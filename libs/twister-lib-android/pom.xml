@@ -27,6 +27,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>net.twisterrob</groupId>
+			<artifactId>twister-lib-java</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<groupId>android</groupId>
 			<artifactId>android</artifactId>
 			<version>4.2.2_r2</version>
