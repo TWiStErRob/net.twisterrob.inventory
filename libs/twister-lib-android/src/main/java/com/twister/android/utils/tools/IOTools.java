@@ -96,6 +96,8 @@ public final class IOTools {
 
 	private static Set<Object> s_getImageLocks = CollectionTools
 			.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
+
+	@SuppressWarnings("unused")
 	public static Bitmap getImage(final URL url, boolean cache) throws IOException {
 		if (!cache) {
 			return getImage(url);
