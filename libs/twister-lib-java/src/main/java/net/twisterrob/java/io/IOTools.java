@@ -1,6 +1,7 @@
 package net.twisterrob.java.io;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 
 public final class IOTools {
@@ -33,6 +34,15 @@ public final class IOTools {
 			} catch (IOException e) {
 				// ignore
 			}
+		}
+	}
+
+	public static void closeConnection(HttpURLConnection connection, Closeable... resources) {
+		for (Closeable resource: resources) {
+			ignorantClose(resource);
+		}
+		if (connection != null) {
+			connection.disconnect();
 		}
 	}
 }
