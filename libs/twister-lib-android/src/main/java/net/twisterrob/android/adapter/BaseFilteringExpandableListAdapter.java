@@ -4,7 +4,6 @@ import java.util.*;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.util.Log;
 
 public abstract class BaseFilteringExpandableListAdapter<Group, Child, GroupVH, ChildVH>
 		extends
@@ -35,7 +34,6 @@ public abstract class BaseFilteringExpandableListAdapter<Group, Child, GroupVH, 
 	public List<Group> getGroups() {
 		if (m_filteredGroups == null) {
 			m_filteredGroups = filterGroups(super.getGroups());
-			Log.d("filter", "Groups: " + m_filteredGroups);
 		}
 		return m_filteredGroups;
 	}
