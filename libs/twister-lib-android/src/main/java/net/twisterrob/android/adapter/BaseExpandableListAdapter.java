@@ -3,8 +3,6 @@ package net.twisterrob.android.adapter;
 import java.util.*;
 
 import android.content.Context;
-import android.database.DataSetObserver;
-import android.util.Log;
 import android.view.*;
 
 public abstract class BaseExpandableListAdapter<Group, Child, GroupVH, ChildVH>
@@ -12,10 +10,8 @@ public abstract class BaseExpandableListAdapter<Group, Child, GroupVH, ChildVH>
 			android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;
 	protected final LayoutInflater m_inflater;
-	protected List<Group> m_groups;
-	protected Map<Group, ? extends List<Child>> m_children;
-	protected List<Group> m_filteredGroups;
-	protected Map<Group, List<Child>> m_filteredChildren;
+	private List<Group> m_groups;
+	private Map<Group, ? extends List<Child>> m_children;
 
 	public BaseExpandableListAdapter(final Context context, final Collection<Group> groups,
 			final Map<Group, ? extends List<Child>> children) {
@@ -23,86 +19,43 @@ public abstract class BaseExpandableListAdapter<Group, Child, GroupVH, ChildVH>
 		this.m_inflater = LayoutInflater.from(m_context);
 		this.m_groups = groups instanceof List? (List<Group>)groups : new ArrayList<Group>(groups);
 		this.m_children = children;
-		super.registerDataSetObserver(new DataSetObserver() {
-			@Override
-			public void onChanged() {
-				resetFiltered();
-			}
-			@Override
-			public void onInvalidated() {
-				resetFiltered();
-			}
-			protected void resetFiltered() {
-				m_filteredGroups = null;
-				m_filteredChildren = null;
-			}
-		});
 	}
 
-	public final List<Group> getAllGroups() {
-		return m_groups;
-	}
-	public void setAllGroups(List<Group> groups) {
+	public void setGroups(List<Group> groups) {
 		m_groups = groups != null? groups : new ArrayList<Group>();
 	}
-	public final List<Group> getFilteredGroups() {
-		if (m_filteredGroups == null) {
-			m_filteredGroups = filterGroups(getAllGroups());
-			Log.d("filter", "Groups: " + m_filteredGroups);
-		}
-		return m_filteredGroups;
-	}
-
-	public final Map<Group, ? extends List<Child>> getAllChildren() {
-		return m_children;
-	}
-	public void setAllChildren(Map<Group, ? extends List<Child>> children) {
+	public void setChildren(Map<Group, ? extends List<Child>> children) {
 		m_children = children != null? children : new HashMap<Group, List<Child>>();
 	}
-	public final List<Child> getFilteredChildren(Group group) {
-		if (m_filteredChildren == null) {
-			m_filteredChildren = new HashMap<Group, List<Child>>();
-		}
-		List<Child> filteredChildren = m_filteredChildren.get(group);
-		if (filteredChildren == null) {
-			filteredChildren = filterChildren(getAllChildren().get(group), group);
-			m_filteredChildren.put(group, filteredChildren);
-			Log.d("filter", group + ": " + filteredChildren);
-		}
-		return filteredChildren;
-	}
 
-	protected List<Group> filterGroups(List<Group> groups) {
-		return groups;
+	public List<Group> getGroups() {
+		return m_groups;
 	}
-	protected List<Child> filterChildren(List<Child> children, Group group) {
-		return children;
-	}
-
 	@Override
 	public int getGroupCount() {
-		Log.d("filter", "groupCount: " + getFilteredGroups().size());
-		return getFilteredGroups().size();
+		return getGroups().size();
 	}
 	@Override
 	public Group getGroup(int groupPosition) {
-		return getFilteredGroups().get(groupPosition);
+		return getGroups().get(groupPosition);
 	}
 	public int getGroupIndex(Group group) {
-		return getFilteredGroups().indexOf(group);
+		return getGroups().indexOf(group);
 	}
 
+	public List<Child> getChildren(Group group) {
+		return m_children.get(group);
+	}
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		Log.d("filter", getGroup(groupPosition) + " childCount: " + getFilteredChildren(getGroup(groupPosition)).size());
-		return getFilteredChildren(getGroup(groupPosition)).size();
+		return getChildren(getGroup(groupPosition)).size();
 	}
 	@Override
 	public Child getChild(int groupPosition, int childPosititon) {
-		return getFilteredChildren(getGroup(groupPosition)).get(childPosititon);
+		return getChildren(getGroup(groupPosition)).get(childPosititon);
 	}
 	public int getChildIndex(Group group, Child child) {
-		return getFilteredChildren(group).indexOf(child);
+		return getChildren(group).indexOf(child);
 	}
 
 	@Override
@@ -127,7 +80,7 @@ public abstract class BaseExpandableListAdapter<Group, Child, GroupVH, ChildVH>
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentListGroupView) {
 		Group currentGroup = getGroup(groupPosition);
-		List<Child> currentChildren = getFilteredChildren(currentGroup);
+		List<Child> currentChildren = getChildren(currentGroup);
 		GroupVH groupHolder;
 		if (groupConvertView == null) {
 			groupConvertView = m_inflater.inflate(getGroupLayoutId(), null);
