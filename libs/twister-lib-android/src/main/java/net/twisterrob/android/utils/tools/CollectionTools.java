@@ -1,7 +1,9 @@
 package net.twisterrob.android.utils.tools;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public final class CollectionTools {
 	private CollectionTools() {
@@ -137,5 +139,115 @@ public final class CollectionTools {
 			stream.defaultReadObject();
 			backingSet = m.keySet();
 		}
+	}
+
+	/**
+	 * Tries to get the last item in the quickes time possible.
+	 * @return last element of the set, or <code>null</code> instaed of {@link NoSuchElementException}.
+	 */
+	public static <T> T last(Set<T> set) {
+		return last(set, false);
+	}
+
+	/**
+	 * Tries to get the last item in the quickes time possible.
+	 * @return last element of the set, or <code>null</code> instaed of {@link NoSuchElementException}.
+	 */
+	public static <T> T last(Set<T> set, boolean hacky) {
+		T elem = null;
+		try {
+			if (set.isEmpty()) {
+				// elem is null
+			} else if (set instanceof TreeSet) {
+				elem = ((TreeSet<T>)set).last();
+			} else if (set instanceof ConcurrentSkipListSet) {
+				elem = ((ConcurrentSkipListSet<T>)set).last();
+			} else if (hacky) {
+				if (set.size() < 0) {
+					// don't even try to hack, iterator is probably faster
+				} else if (set instanceof LinkedHashSet) {
+					elem = tryGetLastJava((LinkedHashSet<T>)set);
+					if (elem == null) {
+						elem = tryGetLastAndroid((LinkedHashSet<T>)set);
+					}
+				}
+			}
+			// fall back if others fail
+			if (elem == null) {
+				for (Iterator<T> iterator = set.iterator(); iterator.hasNext();) {
+					elem = iterator.next();
+				}
+			}
+		} catch (NoSuchElementException ex) {
+			elem = null;
+		}
+		return elem;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> T tryGetLastJava(LinkedHashSet<T> set) {
+		T elem = null;
+		try {
+			Object next = set;
+			// let's try: set.map.header.before.key
+			Field f;
+			// HashSet.(HashMap<T, ?> map).header
+			f = next.getClass().getSuperclass().getDeclaredField("map");
+			f.setAccessible(true);
+			next = f.get(next);
+			// LinkedHashMap.(Entry<T, ?> header).before
+			f = next.getClass().getDeclaredField("header");
+			f.setAccessible(true);
+			next = f.get(next);
+			// LinkedHashMap.Entry.(LinkedHashMap.Entry<T, ?> extends HashMap.Entry<T, ?> before).key
+			f = next.getClass().getDeclaredField("before");
+			f.setAccessible(true);
+			next = f.get(next);
+			// HashMap.Entry.(T key)
+			f = next.getClass().getSuperclass().getDeclaredField("key");
+			f.setAccessible(true);
+			elem = (T)f.get(next);
+		} catch (NoSuchFieldException e) {
+			// not Sun Java 1.6, give up
+		} catch (IllegalArgumentException e) {
+			// should not get here
+		} catch (IllegalAccessException e) {
+			// should not get here
+		}
+		return elem;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> T tryGetLastAndroid(LinkedHashSet<T> set) {
+		T elem = null;
+		try { // android
+			Object next = set;
+			// let's try: set.backingMap.header.prv.key
+			Field f;
+
+			// HashSet.(LinkedHashMap<T, ?> backingMap).header
+			f = next.getClass().getSuperclass().getDeclaredField("backingMap");
+			f.setAccessible(true);
+			next = f.get(next);
+			// LinkedHashMap.(LinkedHashMap.LinkedEntry<T, ?> header).prv
+			f = next.getClass().getDeclaredField("header");
+			f.setAccessible(true);
+			next = f.get(next);
+			// LinkedHashMap.LinkedEntry.(LinkedHashMap.LinkedEntry<T, ?> extends HashMap.HashMapEntry<T, ?> prv).key
+			f = next.getClass().getDeclaredField("prv");
+			f.setAccessible(true);
+			next = f.get(next);
+			// HashMap.Entry.(T key)
+			f = next.getClass().getSuperclass().getDeclaredField("key");
+			f.setAccessible(true);
+			elem = (T)f.get(next);
+		} catch (NoSuchFieldException e1) {
+			// not Android, give up
+		} catch (IllegalArgumentException e) {
+			// should not get here
+		} catch (IllegalAccessException e) {
+			// should not get here
+		}
+		return elem;
 	}
 }
