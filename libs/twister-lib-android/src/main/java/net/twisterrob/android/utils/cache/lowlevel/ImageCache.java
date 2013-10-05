@@ -25,6 +25,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.*;
 import android.support.v4.app.*;
 import android.support.v4.util.LruCache;
@@ -463,14 +465,14 @@ public class ImageCache {
 	 * @param bitmap
 	 * @return size in bytes
 	 */
-	@TargetApi(12)
+	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)
 	public static int getBitmapSize(final Bitmap bitmap) {
-		// if (AndroidTools.hasHoneycombMR1()) {
-		// return bitmap.getByteCount();
-		// }
-
-		// Pre HC-MR1
-		return bitmap.getRowBytes() * bitmap.getHeight();
+		if (VERSION_CODES.HONEYCOMB_MR1 <= VERSION.SDK_INT) {
+			return bitmap.getByteCount();
+		} else {
+			// Pre HC-MR1
+			return bitmap.getHeight() * bitmap.getRowBytes();
+		}
 	}
 
 	/**
@@ -478,12 +480,13 @@ public class ImageCache {
 	 * 
 	 * @return True if external storage is removable (like an SD card), false otherwise.
 	 */
-	@TargetApi(9)
+	@TargetApi(VERSION_CODES.GINGERBREAD)
 	public static boolean isExternalStorageRemovable() {
-		// if (AndroidTools.hasGingerbread()) {
-		// return Environment.isExternalStorageRemovable();
-		// }
-		return true;
+		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
+			return Environment.isExternalStorageRemovable();
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -492,27 +495,30 @@ public class ImageCache {
 	 * @param context The context to use
 	 * @return The external cache dir
 	 */
-	@TargetApi(8)
+	@TargetApi(VERSION_CODES.FROYO)
 	public static File getExternalCacheDir(final Context context) {
-		return context.getExternalCacheDir();
-		// Before Froyo we need to construct the external cache dir ourselves
-		// final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
-		// return new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
+		if (VERSION_CODES.FROYO <= VERSION.SDK_INT) {
+			return context.getExternalCacheDir();
+		} else {
+			// Before Froyo we need to construct the external cache dir ourselves
+			final String cacheDir = "Android/data/" + context.getPackageName() + "/cache";
+			return new File(Environment.getExternalStorageDirectory().getPath(), cacheDir);
+		}
 	}
-
 	/**
 	 * Check how much usable space is available at a given path.
 	 * 
 	 * @param path The path to check
 	 * @return The space available in bytes
 	 */
-	@TargetApi(9)
+	@TargetApi(VERSION_CODES.GINGERBREAD)
 	public static long getUsableSpace(final File path) {
-		// if (AndroidTools.hasGingerbread()) {
-		// return path.getUsableSpace();
-		// }
-		final StatFs stats = new StatFs(path.getPath());
-		return (long)stats.getBlockSize() * (long)stats.getAvailableBlocks();
+		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
+			return path.getUsableSpace();
+		} else {
+			final StatFs stats = new StatFs(path.getPath());
+			return stats.getBlockSizeLong() * stats.getAvailableBlocksLong();
+		}
 	}
 
 	/**

@@ -33,4 +33,15 @@
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1380997151361</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-projectRelativePath-matches-false-false-maven</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>
