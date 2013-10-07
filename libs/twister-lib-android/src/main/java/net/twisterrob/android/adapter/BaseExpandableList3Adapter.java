@@ -125,7 +125,10 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		} else {
 			list = (ExpandableListView)childConvertView;
 		}
-		list.setAdapter(new InnerExpandableListAdapter(m_context, level1Group, level2Children, m_data.get(level1Group)));
+		InnerExpandableListAdapter adapter = new InnerExpandableListAdapter(m_context, level1Group, level2Children,
+				m_data.get(level1Group));
+		list.setAdapter(adapter);
+		bindLevel2Groups(list, adapter);
 		return list;
 	}
 
@@ -141,6 +144,8 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	protected void bindEmptyLevel1View(final Level1VH level1Holder, final View level1ConvertView) {}
 
 	// Level 2
+
+	protected void bindLevel2Groups(ExpandableListView list, BaseExpandableListAdapter adapter) {};
 
 	protected abstract int getLevel2LayoutId();
 
