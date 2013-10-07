@@ -5,7 +5,7 @@ import java.util.*;
 import android.content.Context;
 import android.view.*;
 
-public abstract class BaseExpandableListAdapter<Group, Child, GroupVH, ChildVH>
+public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 		extends
 			android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;
@@ -13,7 +13,7 @@ public abstract class BaseExpandableListAdapter<Group, Child, GroupVH, ChildVH>
 	private List<Group> m_groups;
 	private Map<Group, ? extends List<Child>> m_children;
 
-	public BaseExpandableListAdapter(final Context context, final Collection<Group> groups,
+	public BaseExpandableList2Adapter(final Context context, final Collection<Group> groups,
 			final Map<Group, ? extends List<Child>> children) {
 		this.m_context = context;
 		this.m_inflater = LayoutInflater.from(m_context);

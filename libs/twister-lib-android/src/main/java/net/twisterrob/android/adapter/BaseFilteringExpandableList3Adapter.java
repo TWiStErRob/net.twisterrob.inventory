@@ -4,16 +4,17 @@ import java.util.*;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.widget.ExpandableListView;
 
-public abstract class BaseFilteringExpandableListAdapter<Group, Child, GroupVH, ChildVH>
+public abstract class BaseFilteringExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH>
 		extends
-			BaseExpandableListAdapter<Group, Child, GroupVH, ChildVH> {
-	private List<Group> m_filteredGroups;
-	private Map<Group, List<Child>> m_filteredChildren;
+			BaseExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH> {
+	private List<Level1> m_filteredGroups;
+	private Map<Level1, List<Level2>> m_filteredChildren;
 
-	public BaseFilteringExpandableListAdapter(final Context context, final Collection<Group> groups,
-			final Map<Group, ? extends List<Child>> children) {
-		super(context, groups, children);
+	public BaseFilteringExpandableList3Adapter(final Context context, ExpandableListView outerList,
+			Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> data) {
+		super(context, outerList, data);
 		this.registerDataSetObserver(new DataSetObserver() {
 			@Override
 			public void onChanged() {
@@ -31,7 +32,7 @@ public abstract class BaseFilteringExpandableListAdapter<Group, Child, GroupVH, 
 	}
 
 	@Override
-	public List<Group> getGroups() {
+	public List<Level1> getGroups() {
 		if (m_filteredGroups == null) {
 			m_filteredGroups = filterGroups(super.getGroups());
 		}
@@ -39,11 +40,11 @@ public abstract class BaseFilteringExpandableListAdapter<Group, Child, GroupVH, 
 	}
 
 	@Override
-	public List<Child> getChildren(Group group) {
+	public List<Level2> getChildren(Level1 group) {
 		if (m_filteredChildren == null) {
-			m_filteredChildren = new HashMap<Group, List<Child>>();
+			m_filteredChildren = new HashMap<Level1, List<Level2>>();
 		}
-		List<Child> filteredChildren = m_filteredChildren.get(group);
+		List<Level2> filteredChildren = m_filteredChildren.get(group);
 		if (filteredChildren == null) {
 			filteredChildren = filterChildren(super.getChildren(group), group);
 			m_filteredChildren.put(group, filteredChildren);
@@ -51,11 +52,11 @@ public abstract class BaseFilteringExpandableListAdapter<Group, Child, GroupVH, 
 		return filteredChildren;
 	}
 
-	protected List<Group> filterGroups(List<Group> groups) {
+	protected List<Level1> filterGroups(List<Level1> groups) {
 		return groups;
 	}
 
-	protected List<Child> filterChildren(List<Child> children, Group group) {
+	protected List<Level2> filterChildren(List<Level2> children, Level1 group) {
 		return children;
 	}
 }
