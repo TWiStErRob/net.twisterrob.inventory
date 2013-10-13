@@ -8,7 +8,7 @@ public class Location implements Serializable {
 	private final double m_latitude;
 	private final double m_longitude;
 
-	public Location(final double latitude, final double longitude) {
+	public Location(final double longitude, final double latitude) {
 		m_latitude = latitude;
 		m_longitude = longitude;
 	}
@@ -23,6 +23,6 @@ public class Location implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("%.6f, %.6f", m_latitude, m_longitude);
+		return String.format("%.6f, %.6f", m_longitude, m_latitude);
 	}
 }

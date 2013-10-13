@@ -104,7 +104,7 @@ public class LocationConverter {
 		double E_N_to_Lng = (180 / Math.PI)
 				* (RadLAM0 + (Et * X) - ((Et * Et * Et) * XI) + ((Et * Et * Et * Et * Et) * XII) - ((Et * Et * Et * Et
 						* Et * Et * Et) * XIIA));
-		Location pt_LonLat = new Location(E_N_to_Lng, E_N_to_Lat);
+		Location pt_LonLat = new Location(E_N_to_Lat, E_N_to_Lng);
 
 		if (debug) {
 			System.out.println("E_N_to_Lat: " + E_N_to_Lat);
