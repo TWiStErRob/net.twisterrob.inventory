@@ -8,7 +8,7 @@ public class Location implements Serializable {
 	private final double m_latitude;
 	private final double m_longitude;
 
-	public Location(final double longitude, final double latitude) {
+	public Location(final double latitude, final double longitude) {
 		m_latitude = latitude;
 		m_longitude = longitude;
 	}

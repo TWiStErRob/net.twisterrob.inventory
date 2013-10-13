@@ -12,7 +12,7 @@ public class LocationUtils extends net.twisterrob.java.model.LocationUtils {
 	}
 
 	public static Location fromGeoPoint(GeoPoint geo) {
-		return new Location(geo.getLongitudeE6() / GEO, geo.getLatitudeE6() / GEO);
+		return new Location(geo.getLatitudeE6() / GEO, geo.getLongitudeE6() / GEO);
 	}
 
 	public static boolean near(GeoPoint geo, Location loc) {
