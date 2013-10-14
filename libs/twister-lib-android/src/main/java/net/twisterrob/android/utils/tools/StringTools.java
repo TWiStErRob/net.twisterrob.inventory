@@ -12,9 +12,8 @@ public final class StringTools {
 	public static String format(final String messageFormat, final Object... formatArgs) {
 		if (formatArgs == null || formatArgs.length == 0) {
 			return messageFormat;
-		} else {
-			return String.format(messageFormat, formatArgs);
 		}
+		return String.format(messageFormat, formatArgs);
 	}
 
 	public static String join(final Iterable<?> list, final String separator) {
@@ -44,8 +43,7 @@ public final class StringTools {
 	public static String toNullString(final Object o, final String nullString) {
 		if (nullString == null) {
 			return String.valueOf(o);
-		} else {
-			return o != null? o.toString() : nullString;
 		}
+		return o != null? o.toString() : nullString;
 	}
 }

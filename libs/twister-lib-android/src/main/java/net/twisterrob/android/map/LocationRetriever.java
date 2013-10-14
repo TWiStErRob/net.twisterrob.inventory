@@ -5,11 +5,11 @@ import android.location.*;
 import android.os.Bundle;
 public class LocationRetriever {
 	private final LocationManager m_manager;
-	private final LocationResultListener m_locResultListener;
+	final LocationResultListener m_locResultListener;
 
 	// /////////////////////////////////////////////////////
 	// Provider location listeners
-	private boolean m_isGPSEnabled;
+	boolean m_isGPSEnabled;
 	private final LocationListener m_locationListenerGPS = new LocationListener() {
 		public void onLocationChanged(Location location) {
 			m_locResultListener.locationRetrieved(LocationRetriever.this, location, LocationType.GPS);
@@ -22,10 +22,12 @@ public class LocationRetriever {
 			assert GPS_PROVIDER.equals(provider) : getProviderError(GPS_PROVIDER, provider);
 			m_isGPSEnabled = true;
 		}
-		public void onStatusChanged(String provider, int status, Bundle extras) {}
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			// optional @Override
+		}
 	};
 
-	private boolean m_isNetworkEnabled = false;
+	boolean m_isNetworkEnabled = false;
 	private final LocationListener m_locationListenerNetwork = new LocationListener() {
 		public void onLocationChanged(Location location) {
 			m_locResultListener.locationRetrieved(LocationRetriever.this, location, LocationType.Network);
@@ -39,11 +41,11 @@ public class LocationRetriever {
 			m_isNetworkEnabled = true;
 		}
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-
+			// optional @Override
 		}
 	};
 
-	private static String getProviderError(String expectedProvider, String provider) {
+	static String getProviderError(String expectedProvider, String provider) {
 		return String.format("%s provider didn't get the right provider update, instead it was %s", expectedProvider,
 				provider);
 	}
@@ -58,20 +60,24 @@ public class LocationRetriever {
 	}
 
 	public boolean start(boolean getLastFirst) {
-		if (getLastFirst)
+		if (getLastFirst) {
 			getLastLocation();
+		}
 		startImpl();
 		return m_isGPSEnabled || m_isNetworkEnabled;
 	}
 
 	private void startImpl() {
-		if (!m_isGPSEnabled && !m_isNetworkEnabled)
+		if (!m_isGPSEnabled && !m_isNetworkEnabled) {
 			return;
+		}
 
-		if (m_isGPSEnabled)
+		if (m_isGPSEnabled) {
 			m_manager.requestLocationUpdates(GPS_PROVIDER, 0, 0, m_locationListenerGPS);
-		if (m_isNetworkEnabled)
+		}
+		if (m_isNetworkEnabled) {
 			m_manager.requestLocationUpdates(NETWORK_PROVIDER, 0, 0, m_locationListenerNetwork);
+		}
 	}
 	public void stop() {
 		m_manager.removeUpdates(m_locationListenerGPS);
@@ -80,16 +86,19 @@ public class LocationRetriever {
 
 	private void getLastLocation() {
 		Location locNetwork = null, locGPS = null;
-		if (m_isGPSEnabled)
+		if (m_isGPSEnabled) {
 			locGPS = m_manager.getLastKnownLocation(GPS_PROVIDER);
-		if (m_isNetworkEnabled)
+		}
+		if (m_isNetworkEnabled) {
 			locNetwork = m_manager.getLastKnownLocation(NETWORK_PROVIDER);
+		}
 
 		if (locGPS != null && locNetwork != null) {
-			if (locGPS.getTime() >= locNetwork.getTime())
+			if (locGPS.getTime() >= locNetwork.getTime()) {
 				m_locResultListener.locationRetrieved(this, locGPS, LocationType.LastGPS);
-			else
+			} else {
 				m_locResultListener.locationRetrieved(this, locNetwork, LocationType.LastNetwork);
+			}
 			return;
 		}
 

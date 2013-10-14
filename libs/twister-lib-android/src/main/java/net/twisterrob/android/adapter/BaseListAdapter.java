@@ -52,7 +52,6 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter {
 		m_items = newItems;
 	}
 
-	@SuppressWarnings("unchecked")
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		T currentItem = m_items.get(position);
 		VH holder;
@@ -76,7 +75,6 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter {
 		return convertView;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public View getDropDownView(final int position, View convertView, final ViewGroup parent) {
 		T currentItem = m_items.get(position);
@@ -105,12 +103,22 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter {
 
 	protected abstract VH createHolder(View convertView);
 
-	/** @deprecated Until I figure out why I did it. */
+	/**
+	 * @param holder
+	 * @param currentItem 
+	 * @deprecated Until I figure out why I did it.
+	 */
 	@Deprecated
-	protected void bindModel(final VH holder, final T currentItem) {}
+	protected void bindModel(final VH holder, final T currentItem) {
+		// optional @Override
+	}
 
 	protected abstract void bindView(VH holder, T currentItem, View convertView);
 
+	/**
+	 * @param holder
+	 * @param convertView
+	 */
 	protected void bindEmptyView(final VH holder, final View convertView) {
 		if (m_hasDefaultItem) {
 			throw new IllegalStateException("You must override at least bindEmptyView if hasDefaultItem is true");

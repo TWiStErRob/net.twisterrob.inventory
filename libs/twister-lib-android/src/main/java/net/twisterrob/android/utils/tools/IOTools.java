@@ -2,7 +2,6 @@ package net.twisterrob.android.utils.tools;
 
 import java.io.*;
 import java.net.*;
-import java.nio.charset.Charset;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,15 +11,13 @@ import org.apache.http.*;
 
 import android.graphics.*;
 
-public final class IOTools {
+public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 	// TODO check if UTF-8 is used by cineworld
-	public static final String ENCODING = Charset.defaultCharset().name();
 	private static final String DEFAULT_HTTP_ENCODING = ENCODING;
 	private static final String HTTP_HEADER_CHARSET_PREFIX = "charset=";
-	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final ImageSDNetCache imageCache = new ImageSDNetCache();
 
-	private IOTools() {
+	protected IOTools() {
 		// prevent instantiation
 	}
 
@@ -38,11 +35,18 @@ public final class IOTools {
 		return IOTools.copyFile(sourceFile, destinationFile);
 	}
 
+	@SuppressWarnings("resource")
 	public static int copyFile(final File sourceFile, final File destinationFile) throws IOException {
 		destinationFile.getParentFile().mkdirs();
 		InputStream in = new FileInputStream(sourceFile);
 		OutputStream out = new FileOutputStream(destinationFile);
-		return IOTools.copyStream(in, out);
+		int totalBytes;
+		try {
+			totalBytes = IOTools.copyStream(in, out);
+		} finally {
+			ignorantClose(in, out);
+		}
+		return totalBytes;
 	}
 
 	public static int copyStream(final InputStream in, final OutputStream out) throws IOException {
@@ -81,16 +85,18 @@ public final class IOTools {
 		return encoding;
 	}
 
+	@SuppressWarnings("resource")
 	public static Bitmap getImage(final URL url) throws IOException {
 		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		InputStream input = null;
 		try {
 			connection.connect();
-			InputStream input = connection.getInputStream();
+			input = connection.getInputStream();
 
 			Bitmap bitmap = BitmapFactory.decodeStream(input);
 			return bitmap;
 		} finally {
-			connection.disconnect();
+			closeConnection(connection, input);
 		}
 	}
 
@@ -117,7 +123,9 @@ public final class IOTools {
 				}
 				result = imageCache.get(url);
 				assert result != null : "Image cache is misbehaving";
-			} else {}
+			} else {
+				// TODO check logic
+			}
 			return result;
 		} catch (Exception ex) {
 			throw new IOException("Cannot use cache", ex);

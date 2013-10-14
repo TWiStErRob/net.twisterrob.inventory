@@ -60,6 +60,7 @@ import java.util.concurrent.*;
  * be dropped from the cache. If an error occurs while writing a cache value, the edit will fail silently. Callers
  * should handle other problems by catching {@code IOException} and responding appropriately.
  */
+@SuppressWarnings("synthetic-access")
 public final class DiskLruCache implements Closeable {
 	private static final String JOURNAL_FILE = "journal";
 	private static final String JOURNAL_FILE_TMP = "journal.tmp";
@@ -129,7 +130,6 @@ public final class DiskLruCache implements Closeable {
 	private long nextSequenceNumber = 0;
 
 	/* From java.util.Arrays */
-	@SuppressWarnings("unchecked")
 	private static <T> T[] copyOfRange(final T[] original, final int start, final int end) {
 		final int originalLength = original.length; // For exception priority compatibility.
 		if (start > end) {
@@ -191,13 +191,15 @@ public final class DiskLruCache implements Closeable {
 	/**
 	 * Closes 'closeable', ignoring any checked exceptions. Does nothing if 'closeable' is null.
 	 */
-	private static void closeQuietly(final Closeable closeable) {
+	protected static void closeQuietly(final Closeable closeable) {
 		if (closeable != null) {
 			try {
 				closeable.close();
 			} catch (RuntimeException rethrown) {
 				throw rethrown;
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+				// ignore
+			}
 		}
 	}
 
@@ -290,6 +292,7 @@ public final class DiskLruCache implements Closeable {
 		return cache;
 	}
 
+	@SuppressWarnings("resource")
 	private void readJournal() throws IOException {
 		InputStream in = new BufferedInputStream(new FileInputStream(journalFile), IO_BUFFER_SIZE);
 		try {
@@ -432,10 +435,8 @@ public final class DiskLruCache implements Closeable {
 			return null;
 		}
 
-		/*
-		 * Open all streams eagerly to guarantee that we see a single published snapshot. If we opened streams lazily
-		 * then the streams could come from different edits.
-		 */
+		/* Open all streams eagerly to guarantee that we see a single published snapshot. If we opened streams lazily
+		 * then the streams could come from different edits. */
 		InputStream[] ins = new InputStream[valueCount];
 		File[] files = new File[valueCount];
 		try {
@@ -657,7 +658,7 @@ public final class DiskLruCache implements Closeable {
 		DiskLruCache.deleteContents(directory);
 	}
 
-	private void validateKey(final String key) {
+	private static void validateKey(final String key) {
 		if (key.contains(" ") || key.contains("\n") || key.contains("\r")) {
 			throw new IllegalArgumentException("keys must not contain spaces or newlines: \"" + key + "\"");
 		}
@@ -752,6 +753,7 @@ public final class DiskLruCache implements Closeable {
 		/**
 		 * Returns the last committed value as a string, or null if no value has been committed.
 		 */
+		@SuppressWarnings("resource")
 		public String getString(final int index) throws IOException {
 			InputStream in = newInputStream(index);
 			return in != null? DiskLruCache.inputStreamToString(in) : null;
@@ -867,7 +869,7 @@ public final class DiskLruCache implements Closeable {
 			this.lengths = new long[valueCount];
 		}
 
-		public String getLengths() throws IOException {
+		public String getLengths() {
 			StringBuilder result = new StringBuilder();
 			for (long size: lengths) {
 				result.append(' ').append(size);

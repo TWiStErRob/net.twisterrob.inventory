@@ -34,7 +34,7 @@ public class ImageSDNetCache implements Cache<URL, Bitmap> {
 		return bitmap;
 	}
 
-	private Bitmap getImage(final URL key) throws IOException {
+	private static Bitmap getImage(final URL key) throws IOException {
 		try {
 			Bitmap bitmap = IOTools.getImage(key);
 			return bitmap;

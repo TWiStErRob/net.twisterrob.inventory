@@ -77,9 +77,8 @@ public class MailSender extends javax.mail.Authenticator {
 			Transport.send(msg);
 
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public void addAttachment(String filename) throws Exception {

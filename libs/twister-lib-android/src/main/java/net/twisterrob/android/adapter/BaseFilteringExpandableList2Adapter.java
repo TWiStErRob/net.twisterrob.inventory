@@ -8,8 +8,8 @@ import android.database.DataSetObserver;
 public abstract class BaseFilteringExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 		extends
 			BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH> {
-	private List<Group> m_filteredGroups;
-	private Map<Group, List<Child>> m_filteredChildren;
+	List<Group> m_filteredGroups;
+	Map<Group, List<Child>> m_filteredChildren;
 
 	public BaseFilteringExpandableList2Adapter(final Context context, final Collection<Group> groups,
 			final Map<Group, ? extends List<Child>> children) {
@@ -55,6 +55,14 @@ public abstract class BaseFilteringExpandableList2Adapter<Group, Child, GroupVH,
 		return groups;
 	}
 
+	/**
+	 * Filter children in this method.
+	 * 
+	 * Does no filtering by default, just return children.
+	 * @param children to filter
+	 * @param group the children belong to
+	 * @return the filtered children
+	 */
 	protected List<Child> filterChildren(List<Child> children, Group group) {
 		return children;
 	}

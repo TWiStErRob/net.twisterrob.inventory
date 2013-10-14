@@ -9,8 +9,8 @@ import android.widget.ExpandableListView;
 public abstract class BaseFilteringExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH>
 		extends
 			BaseExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH> {
-	private List<Level1> m_filteredGroups;
-	private Map<Level1, List<Level2>> m_filteredChildren;
+	List<Level1> m_filteredGroups;
+	Map<Level1, List<Level2>> m_filteredChildren;
 
 	public BaseFilteringExpandableList3Adapter(final Context context, ExpandableListView outerList,
 			Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> data) {
@@ -56,6 +56,14 @@ public abstract class BaseFilteringExpandableList3Adapter<Level1, Level2, Level3
 		return groups;
 	}
 
+	/**
+	 * Filter children in this method.
+	 * 
+	 * Does no filtering by default, just return children.
+	 * @param children to filter
+	 * @param group the children belong to
+	 * @return the filtered children
+	 */
 	protected List<Level2> filterChildren(List<Level2> children, Level1 group) {
 		return children;
 	}

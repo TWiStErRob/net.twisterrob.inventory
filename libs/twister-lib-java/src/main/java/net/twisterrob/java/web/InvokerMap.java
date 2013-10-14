@@ -28,7 +28,8 @@ public class InvokerMap implements Map<Object, Object> {
 		ParameterType,
 		Parameter,
 		Invoke
-	};
+	}
+
 	private Mode mode = Mode.Operation;
 
 	private boolean isInstance;
@@ -46,9 +47,9 @@ public class InvokerMap implements Map<Object, Object> {
 					mode = Mode.Operation;
 					break;
 				case Parameter:
-					key = fixType(key);
-					args.add(key);
-					argTypes.add(getType(key));
+					Object fixed = fixType(key);
+					args.add(fixed);
+					argTypes.add(getType(fixed));
 					mode = Mode.Operation;
 					break;
 				case ParameterType:
@@ -237,9 +238,13 @@ public class InvokerMap implements Map<Object, Object> {
 		return null;
 	}
 
-	public void putAll(Map<? extends Object, ? extends Object> t) {}
+	public void putAll(Map<? extends Object, ? extends Object> t) {
+		// do nothing
+	}
 
-	public void clear() {}
+	public void clear() {
+		// do nothing
+	}
 
 	public Set<Object> keySet() {
 		return null;
@@ -253,10 +258,12 @@ public class InvokerMap implements Map<Object, Object> {
 		return null;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return 0;
 	}

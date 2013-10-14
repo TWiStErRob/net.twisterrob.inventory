@@ -72,11 +72,14 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	}
 
 	@Override
+	/**
+	 * @param groupPosition
+	 * @param childPosition
+	 */
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentListGroupView) {
 		Group currentGroup = getGroup(groupPosition);
@@ -100,7 +103,6 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 		return groupConvertView;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View childConvertView,
 			ViewGroup parentGroupViewGroup) {
@@ -130,28 +132,54 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 
 	protected abstract GroupVH createGroupHolder(View groupConvertView);
 
-	/** @param currentChildren 
-	 * @deprecated Until I figure out why I did it. */
+	/**
+	 * @param groupHolder
+	 * @param currentChildren
+	 * @param currentGroup 
+	 * @deprecated Until I figure out why I did it.
+	 */
 	@Deprecated
-	protected void bindGroupModel(final GroupVH groupHolder, List<Child> currentChildren, final Group currentGroup) {}
+	protected void bindGroupModel(final GroupVH groupHolder, List<Child> currentChildren, final Group currentGroup) {
+		// optional @Override
+	}
 
 	protected abstract void bindGroupView(final GroupVH groupHolder, final Group currentGroup,
 			List<Child> currentChildren, final View groupConvertView);
 
+	/**
+	 * @param groupHolder
+	 * @param currentChildren
+	 * @param groupConvertView
+	 */
 	protected void bindEmptyGroupView(final GroupVH groupHolder, List<Child> currentChildren,
-			final View groupConvertView) {}
+			final View groupConvertView) {
+		// optional @Override
+	}
 
 	protected abstract int getChildLayoutId();
 
 	protected abstract ChildVH createChildHolder(View childConvertView);
 
-	/** @param currentGroup 
-	 * @deprecated Until I figure out why I did it. */
+	/**
+	 * @param childHolder
+	 * @param currentGroup
+	 * @param currentChild 
+	 * @deprecated Until I figure out why I did it.
+	 */
 	@Deprecated
-	protected void bindChildModel(final ChildVH childHolder, Group currentGroup, final Child currentChild) {}
+	protected void bindChildModel(final ChildVH childHolder, Group currentGroup, final Child currentChild) {
+		// optional @Override
+	}
 
 	protected abstract void bindChildView(final ChildVH childHolder, Group currentGroup, final Child currentChild,
 			final View childConvertView);
 
-	protected void bindEmptyChildView(final ChildVH childHolder, Group currentGroup, final View childConvertView) {}
+	/**
+	 * @param childHolder
+	 * @param currentGroup
+	 * @param childConvertView
+	 */
+	protected void bindEmptyChildView(final ChildVH childHolder, Group currentGroup, final View childConvertView) {
+		// optional @Override
+	}
 }

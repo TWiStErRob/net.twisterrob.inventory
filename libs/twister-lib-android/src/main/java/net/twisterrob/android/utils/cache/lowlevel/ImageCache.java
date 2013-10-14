@@ -20,6 +20,7 @@ package net.twisterrob.android.utils.cache.lowlevel;
 import java.io.*;
 import java.security.*;
 
+import net.twisterrob.java.io.IOTools;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -39,22 +40,22 @@ public class ImageCache {
 	private static final String TAG = "ImageCache";
 
 	// Default memory cache size
-	private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 1024 * 5; // 5MB
+	protected static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 1024 * 5; // 5MB
 
 	// Default disk cache size
-	private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
+	protected static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
 
 	// Compression settings when writing images to disk cache
-	private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.JPEG;
-	private static final int DEFAULT_COMPRESS_QUALITY = 70;
+	protected static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.JPEG;
+	protected static final int DEFAULT_COMPRESS_QUALITY = 70;
 	private static final int DISK_CACHE_INDEX = 0;
-	private static final boolean DEFAULT_LOG_CACHE_LIFECYCLE = false;
+	protected static final boolean DEFAULT_LOG_CACHE_LIFECYCLE = false;
 
 	// Constants to easily toggle various caches
-	private static final boolean DEFAULT_MEM_CACHE_ENABLED = true;
-	private static final boolean DEFAULT_DISK_CACHE_ENABLED = true;
-	private static final boolean DEFAULT_CLEAR_DISK_CACHE_ON_START = false;
-	private static final boolean DEFAULT_INIT_DISK_CACHE_ON_CREATE = false;
+	protected static final boolean DEFAULT_MEM_CACHE_ENABLED = true;
+	protected static final boolean DEFAULT_DISK_CACHE_ENABLED = true;
+	protected static final boolean DEFAULT_CLEAR_DISK_CACHE_ON_START = false;
+	protected static final boolean DEFAULT_INIT_DISK_CACHE_ON_CREATE = false;
 
 	private DiskLruCache mDiskLruCache;
 	private LruCache<String, Bitmap> mMemoryCache;
@@ -192,6 +193,7 @@ public class ImageCache {
 				final String key = ImageCache.hashKeyForDisk(data);
 				OutputStream out = null;
 				try {
+					@SuppressWarnings("resource")
 					DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
 					if (snapshot == null) {
 						final DiskLruCache.Editor editor = mDiskLruCache.edit(key);
@@ -210,28 +212,26 @@ public class ImageCache {
 				} catch (Exception e) {
 					Log.e(TAG, "addBitmapToCache - " + e);
 				} finally {
-					try {
-						if (out != null) {
-							out.close();
-						}
-					} catch (IOException e) {}
+					IOTools.ignorantClose(out);
 				}
 			}
 		}
 	}
 
-	private CompressFormat getCompressFormat(String data, Bitmap bitmap, ImageCacheParams params) {
+	/**
+	 * @param bitmap no need for now
+	 */
+	private static CompressFormat getCompressFormat(String data, Bitmap bitmap, ImageCacheParams params) {
 		if (params.forceCompressFormat) {
 			return params.compressFormat;
+		}
+		String extension = data.replaceFirst("^[^#]*/[^#]*(?:\\.([^#]*)(?:#.*)?)$", "$1");
+		if (extension.matches("(?i:jpe?g|jpe)")) {
+			return CompressFormat.JPEG;
+		} else if (extension.matches("(?i:png)")) {
+			return CompressFormat.PNG;
 		} else {
-			String extension = data.replaceFirst("^[^#]*/[^#]*(?:\\.([^#]*)(?:#.*)?)$", "$1");
-			if (extension.matches("(?i:jpe?g|jpe)")) {
-				return CompressFormat.JPEG;
-			} else if (extension.matches("(?i:png)")) {
-				return CompressFormat.PNG;
-			} else {
-				return params.compressFormat;
-			}
+			return params.compressFormat;
 		}
 	}
 	/**
@@ -259,13 +259,16 @@ public class ImageCache {
 	 * @param data Unique identifier for which item to get
 	 * @return The bitmap if found in cache, null otherwise
 	 */
+	@SuppressWarnings("resource")
 	public Bitmap getBitmapFromDiskCache(final String data) {
 		final String key = ImageCache.hashKeyForDisk(data);
 		synchronized (mDiskCacheLock) {
 			while (mDiskCacheStarting) {
 				try {
 					mDiskCacheLock.wait();
-				} catch (InterruptedException e) {}
+				} catch (InterruptedException e) {
+					// TODO ignore
+				}
 			}
 			if (mDiskLruCache != null) {
 				InputStream inputStream = null;
@@ -285,11 +288,7 @@ public class ImageCache {
 				} catch (final IOException e) {
 					Log.e(TAG, "getBitmapFromDiskCache - " + e);
 				} finally {
-					try {
-						if (inputStream != null) {
-							inputStream.close();
-						}
-					} catch (IOException e) {}
+					IOTools.ignorantClose(inputStream);
 				}
 			}
 			return null;
@@ -469,10 +468,8 @@ public class ImageCache {
 	public static int getBitmapSize(final Bitmap bitmap) {
 		if (VERSION_CODES.HONEYCOMB_MR1 <= VERSION.SDK_INT) {
 			return bitmap.getByteCount();
-		} else {
-			// Pre HC-MR1
-			return bitmap.getHeight() * bitmap.getRowBytes();
 		}
+		return bitmap.getHeight() * bitmap.getRowBytes();
 	}
 
 	/**
@@ -484,9 +481,8 @@ public class ImageCache {
 	public static boolean isExternalStorageRemovable() {
 		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
 			return Environment.isExternalStorageRemovable();
-		} else {
-			return true;
 		}
+		return true;
 	}
 
 	/**
@@ -499,11 +495,10 @@ public class ImageCache {
 	public static File getExternalCacheDir(final Context context) {
 		if (VERSION_CODES.FROYO <= VERSION.SDK_INT) {
 			return context.getExternalCacheDir();
-		} else {
-			// Before Froyo we need to construct the external cache dir ourselves
-			final String cacheDir = "Android/data/" + context.getPackageName() + "/cache";
-			return new File(Environment.getExternalStorageDirectory().getPath(), cacheDir);
 		}
+		// Before Froyo we need to construct the external cache dir ourselves
+		final String cacheDir = "Android/data/" + context.getPackageName() + "/cache";
+		return new File(Environment.getExternalStorageDirectory().getPath(), cacheDir);
 	}
 	/**
 	 * Check how much usable space is available at a given path.
@@ -515,10 +510,9 @@ public class ImageCache {
 	public static long getUsableSpace(final File path) {
 		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
 			return path.getUsableSpace();
-		} else {
-			final StatFs stats = new StatFs(path.getPath());
-			return stats.getBlockSizeLong() * stats.getAvailableBlocksLong();
 		}
+		final StatFs stats = new StatFs(path.getPath());
+		return stats.getBlockSizeLong() * stats.getAvailableBlocksLong();
 	}
 
 	/**

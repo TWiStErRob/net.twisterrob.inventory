@@ -4,14 +4,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 
-public final class IOTools {
+public/* static */class IOTools {
 	// TODO check if UTF-8 is used by cineworld
 	public static final String ENCODING = Charset.forName("UTF-8").name();
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
-	private IOTools() {
-		// prevent instantiation
-	}
 
 	public static String readAll(Reader reader) throws IOException {
 		StringBuilder sb = new StringBuilder();
@@ -33,6 +29,21 @@ public final class IOTools {
 				closeMe.close();
 			} catch (IOException e) {
 				// ignore
+			}
+		}
+	}
+
+	public static void ignorantClose(Closeable... closeMes) {
+		if (closeMes == null) {
+			return;
+		}
+		for (Closeable closeMe: closeMes) {
+			if (closeMe != null) {
+				try {
+					closeMe.close();
+				} catch (IOException e) {
+					// ignore
+				}
 			}
 		}
 	}

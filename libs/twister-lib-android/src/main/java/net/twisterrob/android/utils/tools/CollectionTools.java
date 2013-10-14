@@ -11,8 +11,8 @@ public final class CollectionTools {
 	}
 
 	public static void ensureIndexValid(final List<? extends Object> list, int i) {
-		i -= list.size();
-		while (i-- >= 0) {
+		i -= list.size(); // don't need to add existing indices
+		while (i-- >= 0) { // add remaining
 			list.add(null);
 		}
 	}
@@ -184,7 +184,6 @@ public final class CollectionTools {
 		return elem;
 	}
 
-	@SuppressWarnings("unchecked")
 	private static <T> T tryGetLastJava(LinkedHashSet<T> set) {
 		T elem = null;
 		try {
@@ -217,7 +216,6 @@ public final class CollectionTools {
 		return elem;
 	}
 
-	@SuppressWarnings("unchecked")
 	private static <T> T tryGetLastAndroid(LinkedHashSet<T> set) {
 		T elem = null;
 		try { // android

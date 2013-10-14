@@ -92,7 +92,6 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentListGroupView) {
 		Level1 currentGroup = getGroup(groupPosition);
@@ -141,11 +140,23 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	protected abstract void bindLevel1View(final Level1VH level1Holder, final Level1 currentLevel1,
 			List<Level2> currentLevel2, final View level1ConvertView);
 
-	protected void bindEmptyLevel1View(final Level1VH level1Holder, final View level1ConvertView) {}
+	/**
+	 * @param level1Holder
+	 * @param level1ConvertView
+	 */
+	protected void bindEmptyLevel1View(final Level1VH level1Holder, final View level1ConvertView) {
+		// optional @Override
+	}
 
 	// Level 2
 
-	protected void bindLevel2Groups(ExpandableListView list, BaseExpandableListAdapter adapter) {};
+	/**
+	 * @param list
+	 * @param adapter
+	 */
+	protected void bindLevel2Groups(ExpandableListView list, BaseExpandableListAdapter adapter) {
+		// optional @Override
+	}
 
 	protected abstract int getLevel2LayoutId();
 
@@ -154,7 +165,14 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	protected abstract void bindLevel2View(final Level2VH level2Holder, Level1 currentLevel1,
 			final Level2 currentLevel2, List<Level3> currentLevel3, final View level2ConvertView);
 
-	protected void bindEmptyLevel2View(final Level2VH level2Holder, Level1 currentLevel1, final View level1ConvertView) {}
+	/**
+	 * @param level2Holder
+	 * @param currentLevel1
+	 * @param level1ConvertView
+	 */
+	protected void bindEmptyLevel2View(final Level2VH level2Holder, Level1 currentLevel1, final View level1ConvertView) {
+		// optional @Override
+	}
 
 	// Level 3
 
@@ -165,12 +183,20 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	protected abstract void bindLevel3View(final Level3VH level3Holder, Level1 currentLevel1, Level2 currentLevel2,
 			final Level3 currentLevel3, final View level3ConvertView);
 
+	/**
+	 * @param level3Holder
+	 * @param currentLevel1
+	 * @param currentLevel2
+	 * @param level3ConvertView
+	 */
 	protected void bindEmptyLevel3View(final Level3VH level3Holder, Level1 currentLevel1, Level2 currentLevel2,
-			final View level3ConvertView) {}
+			final View level3ConvertView) {
+		// optional @Override
+	}
 
 	private class InnerExpandableListAdapter extends BaseExpandableList2Adapter<Level2, Level3, Level2VH, Level3VH> {
 		private final Level1 currentLevel1;
-		private InnerExpandableListAdapter(Context context, Level1 currentLevel1, Collection<Level2> currentLevel2,
+		protected InnerExpandableListAdapter(Context context, Level1 currentLevel1, Collection<Level2> currentLevel2,
 				Map<Level2, ? extends List<Level3>> currentLevel3) {
 			super(context, currentLevel2, currentLevel3);
 			this.currentLevel1 = currentLevel1;
@@ -210,6 +236,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 			this.outerList = outerList;
 			this.setOnGroupClickListener(this);
 		}
+		@Override
 		@SuppressLint("InlinedApi")
 		protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 			super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(View.MEASURED_SIZE_MASK, MeasureSpec.AT_MOST));

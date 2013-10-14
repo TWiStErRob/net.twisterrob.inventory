@@ -28,8 +28,12 @@ public class SelectionOverlay extends BaseItemizedOverlay<SelectionOverlay.Selec
 		s_defaultDrawableId = defaultIcon;
 	}
 
+	/**
+	 * Singleton overlay.
+	 */
 	@Override
 	protected SelectionOverlayItem createItem(int i) {
+		assert i == 0;
 		return new SelectionOverlayItem(m_loc);
 	}
 

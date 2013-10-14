@@ -16,6 +16,7 @@ public class ImageViewDownloader extends AsyncTask<String, Void, Bitmap> {
 		m_callback = callback;
 	}
 
+	@Override
 	protected Bitmap doInBackground(String... urls) {
 		String url = urls[0];
 		Bitmap bitmap = null;
@@ -27,6 +28,7 @@ public class ImageViewDownloader extends AsyncTask<String, Void, Bitmap> {
 		return bitmap;
 	}
 
+	@Override
 	protected void onPostExecute(Bitmap result) {
 		m_view.setImageBitmap(result);
 		if (m_callback != null) {

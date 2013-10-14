@@ -32,26 +32,28 @@ public class GestureOverlay extends Overlay {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event, MapView mapView) {
-		if (m_gestureDetector != null)
+		if (m_gestureDetector != null) {
 			return m_gestureDetector.onTouchEvent(event);
-		else
-			return false;
+		}
+		return false;
 	}
 	public void setOnDoubleTapListener(OnDoubleTapListener onDoubleTapListener) {
-		if (m_gestureDetector != null)
+		if (m_gestureDetector != null) {
 			m_gestureDetector.setOnDoubleTapListener(m_onDoubleTapListener = onDoubleTapListener);
+		}
 	}
 
 	public boolean isLongpressEnabled() {
-		if (m_gestureDetector != null)
+		if (m_gestureDetector != null) {
 			return m_gestureDetector.isLongpressEnabled();
-		else
-			return false;
+		}
+		return false;
 	}
 
 	public void setIsLongpressEnabled(boolean isLongpressEnabled) {
-		if (m_gestureDetector != null)
+		if (m_gestureDetector != null) {
 			m_gestureDetector.setIsLongpressEnabled(isLongpressEnabled);
+		}
 	}
 
 	public void setOnGestureListener(OnGestureListener onGestureListener) {

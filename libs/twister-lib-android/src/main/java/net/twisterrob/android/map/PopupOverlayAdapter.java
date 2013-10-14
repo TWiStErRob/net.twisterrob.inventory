@@ -30,8 +30,9 @@ public class PopupOverlayAdapter extends Overlay implements OnFocusChangeListene
 	private float m_popupDistance = 12;
 
 	public PopupOverlayAdapter(BaseItemizedOverlay<? extends OverlayItem> overlay) {
-		if (overlay == null)
+		if (overlay == null) {
 			throw new IllegalArgumentException("Wrapped overlay must be non-null.");
+		}
 		m_overlay = overlay;
 		m_overlay.setOnFocusChangeListener(this);
 	}
@@ -54,8 +55,9 @@ public class PopupOverlayAdapter extends Overlay implements OnFocusChangeListene
 		return m_font;
 	}
 	public void setFont(Paint font) {
-		if (font == null)
+		if (font == null) {
 			throw new IllegalArgumentException("Popup text font must be non-null.");
+		}
 		m_font = font;
 	}
 	public Paint getFill() {
@@ -94,7 +96,7 @@ public class PopupOverlayAdapter extends Overlay implements OnFocusChangeListene
 		return m_overlay;
 	}
 
-	public void onFocusChanged(@SuppressWarnings("rawtypes") ItemizedOverlay overlay, OverlayItem newFocus) {
+	public void onFocusChanged(ItemizedOverlay overlay, OverlayItem newFocus) {
 		m_item = newFocus; // may be null
 		m_lastDrawnPopupRect = null;
 		if (m_onFocusChangeListener != null) {
@@ -106,8 +108,9 @@ public class PopupOverlayAdapter extends Overlay implements OnFocusChangeListene
 	public boolean onTouchEvent(MotionEvent e, MapView mapView) {
 		if (m_lastDrawnPopupRect != null && e.getAction() == MotionEvent.ACTION_DOWN
 				&& m_lastDrawnPopupRect.contains(e.getX(), e.getY())) {
-			if (m_onClickListener != null)
+			if (m_onClickListener != null) {
 				m_onClickListener.onClick(mapView, m_item);
+			}
 			return false;
 		}
 		return super.onTouchEvent(e, mapView);
@@ -154,8 +157,9 @@ public class PopupOverlayAdapter extends Overlay implements OnFocusChangeListene
 	}
 	protected Rect getDrawnItemBounds() {
 		Drawable marker = m_item.getMarker(0);
-		if (marker == null)
+		if (marker == null) {
 			marker = m_overlay.getDefaultMarker();
+		}
 		Rect bounds = marker.copyBounds();
 		return bounds;
 	}
