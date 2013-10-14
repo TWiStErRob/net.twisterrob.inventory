@@ -5,14 +5,14 @@ import java.util.*;
 
 /**
  * <ul>
- * <li>java.lang.Math.max(2, 4):<br>
- * ${call.static['java.lang.Math'].arg[2].arg[4].invoke['max']}
- * <li>result.lookup(film.edi, cinema.id).size():<br>
- * ${fn:length(call.init[result].arg[film.edi].arg[cinema.id].invoke['lookup']}
- * <li>java.lang.Short.valueOf(short):<br>
- * ${call.static['java.lang.Short'].shortArg[3].invoke['valueOf']}
- * <li>sb is StringBuilder: sb.append("hello"):<br>
- * ${call.init[sb].type('java.lang.CharSequence').arg['hello'].invoke['append']}
+ * <li>Primitive method call: <code>{@link Math#max(int, int) Math.max}(2, 4)</code>:<br>
+ * <code>${call.static['java.lang.Math'].arg[2].arg[4].invoke['max']}</code>
+ * <li>Collection as result: <code>container.lookup(film.edi, cinema.id).size()</code>:<br>
+ * <code>${fn:length(call.init[container].arg[film.edi].arg[cinema.id].invoke['lookup']}</code>
+ * <li>Explicit primitive args (required for anything other than int)<code>{@link Short#valueOf(short)}</code>:<br>
+ * <code>${call.static['java.lang.Short'].shortArg[3].invoke['valueOf']}</code>
+ * <li>Void method call, given {@link StringBuilder} {@code sb}: <code>sb.{@link StringBuilder#append(CharSequence) append}("hello")</code>:<br>
+ * <code>${call.init[sb].type('java.lang.CharSequence').arg['hello'].invoke['append']}</code>
  * <li>
  * </ul>
  * 
@@ -39,6 +39,7 @@ public class InvokerMap implements Map<Object, Object> {
 	private ArrayList<Object> args = new ArrayList<Object>();
 	private ArrayList<Class<?>> argTypes = new ArrayList<Class<?>>();
 
+	@SuppressWarnings("null")
 	public Object get(Object key) {
 		try {
 			switch (mode) {
