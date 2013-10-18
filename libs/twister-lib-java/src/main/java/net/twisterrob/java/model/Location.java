@@ -21,8 +21,45 @@ public class Location implements Serializable {
 		return m_longitude;
 	}
 
+	public Location diff(Location loc) {
+		return new Location(this.m_latitude - loc.m_latitude, this.m_longitude - loc.m_longitude);
+	}
+
 	@Override
 	public String toString() {
-		return String.format("%.6f, %.6f", m_longitude, m_latitude);
+		return String.format("%.10f, %.10f", m_latitude, m_longitude);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(m_latitude);
+		result = prime * result + (int)(temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(m_longitude);
+		result = prime * result + (int)(temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Location)) {
+			return false;
+		}
+		Location other = (Location)obj;
+		if (Double.doubleToLongBits(m_latitude) != Double.doubleToLongBits(other.m_latitude)) {
+			return false;
+		}
+		if (Double.doubleToLongBits(m_longitude) != Double.doubleToLongBits(other.m_longitude)) {
+			return false;
+		}
+		return true;
 	}
 }
