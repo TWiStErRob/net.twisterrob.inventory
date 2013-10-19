@@ -1,6 +1,6 @@
 package net.twisterrob.java.model;
 
-class LocationToScreenTransformer {
+public class LocationToScreenTransformer {
 	private double minLat;
 	private double maxLat;
 	private double scaleY;
