@@ -1,15 +1,12 @@
 package javax.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.*;
 
-import javax.annotation.meta.TypeQualifier;
-import javax.annotation.meta.When;
+import javax.annotation.meta.*;
 
 @Documented
 @TypeQualifier
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Untainted {
-    When when() default When.ALWAYS;
+	When when() default When.ALWAYS;
 }

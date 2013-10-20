@@ -1,8 +1,6 @@
 package javax.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.*;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -11,5 +9,5 @@ import java.lang.annotation.RetentionPolicy;
  * close the resource.
  */
 public @interface WillNotClose {
-
+	// no parameters
 }

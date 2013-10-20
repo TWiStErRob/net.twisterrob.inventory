@@ -1,33 +1,25 @@
 package javax.annotation.meta;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
- * 
  * This annotation is applied to a annotation, and marks the annotation as being
- * a qualifier nickname. Applying a nickname annotation X to a element Y should
- * be interpreted as having the same meaning as applying all of annotations of X
- * (other than QualifierNickname) to Y.
+ * a qualifier nickname. Applying a nickname annotation {@code X} to a element {@code Y} should
+ * be interpreted as having the same meaning as applying all of annotations of {@code X}
+ * (other than {@link TypeQualifierNickname}) to {@code Y}.
  * 
- * <p>
- * Thus, you might define a qualifier SocialSecurityNumber as follows:
- * </p>
+ * <p>Thus, you might define a qualifier <code>SocialSecurityNumber</code> as follows:</p>
  * 
- * 
- * <code>
- @Documented
- @TypeQualifierNickname @Pattern("[0-9]{3}-[0-9]{2}-[0-9]{4}") 
- @Retention(RetentionPolicy.RUNTIME)
- public @interface SocialSecurityNumber {
- }
- </code>
- * 
- * 
+ * <pre><code> {@literal @}Documented
+ * {@literal @}Retention(RetentionPolicy.RUNTIME)
+ * {@literal @}TypeQualifierNickname
+ * {@literal @}Pattern("[0-9]{3}-[0-9]{2}-[0-9]{4}") 
+ * public {@literal @}interface SocialSecurityNumber {
+ *     // no parameters
+ * }</code></pre>
  */
 @Documented
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface TypeQualifierNickname {
-
+	// no parameters
 }

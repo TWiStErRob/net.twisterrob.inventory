@@ -1,9 +1,6 @@
 package javax.annotation.concurrent;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /*
  * Copyright (c) 2005 Brian Goetz
@@ -31,8 +28,8 @@ import java.lang.annotation.Target;
  * returned by calling the named nil-ary method. class-name.class : The Class
  * object for the specified class should be used as the lock object.
  */
-@Target( { ElementType.FIELD, ElementType.METHOD })
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.CLASS)
 public @interface GuardedBy {
-    String value();
+	String value();
 }
