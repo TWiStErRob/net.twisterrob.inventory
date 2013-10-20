@@ -52,7 +52,7 @@ public class MoveableTypeGridRefLocationConverter {
 	}
 
 	// ellipse parameters
-	static Map<String, Ellipse> ellipse = new HashMap<String, Ellipse>() {
+	@SuppressWarnings("serial") static Map<String, Ellipse> ellipse = new HashMap<String, Ellipse>() {
 		{
 			put("WGS84", new Ellipse(6378137, 6356752.3142, 1 / 298.257223563));
 			put("GRS80", new Ellipse(6378137, 6356752.314140, 1 / 298.257222101));
@@ -76,7 +76,7 @@ public class MoveableTypeGridRefLocationConverter {
 	}
 
 	// helmert transform parameters from WGS84 to other datums
-	static Map<String, DatumTransform> datumTransform = new HashMap<String, DatumTransform>() {
+	@SuppressWarnings("serial") static Map<String, DatumTransform> datumTransform = new HashMap<String, DatumTransform>() {
 		{
 			put("toOSGB36", new DatumTransform(-446.448, 125.157, -542.060,  // m
 					-0.1502, -0.2470, -0.8421, // sec
