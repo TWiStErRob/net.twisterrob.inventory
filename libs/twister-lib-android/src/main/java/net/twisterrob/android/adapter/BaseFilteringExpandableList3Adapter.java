@@ -15,7 +15,7 @@ public abstract class BaseFilteringExpandableList3Adapter<Level1, Level2, Level3
 	public BaseFilteringExpandableList3Adapter(final Context context, ExpandableListView outerList,
 			Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> data) {
 		super(context, outerList, data);
-		this.registerDataSetObserver(new DataSetObserver() {
+		registerDataSetObserver(new DataSetObserver() {
 			@Override
 			public void onChanged() {
 				resetFiltered();
@@ -42,7 +42,7 @@ public abstract class BaseFilteringExpandableList3Adapter<Level1, Level2, Level3
 	@Override
 	public List<Level2> getChildren(Level1 group) {
 		if (m_filteredChildren == null) {
-			m_filteredChildren = new HashMap<Level1, List<Level2>>();
+			m_filteredChildren = createChildrenMap();
 		}
 		List<Level2> filteredChildren = m_filteredChildren.get(group);
 		if (filteredChildren == null) {

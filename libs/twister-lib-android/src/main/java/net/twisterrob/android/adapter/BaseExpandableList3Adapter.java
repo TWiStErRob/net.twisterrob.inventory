@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
@@ -15,9 +16,9 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 			android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;
 	protected final LayoutInflater m_inflater;
-	private List<Level1> m_groups;
-	private Map<Level1, List<Level2>> m_children;
-	private Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> m_data;
+	private final List<Level1> m_groups = new ArrayList<Level1>();
+	private final Map<Level1, List<Level2>> m_children;
+	private final Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> m_data;
 	private ExpandableListView m_outerList;
 
 	public BaseExpandableList3Adapter(final Context context, ExpandableListView outerList,
@@ -25,19 +26,28 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		this.m_context = context;
 		this.m_outerList = outerList;
 		this.m_inflater = LayoutInflater.from(m_context);
-		this.m_groups = new ArrayList<Level1>(data.keySet());
-		this.m_children = new HashMap<Level1, List<Level2>>();
-		for (Entry<Level1, ? extends Map<Level2, ? extends List<Level3>>> entry: data.entrySet()) {
-			m_children.put(entry.getKey(), new ArrayList<Level2>(entry.getValue().keySet()));
-		}
 		this.m_data = data;
+		this.m_children = createChildrenMap();
+		registerDataSetObserver(new DataSetObserver() {
+			@Override
+			public void onChanged() {
+				refreshData();
+			}
+		});
+		refreshData();
 	}
 
-	public void setGroups(List<Level1> groups) {
-		m_groups = groups != null? groups : new ArrayList<Level1>();
+	protected Map<Level1, List<Level2>> createChildrenMap() {
+		return new HashMap<Level1, List<Level2>>();
 	}
-	public void setChildren(Map<Level1, Map<Level2, List<Level3>>> data) {
-		m_data = data != null? data : new HashMap<Level1, Map<Level2, List<Level3>>>();
+
+	protected void refreshData() {
+		this.m_groups.clear();
+		this.m_groups.addAll(m_data.keySet());
+		this.m_children.clear();
+		for (Entry<Level1, ? extends Map<Level2, ? extends List<Level3>>> entry: m_data.entrySet()) {
+			m_children.put(entry.getKey(), new ArrayList<Level2>(entry.getValue().keySet()));
+		}
 	}
 
 	public List<Level1> getGroups() {
