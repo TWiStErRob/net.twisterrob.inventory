@@ -8,10 +8,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.twisterrob.android.utils.cache.ImageSDNetCache;
 
 import org.apache.http.*;
+import org.slf4j.*;
 
 import android.graphics.*;
 
 public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
+	private static final Logger LOG = LoggerFactory.getLogger(IOTools.class);
+
 	// TODO check if UTF-8 is used by cineworld
 	private static final String DEFAULT_HTTP_ENCODING = ENCODING;
 	private static final String HTTP_HEADER_CHARSET_PREFIX = "charset=";
@@ -103,14 +106,14 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 	private static Set<Object> s_getImageLocks = CollectionTools
 			.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
 
-	@SuppressWarnings("unused")
 	public static Bitmap getImage(final URL url, boolean cache) throws IOException {
 		if (!cache) {
 			return getImage(url);
 		}
 		try {
 			Bitmap result = imageCache.get(url);
-			if (result == null && false) { // FIXME seems to be not used
+			LOG.trace("getImage({}): {}", url, result != null? "hit" : "miss");
+			if (result == null) {
 				boolean added = s_getImageLocks.add(url);
 				if (added) {
 					synchronized (url) {
@@ -118,13 +121,14 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 							Bitmap newImage = getImage(url, false);
 							s_getImageLocks.remove(url);
 							imageCache.put(url, newImage);
+							LOG.trace("getImage({}): {}", url, "loaded");
+						} else {
+							LOG.trace("getImage({}): {}", url, "already-loaded");
 						}
 					}
 				}
 				result = imageCache.get(url);
 				assert result != null : "Image cache is misbehaving";
-			} else {
-				// TODO check logic
 			}
 			return result;
 		} catch (Exception ex) {
