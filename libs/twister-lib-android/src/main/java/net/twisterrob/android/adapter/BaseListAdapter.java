@@ -4,9 +4,10 @@ import java.util.*;
 
 import android.content.Context;
 import android.view.*;
-import android.widget.BaseAdapter;
+import android.widget.*;
 
-public abstract class BaseListAdapter<T, VH> extends BaseAdapter {
+public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filterable {
+	private List<T> m_allItems;
 	protected List<T> m_items;
 	protected final Context m_context;
 	protected final LayoutInflater m_inflater;
@@ -35,6 +36,10 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter {
 		return position;
 	}
 
+	List<T> getAllItems() {
+		return m_allItems.subList(m_hasDefaultItem? 1 : 0, m_allItems.size());
+	}
+
 	public List<T> getItems() {
 		return m_items.subList(m_hasDefaultItem? 1 : 0, m_items.size());
 	}
@@ -49,6 +54,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter {
 		if (items != null) {
 			newItems.addAll(items);
 		}
+		m_allItems = newItems;
 		m_items = newItems;
 	}
 
@@ -145,5 +151,35 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter {
 	@Deprecated
 	protected void bindDropDownModel(final VH holder, final T currentItem) {
 		bindModel(holder, currentItem);
+	}
+
+	/**
+	 * No need to call super, default implementation returns everything with {@link List#addAll(Collection)}.
+	 * @param fullList source list with all items
+	 * @param filter filter query
+	 * @param resultList target list with filtered items
+	 */
+	protected void filter(List<? extends T> fullList, String filter, List<? super T> resultList) {
+		resultList.addAll(fullList);
+	}
+	public Filter getFilter() {
+		return new Filter() {
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+				FilterResults results = new FilterResults();
+				List<T> resultList = new ArrayList<T>();
+				BaseListAdapter.this.filter(getAllItems(), constraint.toString(), resultList);
+				results.count = resultList.size();
+				results.values = resultList;
+				return results;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint, FilterResults results) {
+				m_items = (List<T>)results.values;
+				notifyDataSetChanged();
+			}
+		};
 	}
 }
