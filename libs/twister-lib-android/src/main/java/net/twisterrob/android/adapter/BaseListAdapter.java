@@ -18,6 +18,12 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 	}
 
 	public BaseListAdapter(final Context context, final Collection<T> items, final boolean hasDefaultItem) {
+		if (context == null) {
+			throw new NullPointerException("context cannot be null");
+		}
+		if (items == null) {
+			throw new NullPointerException("items cannot be null");
+		}
 		this.m_context = context;
 		m_hasDefaultItem = hasDefaultItem;
 		this.m_inflater = LayoutInflater.from(m_context);
@@ -156,11 +162,22 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 	/**
 	 * No need to call super, default implementation returns everything with {@link List#addAll(Collection)}.
 	 * @param fullList source list with all items
-	 * @param filter filter query
+	 * @param filter filter query, never <code>null</code>
 	 * @param resultList target list with filtered items
 	 */
-	protected void filter(List<? extends T> fullList, String filter, List<? super T> resultList) {
+	protected List<T> filter(List<? extends T> fullList, String filter, List<T> resultList) {
 		resultList.addAll(fullList);
+		return resultList;
+	}
+
+	/**
+	 * No need to call super, default implementation returns everything with {@link List#addAll(Collection)}.
+	 * @param fullList source list with all items
+	 * @param resultList target list with filtered items
+	 */
+	protected List<T> filterNoQuery(List<? extends T> fullList, List<T> resultList) {
+		resultList.addAll(fullList);
+		return resultList;
 	}
 	public Filter getFilter() {
 		return new Filter() {
@@ -168,7 +185,11 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 			protected FilterResults performFiltering(CharSequence constraint) {
 				FilterResults results = new FilterResults();
 				List<T> resultList = new ArrayList<T>();
-				BaseListAdapter.this.filter(getAllItems(), constraint.toString(), resultList);
+				if (constraint == null) {
+					resultList = BaseListAdapter.this.filterNoQuery(getAllItems(), resultList);
+				} else {
+					resultList = BaseListAdapter.this.filter(getAllItems(), constraint.toString(), resultList);
+				}
 				results.count = resultList.size();
 				results.values = resultList;
 				return results;
