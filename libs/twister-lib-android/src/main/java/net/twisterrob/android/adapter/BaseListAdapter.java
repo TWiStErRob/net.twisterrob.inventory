@@ -2,6 +2,8 @@ package net.twisterrob.android.adapter;
 
 import java.util.*;
 
+import org.slf4j.*;
+
 import android.content.Context;
 import android.view.*;
 import android.widget.*;
@@ -12,6 +14,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 	protected final Context m_context;
 	protected final LayoutInflater m_inflater;
 	private boolean m_hasDefaultItem;
+	private SimplifyingFilter filter = new SimplifyingFilter();
 
 	public BaseListAdapter(final Context context, final Collection<T> items) {
 		this(context, items, false);
@@ -180,27 +183,45 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		return resultList;
 	}
 	public Filter getFilter() {
-		return new Filter() {
-			@Override
-			protected FilterResults performFiltering(CharSequence constraint) {
-				FilterResults results = new FilterResults();
-				List<T> resultList = new ArrayList<T>();
-				if (constraint == null) {
-					resultList = BaseListAdapter.this.filterNoQuery(getAllItems(), resultList);
-				} else {
-					resultList = BaseListAdapter.this.filter(getAllItems(), constraint.toString(), resultList);
-				}
-				results.count = resultList.size();
-				results.values = resultList;
-				return results;
-			}
+		return filter;
+	}
 
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void publishResults(CharSequence constraint, FilterResults results) {
-				m_items = (List<T>)results.values;
-				notifyDataSetChanged();
+	public String getLastFilter() {
+		return filter.getLastFinished();
+	}
+
+	private final class SimplifyingFilter extends Filter {
+		private final Logger LOG = LoggerFactory.getLogger(BaseListAdapter.SimplifyingFilter.class);
+
+		private String m_lastFinished;
+
+		public SimplifyingFilter() {}
+
+		@Override
+		protected FilterResults performFiltering(CharSequence constraint) {
+			LOG.debug("performFiltering: {}", constraint);
+			FilterResults results = new FilterResults();
+			List<T> resultList = new ArrayList<T>();
+			if (constraint == null) {
+				resultList = BaseListAdapter.this.filterNoQuery(getAllItems(), resultList);
+			} else {
+				resultList = BaseListAdapter.this.filter(getAllItems(), constraint.toString(), resultList);
 			}
-		};
+			results.count = resultList.size();
+			results.values = resultList;
+			LOG.debug("finished performFiltering: {}", constraint);
+			return results;
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void publishResults(CharSequence constraint, FilterResults results) {
+			LOG.debug("Publishing: {} -> {}", constraint, results.count);
+			m_items = (List<T>)results.values;
+			m_lastFinished = constraint != null? constraint.toString() : null;
+		}
+
+		public String getLastFinished() {
+			return m_lastFinished;
+		}
 	}
 }
