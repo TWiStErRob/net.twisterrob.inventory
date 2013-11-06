@@ -3,6 +3,7 @@ package net.twisterrob.android.utils.tools;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public final class CollectionTools {
@@ -247,5 +248,24 @@ public final class CollectionTools {
 			// should not get here
 		}
 		return elem;
+	}
+
+	/**
+	 * Reverses a map so that keys will be indexed by values. <code>null</code> values are skipped.
+	 * @param from source map
+	 * @param to target map
+	 * @return target map
+	 * @throws IllegalArgumentException if duplicate values are found in the source map
+	 */
+	public static <K, V> Map<V, K> reverseMap(Map<? extends K, ? extends V> from, Map<V, K> to) {
+		for (Entry<? extends K, ? extends V> in: from.entrySet()) {
+			if (in.getValue() == null) {
+				continue;
+			}
+			if (null != to.put(in.getValue(), in.getKey())) {
+				throw new IllegalArgumentException("The values are not unique in the source map!");
+			}
+		}
+		return to;
 	}
 }

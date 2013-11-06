@@ -41,20 +41,29 @@ public final class MultiKey {
 		return Arrays.asList(values);
 	}
 
-	@Override public int hashCode() {
+	@Override
+	public int hashCode() {
 		return hashCode;
 	}
 
-	@Override public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
 		final MultiKey other = (MultiKey)obj;
 
 		return Arrays.equals(values, other.values);
 	}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		StringBuilder builder = new StringBuilder("MultiKey[");
 
 		boolean first = true;
