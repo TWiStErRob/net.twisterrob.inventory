@@ -59,6 +59,12 @@
 			<version>18</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.android.gms</groupId>
+			<artifactId>google-play-services</artifactId>
+			<version>12</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.mail</groupId>
