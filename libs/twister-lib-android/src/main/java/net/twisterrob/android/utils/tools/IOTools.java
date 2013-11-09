@@ -10,6 +10,8 @@ import net.twisterrob.android.utils.cache.ImageSDNetCache;
 import org.apache.http.*;
 import org.slf4j.*;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.*;
 
 public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
@@ -142,5 +144,19 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 	public static Bitmap getImage(final String urlString, boolean cache) throws IOException {
 		URL url = new URL(urlString);
 		return IOTools.getImage(url, cache);
+	}
+
+	@SuppressWarnings("resource")
+	public static String getAssetAsString(Context context, String fileName) {
+		InputStream stream = null;
+		try {
+			stream = context.getAssets().open(fileName, AssetManager.ACCESS_STREAMING);
+			return readAll(stream);
+		} catch (IOException ex) {
+			LOG.warn("Cannot open {}", fileName, ex);
+			return null;
+		} finally {
+			ignorantClose(stream);
+		}
 	}
 }
