@@ -1,0 +1,11 @@
+<resources>
+	<string name="query_buildings"><![CDATA["
+		select
+			b._id,
+			b.name,
+			'android.resource://net.twisterrob.android.inventory/drawable/' || bt.image as image
+		from Building b
+		join BuildingType bt ON b.type = bt._id
+		order by b.name 
+	"]]></string>
+</resources>

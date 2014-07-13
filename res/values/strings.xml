@@ -1,0 +1,5 @@
+<resources>
+	<string name="app_name">Magic Home Inventory</string>
+	<string name="building_add">Add Building&#8230;</string>
+	<string name="imd_building">Picture taken of the building or a semantic image depicting the type of the building.</string>
+</resources>
