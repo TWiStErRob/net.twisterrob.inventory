@@ -8,14 +8,23 @@ import net.twisterrob.inventory.android.db.Database;
 
 public class App extends Application {
 	private static App s_instance;
-	private Database database = new Database(this);
+	private boolean initialized = false;
+	private Database database;
 
 	public App() {
 		s_instance = this;
 	}
 
 	public static App getInstance() {
+		s_instance.afterPropertiesSet();
 		return s_instance;
+	}
+
+	private void afterPropertiesSet() {
+		if (!initialized) {
+			database = new Database(this);
+			initialized = true;
+		}
 	}
 
 	public Database getDataBase() {
