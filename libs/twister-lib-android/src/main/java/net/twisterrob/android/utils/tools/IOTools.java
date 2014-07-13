@@ -20,7 +20,7 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 	// TODO check if UTF-8 is used by cineworld
 	private static final String DEFAULT_HTTP_ENCODING = ENCODING;
 	private static final String HTTP_HEADER_CHARSET_PREFIX = "charset=";
-	private static final ImageSDNetCache imageCache = new ImageSDNetCache();
+	private static ImageSDNetCache imageCache;
 
 	protected IOTools() {
 		// prevent instantiation
@@ -113,6 +113,7 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 			return getImage(url);
 		}
 		try {
+			ensureImageCache();
 			Bitmap result = imageCache.get(url);
 			LOG.trace("getImage({}): {}", url, result != null? "hit" : "miss");
 			if (result == null) {
@@ -137,6 +138,11 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 			throw new IOException("Cannot use cache", ex);
 		}
 
+	}
+	private static synchronized void ensureImageCache() {
+		if(imageCache == null) {
+			imageCache = new ImageSDNetCache();
+		}
 	}
 	public static Bitmap getImage(final String urlString) throws IOException {
 		return getImage(urlString, false);

@@ -1,2 +1,7 @@
 /target
-/maven
+/.settings
+/.classpath
+/.project
+/.gradle
+/bin
+/build
