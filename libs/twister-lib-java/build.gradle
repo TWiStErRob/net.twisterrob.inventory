@@ -1,0 +1,43 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+
+group projectGroup
+version projectVersion
+
+compileJava {
+    sourceCompatibility = projectSourceVersion
+    targetCompatibility = projectSourceVersion
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+	provided
+	eclipseProjects
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
+    eclipseProjects 'com.google.code.findbugs:jsr305:3.0.0'
+}
+
+eclipse {
+	jdt {
+		sourceCompatibility = 1.6
+		targetCompatibility = 1.6
+	}
+	
+	sourceSets {
+		main {
+			java.srcDirs 'src/main/jsr305'
+		}
+	}
+	
+	classpath {
+		minusConfigurations += [project.configurations.eclipseProjects]
+	}
+}
