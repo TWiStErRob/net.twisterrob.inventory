@@ -42,10 +42,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		super.onOpen(db);
 		LOG.debug("Opening database: {}", DBTools.toString(db));
 		backupDB(db, "onOpen_beforeDev");
-
+		onCreate(db); // FIXME for DB development, always clear and initialize
 		execFile(db, String.format(DB_DEVELOPMENT_FILE, dbName));
 		backupDB(db, "onOpen_afterDev");
-		onCreate(db); // FIXME for DB development, always clear and initialize
 		LOG.info("Opened database: {}", DBTools.toString(db));
 	}
 
