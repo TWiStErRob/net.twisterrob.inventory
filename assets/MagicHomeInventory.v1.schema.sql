@@ -7,19 +7,19 @@ CREATE TABLE IF NOT EXISTS Category (
 	PRIMARY KEY(_id)
 );
 
-CREATE TABLE IF NOT EXISTS BuildingType (
+CREATE TABLE IF NOT EXISTS PropertyType (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL,
 	priority    INTEGER      NOT NULL,
 	image       VARCHAR      NOT NULL, -- drawable resource name
 	PRIMARY KEY(_id)
 );
-CREATE TABLE IF NOT EXISTS Building (
+CREATE TABLE IF NOT EXISTS Property (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL,
 	type        INTEGER      NOT NULL
-		CONSTRAINT fk_Building_type
-			REFERENCES BuildingType(_id),
+		CONSTRAINT fk_Property_type
+			REFERENCES PropertyType(_id),
 	PRIMARY KEY(_id)
 );
 
@@ -44,9 +44,9 @@ CREATE TABLE IF NOT EXISTS Room (
 	type        INTEGER      NOT NULL
 		CONSTRAINT fk_Room_type
 			REFERENCES RoomType(_id),
-	building	INTEGER NOT NULL
+	property    INTEGER NOT NULL
 		CONSTRAINT fk_county_code
-			REFERENCES Building(_id),
+			REFERENCES Property(_id),
 	PRIMARY KEY(_id)
 );
 

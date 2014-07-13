@@ -8,16 +8,16 @@ import net.twisterrob.android.db.SimpleCursorLoader;
 import net.twisterrob.inventory.android.App;
 
 public enum Loaders {
-	BuildingTypes {
+	PropertyTypes {
 		@Override
 		protected Cursor createCursor() {
-			return App.getInstance().getDataBase().listBuildingTypes();
+			return App.getInstance().getDataBase().listPropertyTypes();
 		}
 	},
-	Buildings {
+	Properties {
 		@Override
 		protected Cursor createCursor() {
-			return App.getInstance().getDataBase().listBuildings();
+			return App.getInstance().getDataBase().listProperties();
 		}
 	};
 

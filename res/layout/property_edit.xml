@@ -6,7 +6,7 @@
 	android:orientation="vertical">
 
 	<Spinner
-		android:id="@+id/buildingType"
+		android:id="@+id/propertyType"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" />
 </LinearLayout>

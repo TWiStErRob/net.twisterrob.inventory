@@ -1,19 +1,19 @@
-INSERT INTO BuildingType
+INSERT INTO PropertyType
                (_id, priority, name,           image)
-	      SELECT -1,       -1, 'building_add', 'building_add'
-	UNION SELECT  0,     1000, 'building_other', 'building_home'
-	UNION SELECT  1,        0, 'building_home', 'building_home'
-	UNION SELECT  2,        0, 'building_workplace'   , 'building_home'
-	UNION SELECT  3,       10, 'Apartment'   , 'building_home'
-	UNION SELECT  4,       10, 'Townhouse'   , 'building_home'
-	UNION SELECT  5,       15, 'Condo(minium)'   , 'building_home'
-	UNION SELECT  6,       15, 'Cottage'   , 'building_home'
-	UNION SELECT  7,       20, 'Farm'   , 'building_home'
-	UNION SELECT  8,       20, 'Vacation Home'   , 'building_home'
-	UNION SELECT  9,       20, 'Villa'   , 'building_home'
-	UNION SELECT 10,       30, 'Camp'   , 'building_home'
-	UNION SELECT 11,       40, 'Rent'   , 'building_home'
-	UNION SELECT 12,       40, 'Storage'   , 'building_home'
+	      SELECT -1,       -1, 'property_add', 'property_add'
+	UNION SELECT  0,     1000, 'property_other', 'property_home'
+	UNION SELECT  1,        0, 'property_home', 'property_home'
+	UNION SELECT  2,        0, 'property_workplace'   , 'property_home'
+	UNION SELECT  3,       10, 'Apartment'   , 'property_home'
+	UNION SELECT  4,       10, 'Townhouse'   , 'property_home'
+	UNION SELECT  5,       15, 'Condo(minium)'   , 'property_home'
+	UNION SELECT  6,       15, 'Cottage'   , 'property_home'
+	UNION SELECT  7,       20, 'Farm'   , 'property_home'
+	UNION SELECT  8,       20, 'Vacation Home'   , 'property_home'
+	UNION SELECT  9,       20, 'Villa'   , 'property_home'
+	UNION SELECT 10,       30, 'Camp'   , 'property_home'
+	UNION SELECT 11,       40, 'Rent'   , 'property_home'
+	UNION SELECT 12,       40, 'Storage'   , 'property_home'
 ;
 
 INSERT INTO RoomTypeKind
@@ -196,8 +196,8 @@ INSERT INTO Category
 		UNION SELECT 18400, 18000, 'Large Vehicle'
 ;
 
-INSERT INTO Building(type, name) VALUES(-1, 'Add Building');
-INSERT INTO Building(type, name) VALUES(1, 'Szentesi ház');
-INSERT INTO Building(type, name) VALUES(11, 'Szegedi albi');
-INSERT INTO Building(type, name) VALUES(11, 'Londoni albi');
-INSERT INTO Building(type, name) VALUES(12, 'Sarah storage');
+INSERT INTO Property(type, name) VALUES(-1, 'Add Property');
+INSERT INTO Property(type, name) VALUES(1, 'Szentesi ház');
+INSERT INTO Property(type, name) VALUES(11, 'Szegedi albi');
+INSERT INTO Property(type, name) VALUES(11, 'Londoni albi');
+INSERT INTO Property(type, name) VALUES(12, 'Sarah storage');

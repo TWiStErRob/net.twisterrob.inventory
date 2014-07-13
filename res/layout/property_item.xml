@@ -4,15 +4,15 @@
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content">
 	<ImageView
-		android:id="@+id/buildingImage"
+		android:id="@+id/propertyImage"
 		android:focusable="false"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
 		android:scaleType="centerInside"
-		android:contentDescription="@string/imd_building" />
+		android:contentDescription="@string/imd_property" />
 	<TextView
-		android:id="@+id/buildingName"
+		android:id="@+id/propertyName"
 		android:focusable="false"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

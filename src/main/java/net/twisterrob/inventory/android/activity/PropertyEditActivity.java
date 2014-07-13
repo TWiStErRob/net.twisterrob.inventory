@@ -13,26 +13,26 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.db.*;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
-public class BuildingEditActivity extends FragmentActivity {
+public class PropertyEditActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.building_edit);
+		super.setContentView(R.layout.property_edit);
 
-		CursorAdapter buildingTypeAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, null,
-				new String[]{BuildingType.NAME}, new int[]{android.R.id.text1}, 0);
-		getSupportLoaderManager().initLoader(Loaders.BuildingTypes.ordinal(), null,
-				new CursorSwapper(this, buildingTypeAdapter));
+		CursorAdapter propertiesTypeAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, null,
+				new String[]{PropertyType.NAME}, new int[]{android.R.id.text1}, 0);
+		getSupportLoaderManager().initLoader(Loaders.PropertyTypes.ordinal(), null,
+				new CursorSwapper(this, propertiesTypeAdapter));
 
-		Spinner buildingType = (Spinner)findViewById(R.id.buildingType);
-		buildingType.setAdapter(buildingTypeAdapter);
-		buildingType.setOnItemSelectedListener(new OnItemSelectedListener() {
+		Spinner propertyType = (Spinner)findViewById(R.id.propertyType);
+		propertyType.setAdapter(propertiesTypeAdapter);
+		propertyType.setOnItemSelectedListener(new OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				@SuppressWarnings("resource")
 				Cursor cursor = ((CursorAdapter)parent.getAdapter()).getCursor();
 				cursor.moveToPosition(position);
-				String text = cursor.getString(cursor.getColumnIndex(BuildingType.ID));
-				Toast.makeText(BuildingEditActivity.this, text, Toast.LENGTH_LONG).show();
+				String text = cursor.getString(cursor.getColumnIndex(PropertyType.ID));
+				Toast.makeText(PropertyEditActivity.this, text, Toast.LENGTH_LONG).show();
 			}
 			public void onNothingSelected(AdapterView<?> parent) {
 				// ignore

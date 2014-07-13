@@ -9,5 +9,5 @@
 		android:id="@+id/btn_ok"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:text="Buildings" />
+		android:text="@string/property_title" />
 </LinearLayout>

@@ -8,11 +8,11 @@ import android.database.sqlite.*;
 
 import net.twisterrob.inventory.R;
 
-public class Dao {
+public class Database {
 	private final Context m_context;
 	private final DatabaseOpenHelper m_helper;
 
-	public Dao(Context context) {
+	public Database(Context context) {
 		m_context = context;
 		m_helper = new DatabaseOpenHelper(m_context);
 	}
@@ -25,44 +25,44 @@ public class Dao {
 	}
 
 	SQLiteDatabase database;
-	SQLiteStatement listBuildingTypes;
+	SQLiteStatement listPropertiesTypes;
 
 	@SuppressWarnings("unused")
 	private void prepareStatements(SQLiteDatabase database) {
 		if (database != this.database) {
 			this.database = database;
-			if (listBuildingTypes != null) {
-				listBuildingTypes.close();
+			if (listPropertiesTypes != null) {
+				listPropertiesTypes.close();
 			}
-			listBuildingTypes = database
+			listPropertiesTypes = database
 					.compileStatement("INSERT INTO Route(region, name, direction, description) VALUES(?, ?, ?, ?);");
 		}
 	}
 
 	@SuppressWarnings("resource")
-	public Cursor listBuildingTypes(CharSequence nameFilter) {
+	public Cursor listPropertyTypes(CharSequence nameFilter) {
 		if (nameFilter == null || nameFilter.toString().trim().isEmpty()) {
-			return listBuildingTypes();
+			return listPropertyTypes();
 		}
 		SQLiteDatabase db = getReadableDatabase();
-		return db.query(BuildingType.TABLE, new String[]{BuildingType.ID, BuildingType.NAME}, BuildingType.NAME_LIKE,
-				new String[]{"%" + nameFilter + "%"}, null, null, BuildingType.DEFAULT_ORDER);
+		return db.query(PropertyType.TABLE, new String[]{PropertyType.ID, PropertyType.NAME}, PropertyType.NAME_LIKE,
+				new String[]{"%" + nameFilter + "%"}, null, null, PropertyType.DEFAULT_ORDER);
 	}
 	@SuppressWarnings("resource")
-	public Cursor listBuildingTypes() {
+	public Cursor listPropertyTypes() {
 		SQLiteDatabase db = getReadableDatabase();
-		return db.query(BuildingType.TABLE, new String[]{BuildingType.ID, BuildingType.NAME}, null, null, null, null,
-				BuildingType.DEFAULT_ORDER);
+		return db.query(PropertyType.TABLE, new String[]{PropertyType.ID, PropertyType.NAME}, null, null, null, null,
+				PropertyType.DEFAULT_ORDER);
 	}
-	public Map<Integer, String> getBuildingTypes() {
+	public Map<Integer, String> getPropertyTypes() {
 		Map<Integer, String> types = new LinkedHashMap<Integer, String>();
 		SQLiteDatabase db = getReadableDatabase();
 		try {
-			Cursor cursor = listBuildingTypes();
+			Cursor cursor = listPropertyTypes();
 			try {
 				while (cursor.moveToNext()) {
-					int id = cursor.getInt(cursor.getColumnIndex(BuildingType.ID));
-					String name = cursor.getString(cursor.getColumnIndex(BuildingType.NAME));
+					int id = cursor.getInt(cursor.getColumnIndex(PropertyType.ID));
+					String name = cursor.getString(cursor.getColumnIndex(PropertyType.NAME));
 					types.put(id, name);
 				}
 			} finally {
@@ -75,8 +75,8 @@ public class Dao {
 	}
 
 	@SuppressWarnings("resource")
-	public Cursor listBuildings() {
+	public Cursor listProperties() {
 		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_buildings), null);
+		return db.rawQuery(m_context.getString(R.string.query_properties), null);
 	}
 }

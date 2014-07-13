@@ -4,11 +4,11 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import net.twisterrob.inventory.android.db.Dao;
+import net.twisterrob.inventory.android.db.Database;
 
 public class App extends Application {
 	private static App s_instance;
-	private Dao dao = new Dao(this);
+	private Database database = new Database(this);
 
 	public App() {
 		s_instance = this;
@@ -18,8 +18,8 @@ public class App extends Application {
 		return s_instance;
 	}
 
-	public Dao getDataBase() {
-		return dao;
+	public Database getDataBase() {
+		return database;
 	}
 
 	public static SharedPreferences getPrefs() {

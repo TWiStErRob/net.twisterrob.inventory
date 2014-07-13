@@ -15,12 +15,12 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.main);
 
-		Button buildings = (Button)findViewById(R.id.btn_ok);
-		buildings.setOnClickListener(new OnClickListener() {
+		Button properties = (Button)findViewById(R.id.btn_ok);
+		properties.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				startActivity(new Intent(getApplicationContext(), BuildingsActivity.class));
+				startActivity(new Intent(getApplicationContext(), PropertiesActivity.class));
 			}
 		});
-		buildings.performClick();
+		properties.performClick();
 	}
 }
