@@ -1,4 +1,4 @@
-package net.twisterrob.android.inventory;
+package net.twisterrob.inventory.android.activity;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,6 +8,10 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
+
+import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.db.*;
+import net.twisterrob.inventory.android.view.CursorSwapper;
 
 public class BuildingEditActivity extends FragmentActivity {
 	@Override

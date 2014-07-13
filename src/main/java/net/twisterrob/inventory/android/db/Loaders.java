@@ -1,8 +1,11 @@
-package net.twisterrob.android.inventory;
+package net.twisterrob.inventory.android.db;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.Loader;
+
+import net.twisterrob.android.db.SimpleCursorLoader;
+import net.twisterrob.inventory.android.App;
 
 public enum Loaders {
 	BuildingTypes {

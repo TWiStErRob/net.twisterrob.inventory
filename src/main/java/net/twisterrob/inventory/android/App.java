@@ -1,8 +1,10 @@
-package net.twisterrob.android.inventory;
+package net.twisterrob.inventory.android;
 
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import net.twisterrob.inventory.android.db.Dao;
 
 public class App extends Application {
 	private static App s_instance;

@@ -1,4 +1,4 @@
-package net.twisterrob.android.inventory;
+package net.twisterrob.inventory.android.db;
 
 import java.io.*;
 
@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.os.Environment;
 
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.inventory.BuildConfig;
+import net.twisterrob.inventory.android.App;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseOpenHelper.class);

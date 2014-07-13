@@ -1,9 +1,13 @@
-package net.twisterrob.android.inventory;
+package net.twisterrob.inventory.android.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.*;
 import android.widget.GridView;
+
+import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.db.*;
+import net.twisterrob.inventory.android.view.CursorSwapper;
 
 public class BuildingsActivity extends FragmentActivity {
 	@Override

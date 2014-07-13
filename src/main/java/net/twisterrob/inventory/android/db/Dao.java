@@ -1,10 +1,12 @@
-package net.twisterrob.android.inventory;
+package net.twisterrob.inventory.android.db;
 
 import java.util.*;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.*;
+
+import net.twisterrob.inventory.R;
 
 public class Dao {
 	private final Context m_context;

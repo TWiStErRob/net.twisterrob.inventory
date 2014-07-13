@@ -2,3 +2,6 @@
 /bin
 /gen
 /temp
+/.classpath
+/.project
+/build

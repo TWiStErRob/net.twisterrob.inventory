@@ -1,4 +1,4 @@
-package net.twisterrob.android.inventory;
+package net.twisterrob.inventory.android.db;
 public interface Building {
 	String TABLE = "Building";
 	String ID = "_id";
