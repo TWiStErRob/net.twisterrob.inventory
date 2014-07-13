@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.*;
 
+import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.R;
 
 public class Database {
@@ -14,7 +15,7 @@ public class Database {
 
 	public Database(Context context) {
 		m_context = context;
-		m_helper = new DatabaseOpenHelper(m_context);
+		m_helper = new DatabaseOpenHelper(m_context, "MagicHomeInventory", 1);
 	}
 
 	public SQLiteDatabase getReadableDatabase() {
