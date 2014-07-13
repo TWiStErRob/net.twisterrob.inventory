@@ -18,7 +18,8 @@ INSERT INTO PropertyType
 
 INSERT INTO RoomTypeKind
                (_id, priority, name)
-	      SELECT  0,     1000, 'Other'
+          SELECT -1,       -1, 'property_add'
+	UNION SELECT  0,     1000, 'Other'
 	UNION SELECT  1,      100, 'General'
 	UNION SELECT  3,      200, 'Storage'
 	UNION SELECT  2,      300, 'Common'
@@ -196,8 +197,4 @@ INSERT INTO Category
 		UNION SELECT 18400, 18000, 'Large Vehicle'
 ;
 
-INSERT INTO Property(type, name) VALUES(-1, 'Add Property');
-INSERT INTO Property(type, name) VALUES(1, 'Szentesi ház');
-INSERT INTO Property(type, name) VALUES(11, 'Szegedi albi');
-INSERT INTO Property(type, name) VALUES(11, 'Londoni albi');
-INSERT INTO Property(type, name) VALUES(12, 'Sarah storage');
+INSERT INTO Property(_id, type, name) VALUES(-1, -1, 'Add Property');

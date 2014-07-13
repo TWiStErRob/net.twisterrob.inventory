@@ -5,6 +5,12 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
+	<EditText
+		android:id="@+id/propertyName"
+		android:inputType="textCapWords"
+		android:maxLength="100"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
 	<Spinner
 		android:id="@+id/propertyType"
 		android:layout_width="fill_parent"

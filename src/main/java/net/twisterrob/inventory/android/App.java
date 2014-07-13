@@ -27,6 +27,10 @@ public class App extends Application {
 		}
 	}
 
+	/**
+	 * net.twisterrob.inventory.android.App.getInstance().getDataBase().getReadableDatabase()
+	   .rawQuery("select * from sqlite_sequence;", null);
+	 */
 	public Database getDataBase() {
 		return database;
 	}

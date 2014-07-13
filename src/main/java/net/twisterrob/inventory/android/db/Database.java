@@ -80,4 +80,10 @@ public class Database {
 		SQLiteDatabase db = getReadableDatabase();
 		return db.rawQuery(m_context.getString(R.string.query_properties), null);
 	}
+
+	@SuppressWarnings("resource")
+	public Cursor getProperty(long propertyID) {
+		SQLiteDatabase db = getReadableDatabase();
+		return db.rawQuery("select * from Property where _id = ?;", new String[]{String.valueOf(propertyID)});
+	}
 }

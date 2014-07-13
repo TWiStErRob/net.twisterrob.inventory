@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.db;
 public interface PropertyType {
-	String TABLE = "PropertiesType";
+	String TABLE = "PropertyType";
 	String ID = "_id";
 
 	String NAME = "name";
