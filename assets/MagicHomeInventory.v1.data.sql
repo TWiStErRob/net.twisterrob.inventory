@@ -1,68 +1,66 @@
 INSERT INTO PropertyType
-                (id, priority, name,           image)
-	      SELECT  0,     1000, 'property_other', 'property_home'
-	UNION SELECT  1,        0, 'property_home', 'property_home'
-	UNION SELECT  2,        0, 'property_workplace'   , 'property_home'
-	UNION SELECT  3,       10, 'Apartment'   , 'property_home'
-	UNION SELECT  4,       10, 'Townhouse'   , 'property_home'
-	UNION SELECT  5,       15, 'Condo(minium)'   , 'property_home'
-	UNION SELECT  6,       15, 'Cottage'   , 'property_home'
-	UNION SELECT  7,       20, 'Farm'   , 'property_home'
-	UNION SELECT  8,       20, 'Vacation Home'   , 'property_home'
-	UNION SELECT  9,       20, 'Villa'   , 'property_home'
-	UNION SELECT 10,       30, 'Camp'   , 'property_home'
-	UNION SELECT 11,       40, 'Rent'   , 'property_home'
-	UNION SELECT 12,       40, 'Storage'   , 'property_home'
+                (id, priority, name,                 image)
+	      SELECT  0,     1000, 'property_other',     'property_home'
+	UNION SELECT  1,        0, 'property_home',      'property_home'
+	UNION SELECT  2,        0, 'property_workplace', 'property_home'
+	UNION SELECT  3,       10, 'property_apartment', 'property_home'
+	UNION SELECT  4,       10, 'property_house',     'property_home'
+	UNION SELECT  5,       15, 'property_condo',     'property_home'
+	UNION SELECT  6,       15, 'property_cottage',   'property_home'
+	UNION SELECT  7,       20, 'property_farm',      'property_home'
+	UNION SELECT  8,       20, 'property_vacation',  'property_home'
+	UNION SELECT  9,       20, 'property_villa',     'property_home'
+	UNION SELECT 10,       30, 'property_camp',      'property_home'
+	UNION SELECT 11,       40, 'property_rent',      'property_home'
+	UNION SELECT 12,       40, 'property_storage',   'property_home'
 ;
 
 INSERT INTO RoomTypeKind
-                (id, priority, name,       image)
-	      SELECT  0,     1000, 'Other', 'room_bedroom'
-	UNION SELECT  1,      100, 'General', 'room_bedroom'
-	UNION SELECT  2,      200, 'Storage', 'room_storage'
-	UNION SELECT  3,      300, 'Common', 'room_bedroom'
-	UNION SELECT  4,      400, 'Function', 'room_bedroom'
-	UNION SELECT  5,      500, 'Space', 'room_bedroom'
+                (id, priority, name,                  image)
+	      SELECT  0,     1000, 'room_group_other',    'room_bedroom'
+	UNION SELECT  1,      100, 'room_group_general',  'room_bedroom'
+	UNION SELECT  2,      200, 'room_group_storage',  'room_storage'
+	UNION SELECT  3,      300, 'room_group_common',   'room_bedroom'
+	UNION SELECT  4,      400, 'room_group_function', 'room_bedroom'
+	UNION SELECT  5,      500, 'room_group_space',    'room_bedroom'
 ;
 
 INSERT INTO RoomType
-               (id,  kind, priority, name, image)
-          SELECT 0,      0,     1000, 'Other', NULL
+                ( id,  kind, priority, name,            image)
+          SELECT   0,     0,     1000, 'room_other',    NULL
 -- General
-	UNION SELECT 101,     1,        0, 'Bathroom', NULL
-	UNION SELECT 102,     1,        0, 'Bedroom (Master)', 'room_bedroom'
-	UNION SELECT 103,     1,        0, 'Bedroom', 'room_bedroom'
-	UNION SELECT 104,     1,        0, 'Kitchen', 'room_kitchen'
-	UNION SELECT 105,     1,        0, 'Restroom', NULL
+	UNION SELECT 101,     1,        0, 'room_bath',     NULL
+	UNION SELECT 102,     1,        0, 'room_bed',      'room_bedroom'
+	UNION SELECT 103,     1,        0, 'room_kitchen',  'room_kitchen'
+	UNION SELECT 104,     1,        0, 'room_WC',       NULL
 -- Storage
-	UNION SELECT 201,     2,        0, 'Storage Room', NULL
-	UNION SELECT 202,     2,        0, 'Closet', NULL
-	UNION SELECT 203,     2,        0, 'Garage', NULL
-	UNION SELECT 204,     2,        0, 'Furnace Room', NULL
-	UNION SELECT 205,     2,        0, 'Shed', NULL
-	UNION SELECT 206,     2,        0, 'Attic', NULL
-	UNION SELECT 207,     2,        0, 'Basement', NULL
-	UNION SELECT 208,     2,        0, 'Cellar', NULL
-	UNION SELECT 209,     2,        0, 'Wine Cellar', NULL
+	UNION SELECT 201,     2,        0, 'room_storage',  NULL
+	UNION SELECT 202,     2,        0, 'room_closet',   NULL
+	UNION SELECT 203,     2,        0, 'room_garage',   NULL
+	UNION SELECT 204,     2,        0, 'room_furnace',  NULL
+	UNION SELECT 205,     2,        0, 'room_shed',     NULL
+	UNION SELECT 206,     2,        0, 'room_attic',    NULL
+	UNION SELECT 207,     2,        0, 'room_basement', NULL
+	UNION SELECT 208,     2,        0, 'room_cellar',   NULL
 -- Common
-	UNION SELECT 301,     3,        0, 'Living Room', NULL
-	UNION SELECT 302,     3,        0, 'Family Room', NULL
-	UNION SELECT 303,     3,        0, 'Play Room', NULL
+	UNION SELECT 301,     3,        0, 'room_living',   NULL
+	UNION SELECT 302,     3,        0, 'room_family',   NULL
+	UNION SELECT 303,     3,        0, 'room_play',     NULL
 -- Function
-	UNION SELECT 401,     4,        0, 'Dining Room', NULL
-	UNION SELECT 402,     4,        0, 'Library', NULL
-	UNION SELECT 403,     4,        0, 'Office', NULL
-	UNION SELECT 404,     4,        0, 'Gym', NULL
-	UNION SELECT 405,     4,        0, 'TV Room', NULL
-	UNION SELECT 406,     4,        0, 'Pool House', NULL
-	UNION SELECT 407,     4,        0, 'Laundry Room', NULL
+	UNION SELECT 401,     4,        0, 'room_dining',   NULL
+	UNION SELECT 402,     4,        0, 'room_library',  NULL
+	UNION SELECT 403,     4,        0, 'room_office',   NULL
+	UNION SELECT 404,     4,        0, 'room_gym',      NULL
+	UNION SELECT 405,     4,        0, 'room_TV',       NULL
+	UNION SELECT 406,     4,        0, 'room_pool',     NULL
+	UNION SELECT 407,     4,        0, 'room_laundy',   NULL
 -- Spaces
-	UNION SELECT 501,     5,        0, 'Balcony', NULL
-	UNION SELECT 502,     5,        0, 'Garden', NULL
-	UNION SELECT 503,     5,        0, 'Lobby', NULL
-	UNION SELECT 504,     5,        0, 'Deck', NULL
-	UNION SELECT 505,     5,        0, 'Patio', NULL
-	UNION SELECT 506,     5,        0, 'Crawl Space', NULL
+	UNION SELECT 501,     5,        0, 'room_balcony',  NULL
+	UNION SELECT 502,     5,        0, 'room_garden',   NULL
+	UNION SELECT 503,     5,        0, 'room_lobby',    NULL
+	UNION SELECT 504,     5,        0, 'room_deck',     NULL
+	UNION SELECT 505,     5,        0, 'room_patio',    NULL
+	UNION SELECT 506,     5,        0, 'room_crawl',    NULL
 ;
 
 

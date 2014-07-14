@@ -10,7 +10,7 @@
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
 		android:scaleType="centerInside"
-		android:contentDescription="@string/imd_property" />
+		android:contentDescription="@string/img_desc_property" />
 	<TextView
 		android:id="@+id/propertyName"
 		android:focusable="false"
