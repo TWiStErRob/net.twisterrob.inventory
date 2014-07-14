@@ -30,13 +30,13 @@ public class RoomsActivity extends BaseListActivity {
 		super.setContentView(R.layout.property_list);
 		propertyID = getIntent().getLongExtra(EXTRA_PROPERTY_ID, Property.ID_ADD);
 
-		CursorAdapter propertiesAdapter = Adapters.loadCursorAdapter(this, R.xml.rooms, (Cursor)null);
+		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.rooms, (Cursor)null);
 		Bundle args = new Bundle();
 		args.putLong(EXTRA_PROPERTY_ID, propertyID);
-		getSupportLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, new CursorSwapper(this, propertiesAdapter));
+		getSupportLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, new CursorSwapper(this, adapter));
 
 		GridView rooms = (GridView)findViewById(R.id.properties);
-		rooms.setAdapter(propertiesAdapter);
+		rooms.setAdapter(adapter);
 
 		rooms.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

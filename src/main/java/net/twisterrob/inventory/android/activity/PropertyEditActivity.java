@@ -4,8 +4,9 @@ import android.database.*;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.widget.*;
+
+import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
@@ -28,10 +29,9 @@ public class PropertyEditActivity extends BaseEditActivity {
 
 		propertyID = getIntent().getLongExtra(EXTRA_PROPERTY_ID, Property.ID_ADD);
 
-		CursorAdapter propertiesTypeAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, null,
-				new String[]{PropertyType.NAME}, new int[]{android.R.id.text1}, 0);
+		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.property_types, (Cursor)null);
 		getSupportLoaderManager().initLoader(Loaders.PropertyTypes.ordinal(), null,
-				new CursorSwapper(this, propertiesTypeAdapter) {
+				new CursorSwapper(this, adapter) {
 					@Override
 					public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 						super.onLoadFinished(loader, data);
@@ -39,7 +39,7 @@ public class PropertyEditActivity extends BaseEditActivity {
 					}
 				});
 
-		propertyType.setAdapter(propertiesTypeAdapter);
+		propertyType.setAdapter(adapter);
 
 		if (propertyID != Property.ID_ADD) {
 			Cursor property = App.getInstance().getDataBase().getProperty(propertyID);

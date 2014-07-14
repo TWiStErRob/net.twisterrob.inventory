@@ -25,12 +25,11 @@ public class PropertiesActivity extends BaseListActivity {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.property_list);
 
-		CursorAdapter propertiesAdapter = Adapters.loadCursorAdapter(this, R.xml.properties, (Cursor)null);
-		getSupportLoaderManager().initLoader(Loaders.Properties.ordinal(), null,
-				new CursorSwapper(this, propertiesAdapter));
+		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.properties, (Cursor)null);
+		getSupportLoaderManager().initLoader(Loaders.Properties.ordinal(), null, new CursorSwapper(this, adapter));
 
 		GridView properties = (GridView)findViewById(R.id.properties);
-		properties.setAdapter(propertiesAdapter);
+		properties.setAdapter(adapter);
 
 		properties.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

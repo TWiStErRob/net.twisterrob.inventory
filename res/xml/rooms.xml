@@ -6,6 +6,6 @@
 		<map app:fromValue="room_add" app:toValue="@string/room_add" />
 	</bind>
 	<bind app:from="image" app:to="@id/propertyImage" app:as="image-uri">
-		<transform app:withExpression="android.resource://net.twisterrob.inventory/drawable/{image}"></transform>
+		<transform app:withExpression="android.resource://net.twisterrob.inventory/drawable/{image}" />
 	</bind>
 </cursor-adapter>

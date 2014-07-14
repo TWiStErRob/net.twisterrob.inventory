@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cursor-adapter xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res/net.twisterrob.inventory"
+		app:layout="@android:layout/simple_spinner_item">
+	<bind app:from="name" app:to="@android:id/text1" app:as="string">
+		<transform app:withClass="com.example.android.xmladapters.TranslateTransformation" />
+	</bind>
+</cursor-adapter>

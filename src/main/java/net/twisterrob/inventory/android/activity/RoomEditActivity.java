@@ -4,8 +4,9 @@ import android.database.*;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.widget.*;
+
+import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
@@ -28,18 +29,16 @@ public class RoomEditActivity extends BaseEditActivity {
 
 		roomID = getIntent().getLongExtra(EXTRA_ROOM_ID, Property.ID_ADD);
 
-		CursorAdapter propertiesTypeAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, null,
-				new String[]{RoomType.NAME}, new int[]{android.R.id.text1}, 0);
-		getSupportLoaderManager().initLoader(Loaders.RoomTypes.ordinal(), null,
-				new CursorSwapper(this, propertiesTypeAdapter) {
-					@Override
-					public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-						super.onLoadFinished(loader, data);
-						AndroidTools.selectByID(roomType, preselectedRoomType);
-					}
-				});
+		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.room_types, (Cursor)null);
+		getSupportLoaderManager().initLoader(Loaders.RoomTypes.ordinal(), null, new CursorSwapper(this, adapter) {
+			@Override
+			public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+				super.onLoadFinished(loader, data);
+				AndroidTools.selectByID(roomType, preselectedRoomType);
+			}
+		});
 
-		roomType.setAdapter(propertiesTypeAdapter);
+		roomType.setAdapter(adapter);
 
 		if (roomID != Room.ID_ADD) {
 			Cursor room = App.getInstance().getDataBase().getRoom(roomID);
