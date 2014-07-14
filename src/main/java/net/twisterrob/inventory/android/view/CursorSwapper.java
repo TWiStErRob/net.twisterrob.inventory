@@ -14,6 +14,6 @@ public class CursorSwapper extends net.twisterrob.android.db.CursorSwapper {
 	}
 
 	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-		return Loaders.fromID(id).createLoader(context);
+		return Loaders.fromID(id).createLoader(context, bundle);
 	}
 }

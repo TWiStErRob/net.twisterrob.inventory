@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.db;
-public interface PropertyType {
-	String TABLE = "PropertyType";
+public interface RoomType {
+	String TABLE = "RoomType";
 	String ID = "id";
 
 	String NAME = "name";

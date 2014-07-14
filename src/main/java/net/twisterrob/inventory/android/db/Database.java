@@ -9,6 +9,7 @@ import android.database.sqlite.*;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.R;
 
+@SuppressWarnings("resource")
 public class Database {
 	private final Context m_context;
 	private final DatabaseOpenHelper m_helper;
@@ -40,20 +41,21 @@ public class Database {
 		}
 	}
 
-	@SuppressWarnings("resource")
 	public Cursor listPropertyTypes(CharSequence nameFilter) {
 		if (nameFilter == null || nameFilter.toString().trim().isEmpty()) {
 			return listPropertyTypes();
 		}
 		SQLiteDatabase db = getReadableDatabase();
-		return db.query(PropertyType.TABLE, new String[]{PropertyType.ID, PropertyType.NAME}, PropertyType.NAME_LIKE,
-				new String[]{"%" + nameFilter + "%"}, null, null, PropertyType.DEFAULT_ORDER);
+		return db.rawQuery(m_context.getString(R.string.query_property_types_filtered), new String[]{"%" + nameFilter
+				+ "%"});
 	}
-	@SuppressWarnings("resource")
 	public Cursor listPropertyTypes() {
 		SQLiteDatabase db = getReadableDatabase();
-		return db.query(PropertyType.TABLE, new String[]{PropertyType.ID, PropertyType.NAME}, null, null, null, null,
-				PropertyType.DEFAULT_ORDER);
+		return db.rawQuery(m_context.getString(R.string.query_property_types), null);
+	}
+	public Cursor listRoomTypes() {
+		SQLiteDatabase db = getReadableDatabase();
+		return db.rawQuery(m_context.getString(R.string.query_room_types), null);
 	}
 	public Map<Integer, String> getPropertyTypes() {
 		Map<Integer, String> types = new LinkedHashMap<Integer, String>();
@@ -75,15 +77,18 @@ public class Database {
 		return types;
 	}
 
-	@SuppressWarnings("resource")
 	public Cursor listProperties() {
 		SQLiteDatabase db = getReadableDatabase();
 		return db.rawQuery(m_context.getString(R.string.query_properties), null);
 	}
 
-	@SuppressWarnings("resource")
 	public Cursor getProperty(long propertyID) {
 		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery("select * from Property where _id = ?;", new String[]{String.valueOf(propertyID)});
+		return db.rawQuery(m_context.getString(R.string.query_property), new String[]{String.valueOf(propertyID)});
+	}
+
+	public Cursor listRooms(long propertyID) {
+		SQLiteDatabase db = getReadableDatabase();
+		return db.rawQuery(m_context.getString(R.string.query_rooms), new String[]{String.valueOf(propertyID)});
 	}
 }

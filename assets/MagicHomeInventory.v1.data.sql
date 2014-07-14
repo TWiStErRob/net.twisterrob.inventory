@@ -1,7 +1,6 @@
 INSERT INTO PropertyType
-               (_id, priority, name,           image)
-	      SELECT -1,       -1, 'property_add', 'property_add'
-	UNION SELECT  0,     1000, 'property_other', 'property_home'
+                (id, priority, name,           image)
+	      SELECT  0,     1000, 'property_other', 'property_home'
 	UNION SELECT  1,        0, 'property_home', 'property_home'
 	UNION SELECT  2,        0, 'property_workplace'   , 'property_home'
 	UNION SELECT  3,       10, 'Apartment'   , 'property_home'
@@ -17,18 +16,17 @@ INSERT INTO PropertyType
 ;
 
 INSERT INTO RoomTypeKind
-               (_id, priority, name)
-          SELECT -1,       -1, 'property_add'
-	UNION SELECT  0,     1000, 'Other'
-	UNION SELECT  1,      100, 'General'
-	UNION SELECT  3,      200, 'Storage'
-	UNION SELECT  2,      300, 'Common'
-	UNION SELECT  4,      400, 'Function'
-	UNION SELECT  5,      500, 'Space'
+                (id, priority, name,       image)
+	      SELECT  0,     1000, 'Other', 'property_home'
+	UNION SELECT  1,      100, 'General', 'property_home'
+	UNION SELECT  3,      200, 'Storage', 'property_home'
+	UNION SELECT  2,      300, 'Common', 'property_home'
+	UNION SELECT  4,      400, 'Function', 'property_home'
+	UNION SELECT  5,      500, 'Space', 'property_home'
 ;
 
 INSERT INTO RoomType
-               (_id,  kind, priority, name)
+               (id,  kind, priority, name)
           SELECT 0,      0,     1000, 'Other'
 -- General
 	UNION SELECT 101,     1,        0, 'Bathroom'
@@ -69,9 +67,9 @@ INSERT INTO RoomType
 
 
 INSERT INTO Category
-	              (_id, parent, name)
---		              (_id, parent, name)
---			              (_id, parent, name)
+	               (id, parent, name)
+--		               (id, parent, name)
+--			               (id, parent, name)
 	      SELECT     0,   NULL, 'Uncategorized'
 	UNION SELECT  1000,   NULL, 'Clothing'
 	UNION SELECT  1100,   1000,   'Clothes'
@@ -144,7 +142,7 @@ INSERT INTO Category
 ;
 
 INSERT INTO Category
-	              (_id, parent, name)
+	               (id, parent, name)
 	      SELECT 10000,   NULL, 'Furnitures'
 		UNION SELECT 10100,  10000, 'Cupboard/Cabinet/Wardrobe'
 		UNION SELECT 10200,  10000, 'Desk/Table'
@@ -196,5 +194,3 @@ INSERT INTO Category
 		UNION SELECT 18300, 18000, 'Motocycle'
 		UNION SELECT 18400, 18000, 'Large Vehicle'
 ;
-
-INSERT INTO Property(_id, type, name) VALUES(-1, -1, 'Add Property');

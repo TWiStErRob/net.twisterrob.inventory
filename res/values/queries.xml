@@ -1,11 +1,69 @@
 <resources>
 	<string name="query_properties"><![CDATA["
-		select
-			p._id,
-			p.name,
-			'android.resource://net.twisterrob.inventory/drawable/' || pt.image as image
-		from Property p
-		join PropertyType pt ON p.type = pt._id
-		order by p.name 
+	    select
+	    	id as _id,
+	    	name,
+	    	'android.resource://net.twisterrob.inventory/drawable/' || image as image
+	    from (
+			select
+				1 as rank,
+				-1 as id,
+				'Add Property' as name,
+				'property_add' as image
+			UNION
+			select
+				2 as rank,
+				p.id,
+				p.name,
+				pt.image
+			from Property p
+			join PropertyType pt ON p.type = pt.id
+		)
+		order by rank, name asc
+	"]]></string>
+	<string name="query_property"><![CDATA["
+		select id as _id, name, type
+		from Property
+		where id = ?
+	"]]></string>
+	<string name="query_property_types"><![CDATA["
+	    select id as _id, name
+	    from PropertyType
+	    order by priority
+	"]]></string>
+	<string name="query_property_types_filtered"><![CDATA["
+	    select id as _id, name
+	    from PropertyType
+	    where name like ?
+	    order by priority
+	"]]></string>
+	<string name="query_room_types"><![CDATA["
+	    select id as _id, name
+	    from RoomType
+	    order by priority
+	"]]></string>
+	<string name="query_rooms"><![CDATA["
+	    select
+	    	id as _id,
+	    	name,
+	    	'android.resource://net.twisterrob.inventory/drawable/' || image as image
+	    from (
+			select
+				1 as rank,
+				-1 as id,
+				'Add Room' as name,
+				'property_add' as image
+			UNION
+			select
+				2 as rank,
+				r.id,
+				r.name,
+				rtk.image
+			from Room r
+			join RoomType rt ON r.type = rt.id
+			join RoomTypeKind rtk ON rt.kind = rtk.id
+			where r.property = ?
+		)
+		order by rank, name asc 
 	"]]></string>
 </resources>
