@@ -1,8 +1,9 @@
 package net.twisterrob.inventory.android.activity;
 
-import android.database.*;
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.widget.*;
 
@@ -17,45 +18,64 @@ import net.twisterrob.inventory.android.view.CursorSwapper;
 public class PropertyEditActivity extends BaseEditActivity {
 	public static final String EXTRA_PROPERTY_ID = "propertyID";
 
-	private long propertyID;
-	private int preselectedPropertyType;
+	private static class Params {
+		long propertyID;
+
+		boolean editExisting() {
+			return propertyID != Property.ID_ADD;
+		}
+
+		void fill(Intent intent) {
+			propertyID = intent.getLongExtra(EXTRA_PROPERTY_ID, Property.ID_ADD);
+		}
+	}
+	private final Params params = new Params();
+
+	private static class ViewHolder {
+		Spinner propertyType;
+		EditText propertyName;
+
+		void fill(Activity root) {
+			propertyName = (EditText)root.findViewById(R.id.propertyName);
+			propertyType = (Spinner)root.findViewById(R.id.propertyType);
+
+		}
+	}
+	private final ViewHolder view = new ViewHolder();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.property_edit);
-		final EditText propertyName = (EditText)findViewById(R.id.propertyName);
-		final Spinner propertyType = (Spinner)findViewById(R.id.propertyType);
 
-		propertyID = getIntent().getLongExtra(EXTRA_PROPERTY_ID, Property.ID_ADD);
+		view.fill(this);
+		params.fill(getIntent());
 
 		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.property_types, (Cursor)null);
-		getSupportLoaderManager().initLoader(Loaders.PropertyTypes.ordinal(), null,
-				new CursorSwapper(this, adapter) {
-					@Override
-					public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-						super.onLoadFinished(loader, data);
-						AndroidTools.selectByID(propertyType, preselectedPropertyType);
-					}
-				});
+		getSupportLoaderManager().initLoader(Loaders.PropertyTypes.ordinal(), null, new CursorSwapper(this, adapter));
 
-		propertyType.setAdapter(adapter);
+		view.propertyType.setAdapter(adapter);
+		view.propertyType.setOnItemSelectedListener(new DefaultValueUpdater(view.propertyName, Property.NAME));
 
-		if (propertyID != Property.ID_ADD) {
-			Cursor property = App.getInstance().getDataBase().getProperty(propertyID);
-			DatabaseUtils.dumpCursor(property);
-			if (property.getCount() == 1) {
-				property.moveToFirst();
-				String name = property.getString(property.getColumnIndex(Property.NAME));
-				propertyName.setText(name);
-				setTitle(name);
-				preselectedPropertyType = (int)property.getLong(property.getColumnIndex(Property.TYPE));
-			} else {
-				String msg = "Property #" + propertyID + " not found!";
-				Toast.makeText(PropertyEditActivity.this, msg, Toast.LENGTH_LONG).show();
-				finish();
-			}
-			property.close();
+		updateEditedItem();
+	}
+
+	@Override
+	protected Cursor getEditedItem() {
+		Cursor property = null;
+		if (params.editExisting()) {
+			property = App.getInstance().getDataBase().getProperty(params.propertyID);
 		}
+		return property;
+	}
+
+	@Override
+	protected void fillEditedItem(Cursor item) {
+		String name = item.getString(item.getColumnIndex(Property.NAME));
+		long type = item.getLong(item.getColumnIndex(Property.TYPE));
+
+		setTitle(name);
+		view.propertyName.setText(name);
+		AndroidTools.selectByID(view.propertyType, type);
 	}
 }

@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 
 import net.twisterrob.inventory.android.db.Database;
@@ -13,6 +14,11 @@ public class App extends Application {
 
 	public App() {
 		s_instance = this;
+
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
+				.detectAll().penaltyLog().penaltyDialog().build());
+		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder() //
+				.detectAll().penaltyLog().penaltyDeath().build());
 	}
 
 	public static App getInstance() {

@@ -8,6 +8,10 @@ public class BaseActivity extends ActionBarActivity {
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 
+		initActionBar();
+	}
+
+	private void initActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
