@@ -8,7 +8,7 @@
 			select
 				1 as rank,
 				-1 as id,
-				'Add Property' as name,
+				'Add Property DB' as name,
 				'property_add' as image
 			UNION
 			select
@@ -56,7 +56,7 @@
 			select
 				1 as rank,
 				-1 as id,
-				'Add Room' as name,
+				'Add Room DB' as name,
 				'property_add' as image
 			UNION
 			select

@@ -24,8 +24,10 @@ dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 	compile 'net.twisterrob:twister-lib-android:1.0'
 	compile 'com.android.support:support-v4:19.1.0'
-	//compile 'com.android.support:support-v13:19.1.0'
+	compile 'com.android.support:support-v13:19.1.0'
+	compile 'com.android.support:appcompat-v7:19.1.0'
 	eclipseProjects 'net.twisterrob:twister-lib-android:1.0'
+	eclipseProjects 'com.android.support:appcompat-v7:19.1.0'
 }
 
 android {
@@ -69,6 +71,7 @@ if (plugins.hasPlugin('android') || plugins.hasPlugin('android-library')) {
 
 		project {
 			referencedProjects 'twister-lib-android'
+			referencedProjects 'android-support-v7-appcompat'
 			//linkedResource name: 'res', type: '2', location: 'PROJECT_LOC/src/main/res'
 			natures 'com.android.ide.eclipse.adt.AndroidNature'
 			buildCommands.clear();
@@ -110,6 +113,7 @@ if (plugins.hasPlugin('android') || plugins.hasPlugin('android-library')) {
 			projectPropertiesFile.append 'android.library=true\n'
 		}
 
-		projectPropertiesFile.append 'android.library.reference.1=../twister-lib-android'
+		projectPropertiesFile.append 'android.library.reference.1=../android-support-v7-appcompat\n'
+		projectPropertiesFile.append 'android.library.reference.2=../twister-lib-android\n'
 	}
 }

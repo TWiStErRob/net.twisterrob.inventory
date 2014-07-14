@@ -4,7 +4,6 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
@@ -16,7 +15,7 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.db.*;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
-public class PropertiesActivity extends FragmentActivity {
+public class PropertiesActivity extends BaseListActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertiesActivity.class);
 
 	@Override

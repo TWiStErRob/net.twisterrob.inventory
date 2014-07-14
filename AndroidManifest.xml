@@ -19,10 +19,18 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="net.twisterrob.inventory.android.activity.PropertiesActivity" />
-		<activity android:name="net.twisterrob.inventory.android.activity.PropertyEditActivity" />
-		<activity android:name="net.twisterrob.inventory.android.activity.RoomsActivity" />
-		<activity android:name="net.twisterrob.inventory.android.activity.RoomEditActivity" />
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.PropertiesActivity"
+			android:label="@string/property_title" />
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.PropertyEditActivity"
+			android:label="@string/property_new" />
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.RoomsActivity"
+			android:label="@string/room_title" />
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.RoomEditActivity"
+			android:label="@string/room_new" />
 	</application>
 <!-- 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
 </manifest>

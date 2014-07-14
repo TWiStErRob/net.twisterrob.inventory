@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.activity;
 
 import android.database.*;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -14,7 +13,7 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.db.*;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
-public class PropertyEditActivity extends FragmentActivity {
+public class PropertyEditActivity extends BaseEditActivity {
 	public static final String EXTRA_PROPERTY_ID = "propertyID";
 
 	private long propertyID;
@@ -57,8 +56,6 @@ public class PropertyEditActivity extends FragmentActivity {
 				finish();
 			}
 			property.close();
-		} else {
-			setTitle("New Property");
 		}
 	}
 }

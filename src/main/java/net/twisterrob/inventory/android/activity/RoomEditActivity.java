@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.activity;
 
 import android.database.*;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -14,7 +13,7 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.db.*;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
-public class RoomEditActivity extends FragmentActivity {
+public class RoomEditActivity extends BaseEditActivity {
 	public static final String EXTRA_ROOM_ID = "roomID";
 
 	private long roomID;
@@ -47,7 +46,9 @@ public class RoomEditActivity extends FragmentActivity {
 			DatabaseUtils.dumpCursor(room);
 			if (room.getCount() == 1) {
 				room.moveToFirst();
-				roomName.setText(room.getString(room.getColumnIndex(Room.NAME)));
+				String name = room.getString(room.getColumnIndex(Room.NAME));
+				roomName.setText(name);
+				setTitle(name);
 				preselectedRoomType = (int)room.getLong(room.getColumnIndex(Room.TYPE));
 			} else {
 				String msg = "Room #" + roomID + " not found!";
