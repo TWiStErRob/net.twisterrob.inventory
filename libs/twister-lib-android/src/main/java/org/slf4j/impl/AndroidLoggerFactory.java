@@ -83,7 +83,7 @@ public class AndroidLoggerFactory implements ILoggerFactory
 	/**
 	 * Trim name in case it exceeds maximum length of {@value #TAG_MAX_LENGTH} characters.
 	 */
-	private final String forceValidName(String name)
+	private static final String forceValidName(String name)
 	{
 		if (name != null && name.length() > TAG_MAX_LENGTH)
 		{

@@ -3,13 +3,15 @@ package net.twisterrob.inventory.android.activity;
 import org.slf4j.*;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+
+import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.db.*;
@@ -23,8 +25,7 @@ public class PropertiesActivity extends BaseListActivity {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.property_list);
 
-		CursorAdapter propertiesAdapter = new SimpleCursorAdapter(this, R.layout.property_item, null, new String[]{
-				Property.NAME, "image"}, new int[]{R.id.propertyName, R.id.propertyImage}, 0);
+		CursorAdapter propertiesAdapter = Adapters.loadCursorAdapter(this, R.xml.properties, (Cursor)null);
 		getSupportLoaderManager().initLoader(Loaders.Properties.ordinal(), null,
 				new CursorSwapper(this, propertiesAdapter));
 
