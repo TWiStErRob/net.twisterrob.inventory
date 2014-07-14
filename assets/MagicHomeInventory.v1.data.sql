@@ -17,52 +17,52 @@ INSERT INTO PropertyType
 
 INSERT INTO RoomTypeKind
                 (id, priority, name,       image)
-	      SELECT  0,     1000, 'Other', 'property_home'
-	UNION SELECT  1,      100, 'General', 'property_home'
-	UNION SELECT  3,      200, 'Storage', 'property_home'
-	UNION SELECT  2,      300, 'Common', 'property_home'
-	UNION SELECT  4,      400, 'Function', 'property_home'
-	UNION SELECT  5,      500, 'Space', 'property_home'
+	      SELECT  0,     1000, 'Other', 'room_bedroom'
+	UNION SELECT  1,      100, 'General', 'room_bedroom'
+	UNION SELECT  2,      200, 'Storage', 'room_storage'
+	UNION SELECT  3,      300, 'Common', 'room_bedroom'
+	UNION SELECT  4,      400, 'Function', 'room_bedroom'
+	UNION SELECT  5,      500, 'Space', 'room_bedroom'
 ;
 
 INSERT INTO RoomType
-               (id,  kind, priority, name)
-          SELECT 0,      0,     1000, 'Other'
+               (id,  kind, priority, name, image)
+          SELECT 0,      0,     1000, 'Other', NULL
 -- General
-	UNION SELECT 101,     1,        0, 'Bathroom'
-	UNION SELECT 102,     1,        0, 'Bedroom (Master)'
-	UNION SELECT 103,     1,        0, 'Bedroom'
-	UNION SELECT 104,     1,        0, 'Kitchen'
-	UNION SELECT 105,     1,        0, 'Restroom'
+	UNION SELECT 101,     1,        0, 'Bathroom', NULL
+	UNION SELECT 102,     1,        0, 'Bedroom (Master)', 'room_bedroom'
+	UNION SELECT 103,     1,        0, 'Bedroom', 'room_bedroom'
+	UNION SELECT 104,     1,        0, 'Kitchen', 'room_kitchen'
+	UNION SELECT 105,     1,        0, 'Restroom', NULL
 -- Storage
-	UNION SELECT 201,     2,        0, 'Storage Room'
-	UNION SELECT 202,     2,        0, 'Closet'
-	UNION SELECT 203,     2,        0, 'Garage'
-	UNION SELECT 204,     2,        0, 'Furnace Room'
-	UNION SELECT 205,     2,        0, 'Shed'
-	UNION SELECT 206,     2,        0, 'Attic'
-	UNION SELECT 207,     2,        0, 'Basement'
-	UNION SELECT 208,     2,        0, 'Cellar'
-	UNION SELECT 209,     2,        0, 'Wine Cellar'
+	UNION SELECT 201,     2,        0, 'Storage Room', NULL
+	UNION SELECT 202,     2,        0, 'Closet', NULL
+	UNION SELECT 203,     2,        0, 'Garage', NULL
+	UNION SELECT 204,     2,        0, 'Furnace Room', NULL
+	UNION SELECT 205,     2,        0, 'Shed', NULL
+	UNION SELECT 206,     2,        0, 'Attic', NULL
+	UNION SELECT 207,     2,        0, 'Basement', NULL
+	UNION SELECT 208,     2,        0, 'Cellar', NULL
+	UNION SELECT 209,     2,        0, 'Wine Cellar', NULL
 -- Common
-	UNION SELECT 301,     3,        0, 'Living Room'
-	UNION SELECT 302,     3,        0, 'Family Room'
-	UNION SELECT 303,     3,        0, 'Play Room'
+	UNION SELECT 301,     3,        0, 'Living Room', NULL
+	UNION SELECT 302,     3,        0, 'Family Room', NULL
+	UNION SELECT 303,     3,        0, 'Play Room', NULL
 -- Function
-	UNION SELECT 401,     4,        0, 'Dining Room'
-	UNION SELECT 402,     4,        0, 'Library'
-	UNION SELECT 403,     4,        0, 'Office'
-	UNION SELECT 404,     4,        0, 'Gym'
-	UNION SELECT 405,     4,        0, 'TV Room'
-	UNION SELECT 406,     4,        0, 'Pool House'
-	UNION SELECT 407,     4,        0, 'Laundry Room'
+	UNION SELECT 401,     4,        0, 'Dining Room', NULL
+	UNION SELECT 402,     4,        0, 'Library', NULL
+	UNION SELECT 403,     4,        0, 'Office', NULL
+	UNION SELECT 404,     4,        0, 'Gym', NULL
+	UNION SELECT 405,     4,        0, 'TV Room', NULL
+	UNION SELECT 406,     4,        0, 'Pool House', NULL
+	UNION SELECT 407,     4,        0, 'Laundry Room', NULL
 -- Spaces
-	UNION SELECT 501,     5,        0, 'Balcony'
-	UNION SELECT 502,     5,        0, 'Garden'
-	UNION SELECT 503,     5,        0, 'Lobby'
-	UNION SELECT 504,     5,        0, 'Deck'
-	UNION SELECT 505,     5,        0, 'Patio'
-	UNION SELECT 506,     5,        0, 'Crawl Space'
+	UNION SELECT 501,     5,        0, 'Balcony', NULL
+	UNION SELECT 502,     5,        0, 'Garden', NULL
+	UNION SELECT 503,     5,        0, 'Lobby', NULL
+	UNION SELECT 504,     5,        0, 'Deck', NULL
+	UNION SELECT 505,     5,        0, 'Patio', NULL
+	UNION SELECT 506,     5,        0, 'Crawl Space', NULL
 ;
 
 

@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS RoomType (
 	kind        INTEGER      NOT NULL
 		CONSTRAINT fk_RoomType_kind
 			REFERENCES RoomTypeKind(id),
-	priority    INTEGER      NOT NULL
+	priority    INTEGER      NOT NULL,
+	image       VARCHAR          NULL -- drawable resource name
 );
 CREATE TABLE IF NOT EXISTS Room (
 	id          INTEGER      PRIMARY KEY AUTOINCREMENT,

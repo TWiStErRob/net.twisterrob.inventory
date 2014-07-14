@@ -42,16 +42,17 @@ public class RoomEditActivity extends FragmentActivity {
 
 		roomType.setAdapter(propertiesTypeAdapter);
 
-		if (roomID != Property.ID_ADD) {
-			Cursor room = App.getInstance().getDataBase().getProperty(roomID);
+		if (roomID != Room.ID_ADD) {
+			Cursor room = App.getInstance().getDataBase().getRoom(roomID);
 			DatabaseUtils.dumpCursor(room);
 			if (room.getCount() == 1) {
 				room.moveToFirst();
-				roomName.setText(room.getString(room.getColumnIndex(Property.NAME)));
-				preselectedRoomType = (int)room.getLong(room.getColumnIndex(Property.TYPE));
+				roomName.setText(room.getString(room.getColumnIndex(Room.NAME)));
+				preselectedRoomType = (int)room.getLong(room.getColumnIndex(Room.TYPE));
 			} else {
 				String msg = "Room #" + roomID + " not found!";
 				Toast.makeText(RoomEditActivity.this, msg, Toast.LENGTH_LONG).show();
+				finish();
 			}
 			room.close();
 		}

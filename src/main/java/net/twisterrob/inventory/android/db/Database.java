@@ -87,6 +87,11 @@ public class Database {
 		return db.rawQuery(m_context.getString(R.string.query_property), new String[]{String.valueOf(propertyID)});
 	}
 
+	public Cursor getRoom(long roomID) {
+		SQLiteDatabase db = getReadableDatabase();
+		return db.rawQuery(m_context.getString(R.string.query_room), new String[]{String.valueOf(roomID)});
+	}
+
 	public Cursor listRooms(long propertyID) {
 		SQLiteDatabase db = getReadableDatabase();
 		return db.rawQuery(m_context.getString(R.string.query_rooms), new String[]{String.valueOf(propertyID)});

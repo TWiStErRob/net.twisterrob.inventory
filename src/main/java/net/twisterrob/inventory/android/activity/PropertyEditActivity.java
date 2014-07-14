@@ -47,13 +47,18 @@ public class PropertyEditActivity extends FragmentActivity {
 			DatabaseUtils.dumpCursor(property);
 			if (property.getCount() == 1) {
 				property.moveToFirst();
-				propertyName.setText(property.getString(property.getColumnIndex(Property.NAME)));
+				String name = property.getString(property.getColumnIndex(Property.NAME));
+				propertyName.setText(name);
+				setTitle(name);
 				preselectedPropertyType = (int)property.getLong(property.getColumnIndex(Property.TYPE));
 			} else {
 				String msg = "Property #" + propertyID + " not found!";
 				Toast.makeText(PropertyEditActivity.this, msg, Toast.LENGTH_LONG).show();
+				finish();
 			}
 			property.close();
+		} else {
+			setTitle("New Property");
 		}
 	}
 }

@@ -42,6 +42,11 @@
 	    from RoomType
 	    order by priority
 	"]]></string>
+	<string name="query_room"><![CDATA["
+		select id as _id, name, type
+		from Room
+		where id = ?
+	"]]></string>
 	<string name="query_rooms"><![CDATA["
 	    select
 	    	id as _id,
@@ -58,7 +63,7 @@
 				2 as rank,
 				r.id,
 				r.name,
-				rtk.image
+				COALESCE(rt.image, rtk.image)
 			from Room r
 			join RoomType rt ON r.type = rt.id
 			join RoomTypeKind rtk ON rt.kind = rtk.id
