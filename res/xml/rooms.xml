@@ -2,6 +2,10 @@
 <cursor-adapter xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res/net.twisterrob.inventory"
 		app:layout="@layout/property_item">
-	<bind app:from="name" app:to="@id/propertyName" app:as="string" />
-	<bind app:from="image" app:to="@id/propertyImage" app:as="image-uri" />
+	<bind app:from="name" app:to="@id/propertyName" app:as="string">
+		<map app:fromValue="room_add" app:toValue="@string/room_add" />
+	</bind>
+	<bind app:from="image" app:to="@id/propertyImage" app:as="image-uri">
+		<transform app:withExpression="android.resource://net.twisterrob.inventory/drawable/{image}"></transform>
+	</bind>
 </cursor-adapter>

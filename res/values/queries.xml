@@ -1,24 +1,19 @@
 <resources>
 	<string name="query_properties"><![CDATA["
-	    select
-	    	id as _id,
-	    	name,
-	    	'android.resource://net.twisterrob.inventory/drawable/' || image as image
-	    from (
+		-- Extra "Add" item at the beginning
 			select
 				1 as rank,
-				-1 as id,
+				-1 as _id,
 				'property_add' as name,
 				'property_add' as image
-			UNION
+		UNION
 			select
 				2 as rank,
-				p.id,
+				p.id as _id,
 				p.name,
 				pt.image
 			from Property p
 			join PropertyType pt ON p.type = pt.id
-		)
 		order by rank, name asc
 	"]]></string>
 	<string name="query_property"><![CDATA["
@@ -48,27 +43,22 @@
 		where id = ?
 	"]]></string>
 	<string name="query_rooms"><![CDATA["
-	    select
-	    	id as _id,
-	    	name,
-	    	'android.resource://net.twisterrob.inventory/drawable/' || image as image
-	    from (
+		-- Extra "Add" item at the beginning
 			select
 				1 as rank,
-				-1 as id,
+				-1 as _id,
 				'room_add' as name,
 				'room_add' as image
-			UNION
+		UNION
 			select
 				2 as rank,
-				r.id,
+				r.id as _id,
 				r.name,
 				COALESCE(rt.image, rtk.image)
 			from Room r
 			join RoomType rt ON r.type = rt.id
 			join RoomTypeKind rtk ON rt.kind = rtk.id
 			where r.property = ?
-		)
 		order by rank, name asc 
 	"]]></string>
 </resources>
