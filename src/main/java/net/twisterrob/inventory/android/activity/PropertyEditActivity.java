@@ -1,6 +1,5 @@
 package net.twisterrob.inventory.android.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,9 +8,9 @@ import android.widget.*;
 
 import com.example.android.xmladapters.Adapters;
 
+import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.db.*;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
@@ -21,61 +20,69 @@ public class PropertyEditActivity extends BaseEditActivity {
 	private static class Params {
 		long propertyID;
 
-		boolean editExisting() {
-			return propertyID != Property.ID_ADD;
-		}
-
 		void fill(Intent intent) {
 			propertyID = intent.getLongExtra(EXTRA_PROPERTY_ID, Property.ID_ADD);
+		}
+
+		Bundle toBundle() {
+			Bundle bundle = new Bundle();
+			bundle.putLong(EXTRA_PROPERTY_ID, propertyID);
+			return bundle;
 		}
 	}
 	private final Params params = new Params();
 
-	private static class ViewHolder {
-		Spinner propertyType;
-		EditText propertyName;
-
-		void fill(Activity root) {
-			propertyName = (EditText)root.findViewById(R.id.propertyName);
-			propertyType = (Spinner)root.findViewById(R.id.propertyType);
-
-		}
-	}
-	private final ViewHolder view = new ViewHolder();
+	Spinner propertyType;
+	EditText propertyName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.property_edit);
-
-		view.fill(this);
 		params.fill(getIntent());
 
+		super.setContentView(R.layout.property_edit);
+		propertyName = (EditText)findViewById(R.id.propertyName);
+		propertyType = (Spinner)findViewById(R.id.propertyType);
+
 		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.property_types, (Cursor)null);
-		getSupportLoaderManager().initLoader(Loaders.PropertyTypes.ordinal(), null, new CursorSwapper(this, adapter));
+		propertyType.setAdapter(adapter);
+		propertyType.setOnItemSelectedListener(new DefaultValueUpdater(propertyName, Property.NAME));
 
-		view.propertyType.setAdapter(adapter);
-		view.propertyType.setOnItemSelectedListener(new DefaultValueUpdater(view.propertyName, Property.NAME));
+		InitAction<Cursor> propertyTypes = new InitAction<Cursor>(getSupportLoaderManager(),
+				Loaders.PropertyTypes.ordinal(), null, new CursorSwapper(this, adapter));
 
-		updateEditedItem();
+		InitAction<Cursor> singleProperty = new InitAction<Cursor>(getSupportLoaderManager(),
+				Loaders.SingleProperty.ordinal(), params.toBundle(), new LoadProperty()) {
+			@Override
+			public void run() {
+				if (getArgs().getLong(EXTRA_PROPERTY_ID, Property.ID_ADD) != Property.ID_ADD) {
+					super.run();
+				}
+			}
+		};
+
+		LoaderChain.sequence(propertyTypes, singleProperty).run();
 	}
-
-	@Override
-	protected Cursor getEditedItem() {
-		Cursor property = null;
-		if (params.editExisting()) {
-			property = App.getInstance().getDataBase().getProperty(params.propertyID);
+	private class LoadProperty extends LoadSingleRow {
+		LoadProperty() {
+			super(PropertyEditActivity.this);
 		}
-		return property;
-	}
 
-	@Override
-	protected void fillEditedItem(Cursor item) {
-		String name = item.getString(item.getColumnIndex(Property.NAME));
-		long type = item.getLong(item.getColumnIndex(Property.TYPE));
+		@Override
+		protected void process(Cursor item) {
+			super.process(item);
+			String name = item.getString(item.getColumnIndex(Property.NAME));
+			long type = item.getLong(item.getColumnIndex(Property.TYPE));
 
-		setTitle(name);
-		view.propertyName.setText(name);
-		AndroidTools.selectByID(view.propertyType, type);
+			setTitle(name);
+			propertyName.setText(name);
+			AndroidTools.selectByID(propertyType, type);
+		}
+
+		@Override
+		protected void processInvalid(Cursor item) {
+			super.processInvalid(item);
+			finish();
+		}
 	}
 }

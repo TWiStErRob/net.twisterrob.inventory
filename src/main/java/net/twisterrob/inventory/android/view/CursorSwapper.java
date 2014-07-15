@@ -8,7 +8,7 @@ import android.support.v4.widget.CursorAdapter;
 
 import net.twisterrob.inventory.android.db.Loaders;
 
-public class CursorSwapper extends net.twisterrob.android.db.CursorSwapper {
+public class CursorSwapper extends net.twisterrob.android.content.CursorSwapper {
 	public CursorSwapper(Context context, CursorAdapter adapter) {
 		super(context, adapter);
 	}

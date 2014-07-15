@@ -1,0 +1,56 @@
+package net.twisterrob.inventory.android.activity;
+
+import android.content.Context;
+import android.database.*;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
+import android.widget.Toast;
+
+import net.twisterrob.inventory.android.db.Loaders;
+
+abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
+	private final Context context;
+
+	public LoadSingleRow(Context context) {
+		this.context = context;
+	}
+
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return Loaders.fromID(id).createLoader(context, args);
+	}
+
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		DatabaseUtils.dumpCursor(data);
+		if (data.getCount() == 1) {
+			data.moveToFirst();
+			process(data);
+		} else {
+			processInvalid(data);
+		}
+		data.close();
+	}
+
+	public void onLoaderReset(Loader<Cursor> loader) {
+		// no op, we didn't keep any reference to data
+	}
+
+	protected void process(Cursor item) {
+		// no op
+	}
+
+	protected void processInvalid(Cursor item) {
+		String msg = getInvalidToastMessage(item);
+		Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+	}
+
+	protected String getInvalidToastMessage(Cursor item) {
+		String msg;
+		if (item.getCount() == 0) {
+			msg = "No item found!";
+		} else {
+			msg = "Multiple (" + item.getCount() + ") items found!";
+		}
+		return msg;
+	}
+}

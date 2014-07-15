@@ -5,9 +5,9 @@ import android.database.*;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
-import net.twisterrob.android.db.SimpleCursorLoader;
+import net.twisterrob.android.content.loader.SimpleCursorLoader;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.activity.RoomsActivity;
+import net.twisterrob.inventory.android.activity.*;
 
 public enum Loaders {
 	PropertyTypes {
@@ -20,6 +20,14 @@ public enum Loaders {
 		@Override
 		protected Cursor createCursor(Bundle args) {
 			return App.getInstance().getDataBase().listProperties();
+		}
+	},
+	SingleProperty {
+		public static final String EXTRA_PROPERTY_ID = PropertyEditActivity.EXTRA_PROPERTY_ID;
+		@Override
+		protected Cursor createCursor(Bundle args) {
+			long id = args.getLong(EXTRA_PROPERTY_ID, Property.ID_ADD);
+			return App.getInstance().getDataBase().getProperty(id);
 		}
 	},
 	RoomTypes {
@@ -35,7 +43,17 @@ public enum Loaders {
 			long id = args.getLong(EXTRA_PROPERTY_ID, Room.ID_ADD);
 			return App.getInstance().getDataBase().listRooms(id);
 		}
+	},
+	SingleRoom {
+		public static final String EXTRA_ROOM_ID = RoomEditActivity.EXTRA_ROOM_ID;
+		@Override
+		protected Cursor createCursor(Bundle args) {
+			long id = args.getLong(EXTRA_ROOM_ID, Room.ID_ADD);
+			return App.getInstance().getDataBase().getRoom(id);
+		}
 	};
+
+	private static final Bundle NO_ARGS = new Bundle(0);
 
 	protected abstract Cursor createCursor(Bundle args);
 
@@ -43,7 +61,7 @@ public enum Loaders {
 		return new SimpleCursorLoader(context) {
 			@Override
 			public Cursor loadInBackground() {
-				return createCursor(args);
+				return createCursor(args != null? args : NO_ARGS);
 			}
 			@Override
 			public void deliverResult(Cursor cursor) {

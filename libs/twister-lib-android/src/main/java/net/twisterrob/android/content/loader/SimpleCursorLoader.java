@@ -1,4 +1,4 @@
-package net.twisterrob.android.db;
+package net.twisterrob.android.content.loader;
 
 import android.content.Context;
 import android.database.Cursor;

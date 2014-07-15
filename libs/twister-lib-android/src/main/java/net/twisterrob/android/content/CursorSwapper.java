@@ -1,4 +1,4 @@
-package net.twisterrob.android.db;
+package net.twisterrob.android.content;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -24,6 +24,8 @@ public abstract class CursorSwapper implements LoaderCallbacks<Cursor> {
 	}
 
 	protected void updateAdapter(Cursor data) {
-		adapter.swapCursor(data);
+		if (adapter != null) {
+			adapter.swapCursor(data);
+		}
 	}
 }

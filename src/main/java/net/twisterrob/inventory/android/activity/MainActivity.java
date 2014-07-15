@@ -17,9 +17,11 @@ public class MainActivity extends BaseActivity {
 		Button properties = (Button)findViewById(R.id.btn_ok);
 		properties.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				startActivity(new Intent(getApplicationContext(), RoomEditActivity.class));
+				startActivity(new Intent(getApplicationContext(), PropertiesActivity.class));
 			}
 		});
-		properties.performClick();
+		Intent intent = new Intent(getApplicationContext(), RoomEditActivity.class);
+		intent.putExtra(RoomEditActivity.EXTRA_ROOM_ID, 2L);
+		startActivity(intent);
 	}
 }

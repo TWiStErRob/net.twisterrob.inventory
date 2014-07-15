@@ -1,4 +1,4 @@
-package net.twisterrob.android.db;
+package net.twisterrob.android.content;
 
 import java.util.*;
 
