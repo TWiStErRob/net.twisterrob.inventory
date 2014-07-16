@@ -48,6 +48,20 @@ public enum Loaders {
 			long id = args.getLong(Extras.ROOM_ID, Room.ID_ADD);
 			return App.getInstance().getDataBase().getRoom(id);
 		}
+	},
+	Items {
+		@Override
+		protected Cursor createCursor(Bundle args) {
+			long id = args.getLong(Extras.PARENT_ID, Item.ID_ADD);
+			return App.getInstance().getDataBase().listItems(id);
+		}
+	},
+	SingleItem {
+		@Override
+		protected Cursor createCursor(Bundle args) {
+			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
+			return App.getInstance().getDataBase().getItem(id);
+		}
 	};
 
 	private static final Bundle NO_ARGS = new Bundle(0);

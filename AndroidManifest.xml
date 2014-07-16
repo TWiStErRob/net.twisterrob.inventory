@@ -47,6 +47,20 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="net.twisterrob.inventory.android.activity.RoomsActivity" />
 		</activity>
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.ItemsActivity"
+			android:label="@string/item_title">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="net.twisterrob.inventory.android.activity.RoomsActivity" />
+		</activity>
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.ItemEditActivity"
+			android:label="@string/item_new">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="net.twisterrob.inventory.android.activity.ItemsActivity" />
+		</activity>
 	</application>
 <!-- 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
 </manifest>

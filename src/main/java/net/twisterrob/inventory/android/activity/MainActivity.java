@@ -1,12 +1,13 @@
 package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.*;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.content.contract.Extras;
 
 public class MainActivity extends BaseActivity {
 	@Override
@@ -19,11 +20,16 @@ public class MainActivity extends BaseActivity {
 		Button properties = (Button)findViewById(R.id.btn_ok);
 		properties.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				startActivity(new Intent(getApplicationContext(), PropertiesActivity.class));
+				Intent intent = createIntent(PropertiesActivity.class);
+				startActivity(intent);
 			}
 		});
-		//Intent intent = new Intent(getApplicationContext(), RoomEditActivity.class);
-		//intent.putExtra(RoomEditActivity.EXTRA_ROOM_ID, 2L);
-		//startActivity(intent);
+		new Handler().post(new Runnable() {
+			public void run() {
+				Intent intent = createIntent(ItemsActivity.class);
+				intent.putExtra(Extras.PARENT_ID, 4L);
+				startActivity(intent);
+			}
+		});
 	}
 }

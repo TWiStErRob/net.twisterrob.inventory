@@ -18,47 +18,42 @@ import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
-public class RoomsActivity extends BaseListActivity {
-	private static final Logger LOG = LoggerFactory.getLogger(RoomsActivity.class);
-
-	private long propertyID;
+public class ItemsActivity extends BaseListActivity {
+	private static final Logger LOG = LoggerFactory.getLogger(ItemsActivity.class);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.property_list);
-		propertyID = getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
+		super.setContentView(R.layout.item_list);
+		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.items, (Cursor)null);
 
-		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.rooms, (Cursor)null);
 		Bundle args = new Bundle();
-		args.putLong(Extras.PROPERTY_ID, propertyID);
-		getSupportLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, new CursorSwapper(this, adapter));
+		long itemID = getIntent().getLongExtra(Extras.PARENT_ID, Item.ID_ADD);
+		args.putLong(Extras.PARENT_ID, itemID);
 
-		GridView rooms = (GridView)findViewById(R.id.properties);
-		rooms.setAdapter(adapter);
+		getSupportLoaderManager().initLoader(Loaders.Items.ordinal(), args, new CursorSwapper(this, adapter));
 
-		rooms.setOnItemLongClickListener(new OnItemLongClickListener() {
+		ListView items = (ListView)findViewById(R.id.items);
+		items.setAdapter(adapter);
+
+		items.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Long Clicked on #{}", id);
-				Intent intent = createIntent(RoomEditActivity.class);
-				intent.putExtra(Extras.ROOM_ID, id);
+				Intent intent = createIntent(ItemEditActivity.class);
+				intent.putExtra(Extras.ITEM_ID, id);
 				startActivity(intent);
 				return true;
 			}
 		});
-		rooms.setOnItemClickListener(new OnItemClickListener() {
+		items.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Clicked on #{}", id);
-				if (id == Room.ID_ADD) {
-					Intent intent = createIntent(RoomEditActivity.class);
+				if (id == Item.ID_ADD) {
+					Intent intent = createIntent(ItemEditActivity.class);
 					startActivity(intent);
 				} else {
-					@SuppressWarnings("resource")
-					Cursor data = (Cursor)parent.getAdapter().getItem(position);
-					long rootItemID = data.getLong(data.getColumnIndexOrThrow(Room.ROOT_ITEM));
-
 					Intent intent = createIntent(ItemsActivity.class);
-					intent.putExtra(Extras.PARENT_ID, rootItemID);
+					intent.putExtra(Extras.PARENT_ID, id);
 					startActivity(intent);
 				}
 			}

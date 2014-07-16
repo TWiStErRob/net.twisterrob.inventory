@@ -79,8 +79,8 @@ public class PropertyEditActivity extends BaseEditActivity {
 		@Override
 		protected void process(Cursor item) {
 			super.process(item);
-			String name = item.getString(item.getColumnIndex(Property.NAME));
-			long type = item.getLong(item.getColumnIndex(Property.TYPE));
+			String name = item.getString(item.getColumnIndexOrThrow(Property.NAME));
+			long type = item.getLong(item.getColumnIndexOrThrow(Property.TYPE));
 
 			setTitle(name);
 			propertyName.setText(name);

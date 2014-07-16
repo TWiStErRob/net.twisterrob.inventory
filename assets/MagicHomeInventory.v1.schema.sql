@@ -6,6 +6,17 @@ CREATE TABLE IF NOT EXISTS Category (
 			REFERENCES Category(id)
 );
 
+CREATE TABLE IF NOT EXISTS Item (
+	id          INTEGER      PRIMARY KEY AUTOINCREMENT,
+	name        NVARCHAR     NOT NULL,
+	category    INTEGER      NOT NULL
+		CONSTRAINT fk_Item_category
+			REFERENCES Category(id),
+	parent      INTEGER          NULL
+		CONSTRAINT fk_Item_parent
+			REFERENCES Item(id)
+);
+
 CREATE TABLE IF NOT EXISTS PropertyType (
 	id          INTEGER      PRIMARY KEY,
 	name        NVARCHAR     NOT NULL,
@@ -41,8 +52,11 @@ CREATE TABLE IF NOT EXISTS Room (
 	type        INTEGER      NOT NULL
 		CONSTRAINT fk_Room_type
 			REFERENCES RoomType(id),
+	root        INTEGER
+		CONSTRAINT fk_Room_root
+			REFERENCES Item(id),
 	property    INTEGER NOT NULL
-		CONSTRAINT fk_county_code
+		CONSTRAINT fk_Room_property
 			REFERENCES Property(id)
 );
 

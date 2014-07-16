@@ -17,7 +17,7 @@ import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class RoomEditActivity extends BaseActivity {
+public class RoomEditActivity extends BaseEditActivity {
 	private EditText roomName;
 	private Spinner roomType;
 
@@ -62,8 +62,8 @@ public class RoomEditActivity extends BaseActivity {
 		@Override
 		protected void process(Cursor item) {
 			super.process(item);
-			String name = item.getString(item.getColumnIndex(Room.NAME));
-			long type = item.getLong(item.getColumnIndex(Room.TYPE));
+			String name = item.getString(item.getColumnIndexOrThrow(Room.NAME));
+			long type = item.getLong(item.getColumnIndexOrThrow(Room.TYPE));
 
 			setTitle(name);
 			roomName.setText(name);

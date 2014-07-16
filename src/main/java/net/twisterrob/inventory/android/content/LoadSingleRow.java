@@ -26,7 +26,7 @@ public abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
 		} else {
 			processInvalid(data);
 		}
-		data.close();
+		//data.close(); // don't close SimpleCursorLoader (created in Loaders) will do it
 	}
 
 	public void onLoaderReset(Loader<Cursor> loader) {

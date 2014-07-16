@@ -65,8 +65,8 @@ public class Database {
 			Cursor cursor = listPropertyTypes();
 			try {
 				while (cursor.moveToNext()) {
-					int id = cursor.getInt(cursor.getColumnIndex(PropertyType.ID));
-					String name = cursor.getString(cursor.getColumnIndex(PropertyType.NAME));
+					int id = cursor.getInt(cursor.getColumnIndexOrThrow(PropertyType.ID));
+					String name = cursor.getString(cursor.getColumnIndexOrThrow(PropertyType.NAME));
 					types.put(id, name);
 				}
 			} finally {
@@ -88,13 +88,21 @@ public class Database {
 		return db.rawQuery(m_context.getString(R.string.query_property), new String[]{String.valueOf(propertyID)});
 	}
 
+	public Cursor listRooms(long propertyID) {
+		SQLiteDatabase db = getReadableDatabase();
+		return db.rawQuery(m_context.getString(R.string.query_rooms), new String[]{String.valueOf(propertyID)});
+	}
 	public Cursor getRoom(long roomID) {
 		SQLiteDatabase db = getReadableDatabase();
 		return db.rawQuery(m_context.getString(R.string.query_room), new String[]{String.valueOf(roomID)});
 	}
 
-	public Cursor listRooms(long propertyID) {
+	public Cursor listItems(long parentID) {
 		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_rooms), new String[]{String.valueOf(propertyID)});
+		return db.rawQuery(m_context.getString(R.string.query_items), new String[]{String.valueOf(parentID)});
+	}
+	public Cursor getItem(long itemID) {
+		SQLiteDatabase db = getReadableDatabase();
+		return db.rawQuery(m_context.getString(R.string.query_item), new String[]{String.valueOf(itemID)});
 	}
 }

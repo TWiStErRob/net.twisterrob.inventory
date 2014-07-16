@@ -34,7 +34,7 @@ public class DefaultValueUpdater implements OnItemSelectedListener {
 	@SuppressWarnings("resource")
 	private int getStringID(AdapterView<?> parent, int position) {
 		Cursor newData = (Cursor)parent.getAdapter().getItem(position);
-		String newName = newData.getString(newData.getColumnIndex(columnName));
+		String newName = newData.getString(newData.getColumnIndexOrThrow(columnName));
 		Context context = parent.getContext();
 		return context.getResources().getIdentifier(newName, "string", context.getPackageName());
 	}

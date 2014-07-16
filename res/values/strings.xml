@@ -1,6 +1,10 @@
 <resources>
 	<string name="app_name">Magic Home Inventory</string>
 	<string name="empty"></string>
+	
+	<string name="item_title">Items</string>
+	<string name="item_add">Add Item&#8230;</string>
+	<string name="item_new">New Item</string>
 
 	<string name="property_title">Properties</string>
 	<string name="property_add">Add Property&#8230;</string>
