@@ -21,19 +21,17 @@ import net.twisterrob.inventory.android.view.CursorSwapper;
 public class RoomsActivity extends BaseListActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomsActivity.class);
 
-	public static final String EXTRA_PROPERTY_ID = "propertyID";
-
 	private long propertyID;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.property_list);
-		propertyID = getIntent().getLongExtra(EXTRA_PROPERTY_ID, Property.ID_ADD);
+		propertyID = getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
 
 		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.rooms, (Cursor)null);
 		Bundle args = new Bundle();
-		args.putLong(EXTRA_PROPERTY_ID, propertyID);
+		args.putLong(Extras.PROPERTY_ID, propertyID);
 		getSupportLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, new CursorSwapper(this, adapter));
 
 		GridView rooms = (GridView)findViewById(R.id.properties);
@@ -42,8 +40,8 @@ public class RoomsActivity extends BaseListActivity {
 		rooms.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Long Clicked on #{}", id);
-				Intent intent = new Intent(getApplicationContext(), RoomEditActivity.class);
-				intent.putExtra(RoomEditActivity.EXTRA_ROOM_ID, id);
+				Intent intent = createIntent(RoomEditActivity.class);
+				intent.putExtra(Extras.ROOM_ID, id);
 				startActivity(intent);
 				return true;
 			}
@@ -52,7 +50,7 @@ public class RoomsActivity extends BaseListActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Clicked on #{}", id);
 				if (id == Room.ID_ADD) {
-					Intent intent = new Intent(getApplicationContext(), RoomEditActivity.class);
+					Intent intent = createIntent(RoomEditActivity.class);
 					startActivity(intent);
 				} else {
 					Toast.makeText(RoomsActivity.this, "Not implemented", Toast.LENGTH_LONG).show();

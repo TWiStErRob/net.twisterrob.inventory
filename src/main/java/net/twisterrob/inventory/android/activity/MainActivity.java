@@ -13,6 +13,8 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.main);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+		getSupportActionBar().setHomeButtonEnabled(false);
 
 		Button properties = (Button)findViewById(R.id.btn_ok);
 		properties.setOnClickListener(new OnClickListener() {
@@ -20,8 +22,8 @@ public class MainActivity extends BaseActivity {
 				startActivity(new Intent(getApplicationContext(), PropertiesActivity.class));
 			}
 		});
-		Intent intent = new Intent(getApplicationContext(), RoomEditActivity.class);
-		intent.putExtra(RoomEditActivity.EXTRA_ROOM_ID, 2L);
-		startActivity(intent);
+		//Intent intent = new Intent(getApplicationContext(), RoomEditActivity.class);
+		//intent.putExtra(RoomEditActivity.EXTRA_ROOM_ID, 2L);
+		//startActivity(intent);
 	}
 }

@@ -12,14 +12,12 @@ import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.LoadSingleRow;
-import net.twisterrob.inventory.android.content.contract.Room;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class RoomEditActivity extends BaseActivity {
-	public static final String EXTRA_ROOM_ID = "roomID";
-
 	private EditText roomName;
 	private Spinner roomType;
 
@@ -52,7 +50,7 @@ public class RoomEditActivity extends BaseActivity {
 
 		@Override
 		protected boolean test(int id, Bundle args) {
-			return args != null && args.getLong(EXTRA_ROOM_ID, Room.ID_ADD) != Room.ID_ADD;
+			return args != null && args.getLong(Extras.ROOM_ID, Room.ID_ADD) != Room.ID_ADD;
 		}
 	}
 

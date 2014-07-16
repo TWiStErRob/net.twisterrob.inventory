@@ -15,7 +15,7 @@ import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.Property;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
 public class PropertiesActivity extends BaseListActivity {
@@ -35,8 +35,8 @@ public class PropertiesActivity extends BaseListActivity {
 		properties.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Long Clicked on #{}", id);
-				Intent intent = new Intent(getApplicationContext(), PropertyEditActivity.class);
-				intent.putExtra(PropertyEditActivity.EXTRA_PROPERTY_ID, id);
+				Intent intent = createIntent(PropertyEditActivity.class);
+				intent.putExtra(Extras.PROPERTY_ID, id);
 				startActivity(intent);
 				return true;
 			}
@@ -45,11 +45,11 @@ public class PropertiesActivity extends BaseListActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Clicked on #{}", id);
 				if (id == Property.ID_ADD) {
-					Intent intent = new Intent(getApplicationContext(), PropertyEditActivity.class);
+					Intent intent = createIntent(PropertyEditActivity.class);
 					startActivity(intent);
 				} else {
-					Intent intent = new Intent(getApplicationContext(), RoomsActivity.class);
-					intent.putExtra(RoomsActivity.EXTRA_PROPERTY_ID, id);
+					Intent intent = createIntent(RoomsActivity.class);
+					intent.putExtra(Extras.PROPERTY_ID, id);
 					startActivity(intent);
 				}
 			}

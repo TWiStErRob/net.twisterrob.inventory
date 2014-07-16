@@ -13,24 +13,22 @@ import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.LoadSingleRow;
-import net.twisterrob.inventory.android.content.contract.Property;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class PropertyEditActivity extends BaseEditActivity {
-	public static final String EXTRA_PROPERTY_ID = "propertyID";
-
 	private static class Params {
 		long propertyID;
 
 		void fill(Intent intent) {
-			propertyID = intent.getLongExtra(EXTRA_PROPERTY_ID, Property.ID_ADD);
+			propertyID = intent.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
 		}
 
 		Bundle toBundle() {
 			Bundle bundle = new Bundle();
-			bundle.putLong(EXTRA_PROPERTY_ID, propertyID);
+			bundle.putLong(Extras.PROPERTY_ID, propertyID);
 			return bundle;
 		}
 	}
@@ -69,7 +67,7 @@ public class PropertyEditActivity extends BaseEditActivity {
 
 		@Override
 		protected boolean test(int id, Bundle args) {
-			return args != null && args.getLong(EXTRA_PROPERTY_ID, Property.ID_ADD) != Property.ID_ADD;
+			return args != null && args.getLong(Extras.PROPERTY_ID, Property.ID_ADD) != Property.ID_ADD;
 		}
 	}
 

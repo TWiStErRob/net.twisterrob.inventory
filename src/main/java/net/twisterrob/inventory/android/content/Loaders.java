@@ -7,7 +7,6 @@ import android.support.v4.content.Loader;
 
 import net.twisterrob.android.content.loader.SimpleCursorLoader;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.activity.*;
 import net.twisterrob.inventory.android.content.contract.*;
 
 public enum Loaders {
@@ -24,10 +23,9 @@ public enum Loaders {
 		}
 	},
 	SingleProperty {
-		public static final String EXTRA_PROPERTY_ID = PropertyEditActivity.EXTRA_PROPERTY_ID;
 		@Override
 		protected Cursor createCursor(Bundle args) {
-			long id = args.getLong(EXTRA_PROPERTY_ID, Property.ID_ADD);
+			long id = args.getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 			return App.getInstance().getDataBase().getProperty(id);
 		}
 	},
@@ -38,18 +36,16 @@ public enum Loaders {
 		}
 	},
 	Rooms {
-		public static final String EXTRA_PROPERTY_ID = RoomsActivity.EXTRA_PROPERTY_ID;
 		@Override
 		protected Cursor createCursor(Bundle args) {
-			long id = args.getLong(EXTRA_PROPERTY_ID, Room.ID_ADD);
+			long id = args.getLong(Extras.PROPERTY_ID, Room.ID_ADD);
 			return App.getInstance().getDataBase().listRooms(id);
 		}
 	},
 	SingleRoom {
-		public static final String EXTRA_ROOM_ID = RoomEditActivity.EXTRA_ROOM_ID;
 		@Override
 		protected Cursor createCursor(Bundle args) {
-			long id = args.getLong(EXTRA_ROOM_ID, Room.ID_ADD);
+			long id = args.getLong(Extras.ROOM_ID, Room.ID_ADD);
 			return App.getInstance().getDataBase().getRoom(id);
 		}
 	};

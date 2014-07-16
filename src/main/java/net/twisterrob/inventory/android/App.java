@@ -1,10 +1,12 @@
 package net.twisterrob.inventory.android;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 
+import net.twisterrob.inventory.BuildConfig;
 import net.twisterrob.inventory.android.content.Database;
 
 public class App extends Application {
@@ -15,10 +17,27 @@ public class App extends Application {
 	public App() {
 		s_instance = this;
 
+		if (BuildConfig.DEBUG) {
+			setStrictMode();
+		}
+	}
+
+	@SuppressLint("NewApi")
+	private static void setStrictMode() {
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
-				.detectAll().penaltyLog().penaltyDialog().build());
+				.detectAll() //
+				.penaltyLog() //
+				.penaltyDialog() //
+				.build());
 		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder() //
-				.detectAll().penaltyLog().penaltyDeath().build());
+				//.detectActivityLeaks() //
+				.detectFileUriExposure() //
+				.detectLeakedClosableObjects() //
+				.detectLeakedRegistrationObjects() //
+				.detectLeakedSqlLiteObjects() //
+				.penaltyLog() //
+				.penaltyDeath() //
+				.build());
 	}
 
 	public static App getInstance() {

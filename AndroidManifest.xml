@@ -21,16 +21,32 @@
 		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.PropertiesActivity"
-			android:label="@string/property_title" />
+			android:label="@string/property_title">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="net.twisterrob.inventory.android.activity.MainActivity" />
+		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.PropertyEditActivity"
-			android:label="@string/property_new" />
+			android:label="@string/property_new">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="net.twisterrob.inventory.android.activity.PropertiesActivity" />
+		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.RoomsActivity"
-			android:label="@string/room_title" />
+			android:label="@string/room_title">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="net.twisterrob.inventory.android.activity.PropertiesActivity" />
+		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.RoomEditActivity"
-			android:label="@string/room_new" />
+			android:label="@string/room_new">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="net.twisterrob.inventory.android.activity.RoomsActivity" />
+		</activity>
 	</application>
 <!-- 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
 </manifest>
