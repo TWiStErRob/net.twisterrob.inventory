@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 
-import net.twisterrob.inventory.android.db.Database;
+import net.twisterrob.inventory.android.content.Database;
 
 public class App extends Application {
 	private static App s_instance;

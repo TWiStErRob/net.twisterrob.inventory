@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity;
+package net.twisterrob.inventory.android.view;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -14,7 +14,7 @@ public class DefaultValueUpdater implements OnItemSelectedListener {
 
 	private final EditText roomName;
 	private final String columnName;
-	
+
 	public DefaultValueUpdater(EditText roomName, String columnName) {
 		this.roomName = roomName;
 		this.columnName = columnName;

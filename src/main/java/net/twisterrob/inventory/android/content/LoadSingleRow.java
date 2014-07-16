@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity;
+package net.twisterrob.inventory.android.content;
 
 import android.content.Context;
 import android.database.*;
@@ -7,9 +7,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.widget.Toast;
 
-import net.twisterrob.inventory.android.db.Loaders;
-
-abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
+public abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
 	private final Context context;
 
 	public LoadSingleRow(Context context) {

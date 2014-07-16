@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.db;
+package net.twisterrob.inventory.android.content.contract;
 public interface Room {
 	String TABLE = "Room";
 	String ID = "id";

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.db;
+package net.twisterrob.inventory.android.content;
 
 import android.content.Context;
 import android.database.*;
@@ -8,6 +8,7 @@ import android.support.v4.content.Loader;
 import net.twisterrob.android.content.loader.SimpleCursorLoader;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.*;
+import net.twisterrob.inventory.android.content.contract.*;
 
 public enum Loaders {
 	PropertyTypes {

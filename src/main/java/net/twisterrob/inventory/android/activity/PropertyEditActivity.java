@@ -9,10 +9,14 @@ import android.widget.*;
 import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.android.content.loader.*;
+import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.db.*;
-import net.twisterrob.inventory.android.view.CursorSwapper;
+import net.twisterrob.inventory.android.content.LoadSingleRow;
+import net.twisterrob.inventory.android.content.contract.Property;
+import net.twisterrob.inventory.android.view.*;
+
+import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class PropertyEditActivity extends BaseEditActivity {
 	public static final String EXTRA_PROPERTY_ID = "propertyID";
@@ -48,23 +52,29 @@ public class PropertyEditActivity extends BaseEditActivity {
 		propertyType.setAdapter(adapter);
 		propertyType.setOnItemSelectedListener(new DefaultValueUpdater(propertyName, Property.NAME));
 
-		InitAction<Cursor> propertyTypes = new InitAction<Cursor>(getSupportLoaderManager(),
-				Loaders.PropertyTypes.ordinal(), null, new CursorSwapper(this, adapter));
+		DynamicLoaderManager manager = new DynamicLoaderManager(getSupportLoaderManager());
+		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, new CursorSwapper(this, adapter));
+		Bundle args = params.toBundle();
+		Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.ordinal(), args, new LoadExistingProperty());
+		Dependency<Void> loadPropertyCondition = manager.add(-SingleProperty.ordinal(), args, new IsExistingProperty());
 
-		InitAction<Cursor> singleProperty = new InitAction<Cursor>(getSupportLoaderManager(),
-				Loaders.SingleProperty.ordinal(), params.toBundle(), new LoadProperty()) {
-			@Override
-			public void run() {
-				if (getArgs().getLong(EXTRA_PROPERTY_ID, Property.ID_ADD) != Property.ID_ADD) {
-					super.run();
-				}
-			}
-		};
-
-		LoaderChain.sequence(propertyTypes, singleProperty).run();
+		populateTypes.providesResultFor(loadPropertyData.dependsOn(loadPropertyCondition));
+		manager.startLoading();
 	}
-	private class LoadProperty extends LoadSingleRow {
-		LoadProperty() {
+
+	private final class IsExistingProperty extends DynamicLoaderManager.Condition {
+		private IsExistingProperty() {
+			super(PropertyEditActivity.this);
+		}
+
+		@Override
+		protected boolean test(int id, Bundle args) {
+			return args != null && args.getLong(EXTRA_PROPERTY_ID, Property.ID_ADD) != Property.ID_ADD;
+		}
+	}
+
+	private class LoadExistingProperty extends LoadSingleRow {
+		LoadExistingProperty() {
 			super(PropertyEditActivity.this);
 		}
 

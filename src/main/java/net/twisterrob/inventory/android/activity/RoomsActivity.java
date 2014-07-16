@@ -14,7 +14,8 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.db.*;
+import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
 public class RoomsActivity extends BaseListActivity {

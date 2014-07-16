@@ -8,10 +8,14 @@ import android.widget.*;
 import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.android.content.loader.*;
+import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.db.*;
-import net.twisterrob.inventory.android.view.CursorSwapper;
+import net.twisterrob.inventory.android.content.LoadSingleRow;
+import net.twisterrob.inventory.android.content.contract.Room;
+import net.twisterrob.inventory.android.view.*;
+
+import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class RoomEditActivity extends BaseActivity {
 	public static final String EXTRA_ROOM_ID = "roomID";
@@ -31,24 +35,29 @@ public class RoomEditActivity extends BaseActivity {
 		roomType.setAdapter(adapter);
 		roomType.setOnItemSelectedListener(new DefaultValueUpdater(roomName, Room.NAME));
 
+		DynamicLoaderManager manager = new DynamicLoaderManager(getSupportLoaderManager());
 		Bundle args = getIntent().getExtras();
-		InitAction<Cursor> roomTypes = new InitAction<Cursor>(getSupportLoaderManager(), Loaders.RoomTypes.ordinal(),
-				null, new CursorSwapper(this, adapter));
-		InitAction<Cursor> singleRoom = new InitAction<Cursor>(getSupportLoaderManager(), Loaders.SingleRoom.ordinal(),
-				args, new LoadRoom()) {
-			@Override
-			public void run() {
-				if (getArgs().getLong(EXTRA_ROOM_ID, Room.ID_ADD) != Room.ID_ADD) {
-					super.run();
-				}
-			}
-		};
+		Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(), args, new LoadExistingRoom());
+		Dependency<Void> loadRoomCondition = manager.add(-SingleRoom.ordinal(), args, new IsExistingRoom());
+		Dependency<Cursor> populateTypes = manager.add(RoomTypes.ordinal(), null, new CursorSwapper(this, adapter));
 
-		LoaderChain.sequence(roomTypes, singleRoom).run();
+		populateTypes.providesResultFor(loadRoomData.dependsOn(loadRoomCondition));
+		manager.startLoading();
 	}
 
-	private class LoadRoom extends LoadSingleRow {
-		LoadRoom() {
+	private final class IsExistingRoom extends DynamicLoaderManager.Condition {
+		private IsExistingRoom() {
+			super(RoomEditActivity.this);
+		}
+
+		@Override
+		protected boolean test(int id, Bundle args) {
+			return args != null && args.getLong(EXTRA_ROOM_ID, Room.ID_ADD) != Room.ID_ADD;
+		}
+	}
+
+	private final class LoadExistingRoom extends LoadSingleRow {
+		private LoadExistingRoom() {
 			super(RoomEditActivity.this);
 		}
 

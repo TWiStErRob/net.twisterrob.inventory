@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.db;
+package net.twisterrob.inventory.android.content;
 
 import java.util.*;
 
@@ -8,6 +8,7 @@ import android.database.sqlite.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.content.contract.PropertyType;
 
 @SuppressWarnings("resource")
 public class Database {
