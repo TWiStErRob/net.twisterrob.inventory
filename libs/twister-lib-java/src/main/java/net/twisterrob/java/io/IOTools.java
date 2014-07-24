@@ -9,6 +9,41 @@ public/* static */class IOTools {
 	public static final String ENCODING = Charset.forName("UTF-8").name();
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
+	public static int copyFile(final String sourceFileName, final String destinationFileName) throws IOException {
+		File sourceFile = new File(sourceFileName);
+		File destinationFile = new File(destinationFileName);
+		return IOTools.copyFile(sourceFile, destinationFile);
+	}
+
+	@SuppressWarnings("resource")
+	public static int copyFile(final File sourceFile, final File destinationFile) throws IOException {
+		destinationFile.getParentFile().mkdirs();
+		InputStream in = new FileInputStream(sourceFile);
+		OutputStream out = new FileOutputStream(destinationFile);
+		int totalBytes;
+		try {
+			totalBytes = IOTools.copyStream(in, out);
+		} finally {
+			ignorantClose(in, out);
+		}
+		return totalBytes;
+	}
+
+	public static int copyStream(final InputStream in, final OutputStream out) throws IOException {
+		try {
+			byte[] buf = new byte[4096];
+			int total = 0;
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+				total += len;
+			}
+			return total;
+		} finally {
+			ignorantClose(in, out);
+		}
+	}
+
 	public static String readAll(Reader reader) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		for (int c = reader.read(); c != -1; c = reader.read()) {
@@ -38,22 +73,24 @@ public/* static */class IOTools {
 			return;
 		}
 		for (Closeable closeMe: closeMes) {
-			if (closeMe != null) {
-				try {
-					closeMe.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
+			ignorantClose(closeMe);
 		}
 	}
 
 	public static void closeConnection(HttpURLConnection connection, Closeable... resources) {
-		for (Closeable resource: resources) {
-			ignorantClose(resource);
-		}
+		IOTools.ignorantClose(resources);
 		if (connection != null) {
 			connection.disconnect();
+		}
+	}
+
+	public static void writeAll(OutputStream stream, String contents) {
+		try {
+			stream.write(contents.getBytes(ENCODING));
+		} catch (IOException ex) {
+			throw new IllegalStateException(ex);
+		} finally {
+			IOTools.ignorantClose(stream);
 		}
 	}
 }

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/layoutRoot"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
-	<GridView
-		android:id="@android:id/list"
-		android:numColumns="2"
+	<TextView
+		android:id="@android:id/text1"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
-	</GridView>
-</merge>
+		android:layout_height="wrap_content"
+		android:text="@string/empty" />
+</LinearLayout>

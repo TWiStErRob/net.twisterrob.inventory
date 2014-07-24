@@ -5,14 +5,14 @@ import java.net.*;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.twisterrob.android.utils.cache.ImageSDNetCache;
-
 import org.apache.http.*;
 import org.slf4j.*;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.*;
+
+import net.twisterrob.android.utils.cache.ImageSDNetCache;
 
 public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 	private static final Logger LOG = LoggerFactory.getLogger(IOTools.class);
@@ -24,47 +24,6 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 
 	protected IOTools() {
 		// prevent instantiation
-	}
-
-	public static String readAll(final Reader r) throws IOException {
-		StringBuilder sb = new StringBuilder();
-		for (int c = r.read(); c != -1; c = r.read()) {
-			sb.append((char)c);
-		}
-		return sb.toString();
-	}
-
-	public static int copyFile(final String sourceFileName, final String destinationFileName) throws IOException {
-		File sourceFile = new File(sourceFileName);
-		File destinationFile = new File(destinationFileName);
-		return IOTools.copyFile(sourceFile, destinationFile);
-	}
-
-	@SuppressWarnings("resource")
-	public static int copyFile(final File sourceFile, final File destinationFile) throws IOException {
-		destinationFile.getParentFile().mkdirs();
-		InputStream in = new FileInputStream(sourceFile);
-		OutputStream out = new FileOutputStream(destinationFile);
-		int totalBytes;
-		try {
-			totalBytes = IOTools.copyStream(in, out);
-		} finally {
-			ignorantClose(in, out);
-		}
-		return totalBytes;
-	}
-
-	public static int copyStream(final InputStream in, final OutputStream out) throws IOException {
-		byte[] buf = new byte[4096];
-		int total = 0;
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
-			total += len;
-		}
-		in.close();
-		out.close();
-		return total;
 	}
 
 	public static String getEncoding(final HttpEntity entity) {
@@ -140,7 +99,7 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 
 	}
 	private static synchronized void ensureImageCache() {
-		if(imageCache == null) {
+		if (imageCache == null) {
 			imageCache = new ImageSDNetCache();
 		}
 	}
