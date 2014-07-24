@@ -1,0 +1,19 @@
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+	<item
+		android:id="@+id/action_picture_take"
+		android:icon="@android:drawable/ic_menu_camera"
+		android:title="@string/action_picture_take"
+		app:showAsAction="always" />
+	<item
+		android:id="@+id/action_picture_pick"
+		android:icon="@android:drawable/ic_menu_gallery"
+		android:title="@string/action_picture_pick"
+		app:showAsAction="ifRoom" />
+	<item
+		android:id="@+id/action_share"
+		android:icon="@android:drawable/ic_menu_share"
+		android:title="@string/action_share"
+		app:showAsAction="ifRoom" />
+</menu>

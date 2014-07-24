@@ -2,6 +2,10 @@
 	<string name="app_name">Magic Home Inventory</string>
 	<string name="empty"></string>
 	
+	<string name="action_picture_take">Take picture</string>
+	<string name="action_picture_pick">Pick picture</string>
+	<string name="action_share">Share</string>
+	
 	<string name="item_title">Items</string>
 	<string name="item_add">Add Item&#8230;</string>
 	<string name="item_new">New Item</string>
@@ -65,6 +69,7 @@
 	<string name="room_group_space">Space</string>
 	
 	<string name="img_desc_property">Picture taken of the property or a semantic image depicting the type of the property.</string>
+	<string name="img_desc_item">Picture taken of the item or a semantic image depicting the category of the item.</string>
 
 <!-- 	<string name=""></string> -->
 </resources>

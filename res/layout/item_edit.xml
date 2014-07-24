@@ -5,6 +5,12 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
+	<ImageView
+		android:id="@+id/itemImage"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:scaleType="fitCenter"
+		android:contentDescription="@string/img_desc_item" />
 	<EditText
 		android:id="@+id/itemName"
 		android:inputType="textCapWords"
