@@ -45,13 +45,18 @@ public class MainActivity extends BaseActivity {
 						Intent intent = createIntent(WelcomeActivity.class);
 						startActivity(intent);
 					}
+				}), new MainItem("Camera", new OnClickListener() {
+					public void onClick(View v) {
+						Intent intent = createIntent(CaptureImage.class);
+						startActivity(intent);
+					}
 				}));
 		list.setAdapter(new MainItemAdapter(this, actions));
 
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-				((MainItem)list.getItemAtPosition(2)).listener.onClick(list);
+				//((MainItem)list.getItemAtPosition(3)).listener.onClick(list);
 				return null;
 			}
 		}.execute();

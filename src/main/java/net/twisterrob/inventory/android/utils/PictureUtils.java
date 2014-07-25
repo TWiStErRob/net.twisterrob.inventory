@@ -9,6 +9,7 @@ import android.content.*;
 import android.content.pm.*;
 import android.database.*;
 import android.graphics.*;
+import android.graphics.Bitmap.CompressFormat;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.*;
@@ -326,6 +327,65 @@ public class PictureUtils {
 			}
 		}
 		return null;
+	}
+
+	public static Bitmap cropPicture(File file, int x, int y, int w, int h) throws IOException {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
+			return cropPictureCreateBitmap(file, x, y, w, h);
+		} else {
+			return cropPictureDecodeRegion(file, x, y, w, h);
+		}
+	}
+
+	private static Bitmap cropPictureCreateBitmap(File file, int x, int y, int w, int h) {
+		Bitmap source = BitmapFactory.decodeFile(file.getAbsolutePath());
+		return Bitmap.createBitmap(source, x, y, w, h);
+	}
+
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
+	private static Bitmap cropPictureDecodeRegion(File file, int x, int y, int w, int h) throws IOException {
+		String fileName = file.getAbsolutePath();
+
+		final int l = x, t = y, r = l + w, b = t + h;
+
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(fileName, options);
+
+		BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(fileName, false);
+		if (decoder != null) {
+			options = new BitmapFactory.Options();
+			return decoder.decodeRegion(new Rect(l, t, r, b), null);
+			//			int oWidth = options.outWidth;
+			//			int oHeight = options.outHeight;
+			//			int startingSize = 1;
+			//			if (w * oWidth * h * oHeight > 1920 * 1080) {
+			//				startingSize = w * oWidth * h * oHeight / (1920 * 1080) + 1;
+			//			}
+			//			options.inSampleSize = startingSize;
+
+			//			for (options.inSampleSize = startingSize; options.inSampleSize <= 32; options.inSampleSize++) {
+			//				try {
+			//			return decoder.decodeRegion(new Rect((int)(l * oWidth), (int)(t * oHeight), (int)(r * oWidth),
+			//					(int)(b * oHeight)), options);
+			//				} catch (OutOfMemoryError e) {
+			//					continue; // with for loop if OutOfMemoryError occurs
+			//				}
+			//			}
+		}
+		return null;
+	}
+
+	public static void savePicture(Bitmap bitmap, File file, CompressFormat format, int quality)
+			throws FileNotFoundException {
+		@SuppressWarnings("resource")
+		FileOutputStream out = null;
+		try {
+			out = new FileOutputStream(file);
+			bitmap.compress(format, quality, out);
+		} finally {
+			IOTools.ignorantClose(out);
+		}
 	}
 
 }
