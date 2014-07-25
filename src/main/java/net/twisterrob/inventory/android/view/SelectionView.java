@@ -31,6 +31,8 @@ public class SelectionView extends View {
 
 	// Starting positions of the bounding box
 	private Rect selection;
+	private float originalRatio;
+	private boolean keepAspectRatio = false;
 
 	private float mLastTouchX;
 	private float mLastTouchY;
@@ -75,7 +77,18 @@ public class SelectionView extends View {
 
 	public void setSelection(Rect selection) {
 		this.selection = selection != null? new Rect(selection) : null;
+		if (selection != null) {
+			this.originalRatio = (float)selection.width() / (float)selection.height();
+		}
 		invalidate();
+	}
+
+	public void setKeepAspectRatio(boolean keepAspectRatio) {
+		this.keepAspectRatio = keepAspectRatio;
+	}
+
+	public boolean isKeepAspectRatio() {
+		return keepAspectRatio;
 	}
 
 	public void setSelectionMargin(float margin) {
@@ -96,6 +109,29 @@ public class SelectionView extends View {
 		setSelection(selection);
 	}
 
+	public void setSelectionMarginSquare(float margin) {
+		WindowManager windowManager = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		windowManager.getDefaultDisplay().getMetrics(displaymetrics);
+		int screenHeight = displaymetrics.heightPixels;
+		int screenWidth = displaymetrics.widthPixels;
+
+		Rect selection = new Rect();
+		if (screenWidth > screenHeight) {
+			float squareSize = screenHeight * (1 - 2 * margin);
+			selection.left = (int)((screenWidth - squareSize) / 2);
+			selection.right = (int)((screenWidth - squareSize) / 2 + squareSize);
+			selection.top = (int)(screenHeight * margin);
+			selection.bottom = (int)(screenHeight * (1 - margin));
+		} else {
+			float squareSize = screenWidth * (1 - 2 * margin);
+			selection.left = (int)(screenWidth * margin);
+			selection.right = (int)(screenWidth * (1 - margin));
+			selection.top = (int)((screenHeight - squareSize) / 2);
+			selection.bottom = (int)((screenHeight - squareSize) / 2 + squareSize);
+		}
+		setSelection(selection);
+	}
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -185,6 +221,7 @@ public class SelectionView extends View {
 				} else {
 					selection.offset((int)dx, (int)dy);
 				}
+				correctSelection();
 
 				// Remember this touch position for the next move event
 				mLastTouchX = x;
@@ -214,6 +251,87 @@ public class SelectionView extends View {
 		return handled || super.onTouchEvent(ev);
 	}
 
+	/**
+	 * TODO widening the selection with left going out left and right going towards right double speed
+	 */
+	private void correctSelection() {
+		if (keepAspectRatio) {
+			float currentRatio = (float)selection.width() / (float)selection.height();
+			if (Math.abs(currentRatio - originalRatio) > 1e-5) {
+				if (currentRatio > originalRatio) {
+					int dx = (int)(selection.width() - selection.height() * originalRatio);
+					LOG.debug("RatioX {}, original: {}, inset: {}", currentRatio, originalRatio, dx);
+					selection.inset(dx / 2, 0);
+				} else {
+					int dy = (int)(selection.height() - selection.width() / originalRatio);
+					LOG.debug("RatioY {}, original: {}, inset: {}", currentRatio, originalRatio, dy);
+					selection.inset(0, dy / 2);
+				}
+			}
+		}
+
+		if (selection.width() > getWidth()) {
+			LOG.debug("Too wide: {} > {}, inset: {}", selection.width(), getWidth(),
+					-(getWidth() - selection.width()) / 2);
+			selection.inset(-(getWidth() - selection.width()) / 2, 0);
+		}
+		if (-selection.width() > getWidth()) {
+			LOG.debug("Too -wide: {} > {}, inset: {}", selection.width(), getWidth(),
+					(getWidth() - -selection.width()) / 2);
+			selection.inset(+(getWidth() - -selection.width()) / 2, 0);
+		}
+
+		if (selection.height() > getHeight()) {
+			LOG.debug("Too tall: {} > {}, inset: {}", selection.height(), getHeight(),
+					-(getHeight() - selection.height()) / 2);
+			selection.inset(0, -(getHeight() - selection.height()) / 2);
+		}
+		if (-selection.height() > getHeight()) {
+			LOG.debug("Too -tall: {} > {}, inset: {}", selection.height(), getHeight(),
+					(getHeight() - -selection.height()) / 2);
+			selection.inset(0, +(getHeight() - -selection.height()) / 2);
+		}
+
+		if (selection.left < 0) {
+			LOG.debug("Left out left: {}, offset: {}", selection.left, -selection.left);
+			selection.offset(-selection.left, 0);
+		}
+		if (selection.right < 0) {
+			LOG.debug("Right out left: {}, offset: {}", selection.right, -selection.right);
+			selection.offset(-+selection.right, 0);
+		}
+
+		if (selection.top < 0) {
+			LOG.debug("Top out top: {}, offset: {}", selection.top, -selection.top);
+			selection.offset(0, -selection.top);
+		}
+		if (selection.bottom < 0) {
+			LOG.debug("Bottom out top: {}, offset: {}", selection.bottom, -selection.bottom);
+			selection.offset(0, -+selection.bottom);
+		}
+
+		if (selection.right > getWidth()) {
+			LOG.debug("Right out right: {} (>{}), offset: {}", selection.right, getWidth(),
+					-(selection.right - getWidth()));
+			selection.offset(-(selection.right - getWidth()), 0);
+		}
+		if (selection.left > getWidth()) {
+			LOG.debug("Left out right: {} (>{}), offset: {}", selection.left, getWidth(),
+					-(selection.left - getWidth()));
+			selection.offset(-+(selection.left - getWidth()), 0);
+		}
+
+		if (selection.bottom > getHeight()) {
+			LOG.debug("Bottom out bottom: {} (>{}), offset: {}", selection.bottom, getHeight(),
+					-(selection.bottom - getHeight()));
+			selection.offset(0, -(selection.bottom - getHeight()));
+		}
+		if (selection.top > getHeight()) {
+			LOG.debug("Top out bottom: {} (>{}), offset: {}", selection.top, getHeight(),
+					-(selection.top - getHeight()));
+			selection.offset(0, -+(selection.top - getHeight()));
+		}
+	}
 	private boolean hasPickedCorner() {
 		return mLeftTopBool || mLeftBottomBool || mRightBottomBool || mRightTopBool;
 	}
@@ -235,8 +353,8 @@ public class SelectionView extends View {
 		double leftBottom = sqrt(pow((abs(x - selection.left)), 2) + pow((abs(y - selection.bottom)), 2));
 		double rightBottom = sqrt(pow((abs(x - selection.right)), 2) + pow((abs(y - selection.bottom)), 2));
 
-		LOG.debug("leftTop: {}, rightTop: {}, leftBottom: {}, rightBottom: {}", //
-				leftTop, rightTop, leftBottom, rightBottom);
+		//LOG.debug("leftTop: {}, rightTop: {}, leftBottom: {}, rightBottom: {}", //
+		//		leftTop, rightTop, leftBottom, rightBottom);
 
 		if (leftTop < MAX_DISTANCE) {
 			mLeftTopBool = true;

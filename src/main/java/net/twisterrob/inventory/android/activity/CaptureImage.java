@@ -35,7 +35,8 @@ public class CaptureImage extends BaseActivity {
 
 		mPreview = (CameraPreview)findViewById(R.id.preview);
 		mSelection = (SelectionView)findViewById(R.id.selection);
-		mSelection.setSelectionMargin(0.10f); // 10 % off all sides
+		mSelection.setKeepAspectRatio(true);
+		mSelection.setSelectionMarginSquare(0.10f); // 10 % off short side
 
 		findViewById(R.id.btn_ok).setOnClickListener(new OnClickListener() {
 			@Override
