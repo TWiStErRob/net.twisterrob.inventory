@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.Paint.Style;
+import android.graphics.Region.Op;
 import android.graphics.drawable.Drawable;
 import android.util.*;
 import android.view.*;
@@ -19,10 +20,10 @@ import net.twisterrob.inventory.R;
  * @see <a href="http://adblogcat.com/a-camera-preview-with-a-bounding-box-like-google-goggles/">based on</a>
  */
 public class SelectionView extends View {
+	private static final Logger LOG = LoggerFactory.getLogger(SelectionView.class);
+
 	private static final double CORNER_SIZE_PERCENT = 0.05;
 	private static final int MAX_DISTANCE = 50;
-
-	private static final Logger LOG = LoggerFactory.getLogger(SelectionView.class);
 
 	private Drawable mLeftTopIcon;
 	private Drawable mRightTopIcon;
@@ -33,17 +34,16 @@ public class SelectionView extends View {
 	private boolean mRightTopBool = false;
 	private boolean mLeftBottomBool = false;
 	private boolean mRightBottomBool = false;
+	private boolean mRelocating = false;
 
-	// Starting positions of the bounding box
 	private Rect selection;
 	private float originalRatio;
 	private boolean keepAspectRatio = false;
+	private boolean fadeNonSelection = true;
 
 	private PointF mLastTouch = new PointF();
 
 	private Paint line;
-
-	private Rect ignoredRectangle;
 
 	@SuppressLint("InlinedApi")
 	private int mActivePointerId = MotionEvent.INVALID_POINTER_ID;
@@ -91,9 +91,15 @@ public class SelectionView extends View {
 	public void setKeepAspectRatio(boolean keepAspectRatio) {
 		this.keepAspectRatio = keepAspectRatio;
 	}
-
 	public boolean isKeepAspectRatio() {
 		return keepAspectRatio;
+	}
+
+	public void setFadeNonSelection(boolean fadeNonSelection) {
+		this.fadeNonSelection = fadeNonSelection;
+	}
+	public boolean isFadeNonSelection() {
+		return fadeNonSelection;
 	}
 
 	public void setSelectionMargin(float margin) {
@@ -152,9 +158,16 @@ public class SelectionView extends View {
 		if (selection == null) {
 			return;
 		}
-
 		tmpDrawSelection.set(selection);
 		tmpDrawSelection.sort(); // need to order because of CCW ordering I guess
+
+		if (fadeNonSelection) {
+			canvas.save();
+			canvas.clipRect(tmpDrawSelection, Op.DIFFERENCE); // the full canvas minus the selection is clipped
+			canvas.drawARGB(0x88, 0x00, 0x00, 0x00); // transparent black shade
+			canvas.restore();
+		}
+
 		canvas.drawRect(tmpDrawSelection, line);
 
 		mLeftTopIcon.draw(canvas);
@@ -185,12 +198,7 @@ public class SelectionView extends View {
 				break;
 			}
 			case MotionEvent.ACTION_DOWN: { // first pointer down
-				if (ignoredRectangle != null && ignoredRectangle.contains((int)x, (int)y)) {
-					handled = false;
-					break;
-				}
-
-				calculateSelectedCorner(x, y);
+				calculateSelectionAction(x, y);
 
 				mLastTouch.set(x, y); // Remember where we started
 				mActivePointerId = ev.getPointerId(pointerIndex);
@@ -220,7 +228,7 @@ public class SelectionView extends View {
 						dy *= 1;
 					}
 					selection.inset((int)dx, (int)dy);
-				} else {
+				} else if (mRelocating) {
 					selection.offset((int)dx, (int)dy);
 				}
 				correctSelection();
@@ -232,7 +240,7 @@ public class SelectionView extends View {
 			}
 			case MotionEvent.ACTION_CANCEL:
 			case MotionEvent.ACTION_UP: { // last pointer up
-				resetPickedCorner();
+				resetPickedAction();
 				selection.sort();
 				mActivePointerId = MotionEvent.INVALID_POINTER_ID;
 				break;
@@ -313,18 +321,19 @@ public class SelectionView extends View {
 		return mLeftTopBool || mLeftBottomBool || mRightBottomBool || mRightTopBool;
 	}
 
-	private void resetPickedCorner() {
+	private void resetPickedAction() {
 		// when one of these is true, that means it can move when onDraw is called
 		mLeftTopBool = false;
 		mRightTopBool = false;
 		mLeftBottomBool = false;
 		mRightBottomBool = false;
+		mRelocating = false;
 	}
 
 	/** Where the screen is pressed, calculate the distance closest to one of the 4 corners
 	  * so that it can get the pressed and moved. Only 1 at a time can be moved.
 	  */
-	private void calculateSelectedCorner(float x, float y) {
+	private void calculateSelectionAction(float x, float y) {
 		double leftTop = distance(x, y, selection.left, selection.top);
 		double rightTop = distance(x, y, selection.right, selection.top);
 		double leftBottom = distance(x, y, selection.left, selection.bottom);
@@ -353,8 +362,10 @@ public class SelectionView extends View {
 			mRightTopBool = false;
 			mLeftBottomBool = false;
 			mRightBottomBool = true;
+		} else if (selection.contains((int)x, (int)y)) {
+			mRelocating = true;
 		} else {
-			resetPickedCorner();
+			resetPickedAction();
 		}
 	}
 
@@ -380,10 +391,6 @@ public class SelectionView extends View {
 
 	private static double distance(float x1, float y1, float x2, float y2) {
 		return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
-	}
-
-	public void setIgnoredRectangle(Rect rec) {
-		this.ignoredRectangle = rec;
 	}
 
 	@Override

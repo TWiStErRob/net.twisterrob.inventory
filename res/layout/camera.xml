@@ -13,10 +13,30 @@
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
 
-	<Button
-		android:id="@+id/btn_ok"
-		android:text="Capture"
+	<LinearLayout
+		android:id="@+id/layoutRoot"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_gravity="bottom|center_horizontal" />
+		android:orientation="horizontal"
+		android:layout_gravity="bottom|center_horizontal">
+		<ImageButton
+			android:id="@+id/btn_crop"
+			android:src="@android:drawable/ic_menu_crop"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="TODO" />
+		<ImageButton
+			android:id="@+id/btn_capture"
+			android:src="@android:drawable/ic_menu_camera"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="TODO" />
+		<ToggleButton
+			android:id="@+id/btn_flash"
+			android:background="@drawable/btn_flash_toggle"
+			android:textOn="@string/empty"
+			android:textOff="@string/empty"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+	</LinearLayout>
 </FrameLayout>

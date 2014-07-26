@@ -66,7 +66,7 @@ public abstract class PictureHelper {
 		return cameraIntents;
 	}
 
-	private static Intent createGalleryIntent() {
+	public static Intent createGalleryIntent() {
 		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
 		galleryIntent.setType("image/*");
 		return galleryIntent;

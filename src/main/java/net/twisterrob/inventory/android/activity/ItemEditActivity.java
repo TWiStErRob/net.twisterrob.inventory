@@ -1,11 +1,12 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.io.File;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.slf4j.*;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.*;
@@ -23,8 +24,6 @@ import static net.twisterrob.inventory.android.content.Loaders.*;
 public class ItemEditActivity extends BaseEditActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditActivity.class);
 
-	private PictureHelper helper;
-
 	private EditText itemName;
 	private TextView itemCategory;
 	private ImageView itemImage;
@@ -34,16 +33,6 @@ public class ItemEditActivity extends BaseEditActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		itemID = getIntent().getLongExtra(Extras.ITEM_ID, Item.ID_ADD);
-
-		helper = new PictureHelper(this) {
-			@Override
-			protected File getTargetFile() {
-				String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
-				String imageFileName = "Item_" + itemID + "_" + timeStamp + ".jpg";
-				File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-				return new File(storageDir, imageFileName);
-			}
-		};
 
 		super.setContentView(R.layout.item_edit);
 		itemName = (EditText)findViewById(R.id.itemName);
@@ -60,11 +49,22 @@ public class ItemEditActivity extends BaseEditActivity {
 		manager.startLoading();
 	}
 
+	protected File getTargetFile() {
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
+		String imageFileName = "Item_" + itemID + "_" + timeStamp + ".jpg";
+		File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+		return new File(storageDir, imageFileName);
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.action_picture_take:
+				startActivityForResult(new Intent(getApplicationContext(), CaptureImage.class),
+						PictureUtils.REQUEST_CODE_TAKE_PICTURE);
+				return true;
 			case R.id.action_picture_pick:
-				startActivityForResult(helper.startCapture(), PictureUtils.REQUEST_CODE_GET_PICTURE);
+				startActivityForResult(PictureHelper.createGalleryIntent(), PictureUtils.REQUEST_CODE_GET_PICTURE);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -81,28 +81,35 @@ public class ItemEditActivity extends BaseEditActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-			case PictureUtils.REQUEST_CODE_GET_PICTURE:
-				if (helper.endCapture(resultCode, data)) {
-					Intent crop = helper.startCrop();
-					if (crop != null) {
-						startActivityForResult(crop, PictureUtils.REQUEST_CODE_CROP_PICTURE);
-					} else {
-						imageReceived(); // use uncropped image
+			case PictureUtils.REQUEST_CODE_GET_PICTURE: {
+				if (resultCode == Activity.RESULT_OK && data != null) {
+					File file = PictureUtils.getFile(this, data.getData());
+					try {
+						itemImage.setImageBitmap(PictureUtils.loadPicture(file, -1, -1));
+					} catch (IOException ex) {
+						LOG.error("Cannot load {}", file, ex);
 					}
+					return;
 				}
 				break;
-			case PictureUtils.REQUEST_CODE_CROP_PICTURE:
-				helper.endCrop(resultCode, data);
+			}
+			case PictureUtils.REQUEST_CODE_TAKE_PICTURE: {
+				if (resultCode == Activity.RESULT_OK && data != null) {
+					File file = PictureUtils.getFile(this, data.getData());
+					try {
+						itemImage.setImageBitmap(PictureUtils.loadPicture(file, -1, -1));
+					} catch (IOException ex) {
+						LOG.error("Cannot load {}", file, ex);
+					}
+					return;
+				}
 				break;
+			}
 			default:
-				super.onActivityResult(requestCode, resultCode, data);
+				// do as super pleases
 				break;
 		}
-	}
-
-	private void imageReceived() {
-		LOG.debug("Result: {}", helper.getFile());
-		itemImage.setImageBitmap(helper.getThumbnail());
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private final class IsExistingItem extends DynamicLoaderManager.Condition {

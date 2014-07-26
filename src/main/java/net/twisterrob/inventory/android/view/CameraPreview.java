@@ -100,7 +100,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		if (mCamera != null) {
 			throw new IllegalStateException("Camera already acquired");
 		}
-		int mCameraID = 0;
+		int mCameraID = 0; // TODO front camera?
 		mCamera = Camera.open(mCameraID);
 		mCameraInfo = new CameraInfo();
 		mParams = mCamera.getParameters();
@@ -160,15 +160,18 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	public void setFlash(boolean flash) {
-		Parameters mParameters = mCamera.getParameters();
-		Toast.makeText(getContext(), "Flash is: " + mParameters.getFlashMode(), Toast.LENGTH_LONG).show();
-		if (flash) {
-			mParameters.setFlashMode(Parameters.FLASH_MODE_TORCH);
-			mCamera.setParameters(mParameters);
-		} else {
-			mParameters.setFlashMode(Parameters.FLASH_MODE_OFF);
-			mCamera.setParameters(mParameters);
+		if (mCamera == null) {
+			return;
 		}
+		String flashMode;
+		if (flash) {
+			flashMode = Parameters.FLASH_MODE_TORCH;
+		} else {
+			flashMode = Parameters.FLASH_MODE_OFF;
+		}
+		mParams.setFlashMode(flashMode);
+		mCamera.setParameters(mParams);
+		Toast.makeText(getContext(), "Flash is: " + mParams.getFlashMode(), Toast.LENGTH_SHORT).show();
 	}
 
 	// TODO implement onMeasure or drop this

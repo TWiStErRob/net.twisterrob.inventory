@@ -4,16 +4,18 @@ import java.io.*;
 
 import org.slf4j.*;
 
+import android.content.Intent;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.hardware.*;
 import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.*;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
+import android.widget.*;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.utils.PictureUtils;
@@ -22,90 +24,136 @@ import net.twisterrob.java.io.IOTools;
 
 public class CaptureImage extends BaseActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
+
 	private CameraPreview mPreview;
 	private SelectionView mSelection;
+	private File mSavedFile;
 
 	@Override
-	protected void onCreate(Bundle arg0) {
-		super.onCreate(arg0);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		getSupportActionBar().hide();
 
 		setContentView(R.layout.camera);
 
+		ImageButton btnCapture = (ImageButton)findViewById(R.id.btn_capture);
+		ImageButton btnCrop = (ImageButton)findViewById(R.id.btn_crop);
+		ToggleButton btnFlash = (ToggleButton)findViewById(R.id.btn_flash);
 		mPreview = (CameraPreview)findViewById(R.id.preview);
 		mSelection = (SelectionView)findViewById(R.id.selection);
+
 		mSelection.setKeepAspectRatio(true);
 		mSelection.setSelectionMarginSquare(0.10f); // 10 % off short side
 
-		findViewById(R.id.btn_ok).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Camera camera = mPreview.getCamera();
-				if (camera == null) {
-					return;
-				}
-				camera.takePicture(new ShutterCallback() {
-					public void onShutter() {
-						LOG.trace("shutter");
-					}
-				}, new PictureCallback() {
-					public void onPictureTaken(byte[] data, Camera camera) {
-						LOG.trace("raw {}", data == null? -1 : data.length);
-					}
-				}, new PictureCallback() {
-					public void onPictureTaken(byte[] data, Camera camera) {
-						LOG.trace("postview {}", data == null? -1 : data.length);
-					}
-				}, new PictureCallback() {
-					public void onPictureTaken(byte[] data, Camera camera) {
-						LOG.trace("jpeg {}", data == null? -1 : data.length);
-						File file = new File(getExternalCacheDir(), "picture.jpg");
-						@SuppressWarnings("resource")
-						OutputStream out = null;
-						try {
-							out = new FileOutputStream(file);
-							IOTools.writeAll(out, data);
-							LOG.info("Raw image saved at {}", file);
-						} catch (FileNotFoundException ex) {
-							LOG.error("Cannot find file {}", file, ex);
-							file = null;
-						} catch (IOException ex) {
-							LOG.error("Cannot write file {}", file, ex);
-							file = null;
-						} finally {
-							IOTools.ignorantClose(out);
-						}
-
-						try {
-							RectF selection = getPictureRect();
-							if (file != null && !selection.isEmpty()) {
-								Bitmap bitmap = PictureUtils.cropPicture(file, selection.left, selection.top,
-										selection.right, selection.bottom);
-								PictureUtils.savePicture(bitmap, file, CompressFormat.JPEG, 80);
-								LOG.info("Cropped file saved at {}", file);
-							}
-						} catch (IOException ex) {
-							LOG.error("Cannot crop image file {}", file, ex);
-							file = null;
-						}
-						if (file != null) {
-							Toast.makeText(CaptureImage.this, "Picture saved to " + file, Toast.LENGTH_LONG).show();
-						}
-					}
-
-					private RectF getPictureRect() {
-						RectF selection = new RectF(mSelection.getSelection());
-						float width = mSelection.getWidth();
-						float height = mSelection.getHeight();
-						selection.left = selection.left / width;
-						selection.top = selection.top / height;
-						selection.right = selection.right / width;
-						selection.bottom = selection.bottom / height;
-						return selection;
-					}
-				});
+		btnFlash.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				mPreview.setFlash(isChecked);
 			}
 		});
+
+		btnCapture.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mSavedFile == null) {
+					take(new PictureCallback() {
+						public void onPictureTaken(byte[] data, Camera camera) {
+							doSave(data);
+						}
+					});
+				} else {
+					doFinish();
+				}
+			}
+		});
+
+		btnCrop.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				if (mSavedFile != null) {
+					doCrop();
+					doFinish();
+				} else {
+					take(new PictureCallback() {
+						public void onPictureTaken(byte[] data, Camera camera) {
+							doSave(data);
+							doCrop();
+							doFinish();
+						}
+					});
+				}
+			}
+
+		});
+	}
+
+	protected void doSave(byte[] data) {
+		mSavedFile = save(data);
+	}
+	protected void doCrop() {
+		mSavedFile = crop(mSavedFile);
+	}
+	protected void doFinish() {
+		Intent result = new Intent();
+		result.setDataAndType(Uri.fromFile(mSavedFile), "image/jpeg");
+		setResult(RESULT_OK, result);
+		finish();
+	}
+
+	private void take(PictureCallback jpegCallback) {
+		Camera camera = mPreview.getCamera();
+		if (camera == null) {
+			return;
+		}
+		camera.takePicture(null, null, null, jpegCallback);
+	}
+
+	@SuppressWarnings("resource")
+	private File save(byte[] data) {
+		if (data == null) {
+			return null;
+		}
+		File file = new File(getExternalCacheDir(), "picture.jpg");
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream(file);
+			IOTools.writeAll(out, data);
+			LOG.info("Raw image saved at {}", file);
+		} catch (FileNotFoundException ex) {
+			LOG.error("Cannot find file {}", file, ex);
+			file = null;
+		} catch (IOException ex) {
+			LOG.error("Cannot write file {}", file, ex);
+			file = null;
+		} finally {
+			IOTools.ignorantClose(out);
+		}
+		return file;
+	}
+
+	private File crop(File file) {
+		try {
+			RectF sel = getPictureRect();
+			if (file != null && !sel.isEmpty()) {
+				Bitmap bitmap = PictureUtils.cropPicture(file, sel.left, sel.top, sel.right, sel.bottom);
+				PictureUtils.savePicture(bitmap, file, CompressFormat.JPEG, 80);
+				LOG.info("Cropped file saved at {}", file);
+				return file;
+			}
+		} catch (IOException ex) {
+			LOG.error("Cannot crop image file {}", file, ex);
+		}
+		return null;
+	}
+
+	private RectF getPictureRect() {
+		float width = mSelection.getWidth();
+		float height = mSelection.getHeight();
+
+		RectF selection = new RectF(mSelection.getSelection());
+		selection.left = selection.left / width;
+		selection.top = selection.top / height;
+		selection.right = selection.right / width;
+		selection.bottom = selection.bottom / height;
+		return selection;
 	}
 }

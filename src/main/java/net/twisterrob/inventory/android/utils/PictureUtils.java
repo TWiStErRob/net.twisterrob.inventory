@@ -85,33 +85,33 @@ public class PictureUtils {
 		activity.startActivity(intent);
 	}
 
-	public static Bitmap loadPicture(String sourceFile, int targetW, int targetH) {
+	@SuppressWarnings("resource")
+	public static Bitmap loadPicture(String sourceFile, int targetW, int targetH) throws IOException {
 		Bitmap bitmap = null;
+		FileInputStream stream = null;
 		try {
-			bitmap = loadPicture(new FileInputStream(sourceFile), targetW, targetH);
-		} catch (FileNotFoundException e) {
-			// ignore
+			stream = new FileInputStream(sourceFile);
+			bitmap = loadPicture(stream, targetW, targetH);
+		} finally {
+			IOTools.ignorantClose(stream);
 		}
-		try {
-			if (bitmap != null) {
-				bitmap = rotateImage(bitmap, sourceFile);
+		if (bitmap != null) {
+			int rotation = getExifRotation(new File(sourceFile));
+			if (rotation != -1) {
+				bitmap = rotateImage(bitmap, rotation);
 			}
-		} catch (IOException e) {
-			// ignore
 		}
 		return bitmap;
 	}
-	public static Bitmap loadPicture(File sourceFile, int targetW, int targetH) {
+	public static Bitmap loadPicture(File sourceFile, int targetW, int targetH) throws IOException {
 		return loadPicture(sourceFile.getAbsolutePath(), targetW, targetH);
 	}
-	public static Bitmap loadPicture(Context context, Uri sourceUri, int targetW, int targetH) {
+	public static Bitmap loadPicture(Context context, Uri sourceUri, int targetW, int targetH) throws IOException {
 		Bitmap bitmap = null;
 		InputStream stream = null;
 		try {
 			stream = context.getContentResolver().openInputStream(sourceUri);
 			bitmap = loadPicture(stream, targetW, targetH);
-		} catch (FileNotFoundException ex) {
-			// ignore
 		} finally {
 			IOTools.ignorantClose(stream);
 		}
@@ -119,17 +119,18 @@ public class PictureUtils {
 	}
 	public static Bitmap loadPicture(InputStream stream, int targetW, int targetH) {
 		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-		bmOptions.inJustDecodeBounds = true;
-		BitmapFactory.decodeStream(stream, null, bmOptions);
+		if (targetW > 0 && targetH > 0) {
+			bmOptions.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(stream, null, bmOptions);
 
-		int photoW = bmOptions.outWidth;
-		int photoH = bmOptions.outHeight;
-		int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+			int photoW = bmOptions.outWidth;
+			int photoH = bmOptions.outHeight;
+			int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+			bmOptions.inSampleSize = scaleFactor;
+			bmOptions.inJustDecodeBounds = false;
+		}
 
-		bmOptions.inJustDecodeBounds = false;
-		bmOptions.inSampleSize = scaleFactor;
 		bmOptions.inPurgeable = true;
-
 		Bitmap bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
 		return bitmap;
 	}
@@ -143,14 +144,6 @@ public class PictureUtils {
 			bitmap.recycle(); // Pretend none of this ever happened!
 		}
 		return result;
-	}
-
-	public static Bitmap rotateImage(Bitmap bitmap, String filePath) throws IOException {
-		int rotation = getExifRotation(new File(filePath));
-		if(rotation != -1) {
-			bitmap = rotateImage(bitmap, rotation);
-		}
-		return bitmap;
 	}
 
 	public static int getOrientation(Context context, Uri photoUri) {
