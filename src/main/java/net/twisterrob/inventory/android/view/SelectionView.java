@@ -6,6 +6,7 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
@@ -14,7 +15,11 @@ import android.view.*;
 
 import net.twisterrob.inventory.R;
 
+/**
+ * @see <a href="http://adblogcat.com/a-camera-preview-with-a-bounding-box-like-google-goggles/">based on</a>
+ */
 public class SelectionView extends View {
+	private static final double CORNER_SIZE_PERCENT = 0.05;
 	private static final int MAX_DISTANCE = 50;
 
 	private static final Logger LOG = LoggerFactory.getLogger(SelectionView.class);
@@ -34,8 +39,7 @@ public class SelectionView extends View {
 	private float originalRatio;
 	private boolean keepAspectRatio = false;
 
-	private float mLastTouchX;
-	private float mLastTouchY;
+	private PointF mLastTouch = new PointF();
 
 	private Paint line;
 
@@ -46,29 +50,30 @@ public class SelectionView extends View {
 
 	public SelectionView(Context context) {
 		super(context);
-		init(context);
+		init();
 	}
 
 	public SelectionView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init(context);
+		init();
 	}
 
 	public SelectionView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		init(context);
+		init();
 	}
 
-	private void init(Context context) {
+	private void init() {
 		line = new Paint();
 		line.setStyle(Style.STROKE);
 		line.setColor(Color.CYAN);
 		line.setStrokeWidth(15);
 
-		mLeftTopIcon = context.getResources().getDrawable(R.drawable.corner);
-		mRightTopIcon = context.getResources().getDrawable(R.drawable.corner);
-		mLeftBotIcon = context.getResources().getDrawable(R.drawable.corner);
-		mRightBotIcon = context.getResources().getDrawable(R.drawable.corner);
+		Resources resources = getContext().getResources();
+		mLeftTopIcon = resources.getDrawable(R.drawable.corner);
+		mRightTopIcon = resources.getDrawable(R.drawable.corner);
+		mLeftBotIcon = resources.getDrawable(R.drawable.corner);
+		mRightBotIcon = resources.getDrawable(R.drawable.corner);
 	}
 
 	public Rect getSelection() {
@@ -170,7 +175,7 @@ public class SelectionView extends View {
 		final float y = ev.getY(pointerIndex);
 
 		if (ev.getActionMasked() != MotionEvent.ACTION_MOVE) {
-			//LOG.debug("{}", ev);
+			//LOG.debug(ev.toString());
 		}
 
 		boolean handled = true;
@@ -180,17 +185,14 @@ public class SelectionView extends View {
 				break;
 			}
 			case MotionEvent.ACTION_DOWN: { // first pointer down
-
 				if (ignoredRectangle != null && ignoredRectangle.contains((int)x, (int)y)) {
 					handled = false;
 					break;
 				}
 
-				euclidianDistance(x, y);
+				calculateSelectedCorner(x, y);
 
-				// Remember where we started
-				mLastTouchX = x;
-				mLastTouchY = y;
+				mLastTouch.set(x, y); // Remember where we started
 				mActivePointerId = ev.getPointerId(pointerIndex);
 				break;
 			}
@@ -200,8 +202,8 @@ public class SelectionView extends View {
 					break;
 				}
 
-				float dx = x - mLastTouchX;
-				float dy = y - mLastTouchY;
+				float dx = x - mLastTouch.x;
+				float dy = y - mLastTouch.y;
 
 				if (hasPickedCorner()) {
 					if (mLeftTopBool) {
@@ -223,9 +225,7 @@ public class SelectionView extends View {
 				}
 				correctSelection();
 
-				// Remember this touch position for the next move event
-				mLastTouchX = x;
-				mLastTouchY = y;
+				mLastTouch.set(x, y); // Remember this touch position for the next move event
 
 				invalidate(); // selection changed, redraw
 				break;
@@ -241,8 +241,7 @@ public class SelectionView extends View {
 				if (ev.getPointerId(pointerIndex) == mActivePointerId) {
 					// this was our active pointer going up, choose a new one
 					final int newPointerIndex = (pointerIndex + 1) % ev.getPointerCount();
-					mLastTouchX = ev.getX(newPointerIndex);
-					mLastTouchY = ev.getY(newPointerIndex);
+					mLastTouch.set(ev.getX(newPointerIndex), ev.getY(newPointerIndex));
 					mActivePointerId = ev.getPointerId(newPointerIndex);
 				}
 				break;
@@ -255,83 +254,61 @@ public class SelectionView extends View {
 	 * TODO widening the selection with left going out left and right going towards right double speed
 	 */
 	private void correctSelection() {
+		Rect s = selection;
 		if (keepAspectRatio) {
-			float currentRatio = (float)selection.width() / (float)selection.height();
+			float currentRatio = (float)s.width() / (float)s.height();
 			if (Math.abs(currentRatio - originalRatio) > 1e-5) {
 				if (currentRatio > originalRatio) {
-					int dx = (int)(selection.width() - selection.height() * originalRatio);
+					int dx = (int)(s.width() - s.height() * originalRatio);
 					LOG.debug("RatioX {}, original: {}, inset: {}", currentRatio, originalRatio, dx);
-					selection.inset(dx / 2, 0);
+					s.inset(dx / 2, 0);
 				} else {
-					int dy = (int)(selection.height() - selection.width() / originalRatio);
+					int dy = (int)(s.height() - s.width() / originalRatio);
 					LOG.debug("RatioY {}, original: {}, inset: {}", currentRatio, originalRatio, dy);
-					selection.inset(0, dy / 2);
+					s.inset(0, dy / 2);
 				}
 			}
 		}
 
-		if (selection.width() > getWidth()) {
-			LOG.debug("Too wide: {} > {}, inset: {}", selection.width(), getWidth(),
-					-(getWidth() - selection.width()) / 2);
-			selection.inset(-(getWidth() - selection.width()) / 2, 0);
-		}
-		if (-selection.width() > getWidth()) {
-			LOG.debug("Too -wide: {} > {}, inset: {}", selection.width(), getWidth(),
-					(getWidth() - -selection.width()) / 2);
-			selection.inset(+(getWidth() - -selection.width()) / 2, 0);
+		int width = Math.abs(s.width());
+		if (width > getWidth()) {
+			int dx = s.width() < 0? getWidth() - width : width - getWidth();
+			LOG.debug("Too wide: {} > {}, inset: {}", width, getWidth(), dx / 2);
+			s.inset(dx / 2, 0);
 		}
 
-		if (selection.height() > getHeight()) {
-			LOG.debug("Too tall: {} > {}, inset: {}", selection.height(), getHeight(),
-					-(getHeight() - selection.height()) / 2);
-			selection.inset(0, -(getHeight() - selection.height()) / 2);
-		}
-		if (-selection.height() > getHeight()) {
-			LOG.debug("Too -tall: {} > {}, inset: {}", selection.height(), getHeight(),
-					(getHeight() - -selection.height()) / 2);
-			selection.inset(0, +(getHeight() - -selection.height()) / 2);
+		int height = Math.abs(s.height());
+		if (height > getHeight()) {
+			int dy = s.height() < 0? getHeight() - height : height - getHeight();
+			LOG.debug("Too tall: {} > {}, inset: {}", height, getHeight(), dy / 2);
+			s.inset(0, dy / 2);
 		}
 
-		if (selection.left < 0) {
-			LOG.debug("Left out left: {}, offset: {}", selection.left, -selection.left);
-			selection.offset(-selection.left, 0);
-		}
-		if (selection.right < 0) {
-			LOG.debug("Right out left: {}, offset: {}", selection.right, -selection.right);
-			selection.offset(-+selection.right, 0);
+		int left = Math.min(s.left, s.right);
+		if (left < 0) {
+			LOG.debug("Out left: {}, offset: {}", left, -left);
+			s.offset(-left, 0);
 		}
 
-		if (selection.top < 0) {
-			LOG.debug("Top out top: {}, offset: {}", selection.top, -selection.top);
-			selection.offset(0, -selection.top);
-		}
-		if (selection.bottom < 0) {
-			LOG.debug("Bottom out top: {}, offset: {}", selection.bottom, -selection.bottom);
-			selection.offset(0, -+selection.bottom);
+		int top = Math.min(s.top, s.bottom);
+		if (top < 0) {
+			LOG.debug("Out top: {}, offset: {}", top, -top);
+			s.offset(0, -top);
 		}
 
-		if (selection.right > getWidth()) {
-			LOG.debug("Right out right: {} (>{}), offset: {}", selection.right, getWidth(),
-					-(selection.right - getWidth()));
-			selection.offset(-(selection.right - getWidth()), 0);
-		}
-		if (selection.left > getWidth()) {
-			LOG.debug("Left out right: {} (>{}), offset: {}", selection.left, getWidth(),
-					-(selection.left - getWidth()));
-			selection.offset(-+(selection.left - getWidth()), 0);
+		int right = Math.max(s.right, s.left);
+		if (right > getWidth()) {
+			LOG.debug("Out right: {} (>{}), offset: {}", right, getWidth(), -(right - getWidth()));
+			s.offset(-(right - getWidth()), 0);
 		}
 
-		if (selection.bottom > getHeight()) {
-			LOG.debug("Bottom out bottom: {} (>{}), offset: {}", selection.bottom, getHeight(),
-					-(selection.bottom - getHeight()));
-			selection.offset(0, -(selection.bottom - getHeight()));
-		}
-		if (selection.top > getHeight()) {
-			LOG.debug("Top out bottom: {} (>{}), offset: {}", selection.top, getHeight(),
-					-(selection.top - getHeight()));
-			selection.offset(0, -+(selection.top - getHeight()));
+		int bottom = Math.max(s.bottom, s.top);
+		if (bottom > getHeight()) {
+			LOG.debug("Out bottom: {} (>{}), offset: {}", bottom, getHeight(), -(bottom - getHeight()));
+			s.offset(0, -(bottom - getHeight()));
 		}
 	}
+
 	private boolean hasPickedCorner() {
 		return mLeftTopBool || mLeftBottomBool || mRightBottomBool || mRightTopBool;
 	}
@@ -347,11 +324,11 @@ public class SelectionView extends View {
 	/** Where the screen is pressed, calculate the distance closest to one of the 4 corners
 	  * so that it can get the pressed and moved. Only 1 at a time can be moved.
 	  */
-	private void euclidianDistance(float x, float y) {
-		double leftTop = sqrt(pow((abs(x - selection.left)), 2) + pow((abs(y - selection.top)), 2));
-		double rightTop = sqrt(pow((abs(x - selection.right)), 2) + pow((abs(y - selection.top)), 2));
-		double leftBottom = sqrt(pow((abs(x - selection.left)), 2) + pow((abs(y - selection.bottom)), 2));
-		double rightBottom = sqrt(pow((abs(x - selection.right)), 2) + pow((abs(y - selection.bottom)), 2));
+	private void calculateSelectedCorner(float x, float y) {
+		double leftTop = distance(x, y, selection.left, selection.top);
+		double rightTop = distance(x, y, selection.right, selection.top);
+		double leftBottom = distance(x, y, selection.left, selection.bottom);
+		double rightBottom = distance(x, y, selection.right, selection.bottom);
 
 		//LOG.debug("leftTop: {}, rightTop: {}, leftBottom: {}, rightBottom: {}", //
 		//		leftTop, rightTop, leftBottom, rightBottom);
@@ -379,8 +356,32 @@ public class SelectionView extends View {
 		} else {
 			resetPickedCorner();
 		}
-
 	}
+
+	protected String getSelectedCorner() {
+		StringBuilder sb = new StringBuilder();
+		if (mLeftTopBool) {
+			sb.append("mLeftTopBool");
+		}
+		if (mLeftBottomBool) {
+			sb.append("mLeftBottomBool");
+		}
+		if (mRightTopBool) {
+			sb.append("mRightTopBool");
+		}
+		if (mRightBottomBool) {
+			sb.append("mRightBottomBool");
+		}
+		if (sb.length() == 0) {
+			sb.append("none");
+		}
+		return sb.toString();
+	}
+
+	private static double distance(float x1, float y1, float x2, float y2) {
+		return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+	}
+
 	public void setIgnoredRectangle(Rect rec) {
 		this.ignoredRectangle = rec;
 	}
@@ -390,7 +391,7 @@ public class SelectionView extends View {
 		super.invalidate();
 
 		if (selection != null) {
-			int size = (int)(Math.min(getWidth(), getHeight()) * 0.025);
+			int size = (int)(Math.min(getWidth(), getHeight()) * CORNER_SIZE_PERCENT / 2);
 			Rect sel = selection;
 			mLeftTopIcon.setBounds(sel.left - size, sel.top - size, sel.left + size, sel.top + size);
 			mRightTopIcon.setBounds(sel.right - size, sel.top - size, sel.right + size, sel.top + size);
