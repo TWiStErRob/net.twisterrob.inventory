@@ -406,4 +406,28 @@ public class SelectionView extends View {
 			mRightBotIcon.setBounds(sel.right - size, sel.bottom - size, sel.right + size, sel.bottom + size);
 		}
 	}
+
+	public enum SelectionStatus {
+		NORMAL(Color.CYAN),
+		FOCUSED(Color.GREEN),
+		BLURRY(Color.RED);
+		private final int color;
+
+		private SelectionStatus(int color) {
+			this.color = color;
+		}
+
+		public int getColor() {
+			return color;
+		}
+
+		private void updatePaint(Paint paint) {
+			paint.setColor(color);
+		}
+	}
+
+	public void setSelectionStatus(SelectionStatus status) {
+		status.updatePaint(line);
+		invalidate();
+	}
 }

@@ -152,6 +152,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
+	public void cancelTakePicture() {
+		startPreview();
+	}
+
 	public void setCameraFocus(AutoFocusCallback autoFocus) {
 		String focusMode = mCamera.getParameters().getFocusMode();
 		if (Parameters.FOCUS_MODE_AUTO.equals(focusMode) || Parameters.FOCUS_MODE_MACRO.equals(focusMode)) {
@@ -165,7 +169,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 		String flashMode;
 		if (flash) {
-			flashMode = Parameters.FLASH_MODE_TORCH;
+			flashMode = Parameters.FLASH_MODE_ON;
 		} else {
 			flashMode = Parameters.FLASH_MODE_OFF;
 		}

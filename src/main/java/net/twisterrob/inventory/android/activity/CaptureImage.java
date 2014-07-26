@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.hardware.*;
+import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.utils.PictureUtils;
 import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
 public class CaptureImage extends BaseActivity {
@@ -62,7 +64,7 @@ public class CaptureImage extends BaseActivity {
 						}
 					});
 				} else {
-					doFinish();
+					doRestartPreview();
 				}
 			}
 		});
@@ -85,12 +87,16 @@ public class CaptureImage extends BaseActivity {
 
 		});
 	}
-
 	protected void doSave(byte[] data) {
 		mSavedFile = save(data);
 	}
 	protected void doCrop() {
 		mSavedFile = crop(mSavedFile);
+	}
+	protected void doRestartPreview() {
+		mSavedFile = null;
+		mSelection.setSelectionStatus(SelectionStatus.NORMAL);
+		mPreview.cancelTakePicture();
 	}
 	protected void doFinish() {
 		Intent result = new Intent();
@@ -98,13 +104,21 @@ public class CaptureImage extends BaseActivity {
 		setResult(RESULT_OK, result);
 		finish();
 	}
-
-	private void take(PictureCallback jpegCallback) {
+	protected void take(final PictureCallback jpegCallback) {
 		Camera camera = mPreview.getCamera();
 		if (camera == null) {
 			return;
 		}
-		camera.takePicture(null, null, null, jpegCallback);
+		camera.autoFocus(new AutoFocusCallback() {
+			public void onAutoFocus(boolean success, Camera camera) {
+				if (success) {
+					mSelection.setSelectionStatus(SelectionStatus.FOCUSED);
+				} else {
+					mSelection.setSelectionStatus(SelectionStatus.BLURRY);
+				}
+				camera.takePicture(null, null, null, jpegCallback);
+			}
+		});
 	}
 
 	@SuppressWarnings("resource")
