@@ -84,11 +84,17 @@ public/* static */class IOTools {
 		}
 	}
 
-	public static void writeAll(OutputStream stream, String contents) {
+	public static void writeAll(OutputStream stream, String contents) throws IOException {
 		try {
-			stream.write(contents.getBytes(ENCODING));
-		} catch (IOException ex) {
+			writeAll(stream, contents.getBytes(ENCODING));
+		} catch (UnsupportedEncodingException ex) {
 			throw new IllegalStateException(ex);
+		}
+	}
+
+	public static void writeAll(OutputStream stream, byte[] contents) throws IOException {
+		try {
+			stream.write(contents);
 		} finally {
 			IOTools.ignorantClose(stream);
 		}

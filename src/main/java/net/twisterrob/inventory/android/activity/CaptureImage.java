@@ -78,10 +78,10 @@ public class CaptureImage extends BaseActivity {
 						}
 
 						try {
-							Rect selection = mSelection.getSelection();
-							if (file != null && selection != null) {
+							RectF selection = getPictureRect();
+							if (file != null && !selection.isEmpty()) {
 								Bitmap bitmap = PictureUtils.cropPicture(file, selection.left, selection.top,
-										selection.width(), selection.height());
+										selection.right, selection.bottom);
 								PictureUtils.savePicture(bitmap, file, CompressFormat.JPEG, 80);
 								LOG.info("Cropped file saved at {}", file);
 							}
@@ -92,6 +92,17 @@ public class CaptureImage extends BaseActivity {
 						if (file != null) {
 							Toast.makeText(CaptureImage.this, "Picture saved to " + file, Toast.LENGTH_LONG).show();
 						}
+					}
+
+					private RectF getPictureRect() {
+						RectF selection = new RectF(mSelection.getSelection());
+						float width = mSelection.getWidth();
+						float height = mSelection.getHeight();
+						selection.left = selection.left / width;
+						selection.top = selection.top / height;
+						selection.right = selection.right / width;
+						selection.bottom = selection.bottom / height;
+						return selection;
 					}
 				});
 			}

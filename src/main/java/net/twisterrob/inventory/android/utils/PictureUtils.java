@@ -3,6 +3,8 @@ package net.twisterrob.inventory.android.utils;
 import java.io.*;
 import java.util.*;
 
+import org.slf4j.*;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.*;
@@ -21,6 +23,8 @@ import net.twisterrob.java.io.IOTools;
 // TODO crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
 // TODO crop http://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
 public class PictureUtils {
+	private static final Logger LOG = LoggerFactory.getLogger(PictureUtils.class);
+
 	public static final short REQUEST_CODE_GET_PICTURE = 0x41C0;
 	public static final short REQUEST_CODE_TAKE_PICTURE = 0x41C1;
 	public static final short REQUEST_CODE_PICK_GALLERY = 0x41C2;
@@ -130,12 +134,8 @@ public class PictureUtils {
 		return bitmap;
 	}
 
-	public static Bitmap rotateImage(Bitmap bitmap, String filePath) throws IOException {
+	public static Bitmap rotateImage(Bitmap bitmap, int rotation) {
 		Bitmap result = bitmap;
-		ExifInterface exif = new ExifInterface(filePath);
-		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-
-		float rotation = getRotation(orientation);
 		if (rotation != 0) {
 			Matrix matrix = new Matrix();
 			matrix.postRotate(rotation);
@@ -143,6 +143,14 @@ public class PictureUtils {
 			bitmap.recycle(); // Pretend none of this ever happened!
 		}
 		return result;
+	}
+
+	public static Bitmap rotateImage(Bitmap bitmap, String filePath) throws IOException {
+		int rotation = getExifRotation(new File(filePath));
+		if(rotation != -1) {
+			bitmap = rotateImage(bitmap, rotation);
+		}
+		return bitmap;
 	}
 
 	public static int getOrientation(Context context, Uri photoUri) {
@@ -157,20 +165,55 @@ public class PictureUtils {
 		return result;
 	}
 
-	/**
-	 * @param orientation {@link ExifInterface#ORIENTATION_UNDEFINED ORIENTATION_ROTATE_*}
-	 * @return degrees
-	 */
-	public static float getRotation(int orientation) {
-		int rotation = 0;
-		if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-			rotation = 90;
-		} else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-			rotation = 180;
-		} else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-			rotation = 270;
+	public static int getExifRotation(File file) throws IOException {
+		return getExifRotation(getExifOrientation(file));
+	}
+
+	public static int getExifOrientation(File file) throws IOException {
+		ExifInterface exif = new ExifInterface(file.getAbsolutePath());
+		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+		return orientation;
+	}
+
+	public static int getExifRotation(int orientation) {
+		switch (orientation) {
+			case ExifInterface.ORIENTATION_NORMAL:
+			case ExifInterface.ORIENTATION_UNDEFINED:
+				return 0;
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				return 90;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				return 180;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				return 270;
+			default:
+				return -1;
 		}
-		return rotation;
+	}
+
+	public static String getExifString(int orientation) {
+		switch (orientation) {
+			case ExifInterface.ORIENTATION_UNDEFINED:
+				return "UNDEFINED";
+			case ExifInterface.ORIENTATION_NORMAL:
+				return "NORMAL";
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				return "ROTATE_90";
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				return "ROTATE_180";
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				return "ROTATE_270";
+			case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+				return "FLIP_HOR";
+			case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+				return "FLIP_VER";
+			case ExifInterface.ORIENTATION_TRANSPOSE:
+				return "TRANSPOSE";
+			case ExifInterface.ORIENTATION_TRANSVERSE:
+				return "TRANSVERSE";
+			default:
+				return "unknown";
+		}
 	}
 
 	public static Uri getPictureUriFromResult(int requestCode, int resultCode, Intent data) {
@@ -297,6 +340,7 @@ public class PictureUtils {
 		}
 		return null;
 	}
+
 	/**
 	 * Get the value of the data column for this Uri. This is useful for
 	 * MediaStore Uris, and other file-based ContentProviders.
@@ -330,49 +374,102 @@ public class PictureUtils {
 	}
 
 	public static Bitmap cropPicture(File file, int x, int y, int w, int h) throws IOException {
+		return crop(file, new Rect(x, y, x + w, y + h));
+	}
+
+	public static Bitmap cropPicture(File file, float left, float top, float right, float bottom) throws IOException {
+		RectF perc = new RectF();
+		int orientation = getExifOrientation(file);
+		switch (orientation) {
+			default:
+			case ExifInterface.ORIENTATION_UNDEFINED:
+			case ExifInterface.ORIENTATION_NORMAL:
+				perc.left = left;
+				perc.top = top;
+				perc.right = right;
+				perc.bottom = bottom;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				perc.left = top;
+				perc.top = 1 - right;
+				perc.right = bottom;
+				perc.bottom = 1 - left;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				perc.left = 1 - right;
+				perc.top = 1 - bottom;
+				perc.right = 1 - left;
+				perc.bottom = 1 - top;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				perc.left = 1 - bottom;
+				perc.top = left;
+				perc.right = 1 - top;
+				perc.bottom = right;
+				break;
+		}
+		BitmapFactory.Options options = getSize(file);
+
+		Rect rect = new Rect();
+		rect.left = (int)(perc.left * options.outWidth);
+		rect.top = (int)(perc.top * options.outHeight);
+		rect.right = (int)(perc.right * options.outWidth);
+		rect.bottom = (int)(perc.bottom * options.outHeight);
+
+		//LOG.debug("cropPicture({}, {}, {}, {}, {}) --{}--> {} --{}x{}--> {}", file.getName(), left, top, right, bottom,
+		//		getExifString(orientation), perc, options.outWidth, options.outHeight, rect);
+
+		Bitmap crop = crop(file, rect);
+		return rotateImage(crop, getExifRotation(orientation));
+	}
+
+	public static Bitmap crop(File file, Rect rect) throws IOException {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
-			return cropPictureCreateBitmap(file, x, y, w, h);
+			return cropBitmap(file, rect);
 		} else {
-			return cropPictureDecodeRegion(file, x, y, w, h);
+			return cropRegion(file, rect);
 		}
 	}
 
-	private static Bitmap cropPictureCreateBitmap(File file, int x, int y, int w, int h) {
+	private static Bitmap cropBitmap(File file, Rect rect) {
 		Bitmap source = BitmapFactory.decodeFile(file.getAbsolutePath());
-		return Bitmap.createBitmap(source, x, y, w, h);
+		return Bitmap.createBitmap(source, rect.left, rect.top, rect.width(), rect.height());
 	}
 
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
-	private static Bitmap cropPictureDecodeRegion(File file, int x, int y, int w, int h) throws IOException {
-		String fileName = file.getAbsolutePath();
+	private static Bitmap cropRegion(File file, Rect rect) throws IOException {
+		BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(file.getAbsolutePath(), false);
+		if (decoder != null) {
+			return decoder.decodeRegion(rect, null);
+		}
+		return null;
+	}
 
-		final int l = x, t = y, r = l + w, b = t + h;
-
+	private static BitmapFactory.Options getSize(File file) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(fileName, options);
+		BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+		return options;
+	}
 
-		BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(fileName, false);
-		if (decoder != null) {
-			options = new BitmapFactory.Options();
-			return decoder.decodeRegion(new Rect(l, t, r, b), null);
-			//			int oWidth = options.outWidth;
-			//			int oHeight = options.outHeight;
-			//			int startingSize = 1;
-			//			if (w * oWidth * h * oHeight > 1920 * 1080) {
-			//				startingSize = w * oWidth * h * oHeight / (1920 * 1080) + 1;
-			//			}
-			//			options.inSampleSize = startingSize;
+	private static Bitmap cropPictureDecodeRegion(File file, int x, int y, int w, int h) throws IOException {
+		//			int oWidth = options.outWidth;
+		//			int oHeight = options.outHeight;
+		//			int startingSize = 1;
+		//			if (w * oWidth * h * oHeight > 1920 * 1080) {
+		//				startingSize = w * oWidth * h * oHeight / (1920 * 1080) + 1;
+		//			}
+		//			options = new BitmapFactory.Options();
+		//			options.inSampleSize = startingSize;
 
-			//			for (options.inSampleSize = startingSize; options.inSampleSize <= 32; options.inSampleSize++) {
-			//				try {
-			//			return decoder.decodeRegion(new Rect((int)(l * oWidth), (int)(t * oHeight), (int)(r * oWidth),
-			//					(int)(b * oHeight)), options);
-			//				} catch (OutOfMemoryError e) {
-			//					continue; // with for loop if OutOfMemoryError occurs
-			//				}
-			//			}
-		}
+		//			for (options.inSampleSize = startingSize; options.inSampleSize <= 32; options.inSampleSize++) {
+		//				try {
+		//			return decoder.decodeRegion(new Rect((int)(l * oWidth), (int)(t * oHeight), (int)(r * oWidth),
+		//					(int)(b * oHeight)), options);
+		//				} catch (OutOfMemoryError e) {
+		//					continue; // with for loop if OutOfMemoryError occurs
+		//				}
+		//			}
 		return null;
 	}
 
@@ -387,5 +484,4 @@ public class PictureUtils {
 			IOTools.ignorantClose(out);
 		}
 	}
-
 }

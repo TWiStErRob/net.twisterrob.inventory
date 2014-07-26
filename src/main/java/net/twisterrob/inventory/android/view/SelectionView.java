@@ -260,11 +260,11 @@ public class SelectionView extends View {
 			if (Math.abs(currentRatio - originalRatio) > 1e-5) {
 				if (currentRatio > originalRatio) {
 					int dx = (int)(s.width() - s.height() * originalRatio);
-					LOG.debug("RatioX {}, original: {}, inset: {}", currentRatio, originalRatio, dx);
+					//LOG.debug("RatioX {}, original: {}, inset: {}", currentRatio, originalRatio, dx);
 					s.inset(dx / 2, 0);
 				} else {
 					int dy = (int)(s.height() - s.width() / originalRatio);
-					LOG.debug("RatioY {}, original: {}, inset: {}", currentRatio, originalRatio, dy);
+					//LOG.debug("RatioY {}, original: {}, inset: {}", currentRatio, originalRatio, dy);
 					s.inset(0, dy / 2);
 				}
 			}
@@ -273,38 +273,38 @@ public class SelectionView extends View {
 		int width = Math.abs(s.width());
 		if (width > getWidth()) {
 			int dx = s.width() < 0? getWidth() - width : width - getWidth();
-			LOG.debug("Too wide: {} > {}, inset: {}", width, getWidth(), dx / 2);
+			//LOG.debug("Too wide: {} > {}, inset: {}", width, getWidth(), dx / 2);
 			s.inset(dx / 2, 0);
 		}
 
 		int height = Math.abs(s.height());
 		if (height > getHeight()) {
 			int dy = s.height() < 0? getHeight() - height : height - getHeight();
-			LOG.debug("Too tall: {} > {}, inset: {}", height, getHeight(), dy / 2);
+			//LOG.debug("Too tall: {} > {}, inset: {}", height, getHeight(), dy / 2);
 			s.inset(0, dy / 2);
 		}
 
 		int left = Math.min(s.left, s.right);
 		if (left < 0) {
-			LOG.debug("Out left: {}, offset: {}", left, -left);
+			//LOG.debug("Out left: {}, offset: {}", left, -left);
 			s.offset(-left, 0);
 		}
 
 		int top = Math.min(s.top, s.bottom);
 		if (top < 0) {
-			LOG.debug("Out top: {}, offset: {}", top, -top);
+			//LOG.debug("Out top: {}, offset: {}", top, -top);
 			s.offset(0, -top);
 		}
 
 		int right = Math.max(s.right, s.left);
 		if (right > getWidth()) {
-			LOG.debug("Out right: {} (>{}), offset: {}", right, getWidth(), -(right - getWidth()));
+			//LOG.debug("Out right: {} (>{}), offset: {}", right, getWidth(), -(right - getWidth()));
 			s.offset(-(right - getWidth()), 0);
 		}
 
 		int bottom = Math.max(s.bottom, s.top);
 		if (bottom > getHeight()) {
-			LOG.debug("Out bottom: {} (>{}), offset: {}", bottom, getHeight(), -(bottom - getHeight()));
+			//LOG.debug("Out bottom: {} (>{}), offset: {}", bottom, getHeight(), -(bottom - getHeight()));
 			s.offset(0, -(bottom - getHeight()));
 		}
 	}
