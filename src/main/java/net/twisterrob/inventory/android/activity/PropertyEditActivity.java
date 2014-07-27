@@ -34,8 +34,8 @@ public class PropertyEditActivity extends BaseEditActivity {
 	}
 	private final Params params = new Params();
 
-	Spinner propertyType;
-	EditText propertyName;
+	private Spinner propertyType;
+	private EditText propertyName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class PropertyEditActivity extends BaseEditActivity {
 		manager.startLoading();
 	}
 
-	private final class IsExistingProperty extends DynamicLoaderManager.Condition {
+	private class IsExistingProperty extends DynamicLoaderManager.Condition {
 		private IsExistingProperty() {
 			super(PropertyEditActivity.this);
 		}

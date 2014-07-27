@@ -26,9 +26,8 @@
  */
 package org.slf4j.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.util.Map.Entry;
 
 import org.slf4j.ILoggerFactory;
 
@@ -41,37 +40,32 @@ import android.util.Log;
  * @author Thorsten M&ouml;ler
  * @version $Rev:$; $Author:$; $Date:$
  */
-public class AndroidLoggerFactory implements ILoggerFactory
-{
+public class AndroidLoggerFactory implements ILoggerFactory {
 	private final Map<String, AndroidLogger> loggerMap;
 
 	static final int TAG_MAX_LENGTH = 23; // tag names cannot be longer on Android platform
-                                         // see also android/system/core/include/cutils/property.h
-                                         // and android/frameworks/base/core/jni/android_util_Log.cpp
+											// see also android/system/core/include/cutils/property.h
+											// and android/frameworks/base/core/jni/android_util_Log.cpp
 
-	public AndroidLoggerFactory()
-	{
+	public AndroidLoggerFactory() {
 		loggerMap = new HashMap<String, AndroidLogger>();
 	}
 
 	/* @see org.slf4j.ILoggerFactory#getLogger(java.lang.String) */
-	public AndroidLogger getLogger(String name)
-	{
-		name = name == null? name : name.replaceFirst("^net\\.twisterrob\\.blt\\.android\\.", "");
-		name = name == null? name : name.replaceFirst("^net\\.twisterrob\\.", "");
-
+	public AndroidLogger getLogger(String name) {
+		name = doReplacements(name);
 		final String actualName = forceValidName(name); // fix for bug #173
 
 		AndroidLogger slogger = null;
 		// protect against concurrent access of the loggerMap
-		synchronized (this)
-		{
+		synchronized (this) {
 			slogger = loggerMap.get(actualName);
-			if (slogger == null)
-			{
-				if (!actualName.equals(name)) Log.i(AndroidLoggerFactory.class.getSimpleName(),
-					"Logger name '" + name + "' exceeds maximum length of " + TAG_MAX_LENGTH +
-					" characters, using '" + actualName + "' instead.");
+			if (slogger == null) {
+				if (!actualName.equals(name)) {
+					Log.i(AndroidLoggerFactory.class.getSimpleName(), "Logger name '" + name
+							+ "' exceeds maximum length of " + TAG_MAX_LENGTH + " characters, using '" + actualName
+							+ "' instead.");
+				}
 
 				slogger = new AndroidLogger(actualName);
 				loggerMap.put(actualName, slogger);
@@ -80,33 +74,44 @@ public class AndroidLoggerFactory implements ILoggerFactory
 		return slogger;
 	}
 
+	private static final LinkedHashMap<String, String> replacements = new LinkedHashMap<String, String>();
+
+	public static void addReplacement(String regex, String replacement) {
+		replacements.put(regex, replacement);
+	}
+
+	private static String doReplacements(String name) {
+		if (name != null) {
+			for (Entry<String, String> replacement: replacements.entrySet()) {
+				name = name.replaceFirst(replacement.getKey(), replacement.getValue());
+			}
+		}
+		if (name != null && name.contains("$")) {
+			int dollar = name.lastIndexOf("$");
+			String before = name.substring(0, dollar);
+			String after = name.substring(dollar, name.length()); // keep dollar with after
+			name = before.replaceAll("\\p{Lower}", "") + after;
+		}
+		return name;
+	}
 	/**
 	 * Trim name in case it exceeds maximum length of {@value #TAG_MAX_LENGTH} characters.
 	 */
-	private static final String forceValidName(String name)
-	{
-		if (name != null && name.length() > TAG_MAX_LENGTH)
-		{
+	private static final String forceValidName(String name) {
+		if (name != null && name.length() > TAG_MAX_LENGTH) {
 			final StringTokenizer st = new StringTokenizer(name, ".");
-			if (st.hasMoreTokens()) // note that empty tokens are skipped, i.e., "aa..bb" has tokens "aa", "bb"
-			{
+			if (st.hasMoreTokens()) { // note that empty tokens are skipped, i.e., "aa..bb" has tokens "aa", "bb"
 				final StringBuilder sb = new StringBuilder();
 				String token;
-				do
-				{
+				do {
 					token = st.nextToken();
-					if (token.length() <= 2) // token of one character appended as is
-					{
+					if (token.length() <= 2) { // token of one character appended as is
 						sb.append(token);
 						sb.append('.');
-					}
-					else if (st.hasMoreTokens()) // truncate all but the last token
-					{
+					} else if (st.hasMoreTokens()) { // truncate all but the last token
 						sb.append(token.charAt(0));
 						sb.append("*.");
-					}
-					else // last token (usually class name) appended as is
-					{
+					} else { // last token (usually class name) appended as is
 						sb.append(token);
 					}
 				} while (st.hasMoreTokens());
@@ -116,8 +121,7 @@ public class AndroidLoggerFactory implements ILoggerFactory
 
 			// Either we had no useful dot location at all or name still too long.
 			// Take leading part and append '*' to indicate that it was truncated
-			if (name.length() > TAG_MAX_LENGTH)
-			{
+			if (name.length() > TAG_MAX_LENGTH) {
 				name = name.substring(0, TAG_MAX_LENGTH - 1) + '*';
 			}
 		}

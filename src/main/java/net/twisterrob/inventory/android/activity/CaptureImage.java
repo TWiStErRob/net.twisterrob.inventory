@@ -13,6 +13,7 @@ import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -29,6 +30,7 @@ public class CaptureImage extends BaseActivity {
 
 	private CameraPreview mPreview;
 	private SelectionView mSelection;
+	private File mTargetFile;
 	private File mSavedFile;
 
 	@Override
@@ -36,6 +38,14 @@ public class CaptureImage extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		getSupportActionBar().hide();
+
+		String output = getIntent().getStringExtra(MediaStore.EXTRA_OUTPUT);
+		if (output == null) {
+			setResult(RESULT_CANCELED);
+			finish();
+		} else {
+			mTargetFile = new File(output);
+		}
 
 		setContentView(R.layout.camera);
 
@@ -125,7 +135,7 @@ public class CaptureImage extends BaseActivity {
 		if (data == null) {
 			return null;
 		}
-		File file = new File(getExternalCacheDir(), "picture.jpg");
+		File file = mTargetFile;
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(file);

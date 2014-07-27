@@ -9,7 +9,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.*;
-import android.database.*;
+import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.media.ExifInterface;
@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.os.*;
 import android.provider.*;
 
-import net.twisterrob.inventory.BuildConfig;
 import net.twisterrob.java.io.IOTools;
 
 // TODO crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
@@ -271,11 +270,13 @@ public class PictureUtils {
 	 * @author paulburke
 	 */
 	public static String getPath(final Context context, final Uri uri) {
-		if (BuildConfig.DEBUG) {
-			System.out.println("Authority: " + uri.getAuthority() + ", Fragment: " + uri.getFragment() + ", Port: "
-					+ uri.getPort() + ", Query: " + uri.getQuery() + ", Scheme: " + uri.getScheme() + ", Host: "
-					+ uri.getHost() + ", Segments: " + uri.getPathSegments().toString());
-		}
+		//LOG.debug("Authority: " + uri.getAuthority() //
+		//		+ ", Fragment: " + uri.getFragment() //
+		//		+ ", Port: " + uri.getPort() //
+		//		+ ", Query: " + uri.getQuery() //
+		//		+ ", Scheme: " + uri.getScheme() //
+		//		+ ", Host: " + uri.getHost() //
+		//		+ ", Segments: " + uri.getPathSegments().toString());
 
 		String result = null;
 
@@ -283,7 +284,6 @@ public class PictureUtils {
 			result = getPathKitKat(context, uri);
 		}
 		if ("content".equalsIgnoreCase(uri.getScheme())) { // MediaStore (and general)
-			// Return the remote address
 			if ("com.google.android.apps.photos.content".equals(uri.getAuthority())) {
 				result = uri.getLastPathSegment();
 			} else {
@@ -352,9 +352,7 @@ public class PictureUtils {
 		try {
 			cursor = context.getContentResolver().query(uri, new String[]{column}, selection, selectionArgs, null);
 			if (cursor != null && cursor.moveToFirst()) {
-				if (BuildConfig.DEBUG) {
-					DatabaseUtils.dumpCursor(cursor);
-				}
+				//DatabaseUtils.dumpCursor(cursor);
 
 				return cursor.getString(cursor.getColumnIndexOrThrow(column));
 			}

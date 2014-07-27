@@ -10,17 +10,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.*;
+import android.provider.MediaStore;
 import android.view.*;
 import android.widget.*;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.LoadSingleRow;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.utils.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
+import static net.twisterrob.inventory.android.utils.DriveUtils.*;
 public class ItemEditActivity extends BaseEditActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditActivity.class);
 
@@ -60,8 +66,9 @@ public class ItemEditActivity extends BaseEditActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_picture_take:
-				startActivityForResult(new Intent(getApplicationContext(), CaptureImage.class),
-						PictureUtils.REQUEST_CODE_TAKE_PICTURE);
+				Intent intent = new Intent(getApplicationContext(), CaptureImage.class);
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, getTargetFile().getAbsolutePath());
+				startActivityForResult(intent, PictureUtils.REQUEST_CODE_TAKE_PICTURE);
 				return true;
 			case R.id.action_picture_pick:
 				startActivityForResult(PictureHelper.createGalleryIntent(), PictureUtils.REQUEST_CODE_GET_PICTURE);
@@ -81,10 +88,12 @@ public class ItemEditActivity extends BaseEditActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-			case PictureUtils.REQUEST_CODE_GET_PICTURE: {
+			case PictureUtils.REQUEST_CODE_GET_PICTURE:
+			case PictureUtils.REQUEST_CODE_TAKE_PICTURE:
 				if (resultCode == Activity.RESULT_OK && data != null) {
 					File file = PictureUtils.getFile(this, data.getData());
 					try {
+						new Upload().execute(file);
 						itemImage.setImageBitmap(PictureUtils.loadPicture(file, -1, -1));
 					} catch (IOException ex) {
 						LOG.error("Cannot load {}", file, ex);
@@ -92,19 +101,6 @@ public class ItemEditActivity extends BaseEditActivity {
 					return;
 				}
 				break;
-			}
-			case PictureUtils.REQUEST_CODE_TAKE_PICTURE: {
-				if (resultCode == Activity.RESULT_OK && data != null) {
-					File file = PictureUtils.getFile(this, data.getData());
-					try {
-						itemImage.setImageBitmap(PictureUtils.loadPicture(file, -1, -1));
-					} catch (IOException ex) {
-						LOG.error("Cannot load {}", file, ex);
-					}
-					return;
-				}
-				break;
-			}
 			default:
 				// do as super pleases
 				break;
@@ -143,6 +139,53 @@ public class ItemEditActivity extends BaseEditActivity {
 		protected void processInvalid(Cursor item) {
 			super.processInvalid(item);
 			finish();
+		}
+	}
+
+	public class Upload extends ApiClientAsyncTask<File, Void, DriveFile> {
+		public Upload() {
+			super(ItemEditActivity.this);
+		}
+
+		@Override
+		protected DriveFile doInBackgroundConnected(File... params) {
+			try {
+				return uploadFile(params[0]);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(DriveFile result) {
+			if (result != null) {
+				Toast.makeText(getApplicationContext(), "Uploaded: " + result.getDriveId(), Toast.LENGTH_LONG).show();
+			}
+			super.onPostExecute(result);
+		}
+
+		private DriveFile uploadFile(File file) throws IOException {
+			DriveFolder folder = getDriveFolder();
+			if (folder == null) {
+				return null;
+			}
+			MetadataChangeSet fileMeta = new MetadataChangeSet.Builder() //
+					.setMimeType("image/jpeg") //
+					.setTitle(file.getName()) //
+					.build();
+			Contents fileContents = sync(Drive.DriveApi.newContents(getGoogleApiClient()));
+			DriveUtils.putFileIntoContents(fileContents, file);
+			return sync(folder.createFile(getGoogleApiClient(), fileMeta, fileContents));
+		}
+
+		private DriveFolder getDriveFolder() {
+			String driveFolderName = App.getPrefs().getString(Constants.Prefs.DRIVE_FOLDER_ID, null);
+			if (driveFolderName != null) {
+				DriveId folderId = DriveId.decodeFromString(driveFolderName);
+				return Drive.DriveApi.getFolder(getGoogleApiClient(), folderId);
+			}
+			return null;
 		}
 	}
 }

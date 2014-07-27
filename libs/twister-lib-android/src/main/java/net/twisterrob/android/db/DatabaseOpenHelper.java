@@ -30,6 +30,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	protected final AssetManager assets;
 	private final boolean hasWriteExternalPermission;
 	private final String dbName;
+	private boolean devMode;
 
 	public DatabaseOpenHelper(Context context, String dbName, int dbVersion) {
 		super(context, dbName, s_factory, dbVersion);
@@ -37,19 +38,30 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		this.dbName = dbName;
 		this.hasWriteExternalPermission = AndroidTools.hasPermission(context, WRITE_EXTERNAL_STORAGE);
 	}
+
+	public void setDevMode(boolean devMode) {
+		this.devMode = devMode;
+	}
+
+	public boolean isDevMode() {
+		return devMode;
+	}
+
 	@Override
 	public void onOpen(SQLiteDatabase db) {
-		super.onOpen(db);
 		LOG.debug("Opening database: {}", DBTools.toString(db));
-		backupDB(db, "onOpen_beforeDev");
-		onCreate(db); // FIXME for DB development, always clear and initialize
-		execFile(db, String.format(DB_DEVELOPMENT_FILE, dbName));
-		backupDB(db, "onOpen_afterDev");
+		super.onOpen(db);
+		if (devMode) {
+			backupDB(db, "onOpen_beforeDev");
+			onCreate(db); // FIXME for DB development, always clear and initialize
+			execFile(db, String.format(DB_DEVELOPMENT_FILE, dbName));
+			backupDB(db, "onOpen_afterDev");
+		}
 		LOG.info("Opened database: {}", DBTools.toString(db));
 	}
 
 	private void backupDB(SQLiteDatabase db, String when) {
-		if (BuildConfig.DEBUG) {
+		if (devMode) {
 			if (hasWriteExternalPermission) {
 				String fileName = dbName + "." + when + ".sqlite";
 				try {

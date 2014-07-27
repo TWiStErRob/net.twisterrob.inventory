@@ -18,6 +18,7 @@ public class Database {
 	public Database(Context context) {
 		m_context = context;
 		m_helper = new DatabaseOpenHelper(m_context, "MagicHomeInventory", 1);
+		m_helper.setDevMode(false);
 	}
 
 	public SQLiteDatabase getReadableDatabase() {

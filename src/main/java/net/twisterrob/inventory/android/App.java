@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android;
 
+import org.slf4j.impl.AndroidLoggerFactory;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -16,6 +18,9 @@ public class App extends Application {
 
 	public App() {
 		s_instance = this;
+
+		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
+		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.android\\.(.+\\.)?", "");
 
 		if (BuildConfig.DEBUG) {
 			setStrictMode();

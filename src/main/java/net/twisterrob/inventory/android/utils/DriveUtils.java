@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.utils;
 
+import java.io.*;
+
 import com.google.android.gms.common.api.*;
 import com.google.android.gms.drive.*;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
@@ -10,11 +12,13 @@ import com.google.android.gms.drive.DriveFolder.DriveFolderResult;
 import com.google.android.gms.drive.DriveResource.MetadataResult;
 import com.google.android.gms.drive.query.*;
 
+import net.twisterrob.java.io.IOTools;
+
 public class DriveUtils {
 	public static <T extends Result> T syncResult(PendingResult<T> pending) {
 		T result = pending.await();
 		if (!result.getStatus().isSuccess()) {
-			throw new IllegalStateException();
+			throw new IllegalStateException(result.getStatus().getStatusMessage());
 		}
 		return result;
 	}
@@ -54,4 +58,16 @@ public class DriveUtils {
 		MetadataBuffer search = DriveUtils.sync(in.queryChildren(client, fileNameQuery.build()));
 		return search.getCount() != 0? search.get(0).getDriveId() : null;
 	}
+
+	public static void putFileIntoContents(Contents contents, File file) throws IOException {
+		@SuppressWarnings("resource")
+		InputStream stream = null;
+		try {
+			stream = new FileInputStream(file);
+			IOTools.copyStream(stream, contents.getOutputStream());
+		} finally {
+			IOTools.ignorantClose(stream);
+		}
+	}
 }
+

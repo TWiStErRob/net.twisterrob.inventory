@@ -14,6 +14,7 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.contract.Extras;
 
 public class MainActivity extends BaseActivity {
+	private GridView list;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,7 +22,7 @@ public class MainActivity extends BaseActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(false);
 
-		final GridView list = (GridView)findViewById(android.R.id.list);
+		list = (GridView)findViewById(android.R.id.list);
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				MainItem item = (MainItem)parent.getAdapter().getItem(position);
@@ -52,16 +53,21 @@ public class MainActivity extends BaseActivity {
 					}
 				}));
 		list.setAdapter(new MainItemAdapter(this, actions));
-
-		new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground(Void... params) {
-				//((MainItem)list.getItemAtPosition(3)).listener.onClick(list);
-				return null;
-			}
-		}.execute();
 	}
 
+	private static boolean first = true;
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (first) {
+			first = false;
+			new Handler().postDelayed(new Runnable() {
+				public void run() {
+					//((MainItem)list.getItemAtPosition(1)).listener.onClick(list);
+				}
+			}, 1000);
+		}
+	}
 	private static class MainItem {
 		public CharSequence title;
 		public OnClickListener listener;
