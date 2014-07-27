@@ -105,18 +105,17 @@ public class CaptureImage extends BaseActivity {
 		finish();
 	}
 	protected void take(final PictureCallback jpegCallback) {
-		Camera camera = mPreview.getCamera();
-		if (camera == null) {
+		if (!mPreview.isRunning()) {
 			return;
 		}
-		camera.autoFocus(new AutoFocusCallback() {
+		mPreview.setCameraFocus(new AutoFocusCallback() {
 			public void onAutoFocus(boolean success, Camera camera) {
 				if (success) {
 					mSelection.setSelectionStatus(SelectionStatus.FOCUSED);
 				} else {
 					mSelection.setSelectionStatus(SelectionStatus.BLURRY);
 				}
-				camera.takePicture(null, null, null, jpegCallback);
+				mPreview.takePicture(jpegCallback);
 			}
 		});
 	}

@@ -10,6 +10,7 @@ import android.hardware.*;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
+import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.Size;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -38,6 +39,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 	public Camera getCamera() {
 		return mCamera;
+	}
+
+	public boolean isRunning() {
+		return mCamera != null;
 	}
 
 	@Override
@@ -87,7 +92,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 				previewSize.width, previewSize.height, (float)previewSize.width / (float)previewSize.height, //
 				pictureSize.width, pictureSize.height, (float)pictureSize.width / (float)pictureSize.height //
 		);
-
 		mParams.setPreviewSize(previewSize.width, previewSize.height);
 		mParams.setPictureSize(pictureSize.width, pictureSize.height);
 		mParams.setRotation(degrees);
@@ -152,11 +156,21 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
+	public void takePicture(PictureCallback jpegCallback) {
+		if (mCamera == null) {
+			return;
+		}
+		mCamera.takePicture(null, null, null, jpegCallback);
+	}
+
 	public void cancelTakePicture() {
 		startPreview();
 	}
 
 	public void setCameraFocus(AutoFocusCallback autoFocus) {
+		if (mCamera == null) {
+			return;
+		}
 		String focusMode = mCamera.getParameters().getFocusMode();
 		if (Parameters.FOCUS_MODE_AUTO.equals(focusMode) || Parameters.FOCUS_MODE_MACRO.equals(focusMode)) {
 			mCamera.autoFocus(autoFocus);
