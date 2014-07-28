@@ -1,8 +1,23 @@
 <resources>
+	<item type="id" name="layoutRoot" />
+	<item type="id" name="fragmentRoot" />
+	<item type="id" name="adapterRoot" />
+
 	<item type="id" name="properties" />
 	<item type="id" name="property" />
+	<item type="id" name="propertyName" />
+	<item type="id" name="propertyType" />
+	<item type="id" name="propertyImage" />
+	
 	<item type="id" name="rooms" />
 	<item type="id" name="room" />
+	<item type="id" name="roomName" />
+	<item type="id" name="roomType" />
+	<item type="id" name="roomImage" />
+	
 	<item type="id" name="items" />
 	<item type="id" name="item" />
+	<item type="id" name="itemName" />
+	<item type="id" name="itemCategory" />
+	<item type="id" name="itemImage" />
 </resources>

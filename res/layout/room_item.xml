@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@id/adapterRoot"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content">
 	<ImageView
-		android:id="@+id/propertyImage"
+		android:id="@id/roomImage"
 		android:focusable="false"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -12,7 +13,7 @@
 		android:scaleType="centerInside"
 		android:contentDescription="@string/img_desc_property" />
 	<TextView
-		android:id="@+id/propertyName"
+		android:id="@id/roomName"
 		android:focusable="false"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

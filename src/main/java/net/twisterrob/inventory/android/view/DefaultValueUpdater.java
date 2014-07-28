@@ -10,15 +10,17 @@ import net.twisterrob.inventory.R;
 
 public class DefaultValueUpdater implements OnItemSelectedListener {
 	private static final int INVALID = -1;
-	private int prevPosition = INVALID;
 
 	private final EditText roomName;
 	private final String columnName;
+
+	private int prevPosition = INVALID;
 
 	public DefaultValueUpdater(EditText roomName, String columnName) {
 		this.roomName = roomName;
 		this.columnName = columnName;
 	}
+
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		int oldName = prevPosition == INVALID? R.string.empty : getStringID(parent, prevPosition);
 		int newName = getStringID(parent, position);
@@ -31,6 +33,7 @@ public class DefaultValueUpdater implements OnItemSelectedListener {
 
 		prevPosition = position;
 	}
+
 	@SuppressWarnings("resource")
 	private int getStringID(AdapterView<?> parent, int position) {
 		Cursor newData = (Cursor)parent.getAdapter().getItem(position);
@@ -38,6 +41,7 @@ public class DefaultValueUpdater implements OnItemSelectedListener {
 		Context context = parent.getContext();
 		return context.getResources().getIdentifier(newName, "string", context.getPackageName());
 	}
+
 	public void onNothingSelected(AdapterView<?> parent) {
 		// ignore
 	}

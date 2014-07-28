@@ -45,10 +45,10 @@ public class PropertiesFragment extends BaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.property_grid, container, false);
-
+		View root = inflater.inflate(R.layout.property_coll, container, false);
 		grid = (GridView)root.findViewById(R.id.properties);
 		adapter = Adapters.loadCursorAdapter(getActivity(), R.xml.properties, (Cursor)null);
+
 		grid.setAdapter(adapter);
 
 		return root;

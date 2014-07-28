@@ -5,8 +5,8 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 	<fragment
-		android:name="net.twisterrob.inventory.android.fragment.PropertiesFragment"
-		android:id="@id/properties"
+		android:name="net.twisterrob.inventory.android.fragment.ItemEditFragment"
+		android:id="@id/item"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
 </FrameLayout>

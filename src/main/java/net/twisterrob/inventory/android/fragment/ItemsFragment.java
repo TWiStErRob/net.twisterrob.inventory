@@ -45,10 +45,10 @@ public class ItemsFragment extends BaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.item_list, container, false);
-
+		View root = inflater.inflate(R.layout.item_coll, container, false);
 		list = (ListView)root.findViewById(R.id.items);
 		adapter = Adapters.loadCursorAdapter(getActivity(), R.xml.items, (Cursor)null);
+
 		list.setAdapter(adapter);
 
 		return root;
