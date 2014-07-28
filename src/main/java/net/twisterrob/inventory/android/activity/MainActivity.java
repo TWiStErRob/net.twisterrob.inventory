@@ -11,7 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import net.twisterrob.android.adapter.BaseListAdapter;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.content.contract.Extras;
+import net.twisterrob.inventory.android.App;
 
 public class MainActivity extends BaseActivity {
 	private GridView list;
@@ -32,23 +32,20 @@ public class MainActivity extends BaseActivity {
 		Collection<MainItem> actions = Arrays.asList( //
 				new MainItem("Properties", new OnClickListener() {
 					public void onClick(View v) {
-						Intent intent = createIntent(PropertiesActivity.class);
-						startActivity(intent);
+						startActivity(PropertiesActivity.list());
 					}
 				}), new MainItem("Edit Item #5", new OnClickListener() {
 					public void onClick(View v) {
-						Intent intent = createIntent(ItemEditActivity.class);
-						intent.putExtra(Extras.ITEM_ID, 5L);
-						startActivity(intent);
+						startActivity(ItemEditActivity.edit(5));
 					}
 				}), new MainItem("Drive", new OnClickListener() {
 					public void onClick(View v) {
-						Intent intent = createIntent(WelcomeActivity.class);
+						Intent intent = new Intent(App.getAppContext(), WelcomeActivity.class);
 						startActivity(intent);
 					}
 				}), new MainItem("Camera", new OnClickListener() {
 					public void onClick(View v) {
-						Intent intent = createIntent(CaptureImage.class);
+						Intent intent = new Intent(App.getAppContext(), CaptureImage.class);
 						startActivity(intent);
 					}
 				}));

@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.view.*;
 import android.widget.*;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.content.loader.*;
@@ -106,6 +105,16 @@ public class ItemEditActivity extends BaseEditActivity {
 				break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public static Intent add() {
+		Intent intent = new Intent(App.getAppContext(), ItemEditActivity.class);
+		return intent;
+	}
+	public static Intent edit(long itemID) {
+		Intent intent = new Intent(App.getAppContext(), ItemEditActivity.class);
+		intent.putExtra(Extras.ITEM_ID, itemID);
+		return intent;
 	}
 
 	private final class IsExistingItem extends DynamicLoaderManager.Condition {

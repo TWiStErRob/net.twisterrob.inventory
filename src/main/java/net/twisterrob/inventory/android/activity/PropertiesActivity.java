@@ -1,58 +1,47 @@
 package net.twisterrob.inventory.android.activity;
 
-import org.slf4j.*;
-
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.widget.CursorAdapter;
-import android.view.View;
-import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-
-import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.view.CursorSwapper;
+import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.fragment.*;
+import net.twisterrob.inventory.android.fragment.PropertiesFragment.PropertyEvents;
 
-public class PropertiesActivity extends BaseListActivity {
-	private static final Logger LOG = LoggerFactory.getLogger(PropertiesActivity.class);
-
+public class PropertiesActivity extends BaseListActivity implements PropertyEvents {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.property_list);
+		super.setContentView(R.layout.properties);
 
-		CursorAdapter adapter = Adapters.loadCursorAdapter(this, R.xml.properties, (Cursor)null);
-		getSupportLoaderManager().initLoader(Loaders.Properties.ordinal(), null, new CursorSwapper(this, adapter));
+		PropertiesFragment properties = getFragment(R.id.properties);
+		properties.list();
+	}
 
-		GridView properties = (GridView)findViewById(R.id.properties);
-		properties.setAdapter(adapter);
+	public void newProperty() {
+		startActivity(PropertyEditActivity.add());
+	}
 
-		properties.setOnItemLongClickListener(new OnItemLongClickListener() {
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Long Clicked on #{}", id);
-				Intent intent = createIntent(PropertyEditActivity.class);
-				intent.putExtra(Extras.PROPERTY_ID, id);
-				startActivity(intent);
-				return true;
-			}
-		});
-		properties.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Clicked on #{}", id);
-				if (id == Property.ID_ADD) {
-					Intent intent = createIntent(PropertyEditActivity.class);
-					startActivity(intent);
-				} else {
-					Intent intent = createIntent(RoomsActivity.class);
-					intent.putExtra(Extras.PROPERTY_ID, id);
-					startActivity(intent);
-				}
-			}
-		});
+	public void propertySelected(long id) {
+		RoomsFragment rooms = getFragment(R.id.rooms);
+		if (rooms != null && rooms.isInLayout()) {
+			rooms.listForProperty(id);
+		} else {
+			startActivity(RoomsActivity.list(id));
+		}
+	}
+
+	public void propertyActioned(long id) {
+		PropertyEditFragment editor = getFragment(R.id.property);
+		if (editor != null && editor.isInLayout()) {
+			editor.edit(id);
+		} else {
+			startActivity(PropertyEditActivity.edit(id));
+		}
+	}
+
+	public static Intent list() {
+		Intent intent = new Intent(App.getAppContext(), PropertiesActivity.class);
+		return intent;
 	}
 }

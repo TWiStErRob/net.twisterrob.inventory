@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cursor-adapter xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res/net.twisterrob.inventory"
-		app:layout="@layout/property_item">
+		app:layout="@layout/property_grid_item">
 	<bind app:from="name" app:to="@id/propertyName" app:as="string">
 		<map app:fromValue="property_add" app:toValue="@string/property_add" />
 	</bind>

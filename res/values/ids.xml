@@ -1,0 +1,8 @@
+<resources>
+	<item type="id" name="properties" />
+	<item type="id" name="property" />
+	<item type="id" name="rooms" />
+	<item type="id" name="room" />
+	<item type="id" name="items" />
+	<item type="id" name="item" />
+</resources>

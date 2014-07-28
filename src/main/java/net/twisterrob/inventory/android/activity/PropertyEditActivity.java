@@ -12,6 +12,7 @@ import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.LoadSingleRow;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.*;
@@ -58,6 +59,16 @@ public class PropertyEditActivity extends BaseEditActivity {
 
 		populateTypes.providesResultFor(loadPropertyData.dependsOn(loadPropertyCondition));
 		manager.startLoading();
+	}
+
+	public static Intent add() {
+		Intent intent = new Intent(App.getAppContext(), PropertyEditActivity.class);
+		return intent;
+	}
+	public static Intent edit(long propertyId) {
+		Intent intent = new Intent(App.getAppContext(), PropertyEditActivity.class);
+		intent.putExtra(Extras.PROPERTY_ID, propertyId);
+		return intent;
 	}
 
 	private class IsExistingProperty extends DynamicLoaderManager.Condition {

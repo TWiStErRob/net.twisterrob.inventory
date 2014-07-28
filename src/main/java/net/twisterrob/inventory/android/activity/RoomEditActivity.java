@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.activity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
@@ -11,6 +12,7 @@ import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.LoadSingleRow;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.*;
@@ -75,5 +77,15 @@ public class RoomEditActivity extends BaseEditActivity {
 			super.processInvalid(item);
 			finish();
 		}
+	}
+
+	public static Intent add() {
+		Intent intent = new Intent(App.getAppContext(), RoomEditActivity.class);
+		return intent;
+	}
+	public static Intent edit(long roomId) {
+		Intent intent = new Intent(App.getAppContext(), RoomEditActivity.class);
+		intent.putExtra(Extras.ROOM_ID, roomId);
+		return intent;
 	}
 }
