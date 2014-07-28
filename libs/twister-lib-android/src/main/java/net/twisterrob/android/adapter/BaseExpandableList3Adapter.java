@@ -108,7 +108,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		List<Level2> currentChildren = getChildren(currentGroup);
 		Level1VH groupHolder;
 		if (groupConvertView == null) {
-			groupConvertView = m_inflater.inflate(getLevel1LayoutId(), null);
+			groupConvertView = m_inflater.inflate(getLevel1LayoutId(), parentListGroupView, false);
 			groupHolder = createGroupHolder(groupConvertView);
 			groupConvertView.setTag(groupHolder);
 		} else {

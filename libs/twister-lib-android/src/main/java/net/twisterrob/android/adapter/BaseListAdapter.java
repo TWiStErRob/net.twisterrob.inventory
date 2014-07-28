@@ -71,7 +71,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		T currentItem = m_items.get(position);
 		VH holder;
 		if (convertView == null) {
-			convertView = m_inflater.inflate(getItemLayoutId(), null);
+			convertView = m_inflater.inflate(getItemLayoutId(), parent, false);
 
 			holder = createHolder(convertView);
 			bindModel(holder, currentItem);
@@ -95,7 +95,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		T currentItem = m_items.get(position);
 		VH holder;
 		if (convertView == null) {
-			convertView = m_inflater.inflate(getDropDownItemLayoutId(), null);
+			convertView = m_inflater.inflate(getDropDownItemLayoutId(), parent, false);
 
 			holder = createDropDownHolder(convertView);
 			bindDropDownModel(holder, currentItem);

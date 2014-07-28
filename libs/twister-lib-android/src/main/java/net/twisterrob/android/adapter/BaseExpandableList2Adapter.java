@@ -86,7 +86,7 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 		List<Child> currentChildren = getChildren(currentGroup);
 		GroupVH groupHolder;
 		if (groupConvertView == null) {
-			groupConvertView = m_inflater.inflate(getGroupLayoutId(), null);
+			groupConvertView = m_inflater.inflate(getGroupLayoutId(), parentListGroupView, false);
 
 			groupHolder = createGroupHolder(groupConvertView);
 			bindGroupModel(groupHolder, currentChildren, currentGroup);
@@ -110,7 +110,7 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 		Child currentChild = getChild(groupPosition, childPosition);
 		ChildVH childHolder;
 		if (childConvertView == null) {
-			childConvertView = m_inflater.inflate(getChildLayoutId(), null);
+			childConvertView = m_inflater.inflate(getChildLayoutId(), parentGroupViewGroup, false);
 
 			childHolder = createChildHolder(childConvertView);
 			bindChildModel(childHolder, currentGroup, currentChild);
