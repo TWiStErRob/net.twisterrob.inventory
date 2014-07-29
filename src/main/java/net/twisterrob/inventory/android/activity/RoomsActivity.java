@@ -35,7 +35,7 @@ public class RoomsActivity extends BaseListActivity implements RoomEvents {
 	public void roomActioned(long id) {
 		RoomEditFragment editor = getFragment(R.id.room);
 		if (editor != null && editor.isInLayout()) {
-			editor.edit(id);
+			editor.load(id);
 		} else {
 			startActivity(RoomEditActivity.edit(id));
 		}

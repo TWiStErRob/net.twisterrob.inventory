@@ -53,18 +53,23 @@ public class ItemEditFragment extends EditFragment {
 	}
 
 	@Override
-	public void edit(long id) {
+	public void load(long id) {
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		Bundle args = new Bundle();
-		args.putLong(Extras.ITEM_ID, id);
-		Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(), args, new LoadExistingItem());
-		Dependency<Void> loadItemCondition = manager.add(-SingleItem.ordinal(), args, new IsExistingItem());
 
-		loadItemData.dependsOn(loadItemCondition);
+		if (id != Item.ID_ADD) {
+			Bundle args = new Bundle();
+			args.putLong(Extras.ITEM_ID, id);
+			@SuppressWarnings("unused")
+			// no dependencies yet
+			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(), args, new LoadExistingItem());
+		}
 
 		currentItemID = id;
 		manager.startLoading();
 	}
+
+	@Override
+	public void save() {}
 
 	protected File getTargetFile() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
@@ -116,17 +121,6 @@ public class ItemEditFragment extends EditFragment {
 				break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	private final class IsExistingItem extends DynamicLoaderManager.Condition {
-		private IsExistingItem() {
-			super(getActivity());
-		}
-
-		@Override
-		protected boolean test(int id, Bundle args) {
-			return args != null && args.getLong(Extras.ITEM_ID, Item.ID_ADD) != Item.ID_ADD;
-		}
 	}
 
 	private final class LoadExistingItem extends LoadSingleRow {

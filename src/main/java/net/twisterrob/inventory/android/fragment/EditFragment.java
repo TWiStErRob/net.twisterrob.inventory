@@ -1,4 +1,5 @@
 package net.twisterrob.inventory.android.fragment;
-public class EditFragment extends BaseFragment {
-	public void edit(long id) {}
+public abstract class EditFragment extends BaseFragment {
+	public abstract void load(long id);
+	public abstract void save();
 }

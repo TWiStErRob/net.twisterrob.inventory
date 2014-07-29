@@ -15,7 +15,7 @@ public class RoomEditActivity extends BaseEditActivity {
 		super.setContentView(R.layout.room);
 
 		RoomEditFragment editor = getFragment(R.id.room);
-		editor.edit(getIntent().getLongExtra(Extras.ROOM_ID, Room.ID_ADD));
+		editor.load(getIntent().getLongExtra(Extras.ROOM_ID, Room.ID_ADD));
 	}
 
 	public static Intent add() {

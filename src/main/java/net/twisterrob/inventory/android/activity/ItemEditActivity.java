@@ -14,7 +14,7 @@ public class ItemEditActivity extends BaseEditActivity {
 		super.setContentView(R.layout.item);
 
 		ItemEditFragment editor = getFragment(R.id.item);
-		editor.edit(getIntent().getLongExtra(Extras.ITEM_ID, Item.ID_ADD));
+		editor.load(getIntent().getLongExtra(Extras.ITEM_ID, Item.ID_ADD));
 	}
 
 	public static Intent add() {

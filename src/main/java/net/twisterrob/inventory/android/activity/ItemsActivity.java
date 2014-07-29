@@ -36,7 +36,7 @@ public class ItemsActivity extends BaseListActivity implements ItemEvents {
 	public void itemActioned(long id) {
 		ItemEditFragment editor = getFragment(R.id.item);
 		if (editor != null && editor.isInLayout()) {
-			editor.edit(id);
+			editor.load(id);
 		} else {
 			startActivity(ItemEditActivity.edit(id));
 		}

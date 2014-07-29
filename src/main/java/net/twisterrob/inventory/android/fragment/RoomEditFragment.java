@@ -37,31 +37,24 @@ public class RoomEditFragment extends EditFragment {
 	}
 
 	@Override
-	public void edit(long id) {
+	public void load(long id) {
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
+		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), adapter);
+		Dependency<Cursor> populateTypes = manager.add(RoomTypes.ordinal(), null, typeCursorSwapper);
 
-		Bundle args = new Bundle();
-		args.putLong(Extras.ROOM_ID, id);
+		if (id != Room.ID_ADD) {
+			Bundle args = new Bundle();
+			args.putLong(Extras.ROOM_ID, id);
+			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(), args, new LoadExistingRoom());
 
-		Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(), args, new LoadExistingRoom());
-		Dependency<Void> loadRoomCondition = manager.add(-SingleRoom.ordinal(), args, new IsExistingRoom());
-		Dependency<Cursor> populateTypes = manager.add(RoomTypes.ordinal(), null, new CursorSwapper(getActivity(),
-				adapter));
+			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
+		}
 
-		populateTypes.providesResultFor(loadRoomData.dependsOn(loadRoomCondition));
 		manager.startLoading();
 	}
 
-	private final class IsExistingRoom extends DynamicLoaderManager.Condition {
-		private IsExistingRoom() {
-			super(getActivity());
-		}
-
-		@Override
-		protected boolean test(int id, Bundle args) {
-			return args != null && args.getLong(Extras.ROOM_ID, Room.ID_ADD) != Room.ID_ADD;
-		}
-	}
+	@Override
+	public void save() {}
 
 	private final class LoadExistingRoom extends LoadSingleRow {
 		private LoadExistingRoom() {

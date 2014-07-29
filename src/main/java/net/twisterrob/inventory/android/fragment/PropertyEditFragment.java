@@ -37,35 +37,26 @@ public class PropertyEditFragment extends EditFragment {
 	}
 
 	@Override
-	public void edit(long id) {
+	public void load(long id) {
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, new CursorSwapper(getActivity(),
-				adapter));
+		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), adapter);
+		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, typeCursorSwapper);
 
-		Bundle args = new Bundle();
-		args.putLong(Extras.PROPERTY_ID, id);
+		if (id != Property.ID_ADD) {
+			Bundle args = new Bundle();
+			args.putLong(Extras.PROPERTY_ID, id);
+			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.ordinal(), args, new PropertyLoaded());
 
-		Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.ordinal(), args, new LoadExistingProperty());
-		Dependency<Void> loadPropertyCondition = manager.add(-SingleProperty.ordinal(), args, new IsExistingProperty());
-
-		populateTypes.providesResultFor(loadPropertyData.dependsOn(loadPropertyCondition));
+			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
+		}
 		manager.startLoading();
 	}
 
-	private class IsExistingProperty extends DynamicLoaderManager.Condition {
-		private IsExistingProperty() {
-			super(getActivity());
-		}
+	@Override
+	public void save() {}
 
-		// TODO probably can move this to Dependency graph building part
-		@Override
-		protected boolean test(int id, Bundle args) {
-			return args != null && args.getLong(Extras.PROPERTY_ID, Property.ID_ADD) != Property.ID_ADD;
-		}
-	}
-
-	private class LoadExistingProperty extends LoadSingleRow {
-		LoadExistingProperty() {
+	private class PropertyLoaded extends LoadSingleRow {
+		PropertyLoaded() {
 			super(getActivity());
 		}
 

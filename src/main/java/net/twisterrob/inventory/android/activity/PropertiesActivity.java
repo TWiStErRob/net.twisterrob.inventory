@@ -34,7 +34,7 @@ public class PropertiesActivity extends BaseListActivity implements PropertyEven
 	public void propertyActioned(long id) {
 		PropertyEditFragment editor = getFragment(R.id.property);
 		if (editor != null && editor.isInLayout()) {
-			editor.edit(id);
+			editor.load(id);
 		} else {
 			startActivity(PropertyEditActivity.edit(id));
 		}

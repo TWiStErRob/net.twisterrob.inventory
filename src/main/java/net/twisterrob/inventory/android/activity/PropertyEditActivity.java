@@ -15,7 +15,7 @@ public class PropertyEditActivity extends BaseEditActivity {
 		super.setContentView(R.layout.property);
 
 		PropertyEditFragment editor = getFragment(R.id.property);
-		editor.edit(getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD));
+		editor.load(getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD));
 	}
 
 	public static Intent add() {
