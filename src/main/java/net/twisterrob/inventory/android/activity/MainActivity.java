@@ -30,20 +30,20 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		Collection<MainItem> actions = Arrays.asList( //
-				new MainItem("Properties", new OnClickListener() {
+				new MainItem("Properties", R.drawable.property_home, new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(PropertiesActivity.list());
 					}
-				}), new MainItem("Edit Item #5", new OnClickListener() {
+				}), new MainItem("Edit Item #5", R.drawable.room_bedroom, new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(ItemEditActivity.edit(5));
 					}
-				}), new MainItem("Drive", new OnClickListener() {
+				}), new MainItem("Drive", android.R.drawable.ic_menu_upload, new OnClickListener() {
 					public void onClick(View v) {
 						Intent intent = new Intent(App.getAppContext(), WelcomeActivity.class);
 						startActivity(intent);
 					}
-				}), new MainItem("Camera", new OnClickListener() {
+				}), new MainItem("Camera", android.R.drawable.ic_menu_camera, new OnClickListener() {
 					public void onClick(View v) {
 						Intent intent = new Intent(App.getAppContext(), CaptureImage.class);
 						startActivity(intent);
@@ -66,11 +66,13 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 	private static class MainItem {
-		public CharSequence title;
-		public OnClickListener listener;
+		public final CharSequence title;
+		public final int iconDrawable;
+		public final OnClickListener listener;
 
-		public MainItem(String title, OnClickListener listener) {
+		public MainItem(String title, int iconDrawable, OnClickListener listener) {
 			this.title = title;
+			this.iconDrawable = iconDrawable;
 			this.listener = listener;
 		}
 	}
@@ -80,7 +82,8 @@ public class MainActivity extends BaseActivity {
 		}
 
 		class ViewHolder {
-			public TextView label;
+			ImageView icon;
+			TextView label;
 		}
 
 		@Override
@@ -91,13 +94,15 @@ public class MainActivity extends BaseActivity {
 		@Override
 		protected ViewHolder createHolder(View convertView) {
 			ViewHolder holder = new ViewHolder();
-			holder.label = (TextView)convertView.findViewById(android.R.id.text1);
+			holder.icon = (ImageView)convertView.findViewById(R.id.icon);
+			holder.label = (TextView)convertView.findViewById(R.id.title);
 			return holder;
 		}
 
 		@Override
 		protected void bindView(ViewHolder holder, MainItem currentItem, View convertView) {
 			holder.label.setText(currentItem.title);
+			holder.icon.setImageResource(currentItem.iconDrawable);
 		}
 	}
 }

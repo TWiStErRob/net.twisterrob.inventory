@@ -8,6 +8,8 @@ import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.view.MenuItem;
 
+import com.android.debug.hv.ViewServer;
+
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 public class BaseActivity extends ActionBarActivity {
@@ -17,8 +19,21 @@ public class BaseActivity extends ActionBarActivity {
 	protected void onCreate(Bundle arg0) {
 		LOG.trace("Creating {}: {}", this, AndroidTools.toString(getIntent().getExtras()));
 		super.onCreate(arg0);
+		ViewServer.get(this).addWindow(this);
 
 		initActionBar();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		ViewServer.get(this).setFocusedWindow(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ViewServer.get(this).removeWindow(this);
 	}
 
 	private void initActionBar() {
