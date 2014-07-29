@@ -119,4 +119,11 @@ public class Database {
 		String[] params = new String[]{name, String.valueOf(type), String.valueOf(id)};
 		db.execSQL(m_context.getString(R.string.query_property_update), params);
 	}
+
+	public void deleteProperty(long id) {
+		SQLiteDatabase db = getWritableDatabase();
+		String[] params = new String[]{String.valueOf(id)};
+		db.execSQL(m_context.getString(R.string.query_property_delete_rooms), params);
+		db.execSQL(m_context.getString(R.string.query_property_delete), params);
+	}
 }

@@ -50,6 +50,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onOpen(SQLiteDatabase db) {
 		LOG.debug("Opening database: {}", DBTools.toString(db));
+		configure(db);
 		super.onOpen(db);
 		if (devMode) {
 			backupDB(db, "onOpen_beforeDev");
@@ -79,11 +80,18 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		backupDB(db, "onCreate");
+		configure(db);
 		LOG.debug("Creating database: {}", DBTools.toString(db));
 		execFile(db, String.format(DB_CLEAN_FILE, dbName));
 		execFile(db, String.format(DB_SCHEMA_FILE, dbName, db.getVersion()));
 		execFile(db, String.format(DB_DATA_FILES, dbName, db.getVersion()));
 		LOG.info("Created database: {}", DBTools.toString(db));
+	}
+
+	public void configure(SQLiteDatabase db) {
+		if (!db.isReadOnly()) {
+			db.execSQL("PRAGMA foreign_keys=ON;"); // db.setForeignKeyConstraintsEnabled(true);
+		}
 	}
 
 	private void execFile(SQLiteDatabase db, String dbSchemaFile) {
@@ -142,6 +150,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		backupDB(db, "onUpgrade_" + oldVersion + "-" + newVersion);
+		configure(db);
 		onCreate(db);
 	}
 }

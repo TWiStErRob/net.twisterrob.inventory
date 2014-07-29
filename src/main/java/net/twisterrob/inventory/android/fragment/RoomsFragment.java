@@ -81,12 +81,12 @@ public class RoomsFragment extends BaseFragment {
 	}
 
 	public void listForProperty(long id) {
-		if (id == Property.ID_ADD) {
-			getLoaderManager().destroyLoader(Loaders.Rooms.ordinal());
-			return;
-		}
 		Bundle args = new Bundle();
 		args.putLong(Extras.PROPERTY_ID, id);
 		getLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, new CursorSwapper(getActivity(), adapter));
+	}
+
+	public void refresh() {
+		getLoaderManager().getLoader(Loaders.Rooms.ordinal()).forceLoad();
 	}
 }

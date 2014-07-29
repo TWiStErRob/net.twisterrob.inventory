@@ -27,6 +27,12 @@
 	<string name="query_property_update"><![CDATA["
 		update Property set name = ?, type = ? where id = ?
 	"]]></string>
+	<string name="query_property_delete"><![CDATA["
+		delete from Property where id = ?
+	"]]></string>
+	<string name="query_property_delete_rooms"><![CDATA["
+		delete from Room where property = ?
+	"]]></string>
 	<string name="query_property_types"><![CDATA["
 	    select id as _id, name
 	    from PropertyType

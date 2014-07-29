@@ -13,6 +13,8 @@
 
 	<string name="property_title">Properties</string>
 	<string name="property_add">Add Property&#8230;</string>
+	<string name="property_edit">Edit Property&#8230;</string>
+	<string name="property_delete">Delete Property</string>
 	<string name="property_new">New Property</string>
 	<string name="property_other">Other</string>
 	<string name="property_home">Home</string>

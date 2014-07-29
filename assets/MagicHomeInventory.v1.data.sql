@@ -68,7 +68,8 @@ INSERT INTO Category
 	               (id, parent, name)
 --		               (id, parent, name)
 --			               (id, parent, name)
-	      SELECT     0,   NULL, 'Uncategorized'
+	      SELECT    -1,   NULL, 'INTERNAL'
+	UNION SELECT     0,   NULL, 'Uncategorized'
 	UNION SELECT  1000,   NULL, 'Clothing'
 	UNION SELECT  1100,   1000,   'Clothes'
 	UNION SELECT  1200,   1000,   'Underwear'
