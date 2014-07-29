@@ -21,6 +21,12 @@
 		from Property
 		where id = ?
 	"]]></string>
+	<string name="query_property_new"><![CDATA["
+		insert into Property(name, type) values(?, ?)
+	"]]></string>
+	<string name="query_property_update"><![CDATA["
+		update Property set name = ?, type = ? where id = ?
+	"]]></string>
 	<string name="query_property_types"><![CDATA["
 	    select id as _id, name
 	    from PropertyType

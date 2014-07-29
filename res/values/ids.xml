@@ -20,4 +20,6 @@
 	<item type="id" name="itemName" />
 	<item type="id" name="itemCategory" />
 	<item type="id" name="itemImage" />
+
+	<item type="id" name="btn_save" />
 </resources>

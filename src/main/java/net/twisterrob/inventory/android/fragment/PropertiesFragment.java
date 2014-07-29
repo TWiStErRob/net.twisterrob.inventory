@@ -80,4 +80,8 @@ public class PropertiesFragment extends BaseFragment {
 	public void list() {
 		getLoaderManager().initLoader(Loaders.Properties.ordinal(), null, new CursorSwapper(getActivity(), adapter));
 	}
+
+	public void refresh() {
+		getLoaderManager().getLoader(Loaders.Properties.ordinal()).forceLoad();
+	}
 }

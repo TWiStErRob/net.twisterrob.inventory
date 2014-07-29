@@ -68,8 +68,8 @@ public class RoomEditFragment extends EditFragment {
 			long type = item.getLong(item.getColumnIndexOrThrow(Room.TYPE));
 
 			getActivity().setTitle(name);
-			roomName.setText(name);
 			AndroidTools.selectByID(roomType, type);
+			roomName.setText(name); // must set it after roomType to prevent auto-propagation
 		}
 
 		@Override

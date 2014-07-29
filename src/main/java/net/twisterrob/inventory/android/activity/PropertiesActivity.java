@@ -9,13 +9,25 @@ import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.PropertiesFragment.PropertyEvents;
 
 public class PropertiesActivity extends BaseListActivity implements PropertyEvents {
+	private PropertiesFragment properties;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.properties);
+		properties = getFragment(R.id.properties);
+	}
 
-		PropertiesFragment properties = getFragment(R.id.properties);
+	@Override
+	protected void onStart() {
+		super.onStart();
 		properties.list();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		properties.refresh();
 	}
 
 	public void newProperty() {

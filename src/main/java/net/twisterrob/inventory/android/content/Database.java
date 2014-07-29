@@ -18,7 +18,7 @@ public class Database {
 	public Database(Context context) {
 		m_context = context;
 		m_helper = new DatabaseOpenHelper(m_context, "MagicHomeInventory", 1);
-		m_helper.setDevMode(false);
+		m_helper.setDevMode(true);
 	}
 
 	public SQLiteDatabase getReadableDatabase() {
@@ -105,5 +105,18 @@ public class Database {
 	public Cursor getItem(long itemID) {
 		SQLiteDatabase db = getReadableDatabase();
 		return db.rawQuery(m_context.getString(R.string.query_item), new String[]{String.valueOf(itemID)});
+	}
+
+	public long newProperty(String name, long type) {
+		SQLiteDatabase db = getWritableDatabase();
+		String[] params = new String[]{name, String.valueOf(type)};
+		db.execSQL(m_context.getString(R.string.query_property_new), params);
+		return 0;
+	}
+
+	public void updateProperty(long id, String name, long type) {
+		SQLiteDatabase db = getWritableDatabase();
+		String[] params = new String[]{name, String.valueOf(type), String.valueOf(id)};
+		db.execSQL(m_context.getString(R.string.query_property_update), params);
 	}
 }

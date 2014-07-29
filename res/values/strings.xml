@@ -5,6 +5,7 @@
 	<string name="action_picture_take">Take picture</string>
 	<string name="action_picture_pick">Pick picture</string>
 	<string name="action_share">Share</string>
+	<string name="action_save">Save</string>
 	
 	<string name="item_title">Items</string>
 	<string name="item_add">Add Item&#8230;</string>
