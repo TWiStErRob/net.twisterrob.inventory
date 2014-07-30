@@ -35,8 +35,7 @@ public class PropertyEditFragment extends BaseEditFragment {
 		propertyName = (EditText)root.findViewById(R.id.propertyName);
 		propertyType = (Spinner)root.findViewById(R.id.propertyType);
 		adapter = Adapters.loadCursorAdapter(getActivity(), R.xml.property_types, (Cursor)null);
-		Button btnSave = (Button)root.findViewById(R.id.btn_save);
-		btnSave.setOnClickListener(new OnClickListener() {
+		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				save();
 			}

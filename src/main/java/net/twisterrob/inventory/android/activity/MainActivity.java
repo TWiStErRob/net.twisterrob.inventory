@@ -34,7 +34,11 @@ public class MainActivity extends BaseActivity {
 					public void onClick(View v) {
 						startActivity(PropertiesActivity.list());
 					}
-				}), new MainItem("Edit Item #5", R.drawable.room_bedroom, new OnClickListener() {
+				}), new MainItem("Edit Room #4", R.drawable.room_bedroom, new OnClickListener() {
+					public void onClick(View v) {
+						startActivity(RoomEditActivity.edit(4));
+					}
+				}), new MainItem("Edit Item #5", R.drawable.room_storage, new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(ItemEditActivity.edit(5));
 					}
@@ -60,7 +64,7 @@ public class MainActivity extends BaseActivity {
 			first = false;
 			new Handler().postDelayed(new Runnable() {
 				public void run() {
-					//((MainItem)list.getItemAtPosition(1)).listener.onClick(list);
+					((MainItem)list.getItemAtPosition(1)).listener.onClick(list);
 				}
 			}, 1000);
 		}

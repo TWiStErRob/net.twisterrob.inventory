@@ -1,19 +1,24 @@
 package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.view.*;
+import android.view.View.OnClickListener;
 import android.widget.*;
 
 import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
+import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.content.LoadSingleRow;
+import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
@@ -22,12 +27,18 @@ public class RoomEditFragment extends BaseEditFragment {
 	private EditText roomName;
 	private Spinner roomType;
 	private CursorAdapter adapter;
+	private long currentRoomID;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.room_edit, container, false);
 		roomName = (EditText)root.findViewById(R.id.roomName);
 		roomType = (Spinner)root.findViewById(R.id.roomType);
+		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				save();
+			}
+		});
 
 		adapter = Adapters.loadCursorAdapter(getActivity(), R.xml.room_types, (Cursor)null);
 		roomType.setAdapter(adapter);
@@ -38,6 +49,7 @@ public class RoomEditFragment extends BaseEditFragment {
 
 	@Override
 	public void load(long id) {
+		currentRoomID = id;
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), adapter);
 		Dependency<Cursor> populateTypes = manager.add(RoomTypes.ordinal(), null, typeCursorSwapper);
@@ -52,9 +64,18 @@ public class RoomEditFragment extends BaseEditFragment {
 
 		manager.startLoading();
 	}
-
 	@Override
-	public void save() {}
+	public void save() {
+		new SaveTask().execute(getCurrentRoom());
+	}
+
+	private RoomDTO getCurrentRoom() {
+		RoomDTO room = new RoomDTO();
+		room.id = currentRoomID;
+		room.name = roomName.getText().toString();
+		room.type = roomType.getSelectedItemId();
+		return room;
+	}
 
 	private final class LoadExistingRoom extends LoadSingleRow {
 		private LoadExistingRoom() {
@@ -64,12 +85,11 @@ public class RoomEditFragment extends BaseEditFragment {
 		@Override
 		protected void process(Cursor item) {
 			super.process(item);
-			String name = item.getString(item.getColumnIndexOrThrow(Room.NAME));
-			long type = item.getLong(item.getColumnIndexOrThrow(Room.TYPE));
+			RoomDTO room = RoomDTO.fromCursor(item);
 
-			getActivity().setTitle(name);
-			AndroidTools.selectByID(roomType, type);
-			roomName.setText(name); // must set it after roomType to prevent auto-propagation
+			getActivity().setTitle(room.name);
+			AndroidTools.selectByID(roomType, room.type);
+			roomName.setText(room.name); // must set it after roomType to prevent auto-propagation
 		}
 
 		@Override
@@ -77,5 +97,37 @@ public class RoomEditFragment extends BaseEditFragment {
 			super.processInvalid(item);
 			getActivity().finish();
 		}
+	}
+
+	private final class SaveTask extends SimpleAsyncTask<RoomDTO, Void, Long> {
+		@Override
+		protected Long doInBackground(RoomDTO param) {
+			try {
+				Database db = App.getInstance().getDataBase();
+				if (param.id == Room.ID_ADD) {
+					return db.newRoom(param.propertyID, param.name, param.type);
+				} else {
+					db.updateRoom(param.id, param.name, param.type);
+					return param.id;
+				}
+			} catch (SQLiteConstraintException ex) {
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Long result) {
+			if (result != null) {
+				getActivity().finish();
+			} else {
+				Toast.makeText(getActivity(), "Room name must be unique within the property", Toast.LENGTH_LONG).show();
+			}
+		}
+	}
+
+	public static Bundle createArgs(long roomID) {
+		Bundle args = new Bundle();
+		args.putLong(Extras.ROOM_ID, roomID);
+		return args;
 	}
 }

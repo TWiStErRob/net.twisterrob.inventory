@@ -126,4 +126,23 @@ public class Database {
 		db.execSQL(m_context.getString(R.string.query_property_delete_rooms), params);
 		db.execSQL(m_context.getString(R.string.query_property_delete), params);
 	}
+
+	public long newRoom(long propertyID, String name, long type) {
+		SQLiteDatabase db = getWritableDatabase();
+		String[] params = new String[]{String.valueOf(propertyID), name, String.valueOf(type)};
+		db.execSQL(m_context.getString(R.string.query_room_new), params);
+		return 0;
+	}
+
+	public void updateRoom(long id, String name, long type) {
+		SQLiteDatabase db = getWritableDatabase();
+		String[] params = new String[]{name, String.valueOf(type), String.valueOf(id)};
+		db.execSQL(m_context.getString(R.string.query_room_update), params);
+	}
+
+	public void deleteRoom(long id) {
+		SQLiteDatabase db = getWritableDatabase();
+		String[] params = new String[]{String.valueOf(id)};
+		db.execSQL(m_context.getString(R.string.query_room_delete), params);
+	}
 }

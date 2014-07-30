@@ -9,13 +9,22 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.PropertyEditFragment;
 
 public class PropertyEditActivity extends BaseEditActivity {
+	private PropertyEditFragment editor;
+	private long currentPropertyID;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.property);
 
-		PropertyEditFragment editor = getFragment(R.id.property);
-		editor.load(getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD));
+		editor = getFragment(R.id.property);
+		currentPropertyID = getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		editor.load(currentPropertyID);
 	}
 
 	public static Intent add() {

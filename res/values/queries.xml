@@ -41,11 +41,6 @@
 	    from RoomType
 	    order by priority
 	"]]></string>
-	<string name="query_room"><![CDATA["
-		select id as _id, name, type
-		from Room
-		where id = ?
-	"]]></string>
 	<string name="query_rooms"><![CDATA["
 		select
 			r.id as _id,
@@ -57,6 +52,20 @@
 		join RoomTypeKind rtk ON rt.kind = rtk.id
 		where r.property = ?
 		order by r.name asc 
+	"]]></string>
+	<string name="query_room"><![CDATA["
+		select id as _id, name, type
+		from Room
+		where id = ?
+	"]]></string>
+	<string name="query_room_new"><![CDATA["
+		insert into Room(property, name, type) values(?, ?, ?)
+	"]]></string>
+	<string name="query_room_update"><![CDATA["
+		update Room set name = ?, type = ? where id = ?
+	"]]></string>
+	<string name="query_room_delete"><![CDATA["
+		delete from Room where id = ?
 	"]]></string>
 	<string name="query_items"><![CDATA["
 		select
