@@ -34,6 +34,10 @@ public class MainActivity extends BaseActivity {
 					public void onClick(View v) {
 						startActivity(PropertiesActivity.list());
 					}
+				}), new MainItem("Edit Property #1", R.drawable.property_home, new OnClickListener() {
+					public void onClick(View v) {
+						startActivity(PropertyEditActivity.edit(1));
+					}
 				}), new MainItem("Edit Room #4", R.drawable.room_bedroom, new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(RoomEditActivity.edit(4));

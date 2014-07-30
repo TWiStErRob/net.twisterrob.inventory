@@ -47,7 +47,9 @@ public class ItemEditFragment extends BaseEditFragment {
 	}
 
 	@Override
-	public void load(long id) {
+	protected void onStartLoading() {
+		long id = getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
+
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 
 		if (id != Item.ID_ADD) {
@@ -61,9 +63,6 @@ public class ItemEditFragment extends BaseEditFragment {
 		currentItemID = id;
 		manager.startLoading();
 	}
-
-	@Override
-	public void save() {}
 
 	protected File getTargetFile() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
@@ -185,5 +184,15 @@ public class ItemEditFragment extends BaseEditFragment {
 			}
 			return null;
 		}
+	}
+
+	public static ItemEditFragment newInstance(long itemID) {
+		ItemEditFragment fragment = new ItemEditFragment();
+
+		Bundle args = new Bundle();
+		args.putLong(Extras.ITEM_ID, itemID);
+
+		fragment.setArguments(args);
+		return fragment;
 	}
 }

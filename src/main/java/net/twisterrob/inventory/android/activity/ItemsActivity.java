@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
@@ -17,13 +19,16 @@ public class ItemsActivity extends BaseListActivity implements ItemEvents {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.items);
 
-		items = getFragment(R.id.items);
-	}
+		long currentParentID = getExtraParentItemID();
+		if (currentParentID == Item.ID_ADD) {
+			Toast.makeText(this, "Invalid parent item ID", Toast.LENGTH_LONG).show();
+			finish();
+		}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		items.list(getIntent().getLongExtra(Extras.PARENT_ID, Item.ID_ADD));
+		items = ItemsFragment.newInstance(currentParentID);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.items, items);
+		ft.commit();
 	}
 
 	@Override
@@ -39,21 +44,14 @@ public class ItemsActivity extends BaseListActivity implements ItemEvents {
 	public void itemSelected(long id) {
 		startActivity(ItemsActivity.list(id));
 		// TODO consider tabs as breadcrumbs?
-		//		ItemsFragment list = getFragment(R.id.items);
-		//		if (list != null && list.isInLayout()) {
-		//			list.list(id);
-		//		} else {
-		//			startActivity(ItemsActivity.list(id));
-		//		}
 	}
 
 	public void itemActioned(long id) {
-		ItemEditFragment editor = getFragment(R.id.item);
-		if (editor != null && editor.isInLayout()) {
-			editor.load(id);
-		} else {
-			startActivity(ItemEditActivity.edit(id));
-		}
+		startActivity(ItemEditActivity.edit(id));
+	}
+
+	private long getExtraParentItemID() {
+		return getIntent().getLongExtra(Extras.PARENT_ID, Item.ID_ADD);
 	}
 
 	public static Intent list(long itemID) {

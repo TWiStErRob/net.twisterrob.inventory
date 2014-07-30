@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.support.v4.app.*;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
@@ -10,35 +10,29 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.RoomEditFragment;
 
 public class RoomEditActivity extends BaseEditActivity {
-	private RoomEditFragment editor;
-	private long currentRoomID;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.room);
 
-		currentRoomID = getIntent().getLongExtra(Extras.ROOM_ID, Room.ID_ADD);
-		if (currentRoomID == Room.ID_ADD) {
-			Toast.makeText(this, "Invalid room ID", Toast.LENGTH_LONG).show();
-			finish();
-		}
-		editor = getFragment(R.id.room);
+		long currentPropertyID = getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
+		long currentRoomID = getIntent().getLongExtra(Extras.ROOM_ID, Room.ID_ADD);
+		Fragment editor = RoomEditFragment.newInstance(currentPropertyID, currentRoomID);
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.room, editor);
+		ft.commit();
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		editor.load(currentRoomID);
-	}
-
-	public static Intent add() {
+	public static Intent add(long propertyID) {
 		Intent intent = new Intent(App.getAppContext(), RoomEditActivity.class);
+		intent.putExtra(Extras.PROPERTY_ID, propertyID);
 		return intent;
 	}
-	public static Intent edit(long roomId) {
+
+	public static Intent edit(long roomID) {
 		Intent intent = new Intent(App.getAppContext(), RoomEditActivity.class);
-		intent.putExtra(Extras.ROOM_ID, roomId);
+		intent.putExtra(Extras.ROOM_ID, roomID);
 		return intent;
 	}
 }

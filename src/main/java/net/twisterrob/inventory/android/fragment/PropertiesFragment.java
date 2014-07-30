@@ -66,11 +66,17 @@ public class PropertiesFragment extends BaseListFragment<PropertyEvents> {
 		});
 	}
 
-	public void list() {
+	@Override
+	protected void onStartLoading() {
 		getLoaderManager().initLoader(Loaders.Properties.ordinal(), null, createListLoaderCallbacks());
 	}
 
 	public void refresh() {
 		getLoaderManager().getLoader(Loaders.Properties.ordinal()).forceLoad();
+	}
+
+	public static PropertiesFragment newInstance() {
+		PropertiesFragment fragment = new PropertiesFragment();
+		return fragment;
 	}
 }

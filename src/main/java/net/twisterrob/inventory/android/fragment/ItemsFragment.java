@@ -11,7 +11,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.Extras;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.ItemsFragment.ItemEvents;
 
 public class ItemsFragment extends BaseListFragment<ItemEvents> {
@@ -67,13 +67,28 @@ public class ItemsFragment extends BaseListFragment<ItemEvents> {
 		});
 	}
 
-	public void list(long parentItemID) {
+	@Override
+	protected void onStartLoading() {
 		Bundle args = new Bundle();
-		args.putLong(Extras.PARENT_ID, parentItemID);
+		args.putLong(Extras.PARENT_ID, getArgParentItemID());
 		getLoaderManager().initLoader(Loaders.Items.ordinal(), args, createListLoaderCallbacks());
+	}
+
+	private long getArgParentItemID() {
+		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
 
 	public void refresh() {
 		getLoaderManager().getLoader(Loaders.Items.ordinal()).forceLoad();
+	}
+
+	public static ItemsFragment newInstance(long parentItemID) {
+		ItemsFragment fragment = new ItemsFragment();
+
+		Bundle args = new Bundle();
+		args.putLong(Extras.PARENT_ID, parentItemID);
+
+		fragment.setArguments(args);
+		return fragment;
 	}
 }

@@ -71,13 +71,28 @@ public class RoomsFragment extends BaseListFragment<RoomEvents> {
 		});
 	}
 
-	public void listForProperty(long id) {
+	@Override
+	protected void onStartLoading() {
 		Bundle args = new Bundle();
-		args.putLong(Extras.PROPERTY_ID, id);
+		args.putLong(Extras.PROPERTY_ID, getArgPropertyID());
 		getLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, createListLoaderCallbacks());
 	}
 
 	public void refresh() {
 		getLoaderManager().getLoader(Loaders.Rooms.ordinal()).forceLoad();
+	}
+
+	private long getArgPropertyID() {
+		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
+	}
+
+	public static RoomsFragment newInstance(long propertyID) {
+		RoomsFragment fragment = new RoomsFragment();
+
+		Bundle args = new Bundle();
+		args.putLong(Extras.PROPERTY_ID, propertyID);
+
+		fragment.setArguments(args);
+		return fragment;
 	}
 }

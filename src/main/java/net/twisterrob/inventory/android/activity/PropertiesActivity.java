@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
@@ -15,13 +16,12 @@ public class PropertiesActivity extends BaseListActivity implements PropertyEven
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.properties);
-		properties = getFragment(R.id.properties);
-	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		properties.list();
+		properties = PropertiesFragment.newInstance();
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.properties, properties);
+		ft.commit();
 	}
 
 	@Override
@@ -35,21 +35,11 @@ public class PropertiesActivity extends BaseListActivity implements PropertyEven
 	}
 
 	public void propertySelected(long id) {
-		RoomsFragment rooms = getFragment(R.id.rooms);
-		if (rooms != null && rooms.isInLayout()) {
-			rooms.listForProperty(id);
-		} else {
-			startActivity(RoomsActivity.list(id));
-		}
+		startActivity(RoomsActivity.list(id));
 	}
 
 	public void propertyActioned(long id) {
-		PropertyEditFragment editor = getFragment(R.id.property);
-		if (editor != null && editor.isInLayout()) {
-			editor.load(id);
-		} else {
-			startActivity(PropertyEditActivity.edit(id));
-		}
+		startActivity(PropertyEditActivity.edit(id));
 	}
 
 	public static Intent list() {

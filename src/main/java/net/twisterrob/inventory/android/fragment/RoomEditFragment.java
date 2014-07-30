@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
+import org.slf4j.*;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
@@ -24,10 +26,11 @@ import net.twisterrob.inventory.android.view.*;
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class RoomEditFragment extends BaseEditFragment {
+	private static final Logger LOG = LoggerFactory.getLogger(RoomEditFragment.class);
+
 	private EditText roomName;
 	private Spinner roomType;
 	private CursorAdapter adapter;
-	private long currentRoomID;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,8 +51,9 @@ public class RoomEditFragment extends BaseEditFragment {
 	}
 
 	@Override
-	public void load(long id) {
-		currentRoomID = id;
+	protected void onStartLoading() {
+		long id = getArgRoomID();
+
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), adapter);
 		Dependency<Cursor> populateTypes = manager.add(RoomTypes.ordinal(), null, typeCursorSwapper);
@@ -64,17 +68,26 @@ public class RoomEditFragment extends BaseEditFragment {
 
 		manager.startLoading();
 	}
-	@Override
-	public void save() {
+
+	private void save() {
 		new SaveTask().execute(getCurrentRoom());
 	}
 
 	private RoomDTO getCurrentRoom() {
 		RoomDTO room = new RoomDTO();
-		room.id = currentRoomID;
+		room.propertyID = getArgPropertyID();
+		room.id = getArgRoomID();
 		room.name = roomName.getText().toString();
 		room.type = roomType.getSelectedItemId();
 		return room;
+	}
+
+	private long getArgPropertyID() {
+		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
+	}
+
+	private long getArgRoomID() {
+		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 
 	private final class LoadExistingRoom extends LoadSingleRow {
@@ -111,6 +124,7 @@ public class RoomEditFragment extends BaseEditFragment {
 					return param.id;
 				}
 			} catch (SQLiteConstraintException ex) {
+				LOG.warn("Cannot save {}", param, ex);
 				return null;
 			}
 		}
@@ -125,9 +139,21 @@ public class RoomEditFragment extends BaseEditFragment {
 		}
 	}
 
-	public static Bundle createArgs(long roomID) {
+	public static RoomEditFragment newInstance(long propertyID, long roomID) {
+		if (propertyID == Property.ID_ADD && roomID == Room.ID_ADD) {
+			throw new IllegalArgumentException("Property ID / room ID must be provided (new room / edit room)");
+		}
+		if (roomID != Room.ID_ADD) { // no need to know which property when editing
+			propertyID = Property.ID_ADD;
+		}
+
+		RoomEditFragment fragment = new RoomEditFragment();
+
 		Bundle args = new Bundle();
+		args.putLong(Extras.PROPERTY_ID, propertyID);
 		args.putLong(Extras.ROOM_ID, roomID);
-		return args;
+
+		fragment.setArguments(args);
+		return fragment;
 	}
 }

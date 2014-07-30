@@ -57,10 +57,18 @@ public class BaseFragment<T> extends Fragment {
 	}
 
 	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		onStartLoading();
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
 		super.onCreateOptionsMenu(menu, menuInflater);
 		if (hasDynResource(DYN_OptionsMenu)) {
 			menuInflater.inflate(this.<Integer> getDynamicResource(DYN_OptionsMenu), menu);
 		}
 	}
+
+	protected void onStartLoading() {}
 }

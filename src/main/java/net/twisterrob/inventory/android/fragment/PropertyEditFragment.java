@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
+import org.slf4j.*;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
@@ -24,7 +26,8 @@ import net.twisterrob.inventory.android.view.*;
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class PropertyEditFragment extends BaseEditFragment {
-	private long currentPropertyID;
+	private static final Logger LOG = LoggerFactory.getLogger(PropertyEditFragment.class);
+
 	private Spinner propertyType;
 	private EditText propertyName;
 	private CursorAdapter adapter;
@@ -48,8 +51,9 @@ public class PropertyEditFragment extends BaseEditFragment {
 	}
 
 	@Override
-	public void load(long id) {
-		currentPropertyID = id;
+	protected void onStartLoading() {
+		long id = getArgPropertyID();
+
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), adapter);
 		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, typeCursorSwapper);
@@ -64,17 +68,20 @@ public class PropertyEditFragment extends BaseEditFragment {
 		manager.startLoading();
 	}
 
-	@Override
-	public void save() {
+	private void save() {
 		new SaveTask().execute(getCurrentProperty());
 	}
 
 	private PropertyDTO getCurrentProperty() {
 		PropertyDTO property = new PropertyDTO();
-		property.id = currentPropertyID;
+		property.id = getArgPropertyID();
 		property.name = propertyName.getText().toString();
 		property.type = propertyType.getSelectedItemId();
 		return property;
+	}
+
+	private long getArgPropertyID() {
+		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
 	private class PropertyLoaded extends LoadSingleRow {
@@ -111,6 +118,7 @@ public class PropertyEditFragment extends BaseEditFragment {
 					return param.id;
 				}
 			} catch (SQLiteConstraintException ex) {
+				LOG.warn("Cannot save {}", param, ex);
 				return null;
 			}
 		}
@@ -123,5 +131,15 @@ public class PropertyEditFragment extends BaseEditFragment {
 				Toast.makeText(getActivity(), "Property name must be unique", Toast.LENGTH_LONG).show();
 			}
 		}
+	}
+
+	public static PropertyEditFragment newInstance(long propertyID) {
+		PropertyEditFragment fragment = new PropertyEditFragment();
+
+		Bundle args = new Bundle();
+		args.putLong(Extras.PROPERTY_ID, propertyID);
+
+		fragment.setArguments(args);
+		return fragment;
 	}
 }
