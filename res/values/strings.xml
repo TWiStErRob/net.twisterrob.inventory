@@ -1,6 +1,7 @@
 <resources>
 	<string name="app_name">Magic Home Inventory</string>
 	<string name="empty"></string>
+	<string name="list_empty_add">You don\'t have any created, add one to get started.</string>
 	
 	<string name="action_picture_take">Take picture</string>
 	<string name="action_picture_pick">Pick picture</string>
@@ -71,8 +72,13 @@
 	<string name="room_group_function">Function</string>
 	<string name="room_group_space">Space</string>
 	
+	<string name="img_desc_empty_add">Create a new one.</string>
 	<string name="img_desc_property">Picture taken of the property or a semantic image depicting the type of the property.</string>
+	<string name="img_desc_property_add">Add a new property.</string>
+	<string name="img_desc_room">Picture taken of the room or a semantic image depicting the type of the room.</string>
+	<string name="img_desc_room_add">Add a new room to the current property.</string>
 	<string name="img_desc_item">Picture taken of the item or a semantic image depicting the category of the item.</string>
+	<string name="img_desc_item_add">Add a new item.</string>
 
 <!-- 	<string name=""></string> -->
 </resources>

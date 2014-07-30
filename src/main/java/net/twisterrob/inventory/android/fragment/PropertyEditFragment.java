@@ -23,7 +23,7 @@ import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class PropertyEditFragment extends EditFragment {
+public class PropertyEditFragment extends BaseEditFragment {
 	private long currentPropertyID;
 	private Spinner propertyType;
 	private EditText propertyName;

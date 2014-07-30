@@ -18,7 +18,7 @@ import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class RoomEditFragment extends EditFragment {
+public class RoomEditFragment extends BaseEditFragment {
 	private EditText roomName;
 	private Spinner roomType;
 	private CursorAdapter adapter;

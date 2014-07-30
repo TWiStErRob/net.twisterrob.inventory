@@ -11,7 +11,7 @@
 		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
 		android:scaleType="centerInside"
-		android:contentDescription="@string/img_desc_property" />
+		android:contentDescription="@string/img_desc_room" />
 	<TextView
 		android:id="@id/roomName"
 		android:focusable="false"

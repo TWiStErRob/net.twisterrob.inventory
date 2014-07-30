@@ -22,4 +22,5 @@
 	<item type="id" name="itemImage" />
 
 	<item type="id" name="btn_save" />
+	<item type="id" name="btn_add" />
 </resources>

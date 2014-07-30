@@ -9,4 +9,6 @@
 		android:layerType="software"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
+	<include layout="@layout/inc_loading" />
+	<include layout="@layout/inc_empty_add" />
 </FrameLayout>

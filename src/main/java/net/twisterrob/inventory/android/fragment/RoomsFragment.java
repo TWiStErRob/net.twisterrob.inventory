@@ -2,23 +2,20 @@ package net.twisterrob.inventory.android.fragment;
 
 import org.slf4j.*;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.widget.CursorAdapter;
 import android.view.*;
+import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-import com.example.android.xmladapters.Adapters;
-
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.view.CursorSwapper;
+import net.twisterrob.inventory.android.fragment.RoomsFragment.RoomEvents;
 
-public class RoomsFragment extends ListFragment {
+public class RoomsFragment extends BaseListFragment<RoomEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomsFragment.class);
 
 	public interface RoomEvents {
@@ -27,33 +24,19 @@ public class RoomsFragment extends ListFragment {
 		void roomActioned(long roomID);
 	}
 
-	private CursorAdapter adapter;
-	private GridView grid;
-	private RoomEvents listener;
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		listener = checkActivityInterface(activity, RoomEvents.class);
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		listener = null;
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-		super.onCreateOptionsMenu(menu, menuInflater);
-		menuInflater.inflate(R.menu.rooms, menu);
+	public RoomsFragment() {
+		setDynamicResource(DYN_EventsClass, RoomEvents.class);
+		setDynamicResource(DYN_Layout, R.layout.room_coll);
+		setDynamicResource(DYN_List, R.id.rooms);
+		setDynamicResource(DYN_CursorAdapter, R.xml.rooms);
+		setDynamicResource(DYN_OptionsMenu, R.menu.rooms);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_room_add:
-				listener.newRoom();
+				eventsListener.newRoom();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -61,34 +44,29 @@ public class RoomsFragment extends ListFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.room_coll, container, false);
-
-		grid = (GridView)root.findViewById(R.id.rooms);
-		adapter = Adapters.loadCursorAdapter(getActivity(), R.xml.rooms, (Cursor)null);
-		grid.setAdapter(adapter);
-
-		return root;
-	}
-
-	@Override
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
 
-		grid.setOnItemLongClickListener(new OnItemLongClickListener() {
+		getView().findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				eventsListener.newRoom();
+			}
+		});
+
+		list.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Long Clicked on #{}", id);
-				listener.roomActioned(id);
+				eventsListener.roomActioned(id);
 				return true;
 			}
 		});
-		grid.setOnItemClickListener(new OnItemClickListener() {
+		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Clicked on #{}", id);
 				@SuppressWarnings("resource")
 				Cursor data = (Cursor)parent.getAdapter().getItem(position);
 				long rootItemID = data.getLong(data.getColumnIndexOrThrow(Room.ROOT_ITEM));
-				listener.roomSelected(id, rootItemID);
+				eventsListener.roomSelected(id, rootItemID);
 			}
 		});
 	}
@@ -96,7 +74,7 @@ public class RoomsFragment extends ListFragment {
 	public void listForProperty(long id) {
 		Bundle args = new Bundle();
 		args.putLong(Extras.PROPERTY_ID, id);
-		getLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, new CursorSwapper(getActivity(), adapter));
+		getLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, createListLoaderCallbacks());
 	}
 
 	public void refresh() {

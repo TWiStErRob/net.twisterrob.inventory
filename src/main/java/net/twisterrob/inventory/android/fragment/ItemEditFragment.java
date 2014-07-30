@@ -28,7 +28,7 @@ import net.twisterrob.inventory.android.utils.*;
 import static net.twisterrob.inventory.android.content.Loaders.*;
 import static net.twisterrob.inventory.android.utils.DriveUtils.*;
 
-public class ItemEditFragment extends EditFragment {
+public class ItemEditFragment extends BaseEditFragment {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditFragment.class);
 
 	private long currentItemID;

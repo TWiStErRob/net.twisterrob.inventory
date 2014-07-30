@@ -1,0 +1,21 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@android:id/empty"
+	android:visibility="gone"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center_horizontal"
+	android:orientation="vertical">
+	<TextView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/list_empty_add" />
+	<ImageButton
+		android:id="@id/btn_add"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:src="@drawable/btn_add"
+		android:adjustViewBounds="true"
+		android:scaleType="fitCenter"
+		android:contentDescription="@string/img_desc_empty_add" />
+</LinearLayout>
