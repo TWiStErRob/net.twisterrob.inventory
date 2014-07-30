@@ -10,14 +10,28 @@ import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.ItemsFragment.ItemEvents;
 
 public class ItemsActivity extends BaseListActivity implements ItemEvents {
+	private ItemsFragment items;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.items);
 
-		ItemsFragment items = getFragment(R.id.items);
+		items = getFragment(R.id.items);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 		items.list(getIntent().getLongExtra(Extras.PARENT_ID, Item.ID_ADD));
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		items.refresh();
+	}
+
 	public void newItem() {
 		startActivity(ItemEditActivity.add());
 	}

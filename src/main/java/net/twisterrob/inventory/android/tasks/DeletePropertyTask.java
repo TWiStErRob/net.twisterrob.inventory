@@ -65,9 +65,7 @@ public class DeletePropertyTask extends ActionParams {
 		try {
 			List<String> roomNames = new ArrayList<String>(rooms.getCount());
 			while (rooms.moveToNext()) {
-				if (rooms.getLong(rooms.getColumnIndex("_id")) != Room.ID_ADD) {
-					roomNames.add(rooms.getString(rooms.getColumnIndexOrThrow(Room.NAME)));
-				}
+				roomNames.add(rooms.getString(rooms.getColumnIndexOrThrow(Room.NAME)));
 			}
 			return roomNames;
 		} finally {

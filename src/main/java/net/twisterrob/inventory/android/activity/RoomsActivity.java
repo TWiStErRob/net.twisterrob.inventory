@@ -14,7 +14,6 @@ import net.twisterrob.inventory.android.tasks.DeletePropertyTask;
 
 public class RoomsActivity extends BaseListActivity implements RoomEvents {
 	private long currentPropertyID;
-	private Menu menu;
 	private RoomsFragment rooms;
 
 	@Override
@@ -45,8 +44,7 @@ public class RoomsActivity extends BaseListActivity implements RoomEvents {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		this.menu = menu;
-		getMenuInflater().inflate(R.menu.rooms, menu);
+		getMenuInflater().inflate(R.menu.room, menu);
 		return true;
 	}
 

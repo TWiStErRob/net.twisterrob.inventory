@@ -18,7 +18,7 @@ import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
-public class RoomsFragment extends BaseFragment {
+public class RoomsFragment extends ListFragment {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomsFragment.class);
 
 	public interface RoomEvents {
@@ -41,6 +41,23 @@ public class RoomsFragment extends BaseFragment {
 	public void onDetach() {
 		super.onDetach();
 		listener = null;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+		super.onCreateOptionsMenu(menu, menuInflater);
+		menuInflater.inflate(R.menu.rooms, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_room_add:
+				listener.newRoom();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -68,14 +85,10 @@ public class RoomsFragment extends BaseFragment {
 		grid.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Clicked on #{}", id);
-				if (id == Room.ID_ADD) {
-					listener.newRoom();
-				} else {
-					@SuppressWarnings("resource")
-					Cursor data = (Cursor)parent.getAdapter().getItem(position);
-					long rootItemID = data.getLong(data.getColumnIndexOrThrow(Room.ROOT_ITEM));
-					listener.roomSelected(id, rootItemID);
-				}
+				@SuppressWarnings("resource")
+				Cursor data = (Cursor)parent.getAdapter().getItem(position);
+				long rootItemID = data.getLong(data.getColumnIndexOrThrow(Room.ROOT_ITEM));
+				listener.roomSelected(id, rootItemID);
 			}
 		});
 	}

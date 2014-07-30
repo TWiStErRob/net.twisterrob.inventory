@@ -15,10 +15,10 @@ import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.contract.Extras;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
-public class ItemsFragment extends BaseFragment {
+public class ItemsFragment extends ListFragment {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemsFragment.class);
 
 	public interface ItemEvents {
@@ -41,6 +41,23 @@ public class ItemsFragment extends BaseFragment {
 	public void onDetach() {
 		super.onDetach();
 		listener = null;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+		super.onCreateOptionsMenu(menu, menuInflater);
+		menuInflater.inflate(R.menu.items, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_item_add:
+				listener.newItem();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -68,22 +85,18 @@ public class ItemsFragment extends BaseFragment {
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Clicked on #{}", id);
-				if (id == Room.ID_ADD) {
-					listener.newItem();
-				} else {
-					listener.itemSelected(id);
-				}
+				listener.itemSelected(id);
 			}
 		});
 	}
 
 	public void list(long parentItemID) {
-		if (parentItemID == Item.ID_ADD) {
-			getLoaderManager().destroyLoader(Loaders.Items.ordinal());
-			return;
-		}
 		Bundle args = new Bundle();
 		args.putLong(Extras.PARENT_ID, parentItemID);
 		getLoaderManager().initLoader(Loaders.Items.ordinal(), args, new CursorSwapper(getActivity(), adapter));
+	}
+
+	public void refresh() {
+		getLoaderManager().getLoader(Loaders.Items.ordinal()).forceLoad();
 	}
 }

@@ -1,20 +1,12 @@
 <resources>
 	<string name="query_properties"><![CDATA["
-		-- Extra "Add" item at the beginning
-			select
-				1 as rank,
-				-1 as _id,
-				'property_add' as name,
-				'property_add' as image
-		UNION
-			select
-				2 as rank,
-				p.id as _id,
-				p.name,
-				pt.image
-			from Property p
-			join PropertyType pt ON p.type = pt.id
-		order by rank, name asc
+		select
+			p.id as _id,
+			p.name,
+			pt.image
+		from Property p
+		join PropertyType pt ON p.type = pt.id
+		order by p.name asc
 	"]]></string>
 	<string name="query_property"><![CDATA["
 		select id as _id, name, type
@@ -55,43 +47,26 @@
 		where id = ?
 	"]]></string>
 	<string name="query_rooms"><![CDATA["
-		-- Extra "Add" item at the beginning
-			select
-				1 as rank,
-				-1 as _id,
-				NULL as root,
-				'room_add' as name,
-				'room_add' as image
-		UNION
-			select
-				2 as rank,
-				r.id as _id,
-				r.root,
-				r.name,
-				COALESCE(rt.image, rtk.image)
-			from Room r
-			join RoomType rt ON r.type = rt.id
-			join RoomTypeKind rtk ON rt.kind = rtk.id
-			where r.property = ?
-		order by rank, name asc 
+		select
+			r.id as _id,
+			r.root,
+			r.name,
+			COALESCE(rt.image, rtk.image) as image
+		from Room r
+		join RoomType rt ON r.type = rt.id
+		join RoomTypeKind rtk ON rt.kind = rtk.id
+		where r.property = ?
+		order by r.name asc 
 	"]]></string>
 	<string name="query_items"><![CDATA["
-		-- Extra "Add" item at the beginning
-			select
-				1 as rank,
-				-1 as _id,
-				'item_add' as name,
-				'category_root' as category
-		UNION
-			select
-				2 as rank,
-				i.id as _id,
-				i.name,
-				c.name as category
-			from Item     i
-			join Category c ON i.category = c.id
-			where i.parent = ?
-		order by rank, name asc 
+		select
+			i.id as _id,
+			i.name,
+			c.name as category
+		from Item     i
+		join Category c ON i.category = c.id
+		where i.parent = ?
+		order by i.name asc 
 	"]]></string>
 	<string name="query_item"><![CDATA["
 		select i.id as _id, i.name, c.name as category

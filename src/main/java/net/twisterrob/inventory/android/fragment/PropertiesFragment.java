@@ -15,10 +15,9 @@ import com.example.android.xmladapters.Adapters;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
-public class PropertiesFragment extends BaseFragment {
+public class PropertiesFragment extends ListFragment {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertiesFragment.class);
 
 	public interface PropertyEvents {
@@ -41,12 +40,6 @@ public class PropertiesFragment extends BaseFragment {
 	public void onDetach() {
 		super.onDetach();
 		listener = null;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -91,11 +84,7 @@ public class PropertiesFragment extends BaseFragment {
 		grid.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				LOG.trace("Clicked on #{}", id);
-				if (id == Property.ID_ADD) {
-					listener.newProperty();
-				} else {
-					listener.propertySelected(id);
-				}
+				listener.propertySelected(id);
 			}
 		});
 	}

@@ -37,12 +37,6 @@ public class ItemEditFragment extends EditFragment {
 	private ImageView itemImage;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.item_edit, container, false);
 		itemName = (EditText)root.findViewById(R.id.itemName);
