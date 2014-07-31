@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import android.database.Cursor;
 
+import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.content.contract.Property;
 
 public class PropertyDTO {
@@ -13,8 +14,17 @@ public class PropertyDTO {
 
 	public static PropertyDTO fromCursor(Cursor item) {
 		PropertyDTO property = new PropertyDTO();
-		property.name = item.getString(item.getColumnIndexOrThrow(Property.NAME));
-		property.type = item.getLong(item.getColumnIndexOrThrow(Property.TYPE));
+
+		int nameColumn = item.getColumnIndex(Property.NAME);
+		if (nameColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			property.name = item.getString(nameColumn);
+		}
+
+		int typeColumn = item.getColumnIndex(Property.TYPE);
+		if (typeColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			property.type = item.getLong(typeColumn);
+		}
+
 		return property;
 	}
 

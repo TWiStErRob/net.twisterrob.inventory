@@ -73,5 +73,7 @@ public class BaseFragment<T> extends Fragment {
 		inflater.inflate(R.menu.share, menu);
 	}
 
-	protected void onStartLoading() {}
+	protected void onStartLoading() {
+		// optional override
+	}
 }

@@ -1,5 +1,5 @@
 INSERT INTO PropertyType
-                (id, priority, name,                 image)
+               (_id, priority, name,                 image)
 	      SELECT  0,     1000, 'property_other',     'property_home'
 	UNION SELECT  1,        0, 'property_home',      'property_home'
 	UNION SELECT  2,        0, 'property_workplace', 'property_home'
@@ -16,7 +16,7 @@ INSERT INTO PropertyType
 ;
 
 INSERT INTO RoomTypeKind
-                (id, priority, name,                  image)
+               (_id, priority, name,                  image)
 	      SELECT  0,     1000, 'room_group_other',    'room_bedroom'
 	UNION SELECT  1,      100, 'room_group_general',  'room_bedroom'
 	UNION SELECT  2,      200, 'room_group_storage',  'room_storage'
@@ -26,7 +26,7 @@ INSERT INTO RoomTypeKind
 ;
 
 INSERT INTO RoomType
-                ( id,  kind, priority, name,            image)
+                (_id,  kind, priority, name,            image)
           SELECT   0,     0,     1000, 'room_other',    NULL
 -- General
 	UNION SELECT 101,     1,        0, 'room_bath',     NULL
@@ -65,9 +65,9 @@ INSERT INTO RoomType
 
 
 INSERT INTO Category
-	               (id, parent, name)
---		               (id, parent, name)
---			               (id, parent, name)
+	              (_id, parent, name)
+--		              (_id, parent, name)
+--			              (_id, parent, name)
 	      SELECT    -1,   NULL, 'INTERNAL'
 	UNION SELECT     0,   NULL, 'Uncategorized'
 	UNION SELECT  1000,   NULL, 'Clothing'
@@ -141,7 +141,7 @@ INSERT INTO Category
 ;
 
 INSERT INTO Category
-	               (id, parent, name)
+	              (_id, parent, name)
 	      SELECT 10000,   NULL, 'Furnitures'
 		UNION SELECT 10100,  10000, 'Cupboard/Cabinet/Wardrobe'
 		UNION SELECT 10200,  10000, 'Desk/Table'

@@ -7,9 +7,9 @@ import android.support.v4.app.FragmentTransaction;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.fragment.*;
-import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertyEvents;
+import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertiesEvents;
 
-public class PropertyListActivity extends BaseListActivity implements PropertyEvents {
+public class PropertyListActivity extends BaseListActivity implements PropertiesEvents {
 	private PropertyListFragment properties;
 
 	@Override

@@ -1,86 +1,86 @@
 <resources>
 	<string name="query_properties"><![CDATA["
 		select
-			p.id as _id,
+			p._id,
 			p.name,
 			pt.image
 		from Property p
-		join PropertyType pt ON p.type = pt.id
+		join PropertyType pt ON p.type = pt._id
 		order by p.name asc
 	"]]></string>
 	<string name="query_property"><![CDATA["
-		select id as _id, name, type
+		select _id, name, type
 		from Property
-		where id = ?
+		where _id = ?
 	"]]></string>
 	<string name="query_property_new"><![CDATA["
 		insert into Property(name, type) values(?, ?)
 	"]]></string>
 	<string name="query_property_update"><![CDATA["
-		update Property set name = ?, type = ? where id = ?
+		update Property set name = ?, type = ? where _id = ?
 	"]]></string>
 	<string name="query_property_delete"><![CDATA["
-		delete from Property where id = ?
+		delete from Property where _id = ?
 	"]]></string>
 	<string name="query_property_delete_rooms"><![CDATA["
 		delete from Room where property = ?
 	"]]></string>
 	<string name="query_property_types"><![CDATA["
-	    select id as _id, name
+	    select _id, name
 	    from PropertyType
 	    order by priority
 	"]]></string>
 	<string name="query_property_types_filtered"><![CDATA["
-	    select id as _id, name
+	    select _id, name
 	    from PropertyType
 	    where name like ?
 	    order by priority
 	"]]></string>
 	<string name="query_room_types"><![CDATA["
-	    select id as _id, name
+	    select _id, name
 	    from RoomType
 	    order by priority
 	"]]></string>
 	<string name="query_rooms"><![CDATA["
 		select
-			r.id as _id,
+			r._id,
 			r.root,
 			r.name,
 			COALESCE(rt.image, rtk.image) as image
 		from Room r
-		join RoomType rt ON r.type = rt.id
-		join RoomTypeKind rtk ON rt.kind = rtk.id
+		join RoomType rt ON r.type = rt._id
+		join RoomTypeKind rtk ON rt.kind = rtk._id
 		where r.property = ?
 		order by r.name asc 
 	"]]></string>
 	<string name="query_room"><![CDATA["
-		select id as _id, name, type
+		select _id, name, type, root, property
 		from Room
-		where id = ?
+		where _id = ?
 	"]]></string>
 	<string name="query_room_new"><![CDATA["
 		insert into Room(property, name, type) values(?, ?, ?)
 	"]]></string>
 	<string name="query_room_update"><![CDATA["
-		update Room set name = ?, type = ? where id = ?
+		update Room set name = ?, type = ? where _id = ?
 	"]]></string>
 	<string name="query_room_delete"><![CDATA["
-		delete from Room where id = ?
+		delete from Room where _id = ?
 	"]]></string>
 	<string name="query_items"><![CDATA["
 		select
-			i.id as _id,
+			i._id,
 			i.name,
 			c.name as category
 		from Item     i
-		join Category c ON i.category = c.id
+		join Category c ON i.category = c._id
 		where i.parent = ?
 		order by i.name asc 
 	"]]></string>
 	<string name="query_item"><![CDATA["
-		select i.id as _id, i.name, c.name as category
+		select i._id, i.name, c.name as category
 		from Item i
-		join Category c ON i.category = c.id
-		where i.id = ?
+		join Category c ON i.category = c._id
+		where i._id = ?
 	"]]></string>
 </resources>

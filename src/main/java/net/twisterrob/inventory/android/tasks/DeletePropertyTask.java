@@ -7,12 +7,13 @@ import android.database.Cursor;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.*;
 import net.twisterrob.inventory.android.activity.Dialogs.ActionParams;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.contract.Room;
+import net.twisterrob.inventory.android.content.model.PropertyDTO;
 
 public class DeletePropertyTask extends ActionParams {
 	private final long propertyID;
 
-	private String propertyName;
+	private PropertyDTO property;
 	private List<String> rooms;
 
 	public DeletePropertyTask(long id, Dialogs.Callback callback) {
@@ -22,7 +23,7 @@ public class DeletePropertyTask extends ActionParams {
 
 	@Override
 	protected void prepare() {
-		propertyName = retrievePropertyName();
+		property = retrieveProperty();
 		rooms = retrieveRoomNames();
 	}
 
@@ -41,7 +42,7 @@ public class DeletePropertyTask extends ActionParams {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Are you sure you want to delete the property named");
 		sb.append(' ');
-		sb.append("'").append(propertyName).append("'");
+		sb.append("'").append(property.name).append("'");
 		if (!rooms.isEmpty()) {
 			sb.append(" and all ");
 			sb.append(rooms.size());
@@ -60,6 +61,16 @@ public class DeletePropertyTask extends ActionParams {
 		return sb.toString();
 	}
 
+	private PropertyDTO retrieveProperty() {
+		Cursor property = App.getInstance().getDataBase().getProperty(propertyID);
+		try {
+			property.moveToFirst();
+			return PropertyDTO.fromCursor(property);
+		} finally {
+			property.close();
+		}
+	}
+
 	private List<String> retrieveRoomNames() {
 		Cursor rooms = App.getInstance().getDataBase().listRooms(propertyID);
 		try {
@@ -70,16 +81,6 @@ public class DeletePropertyTask extends ActionParams {
 			return roomNames;
 		} finally {
 			rooms.close();
-		}
-	}
-
-	private String retrievePropertyName() {
-		Cursor property = App.getInstance().getDataBase().getProperty(propertyID);
-		try {
-			property.moveToFirst();
-			return property.getString(property.getColumnIndexOrThrow(Property.NAME));
-		} finally {
-			property.close();
 		}
 	}
 }

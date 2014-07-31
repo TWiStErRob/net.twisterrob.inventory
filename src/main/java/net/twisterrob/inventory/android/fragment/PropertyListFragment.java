@@ -11,19 +11,19 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertyEvents;
+import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertiesEvents;
 
-public class PropertyListFragment extends BaseListFragment<PropertyEvents> {
+public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyListFragment.class);
 
-	public interface PropertyEvents {
+	public interface PropertiesEvents {
 		void newProperty();
 		void propertySelected(long propertyID);
 		void propertyActioned(long propertyID);
 	}
 
 	public PropertyListFragment() {
-		setDynamicResource(DYN_EventsClass, PropertyEvents.class);
+		setDynamicResource(DYN_EventsClass, PropertiesEvents.class);
 		setDynamicResource(DYN_Layout, R.layout.property_list);
 		setDynamicResource(DYN_List, R.id.properties);
 		setDynamicResource(DYN_CursorAdapter, R.xml.properties);

@@ -18,6 +18,8 @@ import net.twisterrob.android.BuildConfig;
 import net.twisterrob.android.utils.tools.*;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
+	public static final int CURSOR_NO_COLUMN = -1;
+
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseOpenHelper.class);
 	private static final String DB_SCHEMA_FILE = "%s.v%d.schema.sql";
 	private static final String DB_DATA_FILES = "%s.v%d.data.sql";

@@ -78,7 +78,7 @@
 			android:label="@string/item_title">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.ParentViewActivity" />
+				android:value="net.twisterrob.inventory.android.activity.PropertyViewActivity" />
 		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.ItemViewActivity"
