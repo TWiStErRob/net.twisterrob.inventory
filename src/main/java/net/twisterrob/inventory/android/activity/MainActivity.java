@@ -46,6 +46,10 @@ public class MainActivity extends BaseActivity {
 					public void onClick(View v) {
 						startActivity(ItemEditActivity.edit(5));
 					}
+				}), new MainItem("View Property #1", R.drawable.property_home, new OnClickListener() {
+					public void onClick(View v) {
+						startActivity(PropertyViewActivity.list(1));
+					}
 				}), new MainItem("Drive", android.R.drawable.ic_menu_upload, new OnClickListener() {
 					public void onClick(View v) {
 						Intent intent = new Intent(App.getAppContext(), WelcomeActivity.class);
@@ -68,7 +72,7 @@ public class MainActivity extends BaseActivity {
 			first = false;
 			new Handler().postDelayed(new Runnable() {
 				public void run() {
-					((MainItem)list.getItemAtPosition(1)).listener.onClick(list);
+					((MainItem)list.getItemAtPosition(4)).listener.onClick(list);
 				}
 			}, 1000);
 		}

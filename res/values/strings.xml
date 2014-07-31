@@ -34,6 +34,8 @@
 	<string name="room_title">Rooms</string>
 	<string name="room_add">Add Room&#8230;</string>
 	<string name="room_new">New Room</string>
+	<string name="room_edit">Edit Room&#8230;</string>
+	<string name="room_delete">Delete Room</string>
 	
 	<string name="room_other">Other</string>
 	<string name="room_bath">Bathroom</string>

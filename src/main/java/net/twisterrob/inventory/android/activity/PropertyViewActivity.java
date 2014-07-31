@@ -3,17 +3,18 @@ package net.twisterrob.inventory.android.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.view.*;
 import android.widget.Toast;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.*;
-import net.twisterrob.inventory.android.fragment.RoomListFragment.RoomEvents;
-import net.twisterrob.inventory.android.tasks.DeletePropertyTask;
+import net.twisterrob.inventory.android.fragment.PropertyViewFragment.PropertyEvents;
+import net.twisterrob.inventory.android.fragment.RoomListFragment.RoomsEvents;
 
-public class PropertyViewActivity extends BaseListActivity implements RoomEvents {
+public class PropertyViewActivity extends BaseListActivity implements RoomsEvents, PropertyEvents {
+	private PropertyViewFragment property;
 	private RoomListFragment rooms;
 
 	@Override
@@ -27,8 +28,11 @@ public class PropertyViewActivity extends BaseListActivity implements RoomEvents
 			finish();
 		}
 
+		property = PropertyViewFragment.newInstance(currentPropertyID);
 		rooms = RoomListFragment.newInstance(currentPropertyID);
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.property, property);
 		ft.replace(R.id.rooms, rooms);
 		ft.commit();
 	}
@@ -36,44 +40,20 @@ public class PropertyViewActivity extends BaseListActivity implements RoomEvents
 	@Override
 	protected void onResume() {
 		super.onResume();
+		property.refresh();
 		rooms.refresh();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.share, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_property_edit:
-				startActivity(PropertyEditActivity.edit(getExtraPropertyID()));
-				return true;
-			case R.id.action_property_delete:
-				Dialogs.executeTask(this, new DeletePropertyTask(getExtraPropertyID(), new Dialogs.Callback() {
-					public void success() {
-						finish();
-					}
-					public void failed() {
-						String message = "This property still has some rooms";
-						Toast.makeText(App.getAppContext(), message, Toast.LENGTH_LONG).show();
-					}
-				}));
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
+	public void propertyLoaded(PropertyDTO property) {
+		// ignore
 	}
 
 	public void newRoom() {
 		startActivity(RoomEditActivity.add(getExtraPropertyID()));
 	}
 
-	public void roomSelected(long id, long rootItemID) {
-		startActivity(ItemViewActivity.list(rootItemID));
+	public void roomSelected(RoomDTO room) {
+		startActivity(RoomViewActivity.show(room.id));
 	}
 
 	public void roomActioned(long id) {

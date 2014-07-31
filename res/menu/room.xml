@@ -1,0 +1,14 @@
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+	<item
+		android:id="@+id/action_room_edit"
+		android:icon="@android:drawable/ic_menu_edit"
+		android:title="@string/room_edit"
+		app:showAsAction="always" />
+	<item
+		android:id="@+id/action_room_delete"
+		android:icon="@android:drawable/ic_menu_delete"
+		android:title="@string/room_delete"
+		app:showAsAction="ifRoom" />
+</menu>

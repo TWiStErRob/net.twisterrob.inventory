@@ -13,19 +13,20 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.fragment.RoomListFragment.RoomEvents;
+import net.twisterrob.inventory.android.content.model.RoomDTO;
+import net.twisterrob.inventory.android.fragment.RoomListFragment.RoomsEvents;
 
-public class RoomListFragment extends BaseListFragment<RoomEvents> {
+public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
 
-	public interface RoomEvents {
+	public interface RoomsEvents {
 		void newRoom();
-		void roomSelected(long roomID, long rootItemID);
+		void roomSelected(RoomDTO room);
 		void roomActioned(long roomID);
 	}
 
 	public RoomListFragment() {
-		setDynamicResource(DYN_EventsClass, RoomEvents.class);
+		setDynamicResource(DYN_EventsClass, RoomsEvents.class);
 		setDynamicResource(DYN_Layout, R.layout.room_list);
 		setDynamicResource(DYN_List, R.id.rooms);
 		setDynamicResource(DYN_CursorAdapter, R.xml.rooms);
@@ -65,8 +66,7 @@ public class RoomListFragment extends BaseListFragment<RoomEvents> {
 				LOG.trace("Clicked on #{}", id);
 				@SuppressWarnings("resource")
 				Cursor data = (Cursor)parent.getAdapter().getItem(position);
-				long rootItemID = data.getLong(data.getColumnIndexOrThrow(Room.ROOT_ITEM));
-				eventsListener.roomSelected(id, rootItemID);
+				eventsListener.roomSelected(RoomDTO.fromCursor(data));
 			}
 		});
 	}

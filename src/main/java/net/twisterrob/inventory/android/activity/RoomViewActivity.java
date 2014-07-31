@@ -8,10 +8,13 @@ import android.widget.Toast;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemEvents;
+import net.twisterrob.inventory.android.fragment.RoomViewFragment.RoomEvents;
 
-public class RoomViewActivity extends BaseListActivity implements ItemEvents {
+public class RoomViewActivity extends BaseListActivity implements ItemEvents, RoomEvents {
+	private RoomViewFragment room;
 	private ItemListFragment items;
 
 	@Override
@@ -19,22 +22,35 @@ public class RoomViewActivity extends BaseListActivity implements ItemEvents {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.room_view_activity);
 
-		long currentParentID = getExtraParentItemID();
-		if (currentParentID == Item.ID_ADD) {
-			Toast.makeText(this, "Invalid parent item ID", Toast.LENGTH_LONG).show();
+		long currentRoomID = getExtraRoomID();
+		if (currentRoomID == Room.ID_ADD) {
+			Toast.makeText(this, "Invalid room ID", Toast.LENGTH_LONG).show();
 			finish();
+			return;
 		}
 
-		items = ItemListFragment.newInstance(currentParentID);
+		room = RoomViewFragment.newInstance(currentRoomID);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.items, items);
+		ft.replace(R.id.room, room);
 		ft.commit();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		items.refresh();
+		room.refresh();
+		if (items != null) {
+			items.refresh();
+		}
+	}
+
+	public void roomLoaded(RoomDTO room) {
+		if (items == null) {
+			items = ItemListFragment.newInstance(room.rootItemID);
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.replace(R.id.items, items);
+			ft.commitAllowingStateLoss();
+		}
 	}
 
 	public void newItem() {
@@ -50,13 +66,17 @@ public class RoomViewActivity extends BaseListActivity implements ItemEvents {
 		startActivity(ItemEditActivity.edit(id));
 	}
 
-	private long getExtraParentItemID() {
-		return getIntent().getLongExtra(Extras.PARENT_ID, Item.ID_ADD);
+	private long getExtraRoomID() {
+		return getIntent().getLongExtra(Extras.ROOM_ID, Item.ID_ADD);
 	}
 
-	public static Intent list(long itemID) {
-		Intent intent = new Intent(App.getAppContext(), ItemViewActivity.class);
-		intent.putExtra(Extras.PARENT_ID, itemID);
+	public static Intent show(long roomID) {
+		if (roomID == Room.ID_ADD) {
+			throw new IllegalArgumentException("Must be an existing room");
+		}
+
+		Intent intent = new Intent(App.getAppContext(), RoomViewActivity.class);
+		intent.putExtra(Extras.ROOM_ID, roomID);
 		return intent;
 	}
 }

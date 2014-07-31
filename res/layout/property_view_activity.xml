@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/activityRoot"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	<FrameLayout
+		android:id="@id/property"
+		android:tag="fragment"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
 	<FrameLayout
 		android:id="@id/rooms"
 		android:tag="fragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
-</FrameLayout>
+</LinearLayout>
