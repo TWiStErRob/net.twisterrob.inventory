@@ -13,10 +13,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.fragment.RoomsFragment.RoomEvents;
+import net.twisterrob.inventory.android.fragment.RoomListFragment.RoomEvents;
 
-public class RoomsFragment extends BaseListFragment<RoomEvents> {
-	private static final Logger LOG = LoggerFactory.getLogger(RoomsFragment.class);
+public class RoomListFragment extends BaseListFragment<RoomEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
 
 	public interface RoomEvents {
 		void newRoom();
@@ -24,12 +24,12 @@ public class RoomsFragment extends BaseListFragment<RoomEvents> {
 		void roomActioned(long roomID);
 	}
 
-	public RoomsFragment() {
+	public RoomListFragment() {
 		setDynamicResource(DYN_EventsClass, RoomEvents.class);
-		setDynamicResource(DYN_Layout, R.layout.room_coll);
+		setDynamicResource(DYN_Layout, R.layout.room_list);
 		setDynamicResource(DYN_List, R.id.rooms);
 		setDynamicResource(DYN_CursorAdapter, R.xml.rooms);
-		setDynamicResource(DYN_OptionsMenu, R.menu.rooms);
+		setDynamicResource(DYN_OptionsMenu, R.menu.room_list);
 	}
 
 	@Override
@@ -86,8 +86,8 @@ public class RoomsFragment extends BaseListFragment<RoomEvents> {
 		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
-	public static RoomsFragment newInstance(long propertyID) {
-		RoomsFragment fragment = new RoomsFragment();
+	public static RoomListFragment newInstance(long propertyID) {
+		RoomListFragment fragment = new RoomListFragment();
 
 		Bundle args = new Bundle();
 		args.putLong(Extras.PROPERTY_ID, propertyID);

@@ -12,10 +12,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.fragment.ItemsFragment.ItemEvents;
+import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemEvents;
 
-public class ItemsFragment extends BaseListFragment<ItemEvents> {
-	private static final Logger LOG = LoggerFactory.getLogger(ItemsFragment.class);
+public class ItemListFragment extends BaseListFragment<ItemEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(ItemListFragment.class);
 
 	public interface ItemEvents {
 		void newItem();
@@ -23,12 +23,12 @@ public class ItemsFragment extends BaseListFragment<ItemEvents> {
 		void itemActioned(long itemID);
 	}
 
-	public ItemsFragment() {
+	public ItemListFragment() {
 		setDynamicResource(DYN_EventsClass, ItemEvents.class);
-		setDynamicResource(DYN_Layout, R.layout.item_coll);
+		setDynamicResource(DYN_Layout, R.layout.item_list);
 		setDynamicResource(DYN_List, R.id.items);
 		setDynamicResource(DYN_CursorAdapter, R.xml.items);
-		setDynamicResource(DYN_OptionsMenu, R.menu.items);
+		setDynamicResource(DYN_OptionsMenu, R.menu.item_list);
 	}
 
 	@Override
@@ -82,8 +82,8 @@ public class ItemsFragment extends BaseListFragment<ItemEvents> {
 		getLoaderManager().getLoader(Loaders.Items.ordinal()).forceLoad();
 	}
 
-	public static ItemsFragment newInstance(long parentItemID) {
-		ItemsFragment fragment = new ItemsFragment();
+	public static ItemListFragment newInstance(long parentItemID) {
+		ItemListFragment fragment = new ItemListFragment();
 
 		Bundle args = new Bundle();
 		args.putLong(Extras.PARENT_ID, parentItemID);

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
-import android.view.*;
+import android.view.MenuItem;
 
 import com.android.debug.hv.ViewServer;
 
@@ -51,6 +51,9 @@ public class BaseActivity extends ActionBarActivity {
 							.startActivities(); // Navigate up to the closest parent
 				} else {
 					NavUtils.navigateUpFromSameTask(this);
+					//					Intent intent = NavUtils.getParentActivityIntent(this);
+					//					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					//					NavUtils.navigateUpTo(this, intent);
 				}
 				return true;
 			default:

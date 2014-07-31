@@ -13,7 +13,7 @@ public class RoomEditActivity extends BaseEditActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.room);
+		super.setContentView(R.layout.room_edit_activity);
 
 		long currentPropertyID = getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
 		long currentRoomID = getIntent().getLongExtra(Extras.ROOM_ID, Room.ID_ADD);

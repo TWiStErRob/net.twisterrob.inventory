@@ -9,15 +9,15 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.*;
-import net.twisterrob.inventory.android.fragment.ItemsFragment.ItemEvents;
+import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemEvents;
 
-public class ItemsActivity extends BaseListActivity implements ItemEvents {
-	private ItemsFragment items;
+public class RoomViewActivity extends BaseListActivity implements ItemEvents {
+	private ItemListFragment items;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.items);
+		super.setContentView(R.layout.room_view_activity);
 
 		long currentParentID = getExtraParentItemID();
 		if (currentParentID == Item.ID_ADD) {
@@ -25,7 +25,7 @@ public class ItemsActivity extends BaseListActivity implements ItemEvents {
 			finish();
 		}
 
-		items = ItemsFragment.newInstance(currentParentID);
+		items = ItemListFragment.newInstance(currentParentID);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.items, items);
 		ft.commit();
@@ -42,7 +42,7 @@ public class ItemsActivity extends BaseListActivity implements ItemEvents {
 	}
 
 	public void itemSelected(long id) {
-		startActivity(ItemsActivity.list(id));
+		startActivity(ItemViewActivity.list(id));
 		// TODO consider tabs as breadcrumbs?
 	}
 
@@ -55,7 +55,7 @@ public class ItemsActivity extends BaseListActivity implements ItemEvents {
 	}
 
 	public static Intent list(long itemID) {
-		Intent intent = new Intent(App.getAppContext(), ItemsActivity.class);
+		Intent intent = new Intent(App.getAppContext(), ItemViewActivity.class);
 		intent.putExtra(Extras.PARENT_ID, itemID);
 		return intent;
 	}

@@ -7,17 +7,17 @@ import android.support.v4.app.FragmentTransaction;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.fragment.*;
-import net.twisterrob.inventory.android.fragment.PropertiesFragment.PropertyEvents;
+import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertyEvents;
 
-public class PropertiesActivity extends BaseListActivity implements PropertyEvents {
-	private PropertiesFragment properties;
+public class PropertyListActivity extends BaseListActivity implements PropertyEvents {
+	private PropertyListFragment properties;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.properties);
+		super.setContentView(R.layout.property_list_activity);
 
-		properties = PropertiesFragment.newInstance();
+		properties = PropertyListFragment.newInstance();
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.properties, properties);
@@ -35,7 +35,7 @@ public class PropertiesActivity extends BaseListActivity implements PropertyEven
 	}
 
 	public void propertySelected(long id) {
-		startActivity(RoomsActivity.list(id));
+		startActivity(PropertyViewActivity.list(id));
 	}
 
 	public void propertyActioned(long id) {
@@ -43,7 +43,7 @@ public class PropertiesActivity extends BaseListActivity implements PropertyEven
 	}
 
 	public static Intent list() {
-		Intent intent = new Intent(App.getAppContext(), PropertiesActivity.class);
+		Intent intent = new Intent(App.getAppContext(), PropertyListActivity.class);
 		return intent;
 	}
 }

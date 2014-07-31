@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
 
+import net.twisterrob.inventory.R;
+
 public class BaseFragment<T> extends Fragment {
 	protected static final String DYN_OptionsMenu = "optionsMenu";
 	protected static final String DYN_Layout = "layoutRoot";
@@ -48,7 +50,7 @@ public class BaseFragment<T> extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(hasDynResource(DYN_OptionsMenu));
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -63,11 +65,12 @@ public class BaseFragment<T> extends Fragment {
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-		super.onCreateOptionsMenu(menu, menuInflater);
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
 		if (hasDynResource(DYN_OptionsMenu)) {
-			menuInflater.inflate(this.<Integer> getDynamicResource(DYN_OptionsMenu), menu);
+			inflater.inflate(this.<Integer> getDynamicResource(DYN_OptionsMenu), menu);
 		}
+		inflater.inflate(R.menu.share, menu);
 	}
 
 	protected void onStartLoading() {}

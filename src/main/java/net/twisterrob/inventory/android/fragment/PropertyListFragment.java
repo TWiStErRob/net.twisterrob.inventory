@@ -11,10 +11,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.fragment.PropertiesFragment.PropertyEvents;
+import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertyEvents;
 
-public class PropertiesFragment extends BaseListFragment<PropertyEvents> {
-	private static final Logger LOG = LoggerFactory.getLogger(PropertiesFragment.class);
+public class PropertyListFragment extends BaseListFragment<PropertyEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(PropertyListFragment.class);
 
 	public interface PropertyEvents {
 		void newProperty();
@@ -22,12 +22,12 @@ public class PropertiesFragment extends BaseListFragment<PropertyEvents> {
 		void propertyActioned(long propertyID);
 	}
 
-	public PropertiesFragment() {
+	public PropertyListFragment() {
 		setDynamicResource(DYN_EventsClass, PropertyEvents.class);
-		setDynamicResource(DYN_Layout, R.layout.property_coll);
+		setDynamicResource(DYN_Layout, R.layout.property_list);
 		setDynamicResource(DYN_List, R.id.properties);
 		setDynamicResource(DYN_CursorAdapter, R.xml.properties);
-		setDynamicResource(DYN_OptionsMenu, R.menu.properties);
+		setDynamicResource(DYN_OptionsMenu, R.menu.property_list);
 	}
 
 	@Override
@@ -75,8 +75,8 @@ public class PropertiesFragment extends BaseListFragment<PropertyEvents> {
 		getLoaderManager().getLoader(Loaders.Properties.ordinal()).forceLoad();
 	}
 
-	public static PropertiesFragment newInstance() {
-		PropertiesFragment fragment = new PropertiesFragment();
+	public static PropertyListFragment newInstance() {
+		PropertyListFragment fragment = new PropertyListFragment();
 		return fragment;
 	}
 }

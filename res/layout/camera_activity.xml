@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@id/activityRoot"
 	android:orientation="horizontal"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
@@ -14,29 +15,28 @@
 		android:layout_height="fill_parent" />
 
 	<LinearLayout
-		android:id="@id/layoutRoot"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:layout_gravity="bottom|center_horizontal">
+		android:layout_gravity="bottom|center_horizontal"
+		android:orientation="horizontal">
 		<ImageButton
 			android:id="@+id/btn_crop"
-			android:src="@android:drawable/ic_menu_crop"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:src="@android:drawable/ic_menu_crop"
 			android:contentDescription="TODO" />
 		<ImageButton
 			android:id="@+id/btn_capture"
-			android:src="@android:drawable/ic_menu_camera"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:src="@android:drawable/ic_menu_camera"
 			android:contentDescription="TODO" />
 		<ToggleButton
 			android:id="@+id/btn_flash"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
 			android:background="@drawable/btn_flash_toggle"
 			android:textOn="@string/empty"
-			android:textOff="@string/empty"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+			android:textOff="@string/empty" />
 	</LinearLayout>
 </FrameLayout>

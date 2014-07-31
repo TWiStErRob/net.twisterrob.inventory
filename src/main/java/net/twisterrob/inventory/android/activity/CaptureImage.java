@@ -47,7 +47,7 @@ public class CaptureImage extends BaseActivity {
 			mTargetFile = new File(output);
 		}
 
-		setContentView(R.layout.camera);
+		setContentView(R.layout.camera_activity);
 
 		ImageButton btnCapture = (ImageButton)findViewById(R.id.btn_capture);
 		ImageButton btnCrop = (ImageButton)findViewById(R.id.btn_crop);

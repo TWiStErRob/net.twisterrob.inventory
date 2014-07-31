@@ -10,16 +10,16 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.*;
-import net.twisterrob.inventory.android.fragment.RoomsFragment.RoomEvents;
+import net.twisterrob.inventory.android.fragment.RoomListFragment.RoomEvents;
 import net.twisterrob.inventory.android.tasks.DeletePropertyTask;
 
-public class RoomsActivity extends BaseListActivity implements RoomEvents {
-	private RoomsFragment rooms;
+public class PropertyViewActivity extends BaseListActivity implements RoomEvents {
+	private RoomListFragment rooms;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.rooms);
+		super.setContentView(R.layout.property_view_activity);
 
 		long currentPropertyID = getExtraPropertyID();
 		if (currentPropertyID == Property.ID_ADD) {
@@ -27,7 +27,7 @@ public class RoomsActivity extends BaseListActivity implements RoomEvents {
 			finish();
 		}
 
-		rooms = RoomsFragment.newInstance(currentPropertyID);
+		rooms = RoomListFragment.newInstance(currentPropertyID);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.rooms, rooms);
 		ft.commit();
@@ -42,7 +42,7 @@ public class RoomsActivity extends BaseListActivity implements RoomEvents {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.room, menu);
+		getMenuInflater().inflate(R.menu.share, menu);
 		return true;
 	}
 
@@ -73,7 +73,7 @@ public class RoomsActivity extends BaseListActivity implements RoomEvents {
 	}
 
 	public void roomSelected(long id, long rootItemID) {
-		startActivity(ItemsActivity.list(rootItemID));
+		startActivity(ItemViewActivity.list(rootItemID));
 	}
 
 	public void roomActioned(long id) {
@@ -85,7 +85,7 @@ public class RoomsActivity extends BaseListActivity implements RoomEvents {
 	}
 
 	public static Intent list(long propertyID) {
-		Intent intent = new Intent(App.getAppContext(), RoomsActivity.class);
+		Intent intent = new Intent(App.getAppContext(), PropertyViewActivity.class);
 		intent.putExtra(Extras.PROPERTY_ID, propertyID);
 		return intent;
 	}

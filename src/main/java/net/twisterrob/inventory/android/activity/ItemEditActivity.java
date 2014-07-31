@@ -13,7 +13,7 @@ public class ItemEditActivity extends BaseEditActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.item);
+		super.setContentView(R.layout.item_edit_activity);
 
 		long currentItemID = getIntent().getLongExtra(Extras.ITEM_ID, Item.ID_ADD);
 		Fragment editor = ItemEditFragment.newInstance(currentItemID);

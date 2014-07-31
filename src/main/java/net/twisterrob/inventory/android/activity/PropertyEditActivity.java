@@ -13,7 +13,7 @@ public class PropertyEditActivity extends BaseEditActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.property);
+		super.setContentView(R.layout.property_edit_activity);
 
 		long currentPropertyID = getExtraPropertyID();
 		Fragment editor = PropertyEditFragment.newInstance(currentPropertyID);

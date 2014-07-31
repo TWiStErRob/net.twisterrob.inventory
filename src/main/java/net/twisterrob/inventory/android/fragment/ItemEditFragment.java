@@ -74,7 +74,7 @@ public class ItemEditFragment extends BaseEditFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.item_edit, menu);
+		inflater.inflate(R.menu.picture, menu);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.main);
+		super.setContentView(R.layout.main_activity);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(false);
 
@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity {
 		Collection<MainItem> actions = Arrays.asList( //
 				new MainItem("Properties", R.drawable.property_home, new OnClickListener() {
 					public void onClick(View v) {
-						startActivity(PropertiesActivity.list());
+						startActivity(PropertyListActivity.list());
 					}
 				}), new MainItem("Edit Property #1", R.drawable.property_home, new OnClickListener() {
 					public void onClick(View v) {

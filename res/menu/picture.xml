@@ -11,9 +11,4 @@
 		android:icon="@android:drawable/ic_menu_gallery"
 		android:title="@string/action_picture_pick"
 		app:showAsAction="ifRoom" />
-	<item
-		android:id="@+id/action_share"
-		android:icon="@android:drawable/ic_menu_share"
-		android:title="@string/action_share"
-		app:showAsAction="ifRoom" />
 </menu>
