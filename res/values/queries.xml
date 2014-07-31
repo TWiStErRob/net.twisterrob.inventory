@@ -26,20 +26,20 @@
 		delete from Room where property = ?
 	"]]></string>
 	<string name="query_property_types"><![CDATA["
-	    select _id, name
-	    from PropertyType
-	    order by priority
+		select _id, name
+		from PropertyType
+		order by priority
 	"]]></string>
 	<string name="query_property_types_filtered"><![CDATA["
-	    select _id, name
-	    from PropertyType
-	    where name like ?
-	    order by priority
+		select _id, name
+		from PropertyType
+		where name like ?
+		order by priority
 	"]]></string>
 	<string name="query_room_types"><![CDATA["
-	    select _id, name
-	    from RoomType
-	    order by priority
+		select _id, name
+		from RoomType
+		order by priority
 	"]]></string>
 	<string name="query_rooms"><![CDATA["
 		select
@@ -59,7 +59,7 @@
 		where _id = ?
 	"]]></string>
 	<string name="query_room_new"><![CDATA["
-		insert into Room(property, name, type) values(?, ?, ?)
+		insert into Room(property, root, name, type) values(?, ?, ?, ?)
 	"]]></string>
 	<string name="query_room_update"><![CDATA["
 		update Room set name = ?, type = ? where _id = ?

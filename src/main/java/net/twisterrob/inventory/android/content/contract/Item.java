@@ -9,4 +9,6 @@ public interface Item {
 	String PARENT = "parent";
 
 	String DEFAULT_ORDER = NAME;
+
+	String ROOM_ROOT = "ROOT";
 }

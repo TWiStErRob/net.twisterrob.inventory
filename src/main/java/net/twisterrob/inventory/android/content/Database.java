@@ -8,7 +8,7 @@ import android.database.sqlite.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.content.contract.PropertyType;
+import net.twisterrob.inventory.android.content.contract.*;
 
 @SuppressWarnings("resource")
 public class Database {
@@ -26,21 +26,6 @@ public class Database {
 	}
 	public SQLiteDatabase getWritableDatabase() {
 		return m_helper.getWritableDatabase();
-	}
-
-	SQLiteDatabase database;
-	SQLiteStatement listPropertiesTypes;
-
-	@SuppressWarnings("unused")
-	private void prepareStatements(SQLiteDatabase database) {
-		if (database != this.database) {
-			this.database = database;
-			if (listPropertiesTypes != null) {
-				listPropertiesTypes.close();
-			}
-			listPropertiesTypes = database
-					.compileStatement("INSERT INTO Route(region, name, direction, description) VALUES(?, ?, ?, ?);");
-		}
 	}
 
 	public Cursor listPropertyTypes(CharSequence nameFilter) {
@@ -109,9 +94,17 @@ public class Database {
 
 	public long newProperty(String name, long type) {
 		SQLiteDatabase db = getWritableDatabase();
-		String[] params = new String[]{name, String.valueOf(type)};
-		db.execSQL(m_context.getString(R.string.query_property_new), params);
-		return 0; // TODO new id
+
+		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_property_new));
+		try {
+			int arg = 0;
+			insert.bindString(arg++, name);
+			insert.bindLong(arg++, type);
+
+			return insert.executeInsert();
+		} finally {
+			insert.close();
+		}
 	}
 
 	public void updateProperty(long id, String name, long type) {
@@ -122,17 +115,37 @@ public class Database {
 
 	public void deleteProperty(long id) {
 		SQLiteDatabase db = getWritableDatabase();
-		String[] params = new String[]{String.valueOf(id)};
-		// TODO delete all items recursively?
-		db.execSQL(m_context.getString(R.string.query_property_delete_rooms), params);
-		db.execSQL(m_context.getString(R.string.query_property_delete), params);
+		db.beginTransaction();
+		try {
+			String[] params = new String[]{String.valueOf(id)};
+			// TODO delete all items recursively from all rooms?
+			db.execSQL(m_context.getString(R.string.query_property_delete_rooms), params);
+			db.execSQL(m_context.getString(R.string.query_property_delete), params);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
 	}
 
 	public long newRoom(long propertyID, String name, long type) {
 		SQLiteDatabase db = getWritableDatabase();
-		String[] params = new String[]{String.valueOf(propertyID), name, String.valueOf(type)};
-		db.execSQL(m_context.getString(R.string.query_room_new), params);
-		return 0; // TODO new id
+		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_room_new));
+		db.beginTransaction();
+		try {
+			long rootID = newItem(null, Item.ROOM_ROOT, Category.INTERNAL);
+
+			int arg = 0;
+			insert.bindLong(arg++, propertyID);
+			insert.bindLong(arg++, rootID);
+			insert.bindString(arg++, name);
+			insert.bindLong(arg++, type);
+			long roomID = insert.executeInsert();
+			db.setTransactionSuccessful();
+			return roomID;
+		} finally {
+			insert.close();
+			db.endTransaction();
+		}
 	}
 
 	public void updateRoom(long id, String name, long type) {
@@ -148,11 +161,27 @@ public class Database {
 		// TODO delete all items
 	}
 
-	public long newItem(long parentID, String name, long type) {
+	public long newItem(long parentID, String name, long category) {
+		return newItem(parentID, name, category);
+	}
+
+	private long newItem(Long parentID, String name, long category) {
 		SQLiteDatabase db = getWritableDatabase();
-		String[] params = new String[]{String.valueOf(parentID), name, String.valueOf(type)};
-		db.execSQL(m_context.getString(R.string.query_item_new), params);
-		return 0; // TODO new id
+		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_item_new));
+		try {
+			int arg = 0;
+			if (parentID != null) {
+				insert.bindLong(arg++, parentID);
+			} else {
+				insert.bindNull(arg++);
+			}
+			insert.bindString(arg++, name);
+			insert.bindLong(arg++, category);
+
+			return insert.executeInsert();
+		} finally {
+			insert.close();
+		}
 	}
 
 	public void updateItem(long id, String name, long category) {
