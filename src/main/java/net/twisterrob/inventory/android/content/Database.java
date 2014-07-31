@@ -98,8 +98,8 @@ public class Database {
 		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_property_new));
 		try {
 			int arg = 0;
-			insert.bindString(arg++, name);
-			insert.bindLong(arg++, type);
+			insert.bindString(++arg, name);
+			insert.bindLong(++arg, type);
 
 			return insert.executeInsert();
 		} finally {
@@ -135,10 +135,10 @@ public class Database {
 			long rootID = newItem(null, Item.ROOM_ROOT, Category.INTERNAL);
 
 			int arg = 0;
-			insert.bindLong(arg++, propertyID);
-			insert.bindLong(arg++, rootID);
-			insert.bindString(arg++, name);
-			insert.bindLong(arg++, type);
+			insert.bindLong(++arg, propertyID);
+			insert.bindLong(++arg, rootID);
+			insert.bindString(++arg, name);
+			insert.bindLong(++arg, type);
 			long roomID = insert.executeInsert();
 			db.setTransactionSuccessful();
 			return roomID;
@@ -162,7 +162,7 @@ public class Database {
 	}
 
 	public long newItem(long parentID, String name, long category) {
-		return newItem(parentID, name, category);
+		return newItem((Long)parentID, name, category);
 	}
 
 	private long newItem(Long parentID, String name, long category) {
@@ -171,12 +171,12 @@ public class Database {
 		try {
 			int arg = 0;
 			if (parentID != null) {
-				insert.bindLong(arg++, parentID);
+				insert.bindLong(++arg, parentID);
 			} else {
-				insert.bindNull(arg++);
+				insert.bindNull(++arg);
 			}
-			insert.bindString(arg++, name);
-			insert.bindLong(arg++, category);
+			insert.bindString(++arg, name);
+			insert.bindLong(++arg, category);
 
 			return insert.executeInsert();
 		} finally {

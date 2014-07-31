@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS Item (
 	parent      INTEGER          NULL
 		CONSTRAINT fk_Item_parent
 			REFERENCES Item(_id),
-	PRIMARY KEY(_id AUTOINCREMENT)
+	PRIMARY KEY(_id AUTOINCREMENT),
+	UNIQUE (parent, name)
 );
 
 CREATE TABLE IF NOT EXISTS PropertyType (

@@ -73,10 +73,10 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 	}
 
 	private void save() {
-		new SaveTask().execute(getCurrentRoom());
+		new SaveTask().execute(getCurrentItem());
 	}
 
-	private ItemDTO getCurrentRoom() {
+	private ItemDTO getCurrentItem() {
 		ItemDTO item = new ItemDTO();
 		item.parentID = getArgParentID();
 		item.id = getArgItemID();
@@ -189,7 +189,8 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 			if (result != null) {
 				getActivity().finish();
 			} else {
-				Toast.makeText(getActivity(), "Room name must be unique within the property", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "Item name must be unique within the item collection", Toast.LENGTH_LONG)
+						.show();
 			}
 		}
 	}
