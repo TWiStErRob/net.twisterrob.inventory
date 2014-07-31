@@ -33,7 +33,7 @@
 	<string name="query_property_types_filtered"><![CDATA["
 		select _id, name
 		from PropertyType
-		where name like ?
+		where name like ? escape '\'
 		order by priority
 	"]]></string>
 	<string name="query_room_types"><![CDATA["

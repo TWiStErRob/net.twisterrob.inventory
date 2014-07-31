@@ -1,12 +1,11 @@
 package net.twisterrob.inventory.android.content;
 
-import java.util.*;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.contract.*;
 
@@ -24,74 +23,51 @@ public class Database {
 	public SQLiteDatabase getReadableDatabase() {
 		return m_helper.getReadableDatabase();
 	}
+
 	public SQLiteDatabase getWritableDatabase() {
 		return m_helper.getWritableDatabase();
+	}
+
+	private void execSQL(int queryResource, Object... params) {
+		SQLiteDatabase db = getWritableDatabase();
+		db.execSQL(m_context.getString(queryResource), params);
+	}
+
+	private Cursor rawQuery(int queryResource, Object... params) {
+		SQLiteDatabase db = getReadableDatabase();
+		return db.rawQuery(m_context.getString(queryResource), StringTools.toStringArray(params));
 	}
 
 	public Cursor listPropertyTypes(CharSequence nameFilter) {
 		if (nameFilter == null || nameFilter.toString().trim().isEmpty()) {
 			return listPropertyTypes();
 		}
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_property_types_filtered), new String[]{"%" + nameFilter
-				+ "%"});
+		return rawQuery(R.string.query_property_types_filtered, "%" + DBTools.escapeLike(nameFilter, '\\') + "%");
 	}
 	public Cursor listPropertyTypes() {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_property_types), null);
+		return rawQuery(R.string.query_property_types);
 	}
 	public Cursor listRoomTypes() {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_room_types), null);
+		return rawQuery(R.string.query_room_types);
 	}
-	public Map<Integer, String> getPropertyTypes() {
-		Map<Integer, String> types = new LinkedHashMap<Integer, String>();
-		SQLiteDatabase db = getReadableDatabase();
-		try {
-			Cursor cursor = listPropertyTypes();
-			try {
-				while (cursor.moveToNext()) {
-					int id = cursor.getInt(cursor.getColumnIndexOrThrow(PropertyType.ID));
-					String name = cursor.getString(cursor.getColumnIndexOrThrow(PropertyType.NAME));
-					types.put(id, name);
-				}
-			} finally {
-				cursor.close();
-			}
-		} finally {
-			db.close();
-		}
-		return types;
-	}
-
 	public Cursor listProperties() {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_properties), null);
+		return rawQuery(R.string.query_properties);
 	}
-
 	public Cursor getProperty(long propertyID) {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_property), new String[]{String.valueOf(propertyID)});
+		return rawQuery(R.string.query_property, String.valueOf(propertyID));
 	}
-
 	public Cursor listRooms(long propertyID) {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_rooms), new String[]{String.valueOf(propertyID)});
+		return rawQuery(R.string.query_rooms, String.valueOf(propertyID));
 	}
 	public Cursor getRoom(long roomID) {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_room), new String[]{String.valueOf(roomID)});
+		return rawQuery(R.string.query_room, String.valueOf(roomID));
 	}
-
 	public Cursor listItems(long parentID) {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_items), new String[]{String.valueOf(parentID)});
+		return rawQuery(R.string.query_items, String.valueOf(parentID));
 	}
 	public Cursor getItem(long itemID) {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(R.string.query_item), new String[]{String.valueOf(itemID)});
+		return rawQuery(R.string.query_item, String.valueOf(itemID));
 	}
-
 	public long newProperty(String name, long type) {
 		SQLiteDatabase db = getWritableDatabase();
 
@@ -108,19 +84,16 @@ public class Database {
 	}
 
 	public void updateProperty(long id, String name, long type) {
-		SQLiteDatabase db = getWritableDatabase();
-		String[] params = new String[]{name, String.valueOf(type), String.valueOf(id)};
-		db.execSQL(m_context.getString(R.string.query_property_update), params);
+		execSQL(R.string.query_property_update, name, type, id);
 	}
 
 	public void deleteProperty(long id) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
 		try {
-			String[] params = new String[]{String.valueOf(id)};
 			// TODO delete all items recursively from all rooms?
-			db.execSQL(m_context.getString(R.string.query_property_delete_rooms), params);
-			db.execSQL(m_context.getString(R.string.query_property_delete), params);
+			execSQL(R.string.query_property_delete_rooms, id);
+			execSQL(R.string.query_property_delete, id);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -149,15 +122,11 @@ public class Database {
 	}
 
 	public void updateRoom(long id, String name, long type) {
-		SQLiteDatabase db = getWritableDatabase();
-		String[] params = new String[]{name, String.valueOf(type), String.valueOf(id)};
-		db.execSQL(m_context.getString(R.string.query_room_update), params);
+		execSQL(R.string.query_room_update, name, type, id);
 	}
 
 	public void deleteRoom(long id) {
-		SQLiteDatabase db = getWritableDatabase();
-		String[] params = new String[]{String.valueOf(id)};
-		db.execSQL(m_context.getString(R.string.query_room_delete), params);
+		execSQL(R.string.query_room_delete, id);
 		// TODO delete all items
 	}
 
@@ -185,15 +154,11 @@ public class Database {
 	}
 
 	public void updateItem(long id, String name, long category) {
-		SQLiteDatabase db = getWritableDatabase();
-		String[] params = new String[]{name, String.valueOf(category), String.valueOf(id)};
-		db.execSQL(m_context.getString(R.string.query_item_update), params);
+		rawQuery(R.string.query_item_update, id, name, category);
 	}
 
 	public void deleteItem(long id) {
-		SQLiteDatabase db = getWritableDatabase();
-		String[] params = new String[]{String.valueOf(id)};
-		db.execSQL(m_context.getString(R.string.query_item_delete), params);
+		execSQL(R.string.query_item_delete, id);
 		// TODO delete all items
 	}
 }

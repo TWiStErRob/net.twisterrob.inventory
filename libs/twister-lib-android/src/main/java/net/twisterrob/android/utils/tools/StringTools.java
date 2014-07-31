@@ -28,6 +28,17 @@ public final class StringTools {
 		return sb.toString();
 	}
 
+	public static String[] toStringArray(Object... objectArr) {
+		if (objectArr == null) {
+			return null;
+		}
+		String[] stringArr = new String[objectArr.length];
+		for (int i = 0; i < stringArr.length; ++i) {
+			stringArr[i] = String.valueOf(objectArr[i]);
+		}
+		return stringArr;
+	}
+
 	public static URL createUrl(final String type, final String... urls) throws IOException {
 		String url = CollectionTools.coalesce(urls);
 		if (url != null) {
