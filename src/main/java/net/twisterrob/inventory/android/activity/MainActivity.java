@@ -55,6 +55,11 @@ public class MainActivity extends BaseActivity {
 						Intent intent = new Intent(App.getAppContext(), WelcomeActivity.class);
 						startActivity(intent);
 					}
+				}), new MainItem("Drive File", android.R.drawable.ic_menu_upload, new OnClickListener() {
+					public void onClick(View v) {
+						Intent intent = new Intent(App.getAppContext(), PickDriveFileActivity.class);
+						startActivity(intent);
+					}
 				}), new MainItem("Camera", android.R.drawable.ic_menu_camera, new OnClickListener() {
 					public void onClick(View v) {
 						Intent intent = new Intent(App.getAppContext(), CaptureImage.class);
@@ -72,7 +77,7 @@ public class MainActivity extends BaseActivity {
 			first = false;
 			new Handler().postDelayed(new Runnable() {
 				public void run() {
-					((MainItem)list.getItemAtPosition(4)).listener.onClick(list);
+					//((MainItem)list.getItemAtPosition(4)).listener.onClick(list);
 				}
 			}, 1000);
 		}

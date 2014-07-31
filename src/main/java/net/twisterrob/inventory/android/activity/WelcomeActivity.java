@@ -32,6 +32,8 @@ public class WelcomeActivity extends BaseActivity {
 
 		String folderID = App.getPrefs().getString(Constants.Prefs.DRIVE_FOLDER_ID, null);
 		if (folderID != null) {
+			DriveId driveID = DriveId.decodeFromString(folderID);
+			LOG.warn("Google Drive already set up with root '{}' -> '{}'", folderID, driveID.getResourceId());
 			showMessage("Google Drive has been set up already");
 			finish();
 			return;
