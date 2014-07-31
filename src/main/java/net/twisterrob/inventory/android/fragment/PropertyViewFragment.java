@@ -80,9 +80,9 @@ public class PropertyViewFragment extends BaseEditFragment<PropertyEvents> {
 		}
 
 		@Override
-		protected void process(Cursor item) {
-			super.process(item);
-			PropertyDTO property = PropertyDTO.fromCursor(item);
+		protected void process(Cursor cursor) {
+			super.process(cursor);
+			PropertyDTO property = PropertyDTO.fromCursor(cursor);
 
 			getActivity().setTitle(property.name);
 			propertyName.setText(property.name);

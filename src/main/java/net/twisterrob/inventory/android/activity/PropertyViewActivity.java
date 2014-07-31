@@ -26,6 +26,7 @@ public class PropertyViewActivity extends BaseListActivity implements RoomsEvent
 		if (currentPropertyID == Property.ID_ADD) {
 			Toast.makeText(this, "Invalid property ID", Toast.LENGTH_LONG).show();
 			finish();
+			return;
 		}
 
 		property = PropertyViewFragment.newInstance(currentPropertyID);
@@ -48,8 +49,8 @@ public class PropertyViewActivity extends BaseListActivity implements RoomsEvent
 		// ignore
 	}
 
-	public void newRoom() {
-		startActivity(RoomEditActivity.add(getExtraPropertyID()));
+	public void newRoom(long propertyID) {
+		startActivity(RoomEditActivity.add(propertyID));
 	}
 
 	public void roomSelected(RoomDTO room) {

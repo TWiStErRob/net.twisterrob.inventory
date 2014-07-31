@@ -83,4 +83,13 @@
 		join Category c ON i.category = c._id
 		where i._id = ?
 	"]]></string>
+	<string name="query_item_new"><![CDATA["
+		insert into Item(parent, name, category) values(?, ?, ?)
+	"]]></string>
+	<string name="query_item_update"><![CDATA["
+		update Item set name = ?, category = ? where _id = ?
+	"]]></string>
+	<string name="query_item_delete"><![CDATA["
+		delete from Item where _id = ?
+	"]]></string>
 </resources>

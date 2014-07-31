@@ -9,29 +9,32 @@ import org.slf4j.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.*;
 import android.provider.MediaStore;
 import android.view.*;
+import android.view.View.OnClickListener;
 import android.widget.*;
 
 import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
+import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.CaptureImage;
-import net.twisterrob.inventory.android.content.LoadSingleRow;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.utils.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 import static net.twisterrob.inventory.android.utils.DriveUtils.*;
 
-public class ItemEditFragment extends BaseEditFragment {
+public class ItemEditFragment extends BaseEditFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditFragment.class);
 
-	private long currentItemID;
 	private EditText itemName;
 	private TextView itemCategory;
 	private ImageView itemImage;
@@ -43,12 +46,18 @@ public class ItemEditFragment extends BaseEditFragment {
 		itemCategory = (TextView)root.findViewById(R.id.itemCategory);
 		itemImage = (ImageView)root.findViewById(R.id.itemImage);
 
+		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				save();
+			}
+		});
+
 		return root;
 	}
 
 	@Override
 	protected void onStartLoading() {
-		long id = getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
+		long id = getArgItemID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 
@@ -56,19 +65,39 @@ public class ItemEditFragment extends BaseEditFragment {
 			Bundle args = new Bundle();
 			args.putLong(Extras.ITEM_ID, id);
 			@SuppressWarnings("unused")
-			// no dependencies yet
+			// no dependencies yet: Item's category will come in
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(), args, new LoadExistingItem());
 		}
 
-		currentItemID = id;
 		manager.startLoading();
+	}
+
+	private void save() {
+		new SaveTask().execute(getCurrentRoom());
+	}
+
+	private ItemDTO getCurrentRoom() {
+		ItemDTO item = new ItemDTO();
+		item.parentID = getArgParentID();
+		item.id = getArgItemID();
+		item.name = itemName.getText().toString();
+		// item.category = itemCategory.getSelectedItemId(); // TODO tree ListView?
+		return item;
 	}
 
 	protected File getTargetFile() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
-		String imageFileName = "Item_" + currentItemID + "_" + timeStamp + ".jpg";
+		String imageFileName = "Item_" + getArgItemID() + "_" + timeStamp + ".jpg";
 		File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 		return new File(storageDir, imageFileName);
+	}
+
+	private long getArgItemID() {
+		return getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
+	}
+
+	private long getArgParentID() {
+		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
 
 	@Override
@@ -122,20 +151,46 @@ public class ItemEditFragment extends BaseEditFragment {
 		}
 
 		@Override
-		protected void process(Cursor item) {
-			super.process(item);
-			String name = item.getString(item.getColumnIndexOrThrow(Item.NAME));
-			String category = item.getString(item.getColumnIndexOrThrow(Item.CATEGORY));
+		protected void process(Cursor cursor) {
+			super.process(cursor);
+			ItemDTO item = ItemDTO.fromCursor(cursor);
 
-			getActivity().setTitle(name);
-			itemName.setText(name);
-			itemCategory.setText(category);
+			getActivity().setTitle(item.name);
+			itemName.setText(item.name);
+			itemCategory.setText(String.valueOf(item.category));
 		}
 
 		@Override
 		protected void processInvalid(Cursor item) {
 			super.processInvalid(item);
 			getActivity().finish();
+		}
+	}
+
+	private final class SaveTask extends SimpleAsyncTask<ItemDTO, Void, Long> {
+		@Override
+		protected Long doInBackground(ItemDTO param) {
+			try {
+				Database db = App.getInstance().getDataBase();
+				if (param.id == Item.ID_ADD) {
+					return db.newItem(param.parentID, param.name, param.category);
+				} else {
+					db.updateItem(param.id, param.name, param.category);
+					return param.id;
+				}
+			} catch (SQLiteConstraintException ex) {
+				LOG.warn("Cannot save {}", param, ex);
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Long result) {
+			if (result != null) {
+				getActivity().finish();
+			} else {
+				Toast.makeText(getActivity(), "Room name must be unique within the property", Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 
@@ -186,10 +241,18 @@ public class ItemEditFragment extends BaseEditFragment {
 		}
 	}
 
-	public static ItemEditFragment newInstance(long itemID) {
+	public static ItemEditFragment newInstance(long parentID, long itemID) {
+		if (parentID == Item.ID_ADD && itemID == Item.ID_ADD) {
+			throw new IllegalArgumentException("Parent item ID / item ID must be provided (new item / edit item)");
+		}
+		if (itemID != Item.ID_ADD) { // no need to know which parent when editing
+			parentID = Item.ID_ADD;
+		}
+
 		ItemEditFragment fragment = new ItemEditFragment();
 
 		Bundle args = new Bundle();
+		args.putLong(Extras.PARENT_ID, parentID);
 		args.putLong(Extras.ITEM_ID, itemID);
 
 		fragment.setArguments(args);

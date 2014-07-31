@@ -14,32 +14,32 @@ public class RoomDTO {
 	public long type;
 	public long rootItemID = Item.ID_ADD;
 
-	public static RoomDTO fromCursor(Cursor item) {
+	public static RoomDTO fromCursor(Cursor cursor) {
 		RoomDTO room = new RoomDTO();
 
-		int idColumn = item.getColumnIndex(Room.ID);
+		int idColumn = cursor.getColumnIndex(Room.ID);
 		if (idColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			room.id = item.getLong(idColumn);
+			room.id = cursor.getLong(idColumn);
 		}
 
-		int nameColumn = item.getColumnIndex(Room.NAME);
+		int nameColumn = cursor.getColumnIndex(Room.NAME);
 		if (nameColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			room.name = item.getString(nameColumn);
+			room.name = cursor.getString(nameColumn);
 		}
 
-		int typeColumn = item.getColumnIndex(Room.TYPE);
+		int typeColumn = cursor.getColumnIndex(Room.TYPE);
 		if (typeColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			room.type = item.getLong(typeColumn);
+			room.type = cursor.getLong(typeColumn);
 		}
 
-		int rootItemColumn = item.getColumnIndex(Room.ROOT_ITEM);
+		int rootItemColumn = cursor.getColumnIndex(Room.ROOT_ITEM);
 		if (rootItemColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			room.rootItemID = item.getLong(rootItemColumn);
+			room.rootItemID = cursor.getLong(rootItemColumn);
 		}
 
-		int propertyColumn = item.getColumnIndex(Room.PROPERTY);
+		int propertyColumn = cursor.getColumnIndex(Room.PROPERTY);
 		if (propertyColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			room.propertyID = item.getLong(propertyColumn);
+			room.propertyID = cursor.getLong(propertyColumn);
 		}
 
 		return room;

@@ -25,7 +25,7 @@ import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class PropertyEditFragment extends BaseEditFragment {
+public class PropertyEditFragment extends BaseEditFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyEditFragment.class);
 
 	private Spinner propertyType;
@@ -90,9 +90,9 @@ public class PropertyEditFragment extends BaseEditFragment {
 		}
 
 		@Override
-		protected void process(Cursor item) {
-			super.process(item);
-			PropertyDTO property = PropertyDTO.fromCursor(item);
+		protected void process(Cursor cursor) {
+			super.process(cursor);
+			PropertyDTO property = PropertyDTO.fromCursor(cursor);
 
 			getActivity().setTitle(property.name);
 			AndroidTools.selectByID(propertyType, property.type);

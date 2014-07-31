@@ -7,42 +7,42 @@ import android.database.Cursor;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.*;
 import net.twisterrob.inventory.android.activity.Dialogs.ActionParams;
-import net.twisterrob.inventory.android.content.contract.Room;
-import net.twisterrob.inventory.android.content.model.RoomDTO;
+import net.twisterrob.inventory.android.content.contract.Item;
+import net.twisterrob.inventory.android.content.model.ItemDTO;
 
-public class DeleteRoomTask extends ActionParams {
-	private final long roomID;
+public class DeleteItemTask extends ActionParams {
+	private final long itemID;
 
-	private RoomDTO room;
+	private ItemDTO item;
 	private List<String> items;
 
-	public DeleteRoomTask(long id, Dialogs.Callback callback) {
+	public DeleteItemTask(long id, Dialogs.Callback callback) {
 		super(callback);
-		this.roomID = id;
+		this.itemID = id;
 	}
 
 	@Override
 	protected void prepare() {
-		room = retrieveRoom();
+		item = retrieveItem();
 		items = retrieveItemNames();
 	}
 
 	@Override
 	protected void execute() {
-		App.getInstance().getDataBase().deleteRoom(roomID);
+		App.getInstance().getDataBase().deleteItem(itemID);
 	}
 
 	@Override
 	protected String getTitle() {
-		return "Deleting Room #" + roomID;
+		return "Deleting Item #" + itemID;
 	}
 
 	@Override
 	protected String getMessage() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Are you sure you want to delete the room named");
+		sb.append("Are you sure you want to delete the item named");
 		sb.append(' ');
-		sb.append("'").append(room.name).append("'");
+		sb.append("'").append(item.name).append("'");
 		if (!items.isEmpty()) {
 			sb.append(" and all ");
 			sb.append(items.size());
@@ -61,22 +61,22 @@ public class DeleteRoomTask extends ActionParams {
 		return sb.toString();
 	}
 
-	private RoomDTO retrieveRoom() {
-		Cursor room = App.getInstance().getDataBase().getRoom(roomID);
+	private ItemDTO retrieveItem() {
+		Cursor item = App.getInstance().getDataBase().getItem(itemID);
 		try {
-			room.moveToFirst();
-			return RoomDTO.fromCursor(room);
+			item.moveToFirst();
+			return ItemDTO.fromCursor(item);
 		} finally {
-			room.close();
+			item.close();
 		}
 	}
 
 	private List<String> retrieveItemNames() {
-		Cursor items = App.getInstance().getDataBase().listItems(room.rootItemID);
+		Cursor items = App.getInstance().getDataBase().listItems(item.id);
 		try {
 			List<String> itemNames = new ArrayList<String>(items.getCount());
 			while (items.moveToNext()) {
-				itemNames.add(items.getString(items.getColumnIndexOrThrow(Room.NAME)));
+				itemNames.add(items.getString(items.getColumnIndexOrThrow(Item.NAME)));
 			}
 			return itemNames;
 		} finally {

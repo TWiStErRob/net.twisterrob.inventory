@@ -15,13 +15,21 @@ public class RoomEditActivity extends BaseEditActivity {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.room_edit_activity);
 
-		long currentPropertyID = getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
-		long currentRoomID = getIntent().getLongExtra(Extras.ROOM_ID, Room.ID_ADD);
+		long currentPropertyID = getExtraPropertyID();
+		long currentRoomID = getExtraRoomID();
 		Fragment editor = RoomEditFragment.newInstance(currentPropertyID, currentRoomID);
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.room, editor);
 		ft.commit();
+	}
+
+	private long getExtraRoomID() {
+		return getIntent().getLongExtra(Extras.ROOM_ID, Room.ID_ADD);
+	}
+
+	private long getExtraPropertyID() {
+		return getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
 	public static Intent add(long propertyID) {

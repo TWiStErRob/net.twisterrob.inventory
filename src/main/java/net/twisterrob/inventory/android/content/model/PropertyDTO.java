@@ -12,17 +12,22 @@ public class PropertyDTO {
 	public String name;
 	public long type;
 
-	public static PropertyDTO fromCursor(Cursor item) {
+	public static PropertyDTO fromCursor(Cursor cursor) {
 		PropertyDTO property = new PropertyDTO();
 
-		int nameColumn = item.getColumnIndex(Property.NAME);
-		if (nameColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			property.name = item.getString(nameColumn);
+		int idColumn = cursor.getColumnIndex(Property.ID);
+		if (idColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			property.id = cursor.getLong(idColumn);
 		}
 
-		int typeColumn = item.getColumnIndex(Property.TYPE);
+		int nameColumn = cursor.getColumnIndex(Property.NAME);
+		if (nameColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			property.name = cursor.getString(nameColumn);
+		}
+
+		int typeColumn = cursor.getColumnIndex(Property.TYPE);
 		if (typeColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			property.type = item.getLong(typeColumn);
+			property.type = cursor.getLong(typeColumn);
 		}
 
 		return property;

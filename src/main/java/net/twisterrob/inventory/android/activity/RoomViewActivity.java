@@ -10,10 +10,10 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.*;
-import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemEvents;
+import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.fragment.RoomViewFragment.RoomEvents;
 
-public class RoomViewActivity extends BaseListActivity implements ItemEvents, RoomEvents {
+public class RoomViewActivity extends BaseListActivity implements ItemsEvents, RoomEvents {
 	private RoomViewFragment room;
 	private ItemListFragment items;
 
@@ -53,8 +53,8 @@ public class RoomViewActivity extends BaseListActivity implements ItemEvents, Ro
 		}
 	}
 
-	public void newItem() {
-		startActivity(ItemEditActivity.add());
+	public void newItem(long parentID) {
+		startActivity(ItemEditActivity.add(parentID));
 	}
 
 	public void itemSelected(long id) {

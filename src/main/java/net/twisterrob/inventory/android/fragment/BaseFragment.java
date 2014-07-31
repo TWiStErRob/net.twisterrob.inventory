@@ -36,7 +36,8 @@ public class BaseFragment<T> extends Fragment {
 			if (eventsClass.isInstance(activity)) {
 				eventsListener = eventsClass.cast(activity);
 			} else {
-				throw new IllegalArgumentException("Activity must implement " + eventsClass);
+				throw new IllegalArgumentException("Activity " + activity.getClass().getSimpleName()
+						+ " must implement " + eventsClass);
 			}
 		}
 	}

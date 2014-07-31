@@ -12,19 +12,19 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemEvents;
+import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemsEvents;
 
-public class ItemListFragment extends BaseListFragment<ItemEvents> {
+public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemListFragment.class);
 
-	public interface ItemEvents {
-		void newItem();
+	public interface ItemsEvents {
+		void newItem(long parentID);
 		void itemSelected(long itemID);
 		void itemActioned(long itemID);
 	}
 
 	public ItemListFragment() {
-		setDynamicResource(DYN_EventsClass, ItemEvents.class);
+		setDynamicResource(DYN_EventsClass, ItemsEvents.class);
 		setDynamicResource(DYN_Layout, R.layout.item_list);
 		setDynamicResource(DYN_List, R.id.items);
 		setDynamicResource(DYN_CursorAdapter, R.xml.items);
@@ -35,7 +35,7 @@ public class ItemListFragment extends BaseListFragment<ItemEvents> {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_item_add:
-				eventsListener.newItem();
+				eventsListener.newItem(getArgParentItemID());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -48,7 +48,7 @@ public class ItemListFragment extends BaseListFragment<ItemEvents> {
 
 		getView().findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				eventsListener.newItem();
+				eventsListener.newItem(getArgParentItemID());
 			}
 		});
 

@@ -15,16 +15,26 @@ public class ItemEditActivity extends BaseEditActivity {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.item_edit_activity);
 
-		long currentItemID = getIntent().getLongExtra(Extras.ITEM_ID, Item.ID_ADD);
-		Fragment editor = ItemEditFragment.newInstance(currentItemID);
+		long currentItemID = getExtraItemID();
+		long currentParentID = getExtraParentID();
+		Fragment editor = ItemEditFragment.newInstance(currentParentID, currentItemID);
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.item, editor);
 		ft.commit();
 	}
 
-	public static Intent add() {
+	private long getExtraItemID() {
+		return getIntent().getLongExtra(Extras.ITEM_ID, Item.ID_ADD);
+	}
+
+	private long getExtraParentID() {
+		return getIntent().getLongExtra(Extras.PARENT_ID, Item.ID_ADD);
+	}
+
+	public static Intent add(long parentID) {
 		Intent intent = new Intent(App.getAppContext(), ItemEditActivity.class);
+		intent.putExtra(Extras.PARENT_ID, parentID);
 		return intent;
 	}
 

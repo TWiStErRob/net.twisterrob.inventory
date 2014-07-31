@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
+import org.slf4j.*;
+
 import android.app.*;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
@@ -7,6 +9,8 @@ import android.content.DialogInterface.OnClickListener;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 
 public class Dialogs {
+	private static final Logger LOG = LoggerFactory.getLogger(Dialogs.class);
+
 	public interface Callback {
 		void success();
 		void failed();
@@ -42,6 +46,7 @@ public class Dialogs {
 						execute();
 						success();
 					} catch (Exception ex) {
+						LOG.warn("Cannot execute {}", getClass().getSimpleName(), ex);
 						failed();
 					}
 				}

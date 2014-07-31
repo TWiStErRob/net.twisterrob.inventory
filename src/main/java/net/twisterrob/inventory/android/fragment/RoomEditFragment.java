@@ -25,7 +25,7 @@ import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class RoomEditFragment extends BaseEditFragment {
+public class RoomEditFragment extends BaseEditFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomEditFragment.class);
 
 	private EditText roomName;
@@ -96,9 +96,9 @@ public class RoomEditFragment extends BaseEditFragment {
 		}
 
 		@Override
-		protected void process(Cursor item) {
-			super.process(item);
-			RoomDTO room = RoomDTO.fromCursor(item);
+		protected void process(Cursor cursor) {
+			super.process(cursor);
+			RoomDTO room = RoomDTO.fromCursor(cursor);
 
 			getActivity().setTitle(room.name);
 			AndroidTools.selectByID(roomType, room.type);

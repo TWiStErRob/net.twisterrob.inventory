@@ -20,7 +20,7 @@ public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
 
 	public interface RoomsEvents {
-		void newRoom();
+		void newRoom(long propertyID);
 		void roomSelected(RoomDTO room);
 		void roomActioned(long roomID);
 	}
@@ -37,7 +37,7 @@ public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_room_add:
-				eventsListener.newRoom();
+				eventsListener.newRoom(getArgPropertyID());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -50,7 +50,7 @@ public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 
 		getView().findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				eventsListener.newRoom();
+				eventsListener.newRoom(getArgPropertyID());
 			}
 		});
 

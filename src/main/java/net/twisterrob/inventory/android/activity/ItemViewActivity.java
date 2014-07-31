@@ -8,10 +8,13 @@ import android.widget.Toast;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.*;
-import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemEvents;
+import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemsEvents;
+import net.twisterrob.inventory.android.fragment.ItemViewFragment.ItemEvents;
 
-public class ItemViewActivity extends BaseListActivity implements ItemEvents {
+public class ItemViewActivity extends BaseListActivity implements ItemEvents, ItemsEvents {
+	private ItemViewFragment item;
 	private ItemListFragment items;
 
 	@Override
@@ -23,10 +26,14 @@ public class ItemViewActivity extends BaseListActivity implements ItemEvents {
 		if (currentParentID == Item.ID_ADD) {
 			Toast.makeText(this, "Invalid parent item ID", Toast.LENGTH_LONG).show();
 			finish();
+			return;
 		}
 
+		item = ItemViewFragment.newInstance(currentParentID);
 		items = ItemListFragment.newInstance(currentParentID);
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.item, item);
 		ft.replace(R.id.items, items);
 		ft.commit();
 	}
@@ -34,11 +41,16 @@ public class ItemViewActivity extends BaseListActivity implements ItemEvents {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		item.refresh();
 		items.refresh();
 	}
 
-	public void newItem() {
-		startActivity(ItemEditActivity.add());
+	public void itemLoaded(ItemDTO item) {
+		// ignore
+	}
+
+	public void newItem(long parentID) {
+		startActivity(ItemEditActivity.add(parentID));
 	}
 
 	public void itemSelected(long id) {

@@ -111,7 +111,7 @@ public class Database {
 		SQLiteDatabase db = getWritableDatabase();
 		String[] params = new String[]{name, String.valueOf(type)};
 		db.execSQL(m_context.getString(R.string.query_property_new), params);
-		return 0;
+		return 0; // TODO new id
 	}
 
 	public void updateProperty(long id, String name, long type) {
@@ -123,6 +123,7 @@ public class Database {
 	public void deleteProperty(long id) {
 		SQLiteDatabase db = getWritableDatabase();
 		String[] params = new String[]{String.valueOf(id)};
+		// TODO delete all items recursively?
 		db.execSQL(m_context.getString(R.string.query_property_delete_rooms), params);
 		db.execSQL(m_context.getString(R.string.query_property_delete), params);
 	}
@@ -131,7 +132,7 @@ public class Database {
 		SQLiteDatabase db = getWritableDatabase();
 		String[] params = new String[]{String.valueOf(propertyID), name, String.valueOf(type)};
 		db.execSQL(m_context.getString(R.string.query_room_new), params);
-		return 0;
+		return 0; // TODO new id
 	}
 
 	public void updateRoom(long id, String name, long type) {
@@ -144,5 +145,26 @@ public class Database {
 		SQLiteDatabase db = getWritableDatabase();
 		String[] params = new String[]{String.valueOf(id)};
 		db.execSQL(m_context.getString(R.string.query_room_delete), params);
+		// TODO delete all items
+	}
+
+	public long newItem(long parentID, String name, long type) {
+		SQLiteDatabase db = getWritableDatabase();
+		String[] params = new String[]{String.valueOf(parentID), name, String.valueOf(type)};
+		db.execSQL(m_context.getString(R.string.query_item_new), params);
+		return 0; // TODO new id
+	}
+
+	public void updateItem(long id, String name, long category) {
+		SQLiteDatabase db = getWritableDatabase();
+		String[] params = new String[]{name, String.valueOf(category), String.valueOf(id)};
+		db.execSQL(m_context.getString(R.string.query_item_update), params);
+	}
+
+	public void deleteItem(long id) {
+		SQLiteDatabase db = getWritableDatabase();
+		String[] params = new String[]{String.valueOf(id)};
+		db.execSQL(m_context.getString(R.string.query_item_delete), params);
+		// TODO delete all items
 	}
 }

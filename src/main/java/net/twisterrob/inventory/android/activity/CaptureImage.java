@@ -43,6 +43,7 @@ public class CaptureImage extends BaseActivity {
 		if (output == null) {
 			setResult(RESULT_CANCELED);
 			finish();
+			return;
 		} else {
 			mTargetFile = new File(output);
 		}

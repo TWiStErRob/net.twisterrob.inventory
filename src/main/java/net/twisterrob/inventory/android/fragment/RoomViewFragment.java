@@ -80,9 +80,9 @@ public class RoomViewFragment extends BaseEditFragment<RoomEvents> {
 		}
 
 		@Override
-		protected void process(Cursor item) {
-			super.process(item);
-			RoomDTO room = RoomDTO.fromCursor(item);
+		protected void process(Cursor cursor) {
+			super.process(cursor);
+			RoomDTO room = RoomDTO.fromCursor(cursor);
 
 			getActivity().setTitle(room.name);
 			roomName.setText(room.name);
