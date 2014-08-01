@@ -10,13 +10,18 @@ import android.preference.PreferenceManager;
 
 import net.twisterrob.inventory.BuildConfig;
 import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.utils.PicassoWrapper;
 
 public class App extends Application {
 	private static App s_instance;
 	private boolean initialized = false;
 	private Database database;
+	private PicassoWrapper picasso;
 
 	public App() {
+		if (s_instance != null) {
+			throw new IllegalStateException("Multiple applications running at the same time?!");
+		}
 		s_instance = this;
 
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
@@ -54,23 +59,23 @@ public class App extends Application {
 		return getInstance();
 	}
 
-	private void afterPropertiesSet() {
+	/**
+	 * Used to prevent escaping an uninitialized instance in the constructor.
+	 */
+	private synchronized void afterPropertiesSet() {
 		if (!initialized) {
 			database = new Database(this);
+			picasso = new PicassoWrapper(this);
 			initialized = true;
 		}
 	}
 
-	/**
-	 * android.database.DatabaseUtils.dumpCursor(net.twisterrob.inventory.android.
-	 * App.getInstance().getDataBase().getReadableDatabase().rawQuery("select * from sqlite_sequence;", null));
-	 */
 	public Database getDataBase() {
 		return database;
 	}
 
 	public static SharedPreferences getPrefs() {
-		return PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+		return PreferenceManager.getDefaultSharedPreferences(getAppContext());
 	}
 
 	public static SharedPreferences.Editor getPrefEditor() {
@@ -80,5 +85,17 @@ public class App extends Application {
 
 	public static void exit() {
 		android.os.Process.killProcess(android.os.Process.myPid());
+	}
+
+	public static PicassoWrapper pic() {
+		return getInstance().picasso;
+	}
+
+	/**
+	 * android.database.DatabaseUtils.dumpCursor(net.twisterrob.inventory.android.
+	 * App.getInstance().getDataBase().getReadableDatabase().rawQuery("select * from sqlite_sequence;", null));
+	 */
+	public static Database db() {
+		return getInstance().database;
 	}
 }

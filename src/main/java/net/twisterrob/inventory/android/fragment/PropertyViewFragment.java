@@ -14,7 +14,7 @@ import net.twisterrob.inventory.android.content.LoadSingleRow;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.PropertyViewFragment.PropertyEvents;
-import net.twisterrob.inventory.android.tasks.*;
+import net.twisterrob.inventory.android.tasks.DeletePropertyTask;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -93,8 +93,12 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
 			getActivity().setTitle(property.name);
 			propertyName.setText(property.name);
 			propertyType.setText(String.valueOf(property.type));
-			propertyImage.setImageResource(property.getImageResourceID(getActivity())); // backup type image
-			new LoadDriveIdToImageView(propertyImage).execute(property.imageDriveID); // try real image
+
+			int propertyTypeResourceID = property.getImageResourceID(getActivity());
+			App.pic().load(property.imageDriveID) //
+					.placeholder(propertyTypeResourceID) //
+					.error(propertyTypeResourceID) //
+					.into(propertyImage);
 		}
 
 		@Override

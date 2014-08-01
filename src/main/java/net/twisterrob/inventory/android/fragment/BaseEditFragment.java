@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.fragment;
 
-import java.io.*;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -13,10 +13,12 @@ import android.view.*;
 import android.widget.ImageView;
 
 import com.google.android.gms.drive.*;
+import com.squareup.picasso.RequestCreator;
 
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.CaptureImage;
-import net.twisterrob.inventory.android.tasks.*;
+import net.twisterrob.inventory.android.tasks.Upload;
 import net.twisterrob.inventory.android.utils.*;
 
 public abstract class BaseEditFragment<T> extends BaseFragment<T> {
@@ -59,11 +61,7 @@ public abstract class BaseEditFragment<T> extends BaseFragment<T> {
 			case PictureUtils.REQUEST_CODE_TAKE_PICTURE:
 				if (resultCode == Activity.RESULT_OK && data != null) {
 					File file = PictureUtils.getFile(getActivity(), data.getData());
-					try {
-						getImageView().setImageBitmap(PictureUtils.loadPicture(file, -1, -1));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					App.pic().load(data.getData()).into(getImageView());
 
 					new Upload(getActivity()) {
 						private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -74,7 +72,7 @@ public abstract class BaseEditFragment<T> extends BaseFragment<T> {
 								LOG.error("No driveId after upload");
 								return;
 							}
-							setCurrentImageDriveId(result.getDriveId());
+							setCurrentImageDriveId(result.getDriveId(), 0);
 						}
 					}.execute(file);
 					return;
@@ -94,8 +92,12 @@ public abstract class BaseEditFragment<T> extends BaseFragment<T> {
 	protected DriveId getCurrentImageDriveId() {
 		return driveId;
 	}
-	protected void setCurrentImageDriveId(DriveId driveId) {
+	protected void setCurrentImageDriveId(DriveId driveId, int fallbackResource) {
 		this.driveId = driveId;
-		new LoadDriveIdToImageView(getImageView()).execute(driveId);
+		RequestCreator load = App.pic().load(driveId);
+		if (0 < fallbackResource) {
+			load.placeholder(fallbackResource).error(fallbackResource);
+		}
+		load.into(getImageView());
 	}
 }

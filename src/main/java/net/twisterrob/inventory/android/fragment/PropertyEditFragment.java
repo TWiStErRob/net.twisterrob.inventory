@@ -29,7 +29,6 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyEditFragment.class);
 
 	private EditText propertyName;
-	private ImageView propertyImage;
 	private Spinner propertyType;
 	private CursorAdapter proeprtyTypeAdapter;
 
@@ -47,7 +46,6 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		View root = inflater.inflate(R.layout.property_edit, container, false);
 		propertyName = (EditText)root.findViewById(R.id.propertyName);
 		propertyName.requestFocus();
-		propertyImage = (ImageView)root.findViewById(R.id.propertyImage);
 		propertyType = (Spinner)root.findViewById(R.id.propertyType);
 		proeprtyTypeAdapter = Adapters.loadCursorAdapter(getActivity(), R.xml.property_types, (Cursor)null);
 		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
@@ -110,8 +108,8 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 			getActivity().setTitle(property.name);
 			AndroidTools.selectByID(propertyType, property.type);
 			propertyName.setText(property.name); // must set it after propertyType to prevent auto-propagation
-			propertyImage.setImageResource(property.getImageResourceID(getActivity()));
-			setCurrentImageDriveId(property.imageDriveID);
+
+			setCurrentImageDriveId(property.imageDriveID, property.getImageResourceID(getActivity()));
 		}
 
 		@Override

@@ -18,42 +18,20 @@ public abstract class ApiClientAsyncTask<Params, Progress, Result> extends Async
 	private GoogleApiClient mClient;
 
 	public ApiClientAsyncTask(Context context) {
-		GoogleApiClient.Builder builder = new GoogleApiClient.Builder(context) //
-				.addApi(Drive.API) //
-				.addScope(Drive.SCOPE_FILE);
-		mClient = builder.build();
+		mClient = createClient(context);
 	}
 
 	@Override
 	protected final Result doInBackground(Params... params) {
-		final CountDownLatch latch = new CountDownLatch(1);
-		mClient.registerConnectionCallbacks(new ConnectionCallbacks() {
-			@Override
-			public void onConnected(Bundle arg0) {
-				latch.countDown();
-			}
-			@Override
-			public void onConnectionSuspended(int cause) {}
-		});
-		mClient.registerConnectionFailedListener(new OnConnectionFailedListener() {
-			@Override
-			public void onConnectionFailed(ConnectionResult arg0) {
-				latch.countDown();
-			}
-		});
-		mClient.connect();
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
+		GoogleApiClient client = getConnectedClient(mClient);
+		if (client == null) {
 			return null;
 		}
-		if (!mClient.isConnected()) {
-			return null;
-		}
+
 		try {
 			return doInBackgroundConnected(params);
 		} finally {
-			mClient.disconnect();
+			client.disconnect();
 		}
 	}
 
@@ -67,5 +45,46 @@ public abstract class ApiClientAsyncTask<Params, Progress, Result> extends Async
 	 */
 	protected GoogleApiClient getGoogleApiClient() {
 		return mClient;
+	}
+
+	public static GoogleApiClient createClient(Context context) {
+		GoogleApiClient.Builder builder = new GoogleApiClient.Builder(context) //
+				.addApi(Drive.API) //
+				.addScope(Drive.SCOPE_FILE);
+		return builder.build();
+	}
+
+	public static GoogleApiClient createConnectedClient(Context context) {
+		return getConnectedClient(createClient(context));
+	}
+
+	public static GoogleApiClient getConnectedClient(GoogleApiClient client) {
+		final CountDownLatch latch = new CountDownLatch(1);
+		client.registerConnectionCallbacks(new ConnectionCallbacks() {
+			@Override
+			public void onConnected(Bundle arg0) {
+				latch.countDown();
+			}
+			@Override
+			public void onConnectionSuspended(int cause) {
+				// ignore
+			}
+		});
+		client.registerConnectionFailedListener(new OnConnectionFailedListener() {
+			@Override
+			public void onConnectionFailed(ConnectionResult arg0) {
+				latch.countDown();
+			}
+		});
+		client.connect();
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			return null;
+		}
+		if (!client.isConnected()) {
+			return null;
+		}
+		return client;
 	}
 }
