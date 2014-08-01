@@ -8,7 +8,8 @@ import android.hardware.*;
 import android.hardware.Camera.CameraInfo;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
-import android.view.*;
+import android.util.TypedValue;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 
 public abstract class AndroidTools {
@@ -33,14 +34,21 @@ public abstract class AndroidTools {
 		}
 	}
 
+	public static float dip(Context context, float number) {
+		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, number, context.getResources()
+				.getDisplayMetrics());
+	}
+	public static int dipInt(Context context, float number) {
+		return (int)dip(context, number);
+	}
+
 	public static String toString(Bundle bundle) {
 		if (bundle == null) {
 			return "null";
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("Bundle of ").append(bundle.size()).append('\n');
-		sb.append(new TreeSet<String>(bundle.keySet())).append('\n');
-		for (String key: bundle.keySet()) {
+		for (String key: new TreeSet<String>(bundle.keySet())) {
 			String value = toString(bundle.get(key));
 			sb.append('\t').append(key).append("=").append(value).append('\n');
 		}
