@@ -9,30 +9,36 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 
 public class ImagedDTO extends DTO {
 	private String driveColumn;
-	public DriveId imageDriveID;
+	public DriveId image;
 
 	private String drawableColumn;
-	public String imageResourceName;
+	public String fallbackImageResourceName;
 
 	@Override
 	protected ImagedDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		int driveColumnIndex = cursor.getColumnIndex(driveColumn);
-		if (driveColumnIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			imageDriveID = DriveId.decodeFromString(cursor.getString(driveColumnIndex));
+		if (driveColumn != null) {
+			int driveColumnIndex = cursor.getColumnIndex(driveColumn);
+			if (driveColumnIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+				if (!cursor.isNull(driveColumnIndex)) {
+					image = DriveId.decodeFromString(cursor.getString(driveColumnIndex));
+				}
+			}
 		}
 
-		int drawableColumnIndex = cursor.getColumnIndex(drawableColumn);
-		if (drawableColumnIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			imageResourceName = cursor.getString(drawableColumnIndex);
+		if (drawableColumn != null) {
+			int drawableColumnIndex = cursor.getColumnIndex(drawableColumn);
+			if (drawableColumnIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+				fallbackImageResourceName = cursor.getString(drawableColumnIndex);
+			}
 		}
 
 		return this;
 	}
 
-	public int getImageResourceID(Context context) {
-		return context.getResources().getIdentifier(imageResourceName, "drawable", context.getPackageName());
+	public int getFallbackDrawableID(Context context) {
+		return context.getResources().getIdentifier(fallbackImageResourceName, "drawable", context.getPackageName());
 	}
 
 	protected void setImageDriveIdColumnName(String columnName) {

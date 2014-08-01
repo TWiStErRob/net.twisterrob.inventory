@@ -94,8 +94,8 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
 			propertyName.setText(property.name);
 			propertyType.setText(String.valueOf(property.type));
 
-			int propertyTypeResourceID = property.getImageResourceID(getActivity());
-			App.pic().load(property.imageDriveID) //
+			int propertyTypeResourceID = property.getFallbackDrawableID(getActivity());
+			App.pic().load(property.image) //
 					.placeholder(propertyTypeResourceID) //
 					.error(propertyTypeResourceID) //
 					.into(propertyImage);

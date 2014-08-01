@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/fragmentRoot"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical">
+	android:layout_height="match_parent">
+	<ImageView
+		android:id="@id/roomImage"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:scaleType="fitCenter" />
 	<TextView
 		android:id="@id/roomName"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true" />
 	<TextView
 		android:id="@id/roomType"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
-</LinearLayout>
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true" />
+</RelativeLayout>

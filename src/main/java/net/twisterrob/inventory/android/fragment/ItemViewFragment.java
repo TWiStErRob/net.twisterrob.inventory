@@ -28,12 +28,14 @@ public class ItemViewFragment extends BaseViewFragment<ItemEvents> {
 
 	private TextView itemName;
 	private TextView itemCategory;
+	private ImageView itemImage;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.item_view, container, false);
 		itemName = (TextView)root.findViewById(R.id.itemName);
 		itemCategory = (TextView)root.findViewById(R.id.itemCategory);
+		itemImage = (ImageView)root.findViewById(R.id.itemImage);
 		return root;
 	}
 
@@ -87,6 +89,11 @@ public class ItemViewFragment extends BaseViewFragment<ItemEvents> {
 			getActivity().setTitle(item.name);
 			itemName.setText(item.name);
 			itemCategory.setText(String.valueOf(item.category));
+			int itemCategoryResourceID = item.getFallbackDrawableID(getActivity());
+			App.pic().load(item.image) //
+					.placeholder(itemCategoryResourceID) //
+					.error(itemCategoryResourceID) //
+					.into(itemImage);
 
 			eventsListener.itemLoaded(item);
 		}

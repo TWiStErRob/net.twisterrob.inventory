@@ -35,7 +35,7 @@ public class PropertyListActivity extends BaseListActivity implements Properties
 	}
 
 	public void propertySelected(long id) {
-		startActivity(PropertyViewActivity.list(id));
+		startActivity(PropertyViewActivity.show(id));
 	}
 
 	public void propertyActioned(long id) {

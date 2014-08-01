@@ -6,6 +6,8 @@ public interface Room {
 
 	String NAME = "name";
 	String TYPE = "type";
+	String TYPE_IMAGE = "typeImage";
+	String IMAGE = "image";
 	String ROOT_ITEM = "root";
 	String PROPERTY = "property";
 

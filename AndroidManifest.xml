@@ -76,7 +76,8 @@
 		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.RoomEditActivity"
-			android:label="@string/room_new">
+			android:label="@string/room_new"
+			android:windowSoftInputMode="adjustResize">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="net.twisterrob.inventory.android.activity.PropertyViewActivity" />
@@ -97,7 +98,8 @@
 		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.ItemEditActivity"
-			android:label="@string/item_new">
+			android:label="@string/item_new"
+			android:windowSoftInputMode="adjustResize">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="net.twisterrob.inventory.android.activity.ItemViewActivity" />

@@ -3,7 +3,7 @@
 		xmlns:app="http://schemas.android.com/apk/res/net.twisterrob.inventory"
 		app:layout="@layout/room_list_item">
 	<bind app:from="name" app:to="@id/roomName" app:as="string" />
-	<bind app:from="image" app:to="@id/roomImage" app:as="image-uri">
-		<transform app:withExpression="android.resource://net.twisterrob.inventory/drawable/{image}" />
+	<bind app:from="typeImage" app:to="@id/roomImage" app:as="image-uri">
+		<transform app:withExpression="android.resource://net.twisterrob.inventory/drawable/{typeImage}" />
 	</bind>
 </cursor-adapter>

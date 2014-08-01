@@ -28,12 +28,14 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 
 	private TextView roomName;
 	private TextView roomType;
+	private ImageView roomImage;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.room_view, container, false);
 		roomName = (TextView)root.findViewById(R.id.roomName);
 		roomType = (TextView)root.findViewById(R.id.roomType);
+		roomImage = (ImageView)root.findViewById(R.id.roomImage);
 		return root;
 	}
 
@@ -87,6 +89,11 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 			getActivity().setTitle(room.name);
 			roomName.setText(room.name);
 			roomType.setText(String.valueOf(room.type));
+			int roomTypeResourceID = room.getFallbackDrawableID(getActivity());
+			App.pic().load(room.image) //
+					.placeholder(roomTypeResourceID) //
+					.error(roomTypeResourceID) //
+					.into(roomImage);
 
 			eventsListener.roomLoaded(room);
 		}

@@ -58,7 +58,7 @@ public class RoomViewActivity extends BaseListActivity implements ItemsEvents, R
 	}
 
 	public void itemSelected(long id) {
-		startActivity(ItemViewActivity.list(id));
+		startActivity(ItemViewActivity.show(id));
 		// TODO consider tabs as breadcrumbs?
 	}
 

@@ -42,12 +42,12 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 	}
 
 	public Request transformRequest(Request request) {
-		LOG.debug("Transforming request {}", request);
+		//LOG.debug("Transforming request {}", request);
 		return request;
 	}
 
 	public Response load(Uri uri, boolean localCacheOnly) throws IOException {
-		LOG.debug("Loading {} (localCacheOnly={})", uri, localCacheOnly);
+		//LOG.debug("Loading {} (localCacheOnly={})", uri, localCacheOnly);
 		try {
 			DriveId id = fromUri(uri);
 			return loadDriveIdUrl(id, localCacheOnly);
@@ -93,15 +93,15 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 		return picasso;
 	}
 
-	public static Uri toUri(DriveId imageDriveID) {
-		return new Uri.Builder() //
+	public static Uri toUri(DriveId driveId) {
+		return driveId == null? null : new Uri.Builder() //
 				.scheme("DriveId") //
 				.authority("com.google.android.apps.docs") //
-				.path(imageDriveID.encodeToString().substring("DriveId:".length())) //
+				.path(driveId.encodeToString().substring("DriveId:".length())) //
 				.build();
 	}
 
 	public static DriveId fromUri(Uri uri) {
-		return DriveId.decodeFromString(uri.toString().replace("//com.google.android.apps.docs/", ""));
+		return DriveId.decodeFromString("DriveId:" + uri.getPath().substring(1));
 	}
 }

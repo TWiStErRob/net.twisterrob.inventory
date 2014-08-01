@@ -2,15 +2,15 @@
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/adapterRoot"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content">
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
 	<ImageView
 		android:id="@id/roomImage"
 		android:focusable="false"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
 		android:adjustViewBounds="true"
-		android:scaleType="centerInside"
+		android:scaleType="fitCenter"
 		android:contentDescription="@string/img_desc_room" />
 	<TextView
 		android:id="@id/roomName"

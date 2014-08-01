@@ -87,7 +87,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		property.id = getArgPropertyID();
 		property.name = propertyName.getText().toString();
 		property.type = propertyType.getSelectedItemId();
-		property.imageDriveID = getCurrentImageDriveId();
+		property.image = getCurrentImageDriveId();
 		return property;
 	}
 
@@ -109,7 +109,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 			AndroidTools.selectByID(propertyType, property.type);
 			propertyName.setText(property.name); // must set it after propertyType to prevent auto-propagation
 
-			setCurrentImageDriveId(property.imageDriveID, property.getImageResourceID(getActivity()));
+			setCurrentImageDriveId(property.image, property.getFallbackDrawableID(getActivity()));
 		}
 
 		@Override
@@ -125,9 +125,9 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 			try {
 				Database db = App.db();
 				if (param.id == Property.ID_ADD) {
-					return db.newProperty(param.name, param.type, param.imageDriveID);
+					return db.newProperty(param.name, param.type, param.image);
 				} else {
-					db.updateProperty(param.id, param.name, param.type, param.imageDriveID);
+					db.updateProperty(param.id, param.name, param.type, param.image);
 					return param.id;
 				}
 			} catch (SQLiteConstraintException ex) {

@@ -47,7 +47,8 @@
 			r._id,
 			r.root,
 			r.name,
-			COALESCE(rt.image, rtk.image) as image
+			r.image,
+			COALESCE(rt.image, rtk.image) as typeImage
 		from Room r
 		join RoomType rt ON r.type = rt._id
 		join RoomTypeKind rtk ON rt.kind = rtk._id
@@ -55,15 +56,17 @@
 		order by r.name asc 
 	"]]></string>
 	<string name="query_room"><![CDATA["
-		select _id, name, type, root, property
-		from Room
-		where _id = ?
+		select r._id, r.name, r.type, r.root, r.property, r.image, COALESCE(rt.image, rtk.image) as typeImage
+		from Room r
+		join RoomType rt ON r.type = rt._id
+		join RoomTypeKind rtk ON rt.kind = rtk._id
+		where r._id = ?
 	"]]></string>
 	<string name="query_room_new"><![CDATA["
-		insert into Room(property, root, name, type) values(?, ?, ?, ?)
+		insert into Room(property, root, name, type, image) values(?, ?, ?, ?, ?)
 	"]]></string>
 	<string name="query_room_update"><![CDATA["
-		update Room set name = ?, type = ? where _id = ?
+		update Room set name = ?, type = ?, image = ? where _id = ?
 	"]]></string>
 	<string name="query_room_delete"><![CDATA["
 		delete from Room where _id = ?
@@ -72,23 +75,24 @@
 		select
 			i._id,
 			i.name,
-			c.name as category
+			c.name as category,
+			'category_unknown' as categoryImage
 		from Item     i
 		join Category c ON i.category = c._id
 		where i.parent = ?
 		order by i.name asc 
 	"]]></string>
 	<string name="query_item"><![CDATA["
-		select i._id, i.name, c.name as category
+		select i._id, i.name, c.name as category, i.image, 'category_unknown' as categoryImage
 		from Item i
 		join Category c ON i.category = c._id
 		where i._id = ?
 	"]]></string>
 	<string name="query_item_new"><![CDATA["
-		insert into Item(parent, name, category) values(?, ?, ?)
+		insert into Item(parent, name, category, image) values(?, ?, ?, ?)
 	"]]></string>
 	<string name="query_item_update"><![CDATA["
-		update Item set name = ?, category = ? where _id = ?
+		update Item set name = ?, category = ?, image = ? where _id = ?
 	"]]></string>
 	<string name="query_item_delete"><![CDATA["
 		delete from Item where _id = ?

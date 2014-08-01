@@ -1,7 +1,7 @@
 package net.twisterrob.inventory.android.content;
 
 import android.content.Context;
-import android.database.*;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -19,7 +19,7 @@ public abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
 	}
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		DatabaseUtils.dumpCursor(data);
+		//DatabaseUtils.dumpCursor(data);
 		if (data.getCount() == 1) {
 			data.moveToFirst();
 			process(data);

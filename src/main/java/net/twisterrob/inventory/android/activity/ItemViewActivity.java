@@ -54,7 +54,7 @@ public class ItemViewActivity extends BaseListActivity implements ItemEvents, It
 	}
 
 	public void itemSelected(long id) {
-		startActivity(ItemViewActivity.list(id));
+		startActivity(ItemViewActivity.show(id));
 		// TODO consider tabs as breadcrumbs?
 	}
 
@@ -66,7 +66,7 @@ public class ItemViewActivity extends BaseListActivity implements ItemEvents, It
 		return getIntent().getLongExtra(Extras.PARENT_ID, Item.ID_ADD);
 	}
 
-	public static Intent list(long itemID) {
+	public static Intent show(long itemID) {
 		Intent intent = new Intent(App.getAppContext(), ItemViewActivity.class);
 		intent.putExtra(Extras.PARENT_ID, itemID);
 		return intent;

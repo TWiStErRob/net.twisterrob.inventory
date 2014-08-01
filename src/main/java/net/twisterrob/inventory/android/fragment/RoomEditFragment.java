@@ -32,6 +32,10 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 	private Spinner roomType;
 	private CursorAdapter adapter;
 
+	public RoomEditFragment() {
+		setDynamicResource(DYN_ImageView, R.id.roomImage);
+	}
+
 	@Override
 	protected String getBaseFileName() {
 		return "Room_" + getArgRoomID();
@@ -84,6 +88,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		room.id = getArgRoomID();
 		room.name = roomName.getText().toString();
 		room.type = roomType.getSelectedItemId();
+		room.image = getCurrentImageDriveId();
 		return room;
 	}
 
@@ -108,6 +113,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 			getActivity().setTitle(room.name);
 			AndroidTools.selectByID(roomType, room.type);
 			roomName.setText(room.name); // must set it after roomType to prevent auto-propagation
+			setCurrentImageDriveId(room.image, room.getFallbackDrawableID(getActivity()));
 		}
 
 		@Override
@@ -123,9 +129,9 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 			try {
 				Database db = App.db();
 				if (param.id == Room.ID_ADD) {
-					return db.newRoom(param.propertyID, param.name, param.type);
+					return db.newRoom(param.propertyID, param.name, param.type, param.image);
 				} else {
-					db.updateRoom(param.id, param.name, param.type);
+					db.updateRoom(param.id, param.name, param.type, param.image);
 					return param.id;
 				}
 			} catch (SQLiteConstraintException ex) {

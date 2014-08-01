@@ -19,7 +19,7 @@ public class Database {
 	public Database(Context context) {
 		m_context = context;
 		m_helper = new DatabaseOpenHelper(m_context, "MagicHomeInventory", 1);
-		m_helper.setDevMode(true);
+		m_helper.setDevMode(false);
 	}
 
 	public SQLiteDatabase getReadableDatabase() {
@@ -38,6 +38,14 @@ public class Database {
 	private Cursor rawQuery(int queryResource, Object... params) {
 		SQLiteDatabase db = getReadableDatabase();
 		return db.rawQuery(m_context.getString(queryResource), StringTools.toStringArray(params));
+	}
+
+	private static void bindDriveID(SQLiteStatement insert, int arg, DriveId driveID) {
+		if (driveID == null) {
+			insert.bindNull(arg);
+		} else {
+			insert.bindString(arg, driveID.encodeToString());
+		}
 	}
 
 	public Cursor listPropertyTypes(CharSequence nameFilter) {
@@ -78,11 +86,7 @@ public class Database {
 			int arg = 0;
 			insert.bindString(++arg, name);
 			insert.bindLong(++arg, type);
-			if (imageDriveID == null) {
-				insert.bindNull(++arg);
-			} else {
-				insert.bindString(++arg, imageDriveID.encodeToString());
-			}
+			bindDriveID(insert, ++arg, imageDriveID);
 
 			return insert.executeInsert();
 		} finally {
@@ -107,18 +111,19 @@ public class Database {
 		}
 	}
 
-	public long newRoom(long propertyID, String name, long type) {
+	public long newRoom(long propertyID, String name, long type, DriveId imageDriveID) {
 		SQLiteDatabase db = getWritableDatabase();
 		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_room_new));
 		db.beginTransaction();
 		try {
-			long rootID = newItem(null, Item.ROOM_ROOT, Category.INTERNAL);
+			long rootID = newItem(null, Item.ROOM_ROOT, Category.INTERNAL, null);
 
 			int arg = 0;
 			insert.bindLong(++arg, propertyID);
 			insert.bindLong(++arg, rootID);
 			insert.bindString(++arg, name);
 			insert.bindLong(++arg, type);
+			bindDriveID(insert, ++arg, imageDriveID);
 			long roomID = insert.executeInsert();
 			db.setTransactionSuccessful();
 			return roomID;
@@ -128,8 +133,8 @@ public class Database {
 		}
 	}
 
-	public void updateRoom(long id, String name, long type) {
-		execSQL(R.string.query_room_update, name, type, id);
+	public void updateRoom(long id, String name, long type, DriveId imageDriveID) {
+		execSQL(R.string.query_room_update, name, type, imageDriveID.encodeToString(), id);
 	}
 
 	public void deleteRoom(long id) {
@@ -137,11 +142,11 @@ public class Database {
 		// TODO delete all items
 	}
 
-	public long newItem(long parentID, String name, long category) {
-		return newItem((Long)parentID, name, category);
+	public long newItem(long parentID, String name, long category, DriveId imageDriveID) {
+		return newItem((Long)parentID, name, category, imageDriveID);
 	}
 
-	private long newItem(Long parentID, String name, long category) {
+	private long newItem(Long parentID, String name, long category, DriveId imageDriveID) {
 		SQLiteDatabase db = getWritableDatabase();
 		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_item_new));
 		try {
@@ -153,6 +158,7 @@ public class Database {
 			}
 			insert.bindString(++arg, name);
 			insert.bindLong(++arg, category);
+			bindDriveID(insert, ++arg, imageDriveID);
 
 			return insert.executeInsert();
 		} finally {
@@ -160,8 +166,8 @@ public class Database {
 		}
 	}
 
-	public void updateItem(long id, String name, long category) {
-		rawQuery(R.string.query_item_update, id, name, category);
+	public void updateItem(long id, String name, long category, DriveId imageDriveID) {
+		execSQL(R.string.query_item_update, name, category, imageDriveID, id);
 	}
 
 	public void deleteItem(long id) {

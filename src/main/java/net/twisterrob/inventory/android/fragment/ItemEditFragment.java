@@ -24,8 +24,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditFragment.class);
 
 	private EditText itemName;
-	private TextView itemCategory;
-	private ImageView itemImage;
+	private Spinner itemCategory;
 
 	public ItemEditFragment() {
 		setDynamicResource(DYN_ImageView, R.id.itemImage);
@@ -40,8 +39,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.item_edit, container, false);
 		itemName = (EditText)root.findViewById(R.id.itemName);
-		itemCategory = (TextView)root.findViewById(R.id.itemCategory);
-		itemImage = (ImageView)root.findViewById(R.id.itemImage);
+		itemCategory = (Spinner)root.findViewById(R.id.itemCategory);
 
 		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -78,6 +76,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		item.parentID = getArgParentID();
 		item.id = getArgItemID();
 		item.name = itemName.getText().toString();
+		item.image = getCurrentImageDriveId();
 		// item.category = itemCategory.getSelectedItemId(); // TODO tree ListView?
 		return item;
 	}
@@ -102,8 +101,8 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 
 			getActivity().setTitle(item.name);
 			itemName.setText(item.name);
-			itemCategory.setText(String.valueOf(item.category));
-			itemImage.setImageResource(R.drawable.category_unknown);
+			// FIXME itemCategory.setText(String.valueOf(item.category));
+			setCurrentImageDriveId(item.image, item.getFallbackDrawableID(getActivity()));
 		}
 
 		@Override
@@ -119,9 +118,9 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 			try {
 				Database db = App.db();
 				if (param.id == Item.ID_ADD) {
-					return db.newItem(param.parentID, param.name, param.category);
+					return db.newItem(param.parentID, param.name, param.category, param.image);
 				} else {
-					db.updateItem(param.id, param.name, param.category);
+					db.updateItem(param.id, param.name, param.category, param.image);
 					return param.id;
 				}
 			} catch (SQLiteConstraintException ex) {

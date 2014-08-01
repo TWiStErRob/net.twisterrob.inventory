@@ -7,14 +7,16 @@ INSERT INTO Item(_id, category, name) VALUES(1, -1, 'ROOT');
 INSERT INTO Room(_id, property, type, root, name) VALUES(1, 1, 102, 1, 'Nagyszoba');
 
 INSERT INTO Item(_id, category, name) VALUES(2, -1, 'ROOT');
-INSERT INTO Room(_id, property, type, root,name) VALUES(2, 1, 102, 2, 'Robi szoba');
+INSERT INTO Room(_id, property, type, root, name) VALUES(2, 1, 102, 2, 'Robi szoba');
 
 INSERT INTO Item(_id, category, name) VALUES(3, -1, 'ROOT');
-INSERT INTO Room(_id, property, type, root,name) VALUES(3, 1, 103, 3, 'Konyha');
+INSERT INTO Room(_id, property, type, root, name) VALUES(3, 1, 103, 3, 'Konyha');
 
 INSERT INTO Item(_id, category, name) VALUES(4, -1, 'ROOT');
-INSERT INTO Room(_id, property, type, root,name) VALUES(4, 1, 201, 4, 'Spájz');
+INSERT INTO Room(_id, property, type, root, name) VALUES(4, 1, 201, 4, 'Spájz');
 
 INSERT INTO Item(_id, parent, category, name) VALUES(5, 4, 3100, 'Papírdoboz kék karikákkal');
 	INSERT INTO Item(_id, parent, category, name) VALUES(6, 5, 6200, 'Piros műanyag tányér');
 	INSERT INTO Item(_id, parent, category, name) VALUES(7, 5, 6400, 'Neon pohár');
+
+--update RoomType set image = 'category_unknown' where _id = 103;

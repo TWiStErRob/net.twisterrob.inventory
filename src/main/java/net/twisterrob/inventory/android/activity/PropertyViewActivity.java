@@ -65,7 +65,7 @@ public class PropertyViewActivity extends BaseListActivity implements RoomsEvent
 		return getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
-	public static Intent list(long propertyID) {
+	public static Intent show(long propertyID) {
 		Intent intent = new Intent(App.getAppContext(), PropertyViewActivity.class);
 		intent.putExtra(Extras.PROPERTY_ID, propertyID);
 		return intent;

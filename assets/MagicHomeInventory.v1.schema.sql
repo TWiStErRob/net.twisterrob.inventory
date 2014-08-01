@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS Category (
 CREATE TABLE IF NOT EXISTS Item (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL,
+	image       NVARCHAR     NULL,     -- Google Drive ID
 	category    INTEGER      NOT NULL
 		CONSTRAINT fk_Item_category
 			REFERENCES Category(_id),
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS RoomType (
 CREATE TABLE IF NOT EXISTS Room (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL,
+	image       NVARCHAR     NULL,     -- Google Drive ID
 	type        INTEGER      NOT NULL
 		CONSTRAINT fk_Room_type
 			REFERENCES RoomType(_id),

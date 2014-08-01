@@ -6,6 +6,9 @@ public interface Item {
 
 	String NAME = "name";
 	String CATEGORY = "category";
+	String CATEGORY_IMAGE = "categoryImage";
+	String IMAGE = "image";
+
 	String PARENT = "parent";
 
 	String DEFAULT_ORDER = NAME;
