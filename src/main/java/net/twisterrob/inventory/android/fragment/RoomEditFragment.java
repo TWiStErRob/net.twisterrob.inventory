@@ -121,7 +121,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		@Override
 		protected Long doInBackground(RoomDTO param) {
 			try {
-				Database db = App.getInstance().getDataBase();
+				Database db = App.db();
 				if (param.id == Room.ID_ADD) {
 					return db.newRoom(param.propertyID, param.name, param.type);
 				} else {

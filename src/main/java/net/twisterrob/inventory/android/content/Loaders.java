@@ -13,54 +13,54 @@ public enum Loaders {
 	PropertyTypes {
 		@Override
 		protected Cursor createCursor(Bundle args) {
-			return App.getInstance().getDataBase().listPropertyTypes();
+			return App.db().listPropertyTypes();
 		}
 	},
 	Properties {
 		@Override
 		protected Cursor createCursor(Bundle args) {
-			return App.getInstance().getDataBase().listProperties();
+			return App.db().listProperties();
 		}
 	},
 	SingleProperty {
 		@Override
 		protected Cursor createCursor(Bundle args) {
 			long id = args.getLong(Extras.PROPERTY_ID, Property.ID_ADD);
-			return App.getInstance().getDataBase().getProperty(id);
+			return App.db().getProperty(id);
 		}
 	},
 	RoomTypes {
 		@Override
 		protected Cursor createCursor(Bundle args) {
-			return App.getInstance().getDataBase().listRoomTypes();
+			return App.db().listRoomTypes();
 		}
 	},
 	Rooms {
 		@Override
 		protected Cursor createCursor(Bundle args) {
 			long id = args.getLong(Extras.PROPERTY_ID, Property.ID_ADD);
-			return App.getInstance().getDataBase().listRooms(id);
+			return App.db().listRooms(id);
 		}
 	},
 	SingleRoom {
 		@Override
 		protected Cursor createCursor(Bundle args) {
 			long id = args.getLong(Extras.ROOM_ID, Room.ID_ADD);
-			return App.getInstance().getDataBase().getRoom(id);
+			return App.db().getRoom(id);
 		}
 	},
 	Items {
 		@Override
 		protected Cursor createCursor(Bundle args) {
 			long id = args.getLong(Extras.PARENT_ID, Item.ID_ADD);
-			return App.getInstance().getDataBase().listItems(id);
+			return App.db().listItems(id);
 		}
 	},
 	SingleItem {
 		@Override
 		protected Cursor createCursor(Bundle args) {
 			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
-			return App.getInstance().getDataBase().getItem(id);
+			return App.db().getItem(id);
 		}
 	};
 

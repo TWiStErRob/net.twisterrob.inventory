@@ -117,7 +117,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		@Override
 		protected Long doInBackground(ItemDTO param) {
 			try {
-				Database db = App.getInstance().getDataBase();
+				Database db = App.db();
 				if (param.id == Item.ID_ADD) {
 					return db.newItem(param.parentID, param.name, param.category);
 				} else {

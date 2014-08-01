@@ -123,7 +123,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		@Override
 		protected Long doInBackground(PropertyDTO param) {
 			try {
-				Database db = App.getInstance().getDataBase();
+				Database db = App.db();
 				if (param.id == Property.ID_ADD) {
 					return db.newProperty(param.name, param.type, param.imageDriveID);
 				} else {

@@ -29,7 +29,7 @@ public class DeleteItemTask extends ActionParams {
 
 	@Override
 	protected void execute() {
-		App.getInstance().getDataBase().deleteItem(itemID);
+		App.db().deleteItem(itemID);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class DeleteItemTask extends ActionParams {
 	}
 
 	private ItemDTO retrieveItem() {
-		Cursor item = App.getInstance().getDataBase().getItem(itemID);
+		Cursor item = App.db().getItem(itemID);
 		try {
 			item.moveToFirst();
 			return ItemDTO.fromCursor(item);
@@ -72,7 +72,7 @@ public class DeleteItemTask extends ActionParams {
 	}
 
 	private List<String> retrieveItemNames() {
-		Cursor items = App.getInstance().getDataBase().listItems(item.id);
+		Cursor items = App.db().listItems(item.id);
 		try {
 			List<String> itemNames = new ArrayList<String>(items.getCount());
 			while (items.moveToNext()) {

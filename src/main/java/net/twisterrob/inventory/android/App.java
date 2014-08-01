@@ -50,7 +50,7 @@ public class App extends Application {
 				.build());
 	}
 
-	public static App getInstance() {
+	private static App getInstance() {
 		s_instance.afterPropertiesSet();
 		return s_instance;
 	}
@@ -68,10 +68,6 @@ public class App extends Application {
 			picasso = new PicassoWrapper(this);
 			initialized = true;
 		}
-	}
-
-	public Database getDataBase() {
-		return database;
 	}
 
 	public static SharedPreferences getPrefs() {
@@ -93,7 +89,7 @@ public class App extends Application {
 
 	/**
 	 * android.database.DatabaseUtils.dumpCursor(net.twisterrob.inventory.android.
-	 * App.getInstance().getDataBase().getReadableDatabase().rawQuery("select * from sqlite_sequence;", null));
+	 * App.db().getReadableDatabase().rawQuery("select * from sqlite_sequence;", null));
 	 */
 	public static Database db() {
 		return getInstance().database;

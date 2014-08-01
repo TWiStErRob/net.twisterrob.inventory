@@ -29,7 +29,7 @@ public class DeleteRoomTask extends ActionParams {
 
 	@Override
 	protected void execute() {
-		App.getInstance().getDataBase().deleteRoom(roomID);
+		App.db().deleteRoom(roomID);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class DeleteRoomTask extends ActionParams {
 	}
 
 	private RoomDTO retrieveRoom() {
-		Cursor room = App.getInstance().getDataBase().getRoom(roomID);
+		Cursor room = App.db().getRoom(roomID);
 		try {
 			room.moveToFirst();
 			return RoomDTO.fromCursor(room);
@@ -72,7 +72,7 @@ public class DeleteRoomTask extends ActionParams {
 	}
 
 	private List<String> retrieveItemNames() {
-		Cursor items = App.getInstance().getDataBase().listItems(room.rootItemID);
+		Cursor items = App.db().listItems(room.rootItemID);
 		try {
 			List<String> itemNames = new ArrayList<String>(items.getCount());
 			while (items.moveToNext()) {
