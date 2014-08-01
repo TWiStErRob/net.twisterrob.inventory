@@ -28,23 +28,35 @@ import static net.twisterrob.inventory.android.content.Loaders.*;
 public class PropertyEditFragment extends BaseEditFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyEditFragment.class);
 
-	private Spinner propertyType;
 	private EditText propertyName;
-	private CursorAdapter adapter;
+	private ImageView propertyImage;
+	private Spinner propertyType;
+	private CursorAdapter proeprtyTypeAdapter;
+
+	public PropertyEditFragment() {
+		setDynamicResource(DYN_ImageView, R.id.propertyImage);
+	}
+
+	@Override
+	protected String getBaseFileName() {
+		return "Property_" + getArgPropertyID();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.property_edit, container, false);
 		propertyName = (EditText)root.findViewById(R.id.propertyName);
+		propertyName.requestFocus();
+		propertyImage = (ImageView)root.findViewById(R.id.propertyImage);
 		propertyType = (Spinner)root.findViewById(R.id.propertyType);
-		adapter = Adapters.loadCursorAdapter(getActivity(), R.xml.property_types, (Cursor)null);
+		proeprtyTypeAdapter = Adapters.loadCursorAdapter(getActivity(), R.xml.property_types, (Cursor)null);
 		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				save();
 			}
 		});
 
-		propertyType.setAdapter(adapter);
+		propertyType.setAdapter(proeprtyTypeAdapter);
 		propertyType.setOnItemSelectedListener(new DefaultValueUpdater(propertyName, Property.NAME));
 
 		return root;
@@ -55,7 +67,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		long id = getArgPropertyID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), adapter);
+		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), proeprtyTypeAdapter);
 		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, typeCursorSwapper);
 
 		if (id != Property.ID_ADD) {
@@ -77,6 +89,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		property.id = getArgPropertyID();
 		property.name = propertyName.getText().toString();
 		property.type = propertyType.getSelectedItemId();
+		property.imageDriveID = getCurrentImageDriveId();
 		return property;
 	}
 
@@ -97,6 +110,8 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 			getActivity().setTitle(property.name);
 			AndroidTools.selectByID(propertyType, property.type);
 			propertyName.setText(property.name); // must set it after propertyType to prevent auto-propagation
+			propertyImage.setImageResource(property.getImageResourceID(getActivity()));
+			setCurrentImageDriveId(property.imageDriveID);
 		}
 
 		@Override
@@ -112,9 +127,9 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 			try {
 				Database db = App.getInstance().getDataBase();
 				if (param.id == Property.ID_ADD) {
-					return db.newProperty(param.name, param.type);
+					return db.newProperty(param.name, param.type, param.imageDriveID);
 				} else {
-					db.updateProperty(param.id, param.name, param.type);
+					db.updateProperty(param.id, param.name, param.type, param.imageDriveID);
 					return param.id;
 				}
 			} catch (SQLiteConstraintException ex) {

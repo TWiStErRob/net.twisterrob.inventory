@@ -7,6 +7,8 @@ public interface Property {
 
 	String NAME = "name";
 	String TYPE = "type";
+	String TYPE_IMAGE = "typeImage";
+	String IMAGE = "image";
 
 	String DEFAULT_ORDER = NAME;
 }

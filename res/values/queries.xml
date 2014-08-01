@@ -9,15 +9,16 @@
 		order by p.name asc
 	"]]></string>
 	<string name="query_property"><![CDATA["
-		select _id, name, type
-		from Property
-		where _id = ?
+		select p._id, p.name, p.type, p.image, pt.image as typeImage
+		from Property p
+		join PropertyType pt ON p.type = pt._id
+		where p._id = ?
 	"]]></string>
 	<string name="query_property_new"><![CDATA["
 		insert into Property(name, type) values(?, ?)
 	"]]></string>
 	<string name="query_property_update"><![CDATA["
-		update Property set name = ?, type = ? where _id = ?
+		update Property set name = ?, type = ?, image = ? where _id = ?
 	"]]></string>
 	<string name="query_property_delete"><![CDATA["
 		delete from Property where _id = ?

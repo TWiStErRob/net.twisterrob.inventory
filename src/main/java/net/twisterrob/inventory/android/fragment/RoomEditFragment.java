@@ -33,6 +33,11 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 	private CursorAdapter adapter;
 
 	@Override
+	protected String getBaseFileName() {
+		return "Room_" + getArgRoomID();
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.room_edit, container, false);
 		roomName = (EditText)root.findViewById(R.id.roomName);

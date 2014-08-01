@@ -16,7 +16,7 @@ import net.twisterrob.inventory.android.tasks.DeleteRoomTask;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class RoomViewFragment extends BaseEditFragment<RoomEvents> {
+public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 	public interface RoomEvents {
 		void roomLoaded(RoomDTO room);
 	}

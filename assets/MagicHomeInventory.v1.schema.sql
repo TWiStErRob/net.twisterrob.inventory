@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS PropertyType (
 CREATE TABLE IF NOT EXISTS Property (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL,
+	image       NVARCHAR     NULL,     -- Google Drive ID
 	type        INTEGER      NOT NULL
 		CONSTRAINT fk_Property_type
 			REFERENCES PropertyType(_id),

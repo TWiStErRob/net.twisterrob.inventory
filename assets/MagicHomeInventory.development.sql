@@ -1,6 +1,6 @@
-INSERT INTO Property(_id, type, name) VALUES(1, 1, 'Szentesi ház');
-INSERT INTO Property(_id, type, name) VALUES(2, 11, 'Szegedi albi');
-INSERT INTO Property(_id, type, name) VALUES(3, 11, 'Londoni albi');
+INSERT INTO Property(_id, type, name, image) VALUES(1, 1, 'Szentesi ház',  'DriveId:CAESHDBCNXFUTlBncV9sbDVXV3hsVEU0elJUSlhUMUUY7gYg5obA7aFR');
+INSERT INTO Property(_id, type, name, image) VALUES(2, 11, 'Szegedi albi', 'DriveId:CAESHDBCNXFUTlBncV9sbDVXa1l3VnpKelNWcExaVkUY8AYg5obA7aFR');
+INSERT INTO Property(_id, type, name, image) VALUES(3, 11, 'Londoni albi', 'DriveId:CAESHDBCNXFUTlBncV9sbDVPVGhGWmtsdll6VjBPR3MY8gYg5obA7aFR');
 INSERT INTO Property(_id, type, name) VALUES(4, 12, 'Sarah storage');
 
 INSERT INTO Item(_id, category, name) VALUES(1, -1, 'ROOT');

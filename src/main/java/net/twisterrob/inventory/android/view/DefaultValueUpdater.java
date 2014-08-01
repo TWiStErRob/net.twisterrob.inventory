@@ -11,13 +11,13 @@ import net.twisterrob.inventory.R;
 public class DefaultValueUpdater implements OnItemSelectedListener {
 	private static final int INVALID = -1;
 
-	private final EditText roomName;
 	private final String columnName;
+	private final EditText entityName;
 
 	private int prevPosition = INVALID;
 
 	public DefaultValueUpdater(EditText roomName, String columnName) {
-		this.roomName = roomName;
+		this.entityName = roomName;
 		this.columnName = columnName;
 	}
 
@@ -25,10 +25,10 @@ public class DefaultValueUpdater implements OnItemSelectedListener {
 		int oldName = prevPosition == INVALID? R.string.empty : getStringID(parent, prevPosition);
 		int newName = getStringID(parent, position);
 
-		String currentText = roomName.getText().toString().trim();
+		String currentText = entityName.getText().toString().trim();
 		String oldAsText = parent.getContext().getString(oldName);
 		if (currentText.isEmpty() || currentText.equals(oldAsText)) {
-			roomName.setText(newName);
+			entityName.setText(newName);
 		}
 
 		prevPosition = position;

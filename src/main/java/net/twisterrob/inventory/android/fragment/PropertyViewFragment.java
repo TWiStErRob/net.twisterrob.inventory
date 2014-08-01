@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
+import org.slf4j.*;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.*;
@@ -12,11 +14,13 @@ import net.twisterrob.inventory.android.content.LoadSingleRow;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.PropertyViewFragment.PropertyEvents;
-import net.twisterrob.inventory.android.tasks.DeletePropertyTask;
+import net.twisterrob.inventory.android.tasks.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class PropertyViewFragment extends BaseEditFragment<PropertyEvents> {
+public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
+	static final Logger LOG = LoggerFactory.getLogger(PropertyViewFragment.class);
+
 	public interface PropertyEvents {
 		void propertyLoaded(PropertyDTO property);
 	}
@@ -28,12 +32,14 @@ public class PropertyViewFragment extends BaseEditFragment<PropertyEvents> {
 
 	private TextView propertyName;
 	private TextView propertyType;
+	private ImageView propertyImage;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.property_view, container, false);
 		propertyName = (TextView)root.findViewById(R.id.propertyName);
 		propertyType = (TextView)root.findViewById(R.id.propertyType);
+		propertyImage = (ImageView)root.findViewById(R.id.propertyImage);
 		return root;
 	}
 
@@ -87,9 +93,10 @@ public class PropertyViewFragment extends BaseEditFragment<PropertyEvents> {
 			getActivity().setTitle(property.name);
 			propertyName.setText(property.name);
 			propertyType.setText(String.valueOf(property.type));
-
-			eventsListener.propertyLoaded(property);
+			propertyImage.setImageResource(property.getImageResourceID(getActivity())); // backup type image
+			new LoadDriveIdToImageView(propertyImage).execute(property.imageDriveID); // try real image
 		}
+
 		@Override
 		protected void processInvalid(Cursor item) {
 			super.processInvalid(item);

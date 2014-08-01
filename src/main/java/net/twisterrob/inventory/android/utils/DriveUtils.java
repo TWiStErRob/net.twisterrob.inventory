@@ -41,6 +41,9 @@ public class DriveUtils {
 	public static MetadataBuffer sync(PendingResult<MetadataBufferResult> pending) {
 		return syncResult(pending).getMetadataBuffer();
 	}
+	public static Status sync(PendingResult<Status> pending) {
+		return syncResult(pending).getStatus();
+	}
 
 	public static DriveFolder getExistingFolder(GoogleApiClient client, DriveFolder in, String name) {
 		DriveId driveId = lookup(client, in, name, "application/vnd.google-apps.folder");

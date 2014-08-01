@@ -20,6 +20,7 @@ import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.utils.PictureUtils;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.SelectionView.SelectionStatus;
@@ -179,5 +180,11 @@ public class CaptureImage extends BaseActivity {
 		selection.right = selection.right / width;
 		selection.bottom = selection.bottom / height;
 		return selection;
+	}
+
+	public static Intent saveTo(File targetFile) {
+		Intent intent = new Intent(App.getAppContext(), CaptureImage.class);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, targetFile.getAbsolutePath());
+		return intent;
 	}
 }

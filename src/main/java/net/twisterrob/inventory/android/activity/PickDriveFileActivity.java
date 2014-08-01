@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.utils.ApiClientAsyncTask;
+import net.twisterrob.inventory.android.tasks.ApiClientAsyncTask;
 
 public class PickDriveFileActivity extends BaseActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(PickDriveFileActivity.class);

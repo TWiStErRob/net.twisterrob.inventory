@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.*;
 
+import com.google.android.gms.drive.DriveId;
+
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.R;
@@ -68,7 +70,7 @@ public class Database {
 	public Cursor getItem(long itemID) {
 		return rawQuery(R.string.query_item, String.valueOf(itemID));
 	}
-	public long newProperty(String name, long type) {
+	public long newProperty(String name, long type, DriveId imageDriveID) {
 		SQLiteDatabase db = getWritableDatabase();
 
 		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_property_new));
@@ -76,6 +78,11 @@ public class Database {
 			int arg = 0;
 			insert.bindString(++arg, name);
 			insert.bindLong(++arg, type);
+			if (imageDriveID == null) {
+				insert.bindNull(++arg);
+			} else {
+				insert.bindString(++arg, imageDriveID.encodeToString());
+			}
 
 			return insert.executeInsert();
 		} finally {
@@ -83,8 +90,8 @@ public class Database {
 		}
 	}
 
-	public void updateProperty(long id, String name, long type) {
-		execSQL(R.string.query_property_update, name, type, id);
+	public void updateProperty(long id, String name, long type, DriveId imageDriveID) {
+		execSQL(R.string.query_property_update, name, type, imageDriveID.encodeToString(), id);
 	}
 
 	public void deleteProperty(long id) {

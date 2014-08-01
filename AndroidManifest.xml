@@ -61,7 +61,8 @@
 		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.PropertyEditActivity"
-			android:label="@string/property_new">
+			android:label="@string/property_new"
+			android:windowSoftInputMode="adjustResize">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="net.twisterrob.inventory.android.activity.PropertyListActivity" />

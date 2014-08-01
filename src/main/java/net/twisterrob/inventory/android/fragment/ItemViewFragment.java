@@ -16,7 +16,7 @@ import net.twisterrob.inventory.android.tasks.DeleteItemTask;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class ItemViewFragment extends BaseEditFragment<ItemEvents> {
+public class ItemViewFragment extends BaseViewFragment<ItemEvents> {
 	public interface ItemEvents {
 		void itemLoaded(ItemDTO item);
 	}
