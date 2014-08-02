@@ -13,12 +13,14 @@
 	<string name="item_new">New Item</string>
 	<string name="item_edit">Edit Item&#8230;</string>
 	<string name="item_delete">Delete Item</string>
+	<string name="item_name_hint">Item Name</string>
 
 	<string name="property_title">Properties</string>
 	<string name="property_add">Add Property&#8230;</string>
 	<string name="property_edit">Edit Property&#8230;</string>
 	<string name="property_delete">Delete Property</string>
 	<string name="property_new">New Property</string>
+	<string name="property_name_hint">Property Title</string>
 	
 	<string name="property_other">Other</string>
 	<string name="property_home">Home</string>
@@ -39,6 +41,7 @@
 	<string name="room_new">New Room</string>
 	<string name="room_edit">Edit Room&#8230;</string>
 	<string name="room_delete">Delete Room</string>
+	<string name="room_name_hint">Room Title</string>
 	
 	<string name="room_other">Other</string>
 	<string name="room_bath">Bathroom</string>

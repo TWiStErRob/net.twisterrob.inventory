@@ -73,6 +73,8 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(), args, new LoadExistingRoom());
 
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
+		} else {
+			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 
 		manager.startLoading();

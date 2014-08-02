@@ -73,6 +73,10 @@ public class MainActivity extends BaseActivity {
 					public void onClick(View v) {
 						startActivity(PropertyEditActivity.edit(1));
 					}
+				}), new MainItem("Drawable Test", R.drawable.image_loading, new OnClickListener() {
+					public void onClick(View v) {
+						// ignore
+					}
 				}));
 		list.setAdapter(new MainItemAdapter(this, actions));
 	}

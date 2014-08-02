@@ -8,8 +8,9 @@ import org.slf4j.*;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Environment;
+import android.os.*;
 import android.view.*;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.google.android.gms.drive.*;
@@ -33,6 +34,16 @@ public abstract class BaseEditFragment<T> extends BaseFragment<T> {
 	}
 
 	protected abstract String getBaseFileName();
+
+	@Override
+	public void onViewCreated(View view, Bundle bundle) {
+		super.onViewCreated(view, bundle);
+		getImageView().setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				startActivityForResult(CaptureImage.saveTo(getTargetFile()), PictureUtils.REQUEST_CODE_TAKE_PICTURE);
+			}
+		});
+	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -60,8 +71,8 @@ public abstract class BaseEditFragment<T> extends BaseFragment<T> {
 			case PictureUtils.REQUEST_CODE_GET_PICTURE:
 			case PictureUtils.REQUEST_CODE_TAKE_PICTURE:
 				if (resultCode == Activity.RESULT_OK && data != null) {
+					getImageView().setImageResource(R.drawable.image_loading);
 					File file = PictureUtils.getFile(getActivity(), data.getData());
-					App.pic().load(data.getData()).into(getImageView());
 
 					new Upload(getActivity()) {
 						private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -94,9 +105,9 @@ public abstract class BaseEditFragment<T> extends BaseFragment<T> {
 	}
 	protected void setCurrentImageDriveId(DriveId driveId, int fallbackResource) {
 		this.driveId = driveId;
-		RequestCreator load = App.pic().load(driveId);
+		RequestCreator load = App.pic().load(driveId).error(R.drawable.image_error);
 		if (0 < fallbackResource) {
-			load.placeholder(fallbackResource).error(fallbackResource);
+			load.placeholder(fallbackResource);
 		}
 		load.into(getImageView());
 	}

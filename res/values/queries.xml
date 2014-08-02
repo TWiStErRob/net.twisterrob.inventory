@@ -16,7 +16,7 @@
 		where p._id = ?
 	"]]></string>
 	<string name="query_property_new"><![CDATA["
-		insert into Property(name, type) values(?, ?)
+		insert into Property(name, type, image) values(?, ?, ?)
 	"]]></string>
 	<string name="query_property_update"><![CDATA["
 		update Property set name = ?, type = ?, image = ? where _id = ?

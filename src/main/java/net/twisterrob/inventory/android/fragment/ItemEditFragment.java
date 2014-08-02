@@ -62,6 +62,8 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 			@SuppressWarnings("unused")
 			// no dependencies yet: Item's category will come in
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(), args, new LoadExistingItem());
+		} else {
+			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 
 		manager.startLoading();

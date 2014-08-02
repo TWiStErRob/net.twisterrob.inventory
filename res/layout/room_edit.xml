@@ -14,6 +14,7 @@
 		<EditText
 			android:id="@id/roomName"
 			android:inputType="textCapWords"
+			android:hint="@string/room_name_hint"
 			android:maxLength="100"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content" />

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- Vertical component of a + shaped cross, horizontal distribution is 40(gap)-20(vertical rect)-40(gap) = 100 -->
+	<item
+		android:left="40dp"
+		android:right="40dp">
+		<shape android:shape="rectangle">
+			<size android:width="20dp" />
+			<corners android:radius="4dp" />
+			<solid android:color="@android:color/black" />
+		</shape>
+	</item>
+
+	<!-- Horizontal component of a + shaped cross, vertical distribution is 40(gap)-20(horizontal rect)-40(gap) = 100 -->
+	<item
+		android:top="40dp"
+		android:bottom="40dp">
+		<shape android:shape="rectangle">
+			<size android:height="20dp" />
+			<corners android:radius="4dp" />
+			<solid android:color="@android:color/black" />
+		</shape>
+	</item>
+</layer-list>
