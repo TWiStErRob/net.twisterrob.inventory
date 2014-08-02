@@ -18,6 +18,7 @@ public class RoomAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	class ViewHolder {
 		TextView text;
 		ImageView image;
+		ImageView type;
 	}
 
 	@Override
@@ -25,17 +26,20 @@ public class RoomAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		ViewHolder holder = new ViewHolder();
 		holder.text = (TextView)convertView.findViewById(R.id.roomName);
 		holder.image = (ImageView)convertView.findViewById(R.id.roomImage);
+		holder.type = (ImageView)convertView.findViewById(R.id.roomType);
 		return holder;
 	}
 
 	@Override
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
-		holder.text.setText(cursor.getString(cursor.getColumnIndexOrThrow(Room.NAME)));
-		String id = cursor.getString(cursor.getColumnIndexOrThrow(Room.IMAGE));
+		String name = cursor.getString(cursor.getColumnIndexOrThrow(Room.NAME));
+		String imageDriveId = cursor.getString(cursor.getColumnIndexOrThrow(Room.IMAGE));
+		String type = cursor.getString(cursor.getColumnIndex(Room.TYPE_IMAGE));
+		int typeResource = mContext.getResources().getIdentifier(type, "drawable", mContext.getPackageName());
+
+		holder.text.setText(name);
+		holder.type.setImageResource(typeResource);
 		//App.pic().getPicasso().cancelRequest(holder.image); // TODO check scrolling
-		App.pic().loadDriveId(id) //
-				.placeholder(R.drawable.room_bedroom) //
-				.error(R.drawable.room_bedroom) //
-				.into(holder.image);
+		App.pic().loadDriveId(imageDriveId).placeholder(typeResource).error(typeResource).into(holder.image);
 	}
 }

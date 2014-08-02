@@ -30,12 +30,13 @@ public class ItemAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 
 	@Override
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
-		holder.text.setText(cursor.getString(cursor.getColumnIndexOrThrow(Item.NAME)));
+		String name = cursor.getString(cursor.getColumnIndexOrThrow(Item.NAME));
 		String id = cursor.getString(cursor.getColumnIndexOrThrow(Item.IMAGE));
+		String category = cursor.getString(cursor.getColumnIndex(Item.CATEGORY_IMAGE));
+		int categoryResource = mContext.getResources().getIdentifier(category, "drawable", mContext.getPackageName());
+
+		holder.text.setText(name);
 		//App.pic().getPicasso().cancelRequest(holder.image); // TODO check scrolling
-		App.pic().loadDriveId(id) //
-				.placeholder(R.drawable.category_unknown) //
-				.error(R.drawable.category_unknown) //
-				.into(holder.image);
+		App.pic().loadDriveId(id).placeholder(categoryResource).error(categoryResource).into(holder.image);
 	}
 }

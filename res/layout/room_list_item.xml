@@ -12,6 +12,23 @@
 		android:layout_gravity="center"
 		android:adjustViewBounds="true"
 		android:scaleType="fitCenter" />
+	<ImageView
+		android:id="@id/roomType"
+		android:layout_width="32dp"
+		android:layout_height="32dp"
+		android:layout_gravity="bottom|end"
+		android:background="#fff"
+		android:scaleType="fitCenter" />
+<!-- 	<ImageView -->
+<!-- 		android:id="@id/roomType" -->
+<!-- 		android:focusable="false" -->
+<!-- 		android:layout_width="fill_parent" -->
+<!-- 		android:layout_height="fill_parent" -->
+<!-- 		android:layout_gravity="center" -->
+<!-- 		android:tint="#f00" -->
+<!-- 		android:alpha=".2" -->
+<!-- 		android:adjustViewBounds="true" -->
+<!-- 		android:scaleType="fitCenter" /> -->
 	<TextView
 		android:id="@id/roomName"
 		android:focusable="false"

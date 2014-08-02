@@ -30,12 +30,13 @@ public class PropertyAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 
 	@Override
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
-		holder.text.setText(cursor.getString(cursor.getColumnIndexOrThrow(Property.NAME)));
-		String id = cursor.getString(cursor.getColumnIndexOrThrow(Property.IMAGE));
+		String name = cursor.getString(cursor.getColumnIndexOrThrow(Property.NAME));
+		String imageDriveId = cursor.getString(cursor.getColumnIndexOrThrow(Property.IMAGE));
+		String type = cursor.getString(cursor.getColumnIndex(Property.TYPE_IMAGE));
+		int typeResource = mContext.getResources().getIdentifier(type, "drawable", mContext.getPackageName());
+
+		holder.text.setText(name);
 		//App.pic().getPicasso().cancelRequest(holder.image); // TODO check scrolling
-		App.pic().loadDriveId(id) //
-				.placeholder(R.drawable.property_home) //
-				.error(R.drawable.property_home) //
-				.into(holder.image);
+		App.pic().loadDriveId(imageDriveId).placeholder(typeResource).error(typeResource).into(holder.image);
 	}
 }
