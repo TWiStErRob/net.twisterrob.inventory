@@ -8,19 +8,17 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.*;
 import android.widget.*;
 
-import com.example.android.xmladapters.Adapters;
-
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
 public class BaseListFragment<T> extends BaseFragment<T> {
-	protected static final String DYN_CursorAdapter = "cursorAdapter";
 	protected static final String DYN_List = "list";
 
 	protected AbsListView list;
 	protected CursorAdapter adapter;
 
-	protected void setAdapter(ListAdapter adapter) {
-		list.setAdapter(adapter);
+	protected void setAdapter(CursorAdapter adapter) {
+		this.adapter = adapter;
+		((AdapterView<ListAdapter>)list).setAdapter(adapter); // AbsListView.setAdapter is API 11
 	}
 
 	protected void swapEmpty(View newEmptyView) {
@@ -46,11 +44,7 @@ public class BaseListFragment<T> extends BaseFragment<T> {
 		View root = super.onCreateView(inflater, container, savedInstanceState);
 
 		this.list = (AbsListView)root.findViewById(super.<Integer> getDynamicResource(DYN_List));
-		adapter = Adapters.loadCursorAdapter(getActivity(), super.<Integer> getDynamicResource(DYN_CursorAdapter),
-				(Cursor)null);
-
 		swapEmpty(root.findViewById(android.R.id.progress));
-		setAdapter(adapter);
 
 		return root;
 	}

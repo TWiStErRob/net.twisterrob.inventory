@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertiesEvents;
+import net.twisterrob.inventory.android.view.PropertyAdapter;
 
 public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyListFragment.class);
@@ -26,7 +27,6 @@ public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
 		setDynamicResource(DYN_EventsClass, PropertiesEvents.class);
 		setDynamicResource(DYN_Layout, R.layout.property_list);
 		setDynamicResource(DYN_List, R.id.properties);
-		setDynamicResource(DYN_CursorAdapter, R.xml.properties);
 		setDynamicResource(DYN_OptionsMenu, R.menu.property_list);
 	}
 
@@ -44,6 +44,8 @@ public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
 	@Override
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
+
+		setAdapter(new PropertyAdapter(getActivity()));
 
 		getView().findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

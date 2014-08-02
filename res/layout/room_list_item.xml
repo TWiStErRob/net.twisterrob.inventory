@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<net.twisterrob.inventory.android.view.SquareFrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
@@ -9,9 +9,9 @@
 		android:focusable="false"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
+		android:layout_gravity="center"
 		android:adjustViewBounds="true"
-		android:scaleType="fitCenter"
-		android:contentDescription="@string/img_desc_room" />
+		android:scaleType="fitCenter" />
 	<TextView
 		android:id="@id/roomName"
 		android:focusable="false"
@@ -24,4 +24,4 @@
 		android:shadowDx="2"
 		android:shadowDy="2"
 		android:textSize="18sp" />
-</FrameLayout>
+</net.twisterrob.inventory.android.view.SquareFrameLayout>

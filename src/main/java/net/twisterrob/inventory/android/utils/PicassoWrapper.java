@@ -81,6 +81,11 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 		return picasso.load(toUri(driveId));
 	}
 
+	public RequestCreator loadDriveId(String driveId) {
+		DriveId id = driveId == null? null : DriveId.decodeFromString(driveId);
+		return load(id);
+	}
+
 	public RequestCreator load(Uri uri) {
 		return picasso.load(uri);
 	}

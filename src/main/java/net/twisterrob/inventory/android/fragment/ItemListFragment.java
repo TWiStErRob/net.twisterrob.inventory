@@ -13,6 +13,7 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemsEvents;
+import net.twisterrob.inventory.android.view.ItemAdapter;
 
 public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemListFragment.class);
@@ -27,7 +28,6 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 		setDynamicResource(DYN_EventsClass, ItemsEvents.class);
 		setDynamicResource(DYN_Layout, R.layout.item_list);
 		setDynamicResource(DYN_List, R.id.items);
-		setDynamicResource(DYN_CursorAdapter, R.xml.items);
 		setDynamicResource(DYN_OptionsMenu, R.menu.item_list);
 	}
 
@@ -45,6 +45,8 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	@Override
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
+
+		setAdapter(new ItemAdapter(getActivity()));
 
 		getView().findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

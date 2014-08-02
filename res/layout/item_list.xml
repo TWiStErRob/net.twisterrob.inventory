@@ -6,10 +6,13 @@
 	android:layout_height="match_parent">
 	<GridView
 		android:id="@id/items"
-		android:layerType="software"
-		android:numColumns="2"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" />
+		android:layout_height="fill_parent"
+		android:layout_margin="@dimen/margin"
+		android:horizontalSpacing="@dimen/margin"
+		android:verticalSpacing="@dimen/margin"
+		android:layerType="software"
+		android:numColumns="2" />
 	<include layout="@layout/inc_loading" />
 	<include layout="@layout/inc_empty_add" />
 </FrameLayout>

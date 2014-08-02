@@ -3,7 +3,8 @@
 		select
 			p._id,
 			p.name,
-			pt.image
+			p.image,
+			pt.image as typeImage
 		from Property p
 		join PropertyType pt ON p.type = pt._id
 		order by p.name asc
@@ -75,8 +76,9 @@
 		select
 			i._id,
 			i.name,
-			c.name as category,
-			'category_unknown' as categoryImage
+			i.image,
+			'category_unknown' as categoryImage,
+			c.name as category
 		from Item     i
 		join Category c ON i.category = c._id
 		where i.parent = ?
