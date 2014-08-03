@@ -17,6 +17,8 @@
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:layout_gravity="bottom|end"
+		android:layout_marginRight="@dimen/margin"
+		android:layout_marginBottom="@dimen/margin"
 		android:scaleType="fitCenter" />
 	<TextView
 		android:id="@id/count"
