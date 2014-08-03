@@ -13,11 +13,6 @@ public class ItemDTO extends ImagedDTO {
 	public String name;
 	public long category;
 
-	public ItemDTO() {
-		super.setImageDriveIdColumnName(Item.IMAGE);
-		super.setImageDrawableColumnName(Item.CATEGORY_IMAGE);
-	}
-
 	public static ItemDTO fromCursor(Cursor cursor) {
 		ItemDTO item = new ItemDTO();
 		return item.fromCursorInternal(cursor);

@@ -12,11 +12,6 @@ public class PropertyDTO extends ImagedDTO {
 	public String name;
 	public long type;
 
-	public PropertyDTO() {
-		super.setImageDriveIdColumnName(Property.IMAGE);
-		super.setImageDrawableColumnName(Property.TYPE_IMAGE);
-	}
-
 	public static PropertyDTO fromCursor(Cursor cursor) {
 		PropertyDTO property = new PropertyDTO();
 		return property.fromCursorInternal(cursor);

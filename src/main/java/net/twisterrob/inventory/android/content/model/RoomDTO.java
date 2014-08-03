@@ -14,11 +14,6 @@ public class RoomDTO extends ImagedDTO {
 	public long type;
 	public long rootItemID = Item.ID_ADD;
 
-	public RoomDTO() {
-		super.setImageDriveIdColumnName(Room.IMAGE);
-		super.setImageDrawableColumnName(Room.TYPE_IMAGE);
-	}
-
 	public static RoomDTO fromCursor(Cursor cursor) {
 		RoomDTO room = new RoomDTO();
 		return room.fromCursorInternal(cursor);

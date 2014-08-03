@@ -8,13 +8,16 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.*;
 import android.widget.*;
 
-import net.twisterrob.inventory.android.view.CursorSwapper;
+import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.view.*;
 
 public class BaseListFragment<T> extends BaseFragment<T> {
-	protected static final String DYN_List = "list";
-
 	protected AbsListView list;
 	protected CursorAdapter adapter;
+
+	public BaseListFragment() {
+		setDynamicResource(DYN_Layout, R.layout.gallery);
+	}
 
 	protected void setAdapter(CursorAdapter adapter) {
 		this.adapter = adapter;
@@ -43,8 +46,9 @@ public class BaseListFragment<T> extends BaseFragment<T> {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = super.onCreateView(inflater, container, savedInstanceState);
 
-		this.list = (AbsListView)root.findViewById(super.<Integer> getDynamicResource(DYN_List));
+		this.list = (AbsListView)root.findViewById(android.R.id.list);
 		swapEmpty(root.findViewById(android.R.id.progress));
+		setAdapter(new GalleryAdapter(getActivity()));
 
 		return root;
 	}

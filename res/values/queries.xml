@@ -4,7 +4,8 @@
 			p._id,
 			p.name,
 			p.image,
-			pt.image as typeImage
+			pt.image as typeImage,
+			(select count(1) from Room where property = p._id) as childrenCount
 		from Property p
 		join PropertyType pt ON p.type = pt._id
 		order by p.name asc
@@ -49,7 +50,8 @@
 			r.root,
 			r.name,
 			r.image,
-			COALESCE(rt.image, rtk.image) as typeImage
+			COALESCE(rt.image, rtk.image) as typeImage,
+			(select count(1) from Item where parent = r.root) as childrenCount
 		from Room r
 		join RoomType rt ON r.type = rt._id
 		join RoomTypeKind rtk ON rt.kind = rtk._id
@@ -77,7 +79,8 @@
 			i._id,
 			i.name,
 			i.image,
-			'category_unknown' as categoryImage,
+			'category_unknown' as typeImage,
+			(select count(1) from Item where parent = i._id) as childrenCount,
 			c.name as category
 		from Item     i
 		join Category c ON i.category = c._id
@@ -85,7 +88,7 @@
 		order by i.name asc 
 	"]]></string>
 	<string name="query_item"><![CDATA["
-		select i._id, i.name, c.name as category, i.image, 'category_unknown' as categoryImage
+		select i._id, i.name, c.name as category, i.image, 'category_unknown' as typeImage
 		from Item i
 		join Category c ON i.category = c._id
 		where i._id = ?

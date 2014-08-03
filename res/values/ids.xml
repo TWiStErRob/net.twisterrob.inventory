@@ -5,6 +5,11 @@
 	<item type="id" name="editor" />
 	<item type="id" name="details" />
 	<item type="id" name="children" />
+	
+	<item type="id" name="title" />
+	<item type="id" name="image" />
+	<item type="id" name="type" />
+	<item type="id" name="count" />
 
 	<item type="id" name="properties" />
 	<item type="id" name="property" />
