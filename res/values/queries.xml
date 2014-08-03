@@ -93,6 +93,22 @@
 		join Category c ON i.category = c._id
 		where i._id = ?
 	"]]></string>
+	<string name="query_categories"><![CDATA["
+		select
+			c._id,
+			c.name,
+			NULL as image,
+			'category_unknown' as typeImage,
+			(select count(1) from Category where parent = c._id) as childrenCount
+		from Category c
+		where c.parent = ?
+		order by c.name asc
+	"]]></string>
+	<string name="query_category"><![CDATA["
+		select c._id, c.name, 'category_unknown' as typeImage, NULL as image
+		from Category c
+		where c._id = ?
+	"]]></string>
 	<string name="query_item_new"><![CDATA["
 		insert into Item(parent, name, category, image) values(?, ?, ?, ?)
 	"]]></string>

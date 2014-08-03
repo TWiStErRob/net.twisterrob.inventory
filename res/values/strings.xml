@@ -8,6 +8,8 @@
 	<string name="action_share">Share</string>
 	<string name="action_save">Save</string>
 	
+	<string name="category_title">Categories</string>
+	
 	<string name="item_title">Items</string>
 	<string name="item_add">Add Item&#8230;</string>
 	<string name="item_new">New Item</string>

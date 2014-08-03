@@ -62,6 +62,20 @@ public enum Loaders {
 			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
 			return App.db().getItem(id);
 		}
+	},
+	Categories {
+		@Override
+		protected Cursor createCursor(Bundle args) {
+			long id = args.getLong(Extras.PARENT_ID, Category.ID_ADD);
+			return App.db().listCategories(id);
+		}
+	},
+	SingleCategory {
+		@Override
+		protected Cursor createCursor(Bundle args) {
+			long id = args.getLong(Extras.CATEGORY_ID, Category.ID_ADD);
+			return App.db().getCategory(id);
+		}
 	};
 
 	private static final Bundle NO_ARGS = new Bundle(0);

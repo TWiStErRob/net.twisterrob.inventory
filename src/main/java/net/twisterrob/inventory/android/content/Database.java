@@ -78,6 +78,12 @@ public class Database {
 	public Cursor getItem(long itemID) {
 		return rawQuery(R.string.query_item, String.valueOf(itemID));
 	}
+	public Cursor listCategories(long parentID) {
+		return rawQuery(R.string.query_categories, String.valueOf(parentID));
+	}
+	public Cursor getCategory(long itemID) {
+		return rawQuery(R.string.query_category, String.valueOf(itemID));
+	}
 	public long newProperty(String name, long type, DriveId imageDriveID) {
 		SQLiteDatabase db = getWritableDatabase();
 

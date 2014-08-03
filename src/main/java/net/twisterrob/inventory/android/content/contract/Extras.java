@@ -5,4 +5,5 @@ public interface Extras {
 	String ROOM_ID = "roomID";
 	String PARENT_ID = "parentID";
 	String ITEM_ID = "itemID";
+	String CATEGORY_ID = "categoryID";
 }

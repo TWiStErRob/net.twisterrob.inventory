@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import net.twisterrob.android.adapter.BaseListAdapter;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.content.contract.Category;
 
 public class MainActivity extends BaseActivity {
 	private GridView list;
@@ -72,6 +73,10 @@ public class MainActivity extends BaseActivity {
 				}), new MainItem("Edit Property #1", R.drawable.property_home, new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(PropertyEditActivity.edit(1));
+					}
+				}), new MainItem("View Categories", R.drawable.category_unknown, new OnClickListener() {
+					public void onClick(View v) {
+						startActivity(CategoryViewActivity.show(Category.INTERNAL));
 					}
 				}), new MainItem("Drawable Test", R.drawable.image_loading, new OnClickListener() {
 					public void onClick(View v) {
