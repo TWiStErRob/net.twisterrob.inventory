@@ -2,26 +2,15 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.*;
 
-import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.ItemEditFragment;
 
-public class ItemEditActivity extends BaseEditActivity {
+public class ItemEditActivity extends BaseEditActivity<ItemEditFragment> {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.item_edit_activity);
-
-		long currentItemID = getExtraItemID();
-		long currentParentID = getExtraParentID();
-		Fragment editor = ItemEditFragment.newInstance(currentParentID, currentItemID);
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.item, editor);
-		ft.commit();
+	protected ItemEditFragment onCreateFragment(Bundle savedInstanceState) {
+		return ItemEditFragment.newInstance(getExtraParentID(), getExtraItemID());
 	}
 
 	private long getExtraItemID() {

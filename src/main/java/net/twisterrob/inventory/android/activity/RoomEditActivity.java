@@ -2,26 +2,15 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.*;
 
-import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.RoomEditFragment;
 
-public class RoomEditActivity extends BaseEditActivity {
+public class RoomEditActivity extends BaseEditActivity<RoomEditFragment> {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.room_edit_activity);
-
-		long currentPropertyID = getExtraPropertyID();
-		long currentRoomID = getExtraRoomID();
-		Fragment editor = RoomEditFragment.newInstance(currentPropertyID, currentRoomID);
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.room, editor);
-		ft.commit();
+	protected RoomEditFragment onCreateFragment(Bundle savedInstanceState) {
+		return RoomEditFragment.newInstance(getExtraPropertyID(), getExtraRoomID());
 	}
 
 	private long getExtraRoomID() {

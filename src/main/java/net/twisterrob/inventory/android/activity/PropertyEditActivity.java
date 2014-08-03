@@ -2,25 +2,15 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.*;
 
-import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.PropertyEditFragment;
 
-public class PropertyEditActivity extends BaseEditActivity {
+public class PropertyEditActivity extends BaseEditActivity<PropertyEditFragment> {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.property_edit_activity);
-
-		long currentPropertyID = getExtraPropertyID();
-		Fragment editor = PropertyEditFragment.newInstance(currentPropertyID);
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.property, editor);
-		ft.commit();
+	protected PropertyEditFragment onCreateFragment(Bundle savedInstanceState) {
+		return PropertyEditFragment.newInstance(getExtraPropertyID());
 	}
 
 	private long getExtraPropertyID() {
