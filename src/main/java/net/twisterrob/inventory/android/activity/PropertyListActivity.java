@@ -2,32 +2,19 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 
-import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.activity.BaseDetailActivity.NoFragment;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertiesEvents;
 
-public class PropertyListActivity extends BaseListActivity implements PropertiesEvents {
-	private PropertyListFragment properties;
-
+public class PropertyListActivity extends BaseDetailActivity<NoFragment, PropertyListFragment>
+		implements
+			PropertiesEvents {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.property_list_activity);
-
-		properties = PropertyListFragment.newInstance();
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.properties, properties);
-		ft.commit();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		properties.refresh();
+	protected void onCreateFragments(Bundle savedInstanceState) {
+		hideDetails();
+		setFragments(null, PropertyListFragment.newInstance());
 	}
 
 	public void newProperty() {

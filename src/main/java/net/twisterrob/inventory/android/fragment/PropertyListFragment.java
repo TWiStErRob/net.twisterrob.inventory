@@ -73,7 +73,8 @@ public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
 		getLoaderManager().initLoader(Loaders.Properties.ordinal(), null, createListLoaderCallbacks());
 	}
 
-	public void refresh() {
+	@Override
+	protected void onRefresh() {
 		getLoaderManager().getLoader(Loaders.Properties.ordinal()).forceLoad();
 	}
 

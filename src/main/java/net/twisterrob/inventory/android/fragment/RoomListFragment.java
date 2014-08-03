@@ -80,7 +80,8 @@ public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 		getLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, createListLoaderCallbacks());
 	}
 
-	public void refresh() {
+	@Override
+	protected void onRefresh() {
 		getLoaderManager().getLoader(Loaders.Rooms.ordinal()).forceLoad();
 	}
 

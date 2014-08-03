@@ -2,6 +2,8 @@
 	<item type="id" name="activityRoot" />
 	<item type="id" name="fragmentRoot" />
 	<item type="id" name="adapterRoot" />
+	<item type="id" name="details" />
+	<item type="id" name="children" />
 
 	<item type="id" name="properties" />
 	<item type="id" name="property" />

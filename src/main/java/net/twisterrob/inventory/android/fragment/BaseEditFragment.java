@@ -40,7 +40,7 @@ public abstract class BaseEditFragment<T> extends BaseFragment<T> {
 		super.onViewCreated(view, bundle);
 		getImageView().setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				startActivityForResult(CaptureImage.saveTo(getTargetFile()), PictureUtils.REQUEST_CODE_TAKE_PICTURE);
+				takePicture();
 			}
 		});
 	}
@@ -55,14 +55,22 @@ public abstract class BaseEditFragment<T> extends BaseFragment<T> {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_picture_take:
-				startActivityForResult(CaptureImage.saveTo(getTargetFile()), PictureUtils.REQUEST_CODE_TAKE_PICTURE);
+				takePicture();
 				return true;
 			case R.id.action_picture_pick:
-				startActivityForResult(PictureHelper.createGalleryIntent(), PictureUtils.REQUEST_CODE_GET_PICTURE);
+				pickPicture();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void pickPicture() {
+		startActivityForResult(PictureHelper.createGalleryIntent(), PictureUtils.REQUEST_CODE_GET_PICTURE);
+	}
+
+	private void takePicture() {
+		startActivityForResult(CaptureImage.saveTo(getTargetFile()), PictureUtils.REQUEST_CODE_TAKE_PICTURE);
 	}
 
 	@Override

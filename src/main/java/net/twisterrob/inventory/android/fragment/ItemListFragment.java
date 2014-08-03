@@ -80,7 +80,8 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
 
-	public void refresh() {
+	@Override
+	protected void onRefresh() {
 		getLoaderManager().getLoader(Loaders.Items.ordinal()).forceLoad();
 	}
 

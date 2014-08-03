@@ -2,10 +2,7 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.widget.Toast;
 
-import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
@@ -13,43 +10,19 @@ import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.fragment.RoomViewFragment.RoomEvents;
 
-public class RoomViewActivity extends BaseListActivity implements ItemsEvents, RoomEvents {
-	private RoomViewFragment room;
-	private ItemListFragment items;
-
+public class RoomViewActivity extends BaseDetailActivity<RoomViewFragment, ItemListFragment>
+		implements
+			RoomEvents,
+			ItemsEvents {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.room_view_activity);
-
-		long currentRoomID = getExtraRoomID();
-		if (currentRoomID == Room.ID_ADD) {
-			Toast.makeText(this, "Invalid room ID", Toast.LENGTH_LONG).show();
-			finish();
-			return;
-		}
-
-		room = RoomViewFragment.newInstance(currentRoomID);
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.room, room);
-		ft.commit();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		room.refresh();
-		if (items != null) {
-			items.refresh();
-		}
+	protected void onCreateFragments(Bundle savedInstanceState) {
+		long roomID = getExtraRoomID();
+		setFragments(RoomViewFragment.newInstance(roomID), null /* set later */);
 	}
 
 	public void roomLoaded(RoomDTO room) {
-		if (items == null) {
-			items = ItemListFragment.newInstance(room.rootItemID);
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			ft.replace(R.id.items, items);
-			ft.commitAllowingStateLoss();
+		if (getChildren() == null) {
+			updateChildrenFragment(ItemListFragment.newInstance(room.rootItemID)).commitAllowingStateLoss();
 		}
 	}
 
@@ -64,6 +37,14 @@ public class RoomViewActivity extends BaseListActivity implements ItemsEvents, R
 
 	public void itemActioned(long id) {
 		startActivity(ItemEditActivity.edit(id));
+	}
+
+	@Override
+	protected String checkExtras() {
+		if (getExtraRoomID() == Room.ID_ADD) {
+			return "Invalid room ID";
+		}
+		return null;
 	}
 
 	private long getExtraRoomID() {

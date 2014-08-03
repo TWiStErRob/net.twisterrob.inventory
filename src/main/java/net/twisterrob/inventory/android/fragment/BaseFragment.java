@@ -77,4 +77,12 @@ public class BaseFragment<T> extends Fragment {
 	protected void onStartLoading() {
 		// optional override
 	}
+
+	public final void refresh() {
+		onRefresh();
+	}
+
+	protected void onRefresh() {
+		// optional override
+	}
 }

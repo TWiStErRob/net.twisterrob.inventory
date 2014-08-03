@@ -46,7 +46,8 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 		getLoaderManager().initLoader(SingleRoom.ordinal(), args, new LoadExistingRoom());
 	}
 
-	public void refresh() {
+	@Override
+	protected void onRefresh() {
 		getLoaderManager().getLoader(SingleRoom.ordinal()).forceLoad();
 	}
 

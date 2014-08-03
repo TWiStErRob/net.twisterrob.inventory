@@ -46,7 +46,8 @@ public class ItemViewFragment extends BaseViewFragment<ItemEvents> {
 		getLoaderManager().initLoader(SingleItem.ordinal(), args, new LoadExistingItem());
 	}
 
-	public void refresh() {
+	@Override
+	protected void onRefresh() {
 		getLoaderManager().getLoader(SingleItem.ordinal()).forceLoad();
 	}
 

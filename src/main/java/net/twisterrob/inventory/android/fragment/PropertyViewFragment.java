@@ -50,7 +50,8 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
 		getLoaderManager().initLoader(SingleProperty.ordinal(), args, new LoadExistingProperty());
 	}
 
-	public void refresh() {
+	@Override
+	protected void onRefresh() {
 		getLoaderManager().getLoader(SingleProperty.ordinal()).forceLoad();
 	}
 
