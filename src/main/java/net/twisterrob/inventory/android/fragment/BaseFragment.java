@@ -11,7 +11,6 @@ import net.twisterrob.inventory.R;
 
 public class BaseFragment<T> extends Fragment {
 	protected static final String DYN_OptionsMenu = "optionsMenu";
-	protected static final String DYN_Layout = "layoutRoot";
 	protected static final String DYN_EventsClass = "eventsListenerClass";
 
 	private Map<String, Object> dynResources = new HashMap<String, Object>();
@@ -52,11 +51,6 @@ public class BaseFragment<T> extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(this.<Integer> getDynamicResource(DYN_Layout), container, false);
 	}
 
 	@Override

@@ -111,9 +111,10 @@ public abstract class BaseEditFragment<T> extends BaseFragment<T> {
 	protected DriveId getCurrentImageDriveId() {
 		return driveId;
 	}
+
 	protected void setCurrentImageDriveId(DriveId driveId, int fallbackResource) {
 		this.driveId = driveId;
-		RequestCreator load = App.pic().load(driveId).error(R.drawable.image_error);
+		RequestCreator load = App.pic().load(driveId);
 		if (0 < fallbackResource) {
 			load.placeholder(fallbackResource);
 		}

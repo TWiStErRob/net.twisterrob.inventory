@@ -24,6 +24,10 @@ public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemL
 		// ignore
 	}
 
+	public void itemDeleted(ItemDTO item) {
+		finish();
+	}
+
 	public void newItem(long parentID) {
 		startActivity(ItemEditActivity.add(parentID));
 	}

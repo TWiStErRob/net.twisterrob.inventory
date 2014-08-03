@@ -2,13 +2,12 @@ package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.*;
-import android.widget.*;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.*;
-import net.twisterrob.inventory.android.content.LoadSingleRow;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.ItemViewFragment.ItemEvents;
@@ -19,6 +18,7 @@ import static net.twisterrob.inventory.android.content.Loaders.*;
 public class ItemViewFragment extends BaseViewFragment<ItemEvents> {
 	public interface ItemEvents {
 		void itemLoaded(ItemDTO item);
+		void itemDeleted(ItemDTO item);
 	}
 
 	public ItemViewFragment() {
@@ -26,29 +26,28 @@ public class ItemViewFragment extends BaseViewFragment<ItemEvents> {
 		setDynamicResource(DYN_OptionsMenu, R.menu.item);
 	}
 
-	private TextView itemName;
-	private TextView itemCategory;
-	private ImageView itemImage;
-
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.item_view, container, false);
-		itemName = (TextView)root.findViewById(R.id.itemName);
-		itemCategory = (TextView)root.findViewById(R.id.itemCategory);
-		itemImage = (ImageView)root.findViewById(R.id.itemImage);
-		return root;
+	protected void onRefresh() {
+		getLoaderManager().getLoader(SingleItem.ordinal()).forceLoad();
 	}
 
 	@Override
 	protected void onStartLoading() {
 		Bundle args = new Bundle();
 		args.putLong(Extras.ITEM_ID, getArgItemID());
-		getLoaderManager().initLoader(SingleItem.ordinal(), args, new LoadExistingItem());
+		getLoaderManager().initLoader(SingleItem.ordinal(), args, new SingleRowLoaded());
 	}
 
 	@Override
-	protected void onRefresh() {
-		getLoaderManager().getLoader(SingleItem.ordinal()).forceLoad();
+	protected void onSingleRowLoaded(Cursor cursor) {
+		ItemDTO item = ItemDTO.fromCursor(cursor);
+
+		getActivity().setTitle(item.name);
+		title.setText(item.name);
+		type.setText(String.valueOf(item.category));
+		App.pic().load(item.image).placeholder(item.getFallbackDrawableID(getActivity())).into(image);
+
+		eventsListener.itemLoaded(item);
 	}
 
 	@Override
@@ -58,51 +57,29 @@ public class ItemViewFragment extends BaseViewFragment<ItemEvents> {
 				startActivity(ItemEditActivity.edit(getArgItemID()));
 				return true;
 			case R.id.action_item_delete:
-				Dialogs.executeTask(getActivity(), new DeleteItemTask(getArgItemID(), new Dialogs.Callback() {
-					public void success() {
-						getActivity().finish();
-					}
-					public void failed() {
-						String message = "This property still has some items";
-						Toast.makeText(App.getAppContext(), message, Toast.LENGTH_LONG).show();
-					}
-				}));
+				delete(getArgItemID());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	private long getArgItemID() {
-		return getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
+	private void delete(final long itemID) {
+		new DeleteItemTask(itemID, new Dialogs.Callback() {
+			public void dialogSuccess() {
+				ItemDTO item = new ItemDTO();
+				item.id = itemID;
+				eventsListener.itemDeleted(item);
+			}
+
+			public void dialogFailed() {
+				Toast.makeText(getActivity(), "Cannot delete item #" + itemID, Toast.LENGTH_LONG).show();
+			}
+		}).displayDialog(getActivity());
 	}
 
-	private final class LoadExistingItem extends LoadSingleRow {
-		private LoadExistingItem() {
-			super(getActivity());
-		}
-
-		@Override
-		protected void process(Cursor cursor) {
-			super.process(cursor);
-			ItemDTO item = ItemDTO.fromCursor(cursor);
-
-			getActivity().setTitle(item.name);
-			itemName.setText(item.name);
-			itemCategory.setText(String.valueOf(item.category));
-			int itemCategoryResourceID = item.getFallbackDrawableID(getActivity());
-			App.pic().load(item.image) //
-					.placeholder(itemCategoryResourceID) //
-					.error(itemCategoryResourceID) //
-					.into(itemImage);
-
-			eventsListener.itemLoaded(item);
-		}
-		@Override
-		protected void processInvalid(Cursor item) {
-			super.processInvalid(item);
-			getActivity().finish();
-		}
+	private long getArgItemID() {
+		return getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
 	}
 
 	public static ItemViewFragment newInstance(long itemID) {

@@ -15,10 +15,6 @@ public class BaseListFragment<T> extends BaseFragment<T> {
 	protected AbsListView list;
 	protected CursorAdapter adapter;
 
-	public BaseListFragment() {
-		setDynamicResource(DYN_Layout, R.layout.gallery);
-	}
-
 	protected void setAdapter(CursorAdapter adapter) {
 		this.adapter = adapter;
 		((AdapterView<ListAdapter>)list).setAdapter(adapter); // AbsListView.setAdapter is API 11
@@ -44,7 +40,7 @@ public class BaseListFragment<T> extends BaseFragment<T> {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = super.onCreateView(inflater, container, savedInstanceState);
+		View root = inflater.inflate(R.layout.gallery, container, false);
 
 		this.list = (AbsListView)root.findViewById(android.R.id.list);
 		swapEmpty(root.findViewById(android.R.id.progress));

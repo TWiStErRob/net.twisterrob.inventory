@@ -13,7 +13,7 @@ import com.squareup.picasso.*;
 import com.squareup.picasso.Picasso.Listener;
 import com.squareup.picasso.Picasso.RequestTransformer;
 
-import net.twisterrob.inventory.BuildConfig;
+import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.tasks.ApiClientAsyncTask;
 
@@ -78,7 +78,7 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 	}
 
 	public RequestCreator load(DriveId driveId) {
-		return picasso.load(toUri(driveId));
+		return picasso.load(toUri(driveId)).error(R.drawable.image_error);
 	}
 
 	public RequestCreator loadDriveId(String driveId) {
@@ -87,11 +87,11 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 	}
 
 	public RequestCreator load(Uri uri) {
-		return picasso.load(uri);
+		return picasso.load(uri).error(R.drawable.image_error);
 	}
 
 	public RequestCreator load(File file) {
-		return picasso.load(file);
+		return picasso.load(file).error(R.drawable.image_error);
 	}
 
 	public Picasso getPicasso() {

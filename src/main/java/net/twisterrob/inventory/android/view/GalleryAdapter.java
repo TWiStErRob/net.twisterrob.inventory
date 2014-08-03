@@ -56,15 +56,14 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 		//App.pic().getPicasso().cancelRequest(holder.image); // TODO check scrolling
-		App.pic().loadDriveId(image).placeholder(typeResource).error(R.drawable.image_error)
-				.into(holder.image, new Callback() {
-					public void onSuccess() {
-						holder.type.setVisibility(View.VISIBLE);
-					}
+		App.pic().loadDriveId(image).placeholder(typeResource).into(holder.image, new Callback() {
+			public void onSuccess() {
+				holder.type.setVisibility(View.VISIBLE);
+			}
 
-					public void onError() {
-						holder.type.setVisibility(View.GONE);
-					}
-				});
+			public void onError() {
+				holder.type.setVisibility(View.GONE);
+			}
+		});
 	}
 }

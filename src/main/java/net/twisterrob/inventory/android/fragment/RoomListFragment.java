@@ -15,7 +15,6 @@ import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.RoomListFragment.RoomsEvents;
-import net.twisterrob.inventory.android.view.GalleryAdapter;
 
 public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
@@ -45,8 +44,6 @@ public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 	@Override
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
-
-		setAdapter(new GalleryAdapter(getActivity()));
 
 		getView().findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

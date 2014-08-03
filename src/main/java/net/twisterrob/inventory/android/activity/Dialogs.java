@@ -12,8 +12,8 @@ public class Dialogs {
 	private static final Logger LOG = LoggerFactory.getLogger(Dialogs.class);
 
 	public interface Callback {
-		void success();
-		void failed();
+		void dialogSuccess();
+		void dialogFailed();
 	}
 
 	public static abstract class ActionParams {
@@ -30,12 +30,12 @@ public class Dialogs {
 
 		protected void success() {
 			if (callback != null) {
-				callback.success();
+				callback.dialogSuccess();
 			}
 		}
 		protected void failed() {
 			if (callback != null) {
-				callback.failed();
+				callback.dialogFailed();
 			}
 		}
 
@@ -51,6 +51,10 @@ public class Dialogs {
 					}
 				}
 			};
+		}
+
+		public void displayDialog(Activity activity) {
+			Dialogs.executeTask(activity, this);
 		}
 	}
 

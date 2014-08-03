@@ -26,6 +26,10 @@ public class RoomViewActivity extends BaseDetailActivity<RoomViewFragment, ItemL
 		}
 	}
 
+	public void roomDeleted(RoomDTO room) {
+		finish();
+	}
+
 	public void newItem(long parentID) {
 		startActivity(ItemEditActivity.add(parentID));
 	}

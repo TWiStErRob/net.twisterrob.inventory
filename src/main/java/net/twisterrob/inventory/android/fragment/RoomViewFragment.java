@@ -2,13 +2,12 @@ package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.*;
-import android.widget.*;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.*;
-import net.twisterrob.inventory.android.content.LoadSingleRow;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.RoomViewFragment.RoomEvents;
@@ -19,6 +18,7 @@ import static net.twisterrob.inventory.android.content.Loaders.*;
 public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 	public interface RoomEvents {
 		void roomLoaded(RoomDTO room);
+		void roomDeleted(RoomDTO room);
 	}
 
 	public RoomViewFragment() {
@@ -26,29 +26,28 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 		setDynamicResource(DYN_OptionsMenu, R.menu.room);
 	}
 
-	private TextView roomName;
-	private TextView roomType;
-	private ImageView roomImage;
-
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.room_view, container, false);
-		roomName = (TextView)root.findViewById(R.id.roomName);
-		roomType = (TextView)root.findViewById(R.id.roomType);
-		roomImage = (ImageView)root.findViewById(R.id.roomImage);
-		return root;
+	protected void onRefresh() {
+		getLoaderManager().getLoader(SingleRoom.ordinal()).forceLoad();
 	}
 
 	@Override
 	protected void onStartLoading() {
 		Bundle args = new Bundle();
 		args.putLong(Extras.ROOM_ID, getArgRoomID());
-		getLoaderManager().initLoader(SingleRoom.ordinal(), args, new LoadExistingRoom());
+		getLoaderManager().initLoader(SingleRoom.ordinal(), args, new SingleRowLoaded());
 	}
 
 	@Override
-	protected void onRefresh() {
-		getLoaderManager().getLoader(SingleRoom.ordinal()).forceLoad();
+	protected void onSingleRowLoaded(Cursor cursor) {
+		RoomDTO room = RoomDTO.fromCursor(cursor);
+
+		getActivity().setTitle(room.name);
+		title.setText(room.name);
+		type.setText(String.valueOf(room.type));
+		App.pic().load(room.image).placeholder(room.getFallbackDrawableID(getActivity())).into(image);
+
+		eventsListener.roomLoaded(room);
 	}
 
 	@Override
@@ -58,51 +57,29 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 				startActivity(RoomEditActivity.edit(getArgRoomID()));
 				return true;
 			case R.id.action_room_delete:
-				Dialogs.executeTask(getActivity(), new DeleteRoomTask(getArgRoomID(), new Dialogs.Callback() {
-					public void success() {
-						getActivity().finish();
-					}
-					public void failed() {
-						String message = "This property still has some items";
-						Toast.makeText(App.getAppContext(), message, Toast.LENGTH_LONG).show();
-					}
-				}));
+				delete(getArgRoomID());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	private long getArgRoomID() {
-		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+	private void delete(final long roomID) {
+		new DeleteRoomTask(roomID, new Dialogs.Callback() {
+			public void dialogSuccess() {
+				RoomDTO room = new RoomDTO();
+				room.id = roomID;
+				eventsListener.roomDeleted(room);
+			}
+
+			public void dialogFailed() {
+				Toast.makeText(getActivity(), "Cannot delete room #" + roomID, Toast.LENGTH_LONG).show();
+			}
+		}).displayDialog(getActivity());
 	}
 
-	private final class LoadExistingRoom extends LoadSingleRow {
-		private LoadExistingRoom() {
-			super(getActivity());
-		}
-
-		@Override
-		protected void process(Cursor cursor) {
-			super.process(cursor);
-			RoomDTO room = RoomDTO.fromCursor(cursor);
-
-			getActivity().setTitle(room.name);
-			roomName.setText(room.name);
-			roomType.setText(String.valueOf(room.type));
-			int roomTypeResourceID = room.getFallbackDrawableID(getActivity());
-			App.pic().load(room.image) //
-					.placeholder(roomTypeResourceID) //
-					.error(roomTypeResourceID) //
-					.into(roomImage);
-
-			eventsListener.roomLoaded(room);
-		}
-		@Override
-		protected void processInvalid(Cursor item) {
-			super.processInvalid(item);
-			getActivity().finish();
-		}
+	private long getArgRoomID() {
+		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 
 	public static RoomViewFragment newInstance(long roomID) {

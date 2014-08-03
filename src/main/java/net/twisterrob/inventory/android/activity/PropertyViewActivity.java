@@ -25,6 +25,10 @@ public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragmen
 		// ignore
 	}
 
+	public void propertyDeleted(PropertyDTO property) {
+		finish();
+	}
+
 	public void newRoom(long propertyID) {
 		startActivity(RoomEditActivity.add(propertyID));
 	}
