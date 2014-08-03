@@ -18,7 +18,7 @@ import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.view.*;
@@ -70,7 +70,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		if (id != Room.ID_ADD) {
 			Bundle args = new Bundle();
 			args.putLong(Extras.ROOM_ID, id);
-			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(), args, new LoadExistingRoom());
+			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(), args, new SingleRowLoaded());
 
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		} else {
@@ -78,6 +78,16 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		}
 
 		manager.startLoading();
+	}
+
+	@Override
+	protected void onSingleRowLoaded(Cursor cursor) {
+		RoomDTO room = RoomDTO.fromCursor(cursor);
+
+		getActivity().setTitle(room.name);
+		AndroidTools.selectByID(roomType, room.type);
+		roomName.setText(room.name); // must set it after roomType to prevent auto-propagation
+		setCurrentImageDriveId(room.image, room.getFallbackDrawableID(getActivity()));
 	}
 
 	private void save() {
@@ -100,29 +110,6 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 
 	private long getArgRoomID() {
 		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
-	}
-
-	private final class LoadExistingRoom extends LoadSingleRow {
-		private LoadExistingRoom() {
-			super(getActivity());
-		}
-
-		@Override
-		protected void process(Cursor cursor) {
-			super.process(cursor);
-			RoomDTO room = RoomDTO.fromCursor(cursor);
-
-			getActivity().setTitle(room.name);
-			AndroidTools.selectByID(roomType, room.type);
-			roomName.setText(room.name); // must set it after roomType to prevent auto-propagation
-			setCurrentImageDriveId(room.image, room.getFallbackDrawableID(getActivity()));
-		}
-
-		@Override
-		protected void processInvalid(Cursor item) {
-			super.processInvalid(item);
-			getActivity().finish();
-		}
 	}
 
 	private final class SaveTask extends SimpleAsyncTask<RoomDTO, Void, Long> {

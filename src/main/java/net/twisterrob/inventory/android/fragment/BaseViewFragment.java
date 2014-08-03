@@ -1,14 +1,12 @@
 package net.twisterrob.inventory.android.fragment;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.content.LoadSingleRow;
 
-public abstract class BaseViewFragment<T> extends BaseFragment<T> {
+public abstract class BaseViewFragment<T> extends BaseSingleLoaderFragment<T> {
 	protected TextView title;
 	protected TextView type;
 	protected ImageView image;
@@ -21,24 +19,4 @@ public abstract class BaseViewFragment<T> extends BaseFragment<T> {
 		image = (ImageView)root.findViewById(R.id.image);
 		return root;
 	}
-
-	protected class SingleRowLoaded extends LoadSingleRow {
-		public SingleRowLoaded() {
-			super(getActivity());
-		}
-
-		@Override
-		protected void process(Cursor cursor) {
-			super.process(cursor);
-			onSingleRowLoaded(cursor);
-		}
-
-		@Override
-		protected void processInvalid(Cursor item) {
-			super.processInvalid(item);
-			getActivity().finish();
-		}
-	}
-
-	protected abstract void onSingleRowLoaded(Cursor cursor);
 }

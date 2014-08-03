@@ -18,7 +18,7 @@ import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.view.*;
@@ -71,13 +71,24 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		if (id != Property.ID_ADD) {
 			Bundle args = new Bundle();
 			args.putLong(Extras.PROPERTY_ID, id);
-			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.ordinal(), args, new PropertyLoaded());
+			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.ordinal(), args, new SingleRowLoaded());
 
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		} else {
 			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 		manager.startLoading();
+	}
+
+	@Override
+	protected void onSingleRowLoaded(Cursor cursor) {
+		PropertyDTO property = PropertyDTO.fromCursor(cursor);
+
+		getActivity().setTitle(property.name);
+		AndroidTools.selectByID(propertyType, property.type);
+		propertyName.setText(property.name); // must set it after propertyType to prevent auto-propagation
+
+		setCurrentImageDriveId(property.image, property.getFallbackDrawableID(getActivity()));
 	}
 
 	private void save() {
@@ -95,30 +106,6 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 
 	private long getArgPropertyID() {
 		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
-	}
-
-	private class PropertyLoaded extends LoadSingleRow {
-		PropertyLoaded() {
-			super(getActivity());
-		}
-
-		@Override
-		protected void process(Cursor cursor) {
-			super.process(cursor);
-			PropertyDTO property = PropertyDTO.fromCursor(cursor);
-
-			getActivity().setTitle(property.name);
-			AndroidTools.selectByID(propertyType, property.type);
-			propertyName.setText(property.name); // must set it after propertyType to prevent auto-propagation
-
-			setCurrentImageDriveId(property.image, property.getFallbackDrawableID(getActivity()));
-		}
-
-		@Override
-		protected void processInvalid(Cursor item) {
-			super.processInvalid(item);
-			getActivity().finish();
-		}
 	}
 
 	private final class SaveTask extends SimpleAsyncTask<PropertyDTO, Void, Long> {

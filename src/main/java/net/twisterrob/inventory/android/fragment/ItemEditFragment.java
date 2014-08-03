@@ -14,7 +14,7 @@ import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 
@@ -61,12 +61,22 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 			args.putLong(Extras.ITEM_ID, id);
 			@SuppressWarnings("unused")
 			// no dependencies yet: Item's category will come in
-			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(), args, new LoadExistingItem());
+			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(), args, new SingleRowLoaded());
 		} else {
 			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 
 		manager.startLoading();
+	}
+
+	@Override
+	protected void onSingleRowLoaded(Cursor cursor) {
+		ItemDTO item = ItemDTO.fromCursor(cursor);
+
+		getActivity().setTitle(item.name);
+		itemName.setText(item.name);
+		// FIXME itemCategory.setText(String.valueOf(item.category));
+		setCurrentImageDriveId(item.image, item.getFallbackDrawableID(getActivity()));
 	}
 
 	private void save() {
@@ -89,29 +99,6 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 
 	private long getArgParentID() {
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
-	}
-
-	private final class LoadExistingItem extends LoadSingleRow {
-		private LoadExistingItem() {
-			super(getActivity());
-		}
-
-		@Override
-		protected void process(Cursor cursor) {
-			super.process(cursor);
-			ItemDTO item = ItemDTO.fromCursor(cursor);
-
-			getActivity().setTitle(item.name);
-			itemName.setText(item.name);
-			// FIXME itemCategory.setText(String.valueOf(item.category));
-			setCurrentImageDriveId(item.image, item.getFallbackDrawableID(getActivity()));
-		}
-
-		@Override
-		protected void processInvalid(Cursor item) {
-			super.processInvalid(item);
-			getActivity().finish();
-		}
 	}
 
 	private final class SaveTask extends SimpleAsyncTask<ItemDTO, Void, Long> {

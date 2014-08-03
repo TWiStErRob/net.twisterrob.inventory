@@ -22,7 +22,7 @@ import net.twisterrob.inventory.android.activity.CaptureImage;
 import net.twisterrob.inventory.android.tasks.Upload;
 import net.twisterrob.inventory.android.utils.*;
 
-public abstract class BaseEditFragment<T> extends BaseFragment<T> {
+public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	protected static final String DYN_ImageView = "imageViewID";
 	private DriveId driveId;
 
