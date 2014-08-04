@@ -51,10 +51,10 @@ public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends Ba
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if (detailsFragment != null) {
-			ft.add(R.id.details, detailsFragment);
+			ft.replace(R.id.details, detailsFragment);
 		}
 		if (childrenFragment != null) {
-			ft.add(R.id.children, childrenFragment);
+			ft.replace(R.id.children, childrenFragment);
 		}
 		ft.commit();
 	}

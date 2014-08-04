@@ -86,6 +86,10 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 		return load(id);
 	}
 
+	public RequestCreator load(int resourceId) {
+		return picasso.load(resourceId).error(R.drawable.image_error);
+	}
+
 	public RequestCreator load(Uri uri) {
 		return picasso.load(uri).error(R.drawable.image_error);
 	}

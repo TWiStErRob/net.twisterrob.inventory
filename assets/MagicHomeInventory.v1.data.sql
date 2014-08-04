@@ -66,8 +66,8 @@ INSERT INTO RoomType
 
 INSERT INTO Category
 	              (_id, parent, name)
---		              (_id, parent, name)
---			              (_id, parent, name)
+		--            (_id, parent, name)
+			--            (_id, parent, name)
 	      SELECT    -1,   NULL, 'INTERNAL'
 	UNION SELECT     0,     -1, 'Uncategorized'
 	UNION SELECT  1000,     -1, 'Clothing'
@@ -142,7 +142,7 @@ INSERT INTO Category
 
 INSERT INTO Category
 	              (_id, parent, name)
-	      SELECT 10000,     -1, 'Furnitures'
+	      SELECT 10000,     -1, 'Furnitures' -- http://en.wikipedia.org/wiki/List_of_furniture_types
 		UNION SELECT 10100,  10000, 'Cupboard/Cabinet/Wardrobe'
 		UNION SELECT 10200,  10000, 'Desk/Table'
 		UNION SELECT 10300,  10000, 'Stand'
@@ -150,6 +150,11 @@ INSERT INTO Category
 		UNION SELECT 10500,  10000, 'Garden'
 		UNION SELECT 10600,  10000, 'Bathroom'
 		UNION SELECT 10700,  10000, 'Kitchen'
+		UNION SELECT 10800,  10000, 'Compartments'
+			UNION SELECT 10810,  10800, 'Drawer'
+			UNION SELECT 10810,  10800, 'Shelf'
+			UNION SELECT 10810,  10800, 'Section'
+			UNION SELECT 10810,  10800, 'Display'
 	UNION SELECT 11000,     -1, 'Stationery'
 		UNION SELECT 11100, 11000, 'Painting'
 		UNION SELECT 11200, 11000, 'Drawing'

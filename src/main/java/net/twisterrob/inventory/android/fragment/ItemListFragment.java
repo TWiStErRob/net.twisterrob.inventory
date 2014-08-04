@@ -43,7 +43,7 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
 
-		getView().findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
+		view.findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				eventsListener.newItem(getArgParentItemID());
 			}
@@ -68,11 +68,15 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	protected void onStartLoading() {
 		Bundle args = new Bundle();
 		args.putLong(Extras.PARENT_ID, getArgParentItemID());
+		args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
 		getLoaderManager().initLoader(Loaders.Items.ordinal(), args, createListLoaderCallbacks());
 	}
 
 	private long getArgParentItemID() {
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
+	}
+	private long getArgCategoryID() {
+		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 	}
 
 	@Override
@@ -85,6 +89,16 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 
 		Bundle args = new Bundle();
 		args.putLong(Extras.PARENT_ID, parentItemID);
+
+		fragment.setArguments(args);
+		return fragment;
+	}
+
+	public static ItemListFragment newCategoryInstance(long categoryID) {
+		ItemListFragment fragment = new ItemListFragment();
+
+		Bundle args = new Bundle();
+		args.putLong(Extras.CATEGORY_ID, categoryID);
 
 		fragment.setArguments(args);
 		return fragment;

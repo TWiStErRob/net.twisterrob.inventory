@@ -36,23 +36,34 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 	}
 
 	@Override
-	protected void bindView(final ViewHolder holder, Cursor cursor, View convertView) {
-		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-		holder.title.setText(name);
+	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
+		holder.title.setText(getName(cursor));
+		holder.count.setText(getCountText(cursor));
+		setImageAndType(holder, cursor);
+	}
 
+	private static String getName(Cursor cursor) {
+		return cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+	}
+
+	private static String getCountText(Cursor cursor) {
+		String countText = null;
+		int countIndex = cursor.getColumnIndex(CommonColumns.COUNT);
+		if (countIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			int count = cursor.getInt(countIndex);
+			if (count > 0) {
+				countText = String.valueOf(count);
+			}
+		}
+		return countText;
+	}
+
+	private void setImageAndType(final ViewHolder holder, Cursor cursor) {
 		int typeColumn = cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE);
 		String type = cursor.getString(typeColumn);
 		int typeResource = mContext.getResources().getIdentifier(type, "drawable", mContext.getPackageName());
 		holder.type.setImageResource(typeResource);
 		holder.type.setVisibility(View.GONE);
-
-		int countIndex = cursor.getColumnIndex(CommonColumns.COUNT);
-		if (countIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			int count = cursor.getInt(countIndex);
-			if (count > 0) {
-				holder.count.setText(String.valueOf(count));
-			}
-		}
 
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 		//App.pic().getPicasso().cancelRequest(holder.image); // TODO check scrolling

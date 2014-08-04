@@ -40,12 +40,20 @@ public class BaseListFragment<T> extends BaseFragment<T> {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.gallery, container, false);
+		View root = inflateRoot(inflater, container);
 
 		this.list = (AbsListView)root.findViewById(android.R.id.list);
 		swapEmpty(root.findViewById(android.R.id.progress));
-		setAdapter(new GalleryAdapter(getActivity()));
+		setAdapter(createAdapter());
 
 		return root;
+	}
+
+	protected View inflateRoot(LayoutInflater inflater, ViewGroup container) {
+		return inflater.inflate(R.layout.gallery, container, false);
+	}
+
+	protected CursorAdapter createAdapter() {
+		return new GalleryAdapter(getActivity());
 	}
 }

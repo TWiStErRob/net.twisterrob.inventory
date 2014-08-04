@@ -64,25 +64,28 @@ public class Database {
 		return rawQuery(R.string.query_properties);
 	}
 	public Cursor getProperty(long propertyID) {
-		return rawQuery(R.string.query_property, String.valueOf(propertyID));
+		return rawQuery(R.string.query_property, propertyID);
 	}
 	public Cursor listRooms(long propertyID) {
-		return rawQuery(R.string.query_rooms, String.valueOf(propertyID));
+		return rawQuery(R.string.query_rooms, propertyID);
 	}
 	public Cursor getRoom(long roomID) {
-		return rawQuery(R.string.query_room, String.valueOf(roomID));
+		return rawQuery(R.string.query_room, roomID);
 	}
 	public Cursor listItems(long parentID) {
-		return rawQuery(R.string.query_items, String.valueOf(parentID));
+		return rawQuery(R.string.query_items, parentID);
+	}
+	public Cursor listItemsForCategory(long categoryID) {
+		return rawQuery(R.string.query_items_by_category, categoryID);
 	}
 	public Cursor getItem(long itemID) {
-		return rawQuery(R.string.query_item, String.valueOf(itemID));
+		return rawQuery(R.string.query_item, itemID);
 	}
 	public Cursor listCategories(long parentID) {
-		return rawQuery(R.string.query_categories, String.valueOf(parentID));
+		return rawQuery(R.string.query_categories, parentID);
 	}
 	public Cursor getCategory(long itemID) {
-		return rawQuery(R.string.query_category, String.valueOf(itemID));
+		return rawQuery(R.string.query_category, itemID);
 	}
 	public long newProperty(String name, long type, DriveId imageDriveID) {
 		SQLiteDatabase db = getWritableDatabase();

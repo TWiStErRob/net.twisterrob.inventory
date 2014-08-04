@@ -53,7 +53,14 @@ public enum Loaders {
 		@Override
 		protected Cursor createCursor(Bundle args) {
 			long id = args.getLong(Extras.PARENT_ID, Item.ID_ADD);
-			return App.db().listItems(id);
+			if (id != Item.ID_ADD) {
+				return App.db().listItems(id);
+			}
+			long catID = args.getLong(Extras.CATEGORY_ID, Category.ID_ADD);
+			if (catID != Category.ID_ADD) {
+				return App.db().listItemsForCategory(catID);
+			}
+			return null;
 		}
 	},
 	SingleItem {

@@ -5,4 +5,6 @@ public interface Category extends CommonColumns {
 	String PARENT = "parent";
 
 	long INTERNAL = -1;
+
+	String ITEM_COUNT = "countItems";
 }

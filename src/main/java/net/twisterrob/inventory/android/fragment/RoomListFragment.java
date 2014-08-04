@@ -45,7 +45,7 @@ public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
 
-		getView().findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
+		view.findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				eventsListener.newRoom(getArgPropertyID());
 			}
