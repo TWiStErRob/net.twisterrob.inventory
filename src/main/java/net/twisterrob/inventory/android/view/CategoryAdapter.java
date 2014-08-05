@@ -62,7 +62,7 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 		} else {
 			holder.items.setVisibility(View.GONE);
 		}
-		App.pic().load(getImageResource(cursor)).into(holder.image);
+		setImage(cursor, holder.image);
 	}
 
 	private CharSequence getName(Cursor cursor) {
@@ -81,11 +81,20 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 		return null;
 	}
 
-	private int getImageResource(Cursor cursor) {
+	private void setImage(Cursor cursor, ImageView target) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-		return AndroidTools.getDrawableResourceID(mContext, image);
+		int raw = AndroidTools.getRawResourceID(mContext, image);
+		if (raw > 0) {
+			App.pic().loadSVG(raw).into(target);
+			return;
+		}
+		int drawable = AndroidTools.getDrawableResourceID(mContext, image);
+		if (drawable > 0) {
+			App.pic().load(drawable).into(target);
+			return;
+		}
+		App.pic().load(R.drawable.category_unknown).into(target);
 	}
-
 	private void showItems(long categoryID) {
 		activity.startActivity(CategoryItemsActivity.show(categoryID));
 	}

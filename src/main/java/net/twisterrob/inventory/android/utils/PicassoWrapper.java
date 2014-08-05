@@ -5,14 +5,18 @@ import java.io.*;
 import org.slf4j.*;
 
 import android.content.Context;
+import android.graphics.drawable.*;
 import android.net.Uri;
+import android.widget.ImageView;
 
+import com.caverock.androidsvg.*;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
 import com.squareup.picasso.*;
 import com.squareup.picasso.Picasso.Listener;
 import com.squareup.picasso.Picasso.RequestTransformer;
 
+import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.tasks.ApiClientAsyncTask;
@@ -22,10 +26,12 @@ import static net.twisterrob.inventory.android.utils.DriveUtils.*;
 public class PicassoWrapper implements Downloader, Listener, RequestTransformer {
 	private static final Logger LOG = LoggerFactory.getLogger(PicassoWrapper.class);
 
+	private final Context context;
 	private final Picasso picasso;
 	private final Downloader fallback;
 
 	public PicassoWrapper(Context context) {
+		this.context = context;
 		this.picasso = new Picasso.Builder(context) //
 				.indicatorsEnabled(BuildConfig.DEBUG) // XXX disable on release
 				.loggingEnabled(false) // XXX disable on release
@@ -34,11 +40,6 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 				.requestTransformer(this) //
 				.build();
 		this.fallback = new UrlConnectionDownloader(context);
-	}
-
-	public PicassoWrapper(Picasso picasso) {
-		this.picasso = picasso;
-		this.fallback = null;
 	}
 
 	public Request transformRequest(Request request) {
@@ -86,6 +87,10 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 		return load(id);
 	}
 
+	public RequestCreator loadNothing() {
+		return picasso.load((Uri)null);
+	}
+
 	public RequestCreator load(int resourceId) {
 		return picasso.load(resourceId).error(R.drawable.image_error);
 	}
@@ -112,5 +117,38 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 
 	public static DriveId fromUri(Uri uri) {
 		return DriveId.decodeFromString("DriveId:" + uri.getPath().substring(1));
+	}
+
+	public SVGLoader loadSVG(int resourceID) {
+		return new SVGLoader(resourceID);
+	}
+
+	public class SVGLoader extends SimpleAsyncTask<Integer, Void, Drawable> {
+		private final int resourceID;
+		private ImageView imageView;
+
+		public SVGLoader(int resourceID) {
+			this.resourceID = resourceID;
+		}
+
+		public void into(ImageView imageView) {
+			this.imageView = imageView;
+			execute(resourceID);
+		}
+
+		@Override
+		protected Drawable doInBackground(Integer param) {
+			try {
+				SVG svg = SVG.getFromResource(context, resourceID);
+				return new PictureDrawable(svg.renderToPicture());
+			} catch (SVGParseException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Drawable result) {
+			imageView.setImageDrawable(result);
+		}
 	}
 }
