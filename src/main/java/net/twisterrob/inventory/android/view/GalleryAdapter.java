@@ -63,7 +63,7 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 		String type = cursor.getString(typeColumn);
 		int typeResource = mContext.getResources().getIdentifier(type, "drawable", mContext.getPackageName());
 		holder.type.setImageResource(typeResource);
-		holder.type.setVisibility(View.GONE);
+		holder.type.setVisibility(View.INVISIBLE);
 
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 		//App.pic().getPicasso().cancelRequest(holder.image); // TODO check scrolling
@@ -73,7 +73,7 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 			}
 
 			public void onError() {
-				holder.type.setVisibility(View.GONE);
+				holder.type.setVisibility(View.INVISIBLE);
 			}
 		});
 	}
