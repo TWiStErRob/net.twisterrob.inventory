@@ -49,6 +49,12 @@ public enum Loaders {
 			return App.db().getRoom(id);
 		}
 	},
+	ItemCategories {
+		@Override
+		protected Cursor createCursor(Bundle args) {
+			return App.db().listItemCategories();
+		}
+	},
 	Items {
 		@Override
 		protected Cursor createCursor(Bundle args) {

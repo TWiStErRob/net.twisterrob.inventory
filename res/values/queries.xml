@@ -74,6 +74,17 @@
 	<string name="query_room_delete"><![CDATA["
 		delete from Room where _id = ?
 	"]]></string>
+	<string name="query_item_categories"><![CDATA["
+		select
+			c._id,
+			c.name,
+			c.parent,
+			cd.level,
+			'category_unknown' as image
+		from Category_Descendant cd
+		join Category c ON cd.descendant = c._id and c._id >= 0
+		where cd.category = ?
+	"]]></string>
 	<string name="query_items"><![CDATA["
 		select
 			i._id,
@@ -115,9 +126,8 @@
 		order by i.name asc 
 	"]]></string>
 	<string name="query_item"><![CDATA["
-		select i._id, i.name, c.name as category, i.image, 'category_unknown' as typeImage
+		select i._id, i.name, i.category, i.image, 'category_unknown' as typeImage
 		from Item i
-		join Category c ON i.category = c._id
 		where i._id = ?
 	"]]></string>
 	<string name="query_categories"><![CDATA["

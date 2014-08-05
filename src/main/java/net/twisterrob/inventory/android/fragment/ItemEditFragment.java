@@ -5,6 +5,7 @@ import org.slf4j.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
+import android.support.v4.widget.CursorAdapter;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -12,11 +13,13 @@ import android.widget.*;
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
+import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -25,6 +28,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 
 	private EditText itemName;
 	private Spinner itemCategory;
+	private CursorAdapter adapter;
 
 	public ItemEditFragment() {
 		setDynamicResource(DYN_ImageView, R.id.itemImage);
@@ -47,6 +51,9 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 			}
 		});
 
+		adapter = new ItemCategoryAdapter(getActivity());
+		itemCategory.setAdapter(adapter);
+
 		return root;
 	}
 
@@ -55,13 +62,15 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		long id = getArgItemID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
+		CursorSwapper catCursorSwapper = new CursorSwapper(getActivity(), adapter);
+		Dependency<Cursor> populateCats = manager.add(ItemCategories.ordinal(), null, catCursorSwapper);
 
 		if (id != Item.ID_ADD) {
 			Bundle args = new Bundle();
 			args.putLong(Extras.ITEM_ID, id);
-			@SuppressWarnings("unused")
-			// no dependencies yet: Item's category will come in
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(), args, new SingleRowLoaded());
+
+			loadItemData.dependsOn(populateCats);
 		} else {
 			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
@@ -75,7 +84,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 
 		getActivity().setTitle(item.name);
 		itemName.setText(item.name);
-		// FIXME itemCategory.setText(String.valueOf(item.category));
+		AndroidTools.selectByID(itemCategory, item.category);
 		setCurrentImageDriveId(item.image, item.getFallbackDrawableID(getActivity()));
 	}
 
@@ -89,7 +98,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		item.id = getArgItemID();
 		item.name = itemName.getText().toString();
 		item.image = getCurrentImageDriveId();
-		// item.category = itemCategory.getSelectedItemId(); // TODO tree ListView?
+		item.category = itemCategory.getSelectedItemId();
 		return item;
 	}
 

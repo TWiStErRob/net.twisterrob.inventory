@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@id/adapterRoot"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+	<ImageView
+		android:id="@id/image"
+		android:focusable="false"
+		android:layout_width="16dp"
+		android:layout_height="16dp"
+		android:layout_alignParentStart="true"
+		android:layout_centerVertical="true"
+		android:adjustViewBounds="true"
+		android:scaleType="fitCenter"
+		android:layout_marginRight="@dimen/margin" />
+	<TextView
+		android:id="@id/title"
+		android:focusable="false"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_toEndOf="@id/image" />
+</RelativeLayout>

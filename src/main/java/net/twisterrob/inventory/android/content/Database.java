@@ -104,6 +104,9 @@ public class Database {
 	public Cursor getRoom(long roomID) {
 		return rawQuery(R.string.query_room, roomID);
 	}
+	public Cursor listItemCategories() {
+		return rawQuery(R.string.query_item_categories, Category.INTERNAL);
+	}
 	public Cursor listItems(long parentID) {
 		return rawQuery(R.string.query_items, parentID);
 	}

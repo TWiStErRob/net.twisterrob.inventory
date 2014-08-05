@@ -36,7 +36,7 @@ public class CategoryItemsActivity extends BaseDetailActivity<CategoryViewFragme
 	}
 
 	public void itemActioned(long itemID) {
-		startActivity(ItemViewActivity.show(itemID));
+		startActivity(ItemEditActivity.edit(itemID));
 	}
 
 	public void newItem(long parentID) {
