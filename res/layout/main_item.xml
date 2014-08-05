@@ -19,4 +19,3 @@
 		android:gravity="center_horizontal"
 		android:text="@string/empty" />
 </RelativeLayout>
-

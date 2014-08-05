@@ -34,15 +34,19 @@
 		android:shadowDx="2"
 		android:shadowDy="2"
 		android:textSize="18sp" />
-	<TextView
+	<net.twisterrob.inventory.android.view.WrappedTextView
 		android:id="@id/title"
 		android:focusable="false"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:labelFor="@id/adapterRoot"
 		android:layout_gravity="center"
+		android:gravity="center"
+		android:background="@drawable/transparent_rounded"
+		android:padding="@dimen/margin"
 		android:textColor="#f80"
-		android:shadowColor="#840"
-		android:shadowRadius="1"
+		android:shadowColor="#420"
+		android:shadowRadius="2"
 		android:shadowDx="2"
 		android:shadowDy="2"
 		android:textSize="18sp" />
