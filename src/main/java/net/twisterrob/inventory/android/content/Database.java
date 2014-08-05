@@ -1,12 +1,13 @@
 package net.twisterrob.inventory.android.content;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.database.*;
 import android.database.sqlite.*;
 
 import com.google.android.gms.drive.DriveId;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.db.*;
+import net.twisterrob.android.db.DatabaseOpenHelper.HelperHooks;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -18,8 +19,13 @@ public class Database {
 
 	public Database(Context context) {
 		m_context = context;
-		m_helper = new DatabaseOpenHelper(m_context, "MagicHomeInventory", 1);
-		m_helper.setDevMode(false);
+		m_helper = new DatabaseOpenHelper(m_context, "MagicHomeInventory", 1, new HelperHooks() {
+			public void onConfigure(SQLiteDatabase db) {
+				db.execSQL("PRAGMA recursive_triggers = TRUE;");
+			}
+		});
+		m_helper.setDevMode(true);
+		m_helper.setDumpOnOpen(true);
 	}
 
 	public SQLiteDatabase getReadableDatabase() {
@@ -40,12 +46,38 @@ public class Database {
 		return db.rawQuery(m_context.getString(queryResource), StringTools.toStringArray(params));
 	}
 
+	private long rawInsert(int insertResource, Object... params) {
+		SQLiteDatabase db = getWritableDatabase();
+
+		SQLiteStatement insert = db.compileStatement(m_context.getString(insertResource));
+		try {
+			for (int i = 0; i < params.length; ++i) {
+				DatabaseUtils.bindObjectToProgram(insert, i, params[i]);
+			}
+			return insert.executeInsert();
+		} finally {
+			insert.close();
+		}
+	}
+
 	private static void bindDriveID(SQLiteStatement insert, int arg, DriveId driveID) {
 		if (driveID == null) {
 			insert.bindNull(arg);
 		} else {
 			insert.bindString(arg, driveID.encodeToString());
 		}
+	}
+
+	private long preparePath() {
+		return rawInsert(R.string.query_path_new);
+	}
+
+	private void calculateCategoryPath(long pathID, long categoryID) {
+		execSQL(R.string.query_path_category, pathID, categoryID);
+	}
+
+	private void clearPath(long pathID) {
+		execSQL(R.string.query_path_delete, pathID);
 	}
 
 	public Cursor listPropertyTypes(CharSequence nameFilter) {
@@ -75,8 +107,12 @@ public class Database {
 	public Cursor listItems(long parentID) {
 		return rawQuery(R.string.query_items, parentID);
 	}
-	public Cursor listItemsForCategory(long categoryID) {
-		return rawQuery(R.string.query_items_by_category, categoryID);
+	public Cursor listItemsForCategory(long categoryID, boolean include) {
+		if (include) {
+			return rawQuery(R.string.query_items_in_category, categoryID);
+		} else {
+			return rawQuery(R.string.query_items_by_category, categoryID);
+		}
 	}
 	public Cursor getItem(long itemID) {
 		return rawQuery(R.string.query_item, itemID);

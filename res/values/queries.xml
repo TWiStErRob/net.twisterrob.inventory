@@ -100,6 +100,20 @@
 		where i.category = ?
 		order by i.name asc 
 	"]]></string>
+	<string name="query_items_in_category"><![CDATA["
+		select
+			i._id,
+			i.name,
+			i.image,
+			'category_unknown' as typeImage,
+			(select count(1) from Item where parent = i._id) as childrenCount,
+			c.name as category
+		from Item     i
+		join Category_Descendant cd ON i.category = cd.descendant
+		join Category c ON cd.descendant = c._id
+		where cd.category = ?
+		order by i.name asc 
+	"]]></string>
 	<string name="query_item"><![CDATA["
 		select i._id, i.name, c.name as category, i.image, 'category_unknown' as typeImage
 		from Item i
@@ -112,7 +126,7 @@
 			c.name,
 			'category_unknown' as image,
 			(select count(1) from Category where parent = c._id) as childrenCount,
-			(select count(1) from Item where category = c._id) as countItems
+			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countItems
 		from Category c
 		where c.parent = ?
 		order by c.name asc
@@ -130,5 +144,14 @@
 	"]]></string>
 	<string name="query_item_delete"><![CDATA["
 		delete from Item where _id = ?
+	"]]></string>
+	<string name="query_path_new"><![CDATA["
+		insert into Paths
+	"]]></string>
+	<string name="query_path_delete"><![CDATA["
+		delete from Paths where _id = ?
+	"]]></string>
+	<string name="query_path_category"><![CDATA["
+		insert into Path select p._id, -1, c._id, c.parent from Path p, Category c where p._id = ? and c._id = ?;
 	"]]></string>
 </resources>

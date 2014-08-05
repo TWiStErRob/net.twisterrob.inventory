@@ -20,6 +20,10 @@ import net.twisterrob.android.utils.tools.*;
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	public static final int CURSOR_NO_COLUMN = -1;
 
+	public interface HelperHooks {
+		void onConfigure(SQLiteDatabase db);
+	}
+
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseOpenHelper.class);
 	private static final String DB_SCHEMA_FILE = "%s.v%d.schema.sql";
 	private static final String DB_DATA_FILES = "%s.v%d.data.sql";
@@ -30,23 +34,32 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			: null;
 
 	protected final AssetManager assets;
+	private final HelperHooks hooks;
 	private final boolean hasWriteExternalPermission;
 	private final String dbName;
 	private boolean devMode;
+	private boolean dumpOnOpen;
 
-	public DatabaseOpenHelper(Context context, String dbName, int dbVersion) {
+	public DatabaseOpenHelper(Context context, String dbName, int dbVersion, HelperHooks hooks) {
 		super(context, dbName, s_factory, dbVersion);
 		this.assets = context.getAssets();
 		this.dbName = dbName;
+		this.hooks = hooks;
 		this.hasWriteExternalPermission = AndroidTools.hasPermission(context, WRITE_EXTERNAL_STORAGE);
 	}
 
 	public void setDevMode(boolean devMode) {
 		this.devMode = devMode;
 	}
-
 	public boolean isDevMode() {
 		return devMode;
+	}
+
+	public void setDumpOnOpen(boolean dumpOnOpen) {
+		this.dumpOnOpen = dumpOnOpen;
+	}
+	public boolean isDumpOnOpen() {
+		return dumpOnOpen;
 	}
 
 	@Override
@@ -61,27 +74,31 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			backupDB(db, "onOpen_afterDev");
 		}
 		LOG.info("Opened database: {}", DBTools.toString(db));
+		if (dumpOnOpen) {
+			backupDB(db, "onOpen");
+		}
 	}
 
 	private void backupDB(SQLiteDatabase db, String when) {
-		if (devMode) {
-			if (hasWriteExternalPermission) {
-				String fileName = dbName + "." + when + ".sqlite";
-				try {
-					String target = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-							+ fileName;
-					IOTools.copyFile(db.getPath(), target);
-					LOG.info("DB backed up to {}", target);
-				} catch (IOException ex) {
-					LOG.error("Cannot back up DB on open", ex);
-				}
+		if (hasWriteExternalPermission) {
+			String fileName = dbName + "." + when + ".sqlite";
+			try {
+				String target = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + fileName;
+				IOTools.copyFile(db.getPath(), target);
+				LOG.info("DB backed up to {}", target);
+			} catch (IOException ex) {
+				LOG.error("Cannot back up DB on open", ex);
 			}
+		} else {
+			LOG.warn("No {} permission to back up DB at {}", WRITE_EXTERNAL_STORAGE, when);
 		}
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		backupDB(db, "onCreate");
+		if (devMode) {
+			backupDB(db, "onCreate");
+		}
 		configure(db);
 		LOG.debug("Creating database: {}", DBTools.toString(db));
 		execFile(db, String.format(DB_CLEAN_FILE, dbName));
@@ -93,6 +110,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	public void configure(SQLiteDatabase db) {
 		if (!db.isReadOnly()) {
 			db.execSQL("PRAGMA foreign_keys=ON;"); // db.setForeignKeyConstraintsEnabled(true);
+			if (hooks != null) {
+				hooks.onConfigure(db);
+			}
 		}
 	}
 
@@ -142,7 +162,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			}
 			sb.append(line);
 			sb.append(IOTools.LINE_SEPARATOR);
-			if (line.matches(".*;\\s*(--.*)?$")) {
+			if (line.matches(".*;\\s*(?!--NOTEOS)(--.*)?$")) {
 				return sb.toString(); // ends in a semicolon -> end of statement
 			}
 		}
@@ -151,7 +171,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		backupDB(db, "onUpgrade_" + oldVersion + "-" + newVersion);
+		if (devMode) {
+			backupDB(db, "onUpgrade_" + oldVersion + "-" + newVersion);
+		}
 		configure(db);
 		onCreate(db);
 	}

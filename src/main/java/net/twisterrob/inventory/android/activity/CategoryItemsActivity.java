@@ -24,7 +24,7 @@ public class CategoryItemsActivity extends BaseDetailActivity<CategoryViewFragme
 		} else {
 			detailsFragment = CategoryViewFragment.newInstance(categoryID);
 		}
-		setFragments(detailsFragment, ItemListFragment.newCategoryInstance(categoryID));
+		setFragments(detailsFragment, ItemListFragment.newCategoryInstance(categoryID, getExtraIncludeSubs()));
 	}
 
 	public void categoryLoaded(CategoryDTO category) {
@@ -47,9 +47,20 @@ public class CategoryItemsActivity extends BaseDetailActivity<CategoryViewFragme
 		return getIntent().getLongExtra(Extras.CATEGORY_ID, Category.ID_ADD);
 	}
 
+	private boolean getExtraIncludeSubs() {
+		return getIntent().getBooleanExtra(Extras.INCLUDE_SUBS, false);
+	}
+
 	public static Intent show(long categoryID) {
 		Intent intent = new Intent(App.getAppContext(), CategoryItemsActivity.class);
 		intent.putExtra(Extras.CATEGORY_ID, categoryID);
+		intent.putExtra(Extras.INCLUDE_SUBS, true);
+		return intent;
+	}
+	public static Intent showDirect(long categoryID) {
+		Intent intent = new Intent(App.getAppContext(), CategoryItemsActivity.class);
+		intent.putExtra(Extras.CATEGORY_ID, categoryID);
+		intent.putExtra(Extras.INCLUDE_SUBS, false);
 		return intent;
 	}
 }

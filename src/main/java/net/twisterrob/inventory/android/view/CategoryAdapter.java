@@ -24,7 +24,7 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 	class ViewHolder {
 		ImageView image;
 		TextView title;
-		TextView count;
+		TextView stats;
 		Button items;
 	}
 
@@ -33,7 +33,7 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 		ViewHolder holder = new ViewHolder();
 		holder.image = (ImageView)convertView.findViewById(R.id.image);
 		holder.title = (TextView)convertView.findViewById(R.id.title);
-		holder.count = (TextView)convertView.findViewById(R.id.count);
+		holder.stats = (TextView)convertView.findViewById(R.id.stats);
 		holder.items = (Button)convertView.findViewById(R.id.items);
 		return holder;
 	}
@@ -42,15 +42,25 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
 		final long id = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
 		holder.title.setText(getName(cursor));
-		holder.count.setText(getCountText(cursor, CommonColumns.COUNT, " subcategories"));
-		String countText = getCountText(cursor, Category.ITEM_COUNT, " items");
-		holder.items.setText(countText);
-		holder.items.setVisibility(countText != null? View.VISIBLE : View.GONE);
-		holder.items.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				showItems(id);
-			}
-		});
+		Integer subCatCount = getCount(cursor, CommonColumns.COUNT);
+		if (subCatCount != null) {
+			holder.stats.setText(mContext.getString(R.string.label_category_subs, subCatCount));
+		} else {
+			holder.stats.setText(null);
+		}
+
+		Integer itemCountTotal = getCount(cursor, Category.ITEM_COUNT);
+		if (itemCountTotal != null) {
+			holder.items.setVisibility(View.VISIBLE);
+			holder.items.setText(mContext.getString(R.string.label_category_items_view, itemCountTotal));
+			holder.items.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					showItems(id);
+				}
+			});
+		} else {
+			holder.items.setVisibility(View.GONE);
+		}
 		App.pic().load(getImageResource(cursor)).into(holder.image);
 	}
 
@@ -58,16 +68,15 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 		return cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 	}
 
-	private static String getCountText(Cursor cursor, String columName, String postfix) {
-		String countText = null;
+	private static Integer getCount(Cursor cursor, String columName) {
 		int countIndex = cursor.getColumnIndex(columName);
 		if (countIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
 			int count = cursor.getInt(countIndex);
 			if (count > 0) {
-				countText = count + postfix;
+				return count;
 			}
 		}
-		return countText;
+		return null;
 	}
 
 	private int getImageResource(Cursor cursor) {

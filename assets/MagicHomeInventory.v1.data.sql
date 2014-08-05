@@ -142,7 +142,7 @@ INSERT INTO Category
 
 INSERT INTO Category
 	              (_id, parent, name)
-	      SELECT 10000,     -1, 'Furnitures' -- http://en.wikipedia.org/wiki/List_of_furniture_types
+	      SELECT 10000,     -1, 'Furniture' -- http://en.wikipedia.org/wiki/List_of_furniture_types
 		UNION SELECT 10100,  10000, 'Cupboard/Cabinet/Wardrobe'
 		UNION SELECT 10200,  10000, 'Desk/Table'
 		UNION SELECT 10300,  10000, 'Stand'
@@ -152,9 +152,9 @@ INSERT INTO Category
 		UNION SELECT 10700,  10000, 'Kitchen'
 		UNION SELECT 10800,  10000, 'Compartments'
 			UNION SELECT 10810,  10800, 'Drawer'
-			UNION SELECT 10810,  10800, 'Shelf'
-			UNION SELECT 10810,  10800, 'Section'
-			UNION SELECT 10810,  10800, 'Display'
+			UNION SELECT 10820,  10800, 'Shelf'
+			UNION SELECT 10830,  10800, 'Section'
+			UNION SELECT 10840,  10800, 'Display'
 	UNION SELECT 11000,     -1, 'Stationery'
 		UNION SELECT 11100, 11000, 'Painting'
 		UNION SELECT 11200, 11000, 'Drawing'
@@ -198,3 +198,5 @@ INSERT INTO Category
 		UNION SELECT 18300, 18000, 'Motocycle'
 		UNION SELECT 18400, 18000, 'Large Vehicle'
 ;
+
+insert into Category_Descendant select c._id, 0, c._id from Category c;

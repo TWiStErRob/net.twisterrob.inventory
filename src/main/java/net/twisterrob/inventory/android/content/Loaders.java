@@ -58,7 +58,8 @@ public enum Loaders {
 			}
 			long catID = args.getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 			if (catID != Category.ID_ADD) {
-				return App.db().listItemsForCategory(catID);
+				boolean include = args.getBoolean(Extras.INCLUDE_SUBS, false);
+				return App.db().listItemsForCategory(catID, include);
 			}
 			return null;
 		}

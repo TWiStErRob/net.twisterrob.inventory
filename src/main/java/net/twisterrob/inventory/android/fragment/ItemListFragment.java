@@ -69,6 +69,7 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 		Bundle args = new Bundle();
 		args.putLong(Extras.PARENT_ID, getArgParentItemID());
 		args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
+		args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
 		getLoaderManager().initLoader(Loaders.Items.ordinal(), args, createListLoaderCallbacks());
 	}
 
@@ -77,6 +78,9 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	}
 	private long getArgCategoryID() {
 		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
+	}
+	private boolean getArgIncludeSubs() {
+		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
 
 	@Override
@@ -94,11 +98,12 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 		return fragment;
 	}
 
-	public static ItemListFragment newCategoryInstance(long categoryID) {
+	public static ItemListFragment newCategoryInstance(long categoryID, boolean include) {
 		ItemListFragment fragment = new ItemListFragment();
 
 		Bundle args = new Bundle();
 		args.putLong(Extras.CATEGORY_ID, categoryID);
+		args.putBoolean(Extras.INCLUDE_SUBS, include);
 
 		fragment.setArguments(args);
 		return fragment;

@@ -18,8 +18,12 @@
 	<Button
 		android:id="@id/items"
 		android:focusable="false"
+		style="?android:attr/buttonStyleSmall"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:includeFontPadding="false"
+		android:paddingTop="0dp"
+		android:paddingBottom="0dp"
 		android:layout_alignParentEnd="true" />
 	<TextView
 		android:id="@id/title"
@@ -28,13 +32,14 @@
 		android:layout_height="wrap_content"
 		android:layout_toEndOf="@id/image"
 		android:layout_toStartOf="@id/items"
-		android:textStyle="bold" />
+		android:textAppearance="?android:attr/textAppearanceLarge" />
 	<TextView
-		android:id="@id/count"
+		android:id="@id/stats"
 		android:focusable="false"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/title"
 		android:layout_alignStart="@id/title"
-		android:layout_alignEnd="@id/title" />
+		android:layout_alignEnd="@id/title"
+		android:textAppearance="?android:attr/textAppearanceSmall" />
 </RelativeLayout>

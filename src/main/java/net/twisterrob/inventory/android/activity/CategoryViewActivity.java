@@ -37,7 +37,7 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryViewFragmen
 	}
 
 	public void categoryActioned(long id) {
-		startActivity(CategoryViewActivity.show(id));
+		startActivity(CategoryItemsActivity.showDirect(id));
 	}
 
 	private long getExtraParentItemID() {

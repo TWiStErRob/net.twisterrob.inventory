@@ -10,6 +10,8 @@
 	<string name="action_save">Save</string>
 	
 	<string name="category_title">Categories</string>
+	<string name="label_category_subs">%1$d subcategories</string>
+	<string name="label_category_items_view">View %1$d items</string>
 	
 	<string name="item_title">Items</string>
 	<string name="item_add">Add Item&#8230;</string>
