@@ -7,6 +7,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.*;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
@@ -46,13 +47,13 @@ public class ItemCategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHol
 		return marginParams;
 	}
 
-	private static String getName(Cursor cursor) {
-		return cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+	private CharSequence getName(Cursor cursor) {
+		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		return AndroidTools.getText(mContext, name);
 	}
 
 	private int getImageResource(Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-		int imageResource = mContext.getResources().getIdentifier(image, "drawable", mContext.getPackageName());
-		return imageResource;
+		return AndroidTools.getDrawableResourceID(mContext, image);
 	}
 }

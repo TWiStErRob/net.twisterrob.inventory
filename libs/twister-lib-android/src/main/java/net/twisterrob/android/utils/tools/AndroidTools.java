@@ -42,6 +42,15 @@ public abstract class AndroidTools {
 		return (int)dip(context, number);
 	}
 
+	public static int getDrawableResourceID(Context context, String drawableResourceName) {
+		return context.getResources().getIdentifier(drawableResourceName, "drawable", context.getPackageName());
+	}
+
+	public static CharSequence getText(Context context, String stringResourceName) {
+		int id = context.getResources().getIdentifier(stringResourceName, "string", context.getPackageName());
+		return context.getText(id);
+	}
+
 	public static String toString(Bundle bundle) {
 		if (bundle == null) {
 			return "null";

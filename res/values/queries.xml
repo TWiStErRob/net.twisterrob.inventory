@@ -80,7 +80,7 @@
 			c.name,
 			c.parent,
 			cd.level,
-			'category_unknown' as image
+			c.image
 		from Category_Descendant cd
 		join Category c ON cd.descendant = c._id and c._id >= 0
 		where cd.category = ?
@@ -90,7 +90,7 @@
 			i._id,
 			i.name,
 			i.image,
-			'category_unknown' as typeImage,
+			c.image as typeImage,
 			(select count(1) from Item where parent = i._id) as childrenCount,
 			c.name as category
 		from Item     i
@@ -103,7 +103,7 @@
 			i._id,
 			i.name,
 			i.image,
-			'category_unknown' as typeImage,
+			c.image as typeImage,
 			(select count(1) from Item where parent = i._id) as childrenCount,
 			c.name as category
 		from Item     i
@@ -116,7 +116,7 @@
 			i._id,
 			i.name,
 			i.image,
-			'category_unknown' as typeImage,
+			c.image as typeImage,
 			(select count(1) from Item where parent = i._id) as childrenCount,
 			c.name as category
 		from Item     i
@@ -126,15 +126,16 @@
 		order by i.name asc 
 	"]]></string>
 	<string name="query_item"><![CDATA["
-		select i._id, i.name, i.category, i.image, 'category_unknown' as typeImage
+		select i._id, i.name, i.category, i.image, c.image as typeImage
 		from Item i
+		join Category c ON i.category = c._id
 		where i._id = ?
 	"]]></string>
 	<string name="query_categories"><![CDATA["
 		select
 			c._id,
 			c.name,
-			'category_unknown' as image,
+			c.image,
 			(select count(1) from Category where parent = c._id) as childrenCount,
 			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countItems
 		from Category c
@@ -142,7 +143,7 @@
 		order by c.name asc
 	"]]></string>
 	<string name="query_category"><![CDATA["
-		select c._id, c.name, 'category_unknown' as typeImage, NULL as image
+		select c._id, c.name, c.image
 		from Category c
 		where c._id = ?
 	"]]></string>

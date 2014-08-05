@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.fragment;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
@@ -35,9 +36,9 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		CategoryDTO item = CategoryDTO.fromCursor(cursor);
 
-		getActivity().setTitle(item.name);
-		title.setText(item.name);
-		App.pic().load(item.image).placeholder(item.getFallbackDrawableID(getActivity())).into(image);
+		getActivity().setTitle(AndroidTools.getText(getActivity(), item.name));
+		title.setText(AndroidTools.getText(getActivity(), item.name));
+		App.pic().load(AndroidTools.getDrawableResourceID(getActivity(), item.image)).into(image);
 
 		eventsListener.categoryLoaded(item);
 	}

@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.CategoryItemsActivity;
@@ -64,8 +65,9 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 		App.pic().load(getImageResource(cursor)).into(holder.image);
 	}
 
-	private static String getName(Cursor cursor) {
-		return cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+	private CharSequence getName(Cursor cursor) {
+		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		return AndroidTools.getText(mContext, name);
 	}
 
 	private static Integer getCount(Cursor cursor, String columName) {
@@ -81,8 +83,7 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 
 	private int getImageResource(Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-		int imageResource = mContext.getResources().getIdentifier(image, "drawable", mContext.getPackageName());
-		return imageResource;
+		return AndroidTools.getDrawableResourceID(mContext, image);
 	}
 
 	private void showItems(long categoryID) {

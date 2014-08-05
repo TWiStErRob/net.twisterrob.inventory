@@ -1,0 +1,15 @@
+<resources>
+	<string name="property_other">Other</string>
+	<string name="property_home">Home</string>
+	<string name="property_workplace">Workplace</string>
+	<string name="property_apartment">Apartment</string>
+	<string name="property_house">Townhouse</string>
+	<string name="property_condo">Condo(minium)</string>
+	<string name="property_cottage">Cottage</string>
+	<string name="property_farm">Farm</string>
+	<string name="property_vacation">Vacation Home</string>
+	<string name="property_villa">Villa</string>
+	<string name="property_camp">Camp</string>
+	<string name="property_rent">Rent</string>
+	<string name="property_storage">Storage</string>
+</resources>

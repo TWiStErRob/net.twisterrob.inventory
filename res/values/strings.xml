@@ -26,20 +26,6 @@
 	<string name="property_delete">Delete Property</string>
 	<string name="property_new">New Property</string>
 	<string name="property_name_hint">Property Title</string>
-	
-	<string name="property_other">Other</string>
-	<string name="property_home">Home</string>
-	<string name="property_workplace">Workplace</string>
-	<string name="property_apartment">Apartment</string>
-	<string name="property_house">Townhouse</string>
-	<string name="property_condo">Condo(minium)</string>
-	<string name="property_cottage">Cottage</string>
-	<string name="property_farm">Farm</string>
-	<string name="property_vacation">Vacation Home</string>
-	<string name="property_villa">Villa</string>
-	<string name="property_camp">Camp</string>
-	<string name="property_rent">Rent</string>
-	<string name="property_storage">Storage</string>
 
 	<string name="room_title">Rooms</string>
 	<string name="room_add">Add Room&#8230;</string>
@@ -47,44 +33,7 @@
 	<string name="room_edit">Edit Room&#8230;</string>
 	<string name="room_delete">Delete Room</string>
 	<string name="room_name_hint">Room Title</string>
-	
-	<string name="room_other">Other</string>
-	<string name="room_bath">Bathroom</string>
-	<string name="room_bed">Bedroom</string>
-	<string name="room_kitchen">Kitchen</string>
-	<string name="room_WC">Restroom</string>
-	<string name="room_storage">Storage Room</string>
-	<string name="room_closet">Closet</string>
-	<string name="room_garage">Garage</string>
-	<string name="room_furnace">Furnace Room</string>
-	<string name="room_shed">Shed</string>
-	<string name="room_attic">Attic</string>
-	<string name="room_basement">Basement</string>
-	<string name="room_cellar">Cellar</string>
-	<string name="room_living">Living Room</string>
-	<string name="room_family">Family Room</string>
-	<string name="room_play">Play Room</string>
-	<string name="room_dining">Dining Room</string>
-	<string name="room_library">Library</string>
-	<string name="room_office">Office</string>
-	<string name="room_gym">Gym</string>
-	<string name="room_TV">TV Room</string>
-	<string name="room_pool">Pool House</string>
-	<string name="room_laundy">Laundry Room</string>
-	<string name="room_balcony">Balcony</string>
-	<string name="room_garden">Garden</string>
-	<string name="room_lobby">Lobby</string>
-	<string name="room_deck">Deck</string>
-	<string name="room_patio">Patio</string>
-	<string name="room_crawl">Crawl Space</string>
 
-	<string name="room_group_other">Other</string>
-	<string name="room_group_general">General</string>
-	<string name="room_group_storage">Storage</string>
-	<string name="room_group_common">Common</string>
-	<string name="room_group_function">Function</string>
-	<string name="room_group_space">Space</string>
-	
 	<string name="img_desc_empty_add">Create a new one.</string>
 	<string name="img_desc_property">Picture taken of the property or a semantic image depicting the type of the property.</string>
 	<string name="img_desc_property_add">Add a new property.</string>
@@ -92,6 +41,4 @@
 	<string name="img_desc_room_add">Add a new room to the current property.</string>
 	<string name="img_desc_item">Picture taken of the item or a semantic image depicting the category of the item.</string>
 	<string name="img_desc_item_add">Add a new item.</string>
-
-<!-- 	<string name=""></string> -->
 </resources>
