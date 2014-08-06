@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www2.psd100.com/ppp/2013/11/2701/Suitcase-1127233220.png -->
+<svg xmlns="http://www.w3.org/2000/svg"
+	viewBox="0 0 1000 1000">
+	<g transform="translate(500, 0)">
+		<rect x="-150" y="100" width="300" height="200" fill="white" rx="50" ry="50" stroke="black" stroke-width="50" />
+	</g>
+	<g transform="translate(0,250)" width="1000" height="600">
+		<rect x="0" y="0" width="1000" height="600" rx="100" ry="100" fill="black" />
+		<rect x="150" y="0" width="50" height="600" fill="white" />
+		<rect x="800" y="0" width="50" height="600" fill="white" />
+	</g>
+</svg>

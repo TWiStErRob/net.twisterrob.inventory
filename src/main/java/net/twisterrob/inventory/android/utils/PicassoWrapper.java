@@ -4,9 +4,11 @@ import java.io.*;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.*;
 import android.net.Uri;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.caverock.androidsvg.*;
@@ -148,7 +150,15 @@ public class PicassoWrapper implements Downloader, Listener, RequestTransformer 
 
 		@Override
 		protected void onPostExecute(Drawable result) {
+			fixImageView();
 			imageView.setImageDrawable(result);
+		}
+
+		@SuppressLint({"NewApi", "InlinedApi"})
+		private void fixImageView() {
+			if (android.os.Build.VERSION_CODES.HONEYCOMB <= android.os.Build.VERSION.SDK_INT) {
+				imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+			}
 		}
 	}
 }

@@ -38,7 +38,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
 
 		getActivity().setTitle(AndroidTools.getText(getActivity(), item.name));
 		title.setText(AndroidTools.getText(getActivity(), item.name));
-		App.pic().load(AndroidTools.getDrawableResourceID(getActivity(), item.image)).into(image);
+		App.pic().loadSVG(AndroidTools.getRawResourceID(getActivity(), item.image)).into(image);
 
 		eventsListener.categoryLoaded(item);
 	}
