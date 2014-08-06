@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -9,8 +10,8 @@ import android.widget.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.ItemCategoryAdapter.ViewHolder;
 
 public class ItemCategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
@@ -35,7 +36,7 @@ public class ItemCategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHol
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
 		holder.title.setText(getName(cursor));
 		holder.title.setLayoutParams(updateMargin(cursor, holder.title.getLayoutParams()));
-		App.pic().load(getImageResource(cursor)).into(holder.image);
+		holder.image.setImageDrawable(getImageResource(cursor));
 	}
 
 	private LayoutParams updateMargin(Cursor cursor, LayoutParams layoutParams) {
@@ -52,8 +53,8 @@ public class ItemCategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHol
 		return AndroidTools.getText(mContext, name);
 	}
 
-	private int getImageResource(Cursor cursor) {
+	private Drawable getImageResource(Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-		return AndroidTools.getDrawableResourceID(mContext, image);
+		return ImagedDTO.getFallbackDrawable(mContext, image);
 	}
 }

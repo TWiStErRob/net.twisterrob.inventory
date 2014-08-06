@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.view;
 
-import org.slf4j.*;
-
 import android.content.Context;
 import android.text.Layout;
 import android.util.AttributeSet;
@@ -18,11 +16,8 @@ public class WrappedTextView extends TextView {
 		super(context, attrs, defStyle);
 	}
 
-	private static final Logger LOG = LoggerFactory.getLogger(WrappedTextView.class);
-
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		LOG.debug("onMeasure({}, {}", MeasureSpec.toString(widthMeasureSpec), MeasureSpec.toString(heightMeasureSpec));
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
 		int maxLineWidth = (int)Math.ceil(getMaxLineWidth());

@@ -87,7 +87,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		getActivity().setTitle(room.name);
 		AndroidTools.selectByID(roomType, room.type);
 		roomName.setText(room.name); // must set it after roomType to prevent auto-propagation
-		setCurrentImageDriveId(room.image, room.getFallbackDrawableID(getActivity()));
+		setCurrentImageDriveId(room.image, room.getFallbackDrawable(getActivity()));
 	}
 
 	private void save() {

@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.*;
 
@@ -11,6 +12,7 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.GalleryAdapter.ViewHolder;
 
 public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
@@ -61,13 +63,13 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 	private void setImageAndType(final ViewHolder holder, Cursor cursor) {
 		int typeColumn = cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE);
 		String type = cursor.getString(typeColumn);
-		int typeResource = mContext.getResources().getIdentifier(type, "drawable", mContext.getPackageName());
-		holder.type.setImageResource(typeResource);
+		Drawable fallback = ImagedDTO.getFallbackDrawable(mContext, type);
+		holder.type.setImageDrawable(fallback);
 		holder.type.setVisibility(View.INVISIBLE);
 
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 		//App.pic().getPicasso().cancelRequest(holder.image); // TODO check scrolling
-		App.pic().loadDriveId(image).placeholder(typeResource).into(holder.image, new Callback() {
+		App.pic().loadDriveId(image).placeholder(fallback).into(holder.image, new Callback() {
 			public void onSuccess() {
 				holder.type.setVisibility(View.VISIBLE);
 			}

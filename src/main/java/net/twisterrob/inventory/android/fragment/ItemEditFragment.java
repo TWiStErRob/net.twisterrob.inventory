@@ -85,7 +85,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		getActivity().setTitle(item.name);
 		itemName.setText(item.name);
 		AndroidTools.selectByID(itemCategory, item.category);
-		setCurrentImageDriveId(item.image, item.getFallbackDrawableID(getActivity()));
+		setCurrentImageDriveId(item.image, item.getFallbackDrawable(getActivity()));
 	}
 
 	private void save() {

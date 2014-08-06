@@ -8,13 +8,13 @@ import org.slf4j.*;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.*;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.google.android.gms.drive.*;
-import com.squareup.picasso.RequestCreator;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
@@ -91,7 +91,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 								LOG.error("No driveId after upload");
 								return;
 							}
-							setCurrentImageDriveId(result.getDriveId(), 0);
+							setCurrentImageDriveId(result.getDriveId(), null);
 						}
 					}.execute(file);
 					return;
@@ -112,12 +112,12 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		return driveId;
 	}
 
-	protected void setCurrentImageDriveId(DriveId driveId, int fallbackResource) {
+	protected void setCurrentImageDriveId(DriveId driveId, int fallbackResourceID) {
+		setCurrentImageDriveId(driveId, getResources().getDrawable(fallbackResourceID));
+	}
+
+	protected void setCurrentImageDriveId(DriveId driveId, Drawable fallback) {
 		this.driveId = driveId;
-		RequestCreator load = App.pic().load(driveId);
-		if (0 < fallbackResource) {
-			load.placeholder(fallbackResource);
-		}
-		load.into(getImageView());
+		App.pic().load(driveId).placeholder(fallback).into(getImageView());
 	}
 }

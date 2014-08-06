@@ -45,7 +45,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 		getActivity().setTitle(room.name);
 		title.setText(room.name);
 		type.setText(String.valueOf(room.type));
-		App.pic().load(room.image).placeholder(room.getFallbackDrawableID(getActivity())).into(image);
+		App.pic().load(room.image).placeholder(room.getFallbackDrawable(getActivity())).into(image);
 
 		eventsListener.roomLoaded(room);
 	}

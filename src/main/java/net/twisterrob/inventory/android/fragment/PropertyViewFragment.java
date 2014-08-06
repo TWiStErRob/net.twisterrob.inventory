@@ -45,7 +45,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
 		getActivity().setTitle(property.name);
 		title.setText(property.name);
 		type.setText(String.valueOf(property.type));
-		App.pic().load(property.image).placeholder(property.getFallbackDrawableID(getActivity())).into(image);
+		App.pic().load(property.image).placeholder(property.getFallbackDrawable(getActivity())).into(image);
 
 		eventsListener.propertyLoaded(property);
 	}

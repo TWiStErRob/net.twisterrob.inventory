@@ -88,7 +88,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		AndroidTools.selectByID(propertyType, property.type);
 		propertyName.setText(property.name); // must set it after propertyType to prevent auto-propagation
 
-		setCurrentImageDriveId(property.image, property.getFallbackDrawableID(getActivity()));
+		setCurrentImageDriveId(property.image, property.getFallbackDrawable(getActivity()));
 	}
 
 	private void save() {

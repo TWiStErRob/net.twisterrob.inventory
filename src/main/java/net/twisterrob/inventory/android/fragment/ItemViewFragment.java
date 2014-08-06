@@ -45,7 +45,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemEvents> {
 		getActivity().setTitle(item.name);
 		title.setText(item.name);
 		type.setText(String.valueOf(item.category));
-		App.pic().load(item.image).placeholder(item.getFallbackDrawableID(getActivity())).into(image);
+		App.pic().load(item.image).placeholder(item.getFallbackDrawable(getActivity())).into(image);
 
 		eventsListener.itemLoaded(item);
 	}
