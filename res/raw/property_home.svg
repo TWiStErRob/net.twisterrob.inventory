@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://cdn.flaticon.com/png/256/15457.png -->
+<svg xmlns="http://www.w3.org/2000/svg"
+		xmlns:xlink="http://www.w3.org/1999/xlink"
+		viewBox="-100 -625 800 650">
+	<g transform="scale(1,-1)">
+		<path id="house" d="
+			M 0 0
+			v+300
+			l 300 +200 l 300 -200
+			v-300
+			h-350 v+200 h-100 v-200
+			Z
+			M 375 +100
+			m +0 +0 h+75 v+75 h-75 v-75 Z
+			m +0 +75 h+75 v+75 h-75 v-75 Z
+			m +75 +0 h+75 v+75 h-75 v-75 Z
+			m +0 -75 h+75 v+75 h-75 v-75 Z
+			"
+			fill="black" stroke="black" stroke-width="10" stroke-linejoin="round" />
+		<path id="roof" d="
+			M -50 325
+			l 350 +250 l 350 -250
+			"
+			fill="none" stroke="black" stroke-width="75" stroke-linecap="round" stroke-linejoin="bevel" />
+		<path id="chimney" d="
+			M 450 500
+			v+75 h+100 v-150 Z
+			"
+			fill="black" stroke="black" stroke-width="20" stroke-linejoin="round" />
+	</g>
+</svg>

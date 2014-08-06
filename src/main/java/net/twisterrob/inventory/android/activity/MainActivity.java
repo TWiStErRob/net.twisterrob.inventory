@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.activity;
 import java.util.*;
 
 import android.content.*;
+import android.graphics.drawable.Drawable;
 import android.os.*;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -31,7 +32,7 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		Collection<MainItem> actions = Arrays.asList( //
-				new MainItem("Properties", R.drawable.property_home, new OnClickListener() {
+				new MainItem("Properties", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(PropertyListActivity.list());
 					}
@@ -66,11 +67,11 @@ public class MainActivity extends BaseActivity {
 					public void onClick(View v) {
 						startActivity(ItemEditActivity.edit(5));
 					}
-				}), new MainItem("View Property #1", R.drawable.property_home, new OnClickListener() {
+				}), new MainItem("View Property #1", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(PropertyViewActivity.show(1));
 					}
-				}), new MainItem("Edit Property #1", R.drawable.property_home, new OnClickListener() {
+				}), new MainItem("Edit Property #1", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(PropertyEditActivity.edit(1));
 					}
@@ -99,12 +100,16 @@ public class MainActivity extends BaseActivity {
 			}, 1000);
 		}
 	}
-	private static class MainItem {
+	private class MainItem {
 		public final CharSequence title;
-		public final int iconDrawable;
+		public final Drawable iconDrawable;
 		public final OnClickListener listener;
 
 		public MainItem(String title, int iconDrawable, OnClickListener listener) {
+			this(title, getResources().getDrawable(iconDrawable), listener);
+
+		}
+		public MainItem(String title, Drawable iconDrawable, OnClickListener listener) {
 			this.title = title;
 			this.iconDrawable = iconDrawable;
 			this.listener = listener;
@@ -136,7 +141,7 @@ public class MainActivity extends BaseActivity {
 		@Override
 		protected void bindView(ViewHolder holder, MainItem currentItem, View convertView) {
 			holder.label.setText(currentItem.title);
-			holder.icon.setImageResource(currentItem.iconDrawable);
+			holder.icon.setImageDrawable(currentItem.iconDrawable);
 		}
 	}
 }
