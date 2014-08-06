@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
 					public void onClick(View v) {
 						startActivity(PropertyEditActivity.edit(1));
 					}
-				}), new MainItem("View Categories", R.drawable.category_unknown, new OnClickListener() {
+				}), new MainItem("View Categories", App.pic().getSVG(R.raw.category_unknown), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(CategoryViewActivity.show(Category.INTERNAL));
 					}

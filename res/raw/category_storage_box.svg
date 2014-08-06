@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Based on http://cdn.flaticon.com/png/256/15457.png -->
-<svg xmlns="http://www.w3.org/2000/svg"
-		xmlns:xlink="http://www.w3.org/1999/xlink"
-		viewBox="-100 -175 750 700">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100,-175 750 700">
 	<defs>
 		<style type="text/css"><![CDATA[
 			.outside, .inside, .flap {
@@ -25,7 +23,7 @@
 		<rect id="left-side" class="inside" width="300" height="310" rx="10" ry="10" transform="
 				rotate(+120) translate(0, +350) rotate(-120)
 				rotate(-30) skewX(-30) scale(1, 0.8660254037844386467)
-				translate(350,350)
+				translate(350, 350)
 			"
 		/>
 		<rect id="front-side" class="outside" width="350" height="310" rx="10" ry="10" transform="
@@ -44,12 +42,12 @@
 		/>
 		<rect id="right-side" class="outside" width="300" height="310" rx="10" ry="10" transform="
 				rotate(-30) skewX(-30) scale(1, 0.8660254037844386467)
-				translate(350,350)
+				translate(350, 350)
 			"
 		/>
 		<rect id="right-flap" class="flap" width="300" height="150" rx="10" ry="10" transform="
 				rotate(-30) skewX(-30) scale(1, 0.8660254037844386467)
-				translate(350,350)
+				translate(350, 350)
 				skewX(25)
 			"
 		/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25 -25 550 550">
-	<circle cx="250" cy="250" r="250" stroke="black" stroke-width="25" fill="white" />
-	<text text-anchor="middle" x="250" y="250" font-size="400" dy="125">?</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,-25 550 550">
+	<circle cx="250" cy="250" r="250" stroke="black" stroke-width="50" fill="white" />
+	<text text-anchor="middle" x="250" y="250" font-size="400" font-weight="bold" dy="125">?</text>
 </svg>
