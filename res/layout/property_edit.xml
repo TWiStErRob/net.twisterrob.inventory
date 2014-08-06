@@ -36,5 +36,6 @@
 		android:layout_above="@id/editor"
 		android:layout_margin="4dp"
 		android:adjustViewBounds="true"
+		android:layerType="software"
 		android:scaleType="fitCenter" />
 </RelativeLayout>

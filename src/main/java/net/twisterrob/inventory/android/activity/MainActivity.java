@@ -19,7 +19,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.main_activity);
+		super.setContentView(R.layout.activity_main);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(false);
 

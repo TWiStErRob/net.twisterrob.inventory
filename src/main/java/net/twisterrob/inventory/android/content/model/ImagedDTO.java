@@ -45,10 +45,13 @@ public class ImagedDTO extends DTO {
 
 	public static Drawable getFallbackDrawable(Context context, String resourceName) {
 		try {
-			return App.pic().getSVG(AndroidTools.getRawResourceID(context, resourceName));
+			Drawable svg = App.pic().getSVG(AndroidTools.getRawResourceID(context, resourceName));
+			if (svg != null) {
+				return svg;
+			}
 		} catch (NotFoundException ex) {
 			LOG.error("TODO Convert {} to SVG", resourceName);
-			return context.getResources().getDrawable(AndroidTools.getDrawableResourceID(context, resourceName));
 		}
+		return context.getResources().getDrawable(AndroidTools.getDrawableResourceID(context, resourceName));
 	}
 }
