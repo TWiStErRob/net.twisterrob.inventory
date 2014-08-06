@@ -5,6 +5,7 @@
 		xmlns:xlink="http://www.w3.org/1999/xlink"
 		viewBox="-100 -625 800 650">
 	<g transform="scale(1,-1)">
+		<rect id="interior" x="0" y="0" width="600" height="300" fill="white" />
 		<path id="house" d="
 			M 0 0
 			v+300
