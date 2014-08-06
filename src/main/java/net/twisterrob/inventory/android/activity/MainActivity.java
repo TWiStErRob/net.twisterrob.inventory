@@ -51,11 +51,11 @@ public class MainActivity extends BaseActivity {
 						Intent intent = new Intent(App.getAppContext(), CaptureImage.class);
 						startActivity(intent);
 					}
-				}), new MainItem("View Room #4", R.drawable.room_bedroom, new OnClickListener() {
+				}), new MainItem("View Room #4", App.pic().getSVG(R.raw.room_bedroom), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(RoomViewActivity.show(4));
 					}
-				}), new MainItem("Edit Room #4", R.drawable.room_bedroom, new OnClickListener() {
+				}), new MainItem("Edit Room #4", App.pic().getSVG(R.raw.room_bedroom), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(RoomEditActivity.edit(4));
 					}

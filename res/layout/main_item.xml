@@ -8,6 +8,7 @@
 		android:id="@id/icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:padding="@dimen/margin"
 		android:adjustViewBounds="true"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentRight="true" />
