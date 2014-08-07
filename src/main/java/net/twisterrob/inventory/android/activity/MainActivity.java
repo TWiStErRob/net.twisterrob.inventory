@@ -59,11 +59,11 @@ public class MainActivity extends BaseActivity {
 					public void onClick(View v) {
 						startActivity(RoomEditActivity.edit(4));
 					}
-				}), new MainItem("View Item #5", R.drawable.room_storage, new OnClickListener() {
+				}), new MainItem("View Item #5", App.pic().getSVG(R.raw.room_storage), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(ItemViewActivity.show(5));
 					}
-				}), new MainItem("Edit Item #5", R.drawable.room_storage, new OnClickListener() {
+				}), new MainItem("Edit Item #5", App.pic().getSVG(R.raw.room_storage), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(ItemEditActivity.edit(5));
 					}

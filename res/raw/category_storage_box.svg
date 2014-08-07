@@ -1,5 +1,29 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!--
+		red  ; -X: left, +X: right, facing: right
+		green; -Y: back, +Y: front, facing: left
+		blue ; -Z: down, +Z: up   , facing: up
+	-->
+	<!ENTITY isoAngle "30">
+	<!ENTITY isoCos "0.8660254037844386467">
+	<!ENTITY sqrt2 "1.41421356237">
+	<!ENTITY sqrt2Inv "0.70710678118">
+	<!ENTITY isoYZ "rotate(-&isoAngle;) skewX(-&isoAngle;) scale(1, &isoCos;)"><!-- isoX: right facing plane -->
+	<!ENTITY isoXZ "rotate(+&isoAngle;) skewX(+&isoAngle;) scale(1, &isoCos;)"><!-- isoY: left facing plane -->
+	<!ENTITY isoXY "rotate(-&isoAngle;) skewX(+&isoAngle;) scale(1, &isoCos;)"><!-- isoZ: up facing plane -->
+	<!-- isoXY projected Y transform by 350: transform="&isoXY &isoZPreY; translate(+350) &isoZPostY;" -->
+	<!ENTITY isoXPreX "rotate( +45) scale(&sqrt2;, 1)"><!ENTITY isoXPostX "scale(&sqrt2Inv;, 1) rotate( -45)">
+	<!ENTITY isoXPreY "rotate(+180)"><!ENTITY isoXPostY "rotate(-180)">
+	<!ENTITY isoXPreZ "rotate(+270)"><!ENTITY isoXPostZ "rotate(-270)">
+	<!ENTITY isoYPreX "rotate(  +0)"><!ENTITY isoYPostX "rotate(  -0)">
+	<!ENTITY isoYPreY "rotate(+135) scale(&sqrt2;, 1)"><!ENTITY isoYPostY "scale(&sqrt2Inv;, 1) rotate(-135)">
+	<!ENTITY isoYPreZ "rotate(+270)"><!ENTITY isoYPostZ "rotate(-270)">
+	<!ENTITY isoZPreX "rotate( +90)"><!ENTITY isoZPostX "rotate( -90)">
+	<!ENTITY isoZPreY "rotate(+180)"><!ENTITY isoZPostY "rotate(-180)">
+	<!ENTITY isoZPreZ "rotate(+315) scale(&sqrt2;, 1)"><!ENTITY isoZPostZ "scale(&sqrt2Inv;, 1) rotate(-315)">
+]>
+
 <!-- Based on http://cdn.flaticon.com/png/256/15457.png -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100,-175 750 700">
 	<defs>
@@ -20,36 +44,11 @@
 		]]></style>
 	</defs>
 	<g id="box">
-		<rect id="left-side" class="inside" width="300" height="310" rx="10" ry="10" transform="
-				rotate(+120) translate(0, +350) rotate(-120)
-				rotate(-30) skewX(-30) scale(1, 0.8660254037844386467)
-				translate(350, 350)
-			"
-		/>
-		<rect id="front-side" class="outside" width="350" height="310" rx="10" ry="10" transform="
-				rotate(30) skewX(30) scale(1, 0.8660254037844386467)
-			"
-		/>
-		<rect id="back-side" class="inside" width="350" height="310" rx="10" ry="10" transform="
-				rotate(-120) translate(0, +300) rotate(+120)
-				rotate(30) skewX(30) scale(1, 0.8660254037844386467)
-			"
-		/>
-		<rect id="front-flap" class="flap" width="350" height="150" rx="10" ry="10" transform="
-				rotate(30) skewX(30) scale(1, 0.8660254037844386467)
-				skewX(-25)
-			"
-		/>
-		<rect id="right-side" class="outside" width="300" height="310" rx="10" ry="10" transform="
-				rotate(-30) skewX(-30) scale(1, 0.8660254037844386467)
-				translate(350, 350)
-			"
-		/>
-		<rect id="right-flap" class="flap" width="300" height="150" rx="10" ry="10" transform="
-				rotate(-30) skewX(-30) scale(1, 0.8660254037844386467)
-				translate(350, 350)
-				skewX(25)
-			"
-		/>
+		<rect id="left-side" class="inside" width="300" height="310" rx="10" ry="10" transform="&isoYZ;" />
+		<rect id="front-side" class="outside" width="350" height="310" rx="10" ry="10" transform="&isoXZ;" />
+		<rect id="back-side" class="inside" width="350" height="310" rx="10" ry="10" transform="&isoXZ; &isoYPreY; translate(-300) &isoYPostY;" />
+		<rect id="front-flap" class="flap" width="350" height="150" rx="10" ry="10" transform="&isoXZ; skewX(-25)" />
+		<rect id="right-side" class="outside" width="300" height="310" rx="10" ry="10" transform="&isoYZ; &isoXPreX; translate(350) &isoXPostX;" />
+		<rect id="right-flap" class="flap" width="300" height="150" rx="10" ry="10" transform="&isoYZ; &isoXPreX; translate(350) &isoXPostX; skewX(25)" />
 	</g>
 </svg>

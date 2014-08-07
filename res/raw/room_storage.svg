@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.iconexperience.com/_img/o_collection_png/green_dark_grey/512x512/plain/shelf_empty.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 105"
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style type="text/css"><![CDATA[
+			.item {
+				fill: white;
+				stroke: black;
+				stroke-width: 2;
+			}
+			#shelf {
+				fill="black";
+			}
+			#frame {
+				fill: none;
+				stroke: black;
+				stroke-width: 10;
+				stroke-linejoin: round;
+			}
+		]]></style>
+
+		<rect id="shelf" width="80" height="5" transform="translate(0, -5)" />
+	</defs>
+	<g transform="translate(0, 100) scale(1, -1)">
+		<path id="frame" d="M0,0 v+100 h+100 V0" />
+		<g id="shelves" transform="translate(10, 0)">
+			<g id="shelf-top" transform="translate(0, 70)">
+				<rect class="item" x="0" width="40" height="20" rx="10" ry="5"/>
+				<rect class="item" x="45" width="15" height="20" rx="3" ry="3"/>
+				<circle class="item" cx="70" cy="5" r="5" />
+				<use xlink:href="#shelf" />
+			</g>
+			<g id="shelf-middle" transform="translate(0, 45)">
+				<rect class="item" x="0" width="35" height="18" rx="5" ry="5"/>
+				<line class="item" x1="40" x2="55" y2="18" />
+				<rect class="item" x="51.5" width="15" height="14" rx="5" ry="5"/>
+				<use xlink:href="#shelf" />
+			</g>
+			<g id="shelf-bottom" transform="translate(0, 20)">
+				<rect class="item" x="25" width="40" height="15" rx="5" ry="10"/>
+				<use xlink:href="#shelf" />
+			</g>
+		</g>
+	</g>
+</svg>
