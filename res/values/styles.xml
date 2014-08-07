@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources>
 <resources xmlns:tools="http://schemas.android.com/tools">
 	<style name="WidgetFont">
 		<item name="android:layout_width">wrap_content</item>

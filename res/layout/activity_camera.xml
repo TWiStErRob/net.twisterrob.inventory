@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE layout>
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/activityRoot"
@@ -23,14 +24,12 @@
 			android:id="@+id/btn_crop"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@android:drawable/ic_menu_crop"
-			android:contentDescription="TODO" />
+			android:src="@android:drawable/ic_menu_crop" />
 		<ImageButton
 			android:id="@+id/btn_capture"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@android:drawable/ic_menu_camera"
-			android:contentDescription="TODO" />
+			android:src="@android:drawable/ic_menu_camera" />
 		<ToggleButton
 			android:id="@+id/btn_flash"
 			android:layout_width="wrap_content"

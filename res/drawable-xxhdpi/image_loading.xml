@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE drawable>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 10(gap) 10(first) 10(gap) 10(second) 10(gap) 10(third) 10(gap) -->
+	<!-- 10(gap) 10(first) 10(gap) 10(second) 10(gap) 10(third) 10(gap) -->
 	<item android:left="10dp" android:right="50dp">
 		<shape android:shape="oval">
 			<size android:width="10dp" android:height="10dp" />

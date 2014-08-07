@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE lint>
 <lint>
-    <issue id="AppCompatResource" severity="ignore" />
-    <issue id="Assert" severity="ignore" />
-    <issue id="ContentDescription" severity="ignore" />
-    <issue id="UnusedAttribute" severity="ignore" />
+	<issue id="AppCompatResource" severity="ignore" />
+	<issue id="Assert" severity="ignore" />
+	<issue id="ContentDescription" severity="ignore" />
+	<issue id="UnusedAttribute" severity="ignore" />
 </lint>

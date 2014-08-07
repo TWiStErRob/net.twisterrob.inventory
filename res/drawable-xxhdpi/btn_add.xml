@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE drawable>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 	<!-- Vertical component of a + shaped cross, horizontal distribution is 40(gap)-20(vertical rect)-40(gap) = 100 -->
 	<item

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE layout>
 <RelativeLayout
 	android:id="@id/fragmentRoot"
 	android:layout_width="match_parent"
