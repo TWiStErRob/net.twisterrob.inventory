@@ -10,7 +10,6 @@
 		android:focusable="false"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:padding="@dimen/margin"
 		android:layout_gravity="center"
 		android:adjustViewBounds="true"
 		android:scaleType="fitCenter" />

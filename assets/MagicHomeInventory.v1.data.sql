@@ -32,9 +32,9 @@ INSERT INTO RoomType
 	UNION SELECT 101,     1,        0, 'room_bath',     NULL
 	UNION SELECT 102,     1,        0, 'room_bed',      'room_bedroom'
 	UNION SELECT 103,     1,        0, 'room_kitchen',  'room_kitchen'
-	UNION SELECT 104,     1,        0, 'room_WC',       NULL
+	UNION SELECT 104,     1,        0, 'room_toilet',   'room_toilet'
 -- Storage
-	UNION SELECT 201,     2,        0, 'room_storage',  NULL
+	UNION SELECT 201,     2,        0, 'room_storage',  'room_storage'
 	UNION SELECT 202,     2,        0, 'room_closet',   NULL
 	UNION SELECT 203,     2,        0, 'room_garage',   NULL
 	UNION SELECT 204,     2,        0, 'room_furnace',  NULL

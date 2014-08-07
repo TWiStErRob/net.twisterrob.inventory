@@ -21,25 +21,25 @@
 			}
 		]]></style>
 
-		<rect id="shelf" width="80" height="5" transform="translate(0, -5)" />
+		<rect id="shelf" width="90" height="5" transform="translate(0, -5)" />
 	</defs>
 	<g transform="translate(0, 100) scale(1, -1)">
 		<path id="frame" d="M0,0 v+100 h+100 V0" />
-		<g id="shelves" transform="translate(10, 0)">
+		<g id="shelves" transform="translate(5, 0)">
 			<g id="shelf-top" transform="translate(0, 70)">
-				<rect class="item" x="0" width="40" height="20" rx="10" ry="5"/>
-				<rect class="item" x="45" width="15" height="20" rx="3" ry="3"/>
-				<circle class="item" cx="70" cy="5" r="5" />
+				<rect class="item" x="5" width="40" height="20" rx="10" ry="5"/>
+				<rect class="item" x="55" width="15" height="20" rx="3" ry="3"/>
+				<circle class="item" cx="80" cy="5" r="5" />
 				<use xlink:href="#shelf" />
 			</g>
 			<g id="shelf-middle" transform="translate(0, 45)">
-				<rect class="item" x="0" width="35" height="18" rx="5" ry="5"/>
-				<line class="item" x1="40" x2="55" y2="18" />
-				<rect class="item" x="51.5" width="15" height="14" rx="5" ry="5"/>
+				<rect class="item" x="5" width="35" height="18" rx="5" ry="5"/>
+				<line class="item" x1="55" x2="70" y2="18" />
+				<rect class="item" x="66.5" width="15" height="14" rx="5" ry="5"/>
 				<use xlink:href="#shelf" />
 			</g>
 			<g id="shelf-bottom" transform="translate(0, 20)">
-				<rect class="item" x="25" width="40" height="15" rx="5" ry="10"/>
+				<rect class="item" x="20" width="55" height="15" rx="5" ry="10"/>
 				<use xlink:href="#shelf" />
 			</g>
 		</g>

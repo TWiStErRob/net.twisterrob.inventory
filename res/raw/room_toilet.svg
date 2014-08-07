@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY headR "80"><!ENTITY neck "30">
+	<!ENTITY shoulderR "35">
+	<!ENTITY crotch "20">
+	<!ENTITY armW "70"><!ENTITY armOH "320"><!ENTITY armIH "250"><!ENTITY handW "70"><!ENTITY handR "30">
+	<!ENTITY bodyH "300">
+	<!ENTITY legW "100"><!ENTITY legH "350"><!ENTITY legR "50">
+	<!ENTITY torsoIn "60">
+	<!ENTITY hip "60">
+	<!ENTITY skirtW "200">
+]>
+<!-- Based on http://us.123rf.com/400wm/400/400/colorvalley/colorvalley1108/colorvalley110800031/10345100-man-and-woman-icon-on-a-black-background.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1210 1150"
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!-- 530(body)+50(gap)+50(separator)+50(gap)+530(body) x 1150 -->
+	<defs>
+		<style type="text/css"><![CDATA[
+		]]></style>
+		<path id="female" d="
+			M 0,0 m0,+&headR; m+&armW;,0 m+&handW;,0 m+&legW;,0 m&crotch;,0
+			m +&headR;,0 a +&headR;,+&headR; 0 1 0 0,0.0001Z
+
+			M 0,0 m0,+&headR; m0,+&headR; m0,+&neck; m+&armW;,0 m0,+&shoulderR; 
+			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,-&shoulderR;
+			h+&handW;-&shoulderR;+&legW;+&crotch;+&crotch;+&legW;-&shoulderR;+&handW;
+			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,+&shoulderR;
+
+			l +&armW;,+&armOH; a &handR;,&handR; 0 0 1 -&handW;,+&handR; l -&armW;,-&armIH;
+			l -&torsoIn;,&hip; v+&hip; l +&skirtW;,+&bodyH; h-&skirtW;+&torsoIn;,0
+			v+&legH; a &legR;,&legR; 0 0 1 -&legW;,0 v-&legH;
+			h-&crotch;-&crotch;
+			v+&legH; a &legR;,&legR; 0 0 1 -&legW;,0 v-&legH;
+			h+&torsoIn;-&skirtW; l +&skirtW;,-&bodyH; v-&hip; l -&torsoIn;,-&hip;
+			l -&armW;,&armIH; a &handR;,&handR; 0 0 1 -&handW;,-&handR; l +&armW;,-&armOH;
+		" />
+		<path id="male" d="
+			M 0,0 m0,+&headR; m+&armW;,0 m+&handW;,0 m+&legW;,0 m&crotch;,0
+			m +&headR;,0 a +&headR;,+&headR; 0 1 0 0,0.0001Z
+
+			M 0,0 m0,+&headR; m0,+&headR; m0,+&neck; m+&armW;,0 m0,+&shoulderR; 
+			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,-&shoulderR;
+			h+&handW;-&shoulderR;+&legW;+&crotch;+&crotch;+&legW;-&shoulderR;+&handW;
+			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,+&shoulderR;
+
+			l +&armW;,+&armOH; a &handR;,&handR; 0 0 1 -&handW;,+&handR; l -&armW;,-&armIH;
+			v+&bodyH;+&hip;
+			v+&hip;+&legH; a &legR;,&legR; 0 0 1 -&legW;,0 v-&legH;-&hip;
+			h-&crotch;-&crotch;
+			v+&hip;+&legH; a &legR;,&legR; 0 0 1 -&legW;,0 v-&legH;-&hip;
+			v-&bodyH;-&hip;
+			l -&armW;,&armIH; a &handR;,&handR; 0 0 1 -&handW;,-&handR; l +&armW;,-&armOH;
+		" />
+	</defs>
+
+	<use xlink:href="#female" x="0" />
+	<rect x="50" width="50" height="1150" transform="translate(530)" />
+	<use xlink:href="#male" x="50" transform="translate(530) translate(100)" />
+</svg>

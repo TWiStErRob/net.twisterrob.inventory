@@ -11,7 +11,7 @@
 	<string name="room_bath">Bathroom</string>
 	<string name="room_bed">Bedroom</string>
 	<string name="room_kitchen">Kitchen</string>
-	<string name="room_WC">Restroom</string>
+	<string name="room_toilet">Restroom</string>
 	<string name="room_storage">Storage Room</string>
 	<string name="room_closet">Closet</string>
 	<string name="room_garage">Garage</string>

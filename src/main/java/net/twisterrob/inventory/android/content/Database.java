@@ -24,7 +24,7 @@ public class Database {
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 			}
 		});
-		m_helper.setDevMode(true);
+		m_helper.setDevMode(false);
 		m_helper.setDumpOnOpen(true);
 	}
 
@@ -52,19 +52,11 @@ public class Database {
 		SQLiteStatement insert = db.compileStatement(m_context.getString(insertResource));
 		try {
 			for (int i = 0; i < params.length; ++i) {
-				DatabaseUtils.bindObjectToProgram(insert, i, params[i]);
+				DatabaseUtils.bindObjectToProgram(insert, i + 1, params[i]);
 			}
 			return insert.executeInsert();
 		} finally {
 			insert.close();
-		}
-	}
-
-	private static void bindDriveID(SQLiteStatement insert, int arg, DriveId driveID) {
-		if (driveID == null) {
-			insert.bindNull(arg);
-		} else {
-			insert.bindString(arg, driveID.encodeToString());
 		}
 	}
 
@@ -127,23 +119,11 @@ public class Database {
 		return rawQuery(R.string.query_category, itemID);
 	}
 	public long newProperty(String name, long type, DriveId imageDriveID) {
-		SQLiteDatabase db = getWritableDatabase();
-
-		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_property_new));
-		try {
-			int arg = 0;
-			insert.bindString(++arg, name);
-			insert.bindLong(++arg, type);
-			bindDriveID(insert, ++arg, imageDriveID);
-
-			return insert.executeInsert();
-		} finally {
-			insert.close();
-		}
+		return rawInsert(R.string.query_property_new, name, type, imageDriveID);
 	}
 
 	public void updateProperty(long id, String name, long type, DriveId imageDriveID) {
-		execSQL(R.string.query_property_update, name, type, imageDriveID.encodeToString(), id);
+		execSQL(R.string.query_property_update, name, type, imageDriveID, id);
 	}
 
 	public void deleteProperty(long id) {
@@ -161,28 +141,19 @@ public class Database {
 
 	public long newRoom(long propertyID, String name, long type, DriveId imageDriveID) {
 		SQLiteDatabase db = getWritableDatabase();
-		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_room_new));
 		db.beginTransaction();
 		try {
 			long rootID = newItem(null, Item.ROOM_ROOT, Category.INTERNAL, null);
-
-			int arg = 0;
-			insert.bindLong(++arg, propertyID);
-			insert.bindLong(++arg, rootID);
-			insert.bindString(++arg, name);
-			insert.bindLong(++arg, type);
-			bindDriveID(insert, ++arg, imageDriveID);
-			long roomID = insert.executeInsert();
+			long roomID = rawInsert(R.string.query_room_new, propertyID, rootID, name, type, imageDriveID);
 			db.setTransactionSuccessful();
 			return roomID;
 		} finally {
-			insert.close();
 			db.endTransaction();
 		}
 	}
 
 	public void updateRoom(long id, String name, long type, DriveId imageDriveID) {
-		execSQL(R.string.query_room_update, name, type, imageDriveID.encodeToString(), id);
+		execSQL(R.string.query_room_update, name, type, imageDriveID, id);
 	}
 
 	public void deleteRoom(long id) {
@@ -195,23 +166,7 @@ public class Database {
 	}
 
 	private long newItem(Long parentID, String name, long category, DriveId imageDriveID) {
-		SQLiteDatabase db = getWritableDatabase();
-		SQLiteStatement insert = db.compileStatement(m_context.getString(R.string.query_item_new));
-		try {
-			int arg = 0;
-			if (parentID != null) {
-				insert.bindLong(++arg, parentID);
-			} else {
-				insert.bindNull(++arg);
-			}
-			insert.bindString(++arg, name);
-			insert.bindLong(++arg, category);
-			bindDriveID(insert, ++arg, imageDriveID);
-
-			return insert.executeInsert();
-		} finally {
-			insert.close();
-		}
+		return rawInsert(R.string.query_item_new, parentID, name, category, imageDriveID);
 	}
 
 	public void updateItem(long id, String name, long category, DriveId imageDriveID) {
