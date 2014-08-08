@@ -24,7 +24,7 @@ public class Database {
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 			}
 		});
-		m_helper.setDevMode(false);
+		m_helper.setDevMode(true);
 		m_helper.setDumpOnOpen(true);
 	}
 

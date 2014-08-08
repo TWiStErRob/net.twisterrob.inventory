@@ -8,4 +8,14 @@
 		android:icon="@android:drawable/ic_menu_share"
 		android:title="@string/category_share"
 		app:showAsAction="never" />
+	<item
+		android:id="@+id/action_category_viewItems"
+		android:icon="@android:drawable/ic_menu_view"
+		android:title="@string/category_viewItems"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/action_category_viewAllItems"
+		android:icon="@android:drawable/ic_menu_view"
+		android:title="@string/category_viewAllItems"
+		app:showAsAction="never" />
 </menu>

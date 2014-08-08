@@ -49,6 +49,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 
 			loadItemData.dependsOn(populateCats);
 		} else {
+			setTitle(R.string.item_new);
 			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 
@@ -59,7 +60,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
 
-		getActivity().setTitle(item.name);
+		setTitle(item.name);
 		title.setText(item.name);
 		AndroidTools.selectByID(type, item.category);
 		setCurrentImageDriveId(item.image, item.getFallbackDrawable(getActivity()));

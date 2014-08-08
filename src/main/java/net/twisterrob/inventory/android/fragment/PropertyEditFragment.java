@@ -55,6 +55,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		} else {
+			setTitle(R.string.property_new);
 			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 		manager.startLoading();
@@ -64,7 +65,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
 
-		getActivity().setTitle(property.name);
+		setTitle(property.name);
 		AndroidTools.selectByID(type, property.type);
 		title.setText(property.name); // must set it after propertyType to prevent auto-propagation
 

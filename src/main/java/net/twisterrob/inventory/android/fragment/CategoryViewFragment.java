@@ -2,9 +2,12 @@ package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.activity.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.CategoryViewFragment.CategoryEvents;
@@ -18,6 +21,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
 
 	public CategoryViewFragment() {
 		setDynamicResource(DYN_EventsClass, CategoryEvents.class);
+		setDynamicResource(DYN_OptionsMenu, R.menu.category);
 	}
 
 	@Override
@@ -36,11 +40,25 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		CategoryDTO item = CategoryDTO.fromCursor(cursor);
 
-		getActivity().setTitle(AndroidTools.getText(getActivity(), item.name));
+		setTitle(AndroidTools.getText(getActivity(), item.name));
 		title.setText(AndroidTools.getText(getActivity(), item.name));
 		App.pic().loadSVG(AndroidTools.getRawResourceID(getActivity(), item.image)).into(image);
 
 		eventsListener.categoryLoaded(item);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_category_viewItems:
+				startActivity(CategoryItemsActivity.showDirect(getArgCategoryID()));
+				return true;
+			case R.id.action_category_viewAllItems:
+				startActivity(CategoryItemsActivity.show(getArgCategoryID()));
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private long getArgCategoryID() {

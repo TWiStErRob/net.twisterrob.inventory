@@ -5,18 +5,21 @@
 	<string name="empty"></string>
 	<string name="list_empty">This list is empty.</string>
 	<string name="list_empty_add">You don\'t have any created, add one to get started.</string>
-	
+
 	<string name="action_picture_take">Take picture</string>
 	<string name="action_picture_pick">Pick picture</string>
 	<string name="action_share">Share</string>
 	<string name="action_save">Save</string>
-	
-	<string name="category_title">Categories</string>
-	<string name="category_share">Categories</string>
+
+	<string name="category_list">Categories</string>
+	<string name="category_details">Category Details</string>
+	<string name="category_share">Share Category</string>
+	<string name="category_viewItems">View items directly in Category</string>
+	<string name="category_viewAllItems">View all items in Category</string>
 	<string name="label_category_subs">%1$d subcategories</string>
 	<string name="label_category_items_view">View %1$d items</string>
-	
-	<string name="item_title">Items</string>
+
+	<string name="item_details">Item Details</string>
 	<string name="item_add">Add Item</string>
 	<string name="item_new">New Item</string>
 	<string name="item_edit">Edit Item</string>
@@ -24,15 +27,16 @@
 	<string name="item_share">Share Item</string>
 	<string name="item_name_hint">Item Name</string>
 
-	<string name="property_title">Properties</string>
+	<string name="property_list">Properties</string>
+	<string name="property_details">Property Details</string>
 	<string name="property_add">Add Property</string>
+	<string name="property_new">New Property</string>
 	<string name="property_edit">Edit Property</string>
 	<string name="property_delete">Delete Property</string>
 	<string name="property_share">Share Property</string>
-	<string name="property_new">New Property</string>
 	<string name="property_name_hint">Property Title</string>
 
-	<string name="room_title">Rooms</string>
+	<string name="room_details">Room Details</string>
 	<string name="room_add">Add Room</string>
 	<string name="room_new">New Room</string>
 	<string name="room_edit">Edit Room</string>

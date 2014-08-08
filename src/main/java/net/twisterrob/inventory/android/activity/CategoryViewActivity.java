@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
@@ -20,6 +21,7 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryViewFragmen
 		CategoryViewFragment detailsFragment;
 		if (parentID == Category.INTERNAL) {
 			detailsFragment = null;
+			setTitle(R.string.category_list);
 			hideDetails();
 		} else {
 			detailsFragment = CategoryViewFragment.newInstance(parentID);

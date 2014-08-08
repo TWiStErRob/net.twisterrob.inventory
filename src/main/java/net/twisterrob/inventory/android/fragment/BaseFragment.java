@@ -5,6 +5,7 @@ import java.util.*;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 
 public class BaseFragment<T> extends Fragment {
@@ -75,5 +76,13 @@ public class BaseFragment<T> extends Fragment {
 
 	protected void onRefresh() {
 		// optional override
+	}
+
+	public void setTitle(CharSequence string) {
+		((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(string);
+	}
+
+	public void setTitle(int stringResourceID) {
+		((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(stringResourceID);
 	}
 }

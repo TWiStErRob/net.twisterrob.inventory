@@ -55,6 +55,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		} else {
+			setTitle(R.string.room_new);
 			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 
@@ -65,7 +66,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 
-		getActivity().setTitle(room.name);
+		setTitle(room.name);
 		AndroidTools.selectByID(type, room.type);
 		title.setText(room.name); // must set it after roomType to prevent auto-propagation
 		setCurrentImageDriveId(room.image, room.getFallbackDrawable(getActivity()));

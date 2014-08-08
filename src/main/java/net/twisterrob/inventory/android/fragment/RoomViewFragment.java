@@ -42,7 +42,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 
-		getActivity().setTitle(room.name);
+		setTitle(room.name);
 		title.setText(room.name);
 		type.setText(String.valueOf(room.type));
 		App.pic().load(room.image).placeholder(room.getFallbackDrawable(getActivity())).into(image);
