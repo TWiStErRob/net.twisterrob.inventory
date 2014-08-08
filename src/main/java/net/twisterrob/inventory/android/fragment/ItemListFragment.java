@@ -58,11 +58,14 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
 
-		view.findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				eventsListener.newItem(getArgParentItemID());
-			}
-		});
+		View addButton = view.findViewById(R.id.btn_add);
+		if (addButton != null) {
+			addButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					eventsListener.newItem(getArgParentItemID());
+				}
+			});
+		}
 
 		list.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
