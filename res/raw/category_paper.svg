@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY fold "200">
+	<!ENTITY w "600">
+	<!ENTITY h "800">
+]>
+<!-- Based on http://images.clipartlogo.com/files/images/42/428874/paper-document-text-front-clip-art_t.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 840 1040"
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style type="text/css"><![CDATA[
+			#paper {
+				fill: white;
+				stroke: black;
+				stroke-width: 40;
+			}
+			#fold {
+				fill: white;
+				stroke: black;
+				stroke-width: 30;
+			}
+			line {
+				stroke: black;
+				stroke-width: 10;
+			}
+		]]></style>
+	</defs>
+	<g>
+		<path id="paper" d="M &w;,0 h-&w; v+&fold;+&h; h+&w;+&fold; v-&h; Z" />
+		<g id="lines" transform="translate(0, 50)">
+			<line x1="100" x2="700" transform="translate(0, 100)" />
+			<line x1="100" x2="700" transform="translate(0, 200)" />
+			<line x1="100" x2="700" transform="translate(0, 300)" />
+			<line x1="100" x2="700" transform="translate(0, 400)" />
+			<line x1="100" x2="700" transform="translate(0, 500)" />
+			<line x1="100" x2="700" transform="translate(0, 600)" />
+			<line x1="100" x2="700" transform="translate(0, 700)" />
+			<line x1="100" x2="700" transform="translate(0, 800)" />
+		</g>
+		<path id="fold" d="M &w;,0 v+&fold; h+&fold;" />
+	</g>
+</svg>

@@ -10,8 +10,6 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
-import com.example.android.xmladapters.Adapters;
-
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
@@ -46,13 +44,14 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		View root = inflater.inflate(R.layout.room_edit, container, false);
 		roomName = (EditText)root.findViewById(R.id.roomName);
 		roomType = (Spinner)root.findViewById(R.id.roomType);
+
 		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				save();
 			}
 		});
 
-		adapter = Adapters.loadCursorAdapter(getActivity(), R.xml.room_types, (Cursor)null);
+		adapter = new TypeAdapter(getActivity());
 		roomType.setAdapter(adapter);
 		roomType.setOnItemSelectedListener(new DefaultValueUpdater(roomName, Room.NAME));
 

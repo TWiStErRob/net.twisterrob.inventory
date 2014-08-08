@@ -31,7 +31,7 @@
 		delete from Room where property = ?
 	"]]></string>
 	<string name="query_property_types"><![CDATA["
-		select _id, name
+		select _id, name, image
 		from PropertyType
 		order by priority
 	"]]></string>
@@ -42,9 +42,10 @@
 		order by priority
 	"]]></string>
 	<string name="query_room_types"><![CDATA["
-		select _id, name
-		from RoomType
-		order by priority
+		select rt._id, rt.name, COALESCE(rt.image, rtk.image) as image
+		from RoomType rt
+		join RoomTypeKind rtk ON rt.kind = rtk._id
+		order by rt.priority
 	"]]></string>
 	<string name="query_rooms"><![CDATA["
 		select

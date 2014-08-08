@@ -24,4 +24,6 @@
 		M 450,-500
 		v-75 h+100 v+150 Z
 		" fill="black" stroke="black" stroke-width="20" stroke-linejoin="round" />
+	<rect id="sign" x="115" y="-340" width="250" height="100" fill="white" />
+	<text x="320" y="-243" text-anchor="middle" font-size="120" transform="scale(0.75, 1)">X &amp; Y</text>
 </svg>

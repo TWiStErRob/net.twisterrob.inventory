@@ -51,27 +51,27 @@ public class MainActivity extends BaseActivity {
 						Intent intent = new Intent(App.getAppContext(), CaptureImage.class);
 						startActivity(intent);
 					}
-				}), new MainItem("View Room #4", App.pic().getSVG(R.raw.room_bedroom), new OnClickListener() {
+				}), new MainItem("View Room", App.pic().getSVG(R.raw.room_bedroom), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(RoomViewActivity.show(4));
 					}
-				}), new MainItem("Edit Room #4", App.pic().getSVG(R.raw.room_bedroom), new OnClickListener() {
+				}), new MainItem("Edit Room", App.pic().getSVG(R.raw.room_bedroom), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(RoomEditActivity.edit(4));
 					}
-				}), new MainItem("View Item #5", App.pic().getSVG(R.raw.room_storage), new OnClickListener() {
+				}), new MainItem("View Item", App.pic().getSVG(R.raw.category_storage_box), new OnClickListener() {
 					public void onClick(View v) {
-						startActivity(ItemViewActivity.show(5));
+						startActivity(ItemViewActivity.show(4));
 					}
-				}), new MainItem("Edit Item #5", App.pic().getSVG(R.raw.room_storage), new OnClickListener() {
+				}), new MainItem("Edit Item", App.pic().getSVG(R.raw.category_storage_box), new OnClickListener() {
 					public void onClick(View v) {
-						startActivity(ItemEditActivity.edit(5));
+						startActivity(ItemEditActivity.edit(4));
 					}
-				}), new MainItem("View Property #1", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
+				}), new MainItem("View Property", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(PropertyViewActivity.show(1));
 					}
-				}), new MainItem("Edit Property #1", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
+				}), new MainItem("Edit Property", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(PropertyEditActivity.edit(1));
 					}

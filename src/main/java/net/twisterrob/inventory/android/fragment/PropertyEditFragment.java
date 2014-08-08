@@ -10,8 +10,6 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
-import com.example.android.xmladapters.Adapters;
-
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
@@ -30,7 +28,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 
 	private EditText propertyName;
 	private Spinner propertyType;
-	private CursorAdapter proeprtyTypeAdapter;
+	private CursorAdapter adapter;
 
 	public PropertyEditFragment() {
 		setDynamicResource(DYN_ImageView, R.id.propertyImage);
@@ -45,16 +43,16 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.property_edit, container, false);
 		propertyName = (EditText)root.findViewById(R.id.propertyName);
-		propertyName.requestFocus();
 		propertyType = (Spinner)root.findViewById(R.id.propertyType);
-		proeprtyTypeAdapter = Adapters.loadCursorAdapter(getActivity(), R.xml.property_types, (Cursor)null);
+
 		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				save();
 			}
 		});
 
-		propertyType.setAdapter(proeprtyTypeAdapter);
+		adapter = new TypeAdapter(getActivity());
+		propertyType.setAdapter(adapter);
 		propertyType.setOnItemSelectedListener(new DefaultValueUpdater(propertyName, Property.NAME));
 
 		return root;
@@ -65,7 +63,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		long id = getArgPropertyID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), proeprtyTypeAdapter);
+		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), adapter);
 		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, typeCursorSwapper);
 
 		if (id != Property.ID_ADD) {

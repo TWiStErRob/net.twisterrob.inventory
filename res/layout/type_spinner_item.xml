@@ -14,11 +14,12 @@
 		android:layout_centerVertical="true"
 		android:adjustViewBounds="true"
 		android:scaleType="fitCenter"
-		android:layout_marginRight="@dimen/margin" />
+		android:layout_margin="@dimen/margin" />
 	<TextView
 		android:id="@id/title"
 		android:focusable="false"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
 		android:layout_toEndOf="@id/image" />
 </RelativeLayout>

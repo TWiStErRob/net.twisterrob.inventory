@@ -33,7 +33,9 @@
 	<string name="category_collectible_cds">CDs</string>
 	<string name="category_collectible_dvds">DVDs</string>
 	<string name="category_collectible_blurays">Blu-Rays</string>
+	<string name="category_collectible_vinyls">Vinyls</string>
 	<string name="category_collectible_tapes">Tapes</string>
+	<string name="category_collectible_cassettes">Cassettes</string>
 	<string name="category_collectible_souvenirs">Souvenirs</string>
 	<string name="category_consumables">Consumables</string>
 	<string name="category_consumable_food">Food</string>
@@ -110,7 +112,7 @@
 	<string name="category_electronic_appliances">Appliances</string>
 	<string name="category_electronic_cables">Cables</string>
 	<string name="category_electronic_recorders">Cameras/Recorders</string>
-	<string name="category_electronic_playbacks">PLayback Devices</string>
+	<string name="category_electronic_playbacks">Playback Devices</string>
 	<string name="category_electronic_displays">Displays</string>
 	<string name="category_electronic_monitors">Monitors</string>
 	<string name="category_electronic_tv">TV</string>

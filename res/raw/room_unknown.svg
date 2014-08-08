@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://cdn.flaticon.com/png/256/15457.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-500 -500 1000 1000"
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style type="text/css"><![CDATA[
+			line {
+				stroke: black;
+			}
+		]]></style>
+	</defs>
+	<g>
+		<line id="wall-left"  x1="-400" y1="-350" x2="-400" y2="+500" stroke-width=" 50" />
+		<line id="wall-left"  x1="+400" y1="-350" x2="+400" y2="+500" stroke-width=" 50" />
+		<line id="roof-left"  x1="   0" y1="-450" x2="-500" y2="-450" stroke-width="100" transform="skewY(-15)" />
+		<line id="roof-right" x1="   0" y1="-450" x2="+500" y2="-450" stroke-width="100" transform="skewY(+15)" />
+		<g id="in-the-house" transform="translate(0, 50)">
+			<circle r="250" stroke="black" stroke-width="50" fill="white" />
+			<text text-anchor="middle" font-size="400" font-weight="bold" dy="125">?</text>
+		</g>
+	</g>
+</svg>

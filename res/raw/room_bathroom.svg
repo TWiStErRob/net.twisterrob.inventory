@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY curve "200">
+	<!ENTITY tubH "200">
+	<!ENTITY tubW "800">
+	<!ENTITY showerH "500">
+	<!ENTITY showerW "350">
+	<!ENTITY showerR "120">
+	<!ENTITY dropRX "15"><!ENTITY TdropRX "40">
+	<!ENTITY dropRY "20"><!ENTITY TdropRY "translate(0,70)">
+]>
+<!-- Based on http://cdn.flaticon.com/png/256/1290.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20,-695 1240 1115"
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style type="text/css"><![CDATA[
+			.part {
+				fill: none;
+				stroke: black;
+				stroke-width: 40;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+			}
+			#tub {
+				fill: black;
+			}
+			#shower-head {
+				fill: white;
+			}
+			#drop {
+				fill: white;
+				stroke: black;
+				stroke-width: 15;
+			}
+		]]></style>
+		<ellipse id="drop" rx="&dropRX;" ry="&dropRY;" />
+	</defs>
+	<g>
+		<path id="tub" class="part" d="
+			M 0,0
+			v+&tubH;
+			a &curve;,&curve; 0 0 0 &curve;,&curve;
+			h+&tubW;
+			a &curve;,&curve; 0 0 0 &curve;,-&curve;
+			v-&tubH;
+			h-&curve;-&tubW;-&curve;
+			" />
+		<path id="shower" class="part" d="
+			M 0,0
+			v-&showerH;
+			a 1,1 0 0 1 +&showerW;,0" />
+		<path id="shower-head" class="part" d="
+			M 0,0
+			a &showerR;,&showerR; 0 0 1 &showerR;,&showerR;
+			h-&showerR;-&showerR;
+			a &showerR;,&showerR; 0 0 1 &showerR;,-&showerR;
+			" transform="translate(&showerW;, -&showerH;)" />
+		<g id="water" transform="translate(&showerW;, -&showerH;) translate(0,&showerR;)">
+			<use xlink:href="#drop" transform="skewX(  0) translate(         0) &TdropRY;" />
+			<use xlink:href="#drop" transform="skewX(  0) translate(         0) &TdropRY;&TdropRY;" />
+			<use xlink:href="#drop" transform="skewX(  0) translate(         0) &TdropRY;&TdropRY;&TdropRY;" />
+			<use xlink:href="#drop" transform="skewX(+15) translate(+&TdropRX;) &TdropRY;" />
+			<use xlink:href="#drop" transform="skewX(+15) translate(+&TdropRX;) &TdropRY;&TdropRY;" />
+			<use xlink:href="#drop" transform="skewX(+15) translate(+&TdropRX;) &TdropRY;&TdropRY;&TdropRY;" />
+			<use xlink:href="#drop" transform="skewX(-15) translate(-&TdropRX;) &TdropRY;" />
+			<use xlink:href="#drop" transform="skewX(-15) translate(-&TdropRX;) &TdropRY;&TdropRY;" />
+			<use xlink:href="#drop" transform="skewX(-15) translate(-&TdropRX;) &TdropRY;&TdropRY;&TdropRY;" />
+		</g>
+	</g>
+</svg>

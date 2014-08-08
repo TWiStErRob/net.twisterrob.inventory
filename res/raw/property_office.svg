@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.morristownsprinkler.com/images/maps/google-maps-iphone-icon.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style type="text/css"><![CDATA[
+			.building {
+				fill: black;
+				stroke: white;
+				stroke-width: 5;
+				stroke-linejoin: round;
+			}
+			.window {
+				fill: white;
+			}
+		]]></style>
+		<rect id="window" class="window" width="125" height="125" />
+	</defs>
+	<g id="building2">
+		<rect class="building" x="400" y="0" width="600"  height="1000" />
+		<use xlink:href="#window" x="475" y="100" />
+		<use xlink:href="#window" x="635" y="100" />
+		<use xlink:href="#window" x="635" y="300" />
+		<use xlink:href="#window" x="635" y="500" />
+		<use xlink:href="#window" x="635" y="700" />
+		<use xlink:href="#window" x="795" y="100" />
+		<use xlink:href="#window" x="795" y="300" />
+		<use xlink:href="#window" x="795" y="500" />
+		<use xlink:href="#window" x="795" y="700" />
+	</g>
+	<g id="building1">
+		<rect class="building" x="0" y="250" width="700" height="750" />
+		<use xlink:href="#window" x="100" y="350" />
+		<use xlink:href="#window" x="100" y="550" />
+		<use xlink:href="#window" x="100" y="750" />
+		<use xlink:href="#window" x="275" y="350" />
+		<use xlink:href="#window" x="275" y="550" />
+		<use xlink:href="#window" x="275" transform="translate(0,750) scale(1,1.75)" />
+		<use xlink:href="#window" x="450" y="350" />
+		<use xlink:href="#window" x="450" y="550" />
+		<use xlink:href="#window" x="450" y="750" />
+	</g>
+</svg>

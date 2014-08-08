@@ -51,7 +51,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 			}
 		});
 
-		adapter = new ItemCategoryAdapter(getActivity());
+		adapter = new TypeAdapter(getActivity());
 		itemCategory.setAdapter(adapter);
 
 		return root;

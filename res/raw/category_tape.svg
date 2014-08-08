@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY r "20">
+	<!ENTITY w "300">
+	<!ENTITY h "250">
+	<!ENTITY x "50">
+	<!ENTITY hole "30">
+]>
+<!-- Based on http://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Tdkc60cassette.jpg/250px-Tdkc60cassette.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 340"
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style type="text/css"><![CDATA[
+			#cassette {
+				stroke: none;
+				stroke-width: 10;
+				fill: black;
+			}
+			#top {
+				stroke: white;
+				stroke-width: 5;
+				fill: black;
+				stroke-linecap: round;
+			}
+			#label {
+				stroke: white;
+				stroke-width: 15;
+				fill: black;
+			}
+			#hole-left, #hole-right {
+				fill: white;
+			}
+		]]></style>
+	</defs>
+	<g>
+		<path id="cassette" d="
+			M &r;,0
+			h+&x; l+&x;,+&x; h+&w; l+&x;,-&x; h+&x;
+			a &r;,&r; 0 0 1 +&r;,+&r;
+			v+&h;+&x;
+			a &r;,&r; 0 0 1 -&r;,+&r;
+			h-&x;-&x;-&w;-&x;-&x;
+			a &r;,&r; 0 0 1 -&r;,-&r;
+			v-&h;-&x;
+			a &r;,&r; 0 0 1 &r;,-&r;
+			Z" />
+		<path id="top" d="
+			M &x;,0 m&r;,0
+			l+&x;,+&x; h+&w; l+&x;,-&x;
+			" />
+		<path id="label" d="M &x;,&x; m0,&x; m0,&r;
+			a &r;,&r; 0 0 1 +&r;,-&r;
+			h+&x;+&w;+&x;
+			a &r;,&r; 0 0 1 +&r;,+&r;
+			v+150
+			a &r;,&r; 0 0 1 -&r;,+&r;
+			h-&x;-&w;-&x;
+			a &r;,&r; 0 0 1 -&r;,-&r;
+			v-150
+			" stroke="black" stroke-width="3" fill="none" />
+		<circle id="hole-left" r="&hole;"
+			transform="translate(0,&r;) translate(&x;,&x;) translate(&x;,&x;) translate(&x;,&x;)" />
+		<circle id="hole-right" r="&hole;"
+			transform="translate(&w;) translate(&r;,&r;) translate(&r;,&x;) translate(0,&x;) translate(&x;,&x;)" />
+	</g>
+</svg>
