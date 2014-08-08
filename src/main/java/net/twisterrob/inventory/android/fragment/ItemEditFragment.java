@@ -5,10 +5,8 @@ import org.slf4j.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
-import android.support.v4.widget.CursorAdapter;
 import android.view.*;
-import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Toast;
 
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -19,20 +17,12 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.CursorSwapper;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class ItemEditFragment extends BaseEditFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditFragment.class);
-
-	private EditText itemName;
-	private Spinner itemCategory;
-	private CursorAdapter adapter;
-
-	public ItemEditFragment() {
-		setDynamicResource(DYN_ImageView, R.id.itemImage);
-	}
 
 	@Override
 	protected String getBaseFileName() {
@@ -41,20 +31,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.item_edit, container, false);
-		itemName = (EditText)root.findViewById(R.id.itemName);
-		itemCategory = (Spinner)root.findViewById(R.id.itemCategory);
-
-		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				save();
-			}
-		});
-
-		adapter = new TypeAdapter(getActivity());
-		itemCategory.setAdapter(adapter);
-
-		return root;
+		return inflater.inflate(R.layout.item_edit, container, false);
 	}
 
 	@Override
@@ -62,7 +39,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		long id = getArgItemID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper catCursorSwapper = new CursorSwapper(getActivity(), adapter);
+		CursorSwapper catCursorSwapper = new CursorSwapper(getActivity(), typeAdapter);
 		Dependency<Cursor> populateCats = manager.add(ItemCategories.ordinal(), null, catCursorSwapper);
 
 		if (id != Item.ID_ADD) {
@@ -83,12 +60,13 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
 
 		getActivity().setTitle(item.name);
-		itemName.setText(item.name);
-		AndroidTools.selectByID(itemCategory, item.category);
+		title.setText(item.name);
+		AndroidTools.selectByID(type, item.category);
 		setCurrentImageDriveId(item.image, item.getFallbackDrawable(getActivity()));
 	}
 
-	private void save() {
+	@Override
+	protected void save() {
 		new SaveTask().execute(getCurrentItem());
 	}
 
@@ -96,9 +74,9 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		ItemDTO item = new ItemDTO();
 		item.parentID = getArgParentID();
 		item.id = getArgItemID();
-		item.name = itemName.getText().toString();
+		item.name = title.getText().toString();
 		item.image = getCurrentImageDriveId();
-		item.category = itemCategory.getSelectedItemId();
+		item.category = type.getSelectedItemId();
 		return item;
 	}
 

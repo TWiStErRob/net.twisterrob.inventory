@@ -5,10 +5,8 @@ import org.slf4j.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
-import android.support.v4.widget.CursorAdapter;
 import android.view.*;
-import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Toast;
 
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -19,20 +17,12 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.CursorSwapper;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class RoomEditFragment extends BaseEditFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomEditFragment.class);
-
-	private EditText roomName;
-	private Spinner roomType;
-	private CursorAdapter adapter;
-
-	public RoomEditFragment() {
-		setDynamicResource(DYN_ImageView, R.id.roomImage);
-	}
 
 	@Override
 	protected String getBaseFileName() {
@@ -40,22 +30,14 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setKeepNameInSync(true);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.room_edit, container, false);
-		roomName = (EditText)root.findViewById(R.id.roomName);
-		roomType = (Spinner)root.findViewById(R.id.roomType);
-
-		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				save();
-			}
-		});
-
-		adapter = new TypeAdapter(getActivity());
-		roomType.setAdapter(adapter);
-		roomType.setOnItemSelectedListener(new DefaultValueUpdater(roomName, Room.NAME));
-
-		return root;
+		return inflater.inflate(R.layout.room_edit, container, false);
 	}
 
 	@Override
@@ -63,7 +45,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		long id = getArgRoomID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), adapter);
+		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), typeAdapter);
 		Dependency<Cursor> populateTypes = manager.add(RoomTypes.ordinal(), null, typeCursorSwapper);
 
 		if (id != Room.ID_ADD) {
@@ -84,12 +66,13 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 
 		getActivity().setTitle(room.name);
-		AndroidTools.selectByID(roomType, room.type);
-		roomName.setText(room.name); // must set it after roomType to prevent auto-propagation
+		AndroidTools.selectByID(type, room.type);
+		title.setText(room.name); // must set it after roomType to prevent auto-propagation
 		setCurrentImageDriveId(room.image, room.getFallbackDrawable(getActivity()));
 	}
 
-	private void save() {
+	@Override
+	protected void save() {
 		new SaveTask().execute(getCurrentRoom());
 	}
 
@@ -97,8 +80,8 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		RoomDTO room = new RoomDTO();
 		room.propertyID = getArgPropertyID();
 		room.id = getArgRoomID();
-		room.name = roomName.getText().toString();
-		room.type = roomType.getSelectedItemId();
+		room.name = title.getText().toString();
+		room.type = type.getSelectedItemId();
 		room.image = getCurrentImageDriveId();
 		return room;
 	}

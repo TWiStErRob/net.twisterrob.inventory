@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
 
-import net.twisterrob.inventory.R;
-
 public class BaseFragment<T> extends Fragment {
 	protected static final String DYN_OptionsMenu = "optionsMenu";
 	protected static final String DYN_EventsClass = "eventsListenerClass";
@@ -65,7 +63,6 @@ public class BaseFragment<T> extends Fragment {
 		if (hasDynResource(DYN_OptionsMenu)) {
 			inflater.inflate(this.<Integer> getDynamicResource(DYN_OptionsMenu), menu);
 		}
-		inflater.inflate(R.menu.share, menu);
 	}
 
 	protected void onStartLoading() {

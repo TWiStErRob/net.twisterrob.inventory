@@ -5,10 +5,8 @@ import org.slf4j.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
-import android.support.v4.widget.CursorAdapter;
 import android.view.*;
-import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Toast;
 
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -19,20 +17,12 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.CursorSwapper;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class PropertyEditFragment extends BaseEditFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyEditFragment.class);
-
-	private EditText propertyName;
-	private Spinner propertyType;
-	private CursorAdapter adapter;
-
-	public PropertyEditFragment() {
-		setDynamicResource(DYN_ImageView, R.id.propertyImage);
-	}
 
 	@Override
 	protected String getBaseFileName() {
@@ -40,22 +30,14 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setKeepNameInSync(true);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.property_edit, container, false);
-		propertyName = (EditText)root.findViewById(R.id.propertyName);
-		propertyType = (Spinner)root.findViewById(R.id.propertyType);
-
-		((Button)root.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				save();
-			}
-		});
-
-		adapter = new TypeAdapter(getActivity());
-		propertyType.setAdapter(adapter);
-		propertyType.setOnItemSelectedListener(new DefaultValueUpdater(propertyName, Property.NAME));
-
-		return root;
+		return inflater.inflate(R.layout.property_edit, container, false);
 	}
 
 	@Override
@@ -63,7 +45,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		long id = getArgPropertyID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), adapter);
+		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), typeAdapter);
 		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, typeCursorSwapper);
 
 		if (id != Property.ID_ADD) {
@@ -83,21 +65,22 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
 
 		getActivity().setTitle(property.name);
-		AndroidTools.selectByID(propertyType, property.type);
-		propertyName.setText(property.name); // must set it after propertyType to prevent auto-propagation
+		AndroidTools.selectByID(type, property.type);
+		title.setText(property.name); // must set it after propertyType to prevent auto-propagation
 
 		setCurrentImageDriveId(property.image, property.getFallbackDrawable(getActivity()));
 	}
 
-	private void save() {
+	@Override
+	protected void save() {
 		new SaveTask().execute(getCurrentProperty());
 	}
 
 	private PropertyDTO getCurrentProperty() {
 		PropertyDTO property = new PropertyDTO();
 		property.id = getArgPropertyID();
-		property.name = propertyName.getText().toString();
-		property.type = propertyType.getSelectedItemId();
+		property.name = title.getText().toString();
+		property.type = type.getSelectedItemId();
 		property.image = getCurrentImageDriveId();
 		return property;
 	}

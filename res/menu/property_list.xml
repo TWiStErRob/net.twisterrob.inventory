@@ -7,5 +7,5 @@
 		android:id="@+id/action_property_add"
 		android:icon="@android:drawable/ic_menu_add"
 		android:title="@string/property_add"
-		app:showAsAction="always" />
+		app:showAsAction="always|withText" />
 </menu>

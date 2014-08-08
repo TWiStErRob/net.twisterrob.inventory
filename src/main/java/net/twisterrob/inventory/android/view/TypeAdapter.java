@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -35,7 +36,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	@Override
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
 		holder.title.setText(getName(cursor));
-		holder.title.setLayoutParams(updateMargin(cursor, holder.title.getLayoutParams()));
+		holder.title.setLayoutParams(updateFormat(cursor, holder.title));
 
 		App.pic().loadSVG(getImageResource(cursor)).into(holder.image);
 	}
@@ -49,11 +50,17 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		return AndroidTools.getRawResourceID(mContext, image);
 	}
 
-	private LayoutParams updateMargin(Cursor cursor, LayoutParams layoutParams) {
+	private LayoutParams updateFormat(Cursor cursor, TextView title) {
 		int level = getLevel(cursor);
-		float margin = mContext.getResources().getDimension(R.dimen.margin) * (3 * level + 1);
 
-		MarginLayoutParams marginParams = (MarginLayoutParams)layoutParams;
+		if (level == 1) {
+			title.setTypeface(null, Typeface.BOLD);
+		} else {
+			title.setTypeface(null, Typeface.NORMAL);
+		}
+
+		float margin = mContext.getResources().getDimension(R.dimen.margin) * (3 * level + 1);
+		MarginLayoutParams marginParams = (MarginLayoutParams)title.getLayoutParams();
 		marginParams.leftMargin = (int)margin; // TODO setStartMargin
 		return marginParams;
 	}

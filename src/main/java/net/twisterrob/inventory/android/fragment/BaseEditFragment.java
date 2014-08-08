@@ -8,23 +8,41 @@ import org.slf4j.*;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.*;
+import android.support.v4.widget.CursorAdapter;
 import android.view.*;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
+import android.widget.*;
 
 import com.google.android.gms.drive.*;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.CaptureImage;
+import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.tasks.Upload;
 import net.twisterrob.inventory.android.utils.*;
+import net.twisterrob.inventory.android.view.*;
 
 public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
-	protected static final String DYN_ImageView = "imageViewID";
 	private DriveId driveId;
+	private boolean keepNameInSync;
+
+	protected EditText title;
+	protected Spinner type;
+	protected CursorAdapter typeAdapter;
+	protected ImageView image;
+
+	public void setKeepNameInSync(boolean keepNameInSync) {
+		this.keepNameInSync = keepNameInSync;
+	}
+
+	public boolean isKeepNameInSync() {
+		return keepNameInSync;
+	}
 
 	protected File getTargetFile() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
@@ -35,12 +53,39 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	protected abstract String getBaseFileName();
 
+	protected abstract void save();
+
 	@Override
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
-		getImageView().setOnClickListener(new OnClickListener() {
+		title = (EditText)view.findViewById(R.id.title);
+		type = (Spinner)view.findViewById(R.id.type);
+		image = (ImageView)view.findViewById(R.id.image);
+		image.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				takePicture();
+			}
+		});
+
+		((Button)view.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				save();
+			}
+		});
+
+		type.setAdapter(typeAdapter = new TypeAdapter(getActivity()));
+		type.setOnItemSelectedListener(new DefaultValueUpdater(title, CommonColumns.NAME) {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (keepNameInSync) {
+					super.onItemSelected(parent, view, position, id);
+				}
+				if (getCurrentImageDriveId() == null) {
+					@SuppressWarnings("resource")
+					Cursor cursor = (Cursor)parent.getItemAtPosition(position);
+					String image = cursor.getString(cursor.getColumnIndex(CommonColumns.IMAGE));
+					setCurrentImageDriveId(null, ImagedDTO.getFallbackDrawable(getActivity(), image));
+				}
 			}
 		});
 	}
@@ -79,21 +124,26 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 			case PictureUtils.REQUEST_CODE_GET_PICTURE:
 			case PictureUtils.REQUEST_CODE_TAKE_PICTURE:
 				if (resultCode == Activity.RESULT_OK && data != null) {
-					getImageView().setImageResource(R.drawable.image_loading);
-					File file = PictureUtils.getFile(getActivity(), data.getData());
+					image.setImageResource(R.drawable.image_loading);
+					try {
+						File file = PictureUtils.getFile(getActivity(), data.getData());
 
-					new Upload(getActivity()) {
-						private final Logger LOG = LoggerFactory.getLogger(getClass());
+						new Upload(getActivity()) {
+							private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-						@Override
-						protected void onPostExecute(DriveFile result) {
-							if (result == null) {
-								LOG.error("No driveId after upload");
-								return;
+							@Override
+							protected void onPostExecute(DriveFile result) {
+								if (result == null) {
+									LOG.error("No driveId after upload");
+									return;
+								}
+								setCurrentImageDriveId(result.getDriveId(), null);
 							}
-							setCurrentImageDriveId(result.getDriveId(), null);
-						}
-					}.execute(file);
+						}.execute(file);
+					} catch (RuntimeException ex) {
+						image.setImageResource(R.drawable.image_error);
+						throw ex;
+					}
 					return;
 				}
 				break;
@@ -102,10 +152,6 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 				break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	private ImageView getImageView() {
-		return (ImageView)getView().findViewById(super.<Integer> getDynamicResource(DYN_ImageView));
 	}
 
 	protected DriveId getCurrentImageDriveId() {
@@ -118,6 +164,6 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	protected void setCurrentImageDriveId(DriveId driveId, Drawable fallback) {
 		this.driveId = driveId;
-		App.pic().load(driveId).placeholder(fallback).into(getImageView());
+		App.pic().load(driveId).placeholder(fallback).into(image);
 	}
 }
