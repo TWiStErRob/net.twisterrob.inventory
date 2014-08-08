@@ -50,7 +50,7 @@ public class BaseListFragment<T> extends BaseFragment<T> {
 	}
 
 	protected View inflateRoot(LayoutInflater inflater, ViewGroup container) {
-		return inflater.inflate(R.layout.gallery, container, false);
+		return inflater.inflate(R.layout.gallery_editable, container, false);
 	}
 
 	protected CursorAdapter createAdapter() {

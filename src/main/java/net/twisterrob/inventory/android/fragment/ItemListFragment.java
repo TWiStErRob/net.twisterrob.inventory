@@ -29,6 +29,12 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	}
 
 	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		menu.findItem(R.id.action_item_add).setVisible(getArgParentItemID() != Item.ID_ADD);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_item_add:
@@ -36,6 +42,15 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	protected View inflateRoot(LayoutInflater inflater, ViewGroup container) {
+		if (getArgParentItemID() == Item.ID_ADD) {
+			return inflater.inflate(R.layout.gallery_readonly, container, false);
+		} else {
+			return super.inflateRoot(inflater, container);
 		}
 	}
 

@@ -43,7 +43,6 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
 
 		setTitle(property.name);
-		title.setText(property.name);
 		type.setText(String.valueOf(property.type));
 		App.pic().load(property.image).placeholder(property.getFallbackDrawable(getActivity())).into(image);
 

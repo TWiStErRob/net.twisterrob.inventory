@@ -41,7 +41,6 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
 		CategoryDTO item = CategoryDTO.fromCursor(cursor);
 
 		setTitle(AndroidTools.getText(getActivity(), item.name));
-		title.setText(AndroidTools.getText(getActivity(), item.name));
 		App.pic().loadSVG(AndroidTools.getRawResourceID(getActivity(), item.image)).into(image);
 
 		eventsListener.categoryLoaded(item);
