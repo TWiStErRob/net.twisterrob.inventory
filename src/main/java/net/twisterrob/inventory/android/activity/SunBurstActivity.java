@@ -25,24 +25,56 @@ public class SunBurstActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sunburst);
+
+		sunburst = new SunburstDrawable<Node>(new NodeTreeWalker(), new Paints());
 		diagram = (ImageView)findViewById(R.id.diagram);
 		diagram.setOnTouchListener(new Toucher());
-		diagram.setImageDrawable(sunburst);
 		diagram.setImageResource(R.drawable.image_loading);
+
 		new AsyncTask<Void, Void, Node>() {
 			@Override
 			protected Node doInBackground(Void... params) {
-				Node root = new Node(Node.Type.Root, 0, "ROOT");
+				Node root = new Node(Node.Type.Root, 0, null);
 				new TreeLoader().build(root);
 				return root;
 			}
 
 			@Override
 			protected void onPostExecute(Node result) {
-				sunburst = new SunburstDrawable<Node>(result, new NodeTreeWalker(), new Paints());
+				setRoot(result);
 				diagram.setImageDrawable(sunburst);
 			}
 		}.execute();
+	}
+
+	Stack<Node> stack = new Stack<Node>();
+
+	public void setRoot(Node root) {
+		if (root == null) {
+			return;
+		}
+		if (sunburst.getRoot() != null) {
+			stack.add(sunburst.getRoot());
+		}
+		sunburst.setHighlight(null);
+		sunburst.setRoot(root);
+		getSupportActionBar().setSubtitle(root.label);
+	}
+
+	public void resetRoot() {
+		Node root = stack.pop();
+		sunburst.setHighlight(sunburst.getRoot());
+		sunburst.setRoot(root);
+		getSupportActionBar().setSubtitle(root.label);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!stack.isEmpty()) {
+			resetRoot();
+		} else {
+			super.onBackPressed();
+		}
 	}
 
 	private class Toucher implements OnTouchListener {
@@ -52,7 +84,7 @@ public class SunBurstActivity extends BaseActivity {
 				float[] points = unProject(event);
 				if (points != null && sunburst != null) {
 					Node selected = sunburst.at(points[0], points[1]);
-					sunburst.setHighlight(selected);
+					setRoot(selected);
 					return true;
 				}
 			}
@@ -172,6 +204,11 @@ public class SunBurstActivity extends BaseActivity {
 			Property,
 			Room,
 			Item
+		}
+
+		@Override
+		public String toString() {
+			return String.format(Locale.ROOT, "%s #%d: %s", type, id, label);
 		}
 	}
 

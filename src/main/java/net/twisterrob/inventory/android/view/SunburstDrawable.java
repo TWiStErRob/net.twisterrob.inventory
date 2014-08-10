@@ -21,21 +21,30 @@ public class SunburstDrawable<T> extends Drawable {
 		Paint getText(T node, int level, float start, float end);
 	}
 
-	private final T root;
+	private T root;
 	private T highlight;
 	private final TreeWalker<T> walker;
 	private final PaintStrategy<? super T> paints;
 
-	public SunburstDrawable(T root, TreeWalker<T> walker, PaintStrategy<? super T> paints) {
-		this.root = root;
+	public SunburstDrawable(TreeWalker<T> walker, PaintStrategy<? super T> paints) {
 		this.walker = walker;
 		this.paints = paints;
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		draw(canvas, root, 1, queryThickness(), 0, 1);
-		//PaintUtils.drawArcSegment(canvas, 250, 250, 50, 100, 0, 90, paints.getFill(null, 0, 0, 0), null);
+		if (walker.getChildren(root).iterator().hasNext()) {
+			draw(canvas, root, 1, queryThickness(), 0, 1);
+		} else {
+			Rect bounds = getBounds();
+			float size = Math.min(bounds.width(), bounds.height());
+			float cx = bounds.exactCenterX();
+			float cy = bounds.exactCenterY();
+			Paint fill = paints.getFill(root, 0, 0, 1);
+			Paint text = paints.getText(root, 0, 0, 1);
+			canvas.drawCircle(cx, cy, size / 2, fill);
+			canvas.drawText(walker.getLabel(root), cx, cy, text);
+		}
 	}
 
 	private void draw(Canvas canvas, T subTree, int level, float thickness, float start, float end) {
@@ -98,8 +107,19 @@ public class SunburstDrawable<T> extends Drawable {
 		return find(root, r, alpha / 360.0f, 0, queryThickness(), 0, 1);
 	}
 
+	public T getHighlight() {
+		return highlight;
+	}
 	public void setHighlight(T highlight) {
 		this.highlight = highlight;
+		invalidateSelf();
+	}
+
+	public T getRoot() {
+		return root;
+	}
+	public void setRoot(T root) {
+		this.root = root;
 		invalidateSelf();
 	}
 
