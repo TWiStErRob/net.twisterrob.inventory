@@ -53,6 +53,9 @@
 			android:label="@string/action_picture_take"
 			android:screenOrientation="fullSensor" />
 		<activity
+			android:name="net.twisterrob.inventory.android.activity.SunBurstActivity"
+			android:label="@string/sunburst_title" />
+		<activity
 			android:name="net.twisterrob.inventory.android.activity.CategoryViewActivity"
 			android:label="@string/category_details">
 			<meta-data

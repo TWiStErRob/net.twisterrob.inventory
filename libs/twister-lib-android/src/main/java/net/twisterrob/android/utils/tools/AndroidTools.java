@@ -2,10 +2,14 @@ package net.twisterrob.android.utils.tools;
 
 import java.util.*;
 
+import static java.lang.Math.*;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.*;
 import android.hardware.*;
 import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.util.TypedValue;
@@ -135,5 +139,58 @@ public abstract class AndroidTools {
 			result = (cameraInfo.orientation - degrees + 360) % 360;
 		}
 		return result;
+	}
+
+	/**
+	 * Draws a thick arc between the defined angles, see {@link Canvas#drawArc} for more.
+	 * This method is equivalent to
+	 * <code>
+	 * float rMid = (rInn + rOut) / 2;
+	 * paint.setStyle(Style.STROKE); // there's nothing to fill
+	 * paint.setStrokeWidth(rOut - rInn); // thickness
+	 * canvas.drawArc(new RectF(cx - rMid, cy - rMid, cx + rMid, cy + rMid), startAngle, sweepAngle, false, paint);
+	 * </code>
+	 * but supports different fill and stroke paints.
+	 * 
+	 * @param canvas
+	 * @param cx horizontal middle point of the oval
+	 * @param cy vertical middle point of the oval
+	 * @param rInn inner radius of the arc segment
+	 * @param rOut outer radius of the arc segment
+	 * @param startAngle see {@link Canvas#drawArc}
+	 * @param sweepAngle see {@link Canvas#drawArc}
+	 * @param fill filling paint, can be <code>null</code>
+	 * @param stroke stroke paint, can be <code>null</code>
+	 * @see Canvas#drawArc
+	 */
+	public static void drawArcSegment(Canvas canvas, float cx, float cy, float rInn, float rOut, float startAngle,
+			float sweepAngle, Paint fill, Paint stroke) {
+
+		RectF outerRect = new RectF(cx - rOut, cy - rOut, cx + rOut, cy + rOut);
+		RectF innerRect = new RectF(cx - rInn, cy - rInn, cx + rInn, cy + rInn);
+
+		Path segmentPath = new Path();
+		double start = toRadians(startAngle);
+		segmentPath.moveTo((float)(cx + rInn * cos(start)), (float)(cy + rInn * sin(start)));
+		segmentPath.lineTo((float)(cx + rOut * cos(start)), (float)(cy + rOut * sin(start)));
+		segmentPath.arcTo(outerRect, startAngle, sweepAngle);
+		double end = toRadians(startAngle + sweepAngle);
+		segmentPath.lineTo((float)(cx + rInn * cos(end)), (float)(cy + rInn * sin(end)));
+		segmentPath.arcTo(innerRect, startAngle + sweepAngle, -sweepAngle);
+		if (fill != null) {
+			canvas.drawPath(segmentPath, fill);
+		}
+		if (stroke != null) {
+			canvas.drawPath(segmentPath, stroke);
+		}
+	}
+
+	public static void drawTextOnArc(Canvas canvas, String label, float cx, float cy, float rInn, float rOut,
+			float startAngle, float sweepAngle, Paint textPaint) {
+		Path midway = new Path();
+		float r = (rInn + rOut) / 2;
+		RectF segment = new RectF(cx - r, cy - r, cx + r, cy + r);
+		midway.addArc(segment, startAngle, sweepAngle);
+		canvas.drawTextOnPath(label, midway, 0, 0, textPaint);
 	}
 }

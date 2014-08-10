@@ -101,6 +101,20 @@
 		where i.parent = ?
 		order by i.name asc 
 	"]]></string>
+	<string name="query_items_in_room"><![CDATA["
+		select
+			i._id,
+			i.name,
+			i.image,
+			c.image as typeImage,
+			(select count(1) from Item where parent = i._id) as childrenCount,
+			c.name as category
+		from Room     r
+		join Item     i ON r.root = i.parent
+		join Category c ON i.category = c._id
+		where r._id = ?
+		order by i.name asc 
+	"]]></string>
 	<string name="query_items_by_category"><![CDATA["
 		select
 			i._id,

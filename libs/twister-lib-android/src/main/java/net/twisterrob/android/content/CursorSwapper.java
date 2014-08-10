@@ -1,17 +1,17 @@
 package net.twisterrob.android.content;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 
 public abstract class CursorSwapper implements LoaderCallbacks<Cursor> {
-	protected final Context context;
 	protected final CursorAdapter adapter;
 
-	public CursorSwapper(Context context, CursorAdapter adapter) {
-		this.context = context;
+	public CursorSwapper(CursorAdapter adapter) {
+		if (adapter == null) {
+			throw new IllegalArgumentException("Adapter cannot be null");
+		}
 		this.adapter = adapter;
 	}
 
@@ -24,8 +24,6 @@ public abstract class CursorSwapper implements LoaderCallbacks<Cursor> {
 	}
 
 	protected void updateAdapter(Cursor data) {
-		if (adapter != null) {
-			adapter.swapCursor(data);
-		}
+		adapter.swapCursor(data);
 	}
 }

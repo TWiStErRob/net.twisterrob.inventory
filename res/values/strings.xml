@@ -6,6 +6,7 @@
 	<string name="list_empty">This list is empty.</string>
 	<string name="list_empty_add">You don\'t have any created, add one to get started.</string>
 
+	<string name="sunburst_title">Sunburst Diagram</string>
 	<string name="action_picture_take">Take picture</string>
 	<string name="action_picture_pick">Pick picture</string>
 	<string name="action_share">Share</string>

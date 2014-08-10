@@ -79,6 +79,10 @@ public class MainActivity extends BaseActivity {
 					public void onClick(View v) {
 						startActivity(CategoryViewActivity.show(Category.INTERNAL));
 					}
+				}), new MainItem("Sunburst", App.pic().getSVG(R.raw.category_disc), new OnClickListener() {
+					public void onClick(View v) {
+						startActivity(SunBurstActivity.show());
+					}
 				}), new MainItem("Drawable Test", R.drawable.image_loading, new OnClickListener() {
 					public void onClick(View v) {
 						// ignore
