@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY headW "40">
+	<!ENTITY headH "150">
+	<!ENTITY graphiteH "40">
+	<!ENTITY curveW "20">
+	<!ENTITY curveR "10">
+	<!ENTITY bodyH "450">
+	<!ENTITY endH "20">
+	<!-- endW + endR = headW -->
+	<!ENTITY endW "25">
+	<!ENTITY endR "15">
+]>
+<!-- Based on real pencil -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-95 -355 450 450"
+		xmlns:xlink="http://www.w3.org/1999/xlink"><!-- document.children[0].getBBox(); -->
+	<defs>
+		<style type="text/css"><![CDATA[
+			#pencil {
+				fill: black;
+				stroke: white;
+				stroke-width: 5;
+			}
+			#pencil .end {
+				stroke: none;
+			}
+		]]></style>
+		<g id="pencil"><!-- Bounding box: -40,-130 80 595 (cuts of a little from the tip) -->
+			<path id="body" d="
+				M +&headW;,0
+				v+&bodyH;
+				h-&headW;-&headW;
+				v-&bodyH;
+				" />
+			<line class="line" x1="&curveW;" x2="&curveW;" y1="&curveR;" y2="&bodyH;" />
+			<line class="line" x1="-&curveW;" x2="-&curveW;" y1="&curveR;" y2="&bodyH;" />
+			<path id="pencil-head" class="head" d="M 0,-&headH;
+				l-&headW;,+&headH;
+				a &curveW;,&curveW; 0 0 1 +&curveW;,+&curveR;
+				a &curveW;,&curveW; 0 0 1 +&curveW;,-&curveR;
+				a &curveW;,&curveW; 0 0 1 +&curveW;,+&curveR;
+				a &curveW;,&curveW; 0 0 1 +&curveW;,-&curveR;
+				l-&headW;,-&headH;
+				" />
+			<clipPath id="headClip">
+				<use xlink:href="#pencil-head" />
+			</clipPath>
+			<g clip-path="url(#headClip)">
+				<g id="graphite-line" transform="translate(0, -&headH;)">
+					<line class="line" y1="&graphiteH;" y2="&graphiteH;" x2="&headW;" />
+					<line class="line" y1="&graphiteH;" y2="&graphiteH;" x2="-&headW;" />
+				</g>
+			</g>
+			<path class="end" d="M &headW;,&bodyH;
+				a &endH;,&endH; 0 0 1 -&endR;,+&endH;
+				h-&endW;-&endW;
+				a &endH;,&endH; 0 0 1 -&endR;,-&endH;
+				" />
+		</g>
+	</defs>
+	<use xlink:href="#pencil" transform="rotate(-135)" />
+</svg>

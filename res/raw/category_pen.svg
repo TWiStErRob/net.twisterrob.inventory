@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on real pen -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -340 350 350"
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style type="text/css"><![CDATA[
+			#pen {
+				fill: black;
+				stroke: none;
+			}
+			#pen-body {
+				stroke: white;
+				stroke-width: 1.5;
+			}
+			#pen-hanger {
+				stroke: black;
+				stroke-width: 3;
+			}
+		]]></style>
+		<g id="pen"><!-- Bounding box: -30,-10 62.5 485 -->
+			<ellipse id="pen-switch" cy="450" ry="25" rx="10" />
+			<ellipse id="pen-tip" cy="0" ry="10" rx="2.5" />
+			<path id="pen-body" d="
+				M 0,0
+				C 15,0 20,100 15,150
+				S 20,300 20,325
+				S 30,460 0,450
+				M 0,0
+				C -15,0 -20,100 -15,150
+				S -20,300 -20,325
+				S -30,460 -0,450
+				" />
+			<path id="pen-hanger" d="
+				M 15,425
+				a 17.5,5 0 0 0 17.5,-5
+				v-115
+				a 1,1 0 0 0 -5,5
+				a 1,1 0 0 0 0,10
+				v+100 h-10 Z
+				" />
+		</g>
+	</defs>
+	<use xlink:href="#pen" transform="rotate(-135)" />
+</svg>
