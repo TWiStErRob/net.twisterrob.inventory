@@ -1,3 +1,10 @@
+CREATE TABLE Log (
+	_id         INTEGER      NOT NULL,
+	at          DATETIME     DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
+	message     TEXT,
+	PRIMARY KEY(_id AUTOINCREMENT)
+);
+
 CREATE TABLE Category (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- string resource name
@@ -134,28 +141,47 @@ CREATE TABLE Item_Path (
 );
 CREATE TRIGGER Item_Path_traverse
 AFTER INSERT ON Item_Path BEGIN
+	insert into Log(message) values ('Item_Path_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): '
+		|| 'insert into Item_Path select ' || new.item || ', ' || (new.level - 1) || ', i.parent, i.parent, from Item i where i._id = ' || new.node || ' and i.parent IS NOT NULL'
+	);--NOTEOS
 	-- Go up in the Tree
 	insert into Item_Path
 		select new.item, new.level - 1, i.parent, i.parent from Item i where i._id = new.node and i.parent IS NOT NULL
 	;--NOTEOS
+	insert into Log(message) values ('Item_Path_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): '
+		|| 'update Item_Path set root = ' ||  (select node from Item_Path where item = new.item and level = new.level) || ' where item = ' || new.item || ' and node = ' || new.node
+	);--NOTEOS
 	-- Equivalent to calling the following after the original INSERT:
 	-- UPDATE Item_Path p SET root = (select node from Item_Path where item = p.item and level = 0) WHERE item = inserted;
 	update Item_Path
 		set root = (select node from Item_Path where item = new.item and level = new.level)
 		where item = new.item and node = new.node
 	;--NOTEOS
+	insert into Log(message) values ('Item_Path_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): '
+		|| 'update Item_Path set level = level + 1 where item = ' ||  new.item
+		|| ' -- ' || (select group_concat(node || ':' || level, ', ') from Item_Path where item = new.item)
+	);--NOTEOS
 	-- Equivalent to calling the following after the original INSERT:
 	-- UPDATE Item_Path p SET level = (select max(level) from Item_Path where item = p.item) - level WHERE item = inserted;
 	update Item_Path
 		set level = level + 1 where item = new.item
 	;--NOTEOS
+	insert into Log(message) values ('Item_Path_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '):'
+		|| 'finished with ' || (select '(' || item || ', ' || level || ', ' || node || ', ' || root || ')' from Item_Path where item = new.item and node = new.node)
+	);--NOTEOS
 END;
 
 CREATE TRIGGER Item_Path_calculate
 AFTER INSERT ON Item BEGIN
+	insert into Log(message) values ('Item_Path_calculate on (' || new._id || ', ' || new.name || ', ' || IFNULL(new.image, 'null') || ', ' || new.category || ', ' || IFNULL(new.parent, 'null') || '): '
+		|| 'insert into Item_Path select ' || new._id || ', -1, ' || new._id || ', ' || new._id
+	);--NOTEOS
 	insert into Item_Path
 		select new._id, -1, new._id, new._id
 	;--NOTEOS
+	insert into Log(message) values ('Item_Path_calculate on (' || new._id || ', ' || new.name || ', ' || IFNULL(new.image, 'null') || ', ' || new.category || ', ' || IFNULL(new.parent, 'null') || '): '
+		|| 'finished with ' || (select '(' || _id || ', ' || name || ', ' || IFNULL(image, 'null') || ', ' || category || ', ' || IFNULL(parent, 'null') || ')' from Item where _id = new._id)
+	);--NOTEOS
 END;
 
 CREATE VIEW Item_Paths AS
@@ -190,3 +216,16 @@ CREATE VIRTUAL TABLE Search USING fts3 (
 	name,
 	location
 );
+CREATE TRIGGER Item_Path_searchIndex
+AFTER INSERT ON Item_Path BEGIN
+	insert into Log(message) values ('Item_Path_searchIndex on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): '
+		|| 'insert into Search select ' || IFNULL((select group_concat(_id || ', ' || name || ', ' || path) from Item_Paths where _id = new.item), 'null') || ' from Item_Paths where _id = ' || new.item
+	);--NOTEOS
+	insert into Search
+		-- TODO concatenate resolved category to name
+		select _id, name, path from Item_Paths where _id = new.item
+	;--NOTEOS
+	insert into Log(message) values ('Item_Path_searchIndex on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): '
+		|| 'finished'
+	);--NOTEOS
+END;
