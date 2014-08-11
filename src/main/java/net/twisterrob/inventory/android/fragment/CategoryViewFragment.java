@@ -1,15 +1,15 @@
 package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.CategoryDTO;
+import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.CategoryViewFragment.CategoryEvents;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
@@ -41,7 +41,9 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
 		CategoryDTO item = CategoryDTO.fromCursor(cursor);
 
 		setTitle(AndroidTools.getText(getActivity(), item.name));
-		App.pic().loadSVG(AndroidTools.getRawResourceID(getActivity(), item.image)).into(image);
+		Drawable icon = ImagedDTO.getFallbackDrawable(getActivity(), item.image);
+		setIcon(icon);
+		image.setImageDrawable(icon);
 
 		eventsListener.categoryLoaded(item);
 	}

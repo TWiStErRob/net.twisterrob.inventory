@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.fragment;
 import java.util.*;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -84,5 +85,9 @@ public class BaseFragment<T> extends Fragment {
 
 	public void setTitle(int stringResourceID) {
 		((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(stringResourceID);
+	}
+
+	public void setIcon(Drawable iconDrawable) {
+		((ActionBarActivity)getActivity()).getSupportActionBar().setIcon(iconDrawable);
 	}
 }

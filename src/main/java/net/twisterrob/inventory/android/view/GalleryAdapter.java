@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.*;
 
+import com.google.android.gms.drive.DriveId;
 import com.squareup.picasso.Callback;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
@@ -41,7 +42,11 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
 		holder.title.setText(getName(cursor));
 		holder.count.setText(getCountText(cursor));
-		setImageAndType(holder, cursor);
+
+		String type = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+		DriveId id = image == null? null : DriveId.decodeFromString(image);
+		displayImageWithType(holder.image, holder.type, id, type);
 	}
 
 	private static String getName(Cursor cursor) {
@@ -60,22 +65,17 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 		return countText;
 	}
 
-	private void setImageAndType(final ViewHolder holder, Cursor cursor) {
-		int typeColumn = cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE);
-		String type = cursor.getString(typeColumn);
-		Drawable fallback = ImagedDTO.getFallbackDrawable(mContext, type);
-		holder.type.setImageDrawable(fallback);
-		holder.type.setVisibility(View.INVISIBLE);
-
-		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-		//App.pic().getPicasso().cancelRequest(holder.image); // TODO check scrolling
-		App.pic().loadDriveId(image).placeholder(fallback).into(holder.image, new Callback() {
+	private void displayImageWithType(ImageView image, final ImageView type, DriveId imageName, String typeImageName) {
+		Drawable fallback = ImagedDTO.getFallbackDrawable(mContext, typeImageName);
+		type.setImageDrawable(fallback);
+		type.setVisibility(View.INVISIBLE);
+		App.pic().load(imageName).placeholder(fallback).into(image, new Callback() {
 			public void onSuccess() {
-				holder.type.setVisibility(View.VISIBLE);
+				type.setVisibility(View.VISIBLE);
 			}
 
 			public void onError() {
-				holder.type.setVisibility(View.INVISIBLE);
+				type.setVisibility(View.INVISIBLE);
 			}
 		});
 	}

@@ -2,11 +2,12 @@ package net.twisterrob.inventory.android.activity;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
-import android.view.MenuItem;
+import android.view.*;
 
 import com.android.debug.hv.ViewServer;
 
@@ -35,9 +36,16 @@ public class BaseActivity extends ActionBarActivity {
 		ViewServer.get(this).removeWindow(this);
 	}
 
+	@SuppressLint({"NewApi", "InlinedApi"})
 	private void initActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		if (Build.VERSION_CODES.HONEYCOMB <= Build.VERSION.SDK_INT) {
+			int id = getResources().getIdentifier("action_bar", "id", "android");
+			View actionBarView = findViewById(id);
+			actionBarView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -43,8 +44,9 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 
 		setTitle(room.name);
-		type.setText(String.valueOf(room.type));
-		App.pic().load(room.image).placeholder(room.getFallbackDrawable(getActivity())).into(image);
+		Drawable fallback = room.getFallbackDrawable(getActivity());
+		setIcon(fallback);
+		App.pic().load(room.image).placeholder(fallback).into(image);
 
 		eventsListener.roomLoaded(room);
 	}

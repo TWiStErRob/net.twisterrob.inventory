@@ -21,14 +21,14 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryViewFragmen
 		CategoryViewFragment detailsFragment;
 		if (parentID == Category.INTERNAL) {
 			detailsFragment = null;
-			setTitle(R.string.category_list);
 			hideDetails();
+			getSupportActionBar().setTitle(R.string.category_list);
+			getSupportActionBar().setIcon(App.pic().getSVG(R.raw.category_unknown));
 		} else {
 			detailsFragment = CategoryViewFragment.newInstance(parentID);
 		}
 		setFragments(detailsFragment, CategoryListFragment.newInstance(parentID));
 	}
-
 	public void categoryLoaded(CategoryDTO category) {
 		// ignore
 	}

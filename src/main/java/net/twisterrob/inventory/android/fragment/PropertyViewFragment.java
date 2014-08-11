@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -43,12 +44,12 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
 
 		setTitle(property.name);
-		type.setText(String.valueOf(property.type));
-		App.pic().load(property.image).placeholder(property.getFallbackDrawable(getActivity())).into(image);
+		Drawable fallback = property.getFallbackDrawable(getActivity());
+		setIcon(fallback);
+		App.pic().load(property.image).placeholder(fallback).into(image);
 
 		eventsListener.propertyLoaded(property);
 	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

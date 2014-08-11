@@ -10,15 +10,6 @@
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:layerType="software"
+		android:layout_margin="@dimen/margin"
 		android:scaleType="fitCenter" />
-	<TextView
-		android:id="@id/title"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true" />
-	<TextView
-		android:id="@id/type"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true" />
 </RelativeLayout>
