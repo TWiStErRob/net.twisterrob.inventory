@@ -27,9 +27,6 @@
 	<string name="query_property_delete"><![CDATA["
 		delete from Property where _id = ?
 	"]]></string>
-	<string name="query_property_delete_rooms"><![CDATA["
-		delete from Room where property = ?
-	"]]></string>
 	<string name="query_property_types"><![CDATA["
 		select _id, name, image
 		from PropertyType
@@ -173,13 +170,13 @@
 	<string name="query_item_delete"><![CDATA["
 		delete from Item where _id = ?
 	"]]></string>
-	<string name="query_path_new"><![CDATA["
-		insert into Paths
-	"]]></string>
-	<string name="query_path_delete"><![CDATA["
-		delete from Paths where _id = ?
-	"]]></string>
-	<string name="query_path_category"><![CDATA["
-		insert into Path select p._id, -1, c._id, c.parent from Path p, Category c where p._id = ? and c._id = ?;
+	<string name="query_search"><![CDATA["
+		select
+			rowid    as _id,
+			name     as suggest_text_1,
+			location as suggest_text_2
+		from Search
+		where name MATCH ?
+		order by name
 	"]]></string>
 </resources>

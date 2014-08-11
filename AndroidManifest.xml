@@ -33,6 +33,9 @@
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+			<meta-data
+				android:name="android.app.default_searchable"
+				android:value="net.twisterrob.inventory.android.activity.SearchResultsActivity" />
 		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.WelcomeActivity"
@@ -48,6 +51,25 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 		</activity>
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.SearchResultsActivity"
+			android:label="@string/action_search"
+			android:icon="@android:drawable/ic_menu_search"
+			android:launchMode="singleTop">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+			</intent-filter>
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="net.twisterrob.inventory.android.activity.MainActivity" />
+			<meta-data
+				android:name="android.app.searchable"
+				android:resource="@xml/searchable_suggest" />
+		</activity>
+		<provider
+			android:name="net.twisterrob.inventory.android.content.SearchSuggestProvider"
+			android:authorities="net.twisterrob.inventory.suggest"
+			android:syncable="false" />
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.CaptureImage"
 			android:label="@string/action_picture_take"

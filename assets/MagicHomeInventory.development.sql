@@ -27,5 +27,3 @@ INSERT INTO Room(_id, property, type, root, name) VALUES(6, 1, 104, 6, 'WC');
 INSERT INTO Item(_id, parent, category, name) VALUES(100005, 4, 3100, 'Papírdoboz kék karikákkal');
 	INSERT INTO Item(_id, parent, category, name) VALUES(100006, 100005, 6200, 'Piros műanyag tányér');
 	INSERT INTO Item(_id, parent, category, name) VALUES(100007, 100005, 6400, 'Neon pohár');
-
---update RoomType set image = 'category_unknown' where _id = 103;

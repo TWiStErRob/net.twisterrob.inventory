@@ -12,7 +12,6 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.contract.*;
 
-@SuppressWarnings("resource")
 public class Database {
 	private final Context m_context;
 	private final DatabaseOpenHelper m_helper;
@@ -37,15 +36,18 @@ public class Database {
 	}
 
 	private void execSQL(int queryResource, Object... params) {
+		@SuppressWarnings("resource")
 		SQLiteDatabase db = getWritableDatabase();
 		db.execSQL(m_context.getString(queryResource), params);
 	}
 
+	@SuppressWarnings("resource")
 	private Cursor rawQuery(int queryResource, Object... params) {
 		SQLiteDatabase db = getReadableDatabase();
 		return db.rawQuery(m_context.getString(queryResource), StringTools.toStringArray(params));
 	}
 
+	@SuppressWarnings("resource")
 	private long rawInsert(int insertResource, Object... params) {
 		SQLiteDatabase db = getWritableDatabase();
 
@@ -58,18 +60,6 @@ public class Database {
 		} finally {
 			insert.close();
 		}
-	}
-
-	private long preparePath() {
-		return rawInsert(R.string.query_path_new);
-	}
-
-	private void calculateCategoryPath(long pathID, long categoryID) {
-		execSQL(R.string.query_path_category, pathID, categoryID);
-	}
-
-	private void clearPath(long pathID) {
-		execSQL(R.string.query_path_delete, pathID);
 	}
 
 	public Cursor listPropertyTypes(CharSequence nameFilter) {
@@ -130,18 +120,10 @@ public class Database {
 	}
 
 	public void deleteProperty(long id) {
-		SQLiteDatabase db = getWritableDatabase();
-		db.beginTransaction();
-		try {
-			// TODO delete all items recursively from all rooms?
-			execSQL(R.string.query_property_delete_rooms, id);
-			execSQL(R.string.query_property_delete, id);
-			db.setTransactionSuccessful();
-		} finally {
-			db.endTransaction();
-		}
+		execSQL(R.string.query_property_delete, id);
 	}
 
+	@SuppressWarnings("resource")
 	public long newRoom(long propertyID, String name, long type, DriveId imageDriveID) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
@@ -153,6 +135,7 @@ public class Database {
 		} finally {
 			db.endTransaction();
 		}
+
 	}
 
 	public void updateRoom(long id, String name, long type, DriveId imageDriveID) {
@@ -161,7 +144,6 @@ public class Database {
 
 	public void deleteRoom(long id) {
 		execSQL(R.string.query_room_delete, id);
-		// TODO delete all items
 	}
 
 	public long newItem(long parentID, String name, long category, DriveId imageDriveID) {
@@ -178,6 +160,12 @@ public class Database {
 
 	public void deleteItem(long id) {
 		execSQL(R.string.query_item_delete, id);
-		// TODO delete all items
+	}
+
+	public Cursor search(String query) {
+		if (!query.matches(".*[\\s\\*].*")) {
+			query += "*";
+		}
+		return rawQuery(R.string.query_search, query);
 	}
 }

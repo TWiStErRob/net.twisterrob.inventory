@@ -126,4 +126,13 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 		fragment.setArguments(args);
 		return fragment;
 	}
+
+	public static ItemListFragment newSearchInstance(String query) {
+		ItemListFragment fragment = new ItemListFragment();
+
+		Bundle args = new Bundle();
+
+		fragment.setArguments(args);
+		return fragment;
+	}
 }

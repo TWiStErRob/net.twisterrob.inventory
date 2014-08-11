@@ -198,4 +198,5 @@ INSERT INTO Category
 	UNION SELECT 18400,  18000,     'category_vehicle_lgv',                'category_unknown'
 ;
 
+-- TODO create a trigger on Category to insert these automatically (also care for update/delete)
 insert into Category_Descendant select c._id, 0, c._id from Category c;
