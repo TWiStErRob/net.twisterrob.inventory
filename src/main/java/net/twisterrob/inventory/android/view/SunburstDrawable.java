@@ -9,6 +9,10 @@ import android.graphics.drawable.Drawable;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 public class SunburstDrawable<T> extends Drawable {
+	private static final int BASE_LEVEL = 0;
+	private static final float RANGE_START = 0;
+	private static final float RANGE_END = 1;
+
 	public static interface TreeWalker<T> {
 		String getLabel(T node);
 		Iterable<T> getChildren(T node);
@@ -31,82 +35,6 @@ public class SunburstDrawable<T> extends Drawable {
 		this.paints = paints;
 	}
 
-	@Override
-	public void draw(Canvas canvas) {
-		if (walker.getChildren(root).iterator().hasNext()) {
-			draw(canvas, root, 1, queryThickness(), 0, 1);
-		} else {
-			Rect bounds = getBounds();
-			float size = Math.min(bounds.width(), bounds.height());
-			float cx = bounds.exactCenterX();
-			float cy = bounds.exactCenterY();
-			Paint fill = paints.getFill(root, 0, 0, 1);
-			Paint text = paints.getText(root, 0, 0, 1);
-			canvas.drawCircle(cx, cy, size / 2, fill);
-			canvas.drawText(walker.getLabel(root), cx, cy, text);
-		}
-	}
-
-	private void draw(Canvas canvas, T subTree, int level, float thickness, float start, float end) {
-		float fullWidth = end - start;
-		float current = 0;
-		float parentWeight = walker.getWeight(subTree);
-
-		Rect bounds = getBounds();
-		float cx = bounds.exactCenterX();
-		float cy = bounds.exactCenterY();
-		float size = Math.min(bounds.width(), bounds.height());
-		float rIn = (level * thickness) * size / 2;
-		float rOut = ((level + 1) * thickness) * size / 2;
-
-		for (T child: walker.getChildren(subTree)) {
-			float relativeWeight = walker.getWeight(child) / parentWeight;
-			float next = current + relativeWeight;
-			float currentStart = start + current * fullWidth;
-			float currentEnd = start + next * fullWidth;
-
-			float startAngle = -currentStart * 360;
-			float sweepAngle = -(currentEnd - currentStart) * 360;
-
-			float myIn = rIn;
-			float myOut = rOut;
-
-			Paint fill = paints.getFill(child, level, currentStart, currentEnd);
-			Paint stroke = paints.getStroke(child, level, currentStart, currentEnd);
-			if (fill != null || stroke != null) {
-				if (child.equals(highlight)) {
-					//					myIn *= 0.95;
-					//					myOut *= 1.10;
-					//					sweepAngle += (startAngle * 0.20f); // + 2 * 10%
-					//					startAngle *= 0.90;
-					fill.setColor(Color.WHITE);
-				}
-				AndroidTools.drawArcSegment(canvas, cx, cy, myIn, myOut, startAngle, sweepAngle, fill, stroke);
-			}
-			Paint text = paints.getText(child, level, currentStart, currentEnd);
-			if (text != null) {
-				AndroidTools.drawTextOnArc(canvas, walker.getLabel(child), cx, cy, myIn, myOut, startAngle, sweepAngle,
-						text);
-				if (child.equals(highlight)) {
-					text.setColor(Color.BLACK);
-				}
-			}
-
-			draw(canvas, child, level + 1, thickness, currentStart, currentEnd);
-			current = next;
-		}
-	}
-
-	public T at(float x, float y) {
-		Rect bounds = getBounds();
-		float cx = bounds.exactCenterX();
-		float cy = bounds.exactCenterY();
-
-		float r = (float)sqrt(pow(cx - x, 2) + pow(cy - y, 2));
-		float alpha = 180 - (float)toDegrees(atan2(cy - y, cx - x));
-		return find(root, r, alpha / 360.0f, 0, queryThickness(), 0, 1);
-	}
-
 	public T getHighlight() {
 		return highlight;
 	}
@@ -121,6 +49,69 @@ public class SunburstDrawable<T> extends Drawable {
 	public void setRoot(T root) {
 		this.root = root;
 		invalidateSelf();
+	}
+
+	@Override
+	public void draw(Canvas canvas) {
+		draw(canvas, root, BASE_LEVEL, queryThickness(), RANGE_START, RANGE_END);
+	}
+
+	private void draw(Canvas canvas, T subTree, int level, float thickness, float start, float end) {
+		float fullWidth = end - start;
+		float parentWeight = walker.getWeight(subTree);
+		float current = 0;
+		for (T child: walker.getChildren(subTree)) {
+			float relativeWeight = walker.getWeight(child) / parentWeight;
+			float next = current + relativeWeight;
+			float currentStart = start + current * fullWidth;
+			float currentEnd = start + next * fullWidth;
+
+			draw(canvas, child, level + 1, thickness, currentStart, currentEnd);
+			current = next;
+		}
+
+		drawCurrent(canvas, subTree, level, thickness, start, end);
+	}
+
+	private void drawCurrent(Canvas canvas, T subTree, int level, float thickness, float start, float end) {
+		Rect bounds = getBounds();
+		float cx = bounds.exactCenterX();
+		float cy = bounds.exactCenterY();
+		float size = Math.min(bounds.width(), bounds.height());
+		float rIn = ((level) * thickness) * size / 2;
+		float rOut = ((level + 1) * thickness) * size / 2;
+
+		float startAngle = start * 360;
+		float sweepAngle = (end - start) * 360;
+
+		Paint fill = paints.getFill(subTree, level, start, end);
+		Paint stroke = paints.getStroke(subTree, level, start, end);
+		if (fill != null || stroke != null) {
+			if (subTree.equals(highlight)) {
+				fill.setColor(Color.WHITE);
+			}
+			AndroidTools.drawArcSegment(canvas, cx, cy, rIn, rOut, startAngle, sweepAngle, fill, stroke);
+		}
+		Paint text = paints.getText(subTree, level, start, end);
+		String label = walker.getLabel(subTree);
+		if (text != null && label != null) {
+			if (subTree.equals(highlight)) {
+				text.setColor(Color.BLACK);
+			}
+			AndroidTools.drawTextOnArc(canvas, label, cx, cy, rIn, rOut, startAngle, sweepAngle, text);
+		}
+	}
+
+	public T at(float x, float y) {
+		Rect bounds = getBounds();
+		float cx = bounds.exactCenterX();
+		float cy = bounds.exactCenterY();
+
+		float dx = x - cx;
+		float dy = y - cy;
+		float r = (float)sqrt(dx * dx + dy * dy);
+		float alpha = ((float)toDegrees(atan2(dy, dx)) + 360) % 360;
+		return find(root, r, alpha / 360.0f, BASE_LEVEL, queryThickness(), RANGE_START, RANGE_END);
 	}
 
 	private T find(T subTree, float r, float alpha, int level, float thickness, float start, float end) {

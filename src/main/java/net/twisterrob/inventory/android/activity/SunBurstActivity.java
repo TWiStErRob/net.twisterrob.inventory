@@ -50,7 +50,7 @@ public class SunBurstActivity extends BaseActivity {
 	Stack<Node> stack = new Stack<Node>();
 
 	public void setRoot(Node root) {
-		if (root == null) {
+		if (root == null || sunburst.getRoot() == root) {
 			return;
 		}
 		if (sunburst.getRoot() != null) {
@@ -85,6 +85,7 @@ public class SunBurstActivity extends BaseActivity {
 				if (points != null && sunburst != null) {
 					Node selected = sunburst.at(points[0], points[1]);
 					setRoot(selected);
+					//sunburst.setHighlight(selected);
 					return true;
 				}
 			}
