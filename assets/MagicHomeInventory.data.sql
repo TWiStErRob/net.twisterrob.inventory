@@ -187,7 +187,7 @@ INSERT INTO Category
 	UNION SELECT 16530,  16500,         'category_electronic_projector',   'category_electric'
 	UNION SELECT 16600,  16000,     'category_computers',                  'category_electric'
 	UNION SELECT 16610,  16600,         'category_computer_components',    'category_electric'
-	UNION SELECT 16620,  16600,         'category_computer_peripherials',  'category_electric'
+	UNION SELECT 16620,  16600,         'category_computer_peripherals',   'category_electric'
 	UNION SELECT 16630,  16600,         'category_computer_datastorage',   'category_electric'
 	UNION SELECT 16700,  16000,     'category_computer_gameconsoles',      'category_electric'
 	UNION SELECT 17000,     -1, 'category_instruments',                    'category_unknown'

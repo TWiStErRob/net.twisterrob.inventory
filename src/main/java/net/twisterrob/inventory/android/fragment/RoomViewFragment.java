@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
@@ -74,7 +73,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 			}
 
 			public void dialogFailed() {
-				Toast.makeText(getActivity(), "Cannot delete room #" + roomID, Toast.LENGTH_LONG).show();
+				App.toast("Cannot delete room #" + roomID);
 			}
 		}).displayDialog(getActivity());
 	}

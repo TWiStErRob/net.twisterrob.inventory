@@ -153,8 +153,9 @@
 			(select count(1) from Category where parent = c._id) as childrenCount,
 			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countItems
 		from Category c
+		left join Category_Name_Cache cnc ON cnc.key = c.name
 		where c.parent = ?
-		order by c.name
+		order by (CASE WHEN c.name <> 'category_uncategorized' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
 	"]]></string>
 	<string name="query_category"><![CDATA["
 		select c._id, c.name, c.image

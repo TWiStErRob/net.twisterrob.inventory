@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources>
+<resources>
+	<string name="room_group_other">Egyéb Helyiségek</string>
+	<string name="room_group_general">Általános</string>
+	<string name="room_group_storage">Tárolóhely</string>
+	<string name="room_group_common">Közöss</string>
+	<string name="room_group_function">Rendeltetés-szerű</string>
+	<string name="room_group_space">Tér</string>
+	<string name="room_other">Egyéb</string>
+	<string name="room_bath">Fürdőszoba</string>
+	<string name="room_bed">Hálószoba</string>
+	<string name="room_kitchen">Konyha</string>
+	<string name="room_toilet">WC</string>
+	<string name="room_storage">Kamra</string>
+	<string name="room_closet">Lomtár</string>
+	<string name="room_garage">Garázs</string>
+	<string name="room_furnace">Kemence szoba</string>
+	<string name="room_shed">Pajta</string>
+	<string name="room_attic">Padlás</string>
+	<string name="room_basement">Alagsor</string>
+	<string name="room_cellar">Pince</string>
+	<string name="room_living">Nappali</string>
+	<string name="room_family">Családi szoba</string>
+	<string name="room_play">Játszószoba</string>
+	<string name="room_dining">Étkező</string>
+	<string name="room_library">Könyvtár</string>
+	<string name="room_office">Iroda</string>
+	<string name="room_gym">Edzőterem</string>
+	<string name="room_TV">TV szoba</string>
+	<string name="room_pool">Medenceház</string>
+	<string name="room_laundy">Mosószoba</string>
+	<string name="room_balcony">Erkély</string>
+	<string name="room_garden">Kert</string>
+	<string name="room_lobby">Előcsarnok</string>
+	<string name="room_deck">Peron</string>
+	<string name="room_patio">Terasz</string>
+	<string name="room_crawl">Ház Alja</string>
+</resources>

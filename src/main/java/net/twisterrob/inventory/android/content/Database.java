@@ -14,6 +14,8 @@ import com.google.android.gms.drive.DriveId;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.contract.Category;
 
 public class Database {
@@ -33,7 +35,8 @@ public class Database {
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 			}
 		};
-		m_helper.setDevMode(false);
+		m_helper.setDevMode(true);
+		App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
 		m_helper.setDumpOnOpen(true);
 	}
 
