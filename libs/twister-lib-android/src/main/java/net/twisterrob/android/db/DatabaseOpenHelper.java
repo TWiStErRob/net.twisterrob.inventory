@@ -20,13 +20,9 @@ import net.twisterrob.android.utils.tools.*;
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	public static final int CURSOR_NO_COLUMN = -1;
 
-	public interface HelperHooks {
-		void onConfigure(SQLiteDatabase db);
-	}
-
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseOpenHelper.class);
-	private static final String DB_SCHEMA_FILE = "%s.v%d.schema.sql";
-	private static final String DB_DATA_FILES = "%s.v%d.data.sql";
+	private static final String DB_SCHEMA_FILE = "%s.schema.sql";
+	private static final String DB_DATA_FILES = "%s.data.sql";
 	private static final String DB_CLEAN_FILE = "%s.clean.sql";
 	private static final String DB_DEVELOPMENT_FILE = "%s.development.sql";
 	private static final CursorFactory s_factory = VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT
@@ -34,17 +30,15 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			: null;
 
 	protected final AssetManager assets;
-	private final HelperHooks hooks;
 	private final boolean hasWriteExternalPermission;
 	private final String dbName;
 	private boolean devMode;
 	private boolean dumpOnOpen;
 
-	public DatabaseOpenHelper(Context context, String dbName, int dbVersion, HelperHooks hooks) {
+	public DatabaseOpenHelper(Context context, String dbName, int dbVersion) {
 		super(context, dbName, s_factory, dbVersion);
 		this.assets = context.getAssets();
 		this.dbName = dbName;
-		this.hooks = hooks;
 		this.hasWriteExternalPermission = AndroidTools.hasPermission(context, WRITE_EXTERNAL_STORAGE);
 	}
 
@@ -63,9 +57,31 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 
 	@Override
+	public void onCreate(SQLiteDatabase db) {
+		if (devMode) {
+			backupDB(db, "onCreate");
+		}
+		onConfigureCompat(db);
+		LOG.debug("Creating database: {}", DBTools.toString(db));
+		execFile(db, String.format(DB_CLEAN_FILE, dbName));
+		execFile(db, String.format(DB_SCHEMA_FILE, dbName));
+		execFile(db, String.format(DB_DATA_FILES, dbName));
+		LOG.info("Created database: {}", DBTools.toString(db));
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		if (devMode) {
+			backupDB(db, "onUpgrade_" + oldVersion + "-" + newVersion);
+		}
+		onConfigureCompat(db);
+		onCreate(db);
+	}
+
+	@Override
 	public void onOpen(SQLiteDatabase db) {
 		LOG.debug("Opening database: {}", DBTools.toString(db));
-		configure(db);
+		onConfigureCompat(db);
 		super.onOpen(db);
 		if (devMode) {
 			backupDB(db, "onOpen_beforeDev");
@@ -79,45 +95,21 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	private void backupDB(SQLiteDatabase db, String when) {
-		if (hasWriteExternalPermission) {
-			String fileName = dbName + "." + when + ".sqlite";
-			try {
-				String target = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + fileName;
-				IOTools.copyFile(db.getPath(), target);
-				LOG.info("DB backed up to {}", target);
-			} catch (IOException ex) {
-				LOG.error("Cannot back up DB on open", ex);
-			}
-		} else {
-			LOG.warn("No {} permission to back up DB at {}", WRITE_EXTERNAL_STORAGE, when);
-		}
-	}
-
 	@Override
-	public void onCreate(SQLiteDatabase db) {
-		if (devMode) {
-			backupDB(db, "onCreate");
-		}
-		configure(db);
-		LOG.debug("Creating database: {}", DBTools.toString(db));
-		execFile(db, String.format(DB_CLEAN_FILE, dbName));
-		execFile(db, String.format(DB_SCHEMA_FILE, dbName, db.getVersion()));
-		execFile(db, String.format(DB_DATA_FILES, dbName, db.getVersion()));
-		LOG.info("Created database: {}", DBTools.toString(db));
-	}
-
-	public void configure(SQLiteDatabase db) {
+	public void onConfigure(SQLiteDatabase db) {
 		if (!db.isReadOnly()) {
 			db.execSQL("PRAGMA foreign_keys=ON;"); // db.setForeignKeyConstraintsEnabled(true);
-			if (hooks != null) {
-				hooks.onConfigure(db);
-			}
 		}
+	}
+
+	private void onConfigureCompat(SQLiteDatabase db) {
+		if (VERSION.SDK_INT < VERSION_CODES.JELLY_BEAN) {
+			onConfigure(db);
+		} // otherwise onConfigure was already called by super
 	}
 
 	private void execFile(SQLiteDatabase db, String dbSchemaFile) {
-		LOG.debug("Executing file {} into database: {}", dbSchemaFile, DBTools.toString(db));
+		LOG.debug("{} Executing file {} into database: {}", dbSchemaFile, DBTools.toString(db));
 		long time = System.nanoTime();
 
 		realExecuteFile(db, dbSchemaFile);
@@ -169,12 +161,19 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		return null;
 	}
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (devMode) {
-			backupDB(db, "onUpgrade_" + oldVersion + "-" + newVersion);
+	private void backupDB(SQLiteDatabase db, String when) {
+		if (hasWriteExternalPermission) {
+			String fileName = dbName + "." + when + ".sqlite";
+			try {
+				String target = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + fileName;
+				IOTools.copyFile(db.getPath(), target);
+				LOG.info("DB backed up to {}", target);
+			} catch (IOException ex) {
+				LOG.error("Cannot back up DB on open", ex);
+			}
+		} else {
+			LOG.warn("No {} permission to back up DB at {}", WRITE_EXTERNAL_STORAGE, when);
 		}
-		configure(db);
-		onCreate(db);
 	}
+
 }

@@ -4,9 +4,9 @@ echo PRAGMA recursive_triggers = TRUE; -- This is not possible before 3.6.18 > t
 echo select current_timestamp, 'clean.sql'; >> test-db-concatenated.sql
 type assets\MagicHomeInventory.clean.sql >> test-db-concatenated.sql
 echo select current_timestamp, 'schema.sql'; >> test-db-concatenated.sql
-type assets\MagicHomeInventory.v1.schema.sql >> test-db-concatenated.sql
+type assets\MagicHomeInventory.schema.sql >> test-db-concatenated.sql
 echo select current_timestamp, 'data.sql'; >> test-db-concatenated.sql
-type assets\MagicHomeInventory.v1.data.sql >> test-db-concatenated.sql
+type assets\MagicHomeInventory.data.sql >> test-db-concatenated.sql
 echo select current_timestamp, 'development.sql'; >> test-db-concatenated.sql
 type assets\MagicHomeInventory.development.sql >> test-db-concatenated.sql
 echo select current_timestamp, 'test-db.sql'; >> test-db-concatenated.sql

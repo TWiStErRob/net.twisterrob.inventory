@@ -200,3 +200,4 @@ INSERT INTO Category
 
 -- TODO create a trigger on Category to insert these automatically (also care for update/delete)
 insert into Category_Descendant select c._id, 0, c._id from Category c;
+insert into Category_Name_Cache select DISTINCT name, NULL from Category order by name;

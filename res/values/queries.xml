@@ -10,7 +10,7 @@
 			(select count(1) from Room where property = p._id) as childrenCount
 		from Property p
 		join PropertyType pt ON p.type = pt._id
-		order by p.name asc
+		order by p.name
 	"]]></string>
 	<string name="query_property"><![CDATA["
 		select p._id, p.name, p.type, p.image, pt.image as typeImage
@@ -56,7 +56,7 @@
 		join RoomType rt ON r.type = rt._id
 		join RoomTypeKind rtk ON rt.kind = rtk._id
 		where r.property = ?
-		order by r.name asc 
+		order by r.name 
 	"]]></string>
 	<string name="query_room"><![CDATA["
 		select r._id, r.name, r.type, r.root, r.property, r.image, COALESCE(rt.image, rtk.image) as typeImage
@@ -96,7 +96,7 @@
 		from Item     i
 		join Category c ON i.category = c._id
 		where i.parent = ?
-		order by i.name asc 
+		order by i.name 
 	"]]></string>
 	<string name="query_items_in_room"><![CDATA["
 		select
@@ -110,7 +110,7 @@
 		join Item     i ON r.root = i.parent
 		join Category c ON i.category = c._id
 		where r._id = ?
-		order by i.name asc 
+		order by i.name 
 	"]]></string>
 	<string name="query_items_by_category"><![CDATA["
 		select
@@ -123,7 +123,7 @@
 		from Item     i
 		join Category c ON i.category = c._id
 		where i.category = ?
-		order by i.name asc 
+		order by i.name 
 	"]]></string>
 	<string name="query_items_in_category"><![CDATA["
 		select
@@ -137,7 +137,7 @@
 		join Category_Descendant cd ON i.category = cd.descendant
 		join Category c ON cd.descendant = c._id
 		where cd.category = ?
-		order by i.name asc 
+		order by i.name 
 	"]]></string>
 	<string name="query_item"><![CDATA["
 		select i._id, i.name, i.category, i.image, c.image as typeImage
@@ -154,12 +154,18 @@
 			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countItems
 		from Category c
 		where c.parent = ?
-		order by c.name asc
+		order by c.name
 	"]]></string>
 	<string name="query_category"><![CDATA["
 		select c._id, c.name, c.image
 		from Category c
 		where c._id = ?
+	"]]></string>
+	<string name="query_category_cache_names"><![CDATA["
+		select key from Category_Name_Cache
+	"]]></string>
+	<string name="query_category_cache_update"><![CDATA["
+		update Category_Name_Cache set value = ? where key = ?
 	"]]></string>
 	<string name="query_item_new"><![CDATA["
 		insert into Item(parent, name, category, image) values(?, ?, ?, ?)

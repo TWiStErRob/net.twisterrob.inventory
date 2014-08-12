@@ -1,29 +1,39 @@
 package net.twisterrob.inventory.android.content;
 
+import java.util.Arrays;
+
+import org.slf4j.*;
+
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.*;
 import android.database.sqlite.*;
 
 import com.google.android.gms.drive.DriveId;
 
-import net.twisterrob.android.db.*;
-import net.twisterrob.android.db.DatabaseOpenHelper.HelperHooks;
+import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.contract.Category;
 
 public class Database {
+	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
+
 	private final Context m_context;
+	private final Resources m_resources;
 	private final DatabaseOpenHelper m_helper;
 
 	public Database(Context context) {
 		m_context = context;
-		m_helper = new DatabaseOpenHelper(m_context, "MagicHomeInventory", 1, new HelperHooks() {
+		m_resources = context.getResources();
+		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 1) {
+			@Override
 			public void onConfigure(SQLiteDatabase db) {
+				super.onConfigure(db);
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 			}
-		});
-		m_helper.setDevMode(true);
+		};
+		m_helper.setDevMode(false);
 		m_helper.setDumpOnOpen(true);
 	}
 
@@ -36,22 +46,26 @@ public class Database {
 	}
 
 	private void execSQL(int queryResource, Object... params) {
-		@SuppressWarnings("resource")
-		SQLiteDatabase db = getWritableDatabase();
-		db.execSQL(m_context.getString(queryResource), params);
+		execSQL(getWritableDatabase(), queryResource, params);
+	}
+	private void execSQL(SQLiteDatabase db, int queryResource, Object... params) {
+		LOG.trace("execSQL({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
+		db.execSQL(m_resources.getString(queryResource), params);
 	}
 
-	@SuppressWarnings("resource")
 	private Cursor rawQuery(int queryResource, Object... params) {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.rawQuery(m_context.getString(queryResource), StringTools.toStringArray(params));
+		return rawQuery(getReadableDatabase(), queryResource, params);
+	}
+	private Cursor rawQuery(SQLiteDatabase db, int queryResource, Object... params) {
+		LOG.trace("rawQuery({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
+		return db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
 	}
 
 	@SuppressWarnings("resource")
 	private long rawInsert(int insertResource, Object... params) {
 		SQLiteDatabase db = getWritableDatabase();
 
-		SQLiteStatement insert = db.compileStatement(m_context.getString(insertResource));
+		SQLiteStatement insert = db.compileStatement(m_resources.getString(insertResource));
 		try {
 			for (int i = 0; i < params.length; ++i) {
 				DatabaseUtils.bindObjectToProgram(insert, i + 1, params[i]);
@@ -156,5 +170,27 @@ public class Database {
 			query += "*";
 		}
 		return rawQuery(R.string.query_search, query);
+	}
+
+	public void updateCategoryCache() {
+		LOG.info("Updating category name cache");
+		@SuppressWarnings("resource")
+		SQLiteDatabase db = getWritableDatabase();
+		db.beginTransaction();
+		try {
+			Cursor cursor = rawQuery(db, R.string.query_category_cache_names);
+			try {
+				while (cursor.moveToNext()) {
+					String resourceName = cursor.getString(0);
+					String displayName = String.valueOf(AndroidTools.getText(m_context, resourceName));
+					execSQL(db, R.string.query_category_cache_update, displayName, resourceName);
+				}
+				db.setTransactionSuccessful();
+			} finally {
+				cursor.close();
+			}
+		} finally {
+			db.endTransaction();
+		}
 	}
 }

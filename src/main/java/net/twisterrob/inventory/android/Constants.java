@@ -4,5 +4,6 @@ public interface Constants {
 
 	interface Prefs {
 		String DRIVE_FOLDER_ID = "driveRootFolder";
+		String CURRENT_LANGUAGE = "currentLanguage";
 	}
 }
