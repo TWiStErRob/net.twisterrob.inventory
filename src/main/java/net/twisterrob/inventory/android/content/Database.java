@@ -10,7 +10,7 @@ import net.twisterrob.android.db.*;
 import net.twisterrob.android.db.DatabaseOpenHelper.HelperHooks;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.contract.Category;
 
 public class Database {
 	private final Context m_context;
@@ -123,19 +123,8 @@ public class Database {
 		execSQL(R.string.query_property_delete, id);
 	}
 
-	@SuppressWarnings("resource")
 	public long newRoom(long propertyID, String name, long type, DriveId imageDriveID) {
-		SQLiteDatabase db = getWritableDatabase();
-		db.beginTransaction();
-		try {
-			long rootID = newItem(null, Item.ROOM_ROOT, Category.INTERNAL, null);
-			long roomID = rawInsert(R.string.query_room_new, propertyID, rootID, name, type, imageDriveID);
-			db.setTransactionSuccessful();
-			return roomID;
-		} finally {
-			db.endTransaction();
-		}
-
+		return rawInsert(R.string.query_room_new, propertyID, null, name, type, imageDriveID);
 	}
 
 	public void updateRoom(long id, String name, long type, DriveId imageDriveID) {

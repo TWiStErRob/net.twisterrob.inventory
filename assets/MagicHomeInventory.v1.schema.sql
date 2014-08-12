@@ -96,6 +96,16 @@ CREATE TABLE Room (
 	PRIMARY KEY(_id AUTOINCREMENT),
 	UNIQUE (property, name)
 );
+CREATE VIEW Room_Rooter AS select * from Room;
+CREATE TRIGGER Room_Rooter_Auto
+INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NULL) BEGIN
+    INSERT INTO Item(name, category, parent) VALUES ('ROOT', -1, NULL);--NOTEOS
+    INSERT INTO Room VALUES (new._id, new.name, new.image, new.type, last_insert_rowid(), new.property);--NOTEOS
+END;
+CREATE TRIGGER Room_Rooter_Transparent
+INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NOT NULL) BEGIN
+    INSERT INTO Room VALUES (new._id, new.name, new.image, new.type, new.root, new.property);--NOTEOS
+END;
 
 
 CREATE TABLE Category_Descendant (
@@ -169,6 +179,17 @@ AFTER INSERT ON Item_Path BEGIN
 	insert into Log(message) values ('Item_Path_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '):'
 		|| 'finished with ' || (select '(' || item || ', ' || level || ', ' || node || ', ' || root || ')' from Item_Path where item = new.item and node = new.node)
 	);--NOTEOS
+
+	insert into Log(message) values ('Item_Path_searchIndex on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): '
+		|| 'insert into Search select ' || IFNULL((select group_concat(_id || ', ' || name || ', ' || path) from Item_Paths where _id = new.item), 'null') || ' from Item_Paths where _id = ' || new.item
+	);--NOTEOS
+	insert into Search
+		-- TODO concatenate resolved category to name
+		select _id, name, path from Item_Paths where _id = new.item
+	;--NOTEOS
+	insert into Log(message) values ('Item_Path_searchIndex on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): '
+		|| 'finished'
+	);--NOTEOS
 END;
 
 CREATE TRIGGER Item_Path_calculate
@@ -189,12 +210,12 @@ CREATE VIEW Item_Paths AS
 		_id,
 		name as name,
 		category as category,
-		property || ' > ' || room || ' > ' || group_concat(path, ' > ') as path
+		property || ' > ' || room || IFNULL(' > ' || group_concat(path, ' > '), '') as path
 	from (
 		select
 			i._id,
 			i.name,
-			e.name as path,
+			CASE WHEN (ip.item <> ip.node) THEN e.name ELSE NULL END as path,
 			c.name as category,
 			p.name as property,
 			r.name as room
@@ -204,28 +225,15 @@ CREATE VIEW Item_Paths AS
 		join Category  c  ON i.category = c._id
 		join Room      r  ON ip.root = r.root
 		join Property  p  ON r.property = p._id
-		where ip.item <> ip.node and ip.node <> ip.root
+		where ip.node <> ip.root
 		order by i._id, ip.level
 	)
 	group by _id, name, category, property, room
 	order by name asc
 ;
 
-CREATE VIRTUAL TABLE Search USING fts3 (
+CREATE VIRTUAL TABLE Search USING FTS3 (
 	_id,
 	name,
 	location
 );
-CREATE TRIGGER Item_Path_searchIndex
-AFTER INSERT ON Item_Path BEGIN
-	insert into Log(message) values ('Item_Path_searchIndex on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): '
-		|| 'insert into Search select ' || IFNULL((select group_concat(_id || ', ' || name || ', ' || path) from Item_Paths where _id = new.item), 'null') || ' from Item_Paths where _id = ' || new.item
-	);--NOTEOS
-	insert into Search
-		-- TODO concatenate resolved category to name
-		select _id, name, path from Item_Paths where _id = new.item
-	;--NOTEOS
-	insert into Log(message) values ('Item_Path_searchIndex on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): '
-		|| 'finished'
-	);--NOTEOS
-END;
