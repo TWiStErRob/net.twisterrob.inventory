@@ -13,9 +13,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.*;
 import android.provider.MediaStore;
-import android.widget.Toast;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.App;
 
 public abstract class PictureHelper {
 	private static final Logger LOG = LoggerFactory.getLogger(PictureHelper.class);
@@ -131,7 +131,7 @@ public abstract class PictureHelper {
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, cropFile);
 			intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 			if (activity.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) == null) {
-				Toast.makeText(activity, "Sorry, your device can't crop this image!", Toast.LENGTH_LONG).show();
+				App.toast("Sorry, your device can't crop this image!");
 				intent = null;
 			}
 		}

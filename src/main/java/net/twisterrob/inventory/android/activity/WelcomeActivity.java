@@ -7,7 +7,6 @@ import org.slf4j.*;
 import android.content.*;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
@@ -66,7 +65,7 @@ public class WelcomeActivity extends BaseActivity {
 	public void showMessage(final String message) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				Toast.makeText(WelcomeActivity.this, message, Toast.LENGTH_LONG).show();
+				App.toast(message);
 			}
 		});
 	}

@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.view.*;
-import android.widget.Toast;
 
 import net.twisterrob.android.content.loader.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -117,7 +116,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 			if (result != null) {
 				getActivity().finish();
 			} else {
-				Toast.makeText(getActivity(), "Room name must be unique within the property", Toast.LENGTH_LONG).show();
+				App.toast("Room name must be unique within the property");
 			}
 		}
 	}

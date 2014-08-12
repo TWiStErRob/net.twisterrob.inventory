@@ -5,6 +5,7 @@
 	<string name="empty"></string>
 	<string name="list_empty">This list is empty.</string>
 	<string name="list_empty_add">You don\'t have any created, add one to get started.</string>
+	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
 
 	<string name="sunburst_title">Sunburst Diagram</string>
 	<string name="action_picture_take">Take picture</string>

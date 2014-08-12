@@ -15,9 +15,9 @@ import android.hardware.Camera.Size;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.*;
-import android.widget.Toast;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.App;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
@@ -189,7 +189,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 		mParams.setFlashMode(flashMode);
 		mCamera.setParameters(mParams);
-		Toast.makeText(getContext(), "Flash is: " + mParams.getFlashMode(), Toast.LENGTH_SHORT).show();
+		App.toast("Flash is: " + mParams.getFlashMode());
 	}
 
 	// TODO implement onMeasure or drop this

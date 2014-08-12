@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
@@ -73,7 +72,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
 			}
 
 			public void dialogFailed() {
-				Toast.makeText(getActivity(), "Cannot delete property #" + propertyID, Toast.LENGTH_LONG).show();
+				App.toast("Cannot delete property #" + propertyID);
 			}
 		}).displayDialog(getActivity());
 	}

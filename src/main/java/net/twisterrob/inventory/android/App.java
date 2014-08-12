@@ -1,41 +1,55 @@
 package net.twisterrob.inventory.android;
 
+import java.util.Locale;
+
+import org.slf4j.*;
 import org.slf4j.impl.AndroidLoggerFactory;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.*;
-import android.os.StrictMode;
+import android.content.res.Configuration;
+import android.os.*;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
-import net.twisterrob.inventory.BuildConfig;
+import net.twisterrob.android.utils.tools.StringTools;
+import net.twisterrob.inventory.*;
+import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.utils.PicassoWrapper;
 
 public class App extends Application {
+	static {
+		if (BuildConfig.DEBUG) {
+			setStrictMode();
+		}
+		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
+		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.android\\.(.+\\.)?", "");
+	}
+
+	private static final Logger LOG = LoggerFactory.getLogger(App.class);
+
 	private static App s_instance;
-	private boolean initialized = false;
 	private Database database;
 	private PicassoWrapper picasso;
 
 	public App() {
-		if (s_instance != null) {
-			throw new IllegalStateException("Multiple applications running at the same time?!");
-		}
-		s_instance = this;
-
-		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
-		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.android\\.(.+\\.)?", "");
-
-		if (BuildConfig.DEBUG) {
-			setStrictMode();
+		synchronized (App.class) {
+			if (s_instance != null) {
+				throw new IllegalStateException("Multiple applications running at the same time?!");
+			}
+			s_instance = this;
 		}
 	}
 
 	@SuppressLint("NewApi")
 	private static void setStrictMode() {
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
-				.detectAll() //
+				//.detectDiskReads() //
+				.detectDiskWrites() //
+				.detectNetwork() //
+				.detectCustomSlowCalls() //
 				.penaltyLog() //
 				.penaltyDialog() //
 				.build());
@@ -46,28 +60,57 @@ public class App extends Application {
 				.detectLeakedRegistrationObjects() //
 				.detectLeakedSqlLiteObjects() //
 				.penaltyLog() //
-				.penaltyDeath() //
+				//.penaltyDeath() //
 				.build());
 	}
 
 	private static App getInstance() {
-		s_instance.afterPropertiesSet();
 		return s_instance;
+	}
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		database = new Database(this);
+		picasso = new PicassoWrapper(this);
+		updateLanguage(Locale.getDefault());
+
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		updateLanguage(newConfig.locale);
+	}
+
+	private void updateLanguage(Locale newLocale) {
+		final String currentLanguage = newLocale.toString();
+		final SharedPreferences prefs = getPrefs();
+		String storedLanguage = prefs.getString(Prefs.CURRENT_LANGUAGE, null);
+		if (!currentLanguage.equals(storedLanguage)) {
+			String from = StringTools.toLocale(storedLanguage).getDisplayName();
+			String to = StringTools.toLocale(currentLanguage).getDisplayName();
+			String message = getAppContext().getString(R.string.message_locale_changed, from, to);
+			App.toast(message);
+			new AsyncTask<Void, Void, Void>() {
+				@Override
+				protected Void doInBackground(Void... params) {
+					database.updateCategoryCache();
+					prefs.edit().putString(Prefs.CURRENT_LANGUAGE, currentLanguage).apply();
+					return null;
+				}
+			}.execute();
+		}
+	}
+
+	@Override
+	public void onTerminate() {
+		database.getWritableDatabase().close();
+		super.onTerminate();
 	}
 
 	public static Context getAppContext() {
 		return getInstance();
-	}
-
-	/**
-	 * Used to prevent escaping an uninitialized instance in the constructor.
-	 */
-	private synchronized void afterPropertiesSet() {
-		if (!initialized) {
-			database = new Database(this);
-			picasso = new PicassoWrapper(this);
-			initialized = true;
-		}
 	}
 
 	public static SharedPreferences getPrefs() {
@@ -93,5 +136,10 @@ public class App extends Application {
 	 */
 	public static Database db() {
 		return getInstance().database;
+	}
+
+	public static void toast(String message) {
+		LOG.info("Long Toast: {}", message);
+		Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
 	}
 }

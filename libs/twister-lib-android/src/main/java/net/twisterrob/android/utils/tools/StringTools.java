@@ -2,7 +2,7 @@ package net.twisterrob.android.utils.tools;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.Iterator;
+import java.util.*;
 
 public final class StringTools {
 	private StringTools() {
@@ -56,5 +56,25 @@ public final class StringTools {
 			return String.valueOf(o);
 		}
 		return o != null? o.toString() : nullString;
+	}
+
+	/** Inverse of {@link Locale#toString()}. */
+	public static Locale toLocale(String localeToString) {
+		if (localeToString == null) {
+			return Locale.ROOT;
+		}
+		String[] parts = localeToString.split("_");
+		switch (parts.length) {
+			case 0:
+				return Locale.ROOT;
+			case 1:
+				return new Locale(parts[0]);
+			case 2:
+				return new Locale(parts[0], parts[1]);
+			case 3:
+				return new Locale(parts[0], parts[1], parts[2]);
+			default:
+				throw new IllegalArgumentException("Invalid locale: " + localeToString);
+		}
 	}
 }

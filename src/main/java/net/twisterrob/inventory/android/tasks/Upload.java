@@ -5,7 +5,6 @@ import java.io.*;
 import org.slf4j.*;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.google.android.gms.drive.*;
 
@@ -35,7 +34,7 @@ public class Upload extends ApiClientAsyncTask<File, Void, DriveFile> {
 	@Override
 	protected void onPostExecute(DriveFile result) {
 		if (result != null) {
-			Toast.makeText(App.getAppContext(), "Uploaded: " + result.getDriveId(), Toast.LENGTH_LONG).show();
+			App.toast("Uploaded: " + result.getDriveId());
 		}
 	}
 

@@ -5,7 +5,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.widget.Toast;
+
+import net.twisterrob.inventory.android.App;
 
 public abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
 	private final Context context;
@@ -38,8 +39,7 @@ public abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
 	}
 
 	protected void processInvalid(Cursor item) {
-		String msg = getInvalidToastMessage(item);
-		Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+		App.toast(getInvalidToastMessage(item));
 	}
 
 	protected String getInvalidToastMessage(Cursor item) {
