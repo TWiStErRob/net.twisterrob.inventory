@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources> 
 <resources>
-	<string name="app_name">Magic Home Inventory</string>
+	<string name="app_name">!Magic Home Inventory</string>
 	<string name="empty"></string>
 	<string name="list_empty">This list is empty.</string>
 	<string name="list_empty_add">You don\'t have any created, add one to get started.</string>

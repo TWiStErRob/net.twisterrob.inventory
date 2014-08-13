@@ -32,8 +32,8 @@ public class BaseActivity extends ActionBarActivity {
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
 		ViewServer.get(this).removeWindow(this);
+		super.onDestroy();
 	}
 
 	@SuppressLint({"NewApi", "InlinedApi"})

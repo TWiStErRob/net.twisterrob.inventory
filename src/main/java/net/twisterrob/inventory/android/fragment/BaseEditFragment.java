@@ -4,8 +4,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import org.slf4j.*;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -127,17 +125,12 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 					image.setImageResource(R.drawable.image_loading);
 					try {
 						File file = PictureUtils.getFile(getActivity(), data.getData());
-
 						new Upload(getActivity()) {
-							private final Logger LOG = LoggerFactory.getLogger(getClass());
-
 							@Override
 							protected void onPostExecute(DriveFile result) {
-								if (result == null) {
-									LOG.error("No driveId after upload");
-									return;
+								if (result != null) {
+									setCurrentImageDriveId(result.getDriveId(), null);
 								}
-								setCurrentImageDriveId(result.getDriveId(), null);
 							}
 						}.execute(file);
 					} catch (RuntimeException ex) {

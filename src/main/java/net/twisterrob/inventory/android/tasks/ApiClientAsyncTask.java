@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.tasks;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.slf4j.*;
+
 import android.content.Context;
 import android.os.*;
 
@@ -15,6 +17,8 @@ import com.google.android.gms.drive.Drive;
  * An AsyncTask that maintains a connected client.
  */
 public abstract class ApiClientAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+	private static final Logger LOG = LoggerFactory.getLogger(ApiClientAsyncTask.class);
+
 	private GoogleApiClient mClient;
 
 	public ApiClientAsyncTask(Context context) {
@@ -59,10 +63,13 @@ public abstract class ApiClientAsyncTask<Params, Progress, Result> extends Async
 	}
 
 	public static GoogleApiClient getConnectedClient(GoogleApiClient client) {
+		if (client.isConnected()) {
+			return client;
+		}
 		final CountDownLatch latch = new CountDownLatch(1);
 		client.registerConnectionCallbacks(new ConnectionCallbacks() {
 			@Override
-			public void onConnected(Bundle arg0) {
+			public void onConnected(Bundle connectionHint) {
 				latch.countDown();
 			}
 			@Override
@@ -72,7 +79,8 @@ public abstract class ApiClientAsyncTask<Params, Progress, Result> extends Async
 		});
 		client.registerConnectionFailedListener(new OnConnectionFailedListener() {
 			@Override
-			public void onConnectionFailed(ConnectionResult arg0) {
+			public void onConnectionFailed(ConnectionResult result) {
+				LOG.error("Cannot connect to Google Drive: {}", result.toString());
 				latch.countDown();
 			}
 		});

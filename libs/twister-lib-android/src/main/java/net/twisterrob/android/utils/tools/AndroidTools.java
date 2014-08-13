@@ -4,13 +4,14 @@ import java.util.*;
 
 import static java.lang.Math.*;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.hardware.*;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera;
-import android.os.Bundle;
+import android.os.*;
 import android.support.v4.widget.CursorAdapter;
 import android.util.TypedValue;
 import android.view.WindowManager;
@@ -208,5 +209,19 @@ public abstract class AndroidTools {
 		RectF segment = new RectF(cx - r, cy - r, cx + r, cy + r);
 		midway.addArc(segment, startAngle, sweepAngle);
 		canvas.drawTextOnPath(label, midway, 0, 0, textPaint);
+	}
+
+	/**
+	 * @see <a href="http://www.jayway.com/2012/11/28/is-androids-asynctask-executing-tasks-serially-or-concurrently/">AsyncTask ordering</a>
+	 */
+	@SuppressLint("NewApi")
+	public static <Params> void executeParallel(AsyncTask<Params, ?, ?> as, Params... params) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.DONUT) {
+			throw new IllegalStateException("Cannot execute AsyncTask parallel before DONUT (1.6 / API 4)");
+		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			as.execute(params);
+		} else {
+			as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+		}
 	}
 }

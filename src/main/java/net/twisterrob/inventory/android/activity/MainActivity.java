@@ -14,7 +14,7 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
 import net.twisterrob.android.adapter.BaseListAdapter;
-import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.Category;
 
@@ -30,67 +30,36 @@ public class MainActivity extends BaseActivity {
 		list = (GridView)findViewById(android.R.id.list);
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				MainItem item = (MainItem)parent.getAdapter().getItem(position);
+				MainItem item = (MainItem)parent.getItemAtPosition(position);
 				item.listener.onClick(view);
 			}
 		});
-		Collection<MainItem> actions = Arrays.asList( //
+		Collection<MainItem> actions = new ArrayList<MainItem>(Arrays.asList( //
 				new MainItem("Properties", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(PropertyListActivity.list());
 					}
-				}), new MainItem("Drive", android.R.drawable.ic_menu_upload, new OnClickListener() {
-					public void onClick(View v) {
-						Intent intent = new Intent(App.getAppContext(), WelcomeActivity.class);
-						startActivity(intent);
-					}
-				}), new MainItem("Drive File", android.R.drawable.ic_menu_upload, new OnClickListener() {
-					public void onClick(View v) {
-						Intent intent = new Intent(App.getAppContext(), PickDriveFileActivity.class);
-						startActivity(intent);
-					}
-				}), new MainItem("Camera", android.R.drawable.ic_menu_camera, new OnClickListener() {
-					public void onClick(View v) {
-						Intent intent = new Intent(App.getAppContext(), CaptureImage.class);
-						startActivity(intent);
-					}
-				}), new MainItem("View Room", App.pic().getSVG(R.raw.room_bedroom), new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(RoomViewActivity.show(4));
-					}
-				}), new MainItem("Edit Room", App.pic().getSVG(R.raw.room_bedroom), new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(RoomEditActivity.edit(4));
-					}
-				}), new MainItem("View Item", App.pic().getSVG(R.raw.category_storage_box), new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(ItemViewActivity.show(4));
-					}
-				}), new MainItem("Edit Item", App.pic().getSVG(R.raw.category_storage_box), new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(ItemEditActivity.edit(4));
-					}
-				}), new MainItem("View Property", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(PropertyViewActivity.show(1));
-					}
-				}), new MainItem("Edit Property", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(PropertyEditActivity.edit(1));
-					}
-				}), new MainItem("View Categories", App.pic().getSVG(R.raw.category_unknown), new OnClickListener() {
+				}), //
+				new MainItem("View Categories", App.pic().getSVG(R.raw.category_unknown), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(CategoryViewActivity.show(Category.INTERNAL));
 					}
-				}), new MainItem("Sunburst", App.pic().getSVG(R.raw.category_disc), new OnClickListener() {
+				}), //
+				new MainItem("Sunburst", App.pic().getSVG(R.raw.category_disc), new OnClickListener() {
 					public void onClick(View v) {
 						startActivity(SunBurstActivity.show());
 					}
-				}), new MainItem("Drawable Test", R.drawable.image_loading, new OnClickListener() {
-					public void onClick(View v) {
-						// ignore
-					}
-				}));
+				}) //
+				));
+
+		if (BuildConfig.DEBUG) {
+			actions.add(new MainItem("DEVELOPER", android.R.drawable.ic_menu_upload, new OnClickListener() {
+				public void onClick(View v) {
+					Intent intent = new Intent(App.getAppContext(), DeveloperActivity.class);
+					startActivity(intent);
+				}
+			}));
+		}
 		list.setAdapter(new MainItemAdapter(this, actions));
 	}
 
