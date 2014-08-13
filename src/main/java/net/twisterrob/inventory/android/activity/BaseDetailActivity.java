@@ -8,7 +8,9 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 
-public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends BaseFragment<?>> extends BaseActivity {
+public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends BaseFragment<?>>
+		extends
+			BaseDriveActivity {
 	private D details;
 	private L children;
 

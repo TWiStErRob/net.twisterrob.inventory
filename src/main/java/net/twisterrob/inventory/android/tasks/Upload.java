@@ -4,27 +4,40 @@ import java.io.*;
 
 import org.slf4j.*;
 
-import android.content.Context;
+import android.app.Activity;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
 
+import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.utils.DriveUtils;
+import net.twisterrob.inventory.android.utils.DriveIdDownloader.ApiClientProvider;
+import net.twisterrob.inventory.android.utils.*;
 
 import static net.twisterrob.inventory.android.utils.DriveUtils.*;
 
-public class Upload extends ApiClientAsyncTask<File, Void, DriveFile> {
+public class Upload extends SimpleAsyncTask<File, Void, DriveFile> {
 	private static final Logger LOG = LoggerFactory.getLogger(Upload.class);
+	private final ApiClientProvider provider;
 
-	public Upload(Context context) {
-		super(context);
+	public Upload(Activity activity) {
+		if (activity instanceof ApiClientProvider) {
+			this.provider = (ApiClientProvider)activity;
+		} else {
+			String clazz = activity != null? activity.getClass().toString() : null;
+			throw new IllegalArgumentException(clazz + " must implement " + ApiClientProvider.class);
+		}
 	}
 
 	@Override
-	protected DriveFile doInBackgroundConnected(File... params) {
-		File file = params[0];
+	protected DriveFile doInBackground(File file) {
 		try {
-			return uploadFile(file);
+			GoogleApiClient client = provider.getConnectedClient();
+			if (client == null || !client.isConnected()) {
+				LOG.error("Cannot upload file {} because no connected client was given", file);
+				return null;
+			}
+			return uploadFile(client, file);
 		} catch (IOException ex) {
 			LOG.error("Cannot upload file {}", file, ex);
 		}
@@ -38,8 +51,8 @@ public class Upload extends ApiClientAsyncTask<File, Void, DriveFile> {
 		}
 	}
 
-	private DriveFile uploadFile(File file) throws IOException {
-		DriveFolder folder = getDriveFolder();
+	private static DriveFile uploadFile(GoogleApiClient client, File file) throws IOException {
+		DriveFolder folder = getDriveFolder(client);
 		if (folder == null) {
 			LOG.error("No Google Drive folder found, aborting {} upload", file);
 			return null;
@@ -49,16 +62,16 @@ public class Upload extends ApiClientAsyncTask<File, Void, DriveFile> {
 				.setMimeType("image/jpeg") //
 				.setTitle(file.getName()) //
 				.build();
-		Contents fileContents = sync(Drive.DriveApi.newContents(getGoogleApiClient()));
+		Contents fileContents = sync(Drive.DriveApi.newContents(client));
 		DriveUtils.putFileIntoContents(fileContents, file);
-		return sync(folder.createFile(getGoogleApiClient(), fileMeta, fileContents));
+		return sync(folder.createFile(client, fileMeta, fileContents));
 	}
 
-	private DriveFolder getDriveFolder() {
+	private static DriveFolder getDriveFolder(GoogleApiClient client) {
 		String driveFolderName = App.getPrefs().getString(Constants.Prefs.DRIVE_FOLDER_ID, null);
 		if (driveFolderName != null) {
 			DriveId folderId = DriveId.decodeFromString(driveFolderName);
-			return Drive.DriveApi.getFolder(getGoogleApiClient(), folderId);
+			return Drive.DriveApi.getFolder(client, folderId);
 		}
 		return null;
 	}

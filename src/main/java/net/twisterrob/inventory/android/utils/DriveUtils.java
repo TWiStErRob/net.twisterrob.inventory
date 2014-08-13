@@ -18,7 +18,7 @@ public class DriveUtils {
 	public static <T extends Result> T syncResult(PendingResult<T> pending) {
 		T result = pending.await();
 		if (!result.getStatus().isSuccess()) {
-			throw new IllegalStateException(result.getStatus().getStatusMessage());
+			throw new IllegalStateException(result.getStatus().toString());
 		}
 		return result;
 	}

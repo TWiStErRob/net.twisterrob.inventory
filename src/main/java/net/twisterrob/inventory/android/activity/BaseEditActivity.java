@@ -5,7 +5,7 @@ import android.support.v4.app.*;
 
 import net.twisterrob.inventory.R;
 
-public abstract class BaseEditActivity<E extends Fragment> extends BaseActivity {
+public abstract class BaseEditActivity<E extends Fragment> extends BaseDriveActivity {
 	private E editor;
 
 	@Override

@@ -12,6 +12,7 @@ import android.content.pm.*;
 import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.*;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.*;
@@ -131,6 +132,31 @@ public class PictureUtils {
 
 		bmOptions.inPurgeable = true;
 		Bitmap bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
+		return bitmap;
+	}
+
+	public static Bitmap loadPicture(Context context, int drawableResourceID) {
+		return drawableToBitmap(context.getResources().getDrawable(drawableResourceID));
+	}
+	public static Bitmap drawableToBitmap(Drawable drawable) {
+		if (drawable instanceof BitmapDrawable) {
+			return ((BitmapDrawable)drawable).getBitmap();
+		}
+
+		int width = drawable.getIntrinsicWidth();
+		if (width <= 0) {
+			width = 1;
+		}
+		int height = drawable.getIntrinsicHeight();
+		if (height <= 0) {
+			height = 1;
+		}
+
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawable.draw(canvas);
+
 		return bitmap;
 	}
 

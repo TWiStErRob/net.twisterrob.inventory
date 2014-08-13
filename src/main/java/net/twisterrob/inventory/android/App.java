@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android;
 
+import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 import org.slf4j.*;
@@ -13,11 +14,15 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.squareup.picasso.PicassoWrapper;
+
 import net.twisterrob.android.utils.tools.StringTools;
 import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.utils.PicassoWrapper;
+import net.twisterrob.inventory.android.utils.DriveIdDownloader.ApiClientProvider;
+import net.twisterrob.inventory.android.utils.*;
 
 public class App extends Application {
 	static {
@@ -49,9 +54,12 @@ public class App extends Application {
 				//.detectDiskReads() //
 				.detectDiskWrites() //
 				.detectNetwork() //
+				.penaltyDeathOnNetwork() //
 				.detectCustomSlowCalls() //
 				.penaltyLog() //
 				.penaltyDialog() //
+				.penaltyDropBox() //
+				.penaltyFlashScreen() //
 				.build());
 		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder() //
 				//.detectActivityLeaks() //
@@ -111,6 +119,18 @@ public class App extends Application {
 
 	public static Context getAppContext() {
 		return getInstance();
+	}
+
+	private WeakReference<ApiClientProvider> provider = new WeakReference<ApiClientProvider>(null);
+	public static void setApiClientProvider(ApiClientProvider current) {
+		getInstance().provider = new WeakReference<ApiClientProvider>(current);
+	}
+	public static GoogleApiClient getConnectedClient() {
+		ApiClientProvider current = getInstance().provider.get();
+		if (current != null) {
+			return current.getConnectedClient();
+		}
+		return null;
 	}
 
 	public static SharedPreferences getPrefs() {
