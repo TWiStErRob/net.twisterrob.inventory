@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.slf4j.*;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.*;
 import android.hardware.Camera.AutoFocusCallback;
@@ -12,19 +11,18 @@ import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.Size;
-import android.os.Build;
+import android.os.*;
 import android.util.AttributeSet;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.App;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
 
-	private Camera mCamera;
-	private CameraInfo mCameraInfo;
-	private Parameters mParams;
+	private CameraHandlerThread mCameraThread = null;
+	private MissedSurfaceEvents missedEvents = new MissedSurfaceEvents();
+	private CameraHolder cameraHolder = null;
 
 	@SuppressWarnings("deprecation")
 	public CameraPreview(Context context, AttributeSet attributeset) {
@@ -38,96 +36,57 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	public Camera getCamera() {
-		return mCamera;
+		return cameraHolder != null? cameraHolder.camera : null;
 	}
 
 	public boolean isRunning() {
-		return mCamera != null;
+		return cameraHolder != null;
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		LOG.trace("surfaceCreated({})", holder);
-		acquireCamera();
-		usePreview();
-
-		startPreview(); // so that surfaceChanged can stop it without exception
-	}
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		LOG.trace("surfaceDestroyed({})", holder);
-		stopPreview();
-		releaseCamera();
+		LOG.trace("surfaceCreated({}) {}", holder, cameraHolder != null);
+		if (cameraHolder != null) {
+			usePreview();
+		} else {
+			if (mCameraThread != null) {
+				throw new IllegalStateException("Camera Thread already started");
+			}
+			mCameraThread = new CameraHandlerThread();
+			mCameraThread.startOpenCamera();
+			missedEvents.surfaceCreated(holder);
+		}
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-		LOG.trace("surfaceChanged({}, format={}, w={}, h={})", holder, format, w, h);
-		stopPreview();
-		updatePreview(w, h);
-		startPreview();
+		LOG.trace("surfaceChanged({}, format={}, w={}, h={}) {}", holder, format, w, h, cameraHolder != null);
+		if (cameraHolder != null) {
+			stopPreview();
+			updatePreview(w, h);
+			startPreview();
+		} else {
+			missedEvents.surfaceChanged(holder, format, w, h);
+		}
 	}
 
-	private void updatePreview(int w, int h) {
-		if (mCamera == null) {
-			return;
-		}
-
-		int width = getWidth();
-		int height = getHeight();
-		int degrees = AndroidTools.calculateRotation(getContext(), mCameraInfo);
-		boolean landscape = degrees % 180 == 0;
-		if (!landscape) {
-			int temp = width;
-			width = height;
-			height = temp;
-		}
-
-		Size previewSize = AndroidTools.getOptimalSize(mParams.getSupportedPreviewSizes(), width, height);
-		Size pictureSize = AndroidTools.getOptimalSize(mParams.getSupportedPictureSizes(), width, height);
-		LOG.debug("orient: {}, size: {}x{} ({}), surface: {}x{} ({}), preview: {}x{} ({}), picture: {}x{} ({})", //
-				degrees, //
-				width, height, (float)width / (float)height, //
-				w, h, (float)w / (float)h, //
-				previewSize.width, previewSize.height, (float)previewSize.width / (float)previewSize.height, //
-				pictureSize.width, pictureSize.height, (float)pictureSize.width / (float)pictureSize.height //
-		);
-		mParams.setPreviewSize(previewSize.width, previewSize.height);
-		mParams.setPictureSize(pictureSize.width, pictureSize.height);
-		mParams.setRotation(degrees);
-		mParams.set("orientation", landscape? "landscape" : "portrait");
-		mCamera.setParameters(mParams);
-		mCamera.setDisplayOrientation(degrees);
-	}
-
-	private void acquireCamera() {
-		if (mCamera != null) {
-			throw new IllegalStateException("Camera already acquired");
-		}
-		int mCameraID = 0; // TODO front camera?
-		mCamera = Camera.open(mCameraID);
-		mCameraInfo = new CameraInfo();
-		mParams = mCamera.getParameters();
-		Camera.getCameraInfo(mCameraID, mCameraInfo);
-	}
-
-	private void releaseCamera() {
-		if (mCamera != null) {
-			// Important: Call release() to release the camera for use by other
-			// applications. Applications should release the camera immediately
-			// during onPause() and re-open() it during onResume()).
-			LOG.info("Releasing {}", mCamera);
-			mCamera.release();
-			mCamera = null;
-			mCameraInfo = null;
-			mParams = null;
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		LOG.trace("surfaceDestroyed({}) {}", holder, cameraHolder != null);
+		if (cameraHolder != null) {
+			stopPreview();
+			releaseCamera();
+		} else {
+			missedEvents.surfaceDestroyed(holder);
 		}
 	}
 
 	private void usePreview() {
+		LOG.trace("Using preview {}", cameraHolder != null);
 		try {
-			if (mCamera != null) {
-				mCamera.setPreviewDisplay(getHolder());
+			if (cameraHolder != null) {
+				LOG.trace("setPreviewDisplay {}", getHolder());
+				cameraHolder.camera.setPreviewDisplay(getHolder());
 			}
 		} catch (RuntimeException ex) {
 			LOG.error("Error setting up camera preview", ex);
@@ -136,10 +95,60 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
+	private void updatePreview(int w, int h) {
+		LOG.trace("Updating preview {}", cameraHolder != null);
+		if (cameraHolder == null) {
+			return;
+		}
+
+		int width = getWidth();
+		int height = getHeight();
+		int degrees = AndroidTools.calculateRotation(getContext(), cameraHolder.cameraInfo);
+		boolean landscape = degrees % 180 == 0;
+		if (!landscape) {
+			int temp = width;
+			width = height;
+			height = temp;
+		}
+
+		Size previewSize = AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPreviewSizes(), width, height);
+		Size pictureSize = AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPictureSizes(), width, height);
+		LOG.debug("orient: {}, size: {}x{} ({}), surface: {}x{} ({}), preview: {}x{} ({}), picture: {}x{} ({})", //
+				degrees, //
+				width, height, (float)width / (float)height, //
+				w, h, (float)w / (float)h, //
+				previewSize.width, previewSize.height, (float)previewSize.width / (float)previewSize.height, //
+				pictureSize.width, pictureSize.height, (float)pictureSize.width / (float)pictureSize.height //
+		);
+		cameraHolder.params.setPreviewSize(previewSize.width, previewSize.height);
+		cameraHolder.params.setPictureSize(pictureSize.width, pictureSize.height);
+		cameraHolder.params.setRotation(degrees);
+		cameraHolder.params.set("orientation", landscape? "landscape" : "portrait");
+		cameraHolder.camera.setParameters(cameraHolder.params);
+		cameraHolder.camera.setDisplayOrientation(degrees);
+	}
+
+	private void releaseCamera() {
+		LOG.trace("Releasing camera {}", cameraHolder != null);
+		if (cameraHolder != null) {
+			// Important: Call release() to release the camera for use by other
+			// applications. Applications should release the camera immediately
+			// during onPause() and re-open() it during onResume()).
+			LOG.info("Releasing {}", cameraHolder.camera);
+			cameraHolder.camera.release();
+			cameraHolder = null;
+		}
+		if (mCameraThread != null) {
+			mCameraThread.stopThread();
+			mCameraThread = null;
+		}
+	}
+
 	private void startPreview() {
+		LOG.trace("Starting preview {}", cameraHolder != null);
 		try {
-			if (mCamera != null) {
-				mCamera.startPreview();
+			if (cameraHolder != null) {
+				cameraHolder.camera.startPreview();
 			}
 		} catch (RuntimeException ex) {
 			LOG.error("Error starting camera preview", ex);
@@ -147,9 +156,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	private void stopPreview() {
+		LOG.trace("Stopping preview {}", cameraHolder != null);
 		try {
-			if (mCamera != null) {
-				mCamera.stopPreview();
+			if (cameraHolder != null) {
+				cameraHolder.camera.stopPreview();
 			}
 		} catch (RuntimeException ex) {
 			LOG.warn("ignore: tried to stop a non-existent preview", ex);
@@ -157,28 +167,43 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	public void takePicture(PictureCallback jpegCallback) {
-		if (mCamera == null) {
+		LOG.trace("Taking picture {}", cameraHolder != null);
+		if (cameraHolder == null) {
 			return;
 		}
-		mCamera.takePicture(null, null, null, jpegCallback);
+		cameraHolder.camera.takePicture(null, null, null, jpegCallback);
 	}
 
 	public void cancelTakePicture() {
-		startPreview();
+		LOG.trace("Initiaite cancel take picture");
+		mCameraThread.mHandler.post(new Runnable() {
+			public void run() {
+				LOG.trace("Cancel take picture");
+				startPreview();
+				cancelAutoFocus();
+			}
+		});
+	}
+
+	private void cancelAutoFocus() {
+		LOG.trace("Cancel autofocus {}", cameraHolder != null);
+		if (cameraHolder != null) {
+			cameraHolder.camera.cancelAutoFocus();
+		}
 	}
 
 	public void setCameraFocus(AutoFocusCallback autoFocus) {
-		if (mCamera == null) {
+		LOG.trace("Camera focus {}", cameraHolder != null);
+		if (cameraHolder == null) {
 			return;
 		}
-		String focusMode = mCamera.getParameters().getFocusMode();
+		String focusMode = cameraHolder.camera.getParameters().getFocusMode();
 		if (Parameters.FOCUS_MODE_AUTO.equals(focusMode) || Parameters.FOCUS_MODE_MACRO.equals(focusMode)) {
-			mCamera.autoFocus(autoFocus);
+			cameraHolder.camera.autoFocus(autoFocus);
 		}
 	}
-
 	public void setFlash(boolean flash) {
-		if (mCamera == null) {
+		if (cameraHolder == null) {
 			return;
 		}
 		String flashMode;
@@ -187,36 +212,106 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		} else {
 			flashMode = Parameters.FLASH_MODE_OFF;
 		}
-		mParams.setFlashMode(flashMode);
-		mCamera.setParameters(mParams);
-		App.toast("Flash is: " + mParams.getFlashMode());
+		cameraHolder.params.setFlashMode(flashMode);
+		cameraHolder.camera.setParameters(cameraHolder.params);
 	}
 
-	// TODO implement onMeasure or drop this
-	@SuppressLint("WrongCall")
-	private void onMeasureTODO(int widthMeasureSpec, int heightMeasureSpec) {
-		LOG.trace("onMeasure({}, {})", widthMeasureSpec, heightMeasureSpec);
+	private static class CameraHolder {
+		int cameraID;
+		Camera camera;
+		CameraInfo cameraInfo;
+		Parameters params;
 
-		if (mCamera == null) {
-			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-			return;
+		public CameraHolder(int id) {
+			cameraID = id;
+			LOG.trace("Opening camera");
+			camera = Camera.open(cameraID);
+			LOG.trace("Opened camera");
+			try {
+				LOG.trace("setPreviewDisplay null");
+				camera.setPreviewDisplay(null);
+			} catch (RuntimeException ex) {
+				LOG.error("Error setting up camera preview", ex);
+			} catch (IOException ex) {
+				LOG.error("Error setting up camera preview", ex);
+			}
+			cameraInfo = new CameraInfo();
+			params = camera.getParameters();
+			Camera.getCameraInfo(cameraID, cameraInfo);
+		}
+	}
+
+	private class CameraHandlerThread extends HandlerThread {
+		private Handler mHandler = null;
+
+		CameraHandlerThread() {
+			super("CameraHandlerThread");
+			start();
+			mHandler = new Handler(getLooper());
 		}
 
-		final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
-		final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+		void startOpenCamera() {
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() { // on Camera's Looper
+					final CameraHolder holder = new CameraHolder(findCamera());
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+						public void run() { // on UI Looper
+							CameraPreview.this.cameraHolder = holder;
+							CameraPreview.this.missedEvents.replay();
+						}
+					});
+				}
 
-		Size mPreviewSize = AndroidTools.getOptimalSize(mParams.getSupportedPreviewSizes(), width, height);
-		LOG.debug("Chosen optimal preview size: {}x{}", mPreviewSize.width, mPreviewSize.height);
-
-		float ratio;
-		if (mPreviewSize.height >= mPreviewSize.width) {
-			ratio = (float)mPreviewSize.height / (float)mPreviewSize.width;
-		} else {
-			ratio = (float)mPreviewSize.width / (float)mPreviewSize.height;
+				private int findCamera() {
+					return 0; // TODO front camera?
+				}
+			});
 		}
 
-		// One of these methods should be used, second method squishes preview slightly
-		setMeasuredDimension(width, (int)(width * ratio));
-		//setMeasuredDimension((int) (width * ratio), height);
+		void stopThread() {
+			getLooper().quit();
+		}
+	}
+
+	private class MissedSurfaceEvents implements SurfaceHolder.Callback {
+		private boolean surfaceCreated;
+		private boolean surfaceChanged;
+		private boolean surfaceDestroyed;
+		private SurfaceHolder holder;
+		private int format;
+		private int w, h;
+
+		public void surfaceCreated(SurfaceHolder holder) {
+			this.surfaceCreated = true;
+			this.holder = holder;
+		}
+
+		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+			this.surfaceChanged = true;
+			this.holder = holder;
+			this.format = format;
+			this.w = width;
+			this.h = height;
+		}
+
+		public void surfaceDestroyed(SurfaceHolder holder) {
+			this.surfaceDestroyed = true;
+			this.holder = holder;
+		}
+
+		public void replay() {
+			if (surfaceDestroyed) {
+				CameraPreview.this.surfaceDestroyed(holder);
+				return;
+			}
+			if (surfaceCreated) {
+				CameraPreview.this.surfaceCreated(holder);
+			}
+			if (surfaceChanged) {
+				CameraPreview.this.surfaceChanged(holder, format, w, h);
+			}
+		}
+
 	}
 }

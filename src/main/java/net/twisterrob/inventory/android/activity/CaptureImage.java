@@ -12,7 +12,7 @@ import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.*;
 import android.provider.MediaStore;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -106,8 +106,9 @@ public class CaptureImage extends BaseActivity {
 		mSavedFile = crop(mSavedFile);
 	}
 	protected void doRestartPreview() {
+		LOG.trace("Restarting preview");
 		mSavedFile = null;
-		mSelection.setSelectionStatus(SelectionStatus.NORMAL);
+		updateSelection(null);
 		mPreview.cancelTakePicture();
 	}
 	protected void doFinish() {
@@ -117,21 +118,32 @@ public class CaptureImage extends BaseActivity {
 		finish();
 	}
 	protected void take(final PictureCallback jpegCallback) {
+		LOG.trace("Initiate taking picture {}", mPreview.isRunning());
 		if (!mPreview.isRunning()) {
 			return;
 		}
 		mPreview.setCameraFocus(new AutoFocusCallback() {
-			public void onAutoFocus(boolean success, Camera camera) {
-				if (success) {
-					mSelection.setSelectionStatus(SelectionStatus.FOCUSED);
-				} else {
-					mSelection.setSelectionStatus(SelectionStatus.BLURRY);
-				}
+			public void onAutoFocus(final boolean success, Camera camera) {
+				LOG.trace("Autofocus result: {}", success);
+				new Handler(getMainLooper()).post(new Runnable() {
+					public void run() {
+						updateSelection(success);
+					}
+				});
 				mPreview.takePicture(jpegCallback);
 			}
 		});
 	}
+	private void updateSelection(Boolean focusSuccess) {
+		if (focusSuccess == null) {
+			mSelection.setSelectionStatus(SelectionStatus.NORMAL);
+		} else if (focusSuccess) {
+			mSelection.setSelectionStatus(SelectionStatus.FOCUSED);
+		} else {
+			mSelection.setSelectionStatus(SelectionStatus.BLURRY);
+		}
 
+	}
 	@SuppressWarnings("resource")
 	private File save(byte[] data) {
 		if (data == null) {

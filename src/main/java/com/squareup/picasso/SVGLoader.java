@@ -15,7 +15,7 @@ import com.caverock.androidsvg.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 
-class SVGLoader extends SimpleAsyncTask<Integer, Void, Drawable> {
+public class SVGLoader extends SimpleAsyncTask<Integer, Void, Drawable> {
 	private static final Logger LOG = LoggerFactory.getLogger(SVGLoader.class);
 
 	private static final LruCache<Integer, Drawable> CACHE = new LruCache<Integer, Drawable>(100);

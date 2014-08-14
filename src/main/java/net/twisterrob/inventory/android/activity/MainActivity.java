@@ -35,25 +35,28 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		Collection<MainItem> actions = new ArrayList<MainItem>(Arrays.asList( //
-				new MainItem("Properties", App.pic().getSVG(R.raw.property_home), new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(PropertyListActivity.list());
-					}
-				}), //
-				new MainItem("View Categories", App.pic().getSVG(R.raw.category_unknown), new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(CategoryViewActivity.show(Category.INTERNAL));
-					}
-				}), //
-				new MainItem("Sunburst", App.pic().getSVG(R.raw.category_disc), new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(SunBurstActivity.show());
-					}
-				}) //
+				new MainItem(getString(R.string.property_list), App.pic().getSVG(R.raw.property_home),
+						new OnClickListener() {
+							public void onClick(View v) {
+								startActivity(PropertyListActivity.list());
+							}
+						}), //
+				new MainItem(getString(R.string.category_list), App.pic().getSVG(R.raw.category_unknown),
+						new OnClickListener() {
+							public void onClick(View v) {
+								startActivity(CategoryViewActivity.show(Category.INTERNAL));
+							}
+						}), //
+				new MainItem(getString(R.string.sunburst_title), App.pic().getSVG(R.raw.category_disc),
+						new OnClickListener() {
+							public void onClick(View v) {
+								startActivity(SunBurstActivity.show());
+							}
+						}) //
 				));
 
 		if (BuildConfig.DEBUG) {
-			actions.add(new MainItem("DEVELOPER", android.R.drawable.ic_menu_upload, new OnClickListener() {
+			actions.add(new MainItem("DEVELOPER", android.R.drawable.ic_menu_more, new OnClickListener() {
 				public void onClick(View v) {
 					Intent intent = new Intent(App.getAppContext(), DeveloperActivity.class);
 					startActivity(intent);

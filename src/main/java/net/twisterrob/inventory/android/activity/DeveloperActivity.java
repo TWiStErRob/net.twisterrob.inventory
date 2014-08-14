@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.activity;
 
+import java.io.File;
 import java.util.*;
 
 import android.app.ListActivity;
@@ -69,8 +70,7 @@ public class DeveloperActivity extends ListActivity {
 				}), //
 				create(getString(R.string.action_picture_take), new Runnable() {
 					public void run() {
-						Intent intent = new Intent(App.getAppContext(), CaptureImage.class);
-						startActivity(intent);
+						startActivity(CaptureImage.saveTo(new File(getCacheDir(), "developer_image.jpg")));
 					}
 				}) //
 				);

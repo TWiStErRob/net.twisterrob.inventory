@@ -22,13 +22,13 @@ import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.utils.DriveIdDownloader.ApiClientProvider;
-import net.twisterrob.inventory.android.utils.*;
 
 public class App extends Application {
 	static {
 		if (BuildConfig.DEBUG) {
 			setStrictMode();
 		}
+		AndroidLoggerFactory.addReplacement("^com\\.squareup\\.picasso\\.", "net.twisterrob.inventory.android.util.");
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.android\\.(.+\\.)?", "");
 	}
