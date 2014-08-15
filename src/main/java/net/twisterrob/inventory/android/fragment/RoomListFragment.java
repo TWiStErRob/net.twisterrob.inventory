@@ -31,6 +31,13 @@ public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 	}
 
 	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+
+		menu.findItem(R.id.action_room_add).setVisible(getArgPropertyID() != Property.ID_ADD);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_room_add:

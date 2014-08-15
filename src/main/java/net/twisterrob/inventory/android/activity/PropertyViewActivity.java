@@ -18,7 +18,14 @@ public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragmen
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
 		long propertyID = getExtraPropertyID();
-		setFragments(PropertyViewFragment.newInstance(propertyID), RoomListFragment.newInstance(propertyID));
+		PropertyViewFragment detailsFragment;
+		if (propertyID == Property.ID_ADD) {
+			hideDetails();
+			detailsFragment = null;
+		} else {
+			detailsFragment = PropertyViewFragment.newInstance(propertyID);
+		}
+		setFragments(detailsFragment, RoomListFragment.newInstance(propertyID));
 	}
 
 	public void propertyLoaded(PropertyDTO property) {
@@ -39,14 +46,6 @@ public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragmen
 
 	public void roomActioned(long id) {
 		startActivity(RoomEditActivity.edit(id));
-	}
-
-	@Override
-	protected String checkExtras() {
-		if (getExtraPropertyID() == Property.ID_ADD) {
-			return "Invalid property ID";
-		}
-		return null;
 	}
 
 	private long getExtraPropertyID() {

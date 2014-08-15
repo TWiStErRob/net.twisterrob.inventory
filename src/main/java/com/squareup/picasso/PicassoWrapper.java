@@ -26,7 +26,7 @@ public class PicassoWrapper {
 		this.picasso = new Picasso.Builder(context) //
 				.indicatorsEnabled(BuildConfig.DEBUG) // XXX disable on release
 				.loggingEnabled(false) // XXX disable on release
-				.downloader(new DriveIdDownloader(context)) //
+				.downloader(new DriveIdDownloader(context, null)) //
 				.listener(new Listener() {
 					public void onImageLoadFailed(Picasso picasso, Uri uri, Exception ex) {
 						LOG.error("Cannot load image with {} from {}", picasso, uri, ex);

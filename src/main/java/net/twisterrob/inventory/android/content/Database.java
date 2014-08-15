@@ -97,8 +97,11 @@ public class Database {
 	public Cursor getProperty(long propertyID) {
 		return rawQuery(R.string.query_property, propertyID);
 	}
+	public Cursor listRooms() {
+		return rawQuery(R.string.query_rooms);
+	}
 	public Cursor listRooms(long propertyID) {
-		return rawQuery(R.string.query_rooms, propertyID);
+		return rawQuery(R.string.query_rooms_by_property, propertyID);
 	}
 	public Cursor getRoom(long roomID) {
 		return rawQuery(R.string.query_room, roomID);

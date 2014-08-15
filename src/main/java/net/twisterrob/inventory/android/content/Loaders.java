@@ -39,7 +39,11 @@ public enum Loaders {
 		@Override
 		protected Cursor createCursor(Bundle args) {
 			long id = args.getLong(Extras.PROPERTY_ID, Property.ID_ADD);
-			return App.db().listRooms(id);
+			if (id == Property.ID_ADD) {
+				return App.db().listRooms();
+			} else {
+				return App.db().listRooms(id);
+			}
 		}
 	},
 	SingleRoom {

@@ -28,7 +28,7 @@ public class DriveIdDownloader implements Downloader {
 		this(context, new UrlConnectionDownloader(context));
 	}
 
-	public DriveIdDownloader(@SuppressWarnings("unused") Context context, UrlConnectionDownloader fallback) {
+	public DriveIdDownloader(@SuppressWarnings("unused") Context context, Downloader fallback) {
 		this.fallback = fallback;
 	}
 

@@ -55,6 +55,19 @@
 		from Room r
 		join RoomType rt ON r.type = rt._id
 		join RoomTypeKind rtk ON rt.kind = rtk._id
+		order by r.name 
+	"]]></string>
+	<string name="query_rooms_by_property"><![CDATA["
+		select
+			r._id,
+			r.root,
+			r.name,
+			r.image,
+			COALESCE(rt.image, rtk.image) as typeImage,
+			(select count(1) from Item where parent = r.root) as childrenCount
+		from Room r
+		join RoomType rt ON r.type = rt._id
+		join RoomTypeKind rtk ON rt.kind = rtk._id
 		where r.property = ?
 		order by r.name 
 	"]]></string>

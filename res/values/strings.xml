@@ -42,6 +42,8 @@
 	<string name="property_share">Share Property</string>
 	<string name="property_name_hint">Property Title</string>
 
+	<string name="room_list">Rooms</string>
+	<string name="room_viewAll">View all rooms</string>
 	<string name="room_details">Room Details</string>
 	<string name="room_add">Add Room</string>
 	<string name="room_new">New Room</string>

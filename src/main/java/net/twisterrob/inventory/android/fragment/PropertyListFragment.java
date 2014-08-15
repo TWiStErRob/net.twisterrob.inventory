@@ -10,7 +10,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.activity.PropertyViewActivity;
 import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertiesEvents;
 
 public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
@@ -32,6 +34,9 @@ public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
 		switch (item.getItemId()) {
 			case R.id.action_property_add:
 				eventsListener.newProperty();
+				return true;
+			case R.id.action_room_list:
+				startActivity(PropertyViewActivity.show(Property.ID_ADD));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
