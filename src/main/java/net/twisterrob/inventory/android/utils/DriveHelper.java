@@ -1,7 +1,7 @@
 package net.twisterrob.inventory.android.utils;
 
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.*;
 
 import org.slf4j.*;
 
@@ -51,7 +51,7 @@ public class DriveHelper {
 				client.connect(); // TODO consider blockingConnect without a latch
 				try {
 					LOG.trace("getConnectedClient({}) waiting for response", extracted());
-					latch.await();
+					latch.await(30, TimeUnit.SECONDS);
 					LOG.trace("getConnectedClient({}) responded", extracted());
 				} catch (InterruptedException ex) {
 					LOG.trace("getConnectedClient({}) interrupted", extracted());

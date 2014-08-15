@@ -47,6 +47,12 @@ public class MainActivity extends BaseActivity {
 								startActivity(CategoryViewActivity.show(Category.INTERNAL));
 							}
 						}), //
+				new MainItem(getString(R.string.item_list), App.pic().getSVG(R.raw.category_collectibles),
+						new OnClickListener() {
+							public void onClick(View v) {
+								startActivity(CategoryItemsActivity.show(Category.INTERNAL));
+							}
+						}), //
 				new MainItem(getString(R.string.sunburst_title), App.pic().getSVG(R.raw.category_disc),
 						new OnClickListener() {
 							public void onClick(View v) {

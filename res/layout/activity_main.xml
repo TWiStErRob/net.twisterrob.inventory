@@ -7,7 +7,7 @@
 	android:layout_height="match_parent">
 	<GridView
 		android:id="@android:id/list"
-		android:numColumns="2"
+		android:numColumns="3"
 		android:layerType="software"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">

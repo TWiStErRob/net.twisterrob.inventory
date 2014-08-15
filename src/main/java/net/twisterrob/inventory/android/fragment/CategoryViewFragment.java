@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.fragment;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
@@ -15,6 +15,8 @@ import net.twisterrob.inventory.android.fragment.CategoryViewFragment.CategoryEv
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
+	private CharSequence nameCache;
+
 	public interface CategoryEvents {
 		void categoryLoaded(CategoryDTO item);
 	}
@@ -40,12 +42,33 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		CategoryDTO item = CategoryDTO.fromCursor(cursor);
 
-		setTitle(AndroidTools.getText(getActivity(), item.name));
-		Drawable icon = ImagedDTO.getFallbackDrawable(getActivity(), item.image);
-		setIcon(icon);
-		image.setImageDrawable(icon);
+		if (item.id != Category.INTERNAL) {
+			nameCache = AndroidTools.getText(getActivity(), item.name);
+			setTitle(nameCache);
+			Drawable icon = ImagedDTO.getFallbackDrawable(getActivity(), item.image);
+			setIcon(icon);
+			image.setImageDrawable(icon);
+		}
 
 		eventsListener.categoryLoaded(item);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		boolean isRoot = getArgCategoryID() == Category.INTERNAL;
+		MenuItem share = menu.findItem(R.id.action_share);
+		MenuItem viewItems = menu.findItem(R.id.action_category_viewItems);
+		MenuItem viewAllItems = menu.findItem(R.id.action_category_viewAllItems);
+
+		if (nameCache != null) {
+			viewItems.setTitle(getString(R.string.category_viewItems_special, nameCache));
+			viewAllItems.setTitle(getString(R.string.category_viewAllItems_special, nameCache));
+		}
+
+		share.setVisible(!isRoot);
+		viewItems.setVisible(!isRoot);
+		viewAllItems.setVisible(true);
 	}
 
 	@Override

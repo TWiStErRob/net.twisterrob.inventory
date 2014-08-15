@@ -17,11 +17,14 @@
 	<string name="category_list">Categories</string>
 	<string name="category_details">Category Details</string>
 	<string name="category_share">Share Category</string>
-	<string name="category_viewItems">View items directly in Category</string>
-	<string name="category_viewAllItems">View all items in Category</string>
+	<string name="category_viewItems">View items directly inside</string>
+	<string name="category_viewItems_special">View items directly in %1$s</string>
+	<string name="category_viewAllItems">View all items</string>
+	<string name="category_viewAllItems_special">View all items in %1$s</string>
 	<string name="label_category_subs">%1$d subcategories</string>
 	<string name="label_category_items_view">View %1$d items</string>
 
+	<string name="item_list">Items</string>
 	<string name="item_details">Item Details</string>
 	<string name="item_add">Add Item</string>
 	<string name="item_new">New Item</string>

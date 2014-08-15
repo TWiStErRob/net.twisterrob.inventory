@@ -17,18 +17,15 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryViewFragmen
 			CategoriesEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
-		long parentID = getExtraParentItemID();
-		CategoryViewFragment detailsFragment;
+		long parentID = getExtraParentCategoryID();
 		if (parentID == Category.INTERNAL) {
-			detailsFragment = null;
 			hideDetails();
 			getSupportActionBar().setTitle(R.string.category_list);
 			getSupportActionBar().setIcon(App.pic().getSVG(R.raw.category_unknown));
-		} else {
-			detailsFragment = CategoryViewFragment.newInstance(parentID);
 		}
-		setFragments(detailsFragment, CategoryListFragment.newInstance(parentID));
+		setFragments(CategoryViewFragment.newInstance(parentID), CategoryListFragment.newInstance(parentID));
 	}
+
 	public void categoryLoaded(CategoryDTO category) {
 		// ignore
 	}
@@ -42,7 +39,7 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryViewFragmen
 		startActivity(CategoryItemsActivity.showDirect(id));
 	}
 
-	private long getExtraParentItemID() {
+	private long getExtraParentCategoryID() {
 		return getIntent().getLongExtra(Extras.PARENT_ID, Category.ID_ADD);
 	}
 

@@ -135,7 +135,7 @@
 			c.name as category
 		from Item     i
 		join Category_Descendant cd ON i.category = cd.descendant
-		join Category c ON cd.descendant = c._id
+		join Category c ON cd.descendant = c._id and c._id <> -1
 		where cd.category = ?
 		order by i.name 
 	"]]></string>
