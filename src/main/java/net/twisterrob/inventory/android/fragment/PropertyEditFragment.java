@@ -54,7 +54,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		} else {
-			setTitle(R.string.property_new);
+			setTitle(getString(R.string.property_new));
 			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 		manager.startLoading();

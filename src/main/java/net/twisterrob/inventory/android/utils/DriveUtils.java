@@ -14,6 +14,8 @@ import com.google.android.gms.drive.query.*;
 
 import net.twisterrob.java.io.IOTools;
 
+import static net.twisterrob.inventory.android.utils.DriveUtils.*;
+
 public class DriveUtils {
 	public static <T extends Result> T syncResult(PendingResult<T> pending) {
 		T result = pending.await();
@@ -71,5 +73,14 @@ public class DriveUtils {
 		} finally {
 			IOTools.ignorantClose(stream);
 		}
+	}
+
+	public static void dump(GoogleApiClient client, DriveFolder folder) {
+		MetadataBuffer children = sync(folder.listChildren(client));
+		for (Metadata child: children) {
+			System.out.printf("%s / %s (%s) shared:%b\n", child.getDriveId().getResourceId(), child.getDriveId()
+					.encodeToString(), child.getTitle(), child.isShared());
+		}
+		children.close();
 	}
 }

@@ -41,6 +41,14 @@ public class DriveHelper {
 		this.resolutionReqCode = resolutionReqCode;
 	}
 
+	public synchronized void startConnect() {
+		if (client == null) {
+			LOG.trace("getConnectedClient({}) Lazy init in getGoogleApiClient", extracted());
+			client = createClientBuilder().build();
+		}
+		client.connect();
+	}
+
 	public GoogleApiClient getConnectedClient() {
 		LOG.trace("getConnectedClient({}) Getting connected client", extracted());
 		synchronized (this) {

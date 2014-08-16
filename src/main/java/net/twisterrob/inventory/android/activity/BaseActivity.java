@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
@@ -40,6 +41,7 @@ public class BaseActivity extends ActionBarActivity {
 	private void initActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setSubtitle(getTitle());
 
 		if (Build.VERSION_CODES.HONEYCOMB <= Build.VERSION.SDK_INT) {
 			int id = getResources().getIdentifier("action_bar", "id", "android");
@@ -71,5 +73,13 @@ public class BaseActivity extends ActionBarActivity {
 
 	protected <T> T getFragment(int id) {
 		return (T)getSupportFragmentManager().findFragmentById(id);
+	}
+
+	public void setActionBarTitle(CharSequence string) {
+		getSupportActionBar().setTitle(string);
+	}
+
+	public void setIcon(Drawable iconDrawable) {
+		getSupportActionBar().setIcon(iconDrawable);
 	}
 }

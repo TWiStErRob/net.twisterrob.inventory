@@ -48,7 +48,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 
 			loadItemData.dependsOn(populateCats);
 		} else {
-			setTitle(R.string.item_new);
+			setTitle(getString(R.string.item_new));
 			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 

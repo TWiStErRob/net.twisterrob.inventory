@@ -6,8 +6,9 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.*;
+
+import net.twisterrob.inventory.android.activity.BaseActivity;
 
 public class BaseFragment<T> extends Fragment {
 	protected static final String DYN_OptionsMenu = "optionsMenu";
@@ -80,14 +81,10 @@ public class BaseFragment<T> extends Fragment {
 	}
 
 	public void setTitle(CharSequence string) {
-		((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(string);
-	}
-
-	public void setTitle(int stringResourceID) {
-		((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(stringResourceID);
+		((BaseActivity)getActivity()).setActionBarTitle(string);
 	}
 
 	public void setIcon(Drawable iconDrawable) {
-		((ActionBarActivity)getActivity()).getSupportActionBar().setIcon(iconDrawable);
+		((BaseActivity)getActivity()).setIcon(iconDrawable);
 	}
 }

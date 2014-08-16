@@ -59,6 +59,7 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 	public GoogleApiClient getConnectedClient() {
 		return googleDrive.getConnectedClient();
 	}
+
 	public void showMessage(final String message) {
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -97,9 +98,9 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 			}
 
 			Metadata metadata = sync(inventoryFolder.getMetadata(client));
-			showMessage("Successfully connected to Drive folder: " + metadata.getTitle());
+			showMessage("Successfully connected to Drive folder: " + metadata.getTitle() + " ("
+					+ metadata.getDriveId().encodeToString() + ", " + metadata.getDriveId().getResourceId() + ")");
 		}
-
 		private DriveFolder getInventoryFolder() throws IOException {
 			DriveFolder rootFolder = Drive.DriveApi.getRootFolder(client);
 

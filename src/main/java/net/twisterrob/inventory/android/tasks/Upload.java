@@ -30,7 +30,7 @@ public class Upload extends SimpleAsyncTask<File, Void, DriveFile> {
 	}
 
 	@Override
-	protected DriveFile doInBackground(File file) {
+	public DriveFile doInBackground(File file) {
 		try {
 			GoogleApiClient client = provider.getConnectedClient();
 			if (client == null || !client.isConnected()) {

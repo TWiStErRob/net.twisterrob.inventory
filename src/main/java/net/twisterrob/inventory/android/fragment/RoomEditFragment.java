@@ -54,7 +54,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		} else {
-			setTitle(R.string.room_new);
+			setTitle(getString(R.string.room_new));
 			setCurrentImageDriveId(null, R.drawable.image_add);
 		}
 
