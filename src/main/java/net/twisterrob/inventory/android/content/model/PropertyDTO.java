@@ -8,8 +8,6 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.content.contract.Property;
 
 public class PropertyDTO extends ImagedDTO {
-	public long id = Property.ID_ADD;
-	public String name;
 	public long type;
 
 	public static PropertyDTO fromCursor(Cursor cursor) {
@@ -20,16 +18,6 @@ public class PropertyDTO extends ImagedDTO {
 	@Override
 	protected PropertyDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
-
-		int idColumn = cursor.getColumnIndex(Property.ID);
-		if (idColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			id = cursor.getLong(idColumn);
-		}
-
-		int nameColumn = cursor.getColumnIndex(Property.NAME);
-		if (nameColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			name = cursor.getString(nameColumn);
-		}
 
 		int typeColumn = cursor.getColumnIndex(Property.TYPE);
 		if (typeColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {

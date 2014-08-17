@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -15,7 +14,7 @@ import net.twisterrob.inventory.android.tasks.DeletePropertyTask;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
+public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, PropertyEvents> {
 	public interface PropertyEvents {
 		void propertyLoaded(PropertyDTO property);
 		void propertyDeleted(PropertyDTO property);
@@ -41,14 +40,10 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyEvents> {
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
-
-		setTitle(property.name);
-		Drawable fallback = property.getFallbackDrawable(getActivity());
-		setIcon(fallback);
-		App.pic().load(property.image).placeholder(fallback).into(image);
-
+		super.onSingleRowLoaded(property);
 		eventsListener.propertyLoaded(property);
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

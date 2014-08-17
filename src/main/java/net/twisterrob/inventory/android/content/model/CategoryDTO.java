@@ -7,11 +7,8 @@ import android.database.Cursor;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.content.contract.*;
 
-public class CategoryDTO extends DTO {
-	public long id = Category.ID_ADD;
+public class CategoryDTO extends ImagedDTO {
 	public long parentID = Category.ID_ADD;
-	public String name;
-	public String image;
 
 	public static CategoryDTO fromCursor(Cursor cursor) {
 		CategoryDTO category = new CategoryDTO();
@@ -22,24 +19,9 @@ public class CategoryDTO extends DTO {
 	protected CategoryDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		int idColumn = cursor.getColumnIndex(Item.ID);
-		if (idColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			id = cursor.getLong(idColumn);
-		}
-
 		int parentColumn = cursor.getColumnIndex(Item.PARENT);
 		if (parentColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
 			parentID = cursor.getLong(parentColumn);
-		}
-
-		int nameColumn = cursor.getColumnIndex(Item.NAME);
-		if (nameColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			name = cursor.getString(nameColumn);
-		}
-
-		int imageColumn = cursor.getColumnIndex(CommonColumns.IMAGE);
-		if (imageColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			image = cursor.getString(imageColumn);
 		}
 
 		return this;

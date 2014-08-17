@@ -82,7 +82,7 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 	}
 
 	private void setImage(Cursor cursor, ImageView target) {
-		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		int raw = AndroidTools.getRawResourceID(mContext, image);
 		if (raw > 0) {
 			App.pic().loadSVG(raw).into(target);

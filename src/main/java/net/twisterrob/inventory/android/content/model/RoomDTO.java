@@ -9,8 +9,6 @@ import net.twisterrob.inventory.android.content.contract.*;
 
 public class RoomDTO extends ImagedDTO {
 	public long propertyID = Property.ID_ADD;
-	public long id = Room.ID_ADD;
-	public String name;
 	public long type;
 	public long rootItemID = Item.ID_ADD;
 
@@ -22,16 +20,6 @@ public class RoomDTO extends ImagedDTO {
 	@Override
 	protected RoomDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
-
-		int idColumn = cursor.getColumnIndex(Room.ID);
-		if (idColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			id = cursor.getLong(idColumn);
-		}
-
-		int nameColumn = cursor.getColumnIndex(Room.NAME);
-		if (nameColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			name = cursor.getString(nameColumn);
-		}
 
 		int typeColumn = cursor.getColumnIndex(Room.TYPE);
 		if (typeColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {

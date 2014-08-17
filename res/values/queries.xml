@@ -93,7 +93,7 @@
 			c.name,
 			c.parent,
 			cd.level,
-			c.image
+			c.image as typeImage
 		from Category_Descendant cd
 		join Category c ON cd.descendant = c._id and c._id >= 0
 		where cd.category = ?
@@ -162,7 +162,7 @@
 		select
 			c._id,
 			c.name,
-			c.image,
+			c.image as typeImage,
 			(select count(1) from Category where parent = c._id) as childrenCount,
 			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countItems
 		from Category c
@@ -171,7 +171,7 @@
 		order by (CASE WHEN c.name <> 'category_uncategorized' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
 	"]]></string>
 	<string name="query_category"><![CDATA["
-		select c._id, c.name, c.image
+		select c._id, c.name, c.image as typeImage
 		from Category c
 		where c._id = ?
 	"]]></string>

@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.*;
 
@@ -9,12 +8,13 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.activity.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.*;
+import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.CategoryViewFragment.CategoryEvents;
+import net.twisterrob.inventory.android.utils.DescriptionBuilder;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
+public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, CategoryEvents> {
 	private CharSequence nameCache;
 
 	public interface CategoryEvents {
@@ -43,14 +43,18 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryEvents> {
 		CategoryDTO item = CategoryDTO.fromCursor(cursor);
 
 		if (item.id != Category.INTERNAL) {
-			nameCache = AndroidTools.getText(getActivity(), item.name);
-			setTitle(nameCache);
-			Drawable icon = ImagedDTO.getFallbackDrawable(getActivity(), item.image);
-			setIcon(icon);
-			image.setImageDrawable(icon);
+			nameCache = item.name = AndroidTools.getText(getActivity(), item.name).toString();
+			super.onSingleRowLoaded(item);
 		}
 
 		eventsListener.categoryLoaded(item);
+	}
+
+	@Override
+	protected CharSequence getDetailsString(CategoryDTO entity) {
+		return new DescriptionBuilder() //
+				.append("Name", entity.name) //
+				.build();
 	}
 
 	@Override

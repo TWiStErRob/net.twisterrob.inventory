@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -15,7 +14,7 @@ import net.twisterrob.inventory.android.tasks.DeleteRoomTask;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
+public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	public interface RoomEvents {
 		void roomLoaded(RoomDTO room);
 		void roomDeleted(RoomDTO room);
@@ -41,12 +40,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomEvents> {
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
-
-		setTitle(room.name);
-		Drawable fallback = room.getFallbackDrawable(getActivity());
-		setIcon(fallback);
-		App.pic().load(room.image).placeholder(fallback).into(image);
-
+		super.onSingleRowLoaded(room);
 		eventsListener.roomLoaded(room);
 	}
 

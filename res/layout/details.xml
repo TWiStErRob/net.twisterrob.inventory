@@ -5,11 +5,8 @@
 	android:id="@id/fragmentRoot"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
-	<ImageView
-		android:id="@id/image"
+	<android.support.v4.view.ViewPager
+		android:id="@+id/pager"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layerType="software"
-		android:layout_margin="@dimen/margin"
-		android:scaleType="fitCenter" />
+		android:layout_height="fill_parent" />
 </RelativeLayout>

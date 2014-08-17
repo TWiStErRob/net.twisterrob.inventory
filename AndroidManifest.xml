@@ -38,11 +38,6 @@
 				android:value="net.twisterrob.inventory.android.activity.SearchResultsActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.DeveloperActivity"
-			android:label="@string/app_name"
-			android:theme="@android:style/Theme">
-		</activity>
-		<activity
 			android:name="net.twisterrob.inventory.android.activity.PickDriveFileActivity"
 			android:label="@string/app_name">
 			<meta-data
@@ -84,7 +79,7 @@
 		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.CategoryItemsActivity"
-			android:label="@string/category_details">
+			android:label="@string/category_items">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="net.twisterrob.inventory.android.activity.CategoryViewActivity" />
@@ -141,5 +136,21 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="net.twisterrob.inventory.android.activity.ItemViewActivity" />
 		</activity>
+
+		<!-- Developer Activities -->
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.DeveloperActivity"
+			android:label="@string/app_name"
+			android:theme="@android:style/Theme">
+			<intent-filter>
+<!-- 				<action android:name="android.intent.action.MAIN" /> -->
+<!-- 				<category android:name="android.intent.category.LAUNCHER" /> -->
+			</intent-filter>
+		</activity>
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.DeveloperDriveActivity"
+			android:label="@string/app_name">
+		</activity>
+
 	</application>
 </manifest>

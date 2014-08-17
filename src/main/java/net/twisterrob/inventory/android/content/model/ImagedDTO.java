@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
 
 import com.google.android.gms.drive.DriveId;
 
@@ -53,5 +54,10 @@ public class ImagedDTO extends DTO {
 			LOG.error("TODO Convert {} to SVG", resourceName);
 		}
 		return context.getResources().getDrawable(AndroidTools.getDrawableResourceID(context, resourceName));
+	}
+
+	public void loadInto(ImageView imageView) {
+		Drawable fallback = getFallbackDrawable(imageView.getContext());
+		App.pic().load(image).placeholder(fallback).into(imageView);
 	}
 }
