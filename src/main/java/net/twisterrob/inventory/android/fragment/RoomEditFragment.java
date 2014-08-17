@@ -100,7 +100,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 			try {
 				Database db = App.db();
 				if (param.id == Room.ID_ADD) {
-					return db.newRoom(param.propertyID, param.name, param.type, param.image);
+					return db.createRoom(param.propertyID, param.name, param.type, param.image);
 				} else {
 					db.updateRoom(param.id, param.name, param.type, param.image);
 					return param.id;

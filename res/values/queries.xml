@@ -18,15 +18,6 @@
 		join PropertyType pt ON p.type = pt._id
 		where p._id = ?
 	"]]></string>
-	<string name="query_property_new"><![CDATA["
-		insert into Property(name, type, image) values(?, ?, ?)
-	"]]></string>
-	<string name="query_property_update"><![CDATA["
-		update Property set name = ?, type = ?, image = ? where _id = ?
-	"]]></string>
-	<string name="query_property_delete"><![CDATA["
-		delete from Property where _id = ?
-	"]]></string>
 	<string name="query_property_types"><![CDATA["
 		select pt._id, pt.name, pt.image as typeImage
 		from PropertyType pt
@@ -38,6 +29,8 @@
 		where pt.name like ? escape '\'
 		order by pt.priority
 	"]]></string>
+
+
 	<string name="query_room_types"><![CDATA["
 		select rt._id, rt.name, COALESCE(rt.image, rtk.image) as typeImage
 		from RoomType rt
@@ -87,15 +80,8 @@
 		join Property p ON r.property = p._id
 		where r._id = ?
 	"]]></string>
-	<string name="query_room_new"><![CDATA["
-		insert into Room_Rooter(property, name, type, image) values(?, ?, ?, ?)
-	"]]></string>
-	<string name="query_room_update"><![CDATA["
-		update Room set name = ?, type = ?, image = ? where _id = ?
-	"]]></string>
-	<string name="query_room_delete"><![CDATA["
-		delete from Room where _id = ?
-	"]]></string>
+
+
 	<string name="query_item_categories"><![CDATA["
 		select
 			c._id,
@@ -176,6 +162,8 @@
 		left join Item p ON i.parent = p._id
 		where i._id = ?
 	"]]></string>
+
+
 	<string name="query_categories"><![CDATA["
 		select
 			c._id,
@@ -202,21 +190,8 @@
 		left join Category p ON c.parent = p._id
 		where c._id = ?
 	"]]></string>
-	<string name="query_category_cache_names"><![CDATA["
-		select key from Category_Name_Cache
-	"]]></string>
-	<string name="query_category_cache_update"><![CDATA["
-		update Category_Name_Cache set value = ? where key = ?
-	"]]></string>
-	<string name="query_item_new"><![CDATA["
-		insert into Item(parent, name, category, image) values(?, ?, ?, ?)
-	"]]></string>
-	<string name="query_item_update"><![CDATA["
-		update Item set name = ?, category = ?, image = ? where _id = ?
-	"]]></string>
-	<string name="query_item_delete"><![CDATA["
-		delete from Item where _id = ?
-	"]]></string>
+
+
 	<string name="query_search"><![CDATA["
 		select
 			rowid    as _id,
@@ -226,4 +201,47 @@
 		where name MATCH ?
 		order by name
 	"]]></string>
+
+
+	<string name="query_category_cache_names"><![CDATA["
+		select key from Category_Name_Cache
+	"]]></string>
+	<string name="query_category_cache_update"><![CDATA["
+		update Category_Name_Cache set value = ? where key = ?
+	"]]></string>
+
+
+	<!-- Room C_UD -->
+	<string name="query_room_create"><![CDATA["
+		insert into Room_Rooter(property, name, type, image) values(?, ?, ?, ?)
+	"]]></string>
+	<string name="query_room_update"><![CDATA["
+		update Room set name = ?, type = ?, image = ? where _id = ?
+	"]]></string>
+	<string name="query_room_delete"><![CDATA["
+		delete from Room where _id = ?
+	"]]></string>
+
+	<!-- Property C_UD -->
+	<string name="query_property_create"><![CDATA["
+		insert into Property(name, type, image) values(?, ?, ?)
+	"]]></string>
+	<string name="query_property_update"><![CDATA["
+		update Property set name = ?, type = ?, image = ? where _id = ?
+	"]]></string>
+	<string name="query_property_delete"><![CDATA["
+		delete from Property where _id = ?
+	"]]></string>
+
+	<!-- Item C_UD -->
+	<string name="query_item_create"><![CDATA["
+		insert into Item(parent, name, category, image) values(?, ?, ?, ?)
+	"]]></string>
+	<string name="query_item_update"><![CDATA["
+		update Item set name = ?, category = ?, image = ? where _id = ?
+	"]]></string>
+	<string name="query_item_delete"><![CDATA["
+		delete from Item where _id = ?
+	"]]></string>
+
 </resources>

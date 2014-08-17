@@ -95,7 +95,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 			try {
 				Database db = App.db();
 				if (param.id == Property.ID_ADD) {
-					return db.newProperty(param.name, param.type, param.image);
+					return db.createProperty(param.name, param.type, param.image);
 				} else {
 					db.updateProperty(param.id, param.name, param.type, param.image);
 					return param.id;

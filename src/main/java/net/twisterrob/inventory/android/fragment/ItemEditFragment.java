@@ -94,7 +94,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 			try {
 				Database db = App.db();
 				if (param.id == Item.ID_ADD) {
-					return db.newItem(param.parentID, param.name, param.category, param.image);
+					return db.createItem(param.parentID, param.name, param.category, param.image);
 				} else {
 					db.updateItem(param.id, param.name, param.category, param.image);
 					return param.id;

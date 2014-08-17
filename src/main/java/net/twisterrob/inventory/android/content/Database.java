@@ -131,8 +131,8 @@ public class Database {
 	public Cursor getCategory(long itemID) {
 		return rawQuery(R.string.query_category, itemID);
 	}
-	public long newProperty(String name, long type, DriveId imageDriveID) {
-		return rawInsert(R.string.query_property_new, name, type, imageDriveID);
+	public long createProperty(String name, long type, DriveId imageDriveID) {
+		return rawInsert(R.string.query_property_create, name, type, imageDriveID);
 	}
 
 	public void updateProperty(long id, String name, long type, DriveId imageDriveID) {
@@ -143,8 +143,8 @@ public class Database {
 		execSQL(R.string.query_property_delete, id);
 	}
 
-	public long newRoom(long propertyID, String name, long type, DriveId imageDriveID) {
-		return rawInsert(R.string.query_room_new, propertyID, null, name, type, imageDriveID);
+	public long createRoom(long propertyID, String name, long type, DriveId imageDriveID) {
+		return rawInsert(R.string.query_room_create, propertyID, null, name, type, imageDriveID);
 	}
 
 	public void updateRoom(long id, String name, long type, DriveId imageDriveID) {
@@ -155,12 +155,12 @@ public class Database {
 		execSQL(R.string.query_room_delete, id);
 	}
 
-	public long newItem(long parentID, String name, long category, DriveId imageDriveID) {
-		return newItem((Long)parentID, name, category, imageDriveID);
+	public long createItem(long parentID, String name, long category, DriveId imageDriveID) {
+		return createItem((Long)parentID, name, category, imageDriveID);
 	}
 
-	private long newItem(Long parentID, String name, long category, DriveId imageDriveID) {
-		return rawInsert(R.string.query_item_new, parentID, name, category, imageDriveID);
+	private long createItem(Long parentID, String name, long category, DriveId imageDriveID) {
+		return rawInsert(R.string.query_item_create, parentID, name, category, imageDriveID);
 	}
 
 	public void updateItem(long id, String name, long category, DriveId imageDriveID) {
