@@ -1,7 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.database.*;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.*;
 
@@ -30,7 +30,12 @@ public abstract class ResourceCursorAdapterWithHolder<VH> extends ResourceCursor
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		bindView((VH)view.getTag(), cursor, view);
+		try {
+			bindView((VH)view.getTag(), cursor, view);
+		} catch (RuntimeException ex) {
+			DatabaseUtils.dumpCurrentRow(cursor);
+			throw ex;
+		}
 	}
 
 	protected abstract VH createHolder(View convertView);

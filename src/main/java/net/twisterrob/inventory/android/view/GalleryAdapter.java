@@ -55,7 +55,7 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 
 	private static String getCountText(Cursor cursor) {
 		String countText = null;
-		int countIndex = cursor.getColumnIndex(CommonColumns.COUNT);
+		int countIndex = cursor.getColumnIndex(CommonColumns.COUNT_CHILDREN_DIRECT);
 		if (countIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
 			int count = cursor.getInt(countIndex);
 			if (count > 0) {

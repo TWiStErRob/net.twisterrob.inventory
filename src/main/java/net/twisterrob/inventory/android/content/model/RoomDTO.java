@@ -4,12 +4,13 @@ import java.util.Locale;
 
 import android.database.Cursor;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.utils.DatabaseUtils;
 
 public class RoomDTO extends ImagedDTO {
 	public long propertyID = Property.ID_ADD;
-	public long type;
+	public String propertyName;
+	public long type = RoomType.DEFAULT;
 	public long rootItemID = Item.ID_ADD;
 
 	public static RoomDTO fromCursor(Cursor cursor) {
@@ -21,20 +22,10 @@ public class RoomDTO extends ImagedDTO {
 	protected RoomDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		int typeColumn = cursor.getColumnIndex(Room.TYPE);
-		if (typeColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			type = cursor.getLong(typeColumn);
-		}
-
-		int rootItemColumn = cursor.getColumnIndex(Room.ROOT_ITEM);
-		if (rootItemColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			rootItemID = cursor.getLong(rootItemColumn);
-		}
-
-		int propertyColumn = cursor.getColumnIndex(Room.PROPERTY);
-		if (propertyColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			propertyID = cursor.getLong(propertyColumn);
-		}
+		type = DatabaseUtils.getOptionalLong(cursor, Room.TYPE, RoomType.DEFAULT);
+		rootItemID = DatabaseUtils.getOptionalLong(cursor, Room.ROOT_ITEM, Item.ID_ADD);
+		propertyID = DatabaseUtils.getOptionalLong(cursor, Room.PROPERTY_ID, Property.ID_ADD);
+		propertyName = DatabaseUtils.getOptionalString(cursor, Room.PROPERTY_NAME);
 
 		return this;
 	}

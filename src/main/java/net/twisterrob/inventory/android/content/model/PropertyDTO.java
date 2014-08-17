@@ -4,11 +4,11 @@ import java.util.Locale;
 
 import android.database.Cursor;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
-import net.twisterrob.inventory.android.content.contract.Property;
+import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.utils.DatabaseUtils;
 
 public class PropertyDTO extends ImagedDTO {
-	public long type;
+	public long type = PropertyType.DEFAULT;
 
 	public static PropertyDTO fromCursor(Cursor cursor) {
 		PropertyDTO property = new PropertyDTO();
@@ -19,10 +19,7 @@ public class PropertyDTO extends ImagedDTO {
 	protected PropertyDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		int typeColumn = cursor.getColumnIndex(Property.TYPE);
-		if (typeColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			type = cursor.getLong(typeColumn);
-		}
+		type = DatabaseUtils.getOptionalLong(cursor, Property.TYPE, PropertyType.DEFAULT);
 
 		return this;
 	}

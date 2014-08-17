@@ -4,12 +4,14 @@ import java.util.Locale;
 
 import android.database.Cursor;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
-import net.twisterrob.inventory.android.content.contract.Item;
+import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.utils.DatabaseUtils;
 
 public class ItemDTO extends ImagedDTO {
 	public long parentID = Item.ID_ADD;
+	public String parentName;
 	public long category;
+	public String categoryName;
 
 	public static ItemDTO fromCursor(Cursor cursor) {
 		ItemDTO item = new ItemDTO();
@@ -20,15 +22,10 @@ public class ItemDTO extends ImagedDTO {
 	protected ItemDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		int parentColumn = cursor.getColumnIndex(Item.PARENT);
-		if (parentColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			parentID = cursor.getLong(parentColumn);
-		}
-
-		int categoryColumn = cursor.getColumnIndex(Item.CATEGORY);
-		if (categoryColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			category = cursor.getLong(categoryColumn);
-		}
+		parentID = DatabaseUtils.getOptionalLong(cursor, Item.PARENT_ID, Item.ID_ADD);
+		parentName = DatabaseUtils.getOptionalString(cursor, Item.PARENT_NAME);
+		category = DatabaseUtils.getOptionalLong(cursor, Item.CATEGORY, Category.ID_ADD);
+		categoryName = DatabaseUtils.getOptionalString(cursor, Item.CATEGORY_NAME);
 
 		return this;
 	}

@@ -43,14 +43,14 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
 		final long id = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
 		holder.title.setText(getName(cursor));
-		Integer subCatCount = getCount(cursor, CommonColumns.COUNT);
+		Integer subCatCount = getCount(cursor, CommonColumns.COUNT_CHILDREN_DIRECT);
 		if (subCatCount != null) {
 			holder.stats.setText(mContext.getString(R.string.label_category_subs, subCatCount));
 		} else {
 			holder.stats.setText(null);
 		}
 
-		Integer itemCountTotal = getCount(cursor, Category.ITEM_COUNT);
+		Integer itemCountTotal = getCount(cursor, Category.ITEM_COUNT_ALL);
 		if (itemCountTotal != null) {
 			holder.items.setVisibility(View.VISIBLE);
 			holder.items.setText(mContext.getString(R.string.label_category_items_view, itemCountTotal));

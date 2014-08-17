@@ -2,23 +2,16 @@ package net.twisterrob.inventory.android.content.model;
 
 import android.database.Cursor;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.utils.DatabaseUtils;
 
 public class DTO {
 	public long id = CommonColumns.ID_ADD;
 	public String name;
 
 	protected DTO fromCursorInternal(Cursor cursor) {
-		int idColumn = cursor.getColumnIndex(CommonColumns.ID);
-		if (idColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			id = cursor.getLong(idColumn);
-		}
-
-		int nameColumn = cursor.getColumnIndex(CommonColumns.NAME);
-		if (nameColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			name = cursor.getString(nameColumn);
-		}
+		id = DatabaseUtils.getOptionalLong(cursor, CommonColumns.ID, CommonColumns.ID_ADD);
+		name = DatabaseUtils.getOptionalString(cursor, CommonColumns.NAME);
 
 		return this;
 	}

@@ -11,6 +11,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.RoomViewFragment.RoomEvents;
 import net.twisterrob.inventory.android.tasks.DeleteRoomTask;
+import net.twisterrob.inventory.android.utils.DescriptionBuilder;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -42,6 +43,14 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 		super.onSingleRowLoaded(room);
 		eventsListener.roomLoaded(room);
+	}
+
+	@Override
+	protected CharSequence getDetailsString(RoomDTO entity) {
+		return new DescriptionBuilder() //
+				.append("Name", entity.name) //
+				.append("In property", entity.propertyName) //
+				.build();
 	}
 
 	@Override

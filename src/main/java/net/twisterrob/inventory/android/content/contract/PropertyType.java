@@ -9,4 +9,7 @@ public interface PropertyType {
 	String DEFAULT_ORDER = PRIORITY;
 
 	String NAME_LIKE = "(" + NAME + " LIKE ?" + ")";
+
+	/** Other */
+	long DEFAULT = 0;
 }

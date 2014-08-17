@@ -46,7 +46,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	}
 
 	private int getImageResource(Cursor cursor) {
-		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		return AndroidTools.getRawResourceID(mContext, image);
 	}
 

@@ -10,10 +10,10 @@ import android.widget.ImageView;
 
 import com.google.android.gms.drive.DriveId;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.utils.DatabaseUtils;
 
 public class ImagedDTO extends DTO {
 	private static final Logger LOG = LoggerFactory.getLogger(ImagedDTO.class);
@@ -25,16 +25,13 @@ public class ImagedDTO extends DTO {
 	protected ImagedDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		int driveColumnIndex = cursor.getColumnIndex(CommonColumns.IMAGE);
-		if (driveColumnIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			if (!cursor.isNull(driveColumnIndex)) {
-				image = DriveId.decodeFromString(cursor.getString(driveColumnIndex));
-			}
-		}
+		fallbackImageResourceName = DatabaseUtils.getOptionalString(cursor, CommonColumns.TYPE_IMAGE);
 
-		int drawableColumnIndex = cursor.getColumnIndex(CommonColumns.TYPE_IMAGE);
-		if (drawableColumnIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			fallbackImageResourceName = cursor.getString(drawableColumnIndex);
+		String imageDriveId = DatabaseUtils.getOptionalString(cursor, CommonColumns.IMAGE);
+		if (imageDriveId != null) {
+			image = DriveId.decodeFromString(imageDriveId);
+		} else {
+			image = null;
 		}
 
 		return this;

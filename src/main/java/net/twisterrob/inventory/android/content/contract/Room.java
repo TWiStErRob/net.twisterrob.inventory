@@ -4,5 +4,6 @@ public interface Room extends CommonColumns {
 
 	String TYPE = "type";
 	String ROOT_ITEM = "root";
-	String PROPERTY = "property";
+	String PROPERTY_ID = "property";
+	String PROPERTY_NAME = "propertyName";
 }

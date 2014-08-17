@@ -3,8 +3,10 @@ public interface Item extends CommonColumns {
 	String TABLE = "Item";
 
 	String CATEGORY = "category";
+	String CATEGORY_NAME = "categoryName";
 
-	String PARENT = "parent";
+	String PARENT_ID = "parent";
+	String PARENT_NAME = "parentName";
 
 	String ROOM_ROOT = "ROOT";
 }

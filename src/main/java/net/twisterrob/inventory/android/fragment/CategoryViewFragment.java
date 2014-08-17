@@ -54,6 +54,10 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 	protected CharSequence getDetailsString(CategoryDTO entity) {
 		return new DescriptionBuilder() //
 				.append("Name", entity.name) //
+				.append("# of direct subcategories", entity.numDirectSubcategories) //
+				.append("# of all subcategories", entity.numAllSubcategories) //
+				.append("# of direct items", entity.numDirectItems) //
+				.append("# of all items", entity.numAllItems) //
 				.build();
 	}
 

@@ -8,9 +8,15 @@ public class DescriptionBuilder {
 	SpannableStringBuilder text = new SpannableStringBuilder();
 
 	public DescriptionBuilder append(CharSequence label, Object object) {
+		if (object == null) {
+			return this;
+		}
 		return append(label, String.valueOf(object));
 	}
 	public DescriptionBuilder append(CharSequence label, CharSequence contents) {
+		if (contents == null) {
+			return this;
+		}
 		if (text.length() > 0) {
 			newLine();
 		}

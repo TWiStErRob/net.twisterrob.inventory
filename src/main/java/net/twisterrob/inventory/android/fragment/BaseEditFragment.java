@@ -81,7 +81,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 				if (getCurrentImageDriveId() == null) {
 					@SuppressWarnings("resource")
 					Cursor cursor = (Cursor)parent.getItemAtPosition(position);
-					String image = cursor.getString(cursor.getColumnIndex(CommonColumns.IMAGE));
+					String image = cursor.getString(cursor.getColumnIndex(CommonColumns.TYPE_IMAGE));
 					setCurrentImageDriveId(null, ImagedDTO.getFallbackDrawable(getActivity(), image));
 				}
 			}

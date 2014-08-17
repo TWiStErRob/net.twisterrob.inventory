@@ -6,5 +6,6 @@ public interface CommonColumns {
 	String NAME = "name"; // never NULL
 	String IMAGE = "image";
 	String TYPE_IMAGE = "typeImage"; // never NULL
-	String COUNT = "childrenCount";
+	String COUNT_CHILDREN_DIRECT = "countChildren";
+	String COUNT_CHILDREN_ALL = "countAllChildren";
 }

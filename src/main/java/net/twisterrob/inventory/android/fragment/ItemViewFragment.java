@@ -11,6 +11,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.ItemViewFragment.ItemEvents;
 import net.twisterrob.inventory.android.tasks.DeleteItemTask;
+import net.twisterrob.inventory.android.utils.DescriptionBuilder;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -42,6 +43,15 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
 		super.onSingleRowLoaded(item);
 		eventsListener.itemLoaded(item);
+	}
+
+	@Override
+	protected CharSequence getDetailsString(ItemDTO entity) {
+		return new DescriptionBuilder() //
+				.append("Name", entity.name) //
+				.append("Category", entity.categoryName) //
+				.append("Inside", entity.parentName) //
+				.build();
 	}
 
 	@Override
