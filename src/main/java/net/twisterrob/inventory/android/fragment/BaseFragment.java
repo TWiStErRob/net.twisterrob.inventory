@@ -73,7 +73,9 @@ public class BaseFragment<T> extends Fragment {
 	}
 
 	public final void refresh() {
-		onRefresh();
+		if (!getLoaderManager().hasRunningLoaders()) {
+			onRefresh();
+		}
 	}
 
 	protected void onRefresh() {

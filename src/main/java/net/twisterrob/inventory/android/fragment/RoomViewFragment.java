@@ -48,8 +48,10 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	@Override
 	protected CharSequence getDetailsString(RoomDTO entity) {
 		return new DescriptionBuilder() //
-				.append("Name", entity.name) //
+				.append("Room name", entity.name) //
 				.append("In property", entity.propertyName) //
+				.append("# of items in the room", entity.numDirectItems) //
+				.append("# of items inside", entity.numAllItems) //
 				.build();
 	}
 

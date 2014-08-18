@@ -8,4 +8,6 @@ public interface CommonColumns {
 	String TYPE_IMAGE = "typeImage"; // never NULL
 	String COUNT_CHILDREN_DIRECT = "countChildren";
 	String COUNT_CHILDREN_ALL = "countAllChildren";
+	String COUNT_ITEM_DIRECT = "countDirectItems";
+	String COUNT_ITEM_ALL = "countAllItems";
 }

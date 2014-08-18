@@ -53,11 +53,11 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 	@Override
 	protected CharSequence getDetailsString(CategoryDTO entity) {
 		return new DescriptionBuilder() //
-				.append("Name", entity.name) //
-				.append("# of direct subcategories", entity.numDirectSubcategories) //
-				.append("# of all subcategories", entity.numAllSubcategories) //
-				.append("# of direct items", entity.numDirectItems) //
-				.append("# of all items", entity.numAllItems) //
+				.append("Category name", entity.name) //
+				.append("# of direct subcategories", entity.numDirectChildren) //
+				.append("# of all subcategories", entity.numAllChildren) //
+				.append("# of items in this category", entity.numDirectItems) //
+				.append("# of items inside", entity.numAllItems) //
 				.build();
 	}
 

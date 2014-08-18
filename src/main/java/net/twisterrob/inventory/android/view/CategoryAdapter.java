@@ -50,7 +50,7 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 			holder.stats.setText(null);
 		}
 
-		Integer itemCountTotal = getCount(cursor, Category.ITEM_COUNT_ALL);
+		Integer itemCountTotal = getCount(cursor, Category.COUNT_ITEM_ALL);
 		if (itemCountTotal != null) {
 			holder.items.setVisibility(View.VISIBLE);
 			holder.items.setText(mContext.getString(R.string.label_category_items_view, itemCountTotal));

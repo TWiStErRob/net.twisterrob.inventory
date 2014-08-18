@@ -11,6 +11,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.PropertyViewFragment.PropertyEvents;
 import net.twisterrob.inventory.android.tasks.DeletePropertyTask;
+import net.twisterrob.inventory.android.utils.DescriptionBuilder;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -42,6 +43,16 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
 		super.onSingleRowLoaded(property);
 		eventsListener.propertyLoaded(property);
+	}
+
+	@Override
+	protected CharSequence getDetailsString(PropertyDTO entity) {
+		return new DescriptionBuilder() //
+				.append("Property name", entity.name) //
+				.append("# of rooms", entity.numDirectChildren) //
+				.append("# of items in the rooms", entity.numDirectItems) //
+				.append("# of items inside", entity.numAllItems) //
+				.build();
 	}
 
 	@Override

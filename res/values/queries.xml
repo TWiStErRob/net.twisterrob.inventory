@@ -13,7 +13,15 @@
 		order by p.name
 	"]]></string>
 	<string name="query_property"><![CDATA["
-		select p._id, p.name, p.type, p.image, pt.image as typeImage
+		select
+			p._id,
+			p.name,
+			p.type,
+			p.image,
+			pt.image as typeImage,
+			(select count(1) from Room where property = p._id) as countChildren,
+			(select count(1) from Item where parent in (select root from Room where property = p._id)) as countDirectItems,
+			(select count(distinct item) from Item_Path_Node where root in (select root from Room where property = p._id) and root <> node) as countAllItems
 		from Property p
 		join PropertyType pt ON p.type = pt._id
 		where p._id = ?
@@ -73,7 +81,9 @@
 			p._id as property,
 			p.name as propertyName,
 			r.image,
-			COALESCE(rt.image, rtk.image) as typeImage
+			COALESCE(rt.image, rtk.image) as typeImage,
+			(select count(1) from Item where parent = r.root) as countDirectItems,
+			(select count(distinct item) from Item_Path_Node where root = r.root and root <> node) as countAllItems
 		from Room r
 		join RoomType rt ON r.type = rt._id
 		join RoomTypeKind rtk ON rt.kind = rtk._id
@@ -116,7 +126,9 @@
 			ip.categoryName as categoryName,
 			ip.propertyName as propertyName,
 			ip.roomName as roomName,
-			ip.reversePath as parentName
+			ip.reversePath as parentName,
+			(select count(1) from Item where parent = i._id) as countDirectItems,
+			(select count(distinct item) from Item_Path_Node where node = i._id and item <> node) as countAllItems
 		from Item i
 		join Category c ON i.category = c._id
 		join Item_Path ip ON i._id = ip.itemID

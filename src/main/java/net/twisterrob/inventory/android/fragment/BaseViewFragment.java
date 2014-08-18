@@ -8,7 +8,6 @@ import android.widget.*;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
-import net.twisterrob.inventory.android.utils.DescriptionBuilder;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	protected ImageView image;
@@ -28,11 +27,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		pager.setAdapter(new ImageAndDescriptionAdapter(entity));
 	}
 
-	protected CharSequence getDetailsString(DTO entity) {
-		return new DescriptionBuilder() //
-				.append("Name", entity.name) //
-				.build();
-	}
+	protected abstract CharSequence getDetailsString(DTO entity);
 
 	private class ImageAndDescriptionAdapter extends PagerAdapter {
 		private DTO entity;

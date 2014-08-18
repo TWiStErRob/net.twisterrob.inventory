@@ -59,12 +59,12 @@ public class DeveloperActivity extends ListActivity {
 				}), //
 				create(getString(R.string.item_details) + " root", new Runnable() {
 					public void run() {
-						startActivity(ItemViewActivity.show(4));
+						startActivity(ItemViewActivity.show(5));
 					}
 				}), //
 				create(getString(R.string.item_edit) + " root", new Runnable() {
 					public void run() {
-						startActivity(ItemEditActivity.edit(4));
+						startActivity(ItemEditActivity.edit(5));
 					}
 				}), //
 				create("Clear Picasso cache", new Runnable() {
