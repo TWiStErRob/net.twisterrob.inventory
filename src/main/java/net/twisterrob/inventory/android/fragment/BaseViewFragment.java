@@ -6,7 +6,10 @@ import android.support.v4.view.*;
 import android.view.*;
 import android.widget.*;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
@@ -25,8 +28,16 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		setTitle(entity.name);
 		setIcon(entity.getFallbackDrawable(getActivity()));
 		pager.setAdapter(new ImageAndDescriptionAdapter(entity));
+		pager.setCurrentItem(getDefaultPageIndex());
 	}
 
+	private int getDefaultPageIndex() {
+		String defaultPage = App.getPrefs().getString(Prefs.DEFAULT_ENTITY_DETAILS_PAGE,
+				Prefs.DEFAULT_ENTITY_DETAILS_PAGE_DEFAULT);
+		int defaultIndex = AndroidTools.findIndexInResourceArray(getActivity(),
+				R.array.pref_defaultEntityDetailsPage_values, defaultPage);
+		return defaultIndex;
+	}
 	protected abstract CharSequence getDetailsString(DTO entity);
 
 	private class ImageAndDescriptionAdapter extends PagerAdapter {
@@ -43,7 +54,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return position == 0? "Image" : "Description";
+			return getResources().getTextArray(R.array.pref_defaultEntityDetailsPage_entries)[position];
 		}
 
 		@Override

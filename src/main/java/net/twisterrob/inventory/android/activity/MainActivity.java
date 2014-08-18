@@ -98,6 +98,19 @@ public class MainActivity extends BaseActivity {
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.preferences:
+				startActivity(PreferencesActivity.show());
+				break;
+			default:
+				// let super do its thing
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	private class MainItem {
 		public final CharSequence title;
 		public final Drawable iconDrawable;

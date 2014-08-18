@@ -79,6 +79,7 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		database = new Database(this);
 		picasso = new PicassoWrapper(this);
 		updateLanguage(Locale.getDefault());

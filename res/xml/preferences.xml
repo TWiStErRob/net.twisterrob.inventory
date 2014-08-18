@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE preferences>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<ListPreference
+		android:key="defaultEntityDetailsPage"
+		android:title="@string/pref_defaultEntityDetailsPage"
+		android:entries="@array/pref_defaultEntityDetailsPage_entries"
+		android:entryValues="@array/pref_defaultEntityDetailsPage_values"
+		android:defaultValue="@string/pref_defaultEntityDetailsPage_default" />
+</PreferenceScreen>

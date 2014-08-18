@@ -193,14 +193,17 @@
 		select
 			c._id,
 			c.name,
-			p.name as parentName,
 			c.image as typeImage,
+			ifNULL(ppnc.value || ' > ', '') || pnc.value as parentName,
 			(select count(1) from Category where parent = c._id) as countChildren,
 			(select count(1) from Category_Descendant where category = c._id and category <> descendant) as countAllChildren,
 			(select count(1) from Item where category = c._id) as countDirectItems,
 			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
 		from Category c
-		left join Category p ON c.parent = p._id
+		left join Category p ON c.parent = p._id and p._id <> -1
+		left join Category_Name_Cache pnc ON p.name = pnc.key
+		left join Category pp ON p.parent = pp._id and pp._id <> -1
+		left join Category_Name_Cache ppnc ON pp.name = ppnc.key
 		where c._id = ?
 	"]]></string>
 

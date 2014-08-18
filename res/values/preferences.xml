@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources>
+<resources>
+	<string name="pref_activity_title">Settings</string>
+	<string name="pref_defaultEntityDetailsPage">Default Details Page</string>
+	<string name="pref_defaultEntityDetailsPage_default">image</string>
+	<string-array name="pref_defaultEntityDetailsPage_entries">
+		<item>Image</item>
+		<item>Details &amp; Statistics</item>
+	</string-array>
+	<string-array name="pref_defaultEntityDetailsPage_values">
+		<item>image</item>
+		<item>details</item>
+	</string-array>
+</resources>
