@@ -12,6 +12,8 @@ public class ItemDTO extends ImagedDTO {
 	public String parentName;
 	public long category;
 	public String categoryName;
+	public String propertyName;
+	public String roomName;
 
 	public static ItemDTO fromCursor(Cursor cursor) {
 		ItemDTO item = new ItemDTO();
@@ -26,6 +28,8 @@ public class ItemDTO extends ImagedDTO {
 		parentName = DatabaseUtils.getOptionalString(cursor, Item.PARENT_NAME);
 		category = DatabaseUtils.getOptionalLong(cursor, Item.CATEGORY, Category.ID_ADD);
 		categoryName = DatabaseUtils.getOptionalString(cursor, Item.CATEGORY_NAME);
+		propertyName = DatabaseUtils.getOptionalString(cursor, Item.PROPERTY_NAME);
+		roomName = DatabaseUtils.getOptionalString(cursor, Item.ROOM_NAME);
 
 		return this;
 	}

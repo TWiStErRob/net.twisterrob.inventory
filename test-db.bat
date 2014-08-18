@@ -11,4 +11,4 @@ echo select current_timestamp, 'development.sql'; >> test-db-concatenated.sql
 type assets\MagicHomeInventory.development.sql >> test-db-concatenated.sql
 echo select current_timestamp, 'test-db.sql'; >> test-db-concatenated.sql
 type test-db.sql >> test-db-concatenated.sql
-sqlite3 -init test-db-concatenated.sql
+sqlite3 -init test-db-concatenated.sql %*

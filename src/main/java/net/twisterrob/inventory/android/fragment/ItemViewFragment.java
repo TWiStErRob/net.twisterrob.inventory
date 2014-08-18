@@ -1,9 +1,10 @@
 package net.twisterrob.inventory.android.fragment;
 
-import android.database.Cursor;
+import android.database.*;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.*;
@@ -49,7 +50,9 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	protected CharSequence getDetailsString(ItemDTO entity) {
 		return new DescriptionBuilder() //
 				.append("Name", entity.name) //
-				.append("Category", entity.categoryName) //
+				.append("Category", AndroidTools.getText(getActivity(), entity.categoryName)) //
+				.append("Property", entity.propertyName) //
+				.append("Room", entity.roomName) //
 				.append("Inside", entity.parentName) //
 				.build();
 	}

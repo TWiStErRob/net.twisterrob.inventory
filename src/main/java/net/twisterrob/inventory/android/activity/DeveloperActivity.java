@@ -49,10 +49,20 @@ public class DeveloperActivity extends ListActivity {
 				}), //
 				create(getString(R.string.item_details), new Runnable() {
 					public void run() {
-						startActivity(ItemViewActivity.show(4));
+						startActivity(ItemViewActivity.show(100008));
 					}
 				}), //
 				create(getString(R.string.item_edit), new Runnable() {
+					public void run() {
+						startActivity(ItemEditActivity.edit(100008));
+					}
+				}), //
+				create(getString(R.string.item_details) + " root", new Runnable() {
+					public void run() {
+						startActivity(ItemViewActivity.show(4));
+					}
+				}), //
+				create(getString(R.string.item_edit) + " root", new Runnable() {
 					public void run() {
 						startActivity(ItemEditActivity.edit(4));
 					}

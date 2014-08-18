@@ -106,6 +106,22 @@
 		where i.parent = ?
 		order by i.name 
 	"]]></string>
+	<string name="query_item"><![CDATA["
+		select
+			i._id as _id,
+			i.name as name,
+			i.image as image,
+			c.image as typeImage,
+			ip.categoryID as category,
+			ip.categoryName as categoryName,
+			ip.propertyName as propertyName,
+			ip.roomName as roomName,
+			ip.reversePath as parentName
+		from Item i
+		join Category c ON i.category = c._id
+		join Item_Path ip ON i._id = ip.itemID
+		where i._id = ?
+	"]]></string>
 	<string name="query_items_in_room"><![CDATA["
 		select
 			i._id,
@@ -146,21 +162,6 @@
 		join Category c ON cd.descendant = c._id and c._id <> -1
 		where cd.category = ?
 		order by i.name 
-	"]]></string>
-	<string name="query_item"><![CDATA["
-		select
-			i._id,
-			i.name,
-			c._id as category,
-			c.name as categoryName,
-			p._id as parent,
-			p.name as parentName,
-			i.image,
-			c.image as typeImage
-		from Item i
-		join Category c ON i.category = c._id
-		left join Item p ON i.parent = p._id
-		where i._id = ?
 	"]]></string>
 
 

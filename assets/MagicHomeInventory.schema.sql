@@ -145,65 +145,76 @@ AFTER INSERT ON Category_Descendant BEGIN
 END;
 
 
-CREATE TABLE Item_Path (
+CREATE TABLE Item_Path_Node (
 	item        INTEGER      NOT NULL
-		CONSTRAINT fk_Item_Path_item
+		CONSTRAINT fk_Item_Path_Node_item
 			REFERENCES Item(_id)
 			ON UPDATE CASCADE
 			ON DELETE CASCADE,
 	level       INTEGER      NOT NULL,
 	node        INTEGER      NOT NULL
-		CONSTRAINT fk_Item_Path_node
+		CONSTRAINT fk_Item_Path_Node_node
 			REFERENCES Item(_id)
 			ON UPDATE CASCADE
 			ON DELETE NO ACTION,
 	root        INTEGER      NOT NULL
-		CONSTRAINT fk_Item_Path_root
+		CONSTRAINT fk_Item_Path_Node_root
 			REFERENCES Item(_id)
 			ON UPDATE CASCADE
 			ON DELETE NO ACTION
 );
-CREATE TRIGGER Item_Path_traverse
-AFTER INSERT ON Item_Path BEGIN
-	--insert into Log(message) values ('Item_Path_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): ' || 'started');--NOTEOS
+CREATE TRIGGER Item_Path_Node_traverse
+AFTER INSERT ON Item_Path_Node BEGIN
+	--insert into Log(message) values ('Item_Path_Node_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): ' || 'started');--NOTEOS
 	-- Go up in the Tree
-	insert into Item_Path
+	insert into Item_Path_Node
 		select new.item, new.level + 1, i.parent, i.parent from Item i where i._id = new.node and i.parent IS NOT NULL
 	;--NOTEOS
-	--insert into Log(message) values ('Item_Path_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '):' || 'finished');--NOTEOS
+	--insert into Log(message) values ('Item_Path_Node_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '):' || 'finished');--NOTEOS
 END;
 
-
-CREATE VIEW Item_Paths AS
+CREATE VIEW Item_Path_Node_Name AS
 	select
-		e._id,
-		e.level,
-		e.name,
-		e.category,
-		e.name || ' (' || ifNULL(cnc.value, '?') || ')' as nameWithCategory,
-		e.property || ' > ' || e.room || ifNULL(' > ' || group_concat(e.node, ' > '), '') as path
-	from (
-		select
-			i._id,
-			i.name,
-			ip.level,
-			CASE WHEN (ip.item <> ip.node) THEN e.name ELSE NULL END as node,
-			c.name as category,
-			p.name as property,
-			r.name as room
-		from Item_Path ip
-		join Item      i  ON ip.item = i._id
-		join Item      e  ON ip.node = e._id
-		join Category  c  ON i.category = c._id
-		join Room      r  ON ip.root = r.root
-		join Property  p  ON r.property = p._id
-		where ip.node <> ip.root
-		order by i._id, ip.level
-	) e
-	left join Category_Name_Cache cnc ON e.category = cnc.key
-	group by _id, name, category, property, room
-	order by name asc
+		ipn.*,
+		n.name as nodeName
+	from Item_Path_Node ipn
+	join Item      n  ON ipn.node = n._id
+	where ipn.item <> ipn.node and ipn.node <> ipn.root
 ;
+
+CREATE VIEW Item_Path AS
+	select
+		c._id as categoryID,
+		c.name as categoryName,
+		p._id as propertyID,
+		p.name as propertyName,
+		r._id as roomID,
+		r.name as roomName,
+		r.root as rootItemID,
+		i._id as itemID,
+		i.name as itemName,
+		ipn.level as itemLevel,
+		Path.path as path,
+		p.name || ' > ' || r.name || ifNULL(' > ' || Path.path, '') as fullPath,
+		rPath.path as reversePath,
+		ifNULL(rPath.path || ' < ', '') || r.name || ' < ' || p.name as fullReversePath
+	from Item i
+	left join (
+		select item, group_concat(nodeName, ' > ') as path
+		from (select * from Item_Path_Node_Name order by item, level)
+		group by item
+	) Path ON i._id = Path.item
+	left join (
+		select item, group_concat(nodeName, ' < ') as path
+		from (select * from Item_Path_Node_Name order by item, level DESC)
+		group by item
+	) rPath ON i._id = rPath.item
+	join Item_Path_Node ipn ON ipn.item = i._id and ipn.node = i._id
+	join Room      r  ON ipn.root = r.root
+	join Property  p  ON r.property = p._id
+	join Category  c  ON i.category = c._id
+;
+
 
 CREATE VIRTUAL TABLE Search USING FTS3 (
 	_id,
@@ -220,25 +231,27 @@ CREATE TRIGGER Search_insert INSTEAD OF INSERT ON Search_View BEGIN
 	delete from Search where _id MATCH new._id;--NOTEOS
 	insert into Search
 		select
-			_id              as _id,
-			nameWithCategory as name,
-			path             as location
-		from Item_Paths where _id = new._id
+			ip.itemID              as _id,
+			ip.itemName || ' (' || ifNULL(cnc.value, '?') || ')' as name,
+			ip.path             as location
+		from Item_Path ip
+		left join Category_Name_Cache cnc ON ip.categoryName = cnc.key
+		where ip.itemID = new._id
 	;--NOTEOS
 END;
 
 CREATE TRIGGER Item_Path_calculate
 AFTER INSERT ON Item BEGIN
 	--insert into Log(message) values ('Item_Path_calculate on (' || new._id || ', ' || new.name || ', ' || ifNULL(new.image, 'NULL') || ', ' || new.category || ', ' || ifNULL(new.parent, 'NULL') || '): ' || 'started');--NOTEOS
-	insert into Item_Path
+	insert into Item_Path_Node
 		select new._id, 0, new._id, new._id
 	;--NOTEOS
-	update Item_Path
-		set level = (select max(level) from Item_Path where item = new._id) - level
+	update Item_Path_Node
+		set level = (select max(level) from Item_Path_Node where item = new._id) - level
 		where item = new._id
 	;--NOTEOS
-	update Item_Path
-		set root = (select node from Item_Path where item = new._id and level = 0) -- dependent on level being set: 0 as root .. n as leaf
+	update Item_Path_Node
+		set root = (select node from Item_Path_Node where item = new._id and level = 0) -- dependent on level being set: 0 as root .. n as leaf
 		where item = new._id
 	;--NOTEOS
 	insert into Search_View select new._id;--NOTEOS
@@ -248,15 +261,15 @@ END;
 CREATE TRIGGER Category_Name_Cache_insert
 AFTER INSERT ON Category_Name_Cache BEGIN
 	--insert into Log(message) values ('Category_Name_Cache_insert on (' || new.key || ', ' || ifNULL(new.value, 'NULL') || ')');--NOTEOS
-	insert into Search_View(_id) select _id from Item_Paths where category = new.key;--NOTEOS
+	insert into Search_View(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
 END;
 CREATE TRIGGER Category_Name_Cache_update
 AFTER UPDATE OF value ON Category_Name_Cache WHEN (ifNULL(old.value, '') <> ifNULL(new.value, '')) BEGIN 
 	--insert into Log(message) values ('Category_Name_Cache_update on (' || new.key || ', ' || ifNULL(old.value, 'NULL') || ' -> ' || ifNULL(new.value, 'NULL') || ')');--NOTEOS
-	insert into Search_View(_id) select _id from Item_Paths where category = new.key;--NOTEOS
+	insert into Search_View(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
 END;
 CREATE TRIGGER Category_Name_Cache_delete
 AFTER DELETE ON Category_Name_Cache BEGIN
 	--insert into Log(message) values ('Category_Name_Cache_delete on (' || old.key || ', ' || ifNULL(old.value, 'NULL') || ')');--NOTEOS
-	insert into Search_View(_id) select _id from Item_Paths where category = old.key;--NOTEOS
+	insert into Search_View(_id) select itemID from Item_Path where categoryName = old.key;--NOTEOS
 END;
