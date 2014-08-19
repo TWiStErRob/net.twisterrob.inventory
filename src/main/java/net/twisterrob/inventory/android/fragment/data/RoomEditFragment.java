@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 

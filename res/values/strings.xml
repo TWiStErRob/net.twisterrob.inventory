@@ -60,4 +60,6 @@
 	<string name="img_desc_room_add">Add a new room to the current property.</string>
 	<string name="img_desc_item">Picture taken of the item or a semantic image depicting the category of the item.</string>
 	<string name="img_desc_item_add">Add a new item.</string>
+
+	<string name="dev_title">DEVELOPER</string>
 </resources>

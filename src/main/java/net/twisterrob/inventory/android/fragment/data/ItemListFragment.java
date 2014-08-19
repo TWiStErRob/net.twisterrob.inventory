@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
@@ -12,7 +12,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemsEvents;
+import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
 public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemListFragment.class);

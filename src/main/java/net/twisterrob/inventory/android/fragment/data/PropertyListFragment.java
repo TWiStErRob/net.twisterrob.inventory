@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
@@ -13,7 +13,7 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.activity.data.PropertyViewActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.Property;
-import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertiesEvents;
+import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 
 public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyListFragment.class);

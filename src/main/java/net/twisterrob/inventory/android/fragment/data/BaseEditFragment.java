@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -21,6 +21,7 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.CaptureImage;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
+import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.tasks.Upload;
 import net.twisterrob.inventory.android.utils.*;
 import net.twisterrob.inventory.android.view.TypeAdapter;

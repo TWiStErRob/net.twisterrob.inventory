@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
-import net.twisterrob.inventory.android.fragment.CategoryViewFragment.CategoryEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 import net.twisterrob.inventory.android.utils.DescriptionBuilder;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;

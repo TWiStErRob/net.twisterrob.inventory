@@ -110,4 +110,9 @@ public class DeveloperActivity extends ListActivity {
 		Runnable action = (Runnable)x.get("action");
 		action.run();
 	}
+
+	public static Intent show() {
+		Intent intent = new Intent(App.getAppContext(), DeveloperActivity.class);
+		return intent;
+	}
 }

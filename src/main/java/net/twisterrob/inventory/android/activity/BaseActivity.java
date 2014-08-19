@@ -71,8 +71,15 @@ public class BaseActivity extends ActionBarActivity {
 		}
 	}
 
+	protected <T> T getFragment(String tag) {
+		return (T)getSupportFragmentManager().findFragmentByTag(tag);
+	}
 	protected <T> T getFragment(int id) {
 		return (T)getSupportFragmentManager().findFragmentById(id);
+	}
+
+	protected void showDialog(DialogFragment dialog) {
+		dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
 	}
 
 	public void setActionBarTitle(CharSequence string) {

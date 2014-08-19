@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.fragment.PropertyEditFragment;
+import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment;
 
 public class PropertyEditActivity extends BaseEditActivity<PropertyEditFragment> {
 	@Override

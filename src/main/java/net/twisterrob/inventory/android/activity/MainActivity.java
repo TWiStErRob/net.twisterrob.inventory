@@ -1,95 +1,61 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 
 import android.app.SearchManager;
 import android.content.*;
-import android.graphics.drawable.Drawable;
-import android.os.*;
+import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.*;
-import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
 import net.twisterrob.android.adapter.BaseListAdapter;
 import net.twisterrob.inventory.*;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
-import net.twisterrob.inventory.android.content.contract.Category;
-import net.twisterrob.inventory.android.content.io.csv.*;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.BackupPickerFragment.BackupPickerListener;
 
+import static net.twisterrob.inventory.android.content.contract.Category.*;
+
 public class MainActivity extends BaseActivity implements BackupPickerListener {
-	private GridView list;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.activity_main);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(false);
+		getSupportFragmentManager() //
+				.beginTransaction() //
+				.add(new BackupFragment(), BackupFragment.class.getName()) //
+				.commit() //
+		;
 
-		list = (GridView)findViewById(android.R.id.list);
+		GridView list = (GridView)findViewById(android.R.id.list);
+		list.setAdapter(new MainItemAdapter(this, createActions()));
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				MainItem item = (MainItem)parent.getItemAtPosition(position);
-				item.listener.onClick(view);
+				startActivity(item.intent);
 			}
 		});
-		Collection<MainItem> actions = new ArrayList<MainItem>(Arrays.asList( //
-				new MainItem(getString(R.string.property_list), App.pic().getSVG(R.raw.property_home),
-						new OnClickListener() {
-							public void onClick(View v) {
-								startActivity(PropertyListActivity.list());
-							}
-						}), //
-				new MainItem(getString(R.string.category_list), App.pic().getSVG(R.raw.category_unknown),
-						new OnClickListener() {
-							public void onClick(View v) {
-								startActivity(CategoryViewActivity.show(Category.INTERNAL));
-							}
-						}), //
-				new MainItem(getString(R.string.item_list), App.pic().getSVG(R.raw.category_collectibles),
-						new OnClickListener() {
-							public void onClick(View v) {
-								startActivity(CategoryItemsActivity.show(Category.INTERNAL));
-							}
-						}), //
-				new MainItem(getString(R.string.sunburst_title), App.pic().getSVG(R.raw.category_disc),
-						new OnClickListener() {
-							public void onClick(View v) {
-								startActivity(SunBurstActivity.show());
-							}
-						}) //
-				));
-
-		if (BuildConfig.DEBUG) {
-			actions.add(new MainItem("DEVELOPER", android.R.drawable.ic_menu_more, new OnClickListener() {
-				public void onClick(View v) {
-					Intent intent = new Intent(App.getAppContext(), DeveloperActivity.class);
-					startActivity(intent);
-				}
-			}));
-		}
-		list.setAdapter(new MainItemAdapter(this, actions));
 	}
 
-	private static boolean first = true;
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (first) {
-			first = false;
-			new Handler().postDelayed(new Runnable() {
-				public void run() {
-					//((MainItem)list.getItemAtPosition(4)).listener.onClick(list);
-				}
-			}, 1000);
+	private static Collection<MainItem> createActions() {
+		Collection<MainItem> actions = new ArrayList<MainItem>();
+		actions.add(new MainItem(R.string.property_list, R.raw.property_home, PropertyListActivity.list()));
+		actions.add(new MainItem(R.string.category_list, R.raw.category_unknown, CategoryViewActivity.show(INTERNAL)));
+		actions.add(new MainItem(R.string.item_list, R.raw.category_collectibles, CategoryItemsActivity.show(INTERNAL)));
+		actions.add(new MainItem(R.string.sunburst_title, R.raw.category_disc, SunBurstActivity.show()));
+
+		if (BuildConfig.DEBUG) {
+			actions.add(new MainItem(R.string.dev_title, R.raw.category_electric, DeveloperActivity.show()));
 		}
+		return actions;
 	}
 
 	@Override
@@ -109,28 +75,7 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 		switch (item.getItemId()) {
 			case R.id.preferences:
 				startActivity(PreferencesActivity.show());
-				break;
-			case R.id.exportDrive:
-				startActivity(ExportActivity.chooser());
-				break;
-			case R.id.importDrive:
-				startActivity(ImportActivity.chooser());
-				break;
-			case R.id.exportSDCard:
-				doExport();
-				break;
-			case R.id.importSDCard: {
-				pickMode = PickMode.Import;
-				BackupPickerFragment dialog = BackupPickerFragment.choose("Select a backup to restore", ".csv");
-				dialog.show(getSupportFragmentManager(), BackupPickerFragment.class.getSimpleName());
-				break;
-			}
-			case R.id.exportSDCardRemove: {
-				pickMode = PickMode.Remove;
-				BackupPickerFragment dialog = BackupPickerFragment.choose("Select a backup to remove", ".csv");
-				dialog.show(getSupportFragmentManager(), BackupPickerFragment.class.getSimpleName());
-				break;
-			}
+				return true;
 			default:
 				// let super do its thing
 				break;
@@ -138,77 +83,29 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private static void doExport() {
-		String fileName = String.format(Locale.ROOT, Constants.EXPORT_FILE_NAME_FORMAT, Calendar.getInstance());
-
-		File path = new File(App.getInstance().getPhoneHome(), Constants.EXPORT_SDCARD_FOLDER);
-		path.mkdirs();
-
-		File file = new File(path, fileName);
-		try {
-			new DatabaseCSVExporter().export(new FileOutputStream(file));
-			App.toast("Exported successfully to " + file);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			App.toast("Export failed: " + ex.getMessage());
-		}
-	}
-
-	private static enum PickMode {
-		Import,
-		Remove;
-	}
-	private PickMode pickMode;
 	public void filePicked(File file) {
-		if (pickMode == null) {
-			throw new IllegalStateException("Access this method through a dialog's callback");
-		}
-		switch (pickMode) {
-			case Import: {
-				DatabaseCSVImporter importer = null;
-				try {
-					@SuppressWarnings("resource")
-					InputStream input = new FileInputStream(file);
-					importer = new DatabaseCSVImporter();
-					importer.importAll(input);
-					App.toast("Import successful from " + file.getName());
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			}
-			case Remove: {
-				file.delete();
-				App.toast("Backup removed successfully: " + file.getName());
-				break;
-			}
-			default:
-				throw new UnsupportedOperationException(pickMode + " is not implemented");
-		}
-		pickMode = null;
+		BackupFragment backup = getFragment(BackupFragment.class.getName());
+		backup.filePicked(file);
 	}
 
-	private class MainItem {
-		public final CharSequence title;
-		public final Drawable iconDrawable;
-		public final OnClickListener listener;
+	private static class MainItem {
+		private final int titleResourceID;
+		private final int svgResourceID;
+		private final Intent intent;
 
-		public MainItem(String title, int iconDrawable, OnClickListener listener) {
-			this(title, getResources().getDrawable(iconDrawable), listener);
-
-		}
-		public MainItem(String title, Drawable iconDrawable, OnClickListener listener) {
-			this.title = title;
-			this.iconDrawable = iconDrawable;
-			this.listener = listener;
+		public MainItem(int titleResourceID, int svgResourceID, Intent intent) {
+			this.titleResourceID = titleResourceID;
+			this.svgResourceID = svgResourceID;
+			this.intent = intent;
 		}
 	}
+
 	private static class MainItemAdapter extends BaseListAdapter<MainItem, MainItemAdapter.ViewHolder> {
 		public MainItemAdapter(Context context, Collection<MainItem> items) {
 			super(context, items);
 		}
 
-		class ViewHolder {
+		private static class ViewHolder {
 			ImageView icon;
 			TextView label;
 		}
@@ -228,8 +125,8 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 
 		@Override
 		protected void bindView(ViewHolder holder, MainItem currentItem, View convertView) {
-			holder.label.setText(currentItem.title);
-			holder.icon.setImageDrawable(currentItem.iconDrawable);
+			holder.label.setText(currentItem.titleResourceID);
+			App.pic().loadSVG(currentItem.svgResourceID).into(holder.icon);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
+import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	protected ImageView image;

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
@@ -12,7 +12,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.fragment.CategoryListFragment.CategoriesEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryListFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.view.CategoryAdapter;
 
 public class CategoryListFragment extends BaseListFragment<CategoriesEvents> {

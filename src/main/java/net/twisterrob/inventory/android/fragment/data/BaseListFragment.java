@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.*;
 import android.widget.*;
 
 import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.*;
 
 public class BaseListFragment<T> extends BaseFragment<T> {

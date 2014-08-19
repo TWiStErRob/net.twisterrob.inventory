@@ -7,8 +7,9 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.*;
-import net.twisterrob.inventory.android.fragment.ItemListFragment.ItemsEvents;
-import net.twisterrob.inventory.android.fragment.RoomViewFragment.RoomEvents;
+import net.twisterrob.inventory.android.fragment.data.*;
+import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
+import net.twisterrob.inventory.android.fragment.data.RoomViewFragment.RoomEvents;
 
 public class RoomViewActivity extends BaseDetailActivity<RoomViewFragment, ItemListFragment>
 		implements

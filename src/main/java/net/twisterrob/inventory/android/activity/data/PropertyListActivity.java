@@ -6,7 +6,8 @@ import android.os.Bundle;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.data.BaseDetailActivity.NoFragment;
 import net.twisterrob.inventory.android.fragment.*;
-import net.twisterrob.inventory.android.fragment.PropertyListFragment.PropertiesEvents;
+import net.twisterrob.inventory.android.fragment.data.PropertyListFragment;
+import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 
 public class PropertyListActivity extends BaseDetailActivity<NoFragment, PropertyListFragment>
 		implements

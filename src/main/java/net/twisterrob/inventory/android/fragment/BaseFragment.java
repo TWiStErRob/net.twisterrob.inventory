@@ -5,7 +5,7 @@ import java.util.*;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.*;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -60,6 +60,10 @@ public class BaseFragment<T> extends Fragment {
 		if (hasDynResource(DYN_OptionsMenu)) {
 			inflater.inflate(this.<Integer> getDynamicResource(DYN_OptionsMenu), menu);
 		}
+	}
+
+	protected void showDialog(DialogFragment dialog) {
+		dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
 	}
 
 	protected void onStartLoading() {

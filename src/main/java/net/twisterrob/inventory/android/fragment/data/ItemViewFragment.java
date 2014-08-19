@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.data.ItemEditActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
-import net.twisterrob.inventory.android.fragment.ItemViewFragment.ItemEvents;
+import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
 import net.twisterrob.inventory.android.tasks.DeleteItemTask;
 import net.twisterrob.inventory.android.utils.DescriptionBuilder;
 import net.twisterrob.inventory.android.view.Dialogs;

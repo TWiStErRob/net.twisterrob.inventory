@@ -10,28 +10,6 @@
 		app:showAsAction="always|collapseActionView"
 		app:actionViewClass="android.support.v7.widget.SearchView" />
 	<item
-		android:title="Backup"
-		android:icon="@android:drawable/ic_menu_upload"
-		app:showAsAction="never">
-		<menu>
-			<item
-				android:id="@+id/exportDrive"
-				android:title="Backup data to Google Drive" />
-			<item
-				android:id="@+id/importDrive"
-				android:title="Restore data from Google Drive" />
-			<item
-				android:id="@+id/exportSDCard"
-				android:title="Backup data to Phone" />
-			<item
-				android:id="@+id/importSDCard"
-				android:title="Restore data from Phone" />
-			<item
-				android:id="@+id/exportSDCardRemove"
-				android:title="Remove backup from Phone" />
-		</menu>
-	</item>
-	<item
 		android:id="@+id/preferences"
 		android:title="@string/pref_activity_title"
 		android:icon="@android:drawable/ic_menu_preferences"

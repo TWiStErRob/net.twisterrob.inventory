@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.fragment;
+package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
@@ -14,7 +14,7 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
-import net.twisterrob.inventory.android.fragment.RoomListFragment.RoomsEvents;
+import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 
 public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
