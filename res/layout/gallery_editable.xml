@@ -13,7 +13,7 @@
 		android:horizontalSpacing="@dimen/margin"
 		android:verticalSpacing="@dimen/margin"
 		android:layerType="software"
-		android:numColumns="2" />
+		android:numColumns="@integer/gallery_columns" />
 	<include layout="@layout/inc_loading" />
 	<include layout="@layout/inc_empty_add" />
 </FrameLayout>
