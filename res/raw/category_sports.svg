@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://megaicons.net/static/img/icons_sizes/8/178/256/sport-activities-football-icon.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-95 -55 230 300"
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style type="text/css"><![CDATA[
+			circle, path {
+				stroke: black;
+				stroke-width: 5;
+				stroke-linejoin: round;
+				fill: black;
+			}
+		]]></style>
+	</defs>
+
+	<g transform="rotate(25)">
+		<circle r="22" cx="20" cy="-40" />
+		<circle r="25" cx="120" cy="180" />
+		<path id="person" d="
+			M 0,0
+			
+			h+50+40
+			l+30,-35
+			a 1,1 0 0 1 +10,+5
+			l-25,+45
+			a 10,10 0 0 1 -10,+5
+			h-30
+
+			v+100
+
+			v+100
+			a 1,2 0 0 1 -20,0
+			l-10,-100
+
+			l-15,+60
+			a 1,1 0 0 1 -20,0
+			l+5,-60
+
+			v-100
+
+			l-60,+30
+			a 2,1 0 0 1 -20,-10
+			l+60,-35
+			a 20,20 0 0 1 +15,-5
+		" />
+	</g>
+</svg>

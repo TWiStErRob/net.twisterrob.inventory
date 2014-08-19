@@ -81,7 +81,6 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		setTheme(R.style.AppTheme); // for Toasts created with AppContext to have my theme
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		phoneHome = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		database = new Database(this);
