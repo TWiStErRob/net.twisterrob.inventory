@@ -30,15 +30,25 @@ public class DriveHelper {
 	private final Activity activity;
 	private final int resolutionReqCode;
 	private final List<ConnectedTask> delayed = new ArrayList<ConnectedTask>();
+	private boolean finishOnCancel = false;
 
 	private boolean connectable;
 	private GoogleApiClient client;
 	private final CountDownLatch latch = new CountDownLatch(1);
+	private final LifeCycle lifeCycle = new LifeCycle();
 
 	public DriveHelper(Activity activity, int resolutionReqCode) {
 		LOG.trace(activity.getClass().getSimpleName());
 		this.activity = activity;
 		this.resolutionReqCode = resolutionReqCode;
+	}
+
+	public void setFinishOnCancel(boolean finishOnCancel) {
+		this.finishOnCancel = finishOnCancel;
+	}
+
+	public boolean isFinishOnCancel() {
+		return finishOnCancel;
 	}
 
 	public synchronized void startConnect() {
@@ -115,7 +125,6 @@ public class DriveHelper {
 	}
 
 	private Builder createClientBuilder() {
-		LifeCycle lifeCycle = new LifeCycle();
 		return new GoogleApiClient.Builder(activity) //
 				.addApi(Drive.API) //
 				.addScope(Drive.SCOPE_FILE) //
@@ -181,7 +190,13 @@ public class DriveHelper {
 	}
 
 	private void result(boolean result) {
+		if (result) {
+			client.unregisterConnectionCallbacks(lifeCycle);
+		}
 		connectable = result;
 		latch.countDown();
+		if (!connectable && finishOnCancel) {
+			activity.finish();
+		}
 	}
 }

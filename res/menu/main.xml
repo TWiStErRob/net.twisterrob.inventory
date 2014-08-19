@@ -18,12 +18,14 @@
 				android:id="@+id/exportDrive"
 				android:title="Backup data to Google Drive" />
 			<item
+				android:id="@+id/importDrive"
+				android:title="Restore data from Google Drive" />
+			<item
 				android:id="@+id/exportSDCard"
 				android:title="Backup data to Phone" />
 			<item
-				android:id="@+id/importDB"
-				android:title="Restore data from Phone"
-				android:icon="@android:drawable/ic_menu_upload" />
+				android:id="@+id/importSDCard"
+				android:title="Restore data from Phone" />
 			<item
 				android:id="@+id/exportSDCardRemove"
 				android:title="Remove backup from Phone" />

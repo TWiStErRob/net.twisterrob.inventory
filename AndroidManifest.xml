@@ -74,6 +74,9 @@
 			android:name="net.twisterrob.inventory.android.activity.ExportActivity"
 			android:label="Export" />
 		<activity
+			android:name="net.twisterrob.inventory.android.activity.ImportActivity"
+			android:label="Import" />
+		<activity
 			android:name="net.twisterrob.inventory.android.activity.data.SunBurstActivity"
 			android:label="@string/sunburst_title" />
 		<activity

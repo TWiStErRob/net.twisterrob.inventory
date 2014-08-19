@@ -113,18 +113,21 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 			case R.id.exportDrive:
 				startActivity(ExportActivity.chooser());
 				break;
-			case R.id.exportSDCard:
-				export();
+			case R.id.importDrive:
+				startActivity(ImportActivity.chooser());
 				break;
-			case R.id.exportSDCardRemove: {
-				pickMode = PickMode.Remove;
-				BackupPickerFragment dialog = BackupPickerFragment.choose("Select a backup to remove", ".csv");
+			case R.id.exportSDCard:
+				doExport();
+				break;
+			case R.id.importSDCard: {
+				pickMode = PickMode.Import;
+				BackupPickerFragment dialog = BackupPickerFragment.choose("Select a backup to restore", ".csv");
 				dialog.show(getSupportFragmentManager(), BackupPickerFragment.class.getSimpleName());
 				break;
 			}
-			case R.id.importDB: {
-				pickMode = PickMode.Import;
-				BackupPickerFragment dialog = BackupPickerFragment.choose("Select a backup to restore", ".csv");
+			case R.id.exportSDCardRemove: {
+				pickMode = PickMode.Remove;
+				BackupPickerFragment dialog = BackupPickerFragment.choose("Select a backup to remove", ".csv");
 				dialog.show(getSupportFragmentManager(), BackupPickerFragment.class.getSimpleName());
 				break;
 			}
@@ -134,7 +137,8 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	private void export() {
+
+	private static void doExport() {
 		String fileName = String.format(Locale.ROOT, Constants.EXPORT_FILE_NAME_FORMAT, Calendar.getInstance());
 
 		File path = new File(App.getInstance().getPhoneHome(), Constants.EXPORT_SDCARD_FOLDER);
@@ -150,11 +154,11 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 		}
 	}
 
-	enum PickMode {
+	private static enum PickMode {
 		Import,
 		Remove;
 	}
-	PickMode pickMode;
+	private PickMode pickMode;
 	public void filePicked(File file) {
 		if (pickMode == null) {
 			throw new IllegalStateException("Access this method through a dialog's callback");

@@ -28,6 +28,7 @@ public class ExportActivity extends BaseDriveActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		googleDrive.setFinishOnCancel(true);
 		googleDrive.addTaskAfterConnected(new ConnectedTask() {
 			public void execute(GoogleApiClient client) throws Exception {
 				String fileName = String.format(Locale.ROOT, Constants.EXPORT_FILE_NAME_FORMAT, Calendar.getInstance());
@@ -50,19 +51,14 @@ public class ExportActivity extends BaseDriveActivity {
 			}
 
 			private DriveId getRoot(GoogleApiClient client) {
-				String folderDriveId = App.getPrefs().getString(Prefs.DRIVE_FOLDER_ID, null);
-				if (folderDriveId != null) {
-					return DriveId.decodeFromString(folderDriveId);
-				} else {
-					return Drive.DriveApi.getRootFolder(client).getDriveId();
-				}
+				DriveId root = ExportActivity.this.getRoot();
+				return root != null? root : Drive.DriveApi.getRootFolder(client).getDriveId();
 			}
 		});
 	}
 	@Override
 	protected void onStart() {
 		super.onStart();
-		LOG.trace("onStart: connecting");
 		googleDrive.startConnect();
 	}
 
@@ -73,6 +69,7 @@ public class ExportActivity extends BaseDriveActivity {
 				if (resultCode == Activity.RESULT_OK) {
 					DriveId driveId = (DriveId)data.getParcelableExtra(EXTRA_RESPONSE_DRIVE_ID);
 					App.getPrefEditor().putString(Prefs.LAST_EXPORT_DRIVE_ID, driveId.encodeToString()).apply();
+					App.toast("Successfully exported to " + driveId.encodeToString());
 				}
 				finish();
 				return;

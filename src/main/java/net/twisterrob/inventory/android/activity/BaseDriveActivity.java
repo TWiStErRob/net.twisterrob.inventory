@@ -12,6 +12,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
 
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.utils.*;
 import net.twisterrob.inventory.android.utils.DriveHelper.ConnectedTask;
 import net.twisterrob.inventory.android.utils.DriveIdDownloader.ApiClientProvider;
@@ -23,7 +24,8 @@ import static net.twisterrob.inventory.android.utils.DriveUtils.*;
 public class BaseDriveActivity extends BaseActivity implements ApiClientProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDriveActivity.class);
 
-	private static final int REQUEST_CODE_RESOLUTION = 1;
+	private static final int REQUEST_CODE_RESOLUTION = 0xD87; // DRiVe
+
 	protected DriveHelper googleDrive;
 
 	@Override
@@ -56,6 +58,15 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	protected DriveId getRoot() {
+		String folderDriveId = App.getPrefs().getString(Prefs.DRIVE_FOLDER_ID, null);
+		if (folderDriveId != null) {
+			return DriveId.decodeFromString(folderDriveId);
+		} else {
+			return null;
+		}
+	}
+
 	public GoogleApiClient getConnectedClient() {
 		return googleDrive.getConnectedClient();
 	}
@@ -74,10 +85,10 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 		public synchronized void execute(GoogleApiClient client) throws Exception {
 			this.client = client;
 
-			String folderID = App.getPrefs().getString(Constants.Prefs.DRIVE_FOLDER_ID, null);
-			if (folderID != null) {
-				DriveId driveID = DriveId.decodeFromString(folderID);
-				LOG.debug("Google Drive already set up with root '{}' -> '{}'", folderID, driveID.getResourceId());
+			DriveId root = getRoot();
+			if (root != null) {
+				LOG.debug("Google Drive already set up with root '{}' -> '{}'", //
+						root.encodeToString(), root.getResourceId());
 				return;
 			}
 
