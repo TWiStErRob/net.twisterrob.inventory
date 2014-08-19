@@ -35,7 +35,7 @@ public class Database {
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 			}
 		};
-		m_helper.setDevMode(true);
+		m_helper.setDevMode(false);
 		App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
 		m_helper.setDumpOnOpen(true);
 	}
@@ -63,9 +63,22 @@ public class Database {
 		LOG.trace("rawQuery({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
 		return db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
 	}
+	private Long getID(int queryResource, Object... params) {
+		Cursor cursor = rawQuery(queryResource, params);
+		try {
+			if (cursor.moveToFirst()) {
+				return cursor.getLong(0);
+			} else {
+				return null;
+			}
+		} finally {
+			cursor.close();
+		}
+	}
 
 	@SuppressWarnings("resource")
 	private long rawInsert(int insertResource, Object... params) {
+		LOG.trace("rawInsert({}, {})", m_resources.getResourceEntryName(insertResource), Arrays.toString(params));
 		SQLiteDatabase db = getWritableDatabase();
 
 		SQLiteStatement insert = db.compileStatement(m_resources.getString(insertResource));
@@ -131,42 +144,46 @@ public class Database {
 	public Cursor getCategory(long itemID) {
 		return rawQuery(R.string.query_category, itemID);
 	}
+
 	public long createProperty(String name, long type, DriveId imageDriveID) {
 		return rawInsert(R.string.query_property_create, name, type, imageDriveID);
 	}
-
+	public Long findProperty(String name) {
+		return getID(R.string.query_property_find, name);
+	}
 	public void updateProperty(long id, String name, long type, DriveId imageDriveID) {
 		execSQL(R.string.query_property_update, name, type, imageDriveID, id);
 	}
-
 	public void deleteProperty(long id) {
 		execSQL(R.string.query_property_delete, id);
 	}
 
 	public long createRoom(long propertyID, String name, long type, DriveId imageDriveID) {
-		return rawInsert(R.string.query_room_create, propertyID, null, name, type, imageDriveID);
+		rawInsert(R.string.query_room_create, propertyID, name, type, imageDriveID);
+		return findRoom(propertyID, name); // last_insert_rowid() doesn't work with INSTEAD OF INSERT triggers on VIEWs 
 	}
-
+	public Long findRoom(long propertyID, String name) {
+		return getID(R.string.query_room_find, propertyID, name);
+	}
 	public void updateRoom(long id, String name, long type, DriveId imageDriveID) {
 		execSQL(R.string.query_room_update, name, type, imageDriveID, id);
 	}
-
 	public void deleteRoom(long id) {
 		execSQL(R.string.query_room_delete, id);
-	}
-
-	public long createItem(long parentID, String name, long category, DriveId imageDriveID) {
-		return createItem((Long)parentID, name, category, imageDriveID);
 	}
 
 	private long createItem(Long parentID, String name, long category, DriveId imageDriveID) {
 		return rawInsert(R.string.query_item_create, parentID, name, category, imageDriveID);
 	}
-
+	public long createItem(long parentID, String name, long category, DriveId imageDriveID) {
+		return createItem((Long)parentID, name, category, imageDriveID);
+	}
+	public Long findItem(long parentID, String name) {
+		return getID(R.string.query_item_find, parentID, name);
+	}
 	public void updateItem(long id, String name, long category, DriveId imageDriveID) {
 		execSQL(R.string.query_item_update, name, category, imageDriveID, id);
 	}
-
 	public void deleteItem(long id) {
 		execSQL(R.string.query_item_delete, id);
 	}
@@ -198,5 +215,9 @@ public class Database {
 		} finally {
 			db.endTransaction();
 		}
+	}
+
+	public Cursor export() {
+		return rawQuery(R.string.query_export);
 	}
 }

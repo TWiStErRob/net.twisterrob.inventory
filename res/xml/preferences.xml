@@ -7,4 +7,9 @@
 		android:entries="@array/pref_defaultEntityDetailsPage_entries"
 		android:entryValues="@array/pref_defaultEntityDetailsPage_values"
 		android:defaultValue="@string/pref_defaultEntityDetailsPage_default" />
+	<PreferenceScreen android:title="App info">
+		<intent
+			android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
+			android:data="package:net.twisterrob.inventory" />
+	</PreferenceScreen>
 </PreferenceScreen>

@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.activity;
 
+import java.io.*;
 import java.util.*;
 
 import android.app.SearchManager;
@@ -17,6 +18,8 @@ import net.twisterrob.android.adapter.BaseListAdapter;
 import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.Category;
+import net.twisterrob.inventory.android.content.io.csv.*;
+import net.twisterrob.java.io.IOTools;
 
 public class MainActivity extends BaseActivity {
 	private GridView list;
@@ -101,9 +104,36 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.preferences:
+			case R.id.preferences: {
 				startActivity(PreferencesActivity.show());
 				break;
+			}
+			case R.id.exportDB: {
+				DatabaseCSVExporter exporter = null;
+				try {
+					@SuppressWarnings("resource")
+					OutputStream output = new FileOutputStream("/sdcard/export.csv");
+					exporter = new DatabaseCSVExporter();
+					exporter.export(output);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				} finally {
+					IOTools.ignorantClose(exporter);
+				}
+				break;
+			}
+			case R.id.importDB: {
+				DatabaseCSVImporter importer = null;
+				try {
+					@SuppressWarnings("resource")
+					InputStream input = new FileInputStream("/sdcard/export.csv");
+					importer = new DatabaseCSVImporter();
+					importer.importAll(input);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				break;
+			}
 			default:
 				// let super do its thing
 				break;

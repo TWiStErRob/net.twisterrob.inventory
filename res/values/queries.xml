@@ -217,6 +217,48 @@
 		where name MATCH ?
 		order by name
 	"]]></string>
+	<string name="query_export"><![CDATA["
+			select
+				pt.name  as type,
+				p.name   as property,
+				null     as room,
+				null     as item,
+				p.image  as image,
+				null     as parent,
+				null     as id
+			from Property p
+			join PropertyType pt ON p.type = pt._id
+		UNION ALL
+			select
+				rt.name  as type,
+				p.name   as property,
+				r.name   as room,
+				null     as item,
+				r.image  as image,
+				null     as parent,
+				null     as id
+			from Room r
+			join RoomType rt ON r.type = rt._id
+			join Property p ON r.property = p._id
+		UNION ALL
+			select
+				c.name   as type,
+				p.name   as property,
+				r.name   as room,
+				i.name   as item,
+				i.image  as image,
+				CASE
+					WHEN i.parent <> r.root
+					THEN i.parent
+					ELSE NULL
+				END      as parent,
+				i._id    as id
+			from Item       i
+			join Category   c  ON i.category = c._id and c._id <> -1
+			join Item_Path_Node  ip ON ip.item = i._id and ip.node = i._id
+			join Room       r  ON ip.root = r.root
+			join Property   p  ON r.property = p._id
+	"]]></string>
 
 
 	<string name="query_category_cache_names"><![CDATA["
@@ -227,20 +269,12 @@
 	"]]></string>
 
 
-	<!-- Room C_UD -->
-	<string name="query_room_create"><![CDATA["
-		insert into Room_Rooter(property, name, type, image) values(?, ?, ?, ?)
-	"]]></string>
-	<string name="query_room_update"><![CDATA["
-		update Room set name = ?, type = ?, image = ? where _id = ?
-	"]]></string>
-	<string name="query_room_delete"><![CDATA["
-		delete from Room where _id = ?
-	"]]></string>
-
-	<!-- Property C_UD -->
+	<!-- Property CRUD -->
 	<string name="query_property_create"><![CDATA["
 		insert into Property(name, type, image) values(?, ?, ?)
+	"]]></string>
+	<string name="query_property_find"><![CDATA["
+		select _id from Property where name = ?
 	"]]></string>
 	<string name="query_property_update"><![CDATA["
 		update Property set name = ?, type = ?, image = ? where _id = ?
@@ -249,9 +283,26 @@
 		delete from Property where _id = ?
 	"]]></string>
 
-	<!-- Item C_UD -->
+	<!-- Room CRUD -->
+	<string name="query_room_create"><![CDATA["
+		insert into Room_Rooter(property, name, type, image) values(?, ?, ?, ?)
+	"]]></string>
+	<string name="query_room_find"><![CDATA["
+		select _id from Room where property = ? and name = ?
+	"]]></string>
+	<string name="query_room_update"><![CDATA["
+		update Room set name = ?, type = ?, image = ? where _id = ?
+	"]]></string>
+	<string name="query_room_delete"><![CDATA["
+		delete from Room where _id = ?
+	"]]></string>
+
+	<!-- Item CRUD -->
 	<string name="query_item_create"><![CDATA["
 		insert into Item(parent, name, category, image) values(?, ?, ?, ?)
+	"]]></string>
+	<string name="query_item_find"><![CDATA["
+		select _id from Item where parent = ? and name = ?
 	"]]></string>
 	<string name="query_item_update"><![CDATA["
 		update Item set name = ?, category = ?, image = ? where _id = ?
