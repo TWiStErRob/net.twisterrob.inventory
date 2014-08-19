@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 
 public class BaseFragment<T> extends Fragment {
@@ -32,14 +33,7 @@ public class BaseFragment<T> extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		Class<T> eventsClass = this.<Class<T>> getDynamicResource(DYN_EventsClass);
-		if (eventsClass != null) {
-			if (eventsClass.isInstance(activity)) {
-				eventsListener = eventsClass.cast(activity);
-			} else {
-				throw new IllegalArgumentException("Activity " + activity.getClass().getSimpleName()
-						+ " must implement " + eventsClass);
-			}
-		}
+		eventsListener = AndroidTools.getAttachedFragmentListener(activity, eventsClass);
 	}
 
 	@Override

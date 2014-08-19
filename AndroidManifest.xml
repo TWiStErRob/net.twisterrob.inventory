@@ -71,6 +71,9 @@
 			android:label="@string/action_picture_take"
 			android:screenOrientation="fullSensor" />
 		<activity
+			android:name="net.twisterrob.inventory.android.activity.ExportActivity"
+			android:label="Export" />
+		<activity
 			android:name="net.twisterrob.inventory.android.activity.data.SunBurstActivity"
 			android:label="@string/sunburst_title" />
 		<activity

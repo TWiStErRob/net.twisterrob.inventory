@@ -16,14 +16,15 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import net.twisterrob.android.adapter.BaseListAdapter;
 import net.twisterrob.inventory.*;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
 import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.inventory.android.content.io.csv.*;
-import net.twisterrob.java.io.IOTools;
+import net.twisterrob.inventory.android.fragment.*;
+import net.twisterrob.inventory.android.fragment.BackupPickerFragment.BackupPickerListener;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements BackupPickerListener {
 	private GridView list;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,34 +107,25 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.preferences: {
+			case R.id.preferences:
 				startActivity(PreferencesActivity.show());
 				break;
-			}
-			case R.id.exportDB: {
-				DatabaseCSVExporter exporter = null;
-				try {
-					@SuppressWarnings("resource")
-					OutputStream output = new FileOutputStream("/sdcard/export.csv");
-					exporter = new DatabaseCSVExporter();
-					exporter.export(output);
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				} finally {
-					IOTools.ignorantClose(exporter);
-				}
+			case R.id.exportDrive:
+				startActivity(ExportActivity.chooser());
+				break;
+			case R.id.exportSDCard:
+				export();
+				break;
+			case R.id.exportSDCardRemove: {
+				pickMode = PickMode.Remove;
+				BackupPickerFragment dialog = BackupPickerFragment.choose("Select a backup to remove", ".csv");
+				dialog.show(getSupportFragmentManager(), BackupPickerFragment.class.getSimpleName());
 				break;
 			}
 			case R.id.importDB: {
-				DatabaseCSVImporter importer = null;
-				try {
-					@SuppressWarnings("resource")
-					InputStream input = new FileInputStream("/sdcard/export.csv");
-					importer = new DatabaseCSVImporter();
-					importer.importAll(input);
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
+				pickMode = PickMode.Import;
+				BackupPickerFragment dialog = BackupPickerFragment.choose("Select a backup to restore", ".csv");
+				dialog.show(getSupportFragmentManager(), BackupPickerFragment.class.getSimpleName());
 				break;
 			}
 			default:
@@ -141,6 +133,55 @@ public class MainActivity extends BaseActivity {
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	private void export() {
+		String fileName = String.format(Locale.ROOT, Constants.EXPORT_FILE_NAME_FORMAT, Calendar.getInstance());
+
+		File path = new File(App.getInstance().getPhoneHome(), Constants.EXPORT_SDCARD_FOLDER);
+		path.mkdirs();
+
+		File file = new File(path, fileName);
+		try {
+			new DatabaseCSVExporter().export(new FileOutputStream(file));
+			App.toast("Exported successfully to " + file);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			App.toast("Export failed: " + ex.getMessage());
+		}
+	}
+
+	enum PickMode {
+		Import,
+		Remove;
+	}
+	PickMode pickMode;
+	public void filePicked(File file) {
+		if (pickMode == null) {
+			throw new IllegalStateException("Access this method through a dialog's callback");
+		}
+		switch (pickMode) {
+			case Import: {
+				DatabaseCSVImporter importer = null;
+				try {
+					@SuppressWarnings("resource")
+					InputStream input = new FileInputStream(file);
+					importer = new DatabaseCSVImporter();
+					importer.importAll(input);
+					App.toast("Import successful from " + file.getName());
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				break;
+			}
+			case Remove: {
+				file.delete();
+				App.toast("Backup removed successfully: " + file.getName());
+				break;
+			}
+			default:
+				throw new UnsupportedOperationException(pickMode + " is not implemented");
+		}
+		pickMode = null;
 	}
 
 	private class MainItem {

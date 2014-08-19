@@ -10,7 +10,7 @@ import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.App;
 
 // TODO check http://stackoverflow.com/questions/13229294/how-do-i-create-a-google-spreadsheet-with-a-service-account-and-share-to-other-g
-public class DatabaseCSVExporter implements Closeable {
+public class DatabaseCSVExporter {
 	private final Cursor cursor;
 
 	public DatabaseCSVExporter() {
@@ -29,6 +29,7 @@ public class DatabaseCSVExporter implements Closeable {
 			}
 		} finally {
 			IOTools.ignorantClose(printer);
+			cursor.close();
 		}
 	}
 
@@ -36,9 +37,5 @@ public class DatabaseCSVExporter implements Closeable {
 		for (int i = 0; i < values.length; ++i) {
 			values[i] = cursor.getString(i);
 		}
-	}
-
-	public void close() throws IOException {
-		cursor.close();
 	}
 }

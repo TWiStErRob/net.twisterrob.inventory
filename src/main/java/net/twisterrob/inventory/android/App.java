@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
@@ -38,6 +39,7 @@ public class App extends Application {
 	private static App s_instance;
 	private Database database;
 	private PicassoWrapper picasso;
+	private File phoneHome;
 
 	public App() {
 		synchronized (App.class) {
@@ -72,14 +74,16 @@ public class App extends Application {
 				.build());
 	}
 
-	private static App getInstance() {
+	public static App getInstance() {
 		return s_instance;
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		setTheme(R.style.AppTheme); // for Toasts created with AppContext to have my theme
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		phoneHome = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		database = new Database(this);
 		picasso = new PicassoWrapper(this);
 		updateLanguage(Locale.getDefault());
@@ -132,6 +136,10 @@ public class App extends Application {
 			return current.getConnectedClient();
 		}
 		return null;
+	}
+
+	public File getPhoneHome() {
+		return phoneHome;
 	}
 
 	public static SharedPreferences getPrefs() {
