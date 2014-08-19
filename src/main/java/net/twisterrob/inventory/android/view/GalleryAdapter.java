@@ -15,6 +15,7 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.GalleryAdapter.ViewHolder;
+import net.twisterrob.inventory.android.view.lib.ResourceCursorAdapterWithHolder;
 
 public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	public GalleryAdapter(Context context) {

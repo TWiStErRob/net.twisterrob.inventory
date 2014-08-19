@@ -5,10 +5,10 @@ import java.util.*;
 import android.database.Cursor;
 
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.activity.*;
-import net.twisterrob.inventory.android.activity.Dialogs.ActionParams;
 import net.twisterrob.inventory.android.content.contract.Room;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
+import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
 
 public class DeletePropertyTask extends ActionParams {
 	private final long propertyID;

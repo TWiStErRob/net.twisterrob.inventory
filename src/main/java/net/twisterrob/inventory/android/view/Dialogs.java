@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity;
+package net.twisterrob.inventory.android.view;
 
 import org.slf4j.*;
 

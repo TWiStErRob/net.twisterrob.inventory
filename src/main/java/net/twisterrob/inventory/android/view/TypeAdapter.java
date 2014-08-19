@@ -14,6 +14,7 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.view.TypeAdapter.ViewHolder;
+import net.twisterrob.inventory.android.view.lib.ResourceCursorAdapterWithHolder;
 
 public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	public TypeAdapter(Context context) {

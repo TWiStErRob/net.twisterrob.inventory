@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity;
+package net.twisterrob.inventory.android.activity.dev;
 
 import org.slf4j.*;
 
@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.tasks.ApiClientAsyncTask;
 
 public class PickDriveFileActivity extends BaseActivity {

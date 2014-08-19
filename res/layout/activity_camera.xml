@@ -6,11 +6,11 @@
 	android:orientation="horizontal"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
-	<net.twisterrob.inventory.android.view.CameraPreview
+	<net.twisterrob.inventory.android.view.lib.CameraPreview
 		android:id="@+id/preview"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
-	<net.twisterrob.inventory.android.view.SelectionView
+	<net.twisterrob.inventory.android.view.lib.SelectionView
 		android:id="@+id/selection"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />

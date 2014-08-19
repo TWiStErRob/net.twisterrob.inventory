@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.inventory.android.view.lib;
 
 import android.content.Context;
 import android.database.Cursor;

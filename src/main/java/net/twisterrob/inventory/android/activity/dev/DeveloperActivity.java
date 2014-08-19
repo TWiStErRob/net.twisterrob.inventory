@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity;
+package net.twisterrob.inventory.android.activity.dev;
 
 import java.io.File;
 import java.util.*;
@@ -13,6 +13,8 @@ import com.squareup.picasso.PicassoWrapper;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.activity.*;
+import net.twisterrob.inventory.android.activity.data.*;
 
 public class DeveloperActivity extends ListActivity {
 	@Override

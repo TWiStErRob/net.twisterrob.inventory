@@ -23,7 +23,8 @@ import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.tasks.Upload;
 import net.twisterrob.inventory.android.utils.*;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.TypeAdapter;
+import net.twisterrob.inventory.android.view.lib.DefaultValueUpdater;
 
 public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	private DriveId driveId;

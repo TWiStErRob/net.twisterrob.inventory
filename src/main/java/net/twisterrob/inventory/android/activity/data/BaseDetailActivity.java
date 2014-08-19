@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity;
+package net.twisterrob.inventory.android.activity.data;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -6,6 +6,7 @@ import android.view.View;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.activity.BaseDriveActivity;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 
 public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends BaseFragment<?>>
@@ -95,7 +96,7 @@ public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends Ba
 		findViewById(R.id.children).setVisibility(View.GONE);
 	}
 
-	protected static final class NoFragment extends BaseFragment<Void> {
+	public static final class NoFragment extends BaseFragment<Void> {
 		private NoFragment() {
 			// prevent instantiation, just for type
 		}

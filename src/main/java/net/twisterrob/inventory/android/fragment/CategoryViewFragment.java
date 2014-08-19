@@ -6,7 +6,7 @@ import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.activity.CategoryItemsActivity;
+import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.CategoryViewFragment.CategoryEvents;

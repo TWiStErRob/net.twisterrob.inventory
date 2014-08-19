@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE layout>
-<net.twisterrob.inventory.android.view.SquareFrameLayout
+<net.twisterrob.inventory.android.view.lib.SquareFrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
@@ -35,7 +35,7 @@
 		android:shadowDx="2"
 		android:shadowDy="2"
 		android:textSize="18sp" />
-	<net.twisterrob.inventory.android.view.WrappedTextView
+	<net.twisterrob.inventory.android.view.lib.WrappedTextView
 		android:id="@id/title"
 		android:focusable="false"
 		android:layout_width="wrap_content"
@@ -52,4 +52,4 @@
 		android:shadowDx="2"
 		android:shadowDy="2"
 		android:textSize="18sp" />
-</net.twisterrob.inventory.android.view.SquareFrameLayout>
+</net.twisterrob.inventory.android.view.lib.SquareFrameLayout>

@@ -5,10 +5,10 @@ import java.util.*;
 import android.database.Cursor;
 
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.activity.*;
-import net.twisterrob.inventory.android.activity.Dialogs.ActionParams;
 import net.twisterrob.inventory.android.content.contract.Item;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
+import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
 
 public class DeleteItemTask extends ActionParams {
 	private final long itemID;

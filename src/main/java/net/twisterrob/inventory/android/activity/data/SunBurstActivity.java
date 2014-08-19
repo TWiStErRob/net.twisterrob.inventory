@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity;
+package net.twisterrob.inventory.android.activity.data;
 
 import java.util.*;
 
@@ -13,9 +13,10 @@ import android.widget.ImageView;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.view.*;
-import net.twisterrob.inventory.android.view.SunburstDrawable.BasePaintStrategy;
+import net.twisterrob.inventory.android.view.lib.*;
+import net.twisterrob.inventory.android.view.lib.SunburstDrawable.BasePaintStrategy;
 
 public class SunBurstActivity extends BaseActivity {
 	private ImageView diagram;

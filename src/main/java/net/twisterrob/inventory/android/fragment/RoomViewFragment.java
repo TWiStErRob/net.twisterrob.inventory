@@ -6,12 +6,13 @@ import android.view.MenuItem;
 
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.activity.*;
+import net.twisterrob.inventory.android.activity.data.RoomEditActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.RoomViewFragment.RoomEvents;
 import net.twisterrob.inventory.android.tasks.DeleteRoomTask;
 import net.twisterrob.inventory.android.utils.DescriptionBuilder;
+import net.twisterrob.inventory.android.view.Dialogs;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 

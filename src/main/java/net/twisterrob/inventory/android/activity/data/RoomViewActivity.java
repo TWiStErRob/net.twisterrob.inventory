@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity;
+package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
 import android.os.Bundle;

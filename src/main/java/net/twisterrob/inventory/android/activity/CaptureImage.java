@@ -22,8 +22,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.utils.PictureUtils;
-import net.twisterrob.inventory.android.view.*;
-import net.twisterrob.inventory.android.view.SelectionView.SelectionStatus;
+import net.twisterrob.inventory.android.view.lib.*;
+import net.twisterrob.inventory.android.view.lib.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
 public class CaptureImage extends BaseActivity {
