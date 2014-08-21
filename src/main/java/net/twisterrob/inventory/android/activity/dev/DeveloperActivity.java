@@ -5,6 +5,7 @@ import java.util.*;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -26,6 +27,15 @@ public class DeveloperActivity extends ListActivity {
 				create(getString(R.string.app_name), new Runnable() {
 					public void run() {
 						Intent intent = new Intent(App.getAppContext(), MainActivity.class);
+						startActivity(intent);
+					}
+				}), //
+				create("TEST", new Runnable() {
+					public void run() {
+						Intent intent = new Intent();
+						intent.setAction(Intent.ACTION_VIEW);
+						intent.setDataAndType(Uri.parse("content://net.twisterrob.inventory/item/100008"),
+								"vnd.android.cursor.item/vnd.net.twisterrob.inventory.item");
 						startActivity(intent);
 					}
 				}), //

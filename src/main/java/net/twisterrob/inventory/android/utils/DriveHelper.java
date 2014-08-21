@@ -38,7 +38,6 @@ public class DriveHelper {
 	private final LifeCycle lifeCycle = new LifeCycle();
 
 	public DriveHelper(Activity activity, int resolutionReqCode) {
-		LOG.trace(activity.getClass().getSimpleName());
 		this.activity = activity;
 		this.resolutionReqCode = resolutionReqCode;
 	}

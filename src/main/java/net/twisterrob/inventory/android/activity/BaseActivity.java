@@ -19,7 +19,8 @@ public class BaseActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		LOG.trace("Creating {}: {}", this, AndroidTools.toString(getIntent().getExtras()));
+		LOG.trace("Creating {}@{}\n{} {}", this.getClass().getSimpleName(), this.hashCode(), //
+				getIntent(), AndroidTools.toString(getIntent().getExtras()));
 		super.onCreate(savedInstanceState);
 		ViewServer.get(this).addWindow(this);
 		initActionBar();

@@ -133,6 +133,11 @@
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.data.ItemViewActivity"
 			android:label="@string/item_details">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.item/vnd.net.twisterrob.inventory.item" />
+			</intent-filter>
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="net.twisterrob.inventory.android.activity.RoomViewActivity" />

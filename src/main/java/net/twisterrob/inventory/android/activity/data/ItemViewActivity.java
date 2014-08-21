@@ -6,7 +6,6 @@ import android.os.Bundle;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
-import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
@@ -17,8 +16,8 @@ public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemL
 			ItemsEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
-		long parentID = getExtraParentItemID();
-		setFragments(ItemViewFragment.newInstance(parentID), ItemListFragment.newInstance(parentID));
+		long itemID = getExtraItemID();
+		setFragments(ItemViewFragment.newInstance(itemID), ItemListFragment.newInstance(itemID));
 	}
 
 	public void itemLoaded(ItemDTO item) {
@@ -44,14 +43,34 @@ public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemL
 
 	@Override
 	protected String checkExtras() {
-		if (getExtraParentItemID() == Item.ID_ADD) {
-			return "Invalid parent item ID";
+		if (getExtraItemID() == Item.ID_ADD) {
+			return "Invalid item ID";
 		}
 		return null;
 	}
 
-	private long getExtraParentItemID() {
-		return getIntent().getLongExtra(Extras.PARENT_ID, Item.ID_ADD);
+	private long getExtraItemID() {
+		Intent intent = getIntent();
+		long uri = intent.getData() != null? Long.parseLong(intent.getData().getLastPathSegment()) : Item.ID_ADD;
+		long extra = intent.getLongExtra(Extras.PARENT_ID, Item.ID_ADD);
+		return resolve(uri, extra, Item.ID_ADD);
+	}
+
+	/** Sanity checks and uri takes precedence over extra. */
+	private static long resolve(long uri, long extra, long invalid) {
+		if (uri == invalid && extra == invalid) {
+			return invalid;
+		}
+		if (uri != invalid && extra != invalid && uri != extra) {
+			throw new IllegalArgumentException("Cannot get ID from both URI (" + uri + ") and extras (" + extra + ")");
+		}
+		if (uri != invalid) {
+			return uri;
+		}
+		if (extra != invalid) {
+			return extra;
+		}
+		return invalid;
 	}
 
 	public static Intent show(long itemID) {

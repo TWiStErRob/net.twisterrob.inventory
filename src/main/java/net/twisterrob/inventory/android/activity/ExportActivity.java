@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.*;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
+import android.webkit.MimeTypeMap;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
@@ -33,7 +34,7 @@ public class ExportActivity extends BaseDriveActivity {
 			public void execute(GoogleApiClient client) throws Exception {
 				String fileName = String.format(Locale.ROOT, Constants.EXPORT_FILE_NAME_FORMAT, Calendar.getInstance());
 				MetadataChangeSet metadata = new MetadataChangeSet.Builder() //
-						.setMimeType("text/csv") //
+						.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension("csv")) //
 						.setTitle(fileName) //
 						.build();
 				Contents contents = sync(Drive.DriveApi.newContents(client));
