@@ -62,10 +62,6 @@
 				android:name="android.app.searchable"
 				android:resource="@xml/searchable_suggest" />
 		</activity>
-		<provider
-			android:name="net.twisterrob.inventory.android.content.SearchSuggestProvider"
-			android:authorities="net.twisterrob.inventory.suggest"
-			android:syncable="false" />
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.CaptureImage"
 			android:label="@string/action_picture_take"
@@ -150,6 +146,14 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="net.twisterrob.inventory.android.activity.ItemViewActivity" />
 		</activity>
+
+		<provider
+			android:name="net.twisterrob.inventory.android.content.InventoryProvider"
+			android:authorities="net.twisterrob.inventory"
+			android:exported="true"
+			android:grantUriPermissions="true"
+			android:readPermission="net.twisterrob.inventory.READ"
+			android:writePermission="net.twisterrob.inventory.WRITE" />
 
 		<!-- Developer Activities -->
 		<activity

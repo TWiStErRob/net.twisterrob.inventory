@@ -210,9 +210,10 @@
 
 	<string name="query_search"><![CDATA["
 		select
-			rowid    as _id,
-			name     as suggest_text_1,
-			location as suggest_text_2
+			rowid    as _id,                    -- BaseColumns._ID (for ListView)
+			_id      as suggest_intent_data_id, -- SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
+			name     as suggest_text_1,         -- SearchManager.SUGGEST_COLUMN_TEXT_1
+			location as suggest_text_2          -- SearchManager.SUGGEST_COLUMN_TEXT_2
 		from Search
 		where name MATCH ?
 		order by name

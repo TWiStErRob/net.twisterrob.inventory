@@ -34,8 +34,7 @@ public class DeveloperActivity extends ListActivity {
 					public void run() {
 						Intent intent = new Intent();
 						intent.setAction(Intent.ACTION_VIEW);
-						intent.setDataAndType(Uri.parse("content://net.twisterrob.inventory/item/100008"),
-								"vnd.android.cursor.item/vnd.net.twisterrob.inventory.item");
+						intent.setData(Uri.parse("content://net.twisterrob.inventory/item/100008"));
 						startActivity(intent);
 					}
 				}), //

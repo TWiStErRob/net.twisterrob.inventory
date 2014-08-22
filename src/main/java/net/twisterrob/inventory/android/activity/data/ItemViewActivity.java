@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -51,7 +52,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemL
 
 	private long getExtraItemID() {
 		Intent intent = getIntent();
-		long uri = intent.getData() != null? Long.parseLong(intent.getData().getLastPathSegment()) : Item.ID_ADD;
+		long uri = InventoryContract.Item.getID(intent.getData());
 		long extra = intent.getLongExtra(Extras.PARENT_ID, Item.ID_ADD);
 		return resolve(uri, extra, Item.ID_ADD);
 	}

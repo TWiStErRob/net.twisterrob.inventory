@@ -5,13 +5,16 @@ import java.util.*;
 import static java.lang.Math.*;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.hardware.*;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.*;
+import android.preference.ListPreference;
 import android.support.v4.widget.CursorAdapter;
 import android.util.TypedValue;
 import android.view.WindowManager;
@@ -223,5 +226,37 @@ public abstract class AndroidTools {
 		} else {
 			as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
 		}
+	}
+
+	public static int findIndexInResourceArray(Context context, int arrayResourceID, String value) {
+		ListPreference pref = new ListPreference(context);
+		pref.setEntryValues(arrayResourceID);
+		return pref.findIndexOfValue(value);
+	}
+
+	public static Intent getApplicationInfoScreen(Context context) {
+		return getApplicationInfoScreen(context, context.getPackageName());
+	}
+
+	public static Intent getApplicationInfoScreen(Context context, String packageName) {
+		// The specific app page
+		Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+		intent.setData(Uri.parse("package:" + packageName));
+		if (context.getPackageManager().resolveActivity(intent, 0) == null) {
+			// The generic apps page
+			intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+		}
+		return intent;
+	}
+
+	public static <T> T getAttachedFragmentListener(Activity activity, Class<T> eventsClass) {
+		if (eventsClass == null) {
+			return null;
+		}
+		if (!eventsClass.isInstance(activity)) {
+			throw new IllegalArgumentException("Activity " + activity.getClass().getSimpleName() + " must implement "
+					+ eventsClass);
+		}
+		return eventsClass.cast(activity);
 	}
 }
