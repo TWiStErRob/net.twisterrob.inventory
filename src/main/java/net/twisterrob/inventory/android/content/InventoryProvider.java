@@ -14,6 +14,7 @@ import static android.app.SearchManager.*;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.InventoryContract.Item;
 import net.twisterrob.inventory.android.content.InventoryContract.Search;
+import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.java.utils.StringTools;
 
 import static net.twisterrob.inventory.android.content.InventoryContract.*;
@@ -52,7 +53,7 @@ public class InventoryProvider extends ContentProvider {
 		URI_MATCHER.addURI(AUTHORITY, Item.ITEM_URI_PATH + URI_PATH_ID, ITEM);
 		URI_MATCHER.addURI(AUTHORITY, "categories", CATEGORIES);
 		URI_MATCHER.addURI(AUTHORITY, "category" + URI_PATH_ID, CATEGORY);
-		URI_MATCHER.addURI(AUTHORITY, Search.URI_PATH + URI_PATH_ANY, SEARCH_ITEMS);
+		URI_MATCHER.addURI(AUTHORITY, Search.URI_PATH, SEARCH_ITEMS);
 		URI_MATCHER.addURI(AUTHORITY, Search.URI_PATH_SUGGEST, SEARCH_ITEMS_SUGGEST);
 	}
 
@@ -85,11 +86,20 @@ public class InventoryProvider extends ContentProvider {
 			case SEARCH_ITEMS_SUGGEST: {
 				String query = selectionArgs[0].toLowerCase(Locale.getDefault()); // uri.getLastPathSegment().toLowerCase(Locale.ROOT);
 				if (StringTools.isNullOrEmpty(query)) {
-					MatrixCursor cursor = new MatrixCursor(new String[]{BaseColumns._ID, SUGGEST_COLUMN_TEXT_1,
-							SUGGEST_COLUMN_TEXT_2}, 1);
-					cursor.addRow(new String[]{null, "Search Inventory Items", "Search for item name."});
+					MatrixCursor cursor = new MatrixCursor(new String[]{BaseColumns._ID, SUGGEST_COLUMN_INTENT_DATA_ID,
+							SUGGEST_COLUMN_TEXT_1, SUGGEST_COLUMN_TEXT_2/* , SUGGEST_COLUMN_ICON_1,
+																		 * SUGGEST_COLUMN_INTENT_ACTION */}, 1);
+					cursor.addRow(new String[]{null, null, "Search Inventory Items", "Search for item name.",
+					/* "android.resource://android/drawable/ic_menu_search", Intent.ACTION_SEARCH */});
 					return cursor;
 				}
+				return App.db().searchSuggest(query);
+			}
+			case SEARCH_ITEMS: {
+				if (selectionArgs == null || StringTools.isNullOrEmpty(selectionArgs[0])) {
+					return App.db().listItemsForCategory(Category.INTERNAL, true);
+				}
+				String query = selectionArgs[0].toLowerCase(Locale.getDefault());
 				return App.db().search(query);
 			}
 			default:

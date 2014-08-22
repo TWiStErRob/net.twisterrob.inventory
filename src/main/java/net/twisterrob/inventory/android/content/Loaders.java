@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.content;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.database.*;
 import android.os.Bundle;
@@ -12,32 +13,32 @@ import net.twisterrob.inventory.android.content.contract.*;
 public enum Loaders {
 	PropertyTypes {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			return App.db().listPropertyTypes();
 		}
 	},
 	Properties {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			return App.db().listProperties();
 		}
 	},
 	SingleProperty {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 			return App.db().getProperty(id);
 		}
 	},
 	RoomTypes {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			return App.db().listRoomTypes();
 		}
 	},
 	Rooms {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 			if (id == Property.ID_ADD) {
 				return App.db().listRooms();
@@ -48,20 +49,20 @@ public enum Loaders {
 	},
 	SingleRoom {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.ROOM_ID, Room.ID_ADD);
 			return App.db().getRoom(id);
 		}
 	},
 	ItemCategories {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			return App.db().listItemCategories();
 		}
 	},
 	Items {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.PARENT_ID, Item.ID_ADD);
 			if (id != Item.ID_ADD) {
 				return App.db().listItems(id);
@@ -76,35 +77,42 @@ public enum Loaders {
 	},
 	SingleItem {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
 			return App.db().getItem(id);
 		}
 	},
 	Categories {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.PARENT_ID, Category.ID_ADD);
 			return App.db().listCategories(id);
 		}
 	},
 	SingleCategory {
 		@Override
-		protected Cursor createCursor(Bundle args) {
+		protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 			return App.db().getCategory(id);
+		}
+	},
+	ItemSearch {
+		@Override
+		protected Cursor createCursor(Context context, Bundle args) {
+			CharSequence query = args.getCharSequence(SearchManager.QUERY);
+			return InventoryDatabase.getInstance().searchItems(context.getContentResolver(), query);
 		}
 	};
 
 	private static final Bundle NO_ARGS = new Bundle(0);
 
-	protected abstract Cursor createCursor(Bundle args);
+	protected abstract Cursor createCursor(Context context, Bundle args);
 
 	public Loader<Cursor> createLoader(Context context, final Bundle args) {
 		return new SimpleCursorLoader(context) {
 			@Override
 			public Cursor loadInBackground() {
-				return createCursor(args != null? args : NO_ARGS);
+				return createCursor(getContext(), args != null? args : NO_ARGS);
 			}
 			@Override
 			public void deliverResult(Cursor cursor) {

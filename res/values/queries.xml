@@ -208,7 +208,7 @@
 	"]]></string>
 
 
-	<string name="query_search"><![CDATA["
+	<string name="query_search_suggest"><![CDATA["
 		select
 			rowid    as _id,                    -- BaseColumns._ID (for ListView)
 			_id      as suggest_intent_data_id, -- SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
@@ -217,6 +217,20 @@
 		from Search
 		where name MATCH ?
 		order by name
+	"]]></string>
+	<string name="query_search"><![CDATA["
+		select
+			i._id,
+			i.name,
+			i.image,
+			c.image as typeImage,
+			(select count(1) from Item where parent = i._id) as countChildren,
+			c.name as category
+		from Item     i
+		join Category c ON i.category = c._id
+		join Search s ON i._id = s._id
+		where s.name MATCH ?
+		order by i.name 
 	"]]></string>
 	<string name="query_export"><![CDATA["
 			select

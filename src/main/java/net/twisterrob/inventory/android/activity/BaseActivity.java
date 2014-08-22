@@ -83,6 +83,9 @@ public class BaseActivity extends ActionBarActivity {
 		dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
 	}
 
+	public void setActionBarSubtitle(CharSequence string) {
+		getSupportActionBar().setSubtitle(string);
+	}
 	public void setActionBarTitle(CharSequence string) {
 		getSupportActionBar().setTitle(string);
 	}

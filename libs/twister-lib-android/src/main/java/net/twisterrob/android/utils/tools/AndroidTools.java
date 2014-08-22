@@ -5,7 +5,7 @@ import java.util.*;
 import static java.lang.Math.*;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.*;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.*;
@@ -15,9 +15,10 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.*;
 import android.preference.ListPreference;
-import android.support.v4.widget.CursorAdapter;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.*;
 import android.util.TypedValue;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.AdapterView;
 
 public abstract class AndroidTools {
@@ -258,5 +259,22 @@ public abstract class AndroidTools {
 					+ eventsClass);
 		}
 		return eventsClass.cast(activity);
+	}
+
+	public static View prepareSearch(Activity activity, Menu menu, int searchItemID) {
+		SearchManager searchManager = (SearchManager)activity.getSystemService(Context.SEARCH_SERVICE);
+		MenuItem item = menu.findItem(searchItemID);
+		if (item == null) {
+			return null;
+		}
+		View view = MenuItemCompat.getActionView(item);
+		if (view instanceof android.support.v7.widget.SearchView) {
+			android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView)view;
+			searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
+			return searchView;
+		} else {
+			SearchViewCompat.setSearchableInfo(view, activity.getComponentName());
+			return view;
+		}
 	}
 }

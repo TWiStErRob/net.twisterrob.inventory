@@ -3,16 +3,14 @@ package net.twisterrob.inventory.android.activity;
 import java.io.File;
 import java.util.*;
 
-import android.app.SearchManager;
 import android.content.*;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
 import net.twisterrob.android.adapter.BaseListAdapter;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.data.*;
@@ -63,9 +61,8 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.main, menu);
 
-		SearchManager searchManager = (SearchManager)getSystemService(SEARCH_SERVICE);
-		SearchView searchView = (SearchView)MenuItemCompat.getActionView(menu.findItem(R.id.search));
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		getMenuInflater().inflate(R.menu.search, menu);
+		AndroidTools.prepareSearch(this, menu, R.id.search);
 
 		return true;
 	}

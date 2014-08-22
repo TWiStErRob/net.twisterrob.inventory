@@ -40,8 +40,10 @@ dependencies {
 
 	provided 'com.android.support:support-v4:19.1.0'
 	provided 'com.android.support:support-v13:19.1.0'
+	provided 'com.android.support:appcompat-v7:19.1.0'
 	provided 'com.google.android.gms:play-services:5.0.77'
 	eclipseProjects 'net.twisterrob:twister-lib-java:1.0'
+	eclipseProjects 'com.android.support:appcompat-v7:19.1.0'
 	eclipseProjects('com.google.android.gms:play-services:5.0.77') {
 		exclude module:'support-v13'
 		exclude module:'support-v4'
@@ -86,6 +88,7 @@ if (plugins.hasPlugin('android') || plugins.hasPlugin('android-library')) {
 
 		project {
 			referencedProjects 'twister-lib-java'
+			referencedProjects 'android-support-v7-appcompat'
 			natures 'com.android.ide.eclipse.adt.AndroidNature'
 			buildCommands.clear();
 			buildCommand "com.android.ide.eclipse.adt.ResourceManagerBuilder"
@@ -127,7 +130,8 @@ if (plugins.hasPlugin('android') || plugins.hasPlugin('android-library')) {
 		}
 
 		// Import existing Android code into workspace: android-sdk/extras/google/google_play_services/libproject/google-play-services_lib
-		projectPropertiesFile.append 'android.library.reference.1=../google-play-services_lib'
+		projectPropertiesFile.append 'android.library.reference.1=../google-play-services_lib\n'
+		projectPropertiesFile.append 'android.library.reference.2=../android-support-v7-appcompat\n'
 	}
 }
 

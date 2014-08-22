@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
+import android.app.SearchManager;
 import android.os.Bundle;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -84,11 +85,18 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 
 	@Override
 	protected void onStartLoading() {
-		Bundle args = new Bundle();
-		args.putLong(Extras.PARENT_ID, getArgParentItemID());
-		args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
-		args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
-		getLoaderManager().initLoader(Loaders.Items.ordinal(), args, createListLoaderCallbacks());
+		CharSequence query = getArgQuery();
+		if (query == null) {
+			Bundle args = new Bundle();
+			args.putLong(Extras.PARENT_ID, getArgParentItemID());
+			args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
+			args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
+			getLoaderManager().initLoader(Loaders.Items.ordinal(), args, createListLoaderCallbacks());
+		} else {
+			Bundle args = new Bundle();
+			args.putCharSequence(SearchManager.QUERY, query);
+			getLoaderManager().initLoader(Loaders.ItemSearch.ordinal(), args, createListLoaderCallbacks());
+		}
 	}
 
 	private long getArgParentItemID() {
@@ -100,10 +108,17 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	private boolean getArgIncludeSubs() {
 		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
+	private CharSequence getArgQuery() {
+		return getArguments().getCharSequence(SearchManager.QUERY);
+	}
 
 	@Override
 	protected void onRefresh() {
-		getLoaderManager().getLoader(Loaders.Items.ordinal()).forceLoad();
+		if (getArgQuery() == null) {
+			getLoaderManager().getLoader(Loaders.Items.ordinal()).forceLoad();
+		} else {
+			getLoaderManager().getLoader(Loaders.ItemSearch.ordinal()).forceLoad();
+		}
 	}
 
 	public static ItemListFragment newInstance(long parentItemID) {
@@ -127,10 +142,11 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 		return fragment;
 	}
 
-	public static ItemListFragment newSearchInstance(String query) {
+	public static ItemListFragment newSearchInstance(CharSequence query) {
 		ItemListFragment fragment = new ItemListFragment();
 
 		Bundle args = new Bundle();
+		args.putCharSequence(SearchManager.QUERY, query);
 
 		fragment.setArguments(args);
 		return fragment;

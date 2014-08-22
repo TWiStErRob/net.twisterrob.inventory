@@ -189,11 +189,21 @@ public class Database {
 		execSQL(R.string.query_item_delete, id);
 	}
 
+	public Cursor searchSuggest(String query) {
+		query = fixQuery(query);
+		return rawQuery(R.string.query_search_suggest, query);
+	}
+
 	public Cursor search(String query) {
+		query = fixQuery(query);
+		return rawQuery(R.string.query_search, query);
+	}
+
+	private String fixQuery(String query) {
 		if (!query.matches(".*[\\s\\*].*")) {
 			query += "*";
 		}
-		return rawQuery(R.string.query_search, query);
+		return query;
 	}
 
 	public void updateCategoryCache() {

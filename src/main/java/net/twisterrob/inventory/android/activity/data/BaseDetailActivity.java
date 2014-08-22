@@ -28,6 +28,7 @@ public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends Ba
 		}
 
 		onCreateFragments(savedInstanceState);
+		// TODO may need getSupportFragmentManager().executePendingTransactions(); ? but it works :)
 	}
 
 	/** Call {@link #setFragments} */
