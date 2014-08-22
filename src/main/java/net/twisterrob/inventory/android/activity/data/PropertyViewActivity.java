@@ -6,7 +6,6 @@ import android.os.Bundle;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
-import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;

@@ -17,6 +17,7 @@ import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.contract.Category;
+import net.twisterrob.java.utils.StringTools;
 
 public class Database {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);

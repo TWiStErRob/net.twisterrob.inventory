@@ -99,4 +99,12 @@ public/* static */class IOTools {
 			IOTools.ignorantClose(stream);
 		}
 	}
+
+	public static String[] getNames(File... files) {
+		String[] names = new String[files.length];
+		for (int i = 0; i < files.length; ++i) {
+			names[i] = files[i].getName();
+		}
+		return names;
+	}
 }

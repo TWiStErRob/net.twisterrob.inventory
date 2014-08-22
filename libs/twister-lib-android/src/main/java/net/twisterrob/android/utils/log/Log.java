@@ -1,6 +1,6 @@
 package net.twisterrob.android.utils.log;
 
-import net.twisterrob.android.utils.tools.StringTools;
+import net.twisterrob.java.utils.StringTools;
 
 /**
  * Class to hide the complexity of Logging in android.

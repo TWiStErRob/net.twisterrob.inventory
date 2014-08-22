@@ -1,4 +1,4 @@
-package net.twisterrob.android.utils.tools;
+package net.twisterrob.java.utils;
 
 import java.io.IOException;
 import java.net.*;
@@ -56,6 +56,10 @@ public final class StringTools {
 			return String.valueOf(o);
 		}
 		return o != null? o.toString() : nullString;
+	}
+
+	public static boolean isNullOrEmpty(String string) {
+		return string == null || string.isEmpty() || string.trim().isEmpty();
 	}
 
 	/** Inverse of {@link Locale#toString()}. */

@@ -8,6 +8,8 @@ import net.twisterrob.android.utils.cache.lowlevel.*;
 import net.twisterrob.android.utils.cache.lowlevel.ImageCache.ImageCacheParams;
 import net.twisterrob.android.utils.log.*;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.java.utils.StringTools;
+
 import android.graphics.Bitmap;
 
 public class ImageSDNetCache implements Cache<URL, Bitmap> {

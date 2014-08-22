@@ -6,7 +6,6 @@ import android.os.Bundle;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
-import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;

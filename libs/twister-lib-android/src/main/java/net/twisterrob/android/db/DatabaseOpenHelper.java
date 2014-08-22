@@ -120,6 +120,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 				DBTools.toString(db));
 	}
 
+	@SuppressWarnings("resource")
 	private void realExecuteFile(SQLiteDatabase db, String dbSchemaFile) {
 		InputStream s = null;
 		String statement = null;
@@ -134,9 +135,14 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 				db.execSQL(statement);
 			}
 		} catch (SQLException ex) {
-			LOG.error("Error creating database from file: {} while executing\n{}", dbSchemaFile, statement, ex);
+			String message = String.format("Error creating database from file: %s while executing\n%s", dbSchemaFile,
+					statement);
+			LOG.error(message, ex);
+			throw new IllegalStateException(message, ex);
 		} catch (IOException ex) {
-			LOG.error("Error creating database from file: {}", dbSchemaFile, ex);
+			String message = String.format("Error creating database from file: %s", dbSchemaFile);
+			LOG.error(message, ex);
+			throw new IllegalStateException(message, ex);
 		} finally {
 			IOTools.ignorantClose(s, reader);
 		}

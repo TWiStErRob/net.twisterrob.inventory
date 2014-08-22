@@ -18,11 +18,12 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.PicassoWrapper;
 
-import net.twisterrob.android.utils.tools.StringTools;
 import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.utils.DriveIdDownloader.ApiClientProvider;
+import net.twisterrob.java.exceptions.StackTrace;
+import net.twisterrob.java.utils.StringTools;
 
 public class App extends Application {
 	static {
@@ -167,7 +168,7 @@ public class App extends Application {
 	}
 
 	public static void toast(String message) {
-		LOG.info("Long Toast: {}", message);
+		LOG.info("Long Toast: {}", message, new StackTrace());
 		Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
 	}
 }
