@@ -13,13 +13,16 @@ import com.google.android.gms.drive.*;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
-import net.twisterrob.inventory.android.utils.*;
-import net.twisterrob.inventory.android.utils.DriveHelper.ConnectedTask;
-import net.twisterrob.inventory.android.utils.drive.ApiClientProvider;
+import net.twisterrob.inventory.android.utils.drive.*;
+import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
+import net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils;
 import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.inventory.android.Constants.*;
-import static net.twisterrob.inventory.android.utils.DriveUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FileUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.*;
 
 public class BaseDriveActivity extends BaseActivity implements ApiClientProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDriveActivity.class);
@@ -115,7 +118,7 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 		private DriveFolder getInventoryFolder() throws IOException {
 			DriveFolder rootFolder = Drive.DriveApi.getRootFolder(client);
 
-			DriveFolder inventoryFolder = DriveUtils.getExistingFolder(client, rootFolder, DEFAULT_DRIVE_FOLDER_NAME);
+			DriveFolder inventoryFolder = FolderUtils.getExisting(client, rootFolder, DEFAULT_DRIVE_FOLDER_NAME);
 			if (inventoryFolder == null) {
 				inventoryFolder = createInventoryFolder(rootFolder);
 				createREADME(inventoryFolder);

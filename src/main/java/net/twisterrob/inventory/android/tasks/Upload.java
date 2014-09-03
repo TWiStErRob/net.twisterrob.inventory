@@ -11,10 +11,11 @@ import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.utils.DriveUtils;
-import net.twisterrob.inventory.android.utils.drive.ApiClientProvider;
+import net.twisterrob.inventory.android.utils.drive.*;
+import net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils;
 
-import static net.twisterrob.inventory.android.utils.DriveUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FileUtils.*;
 
 public class Upload extends SimpleAsyncTask<File, Void, DriveFile> {
 	private static final Logger LOG = LoggerFactory.getLogger(Upload.class);
@@ -63,7 +64,7 @@ public class Upload extends SimpleAsyncTask<File, Void, DriveFile> {
 				.setTitle(file.getName()) //
 				.build();
 		Contents fileContents = sync(Drive.DriveApi.newContents(client));
-		DriveUtils.putFileIntoContents(fileContents, file);
+		ContentsUtils.putToFile(fileContents, file);
 		return sync(folder.createFile(client, fileMeta, fileContents));
 	}
 

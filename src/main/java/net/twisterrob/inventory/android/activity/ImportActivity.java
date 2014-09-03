@@ -17,9 +17,11 @@ import static com.google.android.gms.drive.OpenFileActivityBuilder.*;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.io.csv.DatabaseCSVImporter;
-import net.twisterrob.inventory.android.utils.DriveHelper.ConnectedTask;
+import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
 
-import static net.twisterrob.inventory.android.utils.DriveUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.StatusUtils.*;
 
 public class ImportActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportActivity.class);

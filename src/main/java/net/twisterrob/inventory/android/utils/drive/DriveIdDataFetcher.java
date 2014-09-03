@@ -11,7 +11,8 @@ import com.google.android.gms.drive.*;
 
 import net.twisterrob.inventory.android.App;
 
-import static net.twisterrob.inventory.android.utils.DriveUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.StatusUtils.*;
 
 public class DriveIdDataFetcher implements DataFetcher<InputStream> {
 	private static final Logger LOG = LoggerFactory.getLogger(DriveIdDataFetcher.class);

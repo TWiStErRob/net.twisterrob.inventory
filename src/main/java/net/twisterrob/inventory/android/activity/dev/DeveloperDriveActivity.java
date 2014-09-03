@@ -15,10 +15,12 @@ import com.google.android.gms.drive.events.DriveEvent.Listener;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.activity.BaseDriveActivity;
 import net.twisterrob.inventory.android.tasks.Upload;
-import net.twisterrob.inventory.android.utils.DriveHelper.ConnectedTask;
-import net.twisterrob.inventory.android.utils.*;
+import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
+import net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils;
 
-import static net.twisterrob.inventory.android.utils.DriveUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.IdUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaBufferUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.*;
 
 public class DeveloperDriveActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(DeveloperDriveActivity.class);
@@ -37,7 +39,7 @@ public class DeveloperDriveActivity extends BaseDriveActivity {
 				LOG.trace("execute: {}", Thread.currentThread());
 
 				DriveFolder rootFolder = Drive.DriveApi.getRootFolder(client);
-				DriveUtils.dump(client, rootFolder);
+				FolderUtils.dump(client, rootFolder);
 
 				DriveFile driveFile = existingFile(client);
 				log("DriveFile: " + driveFile.getDriveId() + " res: " + driveFile.getDriveId().getResourceId());

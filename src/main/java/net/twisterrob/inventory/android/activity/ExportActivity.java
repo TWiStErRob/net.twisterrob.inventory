@@ -18,9 +18,9 @@ import static com.google.android.gms.drive.CreateFileActivityBuilder.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.io.csv.DatabaseCSVExporter;
-import net.twisterrob.inventory.android.utils.DriveHelper.ConnectedTask;
+import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
 
-import static net.twisterrob.inventory.android.utils.DriveUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.*;
 
 public class ExportActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ExportActivity.class);
