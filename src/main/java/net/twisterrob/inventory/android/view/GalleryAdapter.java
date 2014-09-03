@@ -7,13 +7,13 @@ import android.view.View;
 import android.widget.*;
 
 import com.google.android.gms.drive.DriveId;
-import com.squareup.picasso.Callback;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
+import net.twisterrob.inventory.android.utils.glide.VisibilityToggler;
 import net.twisterrob.inventory.android.view.GalleryAdapter.ViewHolder;
 import net.twisterrob.inventory.android.view.lib.ResourceCursorAdapterWithHolder;
 
@@ -70,14 +70,6 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 		Drawable fallback = ImagedDTO.getFallbackDrawable(mContext, typeImageName);
 		type.setImageDrawable(fallback);
 		type.setVisibility(View.INVISIBLE);
-		App.pic().load(imageName).placeholder(fallback).into(image, new Callback() {
-			public void onSuccess() {
-				type.setVisibility(View.VISIBLE);
-			}
-
-			public void onError() {
-				type.setVisibility(View.INVISIBLE);
-			}
-		});
+		App.pic().loadDrive(mContext, imageName, new VisibilityToggler(type)).placeholder(fallback).into(image);
 	}
 }

@@ -39,7 +39,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		holder.title.setText(getName(cursor));
 		holder.title.setLayoutParams(updateFormat(cursor, holder.title));
 
-		App.pic().loadSVG(getImageResource(cursor)).into(holder.image);
+		App.pic().loadSVG(mContext, getImageResource(cursor)).into(holder.image);
 	}
 	private CharSequence getName(Cursor cursor) {
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));

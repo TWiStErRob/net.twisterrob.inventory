@@ -86,15 +86,15 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		int raw = AndroidTools.getRawResourceID(mContext, image);
 		if (raw > 0) {
-			App.pic().loadSVG(raw).into(target);
+			App.pic().loadSVG(mContext, raw).into(target);
 			return;
 		}
 		int drawable = AndroidTools.getDrawableResourceID(mContext, image);
 		if (drawable > 0) {
-			App.pic().load(drawable).into(target);
+			App.pic().loadDrawable(mContext, drawable).into(target);
 			return;
 		}
-		App.pic().load(R.drawable.category_unknown).into(target);
+		App.pic().loadDrawable(mContext, R.drawable.category_unknown).into(target);
 	}
 	private void showItems(long categoryID) {
 		activity.startActivity(CategoryItemsActivity.show(categoryID));

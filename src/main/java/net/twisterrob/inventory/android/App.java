@@ -16,12 +16,12 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.squareup.picasso.PicassoWrapper;
 
 import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.utils.DriveIdDownloader.ApiClientProvider;
+import net.twisterrob.inventory.android.utils.drive.ApiClientProvider;
+import net.twisterrob.inventory.android.utils.glide.ImageLoaderFacade;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.StringTools;
 
@@ -39,7 +39,6 @@ public class App extends Application {
 
 	private static App s_instance;
 	private Database database;
-	private PicassoWrapper picasso;
 	private File phoneHome;
 
 	public App() {
@@ -85,7 +84,6 @@ public class App extends Application {
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		phoneHome = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		database = new Database(this);
-		picasso = new PicassoWrapper(this);
 		updateLanguage(Locale.getDefault());
 
 	}
@@ -155,8 +153,8 @@ public class App extends Application {
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
-	public static PicassoWrapper pic() {
-		return getInstance().picasso;
+	public static ImageLoaderFacade pic() {
+		return ImageLoaderFacade.getInstance();
 	}
 
 	/**

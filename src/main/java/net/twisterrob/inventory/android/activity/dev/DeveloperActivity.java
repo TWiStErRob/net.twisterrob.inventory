@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 
-import com.squareup.picasso.PicassoWrapper;
-
 import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.*;
@@ -80,7 +78,7 @@ public class DeveloperActivity extends ListActivity {
 				}), //
 				create("Clear Picasso cache", new Runnable() {
 					public void run() {
-						PicassoWrapper.clearCache(App.pic().getPicasso());
+						App.pic().clearCaches();
 					}
 				}), //
 				create("Drive Chooser", new Runnable() {

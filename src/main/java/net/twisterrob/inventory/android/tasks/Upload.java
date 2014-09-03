@@ -11,8 +11,8 @@ import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.utils.DriveIdDownloader.ApiClientProvider;
-import net.twisterrob.inventory.android.utils.*;
+import net.twisterrob.inventory.android.utils.DriveUtils;
+import net.twisterrob.inventory.android.utils.drive.ApiClientProvider;
 
 import static net.twisterrob.inventory.android.utils.DriveUtils.*;
 

@@ -159,6 +159,6 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	protected void setCurrentImageDriveId(DriveId driveId, Drawable fallback) {
 		this.driveId = driveId;
-		App.pic().load(driveId).placeholder(fallback).into(image);
+		App.pic().loadDrive(this, driveId).placeholder(fallback).into(image);
 	}
 }

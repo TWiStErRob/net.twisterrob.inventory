@@ -21,7 +21,7 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryViewFragmen
 		if (parentID == Category.INTERNAL) {
 			hideDetails();
 			getSupportActionBar().setTitle(R.string.category_list);
-			getSupportActionBar().setIcon(App.pic().getSVG(R.raw.category_unknown));
+			getSupportActionBar().setIcon(App.pic().getSVG(this, R.raw.category_unknown));
 		}
 		setFragments(CategoryViewFragment.newInstance(parentID), CategoryListFragment.newInstance(parentID));
 	}

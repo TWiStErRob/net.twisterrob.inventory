@@ -15,7 +15,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.utils.*;
 import net.twisterrob.inventory.android.utils.DriveHelper.ConnectedTask;
-import net.twisterrob.inventory.android.utils.DriveIdDownloader.ApiClientProvider;
+import net.twisterrob.inventory.android.utils.drive.ApiClientProvider;
 import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.inventory.android.Constants.*;

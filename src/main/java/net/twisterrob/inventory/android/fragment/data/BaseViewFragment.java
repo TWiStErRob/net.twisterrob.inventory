@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.*;
 import android.view.*;
@@ -71,7 +72,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			if (position == 0) {
 				view = inflater.inflate(R.layout.details_image, container, false);
 				ImageView image = (ImageView)view.findViewById(R.id.image);
-				entity.loadInto(image);
+				loadInto(image);
 			} else {
 				view = inflater.inflate(R.layout.details_description, container, false);
 				TextView details = (TextView)view.findViewById(R.id.details);
@@ -79,6 +80,11 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			}
 			container.addView(view);
 			return view;
+		}
+
+		private void loadInto(ImageView image) {
+			Drawable fallback = entity.getFallbackDrawable(image.getContext());
+			App.pic().loadDrive(BaseViewFragment.this, entity.image).placeholder(fallback).into(image);
 		}
 
 		@Override
