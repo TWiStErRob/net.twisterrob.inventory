@@ -32,7 +32,7 @@ public class ImportActivity extends BaseDriveActivity {
 
 		googleDrive.setFinishOnCancel(true);
 		googleDrive.addTaskAfterConnected(new ConnectedTask() {
-			public void execute(GoogleApiClient client) throws Exception {
+			public void execute(GoogleApiClient client) {
 				IntentSender intentSender = Drive.DriveApi.newOpenFileActivityBuilder() //
 						.setActivityStartFolder(getRoot(client)) //
 						.setMimeType(new String[]{"text/csv"}) //

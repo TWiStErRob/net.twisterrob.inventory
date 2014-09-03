@@ -34,8 +34,8 @@ public abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
 		// no op, we didn't keep any reference to data
 	}
 
-	protected void process(Cursor item) {
-		// no op
+	protected void process(@SuppressWarnings("unused") Cursor item) {
+		// no op, optional override
 	}
 
 	protected void processInvalid(Cursor item) {

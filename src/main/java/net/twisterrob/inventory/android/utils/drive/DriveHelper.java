@@ -102,7 +102,7 @@ public class DriveHelper {
 		}
 	}
 
-	public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+	public boolean onActivityResult(int requestCode, int resultCode, @SuppressWarnings("unused") Intent data) {
 		if (requestCode == resolutionReqCode) {
 			if (resultCode == Activity.RESULT_OK) {
 				LOG.trace("onActivityResult: everything ok, connecting");

@@ -3,8 +3,6 @@ package net.twisterrob.inventory.android.utils;
 import java.io.*;
 import java.util.*;
 
-import org.slf4j.*;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.*;
@@ -23,8 +21,6 @@ import net.twisterrob.java.io.IOTools;
 // TODO crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
 // TODO crop http://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
 public class PictureUtils {
-	private static final Logger LOG = LoggerFactory.getLogger(PictureUtils.class);
-
 	public static final short REQUEST_CODE_GET_PICTURE = 0x41C0;
 	public static final short REQUEST_CODE_TAKE_PICTURE = 0x41C1;
 	public static final short REQUEST_CODE_PICK_GALLERY = 0x41C2;
@@ -288,7 +284,7 @@ public class PictureUtils {
 	 * <br>
 	 * Callers should check whether the path is local before assuming it
 	 * represents a local file.
-	 * 
+	 *
 	 * @param context The context.
 	 * @param uri The Uri to query.
 	 * @see #isLocal(String)
@@ -469,26 +465,26 @@ public class PictureUtils {
 		return options;
 	}
 
-	private static Bitmap cropPictureDecodeRegion(File file, int x, int y, int w, int h) throws IOException {
-		//			int oWidth = options.outWidth;
-		//			int oHeight = options.outHeight;
-		//			int startingSize = 1;
-		//			if (w * oWidth * h * oHeight > 1920 * 1080) {
-		//				startingSize = w * oWidth * h * oHeight / (1920 * 1080) + 1;
-		//			}
-		//			options = new BitmapFactory.Options();
-		//			options.inSampleSize = startingSize;
+	//	private static Bitmap cropPictureDecodeRegion(File file, int x, int y, int w, int h) throws IOException {
+	//			int oWidth = options.outWidth;
+	//			int oHeight = options.outHeight;
+	//			int startingSize = 1;
+	//			if (w * oWidth * h * oHeight > 1920 * 1080) {
+	//				startingSize = w * oWidth * h * oHeight / (1920 * 1080) + 1;
+	//			}
+	//			options = new BitmapFactory.Options();
+	//			options.inSampleSize = startingSize;
 
-		//			for (options.inSampleSize = startingSize; options.inSampleSize <= 32; options.inSampleSize++) {
-		//				try {
-		//			return decoder.decodeRegion(new Rect((int)(l * oWidth), (int)(t * oHeight), (int)(r * oWidth),
-		//					(int)(b * oHeight)), options);
-		//				} catch (OutOfMemoryError e) {
-		//					continue; // with for loop if OutOfMemoryError occurs
-		//				}
-		//			}
-		return null;
-	}
+	//			for (options.inSampleSize = startingSize; options.inSampleSize <= 32; options.inSampleSize++) {
+	//				try {
+	//			return decoder.decodeRegion(new Rect((int)(l * oWidth), (int)(t * oHeight), (int)(r * oWidth),
+	//					(int)(b * oHeight)), options);
+	//				} catch (OutOfMemoryError e) {
+	//					continue; // with for loop if OutOfMemoryError occurs
+	//				}
+	//			}
+	//		return null;
+	//	}
 
 	public static void savePicture(Bitmap bitmap, File file, CompressFormat format, int quality)
 			throws FileNotFoundException {

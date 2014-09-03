@@ -2,8 +2,6 @@ package net.twisterrob.inventory.android.view.lib;
 
 import static java.lang.Math.*;
 
-import org.slf4j.*;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -20,7 +18,7 @@ import net.twisterrob.inventory.R;
  * @see <a href="http://adblogcat.com/a-camera-preview-with-a-bounding-box-like-google-goggles/">based on</a>
  */
 public class SelectionView extends View {
-	private static final Logger LOG = LoggerFactory.getLogger(SelectionView.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(SelectionView.class);
 
 	private static final double CORNER_SIZE_PERCENT = 0.05;
 	private static final int MAX_DISTANCE = 50;

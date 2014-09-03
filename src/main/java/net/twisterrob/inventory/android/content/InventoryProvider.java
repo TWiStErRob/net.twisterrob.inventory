@@ -39,8 +39,8 @@ public class InventoryProvider extends ContentProvider {
 	private static final int SEARCH_ITEMS = FIRST_DIR + 5;
 	private static final int SEARCH_ITEMS_SUGGEST = FIRST_DIR + 6;
 
-	private static final String URI_PATH_ID = "/#";
-	private static final String URI_PATH_ANY = "/*";
+	protected static final String URI_PATH_ID = "/#";
+	protected static final String URI_PATH_ANY = "/*";
 
 	private static final UriMatcher URI_MATCHER;
 	static {

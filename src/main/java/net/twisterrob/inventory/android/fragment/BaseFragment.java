@@ -25,6 +25,7 @@ public class BaseFragment<T> extends Fragment {
 	protected boolean hasDynResource(String type) {
 		return dynResources.containsKey(type);
 	}
+	@SuppressWarnings("unchecked")
 	protected <D> D getDynamicResource(String type) {
 		return (D)dynResources.get(type);
 	}

@@ -16,6 +16,7 @@ import com.google.android.gms.drive.Drive;
 /**
  * An AsyncTask that maintains a connected client.
  */
+@SuppressWarnings("hiding")
 public abstract class ApiClientAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 	private static final Logger LOG = LoggerFactory.getLogger(ApiClientAsyncTask.class);
 

@@ -161,7 +161,7 @@ public class Database {
 
 	public long createRoom(long propertyID, String name, long type, DriveId imageDriveID) {
 		rawInsert(R.string.query_room_create, propertyID, name, type, imageDriveID);
-		return findRoom(propertyID, name); // last_insert_rowid() doesn't work with INSTEAD OF INSERT triggers on VIEWs 
+		return findRoom(propertyID, name); // last_insert_rowid() doesn't work with INSTEAD OF INSERT triggers on VIEWs
 	}
 	public Long findRoom(long propertyID, String name) {
 		return getID(R.string.query_room_find, propertyID, name);
@@ -199,7 +199,7 @@ public class Database {
 		return rawQuery(R.string.query_search, query);
 	}
 
-	private String fixQuery(String query) {
+	private static String fixQuery(String query) {
 		if (!query.matches(".*[\\s\\*].*")) {
 			query += "*";
 		}

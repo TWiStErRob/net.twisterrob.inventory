@@ -1,8 +1,10 @@
 package net.twisterrob.inventory.android.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -51,6 +53,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		return AndroidTools.getRawResourceID(mContext, image);
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	private LayoutParams updateFormat(Cursor cursor, TextView title) {
 		int level = getLevel(cursor);
 
@@ -60,9 +63,13 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 			title.setTypeface(null, Typeface.NORMAL);
 		}
 
-		float margin = mContext.getResources().getDimension(R.dimen.margin) * (3 * level + 1);
+		int margin = (int)(mContext.getResources().getDimension(R.dimen.margin) * (3 * level + 1));
 		MarginLayoutParams marginParams = (MarginLayoutParams)title.getLayoutParams();
-		marginParams.leftMargin = (int)margin; // TODO setStartMargin
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			marginParams.leftMargin = margin;
+		} else {
+			marginParams.setMarginStart(margin);
+		}
 		return marginParams;
 	}
 

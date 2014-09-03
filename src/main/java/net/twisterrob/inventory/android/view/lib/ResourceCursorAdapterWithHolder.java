@@ -31,7 +31,9 @@ public abstract class ResourceCursorAdapterWithHolder<VH> extends ResourceCursor
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		try {
-			bindView((VH)view.getTag(), cursor, view);
+			@SuppressWarnings("unchecked")
+			VH holder = (VH)view.getTag();
+			bindView(holder, cursor, view);
 		} catch (RuntimeException ex) {
 			DatabaseUtils.dumpCurrentRow(cursor);
 			throw ex;

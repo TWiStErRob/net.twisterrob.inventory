@@ -11,7 +11,7 @@ public class InventoryDatabase {
 	private static final InventoryDatabase instance = new InventoryDatabase();
 	private static final String[] NO_PROJ = null;
 	private static final String NO_SEL = null;
-	private static final String NO_ARGS = null;
+	private static final String[] NO_ARGS = null;
 	private static final String NO_SORT = null;
 
 	private InventoryDatabase() {}
@@ -20,16 +20,20 @@ public class InventoryDatabase {
 		return instance;
 	}
 
-	public long createProperty(ContentResolver contentResolver, String name, String image) {
+	public long createProperty(ContentResolver cr, String name, String image) {
 		ContentValues cv = new ContentValues();
 		cv.put(Item.NAME, name);
 		cv.put(Item.IMAGE, image);
-		Uri result = contentResolver.insert(Item.ITEM_URI, cv);
+		Uri result = cr.insert(Item.ITEM_URI, cv);
 		return Long.parseLong(result.getLastPathSegment());
 	}
 
-	public Cursor searchItems(ContentResolver contentResolver, CharSequence query) {
+	public Cursor listProperties(ContentResolver cr) {
+		return cr.query(Item.DIR_URI, NO_PROJ, NO_SEL, NO_ARGS, NO_SORT);
+	}
+
+	public Cursor searchItems(ContentResolver cr, CharSequence query) {
 		String[] args = query != null? new String[]{query.toString()} : null;
-		return contentResolver.query(Search.URI, NO_PROJ, NO_SEL, args, NO_SORT);
+		return cr.query(Search.URI, NO_PROJ, NO_SEL, args, NO_SORT);
 	}
 }

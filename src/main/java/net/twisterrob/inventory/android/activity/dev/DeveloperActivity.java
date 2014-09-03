@@ -113,6 +113,7 @@ public class DeveloperActivity extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
+		@SuppressWarnings("unchecked")
 		Map<String, ?> x = (Map<String, ?>)l.getItemAtPosition(position);
 		Runnable action = (Runnable)x.get("action");
 		action.run();

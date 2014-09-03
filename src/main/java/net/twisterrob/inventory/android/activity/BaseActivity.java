@@ -72,10 +72,12 @@ public class BaseActivity extends ActionBarActivity {
 		}
 	}
 
-	protected <T> T getFragment(String tag) {
+	@SuppressWarnings("unchecked")
+	protected <T extends Fragment> T getFragment(String tag) {
 		return (T)getSupportFragmentManager().findFragmentByTag(tag);
 	}
-	protected <T> T getFragment(int id) {
+	@SuppressWarnings("unchecked")
+	protected <T extends Fragment> T getFragment(int id) {
 		return (T)getSupportFragmentManager().findFragmentById(id);
 	}
 
