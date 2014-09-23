@@ -1,18 +1,16 @@
-package net.twisterrob.android.view.color.swatches;
+package net.twisterrob.android.view;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.View;
 
-import net.twisterrob.android.view.color.ColorMath;
+import net.twisterrob.android.utils.algorithms.RectPacker;
+import net.twisterrob.android.utils.tools.ColorTools;
 
 /**
  * <code><pre>
- * <net.twisterrob.android.view.color.swatches.RectPackerView
+ * &lt;net.twisterrob.android.view.color.swatches.RectPackerView
  *     xmlns:android="http://schemas.android.com/apk/res/android"
  *     android:id="@+id/color"
  *     android:background="#ff888888"
@@ -23,65 +21,62 @@ import net.twisterrob.android.view.color.ColorMath;
  * </pre></code>
  */
 public class RectPackerView extends View {
-    public RectPackerView(Context context) {
-        super(context);
-        init();
-    }
+	private Paint paint = new Paint();
+	private RectPacker.Node<Integer> root;
 
-    public RectPackerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
+	public RectPackerView(Context context) {
+		super(context);
+		init();
+	}
 
-    public RectPackerView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
+	public RectPackerView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init();
+	}
 
-    RectPacker.Node<Integer> root;
+	public RectPackerView(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		init();
+	}
 
-    // https://math.stackexchange.com/questions/466198/algorithm-to-get-the-maximum-size-of-n-squares-that-fit-into-a-rectangle-with-a/
-    private void init() {
-        RectPacker<Integer> packer = new RectPacker<Integer>(new Rect(0, 0, 1000, 1200));
-        this.root = packer.root;
-        int n = 6;
-        float x = root.rect.width();
-        float y = root.rect.height();
-        float px = (float) Math.ceil(x / Math.sqrt(x * y / (float) n));
-        float py = (float) Math.ceil(y / Math.sqrt(x * y / (float) n));
-        int size = (int) Math.max(x / px, x / py);
-        for (int i = 0; i < n; ++i)
-            packer.insert(new Rect(0, 0, size, size), ColorMath.randomColor());
-    }
+	// https://math.stackexchange.com/questions/466198/algorithm-to-get-the-maximum-size-of-n-squares-that-fit-into-a-rectangle-with-a/
+	private void init() {
+		paint.setStyle(Paint.Style.STROKE);
 
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-        draw(canvas, root);
-    }
+		RectPacker<Integer> packer = new RectPacker<Integer>(new Rect(0, 0, 1000, 1200));
+		this.root = packer.root;
+		int n = 6;
+		float x = root.rect.width();
+		float y = root.rect.height();
+		float px = (float)Math.ceil(x / Math.sqrt(x * y / n));
+		float py = (float)Math.ceil(y / Math.sqrt(x * y / n));
+		int size = (int)Math.max(x / px, x / py);
+		for (int i = 0; i < n; ++i) {
+			packer.insert(new Rect(0, 0, size, size), ColorTools.randomColor());
+		}
+	}
 
-    Paint paint = new Paint();
+	@Override
+	public void draw(Canvas canvas) {
+		super.draw(canvas);
+		draw(canvas, root);
+	}
 
-    {
-        paint.setStyle(Paint.Style.STROKE);
-    }
-
-    private void draw(Canvas canvas, RectPacker.Node<Integer> root) {
-        if (root.data != null) {
-            paint.setColor(root.data);
-            paint.setStrokeWidth(10);
-            paint.setAlpha(100);
-        } else {
-            paint.setColor(Color.BLACK);
-            paint.setStrokeWidth(1);
-            paint.setAlpha(255);
-        }
-        canvas.drawRect(root.rect, paint);
-        if (root.child1 != null) {
-            draw(canvas, root.child1);
-        }
-        if (root.child2 != null) {
-            draw(canvas, root.child2);
-        }
-    }
+	private void draw(Canvas canvas, RectPacker.Node<Integer> root) {
+		if (root == null) {
+			return;
+		}
+		if (root.data != null) {
+			paint.setColor(root.data);
+			paint.setStrokeWidth(10);
+			paint.setAlpha(100);
+		} else {
+			paint.setColor(Color.BLACK);
+			paint.setStrokeWidth(1);
+			paint.setAlpha(255);
+		}
+		canvas.drawRect(root.rect, paint);
+		draw(canvas, root.child1);
+		draw(canvas, root.child2);
+	}
 }
