@@ -20,7 +20,6 @@ package net.twisterrob.android.utils.cache.lowlevel;
 import java.io.*;
 import java.security.*;
 
-import net.twisterrob.java.io.IOTools;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -32,6 +31,8 @@ import android.os.*;
 import android.support.v4.app.*;
 import android.support.v4.util.LruCache;
 import android.util.Log;
+
+import net.twisterrob.java.io.IOTools;
 
 /**
  * This class holds our bitmap caches (memory and disk).
@@ -466,10 +467,11 @@ public class ImageCache {
 	 */
 	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)
 	public static int getBitmapSize(final Bitmap bitmap) {
-		if (VERSION_CODES.HONEYCOMB_MR1 <= VERSION.SDK_INT) {
+		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1) {
+			return bitmap.getHeight() * bitmap.getRowBytes();
+		} else {
 			return bitmap.getByteCount();
 		}
-		return bitmap.getHeight() * bitmap.getRowBytes();
 	}
 
 	/**
@@ -479,10 +481,11 @@ public class ImageCache {
 	 */
 	@TargetApi(VERSION_CODES.GINGERBREAD)
 	public static boolean isExternalStorageRemovable() {
-		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
+		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
+			return true;
+		} else {
 			return Environment.isExternalStorageRemovable();
 		}
-		return true;
 	}
 
 	/**
@@ -493,26 +496,32 @@ public class ImageCache {
 	 */
 	@TargetApi(VERSION_CODES.FROYO)
 	public static File getExternalCacheDir(final Context context) {
-		if (VERSION_CODES.FROYO <= VERSION.SDK_INT) {
+		if (VERSION.SDK_INT < VERSION_CODES.FROYO) {
+			// Before Froyo we need to construct the external cache dir ourselves
+			final String cacheDir = "Android/data/" + context.getPackageName() + "/cache";
+			return new File(Environment.getExternalStorageDirectory().getPath(), cacheDir);
+		} else {
 			return context.getExternalCacheDir();
 		}
-		// Before Froyo we need to construct the external cache dir ourselves
-		final String cacheDir = "Android/data/" + context.getPackageName() + "/cache";
-		return new File(Environment.getExternalStorageDirectory().getPath(), cacheDir);
 	}
+
 	/**
 	 * Check how much usable space is available at a given path.
 	 * 
 	 * @param path The path to check
 	 * @return The space available in bytes
 	 */
-	@TargetApi(VERSION_CODES.GINGERBREAD)
+	@TargetApi(VERSION_CODES.JELLY_BEAN_MR2)
 	public static long getUsableSpace(final File path) {
-		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
+		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
+			StatFs stats = new StatFs(path.getPath());
+			return stats.getBlockSize() * stats.getAvailableBlocks();
+		} else if (VERSION.SDK_INT < VERSION_CODES.JELLY_BEAN_MR2) {
 			return path.getUsableSpace();
+		} else { // JELLY_BEAN_MR2 <= SDK_INT
+			StatFs stats = new StatFs(path.getPath());
+			return stats.getBlockSizeLong() * stats.getAvailableBlocksLong();
 		}
-		final StatFs stats = new StatFs(path.getPath());
-		return stats.getBlockSizeLong() * stats.getAvailableBlocksLong();
 	}
 
 	/**
