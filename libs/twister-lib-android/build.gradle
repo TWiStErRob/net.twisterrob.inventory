@@ -1,4 +1,4 @@
-apply plugin: 'android-library' // http://tools.android.com/tech-docs/new-build-system/user-guide
+apply plugin: 'com.android.library' // http://tools.android.com/tech-docs/new-build-system/user-guide
 apply plugin: 'android-maven'
 apply plugin: 'eclipse'
 
@@ -11,7 +11,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:0.12.1' // apply plugin: android
+		classpath 'com.android.tools.build:gradle:0.13.1' // apply plugin: android
 		classpath 'com.github.dcendents:android-maven-plugin:1.1' // for gradle install (to put aar into the repo)
 	}
 }
@@ -41,18 +41,18 @@ dependencies {
 	provided 'com.android.support:support-v4:19.1.0'
 	provided 'com.android.support:support-v13:19.1.0'
 	provided 'com.android.support:appcompat-v7:19.1.0'
-	provided 'com.google.android.gms:play-services:5.0.77'
+	provided 'com.google.android.gms:play-services:5.0.89'
 	eclipseProjects 'net.twisterrob:twister-lib-java:1.0'
 	eclipseProjects 'com.android.support:appcompat-v7:19.1.0'
-	eclipseProjects('com.google.android.gms:play-services:5.0.77') {
+	eclipseProjects('com.google.android.gms:play-services:5.0.89') {
 		exclude module:'support-v13'
 		exclude module:'support-v4'
 	}
 }
 
 android {
-	compileSdkVersion "Google Inc.:Google APIs:19"
-	buildToolsVersion "19.1"
+	compileSdkVersion 20
+	buildToolsVersion "20.0.0"
 
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_1_6
@@ -82,8 +82,8 @@ if (plugins.hasPlugin('android') || plugins.hasPlugin('android-library')) {
 		}
 
 		jdt {
-			sourceCompatibility = 1.6
-			targetCompatibility = 1.6
+			sourceCompatibility = android.compileOptions.sourceCompatibility
+			targetCompatibility = android.compileOptions.targetCompatibility
 		}
 
 		project {

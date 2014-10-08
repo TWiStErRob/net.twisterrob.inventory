@@ -1,5 +1,7 @@
 package net.twisterrob.android.utils.tools;
 
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static java.lang.Math.*;
@@ -17,7 +19,7 @@ import android.os.*;
 import android.preference.ListPreference;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.*;
-import android.util.TypedValue;
+import android.util.*;
 import android.view.*;
 import android.widget.AdapterView;
 
@@ -158,7 +160,7 @@ public abstract class AndroidTools {
 	 * canvas.drawArc(new RectF(cx - rMid, cy - rMid, cx + rMid, cy + rMid), startAngle, sweepAngle, false, paint);
 	 * </code></pre>
 	 * but supports different fill and stroke paints.
-	 * 
+	 *
 	 * @param canvas
 	 * @param cx horizontal middle point of the oval
 	 * @param cy vertical middle point of the oval
@@ -218,6 +220,7 @@ public abstract class AndroidTools {
 	/**
 	 * @see <a href="http://www.jayway.com/2012/11/28/is-androids-asynctask-executing-tasks-serially-or-concurrently/">AsyncTask ordering</a>
 	 */
+	@SafeVarargs
 	@SuppressLint("NewApi")
 	public static <Params> void executeParallel(AsyncTask<Params, ?, ?> as, Params... params) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.DONUT) {
@@ -275,6 +278,24 @@ public abstract class AndroidTools {
 		} else {
 			SearchViewCompat.setSearchableInfo(view, activity.getComponentName());
 			return view;
+		}
+	}
+
+	public static void screenshot(View view) {
+		Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+		view.draw(new Canvas(bitmap));
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		try {
+			File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+			storageDir.mkdirs();
+			File file = File.createTempFile(timeStamp, ".png", storageDir);
+			@SuppressWarnings("resource")
+			OutputStream stream = new FileOutputStream(file);
+			bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+			stream.close();
+			Log.i("SCREENSHOT", "adb pull " + file);
+		} catch (IOException e) {
+			Log.e("SCREENSHOT", "Cannot save screenshot of " + view, e);
 		}
 	}
 }
