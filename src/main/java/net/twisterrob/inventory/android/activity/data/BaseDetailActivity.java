@@ -4,8 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseDriveActivity;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 

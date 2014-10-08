@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.os.Bundle;
 import android.support.v4.app.*;
 
-import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BaseDriveActivity;
 
 public abstract class BaseEditActivity<E extends Fragment> extends BaseDriveActivity {

@@ -11,8 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import net.twisterrob.android.adapter.BaseListAdapter;
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.*;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
 import net.twisterrob.inventory.android.fragment.*;

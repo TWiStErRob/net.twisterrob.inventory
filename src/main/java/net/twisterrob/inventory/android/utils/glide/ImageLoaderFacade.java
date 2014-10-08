@@ -17,8 +17,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.caverock.androidsvg.*;
 import com.google.android.gms.drive.DriveId;
 
-import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.utils.drive.DriveIdModelLoader;
 import net.twisterrob.inventory.android.utils.svg.*;
 

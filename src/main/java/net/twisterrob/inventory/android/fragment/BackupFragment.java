@@ -5,7 +5,6 @@ import java.util.*;
 
 import android.view.MenuItem;
 
-import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.*;
 import net.twisterrob.inventory.android.content.io.csv.*;

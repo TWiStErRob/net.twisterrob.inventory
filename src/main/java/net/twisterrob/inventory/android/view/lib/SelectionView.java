@@ -12,7 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.util.*;
 import android.view.*;
 
-import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.R;
 
 /**
  * @see <a href="http://adblogcat.com/a-camera-preview-with-a-bounding-box-like-google-goggles/">based on</a>

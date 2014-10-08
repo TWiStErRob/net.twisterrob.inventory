@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import net.twisterrob.inventory.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.utils.drive.ApiClientProvider;

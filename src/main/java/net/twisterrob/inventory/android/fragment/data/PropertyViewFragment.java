@@ -4,8 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.PropertyEditActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;

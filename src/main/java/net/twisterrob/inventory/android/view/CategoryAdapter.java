@@ -8,8 +8,7 @@ import android.widget.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.CategoryAdapter.ViewHolder;

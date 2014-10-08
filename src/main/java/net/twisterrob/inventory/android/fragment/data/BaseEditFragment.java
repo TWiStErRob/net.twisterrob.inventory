@@ -16,8 +16,7 @@ import android.widget.*;
 
 import com.google.android.gms.drive.*;
 
-import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.CaptureImage;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;

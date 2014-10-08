@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.ItemEditActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;

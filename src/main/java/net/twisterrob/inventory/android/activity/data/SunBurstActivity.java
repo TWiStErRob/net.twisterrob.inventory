@@ -11,8 +11,7 @@ import android.view.*;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
-import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.lib.*;

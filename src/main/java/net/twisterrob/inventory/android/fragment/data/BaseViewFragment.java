@@ -8,7 +8,6 @@ import android.view.*;
 import android.widget.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;

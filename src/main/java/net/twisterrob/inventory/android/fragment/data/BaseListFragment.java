@@ -8,7 +8,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.*;
 import android.widget.*;
 
-import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.*;
 

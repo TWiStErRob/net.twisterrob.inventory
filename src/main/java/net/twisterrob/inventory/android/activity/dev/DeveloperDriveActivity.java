@@ -12,7 +12,7 @@ import com.google.android.gms.drive.*;
 import com.google.android.gms.drive.events.*;
 import com.google.android.gms.drive.events.DriveEvent.Listener;
 
-import net.twisterrob.inventory.R;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BaseDriveActivity;
 import net.twisterrob.inventory.android.tasks.Upload;
 import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;

@@ -2,7 +2,7 @@
 <!DOCTYPE manifest>
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="net.twisterrob.inventory"
+	package="net.twisterrob.inventory.android"
 	android:versionCode="1"
 	android:versionName="1.0">
 
@@ -21,34 +21,35 @@
 	<uses-permission android:name="android.permission.INTERNET" /> <!-- ViewServer -->
 
 	<application
-		android:name="net.twisterrob.inventory.android.App"
+		android:name=".App"
 		android:allowBackup="true"
+		android:icon="@drawable/ic_launcher"
 		android:label="@string/app_name"
 		android:theme="@style/AppTheme">
 		<meta-data
 			android:name="android.app.default_searchable"
-			android:value="net.twisterrob.inventory.android.activity.SearchResultsActivity" />
+			android:value=".activity.SearchResultsActivity" />
 		<meta-data
 			android:name="com.google.android.gms.version"
 			android:value="@integer/google_play_services_version" />
-		<activity android:name="net.twisterrob.inventory.android.activity.MainActivity">
+		<activity android:name=".activity.MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.PreferencesActivity"
+			android:name=".activity.PreferencesActivity"
 			android:label="@string/pref_activity_title" />
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.dev.PickDriveFileActivity"
+			android:name=".activity.dev.PickDriveFileActivity"
 			android:label="@string/app_name">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.MainActivity" />
+				android:value=".activity.MainActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.SearchResultsActivity"
+			android:name=".activity.SearchResultsActivity"
 			android:label="@string/action_search"
 			android:icon="@android:drawable/ic_menu_search"
 			android:launchMode="singleTop">
@@ -57,77 +58,77 @@
 			</intent-filter>
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.MainActivity" />
+				android:value=".activity.MainActivity" />
 			<meta-data
 				android:name="android.app.searchable"
 				android:resource="@xml/searchable_suggest" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.CaptureImage"
+			android:name=".activity.CaptureImage"
 			android:label="@string/action_picture_take"
 			android:screenOrientation="fullSensor" />
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.ExportActivity"
+			android:name=".activity.ExportActivity"
 			android:label="Export" />
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.ImportActivity"
+			android:name=".activity.ImportActivity"
 			android:label="Import" />
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.SunBurstActivity"
+			android:name=".activity.data.SunBurstActivity"
 			android:label="@string/sunburst_title" />
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.CategoryViewActivity"
+			android:name=".activity.data.CategoryViewActivity"
 			android:label="@string/category_details">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.MainActivity" />
+				android:value=".activity.MainActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.CategoryItemsActivity"
+			android:name=".activity.data.CategoryItemsActivity"
 			android:label="@string/category_items">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.CategoryViewActivity" />
+				android:value=".activity.CategoryViewActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.PropertyListActivity"
+			android:name=".activity.data.PropertyListActivity"
 			android:label="@string/property_list">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.MainActivity" />
+				android:value=".activity.MainActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.PropertyEditActivity"
+			android:name=".activity.data.PropertyEditActivity"
 			android:label="@string/property_edit"
 			android:windowSoftInputMode="adjustResize">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.PropertyListActivity" />
+				android:value=".activity.PropertyListActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.PropertyViewActivity"
+			android:name=".activity.data.PropertyViewActivity"
 			android:label="@string/property_details">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.PropertyListActivity" />
+				android:value=".activity.PropertyListActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.RoomEditActivity"
+			android:name=".activity.data.RoomEditActivity"
 			android:label="@string/room_edit"
 			android:windowSoftInputMode="adjustResize">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.PropertyViewActivity" />
+				android:value=".activity.PropertyViewActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.RoomViewActivity"
+			android:name=".activity.data.RoomViewActivity"
 			android:label="@string/room_details">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.PropertyViewActivity" />
+				android:value=".activity.PropertyViewActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.ItemViewActivity"
+			android:name=".activity.data.ItemViewActivity"
 			android:label="@string/item_details">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -136,19 +137,19 @@
 			</intent-filter>
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.RoomViewActivity" />
+				android:value=".activity.RoomViewActivity" />
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.data.ItemEditActivity"
+			android:name=".activity.data.ItemEditActivity"
 			android:label="@string/item_edit"
 			android:windowSoftInputMode="adjustResize">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="net.twisterrob.inventory.android.activity.ItemViewActivity" />
+				android:value=".activity.ItemViewActivity" />
 		</activity>
 
 		<provider
-			android:name="net.twisterrob.inventory.android.content.InventoryProvider"
+			android:name=".content.InventoryProvider"
 			android:authorities="net.twisterrob.inventory"
 			android:exported="true"
 			android:grantUriPermissions="true"
@@ -157,16 +158,16 @@
 
 		<!-- Developer Activities -->
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.dev.DeveloperActivity"
+			android:name=".activity.dev.DeveloperActivity"
 			android:label="@string/dev_title"
 			android:theme="@android:style/Theme">
-			<intent-filter>
+<!--			<intent-filter> -->
 <!-- 				<action android:name="android.intent.action.MAIN" /> -->
 <!-- 				<category android:name="android.intent.category.LAUNCHER" /> -->
-			</intent-filter>
+<!--			</intent-filter> -->
 		</activity>
 		<activity
-			android:name="net.twisterrob.inventory.android.activity.dev.DeveloperDriveActivity"
+			android:name=".activity.dev.DeveloperDriveActivity"
 			android:label="@string/dev_title">
 		</activity>
 

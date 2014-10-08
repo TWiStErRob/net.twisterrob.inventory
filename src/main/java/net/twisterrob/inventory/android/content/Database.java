@@ -13,7 +13,6 @@ import com.google.android.gms.drive.DriveId;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.R;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.contract.Category;

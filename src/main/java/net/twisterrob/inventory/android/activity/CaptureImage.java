@@ -19,8 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.utils.PictureUtils;
 import net.twisterrob.inventory.android.view.lib.*;
 import net.twisterrob.inventory.android.view.lib.SelectionView.SelectionStatus;

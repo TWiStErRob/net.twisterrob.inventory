@@ -6,8 +6,7 @@ import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-import net.twisterrob.inventory.R;
-
+import net.twisterrob.inventory.android.R;
 public class DefaultValueUpdater implements OnItemSelectedListener {
 	private static final int INVALID = -1;
 

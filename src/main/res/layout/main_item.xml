@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE layout>
+<net.twisterrob.inventory.android.view.lib.SquareRelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@id/adapterRoot"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<TextView
+		android:id="@id/title"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal"
+		android:layout_alignParentBottom="true"
+		android:text="@string/empty" />
+	<ImageView
+		android:id="@id/icon"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_above="@id/title"
+		android:padding="@dimen/margin" />
+</net.twisterrob.inventory.android.view.lib.SquareRelativeLayout>

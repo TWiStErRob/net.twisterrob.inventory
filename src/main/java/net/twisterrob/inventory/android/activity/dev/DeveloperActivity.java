@@ -10,8 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 
-import net.twisterrob.inventory.R;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.*;
 import net.twisterrob.inventory.android.activity.data.*;
 
