@@ -42,7 +42,7 @@ public final class CollectionTools {
 
 	/**
 	 * Returns a set backed by {@code map}.
-	 * 
+	 *
 	 * @throws IllegalArgumentException if the map is not empty
 	 * @since 1.6
 	 */
@@ -185,6 +185,7 @@ public final class CollectionTools {
 		return elem;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T> T tryGetLastJava(LinkedHashSet<T> set) {
 		T elem = null;
 		try {
@@ -217,6 +218,7 @@ public final class CollectionTools {
 		return elem;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T> T tryGetLastAndroid(LinkedHashSet<T> set) {
 		T elem = null;
 		try { // android
