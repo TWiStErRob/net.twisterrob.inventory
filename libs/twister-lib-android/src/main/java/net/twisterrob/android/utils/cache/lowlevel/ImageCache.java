@@ -25,8 +25,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
+import android.os.Build.*;
 import android.os.*;
 import android.support.v4.app.*;
 import android.support.v4.util.LruCache;
@@ -66,7 +65,7 @@ public class ImageCache {
 
 	/**
 	 * Creating a new ImageCache object using the specified parameters.
-	 * 
+	 *
 	 * @param cacheParams The cache parameters to use to initialize the cache
 	 */
 	public ImageCache(final ImageCacheParams cacheParams) {
@@ -75,7 +74,7 @@ public class ImageCache {
 
 	/**
 	 * Creating a new ImageCache object using the default parameters.
-	 * 
+	 *
 	 * @param context The context to use
 	 * @param uniqueName A unique name that will be appended to the cache directory
 	 */
@@ -86,12 +85,12 @@ public class ImageCache {
 	/**
 	 * Find and return an existing ImageCache stored in a {@link RetainFragment}, if not found a new one is created
 	 * using the supplied params and saved to a {@link RetainFragment}.
-	 * 
+	 *
 	 * @param fragmentManager The fragment manager to use when dealing with the retained fragment.
 	 * @param cacheParams The cache parameters to use if creating the ImageCache
 	 * @return An existing retained ImageCache object or a new one if one did not exist
 	 */
-	public static ImageCache findOrCreateCache(final FragmentManager fragmentManager, final ImageCacheParams cacheParams) {
+	public static ImageCache findOrCreateCache(FragmentManager fragmentManager, ImageCacheParams cacheParams) {
 
 		// Search for, or create an instance of the non-UI RetainFragment
 		final RetainFragment mRetainFragment = ImageCache.findOrCreateRetainFragment(fragmentManager);
@@ -110,7 +109,7 @@ public class ImageCache {
 
 	/**
 	 * Initialize the cache, providing all parameters.
-	 * 
+	 *
 	 * @param cacheParams The cache parameters to initialize the cache
 	 */
 	private void init(final ImageCacheParams cacheParams) {
@@ -174,7 +173,7 @@ public class ImageCache {
 
 	/**
 	 * Adds a bitmap to both memory and disk cache.
-	 * 
+	 *
 	 * @param data Unique identifier for the bitmap to store
 	 * @param bitmap The bitmap to store
 	 */
@@ -237,7 +236,7 @@ public class ImageCache {
 	}
 	/**
 	 * Get from memory cache.
-	 * 
+	 *
 	 * @param data Unique identifier for which item to get
 	 * @return The bitmap if found in cache, null otherwise
 	 */
@@ -256,7 +255,7 @@ public class ImageCache {
 
 	/**
 	 * Get from disk cache.
-	 * 
+	 *
 	 * @param data Unique identifier for which item to get
 	 * @return The bitmap if found in cache, null otherwise
 	 */
@@ -396,7 +395,7 @@ public class ImageCache {
 		 * percent is < 0.05 or > .8. This value should be chosen carefully based on a number of factors Refer to the
 		 * corresponding Android Training class for more discussion:
 		 * http://developer.android.com/training/displaying-bitmaps/
-		 * 
+		 *
 		 * @param context Context to use to fetch memory class
 		 * @param percent Percent of memory class to use to size memory cache
 		 */
@@ -415,7 +414,7 @@ public class ImageCache {
 
 	/**
 	 * Get a usable cache directory (external if available, internal otherwise).
-	 * 
+	 *
 	 * @param context The context to use
 	 * @param uniqueName A unique directory name to append to the cache dir
 	 * @return The cache dir
@@ -425,8 +424,8 @@ public class ImageCache {
 		// otherwise use internal cache dir
 		boolean externalOK = Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
 				|| !ImageCache.isExternalStorageRemovable();
-		final String cachePath = externalOK? ImageCache.getExternalCacheDir(context).getPath() : context.getCacheDir()
-				.getPath();
+		final String cachePath =
+				externalOK? ImageCache.getExternalCacheDir(context).getPath() : context.getCacheDir().getPath();
 
 		return new File(cachePath + File.separator + uniqueName);
 	}
@@ -461,7 +460,7 @@ public class ImageCache {
 
 	/**
 	 * Get the size in bytes of a bitmap.
-	 * 
+	 *
 	 * @param bitmap
 	 * @return size in bytes
 	 */
@@ -476,7 +475,7 @@ public class ImageCache {
 
 	/**
 	 * Check if external storage is built-in or removable.
-	 * 
+	 *
 	 * @return True if external storage is removable (like an SD card), false otherwise.
 	 */
 	@TargetApi(VERSION_CODES.GINGERBREAD)
@@ -490,7 +489,7 @@ public class ImageCache {
 
 	/**
 	 * Get the external app cache directory.
-	 * 
+	 *
 	 * @param context The context to use
 	 * @return The external cache dir
 	 */
@@ -507,7 +506,7 @@ public class ImageCache {
 
 	/**
 	 * Check how much usable space is available at a given path.
-	 * 
+	 *
 	 * @param path The path to check
 	 * @return The space available in bytes
 	 */
@@ -526,7 +525,7 @@ public class ImageCache {
 
 	/**
 	 * Locate an existing instance of this Fragment or if not found, create and add it using FragmentManager.
-	 * 
+	 *
 	 * @param fm The FragmentManager manager to use.
 	 * @return The existing instance of the Fragment or the new instance if just created.
 	 */
@@ -550,10 +549,9 @@ public class ImageCache {
 	public static class RetainFragment extends Fragment {
 		private Object mObject;
 
-		/**
-		 * Empty constructor as per the Fragment documentation
-		 */
-		public RetainFragment() {}
+		public RetainFragment() {
+			// Empty constructor as per the Fragment documentation
+		}
 
 		@Override
 		public void onCreate(final Bundle savedInstanceState) {
@@ -565,7 +563,7 @@ public class ImageCache {
 
 		/**
 		 * Store a single object in this Fragment.
-		 * 
+		 *
 		 * @param object The object to store
 		 */
 		public void setObject(final Object object) {
@@ -574,12 +572,11 @@ public class ImageCache {
 
 		/**
 		 * Get the stored object.
-		 * 
+		 *
 		 * @return The stored object
 		 */
 		public Object getObject() {
 			return mObject;
 		}
 	}
-
 }

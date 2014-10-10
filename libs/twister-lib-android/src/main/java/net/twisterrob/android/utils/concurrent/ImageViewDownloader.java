@@ -1,10 +1,11 @@
 package net.twisterrob.android.utils.concurrent;
 
-import net.twisterrob.android.utils.log.*;
-import net.twisterrob.android.utils.tools.IOTools;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
+
+import net.twisterrob.android.utils.log.*;
+import net.twisterrob.android.utils.tools.IOTools;
 
 public class ImageViewDownloader extends AsyncTask<String, Void, Bitmap> {
 	private static final Log LOG = LogFactory.getLog(Tag.IO);

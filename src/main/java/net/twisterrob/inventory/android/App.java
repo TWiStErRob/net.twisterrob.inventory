@@ -51,25 +51,24 @@ public class App extends Application {
 
 	@SuppressLint("NewApi")
 	private static void setStrictMode() {
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
-				//.detectDiskReads() //
-				.detectDiskWrites() //
-				.detectNetwork() //
-				.penaltyDeathOnNetwork() //
-				.detectCustomSlowCalls() //
-				.penaltyLog() //
-				.penaltyDialog() //
-				.penaltyDropBox() //
-				.penaltyFlashScreen() //
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+				//.detectDiskReads()
+				.detectDiskWrites()
+				.detectNetwork()
+				.penaltyDeathOnNetwork()
+				.detectCustomSlowCalls()
+				.penaltyLog()
+				.penaltyDialog()
+				.penaltyDropBox()
+				.penaltyFlashScreen()
 				.build());
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder() //
-				//.detectActivityLeaks() //
-				.detectFileUriExposure() //
-				.detectLeakedClosableObjects() //
-				.detectLeakedRegistrationObjects() //
-				.detectLeakedSqlLiteObjects() //
-				.penaltyLog() //
-				//.penaltyDeath() //
+		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+				//.detectActivityLeaks()
+				.detectFileUriExposure()
+				.detectLeakedClosableObjects()
+				.detectLeakedRegistrationObjects()
+				.detectLeakedSqlLiteObjects()
+				.penaltyLog() //.penaltyDeath()
 				.build());
 	}
 
@@ -84,7 +83,6 @@ public class App extends Application {
 		phoneHome = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		database = new Database(this);
 		updateLanguage(Locale.getDefault());
-
 	}
 
 	@Override

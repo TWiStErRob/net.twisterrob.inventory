@@ -1,11 +1,12 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.*;
 import android.view.*;
 import android.widget.*;
+
+import static android.content.Context.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
@@ -65,8 +66,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			LayoutInflater inflater = (LayoutInflater)container.getContext().getSystemService(
-					Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater)container.getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 			View view;
 			if (position == 0) {
 				view = inflater.inflate(R.layout.details_image, container, false);

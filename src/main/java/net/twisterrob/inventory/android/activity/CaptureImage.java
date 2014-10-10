@@ -7,10 +7,8 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
-import android.hardware.*;
-import android.hardware.Camera.AutoFocusCallback;
-import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera;
+import android.hardware.Camera.*;
 import android.net.Uri;
 import android.os.*;
 import android.provider.MediaStore;
@@ -95,7 +93,6 @@ public class CaptureImage extends BaseActivity {
 					});
 				}
 			}
-
 		});
 	}
 	protected void doSave(byte[] data) {
@@ -141,7 +138,6 @@ public class CaptureImage extends BaseActivity {
 		} else {
 			mSelection.setSelectionStatus(SelectionStatus.BLURRY);
 		}
-
 	}
 	@SuppressWarnings("resource")
 	private File save(byte[] data) {

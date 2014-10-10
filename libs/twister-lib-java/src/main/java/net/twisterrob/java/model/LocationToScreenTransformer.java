@@ -13,7 +13,7 @@ public class LocationToScreenTransformer {
 
 	public LocationToScreenTransformer(Iterable<Location> universe) {
 		reset();
-		for (Location loc: universe) {
+		for (Location loc : universe) {
 			double lat = loc.getLatitude();
 			double lon = loc.getLongitude();
 			if (lat < minLat) {

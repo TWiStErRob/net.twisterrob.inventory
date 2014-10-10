@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources>
 <resources>
 	<item type="id" name="activityRoot" />
 	<item type="id" name="fragmentRoot" />
@@ -7,7 +6,7 @@
 	<item type="id" name="editor" />
 	<item type="id" name="details" />
 	<item type="id" name="children" />
-	
+
 	<item type="id" name="title" />
 	<item type="id" name="image" />
 	<item type="id" name="type" />
@@ -16,10 +15,10 @@
 
 	<item type="id" name="properties" />
 	<item type="id" name="property" />
-	
+
 	<item type="id" name="rooms" />
 	<item type="id" name="room" />
-	
+
 	<item type="id" name="items" />
 	<item type="id" name="item" />
 

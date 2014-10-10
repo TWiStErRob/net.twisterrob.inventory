@@ -50,7 +50,7 @@ import android.util.Log;
  * 	<tr><td>WARN</td><td>{@link Log#WARN}</td></tr>
  * 	<tr><td>ERROR</td><td>{@link Log#ERROR}</td></tr>
  * </table>
- * 
+ *
  * Note: this class has been modified to incorporate the 1.7.x features, like varargs and throwable as last argument.
  *
  * @author Thorsten M&ouml;ller

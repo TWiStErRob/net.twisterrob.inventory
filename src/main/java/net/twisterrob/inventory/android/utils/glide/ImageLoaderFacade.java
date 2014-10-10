@@ -75,22 +75,23 @@ public class ImageLoaderFacade {
 		MultiRequestListener<Integer, PictureDrawable> listener = new MultiRequestListener<Integer, PictureDrawable>(
 				new LoggingListener<Integer, PictureDrawable>("SVG"),
 				new SoftwareLayerSetter<Integer, PictureDrawable>());
-		return Glide.with(context).using(Glide.buildStreamModelLoader(Integer.class, context), InputStream.class) //
-				.load(rawResourceId) //
-				.as(SVG.class) //
-				.transcode(new SvgDrawableTranscoder(), PictureDrawable.class) //
-				.diskCacheStrategy(DiskCacheStrategy.NONE) //
-				// SVG cannot be serialized so it's not worth to cache it
-				// and the getResources() should be fast enough when acquiring the InputStream
-				.decoder(new SvgDecoder()) //
-				.cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder())) // not used
-				.sourceEncoder(NullEncoder.<InputStream> get()) // not used
-				.encoder(NullResourceEncoder.<SVG> get()) // not used
-				.placeholder(R.drawable.image_loading) //
-				.error(R.drawable.image_error) //
-				.animate(android.R.anim.fade_in) //
-				.listener(listener) //
-		;
+		// SVG cannot be serialized so it's not worth to cache it
+		// and the getResources() should be fast enough when acquiring the InputStream
+		return Glide.with(context)
+		            .using(Glide.buildStreamModelLoader(Integer.class, context), InputStream.class)
+		            .load(rawResourceId)
+		            .as(SVG.class)
+		            .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
+		            .diskCacheStrategy(DiskCacheStrategy.NONE)
+		            .decoder(new SvgDecoder())
+		            .cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder()) /* not used */)
+		            .sourceEncoder(NullEncoder.<InputStream>get() /* not used */)
+		            .encoder(NullResourceEncoder.<SVG>get() /* not used */)
+		            .placeholder(R.drawable.image_loading)
+		            .error(R.drawable.image_error)
+		            .animate(android.R.anim.fade_in)
+		            .listener(listener)
+				;
 	}
 
 	public Drawable getSVG(Context context, int rawResourceId) {

@@ -41,7 +41,7 @@ import net.twisterrob.android.R;
  * <p>This class can be used to load {@link android.widget.Adapter adapters} defined in
  * XML resources. XML-defined adapters can be used to easily create adapters in your
  * own application or to pass adapters to other processes.</p>
- * 
+ *
  * <h2>Types of adapters</h2>
  * <p>Adapters defined using XML resources can only be one of the following supported
  * types. Arbitrary adapters are not supported to guarantee the safety of the loaded
@@ -51,7 +51,7 @@ import net.twisterrob.android.R;
  *  to display the content of a cursor, most often coming from a content provider</li>
  * </ul>
  * <p>The complete XML format definition of each adapter type is available below.</p>
- * 
+ *
  * <a name="xml-cursor-adapter"></a>
  * <h2>Cursor adapter</h2>
  * <p>A cursor adapter XML definition starts with the
@@ -61,7 +61,7 @@ import net.twisterrob.android.R;
  *  <li><a href="#xml-cursor-adapter-select-tag"><code>&lt;select /&gt;</code></a></li>
  *  <li><a href="#xml-cursor-adapter-bind-tag"><code>&lt;bind /&gt;</code></a></li>
  * </ul>
- * 
+ *
  * <a name="xml-cursor-adapter-tag"></a>
  * <h3>&lt;cursor-adapter /&gt;</h3>
  * <p>The <code>&lt;cursor-adapter /&gt;</code> element defines the beginning of the
@@ -87,7 +87,7 @@ import net.twisterrob.android.R;
  * <a href="#xml-cursor-adapter-select-tag"><code>&lt;select /&gt;</code></a> and
  * <a href="#xml-cursor-adapter-bind-tag"><code>&lt;bind /&gt;</code></a> tags as children
  * of <code>&lt;cursor-adapter /&gt;</code>.</p>
- * 
+ *
  * <a name="xml-cursor-adapter-select-tag"></a>
  * <h3>&lt;select /&gt;</h3>
  * <p>The <code>&lt;select /&gt;</code> tag is used to select columns from the cursor
@@ -103,7 +103,7 @@ import net.twisterrob.android.R;
  * </ul>
  * <p><strong>Note:</strong> The column named <code>_id</code> is always implicitly
  * selected.</p>
- * 
+ *
  * <a name="xml-cursor-adapter-bind-tag"></a>
  * <h3>&lt;bind /&gt;</h3>
  * <p>The <code>&lt;bind /&gt;</code> tag is used to bind a column from the cursor to
@@ -111,14 +111,14 @@ import net.twisterrob.android.R;
  * during the query and a matching
  * <a href="#xml-cursor-adapter-select-tag"><code>&lt;select /&gt;</code> tag is therefore
  * not required.</p>
- * 
+ *
  * <p>Each binding is declared as a one to one matching but
  * custom binder classes or special
  * <a href="#xml-cursor-adapter-bind-data-transformation">data transformations</a> can
  * allow you to bind several columns to a single view. In this case you must use the
  * <a href="#xml-cursor-adapter-select-tag"><code>&lt;select /&gt;</code> tag to make
  * sure any required column is part of the query.</p>
- * 
+ *
  * <p>The <code>&lt;bind /&gt;</code> tag supports the following attributes:</p>
  * <ul>
  *  <li><code>android:from</code>: The name of the column to bind from.
@@ -128,7 +128,7 @@ import net.twisterrob.android.R;
  *  <li><code>android:as</code>: The <a href="#xml-cursor-adapter-bind-data-types">data type</a>
  *  of the binding. This attribute is mandatory.</li>
  * </ul>
- * 
+ *
  * <p>In addition, a <code>&lt;bind /&gt;</code> can contain zero or more instances of
  * <a href="#xml-cursor-adapter-bind-data-transformation">data transformations</a> children
  * tags.</p>
@@ -155,7 +155,7 @@ import net.twisterrob.android.R;
  *  {@link android.content.Context#isRestricted() restricted contexts}, for instance in an
  *  application widget</li>
  * </ul>
- * 
+ *
  * <a name="xml-cursor-adapter-bind-transformation"></a>
  * <h4>Binding transformations</h4>
  * <p>When defining a data binding you can specify an optional transformation by using one
@@ -169,7 +169,7 @@ import net.twisterrob.android.R;
  * <p>While several <code>&lt;map /&gt;</code> tags can be used at the same time, you cannot
  * mix <code>&lt;map /&gt;</code> and <code>&lt;transform /&gt;</code> tags. If several
  * <code>&lt;transform /&gt;</code> tags are specified, only the last one is retained.</p>
- * 
+ *
  * <a name="xml-cursor-adapter-bind-transformation-map" />
  * <p><strong>&lt;map /&gt;</strong></p>
  * <p>A map element simply specifies a value to match from and a value to match to. When
@@ -181,7 +181,7 @@ import net.twisterrob.android.R;
  *  or a resource identifier. This value is interpreted as a resource identifier when the
  *  data binding is of type <code>drawable</code>. This attribute is mandatory</li>
  * </ul>
- * 
+ *
  * <a name="xml-cursor-adapter-bind-transformation-transform"></a>
  * <p><strong>&lt;transform /&gt;</strong></p>
  * <p>A simple transform that occurs either by calling a specified class or by performing
@@ -201,13 +201,13 @@ import net.twisterrob.android.R;
  *  an app widget This attribute is mandatory if <code>android:withExpression</code> is
  *  not specified</li>
  * </ul>
- * 
+ *
  * <h3>Example</h3>
  * <p>The following example defines a cursor adapter that queries all the contacts with
  * a phone number using the contacts content provider. Each contact is displayed with
  * its display name, its favorite status and its photo. To display photos, a custom data
  * binder is declared:</p>
- * 
+ *
  * <pre class="prettyprint">
  * &lt;cursor-adapter xmlns:android="http://schemas.android.com/apk/res/android"
  *     android:uri="content://com.android.contacts/contacts"
@@ -224,7 +224,7 @@ import net.twisterrob.android.R;
  *
  * &lt;/cursor-adapter&gt;
  * </pre>
- * 
+ *
  * <h3>Related APIs</h3>
  * <ul>
  *  <li>{@link Adapters#loadAdapter(android.content.Context, int, Object[])}</li>
@@ -234,10 +234,10 @@ import net.twisterrob.android.R;
  *  <li>{@link Adapters.CursorTransformation}</li>
  *  <li>{@link android.widget.CursorAdapter}</li>
  * </ul>
- * 
+ *
  * @see android.widget.Adapter
  * @see android.content.ContentProvider
- * 
+ *
  * attr ref android.R.styleable#CursorAdapter_layout
  * attr ref android.R.styleable#CursorAdapter_selection
  * attr ref android.R.styleable#CursorAdapter_sortOrder
@@ -258,15 +258,15 @@ public class Adapters {
 	 * <p>Interface used to bind a {@link android.database.Cursor} column to a View. This
 	 * interface can be used to provide bindings for data types not supported by the
 	 * standard implementation of {@link Adapters}.</p>
-	 * 
+	 *
 	 * <p>A binder is provided with a cursor transformation which may or may not be used
 	 * to transform the value retrieved from the cursor. The transformation is guaranteed
 	 * to never be null so it's always safe to apply the transformation.</p>
-	 * 
+	 *
 	 * <p>The binder is associated with a Context but can be re-used with multiple cursors.
 	 * As such, the implementation should make no assumption about the Cursor in use.</p>
 	 *
-	 * @see android.view.View 
+	 * @see android.view.View
 	 * @see android.database.Cursor
 	 * @see Adapters.CursorTransformation
 	 */
@@ -280,14 +280,14 @@ public class Adapters {
 		 * <p>The transformation associated with this binder. This transformation is never
 		 * null and may or may not be applied to the Cursor data during the
 		 * {@link #bind(android.view.View, android.database.Cursor, int)} operation.</p>
-		 * 
-		 * @see #bind(android.view.View, android.database.Cursor, int) 
+		 *
+		 * @see #bind(android.view.View, android.database.Cursor, int)
 		 */
 		protected final CursorTransformation mTransformation;
 
 		/**
-		 * <p>Creates a new Cursor binder.</p> 
-		 * 
+		 * <p>Creates a new Cursor binder.</p>
+		 *
 		 * @param context The context associated with this binder.
 		 * @param transformation The transformation associated with this binder. This
 		 *        transformation may or may not be applied by the binder and is guaranteed
@@ -303,13 +303,13 @@ public class Adapters {
 		 * can query other Cursor columns as needed. During the binding operation, values
 		 * retrieved from the Cursor may or may not be transformed using this binder's
 		 * cursor transformation.</p>
-		 * 
+		 *
 		 * @param view The view to bind data to.
 		 * @param cursor The cursor to bind data from.
 		 * @param columnIndex The column index in the cursor where the data to bind resides.
-		 * 
+		 *
 		 * @see #mTransformation
-		 * 
+		 *
 		 * @return True if the column was successfully bound to the View, false otherwise.
 		 */
 		public abstract boolean bind(View view, Cursor cursor, int columnIndex);
@@ -318,11 +318,11 @@ public class Adapters {
 	/**
 	 * <p>Interface used to transform data coming out of a {@link android.database.Cursor}
 	 * before it is bound to a {@link android.view.View}.</p>
-	 * 
+	 *
 	 * <p>Transformations are used to transform text-based data (in the form of a String),
 	 * or to transform data into a resource identifier. A default implementation is provided
 	 * to generate resource identifiers.</p>
-	 * 
+	 *
 	 * @see android.database.Cursor
 	 * @see Adapters.CursorBinder
 	 */
@@ -334,7 +334,7 @@ public class Adapters {
 
 		/**
 		 * <p>Creates a new Cursor transformation.</p>
-		 * 
+		 *
 		 * @param context The context associated with this transformation.
 		 */
 		public CursorTransformation(Context context) {
@@ -347,10 +347,10 @@ public class Adapters {
 		 * as the identity transformation) or manipulate the content. For instance,
 		 * a transformation can perform text substitutions or concatenate other
 		 * columns with the specified column.</p>
-		 * 
-		 * @param cursor The cursor that contains the data to transform. 
+		 *
+		 * @param cursor The cursor that contains the data to transform.
 		 * @param columnIndex The index of the column to transform.
-		 * 
+		 *
 		 * @return A String containing the transformed value of the column.
 		 */
 		public abstract String transform(Cursor cursor, int columnIndex);
@@ -359,10 +359,10 @@ public class Adapters {
 		 * <p>Transforms the specified Cursor column into a resource identifier.
 		 * The default implementation simply interprets the content of the column
 		 * as an integer.</p>
-		 * 
-		 * @param cursor The cursor that contains the data to transform. 
+		 *
+		 * @param cursor The cursor that contains the data to transform.
 		 * @param columnIndex The index of the column to transform.
-		 * 
+		 *
 		 * @return A resource identifier.
 		 */
 		public int transformToResource(Cursor cursor, int columnIndex) {
@@ -374,26 +374,26 @@ public class Adapters {
 	 * <p>Loads the {@link android.widget.CursorAdapter} defined in the specified
 	 * XML resource. The content of the adapter is loaded from the content provider
 	 * identified by the supplied URI.</p>
-	 * 
+	 *
 	 * <p><strong>Note:</strong> If the supplied {@link android.content.Context} is
 	 * an {@link android.app.Activity}, the cursor returned by the content provider
 	 * will be automatically managed. Otherwise, you are responsible for managing the
 	 * cursor yourself.</p>
-	 * 
+	 *
 	 * <p>The format of the XML definition of the cursor adapter is documented at
 	 * the top of this page.</p>
-	 * 
+	 *
 	 * @param context The context to load the XML resource from.
 	 * @param id The identifier of the XML resource declaring the adapter.
 	 * @param uri The URI of the content provider.
 	 * @param parameters Optional parameters to pass to the CursorAdapter, used
 	 *        to substitute values in the selection expression.
-	 * 
+	 *
 	 * @return A {@link android.widget.CursorAdapter}
-	 * 
+	 *
 	 * @throws IllegalArgumentException If the XML resource does not contain
 	 *         a valid &lt;cursor-adapter /&gt; definition.
-	 * 
+	 *
 	 * @see android.content.ContentProvider
 	 * @see android.widget.CursorAdapter
 	 * @see #loadAdapter(android.content.Context, int, Object[])
@@ -414,21 +414,21 @@ public class Adapters {
 	 * <p>Loads the {@link android.widget.CursorAdapter} defined in the specified
 	 * XML resource. The content of the adapter is loaded from the specified cursor.
 	 * You are responsible for managing the supplied cursor.</p>
-	 * 
+	 *
 	 * <p>The format of the XML definition of the cursor adapter is documented at
 	 * the top of this page.</p>
-	 * 
+	 *
 	 * @param context The context to load the XML resource from.
 	 * @param id The identifier of the XML resource declaring the adapter.
 	 * @param cursor The cursor containing the data for the adapter.
 	 * @param parameters Optional parameters to pass to the CursorAdapter, used
 	 *        to substitute values in the selection expression.
-	 * 
+	 *
 	 * @return A {@link android.widget.CursorAdapter}
-	 * 
+	 *
 	 * @throws IllegalArgumentException If the XML resource does not contain
 	 *         a valid &lt;cursor-adapter /&gt; definition.
-	 * 
+	 *
 	 * @see android.content.ContentProvider
 	 * @see android.widget.CursorAdapter
 	 * @see android.database.Cursor
@@ -449,18 +449,18 @@ public class Adapters {
 	 * <p>Loads the adapter defined in the specified XML resource. The XML definition of
 	 * the adapter must follow the format definition of one of the supported adapter
 	 * types described at the top of this page.</p>
-	 * 
+	 *
 	 * <p><strong>Note:</strong> If the loaded adapter is a {@link android.widget.CursorAdapter}
 	 * and the supplied {@link android.content.Context} is an {@link android.app.Activity},
 	 * the cursor returned by the content provider will be automatically managed. Otherwise,
 	 * you are responsible for managing the cursor yourself.</p>
-	 * 
+	 *
 	 * @param context The context to load the XML resource from.
 	 * @param id The identifier of the XML resource declaring the adapter.
 	 * @param parameters Optional parameters to pass to the adapter.
-	 *  
+	 *
 	 * @return An adapter instance.
-	 * 
+	 *
 	 * @see #loadCursorAdapter(android.content.Context, int, android.database.Cursor, Object[])
 	 * @see #loadCursorAdapter(android.content.Context, int, String, Object[])
 	 */
@@ -476,13 +476,13 @@ public class Adapters {
 	 * Loads an adapter from the specified XML resource. The optional assertName can
 	 * be used to exit early if the adapter defined in the XML resource is not of the
 	 * expected type.
-	 * 
+	 *
 	 * @param context The context to associate with the adapter.
 	 * @param id The resource id of the XML document defining the adapter.
 	 * @param assertName The mandatory name of the adapter in the XML document.
 	 *        Ignored if null.
 	 * @param parameters Optional parameters passed to the adapter.
-	 * 
+	 *
 	 * @return An instance of {@link android.widget.BaseAdapter}.
 	 */
 	private static BaseAdapter loadAdapter(Context context, int id, String assertName, Object... parameters) {
@@ -492,13 +492,13 @@ public class Adapters {
 			parser = context.getResources().getXml(id);
 			return createAdapterFromXml(context, parser, Xml.asAttributeSet(parser), id, parameters, assertName);
 		} catch (XmlPullParserException ex) {
-			Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load adapter resource ID "
-					+ context.getResources().getResourceEntryName(id));
+			Resources.NotFoundException rnf = new Resources.NotFoundException(
+					"Can't load adapter resource ID " + context.getResources().getResourceEntryName(id));
 			rnf.initCause(ex);
 			throw rnf;
 		} catch (IOException ex) {
-			Resources.NotFoundException rnf = new Resources.NotFoundException("Can't load adapter resource ID "
-					+ context.getResources().getResourceEntryName(id));
+			Resources.NotFoundException rnf = new Resources.NotFoundException(
+					"Can't load adapter resource ID " + context.getResources().getResourceEntryName(id));
 			rnf.initCause(ex);
 			throw rnf;
 		} finally {
@@ -512,7 +512,7 @@ public class Adapters {
 	 * Generates an adapter using the specified XML parser. This method is responsible
 	 * for choosing the type of the adapter to create based on the content of the
 	 * XML parser.
-	 * 
+	 *
 	 * This method will generate an {@link IllegalArgumentException} if
 	 * <code>assertName</code> is not null and does not match the root tag of the XML
 	 * document.
@@ -535,20 +535,19 @@ public class Adapters {
 
 			String name = parser.getName();
 			if (assertName != null && !assertName.equals(name)) {
-				throw new IllegalArgumentException("The adapter defined in "
-						+ c.getResources().getResourceEntryName(id) + " must be a <" + assertName + " />");
+				throw new IllegalArgumentException("The adapter defined in " + c.getResources().getResourceEntryName(id)
+						+ " must be a <" + assertName + " />");
 			}
 
 			if (ADAPTER_CURSOR.equals(name)) {
 				adapter = createCursorAdapter(c, parser, attrs, id, parameters);
 			} else {
-				throw new IllegalArgumentException("Unknown adapter name " + parser.getName() + " in "
-						+ c.getResources().getResourceEntryName(id));
+				throw new IllegalArgumentException("Unknown adapter name " + parser.getName()
+						+ " in " + c.getResources().getResourceEntryName(id));
 			}
 		}
 
 		return adapter;
-
 	}
 
 	/**
@@ -633,8 +632,8 @@ public class Adapters {
 				} else if (ADAPTER_CURSOR_SELECT.equals(name)) {
 					parseSelectTag();
 				} else {
-					throw new RuntimeException("Unknown tag name " + parser.getName() + " in "
-							+ resources.getResourceEntryName(mId));
+					throw new RuntimeException("Unknown tag name " + parser.getName()
+							+ " in " + resources.getResourceEntryName(mId));
 				}
 			}
 
@@ -652,8 +651,8 @@ public class Adapters {
 				}
 			}
 
-			return new XmlCursorAdapter(mContext, layout, uri, fromArray, toArray, selection, selectionArgs, sortOrder,
-					mBinders);
+			return new XmlCursorAdapter(mContext, layout, uri, fromArray, toArray,
+					selection, selectionArgs, sortOrder, mBinders);
 		}
 
 		private void parseSelectTag() {
@@ -727,8 +726,8 @@ public class Adapters {
 					}
 					findMap(((MapTransformation)transformation), isDrawable);
 				} else {
-					throw new RuntimeException("Unknown tag name " + parser.getName() + " in "
-							+ context.getResources().getResourceEntryName(mId));
+					throw new RuntimeException("Unknown tag name " + parser.getName()
+							+ " in " + context.getResources().getResourceEntryName(mId));
 				}
 			}
 
@@ -759,19 +758,19 @@ public class Adapters {
 					return (CursorBinder)c.newInstance(mContext, transformation);
 				}
 			} catch (ClassNotFoundException e) {
-				throw new IllegalArgumentException("Cannot instanciate binder type in "
+				throw new IllegalArgumentException("Cannot instantiate binder type in "
 						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
 			} catch (NoSuchMethodException e) {
-				throw new IllegalArgumentException("Cannot instanciate binder type in "
+				throw new IllegalArgumentException("Cannot instantiate binder type in "
 						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
 			} catch (InvocationTargetException e) {
-				throw new IllegalArgumentException("Cannot instanciate binder type in "
+				throw new IllegalArgumentException("Cannot instantiate binder type in "
 						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
 			} catch (InstantiationException e) {
-				throw new IllegalArgumentException("Cannot instanciate binder type in "
+				throw new IllegalArgumentException("Cannot instantiate binder type in "
 						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
 			} catch (IllegalAccessException e) {
-				throw new IllegalArgumentException("Cannot instanciate binder type in "
+				throw new IllegalArgumentException("Cannot instantiate binder type in "
 						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
 			}
 
@@ -825,19 +824,19 @@ public class Adapters {
 						transformation = (CursorTransformation)c.newInstance(mContext);
 					}
 				} catch (ClassNotFoundException e) {
-					throw new IllegalArgumentException("Cannot instanciate transform type in "
+					throw new IllegalArgumentException("Cannot instantiate transform type in "
 							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
 				} catch (NoSuchMethodException e) {
-					throw new IllegalArgumentException("Cannot instanciate transform type in "
+					throw new IllegalArgumentException("Cannot instantiate transform type in "
 							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
 				} catch (InvocationTargetException e) {
-					throw new IllegalArgumentException("Cannot instanciate transform type in "
+					throw new IllegalArgumentException("Cannot instantiate transform type in "
 							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
 				} catch (InstantiationException e) {
-					throw new IllegalArgumentException("Cannot instanciate transform type in "
+					throw new IllegalArgumentException("Cannot instantiate transform type in "
 							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
 				} catch (IllegalAccessException e) {
-					throw new IllegalArgumentException("Cannot instanciate transform type in "
+					throw new IllegalArgumentException("Cannot instantiate transform type in "
 							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
 				}
 			}
@@ -950,11 +949,11 @@ public class Adapters {
 			@Override
 			protected Cursor doInBackground(Void... params) {
 				if (mContext instanceof Activity) {
-					return ((Activity)mContext).managedQuery(Uri.parse(mUri), mColumns, mSelection, mSelectionArgs,
-							mSortOrder);
+					return ((Activity)mContext).managedQuery(Uri.parse(mUri), mColumns,
+							mSelection, mSelectionArgs, mSortOrder);
 				} else {
-					return mContext.getContentResolver().query(Uri.parse(mUri), mColumns, mSelection, mSelectionArgs,
-							mSortOrder);
+					return mContext.getContentResolver().query(Uri.parse(mUri), mColumns,
+							mSelection, mSelectionArgs, mSortOrder);
 				}
 			}
 
@@ -1012,8 +1011,8 @@ public class Adapters {
 					}
 					// We've reached the end, but the expression didn't close
 					if (c != '}') {
-						throw new IllegalStateException("The transform expression contains a "
-								+ "non-closed column name: " + expression.substring(segmentStart + 1, i));
+						throw new IllegalStateException("The transform expression contains a non-closed column name: "
+								+ expression.substring(segmentStart + 1, i));
 					}
 					node.next = new ColumnExpressionNode(expression.substring(segmentStart + 1, i));
 				} else {

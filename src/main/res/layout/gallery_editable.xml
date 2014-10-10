@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE layout>
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/fragmentRoot"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	>
 	<GridView
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:layout_margin="@dimen/margin"
 		android:horizontalSpacing="@dimen/margin"
-		android:verticalSpacing="@dimen/margin"
 		android:layerType="software"
-		android:numColumns="@integer/gallery_columns" />
+		android:numColumns="@integer/gallery_columns"
+		android:verticalSpacing="@dimen/margin"
+		/>
 	<include layout="@layout/inc_loading" />
 	<include layout="@layout/inc_empty_add" />
 </FrameLayout>

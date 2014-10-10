@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE layout>
 <net.twisterrob.inventory.android.view.lib.SquareFrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+	android:layout_height="fill_parent"
+	>
 	<ImageView
 		android:id="@id/image"
-		android:focusable="false"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:layout_gravity="center"
 		android:adjustViewBounds="true"
-		android:scaleType="fitCenter" />
+		android:focusable="false"
+		android:scaleType="fitCenter"
+		/>
 	<ImageView
 		android:id="@id/type"
 		android:layout_width="32dp"
@@ -20,36 +21,39 @@
 		android:layout_gravity="bottom|end"
 		android:layout_marginRight="@dimen/margin"
 		android:layout_marginBottom="@dimen/margin"
-		android:scaleType="fitCenter" />
+		android:scaleType="fitCenter"
+		/>
 	<TextView
 		android:id="@id/count"
-		android:focusable="false"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="bottom|start"
 		android:layout_marginLeft="@dimen/margin"
 		android:layout_marginBottom="@dimen/margin"
-		android:textColor="#0f8"
+		android:focusable="false"
 		android:shadowColor="#084"
-		android:shadowRadius="1"
 		android:shadowDx="2"
 		android:shadowDy="2"
-		android:textSize="18sp" />
+		android:shadowRadius="1"
+		android:textColor="#0f8"
+		android:textSize="18sp"
+		/>
 	<net.twisterrob.inventory.android.view.lib.WrappedTextView
 		android:id="@id/title"
-		android:focusable="false"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:labelFor="@id/adapterRoot"
 		android:layout_gravity="top|center_horizontal"
-		android:gravity="center"
-		android:background="@drawable/transparent_rounded"
-		android:layout_marginTop="@dimen/margin"
 		android:padding="@dimen/margin"
-		android:textColor="#f80"
+		android:layout_marginTop="@dimen/margin"
+		android:background="@drawable/transparent_rounded"
+		android:focusable="false"
+		android:gravity="center"
+		android:labelFor="@id/adapterRoot"
 		android:shadowColor="#420"
-		android:shadowRadius="2"
 		android:shadowDx="2"
 		android:shadowDy="2"
-		android:textSize="18sp" />
+		android:shadowRadius="2"
+		android:textColor="#f80"
+		android:textSize="18sp"
+		/>
 </net.twisterrob.inventory.android.view.lib.SquareFrameLayout>

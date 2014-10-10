@@ -12,9 +12,7 @@ import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEven
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
 
 public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemListFragment>
-		implements
-			ItemEvents,
-			ItemsEvents {
+		implements ItemEvents, ItemsEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
 		long itemID = getExtraItemID();

@@ -4,7 +4,7 @@ import android.util.Log;
 
 /**
  * Available tag strings in the application logs.
- * 
+ *
  * @author Zoltán Kiss
  */
 public enum Tag {
@@ -22,12 +22,11 @@ public enum Tag {
 	private static final int TAG_MAX_LENGTH = 23;
 
 	private static final String TAG_PREFIX = "london.";
-
 	static {
 		/*
 		 * Check tag string lengths
 		 */
-		for (Tag tag: Tag.values()) {
+		for (Tag tag : Tag.values()) {
 			if (tag.getTag().length() > TAG_MAX_LENGTH) {
 				Log.w(null, String.format("Tag value is longer than 23 chars: %s=%s", tag.name(), tag.getTag()));
 			}

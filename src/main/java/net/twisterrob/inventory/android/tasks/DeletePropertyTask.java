@@ -7,7 +7,7 @@ import android.database.Cursor;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.Room;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.Dialogs;
 import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
 
 public class DeletePropertyTask extends ActionParams {
@@ -51,7 +51,7 @@ public class DeletePropertyTask extends ActionParams {
 		sb.append("?");
 		if (!rooms.isEmpty()) {
 			sb.append("\n(The rooms are: ");
-			for (String name: rooms) {
+			for (String name : rooms) {
 				sb.append(name);
 				sb.append(", ");
 			}

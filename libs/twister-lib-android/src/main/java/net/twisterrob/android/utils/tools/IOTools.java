@@ -97,7 +97,6 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 		} catch (Exception ex) {
 			throw new IOException("Cannot use cache", ex);
 		}
-
 	}
 	private static synchronized void ensureImageCache() {
 		if (imageCache == null) {

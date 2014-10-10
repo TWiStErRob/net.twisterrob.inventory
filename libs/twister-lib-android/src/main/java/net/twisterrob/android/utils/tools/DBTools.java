@@ -13,7 +13,7 @@ public final class DBTools {
 		return string.toString().replace("%", escape + "%").replace("_", escape + "_");
 	}
 
-	public static String toString(final SQLiteDatabase database) {
+	public static String dbToString(final SQLiteDatabase database) {
 		int version = database != null? database.getVersion() : 0;
 		String path = database != null? database.getPath() : null;
 		return String.format(Locale.ROOT, "v%d@%s", version, path);

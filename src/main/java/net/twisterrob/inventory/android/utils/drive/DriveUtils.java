@@ -4,11 +4,8 @@ import java.io.*;
 
 import com.google.android.gms.common.api.*;
 import com.google.android.gms.drive.*;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
-import com.google.android.gms.drive.DriveApi.DriveIdResult;
-import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
-import com.google.android.gms.drive.DriveFolder.DriveFileResult;
-import com.google.android.gms.drive.DriveFolder.DriveFolderResult;
+import com.google.android.gms.drive.DriveApi.*;
+import com.google.android.gms.drive.DriveFolder.*;
 import com.google.android.gms.drive.DriveResource.MetadataResult;
 import com.google.android.gms.drive.query.*;
 
@@ -54,7 +51,6 @@ public class DriveUtils {
 			MetadataBuffer search = MetaBufferUtils.sync(in.queryChildren(client, fileNameQuery.build()));
 			return search.getCount() != 0? search.get(0).getDriveId() : null;
 		}
-
 	}
 
 	public static class FolderUtils {
@@ -69,9 +65,10 @@ public class DriveUtils {
 
 		public static void dump(GoogleApiClient client, DriveFolder folder) {
 			MetadataBuffer children = MetaBufferUtils.sync(folder.listChildren(client));
-			for (Metadata child: children) {
-				System.out.printf("%s / %s (%s) shared:%b\n", child.getDriveId().getResourceId(), child.getDriveId()
-						.encodeToString(), child.getTitle(), child.isShared());
+			for (Metadata child : children) {
+				DriveId childId = child.getDriveId();
+				System.out.printf("%s / %s (%s) shared:%b\n",
+						childId.getResourceId(), childId.encodeToString(), child.getTitle(), child.isShared());
 			}
 			children.close();
 		}

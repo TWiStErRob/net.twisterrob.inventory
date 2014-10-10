@@ -62,8 +62,8 @@ public class ImageDownloader {
 	};
 
 	// Soft cache for bitmap kicked out of hard cache
-	private final static ConcurrentHashMap<String, SoftReference<Bitmap>> sSoftBitmapCache = new ConcurrentHashMap<String, SoftReference<Bitmap>>(
-			HARD_CACHE_CAPACITY / 2);
+	private final static ConcurrentHashMap<String, SoftReference<Bitmap>> sSoftBitmapCache =
+			new ConcurrentHashMap<String, SoftReference<Bitmap>>(HARD_CACHE_CAPACITY / 2);
 
 	private final Handler purgeHandler = new Handler();
 
@@ -265,7 +265,6 @@ public class ImageDownloader {
 						//final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
 						return bitmap;
-
 					} finally {
 						if (inputStream != null) {
 							inputStream.close();
@@ -286,9 +285,7 @@ public class ImageDownloader {
 				getRequest.abort();
 				Log.w(LOG_TAG, "Error while retrieving bitmap from " + url, e);
 			} finally {
-				if (client != null) {
-					client.close();
-				}
+				client.close();
 			}
 			return null;
 		}

@@ -12,10 +12,8 @@ import android.content.IntentSender.SendIntentException;
 import android.os.*;
 
 import com.google.android.gms.common.*;
-import com.google.android.gms.common.api.*;
-import com.google.android.gms.common.api.GoogleApiClient.Builder;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.*;
 import com.google.android.gms.drive.Drive;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -124,13 +122,12 @@ public class DriveHelper {
 	}
 
 	private Builder createClientBuilder() {
-		return new GoogleApiClient.Builder(activity) //
-				.addApi(Drive.API) //
-				.addScope(Drive.SCOPE_FILE) //
-				.addScope(Drive.SCOPE_APPFOLDER) //
-				.addConnectionCallbacks(lifeCycle) //
-				.addOnConnectionFailedListener(lifeCycle) //
-		;
+		return new GoogleApiClient.Builder(activity)
+				.addApi(Drive.API)
+				.addScope(Drive.SCOPE_FILE)
+				.addScope(Drive.SCOPE_APPFOLDER)
+				.addConnectionCallbacks(lifeCycle)
+				.addOnConnectionFailedListener(lifeCycle);
 	}
 
 	private class LifeCycle implements ConnectionCallbacks, OnConnectionFailedListener {
@@ -170,7 +167,7 @@ public class DriveHelper {
 	private class Task extends AsyncTask<ConnectedTask, Void, Void> {
 		@Override
 		protected Void doInBackground(ConnectedTask... params) {
-			for (ConnectedTask run: params) {
+			for (ConnectedTask run : params) {
 				try {
 					run.execute(client);
 				} catch (Exception ex) {
@@ -185,7 +182,6 @@ public class DriveHelper {
 		protected void onPostExecute(Void result) {
 			result(true);
 		}
-
 	}
 
 	private void result(boolean result) {

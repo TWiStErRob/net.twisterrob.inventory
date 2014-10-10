@@ -43,9 +43,12 @@ import android.util.Log;
 public class AndroidLoggerFactory implements ILoggerFactory {
 	private final Map<String, AndroidLogger> loggerMap;
 
-	static final int TAG_MAX_LENGTH = 23; // tag names cannot be longer on Android platform
-											// see also android/system/core/include/cutils/property.h
-											// and android/frameworks/base/core/jni/android_util_Log.cpp
+	/**
+	 * Tag names cannot be longer on Android platform
+	 * @see android/system/core/include/cutils/property.h
+	 * @see android/frameworks/base/core/jni/android_util_Log.cpp
+	 */
+	static final int TAG_MAX_LENGTH = 23;
 
 	public AndroidLoggerFactory() {
 		loggerMap = new HashMap<String, AndroidLogger>();
@@ -62,9 +65,9 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 			slogger = loggerMap.get(actualName);
 			if (slogger == null) {
 				if (!actualName.equals(name)) {
-					Log.i(AndroidLoggerFactory.class.getSimpleName(), "Logger name '" + name
-							+ "' exceeds maximum length of " + TAG_MAX_LENGTH + " characters, using '" + actualName
-							+ "' instead.");
+					Log.i(AndroidLoggerFactory.class.getSimpleName(), "Logger name '"
+							+ name + "' exceeds maximum length of " + TAG_MAX_LENGTH
+							+ " characters, using '" + actualName + "' instead.");
 				}
 
 				slogger = new AndroidLogger(actualName);
@@ -82,7 +85,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 
 	private static String doReplacements(String name) {
 		if (name != null) {
-			for (Entry<String, String> replacement: replacements.entrySet()) {
+			for (Entry<String, String> replacement : replacements.entrySet()) {
 				name = name.replaceFirst(replacement.getKey(), replacement.getValue());
 			}
 		}

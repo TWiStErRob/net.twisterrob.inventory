@@ -2,8 +2,9 @@ package net.twisterrob.android.mail;
 
 import javax.mail.*;
 
-import net.twisterrob.android.utils.log.*;
 import android.os.AsyncTask;
+
+import net.twisterrob.android.utils.log.*;
 
 public class MailSenderAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private static final Log LOG = LogFactory.getLog(Tag.IO);

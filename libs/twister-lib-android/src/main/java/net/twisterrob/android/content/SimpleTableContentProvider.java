@@ -17,21 +17,21 @@ import android.support.v4.database.DatabaseUtilsCompat;
  * public class MySimpleProvider extends SimpleTableContentProvider {
  * 	private static final String AUTHORITY = "my.name.space.provider";
  * 	private static final String BASE_PATH = "items";
- * 
+ *
  * 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
- * 
+ *
  * 	public ExampleSimpleProvider() {
  * 		super(AUTHORITY, "vnd.my.name.space.item", BASE_PATH, "MyItem", BaseColumns._ID, //
  * 				new String[]{ BaseColumns._ID, "name", "description" });
- * 	}
- * 
- * 	{@code @}Override
+ *    }
+ *
+ *    {@code @}Override
  * 	protected SQLiteOpenHelper createDatabaseOpenHelper() {
  * 		return new net.twisterrob.android.db.DatabaseOpenHelper(getContext(), "MyDatabase", 1);
- * 	}
+ *    }
  * }
  * </pre>
- * 
+ *
  * Register in app manifest:
  * <pre>
  * &lt;manifest ...>
@@ -125,7 +125,8 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		}
 
 		Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-		cursor.setNotificationUri(getContext().getContentResolver(), uri); // make sure that potential listeners are getting notified
+		// make sure that potential listeners are getting notified
+		cursor.setNotificationUri(getContext().getContentResolver(), uri);
 
 		return cursor;
 	}

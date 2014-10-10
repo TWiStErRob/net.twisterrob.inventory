@@ -1,34 +1,32 @@
 package net.twisterrob.android.mail;
-import java.util.*;
 
-import javax.activation.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.net.ssl.SSLSocketFactory;
 
 public class MailSender extends javax.mail.Authenticator {
-	private String m_user = ""; // username 
-	private String m_pass = ""; // password 
+	private String m_user = ""; // username
+	private String m_pass = ""; // password
 
 	private String[] m_to;
-	private String m_from = ""; // email sent from 
+	private String m_from = ""; // email sent from
 
-	private int m_port = 465; // default smtp port 
-	private int m_sport = 465; // default socketfactory port 
+	private int m_port = 465; // default smtp port
+	private int m_sport = 465; // default socketfactory port
 
-	private String m_host = "smtp.gmail.com"; // default smtp server 
+	private String m_host = "smtp.gmail.com"; // default smtp server
 
-	private String m_subject = ""; // email subject 
-	private String m_body = ""; // email body 
+	private String m_subject = ""; // email subject
+	private String m_body = ""; // email body
 
-	private boolean m_auth = true; // smtp authentication - default on 
+	private boolean m_auth = true; // smtp authentication - default on
 
-	private boolean m_debuggable = false; // debug mode on or off - default off 
+	private boolean m_debuggable = false; // debug mode on or off - default off
 
 	private Multipart m_multipart = new MimeMultipart();
 
 	public MailSender() {
-		// There is something wrong with MailCap, javamail can not find a handler for the multipart/mixed part, so this bit needs to be added. 
+		// There is something wrong with MailCap, javamail can not find a handler for the multipart/mixed part, so this bit needs to be added.
 		MailcapCommandMap mc = (MailcapCommandMap)CommandMap.getDefaultCommandMap();
 		mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
 		mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
@@ -65,15 +63,15 @@ public class MailSender extends javax.mail.Authenticator {
 			msg.setSubject(m_subject);
 			msg.setSentDate(new Date());
 
-			// setup message body 
+			// setup message body
 			BodyPart messageBodyPart = new MimeBodyPart();
 			messageBodyPart.setText(m_body);
 			m_multipart.addBodyPart(messageBodyPart);
 
-			// Put parts in message 
+			// Put parts in message
 			msg.setContent(m_multipart);
 
-			// send email 
+			// send email
 			Transport.send(msg);
 
 			return true;
@@ -145,5 +143,4 @@ public class MailSender extends javax.mail.Authenticator {
 	public void setSubject(String string) {
 		this.m_subject = string;
 	}
-
 }

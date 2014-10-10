@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE drawable>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 	<!-- top-left to bottom-right line -->
 	<item>
 		<rotate android:fromDegrees="45">
 			<shape android:shape="line">
-				<size
-					android:width="128dp"
-					android:height="128dp" />
-				<stroke
-					android:color="#f00"
-					android:width="4dp" />
+				<size android:width="128dp" android:height="128dp" />
+				<stroke android:width="4dp" android:color="#f00" />
 			</shape>
 		</rotate>
 	</item>
@@ -19,12 +14,8 @@
 	<item>
 		<rotate android:fromDegrees="-45">
 			<shape android:shape="line">
-				<size
-					android:width="128dp"
-					android:height="128dp" />
-				<stroke
-					android:color="#f00"
-					android:width="4dp" />
+				<size android:width="128dp" android:height="128dp" />
+				<stroke android:width="4dp" android:color="#f00" />
 			</shape>
 		</rotate>
 	</item>

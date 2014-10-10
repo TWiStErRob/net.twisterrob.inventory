@@ -5,9 +5,8 @@ import org.slf4j.*;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.view.*;
-import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;

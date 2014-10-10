@@ -9,11 +9,11 @@ import android.content.*;
 import android.database.*;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
 import static android.app.SearchManager.*;
 
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.InventoryContract.Item;
-import net.twisterrob.inventory.android.content.InventoryContract.Search;
+import net.twisterrob.inventory.android.content.InventoryContract.*;
 import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.java.utils.StringTools;
 
@@ -80,15 +80,20 @@ public class InventoryProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		LOG.debug("query({}, {}, {}, {}, {}): {}", //
+		LOG.debug("query({}, {}, {}, {}, {}): {}",
 				uri, projection, selection, selectionArgs, sortOrder, resolveMatch(URI_MATCHER.match(uri)));
 		switch (URI_MATCHER.match(uri)) {
 			case SEARCH_ITEMS_SUGGEST: {
-				String query = selectionArgs[0].toLowerCase(Locale.getDefault()); // uri.getLastPathSegment().toLowerCase(Locale.ROOT);
+				// uri.getLastPathSegment().toLowerCase(Locale.ROOT);
+				String query = selectionArgs[0].toLowerCase(Locale.getDefault());
 				if (StringTools.isNullOrEmpty(query)) {
-					MatrixCursor cursor = new MatrixCursor(new String[]{BaseColumns._ID, SUGGEST_COLUMN_INTENT_DATA_ID,
-							SUGGEST_COLUMN_TEXT_1, SUGGEST_COLUMN_TEXT_2/* , SUGGEST_COLUMN_ICON_1,
-																		 * SUGGEST_COLUMN_INTENT_ACTION */}, 1);
+					MatrixCursor cursor = new MatrixCursor(new String[]{BaseColumns._ID
+							, SUGGEST_COLUMN_INTENT_DATA_ID
+							, SUGGEST_COLUMN_TEXT_1
+							, SUGGEST_COLUMN_TEXT_2
+							//, SUGGEST_COLUMN_ICON_1
+							//, SUGGEST_COLUMN_INTENT_ACTION
+					}, 1);
 					cursor.addRow(new String[]{null, null, "Search Inventory Items", "Search for item name.",
 					/* "android.resource://android/drawable/ic_menu_search", Intent.ACTION_SEARCH */});
 					return cursor;
@@ -126,7 +131,7 @@ public class InventoryProvider extends ContentProvider {
 		if (result == UriMatcher.NO_MATCH) {
 			return "NO_MATCH";
 		}
-		for (Field f: InventoryProvider.class.getDeclaredFields()) {
+		for (Field f : InventoryProvider.class.getDeclaredFields()) {
 			try {
 				if (int.class.equals(f.getType()) && f.getInt(null) == result) {
 					return f.getName();

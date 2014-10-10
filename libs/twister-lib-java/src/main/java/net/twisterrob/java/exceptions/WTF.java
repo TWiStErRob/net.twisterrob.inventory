@@ -1,4 +1,5 @@
 package net.twisterrob.java.exceptions;
+
 public class WTF extends RuntimeException {
 	private static final long serialVersionUID = 8144983081650945396L;
 

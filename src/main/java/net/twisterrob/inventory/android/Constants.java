@@ -1,4 +1,5 @@
 package net.twisterrob.inventory.android;
+
 public interface Constants {
 	String DEFAULT_DRIVE_FOLDER_NAME = "Magic Home Inventory";
 	String EXPORT_FILE_NAME_FORMAT = "export-%tF_%<tH-%<tM-%<tS.csv";

@@ -11,9 +11,7 @@ import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.Categ
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
 public class CategoryItemsActivity extends BaseDetailActivity<CategoryViewFragment, ItemListFragment>
-		implements
-			CategoryEvents,
-			ItemsEvents {
+		implements CategoryEvents, ItemsEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
 		long categoryID = getExtraCategoryID();

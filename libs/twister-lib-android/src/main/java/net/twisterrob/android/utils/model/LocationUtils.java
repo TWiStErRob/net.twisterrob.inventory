@@ -21,5 +21,4 @@ public class LocationUtils extends net.twisterrob.java.model.LocationUtils {
 	public static boolean near(Location loc, LatLng ll) {
 		return Math.abs(ll.latitude - loc.getLatitude()) < DELTA && Math.abs(ll.longitude - loc.getLongitude()) < DELTA;
 	}
-
 }

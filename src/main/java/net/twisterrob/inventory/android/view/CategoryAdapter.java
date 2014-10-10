@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.view.*;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 

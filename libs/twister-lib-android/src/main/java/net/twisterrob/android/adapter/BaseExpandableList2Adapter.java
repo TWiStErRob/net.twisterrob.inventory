@@ -6,8 +6,7 @@ import android.content.Context;
 import android.view.*;
 
 public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
-		extends
-			android.widget.BaseExpandableListAdapter {
+		extends android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;
 	protected final LayoutInflater m_inflater;
 	private List<Group> m_groups;
@@ -81,12 +80,12 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	}
 
 	@Override
-	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentListGroupView) {
+	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentGroupView) {
 		Group currentGroup = getGroup(groupPosition);
 		List<Child> currentChildren = getChildren(currentGroup);
 		GroupVH groupHolder;
 		if (groupConvertView == null) {
-			groupConvertView = m_inflater.inflate(getGroupLayoutId(), parentListGroupView, false);
+			groupConvertView = m_inflater.inflate(getGroupLayoutId(), parentGroupView, false);
 
 			groupHolder = createGroupHolder(groupConvertView);
 			bindGroupModel(groupHolder, currentChildren, currentGroup);
@@ -135,7 +134,7 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	/**
 	 * @param groupHolder
 	 * @param currentChildren
-	 * @param currentGroup 
+	 * @param currentGroup
 	 * @deprecated Until I figure out why I did it.
 	 */
 	@Deprecated
@@ -163,7 +162,7 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	/**
 	 * @param childHolder
 	 * @param currentGroup
-	 * @param currentChild 
+	 * @param currentChild
 	 * @deprecated Until I figure out why I did it.
 	 */
 	@Deprecated

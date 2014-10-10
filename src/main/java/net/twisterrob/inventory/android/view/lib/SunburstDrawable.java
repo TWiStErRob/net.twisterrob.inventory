@@ -19,6 +19,7 @@ public class SunburstDrawable<T> extends Drawable {
 		int getDepth(T subTree);
 		float getWeight(T subTree);
 	}
+
 	public static interface PaintStrategy<T> {
 		Paint getFill(T node, int level, float start, float end);
 		Paint getStroke(T node, int level, float start, float end);
@@ -60,7 +61,7 @@ public class SunburstDrawable<T> extends Drawable {
 		float fullWidth = end - start;
 		float parentWeight = walker.getWeight(subTree);
 		float current = 0;
-		for (T child: walker.getChildren(subTree)) {
+		for (T child : walker.getChildren(subTree)) {
 			float relativeWeight = walker.getWeight(child) / parentWeight;
 			float next = current + relativeWeight;
 			float currentStart = start + current * fullWidth;
@@ -128,7 +129,7 @@ public class SunburstDrawable<T> extends Drawable {
 			return subTree; // TODO invert conditions to cut subtrees from search
 		}
 
-		for (T child: walker.getChildren(subTree)) {
+		for (T child : walker.getChildren(subTree)) {
 			float relativeWeight = walker.getWeight(child) / parentWeight;
 			float next = current + relativeWeight;
 			float currentStart = start + current * fullWidth;

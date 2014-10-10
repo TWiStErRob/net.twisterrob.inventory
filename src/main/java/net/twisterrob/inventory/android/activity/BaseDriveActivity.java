@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.slf4j.*;
 
-import android.content.*;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
@@ -12,17 +12,17 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Prefs;
+import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.utils.drive.*;
 import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
 import net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils;
 import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.inventory.android.Constants.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FileUtils.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.sync;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FileUtils.sync;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils.sync;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.sync;
 
 public class BaseDriveActivity extends BaseActivity implements ApiClientProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDriveActivity.class);
@@ -90,7 +90,7 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 
 			DriveId root = getRoot();
 			if (root != null) {
-				LOG.debug("Google Drive already set up with root '{}' -> '{}'", //
+				LOG.debug("Google Drive already set up with root '{}' -> '{}'",
 						root.encodeToString(), root.getResourceId());
 				return;
 			}
@@ -112,8 +112,9 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 			}
 
 			Metadata metadata = sync(inventoryFolder.getMetadata(client));
-			showMessage("Successfully connected to Drive folder: " + metadata.getTitle() + " ("
-					+ metadata.getDriveId().encodeToString() + ", " + metadata.getDriveId().getResourceId() + ")");
+			showMessage("Successfully connected to Drive folder: " + metadata.getTitle()
+					+ " (" + metadata.getDriveId().encodeToString()
+					+ ", " + metadata.getDriveId().getResourceId() + ")");
 		}
 		private DriveFolder getInventoryFolder() throws IOException {
 			DriveFolder rootFolder = Drive.DriveApi.getRootFolder(client);

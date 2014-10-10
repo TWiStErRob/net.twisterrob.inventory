@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE menu>
 <menu
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	>
 	<item
 		android:id="@+id/action_picture_take"
-		android:icon="@android:drawable/ic_menu_camera"
 		android:title="@string/action_picture_take"
-		app:showAsAction="always" />
+		android:icon="@android:drawable/ic_menu_camera"
+		app:showAsAction="always"
+		/>
 	<item
 		android:id="@+id/action_picture_pick"
-		android:icon="@android:drawable/ic_menu_gallery"
 		android:title="@string/action_picture_pick"
-		app:showAsAction="ifRoom" />
+		android:icon="@android:drawable/ic_menu_gallery"
+		app:showAsAction="ifRoom"
+		/>
 </menu>

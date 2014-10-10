@@ -7,8 +7,7 @@ import android.database.DataSetObserver;
 import android.widget.ExpandableListView;
 
 public abstract class BaseFilteringExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH>
-		extends
-			BaseExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH> {
+		extends BaseExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH> {
 	List<Level1> m_filteredGroups;
 	Map<Level1, List<Level2>> m_filteredChildren;
 
@@ -58,7 +57,7 @@ public abstract class BaseFilteringExpandableList3Adapter<Level1, Level2, Level3
 
 	/**
 	 * Filter children in this method.
-	 * 
+	 *
 	 * Does no filtering by default, just return children.
 	 * @param children to filter
 	 * @param group the children belong to

@@ -11,9 +11,7 @@ import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.Prope
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 
 public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragment, RoomListFragment>
-		implements
-			PropertyEvents,
-			RoomsEvents {
+		implements PropertyEvents, RoomsEvents {
 
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {

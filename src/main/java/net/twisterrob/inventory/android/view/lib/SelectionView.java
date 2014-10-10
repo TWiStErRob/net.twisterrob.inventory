@@ -144,7 +144,6 @@ public class SelectionView extends View {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
 	}
 
 	/** @see @SuppressLint("DrawAllocation") */
@@ -329,8 +328,8 @@ public class SelectionView extends View {
 	}
 
 	/** Where the screen is pressed, calculate the distance closest to one of the 4 corners
-	  * so that it can get the pressed and moved. Only 1 at a time can be moved.
-	  */
+	 * so that it can get the pressed and moved. Only 1 at a time can be moved.
+	 */
 	private void calculateSelectionAction(float x, float y) {
 		double leftTop = distance(x, y, selection.left, selection.top);
 		double rightTop = distance(x, y, selection.right, selection.top);

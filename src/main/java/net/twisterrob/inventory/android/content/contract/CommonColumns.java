@@ -1,4 +1,5 @@
 package net.twisterrob.inventory.android.content.contract;
+
 public interface CommonColumns {
 	String ID = "_id";
 	long ID_ADD = Long.MIN_VALUE;

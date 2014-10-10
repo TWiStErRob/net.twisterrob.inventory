@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.content;
 import android.app.SearchManager;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
 import static android.content.ContentResolver.*;
 
 // content://net.twisterrob.inventory/item/100008

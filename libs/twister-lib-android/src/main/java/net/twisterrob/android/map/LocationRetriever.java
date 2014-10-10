@@ -1,8 +1,10 @@
 package net.twisterrob.android.map;
-import static android.location.LocationManager.*;
+
 import android.content.Context;
 import android.location.*;
 import android.os.Bundle;
+
+import static android.location.LocationManager.*;
 public class LocationRetriever {
 	private final LocationManager m_manager;
 	final LocationResultListener m_locResultListener;
@@ -46,8 +48,8 @@ public class LocationRetriever {
 	};
 
 	static String getProviderError(String expectedProvider, String provider) {
-		return String.format("%s provider didn't get the right provider update, instead it was %s", expectedProvider,
-				provider);
+		return String.format("%s provider didn't get the right provider update, instead it was %s",
+				expectedProvider, provider);
 	}
 	// Provider location listeners
 	// /////////////////////////////////////////////////////
@@ -147,18 +149,19 @@ public class LocationRetriever {
 		/**
 		 * Gives a clue about whether the fix was retrieved from {@link LocationManager#getLastKnownLocation} or
 		 * {@link LocationManager#requestLocationUpdates} registered listeners.
-		 * 
+		 *
 		 * @return <code>true</code> if the fix was a location update, <code>false</code> if it last known location.
 		 */
 		public abstract boolean isCurrent();
 	}
+
 	public interface LocationResultListener {
 		/**
 		 * Called when a new fix arrives from the {@link LocationManager#requestLocationUpdates} registered listeners or
 		 * you requested the last known location in {@link LocationRetriever#start(boolean)}.
 		 * <p>
 		 * None of the parameters will never be <code>null</code>.
-		 * 
+		 *
 		 * @param retriever the {@link LocationRetriever} the listener is registered with
 		 * @param location new fix location
 		 * @param type type of the fix

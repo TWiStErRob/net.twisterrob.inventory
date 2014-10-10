@@ -120,7 +120,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 
 	/**
 	 * @param holder
-	 * @param currentItem 
+	 * @param currentItem
 	 * @deprecated Until I figure out why I did it.
 	 */
 	@Deprecated
@@ -195,7 +195,8 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 
 		private String m_lastFinished;
 
-		public SimplifyingFilter() {}
+		public SimplifyingFilter() {
+		}
 
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {

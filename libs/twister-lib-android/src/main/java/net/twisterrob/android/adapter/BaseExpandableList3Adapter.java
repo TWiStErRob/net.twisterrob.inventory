@@ -12,8 +12,7 @@ import android.widget.*;
 import android.widget.ExpandableListView.OnGroupClickListener;
 
 public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH>
-		extends
-			android.widget.BaseExpandableListAdapter {
+		extends android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;
 	protected final LayoutInflater m_inflater;
 	private final List<Level1> m_groups = new ArrayList<Level1>();
@@ -45,7 +44,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		this.m_groups.clear();
 		this.m_groups.addAll(m_data.keySet());
 		this.m_children.clear();
-		for (Entry<Level1, ? extends Map<Level2, ? extends List<Level3>>> entry: m_data.entrySet()) {
+		for (Entry<Level1, ? extends Map<Level2, ? extends List<Level3>>> entry : m_data.entrySet()) {
 			m_children.put(entry.getKey(), new ArrayList<Level2>(entry.getValue().keySet()));
 		}
 	}
@@ -103,12 +102,12 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	}
 
 	@Override
-	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentListGroupView) {
+	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentGroupView) {
 		Level1 currentGroup = getGroup(groupPosition);
 		List<Level2> currentChildren = getChildren(currentGroup);
 		Level1VH groupHolder;
 		if (groupConvertView == null) {
-			groupConvertView = m_inflater.inflate(getLevel1LayoutId(), parentListGroupView, false);
+			groupConvertView = m_inflater.inflate(getLevel1LayoutId(), parentGroupView, false);
 			groupHolder = createGroupHolder(groupConvertView);
 			groupConvertView.setTag(groupHolder);
 		} else {
@@ -180,7 +179,8 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	 * @param currentLevel1
 	 * @param level1ConvertView
 	 */
-	protected void bindEmptyLevel2View(final Level2VH level2Holder, Level1 currentLevel1, final View level1ConvertView) {
+	protected void bindEmptyLevel2View(final Level2VH level2Holder, Level1 currentLevel1,
+			final View level1ConvertView) {
 		// optional @Override
 	}
 
@@ -249,7 +249,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		@Override
 		@SuppressLint("InlinedApi")
 		protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-			super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(View.MEASURED_SIZE_MASK, MeasureSpec.AT_MOST));
+			super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK, MeasureSpec.AT_MOST));
 		}
 		public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 			assert parent == this;

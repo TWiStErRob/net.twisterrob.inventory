@@ -72,7 +72,7 @@ public/* static */class IOTools {
 		if (closeMes == null) {
 			return;
 		}
-		for (Closeable closeMe: closeMes) {
+		for (Closeable closeMe : closeMes) {
 			ignorantClose(closeMe);
 		}
 	}

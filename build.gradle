@@ -4,22 +4,22 @@ if (!project.hasProperty('precompiled')) {
 }
 
 buildscript {
-    repositories {
-        jcenter()
-        maven { url 'http://localhost/maven' }
-    }
+	repositories {
+		jcenter()
+		maven { url 'http://localhost/maven' }
+	}
 
-    configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-    dependencies {
-        classpath 'net.twisterrob.gradle:plugin:0.2-SNAPSHOT'
-    }
+	configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	dependencies {
+		classpath 'net.twisterrob.gradle:plugin:0.2-SNAPSHOT'
+	}
 }
 
 allprojects {
 	apply plugin: 'idea'
-    project.plugins.withType(com.android.build.gradle.BasePlugin) {
-        project.apply plugin: 'net.twisterrob.android-eclipse'
-    }
+	project.plugins.withType(com.android.build.gradle.BasePlugin) {
+		project.apply plugin: 'net.twisterrob.android-eclipse'
+	}
 }
 
 apply plugin: 'com.android.application'
@@ -52,13 +52,13 @@ android { // http://tools.android.com/tech-docs/new-build-system/user-guide
 		targetCompatibility = JavaVersion.VERSION_1_6
 	}
 
-    defaultConfig {
-        applicationId 'net.twisterrob.inventory'
-    }
+	defaultConfig {
+		applicationId 'net.twisterrob.inventory'
+	}
 
-    lintOptions {
+	lintOptions {
 		abortOnError false
-        disable 'MissingTranslation'
+		disable 'MissingTranslation'
 	}
 	aaptOptions {
 		useAaptPngCruncher false

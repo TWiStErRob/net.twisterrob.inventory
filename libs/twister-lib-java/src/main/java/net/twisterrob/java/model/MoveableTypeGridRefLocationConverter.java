@@ -1,4 +1,5 @@
 package net.twisterrob.java.model;
+
 import java.util.*;
 
 /**
@@ -23,7 +24,6 @@ public class MoveableTypeGridRefLocationConverter {
 			double Mc = ((15 / 8) * n2 + (15 / 8) * n3) * Math.sin(2 * (lat - lat0)) * Math.cos(2 * (lat + lat0));
 			double Md = (35 / 24) * n3 * Math.sin(3 * (lat - lat0)) * Math.cos(3 * (lat + lat0));
 			M = b * F0 * (Ma - Mb + Mc - Md);                // meridional arc
-
 		} while (N - N0 - M >= 0.00001);  // ie until < 0.01mm
 
 		double cosLat = Math.cos(lat), sinLat = Math.sin(lat);
@@ -43,8 +43,13 @@ public class MoveableTypeGridRefLocationConverter {
 		double XII = secLat / (120 * nu5) * (5 + 28 * tan2lat + 24 * tan4lat);
 		double XIIA = secLat / (5040 * nu7) * (61 + 662 * tan2lat + 1320 * tan4lat + 720 * tan6lat);
 
-		double dE = (E - E0), dE2 = dE * dE, dE3 = dE2 * dE, dE4 = dE2 * dE2, dE5 = dE3 * dE2, dE6 = dE4 * dE2, dE7 = dE5
-				* dE2;
+		double dE = (E - E0),
+				dE2 = dE * dE,
+				dE3 = dE2 * dE,
+				dE4 = dE2 * dE2,
+				dE5 = dE3 * dE2,
+				dE6 = dE4 * dE2,
+				dE7 = dE5 * dE2;
 		lat = lat - VII * dE2 + VIII * dE4 - IX * dE6;
 		double lon = lon0 + X * dE - XI * dE3 + XII * dE5 - XIIA * dE7;
 
@@ -78,19 +83,26 @@ public class MoveableTypeGridRefLocationConverter {
 	// helmert transform parameters from WGS84 to other datums
 	@SuppressWarnings("serial") static Map<String, DatumTransform> datumTransform = new HashMap<String, DatumTransform>() {
 		{
-			put("toOSGB36", new DatumTransform(-446.448, 125.157, -542.060,  // m
+			put("toOSGB36", new DatumTransform(
+					-446.448, 125.157, -542.060, // m
 					-0.1502, -0.2470, -0.8421, // sec
-					20.4894));                             // ppm
-			put("toED50", new DatumTransform(89.5, 93.8, 123.1,    // m
-					0.0, 0.0, 0.156,  // sec
-					-1.2));                                 // ppm
-			put("toIrl1975", new DatumTransform(-482.530, 130.596, -564.557,  // m
-					-1.042, -0.214, -0.631,  // sec
-					-8.150));   // ppm
+					20.4894 // ppm
+			));
+			put("toED50", new DatumTransform(
+					89.5, 93.8, 123.1, // m
+					0.0, 0.0, 0.156, // sec
+					-1.2 // ppm
+			));
+			put("toIrl1975", new DatumTransform(
+					-482.530, 130.596, -564.557, // m
+					-1.042, -0.214, -0.631, // sec
+					-8.150 // ppm
+			));
 		}
 	};
+
 	// ED50: og.decc.gov.uk/en/olgs/cms/pons_and_cop/pons/pon4/pon4.aspx
-	// strictly, Ireland 1975 is from ETRF89: qv 
+	// strictly, Ireland 1975 is from ETRF89: qv
 	// www.osi.ie/OSI/media/OSI/Content/Publications/transformations_booklet.pdf
 	// www.ordnancesurvey.co.uk/oswebsite/gps/information/coordinatesystemsinfo/guidecontents/guide6.html#6.5
 	static class DatumTransform {
@@ -110,25 +122,26 @@ public class MoveableTypeGridRefLocationConverter {
 			this.ry = ry;
 			this.rz = rz;
 			this.s = s;
-
 		}
 	}
 
 	/**
 	 * Convert lat/lon point in OSGB36 to WGS84
 	 *
-	 * @param  {LatLon} pOSGB36: lat/lon in OSGB36 reference frame
-	 * @return {LatLon} lat/lon point in WGS84 reference frame
+	 * @param pOSGB36 lat/lon in OSGB36 reference frame
+	 * @return lat/lon point in WGS84 reference frame
 	 */
 	static Location convertOSGB36toWGS84(Location pOSGB36) {
 		Ellipse eAiry1830 = ellipse.get("Airy1830");
 		Ellipse eWGS84 = ellipse.get("WGS84");
 		DatumTransform txToOSGB36 = datumTransform.get("toOSGB36");
 		// negate the 'to' transform to get the 'from'
-		DatumTransform txFromOSGB36 = new DatumTransform(-txToOSGB36.tx, -txToOSGB36.ty, -txToOSGB36.tz,
-				-txToOSGB36.rx, -txToOSGB36.ry, -txToOSGB36.rz, -txToOSGB36.s);
-		Location pWGS84 = convertEllipsoid(pOSGB36, eAiry1830, txFromOSGB36, eWGS84);
-		return pWGS84;
+		DatumTransform txFromOSGB36 = new DatumTransform(
+				-txToOSGB36.tx, -txToOSGB36.ty, -txToOSGB36.tz,
+				-txToOSGB36.rx, -txToOSGB36.ry, -txToOSGB36.rz,
+				-txToOSGB36.s
+		);
+		return convertEllipsoid(pOSGB36, eAiry1830, txFromOSGB36, eWGS84);
 	}
 
 	/**
@@ -137,15 +150,14 @@ public class MoveableTypeGridRefLocationConverter {
 	 * q.v. Ordnance Survey 'A guide to coordinate systems in Great Britain' Section 6
 	 *      www.ordnancesurvey.co.uk/oswebsite/gps/docs/A_Guide_to_Coordinate_Systems_in_Great_Britain.pdf
 	 *
-	 * @private
-	 * @param {LatLon}   point: lat/lon in source reference frame
-	 * @param {Number[]} e1:    source ellipse parameters
-	 * @param {Number[]} t:     Helmert transform parameters
-	 * @param {Number[]} e1:    target ellipse parameters
-	 * @return {Coord} lat/lon in target reference frame
+	 * @param point lat/lon in source reference frame
+	 * @param e1 source ellipse parameters
+	 * @param t Helmert transform parameters
+	 * @param e2 target ellipse parameters
+	 * @return lat/lon in target reference frame
 	 */
-	static Location convertEllipsoid(Location point, Ellipse e1, DatumTransform t, Ellipse e2) {
-		// console.log('convertEllipsoid', 'geod1', point.toString('dms',4), point.toString('d',6)); 
+	private static Location convertEllipsoid(Location point, Ellipse e1, DatumTransform t, Ellipse e2) {
+		// console.log('convertEllipsoid', 'geod1', point.toString('dms',4), point.toString('d',6));
 
 		// -- 1: convert polar to cartesian coordinates (using ellipse 1)
 
@@ -201,9 +213,9 @@ public class MoveableTypeGridRefLocationConverter {
 			phi = Math.atan2(z2 + eSq * nu * Math.sin(phi), p);
 		}
 		double lambda = Math.atan2(y2, x2);
-		H = p / Math.cos(phi) - nu;
+		H = p / Math.cos(phi) - nu; // TODO what is H?
 		//console.log('convertEllipsoid', 'geod2', phi.toDeg(), lambda.toDeg());
 
-		return new Location(Math.toDegrees(phi), Math.toDegrees(lambda)); // TODO what is H?
+		return new Location(Math.toDegrees(phi), Math.toDegrees(lambda));
 	}
 }

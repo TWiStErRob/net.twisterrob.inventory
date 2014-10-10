@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE layout>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/activityRoot"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="horizontal">
+	android:orientation="horizontal"
+	>
 	<FrameLayout
 		android:id="@id/details"
-		android:tag="fragment"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
-		android:layout_weight="0.30" />
+		android:layout_weight="0.30"
+		android:tag="fragment"
+		/>
 	<FrameLayout
 		android:id="@id/children"
-		android:tag="fragment"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
-		android:layout_weight="0.70" />
+		android:layout_weight="0.70"
+		android:tag="fragment"
+		/>
 </LinearLayout>

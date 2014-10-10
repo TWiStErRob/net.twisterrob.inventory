@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.view.lib.*;
+import net.twisterrob.inventory.android.view.lib.SunburstDrawable;
 import net.twisterrob.inventory.android.view.lib.SunburstDrawable.BasePaintStrategy;
 
 public class SunBurstActivity extends BaseActivity {
@@ -108,7 +108,7 @@ public class SunBurstActivity extends BaseActivity {
 			int count = 0;
 			int depth = -1;
 			List<Node> children = loadChildren(node);
-			for (Node child: children) {
+			for (Node child : children) {
 				build(child);
 				if (depth < child.depth) {
 					depth = child.depth;

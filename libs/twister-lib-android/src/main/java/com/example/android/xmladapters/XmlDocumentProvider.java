@@ -424,7 +424,6 @@ public class XmlDocumentProvider extends ContentProvider {
 							}
 						}
 					}
-
 				} else if (eventType == XmlPullParser.END_TAG) {
 					// Pop last node from path
 					final int length = pathLengthStack.pop();
@@ -441,7 +440,6 @@ public class XmlDocumentProvider extends ContentProvider {
 						}
 						currentNodeDepth--;
 					}
-
 				} else if ((eventType == XmlPullParser.TEXT) && (!parser.isWhitespace())) {
 					for (int i = 0; i < mNumberOfProjections; i++) {
 						if ((currentNodeDepth >= 0) && (mActiveTextDepthMask[i].get(currentNodeDepth))) {

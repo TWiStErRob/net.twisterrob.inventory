@@ -18,7 +18,7 @@ public class MultiRequestListener<T, R> implements RequestListener<T, R> {
 	}
 
 	public boolean onResourceReady(R resource, T model, Target<R> target, boolean isFromMemCache, boolean isFirst) {
-		for (RequestListener<T, R> listener: listeners) {
+		for (RequestListener<T, R> listener : listeners) {
 			if (listener != null && listener.onResourceReady(resource, model, target, isFromMemCache, isFirst)) {
 				return true;
 			}
@@ -27,7 +27,7 @@ public class MultiRequestListener<T, R> implements RequestListener<T, R> {
 	}
 
 	public boolean onException(Exception e, T model, Target<R> target, boolean isFirstResource) {
-		for (RequestListener<T, R> listener: listeners) {
+		for (RequestListener<T, R> listener : listeners) {
 			if (listener != null && listener.onException(e, model, target, isFirstResource)) {
 				return true;
 			}

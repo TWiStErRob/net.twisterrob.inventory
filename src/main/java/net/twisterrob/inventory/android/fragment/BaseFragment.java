@@ -33,7 +33,7 @@ public class BaseFragment<T> extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		Class<T> eventsClass = this.<Class<T>> getDynamicResource(DYN_EventsClass);
+		Class<T> eventsClass = getDynamicResource(DYN_EventsClass);
 		eventsListener = AndroidTools.getAttachedFragmentListener(activity, eventsClass);
 	}
 
@@ -59,7 +59,7 @@ public class BaseFragment<T> extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		if (hasDynResource(DYN_OptionsMenu)) {
-			inflater.inflate(this.<Integer> getDynamicResource(DYN_OptionsMenu), menu);
+			inflater.inflate(this.<Integer>getDynamicResource(DYN_OptionsMenu), menu);
 		}
 	}
 

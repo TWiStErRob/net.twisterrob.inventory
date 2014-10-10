@@ -19,9 +19,9 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.io.csv.DatabaseCSVImporter;
 import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
 
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.StatusUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.sync;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.sync;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.StatusUtils.sync;
 
 public class ImportActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportActivity.class);
@@ -33,9 +33,10 @@ public class ImportActivity extends BaseDriveActivity {
 		googleDrive.setFinishOnCancel(true);
 		googleDrive.addTaskAfterConnected(new ConnectedTask() {
 			public void execute(GoogleApiClient client) {
-				IntentSender intentSender = Drive.DriveApi.newOpenFileActivityBuilder() //
-						.setActivityStartFolder(getRoot(client)) //
-						.setMimeType(new String[]{"text/csv"}) //
+				IntentSender intentSender = Drive.DriveApi
+						.newOpenFileActivityBuilder()
+						.setActivityStartFolder(getRoot(client))
+						.setMimeType(new String[]{"text/csv"})
 						.build(client);
 				try {
 					startIntentSenderForResult(intentSender, RESULT_FIRST_USER, null, 0, 0, 0);
@@ -50,6 +51,7 @@ public class ImportActivity extends BaseDriveActivity {
 			}
 		});
 	}
+
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -95,6 +97,7 @@ public class ImportActivity extends BaseDriveActivity {
 				super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
+
 	public static Intent chooser() {
 		Intent intent = new Intent(App.getAppContext(), ImportActivity.class);
 		return intent;

@@ -12,9 +12,12 @@ import android.os.Build;
 public final class LoggingCursorFactory implements CursorFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(LoggingCursorFactory.class);
 
-	private boolean m_debugQueries = false;
+	private final boolean m_debugQueries;
 
-	public LoggingCursorFactory() {}
+	public LoggingCursorFactory() {
+		this(false);
+	}
+
 	public LoggingCursorFactory(boolean debugQueries) {
 		m_debugQueries = debugQueries;
 	}

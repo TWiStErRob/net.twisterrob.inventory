@@ -1,14 +1,14 @@
 buildscript {
-    repositories {
-        jcenter()
-        maven { url 'http://localhost/maven' }
-    }
+	repositories {
+		jcenter()
+		maven { url 'http://localhost/maven' }
+	}
 
-    configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-    dependencies {
-        classpath 'net.twisterrob.gradle:plugin:0.2-SNAPSHOT'
+	configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	dependencies {
+		classpath 'net.twisterrob.gradle:plugin:0.2-SNAPSHOT'
 		classpath 'com.github.dcendents:android-maven-plugin:1.1' // for `gradle install`
-    }
+	}
 }
 
 apply plugin: 'java'
@@ -23,10 +23,10 @@ sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.5'
-    compile 'com.google.code.findbugs:jsr305:3.0.0'
+	compile 'org.slf4j:slf4j-api:1.7.5'
+	compile 'com.google.code.findbugs:jsr305:3.0.0'
 }

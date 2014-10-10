@@ -43,7 +43,7 @@ public class PickDriveFileActivity extends BaseActivity {
 		switch (requestCode) {
 			case RESULT_FIRST_USER:
 				if (resultCode == Activity.RESULT_OK) {
-					DriveId driveId = (DriveId)data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+					DriveId driveId = data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
 					LOG.info("Result: {} / {}", data.getData(), AndroidTools.toString(data.getExtras()));
 					text.setText(driveId.encodeToString());
 				}

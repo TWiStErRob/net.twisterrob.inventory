@@ -6,8 +6,7 @@ import android.content.Context;
 import android.database.DataSetObserver;
 
 public abstract class BaseFilteringExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
-		extends
-			BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH> {
+		extends BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH> {
 	List<Group> m_filteredGroups;
 	Map<Group, List<Child>> m_filteredChildren;
 
@@ -57,7 +56,7 @@ public abstract class BaseFilteringExpandableList2Adapter<Group, Child, GroupVH,
 
 	/**
 	 * Filter children in this method.
-	 * 
+	 *
 	 * Does no filtering by default, just return children.
 	 * @param children to filter
 	 * @param group the children belong to

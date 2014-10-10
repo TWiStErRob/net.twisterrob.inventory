@@ -5,9 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.view.*;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewGroup.MarginLayoutParams;
+import android.view.View;
+import android.view.ViewGroup.*;
 import android.widget.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;

@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.view;
 import org.slf4j.*;
 
 import android.app.*;
-import android.content.*;
+import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;

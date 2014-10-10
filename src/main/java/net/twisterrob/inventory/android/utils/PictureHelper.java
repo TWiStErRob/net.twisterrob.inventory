@@ -56,7 +56,7 @@ public abstract class PictureHelper {
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		PackageManager packageManager = activity.getPackageManager();
 		List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-		for (ResolveInfo res: listCam) {
+		for (ResolveInfo res : listCam) {
 			Intent intent = new Intent(captureIntent);
 			intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
 			intent.setPackage(res.activityInfo.packageName);
@@ -80,10 +80,10 @@ public abstract class PictureHelper {
 	 * selectedCount=1
 	 * selectedItems=content://media/external/images/media/1173
 	 * Total commander: data=content://com.ghisler.android.TotalCommander.files/storage/emulated/0/DCIM/Facebook/IMG_85501072011957.jpeg
-	 * @return 
+	 * @return
 	 */
 	public boolean endCapture(int resultCode, Intent intent) {
-		LOG.trace("endCapture(resultCode={}, intent={}): {}\nextras={}", resultCode, intent, file, //
+		LOG.trace("endCapture(resultCode={}, intent={}): {}\nextras={}", resultCode, intent, file,
 				intent != null? AndroidTools.toString(intent.getExtras()) : null);
 		if (resultCode == Activity.RESULT_CANCELED) {
 			file = null;
@@ -139,7 +139,7 @@ public abstract class PictureHelper {
 	}
 
 	public boolean endCrop(int resultCode, Intent intent) {
-		LOG.trace("endCrop(resultCode={}, intent={}): {}\nextras={}", resultCode, intent, cropFile, //
+		LOG.trace("endCrop(resultCode={}, intent={}): {}\nextras={}", resultCode, intent, cropFile,
 				intent != null? AndroidTools.toString(intent.getExtras()) : null);
 		if (resultCode == Activity.RESULT_CANCELED) {
 			cropFile = null;

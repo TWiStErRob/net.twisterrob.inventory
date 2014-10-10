@@ -14,7 +14,7 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
-import net.twisterrob.inventory.android.fragment.*;
+import net.twisterrob.inventory.android.fragment.BackupFragment;
 import net.twisterrob.inventory.android.fragment.BackupPickerFragment.BackupPickerListener;
 
 import static net.twisterrob.inventory.android.content.contract.Category.*;
@@ -43,16 +43,16 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 	}
 
 	private static Collection<MainItem> createActions() {
-		Collection<MainItem> actions = new ArrayList<MainItem>();
-		actions.add(new MainItem(R.string.property_list, R.raw.property_home, PropertyListActivity.list()));
-		actions.add(new MainItem(R.string.category_list, R.raw.category_unknown, CategoryViewActivity.show(INTERNAL)));
-		actions.add(new MainItem(R.string.item_list, R.raw.category_collectibles, CategoryItemsActivity.show(INTERNAL)));
-		actions.add(new MainItem(R.string.sunburst_title, R.raw.category_disc, SunBurstActivity.show()));
+		Collection<MainItem> acts = new ArrayList<MainItem>();
+		acts.add(new MainItem(R.string.property_list, R.raw.property_home, PropertyListActivity.list()));
+		acts.add(new MainItem(R.string.category_list, R.raw.category_unknown, CategoryViewActivity.show(INTERNAL)));
+		acts.add(new MainItem(R.string.item_list, R.raw.category_collectibles, CategoryItemsActivity.show(INTERNAL)));
+		acts.add(new MainItem(R.string.sunburst_title, R.raw.category_disc, SunBurstActivity.show()));
 
 		if (BuildConfig.DEBUG) {
-			actions.add(new MainItem(R.string.dev_title, R.raw.category_electric, DeveloperActivity.show()));
+			acts.add(new MainItem(R.string.dev_title, R.raw.category_electric, DeveloperActivity.show()));
 		}
-		return actions;
+		return acts;
 	}
 
 	@Override

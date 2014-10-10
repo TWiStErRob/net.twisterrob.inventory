@@ -11,9 +11,7 @@ import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEven
 import net.twisterrob.inventory.android.fragment.data.RoomViewFragment.RoomEvents;
 
 public class RoomViewActivity extends BaseDetailActivity<RoomViewFragment, ItemListFragment>
-		implements
-			RoomEvents,
-			ItemsEvents {
+		implements RoomEvents, ItemsEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
 		long roomID = getExtraRoomID();

@@ -1,4 +1,5 @@
 package net.twisterrob.android.utils.concurrent;
+
 public class AsyncTaskResult<T> {
 	private T result;
 	private Exception error;

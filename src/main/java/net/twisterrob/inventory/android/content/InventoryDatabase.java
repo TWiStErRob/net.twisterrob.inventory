@@ -4,20 +4,21 @@ import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
 
-import net.twisterrob.inventory.android.content.InventoryContract.Item;
-import net.twisterrob.inventory.android.content.InventoryContract.Search;
+import net.twisterrob.inventory.android.content.InventoryContract.*;
 
 public class InventoryDatabase {
-	private static final InventoryDatabase instance = new InventoryDatabase();
+	private static final InventoryDatabase INSTANCE = new InventoryDatabase();
 	private static final String[] NO_PROJ = null;
 	private static final String NO_SEL = null;
 	private static final String[] NO_ARGS = null;
 	private static final String NO_SORT = null;
 
-	private InventoryDatabase() {}
+	private InventoryDatabase() {
+		// Singleton
+	}
 
 	public static InventoryDatabase getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	public long createProperty(ContentResolver cr, String name, String image) {

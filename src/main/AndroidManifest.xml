@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE manifest>
-<manifest
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="net.twisterrob.inventory.android"
-	android:versionCode="1"
-	android:versionName="1.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="net.twisterrob.inventory.android">
 
-	<uses-sdk
-		android:minSdkVersion="9"
-		android:targetSdkVersion="19" />
+	<uses-sdk android:minSdkVersion="9" />
+
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-feature
 		android:name="android.hardware.camera.autofocus"
@@ -16,15 +12,17 @@
 	<uses-feature
 		android:name="android.hardware.camera"
 		android:required="false" />
+
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.INTERNET" /> <!-- ViewServer -->
+	<!-- ViewServer needs INTERNET -->
+	<uses-permission android:name="android.permission.INTERNET" />
 
 	<application
 		android:name=".App"
-		android:allowBackup="true"
-		android:icon="@drawable/ic_launcher"
 		android:label="@string/app_name"
+		android:icon="@drawable/ic_launcher"
+		android:allowBackup="true"
 		android:theme="@style/AppTheme">
 		<meta-data
 			android:name="android.app.default_searchable"
@@ -161,10 +159,10 @@
 			android:name=".activity.dev.DeveloperActivity"
 			android:label="@string/dev_title"
 			android:theme="@android:style/Theme">
-<!--			<intent-filter> -->
-<!-- 				<action android:name="android.intent.action.MAIN" /> -->
-<!-- 				<category android:name="android.intent.category.LAUNCHER" /> -->
-<!--			</intent-filter> -->
+			<!--<intent-filter>-->
+			<!--<action android:name="android.intent.action.MAIN" />-->
+			<!--<category android:name="android.intent.category.LAUNCHER" />-->
+			<!--</intent-filter>-->
 		</activity>
 		<activity
 			android:name=".activity.dev.DeveloperDriveActivity"

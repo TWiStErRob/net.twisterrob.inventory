@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE menu>
 <menu
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	>
 	<item
 		android:id="@+id/preferences"
 		android:title="@string/pref_activity_title"
 		android:icon="@android:drawable/ic_menu_preferences"
-		app:showAsAction="never" />
+		app:showAsAction="never"
+		/>
 </menu>

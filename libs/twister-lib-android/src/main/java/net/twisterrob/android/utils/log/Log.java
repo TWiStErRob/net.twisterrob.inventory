@@ -4,7 +4,7 @@ import net.twisterrob.java.utils.StringTools;
 
 /**
  * Class to hide the complexity of Logging in android.
- * 
+ *
  * @author Zoltán Kiss
  * @author Róbert Papp
  */
@@ -13,7 +13,7 @@ public class Log {
 
 	/**
 	 * Constructs a logger class.
-	 * 
+	 *
 	 * @param tag the tag to use in {@link android.util.Log} calls.
 	 */
 	Log(final Tag tag) {

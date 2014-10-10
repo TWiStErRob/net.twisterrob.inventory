@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE layout>
 <merge
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/activityRoot"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	>
 	<GridView
 		android:id="@android:id/list"
-		android:numColumns="@integer/gallery_columns"
-		android:layerType="software"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
+		android:layout_height="fill_parent"
+		android:layerType="software"
+		android:numColumns="@integer/gallery_columns"
+		>
 	</GridView>
 </merge>

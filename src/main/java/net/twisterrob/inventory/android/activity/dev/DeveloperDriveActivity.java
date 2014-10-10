@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
-import com.google.android.gms.drive.events.*;
+import com.google.android.gms.drive.events.ChangeEvent;
 import com.google.android.gms.drive.events.DriveEvent.Listener;
 
 import net.twisterrob.inventory.android.R;
@@ -18,9 +18,9 @@ import net.twisterrob.inventory.android.tasks.Upload;
 import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
 import net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils;
 
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.IdUtils.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaBufferUtils.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.IdUtils.sync;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaBufferUtils.sync;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.sync;
 
 public class DeveloperDriveActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(DeveloperDriveActivity.class);
@@ -82,8 +82,8 @@ public class DeveloperDriveActivity extends BaseDriveActivity {
 		//return Drive.DriveApi.getFile(client, DriveId.decodeFromString("DriveId:CAESABi2CCDmhsDtoVE="));
 		//				Drive.DriveApi.getFile(client,
 		//						DriveId.decodeFromString("DriveId:CAESHDBCNXFUTlBncV9sbDVUbEJzWjNORGRsVmtTRTAYtggg5obA7aFR"));
-		return Drive.DriveApi
-				.getFile(client, sync(Drive.DriveApi.fetchDriveId(client, "0B5qTNPgq_ll5TlBsZ3NDdlVkSE0")));
+		DriveId driveId = sync(Drive.DriveApi.fetchDriveId(client, "0B5qTNPgq_ll5TlBsZ3NDdlVkSE0"));
+		return Drive.DriveApi.getFile(client, driveId);
 	}
 
 	void log(final Object object) {

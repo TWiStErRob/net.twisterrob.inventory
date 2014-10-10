@@ -1,4 +1,5 @@
 package net.twisterrob.java.exceptions;
+
 public class StackTrace extends RuntimeException {
 	private static final long serialVersionUID = -2617948264981185300L;
 

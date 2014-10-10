@@ -41,13 +41,13 @@ import android.view.*;
  * make HierarchyViewer work on any device. You must be very careful
  * however to only enable HierarchyViewer when debugging your
  * application.</p>
- * 
+ *
  * <p>To use this view server, your application must require the INTERNET
  * permission.</p>
- * 
+ *
  * <p>The recommended way to use this API is to register activities when
  * they are created, and to unregister them when they get destroyed:</p>
- * 
+ *
  * <pre>
  * public class MyActivity extends Activity {
  *     public void onCreate(Bundle savedInstanceState) {
@@ -55,23 +55,23 @@ import android.view.*;
  *         // Set content view, etc.
  *         ViewServer.get(this).addWindow(this);
  *     }
- *       
+ *
  *     public void onDestroy() {
  *         super.onDestroy();
  *         ViewServer.get(this).removeWindow(this);
  *     }
- *   
+ *
  *     public void onResume() {
  *         super.onResume();
  *         ViewServer.get(this).setFocusedWindow(this);
  *     }
  * }
  * </pre>
- * 
+ *
  * <p>
  * In a similar fashion, you can use this API with an InputMethodService:
  * </p>
- * 
+ *
  * <pre>
  * public class MyInputMethodService extends InputMethodService {
  *     public void onCreate() {
@@ -141,12 +141,12 @@ public class ViewServer implements Runnable {
 	 * Returns a unique instance of the ViewServer. This method should only be
 	 * called from the main thread of your application. The server will have
 	 * the same lifetime as your process.
-	 * 
+	 *
 	 * If your application does not have the <code>android:debuggable</code>
 	 * flag set in its manifest, the server returned by this method will
 	 * be a dummy object that does not do anything. This allows you to use
 	 * the same code in debug and release versions of your application.
-	 * 
+	 *
 	 * @param context A Context used to check whether the application is
 	 *                debuggable, this can be the application context
 	 */
@@ -266,7 +266,7 @@ public class ViewServer implements Runnable {
 	 *
 	 * @see #start()
 	 * @see #stop()
-	 * @see WindowManagerService#isViewServerRunning()  
+	 * @see WindowManagerService#isViewServerRunning()
 	 */
 	public boolean isRunning() {
 		return mThread != null && mThread.isAlive();
@@ -274,9 +274,9 @@ public class ViewServer implements Runnable {
 
 	/**
 	 * Invoke this method to register a new view hierarchy.
-	 * 
+	 *
 	 * @param activity The activity whose view hierarchy/window to register
-	 * 
+	 *
 	 * @see #addWindow(View, String)
 	 * @see #removeWindow(Activity)
 	 */
@@ -292,9 +292,9 @@ public class ViewServer implements Runnable {
 
 	/**
 	 * Invoke this method to unregister a view hierarchy.
-	 * 
+	 *
 	 * @param activity The activity whose view hierarchy/window to unregister
-	 * 
+	 *
 	 * @see #addWindow(Activity)
 	 * @see #removeWindow(View)
 	 */
@@ -304,10 +304,10 @@ public class ViewServer implements Runnable {
 
 	/**
 	 * Invoke this method to register a new view hierarchy.
-	 * 
+	 *
 	 * @param view A view that belongs to the view hierarchy/window to register
 	 * @name name The name of the view hierarchy/window to register
-	 * 
+	 *
 	 * @see #removeWindow(View)
 	 */
 	public void addWindow(View view, String name) {
@@ -322,9 +322,9 @@ public class ViewServer implements Runnable {
 
 	/**
 	 * Invoke this method to unregister a view hierarchy.
-	 * 
+	 *
 	 * @param view A view that belongs to the view hierarchy/window to unregister
-	 * 
+	 *
 	 * @see #addWindow(View, String)
 	 */
 	public void removeWindow(View view) {
@@ -339,7 +339,7 @@ public class ViewServer implements Runnable {
 
 	/**
 	 * Invoke this method to change the currently focused window.
-	 * 
+	 *
 	 * @param activity The activity whose view hierarchy/window hasfocus,
 	 *                 or null to remove focus
 	 */
@@ -349,7 +349,7 @@ public class ViewServer implements Runnable {
 
 	/**
 	 * Invoke this method to change the currently focused window.
-	 * 
+	 *
 	 * @param view A view that belongs to the view hierarchy/window that has focus,
 	 *             or null to remove focus
 	 */
@@ -418,13 +418,13 @@ public class ViewServer implements Runnable {
 	}
 
 	private void fireWindowsChangedEvent() {
-		for (WindowListener listener: mListeners) {
+		for (WindowListener listener : mListeners) {
 			listener.windowsChanged();
 		}
 	}
 
 	private void fireFocusChangedEvent() {
-		for (WindowListener listener: mListeners) {
+		for (WindowListener listener : mListeners) {
 			listener.focusChanged();
 		}
 	}
@@ -493,7 +493,8 @@ public class ViewServer implements Runnable {
 	}
 
 	private static class NoopViewServer extends ViewServer {
-		private NoopViewServer() {}
+		private NoopViewServer() {
+		}
 
 		@Override
 		public boolean start() {
@@ -631,8 +632,8 @@ public class ViewServer implements Runnable {
 				UncloseableOutputStream stream = new UncloseableOutputStream(client.getOutputStream());
 
 				// call stuff
-				final Method dispatch = ViewDebug.class.getDeclaredMethod("dispatchCommand", View.class, String.class,
-						String.class, OutputStream.class);
+				final Method dispatch = ViewDebug.class.getDeclaredMethod("dispatchCommand",
+						View.class, String.class, String.class, OutputStream.class);
 				dispatch.setAccessible(true);
 				dispatch.invoke(null, window, command, parameters, stream);
 
@@ -641,7 +642,6 @@ public class ViewServer implements Runnable {
 					out.write("DONE\n");
 					out.flush();
 				}
-
 			} catch (Exception e) {
 				Log.w(LOG_TAG, "Could not send command " + command + " with parameters " + parameters, e);
 				success = false;
@@ -672,7 +672,7 @@ public class ViewServer implements Runnable {
 
 			mWindowsLock.readLock().lock();
 			try {
-				for (Entry<View, String> entry: mWindows.entrySet()) {
+				for (Entry<View, String> entry : mWindows.entrySet()) {
 					if (System.identityHashCode(entry.getKey()) == hashCode) {
 						return entry.getKey();
 					}
@@ -694,7 +694,7 @@ public class ViewServer implements Runnable {
 				OutputStream clientStream = client.getOutputStream();
 				out = new BufferedWriter(new OutputStreamWriter(clientStream), 8 * 1024);
 
-				for (Entry<View, String> entry: mWindows.entrySet()) {
+				for (Entry<View, String> entry : mWindows.entrySet()) {
 					out.write(Integer.toHexString(System.identityHashCode(entry.getKey())));
 					out.write(' ');
 					out.append(entry.getValue());

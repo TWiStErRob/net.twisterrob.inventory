@@ -9,13 +9,15 @@ import android.content.res.AssetManager;
 import android.database.SQLException;
 import android.database.sqlite.*;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import android.os.*;
+import android.os.Build.*;
+import android.os.Environment;
+
 import static android.Manifest.permission.*;
 
 import net.twisterrob.android.BuildConfig;
 import net.twisterrob.android.utils.tools.*;
+
+import static net.twisterrob.android.utils.tools.DBTools.*;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	public static final int CURSOR_NO_COLUMN = -1;
@@ -62,11 +64,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			backupDB(db, "onCreate");
 		}
 		onConfigureCompat(db);
-		LOG.debug("Creating database: {}", DBTools.toString(db));
+		LOG.debug("Creating database: {}", dbToString(db));
 		execFile(db, String.format(DB_CLEAN_FILE, dbName));
 		execFile(db, String.format(DB_SCHEMA_FILE, dbName));
 		execFile(db, String.format(DB_DATA_FILES, dbName));
-		LOG.info("Created database: {}", DBTools.toString(db));
+		LOG.info("Created database: {}", dbToString(db));
 	}
 
 	@Override
@@ -80,7 +82,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onOpen(SQLiteDatabase db) {
-		LOG.debug("Opening database: {}", DBTools.toString(db));
+		LOG.debug("Opening database: {}", dbToString(db));
 		onConfigureCompat(db);
 		super.onOpen(db);
 		if (devMode) {
@@ -89,7 +91,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			execFile(db, String.format(DB_DEVELOPMENT_FILE, dbName));
 			backupDB(db, "onOpen_afterDev");
 		}
-		LOG.info("Opened database: {}", DBTools.toString(db));
+		LOG.info("Opened database: {}", dbToString(db));
 		if (dumpOnOpen) {
 			backupDB(db, "onOpen");
 		}
@@ -109,15 +111,14 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 
 	private void execFile(SQLiteDatabase db, String dbSchemaFile) {
-		LOG.debug("{} Executing file {} into database: {}", dbSchemaFile, DBTools.toString(db));
+		LOG.debug("{} Executing file {} into database: {}", dbSchemaFile, dbToString(db));
 		long time = System.nanoTime();
 
 		realExecuteFile(db, dbSchemaFile);
 
 		long end = System.nanoTime();
 		long executionTime = (end - time) / 1000 / 1000;
-		LOG.debug("Finished ({} ms) executed file {} into database: {}", executionTime, dbSchemaFile,
-				DBTools.toString(db));
+		LOG.debug("Finished ({} ms) executed file {} into database: {}", executionTime, dbSchemaFile, dbToString(db));
 	}
 
 	@SuppressWarnings("resource")
@@ -135,8 +136,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 				db.execSQL(statement);
 			}
 		} catch (SQLException ex) {
-			String message = String.format("Error creating database from file: %s while executing\n%s", dbSchemaFile,
-					statement);
+			String message = String.format("Error creating database from file: %s while executing\n%s",
+					dbSchemaFile, statement);
 			LOG.error(message, ex);
 			throw new IllegalStateException(message, ex);
 		} catch (IOException ex) {
@@ -181,5 +182,4 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			LOG.warn("No {} permission to back up DB at {}", WRITE_EXTERNAL_STORAGE, when);
 		}
 	}
-
 }

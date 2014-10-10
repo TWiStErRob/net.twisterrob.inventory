@@ -15,11 +15,11 @@ import java.util.*;
  * <code>${call.init[sb].type('java.lang.CharSequence').arg['hello'].invoke['append']}</code>
  * <li>
  * </ul>
- * 
+ *
  * @author Based on How to call methods from EL expressions- pre JSP 2.0 trick for JSPs with JSTL
  * @see http://technology.amis.nl/2005/06/15/how-to-call-methods-from-el-expressions-pre-jsp-20-trick-for-jsps-with-jstl
  * @author papp.robert.s
- * 
+ *
  */
 public class InvokerMap implements Map<Object, Object> {
 	private static enum Mode {
@@ -39,7 +39,6 @@ public class InvokerMap implements Map<Object, Object> {
 	private ArrayList<Object> args = new ArrayList<Object>();
 	private ArrayList<Class<?>> argTypes = new ArrayList<Class<?>>();
 
-	@SuppressWarnings("null")
 	public Object get(Object key) {
 		try {
 			switch (mode) {
@@ -63,6 +62,7 @@ public class InvokerMap implements Map<Object, Object> {
 					Method targetMethod = getMethod(clazz);
 					if (targetMethod == null) {
 						error("No such method, maybe need to pick overload by typing some arguments?", null);
+						return null; // error should throw
 					}
 					targetMethod.setAccessible(true);
 					mode = Mode.Operation;
@@ -134,14 +134,15 @@ public class InvokerMap implements Map<Object, Object> {
 
 	protected Method getMethod(Class<?> clazz) {
 		Method[] methods = clazz.getMethods();
-		methods : for (Method method: methods) {
+		methods:
+		for (Method method : methods) {
 			Class<?>[] params = method.getParameterTypes();
 			if (method.getName().equals(methodName) && params.length == args.size()) {
 				int argNum = -1;
-				args : for (Class<?> argType: argTypes) {
+				for (Class<?> argType : argTypes) {
 					argNum++;
 					if (argType == null) {
-						continue args;
+						continue /*args*/;
 					}
 					if (!params[argNum].isAssignableFrom(argType)) {
 						continue methods;

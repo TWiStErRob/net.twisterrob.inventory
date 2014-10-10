@@ -3,16 +3,16 @@ if (!hasProperty('precompiled')) {
 }
 
 buildscript {
-    repositories {
-        jcenter()
-        maven { url 'http://localhost/maven' }
-    }
+	repositories {
+		jcenter()
+		maven { url 'http://localhost/maven' }
+	}
 
-    configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-    dependencies {
-        classpath 'net.twisterrob.gradle:plugin:0.2-SNAPSHOT'
+	configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	dependencies {
+		classpath 'net.twisterrob.gradle:plugin:0.2-SNAPSHOT'
 		//classpath 'com.github.dcendents:android-maven-plugin:1.1' // for gradle install (to put aar into the repo)
-    }
+	}
 }
 
 apply plugin: 'com.android.library'

@@ -11,11 +11,11 @@ import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.utils.drive.*;
+import net.twisterrob.inventory.android.utils.drive.ApiClientProvider;
 import net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils;
 
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FileUtils.*;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.sync;
+import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FileUtils.sync;
 
 public class Upload extends SimpleAsyncTask<File, Void, DriveFile> {
 	private static final Logger LOG = LoggerFactory.getLogger(Upload.class);

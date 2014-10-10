@@ -48,7 +48,7 @@ public class PictureUtils {
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		PackageManager packageManager = activity.getPackageManager();
 		List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-		for (ResolveInfo res: listCam) {
+		for (ResolveInfo res : listCam) {
 			Intent intent = new Intent(captureIntent);
 			intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
 			intent.setPackage(res.activityInfo.packageName);
@@ -268,8 +268,8 @@ public class PictureUtils {
 		return null;
 	}
 	/**
-	    * @return Whether the URI is a local one.
-	    */
+	 * @return Whether the URI is a local one.
+	 */
 	public static boolean isLocal(String url) {
 		if (url != null && !url.startsWith("http://") && !url.startsWith("https://")) {
 			return true;

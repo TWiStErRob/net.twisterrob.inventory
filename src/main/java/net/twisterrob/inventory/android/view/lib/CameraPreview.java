@@ -5,12 +5,8 @@ import java.io.IOException;
 import org.slf4j.*;
 
 import android.content.Context;
-import android.hardware.*;
-import android.hardware.Camera.AutoFocusCallback;
-import android.hardware.Camera.CameraInfo;
-import android.hardware.Camera.Parameters;
-import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.Size;
+import android.hardware.Camera;
+import android.hardware.Camera.*;
 import android.os.*;
 import android.util.AttributeSet;
 import android.view.*;
@@ -312,6 +308,5 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 				CameraPreview.this.surfaceChanged(holder, format, w, h);
 			}
 		}
-
 	}
 }

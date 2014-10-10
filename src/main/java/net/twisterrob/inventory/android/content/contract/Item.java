@@ -1,4 +1,5 @@
 package net.twisterrob.inventory.android.content.contract;
+
 public interface Item extends CommonColumns {
 	String TABLE = "Item";
 

@@ -6,7 +6,7 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.*;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 
@@ -27,7 +27,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 	}
 
 	public void startLoading() {
-		for (Dependency<?> initial: loaders.values()) {
+		for (Dependency<?> initial : loaders.values()) {
 			if (initial.readyToBeExecuted()) {
 				start(initial);
 			}
@@ -57,7 +57,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 
 		state.ready = true;
 		LOG.info("loadFinished #{}, coming up: {}", state.id, state.consumers);
-		for (Dependency<?> next: state.consumers) {
+		for (Dependency<?> next : state.consumers) {
 			if (next.readyToBeExecuted()) {
 				start(next);
 			}
@@ -76,7 +76,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 	public String toString() {
 		StringBuilder sb = new StringBuilder(manager.toString());
 		sb.append('\n');
-		for (Dependency<?> state: loaders.values()) {
+		for (Dependency<?> state : loaders.values()) {
 			sb.append(state.id);
 			sb.append("\n\t").append("->").append(state.consumers);
 			sb.append("\n\t").append("<-").append(state.producers);
@@ -102,7 +102,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 		}
 
 		public boolean readyToBeExecuted() {
-			for (Dependency<?> dependency: producers) {
+			for (Dependency<?> dependency : producers) {
 				if (!dependency.isReady()) {
 					return false;
 				}

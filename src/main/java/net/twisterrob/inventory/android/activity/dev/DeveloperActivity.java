@@ -26,7 +26,7 @@ public class DeveloperActivity extends ListActivity {
 						Intent intent = new Intent(App.getAppContext(), MainActivity.class);
 						startActivity(intent);
 					}
-				}), //
+				}),
 				create("TEST", new Runnable() {
 					public void run() {
 						Intent intent = new Intent();
@@ -34,70 +34,70 @@ public class DeveloperActivity extends ListActivity {
 						intent.setData(Uri.parse("content://net.twisterrob.inventory/item/100008"));
 						startActivity(intent);
 					}
-				}), //
+				}),
 				create(getString(R.string.property_details), new Runnable() {
 					public void run() {
 						startActivity(PropertyViewActivity.show(1));
 					}
-				}), //
+				}),
 				create(getString(R.string.property_edit), new Runnable() {
 					public void run() {
 						startActivity(PropertyEditActivity.edit(1));
 					}
-				}), //
+				}),
 				create(getString(R.string.room_details), new Runnable() {
 					public void run() {
 						startActivity(RoomViewActivity.show(4));
 					}
-				}), //
+				}),
 				create(getString(R.string.room_edit), new Runnable() {
 					public void run() {
 						startActivity(RoomEditActivity.edit(4));
 					}
-				}), //
+				}),
 				create(getString(R.string.item_details), new Runnable() {
 					public void run() {
 						startActivity(ItemViewActivity.show(100008));
 					}
-				}), //
+				}),
 				create(getString(R.string.item_edit), new Runnable() {
 					public void run() {
 						startActivity(ItemEditActivity.edit(100008));
 					}
-				}), //
+				}),
 				create(getString(R.string.item_details) + " root", new Runnable() {
 					public void run() {
 						startActivity(ItemViewActivity.show(5));
 					}
-				}), //
+				}),
 				create(getString(R.string.item_edit) + " root", new Runnable() {
 					public void run() {
 						startActivity(ItemEditActivity.edit(5));
 					}
-				}), //
+				}),
 				create("Clear Picasso cache", new Runnable() {
 					public void run() {
 						App.pic().clearCaches();
 					}
-				}), //
+				}),
 				create("Drive Chooser", new Runnable() {
 					public void run() {
 						Intent intent = new Intent(App.getAppContext(), PickDriveFileActivity.class);
 						startActivity(intent);
 					}
-				}), //
+				}),
 				create("Drive Test", new Runnable() {
 					public void run() {
 						Intent intent = new Intent(App.getAppContext(), DeveloperDriveActivity.class);
 						startActivity(intent);
 					}
-				}), //
+				}),
 				create(getString(R.string.action_picture_take), new Runnable() {
 					public void run() {
 						startActivity(CaptureImage.saveTo(new File(getCacheDir(), "developer_image.jpg")));
 					}
-				}) //
-				);
+				})
+		);
 		SimpleAdapter simpleAdapter = new SimpleAdapter(getApplicationContext(), entries,
 				android.R.layout.simple_list_item_1, new String[]{"title"}, new int[]{android.R.id.text1});
 		setListAdapter(simpleAdapter);

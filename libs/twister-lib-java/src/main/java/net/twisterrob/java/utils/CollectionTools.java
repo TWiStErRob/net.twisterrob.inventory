@@ -19,7 +19,7 @@ public final class CollectionTools {
 	}
 
 	public static <T> T coalesce(final T... objects) {
-		for (T t: objects) {
+		for (T t : objects) {
 			if (t != null) {
 				return t;
 			}
@@ -175,7 +175,7 @@ public final class CollectionTools {
 			}
 			// fall back if others fail
 			if (elem == null) {
-				for (Iterator<T> iterator = set.iterator(); iterator.hasNext();) {
+				for (Iterator<T> iterator = set.iterator(); iterator.hasNext(); ) {
 					elem = iterator.next();
 				}
 			}
@@ -260,7 +260,7 @@ public final class CollectionTools {
 	 * @throws IllegalArgumentException if duplicate values are found in the source map
 	 */
 	public static <K, V> Map<V, K> reverseMap(Map<? extends K, ? extends V> from, Map<V, K> to) {
-		for (Entry<? extends K, ? extends V> in: from.entrySet()) {
+		for (Entry<? extends K, ? extends V> in : from.entrySet()) {
 			if (in.getValue() == null) {
 				continue;
 			}

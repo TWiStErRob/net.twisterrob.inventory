@@ -35,18 +35,18 @@ public class DescriptionBuilder {
 	}
 
 	/**
-	* Returns a CharSequence that concatenates the specified array of CharSequence
-	* objects and then applies a list of zero or more tags to the entire range.
-	*
-	* @param content an array of character sequences to apply a style to
-	* @param tags the styled span objects to apply to the content
-	*        such as android.text.style.StyleSpan
-	*
-	*/
+	 * Returns a CharSequence that concatenates the specified array of CharSequence
+	 * objects and then applies a list of zero or more tags to the entire range.
+	 *
+	 * @param content an array of character sequences to apply a style to
+	 * @param tags the styled span objects to apply to the content
+	 *        such as android.text.style.StyleSpan
+	 *
+	 */
 	private static CharSequence apply(CharSequence[] content, Object... tags) {
 		SpannableStringBuilder text = new SpannableStringBuilder();
 		openTags(text, tags);
-		for (CharSequence item: content) {
+		for (CharSequence item : content) {
 			text.append(item);
 		}
 		closeTags(text, tags);
@@ -59,7 +59,7 @@ public class DescriptionBuilder {
 	 * applied to it. Do not call this method directly.
 	 */
 	private static void openTags(Spannable text, Object... tags) {
-		for (Object tag: tags) {
+		for (Object tag : tags) {
 			text.setSpan(tag, 0, 0, Spannable.SPAN_MARK_MARK);
 		}
 	}
@@ -71,7 +71,7 @@ public class DescriptionBuilder {
 	 */
 	private static void closeTags(Spannable text, Object... tags) {
 		int len = text.length();
-		for (Object tag: tags) {
+		for (Object tag : tags) {
 			if (len > 0) {
 				text.setSpan(tag, 0, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			} else {
@@ -80,9 +80,9 @@ public class DescriptionBuilder {
 		}
 	}
 	/**
-	* Returns a CharSequence that applies boldface to the concatenation
-	* of the specified CharSequence objects.
-	*/
+	 * Returns a CharSequence that applies boldface to the concatenation
+	 * of the specified CharSequence objects.
+	 */
 	public static CharSequence bold(CharSequence... content) {
 		return apply(content, new StyleSpan(Typeface.BOLD));
 	}

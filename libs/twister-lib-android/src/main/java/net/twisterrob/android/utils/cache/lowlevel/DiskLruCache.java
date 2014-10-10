@@ -77,13 +77,13 @@ public final class DiskLruCache implements Closeable {
 
 	/**
 	 * This cache uses a journal file named "journal". A typical journal file looks like this:
-	 * 
+	 *
 	 * <pre>
 	 *     libcore.io.DiskLruCache
 	 *     1
 	 *     100
 	 *     2
-	 * 
+	 *
 	 *     CLEAN 3400330d1dfc7f3f7f4b8d4d803dfcf6 832 21054
 	 *     DIRTY 335c4c6028171cfddfbaae1a9c313c52
 	 *     CLEAN 335c4c6028171cfddfbaae1a9c313c52 3934 2342
@@ -93,7 +93,7 @@ public final class DiskLruCache implements Closeable {
 	 *     READ 335c4c6028171cfddfbaae1a9c313c52
 	 *     READ 3400330d1dfc7f3f7f4b8d4d803dfcf6
 	 * </pre>
-	 * 
+	 *
 	 * The first five lines of the journal form its header. They are the constant string "libcore.io.DiskLruCache", the
 	 * disk cache's version, the application's version, the value count, and a blank line. Each of the subsequent lines
 	 * in the file is a record of the state of a cache entry. Each line contains space-separated values: a state, a key,
@@ -164,7 +164,7 @@ public final class DiskLruCache implements Closeable {
 
 	/**
 	 * Returns the ASCII characters up to but not including the next "\r\n", or "\n".
-	 * 
+	 *
 	 * @throws java.io.EOFException if the stream is exhausted before the next newline character.
 	 */
 	private static String readAsciiLine(final InputStream in) throws IOException {
@@ -212,7 +212,7 @@ public final class DiskLruCache implements Closeable {
 		if (files == null) {
 			throw new IllegalArgumentException("not a directory: " + dir);
 		}
-		for (File file: files) {
+		for (File file : files) {
 			if (file.isDirectory()) {
 				DiskLruCache.deleteContents(file);
 			}
@@ -254,14 +254,15 @@ public final class DiskLruCache implements Closeable {
 
 	/**
 	 * Opens the cache in {@code directory}, creating a cache if none exists there.
-	 * 
+	 *
 	 * @param directory a writable directory
 	 * @param appVersion
 	 * @param valueCount the number of values per cache entry. Must be positive.
 	 * @param maxSize the maximum number of bytes this cache should use to store
 	 * @throws IOException if reading or writing the cache directory fails
 	 */
-	public static DiskLruCache open(final File directory, final int appVersion, final int valueCount, final long maxSize)
+	public static DiskLruCache open(final File directory, final int appVersion, final int valueCount,
+			final long maxSize)
 			throws IOException {
 		if (maxSize <= 0) {
 			throw new IllegalArgumentException("maxSize <= 0");
@@ -357,7 +358,7 @@ public final class DiskLruCache implements Closeable {
 	 */
 	private void processJournal() throws IOException {
 		DiskLruCache.deleteIfExists(journalFileTmp);
-		for (Iterator<Entry> i = lruEntries.values().iterator(); i.hasNext();) {
+		for (Iterator<Entry> i = lruEntries.values().iterator(); i.hasNext(); ) {
 			Entry entry = i.next();
 			if (entry.currentEditor == null) {
 				for (int t = 0; t < valueCount; t++) {
@@ -393,7 +394,7 @@ public final class DiskLruCache implements Closeable {
 		writer.write("\n");
 		writer.write("\n");
 
-		for (Entry entry: lruEntries.values()) {
+		for (Entry entry : lruEntries.values()) {
 			if (entry.currentEditor != null) {
 				writer.write(DIRTY + ' ' + entry.key + '\n');
 			} else {
@@ -571,7 +572,7 @@ public final class DiskLruCache implements Closeable {
 
 	/**
 	 * Drops the entry for {@code key} if it exists and can be removed. Entries actively being edited cannot be removed.
-	 * 
+	 *
 	 * @return true if an entry was removed.
 	 */
 	public synchronized boolean remove(final String key) throws IOException {
@@ -631,7 +632,7 @@ public final class DiskLruCache implements Closeable {
 		if (journalWriter == null) {
 			return; // already closed
 		}
-		for (Entry entry: new ArrayList<Entry>(lruEntries.values())) {
+		for (Entry entry : new ArrayList<Entry>(lruEntries.values())) {
 			if (entry.currentEditor != null) {
 				entry.currentEditor.abort();
 			}
@@ -714,7 +715,7 @@ public final class DiskLruCache implements Closeable {
 		}
 
 		public void close() {
-			for (InputStream in: ins) {
+			for (InputStream in : ins) {
 				DiskLruCache.closeQuietly(in);
 			}
 		}
@@ -871,7 +872,7 @@ public final class DiskLruCache implements Closeable {
 
 		public String getLengths() {
 			StringBuilder result = new StringBuilder();
-			for (long size: lengths) {
+			for (long size : lengths) {
 				result.append(' ').append(size);
 			}
 			return result.toString();

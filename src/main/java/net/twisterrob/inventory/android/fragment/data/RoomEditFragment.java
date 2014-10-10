@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.view.*;
 
-import net.twisterrob.android.content.loader.*;
+import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.AndroidTools;

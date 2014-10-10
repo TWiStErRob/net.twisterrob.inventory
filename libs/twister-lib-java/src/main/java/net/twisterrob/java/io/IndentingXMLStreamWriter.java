@@ -7,11 +7,13 @@ import javax.xml.stream.*;
 
 public class IndentingXMLStreamWriter implements XMLStreamWriter {
 	private XMLStreamWriter writer;
+
 	private static enum State {
 		NONE,
 		ELEMENT,
 		DATA
 	}
+
 	private State state;
 	private Stack<State> states;
 	private String indentString = "\t";
@@ -29,7 +31,6 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 			for (int i = 0; i < depth; i++) {
 				writer.writeCharacters(indentString);
 			}
-
 		}
 	}
 

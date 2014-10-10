@@ -15,7 +15,7 @@ public class DatabaseCSVImporter extends DatabaseImporter {
 		CSVParser parser = CSVConstants.FORMAT.parse(new InputStreamReader(in, CSVConstants.ENCODING));
 		try {
 			startProcess();
-			for (CSVRecord record: parser) {
+			for (CSVRecord record : parser) {
 				String type = record.get("type");
 				String property = record.get("property");
 				String room = record.get("room");
@@ -45,7 +45,7 @@ public class DatabaseCSVImporter extends DatabaseImporter {
 		} else if (property != null) { // property: property != null && room == null && item == null
 			processProperty(type, property, driveId);
 		} else {
-			throw new IllegalArgumentException("Cannot identify entity: property, room or item must be set" //
+			throw new IllegalArgumentException("Cannot identify entity: property, room or item must be set"
 					+ ", type=" + type + ", image=" + image + ", parent=" + parent + ", id=" + id);
 		}
 	}

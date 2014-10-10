@@ -11,9 +11,8 @@ import android.app.*;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.*;
-import android.hardware.*;
-import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.net.Uri;
 import android.os.*;
 import android.preference.ListPreference;
@@ -22,6 +21,8 @@ import android.support.v4.widget.*;
 import android.util.*;
 import android.view.*;
 import android.widget.AdapterView;
+
+import static android.util.TypedValue.*;
 
 public abstract class AndroidTools {
 	private static final float CIRCLE_LIMIT = 359.9999f;
@@ -48,8 +49,7 @@ public abstract class AndroidTools {
 	}
 
 	public static float dip(Context context, float number) {
-		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, number, context.getResources()
-				.getDisplayMetrics());
+		return TypedValue.applyDimension(COMPLEX_UNIT_DIP, number, context.getResources().getDisplayMetrics());
 	}
 	public static int dipInt(Context context, float number) {
 		return (int)dip(context, number);
@@ -74,7 +74,7 @@ public abstract class AndroidTools {
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("Bundle of ").append(bundle.size()).append('\n');
-		for (String key: new TreeSet<String>(bundle.keySet())) {
+		for (String key : new TreeSet<String>(bundle.keySet())) {
 			String value = toString(bundle.get(key));
 			sb.append('\t').append(key).append("=").append(value).append('\n');
 		}
@@ -105,7 +105,7 @@ public abstract class AndroidTools {
 
 		if (optimalSize == null) {
 			double minDiff = Double.MAX_VALUE;
-			for (Camera.Size size: sizes) {
+			for (Camera.Size size : sizes) {
 				double ratio = (double)size.width / (double)size.height;
 				if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) {
 					continue; // try to find the one which have very similar ratio first
@@ -120,7 +120,7 @@ public abstract class AndroidTools {
 
 		if (optimalSize == null) {
 			double minDiff = Double.MAX_VALUE;
-			for (Camera.Size size: sizes) {
+			for (Camera.Size size : sizes) {
 				if (Math.abs(size.height - targetHeight) < minDiff) {
 					optimalSize = size;
 					minDiff = Math.abs(size.height - targetHeight);
@@ -258,8 +258,8 @@ public abstract class AndroidTools {
 			return null;
 		}
 		if (!eventsClass.isInstance(activity)) {
-			throw new IllegalArgumentException("Activity " + activity.getClass().getSimpleName() + " must implement "
-					+ eventsClass);
+			String activityClass = activity.getClass().getSimpleName();
+			throw new IllegalArgumentException("Activity " + activityClass + " must implement " + eventsClass);
 		}
 		return eventsClass.cast(activity);
 	}

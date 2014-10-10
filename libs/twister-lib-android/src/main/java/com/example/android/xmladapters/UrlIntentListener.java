@@ -19,7 +19,7 @@ package com.example.android.xmladapters;
 import android.content.*;
 import android.net.Uri;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 /**

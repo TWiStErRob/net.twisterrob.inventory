@@ -15,16 +15,21 @@ public class LocationUtils {
 	 */
 	public static double distance(Location p1, Location p2) {
 		double meanRadius = (earthRadius(p1.getLatitude()) + earthRadius(p2.getLatitude())) / 2.0 * 1000;
-		return meanRadius
-				* vincenty(toRadians(p1.getLatitude()), toRadians(p1.getLongitude()), toRadians(p2.getLatitude()),
-						toRadians(p2.getLongitude()));
+		return meanRadius * vincenty(
+				toRadians(p1.getLatitude()),
+				toRadians(p1.getLongitude()),
+				toRadians(p2.getLatitude()),
+				toRadians(p2.getLongitude())
+		);
 	}
 	private static double vincenty(double phi_s, double lambda_s, double phi_f, double lambda_f) {
 		double delta_lambda = lambda_s - lambda_f;
-		return atan2(
-				sqrt(pow(cos(phi_f) * sin(delta_lambda), 2)
-						+ pow(cos(phi_s) * sin(phi_f) - sin(phi_s) * cos(phi_f) * cos(delta_lambda), 2)), sin(phi_s)
-						* sin(phi_f) + cos(phi_s) * cos(phi_f) * cos(delta_lambda));
+		return atan2(sqrt(
+						pow(cos(phi_f) * sin(delta_lambda), 2)
+								+ pow(cos(phi_s) * sin(phi_f) - sin(phi_s) * cos(phi_f) * cos(delta_lambda), 2)
+				),
+				sin(phi_s) * sin(phi_f) + cos(phi_s) * cos(phi_f) * cos(delta_lambda)
+		);
 	}
 
 	private static final double equatorial_radius = 6378.1370;

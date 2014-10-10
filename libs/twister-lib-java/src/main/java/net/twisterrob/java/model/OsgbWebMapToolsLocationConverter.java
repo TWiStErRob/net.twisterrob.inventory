@@ -1,4 +1,6 @@
 package net.twisterrob.java.model;
+
+import static java.lang.Math.*;
 /**
  * This code is based on {@link http://osgbwebmaptools.cvs.sourceforge.net/viewvc/osgbwebmaptools/OSGBWebMapTools/OSGBWebMapTools-API/lib/OSGBWebMapTools/GridProjection.js?revision=1.1&view=markup}.
  */
@@ -59,7 +61,7 @@ public class OsgbWebMapToolsLocationConverter {
 		double PHId = initialLat(northing, falseN, af0, RadPHI0, n, bf0);
 
 		// Compute nu, rho and eta2 using value for PHId
-		double sinPHId = Math.sin(PHId);
+		double sinPHId = sin(PHId);
 		double sinPHId2 = sinPHId * sinPHId;
 		double nu = af0 / (Math.sqrt(1.0 - (e2 * sinPHId2)));
 		double rho = (nu * (1.0 - e2)) / (1.0 - (e2 * sinPHId2));
@@ -84,7 +86,7 @@ public class OsgbWebMapToolsLocationConverter {
 				* (PHId - ((Et * Et) * VII) + ((Et * Et * Et * Et) * VIII) - ((Et * Et * Et * Et * Et * Et) * IX));
 
 		// Compute Longitude
-		double cosPHId = Math.cos(PHId);
+		double cosPHId = cos(PHId);
 		double cosPHId_1 = 1.0 / cosPHId;
 		double X = cosPHId_1 / nu;
 		double XI = (cosPHId_1 / (6 * (nu * nu * nu))) * ((nu / rho) + (2 * tanPHId2));
@@ -101,9 +103,12 @@ public class OsgbWebMapToolsLocationConverter {
 			System.out.println("XII: " + XII);
 			System.out.println("XIIA: " + XIIA);
 		}
-		double E_N_to_Lng = (180 / Math.PI)
-				* (RadLAM0 + (Et * X) - ((Et * Et * Et) * XI) + ((Et * Et * Et * Et * Et) * XII) - ((Et * Et * Et * Et
-						* Et * Et * Et) * XIIA));
+		double E_N_to_Lng = (180 / Math.PI) * (RadLAM0
+				+ (Et) * X
+				- (Et * Et * Et) * XI
+				+ (Et * Et * Et * Et * Et) * XII
+				- (Et * Et * Et * Et * Et * Et * Et) * XIIA
+		);
 		Location pt_LonLat = new Location(E_N_to_Lat, E_N_to_Lng);
 
 		if (debug) {
@@ -116,9 +121,9 @@ public class OsgbWebMapToolsLocationConverter {
 	/**
 	 * Method: initialLat
 	 * Internal conversion method
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * Returns:
 	 * {Float}
 	 */
@@ -157,9 +162,9 @@ public class OsgbWebMapToolsLocationConverter {
 	/**
 	 * Method: marc
 	 * Internal conversion method to Compute meridional arc.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * Returns:
 	 * {Float}
 	 */
@@ -172,14 +177,19 @@ public class OsgbWebMapToolsLocationConverter {
 		// THIS FUNCTION IS CALLED BY THE - _
 		// "Lat_Long_to_North" and "InitialLat" FUNCTIONS
 		// THIS FUNCTION IS ALSO USED ON IT'S OWN IN THE "Projection and Transformation Calculations.xls" SPREADSHEET
-		double marc = bf0
-				* (((1.0 + n + ((5.0 / 4.0) * (n * n)) + ((5.0 / 4.0) * (n * n * n))) * (PHI - PHI0))
-						- (((3.0 * n) + (3.0 * (n * n)) + ((21.0 / 8.0) * (n * n * n))) * Math.sin(PHI - PHI0) * Math
-								.cos(PHI + PHI0))
-						+ ((((15.0 / 8.0) * (n * n)) + ((15.0 / 8.0) * (n * n * n))) * Math.sin(2.0 * (PHI - PHI0)) * Math
-								.cos(2.0 * (PHI + PHI0))) - (((35.0 / 24.0) * (n * n * n))
-						* Math.sin(3.0 * (PHI - PHI0)) * Math.cos(3.0 * (PHI + PHI0))));
+		double marc = bf0 * (
+				((1.0 + n + ((5.0 / 4.0) * (n * n)) + ((5.0 / 4.0) * (n * n * n))) * (PHI - PHI0))
+						-
+						(((3.0 * n) + (3.0 * (n * n)) + ((21.0 / 8.0) * (n * n * n)))
+								* sin(PHI - PHI0) * cos(PHI + PHI0)
+						)
+						+
+						((((15.0 / 8.0) * (n * n)) + ((15.0 / 8.0) * (n * n * n)))
+								* sin(2.0 * (PHI - PHI0)) * cos(2.0 * (PHI + PHI0))
+						)
+						-
+						(((35.0 / 24.0) * (n * n * n)) * sin(3.0 * (PHI - PHI0)) * cos(3.0 * (PHI + PHI0)))
+		);
 		return marc;
 	}
-
 }
