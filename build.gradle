@@ -1,4 +1,7 @@
-apply plugin: 'net.twisterrob.android-app'
+if (!project.hasProperty('precompiled')) {
+	evaluationDependsOn ':twister-lib-java'
+	evaluationDependsOn ':twister-lib-android'
+}
 
 buildscript {
     repositories {
@@ -12,14 +15,28 @@ buildscript {
     }
 }
 
+allprojects {
+	apply plugin: 'idea'
+    project.plugins.withType(com.android.build.gradle.BasePlugin) {
+        project.apply plugin: 'net.twisterrob.android-eclipse'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'net.twisterrob.android-app'
+
 repositories {
 	mavenCentral()
 	mavenLocal()
 }
 
 dependencies {
-	compile fileTree(dir: 'libs', include: ['*.jar'])
-	compile 'net.twisterrob:twister-lib-android:1.0'
+	if (project.hasProperty('precompiled')) {
+		compile('net.twisterrob:twister-lib-android:1.0')
+	} else {
+		compile project(':twister-lib-java')
+		compile project(':twister-lib-android')
+	}
 	compile 'com.caverock:androidsvg:1.2.1'
 	compile 'org.apache.commons:commons-csv:1.0'
 	compile 'com.android.support:support-v4:19.1.0'
@@ -27,8 +44,6 @@ dependencies {
 	compile 'com.android.support:appcompat-v7:19.1.0'
 	compile 'com.google.android.gms:play-services:5.0.89'
 	compile 'com.github.bumptech.glide:glide:3.3.+'
-	eclipseProjects 'net.twisterrob:twister-lib-android:1.0'
-	eclipseProjects 'com.android.support:appcompat-v7:19.1.0'
 }
 
 android { // http://tools.android.com/tech-docs/new-build-system/user-guide
@@ -44,5 +59,8 @@ android { // http://tools.android.com/tech-docs/new-build-system/user-guide
     lintOptions {
 		abortOnError false
         disable 'MissingTranslation'
+	}
+	aaptOptions {
+		useAaptPngCruncher false
 	}
 }

@@ -8,3 +8,7 @@
 /.settings
 /prof
 /test-db-concatenated.sql
+/.idea
+/*.iml
+/*.ipr
+/*.iws

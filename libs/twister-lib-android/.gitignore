@@ -6,3 +6,7 @@
 /bin
 /build
 /project.properties
+/.idea
+/*.iml
+/*.ipr
+/*.iws

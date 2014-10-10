@@ -1,6 +1,20 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'http://localhost/maven' }
+    }
+
+    configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    dependencies {
+        classpath 'net.twisterrob.gradle:plugin:0.2-SNAPSHOT'
+		classpath 'com.github.dcendents:android-maven-plugin:1.1' // for `gradle install`
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
+apply plugin: 'net.twisterrob.java'
 
 group 'net.twisterrob'
 version '1.0'
@@ -10,11 +24,6 @@ targetCompatibility = JavaVersion.VERSION_1_6
 
 repositories {
     mavenCentral()
-}
-
-configurations {
-	provided
-	eclipseProjects
 }
 
 dependencies {
