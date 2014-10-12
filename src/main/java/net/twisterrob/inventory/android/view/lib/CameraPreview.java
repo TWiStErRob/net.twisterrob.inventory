@@ -91,6 +91,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
+	@SuppressWarnings("SuspiciousNameCombination")
 	private void updatePreview(int w, int h) {
 		LOG.trace("Updating preview {}", cameraHolder != null);
 		if (cameraHolder == null) {

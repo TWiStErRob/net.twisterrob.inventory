@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.view;
 import org.slf4j.*;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 
@@ -28,7 +29,7 @@ public class LoggingActionBarActivity extends ActionBarActivity {
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+	protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
 		LOG.trace("{}.onRestoreInstanceState({})", getName(), AndroidTools.toString(savedInstanceState));
 		super.onRestoreInstanceState(savedInstanceState);
 	}

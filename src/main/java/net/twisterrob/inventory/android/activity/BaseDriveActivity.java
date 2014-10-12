@@ -8,11 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.*;
 import com.google.android.gms.drive.*;
+import com.google.android.gms.drive.DriveFolder.*;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.utils.drive.*;
 import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
 import net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils;
@@ -98,7 +98,7 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 			try {
 				setupGoogleDrive();
 			} finally {
-				client = null;
+				this.client = null;
 			}
 		}
 
@@ -121,24 +121,24 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 
 			DriveFolder inventoryFolder = FolderUtils.getExisting(client, rootFolder, DEFAULT_DRIVE_FOLDER_NAME);
 			if (inventoryFolder == null) {
-				inventoryFolder = createInventoryFolder(rootFolder);
-				createREADME(inventoryFolder);
+				inventoryFolder = sync(createInventoryFolder(rootFolder));
+				sync(createREADME(inventoryFolder));
 			}
 
 			return inventoryFolder;
 		}
 
-		private DriveFolder createInventoryFolder(DriveFolder rootFolder) {
+		private PendingResult<DriveFolderResult> createInventoryFolder(DriveFolder rootFolder) {
 			MetadataChangeSet folderMeta = new MetadataChangeSet.Builder() //
 					.setTitle(DEFAULT_DRIVE_FOLDER_NAME) //
 					.setDescription("Storage for inventory item images in Magic Home Inventory app") //
 					.setViewed(true) //
 					.build();
 
-			return sync(rootFolder.createFolder(client, folderMeta));
+			return rootFolder.createFolder(client, folderMeta);
 		}
 
-		private DriveFile createREADME(DriveFolder invetoryFolder) throws IOException {
+		private PendingResult<DriveFileResult> createREADME(DriveFolder inventoryFolder) throws IOException {
 			MetadataChangeSet fileMeta = new MetadataChangeSet.Builder() //
 					.setMimeType("text/plain") //
 					.setTitle("README.txt") //
@@ -148,7 +148,7 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 			Contents fileContents = sync(Drive.DriveApi.newContents(client));
 			IOTools.copyStream(getAssets().open("Drive_README.txt"), fileContents.getOutputStream());
 
-			return sync(invetoryFolder.createFile(client, fileMeta, fileContents));
+			return inventoryFolder.createFile(client, fileMeta, fileContents);
 		}
 	}
 }

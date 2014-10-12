@@ -12,7 +12,7 @@ import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.*;
 import android.net.Uri;
 import android.os.*;
 import android.preference.ListPreference;
@@ -97,37 +97,26 @@ public abstract class AndroidTools {
 			return null;
 		}
 
-		final double ASPECT_TOLERANCE = 0.1;
-		final int targetHeight = h;
-		final double targetRatio = (double)w / (double)h;
-
-		Camera.Size optimalSize = null;
+		Camera.Size optimalSize = findClosestAspect(sizes, w, h, 0.1);
 
 		if (optimalSize == null) {
-			double minDiff = Double.MAX_VALUE;
-			for (Camera.Size size : sizes) {
-				double ratio = (double)size.width / (double)size.height;
-				if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) {
-					continue; // try to find the one which have very similar ratio first
-				}
-
-				if (Math.abs(size.height - targetHeight) < minDiff) {
-					optimalSize = size;
-					minDiff = Math.abs(size.height - targetHeight);
-				}
-			}
+			optimalSize = findClosestAspect(sizes, w, h, Double.POSITIVE_INFINITY);
 		}
 
-		if (optimalSize == null) {
-			double minDiff = Double.MAX_VALUE;
-			for (Camera.Size size : sizes) {
-				if (Math.abs(size.height - targetHeight) < minDiff) {
-					optimalSize = size;
-					minDiff = Math.abs(size.height - targetHeight);
-				}
+		return optimalSize;
+	}
+	private static Size findClosestAspect(List<Size> sizes, int width, int height, double tolerance) {
+		Size optimalSize = null;
+
+		final double targetRatio = (double)width / (double)height;
+		double minDiff = Double.MAX_VALUE;
+		for (Size size : sizes) {
+			double ratio = (double)size.width / (double)size.height;
+			if (Math.abs(ratio - targetRatio) <= tolerance && Math.abs(size.height - height) < minDiff) {
+				optimalSize = size;
+				minDiff = Math.abs(size.height - height);
 			}
 		}
-
 		return optimalSize;
 	}
 
@@ -284,7 +273,7 @@ public abstract class AndroidTools {
 	public static void screenshot(View view) {
 		Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
 		view.draw(new Canvas(bitmap));
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
 		try {
 			File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 			storageDir.mkdirs();

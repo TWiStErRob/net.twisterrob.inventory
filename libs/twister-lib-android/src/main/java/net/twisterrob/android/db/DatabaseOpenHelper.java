@@ -151,7 +151,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private static String getNextStatement(BufferedReader reader) throws IOException {
 		StringBuilder sb = new StringBuilder();
-		String line = null;
+		String line;
 		while ((line = reader.readLine()) != null) {
 			if (line.matches("^\\s*$")) {
 				continue; // empty lines

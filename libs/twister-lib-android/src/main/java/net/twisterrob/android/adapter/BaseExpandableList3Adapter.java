@@ -15,13 +15,13 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		extends android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;
 	protected final LayoutInflater m_inflater;
-	private final List<Level1> m_groups = new ArrayList<Level1>();
+	private final List<Level1> m_groups = new ArrayList<>();
 	private final Map<Level1, List<Level2>> m_children;
 	private final Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> m_data;
 	private ExpandableListView m_outerList;
 
-	public BaseExpandableList3Adapter(final Context context, ExpandableListView outerList,
-			final Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> data) {
+	public BaseExpandableList3Adapter(Context context, ExpandableListView outerList,
+			Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> data) {
 		this.m_context = context;
 		this.m_outerList = outerList;
 		this.m_inflater = LayoutInflater.from(m_context);
@@ -37,7 +37,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	}
 
 	protected Map<Level1, List<Level2>> createChildrenMap() {
-		return new HashMap<Level1, List<Level2>>();
+		return new HashMap<>();
 	}
 
 	protected void refreshData() {
@@ -45,7 +45,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		this.m_groups.addAll(m_data.keySet());
 		this.m_children.clear();
 		for (Entry<Level1, ? extends Map<Level2, ? extends List<Level3>>> entry : m_data.entrySet()) {
-			m_children.put(entry.getKey(), new ArrayList<Level2>(entry.getValue().keySet()));
+			m_children.put(entry.getKey(), new ArrayList<>(entry.getValue().keySet()));
 		}
 	}
 
@@ -72,7 +72,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		return 1;
 	}
 	@Override
-	public Object getChild(int groupPosition, int childPosititon) {
+	public Object getChild(int groupPosition, int childPosition) {
 		return null;
 	}
 	public int getChildIndex(Level1 group, Level2 child) {
@@ -102,6 +102,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentGroupView) {
 		Level1 currentGroup = getGroup(groupPosition);
 		List<Level2> currentChildren = getChildren(currentGroup);
@@ -121,7 +122,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		return groupConvertView;
 	}
 	@Override
-	public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View childConvertView,
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View childConvertView,
 			ViewGroup parentGroupViewGroup) {
 		assert childPosition == 0 : "We should only have one child";
 		Level1 level1Group = getGroup(groupPosition);
@@ -146,14 +147,14 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 
 	protected abstract Level1VH createGroupHolder(View level1ConvertView);
 
-	protected abstract void bindLevel1View(final Level1VH level1Holder, final Level1 currentLevel1,
-			List<Level2> currentLevel2, final View level1ConvertView);
+	protected abstract void bindLevel1View(Level1VH level1Holder, Level1 currentLevel1, List<Level2> currentLevel2,
+			View level1ConvertView);
 
 	/**
 	 * @param level1Holder
 	 * @param level1ConvertView
 	 */
-	protected void bindEmptyLevel1View(final Level1VH level1Holder, final View level1ConvertView) {
+	protected void bindEmptyLevel1View(Level1VH level1Holder, View level1ConvertView) {
 		// optional @Override
 	}
 
@@ -171,16 +172,15 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 
 	protected abstract Level2VH createLevel2Holder(View level2ConvertView);
 
-	protected abstract void bindLevel2View(final Level2VH level2Holder, Level1 currentLevel1,
-			final Level2 currentLevel2, List<Level3> currentLevel3, final View level2ConvertView);
+	protected abstract void bindLevel2View(Level2VH level2Holder, Level1 currentLevel1, Level2 currentLevel2,
+			List<Level3> currentLevel3, View level2ConvertView);
 
 	/**
 	 * @param level2Holder
 	 * @param currentLevel1
 	 * @param level1ConvertView
 	 */
-	protected void bindEmptyLevel2View(final Level2VH level2Holder, Level1 currentLevel1,
-			final View level1ConvertView) {
+	protected void bindEmptyLevel2View(Level2VH level2Holder, Level1 currentLevel1, View level1ConvertView) {
 		// optional @Override
 	}
 
@@ -190,8 +190,8 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 
 	protected abstract Level3VH createLevel3Holder(View level3ConvertView);
 
-	protected abstract void bindLevel3View(final Level3VH level3Holder, Level1 currentLevel1, Level2 currentLevel2,
-			final Level3 currentLevel3, final View level3ConvertView);
+	protected abstract void bindLevel3View(Level3VH level3Holder, Level1 currentLevel1, Level2 currentLevel2,
+			Level3 currentLevel3, View level3ConvertView);
 
 	/**
 	 * @param level3Holder
@@ -199,8 +199,8 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	 * @param currentLevel2
 	 * @param level3ConvertView
 	 */
-	protected void bindEmptyLevel3View(final Level3VH level3Holder, Level1 currentLevel1, Level2 currentLevel2,
-			final View level3ConvertView) {
+	protected void bindEmptyLevel3View(Level3VH level3Holder, Level1 currentLevel1, Level2 currentLevel2,
+			View level3ConvertView) {
 		// optional @Override
 	}
 
@@ -239,6 +239,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 		}
 	}
 
+	@SuppressLint("ViewConstructor")
 	private static class InnerExpandableListView extends ExpandableListView implements OnGroupClickListener {
 		private ExpandableListView outerList;
 		public InnerExpandableListView(Context context, ExpandableListView outerList) {

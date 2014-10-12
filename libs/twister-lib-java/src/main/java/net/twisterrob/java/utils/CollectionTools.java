@@ -11,13 +11,14 @@ public final class CollectionTools {
 		// prevent instantiation
 	}
 
-	public static void ensureIndexValid(final List<? extends Object> list, int i) {
+	public static void ensureIndexValid(final List<?> list, int i) {
 		i -= list.size(); // don't need to add existing indices
 		while (i-- >= 0) { // add remaining
 			list.add(null);
 		}
 	}
 
+	@SafeVarargs
 	public static <T> T coalesce(final T... objects) {
 		for (T t : objects) {
 			if (t != null) {

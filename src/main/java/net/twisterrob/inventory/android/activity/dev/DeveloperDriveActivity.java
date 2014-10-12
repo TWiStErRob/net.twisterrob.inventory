@@ -72,8 +72,7 @@ public class DeveloperDriveActivity extends BaseDriveActivity {
 		File file = createFile();
 		log("File: " + file);
 
-		DriveFile driveFile = new Upload(DeveloperDriveActivity.this).doInBackground(file);
-		return driveFile;
+		return new Upload(DeveloperDriveActivity.this).doInBackground(file);
 	}
 
 	DriveFile existingFile(GoogleApiClient client) {

@@ -197,7 +197,7 @@ public class XmlDocumentProvider extends ContentProvider {
 	 * @return An XmlPullParser on this document.
 	 */
 	protected XmlPullParser getUriXmlPullParser(String url) {
-		XmlPullParser parser = null;
+		XmlPullParser parser;
 		try {
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 			factory.setNamespaceAware(true);
@@ -380,7 +380,7 @@ public class XmlDocumentProvider extends ContentProvider {
 					// Update path
 					pathLengthStack.push(path.length());
 					path.append('/');
-					String prefix = null;
+					String prefix;
 					try {
 						// getPrefix is not supported by local Xml resource parser
 						prefix = parser.getPrefix();

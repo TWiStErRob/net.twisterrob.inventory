@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE lint>
 <lint>
-	<issue id="AppCompatResource" severity="ignore" />
-	<issue id="Assert" severity="ignore" />
 	<issue id="ContentDescription" severity="ignore" />
-	<issue id="UnusedAttribute" severity="ignore" />
+	<issue id="MissingTranslation" severity="ignore" />
+	<issue id="UnusedResources">
+		<ignore path="**/res/raw*/category_*.svg" />
+		<ignore path="**/res/raw*/property_*.svg" />
+		<ignore path="**/res/raw*/room_*.svg" />
+		<ignore path="**/res/values*/strings_Categories.xml" />
+		<ignore path="**/res/values*/strings_PropertyTypes.xml" />
+		<ignore path="**/res/values*/strings_RoomTypes.xml" />
+	</issue>
+	<issue id="UnusedAttribute">
+		<ignore path="**/res/layout*/*.xml" />
+	</issue>
 </lint>

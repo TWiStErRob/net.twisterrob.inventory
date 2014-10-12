@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources>
 <resources>
 	<string name="pref_activity_title">Settings</string>
 	<string name="pref_defaultEntityDetailsPage">Default Details Page</string>

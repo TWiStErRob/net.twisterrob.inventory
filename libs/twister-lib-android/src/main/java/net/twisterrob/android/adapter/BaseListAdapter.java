@@ -16,11 +16,11 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 	private boolean m_hasDefaultItem;
 	private SimplifyingFilter filter = new SimplifyingFilter();
 
-	public BaseListAdapter(final Context context, final Collection<T> items) {
+	public BaseListAdapter(Context context, Collection<T> items) {
 		this(context, items, false);
 	}
 
-	public BaseListAdapter(final Context context, final Collection<T> items, final boolean hasDefaultItem) {
+	public BaseListAdapter(Context context, Collection<T> items, boolean hasDefaultItem) {
 		if (context == null) {
 			throw new NullPointerException("context cannot be null");
 		}
@@ -37,11 +37,11 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		return m_items.size();
 	}
 
-	public T getItem(final int position) {
+	public T getItem(int position) {
 		return m_items.get(position);
 	}
 
-	public long getItemId(final int position) {
+	public long getItemId(int position) {
 		return position;
 	}
 
@@ -53,7 +53,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		return m_items.subList(m_hasDefaultItem? 1 : 0, m_items.size());
 	}
 
-	public void setItems(final Collection<T> items) {
+	public void setItems(Collection<T> items) {
 		int prefixSize = m_hasDefaultItem? 1 : 0;
 		int size = items == null? 0 : items.size();
 		ArrayList<T> newItems = new ArrayList<T>(prefixSize + size);
@@ -67,7 +67,8 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		m_items = newItems;
 	}
 
-	public View getView(final int position, View convertView, final ViewGroup parent) {
+	@SuppressWarnings("unchecked")
+	public View getView(int position, View convertView, ViewGroup parent) {
 		T currentItem = m_items.get(position);
 		VH holder;
 		if (convertView == null) {
@@ -91,7 +92,8 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 	}
 
 	@Override
-	public View getDropDownView(final int position, View convertView, final ViewGroup parent) {
+	@SuppressWarnings("unchecked")
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		T currentItem = m_items.get(position);
 		VH holder;
 		if (convertView == null) {
@@ -119,12 +121,12 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 	protected abstract VH createHolder(View convertView);
 
 	/**
+	 * Update the view-model object {@link T} on the first usage.
+	 *
 	 * @param holder
 	 * @param currentItem
-	 * @deprecated Until I figure out why I did it.
 	 */
-	@Deprecated
-	protected void bindModel(final VH holder, final T currentItem) {
+	protected void bindModel(VH holder, T currentItem) {
 		// optional @Override
 	}
 
@@ -134,7 +136,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 	 * @param holder
 	 * @param convertView
 	 */
-	protected void bindEmptyView(final VH holder, final View convertView) {
+	protected void bindEmptyView(VH holder, View convertView) {
 		if (m_hasDefaultItem) {
 			throw new IllegalStateException("You must override at least bindEmptyView if hasDefaultItem is true");
 		}
@@ -144,21 +146,20 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		return getItemLayoutId();
 	}
 
-	protected VH createDropDownHolder(final View convertView) {
+	protected VH createDropDownHolder(View convertView) {
 		return createHolder(convertView);
 	}
 
-	protected void bindDropDownView(final VH holder, final T currentItem, final View convertView) {
+	protected void bindDropDownView(VH holder, T currentItem, View convertView) {
 		bindView(holder, currentItem, convertView);
 	}
 
-	protected void bindEmptyDropDownView(final VH holder, final View convertView) {
+	protected void bindEmptyDropDownView(VH holder, View convertView) {
 		bindEmptyView(holder, convertView);
 	}
 
-	/** @deprecated Until I figure out why I did it. */
-	@Deprecated
-	protected void bindDropDownModel(final VH holder, final T currentItem) {
+	/** @see #bindModel */
+	protected void bindDropDownModel(VH holder, T currentItem) {
 		bindModel(holder, currentItem);
 	}
 

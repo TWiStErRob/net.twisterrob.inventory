@@ -177,7 +177,7 @@ public class OsgbWebMapToolsLocationConverter {
 		// THIS FUNCTION IS CALLED BY THE - _
 		// "Lat_Long_to_North" and "InitialLat" FUNCTIONS
 		// THIS FUNCTION IS ALSO USED ON IT'S OWN IN THE "Projection and Transformation Calculations.xls" SPREADSHEET
-		double marc = bf0 * (
+		return bf0 * (
 				((1.0 + n + ((5.0 / 4.0) * (n * n)) + ((5.0 / 4.0) * (n * n * n))) * (PHI - PHI0))
 						-
 						(((3.0 * n) + (3.0 * (n * n)) + ((21.0 / 8.0) * (n * n * n)))
@@ -190,6 +190,5 @@ public class OsgbWebMapToolsLocationConverter {
 						-
 						(((35.0 / 24.0) * (n * n * n)) * sin(3.0 * (PHI - PHI0)) * cos(3.0 * (PHI + PHI0)))
 		);
-		return marc;
 	}
 }

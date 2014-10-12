@@ -13,15 +13,6 @@
 	<item type="id" name="count" />
 	<item type="id" name="stats" />
 
-	<item type="id" name="properties" />
-	<item type="id" name="property" />
-
-	<item type="id" name="rooms" />
-	<item type="id" name="room" />
-
-	<item type="id" name="items" />
-	<item type="id" name="item" />
-
 	<item type="id" name="btn_save" />
 	<item type="id" name="btn_add" />
 </resources>

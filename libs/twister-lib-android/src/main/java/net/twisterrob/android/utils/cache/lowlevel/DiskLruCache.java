@@ -23,6 +23,8 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.*;
 
+import android.support.annotation.NonNull;
+
 /**
  * Taken from the JB source code, can be found in:<br>
  * <code>libcore/luni/src/main/java/libcore/io/DiskLruCache.java</code><br>
@@ -140,6 +142,7 @@ public final class DiskLruCache implements Closeable {
 		}
 		final int resultLength = end - start;
 		final int copyLength = Math.min(resultLength, originalLength - start);
+		@SuppressWarnings("unchecked")
 		final T[] result = (T[])Array.newInstance(original.getClass().getComponentType(), resultLength);
 		System.arraycopy(original, start, result, 0, copyLength);
 		return result;
@@ -822,7 +825,7 @@ public final class DiskLruCache implements Closeable {
 			}
 
 			@Override
-			public void write(final byte[] buffer, final int offset, final int length) {
+			public void write(@NonNull final byte[] buffer, final int offset, final int length) {
 				try {
 					out.write(buffer, offset, length);
 				} catch (IOException e) {

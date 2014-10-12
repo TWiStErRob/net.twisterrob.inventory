@@ -38,7 +38,6 @@ import org.slf4j.spi.LoggerFactoryBinder;
  * @version $Rev:$; $Author:$; $Date:$
  */
 public class StaticLoggerBinder implements LoggerFactoryBinder {
-
 	/**
 	 * The unique instance of this class.
 	 */
@@ -49,7 +48,7 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
 	 *
 	 * @return the StaticLoggerBinder singleton
 	 */
-	public static final StaticLoggerBinder getSingleton() {
+	public static StaticLoggerBinder getSingleton() {
 		return SINGLETON;
 	}
 
@@ -58,7 +57,7 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
 	 * against. The value of this field is usually modified with each release.
 	 */
 	// to avoid constant folding by the compiler, this field must *not* be final
-	public static String REQUESTED_API_VERSION = "1.7.4"; // !final
+	public static /*final*/ String REQUESTED_API_VERSION = "1.7.4";
 
 	private static final String loggerFactoryClassStr = AndroidLoggerFactory.class.getName();
 

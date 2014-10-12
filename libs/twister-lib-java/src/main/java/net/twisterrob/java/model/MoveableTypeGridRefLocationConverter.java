@@ -213,7 +213,7 @@ public class MoveableTypeGridRefLocationConverter {
 			phi = Math.atan2(z2 + eSq * nu * Math.sin(phi), p);
 		}
 		double lambda = Math.atan2(y2, x2);
-		H = p / Math.cos(phi) - nu; // TODO what is H?
+		// H = p / Math.cos(phi) - nu; // TODO what is H?
 		//console.log('convertEllipsoid', 'geod2', phi.toDeg(), lambda.toDeg());
 
 		return new Location(Math.toDegrees(phi), Math.toDegrees(lambda));

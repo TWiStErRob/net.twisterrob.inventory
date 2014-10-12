@@ -9,6 +9,7 @@ import android.graphics.*;
 import android.graphics.Paint.Style;
 import android.graphics.Region.Op;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.*;
 import android.view.*;
 
@@ -22,6 +23,8 @@ public class SelectionView extends View {
 
 	private static final double CORNER_SIZE_PERCENT = 0.05;
 	private static final int MAX_DISTANCE = 50;
+	@SuppressLint("InlinedApi")
+	private static final int INVALID_POINTER_ID = MotionEvent.INVALID_POINTER_ID;
 
 	private Drawable mLeftTopIcon;
 	private Drawable mRightTopIcon;
@@ -43,8 +46,7 @@ public class SelectionView extends View {
 
 	private Paint line;
 
-	@SuppressLint("InlinedApi")
-	private int mActivePointerId = MotionEvent.INVALID_POINTER_ID;
+	private int mActivePointerId = INVALID_POINTER_ID;
 
 	public SelectionView(Context context) {
 		super(context);
@@ -173,9 +175,9 @@ public class SelectionView extends View {
 		mLeftBotIcon.draw(canvas);
 	}
 
-	@SuppressLint({"ClickableViewAccessibility", "InlinedApi"})
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
+	public boolean onTouchEvent(@NonNull MotionEvent ev) {
 		if (selection == null) {
 			return false;
 		}
@@ -239,7 +241,7 @@ public class SelectionView extends View {
 			case MotionEvent.ACTION_UP: { // last pointer up
 				resetPickedAction();
 				selection.sort();
-				mActivePointerId = MotionEvent.INVALID_POINTER_ID;
+				mActivePointerId = INVALID_POINTER_ID;
 				break;
 			}
 			case MotionEvent.ACTION_POINTER_UP: { // non-last pointer up

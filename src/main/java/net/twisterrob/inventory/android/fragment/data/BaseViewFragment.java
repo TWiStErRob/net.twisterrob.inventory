@@ -10,9 +10,10 @@ import static android.content.Context.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
+
+import static net.twisterrob.inventory.android.Constants.Prefs.*;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	protected ImageView image;
@@ -34,11 +35,9 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 	}
 
 	private int getDefaultPageIndex() {
-		String defaultPage = App.getPrefs().getString(Prefs.DEFAULT_ENTITY_DETAILS_PAGE,
-				Prefs.DEFAULT_ENTITY_DETAILS_PAGE_DEFAULT);
-		int defaultIndex = AndroidTools.findIndexInResourceArray(getActivity(),
+		String defaultPage = App.getPrefs().getString(DEFAULT_ENTITY_DETAILS_PAGE, DEFAULT_ENTITY_DETAILS_PAGE_DEFAULT);
+		return AndroidTools.findIndexInResourceArray(getActivity(),
 				R.array.pref_defaultEntityDetailsPage_values, defaultPage);
-		return defaultIndex;
 	}
 	protected abstract CharSequence getDetailsString(DTO entity);
 

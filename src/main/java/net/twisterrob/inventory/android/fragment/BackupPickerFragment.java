@@ -7,6 +7,7 @@ import android.app.*;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -37,7 +38,7 @@ public class BackupPickerFragment extends DialogFragment {
 	}
 
 	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+	public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
 		File root = new File(App.getInstance().getPhoneHome(), Constants.EXPORT_SDCARD_FOLDER);
 		final File[] files = getImportableFiles(root);
 		Arrays.sort(files);

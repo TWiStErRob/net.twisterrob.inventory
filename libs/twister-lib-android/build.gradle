@@ -34,22 +34,13 @@ dependencies {
 		compile project(':twister-lib-java')
 	}
 
-	provided 'com.android.support:support-v4:19.1.0'
-	provided 'com.android.support:support-v13:19.1.0'
-	provided 'com.android.support:appcompat-v7:19.1.0'
-	provided 'com.google.android.gms:play-services:5.0.89'
+	provided 'com.android.support:support-v4:20.0.0'
+	provided 'com.android.support:appcompat-v7:20.0.0'
+	provided 'com.google.android.gms:play-services:6.1.11'
 }
 
 android {
-	compileSdkVersion 20
-	buildToolsVersion "20.0.0"
-
-	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_6
-		targetCompatibility = JavaVersion.VERSION_1_6
-	}
-
-	lintOptions {
-		abortOnError false
+	defaultConfig {
+		minSdkVersion 9
 	}
 }

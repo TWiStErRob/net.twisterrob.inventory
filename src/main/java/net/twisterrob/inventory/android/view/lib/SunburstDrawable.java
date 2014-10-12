@@ -146,8 +146,7 @@ public class SunburstDrawable<T> extends Drawable {
 
 	private float queryThickness() {
 		int levels = walker.getDepth(root);
-		float thick = 1.0f / (levels + 1); // +1 = middle gap
-		return thick;
+		return 1.0f / (levels + 1); // +1 = middle gap
 	}
 
 	@Override

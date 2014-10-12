@@ -44,7 +44,7 @@ public class PictureUtils {
 		Uri outputFileUri = Uri.fromFile(targetFile);
 
 		// Camera
-		List<Intent> cameraIntents = new ArrayList<Intent>();
+		List<Intent> camIntents = new ArrayList<Intent>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		PackageManager packageManager = activity.getPackageManager();
 		List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
@@ -53,7 +53,7 @@ public class PictureUtils {
 			intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
 			intent.setPackage(res.activityInfo.packageName);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-			cameraIntents.add(intent);
+			camIntents.add(intent);
 		}
 
 		// Filesystem
@@ -63,7 +63,7 @@ public class PictureUtils {
 		// Chooser of filesystem options
 		Intent chooserIntent = Intent.createChooser(galleryIntent, null);
 		// Add the camera options
-		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[0]));
+		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, camIntents.toArray(new Parcelable[camIntents.size()]));
 
 		activity.startActivityForResult(chooserIntent, REQUEST_CODE_GET_PICTURE);
 	}
@@ -121,14 +121,12 @@ public class PictureUtils {
 
 			int photoW = bmOptions.outWidth;
 			int photoH = bmOptions.outHeight;
-			int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-			bmOptions.inSampleSize = scaleFactor;
+			bmOptions.inSampleSize = Math.min(photoW / targetW, photoH / targetH);
 			bmOptions.inJustDecodeBounds = false;
 		}
 
 		bmOptions.inPurgeable = true;
-		Bitmap bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
-		return bitmap;
+		return BitmapFactory.decodeStream(stream, null, bmOptions);
 	}
 
 	public static Bitmap loadPicture(Context context, int drawableResourceID) {
@@ -185,8 +183,7 @@ public class PictureUtils {
 
 	public static int getExifOrientation(File file) throws IOException {
 		ExifInterface exif = new ExifInterface(file.getAbsolutePath());
-		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-		return orientation;
+		return exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
 	}
 
 	public static int getExifRotation(int orientation) {
@@ -271,10 +268,7 @@ public class PictureUtils {
 	 * @return Whether the URI is a local one.
 	 */
 	public static boolean isLocal(String url) {
-		if (url != null && !url.startsWith("http://") && !url.startsWith("https://")) {
-			return true;
-		}
-		return false;
+		return url != null && !url.startsWith("http://") && !url.startsWith("https://");
 	}
 
 	/**
@@ -390,6 +384,7 @@ public class PictureUtils {
 		return crop(file, new Rect(x, y, x + w, y + h));
 	}
 
+	@SuppressWarnings("SuspiciousNameCombination")
 	public static Bitmap cropPicture(File file, float left, float top, float right, float bottom) throws IOException {
 		RectF perc = new RectF();
 		int orientation = getExifOrientation(file);
@@ -499,8 +494,6 @@ public class PictureUtils {
 	}
 
 	public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
-		Bitmap bm = null;
-
 		// First decode with inJustDecodeBounds=true to check dimensions
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
@@ -511,9 +504,8 @@ public class PictureUtils {
 
 		// Decode bitmap with inSampleSize set
 		options.inJustDecodeBounds = false;
-		bm = BitmapFactory.decodeFile(path, options);
 
-		return bm;
+		return BitmapFactory.decodeFile(path, options);
 	}
 
 	public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {

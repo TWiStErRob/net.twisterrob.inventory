@@ -70,8 +70,8 @@ public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder>
 		return AndroidTools.getText(mContext, name);
 	}
 
-	private static Integer getCount(Cursor cursor, String columName) {
-		int countIndex = cursor.getColumnIndex(columName);
+	private static Integer getCount(Cursor cursor, String columnName) {
+		int countIndex = cursor.getColumnIndex(columnName);
 		if (countIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
 			int count = cursor.getInt(countIndex);
 			if (count > 0) {

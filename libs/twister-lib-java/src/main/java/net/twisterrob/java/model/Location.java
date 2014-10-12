@@ -54,12 +54,7 @@ public class Location implements Serializable {
 			return false;
 		}
 		Location other = (Location)obj;
-		if (Double.doubleToLongBits(m_latitude) != Double.doubleToLongBits(other.m_latitude)) {
-			return false;
-		}
-		if (Double.doubleToLongBits(m_longitude) != Double.doubleToLongBits(other.m_longitude)) {
-			return false;
-		}
-		return true;
+		return Double.doubleToLongBits(m_latitude) == Double.doubleToLongBits(other.m_latitude)
+				&& Double.doubleToLongBits(m_longitude) == Double.doubleToLongBits(other.m_longitude);
 	}
 }

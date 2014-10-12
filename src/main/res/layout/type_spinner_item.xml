@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
@@ -10,6 +11,7 @@
 		android:layout_width="16dp"
 		android:layout_height="16dp"
 		android:layout_margin="@dimen/margin"
+		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
 		android:layout_centerVertical="true"
 		android:adjustViewBounds="true"
@@ -22,6 +24,8 @@
 		android:layout_height="wrap_content"
 		android:layout_centerVertical="true"
 		android:layout_toEndOf="@id/image"
+		android:layout_toRightOf="@id/image"
 		android:focusable="false"
+	    tools:ignore="SelectableText"
 		/>
 </RelativeLayout>

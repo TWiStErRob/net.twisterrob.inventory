@@ -34,6 +34,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public Loader<Object> onCreateLoader(int id, Bundle args) {
 		return (Loader<Object>)loaders.get(id).callbacks.onCreateLoader(id, args);
 	}

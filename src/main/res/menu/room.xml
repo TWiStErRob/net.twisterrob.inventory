@@ -7,7 +7,7 @@
 		android:id="@+id/action_room_edit"
 		android:title="@string/room_edit"
 		android:icon="@android:drawable/ic_menu_edit"
-		app:showAsAction="always|withText"
+		app:showAsAction="ifRoom|withText"
 		/>
 	<item
 		android:id="@+id/action_room_delete"

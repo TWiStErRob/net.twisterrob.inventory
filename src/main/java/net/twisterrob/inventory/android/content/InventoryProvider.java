@@ -13,7 +13,6 @@ import android.provider.BaseColumns;
 import static android.app.SearchManager.*;
 
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.InventoryContract.*;
 import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.java.utils.StringTools;
 

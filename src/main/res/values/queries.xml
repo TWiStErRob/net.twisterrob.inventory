@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+           tools:ignore="TypographyDashes">
 	<string name="query_properties"><![CDATA["
 		select
 			p._id,
@@ -56,7 +56,7 @@
 		from Room r
 		join RoomType rt ON r.type = rt._id
 		join RoomTypeKind rtk ON rt.kind = rtk._id
-		order by r.name 
+		order by r.name
 	"]]></string>
 	<string name="query_rooms_by_property"><![CDATA["
 		select
@@ -70,7 +70,7 @@
 		join RoomType rt ON r.type = rt._id
 		join RoomTypeKind rtk ON rt.kind = rtk._id
 		where r.property = ?
-		order by r.name 
+		order by r.name
 	"]]></string>
 	<string name="query_room"><![CDATA["
 		select
@@ -114,7 +114,7 @@
 		from Item     i
 		join Category c ON i.category = c._id
 		where i.parent = ?
-		order by i.name 
+		order by i.name
 	"]]></string>
 	<string name="query_item"><![CDATA["
 		select
@@ -146,7 +146,7 @@
 		join Item     i ON r.root = i.parent
 		join Category c ON i.category = c._id
 		where r._id = ?
-		order by i.name 
+		order by i.name
 	"]]></string>
 	<string name="query_items_by_category"><![CDATA["
 		select
@@ -159,7 +159,7 @@
 		from Item     i
 		join Category c ON i.category = c._id
 		where i.category = ?
-		order by i.name 
+		order by i.name
 	"]]></string>
 	<string name="query_items_in_category"><![CDATA["
 		select
@@ -173,7 +173,7 @@
 		join Category_Descendant cd ON i.category = cd.descendant
 		join Category c ON cd.descendant = c._id and c._id <> -1
 		where cd.category = ?
-		order by i.name 
+		order by i.name
 	"]]></string>
 
 
@@ -230,7 +230,7 @@
 		join Category c ON i.category = c._id
 		join Search s ON i._id = s._id
 		where s.name MATCH ?
-		order by i.name 
+		order by i.name
 	"]]></string>
 	<string name="query_export"><![CDATA["
 			select

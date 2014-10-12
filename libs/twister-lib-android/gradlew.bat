@@ -68,6 +68,7 @@ set CMD_LINE_ARGS=%$
 
 :execute
 @rem Setup the command line
+set CMD_LINE_ARGS=-c settings-lib.gradle %CMD_LINE_ARGS%
 
 set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
 

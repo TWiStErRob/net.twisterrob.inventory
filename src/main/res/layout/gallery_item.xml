@@ -21,6 +21,7 @@
 		android:layout_gravity="bottom|end"
 		android:layout_marginRight="@dimen/margin"
 		android:layout_marginBottom="@dimen/margin"
+		android:layout_marginEnd="@dimen/margin"
 		android:scaleType="fitCenter"
 		/>
 	<TextView
@@ -30,12 +31,14 @@
 		android:layout_gravity="bottom|start"
 		android:layout_marginLeft="@dimen/margin"
 		android:layout_marginBottom="@dimen/margin"
+		android:layout_marginStart="@dimen/margin"
 		android:focusable="false"
 		android:shadowColor="#084"
 		android:shadowDx="2"
 		android:shadowDy="2"
 		android:shadowRadius="1"
 		android:textColor="#0f8"
+		android:textIsSelectable="false"
 		android:textSize="18sp"
 		/>
 	<net.twisterrob.inventory.android.view.lib.WrappedTextView
@@ -54,6 +57,7 @@
 		android:shadowDy="2"
 		android:shadowRadius="2"
 		android:textColor="#f80"
+		android:textIsSelectable="false"
 		android:textSize="18sp"
 		/>
 </net.twisterrob.inventory.android.view.lib.SquareFrameLayout>

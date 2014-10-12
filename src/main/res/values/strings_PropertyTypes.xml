@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources>
 <resources>
 	<string name="property_other">Other</string>
 	<string name="property_home">Home</string>

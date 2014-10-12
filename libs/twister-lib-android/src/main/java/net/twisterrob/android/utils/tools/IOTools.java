@@ -58,15 +58,14 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 			connection.connect();
 			input = connection.getInputStream();
 
-			Bitmap bitmap = BitmapFactory.decodeStream(input);
-			return bitmap;
+			return BitmapFactory.decodeStream(input);
 		} finally {
 			closeConnection(connection, input);
 		}
 	}
 
-	private static Set<Object> s_getImageLocks = CollectionTools
-			.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
+	private static Set<Object> s_getImageLocks =
+			CollectionTools.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
 
 	public static Bitmap getImage(final URL url, boolean cache) throws IOException {
 		if (!cache) {

@@ -281,8 +281,7 @@ public class ImageCache {
 						}
 						inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
 						if (inputStream != null) {
-							final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-							return bitmap;
+							return BitmapFactory.decodeStream(inputStream);
 						}
 					}
 				} catch (final IOException e) {
@@ -479,9 +478,10 @@ public class ImageCache {
 	 * @return True if external storage is removable (like an SD card), false otherwise.
 	 */
 	@TargetApi(VERSION_CODES.GINGERBREAD)
+	@SuppressWarnings("SimplifiableIfStatement")
 	public static boolean isExternalStorageRemovable() {
 		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
-			return true;
+			return true; // assume removable
 		} else {
 			return Environment.isExternalStorageRemovable();
 		}
@@ -511,6 +511,7 @@ public class ImageCache {
 	 * @return The space available in bytes
 	 */
 	@TargetApi(VERSION_CODES.JELLY_BEAN_MR2)
+	@SuppressWarnings("deprecation")
 	public static long getUsableSpace(final File path) {
 		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
 			StatFs stats = new StatFs(path.getPath());

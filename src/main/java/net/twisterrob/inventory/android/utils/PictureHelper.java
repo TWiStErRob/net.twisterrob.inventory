@@ -44,9 +44,9 @@ public abstract class PictureHelper {
 
 	public Intent startCapture() {
 		file = getTargetFile();
-		List<Intent> cameraIntents = createCameraIntents(file);
+		List<Intent> camIntents = createCameraIntents(file);
 		Intent chooserIntent = Intent.createChooser(createGalleryIntent(), null);
-		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[0]));
+		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, camIntents.toArray(new Parcelable[camIntents.size()]));
 		return chooserIntent;
 	}
 

@@ -16,7 +16,6 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
 	private State state;
 	private Stack<State> states;
-	private String indentString = "\t";
 	private int depth;
 
 	public IndentingXMLStreamWriter(XMLStreamWriter writer) {
@@ -29,7 +28,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 	private void printIndent() throws XMLStreamException {
 		if (depth > 0) {
 			for (int i = 0; i < depth; i++) {
-				writer.writeCharacters(indentString);
+				writer.writeCharacters("\t");
 			}
 		}
 	}

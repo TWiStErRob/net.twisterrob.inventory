@@ -2,7 +2,7 @@ package net.twisterrob.java.annotations;
 
 import java.lang.annotation.*;
 
-import javax.annotation.Syntax;
+import javax.annotation.*;
 import javax.annotation.meta.*;
 
 /**
@@ -16,7 +16,7 @@ public @interface SimpleDateFormatString {
 	When when() default When.ALWAYS;
 
 	static class Checker implements TypeQualifierValidator<SimpleDateFormatString> {
-		public When forConstantValue(SimpleDateFormatString annotation, Object value) {
+		public @Nonnull When forConstantValue(@Nonnull SimpleDateFormatString annotation, Object value) {
 			if (!(value instanceof String)) {
 				return When.NEVER;
 			}

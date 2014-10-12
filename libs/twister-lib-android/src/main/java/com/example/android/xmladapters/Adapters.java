@@ -884,8 +884,7 @@ public class Adapters {
 
 		XmlCursorAdapter(Context context, int layout, String uri, String[] from, int[] to, String selection,
 				String[] selectionArgs, String sortOrder, HashMap<String, CursorBinder> binders) {
-
-			super(context, layout, null, from, to);
+			super(context, layout, null, from, to, 0);
 			mContext = context;
 			mUri = uri;
 			mFrom = from;
@@ -947,6 +946,7 @@ public class Adapters {
 
 		class QueryTask extends AsyncTask<Void, Void, Cursor> {
 			@Override
+			@SuppressWarnings("deprecation")
 			protected Cursor doInBackground(Void... params) {
 				if (mContext instanceof Activity) {
 					return ((Activity)mContext).managedQuery(Uri.parse(mUri), mColumns,

@@ -17,7 +17,7 @@ buildscript {
 
 allprojects {
 	apply plugin: 'idea'
-	project.plugins.withType(com.android.build.gradle.BasePlugin) {
+	project.plugins.withType(com.android.build.gradle.BasePlugin.class) {
 		project.apply plugin: 'net.twisterrob.android-eclipse'
 	}
 }
@@ -39,28 +39,16 @@ dependencies {
 	}
 	compile 'com.caverock:androidsvg:1.2.1'
 	compile 'org.apache.commons:commons-csv:1.0'
-	compile 'com.android.support:support-v4:19.1.0'
-	compile 'com.android.support:support-v13:19.1.0'
-	compile 'com.android.support:appcompat-v7:19.1.0'
-	compile 'com.google.android.gms:play-services:5.0.89'
+	compile 'com.android.support:support-v4:20.0.0'
+	compile 'com.android.support:appcompat-v7:20.0.0'
+	compile 'com.google.android.gms:play-services:6.1.11'
+	//noinspection GradleDynamicVersion
 	compile 'com.github.bumptech.glide:glide:3.3.+'
 }
 
 android { // http://tools.android.com/tech-docs/new-build-system/user-guide
-	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_6
-		targetCompatibility = JavaVersion.VERSION_1_6
-	}
-
 	defaultConfig {
 		applicationId 'net.twisterrob.inventory'
-	}
-
-	lintOptions {
-		abortOnError false
-		disable 'MissingTranslation'
-	}
-	aaptOptions {
-		useAaptPngCruncher false
+		minSdkVersion 9
 	}
 }

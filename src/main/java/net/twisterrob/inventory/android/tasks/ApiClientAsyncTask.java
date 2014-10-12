@@ -25,6 +25,7 @@ public abstract class ApiClientAsyncTask<Params, Progress, Result> extends Async
 		mClient = createClient(context);
 	}
 
+	@SafeVarargs
 	@Override
 	protected final Result doInBackground(Params... params) {
 		GoogleApiClient client = getConnectedClient(mClient);
@@ -42,6 +43,7 @@ public abstract class ApiClientAsyncTask<Params, Progress, Result> extends Async
 	/**
 	 * Override this method to perform a computation on a background thread, while the client is connected.
 	 */
+	@SuppressWarnings("unchecked")
 	protected abstract Result doInBackgroundConnected(Params... params);
 
 	/**

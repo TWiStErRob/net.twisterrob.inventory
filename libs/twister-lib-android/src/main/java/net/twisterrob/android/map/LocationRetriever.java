@@ -3,6 +3,7 @@ package net.twisterrob.android.map;
 import android.content.Context;
 import android.location.*;
 import android.os.Bundle;
+import android.util.Log;
 
 import static android.location.LocationManager.*;
 public class LocationRetriever {
@@ -112,6 +113,7 @@ public class LocationRetriever {
 			m_locResultListener.locationRetrieved(this, locNetwork, LocationType.LastNetwork);
 			return;
 		}
+		Log.w("LOCATION", "Cannot get GPS nor Network location");
 	}
 
 	public enum LocationType {

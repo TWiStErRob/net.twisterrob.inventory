@@ -1,113 +1,95 @@
-/*
- * Created 21.10.2009
- *
- * Copyright (c) 2009 SLF4J.ORG
- *
- * All rights reserved.
- *
- * Permission is hereby granted, free  of charge, to any person obtaining
- * a  copy  of this  software  and  associated  documentation files  (the
- * "Software"), to  deal in  the Software without  restriction, including
- * without limitation  the rights to  use, copy, modify,  merge, publish,
- * distribute,  sublicense, and/or sell  copies of  the Software,  and to
- * permit persons to whom the Software  is furnished to do so, subject to
- * the following conditions:
- *
- * The  above  copyright  notice  and  this permission  notice  shall  be
- * included in all copies or substantial portions of the Software.
- *
- * THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
- * EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
- * MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
 package org.slf4j.impl;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.ILoggerFactory;
 
+import android.support.annotation.*;
 import android.util.Log;
 
 /**
- * An implementation of {@link ILoggerFactory} which always returns
- * {@link AndroidLogger} instances.
+ * An implementation of {@link ILoggerFactory} for Android, creating {@link AndroidLogger} instances.
  *
- * @author Thorsten M&ouml;ler
- * @version $Rev:$; $Author:$; $Date:$
+ * @author papp.robert.s@gmail.com
  */
 public class AndroidLoggerFactory implements ILoggerFactory {
-	private final Map<String, AndroidLogger> loggerMap;
-
 	/**
-	 * Tag names cannot be longer on Android platform
+	 * Tag names cannot be longer than {@value} on Android platform.
+	 *
 	 * @see android/system/core/include/cutils/property.h
 	 * @see android/frameworks/base/core/jni/android_util_Log.cpp
 	 */
-	static final int TAG_MAX_LENGTH = 23;
+	private static final int TAG_MAX_LENGTH = 23;
 
-	public AndroidLoggerFactory() {
-		loggerMap = new HashMap<String, AndroidLogger>();
-	}
+	/**
+	 * Allow for replacing long package names with aliases.
+	 * For example <code>AndroidLoggerFactory.addReplacement("net.twisterrob.app.android", "app")</code>.
+	 *
+	 * @see AndroidLoggerFactory#addReplacement
+	 */
+	private static final LinkedHashMap<String, String> REPLACEMENTS = new LinkedHashMap<>();
 
-	/* @see org.slf4j.ILoggerFactory#getLogger(java.lang.String) */
-	public AndroidLogger getLogger(String name) {
-		name = doReplacements(name);
-		final String actualName = forceValidName(name); // fix for bug #173
+	private final ConcurrentHashMap<String, AndroidLogger> loggerMap = new ConcurrentHashMap<>();
 
-		AndroidLogger slogger = null;
-		// protect against concurrent access of the loggerMap
-		synchronized (this) {
-			slogger = loggerMap.get(actualName);
-			if (slogger == null) {
-				if (!actualName.equals(name)) {
-					Log.i(AndroidLoggerFactory.class.getSimpleName(), "Logger name '"
-							+ name + "' exceeds maximum length of " + TAG_MAX_LENGTH
-							+ " characters, using '" + actualName + "' instead.");
-				}
-
-				slogger = new AndroidLogger(actualName);
-				loggerMap.put(actualName, slogger);
-			}
+	public AndroidLogger getLogger(@Nullable String name) {
+		if (name == null) {
+			name = "NULL";
 		}
-		return slogger;
-	}
-
-	private static final LinkedHashMap<String, String> replacements = new LinkedHashMap<String, String>();
-
-	public static void addReplacement(String regex, String replacement) {
-		replacements.put(regex, replacement);
-	}
-
-	private static String doReplacements(String name) {
-		if (name != null) {
-			for (Entry<String, String> replacement : replacements.entrySet()) {
-				name = name.replaceFirst(replacement.getKey(), replacement.getValue());
-			}
+		String replacedName = doReplacements(name);
+		AndroidLogger logger = loggerMap.get(replacedName);
+		if (logger != null) {
+			return logger;
+		} else {
+			AndroidLogger newLogger = createAndroidLogger(name, replacedName);
+			AndroidLogger existingLogger = loggerMap.putIfAbsent(replacedName, newLogger);
+			return existingLogger == null? newLogger : existingLogger;
 		}
-		if (name != null && name.contains("$")) {
-			int dollar = name.lastIndexOf("$");
-			String before = name.substring(0, dollar);
-			String after = name.substring(dollar, name.length()); // keep dollar with after
-			name = before.replaceAll("\\p{Lower}", "") + after;
+	}
+
+	private AndroidLogger createAndroidLogger(@NonNull String originalName, @NonNull String replacedName) {
+		String tag = forceValidName(replacedName); // fix for bug #173
+		if (!tag.equals(replacedName)) {
+			String message = String.format(Locale.ROOT,
+					"Logger name '%1$s' mapped to '%2$s' is too long (>%4$d), using: %3$s.",
+					originalName, replacedName, tag, TAG_MAX_LENGTH);
+			Log.i(AndroidLoggerFactory.class.getSimpleName(), message);
+		}
+
+		return new AndroidLogger(originalName, replacedName, tag);
+	}
+
+	/**
+	 * Allow for replacing long package names with aliases. Search and replace uses regular expressions.
+	 * Replacements may collapse different classes to use the same Android TAG in the end.
+	 *
+	 * @param regex package name to replace
+	 * @param replacement replacement alias
+	 *
+	 * @see String#replaceFirst(String, String)
+	 */
+	public static void addReplacement(@NonNull String regex, @NonNull String replacement) {
+		REPLACEMENTS.put(regex, replacement);
+	}
+
+	private static @NonNull String doReplacements(@NonNull String name) {
+		for (Entry<String, String> replacement : REPLACEMENTS.entrySet()) {
+			name = name.replaceFirst(replacement.getKey(), replacement.getValue());
 		}
 		return name;
 	}
+
 	/**
-	 * Trim name in case it exceeds maximum length of {@value #TAG_MAX_LENGTH} characters.
+	 * Shorten name to sensible tag in case it exceeds maximum length of {@value #TAG_MAX_LENGTH} characters.
 	 */
-	private static final String forceValidName(String name) {
-		if (name != null && name.length() > TAG_MAX_LENGTH) {
-			final StringTokenizer st = new StringTokenizer(name, ".");
+	private static @NonNull String forceValidName(@NonNull String name) {
+		if (name.length() > TAG_MAX_LENGTH && name.contains(".")) {
+			StringTokenizer st = new StringTokenizer(name, ".");
 			if (st.hasMoreTokens()) { // note that empty tokens are skipped, i.e., "aa..bb" has tokens "aa", "bb"
-				final StringBuilder sb = new StringBuilder();
-				String token;
+				StringBuilder sb = new StringBuilder();
 				do {
-					token = st.nextToken();
+					String token = st.nextToken();
 					if (token.length() <= 2) { // token of one character appended as is
 						sb.append(token);
 						sb.append('.');
@@ -121,12 +103,18 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 
 				name = sb.toString();
 			}
-
-			// Either we had no useful dot location at all or name still too long.
-			// Take leading part and append '*' to indicate that it was truncated
-			if (name.length() > TAG_MAX_LENGTH) {
-				name = name.substring(0, TAG_MAX_LENGTH - 1) + '*';
-			}
+		}
+		if (name.length() > TAG_MAX_LENGTH && name.contains("$")) {
+			int dollar = name.lastIndexOf("$");
+			String before = name.substring(0, dollar);
+			String after = name.substring(dollar, name.length()); // keep dollar with after
+			name = before.replaceAll("\\p{Lower}", "") + after;
+		}
+		// Either we had no useful dot location at all or name still too long.
+		// Take as much as possible from front and back and put a * in the middle.
+		if (name.length() > TAG_MAX_LENGTH) {
+			int half = TAG_MAX_LENGTH / 2;
+			name = name.substring(0, half) + '*' + name.substring(name.length() - half, name.length());
 		}
 		return name;
 	}

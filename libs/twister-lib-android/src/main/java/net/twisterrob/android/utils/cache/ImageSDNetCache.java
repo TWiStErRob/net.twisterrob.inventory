@@ -27,8 +27,7 @@ public class ImageSDNetCache implements Cache<URL, Bitmap> {
 		if (key == null) {
 			return null;
 		}
-		Bitmap bitmap = null;
-		bitmap = m_cache.getBitmapFromDiskCache(key.toString());
+		Bitmap bitmap = m_cache.getBitmapFromDiskCache(key.toString());
 		if (bitmap == null) {
 			bitmap = getImage(key);
 			put(key, bitmap);
@@ -38,8 +37,7 @@ public class ImageSDNetCache implements Cache<URL, Bitmap> {
 
 	private static Bitmap getImage(final URL key) throws IOException {
 		try {
-			Bitmap bitmap = IOTools.getImage(key);
-			return bitmap;
+			return IOTools.getImage(key);
 		} catch (IOException ex) {
 			IOException newEx = new IOException(StringTools.format("Cannot get image: %s", key), ex);
 			LOG.warn(newEx.getMessage(), ex);

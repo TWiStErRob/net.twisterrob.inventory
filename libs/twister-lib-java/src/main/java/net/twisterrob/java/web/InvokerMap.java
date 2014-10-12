@@ -240,7 +240,7 @@ public class InvokerMap implements Map<Object, Object> {
 		return null;
 	}
 
-	public void putAll(Map<? extends Object, ? extends Object> t) {
+	public void putAll(Map<?, ?> t) {
 		// do nothing
 	}
 

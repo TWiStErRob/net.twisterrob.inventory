@@ -258,13 +258,9 @@ public class ImageDownloader {
 						copy(inputStream, outputStream);
 						outputStream.flush();
 
+						// FIXME return BitmapFactory.decodeStream(inputStream);
 						final byte[] data = dataStream.toByteArray();
-						final Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-						// FIXME : Should use BitmapFactory.decodeStream(inputStream) instead.
-						//final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-						return bitmap;
+						return BitmapFactory.decodeByteArray(data, 0, data.length);
 					} finally {
 						if (inputStream != null) {
 							inputStream.close();

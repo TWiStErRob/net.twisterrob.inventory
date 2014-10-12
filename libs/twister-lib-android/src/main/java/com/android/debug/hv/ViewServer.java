@@ -28,6 +28,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
@@ -158,11 +159,7 @@ public class ViewServer implements Runnable {
 			}
 
 			if (!sServer.isRunning()) {
-				try {
-					sServer.start();
-				} catch (IOException e) {
-					Log.d(LOG_TAG, "Error:", e);
-				}
+				sServer.start();
 			}
 		} else {
 			sServer = new NoopViewServer();
@@ -191,13 +188,12 @@ public class ViewServer implements Runnable {
 	 * Starts the server.
 	 *
 	 * @return True if the server was successfully created, or false if it already exists.
-	 * @throws IOException If the server cannot be created.
 	 *
 	 * @see #stop()
 	 * @see #isRunning()
 	 * @see WindowManagerService#startViewServer(int)
 	 */
-	public boolean start() throws IOException {
+	public boolean start() {
 		if (mThread != null) {
 			return false;
 		}
@@ -306,7 +302,7 @@ public class ViewServer implements Runnable {
 	 * Invoke this method to register a new view hierarchy.
 	 *
 	 * @param view A view that belongs to the view hierarchy/window to register
-	 * @name name The name of the view hierarchy/window to register
+	 * @param name name The name of the view hierarchy/window to register
 	 *
 	 * @see #removeWindow(View)
 	 */
@@ -477,12 +473,12 @@ public class ViewServer implements Runnable {
 		}
 
 		@Override
-		public void write(byte[] buffer, int offset, int count) throws IOException {
+		public void write(@NonNull byte[] buffer, int offset, int count) throws IOException {
 			mStream.write(buffer, offset, count);
 		}
 
 		@Override
-		public void write(byte[] buffer) throws IOException {
+		public void write(@NonNull byte[] buffer) throws IOException {
 			mStream.write(buffer);
 		}
 

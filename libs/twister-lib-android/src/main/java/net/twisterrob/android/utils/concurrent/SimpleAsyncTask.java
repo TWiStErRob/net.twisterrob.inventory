@@ -3,6 +3,7 @@ package net.twisterrob.android.utils.concurrent;
 import android.os.AsyncTask;
 
 public abstract class SimpleAsyncTask<Param, Progress, Result> extends AsyncTask<Param, Progress, Result> {
+	@SafeVarargs
 	@Override
 	protected final Result doInBackground(Param... params) {
 		return doInBackground(getSingleOrThrow("background operation", params, true));
@@ -10,6 +11,7 @@ public abstract class SimpleAsyncTask<Param, Progress, Result> extends AsyncTask
 
 	protected abstract Result doInBackground(Param param);
 
+	@SafeVarargs
 	@Override
 	protected final void onProgressUpdate(Progress... values) {
 		onProgressUpdate(getSingleOrThrow("progress update", values, true));

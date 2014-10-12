@@ -12,11 +12,11 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	private List<Group> m_groups;
 	private Map<Group, ? extends List<Child>> m_children;
 
-	public BaseExpandableList2Adapter(final Context context, final Collection<Group> groups,
-			final Map<Group, ? extends List<Child>> children) {
+	public BaseExpandableList2Adapter(Context context, Collection<Group> groups,
+			Map<Group, ? extends List<Child>> children) {
 		this.m_context = context;
 		this.m_inflater = LayoutInflater.from(m_context);
-		this.m_groups = groups instanceof List? (List<Group>)groups : new ArrayList<Group>(groups);
+		this.m_groups = groups instanceof List? (List<Group>)groups : new ArrayList<>(groups);
 		this.m_children = children;
 	}
 
@@ -80,6 +80,7 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentGroupView) {
 		Group currentGroup = getGroup(groupPosition);
 		List<Child> currentChildren = getChildren(currentGroup);
@@ -103,6 +104,7 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View childConvertView,
 			ViewGroup parentGroupViewGroup) {
 		Group currentGroup = getGroup(groupPosition);
@@ -132,26 +134,25 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	protected abstract GroupVH createGroupHolder(View groupConvertView);
 
 	/**
+	 * Update the view-model object {@link Group} on the first usage.
+	 *
 	 * @param groupHolder
 	 * @param currentChildren
 	 * @param currentGroup
-	 * @deprecated Until I figure out why I did it.
 	 */
-	@Deprecated
-	protected void bindGroupModel(final GroupVH groupHolder, List<Child> currentChildren, final Group currentGroup) {
+	protected void bindGroupModel(GroupVH groupHolder, List<Child> currentChildren, Group currentGroup) {
 		// optional @Override
 	}
 
-	protected abstract void bindGroupView(final GroupVH groupHolder, final Group currentGroup,
-			List<Child> currentChildren, final View groupConvertView);
+	protected abstract void bindGroupView(GroupVH groupHolder, Group currentGroup, List<Child> currentChildren,
+			View groupConvertView);
 
 	/**
 	 * @param groupHolder
 	 * @param currentChildren
 	 * @param groupConvertView
 	 */
-	protected void bindEmptyGroupView(final GroupVH groupHolder, List<Child> currentChildren,
-			final View groupConvertView) {
+	protected void bindEmptyGroupView(GroupVH groupHolder, List<Child> currentChildren, View groupConvertView) {
 		// optional @Override
 	}
 
@@ -160,25 +161,24 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	protected abstract ChildVH createChildHolder(View childConvertView);
 
 	/**
+	 * Update the view-model object {@link Child} on the first usage.
 	 * @param childHolder
 	 * @param currentGroup
 	 * @param currentChild
-	 * @deprecated Until I figure out why I did it.
 	 */
-	@Deprecated
-	protected void bindChildModel(final ChildVH childHolder, Group currentGroup, final Child currentChild) {
+	protected void bindChildModel(ChildVH childHolder, Group currentGroup, Child currentChild) {
 		// optional @Override
 	}
 
-	protected abstract void bindChildView(final ChildVH childHolder, Group currentGroup, final Child currentChild,
-			final View childConvertView);
+	protected abstract void bindChildView(ChildVH childHolder, Group currentGroup, Child currentChild,
+			View childConvertView);
 
 	/**
 	 * @param childHolder
 	 * @param currentGroup
 	 * @param childConvertView
 	 */
-	protected void bindEmptyChildView(final ChildVH childHolder, Group currentGroup, final View childConvertView) {
+	protected void bindEmptyChildView(ChildVH childHolder, Group currentGroup, View childConvertView) {
 		// optional @Override
 	}
 }

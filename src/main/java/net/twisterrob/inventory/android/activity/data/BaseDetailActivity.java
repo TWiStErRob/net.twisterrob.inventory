@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.activity.data;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -96,6 +97,7 @@ public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends Ba
 	}
 
 	public static final class NoFragment extends BaseFragment<Void> {
+		@SuppressLint("ValidFragment")
 		private NoFragment() {
 			// prevent instantiation, just for type
 		}

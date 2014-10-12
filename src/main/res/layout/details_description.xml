@@ -12,5 +12,6 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
 		android:padding="@dimen/margin"
+		android:textIsSelectable="true"
 		/>
 </FrameLayout>

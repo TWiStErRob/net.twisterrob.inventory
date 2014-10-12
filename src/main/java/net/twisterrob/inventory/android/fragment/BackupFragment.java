@@ -69,11 +69,10 @@ public class BackupFragment extends BaseFragment<Void> implements BackupPickerLi
 		}
 		switch (pickMode) {
 			case Import: {
-				DatabaseCSVImporter importer = null;
 				try {
 					@SuppressWarnings("resource")
 					InputStream input = new FileInputStream(file);
-					importer = new DatabaseCSVImporter();
+					DatabaseCSVImporter importer = new DatabaseCSVImporter();
 					importer.importAll(input);
 					App.toast("Import successful from " + file.getName());
 				} catch (IOException ex) {
@@ -94,6 +93,6 @@ public class BackupFragment extends BaseFragment<Void> implements BackupPickerLi
 
 	private static enum PickMode {
 		Import,
-		Remove;
+		Remove
 	}
 }

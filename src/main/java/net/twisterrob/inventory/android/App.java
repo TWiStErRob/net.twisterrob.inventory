@@ -141,6 +141,8 @@ public class App extends Application {
 		return PreferenceManager.getDefaultSharedPreferences(getAppContext());
 	}
 
+	/** @return You must call {@link SharedPreferences.Editor#commit} as per {@link SharedPreferences#edit} contract. */
+	@SuppressLint("CommitPrefEdits")
 	public static SharedPreferences.Editor getPrefEditor() {
 		SharedPreferences prefs = getPrefs();
 		return prefs != null? prefs.edit() : null;
