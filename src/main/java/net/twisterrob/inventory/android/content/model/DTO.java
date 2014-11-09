@@ -2,8 +2,8 @@ package net.twisterrob.inventory.android.content.model;
 
 import android.database.Cursor;
 
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
-import net.twisterrob.inventory.android.utils.DatabaseUtils;
 
 public class DTO {
 	public long id = CommonColumns.ID_ADD;
@@ -16,14 +16,14 @@ public class DTO {
 	public Integer numAllChildren;
 
 	protected DTO fromCursorInternal(Cursor cursor) {
-		id = DatabaseUtils.getOptionalLong(cursor, CommonColumns.ID, CommonColumns.ID_ADD);
-		name = DatabaseUtils.getOptionalString(cursor, CommonColumns.NAME);
+		id = DatabaseTools.getOptionalLong(cursor, CommonColumns.ID, CommonColumns.ID_ADD);
+		name = DatabaseTools.getOptionalString(cursor, CommonColumns.NAME);
 
-		numDirectChildren = DatabaseUtils.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_DIRECT);
-		numAllChildren = DatabaseUtils.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_ALL);
+		numDirectChildren = DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_DIRECT);
+		numAllChildren = DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_ALL);
 
-		numDirectItems = DatabaseUtils.getOptionalInt(cursor, CommonColumns.COUNT_ITEM_DIRECT);
-		numAllItems = DatabaseUtils.getOptionalInt(cursor, CommonColumns.COUNT_ITEM_ALL);
+		numDirectItems = DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_ITEM_DIRECT);
+		numAllItems = DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_ITEM_ALL);
 
 		return this;
 	}

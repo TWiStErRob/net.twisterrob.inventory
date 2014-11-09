@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.tasks;
+package net.twisterrob.android.utils.concurrent;
 
 import java.util.concurrent.CountDownLatch;
 

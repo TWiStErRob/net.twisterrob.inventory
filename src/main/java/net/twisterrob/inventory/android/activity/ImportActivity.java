@@ -15,13 +15,13 @@ import com.google.android.gms.drive.*;
 import static com.google.android.gms.drive.OpenFileActivityBuilder.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
+import net.twisterrob.android.utils.model.DriveHelper.ConnectedTask;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.io.csv.DatabaseCSVImporter;
-import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
 
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.sync;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.sync;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.StatusUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.MetaDataUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.StatusUtils.sync;
 
 public class ImportActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportActivity.class);

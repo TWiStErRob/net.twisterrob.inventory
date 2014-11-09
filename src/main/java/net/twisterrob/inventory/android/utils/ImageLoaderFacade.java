@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.utils.glide;
+package net.twisterrob.inventory.android.utils;
 
 import java.io.InputStream;
 
@@ -21,9 +21,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.caverock.androidsvg.*;
 import com.google.android.gms.drive.DriveId;
 
+import net.twisterrob.android.content.glide.*;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.utils.drive.DriveIdModelLoader;
-import net.twisterrob.inventory.android.utils.svg.*;
 
 public class ImageLoaderFacade {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageLoaderFacade.class);
@@ -67,7 +66,7 @@ public class ImageLoaderFacade {
 		MultiRequestListener<DriveId, GlideDrawable> listener = new MultiRequestListener<DriveId, GlideDrawable>(
 				new LoggingListener<DriveId, GlideDrawable>("DriveId"), callback);
 		return rm //
-				.using(new DriveIdModelLoader()) //
+				.using(new DriveIdModelLoader(null)) // FIXME App.getConnectedClient()
 				.load(image) //
 				.error(R.drawable.image_drive_error) //
 				.animate(android.R.anim.fade_in) //

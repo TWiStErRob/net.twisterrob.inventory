@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view.lib;
+package net.twisterrob.android.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

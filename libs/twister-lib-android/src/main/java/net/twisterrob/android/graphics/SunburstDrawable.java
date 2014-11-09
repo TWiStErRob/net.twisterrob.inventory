@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view.lib;
+package net.twisterrob.android.graphics;
 
 import static java.lang.Math.*;
 

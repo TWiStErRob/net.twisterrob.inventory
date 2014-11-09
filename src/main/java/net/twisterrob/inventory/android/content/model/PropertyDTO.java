@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import android.database.Cursor;
 
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.utils.DatabaseUtils;
 
 public class PropertyDTO extends ImagedDTO {
 	public long type = PropertyType.DEFAULT;
@@ -19,7 +19,7 @@ public class PropertyDTO extends ImagedDTO {
 	protected PropertyDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		type = DatabaseUtils.getOptionalLong(cursor, Property.TYPE, PropertyType.DEFAULT);
+		type = DatabaseTools.getOptionalLong(cursor, Property.TYPE, PropertyType.DEFAULT);
 
 		return this;
 	}

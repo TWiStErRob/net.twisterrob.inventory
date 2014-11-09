@@ -1,12 +1,10 @@
-package net.twisterrob.inventory.android.utils.svg;
+package net.twisterrob.android.content.glide;
 
 import java.io.*;
 
 import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.Resource;
 import com.caverock.androidsvg.*;
-
-import net.twisterrob.inventory.android.utils.glide.SimpleResource;
 
 /**
  * Decodes an SVG internal representation from an {@link InputStream}.

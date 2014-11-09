@@ -1,37 +1,39 @@
-package net.twisterrob.inventory.android.utils;
+package net.twisterrob.android.utils.tools;
 
 import android.graphics.Typeface;
 import android.text.*;
 import android.text.style.*;
 
-public class DescriptionBuilder {
-	SpannableStringBuilder text = new SpannableStringBuilder();
+public class TextTools {
+	public static class DescriptionBuilder {
+		SpannableStringBuilder text = new SpannableStringBuilder();
 
-	public DescriptionBuilder append(CharSequence label, Object object) {
-		if (object == null) {
+		public DescriptionBuilder append(CharSequence label, Object object) {
+			if (object == null) {
+				return this;
+			}
+			return append(label, String.valueOf(object));
+		}
+		public DescriptionBuilder append(CharSequence label, CharSequence contents) {
+			if (contents == null) {
+				return this;
+			}
+			if (text.length() > 0) {
+				newLine();
+			}
+			text.append(bold(label));
+			text.append(": ");
+			text.append(contents);
 			return this;
 		}
-		return append(label, String.valueOf(object));
-	}
-	public DescriptionBuilder append(CharSequence label, CharSequence contents) {
-		if (contents == null) {
+		public DescriptionBuilder newLine() {
+			text.append("\n");
 			return this;
 		}
-		if (text.length() > 0) {
-			newLine();
-		}
-		text.append(bold(label));
-		text.append(": ");
-		text.append(contents);
-		return this;
-	}
-	public DescriptionBuilder newLine() {
-		text.append("\n");
-		return this;
-	}
 
-	public CharSequence build() {
-		return text;
+		public CharSequence build() {
+			return text;
+		}
 	}
 
 	/**

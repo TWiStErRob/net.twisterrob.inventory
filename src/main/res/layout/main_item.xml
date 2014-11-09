@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.twisterrob.inventory.android.view.lib.SquareRelativeLayout
+<net.twisterrob.android.view.SquareRelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
@@ -20,4 +20,4 @@
 		android:padding="@dimen/margin"
 		android:layout_above="@id/title"
 		/>
-</net.twisterrob.inventory.android.view.lib.SquareRelativeLayout>
+</net.twisterrob.android.view.SquareRelativeLayout>

@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.ItemEditActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
 import net.twisterrob.inventory.android.tasks.DeleteItemTask;
-import net.twisterrob.inventory.android.utils.DescriptionBuilder;
 import net.twisterrob.inventory.android.view.Dialogs;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;

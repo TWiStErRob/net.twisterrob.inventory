@@ -14,7 +14,7 @@ import android.net.Uri;
 import android.os.*;
 import android.provider.MediaStore;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
 
 public abstract class PictureHelper {
@@ -90,7 +90,7 @@ public abstract class PictureHelper {
 			return false;
 		}
 		if (intent != null) {
-			file = PictureUtils.getFile(activity, intent.getData());
+			file = ImageTools.getFile(activity, intent.getData());
 			Bundle extras = intent.getExtras();
 			if (extras != null) {
 				Object data = extras.get("data");
@@ -146,7 +146,7 @@ public abstract class PictureHelper {
 			return false;
 		}
 		if (intent != null) {
-			cropFile = PictureUtils.getFile(activity, intent.getData());
+			cropFile = ImageTools.getFile(activity, intent.getData());
 			Bundle extras = intent.getExtras();
 			if (extras != null) {
 				Object data = extras.get("data");

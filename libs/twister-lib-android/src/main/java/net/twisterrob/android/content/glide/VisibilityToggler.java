@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.utils.glide;
+package net.twisterrob.android.content.glide;
 
 import android.view.View;
 
@@ -7,6 +7,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.drive.DriveId;
 
+// TODO generics?
 public class VisibilityToggler implements RequestListener<DriveId, GlideDrawable> {
 	private final View view;
 

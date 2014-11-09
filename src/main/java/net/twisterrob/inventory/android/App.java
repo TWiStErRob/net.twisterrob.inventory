@@ -19,8 +19,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.utils.drive.ApiClientProvider;
-import net.twisterrob.inventory.android.utils.glide.ImageLoaderFacade;
+import net.twisterrob.inventory.android.utils.*;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.StringTools;
 
@@ -157,7 +156,7 @@ public class App extends Application {
 	}
 
 	/**
-	 * android.database.DatabaseUtils.dumpCursor(net.twisterrob.inventory.android.
+	 * android.database.DatabaseTools.dumpCursor(net.twisterrob.inventory.android.
 	 * App.db().getReadableDatabase().rawQuery("select * from sqlite_sequence;", null));
 	 */
 	public static Database db() {

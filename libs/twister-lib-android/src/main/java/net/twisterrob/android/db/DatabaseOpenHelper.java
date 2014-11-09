@@ -17,7 +17,7 @@ import static android.Manifest.permission.*;
 import net.twisterrob.android.BuildConfig;
 import net.twisterrob.android.utils.tools.*;
 
-import static net.twisterrob.android.utils.tools.DBTools.*;
+import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	public static final int CURSOR_NO_COLUMN = -1;

@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import android.database.Cursor;
 
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.utils.DatabaseUtils;
 
 public class ItemDTO extends ImagedDTO {
 	public long parentID = Item.ID_ADD;
@@ -24,12 +24,12 @@ public class ItemDTO extends ImagedDTO {
 	protected ItemDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		parentID = DatabaseUtils.getOptionalLong(cursor, Item.PARENT_ID, Item.ID_ADD);
-		parentName = DatabaseUtils.getOptionalString(cursor, Item.PARENT_NAME);
-		category = DatabaseUtils.getOptionalLong(cursor, Item.CATEGORY, Category.ID_ADD);
-		categoryName = DatabaseUtils.getOptionalString(cursor, Item.CATEGORY_NAME);
-		propertyName = DatabaseUtils.getOptionalString(cursor, Item.PROPERTY_NAME);
-		roomName = DatabaseUtils.getOptionalString(cursor, Item.ROOM_NAME);
+		parentID = DatabaseTools.getOptionalLong(cursor, Item.PARENT_ID, Item.ID_ADD);
+		parentName = DatabaseTools.getOptionalString(cursor, Item.PARENT_NAME);
+		category = DatabaseTools.getOptionalLong(cursor, Item.CATEGORY, Category.ID_ADD);
+		categoryName = DatabaseTools.getOptionalString(cursor, Item.CATEGORY_NAME);
+		propertyName = DatabaseTools.getOptionalString(cursor, Item.PROPERTY_NAME);
+		roomName = DatabaseTools.getOptionalString(cursor, Item.ROOM_NAME);
 
 		return this;
 	}

@@ -20,7 +20,7 @@ public abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
 	}
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		//DatabaseUtils.dumpCursor(data);
+		//DatabaseTools.dumpCursor(data);
 		if (data.getCount() == 1) {
 			data.moveToFirst();
 			process(data);

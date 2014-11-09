@@ -91,6 +91,7 @@ public abstract class AndroidTools {
 		return "(" + type + ")" + value;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Camera.Size getOptimalSize(List<Camera.Size> sizes, int w, int h) {
 		if (sizes == null) {
 			return null;
@@ -104,6 +105,8 @@ public abstract class AndroidTools {
 
 		return optimalSize;
 	}
+
+	@SuppressWarnings("deprecation")
 	private static Camera.Size findClosestAspect(List<Camera.Size> sizes, int width, int height, double tolerance) {
 		Camera.Size optimalSize = null;
 
@@ -123,6 +126,7 @@ public abstract class AndroidTools {
 		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static int calculateRotation(Context context, Camera.CameraInfo cameraInfo) {
 		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		int rotation = windowManager.getDefaultDisplay().getRotation();

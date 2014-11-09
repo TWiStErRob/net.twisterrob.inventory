@@ -4,13 +4,13 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.PropertyEditActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
 import net.twisterrob.inventory.android.tasks.DeletePropertyTask;
-import net.twisterrob.inventory.android.utils.DescriptionBuilder;
 import net.twisterrob.inventory.android.view.Dialogs;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.utils.drive;
+package net.twisterrob.android.utils.model;
 
 import java.util.*;
 import java.util.concurrent.*;

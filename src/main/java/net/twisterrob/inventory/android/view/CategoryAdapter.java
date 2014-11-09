@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
+import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.CategoryAdapter.ViewHolder;
-import net.twisterrob.inventory.android.view.lib.ResourceCursorAdapterWithHolder;
 
 public class CategoryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	private final Activity activity;

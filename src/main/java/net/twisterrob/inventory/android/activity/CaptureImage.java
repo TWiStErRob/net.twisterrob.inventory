@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.hardware.Camera;
-import android.hardware.Camera.*;
 import android.net.Uri;
 import android.os.*;
 import android.provider.MediaStore;
@@ -17,10 +16,10 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import net.twisterrob.android.utils.tools.ImageTools;
+import net.twisterrob.android.view.*;
+import net.twisterrob.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.utils.PictureUtils;
-import net.twisterrob.inventory.android.view.lib.*;
-import net.twisterrob.inventory.android.view.lib.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
 @SuppressWarnings("deprecation")
@@ -68,7 +67,7 @@ public class CaptureImage extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				if (mSavedFile == null) {
-					take(new PictureCallback() {
+					take(new Camera.PictureCallback() {
 						public void onPictureTaken(byte[] data, Camera camera) {
 							doSave(data);
 						}
@@ -85,7 +84,7 @@ public class CaptureImage extends BaseActivity {
 					doCrop();
 					doFinish();
 				} else {
-					take(new PictureCallback() {
+					take(new Camera.PictureCallback() {
 						public void onPictureTaken(byte[] data, Camera camera) {
 							doSave(data);
 							doCrop();
@@ -114,12 +113,12 @@ public class CaptureImage extends BaseActivity {
 		setResult(RESULT_OK, result);
 		finish();
 	}
-	protected void take(final PictureCallback jpegCallback) {
+	protected void take(final Camera.PictureCallback jpegCallback) {
 		LOG.trace("Initiate taking picture {}", mPreview.isRunning());
 		if (!mPreview.isRunning()) {
 			return;
 		}
-		mPreview.setCameraFocus(new AutoFocusCallback() {
+		mPreview.setCameraFocus(new Camera.AutoFocusCallback() {
 			public void onAutoFocus(final boolean success, Camera camera) {
 				LOG.trace("Autofocus result: {}", success);
 				new Handler(getMainLooper()).post(new Runnable() {
@@ -167,8 +166,8 @@ public class CaptureImage extends BaseActivity {
 		try {
 			RectF sel = getPictureRect();
 			if (file != null && !sel.isEmpty()) {
-				Bitmap bitmap = PictureUtils.cropPicture(file, sel.left, sel.top, sel.right, sel.bottom);
-				PictureUtils.savePicture(bitmap, file, CompressFormat.JPEG, 80);
+				Bitmap bitmap = ImageTools.cropPicture(file, sel.left, sel.top, sel.right, sel.bottom);
+				ImageTools.savePicture(bitmap, file, CompressFormat.JPEG, 80);
 				LOG.info("Cropped file saved at {}", file);
 				return file;
 			}

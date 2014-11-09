@@ -3,12 +3,12 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@id/activityRoot"
 	>
-	<net.twisterrob.inventory.android.view.lib.CameraPreview
+	<net.twisterrob.android.view.CameraPreview
 		android:id="@+id/preview"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		/>
-	<net.twisterrob.inventory.android.view.lib.SelectionView
+	<net.twisterrob.android.view.SelectionView
 		android:id="@+id/selection"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view.lib;
+package net.twisterrob.android.view;
 
 import java.io.IOException;
 
@@ -6,7 +6,6 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.hardware.Camera;
-import android.hardware.Camera.*;
 import android.os.*;
 import android.util.AttributeSet;
 import android.view.*;
@@ -109,8 +108,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			height = temp;
 		}
 
-		Size previewSize = AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPreviewSizes(), width, height);
-		Size pictureSize = AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPictureSizes(), width, height);
+		Camera.Size previewSize =
+				AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPreviewSizes(), width, height);
+		Camera.Size pictureSize =
+				AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPictureSizes(), width, height);
 		LOG.debug("orient: {}, size: {}x{} ({}), surface: {}x{} ({}), preview: {}x{} ({}), picture: {}x{} ({})", //
 				degrees, //
 				width, height, (float)width / (float)height, //
@@ -164,7 +165,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	public void takePicture(PictureCallback jpegCallback) {
+	public void takePicture(Camera.PictureCallback jpegCallback) {
 		LOG.trace("Taking picture {}", cameraHolder != null);
 		if (cameraHolder == null) {
 			return;
@@ -190,13 +191,14 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	public void setCameraFocus(AutoFocusCallback autoFocus) {
+	public void setCameraFocus(Camera.AutoFocusCallback autoFocus) {
 		LOG.trace("Camera focus {}", cameraHolder != null);
 		if (cameraHolder == null) {
 			return;
 		}
 		String focusMode = cameraHolder.camera.getParameters().getFocusMode();
-		if (Parameters.FOCUS_MODE_AUTO.equals(focusMode) || Parameters.FOCUS_MODE_MACRO.equals(focusMode)) {
+		if (Camera.Parameters.FOCUS_MODE_AUTO.equals(focusMode)
+				|| Camera.Parameters.FOCUS_MODE_MACRO.equals(focusMode)) {
 			cameraHolder.camera.autoFocus(autoFocus);
 		}
 	}
@@ -206,9 +208,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 		String flashMode;
 		if (flash) {
-			flashMode = Parameters.FLASH_MODE_ON;
+			flashMode = Camera.Parameters.FLASH_MODE_ON;
 		} else {
-			flashMode = Parameters.FLASH_MODE_OFF;
+			flashMode = Camera.Parameters.FLASH_MODE_OFF;
 		}
 		cameraHolder.params.setFlashMode(flashMode);
 		cameraHolder.camera.setParameters(cameraHolder.params);
@@ -217,8 +219,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	private static class CameraHolder {
 		int cameraID;
 		Camera camera;
-		CameraInfo cameraInfo;
-		Parameters params;
+		Camera.CameraInfo cameraInfo;
+		Camera.Parameters params;
 
 		public CameraHolder(int id) {
 			cameraID = id;
@@ -233,7 +235,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			} catch (IOException ex) {
 				LOG.error("Error setting up camera preview", ex);
 			}
-			cameraInfo = new CameraInfo();
+			cameraInfo = new Camera.CameraInfo();
 			params = camera.getParameters();
 			Camera.getCameraInfo(cameraID, cameraInfo);
 		}

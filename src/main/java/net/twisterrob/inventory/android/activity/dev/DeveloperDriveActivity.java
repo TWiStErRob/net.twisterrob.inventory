@@ -12,15 +12,15 @@ import com.google.android.gms.drive.*;
 import com.google.android.gms.drive.events.ChangeEvent;
 import com.google.android.gms.drive.events.DriveEvent.Listener;
 
+import net.twisterrob.android.utils.model.DriveHelper.ConnectedTask;
+import net.twisterrob.android.utils.tools.DriveTools.FolderUtils;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BaseDriveActivity;
 import net.twisterrob.inventory.android.tasks.Upload;
-import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
-import net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils;
 
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.IdUtils.sync;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaBufferUtils.sync;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.IdUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.MetaBufferUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.MetaDataUtils.sync;
 
 public class DeveloperDriveActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(DeveloperDriveActivity.class);

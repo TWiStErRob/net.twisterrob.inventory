@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view.lib;
+package net.twisterrob.android.wiring;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.android.R;
 
 public class DefaultValueUpdater implements OnItemSelectedListener {
 	private static final int INVALID = -1;
@@ -16,9 +16,9 @@ public class DefaultValueUpdater implements OnItemSelectedListener {
 
 	private int prevPosition = INVALID;
 
-	public DefaultValueUpdater(EditText roomName, String columnName) {
-		this.entityName = roomName;
-		this.columnName = columnName;
+	public DefaultValueUpdater(EditText nameField, String cursorColumn) {
+		this.entityName = nameField;
+		this.columnName = cursorColumn;
 	}
 
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

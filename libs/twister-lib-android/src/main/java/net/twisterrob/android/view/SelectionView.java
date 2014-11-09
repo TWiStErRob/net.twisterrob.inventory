@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view.lib;
+package net.twisterrob.android.view;
 
 import static java.lang.Math.*;
 
@@ -13,7 +13,7 @@ import android.support.annotation.NonNull;
 import android.util.*;
 import android.view.*;
 
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.android.R;
 
 /**
  * @see <a href="http://adblogcat.com/a-camera-preview-with-a-bounding-box-like-google-goggles/">based on</a>
@@ -70,10 +70,10 @@ public class SelectionView extends View {
 		line.setStrokeWidth(15);
 
 		Resources resources = getContext().getResources();
-		mLeftTopIcon = resources.getDrawable(R.drawable.corner);
-		mRightTopIcon = resources.getDrawable(R.drawable.corner);
-		mLeftBotIcon = resources.getDrawable(R.drawable.corner);
-		mRightBotIcon = resources.getDrawable(R.drawable.corner);
+		mLeftTopIcon = resources.getDrawable(R.drawable.selection_corner);
+		mRightTopIcon = resources.getDrawable(R.drawable.selection_corner);
+		mLeftBotIcon = resources.getDrawable(R.drawable.selection_corner);
+		mRightBotIcon = resources.getDrawable(R.drawable.selection_corner);
 	}
 
 	public Rect getSelection() {

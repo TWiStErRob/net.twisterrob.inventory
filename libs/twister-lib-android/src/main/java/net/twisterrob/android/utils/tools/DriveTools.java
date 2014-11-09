@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.utils.drive;
+package net.twisterrob.android.utils.tools;
 
 import java.io.*;
 
@@ -11,7 +11,7 @@ import com.google.android.gms.drive.query.*;
 
 import net.twisterrob.java.io.IOTools;
 
-public class DriveUtils {
+public class DriveTools {
 	public static class ContentsUtils {
 		public static Contents sync(PendingResult<ContentsResult> pending) {
 			return syncResult(pending).getContents();

@@ -12,17 +12,18 @@ import com.google.android.gms.common.api.*;
 import com.google.android.gms.drive.*;
 import com.google.android.gms.drive.DriveFolder.*;
 
+import net.twisterrob.android.utils.model.DriveHelper;
+import net.twisterrob.android.utils.model.DriveHelper.ConnectedTask;
+import net.twisterrob.android.utils.tools.DriveTools.FolderUtils;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.utils.drive.*;
-import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
-import net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils;
+import net.twisterrob.inventory.android.utils.ApiClientProvider;
 import net.twisterrob.java.io.IOTools;
 
+import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.FileUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.FolderUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.MetaDataUtils.sync;
 import static net.twisterrob.inventory.android.Constants.*;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.sync;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FileUtils.sync;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils.sync;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.MetaDataUtils.sync;
 
 public class BaseDriveActivity extends BaseActivity implements ApiClientProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDriveActivity.class);

@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup.*;
 import android.widget.*;
 
+import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.view.TypeAdapter.ViewHolder;
-import net.twisterrob.inventory.android.view.lib.ResourceCursorAdapterWithHolder;
 
 public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	public TypeAdapter(Context context) {

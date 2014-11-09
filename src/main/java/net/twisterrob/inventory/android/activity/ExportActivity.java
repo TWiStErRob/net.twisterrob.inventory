@@ -15,12 +15,12 @@ import com.google.android.gms.drive.*;
 
 import static com.google.android.gms.drive.CreateFileActivityBuilder.*;
 
+import net.twisterrob.android.utils.model.DriveHelper.ConnectedTask;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.io.csv.DatabaseCSVExporter;
-import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
 
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.*;
+import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.*;
 
 public class ExportActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ExportActivity.class);

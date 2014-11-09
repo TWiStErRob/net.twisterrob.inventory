@@ -16,15 +16,16 @@ import android.widget.*;
 
 import com.google.android.gms.drive.*;
 
+import net.twisterrob.android.utils.tools.ImageTools;
+import net.twisterrob.android.wiring.DefaultValueUpdater;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.CaptureImage;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.tasks.Upload;
-import net.twisterrob.inventory.android.utils.*;
+import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.inventory.android.view.TypeAdapter;
-import net.twisterrob.inventory.android.view.lib.DefaultValueUpdater;
 
 public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	private DriveId driveId;
@@ -110,22 +111,22 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	}
 
 	private void pickPicture() {
-		startActivityForResult(PictureHelper.createGalleryIntent(), PictureUtils.REQUEST_CODE_GET_PICTURE);
+		startActivityForResult(PictureHelper.createGalleryIntent(), ImageTools.REQUEST_CODE_GET_PICTURE);
 	}
 
 	private void takePicture() {
-		startActivityForResult(CaptureImage.saveTo(getTargetFile()), PictureUtils.REQUEST_CODE_TAKE_PICTURE);
+		startActivityForResult(CaptureImage.saveTo(getTargetFile()), ImageTools.REQUEST_CODE_TAKE_PICTURE);
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-			case PictureUtils.REQUEST_CODE_GET_PICTURE:
-			case PictureUtils.REQUEST_CODE_TAKE_PICTURE:
+			case ImageTools.REQUEST_CODE_GET_PICTURE:
+			case ImageTools.REQUEST_CODE_TAKE_PICTURE:
 				if (resultCode == Activity.RESULT_OK && data != null) {
 					image.setImageResource(R.drawable.image_loading);
 					try {
-						File file = PictureUtils.getFile(getActivity(), data.getData());
+						File file = ImageTools.getFile(getActivity(), data.getData());
 						new Upload(getActivity()) {
 							@Override
 							protected void onPostExecute(DriveFile result) {

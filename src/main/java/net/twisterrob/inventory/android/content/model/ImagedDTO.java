@@ -9,10 +9,9 @@ import android.graphics.drawable.Drawable;
 
 import com.google.android.gms.drive.DriveId;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
-import net.twisterrob.inventory.android.utils.DatabaseUtils;
 
 public class ImagedDTO extends DTO {
 	private static final Logger LOG = LoggerFactory.getLogger(ImagedDTO.class);
@@ -24,9 +23,9 @@ public class ImagedDTO extends DTO {
 	protected ImagedDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		fallbackImageResourceName = DatabaseUtils.getOptionalString(cursor, CommonColumns.TYPE_IMAGE);
+		fallbackImageResourceName = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE);
 
-		String imageDriveId = DatabaseUtils.getOptionalString(cursor, CommonColumns.IMAGE);
+		String imageDriveId = DatabaseTools.getOptionalString(cursor, CommonColumns.IMAGE);
 		if (imageDriveId != null) {
 			image = DriveId.decodeFromString(imageDriveId);
 		} else {

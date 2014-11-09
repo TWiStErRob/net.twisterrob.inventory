@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.utils.glide;
+package net.twisterrob.android.content.glide;
 
 import java.util.*;
 

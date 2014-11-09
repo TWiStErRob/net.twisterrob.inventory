@@ -11,11 +11,11 @@ import android.view.*;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
+import net.twisterrob.android.graphics.SunburstDrawable;
+import net.twisterrob.android.graphics.SunburstDrawable.BasePaintStrategy;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.view.lib.SunburstDrawable;
-import net.twisterrob.inventory.android.view.lib.SunburstDrawable.BasePaintStrategy;
 
 public class SunBurstActivity extends BaseActivity {
 	private ImageView diagram;

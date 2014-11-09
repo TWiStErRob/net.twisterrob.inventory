@@ -96,7 +96,7 @@ public class Database {
 		if (nameFilter == null || nameFilter.toString().trim().isEmpty()) {
 			return listPropertyTypes();
 		}
-		return rawQuery(R.string.query_property_types_filtered, "%" + DBTools.escapeLike(nameFilter, '\\') + "%");
+		return rawQuery(R.string.query_property_types_filtered, "%" + DatabaseTools.escapeLike(nameFilter, '\\') + "%");
 	}
 	public Cursor listPropertyTypes() {
 		return rawQuery(R.string.query_property_types);

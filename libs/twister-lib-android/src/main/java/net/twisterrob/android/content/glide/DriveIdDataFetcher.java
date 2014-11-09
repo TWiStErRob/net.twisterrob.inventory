@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.utils.drive;
+package net.twisterrob.android.content.glide;
 
 import java.io.InputStream;
 
@@ -9,22 +9,22 @@ import com.bumptech.glide.load.data.DataFetcher;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
 
-import net.twisterrob.inventory.android.App;
-
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.ContentsUtils.sync;
-import static net.twisterrob.inventory.android.utils.drive.DriveUtils.StatusUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.StatusUtils.sync;
 
 public class DriveIdDataFetcher implements DataFetcher<InputStream> {
 	private static final Logger LOG = LoggerFactory.getLogger(DriveIdDataFetcher.class);
+
+	private final GoogleApiClient client;
 	private final DriveId driveId;
 
 	private boolean cancelled = false;
 
-	private GoogleApiClient client;
 	private DriveFile file;
 	private Contents contents;
 
-	public DriveIdDataFetcher(DriveId driveId) {
+	public DriveIdDataFetcher(GoogleApiClient client, DriveId driveId) {
+		this.client = client;
 		this.driveId = driveId;
 	}
 
@@ -33,7 +33,6 @@ public class DriveIdDataFetcher implements DataFetcher<InputStream> {
 	}
 
 	public InputStream loadData(Priority priority) {
-		client = App.getConnectedClient();
 		if (client == null) {
 			LOG.warn("No connected client received, giving custom error image");
 			return null;
