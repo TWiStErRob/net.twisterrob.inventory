@@ -34,7 +34,7 @@ public class InventoryDatabase {
 	}
 
 	public Cursor searchItems(ContentResolver cr, CharSequence query) {
-		String[] args = query != null? new String[]{query.toString()} : null;
+		String[] args = query != null? new String[] {query.toString()} : null;
 		return cr.query(Search.URI, NO_PROJ, NO_SEL, args, NO_SORT);
 	}
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import static android.location.LocationManager.*;
+
 public class LocationRetriever {
 	private final LocationManager m_manager;
 	final LocationResultListener m_locResultListener;

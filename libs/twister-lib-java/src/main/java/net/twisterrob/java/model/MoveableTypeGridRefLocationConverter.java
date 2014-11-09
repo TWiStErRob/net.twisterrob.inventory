@@ -81,25 +81,26 @@ public class MoveableTypeGridRefLocationConverter {
 	}
 
 	// helmert transform parameters from WGS84 to other datums
-	@SuppressWarnings("serial") static Map<String, DatumTransform> datumTransform = new HashMap<String, DatumTransform>() {
-		{
-			put("toOSGB36", new DatumTransform(
-					-446.448, 125.157, -542.060, // m
-					-0.1502, -0.2470, -0.8421, // sec
-					20.4894 // ppm
-			));
-			put("toED50", new DatumTransform(
-					89.5, 93.8, 123.1, // m
-					0.0, 0.0, 0.156, // sec
-					-1.2 // ppm
-			));
-			put("toIrl1975", new DatumTransform(
-					-482.530, 130.596, -564.557, // m
-					-1.042, -0.214, -0.631, // sec
-					-8.150 // ppm
-			));
-		}
-	};
+	@SuppressWarnings("serial") static Map<String, DatumTransform> datumTransform =
+			new HashMap<String, DatumTransform>() {
+				{
+					put("toOSGB36", new DatumTransform(
+							-446.448, 125.157, -542.060, // m
+							-0.1502, -0.2470, -0.8421, // sec
+							20.4894 // ppm
+					));
+					put("toED50", new DatumTransform(
+							89.5, 93.8, 123.1, // m
+							0.0, 0.0, 0.156, // sec
+							-1.2 // ppm
+					));
+					put("toIrl1975", new DatumTransform(
+							-482.530, 130.596, -564.557, // m
+							-1.042, -0.214, -0.631, // sec
+							-8.150 // ppm
+					));
+				}
+			};
 
 	// ED50: og.decc.gov.uk/en/olgs/cms/pons_and_cop/pons/pon4/pon4.aspx
 	// strictly, Ireland 1975 is from ETRF89: qv

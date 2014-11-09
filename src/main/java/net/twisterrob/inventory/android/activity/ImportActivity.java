@@ -36,7 +36,7 @@ public class ImportActivity extends BaseDriveActivity {
 				IntentSender intentSender = Drive.DriveApi
 						.newOpenFileActivityBuilder()
 						.setActivityStartFolder(getRoot(client))
-						.setMimeType(new String[]{"text/csv"})
+						.setMimeType(new String[] {"text/csv"})
 						.build(client);
 				try {
 					startIntentSenderForResult(intentSender, RESULT_FIRST_USER, null, 0, 0, 0);

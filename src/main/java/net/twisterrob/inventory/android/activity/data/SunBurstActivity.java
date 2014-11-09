@@ -95,7 +95,7 @@ public class SunBurstActivity extends BaseActivity {
 		private float[] unProject(MotionEvent event) {
 			Matrix inverse = new Matrix();
 			if (diagram.getImageMatrix().invert(inverse)) {
-				float[] points = new float[]{event.getX(), event.getY()};
+				float[] points = new float[] {event.getX(), event.getY()};
 				inverse.mapPoints(points);
 				return points;
 			}
@@ -229,7 +229,7 @@ public class SunBurstActivity extends BaseActivity {
 	}
 
 	private static class Paints extends BasePaintStrategy<Node> {
-		private final float[] hsv = new float[]{0.0f, 0.5f, 1.0f};
+		private final float[] hsv = new float[] {0.0f, 0.5f, 1.0f};
 
 		private Paint hue(Paint paint, float start, float end) {
 			hsv[0] = (start + end) / 2 * 360;

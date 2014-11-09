@@ -42,9 +42,7 @@
 		<activity
 			android:name=".activity.dev.PickDriveFileActivity"
 			android:label="@string/app_name">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.MainActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.MainActivity" />
 		</activity>
 		<activity
 			android:name=".activity.SearchResultsActivity"
@@ -54,12 +52,8 @@
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
 			</intent-filter>
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.MainActivity" />
-			<meta-data
-				android:name="android.app.searchable"
-				android:resource="@xml/searchable_suggest" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.MainActivity" />
+			<meta-data android:name="android.app.searchable" android:resource="@xml/searchable_suggest" />
 		</activity>
 		<activity
 			android:name=".activity.CaptureImage"
@@ -77,53 +71,39 @@
 		<activity
 			android:name=".activity.data.CategoryViewActivity"
 			android:label="@string/category_details">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.MainActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.MainActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.CategoryItemsActivity"
 			android:label="@string/category_items">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.CategoryViewActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.CategoryViewActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.PropertyListActivity"
 			android:label="@string/property_list">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.MainActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.MainActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.PropertyEditActivity"
 			android:label="@string/property_edit"
 			android:windowSoftInputMode="adjustResize">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.PropertyListActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.PropertyListActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.PropertyViewActivity"
 			android:label="@string/property_details">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.PropertyListActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.PropertyListActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.RoomEditActivity"
 			android:label="@string/room_edit"
 			android:windowSoftInputMode="adjustResize">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.PropertyViewActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.PropertyViewActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.RoomViewActivity"
 			android:label="@string/room_details">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.PropertyViewActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.PropertyViewActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.ItemViewActivity"
@@ -133,17 +113,13 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<data android:mimeType="vnd.android.cursor.item/vnd.net.twisterrob.inventory.item" />
 			</intent-filter>
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.RoomViewActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.RoomViewActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.ItemEditActivity"
 			android:label="@string/item_edit"
 			android:windowSoftInputMode="adjustResize">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activity.ItemViewActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.ItemViewActivity" />
 		</activity>
 
 		<provider

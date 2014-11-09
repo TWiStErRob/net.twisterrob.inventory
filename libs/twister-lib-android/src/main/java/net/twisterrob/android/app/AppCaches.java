@@ -26,9 +26,9 @@ public class AppCaches {
 			return (T)Class.forName(cacheClass).newInstance();
 		} catch (IllegalAccessException ex) {
 			ex.printStackTrace();
-		} catch(InstantiationException ex) {
+		} catch (InstantiationException ex) {
 			ex.printStackTrace();
-		} catch(ClassNotFoundException ex) {
+		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
 		}
 		return null;

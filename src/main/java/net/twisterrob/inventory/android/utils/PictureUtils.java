@@ -166,7 +166,7 @@ public class PictureUtils {
 
 	public static int getOrientation(Context context, Uri photoUri) {
 		Cursor cursor = context.getContentResolver().query(photoUri,
-				new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
+				new String[] {MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
 
 		int result = ExifInterface.ORIENTATION_UNDEFINED;
 		if (cursor.moveToFirst()) {
@@ -343,7 +343,7 @@ public class PictureUtils {
 					contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 				}
 
-				return getDataColumn(context, contentUri, "_id=?", new String[]{split[1]});
+				return getDataColumn(context, contentUri, "_id=?", new String[] {split[1]});
 			}
 		}
 		return null;
@@ -365,7 +365,7 @@ public class PictureUtils {
 
 		Cursor cursor = null;
 		try {
-			cursor = context.getContentResolver().query(uri, new String[]{column}, selection, selectionArgs, null);
+			cursor = context.getContentResolver().query(uri, new String[] {column}, selection, selectionArgs, null);
 			if (cursor != null && cursor.moveToFirst()) {
 				//DatabaseUtils.dumpCursor(cursor);
 

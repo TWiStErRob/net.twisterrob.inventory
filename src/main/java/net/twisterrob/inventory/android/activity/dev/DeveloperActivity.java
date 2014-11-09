@@ -99,7 +99,7 @@ public class DeveloperActivity extends ListActivity {
 				})
 		);
 		SimpleAdapter simpleAdapter = new SimpleAdapter(getApplicationContext(), entries,
-				android.R.layout.simple_list_item_1, new String[]{"title"}, new int[]{android.R.id.text1});
+				android.R.layout.simple_list_item_1, new String[] {"title"}, new int[] {android.R.id.text1});
 		setListAdapter(simpleAdapter);
 	}
 

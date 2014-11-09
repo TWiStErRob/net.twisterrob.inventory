@@ -86,14 +86,14 @@ public class InventoryProvider extends ContentProvider {
 				// uri.getLastPathSegment().toLowerCase(Locale.ROOT);
 				String query = selectionArgs[0].toLowerCase(Locale.getDefault());
 				if (StringTools.isNullOrEmpty(query)) {
-					MatrixCursor cursor = new MatrixCursor(new String[]{BaseColumns._ID
+					MatrixCursor cursor = new MatrixCursor(new String[] {BaseColumns._ID
 							, SUGGEST_COLUMN_INTENT_DATA_ID
 							, SUGGEST_COLUMN_TEXT_1
 							, SUGGEST_COLUMN_TEXT_2
 							//, SUGGEST_COLUMN_ICON_1
 							//, SUGGEST_COLUMN_INTENT_ACTION
 					}, 1);
-					cursor.addRow(new String[]{null, null, "Search Inventory Items", "Search for item name.",
+					cursor.addRow(new String[] {null, null, "Search Inventory Items", "Search for item name.",
 					/* "android.resource://android/drawable/ic_menu_search", Intent.ACTION_SEARCH */});
 					return cursor;
 				}

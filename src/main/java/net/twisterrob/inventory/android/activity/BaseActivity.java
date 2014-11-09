@@ -66,7 +66,7 @@ public class BaseActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home: // Respond to the action bar's Up/Home button
-				if(false) {
+				if (false) {
 					Intent upIntent = NavUtils.getParentActivityIntent(this);
 					if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 						TaskStackBuilder.create(this) // Create a new task with a synthesized back stack

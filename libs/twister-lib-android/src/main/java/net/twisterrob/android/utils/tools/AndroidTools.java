@@ -12,7 +12,6 @@ import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.hardware.Camera;
-import android.hardware.Camera.*;
 import android.net.Uri;
 import android.os.*;
 import android.preference.ListPreference;
@@ -124,7 +123,7 @@ public abstract class AndroidTools {
 		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
 	}
 
-	public static int calculateRotation(Context context, CameraInfo cameraInfo) {
+	public static int calculateRotation(Context context, Camera.CameraInfo cameraInfo) {
 		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		int rotation = windowManager.getDefaultDisplay().getRotation();
 		int degrees = rotation * 90; // consider using Surface.ROTATION_ constants

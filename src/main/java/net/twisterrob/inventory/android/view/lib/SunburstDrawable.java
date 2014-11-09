@@ -207,8 +207,8 @@ public class SunburstDrawable<T> extends Drawable {
 	}
 
 	public static class RandomColorPaints extends BasePaintStrategy<Object> {
-		private final float[] color = new float[]{0, 0.5f, 1.0f};
-		private final float[] textColor = new float[]{0, 1.0f, 0.5f};
+		private final float[] color = new float[] {0, 0.5f, 1.0f};
+		private final float[] textColor = new float[] {0, 1.0f, 0.5f};
 
 		private static Paint randomize(Paint paint, float[] color) {
 			color[0] = (float)(Math.random() * 360);
@@ -230,7 +230,7 @@ public class SunburstDrawable<T> extends Drawable {
 	}
 
 	public static class HueVaryingPaints extends BasePaintStrategy<Object> {
-		private final float[] hsv = new float[]{0.0f, 0.5f, 1.0f};
+		private final float[] hsv = new float[] {0.0f, 0.5f, 1.0f};
 
 		private Paint hue(Paint paint, float start, float end, boolean opposite) {
 			hsv[0] = (start + end) / 2 * 360;

@@ -12,7 +12,7 @@ import com.google.android.gms.common.api.*;
 import com.google.android.gms.drive.*;
 import com.google.android.gms.drive.DriveFolder.*;
 
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.utils.drive.*;
 import net.twisterrob.inventory.android.utils.drive.DriveHelper.ConnectedTask;
 import net.twisterrob.inventory.android.utils.drive.DriveUtils.FolderUtils;

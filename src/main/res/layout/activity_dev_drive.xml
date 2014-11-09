@@ -5,13 +5,13 @@
 	android:id="@id/activityRoot"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin"
+	android:layout_margin="@dimen/margin"
 	>
 	<TextView
 		android:id="@id/details"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:textIsSelectable="true"
-	    tools:text="Some\ndetailed\nlog"
+		tools:text="Some\ndetailed\nlog"
 		/>
 </RelativeLayout>
