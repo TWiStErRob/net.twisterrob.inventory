@@ -8,9 +8,9 @@ buildscript {
 		maven { url 'http://localhost/maven' }
 	}
 
-	configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	dependencies {
-		classpath 'net.twisterrob.gradle:plugin:0.2-SNAPSHOT'
+		classpath 'net.twisterrob.gradle:plugin:0.3.2'
 		//classpath 'com.github.dcendents:android-maven-plugin:1.1' // for gradle install (to put aar into the repo)
 	}
 }
@@ -34,13 +34,7 @@ dependencies {
 		compile project(':twister-lib-java')
 	}
 
-	provided 'com.android.support:support-v4:20.0.0'
-	provided 'com.android.support:appcompat-v7:20.0.0'
-	provided 'com.google.android.gms:play-services:6.1.11'
-}
-
-android {
-	defaultConfig {
-		minSdkVersion 9
-	}
+	provided 'com.android.support:support-v4:21.0.0'
+	provided 'com.android.support:appcompat-v7:21.0.0'
+	provided 'com.google.android.gms:play-services:6.1.71'
 }

@@ -105,12 +105,12 @@ public abstract class AndroidTools {
 
 		return optimalSize;
 	}
-	private static Size findClosestAspect(List<Size> sizes, int width, int height, double tolerance) {
-		Size optimalSize = null;
+	private static Camera.Size findClosestAspect(List<Camera.Size> sizes, int width, int height, double tolerance) {
+		Camera.Size optimalSize = null;
 
 		final double targetRatio = (double)width / (double)height;
 		double minDiff = Double.MAX_VALUE;
-		for (Size size : sizes) {
+		for (Camera.Size size : sizes) {
 			double ratio = (double)size.width / (double)size.height;
 			if (Math.abs(ratio - targetRatio) <= tolerance && Math.abs(size.height - height) < minDiff) {
 				optimalSize = size;

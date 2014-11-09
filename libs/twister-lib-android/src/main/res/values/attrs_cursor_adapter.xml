@@ -24,8 +24,10 @@
 		<attr name="selection" format="string" />
 		<!-- Sort order statement for the query. Optional. -->
 		<attr name="sortOrder" format="string" />
+		<!-- It was originally called layout, but since support-v7@21, it's a duplicate of something else -->
+		<eat-comment />
 		<!-- Layout resource used to display each row from the cursor. Mandatory. -->
-		<attr name="layout" format="reference" />
+		<attr name="rowLayout" format="reference" />
 	</declare-styleable>
 
 	<!-- Attributes used in bind items for XML cursor adapters. -->

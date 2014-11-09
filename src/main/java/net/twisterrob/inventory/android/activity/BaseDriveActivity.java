@@ -106,7 +106,7 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 			DriveFolder inventoryFolder = getInventoryFolder();
 
 			Editor prefs = App.getPrefEditor();
-			prefs.putString(Constants.Prefs.DRIVE_FOLDER_ID, inventoryFolder.getDriveId().encodeToString());
+			prefs.putString(Prefs.DRIVE_FOLDER_ID, inventoryFolder.getDriveId().encodeToString());
 			if (!prefs.commit()) {
 				throw new IOException("Cannot write preferences");
 			}

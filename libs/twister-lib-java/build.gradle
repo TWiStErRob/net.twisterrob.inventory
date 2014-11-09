@@ -4,9 +4,9 @@ buildscript {
 		maven { url 'http://localhost/maven' }
 	}
 
-	configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	dependencies {
-		classpath 'net.twisterrob.gradle:plugin:0.2-SNAPSHOT'
+		classpath 'net.twisterrob.gradle:plugin:0.3.2'
 		classpath 'com.github.dcendents:android-maven-plugin:1.1' // for `gradle install`
 	}
 }

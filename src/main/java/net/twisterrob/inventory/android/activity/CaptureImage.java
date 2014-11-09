@@ -23,6 +23,7 @@ import net.twisterrob.inventory.android.view.lib.*;
 import net.twisterrob.inventory.android.view.lib.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
+@SuppressWarnings("deprecation")
 public class CaptureImage extends BaseActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
 

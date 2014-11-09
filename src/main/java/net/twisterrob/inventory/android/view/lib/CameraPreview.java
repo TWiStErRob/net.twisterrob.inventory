@@ -13,6 +13,7 @@ import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 
+@SuppressWarnings("deprecation")
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
 

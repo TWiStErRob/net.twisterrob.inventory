@@ -125,7 +125,6 @@ public class PictureUtils {
 			bmOptions.inJustDecodeBounds = false;
 		}
 
-		bmOptions.inPurgeable = true;
 		return BitmapFactory.decodeStream(stream, null, bmOptions);
 	}
 

@@ -159,7 +159,7 @@ public class DriveHelper {
 		}
 
 		@Override
-		public void onConnectionSuspended(int reson) {
+		public void onConnectionSuspended(int reason) {
 			LOG.info("GoogleApiClient disconnected");
 		}
 	}

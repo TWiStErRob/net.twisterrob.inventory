@@ -18,7 +18,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	private final List<Level1> m_groups = new ArrayList<>();
 	private final Map<Level1, List<Level2>> m_children;
 	private final Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> m_data;
-	private ExpandableListView m_outerList;
+	private final ExpandableListView m_outerList;
 
 	public BaseExpandableList3Adapter(Context context, ExpandableListView outerList,
 			Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> data) {
@@ -241,7 +241,7 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 
 	@SuppressLint("ViewConstructor")
 	private static class InnerExpandableListView extends ExpandableListView implements OnGroupClickListener {
-		private ExpandableListView outerList;
+		private final ExpandableListView outerList;
 		public InnerExpandableListView(Context context, ExpandableListView outerList) {
 			super(context);
 			this.outerList = outerList;

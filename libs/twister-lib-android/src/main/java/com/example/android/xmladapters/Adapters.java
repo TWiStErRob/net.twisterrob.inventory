@@ -606,7 +606,7 @@ public class Adapters {
 			String uri = a.getString(R.styleable.CursorAdapter_uri);
 			String selection = a.getString(R.styleable.CursorAdapter_selection);
 			String sortOrder = a.getString(R.styleable.CursorAdapter_sortOrder);
-			int layout = a.getResourceId(R.styleable.CursorAdapter_layout, 0);
+			int layout = a.getResourceId(R.styleable.CursorAdapter_rowLayout, 0);
 			if (layout == 0) {
 				throw new IllegalArgumentException("The layout specified in " + resources.getResourceEntryName(mId)
 						+ " does not exist");

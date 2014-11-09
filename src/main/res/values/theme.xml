@@ -16,7 +16,7 @@
 	<!-- Application theme. -->
 	<style
 		name="AppTheme"
-		parent="AppBaseTheme">
+		parent="@style/AppBaseTheme">
 		<!-- All customizations that are NOT specific to a particular API-level can go here. -->
 	</style>
 </resources>
