@@ -17,6 +17,9 @@ public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends Ba
 	@Override
 	protected final void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setActionBarSubtitle(getTitle());
+		setActionBarTitle("...");
+
 		super.setContentView(R.layout.activity_view);
 
 		String extrasError = checkExtras();

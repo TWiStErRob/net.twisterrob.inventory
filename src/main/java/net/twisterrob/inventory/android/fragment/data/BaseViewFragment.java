@@ -13,6 +13,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 
+import static net.twisterrob.inventory.android.Constants.Dimensions.*;
 import static net.twisterrob.inventory.android.Constants.Prefs.*;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
@@ -29,7 +30,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 	public void onSingleRowLoaded(DTO entity) {
 		setTitle(entity.name);
-		setIcon(entity.getFallbackDrawable(getActivity()));
+		setIcon(entity.getFallbackDrawable(getActivity(), ACTIONBAR_ICON_SIZE, ACTIONBAR_ICON_PADDING));
 		pager.setAdapter(new ImageAndDescriptionAdapter(entity));
 		pager.setCurrentItem(getDefaultPageIndex());
 	}

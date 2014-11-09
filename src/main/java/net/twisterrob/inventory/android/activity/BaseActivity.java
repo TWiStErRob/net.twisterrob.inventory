@@ -5,8 +5,9 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.*;
+import android.os.Bundle;
 import android.support.v4.app.*;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.*;
 import android.view.*;
 
@@ -41,13 +42,23 @@ public class BaseActivity extends ActionBarActivity {
 	@SuppressLint({"NewApi", "InlinedApi"})
 	private void initActionBar() {
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setSubtitle(getTitle());
+		actionBar.setDisplayShowHomeEnabled(true);
+		// TODO true, but needs onOptionsItemSelected and onCreateSupportNavigateUpTaskStack
+		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(true);
 
-		if (Build.VERSION_CODES.HONEYCOMB <= Build.VERSION.SDK_INT) {
-			int id = getResources().getIdentifier("action_bar", "id", "android");
-			View actionBarView = findViewById(id);
-			actionBarView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		initActionBarSoftwareRendering();
+	}
+
+	private void initActionBarSoftwareRendering() {
+		View actionBarView = findViewById(getResources().getIdentifier("action_bar", "id", getPackageName()));
+		if (actionBarView == null) {
+			actionBarView = findViewById(getResources().getIdentifier("action_bar", "id", "android"));
+		}
+		if (actionBarView != null) {
+			ViewCompat.setLayerType(actionBarView, ViewCompat.LAYER_TYPE_SOFTWARE, null);
+		} else {
+			LOG.warn("Unable to set SOFTWARE rendering layer on action bar");
 		}
 	}
 
@@ -55,18 +66,20 @@ public class BaseActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home: // Respond to the action bar's Up/Home button
-				Intent upIntent = NavUtils.getParentActivityIntent(this);
-				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-					TaskStackBuilder.create(this) // Create a new task with a synthesized back stack
-							.addNextIntentWithParentStack(upIntent) // add the parents to the back stack
-							.startActivities(); // Navigate up to the closest parent
-				} else {
-					NavUtils.navigateUpFromSameTask(this);
-					//					Intent intent = NavUtils.getParentActivityIntent(this);
-					//					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-					//					NavUtils.navigateUpTo(this, intent);
+				if(false) {
+					Intent upIntent = NavUtils.getParentActivityIntent(this);
+					if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+						TaskStackBuilder.create(this) // Create a new task with a synthesized back stack
+								.addNextIntentWithParentStack(upIntent) // add the parents to the back stack
+								.startActivities(); // Navigate up to the closest parent
+					} else {
+						NavUtils.navigateUpFromSameTask(this);
+						//					Intent intent = NavUtils.getParentActivityIntent(this);
+						//					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						//					NavUtils.navigateUpTo(this, intent);
+					}
+					return true;
 				}
-				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}

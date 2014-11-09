@@ -40,7 +40,6 @@
 		android:layout_toStartOf="@id/items"
 		android:focusable="false"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textIsSelectable="true"
 		/>
 	<TextView
 		android:id="@id/stats"
@@ -53,6 +52,5 @@
 		android:layout_below="@id/title"
 		android:focusable="false"
 		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:textIsSelectable="true"
 		/>
 </RelativeLayout>

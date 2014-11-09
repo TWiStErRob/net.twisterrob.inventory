@@ -39,10 +39,25 @@ public class ImagedDTO extends DTO {
 	public Drawable getFallbackDrawable(Context context) {
 		return getFallbackDrawable(context, fallbackImageResourceName);
 	}
+	public Drawable getFallbackDrawable(Context context, int size, int padding) {
+		return getFallbackDrawable(context, fallbackImageResourceName, size, padding);
+	}
 
 	public static Drawable getFallbackDrawable(Context context, String resourceName) {
 		try {
 			Drawable svg = App.pic().getSVG(context, AndroidTools.getRawResourceID(context, resourceName));
+			if (svg != null) {
+				return svg;
+			}
+		} catch (NotFoundException ex) {
+			LOG.error("TODO Convert {} to SVG", resourceName);
+		}
+		return context.getResources().getDrawable(AndroidTools.getDrawableResourceID(context, resourceName));
+	}
+	public static Drawable getFallbackDrawable(Context context, String resourceName, int size, int padding) {
+		try {
+			Drawable svg =
+					App.pic().getSVG(context, AndroidTools.getRawResourceID(context, resourceName), size, padding);
 			if (svg != null) {
 				return svg;
 			}

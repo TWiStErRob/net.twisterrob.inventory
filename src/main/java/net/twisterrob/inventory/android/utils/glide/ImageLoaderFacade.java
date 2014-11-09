@@ -5,8 +5,12 @@ import java.io.InputStream;
 import org.slf4j.*;
 
 import android.content.Context;
+import android.graphics.*;
 import android.graphics.drawable.*;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
+
+import static android.util.TypedValue.*;
 
 import com.bumptech.glide.*;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -98,6 +102,21 @@ public class ImageLoaderFacade {
 		try {
 			SVG svg = SVG.getFromResource(context, rawResourceId);
 			return new PictureDrawable(svg.renderToPicture());
+		} catch (SVGParseException ex) {
+			LOG.warn("Cannot decode SVG from {}", rawResourceId, ex);
+			return null;
+		}
+	}
+	public Drawable getSVG(Context context, int rawResourceId, int size, int padding) {
+		try {
+			float dp = TypedValue.applyDimension(COMPLEX_UNIT_DIP, 1, context.getResources().getDisplayMetrics());
+			SVG svg = SVG.getFromResource(context, rawResourceId);
+			Picture picture = new Picture();
+			Canvas canvas = picture.beginRecording((int)(size * dp), (int)(size * dp));
+			canvas.translate(padding * dp, padding * dp); // workaround, because renderToCanvas doesn't care about x,y
+			svg.renderToCanvas(canvas, new RectF(0, 0, (size - 2 * padding) * dp, (size - 2 * padding) * dp));
+			picture.endRecording();
+			return new PictureDrawable(picture);
 		} catch (SVGParseException ex) {
 			LOG.warn("Cannot decode SVG from {}", rawResourceId, ex);
 			return null;

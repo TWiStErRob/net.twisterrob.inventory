@@ -18,6 +18,8 @@ public class CategoryItemsActivity extends BaseDetailActivity<CategoryViewFragme
 		CategoryViewFragment detailsFragment;
 		if (categoryID == Category.INTERNAL) {
 			detailsFragment = null;
+			setActionBarSubtitle(null);
+			setActionBarTitle("All Items");
 			hideDetails();
 		} else {
 			detailsFragment = CategoryViewFragment.newInstance(categoryID);

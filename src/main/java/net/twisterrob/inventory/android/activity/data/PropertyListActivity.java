@@ -12,6 +12,8 @@ public class PropertyListActivity extends BaseDetailActivity<NoFragment, Propert
 		implements PropertiesEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
+		setActionBarSubtitle(null);
+		setActionBarTitle(getTitle());
 		hideDetails();
 		setFragments(null, PropertyListFragment.newInstance());
 	}

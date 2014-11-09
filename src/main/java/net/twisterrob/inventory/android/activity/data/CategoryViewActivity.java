@@ -10,15 +10,18 @@ import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryListFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 
+import static net.twisterrob.inventory.android.Constants.Dimensions.*;
+
 public class CategoryViewActivity extends BaseDetailActivity<CategoryViewFragment, CategoryListFragment>
 		implements CategoryEvents, CategoriesEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
 		long parentID = getExtraParentCategoryID();
 		if (parentID == Category.INTERNAL) {
+			setActionBarTitle(getText(R.string.category_list));
+			setActionBarSubtitle(null);
+			setIcon(App.pic().getSVG(this, R.raw.category_unknown, ACTIONBAR_ICON_SIZE, ACTIONBAR_ICON_PADDING));
 			hideDetails();
-			getSupportActionBar().setTitle(R.string.category_list);
-			getSupportActionBar().setIcon(App.pic().getSVG(this, R.raw.category_unknown));
 		}
 		setFragments(CategoryViewFragment.newInstance(parentID), CategoryListFragment.newInstance(parentID));
 	}

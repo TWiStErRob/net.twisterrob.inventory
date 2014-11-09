@@ -12,4 +12,11 @@ public interface Constants {
 		String DEFAULT_ENTITY_DETAILS_PAGE_DEFAULT = "image";
 		String LAST_EXPORT_DRIVE_ID = "lastExportDriveId";
 	}
+
+	interface Dimensions {
+		/** dp */
+		int ACTIONBAR_ICON_SIZE = 48;
+		/** dp */
+		int ACTIONBAR_ICON_PADDING = 4;
+	}
 }

@@ -24,8 +24,9 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.activity_main);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setHomeButtonEnabled(false);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false); // there's no up from home
+		setIcon(getResources().getDrawable(R.drawable.ic_launcher));
+
 		getSupportFragmentManager() //
 				.beginTransaction() //
 				.add(new BackupFragment(), BackupFragment.class.getName()) //
