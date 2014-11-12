@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.fragment;
 import java.util.*;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.*;
@@ -87,5 +88,10 @@ public class BaseFragment<T> extends Fragment {
 
 	public void setIcon(Drawable iconDrawable) {
 		((BaseActivity)getActivity()).setIcon(iconDrawable);
+	}
+
+	// TODO replace getActivity() usages with getContext()
+	protected final Context getContext() {
+		return getActivity();
 	}
 }

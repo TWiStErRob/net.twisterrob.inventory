@@ -1,6 +1,6 @@
 rootProject.name = 'Magic Home Inventory'
 
-if (!hasProperty('precompiled')) {
+if (hasProperty('libFromSources')) {
 	include ':twister-lib-java'
 	project(':twister-lib-java').projectDir = file('libs/twister-lib-java')
 	include ':twister-lib-android'

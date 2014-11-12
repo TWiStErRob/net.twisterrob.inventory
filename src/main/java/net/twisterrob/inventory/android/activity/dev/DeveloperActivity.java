@@ -10,8 +10,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 
+import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.*;
+import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.*;
 
 public class DeveloperActivity extends ListActivity {
@@ -94,7 +95,8 @@ public class DeveloperActivity extends ListActivity {
 				}),
 				create(getString(R.string.action_picture_take), new Runnable() {
 					public void run() {
-						startActivity(CaptureImage.saveTo(new File(getCacheDir(), "developer_image.jpg")));
+						File target = new File(getCacheDir(), "developer_image.jpg");
+						startActivity(CaptureImage.saveTo(App.getAppContext(), target));
 					}
 				})
 		);

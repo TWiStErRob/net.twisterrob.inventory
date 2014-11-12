@@ -16,10 +16,10 @@ import android.widget.*;
 
 import com.google.android.gms.drive.*;
 
+import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.ImageTools;
 import net.twisterrob.android.wiring.DefaultValueUpdater;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.CaptureImage;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
@@ -111,11 +111,13 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	}
 
 	private void pickPicture() {
-		startActivityForResult(PictureHelper.createGalleryIntent(), ImageTools.REQUEST_CODE_GET_PICTURE);
+		Intent intent = PictureHelper.createGalleryIntent();
+		startActivityForResult(intent, ImageTools.REQUEST_CODE_GET_PICTURE);
 	}
 
 	private void takePicture() {
-		startActivityForResult(CaptureImage.saveTo(getTargetFile()), ImageTools.REQUEST_CODE_TAKE_PICTURE);
+		Intent intent = CaptureImage.saveTo(getActivity(), getTargetFile());
+		startActivityForResult(intent, ImageTools.REQUEST_CODE_TAKE_PICTURE);
 	}
 
 	@Override

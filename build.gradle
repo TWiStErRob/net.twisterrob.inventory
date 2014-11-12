@@ -1,4 +1,4 @@
-if (!project.hasProperty('precompiled')) {
+if (project.hasProperty('libFromSources')) {
 	evaluationDependsOn ':twister-lib-java'
 	evaluationDependsOn ':twister-lib-android'
 }
@@ -9,9 +9,9 @@ buildscript {
 		maven { url 'http://localhost/maven' }
 	}
 
-	//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	dependencies {
-		classpath 'net.twisterrob.gradle:plugin:0.3.2'
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath 'net.twisterrob.gradle:plugin:0.3.3'
 	}
 }
 
@@ -27,15 +27,16 @@ apply plugin: 'net.twisterrob.android-app'
 
 repositories {
 	mavenCentral()
-	mavenLocal()
+	maven { url 'http://localhost/maven' }
 }
 
 dependencies {
-	if (project.hasProperty('precompiled')) {
-		compile('net.twisterrob:twister-lib-android:1.0')
-	} else {
+	//configurations.compile.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+	if (project.hasProperty('libFromSources')) {
 		compile project(':twister-lib-java')
 		compile project(':twister-lib-android')
+	} else {
+		compile('net.twisterrob:twister-lib-android:1.0-SNAPSHOT')
 	}
 	compile 'com.caverock:androidsvg:1.2.1'
 	compile 'org.apache.commons:commons-csv:1.0'

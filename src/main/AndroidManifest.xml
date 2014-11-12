@@ -3,14 +3,12 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="net.twisterrob.inventory.android">
 
+	<!-- Used by net.twisterrob.android.activity.CaptureImage -->
 	<uses-permission android:name="android.permission.CAMERA" />
-	<uses-feature
-		android:name="android.hardware.camera.autofocus"
-		android:required="false" />
-	<uses-feature
-		android:name="android.hardware.camera"
-		android:required="false" />
+	<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+	<uses-feature android:name="android.hardware.camera" android:required="false" />
 
+	<!-- Used by ??? -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<!-- ViewServer needs INTERNET -->
@@ -56,9 +54,10 @@
 			<meta-data android:name="android.app.searchable" android:resource="@xml/searchable_suggest" />
 		</activity>
 		<activity
-			android:name=".activity.CaptureImage"
+			android:name="net.twisterrob.android.activity.CaptureImage"
 			android:label="@string/action_picture_take"
-			android:screenOrientation="fullSensor" />
+			android:screenOrientation="fullSensor"
+			/>
 		<activity
 			android:name=".activity.ExportActivity"
 			android:label="Export" />

@@ -1,4 +1,4 @@
-if (!hasProperty('precompiled')) {
+if (project.hasProperty('libFromSources')) {
 	evaluationDependsOn ':twister-lib-java'
 }
 
@@ -8,30 +8,30 @@ buildscript {
 		maven { url 'http://localhost/maven' }
 	}
 
-	//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	dependencies {
-		classpath 'net.twisterrob.gradle:plugin:0.3.2'
-		//classpath 'com.github.dcendents:android-maven-plugin:1.1' // for gradle install (to put aar into the repo)
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath 'net.twisterrob.gradle:plugin:0.3.3'
 	}
 }
-
-apply plugin: 'com.android.library'
-apply plugin: 'net.twisterrob.android-library'
-//apply plugin: 'android-maven'
 
 group 'net.twisterrob'
 version '1.0'
 
+apply plugin: 'com.android.library'
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
 repositories {
-	mavenCentral()
-	mavenLocal()
+	jcenter()
+	maven { url 'http://localhost/maven' }
 }
 
 dependencies {
-	if (hasProperty('precompiled')) {
-		compile 'net.twisterrob:twister-lib-java:1.0'
-	} else {
+	//configurations.compile.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+	if (project.hasProperty('libFromSources')) {
 		compile project(':twister-lib-java')
+	} else {
+		compile 'net.twisterrob:twister-lib-java:1.0-SNAPSHOT'
 	}
 
 	provided 'com.android.support:support-v4:21.0.0'

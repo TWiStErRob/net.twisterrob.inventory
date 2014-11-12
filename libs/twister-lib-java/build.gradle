@@ -6,21 +6,20 @@ buildscript {
 
 	//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	dependencies {
-		classpath 'net.twisterrob.gradle:plugin:0.3.2'
-		classpath 'com.github.dcendents:android-maven-plugin:1.1' // for `gradle install`
+		classpath 'net.twisterrob.gradle:plugin:0.3.3'
 	}
 }
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'eclipse'
-apply plugin: 'net.twisterrob.java'
 
 group 'net.twisterrob'
 version '1.0'
 
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'net.twisterrob.java'
+apply from: 'http://localhost/maven/configure.gradle'
+
 repositories {
-	mavenCentral()
+	jcenter()
 }
 
 dependencies {

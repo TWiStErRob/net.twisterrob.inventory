@@ -1,10 +1,13 @@
-package net.twisterrob.inventory.android.activity;
+package net.twisterrob.android.activity;
 
 import java.io.*;
 
 import org.slf4j.*;
 
-import android.content.Intent;
+import android.Manifest;
+import android.app.Activity;
+import android.content.*;
+import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.hardware.Camera;
@@ -16,14 +19,14 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import net.twisterrob.android.utils.tools.ImageTools;
+import net.twisterrob.android.R;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
-import net.twisterrob.inventory.android.*;
 import net.twisterrob.java.io.IOTools;
 
 @SuppressWarnings("deprecation")
-public class CaptureImage extends BaseActivity {
+public class CaptureImage extends Activity {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
 
 	private CameraPreview mPreview;
@@ -35,7 +38,6 @@ public class CaptureImage extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		getSupportActionBar().hide();
 
 		String output = getIntent().getStringExtra(MediaStore.EXTRA_OUTPUT);
 		if (output == null) {
@@ -189,9 +191,17 @@ public class CaptureImage extends BaseActivity {
 		return selection;
 	}
 
-	public static Intent saveTo(File targetFile) {
-		Intent intent = new Intent(App.getAppContext(), CaptureImage.class);
+	public static Intent saveTo(Context context, File targetFile) {
+		Intent intent = new Intent(context, CaptureImage.class);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, targetFile.getAbsolutePath());
+		PackageManager pm = context.getPackageManager();
+		if (!AndroidTools.hasPermission(context, Manifest.permission.CAMERA)) {
+			throw new IllegalStateException("Camera permission is not granted, please add it to your manifest:\n"
+					+ "<uses-permission android:name=\"android.permission.CAMERA\" />");
+		}
+		if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+			throw new IllegalStateException("Sorry, this system doesn't have a camera.");
+		}
 		return intent;
 	}
 }
