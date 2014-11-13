@@ -8,13 +8,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.os.*;
+import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
-
-import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.ImageTools;
@@ -23,12 +21,13 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
-import net.twisterrob.inventory.android.tasks.Upload;
+import net.twisterrob.inventory.android.tasks.SaveToFile;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.inventory.android.view.TypeAdapter;
 
 public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
-	private DriveId driveId;
+	/** full path */
+	private String currentImage;
 	private boolean keepNameInSync;
 
 	protected EditText title;
@@ -47,7 +46,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	protected File getTargetFile() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
 		String imageFileName = getBaseFileName() + "_" + timeStamp + ".jpg";
-		File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+		File storageDir = getContext().getCacheDir();
 		return new File(storageDir, imageFileName);
 	}
 
@@ -73,18 +72,18 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 			}
 		});
 
-		type.setAdapter(typeAdapter = new TypeAdapter(getActivity()));
+		type.setAdapter(typeAdapter = new TypeAdapter(getContext()));
 		type.setOnItemSelectedListener(new DefaultValueUpdater(title, CommonColumns.NAME) {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				if (keepNameInSync) {
 					super.onItemSelected(parent, view, position, id);
 				}
-				if (getCurrentImageDriveId() == null) {
+				if (getCurrentImage() == null) {
 					@SuppressWarnings("resource")
 					Cursor cursor = (Cursor)parent.getItemAtPosition(position);
 					String image = cursor.getString(cursor.getColumnIndex(CommonColumns.TYPE_IMAGE));
-					setCurrentImageDriveId(null, ImagedDTO.getFallbackDrawable(getActivity(), image));
+					setCurrentImage(null, ImagedDTO.getFallbackDrawable(getContext(), image));
 				}
 			}
 		});
@@ -116,7 +115,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	}
 
 	private void takePicture() {
-		Intent intent = CaptureImage.saveTo(getActivity(), getTargetFile());
+		Intent intent = CaptureImage.saveTo(getContext(), getTargetFile());
 		startActivityForResult(intent, ImageTools.REQUEST_CODE_TAKE_PICTURE);
 	}
 
@@ -128,12 +127,12 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 				if (resultCode == Activity.RESULT_OK && data != null) {
 					image.setImageResource(R.drawable.image_loading);
 					try {
-						File file = ImageTools.getFile(getActivity(), data.getData());
-						new Upload(getActivity()) {
+						File file = ImageTools.getFile(getContext(), data.getData());
+						new SaveToFile(getContext()) {
 							@Override
-							protected void onPostExecute(DriveFile result) {
+							protected void onPostExecute(File result) {
 								if (result != null) {
-									setCurrentImageDriveId(result.getDriveId(), null);
+									setCurrentImage(result.getAbsolutePath(), null);
 								}
 							}
 						}.execute(file);
@@ -151,16 +150,16 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	protected DriveId getCurrentImageDriveId() {
-		return driveId;
+	protected String getCurrentImage() {
+		return currentImage;
 	}
 
-	protected void setCurrentImageDriveId(DriveId driveId, int fallbackResourceID) {
-		setCurrentImageDriveId(driveId, getResources().getDrawable(fallbackResourceID));
+	protected void setCurrentImage(String currentImage, int fallbackResourceID) {
+		setCurrentImage(currentImage, getResources().getDrawable(fallbackResourceID));
 	}
 
-	protected void setCurrentImageDriveId(DriveId driveId, Drawable fallback) {
-		this.driveId = driveId;
-		App.pic().loadDrive(this, driveId).placeholder(fallback).into(image);
+	protected void setCurrentImage(String currentImage, Drawable fallback) {
+		this.currentImage = currentImage;
+		App.pic().start(this).placeholder(fallback).load(currentImage).into(image);
 	}
 }

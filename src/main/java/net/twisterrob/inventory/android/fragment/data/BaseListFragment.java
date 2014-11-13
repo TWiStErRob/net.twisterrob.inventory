@@ -30,7 +30,7 @@ public class BaseListFragment<T> extends BaseFragment<T> {
 	}
 
 	protected LoaderCallbacks<Cursor> createListLoaderCallbacks() {
-		return new CursorSwapper(getActivity(), adapter) {
+		return new CursorSwapper(getContext(), adapter) {
 			@Override
 			public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 				super.onLoadFinished(loader, data);
@@ -55,6 +55,6 @@ public class BaseListFragment<T> extends BaseFragment<T> {
 	}
 
 	protected CursorAdapter createAdapter() {
-		return new GalleryAdapter(getActivity());
+		return new GalleryAdapter(getContext());
 	}
 }

@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 		@Override
 		protected void bindView(ViewHolder holder, MainItem currentItem, View convertView) {
 			holder.label.setText(currentItem.titleResourceID);
-			App.pic().loadSVG(m_context, currentItem.svgResourceID).into(holder.icon);
+			App.pic().startSVG(m_context).load(currentItem.svgResourceID).into(holder.icon);
 		}
 	}
 }

@@ -4,7 +4,6 @@ import java.util.*;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.view.*;
@@ -82,15 +81,10 @@ public class BaseFragment<T> extends Fragment {
 		// optional override
 	}
 
-	public void setTitle(CharSequence string) {
-		((BaseActivity)getActivity()).setActionBarTitle(string);
+	protected BaseActivity getBaseActivity() {
+		return (BaseActivity)super.getActivity();
 	}
 
-	public void setIcon(Drawable iconDrawable) {
-		((BaseActivity)getActivity()).setIcon(iconDrawable);
-	}
-
-	// TODO replace getActivity() usages with getContext()
 	protected final Context getContext() {
 		return getActivity();
 	}

@@ -47,9 +47,9 @@ public class BackupFragment extends BaseFragment<Void> implements BackupPickerLi
 	}
 
 	private static void doExport() {
-		String fileName = String.format(Locale.ROOT, Constants.EXPORT_FILE_NAME_FORMAT, Calendar.getInstance());
+		String fileName = String.format(Locale.ROOT, Constants.Paths.EXPORT_FILE_NAME_FORMAT, Calendar.getInstance());
 
-		File path = new File(App.getInstance().getPhoneHome(), Constants.EXPORT_SDCARD_FOLDER);
+		File path = new File(App.getInstance().getPhoneHome(), Constants.Paths.EXPORT_SDCARD_FOLDER);
 		path.mkdirs();
 
 		File file = new File(path, fileName);

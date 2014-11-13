@@ -31,7 +31,7 @@ END;
 CREATE TABLE Item (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
-	image       VARCHAR      NULL,     -- Google Drive ID
+	image       VARCHAR      NULL,     -- relative path
 	category    INTEGER      DEFAULT 0 -- uncategorized
 		CONSTRAINT fk_Item_category
 			REFERENCES Category(_id)
@@ -57,7 +57,7 @@ CREATE TABLE PropertyType (
 CREATE TABLE Property (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
-	image       VARCHAR      NULL,     -- Google Drive ID
+	image       VARCHAR      NULL,     -- relative path
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Property_type
 			REFERENCES PropertyType(_id)
@@ -91,7 +91,7 @@ CREATE TABLE RoomType (
 CREATE TABLE Room (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
-	image       VARCHAR      NULL,     -- Google Drive ID
+	image       VARCHAR      NULL,     -- relative path
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Room_type
 			REFERENCES RoomType(_id)
@@ -264,7 +264,7 @@ AFTER INSERT ON Category_Name_Cache BEGIN
 	insert into Search_View(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
 END;
 CREATE TRIGGER Category_Name_Cache_update
-AFTER UPDATE OF value ON Category_Name_Cache WHEN (ifNULL(old.value, '') <> ifNULL(new.value, '')) BEGIN 
+AFTER UPDATE OF value ON Category_Name_Cache WHEN (ifNULL(old.value, '') <> ifNULL(new.value, '')) BEGIN
 	--insert into Log(message) values ('Category_Name_Cache_update on (' || new.key || ', ' || ifNULL(old.value, 'NULL') || ' -> ' || ifNULL(new.value, 'NULL') || ')');--NOTEOS
 	insert into Search_View(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
 END;

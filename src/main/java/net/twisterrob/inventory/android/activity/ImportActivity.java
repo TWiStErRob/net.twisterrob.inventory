@@ -66,7 +66,7 @@ public class ImportActivity extends BaseDriveActivity {
 					new SimpleAsyncTask<DriveId, Void, Metadata>() {
 						@Override
 						protected Metadata doInBackground(DriveId driveId) {
-							GoogleApiClient client = getConnectedClient();
+							GoogleApiClient client = googleDrive.getConnectedClient();
 							DriveFile file = Drive.DriveApi.getFile(client, driveId);
 							Metadata meta = sync(file.getMetadata(client));
 							Contents contents = sync(file.openContents(client, DriveFile.MODE_READ_ONLY, null));

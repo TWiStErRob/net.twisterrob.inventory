@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.*;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.*;
@@ -14,6 +15,9 @@ import android.view.*;
 import com.android.debug.hv.ViewServer;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.App;
+
+import static net.twisterrob.inventory.android.Constants.Dimensions.*;
 
 public class BaseActivity extends ActionBarActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseActivity.class);
@@ -90,7 +94,7 @@ public class BaseActivity extends ActionBarActivity {
 		return (T)getSupportFragmentManager().findFragmentByTag(tag);
 	}
 	@SuppressWarnings("unchecked")
-	protected <T extends Fragment> T getFragment(int id) {
+	protected <T extends Fragment> T getFragment(@IdRes int id) {
 		return (T)getSupportFragmentManager().findFragmentById(id);
 	}
 
@@ -107,5 +111,8 @@ public class BaseActivity extends ActionBarActivity {
 
 	public void setIcon(Drawable iconDrawable) {
 		getSupportActionBar().setIcon(iconDrawable);
+	}
+	public void setIcon(@RawRes int resourceId) {
+		App.pic().getSVG(this, resourceId, getActionbarIconSize(this), getActionbarIconPadding(this));
 	}
 }

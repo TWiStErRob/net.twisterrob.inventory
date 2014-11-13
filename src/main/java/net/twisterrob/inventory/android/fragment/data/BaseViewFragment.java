@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.*;
@@ -29,15 +30,16 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 	}
 
 	public void onSingleRowLoaded(DTO entity) {
-		setTitle(entity.name);
-		setIcon(entity.getFallbackDrawable(getActivity(), ACTIONBAR_ICON_SIZE, ACTIONBAR_ICON_PADDING));
+		getBaseActivity().setActionBarTitle(entity.name);
+		getBaseActivity().setIcon(entity.getFallbackDrawable(getContext(),
+				getActionbarIconSize(getContext()), getActionbarIconPadding(getContext())));
 		pager.setAdapter(new ImageAndDescriptionAdapter(entity));
 		pager.setCurrentItem(getDefaultPageIndex());
 	}
 
 	private int getDefaultPageIndex() {
 		String defaultPage = App.getPrefs().getString(DEFAULT_ENTITY_DETAILS_PAGE, DEFAULT_ENTITY_DETAILS_PAGE_DEFAULT);
-		return AndroidTools.findIndexInResourceArray(getActivity(),
+		return AndroidTools.findIndexInResourceArray(getContext(),
 				R.array.pref_defaultEntityDetailsPage_values, defaultPage);
 	}
 	protected abstract CharSequence getDetailsString(DTO entity);
@@ -82,8 +84,14 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		}
 
 		private void loadInto(ImageView image) {
-			Drawable fallback = entity.getFallbackDrawable(image.getContext());
-			App.pic().loadDrive(BaseViewFragment.this, entity.image).placeholder(fallback).into(image);
+			Context context = image.getContext();
+			Drawable fallback = entity.getFallbackDrawable(context);
+			String imagePath = entity.getImage(context);
+			if (imagePath != null) {
+				App.pic().start(BaseViewFragment.this).placeholder(fallback).load(imagePath).into(image);
+			} else {
+				image.setImageDrawable(fallback);
+			}
 		}
 
 		@Override

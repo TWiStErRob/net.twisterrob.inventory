@@ -37,7 +37,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		long id = getArgItemID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper catCursorSwapper = new CursorSwapper(getActivity(), typeAdapter);
+		CursorSwapper catCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
 		Dependency<Cursor> populateCats = manager.add(ItemCategories.ordinal(), null, catCursorSwapper);
 
 		if (id != Item.ID_ADD) {
@@ -47,8 +47,8 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 
 			loadItemData.dependsOn(populateCats);
 		} else {
-			setTitle(getString(R.string.item_new));
-			setCurrentImageDriveId(null, R.drawable.image_add);
+			getBaseActivity().setActionBarTitle(getString(R.string.item_new));
+			setCurrentImage(null, R.drawable.image_add);
 		}
 
 		manager.startLoading();
@@ -58,10 +58,10 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
 
-		setTitle(item.name);
+		getBaseActivity().setActionBarTitle(item.name);
 		title.setText(item.name);
 		AndroidTools.selectByID(type, item.category);
-		setCurrentImageDriveId(item.image, item.getFallbackDrawable(getActivity()));
+		setCurrentImage(item.getImage(getContext()), item.getFallbackDrawable(getContext()));
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		item.parentID = getArgParentID();
 		item.id = getArgItemID();
 		item.name = title.getText().toString();
-		item.image = getCurrentImageDriveId();
+		item.setImage(getContext(), getCurrentImage());
 		item.category = type.getSelectedItemId();
 		return item;
 	}

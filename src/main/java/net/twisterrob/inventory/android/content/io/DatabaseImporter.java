@@ -7,8 +7,6 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 
-import com.google.android.gms.drive.DriveId;
-
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 
@@ -34,26 +32,26 @@ public class DatabaseImporter {
 		App.db().getWritableDatabase().endTransaction();
 	}
 
-	protected long processProperty(String type, String property, DriveId imageDriveId) {
+	protected long processProperty(String type, String property, String image) {
 		LOG.trace("Processing property: {}", property);
-		long propertyID = getOrCreateProperty(property, types.getType(type, PropertyType.DEFAULT), imageDriveId);
+		long propertyID = getOrCreateProperty(property, types.getType(type, PropertyType.DEFAULT), image);
 		properties.put(property, propertyID);
 		return propertyID;
 	}
 
-	protected long processRoom(String type, String property, String room, DriveId imageDriveId) {
+	protected long processRoom(String type, String property, String room, String image) {
 		LOG.trace("Processing room: {} in {}", room, property);
 		if (property == null) {
 			throw new IllegalArgumentException("Cannot process room which is not in a property");
 		}
 		long propertyID = properties.get(property);
-		long roomID = getOrCreateRoom(propertyID, room, types.getType(type, RoomType.DEFAULT), imageDriveId);
+		long roomID = getOrCreateRoom(propertyID, room, types.getType(type, RoomType.DEFAULT), image);
 		roots.put(createRoomKey(property, room), getRoot(roomID));
 		return roomID;
 	}
 
 	protected long processItem(String type, String property, String room, String item, String parent, String id,
-			DriveId imageDriveId) {
+			String image) {
 		LOG.trace("Processing item: {} in {}/{}", item, property, room);
 		if (property == null) {
 			throw new IllegalArgumentException("Cannot process item which is not in a property");
@@ -63,7 +61,7 @@ public class DatabaseImporter {
 		}
 		long csvID = Long.parseLong(id);
 		long parentID = getParentID(property, room, parent);
-		long itemID = getOrCreateItem(parentID, item, types.getType(type, Category.DEFAULT), imageDriveId);
+		long itemID = getOrCreateItem(parentID, item, types.getType(type, Category.DEFAULT), image);
 		items.put(csvID, itemID);
 		return itemID;
 	}

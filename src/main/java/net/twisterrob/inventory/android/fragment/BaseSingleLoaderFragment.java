@@ -10,7 +10,7 @@ public abstract class BaseSingleLoaderFragment<T> extends BaseFragment<T> {
 	/** <code>getLoaderManager().initLoader(Loaders.X.ordinal(), args, new SingleRowLoaded());</code> */
 	protected class SingleRowLoaded extends LoadSingleRow {
 		public SingleRowLoaded() {
-			super(getActivity());
+			super(getContext());
 		}
 
 		@Override

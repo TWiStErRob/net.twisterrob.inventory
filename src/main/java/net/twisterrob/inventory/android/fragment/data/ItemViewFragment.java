@@ -50,7 +50,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	protected CharSequence getDetailsString(ItemDTO entity) {
 		return new DescriptionBuilder() //
 				.append("Item name", entity.name) //
-				.append("Category", AndroidTools.getText(getActivity(), entity.categoryName)) //
+				.append("Category", AndroidTools.getText(getContext(), entity.categoryName)) //
 				.append("Inside", entity.parentName != null? entity.parentName : "the room") //
 				.append("Room", entity.roomName) //
 				.append("Property", entity.propertyName) //

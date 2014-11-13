@@ -16,7 +16,6 @@ import net.twisterrob.android.utils.model.DriveHelper;
 import net.twisterrob.android.utils.model.DriveHelper.ConnectedTask;
 import net.twisterrob.android.utils.tools.DriveTools.FolderUtils;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.utils.ApiClientProvider;
 import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.sync;
@@ -25,7 +24,7 @@ import static net.twisterrob.android.utils.tools.DriveTools.FolderUtils.sync;
 import static net.twisterrob.android.utils.tools.DriveTools.MetaDataUtils.sync;
 import static net.twisterrob.inventory.android.Constants.*;
 
-public class BaseDriveActivity extends BaseActivity implements ApiClientProvider {
+public class BaseDriveActivity extends BaseActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDriveActivity.class);
 
 	private static final int REQUEST_CODE_RESOLUTION = 0xD87; // DRiVe
@@ -41,14 +40,12 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 
 	@Override
 	protected void onResume() {
-		App.setApiClientProvider(this);
 		googleDrive.onResume();
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		App.setApiClientProvider(null);
 		googleDrive.onPause();
 		super.onPause();
 	}
@@ -58,7 +55,6 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 		if (googleDrive.onActivityResult(requestCode, resultCode, data)) {
 			return;
 		}
-		App.setApiClientProvider(this); // we are before onResume, give a peek for fragments who may need it
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -69,10 +65,6 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 		} else {
 			return null;
 		}
-	}
-
-	public GoogleApiClient getConnectedClient() {
-		return googleDrive.getConnectedClient();
 	}
 
 	public void showMessage(final String message) {
@@ -120,7 +112,7 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 		private DriveFolder getInventoryFolder() throws IOException {
 			DriveFolder rootFolder = Drive.DriveApi.getRootFolder(client);
 
-			DriveFolder inventoryFolder = FolderUtils.getExisting(client, rootFolder, DEFAULT_DRIVE_FOLDER_NAME);
+			DriveFolder inventoryFolder = FolderUtils.getExisting(client, rootFolder, Paths.DEFAULT_FOLDER_NAME);
 			if (inventoryFolder == null) {
 				inventoryFolder = sync(createInventoryFolder(rootFolder));
 				sync(createREADME(inventoryFolder));
@@ -131,7 +123,7 @@ public class BaseDriveActivity extends BaseActivity implements ApiClientProvider
 
 		private PendingResult<DriveFolderResult> createInventoryFolder(DriveFolder rootFolder) {
 			MetadataChangeSet folderMeta = new MetadataChangeSet.Builder() //
-					.setTitle(DEFAULT_DRIVE_FOLDER_NAME) //
+					.setTitle(Paths.DEFAULT_FOLDER_NAME) //
 					.setDescription("Storage for inventory item images in Magic Home Inventory app") //
 					.setViewed(true) //
 					.build();

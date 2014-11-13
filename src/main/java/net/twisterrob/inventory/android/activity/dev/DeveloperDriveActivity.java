@@ -16,7 +16,8 @@ import net.twisterrob.android.utils.model.DriveHelper.ConnectedTask;
 import net.twisterrob.android.utils.tools.DriveTools.FolderUtils;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BaseDriveActivity;
-import net.twisterrob.inventory.android.tasks.Upload;
+import net.twisterrob.inventory.android.tasks.SaveToDrive;
+import net.twisterrob.inventory.android.tasks.SaveToDrive.ApiClientProvider;
 
 import static net.twisterrob.android.utils.tools.DriveTools.IdUtils.sync;
 import static net.twisterrob.android.utils.tools.DriveTools.MetaBufferUtils.sync;
@@ -72,7 +73,11 @@ public class DeveloperDriveActivity extends BaseDriveActivity {
 		File file = createFile();
 		log("File: " + file);
 
-		return new Upload(DeveloperDriveActivity.this).doInBackground(file);
+		return new SaveToDrive(new ApiClientProvider() {
+			@Override public GoogleApiClient getConnectedClient() {
+				return googleDrive.getConnectedClient();
+			}
+		}).doInBackground(file);
 	}
 
 	DriveFile existingFile(GoogleApiClient client) {

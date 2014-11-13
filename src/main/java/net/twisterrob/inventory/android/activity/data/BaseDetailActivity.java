@@ -6,11 +6,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.BaseDriveActivity;
+import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 
 public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends BaseFragment<?>>
-		extends BaseDriveActivity {
+		extends BaseActivity {
 	private D details;
 	private L children;
 

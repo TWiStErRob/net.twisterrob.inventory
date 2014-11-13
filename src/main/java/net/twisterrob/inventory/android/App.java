@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 import org.slf4j.*;
@@ -15,11 +14,9 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.utils.*;
+import net.twisterrob.inventory.android.utils.ImageLoaderFacade;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.StringTools;
 
@@ -28,7 +25,6 @@ public class App extends Application {
 		if (BuildConfig.DEBUG) {
 			setStrictMode();
 		}
-		AndroidLoggerFactory.addReplacement("^com\\.squareup\\.picasso\\.", "net.twisterrob.inventory.android.util.");
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.android\\.(.+\\.)?", "");
 	}
@@ -118,18 +114,6 @@ public class App extends Application {
 
 	public static Context getAppContext() {
 		return getInstance();
-	}
-
-	private WeakReference<ApiClientProvider> provider = new WeakReference<ApiClientProvider>(null);
-	public static void setApiClientProvider(ApiClientProvider current) {
-		getInstance().provider = new WeakReference<ApiClientProvider>(current);
-	}
-	public static GoogleApiClient getConnectedClient() {
-		ApiClientProvider current = getInstance().provider.get();
-		if (current != null) {
-			return current.getConnectedClient();
-		}
-		return null;
 	}
 
 	public File getPhoneHome() {

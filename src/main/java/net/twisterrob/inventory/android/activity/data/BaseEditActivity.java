@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.*;
 
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.activity.BaseDriveActivity;
+import net.twisterrob.inventory.android.activity.BaseActivity;
 
-public abstract class BaseEditActivity<E extends Fragment> extends BaseDriveActivity {
+public abstract class BaseEditActivity<E extends Fragment> extends BaseActivity {
 	private E editor;
 
 	@Override

@@ -4,8 +4,6 @@ import java.io.*;
 
 import org.apache.commons.csv.*;
 
-import com.google.android.gms.drive.DriveId;
-
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.content.io.DatabaseImporter;
 
@@ -36,14 +34,12 @@ public class DatabaseCSVImporter extends DatabaseImporter {
 
 	protected void process(String type, String property, String room, String item, String image, String parent,
 			String id) {
-		DriveId driveId = image != null? DriveId.decodeFromString(image) : null;
-
 		if (item != null) { // item: property ?= null && room ?= null && item != null
-			processItem(type, property, room, item, parent, id, driveId);
+			processItem(type, property, room, item, parent, id, image);
 		} else if (room != null) { // room: property ?= null && room != null && item == null
-			processRoom(type, property, room, driveId);
+			processRoom(type, property, room, image);
 		} else if (property != null) { // property: property != null && room == null && item == null
-			processProperty(type, property, driveId);
+			processProperty(type, property, image);
 		} else {
 			throw new IllegalArgumentException("Cannot identify entity: property, room or item must be set"
 					+ ", type=" + type + ", image=" + image + ", parent=" + parent + ", id=" + id);

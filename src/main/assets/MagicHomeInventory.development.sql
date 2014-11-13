@@ -1,6 +1,6 @@
-INSERT INTO Property(_id, type, name, image) VALUES(1, 1, 'Szentesi haz',  'DriveId:CAESHDBCNXFUTlBncV9sbDVXV3hsVEU0elJUSlhUMUUY7gYg5obA7aFR');
-INSERT INTO Property(_id, type, name, image) VALUES(2, 11, 'Szegedi albi', 'DriveId:CAESHDBCNXFUTlBncV9sbDVXa1l3VnpKelNWcExaVkUY8AYg5obA7aFR');
-INSERT INTO Property(_id, type, name, image) VALUES(3, 11, 'Londoni albi', 'DriveId:CAESHDBCNXFUTlBncV9sbDVPVGhGWmtsdll6VjBPR3MY8gYg5obA7aFR');
+INSERT INTO Property(_id, type, name, image) VALUES(1, 1, 'Szentesi haz',  '/sdcard/DCIM/Camera/20141113_124030.jpg');
+INSERT INTO Property(_id, type, name, image) VALUES(2, 11, 'Szegedi albi', '/sdcard/DCIM/Camera/20141113_124033_Áchim András St.jpg');
+INSERT INTO Property(_id, type, name, image) VALUES(3, 11, 'Londoni albi', '/sdcard/DCIM/Camera/20141113_124035_Áchim András St.jpg');
 INSERT INTO Property(_id, type, name, image) VALUES(4, 12, 'Sarah storage', NULL);
 
 INSERT INTO Room_Rooter(_id, property, type, name) VALUES(0, 1,   0, '?');

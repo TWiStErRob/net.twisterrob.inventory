@@ -9,8 +9,6 @@ import android.content.res.Resources;
 import android.database.*;
 import android.database.sqlite.*;
 
-import com.google.android.gms.drive.DriveId;
-
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
@@ -52,7 +50,9 @@ public class Database {
 		execSQL(getWritableDatabase(), queryResource, params);
 	}
 	private void execSQL(SQLiteDatabase db, int queryResource, Object... params) {
-		LOG.trace("execSQL({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
+		if (queryResource != R.string.query_category_cache_update) {
+			LOG.trace("execSQL({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
+		}
 		db.execSQL(m_resources.getString(queryResource), params);
 	}
 
@@ -145,44 +145,44 @@ public class Database {
 		return rawQuery(R.string.query_category, itemID);
 	}
 
-	public long createProperty(String name, long type, DriveId imageDriveID) {
-		return rawInsert(R.string.query_property_create, name, type, imageDriveID);
+	public long createProperty(String name, long type, String image) {
+		return rawInsert(R.string.query_property_create, name, type, image);
 	}
 	public Long findProperty(String name) {
 		return getID(R.string.query_property_find, name);
 	}
-	public void updateProperty(long id, String name, long type, DriveId imageDriveID) {
-		execSQL(R.string.query_property_update, name, type, imageDriveID, id);
+	public void updateProperty(long id, String name, long type, String image) {
+		execSQL(R.string.query_property_update, name, type, image, id);
 	}
 	public void deleteProperty(long id) {
 		execSQL(R.string.query_property_delete, id);
 	}
 
-	public long createRoom(long propertyID, String name, long type, DriveId imageDriveID) {
-		rawInsert(R.string.query_room_create, propertyID, name, type, imageDriveID);
+	public long createRoom(long propertyID, String name, long type, String image) {
+		rawInsert(R.string.query_room_create, propertyID, name, type, image);
 		return findRoom(propertyID, name); // last_insert_rowid() doesn't work with INSTEAD OF INSERT triggers on VIEWs
 	}
 	public Long findRoom(long propertyID, String name) {
 		return getID(R.string.query_room_find, propertyID, name);
 	}
-	public void updateRoom(long id, String name, long type, DriveId imageDriveID) {
-		execSQL(R.string.query_room_update, name, type, imageDriveID, id);
+	public void updateRoom(long id, String name, long type, String image) {
+		execSQL(R.string.query_room_update, name, type, image, id);
 	}
 	public void deleteRoom(long id) {
 		execSQL(R.string.query_room_delete, id);
 	}
 
-	private long createItem(Long parentID, String name, long category, DriveId imageDriveID) {
-		return rawInsert(R.string.query_item_create, parentID, name, category, imageDriveID);
+	private long createItem(Long parentID, String name, long category, String image) {
+		return rawInsert(R.string.query_item_create, parentID, name, category, image);
 	}
-	public long createItem(long parentID, String name, long category, DriveId imageDriveID) {
-		return createItem((Long)parentID, name, category, imageDriveID);
+	public long createItem(long parentID, String name, long category, String image) {
+		return createItem((Long)parentID, name, category, image);
 	}
 	public Long findItem(long parentID, String name) {
 		return getID(R.string.query_item_find, parentID, name);
 	}
-	public void updateItem(long id, String name, long category, DriveId imageDriveID) {
-		execSQL(R.string.query_item_update, name, category, imageDriveID, id);
+	public void updateItem(long id, String name, long category, String image) {
+		execSQL(R.string.query_item_update, name, category, image, id);
 	}
 	public void deleteItem(long id) {
 		execSQL(R.string.query_item_delete, id);

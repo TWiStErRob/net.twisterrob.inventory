@@ -39,7 +39,7 @@ public class BackupPickerFragment extends DialogFragment {
 
 	@Override
 	public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
-		File root = new File(App.getInstance().getPhoneHome(), Constants.EXPORT_SDCARD_FOLDER);
+		File root = new File(App.getInstance().getPhoneHome(), Constants.Paths.EXPORT_SDCARD_FOLDER);
 		final File[] files = getImportableFiles(root);
 		Arrays.sort(files);
 		return new AlertDialog.Builder(getActivity()) //

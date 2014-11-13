@@ -43,7 +43,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		long id = getArgRoomID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), typeAdapter);
+		CursorSwapper typeCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
 		Dependency<Cursor> populateTypes = manager.add(RoomTypes.ordinal(), null, typeCursorSwapper);
 
 		if (id != Room.ID_ADD) {
@@ -53,8 +53,8 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		} else {
-			setTitle(getString(R.string.room_new));
-			setCurrentImageDriveId(null, R.drawable.image_add);
+			getBaseActivity().setActionBarTitle(getString(R.string.room_new));
+			setCurrentImage(null, R.drawable.image_add);
 		}
 
 		manager.startLoading();
@@ -64,10 +64,10 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 
-		setTitle(room.name);
+		getBaseActivity().setActionBarTitle(room.name);
 		AndroidTools.selectByID(type, room.type);
 		title.setText(room.name); // must set it after roomType to prevent auto-propagation
-		setCurrentImageDriveId(room.image, room.getFallbackDrawable(getActivity()));
+		setCurrentImage(room.getImage(getContext()), room.getFallbackDrawable(getContext()));
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		room.id = getArgRoomID();
 		room.name = title.getText().toString();
 		room.type = type.getSelectedItemId();
-		room.image = getCurrentImageDriveId();
+		room.setImage(getContext(), getCurrentImage());
 		return room;
 	}
 

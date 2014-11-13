@@ -43,7 +43,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		CategoryDTO item = CategoryDTO.fromCursor(cursor);
 
 		if (item.id != Category.INTERNAL) {
-			nameCache = item.name = AndroidTools.getText(getActivity(), item.name).toString();
+			nameCache = item.name = AndroidTools.getText(getContext(), item.name).toString();
 			super.onSingleRowLoaded(item);
 		}
 

@@ -43,7 +43,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		long id = getArgPropertyID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper typeCursorSwapper = new CursorSwapper(getActivity(), typeAdapter);
+		CursorSwapper typeCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
 		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, typeCursorSwapper);
 
 		if (id != Property.ID_ADD) {
@@ -53,8 +53,8 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		} else {
-			setTitle(getString(R.string.property_new));
-			setCurrentImageDriveId(null, R.drawable.image_add);
+			getBaseActivity().setActionBarTitle(getString(R.string.property_new));
+			setCurrentImage(null, R.drawable.image_add);
 		}
 		manager.startLoading();
 	}
@@ -63,11 +63,11 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
 
-		setTitle(property.name);
+		getBaseActivity().setActionBarTitle(property.name);
 		AndroidTools.selectByID(type, property.type);
 		title.setText(property.name); // must set it after propertyType to prevent auto-propagation
 
-		setCurrentImageDriveId(property.image, property.getFallbackDrawable(getActivity()));
+		setCurrentImage(property.getImage(getContext()), property.getFallbackDrawable(getContext()));
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		property.id = getArgPropertyID();
 		property.name = title.getText().toString();
 		property.type = type.getSelectedItemId();
-		property.image = getCurrentImageDriveId();
+		property.setImage(getContext(), getCurrentImage());
 		return property;
 	}
 

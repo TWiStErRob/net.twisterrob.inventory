@@ -4,30 +4,26 @@ import java.io.*;
 
 import org.slf4j.*;
 
-import android.app.Activity;
-
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.DriveTools.ContentsUtils;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.utils.ApiClientProvider;
 
 import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.sync;
 import static net.twisterrob.android.utils.tools.DriveTools.FileUtils.sync;
 
-public class Upload extends SimpleAsyncTask<File, Void, DriveFile> {
-	private static final Logger LOG = LoggerFactory.getLogger(Upload.class);
+public class SaveToDrive extends SimpleAsyncTask<File, Void, DriveFile> {
+	public interface ApiClientProvider {
+		GoogleApiClient getConnectedClient();
+	}
+
+	private static final Logger LOG = LoggerFactory.getLogger(SaveToDrive.class);
 	private final ApiClientProvider provider;
 
-	public Upload(Activity activity) {
-		if (activity instanceof ApiClientProvider) {
-			this.provider = (ApiClientProvider)activity;
-		} else {
-			String clazz = activity != null? activity.getClass().toString() : null;
-			throw new IllegalArgumentException(clazz + " must implement " + ApiClientProvider.class);
-		}
+	public SaveToDrive(ApiClientProvider provider) {
+		this.provider = provider;
 	}
 
 	@Override
