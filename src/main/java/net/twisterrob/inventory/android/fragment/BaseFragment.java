@@ -15,7 +15,7 @@ public class BaseFragment<T> extends Fragment {
 	protected static final String DYN_OptionsMenu = "optionsMenu";
 	protected static final String DYN_EventsClass = "eventsListenerClass";
 
-	private Map<String, Object> dynResources = new HashMap<String, Object>();
+	private Map<String, Object> dynResources = new HashMap<>();
 
 	protected T eventsListener;
 

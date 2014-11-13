@@ -74,7 +74,7 @@ public class DeleteItemTask extends ActionParams {
 	private List<String> retrieveItemNames() {
 		Cursor items = App.db().listItems(item.id);
 		try {
-			List<String> itemNames = new ArrayList<String>(items.getCount());
+			List<String> itemNames = new ArrayList<>(items.getCount());
 			while (items.moveToNext()) {
 				itemNames.add(items.getString(items.getColumnIndexOrThrow(Item.NAME)));
 			}

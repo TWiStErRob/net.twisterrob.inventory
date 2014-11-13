@@ -106,7 +106,7 @@ public class DeveloperActivity extends ListActivity {
 	}
 
 	private static Map<String, Object> create(String title, Runnable action) {
-		Map<String, Object> entry = new HashMap<String, Object>();
+		Map<String, Object> entry = new HashMap<>();
 		entry.put("title", title);
 		entry.put("action", action);
 		return entry;

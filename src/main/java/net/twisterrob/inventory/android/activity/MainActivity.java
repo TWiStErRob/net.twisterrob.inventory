@@ -44,7 +44,7 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 	}
 
 	private static Collection<MainItem> createActions() {
-		Collection<MainItem> acts = new ArrayList<MainItem>();
+		Collection<MainItem> acts = new ArrayList<>();
 		acts.add(new MainItem(R.string.property_list, R.raw.property_home, PropertyListActivity.list()));
 		acts.add(new MainItem(R.string.category_list, R.raw.category_unknown, CategoryViewActivity.show(INTERNAL)));
 		acts.add(new MainItem(R.string.item_list, R.raw.category_collectibles, CategoryItemsActivity.show(INTERNAL)));

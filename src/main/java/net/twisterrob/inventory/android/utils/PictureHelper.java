@@ -52,7 +52,7 @@ public abstract class PictureHelper {
 
 	private List<Intent> createCameraIntents(File file) {
 		Uri uri = Uri.fromFile(file);
-		List<Intent> cameraIntents = new ArrayList<Intent>();
+		List<Intent> cameraIntents = new ArrayList<>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		PackageManager packageManager = activity.getPackageManager();
 		List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
@@ -80,7 +80,7 @@ public abstract class PictureHelper {
 	 * selectedCount=1
 	 * selectedItems=content://media/external/images/media/1173
 	 * Total commander: data=content://com.ghisler.android.TotalCommander.files/storage/emulated/0/DCIM/Facebook/IMG_85501072011957.jpeg
-	 * @return
+	 * @return <code>true</code> if capture was successful
 	 */
 	public boolean endCapture(int resultCode, Intent intent) {
 		LOG.trace("endCapture(resultCode={}, intent={}): {}\nextras={}", resultCode, intent, file,

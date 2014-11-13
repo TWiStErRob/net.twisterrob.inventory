@@ -69,7 +69,7 @@ public class ImageLoaderFacade {
 
 	public GenericRequestBuilder<Integer, ?, ?, PictureDrawable> startSVG(Context context) {
 		@SuppressWarnings("unchecked")
-		MultiRequestListener<Integer, PictureDrawable> listener = new MultiRequestListener<Integer, PictureDrawable>(
+		MultiRequestListener<Integer, PictureDrawable> listener = new MultiRequestListener<>(
 				new LoggingListener<Integer, PictureDrawable>("SVG"),
 				new SoftwareLayerSetter<Integer, PictureDrawable>());
 		// SVG cannot be serialized so it's not worth to cache it

@@ -74,7 +74,7 @@ public class DeletePropertyTask extends ActionParams {
 	private List<String> retrieveRoomNames() {
 		Cursor rooms = App.db().listRooms(propertyID);
 		try {
-			List<String> roomNames = new ArrayList<String>(rooms.getCount());
+			List<String> roomNames = new ArrayList<>(rooms.getCount());
 			while (rooms.moveToNext()) {
 				roomNames.add(rooms.getString(rooms.getColumnIndexOrThrow(Room.NAME)));
 			}

@@ -9,8 +9,8 @@ import com.bumptech.glide.load.data.DataFetcher;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
 
-import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.sync;
-import static net.twisterrob.android.utils.tools.DriveTools.StatusUtils.sync;
+import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.*;
+import static net.twisterrob.android.utils.tools.DriveTools.StatusUtils.*;
 
 public class DriveIdDataFetcher implements DataFetcher<InputStream> {
 	private static final Logger LOG = LoggerFactory.getLogger(DriveIdDataFetcher.class);

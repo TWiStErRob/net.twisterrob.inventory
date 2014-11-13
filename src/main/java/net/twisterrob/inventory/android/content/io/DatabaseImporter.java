@@ -17,9 +17,9 @@ public class DatabaseImporter {
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseImporter.class);
 	private static final String SEPARATOR = "\u001F"; // Unit Separator ASCII character
 
-	private final Map<String, Long> properties = new HashMap<String, Long>();
-	private final Map<String, Long> roots = new HashMap<String, Long>();
-	private final Map<Long, Long> items = new HashMap<Long, Long>();
+	private final Map<String, Long> properties = new HashMap<>();
+	private final Map<String, Long> roots = new HashMap<>();
+	private final Map<Long, Long> items = new HashMap<>();
 	private final Types types = new Types();
 
 	protected void startProcess() {
@@ -90,7 +90,7 @@ public class DatabaseImporter {
 	}
 
 	private static class Types {
-		private final Map<String, Long> types = new HashMap<String, Long>();
+		private final Map<String, Long> types = new HashMap<>();
 
 		public Types() {
 			setupTypes();

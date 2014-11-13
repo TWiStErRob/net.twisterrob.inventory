@@ -26,7 +26,7 @@ public class SunBurstActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sunburst);
 
-		sunburst = new SunburstDrawable<Node>(new NodeTreeWalker(), new Paints());
+		sunburst = new SunburstDrawable<>(new NodeTreeWalker(), new Paints());
 		diagram = (ImageView)findViewById(R.id.diagram);
 		diagram.setOnTouchListener(new Toucher());
 		diagram.setImageResource(R.drawable.image_loading);
@@ -47,7 +47,7 @@ public class SunBurstActivity extends BaseActivity {
 		}.execute();
 	}
 
-	Stack<Node> stack = new Stack<Node>();
+	Stack<Node> stack = new Stack<>();
 
 	public void setRoot(Node root) {
 		if (root == null || sunburst.getRoot() == root) {
@@ -140,7 +140,7 @@ public class SunBurstActivity extends BaseActivity {
 		private static List<Node> loadProperties() {
 			Cursor cursor = App.db().listProperties();
 			try {
-				List<Node> children = new ArrayList<Node>();
+				List<Node> children = new ArrayList<>();
 				while (cursor.moveToNext()) {
 					long id = cursor.getLong(cursor.getColumnIndex(Property.ID));
 					String label = cursor.getString(cursor.getColumnIndex(Property.NAME));
@@ -154,7 +154,7 @@ public class SunBurstActivity extends BaseActivity {
 		private static List<Node> loadRooms(Node node) {
 			Cursor cursor = App.db().listRooms(node.id);
 			try {
-				List<Node> children = new ArrayList<Node>();
+				List<Node> children = new ArrayList<>();
 				while (cursor.moveToNext()) {
 					long id = cursor.getLong(cursor.getColumnIndex(Room.ID));
 					String label = cursor.getString(cursor.getColumnIndex(Room.NAME));
@@ -173,7 +173,7 @@ public class SunBurstActivity extends BaseActivity {
 				cursor = App.db().listItems(node.id);
 			}
 			try {
-				List<Node> children = new ArrayList<Node>();
+				List<Node> children = new ArrayList<>();
 				while (cursor.moveToNext()) {
 					long id = cursor.getLong(cursor.getColumnIndex(Item.ID));
 					String label = cursor.getString(cursor.getColumnIndex(Item.NAME));
