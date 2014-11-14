@@ -23,6 +23,13 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		if (BuildConfig.DEBUG) {
+			finish();
+			startActivity(ItemViewActivity.show(100005L));
+			return;
+		}
+
 		super.setContentView(R.layout.activity_main);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false); // there's no up from home
 		setIcon(getResources().getDrawable(R.drawable.ic_launcher));
