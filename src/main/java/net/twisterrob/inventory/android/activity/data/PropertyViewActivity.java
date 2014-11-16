@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -12,9 +12,9 @@ import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEven
 
 public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragment, RoomListFragment>
 		implements PropertyEvents, RoomsEvents {
-
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
+		setIcon(R.raw.property_unknown);
 		long propertyID = getExtraPropertyID();
 		PropertyViewFragment detailsFragment;
 		if (propertyID == Property.ID_ADD) {

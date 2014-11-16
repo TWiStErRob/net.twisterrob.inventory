@@ -3,18 +3,17 @@ package net.twisterrob.inventory.android.fragment.data;
 import org.slf4j.*;
 
 import android.os.Bundle;
-import android.support.v4.widget.CursorAdapter;
-import android.view.*;
-import android.widget.AdapterView;
-import android.widget.AdapterView.*;
+import android.support.v7.widget.*;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryListFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.view.CategoryAdapter;
+import net.twisterrob.inventory.android.view.CategoryAdapter.CategoryItemEvents;
 
-public class CategoryListFragment extends BaseListFragment<CategoriesEvents> {
+public class CategoryListFragment extends BaseRecyclerFragment<CategoriesEvents> implements CategoryItemEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryListFragment.class);
 
 	public interface CategoriesEvents {
@@ -26,33 +25,9 @@ public class CategoryListFragment extends BaseListFragment<CategoriesEvents> {
 		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
 	}
 
-	@Override
-	protected View inflateRoot(LayoutInflater inflater, ViewGroup container) {
-		return inflater.inflate(R.layout.category_list, container, false);
-	}
-
-	@Override
-	protected CursorAdapter createAdapter() {
-		return new CategoryAdapter(getActivity());
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
-
-		list.setOnItemLongClickListener(new OnItemLongClickListener() {
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Long Clicked on #{}", id);
-				eventsListener.categoryActioned(id);
-				return true;
-			}
-		});
-		list.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Clicked on #{}", id);
-				eventsListener.categorySelected(id);
-			}
-		});
+	@Override protected void setupList() {
+		list.setLayoutManager(new LinearLayoutManager(getContext()));
+		list.setAdapter(new CategoryAdapter(null, this));
 	}
 
 	@Override
@@ -69,6 +44,27 @@ public class CategoryListFragment extends BaseListFragment<CategoriesEvents> {
 	@Override
 	protected void onRefresh() {
 		getLoaderManager().getLoader(Loaders.Categories.ordinal()).forceLoad();
+	}
+
+	@Override protected boolean canCreateNew() {
+		return false;
+	}
+
+	@Override protected void onCreateNew() {
+		throw new UnsupportedOperationException("Cannot create new category, please send us an email if you miss one!");
+	}
+
+	@Override public void onItemClick(RecyclerView.ViewHolder holder) {
+		eventsListener.categorySelected(holder.getItemId());
+	}
+
+	@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+		eventsListener.categoryActioned(holder.getItemId());
+		return true;
+	}
+
+	@Override public void showItemsInCategory(ViewHolder holder) {
+		getActivity().startActivity(CategoryItemsActivity.show(holder.getItemId()));
 	}
 
 	public static CategoryListFragment newInstance(long parentCategoryID) {

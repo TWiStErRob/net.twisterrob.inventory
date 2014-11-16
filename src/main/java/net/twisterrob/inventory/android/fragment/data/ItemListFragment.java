@@ -4,17 +4,15 @@ import org.slf4j.*;
 
 import android.app.SearchManager;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.*;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
-public class ItemListFragment extends BaseListFragment<ItemsEvents> {
+public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemListFragment.class);
 
 	public interface ItemsEvents {
@@ -31,55 +29,18 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		menu.findItem(R.id.action_item_add).setVisible(getArgParentItemID() != Item.ID_ADD);
+		menu.findItem(R.id.action_item_add).setVisible(canCreateNew());
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_item_add:
-				eventsListener.newItem(getArgParentItemID());
+				onCreateNew();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	protected View inflateRoot(LayoutInflater inflater, ViewGroup container) {
-		if (getArgParentItemID() == Item.ID_ADD) {
-			return inflater.inflate(R.layout.gallery_readonly, container, false);
-		} else {
-			return super.inflateRoot(inflater, container);
-		}
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
-
-		View addButton = view.findViewById(R.id.btn_add);
-		if (addButton != null) {
-			addButton.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					eventsListener.newItem(getArgParentItemID());
-				}
-			});
-		}
-
-		list.setOnItemLongClickListener(new OnItemLongClickListener() {
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Long Clicked on #{}", id);
-				eventsListener.itemActioned(id);
-				return true;
-			}
-		});
-		list.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Clicked on #{}", id);
-				eventsListener.itemSelected(id);
-			}
-		});
 	}
 
 	@Override
@@ -111,13 +72,29 @@ public class ItemListFragment extends BaseListFragment<ItemsEvents> {
 		return getArguments().getCharSequence(SearchManager.QUERY);
 	}
 
-	@Override
-	protected void onRefresh() {
+	@Override protected void onRefresh() {
 		if (getArgQuery() == null) {
 			getLoaderManager().getLoader(Loaders.Items.ordinal()).forceLoad();
 		} else {
 			getLoaderManager().getLoader(Loaders.ItemSearch.ordinal()).forceLoad();
 		}
+	}
+
+	@Override protected boolean canCreateNew() {
+		return getArgParentItemID() != Item.ID_ADD;
+	}
+
+	@Override protected void onCreateNew() {
+		eventsListener.newItem(getArgParentItemID());
+	}
+
+	@Override public void onItemClick(RecyclerView.ViewHolder holder) {
+		eventsListener.itemSelected(holder.getItemId());
+	}
+
+	@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+		eventsListener.itemActioned(holder.getItemId());
+		return true;
 	}
 
 	public static ItemListFragment newInstance(long parentItemID) {

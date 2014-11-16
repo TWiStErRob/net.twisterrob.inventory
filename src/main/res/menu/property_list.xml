@@ -7,7 +7,7 @@
 		android:id="@+id/action_property_add"
 		android:title="@string/property_add"
 		android:icon="@android:drawable/ic_menu_add"
-		app:showAsAction="always|withText"
+		app:showAsAction="never"
 		/>
 	<item
 		android:id="@+id/action_room_list"

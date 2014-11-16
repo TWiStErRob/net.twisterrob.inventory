@@ -4,10 +4,8 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.*;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
@@ -15,7 +13,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 
-public class RoomListFragment extends BaseListFragment<RoomsEvents> {
+public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
 
 	public interface RoomsEvents {
@@ -32,46 +30,38 @@ public class RoomListFragment extends BaseListFragment<RoomsEvents> {
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-
-		menu.findItem(R.id.action_room_add).setVisible(getArgPropertyID() != Property.ID_ADD);
+		menu.findItem(R.id.action_room_add).setVisible(canCreateNew());
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_room_add:
-				eventsListener.newRoom(getArgPropertyID());
+				onCreateNew();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	@Override
-	public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
+	@Override protected boolean canCreateNew() {
+		return getArgPropertyID() != Property.ID_ADD;
+	}
 
-		view.findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				eventsListener.newRoom(getArgPropertyID());
-			}
-		});
+	@Override public void onCreateNew() {
+		eventsListener.newRoom(getArgPropertyID());
+	}
 
-		list.setOnItemLongClickListener(new OnItemLongClickListener() {
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Long Clicked on #{}", id);
-				eventsListener.roomActioned(id);
-				return true;
-			}
-		});
-		list.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Clicked on #{}", id);
-				@SuppressWarnings("resource")
-				Cursor data = (Cursor)parent.getAdapter().getItem(position);
-				eventsListener.roomSelected(RoomDTO.fromCursor(data));
-			}
-		});
+	@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+		eventsListener.roomActioned(holder.getItemId());
+		return true;
+	}
+
+	@Override public void onItemClick(RecyclerView.ViewHolder holder) {
+		@SuppressWarnings("resource")
+		Cursor data = adapter.getCursor();
+		data.moveToPosition(holder.getPosition());
+		eventsListener.roomSelected(RoomDTO.fromCursor(data));
 	}
 
 	@Override

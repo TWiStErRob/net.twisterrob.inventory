@@ -1,47 +1,68 @@
 package net.twisterrob.inventory.android.view;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
-import android.view.View;
+import android.support.v7.widget.RecyclerView;
+import android.view.*;
+import android.view.View.*;
 import android.widget.*;
 
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.GalleryAdapter.ViewHolder;
 
-public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
-	public GalleryAdapter(Context context) {
-		super(context, R.layout.gallery_item, null, false);
+public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
+	public interface GalleryItemEvents extends RecyclerViewItemEvents {
 	}
 
-	class ViewHolder {
+	private final GalleryItemEvents listener;
+
+	public GalleryAdapter(Cursor cursor, GalleryItemEvents listener) {
+		super(cursor);
+		this.listener = listener;
+	}
+
+	class ViewHolder extends RecyclerView.ViewHolder {
+		public ViewHolder(View view) {
+			super(view);
+			title = (TextView)view.findViewById(R.id.title);
+			image = (ImageView)view.findViewById(R.id.image);
+			type = (ImageView)view.findViewById(R.id.type);
+			count = (TextView)view.findViewById(R.id.count);
+
+			view.setOnClickListener(new OnClickListener() {
+				@Override public void onClick(View v) {
+					listener.onItemClick(ViewHolder.this);
+				}
+			});
+			view.setOnLongClickListener(new OnLongClickListener() {
+				@Override public boolean onLongClick(View v) {
+					return listener.onItemLongClick(ViewHolder.this);
+				}
+			});
+		}
+
 		TextView title;
 		ImageView image;
 		ImageView type;
 		TextView count;
 	}
 
-	@Override
-	protected ViewHolder createHolder(View convertView) {
-		ViewHolder holder = new ViewHolder();
-		holder.title = (TextView)convertView.findViewById(R.id.title);
-		holder.image = (ImageView)convertView.findViewById(R.id.image);
-		holder.type = (ImageView)convertView.findViewById(R.id.type);
-		holder.count = (TextView)convertView.findViewById(R.id.count);
-		return holder;
+	@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+		View view = inflater.inflate(R.layout.fragment_list_item_gallery, parent, false);
+
+		return new ViewHolder(view);
 	}
 
-	@Override
-	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
+	@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
 		holder.title.setText(getName(cursor));
 		holder.count.setText(getCountText(cursor));
 
@@ -67,11 +88,11 @@ public class GalleryAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> 
 	}
 
 	private void displayImageWithType(ImageView image, final ImageView type, String imageName, String typeImageName) {
-		final Drawable fallback = ImagedDTO.getFallbackDrawable(mContext, typeImageName);
+		final Drawable fallback = ImagedDTO.getFallbackDrawable(image.getContext(), typeImageName);
 		ViewCompat.setLayerType(type, ViewCompat.LAYER_TYPE_SOFTWARE, null);
 		type.setVisibility(View.INVISIBLE);
 
-		App.pic().start(mContext, new RequestListener<String, GlideDrawable>() {
+		App.pic().start(image.getContext(), new RequestListener<String, GlideDrawable>() {
 			public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
 					boolean isFromMemoryCache, boolean isFirstResource) {
 				type.setVisibility(View.VISIBLE);

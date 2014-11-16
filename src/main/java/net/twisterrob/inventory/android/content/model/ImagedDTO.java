@@ -6,9 +6,9 @@ import java.util.Locale;
 import org.slf4j.*;
 
 import android.content.Context;
-import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
@@ -61,27 +61,22 @@ public class ImagedDTO extends DTO {
 		return getFallbackDrawable(context, fallbackImageResourceName, size, padding);
 	}
 
-	public static Drawable getFallbackDrawable(Context context, String resourceName) {
-		try {
-			Drawable svg = App.pic().getSVG(context, AndroidTools.getRawResourceID(context, resourceName));
-			if (svg != null) {
-				return svg;
-			}
-		} catch (NotFoundException ex) {
-			LOG.error("TODO Convert {} to SVG", resourceName);
+	public static @NonNull Drawable getFallbackDrawable(Context context, String resourceName) {
+		Drawable svg = App.pic().getSVG(context, AndroidTools.getRawResourceID(context, resourceName));
+		if (svg != null) {
+			return svg;
 		}
-		return context.getResources().getDrawable(AndroidTools.getDrawableResourceID(context, resourceName));
+		return getDrawableFromDrawable(context, resourceName);
 	}
-	public static Drawable getFallbackDrawable(Context context, String resourceName, int size, int padding) {
-		try {
-			Drawable svg =
-					App.pic().getSVG(context, AndroidTools.getRawResourceID(context, resourceName), size, padding);
-			if (svg != null) {
-				return svg;
-			}
-		} catch (NotFoundException ex) {
-			LOG.error("TODO Convert {} to SVG", resourceName);
+	public static @NonNull Drawable getFallbackDrawable(Context context, String resourceName, int size, int padding) {
+		Drawable svg =
+				App.pic().getSVG(context, AndroidTools.getRawResourceID(context, resourceName), size, padding);
+		if (svg != null) {
+			return svg;
 		}
+		return getDrawableFromDrawable(context, resourceName);
+	}
+	private static Drawable getDrawableFromDrawable(Context context, String resourceName) {
 		return context.getResources().getDrawable(AndroidTools.getDrawableResourceID(context, resourceName));
 	}
 }

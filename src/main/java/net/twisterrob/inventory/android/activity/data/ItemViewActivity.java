@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
@@ -15,6 +15,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemL
 		implements ItemEvents, ItemsEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
+		setIcon(R.raw.category_unknown);
 		long itemID = getExtraItemID();
 		setFragments(ItemViewFragment.newInstance(itemID), ItemListFragment.newInstance(itemID));
 	}

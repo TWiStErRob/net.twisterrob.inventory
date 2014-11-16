@@ -1,6 +1,8 @@
 package net.twisterrob.inventory.android.utils;
 
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.util.concurrent.*;
 
 import org.slf4j.*;
 
@@ -88,10 +90,20 @@ public class ImageLoaderFacade {
 				;
 	}
 
+	private static final ConcurrentMap<Integer, WeakReference<Picture>> SVGs = new ConcurrentHashMap<>();
 	public Drawable getSVG(Context context, int rawResourceId) {
 		try {
-			SVG svg = SVG.getFromResource(context, rawResourceId);
-			return new PictureDrawable(svg.renderToPicture());
+			WeakReference<Picture> reference = SVGs.get(rawResourceId);
+			Picture pic = null;
+			if (reference != null) {
+				pic = reference.get();
+			}
+			if (pic == null) {
+				SVG svg = SVG.getFromResource(context, rawResourceId);
+				pic = svg.renderToPicture();
+				SVGs.put(rawResourceId, new WeakReference<>(pic));
+			}
+			return new PictureDrawable(pic);
 		} catch (SVGParseException ex) {
 			LOG.warn("Cannot decode SVG from {}", rawResourceId, ex);
 			return null;

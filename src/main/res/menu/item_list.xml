@@ -7,6 +7,6 @@
 		android:id="@+id/action_item_add"
 		android:title="@string/item_add"
 		android:icon="@android:drawable/ic_menu_add"
-		app:showAsAction="always|withText"
+		app:showAsAction="never"
 		/>
 </menu>

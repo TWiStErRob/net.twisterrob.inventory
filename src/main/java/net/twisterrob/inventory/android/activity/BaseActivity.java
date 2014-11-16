@@ -113,6 +113,7 @@ public class BaseActivity extends ActionBarActivity {
 		getSupportActionBar().setIcon(iconDrawable);
 	}
 	public void setIcon(@RawRes int resourceId) {
-		App.pic().getSVG(this, resourceId, getActionbarIconSize(this), getActionbarIconPadding(this));
+		Drawable svg = App.pic().getSVG(this, resourceId, getActionbarIconSize(this), getActionbarIconPadding(this));
+		setIcon(svg);
 	}
 }

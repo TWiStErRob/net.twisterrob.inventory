@@ -2,11 +2,8 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
-import android.os.Bundle;
-import android.view.*;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.*;
+import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.PropertyViewActivity;
@@ -14,7 +11,7 @@ import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 
-public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
+public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyListFragment.class);
 
 	public interface PropertiesEvents {
@@ -32,7 +29,7 @@ public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_property_add:
-				eventsListener.newProperty();
+				onCreateNew();
 				return true;
 			case R.id.action_room_list:
 				startActivity(PropertyViewActivity.show(Property.ID_ADD));
@@ -42,29 +39,21 @@ public class PropertyListFragment extends BaseListFragment<PropertiesEvents> {
 		}
 	}
 
-	@Override
-	public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
+	@Override protected boolean canCreateNew() {
+		return true;
+	}
 
-		view.findViewById(R.id.btn_add).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				eventsListener.newProperty();
-			}
-		});
+	@Override protected void onCreateNew() {
+		eventsListener.newProperty();
+	}
 
-		list.setOnItemLongClickListener(new OnItemLongClickListener() {
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Long Clicked on #{}", id);
-				eventsListener.propertyActioned(id);
-				return true;
-			}
-		});
-		list.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				LOG.trace("Clicked on #{}", id);
-				eventsListener.propertySelected(id);
-			}
-		});
+	@Override public void onItemClick(RecyclerView.ViewHolder holder) {
+		eventsListener.propertySelected(holder.getItemId());
+	}
+
+	@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+		eventsListener.propertyActioned(holder.getItemId());
+		return true;
 	}
 
 	@Override
