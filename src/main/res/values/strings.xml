@@ -6,8 +6,9 @@
 	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
 
 	<string name="sunburst_title">Sunburst Diagram</string>
-	<string name="action_picture_take">Take picture</string>
-	<string name="action_picture_pick">Pick picture</string>
+	<string name="action_picture_take">Take Picture</string>
+	<string name="action_picture_pick">Pick Picture</string>
+	<string name="action_picture_remove">Remove Picture</string>
 	<string name="action_save">Save</string>
 	<string name="action_search">Search Items</string>
 

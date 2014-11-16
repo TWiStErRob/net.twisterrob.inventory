@@ -14,7 +14,6 @@ public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragmen
 		implements PropertyEvents, RoomsEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
-
 		long propertyID = getExtraPropertyID();
 		PropertyViewFragment detailsFragment;
 		if (propertyID == Property.ID_ADD) {

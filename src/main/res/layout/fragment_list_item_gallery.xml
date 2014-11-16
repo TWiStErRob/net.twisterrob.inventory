@@ -12,6 +12,7 @@
 		android:layout_gravity="center"
 		android:adjustViewBounds="true"
 		android:focusable="false"
+		android:layerType="software"
 		android:scaleType="fitCenter"
 		/>
 	<ImageView
@@ -22,6 +23,7 @@
 		android:layout_marginRight="@dimen/margin"
 		android:layout_marginBottom="@dimen/margin"
 		android:layout_marginEnd="@dimen/margin"
+		android:layerType="software"
 		android:scaleType="fitCenter"
 		/>
 	<TextView

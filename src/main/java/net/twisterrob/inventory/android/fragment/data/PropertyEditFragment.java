@@ -10,7 +10,6 @@ import android.view.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
-import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -54,20 +53,15 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		} else {
 			getBaseActivity().setActionBarTitle(getString(R.string.property_new));
-			setCurrentImage(null, R.drawable.image_add);
 		}
+
 		manager.startLoading();
 	}
 
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
-
-		getBaseActivity().setActionBarTitle(property.name);
-		AndroidTools.selectByID(type, property.type);
-		title.setText(property.name); // must set it after propertyType to prevent auto-propagation
-
-		setCurrentImage(property.getImage(getContext()), property.getFallbackDrawable(getContext()));
+		onSingleRowLoaded(property, property.type);
 	}
 
 	@Override

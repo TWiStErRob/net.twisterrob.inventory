@@ -14,6 +14,7 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.TypeAdapter.ViewHolder;
 
 public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
@@ -39,16 +40,11 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		holder.title.setText(getName(cursor));
 		holder.title.setLayoutParams(updateFormat(cursor, holder.title));
 
-		App.pic().startSVG(mContext).load(getImageResource(cursor)).into(holder.image);
+		App.pic().startSVG(mContext).load(ImagedDTO.getFallbackID(mContext, cursor)).into(holder.image);
 	}
 	private CharSequence getName(Cursor cursor) {
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 		return AndroidTools.getText(mContext, name);
-	}
-
-	private int getImageResource(Cursor cursor) {
-		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		return AndroidTools.getRawResourceID(mContext, image);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

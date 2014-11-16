@@ -8,7 +8,7 @@ import org.slf4j.*;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
@@ -32,6 +32,10 @@ public class ImagedDTO extends DTO {
 	}
 
 	public String getImage(Context context) {
+		return getImage(context, image);
+	}
+
+	public static String getImage(Context context, String image) {
 		return image == null? null : new File(image).isAbsolute()? image
 				: new File(Paths.getImageDirectory(context), image).getAbsolutePath();
 	}
@@ -41,7 +45,7 @@ public class ImagedDTO extends DTO {
 			this.image = null;
 		} else {
 			try {
-				String root = Paths.getImageDirectory(context).getCanonicalPath();
+				String root = Paths.getImageDirectory(context).getCanonicalPath() + File.separator;
 				String image = new File(fullImage).getCanonicalPath();
 				if (!image.startsWith(root)) {
 					throw new IllegalArgumentException(String.format(Locale.ROOT,
@@ -59,6 +63,11 @@ public class ImagedDTO extends DTO {
 	}
 	public Drawable getFallbackDrawable(Context context, int size, int padding) {
 		return getFallbackDrawable(context, fallbackImageResourceName, size, padding);
+	}
+
+	public static @RawRes int getFallbackID(Context context, Cursor cursor) {
+		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+		return AndroidTools.getRawResourceID(context, image);
 	}
 
 	public static @NonNull Drawable getFallbackDrawable(Context context, String resourceName) {

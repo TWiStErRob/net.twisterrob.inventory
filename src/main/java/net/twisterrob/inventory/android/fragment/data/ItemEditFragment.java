@@ -10,7 +10,6 @@ import android.view.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
-import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -48,7 +47,6 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 			loadItemData.dependsOn(populateCats);
 		} else {
 			getBaseActivity().setActionBarTitle(getString(R.string.item_new));
-			setCurrentImage(null, R.drawable.image_add);
 		}
 
 		manager.startLoading();
@@ -57,11 +55,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
-
-		getBaseActivity().setActionBarTitle(item.name);
-		title.setText(item.name);
-		AndroidTools.selectByID(type, item.category);
-		setCurrentImage(item.getImage(getContext()), item.getFallbackDrawable(getContext()));
+		super.onSingleRowLoaded(item, item.category);
 	}
 
 	@Override

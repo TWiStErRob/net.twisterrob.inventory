@@ -10,7 +10,6 @@ import android.view.*;
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
-import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -54,7 +53,6 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		} else {
 			getBaseActivity().setActionBarTitle(getString(R.string.room_new));
-			setCurrentImage(null, R.drawable.image_add);
 		}
 
 		manager.startLoading();
@@ -63,11 +61,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
-
-		getBaseActivity().setActionBarTitle(room.name);
-		AndroidTools.selectByID(type, room.type);
-		title.setText(room.name); // must set it after roomType to prevent auto-propagation
-		setCurrentImage(room.getImage(getContext()), room.getFallbackDrawable(getContext()));
+		super.onSingleRowLoaded(room, room.type);
 	}
 
 	@Override

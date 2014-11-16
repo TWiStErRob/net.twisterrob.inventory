@@ -9,10 +9,17 @@
 		android:icon="@android:drawable/ic_menu_camera"
 		app:showAsAction="always"
 		/>
+	<!-- TODO crop picked picture -->
 	<item
 		android:id="@+id/action_picture_pick"
 		android:title="@string/action_picture_pick"
 		android:icon="@android:drawable/ic_menu_gallery"
+		app:showAsAction="never"
+		/>
+	<item
+		android:id="@+id/action_picture_remove"
+		android:title="@string/action_picture_remove"
+		android:icon="@drawable/ic_menu_picture_remove"
 		app:showAsAction="ifRoom"
 		/>
 </menu>

@@ -9,13 +9,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.RawRes;
 import android.support.v4.widget.CursorAdapter;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
 import net.twisterrob.android.activity.CaptureImage;
-import net.twisterrob.android.utils.tools.ImageTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.wiring.DefaultValueUpdater;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
@@ -54,6 +55,13 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	protected abstract void save();
 
+	protected void onSingleRowLoaded(ImagedDTO dto, long typeID) {
+		AndroidTools.selectByID(type, typeID); // sets icon
+		getBaseActivity().setActionBarTitle(dto.name);
+		title.setText(dto.name); // must set it after type to prevent keepNameInSync
+		setCurrentImage(dto.getImage(getContext()));
+	}
+
 	@Override
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
@@ -76,17 +84,21 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		type.setOnItemSelectedListener(new DefaultValueUpdater(title, CommonColumns.NAME) {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				if (keepNameInSync) {
+				if (isKeepNameInSync()) {
 					super.onItemSelected(parent, view, position, id);
 				}
 				if (getCurrentImage() == null) {
-					@SuppressWarnings("resource")
-					Cursor cursor = (Cursor)parent.getItemAtPosition(position);
-					String image = cursor.getString(cursor.getColumnIndex(CommonColumns.TYPE_IMAGE));
-					setCurrentImage(null, ImagedDTO.getFallbackDrawable(getContext(), image));
-				}
+					setCurrentImage(null);
+				} // else leave current image as is
+				getBaseActivity().setIcon(getTypeImage(position));
 			}
 		});
+	}
+
+	private @RawRes int getTypeImage(int position) {
+		@SuppressWarnings("resource")
+		Cursor cursor = (Cursor)type.getItemAtPosition(position);
+		return ImagedDTO.getFallbackID(getContext(), cursor);
 	}
 
 	@Override
@@ -100,6 +112,9 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		switch (item.getItemId()) {
 			case R.id.action_picture_take:
 				takePicture();
+				return true;
+			case R.id.action_picture_remove:
+				removePicture();
 				return true;
 			case R.id.action_picture_pick:
 				pickPicture();
@@ -119,6 +134,10 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		startActivityForResult(intent, ImageTools.REQUEST_CODE_TAKE_PICTURE);
 	}
 
+	private void removePicture() {
+		setCurrentImage(null);
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -132,7 +151,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 							@Override
 							protected void onPostExecute(File result) {
 								if (result != null) {
-									setCurrentImage(result.getAbsolutePath(), null);
+									setCurrentImage(result.getAbsolutePath());
 								}
 							}
 						}.execute(file);
@@ -154,12 +173,13 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		return currentImage;
 	}
 
-	protected void setCurrentImage(String currentImage, int fallbackResourceID) {
-		setCurrentImage(currentImage, getResources().getDrawable(fallbackResourceID));
-	}
-
-	protected void setCurrentImage(String currentImage, Drawable fallback) {
+	protected void setCurrentImage(String currentImage) {
 		this.currentImage = currentImage;
-		App.pic().start(this).placeholder(fallback).load(currentImage).into(image);
+		Drawable fallback = App.pic().getSVG(getContext(), getTypeImage(type.getSelectedItemPosition()));
+		if (currentImage == null) {
+			image.setImageDrawable(fallback);
+		} else {
+			App.pic().start(this).placeholder(fallback).load(currentImage).into(image);
+		}
 	}
 }

@@ -3,13 +3,14 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.ItemEditFragment;
 
 public class ItemEditActivity extends BaseEditActivity<ItemEditFragment> {
 	@Override
 	protected ItemEditFragment onCreateFragment(Bundle savedInstanceState) {
+		setIcon(R.raw.category_unknown);
 		return ItemEditFragment.newInstance(getExtraParentID(), getExtraItemID());
 	}
 

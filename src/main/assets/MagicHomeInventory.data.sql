@@ -1,6 +1,6 @@
 INSERT INTO PropertyType
 	           (_id, priority, name,                 image)
-	      SELECT  0,     1000, 'property_other',     'property_unknown'
+	      SELECT  0,       -1, 'property_other',     'property_unknown'
 	UNION SELECT  1,        0, 'property_home',      'property_home'
 	UNION SELECT  2,        0, 'property_workplace', 'property_office'
 	UNION SELECT  3,       10, 'property_apartment', 'property_office'
@@ -17,17 +17,17 @@ INSERT INTO PropertyType
 
 INSERT INTO RoomTypeKind
 	           (_id, priority, name,                  image)
-	      SELECT  0,     1000, 'room_group_other',    'room_unknown'
-	UNION SELECT  1,      100, 'room_group_general',  'room_unknown'
-	UNION SELECT  2,      200, 'room_group_storage',  'room_storage'
-	UNION SELECT  3,      300, 'room_group_common',   'room_unknown'
-	UNION SELECT  4,      400, 'room_group_function', 'room_unknown'
-	UNION SELECT  5,      500, 'room_group_space',    'room_unknown'
+	      SELECT  0,       -1, 'room_group_other',    'room_unknown'
+	UNION SELECT  1,       10, 'room_group_general',  'room_unknown'
+	UNION SELECT  2,       20, 'room_group_storage',  'room_storage'
+	UNION SELECT  3,       30, 'room_group_common',   'room_unknown'
+	UNION SELECT  4,       40, 'room_group_function', 'room_unknown'
+	UNION SELECT  5,       50, 'room_group_space',    'room_unknown'
 ;
 
 INSERT INTO RoomType
 	            (_id,  kind, priority, name,            image)
-	      SELECT   0,     0,     1000, 'room_other',    NULL
+	      SELECT   0,     0,       -1, 'room_other',    NULL
 -- General
 	UNION SELECT 101,     1,        0, 'room_bath',     'room_bathroom'
 	UNION SELECT 102,     1,        0, 'room_bed',      'room_bedroom'

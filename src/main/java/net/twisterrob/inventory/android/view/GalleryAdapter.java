@@ -2,15 +2,10 @@ package net.twisterrob.inventory.android.view;
 
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
-
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.*;
@@ -68,6 +63,7 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 
 		String type = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+		image = ImagedDTO.getImage(holder.itemView.getContext(), image);
 		displayImageWithType(holder.image, holder.type, image, type);
 	}
 
@@ -89,25 +85,15 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 
 	private void displayImageWithType(ImageView image, final ImageView type, String imageName, String typeImageName) {
 		final Drawable fallback = ImagedDTO.getFallbackDrawable(image.getContext(), typeImageName);
-		ViewCompat.setLayerType(type, ViewCompat.LAYER_TYPE_SOFTWARE, null);
-		type.setVisibility(View.INVISIBLE);
 
-		App.pic().start(image.getContext(), new RequestListener<String, GlideDrawable>() {
-			public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-					boolean isFromMemoryCache, boolean isFirstResource) {
-				type.setVisibility(View.VISIBLE);
-				type.setImageDrawable(fallback);
-				return false;
-			}
-
-			public boolean onException(Exception e, String model, Target<GlideDrawable> target,
-					boolean isFirstResource) {
-				if (model != null) {
-					type.setVisibility(View.VISIBLE);
-					type.setImageResource(R.drawable.image_error);
-				}
-				return false;
-			}
-		}).placeholder(fallback).error(fallback).load(imageName).into(image);
+		if (imageName == null) {
+			type.setVisibility(View.INVISIBLE);
+			type.setImageDrawable(null);
+			image.setImageDrawable(fallback);
+		} else {
+			type.setVisibility(View.VISIBLE);
+			type.setImageDrawable(fallback);
+			App.pic().start(image.getContext()).placeholder(fallback).load(imageName).into(image);
+		}
 	}
 }
