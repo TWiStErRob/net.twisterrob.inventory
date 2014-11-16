@@ -14,6 +14,7 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
+import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.fragment.BackupFragment;
 import net.twisterrob.inventory.android.fragment.BackupPickerFragment.BackupPickerListener;
 
@@ -46,9 +47,10 @@ public class MainActivity extends BaseActivity implements BackupPickerListener {
 
 	private static Collection<MainItem> createActions() {
 		Collection<MainItem> acts = new ArrayList<>();
-		acts.add(new MainItem(R.string.property_list, R.raw.property_home, PropertyListActivity.list()));
+		acts.add(new MainItem(R.string.property_list, R.raw.property_unknown, PropertyListActivity.list()));
 		acts.add(new MainItem(R.string.category_list, R.raw.category_unknown, CategoryViewActivity.show(INTERNAL)));
-		acts.add(new MainItem(R.string.item_list, R.raw.category_collectibles, CategoryItemsActivity.show(INTERNAL)));
+		acts.add(new MainItem(R.string.room_all, R.raw.room_unknown, PropertyViewActivity.show(Property.ID_ADD)));
+		acts.add(new MainItem(R.string.item_all, R.raw.category_storage_box, CategoryItemsActivity.show(INTERNAL)));
 		acts.add(new MainItem(R.string.sunburst_title, R.raw.category_disc, SunBurstActivity.show()));
 
 		if (BuildConfig.DEBUG) {
