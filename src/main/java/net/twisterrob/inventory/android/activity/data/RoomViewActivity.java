@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -14,6 +14,7 @@ public class RoomViewActivity extends BaseDetailActivity<RoomViewFragment, ItemL
 		implements RoomEvents, ItemsEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
+		setIcon(R.raw.room_unknown);
 		long roomID = getExtraRoomID();
 		setFragments(RoomViewFragment.newInstance(roomID), null /* set later */);
 	}

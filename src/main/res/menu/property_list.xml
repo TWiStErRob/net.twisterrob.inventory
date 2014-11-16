@@ -12,5 +12,7 @@
 	<item
 		android:id="@+id/action_room_list"
 		android:title="@string/room_viewAll"
+		android:icon="@android:drawable/ic_menu_more"
+		app:showAsAction="never"
 		/>
 </menu>

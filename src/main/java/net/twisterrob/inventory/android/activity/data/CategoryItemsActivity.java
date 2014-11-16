@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -14,12 +14,13 @@ public class CategoryItemsActivity extends BaseDetailActivity<CategoryViewFragme
 		implements CategoryEvents, ItemsEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
+		setIcon(R.raw.category_unknown);
 		long categoryID = getExtraCategoryID();
 		CategoryViewFragment detailsFragment;
 		if (categoryID == Category.INTERNAL) {
 			detailsFragment = null;
 			setActionBarSubtitle(null);
-			setActionBarTitle("All Items");
+			setActionBarTitle(getText(R.string.item_all));
 			hideDetails();
 		} else {
 			detailsFragment = CategoryViewFragment.newInstance(categoryID);

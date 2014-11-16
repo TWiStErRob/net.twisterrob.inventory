@@ -14,13 +14,17 @@ public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragmen
 		implements PropertyEvents, RoomsEvents {
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
-		setIcon(R.raw.property_unknown);
+
 		long propertyID = getExtraPropertyID();
 		PropertyViewFragment detailsFragment;
 		if (propertyID == Property.ID_ADD) {
+			setActionBarSubtitle(null);
+			setActionBarTitle(getText(R.string.room_all));
+			setIcon(R.raw.room_unknown);
 			hideDetails();
 			detailsFragment = null;
 		} else {
+			setIcon(R.raw.property_unknown);
 			detailsFragment = PropertyViewFragment.newInstance(propertyID);
 		}
 		setFragments(detailsFragment, RoomListFragment.newInstance(propertyID));

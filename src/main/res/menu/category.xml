@@ -12,14 +12,14 @@
 	<item
 		android:id="@+id/action_category_viewItems"
 		android:title="@string/category_viewItems"
-		android:icon="@android:drawable/ic_menu_view"
+		android:icon="@android:drawable/ic_menu_more"
 		android:titleCondensed="@string/category_viewItems"
 		app:showAsAction="never"
 		/>
 	<item
 		android:id="@+id/action_category_viewAllItems"
 		android:title="@string/category_viewAllItems"
-		android:icon="@android:drawable/ic_menu_view"
+		android:icon="@android:drawable/ic_menu_more"
 		android:titleCondensed="@string/category_viewAllItems"
 		app:showAsAction="never"
 		/>

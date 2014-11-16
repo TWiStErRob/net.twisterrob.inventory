@@ -76,7 +76,7 @@ public class DeveloperActivity extends ListActivity {
 						startActivity(ItemEditActivity.edit(5));
 					}
 				}),
-				create("Clear Picasso cache", new Runnable() {
+				create("Clear Image cache", new Runnable() {
 					public void run() {
 						App.pic().clearCaches();
 					}
