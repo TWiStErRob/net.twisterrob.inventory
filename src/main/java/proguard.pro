@@ -1,0 +1,3 @@
+-dontwarn javax.xml.stream.XMLStreamWriter
+-dontwarn javax.xml.stream.XMLStreamException
+-dontwarn com.caverock.androidsvg.R**

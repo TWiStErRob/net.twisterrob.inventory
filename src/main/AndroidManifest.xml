@@ -128,21 +128,5 @@
 			android:grantUriPermissions="true"
 			android:readPermission="net.twisterrob.inventory.READ"
 			android:writePermission="net.twisterrob.inventory.WRITE" />
-
-		<!-- Developer Activities -->
-		<activity
-			android:name=".activity.dev.DeveloperActivity"
-			android:label="@string/dev_title"
-			android:theme="@android:style/Theme">
-			<!--<intent-filter>-->
-			<!--<action android:name="android.intent.action.MAIN" />-->
-			<!--<category android:name="android.intent.category.LAUNCHER" />-->
-			<!--</intent-filter>-->
-		</activity>
-		<activity
-			android:name=".activity.dev.DeveloperDriveActivity"
-			android:label="@string/dev_title">
-		</activity>
-
 	</application>
 </manifest>
