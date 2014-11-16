@@ -24,7 +24,7 @@
 		tools:ignore="UnusedAttribute">
 		<meta-data
 			android:name="android.app.default_searchable"
-			android:value=".activity.SearchResultsActivity" />
+			android:value="net.twisterrob.inventory.android.activity.SearchResultsActivity" />
 		<meta-data
 			android:name="com.google.android.gms.version"
 			android:value="@integer/google_play_services_version" />
@@ -110,7 +110,7 @@
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
-				<data android:mimeType="vnd.android.cursor.item/vnd.net.twisterrob.inventory.item" />
+				<data android:mimeType="vnd.android.cursor.item/vnd.${applicationId}.item" />
 			</intent-filter>
 			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.RoomViewActivity" />
 		</activity>
@@ -123,7 +123,7 @@
 
 		<provider
 			android:name=".content.InventoryProvider"
-			android:authorities="net.twisterrob.inventory"
+			android:authorities="@string/app_package"
 			android:exported="true"
 			android:grantUriPermissions="true"
 			android:readPermission="net.twisterrob.inventory.READ"

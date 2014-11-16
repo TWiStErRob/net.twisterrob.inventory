@@ -6,15 +6,17 @@ import android.provider.BaseColumns;
 
 import static android.content.ContentResolver.*;
 
+import net.twisterrob.inventory.android.BuildConfig;
+
 // content://net.twisterrob.inventory/item/100008
 public final class InventoryContract {
-	public static final String AUTHORITY = "net.twisterrob.inventory";
+	public static final String AUTHORITY = BuildConfig.APPLICATION_ID;
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
 	public static final class Item implements CommonColumns {
 		private static final long ID_INVALID = net.twisterrob.inventory.android.content.contract.Item.ID_ADD;
 
-		private static final String SUBTYPE = "vnd.net.twisterrob.inventory.item";
+		private static final String SUBTYPE = "vnd." + AUTHORITY + ".item";
 
 		static final String DIR_URI_PATH = "items";
 		public static final Uri DIR_URI = Uri.withAppendedPath(CONTENT_URI, DIR_URI_PATH);

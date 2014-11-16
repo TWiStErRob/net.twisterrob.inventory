@@ -9,7 +9,7 @@
 	<string name="action_picture_take">Take picture</string>
 	<string name="action_picture_pick">Pick picture</string>
 	<string name="action_save">Save</string>
-	<string name="action_search">Search</string>
+	<string name="action_search">Search Items</string>
 
 	<string name="category_list">Categories</string>
 	<string name="category_details">Category Subcategories</string>

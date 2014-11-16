@@ -83,19 +83,10 @@ public class InventoryProvider extends ContentProvider {
 				uri, projection, selection, selectionArgs, sortOrder, resolveMatch(URI_MATCHER.match(uri)));
 		switch (URI_MATCHER.match(uri)) {
 			case SEARCH_ITEMS_SUGGEST: {
-				// uri.getLastPathSegment().toLowerCase(Locale.ROOT);
+				// uri.getLastPathSegment().toLowerCase(Locale.getDefault());
 				String query = selectionArgs[0].toLowerCase(Locale.getDefault());
 				if (StringTools.isNullOrEmpty(query)) {
-					MatrixCursor cursor = new MatrixCursor(new String[] {BaseColumns._ID
-							, SUGGEST_COLUMN_INTENT_DATA_ID
-							, SUGGEST_COLUMN_TEXT_1
-							, SUGGEST_COLUMN_TEXT_2
-							//, SUGGEST_COLUMN_ICON_1
-							//, SUGGEST_COLUMN_INTENT_ACTION
-					}, 1);
-					cursor.addRow(new String[] {null, null, "Search Inventory Items", "Search for item name.",
-					/* "android.resource://android/drawable/ic_menu_search", Intent.ACTION_SEARCH */});
-					return cursor;
+					return createItemSearchHelp();
 				}
 				return App.db().searchSuggest(query);
 			}
@@ -109,6 +100,27 @@ public class InventoryProvider extends ContentProvider {
 			default:
 				throw new UnsupportedOperationException("Unknown URI: " + uri);
 		}
+	}
+	/**
+	 * Return a singular suggestion to display more text about what can be searched
+	 * Tapping it would open the search activity.
+	 */
+	private Cursor createItemSearchHelp() {
+		MatrixCursor cursor = new MatrixCursor(new String[] {BaseColumns._ID
+				, SUGGEST_COLUMN_INTENT_ACTION
+				, SUGGEST_COLUMN_INTENT_DATA
+				, SUGGEST_COLUMN_ICON_1
+				, SUGGEST_COLUMN_TEXT_1
+				, SUGGEST_COLUMN_TEXT_2
+		}, 1);
+		cursor.addRow(new String[] {null
+				, Intent.ACTION_SEARCH // Opens search activity
+				, ""
+				, "android.resource://android/drawable/ic_menu_search"
+				, "Search Inventory Items" // Opens search activity
+				, "Search for item name above." // Opens search activity
+		});
+		return cursor;
 	}
 
 	@Override

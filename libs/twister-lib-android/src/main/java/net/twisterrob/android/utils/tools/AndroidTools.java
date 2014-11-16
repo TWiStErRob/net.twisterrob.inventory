@@ -265,7 +265,14 @@ public abstract class AndroidTools {
 		View view = MenuItemCompat.getActionView(item);
 		if (view instanceof android.support.v7.widget.SearchView) {
 			android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView)view;
-			searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
+			SearchableInfo info = searchManager.getSearchableInfo(activity.getComponentName());
+			if (info == null) {
+				throw new NullPointerException("No searchable info for " + activity.getComponentName()
+						+ "\nDid you define <meta-data android:name=\"android.app.default_searchable\" android:value=\".SearchActivity\" />"
+						+ "\neither on application level or inside the activity in AndroidManifest.xml?"
+						+ "\nAlso make sure that in the merged manifest the class name resolves correctly (package).");
+			}
+			searchView.setSearchableInfo(info);
 			return searchView;
 		} else {
 			SearchViewCompat.setSearchableInfo(view, activity.getComponentName());

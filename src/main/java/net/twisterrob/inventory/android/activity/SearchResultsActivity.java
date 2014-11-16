@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -19,6 +20,7 @@ public class SearchResultsActivity extends BaseDetailActivity<NoFragment, ItemLi
 
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
+		setActionBarTitle(getTitle());
 		hideDetails();
 		LOG.trace("onCreate({})", getIntent());
 		handleIntent(getIntent());
@@ -34,12 +36,16 @@ public class SearchResultsActivity extends BaseDetailActivity<NoFragment, ItemLi
 	private void handleIntent(Intent intent) {
 		CharSequence query = getExtraQuery();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			LOG.info("Search '{}'", query);
+			LOG.debug("Search '{}'", query);
 			setActionBarSubtitle(query);
 			updateChildrenFragment(ItemListFragment.newSearchInstance(query)).commit();
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-			LOG.info("Search '{}' redirecting VIEW for {}", query, intent.getData());
-			startActivity(new Intent(Intent.ACTION_VIEW, intent.getData()));
+			Uri uri = intent.getData();
+			uri = uri.buildUpon()
+			         .authority(uri.getAuthority().replace("${applicationId}", BuildConfig.APPLICATION_ID))
+			         .build();
+			LOG.debug("Search '{}' redirecting VIEW for {}", query, uri);
+			startActivity(new Intent(Intent.ACTION_VIEW, uri));
 			finish();
 		}
 	}
