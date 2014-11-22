@@ -2,15 +2,13 @@ package net.twisterrob.inventory.android.activity;
 
 import org.slf4j.*;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.*;
 import android.support.v4.app.*;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.*;
-import android.view.*;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 
 import com.android.debug.hv.ViewServer;
 
@@ -28,7 +26,6 @@ public class BaseActivity extends ActionBarActivity {
 				getClass().getSimpleName(), hashCode(), getIntent(), AndroidTools.toString(getIntent().getExtras()));
 		super.onCreate(savedInstanceState);
 		ViewServer.get(this).addWindow(this);
-		initActionBar();
 	}
 
 	@Override
@@ -41,29 +38,6 @@ public class BaseActivity extends ActionBarActivity {
 	protected void onDestroy() {
 		ViewServer.get(this).removeWindow(this);
 		super.onDestroy();
-	}
-
-	@SuppressLint({"NewApi", "InlinedApi"})
-	private void initActionBar() {
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayShowHomeEnabled(true);
-		// TODO true, but needs onOptionsItemSelected and onCreateSupportNavigateUpTaskStack
-		actionBar.setDisplayHomeAsUpEnabled(false);
-		actionBar.setDisplayShowTitleEnabled(true);
-
-		initActionBarSoftwareRendering();
-	}
-
-	private void initActionBarSoftwareRendering() {
-		View actionBarView = findViewById(getResources().getIdentifier("action_bar", "id", getPackageName()));
-		if (actionBarView == null) {
-			actionBarView = findViewById(getResources().getIdentifier("action_bar", "id", "android"));
-		}
-		if (actionBarView != null) {
-			ViewCompat.setLayerType(actionBarView, ViewCompat.LAYER_TYPE_SOFTWARE, null);
-		} else {
-			LOG.warn("Unable to set SOFTWARE rendering layer on action bar");
-		}
 	}
 
 	@Override

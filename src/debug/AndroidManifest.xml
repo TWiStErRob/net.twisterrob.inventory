@@ -3,7 +3,7 @@
 	<application>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.dev.DeveloperActivity"
-			android:label="@string/dev_title"
+			android:label="Developer Tools"
 			android:theme="@android:style/Theme">
 			<intent-filter>
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -11,7 +11,7 @@
 		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.dev.DeveloperDriveActivity"
-			android:label="@string/dev_title">
+			android:label="Inventory DEV">
 		</activity>
 	</application>
 </manifest>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.twisterrob.android.view.SquareRelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
@@ -11,6 +12,7 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:text="@string/empty"
+		tools:text="Main Item Title"
 		android:gravity="center_horizontal"
 		/>
 	<ImageView
@@ -19,5 +21,6 @@
 		android:layout_height="fill_parent"
 		android:padding="@dimen/margin"
 		android:layout_above="@id/title"
+		tools:src="@drawable/category_unknown"
 		/>
 </net.twisterrob.android.view.SquareRelativeLayout>

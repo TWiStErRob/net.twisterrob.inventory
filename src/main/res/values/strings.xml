@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">!Magic Home Inventory</string>
-	<string name="list_empty">This list is empty.</string>
-	<string name="list_empty_add">You don\'t have any created, add one to get started.</string>
 	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
 
 	<string name="sunburst_title">Sunburst Diagram</string>
@@ -52,14 +50,10 @@
 	<string name="room_share">Share Room</string>
 	<string name="room_name_hint">Room Title</string>
 
-	<string name="img_desc_empty_add">Create a new one.</string>
-
 	<string name="backup_title">Backup</string>
 	<string name="backup_import_drive">Restore data from Google Drive</string>
 	<string name="backup_export_drive">Backup data to Google Drive</string>
 	<string name="backup_import_sd">Restore data from Phone</string>
 	<string name="backup_export_sd">Backup data to Phone</string>
 	<string name="backup_export_sd_del">Remove backup from Phone</string>
-
-	<string name="dev_title">DEVELOPER</string>
 </resources>

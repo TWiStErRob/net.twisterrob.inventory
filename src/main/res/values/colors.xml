@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- http://image.made-in-china.com/2f0j10mBGQCEalYFzq/-caixa-ondulada-de-envio-pelo-correio-do-branco.jpg
+		with numColors = 7
+	-->
+
+	<!-- Light Muted -->
+	<color name="primary">#FFAFB2BE</color>
+	<color name="primaryTitleText">#000000</color>
+	<color name="primaryBodyText">#000000</color>
+
+	<!-- Dark Muted -->
+	<color name="primaryDark">#FF665F5F</color>
+	<color name="primaryDarkTitleText">#FFFFFF</color>
+	<color name="primaryDarkBodyText">#FFFFFF</color>
+
+	<!-- Vibrant -->
+	<color name="accent">#FFB38C4C</color>
+	<color name="accentDark">#FF654F2B</color>
+	<color name="accentTitleText">#FFFFFF</color>
+	<color name="accentBodyText">#000000</color>
+</resources>
