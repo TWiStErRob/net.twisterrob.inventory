@@ -3,11 +3,14 @@ package net.twisterrob.inventory.android;
 import java.io.File;
 
 import android.content.Context;
+import android.support.annotation.AnyRes;
 import android.util.TypedValue;
 
 import static android.util.TypedValue.*;
 
 public interface Constants {
+	@AnyRes int INVALID_RESOURCE_ID = 0;
+
 	class Paths {
 		public static final String DEFAULT_FOLDER_NAME = "Magic Home Inventory";
 		public static final String EXPORT_FILE_NAME_FORMAT = "export-%tF_%<tH-%<tM-%<tS.csv";
