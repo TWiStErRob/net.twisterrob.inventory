@@ -15,13 +15,6 @@ buildscript {
 	}
 }
 
-allprojects {
-	apply plugin: 'idea'
-	project.plugins.withType(com.android.build.gradle.BasePlugin.class) {
-		project.apply plugin: 'net.twisterrob.android-eclipse'
-	}
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'net.twisterrob.android-app'
 
