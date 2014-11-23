@@ -4,6 +4,7 @@ import java.util.*;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.*;
@@ -41,10 +42,9 @@ public class BaseDrawerActivity extends BaseActivity {
 		return acts;
 	}
 
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
+	@Override public void onSupportContentChanged() {
+		super.onSupportContentChanged();
 
-		// need to have setContentView called in child, but that conflicts with super.onCreate
 		final ListView drawerLeft = (ListView)findViewById(R.id.drawer_left_list);
 		drawerLeft.setAdapter(new IconedItemAdapter(this, R.layout.drawer_left_item, createActions()));
 		mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer);
@@ -74,6 +74,10 @@ public class BaseDrawerActivity extends BaseActivity {
 				startActivity(item.getIntent());
 			}
 		});
+	}
+
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
 		mDrawerToggle.syncState(); // Sync the toggle state after onRestoreInstanceState has occurred.
 	}
 
@@ -81,6 +85,14 @@ public class BaseDrawerActivity extends BaseActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override public void onBackPressed() {
+		if (mDrawerLayout.isDrawerOpen(GravityCompat.START) || mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+			mDrawerLayout.closeDrawers();
+			return;
+		}
+		super.onBackPressed();
 	}
 
 	@Override

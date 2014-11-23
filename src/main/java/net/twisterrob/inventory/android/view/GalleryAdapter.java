@@ -7,6 +7,7 @@ import android.view.*;
 import android.view.View.*;
 import android.widget.*;
 
+import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;

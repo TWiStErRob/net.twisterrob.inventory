@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.android.adapter;
 
 import android.database.*;
 import android.os.Handler;

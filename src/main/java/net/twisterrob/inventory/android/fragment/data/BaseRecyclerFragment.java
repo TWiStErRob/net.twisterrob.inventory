@@ -9,10 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.view.View.OnClickListener;
 
+import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.RecyclerViewItemEvents;
 
 public abstract class BaseRecyclerFragment<T> extends BaseFragment<T> implements RecyclerViewItemEvents {
 	protected RecyclerView list;
