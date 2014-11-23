@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.twisterrob.android.view.SquareFrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
+	tools:background="@color/toolsBG"
 	>
 	<ImageView
 		android:id="@id/image"
@@ -14,6 +16,7 @@
 		android:focusable="false"
 		android:layerType="software"
 		android:scaleType="fitCenter"
+		tools:src="@drawable/category_unknown"
 		/>
 	<ImageView
 		android:id="@id/type"
@@ -25,6 +28,7 @@
 		android:layout_marginEnd="@dimen/margin"
 		android:layerType="software"
 		android:scaleType="fitCenter"
+		tools:src="@drawable/category_unknown"
 		/>
 	<TextView
 		android:id="@id/count"
@@ -42,6 +46,7 @@
 		android:textColor="#0f8"
 		android:textIsSelectable="false"
 		android:textSize="18sp"
+		tools:text="999"
 		/>
 	<net.twisterrob.android.view.WrappedTextView
 		android:id="@id/title"
@@ -61,5 +66,7 @@
 		android:textColor="#f80"
 		android:textIsSelectable="false"
 		android:textSize="18sp"
+		tools:shadowColor="#00000000"
+		tools:text="Gallery List Item, title will wrap in case it's too long"
 		/>
 </net.twisterrob.android.view.SquareFrameLayout>

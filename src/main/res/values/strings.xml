@@ -21,7 +21,6 @@
 	<string name="label_category_subs">%1$d Subcategories</string>
 	<string name="label_category_items_view">List %1$d Items</string>
 
-	<string name="item_list">Items</string>
 	<string name="item_all">All Items</string>
 	<string name="item_details">Item Details</string>
 	<string name="item_add">Add Item Inside</string>

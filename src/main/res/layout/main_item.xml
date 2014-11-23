@@ -5,6 +5,7 @@
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
+	tools:background="@color/toolsBG"
 	>
 	<TextView
 		android:id="@id/title"
@@ -12,8 +13,8 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:text="@string/empty"
-		tools:text="Main Item Title"
 		android:gravity="center_horizontal"
+		tools:text="Main Item Title"
 		/>
 	<ImageView
 		android:id="@id/icon"

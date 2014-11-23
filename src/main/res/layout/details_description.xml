@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<TextView
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@id/fragmentRoot"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@id/details"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
 	android:padding="@dimen/margin"
-	>
-	<TextView
-		android:id="@id/details"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		android:padding="@dimen/margin"
-		android:textIsSelectable="true"
-		/>
-</FrameLayout>
+	android:textIsSelectable="true"
+	tools:text="Property name: Property's name
+# of rooms: 99
+# of items in the rooms: 99
+# of items inside: 9999"
+	/>

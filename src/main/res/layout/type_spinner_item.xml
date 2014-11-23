@@ -5,6 +5,7 @@
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
+	tools:background="@color/toolsBG"
 	>
 	<ImageView
 		android:id="@id/image"
@@ -17,6 +18,7 @@
 		android:adjustViewBounds="true"
 		android:focusable="false"
 		android:scaleType="fitCenter"
+		tools:src="@drawable/category_unknown"
 		/>
 	<TextView
 		android:id="@id/title"
@@ -27,5 +29,6 @@
 		android:layout_toRightOf="@id/image"
 		android:focusable="false"
 		tools:ignore="SelectableText"
+		tools:text="Category Name"
 		/>
 </RelativeLayout>

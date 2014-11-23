@@ -10,7 +10,11 @@
 		<ignore path="**/res/values*/strings_PropertyTypes.xml" />
 		<ignore path="**/res/values*/strings_RoomTypes.xml" />
 	</issue>
+	<issue id="IconMissingDensityFolder">
+		<ignore path="src/main/res" />
+	</issue>
 	<issue id="UnusedAttribute">
 		<ignore path="**/res/layout*/*.xml" />
 	</issue>
+	<issue id="InvalidPackage" severity="ignore" />
 </lint>
