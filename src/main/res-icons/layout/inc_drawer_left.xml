@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/drawer_left_list"
+	android:layout_width="240dp"
+	android:layout_height="match_parent"
+	android:layout_gravity="start"
+	android:background="?attr/colorPrimary"
+	android:choiceMode="singleChoice"
+	android:divider="@android:color/transparent"
+	android:dividerHeight="0dp"
+	/>

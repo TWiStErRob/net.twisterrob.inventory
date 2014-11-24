@@ -1,9 +1,8 @@
-package net.twisterrob.inventory.android.activity.data;
+package net.twisterrob.inventory.android.fragment.data;
 
 import java.util.*;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.*;
 import android.os.*;
@@ -14,21 +13,31 @@ import android.widget.ImageView;
 import net.twisterrob.android.graphics.SunburstDrawable;
 import net.twisterrob.android.graphics.SunburstDrawable.BasePaintStrategy;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.fragment.BaseFragment;
+import net.twisterrob.inventory.android.fragment.data.SunburstFragment.Listener;
 
-public class SunBurstActivity extends BaseActivity {
+public class SunburstFragment extends BaseFragment<Listener> {
+	public interface Listener {
+		void rootChanged(Node root);
+	}
+
 	private ImageView diagram;
 	private SunburstDrawable<Node> sunburst;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_sunburst);
-		setIcon(R.raw.ic_sunburst);
+	public SunburstFragment() {
+		setDynamicResource(DYN_EventsClass, Listener.class);
+	}
 
+	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		sunburst = new SunburstDrawable<>(new NodeTreeWalker(), new Paints());
-		diagram = (ImageView)findViewById(R.id.diagram);
+		return inflater.inflate(R.layout.fragment_sunburst, container, false);
+	}
+
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		diagram = (ImageView)view.findViewById(R.id.diagram);
 		diagram.setOnTouchListener(new Toucher());
 		diagram.setImageResource(R.drawable.image_loading);
 
@@ -48,7 +57,7 @@ public class SunBurstActivity extends BaseActivity {
 		}.execute();
 	}
 
-	Stack<Node> stack = new Stack<>();
+	private final Stack<Node> stack = new Stack<>();
 
 	public void setRoot(Node root) {
 		if (root == null || sunburst.getRoot() == root) {
@@ -59,44 +68,45 @@ public class SunBurstActivity extends BaseActivity {
 		}
 		sunburst.setHighlight(null);
 		sunburst.setRoot(root);
-		getSupportActionBar().setSubtitle(root.label);
+		eventsListener.rootChanged(root);
 	}
 
-	public void resetRoot() {
+	public boolean hasPreviousRoot() {
+		return !stack.isEmpty();
+	}
+	public void setPreviousRoot() {
 		Node root = stack.pop();
 		sunburst.setHighlight(sunburst.getRoot());
 		sunburst.setRoot(root);
-		getSupportActionBar().setSubtitle(root.label);
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (!stack.isEmpty()) {
-			resetRoot();
-		} else {
-			super.onBackPressed();
-		}
+		eventsListener.rootChanged(root);
 	}
 
 	private class Toucher implements OnTouchListener {
-		@SuppressLint({"ClickableViewAccessibility"})
 		public boolean onTouch(View v, MotionEvent event) {
-			if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-				float[] points = unProject(event);
-				if (points != null && sunburst != null) {
-					Node selected = sunburst.at(points[0], points[1]);
-					setRoot(selected);
-					//sunburst.setHighlight(selected);
+			switch (event.getActionMasked()) {
+				case MotionEvent.ACTION_DOWN:
+				case MotionEvent.ACTION_MOVE:
+					sunburst.setHighlight(whichNode(event));
 					return true;
-				}
+				case MotionEvent.ACTION_UP:
+					setRoot(whichNode(event));
+					v.performClick();
+					return true;
 			}
 			return false;
 		}
 
+		private Node whichNode(MotionEvent event) {
+			float[] points = unProject(event);
+			if (points != null) {
+				return sunburst.at(points[0], points[1]);
+			}
+			return null;
+		}
 		private float[] unProject(MotionEvent event) {
 			Matrix inverse = new Matrix();
 			if (diagram.getImageMatrix().invert(inverse)) {
-				float[] points = new float[] {event.getX(), event.getY()};
+				float[] points = {event.getX(), event.getY()};
 				inverse.mapPoints(points);
 				return points;
 			}
@@ -187,7 +197,7 @@ public class SunBurstActivity extends BaseActivity {
 		}
 	}
 
-	private static class Node {
+	public static class Node {
 		private final Type type;
 		private final long id;
 		private final String label;
@@ -206,6 +216,10 @@ public class SunBurstActivity extends BaseActivity {
 			Property,
 			Room,
 			Item
+		}
+
+		public String getLabel() {
+			return label;
 		}
 
 		@Override
@@ -253,8 +267,13 @@ public class SunBurstActivity extends BaseActivity {
 		}
 	}
 
-	public static Intent showAll() {
-		Intent intent = new Intent(App.getAppContext(), SunBurstActivity.class);
-		return intent;
+	public static SunburstFragment newInstance() {
+		SunburstFragment fragment = new SunburstFragment();
+
+		Bundle args = new Bundle();
+		// TODO parametrize
+
+		fragment.setArguments(args);
+		return fragment;
 	}
 }

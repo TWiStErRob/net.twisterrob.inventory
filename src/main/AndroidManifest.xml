@@ -69,7 +69,7 @@
 			android:name=".activity.ImportActivity"
 			android:label="Import" />
 		<activity
-			android:name=".activity.data.SunBurstActivity"
+			android:name=".activity.data.SunburstActivity"
 			android:label="@string/sunburst_title">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
