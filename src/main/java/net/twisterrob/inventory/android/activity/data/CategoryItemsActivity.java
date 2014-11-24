@@ -20,7 +20,7 @@ public class CategoryItemsActivity extends BaseDetailActivity<CategoryViewFragme
 		if (categoryID == Category.INTERNAL) {
 			detailsFragment = null;
 			setActionBarSubtitle(null);
-			setActionBarTitle(getText(R.string.item_all));
+			setActionBarTitle(getText(R.string.item_list));
 			hideDetails();
 		} else {
 			detailsFragment = CategoryViewFragment.newInstance(categoryID);
@@ -52,6 +52,9 @@ public class CategoryItemsActivity extends BaseDetailActivity<CategoryViewFragme
 		return getIntent().getBooleanExtra(Extras.INCLUDE_SUBS, false);
 	}
 
+	public static Intent listAll() {
+		return show(Category.INTERNAL);
+	}
 	public static Intent show(long categoryID) {
 		Intent intent = new Intent(App.getAppContext(), CategoryItemsActivity.class);
 		intent.putExtra(Extras.CATEGORY_ID, categoryID);

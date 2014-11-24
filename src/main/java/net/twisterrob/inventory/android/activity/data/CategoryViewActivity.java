@@ -41,6 +41,9 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryViewFragmen
 		return getIntent().getLongExtra(Extras.PARENT_ID, Category.ID_ADD);
 	}
 
+	public static Intent listAll() {
+		return show(Category.INTERNAL);
+	}
 	public static Intent show(long categoryID) {
 		Intent intent = new Intent(App.getAppContext(), CategoryViewActivity.class);
 		intent.putExtra(Extras.PARENT_ID, categoryID);

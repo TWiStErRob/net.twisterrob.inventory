@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">!Magic Home Inventory</string>
+	<string name="app_name">Magic Home Inventory</string>
 	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
+	<string name="home_title">Inventory Home</string>
 
 	<string name="sunburst_title">Sunburst Diagram</string>
 	<string name="action_picture_take">Take Picture</string>
@@ -21,7 +22,7 @@
 	<string name="label_category_subs">%1$d Subcategories</string>
 	<string name="label_category_items_view">List %1$d Items</string>
 
-	<string name="item_all">All Items</string>
+	<string name="item_list">Items</string>
 	<string name="item_details">Item Details</string>
 	<string name="item_add">Add Item Inside</string>
 	<string name="item_new">New Item</string>
@@ -39,8 +40,7 @@
 	<string name="property_share">Share Property</string>
 	<string name="property_name_hint">Property Title</string>
 
-	<string name="room_viewAll">List All Rooms</string>
-	<string name="room_all">All Rooms</string>
+	<string name="room_list">Rooms</string>
 	<string name="room_details">Room Details</string>
 	<string name="room_add">Add Room</string>
 	<string name="room_new">New Room</string>
@@ -48,6 +48,7 @@
 	<string name="room_delete">Delete Room</string>
 	<string name="room_share">Share Room</string>
 	<string name="room_name_hint">Room Title</string>
+	<string name="room_viewAll">List All Rooms</string>
 
 	<string name="backup_title">Backup</string>
 	<string name="backup_import_drive">Restore data from Google Drive</string>

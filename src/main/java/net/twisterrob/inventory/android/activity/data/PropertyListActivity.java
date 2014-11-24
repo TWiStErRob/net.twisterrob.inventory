@@ -31,7 +31,7 @@ public class PropertyListActivity extends BaseDetailActivity<NoFragment, Propert
 		startActivity(PropertyEditActivity.edit(id));
 	}
 
-	public static Intent list() {
+	public static Intent listAll() {
 		Intent intent = new Intent(App.getAppContext(), PropertyListActivity.class);
 		return intent;
 	}

@@ -25,6 +25,7 @@ public class SunBurstActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sunburst);
+		setIcon(R.raw.ic_sunburst);
 
 		sunburst = new SunburstDrawable<>(new NodeTreeWalker(), new Paints());
 		diagram = (ImageView)findViewById(R.id.diagram);
@@ -252,7 +253,7 @@ public class SunBurstActivity extends BaseActivity {
 		}
 	}
 
-	public static Intent show() {
+	public static Intent showAll() {
 		Intent intent = new Intent(App.getAppContext(), SunBurstActivity.class);
 		return intent;
 	}

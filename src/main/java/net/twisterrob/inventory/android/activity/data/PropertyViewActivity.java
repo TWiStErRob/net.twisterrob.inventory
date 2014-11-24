@@ -18,7 +18,7 @@ public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragmen
 		PropertyViewFragment detailsFragment;
 		if (propertyID == Property.ID_ADD) {
 			setActionBarSubtitle(null);
-			setActionBarTitle(getText(R.string.room_all));
+			setActionBarTitle(getText(R.string.room_list));
 			setIcon(R.raw.room_unknown);
 			hideDetails();
 			detailsFragment = null;
@@ -53,6 +53,9 @@ public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragmen
 		return getIntent().getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
+	public static Intent listAll() {
+		return show(Property.ID_ADD);
+	}
 	public static Intent show(long propertyID) {
 		Intent intent = new Intent(App.getAppContext(), PropertyViewActivity.class);
 		intent.putExtra(Extras.PROPERTY_ID, propertyID);

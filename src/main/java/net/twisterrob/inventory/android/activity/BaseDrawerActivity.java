@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.activity;
 
 import java.util.*;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -13,10 +14,7 @@ import android.widget.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
-import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.view.*;
-
-import static net.twisterrob.inventory.android.content.contract.Category.*;
 
 public class BaseDrawerActivity extends BaseActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -29,15 +27,19 @@ public class BaseDrawerActivity extends BaseActivity {
 	protected Collection<IconedItem> createActions() {
 		Collection<IconedItem> acts = new ArrayList<>();
 
-		// TODO add main activity link
-		acts.add(new SVGIconItem(R.string.property_list, R.raw.property_unknown, PropertyListActivity.list()));
-		acts.add(new SVGIconItem(R.string.category_list, R.raw.category_unknown, CategoryViewActivity.show(INTERNAL)));
-		acts.add(new SVGIconItem(R.string.room_all, R.raw.room_unknown, PropertyViewActivity.show(Property.ID_ADD)));
-		acts.add(new SVGIconItem(R.string.item_all, R.raw.category_storage_box, CategoryItemsActivity.show(INTERNAL)));
-		acts.add(new SVGIconItem(R.string.sunburst_title, R.raw.category_disc, SunBurstActivity.show()));
+		acts.add(new SVGIconItem(R.string.home_title, R.raw.property_home, MainActivity.home()));
+		acts.add(new SVGIconItem(R.string.sunburst_title, R.raw.ic_sunburst, SunBurstActivity.showAll()));
+		acts.add(new SVGIconItem(R.string.property_list, R.raw.property_unknown, PropertyListActivity.listAll()));
+		acts.add(new SVGIconItem(R.string.category_list, R.raw.category_unknown, CategoryViewActivity.listAll()));
+		acts.add(new SVGIconItem(R.string.room_list, R.raw.room_unknown, PropertyViewActivity.listAll()));
+		acts.add(new SVGIconItem(R.string.item_list, R.raw.category_box, CategoryItemsActivity.listAll()));
 
 		if (BuildConfig.DEBUG) {
-			acts.add(new SVGIconItem("Developer Tools", R.raw.category_electric, DeveloperActivity.show()));
+			acts.add(new SVGIconItem(Constants.INVALID_RESOURCE_ID, R.raw.category_chip, DeveloperActivity.show()) {
+				@Override public CharSequence getTitle(Context context) {
+					return "Developer Tools";
+				}
+			});
 		}
 		return acts;
 	}
@@ -45,8 +47,6 @@ public class BaseDrawerActivity extends BaseActivity {
 	@Override public void onSupportContentChanged() {
 		super.onSupportContentChanged();
 
-		final ListView drawerLeft = (ListView)findViewById(R.id.drawer_left_list);
-		drawerLeft.setAdapter(new IconedItemAdapter(this, R.layout.drawer_left_item, createActions()));
 		mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				Constants.INVALID_RESOURCE_ID, Constants.INVALID_RESOURCE_ID) {
@@ -54,17 +54,20 @@ public class BaseDrawerActivity extends BaseActivity {
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
 				getSupportActionBar().setTitle(getTitle());
-				invalidateOptionsMenu();
+				supportInvalidateOptionsMenu();
 			}
 
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
 				getSupportActionBar().setTitle(R.string.app_name);
-				invalidateOptionsMenu();
+				supportInvalidateOptionsMenu();
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		final ListView drawerLeft = (ListView)findViewById(R.id.drawer_left_list);
+		drawerLeft.setAdapter(new IconedItemAdapter(this, R.layout.drawer_left_item, createActions()));
 		drawerLeft.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -81,22 +84,24 @@ public class BaseDrawerActivity extends BaseActivity {
 		mDrawerToggle.syncState(); // Sync the toggle state after onRestoreInstanceState has occurred.
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
+	@Override public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	protected boolean isDrawerShown() {
+		return mDrawerLayout.isDrawerOpen(GravityCompat.START) || mDrawerLayout.isDrawerOpen(GravityCompat.END);
+	}
+
 	@Override public void onBackPressed() {
-		if (mDrawerLayout.isDrawerOpen(GravityCompat.START) || mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+		if (isDrawerShown()) {
 			mDrawerLayout.closeDrawers();
 			return;
 		}
 		super.onBackPressed();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}

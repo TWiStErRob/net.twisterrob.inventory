@@ -2,13 +2,14 @@ package net.twisterrob.inventory.android.activity;
 
 import java.io.File;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.fragment.BackupFragment;
 import net.twisterrob.inventory.android.fragment.BackupPickerFragment.BackupPickerListener;
 import net.twisterrob.inventory.android.view.*;
@@ -64,5 +65,10 @@ public class MainActivity extends BaseDrawerActivity implements BackupPickerList
 	public void filePicked(File file) {
 		BackupFragment backup = getFragment(BackupFragment.class.getName());
 		backup.filePicked(file);
+	}
+
+	public static Intent home() {
+		Intent intent = new Intent(App.getAppContext(), MainActivity.class);
+		return intent;
 	}
 }
