@@ -12,6 +12,8 @@ import net.twisterrob.inventory.android.fragment.data.RoomViewFragment.RoomEvent
 
 public class RoomViewActivity extends BaseDetailActivity<RoomViewFragment, ItemListFragment>
 		implements RoomEvents, ItemsEvents {
+	private RoomDTO current;
+
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
 		setIcon(R.raw.room_unknown);
@@ -20,6 +22,7 @@ public class RoomViewActivity extends BaseDetailActivity<RoomViewFragment, ItemL
 	}
 
 	public void roomLoaded(RoomDTO room) {
+		current = room;
 		if (getChildren() == null) {
 			updateChildrenFragment(ItemListFragment.newInstance(room.rootItemID)).commitAllowingStateLoss();
 		}
@@ -52,6 +55,12 @@ public class RoomViewActivity extends BaseDetailActivity<RoomViewFragment, ItemL
 
 	private long getExtraRoomID() {
 		return getIntent().getLongExtra(Extras.ROOM_ID, Item.ID_ADD);
+	}
+
+	@Override public Intent getSupportParentActivityIntent() {
+		Intent intent = super.getSupportParentActivityIntent();
+		intent.putExtra(Extras.PROPERTY_ID, current != null? current.propertyID : Property.ID_ADD);
+		return intent;
 	}
 
 	public static Intent show(long roomID) {

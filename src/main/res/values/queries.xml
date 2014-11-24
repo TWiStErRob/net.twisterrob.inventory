@@ -124,8 +124,12 @@
 			c.image as typeImage,
 			ip.categoryID as category,
 			ip.categoryName as categoryName,
+			ip.propertyID as propertyID,
 			ip.propertyName as propertyName,
+			ip.rootItemID as roomItemID,
+			ip.roomID as roomID,
 			ip.roomName as roomName,
+			i.parent as parent,
 			ip.reversePath as parentName,
 			(select count(1) from Item where parent = i._id) as countDirectItems,
 			(select count(distinct item) from Item_Path_Node where node = i._id and item <> node) as countAllItems

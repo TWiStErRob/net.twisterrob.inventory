@@ -12,7 +12,10 @@ public class ItemDTO extends ImagedDTO {
 	public String parentName;
 	public long category;
 	public String categoryName;
+	public long property;
 	public String propertyName;
+	public long room;
+	public long roomRoot;
 	public String roomName;
 
 	public static ItemDTO fromCursor(Cursor cursor) {
@@ -28,7 +31,10 @@ public class ItemDTO extends ImagedDTO {
 		parentName = DatabaseTools.getOptionalString(cursor, Item.PARENT_NAME);
 		category = DatabaseTools.getOptionalLong(cursor, Item.CATEGORY, Category.ID_ADD);
 		categoryName = DatabaseTools.getOptionalString(cursor, Item.CATEGORY_NAME);
+		property = DatabaseTools.getOptionalLong(cursor, Item.PROPERTY_ID, Property.ID_ADD);
 		propertyName = DatabaseTools.getOptionalString(cursor, Item.PROPERTY_NAME);
+		room = DatabaseTools.getOptionalLong(cursor, Item.ROOM_ID, Room.ID_ADD);
+		roomRoot = DatabaseTools.getOptionalLong(cursor, Item.ROOM_ROOT, Room.ID_ADD);
 		roomName = DatabaseTools.getOptionalString(cursor, Item.ROOM_NAME);
 
 		return this;

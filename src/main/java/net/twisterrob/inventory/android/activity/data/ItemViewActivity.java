@@ -13,6 +13,8 @@ import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvent
 
 public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemListFragment>
 		implements ItemEvents, ItemsEvents {
+	private ItemDTO current;
+
 	@Override
 	protected void onCreateFragments(Bundle savedInstanceState) {
 		setIcon(R.raw.category_unknown);
@@ -21,7 +23,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemL
 	}
 
 	public void itemLoaded(ItemDTO item) {
-		// ignore
+		current = item;
 	}
 
 	public void itemDeleted(ItemDTO item) {
@@ -54,6 +56,17 @@ public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemL
 		long uri = InventoryContract.Item.getID(intent.getData());
 		long extra = intent.getLongExtra(Extras.PARENT_ID, Item.ID_ADD);
 		return resolve(uri, extra, Item.ID_ADD);
+	}
+
+	@Override public Intent getSupportParentActivityIntent() {
+		if (current == null) {
+			return null;
+		}
+		if (current.parentID == current.roomRoot) {
+			return RoomViewActivity.show(current.room);
+		} else {
+			return ItemViewActivity.show(current.parentID);
+		}
 	}
 
 	/** Sanity checks and uri takes precedence over extra. */

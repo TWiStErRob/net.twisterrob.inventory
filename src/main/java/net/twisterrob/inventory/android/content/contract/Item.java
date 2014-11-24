@@ -9,9 +9,10 @@ public interface Item extends CommonColumns {
 	String PARENT_ID = "parent";
 	String PARENT_NAME = "parentName";
 
-	String ROOM_ROOT = "ROOT";
-
+	String PROPERTY_ID = "propertyID";
 	String PROPERTY_NAME = "propertyName";
 
+	String ROOM_ID = "roomID";
 	String ROOM_NAME = "roomName";
+	String ROOM_ROOT = "roomItemID";
 }

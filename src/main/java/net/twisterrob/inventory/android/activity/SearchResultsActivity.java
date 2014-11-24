@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.Menu;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -41,11 +42,19 @@ public class SearchResultsActivity extends BaseDetailActivity<NoFragment, ItemLi
 			updateChildrenFragment(ItemListFragment.newSearchInstance(query)).commit();
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			Uri uri = intent.getData();
+			String resolvedAuthority = uri.getAuthority().replace("${applicationId}", BuildConfig.APPLICATION_ID);
 			uri = uri.buildUpon()
-			         .authority(uri.getAuthority().replace("${applicationId}", BuildConfig.APPLICATION_ID))
+			         .authority(resolvedAuthority)
 			         .build();
 			LOG.debug("Search '{}' redirecting VIEW for {}", query, uri);
-			startActivity(new Intent(Intent.ACTION_VIEW, uri));
+			Intent redirect = new Intent(Intent.ACTION_VIEW, uri);
+			if (Constants.DISABLE) {
+				TaskStackBuilder.create(getApplicationContext())
+				                .addNextIntentWithParentStack(redirect)
+				                .startActivities();
+			} else {
+				startActivity(redirect);
+			}
 			finish();
 		}
 	}

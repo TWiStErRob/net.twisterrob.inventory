@@ -10,6 +10,7 @@ import static android.util.TypedValue.*;
 
 public interface Constants {
 	@AnyRes int INVALID_RESOURCE_ID = 0;
+	boolean DISABLE = Boolean.parseBoolean("false");
 
 	class Paths {
 		public static final String DEFAULT_FOLDER_NAME = "Magic Home Inventory";
