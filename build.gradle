@@ -19,7 +19,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'net.twisterrob.android-app'
 
 repositories {
-	mavenCentral()
+	jcenter()
 	maven { url 'http://localhost/maven' }
 }
 

@@ -12,7 +12,7 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setIcon(getResources().getDrawable(R.drawable.ic_launcher));
 
-		setContentView(R.layout.activity_drawer);
+		setContentView(R.layout.generic_activity_drawer);
 		getSupportFragmentManager().beginTransaction()
 		                           .add(R.id.activityRoot, MainFragment.newInstance())
 		                           .commit()

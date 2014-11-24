@@ -23,7 +23,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.details, container, false);
+		View root = inflater.inflate(R.layout.fragment_details, container, false);
 		image = (ImageView)root.findViewById(R.id.image);
 		pager = (ViewPager)root.findViewById(R.id.pager);
 		return root;
@@ -71,11 +71,11 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			LayoutInflater inflater = (LayoutInflater)container.getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 			View view;
 			if (position == 0) {
-				view = inflater.inflate(R.layout.details_image, container, false);
+				view = inflater.inflate(R.layout.inc_details_image, container, false);
 				ImageView image = (ImageView)view.findViewById(R.id.image);
 				loadInto(image);
 			} else {
-				view = inflater.inflate(R.layout.details_description, container, false);
+				view = inflater.inflate(R.layout.inc_details_description, container, false);
 				TextView details = (TextView)view.findViewById(R.id.details);
 				details.setText(getDetailsString(entity));
 			}

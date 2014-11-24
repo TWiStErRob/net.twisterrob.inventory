@@ -28,7 +28,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.item_edit, container, false);
+		return inflater.inflate(R.layout.fragment_item_edit, container, false);
 	}
 
 	@Override

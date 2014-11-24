@@ -15,7 +15,7 @@ public class SunburstActivity extends BaseActivity implements SunburstFragment.L
 		super.onCreate(savedInstanceState);
 		setIcon(R.raw.ic_sunburst);
 
-		setContentView(R.layout.activity_drawer);
+		setContentView(R.layout.generic_activity_drawer);
 		getSupportFragmentManager().beginTransaction()
 		                           .add(R.id.activityRoot, fragment = SunburstFragment.newInstance())
 		                           .commit()

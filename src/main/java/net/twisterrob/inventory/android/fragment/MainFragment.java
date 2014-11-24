@@ -4,17 +4,15 @@ import java.io.File;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.*;
-import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.*;
 import net.twisterrob.inventory.android.fragment.BackupPickerFragment.BackupPickerListener;
-import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.IconedItem.IntentLauncher;
+import net.twisterrob.inventory.android.view.IconedItemAdapter;
 
 public class MainFragment extends BaseFragment<Void> implements BackupPickerListener {
 	private static final String BACKUP_FRAGMENT = BackupFragment.class.getSimpleName();
@@ -32,7 +30,7 @@ public class MainFragment extends BaseFragment<Void> implements BackupPickerList
 		;
 
 		GridView list = (GridView)view.findViewById(android.R.id.list);
-		list.setAdapter(new IconedItemAdapter(getContext(), R.layout.main_item, BaseActivity.createActions()));
+		list.setAdapter(new IconedItemAdapter(getContext(), R.layout.item_main, BaseActivity.createActions()));
 		list.setOnItemClickListener(new IntentLauncher(getActivity()));
 	}
 

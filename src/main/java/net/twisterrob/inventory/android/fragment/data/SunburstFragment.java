@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import java.util.*;
 
-import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.graphics.*;
 import android.os.*;

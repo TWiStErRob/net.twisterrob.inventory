@@ -19,7 +19,7 @@ import net.twisterrob.inventory.android.view.TypeAdapter.ViewHolder;
 
 public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	public TypeAdapter(Context context) {
-		super(context, R.layout.type_spinner_item, null, false);
+		super(context, R.layout.item_type_spinner, null, false);
 	}
 
 	class ViewHolder {

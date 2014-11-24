@@ -52,7 +52,7 @@ public abstract class BaseRecyclerFragment<T> extends BaseFragment<T> implements
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.fragment_list, container, false);
+		View root = inflater.inflate(R.layout.generic_list, container, false);
 
 		if (canCreateNew()) {
 			View fab = root.findViewById(R.id.fab);

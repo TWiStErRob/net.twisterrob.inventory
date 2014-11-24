@@ -60,7 +60,7 @@ public class CategoryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 
 	@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-		View view = inflater.inflate(R.layout.fragment_list_item_category, parent, false);
+		View view = inflater.inflate(R.layout.item_category, parent, false);
 		return new ViewHolder(view);
 	}
 
