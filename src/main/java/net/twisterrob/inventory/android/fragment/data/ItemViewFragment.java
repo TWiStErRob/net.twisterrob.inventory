@@ -48,14 +48,22 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 
 	@Override
 	protected CharSequence getDetailsString(ItemDTO entity) {
-		return new DescriptionBuilder() //
-				.append("Item name", entity.name) //
-				.append("Category", AndroidTools.getText(getContext(), entity.categoryName)) //
-				.append("Inside", entity.parentName != null? entity.parentName : "the room") //
-				.append("Room", entity.roomName) //
-				.append("Property", entity.propertyName) //
-				.append("# of items in this item", entity.numDirectItems) //
-				.append("# of items inside", entity.numAllItems) //
+		return new DescriptionBuilder()
+				.append("Item ID", entity.id, BuildConfig.DEBUG)
+				.append("Item Name", entity.name)
+				.append("Parent ID", entity.parentID, BuildConfig.DEBUG)
+				.append("Category ID", entity.category, BuildConfig.DEBUG)
+				.append("Category Name", entity.categoryName, BuildConfig.DEBUG)
+				.append("Category", AndroidTools.getText(getContext(), entity.categoryName))
+				.append("Inside", entity.parentName != null? entity.parentName : "the room")
+				.append("Room ID", entity.room, BuildConfig.DEBUG)
+				.append("Room", entity.roomName)
+				.append("Room Root", entity.roomRoot)
+				.append("Property ID", entity.property, BuildConfig.DEBUG)
+				.append("Property", entity.propertyName)
+				.append("# of items in this item", entity.numDirectItems)
+				.append("# of items inside", entity.numAllItems)
+				.append("image", entity.image, BuildConfig.DEBUG)
 				.build();
 	}
 

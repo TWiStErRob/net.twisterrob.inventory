@@ -9,13 +9,20 @@ public class TextTools {
 		SpannableStringBuilder text = new SpannableStringBuilder();
 
 		public DescriptionBuilder append(CharSequence label, Object object) {
-			if (object == null) {
+			return append(label, object, true);
+		}
+		public DescriptionBuilder append(CharSequence label, Object object, boolean condition) {
+			if (!condition || object == null) {
 				return this;
 			}
 			return append(label, String.valueOf(object));
 		}
+
 		public DescriptionBuilder append(CharSequence label, CharSequence contents) {
-			if (contents == null) {
+			return append(label, contents, true);
+		}
+		public DescriptionBuilder append(CharSequence label, CharSequence contents, boolean condition) {
+			if (!condition || contents == null) {
 				return this;
 			}
 			if (text.length() > 0) {
@@ -26,6 +33,7 @@ public class TextTools {
 			text.append(contents);
 			return this;
 		}
+
 		public DescriptionBuilder newLine() {
 			text.append("\n");
 			return this;

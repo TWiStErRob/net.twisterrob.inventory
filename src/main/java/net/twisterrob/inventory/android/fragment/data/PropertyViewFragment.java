@@ -47,11 +47,15 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 
 	@Override
 	protected CharSequence getDetailsString(PropertyDTO entity) {
-		return new DescriptionBuilder() //
-				.append("Property name", entity.name) //
-				.append("# of rooms", entity.numDirectChildren) //
-				.append("# of items in the rooms", entity.numDirectItems) //
-				.append("# of items inside", entity.numAllItems) //
+		return new DescriptionBuilder()
+				.append("Property ID", entity.id, BuildConfig.DEBUG)
+				.append("Property Name", entity.name)
+				.append("Property Type", entity.type, BuildConfig.DEBUG)
+				.append("# of rooms", entity.numDirectChildren)
+				.append("# of rooms", entity.numAllChildren, BuildConfig.DEBUG)
+				.append("# of items in the rooms", entity.numDirectItems)
+				.append("# of items inside", entity.numAllItems)
+				.append("image", entity.image, BuildConfig.DEBUG)
 				.build();
 	}
 
