@@ -13,7 +13,7 @@ import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
-import net.twisterrob.inventory.android.view.RecyclerViewItemEvents;
+import net.twisterrob.inventory.android.view.*;
 
 public abstract class BaseRecyclerFragment<T> extends BaseFragment<T> implements RecyclerViewItemEvents {
 	protected RecyclerView list;
@@ -66,13 +66,12 @@ public abstract class BaseRecyclerFragment<T> extends BaseFragment<T> implements
 		progress = (SwipeRefreshLayout)root.findViewById(android.R.id.progress);
 
 		list = (RecyclerView)root.findViewById(android.R.id.list);
-		setupList();
-		adapter = (CursorRecyclerAdapter)list.getAdapter();
-
+		adapter = setupList();
+		list.setAdapter(new HeaderViewRecyclerAdapter(adapter));
 		return root;
 	}
 
-	protected abstract void setupList();
+	protected abstract CursorRecyclerAdapter setupList();
 
 	protected abstract boolean canCreateNew();
 	protected abstract void onCreateNew();

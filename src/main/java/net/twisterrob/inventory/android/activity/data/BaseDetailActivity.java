@@ -3,11 +3,17 @@ package net.twisterrob.inventory.android.activity.data;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
+import android.support.v7.widget.RecyclerView;
+import android.view.*;
+import android.view.ViewGroup.LayoutParams;
 
+import static android.view.ViewGroup.LayoutParams.*;
+
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
+import net.twisterrob.inventory.android.view.HeaderViewRecyclerAdapter;
 
 public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends BaseFragment<?>>
 		extends BaseActivity {
@@ -38,15 +44,16 @@ public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends Ba
 
 	@Override protected void onResumeFragments() {
 		super.onResumeFragments();
-		// FIXME scroll details with list
-		/*ListView list = (ListView)children.getView().findViewById(android.R.id.list);
+		RecyclerView list = (RecyclerView)children.getView().findViewById(android.R.id.list);
 		View details = findViewById(R.id.details);
-		ViewGroup parent = (ViewGroup)details.getParent();
-		if (parent != list && parent != null) {
-			parent.removeView(details);
-			details.setLayoutParams(new LayoutParams(MATCH_PARENT, AndroidTools.dipInt(this, 200)));
-			list.addHeaderView(details);
-		}*/
+		if (details != null) {
+			ViewGroup parent = (ViewGroup)details.getParent();
+			if (parent != list && parent != null) {
+				parent.removeView(details);
+				details.setLayoutParams(new LayoutParams(MATCH_PARENT, AndroidTools.dipInt(this, 200)));
+				((HeaderViewRecyclerAdapter)list.getAdapter()).addHeaderView(details);
+			}
+		}
 	}
 	protected String checkExtras() {
 		return null;

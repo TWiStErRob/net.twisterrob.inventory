@@ -1,11 +1,10 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import org.slf4j.*;
-
 import android.os.Bundle;
 import android.support.v7.widget.*;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 
+import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -14,8 +13,6 @@ import net.twisterrob.inventory.android.view.CategoryAdapter;
 import net.twisterrob.inventory.android.view.CategoryAdapter.CategoryItemEvents;
 
 public class CategoryListFragment extends BaseRecyclerFragment<CategoriesEvents> implements CategoryItemEvents {
-	private static final Logger LOG = LoggerFactory.getLogger(CategoryListFragment.class);
-
 	public interface CategoriesEvents {
 		void categorySelected(long categoryID);
 		void categoryActioned(long categoryID);
@@ -25,9 +22,9 @@ public class CategoryListFragment extends BaseRecyclerFragment<CategoriesEvents>
 		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
 	}
 
-	@Override protected void setupList() {
+	@Override protected CursorRecyclerAdapter setupList() {
 		list.setLayoutManager(new LinearLayoutManager(getContext()));
-		list.setAdapter(new CategoryAdapter(null, this));
+		return new CategoryAdapter(null, this);
 	}
 
 	@Override
