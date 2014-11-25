@@ -29,11 +29,13 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 
 	@Override
 	protected void onRefresh() {
+		super.onRefresh();
 		getLoaderManager().getLoader(SingleItem.ordinal()).forceLoad();
 	}
 
 	@Override
 	protected void onStartLoading() {
+		super.onStartLoading();
 		Bundle args = new Bundle();
 		args.putLong(Extras.ITEM_ID, getArgItemID());
 		getLoaderManager().initLoader(SingleItem.ordinal(), args, new SingleRowLoaded());

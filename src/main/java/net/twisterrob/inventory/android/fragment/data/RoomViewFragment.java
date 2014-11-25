@@ -28,11 +28,13 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 
 	@Override
 	protected void onRefresh() {
+		super.onRefresh();
 		getLoaderManager().getLoader(SingleRoom.ordinal()).forceLoad();
 	}
 
 	@Override
 	protected void onStartLoading() {
+		super.onStartLoading();
 		Bundle args = new Bundle();
 		args.putLong(Extras.ROOM_ID, getArgRoomID());
 		getLoaderManager().initLoader(SingleRoom.ordinal(), args, new SingleRowLoaded());

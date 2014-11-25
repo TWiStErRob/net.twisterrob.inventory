@@ -66,6 +66,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 
 	@Override
 	protected void onStartLoading() {
+		super.onStartLoading();
 		Bundle args = new Bundle();
 		args.putLong(Extras.PROPERTY_ID, getArgPropertyID());
 		getLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, createListLoaderCallbacks());
@@ -73,6 +74,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 
 	@Override
 	protected void onRefresh() {
+		super.onRefresh();
 		getLoaderManager().getLoader(Loaders.Rooms.ordinal()).forceLoad();
 	}
 

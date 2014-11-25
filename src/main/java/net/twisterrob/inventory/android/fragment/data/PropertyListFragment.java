@@ -58,11 +58,13 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 
 	@Override
 	protected void onStartLoading() {
+		super.onStartLoading();
 		getLoaderManager().initLoader(Loaders.Properties.ordinal(), null, createListLoaderCallbacks());
 	}
 
 	@Override
 	protected void onRefresh() {
+		super.onRefresh();
 		getLoaderManager().getLoader(Loaders.Properties.ordinal()).forceLoad();
 	}
 

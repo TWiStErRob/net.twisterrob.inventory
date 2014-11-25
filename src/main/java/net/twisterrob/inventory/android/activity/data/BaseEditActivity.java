@@ -12,12 +12,12 @@ public abstract class BaseEditActivity<E extends Fragment> extends BaseActivity 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.activity_edit);
+		super.setContentView(R.layout.generic_activity_nodrawer);
 
 		editor = onCreateFragment(savedInstanceState);
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.editor, editor);
+		ft.replace(R.id.activityRoot, editor);
 		ft.commit();
 	}
 

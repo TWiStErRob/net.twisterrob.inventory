@@ -28,11 +28,13 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 
 	@Override
 	protected void onRefresh() {
+		super.onRefresh();
 		getLoaderManager().getLoader(SingleProperty.ordinal()).forceLoad();
 	}
 
 	@Override
 	protected void onStartLoading() {
+		super.onStartLoading();
 		Bundle args = new Bundle();
 		args.putLong(Extras.PROPERTY_ID, getArgPropertyID());
 		getLoaderManager().initLoader(SingleProperty.ordinal(), args, new SingleRowLoaded());

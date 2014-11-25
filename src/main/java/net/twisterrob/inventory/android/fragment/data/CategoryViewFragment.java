@@ -28,11 +28,13 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 
 	@Override
 	protected void onRefresh() {
+		super.onRefresh();
 		getLoaderManager().getLoader(SingleCategory.ordinal()).forceLoad();
 	}
 
 	@Override
 	protected void onStartLoading() {
+		super.onStartLoading();
 		Bundle args = new Bundle();
 		args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
 		getLoaderManager().initLoader(SingleCategory.ordinal(), args, new SingleRowLoaded());

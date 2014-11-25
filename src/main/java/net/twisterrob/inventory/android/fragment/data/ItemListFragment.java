@@ -45,11 +45,13 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 
 	@Override
 	protected void onStartLoading() {
+		super.onStartLoading();
 		CharSequence query = getArgQuery();
 		if (query == null) {
 			Bundle args = new Bundle();
 			args.putLong(Extras.PARENT_ID, getArgParentItemID());
 			args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
+			args.putLong(Extras.ROOM_ID, getArgRoomID());
 			args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
 			getLoaderManager().initLoader(Loaders.Items.ordinal(), args, createListLoaderCallbacks());
 		} else {
@@ -65,6 +67,9 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	private long getArgCategoryID() {
 		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 	}
+	private long getArgRoomID() {
+		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+	}
 	private boolean getArgIncludeSubs() {
 		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
@@ -73,6 +78,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	}
 
 	@Override protected void onRefresh() {
+		super.onRefresh();
 		if (getArgQuery() == null) {
 			getLoaderManager().getLoader(Loaders.Items.ordinal()).forceLoad();
 		} else {
@@ -84,6 +90,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		return getArgParentItemID() != Item.ID_ADD;
 	}
 
+	// TODO allow adding to rooms
 	@Override protected void onCreateNew() {
 		eventsListener.newItem(getArgParentItemID());
 	}
@@ -95,6 +102,16 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
 		eventsListener.itemActioned(holder.getItemId());
 		return true;
+	}
+
+	public static ItemListFragment newRoomInstance(long roomID) {
+		ItemListFragment fragment = new ItemListFragment();
+
+		Bundle args = new Bundle();
+		args.putLong(Extras.ROOM_ID, roomID);
+
+		fragment.setArguments(args);
+		return fragment;
 	}
 
 	public static ItemListFragment newInstance(long parentItemID) {
