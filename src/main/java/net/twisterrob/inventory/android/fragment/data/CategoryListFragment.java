@@ -8,8 +8,9 @@ import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.CategoryListFragment.CategoriesEvents;
-import net.twisterrob.inventory.android.view.CategoryAdapter;
+import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.CategoryAdapter.CategoryItemEvents;
 
 public class CategoryListFragment extends BaseRecyclerFragment<CategoriesEvents> implements CategoryItemEvents {
@@ -18,13 +19,25 @@ public class CategoryListFragment extends BaseRecyclerFragment<CategoriesEvents>
 		void categoryActioned(long categoryID);
 	}
 
+	private HeaderManager header = null;
+
 	public CategoryListFragment() {
 		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
 	}
 
+	public void setHeader(BaseFragment headerFragment) {
+		this.header = headerFragment != null? new HeaderManager(this, headerFragment) : null;
+	}
+
 	@Override protected CursorRecyclerAdapter setupList() {
 		list.setLayoutManager(new LinearLayoutManager(getContext()));
-		return new CategoryAdapter(null, this);
+		CategoryAdapter cursorAdapter = new CategoryAdapter(null, this);
+		RecyclerView.Adapter adapter = cursorAdapter;
+		if (header != null) {
+			adapter = header.wrap(adapter);
+		}
+		list.setAdapter(adapter);
+		return cursorAdapter;
 	}
 
 	@Override
@@ -40,6 +53,9 @@ public class CategoryListFragment extends BaseRecyclerFragment<CategoriesEvents>
 
 	@Override
 	protected void onRefresh() {
+		if (header != null) {
+			header.getHeader().refresh();
+		}
 		getLoaderManager().getLoader(Loaders.Categories.ordinal()).forceLoad();
 	}
 

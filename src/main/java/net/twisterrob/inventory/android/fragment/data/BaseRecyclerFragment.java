@@ -13,7 +13,7 @@ import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.RecyclerViewItemEvents;
 
 public abstract class BaseRecyclerFragment<T> extends BaseFragment<T> implements RecyclerViewItemEvents {
 	protected RecyclerView list;
@@ -67,10 +67,10 @@ public abstract class BaseRecyclerFragment<T> extends BaseFragment<T> implements
 
 		list = (RecyclerView)root.findViewById(android.R.id.list);
 		adapter = setupList();
-		list.setAdapter(new HeaderViewRecyclerAdapter(adapter));
 		return root;
 	}
 
+	public abstract void setHeader(BaseFragment headerFragment);
 	protected abstract CursorRecyclerAdapter setupList();
 
 	protected abstract boolean canCreateNew();

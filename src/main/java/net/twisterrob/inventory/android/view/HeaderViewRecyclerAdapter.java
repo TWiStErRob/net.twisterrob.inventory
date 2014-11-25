@@ -72,6 +72,19 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 		notifyItemRangeInserted(getHeaderCount(), mWrappedAdapter.getItemCount());
 	}
 
+	@Override public long getItemId(int position) {
+		int headerCount = getHeaderCount();
+		int itemCount = mWrappedAdapter.getItemCount();
+
+		if (position < headerCount) {
+			return HEADERS_START + position;
+		} else if (headerCount + itemCount < position) {
+			return FOOTERS_START + position - headerCount - itemCount;
+		} else { // headerCount <= position && position < headerCount + itemCount
+			return mWrappedAdapter.getItemId(position - headerCount);
+		}
+	}
+
 	@Override
 	public int getItemViewType(int position) {
 		int hCount = getHeaderCount();
@@ -101,10 +114,21 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-		int hCount = getHeaderCount();
-		if (position >= hCount && position < hCount + mWrappedAdapter.getItemCount()) {
-			mWrappedAdapter.onBindViewHolder(viewHolder, position - hCount);
+		int headerCount = getHeaderCount();
+		int itemCount = mWrappedAdapter.getItemCount();
+
+		if (position < headerCount) {
+			onBindHeader(viewHolder, position);
+		} else if (headerCount + itemCount < position) {
+			onBindFooter(viewHolder, position - headerCount - itemCount);
+		} else { // headerCount <= position && position < headerCount + itemCount
+			mWrappedAdapter.onBindViewHolder(viewHolder, position - headerCount);
 		}
+	}
+
+	protected void onBindHeader(RecyclerView.ViewHolder viewHolder, int position) {
+	}
+	protected void onBindFooter(RecyclerView.ViewHolder viewHolder, int position) {
 	}
 
 	/**
@@ -127,7 +151,7 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
 	@Override
 	public int getItemCount() {
-		return getHeaderCount() + getFooterCount() + getWrappedItemCount();
+		return getHeaderCount() + getWrappedItemCount() + getFooterCount();
 	}
 
 	/**
@@ -160,6 +184,7 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 		if (!mItemTypesOffset.containsKey(adapterClass)) {
 			putAdapterTypeOffset(adapterClass);
 		}
+		setHasStableIds(mWrappedAdapter.hasStableIds());
 		mWrappedAdapter.registerAdapterDataObserver(mDataObserver);
 	}
 
