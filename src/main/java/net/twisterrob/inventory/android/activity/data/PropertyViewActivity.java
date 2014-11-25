@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.*;
+import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
@@ -43,12 +43,12 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 		startActivity(RoomEditActivity.add(propertyID));
 	}
 
-	public void roomSelected(RoomDTO room) {
-		startActivity(RoomViewActivity.show(room.id));
+	public void roomSelected(long roomID) {
+		startActivity(RoomViewActivity.show(roomID));
 	}
 
-	public void roomActioned(long id) {
-		startActivity(RoomEditActivity.edit(id));
+	public void roomActioned(long roomID) {
+		startActivity(RoomEditActivity.edit(roomID));
 	}
 
 	private long getExtraPropertyID() {

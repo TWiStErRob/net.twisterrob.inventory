@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -10,7 +9,6 @@ import android.view.*;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 
 public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
@@ -18,7 +16,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 
 	public interface RoomsEvents {
 		void newRoom(long propertyID);
-		void roomSelected(RoomDTO room);
+		void roomSelected(long roomID);
 		void roomActioned(long roomID);
 	}
 
@@ -58,10 +56,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	}
 
 	@Override public void onItemClick(RecyclerView.ViewHolder holder) {
-		@SuppressWarnings("resource")
-		Cursor data = adapter.getCursor();
-		data.moveToPosition(holder.getPosition());
-		eventsListener.roomSelected(RoomDTO.fromCursor(data));
+		eventsListener.roomSelected(holder.getItemId());
 	}
 
 	@Override

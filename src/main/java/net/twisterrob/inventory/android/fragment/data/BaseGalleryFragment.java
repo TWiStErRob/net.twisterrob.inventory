@@ -41,7 +41,9 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T> imp
 		list.addItemDecoration(new ItemDecoration() {
 			private final int margin = getContext().getResources().getDimensionPixelSize(R.dimen.margin);
 			@Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
-				outRect.set(margin, margin, margin, margin);
+				if (header == null || parent.getChildPosition(view) != 0) {
+					outRect.set(margin, margin, margin, margin);
+				}
 			}
 		});
 		GalleryAdapter cursorAdapter = new GalleryAdapter(null, this);
