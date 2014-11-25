@@ -11,8 +11,7 @@ import android.database.sqlite.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Prefs;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.java.utils.StringTools;
 
@@ -33,9 +32,8 @@ public class Database {
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 			}
 		};
-		m_helper.setDevMode(false);
-		App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
-		m_helper.setDumpOnOpen(true);
+		// TODO App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
+		m_helper.setDumpOnOpen(false);
 	}
 
 	public SQLiteDatabase getReadableDatabase() {
@@ -44,6 +42,10 @@ public class Database {
 
 	public SQLiteDatabase getWritableDatabase() {
 		return m_helper.getWritableDatabase();
+	}
+
+	public DatabaseOpenHelper getHelper() {
+		return m_helper;
 	}
 
 	private void execSQL(int queryResource, Object... params) {

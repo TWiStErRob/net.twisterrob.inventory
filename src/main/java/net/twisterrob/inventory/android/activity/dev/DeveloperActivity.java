@@ -14,6 +14,7 @@ import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.*;
+import net.twisterrob.inventory.android.content.Database;
 
 public class DeveloperActivity extends ListActivity {
 	@Override
@@ -79,6 +80,13 @@ public class DeveloperActivity extends ListActivity {
 				create("Clear Image cache", new Runnable() {
 					public void run() {
 						App.pic().clearCaches();
+					}
+				}),
+				create("Reset DB", new Runnable() {
+					public void run() {
+						Database db = new Database(App.getAppContext());
+						db.getHelper().setDevMode(true);
+						db.getReadableDatabase().close();
 					}
 				}),
 				create("Drive Chooser", new Runnable() {
