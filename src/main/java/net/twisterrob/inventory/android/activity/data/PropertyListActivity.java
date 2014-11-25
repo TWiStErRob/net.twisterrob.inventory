@@ -4,19 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.data.BaseDetailActivity.NoFragment;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 
-public class PropertyListActivity extends BaseDetailActivity<NoFragment, PropertyListFragment>
-		implements PropertiesEvents {
+public class PropertyListActivity extends BaseDetailActivity<PropertyListFragment> implements PropertiesEvents {
+	@Override protected void onCreate(Bundle savedInstanceState) {
+		wantDrawer = true;
+		super.onCreate(savedInstanceState);
+	}
+
 	@Override
-	protected void onCreateFragments(Bundle savedInstanceState) {
+	protected PropertyListFragment onCreateFragment(Bundle savedInstanceState) {
 		setActionBarSubtitle(null);
 		setActionBarTitle(getTitle());
 		setIcon(R.raw.property_unknown);
-		hideDetails();
-		setFragments(null, PropertyListFragment.newInstance());
+		return PropertyListFragment.newInstance();
 	}
 
 	public void newProperty() {

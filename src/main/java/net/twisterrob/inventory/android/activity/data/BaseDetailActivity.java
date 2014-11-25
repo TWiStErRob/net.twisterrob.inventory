@@ -1,32 +1,23 @@
 package net.twisterrob.inventory.android.activity.data;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
-import android.view.*;
-import android.view.ViewGroup.LayoutParams;
 
-import static android.view.ViewGroup.LayoutParams.*;
-
-import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
-import net.twisterrob.inventory.android.view.HeaderViewRecyclerAdapter;
 
-public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends BaseFragment<?>>
-		extends BaseActivity {
-	private D details;
-	private L children;
+public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends BaseActivity {
+	protected boolean wantDrawer;
+	private C fragment;
 
 	@Override
-	protected final void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarSubtitle(getTitle());
 		setActionBarTitle("...");
 
-		super.setContentView(R.layout.activity_view);
+		super.setContentView(wantDrawer? R.layout.generic_activity_drawer : R.layout.generic_activity_nodrawer);
 
 		String extrasError = checkExtras();
 		if (extrasError != null) {
@@ -35,26 +26,25 @@ public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends Ba
 			return;
 		}
 
-		onCreateFragments(savedInstanceState);
+		C fragment = onCreateFragment(savedInstanceState);
+		if (fragment != null) {
+			updateFragment(fragment).commit();
+		}
 		// TODO may need getSupportFragmentManager().executePendingTransactions(); ? but it works :)
 	}
 
-	/** Call {@link #setFragments} */
-	protected abstract void onCreateFragments(Bundle savedInstanceState);
+	protected abstract C onCreateFragment(Bundle savedInstanceState);
 
-	@Override protected void onResumeFragments() {
-		super.onResumeFragments();
-		RecyclerView list = (RecyclerView)children.getView().findViewById(android.R.id.list);
-		View details = findViewById(R.id.details);
-		if (details != null) {
-			ViewGroup parent = (ViewGroup)details.getParent();
-			if (parent != list && parent != null) {
-				parent.removeView(details);
-				details.setLayoutParams(new LayoutParams(MATCH_PARENT, AndroidTools.dipInt(this, 200)));
-				((HeaderViewRecyclerAdapter)list.getAdapter()).addHeaderView(details);
-			}
+	protected FragmentTransaction updateFragment(C fragment) {
+		this.fragment = fragment;
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		if (fragment != null) {
+			ft.replace(R.id.activityRoot, fragment);
 		}
+		return ft;
 	}
+
 	protected String checkExtras() {
 		return null;
 	}
@@ -62,66 +52,10 @@ public abstract class BaseDetailActivity<D extends BaseFragment<?>, L extends Ba
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (details != null) {
-			details.refresh();
-		}
-		if (children != null) {
-			children.refresh();
-		}
+		fragment.refresh();
 	}
 
-	protected void setFragments(D detailsFragment, L childrenFragment) {
-		this.details = detailsFragment;
-		this.children = childrenFragment;
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		if (detailsFragment != null) {
-			ft.replace(R.id.details, detailsFragment);
-		}
-		if (childrenFragment != null) {
-			ft.replace(R.id.children, childrenFragment);
-		}
-		ft.commit();
-	}
-
-	protected FragmentTransaction updateDetailsFragment(D detailsFragment) {
-		this.details = detailsFragment;
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		if (detailsFragment != null) {
-			ft.replace(R.id.details, detailsFragment);
-		}
-		return ft;
-	}
-
-	protected FragmentTransaction updateChildrenFragment(L childrenFragment) {
-		this.children = childrenFragment;
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		if (childrenFragment != null) {
-			ft.replace(R.id.children, childrenFragment);
-		}
-		return ft;
-	}
-
-	public D getDetails() {
-		return details;
-	}
-	public L getChildren() {
-		return children;
-	}
-
-	public void hideDetails() {
-		findViewById(R.id.details).setVisibility(View.GONE);
-	}
-	public void hideChildren() {
-		findViewById(R.id.children).setVisibility(View.GONE);
-	}
-
-	public static final class NoFragment extends BaseFragment<Void> {
-		@SuppressLint("ValidFragment")
-		private NoFragment() {
-			// prevent instantiation, just for type
-		}
+	public C getFragment() {
+		return fragment;
 	}
 }

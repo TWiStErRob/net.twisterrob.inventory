@@ -10,18 +10,25 @@ import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryListFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 
-public class CategoryViewActivity extends BaseDetailActivity<CategoryViewFragment, CategoryListFragment>
+public class CategoryViewActivity extends BaseDetailActivity<CategoryListFragment>
 		implements CategoryEvents, CategoriesEvents {
+	@Override protected void onCreate(Bundle savedInstanceState) {
+		wantDrawer = getExtraParentCategoryID() == Category.INTERNAL;
+		super.onCreate(savedInstanceState);
+	}
+
 	@Override
-	protected void onCreateFragments(Bundle savedInstanceState) {
+	protected CategoryListFragment onCreateFragment(Bundle savedInstanceState) {
 		long parentID = getExtraParentCategoryID();
+		CategoryListFragment fragment = CategoryListFragment.newInstance(parentID);
 		if (parentID == Category.INTERNAL) {
 			setActionBarTitle(getText(R.string.category_list));
 			setActionBarSubtitle(null);
 			setIcon(R.raw.category_unknown);
-			hideDetails();
+		} else {
+			fragment.setHeader(CategoryViewFragment.newInstance(parentID));
 		}
-		setFragments(CategoryViewFragment.newInstance(parentID), CategoryListFragment.newInstance(parentID));
+		return fragment;
 	}
 
 	public void categoryLoaded(CategoryDTO category) {

@@ -11,15 +11,17 @@ import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
 
-public class ItemViewActivity extends BaseDetailActivity<ItemViewFragment, ItemListFragment>
+public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 		implements ItemEvents, ItemsEvents {
 	private ItemDTO current;
 
 	@Override
-	protected void onCreateFragments(Bundle savedInstanceState) {
+	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
 		setIcon(R.raw.category_unknown);
 		long itemID = getExtraItemID();
-		setFragments(ItemViewFragment.newInstance(itemID), ItemListFragment.newInstance(itemID));
+		ItemListFragment fragment = ItemListFragment.newInstance(itemID);
+		fragment.setHeader(ItemViewFragment.newInstance(itemID));
+		return fragment;
 	}
 
 	public void itemLoaded(ItemDTO item) {

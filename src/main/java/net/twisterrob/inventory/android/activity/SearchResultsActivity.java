@@ -12,19 +12,18 @@ import android.view.Menu;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.activity.data.BaseDetailActivity.NoFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
-public class SearchResultsActivity extends BaseDetailActivity<NoFragment, ItemListFragment> implements ItemsEvents {
+public class SearchResultsActivity extends BaseDetailActivity<ItemListFragment> implements ItemsEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(SearchResultsActivity.class);
 
 	@Override
-	protected void onCreateFragments(Bundle savedInstanceState) {
+	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
 		setActionBarTitle(getTitle());
-		hideDetails();
 		LOG.trace("onCreate({})", getIntent());
 		handleIntent(getIntent());
+		return null; // handleIntent already set it if needed
 	}
 
 	@Override
@@ -34,12 +33,12 @@ public class SearchResultsActivity extends BaseDetailActivity<NoFragment, ItemLi
 		handleIntent(intent);
 	}
 
-	private void handleIntent(Intent intent) {
+	private ItemListFragment handleIntent(Intent intent) {
 		CharSequence query = getExtraQuery();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			LOG.debug("Search '{}'", query);
 			setActionBarSubtitle(query);
-			updateChildrenFragment(ItemListFragment.newSearchInstance(query)).commit();
+			updateFragment(ItemListFragment.newSearchInstance(query));
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			Uri uri = intent.getData();
 			String resolvedAuthority = uri.getAuthority().replace("${applicationId}", BuildConfig.APPLICATION_ID);
@@ -57,6 +56,7 @@ public class SearchResultsActivity extends BaseDetailActivity<NoFragment, ItemLi
 			}
 			finish();
 		}
+		return null;
 	}
 
 	private CharSequence getExtraQuery() {

@@ -10,22 +10,24 @@ import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
-public class CategoryItemsActivity extends BaseDetailActivity<CategoryViewFragment, ItemListFragment>
-		implements CategoryEvents, ItemsEvents {
+public class CategoryItemsActivity extends BaseDetailActivity<ItemListFragment> implements CategoryEvents, ItemsEvents {
+	@Override protected void onCreate(Bundle savedInstanceState) {
+		wantDrawer = getExtraCategoryID() == Category.INTERNAL && getExtraIncludeSubs();
+		super.onCreate(savedInstanceState);
+	}
+
 	@Override
-	protected void onCreateFragments(Bundle savedInstanceState) {
+	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
 		setIcon(R.raw.category_unknown);
 		long categoryID = getExtraCategoryID();
-		CategoryViewFragment detailsFragment;
+		ItemListFragment fragment = ItemListFragment.newCategoryInstance(categoryID, getExtraIncludeSubs());
 		if (categoryID == Category.INTERNAL) {
-			detailsFragment = null;
 			setActionBarSubtitle(null);
 			setActionBarTitle(getText(R.string.item_list));
-			hideDetails();
 		} else {
-			detailsFragment = CategoryViewFragment.newInstance(categoryID);
+			fragment.setHeader(CategoryViewFragment.newInstance(categoryID));
 		}
-		setFragments(detailsFragment, ItemListFragment.newCategoryInstance(categoryID, getExtraIncludeSubs()));
+		return fragment;
 	}
 
 	public void categoryLoaded(CategoryDTO category) {

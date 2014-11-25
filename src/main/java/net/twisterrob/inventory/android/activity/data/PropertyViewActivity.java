@@ -10,23 +10,25 @@ import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 
-public class PropertyViewActivity extends BaseDetailActivity<PropertyViewFragment, RoomListFragment>
-		implements PropertyEvents, RoomsEvents {
+public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> implements PropertyEvents, RoomsEvents {
+	@Override protected void onCreate(Bundle savedInstanceState) {
+		wantDrawer = getExtraPropertyID() == Property.ID_ADD;
+		super.onCreate(savedInstanceState);
+	}
+
 	@Override
-	protected void onCreateFragments(Bundle savedInstanceState) {
+	protected RoomListFragment onCreateFragment(Bundle savedInstanceState) {
 		long propertyID = getExtraPropertyID();
-		PropertyViewFragment detailsFragment;
+		RoomListFragment fragment = RoomListFragment.newInstance(propertyID);
 		if (propertyID == Property.ID_ADD) {
 			setActionBarSubtitle(null);
 			setActionBarTitle(getText(R.string.room_list));
 			setIcon(R.raw.room_unknown);
-			hideDetails();
-			detailsFragment = null;
 		} else {
 			setIcon(R.raw.property_unknown);
-			detailsFragment = PropertyViewFragment.newInstance(propertyID);
+			fragment.setHeader(PropertyViewFragment.newInstance(propertyID));
 		}
-		setFragments(detailsFragment, RoomListFragment.newInstance(propertyID));
+		return fragment;
 	}
 
 	public void propertyLoaded(PropertyDTO property) {
