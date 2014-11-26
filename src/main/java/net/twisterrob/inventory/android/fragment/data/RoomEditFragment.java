@@ -14,12 +14,21 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
+import net.twisterrob.inventory.android.fragment.data.RoomEditFragment.RoomEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class RoomEditFragment extends BaseEditFragment<Void> {
+public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomEditFragment.class);
+
+	public interface RoomEditEvents {
+		void roomSaved(long roomID);
+	}
+
+	public  RoomEditFragment() {
+		setDynamicResource(DYN_EventsClass, RoomEditEvents.class);
+	}
 
 	@Override
 	protected String getBaseFileName() {
@@ -107,7 +116,7 @@ public class RoomEditFragment extends BaseEditFragment<Void> {
 		@Override
 		protected void onPostExecute(Long result) {
 			if (result != null) {
-				getActivity().finish();
+				eventsListener.roomSaved(result);
 			} else {
 				App.toast("Room name must be unique within the property");
 			}

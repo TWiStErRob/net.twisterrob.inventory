@@ -7,11 +7,18 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment;
 
-public class PropertyEditActivity extends BaseEditActivity<PropertyEditFragment> {
+public class PropertyEditActivity extends BaseEditActivity<PropertyEditFragment>
+		implements PropertyEditFragment.PropertyEditEvents {
 	@Override
 	protected PropertyEditFragment onCreateFragment(Bundle savedInstanceState) {
 		setIcon(R.raw.property_unknown);
 		return PropertyEditFragment.newInstance(getExtraPropertyID());
+	}
+
+	@Override public void propertySaved(long propertyID) {
+		Intent data = ExtrasFactory.intentFromProperty(propertyID);
+		setResult(RESULT_OK, data);
+		finish();
 	}
 
 	private long getExtraPropertyID() {

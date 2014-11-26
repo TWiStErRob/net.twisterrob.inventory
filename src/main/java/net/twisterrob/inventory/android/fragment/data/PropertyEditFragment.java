@@ -14,12 +14,21 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
+import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment.PropertyEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class PropertyEditFragment extends BaseEditFragment<Void> {
+public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyEditFragment.class);
+
+	public interface PropertyEditEvents {
+		void propertySaved(long propertyID);
+	}
+
+	public PropertyEditFragment() {
+		setDynamicResource(DYN_EventsClass, PropertyEditEvents.class);
+	}
 
 	@Override
 	protected String getBaseFileName() {
@@ -102,7 +111,7 @@ public class PropertyEditFragment extends BaseEditFragment<Void> {
 		@Override
 		protected void onPostExecute(Long result) {
 			if (result != null) {
-				getActivity().finish();
+				eventsListener.propertySaved(result);
 			} else {
 				App.toast("Property name must be unique");
 			}

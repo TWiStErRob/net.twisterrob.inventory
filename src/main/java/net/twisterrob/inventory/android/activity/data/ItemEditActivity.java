@@ -7,11 +7,19 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.ItemEditFragment;
 
-public class ItemEditActivity extends BaseEditActivity<ItemEditFragment> {
+public class ItemEditActivity extends BaseEditActivity<ItemEditFragment>
+		implements ItemEditFragment.ItemEditEvents {
 	@Override
 	protected ItemEditFragment onCreateFragment(Bundle savedInstanceState) {
 		setIcon(R.raw.category_unknown);
 		return ItemEditFragment.newInstance(getExtraParentID(), getExtraItemID());
+	}
+
+	@Override public void itemSaved(long itemID) {
+		Intent data = ExtrasFactory.intentFromItem(itemID);
+		data.putExtra(Extras.PARENT_ID, getExtraParentID());
+		setResult(RESULT_OK, data);
+		finish();
 	}
 
 	private long getExtraItemID() {

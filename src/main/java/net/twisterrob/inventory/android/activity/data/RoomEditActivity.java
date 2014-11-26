@@ -7,11 +7,19 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.RoomEditFragment;
 
-public class RoomEditActivity extends BaseEditActivity<RoomEditFragment> {
+public class RoomEditActivity extends BaseEditActivity<RoomEditFragment>
+		implements RoomEditFragment.RoomEditEvents {
 	@Override
 	protected RoomEditFragment onCreateFragment(Bundle savedInstanceState) {
 		setIcon(R.raw.room_unknown);
 		return RoomEditFragment.newInstance(getExtraPropertyID(), getExtraRoomID());
+	}
+
+	@Override public void roomSaved(long roomID) {
+		Intent data = ExtrasFactory.intentFromRoom(roomID);
+		data.putExtra(Extras.PROPERTY_ID, getExtraPropertyID());
+		setResult(RESULT_OK, data);
+		finish();
 	}
 
 	private long getExtraRoomID() {

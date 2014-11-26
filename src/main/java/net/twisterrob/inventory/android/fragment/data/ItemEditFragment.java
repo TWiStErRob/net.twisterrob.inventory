@@ -14,12 +14,21 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
+import net.twisterrob.inventory.android.fragment.data.ItemEditFragment.ItemEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class ItemEditFragment extends BaseEditFragment<Void> {
+public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditFragment.class);
+
+	public interface ItemEditEvents {
+		void itemSaved(long itemID);
+	}
+
+	public ItemEditFragment() {
+		setDynamicResource(DYN_EventsClass, ItemEditEvents.class);
+	}
 
 	@Override
 	protected String getBaseFileName() {
@@ -101,7 +110,7 @@ public class ItemEditFragment extends BaseEditFragment<Void> {
 		@Override
 		protected void onPostExecute(Long result) {
 			if (result != null) {
-				getActivity().finish();
+				eventsListener.itemSaved(result);
 			} else {
 				App.toast("Item name must be unique within the item collection");
 			}
