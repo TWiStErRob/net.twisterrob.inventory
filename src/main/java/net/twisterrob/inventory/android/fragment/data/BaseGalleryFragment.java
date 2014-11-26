@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v7.widget.*;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
@@ -19,10 +20,18 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T> imp
 		this.header = headerFragment != null? new HeaderManager(this, headerFragment) : null;
 	}
 
+	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (header != null) {
+			// TODO workaround for https://code.google.com/p/android/issues/detail?id=40537
+			header.getHeader().onActivityResult(requestCode, resultCode, data);
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
 	@Override protected void onRefresh() {
 		super.onRefresh();
 		if (header != null) {
-			header.getHeader().refresh();
+			header.refresh();
 		}
 	}
 	@Override protected CursorRecyclerAdapter setupList() {

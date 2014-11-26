@@ -315,6 +315,9 @@
 	<string name="query_room_delete"><![CDATA["
 		delete from Room where _id = ?
 	"]]></string>
+	<string name="query_room_move"><![CDATA["
+		update Room set property = ? where _id = ?
+	"]]></string>
 
 	<!-- Item CRUD -->
 	<string name="query_item_create"><![CDATA["

@@ -173,6 +173,9 @@ public class Database {
 	public void deleteRoom(long id) {
 		execSQL(R.string.query_room_delete, id);
 	}
+	public void moveRoom(long id, long propertyID) {
+		execSQL(R.string.query_room_move, propertyID, id);
+	}
 
 	private long createItem(Long parentID, String name, long category, String image) {
 		return rawInsert(R.string.query_item_create, parentID, name, category, image);

@@ -76,6 +76,11 @@
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 		</activity>
 		<activity
+			android:name=".activity.data.MoveTargetActivity"
+			android:label="@string/app_name"
+			android:theme="@style/Theme.AppTheme.Dialog"
+			/>
+		<activity
 			android:name=".activity.data.CategoryViewActivity"
 			android:label="@string/category_details">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"

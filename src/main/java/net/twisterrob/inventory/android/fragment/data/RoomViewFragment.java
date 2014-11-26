@@ -1,21 +1,24 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.data.RoomEditActivity;
+import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomViewFragment.RoomEvents;
-import net.twisterrob.inventory.android.tasks.DeleteRoomTask;
+import net.twisterrob.inventory.android.tasks.*;
 import net.twisterrob.inventory.android.view.Dialogs;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
+	private static final int MOVE_REQUEST = 0;
+
 	public interface RoomEvents {
 		void roomLoaded(RoomDTO room);
 		void roomDeleted(RoomDTO room);
@@ -71,9 +74,43 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 			case R.id.action_room_delete:
 				delete(getArgRoomID());
 				return true;
+			case R.id.action_room_move:
+				startActivityForResult(MoveTargetActivity.pick(), MOVE_REQUEST);
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == MOVE_REQUEST) {
+			switch (resultCode) {
+				case MoveTargetActivity.RESULT_PROPERTY:
+					long propertyID = data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
+					move(getArgRoomID(), propertyID);
+					return;
+				case MoveTargetActivity.RESULT_ROOM:
+					App.toast("Cannot move room into another room, please select a property!");
+					return;
+				case MoveTargetActivity.RESULT_ITEM:
+					App.toast("Cannot move room into an item, please select a property!");
+					return;
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void move(final long roomID, final long propertyID) {
+		new MoveRoomTask(roomID, propertyID, new Dialogs.Callback() {
+			public void dialogFailed() {
+				App.toast("Cannot move room #" + roomID + " to property #" + propertyID);
+			}
+			public void dialogSuccess() {
+				// TODO move event
+				startActivity(PropertyViewActivity.show(propertyID));
+				getActivity().finish();
+			}
+		}).displayDialog(getActivity());
 	}
 
 	private void delete(final long roomID) {

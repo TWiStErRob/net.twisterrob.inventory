@@ -14,6 +14,7 @@ public class HeaderManager {
 	private final BaseFragment parent;
 	private final BaseFragment header;
 	private boolean headerBound = false;
+	private boolean refreshPending = false;
 
 	public HeaderManager(@NonNull BaseFragment parent, @NonNull BaseFragment fragment) {
 		this.parent = parent;
@@ -26,6 +27,13 @@ public class HeaderManager {
 				if (!headerBound) {
 					headerBound = true;
 					parent.getChildFragmentManager().beginTransaction().add(R.id.details, header).commit();
+					if (refreshPending) {
+						viewHolder.itemView.post(new Runnable() {
+							@Override public void run() {
+								refresh();
+							}
+						});
+					}
 				}
 			}
 		};
@@ -40,5 +48,16 @@ public class HeaderManager {
 
 	public BaseFragment getHeader() {
 		return header;
+	}
+
+	public void refresh() {
+		// when rotating the header view is not attached in onRefresh (usually =onResume),
+		// so the header view is not yet bound i.e. the header fragment is not attached to the activity
+		if (header.isAdded()) {
+			header.refresh();
+			refreshPending = false;
+		} else {
+			refreshPending = true;
+		}
 	}
 }

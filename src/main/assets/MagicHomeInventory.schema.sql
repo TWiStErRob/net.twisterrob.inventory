@@ -121,6 +121,7 @@ INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NOT NULL) BEGIN
     insert into Room values (new._id, new.name, new.image, new.type, new.root, new.property);--NOTEOS
 END;
 
+-- TODO room move: create trigger on Room.property: insert all items inside into Search_View
 
 CREATE TABLE Category_Descendant (
 	category    INTEGER      NOT NULL

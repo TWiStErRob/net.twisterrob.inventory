@@ -47,8 +47,12 @@
 	<string name="room_edit">Edit Room</string>
 	<string name="room_delete">Delete Room</string>
 	<string name="room_share">Share Room</string>
+	<string name="room_move">Move Room</string>
 	<string name="room_name_hint">Room Title</string>
 	<string name="room_viewAll">List All Rooms</string>
+
+	<string name="move_title">Move selection to\n%1$s</string>
+	<string name="move_title_question">Where do you want to move them?</string>
 
 	<string name="backup_title">Backup</string>
 	<string name="backup_import_drive">Restore data from Google Drive</string>

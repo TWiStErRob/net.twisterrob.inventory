@@ -10,6 +10,12 @@
 		app:showAsAction="ifRoom|withText"
 		/>
 	<item
+		android:id="@+id/action_room_move"
+		android:title="@string/room_move"
+		android:icon="@android:drawable/ic_menu_set_as"
+		app:showAsAction="never"
+		/>
+	<item
 		android:id="@+id/action_room_delete"
 		android:title="@string/room_delete"
 		android:icon="@android:drawable/ic_menu_delete"

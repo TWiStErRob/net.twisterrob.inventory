@@ -17,6 +17,11 @@
 		<!--<item name="colorSwitchThumbNormal">@color/accent</item>-->
 	</style>
 
+	<style name="Theme.AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+		<!--<item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>-->
+		<!--<item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>-->
+	</style>
+
 	<!-- ActionBar styles -->
 	<style name="Widget.AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
 		<!--<time name="titleTextStyle">@style/Widget.AppTheme.ActionBar.Title</time>-->
