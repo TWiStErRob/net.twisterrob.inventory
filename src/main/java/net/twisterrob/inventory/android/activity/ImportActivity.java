@@ -25,6 +25,7 @@ import static net.twisterrob.android.utils.tools.DriveTools.StatusUtils.sync;
 
 public class ImportActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportActivity.class);
+	private static final int REQUEST_PICK = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class ImportActivity extends BaseDriveActivity {
 						.setMimeType(new String[] {"text/csv"})
 						.build(client);
 				try {
-					startIntentSenderForResult(intentSender, RESULT_FIRST_USER, null, 0, 0, 0);
+					startIntentSenderForResult(intentSender, REQUEST_PICK, null, 0, 0, 0);
 				} catch (SendIntentException ex) {
 					LOG.warn("Unable to send intent", ex);
 				}
@@ -61,7 +62,7 @@ public class ImportActivity extends BaseDriveActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-			case RESULT_FIRST_USER:
+			case REQUEST_PICK:
 				if (resultCode == Activity.RESULT_OK) {
 					new SimpleAsyncTask<DriveId, Void, Metadata>() {
 						@Override

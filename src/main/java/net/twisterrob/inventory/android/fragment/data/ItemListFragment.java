@@ -3,12 +3,13 @@ package net.twisterrob.inventory.android.fragment.data;
 import org.slf4j.*;
 
 import android.app.SearchManager;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
@@ -54,6 +55,16 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 			args.putLong(Extras.ROOM_ID, getArgRoomID());
 			args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
 			getLoaderManager().initLoader(Loaders.Items.ordinal(), args, createListLoaderCallbacks());
+			if (getArgRoomID() != Room.ID_ADD) {
+				args = ExtrasFactory.bundleFromRoom(getArgRoomID());
+				getLoaderManager().initLoader(Loaders.SingleRoom.ordinal(), args, new LoadSingleRow(getContext()) {
+					@Override protected void process(Cursor data) {
+						super.process(data);
+						long root = data.getLong(data.getColumnIndex(Room.ROOT_ITEM));
+						getArguments().putLong(Extras.PARENT_ID, root);
+					}
+				});
+			}
 		} else {
 			Bundle args = new Bundle();
 			args.putCharSequence(SearchManager.QUERY, query);
@@ -87,10 +98,9 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	}
 
 	@Override protected boolean canCreateNew() {
-		return getArgParentItemID() != Item.ID_ADD;
+		return getArgParentItemID() != Item.ID_ADD || getArgRoomID() != Room.ID_ADD;
 	}
 
-	// TODO allow adding to rooms
 	@Override protected void onCreateNew() {
 		eventsListener.newItem(getArgParentItemID());
 	}

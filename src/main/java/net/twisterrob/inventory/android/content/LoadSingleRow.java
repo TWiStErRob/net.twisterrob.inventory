@@ -34,20 +34,20 @@ public abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
 		// no op, we didn't keep any reference to data
 	}
 
-	protected void process(@SuppressWarnings("unused") Cursor item) {
+	protected void process(@SuppressWarnings("unused") Cursor data) {
 		// no op, optional override
 	}
 
-	protected void processInvalid(Cursor item) {
-		App.toast(getInvalidToastMessage(item));
+	protected void processInvalid(Cursor data) {
+		App.toast(getInvalidToastMessage(data));
 	}
 
-	protected String getInvalidToastMessage(Cursor item) {
+	protected String getInvalidToastMessage(Cursor data) {
 		String msg;
-		if (item.getCount() == 0) {
-			msg = "No item found!";
+		if (data.getCount() == 0) {
+			msg = "No data found!";
 		} else {
-			msg = "Multiple (" + item.getCount() + ") items found!";
+			msg = "Multiple (" + data.getCount() + ") data found!";
 		}
 		return msg;
 	}

@@ -24,6 +24,7 @@ import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.*;
 
 public class ExportActivity extends BaseDriveActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ExportActivity.class);
+	private static final int REQUEST_PICK = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class ExportActivity extends BaseDriveActivity {
 						.setInitialContents(contents)
 						.build(client);
 				try {
-					startIntentSenderForResult(intentSender, RESULT_FIRST_USER, null, 0, 0, 0);
+					startIntentSenderForResult(intentSender, REQUEST_PICK, null, 0, 0, 0);
 				} catch (SendIntentException ex) {
 					LOG.warn("Unable to send intent", ex);
 				}
@@ -68,7 +69,7 @@ public class ExportActivity extends BaseDriveActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-			case RESULT_FIRST_USER:
+			case REQUEST_PICK:
 				if (resultCode == Activity.RESULT_OK) {
 					DriveId driveId = data.getParcelableExtra(EXTRA_RESPONSE_DRIVE_ID);
 					App.getPrefEditor().putString(Prefs.LAST_EXPORT_DRIVE_ID, driveId.encodeToString()).apply();

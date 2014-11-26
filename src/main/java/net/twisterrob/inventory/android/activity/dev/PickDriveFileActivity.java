@@ -16,6 +16,8 @@ import net.twisterrob.inventory.android.activity.BaseActivity;
 
 public class PickDriveFileActivity extends BaseActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(PickDriveFileActivity.class);
+	private static final int REQUEST_PICK = 0;
+
 	private EditText text;
 
 	@Override
@@ -29,7 +31,7 @@ public class PickDriveFileActivity extends BaseActivity {
 			protected Void doInBackgroundConnected(Void... params) {
 				IntentSender intentSender = Drive.DriveApi.newOpenFileActivityBuilder().build(getGoogleApiClient());
 				try {
-					startIntentSenderForResult(intentSender, RESULT_FIRST_USER, null, 0, 0, 0);
+					startIntentSenderForResult(intentSender, REQUEST_PICK, null, 0, 0, 0);
 				} catch (SendIntentException ex) {
 					LOG.warn("Unable to send intent", ex);
 				}
@@ -41,7 +43,7 @@ public class PickDriveFileActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-			case RESULT_FIRST_USER:
+			case REQUEST_PICK:
 				if (resultCode == Activity.RESULT_OK) {
 					DriveId driveId = data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
 					LOG.info("Result: {} / {}", data.getData(), AndroidTools.toString(data.getExtras()));
