@@ -54,6 +54,13 @@ public class BaseActivity extends ActionBarActivity {
 
 			initDrawers();
 		}
+
+		View overlay = findViewById(R.id.overlay);
+		if (overlay != null) {
+			SnowDrawable snow = new SnowDrawable(30);
+			overlay.setBackgroundDrawable(snow);
+			snow.start();
+		}
 	}
 
 	private void initDrawers() {

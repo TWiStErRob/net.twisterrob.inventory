@@ -11,5 +11,6 @@
 		android:layout_height="match_parent"
 		android:tag="fragment"
 		/>
+	<include layout="@layout/inc_overlay" />
 	<include layout="@layout/inc_drawers" />
 </android.support.v4.widget.DrawerLayout>
