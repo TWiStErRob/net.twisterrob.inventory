@@ -10,5 +10,5 @@
 		android:layout_height="match_parent"
 		android:tag="fragment"
 		/>
-	<include layout="@layout/inc_overlay" />
+	<!--<include layout="@layout/inc_overlay" />-->
 </FrameLayout>
