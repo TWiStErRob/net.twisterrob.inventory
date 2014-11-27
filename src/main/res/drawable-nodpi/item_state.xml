@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FIXME clean up unknown colors before release -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- Temporary list selection on tap -->
+	<item android:state_pressed="true">
+		<color android:color="@color/accent" />
+	</item>
+	<item android:state_selected="true">
+		<color android:color="#f0f" />
+	</item>
+	<!-- Selected spinner item -->
+	<item android:state_activated="true">
+		<color android:color="@color/accentDark" />
+	</item>
+	<item android:state_focused="true">
+		<color android:color="#0f0" />
+	</item>
+	<item android:state_checked="true">
+		<color android:color="#0ff" />
+	</item>
+	<item android:state_active="true">
+		<color android:color="#ff0" />
+	</item>
+	<item android:state_hovered="true">
+		<color android:color="#00f" />
+	</item>
+	<item android:drawable="@android:color/transparent" />
+</selector>
