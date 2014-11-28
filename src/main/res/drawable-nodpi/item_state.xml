@@ -5,10 +5,14 @@
 	<item android:state_pressed="true">
 		<color android:color="@color/accent" />
 	</item>
+	<!-- Currently active UI item -->
 	<item android:state_selected="true">
-		<color android:color="#f0f" />
+		<shape android:shape="rectangle">
+			<solid android:color="@color/accentDark" />
+			<stroke android:width="2dp" android:color="@color/accent" />
+		</shape>
 	</item>
-	<!-- Selected spinner item -->
+	<!-- Selected spinner item, Selected list item -->
 	<item android:state_activated="true">
 		<color android:color="@color/accentDark" />
 	</item>

@@ -5,7 +5,10 @@
 	android:id="@android:id/list"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
+	android:padding="@dimen/margin"
+	android:horizontalSpacing="@dimen/margin"
 	android:numColumns="@integer/gallery_columns"
+	android:verticalSpacing="@dimen/margin"
 	tools:context=".activity.MainActivity"
 	>
 </GridView>

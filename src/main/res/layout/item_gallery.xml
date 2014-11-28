@@ -5,6 +5,7 @@
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
+	android:padding="@dimen/margin"
 	android:background="@drawable/item_state"
 	tools:background="@color/toolsBG"
 	>

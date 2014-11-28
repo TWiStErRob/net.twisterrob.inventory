@@ -26,11 +26,15 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 			return;
 		}
 
-		C fragment = onCreateFragment(savedInstanceState);
-		if (fragment != null) {
-			updateFragment(fragment).commit();
+		if (savedInstanceState == null) {
+			C fragment = onCreateFragment(null);
+			if (fragment != null) {
+				updateFragment(fragment).commit();
+			}
+			// TODO may need getSupportFragmentManager().executePendingTransactions(); ? but it works :)
+		} else {
+			fragment = findFragment();
 		}
-		// TODO may need getSupportFragmentManager().executePendingTransactions(); ? but it works :)
 	}
 
 	protected abstract C onCreateFragment(Bundle savedInstanceState);
@@ -57,5 +61,10 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 
 	public C getFragment() {
 		return fragment;
+	}
+
+	@SuppressWarnings("unchecked")
+	private C findFragment() {
+		return (C)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 }

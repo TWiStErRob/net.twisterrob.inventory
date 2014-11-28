@@ -1,7 +1,8 @@
 package net.twisterrob.inventory.android.view;
 
+import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.*;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.view.View.*;
@@ -84,7 +85,7 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		return countText;
 	}
 
-	private void displayImageWithType(ImageView image, final ImageView type, String imageName, String typeImageName) {
+	private void displayImageWithType(ImageView image, ImageView type, String imageName, String typeImageName) {
 		final Drawable fallback = ImagedDTO.getFallbackDrawable(image.getContext(), typeImageName);
 
 		if (imageName == null) {
@@ -94,7 +95,19 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		} else {
 			type.setVisibility(View.VISIBLE);
 			type.setImageDrawable(fallback);
-			App.pic().start(image.getContext()).placeholder(fallback).load(imageName).into(image);
+			App.pic().start(image.getContext())
+			   .placeholder(fallback)
+			   .error(makeError(image.getContext(), fallback))
+			   .load(imageName)
+			   .into(image)
+			;
 		}
+	}
+
+	private static Drawable makeError(Context context, Drawable fallback) {
+		Drawable error = context.getResources().getDrawable(R.drawable.image_error);
+		fallback = fallback.mutate();
+		fallback.setAlpha(0x80);
+		return new LayerDrawable(new Drawable[] {fallback, error});
 	}
 }

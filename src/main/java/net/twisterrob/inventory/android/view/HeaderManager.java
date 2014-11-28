@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.*;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
@@ -21,7 +21,8 @@ public class HeaderManager {
 		this.header = fragment;
 	}
 
-	public @NonNull RecyclerView.Adapter wrap(@NonNull Adapter adapter) {
+	public @NonNull RecyclerView.Adapter<? extends RecyclerView.ViewHolder> wrap(
+			@NonNull RecyclerView.Adapter adapter) {
 		HeaderViewRecyclerAdapter headerAdapter = new HeaderViewRecyclerAdapter(adapter) {
 			@Override protected void onBindHeader(ViewHolder viewHolder, int position) {
 				if (!headerBound) {

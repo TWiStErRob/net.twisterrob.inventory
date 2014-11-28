@@ -39,24 +39,22 @@ import android.view.*;
  *
  * @see <a href="https://gist.github.com/darnmason/7bbf8beae24fe7296c8a">GitHub > darnmason > HeaderViewRecyclerAdapter.java</a>
  */
-public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HeaderViewRecyclerAdapter extends WrappingAdapter<RecyclerView.ViewHolder> {
 	private static final int HEADERS_START = Integer.MIN_VALUE;
 	private static final int FOOTERS_START = Integer.MIN_VALUE + 10;
 	private static final int ITEMS_START = Integer.MIN_VALUE + 20;
 	private static final int ADAPTER_MAX_TYPES = 100;
 
-	private RecyclerView.Adapter mWrappedAdapter;
-	private final List<View> mHeaderViews, mFooterViews;
-	private final Map<Class, Integer> mItemTypesOffset;
+	private final List<View> mHeaderViews = new ArrayList<>();
+	private final List<View> mFooterViews = new ArrayList<>();
+	private final Map<Class, Integer> mItemTypesOffset = new HashMap<>();
 
 	/**
 	 * Construct a new header view recycler adapter
 	 * @param adapter The underlying adapter to wrap
 	 */
 	public HeaderViewRecyclerAdapter(RecyclerView.Adapter adapter) {
-		mHeaderViews = new ArrayList<>();
-		mFooterViews = new ArrayList<>();
-		mItemTypesOffset = new HashMap<>();
+		mDataObserver = new HeaderFooterAwareNotifyingObserver();
 		setWrappedAdapter(adapter);
 	}
 
@@ -175,17 +173,13 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 		return mFooterViews.size();
 	}
 
-	private void setWrappedAdapter(RecyclerView.Adapter adapter) {
-		if (mWrappedAdapter != null) {
-			mWrappedAdapter.unregisterAdapterDataObserver(mDataObserver);
-		}
-		mWrappedAdapter = adapter;
+	@Override
+	protected void setWrappedAdapter(RecyclerView.Adapter adapter) {
+		super.setWrappedAdapter(adapter);
 		Class adapterClass = mWrappedAdapter.getClass();
 		if (!mItemTypesOffset.containsKey(adapterClass)) {
 			putAdapterTypeOffset(adapterClass);
 		}
-		setHasStableIds(mWrappedAdapter.hasStableIds());
-		mWrappedAdapter.registerAdapterDataObserver(mDataObserver);
 	}
 
 	private void putAdapterTypeOffset(Class adapterClass) {
@@ -196,42 +190,31 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 		return mItemTypesOffset.get(mWrappedAdapter.getClass());
 	}
 
-	private RecyclerView.AdapterDataObserver mDataObserver = new RecyclerView.AdapterDataObserver() {
-		@Override
-		public void onChanged() {
-			super.onChanged();
-			notifyDataSetChanged();
+	private static class StaticViewHolder extends RecyclerView.ViewHolder {
+		public StaticViewHolder(View itemView) {
+			super(itemView);
 		}
+	}
 
+	private class HeaderFooterAwareNotifyingObserver extends NotifyingObserver {
 		@Override
 		public void onItemRangeChanged(int positionStart, int itemCount) {
-			super.onItemRangeChanged(positionStart, itemCount);
-			notifyItemRangeChanged(getHeaderCount() + positionStart, itemCount);
+			super.onItemRangeChanged(getHeaderCount() + positionStart, itemCount);
 		}
 
 		@Override
 		public void onItemRangeInserted(int positionStart, int itemCount) {
-			super.onItemRangeInserted(positionStart, itemCount);
-			notifyItemRangeInserted(getHeaderCount() + positionStart, itemCount);
+			super.onItemRangeInserted(getHeaderCount() + positionStart, itemCount);
 		}
 
 		@Override
 		public void onItemRangeRemoved(int positionStart, int itemCount) {
-			super.onItemRangeRemoved(positionStart, itemCount);
-			notifyItemRangeRemoved(getHeaderCount() + positionStart, itemCount);
+			super.onItemRangeRemoved(getHeaderCount() + positionStart, itemCount);
 		}
 
 		@Override
 		public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-			super.onItemRangeMoved(fromPosition, toPosition, itemCount);
-			// TODO: No notifyItemRangeMoved method?
-			notifyItemRangeChanged(getHeaderCount() + fromPosition, getHeaderCount() + toPosition + itemCount);
-		}
-	};
-
-	private static class StaticViewHolder extends RecyclerView.ViewHolder {
-		public StaticViewHolder(View itemView) {
-			super(itemView);
+			super.onItemRangeMoved(getHeaderCount() + fromPosition, getHeaderCount() + toPosition, itemCount);
 		}
 	}
 }

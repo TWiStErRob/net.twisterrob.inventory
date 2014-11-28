@@ -20,6 +20,7 @@ import com.caverock.androidsvg.*;
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.view.AlphaPictureDrawable;
 
 public class ImageLoaderFacade {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageLoaderFacade.class);
@@ -108,7 +109,7 @@ public class ImageLoaderFacade {
 				pic = svg.renderToPicture();
 				SVGs.put(rawResourceId, new WeakReference<>(pic));
 			}
-			return new PictureDrawable(pic);
+			return new AlphaPictureDrawable(pic);
 		} catch (SVGParseException ex) {
 			LOG.warn("Cannot decode SVG from {}", rawResourceId, ex);
 			return null;
@@ -122,7 +123,7 @@ public class ImageLoaderFacade {
 			canvas.translate(padding, padding); // workaround, because renderToCanvas doesn't care about x,y
 			svg.renderToCanvas(canvas, new RectF(0, 0, size - 2 * padding, size - 2 * padding));
 			picture.endRecording();
-			return new PictureDrawable(picture);
+			return new AlphaPictureDrawable(picture);
 		} catch (SVGParseException ex) {
 			LOG.warn("Cannot decode SVG from {}", rawResourceId, ex);
 			return null;
