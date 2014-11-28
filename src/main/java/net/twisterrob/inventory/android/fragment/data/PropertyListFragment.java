@@ -47,13 +47,12 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		eventsListener.newProperty();
 	}
 
-	@Override public void onItemClick(RecyclerView.ViewHolder holder) {
+	@Override protected void onListItemClick(RecyclerView.ViewHolder holder) {
 		eventsListener.propertySelected(holder.getItemId());
 	}
 
-	@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+	@Override protected void onListItemLongClick(RecyclerView.ViewHolder holder) {
 		eventsListener.propertyActioned(holder.getItemId());
-		return true;
 	}
 
 	@Override

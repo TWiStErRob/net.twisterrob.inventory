@@ -17,7 +17,7 @@ import net.twisterrob.inventory.android.view.RecyclerViewItemEvents;
 
 public abstract class BaseRecyclerFragment<T> extends BaseFragment<T> implements RecyclerViewItemEvents {
 	protected RecyclerView list;
-	protected CursorRecyclerAdapter adapter;
+	private CursorRecyclerAdapter adapter;
 	private SwipeRefreshLayout progress;
 
 	protected LoaderCallbacks<Cursor> createListLoaderCallbacks() {

@@ -50,12 +50,11 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		eventsListener.newRoom(getArgPropertyID());
 	}
 
-	@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+	@Override protected void onListItemLongClick(RecyclerView.ViewHolder holder) {
 		eventsListener.roomActioned(holder.getItemId());
-		return true;
 	}
 
-	@Override public void onItemClick(RecyclerView.ViewHolder holder) {
+	@Override protected void onListItemClick(RecyclerView.ViewHolder holder) {
 		eventsListener.roomSelected(holder.getItemId());
 	}
 

@@ -13,7 +13,8 @@ import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.GalleryAdapter.GalleryItemEvents;
 
-public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T> implements GalleryItemEvents {
+public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
+		implements GalleryItemEvents {
 	private HeaderManager header = null;
 
 	public void setHeader(BaseFragment headerFragment) {
@@ -34,6 +35,7 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T> imp
 			header.refresh();
 		}
 	}
+
 	@Override protected CursorRecyclerAdapter setupList() {
 		final int columns = getResources().getInteger(R.integer.gallery_columns);
 		//StaggeredGridLayoutManager layout = new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL);
@@ -56,7 +58,7 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T> imp
 			}
 		});
 		GalleryAdapter cursorAdapter = new GalleryAdapter(null, this);
-		RecyclerView.Adapter adapter = cursorAdapter;
+		RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter = cursorAdapter;
 		if (header != null) {
 			adapter = header.wrap(adapter);
 		}
@@ -66,4 +68,15 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T> imp
 
 	protected abstract boolean canCreateNew();
 	protected abstract void onCreateNew();
+	protected abstract void onListItemClick(ViewHolder holder);
+	protected abstract void onListItemLongClick(ViewHolder holder);
+
+	@Override public final void onItemClick(ViewHolder holder) {
+		onListItemClick(holder);
+	}
+
+	@Override public final boolean onItemLongClick(ViewHolder holder) {
+		onListItemLongClick(holder);
+		return true;
+	}
 }
