@@ -51,8 +51,13 @@ public class MoveRoomTask extends ActionParams {
 
 	@Override
 	protected String getTitle() {
-		return "Moving Room" + (roomIDs.size() != 1? "s" : " #" + roomIDs.iterator().next())
-				+ "\nto Property #" + newPropertyID;
+		String base;
+		if (roomIDs.size() == 1) {
+			base = "Moving Room #" + roomIDs.iterator().next();
+		} else {
+			base = "Moving " + roomIDs.size() + " Rooms";
+		}
+		return base + "\nto Property #" + newPropertyID;
 	}
 
 	@Override

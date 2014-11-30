@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.slf4j.*;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
@@ -44,20 +43,6 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		return super.onCreateActionMode(mode, menu);
 	}
 
-	@Override public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-		enable(menu.findItem(R.id.action_room_move), !getSelectedIDs().isEmpty());
-		enable(menu.findItem(R.id.action_room_delete), !getSelectedIDs().isEmpty());
-		return super.onPrepareActionMode(mode, menu);
-	}
-	private void enable(MenuItem item, boolean enable) {
-		item.setEnabled(enable);
-		Drawable icon = item.getIcon();
-		if (icon != null) {
-			icon = icon.mutate();
-			icon.setAlpha(enable? 0xFF : 0x80);
-			item.setIcon(icon);
-		}
-	}
 	@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_room_delete:

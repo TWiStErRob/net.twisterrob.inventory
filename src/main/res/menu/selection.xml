@@ -11,13 +11,6 @@
 		app:showAsAction="never"
 		/>
 	<item
-		android:id="@+id/action_select_none"
-		android:title="@string/selection_selectNone"
-		android:icon="@drawable/ic_action_select_none"
-		android:titleCondensed="@string/selection_selectNone_short"
-		app:showAsAction="never"
-		/>
-	<item
 		android:id="@+id/action_select_invert"
 		android:title="@string/selection_selectInv"
 		android:icon="@drawable/ic_action_select_invert"

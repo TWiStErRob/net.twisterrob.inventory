@@ -28,8 +28,20 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	 */
 	public static final String EXTRA_WHAT = "what";
 	public static final int NOTHING = 0;
+	/**
+	 * Allow only Rooms to be selected. When received as a {@code resultCode}
+	 * use {@code data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD)} to retrieve the selection.
+	 */
 	public static final int PROPERTY = 1 << 1;
+	/**
+	 * Allow only Rooms to be selected. When received as a {@code resultCode}
+	 * use {@code data.getLongExtra(Extras.ROOM_ID, Room.ID_ADD)} to retrieve the selection.
+	 */
 	public static final int ROOM = 1 << 2;
+	/**
+	 * Allow only Rooms to be selected. When received as a {@code resultCode}
+	 * use {@code data.getLongExtra(Extras.ITEM_ID, Item.ID_ADD)} to retrieve the selection.
+	 */
 	public static final int ITEM = 1 << 3;
 	public static final int EVERYTHING = PROPERTY | ROOM | ITEM;
 

@@ -14,17 +14,25 @@ public abstract class BaseEditActivity<E extends Fragment> extends BaseActivity 
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.generic_activity_nodrawer);
 
-		editor = onCreateFragment(savedInstanceState);
-
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.activityRoot, editor)
-		                           .commit()
-		;
+		if (savedInstanceState == null) {
+			editor = onCreateFragment(null);
+			getSupportFragmentManager().beginTransaction()
+			                           .add(R.id.activityRoot, editor)
+			                           .commit()
+			;
+		} else {
+			editor = findEditor();
+		}
 	}
 
 	protected abstract E onCreateFragment(Bundle savedInstanceState);
 
 	public E getEditor() {
 		return editor;
+	}
+
+	@SuppressWarnings("unchecked")
+	private E findEditor() {
+		return (E)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 }

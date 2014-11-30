@@ -39,13 +39,17 @@ public class DeleteRoomTask extends ActionParams {
 
 	@Override
 	protected String getTitle() {
-		return "Deleting Room #" + roomIDs;
+		if (roomIDs.size() == 1) {
+			return "Deleting Room #" + roomIDs.iterator().next();
+		} else {
+			return "Deleting " + roomIDs.size() + " Rooms";
+		}
 	}
 
 	@Override
 	protected String getMessage() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Are you sure you want to move the");
+		sb.append("Are you sure you want to move the ");
 		if (rooms.size() == 1) {
 			sb.append("room named ").append("'").append(rooms.iterator().next().name).append("'");
 		} else {

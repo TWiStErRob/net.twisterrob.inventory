@@ -160,7 +160,12 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 	}
 
 	@Override public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-		mode.setTitle(getString(R.string.selection_count, selectionAdapter.getSelectedItemCount()));
+		int count = selectionAdapter.getSelectedItemCount();
+		if (count == 0) {
+			mode.finish();
+		} else {
+			mode.setTitle(getString(R.string.selection_count, count));
+		}
 		return false;
 	}
 
@@ -168,10 +173,6 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 		switch (item.getItemId()) {
 			case R.id.action_select_all:
 				selectionAdapter.selectRange(0, selectionAdapter.getItemCount());
-				mode.invalidate();
-				return true;
-			case R.id.action_select_none:
-				selectionAdapter.clearSelections();
 				mode.invalidate();
 				return true;
 			case R.id.action_select_invert:

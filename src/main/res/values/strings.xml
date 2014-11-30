@@ -16,8 +16,6 @@
 	<string name="selection_count">%d selected</string>
 	<string name="selection_selectAll">Select All</string>
 	<string name="selection_selectAll_short">All</string>
-	<string name="selection_selectNone">Select None</string>
-	<string name="selection_selectNone_short">None</string>
 	<string name="selection_selectInv">Invert selection</string>
 	<string name="selection_selectInv_short">Invert</string>
 
