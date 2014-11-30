@@ -11,6 +11,14 @@
 	<string name="action_save">Save</string>
 	<string name="action_search">Search Items</string>
 
+	<string name="selection_count">%d selected</string>
+	<string name="selection_selectAll">Select All</string>
+	<string name="selection_selectAll_short">All</string>
+	<string name="selection_selectNone">Select None</string>
+	<string name="selection_selectNone_short">None</string>
+	<string name="selection_selectInv">Invert selection</string>
+	<string name="selection_selectInv_short">Invert</string>
+
 	<string name="category_list">Categories</string>
 	<string name="category_details">Category Subcategories</string>
 	<string name="category_items">Category Items</string>
