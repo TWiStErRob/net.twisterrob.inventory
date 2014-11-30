@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.content;
 
-import java.util.Arrays;
+import java.util.*;
 
 import org.slf4j.*;
 
@@ -173,8 +173,32 @@ public class Database {
 	public void deleteRoom(long id) {
 		execSQL(R.string.query_room_delete, id);
 	}
+	public void deleteRooms(Collection<Long> roomIDs) {
+		SQLiteDatabase db = getWritableDatabase();
+		try {
+			db.beginTransaction();
+			for (Long roomID : roomIDs) {
+				execSQL(db, R.string.query_room_delete, roomID);
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+	}
 	public void moveRoom(long id, long propertyID) {
 		execSQL(R.string.query_room_move, propertyID, id);
+	}
+	public void moveRooms(long propertyID, Collection<Long> roomIDs) {
+		SQLiteDatabase db = getWritableDatabase();
+		try {
+			db.beginTransaction();
+			for (Long roomID : roomIDs) {
+				execSQL(db, R.string.query_room_move, propertyID, roomID);
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
 	}
 
 	private long createItem(Long parentID, String name, long category, String image) {

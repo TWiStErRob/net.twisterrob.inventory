@@ -1,15 +1,23 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import java.util.Collection;
+
 import org.slf4j.*;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
+import net.twisterrob.inventory.android.tasks.*;
+import net.twisterrob.inventory.android.view.Dialogs;
 
 public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
@@ -29,6 +37,48 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		menu.findItem(R.id.action_room_add).setVisible(canCreateNew());
+	}
+
+	@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+		mode.getMenuInflater().inflate(R.menu.room_bulk, menu);
+		return super.onCreateActionMode(mode, menu);
+	}
+
+	@Override public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+		enable(menu.findItem(R.id.action_room_move), !getSelectedIDs().isEmpty());
+		enable(menu.findItem(R.id.action_room_delete), !getSelectedIDs().isEmpty());
+		return super.onPrepareActionMode(mode, menu);
+	}
+	private void enable(MenuItem item, boolean enable) {
+		item.setEnabled(enable);
+		Drawable icon = item.getIcon();
+		if (icon != null) {
+			icon = icon.mutate();
+			icon.setAlpha(enable? 0xFF : 0x80);
+			item.setIcon(icon);
+		}
+	}
+	@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_room_delete:
+				delete(getSelectedIDs());
+				return true;
+			case R.id.action_room_move:
+				startActivityForResult(MoveTargetActivity.pick(MoveTargetActivity.PROPERTY), PICK_REQUEST);
+				return true;
+		}
+		return super.onActionItemClicked(mode, item);
+	}
+
+	public static final int PICK_REQUEST = 1;
+
+	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == PICK_REQUEST && resultCode == MoveTargetActivity.PROPERTY) {
+			long propertyID = data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
+			move(propertyID, getSelectedIDs());
+			return;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
@@ -70,6 +120,34 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	protected void onRefresh() {
 		super.onRefresh();
 		getLoaderManager().getLoader(Loaders.Rooms.ordinal()).forceLoad();
+	}
+
+	private void delete(final Collection<Long> roomIDs) {
+		new DeleteRoomTask(roomIDs, new Dialogs.Callback() {
+			public void dialogSuccess() {
+				finishActionMode();
+				refresh();
+			}
+
+			public void dialogFailed() {
+				App.toast("Cannot delete rooms: " + roomIDs);
+			}
+		}).displayDialog(getActivity());
+	}
+	private void move(final long propertyID, final Collection<Long> roomIDs) {
+		if (propertyID == getArgPropertyID()) {
+			App.toast("Cannot move rooms to the same property where they are.");
+			return;
+		}
+		new MoveRoomTask(propertyID, roomIDs, new Dialogs.Callback() {
+			public void dialogFailed() {
+				App.toast("Cannot move " + roomIDs + " to property #" + propertyID);
+			}
+			public void dialogSuccess() {
+				finishActionMode();
+				refresh();
+			}
+		}).displayDialog(getActivity());
 	}
 
 	private long getArgPropertyID() {

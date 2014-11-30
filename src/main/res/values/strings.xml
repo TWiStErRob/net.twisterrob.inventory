@@ -9,6 +9,8 @@
 	<string name="action_picture_pick">Pick Picture</string>
 	<string name="action_picture_remove">Remove Picture</string>
 	<string name="action_save">Save</string>
+	<string name="action_delete">Delete</string>
+	<string name="action_move">Move</string>
 	<string name="action_search">Search Items</string>
 
 	<string name="selection_count">%d selected</string>
@@ -30,6 +32,7 @@
 	<string name="label_category_subs">%1$d Subcategories</string>
 	<string name="label_category_items_view">List %1$d Items</string>
 
+	<string name="item_one">Item</string>
 	<string name="item_list">Items</string>
 	<string name="item_details">Item Details</string>
 	<string name="item_add">Add Item Inside</string>
@@ -39,6 +42,7 @@
 	<string name="item_share">Share Item</string>
 	<string name="item_name_hint">Item Name</string>
 
+	<string name="property_one">Property</string>
 	<string name="property_list">Properties</string>
 	<string name="property_details">Property Details</string>
 	<string name="property_add">Add Property</string>
@@ -48,19 +52,23 @@
 	<string name="property_share">Share Property</string>
 	<string name="property_name_hint">Property Title</string>
 
+	<string name="room_one">Room</string>
 	<string name="room_list">Rooms</string>
 	<string name="room_details">Room Details</string>
 	<string name="room_add">Add Room</string>
 	<string name="room_new">New Room</string>
 	<string name="room_edit">Edit Room</string>
 	<string name="room_delete">Delete Room</string>
+	<string name="room_delete_many">Delete Rooms</string>
 	<string name="room_share">Share Room</string>
 	<string name="room_move">Move Room</string>
+	<string name="room_move_many">Move Rooms</string>
 	<string name="room_name_hint">Room Title</string>
 	<string name="room_viewAll">List All Rooms</string>
 
-	<string name="move_title">Move selection to\n%1$s</string>
+	<string name="move_title">Move to %1$s:\n%2$s</string>
 	<string name="move_title_question">Where do you want to move them?</string>
+	<string name="move_current_type">Please go to a %1$s</string>
 
 	<string name="backup_title">Backup</string>
 	<string name="backup_import_drive">Restore data from Google Drive</string>

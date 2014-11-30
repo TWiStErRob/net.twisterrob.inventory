@@ -11,57 +11,69 @@ import net.twisterrob.inventory.android.view.Dialogs;
 import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
 
 public class DeleteRoomTask extends ActionParams {
-	private final long roomID;
+	private final Collection<Long> roomIDs;
 
-	private RoomDTO room;
+	private Collection<RoomDTO> rooms;
 	private List<String> items;
 
-	public DeleteRoomTask(long id, Dialogs.Callback callback) {
+	public DeleteRoomTask(Collection<Long> roomIDs, Dialogs.Callback callback) {
 		super(callback);
-		this.roomID = id;
+		if (roomIDs.isEmpty()) {
+			throw new IllegalArgumentException("Nothing to move.");
+		}
+		this.roomIDs = roomIDs;
 	}
 
 	@Override
 	protected void prepare() {
-		room = retrieveRoom();
-		items = retrieveItemNames();
+		rooms = retrieveRooms(roomIDs);
+		if (rooms.size() == 1) {
+			items = retrieveItemNames(rooms.iterator().next());
+		}
 	}
 
 	@Override
 	protected void execute() {
-		App.db().deleteRoom(roomID);
+		App.db().deleteRooms(roomIDs);
 	}
 
 	@Override
 	protected String getTitle() {
-		return "Deleting Room #" + roomID;
+		return "Deleting Room #" + roomIDs;
 	}
 
 	@Override
 	protected String getMessage() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Are you sure you want to delete the room named");
-		sb.append(' ');
-		sb.append("'").append(room.name).append("'");
-		if (!items.isEmpty()) {
-			sb.append(" and all ");
-			sb.append(items.size());
-			sb.append(" items with all items in it");
+		sb.append("Are you sure you want to move the");
+		if (rooms.size() == 1) {
+			sb.append("room named ").append("'").append(rooms.iterator().next().name).append("'");
+		} else {
+			sb.append(rooms.size()).append(" rooms");
 		}
+		sb.append(" with all items in ").append(rooms.size() == 1? "it" : "them");
 		sb.append("?");
-		if (!items.isEmpty()) {
-			sb.append("\n(The items are: ");
+		if (items != null && !items.isEmpty()) {
+			sb.append("\nThe items are: ");
 			for (String name : items) {
+				sb.append("\n\t");
 				sb.append(name);
-				sb.append(", ");
+				sb.append(",");
 			}
-			sb.delete(sb.length() - ", ".length(), sb.length());
-			sb.append(")");
+			sb.delete(sb.length() - ",".length(), sb.length());
 		}
 		return sb.toString();
 	}
 
-	private RoomDTO retrieveRoom() {
+	private List<RoomDTO> retrieveRooms(Collection<Long> roomIDs) {
+		List<RoomDTO> rooms = new ArrayList<>();
+		for (Long roomID : roomIDs) {
+			rooms.add(retrieveRoom(roomID));
+		}
+		return rooms;
+	}
+
+	private RoomDTO retrieveRoom(long roomID) {
 		Cursor room = App.db().getRoom(roomID);
 		try {
 			room.moveToFirst();
@@ -71,7 +83,7 @@ public class DeleteRoomTask extends ActionParams {
 		}
 	}
 
-	private List<String> retrieveItemNames() {
+	private List<String> retrieveItemNames(RoomDTO room) {
 		Cursor items = App.db().listItems(room.rootItemID);
 		try {
 			List<String> itemNames = new ArrayList<>(items.getCount());

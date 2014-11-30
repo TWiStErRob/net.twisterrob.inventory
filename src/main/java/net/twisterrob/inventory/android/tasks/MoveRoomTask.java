@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.tasks;
 
+import java.util.*;
+
 import android.database.Cursor;
 
 import net.twisterrob.inventory.android.App;
@@ -8,54 +10,76 @@ import net.twisterrob.inventory.android.view.Dialogs;
 import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
 
 public class MoveRoomTask extends ActionParams {
-	private final long roomID;
+	private final Collection<Long> roomIDs;
 	private final long newPropertyID;
 
-	private RoomDTO room;
+	private List<RoomDTO> rooms;
 	private PropertyDTO oldProperty;
 	private PropertyDTO newProperty;
 
-	public MoveRoomTask(long roomID, long newPropertyID, Dialogs.Callback callback) {
+	public MoveRoomTask(long newPropertyID, Collection<Long> roomIDs, Dialogs.Callback callback) {
 		super(callback);
-		this.roomID = roomID;
+		if (roomIDs.isEmpty()) {
+			throw new IllegalArgumentException("Nothing to move.");
+		}
+		this.roomIDs = roomIDs;
 		this.newPropertyID = newPropertyID;
 	}
 
 	@Override
 	protected void prepare() {
-		room = retrieveRoom();
-		oldProperty = retrieveProperty(room.propertyID);
+		rooms = retrieveRooms();
+		Long oldPropertyID = findProperty(rooms);
+		if (oldPropertyID != null) {
+			oldProperty = retrieveProperty(oldPropertyID);
+		}
 		newProperty = retrieveProperty(newPropertyID);
+	}
+
+	private Long findProperty(List<RoomDTO> rooms) {
+		Set<Long> propertyIDs = new TreeSet<>();
+		for (RoomDTO room : rooms) {
+			propertyIDs.add(room.propertyID);
+		}
+		return propertyIDs.size() == 1? propertyIDs.iterator().next() : null;
 	}
 
 	@Override
 	protected void execute() {
-		App.db().moveRoom(roomID, newPropertyID);
+		App.db().moveRooms(newPropertyID, roomIDs);
 	}
 
 	@Override
 	protected String getTitle() {
-		return "Moving Room #" + roomID + "\nto Property #" + newPropertyID;
+		return "Moving Room" + (roomIDs.size() != 1? "s" : " #" + roomIDs.iterator().next())
+				+ "\nto Property #" + newPropertyID;
 	}
 
 	@Override
 	protected String getMessage() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Are you sure you want to move the room named");
-		sb.append(' ');
-		sb.append("'").append(room.name).append("'");
-		if (room.numAllItems != 0) {
-			sb.append(" with all ");
-			sb.append(room.numAllItems);
-			sb.append(" items in it");
+		sb.append("Are you sure you want to move the ");
+		if (rooms.size() == 1) {
+			sb.append("room named ").append("'").append(rooms.iterator().next().name).append("'");
+		} else {
+			sb.append(rooms.size()).append(" rooms");
 		}
-		sb.append(" from ").append(oldProperty.name);
+		sb.append(" with all items in ").append(rooms.size() == 1? "it" : "them");
+		sb.append(" from ").append(oldProperty != null? oldProperty.name : "various properties");
 		sb.append(" to ").append(newProperty.name);
 		sb.append("?");
 		return sb.toString();
 	}
 
-	private RoomDTO retrieveRoom() {
+	private List<RoomDTO> retrieveRooms() {
+		List<RoomDTO> rooms = new ArrayList<>(roomIDs.size());
+		for (long roomID : roomIDs) {
+			rooms.add(retrieveRoom(roomID));
+		}
+		return rooms;
+	}
+
+	private RoomDTO retrieveRoom(long roomID) {
 		Cursor room = App.db().getRoom(roomID);
 		try {
 			room.moveToFirst();

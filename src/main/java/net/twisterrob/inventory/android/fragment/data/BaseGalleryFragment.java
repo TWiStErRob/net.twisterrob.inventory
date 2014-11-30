@@ -84,7 +84,7 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 	@Override public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if (actionMode != null) {
-			outState.putIntegerArrayList("selection", (ArrayList<Integer>)selectionAdapter.getSelectedItems());
+			outState.putIntegerArrayList("selection", (ArrayList<Integer>)selectionAdapter.getSelectedPositions());
 		}
 	}
 
@@ -95,7 +95,7 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 			if (selection != null) {
 				tryStartSelectionMode();
 				selectionAdapter.setSelectedItems(selection);
-				updateCount();
+				actionMode.invalidate();
 			}
 		}
 	}
@@ -109,10 +109,21 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 	protected boolean wantSelection() {
 		return true;
 	}
+	protected Collection<Long> getSelectedIDs() {
+		List<Integer> positions = selectionAdapter.getSelectedPositions();
+		List<Long> IDs = new ArrayList<>(positions.size());
+		for (int i = 0; i < positions.size(); i++) {
+			IDs.add(selectionAdapter.getItemId(positions.get(i)));
+		}
+		return IDs;
+	}
+	protected void finishActionMode() {
+		actionMode.finish();
+	}
 	@Override public final void onItemClick(ViewHolder holder) {
 		if (actionMode != null) {
 			selectionAdapter.toggleSelection(holder.getPosition());
-			updateCount();
+			actionMode.invalidate();
 		} else {
 			onListItemClick(holder);
 		}
@@ -124,7 +135,7 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 		}
 		if (actionMode != null) {
 			selectionAdapter.toggleSelection(holder.getPosition());
-			updateCount();
+			actionMode.invalidate();
 		} else {
 			onListItemLongClick(holder);
 		}
@@ -143,36 +154,33 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 		return true;
 	}
 
-	private void updateCount() {
-		actionMode.setTitle(getString(R.string.selection_count, selectionAdapter.getSelectedItemCount()));
-	}
-
 	@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 		mode.getMenuInflater().inflate(R.menu.selection, menu);
 		return true;
 	}
 
 	@Override public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-		return true;
+		mode.setTitle(getString(R.string.selection_count, selectionAdapter.getSelectedItemCount()));
+		return false;
 	}
 
 	@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_select_all:
 				selectionAdapter.selectRange(0, selectionAdapter.getItemCount());
-				updateCount();
+				mode.invalidate();
 				return true;
 			case R.id.action_select_none:
 				selectionAdapter.clearSelections();
-				updateCount();
+				mode.invalidate();
 				return true;
 			case R.id.action_select_invert:
-				Set<Integer> selection = new TreeSet<>(selectionAdapter.getSelectedItems());
+				Set<Integer> selection = new TreeSet<>(selectionAdapter.getSelectedPositions());
 				selectionAdapter.clearSelections();
 				for (int i = 0; i < selectionAdapter.getItemCount(); i++) {
 					selectionAdapter.setSelected(i, !selection.contains(i));
 				}
-				updateCount();
+				mode.invalidate();
 				return true;
 			default:
 				return false;

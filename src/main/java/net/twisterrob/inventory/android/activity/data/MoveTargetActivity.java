@@ -22,17 +22,24 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		PropertyListFragment.PropertiesEvents,
 		RoomListFragment.RoomsEvents,
 		ItemListFragment.ItemsEvents {
+	/**
+	 * What to search for, use {@link #PROPERTY}, {@link #ROOM} and {@link #ITEM} as flags,
+	 * one of the flags will be the result code in {@link android.app.Activity#onActivityResult}.
+	 */
+	public static final String EXTRA_WHAT = "what";
+	public static final int NOTHING = 0;
+	public static final int PROPERTY = 1 << 1;
+	public static final int ROOM = 1 << 2;
+	public static final int ITEM = 1 << 3;
+	public static final int EVERYTHING = PROPERTY | ROOM | ITEM;
 
-	private static final int ADD_PROPERTY = 1;
-	private static final int ADD_ROOM = 2;
-	private static final int ADD_ITEM = 3;
-
-	public static final int RESULT_PROPERTY = RESULT_FIRST_USER + 1;
-	public static final int RESULT_ROOM = RESULT_FIRST_USER + 2;
-	public static final int RESULT_ITEM = RESULT_FIRST_USER + 3;
+	private static final int REQUEST_ADD_PROPERTY = 1;
+	private static final int REQUEST_ADD_ROOM = 2;
+	private static final int REQUEST_ADD_ITEM = 3;
 
 	private Handler handler = new Handler();
 	private View btnOk;
+	private TextView labType;
 	private TextView title;
 
 	private BaseFragment getFragment() {
@@ -43,6 +50,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_move);
 		title = (TextView)findViewById(R.id.selection);
+		labType = (TextView)findViewById(R.id.type);
 		ImageButton imageButton = (ImageButton)findViewById(R.id.up);
 		imageButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 		imageButton.setOnClickListener(new OnClickListener() {
@@ -66,7 +74,6 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 
 		updateFragment(PropertyListFragment.newInstance(), null);
-		onBackStackChanged();
 	}
 
 	private void updateFragment(@NonNull BaseFragment fragment, String title) {
@@ -76,21 +83,37 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 			ft.addToBackStack(title); // prevent backing up to empty dialog
 		}
 		ft.commit();
+		updateUI(fragment, title);
 	}
 
 	private void setResult(Fragment fragment) {
 		setResult(RESULT_CANCELED);
 		if (fragment instanceof RoomListFragment) {
 			long propertyID = fragment.getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
-			setResult(RESULT_PROPERTY, ExtrasFactory.intentFromProperty(propertyID));
+			setResult(PROPERTY, ExtrasFactory.intentFromProperty(propertyID));
 		} else if (fragment instanceof ItemListFragment) {
 			long roomID = fragment.getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 			long itemID = fragment.getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 			if (itemID != Item.ID_ADD) {
-				setResult(RESULT_ITEM, ExtrasFactory.intentFromItem(itemID));
+				setResult(ITEM, ExtrasFactory.intentFromItem(itemID));
 			} else if (roomID != Room.ID_ADD) {
-				setResult(RESULT_ROOM, ExtrasFactory.intentFromRoom(roomID));
+				setResult(ROOM, ExtrasFactory.intentFromRoom(roomID));
 			}
+		}
+	}
+
+	private int getType(Fragment fragment) {
+		if (fragment instanceof RoomListFragment) {
+			return 1 << 1;
+		} else if (fragment instanceof ItemListFragment) {
+			long roomID = fragment.getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+			if (roomID != Room.ID_ADD) {
+				return ROOM;
+			} else {
+				return ITEM;
+			}
+		} else {
+			return NOTHING;
 		}
 	}
 
@@ -99,43 +122,74 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		int count = manager.getBackStackEntryCount();
 		if (count > 0) {
 			BackStackEntry at = manager.getBackStackEntryAt(count - 1);
-			setTitle(at.getName());
+			updateUI(getFragment(), at.getName());
 		} else {
-			setTitle(null);
+			updateUI(getFragment(), null);
 		}
 	}
 
-	private void setTitle(String name) {
+	private void updateUI(BaseFragment fragment, String name) {
+		int currentType = getType(fragment);
+		int requestedType = getArgWhat();
+		boolean allowed = (requestedType & currentType) != 0;
+
 		if (name != null) {
-			btnOk.setEnabled(true);
-			title.setText(getString(R.string.move_title, name));
+			title.setText(getString(R.string.move_title, toString(currentType), name));
 		} else {
-			btnOk.setEnabled(false);
 			title.setText(R.string.move_title_question);
 		}
+		labType.setVisibility(allowed? View.GONE : View.VISIBLE);
+		labType.setText(getString(R.string.move_current_type, toString(requestedType)));
+		btnOk.setEnabled(allowed);
+	}
+
+	private String toString(int type) {
+		int stringResource;
+		switch (type) {
+			case 1 << 1:
+				stringResource = R.string.property_one;
+				break;
+			case ROOM:
+				stringResource = R.string.room_one;
+				break;
+			case ITEM:
+				stringResource = R.string.item_one;
+				break;
+			case 1 << 1 | ROOM:
+				return toString(1 << 1) + "/" + toString(ROOM);
+			case 1 << 1 | ITEM:
+				return toString(1 << 1) + "/" + toString(ITEM);
+			case ROOM | ITEM:
+				return toString(ROOM) + "/" + toString(ITEM);
+			case EVERYTHING:
+				return toString(1 << 1) + "/" + toString(ROOM) + "/" + toString(ITEM);
+			default:
+				return "???";
+		}
+		return getString(stringResource);
 	}
 
 	@Override public void newProperty() {
-		startActivityForResult(PropertyEditActivity.add(), ADD_PROPERTY);
+		startActivityForResult(PropertyEditActivity.add(), REQUEST_ADD_PROPERTY);
 	}
 	@Override public void newRoom(long propertyID) {
-		startActivityForResult(RoomEditActivity.add(propertyID), ADD_ROOM);
+		startActivityForResult(RoomEditActivity.add(propertyID), REQUEST_ADD_ROOM);
 	}
 	@Override public void newItem(long parentID) {
-		startActivityForResult(ItemEditActivity.add(parentID), ADD_ITEM);
+		startActivityForResult(ItemEditActivity.add(parentID), REQUEST_ADD_ITEM);
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			getFragment().refresh();
 			switch (requestCode) {
-				case ADD_PROPERTY:
+				case REQUEST_ADD_PROPERTY:
 					propertySelected(data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD));
 					break;
-				case ADD_ROOM:
+				case REQUEST_ADD_ROOM:
 					roomSelected(data.getLongExtra(Extras.ROOM_ID, Room.ID_ADD));
 					break;
-				case ADD_ITEM:
+				case REQUEST_ADD_ITEM:
 					itemSelected(data.getLongExtra(Extras.ITEM_ID, Item.ID_ADD));
 					break;
 			}
@@ -180,8 +234,16 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		itemSelected(itemID);
 	}
 
+	private int getArgWhat() {
+		return getIntent().getIntExtra(EXTRA_WHAT, NOTHING) & EVERYTHING;
+	}
+
 	public static Intent pick() {
+		return pick(EVERYTHING);
+	}
+	public static Intent pick(int what) {
 		Intent intent = new Intent(App.getAppContext(), MoveTargetActivity.class);
+		intent.putExtra(EXTRA_WHAT, what);
 		return intent;
 	}
 }

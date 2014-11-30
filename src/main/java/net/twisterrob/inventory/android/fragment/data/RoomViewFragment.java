@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import java.util.Arrays;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -75,7 +77,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				delete(getArgRoomID());
 				return true;
 			case R.id.action_room_move:
-				startActivityForResult(MoveTargetActivity.pick(), MOVE_REQUEST);
+				startActivityForResult(MoveTargetActivity.pick(MoveTargetActivity.PROPERTY), MOVE_REQUEST);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -83,25 +85,16 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == MOVE_REQUEST) {
-			switch (resultCode) {
-				case MoveTargetActivity.RESULT_PROPERTY:
-					long propertyID = data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
-					move(getArgRoomID(), propertyID);
-					return;
-				case MoveTargetActivity.RESULT_ROOM:
-					App.toast("Cannot move room into another room, please select a property!");
-					return;
-				case MoveTargetActivity.RESULT_ITEM:
-					App.toast("Cannot move room into an item, please select a property!");
-					return;
-			}
+		if (requestCode == MOVE_REQUEST && resultCode == MoveTargetActivity.PROPERTY) {
+			long propertyID = data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
+			move(getArgRoomID(), propertyID);
+			return;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private void move(final long roomID, final long propertyID) {
-		new MoveRoomTask(roomID, propertyID, new Dialogs.Callback() {
+		new MoveRoomTask(propertyID, Arrays.asList(roomID), new Dialogs.Callback() {
 			public void dialogFailed() {
 				App.toast("Cannot move room #" + roomID + " to property #" + propertyID);
 			}
@@ -114,7 +107,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	private void delete(final long roomID) {
-		new DeleteRoomTask(roomID, new Dialogs.Callback() {
+		new DeleteRoomTask(Arrays.asList(roomID), new Dialogs.Callback() {
 			public void dialogSuccess() {
 				RoomDTO room = new RoomDTO();
 				room.id = roomID;
