@@ -6,11 +6,14 @@ import java.util.Locale;
 import org.slf4j.*;
 import org.slf4j.impl.AndroidLoggerFactory;
 
-import android.annotation.SuppressLint;
+import android.annotation.*;
 import android.app.Application;
 import android.content.*;
 import android.content.res.Configuration;
 import android.os.*;
+import android.os.Build.*;
+import android.os.StrictMode.ThreadPolicy.Builder;
+import android.os.StrictMode.VmPolicy;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -42,29 +45,6 @@ public class App extends Application {
 			}
 			s_instance = this;
 		}
-	}
-
-	@SuppressLint("NewApi")
-	private static void setStrictMode() {
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-				//.detectDiskReads()
-				.detectDiskWrites()
-				.detectNetwork()
-				.penaltyDeathOnNetwork()
-				.detectCustomSlowCalls()
-				.penaltyLog()
-				.penaltyDialog()
-				.penaltyDropBox()
-				.penaltyFlashScreen()
-				.build());
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-				//.detectActivityLeaks()
-				.detectFileUriExposure()
-				.detectLeakedClosableObjects()
-				.detectLeakedRegistrationObjects()
-				.detectLeakedSqlLiteObjects()
-				.penaltyLog() //.penaltyDeath()
-				.build());
 	}
 
 	public static App getInstance() {
@@ -150,5 +130,53 @@ public class App extends Application {
 	public static void toast(String message) {
 		LOG.info("Long Toast: {}", message, new StackTrace());
 		Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
+	}
+
+	@TargetApi(VERSION_CODES.KITKAT)
+	private static void setStrictMode() {
+		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
+			Builder threadBuilder = new Builder();
+			threadBuilder = threadBuilder
+					//.detectDiskReads()
+					.detectDiskWrites()
+					.detectNetwork()
+					.penaltyLog()
+					.penaltyDialog()
+					.penaltyDropBox()
+			;
+			if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+				threadBuilder = threadBuilder
+						.penaltyDeathOnNetwork()
+						.detectCustomSlowCalls()
+						.penaltyFlashScreen()
+				;
+			}
+			StrictMode.setThreadPolicy(threadBuilder.build());
+
+			VmPolicy.Builder vmBuilder = new VmPolicy.Builder();
+			vmBuilder = vmBuilder
+					.detectLeakedSqlLiteObjects()
+							//.penaltyDeath()
+					.penaltyLog()
+			;
+			if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+				vmBuilder = vmBuilder
+						.detectLeakedClosableObjects()
+						.detectActivityLeaks()
+				;
+			}
+			if (VERSION_CODES.JELLY_BEAN_MR2 <= VERSION.SDK_INT) {
+				vmBuilder = vmBuilder
+						.detectFileUriExposure()
+				;
+			}
+			if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
+				vmBuilder = vmBuilder
+						.detectLeakedRegistrationObjects()
+				;
+			}
+
+			StrictMode.setVmPolicy(vmBuilder.build());
+		}
 	}
 }
