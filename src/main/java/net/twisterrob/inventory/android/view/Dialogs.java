@@ -5,6 +5,7 @@ import org.slf4j.*;
 import android.app.*;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.os.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 
@@ -16,7 +17,7 @@ public class Dialogs {
 		void dialogFailed();
 	}
 
-	public static abstract class ActionParams {
+	public static abstract class ActionParams implements Runnable {
 		private final Callback callback;
 		public ActionParams(Callback callback) {
 			this.callback = callback;
@@ -39,16 +40,20 @@ public class Dialogs {
 			}
 		}
 
+		@Override public void run() {
+			try {
+				execute();
+				success();
+			} catch (Exception ex) {
+				LOG.warn("Cannot execute {}", getClass().getSimpleName(), ex);
+				failed();
+			}
+		}
+
 		public OnClickListener createDialogClickListener() {
 			return new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					try {
-						execute();
-						success();
-					} catch (Exception ex) {
-						LOG.warn("Cannot execute {}", getClass().getSimpleName(), ex);
-						failed();
-					}
+					run();
 				}
 			};
 		}
@@ -56,10 +61,14 @@ public class Dialogs {
 		public void displayDialog(Activity activity) {
 			Dialogs.executeTask(activity, this);
 		}
+
+		public void executeBackground() {
+			Dialogs.executeTask(this);
+		}
 	}
 
 	public static void executeTask(final Activity activity, ActionParams params) {
-		new SimpleAsyncTask<ActionParams, Void, ActionParams>() {
+		new SimplerAsyncTask<ActionParams, Void, ActionParams>() {
 			@Override
 			protected ActionParams doInBackground(ActionParams state) {
 				state.prepare();
@@ -77,5 +86,22 @@ public class Dialogs {
 						.show();
 			}
 		}.execute(params);
+	}
+
+	private static void executeTask(ActionParams params) {
+		new SimplerAsyncTask<ActionParams, Void, Void>() {
+			@Override
+			protected Void doInBackground(ActionParams state) {
+				state.prepare();
+				new Handler(Looper.getMainLooper()).post(state);
+				return null;
+			}
+		}.execute(params);
+	}
+
+	static abstract class SimplerAsyncTask<A, B, C> extends SimpleAsyncTask<A, B, C> {
+		public void execute(A a) {
+			super.execute(a);
+		}
 	}
 }

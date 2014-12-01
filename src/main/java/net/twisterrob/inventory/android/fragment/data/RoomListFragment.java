@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.slf4j.*;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.*;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -16,7 +16,9 @@ import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 import net.twisterrob.inventory.android.tasks.*;
-import net.twisterrob.inventory.android.view.Dialogs;
+import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.Dialogs.Callback;
+import net.twisterrob.inventory.android.view.UndobarController.UndoListener;
 
 public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
@@ -131,8 +133,21 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 			public void dialogSuccess() {
 				finishActionMode();
 				refresh();
+				new UndobarController(getActivity().findViewById(R.id.undobar), new UndoListener() {
+					@Override public void onUndo(Parcelable token) {
+						new MoveRoomTask(getArgPropertyID(), roomIDs, new Callback() {
+							@Override public void dialogSuccess() {
+								App.toast("Undo'd");
+								refresh();
+							}
+							@Override public void dialogFailed() {
+								App.toast("Undo failed");
+							}
+						}).executeBackground();
+					}
+				}).showUndoBar(false, roomIDs.size() + " room(s) moved", null);
 			}
-		}).displayDialog(getActivity());
+		}).executeBackground();
 	}
 
 	private long getArgPropertyID() {
