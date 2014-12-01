@@ -297,4 +297,14 @@ public abstract class AndroidTools {
 			Log.e("SCREENSHOT", "Cannot save screenshot of " + view, e);
 		}
 	}
+
+	public static void setEnabled(MenuItem item, boolean enabled) {
+		item.setEnabled(enabled);
+		Drawable icon = item.getIcon();
+		if (icon != null) {
+			icon = icon.mutate();
+			icon.setAlpha(enabled? 0xFF : 0x80);
+			item.setIcon(icon);
+		}
+	}
 }
