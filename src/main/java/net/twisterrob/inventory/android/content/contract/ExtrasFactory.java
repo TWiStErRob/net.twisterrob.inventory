@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.content.contract;
 
+import java.util.*;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -48,5 +50,23 @@ public final class ExtrasFactory {
 		Intent intent = new Intent();
 		intent.putExtras(bundleFromItem(itemID));
 		return intent;
+	}
+	public static Bundle bundleFromIDs(Collection<Long> IDs) {
+		Bundle bundle = new Bundle();
+		long[] array = new long[IDs.size()];
+		int i = 0;
+		for (Long roomID : IDs) {
+			array[i++] = roomID;
+		}
+		bundle.putLongArray("IDs", array);
+		return bundle;
+	}
+	public static Collection<Long> getIDsFrom(Bundle bundle) {
+		long[] array = bundle.getLongArray("IDs");
+		Collection<Long> IDs = new ArrayList<>();
+		for (long id : array) {
+			IDs.add(id);
+		}
+		return IDs;
 	}
 }

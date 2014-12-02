@@ -61,6 +61,10 @@
 	<string name="room_share">Share Room</string>
 	<string name="room_move">Move Room</string>
 	<string name="room_move_many">Move Rooms</string>
+	<plurals name="room_moved">
+		<item quantity="one">Room moved.</item>
+		<item quantity="other">%d Rooms moved.</item>
+	</plurals>
 	<string name="room_name_hint">Room Title</string>
 	<string name="room_location">In %1$s</string>
 	<string name="room_viewAll">List All Rooms</string>

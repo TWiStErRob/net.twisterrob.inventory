@@ -22,6 +22,20 @@ import net.twisterrob.inventory.android.view.UndobarController.UndoListener;
 
 public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
+	private UndobarController controller;
+	private UndoListener undoMove = new UndoListener() {
+		@Override public void onUndo(Parcelable token) {
+			new MoveRoomTask(getArgPropertyID(), ExtrasFactory.getIDsFrom((Bundle)token), new Callback() {
+				@Override public void dialogSuccess() {
+					App.toast("Undo'd");
+					refresh();
+				}
+				@Override public void dialogFailed() {
+					App.toast("Undo failed");
+				}
+			}).executeBackground();
+		}
+	};
 
 	public interface RoomsEvents {
 		void newRoom(long propertyID);
@@ -133,21 +147,16 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 			public void dialogSuccess() {
 				finishActionMode();
 				refresh();
-				new UndobarController(getActivity().findViewById(R.id.undobar), new UndoListener() {
-					@Override public void onUndo(Parcelable token) {
-						new MoveRoomTask(getArgPropertyID(), roomIDs, new Callback() {
-							@Override public void dialogSuccess() {
-								App.toast("Undo'd");
-								refresh();
-							}
-							@Override public void dialogFailed() {
-								App.toast("Undo failed");
-							}
-						}).executeBackground();
-					}
-				}).showUndoBar(false, roomIDs.size() + " room(s) moved", null);
+				String successMessage = getResources().getQuantityString(R.plurals.room_moved, roomIDs.size());
+				showUndo(successMessage, undoMove, ExtrasFactory.bundleFromIDs(roomIDs));
 			}
 		}).executeBackground();
+	}
+	private void showUndo(String message, UndoListener listener, Bundle listenerArgs) {
+		if (controller == null) {
+			controller = new UndobarController(getActivity());
+		}
+		controller.showUndoBar(false, message, listenerArgs, listener);
 	}
 
 	private long getArgPropertyID() {

@@ -13,5 +13,4 @@
 		tools:background="@color/toolsBG"
 		/>
 	<!--<include layout="@layout/inc_overlay" />-->
-	<include layout="@layout/inc_undobar" />
 </FrameLayout>
