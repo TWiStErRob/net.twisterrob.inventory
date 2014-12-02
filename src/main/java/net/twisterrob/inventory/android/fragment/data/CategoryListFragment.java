@@ -101,11 +101,7 @@ public class CategoryListFragment extends BaseFragment<CategoriesEvents> impleme
 
 	public static CategoryListFragment newInstance(long parentCategoryID) {
 		CategoryListFragment fragment = new CategoryListFragment();
-
-		Bundle args = new Bundle();
-		args.putLong(Extras.PARENT_ID, parentCategoryID);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromParent(parentCategoryID));
 		return fragment;
 	}
 }

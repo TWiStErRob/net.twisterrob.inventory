@@ -28,6 +28,11 @@ public final class ExtrasFactory {
 		bundle.putLong(Extras.ITEM_ID, itemID);
 		return bundle;
 	}
+	public static Bundle bundleFromCategory(long categoryID) {
+		Bundle bundle = new Bundle();
+		bundle.putLong(Extras.CATEGORY_ID, categoryID);
+		return bundle;
+	}
 
 	public static Intent intentFromProperty(long propertyID) {
 		Intent intent = new Intent();
@@ -47,6 +52,11 @@ public final class ExtrasFactory {
 	public static Intent intentFromItem(long itemID) {
 		Intent intent = new Intent();
 		intent.putExtras(bundleFromItem(itemID));
+		return intent;
+	}
+	public static Intent intentFromCategory(long categoryID) {
+		Intent intent = new Intent();
+		intent.putExtras(bundleFromCategory(categoryID));
 		return intent;
 	}
 

@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
@@ -38,9 +37,8 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	@Override
 	protected void onStartLoading() {
 		super.onStartLoading();
-		Bundle args = new Bundle();
-		args.putLong(Extras.ROOM_ID, getArgRoomID());
-		getLoaderManager().initLoader(SingleRoom.ordinal(), args, new SingleRowLoaded());
+		getLoaderManager().initLoader(SingleRoom.ordinal(),
+				ExtrasFactory.bundleFromRoom(getArgRoomID()), new SingleRowLoaded());
 	}
 
 	@Override
@@ -128,11 +126,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 		}
 
 		RoomViewFragment fragment = new RoomViewFragment();
-
-		Bundle args = new Bundle();
-		args.putLong(Extras.ROOM_ID, roomID);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromRoom(roomID));
 		return fragment;
 	}
 }

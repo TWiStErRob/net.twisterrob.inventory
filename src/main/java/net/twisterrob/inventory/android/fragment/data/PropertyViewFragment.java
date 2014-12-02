@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.fragment.data;
 
 import android.database.Cursor;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
@@ -35,9 +34,8 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	@Override
 	protected void onStartLoading() {
 		super.onStartLoading();
-		Bundle args = new Bundle();
-		args.putLong(Extras.PROPERTY_ID, getArgPropertyID());
-		getLoaderManager().initLoader(SingleProperty.ordinal(), args, new SingleRowLoaded());
+		getLoaderManager().initLoader(SingleProperty.ordinal(),
+				ExtrasFactory.bundleFromProperty(getArgPropertyID()), new SingleRowLoaded());
 	}
 
 	@Override
@@ -99,11 +97,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 		}
 
 		PropertyViewFragment fragment = new PropertyViewFragment();
-
-		Bundle args = new Bundle();
-		args.putLong(Extras.PROPERTY_ID, propertyID);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromProperty(propertyID));
 		return fragment;
 	}
 }

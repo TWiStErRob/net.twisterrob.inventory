@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.fragment.data;
 
 import android.database.Cursor;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -36,9 +35,8 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	@Override
 	protected void onStartLoading() {
 		super.onStartLoading();
-		Bundle args = new Bundle();
-		args.putLong(Extras.ITEM_ID, getArgItemID());
-		getLoaderManager().initLoader(SingleItem.ordinal(), args, new SingleRowLoaded());
+		getLoaderManager().initLoader(SingleItem.ordinal(),
+				ExtrasFactory.bundleFromItem(getArgItemID()), new SingleRowLoaded());
 	}
 
 	@Override
@@ -107,11 +105,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 		}
 
 		ItemViewFragment fragment = new ItemViewFragment();
-
-		Bundle args = new Bundle();
-		args.putLong(Extras.ITEM_ID, itemID);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromItem(itemID));
 		return fragment;
 	}
 }

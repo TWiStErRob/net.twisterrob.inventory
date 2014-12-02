@@ -110,15 +110,6 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		return getArguments().getCharSequence(SearchManager.QUERY);
 	}
 
-	@Override protected void onRefresh() {
-		super.onRefresh();
-		if (getArgQuery() == null) {
-			getLoaderManager().getLoader(Loaders.Items.ordinal()).forceLoad();
-		} else {
-			getLoaderManager().getLoader(Loaders.ItemSearch.ordinal()).forceLoad();
-		}
-	}
-
 	@Override protected void onListItemClick(RecyclerView.ViewHolder holder) {
 		eventsListener.itemSelected(holder.getItemId());
 	}
@@ -129,29 +120,20 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 
 	public static ItemListFragment newRoomInstance(long roomID) {
 		ItemListFragment fragment = new ItemListFragment();
-
-		Bundle args = new Bundle();
-		args.putLong(Extras.ROOM_ID, roomID);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromRoom(roomID));
 		return fragment;
 	}
 
 	public static ItemListFragment newInstance(long parentItemID) {
 		ItemListFragment fragment = new ItemListFragment();
-
-		Bundle args = new Bundle();
-		args.putLong(Extras.PARENT_ID, parentItemID);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromParent(parentItemID));
 		return fragment;
 	}
 
 	public static ItemListFragment newCategoryInstance(long categoryID, boolean include) {
 		ItemListFragment fragment = new ItemListFragment();
 
-		Bundle args = new Bundle();
-		args.putLong(Extras.CATEGORY_ID, categoryID);
+		Bundle args = ExtrasFactory.bundleFromCategory(categoryID);
 		args.putBoolean(Extras.INCLUDE_SUBS, include);
 
 		fragment.setArguments(args);

@@ -18,6 +18,8 @@ import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.*;
 
+import static net.twisterrob.inventory.android.content.contract.ExtrasFactory.*;
+
 public class MoveTargetActivity extends FragmentActivity implements OnBackStackChangedListener,
 		PropertyListFragment.PropertiesEvents,
 		RoomListFragment.RoomsEvents,
@@ -210,17 +212,15 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	}
 
 	@Override public void propertySelected(long propertyID) {
-		load(Loaders.SingleProperty, Extras.PROPERTY_ID, propertyID, RoomListFragment.newInstance(propertyID));
+		load(Loaders.SingleProperty, bundleFromProperty(propertyID), RoomListFragment.newInstance(propertyID));
 	}
 	@Override public void roomSelected(long roomID) {
-		load(Loaders.SingleRoom, Extras.ROOM_ID, roomID, ItemListFragment.newRoomInstance(roomID));
+		load(Loaders.SingleRoom, bundleFromRoom(roomID), ItemListFragment.newRoomInstance(roomID));
 	}
 	@Override public void itemSelected(long itemID) {
-		load(Loaders.SingleItem, Extras.ITEM_ID, itemID, ItemListFragment.newInstance(itemID));
+		load(Loaders.SingleItem, bundleFromItem(itemID), ItemListFragment.newInstance(itemID));
 	}
-	private void load(final Loaders singleLoader, String extraID, long id, final BaseFragment fragment) {
-		Bundle args = new Bundle();
-		args.putLong(extraID, id);
+	private void load(final Loaders singleLoader, Bundle args, final BaseFragment fragment) {
 		getSupportLoaderManager().initLoader(singleLoader.ordinal(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
 				final DTO data = RoomDTO.fromCursor(cursor);

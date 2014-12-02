@@ -55,10 +55,8 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, typeCursorSwapper);
 
 		if (id != Property.ID_ADD) {
-			Bundle args = new Bundle();
-			args.putLong(Extras.PROPERTY_ID, id);
-			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.ordinal(), args, new SingleRowLoaded());
-
+			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.ordinal(),
+					ExtrasFactory.bundleFromProperty(id), new SingleRowLoaded());
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		} else {
 			getBaseActivity().setActionBarTitle(getString(R.string.property_new));
@@ -120,11 +118,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 
 	public static PropertyEditFragment newInstance(long propertyID) {
 		PropertyEditFragment fragment = new PropertyEditFragment();
-
-		Bundle args = new Bundle();
-		args.putLong(Extras.PROPERTY_ID, propertyID);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromProperty(propertyID));
 		return fragment;
 	}
 }

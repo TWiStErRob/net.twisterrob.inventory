@@ -26,7 +26,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		void roomSaved(long roomID);
 	}
 
-	public  RoomEditFragment() {
+	public RoomEditFragment() {
 		setDynamicResource(DYN_EventsClass, RoomEditEvents.class);
 	}
 
@@ -55,10 +55,8 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		Dependency<Cursor> populateTypes = manager.add(RoomTypes.ordinal(), null, typeCursorSwapper);
 
 		if (id != Room.ID_ADD) {
-			Bundle args = new Bundle();
-			args.putLong(Extras.ROOM_ID, id);
-			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(), args, new SingleRowLoaded());
-
+			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(),
+					ExtrasFactory.bundleFromRoom(id), new SingleRowLoaded());
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		} else {
 			getBaseActivity().setActionBarTitle(getString(R.string.room_new));

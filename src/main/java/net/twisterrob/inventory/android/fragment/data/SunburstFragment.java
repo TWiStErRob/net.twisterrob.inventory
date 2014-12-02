@@ -268,11 +268,7 @@ public class SunburstFragment extends BaseFragment<Listener> {
 
 	public static SunburstFragment newInstance() {
 		SunburstFragment fragment = new SunburstFragment();
-
-		Bundle args = new Bundle();
 		// TODO parametrize
-
-		fragment.setArguments(args);
 		return fragment;
 	}
 }

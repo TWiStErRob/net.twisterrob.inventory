@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.fragment.data;
 
 import android.database.Cursor;
-import android.os.Bundle;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -35,9 +34,8 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 	@Override
 	protected void onStartLoading() {
 		super.onStartLoading();
-		Bundle args = new Bundle();
-		args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
-		getLoaderManager().initLoader(SingleCategory.ordinal(), args, new SingleRowLoaded());
+		getLoaderManager().initLoader(SingleCategory.ordinal(),
+				ExtrasFactory.bundleFromCategory(getArgCategoryID()), new SingleRowLoaded());
 	}
 
 	@Override
@@ -106,11 +104,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		}
 
 		CategoryViewFragment fragment = new CategoryViewFragment();
-
-		Bundle args = new Bundle();
-		args.putLong(Extras.CATEGORY_ID, categoryID);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromCategory(categoryID));
 		return fragment;
 	}
 }

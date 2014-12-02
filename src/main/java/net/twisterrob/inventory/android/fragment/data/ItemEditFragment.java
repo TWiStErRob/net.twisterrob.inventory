@@ -49,10 +49,8 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		Dependency<Cursor> populateCats = manager.add(ItemCategories.ordinal(), null, catCursorSwapper);
 
 		if (id != Item.ID_ADD) {
-			Bundle args = new Bundle();
-			args.putLong(Extras.ITEM_ID, id);
-			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(), args, new SingleRowLoaded());
-
+			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(),
+					ExtrasFactory.bundleFromItem(id), new SingleRowLoaded());
 			loadItemData.dependsOn(populateCats);
 		} else {
 			getBaseActivity().setActionBarTitle(getString(R.string.item_new));

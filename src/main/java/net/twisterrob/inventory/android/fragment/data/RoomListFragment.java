@@ -165,11 +165,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 
 	public static RoomListFragment newInstance(long propertyID) {
 		RoomListFragment fragment = new RoomListFragment();
-
-		Bundle args = new Bundle();
-		args.putLong(Extras.PROPERTY_ID, propertyID);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromProperty(propertyID));
 		return fragment;
 	}
 }
