@@ -101,7 +101,7 @@
 		<activity
 			android:name=".activity.data.PropertyEditActivity"
 			android:label="@string/property_edit"
-			android:windowSoftInputMode="adjustResize">
+			android:windowSoftInputMode="adjustResize|stateHidden">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.data.PropertyListActivity" />
 		</activity>
@@ -114,7 +114,7 @@
 		<activity
 			android:name=".activity.data.RoomEditActivity"
 			android:label="@string/room_edit"
-			android:windowSoftInputMode="adjustResize">
+			android:windowSoftInputMode="adjustResize|stateHidden">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.data.PropertyViewActivity" />
 		</activity>
@@ -140,7 +140,7 @@
 		<activity
 			android:name=".activity.data.ItemEditActivity"
 			android:label="@string/item_edit"
-			android:windowSoftInputMode="adjustResize">
+			android:windowSoftInputMode="adjustResize|stateHidden">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.data.ItemViewActivity" />
 		</activity>
