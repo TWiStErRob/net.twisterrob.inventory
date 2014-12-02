@@ -21,34 +21,19 @@
 		android:scaleType="fitCenter"
 		tools:src="@drawable/category_unknown"
 		/>
-	<Button
-		android:id="@id/items"
-		style="?android:attr/buttonStyleSmall"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingTop="0dp"
-		android:paddingBottom="0dp"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentRight="true"
-		android:focusable="false"
-		android:includeFontPadding="false"
-		tools:text="List 999 items"
-		/>
 	<TextView
 		android:id="@id/title"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_toEndOf="@id/image"
-		android:layout_toLeftOf="@id/items"
 		android:layout_toRightOf="@id/image"
-		android:layout_toStartOf="@id/items"
 		android:focusable="false"
-		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textAppearance="?attr/textAppearanceListItemSmall"
 		android:textIsSelectable="false"
-		tools:text="Category Name"
+		tools:text="Room Name"
 		/>
 	<TextView
-		android:id="@id/stats"
+		android:id="@id/details"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignEnd="@id/title"
@@ -59,6 +44,6 @@
 		android:focusable="false"
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:textIsSelectable="false"
-		tools:text="9 Subcategories"
+		tools:text="@string/room_location"
 		/>
 </RelativeLayout>

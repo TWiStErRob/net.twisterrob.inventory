@@ -1,14 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@android:id/list"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
 	android:padding="@dimen/margin"
-	android:horizontalSpacing="@dimen/margin"
-	android:numColumns="@integer/gallery_columns"
-	android:verticalSpacing="@dimen/margin"
+	android:orientation="horizontal"
 	tools:context=".activity.MainActivity"
 	>
-</GridView>
+	<View
+		android:id="@+id/spacer"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_margin="@dimen/marginHalf"
+		android:layout_centerInParent="true"
+		/>
+	<android.support.v7.widget.CardView
+		android:id="@id/properties"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_below="@id/spacer"
+		android:layout_toLeftOf="@id/spacer"
+		android:layout_toStartOf="@id/spacer"
+		>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			>
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/property_list"
+				android:gravity="center_horizontal"
+				android:textAllCaps="true"
+				/>
+			<include layout="@layout/inc_recyclerview" />
+		</LinearLayout>
+	</android.support.v7.widget.CardView>
+	<android.support.v7.widget.CardView
+		android:id="@id/rooms"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_below="@id/spacer"
+		android:layout_toEndOf="@id/spacer"
+		android:layout_toRightOf="@id/spacer"
+		>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			>
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/room_list"
+				android:gravity="center_horizontal"
+				android:textAllCaps="true"
+				/>
+			<include layout="@layout/inc_recyclerview" />
+		</LinearLayout>
+	</android.support.v7.widget.CardView>
+	<android.support.v7.widget.CardView
+		android:id="@id/items"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_above="@id/spacer"
+		>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			>
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Navigation"
+				android:gravity="center_horizontal"
+				android:textAllCaps="true"
+				/>
+			<GridView
+				android:id="@android:id/list"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:layout_weight="1"
+				android:horizontalSpacing="@dimen/marginHalf"
+				android:numColumns="3"
+				android:verticalSpacing="@dimen/marginHalf"
+				tools:listitem="@layout/item_start"
+				/>
+		</LinearLayout>
+	</android.support.v7.widget.CardView>
+</RelativeLayout>

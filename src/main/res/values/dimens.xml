@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<dimen name="margin">4dp</dimen>
+	<dimen name="margin2">8dp</dimen>
+	<dimen name="marginHalf">2dp</dimen>
+	<dimen name="marginBig">16dp</dimen>
 	<integer name="gallery_columns">2</integer>
 	<!-- TODO calculate for each dpi -->
 	<fraction name="fabShadow">45000%</fraction>

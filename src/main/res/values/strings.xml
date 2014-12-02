@@ -62,6 +62,7 @@
 	<string name="room_move">Move Room</string>
 	<string name="room_move_many">Move Rooms</string>
 	<string name="room_name_hint">Room Title</string>
+	<string name="room_location">In %1$s</string>
 	<string name="room_viewAll">List All Rooms</string>
 
 	<string name="move_title">Move to %1$s:\n%2$s</string>
