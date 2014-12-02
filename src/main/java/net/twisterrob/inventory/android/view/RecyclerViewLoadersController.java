@@ -25,6 +25,10 @@ public abstract class RecyclerViewLoadersController extends RecyclerViewCursorLo
 		this.loader = loader;
 	}
 
+	public Loaders getLoader() {
+		return loader;
+	}
+
 	@Override protected Loader<Cursor> createLoader(int id, Bundle args) {
 		return Loaders.fromID(id).createLoader(context, args);
 	}

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.slf4j.*;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.*;
 import android.support.v7.view.ActionMode;
@@ -72,34 +73,6 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		menu.findItem(R.id.action_room_add).setVisible(listController.canCreateNew());
 	}
 
-	@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-		mode.getMenuInflater().inflate(R.menu.room_bulk, menu);
-		return super.onCreateActionMode(mode, menu);
-	}
-
-	@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_room_delete:
-				delete(getSelectedIDs());
-				return true;
-			case R.id.action_room_move:
-				startActivityForResult(MoveTargetActivity.pick(MoveTargetActivity.PROPERTY), PICK_REQUEST);
-				return true;
-		}
-		return super.onActionItemClicked(mode, item);
-	}
-
-	public static final int PICK_REQUEST = 1;
-
-	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == PICK_REQUEST && resultCode == MoveTargetActivity.PROPERTY) {
-			long propertyID = data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
-			move(propertyID, getSelectedIDs());
-			return;
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -109,6 +82,39 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	protected SelectionActionMode onPrepareSelectionMode(Activity activity, SelectionAdapter<?> adapter) {
+		return new SelectionActionMode(activity, adapter) {
+			@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				mode.getMenuInflater().inflate(R.menu.room_bulk, menu);
+				return super.onCreateActionMode(mode, menu);
+			}
+
+			@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+					case R.id.action_room_delete:
+						delete(selectionMode.getSelectedIDs());
+						return true;
+					case R.id.action_room_move:
+						startActivityForResult(MoveTargetActivity.pick(MoveTargetActivity.PROPERTY), PICK_REQUEST);
+						return true;
+				}
+				return super.onActionItemClicked(mode, item);
+			}
+		};
+	}
+
+	public static final int PICK_REQUEST = 1;
+
+	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == PICK_REQUEST && resultCode == MoveTargetActivity.PROPERTY) {
+			long propertyID = data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
+			move(propertyID, selectionMode.getSelectedIDs());
+			return;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override protected void onListItemLongClick(RecyclerView.ViewHolder holder) {
@@ -126,7 +132,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	private void delete(final long[] roomIDs) {
 		new DeleteRoomTask(new Dialogs.Callback() {
 			public void dialogSuccess() {
-				finishActionMode();
+				selectionMode.finish();
 				refresh();
 			}
 
@@ -145,7 +151,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 				App.toast("Cannot move " + Arrays.toString(roomIDs) + " to property #" + propertyID);
 			}
 			public void dialogSuccess() {
-				finishActionMode();
+				selectionMode.finish();
 				refresh();
 				String message = getResources().getQuantityString(R.plurals.room_moved, roomIDs.length, roomIDs.length);
 				showUndo(message, undoMove, ExtrasFactory.bundleFromIDs(roomIDs));

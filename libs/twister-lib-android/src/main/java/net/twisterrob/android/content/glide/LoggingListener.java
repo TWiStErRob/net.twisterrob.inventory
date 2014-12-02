@@ -28,12 +28,12 @@ public class LoggingListener<T, Z> implements RequestListener<T, Z> {
 	}
 
 	public boolean onException(Exception e, T model, Target<Z> target, boolean isFirst) {
-		LOG.warn("Cannot load {}@{} into {} (first={})", type, formatter.toString(model), target, isFirst, e);
+		LOG.trace("Cannot load {}@{} into {} (first={})", type, formatter.toString(model), target, isFirst, e);
 		return false;
 	}
 
 	public boolean onResourceReady(Z resource, T model, Target<Z> target, boolean isFromMemCache, boolean isFirst) {
-		LOG.debug("Loaded {}@{} into {} (first={}, mem={}) transcoded={}", type, formatter.toString(model), target,
+		LOG.trace("Loaded {}@{} into {} (first={}, mem={}) transcoded={}", type, formatter.toString(model), target,
 				isFirst, isFromMemCache, resource);
 		return false;
 	}

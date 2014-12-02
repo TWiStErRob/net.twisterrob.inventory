@@ -65,17 +65,14 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	}
 
 	@Override protected Bundle createLoadArgs() {
-		CharSequence query = getArgQuery();
-		if (query == null) {
+		if (listController.getLoader() == Loaders.ItemSearch) {
+			return ExtrasFactory.bundleFromQuery(getArgQuery());
+		} else {
 			Bundle args = new Bundle();
 			args.putLong(Extras.PARENT_ID, getArgParentItemID());
 			args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
 			args.putLong(Extras.ROOM_ID, getArgRoomID());
 			args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
-			return args;
-		} else {
-			Bundle args = new Bundle();
-			args.putCharSequence(SearchManager.QUERY, query);
 			return args;
 		}
 	}
@@ -142,11 +139,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 
 	public static ItemListFragment newSearchInstance(CharSequence query) {
 		ItemListFragment fragment = new ItemListFragment();
-
-		Bundle args = new Bundle();
-		args.putCharSequence(SearchManager.QUERY, query);
-
-		fragment.setArguments(args);
+		fragment.setArguments(ExtrasFactory.bundleFromQuery(query));
 		return fragment;
 	}
 }

@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.content.contract;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -67,5 +68,11 @@ public final class ExtrasFactory {
 	}
 	public static long[] getIDsFrom(Bundle bundle) {
 		return bundle.getLongArray("IDs");
+	}
+
+	public static Bundle bundleFromQuery(CharSequence query) {
+		Bundle args = new Bundle();
+		args.putCharSequence(SearchManager.QUERY, query);
+		return args;
 	}
 }

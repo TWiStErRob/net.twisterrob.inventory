@@ -82,7 +82,7 @@ public class SelectionAdapter<VH extends RecyclerView.ViewHolder> extends Wrappi
 		return selectedItems.size();
 	}
 
-	public List<Integer> getSelectedPositions() {
+	public Collection<Integer> getSelectedPositions() {
 		List<Integer> items = new ArrayList<>(selectedItems.size());
 		for (int i = 0; i < selectedItems.size(); i++) {
 			int key = selectedItems.keyAt(i);
