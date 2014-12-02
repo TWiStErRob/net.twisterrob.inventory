@@ -22,7 +22,7 @@ public class MainActivity extends BaseActivity {
 			                           .commit()
 			;
 
-			if (!Constants.DISABLE) {
+			if (Constants.DISABLE) {
 				onOptionsItemSelected(new MenuBuilder(this).add(0, R.id.debug, 0, "Debug"));
 			}
 		}
