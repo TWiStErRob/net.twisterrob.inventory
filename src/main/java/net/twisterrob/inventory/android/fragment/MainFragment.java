@@ -41,8 +41,7 @@ public class MainFragment extends BaseFragment<Void> implements BackupPickerList
 		list.setAdapter(new IconedItemAdapter(getContext(), R.layout.item_main_nav, BaseActivity.createActions()));
 		list.setOnItemClickListener(new IntentLauncher(getActivity()));
 
-		propertiesController = new RecyclerViewLoadersController(getLoaderManager(),
-				view.findViewById(R.id.properties), Loaders.Properties) {
+		propertiesController = new RecyclerViewLoadersController(this, Loaders.Properties) {
 			@Override protected CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				PropertyAdapter adapter = new PropertyAdapter(new RecyclerViewItemEvents() {
@@ -57,8 +56,8 @@ public class MainFragment extends BaseFragment<Void> implements BackupPickerList
 				return adapter;
 			}
 		};
-		roomsController = new RecyclerViewLoadersController(getLoaderManager(),
-				view.findViewById(R.id.rooms), Loaders.Rooms) {
+		propertiesController.setView(view.findViewById(R.id.properties));
+		roomsController = new RecyclerViewLoadersController(this, Loaders.Rooms) {
 			@Override protected CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				RoomAdapter adapter = new RoomAdapter(new RecyclerViewItemEvents() {
@@ -73,6 +72,7 @@ public class MainFragment extends BaseFragment<Void> implements BackupPickerList
 				return adapter;
 			}
 		};
+		roomsController.setView(view.findViewById(R.id.rooms));
 
 		propertiesController.startLoad(null);
 		roomsController.startLoad(null);

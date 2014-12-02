@@ -21,12 +21,13 @@ import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.GalleryAdapter.GalleryItemEvents;
 
-public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
+public abstract class BaseGalleryFragment<T> extends BaseFragment<T>
 		implements GalleryItemEvents, ActionMode.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseGalleryFragment.class);
 
 	private HeaderManager header = null;
 	private SelectionAdapter<? extends ViewHolder> selectionAdapter;
+	protected RecyclerViewLoadersController listController;
 
 	public void setHeader(BaseFragment headerFragment) {
 		this.header = headerFragment != null? new HeaderManager(this, headerFragment) : null;
@@ -40,14 +41,35 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	@Override
+	protected void onStartLoading() {
+		super.onStartLoading();
+		listController.startLoad(createLoadArgs());
+	}
+
+	protected Bundle createLoadArgs() {
+		return null;
+	}
+
 	@Override protected void onRefresh() {
 		super.onRefresh();
 		if (header != null) {
 			header.refresh();
 		}
+		listController.refresh();
 	}
 
-	@Override protected CursorRecyclerAdapter setupList() {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.generic_list, container, false);
+	}
+
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		listController.setView(view);
+	}
+
+	protected CursorRecyclerAdapter setupList(RecyclerView list) {
 		final int columns = getResources().getInteger(R.integer.gallery_columns);
 		//StaggeredGridLayoutManager layout = new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL);
 		//LinearLayoutManager layout = new LinearLayoutManager(getContext());
@@ -100,8 +122,6 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 		}
 	}
 
-	protected abstract boolean canCreateNew();
-	protected abstract void onCreateNew();
 	protected abstract void onListItemClick(ViewHolder holder);
 	protected abstract void onListItemLongClick(ViewHolder holder);
 

@@ -30,7 +30,7 @@ public abstract class RecyclerViewController {
 	};
 	private View fab;
 
-	public RecyclerViewController(View view) {
+	public void setView(View view) {
 		//LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View root = view; //inflater.inflate(R.layout.generic_list, view, true);
 
@@ -64,7 +64,10 @@ public abstract class RecyclerViewController {
 		}
 	}
 
-	protected boolean canCreateNew() {
+	public void createNew() {
+		onCreateNew();
+	}
+	public boolean canCreateNew() {
 		return false;
 	}
 	protected void onCreateNew() {

@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 
+import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
+import net.twisterrob.inventory.android.view.RecyclerViewLoadersController;
 
 public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemListFragment.class);
@@ -27,26 +29,42 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		setDynamicResource(DYN_OptionsMenu, R.menu.item_list);
 	}
 
+	@Override public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Loaders loader = getArgQuery() != null? Loaders.ItemSearch : Loaders.Items;
+		listController = new RecyclerViewLoadersController(this, loader) {
+			@Override protected CursorRecyclerAdapter setupList() {
+				return ItemListFragment.super.setupList(list);
+			}
+
+			@Override public boolean canCreateNew() {
+				return getArgParentItemID() != Item.ID_ADD || getArgRoomID() != Room.ID_ADD;
+			}
+
+			@Override protected void onCreateNew() {
+				eventsListener.newItem(getArgParentItemID());
+			}
+		};
+	}
+
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		menu.findItem(R.id.action_item_add).setVisible(canCreateNew());
+		menu.findItem(R.id.action_item_add).setVisible(listController.canCreateNew());
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_item_add:
-				onCreateNew();
+				listController.createNew();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	@Override
-	protected void onStartLoading() {
-		super.onStartLoading();
+	@Override protected Bundle createLoadArgs() {
 		CharSequence query = getArgQuery();
 		if (query == null) {
 			Bundle args = new Bundle();
@@ -54,21 +72,25 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 			args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
 			args.putLong(Extras.ROOM_ID, getArgRoomID());
 			args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
-			getLoaderManager().initLoader(Loaders.Items.ordinal(), args, createListLoaderCallbacks());
-			if (getArgRoomID() != Room.ID_ADD) {
-				args = ExtrasFactory.bundleFromRoom(getArgRoomID());
-				getLoaderManager().initLoader(Loaders.SingleRoom.ordinal(), args, new LoadSingleRow(getContext()) {
-					@Override protected void process(Cursor data) {
-						super.process(data);
-						long root = data.getLong(data.getColumnIndex(Room.ROOT_ITEM));
-						getArguments().putLong(Extras.PARENT_ID, root);
-					}
-				});
-			}
+			return args;
 		} else {
 			Bundle args = new Bundle();
 			args.putCharSequence(SearchManager.QUERY, query);
-			getLoaderManager().initLoader(Loaders.ItemSearch.ordinal(), args, createListLoaderCallbacks());
+			return args;
+		}
+	}
+
+	@Override protected void onStartLoading() {
+		super.onStartLoading();
+		if (getArgRoomID() != Room.ID_ADD) {
+			Bundle args = ExtrasFactory.bundleFromRoom(getArgRoomID());
+			getLoaderManager().initLoader(Loaders.SingleRoom.ordinal(), args, new LoadSingleRow(getContext()) {
+				@Override protected void process(Cursor data) {
+					super.process(data);
+					long root = data.getLong(data.getColumnIndex(Room.ROOT_ITEM));
+					getArguments().putLong(Extras.PARENT_ID, root);
+				}
+			});
 		}
 	}
 
@@ -95,14 +117,6 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		} else {
 			getLoaderManager().getLoader(Loaders.ItemSearch.ordinal()).forceLoad();
 		}
-	}
-
-	@Override protected boolean canCreateNew() {
-		return getArgParentItemID() != Item.ID_ADD || getArgRoomID() != Room.ID_ADD;
-	}
-
-	@Override protected void onCreateNew() {
-		eventsListener.newItem(getArgParentItemID());
 	}
 
 	@Override protected void onListItemClick(RecyclerView.ViewHolder holder) {

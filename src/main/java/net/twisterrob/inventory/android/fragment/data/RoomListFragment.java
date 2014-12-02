@@ -10,6 +10,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 
+import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.content.Loaders;
@@ -48,10 +49,27 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		setDynamicResource(DYN_OptionsMenu, R.menu.room_list);
 	}
 
+	@Override public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		listController = new RecyclerViewLoadersController(this, Loaders.Rooms) {
+			@Override protected CursorRecyclerAdapter setupList() {
+				return RoomListFragment.super.setupList(list);
+			}
+
+			@Override public boolean canCreateNew() {
+				return getArgPropertyID() != Property.ID_ADD;
+			}
+
+			@Override protected void onCreateNew() {
+				eventsListener.newRoom(getArgPropertyID());
+			}
+		};
+	}
+
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		menu.findItem(R.id.action_room_add).setVisible(canCreateNew());
+		menu.findItem(R.id.action_room_add).setVisible(listController.canCreateNew());
 	}
 
 	@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -86,19 +104,11 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_room_add:
-				onCreateNew();
+				listController.createNew();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override protected boolean canCreateNew() {
-		return getArgPropertyID() != Property.ID_ADD;
-	}
-
-	@Override public void onCreateNew() {
-		eventsListener.newRoom(getArgPropertyID());
 	}
 
 	@Override protected void onListItemLongClick(RecyclerView.ViewHolder holder) {
@@ -109,18 +119,8 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		eventsListener.roomSelected(holder.getItemId());
 	}
 
-	@Override
-	protected void onStartLoading() {
-		super.onStartLoading();
-		Bundle args = new Bundle();
-		args.putLong(Extras.PROPERTY_ID, getArgPropertyID());
-		getLoaderManager().initLoader(Loaders.Rooms.ordinal(), args, createListLoaderCallbacks());
-	}
-
-	@Override
-	protected void onRefresh() {
-		super.onRefresh();
-		getLoaderManager().getLoader(Loaders.Rooms.ordinal()).forceLoad();
+	@Override protected Bundle createLoadArgs() {
+		return ExtrasFactory.bundleFromProperty(getArgPropertyID());
 	}
 
 	private void delete(final long[] roomIDs) {

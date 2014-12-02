@@ -27,6 +27,7 @@ public class App extends Application {
 	static {
 		if (BuildConfig.DEBUG) {
 			setStrictMode();
+			//android.support.v4.app.LoaderManager.enableDebugLogging(true);
 		}
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.android\\.(.+\\.)?", "");

@@ -3,8 +3,10 @@ package net.twisterrob.inventory.android.fragment.data;
 import android.os.Bundle;
 import android.support.v7.widget.*;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -13,7 +15,10 @@ import net.twisterrob.inventory.android.fragment.data.CategoryListFragment.Categ
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.CategoryAdapter.CategoryItemEvents;
 
-public class CategoryListFragment extends BaseRecyclerFragment<CategoriesEvents> implements CategoryItemEvents {
+public class CategoryListFragment extends BaseFragment<CategoriesEvents> implements CategoryItemEvents {
+
+	private RecyclerViewLoadersController listController;
+
 	public interface CategoriesEvents {
 		void categorySelected(long categoryID);
 		void categoryActioned(long categoryID);
@@ -29,22 +34,44 @@ public class CategoryListFragment extends BaseRecyclerFragment<CategoriesEvents>
 		this.header = headerFragment != null? new HeaderManager(this, headerFragment) : null;
 	}
 
-	@Override protected CursorRecyclerAdapter setupList() {
-		list.setLayoutManager(new LinearLayoutManager(getContext()));
-		CategoryAdapter cursorAdapter = new CategoryAdapter(null, this);
-		RecyclerView.Adapter adapter = cursorAdapter;
-		if (header != null) {
-			adapter = header.wrap(adapter);
-		}
-		list.setAdapter(adapter);
-		return cursorAdapter;
+	@Override public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		listController = new RecyclerViewLoadersController(this, Loaders.Categories) {
+			@Override protected CursorRecyclerAdapter setupList() {
+				list.setLayoutManager(new LinearLayoutManager(getContext()));
+				CategoryAdapter cursorAdapter = new CategoryAdapter(null, CategoryListFragment.this);
+				RecyclerView.Adapter adapter = cursorAdapter;
+				if (header != null) {
+					adapter = header.wrap(adapter);
+				}
+				list.setAdapter(adapter);
+				return cursorAdapter;
+			}
+
+			@Override public boolean canCreateNew() {
+				return false;
+			}
+
+			@Override protected void onCreateNew() {
+				throw new UnsupportedOperationException(
+						"Cannot create new category, please send us an email if you miss one!");
+			}
+		};
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.generic_list, container, false);
+	}
+
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		listController.setView(view);
 	}
 
 	@Override
 	protected void onStartLoading() {
-		Bundle args = new Bundle();
-		args.putLong(Extras.PARENT_ID, getArgParentItemID());
-		getLoaderManager().initLoader(Loaders.Categories.ordinal(), args, createListLoaderCallbacks());
+		listController.startLoad(ExtrasFactory.bundleFromParent(getArgParentItemID()));
 	}
 
 	private long getArgParentItemID() {
@@ -56,15 +83,7 @@ public class CategoryListFragment extends BaseRecyclerFragment<CategoriesEvents>
 		if (header != null) {
 			header.getHeader().refresh();
 		}
-		getLoaderManager().getLoader(Loaders.Categories.ordinal()).forceLoad();
-	}
-
-	@Override protected boolean canCreateNew() {
-		return false;
-	}
-
-	@Override protected void onCreateNew() {
-		throw new UnsupportedOperationException("Cannot create new category, please send us an email if you miss one!");
+		listController.refresh();
 	}
 
 	@Override public void onItemClick(RecyclerView.ViewHolder holder) {

@@ -10,16 +10,21 @@ import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 
 public abstract class RecyclerViewCursorLoaderController extends RecyclerViewController {
 	private CursorRecyclerAdapter adapter;
+	private Cursor pendingData;
 
-	public RecyclerViewCursorLoaderController(View view) {
-		super(view);
+	public void setView(View view) {
+		super.setView(view);
 		adapter = setupList();
+		if (pendingData != null) {
+			adapter.swapCursor(pendingData);
+			pendingData = null;
+		}
 	}
 
 	public LoaderCallbacks<Cursor> createLoaderCallbacks() {
-		startLoading();
 		return new LoaderCallbacks<Cursor>() {
 			public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+				startLoading();
 				return createLoader(id, args);
 			}
 
@@ -32,8 +37,12 @@ public abstract class RecyclerViewCursorLoaderController extends RecyclerViewCon
 			}
 
 			protected void updateAdapter(Cursor data) {
-				adapter.swapCursor(data);
-				finishLoading();
+				if (adapter == null) {
+					pendingData = data;
+				} else {
+					adapter.swapCursor(data);
+					finishLoading();
+				}
 			}
 		};
 	}
