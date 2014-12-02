@@ -109,11 +109,11 @@ public abstract class BaseGalleryFragment<T> extends BaseRecyclerFragment<T>
 	protected boolean wantSelection() {
 		return true;
 	}
-	protected Collection<Long> getSelectedIDs() {
+	protected long[] getSelectedIDs() {
 		List<Integer> positions = selectionAdapter.getSelectedPositions();
-		List<Long> IDs = new ArrayList<>(positions.size());
+		long[] IDs = new long[positions.size()];
 		for (int i = 0; i < positions.size(); i++) {
-			IDs.add(selectionAdapter.getItemId(positions.get(i)));
+			IDs[i] = selectionAdapter.getItemId(positions.get(i));
 		}
 		return IDs;
 	}

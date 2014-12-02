@@ -173,6 +173,7 @@ public class HeaderViewRecyclerAdapter extends WrappingAdapter<RecyclerView.View
 		return mFooterViews.size();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void setWrappedAdapter(RecyclerView.Adapter adapter) {
 		super.setWrappedAdapter(adapter);

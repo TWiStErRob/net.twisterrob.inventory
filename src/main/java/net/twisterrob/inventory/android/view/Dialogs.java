@@ -99,6 +99,7 @@ public class Dialogs {
 		}.execute(params);
 	}
 
+	// TODO move to lib
 	static abstract class SimplerAsyncTask<A, B, C> extends SimpleAsyncTask<A, B, C> {
 		public void execute(A a) {
 			super.execute(a);

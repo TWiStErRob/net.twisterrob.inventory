@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import java.util.Collection;
+import java.util.Arrays;
 
 import org.slf4j.*;
 
@@ -25,7 +25,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	private UndobarController controller;
 	private UndoListener undoMove = new UndoListener() {
 		@Override public void onUndo(Parcelable token) {
-			new MoveRoomTask(getArgPropertyID(), ExtrasFactory.getIDsFrom((Bundle)token), new Callback() {
+			new MoveRoomTask(new Callback() {
 				@Override public void dialogSuccess() {
 					App.toast("Undo'd");
 					refresh();
@@ -33,7 +33,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 				@Override public void dialogFailed() {
 					App.toast("Undo failed");
 				}
-			}).executeBackground();
+			}, getArgPropertyID(), ExtrasFactory.getIDsFrom((Bundle)token)).executeBackground();
 		}
 	};
 
@@ -123,34 +123,34 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		getLoaderManager().getLoader(Loaders.Rooms.ordinal()).forceLoad();
 	}
 
-	private void delete(final Collection<Long> roomIDs) {
-		new DeleteRoomTask(roomIDs, new Dialogs.Callback() {
+	private void delete(final long[] roomIDs) {
+		new DeleteRoomTask(new Dialogs.Callback() {
 			public void dialogSuccess() {
 				finishActionMode();
 				refresh();
 			}
 
 			public void dialogFailed() {
-				App.toast("Cannot delete rooms: " + roomIDs);
+				App.toast("Cannot delete rooms: " + Arrays.toString(roomIDs));
 			}
-		}).displayDialog(getActivity());
+		}, roomIDs).displayDialog(getActivity());
 	}
-	private void move(final long propertyID, final Collection<Long> roomIDs) {
+	private void move(final long propertyID, final long[] roomIDs) {
 		if (propertyID == getArgPropertyID()) {
 			App.toast("Cannot move rooms to the same property where they are.");
 			return;
 		}
-		new MoveRoomTask(propertyID, roomIDs, new Dialogs.Callback() {
+		new MoveRoomTask(new Dialogs.Callback() {
 			public void dialogFailed() {
-				App.toast("Cannot move " + roomIDs + " to property #" + propertyID);
+				App.toast("Cannot move " + Arrays.toString(roomIDs) + " to property #" + propertyID);
 			}
 			public void dialogSuccess() {
 				finishActionMode();
 				refresh();
-				String successMessage = getResources().getQuantityString(R.plurals.room_moved, roomIDs.size());
-				showUndo(successMessage, undoMove, ExtrasFactory.bundleFromIDs(roomIDs));
+				String message = getResources().getQuantityString(R.plurals.room_moved, roomIDs.length, roomIDs.length);
+				showUndo(message, undoMove, ExtrasFactory.bundleFromIDs(roomIDs));
 			}
-		}).executeBackground();
+		}, propertyID, roomIDs).executeBackground();
 	}
 	private void showUndo(String message, UndoListener listener, Bundle listenerArgs) {
 		if (controller == null) {

@@ -11,14 +11,14 @@ import net.twisterrob.inventory.android.view.Dialogs;
 import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
 
 public class DeleteRoomTask extends ActionParams {
-	private final Collection<Long> roomIDs;
+	private final long[] roomIDs;
 
 	private Collection<RoomDTO> rooms;
 	private List<String> items;
 
-	public DeleteRoomTask(Collection<Long> roomIDs, Dialogs.Callback callback) {
+	public DeleteRoomTask(Dialogs.Callback callback, long... roomIDs) {
 		super(callback);
-		if (roomIDs.isEmpty()) {
+		if (roomIDs.length == 0) {
 			throw new IllegalArgumentException("Nothing to move.");
 		}
 		this.roomIDs = roomIDs;
@@ -39,10 +39,10 @@ public class DeleteRoomTask extends ActionParams {
 
 	@Override
 	protected String getTitle() {
-		if (roomIDs.size() == 1) {
-			return "Deleting Room #" + roomIDs.iterator().next();
+		if (roomIDs.length == 1) {
+			return "Deleting Room #" + roomIDs[0];
 		} else {
-			return "Deleting " + roomIDs.size() + " Rooms";
+			return "Deleting " + roomIDs.length + " Rooms";
 		}
 	}
 
@@ -69,8 +69,8 @@ public class DeleteRoomTask extends ActionParams {
 		return sb.toString();
 	}
 
-	private List<RoomDTO> retrieveRooms(Collection<Long> roomIDs) {
-		List<RoomDTO> rooms = new ArrayList<>();
+	private List<RoomDTO> retrieveRooms(long[] roomIDs) {
+		List<RoomDTO> rooms = new ArrayList<>(roomIDs.length);
 		for (Long roomID : roomIDs) {
 			rooms.add(retrieveRoom(roomID));
 		}

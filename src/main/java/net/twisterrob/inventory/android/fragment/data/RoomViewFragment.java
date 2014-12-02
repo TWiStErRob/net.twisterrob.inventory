@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import java.util.Arrays;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -94,7 +92,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	private void move(final long roomID, final long propertyID) {
-		new MoveRoomTask(propertyID, Arrays.asList(roomID), new Dialogs.Callback() {
+		new MoveRoomTask(new Dialogs.Callback() {
 			public void dialogFailed() {
 				App.toast("Cannot move room #" + roomID + " to property #" + propertyID);
 			}
@@ -103,11 +101,11 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				startActivity(PropertyViewActivity.show(propertyID));
 				getActivity().finish();
 			}
-		}).displayDialog(getActivity());
+		}, propertyID, roomID).displayDialog(getActivity());
 	}
 
 	private void delete(final long roomID) {
-		new DeleteRoomTask(Arrays.asList(roomID), new Dialogs.Callback() {
+		new DeleteRoomTask(new Dialogs.Callback() {
 			public void dialogSuccess() {
 				RoomDTO room = new RoomDTO();
 				room.id = roomID;
@@ -117,7 +115,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 			public void dialogFailed() {
 				App.toast("Cannot delete room #" + roomID);
 			}
-		}).displayDialog(getActivity());
+		}, roomID).displayDialog(getActivity());
 	}
 
 	private long getArgRoomID() {

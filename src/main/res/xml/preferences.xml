@@ -17,4 +17,12 @@
 			android:data="package:net.twisterrob.inventory"
 			/>
 	</PreferenceScreen>
+	<PreferenceScreen
+		android:title="Market"
+		>
+		<intent
+			android:action="android.intent.action.VIEW"
+			android:data="market://details?id=net.twisterrob.inventory"
+			/>
+	</PreferenceScreen>
 </PreferenceScreen>
