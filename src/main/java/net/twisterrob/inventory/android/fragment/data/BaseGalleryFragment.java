@@ -56,6 +56,9 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		if (header == null) {
+			setHeader(HeaderManager.tryRestore(this));
+		}
 		return inflater.inflate(R.layout.generic_list, container, false);
 	}
 
