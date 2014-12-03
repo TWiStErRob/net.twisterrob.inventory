@@ -99,6 +99,16 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	}
 	protected abstract void onListItemLongClick(ViewHolder holder);
 
+	/**
+	 * Called through:
+	 * <ul>
+	 * <li>{ChildOf}BaseGalleryFragment$RecyclerViewCursorLoaderController{Anon}.setupList</li>
+	 * <li>RecyclerViewCursorLoaderController.setupList</li>
+	 * <li>RecyclerViewCursorLoaderController.setView</li>
+	 * <li>RecyclerViewController.setView</li>
+	 * <li>BaseGalleryFragment.onViewCreated</li>
+	 * </ul>
+	 */
 	protected CursorRecyclerAdapter setupList(RecyclerView list) {
 		final int columns = getResources().getInteger(R.integer.gallery_columns);
 		//StaggeredGridLayoutManager layout = new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL);
