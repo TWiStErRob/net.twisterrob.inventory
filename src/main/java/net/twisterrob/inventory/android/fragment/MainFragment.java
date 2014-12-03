@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.fragment;
 
 import java.io.File;
 
+import org.slf4j.*;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.*;
@@ -20,22 +22,25 @@ import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.IconedItem.IntentLauncher;
 
 public class MainFragment extends BaseFragment<Void> implements BackupPickerListener {
+	private static final Logger LOG = LoggerFactory.getLogger(MainFragment.class);
+
 	private static final String BACKUP_FRAGMENT = BackupFragment.class.getSimpleName();
 
 	private RecyclerViewLoadersController propertiesController;
 	private RecyclerViewLoadersController roomsController;
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		if (savedInstanceState == null) {
+			getChildFragmentManager().beginTransaction()
+			                         .add(new BackupFragment(), BACKUP_FRAGMENT)
+			                         .commit()
+			;
+		}
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
-		getChildFragmentManager().beginTransaction()
-		                         .add(new BackupFragment(), BACKUP_FRAGMENT)
-		                         .commit()
-		;
 
 		GridView list = (GridView)view.findViewById(R.id.items).findViewById(android.R.id.list);
 		list.setAdapter(new IconedItemAdapter(getContext(), R.layout.item_main_nav, BaseActivity.createActions()));
@@ -57,6 +62,7 @@ public class MainFragment extends BaseFragment<Void> implements BackupPickerList
 			}
 		};
 		propertiesController.setView(view.findViewById(R.id.properties));
+
 		roomsController = new RecyclerViewLoadersController(this, Loaders.Rooms) {
 			@Override protected CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -73,20 +79,24 @@ public class MainFragment extends BaseFragment<Void> implements BackupPickerList
 			}
 		};
 		roomsController.setView(view.findViewById(R.id.rooms));
+	}
 
+	@Override public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		propertiesController.startLoad(null);
 		roomsController.startLoad(null);
 	}
 
 	@Override public void onResume() {
 		super.onResume();
-		propertiesController.refresh();
-		roomsController.refresh();
+		if (!getLoaderManager().hasRunningLoaders()) {
+			propertiesController.refresh();
+			roomsController.refresh();
+		}
 	}
 
 	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-
 		inflater.inflate(R.menu.search, menu);
 		AndroidTools.prepareSearch(getActivity(), menu, R.id.search);
 	}

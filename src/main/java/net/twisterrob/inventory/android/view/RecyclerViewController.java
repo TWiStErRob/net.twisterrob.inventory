@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
+import org.slf4j.*;
+
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -8,6 +10,8 @@ import android.view.View.OnClickListener;
 import net.twisterrob.inventory.android.R;
 
 public abstract class RecyclerViewController {
+	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewController.class);
+
 	protected RecyclerView list;
 	private SwipeRefreshLayout progress;
 

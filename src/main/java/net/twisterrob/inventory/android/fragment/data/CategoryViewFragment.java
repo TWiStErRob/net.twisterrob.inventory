@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import org.slf4j.*;
+
 import android.database.Cursor;
 import android.view.*;
 
@@ -14,6 +16,8 @@ import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.Categ
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, CategoryEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(CategoryViewFragment.class);
+
 	private CharSequence nameCache;
 
 	public interface CategoryEvents {
@@ -28,7 +32,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 	@Override
 	protected void onRefresh() {
 		super.onRefresh();
-		getLoaderManager().getLoader(SingleCategory.ordinal()).forceLoad();
+		getLoaderManager().getLoader(SingleCategory.ordinal()).onContentChanged();
 	}
 
 	@Override

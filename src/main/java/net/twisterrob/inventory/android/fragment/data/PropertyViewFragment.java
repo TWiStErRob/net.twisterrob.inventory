@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import org.slf4j.*;
+
 import android.database.Cursor;
 import android.view.MenuItem;
 
@@ -15,6 +17,8 @@ import net.twisterrob.inventory.android.view.Dialogs;
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, PropertyEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(PropertyViewFragment.class);
+
 	public interface PropertyEvents {
 		void propertyLoaded(PropertyDTO property);
 		void propertyDeleted(PropertyDTO property);
@@ -28,7 +32,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	@Override
 	protected void onRefresh() {
 		super.onRefresh();
-		getLoaderManager().getLoader(SingleProperty.ordinal()).forceLoad();
+		getLoaderManager().getLoader(SingleProperty.ordinal()).onContentChanged();
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import org.slf4j.*;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.view.MenuItem;
@@ -16,6 +18,8 @@ import net.twisterrob.inventory.android.view.Dialogs;
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(RoomViewFragment.class);
+
 	private static final int MOVE_REQUEST = 0;
 
 	public interface RoomEvents {
@@ -31,7 +35,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	@Override
 	protected void onRefresh() {
 		super.onRefresh();
-		getLoaderManager().getLoader(SingleRoom.ordinal()).forceLoad();
+		getLoaderManager().getLoader(SingleRoom.ordinal()).onContentChanged();
 	}
 
 	@Override

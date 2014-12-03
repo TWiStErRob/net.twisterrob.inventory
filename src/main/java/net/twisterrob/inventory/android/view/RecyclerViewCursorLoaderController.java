@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
+import org.slf4j.*;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -9,6 +11,8 @@ import android.view.View;
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 
 public abstract class RecyclerViewCursorLoaderController extends RecyclerViewController {
+	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewCursorLoaderController.class);
+
 	private CursorRecyclerAdapter adapter;
 	private Cursor pendingData;
 

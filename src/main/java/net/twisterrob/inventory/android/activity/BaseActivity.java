@@ -38,7 +38,11 @@ public class BaseActivity extends ActionBarActivity {
 
 	@For({PixelView, Log}) @Override protected void onCreate(Bundle savedInstanceState) {
 		LOG.trace("Creating {}@{}\n{} {}",
-				getClass().getSimpleName(), hashCode(), getIntent(), AndroidTools.toString(getIntent().getExtras()));
+				getClass().getSimpleName(),
+				Integer.toHexString(System.identityHashCode(this)),
+				getIntent(),
+				AndroidTools.toString(getIntent().getExtras())
+		);
 		super.onCreate(savedInstanceState);
 		if (BuildConfig.DEBUG) {
 			ViewServer.get(this).addWindow(this);

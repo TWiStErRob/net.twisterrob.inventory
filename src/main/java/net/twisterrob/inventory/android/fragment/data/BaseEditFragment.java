@@ -4,6 +4,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.slf4j.*;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,6 +29,8 @@ import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.inventory.android.view.TypeAdapter;
 
 public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
+	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
+
 	/** full path */
 	private String currentImage;
 	private boolean keepNameInSync;

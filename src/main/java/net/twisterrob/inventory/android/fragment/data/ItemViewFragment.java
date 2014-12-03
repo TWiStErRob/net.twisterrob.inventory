@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import org.slf4j.*;
+
 import android.database.Cursor;
 import android.view.MenuItem;
 
@@ -16,6 +18,8 @@ import net.twisterrob.inventory.android.view.Dialogs;
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(ItemViewFragment.class);
+
 	public interface ItemEvents {
 		void itemLoaded(ItemDTO item);
 		void itemDeleted(ItemDTO item);
@@ -29,7 +33,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	@Override
 	protected void onRefresh() {
 		super.onRefresh();
-		getLoaderManager().getLoader(SingleItem.ordinal()).forceLoad();
+		getLoaderManager().getLoader(SingleItem.ordinal()).onContentChanged();
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.activity.data;
 
+import org.slf4j.*;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,6 +13,8 @@ import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.Prope
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 
 public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> implements PropertyEvents, RoomsEvents {
+	private static final Logger LOG = LoggerFactory.getLogger(PropertyViewActivity.class);
+
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		wantDrawer = getExtraPropertyID() == Property.ID_ADD;
 		super.onCreate(savedInstanceState);

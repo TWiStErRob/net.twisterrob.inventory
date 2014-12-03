@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import org.slf4j.*;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +20,8 @@ import static net.twisterrob.inventory.android.Constants.Dimensions.*;
 import static net.twisterrob.inventory.android.Constants.Prefs.*;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
+	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
+
 	protected ImageView image;
 	protected ViewPager pager;
 

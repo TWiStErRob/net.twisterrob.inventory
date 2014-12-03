@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import java.util.*;
 
+import org.slf4j.*;
+
 import android.database.Cursor;
 import android.graphics.*;
 import android.os.*;
@@ -17,6 +19,8 @@ import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.SunburstFragment.Listener;
 
 public class SunburstFragment extends BaseFragment<Listener> {
+	private static final Logger LOG = LoggerFactory.getLogger(SunburstFragment.class);
+
 	public interface Listener {
 		void rootChanged(Node root);
 	}

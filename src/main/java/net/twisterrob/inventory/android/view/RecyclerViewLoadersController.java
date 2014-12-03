@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
+import org.slf4j.*;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,6 +11,8 @@ import android.support.v4.content.Loader;
 import net.twisterrob.inventory.android.content.Loaders;
 
 public abstract class RecyclerViewLoadersController extends RecyclerViewCursorLoaderController {
+	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewLoadersController.class);
+
 	private final Context context;
 	private final LoaderManager manager;
 	private final Loaders loader;
@@ -38,6 +42,6 @@ public abstract class RecyclerViewLoadersController extends RecyclerViewCursorLo
 	}
 
 	public void refresh() {
-		manager.getLoader(loader.ordinal()).forceLoad();
+		manager.getLoader(loader.ordinal()).onContentChanged();
 	}
 }

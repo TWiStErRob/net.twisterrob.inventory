@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import org.slf4j.*;
+
 import android.os.Bundle;
 import android.support.v7.widget.*;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -16,6 +18,7 @@ import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.CategoryAdapter.CategoryItemEvents;
 
 public class CategoryListFragment extends BaseFragment<CategoriesEvents> implements CategoryItemEvents {
+	private static final Logger LOG = LoggerFactory.getLogger(CategoryListFragment.class);
 
 	private RecyclerViewLoadersController listController;
 

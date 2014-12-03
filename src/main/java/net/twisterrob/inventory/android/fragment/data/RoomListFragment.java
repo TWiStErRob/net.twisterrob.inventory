@@ -24,6 +24,7 @@ import net.twisterrob.inventory.android.view.UndobarController.UndoListener;
 
 public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
+
 	private UndobarController controller;
 	private UndoListener undoMove = new UndoListener() {
 		@Override public void onUndo(Parcelable token) {

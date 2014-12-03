@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.activity.data;
 
+import org.slf4j.*;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
@@ -8,6 +10,8 @@ import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 
 public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends BaseActivity {
+	private static final Logger LOG = LoggerFactory.getLogger(BaseDetailActivity.class);
+
 	protected boolean wantDrawer;
 	private C fragment;
 

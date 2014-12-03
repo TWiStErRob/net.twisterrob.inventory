@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.fragment;
 
 import java.util.*;
 
+import org.slf4j.*;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,12 +14,21 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 
 public class BaseFragment<T> extends Fragment {
+	private static final Logger LOG = LoggerFactory.getLogger(BaseFragment.class);
+
 	protected static final String DYN_OptionsMenu = "optionsMenu";
 	protected static final String DYN_EventsClass = "eventsListenerClass";
 
 	private Map<String, Object> dynResources = new HashMap<>();
 
 	protected T eventsListener;
+
+	public BaseFragment() {
+		LOG.trace("Creating {}@{}",
+				getClass().getSimpleName(),
+				Integer.toHexString(System.identityHashCode(this))
+		);
+	}
 
 	protected void setDynamicResource(String type, Object resource) {
 		dynResources.put(type, resource);
