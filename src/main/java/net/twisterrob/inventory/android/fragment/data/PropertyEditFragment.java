@@ -79,7 +79,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 	private PropertyDTO getCurrentProperty() {
 		PropertyDTO property = new PropertyDTO();
 		property.id = getArgPropertyID();
-		property.name = title.getText().toString();
+		property.name = title.getText().toString().trim();
 		property.type = type.getSelectedItemId();
 		property.setImage(getContext(), getCurrentImage());
 		return property;

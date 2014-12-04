@@ -57,6 +57,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	protected abstract String getBaseFileName();
 
+	// TODO Validation on EditText
 	protected abstract void save();
 
 	protected void onSingleRowLoaded(ImagedDTO dto, long typeID) {
