@@ -112,7 +112,7 @@ public class BaseDriveActivity extends BaseActivity {
 		private DriveFolder getInventoryFolder() throws IOException {
 			DriveFolder rootFolder = Drive.DriveApi.getRootFolder(client);
 
-			DriveFolder inventoryFolder = FolderUtils.getExisting(client, rootFolder, Paths.DEFAULT_FOLDER_NAME);
+			DriveFolder inventoryFolder = FolderUtils.getExisting(client, rootFolder, Paths.EXPORT_SDCARD_FOLDER);
 			if (inventoryFolder == null) {
 				inventoryFolder = sync(createInventoryFolder(rootFolder));
 				sync(createREADME(inventoryFolder));
@@ -123,7 +123,7 @@ public class BaseDriveActivity extends BaseActivity {
 
 		private PendingResult<DriveFolderResult> createInventoryFolder(DriveFolder rootFolder) {
 			MetadataChangeSet folderMeta = new MetadataChangeSet.Builder() //
-					.setTitle(Paths.DEFAULT_FOLDER_NAME) //
+					.setTitle(Paths.EXPORT_SDCARD_FOLDER) //
 					.setDescription("Storage for inventory item images in Magic Home Inventory app") //
 					.setViewed(true) //
 					.build();

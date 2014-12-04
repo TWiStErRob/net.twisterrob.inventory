@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	>
 	<ListPreference
-		android:key="defaultEntityDetailsPage"
-		android:title="@string/pref_defaultEntityDetailsPage"
+		android:key="@string/pref_defaultEntityDetailsPage"
+		android:title="@string/pref_defaultEntityDetailsPage_title"
 		android:defaultValue="@string/pref_defaultEntityDetailsPage_default"
 		android:entries="@array/pref_defaultEntityDetailsPage_entries"
 		android:entryValues="@array/pref_defaultEntityDetailsPage_values"
+		tools:summary="@array/pref_defaultEntityDetailsPage_entries"
+		/>
+	<CheckBoxPreference
+		android:key="@string/pref_internalImageViewer"
+		android:title="@string/pref_internalImageViewer_title"
+		android:defaultValue="@bool/pref_internalImageViewer_default"
+		android:summary="@string/pref_internalImageViewer_desc"
 		/>
 	<PreferenceScreen
 		android:title="App info"

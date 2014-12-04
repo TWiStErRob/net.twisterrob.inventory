@@ -64,6 +64,11 @@
 			android:screenOrientation="fullSensor"
 			/>
 		<activity
+			android:name="net.twisterrob.inventory.android.activity.ImageActivity"
+			android:screenOrientation="fullSensor"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+			/>
+		<activity
 			android:name=".activity.ExportActivity"
 			android:label="Export" />
 		<activity
@@ -152,5 +157,12 @@
 			android:grantUriPermissions="true"
 			android:readPermission="net.twisterrob.inventory.READ"
 			android:writePermission="net.twisterrob.inventory.WRITE" />
+		<provider
+			android:name="android.support.v4.content.FileProvider"
+			android:authorities="${applicationId}.images"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/paths_images" />
+		</provider>
 	</application>
 </manifest>

@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="pref_activity_title">Settings</string>
-	<string name="pref_defaultEntityDetailsPage">Default Details Page</string>
-	<string name="pref_defaultEntityDetailsPage_default">image</string>
+
+	<string name="pref_defaultEntityDetailsPage_title">Default Details Page</string>
+	<string name="pref_defaultEntityDetailsPage" translatable="false">defaultEntityDetailsPage</string>
+	<string name="pref_defaultEntityDetailsPage_default" translatable="false">image</string>
 	<string-array name="pref_defaultEntityDetailsPage_entries">
 		<item>Image</item>
 		<item>Details &amp; Statistics</item>
 	</string-array>
-	<string-array name="pref_defaultEntityDetailsPage_values">
+	<string-array name="pref_defaultEntityDetailsPage_values" translatable="false">
 		<item>image</item>
 		<item>details</item>
 	</string-array>
+
+	<string name="pref_internalImageViewer_title">Use internal image viewer</string>
+	<string name="pref_internalImageViewer" translatable="false">internalImageViewer</string>
+	<bool name="pref_internalImageViewer_default" translatable="false">true</bool>
+	<string name="pref_internalImageViewer_desc">Internal image viewer has limited functionality,
+		but it definitely shows the images,
+		while using another application may result in crashes,
+		or if you're luck: just work.</string>
 </resources>

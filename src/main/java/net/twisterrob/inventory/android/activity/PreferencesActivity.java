@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.*;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Prefs;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
@@ -19,7 +18,7 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 	@Override
 	protected void onStart() {
 		super.onStart();
-		onSharedPreferenceChanged(getPrefs(), Prefs.DEFAULT_ENTITY_DETAILS_PAGE);
+		onSharedPreferenceChanged(getPrefs(), getString(R.string.pref_defaultEntityDetailsPage));
 	}
 
 	@Override
@@ -30,13 +29,13 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 
 	@Override
 	protected void onPause() {
-		super.onPause();
 		getPrefs().unregisterOnSharedPreferenceChangeListener(this);
+		super.onPause();
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Preference pref = findPreference(key);
-		if (key.equals(Prefs.DEFAULT_ENTITY_DETAILS_PAGE)) {
+		if (key.equals(getString(R.string.pref_defaultEntityDetailsPage))) {
 			pref.setSummary(((ListPreference)pref).getEntry());
 		}
 	}

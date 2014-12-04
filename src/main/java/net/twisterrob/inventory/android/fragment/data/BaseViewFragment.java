@@ -1,23 +1,28 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import java.io.File;
+
 import org.slf4j.*;
 
-import android.content.Context;
+import android.content.*;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.*;
 import android.view.*;
+import android.view.View.OnClickListener;
 import android.widget.*;
 
 import static android.content.Context.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.activity.ImageActivity;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 
 import static net.twisterrob.inventory.android.Constants.Dimensions.*;
-import static net.twisterrob.inventory.android.Constants.Prefs.*;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
@@ -42,7 +47,9 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 	}
 
 	private int getDefaultPageIndex() {
-		String defaultPage = App.getPrefs().getString(DEFAULT_ENTITY_DETAILS_PAGE, DEFAULT_ENTITY_DETAILS_PAGE_DEFAULT);
+		String key = getString(R.string.pref_defaultEntityDetailsPage);
+		String defaultValue = getString(R.string.pref_defaultEntityDetailsPage_default);
+		String defaultPage = App.getPrefs().getString(key, defaultValue);
 		return AndroidTools.findIndexInResourceArray(getContext(),
 				R.array.pref_defaultEntityDetailsPage_values, defaultPage);
 	}
@@ -77,6 +84,24 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			if (position == 0) {
 				view = inflater.inflate(R.layout.inc_details_image, container, false);
 				ImageView image = (ImageView)view.findViewById(R.id.image);
+				image.setOnClickListener(new OnClickListener() {
+					@Override public void onClick(View v) {
+						try {
+							String path = entity.getImage(getContext());
+							File file = new File(path);
+							Uri uri = FileProvider.getUriForFile(getContext(), Constants.AUTHORITY_IMAGES, file);
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer), true)) {
+								intent.setComponent(new ComponentName(getContext(), ImageActivity.class));
+							}
+							intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+							intent.setDataAndType(uri, "image/jpeg");
+							getActivity().startActivity(intent);
+						} catch (Exception ex) {
+							LOG.warn("Cannot start image viewer for {}", entity, ex);
+						}
+					}
+				});
 				loadInto(image);
 			} else {
 				view = inflater.inflate(R.layout.inc_details_description, container, false);
