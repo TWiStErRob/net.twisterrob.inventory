@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.RawRes;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -26,7 +27,7 @@ import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.tasks.SaveToFile;
 import net.twisterrob.inventory.android.utils.PictureHelper;
-import net.twisterrob.inventory.android.view.TypeAdapter;
+import net.twisterrob.inventory.android.view.*;
 
 public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
@@ -57,7 +58,6 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	protected abstract String getBaseFileName();
 
-	// TODO Validation on EditText
 	protected abstract void save();
 
 	protected void onSingleRowLoaded(ImagedDTO dto, long typeID) {
@@ -71,6 +71,11 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
 		title = (EditText)view.findViewById(R.id.title);
+		title.addTextChangedListener(new TextWatcherAdapter() {
+			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+				doValidateTitle();
+			}
+		});
 		type = (Spinner)view.findViewById(R.id.type);
 		image = (ImageView)view.findViewById(R.id.image);
 		image.setOnClickListener(new OnClickListener() {
@@ -81,7 +86,10 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 		((Button)view.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				save();
+				doPrepareSave();
+				if (doValidate()) {
+					save();
+				}
 			}
 		});
 
@@ -98,6 +106,26 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 				getBaseActivity().setIcon(getTypeImage(position));
 			}
 		});
+	}
+
+	protected void doPrepareSave() {
+		title.setText(title.getText().toString().trim());
+	}
+
+	protected boolean doValidate() {
+		boolean valid = true;
+		valid &= doValidateTitle();
+		return valid;
+	}
+
+	protected boolean doValidateTitle() {
+		if (TextUtils.getTrimmedLength(title.getText()) == 0) {
+			title.setError("Please enter some text");
+			return false;
+		} else {
+			title.setError(null);
+			return true;
+		}
 	}
 
 	private @RawRes int getTypeImage(int position) {

@@ -80,7 +80,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		RoomDTO room = new RoomDTO();
 		room.propertyID = getArgPropertyID();
 		room.id = getArgRoomID();
-		room.name = title.getText().toString().trim();
+		room.name = title.getText().toString();
 		room.type = type.getSelectedItemId();
 		room.setImage(getContext(), getCurrentImage());
 		return room;

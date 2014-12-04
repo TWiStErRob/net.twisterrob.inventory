@@ -74,7 +74,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		ItemDTO item = new ItemDTO();
 		item.parentID = getArgParentID();
 		item.id = getArgItemID();
-		item.name = title.getText().toString().trim();
+		item.name = title.getText().toString();
 		item.setImage(getContext(), getCurrentImage());
 		item.category = type.getSelectedItemId();
 		return item;
