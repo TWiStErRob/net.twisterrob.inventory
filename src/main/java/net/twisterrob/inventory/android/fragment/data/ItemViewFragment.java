@@ -86,17 +86,13 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	}
 
 	private void delete(final long itemID) {
-		new DeleteItemTask(itemID, new Dialogs.Callback() {
-			public void dialogSuccess() {
+		Dialogs.executeConfirm(getActivity(), new DeleteItemTask(itemID) {
+			@Override public void finished() {
 				ItemDTO item = new ItemDTO();
 				item.id = itemID;
 				eventsListener.itemDeleted(item);
 			}
-
-			public void dialogFailed() {
-				App.toast("Cannot delete item #" + itemID);
-			}
-		}).displayDialog(getActivity());
+		});
 	}
 
 	private long getArgItemID() {

@@ -94,30 +94,23 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	private void move(final long roomID, final long propertyID) {
-		new MoveRoomTask(new Dialogs.Callback() {
-			public void dialogFailed() {
-				App.toast("Cannot move room #" + roomID + " to property #" + propertyID);
-			}
-			public void dialogSuccess() {
-				// TODO move event
+		Dialogs.executeConfirm(getActivity(), new MoveRoomTask(propertyID, roomID) {
+			@Override public void finished() {
+				// TODO move event in eventsListener
 				startActivity(PropertyViewActivity.show(propertyID));
 				getActivity().finish();
 			}
-		}, propertyID, roomID).displayDialog(getActivity());
+		});
 	}
 
 	private void delete(final long roomID) {
-		new DeleteRoomTask(new Dialogs.Callback() {
-			public void dialogSuccess() {
+		Dialogs.executeConfirm(getActivity(), new DeleteRoomTask(roomID) {
+			@Override public void finished() {
 				RoomDTO room = new RoomDTO();
 				room.id = roomID;
 				eventsListener.roomDeleted(room);
 			}
-
-			public void dialogFailed() {
-				App.toast("Cannot delete room #" + roomID);
-			}
-		}, roomID).displayDialog(getActivity());
+		});
 	}
 
 	private long getArgRoomID() {

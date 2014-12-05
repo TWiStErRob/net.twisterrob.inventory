@@ -1,108 +1,154 @@
 package net.twisterrob.inventory.android.view;
 
-import org.slf4j.*;
-
 import android.app.*;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.os.*;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 
+/**
+ * <ol>
+ * <li>{@link #executeConfirm}
+ * <li>{@link ConfirmedExecute}<ol>
+ *     <li>doInBackground: prepare</li>
+ *     <li>onPostExecute: showDialog</li>
+ * </ol>
+ * <li>{@link #showDialog}<ol>
+ *     <li>AlertDialog.show</li>
+ *     <li>setPositiveButton.OnClickListener: executeDirect</li>
+ * </ol>
+ * <li>{@link #executeDirect}</li>
+ * <li>{@link Execute}<ol>
+ *     <li>doInBackground: execute</li>
+ *     <li>onPostExecute: UndobarController.showUndoBar</li>
+ * </ol>
+ * </ol>
+ */
 public class Dialogs {
-	private static final Logger LOG = LoggerFactory.getLogger(Dialogs.class);
-
-	public interface Callback {
-		void dialogSuccess();
-		void dialogFailed();
+	public static void executeConfirm(Activity activity, Action action) {
+		new ConfirmedExecute(activity).execute(new ActionState(action));
 	}
 
-	public static abstract class ActionParams implements Runnable {
-		private final Callback callback;
-		public ActionParams(Callback callback) {
-			this.callback = callback;
-		}
+	public static void executeDirect(Activity activity, Action action) {
+		new NoQuestionsWithUndo(activity).execute(new ActionState(action));
+	}
 
-		protected abstract void prepare();
-
-		protected abstract String getTitle();
-		protected abstract String getMessage();
-		protected abstract void execute() throws Exception;
-
-		protected void success() {
-			if (callback != null) {
-				callback.dialogSuccess();
-			}
-		}
-		protected void failed() {
-			if (callback != null) {
-				callback.dialogFailed();
-			}
-		}
-
-		@Override public void run() {
-			try {
-				execute();
-				success();
-			} catch (Exception ex) {
-				LOG.warn("Cannot execute {}", getClass().getSimpleName(), ex);
-				failed();
-			}
-		}
-
-		public OnClickListener createDialogClickListener() {
-			return new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					run();
+	static void undo(final Activity activity, ActionState state) {
+		final Action undo = state.action.buildUndo();
+		if (undo != null) {
+			UndobarController.UndoListener undoListener = new UndobarController.UndoListener() {
+				@Override public void onUndo(Parcelable token) {
+					new NoQuestions(activity).execute(new ActionState(undo));
 				}
 			};
-		}
-
-		public void displayDialog(Activity activity) {
-			Dialogs.executeTask(activity, this);
-		}
-
-		public void executeBackground() {
-			Dialogs.executeTask(this);
+			new UndobarController(activity).showUndoBar(false, state.action.getSuccessMessage(), null, undoListener);
 		}
 	}
 
-	public static void executeTask(final Activity activity, ActionParams params) {
-		new SimplerAsyncTask<ActionParams, Void, ActionParams>() {
-			@Override
-			protected ActionParams doInBackground(ActionParams state) {
-				state.prepare();
-				return state;
-			}
+	static class ConfirmedExecute extends SimpleAsyncTask<ActionState, Void, ActionState> {
+		private final Activity activity;
+		ConfirmedExecute(@NonNull Activity activity) {
+			this.activity = activity;
+		}
 
-			@Override
-			protected void onPostExecute(ActionParams state) {
-				new AlertDialog.Builder(activity) //
-						.setTitle(state.getTitle()) //
-						.setMessage(state.getMessage()) //
-						.setIcon(android.R.drawable.ic_dialog_alert) //
-						.setPositiveButton(android.R.string.yes, state.createDialogClickListener()) //
-						.setNegativeButton(android.R.string.no, null) //
-						.show();
-			}
-		}.execute(params);
+		@Override
+		protected ActionState doInBackground(ActionState state) {
+			state.prepare();
+			return state;
+		}
+
+		@Override
+		protected void onPostExecute(final ActionState state) {
+			new AlertDialog.Builder(activity)
+					.setTitle(state.action.getConfirmationTitle())
+					.setMessage(state.action.getConfirmationMessage())
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setPositiveButton(android.R.string.yes, new OnClickListener() {
+						@Override public void onClick(DialogInterface dialog, int which) {
+							new Execute(activity).execute(state);
+						}
+					})
+					.setNegativeButton(android.R.string.no, null)
+					.show();
+		}
 	}
 
-	private static void executeTask(ActionParams params) {
-		new SimplerAsyncTask<ActionParams, Void, Void>() {
-			@Override
-			protected Void doInBackground(ActionParams state) {
-				state.prepare();
-				new Handler(Looper.getMainLooper()).post(state);
-				return null;
-			}
-		}.execute(params);
+	static class Execute extends SimpleAsyncTask<ActionState, Void, ActionState> {
+		protected final Activity activity;
+
+		Execute(@NonNull Activity activity) {
+			this.activity = activity;
+		}
+
+		@Override
+		protected ActionState doInBackground(ActionState state) {
+			state.execute();
+			return state;
+		}
+
+		@Override
+		protected void onPostExecute(ActionState state) {
+			state.action.finished();
+		}
 	}
 
-	// TODO move to lib
-	static abstract class SimplerAsyncTask<A, B, C> extends SimpleAsyncTask<A, B, C> {
-		public void execute(A a) {
-			super.execute(a);
+	static class NoQuestions extends SimpleAsyncTask<ActionState, Void, ActionState> {
+		protected final Activity activity;
+
+		NoQuestions(@NonNull Activity activity) {
+			this.activity = activity;
+		}
+
+		@Override
+		protected ActionState doInBackground(ActionState state) {
+			state.prepare();
+			state.execute();
+			return state;
+		}
+
+		@Override
+		protected void onPostExecute(ActionState result) {
+			result.action.finished();
+		}
+	}
+
+	static class NoQuestionsWithUndo extends NoQuestions {
+		NoQuestionsWithUndo(@NonNull Activity activity) {
+			super(activity);
+		}
+
+		@Override
+		protected void onPostExecute(ActionState state) {
+			super.onPostExecute(state);
+			undo(activity, state);
+		}
+	}
+
+	static class ActionState {
+		final Action action;
+		Throwable prepare;
+		Throwable execute;
+
+		public ActionState(Action action) {
+			this.action = action;
+		}
+
+		void prepare() {
+			try {
+				action.prepare();
+			} catch (Exception ex) {
+				prepare = ex;
+			}
+		}
+
+		void execute() {
+			try {
+				action.execute();
+			} catch (Exception ex) {
+				execute = ex;
+			}
 		}
 	}
 }

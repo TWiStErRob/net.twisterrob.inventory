@@ -78,17 +78,13 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	}
 
 	private void delete(final long propertyID) {
-		new DeletePropertyTask(propertyID, new Dialogs.Callback() {
-			public void dialogSuccess() {
+		Dialogs.executeConfirm(getActivity(), new DeletePropertyTask(propertyID) {
+			@Override public void finished() {
 				PropertyDTO item = new PropertyDTO();
 				item.id = propertyID;
 				eventsListener.propertyDeleted(item);
 			}
-
-			public void dialogFailed() {
-				App.toast("Cannot delete property #" + propertyID);
-			}
-		}).displayDialog(getActivity());
+		});
 	}
 
 	private long getArgPropertyID() {

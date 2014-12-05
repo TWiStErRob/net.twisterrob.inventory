@@ -6,10 +6,9 @@ import android.database.Cursor;
 
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.model.*;
-import net.twisterrob.inventory.android.view.Dialogs;
-import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
+import net.twisterrob.inventory.android.view.Action;
 
-public class MoveRoomTask extends ActionParams {
+public abstract class MoveRoomTask implements Action {
 	private final long[] roomIDs;
 	private final long newPropertyID;
 
@@ -17,8 +16,7 @@ public class MoveRoomTask extends ActionParams {
 	private PropertyDTO oldProperty;
 	private PropertyDTO newProperty;
 
-	public MoveRoomTask(Dialogs.Callback callback, long newPropertyID, long... roomIDs) {
-		super(callback);
+	public MoveRoomTask(long newPropertyID, long... roomIDs) {
 		if (roomIDs.length == 0) {
 			throw new IllegalArgumentException("Nothing to move.");
 		}
@@ -26,8 +24,7 @@ public class MoveRoomTask extends ActionParams {
 		this.newPropertyID = newPropertyID;
 	}
 
-	@Override
-	protected void prepare() {
+	@Override public void prepare() {
 		rooms = retrieveRooms();
 		Long oldPropertyID = findProperty(rooms);
 		if (oldPropertyID != null) {
@@ -44,13 +41,11 @@ public class MoveRoomTask extends ActionParams {
 		return propertyIDs.size() == 1? propertyIDs.iterator().next() : null;
 	}
 
-	@Override
-	protected void execute() {
+	@Override public void execute() {
 		App.db().moveRooms(newPropertyID, roomIDs);
 	}
 
-	@Override
-	protected String getTitle() {
+	@Override public String getConfirmationTitle() {
 		String base;
 		if (roomIDs.length == 1) {
 			base = "Moving Room #" + roomIDs[0];
@@ -59,9 +54,7 @@ public class MoveRoomTask extends ActionParams {
 		}
 		return base + "\nto Property #" + newPropertyID;
 	}
-
-	@Override
-	protected String getMessage() {
+	@Override public String getConfirmationMessage() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Are you sure you want to move the ");
 		if (rooms.size() == 1) {
@@ -74,6 +67,19 @@ public class MoveRoomTask extends ActionParams {
 		sb.append(" to ").append(newProperty.name);
 		sb.append("?");
 		return sb.toString();
+	}
+
+	@Override public String getSuccessMessage() {
+		// TODO String message = getResources().getQuantityString(R.plurals.room_moved, roomIDs.length, roomIDs.length);
+		return "Room #" + Arrays.toString(roomIDs) + " moved to property #" + newPropertyID + ".";
+	}
+
+	@Override public String getFailureMessage() {
+		return "Cannot move Room #" + Arrays.toString(roomIDs) + " to property #" + newPropertyID + ".";
+	}
+
+	@Override public Action buildUndo() {
+		return null;
 	}
 
 	private List<RoomDTO> retrieveRooms() {

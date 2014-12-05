@@ -7,38 +7,33 @@ import android.database.Cursor;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.Room;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
-import net.twisterrob.inventory.android.view.Dialogs;
-import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
+import net.twisterrob.inventory.android.view.Action;
 
-public class DeleteRoomTask extends ActionParams {
+public abstract class DeleteRoomTask implements Action {
 	private final long[] roomIDs;
 
 	private Collection<RoomDTO> rooms;
 	private List<String> items;
 
-	public DeleteRoomTask(Dialogs.Callback callback, long... roomIDs) {
-		super(callback);
+	public DeleteRoomTask(long... roomIDs) {
 		if (roomIDs.length == 0) {
 			throw new IllegalArgumentException("Nothing to move.");
 		}
 		this.roomIDs = roomIDs;
 	}
 
-	@Override
-	protected void prepare() {
+	@Override public void prepare() {
 		rooms = retrieveRooms(roomIDs);
 		if (rooms.size() == 1) {
 			items = retrieveItemNames(rooms.iterator().next());
 		}
 	}
 
-	@Override
-	protected void execute() {
+	@Override public void execute() {
 		App.db().deleteRooms(roomIDs);
 	}
 
-	@Override
-	protected String getTitle() {
+	@Override public String getConfirmationTitle() {
 		if (roomIDs.length == 1) {
 			return "Deleting Room #" + roomIDs[0];
 		} else {
@@ -46,8 +41,7 @@ public class DeleteRoomTask extends ActionParams {
 		}
 	}
 
-	@Override
-	protected String getMessage() {
+	@Override public String getConfirmationMessage() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Are you sure you want to move the ");
 		if (rooms.size() == 1) {
@@ -67,6 +61,18 @@ public class DeleteRoomTask extends ActionParams {
 			sb.delete(sb.length() - ",".length(), sb.length());
 		}
 		return sb.toString();
+	}
+
+	@Override public String getSuccessMessage() {
+		return "Room #" + Arrays.toString(roomIDs) + " deleted.";
+	}
+
+	@Override public String getFailureMessage() {
+		return "Cannot move Room #" + Arrays.toString(roomIDs) + ".";
+	}
+
+	@Override public Action buildUndo() {
+		return null;
 	}
 
 	private List<RoomDTO> retrieveRooms(long[] roomIDs) {

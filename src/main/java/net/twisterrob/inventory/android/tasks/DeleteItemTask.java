@@ -7,38 +7,32 @@ import android.database.Cursor;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.Item;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
-import net.twisterrob.inventory.android.view.Dialogs;
-import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
+import net.twisterrob.inventory.android.view.Action;
 
-public class DeleteItemTask extends ActionParams {
+public abstract class DeleteItemTask implements Action {
 	private final long itemID;
 
 	private ItemDTO item;
 	private List<String> items;
 
-	public DeleteItemTask(long id, Dialogs.Callback callback) {
-		super(callback);
+	public DeleteItemTask(long id) {
 		this.itemID = id;
 	}
 
-	@Override
-	protected void prepare() {
+	@Override public void prepare() {
 		item = retrieveItem();
 		items = retrieveItemNames();
 	}
 
-	@Override
-	protected void execute() {
+	@Override public void execute() {
 		App.db().deleteItem(itemID);
 	}
 
-	@Override
-	protected String getTitle() {
+	@Override public String getConfirmationTitle() {
 		return "Deleting Item #" + itemID;
 	}
 
-	@Override
-	protected String getMessage() {
+	@Override public String getConfirmationMessage() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Are you sure you want to delete the item named");
 		sb.append(' ');
@@ -59,6 +53,18 @@ public class DeleteItemTask extends ActionParams {
 			sb.append(")");
 		}
 		return sb.toString();
+	}
+
+	@Override public String getSuccessMessage() {
+		return "Item #" + itemID + " deleted.";
+	}
+
+	@Override public String getFailureMessage() {
+		return "Cannot delete item #" + itemID + ".";
+	}
+
+	@Override public Action buildUndo() {
+		return null;
 	}
 
 	private ItemDTO retrieveItem() {

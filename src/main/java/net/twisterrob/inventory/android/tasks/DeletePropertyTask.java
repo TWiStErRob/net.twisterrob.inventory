@@ -7,38 +7,32 @@ import android.database.Cursor;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.Room;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
-import net.twisterrob.inventory.android.view.Dialogs;
-import net.twisterrob.inventory.android.view.Dialogs.ActionParams;
+import net.twisterrob.inventory.android.view.Action;
 
-public class DeletePropertyTask extends ActionParams {
+public abstract class DeletePropertyTask implements Action {
 	private final long propertyID;
 
 	private PropertyDTO property;
 	private List<String> rooms;
 
-	public DeletePropertyTask(long id, Dialogs.Callback callback) {
-		super(callback);
+	public DeletePropertyTask(long id) {
 		this.propertyID = id;
 	}
 
-	@Override
-	protected void prepare() {
+	@Override public void prepare() {
 		property = retrieveProperty();
 		rooms = retrieveRoomNames();
 	}
 
-	@Override
-	protected void execute() {
+	@Override public void execute() {
 		App.db().deleteProperty(propertyID);
 	}
 
-	@Override
-	protected String getTitle() {
+	@Override public String getConfirmationTitle() {
 		return "Deleting Property #" + propertyID;
 	}
 
-	@Override
-	protected String getMessage() {
+	@Override public String getConfirmationMessage() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Are you sure you want to delete the property named");
 		sb.append(' ');
@@ -59,6 +53,18 @@ public class DeletePropertyTask extends ActionParams {
 			sb.append(")");
 		}
 		return sb.toString();
+	}
+
+	@Override public String getSuccessMessage() {
+		return "Property #" + propertyID + "deleted.";
+	}
+
+	@Override public String getFailureMessage() {
+		return "Cannot delete property #" + propertyID + ".";
+	}
+
+	@Override public Action buildUndo() {
+		return null;
 	}
 
 	private PropertyDTO retrieveProperty() {
