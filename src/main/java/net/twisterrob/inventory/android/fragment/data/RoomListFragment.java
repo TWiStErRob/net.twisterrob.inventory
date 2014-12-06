@@ -112,7 +112,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	}
 
 	private void delete(final long[] roomIDs) {
-		Dialogs.executeConfirm(getActivity(), new DeleteRoomTask(roomIDs) {
+		Dialogs.executeConfirm(getActivity(), new DeleteRoomsAction(roomIDs) {
 			public void finished() {
 				selectionMode.finish();
 				refresh();
@@ -125,18 +125,13 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 			App.toast("Cannot move rooms to the same property where they are.");
 			return;
 		}
-		Dialogs.executeDirect(getActivity(), new MoveRoomTask(propertyID, roomIDs) {
+		Dialogs.executeDirect(getActivity(), new MoveRoomActions(propertyID, roomIDs) {
 			public void finished() {
 				selectionMode.finish();
 				refresh();
 			}
-
-			@Override public Action buildUndo() {
-				return new MoveRoomTask(getArgPropertyID(), roomIDs) {
-					@Override public void finished() {
-						refresh();
-					}
-				};
+			@Override public void undoFinished() {
+				refresh();
 			}
 		});
 	}

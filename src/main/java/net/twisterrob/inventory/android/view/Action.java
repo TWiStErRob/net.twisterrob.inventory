@@ -32,4 +32,5 @@ public interface Action {
 	 * @return action that can reset the database to the original state
 	 */
 	Action buildUndo();
+	void undoFinished();
 }

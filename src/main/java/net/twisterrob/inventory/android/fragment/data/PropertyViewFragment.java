@@ -11,7 +11,7 @@ import net.twisterrob.inventory.android.activity.data.PropertyEditActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
-import net.twisterrob.inventory.android.tasks.DeletePropertyTask;
+import net.twisterrob.inventory.android.tasks.DeletePropertiesAction;
 import net.twisterrob.inventory.android.view.Dialogs;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
@@ -78,7 +78,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	}
 
 	private void delete(final long propertyID) {
-		Dialogs.executeConfirm(getActivity(), new DeletePropertyTask(propertyID) {
+		Dialogs.executeConfirm(getActivity(), new DeletePropertiesAction(propertyID) {
 			@Override public void finished() {
 				PropertyDTO item = new PropertyDTO();
 				item.id = propertyID;

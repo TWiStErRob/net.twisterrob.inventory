@@ -2,20 +2,19 @@ package net.twisterrob.inventory.android.tasks;
 
 import java.util.*;
 
-import android.database.Cursor;
-
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.contract.Room;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.view.Action;
 
-public abstract class DeleteRoomTask implements Action {
+import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
+
+public abstract class DeleteRoomsAction extends BaseAction {
 	private final long[] roomIDs;
 
 	private Collection<RoomDTO> rooms;
-	private List<String> items;
+	private Collection<String> items;
 
-	public DeleteRoomTask(long... roomIDs) {
+	public DeleteRoomsAction(long... roomIDs) {
 		if (roomIDs.length == 0) {
 			throw new IllegalArgumentException("Nothing to move.");
 		}
@@ -25,7 +24,7 @@ public abstract class DeleteRoomTask implements Action {
 	@Override public void prepare() {
 		rooms = retrieveRooms(roomIDs);
 		if (rooms.size() == 1) {
-			items = retrieveItemNames(rooms.iterator().next());
+			items = retrieveItemNames(rooms.iterator().next().rootItemID);
 		}
 	}
 
@@ -75,34 +74,7 @@ public abstract class DeleteRoomTask implements Action {
 		return null;
 	}
 
-	private List<RoomDTO> retrieveRooms(long[] roomIDs) {
-		List<RoomDTO> rooms = new ArrayList<>(roomIDs.length);
-		for (Long roomID : roomIDs) {
-			rooms.add(retrieveRoom(roomID));
-		}
-		return rooms;
-	}
-
-	private RoomDTO retrieveRoom(long roomID) {
-		Cursor room = App.db().getRoom(roomID);
-		try {
-			room.moveToFirst();
-			return RoomDTO.fromCursor(room);
-		} finally {
-			room.close();
-		}
-	}
-
-	private List<String> retrieveItemNames(RoomDTO room) {
-		Cursor items = App.db().listItems(room.rootItemID);
-		try {
-			List<String> itemNames = new ArrayList<>(items.getCount());
-			while (items.moveToNext()) {
-				itemNames.add(items.getString(items.getColumnIndexOrThrow(Room.NAME)));
-			}
-			return itemNames;
-		} finally {
-			items.close();
-		}
+	@Override public void undoFinished() {
+		// optional override
 	}
 }

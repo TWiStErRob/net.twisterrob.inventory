@@ -1,27 +1,26 @@
 package net.twisterrob.inventory.android.tasks;
 
-import java.util.*;
-
-import android.database.Cursor;
+import java.util.Collection;
 
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.contract.Room;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.view.Action;
 
-public abstract class DeletePropertyTask implements Action {
+import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
+
+public abstract class DeletePropertiesAction extends BaseAction {
 	private final long propertyID;
 
 	private PropertyDTO property;
-	private List<String> rooms;
+	private Collection<String> rooms;
 
-	public DeletePropertyTask(long id) {
+	public DeletePropertiesAction(long id) {
 		this.propertyID = id;
 	}
 
 	@Override public void prepare() {
-		property = retrieveProperty();
-		rooms = retrieveRoomNames();
+		property = retrieveProperty(propertyID);
+		rooms = retrieveRoomNames(propertyID);
 	}
 
 	@Override public void execute() {
@@ -67,26 +66,7 @@ public abstract class DeletePropertyTask implements Action {
 		return null;
 	}
 
-	private PropertyDTO retrieveProperty() {
-		Cursor property = App.db().getProperty(propertyID);
-		try {
-			property.moveToFirst();
-			return PropertyDTO.fromCursor(property);
-		} finally {
-			property.close();
-		}
-	}
-
-	private List<String> retrieveRoomNames() {
-		Cursor rooms = App.db().listRooms(propertyID);
-		try {
-			List<String> roomNames = new ArrayList<>(rooms.getCount());
-			while (rooms.moveToNext()) {
-				roomNames.add(rooms.getString(rooms.getColumnIndexOrThrow(Room.NAME)));
-			}
-			return roomNames;
-		} finally {
-			rooms.close();
-		}
+	@Override public void undoFinished() {
+		// optional override
 	}
 }

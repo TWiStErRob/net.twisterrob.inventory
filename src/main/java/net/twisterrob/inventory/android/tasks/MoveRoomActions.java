@@ -2,21 +2,21 @@ package net.twisterrob.inventory.android.tasks;
 
 import java.util.*;
 
-import android.database.Cursor;
-
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.view.Action;
 
-public abstract class MoveRoomTask implements Action {
+import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
+
+public abstract class MoveRoomActions extends BaseAction {
 	private final long[] roomIDs;
 	private final long newPropertyID;
 
-	private List<RoomDTO> rooms;
+	private Collection<RoomDTO> rooms;
 	private PropertyDTO oldProperty;
 	private PropertyDTO newProperty;
 
-	public MoveRoomTask(long newPropertyID, long... roomIDs) {
+	public MoveRoomActions(long newPropertyID, long... roomIDs) {
 		if (roomIDs.length == 0) {
 			throw new IllegalArgumentException("Nothing to move.");
 		}
@@ -26,14 +26,14 @@ public abstract class MoveRoomTask implements Action {
 
 	@Override public void prepare() {
 		rooms = retrieveRooms();
-		Long oldPropertyID = findProperty(rooms);
+		Long oldPropertyID = findCommonProperty(rooms);
 		if (oldPropertyID != null) {
 			oldProperty = retrieveProperty(oldPropertyID);
 		}
 		newProperty = retrieveProperty(newPropertyID);
 	}
 
-	private Long findProperty(List<RoomDTO> rooms) {
+	private Long findCommonProperty(Collection<RoomDTO> rooms) {
 		Set<Long> propertyIDs = new TreeSet<>();
 		for (RoomDTO room : rooms) {
 			propertyIDs.add(room.propertyID);
@@ -79,34 +79,14 @@ public abstract class MoveRoomTask implements Action {
 	}
 
 	@Override public Action buildUndo() {
-		return null;
-	}
+		return new UndoAction(this) {
+			private final Collection<RoomDTO> rooms = MoveRoomActions.this.rooms;
 
-	private List<RoomDTO> retrieveRooms() {
-		List<RoomDTO> rooms = new ArrayList<>(roomIDs.length);
-		for (long roomID : roomIDs) {
-			rooms.add(retrieveRoom(roomID));
-		}
-		return rooms;
-	}
-
-	private RoomDTO retrieveRoom(long roomID) {
-		Cursor room = App.db().getRoom(roomID);
-		try {
-			room.moveToFirst();
-			return RoomDTO.fromCursor(room);
-		} finally {
-			room.close();
-		}
-	}
-
-	private PropertyDTO retrieveProperty(long propertyID) {
-		Cursor property = App.db().getProperty(propertyID);
-		try {
-			property.moveToFirst();
-			return PropertyDTO.fromCursor(property);
-		} finally {
-			property.close();
-		}
+			@Override public void execute() {
+				for (RoomDTO room : rooms) {
+					App.db().moveRoom(room.id, room.propertyID);
+				}
+			}
+		};
 	}
 }

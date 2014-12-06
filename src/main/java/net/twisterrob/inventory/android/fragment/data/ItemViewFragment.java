@@ -12,7 +12,7 @@ import net.twisterrob.inventory.android.activity.data.ItemEditActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
-import net.twisterrob.inventory.android.tasks.DeleteItemTask;
+import net.twisterrob.inventory.android.tasks.DeleteItemsAction;
 import net.twisterrob.inventory.android.view.Dialogs;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
@@ -86,7 +86,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	}
 
 	private void delete(final long itemID) {
-		Dialogs.executeConfirm(getActivity(), new DeleteItemTask(itemID) {
+		Dialogs.executeConfirm(getActivity(), new DeleteItemsAction(itemID) {
 			@Override public void finished() {
 				ItemDTO item = new ItemDTO();
 				item.id = itemID;

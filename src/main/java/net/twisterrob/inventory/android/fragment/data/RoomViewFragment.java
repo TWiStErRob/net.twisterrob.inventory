@@ -94,17 +94,20 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	private void move(final long roomID, final long propertyID) {
-		Dialogs.executeConfirm(getActivity(), new MoveRoomTask(propertyID, roomID) {
+		Dialogs.executeConfirm(getActivity(), new MoveRoomActions(propertyID, roomID) {
 			@Override public void finished() {
 				// TODO move event in eventsListener
 				startActivity(PropertyViewActivity.show(propertyID));
 				getActivity().finish();
 			}
+			@Override public void undoFinished() {
+				// TODO ???
+			}
 		});
 	}
 
 	private void delete(final long roomID) {
-		Dialogs.executeConfirm(getActivity(), new DeleteRoomTask(roomID) {
+		Dialogs.executeConfirm(getActivity(), new DeleteRoomsAction(roomID) {
 			@Override public void finished() {
 				RoomDTO room = new RoomDTO();
 				room.id = roomID;
