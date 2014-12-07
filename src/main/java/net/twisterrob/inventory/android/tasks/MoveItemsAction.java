@@ -15,13 +15,14 @@ public abstract class MoveItemsAction extends MoveAction {
 		super(parentID, R.plurals.item, R.plurals.item, itemIDs);
 	}
 
-	@Override public void prepare() {
+	@Override protected void doPrepare() {
+		super.doPrepare();
 		items = retrieveItems(IDs);
 		stuff = getNames(items);
 		target = retrieveItem(targetID).name;
 	}
 
-	@Override public void execute() {
+	@Override protected void doExecute() {
 		App.db().moveItems(targetID, IDs);
 	}
 

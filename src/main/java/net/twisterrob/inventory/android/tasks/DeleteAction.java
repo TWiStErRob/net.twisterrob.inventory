@@ -20,15 +20,17 @@ public abstract class DeleteAction extends BaseAction {
 	protected final Collection<String> children = new TreeSet<>();
 
 	public DeleteAction(@PluralsRes int targetNameRes, @PluralsRes int childNameRes, long... IDs) {
-		if (IDs == null || IDs.length == 0) {
-			throw new IllegalArgumentException("Nothing to delete.");
-		}
 		this.IDs = IDs;
 
 		this.targetNameRes = targetNameRes;
 		this.childNameRes = childNameRes;
 	}
 
+	@Override protected void doPrepare() {
+		if (IDs == null || IDs.length == 0) {
+			throw new IllegalArgumentException("Nothing to delete.");
+		}
+	}
 	private String buildPlural(Resources res, @PluralsRes int titleRes) {
 		String name = res.getQuantityString(targetNameRes, targets.size());
 		return res.getQuantityString(titleRes, targets.size(), toPluralArgs(targets, name));
@@ -60,7 +62,7 @@ public abstract class DeleteAction extends BaseAction {
 		return buildPlural(res, R.plurals.action_delete_success);
 	}
 
-	@Override public String getFailureMessage(Resources res) {
+	@Override protected String getGenericFailureMessage(Resources res) {
 		return buildPlural(res, R.plurals.action_delete_failed);
 	}
 

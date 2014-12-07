@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.*;
-import android.os.*;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.*;
 import android.support.v4.app.FragmentManager.*;
@@ -14,7 +14,6 @@ import android.widget.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.*;
 
@@ -51,7 +50,6 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	private static final int REQUEST_ADD_ROOM = 2;
 	private static final int REQUEST_ADD_ITEM = 3;
 
-	private Handler handler = new Handler();
 	private View btnOk;
 	private TextView labType;
 	private TextView title;
@@ -118,7 +116,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 
 	private int getType(Fragment fragment) {
 		if (fragment instanceof RoomListFragment) {
-			return 1 << 1;
+			return PROPERTY;
 		} else if (fragment instanceof ItemListFragment) {
 			long roomID = fragment.getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 			if (roomID != Room.ID_ADD) {
@@ -152,15 +150,21 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		} else {
 			title.setText(R.string.move_title_question);
 		}
-		labType.setVisibility(allowed? View.GONE : View.VISIBLE);
-		labType.setText(getString(R.string.move_current_type, toString(requestedType)));
+		if (allowed) {
+			labType.setVisibility(View.GONE);
+			labType.setText(null);
+		} else {
+			labType.setVisibility(View.VISIBLE);
+			String typeString = getString(R.string.move_current_type, toString(requestedType));
+			labType.setText(typeString);
+		}
 		btnOk.setEnabled(allowed);
 	}
 
 	private String toString(int type) {
 		int stringResource;
 		switch (type) {
-			case 1 << 1:
+			case PROPERTY:
 				stringResource = R.string.property_one;
 				break;
 			case ROOM:
@@ -169,14 +173,14 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 			case ITEM:
 				stringResource = R.string.item_one;
 				break;
-			case 1 << 1 | ROOM:
-				return toString(1 << 1) + "/" + toString(ROOM);
-			case 1 << 1 | ITEM:
-				return toString(1 << 1) + "/" + toString(ITEM);
+			case PROPERTY | ROOM:
+				return toString(PROPERTY) + "/" + toString(ROOM);
+			case PROPERTY | ITEM:
+				return toString(PROPERTY) + "/" + toString(ITEM);
 			case ROOM | ITEM:
 				return toString(ROOM) + "/" + toString(ITEM);
 			case EVERYTHING:
-				return toString(1 << 1) + "/" + toString(ROOM) + "/" + toString(ITEM);
+				return toString(PROPERTY) + "/" + toString(ROOM) + "/" + toString(ITEM);
 			default:
 				return "???";
 		}
@@ -223,13 +227,13 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	private void load(final Loaders singleLoader, Bundle args, final BaseFragment fragment) {
 		getSupportLoaderManager().initLoader(singleLoader.ordinal(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
-				final DTO data = RoomDTO.fromCursor(cursor);
+				final String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 				getSupportLoaderManager().destroyLoader(singleLoader.ordinal());
 				// FragmentTransaction.commit: Can not perform this action inside of onLoadFinished
 				// so must do it on the UI thread, but later!
-				handler.post(new Runnable() {
+				runOnUiThread(new Runnable() {
 					@Override public void run() {
-						updateFragment(fragment, data.name);
+						updateFragment(fragment, name);
 					}
 				});
 			}

@@ -15,7 +15,8 @@ public abstract class MoveItemsToRoomAction extends MoveAction {
 		super(roomID, R.plurals.item, R.plurals.room, itemIDs);
 	}
 
-	@Override public void prepare() {
+	@Override protected void doPrepare() {
+		super.doPrepare();
 		items = retrieveItems(IDs);
 		stuff = getNames(items);
 		RoomDTO room = retrieveRoom(targetID);
@@ -23,7 +24,7 @@ public abstract class MoveItemsToRoomAction extends MoveAction {
 		targetID = room.rootItemID;
 	}
 
-	@Override public void execute() {
+	@Override protected void doExecute() {
 		App.db().moveItems(targetID, IDs);
 	}
 

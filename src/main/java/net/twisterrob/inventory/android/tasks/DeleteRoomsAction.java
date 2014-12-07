@@ -12,7 +12,8 @@ public abstract class DeleteRoomsAction extends DeleteAction {
 		super(R.plurals.room, R.plurals.item, roomIDs);
 	}
 
-	@Override public void prepare() {
+	@Override protected void doPrepare() {
+		super.doPrepare();
 		List<RoomDTO> dtos = retrieveRooms(IDs);
 		targets = getNames(dtos);
 		for (RoomDTO room : dtos) {
@@ -20,7 +21,7 @@ public abstract class DeleteRoomsAction extends DeleteAction {
 		}
 	}
 
-	@Override public void execute() {
+	@Override protected void doExecute() {
 		for (long roomID : IDs) {
 			App.db().deleteRoom(roomID);
 		}

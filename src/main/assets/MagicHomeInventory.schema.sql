@@ -16,7 +16,8 @@ CREATE TABLE Category (
 			ON UPDATE CASCADE
 			ON DELETE CASCADE,
 	PRIMARY KEY(_id AUTOINCREMENT),
-	UNIQUE(name)
+	UNIQUE(name),
+	CHECK (_id <> parent)
 );
 CREATE TABLE Category_Name_Cache (
 	key         VARCHAR      NOT NULL, -- string resource name
@@ -43,7 +44,8 @@ CREATE TABLE Item (
 			ON UPDATE CASCADE
 			ON DELETE CASCADE,
 	PRIMARY KEY(_id AUTOINCREMENT),
-	UNIQUE (parent, name)
+	UNIQUE (parent, name),
+	CHECK (_id <> parent)
 );
 
 CREATE TABLE PropertyType (

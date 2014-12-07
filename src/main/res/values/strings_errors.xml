@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="action_error">Unhandled error: %1$s</string>
+	<string name="action_move_error_empty">Nothing to move.</string>
+	<string name="action_delete_error_empty">Nothing to delete.</string>
+</resources>

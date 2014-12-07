@@ -12,7 +12,8 @@ public abstract class DeletePropertiesAction extends DeleteAction {
 		super(R.plurals.property, R.plurals.room, propertyIDs);
 	}
 
-	@Override public void prepare() {
+	@Override protected void doPrepare() {
+		super.doPrepare();
 		List<PropertyDTO> dtos = retrieveProperties(IDs);
 		targets = getNames(dtos);
 		for (PropertyDTO property : dtos) {
@@ -20,7 +21,7 @@ public abstract class DeletePropertiesAction extends DeleteAction {
 		}
 	}
 
-	@Override public void execute() {
+	@Override protected void doExecute() {
 		for (long propertyID : IDs) {
 			App.db().deleteProperty(propertyID);
 		}

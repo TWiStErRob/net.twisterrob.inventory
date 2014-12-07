@@ -15,13 +15,14 @@ public abstract class MoveRoomsAction extends MoveAction {
 		super(propertyID, R.plurals.room, R.plurals.property, roomIDs);
 	}
 
-	@Override public void prepare() {
+	@Override protected void doPrepare() {
+		super.doPrepare();
 		rooms = retrieveRooms(IDs);
 		stuff = getNames(rooms);
 		target = retrieveProperty(targetID).name;
 	}
 
-	@Override public void execute() {
+	@Override protected void doExecute() {
 		App.db().moveRooms(targetID, IDs);
 	}
 

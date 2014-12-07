@@ -20,14 +20,17 @@ public abstract class MoveAction extends BaseAction {
 	protected String target;
 
 	public MoveAction(long targetID, @PluralsRes int typeRes, int targetTypeRes, long... IDs) {
-		if (IDs.length == 0) {
-			throw new IllegalArgumentException("Nothing to move.");
-		}
 		this.IDs = IDs;
 		this.targetID = targetID;
 
 		this.typeRes = typeRes;
 		this.targetTypeRes = targetTypeRes;
+	}
+
+	@Override protected void doPrepare() {
+		if (IDs == null || IDs.length == 0) {
+			throw new ValidationException(R.string.action_move_error_empty);
+		}
 	}
 
 	private String buildPlural(Resources res, @PluralsRes int titleRes) {
@@ -48,7 +51,7 @@ public abstract class MoveAction extends BaseAction {
 		return buildPlural(res, R.plurals.action_move_success);
 	}
 
-	@Override public String getFailureMessage(Resources res) {
+	@Override protected String getGenericFailureMessage(Resources res) {
 		return buildPlural(res, R.plurals.action_move_failed);
 	}
 }
