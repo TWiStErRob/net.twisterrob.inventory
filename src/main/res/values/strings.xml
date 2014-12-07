@@ -13,6 +13,31 @@
 	<string name="action_move">Move</string>
 	<string name="action_search">Search Items</string>
 
+	<plurals name="action_delete_title">
+		<item quantity="one">Deleting %2$s:\n%3$s</item>
+		<item quantity="other">Deleting %1$d %2$s</item>
+	</plurals>
+	<plurals name="action_delete_success">
+		<item quantity="one">%2$s "%3$s" deleted.</item>
+		<item quantity="other">%1$d %2$s deleted.</item>
+	</plurals>
+	<plurals name="action_delete_failed">
+		<item quantity="one">Failed to delete %2$s "%3$s"!</item>
+		<item quantity="other">Deleting %1$d %2$s failed!</item>
+	</plurals>
+	<plurals name="action_delete_confirm">
+		<item quantity="one">Are you sure you want to delete the %2$s named "%3$s" with everything in it?</item>
+		<item quantity="other">Are you sure you want to delete %1$d %2$s with everything in them?</item>
+	</plurals>
+	<plurals name="action_delete_confirm_empty">
+		<item quantity="one">Are you sure you want to delete the empty %2$s named "%3$s"?</item>
+		<item quantity="other">Are you sure you want to delete %1$d empty %2$s?</item>
+	</plurals>
+	<plurals name="action_delete_details">
+		<item quantity="one">The following %2$s inside will be also deleted with all its contents: %3$s</item>
+		<item quantity="other">The following %1$d %2$s inside will be also deleted with all their contents: %3$s</item>
+	</plurals>
+
 	<string name="selection_count">%d selected</string>
 	<string name="selection_selectAll">Select All</string>
 	<string name="selection_selectAll_short">All</string>
@@ -30,6 +55,10 @@
 	<string name="label_category_subs">%1$d Subcategories</string>
 	<string name="label_category_items_view">List %1$d Items</string>
 
+	<plurals name="item">
+		<item quantity="one">@string/item_one</item>
+		<item quantity="other">@string/item_list</item>
+	</plurals>
 	<string name="item_one">Item</string>
 	<string name="item_list">Items</string>
 	<string name="item_details">Item Details</string>
@@ -38,35 +67,15 @@
 	<string name="item_edit">Edit Item</string>
 	<string name="item_delete">Delete Item</string>
 	<string name="item_delete_many">Delete Items</string>
-	<plurals name="item_delete_title">
-		<item quantity="one">Deleting Item:\n%2$s</item>
-		<item quantity="other">Deleting %1$d Items</item>
-	</plurals>
-	<plurals name="item_delete_success">
-		<item quantity="one">Item %2$s deleted.</item>
-		<item quantity="other">%1$d items deleted.</item>
-	</plurals>
-	<plurals name="item_delete_failed">
-		<item quantity="one">Failed to delete item %2$s!</item>
-		<item quantity="other">Deleting %1$d items failed!</item>
-	</plurals>
-	<plurals name="item_delete_confirm">
-		<item quantity="one">Are you sure you want to delete the item named %2$s with everything in it?</item>
-		<item quantity="other">Are you sure you want to delete %1$d items with everything in them?</item>
-	</plurals>
-	<plurals name="item_delete_confirm_empty">
-		<item quantity="one">Are you sure you want to delete the empty item named %2$s?</item>
-		<item quantity="other">Are you sure you want to delete %1$d empty items?</item>
-	</plurals>
-	<plurals name="item_delete_item_details">
-		<item quantity="one">The following item will be deleted: %2$s</item>
-		<item quantity="other">The following items will be deleted: %2$s</item>
-	</plurals>
 	<string name="item_share">Share Item</string>
 	<string name="item_move">Move Item</string>
 	<string name="item_move_many">Move Items</string>
 	<string name="item_name_hint">Item Name</string>
 
+	<plurals name="property">
+		<item quantity="one">@string/property_one</item>
+		<item quantity="other">@string/property_list</item>
+	</plurals>
 	<string name="property_one">Property</string>
 	<string name="property_list">Properties</string>
 	<string name="property_details">Property Details</string>
@@ -75,33 +84,13 @@
 	<string name="property_edit">Edit Property</string>
 	<string name="property_delete">Delete Property</string>
 	<string name="property_delete_many">Delete Properties</string>
-	<plurals name="property_delete_title">
-		<item quantity="one">Deleting Property:\n%2$s</item>
-		<item quantity="other">Deleting %1$d Properties</item>
-	</plurals>
-	<plurals name="property_delete_success">
-		<item quantity="one">Property %2$s deleted.</item>
-		<item quantity="other">%1$d properties deleted.</item>
-	</plurals>
-	<plurals name="property_delete_failed">
-		<item quantity="one">Failed to delete property %2$s!</item>
-		<item quantity="other">Deleting %1$d properties failed!</item>
-	</plurals>
-	<plurals name="property_delete_confirm">
-		<item quantity="one">Are you sure you want to delete the property named %2$s with everything in it?</item>
-		<item quantity="other">Are you sure you want to delete %1$d properties with everything in them?</item>
-	</plurals>
-	<plurals name="property_delete_confirm_empty">
-		<item quantity="one">Are you sure you want to delete the empty property named %2$s?</item>
-		<item quantity="other">Are you sure you want to delete %1$d empty properties?</item>
-	</plurals>
-	<plurals name="property_delete_room_details">
-		<item quantity="one">The following room will be deleted: %2$s</item>
-		<item quantity="other">The following rooms will be deleted: %2$s</item>
-	</plurals>
 	<string name="property_share">Share Property</string>
 	<string name="property_name_hint">Property Title</string>
 
+	<plurals name="room">
+		<item quantity="one">@string/room_one</item>
+		<item quantity="other">@string/room_list</item>
+	</plurals>
 	<string name="room_one">Room</string>
 	<string name="room_list">Rooms</string>
 	<string name="room_details">Room Details</string>
@@ -110,30 +99,6 @@
 	<string name="room_edit">Edit Room</string>
 	<string name="room_delete">Delete Room</string>
 	<string name="room_delete_many">Delete Rooms</string>
-	<plurals name="room_delete_title">
-		<item quantity="one">Deleting Room:\n%2$s</item>
-		<item quantity="other">Deleting %1$d Rooms</item>
-	</plurals>
-	<plurals name="room_delete_success">
-		<item quantity="one">Room %2$s deleted.</item>
-		<item quantity="other">%1$d rooms deleted.</item>
-	</plurals>
-	<plurals name="room_delete_failed">
-		<item quantity="one">Failed to delete room %2$s!</item>
-		<item quantity="other">Deleting %1$d rooms failed!</item>
-	</plurals>
-	<plurals name="room_delete_confirm">
-		<item quantity="one">Are you sure you want to delete the room named %2$s with everything in it?</item>
-		<item quantity="other">Are you sure you want to delete %1$d rooms with everything in them?</item>
-	</plurals>
-	<plurals name="room_delete_confirm_empty">
-		<item quantity="one">Are you sure you want to delete the empty room named %2$s?</item>
-		<item quantity="other">Are you sure you want to delete %1$d empty rooms?</item>
-	</plurals>
-	<plurals name="room_delete_room_details">
-		<item quantity="one">The following room will be deleted: %2$s</item>
-		<item quantity="other">The following rooms will be deleted: %2$s</item>
-	</plurals>
 	<string name="room_share">Share Room</string>
 	<string name="room_move">Move Room</string>
 	<string name="room_move_many">Move Rooms</string>
