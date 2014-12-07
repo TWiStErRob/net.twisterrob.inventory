@@ -43,7 +43,8 @@ public class Dialogs {
 					new NoQuestions(activity).execute(new ActionState(undo));
 				}
 			};
-			new UndobarController(activity).showUndoBar(false, state.action.getSuccessMessage(), null, undoListener);
+			String message = state.action.getSuccessMessage(activity.getResources());
+			new UndobarController(activity).showUndoBar(false, message, null, undoListener);
 		}
 	}
 
@@ -62,8 +63,8 @@ public class Dialogs {
 		@Override
 		protected void onPostExecute(final ActionState state) {
 			new AlertDialog.Builder(activity)
-					.setTitle(state.action.getConfirmationTitle())
-					.setMessage(state.action.getConfirmationMessage())
+					.setTitle(state.action.getConfirmationTitle(activity.getResources()))
+					.setMessage(state.action.getConfirmationMessage(activity.getResources()))
 					.setIcon(android.R.drawable.ic_dialog_alert)
 					.setPositiveButton(android.R.string.yes, new OnClickListener() {
 						@Override public void onClick(DialogInterface dialog, int which) {

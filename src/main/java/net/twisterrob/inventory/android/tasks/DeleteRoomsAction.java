@@ -2,7 +2,9 @@ package net.twisterrob.inventory.android.tasks;
 
 import java.util.*;
 
-import net.twisterrob.inventory.android.App;
+import android.content.res.Resources;
+
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.view.Action;
 
@@ -11,8 +13,8 @@ import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
 public abstract class DeleteRoomsAction extends BaseAction {
 	private final long[] roomIDs;
 
-	private Collection<RoomDTO> rooms;
-	private Collection<String> items;
+	private Collection<String> rooms;
+	private final Collection<String> items = new TreeSet<>();
 
 	public DeleteRoomsAction(long... roomIDs) {
 		if (roomIDs.length == 0) {
@@ -22,52 +24,37 @@ public abstract class DeleteRoomsAction extends BaseAction {
 	}
 
 	@Override public void prepare() {
-		rooms = retrieveRooms(roomIDs);
-		if (rooms.size() == 1) {
-			items = retrieveItemNames(rooms.iterator().next().rootItemID);
+		List<RoomDTO> dtos = retrieveRooms(roomIDs);
+		rooms = getNames(dtos);
+		for (RoomDTO room : dtos) {
+			items.addAll(retrieveItemNames(room.rootItemID));
 		}
 	}
 
 	@Override public void execute() {
-		App.db().deleteRooms(roomIDs);
-	}
-
-	@Override public String getConfirmationTitle() {
-		if (roomIDs.length == 1) {
-			return "Deleting Room #" + roomIDs[0];
-		} else {
-			return "Deleting " + roomIDs.length + " Rooms";
+		for (long roomID : roomIDs) {
+			App.db().deleteRoom(roomID);
 		}
 	}
 
-	@Override public String getConfirmationMessage() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Are you sure you want to move the ");
-		if (rooms.size() == 1) {
-			sb.append("room named ").append("'").append(rooms.iterator().next().name).append("'");
-		} else {
-			sb.append(rooms.size()).append(" rooms");
-		}
-		sb.append(" with all items in ").append(rooms.size() == 1? "it" : "them");
-		sb.append("?");
-		if (items != null && !items.isEmpty()) {
-			sb.append("\nThe items are: ");
-			for (String name : items) {
-				sb.append("\n\t");
-				sb.append(name);
-				sb.append(",");
-			}
-			sb.delete(sb.length() - ",".length(), sb.length());
-		}
-		return sb.toString();
+	@Override public String getConfirmationTitle(Resources res) {
+		return quant(res, R.plurals.room_delete_title, rooms);
 	}
 
-	@Override public String getSuccessMessage() {
-		return "Room #" + Arrays.toString(roomIDs) + " deleted.";
+	@Override public String getConfirmationMessage(Resources res) {
+		return buildConfirmString(res, rooms, items,
+				R.plurals.room_delete_confirm,
+				R.plurals.room_delete_confirm_empty,
+				R.plurals.room_delete_room_details
+		);
 	}
 
-	@Override public String getFailureMessage() {
-		return "Cannot move Room #" + Arrays.toString(roomIDs) + ".";
+	@Override public String getSuccessMessage(Resources res) {
+		return quant(res, R.plurals.room_delete_success, rooms);
+	}
+
+	@Override public String getFailureMessage(Resources res) {
+		return quant(res, R.plurals.room_delete_failed, rooms);
 	}
 
 	@Override public Action buildUndo() {
@@ -75,6 +62,6 @@ public abstract class DeleteRoomsAction extends BaseAction {
 	}
 
 	@Override public void undoFinished() {
-		// optional override
+		// no undo
 	}
 }

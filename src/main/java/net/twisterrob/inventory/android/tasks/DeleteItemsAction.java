@@ -1,65 +1,57 @@
 package net.twisterrob.inventory.android.tasks;
 
-import java.util.Collection;
+import java.util.*;
 
-import net.twisterrob.inventory.android.App;
+import android.content.res.Resources;
+
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.view.Action;
 
 import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
 
 public abstract class DeleteItemsAction extends BaseAction {
-	private final long itemID;
+	private final long[] itemIDs;
 
-	private ItemDTO item;
 	private Collection<String> items;
+	private final Collection<String> children = new TreeSet<>();
 
-	public DeleteItemsAction(long id) {
-		this.itemID = id;
+	public DeleteItemsAction(long... itemIDs) {
+		this.itemIDs = itemIDs;
 	}
 
 	@Override public void prepare() {
-		item = retrieveItem(itemID);
-		items = retrieveItemNames(itemID);
+		List<ItemDTO> dtos = retrieveItems(itemIDs);
+		items = getNames(dtos);
+		for (ItemDTO dto : dtos) {
+			children.addAll(retrieveItemNames(dto.id));
+		}
 	}
 
 	@Override public void execute() {
-		App.db().deleteItem(itemID);
-	}
-
-	@Override public String getConfirmationTitle() {
-		return "Deleting Item #" + itemID;
-	}
-
-	@Override public String getConfirmationMessage() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Are you sure you want to delete the item named");
-		sb.append(' ');
-		sb.append("'").append(item.name).append("'");
-		if (!items.isEmpty()) {
-			sb.append(" and all ");
-			sb.append(items.size());
-			sb.append(" items with all items in it");
+		for (long itemID : itemIDs) {
+			App.db().deleteItem(itemID);
 		}
-		sb.append("?");
-		if (!items.isEmpty()) {
-			sb.append("\n(The items are: ");
-			for (String name : items) {
-				sb.append(name);
-				sb.append(", ");
-			}
-			sb.delete(sb.length() - ", ".length(), sb.length());
-			sb.append(")");
-		}
-		return sb.toString();
 	}
 
-	@Override public String getSuccessMessage() {
-		return "Item #" + itemID + " deleted.";
+	@Override public String getConfirmationTitle(Resources res) {
+		return quant(res, R.plurals.item_delete_title, items);
 	}
 
-	@Override public String getFailureMessage() {
-		return "Cannot delete item #" + itemID + ".";
+	@Override public String getConfirmationMessage(Resources res) {
+		return buildConfirmString(res, items, children,
+				R.plurals.item_delete_confirm,
+				R.plurals.item_delete_confirm_empty,
+				R.plurals.item_delete_item_details
+		);
+	}
+
+	@Override public String getSuccessMessage(Resources res) {
+		return quant(res, R.plurals.item_delete_success, items);
+	}
+
+	@Override public String getFailureMessage(Resources res) {
+		return quant(res, R.plurals.item_delete_failed, items);
 	}
 
 	@Override public Action buildUndo() {
@@ -67,6 +59,6 @@ public abstract class DeleteItemsAction extends BaseAction {
 	}
 
 	@Override public void undoFinished() {
-		// optional override
+		// no undo
 	}
 }

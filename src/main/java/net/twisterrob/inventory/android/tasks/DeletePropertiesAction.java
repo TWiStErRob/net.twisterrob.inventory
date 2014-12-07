@@ -1,65 +1,57 @@
 package net.twisterrob.inventory.android.tasks;
 
-import java.util.Collection;
+import java.util.*;
 
-import net.twisterrob.inventory.android.App;
+import android.content.res.Resources;
+
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.view.Action;
 
 import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
 
 public abstract class DeletePropertiesAction extends BaseAction {
-	private final long propertyID;
+	private final long[] propertyIDs;
 
-	private PropertyDTO property;
-	private Collection<String> rooms;
+	private Collection<String> properties;
+	private final Collection<String> rooms = new TreeSet<>();
 
-	public DeletePropertiesAction(long id) {
-		this.propertyID = id;
+	public DeletePropertiesAction(long... propertyIDs) {
+		this.propertyIDs = propertyIDs;
 	}
 
 	@Override public void prepare() {
-		property = retrieveProperty(propertyID);
-		rooms = retrieveRoomNames(propertyID);
+		List<PropertyDTO> dtos = retrieveProperties(propertyIDs);
+		properties = getNames(dtos);
+		for (PropertyDTO property : dtos) {
+			rooms.addAll(retrieveRoomNames(property.id));
+		}
 	}
 
 	@Override public void execute() {
-		App.db().deleteProperty(propertyID);
-	}
-
-	@Override public String getConfirmationTitle() {
-		return "Deleting Property #" + propertyID;
-	}
-
-	@Override public String getConfirmationMessage() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Are you sure you want to delete the property named");
-		sb.append(' ');
-		sb.append("'").append(property.name).append("'");
-		if (!rooms.isEmpty()) {
-			sb.append(" and all ");
-			sb.append(rooms.size());
-			sb.append(" rooms with all items in it");
+		for (long propertyID : propertyIDs) {
+			App.db().deleteProperty(propertyID);
 		}
-		sb.append("?");
-		if (!rooms.isEmpty()) {
-			sb.append("\n(The rooms are: ");
-			for (String name : rooms) {
-				sb.append(name);
-				sb.append(", ");
-			}
-			sb.delete(sb.length() - ", ".length(), sb.length());
-			sb.append(")");
-		}
-		return sb.toString();
 	}
 
-	@Override public String getSuccessMessage() {
-		return "Property #" + propertyID + "deleted.";
+	@Override public String getConfirmationTitle(Resources res) {
+		return quant(res, R.plurals.property_delete_title, properties);
 	}
 
-	@Override public String getFailureMessage() {
-		return "Cannot delete property #" + propertyID + ".";
+	@Override public String getConfirmationMessage(Resources res) {
+		return buildConfirmString(res, properties, rooms,
+				R.plurals.property_delete_confirm,
+				R.plurals.property_delete_confirm_empty,
+				R.plurals.property_delete_room_details
+		);
+	}
+
+	@Override public String getSuccessMessage(Resources res) {
+		return quant(res, R.plurals.property_delete_success, properties);
+	}
+
+	@Override public String getFailureMessage(Resources res) {
+		return quant(res, R.plurals.property_delete_failed, properties);
 	}
 
 	@Override public Action buildUndo() {
@@ -67,6 +59,6 @@ public abstract class DeletePropertiesAction extends BaseAction {
 	}
 
 	@Override public void undoFinished() {
-		// optional override
+		// no undo
 	}
 }

@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -20,6 +20,7 @@ import net.twisterrob.inventory.android.view.*;
 
 public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
+	private static final int PICK_REQUEST = 1;
 
 	public interface RoomsEvents {
 		void newRoom(long propertyID);
@@ -88,8 +89,6 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		};
 	}
 
-	public static final int PICK_REQUEST = 1;
-
 	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == PICK_REQUEST && resultCode == MoveTargetActivity.PROPERTY) {
 			long propertyID = data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
@@ -111,7 +110,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		return ExtrasFactory.bundleFromProperty(getArgPropertyID());
 	}
 
-	private void delete(final long[] roomIDs) {
+	private void delete(final long... roomIDs) {
 		Dialogs.executeConfirm(getActivity(), new DeleteRoomsAction(roomIDs) {
 			public void finished() {
 				selectionMode.finish();
@@ -119,13 +118,9 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 			}
 		});
 	}
-	private void move(final long propertyID, final long[] roomIDs) {
-		if (propertyID == getArgPropertyID()) {
-			// TODO this should be in MoveRoomTask
-			App.toast("Cannot move rooms to the same property where they are.");
-			return;
-		}
-		Dialogs.executeDirect(getActivity(), new MoveRoomActions(propertyID, roomIDs) {
+
+	private void move(final long propertyID, final long... roomIDs) {
+		Dialogs.executeDirect(getActivity(), new MoveRoomsAction(propertyID, roomIDs) {
 			public void finished() {
 				selectionMode.finish();
 				refresh();

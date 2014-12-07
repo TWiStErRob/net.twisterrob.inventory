@@ -9,6 +9,22 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
 
 public class DatabaseDTOTools {
+	public static List<String> getNames(Collection<? extends DTO> dtos) {
+		List<String> names = new ArrayList<>(dtos.size());
+		for (DTO dto : dtos) {
+			names.add(dto.name);
+		}
+		return names;
+	}
+
+	public static List<PropertyDTO> retrieveProperties(long... propertyIDs) {
+		List<PropertyDTO> properties = new ArrayList<>(propertyIDs.length);
+		for (long propertyID : propertyIDs) {
+			properties.add(retrieveProperty(propertyID));
+		}
+		return properties;
+	}
+
 	public static PropertyDTO retrieveProperty(long propertyID) {
 		Cursor property = App.db().getProperty(propertyID);
 		try {
@@ -48,6 +64,14 @@ public class DatabaseDTOTools {
 		} finally {
 			room.close();
 		}
+	}
+
+	public static List<ItemDTO> retrieveItems(long... itemIDs) {
+		List<ItemDTO> items = new ArrayList<>(itemIDs.length);
+		for (long itemID : itemIDs) {
+			items.add(retrieveItem(itemID));
+		}
+		return items;
 	}
 
 	public static ItemDTO retrieveItem(long itemID) {

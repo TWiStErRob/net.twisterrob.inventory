@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
+import android.content.res.Resources;
+
 public interface Action {
 	/**
 	 * Load the affected entities into memory for use on the UI.
@@ -7,8 +9,8 @@ public interface Action {
 	 * <i>Called in background.</i>
 	 */
 	void prepare();
-	String getConfirmationTitle();
-	String getConfirmationMessage();
+	String getConfirmationTitle(Resources res);
+	String getConfirmationMessage(Resources res);
 	/**
 	 * Send all the requested actions the user has confirmed to the database.
 	 *
@@ -22,9 +24,9 @@ public interface Action {
 	 */
 	void finished();
 	/** Will be displayed in a Toast or Undobar */
-	String getSuccessMessage();
+	String getSuccessMessage(Resources res);
 	/** Will be displayed in a Toast or AlertDialog */
-	String getFailureMessage();
+	String getFailureMessage(Resources res);
 	/**
 	 * Build an opposite of this action implying that all the data has been modified by {@link #execute} already.
 	 *

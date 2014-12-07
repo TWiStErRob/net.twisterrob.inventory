@@ -2,7 +2,8 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
-import android.app.SearchManager;
+import android.app.*;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -10,13 +11,16 @@ import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
-import net.twisterrob.inventory.android.view.RecyclerViewLoadersController;
+import net.twisterrob.inventory.android.tasks.DeleteItemsAction;
+import net.twisterrob.inventory.android.view.*;
 
 public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemListFragment.class);
+	private static final int PICK_REQUEST = 1;
 
 	public interface ItemsEvents {
 		void newItem(long parentID);
@@ -62,6 +66,60 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	protected SelectionActionMode onPrepareSelectionMode(Activity activity, SelectionAdapter<?> adapter) {
+		return new SelectionActionMode(activity, adapter) {
+			@Override public boolean onCreateActionMode(android.support.v7.view.ActionMode mode, Menu menu) {
+				mode.getMenuInflater().inflate(R.menu.item_bulk, menu);
+				return super.onCreateActionMode(mode, menu);
+			}
+
+			@Override public boolean onActionItemClicked(android.support.v7.view.ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+					case R.id.action_item_delete:
+						delete(selectionMode.getSelectedIDs());
+						return true;
+					case R.id.action_item_move:
+						int target = MoveTargetActivity.ROOM | MoveTargetActivity.ITEM;
+						startActivityForResult(MoveTargetActivity.pick(target), PICK_REQUEST);
+						return true;
+				}
+				return super.onActionItemClicked(mode, item);
+			}
+		};
+	}
+
+	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == PICK_REQUEST) {
+			switch (resultCode) {
+				case MoveTargetActivity.ROOM: {
+					long roomID = data.getLongExtra(Extras.ROOM_ID, Room.ID_ADD);
+					move(roomID, selectionMode.getSelectedIDs());
+					return;
+				}
+				case MoveTargetActivity.ITEM: {
+					long parentID = data.getLongExtra(Extras.ITEM_ID, Item.ID_ADD);
+					move(parentID, selectionMode.getSelectedIDs());
+					return;
+				}
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void delete(final long... itemIDs) {
+		Dialogs.executeConfirm(getActivity(), new DeleteItemsAction(itemIDs) {
+			public void finished() {
+				selectionMode.finish();
+				refresh();
+			}
+		});
+	}
+
+	private void move(final long parentID, final long... itemIDs) {
+		// FIXME implement
 	}
 
 	@Override protected Bundle createLoadArgs() {

@@ -2,13 +2,15 @@ package net.twisterrob.inventory.android.tasks;
 
 import java.util.*;
 
+import android.content.res.Resources;
+
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.view.Action;
 
 import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
 
-public abstract class MoveRoomActions extends BaseAction {
+public abstract class MoveRoomsAction extends BaseAction {
 	private final long[] roomIDs;
 	private final long newPropertyID;
 
@@ -16,7 +18,7 @@ public abstract class MoveRoomActions extends BaseAction {
 	private PropertyDTO oldProperty;
 	private PropertyDTO newProperty;
 
-	public MoveRoomActions(long newPropertyID, long... roomIDs) {
+	public MoveRoomsAction(long newPropertyID, long... roomIDs) {
 		if (roomIDs.length == 0) {
 			throw new IllegalArgumentException("Nothing to move.");
 		}
@@ -45,7 +47,7 @@ public abstract class MoveRoomActions extends BaseAction {
 		App.db().moveRooms(newPropertyID, roomIDs);
 	}
 
-	@Override public String getConfirmationTitle() {
+	@Override public String getConfirmationTitle(Resources res) {
 		String base;
 		if (roomIDs.length == 1) {
 			base = "Moving Room #" + roomIDs[0];
@@ -54,7 +56,7 @@ public abstract class MoveRoomActions extends BaseAction {
 		}
 		return base + "\nto Property #" + newPropertyID;
 	}
-	@Override public String getConfirmationMessage() {
+	@Override public String getConfirmationMessage(Resources res) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Are you sure you want to move the ");
 		if (rooms.size() == 1) {
@@ -69,18 +71,18 @@ public abstract class MoveRoomActions extends BaseAction {
 		return sb.toString();
 	}
 
-	@Override public String getSuccessMessage() {
+	@Override public String getSuccessMessage(Resources res) {
 		// TODO String message = getResources().getQuantityString(R.plurals.room_moved, roomIDs.length, roomIDs.length);
 		return "Room #" + Arrays.toString(roomIDs) + " moved to property #" + newPropertyID + ".";
 	}
 
-	@Override public String getFailureMessage() {
+	@Override public String getFailureMessage(Resources res) {
 		return "Cannot move Room #" + Arrays.toString(roomIDs) + " to property #" + newPropertyID + ".";
 	}
 
 	@Override public Action buildUndo() {
 		return new UndoAction(this) {
-			private final Collection<RoomDTO> rooms = MoveRoomActions.this.rooms;
+			private final Collection<RoomDTO> rooms = MoveRoomsAction.this.rooms;
 
 			@Override public void execute() {
 				for (RoomDTO room : rooms) {

@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.tasks;
 
+import android.content.res.Resources;
+
 import net.twisterrob.inventory.android.view.Action;
 
 public abstract class UndoAction implements Action {
@@ -12,10 +14,10 @@ public abstract class UndoAction implements Action {
 	@Override public void prepare() {
 		// usually no preparation needed because all the information is available from the original.
 	}
-	@Override public final String getConfirmationTitle() {
+	@Override public final String getConfirmationTitle(Resources res) {
 		return "Undo";
 	}
-	@Override public final String getConfirmationMessage() {
+	@Override public final String getConfirmationMessage(Resources res) {
 		return "Are you sure you want to undo?";
 	}
 	@Override public abstract void execute();
@@ -26,10 +28,10 @@ public abstract class UndoAction implements Action {
 		}
 	}
 
-	@Override public String getSuccessMessage() {
+	@Override public String getSuccessMessage(Resources res) {
 		return "Un-done";
 	}
-	@Override public String getFailureMessage() {
+	@Override public String getFailureMessage(Resources res) {
 		return "Undo failed";
 	}
 	@Override public final Action buildUndo() {

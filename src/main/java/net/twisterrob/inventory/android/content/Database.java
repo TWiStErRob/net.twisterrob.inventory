@@ -173,18 +173,6 @@ public class Database {
 	public void deleteRoom(long id) {
 		execSQL(R.string.query_room_delete, id);
 	}
-	public void deleteRooms(long[] roomIDs) {
-		SQLiteDatabase db = getWritableDatabase();
-		try {
-			db.beginTransaction();
-			for (long roomID : roomIDs) {
-				execSQL(db, R.string.query_room_delete, roomID);
-			}
-			db.setTransactionSuccessful();
-		} finally {
-			db.endTransaction();
-		}
-	}
 	public void moveRoom(long id, long propertyID) {
 		execSQL(R.string.query_room_move, propertyID, id);
 	}

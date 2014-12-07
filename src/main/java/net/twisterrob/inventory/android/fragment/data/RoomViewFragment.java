@@ -13,7 +13,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomViewFragment.RoomEvents;
 import net.twisterrob.inventory.android.tasks.*;
-import net.twisterrob.inventory.android.view.Dialogs;
+import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -94,14 +94,18 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	private void move(final long roomID, final long propertyID) {
-		Dialogs.executeConfirm(getActivity(), new MoveRoomActions(propertyID, roomID) {
+		Dialogs.executeConfirm(getActivity(), new MoveRoomsAction(propertyID, roomID) {
 			@Override public void finished() {
 				// TODO move event in eventsListener
 				startActivity(PropertyViewActivity.show(propertyID));
 				getActivity().finish();
 			}
+			@Override public Action buildUndo() {
+				// we navigated away from current activity, no undo
+				return null;
+			}
 			@Override public void undoFinished() {
-				// TODO ???
+				// no undo
 			}
 		});
 	}
