@@ -14,23 +14,23 @@
 	<string name="action_search">Search Items</string>
 
 	<plurals name="action_delete_title">
-		<item quantity="one">Deleting %2$s:\n%3$s</item>
+		<item quantity="one">Deleting %2$s \"%3$s\"</item>
 		<item quantity="other">Deleting %1$d %2$s</item>
 	</plurals>
 	<plurals name="action_delete_success">
-		<item quantity="one">%2$s "%3$s" deleted.</item>
+		<item quantity="one">Deleted %2$s \"%3$s\".</item>
 		<item quantity="other">%1$d %2$s deleted.</item>
 	</plurals>
 	<plurals name="action_delete_failed">
-		<item quantity="one">Failed to delete %2$s "%3$s"!</item>
+		<item quantity="one">Failed to delete %2$s \"%3$s\"!</item>
 		<item quantity="other">Deleting %1$d %2$s failed!</item>
 	</plurals>
 	<plurals name="action_delete_confirm">
-		<item quantity="one">Are you sure you want to delete the %2$s named "%3$s" with everything in it?</item>
+		<item quantity="one">Are you sure you want to delete the %2$s named \"%3$s\" with everything in it?</item>
 		<item quantity="other">Are you sure you want to delete %1$d %2$s with everything in them?</item>
 	</plurals>
 	<plurals name="action_delete_confirm_empty">
-		<item quantity="one">Are you sure you want to delete the empty %2$s named "%3$s"?</item>
+		<item quantity="one">Are you sure you want to delete the empty %2$s named \"%3$s\"?</item>
 		<item quantity="other">Are you sure you want to delete %1$d empty %2$s?</item>
 	</plurals>
 	<plurals name="action_delete_details">
@@ -38,6 +38,23 @@
 		<item quantity="other">The following %1$d %2$s inside will be also deleted with all their contents: %3$s</item>
 	</plurals>
 
+
+	<plurals name="action_move_title">
+		<item quantity="one">Moving %2$s \"%5$s\"</item>
+		<item quantity="other">Moving %1$d %2$s</item>
+	</plurals>
+	<plurals name="action_move_success">
+		<item quantity="one">Moved %2$s \"%5$s\" to %3$s \"%4$s\".</item>
+		<item quantity="other">%1$d %2$s moved to %3$s \"%4$s\".</item>
+	</plurals>
+	<plurals name="action_move_failed">
+		<item quantity="one">Failed to move %2$s \"%5$s\" to %3$s \"%4$s\"!</item>
+		<item quantity="other">Moving %1$d %2$s to %3$s \"%4$s\" failed!</item>
+	</plurals>
+	<plurals name="action_move_confirm">
+		<item quantity="one">Are you sure you want to move the %2$s named \"%7$s\" with everything in it to %3$s \"%4$s\"?</item>
+		<item quantity="other">Are you sure you want to move %1$d %2$s with everything in them to %3$s \"%4$s\"?</item>
+	</plurals>
 	<string name="selection_count">%d selected</string>
 	<string name="selection_selectAll">Select All</string>
 	<string name="selection_selectAll_short">All</string>
@@ -56,8 +73,8 @@
 	<string name="label_category_items_view">List %1$d Items</string>
 
 	<plurals name="item">
-		<item quantity="one">@string/item_one</item>
-		<item quantity="other">@string/item_list</item>
+		<item quantity="one">item</item>
+		<item quantity="other">items</item>
 	</plurals>
 	<string name="item_one">Item</string>
 	<string name="item_list">Items</string>
@@ -73,8 +90,8 @@
 	<string name="item_name_hint">Item Name</string>
 
 	<plurals name="property">
-		<item quantity="one">@string/property_one</item>
-		<item quantity="other">@string/property_list</item>
+		<item quantity="one">property</item>
+		<item quantity="other">properties</item>
 	</plurals>
 	<string name="property_one">Property</string>
 	<string name="property_list">Properties</string>
@@ -88,8 +105,8 @@
 	<string name="property_name_hint">Property Title</string>
 
 	<plurals name="room">
-		<item quantity="one">@string/room_one</item>
-		<item quantity="other">@string/room_list</item>
+		<item quantity="one">room</item>
+		<item quantity="other">rooms</item>
 	</plurals>
 	<string name="room_one">Room</string>
 	<string name="room_list">Rooms</string>

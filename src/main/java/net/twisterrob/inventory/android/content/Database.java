@@ -204,6 +204,21 @@ public class Database {
 	public void deleteItem(long id) {
 		execSQL(R.string.query_item_delete, id);
 	}
+	public void moveItem(long id, long parentID) {
+		execSQL(R.string.query_item_move, parentID, id);
+	}
+	public void moveItems(long parentID, long[] itemIDs) {
+		SQLiteDatabase db = getWritableDatabase();
+		try {
+			db.beginTransaction();
+			for (long itemID : itemIDs) {
+				execSQL(db, R.string.query_item_move, parentID, itemID);
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+	}
 
 	public Cursor searchSuggest(String query) {
 		query = fixQuery(query);

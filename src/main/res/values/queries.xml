@@ -335,5 +335,8 @@
 	<string name="query_item_delete"><![CDATA["
 		delete from Item where _id = ?
 	"]]></string>
+	<string name="query_item_move"><![CDATA["
+		update Item set parent = ? where _id = ?
+	"]]></string>
 
 </resources>

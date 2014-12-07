@@ -108,10 +108,10 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		} else if (fragment instanceof ItemListFragment) {
 			long roomID = fragment.getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 			long itemID = fragment.getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
-			if (itemID != Item.ID_ADD) {
-				setResult(ITEM, ExtrasFactory.intentFromItem(itemID));
-			} else if (roomID != Room.ID_ADD) {
+			if (roomID != Room.ID_ADD) {
 				setResult(ROOM, ExtrasFactory.intentFromRoom(roomID));
+			} else if (itemID != Item.ID_ADD) {
+				setResult(ITEM, ExtrasFactory.intentFromItem(itemID));
 			}
 		}
 	}

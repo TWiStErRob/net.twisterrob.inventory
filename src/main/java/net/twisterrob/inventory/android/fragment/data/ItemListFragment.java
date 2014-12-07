@@ -15,7 +15,7 @@ import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
-import net.twisterrob.inventory.android.tasks.DeleteItemsAction;
+import net.twisterrob.inventory.android.tasks.*;
 import net.twisterrob.inventory.android.view.*;
 
 public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
@@ -96,7 +96,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 			switch (resultCode) {
 				case MoveTargetActivity.ROOM: {
 					long roomID = data.getLongExtra(Extras.ROOM_ID, Room.ID_ADD);
-					move(roomID, selectionMode.getSelectedIDs());
+					moveToRoom(roomID, selectionMode.getSelectedIDs());
 					return;
 				}
 				case MoveTargetActivity.ITEM: {
@@ -118,8 +118,28 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		});
 	}
 
+	private void moveToRoom(final long roomID, final long... itemIDs) {
+		Dialogs.executeDirect(getActivity(), new MoveItemsToRoomAction(roomID, itemIDs) {
+			public void finished() {
+				selectionMode.finish();
+				refresh();
+			}
+			@Override public void undoFinished() {
+				refresh();
+			}
+		});
+	}
+
 	private void move(final long parentID, final long... itemIDs) {
-		// FIXME implement
+		Dialogs.executeDirect(getActivity(), new MoveItemsAction(parentID, itemIDs) {
+			public void finished() {
+				selectionMode.finish();
+				refresh();
+			}
+			@Override public void undoFinished() {
+				refresh();
+			}
+		});
 	}
 
 	@Override protected Bundle createLoadArgs() {
