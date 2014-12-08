@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.activity.data;
 
 import java.util.*;
 
+import org.slf4j.*;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.*;
@@ -14,8 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
-import net.twisterrob.android.content.loader.DynamicLoaderManager;
-import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
@@ -31,11 +31,15 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		PropertyListFragment.PropertiesEvents,
 		RoomListFragment.RoomsEvents,
 		ItemListFragment.ItemsEvents {
+	private static final Logger LOG = LoggerFactory.getLogger(MoveTargetActivity.class);
+
 	/**
 	 * What to search for, use {@link #PROPERTY}, {@link #ROOM} and {@link #ITEM} as flags,
 	 * one of the flags will be the result code in {@link android.app.Activity#onActivityResult}.
 	 */
 	private static final String EXTRA_WHAT = "what";
+	private static final String EXTRA_START_TYPE = "start_type";
+	private static final String EXTRA_START_ID = "start_id";
 	private static final String EXTRA_NO_PROPERTIES = "no_properties";
 	private static final String EXTRA_NO_ROOMS = "no_rooms";
 	private static final String EXTRA_NO_ITEMS = "no_items";
@@ -100,7 +104,22 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		});
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-		updateFragment(PropertyListFragment.newInstance());
+		PropertyListFragment fragment = PropertyListFragment.newInstance();
+		updateFragment(fragment);
+		updateUI(fragment);
+		if (savedInstanceState == null) {
+			switch (getArgStartType()) {
+				case PROPERTY:
+					propertySelected(getArgStartId(), true);
+					break;
+				case ROOM:
+					roomSelected(getArgStartId(), true);
+					break;
+				case ITEM:
+					itemSelected(getArgStartId(), true);
+					break;
+			}
+		}
 	}
 
 	private void updateFragment(@NonNull BaseFragment fragment) {
@@ -110,7 +129,6 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 			ft.addToBackStack(null);
 		}
 		ft.commit();
-		updateUI(fragment);
 	}
 
 	private void setResult(Fragment fragment) {
@@ -248,12 +266,15 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	}
 
 	@Override public void propertySelected(long propertyID) {
+		propertySelected(propertyID, false);
+	}
+	private void propertySelected(long propertyID, boolean startMode) {
 		Bundle args = bundleFromProperty(propertyID);
-		final BaseFragment fragment = RoomListFragment.newInstance(propertyID);
 		getSupportLoaderManager().destroyLoader(Loaders.SingleProperty.ordinal());
 		getSupportLoaderManager().initLoader(Loaders.SingleProperty.ordinal(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
 				PropertyDTO property = PropertyDTO.fromCursor(cursor);
+				BaseFragment fragment = RoomListFragment.newInstance(property.id);
 				fragment.getArguments().putString(ARG_TITLE, property.name);
 				if (isForbidden(EXTRA_NO_PROPERTIES, property.id)) {
 					fragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
@@ -264,53 +285,77 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	}
 
 	@Override public void roomSelected(long roomID) {
+		roomSelected(roomID, false);
+	}
+	private void roomSelected(long roomID, final boolean startMode) {
 		Bundle args = bundleFromRoom(roomID);
-		final BaseFragment fragment = ItemListFragment.newRoomInstance(roomID);
 		getSupportLoaderManager().destroyLoader(Loaders.SingleRoom.ordinal());
 		getSupportLoaderManager().initLoader(Loaders.SingleRoom.ordinal(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
 				RoomDTO room = RoomDTO.fromCursor(cursor);
-				fragment.getArguments().putString(ARG_TITLE, room.name);
+				BaseFragment roomFragment = ItemListFragment.newRoomInstance(room.id);
+				roomFragment.getArguments().putString(ARG_TITLE, room.name);
 				if (isForbidden(EXTRA_NO_PROPERTIES, room.propertyID) || isForbidden(EXTRA_NO_ROOMS, room.id)) {
-					fragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
+					roomFragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
 				}
-				startFragment(fragment);
+				if (startMode) {
+					BaseFragment propertyFragment = RoomListFragment.newInstance(room.propertyID);
+					propertyFragment.getArguments().putString(ARG_TITLE, room.propertyName);
+					if (isForbidden(EXTRA_NO_PROPERTIES, room.propertyID)) {
+						propertyFragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
+					}
+					startFragment(propertyFragment);
+				}
+				startFragment(roomFragment);
 			}
 		});
 	}
 
 	@Override public void itemSelected(long itemID) {
+		itemSelected(itemID, false);
+	}
+	private void itemSelected(final long itemID, final boolean startMode) {
 		Bundle args = bundleFromItem(itemID);
-		final BaseFragment fragment = ItemListFragment.newInstance(itemID);
-		DynamicLoaderManager manager = new DynamicLoaderManager(getSupportLoaderManager());
-		// TODO move functionality to DynamicLoaderManager
-		getSupportLoaderManager().destroyLoader(Loaders.SingleItem.ordinal());
-		Dependency<Cursor> data = manager.add(Loaders.SingleItem.ordinal(), args, new LoadSingleRow(this) {
-			@Override protected void process(Cursor cursor) {
-				ItemDTO item = ItemDTO.fromCursor(cursor);
-				fragment.getArguments().putString(ARG_TITLE, item.name);
-				startFragment(fragment);
-			}
-		});
 		getSupportLoaderManager().destroyLoader(Loaders.ItemParents.ordinal());
-		Dependency<Cursor> parents = manager.add(Loaders.ItemParents.ordinal(), args, new LoadersCallbacks(this) {
+		getSupportLoaderManager().initLoader(Loaders.ItemParents.ordinal(), args, new LoadersCallbacks(this) {
 			@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+				boolean forbidden = false;
 				while (data.moveToNext()) {
 					long id = data.getLong(data.getColumnIndexOrThrow(ParentColumns.ID));
-					String typeString = data.getString(data.getColumnIndexOrThrow(ParentColumns.TYPE));
-					Type type = Type.from(typeString);
-					if (type == Type.Item && isForbidden(EXTRA_NO_ITEMS, id)
-							|| type == Type.Room && isForbidden(EXTRA_NO_ROOMS, id)
-							|| type == Type.Property && isForbidden(EXTRA_NO_PROPERTIES, id)) {
-						fragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
+					Type type = Type.from(data.getString(data.getColumnIndexOrThrow(ParentColumns.TYPE)));
+					forbidden = forbidden || isAnyForbidden(id, type);
+					LOG.trace("itemSelected({}, {}): {}#{} -> {}", itemID, startMode, type, id, forbidden);
+					if (type.isMain() && (startMode || data.isLast())) {
+						BaseFragment fragment = createFragment(type, id);
+						String name = data.getString(data.getColumnIndexOrThrow(ParentColumns.NAME));
+						fragment.getArguments().putString(ARG_TITLE, name);
+						fragment.getArguments().putBoolean(ARG_FORBIDDEN, forbidden);
+						LOG.trace("created: {}: {}", fragment, fragment.getArguments());
+						startFragment(fragment);
 					}
 				}
+			}
+
+			private BaseFragment createFragment(Type type, long id) {
+				switch (type) {
+					case Property:
+						return RoomListFragment.newInstance(id);
+					case Room:
+						return ItemListFragment.newRoomInstance(id);
+					case Item:
+						return ItemListFragment.newInstance(id);
+				}
+				throw new IllegalArgumentException("Cannot create fragment for " + type + " with id=" + id);
+			}
+
+			private boolean isAnyForbidden(long id, Type type) {
+				return type == Type.Item && isForbidden(EXTRA_NO_ITEMS, id)
+						|| type == Type.Room && isForbidden(EXTRA_NO_ROOMS, id)
+						|| type == Type.Property && isForbidden(EXTRA_NO_PROPERTIES, id);
 			}
 			@Override public void onLoaderReset(Loader<Cursor> loader) {
 			}
 		});
-		data.dependsOn(parents);
-		manager.startLoading();
 	}
 
 	@Override public void propertyActioned(long propertyID) {
@@ -323,6 +368,12 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		itemSelected(itemID);
 	}
 
+	private int getArgStartType() {
+		return getIntent().getIntExtra(EXTRA_START_TYPE, NOTHING);
+	}
+	private long getArgStartId() {
+		return getIntent().getLongExtra(EXTRA_START_ID, CommonColumns.ID_ADD);
+	}
 	private int getArgWhat() {
 		return getIntent().getIntExtra(EXTRA_WHAT, NOTHING) & EVERYTHING;
 	}
@@ -393,6 +444,32 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		public Builder forbidItems(long... itemIDs) {
 			for (long id : itemIDs) {
 				this.itemIDs.add(id);
+			}
+			return this;
+		}
+		public Builder startFromPropertyList() {
+			intent.removeExtra(EXTRA_START_TYPE);
+			intent.removeExtra(EXTRA_START_ID);
+			return this;
+		}
+		public Builder startFromProperty(long propertyID) {
+			if (propertyID != Property.ID_ADD) {
+				intent.putExtra(EXTRA_START_TYPE, PROPERTY);
+				intent.putExtra(EXTRA_START_ID, propertyID);
+			}
+			return this;
+		}
+		public Builder startFromRoom(long roomID) {
+			if (roomID != Room.ID_ADD) {
+				intent.putExtra(EXTRA_START_TYPE, ROOM);
+				intent.putExtra(EXTRA_START_ID, roomID);
+			}
+			return this;
+		}
+		public Builder startFromItem(long itemID) {
+			if (itemID != Item.ID_ADD) {
+				intent.putExtra(EXTRA_START_TYPE, ITEM);
+				intent.putExtra(EXTRA_START_ID, itemID);
 			}
 			return this;
 		}

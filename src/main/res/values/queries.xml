@@ -245,7 +245,9 @@
 				join Property p on r.property = p._id
 				join PropertyType pt ON p.type = pt._id
 				where n.root = n.node
-			) where item = ?
+			)
+			where item = ?
+			order by level asc
 	"]]></string>
 
 

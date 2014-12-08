@@ -83,10 +83,10 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 						return true;
 					case R.id.action_item_move:
 						Intent intent = MoveTargetActivity.pick()
+						                                  .startFromItem(getArgParentItemID())
+						                                  .startFromRoom(getArgRoomID())
 						                                  .allowRooms()
-						                                  .forbidRooms(getArgRoomID())
 						                                  .allowItems()
-						                                  .forbidItems(getArgParentItemID())
 						                                  .forbidItems(getSelectedIDs())
 						                                  .build();
 						startActivityForResult(intent, PICK_REQUEST);

@@ -81,6 +81,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				return true;
 			case R.id.action_room_move:
 				Intent intent = MoveTargetActivity.pick()
+				                                  .startFromPropertyList()
 				                                  .allowProperties()
 				                                  .forbidProperties(propertyID)
 				                                  .build();

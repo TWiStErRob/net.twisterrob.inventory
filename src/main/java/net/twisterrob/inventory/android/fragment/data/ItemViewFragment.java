@@ -86,8 +86,9 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 			case R.id.action_item_move:
 				Intent intent = MoveTargetActivity.pick()
 				                                  .allowRooms()
+				                                  .startFromItem(parentID)
 				                                  .allowItems()
-				                                  .forbidItems(getArgItemID(), parentID)
+				                                  .forbidItems(getArgItemID())
 				                                  .build();
 				startActivityForResult(intent, MOVE_REQUEST);
 				return true;

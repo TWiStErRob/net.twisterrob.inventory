@@ -8,16 +8,22 @@ public interface ParentColumns {
 	String TYPE = "parentType";
 
 	enum Type {
-		Category("category"),
-		Property("property"),
-		Room("room"),
-		Root("root"),
-		Item("item");
+		Category("category", false),
+		Property("property", true),
+		Room("room", true),
+		Root("root", false),
+		Item("item", true);
 
 		private final String string;
+		private final boolean isMain;
 
-		private Type(String string) {
+		private Type(String string, boolean isMain) {
 			this.string = string;
+			this.isMain = isMain;
+		}
+
+		public boolean isMain() {
+			return isMain;
 		}
 
 		public static Type from(String string) {
