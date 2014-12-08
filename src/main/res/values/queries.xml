@@ -182,6 +182,71 @@
 		where cd.category = ?
 		order by i.name
 	"]]></string>
+	<string name="query_item_parents"><![CDATA["
+		select * from (
+			-- Item from tree
+			select n.item,
+					n.level + 2 as level,
+					'item' as parentType,
+					i._id as _id,
+					i.name as name,
+					c._id as typeID,
+					c.name as typeName,
+					c.image as typeImage,
+					i.image
+				from Item_Path_Node n
+				join Item i on i._id = n.node
+				join Category c on i.category = c._id
+				where n.root <> n.node
+			union all
+			-- Item (ROOT)
+			/*select n.item,
+					2 as level,
+					'root' as parentType,
+					i._id as _id,
+					i.name as name,
+					c._id as typeID,
+					c.name as typeName,
+					c.image as typeImage,
+					i.image
+				from Item_Path_Node n
+				join Item i on i._id = n.node
+				join Category c on i.category = c._id
+				where n.root = n.node
+			union all*/
+			-- Room
+			select n.item,
+					2 as level,
+					'room' as parentType,
+					r._id as _id,
+					r.name as name,
+					rt._id as typeID,
+					rt.name as typeName,
+					COALESCE(rt.image, rtk.image) as typeImage,
+					r.image
+				from Item_Path_Node n
+				join Room r on n.root = r.root
+				join RoomType rt ON r.type = rt._id
+				join RoomTypeKind rtk ON rt.kind = rtk._id
+				where n.root = n.node
+			union all
+			-- Property
+			select n.item,
+					1 as level,
+					'property' as parentType,
+					p._id as _id,
+					p.name as name,
+					pt._id as typeID,
+					pt.name as typeName,
+					pt.image as typeImage,
+					p.image
+				from Item_Path_Node n
+				join Room r on n.root = r.root
+				join Property p on r.property = p._id
+				join PropertyType pt ON p.type = pt._id
+				where n.root = n.node
+			) where item = ?
+	"]]></string>
 
 
 	<string name="query_categories"><![CDATA["

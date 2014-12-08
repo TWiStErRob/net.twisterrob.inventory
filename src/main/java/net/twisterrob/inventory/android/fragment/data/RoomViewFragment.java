@@ -27,6 +27,8 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 		void roomDeleted(RoomDTO room);
 	}
 
+	private long propertyID = Property.ID_ADD;
+
 	public RoomViewFragment() {
 		setDynamicResource(DYN_EventsClass, RoomEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.room);
@@ -48,6 +50,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
+		propertyID = room.propertyID;
 		super.onSingleRowLoaded(room);
 		eventsListener.roomLoaded(room);
 	}
@@ -77,7 +80,11 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				delete(getArgRoomID());
 				return true;
 			case R.id.action_room_move:
-				startActivityForResult(MoveTargetActivity.pick(MoveTargetActivity.PROPERTY), MOVE_REQUEST);
+				Intent intent = MoveTargetActivity.pick()
+				                                  .allowProperties()
+				                                  .forbidProperties(propertyID)
+				                                  .build();
+				startActivityForResult(intent, MOVE_REQUEST);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

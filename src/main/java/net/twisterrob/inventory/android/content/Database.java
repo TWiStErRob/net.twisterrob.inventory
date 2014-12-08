@@ -137,6 +137,10 @@ public class Database {
 			return rawQuery(R.string.query_items_by_category, categoryID);
 		}
 	}
+	public Cursor listItemParents(long itemID) {
+		return rawQuery(R.string.query_item_parents, itemID);
+	}
+
 	public Cursor getItem(long itemID) {
 		return rawQuery(R.string.query_item, itemID);
 	}

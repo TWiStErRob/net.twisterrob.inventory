@@ -55,6 +55,12 @@
 		<item quantity="one">Are you sure you want to move the %2$s named \"%7$s\" with everything in it to %3$s \"%4$s\"?</item>
 		<item quantity="other">Are you sure you want to move %1$d %2$s with everything in them to %3$s \"%4$s\"?</item>
 	</plurals>
+	<string name="action_move_pick_title">Move to %1$s:\n%2$s</string>
+	<string name="action_move_pick_title_initial">Please select a\n%1$s</string>
+	<string name="action_move_pick_requested">Please select a %1$s</string>
+	<string name="action_move_pick_forbidden">Cannot move here, select another %1$s.</string>
+
+
 	<string name="selection_count">%d selected</string>
 	<string name="selection_selectAll">Select All</string>
 	<string name="selection_selectAll_short">All</string>
@@ -126,10 +132,6 @@
 	<string name="room_name_hint">Room Title</string>
 	<string name="room_location">In %1$s</string>
 	<string name="room_viewAll">List All Rooms</string>
-
-	<string name="move_title">Move to %1$s:\n%2$s</string>
-	<string name="move_title_question">Where do you want to move them?</string>
-	<string name="move_current_type">Please go to a %1$s</string>
 
 	<string name="backup_title">Backup</string>
 	<string name="backup_import_drive">Restore data from Google Drive</string>

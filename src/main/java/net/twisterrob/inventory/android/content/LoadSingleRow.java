@@ -2,21 +2,14 @@ package net.twisterrob.inventory.android.content;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
 
-public abstract class LoadSingleRow implements LoaderCallbacks<Cursor> {
-	private final Context context;
-
+public abstract class LoadSingleRow extends LoadersCallbacks {
 	public LoadSingleRow(Context context) {
-		this.context = context;
-	}
-
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return Loaders.fromID(id).createLoader(context, args);
+		super(context);
 	}
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {

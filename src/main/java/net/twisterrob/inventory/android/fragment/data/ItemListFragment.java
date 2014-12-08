@@ -82,8 +82,14 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 						delete(selectionMode.getSelectedIDs());
 						return true;
 					case R.id.action_item_move:
-						int target = MoveTargetActivity.ROOM | MoveTargetActivity.ITEM;
-						startActivityForResult(MoveTargetActivity.pick(target), PICK_REQUEST);
+						Intent intent = MoveTargetActivity.pick()
+						                                  .allowRooms()
+						                                  .forbidRooms(getArgRoomID())
+						                                  .allowItems()
+						                                  .forbidItems(getArgParentItemID())
+						                                  .forbidItems(getSelectedIDs())
+						                                  .build();
+						startActivityForResult(intent, PICK_REQUEST);
 						return true;
 				}
 				return super.onActionItemClicked(mode, item);

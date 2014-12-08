@@ -81,7 +81,11 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 						delete(selectionMode.getSelectedIDs());
 						return true;
 					case R.id.action_room_move:
-						startActivityForResult(MoveTargetActivity.pick(MoveTargetActivity.PROPERTY), PICK_REQUEST);
+						Intent intent = MoveTargetActivity.pick()
+						                                  .allowProperties()
+						                                  .forbidProperties(getArgPropertyID())
+						                                  .build();
+						startActivityForResult(intent, PICK_REQUEST);
 						return true;
 				}
 				return super.onActionItemClicked(mode, item);

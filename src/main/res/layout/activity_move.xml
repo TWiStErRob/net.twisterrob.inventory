@@ -24,7 +24,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:padding="@dimen/margin"
-			android:text="@string/move_title"
+			tools:text="@string/action_move_pick_title"
 			android:gravity="center"
 			android:textAppearance="@style/TextAppearance.AppCompat.Headline"
 			/>

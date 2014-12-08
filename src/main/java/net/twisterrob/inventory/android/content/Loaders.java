@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.database.*;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 
 import net.twisterrob.android.content.loader.SimpleCursorLoader;
@@ -100,6 +101,13 @@ public enum Loaders {
 			return App.db().getCategory(id);
 		}
 	},
+	ItemParents {
+		@Override
+		protected Cursor createCursor(Context context, Bundle args) {
+			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
+			return App.db().listItemParents(id);
+		}
+	},
 	ItemSearch {
 		@Override
 		protected Cursor createCursor(Context context, Bundle args) {
@@ -123,7 +131,11 @@ public enum Loaders {
 				try {
 					super.deliverResult(cursor);
 				} catch (RuntimeException ex) {
-					DatabaseUtils.dumpCursor(cursor);
+					try {
+						DatabaseUtils.dumpCursor(cursor);
+					} catch (Exception dumpEx) {
+						dumpEx.printStackTrace();
+					}
 					throw ex;
 				}
 			}
@@ -132,5 +144,17 @@ public enum Loaders {
 
 	public static Loaders fromID(int id) {
 		return values()[id];
+	}
+
+	public abstract static class LoadersCallbacks implements LoaderCallbacks<Cursor> {
+		protected final Context context;
+
+		public LoadersCallbacks(Context context) {
+			this.context = context;
+		}
+
+		@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			return fromID(id).createLoader(context, args);
+		}
 	}
 }

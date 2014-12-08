@@ -2,28 +2,33 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.data.ItemEditActivity;
+import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
-import net.twisterrob.inventory.android.tasks.DeleteItemsAction;
-import net.twisterrob.inventory.android.view.Dialogs;
+import net.twisterrob.inventory.android.tasks.*;
+import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemViewFragment.class);
 
+	private static final int MOVE_REQUEST = 0;
+
 	public interface ItemEvents {
 		void itemLoaded(ItemDTO item);
 		void itemDeleted(ItemDTO item);
 	}
+
+	private long parentID = Item.ID_ADD;
 
 	public ItemViewFragment() {
 		setDynamicResource(DYN_EventsClass, ItemEvents.class);
@@ -46,6 +51,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
+		parentID = item.parentID;
 		super.onSingleRowLoaded(item);
 		eventsListener.itemLoaded(item);
 	}
@@ -77,12 +83,70 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 			case R.id.action_item_edit:
 				startActivity(ItemEditActivity.edit(getArgItemID()));
 				return true;
+			case R.id.action_item_move:
+				Intent intent = MoveTargetActivity.pick()
+				                                  .allowRooms()
+				                                  .allowItems()
+				                                  .forbidItems(getArgItemID(), parentID)
+				                                  .build();
+				startActivityForResult(intent, MOVE_REQUEST);
+				return true;
 			case R.id.action_item_delete:
 				delete(getArgItemID());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == MOVE_REQUEST) {
+			switch (resultCode) {
+				case MoveTargetActivity.ROOM: {
+					long roomID = data.getLongExtra(Extras.ROOM_ID, Room.ID_ADD);
+					moveToRoom(roomID, getArgItemID());
+					return;
+				}
+				case MoveTargetActivity.ITEM: {
+					long parentID = data.getLongExtra(Extras.ITEM_ID, Item.ID_ADD);
+					move(parentID, getArgItemID());
+					return;
+				}
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void moveToRoom(final long roomID, final long... itemIDs) {
+		Dialogs.executeDirect(getActivity(), new MoveItemsToRoomAction(roomID, itemIDs) {
+			public void finished() {
+				startActivity(RoomViewActivity.show(roomID));
+				getActivity().finish();
+			}
+			@Override public Action buildUndo() {
+				// we navigated away from current activity, no undo
+				return null;
+			}
+			@Override public void undoFinished() {
+				// no undo
+			}
+		});
+	}
+
+	private void move(final long parentID, final long... itemIDs) {
+		Dialogs.executeDirect(getActivity(), new MoveItemsAction(parentID, itemIDs) {
+			public void finished() {
+				startActivity(ItemViewActivity.show(parentID));
+				getActivity().finish();
+			}
+			@Override public Action buildUndo() {
+				// we navigated away from current activity, no undo
+				return null;
+			}
+			@Override public void undoFinished() {
+				// no undo
+			}
+		});
 	}
 
 	private void delete(final long itemID) {
