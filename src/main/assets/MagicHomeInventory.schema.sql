@@ -38,7 +38,7 @@ CREATE TABLE Item (
 			REFERENCES Category(_id)
 			ON UPDATE CASCADE
 			ON DELETE SET DEFAULT,
-	parent      INTEGER          NULL
+	parent      INTEGER          NULL -- -1 -> ROOT item
 		CONSTRAINT fk_Item_parent
 			REFERENCES Item(_id)
 			ON UPDATE CASCADE
@@ -112,6 +112,19 @@ CREATE TABLE Room (
 	PRIMARY KEY(_id AUTOINCREMENT),
 	UNIQUE (property, name)
 );
+CREATE TRIGGER Room_Delete_Root
+AFTER DELETE ON Room BEGIN
+	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || old.root || '): '  || 'started');--NOTEOS
+	delete from Item where _id = old.root;--NOTEOS
+	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || old.root || '): '  || 'finished');--NOTEOS
+END;
+CREATE TRIGGER Room_Move
+AFTER UPDATE OF property ON Room BEGIN
+	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || new.name || ', ' || new.root || ', ' || old.property || '->' || new.property || '): ' || 'started');--NOTEOS
+	insert into Search_View(_id) select ip.itemID from Item_Path ip where ip.rootItemID <> ip.itemID and ip.roomID = new._id;--NOTEOS
+	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || new.name || ', ' || new.root || ', ' || old.property || '->' || new.property || '): ' || 'finished');--NOTEOS
+END;
+
 CREATE VIEW Room_Rooter AS select * from Room;
 CREATE TRIGGER Room_Rooter_Auto
 INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NULL) BEGIN
@@ -123,7 +136,6 @@ INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NOT NULL) BEGIN
     insert into Room values (new._id, new.name, new.image, new.type, new.root, new.property);--NOTEOS
 END;
 
--- TODO room move: create trigger on Room.property: insert all items inside into Search_View
 
 CREATE TABLE Category_Descendant (
 	category    INTEGER      NOT NULL

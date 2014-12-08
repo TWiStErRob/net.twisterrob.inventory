@@ -1,18 +1,20 @@
-select '-------- Search ---------';
-select * from Search;
-
-select '--------- Item_Path --------';
-select * from Item_Path;
+select '';
+select '--------- Before --------';
+--select * from Search order by _id;
+select * from Item;
 
 select '';
+select '--------- Change stuff --------';
+select * from Room where _id = 4;
+delete from Room where _id = 4;
 
-select '--------- Insert DOBOZ --------';
-insert OR REPLACE into Category_Name_Cache(key, value) values('category_storage_boxes', 'DOBOZ');
-select '--------- Item_Path --------';
-select * from Item_Path;
+select '';
+select '--------- After --------';
+--select * from Search order by _id;
+select * from Item;
 
-select '--------- Search --------';
-select * from Search;
-
-select '--------- Log --------';
-select * from Log where _id >= 128 order by _id;
+select '';
+select '--------- Check Log --------';
+select * from Log
+--where _id >= 20
+order by _id;

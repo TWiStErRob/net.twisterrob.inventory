@@ -324,13 +324,11 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 					long id = data.getLong(data.getColumnIndexOrThrow(ParentColumns.ID));
 					Type type = Type.from(data.getString(data.getColumnIndexOrThrow(ParentColumns.TYPE)));
 					forbidden = forbidden || isAnyForbidden(id, type);
-					LOG.trace("itemSelected({}, {}): {}#{} -> {}", itemID, startMode, type, id, forbidden);
 					if (type.isMain() && (startMode || data.isLast())) {
 						BaseFragment fragment = createFragment(type, id);
 						String name = data.getString(data.getColumnIndexOrThrow(ParentColumns.NAME));
 						fragment.getArguments().putString(ARG_TITLE, name);
 						fragment.getArguments().putBoolean(ARG_FORBIDDEN, forbidden);
-						LOG.trace("created: {}: {}", fragment, fragment.getArguments());
 						startFragment(fragment);
 					}
 				}
