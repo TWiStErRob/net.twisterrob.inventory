@@ -342,11 +342,11 @@
 					ELSE NULL
 				END      as parent,
 				i._id    as id
-			from Item       i
-			join Category   c  ON i.category = c._id and c._id <> -1
-			join Item_Path_Node  ip ON ip.item = i._id and ip.node = i._id
-			join Room       r  ON ip.root = r.root
-			join Property   p  ON r.property = p._id
+			from Item           i
+			join Category       c  ON i.category = c._id and c._id <> -1
+			join Item_Path_Node ip ON ip.item = i._id and ip.node = i._id
+			join Room           r  ON ip.root = r.root
+			join Property       p  ON r.property = p._id
 	"]]></string>
 
 

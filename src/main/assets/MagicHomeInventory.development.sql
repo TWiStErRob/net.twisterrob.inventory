@@ -12,6 +12,7 @@ INSERT INTO Room_Rooter(_id, property, type, name) VALUES(4, 1, 201, 'Spajz');
 		INSERT INTO Item(_id, parent, category, name) VALUES(100006, 100005, 6200, 'Piros muanyag tanyer');
 		INSERT INTO Item(_id, parent, category, name) VALUES(100007, 100005, 6400, 'Neon pohar 1');
 			INSERT INTO Item(_id, parent, category, name) VALUES(110008, 100007, 5500, 'Viz');
+				INSERT INTO Item(_id, parent, category, name) VALUES(110009, 110008, 5500, 'H20');
 		INSERT INTO Item(_id, parent, category, name) VALUES(100008, 100005, 6400, 'Neon pohar 2');
 		INSERT INTO Item(_id, parent, category, name) VALUES(100009, 100005, 6400, 'Neon pohar 3');
 		INSERT INTO Item(_id, parent, category, name) VALUES(100010, 100005, 6400, 'Neon pohar 4');
