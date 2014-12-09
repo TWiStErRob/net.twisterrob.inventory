@@ -1,4 +1,5 @@
--- Simulate user actions to see the DB state before and after also some triggers put stuff in Log if uncommented.
+-- This file is used to simulate user actions to see the DB state before and after
+-- Some triggers populate the Log table if those lines are uncommented.
 
 -- fake some values for Category names
 update Category_Name_Cache set value = UPPER(key);
@@ -13,12 +14,14 @@ select '------------------------------------------------------------------------
 select * from Search order by _id;
 
 
-
 select '';
 select '_______________________________.- Change stuff -._______________________________';
 insert into Log(message) values('Change stuff');
+select '--------------------------------------------------------------------------------';
 BEGIN TRANSACTION;
+
 	update Item set name = '----------' where _id = 100007;
+
 END TRANSACTION;
 
 

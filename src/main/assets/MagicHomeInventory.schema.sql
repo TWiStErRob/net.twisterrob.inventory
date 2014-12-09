@@ -148,18 +148,18 @@ CREATE TABLE Room (
 );
 CREATE TRIGGER Room_delete_root
 AFTER DELETE ON Room BEGIN
-	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || old.root || '): '  || 'started');--NOTEOS
+	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || ', ' || old.root || '): '  || 'started');--NOTEOS
 	delete from Item where _id = old.root;--NOTEOS
-	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || old.root || '): '  || 'finished');--NOTEOS
+	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || ', ' || old.root || '): '  || 'finished');--NOTEOS
 END;
 CREATE TRIGGER Room_move
 AFTER UPDATE OF property ON Room BEGIN
-	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || new.name || ', ' || new.root || ', ' || old.property || '->' || new.property || '): ' || 'started');--NOTEOS
+	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || old.property || '->' || new.property || ', ' || new.root || ', ' || new.name || '): ' || 'started');--NOTEOS
 	insert into Search_Refresher(_id)
 		select ip.itemID from Item_Path ip
 		where ip.rootItemID <> ip.itemID and ip.roomID = new._id
 	;--NOTEOS
-	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || new.name || ', ' || new.root || ', ' || old.property || '->' || new.property || '): ' || 'finished');--NOTEOS
+	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || old.property || '->' || new.property || ', ' || new.root || ', ' || new.name || '): ' || 'finished');--NOTEOS
 END;
 
 CREATE VIEW Room_Rooter AS select * from Room;
@@ -240,7 +240,7 @@ CREATE TRIGGER Item_Path_Node_refresh
 INSTEAD OF INSERT ON Item_Path_Node_Refresher BEGIN
 	--insert into Log(message) values ('Item_Path_Node_refresh on (' || new._id || '): ' || 'started');--NOTEOS
 	-- Go up in the Tree
-	delete from Item_Path_Node where item = new._id;
+	delete from Item_Path_Node where item = new._id;--NOTEOS
 	insert into Item_Path_Node
 		select new._id, 0, new._id, new._id
 	;--NOTEOS
@@ -258,16 +258,16 @@ INSTEAD OF INSERT ON Item_Path_Node_Refresher BEGIN
 	--insert into Log(message) values ('Item_Path_Node_refresh on (' || new._id || '): ' || 'finished');--NOTEOS
 END;
 
+-- WITH clause support was added in SQLite 3.8.3, first to support it is Android 5.0
+CREATE VIEW Item_Path_WITH_Node_Name AS
+	select
+		ipn.*,
+		n.name as nodeName
+	from Item_Path_Node ipn
+	join Item           n   ON ipn.node = n._id
+	where ipn.item <> ipn.node and ipn.node <> ipn.root
+;
 CREATE VIEW Item_Path AS
-	with
-		Item_Path_Node_Name AS (
-			select
-				ipn.*,
-				n.name as nodeName
-			from Item_Path_Node ipn
-			join Item           n   ON ipn.node = n._id
-			where ipn.item <> ipn.node and ipn.node <> ipn.root
-		)
 	select
 		p._id      as propertyID,
 		p.name     as propertyName,
@@ -286,12 +286,12 @@ CREATE VIEW Item_Path AS
 	from Item           i
 	left join (
 		select item, group_concat(nodeName, ' > ') as path
-		from (select * from Item_Path_Node_Name order by item, level)
+		from (select * from Item_Path_WITH_Node_Name order by item, level)
 		group by item
 	)    Path               ON i._id = Path.item
 	left join (
 		select item, group_concat(nodeName, ' < ') as path
-		from (select * from Item_Path_Node_Name order by item, level DESC)
+		from (select * from Item_Path_WITH_Node_Name order by item, level DESC)
 		group by item
 	)    rPath              ON i._id = rPath.item
 	join Item_Path_Node ipn ON ipn.item = i._id and ipn.node = i._id

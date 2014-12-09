@@ -55,6 +55,8 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		LOG.info("************* Starting up {} {} built at {}",
+				getPackageName(), BuildConfig.VERSION_NAME, BuildConfig.BUILD_TIME);
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		phoneHome = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		database = new Database(this);
