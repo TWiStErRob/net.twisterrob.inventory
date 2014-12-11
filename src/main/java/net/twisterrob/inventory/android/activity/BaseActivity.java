@@ -24,7 +24,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
 import net.twisterrob.inventory.android.view.*;
-import net.twisterrob.inventory.android.view.IconedItem.IntentLauncher;
+import net.twisterrob.inventory.android.view.IconedItem.OnClickCallback;
 
 import static net.twisterrob.inventory.android.Constants.Dimensions.*;
 import static net.twisterrob.inventory.android.activity.BaseActivity.For.Feature.*;
@@ -67,8 +67,8 @@ public class BaseActivity extends ActionBarActivity {
 
 	private void initDrawers() {
 		ListView drawerLeft = (ListView)mDrawerLayout.findViewById(R.id.drawer_left_list);
-		drawerLeft.setAdapter(new IconedItemAdapter(this, R.layout.item_drawer_left, createActions()));
-		drawerLeft.setOnItemClickListener(new IntentLauncher(this) {
+		drawerLeft.setAdapter(new IconedItemAdapter(this, R.layout.item_drawer_left, createActions(this)));
+		drawerLeft.setOnItemClickListener(new OnClickCallback() {
 			@Override public void onItemClick(AdapterView parent, View view, int position, long id) {
 				super.onItemClick(parent, view, position, id);
 				mDrawerLayout.closeDrawer(parent);
@@ -119,18 +119,26 @@ public class BaseActivity extends ActionBarActivity {
 		super.onDestroy();
 	}
 
-	@For(Drawer) public static Collection<IconedItem> createActions() {
+	@For(Drawer) public static Collection<IconedItem> createActions(final BaseActivity activity) {
 		Collection<IconedItem> acts = new ArrayList<>();
 
-		acts.add(new SVGIconItem(R.string.home_title, R.raw.property_home, MainActivity.home()));
-		acts.add(new SVGIconItem(R.string.sunburst_title, R.raw.ic_sunburst, SunburstActivity.showAll()));
-		acts.add(new SVGIconItem(R.string.property_list, R.raw.property_unknown, PropertyListActivity.listAll()));
-		acts.add(new SVGIconItem(R.string.category_list, R.raw.category_unknown, CategoryViewActivity.listAll()));
-		acts.add(new SVGIconItem(R.string.room_list, R.raw.room_unknown, PropertyViewActivity.listAll()));
-		acts.add(new SVGIconItem(R.string.item_list, R.raw.category_box, CategoryItemsActivity.listAll()));
+		// @formatter:off
+		acts.add(new SVGIntentItem(R.string.home_title, R.raw.property_home, activity, MainActivity.home()));
+		acts.add(new SVGIntentItem(R.string.sunburst_title, R.raw.ic_sunburst, activity, SunburstActivity.showAll()));
+		acts.add(new SVGIntentItem(R.string.property_list, R.raw.property_unknown, activity, PropertyListActivity.listAll()));
+		acts.add(new SVGIntentItem(R.string.category_list, R.raw.category_unknown, activity, CategoryViewActivity.listAll()));
+		acts.add(new SVGIntentItem(R.string.room_list, R.raw.room_unknown, activity, PropertyViewActivity.listAll()));
+		acts.add(new SVGIntentItem(R.string.item_list, R.raw.category_box, activity, CategoryItemsActivity.listAll()));
+		// @formatter:on
+		acts.add(new SVGItem(R.string.backup_title, R.raw.category_disc) {
+			@Override public void onClick() {
+				// BackupFragment.create().show(activity.getSupportFragmentManager(), "backup");
+			}
+		});
 
 		if (BuildConfig.DEBUG) {
-			acts.add(new SVGIconItem(Constants.INVALID_RESOURCE_ID, R.raw.category_chip, DeveloperActivity.show()) {
+			acts.add(new SVGIntentItem(Constants.INVALID_RESOURCE_ID, R.raw.category_chip,
+					activity, DeveloperActivity.show()) {
 				@Override public CharSequence getTitle(Context context) {
 					return "Developer Tools";
 				}

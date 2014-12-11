@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.fragment;
 
-import java.io.File;
-
 import org.slf4j.*;
 
 import android.database.Cursor;
@@ -13,29 +11,21 @@ import android.widget.*;
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.Room;
-import net.twisterrob.inventory.android.fragment.BackupPickerFragment.BackupPickerListener;
 import net.twisterrob.inventory.android.view.*;
-import net.twisterrob.inventory.android.view.IconedItem.IntentLauncher;
+import net.twisterrob.inventory.android.view.IconedItem.OnClickCallback;
 
-public class MainFragment extends BaseFragment<Void> implements BackupPickerListener {
+import static net.twisterrob.inventory.android.activity.BaseActivity.*;
+
+public class MainFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(MainFragment.class);
-
-	private static final String BACKUP_FRAGMENT = BackupFragment.class.getSimpleName();
 
 	private RecyclerViewLoadersController propertiesController;
 	private RecyclerViewLoadersController roomsController;
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (savedInstanceState == null) {
-			getChildFragmentManager().beginTransaction()
-			                         .add(new BackupFragment(), BACKUP_FRAGMENT)
-			                         .commit()
-			;
-		}
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
@@ -43,8 +33,8 @@ public class MainFragment extends BaseFragment<Void> implements BackupPickerList
 		super.onViewCreated(view, savedInstanceState);
 
 		GridView list = (GridView)view.findViewById(R.id.items).findViewById(android.R.id.list);
-		list.setAdapter(new IconedItemAdapter(getContext(), R.layout.item_main_nav, BaseActivity.createActions()));
-		list.setOnItemClickListener(new IntentLauncher(getActivity()));
+		list.setAdapter(new IconedItemAdapter(getContext(), R.layout.item_main_nav, createActions(getBaseActivity())));
+		list.setOnItemClickListener(new OnClickCallback());
 
 		propertiesController = new RecyclerViewLoadersController(this, Loaders.Properties) {
 			@Override protected CursorRecyclerAdapter setupList() {
@@ -99,11 +89,6 @@ public class MainFragment extends BaseFragment<Void> implements BackupPickerList
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.search, menu);
 		AndroidTools.prepareSearch(getActivity(), menu, R.id.search);
-	}
-
-	public void filePicked(File file) {
-		BackupFragment backup = (BackupFragment)getChildFragmentManager().findFragmentByTag(BACKUP_FRAGMENT);
-		backup.filePicked(file);
 	}
 
 	static class PropertyAdapter extends BaseImagedAdapter {

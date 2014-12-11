@@ -1,8 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.*;
+import android.content.Context;
 import android.os.Build.*;
 import android.view.View;
 import android.widget.*;
@@ -10,19 +9,13 @@ import android.widget.*;
 public interface IconedItem {
 	CharSequence getTitle(Context context);
 	void loadImage(ImageView icon);
-	Intent getIntent();
+	void onClick();
 
-	public static class IntentLauncher implements AdapterView.OnItemClickListener {
-		private final Activity activity;
-
-		public IntentLauncher(Activity activity) {
-			this.activity = activity;
-		}
-
+	public static class OnClickCallback implements AdapterView.OnItemClickListener {
 		@Override public void onItemClick(AdapterView parent, View view, int position, long id) {
 			check(parent, position);
 			IconedItem item = (IconedItem)parent.getItemAtPosition(position);
-			activity.startActivity(item.getIntent());
+			item.onClick();
 		}
 
 		@TargetApi(VERSION_CODES.HONEYCOMB)
