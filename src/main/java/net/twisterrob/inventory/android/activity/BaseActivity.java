@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.activity;
 
 import java.lang.annotation.*;
-import java.lang.reflect.Method;
 import java.util.*;
 
 import org.slf4j.*;
@@ -11,11 +10,10 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.*;
-import android.support.v4.app.*;
-import android.support.v4.view.*;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.*;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.*;
 import android.widget.*;
 
@@ -51,20 +49,7 @@ public class BaseActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onMenuOpened(int featureId, Menu menu) {
-		// TODO extract to android utils
-		// http://stackoverflow.com/questions/18374183/how-to-show-icons-in-overflow-menu-in-actionbar
-		if ((featureId == WindowCompat.FEATURE_ACTION_BAR || featureId == WindowCompat.FEATURE_ACTION_BAR_OVERLAY)
-				&& menu != null && "MenuBuilder".equals(menu.getClass().getSimpleName())) {
-			try {
-				Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-				m.setAccessible(true);
-				m.invoke(menu, true);
-			} catch (NoSuchMethodException e) {
-				LOG.error("ActionBar overflow icons hack failed", e);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
+		AndroidTools.showActionBarOverflowIcons(featureId, menu, true);
 		return super.onMenuOpened(featureId, menu);
 	}
 
@@ -164,16 +149,8 @@ public class BaseActivity extends ActionBarActivity {
 	}
 
 	@SuppressWarnings("unchecked")
-	@For(Children) protected <T extends Fragment> T getFragment(String tag) {
-		return (T)getSupportFragmentManager().findFragmentByTag(tag);
-	}
-	@SuppressWarnings("unchecked")
 	@For(Children) protected <T extends Fragment> T getFragment(@IdRes int id) {
 		return (T)getSupportFragmentManager().findFragmentById(id);
-	}
-
-	@For(Children) protected void showDialog(DialogFragment dialog) {
-		dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
 	}
 
 	@For(Children) public void setActionBarSubtitle(CharSequence string) {

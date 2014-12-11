@@ -9,18 +9,18 @@ public/* static */class IOTools {
 	public static final String ENCODING = Charset.forName("UTF-8").name();
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	public static int copyFile(final String sourceFileName, final String destinationFileName) throws IOException {
+	public static long copyFile(final String sourceFileName, final String destinationFileName) throws IOException {
 		File sourceFile = new File(sourceFileName);
 		File destinationFile = new File(destinationFileName);
 		return IOTools.copyFile(sourceFile, destinationFile);
 	}
 
 	@SuppressWarnings("resource")
-	public static int copyFile(final File sourceFile, final File destinationFile) throws IOException {
+	public static long copyFile(final File sourceFile, final File destinationFile) throws IOException {
 		destinationFile.getParentFile().mkdirs();
 		InputStream in = new FileInputStream(sourceFile);
 		OutputStream out = new FileOutputStream(destinationFile);
-		int totalBytes;
+		long totalBytes;
 		try {
 			totalBytes = IOTools.copyStream(in, out);
 		} finally {
@@ -29,10 +29,14 @@ public/* static */class IOTools {
 		return totalBytes;
 	}
 
-	public static int copyStream(final InputStream in, final OutputStream out) throws IOException {
+	public static long copyStream(InputStream in, OutputStream out) throws IOException {
+		return copyStream(in, out, true);
+	}
+
+	public static long copyStream(final InputStream in, final OutputStream out, boolean autoClose) throws IOException {
 		try {
 			byte[] buf = new byte[4096];
-			int total = 0;
+			long total = 0;
 			int len;
 			while ((len = in.read(buf)) > 0) {
 				out.write(buf, 0, len);
@@ -40,7 +44,9 @@ public/* static */class IOTools {
 			}
 			return total;
 		} finally {
-			ignorantClose(in, out);
+			if (autoClose) {
+				ignorantClose(in, out);
+			}
 		}
 	}
 

@@ -21,7 +21,7 @@ public abstract class BaseEditActivity<E extends Fragment> extends BaseActivity 
 			                           .commit()
 			;
 		} else {
-			editor = findEditor();
+			editor = getFragment(R.id.activityRoot);
 		}
 	}
 
@@ -29,10 +29,5 @@ public abstract class BaseEditActivity<E extends Fragment> extends BaseActivity 
 
 	public E getEditor() {
 		return editor;
-	}
-
-	@SuppressWarnings("unchecked")
-	private E findEditor() {
-		return (E)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 }

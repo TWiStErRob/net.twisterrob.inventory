@@ -45,7 +45,9 @@ public class BaseFragment<T> extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		Class<T> eventsClass = getDynamicResource(DYN_EventsClass);
-		eventsListener = AndroidTools.getAttachedFragmentListener(activity, eventsClass);
+		if (eventsClass != null) {
+			eventsListener = AndroidTools.findAttachedListener(this, eventsClass);
+		}
 	}
 
 	@Override

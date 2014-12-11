@@ -24,17 +24,16 @@ public class BackupPickerFragment extends DialogFragment {
 
 	private BackupPickerListener mListener;
 
-	// Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		mListener = AndroidTools.getAttachedFragmentListener(activity, BackupPickerListener.class);
+		mListener = AndroidTools.findAttachedListener(this, BackupPickerListener.class);
 	}
 
 	@Override
 	public void onDetach() {
-		super.onDetach();
 		mListener = null;
+		super.onDetach();
 	}
 
 	@Override

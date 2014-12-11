@@ -1,21 +1,27 @@
 package net.twisterrob.android.utils.tools;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static java.lang.Math.*;
+
+import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.*;
 import android.preference.ListPreference;
-import android.support.v4.view.MenuItemCompat;
+import android.support.annotation.*;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.*;
 import android.support.v4.widget.*;
 import android.util.*;
 import android.view.*;
@@ -24,6 +30,8 @@ import android.widget.AdapterView;
 import static android.util.TypedValue.*;
 
 public abstract class AndroidTools {
+	private static final Logger LOG = LoggerFactory.getLogger(AndroidTools.class);
+
 	private static final float CIRCLE_LIMIT = 359.9999f;
 
 	private AndroidTools() {
@@ -245,15 +253,58 @@ public abstract class AndroidTools {
 		return intent;
 	}
 
-	public static <T> T getAttachedFragmentListener(Activity activity, Class<T> eventsClass) {
-		if (eventsClass == null) {
+	/**
+	 * Tries to find an instance of {@code eventsClass} among the {@code fragment}'s parents,
+	 * that is {@link Fragment#getParentFragment()} and {@link Fragment#getActivity()}.
+	 * Closest one wins, activity being the farthest.
+	 *
+	 * @throws IllegalArgumentException if callback is null or is not the right {@code eventsClass}.
+	 */
+	public static @NonNull <T> T findAttachedListener(@NonNull Fragment fragment, @NonNull Class<T> eventsClass)
+			throws IllegalArgumentException {
+		T listener = null;
+		List<Fragment> parents = getParents(fragment);
+		Iterator<Fragment> iterator = parents.iterator();
+		while (listener == null && iterator.hasNext()) {
+			listener = tryGetAttachedListener(iterator.next(), eventsClass);
+		}
+		if (listener == null) {
+			listener = tryGetAttachedListener(fragment.getActivity(), eventsClass);
+		}
+		if (listener != null) {
+			return listener;
+		} else {
+			throw new IllegalArgumentException("One of " + fragment + "'s parents (" + parents + ") or its activity ("
+					+ fragment.getActivity() + ") must implement " + eventsClass);
+		}
+	}
+
+	public static @NonNull List<Fragment> getParents(@NonNull Fragment fragment) {
+		List<Fragment> parents = new LinkedList<>();
+		Fragment parent = fragment.getParentFragment();
+		while (parent != null) {
+			parents.add(parent);
+		}
+		return parents;
+	}
+
+	public static @Nullable <T> T tryGetAttachedListener(Object callback, @NonNull Class<T> eventsClass) {
+		if (eventsClass.isInstance(callback)) {
+			return eventsClass.cast(callback);
+		} else {
 			return null;
 		}
-		if (!eventsClass.isInstance(activity)) {
-			String activityClass = activity.getClass().getSimpleName();
-			throw new IllegalArgumentException("Activity " + activityClass + " must implement " + eventsClass);
+	}
+
+	/** @throws IllegalArgumentException if callback is null or is not the right {@code eventsClass}. */
+	public static @NonNull <T> T getAttachedListener(Object callback, @NonNull Class<T> eventsClass)
+			throws IllegalArgumentException {
+		T listener = tryGetAttachedListener(callback, eventsClass);
+		if (listener != null) {
+			return listener;
+		} else {
+			throw new IllegalArgumentException("Parent " + callback + " must implement " + eventsClass);
 		}
-		return eventsClass.cast(activity);
 	}
 
 	public static View prepareSearch(Activity activity, Menu menu, int searchItemID) {
@@ -305,6 +356,21 @@ public abstract class AndroidTools {
 			icon = icon.mutate();
 			icon.setAlpha(enabled? 0xFF : 0x80);
 			item.setIcon(icon);
+		}
+	}
+	public static void showActionBarOverflowIcons(int featureId, Menu menu, boolean show) {
+		// http://stackoverflow.com/questions/18374183/how-to-show-icons-in-overflow-menu-in-actionbar
+		if ((featureId == WindowCompat.FEATURE_ACTION_BAR || featureId == WindowCompat.FEATURE_ACTION_BAR_OVERLAY)
+				&& menu != null && "MenuBuilder".equals(menu.getClass().getSimpleName())) {
+			try {
+				Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+				m.setAccessible(true);
+				m.invoke(menu, show);
+			} catch (NoSuchMethodException e) {
+				LOG.error("ActionBar overflow icons hack failed", e);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 }

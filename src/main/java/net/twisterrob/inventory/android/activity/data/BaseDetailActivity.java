@@ -37,7 +37,7 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 			}
 			// TODO may need getSupportFragmentManager().executePendingTransactions(); ? but it works :)
 		} else {
-			fragment = findFragment();
+			fragment = getFragment(R.id.activityRoot);
 		}
 	}
 
@@ -65,10 +65,5 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 
 	public C getFragment() {
 		return fragment;
-	}
-
-	@SuppressWarnings("unchecked")
-	private C findFragment() {
-		return (C)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 }
