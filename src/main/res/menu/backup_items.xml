@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
+	<item
+		android:id="@+id/exportDrive"
+		android:title="@string/backup_export_drive"
+		/>
+	<item
+		android:id="@+id/importDrive"
+		android:title="@string/backup_import_drive"
+		/>
+	<item
+		android:id="@+id/exportSDCard"
+		android:title="@string/backup_export_sd"
+		/>
+	<item
+		android:id="@+id/importSDCard"
+		android:title="@string/backup_import_sd"
+		/>
+	<item
+		android:id="@+id/exportSDCardRemove"
+		android:title="@string/backup_export_sd_del"
+		/>
+</menu>

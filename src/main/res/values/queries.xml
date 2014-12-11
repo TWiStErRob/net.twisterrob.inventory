@@ -308,40 +308,43 @@
 	"]]></string>
 	<string name="query_export"><![CDATA["
 			select
-				pt.name  as type,
-				p.name   as property,
-				null     as room,
-				null     as item,
-				p.image  as image,
-				null     as parent,
-				null     as id
+				'property' as type,
+				pt.name    as typeName,
+				p.name     as propertyName,
+				null       as roomName,
+				null       as itemName,
+				p.image    as image,
+				null       as parent,
+				null       as _id
 			from Property p
 			join PropertyType pt ON p.type = pt._id
 		UNION ALL
 			select
-				rt.name  as type,
-				p.name   as property,
-				r.name   as room,
-				null     as item,
-				r.image  as image,
-				null     as parent,
-				null     as id
+				'room'     as type,
+				rt.name    as typeName,
+				p.name     as propertyName,
+				r.name     as roomName,
+				null       as itemName,
+				r.image    as image,
+				null       as parent,
+				null       as _id
 			from Room r
 			join RoomType rt ON r.type = rt._id
 			join Property p ON r.property = p._id
 		UNION ALL
 			select
-				c.name   as type,
-				p.name   as property,
-				r.name   as room,
-				i.name   as item,
-				i.image  as image,
+				'item'     as type,
+				c.name     as typeName,
+				p.name     as propertyName,
+				r.name     as roomName,
+				i.name     as itemName,
+				i.image    as image,
 				CASE
 					WHEN i.parent <> r.root
 					THEN i.parent
 					ELSE NULL
-				END      as parent,
-				i._id    as id
+				END        as parent,
+				i._id      as _id
 			from Item           i
 			join Category       c  ON i.category = c._id and c._id <> -1
 			join Item_Path_Node ip ON ip.item = i._id and ip.node = i._id

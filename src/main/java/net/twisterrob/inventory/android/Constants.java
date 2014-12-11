@@ -16,7 +16,7 @@ public interface Constants {
 	class Paths {
 		/** Warning: this is used inlined in paths_images.xml because path doesn't support string resources */
 		private static final String INTERNAL_IMAGES_FOLDER = "images";
-		public static final String EXPORT_FILE_NAME_FORMAT = "export-%tF_%<tH-%<tM-%<tS.csv";
+		public static final String EXPORT_FILE_NAME_FORMAT = "export-%tF_%<tH-%<tM-%<tS.zip";
 		public static final String EXPORT_SDCARD_FOLDER = "Magic Home Inventory";
 		public static File getImageDirectory(Context context) {
 			return new File(context.getFilesDir(), INTERNAL_IMAGES_FOLDER);

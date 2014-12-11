@@ -23,6 +23,7 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
+import net.twisterrob.inventory.android.fragment.BackupFragment;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.IconedItem.OnClickCallback;
 
@@ -132,7 +133,7 @@ public class BaseActivity extends ActionBarActivity {
 		// @formatter:on
 		acts.add(new SVGItem(R.string.backup_title, R.raw.category_disc) {
 			@Override public void onClick() {
-				// BackupFragment.create().show(activity.getSupportFragmentManager(), "backup");
+				BackupFragment.create().show(activity.getSupportFragmentManager(), "backup");
 			}
 		});
 
