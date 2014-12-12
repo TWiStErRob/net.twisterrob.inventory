@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.util.*;
-
 import org.slf4j.*;
 
 import android.app.Activity;
@@ -16,8 +14,8 @@ import com.google.android.gms.drive.*;
 import static com.google.android.gms.drive.CreateFileActivityBuilder.*;
 
 import net.twisterrob.android.utils.model.DriveHelper.ConnectedTask;
-import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.Constants.*;
+import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.io.csv.DatabaseCSVExporter;
 
 import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.*;
@@ -33,7 +31,7 @@ public class ExportActivity extends BaseDriveActivity {
 		googleDrive.setFinishOnCancel(true);
 		googleDrive.addTaskAfterConnected(new ConnectedTask() {
 			public void execute(GoogleApiClient client) throws Exception {
-				String fileName = String.format(Locale.ROOT, Paths.EXPORT_FILE_NAME_FORMAT, Calendar.getInstance());
+				String fileName = Constants.Paths.getExportFileName();
 				MetadataChangeSet metadata = new MetadataChangeSet.Builder()
 						.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension("csv"))
 						.setTitle(fileName)

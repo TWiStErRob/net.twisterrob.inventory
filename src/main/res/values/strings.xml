@@ -134,6 +134,24 @@
 	<string name="room_viewAll">List All Rooms</string>
 
 	<string name="backup_title">Backup</string>
+	<string name="backup_export_title">Exporting belongings</string>
+	<string name="backup_export_success">Done exporting %1$d belongings.</string>
+	<string name="backup_export_warning">Done exporting %1$d belongings, but %2$d/%3$d images missing.</string>
+	<string name="backup_export_failed">Failed to export belongings:\n%1$s</string>
+	<string name="backup_export_message_init">Preparing export…</string>
+	<string name="backup_export_message_data">@string/backup_export_message_init</string>
+	<string name="backup_export_message_images">Exporting images…</string>
+
+	<string name="backup_select">Please select a backup.</string>
+
+	<string name="backup_import_title">Importing belongings</string>
+	<string name="backup_import_success">Done importing %1$d belongings.</string>
+	<string name="backup_import_warning">Done importing %1$d belongings, but %2$d/%3$d images missing.</string>
+	<string name="backup_import_failed">Failed to import belongings:\n%1$s</string>
+	<string name="backup_import_message_init">Preparing import…</string>
+	<string name="backup_import_message_data">@string/backup_import_message_init</string>
+	<string name="backup_import_message_images">Exporting images…</string>
+
 	<string name="backup_import_drive">Restore data from Google Drive</string>
 	<string name="backup_export_drive">Backup data to Google Drive</string>
 	<string name="backup_import_sd">Restore data from Phone</string>

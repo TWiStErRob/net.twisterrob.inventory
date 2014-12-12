@@ -1,7 +1,10 @@
 package net.twisterrob.inventory.android.fragment;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+
+import javax.annotation.RegEx;
 
 import android.app.*;
 import android.content.DialogInterface;
@@ -15,11 +18,12 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.java.io.IOTools;
 
 public class BackupPickerFragment extends DialogFragment {
-	public static final String EXTRA_EXTENSION = "fileExtension";
+	public static final String EXTRA_PATTERN = "fileRegex";
 	public static final String EXTRA_TITLE = "chooserTitle";
+	public static final String EXTRA_TAG = "tag";
 
 	public interface BackupPickerListener {
-		void filePicked(File file);
+		void filePicked(Serializable tag, File file);
 	}
 
 	private BackupPickerListener mListener;
@@ -41,19 +45,20 @@ public class BackupPickerFragment extends DialogFragment {
 		File root = new File(App.getInstance().getPhoneHome(), Constants.Paths.EXPORT_SDCARD_FOLDER);
 		final File[] files = getImportableFiles(root);
 		Arrays.sort(files);
-		return new AlertDialog.Builder(getActivity()) //
-				.setTitle(getArgTitle()) //
+		return new AlertDialog.Builder(getActivity())
+				.setTitle(getArgTitle())
+				.setMessage(R.string.backup_select)
 				.setItems(IOTools.getNames(files), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						File file = files[which];
-						mListener.filePicked(file);
+						mListener.filePicked(getArgTag(), file);
 					}
-				}) //
+				})
 				.setNegativeButton(android.R.string.cancel, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
 					}
-				}) //
+				})
 				.create();
 	}
 
@@ -61,26 +66,31 @@ public class BackupPickerFragment extends DialogFragment {
 		String title = getArguments().getString(EXTRA_TITLE);
 		return title != null? title : "Select a file";
 	}
-	private String getArgExtension() {
-		String extension = getArguments().getString(EXTRA_EXTENSION);
+	private String getArgPattern() {
+		String extension = getArguments().getString(EXTRA_PATTERN);
 		return extension != null? extension : "";
+	}
+	private Serializable getArgTag() {
+		Serializable tag = getArguments().getSerializable(EXTRA_TAG);
+		return tag != null? tag : "";
 	}
 
 	private File[] getImportableFiles(File root) {
 		return root.listFiles(new FileFilter() {
+			final Pattern pattern = Pattern.compile(getArgPattern());
 			public boolean accept(File file) {
-				return file.isFile() && file.canRead()
-						&& file.getName().toLowerCase(Locale.getDefault()).endsWith(getArgExtension());
+				return file.isFile() && file.canRead() && pattern.matcher(file.getName()).matches();
 			}
 		});
 	}
 
-	public static BackupPickerFragment choose(String title, String extension) {
+	public static BackupPickerFragment choose(Serializable tag, @RegEx String pattern, CharSequence title) {
 		BackupPickerFragment fragment = new BackupPickerFragment();
 
 		Bundle args = new Bundle();
-		args.putString(EXTRA_TITLE, title);
-		args.putString(EXTRA_EXTENSION, extension);
+		args.putSerializable(EXTRA_TAG, tag);
+		args.putCharSequence(EXTRA_TITLE, title);
+		args.putString(EXTRA_PATTERN, pattern);
 
 		fragment.setArguments(args);
 		return fragment;

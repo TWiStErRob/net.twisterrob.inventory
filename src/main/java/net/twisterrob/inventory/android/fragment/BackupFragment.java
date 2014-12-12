@@ -1,14 +1,16 @@
 package net.twisterrob.inventory.android.fragment;
 
 import java.io.*;
-import java.util.*;
+
+import org.slf4j.*;
 
 import android.app.*;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
+import android.os.*;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.*;
 import android.view.*;
 
 import net.twisterrob.inventory.android.*;
@@ -16,9 +18,10 @@ import net.twisterrob.inventory.android.activity.*;
 import net.twisterrob.inventory.android.content.io.ExporterTask;
 import net.twisterrob.inventory.android.content.io.csv.DatabaseCSVImporter;
 import net.twisterrob.inventory.android.fragment.BackupPickerFragment.BackupPickerListener;
+import net.twisterrob.inventory.android.view.SafeSimpleAsyncTask;
 
 public class BackupFragment extends DialogFragment implements BackupPickerListener {
-	private PickMode pickMode;
+	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
 
 	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -40,30 +43,13 @@ public class BackupFragment extends DialogFragment implements BackupPickerListen
 				startActivity(ImportActivity.chooser());
 				return true;
 			case R.id.exportSDCard:
-				ExporterTask task = new ExporterTask(getActivity());
-				ExportFragment.create(getActivity().getSupportFragmentManager(), task);
-
-				String fileName = String.format(
-						Locale.ROOT, Constants.Paths.EXPORT_FILE_NAME_FORMAT, Calendar.getInstance());
-				File path = new File(App.getInstance().getPhoneHome(), Constants.Paths.EXPORT_SDCARD_FOLDER);
-				final File file = new File(path, fileName);
-				try {
-					// TODO move IO to background
-					file.getParentFile().mkdirs();
-					task.execute(new FileOutputStream(file));
-				} catch (IOException ex) {
-					ex.printStackTrace();
-					App.toast("Export failed: " + ex.getMessage());
-				}
+				FragmentActivity ac = getActivity();
+				AsyncTask<OutputStream, ?, ?> task = ExportFragment.create(ac, ac.getSupportFragmentManager());
+				new OpenPhoneOutputStream(task).execute();
 				return true;
 			case R.id.importSDCard: {
-				pickMode = PickMode.Import;
-				showDialog(BackupPickerFragment.choose("Select a backup to restore", ".csv"));
-				return true;
-			}
-			case R.id.exportSDCardRemove: {
-				pickMode = PickMode.Remove;
-				showDialog(BackupPickerFragment.choose("Select a backup to remove", ".csv"));
+				BackupPickerFragment.choose(null, ".*\\.zip$", getString(R.string.backup_import_sd))
+				                    .show(getActivity().getSupportFragmentManager(), "import");
 				return true;
 			}
 			default:
@@ -76,8 +62,7 @@ public class BackupFragment extends DialogFragment implements BackupPickerListen
 				R.id.importDrive,
 				R.id.exportDrive,
 				R.id.importSDCard,
-				R.id.exportSDCard,
-				R.id.exportSDCardRemove
+				R.id.exportSDCard
 		};
 		return new AlertDialog.Builder(getActivity())
 				.setTitle(R.string.backup_title)
@@ -98,42 +83,38 @@ public class BackupFragment extends DialogFragment implements BackupPickerListen
 		super.onCancel(dialog);
 	}
 
-	protected void showDialog(DialogFragment dialog) {
-		dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
-	}
-
 	@Override
-	public void filePicked(File file) {
-		if (pickMode == null) {
-			throw new IllegalStateException("Access this method through a dialog's callback");
+	public void filePicked(Serializable tag, File file) {
+		try {
+			@SuppressWarnings("resource")
+			InputStream input = new FileInputStream(file);
+			DatabaseCSVImporter importer = new DatabaseCSVImporter();
+			importer.importAll(input);
+			App.toast("Import successful from " + file.getName());
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
-		switch (pickMode) {
-			case Import: {
-				try {
-					@SuppressWarnings("resource")
-					InputStream input = new FileInputStream(file);
-					DatabaseCSVImporter importer = new DatabaseCSVImporter();
-					importer.importAll(input);
-					App.toast("Import successful from " + file.getName());
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			}
-			case Remove: {
-				file.delete();
-				App.toast("Backup removed successfully: " + file.getName());
-				break;
-			}
-			default:
-				throw new UnsupportedOperationException(pickMode + " is not implemented");
-		}
-		pickMode = null;
 	}
 
-	private static enum PickMode {
-		Import,
-		Remove
+	private static class OpenPhoneOutputStream extends SafeSimpleAsyncTask<Void, Void, OutputStream> {
+		private AsyncTask<OutputStream, ?, ?> task;
+		private OpenPhoneOutputStream(AsyncTask<OutputStream, ?, ?> task) {
+			this.task = task;
+		}
+		@Override protected OutputStream doInBackgroundSafe(Void aVoid) throws Exception {
+			File parent = App.getInstance().getPhoneHome();
+			File file = new File(parent, Constants.Paths.getExportFileName());
+			if (!(parent.mkdirs() || parent.isDirectory())) {
+				throw new IOException("Cannot use directory: " + parent);
+			}
+			return new FileOutputStream(file);
+		}
+		@Override protected void onResult(OutputStream stream) {
+			task.execute(stream);
+		}
+		@Override protected void onError(Exception error) {
+			App.toast("Export failed: " + error.getMessage());
+		}
 	}
 
 	public static BackupFragment create() {

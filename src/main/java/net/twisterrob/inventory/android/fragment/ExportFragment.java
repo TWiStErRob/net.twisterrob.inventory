@@ -1,9 +1,12 @@
 package net.twisterrob.inventory.android.fragment;
 
+import java.io.OutputStream;
+
 import org.slf4j.*;
 
 import android.app.*;
-import android.content.DialogInterface;
+import android.content.*;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -18,15 +21,11 @@ public class ExportFragment extends DialogFragment implements ExportCallbacks {
 
 	private ExporterTask task;
 	private FragmentManager parentFragmentManager;
+	private Progress progress;
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
-	}
-
-	@Override public void onDetach() {
-		task.setCallbacks(null);
-		super.onDetach();
 	}
 
 	@Override public void onAttach(Activity activity) {
@@ -34,29 +33,71 @@ public class ExportFragment extends DialogFragment implements ExportCallbacks {
 		task.setCallbacks(this);
 	}
 
+	@Override public void onDetach() {
+		task.setCallbacks(new ExportFinishedListener(getResources()));
+		super.onDetach();
+	}
+
+	@Override
+	public void onDestroyView() {
+		// http://stackoverflow.com/questions/8235080/fragments-dialogfragment-and-screen-rotation
+		// https://code.google.com/p/android/issues/detail?id=17423
+		if (getDialog() != null && getRetainInstance()) {
+			getDialog().setDismissMessage(null);
+		}
+		super.onDestroyView();
+	}
+
 	@Override public void exportStarting() {
 		LOG.trace("exportStarting");
 		show(parentFragmentManager, "export");
+		parentFragmentManager = null;
 	}
+
 	@Override public void exportProgress(Progress progress) {
+		this.progress = progress;
 		LOG.trace("exportProgress {}", progress);
-		ProgressDialog dialog = (ProgressDialog)getDialog();
-		if (progress.copyingImages) {
-			dialog.setMessage("Exporting images");
-			dialog.setIndeterminate(false);
-			dialog.setProgress(progress.done);
-			dialog.setMax(progress.total);
-		} else {
-			dialog.setMessage("Preparing export");
-			dialog.setIndeterminate(false);
-			dialog.setProgress(progress.done);
-			dialog.setMax(progress.total);
+		updateProgress((ProgressDialog)getDialog(), progress);
+	}
+	private void updateProgress(ProgressDialog dialog, Progress progress) {
+		switch (progress.phase) {
+			case Init:
+				dialog.setMessage(getString(R.string.backup_export_message_init));
+				dialog.setIndeterminate(true);
+				break;
+			case Data:
+				dialog.setMessage(getString(R.string.backup_export_message_data));
+				dialog.setIndeterminate(false);
+				dialog.setProgress(progress.done);
+				dialog.setMax(progress.total);
+				break;
+			case Images:
+				dialog.setMessage(getString(R.string.backup_export_message_images));
+				dialog.setIndeterminate(false);
+				dialog.setProgress(progress.done);
+				dialog.setMax(progress.total);
+				break;
 		}
 	}
-	@Override public void exportFinished(Progress progress) {
-		LOG.trace("exportFinished {}", progress);
+
+	@Override public void exportFinished(Progress res) {
+		LOG.trace("exportFinished {}", res);
 		dismiss();
-		App.toast("Done exporting " + progress.total + " belongings.");
+		displayFinishMessage(getResources(), res);
+	}
+
+	private static void displayFinishMessage(Resources res, Progress p) {
+		String message;
+		if (p.failure == null) {
+			if (p.imagesFailed == 0) {
+				message = res.getString(R.string.backup_export_success, p.total);
+			} else {
+				message = res.getString(R.string.backup_export_warning, p.total, p.imagesFailed, p.imagesTried);
+			}
+		} else {
+			message = res.getString(R.string.backup_export_failed, p.failure.getMessage());
+		}
+		App.toast(message);
 	}
 
 	@Override public void onCancel(DialogInterface dialog) {
@@ -64,23 +105,44 @@ public class ExportFragment extends DialogFragment implements ExportCallbacks {
 		task.cancel(true);
 	}
 
-	@NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+	@Override public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
 		ProgressDialog dialog = new ProgressDialog(getActivity());
 		dialog.setCancelable(true);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.setIcon(android.R.drawable.ic_menu_upload);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		dialog.setTitle("Exporting");
+		dialog.setTitle(R.string.backup_export_title);
 		// needs to be non-null at creation time to be able to change it later
 		dialog.setMessage(getActivity().getString(R.string.empty));
+		if (progress != null) {
+			updateProgress(dialog, progress);
+		}
 		return dialog;
 	}
 
-	public static ExportFragment create(FragmentManager fm, ExporterTask task) {
+	public static AsyncTask<OutputStream, ?, ?> create(Context context, FragmentManager fm) {
 		ExportFragment fragment = new ExportFragment();
 		fragment.parentFragmentManager = fm;
-		fragment.task = task;
-		task.setCallbacks(fragment);
-		return fragment;
+		fragment.task = new ExporterTask(context);
+		fragment.task.setCallbacks(fragment);
+		return fragment.task;
+	}
+
+	private static final class ExportFinishedListener implements ExportCallbacks {
+		Resources res;
+
+		ExportFinishedListener(Resources res) {
+			this.res = res;
+		}
+
+		@Override public void exportStarting() {
+			// ignore
+		}
+		@Override public void exportProgress(Progress progress) {
+			// ignore
+		}
+		@Override public void exportFinished(Progress p) {
+			displayFinishMessage(res, p);
+		}
 	}
 }

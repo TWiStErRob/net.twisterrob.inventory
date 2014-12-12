@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.content.io;
 
 import java.io.*;
 import java.util.Locale;
+import java.util.concurrent.CancellationException;
 import java.util.zip.*;
 
 import org.apache.commons.csv.CSVPrinter;
@@ -16,12 +17,14 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress;
+import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress.Phase;
 import net.twisterrob.inventory.android.content.io.csv.CSVConstants;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.java.utils.ConcurrentTools;
 
 public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progress> {
 	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
+
 	private Cursor cursor;
 	private ZipOutputStream zip;
 	private ExportCallbacks callbacks = DUMMY_CALLBACK;
@@ -32,13 +35,30 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 		void exportProgress(Progress progress);
 		void exportFinished(Progress progress);
 
-		public static class Progress {
-			public boolean copyingImages;
+		public static final class Progress implements Cloneable {
+			public Phase phase;
+			public int imagesTried;
+			public int imagesFailed;
 			public int done;
 			public int total;
+			public Throwable failure;
 
+			@Override public Progress clone() {
+				try {
+					return (Progress)super.clone();
+				} catch (CloneNotSupportedException ex) {
+					throw new InternalError(ex.toString());
+				}
+			}
 			@Override public String toString() {
-				return String.format(Locale.ROOT, "%b: %d/%d", copyingImages, done, total);
+				return String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %s",
+						phase, done, total, imagesFailed, imagesTried, failure);
+			}
+
+			public enum Phase {
+				Init,
+				Data,
+				Images
 			}
 		}
 	}
@@ -56,61 +76,87 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 	@Override protected void onPreExecute() {
 		callbacks.exportStarting();
 	}
-	@Override protected void onPostExecute(Progress progress) {
-		callbacks.exportFinished(progress);
-	}
 	@Override protected void onProgressUpdate(Progress progress) {
 		callbacks.exportProgress(progress);
 	}
+	@Override protected void onPostExecute(Progress progress) {
+		callbacks.exportFinished(progress);
+	}
+
+	private void publishRestart() {
+		progress.done = 0;
+		publishProgress();
+	}
+	private void publishIncrement() {
+		ConcurrentTools.ignorantSleep(100);
+		progress.done++;
+		publishProgress();
+	}
+	private void publishProgress() {
+		if (isCancelled()) {
+			throw new CancellationException();
+		}
+		publishProgress(progress.clone());
+	}
 
 	@Override protected Progress doInBackground(OutputStream os) {
-		zip = new ZipOutputStream(new BufferedOutputStream(os));
-		cursor = App.db().export();
 		progress = new Progress();
-		progress.total = cursor.getCount();
-		// TODO wakelock?
 		try {
+			// TODO wakelock?
+			progress.phase = Phase.Init;
+			cursor = App.db().export();
+			progress.total = cursor.getCount();
+			zip = new ZipOutputStream(new BufferedOutputStream(os));
+
+			progress.phase = Phase.Data;
 			saveData();
+
+			progress.phase = Phase.Images;
 			saveImages();
+
 			zip.close();
-		} catch (IOException ex) {
-			LOG.error("Cannot finish export", ex);
+		} catch (Throwable ex) {
+			LOG.warn("Export failed", ex);
+			progress.failure = ex;
 		} finally {
 			IOTools.ignorantClose(zip, cursor);
 		}
 		return progress;
 	}
 	private void saveImages() throws IOException {
-		cursor.moveToPosition(-1);
-		progress.copyingImages = true;
-		progress.done = 0;
-		publishProgress(progress); // TODO extract and check cancel and throw if isCancelled
 
+		cursor.moveToPosition(-1);
+		publishRestart();
 		while (cursor.moveToNext()) {
 			String imageFileName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-			saveImage(imageFileName);
-			ConcurrentTools.ignorantSleep(100);
-			progress.done++;
-			publishProgress(progress);
+			if (imageFileName != null) {
+				try {
+					progress.imagesTried++;
+					saveImage(imageFileName);
+				} catch (FileNotFoundException ex) {
+					progress.imagesFailed++;
+					LOG.warn("Cannot find image: {}", imageFileName, ex);
+				}
+			}
+			publishIncrement();
 		}
 	}
+
 	private void saveImage(String imageFileName) throws IOException {
-		if (imageFileName != null) {
-			try {
-				FileInputStream imageFile = new FileInputStream(ImagedDTO.getImage(context, imageFileName));
-				ZipEntry entry = new ZipEntry(imageFileName);
-				entry.setComment(buildComment());
-				zip.putNextEntry(entry);
-				IOTools.copyStream(imageFile, zip, false);
-				zip.closeEntry();
-			} catch (FileNotFoundException ex) {
-				LOG.warn("Cannot find image: {}", imageFileName, ex);
-			}
+		FileInputStream imageFile = new FileInputStream(ImagedDTO.getImage(context, imageFileName));
+		try {
+			ZipEntry entry = new ZipEntry(imageFileName);
+			entry.setComment(buildComment());
+			zip.putNextEntry(entry);
+			IOTools.copyStream(imageFile, zip, false);
+			zip.closeEntry();
+		} finally {
+			IOTools.ignorantClose(imageFile);
 		}
 	}
 	private void saveData() throws IOException {
 		zip.putNextEntry(new ZipEntry("data.csv"));
-		export();
+		export(zip);
 		zip.closeEntry();
 	}
 
@@ -140,13 +186,13 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 		}
 	}
 
-	private void export() throws IOException {
-		CSVPrinter printer = CSVConstants.FORMAT.print(new PrintStream(zip, false, CSVConstants.ENCODING));
-		cursor.moveToPosition(-1);
-		progress.done = 0;
-		publishProgress(progress);
-
+	// TODO check http://stackoverflow.com/questions/13229294/how-do-i-create-a-google-spreadsheet-with-a-service-account-and-share-to-other-g
+	private void export(OutputStream out) throws IOException {
+		CSVPrinter printer = CSVConstants.FORMAT.print(new PrintStream(out, false, CSVConstants.ENCODING));
 		Object[] values = new Object[CSVConstants.FORMAT.getHeader().length];
+
+		cursor.moveToPosition(-1);
+		publishRestart();
 		while (cursor.moveToNext()) {
 			for (int i = 0; i < values.length; ++i) {
 				String column = CSVConstants.COLUMNS[i];
@@ -157,9 +203,7 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 				}
 			}
 			printer.printRecord(values);
-			ConcurrentTools.ignorantSleep(100);
-			progress.done++;
-			publishProgress(progress);
+			publishIncrement();
 		}
 		printer.flush();
 	}
