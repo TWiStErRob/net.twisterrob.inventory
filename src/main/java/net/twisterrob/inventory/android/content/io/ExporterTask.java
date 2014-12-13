@@ -13,12 +13,11 @@ import android.database.Cursor;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.IOTools;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress.Phase;
-import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.java.utils.ConcurrentTools;
 
 public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progress> {
@@ -123,7 +122,6 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 		return progress;
 	}
 	private void saveImages() throws IOException {
-
 		cursor.moveToPosition(-1);
 		publishStart();
 		while (cursor.moveToNext()) {
@@ -142,7 +140,7 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 	}
 
 	private void saveImage(String imageFileName) throws IOException {
-		FileInputStream imageFile = new FileInputStream(ImagedDTO.getImage(context, imageFileName));
+		FileInputStream imageFile = new FileInputStream(Constants.Paths.getImageFile(context, imageFileName));
 		try {
 			ZipEntry entry = new ZipEntry(imageFileName);
 			entry.setComment(buildComment());

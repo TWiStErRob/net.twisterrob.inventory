@@ -65,7 +65,7 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 
 		String type = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-		image = ImagedDTO.getImage(holder.itemView.getContext(), image);
+		image = Constants.Paths.getImagePath(holder.itemView.getContext(), image);
 		displayImageWithType(holder.image, holder.type, image, type);
 	}
 
@@ -85,10 +85,10 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		return countText;
 	}
 
-	private void displayImageWithType(ImageView image, ImageView type, String imageName, String typeImageName) {
+	private void displayImageWithType(ImageView image, ImageView type, String imagePath, String typeImageName) {
 		final Drawable fallback = ImagedDTO.getFallbackDrawable(image.getContext(), typeImageName);
 
-		if (imageName == null) {
+		if (imagePath == null) {
 			type.setVisibility(View.INVISIBLE);
 			type.setImageDrawable(null);
 			image.setImageDrawable(fallback);
@@ -98,7 +98,7 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 			App.pic().start(image.getContext())
 			   .placeholder(fallback)
 			   .error(makeError(image.getContext(), fallback))
-			   .load(imageName)
+			   .load(imagePath)
 			   .into(image)
 			;
 		}

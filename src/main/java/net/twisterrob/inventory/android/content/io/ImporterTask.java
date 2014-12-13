@@ -17,10 +17,10 @@ import android.support.annotation.StringRes;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress.Phase;
-import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.java.utils.ConcurrentTools;
 
 import static net.twisterrob.java.utils.CollectionTools.*;
@@ -174,7 +174,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 					ZipEntry imageEntry = zip.getEntry(image);
 					if (imageEntry != null) {
 						InputStream imageStream = zip.getInputStream(imageEntry);
-						File imageFile = ImagedDTO.getImageFile(context, image);
+						File imageFile = Constants.Paths.getImageFile(context, image);
 						IOTools.copyStream(imageStream, new FileOutputStream(imageFile));
 					} else {
 						warning(R.string.backup_import_invalid_image, coalesce(item, room, property), image);

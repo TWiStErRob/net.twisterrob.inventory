@@ -22,6 +22,17 @@ public interface Constants {
 		public static File getImageDirectory(Context context) {
 			return new File(context.getFilesDir(), INTERNAL_IMAGES_FOLDER);
 		}
+		public static File getImageFile(Context context, String image) {
+			if (image == null) {
+				return null;
+			}
+			File imageFile = new File(image);
+			return imageFile.isAbsolute()? imageFile : new File(Paths.getImageDirectory(context), image);
+		}
+		public static String getImagePath(Context context, String image) {
+			File imageFile = getImageFile(context, image);
+			return imageFile != null? imageFile.getAbsolutePath() : null;
+		}
 		public static String getExportFileName() {
 			return String.format(Locale.ROOT, "MagicHomeInventory-%tF_%<tH-%<tM-%<tS.zip", Calendar.getInstance());
 		}

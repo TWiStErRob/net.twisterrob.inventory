@@ -11,7 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.*;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 
@@ -32,19 +32,7 @@ public class ImagedDTO extends DTO {
 	}
 
 	public String getImage(Context context) {
-		return getImage(context, image);
-	}
-
-	public static File getImageFile(Context context, String image) {
-		if (image == null) {
-			return null;
-		}
-		File imageFile = new File(image);
-		return imageFile.isAbsolute()? imageFile : new File(Paths.getImageDirectory(context), image);
-	}
-	public static String getImage(Context context, String image) {
-		return image == null? null : new File(image).isAbsolute()? image
-				: new File(Paths.getImageDirectory(context), image).getAbsolutePath();
+		return Constants.Paths.getImagePath(context, image);
 	}
 
 	public void setImage(Context context, String fullImage) {

@@ -64,22 +64,22 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		image = ImagedDTO.getImage(holder.itemView.getContext(), image);
+		image = Constants.Paths.getImagePath(holder.itemView.getContext(), image);
 
 		holder.title.setText(name);
 		loadImageWithFallback(holder.image, image, typeImage);
 	}
 
-	protected static void loadImageWithFallback(ImageView image, String imageName, String typeImageName) {
+	protected static void loadImageWithFallback(ImageView image, String imagePath, String typeImageName) {
 		final Drawable fallback = ImagedDTO.getFallbackDrawable(image.getContext(), typeImageName);
 
-		if (imageName == null) {
+		if (imagePath == null) {
 			image.setImageDrawable(fallback);
 		} else {
 			App.pic().start(image.getContext())
 			   .placeholder(fallback)
 			   .error(makeError(image.getContext(), fallback))
-			   .load(imageName)
+			   .load(imagePath)
 			   .into(image)
 			;
 		}
