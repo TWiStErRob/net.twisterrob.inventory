@@ -1,82 +1,44 @@
 package net.twisterrob.inventory.android.activity;
 
-import org.slf4j.*;
+import java.io.*;
 
-import android.app.Activity;
-import android.content.*;
-import android.content.IntentSender.SendIntentException;
-import android.os.Bundle;
-import android.webkit.MimeTypeMap;
+import android.content.Intent;
+import android.os.*;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.*;
-
-import static com.google.android.gms.drive.CreateFileActivityBuilder.*;
-
-import net.twisterrob.android.utils.model.DriveHelper.ConnectedTask;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Prefs;
-import net.twisterrob.inventory.android.content.io.csv.DatabaseCSVExporter;
+import net.twisterrob.inventory.android.fragment.ExportFragment;
+import net.twisterrob.inventory.android.view.SafeSimpleAsyncTask;
 
-import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.*;
-
-public class ExportActivity extends BaseDriveActivity {
-	private static final Logger LOG = LoggerFactory.getLogger(ExportActivity.class);
-	private static final int REQUEST_PICK = 0;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+public class ExportActivity extends BaseActivity {
+	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		googleDrive.setFinishOnCancel(true);
-		googleDrive.addTaskAfterConnected(new ConnectedTask() {
-			public void execute(GoogleApiClient client) throws Exception {
-				String fileName = Constants.Paths.getExportFileName();
-				MetadataChangeSet metadata = new MetadataChangeSet.Builder()
-						.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension("csv"))
-						.setTitle(fileName)
-						.build();
-				Contents contents = sync(Drive.DriveApi.newContents(client));
-				new DatabaseCSVExporter().export(contents.getOutputStream());
-				IntentSender intentSender = Drive.DriveApi
-						.newCreateFileActivityBuilder()
-						.setActivityStartFolder(getRoot(client))
-						.setInitialMetadata(metadata)
-						.setInitialContents(contents)
-						.build(client);
-				try {
-					startIntentSenderForResult(intentSender, REQUEST_PICK, null, 0, 0, 0);
-				} catch (SendIntentException ex) {
-					LOG.warn("Unable to send intent", ex);
-				}
-			}
-
-			private DriveId getRoot(GoogleApiClient client) {
-				DriveId root = ExportActivity.this.getRoot();
-				return root != null? root : Drive.DriveApi.getRootFolder(client).getDriveId();
-			}
-		});
+		if (savedInstanceState == null) {
+			exportSDCard();
+		}
+	}
+	private void exportSDCard() {
+		AsyncTask<OutputStream, ?, ?> task = ExportFragment.create(this, getSupportFragmentManager());
+		new OpenPhoneOutputStream(task).execute();
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		googleDrive.startConnect();
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-			case REQUEST_PICK:
-				if (resultCode == Activity.RESULT_OK) {
-					DriveId driveId = data.getParcelableExtra(EXTRA_RESPONSE_DRIVE_ID);
-					App.getPrefEditor().putString(Prefs.LAST_EXPORT_DRIVE_ID, driveId.encodeToString()).apply();
-					App.toast("Successfully exported to " + driveId.encodeToString());
-				}
-				finish();
-				return;
-			default:
-				super.onActivityResult(requestCode, resultCode, data);
+	private static class OpenPhoneOutputStream extends SafeSimpleAsyncTask<Void, Void, OutputStream> {
+		private AsyncTask<OutputStream, ?, ?> task;
+		private OpenPhoneOutputStream(AsyncTask<OutputStream, ?, ?> task) {
+			this.task = task;
+		}
+		@Override protected OutputStream doInBackgroundSafe(Void aVoid) throws Exception {
+			File parent = Constants.Paths.getPhoneHome();
+			File file = new File(parent, Constants.Paths.getExportFileName());
+			if (!(parent.mkdirs() || parent.isDirectory())) {
+				throw new IOException("Cannot use directory: " + parent);
+			}
+			return new FileOutputStream(file);
+		}
+		@Override protected void onResult(OutputStream stream) {
+			task.execute(stream);
+		}
+		@Override protected void onError(Exception error) {
+			App.toast("Export failed: " + error.getMessage());
 		}
 	}
 

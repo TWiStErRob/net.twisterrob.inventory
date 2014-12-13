@@ -284,6 +284,7 @@ public abstract class AndroidTools {
 		Fragment parent = fragment.getParentFragment();
 		while (parent != null) {
 			parents.add(parent);
+			parent = parent.getParentFragment();
 		}
 		return parents;
 	}

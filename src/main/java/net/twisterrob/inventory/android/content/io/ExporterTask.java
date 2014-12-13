@@ -18,7 +18,6 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress.Phase;
-import net.twisterrob.inventory.android.content.io.csv.CSVConstants;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.java.utils.ConcurrentTools;
 
@@ -83,7 +82,7 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 		callbacks.exportFinished(progress);
 	}
 
-	private void publishRestart() {
+	private void publishStart() {
 		progress.done = 0;
 		publishProgress();
 	}
@@ -126,7 +125,7 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 	private void saveImages() throws IOException {
 
 		cursor.moveToPosition(-1);
-		publishRestart();
+		publishStart();
 		while (cursor.moveToNext()) {
 			String imageFileName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 			if (imageFileName != null) {
@@ -192,7 +191,7 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 		Object[] values = new Object[CSVConstants.FORMAT.getHeader().length];
 
 		cursor.moveToPosition(-1);
-		publishRestart();
+		publishStart();
 		while (cursor.moveToNext()) {
 			for (int i = 0; i < values.length; ++i) {
 				String column = CSVConstants.COLUMNS[i];

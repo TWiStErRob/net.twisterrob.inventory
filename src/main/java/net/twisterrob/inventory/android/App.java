@@ -1,6 +1,5 @@
 package net.twisterrob.inventory.android;
 
-import java.io.File;
 import java.util.Locale;
 
 import org.slf4j.*;
@@ -37,7 +36,6 @@ public class App extends Application {
 
 	private static App s_instance;
 	private Database database;
-	private File phoneHome;
 
 	public App() {
 		synchronized (App.class) {
@@ -58,7 +56,6 @@ public class App extends Application {
 		LOG.info("************* Starting up {} {} built at {}",
 				getPackageName(), BuildConfig.VERSION_NAME, BuildConfig.BUILD_TIME);
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		phoneHome = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		database = new Database(this);
 		updateLanguage(Locale.getDefault());
 	}
@@ -97,10 +94,6 @@ public class App extends Application {
 
 	public static Context getAppContext() {
 		return getInstance();
-	}
-
-	public File getPhoneHome() {
-		return phoneHome;
 	}
 
 	public static SharedPreferences getPrefs() {

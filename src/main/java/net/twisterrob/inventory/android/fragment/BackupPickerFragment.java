@@ -14,7 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants;
 import net.twisterrob.java.io.IOTools;
 
 public class BackupPickerFragment extends DialogFragment {
@@ -42,12 +42,12 @@ public class BackupPickerFragment extends DialogFragment {
 
 	@Override
 	public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
-		File root = new File(App.getInstance().getPhoneHome(), Constants.Paths.EXPORT_SDCARD_FOLDER);
+		File root = Constants.Paths.getPhoneHome();
 		final File[] files = getImportableFiles(root);
 		Arrays.sort(files);
 		return new AlertDialog.Builder(getActivity())
 				.setTitle(getArgTitle())
-				.setMessage(R.string.backup_select)
+						//.setMessage(R.string.backup_select)
 				.setItems(IOTools.getNames(files), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						File file = files[which];

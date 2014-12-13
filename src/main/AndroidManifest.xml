@@ -75,6 +75,12 @@
 			android:name=".activity.ImportActivity"
 			android:label="Import" />
 		<activity
+			android:name=".activity.ExportGoogleActivity"
+			android:label="Export" />
+		<activity
+			android:name=".activity.ImportGoogleActivity"
+			android:label="Import" />
+		<activity
 			android:name=".activity.data.SunburstActivity"
 			android:label="@string/sunburst_title">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"

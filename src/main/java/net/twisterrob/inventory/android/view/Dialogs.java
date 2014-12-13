@@ -115,7 +115,9 @@ public class Dialogs {
 		@Override
 		protected ActionState doInBackground(ActionState state) {
 			state.prepare();
-			state.execute();
+			if (!state.hasErrors()) {
+				state.execute();
+			}
 			return state;
 		}
 
@@ -170,7 +172,7 @@ public class Dialogs {
 		}
 
 		boolean check(Activity activity) {
-			if (prepare == null && execute == null) {
+			if (!hasErrors()) {
 				return true;
 			} else {
 				String message;
@@ -189,6 +191,9 @@ public class Dialogs {
 				Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
 				return false;
 			}
+		}
+		private boolean hasErrors() {
+			return prepare != null || execute != null;
 		}
 
 		private String getError() {

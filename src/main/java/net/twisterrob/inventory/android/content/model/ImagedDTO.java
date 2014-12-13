@@ -35,6 +35,13 @@ public class ImagedDTO extends DTO {
 		return getImage(context, image);
 	}
 
+	public static File getImageFile(Context context, String image) {
+		if (image == null) {
+			return null;
+		}
+		File imageFile = new File(image);
+		return imageFile.isAbsolute()? imageFile : new File(Paths.getImageDirectory(context), image);
+	}
 	public static String getImage(Context context, String image) {
 		return image == null? null : new File(image).isAbsolute()? image
 				: new File(Paths.getImageDirectory(context), image).getAbsolutePath();

@@ -134,27 +134,31 @@
 	<string name="room_viewAll">List All Rooms</string>
 
 	<string name="backup_title">Backup</string>
-	<string name="backup_export_title">Exporting belongings</string>
-	<string name="backup_export_success">Done exporting %1$d belongings.</string>
-	<string name="backup_export_warning">Done exporting %1$d belongings, but %2$d/%3$d images missing.</string>
-	<string name="backup_export_failed">Failed to export belongings:\n%1$s</string>
-	<string name="backup_export_message_init">Preparing export…</string>
-	<string name="backup_export_message_data">@string/backup_export_message_init</string>
-	<string name="backup_export_message_images">Exporting images…</string>
-
 	<string name="backup_select">Please select a backup.</string>
 
-	<string name="backup_import_title">Importing belongings</string>
-	<string name="backup_import_success">Done importing %1$d belongings.</string>
-	<string name="backup_import_warning">Done importing %1$d belongings, but %2$d/%3$d images missing.</string>
-	<string name="backup_import_failed">Failed to import belongings:\n%1$s</string>
-	<string name="backup_import_message_init">Preparing import…</string>
-	<string name="backup_import_message_data">@string/backup_import_message_init</string>
-	<string name="backup_import_message_images">Exporting images…</string>
+	<string name="backup_export_progress_title">Export</string>
+	<string name="backup_export_progress_init">Preparing export…</string>
+	<string name="backup_export_progress_data">Exporting belongings…</string>
+	<string name="backup_export_progress_images">Exporting images…</string>
+	<string name="backup_export_result_success">Done exporting %1$d belongings.</string>
+	<string name="backup_export_result_warning">Done exporting %1$d belongings, but %2$d/%3$d images missing.</string>
+	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>
+
+	<string name="backup_import_progress_title">Import</string>
+	<string name="backup_import_progress_init">Preparing import…</string>
+	<string name="backup_import_progress_data">Importing belongings…</string>
+	<string name="backup_import_result_success">Done importing %1$d belongings.</string>
+	<string name="backup_import_result_warning">There were issues during importing %2$d/%1$d belongings: tap for details.</string>
+	<string name="backup_import_result_failed">Failed to import belongings:\n%1$s</string>
+	<string name="backup_import_conflict_property">Property \"%1$s\" already exists, used existing one.</string>
+	<string name="backup_import_conflict_room">Room \"%2$s\" in \"%1$s\" already exists, used existing one.</string>
+	<string name="backup_import_conflict_item">Item \"%3$s\" in \"%2$s\" in \"%1$s\" already exists, used existing one.</string>
+	<string name="backup_import_invalid_type">"%1$s" has invalid type: "%2$s", used the default type.</string>
+	<string name="backup_import_invalid_image">"%1$s" has invalid image: "%2$s", ignored image.</string>
+	<string name="backup_import_invalid_belonging">Cannot identify entity #%4$s: property, room or item must be set, skipped. (%1$s in %3$s, image: %2$s)</string>
 
 	<string name="backup_import_drive">Restore data from Google Drive</string>
 	<string name="backup_export_drive">Backup data to Google Drive</string>
 	<string name="backup_import_sd">Restore data from Phone</string>
 	<string name="backup_export_sd">Backup data to Phone</string>
-	<string name="backup_export_sd_del">Remove backup from Phone</string>
 </resources>

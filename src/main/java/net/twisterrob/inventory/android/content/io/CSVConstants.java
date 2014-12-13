@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.content.io.csv;
+package net.twisterrob.inventory.android.content.io;
 
 import org.apache.commons.csv.CSVFormat;
 
