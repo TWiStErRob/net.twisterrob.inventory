@@ -10,9 +10,5 @@
 				<action android:name="android.intent.action.MAIN" />
 			</intent-filter>
 		</activity>
-		<activity
-			android:name="net.twisterrob.inventory.android.activity.dev.DeveloperDriveActivity"
-			android:label="Inventory DEV">
-		</activity>
 	</application>
 </manifest>

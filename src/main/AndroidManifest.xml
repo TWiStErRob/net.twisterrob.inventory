@@ -8,7 +8,7 @@
 	<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 	<uses-feature android:name="android.hardware.camera" android:required="false" />
 
-	<!-- Used by ??? -->
+	<!-- Used by Import/Export -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<!-- ViewServer needs INTERNET -->
@@ -25,9 +25,6 @@
 		<meta-data
 			android:name="android.app.default_searchable"
 			android:value="net.twisterrob.inventory.android.activity.SearchResultsActivity" />
-		<meta-data
-			android:name="com.google.android.gms.version"
-			android:value="@integer/google_play_services_version" />
 		<activity
 			android:name=".activity.MainActivity"
 			android:label="@string/home_title"
@@ -41,11 +38,6 @@
 		<activity
 			android:name=".activity.PreferencesActivity"
 			android:label="@string/pref_activity_title" />
-		<activity
-			android:name=".activity.dev.PickDriveFileActivity">
-			<meta-data android:name="android.support.PARENT_ACTIVITY"
-			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
-		</activity>
 		<activity
 			android:name=".activity.SearchResultsActivity"
 			android:label="@string/action_search"
@@ -73,12 +65,6 @@
 			android:label="Export" />
 		<activity
 			android:name=".activity.ImportActivity"
-			android:label="Import" />
-		<activity
-			android:name=".activity.ExportGoogleActivity"
-			android:label="Export" />
-		<activity
-			android:name=".activity.ImportGoogleActivity"
 			android:label="Import" />
 		<activity
 			android:name=".activity.data.SunburstActivity"

@@ -89,18 +89,6 @@ public class DeveloperActivity extends ListActivity {
 						db.getReadableDatabase().close();
 					}
 				}),
-				create("Drive Chooser", new Runnable() {
-					public void run() {
-						Intent intent = new Intent(App.getAppContext(), PickDriveFileActivity.class);
-						startActivity(intent);
-					}
-				}),
-				create("Drive Test", new Runnable() {
-					public void run() {
-						Intent intent = new Intent(App.getAppContext(), DeveloperDriveActivity.class);
-						startActivity(intent);
-					}
-				}),
 				create(getString(R.string.action_picture_take), new Runnable() {
 					public void run() {
 						File target = new File(getCacheDir(), "developer_image.jpg");

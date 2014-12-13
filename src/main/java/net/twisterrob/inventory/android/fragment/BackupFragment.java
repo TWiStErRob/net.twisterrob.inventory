@@ -16,15 +16,11 @@ import net.twisterrob.inventory.android.content.io.ExporterTask;
 public class BackupFragment extends DialogFragment {
 	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
 
-	private static final int IMPORT_DRIVE = 0;
-	private static final int EXPORT_DRIVE = 1;
-	private static final int IMPORT_SD = 2;
-	private static final int EXPORT_SD = 3;
+	private static final int IMPORT_SD = 0;
+	private static final int EXPORT_SD = 1;
 
 	@Override public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
-		CharSequence[] items = new CharSequence[4];
-		items[IMPORT_DRIVE] = getResources().getText(R.string.backup_import_drive);
-		items[EXPORT_DRIVE] = getResources().getText(R.string.backup_export_drive);
+		CharSequence[] items = new CharSequence[2];
 		items[IMPORT_SD] = getResources().getText(R.string.backup_import_sd);
 		items[EXPORT_SD] = getResources().getText(R.string.backup_export_sd);
 
@@ -34,12 +30,6 @@ public class BackupFragment extends DialogFragment {
 				.setItems(items, new OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
-							case EXPORT_DRIVE:
-								startActivity(ExportGoogleActivity.chooser());
-								break;
-							case IMPORT_DRIVE:
-								startActivity(ImportGoogleActivity.chooser());
-								break;
 							case EXPORT_SD:
 								startActivity(ExportActivity.chooser());
 								break;
