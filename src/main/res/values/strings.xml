@@ -14,23 +14,23 @@
 	<string name="action_search">Search Items</string>
 
 	<plurals name="action_delete_title">
-		<item quantity="one">Deleting %2$s \"%3$s\"</item>
+		<item quantity="one">Deleting %2$s &#8220;%3$s&#8221;</item>
 		<item quantity="other">Deleting %1$d %2$s</item>
 	</plurals>
 	<plurals name="action_delete_success">
-		<item quantity="one">Deleted %2$s \"%3$s\".</item>
+		<item quantity="one">Deleted %2$s &#8220;%3$s&#8221;.</item>
 		<item quantity="other">%1$d %2$s deleted.</item>
 	</plurals>
 	<plurals name="action_delete_failed">
-		<item quantity="one">Failed to delete %2$s \"%3$s\"!</item>
+		<item quantity="one">Failed to delete %2$s &#8220;%3$s&#8221;!</item>
 		<item quantity="other">Deleting %1$d %2$s failed!</item>
 	</plurals>
 	<plurals name="action_delete_confirm">
-		<item quantity="one">Are you sure you want to delete the %2$s named \"%3$s\" with everything in it?</item>
+		<item quantity="one">Are you sure you want to delete the %2$s named &#8220;%3$s&#8221; with everything in it?</item>
 		<item quantity="other">Are you sure you want to delete %1$d %2$s with everything in them?</item>
 	</plurals>
 	<plurals name="action_delete_confirm_empty">
-		<item quantity="one">Are you sure you want to delete the empty %2$s named \"%3$s\"?</item>
+		<item quantity="one">Are you sure you want to delete the empty %2$s named &#8220;%3$s&#8221;?</item>
 		<item quantity="other">Are you sure you want to delete %1$d empty %2$s?</item>
 	</plurals>
 	<plurals name="action_delete_details">
@@ -40,20 +40,20 @@
 
 
 	<plurals name="action_move_title">
-		<item quantity="one">Moving %2$s \"%5$s\"</item>
+		<item quantity="one">Moving %2$s &#8220;%5$s&#8221;</item>
 		<item quantity="other">Moving %1$d %2$s</item>
 	</plurals>
 	<plurals name="action_move_success">
-		<item quantity="one">Moved %2$s \"%5$s\" to %3$s \"%4$s\".</item>
-		<item quantity="other">%1$d %2$s moved to %3$s \"%4$s\".</item>
+		<item quantity="one">Moved %2$s &#8220;%5$s&#8221; to %3$s &#8220;%4$s&#8221;.</item>
+		<item quantity="other">%1$d %2$s moved to %3$s &#8220;%4$s&#8221;.</item>
 	</plurals>
 	<plurals name="action_move_failed">
-		<item quantity="one">Failed to move %2$s \"%5$s\" to %3$s \"%4$s\"!</item>
-		<item quantity="other">Moving %1$d %2$s to %3$s \"%4$s\" failed!</item>
+		<item quantity="one">Failed to move %2$s &#8220;%5$s&#8221; to %3$s &#8220;%4$s&#8221;!</item>
+		<item quantity="other">Moving %1$d %2$s to %3$s &#8220;%4$s&#8221; failed!</item>
 	</plurals>
 	<plurals name="action_move_confirm">
-		<item quantity="one">Are you sure you want to move the %2$s named \"%7$s\" with everything in it to %3$s \"%4$s\"?</item>
-		<item quantity="other">Are you sure you want to move %1$d %2$s with everything in them to %3$s \"%4$s\"?</item>
+		<item quantity="one">Are you sure you want to move the %2$s named &#8220;%7$s&#8221; with everything in it to %3$s &#8220;%4$s&#8221;?</item>
+		<item quantity="other">Are you sure you want to move %1$d %2$s with everything in them to %3$s &#8220;%4$s&#8221;?</item>
 	</plurals>
 	<string name="action_move_pick_title">Move to %1$s:\n%2$s</string>
 	<string name="action_move_pick_title_initial">Please select a\n%1$s</string>
@@ -125,10 +125,6 @@
 	<string name="room_share">Share Room</string>
 	<string name="room_move">Move Room</string>
 	<string name="room_move_many">Move Rooms</string>
-	<plurals name="room_moved">
-		<item quantity="one">Room moved.</item>
-		<item quantity="other">%d Rooms moved.</item>
-	</plurals>
 	<string name="room_name_hint">Room Title</string>
 	<string name="room_location">In %1$s</string>
 	<string name="room_viewAll">List All Rooms</string>
@@ -150,15 +146,13 @@
 	<string name="backup_import_result_success">Done importing %1$d belongings.</string>
 	<string name="backup_import_result_warning">There were issues during importing %2$d/%1$d belongings: tap for details.</string>
 	<string name="backup_import_result_failed">Failed to import belongings:\n%1$s</string>
-	<string name="backup_import_conflict_property">Property \"%1$s\" already exists, used existing one.</string>
-	<string name="backup_import_conflict_room">Room \"%2$s\" in \"%1$s\" already exists, used existing one.</string>
-	<string name="backup_import_conflict_item">Item \"%3$s\" in \"%2$s\" in \"%1$s\" already exists, used existing one.</string>
-	<string name="backup_import_invalid_type">"%1$s" has invalid type: "%2$s", used the default type.</string>
-	<string name="backup_import_invalid_image">"%1$s" has invalid image: "%2$s", ignored image.</string>
+	<string name="backup_import_conflict_property">Property &#8220;%1$s&#8221; already exists, used existing one.</string>
+	<string name="backup_import_conflict_room">Room &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>
+	<string name="backup_import_conflict_item">Item &#8220;%3$s&#8221; in &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>
+	<string name="backup_import_invalid_type">&#8220;%1$s&#8221; has invalid type: &#8220;%2$s&#8221;, used the default type.</string>
+	<string name="backup_import_invalid_image">&#8220;%1$s&#8221; has invalid image: &#8220;%2$s&#8221;, ignored image.</string>
 	<string name="backup_import_invalid_belonging">Cannot identify entity #%4$s: property, room or item must be set, skipped. (%1$s in %3$s, image: %2$s)</string>
 
-	<string name="backup_import_drive">Restore data from Google Drive</string>
-	<string name="backup_export_drive">Backup data to Google Drive</string>
 	<string name="backup_import_sd">Restore data from Phone</string>
 	<string name="backup_export_sd">Backup data to Phone</string>
 </resources>

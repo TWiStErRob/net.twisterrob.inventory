@@ -34,6 +34,7 @@
 			android:gravity="center_vertical"
 			android:textAppearance="?android:textAppearanceMedium"
 			android:textColor="#fff"
+			android:textIsSelectable="false"
 			tools:text="Something long happened"
 			/>
 		<View

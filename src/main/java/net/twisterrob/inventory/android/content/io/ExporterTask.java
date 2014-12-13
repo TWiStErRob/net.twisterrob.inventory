@@ -18,7 +18,6 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress.Phase;
-import net.twisterrob.java.utils.ConcurrentTools;
 
 public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progress> {
 	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
@@ -86,7 +85,6 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 		publishProgress();
 	}
 	private void publishIncrement() {
-		ConcurrentTools.ignorantSleep(100);
 		progress.done++;
 		publishProgress();
 	}

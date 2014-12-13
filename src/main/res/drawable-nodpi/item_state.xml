@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- FIXME clean up unknown colors before release -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<selector
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:ignore="UnusedAttribute"
+	>
+	<!-- TODO check how this behaves on lower API: state_activated=11 and state_hovered=14 -->
+
 	<!-- Temporary list selection on tap -->
 	<item android:state_pressed="true">
 		<color android:color="@color/accent" />

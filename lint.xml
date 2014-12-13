@@ -2,6 +2,7 @@
 <lint>
 	<issue id="ContentDescription" severity="ignore" />
 	<issue id="MissingTranslation" severity="ignore" />
+	<issue id="Overdraw" severity="ignore" />
 	<issue id="UnusedResources">
 		<ignore path="**/res/raw*/category_*.svg" />
 		<ignore path="**/res/raw*/property_*.svg" />

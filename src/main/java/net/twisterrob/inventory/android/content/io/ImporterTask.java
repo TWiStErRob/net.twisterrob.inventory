@@ -21,7 +21,6 @@ import net.twisterrob.inventory.android.Constants;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress.Phase;
-import net.twisterrob.java.utils.ConcurrentTools;
 
 import static net.twisterrob.java.utils.CollectionTools.*;
 
@@ -96,7 +95,6 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 		publishProgress();
 	}
 	private void publishProgress() {
-		ConcurrentTools.ignorantSleep(100);
 		if (isCancelled()) {
 			throw new CancellationException();
 		}

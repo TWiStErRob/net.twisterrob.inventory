@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.utils.listeners;
+package net.twisterrob.android.utils.listeners;
 
 import org.slf4j.*;
 

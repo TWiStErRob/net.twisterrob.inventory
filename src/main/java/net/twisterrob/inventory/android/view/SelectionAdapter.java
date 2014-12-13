@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import java.util.*;
 
+import android.annotation.TargetApi;
 import android.os.Build.*;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
@@ -17,6 +18,7 @@ public class SelectionAdapter<VH extends RecyclerView.ViewHolder> extends Wrappi
 		super(wrapped);
 	}
 
+	@TargetApi(VERSION_CODES.HONEYCOMB)
 	@Override public void onBindViewHolder(VH holder, int position) {
 		boolean selected = isSelected(position);
 		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {

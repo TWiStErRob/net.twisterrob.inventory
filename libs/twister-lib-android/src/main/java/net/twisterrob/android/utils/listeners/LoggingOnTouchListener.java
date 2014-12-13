@@ -1,11 +1,13 @@
-package net.twisterrob.inventory.android.utils.listeners;
+package net.twisterrob.android.utils.listeners;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.view.*;
 
+@SuppressLint("ClickableViewAccessibility")
 public class LoggingOnTouchListener implements View.OnTouchListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger("RecyclerViewOnScroll");
+	private static final Logger LOGGER = LoggerFactory.getLogger("ViewOnTouch");
 	private final Logger LOG;
 
 	public LoggingOnTouchListener() {
