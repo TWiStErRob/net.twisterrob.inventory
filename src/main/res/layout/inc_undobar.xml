@@ -48,7 +48,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
-			android:text="Undo"
+			android:text="@string/action_undo"
 			android:drawableLeft="@android:drawable/ic_menu_revert"
 			android:drawablePadding="@dimen/margin"
 			android:drawableStart="@android:drawable/ic_menu_revert"

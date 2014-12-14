@@ -75,7 +75,7 @@
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="Navigation"
+				android:text="@string/navigation_title"
 				android:gravity="center_horizontal"
 				android:textAllCaps="true"
 				/>

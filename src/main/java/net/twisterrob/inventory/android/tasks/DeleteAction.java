@@ -28,7 +28,7 @@ public abstract class DeleteAction extends BaseAction {
 
 	@Override protected void doPrepare() {
 		if (IDs == null || IDs.length == 0) {
-			throw new IllegalArgumentException("Nothing to delete.");
+			throw new ValidationException(R.string.action_delete_error_empty);
 		}
 	}
 	private String buildPlural(Resources res, @PluralsRes int titleRes) {
