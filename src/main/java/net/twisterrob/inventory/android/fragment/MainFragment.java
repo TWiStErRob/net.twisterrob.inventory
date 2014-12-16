@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
+import java.util.Collection;
+
 import org.slf4j.*;
 
 import android.database.Cursor;
@@ -15,7 +17,6 @@ import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.Room;
 import net.twisterrob.inventory.android.view.*;
-import net.twisterrob.inventory.android.view.IconedItem.OnClickCallback;
 
 import static net.twisterrob.inventory.android.activity.BaseActivity.*;
 
@@ -33,8 +34,10 @@ public class MainFragment extends BaseFragment<Void> {
 		super.onViewCreated(view, savedInstanceState);
 
 		GridView list = (GridView)view.findViewById(R.id.items).findViewById(android.R.id.list);
-		list.setAdapter(new IconedItemAdapter(getContext(), R.layout.item_main_nav, createActions(getBaseActivity())));
-		list.setOnItemClickListener(new OnClickCallback());
+		Collection<IconedItem> actions = createActions(getBaseActivity());
+		actions.remove(actions.iterator().next());
+		list.setAdapter(new IconedItemAdapter(getContext(), R.layout.item_main_nav, actions));
+		list.setOnItemClickListener(new IconedItem.OnClick());
 
 		propertiesController = new RecyclerViewLoadersController(this, Loaders.Properties) {
 			@Override protected CursorRecyclerAdapter setupList() {

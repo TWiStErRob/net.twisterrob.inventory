@@ -2,7 +2,9 @@ package net.twisterrob.inventory.android.view;
 
 import java.util.Collection;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build.*;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.widget.*;
@@ -13,6 +15,7 @@ import net.twisterrob.inventory.android.view.IconedItemAdapter.ViewHolder;
 
 public class IconedItemAdapter extends BaseListAdapter<IconedItem, ViewHolder> {
 	private final int layout;
+	private IconedItem active;
 
 	public IconedItemAdapter(Context context, @LayoutRes int layoutId, Collection<IconedItem> items) {
 		super(context, items);
@@ -20,10 +23,12 @@ public class IconedItemAdapter extends BaseListAdapter<IconedItem, ViewHolder> {
 	}
 
 	protected static class ViewHolder {
+		final View view;
 		ImageView icon;
 		TextView label;
 
 		ViewHolder(View view) {
+			this.view = view;
 			icon = (ImageView)view.findViewById(R.id.icon);
 			label = (TextView)view.findViewById(R.id.title);
 		}
@@ -41,8 +46,32 @@ public class IconedItemAdapter extends BaseListAdapter<IconedItem, ViewHolder> {
 
 	@Override
 	protected void bindView(ViewHolder holder, IconedItem currentItem, View convertView) {
+		setActive(holder.view, currentItem != active);
 		CharSequence title = currentItem.getTitle(convertView.getContext());
 		holder.label.setText(title);
 		currentItem.loadImage(holder.icon);
+	}
+
+	@TargetApi(VERSION_CODES.HONEYCOMB)
+	private void setActive(View view, boolean enabled) {
+		view.setEnabled(enabled);
+		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+			view.setActivated(!enabled);
+		}
+	}
+
+	public void setActive(int active) {
+		try {
+			this.active = getItem(active);
+		} catch (IndexOutOfBoundsException ex) {
+			this.active = null;
+		}
+	}
+
+	@Override public boolean areAllItemsEnabled() {
+		return false;
+	}
+	@Override public boolean isEnabled(int position) {
+		return getItem(position) != active;
 	}
 }

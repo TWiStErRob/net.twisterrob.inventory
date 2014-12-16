@@ -3,10 +3,24 @@
 <selector
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	tools:ignore="UnusedAttribute"
 	>
 	<!-- TODO check how this behaves on lower API: state_activated=11 and state_hovered=14 -->
 
+	<item android:state_hovered="true" tools:ignore="UnusedAttribute">
+		<color android:color="#f00" />
+	</item>
+	<item android:state_focused="true">
+		<color android:color="#0f0" />
+	</item>
+	<item android:state_active="true">
+		<color android:color="#ff0" />
+	</item>
+	<item android:state_checked="true">
+		<color android:color="#0ff" />
+	</item>
+	<item android:state_enabled="false">
+		<color android:color="@color/primaryDark" />
+	</item>
 	<!-- Temporary list selection on tap -->
 	<item android:state_pressed="true">
 		<color android:color="@color/accent" />
@@ -19,20 +33,8 @@
 		</shape>
 	</item>
 	<!-- Selected spinner item, Selected list item -->
-	<item android:state_activated="true">
+	<item android:state_activated="true" tools:ignore="UnusedAttribute">
 		<color android:color="@color/accentDark" />
-	</item>
-	<item android:state_focused="true">
-		<color android:color="#0f0" />
-	</item>
-	<item android:state_checked="true">
-		<color android:color="#0ff" />
-	</item>
-	<item android:state_active="true">
-		<color android:color="#ff0" />
-	</item>
-	<item android:state_hovered="true">
-		<color android:color="#00f" />
 	</item>
 	<item android:drawable="@android:color/transparent" />
 </selector>

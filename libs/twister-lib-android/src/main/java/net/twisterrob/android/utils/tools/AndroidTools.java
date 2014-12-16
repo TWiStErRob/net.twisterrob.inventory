@@ -359,6 +359,8 @@ public abstract class AndroidTools {
 			item.setIcon(icon);
 		}
 	}
+
+	/** Call from {@link android.app.Activity#onMenuOpened(int, Menu)}. */
 	public static void showActionBarOverflowIcons(int featureId, Menu menu, boolean show) {
 		// http://stackoverflow.com/questions/18374183/how-to-show-icons-in-overflow-menu-in-actionbar
 		if ((featureId == WindowCompat.FEATURE_ACTION_BAR || featureId == WindowCompat.FEATURE_ACTION_BAR_OVERLAY)
@@ -372,6 +374,19 @@ public abstract class AndroidTools {
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
+		}
+	}
+
+	@TargetApi(VERSION_CODES.HONEYCOMB)
+	public static void setItemChecked(AdapterView parent, int position, boolean value) {
+		if (parent instanceof ListView) {
+			((ListView)parent).setItemChecked(position, value);
+		} else if (parent instanceof AbsListView) {
+			if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+				((AbsListView)parent).setItemChecked(position, value);
+			}
+		} else {
+			LOG.warn("Cannot setItemChecked({}) #{} on {}", value, position, parent);
 		}
 	}
 }

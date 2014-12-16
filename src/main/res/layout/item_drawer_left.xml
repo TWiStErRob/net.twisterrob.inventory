@@ -12,12 +12,13 @@
 	android:orientation="horizontal"
 	android:background="@drawable/item_state"
 	tools:layout_width="240dp"
-	tools:background="?attr/colorPrimary"
+	tools:background="@color/toolsBG"
 	>
 	<!-- TODO android.support.v7.widget.Space -->
 	<View
 		android:layout_width="4dp"
 		android:layout_height="fill_parent"
+		android:background="@drawable/item_drawer_active"
 		/>
 	<ImageView
 		android:id="@id/icon"
