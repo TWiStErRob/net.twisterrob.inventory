@@ -151,6 +151,11 @@ public class BaseActivity extends ActionBarActivity {
 				BackupFragment.create().show(activity.getSupportFragmentManager(), "backup");
 			}
 		});
+		acts.add(new ResourceItem(R.string.pref_activity_title, android.R.drawable.ic_menu_preferences) {
+			@Override public void onClick() {
+				activity.startActivity(PreferencesActivity.show());
+			}
+		});
 
 		if (BuildConfig.DEBUG) {
 			acts.add(new SVGIntentItem(Constants.INVALID_RESOURCE_ID, R.raw.category_chip,

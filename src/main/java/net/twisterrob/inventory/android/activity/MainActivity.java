@@ -38,9 +38,6 @@ public class MainActivity extends BaseActivity {
 
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.preferences:
-				startActivity(PreferencesActivity.show());
-				return true;
 			case R.id.debug:
 				startActivityForResult(CaptureImage.saveTo(this, new File(getCacheDir(), "dev.jpg")), 32767);
 				return true;

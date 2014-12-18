@@ -49,6 +49,7 @@ public class IconedItemAdapter extends BaseListAdapter<IconedItem, ViewHolder> {
 		setActive(holder.view, currentItem != active);
 		CharSequence title = currentItem.getTitle(convertView.getContext());
 		holder.label.setText(title);
+		holder.icon.setVisibility(View.VISIBLE);
 		currentItem.loadImage(holder.icon);
 	}
 
