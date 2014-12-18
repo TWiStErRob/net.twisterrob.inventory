@@ -2,6 +2,8 @@ package net.twisterrob.android.view;
 
 import static java.lang.Math.*;
 
+import org.slf4j.*;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -19,10 +21,10 @@ import net.twisterrob.android.R;
  * @see <a href="http://adblogcat.com/a-camera-preview-with-a-bounding-box-like-google-goggles/">based on</a>
  */
 public class SelectionView extends View {
-	//private static final Logger LOG = LoggerFactory.getLogger(SelectionView.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SelectionView.class);
 
 	private static final double CORNER_SIZE_PERCENT = 0.05;
-	private static final int MAX_DISTANCE = 50;
+	private static final int MAX_DISTANCE = 48;
 	@SuppressLint("InlinedApi")
 	private static final int INVALID_POINTER_ID = MotionEvent.INVALID_POINTER_ID;
 
@@ -30,6 +32,7 @@ public class SelectionView extends View {
 	private Drawable mRightTopIcon;
 	private Drawable mLeftBotIcon;
 	private Drawable mRightBotIcon;
+	private float mTouchDistance;
 
 	private boolean mLeftTopBool = false;
 	private boolean mRightTopBool = false;
@@ -74,6 +77,8 @@ public class SelectionView extends View {
 		mRightTopIcon = resources.getDrawable(R.drawable.selection_corner);
 		mLeftBotIcon = resources.getDrawable(R.drawable.selection_corner);
 		mRightBotIcon = resources.getDrawable(R.drawable.selection_corner);
+
+		mTouchDistance = resources.getDisplayMetrics().density * MAX_DISTANCE;
 	}
 
 	public Rect getSelection() {
@@ -112,6 +117,7 @@ public class SelectionView extends View {
 		windowManager.getDefaultDisplay().getMetrics(displaymetrics);
 		int screenHeight = displaymetrics.heightPixels;
 		int screenWidth = displaymetrics.widthPixels;
+
 		Rect selection = new Rect();
 		selection.left = (int)(screenWidth * left);
 		selection.right = (int)(screenWidth * (1 - right));
@@ -233,14 +239,18 @@ public class SelectionView extends View {
 				correctSelection();
 
 				mLastTouch.set(x, y); // Remember this touch position for the next move event
-
-				invalidate(); // selection changed, redraw
 				break;
 			}
 			case MotionEvent.ACTION_CANCEL:
 			case MotionEvent.ACTION_UP: { // last pointer up
 				resetPickedAction();
 				selection.sort();
+				int limit = (int)(mTouchDistance * 2);
+				// (w/h - limit) will be negative if w/h is too small, min() constrains it to expand-only
+				selection.inset(
+						Math.min(0, (selection.width() - limit) / 2),
+						Math.min(0, (selection.height() - limit) / 2)
+				);
 				mActivePointerId = INVALID_POINTER_ID;
 				break;
 			}
@@ -253,6 +263,9 @@ public class SelectionView extends View {
 				}
 				break;
 			}
+		}
+		if (handled) {
+			invalidate(); // selection quite possibly changed, redraw
 		}
 		return handled || super.onTouchEvent(ev);
 	}
@@ -338,25 +351,25 @@ public class SelectionView extends View {
 		double leftBottom = distance(x, y, selection.left, selection.bottom);
 		double rightBottom = distance(x, y, selection.right, selection.bottom);
 
-		//LOG.debug("leftTop: {}, rightTop: {}, leftBottom: {}, rightBottom: {}", //
+		//LOG.debug("leftTop: {}, rightTop: {}, leftBottom: {}, rightBottom: {}",
 		//		leftTop, rightTop, leftBottom, rightBottom);
 
-		if (leftTop < MAX_DISTANCE) {
+		if (leftTop < mTouchDistance) {
 			mLeftTopBool = true;
 			mRightTopBool = false;
 			mLeftBottomBool = false;
 			mRightBottomBool = false;
-		} else if (rightTop < MAX_DISTANCE) {
+		} else if (rightTop < mTouchDistance) {
 			mLeftTopBool = false;
 			mRightTopBool = true;
 			mLeftBottomBool = false;
 			mRightBottomBool = false;
-		} else if (leftBottom < MAX_DISTANCE) {
+		} else if (leftBottom < mTouchDistance) {
 			mLeftTopBool = false;
 			mRightTopBool = false;
 			mLeftBottomBool = true;
 			mRightBottomBool = false;
-		} else if (rightBottom < MAX_DISTANCE) {
+		} else if (rightBottom < mTouchDistance) {
 			mLeftTopBool = false;
 			mRightTopBool = false;
 			mLeftBottomBool = false;

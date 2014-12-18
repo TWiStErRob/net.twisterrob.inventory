@@ -28,6 +28,10 @@ import net.twisterrob.java.io.IOTools;
 @SuppressWarnings("deprecation")
 public class CaptureImage extends Activity {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
+	private static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;
+	private static final String EXTRA_ASPECT = "keepAspect";
+	private static final String EXTRA_SQUARE = "isSquare";
+	private static final float DEFAULT_MARGIN = 0.10f;
 
 	private CameraPreview mPreview;
 	private SelectionView mSelection;
@@ -39,7 +43,7 @@ public class CaptureImage extends Activity {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-		String output = getIntent().getStringExtra(MediaStore.EXTRA_OUTPUT);
+		String output = getIntent().getStringExtra(EXTRA_OUTPUT);
 		if (output == null) {
 			setResult(RESULT_CANCELED);
 			finish();
@@ -56,8 +60,12 @@ public class CaptureImage extends Activity {
 		mPreview = (CameraPreview)findViewById(R.id.preview);
 		mSelection = (SelectionView)findViewById(R.id.selection);
 
-		mSelection.setKeepAspectRatio(true);
-		mSelection.setSelectionMarginSquare(0.10f); // 10 % off short side
+		mSelection.setKeepAspectRatio(getIntent().getBooleanExtra(EXTRA_ASPECT, false));
+		if (getIntent().getBooleanExtra(EXTRA_SQUARE, false)) {
+			mSelection.setSelectionMarginSquare(DEFAULT_MARGIN);
+		} else {
+			mSelection.setSelectionMargin(DEFAULT_MARGIN);
+		}
 
 		btnFlash.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -97,6 +105,7 @@ public class CaptureImage extends Activity {
 			}
 		});
 	}
+
 	protected void doSave(byte[] data) {
 		mSavedFile = save(data);
 	}
@@ -122,7 +131,7 @@ public class CaptureImage extends Activity {
 		}
 		mPreview.setCameraFocus(new Camera.AutoFocusCallback() {
 			public void onAutoFocus(final boolean success, Camera camera) {
-				LOG.trace("Autofocus result: {}", success);
+				LOG.trace("Auto-focus result: {}", success);
 				new Handler(getMainLooper()).post(new Runnable() {
 					public void run() {
 						updateSelection(success);

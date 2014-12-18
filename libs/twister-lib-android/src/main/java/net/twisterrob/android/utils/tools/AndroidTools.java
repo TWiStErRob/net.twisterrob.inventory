@@ -9,7 +9,7 @@ import static java.lang.Math.*;
 
 import org.slf4j.*;
 
-import android.annotation.SuppressLint;
+import android.annotation.*;
 import android.app.*;
 import android.content.*;
 import android.content.pm.PackageManager;
@@ -18,14 +18,16 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.*;
+import android.os.Build.*;
 import android.preference.ListPreference;
 import android.support.annotation.*;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.*;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.*;
 import android.util.*;
 import android.view.*;
-import android.widget.AdapterView;
+import android.widget.*;
 
 import static android.util.TypedValue.*;
 

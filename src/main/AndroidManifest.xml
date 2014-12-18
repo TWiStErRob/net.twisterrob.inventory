@@ -53,6 +53,7 @@
 		<activity
 			android:name="net.twisterrob.android.activity.CaptureImage"
 			android:label="@string/action_picture_take"
+			android:icon="@android:drawable/ic_menu_camera"
 			android:screenOrientation="fullSensor"
 			/>
 		<activity
