@@ -391,4 +391,21 @@ public abstract class AndroidTools {
 			LOG.warn("Cannot setItemChecked({}) #{} on {}", value, position, parent);
 		}
 	}
+	public static View findClosest(View view, @IdRes int viewId) {
+		if (view.getId() == viewId) {
+			return view;
+		}
+		ViewParent parent = view.getParent();
+		if (parent instanceof ViewGroup) {
+			ViewGroup group = (ViewGroup)parent;
+			for (int index = 0; index < group.getChildCount(); index++) {
+				View child = group.getChildAt(index);
+				if (child.getId() == viewId) {
+					return child;
+				}
+			}
+			return findClosest(group, viewId);
+		}
+		return null;
+	}
 }

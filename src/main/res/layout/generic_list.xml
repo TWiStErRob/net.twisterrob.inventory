@@ -6,7 +6,12 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	>
-	<include layout="@layout/inc_recyclerview" />
+	<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
+		<android.support.v7.widget.RecyclerView
+			android:id="@android:id/list"
+			style="@style/Theme.AppTheme.RecyclerList"
+			/>
+	</android.support.v4.widget.SwipeRefreshLayout>
 	<ImageView
 		android:id="@+id/fab"
 		android:layout_width="56dp"

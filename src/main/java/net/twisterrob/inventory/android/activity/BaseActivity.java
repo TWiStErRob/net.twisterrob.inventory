@@ -68,9 +68,9 @@ public class BaseActivity extends ActionBarActivity {
 	private void initDrawers() {
 		ListView drawerLeft = (ListView)mDrawerLayout.findViewById(R.id.drawer_left_list);
 		IconedItemAdapter adapter = new IconedItemAdapter(this, R.layout.item_drawer_left, createActions(this));
+		drawerLeft.setAdapter(adapter);
 		adapter.setActive(findActivePosition(drawerLeft));
 
-		drawerLeft.setAdapter(adapter);
 		drawerLeft.setOnItemClickListener(new IconedItem.OnClick() {
 			@Override public void onItemClick(AdapterView parent, View view, int position, long id) {
 				super.onItemClick(parent, view, position, id);

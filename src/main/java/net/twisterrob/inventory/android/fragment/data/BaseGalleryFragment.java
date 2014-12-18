@@ -64,7 +64,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		listController.setView(view);
+		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
 	}
 
 	@Override public void onSaveInstanceState(Bundle outState) {

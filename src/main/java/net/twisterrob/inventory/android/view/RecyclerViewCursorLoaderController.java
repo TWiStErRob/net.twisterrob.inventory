@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.view.View;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 
@@ -16,8 +15,8 @@ public abstract class RecyclerViewCursorLoaderController extends RecyclerViewCon
 	private CursorRecyclerAdapter adapter;
 	private Cursor pendingData;
 
-	public void setView(View view) {
-		super.setView(view);
+	@Override protected void onViewSet() {
+		super.onViewSet();
 		adapter = setupList();
 		if (pendingData != null) {
 			adapter.swapCursor(pendingData);

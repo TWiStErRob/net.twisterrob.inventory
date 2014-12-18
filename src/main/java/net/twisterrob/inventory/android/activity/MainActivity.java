@@ -1,12 +1,14 @@
 package net.twisterrob.inventory.android.activity;
 
+import java.io.File;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.view.*;
 
+import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.data.PropertyViewActivity;
 import net.twisterrob.inventory.android.fragment.MainFragment;
 
 public class MainActivity extends BaseActivity {
@@ -40,13 +42,19 @@ public class MainActivity extends BaseActivity {
 				startActivity(PreferencesActivity.show());
 				return true;
 			case R.id.debug:
-				startActivity(PropertyViewActivity.show(1L));
+				startActivityForResult(CaptureImage.saveTo(this, new File(getCacheDir(), "dev.jpg")), 32767);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
+	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 32767 && resultCode == RESULT_OK) {
+			startActivity(ImageActivity.show(data.getData()));
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 	public static Intent home() {
 		Intent intent = new Intent(App.getAppContext(), MainActivity.class);
 		return intent;

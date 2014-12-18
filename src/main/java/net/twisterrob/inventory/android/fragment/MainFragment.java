@@ -33,7 +33,7 @@ public class MainFragment extends BaseFragment<Void> {
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		GridView list = (GridView)view.findViewById(R.id.items).findViewById(android.R.id.list);
+		GridView list = (GridView)view.findViewById(R.id.items);
 		Collection<IconedItem> actions = createActions(getBaseActivity());
 		actions.remove(actions.iterator().next());
 		list.setAdapter(new IconedItemAdapter(getContext(), R.layout.item_main_nav, actions));
@@ -54,7 +54,7 @@ public class MainFragment extends BaseFragment<Void> {
 				return adapter;
 			}
 		};
-		propertiesController.setView(view.findViewById(R.id.properties));
+		propertiesController.setView((RecyclerView)view.findViewById(R.id.properties));
 
 		roomsController = new RecyclerViewLoadersController(this, Loaders.Rooms) {
 			@Override protected CursorRecyclerAdapter setupList() {
@@ -71,7 +71,7 @@ public class MainFragment extends BaseFragment<Void> {
 				return adapter;
 			}
 		};
-		roomsController.setView(view.findViewById(R.id.rooms));
+		roomsController.setView((RecyclerView)view.findViewById(R.id.rooms));
 	}
 
 	@Override public void onActivityCreated(Bundle savedInstanceState) {

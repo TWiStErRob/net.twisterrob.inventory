@@ -4,9 +4,10 @@ import org.slf4j.*;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
 
 public abstract class RecyclerViewController {
@@ -34,14 +35,17 @@ public abstract class RecyclerViewController {
 	};
 	private View fab;
 
-	public void setView(View view) {
-		//LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View root = view; //inflater.inflate(R.layout.generic_list, view, true);
+	public void setView(RecyclerView list) {
+		this.list = list;
+		ViewParent parent = list.getParent();
+		if (parent instanceof SwipeRefreshLayout) {
+			this.progress = (SwipeRefreshLayout)parent;
+		}
+		fab = AndroidTools.findClosest(list, R.id.fab);
+		onViewSet();
+	}
 
-		fab = root.findViewById(R.id.fab);
-		progress = (SwipeRefreshLayout)root.findViewById(android.R.id.progress);
-		list = (RecyclerView)root.findViewById(android.R.id.list);
-
+	protected void onViewSet() {
 		updateFAB();
 	}
 

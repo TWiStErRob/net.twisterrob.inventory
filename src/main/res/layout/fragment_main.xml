@@ -16,7 +16,6 @@
 		android:layout_centerInParent="true"
 		/>
 	<android.support.v7.widget.CardView
-		android:id="@id/properties"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:layout_below="@id/spacer"
@@ -29,17 +28,19 @@
 			android:orientation="vertical"
 			>
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
+				style="@style/Theme.AppTheme.Header"
 				android:text="@string/property_list"
-				android:gravity="center_horizontal"
-				android:textAllCaps="true"
 				/>
-			<include layout="@layout/inc_recyclerview" />
+			<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
+				<android.support.v7.widget.RecyclerView
+					android:id="@id/properties"
+					style="@style/Theme.AppTheme.RecyclerList"
+					tools:listitem="@layout/item_main_property"
+					/>
+			</android.support.v4.widget.SwipeRefreshLayout>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
 	<android.support.v7.widget.CardView
-		android:id="@id/rooms"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:layout_below="@id/spacer"
@@ -52,17 +53,19 @@
 			android:orientation="vertical"
 			>
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
+				style="@style/Theme.AppTheme.Header"
 				android:text="@string/room_list"
-				android:gravity="center_horizontal"
-				android:textAllCaps="true"
 				/>
-			<include layout="@layout/inc_recyclerview" />
+			<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
+				<android.support.v7.widget.RecyclerView
+					android:id="@id/rooms"
+					style="@style/Theme.AppTheme.RecyclerList"
+					tools:listitem="@layout/item_main_room"
+					/>
+			</android.support.v4.widget.SwipeRefreshLayout>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
 	<android.support.v7.widget.CardView
-		android:id="@id/items"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:layout_above="@id/spacer"
@@ -80,14 +83,14 @@
 				android:textAllCaps="true"
 				/>
 			<GridView
-				android:id="@android:id/list"
+				android:id="@id/items"
 				android:layout_width="match_parent"
 				android:layout_height="0dp"
 				android:layout_weight="1"
 				android:horizontalSpacing="@dimen/marginHalf"
 				android:numColumns="3"
 				android:verticalSpacing="@dimen/marginHalf"
-				tools:listitem="@layout/item_start"
+				tools:listitem="@layout/item_main_nav"
 				/>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>

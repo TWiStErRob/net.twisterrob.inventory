@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -10,7 +11,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 
 public class ImageActivity extends Activity implements RequestListener<Uri, GlideDrawable> {
 	@Override protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +20,11 @@ public class ImageActivity extends Activity implements RequestListener<Uri, Glid
 		setContentView(R.layout.activity_image);
 		ImageView image = (ImageView)findViewById(R.id.image);
 
-		Glide.with(this).load(getIntent().getData()).listener(this).into(image);
+		Glide.with(this)
+				.load(getIntent().getData())
+						//.signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+				.listener(this)
+				.into(image);
 	}
 
 	@Override
@@ -32,5 +37,11 @@ public class ImageActivity extends Activity implements RequestListener<Uri, Glid
 	public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target,
 			boolean isFromMemoryCache, boolean isFirstResource) {
 		return false;
+	}
+
+	public static Intent show(Uri data) {
+		Intent intent = new Intent(App.getAppContext(), ImageActivity.class);
+		intent.setData(data);
+		return intent;
 	}
 }
