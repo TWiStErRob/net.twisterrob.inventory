@@ -285,7 +285,9 @@
 	<string name="query_search_suggest"><![CDATA["
 		select
 			rowid    as _id,                    -- BaseColumns._ID (for ListView)
+			NULL     as suggest_intent_action,  -- SearchManager.SUGGEST_COLUMN_INTENT_ACTION
 			_id      as suggest_intent_data_id, -- SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
+			NULL     as suggest_icon_1,         -- SearchManager.SUGGEST_COLUMN_ICON_1
 			name     as suggest_text_1,         -- SearchManager.SUGGEST_COLUMN_TEXT_1
 			location as suggest_text_2          -- SearchManager.SUGGEST_COLUMN_TEXT_2
 		from Search

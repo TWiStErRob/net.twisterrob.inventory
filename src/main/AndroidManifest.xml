@@ -22,9 +22,6 @@
 		android:supportsRtl="true"
 		android:theme="@style/Theme.AppTheme"
 		tools:ignore="UnusedAttribute">
-		<meta-data
-			android:name="android.app.default_searchable"
-			android:value="net.twisterrob.inventory.android.activity.SearchResultsActivity" />
 		<activity
 			android:name=".activity.MainActivity"
 			android:label="@string/home_title"
@@ -34,6 +31,8 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
+			<meta-data android:name="android.app.default_searchable"
+			           android:value="net.twisterrob.inventory.android.activity.SearchResultsActivity" />
 		</activity>
 		<activity
 			android:name=".activity.PreferencesActivity"

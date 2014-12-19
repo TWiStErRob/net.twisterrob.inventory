@@ -13,7 +13,6 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDetailActivity.class);
 
 	protected boolean wantDrawer;
-	private C fragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +35,12 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 				updateFragment(fragment).commit();
 			}
 			// TODO may need getSupportFragmentManager().executePendingTransactions(); ? but it works :)
-		} else {
-			fragment = getFragment(R.id.activityRoot);
 		}
 	}
 
 	protected abstract C onCreateFragment(Bundle savedInstanceState);
 
 	protected FragmentTransaction updateFragment(C fragment) {
-		this.fragment = fragment;
-
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if (fragment != null) {
 			ft.replace(R.id.activityRoot, fragment);
@@ -60,10 +55,11 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 	@Override
 	protected void onResume() {
 		super.onResume();
-		fragment.refresh();
+		getFragment().refresh();
 	}
 
+	@SuppressWarnings("unchecked")
 	public C getFragment() {
-		return fragment;
+		return (C)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 }

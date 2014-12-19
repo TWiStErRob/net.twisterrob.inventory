@@ -235,10 +235,10 @@ public class Database {
 	}
 
 	private static String fixQuery(String query) {
-		if (!query.matches(".*[\\s\\*].*")) {
-			query += "*";
+		if (query.contains("*")) {
+			return query;
 		}
-		return query;
+		return query.trim().replaceAll("\\s+", "*") + "*";
 	}
 
 	public void updateCategoryCache() {

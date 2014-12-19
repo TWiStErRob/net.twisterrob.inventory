@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.Menu;
 
@@ -15,55 +16,82 @@ import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
-public class SearchResultsActivity extends BaseDetailActivity<ItemListFragment> implements ItemsEvents {
+public class SearchResultsActivity extends BaseDetailActivity<ItemListFragment>
+		implements ItemsEvents, OnBackStackChangedListener {
 	private static final Logger LOG = LoggerFactory.getLogger(SearchResultsActivity.class);
 
+	@Override protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getSupportFragmentManager().addOnBackStackChangedListener(this);
+	}
 	@Override
 	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
 		setActionBarTitle(getTitle());
 		LOG.trace("onCreate({})", getIntent());
-		handleIntent(getIntent());
-		return null; // handleIntent already set it if needed
+		return handleIntent();
 	}
 
+	@Override public void onBackStackChanged() {
+		ItemListFragment fragment = getFragment();
+		if (fragment != null) {
+			String query = fragment.getArguments().getString(SearchManager.QUERY);
+			setActionBarSubtitle(query);
+		}
+	}
+
+	@Override protected void onResume() {
+		super.onResume();
+		onBackStackChanged();
+	}
 	@Override
 	protected void onNewIntent(Intent intent) {
 		LOG.trace("onNewIntent({}->{})", getIntent(), intent);
 		setIntent(intent);
-		handleIntent(intent);
+		super.onNewIntent(intent);
+		ItemListFragment fragment = handleIntent();
+		if (fragment != null) {
+			updateFragment(fragment)
+					.addToBackStack(null)
+					.commit()
+			;
+		}
 	}
 
-	private ItemListFragment handleIntent(Intent intent) {
-		CharSequence query = getExtraQuery();
+	private ItemListFragment handleIntent() {
+		Intent intent = getIntent();
+		CharSequence query = getExtraQuery(intent);
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			LOG.debug("Search '{}'", query);
-			setActionBarSubtitle(query);
-			updateFragment(ItemListFragment.newSearchInstance(query));
+			return ItemListFragment.newSearchInstance(query);
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-			Uri uri = intent.getData();
-			String resolvedAuthority = uri.getAuthority().replace("${applicationId}", BuildConfig.APPLICATION_ID);
-			uri = uri.buildUpon()
-			         .authority(resolvedAuthority)
-			         .build();
+			Uri uri = fixUri(intent.getData());
 			LOG.debug("Search '{}' redirecting VIEW for {}", query, uri);
 			Intent redirect = new Intent(Intent.ACTION_VIEW, uri);
 			if (Constants.DISABLE) {
 				TaskStackBuilder.create(getApplicationContext())
 				                .addNextIntentWithParentStack(redirect)
 				                .startActivities();
+				finish();
 			} else {
 				startActivity(redirect);
+				finish();
 			}
-			finish();
 		}
 		return null;
 	}
 
-	private CharSequence getExtraQuery() {
-		Intent intent = getIntent();
+	private CharSequence getExtraQuery(Intent intent) {
 		CharSequence userTypedQuery = intent.getCharSequenceExtra(SearchManager.USER_QUERY);
 		CharSequence searchQuery = intent.getCharSequenceExtra(SearchManager.QUERY);
 		return searchQuery != null? searchQuery : userTypedQuery;
+	}
+
+	private Uri fixUri(Uri uri) {
+		String resolvedAuthority = uri.getAuthority().replace("${applicationId}", BuildConfig.APPLICATION_ID);
+		return uri.buildUpon()
+		          .authority(resolvedAuthority)
+		          .build()
+				;
 	}
 
 	@Override
