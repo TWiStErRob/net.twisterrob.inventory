@@ -1,6 +1,8 @@
 package net.twisterrob.android.db;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.slf4j.*;
 
@@ -170,7 +172,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private void backupDB(SQLiteDatabase db, String when) {
 		if (hasWriteExternalPermission) {
-			String fileName = dbName + "." + when + ".sqlite";
+			String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+			String fileName = dbName + "." + date + "." + when + ".sqlite";
 			try {
 				String target = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + fileName;
 				IOTools.copyFile(db.getPath(), target);

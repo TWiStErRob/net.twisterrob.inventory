@@ -9,9 +9,9 @@ select '';
 select '__________________________________.- Before -.__________________________________';
 insert into Log(message) values('Before');
 select '--------------------------------------------------------------------------------';
-select * from Item_Path order by itemID;
+select * from Room order by _id;
 select '--------------------------------------------------------------------------------';
-select * from Search order by _id;
+select * from Item where name = 'ROOT' order by _id;
 
 
 select '';
@@ -20,7 +20,8 @@ insert into Log(message) values('Change stuff');
 select '--------------------------------------------------------------------------------';
 BEGIN TRANSACTION;
 
-	update Item set name = '----------' where _id = 100007;
+	--delete from Item where _id = 1;
+	delete from Room where _id = 0;
 
 END TRANSACTION;
 
@@ -29,12 +30,12 @@ select '';
 select '__________________________________.- After -.___________________________________';
 insert into Log(message) values('After');
 select '--------------------------------------------------------------------------------';
-select * from Item_Path order by itemID;
+select * from Room order by _id;
 select '--------------------------------------------------------------------------------';
-select * from Search order by _id;
+select * from Item where name = 'ROOT' order by _id;
 
 select '';
 select '__________________________________.- Log -._____________________________________';
 select * from Log
-where _id >= 217
+--where _id >= 217
 order by _id;

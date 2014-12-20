@@ -207,23 +207,24 @@ AFTER INSERT ON Category_Descendant BEGIN
 END;
 
 
+-- TODO lookup DEFERRED maybe that's what's needed here: CONSTRAINTs below prevent Room root deletion regardless of refresh calls
 CREATE TABLE Item_Path_Node (
-	item        INTEGER      NOT NULL
-		CONSTRAINT fk_Item_Path_Node_item
-			REFERENCES Item(_id)
-			ON UPDATE CASCADE
-			ON DELETE CASCADE,
+	item        INTEGER      NOT NULL,
+--		CONSTRAINT fk_Item_Path_Node_item
+--			REFERENCES Item(_id)
+--			ON UPDATE CASCADE
+--			ON DELETE CASCADE,
 	level       INTEGER      NOT NULL,
-	node        INTEGER      NOT NULL
-		CONSTRAINT fk_Item_Path_Node_node
-			REFERENCES Item(_id)
-			ON UPDATE CASCADE
-			ON DELETE NO ACTION,
+	node        INTEGER      NOT NULL,
+--		CONSTRAINT fk_Item_Path_Node_node
+--			REFERENCES Item(_id)
+--			ON UPDATE CASCADE
+--			ON DELETE NO ACTION,
 	root        INTEGER      NOT NULL
-		CONSTRAINT fk_Item_Path_Node_root
-			REFERENCES Item(_id)
-			ON UPDATE CASCADE
-			ON DELETE NO ACTION
+--		CONSTRAINT fk_Item_Path_Node_root
+--			REFERENCES Item(_id)
+--			ON UPDATE CASCADE
+--			ON DELETE NO ACTION
 );
 CREATE TRIGGER Item_Path_Node_traverse
 AFTER INSERT ON Item_Path_Node BEGIN

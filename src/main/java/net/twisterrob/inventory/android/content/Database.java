@@ -33,7 +33,7 @@ public class Database {
 			}
 		};
 		// TODO App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
-		m_helper.setDumpOnOpen(false);
+		m_helper.setDumpOnOpen(true);
 	}
 
 	public SQLiteDatabase getReadableDatabase() {
