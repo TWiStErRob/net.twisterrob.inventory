@@ -5,7 +5,7 @@ import org.slf4j.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
-import android.view.*;
+import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -35,9 +35,10 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		return "Item_" + getArgItemID();
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_item_edit, container, false);
+	@Override public void onViewCreated(View view, Bundle bundle) {
+		super.onViewCreated(view, bundle);
+		name.setHint(R.string.item_name_hint);
+		description.setHint(R.string.item_description_hint);
 	}
 
 	@Override
@@ -74,7 +75,8 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		ItemDTO item = new ItemDTO();
 		item.parentID = getArgParentID();
 		item.id = getArgItemID();
-		item.name = title.getText().toString();
+		item.name = name.getText().toString();
+		item.description = description.getText().toString();
 		item.setImage(getContext(), getCurrentImage());
 		item.category = type.getSelectedItemId();
 		return item;
@@ -94,9 +96,9 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 			try {
 				Database db = App.db();
 				if (param.id == Item.ID_ADD) {
-					return db.createItem(param.parentID, param.name, param.category, param.image);
+					return db.createItem(param.parentID, param.category, param.name, param.description, param.image);
 				} else {
-					db.updateItem(param.id, param.name, param.category, param.image);
+					db.updateItem(param.id, param.category, param.name, param.description, param.image);
 					return param.id;
 				}
 			} catch (SQLiteConstraintException ex) {

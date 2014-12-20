@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.*;
 import android.view.*;
-import android.view.View.OnClickListener;
+import android.view.View.*;
 import android.widget.*;
 
 import static android.content.Context.*;
@@ -74,39 +74,44 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 		@Override
 		public int getItemPosition(Object object) {
-			return ((View)object).findViewById(R.id.image) != null? 0 : 1;
+			View view = (View)object;
+			if (view.findViewById(R.id.image) != null) {
+				return 0;
+			} else if (view.findViewById(R.id.details) != null) {
+				return 1;
+			}
+			return -1;
 		}
 
 		@Override
-		public Object instantiateItem(ViewGroup container, int position) {
+		public Object instantiateItem(final ViewGroup container, int position) {
 			LayoutInflater inflater = (LayoutInflater)container.getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 			View view;
-			if (position == 0) {
-				view = inflater.inflate(R.layout.inc_details_image, container, false);
-				ImageView image = (ImageView)view.findViewById(R.id.image);
-				image.setOnClickListener(new OnClickListener() {
-					@Override public void onClick(View v) {
-						try {
-							String path = entity.getImage(getContext());
-							File file = new File(path);
-							Uri uri = FileProvider.getUriForFile(getContext(), Constants.AUTHORITY_IMAGES, file);
-							Intent intent = new Intent(Intent.ACTION_VIEW);
-							if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer), true)) {
-								intent.setComponent(new ComponentName(getContext(), ImageActivity.class));
-							}
-							intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-							intent.setDataAndType(uri, "image/jpeg");
-							getActivity().startActivity(intent);
-						} catch (Exception ex) {
-							LOG.warn("Cannot start image viewer for {}", entity, ex);
+			switch (position) {
+				case 0: {
+					view = inflater.inflate(R.layout.inc_details_image, container, false);
+					ImageView image = (ImageView)view.findViewById(R.id.image);
+					image.setOnClickListener(new ImageOpenListener());
+					loadInto(image);
+					break;
+				}
+				case 1: {
+					view = inflater.inflate(R.layout.inc_details_details, container, false);
+					TextView details = (TextView)view.findViewById(R.id.details);
+					details.setText(getDetailsString(entity));
+					//details.setMovementMethod(ScrollingMovementMethod.getInstance());
+					details.setOnTouchListener(new OnTouchListener() {
+						@Override
+						public boolean onTouch(View v, MotionEvent event) {
+							// http://stackoverflow.com/questions/8121491/is-it-possible-to-add-a-scrollable-textview-to-a-listview
+							container.getParent().requestDisallowInterceptTouchEvent(true);
+							return false;
 						}
-					}
-				});
-				loadInto(image);
-			} else {
-				view = inflater.inflate(R.layout.inc_details_description, container, false);
-				TextView details = (TextView)view.findViewById(R.id.details);
-				details.setText(getDetailsString(entity));
+					});
+					break;
+				}
+				default:
+					throw new UnsupportedOperationException("Position #" + position + " is not supported");
 			}
 			container.addView(view);
 			return view;
@@ -131,6 +136,29 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		@Override
 		public boolean isViewFromObject(View view, Object obj) {
 			return view == obj;
+		}
+
+		private class ImageOpenListener implements OnClickListener {
+			@Override public void onClick(View v) {
+				try {
+					String path = entity.getImage(getContext());
+					showImage(path);
+				} catch (Exception ex) {
+					LOG.warn("Cannot start image viewer for {}", entity, ex);
+				}
+			}
+
+			private void showImage(String path) {
+				File file = new File(path);
+				Uri uri = FileProvider.getUriForFile(getContext(), Constants.AUTHORITY_IMAGES, file);
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer), true)) {
+					intent.setComponent(new ComponentName(getContext(), ImageActivity.class));
+				}
+				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+				intent.setDataAndType(uri, "image/jpeg");
+				getActivity().startActivity(intent);
+			}
 		}
 	}
 }

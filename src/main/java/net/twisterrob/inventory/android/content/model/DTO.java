@@ -8,6 +8,7 @@ import net.twisterrob.inventory.android.content.contract.CommonColumns;
 public class DTO {
 	public long id = CommonColumns.ID_ADD;
 	public String name;
+	public String description;
 
 	public Integer numDirectItems;
 	public Integer numAllItems;
@@ -18,6 +19,7 @@ public class DTO {
 	protected DTO fromCursorInternal(Cursor cursor) {
 		id = DatabaseTools.getOptionalLong(cursor, CommonColumns.ID, CommonColumns.ID_ADD);
 		name = DatabaseTools.getOptionalString(cursor, CommonColumns.NAME);
+		description = DatabaseTools.getOptionalString(cursor, CommonColumns.DESCRIPTION);
 
 		numDirectChildren = DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_DIRECT);
 		numAllChildren = DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_ALL);

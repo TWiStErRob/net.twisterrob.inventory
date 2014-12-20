@@ -5,6 +5,7 @@ public interface CommonColumns {
 	long ID_ADD = Long.MIN_VALUE;
 
 	String NAME = "name"; // never NULL
+	String DESCRIPTION = "description";
 	String IMAGE = "image";
 	String TYPE_IMAGE = "typeImage"; // never NULL
 	String COUNT_CHILDREN_DIRECT = "countChildren";

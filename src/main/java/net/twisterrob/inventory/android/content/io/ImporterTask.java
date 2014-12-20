@@ -163,11 +163,12 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 				String property = record.get("property");
 				String room = record.get("room");
 				String item = record.get("item");
+				String description = record.get("description");
 				String image = record.get("image");
 				String parent = record.get("parent");
 				String id = record.get("id");
 
-				process(type, property, room, item, image, parent, id);
+				process(type, property, room, item, description, image, parent, id);
 				if (image != null) {
 					ZipEntry imageEntry = zip.getEntry(image);
 					if (imageEntry != null) {
@@ -187,14 +188,14 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 		}
 	}
 
-	protected void process(String type, String property, String room, String item, String image, String parent,
-			String id) {
+	protected void process(String type, String property, String room, String item, String description, String image,
+			String parent, String id) {
 		if (item != null) { // item: property ?= null && room ?= null && item != null
-			processItem(type, property, room, item, parent, id, image);
+			processItem(type, property, room, item, parent, id, description, image);
 		} else if (room != null) { // room: property ?= null && room != null && item == null
-			processRoom(type, property, room, image);
+			processRoom(type, property, room, description, image);
 		} else if (property != null) { // property: property != null && room == null && item == null
-			processProperty(type, property, image);
+			processProperty(type, property, description, image);
 		} else { // invalid: property: property == null && room == null && item == null
 			String message = context.getString(R.string.backup_import_invalid_belonging, type, image, parent, id);
 			throw new IllegalArgumentException(message);
@@ -208,7 +209,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 	private final Map<String, Long> roots = new HashMap<>();
 	private final Map<Long, Long> items = new HashMap<>();
 
-	protected long processProperty(String type, String property, String image) {
+	protected long processProperty(String type, String property, String description, String image) {
 		LOG.trace("Processing property: {}", property);
 		Long propertyID = App.db().findProperty(property);
 		if (propertyID == null) {
@@ -217,7 +218,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 				warning(R.string.backup_import_invalid_type, type, property);
 				typeID = PropertyType.DEFAULT;
 			}
-			propertyID = App.db().createProperty(property, typeID, image);
+			propertyID = App.db().createProperty(typeID, property, description, image);
 		} else {
 			warning(R.string.backup_import_conflict_property, property);
 		}
@@ -225,7 +226,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 		return propertyID;
 	}
 
-	protected long processRoom(String type, String property, String room, String image) {
+	protected long processRoom(String type, String property, String room, String description, String image) {
 		LOG.trace("Processing room: {} in {}", room, property);
 		if (property == null) {
 			throw new IllegalArgumentException("Cannot process room which is not in a property");
@@ -238,7 +239,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 				warning(R.string.backup_import_invalid_type, type, room);
 				typeID = RoomType.DEFAULT;
 			}
-			roomID = App.db().createRoom(propertyID, room, typeID, image);
+			roomID = App.db().createRoom(propertyID, typeID, room, description, image);
 		} else {
 			warning(R.string.backup_import_conflict_room, property, room);
 		}
@@ -247,7 +248,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 	}
 
 	protected long processItem(String type, String property, String room, String item, String parent, String id,
-			String image) {
+			String description, String image) {
 		LOG.trace("Processing item: {} in {}/{}", item, property, room);
 		if (property == null) {
 			throw new IllegalArgumentException("Cannot process item which is not in a property");
@@ -264,7 +265,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 				warning(R.string.backup_import_invalid_type, type, item);
 				typeID = Category.DEFAULT;
 			}
-			itemID = App.db().createItem(parentID, item, typeID, image);
+			itemID = App.db().createItem(parentID, typeID, item, description, image);
 		} else {
 			warning(R.string.backup_import_conflict_item, property, room, item);
 		}

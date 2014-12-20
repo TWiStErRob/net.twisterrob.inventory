@@ -16,6 +16,7 @@
 		select
 			p._id,
 			p.name,
+			p.description,
 			p.type,
 			p.image,
 			pt.image as typeImage,
@@ -79,6 +80,7 @@
 		select
 			r._id,
 			r.name,
+			r.description,
 			r.type,
 			r.root,
 			p._id as property,
@@ -123,6 +125,7 @@
 		select
 			i._id as _id,
 			i.name as name,
+			i.description as description,
 			i.image as image,
 			c.image as typeImage,
 			ip.categoryID as category,
@@ -310,43 +313,46 @@
 	"]]></string>
 	<string name="query_export"><![CDATA["
 			select
-				'property' as type,
-				pt.name    as typeName,
-				p.name     as propertyName,
-				null       as roomName,
-				null       as itemName,
-				p.image    as image,
-				null       as parent,
-				null       as _id
+				'property'    as type,
+				pt.name       as typeName,
+				p.name        as propertyName,
+				null          as roomName,
+				null          as itemName,
+				p.description as description,
+				p.image       as image,
+				null          as parent,
+				null          as _id
 			from Property p
 			join PropertyType pt ON p.type = pt._id
 		UNION ALL
 			select
-				'room'     as type,
-				rt.name    as typeName,
-				p.name     as propertyName,
-				r.name     as roomName,
-				null       as itemName,
-				r.image    as image,
-				null       as parent,
-				null       as _id
+				'room'        as type,
+				rt.name       as typeName,
+				p.name        as propertyName,
+				r.name        as roomName,
+				null          as itemName,
+				r.description as description,
+				r.image       as image,
+				null          as parent,
+				null          as _id
 			from Room r
 			join RoomType rt ON r.type = rt._id
 			join Property p ON r.property = p._id
 		UNION ALL
 			select
-				'item'     as type,
-				c.name     as typeName,
-				p.name     as propertyName,
-				r.name     as roomName,
-				i.name     as itemName,
-				i.image    as image,
+				'item'        as type,
+				c.name        as typeName,
+				p.name        as propertyName,
+				r.name        as roomName,
+				i.name        as itemName,
+				i.description as description,
+				i.image       as image,
 				CASE
 					WHEN i.parent <> r.root
 					THEN i.parent
 					ELSE NULL
-				END        as parent,
-				i._id      as _id
+				END           as parent,
+				i._id         as _id
 			from Item           i
 			join Category       c  ON i.category = c._id and c._id <> -1
 			join Item_Path_Node ip ON ip.item = i._id and ip.node = i._id
@@ -365,13 +371,13 @@
 
 	<!-- Property CRUD -->
 	<string name="query_property_create"><![CDATA["
-		insert into Property(name, type, image) values(?, ?, ?)
+		insert into Property(type, name, description, image) values(?, ?, ?, ?)
 	"]]></string>
 	<string name="query_property_find"><![CDATA["
 		select _id from Property where name = ?
 	"]]></string>
 	<string name="query_property_update"><![CDATA["
-		update Property set name = ?, type = ?, image = ? where _id = ?
+		update Property set type = ?, name = ?, description = ?, image = ? where _id = ?
 	"]]></string>
 	<string name="query_property_delete"><![CDATA["
 		delete from Property where _id = ?
@@ -379,13 +385,13 @@
 
 	<!-- Room CRUD -->
 	<string name="query_room_create"><![CDATA["
-		insert into Room_Rooter(property, name, type, image) values(?, ?, ?, ?)
+		insert into Room_Rooter(property, type, name, description, image) values(?, ?, ?, ?, ?)
 	"]]></string>
 	<string name="query_room_find"><![CDATA["
 		select _id from Room where property = ? and name = ?
 	"]]></string>
 	<string name="query_room_update"><![CDATA["
-		update Room set name = ?, type = ?, image = ? where _id = ?
+		update Room set type = ?, name = ?, description = ?, image = ? where _id = ?
 	"]]></string>
 	<string name="query_room_delete"><![CDATA["
 		delete from Room where _id = ?
@@ -396,13 +402,13 @@
 
 	<!-- Item CRUD -->
 	<string name="query_item_create"><![CDATA["
-		insert into Item(parent, name, category, image) values(?, ?, ?, ?)
+		insert into Item(parent, category, name, description, image) values(?, ?, ?, ?, ?)
 	"]]></string>
 	<string name="query_item_find"><![CDATA["
 		select _id from Item where parent = ? and name = ?
 	"]]></string>
 	<string name="query_item_update"><![CDATA["
-		update Item set name = ?, category = ?, image = ? where _id = ?
+		update Item set category = ?, name = ?, description = ?, image = ? where _id = ?
 	"]]></string>
 	<string name="query_item_delete"><![CDATA["
 		delete from Item where _id = ?

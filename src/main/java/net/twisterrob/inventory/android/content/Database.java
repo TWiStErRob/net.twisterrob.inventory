@@ -151,28 +151,28 @@ public class Database {
 		return rawQuery(R.string.query_category, itemID);
 	}
 
-	public long createProperty(String name, long type, String image) {
-		return rawInsert(R.string.query_property_create, name, type, image);
+	public long createProperty(long type, String name, String description, String image) {
+		return rawInsert(R.string.query_property_create, type, name, description, image);
 	}
 	public Long findProperty(String name) {
 		return getID(R.string.query_property_find, name);
 	}
-	public void updateProperty(long id, String name, long type, String image) {
-		execSQL(R.string.query_property_update, name, type, image, id);
+	public void updateProperty(long id, long type, String name, String description, String image) {
+		execSQL(R.string.query_property_update, type, name, description, image, id);
 	}
 	public void deleteProperty(long id) {
 		execSQL(R.string.query_property_delete, id);
 	}
 
-	public long createRoom(long propertyID, String name, long type, String image) {
-		rawInsert(R.string.query_room_create, propertyID, name, type, image);
+	public long createRoom(long propertyID, long type, String name, String description, String image) {
+		rawInsert(R.string.query_room_create, propertyID, type, name, description, image);
 		return findRoom(propertyID, name); // last_insert_rowid() doesn't work with INSTEAD OF INSERT triggers on VIEWs
 	}
 	public Long findRoom(long propertyID, String name) {
 		return getID(R.string.query_room_find, propertyID, name);
 	}
-	public void updateRoom(long id, String name, long type, String image) {
-		execSQL(R.string.query_room_update, name, type, image, id);
+	public void updateRoom(long id, long type, String name, String description, String image) {
+		execSQL(R.string.query_room_update, type, name, description, image, id);
 	}
 	public void deleteRoom(long id) {
 		execSQL(R.string.query_room_delete, id);
@@ -193,17 +193,17 @@ public class Database {
 		}
 	}
 
-	private long createItem(Long parentID, String name, long category, String image) {
-		return rawInsert(R.string.query_item_create, parentID, name, category, image);
+	private long createItem(Long parentID, long category, String name, String description, String image) {
+		return rawInsert(R.string.query_item_create, parentID, category, name, description, image);
 	}
-	public long createItem(long parentID, String name, long category, String image) {
-		return createItem((Long)parentID, name, category, image);
+	public long createItem(long parentID, long category, String name, String description, String image) {
+		return createItem((Long)parentID, category, name, description, image);
 	}
 	public Long findItem(long parentID, String name) {
 		return getID(R.string.query_item_find, parentID, name);
 	}
-	public void updateItem(long id, String name, long category, String image) {
-		execSQL(R.string.query_item_update, name, category, image, id);
+	public void updateItem(long id, long category, String name, String description, String image) {
+		execSQL(R.string.query_item_update, category, name, description, image, id);
 	}
 	public void deleteItem(long id) {
 		execSQL(R.string.query_item_delete, id);

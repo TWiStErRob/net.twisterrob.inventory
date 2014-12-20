@@ -96,6 +96,7 @@
 	<string name="item_move">Move Item</string>
 	<string name="item_move_many">Move Items</string>
 	<string name="item_name_hint">Item Name</string>
+	<string name="item_description_hint">Item Description</string>
 
 	<plurals name="property">
 		<item quantity="one">property</item>
@@ -111,6 +112,7 @@
 	<string name="property_delete_many">Delete Properties</string>
 	<string name="property_share">Share Property</string>
 	<string name="property_name_hint">Property Title</string>
+	<string name="property_description_hint">Property Description</string>
 
 	<plurals name="room">
 		<item quantity="one">room</item>
@@ -128,6 +130,7 @@
 	<string name="room_move">Move Room</string>
 	<string name="room_move_many">Move Rooms</string>
 	<string name="room_name_hint">Room Title</string>
+	<string name="room_description_hint">Room Description</string>
 	<string name="room_location">In %1$s</string>
 	<string name="room_viewAll">List All Rooms</string>
 

@@ -32,6 +32,7 @@ END;
 CREATE TABLE Item (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
+	description TEXT         NULL,     -- user entered
 	image       VARCHAR      NULL,     -- relative path
 	category    INTEGER      DEFAULT 0 -- uncategorized
 		CONSTRAINT fk_Item_category
@@ -93,6 +94,7 @@ CREATE TABLE PropertyType (
 CREATE TABLE Property (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
+	description TEXT         NULL,     -- user entered
 	image       VARCHAR      NULL,     -- relative path
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Property_type
@@ -127,6 +129,7 @@ CREATE TABLE RoomType (
 CREATE TABLE Room (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
+	description TEXT         NULL,     -- user entered
 	image       VARCHAR      NULL,     -- relative path
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Room_type
@@ -168,13 +171,13 @@ INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NULL) BEGIN
 	insert into Item(name, category, parent)
 		values ('ROOT', -1, NULL)
 	;--NOTEOS
-	insert into Room
+	insert into Room(_id, name, image, type, root, property)
 		values (new._id, new.name, new.image, new.type, last_insert_rowid(), new.property)
 	;--NOTEOS
 END;
 CREATE TRIGGER Room_Rooter_Transparent
 INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NOT NULL) BEGIN
-	insert into Room
+	insert into Room(_id, name, image, type, root, property)
 		values (new._id, new.name, new.image, new.type, new.root, new.property)
 	;--NOTEOS
 END;

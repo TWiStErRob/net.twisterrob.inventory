@@ -7,6 +7,8 @@
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"
 	android:padding="@dimen/margin"
+	android:fadeScrollbars="false"
+	android:scrollbars="vertical"
 	android:textIsSelectable="true"
 	tools:text="Property name: Property's name
 # of rooms: 99

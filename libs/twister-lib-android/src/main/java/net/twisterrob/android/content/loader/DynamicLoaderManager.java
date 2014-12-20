@@ -55,6 +55,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 		assert state.loader == loader;
 		@SuppressWarnings("unchecked")
 		LoaderCallbacks<Object> callbacks = (LoaderCallbacks<Object>)state.callbacks;
+		callbacks.onLoadFinished(loader, data);
 
 		state.ready = true;
 		LOG.info("loadFinished #{}, coming up: {}", state.id, state.consumers);
@@ -63,8 +64,6 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 				start(next);
 			}
 		}
-
-		callbacks.onLoadFinished(loader, data);
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})

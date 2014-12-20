@@ -36,7 +36,8 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	private String currentImage;
 	private boolean keepNameInSync;
 
-	protected EditText title;
+	protected EditText name;
+	protected EditText description;
 	protected Spinner type;
 	protected CursorAdapter typeAdapter;
 	protected ImageView image;
@@ -63,26 +64,33 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	protected void onSingleRowLoaded(ImagedDTO dto, long typeID) {
 		AndroidTools.selectByID(type, typeID); // sets icon
 		getBaseActivity().setActionBarTitle(dto.name);
-		title.setText(dto.name); // must set it after type to prevent keepNameInSync
+		name.setText(dto.name); // must set it after type to prevent keepNameInSync
 		setCurrentImage(dto.getImage(getContext()));
+		description.setText(dto.description);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.fragment_edit, container, false);
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
-		title = (EditText)view.findViewById(R.id.title);
-		title.addTextChangedListener(new TextWatcherAdapter() {
-			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-				doValidateTitle();
-			}
-		});
-		type = (Spinner)view.findViewById(R.id.type);
 		image = (ImageView)view.findViewById(R.id.image);
 		image.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				takePicture();
 			}
 		});
+		type = (Spinner)view.findViewById(R.id.type);
+		name = (EditText)view.findViewById(R.id.title);
+		name.addTextChangedListener(new TextWatcherAdapter() {
+			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+				doValidateTitle();
+			}
+		});
+		description = (EditText)view.findViewById(R.id.description);
 
 		((Button)view.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -94,7 +102,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		});
 
 		type.setAdapter(typeAdapter = new TypeAdapter(getContext()));
-		type.setOnItemSelectedListener(new DefaultValueUpdater(title, CommonColumns.NAME) {
+		type.setOnItemSelectedListener(new DefaultValueUpdater(name, CommonColumns.NAME) {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				if (isKeepNameInSync()) {
@@ -109,7 +117,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	}
 
 	protected void doPrepareSave() {
-		title.setText(title.getText().toString().trim());
+		name.setText(name.getText().toString().trim());
 	}
 
 	protected boolean doValidate() {
@@ -119,11 +127,11 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	}
 
 	protected boolean doValidateTitle() {
-		if (TextUtils.getTrimmedLength(title.getText()) == 0) {
-			title.setError("Please enter some text");
+		if (TextUtils.getTrimmedLength(name.getText()) == 0) {
+			name.setError("Please enter some text");
 			return false;
 		} else {
-			title.setError(null);
+			name.setError(null);
 			return true;
 		}
 	}

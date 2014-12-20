@@ -5,7 +5,7 @@ import org.slf4j.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
-import android.view.*;
+import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -41,9 +41,10 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		setKeepNameInSync(true);
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_property_edit, container, false);
+	@Override public void onViewCreated(View view, Bundle bundle) {
+		super.onViewCreated(view, bundle);
+		name.setHint(R.string.property_name_hint);
+		description.setHint(R.string.property_description_hint);
 	}
 
 	@Override
@@ -79,7 +80,8 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 	private PropertyDTO getCurrentProperty() {
 		PropertyDTO property = new PropertyDTO();
 		property.id = getArgPropertyID();
-		property.name = title.getText().toString();
+		property.name = name.getText().toString();
+		property.description = description.getText().toString();
 		property.type = type.getSelectedItemId();
 		property.setImage(getContext(), getCurrentImage());
 		return property;
@@ -95,9 +97,9 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 			try {
 				Database db = App.db();
 				if (param.id == Property.ID_ADD) {
-					return db.createProperty(param.name, param.type, param.image);
+					return db.createProperty(param.type, param.name, param.description, param.image);
 				} else {
-					db.updateProperty(param.id, param.name, param.type, param.image);
+					db.updateProperty(param.id, param.type, param.name, param.description, param.image);
 					return param.id;
 				}
 			} catch (SQLiteConstraintException ex) {

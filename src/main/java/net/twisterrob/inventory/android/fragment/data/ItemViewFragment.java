@@ -74,6 +74,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				.append("# of items in this item", entity.numDirectItems)
 				.append("# of items inside", entity.numAllItems)
 				.append("image", entity.image, BuildConfig.DEBUG)
+				.append("Description", entity.description)
 				.build();
 	}
 
