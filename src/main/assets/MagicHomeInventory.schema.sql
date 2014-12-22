@@ -121,7 +121,7 @@ CREATE TABLE RoomType (
 	kind        INTEGER      NOT NULL
 		CONSTRAINT fk_RoomType_kind
 			REFERENCES RoomTypeKind(_id)
-			ON UPDATE RESTRICT
+			ON UPDATE CASCADE
 			ON DELETE RESTRICT,
 	PRIMARY KEY(_id),
 	UNIQUE (name)
@@ -140,7 +140,7 @@ CREATE TABLE Room (
 		CONSTRAINT fk_Room_root
 			REFERENCES Item(_id)
 			ON UPDATE CASCADE
-			ON DELETE RESTRICT,
+			ON DELETE RESTRICT, -- need to delete the room to delete the root
 	property    INTEGER      NOT NULL
 		CONSTRAINT fk_Room_property
 			REFERENCES Property(_id)
@@ -207,24 +207,23 @@ AFTER INSERT ON Category_Descendant BEGIN
 END;
 
 
--- TODO lookup DEFERRED maybe that's what's needed here: CONSTRAINTs below prevent Room root deletion regardless of refresh calls
 CREATE TABLE Item_Path_Node (
-	item        INTEGER      NOT NULL,
---		CONSTRAINT fk_Item_Path_Node_item
---			REFERENCES Item(_id)
---			ON UPDATE CASCADE
---			ON DELETE CASCADE,
+	item        INTEGER      NOT NULL
+		CONSTRAINT fk_Item_Path_Node_item
+			REFERENCES Item(_id)
+			ON UPDATE CASCADE
+			ON DELETE CASCADE,
 	level       INTEGER      NOT NULL,
-	node        INTEGER      NOT NULL,
---		CONSTRAINT fk_Item_Path_Node_node
---			REFERENCES Item(_id)
---			ON UPDATE CASCADE
---			ON DELETE NO ACTION,
+	node        INTEGER      NOT NULL
+		CONSTRAINT fk_Item_Path_Node_node
+			REFERENCES Item(_id)
+			ON UPDATE CASCADE
+			ON DELETE NO ACTION,
 	root        INTEGER      NOT NULL
---		CONSTRAINT fk_Item_Path_Node_root
---			REFERENCES Item(_id)
---			ON UPDATE CASCADE
---			ON DELETE NO ACTION
+		CONSTRAINT fk_Item_Path_Node_root
+			REFERENCES Item(_id)
+			ON UPDATE CASCADE
+			ON DELETE NO ACTION
 );
 CREATE TRIGGER Item_Path_Node_traverse
 AFTER INSERT ON Item_Path_Node BEGIN
@@ -247,6 +246,7 @@ INSTEAD OF INSERT ON Item_Path_Node_Refresher BEGIN
 	delete from Item_Path_Node where item = new._id;--NOTEOS
 	insert into Item_Path_Node
 		select new._id, 0, new._id, new._id
+		from Item where _id = new._id -- need to restrict in case the item doesn't exist any more
 	;--NOTEOS
 	update Item_Path_Node
 		set level = (select max(level) from Item_Path_Node where item = new._id) - level

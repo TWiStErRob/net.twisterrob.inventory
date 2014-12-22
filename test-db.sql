@@ -4,6 +4,8 @@
 -- fake some values for Category names
 update Category_Name_Cache set value = UPPER(key);
 
+-- Helps to figure out problems with foreign key constraints
+--PRAGMA defer_foreign_keys = 1;
 
 select '';
 select '__________________________________.- Before -.__________________________________';
@@ -21,7 +23,7 @@ select '------------------------------------------------------------------------
 BEGIN TRANSACTION;
 
 	--delete from Item where _id = 1;
-	delete from Room where _id = 0;
+	delete from Room where _id = 4;
 
 END TRANSACTION;
 
