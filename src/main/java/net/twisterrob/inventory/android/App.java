@@ -9,13 +9,14 @@ import android.annotation.*;
 import android.app.Application;
 import android.content.*;
 import android.content.res.Configuration;
-import android.os.*;
 import android.os.Build.*;
+import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy.Builder;
 import android.os.StrictMode.VmPolicy;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import net.twisterrob.android.utils.concurrent.BackgroundExecution;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.utils.ImageLoaderFacade;
@@ -67,22 +68,22 @@ public class App extends Application {
 	}
 
 	private void updateLanguage(Locale newLocale) {
-		final String currentLanguage = newLocale.toString();
 		final SharedPreferences prefs = getPrefs();
-		String storedLanguage = prefs.getString(Prefs.CURRENT_LANGUAGE, null);
+		final String storedLanguage = prefs.getString(Prefs.CURRENT_LANGUAGE, null);
+		final String currentLanguage = newLocale.toString();
 		if (!currentLanguage.equals(storedLanguage)) {
 			String from = StringTools.toLocale(storedLanguage).getDisplayName();
 			String to = StringTools.toLocale(currentLanguage).getDisplayName();
 			String message = getAppContext().getString(R.string.message_locale_changed, from, to);
+			LOG.debug(message);
 			App.toast(message);
-			new AsyncTask<Void, Void, Void>() {
-				@Override
-				protected Void doInBackground(Void... params) {
+			new BackgroundExecution(new Runnable() {
+				@Override public void run() {
 					database.updateCategoryCache();
+					LOG.debug("Locale update successful: {} -> {}", storedLanguage, currentLanguage);
 					prefs.edit().putString(Prefs.CURRENT_LANGUAGE, currentLanguage).apply();
-					return null;
 				}
-			}.execute();
+			}).execute();
 		}
 	}
 
