@@ -22,6 +22,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import net.twisterrob.android.R;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.*;
+import net.twisterrob.android.view.CameraPreview.CameraPreviewListener;
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
@@ -31,7 +32,10 @@ public class CaptureImage extends Activity {
 	private static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;
 	private static final String EXTRA_ASPECT = "keepAspect";
 	private static final String EXTRA_SQUARE = "isSquare";
+	private static final String EXTRA_FLASH = "flash";
+	private static final String PREF_FLASH = EXTRA_FLASH;
 	private static final float DEFAULT_MARGIN = 0.10f;
+	private static final boolean DEFAULT_FLASH = false;
 
 	private CameraPreview mPreview;
 	private SelectionView mSelection;
@@ -54,11 +58,19 @@ public class CaptureImage extends Activity {
 
 		setContentView(R.layout.activity_camera);
 
-		ImageButton btnCapture = (ImageButton)findViewById(R.id.btn_capture);
-		ImageButton btnCrop = (ImageButton)findViewById(R.id.btn_crop);
-		ToggleButton btnFlash = (ToggleButton)findViewById(R.id.btn_flash);
+		final ImageButton btnCapture = (ImageButton)findViewById(R.id.btn_capture);
+		final ImageButton btnCrop = (ImageButton)findViewById(R.id.btn_crop);
+		final ToggleButton btnFlash = (ToggleButton)findViewById(R.id.btn_flash);
 		mPreview = (CameraPreview)findViewById(R.id.preview);
 		mSelection = (SelectionView)findViewById(R.id.selection);
+
+		mPreview.setListener(new CameraPreviewListener() {
+			@Override public void onStarted(CameraPreview preview) {
+				btnFlash.setChecked(getInitialFlashEnabled()); // calls setOnCheckedChangeListener
+			}
+			@Override public void onFinished(CameraPreview preview) {
+			}
+		});
 
 		mSelection.setKeepAspectRatio(getIntent().getBooleanExtra(EXTRA_ASPECT, false));
 		if (getIntent().getBooleanExtra(EXTRA_SQUARE, false)) {
@@ -70,6 +82,7 @@ public class CaptureImage extends Activity {
 		btnFlash.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				mPreview.setFlash(isChecked);
+				getPreferences(MODE_PRIVATE).edit().putBoolean(PREF_FLASH, isChecked).apply();
 			}
 		});
 
@@ -104,6 +117,16 @@ public class CaptureImage extends Activity {
 				}
 			}
 		});
+	}
+
+	private boolean getInitialFlashEnabled() {
+		boolean flash;
+		if (getIntent().hasExtra(EXTRA_FLASH)) {
+			flash = getIntent().getBooleanExtra(EXTRA_FLASH, DEFAULT_FLASH);
+		} else {
+			flash = getPreferences(MODE_PRIVATE).getBoolean(PREF_FLASH, DEFAULT_FLASH);
+		}
+		return flash;
 	}
 
 	protected void doSave(byte[] data) {

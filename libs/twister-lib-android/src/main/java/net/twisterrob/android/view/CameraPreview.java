@@ -16,9 +16,15 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
 
+	public interface CameraPreviewListener {
+		public void onStarted(CameraPreview preview);
+		public void onFinished(CameraPreview preview);
+	}
+
 	private CameraHandlerThread mCameraThread = null;
 	private MissedSurfaceEvents missedEvents = new MissedSurfaceEvents();
 	private CameraHolder cameraHolder = null;
+	private CameraPreviewListener listener = null;
 
 	@SuppressWarnings("deprecation")
 	public CameraPreview(Context context, AttributeSet attributeset) {
@@ -29,6 +35,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		}
+	}
+
+	public void setListener(CameraPreviewListener listener) {
+		this.listener = listener;
 	}
 
 	public Camera getCamera() {
@@ -135,7 +145,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			// during onPause() and re-open() it during onResume()).
 			LOG.info("Releasing {}", cameraHolder.camera);
 			cameraHolder.camera.release();
-			cameraHolder = null;
+			finished();
 		}
 		if (mCameraThread != null) {
 			mCameraThread.stopThread();
@@ -162,6 +172,21 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			}
 		} catch (RuntimeException ex) {
 			LOG.warn("ignore: tried to stop a non-existent preview", ex);
+		}
+	}
+
+	private void started(CameraHolder holder) {
+		cameraHolder = holder;
+		missedEvents.replay();
+		if (listener != null) {
+			listener.onStarted(this);
+		}
+	}
+
+	private void finished() {
+		cameraHolder = null;
+		if (listener != null) {
+			listener.onFinished(this);
 		}
 	}
 
@@ -257,8 +282,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 					final CameraHolder holder = new CameraHolder(findCamera());
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						public void run() { // on UI Looper
-							CameraPreview.this.cameraHolder = holder;
-							CameraPreview.this.missedEvents.replay();
+							CameraPreview.this.started(holder);
 						}
 					});
 				}
