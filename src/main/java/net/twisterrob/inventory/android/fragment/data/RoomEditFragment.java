@@ -73,7 +73,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 	}
 
 	@Override
-	protected void save() {
+	protected void doSave() {
 		new SaveTask().execute(getCurrentRoom());
 	}
 

@@ -73,7 +73,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 	}
 
 	@Override
-	protected void save() {
+	protected void doSave() {
 		new SaveTask().execute(getCurrentProperty());
 	}
 

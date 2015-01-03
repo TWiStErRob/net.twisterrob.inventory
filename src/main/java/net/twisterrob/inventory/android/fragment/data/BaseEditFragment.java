@@ -10,12 +10,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
+import android.os.*;
 import android.support.annotation.RawRes;
 import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
 import android.view.*;
-import android.view.View.OnClickListener;
+import android.view.View.*;
 import android.widget.*;
 
 import net.twisterrob.android.activity.CaptureImage;
@@ -42,6 +42,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	protected Spinner type;
 	protected CursorAdapter typeAdapter;
 	protected ImageView image;
+	private boolean isClean;
 
 	public void setKeepNameInSync(boolean keepNameInSync) {
 		this.keepNameInSync = keepNameInSync;
@@ -49,6 +50,10 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	public boolean isKeepNameInSync() {
 		return keepNameInSync;
+	}
+
+	public boolean isDirty() {
+		return !isClean;
 	}
 
 	protected File getTargetFile() {
@@ -60,8 +65,6 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	protected abstract String getBaseFileName();
 
-	protected abstract void save();
-
 	protected void onSingleRowLoaded(ImagedDTO dto, long typeID) {
 		AndroidTools.selectByID(type, typeID); // sets icon
 		getBaseActivity().setActionBarTitle(dto.name);
@@ -72,6 +75,11 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 			getArguments().remove(EDIT_IMAGE);
 			takePicture();
 		}
+		new Handler(getActivity().getMainLooper()).post(new Runnable() {
+			@Override public void run() {
+				isClean = true;
+			}
+		});
 	}
 
 	@Override
@@ -88,28 +96,44 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 				takePicture();
 			}
 		});
-		type = (Spinner)view.findViewById(R.id.type);
+		image.setOnLongClickListener(new OnLongClickListener() {
+			@Override public boolean onLongClick(View v) {
+				removePicture();
+				return true;
+			}
+		});
+
 		name = (EditText)view.findViewById(R.id.title);
 		name.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+				isClean = false;
 				doValidateTitle();
 			}
 		});
-		description = (EditText)view.findViewById(R.id.description);
 
-		((Button)view.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				doPrepareSave();
-				if (doValidate()) {
-					save();
-				}
+		description = (EditText)view.findViewById(R.id.description);
+		description.addTextChangedListener(new TextWatcherAdapter() {
+			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+				isClean = false;
 			}
 		});
 
+		((Button)view.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				save();
+			}
+		});
+
+		type = (Spinner)view.findViewById(R.id.type);
 		type.setAdapter(typeAdapter = new TypeAdapter(getContext()));
 		type.setOnItemSelectedListener(new DefaultValueUpdater(name, CommonColumns.NAME) {
+			private int oldPos = AdapterView.INVALID_POSITION;
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (oldPos != position) {
+					oldPos = position;
+					isClean = false;
+				}
 				if (isKeepNameInSync()) {
 					super.onItemSelected(parent, view, position, id);
 				}
@@ -121,9 +145,18 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		});
 	}
 
+	public void save() {
+		doPrepareSave();
+		if (doValidate()) {
+			doSave();
+		}
+	}
+
 	protected void doPrepareSave() {
 		name.setText(name.getText().toString().trim());
 	}
+
+	protected abstract void doSave();
 
 	protected boolean doValidate() {
 		boolean valid = true;
@@ -221,6 +254,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	protected void setCurrentImage(String currentImage) {
 		this.currentImage = currentImage;
+		isClean = false;
 		Drawable fallback = App.pic().getSVG(getContext(), getTypeImage(type.getSelectedItemPosition()));
 		if (currentImage == null) {
 			image.setImageDrawable(fallback);

@@ -67,7 +67,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 	}
 
 	@Override
-	protected void save() {
+	protected void doSave() {
 		new SaveTask().execute(getCurrentItem());
 	}
 
