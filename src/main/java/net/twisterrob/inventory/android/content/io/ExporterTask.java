@@ -139,15 +139,11 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 
 	private void saveImage(String imageFileName) throws IOException {
 		FileInputStream imageFile = new FileInputStream(Constants.Paths.getImageFile(context, imageFileName));
-		try {
-			ZipEntry entry = new ZipEntry(imageFileName);
-			entry.setComment(buildComment());
-			zip.putNextEntry(entry);
-			IOTools.copyStream(imageFile, zip, false);
-			zip.closeEntry();
-		} finally {
-			IOTools.ignorantClose(imageFile);
-		}
+		ZipEntry entry = new ZipEntry(imageFileName);
+		entry.setComment(buildComment());
+		zip.putNextEntry(entry);
+		IOTools.copyStream(imageFile, zip, false);
+		zip.closeEntry();
 	}
 	private void saveData() throws IOException {
 		zip.putNextEntry(new ZipEntry("data.csv"));

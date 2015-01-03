@@ -44,8 +44,9 @@ public/* static */class IOTools {
 			}
 			return total;
 		} finally {
+			ignorantClose(in);
 			if (autoClose) {
-				ignorantClose(in, out);
+				ignorantClose(out);
 			}
 		}
 	}
