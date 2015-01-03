@@ -255,11 +255,11 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	protected void setCurrentImage(String currentImage) {
 		this.currentImage = currentImage;
 		isClean = false;
-		Drawable fallback = App.pic().getSVG(getContext(), getTypeImage(type.getSelectedItemPosition()));
 		if (currentImage == null) {
+			Drawable fallback = App.pic().getSVG(getContext(), getTypeImage(type.getSelectedItemPosition()));
 			image.setImageDrawable(fallback);
 		} else {
-			App.pic().start(this).placeholder(fallback).load(currentImage).into(image);
+			App.pic().start(this).load(currentImage).into(image);
 		}
 	}
 }
