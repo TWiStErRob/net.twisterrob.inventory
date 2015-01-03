@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.data.PropertyEditActivity;
+import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
@@ -86,6 +86,10 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 				eventsListener.propertyDeleted(item);
 			}
 		});
+	}
+
+	@Override protected void editImage() {
+		startActivity(BaseEditActivity.takeImage(PropertyEditActivity.edit(getArgPropertyID())));
 	}
 
 	private long getArgPropertyID() {

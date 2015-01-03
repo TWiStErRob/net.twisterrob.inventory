@@ -31,6 +31,7 @@ import net.twisterrob.inventory.android.view.*;
 
 public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
+	public static final String EDIT_IMAGE = "editImageOnStartup";
 
 	/** full path */
 	private String currentImage;
@@ -67,6 +68,10 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
 		setCurrentImage(dto.getImage(getContext()));
 		description.setText(dto.description);
+		if (getArguments().getBoolean(EDIT_IMAGE)) {
+			getArguments().remove(EDIT_IMAGE);
+			takePicture();
+		}
 	}
 
 	@Override

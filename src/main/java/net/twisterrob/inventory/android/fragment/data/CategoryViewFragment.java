@@ -98,6 +98,10 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		}
 	}
 
+	@Override protected void editImage() {
+		// no editing
+	}
+
 	private long getArgCategoryID() {
 		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 	}

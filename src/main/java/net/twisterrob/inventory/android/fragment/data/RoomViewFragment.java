@@ -129,6 +129,10 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 		});
 	}
 
+	@Override protected void editImage() {
+		startActivity(BaseEditActivity.takeImage(RoomEditActivity.edit(getArgRoomID())));
+	}
+
 	private long getArgRoomID() {
 		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}

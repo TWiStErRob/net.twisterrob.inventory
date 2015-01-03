@@ -161,6 +161,10 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 		});
 	}
 
+	@Override protected void editImage() {
+		startActivity(BaseEditActivity.takeImage(ItemEditActivity.edit(getArgItemID())));
+	}
+
 	private long getArgItemID() {
 		return getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
 	}

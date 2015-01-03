@@ -92,6 +92,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					view = inflater.inflate(R.layout.inc_details_image, container, false);
 					ImageView image = (ImageView)view.findViewById(R.id.image);
 					image.setOnClickListener(new ImageOpenListener());
+					image.setOnLongClickListener(new ImageChangeListener());
 					loadInto(image);
 					break;
 				}
@@ -142,7 +143,11 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			@Override public void onClick(View v) {
 				try {
 					String path = entity.getImage(getContext());
-					showImage(path);
+					if (path != null) {
+						showImage(path);
+					} else {
+						editImage();
+					}
 				} catch (Exception ex) {
 					LOG.warn("Cannot start image viewer for {}", entity, ex);
 				}
@@ -160,5 +165,14 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 				getActivity().startActivity(intent);
 			}
 		}
+
+		private class ImageChangeListener implements OnLongClickListener {
+			@Override public boolean onLongClick(View v) {
+				editImage();
+				return true;
+			}
+		}
 	}
+
+	protected abstract void editImage();
 }
