@@ -52,10 +52,12 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		TextView count;
 	}
 
+	@Override public int getItemViewType(int position) {
+		return isGroup(position)? R.layout.item_gallery_group : R.layout.item_gallery;
+	}
 	@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-		View view = inflater.inflate(R.layout.item_gallery, parent, false);
-
+		View view = inflater.inflate(viewType, parent, false);
 		return new ViewHolder(view);
 	}
 
@@ -66,7 +68,23 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		String type = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 		image = Constants.Paths.getImagePath(holder.itemView.getContext(), image);
-		displayImageWithType(holder.image, holder.type, image, type);
+		if (holder.getItemViewType() == R.layout.item_gallery) {
+			displayImageWithType(holder.image, holder.type, image, type);
+		} else {
+			displayImageWithType(holder.image, holder.image, image, type);
+		}
+	}
+
+	public boolean isGroup(int position) {
+		Cursor c = getCursor();
+		c.moveToPosition(position);
+		return isGroup(c);
+	}
+
+	private static boolean isGroup(Cursor cursor) {
+		int groupIndex = cursor.getColumnIndex("group");
+		return groupIndex != -1
+				&& cursor.getLong(cursor.getColumnIndex(CommonColumns.ID)) == cursor.getLong(groupIndex);
 	}
 
 	private static String getName(Cursor cursor) {
@@ -91,6 +109,7 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		if (imagePath == null) {
 			type.setVisibility(View.INVISIBLE);
 			type.setImageDrawable(null);
+			image.setVisibility(View.VISIBLE);
 			image.setImageDrawable(fallback);
 		} else {
 			type.setVisibility(View.VISIBLE);

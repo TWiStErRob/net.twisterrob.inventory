@@ -113,11 +113,15 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		final int columns = getResources().getInteger(R.integer.gallery_columns);
 		//StaggeredGridLayoutManager layout = new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL);
 		//LinearLayoutManager layout = new LinearLayoutManager(getContext());
+
+		final GalleryAdapter cursorAdapter = new GalleryAdapter(null, this);
+
 		GridLayoutManager layout = new GridLayoutManager(getContext(), columns);
 		if (header != null) {
 			layout.setSpanSizeLookup(new SpanSizeLookup() {
 				@Override public int getSpanSize(int position) {
-					return position == 0? columns : 1;
+					// TODO account for headerless lists
+					return position == 0 || cursorAdapter.isGroup(position - 1)? columns : 1;
 				}
 			});
 		}
@@ -130,7 +134,6 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 				}
 			}
 		});
-		GalleryAdapter cursorAdapter = new GalleryAdapter(null, this);
 		RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter = cursorAdapter;
 		if (header != null) {
 			adapter = header.wrap(adapter);
