@@ -66,7 +66,7 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 
 	@Override public void exportFinished(Progress res) {
 		LOG.trace("exportFinished {}", res);
-		dismiss();
+		dismissAllowingStateLoss();
 		displayFinishMessage(getResources(), res);
 	}
 

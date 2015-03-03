@@ -172,8 +172,10 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 				if (image != null) {
 					ZipEntry imageEntry = zip.getEntry(image);
 					if (imageEntry != null) {
-						InputStream imageStream = zip.getInputStream(imageEntry);
 						File imageFile = Constants.Paths.getImageFile(context, image);
+						//noinspection ResultOfMethodCallIgnored FileOutputStream will fail nicely
+						imageFile.getParentFile().mkdirs();
+						InputStream imageStream = zip.getInputStream(imageEntry);
 						IOTools.copyStream(imageStream, new FileOutputStream(imageFile));
 					} else {
 						warning(R.string.backup_import_invalid_image, coalesce(item, room, property), image);

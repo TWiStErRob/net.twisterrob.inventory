@@ -59,7 +59,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 
 	@Override public void importFinished(Progress res) {
 		LOG.trace("importFinished {}", res);
-		dismiss();
+		dismissAllowingStateLoss();
 		displayFinishMessage(getActivity(), res);
 	}
 
