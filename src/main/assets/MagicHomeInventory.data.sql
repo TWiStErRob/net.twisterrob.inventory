@@ -67,6 +67,7 @@ INSERT INTO Category
 	              (_id, parent, name,                                      image)
 	      SELECT    -1,   NULL, 'category_internal',                       'category_unknown'
 	UNION SELECT     0,     -1, 'category_uncategorized',                  'category_unknown'
+	UNION SELECT     1,     -1, 'category_group',                          'category_box'
 	UNION SELECT  1000,     -1, 'category_clothing',                       'category_unknown'
 	UNION SELECT  1100,   1000,     'category_clothing_clothes',           'category_unknown'
 	UNION SELECT  1200,   1000,     'category_clothing_underwear',         'category_unknown'
@@ -197,7 +198,3 @@ INSERT INTO Category
 	UNION SELECT 18300,  18000,     'category_vehicle_motocycles',         'category_unknown'
 	UNION SELECT 18400,  18000,     'category_vehicle_lgv',                'category_unknown'
 ;
-
--- TODO create a trigger on Category to insert these automatically (also care for update/delete)
-insert into Category_Descendant select c._id, 0, c._id from Category c;
-insert into Category_Name_Cache select DISTINCT name, NULL from Category order by name;

@@ -82,9 +82,8 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	}
 
 	private static boolean isGroup(Cursor cursor) {
-		int groupIndex = cursor.getColumnIndex("group");
-		return groupIndex != -1
-				&& cursor.getLong(cursor.getColumnIndex(CommonColumns.ID)) == cursor.getLong(groupIndex);
+		int groupIndex = cursor.getColumnIndex("group"); // boolean
+		return groupIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN && cursor.getInt(groupIndex) == 1;
 	}
 
 	private static String getName(Cursor cursor) {
@@ -96,7 +95,7 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		int countIndex = cursor.getColumnIndex(CommonColumns.COUNT_CHILDREN_DIRECT);
 		if (countIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
 			int count = cursor.getInt(countIndex);
-			if (count > 0) {
+			if (count > 0 || isGroup(cursor)) {
 				countText = String.valueOf(count);
 			}
 		}

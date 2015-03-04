@@ -2,6 +2,7 @@
 <resources>
 	<string name="category_internal">INTERNAL</string>
 	<string name="category_uncategorized">Uncategorized</string>
+	<string name="category_group">Group</string>
 	<string name="category_clothing">Clothing</string>
 	<string name="category_clothing_clothes">Clothes</string>
 	<string name="category_clothing_underwear">Underwear</string>

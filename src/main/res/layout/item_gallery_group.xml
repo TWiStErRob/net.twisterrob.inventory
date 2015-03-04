@@ -6,7 +6,8 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:padding="@dimen/margin"
-	android:background="@color/primary"
+	android:background="@drawable/item_state"
+	tools:background="@color/toolsBG"
 	>
 	<ImageView
 		android:id="@id/image"
@@ -25,6 +26,8 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
 		android:padding="@dimen/margin"
+		android:layout_marginLeft="@dimen/margin"
+		android:layout_marginRight="@dimen/margin"
 		android:layout_weight="1"
 		android:focusable="false"
 		android:gravity="center"
@@ -40,7 +43,6 @@
 		android:layout_height="32dp"
 		android:layout_gravity="center_vertical"
 		android:padding="@dimen/margin"
-		android:layout_margin="@dimen/margin"
 		android:background="@drawable/circle"
 		android:focusable="false"
 		android:gravity="center"

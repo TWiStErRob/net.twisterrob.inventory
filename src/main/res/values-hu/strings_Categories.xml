@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="category_uncategorized">Kategorizálatlan</string>
+	<string name="category_group">Csoport</string>
 	<string name="category_clothing">Öltözködés</string>
 	<string name="category_clothing_clothes">Ruhák</string>
 	<string name="category_clothing_underwear">Alsóneműk</string>

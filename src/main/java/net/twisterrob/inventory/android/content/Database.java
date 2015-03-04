@@ -12,7 +12,6 @@ import android.database.sqlite.*;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.java.utils.StringTools;
 
 public class Database {
@@ -25,7 +24,7 @@ public class Database {
 	public Database(Context context) {
 		m_context = context;
 		m_resources = context.getResources();
-		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 1) {
+		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 4) { // FIXME reset to 1 before release
 			@Override
 			public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);
@@ -122,10 +121,10 @@ public class Database {
 		return rawQuery(R.string.query_room, roomID);
 	}
 	public Cursor listItemCategories() {
-		return rawQuery(R.string.query_item_categories, Category.INTERNAL);
+		return rawQuery(R.string.query_item_categories);
 	}
 	public Cursor listItems(long parentID) {
-		return rawQuery(R.string.query_items, parentID, parentID, parentID, parentID, parentID);
+		return rawQuery(R.string.query_items, parentID, parentID, parentID);
 	}
 	public Cursor listItemsInRoom(long roomID) {
 		return rawQuery(R.string.query_items_in_room, roomID);
