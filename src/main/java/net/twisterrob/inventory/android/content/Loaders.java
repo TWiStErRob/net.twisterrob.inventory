@@ -124,7 +124,11 @@ public enum Loaders {
 		return new SimpleCursorLoader(context) {
 			@Override
 			public Cursor loadInBackground() {
-				return createCursor(getContext(), args != null? args : NO_ARGS);
+				Cursor cursor = createCursor(getContext(), args != null? args : NO_ARGS);
+				if (args == null || !args.getBoolean("dontExecute")) {
+					cursor.getCount();
+				}
+				return cursor;
 			}
 			@Override
 			public void deliverResult(Cursor cursor) {

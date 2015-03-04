@@ -99,77 +99,46 @@
 
 	<string name="query_item_categories"><![CDATA["
 		select
-			c._id,
-			c.name,
-			c.parent,
+			cd._id,
+			cd.name,
+			cd.parent,
 			cd.level,
-			c.image as typeImage
-		from Category_Descendant cd
-		join Category c ON cd.descendant = c._id and c._id >= 0
-		where cd.category = ?
+			cd.image as typeImage
+		from Category_Tree cd
+		where cd._id <> -1
+		order by cd._id
 	"]]></string>
-	<string name="query_items"><![CDATA["
-		select * from (
-			-- Items that are not groups
+	<string name="query_items" tools:ignore="Typos"><![CDATA["
+		select
+			i._id as _id,
+			--g._id as gid,
+			i._id = g._id as [group],
+			i.name as name,
+			i.image as image,
+			c.image as typeImage,
+			(select count(1) from Item where parent = i._id) as countChildren,
+			c.name as category
+		from Item	  i
+		join Category c ON i.category = c._id
+		join (
 			select
 				i._id,
-				NULL as [group],
-				i.name,
-				i.image,
-				c.image as typeImage,
-				(select count(1) from Item where parent = i._id) as countChildren,
-				c.name as category
-			from Item     i
-			join Category c ON i.category = c._id and c._id <> 3000
-			where i.parent = ?
-
-			union
-
-			-- Items that are groups
-			select
-				i._id,
-				i._id as [group],
-				i.name,
-				i.image,
-				c.image as typeImage,
-				(select count(1) from Item where parent = i._id) as countChildren,
-				c.name as category
-			from Item     i
-			join Category c ON i.category = c._id and c._id = 3000
-			where i.parent = ?
-
-			union
-
-			-- Items inside those groups (1 level only)
-			select
-				i._id,
-				i.parent as [group],
-				i.name,
-				i.image,
-				c.image as typeImage,
-				(select count(1) from Item where parent = i._id) as countChildren,
-				c.name as category
-			from Item     i
-			join Category c ON i.category = c._id
-			where i.parent in (select _id from Item where parent = ? and category = 3000)
-
-			union
-
-			-- Header for items that are not in groups, only if there are other groups
-			select
-				null as _id,
-				null as [group],
-				null as name,
-				null as image,
-				'category_box' as typeImage,
-				(select count(1) from Item where parent = ? and category <> 3000) as countChildren,
-				null as category
-			where
-				exists (select _id from Item where parent = ? and category = 3000)
-	)
-	order by [group] is null, [group], _id <> [group], category <> 'category_storage', name
-	;
-		;
+				case when i.parent <> ? -- inside one of the flattened groups
+					then p._id
+					else -- not inside a group
+						case when i.category = 1 /* category_group */ -- but is a group
+							then i._id -- this will be the header
+							else null -- these items are just inside the item without groups
+						end
+				end as gid
+			from Item i
+			join Item p on i.parent = p._id
+		) Groups ON Groups._id = i._id
+		left join Item g ON Groups.gid = g._id
+		where i.parent = ? -- children
+			or i.parent in -- grandchildren
+				(select _id from Item where parent = ? and category = 1 /* category_group */)
+		order by g.name, not [group], i.category <> 1, name
 	"]]></string>
 	<string name="query_item"><![CDATA["
 		select

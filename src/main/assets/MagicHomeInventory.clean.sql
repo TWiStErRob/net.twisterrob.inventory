@@ -16,7 +16,7 @@ DROP TRIGGER IF EXISTS Item_delete;
 DROP TABLE IF EXISTS Item;
 
 DROP TABLE IF EXISTS Category_Name_Cache;
-DROP TABLE IF EXISTS Category_Descendant;
+DROP VIEW IF EXISTS Category_Descendant;
 DROP TABLE IF EXISTS Category;
 
 DROP VIEW IF EXISTS Search_Refresher;

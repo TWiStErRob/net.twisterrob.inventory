@@ -26,6 +26,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseOpenHelper.class);
 	private static final String DB_SCHEMA_FILE = "%s.schema.sql";
+	private static final String DB_UPGRADE_FILE = "%s.upgrade.%d.sql";
 	private static final String DB_DATA_FILES = "%s.data.sql";
 	private static final String DB_CLEAN_FILE = "%s.clean.sql";
 	private static final String DB_DEVELOPMENT_FILE = "%s.development.sql";
@@ -67,19 +68,30 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		}
 		onConfigureCompat(db);
 		LOG.debug("Creating database: {}", dbToString(db));
-		execFile(db, String.format(DB_CLEAN_FILE, dbName));
 		execFile(db, String.format(DB_SCHEMA_FILE, dbName));
 		execFile(db, String.format(DB_DATA_FILES, dbName));
 		LOG.info("Created database: {}", dbToString(db));
 	}
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	public void onDestroy(SQLiteDatabase db) {
 		if (devMode) {
-			backupDB(db, "onUpgrade_" + oldVersion + "-" + newVersion);
+			backupDB(db, "onDestroy");
 		}
 		onConfigureCompat(db);
-		onCreate(db);
+		LOG.debug("Destroying database: {}", dbToString(db));
+		execFile(db, String.format(DB_CLEAN_FILE, dbName));
+		LOG.info("Destroyed database: {}", dbToString(db));
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		onConfigureCompat(db);
+		for (int version = oldVersion + 1; version <= newVersion; ++version) {
+			if (devMode) {
+				backupDB(db, "onUpgrade_" + oldVersion + "-" + newVersion);
+			}
+			execFile(db, String.format(DB_UPGRADE_FILE, dbName, version));
+		}
 	}
 
 	@Override
@@ -88,10 +100,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		onConfigureCompat(db);
 		super.onOpen(db);
 		if (devMode) {
-			backupDB(db, "onOpen_beforeDev");
-			onCreate(db); // for DB development, always clear and initialize
+			backupDB(db, "onOpen_backup");
+			// for DB development, always clear and initialize
+			onDestroy(db);
+			onCreate(db);
 			execFile(db, String.format(DB_DEVELOPMENT_FILE, dbName));
-			backupDB(db, "onOpen_afterDev");
 		}
 		LOG.info("Opened database: {}", dbToString(db));
 		if (dumpOnOpen) {
@@ -113,7 +126,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 
 	private void execFile(SQLiteDatabase db, String dbSchemaFile) {
-		LOG.debug("{} Executing file {} into database: {}", dbSchemaFile, dbToString(db));
+		LOG.debug("Executing file {} into database: {}", dbSchemaFile, dbToString(db));
 		long time = System.nanoTime();
 
 		realExecuteFile(db, dbSchemaFile);
@@ -138,12 +151,12 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 				db.execSQL(statement);
 			}
 		} catch (SQLException ex) {
-			String message = String.format("Error creating database from file: %s while executing\n%s",
+			String message = String.format("Error executing database file: %s while executing\n%s",
 					dbSchemaFile, statement);
 			LOG.error(message, ex);
 			throw new IllegalStateException(message, ex);
 		} catch (IOException ex) {
-			String message = String.format("Error creating database from file: %s", dbSchemaFile);
+			String message = String.format("Error executing database file: %s", dbSchemaFile);
 			LOG.error(message, ex);
 			throw new IllegalStateException(message, ex);
 		} finally {

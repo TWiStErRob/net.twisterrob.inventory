@@ -19,6 +19,49 @@ CREATE TABLE Category (
 	UNIQUE(name),
 	CHECK (_id <> parent)
 );
+CREATE INDEX Category_parent ON Category(parent);
+
+CREATE TRIGGER Category_insert
+AFTER INSERT ON Category BEGIN
+	insert into Category_Name_Cache values(new.name, NULL);--NOTEOS
+END;
+
+-- Assumes internal (c0) -> root (c1) -> level1 (c2) -> level2 (c3) maximum depth
+CREATE VIEW Category_Descendant AS
+	select c0._id as category, 0 as level, c0._id as descendant
+		from Category c0
+    UNION
+	select c0._id as category, 1 as level, c1._id as descendant
+		from Category c0
+		join Category c1 ON c0._id = c1.parent
+	UNION
+	select c0._id as category, 2 as level, c2._id as descendant
+        from Category c0
+        join Category c1 ON c0._id = c1.parent
+        join Category c2 ON c1._id = c2.parent
+	UNION
+    select c0._id as category, 3 as level, c3._id as descendant
+        from Category c0
+        join Category c1 ON c0._id = c1.parent
+        join Category c2 ON c1._id = c2.parent
+        join Category c3 ON c2._id = c3.parent
+;
+
+-- Assumes internal -> root -> level1 -> level2 maximum depth
+CREATE VIEW Category_Tree AS
+	select
+		c0._id,
+		c0.name,
+		c0.image,
+		2 - ((c1._id IS NULL) + (c2._id IS NULL)) as level,
+		c0.parent,
+		COALESCE(c2._id, c1._id) as root
+	from Category c0
+	left join Category c1 on c0.parent = c1._id and c1._id <> -1
+	left join Category c2 on c1.parent = c2._id and c2._id <> -1
+	order by c0.name, c1.name, c2.name
+;
+
 CREATE TABLE Category_Name_Cache (
 	key         VARCHAR      NOT NULL, -- string resource name
 	value       NVARCHAR         NULL, -- translated display name by Android resources
@@ -28,6 +71,22 @@ CREATE TRIGGER Category_Name_Cache_prevent_rename
 AFTER UPDATE OF key ON Category_Name_Cache BEGIN
 	select RAISE(ABORT, 'Cannot change Category_Name_Cache.key column');--NOTEOS
 END;
+CREATE TRIGGER Category_Name_Cache_insert
+AFTER INSERT ON Category_Name_Cache BEGIN
+	--insert into Log(message) values ('Category_Name_Cache_insert on (' || new.key || ', ' || ifNULL(new.value, 'NULL') || ')');--NOTEOS
+	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
+END;
+CREATE TRIGGER Category_Name_Cache_update
+AFTER UPDATE OF value ON Category_Name_Cache WHEN (ifNULL(old.value, '') <> ifNULL(new.value, '')) BEGIN
+	--insert into Log(message) values ('Category_Name_Cache_update on (' || new.key || ', ' || ifNULL(old.value, 'NULL') || ' -> ' || ifNULL(new.value, 'NULL') || ')');--NOTEOS
+	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
+END;
+CREATE TRIGGER Category_Name_Cache_delete
+AFTER DELETE ON Category_Name_Cache BEGIN
+	--insert into Log(message) values ('Category_Name_Cache_delete on (' || old.key || ', ' || ifNULL(old.value, 'NULL') || ')');--NOTEOS
+	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = old.key;--NOTEOS
+END;
+
 
 CREATE TABLE Item (
 	_id         INTEGER      NOT NULL,
@@ -48,6 +107,7 @@ CREATE TABLE Item (
 	UNIQUE (parent, name),
 	CHECK (_id <> parent)
 );
+CREATE INDEX Item_category ON Item(category);
 CREATE TRIGGER Item_insert
 AFTER INSERT ON Item BEGIN
 	--insert into Log(message) values ('Item_insert on (' || new._id || ', ' || new.name || ', ' || ifNULL(new.image, 'NULL') || ', ' || new.category || ', ' || ifNULL(new.parent, 'NULL') || '): ' || 'started');--NOTEOS
@@ -74,14 +134,21 @@ AFTER UPDATE OF parent ON Item BEGIN
 	--insert into Log(message) values ('Item_move on (' || new._id || ', ' || old.parent || '->' || new.parent || '): '  || 'finished');--NOTEOS
 END;
 CREATE TRIGGER Item_rename
-AFTER UPDATE OF name, category ON Item BEGIN
-	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || old.category || '->' || new.category || '): '  || 'started');--NOTEOS
+AFTER UPDATE OF name ON Item BEGIN
+	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || '): '  || 'started');--NOTEOS
 	insert into Item_Path_Node_Refresher(_id)
 		select distinct item from Item_Path_Node
 		where node = new._id
 	;--NOTEOS
+	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || '): '  || 'finished');--NOTEOS
+END;
+CREATE TRIGGER Item_categoryChange
+AFTER UPDATE OF category ON Item BEGIN
+	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || old.category || '->' || new.category || '): '  || 'started');--NOTEOS
+	insert into Search_Refresher(_id) values (new._id);--NOTEOS
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || old.category || '->' || new.category || '): '  || 'finished');--NOTEOS
 END;
+
 
 CREATE TABLE PropertyType (
 	_id         INTEGER      NOT NULL,
@@ -179,30 +246,6 @@ CREATE TRIGGER Room_Rooter_Transparent
 INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NOT NULL) BEGIN
 	insert into Room(_id, name, image, type, root, property)
 		values (new._id, new.name, new.image, new.type, new.root, new.property)
-	;--NOTEOS
-END;
-
-
-CREATE TABLE Category_Descendant (
-	category    INTEGER      NOT NULL
-		CONSTRAINT fk_Category_Descendant_category
-			REFERENCES Category(_id)
-			ON UPDATE CASCADE
-			ON DELETE CASCADE,
-	level       INTEGER      NOT NULL,
-	descendant  INTEGER      NOT NULL
-		CONSTRAINT fk_Category_Descendant_descendant
-			REFERENCES Category(_id)
-			ON UPDATE CASCADE
-			ON DELETE CASCADE,
-	UNIQUE (category, descendant)
-);
-CREATE TRIGGER Category_Descendant_traverse
-AFTER INSERT ON Category_Descendant BEGIN
-	-- Go down in the Tree
-	insert into Category_Descendant
-		select new.category, new.level + 1, c._id from Category c
-		where c.parent = new.descendant
 	;--NOTEOS
 END;
 
@@ -327,20 +370,4 @@ INSTEAD OF INSERT ON Search_Refresher BEGIN
 		left join Category_Name_Cache cnc ON ip.categoryName = cnc.key
 		where ip.itemID = new._id
 	;--NOTEOS
-END;
-
-CREATE TRIGGER Category_Name_Cache_insert
-AFTER INSERT ON Category_Name_Cache BEGIN
-	--insert into Log(message) values ('Category_Name_Cache_insert on (' || new.key || ', ' || ifNULL(new.value, 'NULL') || ')');--NOTEOS
-	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
-END;
-CREATE TRIGGER Category_Name_Cache_update
-AFTER UPDATE OF value ON Category_Name_Cache WHEN (ifNULL(old.value, '') <> ifNULL(new.value, '')) BEGIN
-	--insert into Log(message) values ('Category_Name_Cache_update on (' || new.key || ', ' || ifNULL(old.value, 'NULL') || ' -> ' || ifNULL(new.value, 'NULL') || ')');--NOTEOS
-	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
-END;
-CREATE TRIGGER Category_Name_Cache_delete
-AFTER DELETE ON Category_Name_Cache BEGIN
-	--insert into Log(message) values ('Category_Name_Cache_delete on (' || old.key || ', ' || ifNULL(old.value, 'NULL') || ')');--NOTEOS
-	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = old.key;--NOTEOS
 END;
