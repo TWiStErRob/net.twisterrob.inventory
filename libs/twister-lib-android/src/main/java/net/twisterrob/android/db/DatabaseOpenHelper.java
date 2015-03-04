@@ -29,6 +29,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private static final String DB_UPGRADE_FILE = "%s.upgrade.%d.sql";
 	private static final String DB_DATA_FILES = "%s.data.sql";
 	private static final String DB_CLEAN_FILE = "%s.clean.sql";
+	private static final String DB_TEST_FILE = "%s.test.sql";
 	private static final String DB_DEVELOPMENT_FILE = "%s.development.sql";
 	private static final CursorFactory s_factory = VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT
 			? new LoggingCursorFactory(BuildConfig.DEBUG)
@@ -38,6 +39,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private final boolean hasWriteExternalPermission;
 	private final String dbName;
 	private boolean devMode;
+	private boolean testMode;
 	private boolean dumpOnOpen;
 
 	public DatabaseOpenHelper(Context context, String dbName, int dbVersion) {
@@ -52,6 +54,13 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 	public boolean isDevMode() {
 		return devMode;
+	}
+
+	public void setTestMode(boolean testMode) {
+		this.testMode = testMode;
+	}
+	public boolean isTestMode() {
+		return testMode;
 	}
 
 	public void setDumpOnOpen(boolean dumpOnOpen) {
@@ -99,11 +108,14 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		LOG.debug("Opening database: {}", dbToString(db));
 		onConfigureCompat(db);
 		super.onOpen(db);
-		if (devMode) {
-			backupDB(db, "onOpen_backup");
+		if (testMode) {
 			// for DB development, always clear and initialize
 			onDestroy(db);
 			onCreate(db);
+			execFile(db, String.format(DB_TEST_FILE, dbName));
+		}
+		if (devMode) {
+			backupDB(db, "onOpen_backup");
 			execFile(db, String.format(DB_DEVELOPMENT_FILE, dbName));
 		}
 		LOG.info("Opened database: {}", dbToString(db));

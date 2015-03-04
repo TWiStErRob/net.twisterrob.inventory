@@ -38,33 +38,36 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	@Override
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
 		holder.title.setText(getName(cursor));
-		holder.title.setLayoutParams(updateFormat(cursor, holder.title));
+		int margin = updateFormat(cursor, holder.title);
+		updateLeftStartMargin(holder.title, margin);
 
 		App.pic().startSVG(mContext).load(ImagedDTO.getFallbackID(mContext, cursor)).into(holder.image);
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	private void updateLeftStartMargin(View view, int margin) {
+		MarginLayoutParams marginParams = (MarginLayoutParams)view.getLayoutParams();
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			marginParams.leftMargin = margin;
+		} else {
+			marginParams.setMarginStart(margin);
+		}
 	}
 	private CharSequence getName(Cursor cursor) {
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 		return AndroidTools.getText(mContext, name);
 	}
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	private LayoutParams updateFormat(Cursor cursor, TextView title) {
+	private int updateFormat(Cursor cursor, TextView title) {
 		int level = getLevel(cursor);
 
-		if (level == 1) {
+		if (level == 0) {
 			title.setTypeface(null, Typeface.BOLD);
 		} else {
 			title.setTypeface(null, Typeface.NORMAL);
 		}
 
-		int margin = (int)(mContext.getResources().getDimension(R.dimen.margin) * (3 * level + 1));
-		MarginLayoutParams marginParams = (MarginLayoutParams)title.getLayoutParams();
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-			marginParams.leftMargin = margin;
-		} else {
-			marginParams.setMarginStart(margin);
-		}
-		return marginParams;
+		return (int)(mContext.getResources().getDimension(R.dimen.margin) * (3 * level + 1));
 	}
 
 	private static int getLevel(Cursor cursor) {
