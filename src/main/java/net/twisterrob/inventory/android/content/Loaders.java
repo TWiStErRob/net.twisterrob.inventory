@@ -72,6 +72,10 @@ public enum Loaders {
 			if (roomID != Item.ID_ADD) {
 				return App.db().listItemsInRoom(roomID);
 			}
+			long listID = args.getLong(Extras.LIST_ID, CommonColumns.ID_ADD);
+			if (listID != CommonColumns.ID_ADD) {
+				return App.db().listItemsInList(listID);
+			}
 			long catID = args.getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 			if (catID != Category.ID_ADD) {
 				boolean include = args.getBoolean(Extras.INCLUDE_SUBS, false);

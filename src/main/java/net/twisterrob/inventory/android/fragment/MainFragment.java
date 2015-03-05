@@ -72,7 +72,7 @@ public class MainFragment extends BaseFragment<Void> {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.ListAdapter adapter = new MainFragment.ListAdapter(null, new RecyclerViewItemEvents() {
 					@Override public void onItemClick(RecyclerView.ViewHolder holder) {
-						//getActivity().startActivity(ListActivity.show(holder.getItemId()));
+						getActivity().startActivity(ListItemsActivity.show(holder.getItemId()));
 					}
 					@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
 						return false;

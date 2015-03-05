@@ -130,6 +130,9 @@ public class Database {
 	public Cursor listItemsInRoom(long roomID) {
 		return rawQuery(R.string.query_items_in_room, roomID);
 	}
+	public Cursor listItemsInList(long listID) {
+		return rawQuery(R.string.query_items_in_list, listID);
+	}
 	public Cursor listItemsForCategory(long categoryID, boolean include) {
 		if (include) {
 			return rawQuery(R.string.query_items_in_category, categoryID);

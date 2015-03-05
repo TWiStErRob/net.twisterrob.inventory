@@ -6,5 +6,6 @@ public interface Extras {
 	String PARENT_ID = "parentID";
 	String ITEM_ID = "itemID";
 	String CATEGORY_ID = "categoryID";
+	String LIST_ID = "listID";
 	String INCLUDE_SUBS = "includeSubs";
 }

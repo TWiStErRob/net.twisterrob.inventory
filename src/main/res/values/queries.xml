@@ -333,15 +333,20 @@
 		delete from List_Entry where list = ? and item = ?
 	"]]></string>
 
-	<string name="query_list_entries"><![CDATA["
+	<string name="query_items_in_list"><![CDATA["
 		select
 			i._id,
 			i.name,
-			. . .
+			i.image,
+			c.image as typeImage,
+			(select count(1) from Item where parent = i._id) as countChildren,
+			c.name as category
 		from List       l
 		join List_Entry le ON l._id = le.list
 		join Item       i  ON le.item = i._id
+		join Category   c  ON i.category = c._id
 		where l._id = ?
+		order by i.name
 	"]]></string>
 
 	<string name="query_search_suggest"><![CDATA["

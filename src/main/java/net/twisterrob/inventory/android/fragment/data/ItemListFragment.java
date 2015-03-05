@@ -156,6 +156,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 			args.putLong(Extras.PARENT_ID, getArgParentItemID());
 			args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
 			args.putLong(Extras.ROOM_ID, getArgRoomID());
+			args.putLong(Extras.LIST_ID, getArgListID());
 			args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
 			return args;
 		}
@@ -175,6 +176,9 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		}
 	}
 
+	private long getArgListID() {
+		return getArguments().getLong(Extras.LIST_ID, Item.ID_ADD);
+	}
 	private long getArgParentItemID() {
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
@@ -224,6 +228,12 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	public static ItemListFragment newSearchInstance(CharSequence query) {
 		ItemListFragment fragment = new ItemListFragment();
 		fragment.setArguments(ExtrasFactory.bundleFromQuery(query));
+		return fragment;
+	}
+
+	public static ItemListFragment newListInstance(long listID) {
+		ItemListFragment fragment = new ItemListFragment();
+		fragment.setArguments(ExtrasFactory.bundleFromList(listID));
 		return fragment;
 	}
 }
