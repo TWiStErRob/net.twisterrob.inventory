@@ -249,6 +249,25 @@ INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NOT NULL) BEGIN
 	;--NOTEOS
 END;
 
+CREATE TABLE List (
+	_id         INTEGER      NOT NULL,
+	name        VARCHAR      NOT NULL, -- user entered
+	PRIMARY KEY(_id AUTOINCREMENT),
+   	UNIQUE (name)
+);
+CREATE TABLE List_Entry (
+	list        INTEGER      NOT NULL
+		CONSTRAINT fk_List_Entry_list
+			REFERENCES List(_id)
+			ON UPDATE CASCADE
+			ON DELETE CASCADE,
+	item        INTEGER      NOT NULL
+		CONSTRAINT fk_List_Entry_item
+			REFERENCES Item(_id)
+			ON UPDATE CASCADE
+			ON DELETE CASCADE,
+	UNIQUE (list, item)
+);
 
 CREATE TABLE Item_Path_Node (
 	item        INTEGER      NOT NULL

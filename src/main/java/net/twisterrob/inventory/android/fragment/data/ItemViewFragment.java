@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.activity.ListsActivity;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
@@ -95,6 +96,9 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				return true;
 			case R.id.action_item_delete:
 				delete(getArgItemID());
+				return true;
+			case R.id.action_list_manage:
+				startActivity(ListsActivity.manage(getArgItemID()));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

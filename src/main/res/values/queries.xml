@@ -303,6 +303,46 @@
 		where c._id = ?
 	"]]></string>
 
+	<string name="query_list_list"><![CDATA["
+		select
+			l._id,
+			l.name,
+			case ?
+				when -1 then
+					0
+				else exists (
+					select 1 from List_Entry where list = l._id and item = ?
+				)
+			end as [exists],
+			(select count(1) from List_Entry where list = l._id) as countChildren
+		from List       l
+	"]]></string>
+	<string name="query_list_create"><![CDATA["
+		insert into List(name) values(?)
+	"]]></string>
+	<string name="query_list_update"><![CDATA["
+		update List set name = ? where _id = ?
+	"]]></string>
+	<string name="query_list_delete"><![CDATA["
+		delete from List where list = ?
+	"]]></string>
+	<string name="query_list_entry_add"><![CDATA["
+		insert into List_Entry(list, item) values(?, ?)
+	"]]></string>
+	<string name="query_list_entry_remove"><![CDATA["
+		delete from List_Entry where list = ? and item = ?
+	"]]></string>
+
+	<string name="query_list_entries"><![CDATA["
+		select
+			i._id,
+			i.name,
+			. . .
+		from List       l
+		join List_Entry le ON l._id = le.list
+		join Item       i  ON le.item = i._id
+		where l._id = ?
+	"]]></string>
 
 	<string name="query_search_suggest"><![CDATA["
 		select

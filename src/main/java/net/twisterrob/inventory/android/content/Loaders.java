@@ -114,7 +114,20 @@ public enum Loaders {
 			CharSequence query = args.getCharSequence(SearchManager.QUERY);
 			return InventoryDatabase.getInstance().searchItems(context.getContentResolver(), query);
 		}
-	};
+	},
+	Lists {
+		@Override
+		protected Cursor createCursor(Context context, Bundle args) {
+			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
+			return App.db().listLists(id);
+		}
+	},
+	Recents {
+		@Override
+		protected Cursor createCursor(Context context, Bundle args) {
+			return new MatrixCursor(new String[] {"_id"});
+		}
+	},;
 
 	private static final Bundle NO_ARGS = new Bundle(0);
 

@@ -80,6 +80,9 @@
 	<string name="label_category_subs">%1$d Subcategories</string>
 	<string name="label_category_items_view">List %1$d Items</string>
 
+	<string name="list_list">Lists</string>
+	<string name="list_manage">Manage Lists</string>
+
 	<plurals name="item">
 		<item quantity="one">item</item>
 		<item quantity="other">items</item>

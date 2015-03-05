@@ -13,7 +13,7 @@
 		android:id="@+id/action_item_move"
 		android:title="@string/item_move"
 		android:icon="@android:drawable/ic_menu_set_as"
-		app:showAsAction="never"
+		app:showAsAction="ifRoom"
 		/>
 	<item
 		android:id="@+id/action_item_delete"
@@ -26,5 +26,11 @@
 		android:title="@string/item_share"
 		android:icon="@android:drawable/ic_menu_share"
 		app:showAsAction="never"
+		/>
+	<item
+		android:id="@+id/action_list_manage"
+		android:title="@string/list_manage"
+		android:icon="@android:drawable/ic_menu_myplaces"
+		app:showAsAction="ifRoom"
 		/>
 </menu>

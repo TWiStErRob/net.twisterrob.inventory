@@ -24,7 +24,7 @@ public class Database {
 	public Database(Context context) {
 		m_context = context;
 		m_resources = context.getResources();
-		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 4) { // FIXME reset to 1 before release
+		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 5) { // FIXME reset to 1 before release
 			@Override
 			public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);
@@ -222,6 +222,25 @@ public class Database {
 		} finally {
 			db.endTransaction();
 		}
+	}
+
+	public Cursor listLists(long itemID) {
+		return rawQuery(R.string.query_list_list, itemID, itemID);
+	}
+	public long createList(String name) {
+		return rawInsert(R.string.query_list_create, name);
+	}
+	public long updateList(long id, String name) {
+		return rawInsert(R.string.query_list_create, name, id);
+	}
+	public void deleteList(long id) {
+		execSQL(R.string.query_list_delete, id);
+	}
+	public void addListEntry(long listID, long itemID) {
+		execSQL(R.string.query_list_entry_add, listID, itemID);
+	}
+	public void deleteListEntry(long listID, long itemID) {
+		execSQL(R.string.query_list_entry_remove, listID, itemID);
 	}
 
 	public Cursor searchSuggest(String query) {

@@ -75,4 +75,10 @@ public final class ExtrasFactory {
 		args.putCharSequence(SearchManager.QUERY, query);
 		return args;
 	}
+	public static long getItemFrom(Intent intent) {
+		return getItemFrom(intent.getExtras());
+	}
+	public static long getItemFrom(Bundle bundle) {
+		return bundle != null? bundle.getLong(Extras.ITEM_ID, Item.ID_ADD) : Item.ID_ADD;
+	}
 }
