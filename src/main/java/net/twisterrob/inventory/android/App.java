@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android;
 
+import java.io.File;
 import java.util.Locale;
 
 import org.slf4j.*;
@@ -15,6 +16,10 @@ import android.os.StrictMode.ThreadPolicy.Builder;
 import android.os.StrictMode.VmPolicy;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+
+import com.bumptech.glide.*;
+import com.bumptech.glide.load.engine.cache.*;
+import com.bumptech.glide.module.GlideModule;
 
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
 import net.twisterrob.inventory.android.Constants.Prefs;
@@ -174,6 +179,22 @@ public class App extends Application {
 			}
 
 			StrictMode.setVmPolicy(vmBuilder.build());
+		}
+	}
+
+	public static class GlideSetup implements GlideModule {
+		@Override public void applyOptions(final Context context, GlideBuilder builder) {
+			if (BuildConfig.DEBUG) {
+				builder.setDiskCache(new DiskCache.Factory() {
+					@Override public DiskCache build() {
+						final File cacheDir = new File(context.getExternalCacheDir(), "image_manager_disk_cache");
+						return DiskLruCacheWrapper.get(cacheDir, 250 * 1024 * 1024);
+					}
+				});
+			}
+		}
+		@Override public void registerComponents(Context context, Glide glide) {
+
 		}
 	}
 }

@@ -34,6 +34,7 @@ public abstract class RecyclerViewLoadersController extends RecyclerViewCursorLo
 	}
 
 	@Override protected Loader<Cursor> createLoader(int id, Bundle args) {
+		assert id == loader.ordinal();
 		return Loaders.fromID(id).createLoader(context, args);
 	}
 

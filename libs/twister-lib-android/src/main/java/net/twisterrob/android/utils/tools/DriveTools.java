@@ -13,11 +13,11 @@ import net.twisterrob.java.io.IOTools;
 
 public class DriveTools {
 	public static class ContentsUtils {
-		public static Contents sync(PendingResult<ContentsResult> pending) {
-			return syncResult(pending).getContents();
+		public static DriveContents sync(PendingResult<DriveContentsResult> pending) {
+			return syncResult(pending).getDriveContents();
 		}
 
-		public static void putToFile(Contents contents, File file) throws IOException {
+		public static void putToFile(DriveContents contents, File file) throws IOException {
 			@SuppressWarnings("resource")
 			InputStream stream = null;
 			try {

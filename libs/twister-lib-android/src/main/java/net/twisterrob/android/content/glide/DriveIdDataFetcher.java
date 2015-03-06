@@ -10,7 +10,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.*;
 
 import static net.twisterrob.android.utils.tools.DriveTools.ContentsUtils.*;
-import static net.twisterrob.android.utils.tools.DriveTools.StatusUtils.*;
 
 public class DriveIdDataFetcher implements DataFetcher<InputStream> {
 	private static final Logger LOG = LoggerFactory.getLogger(DriveIdDataFetcher.class);
@@ -20,8 +19,7 @@ public class DriveIdDataFetcher implements DataFetcher<InputStream> {
 
 	private boolean cancelled = false;
 
-	private DriveFile file;
-	private Contents contents;
+	private DriveContents contents;
 
 	public DriveIdDataFetcher(GoogleApiClient client, DriveId driveId) {
 		this.client = client;
@@ -37,11 +35,11 @@ public class DriveIdDataFetcher implements DataFetcher<InputStream> {
 			LOG.warn("No connected client received, giving custom error image");
 			return null;
 		}
-		file = Drive.DriveApi.getFile(client, driveId);
+		DriveFile file = Drive.DriveApi.getFile(client, driveId);
 		if (cancelled) {
 			return null;
 		}
-		contents = sync(file.openContents(client, DriveFile.MODE_READ_ONLY, null));
+		contents = sync(file.open(client, DriveFile.MODE_READ_ONLY, null));
 		if (cancelled) {
 			return null;
 		}
@@ -51,13 +49,13 @@ public class DriveIdDataFetcher implements DataFetcher<InputStream> {
 	public void cancel() {
 		cancelled = true;
 		if (contents != null) {
-			file.discardContents(client, contents);
+			contents.discard(client);
 		}
 	}
 
 	public void cleanup() {
 		if (contents != null) {
-			sync(file.discardContents(client, contents));
+			contents.discard(client);
 		}
 	}
 }

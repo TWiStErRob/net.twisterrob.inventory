@@ -117,6 +117,8 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		final GalleryAdapter cursorAdapter = new GalleryAdapter(null, this);
 
 		GridLayoutManager layout = new GridLayoutManager(getContext(), columns);
+		// TODO v21.0.3: doesn't work, false -> ladder jumpy, true -> chaotic jumpy
+		//layout.setSmoothScrollbarEnabled(true);
 		if (header != null) {
 			layout.setSpanSizeLookup(new SpanSizeLookup() {
 				@Override public int getSpanSize(int position) {
