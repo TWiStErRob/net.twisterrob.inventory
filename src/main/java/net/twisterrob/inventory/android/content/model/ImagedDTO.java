@@ -7,11 +7,10 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.*;
+import android.support.annotation.RawRes;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 
@@ -53,34 +52,12 @@ public class ImagedDTO extends DTO {
 		}
 	}
 
-	public Drawable getFallbackDrawable(Context context) {
-		return getFallbackDrawable(context, fallbackImageResourceName);
-	}
-	public Drawable getFallbackDrawable(Context context, int size, int padding) {
-		return getFallbackDrawable(context, fallbackImageResourceName, size, padding);
+	public @RawRes int getFallbackResource(Context context) {
+		return AndroidTools.getRawResourceID(context, fallbackImageResourceName);
 	}
 
 	public static @RawRes int getFallbackID(Context context, Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		return AndroidTools.getRawResourceID(context, image);
-	}
-
-	public static @NonNull Drawable getFallbackDrawable(Context context, String resourceName) {
-		Drawable svg = App.pic().getSVG(context, AndroidTools.getRawResourceID(context, resourceName));
-		if (svg != null) {
-			return svg;
-		}
-		return getDrawableFromDrawable(context, resourceName);
-	}
-	public static @NonNull Drawable getFallbackDrawable(Context context, String resourceName, int size, int padding) {
-		Drawable svg =
-				App.pic().getSVG(context, AndroidTools.getRawResourceID(context, resourceName), size, padding);
-		if (svg != null) {
-			return svg;
-		}
-		return getDrawableFromDrawable(context, resourceName);
-	}
-	private static Drawable getDrawableFromDrawable(Context context, String resourceName) {
-		return context.getResources().getDrawable(AndroidTools.getDrawableResourceID(context, resourceName));
 	}
 }

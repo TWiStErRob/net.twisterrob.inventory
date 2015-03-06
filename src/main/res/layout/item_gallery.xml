@@ -16,8 +16,7 @@
 		android:layout_gravity="center"
 		android:adjustViewBounds="true"
 		android:focusable="false"
-		android:layerType="software"
-		android:scaleType="fitCenter"
+		android:scaleType="centerCrop"
 		tools:src="@drawable/category_unknown"
 		/>
 	<ImageView
@@ -28,7 +27,6 @@
 		android:layout_marginRight="@dimen/margin"
 		android:layout_marginBottom="@dimen/margin"
 		android:layout_marginEnd="@dimen/margin"
-		android:layerType="software"
 		android:scaleType="fitCenter"
 		tools:src="@drawable/category_unknown"
 		/>
@@ -41,6 +39,7 @@
 		android:layout_marginBottom="@dimen/margin"
 		android:layout_marginStart="@dimen/margin"
 		android:focusable="false"
+		android:gravity="center"
 		android:shadowColor="#084"
 		android:shadowDx="2"
 		android:shadowDy="2"

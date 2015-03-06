@@ -9,7 +9,6 @@ import org.slf4j.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.*;
 import android.support.annotation.RawRes;
 import android.support.v4.widget.CursorAdapter;
@@ -21,7 +20,8 @@ import android.widget.*;
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.wiring.DefaultValueUpdater;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
@@ -256,10 +256,9 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		this.currentImage = currentImage;
 		isClean = false;
 		if (currentImage == null) {
-			Drawable fallback = App.pic().getSVG(getContext(), getTypeImage(type.getSelectedItemPosition()));
-			image.setImageDrawable(fallback);
+			Pic.SVG_REQUEST.load(getTypeImage(type.getSelectedItemPosition())).into(image);
 		} else {
-			App.pic().start(this).load(currentImage).into(image);
+			Pic.IMAGE_REQUEST.load(currentImage).into(image);
 		}
 	}
 }

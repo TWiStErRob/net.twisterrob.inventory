@@ -15,9 +15,11 @@
  */
 package net.twisterrob.inventory.android.view;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 
 /**
@@ -120,7 +122,17 @@ public class HeaderViewRecyclerAdapter extends WrappingAdapter<RecyclerView.View
 		} else if (headerCount + itemCount < position) {
 			onBindFooter(viewHolder, position - headerCount - itemCount);
 		} else { // headerCount <= position && position < headerCount + itemCount
-			mWrappedAdapter.onBindViewHolder(viewHolder, position - headerCount);
+			try {
+				int myType = viewHolder.getItemViewType();
+				int viewType = myType - getAdapterTypeOffset(); // reverse of getItemViewType
+				Field f = ViewHolder.class.getDeclaredField("mItemViewType");
+				f.setAccessible(true);
+				f.set(viewHolder, viewType);
+				mWrappedAdapter.onBindViewHolder(viewHolder, position - headerCount);
+				f.set(viewHolder, myType);
+			} catch (Exception e) {
+				throw new IllegalStateException(e);
+			}
 		}
 	}
 

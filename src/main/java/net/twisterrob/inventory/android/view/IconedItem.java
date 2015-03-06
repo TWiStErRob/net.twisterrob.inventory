@@ -9,7 +9,7 @@ public interface IconedItem {
 	void loadImage(ImageView icon);
 	void onClick();
 
-	public class OnClick implements AdapterView.OnItemClickListener {
+	class OnClick implements AdapterView.OnItemClickListener {
 		@Override public void onItemClick(AdapterView parent, View view, int position, long id) {
 			IconedItem item = (IconedItem)parent.getItemAtPosition(position);
 			item.onClick();

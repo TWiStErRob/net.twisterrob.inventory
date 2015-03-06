@@ -2,10 +2,9 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Context;
 import android.support.annotation.StringRes;
-import android.support.v4.view.ViewCompat;
 import android.widget.ImageView;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.view.IconedItem;
 
 abstract class SVGItem implements IconedItem {
@@ -22,7 +21,6 @@ abstract class SVGItem implements IconedItem {
 	}
 
 	@Override public void loadImage(ImageView icon) {
-		ViewCompat.setLayerType(icon, ViewCompat.LAYER_TYPE_SOFTWARE, null);
-		App.pic().startSVG(icon.getContext()).load(svgResourceID).into(icon);
+		Pic.SVG_REQUEST.load(svgResourceID).into(icon);
 	}
 }

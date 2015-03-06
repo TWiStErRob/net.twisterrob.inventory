@@ -1,6 +1,5 @@
 package net.twisterrob.inventory.android;
 
-import java.io.File;
 import java.util.Locale;
 
 import org.slf4j.*;
@@ -17,14 +16,9 @@ import android.os.StrictMode.VmPolicy;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import com.bumptech.glide.*;
-import com.bumptech.glide.load.engine.cache.*;
-import com.bumptech.glide.module.GlideModule;
-
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.utils.ImageLoaderFacade;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.StringTools;
 
@@ -117,10 +111,6 @@ public class App extends Application {
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
-	public static ImageLoaderFacade pic() {
-		return ImageLoaderFacade.getInstance();
-	}
-
 	/**
 	 * android.database.DatabaseTools.dumpCursor(net.twisterrob.inventory.android.
 	 * App.db().getReadableDatabase().rawQuery("select * from sqlite_sequence;", null));
@@ -179,22 +169,6 @@ public class App extends Application {
 			}
 
 			StrictMode.setVmPolicy(vmBuilder.build());
-		}
-	}
-
-	public static class GlideSetup implements GlideModule {
-		@Override public void applyOptions(final Context context, GlideBuilder builder) {
-			if (BuildConfig.DEBUG) {
-				builder.setDiskCache(new DiskCache.Factory() {
-					@Override public DiskCache build() {
-						final File cacheDir = new File(context.getExternalCacheDir(), "image_manager_disk_cache");
-						return DiskLruCacheWrapper.get(cacheDir, 250 * 1024 * 1024);
-					}
-				});
-			}
-		}
-		@Override public void registerComponents(Context context, Glide glide) {
-
 		}
 	}
 }

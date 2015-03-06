@@ -1,18 +1,16 @@
 package net.twisterrob.inventory.android.view;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.*;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
-import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
 public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends CursorRecyclerAdapter<VH> {
 	private final int layoutResource;
@@ -31,7 +29,6 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 		public ViewHolder(View view) {
 			super(view);
 			image = (ImageView)view.findViewById(R.id.image);
-			ViewCompat.setLayerType(image, ViewCompat.LAYER_TYPE_SOFTWARE, null); // for SVGs
 			title = (TextView)view.findViewById(R.id.title);
 
 			view.setOnClickListener(new OnClickListener() {
@@ -65,30 +62,17 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		image = Constants.Paths.getImagePath(holder.itemView.getContext(), image);
+		int fallbackID = AndroidTools.getRawResourceID(holder.image.getContext(), typeImage);
 
 		holder.title.setText(name);
-		loadImageWithFallback(holder.image, image, typeImage);
-	}
-
-	protected static void loadImageWithFallback(ImageView image, String imagePath, String typeImageName) {
-		final Drawable fallback = ImagedDTO.getFallbackDrawable(image.getContext(), typeImageName);
-
-		if (imagePath == null) {
-			image.setImageDrawable(fallback);
+		if (image == null) {
+			Pic.SVG_REQUEST.load(fallbackID).into(holder.image);
 		} else {
-			App.pic().start(image.getContext())
-			   .placeholder(fallback)
-			   .error(makeError(image.getContext(), fallback))
-			   .load(imagePath)
-			   .into(image)
+			Pic.IMAGE_REQUEST
+					.load(image)
+					.thumbnail(Pic.SVG_REQUEST.load(fallbackID))
+					.into(holder.image)
 			;
 		}
-	}
-
-	protected static Drawable makeError(Context context, Drawable fallback) {
-		Drawable error = context.getResources().getDrawable(R.drawable.image_error);
-		fallback = fallback.mutate();
-		fallback.setAlpha(0x80);
-		return new LayerDrawable(new Drawable[] {fallback, error});
 	}
 }

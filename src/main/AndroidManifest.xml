@@ -24,7 +24,7 @@
 		tools:ignore="UnusedAttribute">
 
 		<meta-data
-			android:name="net.twisterrob.inventory.android.App$GlideSetup"
+			android:name="net.twisterrob.inventory.android.Constants$Pic$GlideSetup"
 			android:value="GlideModule" />
 
 		<activity

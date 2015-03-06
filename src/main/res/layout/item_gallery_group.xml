@@ -16,7 +16,6 @@
 		android:layout_gravity="center_vertical"
 		android:adjustViewBounds="true"
 		android:focusable="false"
-		android:layerType="software"
 		android:scaleType="fitCenter"
 		tools:src="@drawable/category_unknown"
 		/>

@@ -10,7 +10,8 @@ import android.widget.*;
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.CategoryAdapter.ViewHolder;
 
@@ -103,15 +104,6 @@ public class CategoryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	private void setImage(Cursor cursor, ImageView target) {
 		Context context = target.getContext();
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		int raw = AndroidTools.getRawResourceID(context, image);
-		if (raw > 0) {
-			App.pic().startSVG(context).load(raw).into(target);
-			return;
-		}
-		int drawable = AndroidTools.getDrawableResourceID(context, image);
-		if (drawable <= 0) {
-			drawable = R.drawable.category_unknown;
-		}
-		App.pic().startDrawable(context).load(drawable).into(target);
+		Pic.SVG_REQUEST.load(AndroidTools.getRawResourceID(context, image)).into(target);
 	}
 }

@@ -1,8 +1,6 @@
 package net.twisterrob.inventory.android.view;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.*;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.view.View.*;
@@ -10,9 +8,10 @@ import android.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
-import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.GalleryAdapter.ViewHolder;
 
 public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
@@ -103,29 +102,17 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	}
 
 	private void displayImageWithType(ImageView image, ImageView type, String imagePath, String typeImageName) {
-		final Drawable fallback = ImagedDTO.getFallbackDrawable(image.getContext(), typeImageName);
+		int typeID = AndroidTools.getRawResourceID(type.getContext(), typeImageName);
 
 		if (imagePath == null) {
-			type.setVisibility(View.INVISIBLE);
 			type.setImageDrawable(null);
-			image.setVisibility(View.VISIBLE);
-			image.setImageDrawable(fallback);
+			Pic.SVG_REQUEST.load(typeID).into(image);
 		} else {
-			type.setVisibility(View.VISIBLE);
-			type.setImageDrawable(fallback);
-			App.pic().start(image.getContext())
-			   .placeholder(fallback)
-			   .error(makeError(image.getContext(), fallback))
-			   .load(imagePath)
-			   .into(image)
-			;
+			Pic.SVG_REQUEST.load(typeID).into(type);
+			Pic.IMAGE_REQUEST
+					.load(imagePath)
+					.thumbnail(Pic.SVG_REQUEST.load(typeID))
+					.into(image);
 		}
-	}
-
-	private static Drawable makeError(Context context, Drawable fallback) {
-		Drawable error = context.getResources().getDrawable(R.drawable.image_error);
-		fallback = fallback.mutate();
-		fallback.setAlpha(0x80);
-		return new LayerDrawable(new Drawable[] {fallback, error});
 	}
 }

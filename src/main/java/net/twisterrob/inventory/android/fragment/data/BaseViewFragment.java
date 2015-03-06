@@ -5,7 +5,6 @@ import java.io.File;
 import org.slf4j.*;
 
 import android.content.*;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
@@ -16,13 +15,14 @@ import android.widget.*;
 
 import static android.content.Context.*;
 
+import com.bumptech.glide.DrawableRequestBuilder;
+
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.activity.ImageActivity;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
-
-import static net.twisterrob.inventory.android.Constants.Dimensions.*;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
@@ -40,8 +40,8 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 	public void onSingleRowLoaded(DTO entity) {
 		getBaseActivity().setActionBarTitle(entity.name);
-		getBaseActivity().setIcon(entity.getFallbackDrawable(getContext(),
-				getActionbarIconSize(getContext()), getActionbarIconPadding(getContext())));
+		// FIXME getBaseActivity().setIcon(entity.getFallbackDrawable(getContext(),
+		//		getActionbarIconSize(getContext()), getActionbarIconPadding(getContext())));
 		pager.setAdapter(new ImageAndDescriptionAdapter(entity));
 		pager.setCurrentItem(getDefaultPageIndex());
 	}
@@ -93,7 +93,11 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					ImageView image = (ImageView)view.findViewById(R.id.image);
 					image.setOnClickListener(new ImageOpenListener());
 					image.setOnLongClickListener(new ImageChangeListener());
-					loadInto(image);
+
+					int fallbackID = entity.getFallbackResource(image.getContext());
+					String imagePath = entity.getImage(image.getContext());
+					DrawableRequestBuilder<?> svgThumb = Pic.SVG_REQUEST.load(fallbackID);
+					Pic.IMAGE_REQUEST.load(imagePath).thumbnail(svgThumb).into(image);
 					break;
 				}
 				case 1: {
@@ -116,17 +120,6 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			}
 			container.addView(view);
 			return view;
-		}
-
-		private void loadInto(ImageView image) {
-			Context context = image.getContext();
-			Drawable fallback = entity.getFallbackDrawable(context);
-			String imagePath = entity.getImage(context);
-			if (imagePath != null) {
-				App.pic().start(BaseViewFragment.this).placeholder(fallback).load(imagePath).into(image);
-			} else {
-				image.setImageDrawable(fallback);
-			}
 		}
 
 		@Override

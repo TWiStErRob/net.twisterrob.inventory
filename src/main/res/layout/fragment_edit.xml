@@ -25,7 +25,6 @@
 				android:layout_height="128dp"
 				android:layout_margin="4dp"
 				android:adjustViewBounds="true"
-				android:layerType="software"
 				android:scaleType="fitCenter"
 				tools:src="@drawable/category_unknown"
 				/>

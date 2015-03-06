@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 
+import com.bumptech.glide.Glide;
+
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.MainActivity;
@@ -79,7 +81,7 @@ public class DeveloperActivity extends ListActivity {
 				}),
 				create("Clear Image cache", new Runnable() {
 					public void run() {
-						App.pic().clearCaches();
+						Glide.get(App.getAppContext()).clearMemory();
 					}
 				}),
 				create("Reset DB", new Runnable() {

@@ -6,13 +6,14 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.view.View;
-import android.view.ViewGroup.*;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.*;
 
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.TypeAdapter.ViewHolder;
@@ -41,7 +42,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		int margin = updateFormat(cursor, holder.title);
 		updateLeftStartMargin(holder.title, margin);
 
-		App.pic().startSVG(mContext).load(ImagedDTO.getFallbackID(mContext, cursor)).into(holder.image);
+		Pic.SVG_REQUEST.load(ImagedDTO.getFallbackID(mContext, cursor)).into(holder.image);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
