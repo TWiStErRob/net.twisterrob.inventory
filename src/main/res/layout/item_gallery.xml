@@ -16,7 +16,7 @@
 		android:layout_gravity="center"
 		android:adjustViewBounds="true"
 		android:focusable="false"
-		android:scaleType="centerCrop"
+		android:scaleType="fitCenter"
 		tools:src="@drawable/category_unknown"
 		/>
 	<ImageView
