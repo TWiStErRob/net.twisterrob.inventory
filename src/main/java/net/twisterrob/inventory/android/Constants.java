@@ -6,9 +6,6 @@ import java.util.*;
 import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.AnyRes;
-import android.util.TypedValue;
-
-import static android.util.TypedValue.*;
 
 import com.bumptech.glide.*;
 import com.bumptech.glide.load.ResourceDecoder;
@@ -62,23 +59,6 @@ public interface Constants {
 		String LAST_EXPORT_DRIVE_ID = "lastExportDriveId";
 	}
 
-	class Dimensions {
-		/** dp */
-		private static final int ACTIONBAR_ICON_SIZE = 48;
-		/** dp */
-		private static final int ACTIONBAR_ICON_PADDING = 4;
-
-		public static int getActionbarIconSize(Context context) {
-			return (int)dpToPixels(context, ACTIONBAR_ICON_SIZE);
-		}
-		public static int getActionbarIconPadding(Context context) {
-			return (int)dpToPixels(context, ACTIONBAR_ICON_PADDING);
-		}
-		private static float dpToPixels(Context context, int dp) {
-			return TypedValue.applyDimension(COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-		}
-	}
-
 	class Pic {
 		private static final LoggingListener<Integer, GlideDrawable> SVG_LOGGING_LISTENER =
 				new LoggingListener<>("SVG", new ResourceFormatter(App.getAppContext()));
@@ -88,8 +68,7 @@ public interface Constants {
 		public static final DrawableRequestBuilder<Integer> SVG_REQUEST = Glide
 				.with(App.getAppContext())
 				.fromResource()
-						//.listener(SVG_LOGGING_LISTENER)
-
+//				.listener(SVG_LOGGING_LISTENER)
 				.decoder(getSvgDecoder())
 				.animate(android.R.anim.fade_in)
 				.error(R.drawable.category_unknown);
@@ -97,7 +76,7 @@ public interface Constants {
 		public static final DrawableRequestBuilder<String> IMAGE_REQUEST = Glide
 				.with(App.getAppContext())
 				.fromString()
-						//.listener(IMAGE_LOGGING_LISTENER)
+//				.listener(IMAGE_LOGGING_LISTENER)
 				.animate(android.R.anim.fade_in)
 				.error(R.drawable.image_error);
 

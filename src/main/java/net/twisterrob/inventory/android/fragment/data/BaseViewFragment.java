@@ -38,8 +38,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 	public void onSingleRowLoaded(DTO entity) {
 		getBaseActivity().setActionBarTitle(entity.name);
-		// FIXME getBaseActivity().setIcon(entity.getFallbackDrawable(getContext(),
-		//		getActionbarIconSize(getContext()), getActionbarIconPadding(getContext())));
+		getBaseActivity().setIcon(entity.getFallbackResource(getContext()));
 		pager.setAdapter(new ImageAndDescriptionAdapter(entity));
 		pager.setCurrentItem(getDefaultPageIndex());
 	}

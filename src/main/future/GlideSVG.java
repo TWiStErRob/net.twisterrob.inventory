@@ -34,3 +34,18 @@ public Drawable getSVG(Context context, int rawResourceId) {
 		return null;
 	}
 }
+
+private static Drawable getSVG(Context context, int rawResourceId, int size, int padding) {
+	try {
+		SVG svg = SVG.getFromResource(context, rawResourceId);
+		Picture picture = new Picture();
+		Canvas canvas = picture.beginRecording(size, size);
+		canvas.translate(padding, padding); // workaround, because renderToCanvas doesn't care about x,y
+		svg.renderToCanvas(canvas, new RectF(0, 0, size - 2 * padding, size - 2 * padding));
+		picture.endRecording();
+		return new AlphaPictureDrawable(picture);
+	} catch (SVGParseException ex) {
+		LOG.warn("Cannot decode SVG from {}", rawResourceId, ex);
+		return null;
+	}
+}

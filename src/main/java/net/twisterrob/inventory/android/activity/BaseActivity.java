@@ -7,7 +7,6 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.*;
@@ -19,16 +18,16 @@ import android.view.*;
 import android.widget.*;
 
 import com.android.debug.hv.ViewServer;
-import com.caverock.androidsvg.*;
 
+import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
 import net.twisterrob.inventory.android.fragment.BackupFragment;
 import net.twisterrob.inventory.android.view.*;
 
-import static net.twisterrob.inventory.android.Constants.Dimensions.*;
 import static net.twisterrob.inventory.android.activity.BaseActivity.For.Feature.*;
 
 public class BaseActivity extends ActionBarActivity {
@@ -195,8 +194,10 @@ public class BaseActivity extends ActionBarActivity {
 		getSupportActionBar().setIcon(iconDrawable);
 	}
 	@For(Children) public void setIcon(@RawRes int resourceId) {
-		Drawable svg = getSVG(this, resourceId, getActionbarIconSize(this), getActionbarIconPadding(this));
-		setIcon(svg);
+		Pic.SVG_REQUEST
+				.load(resourceId)
+				.transform(new PaddingTransformation(this, AndroidTools.dipInt(this, 4)))
+				.into(new ActionBarIconTarget(getSupportActionBar()));
 	}
 
 	@For(Drawer) private static class StandardMyActionBarDrawerToggle extends ActionBarDrawerToggle {
@@ -218,22 +219,6 @@ public class BaseActivity extends ActionBarActivity {
 			super.onDrawerOpened(drawerView);
 			activity.getSupportActionBar().setTitle(activity.getText(R.string.app_name));
 			activity.supportInvalidateOptionsMenu();
-		}
-	}
-
-	@Deprecated
-	private static Drawable getSVG(Context context, int rawResourceId, int size, int padding) {
-		try {
-			SVG svg = SVG.getFromResource(context, rawResourceId);
-			Picture picture = new Picture();
-			Canvas canvas = picture.beginRecording(size, size);
-			canvas.translate(padding, padding); // workaround, because renderToCanvas doesn't care about x,y
-			svg.renderToCanvas(canvas, new RectF(0, 0, size - 2 * padding, size - 2 * padding));
-			picture.endRecording();
-			return new AlphaPictureDrawable(picture);
-		} catch (SVGParseException ex) {
-			LOG.warn("Cannot decode SVG from {}", rawResourceId, ex);
-			return null;
 		}
 	}
 
