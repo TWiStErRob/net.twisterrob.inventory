@@ -104,6 +104,7 @@ public class CategoryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	private void setImage(Cursor cursor, ImageView target) {
 		Context context = target.getContext();
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		Pic.SVG_REQUEST.load(AndroidTools.getRawResourceID(context, image)).into(target);
+		int typeImageID = AndroidTools.getRawResourceID(context, image);
+		Pic.SVG_REQUEST.load(typeImageID).into(target);
 	}
 }

@@ -42,7 +42,8 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		int margin = updateFormat(cursor, holder.title);
 		updateLeftStartMargin(holder.title, margin);
 
-		Pic.SVG_REQUEST.load(ImagedDTO.getFallbackID(mContext, cursor)).into(holder.image);
+		int fallbackID = ImagedDTO.getFallbackID(mContext, cursor);
+		Pic.SVG_REQUEST.load(fallbackID).into(holder.image);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

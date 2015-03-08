@@ -15,8 +15,6 @@ import android.widget.*;
 
 import static android.content.Context.*;
 
-import com.bumptech.glide.DrawableRequestBuilder;
-
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
@@ -96,8 +94,11 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 					int fallbackID = entity.getFallbackResource(image.getContext());
 					String imagePath = entity.getImage(image.getContext());
-					DrawableRequestBuilder<?> svgThumb = Pic.SVG_REQUEST.load(fallbackID);
-					Pic.IMAGE_REQUEST.load(imagePath).thumbnail(svgThumb).into(image);
+					if (imagePath == null) {
+						Pic.SVG_REQUEST.load(fallbackID).into(image);
+					} else {
+						Pic.IMAGE_REQUEST.load(imagePath).into(image);
+					}
 					break;
 				}
 				case 1: {

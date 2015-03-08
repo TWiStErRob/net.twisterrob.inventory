@@ -105,14 +105,11 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		int typeID = AndroidTools.getRawResourceID(type.getContext(), typeImageName);
 
 		if (imagePath == null) {
-			type.setImageDrawable(null);
+			type.setImageDrawable(null); // == Pic.IMAGE_REQUEST.load(null).into(type); Glide#268
 			Pic.SVG_REQUEST.load(typeID).into(image);
 		} else {
 			Pic.SVG_REQUEST.load(typeID).into(type);
-			Pic.IMAGE_REQUEST
-					.load(imagePath)
-					.thumbnail(Pic.SVG_REQUEST.load(typeID))
-					.into(image);
+			Pic.IMAGE_REQUEST.load(imagePath).into(image);
 		}
 	}
 }

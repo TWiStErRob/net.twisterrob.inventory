@@ -80,20 +80,25 @@ public interface Constants {
 	}
 
 	class Pic {
+		private static final LoggingListener<Integer, GlideDrawable> SVG_LOGGING_LISTENER =
+				new LoggingListener<>("SVG", new ResourceFormatter(App.getAppContext()));
+		private static final LoggingListener<String, GlideDrawable> IMAGE_LOGGING_LISTENER =
+				new LoggingListener<>("image");
+
 		public static final DrawableRequestBuilder<Integer> SVG_REQUEST = Glide
 				.with(App.getAppContext())
 				.fromResource()
-				.listener(
-						new LoggingListener<Integer, GlideDrawable>("SVG", new ResourceFormatter(App.getAppContext())))
+						//.listener(SVG_LOGGING_LISTENER)
+
 				.decoder(getSvgDecoder())
-				.crossFade()
+				.animate(android.R.anim.fade_in)
 				.error(R.drawable.category_unknown);
 
 		public static final DrawableRequestBuilder<String> IMAGE_REQUEST = Glide
 				.with(App.getAppContext())
 				.fromString()
-				.listener(new LoggingListener<String, GlideDrawable>("image"))
-				.crossFade()
+						//.listener(IMAGE_LOGGING_LISTENER)
+				.animate(android.R.anim.fade_in)
 				.error(R.drawable.image_error);
 
 		private static ResourceDecoder<ImageVideoWrapper, GifBitmapWrapper> getSvgDecoder() {

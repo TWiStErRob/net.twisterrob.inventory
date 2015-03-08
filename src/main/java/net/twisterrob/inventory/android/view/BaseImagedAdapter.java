@@ -68,11 +68,7 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 		if (image == null) {
 			Pic.SVG_REQUEST.load(fallbackID).into(holder.image);
 		} else {
-			Pic.IMAGE_REQUEST
-					.load(image)
-					.thumbnail(Pic.SVG_REQUEST.load(fallbackID))
-					.into(holder.image)
-			;
+			Pic.IMAGE_REQUEST.load(image).into(holder.image);
 		}
 	}
 }
