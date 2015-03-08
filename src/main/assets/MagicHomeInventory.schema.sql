@@ -249,6 +249,51 @@ INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NOT NULL) BEGIN
 	;--NOTEOS
 END;
 
+
+CREATE TABLE Recent (
+	_id         INTEGER,
+	visit       DATETIME DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))
+);
+CREATE TRIGGER Recent_insert
+AFTER INSERT ON Recent BEGIN
+	delete from Recent where 100 < (
+		select count() from Recent r where Recent.visit <= r.visit
+	);--NOTEOS
+END;
+
+CREATE VIEW Recent_Stats AS
+	select
+		_id,
+		count(1) as population,
+		count(1)/cast(s.count as float) as percentage,
+		max(visit) as visit,
+		(julianday(max(visit)) - julianday(s.firstVisit)) / (julianday(s.lastVisit) - julianday(s.firstVisit)) as recency
+	from Recent,
+	(
+		select
+			min(visit) as firstVisit,
+			max(visit) as lastVisit,
+			--datetime(avg(julianday(visit))) as meanVisit,
+			count() as count
+		from Recent
+	) s
+	group by _id
+;
+CREATE VIEW Recents AS
+	select
+		r._id,
+		r.population,
+		r.percentage,
+		count(distinct rp._id) as populationRank,
+		r.visit,
+		r.recency,
+		count(distinct rr._id) as visitRank
+	from Recent_Stats r
+	join Recent_Stats rp on r.population <= rp.population
+	join Recent_Stats rr on r.visit <= rr.visit
+	group by r._id
+;
+
 CREATE TABLE List (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- user entered

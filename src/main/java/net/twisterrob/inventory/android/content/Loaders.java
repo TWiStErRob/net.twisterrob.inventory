@@ -129,7 +129,7 @@ public enum Loaders {
 	Recents {
 		@Override
 		protected Cursor createCursor(Context context, Bundle args) {
-			return new MatrixCursor(new String[] {"_id"});
+			return App.db().listRecents();
 		}
 	},;
 

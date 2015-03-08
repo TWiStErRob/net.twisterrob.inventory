@@ -145,6 +145,7 @@ public class Database {
 	}
 
 	public Cursor getItem(long itemID) {
+		execSQL(R.string.query_recent_add, itemID);
 		return rawQuery(R.string.query_item, itemID);
 	}
 	public Cursor listCategories(long parentID) {
@@ -233,8 +234,8 @@ public class Database {
 	public long createList(String name) {
 		return rawInsert(R.string.query_list_create, name);
 	}
-	public long updateList(long id, String name) {
-		return rawInsert(R.string.query_list_create, name, id);
+	public void updateList(long id, String name) {
+		execSQL(R.string.query_list_update, name, id);
 	}
 	public void deleteList(long id) {
 		execSQL(R.string.query_list_delete, id);
@@ -244,6 +245,13 @@ public class Database {
 	}
 	public void deleteListEntry(long listID, long itemID) {
 		execSQL(R.string.query_list_entry_remove, listID, itemID);
+	}
+
+	public void deleteRecentsOfItem(long itemID) {
+		execSQL(R.string.query_recent_delete, itemID);
+	}
+	public Cursor listRecents() {
+		return rawQuery(R.string.query_recents, 1, 0.6);
 	}
 
 	public Cursor searchSuggest(String query) {

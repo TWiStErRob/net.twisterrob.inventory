@@ -1,18 +1,21 @@
 package net.twisterrob.inventory.android.fragment;
 
+import java.text.*;
+import java.util.*;
+
 import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.*;
-import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.text.format.DateUtils;
 import android.view.*;
 import android.view.View.*;
 import android.widget.TextView;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -87,14 +90,16 @@ public class MainFragment extends BaseFragment<Void> {
 		recentsController = new RecyclerViewLoadersController(this, Loaders.Recents) {
 			@Override protected CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
-				CursorRecyclerAdapter adapter = new CursorRecyclerAdapter(null) {
-					@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+				MainFragment.RecentAdapter adapter = new MainFragment.RecentAdapter(new RecyclerViewItemEvents() {
+					@Override public void onItemClick(RecyclerView.ViewHolder holder) {
+						getActivity().startActivity(ItemViewActivity.show(holder.getItemId()));
 					}
-					@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-						return new ViewHolder(parent) {
-						};
+					@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+						App.db().deleteRecentsOfItem(holder.getItemId());
+						recentsController.refresh();
+						return true;
 					}
-				};
+				});
 				list.setAdapter(adapter);
 				return adapter;
 			}
@@ -154,6 +159,43 @@ public class MainFragment extends BaseFragment<Void> {
 			super.onBindViewHolder(holder, cursor);
 			String property = cursor.getString(cursor.getColumnIndexOrThrow(Room.PROPERTY_NAME));
 			holder.details.setText(holder.details.getContext().getString(R.string.room_location, property));
+		}
+	}
+
+	static class RecentAdapter extends BaseImagedAdapter<RecentAdapter.ViewHolder> {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
+
+		public RecentAdapter(RecyclerViewItemEvents listener) {
+			super(null, listener);
+		}
+
+		class ViewHolder extends BaseImagedAdapter.ViewHolder {
+			public ViewHolder(View view) {
+				super(view);
+				details = (TextView)view.findViewById(R.id.details);
+			}
+
+			final TextView details;
+		}
+
+		@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+			return new ViewHolder(inflateView(parent, R.layout.item_main_recent));
+		}
+
+		@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+			super.onBindViewHolder(holder, cursor);
+			CharSequence visit = cursor.getString(cursor.getColumnIndexOrThrow("visit"));
+			try {
+				Date date = format.parse(visit.toString());
+				visit = DateUtils.getRelativeTimeSpanString(date.getTime(), System.currentTimeMillis(),
+						DateUtils.SECOND_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE);
+			} catch (ParseException e) { /* use the original visit string*/ }
+			// int vRank = cursor.getInt(cursor.getColumnIndexOrThrow("visitRank"));
+			int pop = cursor.getInt(cursor.getColumnIndexOrThrow("population"));
+			// float perc = cursor.getFloat(cursor.getColumnIndexOrThrow("percentage"));
+			// int pRank = cursor.getInt(cursor.getColumnIndexOrThrow("populationRank"));
+
+			holder.details.setText(String.format("%1$s (%2$dx)", visit, pop));
 		}
 	}
 
