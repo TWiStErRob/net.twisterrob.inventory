@@ -421,11 +421,13 @@ public class SelectionView extends View {
 
 	public enum SelectionStatus {
 		NORMAL(Color.CYAN),
+		FOCUSING(Color.YELLOW),
 		FOCUSED(Color.GREEN),
 		BLURRY(Color.RED);
+
 		private final int color;
 
-		private SelectionStatus(int color) {
+		SelectionStatus(int color) {
 			this.color = color;
 		}
 

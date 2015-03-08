@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -20,11 +21,15 @@ public class ImageActivity extends Activity implements RequestListener<Uri, Glid
 		setContentView(R.layout.activity_image);
 		ImageView image = (ImageView)findViewById(R.id.image);
 
-		Glide.with(this)
+		Glide
+				.with(this)
 				.load(getIntent().getData())
-						//.signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+				.diskCacheStrategy(DiskCacheStrategy.NONE)
+				.skipMemoryCache(true)
+				.thumbnail(0.25f)
 				.listener(this)
-				.into(image);
+				.into(image)
+		;
 	}
 
 	@Override

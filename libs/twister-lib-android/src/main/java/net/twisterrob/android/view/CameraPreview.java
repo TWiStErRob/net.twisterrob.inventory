@@ -9,6 +9,7 @@ import android.hardware.Camera;
 import android.os.*;
 import android.util.AttributeSet;
 import android.view.*;
+import android.widget.Toast;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 
@@ -17,8 +18,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
 
 	public interface CameraPreviewListener {
-		public void onStarted(CameraPreview preview);
-		public void onFinished(CameraPreview preview);
+		void onStarted(CameraPreview preview);
+		void onFinished(CameraPreview preview);
 	}
 
 	private CameraHandlerThread mCameraThread = null;
@@ -203,8 +204,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		mCameraThread.mHandler.post(new Runnable() {
 			public void run() {
 				LOG.trace("Cancel take picture");
-				startPreview();
 				cancelAutoFocus();
+				startPreview();
 			}
 		});
 	}
@@ -279,12 +280,17 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() { // on Camera's Looper
-					final CameraHolder holder = new CameraHolder(findCamera());
-					new Handler(Looper.getMainLooper()).post(new Runnable() {
-						public void run() { // on UI Looper
-							CameraPreview.this.started(holder);
-						}
-					});
+					try {
+						final CameraHolder holder = new CameraHolder(findCamera());
+						CameraPreview.this.post(new Runnable() {
+							public void run() { // on UI Looper
+								CameraPreview.this.started(holder);
+							}
+						});
+					} catch(RuntimeException ex) {
+						LOG.error("Error setting up camera", ex);
+						Toast.makeText(CameraPreview.this.getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+					}
 				}
 
 				private int findCamera() {

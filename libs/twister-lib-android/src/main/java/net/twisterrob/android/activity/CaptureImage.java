@@ -10,6 +10,7 @@ import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.*;
@@ -18,6 +19,9 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import net.twisterrob.android.R;
 import net.twisterrob.android.utils.tools.*;
@@ -41,6 +45,7 @@ public class CaptureImage extends Activity {
 	private SelectionView mSelection;
 	private File mTargetFile;
 	private File mSavedFile;
+	private ImageView mImage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +62,12 @@ public class CaptureImage extends Activity {
 		}
 
 		setContentView(R.layout.activity_camera);
-
-		final ImageButton btnCapture = (ImageButton)findViewById(R.id.btn_capture);
-		final ImageButton btnCrop = (ImageButton)findViewById(R.id.btn_crop);
-		final ToggleButton btnFlash = (ToggleButton)findViewById(R.id.btn_flash);
+		final View controls = findViewById(R.id.controls);
+		final ImageButton btnCapture = (ImageButton)controls.findViewById(R.id.btn_capture);
+		final ImageButton btnCrop = (ImageButton)controls.findViewById(R.id.btn_crop);
+		final ToggleButton btnFlash = (ToggleButton)controls.findViewById(R.id.btn_flash);
 		mPreview = (CameraPreview)findViewById(R.id.preview);
+		mImage = (ImageView)findViewById(R.id.image);
 		mSelection = (SelectionView)findViewById(R.id.selection);
 
 		mPreview.setListener(new CameraPreviewListener() {
@@ -89,15 +95,29 @@ public class CaptureImage extends Activity {
 		btnCapture.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				disableControls();
 				if (mSavedFile == null) {
 					take(new Camera.PictureCallback() {
 						public void onPictureTaken(byte[] data, Camera camera) {
 							doSave(data);
+							enableControls();
+							prepareCrop();
 						}
 					});
 				} else {
 					doRestartPreview();
+					enableControls();
 				}
+			}
+			private void enableControls() {
+				controls.post(new Runnable() {
+					@Override public void run() {
+						controls.setVisibility(View.VISIBLE);
+					}
+				});
+			}
+			private void disableControls() {
+				controls.setVisibility(View.INVISIBLE);
 			}
 		});
 
@@ -105,18 +125,39 @@ public class CaptureImage extends Activity {
 			public void onClick(View v) {
 				if (mSavedFile != null) {
 					doCrop();
-					doFinish();
+					doReturn();
 				} else {
 					take(new Camera.PictureCallback() {
 						public void onPictureTaken(byte[] data, Camera camera) {
 							doSave(data);
 							doCrop();
-							doFinish();
+							doReturn();
 						}
 					});
 				}
 			}
 		});
+	}
+
+	private void prepareCrop() {
+		if (Looper.myLooper() != Looper.getMainLooper()) {
+			mImage.post(new Runnable() {
+				@Override public void run() {
+					prepareCrop();
+				}
+			});
+			return;
+		}
+		LOG.trace("Loading taken image to crop: {}", mSavedFile);
+		Glide
+				.with(CaptureImage.this)
+				.load(mSavedFile)
+				.diskCacheStrategy(DiskCacheStrategy.NONE)
+				.skipMemoryCache(true)
+				.placeholder(new ColorDrawable(Color.BLACK))
+				.thumbnail(0.1f)
+				.dontAnimate()
+				.into(mImage);
 	}
 
 	private boolean getInitialFlashEnabled() {
@@ -130,7 +171,7 @@ public class CaptureImage extends Activity {
 	}
 
 	protected void doSave(byte[] data) {
-		mSavedFile = save(data);
+		mSavedFile = save(mTargetFile, data);
 	}
 	protected void doCrop() {
 		mSavedFile = crop(mSavedFile);
@@ -138,10 +179,12 @@ public class CaptureImage extends Activity {
 	protected void doRestartPreview() {
 		LOG.trace("Restarting preview");
 		mSavedFile = null;
-		updateSelection(null);
+		mSelection.setSelectionStatus(SelectionStatus.NORMAL);
 		mPreview.cancelTakePicture();
+		Glide.clear(mImage);
+		mImage.setImageDrawable(null);
 	}
-	protected void doFinish() {
+	protected void doReturn() {
 		Intent result = new Intent();
 		result.setDataAndType(Uri.fromFile(mSavedFile), "image/jpeg");
 		setResult(RESULT_OK, result);
@@ -152,37 +195,29 @@ public class CaptureImage extends Activity {
 		if (!mPreview.isRunning()) {
 			return;
 		}
+		mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
 		mPreview.setCameraFocus(new Camera.AutoFocusCallback() {
 			public void onAutoFocus(final boolean success, Camera camera) {
 				LOG.trace("Auto-focus result: {}", success);
-				new Handler(getMainLooper()).post(new Runnable() {
+				mSelection.post(new Runnable() {
 					public void run() {
-						updateSelection(success);
+						mSelection.setSelectionStatus(success? SelectionStatus.FOCUSED : SelectionStatus.BLURRY);
 					}
 				});
 				mPreview.takePicture(jpegCallback);
 			}
 		});
 	}
-	private void updateSelection(Boolean focusSuccess) {
-		if (focusSuccess == null) {
-			mSelection.setSelectionStatus(SelectionStatus.NORMAL);
-		} else if (focusSuccess) {
-			mSelection.setSelectionStatus(SelectionStatus.FOCUSED);
-		} else {
-			mSelection.setSelectionStatus(SelectionStatus.BLURRY);
-		}
-	}
-	@SuppressWarnings("resource")
-	private File save(byte[] data) {
+
+	private static File save(File file, byte[] data) {
 		if (data == null) {
 			return null;
 		}
-		File file = mTargetFile;
+		LOG.trace("Saving {} bytes to {}", data.length, file);
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(file);
-			IOTools.writeAll(out, data);
+			out.write(data);
 			LOG.info("Raw image saved at {}", file);
 		} catch (FileNotFoundException ex) {
 			LOG.error("Cannot find file {}", file, ex);

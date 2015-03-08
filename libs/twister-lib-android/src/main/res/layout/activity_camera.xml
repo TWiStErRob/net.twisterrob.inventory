@@ -9,44 +9,56 @@
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		/>
+	<ImageView
+		android:id="@id/image"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:contentDescription="Image taken"
+		/>
 	<net.twisterrob.android.view.SelectionView
 		android:id="@+id/selection"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		/>
 
-	<ToggleButton
-		android:id="@+id/btn_flash"
-		android:layout_width="48dp"
-		android:layout_height="48dp"
-		android:layout_gravity="top|end"
-		android:layout_margin="8dp"
-		android:background="@drawable/btn_flash_toggle"
-		android:textOn="@string/empty"
-		android:textOff="@string/empty"
-		/>
-
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom|center_horizontal"
-		android:orientation="horizontal"
+	<FrameLayout
+		android:id="@+id/controls"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		>
-		<ImageButton
-			android:id="@+id/btn_capture"
+		<ToggleButton
+			android:id="@+id/btn_flash"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_gravity="top|end"
+			android:layout_margin="8dp"
+			android:background="@drawable/btn_flash_toggle"
+			android:textOn="@string/empty"
+			android:textOff="@string/empty"
+			/>
+
+		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="8dp"
-			android:src="@android:drawable/ic_menu_camera"
-			android:contentDescription="capture"
-			/>
-		<ImageButton
-			android:id="@+id/btn_crop"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="8dp"
-			android:src="@android:drawable/ic_menu_crop"
-			android:contentDescription="crop"
-			/>
-	</LinearLayout>
+			android:layout_gravity="bottom|center_horizontal"
+			android:orientation="horizontal"
+			>
+			<ImageButton
+				android:id="@+id/btn_capture"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="8dp"
+				android:src="@android:drawable/ic_menu_camera"
+				android:contentDescription="capture"
+				/>
+			<ImageButton
+				android:id="@+id/btn_crop"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="8dp"
+				android:src="@android:drawable/ic_menu_crop"
+				android:contentDescription="crop"
+				/>
+		</LinearLayout>
+	</FrameLayout>
 </merge>
