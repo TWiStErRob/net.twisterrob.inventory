@@ -1,6 +1,8 @@
 package net.twisterrob.inventory.android.tasks;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.view.View;
 
 import net.twisterrob.inventory.android.view.Action;
 
@@ -20,6 +22,10 @@ public abstract class UndoAction implements Action {
 	@Override public final String getConfirmationMessage(Resources res) {
 		return "Are you sure you want to undo?";
 	}
+	@Override public View getConfirmationView(Context context) {
+		return null;
+	}
+
 	@Override public abstract void execute();
 
 	@Override public void finished() {

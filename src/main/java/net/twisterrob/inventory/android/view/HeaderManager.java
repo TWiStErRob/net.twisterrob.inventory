@@ -22,9 +22,9 @@ public class HeaderManager {
 	private final BaseFragment header;
 	private boolean refreshPending = false;
 
-	public HeaderManager(@NonNull BaseFragment parent, @NonNull BaseFragment fragment) {
+	public HeaderManager(@NonNull BaseFragment parent, @NonNull BaseFragment header) {
 		this.parent = parent;
-		this.header = fragment;
+		this.header = header;
 	}
 
 	public BaseFragment getHeader() {
@@ -55,8 +55,10 @@ public class HeaderManager {
 	protected ViewGroup createContainer() {
 		FrameLayout headerContainer = new FrameLayout(parent.getActivity());
 		headerContainer.setId(R.id.details);
-		headerContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-				(int)(parent.getActivity().getResources().getDisplayMetrics().heightPixels * 0.30)));
+		if (header.hasUI()) {
+			headerContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+					(int)(parent.getActivity().getResources().getDisplayMetrics().heightPixels * 0.30)));
+		}
 		return headerContainer;
 	}
 

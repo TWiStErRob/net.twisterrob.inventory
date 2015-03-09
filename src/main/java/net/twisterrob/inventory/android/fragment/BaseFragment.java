@@ -62,6 +62,10 @@ public class BaseFragment<T> extends Fragment {
 		setHasOptionsMenu(true);
 	}
 
+	public boolean hasUI() {
+		return true;
+	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);

@@ -1,6 +1,8 @@
 package net.twisterrob.inventory.android.view;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.view.View;
 
 public interface Action {
 	/**
@@ -12,6 +14,10 @@ public interface Action {
 	void prepare();
 	String getConfirmationTitle(Resources res);
 	String getConfirmationMessage(Resources res);
+	/**
+	 * Custom view for confirmation dialog. Implementers must hold on to it to be able to read from it in {@link #execute}.
+	 */
+	View getConfirmationView(Context context);
 	/**
 	 * Send all the requested actions the user has confirmed to the database.
 	 * TODO Should be ACID, that is either all operations fail or all succeed.

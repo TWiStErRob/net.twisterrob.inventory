@@ -1,7 +1,9 @@
 package net.twisterrob.inventory.android.tasks;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.StringRes;
+import android.view.View;
 
 import net.twisterrob.inventory.android.view.Action;
 
@@ -31,6 +33,10 @@ public abstract class BaseAction implements Action {
 		doExecute();
 	}
 	protected abstract void doExecute();
+
+	@Override public View getConfirmationView(Context context) {
+		return null;
+	}
 
 	@Override public String toString() {
 		Class<?> actionClass = getClass();

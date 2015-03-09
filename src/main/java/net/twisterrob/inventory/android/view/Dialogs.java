@@ -73,6 +73,7 @@ public class Dialogs {
 						.setTitle(state.action.getConfirmationTitle(activity.getResources()))
 						.setMessage(state.action.getConfirmationMessage(activity.getResources()))
 						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setView(state.action.getConfirmationView(activity))
 						.setPositiveButton(android.R.string.yes, new OnClickListener() {
 							@Override public void onClick(DialogInterface dialog, int which) {
 								new Execute(activity).execute(state);
