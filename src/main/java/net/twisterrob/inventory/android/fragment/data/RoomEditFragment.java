@@ -23,6 +23,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomEditFragment.class);
 
 	public interface RoomEditEvents {
+		void roomLoaded(RoomDTO room);
 		void roomSaved(long roomID);
 	}
 
@@ -59,8 +60,6 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(),
 					ExtrasFactory.bundleFromRoom(id), new SingleRowLoaded());
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
-		} else {
-			getBaseActivity().setActionBarTitle(getString(R.string.room_new));
 		}
 
 		manager.startLoading();
@@ -70,6 +69,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 		super.onSingleRowLoaded(room, room.type);
+		eventsListener.roomLoaded(room);
 	}
 
 	@Override

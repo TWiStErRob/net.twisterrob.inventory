@@ -23,6 +23,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyEditFragment.class);
 
 	public interface PropertyEditEvents {
+		void propertyLoaded(PropertyDTO property);
 		void propertySaved(long propertyID);
 	}
 
@@ -59,8 +60,6 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.ordinal(),
 					ExtrasFactory.bundleFromProperty(id), new SingleRowLoaded());
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
-		} else {
-			getBaseActivity().setActionBarTitle(getString(R.string.property_new));
 		}
 
 		manager.startLoading();
@@ -70,6 +69,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
 		onSingleRowLoaded(property, property.type);
+		eventsListener.propertyLoaded(property);
 	}
 
 	@Override

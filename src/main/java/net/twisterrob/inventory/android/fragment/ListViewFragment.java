@@ -47,7 +47,6 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		ListDTO list = ListDTO.fromCursor(cursor);
-		getBaseActivity().setActionBarTitle(list.name);
 		eventsListener.listLoaded(list);
 	}
 

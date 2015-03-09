@@ -5,14 +5,19 @@ import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomEditFragment;
 
 public class RoomEditActivity extends BaseEditActivity<RoomEditFragment>
 		implements RoomEditFragment.RoomEditEvents {
 	@Override
 	protected RoomEditFragment onCreateFragment(Bundle savedInstanceState) {
-		setIcon(R.raw.room_unknown);
+		setActionBarTitle(getString(R.string.room_new));
 		return RoomEditFragment.newInstance(getExtraPropertyID(), getExtraRoomID());
+	}
+
+	@Override public void roomLoaded(RoomDTO room) {
+		setActionBarTitle(room.name);
 	}
 
 	@Override public void roomSaved(long roomID) {

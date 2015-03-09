@@ -5,14 +5,19 @@ import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment;
 
 public class PropertyEditActivity extends BaseEditActivity<PropertyEditFragment>
 		implements PropertyEditFragment.PropertyEditEvents {
 	@Override
 	protected PropertyEditFragment onCreateFragment(Bundle savedInstanceState) {
-		setIcon(R.raw.property_unknown);
+		setActionBarTitle(getString(R.string.property_new));
 		return PropertyEditFragment.newInstance(getExtraPropertyID());
+	}
+
+	@Override public void propertyLoaded(PropertyDTO property) {
+		setActionBarTitle(property.name);
 	}
 
 	@Override public void propertySaved(long propertyID) {

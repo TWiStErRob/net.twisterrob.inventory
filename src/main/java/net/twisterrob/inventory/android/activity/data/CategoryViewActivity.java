@@ -24,7 +24,6 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryListFragmen
 		if (parentID == Category.INTERNAL) {
 			setActionBarTitle(getText(R.string.category_list));
 			setActionBarSubtitle(null);
-			setIcon(R.raw.category_unknown);
 		} else {
 			fragment.setHeader(CategoryViewFragment.newInstance(parentID));
 		}
@@ -32,7 +31,7 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryListFragmen
 	}
 
 	public void categoryLoaded(CategoryDTO category) {
-		// ignore
+		setActionBarTitle(category.name);
 	}
 
 	public void categorySelected(long id) {

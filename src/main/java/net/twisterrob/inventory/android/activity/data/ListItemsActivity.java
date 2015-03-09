@@ -26,7 +26,7 @@ public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> impl
 	}
 
 	@Override public void listLoaded(ListDTO list) {
-		// ignore
+		setActionBarTitle(list.name);
 	}
 
 	@Override public void listDeleted(ListDTO list) {

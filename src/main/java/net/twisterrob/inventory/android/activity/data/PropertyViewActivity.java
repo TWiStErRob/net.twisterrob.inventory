@@ -27,9 +27,7 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 		if (propertyID == Property.ID_ADD) {
 			setActionBarSubtitle(null);
 			setActionBarTitle(getText(R.string.room_list));
-			setIcon(R.raw.room_unknown);
 		} else {
-			setIcon(R.raw.property_unknown);
 			fragment.setHeader(PropertyViewFragment.newInstance(propertyID));
 		}
 		return fragment;

@@ -5,14 +5,19 @@ import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemEditFragment;
 
 public class ItemEditActivity extends BaseEditActivity<ItemEditFragment>
 		implements ItemEditFragment.ItemEditEvents {
 	@Override
 	protected ItemEditFragment onCreateFragment(Bundle savedInstanceState) {
-		setIcon(R.raw.category_unknown);
+		setActionBarTitle(getString(R.string.item_new));
 		return ItemEditFragment.newInstance(getExtraParentID(), getExtraItemID());
+	}
+
+	@Override public void itemLoaded(ItemDTO item) {
+		setActionBarTitle(item.name);
 	}
 
 	@Override public void itemSaved(long itemID) {

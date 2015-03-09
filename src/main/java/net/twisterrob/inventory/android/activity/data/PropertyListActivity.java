@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 
@@ -17,7 +17,6 @@ public class PropertyListActivity extends BaseDetailActivity<PropertyListFragmen
 	protected PropertyListFragment onCreateFragment(Bundle savedInstanceState) {
 		setActionBarSubtitle(null);
 		setActionBarTitle(getTitle());
-		setIcon(R.raw.property_unknown);
 		return PropertyListFragment.newInstance();
 	}
 

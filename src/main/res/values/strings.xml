@@ -2,7 +2,7 @@
 <resources>
 	<string name="app_name">Magic Home Inventory</string>
 	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
-	<string name="home_title">Inventory Home</string>
+	<string name="home_title">Inventory</string>
 	<string name="navigation_title">Navigation</string>
 
 	<string name="sunburst_title">Sunburst Diagram</string>

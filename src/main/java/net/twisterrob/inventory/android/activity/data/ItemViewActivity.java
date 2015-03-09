@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
@@ -17,7 +17,6 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 
 	@Override
 	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
-		setIcon(R.raw.category_unknown);
 		long itemID = getExtraItemID();
 		ItemListFragment fragment = ItemListFragment.newInstance(itemID);
 		fragment.setHeader(ItemViewFragment.newInstance(itemID));
@@ -25,6 +24,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 	}
 
 	public void itemLoaded(ItemDTO item) {
+		setActionBarTitle(item.name);
 		current = item;
 	}
 

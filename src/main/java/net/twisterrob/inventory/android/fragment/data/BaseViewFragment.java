@@ -25,20 +25,16 @@ import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
 
-	protected ImageView image;
 	protected ViewPager pager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_details, container, false);
-		image = (ImageView)root.findViewById(R.id.image);
 		pager = (ViewPager)root.findViewById(R.id.pager);
 		return root;
 	}
 
 	public void onSingleRowLoaded(DTO entity) {
-		getBaseActivity().setActionBarTitle(entity.name);
-		getBaseActivity().setIcon(entity.getFallbackResource(getContext()));
 		pager.setAdapter(new ImageAndDescriptionAdapter(entity));
 		pager.setCurrentItem(getDefaultPageIndex());
 	}
@@ -88,14 +84,17 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 				case 0: {
 					view = inflater.inflate(R.layout.inc_details_image, container, false);
 					ImageView image = (ImageView)view.findViewById(R.id.image);
+					ImageView type = (ImageView)view.findViewById(R.id.type);
 					image.setOnClickListener(new ImageOpenListener());
 					image.setOnLongClickListener(new ImageChangeListener());
 
 					int fallbackID = entity.getFallbackResource(image.getContext());
 					String imagePath = entity.getImage(image.getContext());
 					if (imagePath == null) {
+						type.setImageDrawable(null);
 						Pic.SVG_REQUEST.load(fallbackID).into(image);
 					} else {
+						Pic.SVG_REQUEST.load(fallbackID).into(type);
 						Pic.IMAGE_REQUEST.load(imagePath).into(image);
 					}
 					break;

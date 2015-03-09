@@ -23,6 +23,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditFragment.class);
 
 	public interface ItemEditEvents {
+		void itemLoaded(ItemDTO item);
 		void itemSaved(long itemID);
 	}
 
@@ -53,8 +54,6 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(),
 					ExtrasFactory.bundleFromItem(id), new SingleRowLoaded());
 			loadItemData.dependsOn(populateCats);
-		} else {
-			getBaseActivity().setActionBarTitle(getString(R.string.item_new));
 		}
 
 		manager.startLoading();
@@ -64,6 +63,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 	protected void onSingleRowLoaded(Cursor cursor) {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
 		super.onSingleRowLoaded(item, item.category);
+		eventsListener.itemLoaded(item);
 	}
 
 	@Override

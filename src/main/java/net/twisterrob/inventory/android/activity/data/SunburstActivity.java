@@ -13,7 +13,6 @@ public class SunburstActivity extends BaseActivity implements SunburstFragment.L
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setIcon(R.raw.ic_sunburst);
 
 		setContentView(R.layout.generic_activity_drawer);
 		getSupportFragmentManager().beginTransaction()

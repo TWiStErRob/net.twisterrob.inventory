@@ -18,7 +18,6 @@ public class CategoryItemsActivity extends BaseDetailActivity<ItemListFragment> 
 
 	@Override
 	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
-		setIcon(R.raw.category_unknown);
 		long categoryID = getExtraCategoryID();
 		ItemListFragment fragment = ItemListFragment.newCategoryInstance(categoryID, getExtraIncludeSubs());
 		if (categoryID == Category.INTERNAL) {
@@ -31,7 +30,7 @@ public class CategoryItemsActivity extends BaseDetailActivity<ItemListFragment> 
 	}
 
 	public void categoryLoaded(CategoryDTO category) {
-		// ignore
+		setActionBarTitle(category.name);
 	}
 
 	public void itemSelected(long itemID) {

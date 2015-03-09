@@ -66,8 +66,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	protected abstract String getBaseFileName();
 
 	protected void onSingleRowLoaded(ImagedDTO dto, long typeID) {
-		AndroidTools.selectByID(type, typeID); // sets icon
-		getBaseActivity().setActionBarTitle(dto.name);
+		AndroidTools.selectByID(type, typeID);
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
 		setCurrentImage(dto.getImage(getContext()));
 		description.setText(dto.description);
@@ -140,7 +139,6 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 				if (getCurrentImage() == null) {
 					setCurrentImage(null);
 				} // else leave current image as is
-				getBaseActivity().setIcon(getTypeImage(position));
 			}
 		});
 	}
@@ -257,7 +255,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		isClean = false;
 		if (currentImage == null) {
 			int typeImageID = getTypeImage(type.getSelectedItemPosition());
-			Pic.SVG_REQUEST.load(typeImageID).into(this.image);
+			Pic.SVG_REQUEST.load(typeImageID).into(image);
 		} else {
 			Pic.IMAGE_REQUEST.load(currentImage).into(image);
 		}
