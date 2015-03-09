@@ -95,7 +95,7 @@ public class MainFragment extends BaseFragment<Void> {
 						getActivity().startActivity(ItemViewActivity.show(holder.getItemId()));
 					}
 					@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
-						App.db().deleteRecentsOfItem(holder.getItemId());
+						App.db().deleteRecentsOfItem(holder.getItemId()); // FIXME DB on UI
 						recentsController.refresh();
 						return true;
 					}

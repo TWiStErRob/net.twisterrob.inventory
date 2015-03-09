@@ -14,16 +14,16 @@ import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.ExtrasFactory;
-import net.twisterrob.inventory.android.fragment.ListListFragment.ListEvents;
+import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.ListAdapter.ListItemEvents;
 
-public class ListListFragment extends BaseFragment<ListEvents> implements ListItemEvents {
+public class ListListFragment extends BaseFragment<ListsEvents> implements ListItemEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(ListListFragment.class);
 
 	private RecyclerViewLoadersController listController;
 
-	public interface ListEvents {
+	public interface ListsEvents {
 		void listSelected(long listID);
 		void listRemoved(long listID);
 	}
@@ -31,7 +31,7 @@ public class ListListFragment extends BaseFragment<ListEvents> implements ListIt
 	private HeaderManager header = null;
 
 	public ListListFragment() {
-		setDynamicResource(DYN_EventsClass, ListEvents.class);
+		setDynamicResource(DYN_EventsClass, ListsEvents.class);
 	}
 
 	@Override public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class ListListFragment extends BaseFragment<ListEvents> implements ListIt
 						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
 								String value = input.getText().toString();
-								long id = App.db().createList(value);
+								long id = App.db().createList(value); // FIXME DB on UI
 								eventsListener.listSelected(id);
 							}
 						})

@@ -8,25 +8,14 @@
 	android:background="@drawable/item_state"
 	tools:background="@color/toolsBG"
 	>
-	<ImageView
-		android:id="@id/image"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
-		android:layout_margin="@dimen/margin"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentStart="true"
-		android:layout_centerVertical="true"
-		android:focusable="false"
-		android:src="@android:drawable/ic_menu_agenda"
-		/>
 	<TextView
 		android:id="@id/title"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/margin"
+		android:layout_marginRight="@dimen/margin"
 		android:layout_centerVertical="true"
-		android:layout_toEndOf="@id/image"
 		android:layout_toLeftOf="@id/count"
-		android:layout_toRightOf="@id/image"
 		android:layout_toStartOf="@id/count"
 		android:focusable="false"
 		android:textAppearance="?attr/textAppearanceListItemSmall"
