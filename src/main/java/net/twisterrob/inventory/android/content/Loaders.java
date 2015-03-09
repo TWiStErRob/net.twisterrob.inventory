@@ -119,6 +119,13 @@ public enum Loaders {
 			return InventoryDatabase.getInstance().searchItems(context.getContentResolver(), query);
 		}
 	},
+	SingleList {
+		@Override
+		protected Cursor createCursor(Context context, Bundle args) {
+			long id = args.getLong(Extras.LIST_ID, CommonColumns.ID_ADD);
+			return App.db().getList(id);
+		}
+	},
 	Lists {
 		@Override
 		protected Cursor createCursor(Context context, Bundle args) {

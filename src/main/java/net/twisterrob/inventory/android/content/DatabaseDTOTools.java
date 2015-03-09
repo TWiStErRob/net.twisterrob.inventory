@@ -17,6 +17,14 @@ public class DatabaseDTOTools {
 		return names;
 	}
 
+	public static List<String> getNames(Cursor cursor) {
+		List<String> names = new ArrayList<>(cursor.getCount());
+		while (cursor.moveToNext()) {
+			names.add(cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME)));
+		}
+		return names;
+	}
+
 	public static List<PropertyDTO> retrieveProperties(long... propertyIDs) {
 		List<PropertyDTO> properties = new ArrayList<>(propertyIDs.length);
 		for (long propertyID : propertyIDs) {
@@ -94,6 +102,16 @@ public class DatabaseDTOTools {
 			return itemNames;
 		} finally {
 			items.close();
+		}
+	}
+
+	public static ListDTO retrieveList(long listID) {
+		Cursor list = App.db().getList(listID);
+		try {
+			list.moveToFirst();
+			return ListDTO.fromCursor(list);
+		} finally {
+			list.close();
 		}
 	}
 }

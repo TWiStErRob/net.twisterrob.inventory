@@ -15,13 +15,19 @@ public abstract class DeleteAction extends BaseAction {
 	protected final long[] IDs;
 	private final int targetNameRes;
 	private final int childNameRes;
+	private final boolean affectsChildren;
 
 	protected Collection<String> targets;
 	protected final Collection<String> children = new TreeSet<>();
 
 	public DeleteAction(@PluralsRes int targetNameRes, @PluralsRes int childNameRes, long... IDs) {
+		this(targetNameRes, childNameRes, true, IDs);
+	}
+	public DeleteAction(@PluralsRes int targetNameRes, @PluralsRes int childNameRes, boolean affectsChildren,
+			long... IDs) {
 		this.IDs = IDs;
 
+		this.affectsChildren = affectsChildren;
 		this.targetNameRes = targetNameRes;
 		this.childNameRes = childNameRes;
 	}
@@ -45,11 +51,13 @@ public abstract class DeleteAction extends BaseAction {
 		if (children.isEmpty()) {
 			sb.append(buildPlural(res, R.plurals.action_delete_confirm_empty));
 		} else {
-			sb.append(buildPlural(res, R.plurals.action_delete_confirm));
+			int confirm = affectsChildren? R.plurals.action_delete_confirm : R.plurals.action_delete_confirm_only;
+			sb.append(buildPlural(res, confirm));
 		}
 		if (!children.isEmpty()) {
 			sb.append("\n\n");
-			sb.append(res.getQuantityString(R.plurals.action_delete_details, children.size(),
+			int msg = affectsChildren? R.plurals.action_delete_details : R.plurals.action_delete_details_keep;
+			sb.append(res.getQuantityString(msg, children.size(),
 					children.size(),
 					res.getQuantityString(childNameRes, children.size()),
 					StringTools.join(children, ", ")

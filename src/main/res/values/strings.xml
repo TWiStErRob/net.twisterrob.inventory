@@ -31,6 +31,10 @@
 		<item quantity="one">Are you sure you want to delete the %2$s named &#8220;%3$s&#8221; with everything in it?</item>
 		<item quantity="other">Are you sure you want to delete %1$d %2$s with everything in them?</item>
 	</plurals>
+	<plurals name="action_delete_confirm_only">
+		<item quantity="one">Are you sure you want to delete the %2$s named &#8220;%3$s&#8221;?</item>
+		<item quantity="other">Are you sure you want to delete %1$d %2$s?</item>
+	</plurals>
 	<plurals name="action_delete_confirm_empty">
 		<item quantity="one">Are you sure you want to delete the empty %2$s named &#8220;%3$s&#8221;?</item>
 		<item quantity="other">Are you sure you want to delete %1$d empty %2$s?</item>
@@ -38,6 +42,10 @@
 	<plurals name="action_delete_details">
 		<item quantity="one">The following %2$s inside will be also deleted with all its contents: %3$s</item>
 		<item quantity="other">The following %1$d %2$s inside will be also deleted with all their contents: %3$s</item>
+	</plurals>
+	<plurals name="action_delete_details_keep">
+		<item quantity="one">The following %2$s will not be affected: %3$s</item>
+		<item quantity="other">The following %1$d %2$s will not be affected: %3$s</item>
 	</plurals>
 
 
@@ -62,6 +70,10 @@
 	<string name="action_move_pick_requested">Please select a %1$s</string>
 	<string name="action_move_pick_forbidden">Cannot move here, select another %1$s.</string>
 
+	<string name="action_rename_title">Renaming %1$s &#8220;%2$s&#8221;</string>
+	<string name="action_rename_ask">Please enter the new name for %1$s &#8220;%2$s&#8221;!</string>
+	<string name="action_rename_success">Renamed %1$s &#8220;%2$s&#8221; to &#8220;%3$s&#8221;.</string>
+	<string name="action_rename_failed">Failed to rename %1$s &#8220;%2$s&#8221;!</string>
 
 	<string name="selection_count">%d selected</string>
 	<string name="selection_selectAll">Select All</string>
@@ -80,7 +92,14 @@
 	<string name="label_category_subs">%1$d Subcategories</string>
 	<string name="label_category_items_view">List %1$d Items</string>
 
+	<plurals name="list">
+		<item quantity="one">list</item>
+		<item quantity="other">lists</item>
+	</plurals>
+	<string name="list_one">List</string>
 	<string name="list_list">Lists</string>
+	<string name="list_edit">Rename List</string>
+	<string name="list_delete">Delete List</string>
 	<string name="list_manage">Manage Lists</string>
 
 	<plurals name="item">

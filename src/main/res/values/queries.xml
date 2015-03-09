@@ -317,6 +317,13 @@
 			(select count(1) from List_Entry where list = l._id) as countChildren
 		from List       l
 	"]]></string>
+	<string name="query_list"><![CDATA["
+		select
+			_id,
+			name
+		from List
+		where _id = ?
+	"]]></string>
 	<string name="query_list_create"><![CDATA["
 		insert into List(name) values(?)
 	"]]></string>

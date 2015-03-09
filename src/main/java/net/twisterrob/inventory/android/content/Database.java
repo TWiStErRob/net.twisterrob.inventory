@@ -231,6 +231,9 @@ public class Database {
 	public Cursor listLists(long itemID) {
 		return rawQuery(R.string.query_list_list, itemID, itemID);
 	}
+	public Cursor getList(long listID) {
+		return rawQuery(R.string.query_list, listID);
+	}
 	public long createList(String name) {
 		return rawInsert(R.string.query_list_create, name);
 	}
