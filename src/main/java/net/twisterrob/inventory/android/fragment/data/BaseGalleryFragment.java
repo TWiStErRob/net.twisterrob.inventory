@@ -77,27 +77,27 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		selectionMode.onRestoreInstanceState(savedInstanceState);
 	}
 
-	@Override public final void onItemClick(ViewHolder holder) {
+	@Override public final void onItemClick(int position, long recyclerViewItemID) {
 		if (selectionMode.isRunning()) {
-			selectionMode.toggle(holder.getPosition());
+			selectionMode.toggle(position);
 		} else {
-			onListItemClick(holder);
+			onListItemClick(position, recyclerViewItemID);
 		}
 	}
-	protected abstract void onListItemClick(ViewHolder holder);
+	protected abstract void onListItemClick(int position, long recyclerViewItemID);
 
-	@Override public final boolean onItemLongClick(ViewHolder holder) {
+	@Override public final boolean onItemLongClick(int position, long recyclerViewItemID) {
 		if (!selectionMode.isRunning()) {
 			selectionMode.start();
 		}
 		if (selectionMode.isRunning()) {
-			selectionMode.toggle(holder.getPosition());
+			selectionMode.toggle(position);
 		} else {
-			onListItemLongClick(holder);
+			onListItemLongClick(position, recyclerViewItemID);
 		}
 		return true;
 	}
-	protected abstract void onListItemLongClick(ViewHolder holder);
+	protected abstract void onListItemLongClick(int position, long recyclerViewItemID);
 
 	/**
 	 * Called through:

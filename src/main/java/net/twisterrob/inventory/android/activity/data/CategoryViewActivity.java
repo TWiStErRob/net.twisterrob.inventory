@@ -6,11 +6,11 @@ import android.os.Bundle;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
-import net.twisterrob.inventory.android.fragment.data.*;
-import net.twisterrob.inventory.android.fragment.data.CategoryListFragment.CategoriesEvents;
-import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryActionsFragment.CategoryEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryFragment;
+import net.twisterrob.inventory.android.fragment.data.CategoryFragment.CategoriesEvents;
 
-public class CategoryViewActivity extends BaseDetailActivity<CategoryListFragment>
+public class CategoryViewActivity extends BaseDetailActivity<CategoryFragment>
 		implements CategoryEvents, CategoriesEvents {
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		wantDrawer = getExtraParentCategoryID() == Category.INTERNAL;
@@ -18,14 +18,14 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryListFragmen
 	}
 
 	@Override
-	protected CategoryListFragment onCreateFragment(Bundle savedInstanceState) {
+	protected CategoryFragment onCreateFragment(Bundle savedInstanceState) {
 		long parentID = getExtraParentCategoryID();
-		CategoryListFragment fragment = CategoryListFragment.newInstance(parentID);
+		CategoryFragment fragment = CategoryFragment.newInstance(parentID);
 		if (parentID == Category.INTERNAL) {
 			setActionBarTitle(getText(R.string.category_list));
 			setActionBarSubtitle(null);
 		} else {
-			fragment.setHeader(CategoryViewFragment.newInstance(parentID));
+			// FIXME fragment.setHeader(CategoryActionsFragment.newInstance(parentID));
 		}
 		return fragment;
 	}

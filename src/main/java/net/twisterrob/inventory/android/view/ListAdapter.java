@@ -13,8 +13,8 @@ import net.twisterrob.inventory.android.view.ListAdapter.ViewHolder;
 
 public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	public interface ListItemEvents {
-		void removeFromList(RecyclerView.ViewHolder holder);
-		void addToList(RecyclerView.ViewHolder holder);
+		void removeFromList(long listID);
+		void addToList(long listID);
 	}
 
 	private final ListItemEvents listener;
@@ -37,9 +37,9 @@ public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 					cursor.moveToPosition(getPosition());
 					boolean exists = cursor.getShort(cursor.getColumnIndexOrThrow("exists")) != 0;
 					if (exists) {
-						listener.removeFromList(ViewHolder.this);
+						listener.removeFromList(getItemId());
 					} else {
-						listener.addToList(ViewHolder.this);
+						listener.addToList(getItemId());
 					}
 				}
 			});

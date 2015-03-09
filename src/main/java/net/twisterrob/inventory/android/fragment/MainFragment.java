@@ -40,10 +40,10 @@ public class MainFragment extends BaseFragment<Void> {
 			@Override protected CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.PropertyAdapter adapter = new MainFragment.PropertyAdapter(new RecyclerViewItemEvents() {
-					@Override public void onItemClick(RecyclerView.ViewHolder holder) {
-						getActivity().startActivity(PropertyViewActivity.show(holder.getItemId()));
+					@Override public void onItemClick(int position, long recyclerViewItemID) {
+						getActivity().startActivity(PropertyViewActivity.show(recyclerViewItemID));
 					}
-					@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
 						return false;
 					}
 				});
@@ -57,10 +57,10 @@ public class MainFragment extends BaseFragment<Void> {
 			@Override protected CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.RoomAdapter adapter = new MainFragment.RoomAdapter(new RecyclerViewItemEvents() {
-					@Override public void onItemClick(RecyclerView.ViewHolder holder) {
-						getActivity().startActivity(RoomViewActivity.show(holder.getItemId()));
+					@Override public void onItemClick(int position, long recyclerViewItemID) {
+						getActivity().startActivity(RoomViewActivity.show(recyclerViewItemID));
 					}
-					@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
 						return false;
 					}
 				});
@@ -74,10 +74,10 @@ public class MainFragment extends BaseFragment<Void> {
 			@Override protected CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.ListAdapter adapter = new MainFragment.ListAdapter(null, new RecyclerViewItemEvents() {
-					@Override public void onItemClick(RecyclerView.ViewHolder holder) {
-						getActivity().startActivity(ListItemsActivity.show(holder.getItemId()));
+					@Override public void onItemClick(int position, long recyclerViewItemID) {
+						getActivity().startActivity(ListItemsActivity.show(recyclerViewItemID));
 					}
-					@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
+					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
 						return false;
 					}
 				});
@@ -91,11 +91,11 @@ public class MainFragment extends BaseFragment<Void> {
 			@Override protected CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.RecentAdapter adapter = new MainFragment.RecentAdapter(new RecyclerViewItemEvents() {
-					@Override public void onItemClick(RecyclerView.ViewHolder holder) {
-						getActivity().startActivity(ItemViewActivity.show(holder.getItemId()));
+					@Override public void onItemClick(int position, long recyclerViewItemID) {
+						getActivity().startActivity(ItemViewActivity.show(recyclerViewItemID));
 					}
-					@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
-						App.db().deleteRecentsOfItem(holder.getItemId()); // FIXME DB on UI
+					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
+						App.db().deleteRecentsOfItem(recyclerViewItemID); // FIXME DB on UI
 						recentsController.refresh();
 						return true;
 					}
@@ -215,12 +215,12 @@ public class MainFragment extends BaseFragment<Void> {
 
 				view.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {
-						listener.onItemClick(ViewHolder.this);
+						listener.onItemClick(getPosition(), getItemId());
 					}
 				});
 				view.setOnLongClickListener(new OnLongClickListener() {
 					@Override public boolean onLongClick(View v) {
-						listener.onItemLongClick(ViewHolder.this);
+						listener.onItemLongClick(getPosition(), getItemId());
 						return true;
 					}
 				});

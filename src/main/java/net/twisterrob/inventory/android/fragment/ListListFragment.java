@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.*;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 import android.widget.EditText;
 
@@ -94,12 +93,12 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 		listController.refresh();
 	}
 
-	@Override public void addToList(ViewHolder holder) {
-		eventsListener.listSelected(holder.getItemId());
+	@Override public void addToList(long listID) {
+		eventsListener.listSelected(listID);
 	}
 
-	@Override public void removeFromList(ViewHolder holder) {
-		eventsListener.listRemoved(holder.getItemId());
+	@Override public void removeFromList(long listID) {
+		eventsListener.listRemoved(listID);
 	}
 
 	public static ListListFragment newInstance(long itemID) {

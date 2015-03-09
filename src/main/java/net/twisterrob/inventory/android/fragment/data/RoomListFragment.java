@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.RecyclerView;
 import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
@@ -103,12 +102,12 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	@Override protected void onListItemLongClick(RecyclerView.ViewHolder holder) {
-		eventsListener.roomActioned(holder.getItemId());
+	@Override protected void onListItemLongClick(int position, long recyclerViewItemID) {
+		eventsListener.roomActioned(recyclerViewItemID);
 	}
 
-	@Override protected void onListItemClick(RecyclerView.ViewHolder holder) {
-		eventsListener.roomSelected(holder.getItemId());
+	@Override protected void onListItemClick(int position, long recyclerViewItemID) {
+		eventsListener.roomSelected(recyclerViewItemID);
 	}
 
 	@Override protected Bundle createLoadArgs() {

@@ -33,12 +33,12 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 
 			view.setOnClickListener(new OnClickListener() {
 				@Override public void onClick(View v) {
-					listener.onItemClick(ViewHolder.this);
+					listener.onItemClick(getPosition(), getItemId());
 				}
 			});
 			view.setOnLongClickListener(new OnLongClickListener() {
 				@Override public boolean onLongClick(View v) {
-					listener.onItemLongClick(ViewHolder.this);
+					listener.onItemLongClick(getPosition(), getItemId());
 					return true;
 				}
 			});

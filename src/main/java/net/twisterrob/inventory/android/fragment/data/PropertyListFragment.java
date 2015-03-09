@@ -5,7 +5,6 @@ import org.slf4j.*;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.RecyclerView;
 import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
@@ -79,12 +78,12 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		};
 	}
 
-	@Override protected void onListItemClick(RecyclerView.ViewHolder holder) {
-		eventsListener.propertySelected(holder.getItemId());
+	@Override protected void onListItemClick(int position, long recyclerViewItemID) {
+		eventsListener.propertySelected(recyclerViewItemID);
 	}
 
-	@Override protected void onListItemLongClick(RecyclerView.ViewHolder holder) {
-		eventsListener.propertyActioned(holder.getItemId());
+	@Override protected void onListItemLongClick(int position, long recyclerViewItemID) {
+		eventsListener.propertyActioned(recyclerViewItemID);
 	}
 
 	private void delete(final long... propertyIDs) {

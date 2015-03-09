@@ -25,8 +25,8 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		this.listener = listener;
 	}
 
-	class ViewHolder extends RecyclerView.ViewHolder {
-		public ViewHolder(View view) {
+	public static class ViewHolder extends RecyclerView.ViewHolder {
+		public ViewHolder(View view, final GalleryItemEvents listener) {
 			super(view);
 			title = (TextView)view.findViewById(R.id.title);
 			image = (ImageView)view.findViewById(R.id.image);
@@ -35,12 +35,12 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 
 			view.setOnClickListener(new OnClickListener() {
 				@Override public void onClick(View v) {
-					listener.onItemClick(ViewHolder.this);
+					listener.onItemClick(getPosition(), getItemId());
 				}
 			});
 			view.setOnLongClickListener(new OnLongClickListener() {
 				@Override public boolean onLongClick(View v) {
-					return listener.onItemLongClick(ViewHolder.this);
+					return listener.onItemLongClick(getPosition(), getItemId());
 				}
 			});
 		}
@@ -49,6 +49,32 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		ImageView image;
 		ImageView type;
 		TextView count;
+
+		public void bind(Cursor cursor) {
+			title.setText(getName(cursor));
+			count.setText(getCountText(cursor));
+
+			String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+			String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+			imagePath = Constants.Paths.getImagePath(itemView.getContext(), imagePath);
+			if (getItemViewType() == R.layout.item_gallery) {
+				displayImageWithType(image, type, imagePath, typeImage);
+			} else {
+				displayImageWithType(image, image, imagePath, typeImage);
+			}
+		}
+
+		private void displayImageWithType(ImageView image, ImageView type, String imagePath, String typeImageName) {
+			int typeID = AndroidTools.getRawResourceID(type.getContext(), typeImageName);
+
+			if (imagePath == null) {
+				type.setImageDrawable(null); // == Pic.IMAGE_REQUEST.load(null).into(type); Glide#268
+				Pic.SVG_REQUEST.load(typeID).into(image);
+			} else {
+				Pic.SVG_REQUEST.load(typeID).into(type);
+				Pic.IMAGE_REQUEST.load(imagePath).into(image);
+			}
+		}
 	}
 
 	@Override public int getItemViewType(int position) {
@@ -57,21 +83,11 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 		View view = inflater.inflate(viewType, parent, false);
-		return new ViewHolder(view);
+		return new ViewHolder(view, listener);
 	}
 
 	@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
-		holder.title.setText(getName(cursor));
-		holder.count.setText(getCountText(cursor));
-
-		String type = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-		image = Constants.Paths.getImagePath(holder.itemView.getContext(), image);
-		if (holder.getItemViewType() == R.layout.item_gallery) {
-			displayImageWithType(holder.image, holder.type, image, type);
-		} else {
-			displayImageWithType(holder.image, holder.image, image, type);
-		}
+		holder.bind(cursor);
 	}
 
 	public boolean isGroup(int position) {
@@ -99,17 +115,5 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 			}
 		}
 		return countText;
-	}
-
-	private void displayImageWithType(ImageView image, ImageView type, String imagePath, String typeImageName) {
-		int typeID = AndroidTools.getRawResourceID(type.getContext(), typeImageName);
-
-		if (imagePath == null) {
-			type.setImageDrawable(null); // == Pic.IMAGE_REQUEST.load(null).into(type); Glide#268
-			Pic.SVG_REQUEST.load(typeID).into(image);
-		} else {
-			Pic.SVG_REQUEST.load(typeID).into(type);
-			Pic.IMAGE_REQUEST.load(imagePath).into(image);
-		}
 	}
 }

@@ -275,15 +275,34 @@
 
 	<string name="query_categories"><![CDATA["
 		select
-			c._id,
-			c.name,
+			1       as variant,
+			c._id   as _id,
+			c.name  as name,
+			NULL    as image,
 			c.image as typeImage,
 			(select count(1) from Category where parent = c._id) as countChildren,
 			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
 		from Category c
 		left join Category_Name_Cache cnc ON cnc.key = c.name
 		where c.parent = ?
-		order by (CASE WHEN c.name <> 'category_uncategorized' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
+
+		UNION ALL
+
+		select
+			2       as variant,
+			i._id   as _id,
+			i.name  as name,
+			i.image as image,
+			c.image as typeImage,
+			(select count(1) from Item where parent = i._id) as countChildren,
+			NULL    as countAllItems
+		from Item     i
+		join Category c ON i.category = c._id
+		where i.category = ?
+
+		--  (CASE WHEN c.name <> 'category_uncategorized' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
+		order by variant, name
+		;
 	"]]></string>
 	<string name="query_category"><![CDATA["
 		select

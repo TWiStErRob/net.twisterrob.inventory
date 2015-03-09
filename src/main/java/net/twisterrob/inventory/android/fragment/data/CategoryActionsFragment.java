@@ -11,12 +11,12 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
-import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryActionsFragment.CategoryEvents;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, CategoryEvents> {
-	private static final Logger LOG = LoggerFactory.getLogger(CategoryViewFragment.class);
+public class CategoryActionsFragment extends BaseViewFragment<CategoryDTO, CategoryEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(CategoryActionsFragment.class);
 
 	private CharSequence nameCache;
 
@@ -24,7 +24,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		void categoryLoaded(CategoryDTO item);
 	}
 
-	public CategoryViewFragment() {
+	public CategoryActionsFragment() {
 		setDynamicResource(DYN_EventsClass, CategoryEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.category);
 	}
@@ -109,12 +109,12 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 	}
 
-	public static CategoryViewFragment newInstance(long categoryID) {
+	public static CategoryActionsFragment newInstance(long categoryID) {
 		if (categoryID == Category.ID_ADD) {
 			throw new IllegalArgumentException("Must be an existing category");
 		}
 
-		CategoryViewFragment fragment = new CategoryViewFragment();
+		CategoryActionsFragment fragment = new CategoryActionsFragment();
 		fragment.setArguments(ExtrasFactory.bundleFromCategory(categoryID));
 		return fragment;
 	}

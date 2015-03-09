@@ -7,7 +7,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.data.*;
-import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryActionsFragment.CategoryEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
 public class CategoryItemsActivity extends BaseDetailActivity<ItemListFragment> implements CategoryEvents, ItemsEvents {
@@ -24,7 +24,7 @@ public class CategoryItemsActivity extends BaseDetailActivity<ItemListFragment> 
 			setActionBarSubtitle(null);
 			setActionBarTitle(getText(R.string.item_list));
 		} else {
-			fragment.setHeader(CategoryViewFragment.newInstance(categoryID));
+			fragment.setHeader(CategoryActionsFragment.newInstance(categoryID));
 		}
 		return fragment;
 	}

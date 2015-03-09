@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.view;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.ViewGroup;
@@ -11,11 +12,11 @@ public abstract class WrappingAdapter<VH extends RecyclerView.ViewHolder> extend
 	protected WrappingAdapter() {
 		// child must call setWrappedAdapter after it's initialization
 	}
-	public WrappingAdapter(RecyclerView.Adapter<VH> wrapped) {
+	public WrappingAdapter(@NonNull RecyclerView.Adapter<VH> wrapped) {
 		setWrappedAdapter(wrapped);
 	}
 
-	protected void setWrappedAdapter(Adapter<VH> wrapped) {
+	protected void setWrappedAdapter(@NonNull Adapter<VH> wrapped) {
 		if (mWrappedAdapter != null) {
 			mWrappedAdapter.unregisterAdapterDataObserver(mDataObserver);
 		}

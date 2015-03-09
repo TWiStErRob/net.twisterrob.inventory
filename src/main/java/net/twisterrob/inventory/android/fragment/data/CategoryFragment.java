@@ -4,7 +4,6 @@ import org.slf4j.*;
 
 import android.os.Bundle;
 import android.support.v7.widget.*;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
@@ -13,12 +12,12 @@ import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
-import net.twisterrob.inventory.android.fragment.data.CategoryListFragment.CategoriesEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.view.*;
-import net.twisterrob.inventory.android.view.CategoryAdapter.CategoryItemEvents;
+import net.twisterrob.inventory.android.view.CategoryAndItemsAdapter.CategoryItemEvents;
 
-public class CategoryListFragment extends BaseFragment<CategoriesEvents> implements CategoryItemEvents {
-	private static final Logger LOG = LoggerFactory.getLogger(CategoryListFragment.class);
+public class CategoryFragment extends BaseFragment<CategoriesEvents> implements CategoryItemEvents {
+	private static final Logger LOG = LoggerFactory.getLogger(CategoryFragment.class);
 
 	private RecyclerViewLoadersController listController;
 
@@ -27,28 +26,24 @@ public class CategoryListFragment extends BaseFragment<CategoriesEvents> impleme
 		void categoryActioned(long categoryID);
 	}
 
-	private HeaderManager header = null;
-
-	public CategoryListFragment() {
+	public CategoryFragment() {
 		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
-	}
-
-	public void setHeader(BaseFragment headerFragment) {
-		this.header = headerFragment != null? new HeaderManager(this, headerFragment) : null;
 	}
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		listController = new RecyclerViewLoadersController(this, Loaders.Categories) {
 			@Override protected CursorRecyclerAdapter setupList() {
-				list.setLayoutManager(new LinearLayoutManager(getContext()));
-				CategoryAdapter cursorAdapter = new CategoryAdapter(null, CategoryListFragment.this);
-				RecyclerView.Adapter adapter = cursorAdapter;
-				if (header != null) {
-					adapter = header.wrap(adapter);
-				}
-				list.setAdapter(adapter);
-				return cursorAdapter;
+				CategoryAndItemsAdapter adapter = new CategoryAndItemsAdapter(CategoryFragment.this);
+				GridLayoutManager layout = (GridLayoutManager)adapter.createLayout(getContext());
+
+				HeaderViewRecyclerAdapter headerAdapter = new HeaderViewRecyclerAdapter(adapter);
+				layout.setSpanSizeLookup(headerAdapter.wrap(layout.getSpanSizeLookup(), layout.getSpanCount()));
+				// TODO header
+
+				list.setLayoutManager(layout);
+				list.setAdapter(headerAdapter);
+				return adapter;
 			}
 
 			@Override public boolean canCreateNew() {
@@ -83,27 +78,24 @@ public class CategoryListFragment extends BaseFragment<CategoriesEvents> impleme
 
 	@Override
 	protected void onRefresh() {
-		if (header != null) {
-			header.getHeader().refresh();
-		}
 		listController.refresh();
 	}
 
-	@Override public void onItemClick(RecyclerView.ViewHolder holder) {
-		eventsListener.categorySelected(holder.getItemId());
+	@Override public void onItemClick(int position, long recyclerViewItemID) {
+		eventsListener.categorySelected(recyclerViewItemID);
 	}
 
-	@Override public boolean onItemLongClick(RecyclerView.ViewHolder holder) {
-		eventsListener.categoryActioned(holder.getItemId());
+	@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
+		eventsListener.categoryActioned(recyclerViewItemID);
 		return true;
 	}
 
-	@Override public void showItemsInCategory(ViewHolder holder) {
-		getActivity().startActivity(CategoryItemsActivity.show(holder.getItemId()));
+	@Override public void showItemsInCategory(long categoryID) {
+		getActivity().startActivity(CategoryItemsActivity.show(categoryID));
 	}
 
-	public static CategoryListFragment newInstance(long parentCategoryID) {
-		CategoryListFragment fragment = new CategoryListFragment();
+	public static CategoryFragment newInstance(long parentCategoryID) {
+		CategoryFragment fragment = new CategoryFragment();
 		fragment.setArguments(ExtrasFactory.bundleFromParent(parentCategoryID));
 		return fragment;
 	}
