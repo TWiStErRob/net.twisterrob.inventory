@@ -7,7 +7,7 @@ import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
@@ -57,7 +57,10 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 	@Override
 	protected CharSequence getDetailsString(CategoryDTO entity) {
 		return new DescriptionBuilder()
-				.append("Category name", entity.name)
+				.append("Category ID", entity.id, BuildConfig.DEBUG)
+				.append("Category Name", entity.name)
+				.append("Category Image", entity.fallbackImageResourceName, BuildConfig.DEBUG)
+				.append("Parent ID", entity.parentID, BuildConfig.DEBUG)
 				.append("Inside", entity.parentName)
 				.append("# of direct subcategories", entity.numDirectChildren)
 				.append("# of all subcategories", entity.numAllChildren)

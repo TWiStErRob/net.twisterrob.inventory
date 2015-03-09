@@ -290,6 +290,7 @@
 			c._id,
 			c.name,
 			c.image as typeImage,
+			c.parent,
 			ifNULL(ppnc.value || ' > ', '') || pnc.value as parentName,
 			(select count(1) from Category where parent = c._id) as countChildren,
 			(select count(1) from Category_Descendant where category = c._id and category <> descendant) as countAllChildren,
