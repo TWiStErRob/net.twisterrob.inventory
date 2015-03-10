@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.android.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -25,8 +25,8 @@ public abstract class WrappingAdapter<VH extends RecyclerView.ViewHolder> extend
 		mWrappedAdapter.registerAdapterDataObserver(mDataObserver);
 	}
 
-	@Override public VH onCreateViewHolder(ViewGroup group, int position) {
-		return mWrappedAdapter.onCreateViewHolder(group, position);
+	@Override public VH onCreateViewHolder(ViewGroup group, int viewType) {
+		return mWrappedAdapter.onCreateViewHolder(group, viewType);
 	}
 	@Override public void onBindViewHolder(VH holder, int position) {
 		mWrappedAdapter.onBindViewHolder(holder, position);

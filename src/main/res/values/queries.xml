@@ -186,7 +186,7 @@
 			(select count(1) from Item where parent = i._id) as countChildren,
 			c.name as category
 		from Item     i
-		join Category c ON i.category = c._id
+		join Category c ON i.category = c._id and c._id <> -1
 		where i.category = ?
 		order by i.name
 	"]]></string>
@@ -285,23 +285,7 @@
 		from Category c
 		left join Category_Name_Cache cnc ON cnc.key = c.name
 		where c.parent = ?
-
-		UNION ALL
-
-		select
-			2       as variant,
-			i._id   as _id,
-			i.name  as name,
-			i.image as image,
-			c.image as typeImage,
-			(select count(1) from Item where parent = i._id) as countChildren,
-			NULL    as countAllItems
-		from Item     i
-		join Category c ON i.category = c._id
-		where i.category = ?
-
-		--  (CASE WHEN c.name <> 'category_uncategorized' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
-		order by variant, name
+		order by (CASE WHEN c.name <> 'category_uncategorized' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
 		;
 	"]]></string>
 	<string name="query_category"><![CDATA["
@@ -320,7 +304,7 @@
 		left join Category_Name_Cache pnc ON p.name = pnc.key
 		left join Category pp ON p.parent = pp._id and pp._id <> -1
 		left join Category_Name_Cache ppnc ON pp.name = ppnc.key
-		where c._id = ?
+		where c._id = ? and c._id <> -1
 	"]]></string>
 
 	<string name="query_list_list"><![CDATA["

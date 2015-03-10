@@ -91,4 +91,7 @@ public final class ExtrasFactory {
 	public static long getItemFrom(Bundle bundle) {
 		return bundle != null? bundle.getLong(Extras.ITEM_ID, Item.ID_ADD) : Item.ID_ADD;
 	}
+	public static long getCategory(Bundle bundle) {
+		return bundle != null? bundle.getLong(Extras.CATEGORY_ID, Category.ID_ADD) : Category.ID_ADD;
+	}
 }

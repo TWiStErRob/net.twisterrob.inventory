@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.android.adapter;
 
 import java.util.*;
 
@@ -187,6 +187,7 @@ public class HeaderViewRecyclerAdapter extends WrappingAdapter<RecyclerView.View
 		return mFooterViews.size();
 	}
 
+	/** layout.setSpanSizeLookup(headerAdapter.wrap(layout.getSpanSizeLookup(), layout.getSpanCount())); */
 	public SpanSizeLookup wrap(final SpanSizeLookup lookup, final int headerFooterSpanSize) {
 		return new SpanSizeLookup() {
 			@Override public int getSpanSize(int position) {

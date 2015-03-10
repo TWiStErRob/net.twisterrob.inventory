@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 
+import net.twisterrob.android.adapter.HeaderViewRecyclerAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 

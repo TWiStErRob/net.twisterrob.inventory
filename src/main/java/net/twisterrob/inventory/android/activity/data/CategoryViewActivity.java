@@ -55,4 +55,13 @@ public class CategoryViewActivity extends BaseDetailActivity<CategoryFragment>
 		intent.putExtra(Extras.PARENT_ID, categoryID);
 		return intent;
 	}
+	@Override public void newItem(long parentID) {
+		// ignore
+	}
+	@Override public void itemSelected(long itemID) {
+		startActivity(ItemViewActivity.show(itemID));
+	}
+	@Override public void itemActioned(long itemID) {
+		startActivity(ItemViewActivity.show(itemID));
+	}
 }

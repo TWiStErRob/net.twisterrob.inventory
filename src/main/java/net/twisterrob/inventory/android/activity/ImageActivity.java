@@ -34,6 +34,7 @@ public class ImageActivity extends Activity implements RequestListener<Uri, Glid
 
 	@Override
 	public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
+		App.toast(String.valueOf(e));
 		finish();
 		return true;
 	}
