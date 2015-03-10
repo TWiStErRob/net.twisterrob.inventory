@@ -82,15 +82,10 @@
 	<string name="selection_selectInv_short">Invert</string>
 
 	<string name="category_list">Categories</string>
-	<string name="category_details">Category Subcategories</string>
-	<string name="category_items">Category Items</string>
+	<string name="category_details">Category</string>
 	<string name="category_share">Share Category</string>
-	<string name="category_viewItems">List Items directly inside</string>
-	<string name="category_viewItems_special">List Items directly in %1$s</string>
-	<string name="category_viewAllItems">List All Items</string>
-	<string name="category_viewAllItems_special">List All Items in %1$s</string>
+	<string name="category_viewAllItems">Flatten Subcategories</string>
 	<string name="label_category_subs">%1$d Subcategories</string>
-	<string name="label_category_items_view">List %1$d Items</string>
 
 	<plurals name="list">
 		<item quantity="one">list</item>
@@ -108,7 +103,7 @@
 	</plurals>
 	<string name="item_one">Item</string>
 	<string name="item_list">Items</string>
-	<string name="item_details">Item Details</string>
+	<string name="item_details">Item</string>
 	<string name="item_add">Add Item Inside</string>
 	<string name="item_new">New Item</string>
 	<string name="item_edit">Edit Item</string>
@@ -126,7 +121,7 @@
 	</plurals>
 	<string name="property_one">Property</string>
 	<string name="property_list">Properties</string>
-	<string name="property_details">Property Details</string>
+	<string name="property_details">Property</string>
 	<string name="property_add">Add Property</string>
 	<string name="property_new">New Property</string>
 	<string name="property_edit">Edit Property</string>
@@ -142,7 +137,7 @@
 	</plurals>
 	<string name="room_one">Room</string>
 	<string name="room_list">Rooms</string>
-	<string name="room_details">Room Details</string>
+	<string name="room_details">Room</string>
 	<string name="room_add">Add Room</string>
 	<string name="room_new">New Room</string>
 	<string name="room_edit">Edit Room</string>

@@ -52,7 +52,9 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 
 		public void bind(Cursor cursor) {
 			title.setText(getName(cursor));
-			count.setText(getCountText(cursor));
+			String countText = getCountText(cursor);
+			count.setText(countText);
+			count.setVisibility(countText != null? View.VISIBLE : View.GONE);
 
 			String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 			String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));

@@ -13,6 +13,7 @@
 	android:background="@drawable/item_state"
 	tools:layout_width="240dp"
 	tools:background="@color/toolsBG"
+	tools:context=".view.IconedItemAdapter"
 	>
 	<!-- TODO android.support.v7.widget.Space -->
 	<View
@@ -21,7 +22,7 @@
 		android:background="@drawable/item_drawer_active"
 		/>
 	<ImageView
-		android:id="@id/icon"
+		android:id="@id/image"
 		android:layout_width="?attr/listPreferredItemHeightSmall"
 		android:layout_height="?attr/listPreferredItemHeightSmall"
 		android:layout_gravity="center_vertical"
@@ -45,20 +46,10 @@
 		android:textIsSelectable="false"
 		tools:text="Application Drawer Item"
 		/>
-	<TextView
+	<include
 		android:id="@id/count"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
-		android:layout_gravity="center_vertical"
-		android:layout_margin="8dp"
-		android:background="?attr/colorAccent"
-		android:minHeight="?attr/listPreferredItemHeightSmall"
-		android:gravity="center"
-		android:textAppearance="?attr/textAppearanceListItemSmall"
-		android:textSize="12sp"
-		android:textStyle="bold"
+		layout="@layout/inc_count"
 		android:visibility="invisible"
 		tools:visibility="visible"
-		tools:text="999"
 		/>
 </LinearLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@id/adapterRoot"
@@ -8,33 +8,20 @@
 	android:background="@drawable/item_state"
 	tools:background="@color/toolsBG"
 	>
+	<include
+		android:id="@id/count"
+		layout="@layout/inc_count"
+		/>
 	<TextView
 		android:id="@id/title"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
 		android:layout_marginLeft="@dimen/margin"
 		android:layout_marginRight="@dimen/margin"
-		android:layout_centerVertical="true"
-		android:layout_toLeftOf="@id/count"
-		android:layout_toStartOf="@id/count"
 		android:focusable="false"
 		android:textAppearance="?attr/textAppearanceListItemSmall"
 		android:textIsSelectable="false"
 		tools:text="List Name"
 		/>
-	<TextView
-		android:id="@id/count"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
-		android:padding="@dimen/margin"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
-		android:background="@drawable/circle"
-		android:focusable="false"
-		android:gravity="center"
-		android:textColor="@color/accent"
-		android:textIsSelectable="false"
-		tools:text="999"
-		/>
-</RelativeLayout>
+</LinearLayout>

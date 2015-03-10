@@ -85,7 +85,9 @@ public class BaseActivity extends ActionBarActivity {
 			Object item = drawerLeft.getItemAtPosition(pos);
 			if (item instanceof SVGIntentItem) {
 				SVGIntentItem intentItem = (SVGIntentItem)item;
-				if (getIntent().getComponent().equals(intentItem.getIntent().getComponent())) {
+				if (getIntent().getComponent().equals(intentItem.getIntent().getComponent())
+						&& AndroidTools.toString(getIntent().getExtras())
+						               .equals(AndroidTools.toString(intentItem.getIntent().getExtras()))) {
 					return pos;
 				}
 			}
@@ -141,10 +143,10 @@ public class BaseActivity extends ActionBarActivity {
 
 		// @formatter:off
 		acts.add(new SVGIntentItem(R.string.home_title, R.raw.property_home, activity, MainActivity.home()));
-		acts.add(new SVGIntentItem(R.string.category_list, R.raw.category_unknown, activity, CategoryViewActivity.listAll()));
+		acts.add(new SVGIntentItem(R.string.category_list, R.raw.category_unknown, activity, CategoryActivity.listAll()));
 		acts.add(new SVGIntentItem(R.string.property_list, R.raw.property_unknown, activity, PropertyListActivity.listAll()));
 		acts.add(new SVGIntentItem(R.string.room_list, R.raw.room_unknown, activity, PropertyViewActivity.listAll()));
-		acts.add(new SVGIntentItem(R.string.item_list, R.raw.category_box, activity, CategoryItemsActivity.listAll()));
+		acts.add(new SVGIntentItem(R.string.item_list, R.raw.category_box, activity, CategoryActivity.listAllItems()));
 		acts.add(new SVGIntentItem(R.string.sunburst_title, R.raw.ic_sunburst, activity, SunburstActivity.showAll()));
 		// @formatter:on
 		acts.add(new SVGItem(R.string.backup_title, R.raw.category_disc) {

@@ -5,6 +5,7 @@ import java.io.File;
 import org.slf4j.*;
 
 import android.content.*;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
@@ -13,17 +14,20 @@ import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.view.*;
 
 import net.twisterrob.android.adapter.ConcatAdapter;
+import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.ImageActivity;
-import net.twisterrob.inventory.android.activity.data.CategoryItemsActivity;
+import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.ExtrasFactory;
+import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.CategoryFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.CategoryAdapter.CategoryItemEvents;
-import net.twisterrob.inventory.android.view.DetailsAdapter.DetailsEvent;
+import net.twisterrob.inventory.android.view.DetailsAdapter.DetailsEvents;
 import net.twisterrob.inventory.android.view.GalleryAdapter.GalleryItemEvents;
 
 public class CategoryFragment extends BaseFragment<CategoriesEvents> {
@@ -45,51 +49,27 @@ public class CategoryFragment extends BaseFragment<CategoriesEvents> {
 		listController = new RecyclerViewCursorsLoadersController(getContext(), getLoaderManager(),
 				Loaders.SingleCategory, Loaders.Categories, Loaders.Items) {
 			@Override protected void setupList() {
-				final DetailsAdapter headerAdapter = new DetailsAdapter(new DetailsEvent() {
-					@Override public void showImage(String path) {
-						try {
-							File file = new File(path);
-							Uri uri = FileProvider.getUriForFile(getContext(), Constants.AUTHORITY_IMAGES, file);
-							Intent intent = new Intent(Intent.ACTION_VIEW);
-							if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer), true)) {
-								intent.setComponent(new ComponentName(getContext(), ImageActivity.class));
-							}
-							intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-							intent.setDataAndType(uri, "image/jpeg");
-							getActivity().startActivity(intent);
-						} catch (Exception ex) {
-							LOG.warn("Cannot start image viewer for {}", path, ex);
-						}
+				final DetailsAdapter headerAdapter = new DetailsAdapter(new DetailsEventsForwarder()) {
+					@Override
+					protected CharSequence getDetailsString(Context context, Cursor cursor) {
+						CategoryDTO entity = CategoryDTO.fromCursor(cursor);
+						return new DescriptionBuilder()
+								.append("Category ID", entity.id, BuildConfig.DEBUG)
+								.append("Category Key", entity.name, BuildConfig.DEBUG)
+								.append("Category Name", AndroidTools.getText(context, entity.name))
+								.append("Category Image", entity.fallbackImageResourceName, BuildConfig.DEBUG)
+								.append("Parent ID", entity.parentID, BuildConfig.DEBUG)
+								.append("Inside", entity.parentName)
+								.append("# of direct subcategories", entity.numDirectChildren)
+								.append("# of all subcategories", entity.numAllChildren)
+								.append("# of items in this category", entity.numDirectItems)
+								.append("# of items inside", entity.numAllItems)
+								.build();
 					}
-					@Override public void editImage(long id) {
+				};
 
-					}
-				});
-
-				final CategoryAdapter catAdapter = new CategoryAdapter(new CategoryItemEvents() {
-					@Override public void showItemsInCategory(long categoryID) {
-						getActivity().startActivity(CategoryItemsActivity.show(categoryID));
-					}
-
-					@Override public void onItemClick(int position, long recyclerViewItemID) {
-						eventsListener.categorySelected(recyclerViewItemID);
-					}
-
-					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
-						eventsListener.categoryActioned(recyclerViewItemID);
-						return true;
-					}
-				});
-
-				final GalleryAdapter galAdapter = new GalleryAdapter(null, new GalleryItemEvents() {
-					@Override public void onItemClick(int position, long recyclerViewItemID) {
-						eventsListener.itemSelected(recyclerViewItemID);
-					}
-					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
-						eventsListener.itemActioned(recyclerViewItemID);
-						return true;
-					}
-				});
+				final CategoryAdapter catAdapter = new CategoryAdapter(new CategoryItemEventsForwarder());
+				final GalleryAdapter galAdapter = new GalleryAdapter(null, new GalleryItemEventsForwarder());
 
 				ConcatAdapter adapter = new ConcatAdapter(headerAdapter, catAdapter, galAdapter);
 				final int columns = getContext().getResources().getInteger(R.integer.gallery_columns);
@@ -129,22 +109,82 @@ public class CategoryFragment extends BaseFragment<CategoriesEvents> {
 	}
 
 	@Override protected void onStartLoading() {
-		listController.startLoad(Loaders.SingleCategory, ExtrasFactory.bundleFromCategory(getArgCategoryID()));
-		listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromParent(getArgCategoryID()));
-		listController.startLoad(Loaders.Items, ExtrasFactory.bundleFromCategory(getArgCategoryID()));
+		long id = getArgCategoryID();
+		listController.startLoad(Loaders.SingleCategory, ExtrasFactory.bundleFromCategory(
+				id == Category.INTERNAL? Category.ID_ADD : id)); // don't show internal header: request non-existent
+		if (getArgFlatten()) {
+			Bundle args = ExtrasFactory.bundleFromCategory(id);
+			args.putBoolean(Extras.INCLUDE_SUBS, true);
+			listController.startLoad(Loaders.Items, args);
+			listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromParent(Category.ID_ADD)); // 0 rows
+		} else {
+			listController.startLoad(Loaders.Items, ExtrasFactory.bundleFromCategory(id));
+			listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromParent(id));
+		}
 	}
 
 	private long getArgCategoryID() {
 		return ExtrasFactory.getCategory(getArguments());
+	}
+	private boolean getArgFlatten() {
+		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
 
 	@Override protected void onRefresh() {
 		listController.refresh();
 	}
 
-	public static CategoryFragment newInstance(long parentCategoryID) {
+	public static CategoryFragment newInstance(long parentCategoryID, boolean flatten) {
 		CategoryFragment fragment = new CategoryFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromCategory(parentCategoryID));
+		Bundle args = ExtrasFactory.bundleFromCategory(parentCategoryID);
+		args.putBoolean(Extras.INCLUDE_SUBS, flatten);
+		fragment.setArguments(args);
 		return fragment;
+	}
+
+	private class CategoryItemEventsForwarder implements CategoryItemEvents {
+		@Override public void showItemsInCategory(long categoryID) {
+			getActivity().startActivity(CategoryActivity.showFlattened(categoryID));
+		}
+
+		@Override public void onItemClick(int position, long recyclerViewItemID) {
+			eventsListener.categorySelected(recyclerViewItemID);
+		}
+
+		@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
+			eventsListener.categoryActioned(recyclerViewItemID);
+			return true;
+		}
+	}
+
+	private class GalleryItemEventsForwarder implements GalleryItemEvents {
+		@Override public void onItemClick(int position, long recyclerViewItemID) {
+			eventsListener.itemSelected(recyclerViewItemID);
+		}
+		@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
+			eventsListener.itemActioned(recyclerViewItemID);
+			return true;
+		}
+	}
+
+	private class DetailsEventsForwarder implements DetailsEvents {
+		@Override public void showImage(String path) {
+			try {
+				File file = new File(path);
+				Uri uri = FileProvider.getUriForFile(getContext(), Constants.AUTHORITY_IMAGES, file);
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer), true)) {
+					intent.setComponent(new ComponentName(getContext(), ImageActivity.class));
+				}
+				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+				intent.setDataAndType(uri, "image/jpeg");
+				getActivity().startActivity(intent);
+			} catch (Exception ex) {
+				LOG.warn("Cannot start image viewer for {}", path, ex);
+			}
+		}
+		@Override public void editImage(long id) {
+
+		}
 	}
 }

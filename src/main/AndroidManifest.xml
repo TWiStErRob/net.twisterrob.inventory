@@ -94,16 +94,10 @@
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 		</activity>
 		<activity
-			android:name=".activity.data.CategoryViewActivity"
+			android:name=".activity.data.CategoryActivity"
 			android:label="@string/category_details">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
-		</activity>
-		<activity
-			android:name=".activity.data.CategoryItemsActivity"
-			android:label="@string/category_items">
-			<meta-data android:name="android.support.PARENT_ACTIVITY"
-			           android:value="net.twisterrob.inventory.android.activity.data.CategoryViewActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.PropertyListActivity"

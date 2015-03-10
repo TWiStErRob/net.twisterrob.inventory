@@ -33,7 +33,7 @@ public class CategoryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 			image = (ImageView)view.findViewById(R.id.image);
 			title = (TextView)view.findViewById(R.id.title);
 			stats = (TextView)view.findViewById(R.id.stats);
-			items = (Button)view.findViewById(R.id.items);
+			count = (TextView)view.findViewById(R.id.count);
 
 			view.setOnClickListener(new OnClickListener() {
 				@Override public void onClick(View v) {
@@ -45,7 +45,7 @@ public class CategoryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 					return listener.onItemLongClick(getPosition(), getItemId());
 				}
 			});
-			items.setOnClickListener(new OnClickListener() {
+			count.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					listener.showItemsInCategory(getItemId());
 				}
@@ -55,7 +55,7 @@ public class CategoryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		ImageView image;
 		TextView title;
 		TextView stats;
-		Button items;
+		TextView count;
 	}
 
 	@Override public int getItemViewType(int position) {
@@ -80,10 +80,10 @@ public class CategoryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 
 		Integer itemCountTotal = getCount(cursor, Category.COUNT_ITEM_ALL);
 		if (itemCountTotal != null) {
-			holder.items.setVisibility(View.VISIBLE);
-			holder.items.setText(context.getString(R.string.label_category_items_view, itemCountTotal));
+			holder.count.setVisibility(View.VISIBLE);
+			holder.count.setText(String.valueOf(itemCountTotal));
 		} else {
-			holder.items.setVisibility(View.GONE);
+			holder.count.setVisibility(View.GONE);
 		}
 
 		Pic.SVG_REQUEST.load(getTypeImage(cursor, context)).into(holder.image);

@@ -34,7 +34,7 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 	}
 
 	public void propertyLoaded(PropertyDTO property) {
-		// ignore
+		setActionBarTitle(property.name);
 	}
 
 	public void propertyDeleted(PropertyDTO property) {

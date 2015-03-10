@@ -8,6 +8,7 @@
 	android:padding="@dimen/margin"
 	android:background="@drawable/item_state"
 	tools:background="@color/toolsBG"
+	tools:context=".view.GalleryAdapter"
 	>
 	<ImageView
 		android:id="@id/image"
@@ -30,24 +31,16 @@
 		android:scaleType="fitCenter"
 		tools:src="@drawable/category_unknown"
 		/>
-	<TextView
+	<include
 		android:id="@id/count"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		layout="@layout/inc_count"
+		android:layout_width="32dp"
+		android:layout_height="32dp"
 		android:layout_gravity="bottom|start"
-		android:layout_marginLeft="@dimen/margin"
-		android:layout_marginBottom="@dimen/margin"
-		android:layout_marginStart="@dimen/margin"
-		android:focusable="false"
-		android:gravity="center"
+		android:layout_margin="@dimen/margin"
 		android:shadowColor="#084"
-		android:shadowDx="2"
-		android:shadowDy="2"
+		android:shadowDx="2" android:shadowDy="2"
 		android:shadowRadius="1"
-		android:textColor="#0f8"
-		android:textIsSelectable="false"
-		android:textSize="18sp"
-		tools:text="999"
 		/>
 	<net.twisterrob.android.view.WrappedTextView
 		android:id="@id/title"

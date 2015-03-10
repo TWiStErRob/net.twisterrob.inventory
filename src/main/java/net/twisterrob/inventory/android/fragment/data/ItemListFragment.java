@@ -181,13 +181,13 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	private long getArgParentItemID() {
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
-	private long getArgCategoryID() {
+	@Deprecated private long getArgCategoryID() {
 		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 	}
 	private long getArgRoomID() {
 		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
-	private boolean getArgIncludeSubs() {
+	@Deprecated private boolean getArgIncludeSubs() {
 		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
 	private CharSequence getArgQuery() {
@@ -214,7 +214,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		return fragment;
 	}
 
-	public static ItemListFragment newCategoryInstance(long categoryID, boolean include) {
+	@Deprecated public static ItemListFragment newCategoryInstance(long categoryID, boolean include) {
 		ItemListFragment fragment = new ItemListFragment();
 
 		Bundle args = ExtrasFactory.bundleFromCategory(categoryID);

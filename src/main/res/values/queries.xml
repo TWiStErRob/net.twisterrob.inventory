@@ -304,7 +304,7 @@
 		left join Category_Name_Cache pnc ON p.name = pnc.key
 		left join Category pp ON p.parent = pp._id and pp._id <> -1
 		left join Category_Name_Cache ppnc ON pp.name = ppnc.key
-		where c._id = ? and c._id <> -1
+		where c._id = ?
 	"]]></string>
 
 	<string name="query_list_list"><![CDATA["

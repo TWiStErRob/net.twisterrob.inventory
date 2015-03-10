@@ -13,23 +13,24 @@ import android.widget.*;
 import static android.content.Context.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
-import net.twisterrob.inventory.android.content.model.*;
+import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.view.DetailsAdapter.ViewHolder;
 
 public class DetailsAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	private static final Logger LOG = LoggerFactory.getLogger(DetailsAdapter.class);
 
-	public interface DetailsEvent {
+	public interface DetailsEvents {
 		void showImage(String path);
 		void editImage(long id);
 	}
 
-	private final DetailsEvent listener;
+	private final DetailsEvents listener;
 
-	public DetailsAdapter(DetailsEvent listener) {
+	public DetailsAdapter(DetailsEvents listener) {
 		super(null);
 		this.listener = listener;
 	}
@@ -49,7 +50,7 @@ public class DetailsAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	}
 
 	@Override public int getItemViewType(int position) {
-		return R.layout.fragment_details;
+		return R.layout.item_details;
 	}
 
 	@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,9 +61,32 @@ public class DetailsAdapter extends CursorRecyclerAdapter<ViewHolder> {
 
 	@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
 		if (holder.pager.getAdapter() == null) {
-			CategoryDTO entity = CategoryDTO.fromCursor(cursor);
-			holder.pager.setAdapter(new ImageAndDescriptionAdapter(holder.itemView.getContext(), entity));
+			Context context = holder.itemView.getContext();
+			holder.pager.setAdapter(new ImageAndDescriptionAdapter(context,
+					holder.getItemId(),
+					getDetailsString(context, cursor),
+					getImage(context, cursor),
+					getTypeImage(context, cursor)));
 		}
+	}
+
+	private String getImage(Context context, Cursor cursor) {
+		int index = cursor.getColumnIndex(CommonColumns.IMAGE);
+		if (index != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			return cursor.getString(index);
+		} else {
+			return null;
+		}
+	}
+
+	private int getTypeImage(Context context, Cursor cursor) {
+		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+		return AndroidTools.getRawResourceID(context, typeImage);
+	}
+
+	protected CharSequence getDetailsString(Context context, Cursor cursor) {
+		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		return AndroidTools.getText(context, name);
 	}
 
 	private static int getDefaultPageIndex(Context context) {
@@ -75,11 +99,19 @@ public class DetailsAdapter extends CursorRecyclerAdapter<ViewHolder> {
 
 	private class ImageAndDescriptionAdapter extends PagerAdapter {
 		private final Context context;
-		private final ImagedDTO entity;
+		private final long id;
+		private final CharSequence description;
+		private final String imagePath;
+		private final int fallbackID;
 
-		public ImageAndDescriptionAdapter(Context context, ImagedDTO imageData) {
+		public ImageAndDescriptionAdapter(Context context, long id, CharSequence description, String imagePath,
+				int fallbackID) {
+
 			this.context = context;
-			this.entity = imageData;
+			this.id = id;
+			this.description = description;
+			this.imagePath = imagePath;
+			this.fallbackID = fallbackID;
 		}
 
 		@Override
@@ -114,23 +146,20 @@ public class DetailsAdapter extends CursorRecyclerAdapter<ViewHolder> {
 					ImageView type = (ImageView)view.findViewById(R.id.type);
 					image.setOnClickListener(new OnClickListener() {
 						@Override public void onClick(View v) {
-							String path = entity.getImage(v.getContext());
-							if (path != null) {
-								listener.showImage(path);
+							if (imagePath != null) {
+								listener.showImage(imagePath);
 							} else {
-								listener.editImage(entity.id);
+								listener.editImage(id);
 							}
 						}
 					});
 					image.setOnLongClickListener(new OnLongClickListener() {
 						@Override public boolean onLongClick(View v) {
-							listener.editImage(entity.id);
+							listener.editImage(id);
 							return true;
 						}
 					});
 
-					int fallbackID = entity.getFallbackResource(image.getContext());
-					String imagePath = entity.getImage(image.getContext());
 					if (imagePath == null) {
 						type.setImageDrawable(null);
 						Pic.SVG_REQUEST.load(fallbackID).into(image);
@@ -143,7 +172,7 @@ public class DetailsAdapter extends CursorRecyclerAdapter<ViewHolder> {
 				case 1: {
 					view = inflater.inflate(R.layout.inc_details_details, container, false);
 					TextView details = (TextView)view.findViewById(R.id.details);
-					details.setText(entity.name);
+					details.setText(description);
 					//details.setMovementMethod(ScrollingMovementMethod.getInstance());
 					details.setOnTouchListener(new OnTouchListener() {
 						@Override

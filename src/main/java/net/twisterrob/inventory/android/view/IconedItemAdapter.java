@@ -29,7 +29,7 @@ public class IconedItemAdapter extends BaseListAdapter<IconedItem, ViewHolder> {
 
 		ViewHolder(View view) {
 			this.view = view;
-			icon = (ImageView)view.findViewById(R.id.icon);
+			icon = (ImageView)view.findViewById(R.id.image);
 			label = (TextView)view.findViewById(R.id.title);
 		}
 	}

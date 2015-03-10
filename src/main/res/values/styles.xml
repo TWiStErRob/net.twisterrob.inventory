@@ -17,7 +17,7 @@
 	<style name="Theme.AppTheme.RecyclerList">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">match_parent</item>
-		<item name="android:padding">@dimen/margin</item>
+		<!--<item name="android:padding">@dimen/margin</item>-->
 		<item name="android:scrollbars">vertical</item>
 	</style>
 </resources>
