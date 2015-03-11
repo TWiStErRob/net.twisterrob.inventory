@@ -58,7 +58,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 				.append("# of rooms", entity.numDirectChildren)
 				.append("# of rooms", entity.numAllChildren, BuildConfig.DEBUG)
 				.append("# of items in the rooms", entity.numDirectItems)
-				.append("# of items inside", entity.numAllItems)
+				.append("# of items inside rooms", entity.numAllItems)
 				.append("image", entity.image, BuildConfig.DEBUG)
 				.append("Description", entity.description)
 				.build();

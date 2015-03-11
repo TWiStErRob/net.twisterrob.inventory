@@ -23,13 +23,6 @@ public class BaseFragment<T> extends Fragment {
 
 	protected T eventsListener;
 
-	public BaseFragment() {
-		LOG.trace("Creating {}@{}",
-				getClass().getSimpleName(),
-				Integer.toHexString(System.identityHashCode(this))
-		);
-	}
-
 	protected void setDynamicResource(String type, Object resource) {
 		dynResources.put(type, resource);
 	}
@@ -58,6 +51,11 @@ public class BaseFragment<T> extends Fragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		LOG.trace("Creating {}@{} {}",
+				getClass().getSimpleName(),
+				Integer.toHexString(System.identityHashCode(this)),
+				AndroidTools.toString(getArguments())
+		);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}

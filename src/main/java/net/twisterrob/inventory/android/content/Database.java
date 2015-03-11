@@ -148,8 +148,8 @@ public class Database {
 		execSQL(R.string.query_recent_add, itemID);
 		return rawQuery(R.string.query_item, itemID);
 	}
-	public Cursor listCategories(long parentID) {
-		return rawQuery(R.string.query_categories, parentID);
+	public Cursor listCategories(Long parentCategoryID) {
+		return rawQuery(R.string.query_categories, parentCategoryID, parentCategoryID);
 	}
 	public Cursor getCategory(long itemID) {
 		return rawQuery(R.string.query_category, itemID);

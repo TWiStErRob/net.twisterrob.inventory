@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.contract.Extras;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryActionsFragment.CategoryEvents;
@@ -14,10 +14,13 @@ import net.twisterrob.inventory.android.fragment.data.CategoryFragment.Categorie
 public class CategoryActivity extends BaseDetailActivity<CategoryFragment>
 		implements CategoryEvents, CategoriesEvents {
 	@Override protected void onCreate(Bundle savedInstanceState) {
-		long categoryID = getExtraCategoryID();
-		wantDrawer = categoryID == Category.INTERNAL;
+		Long categoryID = getExtraCategoryID();
+		wantDrawer = categoryID == null;
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState == null) {
+		if (categoryID == null) {
+			setActionBarTitle(getText(getExtraIncludeSubs()? R.string.item_list : R.string.category_list));
+			setActionBarSubtitle(null);
+		} else if (savedInstanceState == null) {
 			getSupportFragmentManager()
 					.beginTransaction()
 					.add(CategoryActionsFragment.newInstance(categoryID), "details")
@@ -28,18 +31,13 @@ public class CategoryActivity extends BaseDetailActivity<CategoryFragment>
 
 	@Override
 	protected CategoryFragment onCreateFragment(Bundle savedInstanceState) {
-		long categoryID = getExtraCategoryID();
+		Long categoryID = getExtraCategoryID();
 		CategoryFragment fragment = CategoryFragment.newInstance(categoryID, getExtraIncludeSubs());
 		return fragment;
 	}
 
 	public void categoryLoaded(CategoryDTO category) {
-		if (category.id == Category.INTERNAL) {
-			setActionBarTitle(getText(getExtraIncludeSubs()? R.string.item_list : R.string.category_list));
-			setActionBarSubtitle(null);
-		} else {
-			setActionBarTitle(AndroidTools.getText(this, category.name));
-		}
+		setActionBarTitle(AndroidTools.getText(this, category.name));
 	}
 
 	public void categorySelected(long id) {
@@ -61,8 +59,8 @@ public class CategoryActivity extends BaseDetailActivity<CategoryFragment>
 		startActivity(ItemViewActivity.show(itemID));
 	}
 
-	private long getExtraCategoryID() {
-		return getIntent().getLongExtra(Extras.CATEGORY_ID, Category.ID_ADD);
+	private Long getExtraCategoryID() {
+		return (Long)getIntent().getExtras().get(Extras.CATEGORY_ID);
 	}
 
 	private boolean getExtraIncludeSubs() {
@@ -70,22 +68,22 @@ public class CategoryActivity extends BaseDetailActivity<CategoryFragment>
 	}
 
 	public static Intent listAll() {
-		return show(Category.INTERNAL);
+		return show(null, false);
 	}
 	public static Intent listAllItems() {
-		return showFlattened(Category.INTERNAL);
+		return show(null, true);
 	}
-
 	public static Intent show(long categoryID) {
-		Intent intent = new Intent(App.getAppContext(), CategoryActivity.class);
-		intent.putExtra(Extras.CATEGORY_ID, categoryID);
-		intent.putExtra(Extras.INCLUDE_SUBS, false);
-		return intent;
+		return show(categoryID, false);
 	}
 	public static Intent showFlattened(long categoryID) {
+		return show(categoryID, true);
+	}
+
+	private static Intent show(Long categoryID, boolean flattened) {
 		Intent intent = new Intent(App.getAppContext(), CategoryActivity.class);
 		intent.putExtra(Extras.CATEGORY_ID, categoryID);
-		intent.putExtra(Extras.INCLUDE_SUBS, true);
+		intent.putExtra(Extras.INCLUDE_SUBS, flattened);
 		return intent;
 	}
 }

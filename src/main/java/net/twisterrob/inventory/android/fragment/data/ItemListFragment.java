@@ -152,10 +152,18 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 			return ExtrasFactory.bundleFromQuery(getArgQuery());
 		} else {
 			Bundle args = new Bundle();
-			args.putLong(Extras.PARENT_ID, getArgParentItemID());
-			args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
-			args.putLong(Extras.ROOM_ID, getArgRoomID());
-			args.putLong(Extras.LIST_ID, getArgListID());
+			if (getArgParentItemID() != Item.ID_ADD) {
+				args.putLong(Extras.PARENT_ID, getArgParentItemID());
+			}
+			if (getArgCategoryID() != Category.ID_ADD) {
+				args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
+			}
+			if (getArgRoomID() != Room.ID_ADD) {
+				args.putLong(Extras.ROOM_ID, getArgRoomID());
+			}
+			if (getArgListID() != CommonColumns.ID_ADD) {
+				args.putLong(Extras.LIST_ID, getArgListID());
+			}
 			args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
 			return args;
 		}
@@ -176,7 +184,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	}
 
 	private long getArgListID() {
-		return getArguments().getLong(Extras.LIST_ID, Item.ID_ADD);
+		return getArguments().getLong(Extras.LIST_ID, CommonColumns.ID_ADD);
 	}
 	private long getArgParentItemID() {
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);

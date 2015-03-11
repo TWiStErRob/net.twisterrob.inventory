@@ -18,30 +18,30 @@ public class DatabaseTools {
 	}
 
 	public static int getOptionalInt(Cursor cursor, String columnName, int defaultValue) {
-		int parentColumn = cursor.getColumnIndex(columnName);
-		if (parentColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			return cursor.getInt(parentColumn);
+		int col = cursor.getColumnIndex(columnName);
+		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			return cursor.getInt(col);
 		}
 		return defaultValue;
 	}
 	public static Integer getOptionalInt(Cursor cursor, String columnName) {
-		int parentColumn = cursor.getColumnIndex(columnName);
-		if (parentColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			return cursor.getInt(parentColumn);
+		int col = cursor.getColumnIndex(columnName);
+		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			return cursor.isNull(col)? null : cursor.getInt(col);
 		}
 		return null;
 	}
 	public static long getOptionalLong(Cursor cursor, String columnName, long defaultValue) {
-		int parentColumn = cursor.getColumnIndex(columnName);
-		if (parentColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			return cursor.getLong(parentColumn);
+		int col = cursor.getColumnIndex(columnName);
+		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			return cursor.getLong(col);
 		}
 		return defaultValue;
 	}
 	public static Long getOptionalLong(Cursor cursor, String columnName) {
-		int parentColumn = cursor.getColumnIndex(columnName);
-		if (parentColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			return cursor.getLong(parentColumn);
+		int col = cursor.getColumnIndex(columnName);
+		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			return cursor.isNull(col)? null : cursor.getLong(col);
 		}
 		return null;
 	}
@@ -49,9 +49,9 @@ public class DatabaseTools {
 		return getOptionalString(cursor, columnName, null);
 	}
 	public static String getOptionalString(Cursor cursor, String columnName, String defaultValue) {
-		int parentColumn = cursor.getColumnIndex(columnName);
-		if (parentColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			return cursor.getString(parentColumn);
+		int col = cursor.getColumnIndex(columnName);
+		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			return cursor.isNull(col)? null : cursor.getString(col);
 		}
 		return defaultValue;
 	}

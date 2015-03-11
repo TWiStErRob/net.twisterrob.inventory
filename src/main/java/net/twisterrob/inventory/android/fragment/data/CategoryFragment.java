@@ -61,9 +61,9 @@ public class CategoryFragment extends BaseFragment<CategoriesEvents> {
 								.append("Parent ID", entity.parentID, BuildConfig.DEBUG)
 								.append("Inside", entity.parentName)
 								.append("# of direct subcategories", entity.numDirectChildren)
-								.append("# of all subcategories", entity.numAllChildren)
+								.append("# of subcategories", entity.numAllChildren)
 								.append("# of items in this category", entity.numDirectItems)
-								.append("# of items inside", entity.numAllItems)
+								.append("# of items in subcategories", entity.numAllItems)
 								.build();
 					}
 				};
@@ -109,22 +109,25 @@ public class CategoryFragment extends BaseFragment<CategoriesEvents> {
 	}
 
 	@Override protected void onStartLoading() {
-		long id = getArgCategoryID();
-		listController.startLoad(Loaders.SingleCategory, ExtrasFactory.bundleFromCategory(
-				id == Category.INTERNAL? Category.ID_ADD : id)); // don't show internal header: request non-existent
+		Long id = getArgCategoryID();
+		// don't show internal header category query doesn't support null so no rows will be returned
+		Bundle catArgs = new Bundle();
+		catArgs.putSerializable(Extras.CATEGORY_ID, id);
+
+		listController.startLoad(Loaders.SingleCategory, catArgs);
 		if (getArgFlatten()) {
-			Bundle args = ExtrasFactory.bundleFromCategory(id);
+			Bundle args = new Bundle(catArgs);
 			args.putBoolean(Extras.INCLUDE_SUBS, true);
 			listController.startLoad(Loaders.Items, args);
-			listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromParent(Category.ID_ADD)); // 0 rows
+			listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromCategory(Category.ID_ADD)); // 0 rows
 		} else {
-			listController.startLoad(Loaders.Items, ExtrasFactory.bundleFromCategory(id));
-			listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromParent(id));
+			listController.startLoad(Loaders.Items, catArgs);
+			listController.startLoad(Loaders.Categories, catArgs);
 		}
 	}
 
-	private long getArgCategoryID() {
-		return ExtrasFactory.getCategory(getArguments());
+	private Long getArgCategoryID() {
+		return (Long)getArguments().get(Extras.CATEGORY_ID);
 	}
 	private boolean getArgFlatten() {
 		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
@@ -134,9 +137,10 @@ public class CategoryFragment extends BaseFragment<CategoriesEvents> {
 		listController.refresh();
 	}
 
-	public static CategoryFragment newInstance(long parentCategoryID, boolean flatten) {
+	public static CategoryFragment newInstance(Long parentCategoryID, boolean flatten) {
 		CategoryFragment fragment = new CategoryFragment();
-		Bundle args = ExtrasFactory.bundleFromCategory(parentCategoryID);
+		Bundle args = new Bundle();
+		args.putSerializable(Extras.CATEGORY_ID, parentCategoryID);
 		args.putBoolean(Extras.INCLUDE_SUBS, flatten);
 		fragment.setArguments(args);
 		return fragment;

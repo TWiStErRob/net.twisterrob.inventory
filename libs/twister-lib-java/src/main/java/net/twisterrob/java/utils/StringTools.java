@@ -34,7 +34,7 @@ public final class StringTools {
 		}
 		String[] stringArr = new String[objectArr.length];
 		for (int i = 0; i < stringArr.length; ++i) {
-			stringArr[i] = String.valueOf(objectArr[i]);
+			stringArr[i] = /*objectArr[i] == null? null :*/ String.valueOf(objectArr[i]);
 		}
 		return stringArr;
 	}

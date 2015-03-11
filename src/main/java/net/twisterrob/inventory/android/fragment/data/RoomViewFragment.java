@@ -65,7 +65,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				.append("Property ID", entity.propertyID, BuildConfig.DEBUG)
 				.append("In property", entity.propertyName)
 				.append("# of items in the room", entity.numDirectItems)
-				.append("# of items inside", entity.numAllItems)
+				.append("# of items inside items", entity.numAllItems)
 				.append("image", entity.image, BuildConfig.DEBUG)
 				.append("Description", entity.description)
 				.build();

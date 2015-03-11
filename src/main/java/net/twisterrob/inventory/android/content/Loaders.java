@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.content;
 
+import org.slf4j.*;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.database.*;
@@ -64,20 +66,20 @@ public enum Loaders {
 	Items {
 		@Override
 		protected Cursor createCursor(Context context, Bundle args) {
-			long id = args.getLong(Extras.PARENT_ID, Item.ID_ADD);
-			if (id != Item.ID_ADD) {
+			if (args.containsKey(Extras.PARENT_ID)) {
+				long id = args.getLong(Extras.PARENT_ID);
 				return App.db().listItems(id);
 			}
-			long roomID = args.getLong(Extras.ROOM_ID, Room.ID_ADD);
-			if (roomID != Item.ID_ADD) {
+			if (args.containsKey(Extras.ROOM_ID)) {
+				long roomID = args.getLong(Extras.ROOM_ID);
 				return App.db().listItemsInRoom(roomID);
 			}
-			long listID = args.getLong(Extras.LIST_ID, CommonColumns.ID_ADD);
-			if (listID != CommonColumns.ID_ADD) {
+			if (args.containsKey(Extras.LIST_ID)) {
+				long listID = args.getLong(Extras.LIST_ID);
 				return App.db().listItemsInList(listID);
 			}
-			long catID = args.getLong(Extras.CATEGORY_ID, Category.ID_ADD);
-			if (catID != Category.ID_ADD) {
+			if (args.containsKey(Extras.CATEGORY_ID)) {
+				Long catID = args.getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 				boolean include = args.getBoolean(Extras.INCLUDE_SUBS, false);
 				return App.db().listItemsForCategory(catID, include);
 			}
@@ -94,7 +96,7 @@ public enum Loaders {
 	Categories {
 		@Override
 		protected Cursor createCursor(Context context, Bundle args) {
-			long id = args.getLong(Extras.PARENT_ID, Category.ID_ADD);
+			Long id = (Long)args.get(Extras.CATEGORY_ID);
 			return App.db().listCategories(id);
 		}
 	},
@@ -140,6 +142,8 @@ public enum Loaders {
 		}
 	},;
 
+	private static final Logger LOG = LoggerFactory.getLogger(Loaders.class);
+
 	private static final Bundle NO_ARGS = new Bundle(0);
 
 	protected abstract Cursor createCursor(Context context, Bundle args);
@@ -148,6 +152,7 @@ public enum Loaders {
 		return new SimpleCursorLoader(context) {
 			@Override
 			public Cursor loadInBackground() {
+				LOG.trace("Loading {}({})", Loaders.this, args);
 				Cursor cursor = createCursor(getContext(), args != null? args : NO_ARGS);
 				if (args == null || !args.getBoolean("dontExecute")) {
 					cursor.getCount();

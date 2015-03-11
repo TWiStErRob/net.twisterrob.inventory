@@ -186,7 +186,7 @@
 			(select count(1) from Item where parent = i._id) as countChildren,
 			c.name as category
 		from Item     i
-		join Category c ON i.category = c._id and c._id <> -1
+		join Category c ON i.category = c._id
 		where i.category = ?
 		order by i.name
 	"]]></string>
@@ -200,7 +200,7 @@
 			c.name as category
 		from Item     i
 		join Category_Descendant cd ON i.category = cd.descendant
-		join Category c ON cd.descendant = c._id and c._id <> -1
+		join Category c ON cd.descendant = c._id
 		where cd.category = ?
 		order by i.name
 	"]]></string>
@@ -284,7 +284,8 @@
 			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
 		from Category c
 		left join Category_Name_Cache cnc ON cnc.key = c.name
-		where c.parent = ?
+		where c.parent = ? or (? = 'null' and c.parent is null)
+		      and c._id <> -1 -- don't return category_internal
 		order by (CASE WHEN c.name <> 'category_uncategorized' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
 		;
 	"]]></string>
@@ -300,9 +301,9 @@
 			(select count(1) from Item where category = c._id) as countDirectItems,
 			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
 		from Category c
-		left join Category p ON c.parent = p._id and p._id <> -1
+		left join Category p ON c.parent = p._id
 		left join Category_Name_Cache pnc ON p.name = pnc.key
-		left join Category pp ON p.parent = pp._id and pp._id <> -1
+		left join Category pp ON p.parent = pp._id
 		left join Category_Name_Cache ppnc ON pp.name = ppnc.key
 		where c._id = ?
 	"]]></string>

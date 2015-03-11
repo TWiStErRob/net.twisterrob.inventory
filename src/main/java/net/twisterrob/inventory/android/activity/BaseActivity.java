@@ -36,11 +36,11 @@ public class BaseActivity extends ActionBarActivity {
 	@For(Drawer) private DrawerLayout mDrawerLayout;
 
 	@For({PixelView, Log}) @Override protected void onCreate(Bundle savedInstanceState) {
-		LOG.trace("Creating {}@{}\n{} {}",
+		LOG.trace("Creating {}@{} {}\n{}",
 				getClass().getSimpleName(),
 				Integer.toHexString(System.identityHashCode(this)),
-				getIntent(),
-				AndroidTools.toString(getIntent().getExtras())
+				AndroidTools.toString(getIntent().getExtras()),
+				getIntent()
 		);
 		super.onCreate(savedInstanceState);
 		if (BuildConfig.DEBUG) {
