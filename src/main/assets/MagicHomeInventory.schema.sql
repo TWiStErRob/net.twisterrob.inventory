@@ -1,3 +1,8 @@
+-- Notes
+-- ;--NOTEOS is need in trigger bodies so statement execution to android driver is delayed until correct semicolon
+-- RAISE(action, msg) doesn't support expressions
+
+
 -- Usage: insert into Log(message) values ('Log message');
 CREATE TABLE Log (
 	_id         INTEGER      NOT NULL,
@@ -22,7 +27,8 @@ CREATE TABLE Category (
 CREATE INDEX Category_parent ON Category(parent);
 
 CREATE TRIGGER Category_insert
-AFTER INSERT ON Category BEGIN
+AFTER INSERT ON Category
+BEGIN
 	insert into Category_Name_Cache values(new.name, NULL);--NOTEOS
 END;
 
@@ -67,22 +73,31 @@ CREATE TABLE Category_Name_Cache (
 	value       NVARCHAR         NULL, -- translated display name by Android resources
 	PRIMARY KEY(key)
 );
+
 CREATE TRIGGER Category_Name_Cache_prevent_rename
-AFTER UPDATE OF key ON Category_Name_Cache BEGIN
-	select RAISE(ABORT, 'Cannot change Category_Name_Cache.key column');--NOTEOS
+AFTER UPDATE OF key ON Category_Name_Cache
+BEGIN
+	select RAISE(ABORT, 'Cannot change Category_Name_Cache.key column!');--NOTEOS
 END;
+
 CREATE TRIGGER Category_Name_Cache_insert
-AFTER INSERT ON Category_Name_Cache BEGIN
+AFTER INSERT ON Category_Name_Cache
+BEGIN
 	--insert into Log(message) values ('Category_Name_Cache_insert on (' || new.key || ', ' || ifNULL(new.value, 'NULL') || ')');--NOTEOS
 	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
 END;
+
 CREATE TRIGGER Category_Name_Cache_update
-AFTER UPDATE OF value ON Category_Name_Cache WHEN (ifNULL(old.value, '') <> ifNULL(new.value, '')) BEGIN
+AFTER UPDATE OF value ON Category_Name_Cache
+WHEN ifNULL(old.value, '') <> ifNULL(new.value, '')
+BEGIN
 	--insert into Log(message) values ('Category_Name_Cache_update on (' || new.key || ', ' || ifNULL(old.value, 'NULL') || ' -> ' || ifNULL(new.value, 'NULL') || ')');--NOTEOS
 	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = new.key;--NOTEOS
 END;
+
 CREATE TRIGGER Category_Name_Cache_delete
-AFTER DELETE ON Category_Name_Cache BEGIN
+AFTER DELETE ON Category_Name_Cache
+BEGIN
 	--insert into Log(message) values ('Category_Name_Cache_delete on (' || old.key || ', ' || ifNULL(old.value, 'NULL') || ')');--NOTEOS
 	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = old.key;--NOTEOS
 END;
@@ -108,33 +123,46 @@ CREATE TABLE Item (
 	CHECK (_id <> parent)
 );
 CREATE INDEX Item_category ON Item(category);
+
 CREATE TRIGGER Item_insert
-AFTER INSERT ON Item BEGIN
+AFTER INSERT ON Item
+BEGIN
 	--insert into Log(message) values ('Item_insert on (' || new._id || ', ' || new.name || ', ' || ifNULL(new.image, 'NULL') || ', ' || new.category || ', ' || ifNULL(new.parent, 'NULL') || '): ' || 'started');--NOTEOS
 	insert into Item_Path_Node_Refresher(_id)
 		values (new._id)
 	;--NOTEOS
 	--insert into Log(message) values ('Item_insert on (' || new._id || ', ' || new.name || ', ' || ifNULL(new.image, 'NULL') || ', ' || new.category || ', ' || ifNULL(new.parent, 'NULL') || '): ' || 'finished');--NOTEOS
 END;
+
 CREATE TRIGGER Item_delete
-AFTER DELETE ON Item BEGIN
+AFTER DELETE ON Item
+BEGIN
 	--insert into Log(message) values ('Item_delete on (' || old._id || '): '  || 'started');--NOTEOS
 	insert into Item_Path_Node_Refresher(_id)
 		values (old._id)
 	;--NOTEOS
 	--insert into Log(message) values ('Item_delete on (' || old._id || '): '  || 'finished');--NOTEOS
 END;
+
 CREATE TRIGGER Item_move
-AFTER UPDATE OF parent ON Item BEGIN
-	--insert into Log(message) values ('Item_move on (' || new._id || ', ' || old.parent || '->' || new.parent || '): '  || 'started');--NOTEOS
+AFTER UPDATE OF parent ON Item
+WHEN old.parent <> new.parent or ((old.parent IS NULL) <> (new.parent IS NULL))
+BEGIN
+	--insert into Log(message) values ('Item_move on (' || new._id || ', ' || ifNULL(old.parent, 'NULL') || '->' || ifNULL(new.parent, 'NULL') || '): '  || 'started');--NOTEOS
+	select RAISE(ABORT, 'Cannot change Item.parent nullity: NULL -> NOT NULL!') where old.parent IS NULL and new.parent IS NOT NULL;--NOTEOS
+	select RAISE(ABORT, 'Cannot change Item.parent nullity: NOT NULL -> NULL!') where old.parent IS NOT NULL and new.parent IS NULL;--NOTEOS
+	-- TODO check for recursive move to prevent loops in the tree
 	insert into Item_Path_Node_Refresher(_id)
 		select distinct item from Item_Path_Node
 		where node = new._id
 	;--NOTEOS
-	--insert into Log(message) values ('Item_move on (' || new._id || ', ' || old.parent || '->' || new.parent || '): '  || 'finished');--NOTEOS
+	--insert into Log(message) values ('Item_move on (' || new._id || ', ' || ifNULL(old.parent, 'NULL') || '->' || ifNULL(new.parent, 'NULL') || '): '  || 'finished');--NOTEOS
 END;
+
 CREATE TRIGGER Item_rename
-AFTER UPDATE OF name ON Item BEGIN
+AFTER UPDATE OF name ON Item
+WHEN old.name <> new.name
+BEGIN
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || '): '  || 'started');--NOTEOS
 	insert into Item_Path_Node_Refresher(_id)
 		select distinct item from Item_Path_Node
@@ -142,8 +170,11 @@ AFTER UPDATE OF name ON Item BEGIN
 	;--NOTEOS
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || '): '  || 'finished');--NOTEOS
 END;
+
 CREATE TRIGGER Item_categoryChange
-AFTER UPDATE OF category ON Item BEGIN
+AFTER UPDATE OF category ON Item
+WHEN old.category <> new.category
+BEGIN
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || old.category || '->' || new.category || '): '  || 'started');--NOTEOS
 	insert into Search_Refresher(_id) values (new._id);--NOTEOS
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || old.category || '->' || new.category || '): '  || 'finished');--NOTEOS
@@ -216,14 +247,18 @@ CREATE TABLE Room (
 	PRIMARY KEY(_id AUTOINCREMENT),
 	UNIQUE (property, name)
 );
+
 CREATE TRIGGER Room_delete_root
-AFTER DELETE ON Room BEGIN
+AFTER DELETE ON Room
+BEGIN
 	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || ', ' || old.root || '): '  || 'started');--NOTEOS
 	delete from Item where _id = old.root;--NOTEOS
 	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || ', ' || old.root || '): '  || 'finished');--NOTEOS
 END;
+
 CREATE TRIGGER Room_move
-AFTER UPDATE OF property ON Room BEGIN
+AFTER UPDATE OF property ON Room
+BEGIN
 	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || old.property || '->' || new.property || ', ' || new.root || ', ' || new.name || '): ' || 'started');--NOTEOS
 	insert into Search_Refresher(_id)
 		select ip.itemID from Item_Path ip
@@ -233,8 +268,11 @@ AFTER UPDATE OF property ON Room BEGIN
 END;
 
 CREATE VIEW Room_Rooter AS select * from Room;
+
 CREATE TRIGGER Room_Rooter_Auto
-INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NULL) BEGIN
+INSTEAD OF INSERT ON Room_Rooter
+WHEN new.root IS NULL
+BEGIN
 	insert into Item(name, category, parent)
 		values ('ROOT', -1, NULL)
 	;--NOTEOS
@@ -242,8 +280,11 @@ INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NULL) BEGIN
 		values (new._id, new.name, new.image, new.type, last_insert_rowid(), new.property)
 	;--NOTEOS
 END;
+
 CREATE TRIGGER Room_Rooter_Transparent
-INSTEAD OF INSERT ON Room_Rooter WHEN (new.root IS NOT NULL) BEGIN
+INSTEAD OF INSERT ON Room_Rooter
+WHEN (new.root IS NOT NULL)
+BEGIN
 	insert into Room(_id, name, image, type, root, property)
 		values (new._id, new.name, new.image, new.type, new.root, new.property)
 	;--NOTEOS
@@ -254,8 +295,10 @@ CREATE TABLE Recent (
 	_id         INTEGER,
 	visit       DATETIME DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))
 );
+
 CREATE TRIGGER Recent_insert
-AFTER INSERT ON Recent BEGIN
+AFTER INSERT ON Recent
+BEGIN
 	delete from Recent where 100 < (
 		select count() from Recent r where Recent.visit <= r.visit
 	);--NOTEOS
@@ -279,6 +322,7 @@ CREATE VIEW Recent_Stats AS
 	) s
 	group by _id
 ;
+
 CREATE VIEW Recents AS
 	select
 		r._id,
@@ -294,12 +338,14 @@ CREATE VIEW Recents AS
 	group by r._id
 ;
 
+
 CREATE TABLE List (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- user entered
 	PRIMARY KEY(_id AUTOINCREMENT),
    	UNIQUE (name)
 );
+
 CREATE TABLE List_Entry (
 	list        INTEGER      NOT NULL
 		CONSTRAINT fk_List_Entry_list
@@ -313,6 +359,7 @@ CREATE TABLE List_Entry (
 			ON DELETE CASCADE,
 	UNIQUE (list, item)
 );
+
 
 CREATE TABLE Item_Path_Node (
 	item        INTEGER      NOT NULL
@@ -332,8 +379,10 @@ CREATE TABLE Item_Path_Node (
 			ON UPDATE CASCADE
 			ON DELETE NO ACTION
 );
+
 CREATE TRIGGER Item_Path_Node_traverse
-AFTER INSERT ON Item_Path_Node BEGIN
+AFTER INSERT ON Item_Path_Node
+BEGIN
 	--insert into Log(message) values ('Item_Path_Node_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): ' || 'started');--NOTEOS
 	-- Go up in the Tree
 	insert into Item_Path_Node
@@ -346,8 +395,10 @@ END;
 CREATE VIEW Item_Path_Node_Refresher AS
 	SELECT NULL as _id
 ;
+
 CREATE TRIGGER Item_Path_Node_refresh
-INSTEAD OF INSERT ON Item_Path_Node_Refresher BEGIN
+INSTEAD OF INSERT ON Item_Path_Node_Refresher
+BEGIN
 	--insert into Log(message) values ('Item_Path_Node_refresh on (' || new._id || '): ' || 'started');--NOTEOS
 	-- Go up in the Tree
 	delete from Item_Path_Node where item = new._id;--NOTEOS
@@ -378,6 +429,7 @@ CREATE VIEW Item_Path_WITH_Node_Name AS
 	join Item           n   ON ipn.node = n._id
 	where ipn.item <> ipn.node and ipn.node <> ipn.root
 ;
+
 CREATE VIEW Item_Path AS
 	select
 		p._id      as propertyID,
@@ -421,8 +473,10 @@ CREATE VIRTUAL TABLE Search USING FTS3 (
 CREATE VIEW Search_Refresher AS
 	select NULL as _id
 ;
+
 CREATE TRIGGER Search_refresh
-INSTEAD OF INSERT ON Search_Refresher BEGIN
+INSTEAD OF INSERT ON Search_Refresher
+BEGIN
 	--insert into Log(message) values ('Search_refresh on (' || new._id || ')');--NOTEOS
 	delete from Search where _id MATCH new._id;--NOTEOS
 	insert into Search

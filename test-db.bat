@@ -14,8 +14,8 @@ echo select %NOW%, 'schema.sql'; >> %TARGET%
 type %ASSETS%\MagicHomeInventory.schema.sql >> %TARGET%
 echo select %NOW%, 'data.sql'; >> %TARGET%
 type %ASSETS%\MagicHomeInventory.data.sql >> %TARGET%
-echo select %NOW%, 'development.sql'; >> %TARGET%
-type %ASSETS%\MagicHomeInventory.development.sql >> %TARGET%
+echo select %NOW%, 'test.sql'; >> %TARGET%
+type %ASSETS%\MagicHomeInventory.test.sql >> %TARGET%
 
 echo select %NOW%, 'Tear-down and initialize again'; >> %TARGET%
 echo select %NOW%, 'clean.sql'; >> %TARGET%
@@ -24,8 +24,8 @@ echo select %NOW%, 'schema.sql'; >> %TARGET%
 type %ASSETS%\MagicHomeInventory.schema.sql >> %TARGET%
 echo select %NOW%, 'data.sql'; >> %TARGET%
 type %ASSETS%\MagicHomeInventory.data.sql >> %TARGET%
-echo select %NOW%, 'development.sql'; >> %TARGET%
-type %ASSETS%\MagicHomeInventory.development.sql >> %TARGET%
+echo select %NOW%, 'test.sql'; >> %TARGET%
+type %ASSETS%\MagicHomeInventory.test.sql >> %TARGET%
 
 echo select %NOW%, 'test-db.sql'; >> %TARGET%
 type test-db.sql >> %TARGET%

@@ -254,7 +254,7 @@ public class Database {
 		execSQL(R.string.query_recent_delete, itemID);
 	}
 	public Cursor listRecents() {
-		return rawQuery(R.string.query_recents, 1, 0.6);
+		return rawQuery(R.string.query_recents, 1, 0.5);
 	}
 
 	public Cursor searchSuggest(String query) {
