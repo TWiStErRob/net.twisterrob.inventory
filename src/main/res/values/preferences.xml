@@ -20,4 +20,11 @@
 	<string name="pref_internalImageViewer_desc">Internal image viewer has limited functionality,
 		but it definitely shows the images,
 		while using another application may result in crashes.</string>
+
+	<string name="pref_displayDebugDetails_title">Display more details (debug)</string>
+	<string name="pref_displayDebugDetails" translatable="false">displayDebugDetails</string>
+	<bool name="pref_displayDebugDetails_default" translatable="false">false</bool>
+	<string name="pref_displayDebugDetails_desc">Display some internal details of the entities,
+		these information is only relevant for debugging and hacking.</string>
+
 </resources>

@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
@@ -50,16 +50,16 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	}
 
 	@Override
-	protected CharSequence getDetailsString(PropertyDTO entity) {
+	protected CharSequence getDetailsString(PropertyDTO entity, boolean DEBUG) {
 		return new DescriptionBuilder()
-				.append("Property ID", entity.id, BuildConfig.DEBUG)
+				.append("Property ID", entity.id, DEBUG)
 				.append("Property Name", entity.name)
-				.append("Property Type", entity.type, BuildConfig.DEBUG)
+				.append("Property Type", entity.type, DEBUG)
 				.append("# of rooms", entity.numDirectChildren)
-				.append("# of rooms", entity.numAllChildren, BuildConfig.DEBUG)
+				.append("# of rooms", entity.numAllChildren, DEBUG)
 				.append("# of items in the rooms", entity.numDirectItems)
 				.append("# of items inside rooms", entity.numAllItems)
-				.append("image", entity.image, BuildConfig.DEBUG)
+				.append("image", entity.image, DEBUG)
 				.append("Description", entity.description)
 				.build();
 	}

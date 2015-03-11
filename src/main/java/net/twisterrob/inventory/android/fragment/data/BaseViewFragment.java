@@ -46,7 +46,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		return AndroidTools.findIndexInResourceArray(getContext(),
 				R.array.pref_defaultEntityDetailsPage_values, defaultPage);
 	}
-	protected abstract CharSequence getDetailsString(DTO entity);
+	protected abstract CharSequence getDetailsString(DTO entity, boolean DEBUG);
 
 	private class ImageAndDescriptionAdapter extends PagerAdapter {
 		private DTO entity;
@@ -101,8 +101,12 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 				}
 				case 1: {
 					view = inflater.inflate(R.layout.inc_details_details, container, false);
+
+					final boolean debug = App.getPrefs().getBoolean(getString(R.string.pref_displayDebugDetails),
+							getResources().getBoolean(R.bool.pref_displayDebugDetails_default));
+
 					TextView details = (TextView)view.findViewById(R.id.details);
-					details.setText(getDetailsString(entity));
+					details.setText(getDetailsString(entity, debug));
 					//details.setMovementMethod(ScrollingMovementMethod.getInstance());
 					details.setOnTouchListener(new OnTouchListener() {
 						@Override
@@ -149,7 +153,8 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 				File file = new File(path);
 				Uri uri = FileProvider.getUriForFile(getContext(), Constants.AUTHORITY_IMAGES, file);
 				Intent intent = new Intent(Intent.ACTION_VIEW);
-				if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer), true)) {
+				if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer),
+						getResources().getBoolean(R.bool.pref_internalImageViewer_default))) {
 					intent.setComponent(new ComponentName(getContext(), ImageActivity.class));
 				}
 				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

@@ -53,12 +53,14 @@ public class CategoryFragment extends BaseFragment<CategoriesEvents> {
 					@Override
 					protected CharSequence getDetailsString(Context context, Cursor cursor) {
 						CategoryDTO entity = CategoryDTO.fromCursor(cursor);
+						final boolean DEBUG = App.getPrefs().getBoolean(getString(R.string.pref_displayDebugDetails),
+								getResources().getBoolean(R.bool.pref_displayDebugDetails_default));
 						return new DescriptionBuilder()
-								.append("Category ID", entity.id, BuildConfig.DEBUG)
-								.append("Category Key", entity.name, BuildConfig.DEBUG)
+								.append("Category ID", entity.id, DEBUG)
+								.append("Category Key", entity.name, DEBUG)
 								.append("Category Name", AndroidTools.getText(context, entity.name))
-								.append("Category Image", entity.fallbackImageResourceName, BuildConfig.DEBUG)
-								.append("Parent ID", entity.parentID, BuildConfig.DEBUG)
+								.append("Category Image", entity.fallbackImageResourceName, DEBUG)
+								.append("Parent ID", entity.parentID, DEBUG)
 								.append("Inside", entity.parentName)
 								.append("# of direct subcategories", entity.numDirectChildren)
 								.append("# of subcategories", entity.numAllChildren)

@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
@@ -56,17 +56,17 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	@Override
-	protected CharSequence getDetailsString(RoomDTO entity) {
+	protected CharSequence getDetailsString(RoomDTO entity, boolean DEBUG) {
 		return new DescriptionBuilder()
-				.append("Room ID", entity.id, BuildConfig.DEBUG)
+				.append("Room ID", entity.id, DEBUG)
 				.append("Room Name", entity.name)
-				.append("Room Type", entity.type, BuildConfig.DEBUG)
-				.append("Room Root", entity.rootItemID)
-				.append("Property ID", entity.propertyID, BuildConfig.DEBUG)
+				.append("Room Type", entity.type, DEBUG)
+				.append("Room Root", entity.rootItemID, DEBUG)
+				.append("Property ID", entity.propertyID, DEBUG)
 				.append("In property", entity.propertyName)
 				.append("# of items in the room", entity.numDirectItems)
 				.append("# of items inside items", entity.numAllItems)
-				.append("image", entity.image, BuildConfig.DEBUG)
+				.append("image", entity.image, DEBUG)
 				.append("Description", entity.description)
 				.build();
 	}

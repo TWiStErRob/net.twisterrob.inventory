@@ -17,6 +17,13 @@
 		android:defaultValue="@bool/pref_internalImageViewer_default"
 		android:summary="@string/pref_internalImageViewer_desc"
 		/>
+	<CheckBoxPreference
+		android:key="@string/pref_displayDebugDetails"
+		android:title="@string/pref_displayDebugDetails_title"
+		android:defaultValue="@bool/pref_displayDebugDetails_default"
+		android:summary="@string/pref_displayDebugDetails_desc"
+		android:enabled="@bool/in_test"
+		/>
 	<PreferenceScreen
 		android:title="App info"
 		>

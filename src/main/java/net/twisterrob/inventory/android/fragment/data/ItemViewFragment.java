@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.ListsActivity;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -58,23 +58,23 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	}
 
 	@Override
-	protected CharSequence getDetailsString(ItemDTO entity) {
+	protected CharSequence getDetailsString(ItemDTO entity, boolean DEBUG) {
 		return new DescriptionBuilder()
-				.append("Item ID", entity.id, BuildConfig.DEBUG)
+				.append("Item ID", entity.id, DEBUG)
 				.append("Item Name", entity.name)
-				.append("Parent ID", entity.parentID, BuildConfig.DEBUG)
-				.append("Category ID", entity.category, BuildConfig.DEBUG)
-				.append("Category Name", entity.categoryName, BuildConfig.DEBUG)
-				.append("Category", AndroidTools.getText(getContext(), entity.categoryName))
+				.append("Parent ID", entity.parentID, DEBUG)
 				.append("Inside", entity.parentName != null? entity.parentName : "the room")
-				.append("Room ID", entity.room, BuildConfig.DEBUG)
+				.append("Room ID", entity.room, DEBUG)
 				.append("Room", entity.roomName)
-				.append("Room Root", entity.roomRoot)
-				.append("Property ID", entity.property, BuildConfig.DEBUG)
+				.append("Room Root", entity.roomRoot, DEBUG)
+				.append("Property ID", entity.property, DEBUG)
 				.append("Property", entity.propertyName)
+				.append("Category ID", entity.category, DEBUG)
+				.append("Category Name", entity.categoryName, DEBUG)
+				.append("Category", AndroidTools.getText(getContext(), entity.categoryName))
 				.append("# of items in this item", entity.numDirectItems)
 				.append("# of items inside", entity.numAllItems)
-				.append("image", entity.image, BuildConfig.DEBUG)
+				.append("image", entity.image, DEBUG)
 				.append("Description", entity.description)
 				.build();
 	}
