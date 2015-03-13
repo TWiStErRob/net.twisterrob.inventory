@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.content.contract;
 public interface Item extends CommonColumns {
 	String TABLE = "Item";
 
-	String CATEGORY = "category";
+	String CATEGORY = TYPE;
 	String CATEGORY_NAME = "categoryName";
 
 	String PARENT_ID = "parent";

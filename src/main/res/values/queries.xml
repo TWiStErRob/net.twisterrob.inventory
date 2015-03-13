@@ -147,7 +147,7 @@
 			i.description as description,
 			i.image as image,
 			c.image as typeImage,
-			ip.categoryID as category,
+			ip.categoryID as type,
 			ip.categoryName as categoryName,
 			ip.propertyID as propertyID,
 			ip.propertyName as propertyName,

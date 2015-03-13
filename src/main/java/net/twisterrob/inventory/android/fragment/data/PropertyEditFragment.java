@@ -68,7 +68,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
-		onSingleRowLoaded(property, property.type);
+		onSingleRowLoaded(property);
 		eventsListener.propertyLoaded(property);
 	}
 

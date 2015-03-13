@@ -65,8 +65,8 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 
 	protected abstract String getBaseFileName();
 
-	protected void onSingleRowLoaded(ImagedDTO dto, long typeID) {
-		AndroidTools.selectByID(type, typeID);
+	protected void onSingleRowLoaded(ImagedDTO dto) {
+		AndroidTools.selectByID(type, dto.type);
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
 		setCurrentImage(dto.getImage(getContext()));
 		description.setText(dto.description);

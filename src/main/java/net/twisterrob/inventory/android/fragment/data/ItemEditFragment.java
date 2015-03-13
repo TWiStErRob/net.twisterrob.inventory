@@ -62,7 +62,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
-		super.onSingleRowLoaded(item, item.category);
+		onSingleRowLoaded(item);
 		eventsListener.itemLoaded(item);
 	}
 
@@ -78,7 +78,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		item.name = name.getText().toString();
 		item.description = description.getText().toString();
 		item.setImage(getContext(), getCurrentImage());
-		item.category = type.getSelectedItemId();
+		item.type = type.getSelectedItemId();
 		return item;
 	}
 
@@ -96,9 +96,9 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 			try {
 				Database db = App.db();
 				if (param.id == Item.ID_ADD) {
-					return db.createItem(param.parentID, param.category, param.name, param.description, param.image);
+					return db.createItem(param.parentID, param.type, param.name, param.description, param.image);
 				} else {
-					db.updateItem(param.id, param.category, param.name, param.description, param.image);
+					db.updateItem(param.id, param.type, param.name, param.description, param.image);
 					return param.id;
 				}
 			} catch (SQLiteConstraintException ex) {

@@ -4,11 +4,15 @@ import java.io.File;
 
 import org.slf4j.*;
 
+import android.app.AlertDialog;
 import android.content.*;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.FileProvider;
+import android.support.v4.content.*;
+import android.support.v4.content.Loader;
 import android.support.v4.view.*;
+import android.support.v4.widget.CursorAdapter;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
@@ -19,11 +23,17 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.activity.ImageActivity;
+import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
+import net.twisterrob.inventory.android.view.*;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
+
+	protected static final String DYN_TypeLoader = "typeLoader";
+	protected static final String DYN_TypeChangeTitle = "typeTitle";
 
 	protected ViewPager pager;
 
@@ -87,11 +97,12 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					ImageView type = (ImageView)view.findViewById(R.id.type);
 					image.setOnClickListener(new ImageOpenListener());
 					image.setOnLongClickListener(new ImageChangeListener());
+					image.setOnClickListener(new ChangeTypeListener());
 
 					int fallbackID = entity.getFallbackResource(image.getContext());
 					String imagePath = entity.getImage(image.getContext());
 					if (imagePath == null) {
-						type.setImageDrawable(null);
+						Pic.SVG_REQUEST.load(fallbackID).into(type);
 						Pic.SVG_REQUEST.load(fallbackID).into(image);
 					} else {
 						Pic.SVG_REQUEST.load(fallbackID).into(type);
@@ -169,7 +180,46 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 				return true;
 			}
 		}
+
+		private class ChangeTypeListener implements OnClickListener {
+			@Override public void onClick(View v) {
+				Loaders typeLoader = getDynamicResource(DYN_TypeLoader);
+				getLoaderManager().initLoader(typeLoader.ordinal(), null,
+						new CursorSwapper(getContext(), new TypeAdapter(getContext())) {
+							@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+								super.onLoadFinished(loader, data);
+
+								int position = AndroidTools.findItemPosition(adapter, entity.type);
+								new AlertDialog.Builder(getContext())
+										.setTitle((CharSequence)getDynamicResource(DYN_TypeChangeTitle))
+										.setSingleChoiceItems(adapter, position, new TypeSelectedListener(adapter))
+										.create()
+										.show()
+								;
+							}
+						});
+			}
+			private class TypeSelectedListener implements DialogInterface.OnClickListener {
+				private final CursorAdapter adapter;
+				public TypeSelectedListener(CursorAdapter adapter) {
+					this.adapter = adapter;
+				}
+
+				@Override public void onClick(DialogInterface dialog, int which) {
+					Cursor cursor = (Cursor)adapter.getItem(which);
+					long newType = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
+					String newTypeName = cursor.getString(cursor.getColumnIndex(CommonColumns.NAME));
+					CharSequence message = update(entity, newType, newTypeName); // FIXME DB on UI
+					dialog.dismiss();
+					refresh();
+
+					App.toastUser(message);
+				}
+			}
+		}
 	}
+
+	protected abstract CharSequence update(DTO cursor, long newType, String newTypeName);
 
 	protected abstract void editImage();
 }

@@ -10,8 +10,11 @@ import net.twisterrob.inventory.android.content.contract.*;
 public class RoomDTO extends ImagedDTO {
 	public long propertyID = Property.ID_ADD;
 	public String propertyName;
-	public long type = RoomType.DEFAULT;
 	public long rootItemID = Item.ID_ADD;
+
+	public RoomDTO() {
+		type = RoomType.DEFAULT;
+	}
 
 	public static RoomDTO fromCursor(Cursor cursor) {
 		RoomDTO room = new RoomDTO();
@@ -22,7 +25,6 @@ public class RoomDTO extends ImagedDTO {
 	protected RoomDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		type = DatabaseTools.getOptionalLong(cursor, Room.TYPE, RoomType.DEFAULT);
 		rootItemID = DatabaseTools.getOptionalLong(cursor, Room.ROOT_ITEM, Item.ID_ADD);
 		propertyID = DatabaseTools.getOptionalLong(cursor, Room.PROPERTY_ID, Property.ID_ADD);
 		propertyName = DatabaseTools.getOptionalString(cursor, Room.PROPERTY_NAME);

@@ -19,6 +19,7 @@ public class ImagedDTO extends DTO {
 
 	public String image;
 	public String fallbackImageResourceName;
+	public long type;
 
 	@Override
 	protected ImagedDTO fromCursorInternal(Cursor cursor) {
@@ -26,6 +27,7 @@ public class ImagedDTO extends DTO {
 
 		fallbackImageResourceName = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE);
 		image = DatabaseTools.getOptionalString(cursor, CommonColumns.IMAGE);
+		type = DatabaseTools.getOptionalLong(cursor, CommonColumns.TYPE, type);
 
 		return this;
 	}

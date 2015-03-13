@@ -8,9 +8,10 @@ import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.ListsActivity;
 import net.twisterrob.inventory.android.activity.data.*;
+import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
@@ -34,6 +35,8 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	public ItemViewFragment() {
 		setDynamicResource(DYN_EventsClass, ItemEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.item);
+		setDynamicResource(DYN_TypeLoader, Loaders.ItemCategories);
+		setDynamicResource(DYN_TypeChangeTitle, "Change Category");
 	}
 
 	@Override
@@ -69,7 +72,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				.append("Room Root", entity.roomRoot, DEBUG)
 				.append("Property ID", entity.property, DEBUG)
 				.append("Property", entity.propertyName)
-				.append("Category ID", entity.category, DEBUG)
+				.append("Category ID", entity.type, DEBUG)
 				.append("Category Name", entity.categoryName, DEBUG)
 				.append("Category", AndroidTools.getText(getContext(), entity.categoryName))
 				.append("# of items in this item", entity.numDirectItems)
@@ -167,6 +170,11 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 
 	@Override protected void editImage() {
 		startActivity(BaseEditActivity.takeImage(ItemEditActivity.edit(getArgItemID())));
+	}
+
+	@Override protected CharSequence update(ItemDTO entity, long newType, String newTypeName) {
+		App.db().updateItem(entity.id, newType, entity.name, entity.description, entity.image);
+		return newTypeName;
 	}
 
 	private long getArgItemID() {
