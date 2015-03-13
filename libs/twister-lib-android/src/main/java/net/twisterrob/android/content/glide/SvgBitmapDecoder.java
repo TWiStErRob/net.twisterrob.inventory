@@ -11,6 +11,7 @@ import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+import com.bumptech.glide.request.target.Target;
 import com.caverock.androidsvg.*;
 
 public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
@@ -27,6 +28,13 @@ public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
 	public Resource<Bitmap> decode(InputStream source, int width, int height) throws IOException {
 		try {
 			SVG svg = SVG.getFromInputStream(source);
+			if (width == Target.SIZE_ORIGINAL) {
+				width = (int)(height * svg.getDocumentAspectRatio());
+			}
+			if (height == Target.SIZE_ORIGINAL) {
+				height = (int)(width / svg.getDocumentAspectRatio());
+			}
+
 			Bitmap bitmap = findBitmap(width, height);
 			Canvas canvas = new Canvas(bitmap);
 			svg.renderToCanvas(canvas);

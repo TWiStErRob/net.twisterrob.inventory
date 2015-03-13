@@ -23,8 +23,7 @@ import android.preference.ListPreference;
 import android.support.annotation.*;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.*;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.*;
+import android.support.v4.widget.SearchViewCompat;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
@@ -47,13 +46,19 @@ public abstract class AndroidTools {
 		return permissionResult == PackageManager.PERMISSION_GRANTED;
 	}
 
-	public static void selectByID(AdapterView<?> view, long id) {
-		CursorAdapter myAdapter = (CursorAdapter)view.getAdapter();
-		for (int i = 0, n = myAdapter.getCount(); i < n; i++) {
-			if (myAdapter.getItemId(i) == id) {
-				view.setSelection(i);
-				break;
+	public static int findItemPosition(Adapter adapter, long id) {
+		for (int position = 0, n = adapter.getCount(); position < n; position++) {
+			if (adapter.getItemId(position) == id) {
+				return position;
 			}
+		}
+		return -1;
+	}
+
+	public static void selectByID(AdapterView<?> view, long id) {
+		int position = findItemPosition(view.getAdapter(), id);
+		if (position != -1) {
+			view.setSelection(position);
 		}
 	}
 
@@ -163,7 +168,6 @@ public abstract class AndroidTools {
 	 * </code></pre>
 	 * but supports different fill and stroke paints.
 	 *
-	 * @param canvas
 	 * @param cx horizontal middle point of the oval
 	 * @param cy vertical middle point of the oval
 	 * @param rInn inner radius of the arc segment
@@ -199,14 +203,87 @@ public abstract class AndroidTools {
 			segmentPath.moveTo((float)(cx + rInn * cos(start)), (float)(cy + rInn * sin(start)));
 			segmentPath.lineTo((float)(cx + rOut * cos(start)), (float)(cy + rOut * sin(start)));
 			segmentPath.arcTo(outerRect, startAngle, sweepAngle);
+			// Path currently at (float)(cx + rOut * cos(end)), (float)(cy + rOut * sin(end))
 			segmentPath.lineTo((float)(cx + rInn * cos(end)), (float)(cy + rInn * sin(end)));
-			segmentPath.arcTo(innerRect, startAngle + sweepAngle, -sweepAngle);
+			segmentPath.arcTo(innerRect, startAngle + sweepAngle, -sweepAngle); // drawn backwards
 		}
 		if (fill != null) {
 			canvas.drawPath(segmentPath, fill);
 		}
 		if (stroke != null) {
 			canvas.drawPath(segmentPath, stroke);
+		}
+	}
+
+	/**
+	 * Draws a thick arc between the defined angles, see {@link Canvas#drawArc} for more.
+	 * This method is equivalent to
+	 * <pre><code>
+	 * float rMid = (rInn + rOut) / 2;
+	 * paint.setStyle(Style.STROKE); // there's nothing to fill
+	 * paint.setStrokeWidth(rOut - rInn); // thickness
+	 * canvas.drawArc(new RectF(cx - rMid, cy - rMid, cx + rMid, cy + rMid), startAngle, sweepAngle, false, paint);
+	 * </code></pre>
+	 * but supports different fill and stroke paints.
+	 *
+	 * @param cx horizontal middle point of the oval
+	 * @param cy vertical middle point of the oval
+	 * @param rInn inner radius of the arc segment
+	 * @param rOut outer radius of the arc segment
+	 * @param startAngle see {@link Canvas#drawArc}
+	 * @param sweepAngle see {@link Canvas#drawArc}, capped at &plusmn;360
+	 * @param fill filling paint, can be <code>null</code>
+	 * @param strokeInner stroke paint for inner ring segment, can be <code>null</code>
+	 * @param strokeOuter stroke paint for outer ring segment, can be <code>null</code>
+	 * @param strokeSides stroke paint for lines connecting the ends of the ring segments, can be <code>null</code>
+	 * @see Canvas#drawArc
+	 */
+	public static void drawArcSegment(Canvas canvas, float cx, float cy, float rInn, float rOut, float startAngle,
+			float sweepAngle, Paint fill, Paint strokeInner, Paint strokeOuter, Paint strokeSides) {
+		boolean circle = false;
+		if (sweepAngle > CIRCLE_LIMIT) {
+			sweepAngle = CIRCLE_LIMIT;
+			circle = true;
+		}
+		if (sweepAngle < -CIRCLE_LIMIT) {
+			sweepAngle = -CIRCLE_LIMIT;
+			circle = true;
+		}
+
+		RectF outerRect = new RectF(cx - rOut, cy - rOut, cx + rOut, cy + rOut);
+		RectF innerRect = new RectF(cx - rInn, cy - rInn, cx + rInn, cy + rInn);
+
+		if (fill != null || strokeSides != null) { // to prevent calculating this lot of floats
+			double start = toRadians(startAngle);
+			double end = toRadians(startAngle + sweepAngle);
+			float innerStartX = (float)(cx + rInn * cos(start));
+			float innerStartY = (float)(cy + rInn * sin(start));
+			float innerEndX = (float)(cx + rInn * cos(end));
+			float innerEndY = (float)(cy + rInn * sin(end));
+			float outerStartX = (float)(cx + rOut * cos(start));
+			float outerStartY = (float)(cy + rOut * sin(start));
+			float outerEndX = (float)(cx + rOut * cos(end));
+			float outerEndY = (float)(cy + rOut * sin(end));
+			if (fill != null) {
+				Path segmentPath = new Path();
+				segmentPath.moveTo(innerStartX, innerStartY);
+				segmentPath.lineTo(outerStartX, outerStartY);
+				segmentPath.arcTo(outerRect, startAngle, sweepAngle);
+				// Path currently at outerEndX,outerEndY
+				segmentPath.lineTo(innerEndX, innerEndY);
+				segmentPath.arcTo(innerRect, startAngle + sweepAngle, -sweepAngle); // drawn backwards
+				canvas.drawPath(segmentPath, fill);
+			}
+			if (!circle && strokeSides != null) {
+				canvas.drawLine(innerStartX, innerStartY, outerStartX, outerStartY, strokeSides);
+				canvas.drawLine(innerEndX, innerEndY, outerEndX, outerEndY, strokeSides);
+			}
+		}
+		if (strokeInner != null) {
+			canvas.drawArc(innerRect, startAngle, sweepAngle, false, strokeInner);
+		}
+		if (strokeOuter != null) {
+			canvas.drawArc(outerRect, startAngle, sweepAngle, false, strokeOuter);
 		}
 	}
 
