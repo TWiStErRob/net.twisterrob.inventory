@@ -10,7 +10,7 @@ import android.database.*;
 import android.database.sqlite.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
-import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.java.utils.StringTools;
 
@@ -62,8 +62,14 @@ public class Database {
 		return rawQuery(getReadableDatabase(), queryResource, params);
 	}
 	private Cursor rawQuery(SQLiteDatabase db, int queryResource, Object... params) {
-		LOG.trace("rawQuery({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
-		return db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
+		String name = m_resources.getResourceEntryName(queryResource);
+		String paramString = Arrays.toString(params);
+		LOG.trace("rawQuery({}, {})", name, paramString);
+		try {
+			return db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
+		} catch (Exception ex) {
+			throw new IllegalStateException(name + ": " + paramString, ex);
+		}
 	}
 	private Long getID(int queryResource, Object... params) {
 		Cursor cursor = rawQuery(queryResource, params);
@@ -94,12 +100,10 @@ public class Database {
 		}
 	}
 
-	public Cursor listPropertyTypes(CharSequence nameFilter) {
-		if (nameFilter == null || nameFilter.toString().trim().isEmpty()) {
-			return listPropertyTypes();
-		}
-		return rawQuery(R.string.query_property_types_filtered, "%" + DatabaseTools.escapeLike(nameFilter, '\\') + "%");
-	}
+	// Filtered example
+	// where pt.name like ? escape '\'
+	// return rawQuery(R.string.query_..., "%" + DatabaseTools.escapeLike(nameFilter, '\\') + "%");
+
 	public Cursor listPropertyTypes() {
 		return rawQuery(R.string.query_property_types);
 	}
@@ -113,10 +117,10 @@ public class Database {
 		return rawQuery(R.string.query_property, propertyID);
 	}
 	public Cursor listRooms() {
-		return rawQuery(R.string.query_rooms);
+		return rawQuery(R.string.query_rooms, null, null);
 	}
 	public Cursor listRooms(long propertyID) {
-		return rawQuery(R.string.query_rooms_by_property, propertyID);
+		return rawQuery(R.string.query_rooms, propertyID, propertyID);
 	}
 	public Cursor getRoom(long roomID) {
 		return rawQuery(R.string.query_room, roomID);
@@ -125,13 +129,16 @@ public class Database {
 		return rawQuery(R.string.query_item_categories);
 	}
 	public Cursor listItems(long parentID) {
-		return rawQuery(R.string.query_items, parentID, parentID, parentID);
+		return rawQuery(R.string.query_items_by_item, parentID, parentID, parentID);
 	}
 	public Cursor listItemsInRoom(long roomID) {
-		return rawQuery(R.string.query_items_in_room, roomID);
+		return rawQuery(R.string.query_items_by_room, roomID);
 	}
 	public Cursor listItemsInList(long listID) {
-		return rawQuery(R.string.query_items_in_list, listID);
+		return rawQuery(R.string.query_items_by_list, listID);
+	}
+	public Cursor listItems() {
+		return rawQuery(R.string.query_items);
 	}
 	public Cursor listItemsForCategory(long categoryID, boolean include) {
 		if (include) {

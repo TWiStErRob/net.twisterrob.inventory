@@ -79,11 +79,11 @@ public enum Loaders {
 				return App.db().listItemsInList(listID);
 			}
 			if (args.containsKey(Extras.CATEGORY_ID)) {
-				Long catID = args.getLong(Extras.CATEGORY_ID, Category.ID_ADD);
+				long catID = args.getLong(Extras.CATEGORY_ID);
 				boolean include = args.getBoolean(Extras.INCLUDE_SUBS, false);
 				return App.db().listItemsForCategory(catID, include);
 			}
-			return null;
+			return App.db().listItems();
 		}
 	},
 	SingleItem {

@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.content.contract;
 
+import java.io.Serializable;
+
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -93,5 +95,10 @@ public final class ExtrasFactory {
 	}
 	public static long getCategory(Bundle bundle) {
 		return bundle != null? bundle.getLong(Extras.CATEGORY_ID, Category.ID_ADD) : Category.ID_ADD;
+	}
+	public static Bundle bundleFrom(String key, Serializable value) {
+		Bundle args = new Bundle();
+		args.putSerializable(key, value);
+		return args;
 	}
 }

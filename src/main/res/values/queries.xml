@@ -7,7 +7,7 @@
 			p.name,
 			p.image,
 			pt.image as typeImage,
-			(select count(1) from Room where property = p._id) as countChildren
+			(select count() from Room where property = p._id) as countChildren
 		from Property p
 		join PropertyType pt ON p.type = pt._id
 		order by p.name
@@ -20,8 +20,8 @@
 			p.type,
 			p.image,
 			pt.image as typeImage,
-			(select count(1) from Room where property = p._id) as countChildren,
-			(select count(1) from Item where parent in (select root from Room where property = p._id)) as countDirectItems,
+			(select count() from Room where property = p._id) as countChildren,
+			(select count() from Item where parent in (select root from Room where property = p._id)) as countDirectItems,
 			(select count(distinct item) from Item_Path_Node where root in (select root from Room where property = p._id) and root <> node) as countAllItems
 		from Property p
 		join PropertyType pt ON p.type = pt._id
@@ -30,12 +30,6 @@
 	<string name="query_property_types"><![CDATA["
 		select pt._id, pt.name, pt.image as typeImage
 		from PropertyType pt
-		order by pt.priority
-	"]]></string>
-	<string name="query_property_types_filtered"><![CDATA["
-		select pt._id, pt.name
-		from PropertyType
-		where pt.name like ? escape '\'
 		order by pt.priority
 	"]]></string>
 
@@ -55,25 +49,12 @@
 			COALESCE(rt.image, rtk.image) as typeImage,
 			p._id as property,
 			p.name as propertyName,
-			(select count(1) from Item where parent = r.root) as countChildren
+			(select count() from Item where parent = r.root) as countChildren
 		from Room r
 		join RoomType rt ON r.type = rt._id
 		join RoomTypeKind rtk ON rt.kind = rtk._id
 		join Property p ON r.property = p._id
-		order by r.name
-	"]]></string>
-	<string name="query_rooms_by_property"><![CDATA["
-		select
-			r._id,
-			r.root,
-			r.name,
-			r.image,
-			COALESCE(rt.image, rtk.image) as typeImage,
-			(select count(1) from Item where parent = r.root) as countChildren
-		from Room r
-		join RoomType rt ON r.type = rt._id
-		join RoomTypeKind rtk ON rt.kind = rtk._id
-		where r.property = ?
+		where p._id = ? or ? = 'null'
 		order by r.name
 	"]]></string>
 	<string name="query_room"><![CDATA["
@@ -87,7 +68,7 @@
 			p.name as propertyName,
 			r.image,
 			COALESCE(rt.image, rtk.image) as typeImage,
-			(select count(1) from Item where parent = r.root) as countDirectItems,
+			(select count() from Item where parent = r.root) as countDirectItems,
 			(select count(distinct item) from Item_Path_Node where root = r.root and root <> node) as countAllItems
 		from Room r
 		join RoomType rt ON r.type = rt._id
@@ -108,7 +89,7 @@
 		where cd._id <> -1
 		order by cd._id
 	"]]></string>
-	<string name="query_items" tools:ignore="Typos"><![CDATA["
+	<string name="query_items_by_item" tools:ignore="Typos"><![CDATA["
 		select
 			i._id as _id,
 			--g._id as gid,
@@ -116,7 +97,7 @@
 			i.name as name,
 			i.image as image,
 			c.image as typeImage,
-			(select count(1) from Item where parent = i._id) as countChildren,
+			(select count() from Item where parent = i._id) as countChildren,
 			c.name as category
 		from Item	  i
 		join Category c ON i.category = c._id
@@ -156,20 +137,32 @@
 			ip.roomName as roomName,
 			i.parent as parent,
 			ip.reversePath as parentName,
-			(select count(1) from Item where parent = i._id) as countDirectItems,
+			(select count() from Item where parent = i._id) as countDirectItems,
 			(select count(distinct item) from Item_Path_Node where node = i._id and item <> node) as countAllItems
 		from Item i
 		join Category c ON i.category = c._id
 		join Item_Path ip ON i._id = ip.itemID
 		where i._id = ?
 	"]]></string>
-	<string name="query_items_in_room"><![CDATA["
+	<string name="query_items"><![CDATA["
 		select
 			i._id,
 			i.name,
 			i.image,
 			c.image as typeImage,
-			(select count(1) from Item where parent = i._id) as countChildren,
+			(select count() from Item where parent = i._id) as countChildren,
+			c.name as category
+		from Item     i
+		join Category c ON i.category = c._id
+		order by i.name
+	"]]></string>
+	<string name="query_items_by_room"><![CDATA["
+		select
+			i._id,
+			i.name,
+			i.image,
+			c.image as typeImage,
+			(select count() from Item where parent = i._id) as countChildren,
 			c.name as category
 		from Room     r
 		join Item     i ON r.root = i.parent
@@ -183,7 +176,7 @@
 			i.name,
 			i.image,
 			c.image as typeImage,
-			(select count(1) from Item where parent = i._id) as countChildren,
+			(select count() from Item where parent = i._id) as countChildren,
 			c.name as category
 		from Item     i
 		join Category c ON i.category = c._id
@@ -196,7 +189,7 @@
 			i.name,
 			i.image,
 			c.image as typeImage,
-			(select count(1) from Item where parent = i._id) as countChildren,
+			(select count() from Item where parent = i._id) as countChildren,
 			c.name as category
 		from Item     i
 		join Category_Descendant cd ON i.category = cd.descendant
@@ -280,8 +273,8 @@
 			c.name  as name,
 			NULL    as image,
 			c.image as typeImage,
-			(select count(1) from Category where parent = c._id) as countChildren,
-			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
+			(select count() from Category where parent = c._id) as countChildren,
+			(select count() from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
 		from Category c
 		left join Category_Name_Cache cnc ON cnc.key = c.name
 		where c.parent = ? or (? = 'null' and c.parent is null)
@@ -296,10 +289,10 @@
 			c.image as typeImage,
 			c.parent,
 			ifNULL(ppnc.value || ' > ', '') || pnc.value as parentName,
-			(select count(1) from Category where parent = c._id) as countChildren,
-			(select count(1) from Category_Descendant where category = c._id and category <> descendant) as countAllChildren,
-			(select count(1) from Item where category = c._id) as countDirectItems,
-			(select count(1) from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
+			(select count() from Category where parent = c._id) as countChildren,
+			(select count() from Category_Descendant where category = c._id and category <> descendant) as countAllChildren,
+			(select count() from Item where category = c._id) as countDirectItems,
+			(select count() from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
 		from Category c
 		left join Category p ON c.parent = p._id
 		left join Category_Name_Cache pnc ON p.name = pnc.key
@@ -319,7 +312,7 @@
 					select 1 from List_Entry where list = l._id and item = ?
 				)
 			end as [exists],
-			(select count(1) from List_Entry where list = l._id) as countChildren
+			(select count() from List_Entry where list = l._id) as countChildren
 		from List       l
 	"]]></string>
 	<string name="query_list"><![CDATA["
@@ -344,13 +337,13 @@
 	<string name="query_list_entry_remove"><![CDATA["
 		delete from List_Entry where list = ? and item = ?
 	"]]></string>
-	<string name="query_items_in_list"><![CDATA["
+	<string name="query_items_by_list"><![CDATA["
 		select
 			i._id,
 			i.name,
 			i.image,
 			c.image as typeImage,
-			(select count(1) from Item where parent = i._id) as countChildren,
+			(select count() from Item where parent = i._id) as countChildren,
 			c.name as category
 		from List       l
 		join List_Entry le ON l._id = le.list
@@ -402,7 +395,7 @@
 			i.name,
 			i.image,
 			c.image as typeImage,
-			(select count(1) from Item where parent = i._id) as countChildren,
+			(select count() from Item where parent = i._id) as countChildren,
 			c.name as category
 		from Item     i
 		join Category c ON i.category = c._id

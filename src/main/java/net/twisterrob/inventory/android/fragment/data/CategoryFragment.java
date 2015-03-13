@@ -111,20 +111,30 @@ public class CategoryFragment extends BaseFragment<CategoriesEvents> {
 	}
 
 	@Override protected void onStartLoading() {
+		// by listController contract all ctor provided Loaders must be started even if they don't return data
 		Long id = getArgCategoryID();
-		// don't show internal header category query doesn't support null so no rows will be returned
-		Bundle catArgs = new Bundle();
-		catArgs.putSerializable(Extras.CATEGORY_ID, id);
-
-		listController.startLoad(Loaders.SingleCategory, catArgs);
-		if (getArgFlatten()) {
-			Bundle args = new Bundle(catArgs);
-			args.putBoolean(Extras.INCLUDE_SUBS, true);
-			listController.startLoad(Loaders.Items, args);
-			listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromCategory(Category.ID_ADD)); // 0 rows
-		} else {
-			listController.startLoad(Loaders.Items, catArgs);
-			listController.startLoad(Loaders.Categories, catArgs);
+		if (id == null) { // all "root" categories
+			if (getArgFlatten()) { // all items
+				listController.startLoad(Loaders.SingleCategory, null); // no header
+				listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromCategory(Category.ID_ADD)); // no
+				listController.startLoad(Loaders.Items, null); // all items
+			} else { // all categories
+				listController.startLoad(Loaders.SingleCategory, null); // no header
+				listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFrom(Extras.CATEGORY_ID, null)); // all
+				listController.startLoad(Loaders.Items, ExtrasFactory.bundleFromParent(Item.ID_ADD)); // no items
+			}
+		} else { // specific category
+			if (getArgFlatten()) { // all items in category
+				listController.startLoad(Loaders.SingleCategory, ExtrasFactory.bundleFromCategory(id)); // cat header
+				listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromCategory(Category.ID_ADD)); // no
+				Bundle args = ExtrasFactory.bundleFromCategory(id);
+				args.putBoolean(Extras.INCLUDE_SUBS, true);
+				listController.startLoad(Loaders.Items, args); // items in category
+			} else { // subcategories and direct items
+				listController.startLoad(Loaders.SingleCategory, ExtrasFactory.bundleFromCategory(id)); // cat header
+				listController.startLoad(Loaders.Categories, ExtrasFactory.bundleFromCategory(id)); // subcategories
+				listController.startLoad(Loaders.Items, ExtrasFactory.bundleFromCategory(id)); // items by category
+			}
 		}
 	}
 
