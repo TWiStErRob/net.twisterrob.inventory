@@ -69,7 +69,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 			title.setTypeface(null, Typeface.NORMAL);
 		}
 
-		return (int)(mContext.getResources().getDimension(R.dimen.margin) * (3 * level + 1));
+		return (int)(mContext.getResources().getDimension(R.dimen.margin) * (4 * level));
 	}
 
 	private static int getLevel(Cursor cursor) {

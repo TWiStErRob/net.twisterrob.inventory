@@ -119,8 +119,13 @@ public class App extends Application {
 		return getInstance().database;
 	}
 
-	public static void toast(String message) {
-		LOG.info("Long Toast: {}", message, new StackTrace());
+	public static void toast(CharSequence message) {
+		LOG.info("Debug Toast: {}", message, new StackTrace());
+		Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
+	}
+
+	public static void toastUser(CharSequence message) {
+		//LOG.trace("User Toast: {}", message, new StackTrace());
 		Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
 	}
 

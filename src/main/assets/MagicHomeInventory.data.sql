@@ -87,7 +87,7 @@ INSERT INTO Category
 	UNION SELECT  3100,   3000,     'category_storage_boxes',              'category_box'
 	UNION SELECT  3200,   3000,     'category_storage_baskets',            'category_box'
 	UNION SELECT  3300,   3000,     'category_storage_crates',             'category_box'
-	UNION SELECT  3400,   3000,     'category_storage_disccases',          'category_box'
+	UNION SELECT  3400,   3000,     'category_storage_cases',              'category_box'
 	UNION SELECT  4000,   NULL, 'category_collectibles',                   'category_collectibles'
 	UNION SELECT  4100,   4000,     'category_collectible_albums',         'category_collectibles'
 	UNION SELECT  4200,   4000,     'category_collectible_artwork',        'category_collectibles'
