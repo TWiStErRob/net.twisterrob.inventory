@@ -26,7 +26,6 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 		setActionBarTitle(room.name);
 		current = room;
 	}
-
 	public void roomDeleted(RoomDTO room) {
 		finish();
 	}
@@ -34,12 +33,10 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 	public void newItem(long parentID) {
 		startActivity(ItemEditActivity.add(parentID));
 	}
-
 	public void itemSelected(long id) {
 		startActivity(ItemViewActivity.show(id));
 		// TODO consider tabs as breadcrumbs?
 	}
-
 	public void itemActioned(long id) {
 		startActivity(ItemEditActivity.edit(id));
 	}

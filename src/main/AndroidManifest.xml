@@ -100,23 +100,13 @@
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 		</activity>
 		<activity
-			android:name=".activity.data.PropertyListActivity"
-			android:label="@string/property_list">
-			<meta-data android:name="android.support.PARENT_ACTIVITY"
-			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
-		</activity>
-		<activity
 			android:name=".activity.data.PropertyEditActivity"
 			android:label="@string/property_edit"
 			android:windowSoftInputMode="adjustResize|stateHidden">
-			<meta-data android:name="android.support.PARENT_ACTIVITY"
-			           android:value="net.twisterrob.inventory.android.activity.data.PropertyListActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.PropertyViewActivity"
 			android:label="@string/property_details">
-			<meta-data android:name="android.support.PARENT_ACTIVITY"
-			           android:value="net.twisterrob.inventory.android.activity.data.PropertyListActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.RoomEditActivity"

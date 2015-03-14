@@ -5,7 +5,7 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import android.content.Context;
+import android.content.*;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,12 +23,13 @@ import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
-import net.twisterrob.inventory.android.activity.data.*;
+import net.twisterrob.inventory.android.activity.data.SunburstActivity;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
 import net.twisterrob.inventory.android.fragment.BackupFragment;
 import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.activity.BaseActivity.For.Feature.*;
+import static net.twisterrob.inventory.android.activity.MainActivity.*;
 
 public class BaseActivity extends ActionBarActivity {
 	@For(Log) private static final Logger LOG = LoggerFactory.getLogger(BaseActivity.class);
@@ -66,33 +67,40 @@ public class BaseActivity extends ActionBarActivity {
 		}
 	}
 
-	private void initDrawers() {
+	@For(Drawer) private void initDrawers() {
 		ListView drawerLeft = (ListView)mDrawerLayout.findViewById(R.id.drawer_left_list);
 		IconedItemAdapter adapter = new IconedItemAdapter(this, R.layout.item_drawer_left, createActions(this));
 		drawerLeft.setAdapter(adapter);
-		adapter.setActive(findActivePosition(drawerLeft));
-
 		drawerLeft.setOnItemClickListener(new IconedItem.OnClick() {
 			@Override public void onItemClick(AdapterView parent, View view, int position, long id) {
 				super.onItemClick(parent, view, position, id);
 				mDrawerLayout.closeDrawer(parent);
 			}
 		});
+
+		refreshDrawers(getIntent());
 	}
 
-	private int findActivePosition(ListView drawerLeft) {
+	@For(Drawer) private int findActivePosition(ListView drawerLeft, Intent intent) {
 		for (int pos = 0; pos < drawerLeft.getAdapter().getCount(); pos++) {
 			Object item = drawerLeft.getItemAtPosition(pos);
 			if (item instanceof SVGIntentItem) {
 				SVGIntentItem intentItem = (SVGIntentItem)item;
-				if (getIntent().getComponent().equals(intentItem.getIntent().getComponent())
-						&& AndroidTools.toString(getIntent().getExtras())
+				if (intent.getComponent().equals(intentItem.getIntent().getComponent())
+						&& AndroidTools.toString(intent.getExtras())
 						               .equals(AndroidTools.toString(intentItem.getIntent().getExtras()))) {
 					return pos;
 				}
 			}
 		}
 		return -1;
+	}
+
+	@For(Drawer) private void refreshDrawers(Intent intent) {
+		ListView drawerLeft = (ListView)mDrawerLayout.findViewById(R.id.drawer_left_list);
+		IconedItemAdapter adapter = (IconedItemAdapter)drawerLeft.getAdapter();
+		adapter.setActive(findActivePosition(drawerLeft, intent));
+		adapter.notifyDataSetChanged();
 	}
 
 	@For(Drawer) protected void onPostCreate(Bundle savedInstanceState) {
@@ -107,6 +115,17 @@ public class BaseActivity extends ActionBarActivity {
 		if (BuildConfig.DEBUG) {
 			ViewServer.get(this).setFocusedWindow(this);
 		}
+	}
+
+	@For(Drawer) @Override protected void onNewIntent(Intent intent) {
+		LOG.trace("Refreshing {}@{} {}\n{}",
+				getClass().getSimpleName(),
+				Integer.toHexString(System.identityHashCode(this)),
+				AndroidTools.toString(intent.getExtras()),
+				intent
+		);
+		super.onNewIntent(intent);
+		refreshDrawers(intent);
 	}
 
 	@For(Drawer) @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -143,10 +162,10 @@ public class BaseActivity extends ActionBarActivity {
 
 		// @formatter:off
 		acts.add(new SVGIntentItem(R.string.home_title, R.raw.property_home, activity, MainActivity.home()));
-		acts.add(new SVGIntentItem(R.string.category_list, R.raw.category_unknown, activity, CategoryActivity.listAll()));
-		acts.add(new SVGIntentItem(R.string.property_list, R.raw.property_unknown, activity, PropertyListActivity.listAll()));
-		acts.add(new SVGIntentItem(R.string.room_list, R.raw.room_unknown, activity, PropertyViewActivity.listAll()));
-		acts.add(new SVGIntentItem(R.string.item_list, R.raw.category_box, activity, CategoryActivity.listAllItems()));
+		acts.add(new SVGIntentItem(R.string.category_list, R.raw.category_unknown, activity, MainActivity.list(PAGE_CATEGORIES)));
+		acts.add(new SVGIntentItem(R.string.property_list, R.raw.property_unknown, activity, MainActivity.list(PAGE_PROPERTIES)));
+		acts.add(new SVGIntentItem(R.string.room_list, R.raw.room_unknown, activity, MainActivity.list(PAGE_ROOMS)));
+		acts.add(new SVGIntentItem(R.string.item_list, R.raw.category_box, activity, MainActivity.list(PAGE_ITEMS)));
 		acts.add(new SVGIntentItem(R.string.sunburst_title, R.raw.ic_sunburst, activity, SunburstActivity.showAll()));
 		// @formatter:on
 		acts.add(new SVGItem(R.string.backup_title, R.raw.category_disc) {
@@ -219,7 +238,7 @@ public class BaseActivity extends ActionBarActivity {
 		@Override
 		public void onDrawerOpened(View drawerView) {
 			super.onDrawerOpened(drawerView);
-			activity.getSupportActionBar().setTitle(activity.getText(R.string.app_name));
+			activity.getSupportActionBar().setTitle(activity.getText(R.string.navigation_title));
 			activity.supportInvalidateOptionsMenu();
 		}
 	}

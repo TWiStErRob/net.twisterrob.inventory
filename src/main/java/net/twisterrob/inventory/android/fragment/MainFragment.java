@@ -14,7 +14,6 @@ import android.view.View.*;
 import android.widget.TextView;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Loaders;
@@ -123,12 +122,6 @@ public class MainFragment extends BaseFragment<Void> {
 			listsController.refresh();
 			recentsController.refresh();
 		}
-	}
-
-	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.search, menu);
-		AndroidTools.prepareSearch(getActivity(), menu, R.id.search);
 	}
 
 	static class PropertyAdapter extends BaseImagedAdapter {
