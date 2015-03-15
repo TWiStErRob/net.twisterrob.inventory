@@ -67,12 +67,12 @@ public abstract class RecyclerViewCursorsLoadersController extends RecyclerViewC
 		if (!requestedData.containsKey(loader)) {
 			throw new IllegalArgumentException("Please add the loader/adapter mapping first during setupList().");
 		}
-		manager.initLoader(loader.ordinal(), args, callbacks);
+		manager.initLoader(loader.id(), args, callbacks);
 	}
 
 	public void refresh(Loaders loader) {
 		// callbacks.finished--;
-		manager.getLoader(loader.ordinal()).onContentChanged();
+		manager.getLoader(loader.id()).onContentChanged();
 	}
 	public void refresh() {
 		for (Loaders loader : requestedData.keySet()) {

@@ -34,13 +34,13 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 	@Override
 	protected void onRefresh() {
 		super.onRefresh();
-		getLoaderManager().getLoader(SingleList.ordinal()).onContentChanged();
+		getLoaderManager().getLoader(SingleList.id()).onContentChanged();
 	}
 
 	@Override
 	protected void onStartLoading() {
 		super.onStartLoading();
-		getLoaderManager().initLoader(SingleList.ordinal(),
+		getLoaderManager().initLoader(SingleList.id(),
 				ExtrasFactory.bundleFromList(getArgListID()), new SingleRowLoaded());
 	}
 

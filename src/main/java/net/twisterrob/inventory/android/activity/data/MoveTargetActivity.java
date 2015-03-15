@@ -270,8 +270,8 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	}
 	private void propertySelected(long propertyID, boolean startMode) {
 		Bundle args = bundleFromProperty(propertyID);
-		getSupportLoaderManager().destroyLoader(Loaders.SingleProperty.ordinal());
-		getSupportLoaderManager().initLoader(Loaders.SingleProperty.ordinal(), args, new LoadSingleRow(this) {
+		getSupportLoaderManager().destroyLoader(Loaders.SingleProperty.id());
+		getSupportLoaderManager().initLoader(Loaders.SingleProperty.id(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
 				PropertyDTO property = PropertyDTO.fromCursor(cursor);
 				BaseFragment fragment = RoomListFragment.newInstance(property.id);
@@ -289,8 +289,8 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	}
 	private void roomSelected(long roomID, final boolean startMode) {
 		Bundle args = bundleFromRoom(roomID);
-		getSupportLoaderManager().destroyLoader(Loaders.SingleRoom.ordinal());
-		getSupportLoaderManager().initLoader(Loaders.SingleRoom.ordinal(), args, new LoadSingleRow(this) {
+		getSupportLoaderManager().destroyLoader(Loaders.SingleRoom.id());
+		getSupportLoaderManager().initLoader(Loaders.SingleRoom.id(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
 				RoomDTO room = RoomDTO.fromCursor(cursor);
 				BaseFragment roomFragment = ItemListFragment.newRoomInstance(room.id);
@@ -316,8 +316,8 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	}
 	private void itemSelected(final long itemID, final boolean startMode) {
 		Bundle args = bundleFromItem(itemID);
-		getSupportLoaderManager().destroyLoader(Loaders.ItemParents.ordinal());
-		getSupportLoaderManager().initLoader(Loaders.ItemParents.ordinal(), args, new LoadersCallbacks(this) {
+		getSupportLoaderManager().destroyLoader(Loaders.ItemParents.id());
+		getSupportLoaderManager().initLoader(Loaders.ItemParents.id(), args, new LoadersCallbacks(this) {
 			@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 				boolean forbidden = false;
 				while (data.moveToNext()) {

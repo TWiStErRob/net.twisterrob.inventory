@@ -48,10 +48,10 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper catCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
-		Dependency<Cursor> populateCats = manager.add(ItemCategories.ordinal(), null, catCursorSwapper);
+		Dependency<Cursor> populateCats = manager.add(ItemCategories.id(), null, catCursorSwapper);
 
 		if (id != Item.ID_ADD) {
-			Dependency<Cursor> loadItemData = manager.add(SingleItem.ordinal(),
+			Dependency<Cursor> loadItemData = manager.add(SingleItem.id(),
 					ExtrasFactory.bundleFromItem(id), new SingleRowLoaded());
 			loadItemData.dependsOn(populateCats);
 		}

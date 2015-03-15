@@ -175,6 +175,10 @@ public enum Loaders {
 		};
 	}
 
+	public int id() {
+		return ordinal();
+	}
+
 	public static Loaders fromID(int id) {
 		return values()[id];
 	}

@@ -42,13 +42,13 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	@Override
 	protected void onRefresh() {
 		super.onRefresh();
-		getLoaderManager().getLoader(SingleItem.ordinal()).onContentChanged();
+		getLoaderManager().getLoader(SingleItem.id()).onContentChanged();
 	}
 
 	@Override
 	protected void onStartLoading() {
 		super.onStartLoading();
-		getLoaderManager().initLoader(SingleItem.ordinal(),
+		getLoaderManager().initLoader(SingleItem.id(),
 				ExtrasFactory.bundleFromItem(getArgItemID()), new SingleRowLoaded());
 	}
 

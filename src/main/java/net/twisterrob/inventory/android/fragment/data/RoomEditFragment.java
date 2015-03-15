@@ -54,10 +54,10 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper typeCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
-		Dependency<Cursor> populateTypes = manager.add(RoomTypes.ordinal(), null, typeCursorSwapper);
+		Dependency<Cursor> populateTypes = manager.add(RoomTypes.id(), null, typeCursorSwapper);
 
 		if (id != Room.ID_ADD) {
-			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.ordinal(),
+			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.id(),
 					ExtrasFactory.bundleFromRoom(id), new SingleRowLoaded());
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		}

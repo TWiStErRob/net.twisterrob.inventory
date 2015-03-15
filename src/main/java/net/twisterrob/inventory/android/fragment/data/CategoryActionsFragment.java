@@ -30,13 +30,13 @@ public class CategoryActionsFragment extends BaseSingleLoaderFragment<CategoryEv
 	@Override
 	protected void onRefresh() {
 		super.onRefresh();
-		getLoaderManager().getLoader(SingleCategory.ordinal()).onContentChanged();
+		getLoaderManager().getLoader(SingleCategory.id()).onContentChanged();
 	}
 
 	@Override
 	protected void onStartLoading() {
 		super.onStartLoading();
-		getLoaderManager().initLoader(SingleCategory.ordinal(),
+		getLoaderManager().initLoader(SingleCategory.id(),
 				ExtrasFactory.bundleFromCategory(getArgCategoryID()), new SingleRowLoaded());
 	}
 

@@ -173,7 +173,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		super.onStartLoading();
 		if (getArgRoomID() != Room.ID_ADD) {
 			Bundle args = ExtrasFactory.bundleFromRoom(getArgRoomID());
-			getLoaderManager().initLoader(Loaders.SingleRoom.ordinal(), args, new LoadSingleRow(getContext()) {
+			getLoaderManager().initLoader(Loaders.SingleRoom.id(), args, new LoadSingleRow(getContext()) {
 				@Override protected void process(Cursor data) {
 					super.process(data);
 					long root = data.getLong(data.getColumnIndex(Room.ROOT_ITEM));

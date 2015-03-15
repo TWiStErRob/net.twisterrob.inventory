@@ -38,11 +38,11 @@ public abstract class RecyclerViewLoadersController extends RecyclerViewCursorLo
 	}
 
 	public void startLoad(Bundle args) {
-		manager.get().initLoader(loader.ordinal(), args, createLoaderCallbacks());
+		manager.get().initLoader(loader.id(), args, createLoaderCallbacks());
 	}
 
 	public void refresh() {
-		manager.get().getLoader(loader.ordinal()).onContentChanged();
+		manager.get().getLoader(loader.id()).onContentChanged();
 	}
 
 	private interface LoaderManagerProvider {

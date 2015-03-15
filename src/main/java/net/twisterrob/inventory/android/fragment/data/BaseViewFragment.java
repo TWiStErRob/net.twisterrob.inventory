@@ -175,7 +175,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		private class ChangeTypeListener implements OnClickListener {
 			@Override public void onClick(View v) {
 				Loaders typeLoader = getDynamicResource(DYN_TypeLoader);
-				getLoaderManager().initLoader(typeLoader.ordinal(), null,
+				getLoaderManager().initLoader(typeLoader.id(), null,
 						new CursorSwapper(getContext(), new TypeAdapter(getContext())) {
 							@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 								super.onLoadFinished(loader, data);

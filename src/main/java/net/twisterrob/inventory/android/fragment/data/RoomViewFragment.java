@@ -40,13 +40,13 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	@Override
 	protected void onRefresh() {
 		super.onRefresh();
-		getLoaderManager().getLoader(SingleRoom.ordinal()).onContentChanged();
+		getLoaderManager().getLoader(SingleRoom.id()).onContentChanged();
 	}
 
 	@Override
 	protected void onStartLoading() {
 		super.onStartLoading();
-		getLoaderManager().initLoader(SingleRoom.ordinal(),
+		getLoaderManager().initLoader(SingleRoom.id(),
 				ExtrasFactory.bundleFromRoom(getArgRoomID()), new SingleRowLoaded());
 	}
 

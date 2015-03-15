@@ -54,10 +54,10 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper typeCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
-		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.ordinal(), null, typeCursorSwapper);
+		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.id(), null, typeCursorSwapper);
 
 		if (id != Property.ID_ADD) {
-			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.ordinal(),
+			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.id(),
 					ExtrasFactory.bundleFromProperty(id), new SingleRowLoaded());
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		}

@@ -7,7 +7,7 @@ import net.twisterrob.inventory.android.content.LoadSingleRow;
 public abstract class BaseSingleLoaderFragment<T> extends BaseFragment<T> {
 	protected abstract void onSingleRowLoaded(Cursor cursor);
 
-	/** <code>getLoaderManager().initLoader(Loaders.X.ordinal(), args, new SingleRowLoaded());</code> */
+	/** <code>getLoaderManager().initLoader(Loaders.X.getID(0), args, new SingleRowLoaded());</code> */
 	protected class SingleRowLoaded extends LoadSingleRow {
 		public SingleRowLoaded() {
 			super(getContext());
