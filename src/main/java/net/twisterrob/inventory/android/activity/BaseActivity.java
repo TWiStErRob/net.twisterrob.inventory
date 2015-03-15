@@ -33,8 +33,10 @@ import static net.twisterrob.inventory.android.activity.MainActivity.*;
 
 public class BaseActivity extends ActionBarActivity {
 	@For(Log) private static final Logger LOG = LoggerFactory.getLogger(BaseActivity.class);
-	@For(Drawer) private ActionBarDrawerToggle mDrawerToggle;
-	@For(Drawer) private DrawerLayout mDrawerLayout;
+	@For(Drawer) protected ActionBarDrawerToggle mDrawerToggle;
+	@For(Drawer) protected DrawerLayout mDrawerLayout;
+	@For(Drawer) protected View mDrawerLeft;
+	@For(Drawer) protected View mDrawerRight;
 
 	@For({PixelView, Log}) @Override protected void onCreate(Bundle savedInstanceState) {
 		LOG.trace("Creating {}@{} {}\n{}",
@@ -68,17 +70,35 @@ public class BaseActivity extends ActionBarActivity {
 	}
 
 	@For(Drawer) private void initDrawers() {
-		ListView drawerLeft = (ListView)mDrawerLayout.findViewById(R.id.drawer_left_list);
+		createDrawerLeft();
+		if (mDrawerLeft == null) {
+			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.START);
+			mDrawerToggle.setDrawerIndicatorEnabled(false);
+		}
+		createDrawerRight();
+		if (mDrawerRight == null) {
+			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+		}
+		refreshDrawers(getIntent());
+	}
+
+	/** Initialize mDrawerLeft */
+	protected void createDrawerLeft() {
+		mDrawerLeft = getLayoutInflater().inflate(R.layout.inc_drawer_left_main, mDrawerLayout);
+		ListView list = (ListView)mDrawerLeft.findViewById(R.id.drawer_left_list);
 		IconedItemAdapter adapter = new IconedItemAdapter(this, R.layout.item_drawer_left, createActions(this));
-		drawerLeft.setAdapter(adapter);
-		drawerLeft.setOnItemClickListener(new IconedItem.OnClick() {
+		list.setAdapter(adapter);
+		list.setOnItemClickListener(new IconedItem.OnClick() {
 			@Override public void onItemClick(AdapterView parent, View view, int position, long id) {
 				super.onItemClick(parent, view, position, id);
 				mDrawerLayout.closeDrawer(parent);
 			}
 		});
+	}
 
-		refreshDrawers(getIntent());
+	/** Initialize mDrawerRight */
+	protected void createDrawerRight() {
+
 	}
 
 	@For(Drawer) private int findActivePosition(ListView drawerLeft, Intent intent) {
@@ -97,10 +117,23 @@ public class BaseActivity extends ActionBarActivity {
 	}
 
 	@For(Drawer) private void refreshDrawers(Intent intent) {
-		ListView drawerLeft = (ListView)mDrawerLayout.findViewById(R.id.drawer_left_list);
-		IconedItemAdapter adapter = (IconedItemAdapter)drawerLeft.getAdapter();
-		adapter.setActive(findActivePosition(drawerLeft, intent));
+		if (mDrawerLeft != null) {
+			refreshDrawerLeft(intent);
+		}
+		if (mDrawerRight != null) {
+			refreshDrawerRight(intent);
+		}
+	}
+
+	protected void refreshDrawerLeft(Intent intent) {
+		ListView list = (ListView)mDrawerLeft.findViewById(R.id.drawer_left_list);
+		IconedItemAdapter adapter = (IconedItemAdapter)list.getAdapter();
+		adapter.setActive(findActivePosition(list, intent));
 		adapter.notifyDataSetChanged();
+	}
+
+	protected void refreshDrawerRight(Intent intent) {
+
 	}
 
 	@For(Drawer) protected void onPostCreate(Bundle savedInstanceState) {
@@ -191,7 +224,7 @@ public class BaseActivity extends ActionBarActivity {
 	}
 
 	@For(Drawer) protected boolean hasDrawer() {
-		return mDrawerLayout != null && mDrawerToggle != null;
+		return mDrawerLayout != null && mDrawerToggle != null && (mDrawerLeft != null || mDrawerRight != null);
 	}
 
 	@For(Drawer) protected boolean isDrawerShown() {

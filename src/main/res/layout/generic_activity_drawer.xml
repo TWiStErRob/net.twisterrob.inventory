@@ -15,5 +15,5 @@
 		tools:background="@color/toolsBG"
 		/>
 	<!--<include layout="@layout/inc_overlay" />-->
-	<include layout="@layout/inc_drawers" />
+	<!-- See BaseActivity createDrawer* -->
 </android.support.v4.widget.DrawerLayout>
