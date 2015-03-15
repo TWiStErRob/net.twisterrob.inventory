@@ -119,14 +119,17 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		GridLayoutManager layout = new GridLayoutManager(getContext(), columns);
 		// TODO v21.0.3: doesn't work, false -> ladder jumpy, true -> chaotic jumpy
 		//layout.setSmoothScrollbarEnabled(true);
-		if (header != null) {
-			layout.setSpanSizeLookup(new SpanSizeLookup() {
-				@Override public int getSpanSize(int position) {
-					// TODO account for headerless lists
-					return position == 0 || cursorAdapter.isGroup(position - 1)? columns : 1;
+		layout.setSpanSizeLookup(new SpanSizeLookup() {
+			@Override public int getSpanSize(int position) {
+				if (header != null) {
+					if (position == 0) {
+						return columns;
+					}
+					position -= 1;
 				}
-			});
-		}
+				return cursorAdapter.isGroup(position)? columns : 1;
+			}
+		});
 		list.setLayoutManager(layout);
 		list.addItemDecoration(new ItemDecoration() {
 			private final int margin = getContext().getResources().getDimensionPixelSize(R.dimen.margin);

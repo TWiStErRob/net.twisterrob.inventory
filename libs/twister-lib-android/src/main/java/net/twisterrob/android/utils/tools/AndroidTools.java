@@ -13,6 +13,7 @@ import android.annotation.*;
 import android.app.*;
 import android.content.*;
 import android.content.pm.PackageManager;
+import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
@@ -79,7 +80,11 @@ public abstract class AndroidTools {
 
 	public static CharSequence getText(Context context, String stringResourceName) {
 		int id = context.getResources().getIdentifier(stringResourceName, "string", context.getPackageName());
-		return context.getText(id);
+		try {
+			return context.getText(id);
+		} catch (NotFoundException ex) {
+			throw new NotFoundException(ex.getMessage() + " from " + stringResourceName);
+		}
 	}
 
 	public static String toString(Bundle bundle) {

@@ -10,7 +10,7 @@ import android.view.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 public class LoggingActionBarActivity extends ActionBarActivity {
-	private static final Logger LOG = LoggerFactory.getLogger(LoggingActionBarActivity.class);
+	private static final Logger LOG = LoggerFactory.getLogger("Activity");
 
 	public LoggingActionBarActivity() {
 		LOG.trace("{}.ctor", getName());
@@ -20,6 +20,7 @@ public class LoggingActionBarActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		LOG.trace("{}.onCreate({})", getName(), AndroidTools.toString(savedInstanceState));
 		super.onCreate(savedInstanceState);
+		LOG.trace("{}.getLoaderManager(): {}", getName(), LoggingHelper.toString(getSupportLoaderManager()));
 	}
 
 	@Override
@@ -113,6 +114,6 @@ public class LoggingActionBarActivity extends ActionBarActivity {
 	}
 
 	private String getName() {
-		return getClass().getSimpleName() + "@" + hashCode();
+		return getClass().getSimpleName() + "@" + LoggingHelper.hash(this);
 	}
 }

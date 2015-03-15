@@ -12,7 +12,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 public class LoggingFragment extends Fragment {
-	private static final Logger LOG = LoggerFactory.getLogger(LoggingFragment.class);
+	private static final Logger LOG = LoggerFactory.getLogger("Fragment");
 	public LoggingFragment() {
 		LOG.trace("{}.ctor", getName());
 	}
@@ -46,6 +46,7 @@ public class LoggingFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		LOG.trace("{}.onActivityCreated({})", getName(), AndroidTools.toString(savedInstanceState));
 		super.onActivityCreated(savedInstanceState);
+		LOG.trace("{}.getLoaderManager(): {}", getName(), LoggingHelper.toString(getLoaderManager()));
 	}
 
 	@Override
@@ -158,6 +159,6 @@ public class LoggingFragment extends Fragment {
 	}
 
 	private String getName() {
-		return getClass().getSimpleName() + "@" + hashCode();
+		return getClass().getSimpleName() + "(" + LoggingHelper.getWho(this) + ")" + "@" + LoggingHelper.hash(this);
 	}
 }

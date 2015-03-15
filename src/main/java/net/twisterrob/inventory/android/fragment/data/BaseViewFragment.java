@@ -97,7 +97,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					ImageView type = (ImageView)view.findViewById(R.id.type);
 					image.setOnClickListener(new ImageOpenListener());
 					image.setOnLongClickListener(new ImageChangeListener());
-					image.setOnClickListener(new ChangeTypeListener());
+					type.setOnClickListener(new ChangeTypeListener());
 
 					int fallbackID = entity.getFallbackResource(image.getContext());
 					String imagePath = entity.getImage(image.getContext());

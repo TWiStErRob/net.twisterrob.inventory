@@ -14,16 +14,16 @@ public abstract class RecyclerViewLoadersController extends RecyclerViewCursorLo
 	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewLoadersController.class);
 
 	private final Context context;
-	private final LoaderManager manager;
+	private final LoaderManagerProvider manager;
 	private final Loaders loader;
 
 	public RecyclerViewLoadersController(FragmentActivity activity, Loaders loader) {
-		this(activity, activity.getSupportLoaderManager(), loader);
+		this(activity, new ActivityLoaderManagerProvider(activity), loader);
 	}
 	public RecyclerViewLoadersController(Fragment fragment, Loaders loader) {
-		this(fragment.getActivity(), fragment.getLoaderManager(), loader);
+		this(fragment.getActivity(), new FragmentLoaderManagerProvider(fragment), loader);
 	}
-	public RecyclerViewLoadersController(Context context, LoaderManager manager, Loaders loader) {
+	public RecyclerViewLoadersController(Context context, LoaderManagerProvider manager, Loaders loader) {
 		this.context = context;
 		this.manager = manager;
 		this.loader = loader;
@@ -34,15 +34,42 @@ public abstract class RecyclerViewLoadersController extends RecyclerViewCursorLo
 	}
 
 	@Override protected Loader<Cursor> createLoader(int id, Bundle args) {
-		assert id == loader.ordinal();
 		return Loaders.fromID(id).createLoader(context, args);
 	}
 
 	public void startLoad(Bundle args) {
-		manager.initLoader(loader.ordinal(), args, createLoaderCallbacks());
+		manager.get().initLoader(loader.ordinal(), args, createLoaderCallbacks());
 	}
 
 	public void refresh() {
-		manager.getLoader(loader.ordinal()).onContentChanged();
+		manager.get().getLoader(loader.ordinal()).onContentChanged();
+	}
+
+	private interface LoaderManagerProvider {
+		LoaderManager get();
+	}
+
+	private static class ActivityLoaderManagerProvider implements LoaderManagerProvider {
+		private final FragmentActivity activity;
+
+		public ActivityLoaderManagerProvider(FragmentActivity activity) {
+			this.activity = activity;
+		}
+
+		@Override public LoaderManager get() {
+			return activity.getSupportLoaderManager();
+		}
+	}
+
+	private static class FragmentLoaderManagerProvider implements LoaderManagerProvider {
+		private final Fragment fragment;
+
+		public FragmentLoaderManagerProvider(Fragment fragment) {
+			this.fragment = fragment;
+		}
+
+		@Override public LoaderManager get() {
+			return fragment.getLoaderManager();
+		}
 	}
 }
