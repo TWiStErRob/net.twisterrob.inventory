@@ -1,11 +1,7 @@
 package net.twisterrob.inventory.android.content.contract;
 
-public interface ParentColumns {
-	String ID = CommonColumns.ID;
-	String NAME = CommonColumns.NAME;
-	String IMAGE = CommonColumns.IMAGE;
-	String TYPE_IMAGE = CommonColumns.TYPE_IMAGE;
-	String TYPE = "parentType";
+public interface ParentColumns extends CommonColumns {
+	String PARENT_TYPE = "parentType";
 
 	enum Type {
 		Category("category", false),
@@ -17,7 +13,7 @@ public interface ParentColumns {
 		private final String string;
 		private final boolean isMain;
 
-		private Type(String string, boolean isMain) {
+		Type(String string, boolean isMain) {
 			this.string = string;
 			this.isMain = isMain;
 		}

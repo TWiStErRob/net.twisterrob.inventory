@@ -322,7 +322,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 				boolean forbidden = false;
 				while (data.moveToNext()) {
 					long id = data.getLong(data.getColumnIndexOrThrow(ParentColumns.ID));
-					Type type = Type.from(data.getString(data.getColumnIndexOrThrow(ParentColumns.TYPE)));
+					Type type = Type.from(data.getString(data.getColumnIndexOrThrow(ParentColumns.PARENT_TYPE)));
 					forbidden = forbidden || isAnyForbidden(id, type);
 					if (type.isMain() && (startMode || data.isLast())) {
 						BaseFragment fragment = createFragment(type, id);

@@ -205,7 +205,7 @@
 					'item' as parentType,
 					i._id as _id,
 					i.name as name,
-					c._id as typeID,
+					c._id as type,
 					c.name as typeName,
 					c.image as typeImage,
 					i.image
@@ -220,7 +220,7 @@
 					'root' as parentType,
 					i._id as _id,
 					i.name as name,
-					c._id as typeID,
+					c._id as type,
 					c.name as typeName,
 					c.image as typeImage,
 					i.image
@@ -235,7 +235,7 @@
 					'room' as parentType,
 					r._id as _id,
 					r.name as name,
-					rt._id as typeID,
+					rt._id as type,
 					rt.name as typeName,
 					COALESCE(rt.image, rtk.image) as typeImage,
 					r.image
@@ -251,7 +251,7 @@
 					'property' as parentType,
 					p._id as _id,
 					p.name as name,
-					pt._id as typeID,
+					pt._id as type,
 					pt.name as typeName,
 					pt.image as typeImage,
 					p.image
