@@ -59,7 +59,7 @@ public class CategoryFragment extends BaseFragment<CategoriesEvents> {
 								.append("Category ID", entity.id, DEBUG)
 								.append("Category Key", entity.name, DEBUG)
 								.append("Category Name", AndroidTools.getText(context, entity.name))
-								.append("Category Image", entity.fallbackImageResourceName, DEBUG)
+								.append("Category Image", entity.typeImage, DEBUG)
 								.append("Parent ID", entity.parentID, DEBUG)
 								.append("Inside", entity.parentName)
 								.append("# of direct subcategories", entity.numDirectChildren)

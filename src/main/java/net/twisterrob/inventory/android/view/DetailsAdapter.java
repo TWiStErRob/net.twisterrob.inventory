@@ -16,8 +16,8 @@ import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.DetailsAdapter.ViewHolder;
 
 public class DetailsAdapter extends CursorRecyclerAdapter<ViewHolder> {
@@ -160,13 +160,7 @@ public class DetailsAdapter extends CursorRecyclerAdapter<ViewHolder> {
 						}
 					});
 
-					if (imagePath == null) {
-						type.setImageDrawable(null);
-						Pic.SVG_REQUEST.load(fallbackID).into(image);
-					} else {
-						Pic.SVG_REQUEST.load(fallbackID).into(type);
-						Pic.IMAGE_REQUEST.load(imagePath).into(image);
-					}
+					ImagedDTO.loadInto(image, type, imagePath, fallbackID, false);
 					break;
 				}
 				case 1: {

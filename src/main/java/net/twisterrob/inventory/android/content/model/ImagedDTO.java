@@ -8,24 +8,25 @@ import org.slf4j.*;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.RawRes;
+import android.widget.ImageView;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants;
-import net.twisterrob.inventory.android.Constants.Paths;
+import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 
 public class ImagedDTO extends DTO {
 	private static final Logger LOG = LoggerFactory.getLogger(ImagedDTO.class);
 
 	public String image;
-	public String fallbackImageResourceName;
+	public String typeImage;
 	public long type;
 
 	@Override
 	protected ImagedDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		fallbackImageResourceName = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE);
+		typeImage = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE);
 		image = DatabaseTools.getOptionalString(cursor, CommonColumns.IMAGE);
 		type = DatabaseTools.getOptionalLong(cursor, CommonColumns.TYPE, type);
 
@@ -54,12 +55,51 @@ public class ImagedDTO extends DTO {
 		}
 	}
 
-	public @RawRes int getFallbackResource(Context context) {
-		return AndroidTools.getRawResourceID(context, fallbackImageResourceName);
+	public @RawRes int getFallbackID(Context context) {
+		return AndroidTools.getRawResourceID(context, typeImage);
 	}
-
 	public static @RawRes int getFallbackID(Context context, Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		return AndroidTools.getRawResourceID(context, image);
+	}
+
+	public void loadInto(ImageView image, ImageView type, boolean alwaysShowType) {
+		loadInto(image, type, this.image, this.typeImage, alwaysShowType);
+	}
+	public static void loadInto(ImageView image, ImageView type, String imagePath, String typeName,
+			boolean alwaysShowType) {
+		String fullImagePath = Constants.Paths.getImagePath(image.getContext(), imagePath);
+		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
+		loadInto(image, type, fullImagePath, typeID, alwaysShowType);
+	}
+	public static void loadInto(ImageView image, ImageView type, String fullImagePath, int typeID,
+			boolean alwaysShowType) {
+		if (fullImagePath == null) {
+			if (alwaysShowType) {
+				Pic.SVG_REQUEST.load(typeID).into(type);
+			} else {
+				type.setImageDrawable(null); // == Pic.IMAGE_REQUEST.load(null).into(type); Glide#268
+			}
+			Pic.SVG_REQUEST.load(typeID).into(image);
+		} else {
+			Pic.SVG_REQUEST.load(typeID).into(type);
+			Pic.IMAGE_REQUEST.load(fullImagePath).into(image);
+		}
+	}
+
+	public void loadInto(ImageView image) {
+		loadInto(image, this.image, this.typeImage);
+	}
+	public static void loadInto(ImageView image, String imagePath, String typeName) {
+		String fullImagePath = Constants.Paths.getImagePath(image.getContext(), imagePath);
+		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
+		loadInto(image, fullImagePath, typeID);
+	}
+	public static void loadInto(ImageView image, String fullImagePath, int typeID) {
+		if (fullImagePath == null) {
+			Pic.SVG_REQUEST.load(typeID).into(image);
+		} else {
+			Pic.IMAGE_REQUEST.load(fullImagePath).into(image);
+		}
 	}
 }

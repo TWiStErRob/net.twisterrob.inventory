@@ -7,10 +7,9 @@ import android.view.View.*;
 import android.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
 public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends CursorRecyclerAdapter<VH> {
 	private final int layoutResource;
@@ -61,14 +60,8 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		image = Constants.Paths.getImagePath(holder.itemView.getContext(), image);
-		int fallbackID = AndroidTools.getRawResourceID(holder.image.getContext(), typeImage);
 
 		holder.title.setText(name);
-		if (image == null) {
-			Pic.SVG_REQUEST.load(fallbackID).into(holder.image);
-		} else {
-			Pic.IMAGE_REQUEST.load(image).into(holder.image);
-		}
+		ImagedDTO.loadInto(holder.image, image, typeImage);
 	}
 }

@@ -21,7 +21,6 @@ import static android.content.Context.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.activity.ImageActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
@@ -99,15 +98,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					image.setOnLongClickListener(new ImageChangeListener());
 					type.setOnClickListener(new ChangeTypeListener());
 
-					int fallbackID = entity.getFallbackResource(image.getContext());
-					String imagePath = entity.getImage(image.getContext());
-					if (imagePath == null) {
-						Pic.SVG_REQUEST.load(fallbackID).into(type);
-						Pic.SVG_REQUEST.load(fallbackID).into(image);
-					} else {
-						Pic.SVG_REQUEST.load(fallbackID).into(type);
-						Pic.IMAGE_REQUEST.load(imagePath).into(image);
-					}
+					entity.loadInto(image, type, true);
 					break;
 				}
 				case 1: {
