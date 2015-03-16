@@ -1,9 +1,10 @@
 package net.twisterrob.inventory.android.view;
 
-import android.database.Cursor;
+import android.database.*;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.view.View.*;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
@@ -11,21 +12,63 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
-import net.twisterrob.inventory.android.view.GalleryAdapter.ViewHolder;
+import net.twisterrob.inventory.android.view.GalleryAdapter.GalleryViewHolder;
 
-public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
+public class GalleryAdapter extends CursorRecyclerAdapter<GalleryViewHolder> {
 	public interface GalleryItemEvents extends RecyclerViewItemEvents {
 	}
 
 	private final GalleryItemEvents listener;
+	private View headerContainer;
 
 	public GalleryAdapter(Cursor cursor, GalleryItemEvents listener) {
 		super(cursor);
 		this.listener = listener;
 	}
 
-	public static class ViewHolder extends RecyclerView.ViewHolder {
-		public ViewHolder(View view, final GalleryItemEvents listener) {
+	public void setHeader(View headerContainer) {
+		this.headerContainer = headerContainer;
+	}
+
+	@Override public Cursor swapCursor(Cursor newCursor) {
+		if (headerContainer != null) { // add one extra row for header
+			MatrixCursor header = new MatrixCursor(new String[] {"_id"}, 1);
+			header.addRow(new Object[] {CommonColumns.ID_ADD});
+			newCursor = new MergeCursor(new Cursor[] {header, newCursor});
+		}
+		return super.swapCursor(newCursor);
+	}
+
+	public static abstract class GalleryViewHolder extends RecyclerView.ViewHolder {
+		GalleryViewHolder(View view) {
+			super(view);
+		}
+		abstract void bind(Cursor cursor);
+	}
+
+	private static class HeaderViewHolder extends GalleryViewHolder {
+		private View header;
+
+		HeaderViewHolder(View view, View headerContainer) {
+			super(view);
+			this.header = headerContainer;
+
+			view.setOnTouchListener(new OnTouchListener() {
+				@Override public boolean onTouch(View v, MotionEvent event) {
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+					return header.dispatchTouchEvent(event);
+				}
+			});
+		}
+		@Override void bind(Cursor cursor) {
+			LayoutParams layout = itemView.getLayoutParams();
+			layout.height = header.getHeight();
+			itemView.setLayoutParams(layout);
+		}
+	}
+
+	private static class ViewHolder extends GalleryViewHolder {
+		ViewHolder(View view, final GalleryItemEvents listener) {
 			super(view);
 			title = (TextView)view.findViewById(R.id.title);
 			image = (ImageView)view.findViewById(R.id.image);
@@ -66,15 +109,26 @@ public class GalleryAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	}
 
 	@Override public int getItemViewType(int position) {
+		if (position == 0 && headerContainer != null) {
+			return R.layout.item_header_placeholder;
+		}
 		return isGroup(position)? R.layout.item_gallery_group : R.layout.item_gallery;
 	}
-	@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	@Override public GalleryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 		View view = inflater.inflate(viewType, parent, false);
-		return new ViewHolder(view, listener);
+		switch (viewType) {
+			case R.layout.item_header_placeholder:
+				return new HeaderViewHolder(view, headerContainer);
+			case R.layout.item_gallery:
+			case R.layout.item_gallery_group:
+				return new ViewHolder(view, listener);
+			default:
+				throw new IllegalArgumentException("Unhandled viewType: " + viewType);
+		}
 	}
 
-	@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+	@Override public void onBindViewHolder(GalleryViewHolder holder, Cursor cursor) {
 		holder.bind(cursor);
 	}
 

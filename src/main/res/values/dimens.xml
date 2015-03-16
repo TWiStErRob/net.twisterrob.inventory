@@ -7,4 +7,5 @@
 	<integer name="gallery_columns">2</integer>
 	<!-- TODO calculate for each dpi -->
 	<fraction name="fabShadow">45000%</fraction>
+	<dimen name="header">250dp</dimen>
 </resources>
