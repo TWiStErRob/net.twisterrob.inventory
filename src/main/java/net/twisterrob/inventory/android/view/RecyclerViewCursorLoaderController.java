@@ -3,9 +3,7 @@ package net.twisterrob.inventory.android.view;
 import org.slf4j.*;
 
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 
@@ -20,35 +18,20 @@ public abstract class RecyclerViewCursorLoaderController extends RecyclerViewCon
 		adapter = setupList();
 		if (pendingData != null) {
 			adapter.swapCursor(pendingData);
+			// finishLoading(); // no need to finish, because we didn't have a view to start with
 			pendingData = null;
 		}
 	}
 
-	public LoaderCallbacks<Cursor> createLoaderCallbacks() {
-		return new LoaderCallbacks<Cursor>() {
-			public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-				startLoading();
-				return createLoader(id, args);
-			}
-
-			public void onLoaderReset(Loader<Cursor> loader) {
-				updateAdapter(null);
-			}
-
-			public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-				updateAdapter(data);
-			}
-
-			protected void updateAdapter(Cursor data) {
-				if (adapter == null) {
-					pendingData = data;
-				} else {
-					adapter.swapCursor(data);
-					finishLoading();
-				}
-			}
-		};
+	protected void updateAdapter(Cursor data) {
+		if (adapter == null) {
+			pendingData = data;
+		} else {
+			adapter.swapCursor(data);
+			finishLoading();
+		}
 	}
-	protected abstract Loader<Cursor> createLoader(int id, Bundle args);
+
+	public abstract LoaderCallbacks<Cursor> createLoaderCallbacks();
 	protected abstract CursorRecyclerAdapter setupList();
 }

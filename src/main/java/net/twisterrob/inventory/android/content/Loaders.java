@@ -10,6 +10,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 
 import net.twisterrob.android.content.loader.SimpleCursorLoader;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 
@@ -149,38 +150,22 @@ public enum Loaders {
 	protected abstract Cursor createCursor(Context context, Bundle args);
 
 	public Loader<Cursor> createLoader(Context context, final Bundle args) {
-		return new SimpleCursorLoader(context) {
-			@Override
-			public Cursor loadInBackground() {
-				LOG.trace("Loading {}({})", Loaders.this, args);
-				Cursor cursor = createCursor(getContext(), args != null? args : NO_ARGS);
-				if (args == null || !args.getBoolean("dontExecute")) {
-					cursor.getCount();
-				}
-				return cursor;
-			}
-			@Override
-			public void deliverResult(Cursor cursor) {
-				try {
-					super.deliverResult(cursor);
-				} catch (RuntimeException ex) {
-					try {
-						DatabaseUtils.dumpCursor(cursor);
-					} catch (Exception dumpEx) {
-						dumpEx.printStackTrace();
-					}
-					throw ex;
-				}
-			}
-		};
+		return new LoadersCursorLoader(context, Loaders.this, args);
 	}
 
+	private static final int MOD = (int)Math.pow(10, Math.ceil(Math.log10(values().length)));
+	private static final int INT_SIZE = (int)Math.pow(10, Math.floor(Math.log10(Integer.MAX_VALUE)));
+
 	public int id() {
-		return ordinal();
+		return ordinal(); // === id(0)
+	}
+
+	public int id(int mixin) {
+		return (int)((mixin * (long)MOD) % INT_SIZE) + ordinal();
 	}
 
 	public static Loaders fromID(int id) {
-		return values()[id];
+		return values()[(id % MOD + MOD) % MOD]; // cycle up if negative
 	}
 
 	public abstract static class LoadersCallbacks implements LoaderCallbacks<Cursor> {
@@ -191,7 +176,86 @@ public enum Loaders {
 		}
 
 		@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-			return fromID(id).createLoader(context, args);
+			Loader<Cursor> loader = fromID(id).createLoader(context, args);
+			//LOG.trace("Created {}", loader);
+			return loader;
+		}
+
+		@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+			if (loader instanceof LoadersCursorLoader) {
+				((LoadersCursorLoader)loader).timeLoadFinished = System.nanoTime();
+			}
+			//LOG.trace("Finished {}: {}", loader, data);
+		}
+		@Override public void onLoaderReset(Loader<Cursor> loader) {
+			if (loader instanceof LoadersCursorLoader) {
+				((LoadersCursorLoader)loader).timeLoaderReset = System.nanoTime();
+			}
+			//LOG.trace("Reset {}", loader);
+		}
+	}
+
+	private static class LoadersCursorLoader extends SimpleCursorLoader {
+		private final Loaders loaders;
+		private final Bundle args;
+		private long timeCreateLoader = System.nanoTime();
+		private long timeForceLoad = timeCreateLoader;
+		private long timeCursorWanted = timeCreateLoader; // BG entry
+		private long timeCursorCreated = timeCreateLoader; // in BG
+		private long timeCursorExecuted = timeCreateLoader; // in BG
+		private long timeCursorDelivered = timeCreateLoader; // BG exit, on UI
+		long timeLoadFinished = timeCreateLoader; // on UI
+		long timeLoaderReset = timeCreateLoader; // on UI
+
+		public LoadersCursorLoader(Context context, Loaders loaders, Bundle args) {
+			super(context);
+			this.loaders = loaders;
+			this.args = args;
+		}
+
+		@Override
+		public Cursor loadInBackground() {
+			timeCursorWanted = System.nanoTime();
+			Cursor cursor = loaders.createCursor(getContext(), args != null? args : NO_ARGS);
+			timeCursorCreated = System.nanoTime();
+			if (args == null || !args.getBoolean("dontExecute")) {
+				cursor.getCount();
+				timeCursorExecuted = System.nanoTime();
+			}
+			return cursor;
+		}
+
+		@Override
+		public void deliverResult(Cursor cursor) {
+			timeCursorDelivered = System.nanoTime();
+			try {
+				super.deliverResult(cursor);
+			} catch (RuntimeException ex) {
+				try {
+					DatabaseUtils.dumpCursor(cursor);
+				} catch (Exception dumpEx) {
+					dumpEx.printStackTrace();
+				}
+				throw ex;
+			}
+		}
+
+		@Override public void forceLoad() {
+			timeForceLoad = System.nanoTime();
+			super.forceLoad();
+		}
+
+		@Override public String toString() {
+			return super.toString() + "=" + loaders + "(" + AndroidTools.toString(args) + ")" + ","
+					+ " [" + "loader " + (timeCreateLoader - timeForceLoad) / 1000 / 1000 + "ms"
+					+ ", " + "wanted " + (timeCursorWanted - timeForceLoad) / 1000 / 1000 + "ms"
+					+ ", " + "created " + (timeCursorCreated - timeForceLoad) / 1000 / 1000 + "ms"
+					+ ", " + "executed " + (timeCursorExecuted - timeForceLoad) / 1000 / 1000 + "ms"
+					+ ", " + "delivered " + (timeCursorDelivered - timeForceLoad) / 1000 / 1000 + "ms"
+					+ ", " + "finished " + (timeLoadFinished - timeForceLoad) / 1000 / 1000 + "ms"
+					+ ", " + "reset " + (timeLoaderReset - timeForceLoad) / 1000 / 1000 + "ms"
+					+ "]"
+					;
 		}
 	}
 }

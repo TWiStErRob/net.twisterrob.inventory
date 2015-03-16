@@ -13,6 +13,7 @@ public abstract class LoadSingleRow extends LoadersCallbacks {
 	}
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		super.onLoadFinished(loader, data);
 		//DatabaseTools.dumpCursor(data);
 		if (data.getCount() == 1) {
 			data.moveToFirst();
@@ -24,6 +25,7 @@ public abstract class LoadSingleRow extends LoadersCallbacks {
 	}
 
 	public void onLoaderReset(Loader<Cursor> loader) {
+		super.onLoaderReset(loader);
 		// no op, we didn't keep any reference to data
 	}
 
