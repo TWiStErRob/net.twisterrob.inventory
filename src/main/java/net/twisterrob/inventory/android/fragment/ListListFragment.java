@@ -27,8 +27,6 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 		void listRemoved(long listID);
 	}
 
-	private HeaderManager header = null;
-
 	public ListListFragment() {
 		setDynamicResource(DYN_EventsClass, ListsEvents.class);
 	}
@@ -87,9 +85,6 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 
 	@Override
 	protected void onRefresh() {
-		if (header != null) {
-			header.getHeader().refresh();
-		}
 		listController.refresh();
 	}
 

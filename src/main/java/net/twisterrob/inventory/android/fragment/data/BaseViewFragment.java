@@ -38,9 +38,12 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.fragment_details, container, false);
-		pager = (ViewPager)root.findViewById(R.id.pager);
-		return root;
+		return inflater.inflate(R.layout.fragment_details, container, false);
+	}
+
+	@Override public void onViewCreated(View view, Bundle bundle) {
+		super.onViewCreated(view, bundle);
+		pager = (ViewPager)view.findViewById(R.id.pager);
 	}
 
 	public void onSingleRowLoaded(DTO entity) {

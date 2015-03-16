@@ -243,4 +243,18 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		fragment.setArguments(ExtrasFactory.bundleFromList(listID));
 		return fragment;
 	}
+
+	public ItemListFragment addHeader() {
+		Bundle args = getArguments();
+		if (args.containsKey(Extras.PARENT_ID)) {
+			setHeader(ItemViewFragment.newInstance(getArgParentItemID()));
+		} else if (args.containsKey(Extras.ROOM_ID)) {
+			setHeader(RoomViewFragment.newInstance(getArgRoomID()));
+		} else if (args.containsKey(Extras.CATEGORY_ID)) {
+			setHeader(null); // TODO CategoryViewFragment?
+		} else if (args.containsKey(Extras.LIST_ID)) {
+			setHeader(null); // TODO ListViewFragment?
+		}
+		return this;
+	}
 }

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
-import net.twisterrob.inventory.android.fragment.data.*;
+import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.fragment.data.RoomViewFragment.RoomEvents;
 
@@ -15,11 +15,7 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 
 	@Override
 	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
-		long roomID = getExtraRoomID();
-
-		ItemListFragment fragment = ItemListFragment.newRoomInstance(roomID);
-		fragment.setHeader(RoomViewFragment.newInstance(roomID));
-		return fragment;
+		return ItemListFragment.newRoomInstance(getExtraRoomID()).addHeader();
 	}
 
 	public void roomLoaded(RoomDTO room) {

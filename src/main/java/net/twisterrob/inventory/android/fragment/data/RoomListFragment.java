@@ -144,4 +144,8 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		fragment.setArguments(ExtrasFactory.bundleFromProperty(propertyID));
 		return fragment;
 	}
+	public RoomListFragment addHeader() {
+		setHeader(PropertyViewFragment.newInstance(getArgPropertyID()));
+		return this;
+	}
 }

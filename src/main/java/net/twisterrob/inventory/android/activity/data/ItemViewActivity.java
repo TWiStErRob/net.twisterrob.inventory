@@ -7,7 +7,7 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
-import net.twisterrob.inventory.android.fragment.data.*;
+import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
 
@@ -17,10 +17,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 
 	@Override
 	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
-		long itemID = getExtraItemID();
-		ItemListFragment fragment = ItemListFragment.newInstance(itemID);
-		fragment.setHeader(ItemViewFragment.newInstance(itemID));
-		return fragment;
+		return ItemListFragment.newInstance(getExtraItemID()).addHeader();
 	}
 
 	public void itemLoaded(ItemDTO item) {

@@ -8,8 +8,8 @@ import android.os.Bundle;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
-import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
+import net.twisterrob.inventory.android.fragment.data.RoomListFragment;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 
 public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> implements PropertyEvents, RoomsEvents {
@@ -17,10 +17,7 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 
 	@Override
 	protected RoomListFragment onCreateFragment(Bundle savedInstanceState) {
-		long propertyID = getExtraPropertyID();
-		RoomListFragment fragment = RoomListFragment.newInstance(propertyID);
-		fragment.setHeader(PropertyViewFragment.newInstance(propertyID));
-		return fragment;
+		return RoomListFragment.newInstance(getExtraPropertyID()).addHeader();
 	}
 
 	public void propertyLoaded(PropertyDTO property) {
