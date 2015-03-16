@@ -81,4 +81,8 @@ public final class StringTools {
 				throw new IllegalArgumentException("Invalid locale: " + localeToString);
 		}
 	}
+
+	public static String hashString(Object object) {
+		return Integer.toHexString(System.identityHashCode(object));
+	}
 }

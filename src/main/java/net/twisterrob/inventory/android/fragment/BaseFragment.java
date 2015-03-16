@@ -54,7 +54,7 @@ public class BaseFragment<T> extends Fragment {
 		LOG.trace("Creating {}@{} {}",
 				getClass().getSimpleName(),
 				Integer.toHexString(System.identityHashCode(this)),
-				AndroidTools.toString(getArguments())
+				AndroidTools.toLongString(getArguments())
 		);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);

@@ -23,6 +23,7 @@ import android.os.Build.*;
 import android.preference.ListPreference;
 import android.support.annotation.*;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment.SavedState;
 import android.support.v4.view.*;
 import android.support.v4.widget.SearchViewCompat;
 import android.util.*;
@@ -35,6 +36,8 @@ public abstract class AndroidTools {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidTools.class);
 
 	private static final float CIRCLE_LIMIT = 359.9999f;
+	public static final String NULL = "null";
+	public static final String ERROR = "error";
 
 	private AndroidTools() {
 		// static class
@@ -87,28 +90,58 @@ public abstract class AndroidTools {
 		}
 	}
 
-	public static String toString(Bundle bundle) {
+	public static String toLongString(Bundle bundle) {
+		return toString(bundle, "Bundle of ", "\n", "", "\t", "\n");
+	}
+
+	public static String toShortString(Bundle bundle) {
+		return toString(bundle, "(Bundle)", "{", "}", "", ", ");
+	}
+
+	public static String toShortString(SavedState state) {
+		try {
+			if (state == null) {
+				return NULL;
+			}
+			return toShortString((Bundle)SavedState.class.getDeclaredField("mState").get(state));
+		} catch (Exception e) {
+			LOG.warn("Cannot find SavedState.mState", state);
+			return ERROR;
+		}
+	}
+
+	private static String toString(Bundle bundle, String number, String start, String end, String preItem,
+			String postItem) {
 		if (bundle == null) {
-			return "null";
+			return NULL;
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("Bundle of ").append(bundle.size()).append('\n');
-		for (String key : new TreeSet<String>(bundle.keySet())) {
+		sb.append(number).append(bundle.size()).append(start);
+		for (Iterator<String> it = new TreeSet<>(bundle.keySet()).iterator(); it.hasNext(); ) {
+			String key = it.next();
 			String value = toString(bundle.get(key));
-			sb.append('\t').append(key).append("=").append(value).append('\n');
+
+			sb.append(preItem).append(key).append("=").append(value);
+			if (it.hasNext()) {
+				sb.append(postItem);
+			}
 		}
+		sb.append(end);
 		return sb.toString();
 	}
 
 	public static String toString(Object value) {
 		if (value == null) {
-			return "null";
-		}
-		if (value instanceof Bundle) {
-			return AndroidTools.toString((Bundle)value);
+			return NULL;
 		}
 		String type = value.getClass().getSimpleName();
-		return "(" + type + ")" + value;
+		String string;
+		if (value instanceof Bundle) {
+			string = toString((Bundle)value, "", "{", "}", "", ", ");
+		} else {
+			string = value.toString();
+		}
+		return "(" + type + ")" + string;
 	}
 
 	@SuppressWarnings("deprecation")

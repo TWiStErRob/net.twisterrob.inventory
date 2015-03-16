@@ -42,7 +42,7 @@ public class BaseActivity extends ActionBarActivity {
 		LOG.trace("Creating {}@{} {}\n{}",
 				getClass().getSimpleName(),
 				Integer.toHexString(System.identityHashCode(this)),
-				AndroidTools.toString(getIntent().getExtras()),
+				AndroidTools.toLongString(getIntent().getExtras()),
 				getIntent()
 		);
 		super.onCreate(savedInstanceState);

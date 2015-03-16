@@ -1,63 +1,87 @@
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.android.utils.log;
 
 import org.slf4j.*;
 
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.*;
+import android.util.AttributeSet;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.java.utils.*;
 
 public class LoggingFragment extends Fragment {
 	private static final Logger LOG = LoggerFactory.getLogger("Fragment");
+
+	protected interface DebugInfoProvider {
+		String getDebugInfo() throws Throwable;
+	}
+
+	protected DebugInfoProvider debugInfoProvider;
+
 	public LoggingFragment() {
-		LOG.trace("{}.ctor", getName());
+		log("ctor");
+	}
+
+	@Override public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
+		log("onInflate", activity, attrs, savedInstanceState);
+		super.onInflate(activity, attrs, savedInstanceState);
+	}
+
+	@Override public void setArguments(Bundle args) {
+		log("setArguments", args);
+		super.setArguments(args);
+	}
+
+	@Override public void setInitialSavedState(SavedState state) {
+		log("setInitialSavedState", state);
+		super.setInitialSavedState(state);
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
-		LOG.trace("{}.onAttach({})", getName(), activity);
+		log("onAttach", activity);
 		super.onAttach(activity);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		LOG.trace("{}.onCreate({})", getName(), AndroidTools.toString(savedInstanceState));
+		log("onCreate", savedInstanceState);
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		LOG.trace("{}.onCreateView({}, {}, {})", getName(), inflater, container,
-				AndroidTools.toString(savedInstanceState));
+		log("onCreateView", inflater, container, savedInstanceState);
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle bundle) {
-		LOG.trace("{}.onViewCreated({}, {})", getName(), view, AndroidTools.toString(bundle));
+		log("onViewCreated", view, bundle);
 		super.onViewCreated(view, bundle);
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		LOG.trace("{}.onActivityCreated({})", getName(), AndroidTools.toString(savedInstanceState));
+		log("onActivityCreated", savedInstanceState);
 		super.onActivityCreated(savedInstanceState);
-		LOG.trace("{}.getLoaderManager(): {}", getName(), LoggingHelper.toString(getLoaderManager()));
+		LoaderManager lm = getLoaderManager();
+		LOG.trace("{}.loaderManager={}({})", getName(), lm, ReflectionTools.get(lm, "mWho"));
 	}
 
 	@Override
 	public void onViewStateRestored(Bundle savedInstanceState) {
-		LOG.trace("{}.onViewStateRestored({})", getName(), AndroidTools.toString(savedInstanceState));
+		log("onViewStateRestored", savedInstanceState);
 		super.onViewStateRestored(savedInstanceState);
 	}
 
 	@Override
 	public void onStart() {
-		LOG.trace("{}.onStart", getName());
+		log("onStart");
 		super.onStart();
 	}
 
@@ -66,7 +90,7 @@ public class LoggingFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		LOG.trace("{}.onResume", getName());
+		log("onResume");
 		super.onResume();
 	}
 
@@ -74,7 +98,7 @@ public class LoggingFragment extends Fragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-		LOG.trace("{}.onCreateOptionsMenu({}, {})", getName(), menu, menuInflater);
+		log("onCreateOptionsMenu", menu, menuInflater);
 		super.onCreateOptionsMenu(menu, menuInflater);
 	}
 
@@ -82,43 +106,43 @@ public class LoggingFragment extends Fragment {
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
-		LOG.trace("{}.onPrepareOptionsMenu({})", getName(), menu);
+		log("onPrepareOptionsMenu", menu);
 		super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		LOG.trace("{}.onOptionsItemSelected({})", getName(), item);
+		log("onOptionsItemSelected", item);
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onOptionsMenuClosed(Menu menu) {
-		LOG.trace("{}.onOptionsMenuClosed({})", getName(), menu);
+		log("onOptionsMenuClosed", menu);
 		super.onOptionsMenuClosed(menu);
 	}
 
 	@Override
 	public void onDestroyOptionsMenu() {
-		LOG.trace("{}.onDestroyOptionsMenu", getName());
+		log("onDestroyOptionsMenu");
 		super.onDestroyOptionsMenu();
 	}
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-		LOG.trace("{}.onCreateContextMenu({}, {}, {})", getName(), menu, view, menuInfo);
+		log("onCreateContextMenu", menu, view, menuInfo);
 		super.onCreateContextMenu(menu, view, menuInfo);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		LOG.trace("{}.onContextItemSelected({})", getName(), item);
+		log("onContextItemSelected", item);
 		return super.onContextItemSelected(item);
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		LOG.trace("{}.onConfigurationChanged({})", getName(), newConfig);
+		log("onConfigurationChanged", newConfig);
 		super.onConfigurationChanged(newConfig);
 	}
 
@@ -126,15 +150,20 @@ public class LoggingFragment extends Fragment {
 
 	@Override
 	public void onPause() {
-		LOG.trace("{}.onPause", getName());
+		log("onPause");
 		super.onPause();
+	}
+
+	@Override public void onSaveInstanceState(Bundle outState) {
+		log("onSaveInstanceState", outState);
+		super.onSaveInstanceState(outState);
 	}
 
 	// Activity.onStop
 
 	@Override
 	public void onStop() {
-		LOG.trace("{}.onStop", getName());
+		log("onStop");
 		super.onStop();
 	}
 
@@ -142,23 +171,55 @@ public class LoggingFragment extends Fragment {
 
 	@Override
 	public void onDestroyView() {
-		LOG.trace("{}.onDestroyView", getName());
+		log("onDestroyView");
 		super.onDestroyView();
 	}
 
 	@Override
 	public void onDestroy() {
-		LOG.trace("{}.onDestroy", getName());
+		log("onDestroy");
 		super.onDestroy();
 	}
 
 	@Override
 	public void onDetach() {
-		LOG.trace("{}.onDetach", getName());
+		log("onDetach");
 		super.onDetach();
 	}
 
+	@Override public void onLowMemory() {
+		log("onLowMemory");
+		super.onLowMemory();
+	}
+
+	// getName().name(args[0], ..., args[n]):\ndebugInfo()
+	private void log(String name, Object... args) {
+		Throwable t = null;
+		StringBuilder message = new StringBuilder();
+		message.append(getName()).append(".").append(name).append("(");
+		for (int i = 0; i < args.length; i++) {
+			message.append(AndroidTools.toString(args[i]));
+			if (i < args.length - 1) {
+				message.append(", ");
+			}
+		}
+		message.append(")");
+		if (debugInfoProvider != null) {
+			String info;
+			try {
+				info = debugInfoProvider.getDebugInfo();
+			} catch (Throwable ex) {
+				info = ex.toString();
+				t = ex;
+			}
+			message.append(":\n").append(info);
+		}
+
+		LOG.trace(message.toString(), t);
+	}
+
 	private String getName() {
-		return getClass().getSimpleName() + "(" + LoggingHelper.getWho(this) + ")" + "@" + LoggingHelper.hash(this);
+		return getClass().getSimpleName() + "@" + StringTools.hashString(this)
+				+ "(" + ReflectionTools.get(this, "mWho") + ")";
 	}
 }

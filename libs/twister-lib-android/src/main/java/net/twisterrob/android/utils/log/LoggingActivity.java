@@ -1,61 +1,64 @@
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.android.utils.log;
 
 import org.slf4j.*;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.java.utils.*;
 
-public class LoggingActionBarActivity extends ActionBarActivity {
+public class LoggingActivity extends ActionBarActivity {
 	private static final Logger LOG = LoggerFactory.getLogger("Activity");
 
-	public LoggingActionBarActivity() {
+	public LoggingActivity() {
 		LOG.trace("{}.ctor", getName());
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		LOG.trace("{}.onCreate({})", getName(), AndroidTools.toString(savedInstanceState));
+		LOG.trace("{}.onCreate({})", getName(), AndroidTools.toShortString(savedInstanceState));
 		super.onCreate(savedInstanceState);
-		LOG.trace("{}.getLoaderManager(): {}", getName(), LoggingHelper.toString(getSupportLoaderManager()));
+		LoaderManager lm = getSupportLoaderManager();
+		LOG.trace("{}.loaderManager={}({})", getName(), lm, ReflectionTools.get(lm, "mWho"));
 	}
 
 	@Override
 	protected void onStart() {
-		LOG.trace("{}.onStart", getName());
+		LOG.trace("{}.onStart()", getName());
 		super.onStart();
 	}
 
 	@Override
 	protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-		LOG.trace("{}.onRestoreInstanceState({})", getName(), AndroidTools.toString(savedInstanceState));
+		LOG.trace("{}.onRestoreInstanceState({})", getName(), AndroidTools.toShortString(savedInstanceState));
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
-		LOG.trace("{}.onPostCreate({})", getName(), AndroidTools.toString(savedInstanceState));
+		LOG.trace("{}.onPostCreate({})", getName(), AndroidTools.toShortString(savedInstanceState));
 		super.onPostCreate(savedInstanceState);
 	}
 
 	@Override
 	protected void onResume() {
-		LOG.trace("{}.onResume", getName());
+		LOG.trace("{}.onResume()", getName());
 		super.onResume();
 	}
 
 	@Override
 	protected void onPostResume() {
-		LOG.trace("{}.onPostResume", getName());
+		LOG.trace("{}.onPostResume()", getName());
 		super.onPostResume();
 	}
 
 	@Override
 	protected void onResumeFragments() {
-		LOG.trace("{}.onResumeFragments", getName());
+		LOG.trace("{}.onResumeFragments()", getName());
 		super.onResumeFragments();
 	}
 
@@ -85,35 +88,35 @@ public class LoggingActionBarActivity extends ActionBarActivity {
 
 	@Override
 	protected void onPause() {
-		LOG.trace("{}.onPause", getName());
+		LOG.trace("{}.onPause()", getName());
 		super.onPause();
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		LOG.trace("{}.onSaveInstanceState({})", getName(), AndroidTools.toString(outState));
+		LOG.trace("{}.onSaveInstanceState({})", getName(), AndroidTools.toShortString(outState));
 		super.onSaveInstanceState(outState);
 	}
 
 	@Override
 	protected void onStop() {
-		LOG.trace("{}.onStop", getName());
+		LOG.trace("{}.onStop()", getName());
 		super.onStop();
 	}
 
 	@Override
 	protected void onRestart() {
-		LOG.trace("{}.onRestart", getName());
+		LOG.trace("{}.onRestart()", getName());
 		super.onRestart();
 	}
 
 	@Override
 	protected void onDestroy() {
-		LOG.trace("{}.onDestroy", getName());
+		LOG.trace("{}.onDestroy()", getName());
 		super.onDestroy();
 	}
 
 	private String getName() {
-		return getClass().getSimpleName() + "@" + LoggingHelper.hash(this);
+		return getClass().getSimpleName() + "@" + StringTools.hashString(this);
 	}
 }
