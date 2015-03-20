@@ -2,7 +2,8 @@ package net.twisterrob.android.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.view.*;
+import android.view.View;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
 /**
@@ -10,10 +11,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
  * Mostly useful for headers where the {@link RecyclerView} has a placeholder and the header is on top of it.
  */
 public class SynchronizedScrollListener extends OnScrollListener {
-	public interface ViewProvider {
-		View getView();
-	}
-
 	/**
 	 * <li><code>0</code> means that the view will scroll just outside the screen
 	 * and come back only when the list is towards it's beginning.
@@ -38,13 +35,10 @@ public class SynchronizedScrollListener extends OnScrollListener {
 		this.view = view;
 
 		if (list != null) { // need to mock a scroll event when the first layout happens
-			final ViewTreeObserver observer = list.getViewTreeObserver();
-			observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+			list.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 				@Override public void onGlobalLayout() {
 					onScrolled(list, 0, 0);
-					if (observer.isAlive()) {
-						observer.removeGlobalOnLayoutListener(this);
-					}
+					list.getViewTreeObserver().removeGlobalOnLayoutListener(this); // call to get non-floating observer
 				}
 			});
 		}
@@ -59,7 +53,7 @@ public class SynchronizedScrollListener extends OnScrollListener {
 			if (ratio == 0) {
 				View placeholder = recyclerView.getLayoutManager().findViewByPosition(0);
 				if (placeholder == null) { // no first view
-					offset = -(top + height); // offset the bottom to 0
+					offset = -(top + height); // offset the bottom to 0 to hide
 				} else { // placeholder on screen, but may be half hidden
 					offset = placeholder.getTop() - top; // level the two views
 				}
@@ -68,6 +62,7 @@ public class SynchronizedScrollListener extends OnScrollListener {
 				offset = (int)(-dy * ratio);
 			}
 
+			// prevent visual weirdness
 			if (top + offset < -height) { // would scroll out of screen on top
 				offset = -(top + height); // offset the bottom to 0
 			}
@@ -75,19 +70,10 @@ public class SynchronizedScrollListener extends OnScrollListener {
 				offset = -top; // offset the top to 0
 			}
 
-			view.offsetTopAndBottom(offset);
-		}
-	}
-
-	protected static class StaticViewProvider implements ViewProvider {
-		private final View view;
-
-		public StaticViewProvider(View view) {
-			this.view = view;
-		}
-
-		@Override public View getView() {
-			return view;
+			//view.offsetTopAndBottom(offset); // doesn't preserve on layout
+			MarginLayoutParams params = (MarginLayoutParams)view.getLayoutParams();
+			params.topMargin = top + offset;
+			view.setLayoutParams(params);
 		}
 	}
 }

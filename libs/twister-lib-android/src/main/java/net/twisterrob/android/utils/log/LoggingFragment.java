@@ -11,6 +11,7 @@ import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.*;
 
 public class LoggingFragment extends Fragment {
@@ -69,8 +70,19 @@ public class LoggingFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		log("onActivityCreated", savedInstanceState);
 		super.onActivityCreated(savedInstanceState);
-		LoaderManager lm = getLoaderManager();
+		LoaderManager lm = super.getLoaderManager();
 		LOG.trace("{}.loaderManager={}({})", getName(), lm, ReflectionTools.get(lm, "mWho"));
+	}
+
+	@Override public LoaderManager getLoaderManager() {
+		LoaderManager lm = super.getLoaderManager();
+		String who = ReflectionTools.get(lm, "mWho");
+		if (who == null || who.contains("null")) {
+			// for example executePendingTransactions() in onCreate()
+			LOG.warn("{}.getLoaderManager(): invalid loaderManager {}({}), parent not initialized yet",
+					getName(), lm, who, new StackTrace());
+		}
+		return lm;
 	}
 
 	@Override

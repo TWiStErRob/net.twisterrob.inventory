@@ -19,19 +19,19 @@ public class GalleryAdapter extends CursorRecyclerAdapter<GalleryViewHolder> {
 	}
 
 	private final GalleryItemEvents listener;
-	private View headerContainer;
+	private View header;
 
 	public GalleryAdapter(Cursor cursor, GalleryItemEvents listener) {
 		super(cursor);
 		this.listener = listener;
 	}
 
-	public void setHeader(View headerContainer) {
-		this.headerContainer = headerContainer;
+	public void setHeader(View header) {
+		this.header = header;
 	}
 
 	@Override public Cursor swapCursor(Cursor newCursor) {
-		if (headerContainer != null) { // add one extra row for header
+		if (header != null) { // add one extra row for header
 			MatrixCursor header = new MatrixCursor(new String[] {"_id"}, 1);
 			header.addRow(new Object[] {CommonColumns.ID_ADD});
 			newCursor = new MergeCursor(new Cursor[] {header, newCursor});
@@ -49,14 +49,14 @@ public class GalleryAdapter extends CursorRecyclerAdapter<GalleryViewHolder> {
 	private static class HeaderViewHolder extends GalleryViewHolder {
 		private View header;
 
-		HeaderViewHolder(View view, View headerContainer) {
+		HeaderViewHolder(View view, View header) {
 			super(view);
-			this.header = headerContainer;
+			this.header = header;
 
 			view.setOnTouchListener(new OnTouchListener() {
 				@Override public boolean onTouch(View v, MotionEvent event) {
 					v.getParent().requestDisallowInterceptTouchEvent(true);
-					return header.dispatchTouchEvent(event);
+					return HeaderViewHolder.this.header.dispatchTouchEvent(event);
 				}
 			});
 		}
@@ -109,7 +109,7 @@ public class GalleryAdapter extends CursorRecyclerAdapter<GalleryViewHolder> {
 	}
 
 	@Override public int getItemViewType(int position) {
-		if (position == 0 && headerContainer != null) {
+		if (position == 0 && header != null) {
 			return R.layout.item_header_placeholder;
 		}
 		return isGroup(position)? R.layout.item_gallery_group : R.layout.item_gallery;
@@ -119,7 +119,7 @@ public class GalleryAdapter extends CursorRecyclerAdapter<GalleryViewHolder> {
 		View view = inflater.inflate(viewType, parent, false);
 		switch (viewType) {
 			case R.layout.item_header_placeholder:
-				return new HeaderViewHolder(view, headerContainer);
+				return new HeaderViewHolder(view, header);
 			case R.layout.item_gallery:
 			case R.layout.item_gallery_group:
 				return new ViewHolder(view, listener);

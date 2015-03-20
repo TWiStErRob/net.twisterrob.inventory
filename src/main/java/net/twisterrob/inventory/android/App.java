@@ -26,6 +26,8 @@ public class App extends Application {
 	static {
 		if (BuildConfig.DEBUG) {
 			setStrictMode();
+			//android.app.FragmentManager.enableDebugLogging(true);
+			//android.support.v4.app.FragmentManager.enableDebugLogging(true);
 			//android.app.LoaderManager.enableDebugLogging(true);
 			//android.support.v4.app.LoaderManager.enableDebugLogging(true);
 		}

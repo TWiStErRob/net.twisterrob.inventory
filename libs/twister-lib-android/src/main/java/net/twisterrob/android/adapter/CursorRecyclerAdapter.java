@@ -21,6 +21,8 @@ import android.widget.*;
  */
 public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>
 		implements Filterable, CursorFilter.CursorFilterClient {
+	public static final int AUTO_REQUERY_BG = android.support.v4.widget.CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER;
+
 	private boolean mDataValid;
 	private int mRowIDColumn;
 	private Cursor mCursor;
@@ -30,18 +32,26 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	private FilterQueryProvider mFilterQueryProvider;
 
 	public CursorRecyclerAdapter(Cursor cursor) {
+		this(cursor, 0);
+	}
+	public CursorRecyclerAdapter(Cursor cursor, int flags) {
 		setHasStableIds(true);
-		init(cursor);
+		init(cursor, flags);
 	}
 
-	void init(Cursor c) {
+	void init(Cursor c, int flags) {
 		boolean cursorPresent = c != null;
 		mCursor = c;
 		mDataValid = cursorPresent;
 		mRowIDColumn = cursorPresent? c.getColumnIndexOrThrow("_id") : -1;
 
-		mChangeObserver = new ChangeObserver();
-		mDataSetObserver = new MyDataSetObserver();
+		if ((flags & AUTO_REQUERY_BG) == AUTO_REQUERY_BG) {
+			mChangeObserver = new ChangeObserver();
+			mDataSetObserver = new MyDataSetObserver();
+		} else {
+			mChangeObserver = null;
+			mDataSetObserver = null;
+		}
 
 		if (cursorPresent) {
 			if (mChangeObserver != null) {
@@ -164,8 +174,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 			mRowIDColumn = -1;
 			mDataValid = false;
 			// notify the observers about the lack of a data set
-			// notifyDataSetInvalidated();
-			notifyItemRangeRemoved(0, getItemCount());
+			notifyItemRangeRemoved(0, getItemCount()); // =~= notifyDataSetInvalidated();
 		}
 		return oldCursor;
 	}

@@ -13,7 +13,7 @@ import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.view.SynchronizedScrollListener;
-import net.twisterrob.android.view.SynchronizedScrollListener.ViewProvider;
+import net.twisterrob.android.view.ViewProvider.StaticViewProvider;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.*;
@@ -67,10 +67,12 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		if (savedInstanceState == null && hasHeader()) {
 			getChildFragmentManager()
 					.beginTransaction()
-					.replace(R.id.header, header)
+					.add(R.id.header, header)
 					.commit()
 			;
-			getChildFragmentManager().executePendingTransactions();
+			// header is scheduled to be added, will be available: whenever,
+			// any post() will have header.getView() available, don't executePendingTransactions
+			// because we're (parent) not activated yet!
 		}
 	}
 	@Override
@@ -80,8 +82,10 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		// restore on rotation, idempotent on first creation
-		header = (BaseFragment)getChildFragmentManager().findFragmentById(R.id.header);
+		if (header == null) {
+			header = (BaseFragment)getChildFragmentManager().findFragmentById(R.id.header); // restore on rotation
+		}
+
 		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
 	}
 
@@ -131,8 +135,14 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		final int columns = getResources().getInteger(R.integer.gallery_columns);
 
 		final GalleryAdapter cursorAdapter = new GalleryAdapter(null, this);
+		SelectionAdapter<? extends ViewHolder> selectionAdapter = new SelectionAdapter<>(cursorAdapter);
+		selectionMode = onPrepareSelectionMode(getActivity(), selectionAdapter);
+
 		if (hasHeader() && getView() != null) {
-			cursorAdapter.setHeader(getView().findViewById(R.id.header));
+			View headerContainer = getView().findViewById(R.id.header);
+			cursorAdapter.setHeader(headerContainer);
+			list.setOnScrollListener(new SynchronizedScrollListener(0, list, new StaticViewProvider(headerContainer)));
+			selectionAdapter.setSelectable(0, false);
 		}
 
 		GridLayoutManager layout = new GridLayoutManager(getContext(), columns);
@@ -152,22 +162,8 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 				}
 			}
 		});
-
-		if (hasHeader()) {
-			list.setOnScrollListener(new SynchronizedScrollListener(0, list, new ViewProvider() {
-				@Override public View getView() {
-					// Can't use R.id.header, because it's jumping all around when RecyclerView scrolls an item out.
-					return header.getView();
-				}
-			}));
-		}
-
-		SelectionAdapter<? extends ViewHolder> selectionAdapter = new SelectionAdapter<>(cursorAdapter);
-		if (hasHeader()) {
-			selectionAdapter.setSelectable(0, false);
-		}
-		selectionMode = onPrepareSelectionMode(getActivity(), selectionAdapter);
 		list.setAdapter(selectionAdapter);
+
 		return cursorAdapter;
 	}
 
