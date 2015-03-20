@@ -23,7 +23,6 @@ import android.os.Build.*;
 import android.preference.ListPreference;
 import android.support.annotation.*;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.Fragment.SavedState;
 import android.support.v4.view.*;
 import android.support.v4.widget.SearchViewCompat;
 import android.util.*;
@@ -31,6 +30,8 @@ import android.view.*;
 import android.widget.*;
 
 import static android.util.TypedValue.*;
+
+import net.twisterrob.java.utils.ReflectionTools;
 
 public abstract class AndroidTools {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidTools.class);
@@ -91,27 +92,15 @@ public abstract class AndroidTools {
 	}
 
 	public static String toLongString(Bundle bundle) {
-		return toString(bundle, "Bundle of ", "\n", "", "\t", "\n");
+		return toString(bundle, "Bundle of ", "\n", "\t", "\n", "");
 	}
 
 	public static String toShortString(Bundle bundle) {
-		return toString(bundle, "(Bundle)", "{", "}", "", ", ");
+		return toString(bundle, "(Bundle)", "×{", "", ", ", "}");
 	}
 
-	public static String toShortString(SavedState state) {
-		try {
-			if (state == null) {
-				return NULL;
-			}
-			return toShortString((Bundle)SavedState.class.getDeclaredField("mState").get(state));
-		} catch (Exception e) {
-			LOG.warn("Cannot find SavedState.mState", state);
-			return ERROR;
-		}
-	}
-
-	private static String toString(Bundle bundle, String number, String start, String end, String preItem,
-			String postItem) {
+	private static String toString(Bundle bundle, String number, String start, String preItem, String postItem,
+			String end) {
 		if (bundle == null) {
 			return NULL;
 		}
@@ -134,14 +123,30 @@ public abstract class AndroidTools {
 		if (value == null) {
 			return NULL;
 		}
-		String type = value.getClass().getSimpleName();
-		String string;
+		String type = value.getClass().getName();
+		String display;
 		if (value instanceof Bundle) {
-			string = toString((Bundle)value, "", "{", "}", "", ", ");
+			display = toString((Bundle)value, "", "{", "", ", ", "}");
+		} else if (value instanceof android.app.Fragment.SavedState) {
+			return "(SavedState)" + toString(ReflectionTools.get(value, "mState"));
+		} else if (value instanceof android.support.v4.app.Fragment.SavedState) {
+			return "(v4.SavedState)" + toString(ReflectionTools.get(value, "mState"));
 		} else {
-			string = value.toString();
+			display = value.toString();
+			if (type.length() <= display.length() && display.startsWith(type)) {
+				display = display.substring(type.length()); // from @ sign or { in case of View
+			}
+			display = shortenPackageNames(display);
 		}
-		return "(" + type + ")" + string;
+		return "(" + shortenPackageNames(type) + ")" + display;
+	}
+
+	private static String shortenPackageNames(String string) {
+		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+(v4|v7|v13)\\.(?:[a-z0-9]+\\.)+", "$1.");
+		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+", "");
+		string = string.replaceAll("^javax?\\.(?:[a-z0-9]+\\.)+", "");
+		string = string.replaceAll("^net\\.twisterrob\\.([a-z0-9.]+\\.)+", "tws.");
+		return string;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -522,5 +527,63 @@ public abstract class AndroidTools {
 			return findClosest(group, viewId);
 		}
 		return null;
+	}
+
+	/** @see ComponentCallbacks2 */
+	public static String toTrimMemoryString(int level) {
+		switch (level) {
+			case ComponentCallbacks2.TRIM_MEMORY_COMPLETE:
+				return "TRIM_MEMORY_COMPLETE";
+			case ComponentCallbacks2.TRIM_MEMORY_MODERATE:
+				return "TRIM_MEMORY_MODERATE";
+			case ComponentCallbacks2.TRIM_MEMORY_BACKGROUND:
+				return "TRIM_MEMORY_BACKGROUND";
+			case ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN:
+				return "TRIM_MEMORY_UI_HIDDEN";
+			case ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL:
+				return "TRIM_MEMORY_RUNNING_CRITICAL";
+			case ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW:
+				return "TRIM_MEMORY_RUNNING_LOW";
+			case ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE:
+				return "TRIM_MEMORY_RUNNING_MODERATE";
+		}
+		return "trimMemoryLevel=" + level;
+	}
+	public static String toColorString(int color) {
+		return String.format(Locale.ROOT, "#%02X%02X%02X%02X",
+				Color.alpha(color), Color.red(color), Color.green(color), Color.blue(color));
+	}
+	public static String toFeatureString(int featureId) {
+		switch (featureId) {
+			case Window.FEATURE_OPTIONS_PANEL:
+				return "FEATURE_OPTIONS_PANEL";
+			case Window.FEATURE_NO_TITLE:
+				return "FEATURE_NO_TITLE";
+			case Window.FEATURE_PROGRESS:
+				return "FEATURE_PROGRESS";
+			case Window.FEATURE_LEFT_ICON:
+				return "FEATURE_LEFT_ICON";
+			case Window.FEATURE_RIGHT_ICON:
+				return "FEATURE_RIGHT_ICON";
+			case Window.FEATURE_INDETERMINATE_PROGRESS:
+				return "FEATURE_INDETERMINATE_PROGRESS";
+			case Window.FEATURE_CONTEXT_MENU:
+				return "FEATURE_CONTEXT_MENU";
+			case Window.FEATURE_CUSTOM_TITLE:
+				return "FEATURE_CUSTOM_TITLE";
+			case Window.FEATURE_ACTION_BAR:
+				return "FEATURE_ACTION_BAR";
+			case Window.FEATURE_ACTION_BAR_OVERLAY:
+				return "FEATURE_ACTION_BAR_OVERLAY";
+			case Window.FEATURE_ACTION_MODE_OVERLAY:
+				return "FEATURE_ACTION_MODE_OVERLAY";
+			case Window.FEATURE_SWIPE_TO_DISMISS:
+				return "FEATURE_SWIPE_TO_DISMISS";
+			case Window.FEATURE_CONTENT_TRANSITIONS:
+				return "FEATURE_CONTENT_TRANSITIONS";
+			case Window.FEATURE_ACTIVITY_TRANSITIONS:
+				return "FEATURE_ACTIVITY_TRANSITIONS";
+		}
+		return "featureId=" + featureId;
 	}
 }

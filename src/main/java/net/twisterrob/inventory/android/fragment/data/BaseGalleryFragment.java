@@ -99,6 +99,12 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		selectionMode.onRestoreInstanceState(savedInstanceState);
 	}
 
+	@Override public void setMenuVisibility(boolean menuVisible) {
+		super.setMenuVisibility(menuVisible);
+		if (header != null) {
+			// FIXME needed for hierarchy view? header.setMenuVisibility(menuVisible);
+		}
+	}
 	@Override public final void onItemClick(int position, long recyclerViewItemID) {
 		if (selectionMode.isRunning()) {
 			selectionMode.toggle(position);
