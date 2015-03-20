@@ -51,11 +51,15 @@ public class SynchronizedScrollListener extends OnScrollListener {
 			int height = view.getHeight();
 			int offset;
 			if (ratio == 0) {
-				View placeholder = recyclerView.getLayoutManager().findViewByPosition(0);
-				if (placeholder == null) { // no first view
-					offset = -(top + height); // offset the bottom to 0 to hide
-				} else { // placeholder on screen, but may be half hidden
-					offset = placeholder.getTop() - top; // level the two views
+				if (recyclerView.getAdapter().getItemCount() == 0) { // no data yet
+					offset = 0; // don't do anything
+				} else {
+					View placeholder = recyclerView.getLayoutManager().findViewByPosition(0);
+					if (placeholder == null) { // no first view
+						offset = -(top + height); // offset the bottom to 0 to hide
+					} else { // placeholder on screen, but may be half hidden
+						offset = placeholder.getTop() - top; // level the two views
+					}
 				}
 			} else {
 				float ratio = 0 <= dy? this.ratio : 1 / this.ratio;
