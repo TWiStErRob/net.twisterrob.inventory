@@ -56,10 +56,10 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 				dialog.setMax(progress.total);
 				break;
 			case Images:
-				dialog.setMessage(getString(R.string.backup_export_progress_images));
+				dialog.setMessage(getString(R.string.backup_export_progress_images, progress.imagesCount, progress.total));
 				dialog.setIndeterminate(false);
-				dialog.setProgress(progress.done);
-				dialog.setMax(progress.total);
+				dialog.setProgress(progress.imagesTried);
+				dialog.setMax(progress.imagesCount);
 				break;
 		}
 	}

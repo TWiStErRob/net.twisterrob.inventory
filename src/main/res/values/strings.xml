@@ -157,7 +157,7 @@
 	<string name="backup_export_progress_title">Export</string>
 	<string name="backup_export_progress_init">Preparing export…</string>
 	<string name="backup_export_progress_data">Exporting belongings…</string>
-	<string name="backup_export_progress_images">Exporting images…</string>
+	<string name="backup_export_progress_images">Exporting %1$d images for %2$d belongings…</string>
 	<string name="backup_export_result_success">Done exporting %1$d belongings.</string>
 	<string name="backup_export_result_warning">Done exporting %1$d belongings, but %2$d/%3$d images missing.</string>
 	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>

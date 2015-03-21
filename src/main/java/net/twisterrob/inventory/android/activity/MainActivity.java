@@ -12,7 +12,6 @@ import android.view.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.activity.neew.HierarchyActivity;
 import net.twisterrob.inventory.android.content.contract.Room;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -129,8 +128,7 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 		switch (item.getItemId()) {
 			case R.id.debug:
 				//startActivity(CategoryActivity.show(7000));
-				startActivity(HierarchyActivity.show(1723));
-				//startActivity(ItemViewActivity.show(1723));
+				startActivity(ItemViewActivity.show(1723));
 				//startActivityForResult(CaptureImage.saveTo(this, new File(getCacheDir(), "dev.jpg")), 32767);
 				return true;
 			default:

@@ -96,7 +96,7 @@ public abstract class AndroidTools {
 	}
 
 	public static String toShortString(Bundle bundle) {
-		return toString(bundle, "(Bundle)", "×{", "", ", ", "}");
+		return toString(bundle, "(Bundle)", "#{", "", ", ", "}");
 	}
 
 	private static String toString(Bundle bundle, String number, String start, String preItem, String postItem,
@@ -126,7 +126,7 @@ public abstract class AndroidTools {
 		String type = value.getClass().getName();
 		String display;
 		if (value instanceof Bundle) {
-			display = toString((Bundle)value, "", "{", "", ", ", "}");
+			display = toString((Bundle)value, " ", "#{", "", ", ", "}");
 		} else if (value instanceof android.app.Fragment.SavedState) {
 			return "(SavedState)" + toString(ReflectionTools.get(value, "mState"));
 		} else if (value instanceof android.support.v4.app.Fragment.SavedState) {

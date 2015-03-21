@@ -34,9 +34,15 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 
 		public static final class Progress implements Cloneable {
 			public Phase phase;
+			/** number of images tried (may have failed) from imagesCount*/
 			public int imagesTried;
+			/** number of images failed from imagesCount */
 			public int imagesFailed;
+			/** number of images from total */
+			public int imagesCount;
+			/** number of items done from total */
 			public int done;
+			/** total number of items */
 			public int total;
 			public Throwable failure;
 
@@ -192,6 +198,9 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 				} else {
 					values[i] = null;
 				}
+			}
+			if (!cursor.isNull(cursor.getColumnIndex(CommonColumns.IMAGE))) {
+				progress.imagesCount++;
 			}
 			printer.printRecord(values);
 			publishIncrement();
