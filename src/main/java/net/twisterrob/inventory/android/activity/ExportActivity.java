@@ -4,8 +4,10 @@ import java.io.*;
 
 import android.content.Intent;
 import android.os.*;
+import android.support.annotation.NonNull;
 
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.fragment.ExportFragment;
 import net.twisterrob.inventory.android.view.SafeSimpleAsyncTask;
 
@@ -27,17 +29,12 @@ public class ExportActivity extends BaseActivity {
 			this.task = task;
 		}
 		@Override protected OutputStream doInBackgroundSafe(Void aVoid) throws Exception {
-			File parent = Constants.Paths.getPhoneHome();
-			File file = new File(parent, Constants.Paths.getExportFileName());
-			if (!(parent.mkdirs() || parent.isDirectory())) {
-				throw new IOException("Cannot use directory: " + parent);
-			}
-			return new FileOutputStream(file);
+			return new FileOutputStream(Paths.getExportFile());
 		}
 		@Override protected void onResult(OutputStream stream) {
 			task.execute(stream);
 		}
-		@Override protected void onError(Exception error) {
+		@Override protected void onError(@NonNull Exception error) {
 			App.toast("Export failed: " + error.getMessage());
 		}
 	}

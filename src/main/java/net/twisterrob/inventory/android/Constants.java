@@ -1,16 +1,15 @@
 package net.twisterrob.inventory.android;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.AnyRes;
+import android.support.annotation.*;
 
 import com.bumptech.glide.*;
 import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.engine.cache.*;
 import com.bumptech.glide.load.model.ImageVideoWrapper;
 import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -30,24 +29,34 @@ public interface Constants {
 		/** Warning: this is used inlined in paths_images.xml because path doesn't support string resources */
 		private static final String INTERNAL_IMAGES_FOLDER = "images";
 		public static final String DRIVE_HOME_FOLDER = "Magic Home Inventory";
-		public static File getImageDirectory(Context context) {
-			return new File(context.getFilesDir(), INTERNAL_IMAGES_FOLDER);
-		}
-		public static File getImageFile(Context context, String image) {
-			if (image == null) {
-				return null;
+		public static @NonNull File getImageDirectory(Context context) {
+			if (Constants.DISABLE && BuildConfig.DEBUG) {
+				File dir = context.getExternalFilesDir(INTERNAL_IMAGES_FOLDER);
+				return dir != null? dir : new File(context.getFilesDir(), INTERNAL_IMAGES_FOLDER);
+			} else {
+				return new File(context.getFilesDir(), INTERNAL_IMAGES_FOLDER);
 			}
+		}
+		public static @NonNull File getImageFile(Context context, @NonNull String image) {
 			File imageFile = new File(image);
 			return imageFile.isAbsolute()? imageFile : new File(Paths.getImageDirectory(context), image);
 		}
-		public static String getImagePath(Context context, String image) {
-			File imageFile = getImageFile(context, image);
-			return imageFile != null? imageFile.getAbsolutePath() : null;
+		public static @Nullable String getImagePath(Context context, @Nullable String image) {
+			if (image == null) {
+				return null;
+			}
+			return getImageFile(context, image).getAbsolutePath();
 		}
-		public static String getExportFileName() {
-			return String.format(Locale.ROOT, "MagicHomeInventory-%tF_%<tH-%<tM-%<tS.zip", Calendar.getInstance());
+		public static @NonNull File getExportFile() throws IOException {
+			Calendar now = Calendar.getInstance();
+			String fileName = String.format(Locale.ROOT, "MagicHomeInventory-%tF_%<tH-%<tM-%<tS.zip", now);
+			File exportFolder = getPhoneHome();
+			if (!(exportFolder.mkdirs() || exportFolder.isDirectory())) {
+				throw new IOException("Cannot use directory: " + exportFolder);
+			}
+			return new File(exportFolder, fileName);
 		}
-		public static File getPhoneHome() {
+		public static @NonNull File getPhoneHome() {
 			return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		}
 	}
@@ -95,14 +104,14 @@ public interface Constants {
 
 		public static class GlideSetup implements GlideModule {
 			@Override public void applyOptions(final Context context, GlideBuilder builder) {
-				if (BuildConfig.DEBUG) {
-					builder.setDiskCache(new DiskCache.Factory() {
-						@Override public DiskCache build() {
-							final File cacheDir = new File(context.getExternalCacheDir(), "image_manager_disk_cache");
-							return DiskLruCacheWrapper.get(cacheDir, 250 * 1024 * 1024);
-						}
-					});
-				}
+//				if (BuildConfig.DEBUG) {
+//					builder.setDiskCache(new DiskCache.Factory() {
+//						@Override public DiskCache build() {
+//							final File cacheDir = new File(context.getExternalCacheDir(), "image_manager_disk_cache");
+//							return DiskLruCacheWrapper.get(cacheDir, 250 * 1024 * 1024);
+//						}
+//					});
+//				}
 			}
 			@Override public void registerComponents(Context context, Glide glide) {
 			}

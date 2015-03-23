@@ -306,4 +306,31 @@ public class Database {
 	public Cursor export() {
 		return rawQuery(R.string.query_export);
 	}
+
+	public void clearImages() {
+		SQLiteDatabase db = getWritableDatabase();
+		try {
+			db.beginTransaction();
+			db.execSQL("UPDATE Property SET image = NULL");
+			db.execSQL("UPDATE Room SET image = NULL");
+			db.execSQL("UPDATE Item SET image = NULL");
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		db.execSQL("VACUUM"); // must be outside a transaction
+	}
+
+	public void rebuildSearch() {
+		SQLiteDatabase db = getWritableDatabase();
+		try {
+			db.beginTransaction();
+			db.execSQL("DELETE from Search");
+			db.execSQL("insert into Search_Refresher(_id) select _id from Item");
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		db.execSQL("VACUUM"); // must be outside a transaction
+	}
 }

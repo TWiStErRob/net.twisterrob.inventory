@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 
@@ -54,5 +55,25 @@ public class DatabaseTools {
 			return cursor.isNull(col)? null : cursor.getString(col);
 		}
 		return defaultValue;
+	}
+
+	public static Long singleResult(@NonNull Cursor cursor) {
+		try {
+			if (cursor.getCount() == 0 || cursor.getColumnCount() == 0) {
+				throw new IllegalArgumentException("Empty cursor");
+			}
+			if (1 < cursor.getCount()) {
+				throw new IllegalArgumentException("Multiple rows returned");
+			}
+			if (1 < cursor.getColumnCount()) {
+				throw new IllegalArgumentException("Multiple columns returned");
+			}
+			if (!cursor.moveToFirst()) {
+				throw new IllegalArgumentException("Cannot move to first item");
+			}
+			return cursor.isNull(0)? null : cursor.getLong(0);
+		} finally {
+			cursor.close();
+		}
 	}
 }

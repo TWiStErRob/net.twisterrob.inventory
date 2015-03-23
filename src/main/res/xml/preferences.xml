@@ -29,7 +29,7 @@
 		>
 		<intent
 			android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
-			android:data="package:net.twisterrob.inventory"
+			android:data="@string/package_url_settings"
 			/>
 	</PreferenceScreen>
 	<PreferenceScreen

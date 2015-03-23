@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="ManageSpaceText">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:paddingTop">@dimen/margin</item>
+		<item name="android:textAppearance">?android:textAppearanceSmall</item>
+	</style>
+
+	<style name="ManageSpaceDots">
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_height">1dp</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:layout_gravity">bottom</item>
+		<item name="android:layout_marginLeft">1dp</item>
+		<item name="android:layout_marginRight">1dp</item>
+		<item name="android:layout_marginBottom">4dp</item>
+		<item name="android:src">@drawable/dotted_line</item>
+		<item name="android:scaleType">center</item>
+	</style>
+
+	<style name="ManageSpaceTitle">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:maxLines">1</item>
+		<item name="android:textAppearance">?android:textAppearanceMedium</item>
+	</style>
+
+	<style name="ManageSpaceButton">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_gravity">end</item>
+		<item name="android:paddingLeft">@dimen/marginBig</item>
+		<item name="android:paddingRight">@dimen/marginBig</item>
+	</style>
+</resources>

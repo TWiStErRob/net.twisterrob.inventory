@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="pref_activity_title">Settings</string>
+	<string name="package_url_settings">package:net.twisterrob.inventory</string>
 
 	<string name="pref_defaultEntityDetailsPage_title">Default Details Page</string>
 	<string name="pref_defaultEntityDetailsPage" translatable="false">defaultEntityDetailsPage</string>

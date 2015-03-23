@@ -9,10 +9,11 @@ import static java.lang.Math.*;
 
 import org.slf4j.*;
 
-import android.annotation.*;
+import android.annotation.TargetApi;
 import android.app.*;
 import android.content.*;
-import android.content.pm.PackageManager;
+import android.content.pm.*;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -340,17 +341,34 @@ public abstract class AndroidTools {
 	}
 
 	/**
+	 * @see AsyncTask#execute(Object[])
+	 * @see <a href="http://commonsware.com/blog/2012/04/20/asynctask-threading-regression-confirmed.html">AsyncTask Threading Regression Confirmed</a>
+	 * @see <a href="https://groups.google.com/forum/#!topic/android-developers/8M0RTFfO7-M">AsyncTask in Android 4.0</a>
 	 * @see <a href="http://www.jayway.com/2012/11/28/is-androids-asynctask-executing-tasks-serially-or-concurrently/">AsyncTask ordering</a>
 	 */
 	@SafeVarargs
-	@SuppressLint("NewApi")
 	public static <Params> void executeParallel(AsyncTask<Params, ?, ?> as, Params... params) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.DONUT) {
-			throw new IllegalStateException("Cannot execute AsyncTask parallel before DONUT (1.6 / API 4)");
+			throw new IllegalStateException("Cannot execute AsyncTask in parallel before DONUT");
 		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			as.execute(params);
+			as.execute(params); // default is pooling, cannot be explicit
 		} else {
-			as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+			as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params); // default is serial, explicit pooling
+		}
+	}
+
+	/**
+	 * @see AsyncTask#execute(Object[])
+	 * @see #executeParallel(AsyncTask, Object[])
+	 */
+	@SafeVarargs
+	public static <Params> void executeSerial(AsyncTask<Params, ?, ?> as, Params... params) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.DONUT) {
+			as.execute(params); // default is serial
+		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			throw new IllegalStateException("Cannot execute AsyncTask in serial between DONUT and HONEYCOMB");
+		} else {
+			as.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params); // default is serial, explicit serial
 		}
 	}
 
@@ -585,5 +603,17 @@ public abstract class AndroidTools {
 				return "FEATURE_ACTIVITY_TRANSITIONS";
 		}
 		return "featureId=" + featureId;
+	}
+
+	/**
+	 * @see PackageManager#getActivityInfo(ComponentName, int)
+	 */
+	public static ActivityInfo getActivityInfo(Activity activity, int flags) {
+		try {
+			return activity.getPackageManager().getActivityInfo(activity.getComponentName(), flags);
+		} catch (NameNotFoundException e) {
+			LOG.warn("Activity doesn't exists, but has an instance? {}", activity, e);
+			throw new RuntimeException(e);
+		}
 	}
 }
