@@ -2,9 +2,9 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
+import android.content.Context;
 import android.database.*;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -17,6 +17,7 @@ import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
 import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
@@ -94,11 +95,9 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		return this;
 	}
 
-	private class CategoriesItemsLoaderController
-			extends RecyclerViewCursorLoaderController
-			implements LoaderCallbacks<Cursor> {
-		Cursor pendingCategories;
-		Cursor pendingItems;
+	private class CategoriesItemsLoaderController extends RecyclerViewCursorLoaderController {
+		private final Callbacks callbackState = new Callbacks(getContext());
+
 		public CategoriesItemsLoaderController() {
 			super(CategoryContentsFragment.this);
 		}
@@ -132,44 +131,59 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 					itemsArgs = ExtrasFactory.bundleFromCategory(id); // items by category
 				}
 			}
-			getLoaderManager().initLoader(Loaders.Categories.ordinal(), categoriesArgs, this);
-			getLoaderManager().initLoader(Loaders.Items.ordinal(), itemsArgs, this);
+			getLoaderManager().initLoader(Loaders.Categories.ordinal(), categoriesArgs, callbackState);
+			getLoaderManager().initLoader(Loaders.Items.ordinal(), itemsArgs, callbackState);
 		}
 		@Override public void refresh() {
 			getLoaderManager().getLoader(Loaders.Items.ordinal()).onContentChanged();
 		}
 
-		@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-			return Loaders.fromID(id).createLoader(getContext(), args);
-		}
-		@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-			if (Loaders.Categories.ordinal() == loader.getId()) {
-				pendingCategories = data;
-			} else if (Loaders.Items.ordinal() == loader.getId()) {
-				pendingItems = data;
+		private class Callbacks extends LoadersCallbacks {
+			private Cursor pendingCategories;
+			private Cursor pendingItems;
+
+			public Callbacks(Context context) {
+				super(context);
 			}
-			updateAdapter();
-		}
-		@Override public void onLoaderReset(Loader<Cursor> loader) {
-			if (Loaders.Categories.ordinal() == loader.getId()) {
-				pendingCategories = null;
-			} else if (Loaders.Items.ordinal() == loader.getId()) {
-				pendingItems = null;
+
+			@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+				CategoriesItemsLoaderController.this.startLoading();
+				return super.onCreateLoader(id, args);
 			}
-			updateAdapter();
-		}
-		private void updateAdapter() {
-			Cursor c;
-			if (pendingCategories != null && pendingItems != null) {
-				c = new MergeCursor(new Cursor[] {pendingCategories, pendingItems});
-			} else if (pendingCategories != null) {
-				c = pendingCategories;
-			} else if (pendingItems != null) {
-				c = pendingItems;
-			} else {
-				c = null;
+
+			@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+				if (Loaders.Categories.ordinal() == loader.getId()) {
+					pendingCategories = data;
+				} else if (Loaders.Items.ordinal() == loader.getId()) {
+					pendingItems = data;
+				}
+				updateAdapter();
+				super.onLoadFinished(loader, data);
 			}
-			updateAdapter(c);
+
+			@Override public void onLoaderReset(Loader<Cursor> loader) {
+				if (Loaders.Categories.ordinal() == loader.getId()) {
+					pendingCategories = null;
+				} else if (Loaders.Items.ordinal() == loader.getId()) {
+					pendingItems = null;
+				}
+				updateAdapter();
+				super.onLoaderReset(loader);
+			}
+
+			private void updateAdapter() {
+				Cursor c;
+				if (pendingCategories != null && pendingItems != null) {
+					c = new MergeCursor(new Cursor[] {pendingCategories, pendingItems});
+				} else if (pendingCategories != null) {
+					c = pendingCategories;
+				} else if (pendingItems != null) {
+					c = pendingItems;
+				} else {
+					c = null;
+				}
+				CategoriesItemsLoaderController.this.updateAdapter(c);
+			}
 		}
 	}
 
