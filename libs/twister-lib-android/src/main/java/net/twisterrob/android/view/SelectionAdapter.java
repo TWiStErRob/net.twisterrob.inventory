@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.android.view;
 
 import java.util.*;
 

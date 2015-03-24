@@ -68,9 +68,10 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	private static final String ARG_TITLE = "move_title";
 	private static final String ARG_FORBIDDEN = "move_forbidden";
 
-	private View btnOk;
-	private TextView labType;
 	private TextView title;
+	private TextView labType;
+	private ImageButton upButton;
+	private View btnOk;
 	private final Handler handler = new Handler();
 
 	private BaseFragment getFragment() {
@@ -82,9 +83,9 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		setContentView(R.layout.activity_move);
 		title = (TextView)findViewById(R.id.selection);
 		labType = (TextView)findViewById(R.id.type);
-		ImageButton imageButton = (ImageButton)findViewById(R.id.up);
-		imageButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-		imageButton.setOnClickListener(new OnClickListener() {
+		upButton = (ImageButton)findViewById(R.id.up);
+		upButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+		upButton.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				getSupportFragmentManager().popBackStack();
 			}
@@ -183,6 +184,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 			labType.setVisibility(View.GONE);
 			labType.setText(null);
 		}
+		upButton.setVisibility(0 < getSupportFragmentManager().getBackStackEntryCount()? View.VISIBLE : View.GONE);
 	}
 
 	private CharSequence buildDisabledMessage(BaseFragment fragment) {
@@ -388,9 +390,9 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	public static final class Builder {
 		private final Intent intent = new Intent(App.getAppContext(), MoveTargetActivity.class);
 		private int what;
-		private final Set<Long> propertyIDs = new TreeSet<>();
-		private final Set<Long> roomIDs = new TreeSet<>();
-		private final Set<Long> itemIDs = new TreeSet<>();
+		private final Set<Long> forbiddenPropertyIDs = new TreeSet<>();
+		private final Set<Long> forbiddenRoomIDs = new TreeSet<>();
+		private final Set<Long> forbiddenItemIDs = new TreeSet<>();
 		public Builder() {
 			allowNothing();
 		}
@@ -429,20 +431,32 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		}
 		public Builder forbidProperties(long... propertyIDs) {
 			for (long id : propertyIDs) {
-				this.propertyIDs.add(id);
+				forbiddenPropertyIDs.add(id);
 			}
 			return this;
 		}
 		public Builder forbidRooms(long... roomIDs) {
 			for (long id : roomIDs) {
-				this.roomIDs.add(id);
+				forbiddenRoomIDs.add(id);
 			}
 			return this;
 		}
 		public Builder forbidItems(long... itemIDs) {
 			for (long id : itemIDs) {
-				this.itemIDs.add(id);
+				forbiddenItemIDs.add(id);
 			}
+			return this;
+		}
+		public Builder resetForbidProperties() {
+			forbiddenPropertyIDs.clear();
+			return this;
+		}
+		public Builder resetForbidRooms() {
+			forbiddenRoomIDs.clear();
+			return this;
+		}
+		public Builder resetForbidItems() {
+			forbiddenItemIDs.clear();
 			return this;
 		}
 		public Builder startFromPropertyList() {
@@ -474,14 +488,14 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 
 		public Intent build() {
 			intent.putExtra(EXTRA_WHAT, what);
-			if (!propertyIDs.isEmpty()) {
-				intent.putExtra(EXTRA_NO_PROPERTIES, toArr(propertyIDs));
+			if (!forbiddenPropertyIDs.isEmpty()) {
+				intent.putExtra(EXTRA_NO_PROPERTIES, toArr(forbiddenPropertyIDs));
 			}
-			if (!roomIDs.isEmpty()) {
-				intent.putExtra(EXTRA_NO_ROOMS, toArr(roomIDs));
+			if (!forbiddenRoomIDs.isEmpty()) {
+				intent.putExtra(EXTRA_NO_ROOMS, toArr(forbiddenRoomIDs));
 			}
-			if (!itemIDs.isEmpty()) {
-				intent.putExtra(EXTRA_NO_ITEMS, toArr(itemIDs));
+			if (!forbiddenItemIDs.isEmpty()) {
+				intent.putExtra(EXTRA_NO_ITEMS, toArr(forbiddenItemIDs));
 			}
 			return intent;
 		}

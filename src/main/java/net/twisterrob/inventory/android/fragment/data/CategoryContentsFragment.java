@@ -1,0 +1,231 @@
+package net.twisterrob.inventory.android.fragment.data;
+
+import org.slf4j.*;
+
+import android.database.*;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.view.*;
+
+import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.view.SelectionAdapter;
+import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.activity.data.*;
+import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
+import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
+import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
+import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.adapters.*;
+import net.twisterrob.inventory.android.view.adapters.CategoryViewHolder.CategoryItemEvents;
+
+public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(CategoryContentsFragment.class);
+
+	public interface CategoriesEvents extends ItemsEvents {
+		void categorySelected(long categoryID);
+		void categoryActioned(long categoryID);
+	}
+
+	public CategoryContentsFragment() {
+		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
+	}
+
+	@Override protected Bundle createLoadArgs() {
+		return getArguments();
+	}
+	@Override public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		listController = new CategoriesItemsLoaderController();
+	}
+
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
+	}
+
+	@Override protected SingleHeaderAdapter createAdapter() {
+		return new CategoryAndItemsAdapter();
+	}
+
+	@Override protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+		Builder builder = MoveTargetActivity.pick()
+		                                    .startFromPropertyList()
+		                                    .allowRooms()
+		                                    .allowItems();
+		return new ItemSelectionActionMode(this, adapter, builder);
+	}
+	@Override protected void onListItemClick(int position, long recyclerViewItemID) {
+		// category listener doesn't call through to super
+		eventsListener.itemSelected(recyclerViewItemID);
+	}
+
+	@Override protected void onListItemLongClick(int position, long recyclerViewItemID) {
+		// category listener doesn't call through to super
+		eventsListener.itemActioned(recyclerViewItemID);
+	}
+
+	private Long getArgCategoryID() {
+		return (Long)getArguments().get(Extras.CATEGORY_ID);
+	}
+	private boolean getArgFlatten() {
+		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
+	}
+
+	public static CategoryContentsFragment newInstance(Long parentCategoryID, boolean flatten) {
+		CategoryContentsFragment fragment = new CategoryContentsFragment();
+		Bundle args = new Bundle();
+		args.putSerializable(Extras.CATEGORY_ID, parentCategoryID);
+		args.putBoolean(Extras.INCLUDE_SUBS, flatten);
+		fragment.setArguments(args);
+		return fragment;
+	}
+
+	public CategoryContentsFragment addHeader() {
+		Long id = getArgCategoryID();
+		if (id != null) {
+			setHeader(CategoryViewFragment.newInstance(id));
+		}
+		return this;
+	}
+
+	private class CategoriesItemsLoaderController
+			extends RecyclerViewCursorLoaderController
+			implements LoaderCallbacks<Cursor> {
+		Cursor pendingCategories;
+		Cursor pendingItems;
+		public CategoriesItemsLoaderController() {
+			super(CategoryContentsFragment.this);
+		}
+
+		@Override protected CursorRecyclerAdapter setupList() {
+			return CategoryContentsFragment.this.setupList(list);
+		}
+
+		@Override public void startLoad(Bundle args) {
+			// by listController contract all ctor provided Loaders must be started even if they don't return data
+			Long id = (Long)args.get(Extras.CATEGORY_ID);
+			boolean flatten = args.getBoolean(Extras.INCLUDE_SUBS);
+
+			Bundle categoriesArgs;
+			Bundle itemsArgs;
+			if (id == null) { // all "root" categories
+				if (flatten) { // all items
+					categoriesArgs = ExtrasFactory.bundleFromCategory(Category.ID_ADD); // none
+					itemsArgs = null; // all items
+				} else { // all categories
+					categoriesArgs = ExtrasFactory.bundleFrom(Extras.CATEGORY_ID, null); // all
+					itemsArgs = ExtrasFactory.bundleFromParent(Item.ID_ADD); // no items
+				}
+			} else { // specific category
+				if (flatten) { // all items in category
+					categoriesArgs = ExtrasFactory.bundleFromCategory(Category.ID_ADD); // none
+					itemsArgs = ExtrasFactory.bundleFromCategory(id);  // items in category
+					itemsArgs.putBoolean(Extras.INCLUDE_SUBS, true);
+				} else { // subcategories and direct items
+					categoriesArgs = ExtrasFactory.bundleFromCategory(id); // subcategories
+					itemsArgs = ExtrasFactory.bundleFromCategory(id); // items by category
+				}
+			}
+			getLoaderManager().initLoader(Loaders.Categories.ordinal(), categoriesArgs, this);
+			getLoaderManager().initLoader(Loaders.Items.ordinal(), itemsArgs, this);
+		}
+		@Override public void refresh() {
+			getLoaderManager().getLoader(Loaders.Items.ordinal()).onContentChanged();
+		}
+
+		@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			return Loaders.fromID(id).createLoader(getContext(), args);
+		}
+		@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+			if (Loaders.Categories.ordinal() == loader.getId()) {
+				pendingCategories = data;
+			} else if (Loaders.Items.ordinal() == loader.getId()) {
+				pendingItems = data;
+			}
+			updateAdapter();
+		}
+		@Override public void onLoaderReset(Loader<Cursor> loader) {
+			if (Loaders.Categories.ordinal() == loader.getId()) {
+				pendingCategories = null;
+			} else if (Loaders.Items.ordinal() == loader.getId()) {
+				pendingItems = null;
+			}
+			updateAdapter();
+		}
+		private void updateAdapter() {
+			Cursor c;
+			if (pendingCategories != null && pendingItems != null) {
+				c = new MergeCursor(new Cursor[] {pendingCategories, pendingItems});
+			} else if (pendingCategories != null) {
+				c = pendingCategories;
+			} else if (pendingItems != null) {
+				c = pendingItems;
+			} else {
+				c = null;
+			}
+			updateAdapter(c);
+		}
+	}
+
+	private class CategoryItemEventsForwarder implements CategoryItemEvents {
+		@Override public void showItemsInCategory(long categoryID) {
+			getActivity().startActivity(CategoryActivity.showFlattened(categoryID));
+		}
+
+		@Override public void onItemClick(int position, long recyclerViewItemID) {
+			eventsListener.categorySelected(recyclerViewItemID);
+		}
+
+		@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
+			eventsListener.categoryActioned(recyclerViewItemID);
+			return true;
+		}
+	}
+
+	private class CategoryAndItemsAdapter extends SingleHeaderAdapter<ViewHolder> {
+		public CategoryAndItemsAdapter() {
+			super(null);
+		}
+
+		@Override public int getSpanSize(int position, int columns) {
+			return isCategory(position)? columns : 1;
+		}
+
+		public boolean isCategory(int position) {
+			Cursor c = getCursor();
+			c.moveToPosition(position);
+			// only items have "category" column, categories don't
+			return c.getColumnIndex("category") == DatabaseOpenHelper.CURSOR_NO_COLUMN;
+		}
+
+		@Override protected int getNonHeaderViewType(int position) {
+			return isCategory(position)? R.layout.item_category : R.layout.item_gallery;
+		}
+
+		@Override protected ViewHolder onCreateNonHeaderViewHolder(ViewGroup parent, int viewType) {
+			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+			View view = inflater.inflate(viewType, parent, false);
+			switch (viewType) {
+				case R.layout.item_category:
+					return new CategoryViewHolder(view, new CategoryItemEventsForwarder());
+				case R.layout.item_gallery:
+					return new GalleryViewHolder(view, CategoryContentsFragment.this);
+				default:
+					throw new IllegalArgumentException("Invalid view type: " + viewType);
+			}
+		}
+		@Override protected void onBindNonHeaderViewHolder(ViewHolder holder, Cursor cursor) {
+			if (holder instanceof CategoryViewHolder) {
+				((CategoryViewHolder)holder).bind(cursor);
+			} else if (holder instanceof GalleryViewHolder) {
+				((GalleryViewHolder)holder).bind(cursor);
+			}
+		}
+	}
+}

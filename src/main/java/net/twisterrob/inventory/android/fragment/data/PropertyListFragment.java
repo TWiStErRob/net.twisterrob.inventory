@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.view.*;
@@ -15,6 +15,7 @@ import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 import net.twisterrob.inventory.android.tasks.DeletePropertiesAction;
 import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.android.view.SelectionAdapter;
 
 public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyListFragment.class);
@@ -60,8 +61,8 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 	}
 
 	@Override
-	protected SelectionActionMode onPrepareSelectionMode(Activity activity, SelectionAdapter<?> adapter) {
-		return new SelectionActionMode(activity, adapter) {
+	protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+		return new SelectionActionMode(getActivity(), adapter) {
 			@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 				mode.getMenuInflater().inflate(R.menu.property_bulk, menu);
 				return super.onCreateActionMode(mode, menu);
@@ -75,6 +76,21 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 				}
 				return super.onActionItemClicked(mode, item);
 			}
+
+			@Override public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+				return false;
+			}
+
+
+			private void delete(final long... propertyIDs) {
+				Dialogs.executeConfirm(getActivity(), new DeletePropertiesAction(propertyIDs) {
+					public void finished() {
+						finish();
+						refresh();
+					}
+				});
+			}
+
 		};
 	}
 
@@ -84,15 +100,6 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 
 	@Override protected void onListItemLongClick(int position, long recyclerViewItemID) {
 		eventsListener.propertyActioned(recyclerViewItemID);
-	}
-
-	private void delete(final long... propertyIDs) {
-		Dialogs.executeConfirm(getActivity(), new DeletePropertiesAction(propertyIDs) {
-			public void finished() {
-				selectionMode.finish();
-				refresh();
-			}
-		});
 	}
 
 	public static PropertyListFragment newInstance() {

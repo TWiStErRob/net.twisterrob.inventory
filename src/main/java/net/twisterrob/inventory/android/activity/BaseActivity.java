@@ -27,6 +27,7 @@ import net.twisterrob.inventory.android.activity.data.SunburstActivity;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
 import net.twisterrob.inventory.android.fragment.BackupFragment;
 import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter;
 
 import static net.twisterrob.inventory.android.activity.BaseActivity.For.Feature.*;
 import static net.twisterrob.inventory.android.activity.MainActivity.*;

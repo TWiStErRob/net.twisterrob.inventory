@@ -1,0 +1,87 @@
+package net.twisterrob.inventory.android.view.adapters;
+
+import android.database.*;
+import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.view.*;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
+
+import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.content.contract.CommonColumns;
+
+public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorRecyclerAdapter<ViewHolder> {
+	private View header;
+
+	public SingleHeaderAdapter(Cursor cursor) {
+		super(cursor);
+	}
+
+	public void setHeader(View header) {
+		this.header = header;
+	}
+
+	@Override public Cursor swapCursor(Cursor newCursor) {
+		if (header != null) { // add one extra row for header
+			MatrixCursor header = new MatrixCursor(new String[] {"_id"}, 1);
+			header.addRow(new Object[] {CommonColumns.ID_ADD});
+			newCursor = new MergeCursor(new Cursor[] {header, newCursor});
+		}
+		return super.swapCursor(newCursor);
+	}
+
+	public int getSpanSize(int position, int columns) {
+		return 1;
+	}
+
+	private static class HeaderViewHolder extends ViewHolder {
+		private View header;
+
+		HeaderViewHolder(View view, View header) {
+			super(view);
+			this.header = header;
+
+			view.setOnTouchListener(new OnTouchListener() {
+				@Override public boolean onTouch(View v, MotionEvent event) {
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+					return HeaderViewHolder.this.header.dispatchTouchEvent(event);
+				}
+			});
+		}
+		void bind() {
+			LayoutParams layout = itemView.getLayoutParams();
+			layout.height = header.getHeight();
+			itemView.setLayoutParams(layout);
+		}
+	}
+
+	protected abstract int getNonHeaderViewType(int position);
+	@Override public final int getItemViewType(int position) {
+		if (position == 0 && header != null) {
+			return R.layout.item_header_placeholder;
+		}
+		return getNonHeaderViewType(position);
+	}
+
+	protected abstract VH onCreateNonHeaderViewHolder(ViewGroup parent, int viewType);
+	@Override public final ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		switch (viewType) {
+			case R.layout.item_header_placeholder:
+				LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+				View view = inflater.inflate(viewType, parent, false);
+				return new HeaderViewHolder(view, header);
+			default:
+				return onCreateNonHeaderViewHolder(parent, viewType);
+		}
+	}
+
+	protected abstract void onBindNonHeaderViewHolder(VH holder, Cursor cursor);
+	@Override public final void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+		if (holder instanceof HeaderViewHolder) {
+			((HeaderViewHolder)holder).bind();
+		} else {
+			@SuppressWarnings("unchecked") VH nonHeaderHolder = (VH)holder;
+			onBindNonHeaderViewHolder(nonHeaderHolder, cursor);
+		}
+	}
+}

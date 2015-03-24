@@ -27,7 +27,8 @@ import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.tasks.SaveToFile;
 import net.twisterrob.inventory.android.utils.PictureHelper;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.TextWatcherAdapter;
+import net.twisterrob.inventory.android.view.adapters.*;
 
 public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);

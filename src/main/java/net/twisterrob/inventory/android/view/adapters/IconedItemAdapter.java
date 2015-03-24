@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.inventory.android.view.adapters;
 
 import java.util.Collection;
 
@@ -11,7 +11,8 @@ import android.widget.*;
 
 import net.twisterrob.android.adapter.BaseListAdapter;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.view.IconedItemAdapter.ViewHolder;
+import net.twisterrob.inventory.android.view.IconedItem;
+import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter.ViewHolder;
 
 public class IconedItemAdapter extends BaseListAdapter<IconedItem, ViewHolder> {
 	private final int layout;

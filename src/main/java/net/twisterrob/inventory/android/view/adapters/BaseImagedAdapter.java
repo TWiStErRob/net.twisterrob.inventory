@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.inventory.android.view.adapters;
 
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.view;
+package net.twisterrob.inventory.android.view.adapters;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,7 +16,7 @@ import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
-import net.twisterrob.inventory.android.view.TypeAdapter.ViewHolder;
+import net.twisterrob.inventory.android.view.adapters.TypeAdapter.ViewHolder;
 
 public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	public TypeAdapter(Context context) {

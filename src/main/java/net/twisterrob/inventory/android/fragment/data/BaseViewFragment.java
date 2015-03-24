@@ -26,7 +26,8 @@ import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.CursorSwapper;
+import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
@@ -155,16 +156,20 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			}
 
 			private void showImage(String path) {
-				File file = new File(path);
-				Uri uri = FileProvider.getUriForFile(getContext(), Constants.AUTHORITY_IMAGES, file);
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer),
-						getResources().getBoolean(R.bool.pref_internalImageViewer_default))) {
-					intent.setComponent(new ComponentName(getContext(), ImageActivity.class));
+				try {
+					File file = new File(path);
+					Uri uri = FileProvider.getUriForFile(getContext(), Constants.AUTHORITY_IMAGES, file);
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer),
+							getResources().getBoolean(R.bool.pref_internalImageViewer_default))) {
+						intent.setComponent(new ComponentName(getContext(), ImageActivity.class));
+					}
+					intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+					intent.setDataAndType(uri, "image/jpeg");
+					getActivity().startActivity(intent);
+				} catch (Exception ex) {
+					LOG.warn("Cannot start image viewer for {}", path, ex);
 				}
-				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-				intent.setDataAndType(uri, "image/jpeg");
-				getActivity().startActivity(intent);
 			}
 		}
 

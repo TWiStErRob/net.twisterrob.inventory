@@ -19,6 +19,7 @@ import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.adapters.*;
 
 public class MainFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(MainFragment.class);

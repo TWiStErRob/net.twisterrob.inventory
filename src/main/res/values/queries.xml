@@ -268,7 +268,6 @@
 
 	<string name="query_categories"><![CDATA["
 		select
-			1       as variant,
 			c._id   as _id,
 			c.name  as name,
 			NULL    as image,

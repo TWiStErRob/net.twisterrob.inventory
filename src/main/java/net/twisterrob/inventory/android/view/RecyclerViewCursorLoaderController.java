@@ -1,37 +1,59 @@
 package net.twisterrob.inventory.android.view;
 
-import org.slf4j.*;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.*;
 
-import android.database.Cursor;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
+public abstract class RecyclerViewCursorLoaderController extends RecyclerViewCursorController {
+	private final Context context;
+	private final LoaderManagerProvider manager;
 
-import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+	public RecyclerViewCursorLoaderController(FragmentActivity activity) {
+		this(activity, new ActivityLoaderManagerProvider(activity));
+	}
+	public RecyclerViewCursorLoaderController(Fragment fragment) {
+		this(fragment.getActivity(), new FragmentLoaderManagerProvider(fragment));
+	}
+	private RecyclerViewCursorLoaderController(Context context, LoaderManagerProvider manager) {
+		this.context = context;
+		this.manager = manager;
+	}
 
-public abstract class RecyclerViewCursorLoaderController extends RecyclerViewController {
-	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewCursorLoaderController.class);
+	protected Context getContext() {
+		return context;
+	}
+	protected LoaderManager getLoaderManager() {
+		return manager.get();
+	}
 
-	private CursorRecyclerAdapter adapter;
-	private Cursor pendingData;
+	public abstract void startLoad(Bundle args);
+	public abstract void refresh();
 
-	@Override protected void onViewSet() {
-		super.onViewSet();
-		adapter = setupList();
-		if (pendingData != null) {
-			adapter.swapCursor(pendingData);
-			// finishLoading(); // no need to finish, because we didn't have a view to start with
-			pendingData = null;
+	protected interface LoaderManagerProvider {
+		LoaderManager get();
+	}
+
+	protected static class ActivityLoaderManagerProvider implements LoaderManagerProvider {
+		private final FragmentActivity activity;
+
+		public ActivityLoaderManagerProvider(FragmentActivity activity) {
+			this.activity = activity;
+		}
+
+		@Override public LoaderManager get() {
+			return activity.getSupportLoaderManager();
 		}
 	}
 
-	protected void updateAdapter(Cursor data) {
-		if (adapter == null) {
-			pendingData = data;
-		} else {
-			adapter.swapCursor(data);
-			finishLoading();
+	protected static class FragmentLoaderManagerProvider implements LoaderManagerProvider {
+		private final Fragment fragment;
+
+		public FragmentLoaderManagerProvider(Fragment fragment) {
+			this.fragment = fragment;
+		}
+
+		@Override public LoaderManager get() {
+			return fragment.getLoaderManager();
 		}
 	}
-
-	public abstract LoaderCallbacks<Cursor> createLoaderCallbacks();
-	protected abstract CursorRecyclerAdapter setupList();
 }

@@ -6,23 +6,24 @@ import android.database.Cursor;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
-import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
-import net.twisterrob.inventory.android.fragment.data.CategoryActionsFragment.CategoryEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class CategoryActionsFragment extends BaseSingleLoaderFragment<CategoryEvents> {
-	private static final Logger LOG = LoggerFactory.getLogger(CategoryActionsFragment.class);
+public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, CategoryEvents> {
+	private static final Logger LOG = LoggerFactory.getLogger(CategoryViewFragment.class);
 
 	public interface CategoryEvents {
 		void categoryLoaded(CategoryDTO item);
 	}
 
-	public CategoryActionsFragment() {
+	public CategoryViewFragment() {
 		setDynamicResource(DYN_EventsClass, CategoryEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.category);
 	}
@@ -42,8 +43,24 @@ public class CategoryActionsFragment extends BaseSingleLoaderFragment<CategoryEv
 
 	@Override
 	protected void onSingleRowLoaded(Cursor cursor) {
-		CategoryDTO item = CategoryDTO.fromCursor(cursor);
-		eventsListener.categoryLoaded(item);
+		CategoryDTO category = CategoryDTO.fromCursor(cursor);
+		super.onSingleRowLoaded(category);
+		eventsListener.categoryLoaded(category);
+	}
+
+	@Override protected CharSequence getDetailsString(CategoryDTO entity, boolean DEBUG) {
+		return new DescriptionBuilder()
+				.append("Category ID", entity.id, DEBUG)
+				.append("Category Key", entity.name, DEBUG)
+				.append("Category Name", AndroidTools.getText(getContext(), entity.name))
+				.append("Category Image", entity.typeImage, DEBUG)
+				.append("Parent ID", entity.parentID, DEBUG)
+				.append("Inside", entity.parentName)
+				.append("# of direct subcategories", entity.numDirectChildren)
+				.append("# of subcategories", entity.numAllChildren)
+				.append("# of items in this category", entity.numDirectItems)
+				.append("# of items in subcategories", entity.numAllItems)
+				.build();
 	}
 
 	@Override
@@ -60,16 +77,24 @@ public class CategoryActionsFragment extends BaseSingleLoaderFragment<CategoryEv
 		}
 	}
 
+	@Override protected void editImage() {
+		throw new UnsupportedOperationException("Can't edit image of category");
+	}
+
+	@Override protected CharSequence update(CategoryDTO cursor, long newType, String newTypeName) {
+		throw new UnsupportedOperationException("Can't edit category");
+	}
+
 	private long getArgCategoryID() {
 		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 	}
 
-	public static CategoryActionsFragment newInstance(long categoryID) {
+	public static CategoryViewFragment newInstance(long categoryID) {
 		if (categoryID == Category.ID_ADD) {
 			throw new IllegalArgumentException("Must be an existing category");
 		}
 
-		CategoryActionsFragment fragment = new CategoryActionsFragment();
+		CategoryViewFragment fragment = new CategoryViewFragment();
 		fragment.setArguments(ExtrasFactory.bundleFromCategory(categoryID));
 		return fragment;
 	}

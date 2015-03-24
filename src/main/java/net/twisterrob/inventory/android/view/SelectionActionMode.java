@@ -5,15 +5,17 @@ import java.util.*;
 import org.slf4j.*;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.java.exceptions.StackTrace;
 
-public class SelectionActionMode implements ActionMode.Callback {
+public abstract class SelectionActionMode implements ActionMode.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(SelectionActionMode.class);
 	private static final String KEY_SELECTION = "selection";
 
@@ -26,6 +28,10 @@ public class SelectionActionMode implements ActionMode.Callback {
 	public SelectionActionMode(Activity activity, SelectionAdapter<?> adapter) {
 		this.activity = activity;
 		this.adapter = adapter;
+	}
+
+	public Activity getActivity() {
+		return activity;
 	}
 
 	public void start() {
@@ -128,4 +134,6 @@ public class SelectionActionMode implements ActionMode.Callback {
 		actionMode = null;
 		adapter.clearSelections();
 	}
+
+	public abstract boolean onActivityResult(int requestCode, int resultCode, Intent data);
 }

@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.view;
 import org.slf4j.*;
 
 import android.app.*;
-import android.content.DialogInterface;
+import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -33,7 +33,7 @@ import net.twisterrob.inventory.android.R;
 public class Dialogs {
 	private static final Logger LOG = LoggerFactory.getLogger(Dialogs.class);
 
-	public static void executeConfirm(Activity activity, Action action) {
+	public static void executeConfirm(Context activity, Action action) {
 		new ConfirmedExecute(activity).execute(new ActionState(action));
 	}
 
@@ -55,9 +55,9 @@ public class Dialogs {
 	}
 
 	static class ConfirmedExecute extends SimpleAsyncTask<ActionState, Void, ActionState> {
-		private final Activity activity;
-		ConfirmedExecute(@NonNull Activity activity) {
-			this.activity = activity;
+		private final Context context;
+		ConfirmedExecute(@NonNull Context context) {
+			this.context = context;
 		}
 
 		@Override
@@ -68,15 +68,15 @@ public class Dialogs {
 
 		@Override
 		protected void onPostExecute(final ActionState state) {
-			if (state.check(activity)) {
-				new AlertDialog.Builder(activity)
-						.setTitle(state.action.getConfirmationTitle(activity.getResources()))
-						.setMessage(state.action.getConfirmationMessage(activity.getResources()))
+			if (state.check(context)) {
+				new AlertDialog.Builder(context)
+						.setTitle(state.action.getConfirmationTitle(context.getResources()))
+						.setMessage(state.action.getConfirmationMessage(context.getResources()))
 						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setView(state.action.getConfirmationView(activity))
+						.setView(state.action.getConfirmationView(context))
 						.setPositiveButton(android.R.string.yes, new OnClickListener() {
 							@Override public void onClick(DialogInterface dialog, int which) {
-								new Execute(activity).execute(state);
+								new Execute(context).execute(state);
 							}
 						})
 						.setNegativeButton(android.R.string.no, null)
@@ -86,10 +86,10 @@ public class Dialogs {
 	}
 
 	static class Execute extends SimpleAsyncTask<ActionState, Void, ActionState> {
-		protected final Activity activity;
+		protected final Context context;
 
-		Execute(@NonNull Activity activity) {
-			this.activity = activity;
+		Execute(@NonNull Context context) {
+			this.context = context;
 		}
 
 		@Override
@@ -100,17 +100,17 @@ public class Dialogs {
 
 		@Override
 		protected void onPostExecute(ActionState state) {
-			if (state.check(activity)) {
+			if (state.check(context)) {
 				state.action.finished();
 			}
 		}
 	}
 
 	static class NoQuestions extends SimpleAsyncTask<ActionState, Void, ActionState> {
-		protected final Activity activity;
+		protected final Context context;
 
-		NoQuestions(@NonNull Activity activity) {
-			this.activity = activity;
+		NoQuestions(@NonNull Context context) {
+			this.context = context;
 		}
 
 		@Override
@@ -124,7 +124,7 @@ public class Dialogs {
 
 		@Override
 		protected void onPostExecute(ActionState state) {
-			if (state.check(activity)) {
+			if (state.check(context)) {
 				state.action.finished();
 			}
 		}
@@ -137,9 +137,9 @@ public class Dialogs {
 
 		@Override
 		protected void onPostExecute(ActionState state) {
-			if (state.check(activity)) {
+			if (state.check(context)) {
 				state.action.finished();
-				undo(activity, state);
+				undo((Activity)context, state);
 			}
 		}
 	}
@@ -172,13 +172,13 @@ public class Dialogs {
 			}
 		}
 
-		boolean check(Activity activity) {
+		boolean check(Context context) {
 			if (!hasErrors()) {
 				return true;
 			} else {
 				String message;
 				try {
-					message = action.getFailureMessage(activity.getResources());
+					message = action.getFailureMessage(context.getResources());
 				} catch (Exception ex) {
 					LOG.warn("Failed to get failure message from action {}", action, ex);
 					failureMessage = ex;
@@ -187,9 +187,9 @@ public class Dialogs {
 				if (message == null) { // getFailureMessage returned null or thrown an Exception
 					message = getError();
 					LOG.warn("No error message from action {}, using one of the exceptions:\n{}", action, message);
-					message = activity.getString(R.string.action_error, message);
+					message = context.getString(R.string.action_error, message);
 				}
-				Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+				Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 				return false;
 			}
 		}

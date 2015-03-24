@@ -2,17 +2,19 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
+import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 import net.twisterrob.inventory.android.tasks.*;
 import net.twisterrob.inventory.android.view.*;
@@ -67,39 +69,12 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	}
 
 	@Override
-	protected SelectionActionMode onPrepareSelectionMode(Activity activity, SelectionAdapter<?> adapter) {
-		return new SelectionActionMode(activity, adapter) {
-			@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-				mode.getMenuInflater().inflate(R.menu.room_bulk, menu);
-				return super.onCreateActionMode(mode, menu);
-			}
-
-			@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-				switch (item.getItemId()) {
-					case R.id.action_room_delete:
-						delete(selectionMode.getSelectedIDs());
-						return true;
-					case R.id.action_room_move:
-						Intent intent = MoveTargetActivity.pick()
-						                                  .startFromPropertyList()
-						                                  .allowProperties()
-						                                  .forbidProperties(getArgPropertyID())
-						                                  .build();
-						startActivityForResult(intent, PICK_REQUEST);
-						return true;
-				}
-				return super.onActionItemClicked(mode, item);
-			}
-		};
-	}
-
-	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == PICK_REQUEST && resultCode == MoveTargetActivity.PROPERTY) {
-			long propertyID = data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
-			move(propertyID, selectionMode.getSelectedIDs());
-			return;
-		}
-		super.onActivityResult(requestCode, resultCode, data);
+	protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+		Builder builder = MoveTargetActivity.pick()
+		                                    .startFromPropertyList()
+		                                    .allowProperties()
+		                                    .forbidProperties(getArgPropertyID());
+		return new RoomSelectionActionMode(this, adapter, builder);
 	}
 
 	@Override protected void onListItemLongClick(int position, long recyclerViewItemID) {
@@ -114,27 +89,6 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		return ExtrasFactory.bundleFromProperty(getArgPropertyID());
 	}
 
-	private void delete(final long... roomIDs) {
-		Dialogs.executeConfirm(getActivity(), new DeleteRoomsAction(roomIDs) {
-			public void finished() {
-				selectionMode.finish();
-				refresh();
-			}
-		});
-	}
-
-	private void move(final long propertyID, final long... roomIDs) {
-		Dialogs.executeDirect(getActivity(), new MoveRoomsAction(propertyID, roomIDs) {
-			public void finished() {
-				selectionMode.finish();
-				refresh();
-			}
-			@Override public void undoFinished() {
-				refresh();
-			}
-		});
-	}
-
 	private long getArgPropertyID() {
 		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
@@ -147,5 +101,64 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	public RoomListFragment addHeader() {
 		setHeader(PropertyViewFragment.newInstance(getArgPropertyID()));
 		return this;
+	}
+
+	private static class RoomSelectionActionMode extends SelectionActionMode {
+		private final BaseFragment fragment;
+		private final Builder builder;
+
+		public RoomSelectionActionMode(BaseFragment fragment, SelectionAdapter<?> adapter, Builder builder) {
+			super(fragment.getActivity(), adapter);
+			this.fragment = fragment;
+			this.builder = builder;
+		}
+
+		@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			mode.getMenuInflater().inflate(R.menu.room_bulk, menu);
+			return super.onCreateActionMode(mode, menu);
+		}
+
+		@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+				case R.id.action_room_delete:
+					delete(getSelectedIDs());
+					return true;
+				case R.id.action_room_move:
+					Intent intent = builder.build();
+					fragment.startActivityForResult(intent, PICK_REQUEST);
+					return true;
+			}
+			return super.onActionItemClicked(mode, item);
+		}
+
+		@Override public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+			if (requestCode == PICK_REQUEST && resultCode == MoveTargetActivity.PROPERTY) {
+				long propertyID = data.getLongExtra(Extras.PROPERTY_ID, Property.ID_ADD);
+				move(propertyID, getSelectedIDs());
+				return true;
+			}
+			return false;
+		}
+
+		private void delete(final long... roomIDs) {
+			Dialogs.executeConfirm(getActivity(), new DeleteRoomsAction(roomIDs) {
+				public void finished() {
+					finish();
+					fragment.refresh();
+				}
+			});
+		}
+
+		private void move(final long propertyID, final long... roomIDs) {
+			Dialogs.executeDirect(getActivity(), new MoveRoomsAction(propertyID, roomIDs) {
+				public void finished() {
+					finish();
+					fragment.refresh();
+				}
+				@Override public void undoFinished() {
+					fragment.refresh();
+				}
+			});
+		}
 	}
 }

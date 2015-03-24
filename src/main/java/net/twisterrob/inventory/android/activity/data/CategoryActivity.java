@@ -8,26 +8,14 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.data.*;
-import net.twisterrob.inventory.android.fragment.data.CategoryActionsFragment.CategoryEvents;
-import net.twisterrob.inventory.android.fragment.data.CategoryFragment.CategoriesEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 
-public class CategoryActivity extends BaseDetailActivity<CategoryFragment>
+public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragment>
 		implements CategoryEvents, CategoriesEvents {
-	@Override protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (savedInstanceState == null) {
-			getSupportFragmentManager()
-					.beginTransaction()
-					.add(CategoryActionsFragment.newInstance(getExtraCategoryID()), "details")
-					.commit()
-			;
-		}
-	}
-
 	@Override
-	protected CategoryFragment onCreateFragment(Bundle savedInstanceState) {
-		CategoryFragment fragment = CategoryFragment.newInstance(getExtraCategoryID(), getExtraIncludeSubs());
-		return fragment;
+	protected CategoryContentsFragment onCreateFragment(Bundle savedInstanceState) {
+		return CategoryContentsFragment.newInstance(getExtraCategoryID(), getExtraIncludeSubs()).addHeader();
 	}
 
 	public void categoryLoaded(CategoryDTO category) {

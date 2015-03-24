@@ -6,7 +6,6 @@ import android.os.Bundle;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ListDTO;
-import net.twisterrob.inventory.android.fragment.ListViewFragment;
 import net.twisterrob.inventory.android.fragment.ListViewFragment.ListEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
@@ -19,10 +18,7 @@ public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> impl
 
 	@Override
 	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
-		long listID = getExtraListID();
-		ItemListFragment fragment = ItemListFragment.newListInstance(listID);
-		fragment.setHeader(ListViewFragment.newInstance(listID));
-		return fragment;
+		return ItemListFragment.newListInstance(getExtraListID()).addHeader();
 	}
 
 	@Override public void listLoaded(ListDTO list) {

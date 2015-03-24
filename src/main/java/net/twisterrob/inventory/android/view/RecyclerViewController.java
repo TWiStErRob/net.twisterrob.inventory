@@ -79,5 +79,6 @@ public abstract class RecyclerViewController {
 		return false;
 	}
 	protected void onCreateNew() {
+		throw new UnsupportedOperationException("Please override onCreateNew() if canCreateNew() returns true!");
 	}
 }

@@ -2,28 +2,28 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Rect;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.*;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
-import android.support.v7.widget.RecyclerView.*;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.view.SynchronizedScrollListener;
+import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.ViewProvider.StaticViewProvider;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.*;
-import net.twisterrob.inventory.android.view.GalleryAdapter.GalleryItemEvents;
+import net.twisterrob.inventory.android.view.adapters.*;
 
-public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements GalleryItemEvents {
+public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements RecyclerViewItemEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseGalleryFragment.class);
 
 	private BaseFragment header;
-	protected RecyclerViewLoadersController listController;
+	protected RecyclerViewCursorLoaderController listController;
 	protected SelectionActionMode selectionMode;
 
 	public void setHeader(BaseFragment headerFragment) {
@@ -32,11 +32,14 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	public BaseFragment getHeader() {
 		return header;
 	}
-	private boolean hasHeader() {
+	public boolean hasHeader() {
 		return header != null;
 	}
 
 	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (selectionMode.onActivityResult(requestCode, resultCode, data)) {
+			return;
+		}
 		if (hasHeader()) {
 			// TODO this is workaround for https://code.google.com/p/android/issues/detail?id=40537
 			header.onActivityResult(requestCode, resultCode, data);
@@ -105,6 +108,9 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 			// FIXME needed for hierarchy view? header.setMenuVisibility(menuVisible);
 		}
 	}
+
+	protected abstract SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter);
+
 	@Override public final void onItemClick(int position, long recyclerViewItemID) {
 		if (selectionMode.isRunning()) {
 			selectionMode.toggle(position);
@@ -140,13 +146,14 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	protected CursorRecyclerAdapter setupList(RecyclerView list) {
 		final int columns = getResources().getInteger(R.integer.gallery_columns);
 
-		final GalleryAdapter cursorAdapter = new GalleryAdapter(null, this);
-		SelectionAdapter<? extends ViewHolder> selectionAdapter = new SelectionAdapter<>(cursorAdapter);
-		selectionMode = onPrepareSelectionMode(getActivity(), selectionAdapter);
+		final SingleHeaderAdapter adapter = createAdapter();
+		@SuppressWarnings("unchecked")
+		SelectionAdapter selectionAdapter = new SelectionAdapter(adapter);
+		selectionMode = onPrepareSelectionMode(selectionAdapter);
 
-		if (hasHeader() && getView() != null) {
+		if (hasHeader() && header.hasUI() && /*ConstantConditions:*/ getView() != null) {
 			View headerContainer = getView().findViewById(R.id.header);
-			cursorAdapter.setHeader(headerContainer);
+			adapter.setHeader(headerContainer);
 			list.setOnScrollListener(new SynchronizedScrollListener(0, list, new StaticViewProvider(headerContainer)));
 			selectionAdapter.setSelectable(0, false);
 		}
@@ -156,24 +163,64 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		//layout.setSmoothScrollbarEnabled(true);
 		layout.setSpanSizeLookup(new SpanSizeLookup() {
 			@Override public int getSpanSize(int position) {
-				return (hasHeader() && position == 0) || cursorAdapter.isGroup(position)? columns : 1;
+				if (hasHeader() && header.hasUI() && position == 0) {
+					return columns;
+				}
+				return adapter.getSpanSize(position, columns);
 			}
 		});
 		list.setLayoutManager(layout);
-		list.addItemDecoration(new ItemDecoration() {
-			private final int margin = getContext().getResources().getDimensionPixelSize(R.dimen.margin);
-			@Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
-				if (header == null || parent.getChildPosition(view) != 0) {
-					outRect.set(margin, margin, margin, margin);
-				}
-			}
-		});
 		list.setAdapter(selectionAdapter);
 
-		return cursorAdapter;
+		return adapter;
 	}
 
-	protected SelectionActionMode onPrepareSelectionMode(Activity activity, SelectionAdapter<?> adapter) {
-		return new SelectionActionMode(activity, adapter);
+	protected SingleHeaderAdapter createAdapter() {
+		return new GalleryAdapter(null, this);
+	}
+
+	private static class GalleryAdapter extends SingleHeaderAdapter<ViewHolder> {
+		private final RecyclerViewItemEvents listener;
+
+		public GalleryAdapter(Cursor cursor, RecyclerViewItemEvents listener) {
+			super(cursor);
+			this.listener = listener;
+		}
+
+		@Override public int getSpanSize(int position, int columns) {
+			return isGroup(position)? columns : 1;
+		}
+
+		@Override protected int getNonHeaderViewType(int position) {
+			return isGroup(position)? R.layout.item_gallery_group : R.layout.item_gallery;
+		}
+
+		private boolean isGroup(int position) {
+			Cursor c = getCursor();
+			c.moveToPosition(position);
+			int groupIndex = c.getColumnIndex("group");
+			return groupIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN && c.getInt(groupIndex) == 1; // boolean
+		}
+
+		@Override protected ViewHolder onCreateNonHeaderViewHolder(ViewGroup parent, int viewType) {
+			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+			View view = inflater.inflate(viewType, parent, false);
+			switch (viewType) {
+				case R.layout.item_gallery:
+					return new GalleryViewHolder(view, listener);
+				case R.layout.item_gallery_group:
+					return new GalleryGroupViewHolder(view, listener);
+				default:
+					throw new IllegalArgumentException("Unsupported viewType: " + viewType);
+			}
+		}
+
+		@Override protected void onBindNonHeaderViewHolder(ViewHolder holder, Cursor cursor) {
+			if (holder instanceof GalleryViewHolder) {
+				((GalleryViewHolder)holder).bind(cursor);
+			} else if (holder instanceof GalleryGroupViewHolder) {
+				((GalleryGroupViewHolder)holder).bind(cursor);
+			}
+		}
 	}
 }

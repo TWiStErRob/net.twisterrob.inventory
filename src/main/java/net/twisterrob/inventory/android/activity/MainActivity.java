@@ -15,7 +15,7 @@ import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.contract.Room;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.data.*;
-import net.twisterrob.inventory.android.fragment.data.CategoryFragment.CategoriesEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 
@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 		BaseFragment fragment;
 		switch (page) {
 			case PAGE_CATEGORIES:
-				fragment = CategoryFragment.newInstance(null, false);
+				fragment = CategoryContentsFragment.newInstance(null, false);
 				break;
 			case PAGE_PROPERTIES:
 				fragment = PropertyListFragment.newInstance();
@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 				fragment = RoomListFragment.newInstance(Room.ID_ADD);
 				break;
 			case PAGE_ITEMS:
-				fragment = CategoryFragment.newInstance(null, true);
+				fragment = CategoryContentsFragment.newInstance(null, true);
 				break;
 			case PAGE_HOME:
 				fragment = MainFragment.newInstance();

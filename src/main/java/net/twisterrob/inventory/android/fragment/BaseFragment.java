@@ -10,10 +10,11 @@ import android.os.Bundle;
 import android.support.v4.app.*;
 import android.view.*;
 
+import net.twisterrob.android.utils.log.LoggingFragment;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 
-public class BaseFragment<T> extends Fragment {
+public class BaseFragment<T> extends LoggingFragment {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseFragment.class);
 
 	protected static final String DYN_OptionsMenu = "optionsMenu";
