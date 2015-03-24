@@ -54,6 +54,28 @@ public final class CollectionTools {
 		throw new IllegalArgumentException();
 	}
 
+	@SuppressWarnings("unchecked")
+	@SafeVarargs
+	public static <T> T[] nonNull(T... listOrNull) {
+		return listOrNull != null? listOrNull : (T[])new Object[0];
+	}
+
+	public static <T> List<T> nonNull(List<T> listOrNull) {
+		return listOrNull != null? listOrNull : Collections.<T>emptyList();
+	}
+
+	public static <T> Collection<T> nonNull(Collection<T> listOrNull) {
+		return listOrNull != null? listOrNull : Collections.<T>emptyList();
+	}
+
+	public static <K, V> Map<K, V> nonNull(Map<K, V> listOrNull) {
+		return listOrNull != null? listOrNull : Collections.<K, V>emptyMap();
+	}
+
+	public static <T> Set<T> nonNull(Set<T> listOrNull) {
+		return listOrNull != null? listOrNull : Collections.<T>emptySet();
+	}
+
 	private static class SetFromMap<E> extends AbstractSet<E> implements Serializable {
 		private static final long serialVersionUID = 2454657854757543876L;
 

@@ -19,11 +19,12 @@ import android.widget.*;
 
 import com.android.debug.hv.ViewServer;
 
+import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.content.glide.*;
+import net.twisterrob.android.utils.log.LoggingActivity;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
-import net.twisterrob.inventory.android.activity.data.SunburstActivity;
 import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
 import net.twisterrob.inventory.android.fragment.BackupFragment;
 import net.twisterrob.inventory.android.view.*;
@@ -31,8 +32,9 @@ import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter;
 
 import static net.twisterrob.inventory.android.activity.BaseActivity.For.Feature.*;
 import static net.twisterrob.inventory.android.activity.MainActivity.*;
+import static net.twisterrob.java.utils.CollectionTools.*;
 
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends LoggingActivity {
 	@For(Log) private static final Logger LOG = LoggerFactory.getLogger(BaseActivity.class);
 	@For(Drawer) protected ActionBarDrawerToggle mDrawerToggle;
 	@For(Drawer) protected DrawerLayout mDrawerLayout;
@@ -56,6 +58,11 @@ public class BaseActivity extends ActionBarActivity {
 	public boolean onMenuOpened(int featureId, Menu menu) {
 		AndroidTools.showActionBarOverflowIcons(featureId, menu, true);
 		return super.onMenuOpened(featureId, menu);
+	}
+
+	@Override public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO still shows up when drawer is up
+		return super.onCreateOptionsMenu(menu) && !isDrawerShown();
 	}
 
 	@For(Drawer) @Override public void onSupportContentChanged() {
@@ -174,6 +181,11 @@ public class BaseActivity extends ActionBarActivity {
 			mDrawerLayout.closeDrawers();
 			return;
 		}
+		for (Fragment fragment : nonNull(getSupportFragmentManager().getFragments())) {
+			if (fragment instanceof BackPressAware && ((BackPressAware)fragment).onBackPressed()) {
+				return;
+			}
+		}
 		super.onBackPressed();
 	}
 
@@ -200,7 +212,7 @@ public class BaseActivity extends ActionBarActivity {
 		acts.add(new SVGIntentItem(R.string.property_list, R.raw.property_unknown, activity, MainActivity.list(PAGE_PROPERTIES)));
 		acts.add(new SVGIntentItem(R.string.room_list, R.raw.room_unknown, activity, MainActivity.list(PAGE_ROOMS)));
 		acts.add(new SVGIntentItem(R.string.item_list, R.raw.category_box, activity, MainActivity.list(PAGE_ITEMS)));
-		acts.add(new SVGIntentItem(R.string.sunburst_title, R.raw.ic_sunburst, activity, SunburstActivity.showAll()));
+		acts.add(new SVGIntentItem(R.string.sunburst_title, R.raw.ic_sunburst, activity, MainActivity.list(PAGE_SUNBURST)));
 		// @formatter:on
 		acts.add(new SVGItem(R.string.backup_title, R.raw.category_disc) {
 			@Override public void onClick() {
