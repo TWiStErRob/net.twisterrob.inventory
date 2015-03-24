@@ -7,6 +7,7 @@
 		android:id="@+id/action_share"
 		android:title="@string/category_share"
 		android:icon="@android:drawable/ic_menu_share"
+		android:visible="@bool/visible_in_debug"
 		app:showAsAction="never"
 		/>
 	<item

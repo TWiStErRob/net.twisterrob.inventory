@@ -8,14 +8,13 @@ import android.support.v7.view.ActionMode;
 import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.activity.data.PropertyViewActivity;
+import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 import net.twisterrob.inventory.android.tasks.DeletePropertiesAction;
 import net.twisterrob.inventory.android.view.*;
-import net.twisterrob.android.view.SelectionAdapter;
 
 public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyListFragment.class);
@@ -53,7 +52,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 				listController.createNew();
 				return true;
 			case R.id.action_room_list:
-				startActivity(PropertyViewActivity.show(Property.ID_ADD));
+				startActivity(MainActivity.list(MainActivity.PAGE_ROOMS));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -81,7 +80,6 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 				return false;
 			}
 
-
 			private void delete(final long... propertyIDs) {
 				Dialogs.executeConfirm(getActivity(), new DeletePropertiesAction(propertyIDs) {
 					public void finished() {
@@ -90,7 +88,6 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 					}
 				});
 			}
-
 		};
 	}
 
