@@ -11,29 +11,37 @@ import android.view.*;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
+import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.graphics.SunburstDrawable;
 import net.twisterrob.android.graphics.SunburstDrawable.BasePaintStrategy;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
-import net.twisterrob.inventory.android.fragment.data.SunburstFragment.Listener;
+import net.twisterrob.inventory.android.fragment.data.SunburstFragment.Node.Type;
+import net.twisterrob.inventory.android.fragment.data.SunburstFragment.SunBurstEvents;
 
-public class SunburstFragment extends BaseFragment<Listener> {
+public class SunburstFragment extends BaseFragment<SunBurstEvents> implements BackPressAware {
 	private static final Logger LOG = LoggerFactory.getLogger(SunburstFragment.class);
 
-	public interface Listener {
+	public interface SunBurstEvents {
 		void rootChanged(Node root);
 	}
 
 	private ImageView diagram;
 	private SunburstDrawable<Node> sunburst;
 
+	private AsyncTask<Void, Void, Node> loadTreeTask;
+
 	public SunburstFragment() {
-		setDynamicResource(DYN_EventsClass, Listener.class);
+		setDynamicResource(DYN_EventsClass, SunBurstEvents.class);
+	}
+
+	@Override public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		sunburst = new SunburstDrawable<>(new NodeTreeWalker(), new Paints());
 	}
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		sunburst = new SunburstDrawable<>(new NodeTreeWalker(), new Paints());
 		return inflater.inflate(R.layout.fragment_sunburst, container, false);
 	}
 
@@ -43,11 +51,14 @@ public class SunburstFragment extends BaseFragment<Listener> {
 		diagram = (ImageView)view.findViewById(R.id.diagram);
 		diagram.setOnTouchListener(new Toucher());
 		diagram.setImageResource(R.drawable.image_loading);
+	}
 
-		new AsyncTask<Void, Void, Node>() {
+	@Override public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		loadTreeTask = new AsyncTask<Void, Void, Node>() {
 			@Override
 			protected Node doInBackground(Void... params) {
-				Node root = new Node(Node.Type.Root, 0, null);
+				Node root = new Node(Type.Room, 38, null);
 				new TreeLoader().build(root);
 				return root;
 			}
@@ -57,7 +68,13 @@ public class SunburstFragment extends BaseFragment<Listener> {
 				setRoot(result);
 				diagram.setImageDrawable(sunburst);
 			}
-		}.execute();
+		};
+		loadTreeTask.execute();
+	}
+
+	@Override public void onDestroy() {
+		loadTreeTask.cancel(true);
+		super.onDestroy();
 	}
 
 	private final Stack<Node> stack = new Stack<>();
@@ -72,6 +89,14 @@ public class SunburstFragment extends BaseFragment<Listener> {
 		sunburst.setHighlight(null);
 		sunburst.setRoot(root);
 		eventsListener.rootChanged(root);
+	}
+
+	@Override public boolean onBackPressed() {
+		if (hasPreviousRoot()) {
+			setPreviousRoot();
+			return true;
+		}
+		return false;
 	}
 
 	public boolean hasPreviousRoot() {

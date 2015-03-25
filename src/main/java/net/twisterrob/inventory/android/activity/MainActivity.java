@@ -18,14 +18,17 @@ import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
+import net.twisterrob.inventory.android.fragment.data.SunburstFragment.SunBurstEvents;
 
-public class MainActivity extends BaseActivity implements PropertiesEvents, RoomsEvents, CategoriesEvents {
+public class MainActivity extends BaseActivity implements PropertiesEvents, RoomsEvents, CategoriesEvents,
+		SunBurstEvents {
 	public static final String EXTRA_PAGE = "page";
 	public static final String PAGE_HOME = "home";
 	public static final String PAGE_PROPERTIES = "properties";
 	public static final String PAGE_ROOMS = "rooms";
 	public static final String PAGE_CATEGORIES = "categories";
 	public static final String PAGE_ITEMS = "items";
+	public static final String PAGE_SUNBURST = "sunburst";
 
 	private static final Map<String, Integer> TITLES = new HashMap<String, Integer>() {
 		{
@@ -34,6 +37,7 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 			put(PAGE_PROPERTIES, R.string.property_list);
 			put(PAGE_ROOMS, R.string.room_list);
 			put(PAGE_ITEMS, R.string.item_list);
+			put(PAGE_SUNBURST, R.string.sunburst_title);
 		}
 	};
 
@@ -57,7 +61,10 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 					finish();
 				} else {
 					BackStackEntry top = getSupportFragmentManager().getBackStackEntryAt(count - 1);
-					setTitle(TITLES.get(top.getName()));
+					CharSequence title = getString(TITLES.get(top.getName()));
+					setActionBarTitle(title); // to display now
+					setActionBarSubtitle(null); // clear to change
+					setTitle(title); // to persist and display later (e.g. onDrawerClosed)
 				}
 			}
 		});
@@ -105,6 +112,9 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 			case PAGE_HOME:
 				fragment = MainFragment.newInstance();
 				break;
+			case PAGE_SUNBURST:
+				fragment = SunburstFragment.newInstance();
+				break;
 			default:
 				throw new IllegalArgumentException(page + " page is not supported.");
 		}
@@ -150,13 +160,13 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 		startActivity(CategoryActivity.show(id));
 	}
 
-	@Override public void newItem(long parentID) {
+	public void newItem(long parentID) {
 		throw new UnsupportedOperationException("newItem shouldn't be called");
 	}
-	@Override public void itemSelected(long itemID) {
+	public void itemSelected(long itemID) {
 		throw new UnsupportedOperationException("newItem shouldn't be called");
 	}
-	@Override public void itemActioned(long itemID) {
+	public void itemActioned(long itemID) {
 		throw new UnsupportedOperationException("newItem shouldn't be called");
 	}
 
@@ -178,6 +188,10 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 	}
 	public void roomActioned(long roomID) {
 		startActivity(RoomEditActivity.edit(roomID));
+	}
+
+	public void rootChanged(SunburstFragment.Node root) {
+		setActionBarSubtitle(root.getLabel());
 	}
 
 	public static Intent home() {

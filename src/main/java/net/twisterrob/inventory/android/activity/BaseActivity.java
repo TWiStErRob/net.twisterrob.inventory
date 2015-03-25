@@ -182,7 +182,8 @@ public class BaseActivity extends LoggingActivity {
 			return;
 		}
 		for (Fragment fragment : nonNull(getSupportFragmentManager().getFragments())) {
-			if (fragment instanceof BackPressAware && ((BackPressAware)fragment).onBackPressed()) {
+			if (fragment != null && fragment.isAdded()
+					&& fragment instanceof BackPressAware && ((BackPressAware)fragment).onBackPressed()) {
 				return;
 			}
 		}
