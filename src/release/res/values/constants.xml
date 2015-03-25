@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="package_url_settings">package:net.twisterrob.inventory</string>
+	<string name="visible_in_debug">gone</string>
+	<bool name="visible_in_debug">false</bool>
+</resources>

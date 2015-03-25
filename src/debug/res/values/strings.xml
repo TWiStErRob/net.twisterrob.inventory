@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">!Magic Home Inventory</string>
-	<string name="package_url_settings">package:net.twisterrob.inventory.debug</string>
-	<string name="visible_in_debug">visible</string>
-	<bool name="visible_in_debug">true</bool>
 </resources>
