@@ -17,6 +17,7 @@
 		android:layout_weight="1"
 		android:focusable="false"
 		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textIsSelectable="false"
 		tools:text="List Name"
 		/>
 	<TextView

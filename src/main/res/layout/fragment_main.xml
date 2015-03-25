@@ -104,11 +104,11 @@
 			>
 			<TextView
 				style="@style/Theme.AppTheme.Header"
-				android:text="Recents"
+				android:text="@string/recent_list"
 				/>
 			<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
 				<android.support.v7.widget.RecyclerView
-					android:id="@+id/recents"
+					android:id="@id/items"
 					style="@style/Theme.AppTheme.RecyclerList"
 					tools:listitem="@layout/item_main_recent"
 					/>

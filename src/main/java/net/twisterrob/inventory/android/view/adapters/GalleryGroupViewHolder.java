@@ -23,12 +23,12 @@ public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
 
 		view.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
-				listener.onItemClick(getPosition(), getItemId());
+				listener.onItemClick(getAdapterPosition(), getItemId());
 			}
 		});
 		view.setOnLongClickListener(new OnLongClickListener() {
 			@Override public boolean onLongClick(View v) {
-				return listener.onItemLongClick(getPosition(), getItemId());
+				return listener.onItemLongClick(getAdapterPosition(), getItemId());
 			}
 		});
 	}

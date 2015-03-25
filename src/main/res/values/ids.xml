@@ -3,7 +3,6 @@
 	<item type="id" name="activityRoot" />
 	<item type="id" name="fragmentRoot" />
 	<item type="id" name="adapterRoot" />
-	<item type="id" name="editor" />
 	<item type="id" name="details" />
 
 	<item type="id" name="properties" />

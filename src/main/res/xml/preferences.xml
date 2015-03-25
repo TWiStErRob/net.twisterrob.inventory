@@ -34,6 +34,7 @@
 	</PreferenceScreen>
 	<PreferenceScreen
 		android:title="Market"
+		android:enabled="@bool/in_prod"
 		>
 		<intent
 			android:action="android.intent.action.VIEW"

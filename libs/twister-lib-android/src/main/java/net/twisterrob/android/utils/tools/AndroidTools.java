@@ -9,7 +9,7 @@ import static java.lang.Math.*;
 
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.app.*;
 import android.content.*;
 import android.content.pm.*;
@@ -32,6 +32,7 @@ import android.widget.*;
 
 import static android.util.TypedValue.*;
 
+import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.ReflectionTools;
 
 public abstract class AndroidTools {
@@ -92,14 +93,17 @@ public abstract class AndroidTools {
 		}
 	}
 
+	@DebugHelper
 	public static String toLongString(Bundle bundle) {
 		return toString(bundle, "Bundle of ", "\n", "\t", "\n", "");
 	}
 
+	@DebugHelper
 	public static String toShortString(Bundle bundle) {
 		return toString(bundle, "(Bundle)", "#{", "", ", ", "}");
 	}
 
+	@DebugHelper
 	private static String toString(Bundle bundle, String number, String start, String preItem, String postItem,
 			String end) {
 		if (bundle == null) {
@@ -120,6 +124,7 @@ public abstract class AndroidTools {
 		return sb.toString();
 	}
 
+	@DebugHelper
 	public static String toString(Object value) {
 		if (value == null) {
 			return NULL;
@@ -142,6 +147,7 @@ public abstract class AndroidTools {
 		return "(" + shortenPackageNames(type) + ")" + display;
 	}
 
+	@DebugHelper
 	private static String shortenPackageNames(String string) {
 		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+(v4|v7|v13)\\.(?:[a-z0-9]+\\.)+", "$1.");
 		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+", "");
@@ -347,10 +353,11 @@ public abstract class AndroidTools {
 	 * @see <a href="http://www.jayway.com/2012/11/28/is-androids-asynctask-executing-tasks-serially-or-concurrently/">AsyncTask ordering</a>
 	 */
 	@SafeVarargs
+	@TargetApi(VERSION_CODES.HONEYCOMB)
 	public static <Params> void executeParallel(AsyncTask<Params, ?, ?> as, Params... params) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.DONUT) {
+		if (VERSION.SDK_INT < VERSION_CODES.DONUT) {
 			throw new IllegalStateException("Cannot execute AsyncTask in parallel before DONUT");
-		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
 			as.execute(params); // default is pooling, cannot be explicit
 		} else {
 			as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params); // default is serial, explicit pooling
@@ -362,10 +369,11 @@ public abstract class AndroidTools {
 	 * @see #executeParallel(AsyncTask, Object[])
 	 */
 	@SafeVarargs
+	@TargetApi(VERSION_CODES.HONEYCOMB)
 	public static <Params> void executeSerial(AsyncTask<Params, ?, ?> as, Params... params) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.DONUT) {
+		if (VERSION.SDK_INT < VERSION_CODES.DONUT) {
 			as.execute(params); // default is serial
-		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
 			throw new IllegalStateException("Cannot execute AsyncTask in serial between DONUT and HONEYCOMB");
 		} else {
 			as.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params); // default is serial, explicit serial
@@ -472,19 +480,23 @@ public abstract class AndroidTools {
 		}
 	}
 
+	@SuppressLint("LogConditional") // Should only be used in debug code
+	@DebugHelper
 	public static void screenshot(View view) {
 		Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
 		view.draw(new Canvas(bitmap));
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
 		try {
 			File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-			storageDir.mkdirs();
+			if (!storageDir.mkdirs() || !storageDir.isDirectory()) {
+				throw new IOException("Not a directory: " + storageDir);
+			}
 			File file = File.createTempFile(timeStamp, ".png", storageDir);
 			@SuppressWarnings("resource")
 			OutputStream stream = new FileOutputStream(file);
 			bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
 			stream.close();
-			Log.i("SCREENSHOT", "adb pull " + file);
+			Log.d("SCREENSHOT", "adb pull " + file);
 		} catch (IOException e) {
 			Log.e("SCREENSHOT", "Cannot save screenshot of " + view, e);
 		}
@@ -529,6 +541,7 @@ public abstract class AndroidTools {
 			LOG.warn("Cannot setItemChecked({}) #{} on {}", value, position, parent);
 		}
 	}
+
 	public static View findClosest(View view, @IdRes int viewId) {
 		if (view.getId() == viewId) {
 			return view;
@@ -548,6 +561,7 @@ public abstract class AndroidTools {
 	}
 
 	/** @see ComponentCallbacks2 */
+	@DebugHelper
 	public static String toTrimMemoryString(int level) {
 		switch (level) {
 			case ComponentCallbacks2.TRIM_MEMORY_COMPLETE:
@@ -567,10 +581,13 @@ public abstract class AndroidTools {
 		}
 		return "trimMemoryLevel=" + level;
 	}
+
 	public static String toColorString(int color) {
 		return String.format(Locale.ROOT, "#%02X%02X%02X%02X",
 				Color.alpha(color), Color.red(color), Color.green(color), Color.blue(color));
 	}
+
+	@DebugHelper
 	public static String toFeatureString(int featureId) {
 		switch (featureId) {
 			case Window.FEATURE_OPTIONS_PANEL:
@@ -605,9 +622,7 @@ public abstract class AndroidTools {
 		return "featureId=" + featureId;
 	}
 
-	/**
-	 * @see PackageManager#getActivityInfo(ComponentName, int)
-	 */
+	/** @see PackageManager#getActivityInfo(ComponentName, int) */
 	public static ActivityInfo getActivityInfo(Activity activity, int flags) {
 		try {
 			return activity.getPackageManager().getActivityInfo(activity.getComponentName(), flags);

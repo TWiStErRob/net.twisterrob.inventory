@@ -35,12 +35,12 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
 		view.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
-				listener.onItemClick(getPosition(), getItemId());
+				listener.onItemClick(getAdapterPosition(), getItemId());
 			}
 		});
 		view.setOnLongClickListener(new OnLongClickListener() {
 			@Override public boolean onLongClick(View v) {
-				return listener.onItemLongClick(getPosition(), getItemId());
+				return listener.onItemLongClick(getAdapterPosition(), getItemId());
 			}
 		});
 		count.setOnClickListener(new OnClickListener() {
@@ -56,7 +56,8 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
 		Integer subCatCount = getCount(cursor, CommonColumns.COUNT_CHILDREN_DIRECT);
 		if (subCatCount != null) {
-			stats.setText(context.getString(R.string.label_category_subs, subCatCount));
+			stats.setText(context.getResources().getQuantityString(
+					R.plurals.label_category_subs, subCatCount, subCatCount));
 		} else {
 			stats.setText(null);
 		}

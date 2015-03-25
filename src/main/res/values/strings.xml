@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="app_name">Magic Home Inventory</string>
 	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
 	<string name="home_title">Inventory</string>
@@ -75,7 +75,9 @@
 	<string name="action_rename_success">Renamed %1$s &#8220;%2$s&#8221; to &#8220;%3$s&#8221;.</string>
 	<string name="action_rename_failed">Failed to rename %1$s &#8220;%2$s&#8221;!</string>
 
-	<string name="selection_count">%d selected</string>
+	<plurals name="selection_count">
+		<item quantity="other">%d selected</item>
+	</plurals>
 	<string name="selection_selectAll">Select All</string>
 	<string name="selection_selectAll_short">All</string>
 	<string name="selection_selectInv">Invert selection</string>
@@ -85,7 +87,10 @@
 	<string name="category_details">Category</string>
 	<string name="category_share">Share Category</string>
 	<string name="category_viewAllItems">Flatten Subcategories</string>
-	<string name="label_category_subs">%1$d Subcategories</string>
+	<plurals name="label_category_subs">
+		<item quantity="one">%d subcategory</item>
+		<item quantity="other">%d subcategories</item>
+	</plurals>
 
 	<plurals name="list">
 		<item quantity="one">list</item>
@@ -96,6 +101,8 @@
 	<string name="list_edit">Rename List</string>
 	<string name="list_delete">Delete List</string>
 	<string name="list_manage">Manage Lists</string>
+
+	<string name="recent_list">Recents</string>
 
 	<plurals name="item">
 		<item quantity="one">item</item>
@@ -152,21 +159,20 @@
 	<string name="room_viewAll">List All Rooms</string>
 
 	<string name="backup_title">Backup</string>
-	<string name="backup_select">Please select a backup.</string>
 
 	<string name="backup_export_progress_title">Export</string>
 	<string name="backup_export_progress_init">Preparing export…</string>
 	<string name="backup_export_progress_data">Exporting belongings…</string>
-	<string name="backup_export_progress_images">Exporting %1$d images for %2$d belongings…</string>
-	<string name="backup_export_result_success">Done exporting %1$d belongings.</string>
-	<string name="backup_export_result_warning">Done exporting %1$d belongings, but %2$d/%3$d images missing.</string>
+	<string name="backup_export_progress_images" tools:ignore="PluralsCandidate">Exporting %1$d images for %2$d belongings…</string>
+	<string name="backup_export_result_success" tools:ignore="PluralsCandidate">Done exporting %1$d belongings.</string>
+	<string name="backup_export_result_warning" tools:ignore="PluralsCandidate">Done exporting %1$d belongings, but %2$d/%3$d images missing.</string>
 	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>
 
 	<string name="backup_import_progress_title">Import</string>
 	<string name="backup_import_progress_init">Preparing import…</string>
 	<string name="backup_import_progress_data">Importing belongings…</string>
-	<string name="backup_import_result_success">Done importing %1$d belongings.</string>
-	<string name="backup_import_result_warning">There were issues during importing %2$d/%1$d belongings: tap for details.</string>
+	<string name="backup_import_result_success" tools:ignore="PluralsCandidate">Done importing %1$d belongings.</string>
+	<string name="backup_import_result_warning" tools:ignore="PluralsCandidate">There were issues during importing %2$d/%1$d belongings: tap for details.</string>
 	<string name="backup_import_result_failed">Failed to import belongings:\n%1$s</string>
 	<string name="backup_import_conflict_property">Property &#8220;%1$s&#8221; already exists, used existing one.</string>
 	<string name="backup_import_conflict_room">Room &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>

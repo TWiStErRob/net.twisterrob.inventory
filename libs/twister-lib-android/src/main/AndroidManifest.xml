@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	package="net.twisterrob.android"
 	>
 
@@ -8,7 +10,7 @@
 	<!-- TODO for what? -->
 	<!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
-	<application>
+	<application android:supportsRtl="true" tools:ignore="UnusedAttribute">
 		<!--
 		<activity
 			android:name="net.twisterrob.android.activity.CaptureImage"

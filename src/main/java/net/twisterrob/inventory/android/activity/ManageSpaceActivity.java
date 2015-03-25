@@ -113,36 +113,37 @@ public class ManageSpaceActivity extends BaseActivity {
 				new ConfirmDialog("Export Data",
 						"Dump the data folder to a zip file for debugging.") {
 					@Override public void onClick(DialogInterface var1, int var2) {
-						ZipOutputStream zip = null;
-						try {
-							zip = new ZipOutputStream(new FileOutputStream(Paths.getExportFile()));
-							StringBuilder description = new StringBuilder();
-							if (getApplicationInfo().dataDir != null) {
-								File internalDataDir = new File(getApplicationInfo().dataDir);
-								IOTools.zip(zip, internalDataDir, "internal");
-								description.append("internal\tgetApplicationInfo().dataDir: ").append(internalDataDir)
-								           .append("\n");
-							}
-							File externalFilesDir = getExternalFilesDir(null);
-							if (externalFilesDir != null) {
-								File externalDataDir = externalFilesDir.getParentFile();
-								IOTools.zip(zip, externalDataDir, "external");
-								description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir)
-								           .append("\n");
-							}
-							IOTools.zip(zip, "descript.ion",
-									new ByteArrayInputStream(description.toString().getBytes("UTF-8")));
-						} catch (IOException ex) {
-							LOG.error("Cannot save data", ex);
-						} finally {
-							IOTools.ignorantClose(zip);
-						}
+						zipAllData();
 					}
 				}.show(getSupportFragmentManager(), null);
 			}
 		});
 		findViewById(R.id.storage_all)
 				.setVisibility(VERSION_CODES.KITKAT <= VERSION.SDK_INT || BuildConfig.DEBUG? View.VISIBLE : View.GONE);
+	}
+
+	private void zipAllData() {
+		ZipOutputStream zip = null;
+		try {
+			zip = new ZipOutputStream(new FileOutputStream(Paths.getExportFile()));
+			StringBuilder description = new StringBuilder();
+			if (getApplicationInfo().dataDir != null) {
+				File internalDataDir = new File(getApplicationInfo().dataDir);
+				IOTools.zip(zip, internalDataDir, "internal");
+				description.append("internal\tgetApplicationInfo().dataDir: ").append(internalDataDir).append("\n");
+			}
+			File externalFilesDir = getExternalFilesDir(null);
+			if (externalFilesDir != null) {
+				File externalDataDir = externalFilesDir.getParentFile();
+				IOTools.zip(zip, externalDataDir, "external");
+				description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir).append("\n");
+			}
+			IOTools.zip(zip, "descript.ion", new ByteArrayInputStream(description.toString().getBytes("UTF-8")));
+		} catch (IOException ex) {
+			LOG.error("Cannot save data", ex);
+		} finally {
+			IOTools.ignorantClose(zip);
+		}
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {

@@ -114,14 +114,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					TextView details = (TextView)view.findViewById(R.id.details);
 					details.setText(getDetailsString(entity, debug));
 					//details.setMovementMethod(ScrollingMovementMethod.getInstance());
-					details.setOnTouchListener(new OnTouchListener() {
-						@Override
-						public boolean onTouch(View v, MotionEvent event) {
-							// http://stackoverflow.com/questions/8121491/is-it-possible-to-add-a-scrollable-textview-to-a-listview
-							container.getParent().requestDisallowInterceptTouchEvent(true);
-							return false;
-						}
-					});
+					//details.setOnTouchListener(new DeepScrollFixListener());
 					break;
 				}
 				default:

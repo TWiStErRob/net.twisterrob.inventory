@@ -11,8 +11,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
-import net.twisterrob.inventory.android.R;
 import net.twisterrob.android.view.SelectionAdapter;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.java.exceptions.StackTrace;
 
 public abstract class SelectionActionMode implements ActionMode.Callback {
@@ -104,7 +104,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 		if (count == 0) {
 			mode.finish();
 		} else {
-			mode.setTitle(activity.getString(R.string.selection_count, count));
+			mode.setTitle(activity.getResources().getQuantityString(R.plurals.selection_count, count, count));
 		}
 		return false;
 	}

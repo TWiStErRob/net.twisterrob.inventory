@@ -18,7 +18,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.RecyclerViewLoadersController;
 import net.twisterrob.inventory.android.view.adapters.*;
 
 public class MainFragment extends BaseFragment<Void> {
@@ -104,7 +104,7 @@ public class MainFragment extends BaseFragment<Void> {
 				return adapter;
 			}
 		};
-		recentsController.setView((RecyclerView)view.findViewById(R.id.recents));
+		recentsController.setView((RecyclerView)view.findViewById(R.id.items));
 	}
 
 	@Override public void onActivityCreated(Bundle savedInstanceState) {
@@ -209,12 +209,12 @@ public class MainFragment extends BaseFragment<Void> {
 
 				view.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {
-						listener.onItemClick(getPosition(), getItemId());
+						listener.onItemClick(getAdapterPosition(), getItemId());
 					}
 				});
 				view.setOnLongClickListener(new OnLongClickListener() {
 					@Override public boolean onLongClick(View v) {
-						listener.onItemLongClick(getPosition(), getItemId());
+						listener.onItemLongClick(getAdapterPosition(), getItemId());
 						return true;
 					}
 				});

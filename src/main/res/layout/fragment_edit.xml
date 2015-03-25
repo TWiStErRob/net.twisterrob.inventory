@@ -14,7 +14,6 @@
 		android:layout_weight="1"
 		>
 		<LinearLayout
-			android:id="@+id/editor"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"

@@ -1,5 +1,7 @@
 package net.twisterrob.android.utils.log;
 
+import android.annotation.SuppressLint;
+
 import net.twisterrob.java.utils.StringTools;
 
 /**
@@ -8,6 +10,7 @@ import net.twisterrob.java.utils.StringTools;
  * @author Zoltán Kiss
  * @author Róbert Papp
  */
+@SuppressLint("LogConditional") // TODO consider automatic Log.isLoggable(...) calls
 public class Log {
 	private final String m_tag;
 
@@ -22,7 +25,7 @@ public class Log {
 
 	private static String format(final String messageFormat, final Object... formatArgs) {
 		String message = StringTools.format(messageFormat, formatArgs);
-		if (message == null || message.trim().length() == 0) {
+		if (message == null || message.trim().length() == 0 || "null".equals(message)) {
 			throw new IllegalArgumentException("ALERT: Lazy developer! Please describe what you're logging.");
 		}
 		return message;

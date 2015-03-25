@@ -3,10 +3,10 @@ package net.twisterrob.inventory.android.view.adapters;
 import android.database.*;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.view.DeepScrollFixListener;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 
@@ -41,9 +41,9 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 			super(view);
 			this.header = header;
 
-			view.setOnTouchListener(new OnTouchListener() {
+			view.setOnTouchListener(new DeepScrollFixListener() {
 				@Override public boolean onTouch(View v, MotionEvent event) {
-					v.getParent().requestDisallowInterceptTouchEvent(true);
+					super.onTouch(v, event);
 					return HeaderViewHolder.this.header.dispatchTouchEvent(event);
 				}
 			});

@@ -20,6 +20,10 @@
 		<!-- Used dynamically by DB:RoomType.name and DB:RoomTypeKind.name -->
 		<ignore path="**/res/values*/strings_RoomTypes.xml" />
 	</issue>
+	<issue id="SelectableText">
+		<!-- TODO SelectableText lint check ignores style: http://b.android.com/57866 -->
+		<ignore path="src/main/res/layout/manage_space_activity.xml" />
+	</issue>
 	<issue id="IconMissingDensityFolder">
 		<!-- Resources are separate into res and res-icons, and only icons need density-folders. -->
 		<ignore path="src/main/res" />

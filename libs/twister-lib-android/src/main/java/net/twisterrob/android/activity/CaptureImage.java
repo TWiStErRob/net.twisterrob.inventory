@@ -70,8 +70,10 @@ public class CaptureImage extends Activity {
 		mImage = (ImageView)findViewById(R.id.image);
 		mSelection = (SelectionView)findViewById(R.id.selection);
 
+		btnFlash.setVisibility(View.INVISIBLE); // hide until it can operate
 		mPreview.setListener(new CameraPreviewListener() {
 			@Override public void onStarted(CameraPreview preview) {
+				btnFlash.setVisibility(View.VISIBLE);
 				btnFlash.setChecked(getInitialFlashEnabled()); // calls setOnCheckedChangeListener
 			}
 			@Override public void onFinished(CameraPreview preview) {
@@ -100,8 +102,8 @@ public class CaptureImage extends Activity {
 					take(new Camera.PictureCallback() {
 						public void onPictureTaken(byte[] data, Camera camera) {
 							doSave(data);
-							enableControls();
 							prepareCrop();
+							enableControls();
 						}
 					});
 				} else {
@@ -110,6 +112,7 @@ public class CaptureImage extends Activity {
 				}
 			}
 			private void enableControls() {
+				// post, so everything has time to set up
 				controls.post(new Runnable() {
 					@Override public void run() {
 						controls.setVisibility(View.VISIBLE);

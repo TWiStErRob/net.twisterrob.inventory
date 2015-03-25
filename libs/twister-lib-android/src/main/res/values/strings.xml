@@ -1,5 +1,4 @@
 <resources>
-	<string name="app_name">twister-lib-android</string>
 	<!--suppress CheckTagEmptyBody -->
 	<string name="empty"></string>
 </resources>

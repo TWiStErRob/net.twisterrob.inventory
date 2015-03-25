@@ -19,7 +19,7 @@
 		android:id="@+id/action_share"
 		android:title="@string/property_share"
 		android:icon="@android:drawable/ic_menu_share"
-		android:visible="@bool/visible_in_debug"
+		android:visible="@bool/in_test"
 		app:showAsAction="never"
 		/>
 </menu>
