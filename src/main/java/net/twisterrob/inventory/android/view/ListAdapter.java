@@ -24,31 +24,6 @@ public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		this.listener = listener;
 	}
 
-	class ViewHolder extends RecyclerView.ViewHolder {
-		public ViewHolder(View view) {
-			super(view);
-
-			title = (TextView)view.findViewById(R.id.title);
-			count = (TextView)view.findViewById(R.id.count);
-
-			view.setOnClickListener(new OnClickListener() {
-				@Override public void onClick(View v) {
-					Cursor cursor = getCursor();
-					cursor.moveToPosition(getAdapterPosition());
-					boolean exists = cursor.getShort(cursor.getColumnIndexOrThrow("exists")) != 0;
-					if (exists) {
-						listener.removeFromList(getItemId());
-					} else {
-						listener.addToList(getItemId());
-					}
-				}
-			});
-		}
-
-		TextView title;
-		TextView count;
-	}
-
 	@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 		View view = inflater.inflate(R.layout.item_list, parent, false);
@@ -56,12 +31,43 @@ public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	}
 
 	@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
-		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-		int count = cursor.getInt(cursor.getColumnIndexOrThrow(CommonColumns.COUNT_CHILDREN_DIRECT));
-		boolean exists = cursor.getShort(cursor.getColumnIndexOrThrow("exists")) != 0;
+		holder.bind(cursor);
+	}
 
-		holder.title.setText(name);
-		holder.count.setText(String.valueOf(count));
-		holder.itemView.setSelected(exists);
+	class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
+		TextView title;
+		TextView count;
+
+		public ViewHolder(View view) {
+			super(view);
+
+			title = (TextView)view.findViewById(R.id.title);
+			count = (TextView)view.findViewById(R.id.count);
+
+			view.setOnClickListener(this);
+		}
+
+		@Override public void onClick(View v) {
+			itemView.setEnabled(false);
+			Cursor cursor = getCursor();
+			if (cursor.moveToPosition(getAdapterPosition())) {
+				if (cursor.getShort(cursor.getColumnIndexOrThrow("exists")) != 0) {
+					listener.removeFromList(getItemId());
+				} else {
+					listener.addToList(getItemId());
+				}
+			}
+		}
+
+		private void bind(Cursor cursor) {
+			String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+			int childCount = cursor.getInt(cursor.getColumnIndexOrThrow(CommonColumns.COUNT_CHILDREN_DIRECT));
+			boolean exists = cursor.getShort(cursor.getColumnIndexOrThrow("exists")) != 0;
+
+			title.setText(name);
+			count.setText(String.valueOf(childCount));
+			itemView.setSelected(exists);
+			itemView.setEnabled(true);
+		}
 	}
 }

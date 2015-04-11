@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.fragment.ListListFragment;
+import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
 
 public class ListsActivity extends FragmentActivity implements ListsEvents {
@@ -25,12 +25,16 @@ public class ListsActivity extends FragmentActivity implements ListsEvents {
 	@Override public void listSelected(long listID) {
 		App.db().addListEntry(listID, getExtraItemID()); // FIXME DB on UI
 		App.toast("Item has been added to a list.");
-		finish();
+		getFragment().refresh();
 	}
 	@Override public void listRemoved(long listID) {
 		App.db().deleteListEntry(listID, getExtraItemID()); // FIXME DB on UI
 		App.toast("Item has been removed from a list.");
-		finish();
+		getFragment().refresh();
+	}
+
+	private BaseFragment getFragment() {
+		return (BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 
 	public static Intent manage(long itemID) {

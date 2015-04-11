@@ -29,7 +29,7 @@
 		android:background="@drawable/circle"
 		android:focusable="false"
 		android:gravity="center"
-		android:textColor="@color/accent"
+		android:textColor="@color/accentTitleText"
 		android:textIsSelectable="false"
 		tools:text="999"
 		/>
