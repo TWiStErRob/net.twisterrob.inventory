@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.content.contract;
 
+import android.database.Cursor;
+
 public interface ParentColumns extends CommonColumns {
 	String PARENT_TYPE = "parentType";
 
@@ -22,6 +24,9 @@ public interface ParentColumns extends CommonColumns {
 			return isMain;
 		}
 
+		public static Type from(Cursor cursor, String columnName) {
+			return Type.from(cursor.getString(cursor.getColumnIndexOrThrow(columnName)));
+		}
 		public static Type from(String string) {
 			for (Type type : values()) {
 				if (type.string.equals(string)) {

@@ -29,6 +29,8 @@ public interface Constants {
 		/** Warning: this is used inlined in paths_images.xml because path doesn't support string resources */
 		private static final String INTERNAL_IMAGES_FOLDER = "images";
 		public static final String DRIVE_HOME_FOLDER = "Magic Home Inventory";
+		public static final String BACKUP_XML_FILENAME = "data.xml";
+		public static final String BACKUP_CSV_FILENAME = "data.csv";
 		public static @NonNull File getImageDirectory(Context context) {
 			if (Constants.DISABLE && BuildConfig.DEBUG) {
 				File dir = context.getExternalFilesDir(INTERNAL_IMAGES_FOLDER);
@@ -49,7 +51,7 @@ public interface Constants {
 		}
 		public static @NonNull File getExportFile() throws IOException {
 			Calendar now = Calendar.getInstance();
-			String fileName = String.format(Locale.ROOT, "MagicHomeInventory-%tF_%<tH-%<tM-%<tS.zip", now);
+			String fileName = String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
 			File exportFolder = getPhoneHome();
 			if (!(exportFolder.mkdirs() || exportFolder.isDirectory())) {
 				throw new IOException("Cannot use directory: " + exportFolder);

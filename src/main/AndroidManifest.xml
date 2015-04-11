@@ -69,14 +69,14 @@
 			/>
 		<activity
 			android:name=".activity.ManageSpaceActivity"
-			android:process=":managespace"
-			android:label="Manage Inventory Space" />
+			android:label="Manage Inventory Space"
+			android:process=":managespace" />
 		<activity
-			android:name=".activity.ExportActivity"
-			android:label="Export" />
-		<activity
-			android:name=".activity.ImportActivity"
-			android:label="Import" />
+			android:name=".activity.BackupActivity"
+			android:label="Backup">
+			<meta-data android:name="android.support.PARENT_ACTIVITY"
+			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
+		</activity>
 		<activity
 			android:name=".activity.data.MoveTargetActivity"
 			android:label="@string/action_move"

@@ -26,7 +26,6 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.fragment.BackupFragment;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
 
@@ -156,7 +155,7 @@ public class ManageSpaceActivity extends BaseActivity {
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_backup:
-				BackupFragment.create().show(getSupportFragmentManager(), "backup");
+				startActivity(BackupActivity.chooser());
 				return true;
 		}
 		return super.onOptionsItemSelected(item);

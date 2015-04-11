@@ -170,7 +170,7 @@
 
 	<string name="backup_import_progress_title">Import</string>
 	<string name="backup_import_progress_init">Preparing import…</string>
-	<string name="backup_import_progress_data">Importing belongings…</string>
+	<string name="backup_import_progress_data">Importing belongings…\nFeel free to leave it will run in the background, you can cancel by pressing the back button.</string>
 	<string name="backup_import_result_success" tools:ignore="PluralsCandidate">Done importing %1$d belongings.</string>
 	<string name="backup_import_result_warning" tools:ignore="PluralsCandidate">There were issues during importing %2$d/%1$d belongings: tap for details.</string>
 	<string name="backup_import_result_failed">Failed to import belongings:\n%1$s</string>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@id/adapterRoot"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:padding="@dimen/margin"
+	android:background="@drawable/item_state"
+	tools:background="@color/toolsBG"
+	>
+	<TextView
+		android:id="@id/title"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:layout_weight="1"
+		android:focusable="false"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textIsSelectable="true"
+		tools:text="9999-99-99 00-00-00"
+		/>
+	<TextView
+		android:id="@id/count"
+		android:layout_width="64dp"
+		android:layout_height="32dp"
+		android:layout_gravity="center_vertical"
+		android:padding="@dimen/margin"
+		android:background="@drawable/circle"
+		android:focusable="false"
+		android:gravity="center"
+		android:textColor="@color/accentTitleText"
+		android:textIsSelectable="false"
+		android:textSize="14dp"
+		tools:text="0.00MB"
+		tools:ignore="SpUsage"
+		/>
+</LinearLayout>

@@ -6,7 +6,7 @@ import org.slf4j.*;
 
 import android.app.*;
 import android.content.*;
-import android.os.*;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
@@ -15,7 +15,7 @@ import net.twisterrob.inventory.android.content.io.ImporterTask;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks;
 
 public class ImportFragment extends BaseDialogFragment implements ImportCallbacks {
-	private static final Logger LOG = LoggerFactory.getLogger(ImporterTask.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ImportFragment.class);
 
 	private ImporterTask task;
 	private FragmentManager parentFragmentManager;
@@ -31,9 +31,13 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		super.onDetach();
 	}
 
+	public void execute(File file) {
+		task.execute(file);
+	}
+
 	@Override public void importStarting() {
 		LOG.trace("importStarting");
-		show(parentFragmentManager, "import");
+		show(parentFragmentManager.beginTransaction().addToBackStack("import"), "import");
 		parentFragmentManager = null;
 	}
 
@@ -51,8 +55,8 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 			case Data:
 				dialog.setMessage(getString(R.string.backup_import_progress_data));
 				dialog.setIndeterminate(false);
-				dialog.setProgress(progress.done);
-				dialog.setMax(progress.total);
+				dialog.setProgress((int)progress.done);
+				dialog.setMax((int)progress.total);
 				break;
 		}
 	}
@@ -108,12 +112,12 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		return dialog;
 	}
 
-	public static AsyncTask<File, ?, ?> create(Context context, FragmentManager fm) {
+	public static ImportFragment create(Context context, FragmentManager fm) {
 		ImportFragment fragment = new ImportFragment();
 		fragment.parentFragmentManager = fm;
 		fragment.task = new ImporterTask(context);
 		fragment.task.setCallbacks(fragment);
-		return fragment.task;
+		return fragment;
 	}
 
 	private static final class ImportFinishedListener implements ImportCallbacks {

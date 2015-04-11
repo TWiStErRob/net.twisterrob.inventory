@@ -1,22 +1,21 @@
 package net.twisterrob.inventory.android.fragment;
 
-import java.io.OutputStream;
-
 import org.slf4j.*;
 
 import android.app.*;
 import android.content.*;
 import android.content.res.Resources;
-import android.os.*;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.io.ExporterTask;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks;
+import net.twisterrob.inventory.android.content.io.xml.ZippedXMLExporter;
 
 public class ExportFragment extends BaseDialogFragment implements ExportCallbacks {
-	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ExportFragment.class);
 
 	private ExporterTask task;
 	private FragmentManager parentFragmentManager;
@@ -32,16 +31,25 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		super.onDetach();
 	}
 
+	public void execute() {
+		task.execute();
+	}
+
 	@Override public void exportStarting() {
 		LOG.trace("exportStarting");
-		show(parentFragmentManager, "export");
+		show(parentFragmentManager.beginTransaction().addToBackStack("export"), "export");
 		parentFragmentManager = null;
 	}
 
 	@Override public void exportProgress(Progress progress) {
 		this.progress = progress;
 		LOG.trace("exportProgress {}", progress);
-		updateProgress((ProgressDialog)getDialog(), progress);
+		ProgressDialog dialog = (ProgressDialog)getDialog();
+		if (dialog != null) {
+			updateProgress(dialog, progress);
+		} else {
+			LOG.warn("Premature stop, no dialog");
+		}
 	}
 	private void updateProgress(ProgressDialog dialog, Progress progress) {
 		switch (progress.phase) {
@@ -56,7 +64,8 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 				dialog.setMax(progress.total);
 				break;
 			case Images:
-				dialog.setMessage(getString(R.string.backup_export_progress_images, progress.imagesCount, progress.total));
+				dialog.setMessage(
+						getString(R.string.backup_export_progress_images, progress.imagesCount, progress.total));
 				dialog.setIndeterminate(false);
 				dialog.setProgress(progress.imagesTried);
 				dialog.setMax(progress.imagesCount);
@@ -104,12 +113,12 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		return dialog;
 	}
 
-	public static AsyncTask<OutputStream, ?, ?> create(Context context, FragmentManager fm) {
+	public static ExportFragment create(Context context, FragmentManager fm) {
 		ExportFragment fragment = new ExportFragment();
 		fragment.parentFragmentManager = fm;
-		fragment.task = new ExporterTask(context);
+		fragment.task = new ExporterTask(new ZippedXMLExporter(), context);
 		fragment.task.setCallbacks(fragment);
-		return fragment.task;
+		return fragment;
 	}
 
 	private static final class ExportFinishedListener implements ExportCallbacks {

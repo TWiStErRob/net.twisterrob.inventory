@@ -327,6 +327,9 @@
 	<string name="query_list_update"><![CDATA["
 		update List set name = ? where _id = ?
 	"]]></string>
+	<string name="query_list_find"><![CDATA["
+		select _id from List where name = ?
+	"]]></string>
 	<string name="query_list_delete"><![CDATA["
 		delete from List where _id = ?
 	"]]></string>
@@ -411,8 +414,10 @@
 				null          as itemName,
 				p.description as description,
 				p.image       as image,
+				null          as parentType,
 				null          as parent,
-				null          as _id
+				null          as parentName,
+				p._id         as _id
 			from Property p
 			join PropertyType pt ON p.type = pt._id
 		UNION ALL
@@ -424,8 +429,10 @@
 				null          as itemName,
 				r.description as description,
 				r.image       as image,
-				null          as parent,
-				null          as _id
+				'property'    as parentType,
+				p._id         as parent,
+				p.name        as parentName,
+				r._id         as _id
 			from Room r
 			join RoomType rt ON r.type = rt._id
 			join Property p ON r.property = p._id
@@ -438,13 +445,12 @@
 				i.name        as itemName,
 				i.description as description,
 				i.image       as image,
-				CASE
-					WHEN i.parent <> r.root
-					THEN i.parent
-					ELSE NULL
-				END           as parent,
+				CASE WHEN i.parent <> r.root THEN 'item'  ELSE 'room' END as parentType,
+				CASE WHEN i.parent <> r.root THEN pi._id  ELSE r._id  END as parent,
+				CASE WHEN i.parent <> r.root THEN pi.name ELSE r.name END as parentName,
 				i._id         as _id
 			from Item           i
+			join Item           pi ON i.parent = pi._id
 			join Category       c  ON i.category = c._id and c._id <> -1
 			join Item_Path_Node ip ON ip.item = i._id and ip.node = i._id
 			join Room           r  ON ip.root = r.root

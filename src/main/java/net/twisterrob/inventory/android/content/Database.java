@@ -11,7 +11,7 @@ import android.database.sqlite.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.java.utils.StringTools;
 
 public class Database {
@@ -32,8 +32,8 @@ public class Database {
 			}
 		};
 		// TODO App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
-		m_helper.setDumpOnOpen(true);
-		m_helper.setDevMode(true);
+		m_helper.setDumpOnOpen(BuildConfig.DEBUG);
+		m_helper.setDevMode(BuildConfig.DEBUG);
 	}
 
 	public SQLiteDatabase getReadableDatabase() {
@@ -249,6 +249,9 @@ public class Database {
 	}
 	public void deleteList(long id) {
 		execSQL(R.string.query_list_delete, id);
+	}
+	public Long findList(String name) {
+		return getID(R.string.query_list_find, name);
 	}
 	public void addListEntry(long listID, long itemID) {
 		execSQL(R.string.query_list_entry_add, listID, itemID);

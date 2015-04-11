@@ -3,9 +3,7 @@ package net.twisterrob.inventory.android.content.io;
 import java.io.*;
 import java.util.Locale;
 import java.util.concurrent.CancellationException;
-import java.util.zip.*;
 
-import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.*;
 
 import android.content.Context;
@@ -14,25 +12,26 @@ import android.database.Cursor;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress.Phase;
 
-public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progress> {
+public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
 
 	private Cursor cursor;
-	private ZipOutputStream zip;
 	private ExportCallbacks callbacks = DUMMY_CALLBACK;
 	private Progress progress;
+	private Exporter exporter;
 
 	public interface ExportCallbacks {
 		void exportStarting();
 		void exportProgress(Progress progress);
 		void exportFinished(Progress progress);
 
-		public static final class Progress implements Cloneable {
+		final class Progress implements Cloneable {
 			public Phase phase;
 			/** number of images tried (may have failed) from imagesCount*/
 			public int imagesTried;
@@ -68,7 +67,8 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 
 	private final Context context;
 
-	public ExporterTask(Context context) {
+	public ExporterTask(Exporter exporter, Context context) {
+		this.exporter = exporter;
 		this.context = context;
 	}
 
@@ -86,29 +86,33 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 		callbacks.exportFinished(progress);
 	}
 
-	private void publishStart() {
+	protected void publishStart() {
 		progress.done = 0;
 		publishProgress();
 	}
-	private void publishIncrement() {
+	protected void publishIncrement() {
 		progress.done++;
 		publishProgress();
 	}
-	private void publishProgress() {
+	protected void publishProgress() {
 		if (isCancelled()) {
 			throw new CancellationException();
 		}
 		publishProgress(progress.clone());
 	}
 
-	@Override protected Progress doInBackground(OutputStream os) {
-		progress = new Progress();
+	@Override protected Progress doInBackground(Void ignore) {
+		OutputStream os = null;
+		File file = null;
 		try {
+			file = Paths.getExportFile();
+			os = new FileOutputStream(file);
 			// TODO wakelock?
+			progress = new Progress();
 			progress.phase = Phase.Init;
 			cursor = App.db().export();
 			progress.total = cursor.getCount();
-			zip = new ZipOutputStream(new BufferedOutputStream(os));
+			exporter.initExport(os);
 
 			progress.phase = Phase.Data;
 			saveData();
@@ -116,16 +120,42 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 			progress.phase = Phase.Images;
 			saveImages();
 
-			zip.close();
+			exporter.finishExport();
 		} catch (Throwable ex) {
 			LOG.warn("Export failed", ex);
 			progress.failure = ex;
+			IOTools.ignorantClose(os);
+			if (!BuildConfig.DEBUG && file != null && !file.delete()) {
+				file.deleteOnExit();
+			}
 		} finally {
-			IOTools.ignorantClose(zip, cursor);
+			IOTools.ignorantClose(cursor);
+			exporter.finalizeExport();
 		}
+
 		return progress;
 	}
-	private void saveImages() throws IOException {
+
+	// TODO check http://stackoverflow.com/questions/13229294/how-do-i-create-a-google-spreadsheet-with-a-service-account-and-share-to-other-g
+	protected void saveData() throws Throwable {
+		exporter.initData(cursor);
+
+		cursor.moveToPosition(-1);
+		publishStart();
+		while (cursor.moveToNext()) {
+			if (!cursor.isNull(cursor.getColumnIndex(CommonColumns.IMAGE))) {
+				progress.imagesCount++;
+			}
+			exporter.writeData(cursor);
+			publishIncrement();
+		}
+
+		exporter.finishData(cursor);
+	}
+
+	private void saveImages() throws Throwable {
+		exporter.initImages(cursor);
+
 		cursor.moveToPosition(-1);
 		publishStart();
 		while (cursor.moveToNext()) {
@@ -133,79 +163,63 @@ public class ExporterTask extends SimpleAsyncTask<OutputStream, Progress, Progre
 			if (imageFileName != null) {
 				try {
 					progress.imagesTried++;
-					saveImage(imageFileName);
-				} catch (FileNotFoundException ex) {
+					exporter.saveImage(Constants.Paths.getImageFile(context, imageFileName), cursor);
+				} catch (Exception ex) {
 					progress.imagesFailed++;
 					LOG.warn("Cannot find image: {}", imageFileName, ex);
 				}
+			} else {
+				exporter.noImage(cursor);
 			}
 			publishIncrement();
 		}
+
+		exporter.finishImages(cursor);
 	}
 
-	private void saveImage(String imageFileName) throws IOException {
-		FileInputStream imageFile = new FileInputStream(Constants.Paths.getImageFile(context, imageFileName));
-		ZipEntry entry = new ZipEntry(imageFileName);
-		entry.setComment(buildComment());
-		zip.putNextEntry(entry);
-		IOTools.copyStream(imageFile, zip, false);
-		zip.closeEntry();
-	}
-	private void saveData() throws IOException {
-		zip.putNextEntry(new ZipEntry("data.csv"));
-		export(zip);
-		zip.closeEntry();
-	}
-
-	private String buildComment() {
+	public static String buildComment(Cursor cursor) {
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
-		String typeName = cursor.getString(cursor.getColumnIndexOrThrow("type"));
 		String property = cursor.getString(cursor.getColumnIndexOrThrow(Item.PROPERTY_NAME));
 		String room = cursor.getString(cursor.getColumnIndexOrThrow(Item.ROOM_NAME));
 		String item = cursor.getString(cursor.getColumnIndexOrThrow("itemName"));
-		Type type = Type.from(typeName);
+		String parentName = cursor.getString(cursor.getColumnIndexOrThrow(Item.PARENT_NAME));
+		Type type = Type.from(cursor, "type");
 		String format = null;
 		switch (type) {
 			case Property:
-				format = "%2$s #%1$d in %5$s";
+				format = "%2$s #%1$d: %3$s";
 				break;
 			case Room:
-				format = "%2$s #%1$d in %5$s in %4$s";
+				format = "%2$s #%1$d: %4$s in %3$s";
 				break;
 			case Item:
-				format = "%2$s #%1$d in %5$s in %4$s in %3$s";
+				if (Type.from(cursor, "parentType") == Type.Room) {
+					format = "%2$s #%1$d: %5$s in %4$s in %3$s";
+				} else {
+					format = "%2$s #%1$d: %5$s in %6$s in %4$s in %3$s";
+				}
 				break;
 		}
 		if (format != null) {
-			return String.format(Locale.ROOT, format, id, typeName, property, room, item);
+			return String.format(Locale.ROOT, format, id, type, property, room, item, parentName);
 		} else {
 			return null;
 		}
 	}
 
-	// TODO check http://stackoverflow.com/questions/13229294/how-do-i-create-a-google-spreadsheet-with-a-service-account-and-share-to-other-g
-	private void export(OutputStream out) throws IOException {
-		CSVPrinter printer = CSVConstants.FORMAT.print(new PrintStream(out, false, CSVConstants.ENCODING));
-		Object[] values = new Object[CSVConstants.FORMAT.getHeader().length];
+	public interface Exporter {
+		void initExport(OutputStream os);
+		void finishExport() throws Throwable;
+		void finalizeExport();
 
-		cursor.moveToPosition(-1);
-		publishStart();
-		while (cursor.moveToNext()) {
-			for (int i = 0; i < values.length; ++i) {
-				String column = CSVConstants.COLUMNS[i];
-				if (column != null) {
-					values[i] = cursor.getString(cursor.getColumnIndexOrThrow(column));
-				} else {
-					values[i] = null;
-				}
-			}
-			if (!cursor.isNull(cursor.getColumnIndex(CommonColumns.IMAGE))) {
-				progress.imagesCount++;
-			}
-			printer.printRecord(values);
-			publishIncrement();
-		}
-		printer.flush();
+		void initData(Cursor cursor) throws Throwable;
+		void writeData(Cursor cursor) throws Throwable;
+		void finishData(Cursor cursor) throws Throwable;
+
+		void initImages(Cursor cursor) throws Throwable;
+		void saveImage(File file, Cursor cursor) throws Throwable;
+		void noImage(Cursor cursor) throws Throwable;
+		void finishImages(Cursor cursor) throws Throwable;
 	}
 
 	/** To prevent NullPointerException and null-checks in code */
