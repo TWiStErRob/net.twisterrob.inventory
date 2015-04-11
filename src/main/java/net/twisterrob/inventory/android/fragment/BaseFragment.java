@@ -7,14 +7,11 @@ import org.slf4j.*;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.*;
 import android.view.*;
 
-import net.twisterrob.android.utils.log.LoggingFragment;
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.activity.BaseActivity;
 
-public class BaseFragment<T> extends LoggingFragment {
+public class BaseFragment<T> extends VariantFragment {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseFragment.class);
 
 	protected static final String DYN_OptionsMenu = "optionsMenu";
@@ -79,10 +76,6 @@ public class BaseFragment<T> extends LoggingFragment {
 		}
 	}
 
-	protected void showDialog(DialogFragment dialog) {
-		dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
-	}
-
 	protected void onStartLoading() {
 		// optional override
 	}
@@ -95,10 +88,6 @@ public class BaseFragment<T> extends LoggingFragment {
 
 	protected void onRefresh() {
 		// optional override
-	}
-
-	protected BaseActivity getBaseActivity() {
-		return (BaseActivity)super.getActivity();
 	}
 
 	protected final Context getContext() {

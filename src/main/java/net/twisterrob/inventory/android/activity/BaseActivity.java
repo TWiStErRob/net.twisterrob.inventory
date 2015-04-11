@@ -1,11 +1,11 @@
 package net.twisterrob.inventory.android.activity;
 
 import java.lang.annotation.*;
-import java.util.*;
+import java.util.Collection;
 
 import org.slf4j.*;
 
-import android.content.*;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,16 +17,11 @@ import android.support.v7.app.*;
 import android.view.*;
 import android.widget.*;
 
-import com.android.debug.hv.ViewServer;
-
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.content.glide.*;
-import net.twisterrob.android.utils.log.LoggingActivity;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
-import net.twisterrob.inventory.android.activity.dev.DeveloperActivity;
-import net.twisterrob.inventory.android.fragment.BackupFragment;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter;
 
@@ -34,14 +29,14 @@ import static net.twisterrob.inventory.android.activity.BaseActivity.For.Feature
 import static net.twisterrob.inventory.android.activity.MainActivity.*;
 import static net.twisterrob.java.utils.CollectionTools.*;
 
-public class BaseActivity extends LoggingActivity {
+public class BaseActivity extends VariantActivity {
 	@For(Log) private static final Logger LOG = LoggerFactory.getLogger(BaseActivity.class);
 	@For(Drawer) protected ActionBarDrawerToggle mDrawerToggle;
 	@For(Drawer) protected DrawerLayout mDrawerLayout;
 	@For(Drawer) protected View mDrawerLeft;
 	@For(Drawer) protected View mDrawerRight;
 
-	@For({PixelView, Log}) @Override protected void onCreate(Bundle savedInstanceState) {
+	@For(Log) @Override protected void onCreate(Bundle savedInstanceState) {
 		LOG.trace("Creating {}@{} {}\n{}",
 				getClass().getSimpleName(),
 				Integer.toHexString(System.identityHashCode(this)),
@@ -49,9 +44,6 @@ public class BaseActivity extends LoggingActivity {
 				getIntent()
 		);
 		super.onCreate(savedInstanceState);
-		if (BuildConfig.DEBUG) {
-			ViewServer.get(this).addWindow(this);
-		}
 	}
 
 	@Override
@@ -94,7 +86,7 @@ public class BaseActivity extends LoggingActivity {
 	protected void createDrawerLeft() {
 		mDrawerLeft = getLayoutInflater().inflate(R.layout.inc_drawer_left_main, mDrawerLayout);
 		ListView list = (ListView)mDrawerLeft.findViewById(R.id.drawer_left_list);
-		IconedItemAdapter adapter = new IconedItemAdapter(this, R.layout.item_drawer_left, createActions(this));
+		IconedItemAdapter adapter = new IconedItemAdapter(this, R.layout.item_drawer_left, createActions());
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(new IconedItem.OnClick() {
 			@Override public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -151,13 +143,6 @@ public class BaseActivity extends LoggingActivity {
 		}
 	}
 
-	@For(PixelView) @Override protected void onResume() {
-		super.onResume();
-		if (BuildConfig.DEBUG) {
-			ViewServer.get(this).setFocusedWindow(this);
-		}
-	}
-
 	@For(Drawer) @Override protected void onNewIntent(Intent intent) {
 		LOG.trace("Refreshing {}@{} {}\n{}",
 				getClass().getSimpleName(),
@@ -197,15 +182,9 @@ public class BaseActivity extends LoggingActivity {
 		}
 	}
 
-	@For(PixelView) @Override protected void onDestroy() {
-		if (BuildConfig.DEBUG) {
-			ViewServer.get(this).removeWindow(this);
-		}
-		super.onDestroy();
-	}
-
-	@For(Drawer) public static Collection<IconedItem> createActions(final BaseActivity activity) {
-		Collection<IconedItem> acts = new ArrayList<>();
+	@For(Drawer) protected Collection<IconedItem> createActions() {
+		Collection<IconedItem> acts = super.createActions();
+		final BaseActivity activity = this;
 
 		// @formatter:off
 		acts.add(new SVGIntentItem(R.string.home_title, R.raw.property_home, activity, MainActivity.home()));
@@ -214,26 +193,14 @@ public class BaseActivity extends LoggingActivity {
 		acts.add(new SVGIntentItem(R.string.room_list, R.raw.room_unknown, activity, MainActivity.list(PAGE_ROOMS)));
 		acts.add(new SVGIntentItem(R.string.item_list, R.raw.category_box, activity, MainActivity.list(PAGE_ITEMS)));
 		acts.add(new SVGIntentItem(R.string.sunburst_title, R.raw.ic_sunburst, activity, MainActivity.list(PAGE_SUNBURST)));
+		acts.add(new SVGIntentItem(R.string.backup_title, R.raw.category_disc, activity, BackupActivity.chooser()));
 		// @formatter:on
-		acts.add(new SVGItem(R.string.backup_title, R.raw.category_disc) {
-			@Override public void onClick() {
-				BackupFragment.create().show(activity.getSupportFragmentManager(), "backup");
-			}
-		});
 		acts.add(new ResourceItem(R.string.pref_activity_title, android.R.drawable.ic_menu_preferences) {
 			@Override public void onClick() {
 				activity.startActivity(PreferencesActivity.show());
 			}
 		});
 
-		if (BuildConfig.DEBUG) {
-			acts.add(new SVGIntentItem(Constants.INVALID_RESOURCE_ID, R.raw.category_chip,
-					activity, DeveloperActivity.show()) {
-				@Override public CharSequence getTitle(Context context) {
-					return "Developer Tools";
-				}
-			});
-		}
 		return acts;
 	}
 
@@ -295,7 +262,6 @@ public class BaseActivity extends LoggingActivity {
 		enum Feature {
 			Log,
 			Children,
-			PixelView,
 			Drawer,
 		}
 	}
