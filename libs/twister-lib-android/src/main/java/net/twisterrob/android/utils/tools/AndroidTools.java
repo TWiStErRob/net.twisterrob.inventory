@@ -12,6 +12,7 @@ import org.slf4j.*;
 import android.annotation.*;
 import android.app.*;
 import android.content.*;
+import android.content.DialogInterface.OnClickListener;
 import android.content.pm.*;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources.NotFoundException;
@@ -630,5 +631,38 @@ public abstract class AndroidTools {
 			LOG.warn("Activity doesn't exists, but has an instance? {}", activity, e);
 			throw new RuntimeException(e);
 		}
+	}
+
+	public interface PopupCallbacks<T> {
+		void finished(T value);
+	}
+	public static AlertDialog.Builder prompt(Context context, final PopupCallbacks<String> callbacks) {
+		final EditText input = new EditText(context);
+		return new AlertDialog.Builder(context)
+				.setView(input)
+				.setPositiveButton(android.R.string.ok, new OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String value = input.getText().toString();
+						callbacks.finished(value);
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, new OnClickListener() {
+					@Override public void onClick(DialogInterface dialog, int which) {
+						callbacks.finished(null);
+					}
+				});
+	}
+	public static AlertDialog.Builder confirm(Context context, final PopupCallbacks<Boolean> callbacks) {
+		return new AlertDialog.Builder(context)
+				.setPositiveButton(android.R.string.ok, new OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						callbacks.finished(true);
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, new OnClickListener() {
+					@Override public void onClick(DialogInterface dialog, int which) {
+						callbacks.finished(false);
+					}
+				});
 	}
 }

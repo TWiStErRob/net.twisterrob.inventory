@@ -18,6 +18,7 @@ import static android.Manifest.permission.*;
 
 import net.twisterrob.android.BuildConfig;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.java.annotations.DebugHelper;
 
 import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 
@@ -70,8 +71,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		return dumpOnOpen;
 	}
 
-	@Override
-	public void onCreate(SQLiteDatabase db) {
+	@Override public void onCreate(SQLiteDatabase db) {
 		if (devMode) {
 			backupDB(db, "onCreate");
 		}
@@ -92,8 +92,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		LOG.info("Destroyed database: {}", dbToString(db));
 	}
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	@Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		onConfigureCompat(db);
 		for (int version = oldVersion + 1; version <= newVersion; ++version) {
 			if (devMode) {
@@ -103,8 +102,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	@Override
-	public void onOpen(SQLiteDatabase db) {
+	@Override public void onOpen(SQLiteDatabase db) {
 		LOG.debug("Opening database: {}", dbToString(db));
 		onConfigureCompat(db);
 		super.onOpen(db);
@@ -124,11 +122,20 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	@Override
-	public void onConfigure(SQLiteDatabase db) {
+	@Override public void onConfigure(SQLiteDatabase db) {
 		if (!db.isReadOnly()) {
 			db.execSQL("PRAGMA foreign_keys=ON;"); // db.setForeignKeyConstraintsEnabled(true);
 		}
+	}
+
+	@DebugHelper
+	public void restore(String from) throws IOException {
+		String target = getReadableDatabase().getPath();
+		close();
+		if (!new File(target).delete()) {
+			throw new IOException("Couldn't delete current DB file: " + target);
+		}
+		IOTools.copyFile(from, target);
 	}
 
 	private void onConfigureCompat(SQLiteDatabase db) {
@@ -148,7 +155,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		LOG.debug("Finished ({} ms) executed file {} into database: {}", executionTime, dbSchemaFile, dbToString(db));
 	}
 
-	@SuppressWarnings("resource")
 	private void realExecuteFile(SQLiteDatabase db, String dbSchemaFile) {
 		InputStream s = null;
 		String statement = null;

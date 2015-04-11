@@ -27,6 +27,7 @@
 					android:id="@id/properties"
 					style="@style/Theme.AppTheme.RecyclerList"
 					tools:listitem="@layout/item_main_property"
+					tools:scrollbars="none"
 					/>
 			</android.support.v4.widget.SwipeRefreshLayout>
 		</LinearLayout>
@@ -50,6 +51,7 @@
 					android:id="@id/rooms"
 					style="@style/Theme.AppTheme.RecyclerList"
 					tools:listitem="@layout/item_main_room"
+					tools:scrollbars="none"
 					/>
 			</android.support.v4.widget.SwipeRefreshLayout>
 		</LinearLayout>
@@ -73,6 +75,7 @@
 					android:id="@id/lists"
 					style="@style/Theme.AppTheme.RecyclerList"
 					tools:listitem="@layout/item_main_list"
+					tools:scrollbars="none"
 					/>
 			</android.support.v4.widget.SwipeRefreshLayout>
 		</LinearLayout>
@@ -96,6 +99,7 @@
 					android:id="@id/items"
 					style="@style/Theme.AppTheme.RecyclerList"
 					tools:listitem="@layout/item_main_recent"
+					tools:scrollbars="none"
 					/>
 			</android.support.v4.widget.SwipeRefreshLayout>
 		</LinearLayout>

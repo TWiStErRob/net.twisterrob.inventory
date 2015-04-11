@@ -76,6 +76,7 @@ public class ManageSpaceActivity extends BaseActivity {
 					@Override protected void doClean() {
 						DatabaseOpenHelper helper = App.db().getHelper();
 						helper.onDestroy(helper.getWritableDatabase());
+						helper.onCreate(helper.getWritableDatabase());
 						helper.close();
 					}
 				}.show(getSupportFragmentManager(), null);
@@ -85,7 +86,7 @@ public class ManageSpaceActivity extends BaseActivity {
 		imagesSize = (TextView)this.findViewById(R.id.storage_images_size);
 		findViewById(R.id.storage_images_clear).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
-				new ConfirmDialog("Empty Database",
+				new ConfirmDialog("Clear Images",
 						"All images your belongings will be permanently deleted, other data is kept.") {
 					@Override protected void doClean() {
 						App.db().clearImages();
@@ -180,9 +181,10 @@ public class ManageSpaceActivity extends BaseActivity {
 				new File(getApplicationInfo().dataDir), getExternalCacheDir(), getExternalFilesDir(null));
 		executeParallel(new GetSize<Void>(searchIndexSize) {
 			@Override protected Long doInBackground(Void... params) {
-				String sql = "select sum(length(name) + length(location)) + count() * 4 * 3 from Search";
+				// sum 0 rows is NULL, count 0 rows is 0...
+				String sql = "select coalesce(sum(length(name) + length(location)), 0) + count() * 4 * 3 from Search";
 				Cursor cursor = App.db().getReadableDatabase().rawQuery(sql, null);
-				return DatabaseTools.singleResult(cursor);
+				return (long)DatabaseTools.singleResult(cursor);
 			}
 		});
 	}
@@ -243,7 +245,7 @@ public class ManageSpaceActivity extends BaseActivity {
 			result.setText(getSize(size));
 		}
 
-		private String getSize(Long size) {
+		private String getSize(long size) {
 			return Formatter.formatFileSize(result.getContext(), size);
 		}
 	}
