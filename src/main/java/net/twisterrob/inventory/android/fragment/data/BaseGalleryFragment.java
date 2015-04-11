@@ -23,7 +23,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	private static final Logger LOG = LoggerFactory.getLogger(BaseGalleryFragment.class);
 
 	private BaseFragment header;
-	protected RecyclerViewCursorLoaderController listController;
+	protected RecyclerViewLoaderController listController;
 	protected SelectionActionMode selectionMode;
 
 	public void setHeader(BaseFragment headerFragment) {
@@ -143,7 +143,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	 * <li>BaseGalleryFragment.onViewCreated</li>
 	 * </ul>
 	 */
-	protected CursorRecyclerAdapter setupList(RecyclerView list) {
+	protected CursorRecyclerAdapter setupGallery(RecyclerView list) {
 		final int columns = getResources().getInteger(R.integer.gallery_columns);
 
 		final SingleHeaderAdapter adapter = createAdapter();

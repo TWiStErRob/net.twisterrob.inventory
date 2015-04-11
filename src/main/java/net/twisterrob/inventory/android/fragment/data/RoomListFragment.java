@@ -38,7 +38,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		super.onCreate(savedInstanceState);
 		listController = new RecyclerViewLoadersController(this, Loaders.Rooms) {
 			@Override protected CursorRecyclerAdapter setupList() {
-				return RoomListFragment.super.setupList(list);
+				return RoomListFragment.super.setupGallery(list);
 			}
 
 			@Override public boolean canCreateNew() {

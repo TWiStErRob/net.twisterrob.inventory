@@ -2,14 +2,13 @@ package net.twisterrob.inventory.android.fragment;
 
 import org.slf4j.*;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.*;
 import android.view.*;
-import android.widget.EditText;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.ExtrasFactory;
@@ -46,20 +45,19 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 			}
 
 			@Override protected void onCreateNew() {
-				final EditText input = new EditText(getContext());
-				new AlertDialog.Builder(getContext())
-						.setTitle("New List")
-						.setMessage("Please enter a name for the list!")
-						.setView(input)
-						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								String value = input.getText().toString();
-								long id = App.db().createList(value); // FIXME DB on UI
-								eventsListener.listSelected(id);
+				AndroidTools
+						.prompt(getContext(), new PopupCallbacks<String>() {
+							@Override public void finished(String value) {
+								if (value != null) {
+									long id = App.db().createList(value); // FIXME DB on UI
+									eventsListener.listSelected(id);
+								}
 							}
 						})
-						.setNegativeButton(android.R.string.cancel, null)
-						.show();
+						.setTitle("New List")
+						.setMessage("Please enter a name for the list!")
+						.show()
+				;
 			}
 		};
 	}

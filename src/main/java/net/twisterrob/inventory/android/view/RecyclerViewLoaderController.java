@@ -3,18 +3,20 @@ package net.twisterrob.inventory.android.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.*;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.widget.RecyclerView.Adapter;
 
-public abstract class RecyclerViewCursorLoaderController extends RecyclerViewCursorController {
+public abstract class RecyclerViewLoaderController<A extends Adapter, D> extends RecyclerViewController<A, D> {
 	private final Context context;
 	private final LoaderManagerProvider manager;
 
-	public RecyclerViewCursorLoaderController(FragmentActivity activity) {
+	public RecyclerViewLoaderController(FragmentActivity activity) {
 		this(activity, new ActivityLoaderManagerProvider(activity));
 	}
-	public RecyclerViewCursorLoaderController(Fragment fragment) {
+	public RecyclerViewLoaderController(Fragment fragment) {
 		this(fragment.getActivity(), new FragmentLoaderManagerProvider(fragment));
 	}
-	private RecyclerViewCursorLoaderController(Context context, LoaderManagerProvider manager) {
+	private RecyclerViewLoaderController(Context context, LoaderManagerProvider manager) {
 		this.context = context;
 		this.manager = manager;
 	}
@@ -26,7 +28,21 @@ public abstract class RecyclerViewCursorLoaderController extends RecyclerViewCur
 		return manager.get();
 	}
 
+	@Override protected void onViewSet() {
+		super.onViewSet();
+		if (progress != null) {
+			progress.setOnRefreshListener(new OnRefreshListener() {
+				@Override public void onRefresh() {
+					refresh();
+				}
+			});
+		}
+	}
+
+	/** getLoaderManager().initLoader(id, args, new LoaderFactory() {...}); */
 	public abstract void startLoad(Bundle args);
+
+	/** getLoaderManager().getLoader(id).onContentChanged(); */
 	public abstract void refresh();
 
 	protected interface LoaderManagerProvider {

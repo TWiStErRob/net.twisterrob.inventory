@@ -42,7 +42,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	}
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		listController = new CategoriesItemsLoaderController();
+		listController = new CategoriesItemsController();
 	}
 
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -95,15 +95,19 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		return this;
 	}
 
-	private class CategoriesItemsLoaderController extends RecyclerViewCursorLoaderController {
+	private class CategoriesItemsController extends RecyclerViewLoaderController<CursorRecyclerAdapter, Cursor> {
 		private final Callbacks callbackState = new Callbacks(getContext());
 
-		public CategoriesItemsLoaderController() {
+		public CategoriesItemsController() {
 			super(CategoryContentsFragment.this);
 		}
 
 		@Override protected CursorRecyclerAdapter setupList() {
-			return CategoryContentsFragment.this.setupList(list);
+			return setupGallery(list);
+		}
+
+		@Override protected void setData(CursorRecyclerAdapter adapter, Cursor data) {
+			adapter.swapCursor(data);
 		}
 
 		@Override public void startLoad(Bundle args) {
@@ -147,7 +151,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			}
 
 			@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-				CategoriesItemsLoaderController.this.startLoading();
+				CategoriesItemsController.this.startLoading();
 				return super.onCreateLoader(id, args);
 			}
 
@@ -157,7 +161,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 				} else if (Loaders.Items.ordinal() == loader.getId()) {
 					pendingItems = data;
 				}
-				updateAdapter();
+				refreshAdapter();
 				super.onLoadFinished(loader, data);
 			}
 
@@ -167,11 +171,11 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 				} else if (Loaders.Items.ordinal() == loader.getId()) {
 					pendingItems = null;
 				}
-				updateAdapter();
+				refreshAdapter();
 				super.onLoaderReset(loader);
 			}
 
-			private void updateAdapter() {
+			private void refreshAdapter() {
 				Cursor c;
 				if (pendingCategories != null && pendingItems != null) {
 					c = new MergeCursor(new Cursor[] {pendingCategories, pendingItems});
@@ -182,7 +186,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 				} else {
 					c = null;
 				}
-				CategoriesItemsLoaderController.this.updateAdapter(c);
+				updateAdapter(c);
 			}
 		}
 	}

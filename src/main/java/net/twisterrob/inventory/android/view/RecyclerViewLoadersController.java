@@ -4,22 +4,20 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.*;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 
+import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
 
-public abstract class RecyclerViewLoadersController extends RecyclerViewCursorLoaderController {
+public abstract class RecyclerViewLoadersController
+		extends RecyclerViewLoaderController<CursorRecyclerAdapter, Cursor> {
 	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewLoadersController.class);
 
 	private final Loaders loader;
 
-	public RecyclerViewLoadersController(FragmentActivity activity, Loaders loader) {
-		super(activity);
-		this.loader = loader;
-	}
 	public RecyclerViewLoadersController(Fragment fragment, Loaders loader) {
 		super(fragment);
 		this.loader = loader;
@@ -27,6 +25,10 @@ public abstract class RecyclerViewLoadersController extends RecyclerViewCursorLo
 
 	public Loaders getLoader() {
 		return loader;
+	}
+
+	@Override protected void setData(CursorRecyclerAdapter adapter, Cursor data) {
+		adapter.swapCursor(data);
 	}
 
 	private LoaderCallbacks<Cursor> createLoaderCallbacks() {

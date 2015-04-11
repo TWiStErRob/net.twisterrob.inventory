@@ -37,7 +37,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		Loaders loader = getArgQuery() != null? Loaders.ItemSearch : Loaders.Items;
 		listController = new RecyclerViewLoadersController(this, loader) {
 			@Override protected CursorRecyclerAdapter setupList() {
-				return ItemListFragment.super.setupList(list);
+				return ItemListFragment.super.setupGallery(list);
 			}
 
 			@Override public boolean canCreateNew() {

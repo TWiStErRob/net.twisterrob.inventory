@@ -34,7 +34,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		super.onCreate(savedInstanceState);
 		listController = new RecyclerViewLoadersController(this, Loaders.Properties) {
 			@Override protected CursorRecyclerAdapter setupList() {
-				return PropertyListFragment.super.setupList(list);
+				return PropertyListFragment.super.setupGallery(list);
 			}
 			@Override public boolean canCreateNew() {
 				return true;

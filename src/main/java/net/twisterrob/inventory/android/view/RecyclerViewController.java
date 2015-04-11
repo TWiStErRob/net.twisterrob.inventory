@@ -4,17 +4,22 @@ import org.slf4j.*;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.*;
 import android.view.View.OnClickListener;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
 
-public abstract class RecyclerViewController {
+public abstract class RecyclerViewController<A extends Adapter, D> {
 	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewController.class);
 
+	protected SwipeRefreshLayout progress;
 	protected RecyclerView list;
-	private SwipeRefreshLayout progress;
+	private View fab;
+
+	private A adapter;
+	private D pendingData;
 
 	private Runnable finishLoading = new Runnable() {
 		@Override public void run() {
@@ -33,7 +38,6 @@ public abstract class RecyclerViewController {
 			onCreateNew();
 		}
 	};
-	private View fab;
 
 	public void setView(RecyclerView list) {
 		this.list = list;
@@ -46,8 +50,15 @@ public abstract class RecyclerViewController {
 	}
 
 	protected void onViewSet() {
+		adapter = setupList();
+		if (pendingData != null) {
+			setData(adapter, pendingData);
+			// finishLoading(); // no need to finish, because we didn't have a view to start with
+			pendingData = null;
+		}
 		updateFAB();
 	}
+	protected abstract A setupList();
 
 	protected void updateFAB() {
 		if (fab == null) {
@@ -66,6 +77,17 @@ public abstract class RecyclerViewController {
 			progress.post(startLoading); // progress.setRefreshing(true);
 		}
 	}
+
+	public void updateAdapter(D data) {
+		if (adapter == null) {
+			pendingData = data;
+		} else {
+			setData(adapter, data);
+			finishLoading();
+		}
+	}
+	protected abstract void setData(A adapter, D data);
+
 	protected void finishLoading() {
 		if (progress != null) {
 			progress.post(finishLoading); // progress.setRefreshing(false);
