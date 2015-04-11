@@ -139,6 +139,7 @@ public class ManageSpaceActivity extends BaseActivity {
 				description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir).append("\n");
 			}
 			IOTools.zip(zip, "descript.ion", new ByteArrayInputStream(description.toString().getBytes("UTF-8")));
+			zip.finish();
 		} catch (IOException ex) {
 			LOG.error("Cannot save data", ex);
 		} finally {

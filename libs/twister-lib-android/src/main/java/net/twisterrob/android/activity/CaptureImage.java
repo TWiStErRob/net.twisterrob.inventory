@@ -221,6 +221,7 @@ public class CaptureImage extends Activity {
 		try {
 			out = new FileOutputStream(file);
 			out.write(data);
+			out.flush();
 			LOG.info("Raw image saved at {}", file);
 		} catch (FileNotFoundException ex) {
 			LOG.error("Cannot find file {}", file, ex);

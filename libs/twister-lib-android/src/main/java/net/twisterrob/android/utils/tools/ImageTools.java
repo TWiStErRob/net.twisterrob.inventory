@@ -480,13 +480,13 @@ public class ImageTools {
 	//		return null;
 	//	}
 
-	public static void savePicture(Bitmap bitmap, File file, CompressFormat format, int quality)
-			throws FileNotFoundException {
+	public static void savePicture(Bitmap bitmap, File file, CompressFormat format, int quality) throws IOException {
 		@SuppressWarnings("resource")
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(file);
 			bitmap.compress(format, quality, out);
+			out.flush();
 		} finally {
 			IOTools.ignorantClose(out);
 		}
