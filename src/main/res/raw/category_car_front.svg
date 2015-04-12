@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://png-4.findicons.com/files/icons/2219/dot_pictograms/256/parking_locked.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1000 1000">
+	<g transform="translate(0, 400)">
+		<rect id="body" x="0" y="0" width="1000" height="350" rx="100" ry="50" fill="black" />
+		<path id="top" d="M150,0 l100,-200 h500 l100,200"
+		      fill="none" stroke="black" stroke-width="100" stroke-linejoin="round" stroke-linecap="round" />
+		<g transform="translate(0, 125)">
+			<circle id="light-left" cx="175" cy="0" r="75" fill="white" />
+			<circle id="light-right" cx="825" cy="0" r="75" fill="white" />
+		</g>
+		<g transform="translate(0, 360)">
+			<ellipse id="wheel-left" cx="200" cy="0" rx="75" ry="100" fill="black" />
+			<ellipse id="wheel-right" cx="800" cy="0" rx="75" ry="100" fill="black" />
+		</g>
+	</g>
+</svg>

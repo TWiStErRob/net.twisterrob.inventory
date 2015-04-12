@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/car-.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1000 1000">
+	<g transform="translate(0, 400)">
+		<!-- rounded_rect_uni(0,0,1000,250, 50,200,50,50) -->
+		<path id="body" fill="black" d="M50,0
+			h750
+			a 200,200 0 0 1 200,200
+			v0
+			a 50,50 0 0 1 -50,50
+			h-900
+			a 50,50 0 0 1 -50,-50
+			v-150
+			a 50,50 0 0 1 50,-50
+			z" />
+		<g transform="translate(0, 250)">
+			<circle id="wheel-left" cx="250" cy="0" r="100" fill="black" stroke="lightgrey" stroke-width="40" />
+			<circle id="wheel-right" cx="750" cy="0" r="100" fill="black" stroke="lightgrey" stroke-width="40" />
+		</g>
+		<path id="top" d="M 150,0 l 100,-150 h+200 v+150 m 0,-150 h+200 l 100,150"
+		      fill="none" stroke="black" stroke-width="65" stroke-linejoin="round" stroke-linecap="round" />
+	</g>
+</svg>
