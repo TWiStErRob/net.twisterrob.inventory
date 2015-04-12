@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY wrenchHandle "550">
+	<!ENTITY wrenchW "60">
+	<!ENTITY wrenchElbow "60">
+	<!ENTITY wrenchHole "85">
+	<!ENTITY wrenchHead "100">
+	<!ENTITY hammerHandle "600">
+	<!ENTITY hammerW "50">
+	<!ENTITY hammerOutH "80">
+	<!ENTITY hammerOutW "40">
+	<!ENTITY hammerHeadH "50">
+	<!ENTITY hammerHeadW "75">
+	<!ENTITY hammerTailW "150">
+	]>
+<!-- Based on http://www.iconarchive.com/show/windows-8-icons-by-icons8/Clothing-T-Shirt-icon.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-200,-100 850 800">
+	<g id="wrench" transform="translate(0,&wrenchHandle;) rotate(-135)">
+		<path id="wrench-body"
+		      fill="black" stroke="black" stroke-width="25" stroke-linejoin="round"
+		      d="
+				M &wrenchW;,0
+				v+&wrenchHandle;
+				l &wrenchElbow;,&wrenchHead; l -&wrenchElbow;,&wrenchHead;
+				v-&wrenchHole;
+				l-&wrenchW;,-&wrenchElbow; l-&wrenchW;,&wrenchElbow;
+				v+&wrenchHole;
+				l -&wrenchElbow;,-&wrenchHead; l &wrenchElbow;,-&wrenchHead;
+				v-&wrenchHandle;
+				a &wrenchW;,&wrenchW; 0 0 1 &wrenchW;,-&wrenchW; a &wrenchW;,&wrenchW; 0 0 1 &wrenchW;,&wrenchW;
+				z
+				"
+			/>
+		<circle id="wrench-hole" cx="0" cy="0" r="25" fill="white" />
+	</g>
+	<g id="hammer" transform="translate(&hammerHandle;,&hammerHandle;) rotate(-225) translate(50, 100)">
+		<path id="hammer-body"
+		      fill="black" stroke="black" stroke-width="25" stroke-linejoin="round"
+		      d="
+				M 0,0
+				h+&hammerW;
+				v+&hammerHandle;
+
+				h+&hammerOutH;
+					v-&hammerOutW; h+&hammerHeadH; v+&hammerOutW;
+						v+&hammerHeadW;
+					v+&hammerOutW; h-&hammerHeadH; v-&hammerOutW;
+				h-&hammerOutH;h-&hammerW;h-&hammerW;
+				l-&hammerTailW;,-&hammerHeadW;
+				h+&hammerTailW;
+				v-&hammerHandle;
+				h+&hammerW;
+				z
+				"
+			/>
+	</g>
+</svg>

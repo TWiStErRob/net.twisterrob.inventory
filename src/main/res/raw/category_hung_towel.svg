@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.iconarchive.com/show/windows-8-icons-by-icons8/Clothing-T-Shirt-icon.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,50 1000 750">
+	<g>
+		<path id="hanger" d="M 500, -300 l 500 300 h-1000 z v-50 a 50,50 0 1 0 -50 -50" transform="translate(0, 500)"
+		      fill="none" stroke="black" stroke-width="50" stroke-linejoin="round" stroke-linecap="round" />
+		<g transform="translate(200, 400)">
+			<rect id="towel" x="0" y="0" width="600" height="400" rx="100" ry="100" fill="black" />
+			<rect id="stripe" x="0" y="275" width="600" height="35" fill="white" />
+		</g>
+	</g>
+</svg>

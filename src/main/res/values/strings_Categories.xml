@@ -48,9 +48,6 @@
 	<string name="category_kitchen_dishes">Dishes</string>
 	<string name="category_kitchen_pans">Pans</string>
 	<string name="category_kitchen_glasses">Glasses</string>
-	<string name="category_cleaning">Cleaning</string>
-	<string name="category_cleaning_chemicals">Chemicals</string>
-	<string name="category_cleaning_equipment">Equipment</string>
 	<string name="category_decorations">Decorations</string>
 	<string name="category_decor_lighting">Lighting</string>
 	<string name="category_decor_vase">Vase</string>
@@ -93,7 +90,9 @@
 	<string name="category_stationery_paper">Paper</string>
 	<string name="category_tools">Tools</string>
 	<string name="category_tools_utility">Utility</string>
+	<string name="category_tools_cleaning">Cleaning</string>
 	<string name="category_tools_gardening">Gardening</string>
+	<string name="category_tools_chemicals">Chemicals</string>
 	<string name="category_toys">Toys</string>
 	<string name="category_toys_soft">Soft/Plush</string>
 	<string name="category_toys_dolls">Dolls/Action Figures</string>

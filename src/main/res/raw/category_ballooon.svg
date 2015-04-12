@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://cdn2.iconfinder.com/data/icons/life-moments/701/balloons-512.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="250,100 500 850">
+	<g>
+		<ellipse cx="500" cy="400" rx="250" ry="300" fill="black" />
+		<path d="M500,650 l100,100 l-200,0 z" fill="black" />
+		<rect x="485" y="750" width="30" height="200" fill="black" />
+	</g>
+</svg>

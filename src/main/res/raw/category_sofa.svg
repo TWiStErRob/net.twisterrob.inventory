@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY radius "75">
+	]>
+<!-- Based on https://s3.amazonaws.com/media-p.slid.es/uploads/semeano/images/249210/icon_6429.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1000 1000">
+	<style type="text/css">
+		rect {
+		fill: black;
+		stroke: white;
+		stroke-width: 25;
+		}
+	</style>
+	<rect id="back" x="100" y="300" width="800" height="200" rx="&radius;" ry="&radius;" />
+	<rect id="left" x="0" y="400" width="250" height="300" rx="&radius;" ry="&radius;" />
+	<rect id="right" x="750" y="400" width="250" height="300" rx="&radius;" ry="&radius;" />
+	<rect id="base" x="150" y="500" width="700" height="200" rx="&radius;" ry="&radius;" />
+</svg>

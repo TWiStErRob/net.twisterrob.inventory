@@ -7,8 +7,7 @@
 	<!ENTITY hole "30">
 ]>
 <!-- Based on http://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Tdkc60cassette.jpg/250px-Tdkc60cassette.jpg -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 340"
-		xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 340">
 	<defs>
 		<style type="text/css"><![CDATA[
 			#cassette {

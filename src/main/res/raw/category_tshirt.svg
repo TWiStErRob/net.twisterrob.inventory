@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY shoulderR "30">
+	<!ENTITY vneck "100">
+	<!ENTITY armW "30"><!ENTITY armOH "150"><!ENTITY armIH "80"><!ENTITY handW "70"><!ENTITY handR "30">
+	<!ENTITY bodyH "300">
+	<!ENTITY shoulderW "75">
+	]>
+<!-- Based on http://www.iconarchive.com/show/windows-8-icons-by-icons8/Clothing-T-Shirt-icon.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 450 430">
+	<path d="
+			M 0,0 m+&armW;,&shoulderR;
+			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,-&shoulderR;
+			h+&handW;-&shoulderR;+&shoulderW;
+			a 50,50 0 0 0 &vneck;,0
+			h+&shoulderW;-&shoulderR;+&handW;
+			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,+&shoulderR;
+
+			l +&armW;,+&armOH; l -&handW;,+&handR; l -&armW;,-&armIH;
+			v+&bodyH;
+			h-&shoulderW;
+			h-&vneck;
+			h-&shoulderW;
+			v-&bodyH;
+			l -&armW;,&armIH; l -&handW;,-&handR; l +&armW;,-&armOH;
+		" />
+</svg>

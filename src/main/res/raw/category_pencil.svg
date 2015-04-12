@@ -13,7 +13,7 @@
 ]>
 <!-- Based on real pencil -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-95 -355 450 450"
-		xmlns:xlink="http://www.w3.org/1999/xlink"><!-- document.children[0].getBBox(); -->
+     xmlns:xlink="http://www.w3.org/1999/xlink">
 	<defs>
 		<style type="text/css"><![CDATA[
 			#pencil {

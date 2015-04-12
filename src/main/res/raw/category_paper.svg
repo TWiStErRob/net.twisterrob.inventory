@@ -5,8 +5,7 @@
 	<!ENTITY h "800">
 ]>
 <!-- Based on http://images.clipartlogo.com/files/images/42/428874/paper-document-text-front-clip-art_t.jpg -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 840 1040"
-		xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 840 1040">
 	<defs>
 		<style type="text/css"><![CDATA[
 			#paper {

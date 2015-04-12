@@ -47,9 +47,6 @@
 	<string name="category_kitchen_dishes">Tányérok</string>
 	<string name="category_kitchen_pans">Edények</string>
 	<string name="category_kitchen_glasses">Poharak</string>
-	<string name="category_cleaning">Takarítás</string>
-	<string name="category_cleaning_chemicals">Tisztítószerek</string>
-	<string name="category_cleaning_equipment">Takarítóeszközök</string>
 	<string name="category_decorations">Díszítés</string>
 	<string name="category_decor_lighting">Világítás</string>
 	<string name="category_decor_vase">Vázák</string>
@@ -92,7 +89,9 @@
 	<string name="category_stationery_paper">Papír</string>
 	<string name="category_tools">Eszközök</string>
 	<string name="category_tools_utility">Szerszámok</string>
+	<string name="category_tools_cleaning">Takarítás</string>
 	<string name="category_tools_gardening">Kertészeti</string>
+	<string name="category_tools_chemicals">Vegyszerek</string>
 	<string name="category_toys">Játékok</string>
 	<string name="category_toys_soft">Plüssfigurák</string>
 	<string name="category_toys_dolls">Babák/Akciófigurák</string>

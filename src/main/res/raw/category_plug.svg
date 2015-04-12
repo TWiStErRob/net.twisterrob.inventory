@@ -6,8 +6,7 @@
 	<!ENTITY cordL "150">
 ]>
 <!-- Based on http://www.polyvore.com/cgi/img-thing?.out=jpg&size=l&tid=60477302 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-200 -260 425 610"
-		xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-200 -260 425 610">
 	<defs>
 		<style type="text/css"><![CDATA[
 			line {

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Based on http://megaicons.net/static/img/icons_sizes/8/178/256/sport-activities-football-icon.png -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-95 -55 230 300"
-		xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-95 -55 230 300">
 	<defs>
 		<style type="text/css"><![CDATA[
 			circle, path {
@@ -19,7 +18,7 @@
 		<circle r="25" cx="120" cy="180" />
 		<path id="person" d="
 			M 0,0
-			
+
 			h+50+40
 			l+30,-35
 			a 1,1 0 0 1 +10,+5

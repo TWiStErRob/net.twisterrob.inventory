@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY cupBottom "200">
+	<!ENTITY cupHeight "500">
+	<!ENTITY cupEdge "100">
+	]>
+<!-- Based on http://www.pd4pic.com/images/fast-food-meal-food-lunch-drink-burger-hamburger.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,0 840 700">
+	<g id="burger" transform="translate(0, 400)">
+		<rect id="base" width="400" height="300" rx="200" ry="75" fill="black" />
+		<rect id="top" x="-25" y="75" width="450" height="50" rx="50" ry="50" fill="white" />
+		<rect id="bottom" x="-25" y="175" width="450" height="50" rx="50" ry="50" fill="white" />
+		<rect id="middle" x="-25" y="113" width="450" height="75" rx="50" ry="50" fill="black" />
+	</g>
+	<g id="drink" transform="translate(400, 200)">
+		<line id="straw" x1="&cupBottom;" x2="0" y1="&cupHeight;" y2="-&cupBottom;" fill="black" stroke="black"
+		      stroke-width="35" />
+		<path id="cup" d="M 0,0 h+&cupEdge;+&cupBottom;+&cupEdge; l-&cupEdge;,&cupHeight; h-&cupBottom; z" fill="white"
+		      fill-opacity="0.5" stroke="black" stroke-width="25" />
+	</g>
+</svg>
