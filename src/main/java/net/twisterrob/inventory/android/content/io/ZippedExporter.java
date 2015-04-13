@@ -48,9 +48,17 @@ public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 	}
 	@Override public void saveImage(File file, Cursor cursor) throws IOException {
 		FileInputStream imageFile = new FileInputStream(file);
-		ZipEntry entry = new ZipEntry(file.getName());
-		entry.setComment(ExporterTask.buildComment(cursor));
-		zip.putNextEntry(entry);
+		try {
+			ZipEntry entry = new ZipEntry(file.getName());
+			entry.setTime(file.lastModified());
+			entry.setMethod(ZipEntry.STORED);
+			entry.setSize(file.length());
+			entry.setCrc(IOTools.crc(file));
+			entry.setComment(ExporterTask.buildComment(cursor));
+			zip.putNextEntry(entry);
+		} catch (IOException ex) {
+			IOTools.ignorantClose(imageFile);
+		}
 		IOTools.copyStream(imageFile, zip, false);
 		zip.closeEntry();
 	}

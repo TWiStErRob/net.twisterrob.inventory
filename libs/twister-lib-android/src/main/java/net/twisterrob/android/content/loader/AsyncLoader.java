@@ -10,6 +10,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * @see <a href="https://code.google.com/p/android/issues/detail?id=14944">Honeycomb: initLoader() nor restartLoader() actually starts the loader</a>
  * @param <D> the data type to be loaded
  */
+// TODO post to http://stackoverflow.com/questions/10524667/android-asynctaskloader-doesnt-start-loadinbackground
 public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 	private D mData;
 

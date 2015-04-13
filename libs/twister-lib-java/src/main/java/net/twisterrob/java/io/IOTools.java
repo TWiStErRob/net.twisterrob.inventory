@@ -36,7 +36,7 @@ public/* static */class IOTools {
 
 	public static long copyStream(final InputStream in, final OutputStream out, boolean autoClose) throws IOException {
 		try {
-			byte[] buf = new byte[4096];
+			byte[] buf = new byte[16 * 1024];
 			long total = 0;
 			int len;
 			while ((len = in.read(buf)) > 0) {
@@ -291,5 +291,10 @@ public/* static */class IOTools {
 		} else {
 			throw new IOException("Cannot read directory " + dir);
 		}
+	}
+	public static long crc(File file) throws IOException {
+		CRC32OutputStream crc = new CRC32OutputStream();
+		IOTools.copyStream(new FileInputStream(file), crc, true);
+		return crc.getValue();
 	}
 }

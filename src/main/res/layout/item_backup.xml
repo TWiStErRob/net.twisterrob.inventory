@@ -16,8 +16,8 @@
 		android:layout_gravity="center_vertical"
 		android:layout_weight="1"
 		android:focusable="false"
-		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textIsSelectable="true"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textIsSelectable="false"
 		tools:text="9999-99-99 00-00-00"
 		/>
 	<TextView
