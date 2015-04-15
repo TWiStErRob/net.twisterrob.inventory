@@ -278,7 +278,7 @@
 		left join Category_Name_Cache cnc ON cnc.key = c.name
 		where c.parent = ? or (? = 'null' and c.parent is null)
 		      and c._id <> -1 -- don't return category_internal
-		order by (CASE WHEN c.name <> 'category_uncategorized' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
+		order by (CASE WHEN c.name <> 'category_uncategorized' and c.name <> 'category_group' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
 		;
 	"]]></string>
 	<string name="query_category"><![CDATA["

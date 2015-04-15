@@ -164,10 +164,10 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 		throw new UnsupportedOperationException("newItem shouldn't be called");
 	}
 	public void itemSelected(long itemID) {
-		throw new UnsupportedOperationException("newItem shouldn't be called");
+		startActivity(ItemViewActivity.show(itemID));
 	}
 	public void itemActioned(long itemID) {
-		throw new UnsupportedOperationException("newItem shouldn't be called");
+		startActivity(ItemEditActivity.edit(itemID));
 	}
 
 	public void newProperty() {
