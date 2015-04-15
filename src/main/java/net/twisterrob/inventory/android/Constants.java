@@ -4,24 +4,22 @@ import java.io.*;
 import java.util.*;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Environment;
 import android.support.annotation.*;
 
 import com.bumptech.glide.*;
-import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.model.ImageVideoWrapper;
 import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifResourceDecoder;
-import com.bumptech.glide.load.resource.gifbitmap.*;
+import com.bumptech.glide.load.resource.gifbitmap.GifBitmapWrapperResourceDecoder;
 import com.bumptech.glide.module.GlideModule;
 
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
 
 public interface Constants {
-	@AnyRes int INVALID_RESOURCE_ID = 0;
 	boolean DISABLE = Boolean.parseBoolean("false");
 	String AUTHORITY_IMAGES = BuildConfig.APPLICATION_ID + ".images";
 
@@ -76,13 +74,13 @@ public interface Constants {
 		private static final LoggingListener<String, GlideDrawable> IMAGE_LOGGING_LISTENER =
 				new LoggingListener<>("image");
 
-		public static final DrawableRequestBuilder<Integer> SVG_REQUEST = Glide
+		private static final DrawableRequestBuilder<Integer> SVG_REQUEST = Glide
 				.with(App.getAppContext())
 				.fromResource()
 //				.listener(SVG_LOGGING_LISTENER)
 				.decoder(getSvgDecoder())
 				.animate(android.R.anim.fade_in)
-				.error(R.drawable.category_unknown);
+				.error(R.drawable.image_error);
 
 		public static final DrawableRequestBuilder<String> IMAGE_REQUEST = Glide
 				.with(App.getAppContext())
@@ -91,7 +89,7 @@ public interface Constants {
 				.animate(android.R.anim.fade_in)
 				.error(R.drawable.image_error);
 
-		private static ResourceDecoder<ImageVideoWrapper, GifBitmapWrapper> getSvgDecoder() {
+		private static GifBitmapWrapperResourceDecoder getSvgDecoder() {
 			Context context = App.getAppContext();
 			BitmapPool pool = Glide.get(context).getBitmapPool();
 			return new GifBitmapWrapperResourceDecoder(
@@ -102,6 +100,19 @@ public interface Constants {
 					new GifResourceDecoder(context, pool),
 					pool
 			);
+		}
+
+		/** @see <a href="https://github.com/bumptech/glide/issues/413">Invalid resource ID crashes the app</a> */
+		// TODO remove validation and inline if glide#413 is fixed
+		public static DrawableRequestBuilder<Integer> loadSVG(@NonNull Context context,
+				@NonNull @RawRes Integer resID) {
+			try {
+				context.getResources().getResourceEntryName(resID);
+			} catch (Resources.NotFoundException ex) {
+				//noinspection ConstantConditions
+				resID = null;
+			}
+			return SVG_REQUEST.load(resID);
 		}
 
 		public static class GlideSetup implements GlideModule {

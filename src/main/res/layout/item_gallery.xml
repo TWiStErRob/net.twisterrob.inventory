@@ -30,6 +30,7 @@
 		android:layout_marginBottom="@dimen/margin"
 		android:layout_marginEnd="@dimen/margin"
 		android:scaleType="fitCenter"
+		android:src="@drawable/transparent_32dp"
 		tools:src="@drawable/category_unknown"
 		/>
 	<include

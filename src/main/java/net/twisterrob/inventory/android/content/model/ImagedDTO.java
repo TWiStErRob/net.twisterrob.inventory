@@ -11,7 +11,7 @@ import android.support.annotation.RawRes;
 import android.widget.ImageView;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.Constants;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 
@@ -76,13 +76,13 @@ public class ImagedDTO extends DTO {
 			boolean alwaysShowType) {
 		if (fullImagePath == null) {
 			if (alwaysShowType) {
-				Pic.SVG_REQUEST.load(typeID).into(type);
+				Pic.loadSVG(type.getContext(), typeID).placeholder(R.drawable.transparent_32dp).into(type);
 			} else {
 				type.setImageDrawable(null); // == Pic.IMAGE_REQUEST.load(null).into(type); Glide#268
 			}
-			Pic.SVG_REQUEST.load(typeID).into(image);
+			Pic.loadSVG(image.getContext(), typeID).into(image);
 		} else {
-			Pic.SVG_REQUEST.load(typeID).into(type);
+			Pic.loadSVG(type.getContext(), typeID).placeholder(R.drawable.transparent_32dp).into(type);
 			Pic.IMAGE_REQUEST.load(fullImagePath).into(image);
 		}
 	}
@@ -97,7 +97,7 @@ public class ImagedDTO extends DTO {
 	}
 	public static void loadInto(ImageView image, String fullImagePath, int typeID) {
 		if (fullImagePath == null) {
-			Pic.SVG_REQUEST.load(typeID).into(image);
+			Pic.loadSVG(image.getContext(), typeID).into(image);
 		} else {
 			Pic.IMAGE_REQUEST.load(fullImagePath).into(image);
 		}

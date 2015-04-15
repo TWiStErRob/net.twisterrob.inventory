@@ -43,7 +43,8 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		updateLeftStartMargin(holder.title, margin);
 
 		int fallbackID = ImagedDTO.getFallbackID(mContext, cursor);
-		Pic.SVG_REQUEST.load(fallbackID).into(holder.image);
+		// same-size placeholder makes it load much faster, onLoadStarted(null) would make it relayout on every new row
+		Pic.loadSVG(mContext, fallbackID).placeholder(R.drawable.transparent_16dp).into(holder.image);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

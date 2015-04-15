@@ -28,7 +28,7 @@ import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.tasks.SaveToFile;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.inventory.android.view.TextWatcherAdapter;
-import net.twisterrob.inventory.android.view.adapters.*;
+import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
@@ -256,7 +256,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		isClean = false;
 		if (currentImage == null) {
 			int typeImageID = getTypeImage(type.getSelectedItemPosition());
-			Pic.SVG_REQUEST.load(typeImageID).into(image);
+			Pic.loadSVG(image.getContext(), typeImageID).into(image);
 		} else {
 			Pic.IMAGE_REQUEST.load(currentImage).into(image);
 		}

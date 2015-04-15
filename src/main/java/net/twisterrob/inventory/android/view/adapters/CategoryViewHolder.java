@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.RawRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.*;
@@ -70,7 +71,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 			count.setVisibility(View.GONE);
 		}
 
-		Pic.SVG_REQUEST.load(getTypeImage(cursor, context)).into(image);
+		Pic.loadSVG(context, getTypeImage(cursor, context)).into(image);
 	}
 
 	private CharSequence getName(Context context, Cursor cursor) {
@@ -78,7 +79,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		return AndroidTools.getText(context, name);
 	}
 
-	private int getTypeImage(Cursor cursor, Context context) {
+	private @RawRes int getTypeImage(Cursor cursor, Context context) {
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		return AndroidTools.getRawResourceID(context, typeImage);
 	}

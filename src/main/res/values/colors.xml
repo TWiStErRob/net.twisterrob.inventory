@@ -22,4 +22,5 @@
 
 	<!-- TOOLS colors -->
 	<color name="toolsBG">#8888</color>
+	<color name="transparent">#00000000</color>
 </resources>

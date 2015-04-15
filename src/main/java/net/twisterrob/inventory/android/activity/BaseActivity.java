@@ -20,8 +20,8 @@ import android.widget.*;
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter;
 
@@ -229,8 +229,8 @@ public class BaseActivity extends VariantActivity {
 		getSupportActionBar().setIcon(iconDrawable);
 	}
 	@For(Children) public void setIcon(@RawRes int resourceId) {
-		Pic.SVG_REQUEST
-				.load(resourceId)
+		Pic
+				.loadSVG(this, resourceId)
 				.transform(new PaddingTransformation(this, AndroidTools.dipInt(this, 4)))
 				.into(new ActionBarIconTarget(getSupportActionBar()));
 	}
@@ -239,7 +239,7 @@ public class BaseActivity extends VariantActivity {
 		private final ActionBarActivity activity;
 
 		public StandardMyActionBarDrawerToggle(ActionBarActivity activity, DrawerLayout drawerLayout) {
-			super(activity, drawerLayout, Constants.INVALID_RESOURCE_ID, Constants.INVALID_RESOURCE_ID);
+			super(activity, drawerLayout, AndroidTools.INVALID_RESOURCE_ID, AndroidTools.INVALID_RESOURCE_ID);
 			this.activity = activity;
 		}
 		@Override

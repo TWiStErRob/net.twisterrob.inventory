@@ -1,17 +1,17 @@
 package net.twisterrob.inventory.android.activity;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
+import android.support.annotation.*;
 import android.widget.ImageView;
 
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.view.IconedItem;
 
 abstract class SVGItem implements IconedItem {
-	private final int titleResourceID;
-	private final int svgResourceID;
+	private final @StringRes int titleResourceID;
+	private final @RawRes int svgResourceID;
 
-	public SVGItem(@StringRes int titleResourceID, int svgResourceID) {
+	public SVGItem(@StringRes int titleResourceID, @RawRes int svgResourceID) {
 		this.titleResourceID = titleResourceID;
 		this.svgResourceID = svgResourceID;
 	}
@@ -21,6 +21,6 @@ abstract class SVGItem implements IconedItem {
 	}
 
 	@Override public void loadImage(ImageView icon) {
-		Pic.SVG_REQUEST.load(svgResourceID).into(icon);
+		Pic.loadSVG(icon.getContext(), svgResourceID).into(icon);
 	}
 }
