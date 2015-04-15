@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.android.debug.hv.ViewServer;
 
 import net.twisterrob.android.utils.log.LoggingActivity;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.view.IconedItem;
 
@@ -36,7 +37,8 @@ public class VariantActivity extends LoggingActivity {
 	protected Collection<IconedItem> createActions() {
 		Collection<IconedItem> acts = new ArrayList<>();
 
-		acts.add(new SVGIntentItem(Constants.INVALID_RESOURCE_ID, R.raw.category_chip, this, DeveloperActivity.show()) {
+		acts.add(new SVGIntentItem(AndroidTools.INVALID_RESOURCE_ID, R.raw.category_chip, this,
+				DeveloperActivity.show()) {
 			@Override public CharSequence getTitle(Context context) {
 				return "Developer Tools";
 			}

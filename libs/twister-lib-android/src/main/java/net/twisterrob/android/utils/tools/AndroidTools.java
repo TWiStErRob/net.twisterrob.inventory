@@ -40,6 +40,9 @@ public abstract class AndroidTools {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidTools.class);
 
 	private static final float CIRCLE_LIMIT = 359.9999f;
+	private static final int INVALID_POSITION = -1;
+
+	public static final @AnyRes int INVALID_RESOURCE_ID = 0;
 	public static final String NULL = "null";
 	public static final String ERROR = "error";
 
@@ -60,12 +63,12 @@ public abstract class AndroidTools {
 				return position;
 			}
 		}
-		return -1;
+		return INVALID_POSITION;
 	}
 
 	public static void selectByID(AdapterView<?> view, long id) {
 		int position = findItemPosition(view.getAdapter(), id);
-		if (position != -1) {
+		if (position != INVALID_POSITION) {
 			view.setSelection(position);
 		}
 	}
@@ -77,21 +80,34 @@ public abstract class AndroidTools {
 		return (int)dip(context, number);
 	}
 
-	public static int getRawResourceID(Context context, String rawResourceName) {
-		return context.getResources().getIdentifier(rawResourceName, "raw", context.getPackageName());
+	public static @RawRes int getRawResourceID(Context context, String rawResourceName) {
+		return getResourceID(context, "raw", rawResourceName);
 	}
 
-	public static int getDrawableResourceID(Context context, String drawableResourceName) {
-		return context.getResources().getIdentifier(drawableResourceName, "drawable", context.getPackageName());
+	public static @DrawableRes int getDrawableResourceID(Context context, String drawableResourceName) {
+		return getResourceID(context, "drawable", drawableResourceName);
+	}
+
+	public static @StringRes int getStringResourceID(Context context, String stringResourceName) {
+		return getResourceID(context, "string", stringResourceName);
 	}
 
 	public static CharSequence getText(Context context, String stringResourceName) {
-		int id = context.getResources().getIdentifier(stringResourceName, "string", context.getPackageName());
-		try {
-			return context.getText(id);
-		} catch (NotFoundException ex) {
-			throw new NotFoundException(ex.getMessage() + " from " + stringResourceName);
+		int id = getStringResourceID(context, stringResourceName);
+		if (id == INVALID_RESOURCE_ID) {
+			throw new NotFoundException(String.format(Locale.ROOT, "Resource '%s' is not a valid string in '%s'",
+					stringResourceName, context.getPackageName()));
 		}
+		return context.getText(id);
+	}
+
+	private static @AnyRes int getResourceID(Context context, String resourceType, String resourceName) {
+		int resID = context.getResources().getIdentifier(resourceName, resourceType, context.getPackageName());
+		if (resID == INVALID_RESOURCE_ID) {
+			LOG.warn("No {} resource found with name '{}' in package '{}'",
+					resourceType, resourceName, context.getPackageName());
+		}
+		return resID;
 	}
 
 	@DebugHelper
@@ -381,7 +397,7 @@ public abstract class AndroidTools {
 		}
 	}
 
-	public static int findIndexInResourceArray(Context context, int arrayResourceID, String value) {
+	public static int findIndexInResourceArray(Context context, @ArrayRes int arrayResourceID, String value) {
 		ListPreference pref = new ListPreference(context);
 		pref.setEntryValues(arrayResourceID);
 		return pref.findIndexOfValue(value);

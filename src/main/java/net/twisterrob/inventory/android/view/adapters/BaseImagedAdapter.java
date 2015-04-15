@@ -7,7 +7,8 @@ import android.view.View.*;
 import android.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
@@ -16,7 +17,7 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 	private final RecyclerViewItemEvents listener;
 
 	public BaseImagedAdapter(Cursor cursor, RecyclerViewItemEvents listener) {
-		this(cursor, Constants.INVALID_RESOURCE_ID, listener);
+		this(cursor, AndroidTools.INVALID_RESOURCE_ID, listener);
 	}
 	public BaseImagedAdapter(Cursor cursor, int layoutResource, RecyclerViewItemEvents listener) {
 		super(cursor);
