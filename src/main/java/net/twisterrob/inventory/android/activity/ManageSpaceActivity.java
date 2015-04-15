@@ -16,7 +16,7 @@ import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.format.Formatter;
-import android.view.*;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
@@ -147,19 +147,6 @@ public class ManageSpaceActivity extends BaseActivity {
 		}
 	}
 
-	@Override public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.manage_space, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_backup:
-				startActivity(BackupActivity.chooser());
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 
 	void killProcesses() {
 		ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);

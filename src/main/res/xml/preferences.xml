@@ -33,6 +33,14 @@
 			/>
 	</PreferenceScreen>
 	<PreferenceScreen
+		android:title="@string/manage_space_title"
+		>
+		<intent
+			android:targetPackage="@string/app_package"
+			android:targetClass="net.twisterrob.inventory.android.activity.ManageSpaceActivity"
+			/>
+	</PreferenceScreen>
+	<PreferenceScreen
 		android:title="Market"
 		android:enabled="@bool/in_prod"
 		>

@@ -14,7 +14,7 @@ public class Types {
 	static Map<String, String> buildDeprecatedMap() {
 		Map<String, String> map = new HashMap<>();
 		map.put("category_storage_disccases", "category_storage_cases"); // XXX remove
-		map.put("category_storage_storage", "category_storage_group"); // XXX remove
+		map.put("category_storage", "category_storage_group"); // XXX remove
 		return map;
 	}
 

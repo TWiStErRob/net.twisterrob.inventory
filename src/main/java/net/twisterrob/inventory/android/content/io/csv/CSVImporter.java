@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.content.io.csv;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.CancellationException;
 
 import org.apache.commons.csv.*;
 import org.slf4j.*;
@@ -38,7 +39,9 @@ public class CSVImporter implements Importer {
 				processor.description = record.get("description");
 				processor.imageFileName = record.get("image");
 				processor.parentName = record.get("parent");
-				processor.id = Long.parseLong(record.get("id"));
+				if (processor.itemName != null) {
+					processor.id = Long.parseLong(record.get("id"));
+				}
 
 				long dbID = processor.process();
 				if (processor.imageFileName != null) {
@@ -47,6 +50,8 @@ public class CSVImporter implements Importer {
 							processor.imageFileName);
 				}
 				progress.publishIncrement();
+			} catch (CancellationException ex) {
+				throw ex;
 			} catch (Exception ex) {
 				LOG.warn("Cannot process {}", record, ex);
 				progress.error(ex.getMessage());
@@ -54,7 +59,7 @@ public class CSVImporter implements Importer {
 		}
 	}
 
-	private Collection<CSVRecord> getRecords(InputStream in) throws IOException {
+	private List<CSVRecord> getRecords(InputStream in) throws IOException {
 		try {
 			@SuppressWarnings("resource")
 			CSVParser parser = CSVConstants.FORMAT.parse(new InputStreamReader(in, CSVConstants.ENCODING));

@@ -4,9 +4,9 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	>
 	<item
-		android:id="@+id/action_backup"
-		android:title="@string/backup_title"
-		android:icon="@android:drawable/ic_menu_save"
+		android:id="@+id/action_manage_space"
+		android:title="@string/manage_space_title"
+		android:icon="@android:drawable/ic_popup_disk_full"
 		app:showAsAction="always|withText"
 		/>
 </menu>

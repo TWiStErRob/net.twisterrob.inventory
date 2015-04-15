@@ -48,6 +48,21 @@ public class BackupActivity extends BaseActivity {
 		controller.refresh();
 	}
 
+	@Override public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getMenuInflater().inflate(R.menu.backup, menu);
+		return true;
+	}
+
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_manage_space:
+				startActivity(ManageSpaceActivity.launch());
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
 	public void filePicked(File file) {
 		ImportFragment.create(this, getSupportFragmentManager()).execute(file);
 	}

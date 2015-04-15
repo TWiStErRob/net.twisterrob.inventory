@@ -69,7 +69,8 @@
 			/>
 		<activity
 			android:name=".activity.ManageSpaceActivity"
-			android:label="Manage Inventory Space"
+			android:label="@string/manage_space_title"
+			android:launchMode="singleInstance"
 			android:process=":managespace" />
 		<activity
 			android:name=".activity.BackupActivity"
