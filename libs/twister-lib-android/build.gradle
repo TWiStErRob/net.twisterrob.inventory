@@ -5,7 +5,7 @@ if (project.hasProperty('libFromSources')) {
 buildscript {
 	repositories {
 		jcenter()
-		maven { url 'http://localhost/maven' }
+		maven { name 'twisterrob'; url 'http://localhost/maven' }
 	}
 
 	dependencies {
@@ -23,7 +23,8 @@ apply from: 'http://localhost/maven/configure.gradle'
 
 repositories {
 	jcenter()
-	maven { url 'http://localhost/maven' }
+	maven { name 'twisterrob'; url 'http://localhost/maven' }
+	maven { name 'glide'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
@@ -41,5 +42,5 @@ dependencies {
 	//compile "com.android.support:palette-v7:${supportVersion}"
 
 	compile 'com.caverock:androidsvg:1.2.1'
-	compile 'com.github.bumptech.glide:glide:3.5.2'
+	compile 'com.github.bumptech.glide:glide:3.6.0-SNAPSHOT'
 }

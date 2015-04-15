@@ -6,7 +6,7 @@ if (project.hasProperty('libFromSources')) {
 buildscript {
 	repositories {
 		jcenter()
-		maven { url 'http://localhost/maven' }
+		maven { name 'twisterrob'; url 'http://localhost/maven' }
 	}
 
 	dependencies {
@@ -20,7 +20,8 @@ apply plugin: 'net.twisterrob.android-app'
 
 repositories {
 	jcenter()
-	maven { url 'http://localhost/maven' }
+	maven { name 'twisterrob'; url 'http://localhost/maven' }
+	maven { name 'glide'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
