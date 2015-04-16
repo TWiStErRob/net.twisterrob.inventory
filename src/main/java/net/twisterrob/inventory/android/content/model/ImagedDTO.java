@@ -76,13 +76,13 @@ public class ImagedDTO extends DTO {
 			boolean alwaysShowType) {
 		if (fullImagePath == null) {
 			if (alwaysShowType) {
-				Pic.loadSVG(type.getContext(), typeID).placeholder(R.drawable.transparent_32dp).into(type);
+				Pic.SVG_REQUEST.load(typeID).placeholder(R.drawable.transparent_32dp).into(type);
 			} else {
 				type.setImageDrawable(null); // == Pic.IMAGE_REQUEST.load(null).into(type); Glide#268
 			}
-			Pic.loadSVG(image.getContext(), typeID).into(image);
+			Pic.SVG_REQUEST.load(typeID).into(image);
 		} else {
-			Pic.loadSVG(type.getContext(), typeID).placeholder(R.drawable.transparent_32dp).into(type);
+			Pic.SVG_REQUEST.load(typeID).placeholder(R.drawable.transparent_32dp).into(type);
 			Pic.IMAGE_REQUEST.load(fullImagePath).into(image);
 		}
 	}
@@ -97,7 +97,7 @@ public class ImagedDTO extends DTO {
 	}
 	public static void loadInto(ImageView image, String fullImagePath, int typeID) {
 		if (fullImagePath == null) {
-			Pic.loadSVG(image.getContext(), typeID).into(image);
+			Pic.SVG_REQUEST.load(typeID).into(image);
 		} else {
 			Pic.IMAGE_REQUEST.load(fullImagePath).into(image);
 		}

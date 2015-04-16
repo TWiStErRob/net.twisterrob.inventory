@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.content;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
@@ -8,6 +9,7 @@ import org.slf4j.*;
 import android.content.*;
 import android.database.*;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 
 import static android.app.SearchManager.*;
@@ -138,6 +140,9 @@ public class InventoryProvider extends ContentProvider {
 		throw new UnsupportedOperationException("Unknown URI: " + uri);
 	}
 
+	@Override public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+		return super.openFile(uri, mode);
+	}
 	private static String resolveMatch(int result) {
 		if (result == UriMatcher.NO_MATCH) {
 			return "NO_MATCH";

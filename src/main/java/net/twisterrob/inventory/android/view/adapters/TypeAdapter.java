@@ -44,7 +44,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 
 		int fallbackID = ImagedDTO.getFallbackID(mContext, cursor);
 		// same-size placeholder makes it load much faster, onLoadStarted(null) would make it relayout on every new row
-		Pic.loadSVG(mContext, fallbackID).placeholder(R.drawable.transparent_16dp).into(holder.image);
+		Pic.SVG_REQUEST.load(fallbackID).placeholder(R.drawable.transparent_16dp).into(holder.image);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

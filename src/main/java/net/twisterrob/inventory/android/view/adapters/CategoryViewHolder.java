@@ -71,7 +71,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 			count.setVisibility(View.GONE);
 		}
 
-		Pic.loadSVG(context, getTypeImage(cursor, context)).into(image);
+		Pic.SVG_REQUEST.load(getTypeImage(cursor, context)).into(image);
 	}
 
 	private CharSequence getName(Context context, Cursor cursor) {

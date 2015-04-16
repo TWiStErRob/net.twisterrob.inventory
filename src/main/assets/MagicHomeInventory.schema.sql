@@ -478,7 +478,7 @@ CREATE TRIGGER Search_refresh
 INSTEAD OF INSERT ON Search_Refresher
 BEGIN
 	--insert into Log(message) values ('Search_refresh on (' || new._id || ')');--NOTEOS
-	delete from Search where _id MATCH new._id;--NOTEOS
+	delete from Search where _id = new._id;--NOTEOS
 	insert into Search
 		select
 			ip.itemID                                            as _id,

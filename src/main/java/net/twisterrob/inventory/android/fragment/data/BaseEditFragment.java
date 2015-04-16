@@ -256,7 +256,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		isClean = false;
 		if (currentImage == null) {
 			int typeImageID = getTypeImage(type.getSelectedItemPosition());
-			Pic.loadSVG(image.getContext(), typeImageID).into(image);
+			Pic.SVG_REQUEST.load(typeImageID).into(image);
 		} else {
 			Pic.IMAGE_REQUEST.load(currentImage).into(image);
 		}

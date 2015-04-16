@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Environment;
 import android.support.annotation.*;
 
@@ -74,7 +73,7 @@ public interface Constants {
 		private static final LoggingListener<String, GlideDrawable> IMAGE_LOGGING_LISTENER =
 				new LoggingListener<>("image");
 
-		private static final DrawableRequestBuilder<Integer> SVG_REQUEST = Glide
+		public static final DrawableRequestBuilder<Integer> SVG_REQUEST = Glide
 				.with(App.getAppContext())
 				.fromResource()
 //				.listener(SVG_LOGGING_LISTENER)
@@ -100,19 +99,6 @@ public interface Constants {
 					new GifResourceDecoder(context, pool),
 					pool
 			);
-		}
-
-		/** @see <a href="https://github.com/bumptech/glide/issues/413">Invalid resource ID crashes the app</a> */
-		// TODO remove validation and inline if glide#413 is fixed
-		public static DrawableRequestBuilder<Integer> loadSVG(@NonNull Context context,
-				@NonNull @RawRes Integer resID) {
-			try {
-				context.getResources().getResourceEntryName(resID);
-			} catch (Resources.NotFoundException ex) {
-				//noinspection ConstantConditions
-				resID = null;
-			}
-			return SVG_REQUEST.load(resID);
 		}
 
 		public static class GlideSetup implements GlideModule {

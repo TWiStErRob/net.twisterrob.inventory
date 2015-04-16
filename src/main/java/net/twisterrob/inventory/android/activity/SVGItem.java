@@ -21,6 +21,6 @@ abstract class SVGItem implements IconedItem {
 	}
 
 	@Override public void loadImage(ImageView icon) {
-		Pic.loadSVG(icon.getContext(), svgResourceID).into(icon);
+		Pic.SVG_REQUEST.load(svgResourceID).into(icon);
 	}
 }

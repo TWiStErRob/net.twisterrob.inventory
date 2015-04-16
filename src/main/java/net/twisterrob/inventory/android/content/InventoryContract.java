@@ -26,6 +26,8 @@ public final class InventoryContract {
 		public static final Uri ITEM_URI = Uri.withAppendedPath(CONTENT_URI, ITEM_URI_PATH);
 		public static final String ITEM_TYPE = CURSOR_ITEM_BASE_TYPE + "/" + SUBTYPE;
 
+		public static final Uri ITEM_IMAGES_URI = Uri.withAppendedPath(ITEM_URI, Image.IMAGE_URI_PATH);
+
 		public static long getID(Uri data) {
 			if (data == null) {
 				return ID_INVALID;
@@ -41,6 +43,10 @@ public final class InventoryContract {
 		}
 	}
 
+	private static final class Image {
+		static final String IMAGE_URI_PATH = "images";
+	}
+
 	public static final class Search {
 		static final String URI_PATH = Item.DIR_URI_PATH + "/" + "search";
 		public static final Uri URI = Uri.withAppendedPath(CONTENT_URI, URI_PATH);
@@ -54,8 +60,8 @@ public final class InventoryContract {
 	/**
 	 * This interface defines common columns found in multiple tables.
 	 */
-	public static interface CommonColumns extends BaseColumns {
-		public static String NAME = "name";
-		public static String IMAGE = "image";
+	public interface CommonColumns extends BaseColumns {
+		String NAME = "name";
+		String IMAGE = "image";
 	}
 }
