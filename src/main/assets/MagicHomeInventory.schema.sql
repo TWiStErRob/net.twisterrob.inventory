@@ -36,21 +36,21 @@ END;
 CREATE VIEW Category_Descendant AS
 	select c0._id as category, 0 as level, c0._id as descendant
 		from Category c0
-    UNION ALL
+	UNION ALL
 	select c0._id as category, 1 as level, c1._id as descendant
 		from Category c0
 		join Category c1 ON c0._id = c1.parent
 	UNION ALL
 	select c0._id as category, 2 as level, c2._id as descendant
-        from Category c0
-        join Category c1 ON c0._id = c1.parent
-        join Category c2 ON c1._id = c2.parent
+		from Category c0
+		join Category c1 ON c0._id = c1.parent
+		join Category c2 ON c1._id = c2.parent
 	UNION ALL
-    select c0._id as category, 3 as level, c3._id as descendant
-        from Category c0
-        join Category c1 ON c0._id = c1.parent
-        join Category c2 ON c1._id = c2.parent
-        join Category c3 ON c2._id = c3.parent
+	select c0._id as category, 3 as level, c3._id as descendant
+		from Category c0
+		join Category c1 ON c0._id = c1.parent
+		join Category c2 ON c1._id = c2.parent
+		join Category c3 ON c2._id = c3.parent
 ;
 
 -- Assumes internal -> root -> level1 -> level2 maximum depth
@@ -247,6 +247,7 @@ CREATE TABLE Room (
 	PRIMARY KEY(_id AUTOINCREMENT),
 	UNIQUE (property, name)
 );
+CREATE INDEX Room_root ON Room(root);
 
 CREATE TRIGGER Room_delete_root
 AFTER DELETE ON Room
@@ -379,6 +380,9 @@ CREATE TABLE Item_Path_Node (
 			ON UPDATE CASCADE
 			ON DELETE NO ACTION
 );
+CREATE INDEX Item_Path_Node_item_node ON Item_Path_Node(item, node);
+CREATE INDEX Item_Path_Node_node_item ON Item_Path_Node(node, item);
+CREATE INDEX Item_Path_Node_root      ON Item_Path_Node(root);
 
 CREATE TRIGGER Item_Path_Node_traverse
 AFTER INSERT ON Item_Path_Node
@@ -441,22 +445,8 @@ CREATE VIEW Item_Path AS
 		i._id      as itemID,
 		i.name     as itemName,
 		c._id      as categoryID,
-		c.name     as categoryName,
-		Path.path  as path,
-		p.name || ' > ' || r.name || ifNULL(' > ' || Path.path, '') as fullPath,
-		rPath.path as reversePath,
-		ifNULL(rPath.path || ' < ', '') || r.name || ' < ' || p.name as fullReversePath
+		c.name     as categoryName
 	from Item           i
-	left join (
-		select item, group_concat(nodeName, ' > ') as path
-		from (select * from Item_Path_WITH_Node_Name order by item, level)
-		group by item
-	)    Path               ON i._id = Path.item
-	left join (
-		select item, group_concat(nodeName, ' < ') as path
-		from (select * from Item_Path_WITH_Node_Name order by item, level DESC)
-		group by item
-	)    rPath              ON i._id = rPath.item
 	join Item_Path_Node ipn ON ipn.item = i._id and ipn.node = i._id
 	join Room           r   ON ipn.root = r.root
 	join Property       p   ON r.property = p._id
@@ -481,11 +471,19 @@ BEGIN
 	delete from Search where _id = new._id;--NOTEOS
 	insert into Search
 		select
-			ip.itemID                                            as _id,
-			ip.itemName || ' (' || ifNULL(cnc.value, '?') || ')' as name,
-			ip.reversePath                                       as location
-		from Item_Path                ip
-		left join Category_Name_Cache cnc ON ip.categoryName = cnc.key
-		where ip.itemID = new._id
+			i._id                                           as _id,
+			i.name || ' (' || ifNULL(cnc.value, '?') || ')' as name,
+			group_concat(Path.part, ' < ')                  as location
+		from Item i
+		join Category       c   ON i.category = c._id
+		join (
+			select n.name as part
+			from Item_Path_Node ipn
+			join Item           n   ON ipn.node = n._id
+			where ipn.item = new._id and ipn.item <> ipn.node and ipn.node <> ipn.root
+			order by level DESC
+		) as Path
+		left join Category_Name_Cache cnc ON c.name = cnc.key
+		where i._id = new._id
 	;--NOTEOS
 END;

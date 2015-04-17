@@ -14,6 +14,7 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.java.utils.StringTools;
 
+// XXX extract base class for execSQL/rawQuery to variant folders
 public class Database {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
 
@@ -52,10 +53,14 @@ public class Database {
 		execSQL(getWritableDatabase(), queryResource, params);
 	}
 	private void execSQL(SQLiteDatabase db, int queryResource, Object... params) {
-		if (queryResource != R.string.query_category_cache_update) {
-			LOG.trace("execSQL({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
-		}
+		LOG.trace("execSQL({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
+		long start = System.nanoTime();
 		db.execSQL(m_resources.getString(queryResource), params);
+		long end = System.nanoTime();
+		if (queryResource != R.string.query_category_cache_update) {
+			LOG.debug("execSQL({}, {}): {}ms",
+					m_resources.getResourceEntryName(queryResource), Arrays.toString(params), (end - start) / 10000000);
+		}
 	}
 
 	private Cursor rawQuery(int queryResource, Object... params) {
@@ -66,7 +71,11 @@ public class Database {
 		String paramString = Arrays.toString(params);
 		LOG.trace("rawQuery({}, {})", name, paramString);
 		try {
-			return db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
+			long start = System.nanoTime();
+			Cursor cursor = db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
+			long end = System.nanoTime();
+			LOG.debug("rawQuery({}, {}): {}ms", name, paramString, (end - start) / 10000000);
+			return cursor;
 		} catch (Exception ex) {
 			throw new IllegalStateException(name + ": " + paramString, ex);
 		}
@@ -94,7 +103,13 @@ public class Database {
 			for (int i = 0; i < params.length; ++i) {
 				DatabaseUtils.bindObjectToProgram(insert, i + 1, params[i]);
 			}
-			return insert.executeInsert();
+			long start = System.nanoTime();
+			long rows = insert.executeInsert();
+			long end = System.nanoTime();
+			LOG.debug("rawInsert({}, {}): {}ms",
+					m_resources.getResourceEntryName(insertResource), Arrays.toString(params),
+					(end - start) / 10000000);
+			return rows;
 		} finally {
 			insert.close();
 		}
@@ -153,7 +168,7 @@ public class Database {
 
 	public Cursor getItem(long itemID) {
 		execSQL(R.string.query_recent_add, itemID);
-		return rawQuery(R.string.query_item, itemID);
+		return rawQuery(R.string.query_item, itemID, itemID);
 	}
 	public Cursor listCategories(Long parentCategoryID) {
 		return rawQuery(R.string.query_categories, parentCategoryID, parentCategoryID);
