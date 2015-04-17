@@ -15,14 +15,13 @@ public class LoggingListener<T, Z> implements RequestListener<T, Z> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LoggingListener.class);
 	private final String type;
-	private final ModelFormatter<T> formatter;
+	private final ModelFormatter<? super T> formatter;
 
-	@SuppressWarnings("unchecked")
 	public LoggingListener(String type) {
-		this(type, (ModelFormatter<T>)STRING_FORMATTER);
+		this(type, STRING_FORMATTER);
 	}
 
-	public LoggingListener(String type, ModelFormatter<T> formatter) {
+	public LoggingListener(String type, ModelFormatter<? super T> formatter) {
 		this.type = type;
 		this.formatter = formatter;
 	}
@@ -38,7 +37,7 @@ public class LoggingListener<T, Z> implements RequestListener<T, Z> {
 		return false;
 	}
 
-	private static final ModelFormatter STRING_FORMATTER = new ModelFormatter<Object>() {
+	private static final ModelFormatter<Object> STRING_FORMATTER = new ModelFormatter<Object>() {
 		@Override public String toString(Object model) {
 			return String.valueOf(model);
 		}

@@ -83,7 +83,7 @@ public class DatabaseDTOTools {
 	}
 
 	public static ItemDTO retrieveItem(long itemID) {
-		Cursor item = App.db().getItem(itemID);
+		Cursor item = App.db().getItem(itemID, false);
 		try {
 			item.moveToFirst();
 			return ItemDTO.fromCursor(item);

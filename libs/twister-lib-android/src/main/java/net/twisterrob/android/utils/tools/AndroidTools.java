@@ -103,10 +103,13 @@ public abstract class AndroidTools {
 	}
 
 	private static @AnyRes int getResourceID(Context context, String resourceType, String resourceName) {
-		int resID = context.getResources().getIdentifier(resourceName, resourceType, context.getPackageName());
+		int resID = INVALID_RESOURCE_ID;
+		if (context != null && resourceType != null && resourceName != null) {
+			resID = context.getResources().getIdentifier(resourceName, resourceType, context.getPackageName());
+		}
 		if (resID == INVALID_RESOURCE_ID) {
 			LOG.warn("No {} resource found with name '{}' in package '{}'",
-					resourceType, resourceName, context.getPackageName());
+					resourceType, resourceName, context != null? context.getPackageName() : null);
 		}
 		return resID;
 	}

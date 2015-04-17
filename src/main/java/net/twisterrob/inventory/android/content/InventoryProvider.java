@@ -139,7 +139,7 @@ public class InventoryProvider extends ContentProvider {
 					throw new IllegalArgumentException("Item can only be queried as a file");
 				}
 				long itemID = Item.getID(uri);
-				return buildImageCursor(itemID, getImageFullPath(App.db().getItem(itemID)));
+				return buildImageCursor(itemID, getImageFullPath(App.db().getItem(itemID, false)));
 			}
 			default:
 				throw new UnsupportedOperationException("Unknown URI: " + uri);

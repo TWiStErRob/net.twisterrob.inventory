@@ -166,8 +166,10 @@ public class Database {
 		return rawQuery(R.string.query_item_parents, itemID);
 	}
 
-	public Cursor getItem(long itemID) {
-		execSQL(R.string.query_recent_add, itemID);
+	public Cursor getItem(long itemID, boolean addToRecents) {
+		if(addToRecents) {
+			execSQL(R.string.query_recent_add, itemID);
+		}
 		return rawQuery(R.string.query_item, itemID, itemID);
 	}
 	public Cursor listCategories(Long parentCategoryID) {

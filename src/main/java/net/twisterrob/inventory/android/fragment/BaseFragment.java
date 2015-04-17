@@ -49,7 +49,7 @@ public class BaseFragment<T> extends VariantFragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		LOG.trace("Creating {}@{} {}",
+		LOG.debug("Creating {}@{} {}",
 				getClass().getSimpleName(),
 				Integer.toHexString(System.identityHashCode(this)),
 				AndroidTools.toLongString(getArguments())

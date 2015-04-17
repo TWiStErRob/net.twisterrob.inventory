@@ -37,7 +37,7 @@ public class BaseActivity extends VariantActivity {
 	@For(Drawer) protected View mDrawerRight;
 
 	@For(Log) @Override protected void onCreate(Bundle savedInstanceState) {
-		LOG.trace("Creating {}@{} {}\n{}",
+		LOG.debug("Creating {}@{} {}\n{}",
 				getClass().getSimpleName(),
 				Integer.toHexString(System.identityHashCode(this)),
 				AndroidTools.toLongString(getIntent().getExtras()),

@@ -94,14 +94,23 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 	@Override public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		selectionMode.onSaveInstanceState(outState);
+		if (selectionMode != null) { // Fragment may be in background, and selectionMode is created in onViewCreated
+			selectionMode.onSaveInstanceState(outState);
+		}
 	}
 
 	@Override public void onViewStateRestored(Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
-		selectionMode.onRestoreInstanceState(savedInstanceState);
+		if (selectionMode != null) { // Fragment may be in background, and selectionMode is created in onViewCreated
+			selectionMode.onRestoreInstanceState(savedInstanceState);
+		}
 	}
 
+	@Override public void onDestroyView() {
+		super.onDestroyView();
+		selectionMode.finish();
+		selectionMode = null;
+	}
 	@Override public void setMenuVisibility(boolean menuVisible) {
 		super.setMenuVisibility(menuVisible);
 		if (header != null) {

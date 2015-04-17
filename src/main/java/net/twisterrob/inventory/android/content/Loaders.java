@@ -91,7 +91,7 @@ public enum Loaders {
 		@Override
 		protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
-			return App.db().getItem(id);
+			return App.db().getItem(id, true);
 		}
 	},
 	Categories {
