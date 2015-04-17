@@ -476,7 +476,7 @@ BEGIN
 			group_concat(Path.part, ' < ')                  as location
 		from Item i
 		join Category       c   ON i.category = c._id
-		join (
+		left join (
 			select n.name as part
 			from Item_Path_Node ipn
 			join Item           n   ON ipn.node = n._id

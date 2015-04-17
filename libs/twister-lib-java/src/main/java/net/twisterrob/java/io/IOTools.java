@@ -43,6 +43,7 @@ public/* static */class IOTools {
 				out.write(buf, 0, len);
 				total += len;
 			}
+			out.flush();
 			return total;
 		} finally {
 			ignorantClose(in);
