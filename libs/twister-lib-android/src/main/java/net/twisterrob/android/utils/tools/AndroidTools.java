@@ -22,6 +22,7 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.*;
 import android.os.Build.*;
+import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.preference.ListPreference;
 import android.support.annotation.*;
 import android.support.v4.app.Fragment;
@@ -647,6 +648,37 @@ public abstract class AndroidTools {
 			LOG.warn("Activity doesn't exists, but has an instance? {}", activity, e);
 			throw new RuntimeException(e);
 		}
+	}
+	public static ParcelFileDescriptor stream(final byte[] contents) throws FileNotFoundException {
+		ParcelFileDescriptor[] pipe;
+		try {
+			pipe = ParcelFileDescriptor.createPipe();
+		} catch (IOException e) {
+			throw new FileNotFoundException(e.toString());
+		}
+		final ParcelFileDescriptor readEnd = pipe[0];
+		final ParcelFileDescriptor writeEnd = pipe[1];
+
+		executeParallel(new AsyncTask<Object, Object, Object>() {
+			@Override
+			protected Object doInBackground(Object... params) {
+				InputStream in = new ByteArrayInputStream(contents);
+				OutputStream out = new AutoCloseOutputStream(writeEnd);
+				try {
+					IOTools.copyStream(in, out);
+				} catch (IOException e) {
+					IOTools.ignorantCloseWithError(writeEnd, e.toString());
+				}
+				try {
+					writeEnd.close();
+				} catch (IOException e) {
+					LOG.warn("Failure closing pipe", e);
+				}
+				return null;
+			}
+		});
+
+		return readEnd;
 	}
 
 	public interface PopupCallbacks<T> {

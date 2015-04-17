@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.content;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -89,14 +89,19 @@ public class InventoryProvider extends ContentProvider {
 		long start = System.nanoTime();
 		try {
 			return queryInternal(uri, projection, selectionArgs);
+		} catch (Exception ex) {
+			LOG.error("query/{}({}, {}, {}, {}, {})",
+					resolveMatch(URI_MATCHER.match(uri)),
+					uri, projection, selection, selectionArgs, sortOrder, ex);
 		} finally {
 			long end = System.nanoTime();
 			LOG.debug("query/{}({}, {}, {}, {}, {}): {}ms",
 					resolveMatch(URI_MATCHER.match(uri)),
 					uri, projection, selection, selectionArgs, sortOrder, (end - start) / 1e6);
 		}
+		return null;
 	}
-	private Cursor queryInternal(Uri uri, String[] projection, String[] selectionArgs) {
+	private Cursor queryInternal(Uri uri, String[] projection, String[] selectionArgs) throws Exception {
 		switch (URI_MATCHER.match(uri)) {
 			case SEARCH_ITEMS_SUGGEST: {
 				// uri.getLastPathSegment().toLowerCase(Locale.getDefault());
@@ -141,9 +146,13 @@ public class InventoryProvider extends ContentProvider {
 		}
 	}
 
-	private Cursor buildImageCursor(long belongingID, String imagePath) {
+	private Cursor buildImageCursor(long belongingID, String imagePath) throws IOException {
+		File file = new File(imagePath);
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream((int)file.length());
+		IOTools.copyStream(new FileInputStream(file), bytes);
+		byte[] imageContents = bytes.toByteArray();
 		MatrixCursor cursor = new MatrixCursor(new String[] {BaseColumns._ID, FILE_COLUMN}, 1);
-		cursor.addRow(new String[] {String.valueOf(belongingID), imagePath});
+		cursor.addRow(new Object[] {belongingID, imageContents});
 		return cursor;
 	}
 
@@ -191,7 +200,7 @@ public class InventoryProvider extends ContentProvider {
 			case PROPERTY:
 			case ROOM:
 			case ITEM:
-				return openFileHelper(uri, mode);
+				return openBlobHelper(uri, mode);
 			case CATEGORY:
 				Cursor category = App.db().getCategory(Category.getID(uri));
 				String name = DatabaseTools.singleResultFromColumn(category,
@@ -201,6 +210,32 @@ public class InventoryProvider extends ContentProvider {
 				return getContext().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();
 		}
 		return super.openFile(uri, mode);
+	}
+
+	protected final ParcelFileDescriptor openBlobHelper(Uri uri, String mode) throws FileNotFoundException {
+		Cursor c = query(uri, new String[] {FILE_COLUMN}, null, null, null);
+		int count = (c != null)? c.getCount() : 0;
+		if (count != 1) {
+			// If there is not exactly one result, throw an appropriate
+			// exception.
+			if (c != null) {
+				c.close();
+			}
+			if (count == 0) {
+				throw new FileNotFoundException("No entry for " + uri);
+			}
+			throw new FileNotFoundException("Multiple items at " + uri);
+		}
+
+		c.moveToFirst();
+		int i = c.getColumnIndex(FILE_COLUMN);
+		byte[] contents = (i >= 0? c.getBlob(i) : null);
+		c.close();
+		if (contents == null) {
+			throw new FileNotFoundException("Column " + FILE_COLUMN + " not found.");
+		}
+
+		return AndroidTools.stream(contents);
 	}
 
 	@DebugHelper

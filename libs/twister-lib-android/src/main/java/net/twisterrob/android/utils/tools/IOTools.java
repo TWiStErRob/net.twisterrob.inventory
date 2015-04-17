@@ -8,9 +8,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.http.*;
 import org.slf4j.*;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.*;
+import android.os.Build.*;
+import android.os.ParcelFileDescriptor;
 
 import net.twisterrob.android.utils.cache.ImageSDNetCache;
 import net.twisterrob.java.utils.CollectionTools;
@@ -121,6 +124,41 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 			return null;
 		} finally {
 			ignorantClose(stream);
+		}
+	}
+
+	/**
+	 * {@link ParcelFileDescriptor} doesn't implement {@link Closeable} before 4.1.1_r1 so we need a specialized method.
+	 * @param closeMe more specific than {@link #ignorantClose(Closeable)} won't throw {@link IncompatibleClassChangeError}
+	 * @see <a href="https://github.com/bumptech/glide/issues/157">ParcelFileDescriptor image loading is broken pre 4.1.1_r1</a>
+	 * @see <a href="https://github.com/android/platform_frameworks_base/commit/e861b423790e5bf2d5a55b096065c6ad0541d5bb">Add Closeable to ParcelFileDescriptor, and always close any incoming PFDs when dumping.</a>
+	 */
+	@TargetApi(VERSION_CODES.JELLY_BEAN_MR1)
+	public static void ignorantClose(ParcelFileDescriptor closeMe) {
+		if (closeMe != null) {
+			try {
+				closeMe.close();
+			} catch (IOException e) {
+				LOG.warn("Cannot close " + closeMe, e);
+			}
+		}
+	}
+
+	@TargetApi(VERSION_CODES.KITKAT)
+	public static void closeWithError(ParcelFileDescriptor pfd, String message) throws IOException {
+		if (VERSION.SDK_INT < VERSION_CODES.KITKAT) {
+			pfd.close();
+		} else {
+			pfd.closeWithError(message);
+		}
+	}
+
+	@TargetApi(VERSION_CODES.KITKAT)
+	public static void ignorantCloseWithError(ParcelFileDescriptor pfd, String message) {
+		try {
+			closeWithError(pfd, message);
+		} catch (IOException e) {
+			LOG.warn("Cannot close " + pfd + " with error: " + message, e);
 		}
 	}
 }
