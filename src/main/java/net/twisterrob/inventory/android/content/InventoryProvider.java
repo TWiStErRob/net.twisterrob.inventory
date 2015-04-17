@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.content;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
-import java.util.Locale;
+import java.util.*;
 
 import org.slf4j.*;
 
@@ -14,8 +14,11 @@ import android.provider.BaseColumns;
 
 import static android.app.SearchManager.*;
 
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.contract.Category;
+import net.twisterrob.inventory.android.Constants.Paths;
+import net.twisterrob.inventory.android.content.InventoryContract.*;
+import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
 
 import static net.twisterrob.inventory.android.content.InventoryContract.*;
@@ -42,47 +45,58 @@ public class InventoryProvider extends ContentProvider {
 
 	protected static final String URI_PATH_ID = "/#";
 	protected static final String URI_PATH_ANY = "/*";
+	private static final String FILE_COLUMN = "_data";
 
 	private static final UriMatcher URI_MATCHER;
+
 	static {
 		URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-		URI_MATCHER.addURI(AUTHORITY, "properties", PROPRETIES);
-		URI_MATCHER.addURI(AUTHORITY, "property" + URI_PATH_ID, PROPERTY);
-		URI_MATCHER.addURI(AUTHORITY, "rooms", ROOMS);
-		URI_MATCHER.addURI(AUTHORITY, "room" + URI_PATH_ID, ROOM);
+		URI_MATCHER.addURI(AUTHORITY, Property.DIR_URI_PATH, PROPRETIES);
+		URI_MATCHER.addURI(AUTHORITY, Property.ITEM_URI_PATH + URI_PATH_ID, PROPERTY);
+		URI_MATCHER.addURI(AUTHORITY, Room.DIR_URI_PATH, ROOMS);
+		URI_MATCHER.addURI(AUTHORITY, Room.ITEM_URI_PATH + URI_PATH_ID, ROOM);
 		URI_MATCHER.addURI(AUTHORITY, Item.DIR_URI_PATH, ITEMS);
 		URI_MATCHER.addURI(AUTHORITY, Item.ITEM_URI_PATH + URI_PATH_ID, ITEM);
-		URI_MATCHER.addURI(AUTHORITY, "categories", CATEGORIES);
-		URI_MATCHER.addURI(AUTHORITY, "category" + URI_PATH_ID, CATEGORY);
+		URI_MATCHER.addURI(AUTHORITY, Category.DIR_URI_PATH, CATEGORIES);
+		URI_MATCHER.addURI(AUTHORITY, Category.ITEM_URI_PATH + URI_PATH_ID, CATEGORY);
 		URI_MATCHER.addURI(AUTHORITY, Search.URI_PATH, SEARCH_ITEMS);
 		URI_MATCHER.addURI(AUTHORITY, Search.URI_PATH_SUGGEST, SEARCH_ITEMS_SUGGEST);
 	}
 
-	@Override
-	public boolean onCreate() {
+	@Override public boolean onCreate() {
 		return false;
 	}
 
-	@Override
-	public String getType(Uri uri) {
+	@Override public String getType(Uri uri) {
 		switch (URI_MATCHER.match(uri)) {
 			case ITEMS:
-				return InventoryContract.Item.DIR_TYPE;
+				return Item.DIR_TYPE;
 			case ITEM:
-				return InventoryContract.Item.ITEM_TYPE;
+				return Item.ITEM_TYPE;
 			case SEARCH_ITEMS:
-				return InventoryContract.Search.TYPE;
+				return Search.TYPE;
 			case SEARCH_ITEMS_SUGGEST:
-				return InventoryContract.Search.TYPE_SUGGEST;
+				return Search.TYPE_SUGGEST;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
 	}
 
-	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		LOG.debug("query({}, {}, {}, {}, {}): {}",
-				uri, projection, selection, selectionArgs, sortOrder, resolveMatch(URI_MATCHER.match(uri)));
+	@Override public Cursor query(Uri uri,
+			String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+		LOG.trace("query/{}({}, {}, {}, {}, {})",
+				resolveMatch(URI_MATCHER.match(uri)), uri, projection, selection, selectionArgs, sortOrder);
+		long start = System.nanoTime();
+		try {
+			return queryInternal(uri, projection, selectionArgs);
+		} finally {
+			long end = System.nanoTime();
+			LOG.debug("query/{}({}, {}, {}, {}, {}): {}ms",
+					resolveMatch(URI_MATCHER.match(uri)),
+					uri, projection, selection, selectionArgs, sortOrder, (end - start) / 1e6);
+		}
+	}
+	private Cursor queryInternal(Uri uri, String[] projection, String[] selectionArgs) {
 		switch (URI_MATCHER.match(uri)) {
 			case SEARCH_ITEMS_SUGGEST: {
 				// uri.getLastPathSegment().toLowerCase(Locale.getDefault());
@@ -94,15 +108,50 @@ public class InventoryProvider extends ContentProvider {
 			}
 			case SEARCH_ITEMS: {
 				if (selectionArgs == null || StringTools.isNullOrEmpty(selectionArgs[0])) {
-					return App.db().listItemsForCategory(Category.INTERNAL, true);
+					return App.db().listItemsForCategory(
+							net.twisterrob.inventory.android.content.contract.Category.INTERNAL, true);
 				}
 				String query = selectionArgs[0].toLowerCase(Locale.getDefault());
 				return App.db().search(query);
+			}
+
+			case PROPERTY: {
+				if (!Arrays.asList(projection).contains(FILE_COLUMN)) {
+					throw new IllegalArgumentException("Property can only be queried as a file");
+				}
+				long propertyID = Property.getID(uri);
+				return buildImageCursor(propertyID, getImageFullPath(App.db().getProperty(propertyID)));
+			}
+			case ROOM: {
+				if (!Arrays.asList(projection).contains(FILE_COLUMN)) {
+					throw new IllegalArgumentException("Room can only be queried as a file");
+				}
+				long roomID = Room.getID(uri);
+				return buildImageCursor(roomID, getImageFullPath(App.db().getRoom(roomID)));
+			}
+			case ITEM: {
+				if (!Arrays.asList(projection).contains(FILE_COLUMN)) {
+					throw new IllegalArgumentException("Item can only be queried as a file");
+				}
+				long itemID = Item.getID(uri);
+				return buildImageCursor(itemID, getImageFullPath(App.db().getItem(itemID)));
 			}
 			default:
 				throw new UnsupportedOperationException("Unknown URI: " + uri);
 		}
 	}
+
+	private Cursor buildImageCursor(long belongingID, String imagePath) {
+		MatrixCursor cursor = new MatrixCursor(new String[] {BaseColumns._ID, FILE_COLUMN}, 1);
+		cursor.addRow(new String[] {String.valueOf(belongingID), imagePath});
+		return cursor;
+	}
+
+	private String getImageFullPath(Cursor belonging) {
+		String imageFileName = DatabaseTools.singleResultFromColumn(belonging, CommonColumns.IMAGE);
+		return Paths.getImagePath(getContext(), imageFileName);
+	}
+
 	/**
 	 * Return a singular suggestion to display more text about what can be searched
 	 * Tapping it would open the search activity.
@@ -125,24 +174,36 @@ public class InventoryProvider extends ContentProvider {
 		return cursor;
 	}
 
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
+	@Override public Uri insert(Uri uri, ContentValues values) {
 		throw new UnsupportedOperationException("Unknown URI: " + uri);
 	}
 
-	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+	@Override public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		throw new UnsupportedOperationException("Unknown URI: " + uri);
 	}
 
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
+	@Override public int delete(Uri uri, String selection, String[] selectionArgs) {
 		throw new UnsupportedOperationException("Unknown URI: " + uri);
 	}
 
 	@Override public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+		switch (URI_MATCHER.match(uri)) {
+			case PROPERTY:
+			case ROOM:
+			case ITEM:
+				return openFileHelper(uri, mode);
+			case CATEGORY:
+				Cursor category = App.db().getCategory(Category.getID(uri));
+				String name = DatabaseTools.singleResultFromColumn(category,
+						net.twisterrob.inventory.android.content.contract.Category.TYPE_IMAGE);
+				int svgID = AndroidTools.getRawResourceID(getContext(), name);
+				// The following only works if the resource is uncompressed: android.aaptOptions.noCompress 'svg'
+				return getContext().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();
+		}
 		return super.openFile(uri, mode);
 	}
+
+	@DebugHelper
 	private static String resolveMatch(int result) {
 		if (result == UriMatcher.NO_MATCH) {
 			return "NO_MATCH";

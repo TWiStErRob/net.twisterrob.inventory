@@ -2,9 +2,12 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.Locale;
 
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.net.Uri;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
+import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.content.contract.*;
 
 public class RoomDTO extends ImagedDTO {
@@ -30,6 +33,9 @@ public class RoomDTO extends ImagedDTO {
 		propertyName = DatabaseTools.getOptionalString(cursor, Room.PROPERTY_NAME);
 
 		return this;
+	}
+	@Override protected Uri getImageUri() {
+		return ContentUris.withAppendedId(InventoryContract.Room.ITEM_URI, id);
 	}
 
 	@Override

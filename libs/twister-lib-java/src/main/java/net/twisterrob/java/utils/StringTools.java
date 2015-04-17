@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
+import javax.annotation.*;
+
 public final class StringTools {
 	private StringTools() {
 		// prevent instantiation
@@ -51,11 +53,27 @@ public final class StringTools {
 		return null;
 	}
 
-	public static String toNullString(final Object o, final String nullString) {
-		if (nullString == null) {
-			return String.valueOf(o);
-		}
-		return o != null? o.toString() : nullString;
+	/**
+	 * Behaves like {@link String#valueOf}, but with a customizable <code>null</code> String.
+	 *
+	 * @see String#valueOf(Object)
+	 * @param nullObj will be used when {@param obj} is <code>null</code>
+	 * @return toString of {@param obj} or {@param nullObj}
+	 */
+	public static @Nonnull String toString(@Nullable Object obj, @Nonnull Object nullObj) {
+		return obj == null? nullObj.toString() : obj.toString();
+	}
+
+	/**
+	 * Behaves like {@link String#valueOf}, but with a customizable <code>null</code> String.
+	 * Also allowing <code>null</code> as {@param nullObj}.
+	 *
+	 * @see String#valueOf(Object)
+	 * @param nullObj will be used when {@param obj} is <code>null</code>
+	 * @return toString of {@param obj} or {@param nullObj}
+	 */
+	public static @Nullable String toStringNull(@Nullable Object obj, @Nullable Object nullObj) {
+		return obj == null? (nullObj == null? null : nullObj.toString()) : obj.toString();
 	}
 
 	public static boolean isNullOrEmpty(String string) {

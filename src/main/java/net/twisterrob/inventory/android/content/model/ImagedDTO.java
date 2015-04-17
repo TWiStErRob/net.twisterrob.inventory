@@ -7,6 +7,7 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.annotation.RawRes;
 import android.widget.ImageView;
 
@@ -14,8 +15,9 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.java.utils.StringTools;
 
-public class ImagedDTO extends DTO {
+public abstract class ImagedDTO extends DTO {
 	private static final Logger LOG = LoggerFactory.getLogger(ImagedDTO.class);
 
 	public String image;
@@ -32,6 +34,8 @@ public class ImagedDTO extends DTO {
 
 		return this;
 	}
+
+	protected abstract Uri getImageUri();
 
 	public String getImage(Context context) {
 		return Constants.Paths.getImagePath(context, image);
@@ -64,10 +68,14 @@ public class ImagedDTO extends DTO {
 	}
 
 	public void loadInto(ImageView image, ImageView type, boolean alwaysShowType) {
-		loadInto(image, type, this.image, this.typeImage, alwaysShowType);
+		String fullImagePath = this.image != null? StringTools.toStringNull(getImageUri(), null) : null;
+		int typeID = AndroidTools.getRawResourceID(image.getContext(), this.typeImage);
+		loadInto(image, type, fullImagePath, typeID, alwaysShowType);
 	}
+
 	public static void loadInto(ImageView image, ImageView type, String imagePath, String typeName,
 			boolean alwaysShowType) {
+		// @see #getImage(Context), but we're static
 		String fullImagePath = Constants.Paths.getImagePath(image.getContext(), imagePath);
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
 		loadInto(image, type, fullImagePath, typeID, alwaysShowType);

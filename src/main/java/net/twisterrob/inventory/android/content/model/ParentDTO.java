@@ -2,8 +2,11 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.Locale;
 
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.net.Uri;
 
+import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.content.contract.ParentColumns;
 import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
 
@@ -24,6 +27,27 @@ public class ParentDTO extends ImagedDTO {
 		name = cursor.getString(cursor.getColumnIndexOrThrow(ParentColumns.NAME));
 
 		return this;
+	}
+	@Override protected Uri getImageUri() {
+		Uri baseUri = getBaseUri();
+		if (baseUri != null) {
+			ContentUris.withAppendedId(baseUri, this.id);
+		}
+		return null;
+	}
+
+	private Uri getBaseUri() {
+		switch (parentType) {
+			case Category:
+				return InventoryContract.Category.ITEM_URI;
+			case Property:
+				return InventoryContract.Property.ITEM_URI;
+			case Room:
+				return InventoryContract.Room.ITEM_URI;
+			case Item:
+				return InventoryContract.Item.ITEM_URI;
+		}
+		return null;
 	}
 
 	@Override

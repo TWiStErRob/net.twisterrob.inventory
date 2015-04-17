@@ -76,7 +76,7 @@ public interface Constants {
 		public static final DrawableRequestBuilder<Integer> SVG_REQUEST = Glide
 				.with(App.getAppContext())
 				.fromResource()
-//				.listener(SVG_LOGGING_LISTENER)
+				.listener(SVG_LOGGING_LISTENER)
 				.decoder(getSvgDecoder())
 				.animate(android.R.anim.fade_in)
 				.error(R.drawable.image_error);
@@ -84,7 +84,7 @@ public interface Constants {
 		public static final DrawableRequestBuilder<String> IMAGE_REQUEST = Glide
 				.with(App.getAppContext())
 				.fromString()
-//				.listener(IMAGE_LOGGING_LISTENER)
+				.listener(IMAGE_LOGGING_LISTENER)
 				.animate(android.R.anim.fade_in)
 				.error(R.drawable.image_error);
 

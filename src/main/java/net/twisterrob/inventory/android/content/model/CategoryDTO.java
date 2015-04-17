@@ -3,11 +3,15 @@ package net.twisterrob.inventory.android.content.model;
 import java.util.Locale;
 
 import android.database.Cursor;
+import android.net.Uri;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
+import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.content.contract.Category;
 
 public class CategoryDTO extends ImagedDTO {
+	private static final Uri APP_RESOURCE_RAW = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/");
+
 	public Long parentID;
 	public String parentName;
 
@@ -24,6 +28,9 @@ public class CategoryDTO extends ImagedDTO {
 		parentName = DatabaseTools.getOptionalString(cursor, Category.PARENT_NAME);
 
 		return this;
+	}
+	@Override protected Uri getImageUri() {
+		return APP_RESOURCE_RAW.buildUpon().appendPath(typeImage).build();
 	}
 
 	@Override

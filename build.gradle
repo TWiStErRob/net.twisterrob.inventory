@@ -39,5 +39,8 @@ android {
 	defaultConfig {
 		applicationId 'net.twisterrob.inventory'
 	}
+	aaptOptions {
+		noCompress 'svg' // Resources.openRawResourceFd can only open AssetFileDescriptor for uncompressed resources
+	}
 	sourceSets.main.res.srcDir 'src/main/res-icons'
 }

@@ -76,4 +76,22 @@ public class DatabaseTools {
 			cursor.close();
 		}
 	}
+
+	public static String singleResultFromColumn(@NonNull Cursor cursor, @NonNull String columnName) {
+		try {
+			if (cursor.getCount() == 0 || cursor.getColumnCount() == 0) {
+				throw new IllegalArgumentException("Empty cursor");
+			}
+			if (1 < cursor.getCount()) {
+				throw new IllegalArgumentException("Multiple rows returned");
+			}
+			if (!cursor.moveToFirst()) {
+				throw new IllegalArgumentException("Cannot move to first item");
+			}
+			int columnIndex = cursor.getColumnIndexOrThrow(columnName);
+			return cursor.isNull(columnIndex)? null : cursor.getString(columnIndex);
+		} finally {
+			cursor.close();
+		}
+	}
 }
