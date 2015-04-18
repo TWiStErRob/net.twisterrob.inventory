@@ -9,7 +9,7 @@ import android.widget.*;
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
 public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends CursorRecyclerAdapter<VH> {
@@ -58,11 +58,13 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 	}
 
 	@Override public void onBindViewHolder(VH holder, Cursor cursor) {
+		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+		Type type = Type.from(cursor, CommonColumns.TYPE);
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+		boolean hasImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE)) != null;
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 
 		holder.title.setText(name);
-		ImagedDTO.loadInto(holder.image, image, typeImage);
+		ImagedDTO.loadInto(holder.image, hasImage? type : null, id, typeImage);
 	}
 }

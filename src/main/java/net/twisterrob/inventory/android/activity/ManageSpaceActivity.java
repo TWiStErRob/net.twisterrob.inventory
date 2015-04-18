@@ -10,8 +10,8 @@ import android.app.*;
 import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.database.Cursor;
-import android.os.*;
 import android.os.Build.*;
+import android.os.*;
 import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.utils.concurrent.SafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
@@ -60,8 +61,7 @@ public class ManageSpaceActivity extends BaseActivity {
 				new ConfirmDialog("Clear Image Cache",
 						"You're about to remove all files in the image cache. There will be no permanent damage done. The cache will be filled as required in the future..") {
 					@Override protected void doClean() {
-						//  TODO 3.5.3 Glide.get(getApplicationContext()).clearDiskCache();
-						IOTools.delete(Glide.getPhotoCacheDir(App.getAppContext()));
+						Glide.get(getApplicationContext()).clearDiskCache();
 					}
 				}.show(getSupportFragmentManager(), null);
 			}
@@ -166,7 +166,7 @@ public class ManageSpaceActivity extends BaseActivity {
 		executeParallel(new GetFolderSize(allSize),
 				new File(getApplicationInfo().dataDir), getExternalCacheDir(), getExternalFilesDir(null));
 		executeParallel(new GetSize<Void>(searchIndexSize) {
-			@Override protected Long doInBackground(Void... params) {
+			@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
 				// sum 0 rows is NULL, count 0 rows is 0...
 				String sql = "select coalesce(sum(length(name) + length(location)), 0) + count() * 4 * 3 from Search";
 				Cursor cursor = App.db().getReadableDatabase().rawQuery(sql, null);
@@ -214,7 +214,7 @@ public class ManageSpaceActivity extends BaseActivity {
 		}
 	}
 
-	private static abstract class GetSize<Param> extends AsyncTask<Param, Long, Long> {
+	private static abstract class GetSize<Param> extends SafeAsyncTask<Param, Long, Long> {
 		private final TextView result;
 		public GetSize(TextView result) {
 			this.result = result;
@@ -227,11 +227,18 @@ public class ManageSpaceActivity extends BaseActivity {
 			//result.setText("Calculating... (" + getSize(values[0]) + ")");
 		}
 
-		@Override protected void onPostExecute(Long size) {
-			result.setText(getSize(size));
+		@SafeVarargs
+		@Override protected final void onResult(Long size, Param... params) {
+			result.setText(format(size));
 		}
 
-		private String getSize(long size) {
+		@SafeVarargs
+		@Override protected final void onError(@NonNull Exception ex, Param... params) {
+			App.toast(ex.getMessage());
+			result.setText("?");
+		}
+
+		private String format(long size) {
 			return Formatter.formatFileSize(result.getContext(), size);
 		}
 	}
@@ -241,7 +248,7 @@ public class ManageSpaceActivity extends BaseActivity {
 			super(result);
 		}
 
-		@Override protected Long doInBackground(File... dirs) {
+		@Override protected Long doInBackgroundSafe(File... dirs) {
 			long result = 0;
 			for (File dir : dirs) {
 				publishProgress(result);

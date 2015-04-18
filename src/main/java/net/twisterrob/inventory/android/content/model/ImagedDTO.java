@@ -96,8 +96,9 @@ public abstract class ImagedDTO extends DTO {
 		}
 	}
 
-	public static void loadInto(ImageView image, String imagePath, String typeName) {
-		String fullImagePath = Constants.Paths.getImagePath(image.getContext(), imagePath);
+	public static void loadInto(ImageView image, Type entity, long id, String typeName) {
+		Uri uri = entity != null? entity.getImageUri(id) : null;
+		String fullImagePath = StringTools.toString(uri, null);
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
 		loadInto(image, fullImagePath, typeID);
 	}

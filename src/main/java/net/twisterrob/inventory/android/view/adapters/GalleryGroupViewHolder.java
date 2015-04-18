@@ -7,7 +7,7 @@ import android.view.View.*;
 import android.widget.*;
 
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
 public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
@@ -38,8 +38,10 @@ public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
 		count.setText(getCountText(cursor));
 
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-		ImagedDTO.loadInto(image, imagePath, typeImage);
+		boolean hasImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE)) != null;
+		Type type = Type.from(cursor, CommonColumns.TYPE);
+		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+		ImagedDTO.loadInto(image, hasImage? type : null, id, typeImage);
 	}
 
 	private static String getName(Cursor cursor) {
