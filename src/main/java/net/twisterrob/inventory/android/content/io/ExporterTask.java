@@ -14,7 +14,6 @@ import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress.Phase;
 

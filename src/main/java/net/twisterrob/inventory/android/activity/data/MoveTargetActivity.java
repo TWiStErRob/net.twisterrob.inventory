@@ -20,7 +20,6 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.*;

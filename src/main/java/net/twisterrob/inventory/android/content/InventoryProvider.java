@@ -147,10 +147,13 @@ public class InventoryProvider extends ContentProvider {
 	}
 
 	private Cursor buildImageCursor(long belongingID, String imagePath) throws IOException {
-		File file = new File(imagePath);
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream((int)file.length());
-		IOTools.copyStream(new FileInputStream(file), bytes);
-		byte[] imageContents = bytes.toByteArray();
+		byte[] imageContents = null;
+		if (imagePath != null) {
+			File file = new File(imagePath);
+			ByteArrayOutputStream bytes = new ByteArrayOutputStream((int)file.length());
+			IOTools.copyStream(new FileInputStream(file), bytes);
+			imageContents = bytes.toByteArray();
+		}
 		MatrixCursor cursor = new MatrixCursor(new String[] {BaseColumns._ID, FILE_COLUMN}, 1);
 		cursor.addRow(new Object[] {belongingID, imageContents});
 		return cursor;
@@ -227,15 +230,20 @@ public class InventoryProvider extends ContentProvider {
 			throw new FileNotFoundException("Multiple items at " + uri);
 		}
 
-		c.moveToFirst();
-		int i = c.getColumnIndex(FILE_COLUMN);
-		byte[] contents = (i >= 0? c.getBlob(i) : null);
-		c.close();
-		if (contents == null) {
-			throw new FileNotFoundException("Column " + FILE_COLUMN + " not found.");
+		try {
+			c.moveToFirst();
+			int i = c.getColumnIndex(FILE_COLUMN);
+			if (i < 0) {
+				throw new FileNotFoundException("Column " + FILE_COLUMN + " not found for " + uri);
+			}
+			byte[] contents = c.getBlob(i);
+			if (contents == null) {
+				throw new FileNotFoundException("No blob for " + uri);
+			}
+			return AndroidTools.stream(contents);
+		} finally {
+			c.close();
 		}
-
-		return AndroidTools.stream(contents);
 	}
 
 	@DebugHelper

@@ -15,7 +15,7 @@ import android.support.annotation.StringRes;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
+import net.twisterrob.inventory.android.content.contract.Type;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress.Phase;
 import net.twisterrob.inventory.android.content.io.csv.CSVImporter;

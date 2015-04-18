@@ -8,7 +8,7 @@ import android.widget.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
 public class GalleryViewHolder extends RecyclerView.ViewHolder {
@@ -43,12 +43,20 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 		count.setVisibility(countText != null? View.VISIBLE : View.GONE);
 
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
-		ImagedDTO.loadInto(image, type, imagePath, typeImage, false);
+		ImagedDTO.loadInto(image, type, getImage(cursor) != null? getType(cursor) : null, getID(cursor), typeImage,
+				false);
 	}
-
+	private static Type getType(Cursor cursor) {
+		return Type.from(cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE)));
+	}
+	private static long getID(Cursor cursor) {
+		return cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+	}
 	private static String getName(Cursor cursor) {
 		return cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+	}
+	private static String getImage(Cursor cursor) {
+		return cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
 	}
 
 	private static String getCountText(Cursor cursor) {

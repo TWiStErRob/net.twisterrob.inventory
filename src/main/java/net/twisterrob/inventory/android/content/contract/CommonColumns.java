@@ -8,6 +8,7 @@ public interface CommonColumns {
 	String DESCRIPTION = "description";
 	String IMAGE = "image";
 	String TYPE_IMAGE = "typeImage"; // never NULL
+	String TYPE_ID = "typeID";
 	String TYPE = "type";
 	String COUNT_CHILDREN_DIRECT = "countChildren";
 	String COUNT_CHILDREN_ALL = "countAllChildren";

@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.java.utils.StringTools;
 
 public abstract class ImagedDTO extends DTO {
@@ -30,7 +30,7 @@ public abstract class ImagedDTO extends DTO {
 
 		typeImage = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE);
 		image = DatabaseTools.getOptionalString(cursor, CommonColumns.IMAGE);
-		type = DatabaseTools.getOptionalLong(cursor, CommonColumns.TYPE, type);
+		type = DatabaseTools.getOptionalLong(cursor, CommonColumns.TYPE_ID, type);
 
 		return this;
 	}
@@ -68,15 +68,16 @@ public abstract class ImagedDTO extends DTO {
 	}
 
 	public void loadInto(ImageView image, ImageView type, boolean alwaysShowType) {
-		String fullImagePath = this.image != null? StringTools.toStringNull(getImageUri(), null) : null;
+		String fullImagePath = this.image != null? StringTools.toString(getImageUri(), null) : null;
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), this.typeImage);
 		loadInto(image, type, fullImagePath, typeID, alwaysShowType);
 	}
 
-	public static void loadInto(ImageView image, ImageView type, String imagePath, String typeName,
+	public static void loadInto(ImageView image, ImageView type, Type entity, long id, String typeName,
 			boolean alwaysShowType) {
 		// @see #getImage(Context), but we're static
-		String fullImagePath = Constants.Paths.getImagePath(image.getContext(), imagePath);
+		Uri uri = entity != null? entity.getImageUri(id) : null;
+		String fullImagePath = StringTools.toString(uri, null);
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
 		loadInto(image, type, fullImagePath, typeID, alwaysShowType);
 	}
@@ -95,15 +96,12 @@ public abstract class ImagedDTO extends DTO {
 		}
 	}
 
-	public void loadInto(ImageView image) {
-		loadInto(image, this.image, this.typeImage);
-	}
 	public static void loadInto(ImageView image, String imagePath, String typeName) {
 		String fullImagePath = Constants.Paths.getImagePath(image.getContext(), imagePath);
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
 		loadInto(image, fullImagePath, typeID);
 	}
-	public static void loadInto(ImageView image, String fullImagePath, int typeID) {
+	private static void loadInto(ImageView image, String fullImagePath, int typeID) {
 		if (fullImagePath == null) {
 			Pic.SVG_REQUEST.load(typeID).into(image);
 		} else {

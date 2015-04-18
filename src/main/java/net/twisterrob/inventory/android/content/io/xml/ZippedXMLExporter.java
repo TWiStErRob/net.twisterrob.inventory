@@ -12,7 +12,6 @@ import android.util.Xml;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
 import net.twisterrob.inventory.android.content.io.*;
 import net.twisterrob.java.utils.StringTools;
 
@@ -49,7 +48,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 	@Override protected void writeData(XmlSerializer output, Cursor cursor) throws IOException {
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
 		long parentID = cursor.getLong(cursor.getColumnIndexOrThrow(Item.PARENT_ID));
-		Type type = Type.from(cursor, "type");
+		Type type = Type.from(cursor, CommonColumns.TYPE);
 
 		Belonging belonging = hier.get(type, id);
 		belonging.name = cursor.getString(cursor.getColumnIndexOrThrow(nameColumn(type)));
@@ -59,7 +58,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		belonging.comment = ExporterTask.buildComment(cursor);
 
 		if (type != Type.Property) { // can't have parents
-			hier.put(parentID, Type.from(cursor, "parentType"), belonging);
+			hier.put(parentID, Type.from(cursor, ParentColumns.PARENT_TYPE), belonging);
 		}
 	}
 

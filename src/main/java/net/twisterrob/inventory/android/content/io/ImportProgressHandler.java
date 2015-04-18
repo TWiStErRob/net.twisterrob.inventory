@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import android.support.annotation.StringRes;
 
-import net.twisterrob.inventory.android.content.contract.ParentColumns.Type;
+import net.twisterrob.inventory.android.content.contract.Type;
 
 public interface ImportProgressHandler {
 	void publishStart(long size);

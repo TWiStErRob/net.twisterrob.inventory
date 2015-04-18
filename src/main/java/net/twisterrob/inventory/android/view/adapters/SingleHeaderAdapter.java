@@ -23,8 +23,8 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 
 	@Override public Cursor swapCursor(Cursor newCursor) {
 		if (header != null) { // add one extra row for header
-			MatrixCursor header = new MatrixCursor(new String[] {"_id"}, 1);
-			header.addRow(new Object[] {CommonColumns.ID_ADD});
+			MatrixCursor header = new MatrixCursor(new String[] {"type", "_id"}, 1);
+			header.addRow(new Object[] {"header", CommonColumns.ID_ADD});
 			newCursor = new MergeCursor(new Cursor[] {header, newCursor});
 		}
 		return super.swapCursor(newCursor);

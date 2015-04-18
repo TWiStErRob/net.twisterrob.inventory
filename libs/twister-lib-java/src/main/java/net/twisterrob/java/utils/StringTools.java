@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
-import javax.annotation.*;
+import javax.annotation.Nullable;
 
 public final class StringTools {
 	private StringTools() {
@@ -58,21 +58,9 @@ public final class StringTools {
 	 *
 	 * @see String#valueOf(Object)
 	 * @param nullObj will be used when {@param obj} is <code>null</code>
-	 * @return toString of {@param obj} or {@param nullObj}
+	 * @return toString of {@param obj} or {@param nullObj} or  <code>null</code> if both  <code>null</code>
 	 */
-	public static @Nonnull String toString(@Nullable Object obj, @Nonnull Object nullObj) {
-		return obj == null? nullObj.toString() : obj.toString();
-	}
-
-	/**
-	 * Behaves like {@link String#valueOf}, but with a customizable <code>null</code> String.
-	 * Also allowing <code>null</code> as {@param nullObj}.
-	 *
-	 * @see String#valueOf(Object)
-	 * @param nullObj will be used when {@param obj} is <code>null</code>
-	 * @return toString of {@param obj} or {@param nullObj}
-	 */
-	public static @Nullable String toStringNull(@Nullable Object obj, @Nullable Object nullObj) {
+	public static @Nullable String toString(Object obj, Object nullObj) {
 		return obj == null? (nullObj == null? null : nullObj.toString()) : obj.toString();
 	}
 
