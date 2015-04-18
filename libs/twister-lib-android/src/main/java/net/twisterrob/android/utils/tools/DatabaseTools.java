@@ -2,6 +2,8 @@ package net.twisterrob.android.utils.tools;
 
 import java.util.Locale;
 
+import javax.annotation.Nullable;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
@@ -16,6 +18,17 @@ public class DatabaseTools {
 		int version = database != null? database.getVersion() : 0;
 		String path = database != null? database.getPath() : null;
 		return String.format(Locale.ROOT, "v%d@%s", version, path);
+	}
+	public static boolean getBoolean(Cursor cursor, String columnName) {
+		int col = cursor.getColumnIndex(columnName);
+		return cursor.getInt(col) != 0;
+	}
+	public static boolean getOptionalBoolean(Cursor cursor, String columnName, boolean defaultValue) {
+		int col = cursor.getColumnIndex(columnName);
+		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			return cursor.getInt(col) != 0;
+		}
+		return defaultValue;
 	}
 
 	public static int getOptionalInt(Cursor cursor, String columnName, int defaultValue) {
@@ -57,41 +70,64 @@ public class DatabaseTools {
 		return defaultValue;
 	}
 
-	public static Long singleResult(@NonNull Cursor cursor) {
+	public static Long singleLong(@NonNull Cursor cursor, @Nullable String columnName) {
 		try {
-			if (cursor.getCount() == 0 || cursor.getColumnCount() == 0) {
-				throw new IllegalArgumentException("Empty cursor");
+			checkSingleRow(cursor);
+			int columnIndex;
+			if (columnName == null) {
+				checkSingleColumn(cursor);
+				columnIndex = 0;
+			} else {
+				columnIndex = cursor.getColumnIndexOrThrow(columnName);
 			}
-			if (1 < cursor.getCount()) {
-				throw new IllegalArgumentException("Multiple rows returned");
-			}
-			if (1 < cursor.getColumnCount()) {
-				throw new IllegalArgumentException("Multiple columns returned");
-			}
-			if (!cursor.moveToFirst()) {
-				throw new IllegalArgumentException("Cannot move to first item");
-			}
-			return cursor.isNull(0)? null : cursor.getLong(0);
+			return cursor.isNull(columnIndex)? null : cursor.getLong(columnIndex);
 		} finally {
 			cursor.close();
 		}
 	}
 
-	public static String singleResultFromColumn(@NonNull Cursor cursor, @NonNull String columnName) {
+	public static String singleString(@NonNull Cursor cursor, @Nullable String columnName) {
 		try {
-			if (cursor.getCount() == 0 || cursor.getColumnCount() == 0) {
-				throw new IllegalArgumentException("Empty cursor");
+			checkSingleRow(cursor);
+			if (columnName == null) {
+				checkSingleColumn(cursor);
+				return cursor.getString(0);
+			} else {
+				return cursor.getString(cursor.getColumnIndexOrThrow(columnName));
 			}
-			if (1 < cursor.getCount()) {
-				throw new IllegalArgumentException("Multiple rows returned");
-			}
-			if (!cursor.moveToFirst()) {
-				throw new IllegalArgumentException("Cannot move to first item");
-			}
-			int columnIndex = cursor.getColumnIndexOrThrow(columnName);
-			return cursor.isNull(columnIndex)? null : cursor.getString(columnIndex);
 		} finally {
 			cursor.close();
+		}
+	}
+
+	public static byte[] singleBlob(@NonNull Cursor cursor, @Nullable String columnName) {
+		try {
+			checkSingleRow(cursor);
+			if (columnName == null) {
+				checkSingleColumn(cursor);
+				return cursor.getBlob(0);
+			} else {
+				return cursor.getBlob(cursor.getColumnIndexOrThrow(columnName));
+			}
+		} finally {
+			cursor.close();
+		}
+	}
+
+	private static void checkSingleRow(@NonNull Cursor cursor) {
+		if (cursor.getCount() == 0 || cursor.getColumnCount() == 0) {
+			throw new IllegalArgumentException("Empty cursor");
+		}
+		if (1 < cursor.getCount()) {
+			throw new IllegalArgumentException("Multiple rows returned");
+		}
+		if (!cursor.moveToFirst()) {
+			throw new IllegalArgumentException("Cannot move to first item");
+		}
+	}
+	private static void checkSingleColumn(@NonNull Cursor cursor) {
+		if (1 < cursor.getColumnCount()) {
+			throw new IllegalArgumentException("Multiple columns returned");
 		}
 	}
 }

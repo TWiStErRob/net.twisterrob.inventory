@@ -10,7 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
-import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -142,7 +142,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		cursor.moveToPosition(-1);
 		publishStart();
 		while (cursor.moveToNext()) {
-			if (!cursor.isNull(cursor.getColumnIndex(CommonColumns.IMAGE))) {
+			if (DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE)) {
 				progress.imagesCount++;
 			}
 			exporter.writeData(cursor);

@@ -96,9 +96,9 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		@Override protected Long doInBackground(PropertyDTO param) throws SQLiteConstraintException {
 			Database db = App.db();
 			if (param.id == Property.ID_ADD) {
-				return db.createProperty(param.type, param.name, param.description, param.image);
+				return db.createProperty(param.type, param.name, param.description);
 			} else {
-				db.updateProperty(param.id, param.type, param.name, param.description, param.image);
+				db.updateProperty(param.id, param.type, param.name, param.description);
 				return param.id;
 			}
 		}

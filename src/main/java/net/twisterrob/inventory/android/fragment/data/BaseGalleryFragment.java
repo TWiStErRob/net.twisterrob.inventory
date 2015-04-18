@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.ViewProvider.StaticViewProvider;
 import net.twisterrob.inventory.android.R;
@@ -209,8 +209,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		private boolean isGroup(int position) {
 			Cursor c = getCursor();
 			c.moveToPosition(position);
-			int groupIndex = c.getColumnIndex("group");
-			return groupIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN && c.getInt(groupIndex) == 1; // boolean
+			return DatabaseTools.getOptionalBoolean(c, "group", false); // boolean
 		}
 
 		@Override protected ViewHolder onCreateNonHeaderViewHolder(ViewGroup parent, int viewType) {

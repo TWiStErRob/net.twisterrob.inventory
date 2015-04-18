@@ -33,7 +33,6 @@ public class Database {
 			}
 		};
 		// TODO App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
-		m_helper.setDumpOnOpen(BuildConfig.DEBUG);
 		m_helper.setDevMode(BuildConfig.DEBUG);
 	}
 
@@ -73,6 +72,7 @@ public class Database {
 		try {
 			long start = System.nanoTime();
 			Cursor cursor = db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
+			cursor.moveToFirst(); // make sure the query runs now
 			long end = System.nanoTime();
 			LOG.debug("rawQuery({}, {}): {}ms", name, paramString, (end - start) / 10000000);
 			return cursor;
@@ -179,28 +179,40 @@ public class Database {
 		return rawQuery(R.string.query_category, itemID);
 	}
 
-	public long createProperty(long type, String name, String description, String image) {
-		return rawInsert(R.string.query_property_create, type, name, description, image);
+	public long createProperty(long type, String name, String description) {
+		return rawInsert(R.string.query_property_create, type, name, description);
 	}
 	public Long findProperty(String name) {
 		return getID(R.string.query_property_find, name);
 	}
-	public void updateProperty(long id, long type, String name, String description, String image) {
-		execSQL(R.string.query_property_update, type, name, description, image, id);
+	public void updateProperty(long id, long type, String name, String description) {
+		execSQL(R.string.query_property_update, type, name, description, id);
+	}
+	public void addPropertyImage(long id, byte[] imageContents) {
+		execSQL(R.string.query_property_image_set, imageContents, id);
+	}
+	public Cursor getPropertyImage(long id) {
+		return rawQuery(R.string.query_property_image_get, id);
 	}
 	public void deleteProperty(long id) {
 		execSQL(R.string.query_property_delete, id);
 	}
 
-	public long createRoom(long propertyID, long type, String name, String description, String image) {
-		rawInsert(R.string.query_room_create, propertyID, type, name, description, image);
+	public long createRoom(long propertyID, long type, String name, String description) {
+		rawInsert(R.string.query_room_create, propertyID, type, name, description);
 		return findRoom(propertyID, name); // last_insert_rowid() doesn't work with INSTEAD OF INSERT triggers on VIEWs
 	}
 	public Long findRoom(long propertyID, String name) {
 		return getID(R.string.query_room_find, propertyID, name);
 	}
-	public void updateRoom(long id, long type, String name, String description, String image) {
-		execSQL(R.string.query_room_update, type, name, description, image, id);
+	public void updateRoom(long id, long type, String name, String description) {
+		execSQL(R.string.query_room_update, type, name, description, id);
+	}
+	public void addRoomImage(long id, byte[] imageContents) {
+		execSQL(R.string.query_room_image_set, imageContents, id);
+	}
+	public Cursor getRoomImage(long id) {
+		return rawQuery(R.string.query_room_image_get, id);
 	}
 	public void deleteRoom(long id) {
 		execSQL(R.string.query_room_delete, id);
@@ -221,17 +233,23 @@ public class Database {
 		}
 	}
 
-	private long createItem(Long parentID, long category, String name, String description, String image) {
-		return rawInsert(R.string.query_item_create, parentID, category, name, description, image);
+	private long createItem(Long parentID, long category, String name, String description) {
+		return rawInsert(R.string.query_item_create, parentID, category, name, description);
 	}
-	public long createItem(long parentID, long category, String name, String description, String image) {
-		return createItem((Long)parentID, category, name, description, image);
+	public long createItem(long parentID, long category, String name, String description) {
+		return createItem((Long)parentID, category, name, description);
 	}
 	public Long findItem(long parentID, String name) {
 		return getID(R.string.query_item_find, parentID, name);
 	}
-	public void updateItem(long id, long category, String name, String description, String image) {
-		execSQL(R.string.query_item_update, category, name, description, image, id);
+	public void updateItem(long id, long category, String name, String description) {
+		execSQL(R.string.query_item_update, category, name, description, id);
+	}
+	public void addItemImage(long id, byte[] imageContents) {
+		execSQL(R.string.query_item_image_set, imageContents, id);
+	}
+	public Cursor getItemImage(long id) {
+		return rawQuery(R.string.query_item_image_get, id);
 	}
 	public void deleteItem(long id) {
 		execSQL(R.string.query_item_delete, id);
@@ -338,7 +356,7 @@ public class Database {
 		} finally {
 			db.endTransaction();
 		}
-		db.execSQL("VACUUM"); // must be outside a transaction
+		//db.execSQL("VACUUM"); // must be outside a transaction
 	}
 
 	public void rebuildSearch() {
@@ -351,6 +369,6 @@ public class Database {
 		} finally {
 			db.endTransaction();
 		}
-		db.execSQL("VACUUM"); // must be outside a transaction
+		//db.execSQL("VACUUM"); // must be outside a transaction
 	}
 }

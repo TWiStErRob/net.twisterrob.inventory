@@ -107,7 +107,7 @@ CREATE TABLE Item (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         NULL,     -- user entered
-	image       VARCHAR      NULL,     -- relative path
+	image       BLOB         NULL,     -- JPEG image
 	category    INTEGER      DEFAULT 0 -- uncategorized
 		CONSTRAINT fk_Item_category
 			REFERENCES Category(_id)
@@ -193,7 +193,7 @@ CREATE TABLE Property (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         NULL,     -- user entered
-	image       VARCHAR      NULL,     -- relative path
+	image       BLOB         NULL,     -- JPEG image
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Property_type
 			REFERENCES PropertyType(_id)
@@ -228,7 +228,7 @@ CREATE TABLE Room (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         NULL,     -- user entered
-	image       VARCHAR      NULL,     -- relative path
+	image       BLOB         NULL,     -- JPEG image
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Room_type
 			REFERENCES RoomType(_id)

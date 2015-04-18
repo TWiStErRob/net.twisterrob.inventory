@@ -137,7 +137,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	@Override protected CharSequence update(RoomDTO entity, long newType, String newTypeName) {
-		App.db().updateRoom(entity.id, newType, entity.name, entity.description, entity.image);
+		App.db().updateRoom(entity.id, newType, entity.name, entity.description);
 		return newTypeName;
 	}
 

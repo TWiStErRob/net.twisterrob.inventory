@@ -96,7 +96,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	}
 
 	@Override protected CharSequence update(PropertyDTO entity, long newType, String newTypeName) {
-		App.db().updateProperty(entity.id, newType, entity.name, entity.description, entity.image);
+		App.db().updateProperty(entity.id, newType, entity.name, entity.description);
 		return newTypeName;
 	}
 

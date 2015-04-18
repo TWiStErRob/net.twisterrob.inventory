@@ -7,7 +7,7 @@ import android.view.View.*;
 import android.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
@@ -61,7 +61,7 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
 		Type type = Type.from(cursor, CommonColumns.TYPE);
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-		boolean hasImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE)) != null;
+		boolean hasImage = DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE);
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 
 		holder.title.setText(name);

@@ -7,6 +7,7 @@ import android.view.View.*;
 import android.widget.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
@@ -43,7 +44,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 		count.setVisibility(countText != null? View.VISIBLE : View.GONE);
 
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		ImagedDTO.loadInto(image, type, getImage(cursor) != null? getType(cursor) : null, getID(cursor), typeImage,
+		ImagedDTO.loadInto(image, type, hasImage(cursor)? getType(cursor) : null, getID(cursor), typeImage,
 				false);
 	}
 	private static Type getType(Cursor cursor) {
@@ -55,8 +56,8 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 	private static String getName(Cursor cursor) {
 		return cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 	}
-	private static String getImage(Cursor cursor) {
-		return cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+	private static boolean hasImage(Cursor cursor) {
+		return DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE);
 	}
 
 	private static String getCountText(Cursor cursor) {

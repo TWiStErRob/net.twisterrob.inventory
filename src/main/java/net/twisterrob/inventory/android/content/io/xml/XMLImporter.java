@@ -199,7 +199,7 @@ public class XMLImporter implements Importer {
 					progress.warning(R.string.backup_import_invalid_type, type, name);
 					typeID = PropertyType.DEFAULT;
 				}
-				id = App.db().createProperty(typeID, name, description, image);
+				id = App.db().createProperty(typeID, name, description);
 			} else {
 				progress.warning(R.string.backup_import_conflict_property, name);
 			}
@@ -220,7 +220,7 @@ public class XMLImporter implements Importer {
 					progress.warning(R.string.backup_import_invalid_type, type, name);
 					typeID = RoomType.DEFAULT;
 				}
-				id = App.db().createRoom(propertyID, typeID, name, description, image);
+				id = App.db().createRoom(propertyID, typeID, name, description);
 			} else {
 				progress.warning(R.string.backup_import_conflict_room, null, name);
 			}
@@ -273,7 +273,7 @@ public class XMLImporter implements Importer {
 					progress.warning(R.string.backup_import_invalid_type, type, name);
 					typeID = Category.DEFAULT;
 				}
-				id = App.db().createItem(parentID, typeID, name, description, image);
+				id = App.db().createItem(parentID, typeID, name, description);
 			} else {
 				progress.warning(R.string.backup_import_conflict_item, null, null, name);
 			}

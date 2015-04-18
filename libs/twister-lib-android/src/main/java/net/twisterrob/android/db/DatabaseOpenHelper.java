@@ -113,7 +113,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			execFile(db, String.format(DB_TEST_FILE, dbName));
 		}
 		if (devMode) {
-			backupDB(db, "onOpen_backup");
+			if (dumpOnOpen) {
+				backupDB(db, "onOpen_backup");
+			}
 			execFile(db, String.format(DB_DEVELOPMENT_FILE, dbName));
 		}
 		LOG.info("Opened database: {}", dbToString(db));

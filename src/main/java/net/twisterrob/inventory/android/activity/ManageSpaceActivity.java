@@ -170,7 +170,7 @@ public class ManageSpaceActivity extends BaseActivity {
 				// sum 0 rows is NULL, count 0 rows is 0...
 				String sql = "select coalesce(sum(length(name) + length(location)), 0) + count() * 4 * 3 from Search";
 				Cursor cursor = App.db().getReadableDatabase().rawQuery(sql, null);
-				return (long)DatabaseTools.singleResult(cursor);
+				return (long)DatabaseTools.singleLong(cursor, null);
 			}
 		});
 	}

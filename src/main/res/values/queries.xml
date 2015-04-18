@@ -6,7 +6,7 @@
 			'property'                                        as type,
 			p._id                                             as _id,
 			p.name                                            as name,
-			p.image                                           as image,
+			p.image IS NOT NULL                               as image,
 			pt.image                                          as typeImage,
 			(select count() from Room where property = p._id) as countChildren
 		from Property     p
@@ -20,7 +20,7 @@
 			p.name                                            as name,
 			p.description                                     as description,
 			p.type                                            as typeID,
-			p.image                                           as image,
+			p.image IS NOT NULL                               as image,
 			pt.image                                          as typeImage,
 			(select count() from Room where property = p._id) as countChildren,
 			(select count() from Item where parent in (select root from Room where property = p._id)) as countDirectItems,
@@ -54,7 +54,7 @@
 			r._id                                            as _id,
 			r.root                                           as root,
 			r.name                                           as name,
-			r.image                                          as image,
+			r.image IS NOT NULL                              as image,
 			COALESCE(rt.image, rtk.image)                    as typeImage,
 			p._id                                            as property,
 			p.name                                           as propertyName,
@@ -76,7 +76,7 @@
 			r.root                                           as root,
 			p._id                                            as property,
 			p.name                                           as propertyName,
-			r.image                                          as image,
+			r.image IS NOT NULL                              as image,
 			COALESCE(rt.image, rtk.image)                    as typeImage,
 			(select count() from Item where parent = r.root) as countDirectItems,
 			(select count(distinct item) from Item_Path_Node where root = r.root and root <> node) as countAllItems
@@ -107,7 +107,7 @@
 			--g._id                                           as gid,
 			i._id = g._id                                   as [group],
 			i.name                                          as name,
-			i.image                                         as image,
+			i.image IS NOT NULL                             as image,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -139,7 +139,7 @@
 			i._id                                           as _id,
 			i.name                                          as name,
 			i.description                                   as description,
-			i.image                                         as image,
+			i.image IS NOT NULL                             as image,
 			c.image                                         as typeImage,
 			ip.categoryID                                   as typeID,
 			ip.categoryName                                 as categoryName,
@@ -169,7 +169,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image                                         as image,
+			i.image IS NOT NULL                             as image,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -182,7 +182,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image                                         as image,
+			i.image IS NOT NULL                             as image,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -197,7 +197,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image                                         as image,
+			i.image IS NOT NULL                             as image,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -211,7 +211,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image                                         as image,
+			i.image IS NOT NULL                             as image,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -233,7 +233,7 @@
 					c._id       as typeID,
 					c.name      as typeName,
 					c.image     as typeImage,
-					i.image     as image
+					i.image IS NOT NULL as image
 				from Item_Path_Node n
 				join Item           i ON i._id = n.node
 				join Category       c ON i.category = c._id
@@ -249,7 +249,7 @@
 					c._id   as typeID,
 					c.name  as typeName,
 					c.image as typeImage,
-					i.image as image
+					i.image IS NOT NULL as image
 				from Item_Path_Node n
 				join Item           i ON i._id = n.node
 				join Category       c ON i.category = c._id
@@ -265,7 +265,7 @@
 					rt._id                        as typeID,
 					rt.name                       as typeName,
 					COALESCE(rt.image, rtk.image) as typeImage,
-					r.image                       as image
+					r.image IS NOT NULL           as image
 				from Item_Path_Node n
 				join Room           r   ON n.root = r.root
 				join RoomType       rt  ON r.type = rt._id
@@ -282,7 +282,7 @@
 					pt._id     as typeID,
 					pt.name    as typeName,
 					pt.image   as typeImage,
-					p.image    as image
+					p.image IS NOT NULL    as image
 				from Item_Path_Node n
 				join Room           r  ON n.root = r.root
 				join Property       p  ON r.property = p._id
@@ -299,7 +299,7 @@
 			'category'                                          as type,
 			c._id                                               as _id,
 			c.name                                              as name,
-			NULL                                                as image,
+			1 <> 2                                              as image,
 			c.image                                             as typeImage,
 			(select count() from Category where parent = c._id) as countChildren,
 			(select count() from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
@@ -376,7 +376,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image                                         as image,
+			i.image IS NOT NULL                             as image,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -393,7 +393,7 @@
 			'item'                         as type,
 			i._id                          as _id,
 			i.name                         as name,
-			i.image                        as image,
+			i.image IS NOT NULL            as image,
 			c.image                        as typeImage,
 			datetime(r.visit, 'localtime') as visit,
 			r.recency                      as recency,
@@ -430,7 +430,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image                                         as image,
+			i.image IS NOT NULL                             as image,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -503,13 +503,19 @@
 
 	<!-- Property CRUD -->
 	<string name="query_property_create"><![CDATA["
-		insert into Property(type, name, description, image) values(?, ?, ?, ?)
+		insert into Property(type, name, description) values(?, ?, ?)
 	"]]></string>
 	<string name="query_property_find"><![CDATA["
 		select _id from Property where name = ?
 	"]]></string>
 	<string name="query_property_update"><![CDATA["
-		update Property set type = ?, name = ?, description = ?, image = ? where _id = ?
+		update Property set type = ?, name = ?, description = ? where _id = ?
+	"]]></string>
+	<string name="query_property_image_set"><![CDATA["
+		update Property set image = ? where _id = ?
+	"]]></string>
+	<string name="query_property_image_get"><![CDATA["
+		select _id as _id, image as _data from Property where _id = ?
 	"]]></string>
 	<string name="query_property_delete"><![CDATA["
 		delete from Property where _id = ?
@@ -517,13 +523,19 @@
 
 	<!-- Room CRUD -->
 	<string name="query_room_create"><![CDATA["
-		insert into Room_Rooter(property, type, name, description, image) values(?, ?, ?, ?, ?)
+		insert into Room_Rooter(property, type, name, description) values(?, ?, ?, ?)
 	"]]></string>
 	<string name="query_room_find"><![CDATA["
 		select _id from Room where property = ? and name = ?
 	"]]></string>
 	<string name="query_room_update"><![CDATA["
-		update Room set type = ?, name = ?, description = ?, image = ? where _id = ?
+		update Room set type = ?, name = ?, description = ? where _id = ?
+	"]]></string>
+	<string name="query_room_image_set"><![CDATA["
+		update Room set image = ? where _id = ?
+	"]]></string>
+	<string name="query_room_image_get"><![CDATA["
+		select _id as _id, image as _data from Room where _id = ?
 	"]]></string>
 	<string name="query_room_delete"><![CDATA["
 		delete from Room where _id = ?
@@ -534,13 +546,19 @@
 
 	<!-- Item CRUD -->
 	<string name="query_item_create"><![CDATA["
-		insert into Item(parent, category, name, description, image) values(?, ?, ?, ?, ?)
+		insert into Item(parent, category, name, description) values(?, ?, ?, ?)
 	"]]></string>
 	<string name="query_item_find"><![CDATA["
 		select _id from Item where parent = ? and name = ?
 	"]]></string>
 	<string name="query_item_update"><![CDATA["
-		update Item set category = ?, name = ?, description = ?, image = ? where _id = ?
+		update Item set category = ?, name = ?, description = ? where _id = ?
+	"]]></string>
+	<string name="query_item_image_set"><![CDATA["
+		update Item set image = ? where _id = ?
+	"]]></string>
+	<string name="query_item_image_get"><![CDATA["
+		select _id as _id, image as _data from Item where _id = ?
 	"]]></string>
 	<string name="query_item_delete"><![CDATA["
 		delete from Item where _id = ?

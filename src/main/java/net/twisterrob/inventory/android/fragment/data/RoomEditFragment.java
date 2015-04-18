@@ -101,9 +101,9 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		@Override protected Long doInBackground(RoomDTO param) throws SQLiteConstraintException {
 			Database db = App.db();
 			if (param.id == Room.ID_ADD) {
-				return db.createRoom(param.propertyID, param.type, param.name, param.description, param.image);
+				return db.createRoom(param.propertyID, param.type, param.name, param.description);
 			} else {
-				db.updateRoom(param.id, param.type, param.name, param.description, param.image);
+				db.updateRoom(param.id, param.type, param.name, param.description);
 				return param.id;
 			}
 		}

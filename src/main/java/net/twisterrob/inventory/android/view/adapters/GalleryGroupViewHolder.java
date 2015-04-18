@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.View.*;
 import android.widget.*;
 
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
@@ -38,7 +39,7 @@ public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
 		count.setText(getCountText(cursor));
 
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		boolean hasImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE)) != null;
+		boolean hasImage = DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE);
 		Type type = Type.from(cursor, CommonColumns.TYPE);
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
 		ImagedDTO.loadInto(image, hasImage? type : null, id, typeImage);

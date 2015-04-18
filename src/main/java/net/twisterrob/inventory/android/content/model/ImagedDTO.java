@@ -20,7 +20,7 @@ import net.twisterrob.java.utils.StringTools;
 public abstract class ImagedDTO extends DTO {
 	private static final Logger LOG = LoggerFactory.getLogger(ImagedDTO.class);
 
-	public String image;
+	public boolean image;
 	public String typeImage;
 	public long type;
 
@@ -29,7 +29,7 @@ public abstract class ImagedDTO extends DTO {
 		super.fromCursorInternal(cursor);
 
 		typeImage = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE);
-		image = DatabaseTools.getOptionalString(cursor, CommonColumns.IMAGE);
+		image = DatabaseTools.getOptionalBoolean(cursor, CommonColumns.IMAGE, false);
 		type = DatabaseTools.getOptionalLong(cursor, CommonColumns.TYPE_ID, type);
 
 		return this;
@@ -38,12 +38,12 @@ public abstract class ImagedDTO extends DTO {
 	protected abstract Uri getImageUri();
 
 	public String getImage(Context context) {
-		return Constants.Paths.getImagePath(context, image);
+		return Constants.Paths.getImagePath(context, null);
 	}
 
 	public void setImage(Context context, String fullImage) {
 		if (fullImage == null) {
-			this.image = null;
+			this.image = false; // null
 		} else {
 			try {
 				String root = Paths.getImageDirectory(context).getCanonicalPath() + File.separator;
@@ -52,7 +52,7 @@ public abstract class ImagedDTO extends DTO {
 					throw new IllegalArgumentException(String.format(Locale.ROOT,
 							"Image is not in internal storage (%3$s): %2$s (<- %1$s)", fullImage, image, root));
 				}
-				this.image = image.substring(root.length());
+				this.image = true; //image.substring(root.length());
 			} catch (IOException e) {
 				LOG.error("Cannot find out the location of {}", fullImage, e);
 			}
@@ -68,7 +68,7 @@ public abstract class ImagedDTO extends DTO {
 	}
 
 	public void loadInto(ImageView image, ImageView type, boolean alwaysShowType) {
-		String fullImagePath = this.image != null? StringTools.toString(getImageUri(), null) : null;
+		String fullImagePath = this.image? StringTools.toString(getImageUri(), null) : null;
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), this.typeImage);
 		loadInto(image, type, fullImagePath, typeID, alwaysShowType);
 	}

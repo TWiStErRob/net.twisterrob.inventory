@@ -95,9 +95,9 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		@Override protected Long doInBackground(ItemDTO param) throws SQLiteConstraintException {
 			Database db = App.db();
 			if (param.id == Item.ID_ADD) {
-				return db.createItem(param.parentID, param.type, param.name, param.description, param.image);
+				return db.createItem(param.parentID, param.type, param.name, param.description);
 			} else {
-				db.updateItem(param.id, param.type, param.name, param.description, param.image);
+				db.updateItem(param.id, param.type, param.name, param.description);
 				return param.id;
 			}
 		}

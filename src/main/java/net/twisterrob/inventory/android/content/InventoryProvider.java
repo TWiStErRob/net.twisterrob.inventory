@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.content;
 
-import java.io.*;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -16,7 +16,6 @@ import static android.app.SearchManager.*;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.InventoryContract.*;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
@@ -124,44 +123,23 @@ public class InventoryProvider extends ContentProvider {
 				if (!Arrays.asList(projection).contains(FILE_COLUMN)) {
 					throw new IllegalArgumentException("Property can only be queried as a file");
 				}
-				long propertyID = Property.getID(uri);
-				return buildImageCursor(propertyID, getImageFullPath(App.db().getProperty(propertyID)));
+				return App.db().getPropertyImage(Property.getID(uri));
 			}
 			case ROOM: {
 				if (!Arrays.asList(projection).contains(FILE_COLUMN)) {
 					throw new IllegalArgumentException("Room can only be queried as a file");
 				}
-				long roomID = Room.getID(uri);
-				return buildImageCursor(roomID, getImageFullPath(App.db().getRoom(roomID)));
+				return App.db().getRoomImage(Room.getID(uri));
 			}
 			case ITEM: {
 				if (!Arrays.asList(projection).contains(FILE_COLUMN)) {
 					throw new IllegalArgumentException("Item can only be queried as a file");
 				}
-				long itemID = Item.getID(uri);
-				return buildImageCursor(itemID, getImageFullPath(App.db().getItem(itemID, false)));
+				return App.db().getItemImage(Item.getID(uri));
 			}
 			default:
 				throw new UnsupportedOperationException("Unknown URI: " + uri);
 		}
-	}
-
-	private Cursor buildImageCursor(long belongingID, String imagePath) throws IOException {
-		byte[] imageContents = null;
-		if (imagePath != null) {
-			File file = new File(imagePath);
-			ByteArrayOutputStream bytes = new ByteArrayOutputStream((int)file.length());
-			IOTools.copyStream(new FileInputStream(file), bytes);
-			imageContents = bytes.toByteArray();
-		}
-		MatrixCursor cursor = new MatrixCursor(new String[] {BaseColumns._ID, FILE_COLUMN}, 1);
-		cursor.addRow(new Object[] {belongingID, imageContents});
-		return cursor;
-	}
-
-	private String getImageFullPath(Cursor belonging) {
-		String imageFileName = DatabaseTools.singleResultFromColumn(belonging, CommonColumns.IMAGE);
-		return Paths.getImagePath(getContext(), imageFileName);
 	}
 
 	/**
@@ -206,7 +184,7 @@ public class InventoryProvider extends ContentProvider {
 				return openBlobHelper(uri, mode);
 			case CATEGORY:
 				Cursor category = App.db().getCategory(Category.getID(uri));
-				String name = DatabaseTools.singleResultFromColumn(category,
+				String name = DatabaseTools.singleString(category,
 						net.twisterrob.inventory.android.content.contract.Category.TYPE_IMAGE);
 				int svgID = AndroidTools.getRawResourceID(getContext(), name);
 				// The following only works if the resource is uncompressed: android.aaptOptions.noCompress 'svg'

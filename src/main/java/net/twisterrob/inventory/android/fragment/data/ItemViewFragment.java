@@ -173,7 +173,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	}
 
 	@Override protected CharSequence update(ItemDTO entity, long newType, String newTypeName) {
-		App.db().updateItem(entity.id, newType, entity.name, entity.description, entity.image);
+		App.db().updateItem(entity.id, newType, entity.name, entity.description);
 		return newTypeName;
 	}
 

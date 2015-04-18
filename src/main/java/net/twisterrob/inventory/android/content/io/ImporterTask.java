@@ -155,11 +155,23 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 	public void importImage(Type type, long id, String name, String image) throws IOException {
 		ZipEntry imageEntry = zip.getEntry(image);
 		if (imageEntry != null) {
-			File imageFile = Constants.Paths.getImageFile(context, image);
-			//noinspection ResultOfMethodCallIgnored FileOutputStream will fail nicely
-			imageFile.getParentFile().mkdirs();
-			InputStream imageStream = zip.getInputStream(imageEntry);
-			IOTools.copyStream(imageStream, new FileOutputStream(imageFile));
+			InputStream zipImage = zip.getInputStream(imageEntry);
+			ByteArrayOutputStream byteOut = new ByteArrayOutputStream((int)imageEntry.getSize());
+			IOTools.copyStream(zipImage, byteOut);
+			byte[] imageContents = byteOut.toByteArray();
+			switch (type) {
+				case Property:
+					App.db().addPropertyImage(id, imageContents);
+					break;
+				case Room:
+					App.db().addRoomImage(id, imageContents);
+					break;
+				case Item:
+					App.db().addItemImage(id, imageContents);
+					break;
+				default:
+					throw new IllegalArgumentException(type + " cannot have images.");
+			}
 		} else {
 			warning(R.string.backup_import_invalid_image, name, image);
 		}

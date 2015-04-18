@@ -43,12 +43,7 @@ public class CSVImporter implements Importer {
 					processor.id = Long.parseLong(record.get("id"));
 				}
 
-				long dbID = processor.process();
-				if (processor.imageFileName != null) {
-					progress.importImage(null, dbID,
-							coalesce(processor.itemName, processor.roomName, processor.propertyName),
-							processor.imageFileName);
-				}
+				processor.process();
 				progress.publishIncrement();
 			} catch (CancellationException ex) {
 				throw ex;
@@ -85,17 +80,19 @@ public class CSVImporter implements Importer {
 		String imageFileName;
 		String parentName;
 		long id;
+		Type type;
 
 		protected long process() throws IOException {
 			long dbID = processInternal();
 
 			if (imageFileName != null) {
-				progress.importImage(null, dbID, coalesce(itemName, roomName, propertyName), imageFileName);
+				progress.importImage(type, dbID, coalesce(itemName, roomName, propertyName), imageFileName);
 			}
 
 			return dbID;
 		}
 		protected long processInternal() {
+			type = null;
 			if (itemName != null) { // item: property ?= null && room ?= null && item != null
 				if (propertyName == null) {
 					throw new IllegalArgumentException("Cannot process item which is not in a property");
@@ -103,13 +100,16 @@ public class CSVImporter implements Importer {
 				if (roomName == null) {
 					throw new IllegalArgumentException("Cannot process item which is not in a room");
 				}
+				type = Type.Item;
 				return processItem();
 			} else if (roomName != null) { // room: property ?= null && room != null && item == null
 				if (propertyName == null) {
 					throw new IllegalArgumentException("Cannot process room which is not in a property");
 				}
+				type = Type.Room;
 				return processRoom();
 			} else if (propertyName != null) { // property: property != null && room == null && item == null
+				type = Type.Property;
 				return processProperty();
 			} else { // invalid: property: property == null && room == null && item == null
 				progress.warning(R.string.backup_import_invalid_belonging, belongingTypeName, imageFileName,
@@ -132,7 +132,7 @@ public class CSVImporter implements Importer {
 					progress.warning(R.string.backup_import_invalid_type, belongingTypeName, propertyName);
 					typeID = PropertyType.DEFAULT;
 				}
-				propertyID = App.db().createProperty(typeID, propertyName, description, imageFileName);
+				propertyID = App.db().createProperty(typeID, propertyName, description);
 			} else {
 				progress.warning(R.string.backup_import_conflict_property, propertyName);
 			}
@@ -154,7 +154,7 @@ public class CSVImporter implements Importer {
 					progress.warning(R.string.backup_import_invalid_type, belongingTypeName, roomName);
 					typeID = RoomType.DEFAULT;
 				}
-				roomID = App.db().createRoom(propertyID, typeID, roomName, description, imageFileName);
+				roomID = App.db().createRoom(propertyID, typeID, roomName, description);
 			} else {
 				progress.warning(R.string.backup_import_conflict_room, propertyName, roomName);
 			}
@@ -177,7 +177,7 @@ public class CSVImporter implements Importer {
 					progress.warning(R.string.backup_import_invalid_type, belongingTypeName, itemName);
 					typeID = Category.DEFAULT;
 				}
-				itemID = App.db().createItem(parentID, typeID, itemName, description, imageFileName);
+				itemID = App.db().createItem(parentID, typeID, itemName, description);
 			} else {
 				progress.warning(R.string.backup_import_conflict_item, propertyName, roomName, itemName);
 			}

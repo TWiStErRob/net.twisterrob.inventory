@@ -8,7 +8,10 @@ import android.os.Environment;
 import android.support.annotation.*;
 
 import com.bumptech.glide.*;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.model.ModelLoader;
+import com.bumptech.glide.load.model.stream.StreamModelLoader;
 import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifResourceDecoder;
@@ -73,20 +76,29 @@ public interface Constants {
 		private static final LoggingListener<String, GlideDrawable> IMAGE_LOGGING_LISTENER =
 				new LoggingListener<>("image");
 
-		public static final DrawableRequestBuilder<Integer> SVG_REQUEST = Glide
-				.with(App.getAppContext())
-				.fromResource()
-				.listener(SVG_LOGGING_LISTENER)
-				.decoder(getSvgDecoder())
-				.animate(android.R.anim.fade_in)
-				.error(R.drawable.image_error);
+		private static <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz) {
+			ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, App.getAppContext());
+			DrawableRequestBuilder<T> builder = Glide
+					.with(App.getAppContext())
+					.using((StreamModelLoader<T>)loader)
+					.from(clazz)
+					.animate(android.R.anim.fade_in)
+					.error(R.drawable.image_error);
+			if (DISABLE && BuildConfig.DEBUG) {
+				builder = builder
+						.diskCacheStrategy(DiskCacheStrategy.NONE)
+						.skipMemoryCache(true)
+				;
+			}
+			return builder;
+		}
 
-		public static final DrawableRequestBuilder<String> IMAGE_REQUEST = Glide
-				.with(App.getAppContext())
-				.fromString()
-				.listener(IMAGE_LOGGING_LISTENER)
-				.animate(android.R.anim.fade_in)
-				.error(R.drawable.image_error);
+		public static final DrawableRequestBuilder<Integer> SVG_REQUEST = baseRequest(Integer.class)
+				.listener(SVG_LOGGING_LISTENER)
+				.decoder(getSvgDecoder());
+
+		public static final DrawableRequestBuilder<String> IMAGE_REQUEST = baseRequest(String.class)
+				.listener(IMAGE_LOGGING_LISTENER);
 
 		private static GifBitmapWrapperResourceDecoder getSvgDecoder() {
 			Context context = App.getAppContext();
