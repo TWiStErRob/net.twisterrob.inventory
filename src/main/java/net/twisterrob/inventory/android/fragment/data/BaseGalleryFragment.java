@@ -108,7 +108,9 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 	@Override public void onDestroyView() {
 		super.onDestroyView();
-		selectionMode.finish();
+		if (selectionMode.isRunning()) {
+			selectionMode.finish();
+		}
 		selectionMode = null;
 	}
 	@Override public void setMenuVisibility(boolean menuVisible) {

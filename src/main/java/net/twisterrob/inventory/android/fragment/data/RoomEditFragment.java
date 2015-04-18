@@ -5,11 +5,12 @@ import org.slf4j.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
-import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
+import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -96,30 +97,23 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 
-	private final class SaveTask extends SimpleAsyncTask<RoomDTO, Void, Long> {
-		@Override
-		protected Long doInBackground(RoomDTO param) {
-			try {
-				Database db = App.db();
-				if (param.id == Room.ID_ADD) {
-					return db.createRoom(param.propertyID, param.type, param.name, param.description, param.image);
-				} else {
-					db.updateRoom(param.id, param.type, param.name, param.description, param.image);
-					return param.id;
-				}
-			} catch (SQLiteConstraintException ex) {
-				LOG.warn("Cannot save {}", param, ex);
-				return null;
+	private final class SaveTask extends SimpleSafeAsyncTask<RoomDTO, Void, Long> {
+		@Override protected Long doInBackground(RoomDTO param) throws SQLiteConstraintException {
+			Database db = App.db();
+			if (param.id == Room.ID_ADD) {
+				return db.createRoom(param.propertyID, param.type, param.name, param.description, param.image);
+			} else {
+				db.updateRoom(param.id, param.type, param.name, param.description, param.image);
+				return param.id;
 			}
 		}
 
-		@Override
-		protected void onPostExecute(Long result) {
-			if (result != null) {
-				eventsListener.roomSaved(result);
-			} else {
-				App.toast("Room name must be unique within the property");
-			}
+		@Override protected void onResult(Long result, RoomDTO param) {
+			eventsListener.roomSaved(result);
+		}
+		@Override protected void onError(@NonNull Exception ex, RoomDTO param) {
+			LOG.warn("Cannot save {}", param, ex);
+			App.toast("Room name must be unique within the property");
 		}
 	}
 

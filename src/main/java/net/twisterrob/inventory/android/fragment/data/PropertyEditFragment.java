@@ -5,11 +5,12 @@ import org.slf4j.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
-import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
+import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -91,30 +92,24 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
-	private final class SaveTask extends SimpleAsyncTask<PropertyDTO, Void, Long> {
-		@Override
-		protected Long doInBackground(PropertyDTO param) {
-			try {
-				Database db = App.db();
-				if (param.id == Property.ID_ADD) {
-					return db.createProperty(param.type, param.name, param.description, param.image);
-				} else {
-					db.updateProperty(param.id, param.type, param.name, param.description, param.image);
-					return param.id;
-				}
-			} catch (SQLiteConstraintException ex) {
-				LOG.warn("Cannot save {}", param, ex);
-				return null;
+	private final class SaveTask extends SimpleSafeAsyncTask<PropertyDTO, Void, Long> {
+		@Override protected Long doInBackground(PropertyDTO param) throws SQLiteConstraintException {
+			Database db = App.db();
+			if (param.id == Property.ID_ADD) {
+				return db.createProperty(param.type, param.name, param.description, param.image);
+			} else {
+				db.updateProperty(param.id, param.type, param.name, param.description, param.image);
+				return param.id;
 			}
 		}
 
-		@Override
-		protected void onPostExecute(Long result) {
-			if (result != null) {
-				eventsListener.propertySaved(result);
-			} else {
-				App.toast("Property name must be unique");
-			}
+		@Override protected void onResult(Long result, PropertyDTO param) {
+			eventsListener.propertySaved(result);
+		}
+
+		@Override protected void onError(@NonNull Exception ex, PropertyDTO param) {
+			LOG.warn("Cannot save {}", param, ex);
+			App.toast("Property name must be unique");
 		}
 	}
 

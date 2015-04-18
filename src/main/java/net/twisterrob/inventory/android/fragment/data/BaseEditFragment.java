@@ -226,11 +226,8 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 					try {
 						File file = ImageTools.getFile(getContext(), data.getData());
 						new SaveToFile(getContext()) {
-							@Override
-							protected void onPostExecute(File result) {
-								if (result != null) {
-									setCurrentImage(result.getAbsolutePath());
-								}
+							@Override protected void onResult(File result, File param) {
+								setCurrentImage(result.getAbsolutePath());
 							}
 						}.execute(file);
 					} catch (RuntimeException ex) {

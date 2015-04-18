@@ -14,7 +14,7 @@ public class Types {
 	static Map<String, String> buildDeprecatedMap() {
 		Map<String, String> map = new HashMap<>();
 		map.put("category_storage_disccases", "category_storage_cases"); // XXX remove
-		map.put("category_storage", "category_storage_group"); // XXX remove
+		map.put("category_storage", "category_group"); // XXX remove
 		return map;
 	}
 
@@ -25,11 +25,10 @@ public class Types {
 	}
 
 	public Long getID(String type) {
-		Long id = types.get(type);
-		if (id == null) {
-			id = types.get(DEPRECATED.get(type));
+		while (DEPRECATED.containsKey(type)) {
+			type = DEPRECATED.get(type);
 		}
-		return id;
+		return types.get(type);
 	}
 
 	private void putTypes(Cursor cursor, String idColumn, String nameColumn) {
