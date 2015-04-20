@@ -25,6 +25,10 @@ import net.twisterrob.inventory.android.Constants.Paths;
 
 public class ImageActivity extends VariantActivity implements RequestListener<Uri, GlideDrawable> {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageActivity.class);
+
+	/** type: Boolean, true=internal, false=external, not present=auto(from prefs) */
+	public static final String EXTRA_INTERNAL = "useInternal";
+
 	private ImageView image;
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +37,7 @@ public class ImageActivity extends VariantActivity implements RequestListener<Ur
 		setContentView(R.layout.activity_image);
 		image = (ImageView)findViewById(R.id.image);
 
-		boolean useInternal = App.getPrefs().getBoolean(
-				getResources().getString(R.string.pref_internalImageViewer),
-				getResources().getBoolean(R.bool.pref_internalImageViewer_default));
-
-		if (useInternal) {
+		if (getExtraUseInternal()) {
 			Glide
 					.with(this)
 					.using(new StreamUriLoader(this))
@@ -70,6 +70,18 @@ public class ImageActivity extends VariantActivity implements RequestListener<Ur
 		return false;
 	}
 
+	private boolean getExtraUseInternal() {
+		Bundle extras = getIntent().getExtras();
+		if (extras != null && extras.containsKey(EXTRA_INTERNAL)) {
+			return extras.getBoolean(EXTRA_INTERNAL);
+		}
+		// if not overridden in extras, return the value in preferences
+		return App.getPrefs().getBoolean(
+				getResources().getString(R.string.pref_internalImageViewer),
+				getResources().getBoolean(R.bool.pref_internalImageViewer_default));
+	}
+
+	/** Optional {@link #EXTRA_INTERNAL} can be added. */
 	public static Intent show(@NonNull Uri data) {
 		Intent intent = new Intent(App.getAppContext(), ImageActivity.class);
 		intent.setData(data);
