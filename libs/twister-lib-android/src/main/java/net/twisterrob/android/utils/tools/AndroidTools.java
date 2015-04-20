@@ -509,9 +509,7 @@ public abstract class AndroidTools {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
 		try {
 			File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-			if (!storageDir.mkdirs() || !storageDir.isDirectory()) {
-				throw new IOException("Not a directory: " + storageDir);
-			}
+			IOTools.ensure(storageDir);
 			File file = File.createTempFile(timeStamp, ".png", storageDir);
 			@SuppressWarnings("resource")
 			OutputStream stream = new FileOutputStream(file);
@@ -715,5 +713,27 @@ public abstract class AndroidTools {
 						callbacks.finished(false);
 					}
 				});
+	}
+
+	/** Will return the first if there are more. */
+	public static @NonNull ProviderInfo findProviderAuthority(
+			@NonNull Context context, @NonNull Class<? extends ContentProvider> clazz) {
+		try {
+			PackageManager pm = context.getPackageManager();
+			PackageInfo info = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_PROVIDERS);
+			for (ProviderInfo p : info.providers) {
+				try {
+					Class providerClass = Class.forName(p.name);
+					if (clazz.isAssignableFrom(providerClass)) {
+						return p;
+					}
+				} catch (ClassNotFoundException ex) {
+					LOG.warn("Cannot find provider class: {}", p.name, ex);
+				}
+			}
+		} catch (NameNotFoundException ex) {
+			LOG.error("Cannot find provider {} in {}", clazz, context, ex);
+		}
+		return new ProviderInfo();
 	}
 }

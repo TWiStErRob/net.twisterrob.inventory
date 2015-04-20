@@ -29,7 +29,7 @@ public class CategoryDTO extends ImagedDTO {
 
 		return this;
 	}
-	@Override protected Uri getImageUri() {
+	@Override public Uri getImageUri() {
 		return APP_RESOURCE_RAW.buildUpon().appendPath(typeImage).build();
 	}
 

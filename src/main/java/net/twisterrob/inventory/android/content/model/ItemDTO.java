@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
+import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.content.contract.*;
 
 public class ItemDTO extends ImagedDTO {
@@ -43,8 +44,8 @@ public class ItemDTO extends ImagedDTO {
 		return this;
 	}
 
-	@Override protected Uri getImageUri() {
-		return Type.Item.getImageUri(id);
+	@Override public Uri getImageUri() {
+		return InventoryContract.Item.imageUri(id);
 	}
 
 	@Override

@@ -1,15 +1,11 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import java.io.File;
-
 import org.slf4j.*;
 
 import android.app.AlertDialog;
-import android.content.*;
+import android.content.DialogInterface;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.*;
 import android.support.v4.content.Loader;
 import android.support.v4.view.*;
 import android.support.v4.widget.CursorAdapter;
@@ -136,32 +132,10 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 		private class ImageOpenListener implements OnClickListener {
 			@Override public void onClick(View v) {
-				try {
-					String path = entity.getImage(getContext());
-					if (path != null) {
-						showImage(path);
-					} else {
-						editImage();
-					}
-				} catch (Exception ex) {
-					LOG.warn("Cannot start image viewer for {}", entity, ex);
-				}
-			}
-
-			private void showImage(String path) {
-				try {
-					File file = new File(path);
-					Uri uri = FileProvider.getUriForFile(getContext(), Constants.AUTHORITY_IMAGES, file);
-					Intent intent = new Intent(Intent.ACTION_VIEW);
-					if (App.getPrefs().getBoolean(getString(R.string.pref_internalImageViewer),
-							getResources().getBoolean(R.bool.pref_internalImageViewer_default))) {
-						intent.setComponent(new ComponentName(getContext(), ImageActivity.class));
-					}
-					intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-					intent.setDataAndType(uri, "image/jpeg");
-					getActivity().startActivity(intent);
-				} catch (Exception ex) {
-					LOG.warn("Cannot start image viewer for {}", path, ex);
+				if (entity.image) {
+					startActivity(ImageActivity.show(entity.getImageUri()));
+				} else {
+					editImage();
 				}
 			}
 		}

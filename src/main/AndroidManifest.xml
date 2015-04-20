@@ -64,8 +64,9 @@
 			/>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.ImageActivity"
+			android:label="@string/image_title"
 			android:screenOrientation="fullSensor"
-			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+			android:theme="@style/Theme.AppTheme.FullScreen"
 			/>
 		<activity
 			android:name=".activity.ManageSpaceActivity"
@@ -149,13 +150,14 @@
 			android:exported="true"
 			android:grantUriPermissions="true"
 			android:readPermission="net.twisterrob.inventory.READ"
-			android:writePermission="net.twisterrob.inventory.WRITE" />
+			android:writePermission="net.twisterrob.inventory.WRITE">
+		</provider>
 		<provider
-			android:name="android.support.v4.content.FileProvider"
-			android:authorities="${applicationId}.images"
+			android:name=".content.FileProvider"
+			android:authorities="${applicationId}.share"
 			android:exported="false"
 			android:grantUriPermissions="true">
-			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/paths_images" />
+			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/paths_share" />
 		</provider>
 	</application>
 </manifest>

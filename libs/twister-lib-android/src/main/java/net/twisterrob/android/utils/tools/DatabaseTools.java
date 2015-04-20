@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import javax.annotation.Nullable;
 
-import android.database.Cursor;
+import android.database.*;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
@@ -129,5 +129,11 @@ public class DatabaseTools {
 		if (1 < cursor.getColumnCount()) {
 			throw new IllegalArgumentException("Multiple columns returned");
 		}
+	}
+
+	public static String dumpCursorToString(Cursor cursor) {
+		StringBuilder cursorDump = new StringBuilder();
+		DatabaseUtils.dumpCursor(cursor, cursorDump);
+		return cursorDump.toString();
 	}
 }

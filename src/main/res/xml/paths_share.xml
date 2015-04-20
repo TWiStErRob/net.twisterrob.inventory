@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:tools="http://schemas.android.com/tools">
-	<files-path name="images" path="images" tools:path=".Constants.Paths.INTERNAL_IMAGES_FOLDER" />
+	<cache-path name="images" path="share" tools:path=".Constants.Paths.PUBLIC_SHARE_FOLDER_NAME" />
 </paths>

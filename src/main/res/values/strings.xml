@@ -4,6 +4,7 @@
 	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
 	<string name="home_title">Inventory</string>
 	<string name="navigation_title">Navigation</string>
+	<string name="image_title">Image</string>
 
 	<string name="sunburst_title">Sunburst Diagram</string>
 	<string name="action_picture_take">Take Picture</string>

@@ -20,15 +20,15 @@ import com.bumptech.glide.module.GlideModule;
 
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
+import net.twisterrob.android.utils.tools.IOTools;
 
 public interface Constants {
 	boolean DISABLE = Boolean.parseBoolean("false");
-	String AUTHORITY_IMAGES = BuildConfig.APPLICATION_ID + ".images";
 
 	class Paths {
-		/** Warning: this is used inlined in paths_images.xml because path doesn't support string resources */
 		private static final String INTERNAL_IMAGES_FOLDER = "images";
-		public static final String DRIVE_HOME_FOLDER = "Magic Home Inventory";
+		/** Warning: this is used inlined in paths_share.xml because path doesn't support string resources */
+		private static final String PUBLIC_SHARE_FOLDER_NAME = "share";
 		public static final String BACKUP_XML_FILENAME = "data.xml";
 		public static final String BACKUP_CSV_FILENAME = "data.csv";
 		public static @NonNull File getImageDirectory(Context context) {
@@ -53,13 +53,27 @@ public interface Constants {
 			Calendar now = Calendar.getInstance();
 			String fileName = String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
 			File exportFolder = getPhoneHome();
-			if (!(exportFolder.mkdirs() || exportFolder.isDirectory())) {
-				throw new IOException("Cannot use directory: " + exportFolder);
-			}
+			IOTools.ensure(exportFolder);
 			return new File(exportFolder, fileName);
 		}
 		public static @NonNull File getPhoneHome() {
 			return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		}
+
+		public static File getTempImage(Context context) throws IOException {
+			File tempDir = new File(context.getCacheDir(), PUBLIC_SHARE_FOLDER_NAME);
+			IOTools.ensure(tempDir);
+			File tempImage = new File(tempDir, "temp.jpg");
+			if (tempImage.exists()) {
+				if (!tempImage.isFile()) {
+					throw new IOException(tempImage + " is not a file");
+				}
+				if (!tempImage.delete()) {
+					throw new IOException("Cannot clean up " + tempImage);
+				}
+			}
+			tempImage.deleteOnExit();
+			return tempImage;
 		}
 	}
 

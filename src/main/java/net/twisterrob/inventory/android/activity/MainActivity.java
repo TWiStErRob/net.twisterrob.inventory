@@ -2,7 +2,11 @@ package net.twisterrob.inventory.android.activity;
 
 import java.util.*;
 
+import org.slf4j.*;
+
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.*;
@@ -12,7 +16,8 @@ import android.view.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.contract.Room;
+import net.twisterrob.inventory.android.content.InventoryContract;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
@@ -20,9 +25,12 @@ import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.Prope
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 import net.twisterrob.inventory.android.fragment.data.SunburstFragment.SunBurstEvents;
 
-public class MainActivity extends BaseActivity implements PropertiesEvents, RoomsEvents, CategoriesEvents,
-		SunBurstEvents {
+public class MainActivity extends BaseActivity
+		implements PropertiesEvents, RoomsEvents, CategoriesEvents, SunBurstEvents {
+	private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
+
 	public static final String EXTRA_PAGE = "page";
+	public static final String PAGE_EMPTY = "empty";
 	public static final String PAGE_HOME = "home";
 	public static final String PAGE_PROPERTIES = "properties";
 	public static final String PAGE_ROOMS = "rooms";
@@ -32,6 +40,7 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 
 	private static final Map<String, Integer> TITLES = new HashMap<String, Integer>() {
 		{
+			put(PAGE_EMPTY, R.string.empty);
 			put(PAGE_HOME, R.string.home_title);
 			put(PAGE_CATEGORIES, R.string.category_list);
 			put(PAGE_PROPERTIES, R.string.property_list);
@@ -97,6 +106,9 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 	private BaseFragment createPage(String page) {
 		BaseFragment fragment;
 		switch (page) {
+			case PAGE_EMPTY:
+				fragment = new BaseFragment();
+				break;
 			case PAGE_CATEGORIES:
 				fragment = CategoryContentsFragment.newInstance(null, false);
 				break;
@@ -116,7 +128,7 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 				fragment = SunburstFragment.newInstance();
 				break;
 			default:
-				throw new IllegalArgumentException(page + " page is not supported.");
+				throw new IllegalArgumentException("Page is not supported: " + page);
 		}
 		return fragment;
 	}
@@ -136,11 +148,17 @@ public class MainActivity extends BaseActivity implements PropertiesEvents, Room
 
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.debug:
+			case R.id.debug: {
+				Cursor cursor = App.db().listItems();
+				cursor.moveToPosition(cursor.getCount() / 2);
+				long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+				Uri uri = InventoryContract.Item.imageUri(id);
+				startActivity(ImageActivity.show(uri));
 				//startActivity(CategoryActivity.show(7000));
-				startActivity(ItemViewActivity.show(1723));
+				//startActivity(ItemViewActivity.show(1723));
 				//startActivityForResult(CaptureImage.saveTo(this, new File(getCacheDir(), "dev.jpg")), 32767);
 				return true;
+			}
 			default:
 				return super.onOptionsItemSelected(item);
 		}

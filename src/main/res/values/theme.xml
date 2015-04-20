@@ -22,6 +22,13 @@
 		<!--<item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>-->
 	</style>
 
+	<style name="Theme.AppTheme.FullScreen" parent="@style/Theme.AppCompat.NoActionBar">
+		<item name="android:progressDrawable">?android:attr/progress</item>
+		<item name="android:windowFullscreen">true</item>
+		<item name="android:windowContentOverlay">@null</item>
+		<!--<item name="android:windowBackground">@android:color/black</item>-->
+	</style>
+
 	<!-- ActionBar styles -->
 	<style name="Widget.AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
 		<!--<time name="titleTextStyle">@style/Widget.AppTheme.ActionBar.Title</time>-->

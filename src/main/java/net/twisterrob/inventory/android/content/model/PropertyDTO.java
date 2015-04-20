@@ -5,7 +5,8 @@ import java.util.Locale;
 import android.database.Cursor;
 import android.net.Uri;
 
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.InventoryContract;
+import net.twisterrob.inventory.android.content.contract.PropertyType;
 
 public class PropertyDTO extends ImagedDTO {
 	public PropertyDTO() {
@@ -22,8 +23,8 @@ public class PropertyDTO extends ImagedDTO {
 		super.fromCursorInternal(cursor);
 		return this;
 	}
-	@Override protected Uri getImageUri() {
-		return Type.Property.getImageUri(id);
+	@Override public Uri getImageUri() {
+		return InventoryContract.Property.imageUri(id);
 	}
 
 	@Override

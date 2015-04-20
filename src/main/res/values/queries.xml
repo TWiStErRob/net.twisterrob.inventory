@@ -515,7 +515,7 @@
 		update Property set image = ? where _id = ?
 	"]]></string>
 	<string name="query_property_image_get"><![CDATA["
-		select _id as _id, image as _data from Property where _id = ?
+		select _id as _id, image as _dataBlob from Property where _id = ?
 	"]]></string>
 	<string name="query_property_delete"><![CDATA["
 		delete from Property where _id = ?
@@ -535,7 +535,7 @@
 		update Room set image = ? where _id = ?
 	"]]></string>
 	<string name="query_room_image_get"><![CDATA["
-		select _id as _id, image as _data from Room where _id = ?
+		select _id as _id, image as _dataBlob from Room where _id = ?
 	"]]></string>
 	<string name="query_room_delete"><![CDATA["
 		delete from Room where _id = ?
@@ -558,7 +558,7 @@
 		update Item set image = ? where _id = ?
 	"]]></string>
 	<string name="query_item_image_get"><![CDATA["
-		select _id as _id, image as _data from Item where _id = ?
+		select _id as _id, image as _dataBlob from Item where _id = ?
 	"]]></string>
 	<string name="query_item_delete"><![CDATA["
 		delete from Item where _id = ?

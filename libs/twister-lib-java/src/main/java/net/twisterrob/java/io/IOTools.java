@@ -16,9 +16,15 @@ public/* static */class IOTools {
 		return IOTools.copyFile(sourceFile, destinationFile);
 	}
 
+	public static void ensure(File dir) throws IOException {
+		if (!(dir.mkdirs() || dir.isDirectory())) {
+			throw new FileNotFoundException("Failed to ensure directory: " + dir);
+		}
+	}
+
 	@SuppressWarnings("resource")
 	public static long copyFile(final File sourceFile, final File destinationFile) throws IOException {
-		destinationFile.getParentFile().mkdirs();
+		ensure(destinationFile.getParentFile());
 		InputStream in = new FileInputStream(sourceFile);
 		OutputStream out = new FileOutputStream(destinationFile);
 		long totalBytes;

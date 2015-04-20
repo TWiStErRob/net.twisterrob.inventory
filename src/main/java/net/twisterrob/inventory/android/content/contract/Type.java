@@ -1,31 +1,46 @@
 package net.twisterrob.inventory.android.content.contract;
 
-import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
 
 import net.twisterrob.inventory.android.content.InventoryContract;
 
 public enum Type {
-	Category("category", false, InventoryContract.Category.ITEM_URI),
-	Property("property", true, InventoryContract.Property.ITEM_URI),
-	Room("room", true, InventoryContract.Room.ITEM_URI),
-	Root("root", false, null),
-	Item("item", true, InventoryContract.Item.ITEM_URI);
+	Category("category", false) {
+		@Override public Uri getImageUri(long id) {
+			return InventoryContract.Category.imageUri(id);
+		}
+	},
+	Property("property", true) {
+		@Override public Uri getImageUri(long id) {
+			return InventoryContract.Property.imageUri(id);
+		}
+	},
+	Room("room", true) {
+		@Override public Uri getImageUri(long id) {
+			return InventoryContract.Room.imageUri(id);
+		}
+	},
+	Root("root", false) {
+		@Override public Uri getImageUri(long id) {
+			return null;
+		}
+	},
+	Item("item", true) {
+		@Override public Uri getImageUri(long id) {
+			return InventoryContract.Item.imageUri(id);
+		}
+	};
 
 	private final String string;
 	private final boolean isMain;
-	private final Uri baseUri;
 
-	Type(String string, boolean isMain, Uri baseUri) {
+	Type(String string, boolean isMain) {
 		this.string = string;
 		this.isMain = isMain;
-		this.baseUri = baseUri;
 	}
 
-	public Uri getImageUri(long id) {
-		return baseUri != null? ContentUris.withAppendedId(baseUri, id) : null;
-	}
+	public abstract Uri getImageUri(long id);
 
 	public boolean isMain() {
 		return isMain;

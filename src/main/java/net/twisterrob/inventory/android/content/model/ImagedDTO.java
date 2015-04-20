@@ -35,7 +35,7 @@ public abstract class ImagedDTO extends DTO {
 		return this;
 	}
 
-	protected abstract Uri getImageUri();
+	public abstract Uri getImageUri();
 
 	public String getImage(Context context) {
 		return Constants.Paths.getImagePath(context, null);

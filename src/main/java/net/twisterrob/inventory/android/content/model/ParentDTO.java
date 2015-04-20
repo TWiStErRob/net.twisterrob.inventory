@@ -25,7 +25,7 @@ public class ParentDTO extends ImagedDTO {
 
 		return this;
 	}
-	@Override protected Uri getImageUri() {
+	@Override public Uri getImageUri() {
 		return parentType.getImageUri(this.id);
 	}
 
