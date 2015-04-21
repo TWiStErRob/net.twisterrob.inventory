@@ -59,9 +59,13 @@ public class App extends Application {
 		super.onCreate();
 		LOG.info("************* Starting up {} {} built at {}",
 				getPackageName(), BuildConfig.VERSION_NAME, BuildConfig.BUILD_TIME);
-		// StrictModeDiskReadViolation on first startup, but there isn't really a good way around it,
-		// since it needs to be loaded for the following code to work
+
+		// StrictModeDiskReadViolation on startup, but there isn't really a good way around it,
+		// since it needs to be loaded for the following code to work, make an exception:
+		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		StrictMode.setThreadPolicy(originalPolicy);
+
 		database = new Database(this);
 		updateLanguage(Locale.getDefault());
 	}

@@ -152,6 +152,7 @@ public class MainActivity extends BaseActivity
 				Cursor cursor = App.db().listItems();
 				cursor.moveToPosition(cursor.getCount() / 2);
 				long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+				cursor.close();
 				Uri uri = InventoryContract.Item.imageUri(id);
 				startActivity(ImageActivity.show(uri));
 				//startActivity(CategoryActivity.show(7000));
