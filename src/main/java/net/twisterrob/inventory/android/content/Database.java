@@ -10,7 +10,7 @@ import android.database.*;
 import android.database.sqlite.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.java.utils.StringTools;
 
@@ -310,6 +310,10 @@ public class Database {
 	public Cursor search(String query) {
 		query = fixQuery(query);
 		return rawQuery(R.string.query_search, query);
+	}
+
+	public long getSearchSize() {
+		return DatabaseTools.singleLong(rawQuery(R.string.query_search_size), null);
 	}
 
 	private static String fixQuery(String query) {

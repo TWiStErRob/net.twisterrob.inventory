@@ -20,7 +20,7 @@
 		android:label="@string/app_name"
 		android:icon="@drawable/ic_launcher"
 		android:allowBackup="true"
-		android:manageSpaceActivity="net.twisterrob.inventory.android.activity.ManageSpaceActivity"
+		android:manageSpaceActivity="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
 		android:supportsRtl="true"
 		android:theme="@style/Theme.AppTheme"
 		tools:ignore="UnusedAttribute">
@@ -69,7 +69,7 @@
 			android:theme="@style/Theme.AppTheme.FullScreen"
 			/>
 		<activity
-			android:name=".activity.ManageSpaceActivity"
+			android:name=".activity.space.ManageSpaceActivity"
 			android:label="@string/manage_space_title"
 			android:launchMode="singleInstance"
 			android:process=":managespace" />

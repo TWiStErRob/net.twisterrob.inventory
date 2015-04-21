@@ -18,6 +18,7 @@ import android.widget.TextView;
 import net.twisterrob.android.content.loader.AsyncLoader;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
+import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.view.RecyclerViewLoaderController;
 

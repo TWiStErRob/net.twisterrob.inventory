@@ -444,6 +444,10 @@
 		where s.name MATCH ?
 		order by i.name
 	"]]></string>
+	<string name="query_search_size"><![CDATA["
+		-- sum 0 rows is NULL, count 0 rows is 0
+		select coalesce(sum(length(name) + length(location)), 0) + count() * 4 * 3 from Search
+	"]]></string>
 
 	<string name="query_export"><![CDATA["
 			select
