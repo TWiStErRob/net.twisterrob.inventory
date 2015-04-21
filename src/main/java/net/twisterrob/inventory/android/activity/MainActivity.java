@@ -65,11 +65,15 @@ public class MainActivity extends BaseActivity
 
 		getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			@Override public void onBackStackChanged() {
-				int count = getSupportFragmentManager().getBackStackEntryCount();
+				FragmentManager fm = getSupportFragmentManager();
+				int count = fm.getBackStackEntryCount();
 				if (count == 0) {
 					finish();
 				} else {
-					BackStackEntry top = getSupportFragmentManager().getBackStackEntryAt(count - 1);
+					BaseFragment fragment = (BaseFragment)fm.findFragmentById(R.id.activityRoot);
+					refreshDrawers((Intent)fragment.getViewTag());
+
+					BackStackEntry top = fm.getBackStackEntryAt(count - 1);
 					CharSequence title = getString(TITLES.get(top.getName()));
 					setActionBarTitle(title); // to display now
 					setActionBarSubtitle(null); // clear to change
@@ -96,6 +100,7 @@ public class MainActivity extends BaseActivity
 			}
 		}
 		BaseFragment fragment = createPage(page);
+		fragment.setViewTag(intent);
 		m
 				.beginTransaction()
 				.replace(R.id.activityRoot, fragment)

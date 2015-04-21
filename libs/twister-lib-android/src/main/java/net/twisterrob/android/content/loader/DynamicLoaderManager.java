@@ -58,7 +58,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 		callbacks.onLoadFinished(loader, data);
 
 		state.ready = true;
-		LOG.info("loadFinished #{}, coming up: {}", state.id, state.consumers);
+		LOG.debug("loadFinished #{}, coming up: {}", state.id, state.consumers);
 		for (Dependency<?> next : state.consumers) {
 			if (next.readyToBeExecuted()) {
 				start(next);
@@ -68,7 +68,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void start(Dependency<?> state) {
-		LOG.info("initLoader #{}", state.id);
+		LOG.debug("initLoader #{}", state.id);
 		state.loader = (Loader)manager.initLoader(state.id, state.args, this);
 	}
 

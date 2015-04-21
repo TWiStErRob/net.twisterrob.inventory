@@ -46,8 +46,7 @@ public class BaseActivity extends VariantActivity {
 		super.onCreate(savedInstanceState);
 	}
 
-	@Override
-	public boolean onMenuOpened(int featureId, Menu menu) {
+	@Override public boolean onMenuOpened(int featureId, Menu menu) {
 		AndroidTools.showActionBarOverflowIcons(featureId, menu, true);
 		return super.onMenuOpened(featureId, menu);
 	}
@@ -116,7 +115,7 @@ public class BaseActivity extends VariantActivity {
 		return -1;
 	}
 
-	@For(Drawer) private void refreshDrawers(Intent intent) {
+	@For(Drawer) protected final void refreshDrawers(Intent intent) {
 		if (mDrawerLeft != null) {
 			refreshDrawerLeft(intent);
 		}
