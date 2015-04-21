@@ -11,8 +11,7 @@ import android.content.*;
 import android.content.res.Configuration;
 import android.os.Build.*;
 import android.os.StrictMode;
-import android.os.StrictMode.ThreadPolicy.Builder;
-import android.os.StrictMode.VmPolicy;
+import android.os.StrictMode.*;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -23,6 +22,10 @@ import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.StringTools;
 
 public class App extends Application {
+	// This is the first Logger created which will result in reading the classpath to create the binding.
+	// Make sure the strict mode is set up after this!
+	private static final Logger LOG = LoggerFactory.getLogger(App.class);
+
 	static {
 		if (BuildConfig.DEBUG) {
 			setStrictMode();
@@ -34,8 +37,6 @@ public class App extends Application {
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.android\\.(.+\\.)?", "");
 	}
-
-	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
 	private static App s_instance;
 	private Database database;
@@ -58,6 +59,8 @@ public class App extends Application {
 		super.onCreate();
 		LOG.info("************* Starting up {} {} built at {}",
 				getPackageName(), BuildConfig.VERSION_NAME, BuildConfig.BUILD_TIME);
+		// StrictModeDiskReadViolation on first startup, but there isn't really a good way around it,
+		// since it needs to be loaded for the following code to work
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		database = new Database(this);
 		updateLanguage(Locale.getDefault());
@@ -135,9 +138,9 @@ public class App extends Application {
 	@TargetApi(VERSION_CODES.KITKAT)
 	private static void setStrictMode() {
 		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
-			Builder threadBuilder = new Builder();
+			ThreadPolicy.Builder threadBuilder = new ThreadPolicy.Builder();
 			threadBuilder = threadBuilder
-					//.detectDiskReads()
+					.detectDiskReads()
 					.detectDiskWrites()
 					.detectNetwork()
 					.penaltyLog()
