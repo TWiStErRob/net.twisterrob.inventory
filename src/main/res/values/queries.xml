@@ -415,15 +415,19 @@
 
 	<string name="query_search_suggest"><![CDATA["
 		select
-			rowid    as _id,                    -- BaseColumns._ID (for ListView)
-			NULL     as suggest_intent_action,  -- SearchManager.SUGGEST_COLUMN_INTENT_ACTION
-			_id      as suggest_intent_data_id, -- SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
-			NULL     as suggest_icon_1,         -- SearchManager.SUGGEST_COLUMN_ICON_1
-			name     as suggest_text_1,         -- SearchManager.SUGGEST_COLUMN_TEXT_1
-			location as suggest_text_2          -- SearchManager.SUGGEST_COLUMN_TEXT_2
-		from Search
-		where name MATCH ?
-		order by name
+			s.rowid    as _id,                    -- BaseColumns._ID (for ListView)
+			NULL       as suggest_intent_action,  -- SearchManager.SUGGEST_COLUMN_INTENT_ACTION
+			s._id      as suggest_intent_data_id, -- SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
+			NULL       as suggest_icon_1,         -- SearchManager.SUGGEST_COLUMN_ICON_1
+			--'content://net.twisterrob.inventory.debug/item/'     || i._id || '/image' as suggest_icon_1, -- SearchManager.SUGGEST_COLUMN_ICON_1
+			--'content://net.twisterrob.inventory.debug/category/' || c._id || '/image' as suggest_icon_2, -- SearchManager.SUGGEST_COLUMN_ICON_2
+			s.name     as suggest_text_1,         -- SearchManager.SUGGEST_COLUMN_TEXT_1
+			s.location as suggest_text_2          -- SearchManager.SUGGEST_COLUMN_TEXT_2
+		from Search s
+		--join Item i ON s._id = i._id
+		--join Category c ON i.category = c._id
+		where s.name MATCH ?
+		order by s.name
 	"]]></string>
 	<string name="query_search"><![CDATA["
 		select
@@ -440,6 +444,7 @@
 		where s.name MATCH ?
 		order by i.name
 	"]]></string>
+
 	<string name="query_export"><![CDATA["
 			select
 				'property'    as type,

@@ -187,6 +187,9 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 					c = null;
 				}
 				updateAdapter(c);
+				if (pendingCategories == null || pendingItems == null) {
+					startLoading(); // restart loading indicator since we only have one part of the data
+				}
 			}
 		}
 	}

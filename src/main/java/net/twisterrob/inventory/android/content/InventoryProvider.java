@@ -176,6 +176,7 @@ public class InventoryProvider extends ContentProvider {
 				, SUGGEST_COLUMN_INTENT_ACTION
 				, SUGGEST_COLUMN_INTENT_DATA
 				, SUGGEST_COLUMN_ICON_1
+				//, SUGGEST_COLUMN_ICON_2
 				, SUGGEST_COLUMN_TEXT_1
 				, SUGGEST_COLUMN_TEXT_2
 		}, 1);
@@ -183,6 +184,7 @@ public class InventoryProvider extends ContentProvider {
 				, Intent.ACTION_SEARCH // Opens search activity
 				, ""
 				, "android.resource://android/drawable/ic_menu_search"
+				//, "android.resource://net.twisterrob.inventory.debug/drawable/category_unknown"
 				, "Search Inventory Items" // Opens search activity
 				, "Search for item name above." // Opens search activity
 		});
