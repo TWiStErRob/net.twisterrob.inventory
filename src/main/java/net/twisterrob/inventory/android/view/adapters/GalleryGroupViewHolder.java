@@ -40,9 +40,10 @@ public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
 
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		boolean hasImage = DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE);
+		long imageTime = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
 		Type type = Type.from(cursor, CommonColumns.TYPE);
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
-		ImagedDTO.loadInto(image, hasImage? type : null, id, typeImage);
+		ImagedDTO.loadInto(image, hasImage? type : null, id, imageTime, typeImage);
 	}
 
 	private static String getName(Cursor cursor) {

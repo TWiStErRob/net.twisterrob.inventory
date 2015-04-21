@@ -173,15 +173,16 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 					LOG.warn("Cannot parse: {}", image, ex);
 				}
 			}
+			Long dbTime = time != -1? time : null;
 			switch (type) {
 				case Property:
-					App.db().addPropertyImage(id, imageContents, time);
+					App.db().setPropertyImage(id, imageContents, dbTime);
 					break;
 				case Room:
-					App.db().addRoomImage(id, imageContents, time);
+					App.db().setRoomImage(id, imageContents, dbTime);
 					break;
 				case Item:
-					App.db().addItemImage(id, imageContents, time);
+					App.db().setItemImage(id, imageContents, dbTime);
 					break;
 				default:
 					throw new IllegalArgumentException(type + " cannot have images.");

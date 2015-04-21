@@ -17,6 +17,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifResourceDecoder;
 import com.bumptech.glide.load.resource.gifbitmap.GifBitmapWrapperResourceDecoder;
 import com.bumptech.glide.module.GlideModule;
+import com.bumptech.glide.signature.StringSignature;
 
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
@@ -60,7 +61,7 @@ public interface Constants {
 			return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		}
 
-		public static File getTempImage(Context context) throws IOException {
+		public static File getShareImage(Context context) throws IOException {
 			File tempDir = new File(context.getCacheDir(), PUBLIC_SHARE_FOLDER_NAME);
 			IOTools.ensure(tempDir);
 			File tempImage = new File(tempDir, "temp.jpg");
@@ -72,6 +73,11 @@ public interface Constants {
 					throw new IOException("Cannot clean up " + tempImage);
 				}
 			}
+			tempImage.deleteOnExit();
+			return tempImage;
+		}
+		public static File getTempImage(Context context) throws IOException {
+			File tempImage = File.createTempFile("image_", ".jpg", context.getCacheDir());
 			tempImage.deleteOnExit();
 			return tempImage;
 		}
@@ -108,6 +114,7 @@ public interface Constants {
 		}
 
 		public static final DrawableRequestBuilder<Integer> SVG_REQUEST = baseRequest(Integer.class)
+				.signature(new StringSignature(BuildConfig.VERSION_NAME))
 				.listener(SVG_LOGGING_LISTENER)
 				.decoder(getSvgDecoder());
 

@@ -38,26 +38,19 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 	}
 
 	public void bind(Cursor cursor) {
-		title.setText(getName(cursor));
+		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+		Type type = Type.from(cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE)));
+		boolean image = DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE);
+		long imageTime = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
+		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		String countText = getCountText(cursor);
+
+		title.setText(name);
 		count.setText(countText);
 		count.setVisibility(countText != null? View.VISIBLE : View.GONE);
 
-		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		ImagedDTO.loadInto(image, type, hasImage(cursor)? getType(cursor) : null, getID(cursor), typeImage,
-				false);
-	}
-	private static Type getType(Cursor cursor) {
-		return Type.from(cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE)));
-	}
-	private static long getID(Cursor cursor) {
-		return cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
-	}
-	private static String getName(Cursor cursor) {
-		return cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-	}
-	private static boolean hasImage(Cursor cursor) {
-		return DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE);
+		ImagedDTO.loadInto(this.image, this.type, image? type : null, id, imageTime, typeImage, false);
 	}
 
 	private static String getCountText(Cursor cursor) {

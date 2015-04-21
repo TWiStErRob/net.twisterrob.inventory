@@ -95,7 +95,7 @@ public class ImageActivity extends VariantActivity implements RequestListener<Ur
 
 		@Override protected Uri doInBackground(Uri uri) throws IOException {
 			Context context = ImageActivity.this;
-			File tempImage = Paths.getTempImage(context);
+			File tempImage = Paths.getShareImage(context);
 			IOTools.copyStream(context.getContentResolver().openInputStream(uri), new FileOutputStream(tempImage));
 			String authority = AndroidTools.findProviderAuthority(context, FileProvider.class).authority;
 			return FileProvider.getUriForFile(context, authority, tempImage);

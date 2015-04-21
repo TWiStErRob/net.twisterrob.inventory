@@ -3,20 +3,18 @@ package net.twisterrob.inventory.android.fragment.data;
 import org.slf4j.*;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
-import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemEditFragment.ItemEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
+import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -30,11 +28,6 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 
 	public ItemEditFragment() {
 		setDynamicResource(DYN_EventsClass, ItemEditEvents.class);
-	}
-
-	@Override
-	protected String getBaseFileName() {
-		return "Item_" + getArgItemID();
 	}
 
 	@Override public void onViewCreated(View view, Bundle bundle) {
@@ -78,7 +71,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		item.id = getArgItemID();
 		item.name = name.getText().toString();
 		item.description = description.getText().toString();
-		item.setImage(getContext(), getCurrentImage());
+		item.tempImageUri = getCurrentImage();
 		item.type = type.getSelectedItemId();
 		return item;
 	}
@@ -91,24 +84,21 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
 
-	private final class SaveTask extends SimpleSafeAsyncTask<ItemDTO, Void, Long> {
-		@Override protected Long doInBackground(ItemDTO param) throws SQLiteConstraintException {
-			Database db = App.db();
+	private final class SaveTask extends BaseSaveTask<ItemDTO> {
+		@Override protected ItemDTO saveInTransaction(Database db, ItemDTO param) throws Exception {
 			if (param.id == Item.ID_ADD) {
-				return db.createItem(param.parentID, param.type, param.name, param.description);
+				param.id = db.createItem(param.parentID, param.type, param.name, param.description);
 			} else {
 				db.updateItem(param.id, param.type, param.name, param.description);
-				return param.id;
 			}
+			if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
+				db.setItemImage(param.id, param.getImage(getContext()), null);
+			}
+			return param;
 		}
 
-		@Override protected void onResult(Long result, ItemDTO param) {
-			eventsListener.itemSaved(result);
-		}
-
-		@Override protected void onError(@NonNull Exception ex, ItemDTO param) {
-			LOG.warn("Cannot save {}", param, ex);
-			App.toast("Item name must be unique within the item collection");
+		@Override protected void onResult(ItemDTO result, ItemDTO param) {
+			eventsListener.itemSaved(result.id);
 		}
 	}
 

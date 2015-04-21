@@ -1,16 +1,15 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.io.*;
 
 import org.slf4j.*;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.*;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.*;
-import android.support.annotation.RawRes;
+import android.support.annotation.*;
 import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
 import android.view.*;
@@ -18,14 +17,16 @@ import android.view.View.*;
 import android.widget.*;
 
 import net.twisterrob.android.activity.CaptureImage;
+import net.twisterrob.android.content.glide.LongSignature;
+import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.wiring.DefaultValueUpdater;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
-import net.twisterrob.inventory.android.tasks.SaveToFile;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.inventory.android.view.TextWatcherAdapter;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
@@ -34,8 +35,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
 	public static final String EDIT_IMAGE = "editImageOnStartup";
 
-	/** full path */
-	private String currentImage;
+	private Uri currentImage;
 	private boolean keepNameInSync;
 
 	protected EditText name;
@@ -57,19 +57,10 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		return !isClean;
 	}
 
-	protected File getTargetFile() {
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
-		String imageFileName = getBaseFileName() + "_" + timeStamp + ".jpg";
-		File storageDir = getContext().getCacheDir();
-		return new File(storageDir, imageFileName);
-	}
-
-	protected abstract String getBaseFileName();
-
 	protected void onSingleRowLoaded(ImagedDTO dto) {
 		AndroidTools.selectByID(type, dto.type);
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
-		setCurrentImage(dto.getImage(getContext()));
+		setCurrentImage(dto.image? dto.getImageUri() : null);
 		description.setText(dto.description);
 		if (getArguments().getBoolean(EDIT_IMAGE)) {
 			getArguments().remove(EDIT_IMAGE);
@@ -137,9 +128,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 				if (isKeepNameInSync()) {
 					super.onItemSelected(parent, view, position, id);
 				}
-				if (getCurrentImage() == null) {
-					setCurrentImage(null);
-				} // else leave current image as is
+				reloadImage();
 			}
 		});
 	}
@@ -208,8 +197,23 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 	}
 
 	private void takePicture() {
-		Intent intent = CaptureImage.saveTo(getContext(), getTargetFile());
-		startActivityForResult(intent, ImageTools.REQUEST_CODE_TAKE_PICTURE);
+		new SimpleSafeAsyncTask<Context, Void, File>() {
+			@Override protected @Nullable File doInBackground(@Nullable Context context) throws IOException {
+				return Constants.Paths.getTempImage(context);
+			}
+			@Override protected void onResult(@Nullable File file, Context context) {
+				try {
+					Intent intent = CaptureImage.saveTo(getContext(), file);
+					startActivityForResult(intent, ImageTools.REQUEST_CODE_TAKE_PICTURE);
+				} catch (RuntimeException ex) {
+					onError(ex, context);
+				}
+			}
+			@Override protected void onError(@NonNull Exception ex, Context context) {
+				LOG.error("Cannot take picture", ex);
+				App.toastUser("Cannot take picture: " + ex);
+			}
+		}.execute(getContext());
 	}
 
 	private void removePicture() {
@@ -224,12 +228,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 				if (resultCode == Activity.RESULT_OK && data != null) {
 					image.setImageResource(R.drawable.image_loading);
 					try {
-						File file = ImageTools.getFile(getContext(), data.getData());
-						new SaveToFile(getContext()) {
-							@Override protected void onResult(File result, File param) {
-								setCurrentImage(result.getAbsolutePath());
-							}
-						}.execute(file);
+						setCurrentImage(data.getData());
 					} catch (RuntimeException ex) {
 						image.setImageResource(R.drawable.image_error);
 						throw ex;
@@ -244,18 +243,44 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	protected String getCurrentImage() {
+	protected Uri getCurrentImage() {
 		return currentImage;
 	}
 
-	protected void setCurrentImage(String currentImage) {
+	protected void setCurrentImage(Uri currentImage) {
 		this.currentImage = currentImage;
 		isClean = false;
+		reloadImage();
+	}
+
+	private void reloadImage() {
 		if (currentImage == null) {
 			int typeImageID = getTypeImage(type.getSelectedItemPosition());
 			Pic.SVG_REQUEST.load(typeImageID).into(image);
 		} else {
-			Pic.IMAGE_REQUEST.load(currentImage).into(image);
+			Pic.IMAGE_REQUEST
+					.signature(new LongSignature(System.currentTimeMillis()))
+					.load(currentImage.toString())
+					.into(image);
+		}
+	}
+
+	protected static abstract class BaseSaveTask<T extends ImagedDTO> extends SimpleSafeAsyncTask<T, Void, T> {
+		@Override protected final T doInBackground(T param) throws Exception {
+			Database db = App.db().beginTransaction();
+			try {
+				param = saveInTransaction(db, param);
+				db.setTransactionSuccessful();
+				return param;
+			} finally {
+				db.endTransaction();
+			}
+		}
+		protected abstract T saveInTransaction(Database db, T param) throws Exception;
+
+		@Override protected void onError(@NonNull Exception ex, T param) {
+			LOG.warn("Cannot save ({}){}", param != null? param.getClass().getSimpleName() : null, param, ex);
+			App.toastUser("Name must be unique within the collection");
 		}
 	}
 }

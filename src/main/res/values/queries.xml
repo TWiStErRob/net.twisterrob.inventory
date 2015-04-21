@@ -7,6 +7,7 @@
 			p._id                                             as _id,
 			p.name                                            as name,
 			p.image IS NOT NULL                               as image,
+			strftime('%s', p.image_time) * 1000               as imageTime,
 			pt.image                                          as typeImage,
 			(select count() from Room where property = p._id) as countChildren
 		from Property     p
@@ -56,6 +57,7 @@
 			r.root                                           as root,
 			r.name                                           as name,
 			r.image IS NOT NULL                              as image,
+			strftime('%s', r.image_time) * 1000              as imageTime,
 			COALESCE(rt.image, rtk.image)                    as typeImage,
 			p._id                                            as property,
 			p.name                                           as propertyName,
@@ -110,6 +112,7 @@
 			i._id = g._id                                   as [group],
 			i.name                                          as name,
 			i.image IS NOT NULL                             as image,
+			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -173,6 +176,7 @@
 			i._id                                           as _id,
 			i.name                                          as name,
 			i.image IS NOT NULL                             as image,
+			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -186,6 +190,7 @@
 			i._id                                           as _id,
 			i.name                                          as name,
 			i.image IS NOT NULL                             as image,
+			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -201,6 +206,7 @@
 			i._id                                           as _id,
 			i.name                                          as name,
 			i.image IS NOT NULL                             as image,
+			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -215,6 +221,7 @@
 			i._id                                           as _id,
 			i.name                                          as name,
 			i.image IS NOT NULL                             as image,
+			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -224,19 +231,20 @@
 		where cd.category = ?
 		order by i.name
 	"]]></string>
-	<string name="query_item_parents"><![CDATA["
+	<string name="query_item_parents" formatted="false"><![CDATA["
 		select * from (
 			-- Item from tree
 			select
-					n.item      as item,
-					n.level + 2 as level,
-					'item'      as parentType,
-					i._id       as _id,
-					i.name      as name,
-					c._id       as typeID,
-					c.name      as typeName,
-					c.image     as typeImage,
-					i.image IS NOT NULL as image
+					n.item                              as item,
+					n.level + 2                         as level,
+					'item'                              as parentType,
+					i._id                               as _id,
+					i.name                              as name,
+					c._id                               as typeID,
+					c.name                              as typeName,
+					c.image                             as typeImage,
+					i.image IS NOT NULL                 as image,
+					strftime('%s', i.image_time) * 1000 as imageTime
 				from Item_Path_Node n
 				join Item           i ON i._id = n.node
 				join Category       c ON i.category = c._id
@@ -244,15 +252,16 @@
 			union all
 			-- Item (ROOT)
 			/*select
-					n.item  as item,
-					2       as level,
-					'root'  as parentType,
-					i._id   as _id,
-					i.name  as name,
-					c._id   as typeID,
-					c.name  as typeName,
-					c.image as typeImage,
-					i.image IS NOT NULL as image
+					n.item                              as item,
+					2                                   as level,
+					'root'                              as parentType,
+					i._id                               as _id,
+					i.name                              as name,
+					c._id                               as typeID,
+					c.name                              as typeName,
+					c.image                             as typeImage,
+					i.image IS NOT NULL                 as image,
+					strftime('%s', i.image_time) * 1000 as imageTime
 				from Item_Path_Node n
 				join Item           i ON i._id = n.node
 				join Category       c ON i.category = c._id
@@ -260,15 +269,16 @@
 			union all*/
 			-- Room
 			select
-					n.item                        as item,
-					2                             as level,
-					'room'                        as parentType,
-					r._id                         as _id,
-					r.name                        as name,
-					rt._id                        as typeID,
-					rt.name                       as typeName,
-					COALESCE(rt.image, rtk.image) as typeImage,
-					r.image IS NOT NULL           as image
+					n.item                              as item,
+					2                                   as level,
+					'room'                              as parentType,
+					r._id                               as _id,
+					r.name                              as name,
+					rt._id                              as typeID,
+					rt.name                             as typeName,
+					COALESCE(rt.image, rtk.image)       as typeImage,
+					r.image IS NOT NULL                 as image,
+					strftime('%s', r.image_time) * 1000 as imageTime
 				from Item_Path_Node n
 				join Room           r   ON n.root = r.root
 				join RoomType       rt  ON r.type = rt._id
@@ -277,15 +287,16 @@
 			union all
 			-- Property
 			select
-					n.item     as item,
-					1          as level,
-					'property' as parentType,
-					p._id      as _id,
-					p.name     as name,
-					pt._id     as typeID,
-					pt.name    as typeName,
-					pt.image   as typeImage,
-					p.image IS NOT NULL    as image
+					n.item                              as item,
+					1                                   as level,
+					'property'                          as parentType,
+					p._id                               as _id,
+					p.name                              as name,
+					pt._id                              as typeID,
+					pt.name                             as typeName,
+					pt.image                            as typeImage,
+					p.image IS NOT NULL                 as image,
+					strftime('%s', p.image_time) * 1000 as imageTime
 				from Item_Path_Node n
 				join Room           r  ON n.root = r.root
 				join Property       p  ON r.property = p._id
@@ -380,6 +391,7 @@
 			i._id                                           as _id,
 			i.name                                          as name,
 			i.image IS NOT NULL                             as image,
+			strftime('%s', i.image_time) * 1000             as imageTime
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -393,17 +405,18 @@
 
 	<string name="query_recents"><![CDATA["
 		select
-			'item'                         as type,
-			i._id                          as _id,
-			i.name                         as name,
-			i.image IS NOT NULL            as image,
-			c.image                        as typeImage,
-			datetime(r.visit, 'localtime') as visit,
-			r.recency                      as recency,
-			r.visitRank                    as visitRank,
-			r.population                   as population,
-			r.percentage                   as percentage,
-			r.populationRank               as populationRank
+			'item'                              as type,
+			i._id                               as _id,
+			i.name                              as name,
+			i.image IS NOT NULL                 as image,
+			strftime('%s', i.image_time) * 1000 as imageTime,
+			c.image                             as typeImage,
+			datetime(r.visit, 'localtime')      as visit,
+			r.recency                           as recency,
+			r.visitRank                         as visitRank,
+			r.population                        as population,
+			r.percentage                        as percentage,
+			r.populationRank                    as populationRank
 		from Recents  r
 		join Item     i  ON r._id = i._id
 		join Category c  ON i.category = c._id
@@ -541,8 +554,11 @@
 	<string name="query_property_update"><![CDATA["
 		update Property set type = ?, name = ?, description = ? where _id = ?
 	"]]></string>
-	<string name="query_property_image_set"><![CDATA["
+	<string name="query_property_image_set_with_time"><![CDATA["
 		update Property set image = ?, image_time = datetime(? / 1000, 'unixepoch') where _id = ?
+	"]]></string>
+	<string name="query_property_image_set"><![CDATA["
+		update Property set image = ? where _id = ?
 	"]]></string>
 	<string name="query_property_image_get"><![CDATA["
 		select _id as _id, image as _dataBlob from Property where _id = ?
@@ -561,8 +577,11 @@
 	<string name="query_room_update"><![CDATA["
 		update Room set type = ?, name = ?, description = ? where _id = ?
 	"]]></string>
-	<string name="query_room_image_set"><![CDATA["
+	<string name="query_room_image_set_with_time"><![CDATA["
 		update Room set image = ?, image_time = datetime(? / 1000, 'unixepoch') where _id = ?
+	"]]></string>
+	<string name="query_room_image_set"><![CDATA["
+		update Room set image = ? where _id = ?
 	"]]></string>
 	<string name="query_room_image_get"><![CDATA["
 		select _id as _id, image as _dataBlob from Room where _id = ?
@@ -584,8 +603,11 @@
 	<string name="query_item_update"><![CDATA["
 		update Item set category = ?, name = ?, description = ? where _id = ?
 	"]]></string>
-	<string name="query_item_image_set"><![CDATA["
+	<string name="query_item_image_set_with_time"><![CDATA["
 		update Item set image = ?, image_time = datetime(? / 1000, 'unixepoch') where _id = ?
+	"]]></string>
+	<string name="query_item_image_set"><![CDATA["
+		update Item set image = ? where _id = ?
 	"]]></string>
 	<string name="query_item_image_get"><![CDATA["
 		select _id as _id, image as _dataBlob from Item where _id = ?

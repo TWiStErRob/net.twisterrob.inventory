@@ -74,6 +74,11 @@ public/* static */class IOTools {
 	public static String readAll(InputStream stream, String charsetName) throws IOException {
 		return readAll(new InputStreamReader(stream, charsetName));
 	}
+	public static byte[] readBytes(InputStream input) throws IOException {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		IOTools.copyStream(input, bytes);
+		return bytes.toByteArray();
+	}
 
 	public static void ignorantClose(Closeable closeMe) {
 		if (closeMe != null) {

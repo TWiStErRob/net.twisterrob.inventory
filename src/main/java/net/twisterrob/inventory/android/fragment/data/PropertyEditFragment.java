@@ -3,20 +3,18 @@ package net.twisterrob.inventory.android.fragment.data;
 import org.slf4j.*;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
-import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment.PropertyEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
+import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -30,11 +28,6 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 
 	public PropertyEditFragment() {
 		setDynamicResource(DYN_EventsClass, PropertyEditEvents.class);
-	}
-
-	@Override
-	protected String getBaseFileName() {
-		return "Property_" + getArgPropertyID();
 	}
 
 	@Override
@@ -84,7 +77,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		property.name = name.getText().toString();
 		property.description = description.getText().toString();
 		property.type = type.getSelectedItemId();
-		property.setImage(getContext(), getCurrentImage());
+		property.tempImageUri = getCurrentImage();
 		return property;
 	}
 
@@ -92,24 +85,21 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
-	private final class SaveTask extends SimpleSafeAsyncTask<PropertyDTO, Void, Long> {
-		@Override protected Long doInBackground(PropertyDTO param) throws SQLiteConstraintException {
-			Database db = App.db();
+	private final class SaveTask extends BaseSaveTask<PropertyDTO> {
+		@Override protected PropertyDTO saveInTransaction(Database db, PropertyDTO param) throws Exception {
 			if (param.id == Property.ID_ADD) {
-				return db.createProperty(param.type, param.name, param.description);
+				param.id = db.createProperty(param.type, param.name, param.description);
 			} else {
 				db.updateProperty(param.id, param.type, param.name, param.description);
-				return param.id;
 			}
+			if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
+				db.setPropertyImage(param.id, param.getImage(getContext()), null);
+			}
+			return param;
 		}
 
-		@Override protected void onResult(Long result, PropertyDTO param) {
-			eventsListener.propertySaved(result);
-		}
-
-		@Override protected void onError(@NonNull Exception ex, PropertyDTO param) {
-			LOG.warn("Cannot save {}", param, ex);
-			App.toast("Property name must be unique");
+		@Override protected void onResult(PropertyDTO result, PropertyDTO param) {
+			eventsListener.propertySaved(result.id);
 		}
 	}
 

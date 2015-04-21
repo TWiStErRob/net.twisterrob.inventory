@@ -48,6 +48,17 @@ public class Database {
 		return m_helper;
 	}
 
+	public Database beginTransaction() {
+		getWritableDatabase().beginTransaction();
+		return this;
+	}
+	public void endTransaction() {
+		getWritableDatabase().endTransaction();
+	}
+	public void setTransactionSuccessful() {
+		getWritableDatabase().setTransactionSuccessful();
+	}
+
 	private void execSQL(int queryResource, Object... params) {
 		execSQL(getWritableDatabase(), queryResource, params);
 	}
@@ -188,11 +199,12 @@ public class Database {
 	public void updateProperty(long id, long type, String name, String description) {
 		execSQL(R.string.query_property_update, type, name, description, id);
 	}
-	public void addPropertyImage(long id, byte[] imageContents, long time) {
-		if (time == -1) {
-			time = System.currentTimeMillis();
+	public void setPropertyImage(long id, byte[] imageContents, Long time) {
+		if(time != null) {
+			execSQL(R.string.query_property_image_set_with_time, imageContents, time, id);
+		} else {
+			execSQL(R.string.query_property_image_set, imageContents, id);
 		}
-		execSQL(R.string.query_property_image_set, imageContents, time, id);
 	}
 	public Cursor getPropertyImage(long id) {
 		return rawQuery(R.string.query_property_image_get, id);
@@ -211,11 +223,12 @@ public class Database {
 	public void updateRoom(long id, long type, String name, String description) {
 		execSQL(R.string.query_room_update, type, name, description, id);
 	}
-	public void addRoomImage(long id, byte[] imageContents, long time) {
-		if (time == -1) {
-			time = System.currentTimeMillis();
+	public void setRoomImage(long id, byte[] imageContents, Long time) {
+		if (time != null) {
+			execSQL(R.string.query_room_image_set_with_time, imageContents, time, id);
+		} else {
+			execSQL(R.string.query_room_image_set, imageContents, id);
 		}
-		execSQL(R.string.query_room_image_set, imageContents, time, id);
 	}
 	public Cursor getRoomImage(long id) {
 		return rawQuery(R.string.query_room_image_get, id);
@@ -251,11 +264,12 @@ public class Database {
 	public void updateItem(long id, long category, String name, String description) {
 		execSQL(R.string.query_item_update, category, name, description, id);
 	}
-	public void addItemImage(long id, byte[] imageContents, long time) {
-		if (time == -1) {
-			time = System.currentTimeMillis();
+	public void setItemImage(long id, byte[] imageContents, Long time) {
+		if (time != null) {
+			execSQL(R.string.query_item_image_set_with_time, imageContents, time, id);
+		} else {
+			execSQL(R.string.query_item_image_set, imageContents, id);
 		}
-		execSQL(R.string.query_item_image_set, imageContents, time, id);
 	}
 	public Cursor getItemImage(long id) {
 		return rawQuery(R.string.query_item_image_get, id);

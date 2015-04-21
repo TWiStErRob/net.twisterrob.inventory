@@ -63,8 +63,9 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 		boolean hasImage = DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE);
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+		long imageTime = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
 
 		holder.title.setText(name);
-		ImagedDTO.loadInto(holder.image, hasImage? type : null, id, typeImage);
+		ImagedDTO.loadInto(holder.image, hasImage? type : null, id, imageTime, typeImage);
 	}
 }

@@ -3,20 +3,18 @@ package net.twisterrob.inventory.android.fragment.data;
 import org.slf4j.*;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
-import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomEditFragment.RoomEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
+import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -30,11 +28,6 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 
 	public RoomEditFragment() {
 		setDynamicResource(DYN_EventsClass, RoomEditEvents.class);
-	}
-
-	@Override
-	protected String getBaseFileName() {
-		return "Room_" + getArgRoomID();
 	}
 
 	@Override
@@ -85,7 +78,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		room.name = name.getText().toString();
 		room.description = description.getText().toString();
 		room.type = type.getSelectedItemId();
-		room.setImage(getContext(), getCurrentImage());
+		room.tempImageUri = getCurrentImage();
 		return room;
 	}
 
@@ -97,23 +90,21 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 
-	private final class SaveTask extends SimpleSafeAsyncTask<RoomDTO, Void, Long> {
-		@Override protected Long doInBackground(RoomDTO param) throws SQLiteConstraintException {
-			Database db = App.db();
+	private final class SaveTask extends BaseSaveTask<RoomDTO> {
+		@Override protected RoomDTO saveInTransaction(Database db, RoomDTO param) throws Exception {
 			if (param.id == Room.ID_ADD) {
-				return db.createRoom(param.propertyID, param.type, param.name, param.description);
+				param.id = db.createRoom(param.propertyID, param.type, param.name, param.description);
 			} else {
 				db.updateRoom(param.id, param.type, param.name, param.description);
-				return param.id;
 			}
+			if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
+				db.setRoomImage(param.id, param.getImage(getContext()), null);
+			}
+			return param;
 		}
 
-		@Override protected void onResult(Long result, RoomDTO param) {
-			eventsListener.roomSaved(result);
-		}
-		@Override protected void onError(@NonNull Exception ex, RoomDTO param) {
-			LOG.warn("Cannot save {}", param, ex);
-			App.toast("Room name must be unique within the property");
+		@Override protected void onResult(RoomDTO result, RoomDTO param) {
+			eventsListener.roomSaved(result.id);
 		}
 	}
 

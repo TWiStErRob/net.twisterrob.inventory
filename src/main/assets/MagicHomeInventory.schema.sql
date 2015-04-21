@@ -108,7 +108,7 @@ CREATE TABLE Item (
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         NULL,     -- user entered
 	image       BLOB         NULL,     -- JPEG image
-	image_time  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+	image_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	category    INTEGER      DEFAULT 0 -- uncategorized
 		CONSTRAINT fk_Item_category
 			REFERENCES Category(_id)
@@ -203,7 +203,7 @@ CREATE TABLE Property (
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         NULL,     -- user entered
 	image       BLOB         NULL,     -- JPEG image
-	image_time  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+	image_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Property_type
 			REFERENCES PropertyType(_id)
@@ -249,7 +249,7 @@ CREATE TABLE Room (
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         NULL,     -- user entered
 	image       BLOB         NULL,     -- JPEG image
-	image_time  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+	image_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Room_type
 			REFERENCES RoomType(_id)
