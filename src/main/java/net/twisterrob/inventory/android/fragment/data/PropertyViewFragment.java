@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import java.util.Date;
+
 import org.slf4j.*;
 
 import android.database.Cursor;
@@ -62,7 +64,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 				.append("# of rooms", entity.numAllChildren, DEBUG)
 				.append("# of items in the rooms", entity.numDirectItems)
 				.append("# of items inside rooms", entity.numAllItems)
-				.append("image", entity.image, DEBUG)
+				.append(entity.image? "image" : "image removed", new Date(entity.imageTime), DEBUG)
 				.append("Description", entity.description)
 				.build();
 	}

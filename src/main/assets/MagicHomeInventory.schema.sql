@@ -108,6 +108,7 @@ CREATE TABLE Item (
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         NULL,     -- user entered
 	image       BLOB         NULL,     -- JPEG image
+	image_time  DATETIME     DEFAULT CURRENT_TIMESTAMP,
 	category    INTEGER      DEFAULT 0 -- uncategorized
 		CONSTRAINT fk_Item_category
 			REFERENCES Category(_id)
@@ -171,6 +172,13 @@ BEGIN
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || '): '  || 'finished');--NOTEOS
 END;
 
+CREATE TRIGGER Item_image
+AFTER UPDATE OF image ON Item
+WHEN old.image_time = new.image_time
+BEGIN
+	update Item set image_time = current_timestamp where _id = new._id;--NOTEOS
+END;
+
 CREATE TRIGGER Item_categoryChange
 AFTER UPDATE OF category ON Item
 WHEN old.category <> new.category
@@ -189,11 +197,13 @@ CREATE TABLE PropertyType (
 	PRIMARY KEY(_id),
 	UNIQUE (name)
 );
+
 CREATE TABLE Property (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         NULL,     -- user entered
 	image       BLOB         NULL,     -- JPEG image
+	image_time  DATETIME     DEFAULT CURRENT_TIMESTAMP,
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Property_type
 			REFERENCES PropertyType(_id)
@@ -203,6 +213,14 @@ CREATE TABLE Property (
 	UNIQUE (name)
 );
 
+CREATE TRIGGER Property_image
+AFTER UPDATE OF image ON Property
+WHEN old.image_time = new.image_time
+BEGIN
+	update Property set image_time = current_timestamp where _id = new._id;--NOTEOS
+END;
+
+
 CREATE TABLE RoomTypeKind (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- string resource name
@@ -211,6 +229,7 @@ CREATE TABLE RoomTypeKind (
 	PRIMARY KEY(_id),
 	UNIQUE (name)
 );
+
 CREATE TABLE RoomType (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- string resource name
@@ -224,11 +243,13 @@ CREATE TABLE RoomType (
 	PRIMARY KEY(_id),
 	UNIQUE (name)
 );
+
 CREATE TABLE Room (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         NULL,     -- user entered
 	image       BLOB         NULL,     -- JPEG image
+	image_time  DATETIME     DEFAULT CURRENT_TIMESTAMP,
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Room_type
 			REFERENCES RoomType(_id)
@@ -266,6 +287,13 @@ BEGIN
 		where ip.rootItemID <> ip.itemID and ip.roomID = new._id
 	;--NOTEOS
 	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || old.property || '->' || new.property || ', ' || new.root || ', ' || new.name || '): ' || 'finished');--NOTEOS
+END;
+
+CREATE TRIGGER Room_image
+AFTER UPDATE OF image ON Room
+WHEN old.image_time = new.image_time
+BEGIN
+	update Room set image_time = current_timestamp where _id = new._id;--NOTEOS
 END;
 
 CREATE VIEW Room_Rooter AS select * from Room;

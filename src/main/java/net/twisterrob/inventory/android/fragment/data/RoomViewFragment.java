@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import java.util.Date;
+
 import org.slf4j.*;
 
 import android.content.Intent;
@@ -69,7 +71,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				.append("In property", entity.propertyName)
 				.append("# of items in the room", entity.numDirectItems)
 				.append("# of items inside items", entity.numAllItems)
-				.append("image", entity.image, DEBUG)
+				.append(entity.image? "image" : "image removed", new Date(entity.imageTime), DEBUG)
 				.append("Description", entity.description)
 				.build();
 	}

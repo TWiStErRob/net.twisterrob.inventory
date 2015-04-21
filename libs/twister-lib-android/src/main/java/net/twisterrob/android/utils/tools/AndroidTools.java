@@ -19,6 +19,7 @@ import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.*;
 import android.os.Build.*;
@@ -735,5 +736,10 @@ public abstract class AndroidTools {
 			LOG.error("Cannot find provider {} in {}", clazz, context, ex);
 		}
 		return new ProviderInfo();
+	}
+
+	public static void makeFileDiscoverable(@NonNull Context context, @NonNull File file) {
+		MediaScannerConnection.scanFile(context, new String[] {file.getPath()}, null, null);
+		//context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
 	}
 }

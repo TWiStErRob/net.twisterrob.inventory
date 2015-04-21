@@ -7,6 +7,7 @@ public interface CommonColumns {
 	String NAME = "name"; // never NULL
 	String DESCRIPTION = "description";
 	String IMAGE = "image";
+	String IMAGE_TIME = "imageTime";
 	String TYPE_IMAGE = "typeImage"; // never NULL
 	String TYPE_ID = "typeID";
 	String TYPE = "type";

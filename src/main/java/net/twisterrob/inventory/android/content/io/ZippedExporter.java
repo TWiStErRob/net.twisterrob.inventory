@@ -5,7 +5,9 @@ import java.util.zip.*;
 
 import android.database.Cursor;
 
-import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.content.contract.*;
 
 public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 	private final String fileName;
@@ -46,26 +48,34 @@ public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 	@Override public void initImages(Cursor cursor) {
 		// nop
 	}
-	@Override public void saveImage(File file, Cursor cursor) throws IOException {
-		FileInputStream imageFile = new FileInputStream(file);
-		try {
-			ZipEntry entry = new ZipEntry(file.getName());
-			entry.setTime(file.lastModified());
-			entry.setMethod(ZipEntry.STORED);
-			entry.setSize(file.length());
-			entry.setCrc(IOTools.crc(file));
-			entry.setComment(ExporterTask.buildComment(cursor));
-			zip.putNextEntry(entry);
-		} catch (IOException ex) {
-			IOTools.ignorantClose(imageFile);
-		}
-		IOTools.copyStream(imageFile, zip, false);
-		zip.closeEntry();
+	@Override public void saveImage(@Deprecated File file, Cursor cursor) throws IOException {
+		byte[] image = getImage(cursor);
+		long unixUtc = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
+		String fileName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+		String comment = ExporterTask.buildComment(cursor);
+		IOTools.store(zip, image, unixUtc, fileName, comment);
 	}
+
 	@Override public void noImage(Cursor cursor) throws Throwable {
 		// nop
 	}
 	@Override public void finishImages(Cursor cursor) throws Throwable {
 		// nop
+	}
+	public byte[] getImage(Cursor cursor) {
+		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+		Type type = Type.from(cursor, CommonColumns.TYPE);
+		switch (type) {
+			case Property:
+				cursor = App.db().getPropertyImage(id);
+				break;
+			case Room:
+				cursor = App.db().getRoomImage(id);
+				break;
+			case Item:
+				cursor = App.db().getItemImage(id);
+				break;
+		}
+		return DatabaseTools.singleBlob(cursor, "_dataBlob");
 	}
 }

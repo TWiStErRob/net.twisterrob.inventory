@@ -167,7 +167,7 @@ public class Database {
 	}
 
 	public Cursor getItem(long itemID, boolean addToRecents) {
-		if(addToRecents) {
+		if (addToRecents) {
 			execSQL(R.string.query_recent_add, itemID);
 		}
 		return rawQuery(R.string.query_item, itemID, itemID);
@@ -188,8 +188,11 @@ public class Database {
 	public void updateProperty(long id, long type, String name, String description) {
 		execSQL(R.string.query_property_update, type, name, description, id);
 	}
-	public void addPropertyImage(long id, byte[] imageContents) {
-		execSQL(R.string.query_property_image_set, imageContents, id);
+	public void addPropertyImage(long id, byte[] imageContents, long time) {
+		if (time == -1) {
+			time = System.currentTimeMillis();
+		}
+		execSQL(R.string.query_property_image_set, imageContents, time, id);
 	}
 	public Cursor getPropertyImage(long id) {
 		return rawQuery(R.string.query_property_image_get, id);
@@ -208,8 +211,11 @@ public class Database {
 	public void updateRoom(long id, long type, String name, String description) {
 		execSQL(R.string.query_room_update, type, name, description, id);
 	}
-	public void addRoomImage(long id, byte[] imageContents) {
-		execSQL(R.string.query_room_image_set, imageContents, id);
+	public void addRoomImage(long id, byte[] imageContents, long time) {
+		if (time == -1) {
+			time = System.currentTimeMillis();
+		}
+		execSQL(R.string.query_room_image_set, imageContents, time, id);
 	}
 	public Cursor getRoomImage(long id) {
 		return rawQuery(R.string.query_room_image_get, id);
@@ -245,8 +251,11 @@ public class Database {
 	public void updateItem(long id, long category, String name, String description) {
 		execSQL(R.string.query_item_update, category, name, description, id);
 	}
-	public void addItemImage(long id, byte[] imageContents) {
-		execSQL(R.string.query_item_image_set, imageContents, id);
+	public void addItemImage(long id, byte[] imageContents, long time) {
+		if (time == -1) {
+			time = System.currentTimeMillis();
+		}
+		execSQL(R.string.query_item_image_set, imageContents, time, id);
 	}
 	public Cursor getItemImage(long id) {
 		return rawQuery(R.string.query_item_image_get, id);

@@ -5,6 +5,8 @@ import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.util.zip.*;
 
+import javax.annotation.*;
+
 public/* static */class IOTools {
 	// TODO check if UTF-8 is used by cineworld
 	public static final String ENCODING = Charset.forName("UTF-8").name();
@@ -299,9 +301,52 @@ public/* static */class IOTools {
 			throw new IOException("Cannot read directory " + dir);
 		}
 	}
+
+	public static long crc(byte[] arr) throws IOException {
+		CRC32 crc = new CRC32();
+		crc.update(arr);
+		return crc.getValue();
+	}
+
 	public static long crc(File file) throws IOException {
 		CRC32OutputStream crc = new CRC32OutputStream();
 		IOTools.copyStream(new FileInputStream(file), crc, true);
 		return crc.getValue();
+	}
+
+	public static InputStream stream(String string) throws IOException {
+		return new ByteArrayInputStream(string.getBytes("UTF-8"));
+	}
+
+	public static void store(@Nonnull ZipOutputStream zip,
+			@Nonnull File file, @Nullable String comment) throws IOException {
+		InputStream imageFile = new FileInputStream(file);
+		ZipEntry entry = new ZipEntry(file.getName());
+		entry.setTime(file.lastModified());
+		entry.setMethod(ZipEntry.STORED);
+		entry.setSize(file.length());
+		entry.setCrc(IOTools.crc(file));
+		entry.setComment(comment);
+		try {
+			zip.putNextEntry(entry);
+			IOTools.copyStream(imageFile, zip, false);
+			zip.closeEntry();
+		} finally {
+			IOTools.ignorantClose(imageFile);
+		}
+	}
+
+	public static void store(@Nonnull ZipOutputStream zip,
+			@Nonnull byte[] file, long unixEpoch, @Nonnull String name, @Nullable String comment) throws IOException {
+		ZipEntry entry = new ZipEntry(name);
+		entry.setTime(unixEpoch);
+		entry.setMethod(ZipEntry.STORED);
+		entry.setSize(file.length);
+		entry.setCrc(IOTools.crc(file));
+		entry.setComment(comment);
+
+		zip.putNextEntry(entry);
+		zip.write(file);
+		zip.closeEntry();
 	}
 }

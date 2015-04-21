@@ -21,6 +21,7 @@ public abstract class ImagedDTO extends DTO {
 	private static final Logger LOG = LoggerFactory.getLogger(ImagedDTO.class);
 
 	public boolean image;
+	public long imageTime;
 	public String typeImage;
 	public long type;
 
@@ -28,8 +29,9 @@ public abstract class ImagedDTO extends DTO {
 	protected ImagedDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
-		typeImage = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE);
-		image = DatabaseTools.getOptionalBoolean(cursor, CommonColumns.IMAGE, false);
+		typeImage = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE, typeImage);
+		image = DatabaseTools.getOptionalBoolean(cursor, CommonColumns.IMAGE, image);
+		imageTime = DatabaseTools.getOptionalLong(cursor, CommonColumns.IMAGE_TIME, imageTime);
 		type = DatabaseTools.getOptionalLong(cursor, CommonColumns.TYPE_ID, type);
 
 		return this;

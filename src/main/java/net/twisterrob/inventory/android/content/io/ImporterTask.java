@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.content.io;
 
 import java.io.*;
+import java.text.*;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.zip.*;
@@ -26,7 +27,6 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 
 	private ImportCallbacks callbacks = DUMMY_CALLBACK;
 	private Progress progress;
-	private Importer importer;
 	private ZipFile zip;
 
 	public interface ImportCallbacks {
@@ -127,6 +127,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 			ZipEntry xml = zip.getEntry(Constants.Paths.BACKUP_XML_FILENAME);
 			ZipEntry csv = zip.getEntry(Constants.Paths.BACKUP_CSV_FILENAME);
 			InputStream stream;
+			Importer importer;
 			if (xml != null) {
 				stream = zip.getInputStream(xml);
 				importer = new XMLImporter(this);
@@ -159,15 +160,28 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 			ByteArrayOutputStream byteOut = new ByteArrayOutputStream((int)imageEntry.getSize());
 			IOTools.copyStream(zipImage, byteOut);
 			byte[] imageContents = byteOut.toByteArray();
+			// XXX remove CSV handling
+			long time = imageEntry.getTime();
+			ZipEntry csv = zip.getEntry(Constants.Paths.BACKUP_CSV_FILENAME);
+			long dataTime = csv == null? Long.MAX_VALUE : csv.getTime();
+			if (dataTime < time) { // jpeg was written later than csv file, so date is invalid, use name
+				try {
+					// Item_1004_20150206_154157
+					String datePart = image.replaceFirst("^.*_(\\d{8}_\\d{6}).jpg$", "$1");
+					time = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).parse(datePart).getTime();
+				} catch (ParseException ex) {
+					LOG.warn("Cannot parse: {}", image, ex);
+				}
+			}
 			switch (type) {
 				case Property:
-					App.db().addPropertyImage(id, imageContents);
+					App.db().addPropertyImage(id, imageContents, time);
 					break;
 				case Room:
-					App.db().addRoomImage(id, imageContents);
+					App.db().addRoomImage(id, imageContents, time);
 					break;
 				case Item:
-					App.db().addItemImage(id, imageContents);
+					App.db().addItemImage(id, imageContents, time);
 					break;
 				default:
 					throw new IllegalArgumentException(type + " cannot have images.");

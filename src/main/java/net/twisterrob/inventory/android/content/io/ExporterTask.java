@@ -123,13 +123,15 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		} catch (Throwable ex) {
 			LOG.warn("Export failed", ex);
 			progress.failure = ex;
-			IOTools.ignorantClose(os);
 			if (!BuildConfig.DEBUG && file != null && !file.delete()) {
 				file.deleteOnExit();
 			}
 		} finally {
 			IOTools.ignorantClose(cursor);
 			exporter.finalizeExport();
+			if (file != null) {
+				AndroidTools.makeFileDiscoverable(context, file);
+			}
 		}
 
 		return progress;
@@ -142,7 +144,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		cursor.moveToPosition(-1);
 		publishStart();
 		while (cursor.moveToNext()) {
-			if (DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE)) {
+			if (!cursor.isNull(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE))) {
 				progress.imagesCount++;
 			}
 			exporter.writeData(cursor);

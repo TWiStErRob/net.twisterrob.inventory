@@ -21,6 +21,7 @@
 			p.description                                     as description,
 			p.type                                            as typeID,
 			p.image IS NOT NULL                               as image,
+			strftime('%s', p.image_time) * 1000               as imageTime,
 			pt.image                                          as typeImage,
 			(select count() from Room where property = p._id) as countChildren,
 			(select count() from Item where parent in (select root from Room where property = p._id)) as countDirectItems,
@@ -77,6 +78,7 @@
 			p._id                                            as property,
 			p.name                                           as propertyName,
 			r.image IS NOT NULL                              as image,
+			strftime('%s', r.image_time) * 1000              as imageTime,
 			COALESCE(rt.image, rtk.image)                    as typeImage,
 			(select count() from Item where parent = r.root) as countDirectItems,
 			(select count(distinct item) from Item_Path_Node where root = r.root and root <> node) as countAllItems
@@ -140,6 +142,7 @@
 			i.name                                          as name,
 			i.description                                   as description,
 			i.image IS NOT NULL                             as image,
+			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			ip.categoryID                                   as typeID,
 			ip.categoryName                                 as categoryName,
@@ -449,7 +452,7 @@
 		select coalesce(sum(length(name) + length(location)), 0) + count() * 4 * 3 from Search
 	"]]></string>
 
-	<string name="query_export"><![CDATA["
+	<string name="query_export" formatted="false"><![CDATA["
 			select
 				'property'    as type,
 				pt.name       as typeName,
@@ -457,7 +460,13 @@
 				null          as roomName,
 				null          as itemName,
 				p.description as description,
-				p.image       as image,
+				CASE WHEN p.image is not null
+				THEN 'property'
+					|| '_' || p._id
+					|| '_' || strftime('%Y%m%d_%H%M%S', p.image_time, 'localtime')
+					|| '.jpg'
+				ELSE NULL END as image,
+				strftime('%s', p.image_time) * 1000 as imageTime,
 				null          as parentType,
 				null          as parent,
 				null          as parentName,
@@ -472,7 +481,13 @@
 				r.name        as roomName,
 				null          as itemName,
 				r.description as description,
-				r.image       as image,
+				CASE WHEN r.image is not null
+				THEN 'room'
+					|| '_' || r._id
+					|| '_' || strftime('%Y%m%d_%H%M%S', r.image_time, 'localtime')
+					|| '.jpg'
+				ELSE NULL END as image,
+				strftime('%s', r.image_time) * 1000 as imageTime,
 				'property'    as parentType,
 				p._id         as parent,
 				p.name        as parentName,
@@ -488,7 +503,13 @@
 				r.name        as roomName,
 				i.name        as itemName,
 				i.description as description,
-				i.image       as image,
+				CASE WHEN i.image is not null
+				THEN 'item'
+					|| '_' || i._id
+					|| '_' || strftime('%Y%m%d_%H%M%S', i.image_time, 'localtime')
+					|| '.jpg'
+				ELSE NULL END as image,
+				strftime('%s', i.image_time) * 1000 as imageTime,
 				CASE WHEN i.parent <> r.root THEN 'item'  ELSE 'room' END as parentType,
 				CASE WHEN i.parent <> r.root THEN pi._id  ELSE r._id  END as parent,
 				CASE WHEN i.parent <> r.root THEN pi.name ELSE r.name END as parentName,
@@ -521,7 +542,7 @@
 		update Property set type = ?, name = ?, description = ? where _id = ?
 	"]]></string>
 	<string name="query_property_image_set"><![CDATA["
-		update Property set image = ? where _id = ?
+		update Property set image = ?, image_time = datetime(? / 1000, 'unixepoch') where _id = ?
 	"]]></string>
 	<string name="query_property_image_get"><![CDATA["
 		select _id as _id, image as _dataBlob from Property where _id = ?
@@ -541,7 +562,7 @@
 		update Room set type = ?, name = ?, description = ? where _id = ?
 	"]]></string>
 	<string name="query_room_image_set"><![CDATA["
-		update Room set image = ? where _id = ?
+		update Room set image = ?, image_time = datetime(? / 1000, 'unixepoch') where _id = ?
 	"]]></string>
 	<string name="query_room_image_get"><![CDATA["
 		select _id as _id, image as _dataBlob from Room where _id = ?
@@ -564,7 +585,7 @@
 		update Item set category = ?, name = ?, description = ? where _id = ?
 	"]]></string>
 	<string name="query_item_image_set"><![CDATA["
-		update Item set image = ? where _id = ?
+		update Item set image = ?, image_time = datetime(? / 1000, 'unixepoch') where _id = ?
 	"]]></string>
 	<string name="query_item_image_get"><![CDATA["
 		select _id as _id, image as _dataBlob from Item where _id = ?
