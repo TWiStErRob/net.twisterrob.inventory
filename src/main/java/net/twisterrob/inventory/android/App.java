@@ -64,10 +64,9 @@ public class App extends Application {
 		// since it needs to be loaded for the following code to work, make an exception:
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		StrictMode.setThreadPolicy(originalPolicy);
-
 		database = new Database(this);
-		updateLanguage(Locale.getDefault());
+		updateLanguage(Locale.getDefault()); // reads prefs, so may cause StrictModeDiskReadViolation if not loaded yet
+		StrictMode.setThreadPolicy(originalPolicy);
 	}
 
 	@Override

@@ -3,4 +3,6 @@
 	<string name="package_url_settings">package:net.twisterrob.inventory.debug</string>
 	<string name="visible_in_test">0x00000000</string>
 	<color name="transparent">#66000000</color>
+	<bool name="pref_internalImageViewer_default" translatable="false">false</bool>
+	<bool name="pref_displayDebugDetails_default" translatable="false">true</bool>
 </resources>
