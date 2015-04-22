@@ -31,7 +31,7 @@ import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.inventory.android.view.TextWatcherAdapter;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
-public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
+public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
 	public static final String EDIT_IMAGE = "editImageOnStartup";
 
@@ -57,7 +57,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		return !isClean;
 	}
 
-	protected void onSingleRowLoaded(ImagedDTO dto) {
+	protected void onSingleRowLoaded(DTO dto) {
 		AndroidTools.selectByID(type, dto.type);
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
 		setCurrentImage(dto.image? dto.getImageUri() : null);
@@ -73,13 +73,11 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		});
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_edit, container, false);
 	}
 
-	@Override
-	public void onViewCreated(View view, Bundle bundle) {
+	@Override public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
 		image = (ImageView)view.findViewById(R.id.image);
 		image.setOnClickListener(new OnClickListener() {
@@ -144,7 +142,13 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		name.setText(name.getText().toString().trim());
 	}
 
-	protected abstract void doSave();
+	@SuppressWarnings("unchecked")
+	protected void doSave() {
+		new SaveTask().execute(gatherEdits());
+	}
+	protected abstract DTO gatherEdits();
+	protected abstract DTO onSave(Database db, DTO param) throws Exception;
+	protected abstract void onSaved(DTO result);
 
 	protected boolean doValidate() {
 		boolean valid = true;
@@ -168,14 +172,12 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		return ImagedDTO.getFallbackID(getContext(), cursor);
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.picture, menu);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_picture_take:
 				takePicture();
@@ -220,8 +222,7 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		setCurrentImage(null);
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 			case ImageTools.REQUEST_CODE_GET_PICTURE:
 			case ImageTools.REQUEST_CODE_TAKE_PICTURE:
@@ -265,22 +266,25 @@ public abstract class BaseEditFragment<T> extends BaseSingleLoaderFragment<T> {
 		}
 	}
 
-	protected static abstract class BaseSaveTask<T extends ImagedDTO> extends SimpleSafeAsyncTask<T, Void, T> {
-		@Override protected final T doInBackground(T param) throws Exception {
+	protected class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
+		@Override protected final DTO doInBackground(DTO param) throws Exception {
 			Database db = App.db().beginTransaction();
 			try {
-				param = saveInTransaction(db, param);
+				param = onSave(db, param);
 				db.setTransactionSuccessful();
 				return param;
 			} finally {
 				db.endTransaction();
 			}
 		}
-		protected abstract T saveInTransaction(Database db, T param) throws Exception;
 
-		@Override protected void onError(@NonNull Exception ex, T param) {
+		@Override protected void onResult(DTO result, DTO param) {
+			onSaved(result);
+		}
+
+		@Override protected void onError(@NonNull Exception ex, DTO param) {
 			LOG.warn("Cannot save ({}){}", param != null? param.getClass().getSimpleName() : null, param, ex);
-			App.toastUser("Name must be unique within the collection");
+			App.toastUser(String.format("Cannot save %s: %s", param, ex));
 		}
 	}
 }

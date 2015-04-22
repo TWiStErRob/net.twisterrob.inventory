@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.*;
 import android.support.v7.internal.view.menu.MenuBuilder;
@@ -67,6 +68,7 @@ public class MainActivity extends BaseActivity
 			@Override public void onBackStackChanged() {
 				FragmentManager fm = getSupportFragmentManager();
 				int count = fm.getBackStackEntryCount();
+				//AndroidTools.dumpBackStack(getApplicationContext(), fm);
 				if (count == 0) {
 					finish();
 				} else {
@@ -92,13 +94,30 @@ public class MainActivity extends BaseActivity
 		String page = getExtraPage(intent);
 
 		FragmentManager m = getSupportFragmentManager();
-		if (Constants.DISABLE && 2 <= m.getBackStackEntryCount()) {
-			BackStackEntry top = m.getBackStackEntryAt(m.getBackStackEntryCount() - 2);
+		int count = m.getBackStackEntryCount();
+
+		if (0 < count) {
+			if (page.equals(PAGE_HOME) && page.equals(m.getBackStackEntryAt(0).getName())) {
+				LOG.trace("Fragment '{}' already exists on the bottom of the stack, skipping the new request", page);
+				return;
+			}
+			BackStackEntry top = m.getBackStackEntryAt(count - 1);
 			if (page.equals(top.getName())) {
+				LOG.trace("Fragment '{}' is already on top, skipping the new request", page);
+				return;
+			}
+		}
+
+		if (1 < count) {
+			BackStackEntry topCandidate = m.getBackStackEntryAt(count - 2);
+			if (page.equals(topCandidate.getName())) {
+				LOG.trace("There's already a '{}' behind the top '{}', simulating back navigation",
+						page, m.getBackStackEntryAt(count - 1).getName());
 				m.popBackStack();
 				return;
 			}
 		}
+
 		BaseFragment fragment = createPage(page);
 		fragment.setViewTag(intent);
 		m
@@ -138,7 +157,7 @@ public class MainActivity extends BaseActivity
 		return fragment;
 	}
 
-	private String getExtraPage(Intent intent) {
+	private @NonNull String getExtraPage(Intent intent) {
 		String page = intent.getStringExtra(EXTRA_PAGE);
 		return page != null? page : PAGE_HOME;
 	}

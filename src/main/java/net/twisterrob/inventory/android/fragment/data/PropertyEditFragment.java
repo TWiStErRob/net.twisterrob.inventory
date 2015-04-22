@@ -18,7 +18,7 @@ import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
+public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, PropertyDTO> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyEditFragment.class);
 
 	public interface PropertyEditEvents {
@@ -30,8 +30,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		setDynamicResource(DYN_EventsClass, PropertyEditEvents.class);
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setKeepNameInSync(true);
 	}
@@ -42,8 +41,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		description.setHint(R.string.property_description_hint);
 	}
 
-	@Override
-	protected void onStartLoading() {
+	@Override protected void onStartLoading() {
 		long id = getArgPropertyID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
@@ -59,19 +57,13 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		manager.startLoading();
 	}
 
-	@Override
-	protected void onSingleRowLoaded(Cursor cursor) {
+	@Override protected void onSingleRowLoaded(Cursor cursor) {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
 		onSingleRowLoaded(property);
 		eventsListener.propertyLoaded(property);
 	}
 
-	@Override
-	protected void doSave() {
-		new SaveTask().execute(getCurrentProperty());
-	}
-
-	private PropertyDTO getCurrentProperty() {
+	@Override protected PropertyDTO gatherEdits() {
 		PropertyDTO property = new PropertyDTO();
 		property.id = getArgPropertyID();
 		property.name = name.getText().toString();
@@ -85,22 +77,20 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents> {
 		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
-	private final class SaveTask extends BaseSaveTask<PropertyDTO> {
-		@Override protected PropertyDTO saveInTransaction(Database db, PropertyDTO param) throws Exception {
-			if (param.id == Property.ID_ADD) {
-				param.id = db.createProperty(param.type, param.name, param.description);
-			} else {
-				db.updateProperty(param.id, param.type, param.name, param.description);
-			}
-			if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
-				db.setPropertyImage(param.id, param.getImage(getContext()), null);
-			}
-			return param;
+	@Override protected PropertyDTO onSave(Database db, PropertyDTO param) throws Exception {
+		if (param.id == Property.ID_ADD) {
+			param.id = db.createProperty(param.type, param.name, param.description);
+		} else {
+			db.updateProperty(param.id, param.type, param.name, param.description);
 		}
+		if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
+			db.setPropertyImage(param.id, param.getImage(getContext()), null);
+		}
+		return param;
+	}
 
-		@Override protected void onResult(PropertyDTO result, PropertyDTO param) {
-			eventsListener.propertySaved(result.id);
-		}
+	@Override protected void onSaved(PropertyDTO result) {
+		eventsListener.propertySaved(result.id);
 	}
 
 	public static PropertyEditFragment newInstance(long propertyID) {

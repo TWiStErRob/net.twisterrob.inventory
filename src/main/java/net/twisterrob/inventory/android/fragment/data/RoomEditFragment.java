@@ -18,7 +18,7 @@ import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
+public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomEditFragment.class);
 
 	public interface RoomEditEvents {
@@ -30,8 +30,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		setDynamicResource(DYN_EventsClass, RoomEditEvents.class);
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setKeepNameInSync(true);
 	}
@@ -42,8 +41,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		description.setHint(R.string.room_description_hint);
 	}
 
-	@Override
-	protected void onStartLoading() {
+	@Override protected void onStartLoading() {
 		long id = getArgRoomID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
@@ -59,19 +57,13 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		manager.startLoading();
 	}
 
-	@Override
-	protected void onSingleRowLoaded(Cursor cursor) {
+	@Override protected void onSingleRowLoaded(Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 		onSingleRowLoaded(room);
 		eventsListener.roomLoaded(room);
 	}
 
-	@Override
-	protected void doSave() {
-		new SaveTask().execute(getCurrentRoom());
-	}
-
-	private RoomDTO getCurrentRoom() {
+	@Override protected RoomDTO gatherEdits() {
 		RoomDTO room = new RoomDTO();
 		room.propertyID = getArgPropertyID();
 		room.id = getArgRoomID();
@@ -90,22 +82,20 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents> {
 		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 
-	private final class SaveTask extends BaseSaveTask<RoomDTO> {
-		@Override protected RoomDTO saveInTransaction(Database db, RoomDTO param) throws Exception {
-			if (param.id == Room.ID_ADD) {
-				param.id = db.createRoom(param.propertyID, param.type, param.name, param.description);
-			} else {
-				db.updateRoom(param.id, param.type, param.name, param.description);
-			}
-			if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
-				db.setRoomImage(param.id, param.getImage(getContext()), null);
-			}
-			return param;
+	@Override protected RoomDTO onSave(Database db, RoomDTO param) throws Exception {
+		if (param.id == Room.ID_ADD) {
+			param.id = db.createRoom(param.propertyID, param.type, param.name, param.description);
+		} else {
+			db.updateRoom(param.id, param.type, param.name, param.description);
 		}
+		if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
+			db.setRoomImage(param.id, param.getImage(getContext()), null);
+		}
+		return param;
+	}
 
-		@Override protected void onResult(RoomDTO result, RoomDTO param) {
-			eventsListener.roomSaved(result.id);
-		}
+	@Override protected void onSaved(RoomDTO result) {
+		eventsListener.roomSaved(result.id);
 	}
 
 	public static RoomEditFragment newInstance(long propertyID, long roomID) {

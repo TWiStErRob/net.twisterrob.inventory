@@ -18,7 +18,7 @@ import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
-public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
+public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditFragment.class);
 
 	public interface ItemEditEvents {
@@ -36,8 +36,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		description.setHint(R.string.item_description_hint);
 	}
 
-	@Override
-	protected void onStartLoading() {
+	@Override protected void onStartLoading() {
 		long id = getArgItemID();
 
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
@@ -53,19 +52,13 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		manager.startLoading();
 	}
 
-	@Override
-	protected void onSingleRowLoaded(Cursor cursor) {
+	@Override protected void onSingleRowLoaded(Cursor cursor) {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
 		onSingleRowLoaded(item);
 		eventsListener.itemLoaded(item);
 	}
 
-	@Override
-	protected void doSave() {
-		new SaveTask().execute(getCurrentItem());
-	}
-
-	private ItemDTO getCurrentItem() {
+	@Override protected ItemDTO gatherEdits() {
 		ItemDTO item = new ItemDTO();
 		item.parentID = getArgParentID();
 		item.id = getArgItemID();
@@ -84,22 +77,20 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents> {
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
 
-	private final class SaveTask extends BaseSaveTask<ItemDTO> {
-		@Override protected ItemDTO saveInTransaction(Database db, ItemDTO param) throws Exception {
-			if (param.id == Item.ID_ADD) {
-				param.id = db.createItem(param.parentID, param.type, param.name, param.description);
-			} else {
-				db.updateItem(param.id, param.type, param.name, param.description);
-			}
-			if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
-				db.setItemImage(param.id, param.getImage(getContext()), null);
-			}
-			return param;
+	@Override protected ItemDTO onSave(Database db, ItemDTO param) throws Exception {
+		if (param.id == Item.ID_ADD) {
+			param.id = db.createItem(param.parentID, param.type, param.name, param.description);
+		} else {
+			db.updateItem(param.id, param.type, param.name, param.description);
 		}
+		if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
+			db.setItemImage(param.id, param.getImage(getContext()), null);
+		}
+		return param;
+	}
 
-		@Override protected void onResult(ItemDTO result, ItemDTO param) {
-			eventsListener.itemSaved(result.id);
-		}
+	@Override protected void onSaved(ItemDTO result) {
+		eventsListener.itemSaved(result.id);
 	}
 
 	public static ItemEditFragment newInstance(long parentID, long itemID) {
