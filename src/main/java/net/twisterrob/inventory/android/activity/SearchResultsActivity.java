@@ -81,7 +81,7 @@ public class SearchResultsActivity extends BaseDetailActivity<ItemListFragment> 
 	}
 
 	public void newItem(long parentID) {
-		// ignore
+		throw new UnsupportedOperationException("Cannot create new item here");
 	}
 
 	public static Intent show() {

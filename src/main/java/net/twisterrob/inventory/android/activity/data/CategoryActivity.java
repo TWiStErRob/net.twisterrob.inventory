@@ -7,9 +7,9 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
-import net.twisterrob.inventory.android.fragment.data.*;
-import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
+import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 
 public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragment>
 		implements CategoryEvents, CategoriesEvents {
@@ -30,7 +30,7 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 	}
 
 	@Override public void newItem(long parentID) {
-		// ignore
+		throw new UnsupportedOperationException("Cannot create new item here");
 	}
 	@Override public void itemSelected(long itemID) {
 		startActivity(ItemViewActivity.show(itemID));

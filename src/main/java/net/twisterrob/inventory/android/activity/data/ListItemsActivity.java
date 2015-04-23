@@ -38,7 +38,16 @@ public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> impl
 	}
 
 	public void newItem(long parentID) {
-		// ignore
+		throw new UnsupportedOperationException("Cannot create new item here");
+	}
+
+	@Override public void onSupportContentChanged() {
+		super.onSupportContentChanged();
+		setupTitleEditor();
+	}
+
+	@Override protected void updateName(String newName) {
+		App.db().updateList(getExtraListID(), newName);
 	}
 
 	private long getExtraListID() {

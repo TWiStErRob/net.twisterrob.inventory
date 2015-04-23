@@ -391,7 +391,7 @@
 			i._id                                           as _id,
 			i.name                                          as name,
 			i.image IS NOT NULL                             as image,
-			strftime('%s', i.image_time) * 1000             as imageTime
+			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category

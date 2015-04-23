@@ -45,6 +45,15 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 		return null;
 	}
 
+	@Override public void onSupportContentChanged() {
+		super.onSupportContentChanged();
+		setupTitleEditor();
+	}
+
+	@Override protected void updateName(String newName) {
+		App.db().updateRoom(current.id, current.type, newName, current.description);
+	}
+
 	private long getExtraRoomID() {
 		return getIntent().getLongExtra(Extras.ROOM_ID, Item.ID_ADD);
 	}

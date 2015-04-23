@@ -15,6 +15,8 @@ import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEven
 public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> implements PropertyEvents, RoomsEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyViewActivity.class);
 
+	private PropertyDTO current;
+
 	@Override
 	protected RoomListFragment onCreateFragment(Bundle savedInstanceState) {
 		return RoomListFragment.newInstance(getExtraPropertyID()).addHeader();
@@ -22,6 +24,7 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 
 	public void propertyLoaded(PropertyDTO property) {
 		setActionBarTitle(property.name);
+		current = property;
 	}
 	public void propertyDeleted(PropertyDTO property) {
 		finish();
@@ -43,6 +46,15 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 			return "Invalid property ID";
 		}
 		return null;
+	}
+
+	@Override public void onSupportContentChanged() {
+		super.onSupportContentChanged();
+		setupTitleEditor();
+	}
+
+	@Override protected void updateName(String newName) {
+		App.db().updateProperty(current.id, current.type, newName, current.description);
 	}
 
 	private long getExtraPropertyID() {

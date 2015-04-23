@@ -68,6 +68,15 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 		}
 	}
 
+	@Override public void onSupportContentChanged() {
+		super.onSupportContentChanged();
+		setupTitleEditor();
+	}
+
+	@Override protected void updateName(String newName) {
+		App.db().updateItem(current.id, current.type, newName, current.description);
+	}
+
 	/** Sanity checks and uri takes precedence over extra. */
 	private static long resolve(long uri, long extra, long invalid) {
 		if (uri == invalid && extra == invalid) {

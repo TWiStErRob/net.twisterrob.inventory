@@ -14,11 +14,16 @@ public class ReflectionTools {
 			field.setAccessible(true);
 			return (T)field.get(object);
 		} catch (Exception ex) {
-			LOG.warn("Cannot get LoaderManager.mWho", ex);
+			LOG.warn("Cannot read field {} of {}", fieldName, object, ex);
 		}
 		return null;
 	}
 
+	/**
+	 * Like {@link Class#getDeclaredField}, but looking in all superclasses as well.
+	 * @throws NoSuchFieldException if a field with the specified name is not found in the class hierarchy.
+	 * @see Class#getDeclaredField(String)
+	 */
 	public static Field findDeclaredField(Class<?> clazz, String fieldName) throws NoSuchFieldException {
 		do {
 			try {

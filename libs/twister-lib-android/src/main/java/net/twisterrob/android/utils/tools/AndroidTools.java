@@ -1,6 +1,7 @@
 package net.twisterrob.android.utils.tools;
 
 import java.io.*;
+import java.lang.annotation.*;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -27,6 +28,8 @@ import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.preference.ListPreference;
 import android.support.annotation.*;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.view.*;
 import android.support.v4.widget.SearchViewCompat;
 import android.util.*;
@@ -47,6 +50,12 @@ public abstract class AndroidTools {
 	public static final @AnyRes int INVALID_RESOURCE_ID = 0;
 	public static final String NULL = "null";
 	public static final String ERROR = "error";
+
+	public static final String ANDROID_PACKAGE = "android";
+	public static final String RES_TYPE_ID = "id";
+	public static final String RES_TYPE_STRING = "string";
+	public static final String RES_TYPE_RAW = "raw";
+	public static final String RES_TYPE_DRAWABLE = "drawable";
 
 	private AndroidTools() {
 		// static class
@@ -83,15 +92,15 @@ public abstract class AndroidTools {
 	}
 
 	public static @RawRes int getRawResourceID(Context context, String rawResourceName) {
-		return getResourceID(context, "raw", rawResourceName);
+		return getResourceID(context, RES_TYPE_RAW, rawResourceName);
 	}
 
 	public static @DrawableRes int getDrawableResourceID(Context context, String drawableResourceName) {
-		return getResourceID(context, "drawable", drawableResourceName);
+		return getResourceID(context, RES_TYPE_DRAWABLE, drawableResourceName);
 	}
 
 	public static @StringRes int getStringResourceID(Context context, String stringResourceName) {
-		return getResourceID(context, "string", stringResourceName);
+		return getResourceID(context, RES_TYPE_STRING, stringResourceName);
 	}
 
 	public static CharSequence getText(Context context, String stringResourceName) {
@@ -113,6 +122,45 @@ public abstract class AndroidTools {
 					resourceType, resourceName, context != null? context.getPackageName() : null);
 		}
 		return resID;
+	}
+
+	/** @param root usually Activity.getWindow().getDecorView() or custom Toolbar */
+	public static View findActionBarTitle(View root) {
+		return findActionBarItem(root, "action_bar_title", "mTitleTextView");
+	}
+	/** @param root usually Activity.getWindow().getDecorView() or custom Toolbar */
+	public static View findActionBarSubTitle(View root) {
+		return findActionBarItem(root, "action_bar_subtitle", "mSubtitleTextView");
+	}
+
+	private static View findActionBarItem(View root, String resourceName, String toolbarFieldName) {
+		View result = findViewSupportOrAndroid(root, resourceName);
+
+		if (result == null) {
+			View actionBar = findViewSupportOrAndroid(root, "action_bar");
+			if (actionBar != null) {
+				result = ReflectionTools.get(actionBar, toolbarFieldName);
+			}
+		}
+		if (result == null && root.getClass().getName().endsWith("Toolbar")) {
+			result = ReflectionTools.get(root, toolbarFieldName);
+		}
+		return result;
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	private static View findViewSupportOrAndroid(View root, String resourceName) {
+		Context context = root.getContext();
+		View result = null;
+		if (result == null) {
+			int supportID = context.getResources().getIdentifier(resourceName, RES_TYPE_ID, context.getPackageName());
+			result = root.findViewById(supportID);
+		}
+		if (result == null) {
+			int androidID = context.getResources().getIdentifier(resourceName, RES_TYPE_ID, ANDROID_PACKAGE);
+			result = root.findViewById(androidID);
+		}
+		return result;
 	}
 
 	@DebugHelper
@@ -533,7 +581,7 @@ public abstract class AndroidTools {
 	}
 
 	/** Call from {@link android.app.Activity#onMenuOpened(int, Menu)}. */
-	public static void showActionBarOverflowIcons(int featureId, Menu menu, boolean show) {
+	public static void showActionBarOverflowIcons(@WindowFeature int featureId, Menu menu, boolean show) {
 		// http://stackoverflow.com/questions/18374183/how-to-show-icons-in-overflow-menu-in-actionbar
 		if ((featureId == WindowCompat.FEATURE_ACTION_BAR || featureId == WindowCompat.FEATURE_ACTION_BAR_OVERLAY)
 				&& menu != null && "MenuBuilder".equals(menu.getClass().getSimpleName())) {
@@ -542,7 +590,7 @@ public abstract class AndroidTools {
 				m.setAccessible(true);
 				m.invoke(menu, show);
 			} catch (NoSuchMethodException e) {
-				LOG.error("ActionBar overflow icons hack failed", e);
+				LOG.warn("ActionBar overflow icons hack failed", e);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -582,7 +630,7 @@ public abstract class AndroidTools {
 
 	/** @see ComponentCallbacks2 */
 	@DebugHelper
-	public static String toTrimMemoryString(int level) {
+	public static String toTrimMemoryString(@TrimMemoryLevel int level) {
 		switch (level) {
 			case ComponentCallbacks2.TRIM_MEMORY_COMPLETE:
 				return "TRIM_MEMORY_COMPLETE";
@@ -608,7 +656,7 @@ public abstract class AndroidTools {
 	}
 
 	@DebugHelper
-	public static String toFeatureString(int featureId) {
+	public static String toFeatureString(@WindowFeature int featureId) {
 		switch (featureId) {
 			case Window.FEATURE_OPTIONS_PANEL:
 				return "FEATURE_OPTIONS_PANEL";
@@ -682,6 +730,36 @@ public abstract class AndroidTools {
 
 		return readEnd;
 	}
+	public static void dumpBackStack(Context context, FragmentManager fm) {
+		int count = fm.getBackStackEntryCount();
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format(Locale.ROOT, "There are %d entries in the backstack of %s:", count, fm));
+		for (int i = 0; i < count; ++i) {
+			BackStackEntry entry = fm.getBackStackEntryAt(i);
+
+			int id = entry.getId();
+			String name = entry.getName();
+			CharSequence title = entry.getBreadCrumbTitle();
+			CharSequence shortTitle = entry.getBreadCrumbShortTitle();
+			String titleRes = resourceIdToString(context, entry.getBreadCrumbTitleRes());
+			String shortTitleRes = resourceIdToString(context, entry.getBreadCrumbShortTitleRes());
+
+			sb.append(String.format(Locale.ROOT, "\n\t#%d @%d: %s. shortTitle=(%s)%s, title=(%s)%s",
+					i, id, name, shortTitleRes, shortTitle, titleRes, title));
+		}
+		LOG.trace(sb.toString());
+	}
+	private static String resourceIdToString(Context context, @AnyRes int shortTitleRes) {
+		if (shortTitleRes != INVALID_RESOURCE_ID) {
+			try {
+				return context.getResources().getResourceName(shortTitleRes)
+						+ " (" + Integer.toHexString(shortTitleRes) + ")";
+			} catch (NotFoundException ex) {
+				return Integer.toHexString(shortTitleRes);
+			}
+		}
+		return null;
+	}
 
 	public interface PopupCallbacks<T> {
 		void finished(T value);
@@ -741,5 +819,43 @@ public abstract class AndroidTools {
 	public static void makeFileDiscoverable(@NonNull Context context, @NonNull File file) {
 		MediaScannerConnection.scanFile(context, new String[] {file.getPath()}, null, null);
 		//context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+	}
+
+	@TargetApi(VERSION_CODES.LOLLIPOP)
+	@IntDef({
+			        Window.FEATURE_OPTIONS_PANEL,
+			        Window.FEATURE_NO_TITLE,
+			        Window.FEATURE_PROGRESS,
+			        Window.FEATURE_LEFT_ICON,
+			        Window.FEATURE_RIGHT_ICON,
+			        Window.FEATURE_INDETERMINATE_PROGRESS,
+			        Window.FEATURE_CONTEXT_MENU,
+			        Window.FEATURE_CUSTOM_TITLE,
+			        Window.FEATURE_ACTION_BAR,
+			        WindowCompat.FEATURE_ACTION_BAR,
+			        Window.FEATURE_ACTION_BAR_OVERLAY,
+			        WindowCompat.FEATURE_ACTION_BAR_OVERLAY,
+			        Window.FEATURE_ACTION_MODE_OVERLAY,
+			        WindowCompat.FEATURE_ACTION_MODE_OVERLAY,
+			        Window.FEATURE_SWIPE_TO_DISMISS,
+			        Window.FEATURE_CONTENT_TRANSITIONS,
+			        Window.FEATURE_ACTIVITY_TRANSITIONS
+	        })
+	@Retention(RetentionPolicy.SOURCE)
+	public @interface WindowFeature {
+	}
+
+	@TargetApi(VERSION_CODES.JELLY_BEAN)
+	@IntDef({
+			        ComponentCallbacks2.TRIM_MEMORY_COMPLETE,
+			        ComponentCallbacks2.TRIM_MEMORY_MODERATE,
+			        ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
+			        ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN,
+			        ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL,
+			        ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
+			        ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE
+	        })
+	@Retention(RetentionPolicy.SOURCE)
+	public @interface TrimMemoryLevel {
 	}
 }
