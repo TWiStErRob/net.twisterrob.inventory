@@ -5,7 +5,7 @@ import java.util.*;
 
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.*;
+import android.support.annotation.NonNull;
 
 import com.bumptech.glide.*;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,29 +27,11 @@ public interface Constants {
 	boolean DISABLE = Boolean.parseBoolean("false");
 
 	class Paths {
-		private static final String INTERNAL_IMAGES_FOLDER = "images";
 		/** Warning: this is used inlined in paths_share.xml because path doesn't support string resources */
 		private static final String PUBLIC_SHARE_FOLDER_NAME = "share";
 		public static final String BACKUP_XML_FILENAME = "data.xml";
 		public static final String BACKUP_CSV_FILENAME = "data.csv";
-		public static @NonNull File getImageDirectory(Context context) {
-			if (Constants.DISABLE && BuildConfig.DEBUG) {
-				File dir = context.getExternalFilesDir(INTERNAL_IMAGES_FOLDER);
-				return dir != null? dir : new File(context.getFilesDir(), INTERNAL_IMAGES_FOLDER);
-			} else {
-				return new File(context.getFilesDir(), INTERNAL_IMAGES_FOLDER);
-			}
-		}
-		public static @NonNull File getImageFile(Context context, @NonNull String image) {
-			File imageFile = new File(image);
-			return imageFile.isAbsolute()? imageFile : new File(Paths.getImageDirectory(context), image);
-		}
-		public static @Nullable String getImagePath(Context context, @Nullable String image) {
-			if (image == null) {
-				return null;
-			}
-			return getImageFile(context, image).getAbsolutePath();
-		}
+
 		public static @NonNull File getExportFile() throws IOException {
 			Calendar now = Calendar.getInstance();
 			String fileName = String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
@@ -62,30 +44,22 @@ public interface Constants {
 		}
 
 		public static File getShareImage(Context context) throws IOException {
-			File tempDir = new File(context.getCacheDir(), PUBLIC_SHARE_FOLDER_NAME);
-			IOTools.ensure(tempDir);
-			File tempImage = new File(tempDir, "temp.jpg");
-			if (tempImage.exists()) {
-				if (!tempImage.isFile()) {
-					throw new IOException(tempImage + " is not a file");
-				}
-				if (!tempImage.delete()) {
-					throw new IOException("Cannot clean up " + tempImage);
-				}
-			}
-			tempImage.deleteOnExit();
-			return tempImage;
+			return getTemporaryCacheFile(context, PUBLIC_SHARE_FOLDER_NAME, "share_", ".jpg");
 		}
 		public static File getTempImage(Context context) throws IOException {
-			File tempImage = File.createTempFile("image_", ".jpg", context.getCacheDir());
-			tempImage.deleteOnExit();
-			return tempImage;
+			return getTemporaryCacheFile(context, "temp", "temp_", ".jpg");
+		}
+		private static File getTemporaryCacheFile(Context context, String folderName, String prefix, String suffix)
+				throws IOException {
+			File folder = new File(context.getCacheDir(), folderName);
+			IOTools.ensure(folder);
+			File file = File.createTempFile(prefix, suffix, folder);
+			file.deleteOnExit();
+			return file;
 		}
 	}
 
 	interface Prefs {
-		@Deprecated
-		String DRIVE_FOLDER_ID = "driveRootFolder";
 		String CURRENT_LANGUAGE = "currentLanguage";
 		String LAST_EXPORT_DRIVE_ID = "lastExportDriveId";
 	}
