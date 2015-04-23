@@ -16,6 +16,8 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.io.*;
 import net.twisterrob.inventory.android.content.model.Types;
 
+import static net.twisterrob.inventory.android.content.io.xml.ZippedXMLExporter.*;
+
 public class XMLImporter implements Importer {
 	private static final Logger LOG = LoggerFactory.getLogger(XMLImporter.class);
 	private final ImportProgressHandler progress;
@@ -32,11 +34,11 @@ public class XMLImporter implements Importer {
 	}
 
 	public RootElement getStructure() throws IOException, SAXException {
-		RootElement root = new RootElement("inventory");
-		Element propertyElement = root.getChild("property");
-		final Element roomElement = propertyElement.getChild("room");
-		final Element listElement = root.getChild("list");
-		Element listEntryElement = listElement.getChild("item-ref");
+		RootElement root = new RootElement(TAG_ROOT);
+		Element propertyElement = root.getChild(TAG_PROPERTY);
+		final Element roomElement = propertyElement.getChild(TAG_ROOM);
+		final Element listElement = root.getChild(TAG_LIST);
+		Element listEntryElement = listElement.getChild(TAG_ITEM_REF);
 
 		final PropertyElementListener propertyListener = new PropertyElementListener();
 		RoomElementListener roomListener = new RoomElementListener(propertyListener, new TraverseFactory() {
@@ -44,25 +46,25 @@ public class XMLImporter implements Importer {
 			private int deepestLevel = propertyListener.getLevel();
 			public void onNewLevel(Parent parent) {
 				if (parent.getLevel() > deepestLevel) {
-					element = element.getChild("item");
+					element = element.getChild(TAG_ITEM);
 					ItemElementListener childListener = new ItemElementListener(parent, this);
 					element.setElementListener(childListener);
-					element.getChild("description").setEndTextElementListener(childListener);
+					element.getChild(TAG_DESCRIPTION).setEndTextElementListener(childListener);
 					deepestLevel = parent.getLevel();
 				}
 			}
 		});
 
 		propertyElement.setElementListener(propertyListener);
-		propertyElement.getChild("description").setEndTextElementListener(propertyListener);
+		propertyElement.getChild(TAG_DESCRIPTION).setEndTextElementListener(propertyListener);
 
 		roomElement.setElementListener(roomListener);
-		roomElement.getChild("description").setEndTextElementListener(roomListener);
+		roomElement.getChild(TAG_DESCRIPTION).setEndTextElementListener(roomListener);
 
 		final ThreadLocal<Long> currentListID = new ThreadLocal<>();
 		listElement.setElementListener(new ElementListener() {
 			@Override public void start(Attributes attributes) {
-				String name = attributes.getValue("name");
+				String name = attributes.getValue(ATTR_NAME);
 				Long id = App.db().findList(name);
 				if (id == null) {
 					id = App.db().createList(name);
@@ -76,7 +78,7 @@ public class XMLImporter implements Importer {
 		listEntryElement.setElementListener(new ElementListener() {
 			@Override public void start(Attributes attributes) {
 				long id = currentListID.get();
-				long itemID = Long.parseLong(attributes.getValue("id"));
+				long itemID = Long.parseLong(attributes.getValue(ATTR_ID));
 				Long dbItemID = itemMap.get(itemID);
 				if (dbItemID == null) {
 					throw new IllegalArgumentException("Invalid item reference to id=" + itemID);
@@ -98,7 +100,7 @@ public class XMLImporter implements Importer {
 
 		root.setStartElementListener(new StartElementListener() {
 			@Override public void start(Attributes attributes) {
-				String count = attributes.getValue("approximateCount");
+				String count = attributes.getValue(ATTR_COUNT);
 				if (count != null) {
 					progress.publishStart(Long.parseLong(count));
 				}
@@ -121,7 +123,6 @@ public class XMLImporter implements Importer {
 		protected String description;
 
 		public BaseElementListener(Parent parent, TraverseFactory factory) {
-			LOG.trace("{}", getClass().getSimpleName());
 			this.parent = parent;
 			this.factory = factory;
 			this.level = parent.getLevel() + 1;
@@ -129,9 +130,9 @@ public class XMLImporter implements Importer {
 
 		@Override
 		public void start(Attributes attributes) {
-			type = attributes.getValue("type");
-			name = attributes.getValue("name");
-			image = attributes.getValue("image");
+			type = attributes.getValue(ATTR_TYPE);
+			name = attributes.getValue(ATTR_NAME);
+			image = attributes.getValue(ATTR_IMAGE);
 			factory.onNewLevel(this);
 			process();
 		}
@@ -261,7 +262,7 @@ public class XMLImporter implements Importer {
 		}
 
 		@Override public void start(Attributes attributes) {
-			refID = Long.parseLong(attributes.getValue("id"));
+			refID = Long.parseLong(attributes.getValue(ATTR_ID));
 			super.start(attributes);
 		}
 		@Override protected void doProcess() {

@@ -18,7 +18,6 @@ import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.Type;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress;
-import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress.Phase;
 import net.twisterrob.inventory.android.content.io.csv.CSVImporter;
 import net.twisterrob.inventory.android.content.io.xml.XMLImporter;
 
@@ -36,8 +35,6 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 
 		final class Progress implements Cloneable {
 			public File input;
-			@Deprecated
-			public Phase phase;
 			public long done;
 			public long total;
 			public Throwable failure;
@@ -51,7 +48,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 				}
 			}
 			@Override public String toString() {
-				return format(Locale.ROOT, "%2$s: data=%3$d/%4$d: %5$s for %1$s", input, phase, done, total, failure);
+				return format(Locale.ROOT, "data=%2$d/%3$d: %4$s for %1$s", input, done, total, failure);
 			}
 
 			public enum Phase {
@@ -102,8 +99,8 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 
 	public void warning(@StringRes int stringID, Object... args) {
 		String message = context.getString(stringID, args);
-		//LOG.warn("Warning: {}", message);
-		//progress.conflicts.add(message);
+		LOG.warn("Warning: {}", message);
+		progress.conflicts.add(message);
 	}
 
 	public void error(String message) {
@@ -114,7 +111,6 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 	@Override protected Progress doInBackground(File file) {
 		progress = new Progress();
 		progress.input = file;
-		progress.phase = Phase.Data;
 		zip = null;
 		try {
 			// TODO wakelock?

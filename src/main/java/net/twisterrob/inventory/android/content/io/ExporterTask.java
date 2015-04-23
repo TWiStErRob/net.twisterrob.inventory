@@ -164,7 +164,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 			if (imageFileName != null) {
 				try {
 					progress.imagesTried++;
-					exporter.saveImage(Constants.Paths.getImageFile(context, imageFileName), cursor);
+					exporter.saveImage(cursor);
 				} catch (Exception ex) {
 					progress.imagesFailed++;
 					LOG.warn("Cannot find image: {}", imageFileName, ex);
@@ -218,7 +218,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		void finishData(Cursor cursor) throws Throwable;
 
 		void initImages(Cursor cursor) throws Throwable;
-		void saveImage(File file, Cursor cursor) throws Throwable;
+		void saveImage(Cursor cursor) throws Throwable;
 		void noImage(Cursor cursor) throws Throwable;
 		void finishImages(Cursor cursor) throws Throwable;
 	}

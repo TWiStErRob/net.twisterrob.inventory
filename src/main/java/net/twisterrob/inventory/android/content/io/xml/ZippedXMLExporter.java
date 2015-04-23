@@ -19,12 +19,19 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 	private static final Logger LOG = LoggerFactory.getLogger(ZippedXMLExporter.class);
 	public static final String NS = "";
 	public static final String TAG_ROOT = "inventory";
+	public static final String ATTR_COUNT = "approximateCount";
+	public static final String ATTR_ID = "id";
+	public static final String ATTR_NAME = "name";
+	public static final String ATTR_TYPE = "type";
+	public static final String ATTR_IMAGE = "image";
 	public static final String TAG_PROPERTY = "property";
 	public static final String TAG_ROOM = "room";
 	public static final String TAG_ITEM = "item";
 	public static final String TAG_LIST = "list";
+	public static final String TAG_DESCRIPTION = "description";
 	public static final String TAG_ITEM_REF = "item-ref";
-	public static final String ATTR_ID = "id";
+	public static final String ENCODING = "utf-8";
+
 	private Hierarchy hier;
 
 	public ZippedXMLExporter() {
@@ -37,11 +44,11 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 	}
 	@Override protected XmlSerializer initData(OutputStream dataStream, Cursor cursor) throws IOException {
 		XmlSerializer serializer = Xml.newSerializer();
-		serializer.setOutput(dataStream, "utf-8");
+		serializer.setOutput(dataStream, ENCODING);
 		serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-		serializer.startDocument("utf-8", true);
+		serializer.startDocument(ENCODING, true);
 		serializer.startTag(NS, TAG_ROOT);
-		serializer.attribute(NS, "approximateCount", String.valueOf(cursor.getCount()));
+		serializer.attribute(NS, ATTR_COUNT, String.valueOf(cursor.getCount()));
 		return serializer;
 	}
 
@@ -74,7 +81,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		Cursor listsCursor = App.db().listLists(Item.ID_ADD);
 		while (listsCursor.moveToNext()) {
 			output.startTag(NS, TAG_LIST);
-			output.attribute(NS, "name", listsCursor.getString(listsCursor.getColumnIndex(CommonColumns.NAME)));
+			output.attribute(NS, ATTR_NAME, listsCursor.getString(listsCursor.getColumnIndex(CommonColumns.NAME)));
 			Cursor list = App.db().listItemsInList(listsCursor.getLong(listsCursor.getColumnIndex(CommonColumns.ID)));
 			while (list.moveToNext()) {
 				output.startTag(NS, TAG_ITEM_REF);
@@ -115,19 +122,19 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 			String tag = getTag();
 			output.startTag(NS, tag);
 			output.attribute(NS, ATTR_ID, String.valueOf(id));
-			output.attribute(NS, "name", name);
-			output.attribute(NS, "type", type);
+			output.attribute(NS, ATTR_NAME, name);
+			output.attribute(NS, ATTR_TYPE, type);
 			if (image != null) {
-				output.attribute(NS, "image", image);
+				output.attribute(NS, ATTR_IMAGE, image);
 			}
 			boolean hasBody = !children.isEmpty() || !StringTools.isNullOrEmpty(description);
 			if (hasBody) {
 				output.comment(comment);
 			}
 			if (!StringTools.isNullOrEmpty(description)) {
-				output.startTag(NS, "description");
+				output.startTag(NS, TAG_DESCRIPTION);
 				output.text(description);
-				output.endTag(NS, "description");
+				output.endTag(NS, TAG_DESCRIPTION);
 			}
 			for (T child : children) {
 				child.write(output);

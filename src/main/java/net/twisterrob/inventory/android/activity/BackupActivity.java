@@ -28,6 +28,7 @@ public class BackupActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_backup);
 
+		((TextView)findViewById(R.id.backup_location)).setText(Paths.getPhoneHome().toString());
 		findViewById(R.id.btn_export).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				ExportFragment.create(BackupActivity.this, getSupportFragmentManager()).execute();

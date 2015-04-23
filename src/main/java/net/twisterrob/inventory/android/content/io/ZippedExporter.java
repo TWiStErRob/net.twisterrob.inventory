@@ -48,7 +48,7 @@ public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 	@Override public void initImages(Cursor cursor) {
 		// nop
 	}
-	@Override public void saveImage(@Deprecated File file, Cursor cursor) throws IOException {
+	@Override public void saveImage(Cursor cursor) throws IOException {
 		byte[] image = getImage(cursor);
 		long unixUtc = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
 		String fileName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
