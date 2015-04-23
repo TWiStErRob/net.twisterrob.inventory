@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import java.util.Locale;
+
 import org.slf4j.*;
 
 import android.app.AlertDialog;
@@ -175,17 +177,19 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					Cursor cursor = (Cursor)adapter.getItem(which);
 					long newType = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
 					String newTypeName = cursor.getString(cursor.getColumnIndex(CommonColumns.NAME));
-					CharSequence message = update(entity, newType, newTypeName); // FIXME DB on UI
+					update(entity, newType); // FIXME DB on UI
 					dialog.dismiss();
 					refresh();
 
-					App.toastUser(message);
+					CharSequence newTypeDisplayName = AndroidTools.getText(getContext(), newTypeName);
+					App.toastUser(String.format(Locale.ROOT, "\"%s\" is now in \"%s\"",
+							entity.name, newTypeDisplayName));
 				}
 			}
 		}
 	}
 
-	protected abstract CharSequence update(DTO cursor, long newType, String newTypeName);
+	protected abstract void update(DTO cursor, long newType);
 
 	protected abstract void editImage();
 }

@@ -174,9 +174,8 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 		startActivity(BaseEditActivity.takeImage(ItemEditActivity.edit(getArgItemID())));
 	}
 
-	@Override protected CharSequence update(ItemDTO entity, long newType, String newTypeName) {
+	@Override protected void update(ItemDTO entity, long newType) {
 		App.db().updateItem(entity.id, newType, entity.name, entity.description);
-		return newTypeName;
 	}
 
 	private long getArgItemID() {

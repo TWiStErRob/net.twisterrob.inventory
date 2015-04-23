@@ -138,9 +138,8 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 		startActivity(BaseEditActivity.takeImage(RoomEditActivity.edit(getArgRoomID())));
 	}
 
-	@Override protected CharSequence update(RoomDTO entity, long newType, String newTypeName) {
+	@Override protected void update(RoomDTO entity, long newType) {
 		App.db().updateRoom(entity.id, newType, entity.name, entity.description);
-		return newTypeName;
 	}
 
 	private long getArgRoomID() {

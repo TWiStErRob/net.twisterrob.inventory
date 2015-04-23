@@ -81,7 +81,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		throw new UnsupportedOperationException("Can't edit image of category");
 	}
 
-	@Override protected CharSequence update(CategoryDTO cursor, long newType, String newTypeName) {
+	@Override protected void update(CategoryDTO cursor, long newType) {
 		throw new UnsupportedOperationException("Can't edit category");
 	}
 

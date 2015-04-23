@@ -97,9 +97,8 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 		startActivity(BaseEditActivity.takeImage(PropertyEditActivity.edit(getArgPropertyID())));
 	}
 
-	@Override protected CharSequence update(PropertyDTO entity, long newType, String newTypeName) {
+	@Override protected void update(PropertyDTO entity, long newType) {
 		App.db().updateProperty(entity.id, newType, entity.name, entity.description);
-		return newTypeName;
 	}
 
 	private long getArgPropertyID() {
