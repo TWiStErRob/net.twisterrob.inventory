@@ -4,7 +4,7 @@
 	<!ENTITY plugH "100">
 	<!ENTITY pinD "90">
 	<!ENTITY cordL "150">
-]>
+	]>
 <!-- Based on http://www.polyvore.com/cgi/img-thing?.out=jpg&size=l&tid=60477302 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-200 -260 425 610">
 	<defs>
@@ -26,7 +26,7 @@
 			a &plugR;,&plugR; 0 0 0 &plugR;,&plugR;
 		" />
 		<line id="cord" y1="0" y2="&cordL;" transform="translate(0, &plugR;)" />
-		<line id="pin-left"  x1="-&pinD;" x2="-&pinD;" y2="-&plugR;" />
+		<line id="pin-left" x1="-&pinD;" x2="-&pinD;" y2="-&plugR;" />
 		<line id="pin-right" x1="+&pinD;" x2="+&pinD;" y2="-&plugR;" />
 	</g>
 </svg>

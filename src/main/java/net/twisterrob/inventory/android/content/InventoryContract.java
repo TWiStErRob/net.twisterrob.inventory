@@ -32,7 +32,6 @@ public final class InventoryContract {
 		public static Uri imageUri(long id) {
 			return Helpers.getImageUri(ITEM_URI, id);
 		}
-
 	}
 
 	public static final class Room implements CommonColumns {

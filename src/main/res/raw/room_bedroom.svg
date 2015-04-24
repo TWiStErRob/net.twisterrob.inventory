@@ -12,7 +12,8 @@
 			v-80 h-20 v+20
 			Z" fill="black" />
 		<circle id="head" cx="40" cy="75" r="15" fill="black" />
-		<path id="arm" d="M 30,50 h+35 v+25" fill="none" stroke="black" stroke-width="15" stroke-linejoin="round" stroke-linecap="round" />
+		<path id="arm" d="M 30,50 h+35 v+25" fill="none"
+		      stroke="black" stroke-width="15" stroke-linejoin="round" stroke-linecap="round" />
 		<path id="body" d="M 75,42.5 h+60 v+25 a 20,10 0 0 1 -20,10 h-40" fill="black" />
 	</g>
 </svg>

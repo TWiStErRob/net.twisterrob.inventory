@@ -47,7 +47,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		updateProgress((ProgressDialog)getDialog(), progress);
 	}
 	private void updateProgress(ProgressDialog dialog, Progress progress) {
-		if(progress.total == -1) {
+		if (progress.total == -1) {
 			dialog.setIndeterminate(true);
 		} else {
 			dialog.setIndeterminate(false);

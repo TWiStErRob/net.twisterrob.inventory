@@ -229,9 +229,9 @@ public class BaseActivity extends VariantActivity {
 	}
 	@For(Children) public void setIcon(@RawRes int resourceId) {
 		Pic.svg()
-				.load(resourceId)
-				.transform(new PaddingTransformation(this, AndroidTools.dipInt(this, 4)))
-				.into(new ActionBarIconTarget(getSupportActionBar()));
+		   .load(resourceId)
+		   .transform(new PaddingTransformation(this, AndroidTools.dipInt(this, 4)))
+		   .into(new ActionBarIconTarget(getSupportActionBar()));
 	}
 
 	@For(Drawer) private static class StandardMyActionBarDrawerToggle extends ActionBarDrawerToggle {

@@ -22,7 +22,7 @@
 	<!ENTITY isoZPreX "rotate( +90)"><!ENTITY isoZPostX "rotate( -90)">
 	<!ENTITY isoZPreY "rotate(+180)"><!ENTITY isoZPostY "rotate(-180)">
 	<!ENTITY isoZPreZ "rotate(+315) scale(&sqrt2;, 1)"><!ENTITY isoZPostZ "scale(&sqrt2Inv;, 1) rotate(-315)">
-]>
+	]>
 
 <!-- Based on http://cdn.flaticon.com/png/256/15457.png -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100,-175 750 700">
@@ -44,11 +44,17 @@
 		]]></style>
 	</defs>
 	<g id="box">
-		<rect id="left-side" class="inside" width="300" height="310" rx="10" ry="10" transform="&isoYZ;" />
-		<rect id="front-side" class="outside" width="350" height="310" rx="10" ry="10" transform="&isoXZ;" />
-		<rect id="back-side" class="inside" width="350" height="310" rx="10" ry="10" transform="&isoXZ; &isoYPreY; translate(-300) &isoYPostY;" />
-		<rect id="front-flap" class="flap" width="350" height="150" rx="10" ry="10" transform="&isoXZ; skewX(-25)" />
-		<rect id="right-side" class="outside" width="300" height="310" rx="10" ry="10" transform="&isoYZ; &isoXPreX; translate(350) &isoXPostX;" />
-		<rect id="right-flap" class="flap" width="300" height="150" rx="10" ry="10" transform="&isoYZ; &isoXPreX; translate(350) &isoXPostX; skewX(25)" />
+		<rect id="left-side" class="inside" width="300" height="310" rx="10" ry="10"
+		      transform="&isoYZ;" />
+		<rect id="front-side" class="outside" width="350" height="310" rx="10" ry="10"
+		      transform="&isoXZ;" />
+		<rect id="back-side" class="inside" width="350" height="310" rx="10" ry="10"
+		      transform="&isoXZ; &isoYPreY; translate(-300) &isoYPostY;" />
+		<rect id="front-flap" class="flap" width="350" height="150" rx="10" ry="10"
+		      transform="&isoXZ; skewX(-25)" />
+		<rect id="right-side" class="outside" width="300" height="310" rx="10" ry="10"
+		      transform="&isoYZ; &isoXPreX; translate(350) &isoXPostX;" />
+		<rect id="right-flap" class="flap" width="300" height="150" rx="10" ry="10"
+		      transform="&isoYZ; &isoXPreX; translate(350) &isoXPostX; skewX(25)" />
 	</g>
 </svg>

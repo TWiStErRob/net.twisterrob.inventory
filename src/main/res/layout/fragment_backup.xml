@@ -44,7 +44,7 @@
 				style="@style/Theme.AppTheme.Header"
 				tools:text="/sdcard/Download"
 				android:textIsSelectable="true"
-			    android:textAllCaps="false"
+				android:textAllCaps="false"
 				/>
 			<android.support.v4.widget.SwipeRefreshLayout
 				style="@style/Theme.AppTheme.RecyclerRefresh"

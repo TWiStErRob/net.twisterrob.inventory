@@ -8,10 +8,10 @@
 	<!ENTITY showerR "120">
 	<!ENTITY dropRX "15"><!ENTITY TdropRX "40">
 	<!ENTITY dropRY "20"><!ENTITY TdropRY "translate(0,70)">
-]>
+	]>
 <!-- Based on http://cdn.flaticon.com/png/256/1290.png -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20,-695 1240 1115"
-		xmlns:xlink="http://www.w3.org/1999/xlink">
+     xmlns:xlink="http://www.w3.org/1999/xlink">
 	<defs>
 		<style type="text/css"><![CDATA[
 			.part {

@@ -287,7 +287,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 								CameraPreview.this.started(holder);
 							}
 						});
-					} catch(RuntimeException ex) {
+					} catch (RuntimeException ex) {
 						LOG.error("Error setting up camera", ex);
 						Toast.makeText(CameraPreview.this.getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
 					}

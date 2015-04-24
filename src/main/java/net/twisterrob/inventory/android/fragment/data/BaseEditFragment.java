@@ -319,7 +319,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 	}
 
-
 	protected class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
 		@Override protected final DTO doInBackground(DTO param) throws Exception {
 			Database db = App.db().beginTransaction();

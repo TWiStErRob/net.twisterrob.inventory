@@ -9,10 +9,10 @@
 	<!ENTITY torsoIn "60">
 	<!ENTITY hip "60">
 	<!ENTITY skirtW "200">
-]>
+	]>
 <!-- Based on http://us.123rf.com/400wm/400/400/colorvalley/colorvalley1108/colorvalley110800031/10345100-man-and-woman-icon-on-a-black-background.jpg -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1210 1150"
-		xmlns:xlink="http://www.w3.org/1999/xlink">
+     xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!-- 530(body)+50(gap)+50(separator)+50(gap)+530(body) x 1150 -->
 	<defs>
 		<style type="text/css"><![CDATA[
@@ -21,7 +21,7 @@
 			M 0,0 m0,+&headR; m+&armW;,0 m+&handW;,0 m+&legW;,0 m&crotch;,0
 			m +&headR;,0 a +&headR;,+&headR; 0 1 0 0,0.0001Z
 
-			M 0,0 m0,+&headR; m0,+&headR; m0,+&neck; m+&armW;,0 m0,+&shoulderR; 
+			M 0,0 m0,+&headR; m0,+&headR; m0,+&neck; m+&armW;,0 m0,+&shoulderR;
 			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,-&shoulderR;
 			h+&handW;-&shoulderR;+&legW;+&crotch;+&crotch;+&legW;-&shoulderR;+&handW;
 			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,+&shoulderR;
@@ -38,7 +38,7 @@
 			M 0,0 m0,+&headR; m+&armW;,0 m+&handW;,0 m+&legW;,0 m&crotch;,0
 			m +&headR;,0 a +&headR;,+&headR; 0 1 0 0,0.0001Z
 
-			M 0,0 m0,+&headR; m0,+&headR; m0,+&neck; m+&armW;,0 m0,+&shoulderR; 
+			M 0,0 m0,+&headR; m0,+&headR; m0,+&neck; m+&armW;,0 m0,+&shoulderR;
 			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,-&shoulderR;
 			h+&handW;-&shoulderR;+&legW;+&crotch;+&crotch;+&legW;-&shoulderR;+&handW;
 			a &shoulderR;,&shoulderR; 0 0 1 +&shoulderR;,+&shoulderR;

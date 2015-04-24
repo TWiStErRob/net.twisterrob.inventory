@@ -1,15 +1,7 @@
 package net.twisterrob.android.utils.model;
 
-import java.util.*;
-import java.util.concurrent.*;
-
-import org.slf4j.*;
-
-import android.app.*;
-import android.content.*;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.IntentSender.SendIntentException;
-import android.os.*;
 
 import com.google.android.gms.common.*;
 import com.google.android.gms.common.api.GoogleApiClient;

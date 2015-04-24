@@ -66,7 +66,7 @@ public class BaseFragment<T> extends VariantFragment {
 				AndroidTools.toLongString(getArguments())
 		);
 		super.onCreate(savedInstanceState);
-		if(savedInstanceState != null) {
+		if (savedInstanceState != null) {
 			tag = savedInstanceState.getParcelable(KEY_VIEWTAG);
 		}
 		setHasOptionsMenu(true);

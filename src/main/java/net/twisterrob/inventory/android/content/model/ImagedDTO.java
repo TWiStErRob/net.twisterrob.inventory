@@ -67,9 +67,9 @@ public abstract class ImagedDTO extends DTO {
 		} else {
 			Pic.svg().load(typeID).into(type);
 			Pic.jpg()
-					.signature(new LongSignature(signature))
-					.load(fullImagePath)
-					.into(image);
+			   .signature(new LongSignature(signature))
+			   .load(fullImagePath)
+			   .into(image);
 		}
 	}
 
@@ -84,9 +84,9 @@ public abstract class ImagedDTO extends DTO {
 			Pic.svg().load(typeID).into(image);
 		} else {
 			Pic.jpg()
-					.signature(new LongSignature(signature))
-					.load(fullImagePath)
-					.into(image);
+			   .signature(new LongSignature(signature))
+			   .load(fullImagePath)
+			   .into(image);
 		}
 	}
 }

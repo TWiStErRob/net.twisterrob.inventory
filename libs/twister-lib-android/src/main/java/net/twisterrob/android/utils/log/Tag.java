@@ -22,6 +22,7 @@ public enum Tag {
 	private static final int TAG_MAX_LENGTH = 23;
 
 	private static final String TAG_PREFIX = "london.";
+
 	static {
 		/*
 		 * Check tag string lengths

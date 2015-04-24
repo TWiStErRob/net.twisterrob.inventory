@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Based on http://www.morristownsprinkler.com/images/maps/google-maps-iphone-icon.png -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"
-		xmlns:xlink="http://www.w3.org/1999/xlink">
+     xmlns:xlink="http://www.w3.org/1999/xlink">
 	<defs>
 		<style type="text/css"><![CDATA[
 			.building {
@@ -18,7 +18,7 @@
 		<rect id="window" class="window" width="125" height="125" />
 	</defs>
 	<g id="building2">
-		<rect class="building" x="400" y="0" width="600"  height="1000" />
+		<rect class="building" x="400" y="0" width="600" height="1000" />
 		<use xlink:href="#window" x="475" y="100" />
 		<use xlink:href="#window" x="635" y="100" />
 		<use xlink:href="#window" x="635" y="300" />

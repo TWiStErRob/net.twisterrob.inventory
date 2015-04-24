@@ -10,7 +10,7 @@
 	<!-- endW + endR = headW -->
 	<!ENTITY endW "25">
 	<!ENTITY endR "15">
-]>
+	]>
 <!-- Based on real pencil -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-95 -355 450 450"
      xmlns:xlink="http://www.w3.org/1999/xlink">

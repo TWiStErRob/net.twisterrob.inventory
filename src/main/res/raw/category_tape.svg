@@ -5,7 +5,7 @@
 	<!ENTITY h "250">
 	<!ENTITY x "50">
 	<!ENTITY hole "30">
-]>
+	]>
 <!-- Based on http://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Tdkc60cassette.jpg/250px-Tdkc60cassette.jpg -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 340">
 	<defs>
@@ -58,8 +58,8 @@
 			v-150
 			" stroke="black" stroke-width="3" fill="none" />
 		<circle id="hole-left" r="&hole;"
-			transform="translate(0,&r;) translate(&x;,&x;) translate(&x;,&x;) translate(&x;,&x;)" />
+		        transform="translate(0,&r;) translate(&x;,&x;) translate(&x;,&x;) translate(&x;,&x;)" />
 		<circle id="hole-right" r="&hole;"
-			transform="translate(&w;) translate(&r;,&r;) translate(&r;,&x;) translate(0,&x;) translate(&x;,&x;)" />
+		        transform="translate(&w;) translate(&r;,&r;) translate(&r;,&x;) translate(0,&x;) translate(&x;,&x;)" />
 	</g>
 </svg>
