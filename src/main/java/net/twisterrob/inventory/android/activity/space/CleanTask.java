@@ -18,7 +18,7 @@ abstract class CleanTask extends SimpleSafeAsyncTask<Activity, Void, Void> imple
 		super.execute(activity);
 	}
 
-	protected abstract void doClean();
+	protected abstract void doClean() throws Exception;
 
 	@Override protected Void doInBackground(Activity activity) throws Exception {
 		killProcessesAround(activity);

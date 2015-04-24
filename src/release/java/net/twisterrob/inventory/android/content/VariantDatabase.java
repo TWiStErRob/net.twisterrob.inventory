@@ -28,7 +28,7 @@ public class VariantDatabase {
 	protected Cursor rawQuery(SQLiteDatabase db, @StringRes int queryResource, Object... params) {
 		try {
 			Cursor cursor = db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
-			cursor.moveToFirst(); // make sure the query runs now
+			cursor.getCount(); // make sure the query runs now
 			return cursor;
 		} catch (Exception ex) {
 			throw new IllegalStateException(

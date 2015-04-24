@@ -51,6 +51,10 @@ public class MainActivity extends BaseActivity
 		}
 	};
 
+	private BaseFragment getFragment() {
+		return (BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
+	}
+
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setIcon(getResources().getDrawable(R.drawable.ic_launcher));
@@ -72,7 +76,7 @@ public class MainActivity extends BaseActivity
 				if (count == 0) {
 					finish();
 				} else {
-					BaseFragment fragment = (BaseFragment)fm.findFragmentById(R.id.activityRoot);
+					BaseFragment fragment = getFragment();
 					refreshDrawers((Intent)fragment.getViewTag());
 
 					BackStackEntry top = fm.getBackStackEntryAt(count - 1);
@@ -160,6 +164,11 @@ public class MainActivity extends BaseActivity
 	private @NonNull String getExtraPage(Intent intent) {
 		String page = intent.getStringExtra(EXTRA_PAGE);
 		return page != null? page : PAGE_HOME;
+	}
+
+	@Override protected void onResume() {
+		super.onResume();
+		getFragment().refresh();
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {

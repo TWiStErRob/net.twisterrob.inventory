@@ -96,6 +96,12 @@
 					android:layout_weight="1"
 					/>
 				<Button
+					android:id="@+id/storage_db_dump"
+					style="@style/ManageSpaceButton"
+					android:visibility="@integer/visible_in_test"
+					android:text="Dump"
+					/>
+				<Button
 					android:id="@+id/storage_images_clear"
 					style="@style/ManageSpaceButton"
 					android:text="Remove Images"
@@ -103,7 +109,7 @@
 				<Button
 					android:id="@+id/storage_db_clear"
 					style="@style/ManageSpaceButton"
-					android:text="Empty Database"
+					android:text="Empty"
 					/>
 				</LinearLayout>
 			</LinearLayout>

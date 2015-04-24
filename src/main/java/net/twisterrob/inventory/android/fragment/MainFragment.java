@@ -107,22 +107,18 @@ public class MainFragment extends BaseFragment<Void> {
 		recentsController.setView((RecyclerView)view.findViewById(R.id.items));
 	}
 
-	@Override public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	@Override protected void onStartLoading() {
 		propertiesController.startLoad(null);
 		roomsController.startLoad(null);
 		listsController.startLoad(null);
 		recentsController.startLoad(null);
 	}
 
-	@Override public void onResume() {
-		super.onResume();
-		if (!getLoaderManager().hasRunningLoaders()) {
-			propertiesController.refresh();
-			roomsController.refresh();
-			listsController.refresh();
-			recentsController.refresh();
-		}
+	@Override protected void onRefresh() {
+		propertiesController.refresh();
+		roomsController.refresh();
+		listsController.refresh();
+		recentsController.refresh();
 	}
 
 	static class PropertyAdapter extends BaseImagedAdapter {

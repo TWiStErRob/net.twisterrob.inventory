@@ -85,6 +85,19 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 				).show(ManageSpaceActivity.this.getSupportFragmentManager(), null);
 			}
 		});
+		findViewById(R.id.storage_db_dump).setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				NoProgressTaskExecutor.create(new CleanTask() {
+					@Override protected void doClean() throws IOException {
+						String path = App.db().getWritableDatabase().getPath();
+						InputStream in = new FileInputStream(path);
+						File dumpFile = new File(Paths.getPhoneHome(), "db.sqlite");
+						OutputStream out = new FileOutputStream(dumpFile);
+						IOTools.copyStream(in, out);
+					}
+				}).show(getSupportFragmentManager(), "task");
+			}
+		});
 		findViewById(R.id.storage_images_clear).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				new ConfirmedCleanAction("Clear Images",

@@ -231,21 +231,17 @@ public class InventoryProvider extends ContentProvider {
 	/** @see ContentProvider#openFileHelper(android.net.Uri, java.lang.String) */
 	protected final ParcelFileDescriptor openBlobHelper(Uri uri, String mode) throws FileNotFoundException {
 		Cursor c = query(uri, new String[] {COLUMN_BLOB}, null, null, null);
-		int count = (c != null)? c.getCount() : 0;
-		if (count != 1) {
-			// If there is not exactly one result, throw an appropriate
-			// exception.
-			if (c != null) {
-				c.close();
-			}
-			if (count == 0) {
-				throw new FileNotFoundException("No entry for " + uri);
-			}
-			throw new FileNotFoundException("Multiple items at " + uri);
+		if (c == null) {
+			throw new NullPointerException("No cursor returned for " + uri);
 		}
 
 		try {
-			c.moveToFirst();
+			if (1 < c.getCount()) {
+				throw new FileNotFoundException("Multiple items at " + uri);
+			}
+			if (!c.moveToFirst()) {
+				throw new FileNotFoundException("No entry for " + uri);
+			}
 			int i = c.getColumnIndex(COLUMN_BLOB);
 			if (i < 0) {
 				throw new FileNotFoundException("Column " + COLUMN_BLOB + " not found for " + uri);

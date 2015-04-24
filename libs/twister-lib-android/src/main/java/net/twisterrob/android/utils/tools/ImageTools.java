@@ -362,13 +362,11 @@ public class ImageTools {
 	 */
 	public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 		final String column = "_data";
-
 		Cursor cursor = null;
 		try {
 			cursor = context.getContentResolver().query(uri, new String[] {column}, selection, selectionArgs, null);
 			if (cursor != null && cursor.moveToFirst()) {
 				//DatabaseTools.dumpCursor(cursor);
-
 				return cursor.getString(cursor.getColumnIndexOrThrow(column));
 			}
 		} finally {

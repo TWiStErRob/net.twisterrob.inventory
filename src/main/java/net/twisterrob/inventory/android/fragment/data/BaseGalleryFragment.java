@@ -208,8 +208,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 		private boolean isGroup(int position) {
 			Cursor c = getCursor();
-			c.moveToPosition(position);
-			return DatabaseTools.getOptionalBoolean(c, "group", false); // boolean
+			return c.moveToPosition(position) && DatabaseTools.getOptionalBoolean(c, "group", false);
 		}
 
 		@Override protected ViewHolder onCreateNonHeaderViewHolder(ViewGroup parent, int viewType) {

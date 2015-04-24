@@ -139,7 +139,8 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			getLoaderManager().initLoader(Loaders.Items.ordinal(), itemsArgs, callbackState);
 		}
 		@Override public void refresh() {
-			getLoaderManager().getLoader(Loaders.Items.ordinal()).onContentChanged();
+			getLoaderManager().getLoader(Loaders.Categories.ordinal()).onContentChanged(); // counts may have changed
+			getLoaderManager().getLoader(Loaders.Items.ordinal()).onContentChanged(); // items may have moved
 		}
 
 		private class Callbacks extends LoadersCallbacks {
@@ -220,9 +221,9 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 
 		public boolean isCategory(int position) {
 			Cursor c = getCursor();
-			c.moveToPosition(position);
-			// only items have "category" column, categories don't
-			return c.getColumnIndex("category") == DatabaseOpenHelper.CURSOR_NO_COLUMN;
+			// Remember c is a MergeCursor so moving to a position may change the columns:
+			// only Items have "category" column, Categories don't
+			return c.moveToPosition(position) && c.getColumnIndex("category") == DatabaseOpenHelper.CURSOR_NO_COLUMN;
 		}
 
 		@Override protected int getNonHeaderViewType(int position) {

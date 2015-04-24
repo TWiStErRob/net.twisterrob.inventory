@@ -11,7 +11,7 @@ import android.support.v4.content.Loader;
 
 import net.twisterrob.android.content.loader.SimpleCursorLoader;
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 
 public enum Loaders {
@@ -177,7 +177,7 @@ public enum Loaders {
 
 		@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 			Loader<Cursor> loader = fromID(id).createLoader(context, args);
-			//LOG.trace("Created {}", loader);
+			LOG.trace("{}.onCreateLoader({}, {}){}", loader, id, args, getTimings(loader));
 			return loader;
 		}
 
@@ -185,13 +185,27 @@ public enum Loaders {
 			if (loader instanceof LoadersCursorLoader) {
 				((LoadersCursorLoader)loader).timeLoadFinished = System.nanoTime();
 			}
-			//LOG.trace("Finished {}: {}", loader, data);
+			LOG.trace("{}.onLoadFinished({}){}", loader, data, getTimings(loader));
+		}
+		private String getTimings(Loader<Cursor> loader) {
+			if (BuildConfig.DEBUG && loader instanceof LoadersCursorLoader) {
+				LoadersCursorLoader l = ((LoadersCursorLoader)loader);
+				return "\n"
+						+ "[" + "loader " + (l.timeCreateLoader - l.timeForceLoad) / 1000 / 1000 + "ms"
+						+ ", " + "wanted " + (l.timeCursorWanted - l.timeForceLoad) / 1000 / 1000 + "ms"
+						+ ", " + "created " + (l.timeCursorCreated - l.timeForceLoad) / 1000 / 1000 + "ms"
+						+ ", " + "delivered " + (l.timeCursorDelivered - l.timeForceLoad) / 1000 / 1000 + "ms"
+						+ ", " + "finished " + (l.timeLoadFinished - l.timeForceLoad) / 1000 / 1000 + "ms"
+						+ ", " + "reset " + (l.timeLoaderReset - l.timeForceLoad) / 1000 / 1000 + "ms"
+						+ "]";
+			}
+			return "";
 		}
 		@Override public void onLoaderReset(Loader<Cursor> loader) {
 			if (loader instanceof LoadersCursorLoader) {
 				((LoadersCursorLoader)loader).timeLoaderReset = System.nanoTime();
 			}
-			//LOG.trace("Reset {}", loader);
+			LOG.trace("{}.onLoaderReset(){}", loader, getTimings(loader));
 		}
 	}
 
@@ -202,7 +216,6 @@ public enum Loaders {
 		private long timeForceLoad = timeCreateLoader;
 		private long timeCursorWanted = timeCreateLoader; // BG entry
 		private long timeCursorCreated = timeCreateLoader; // in BG
-		private long timeCursorExecuted = timeCreateLoader; // in BG
 		private long timeCursorDelivered = timeCreateLoader; // BG exit, on UI
 		long timeLoadFinished = timeCreateLoader; // on UI
 		long timeLoaderReset = timeCreateLoader; // on UI
@@ -218,10 +231,6 @@ public enum Loaders {
 			timeCursorWanted = System.nanoTime();
 			Cursor cursor = loaders.createCursor(getContext(), args != null? args : NO_ARGS);
 			timeCursorCreated = System.nanoTime();
-			if (args == null || !args.getBoolean("dontExecute")) {
-				cursor.getCount();
-				timeCursorExecuted = System.nanoTime();
-			}
 			return cursor;
 		}
 
@@ -246,16 +255,7 @@ public enum Loaders {
 		}
 
 		@Override public String toString() {
-			return super.toString() + "=" + loaders + "(" + AndroidTools.toString(args) + ")" + ","
-					+ " [" + "loader " + (timeCreateLoader - timeForceLoad) / 1000 / 1000 + "ms"
-					+ ", " + "wanted " + (timeCursorWanted - timeForceLoad) / 1000 / 1000 + "ms"
-					+ ", " + "created " + (timeCursorCreated - timeForceLoad) / 1000 / 1000 + "ms"
-					+ ", " + "executed " + (timeCursorExecuted - timeForceLoad) / 1000 / 1000 + "ms"
-					+ ", " + "delivered " + (timeCursorDelivered - timeForceLoad) / 1000 / 1000 + "ms"
-					+ ", " + "finished " + (timeLoadFinished - timeForceLoad) / 1000 / 1000 + "ms"
-					+ ", " + "reset " + (timeLoaderReset - timeForceLoad) / 1000 / 1000 + "ms"
-					+ "]"
-					;
+			return super.toString() + "=" + loaders + "(" + AndroidTools.toString(args) + ")";
 		}
 	}
 }

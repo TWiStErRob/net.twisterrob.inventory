@@ -29,7 +29,7 @@ public class VariantDatabase {
 		long end = System.nanoTime();
 		if (queryResource != R.string.query_category_cache_update) {
 			LOG.debug("execSQL({}, {}): {}ms",
-					m_resources.getResourceEntryName(queryResource), Arrays.toString(params), (end - start) / 10000000);
+					m_resources.getResourceEntryName(queryResource), Arrays.toString(params), (end - start) / 1000000);
 		}
 	}
 
@@ -40,9 +40,9 @@ public class VariantDatabase {
 		try {
 			long start = System.nanoTime();
 			Cursor cursor = db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
-			cursor.moveToFirst(); // make sure the query runs now
+			cursor.getCount(); // make sure the query runs now
 			long end = System.nanoTime();
-			LOG.debug("rawQuery({}, {}): {}ms", name, paramString, (end - start) / 10000000);
+			LOG.debug("rawQuery({}, {}): {}ms", name, paramString, (end - start) / 1000000);
 			return cursor;
 		} catch (Exception ex) {
 			throw new IllegalStateException(name + ": " + paramString, ex);
@@ -63,7 +63,7 @@ public class VariantDatabase {
 			long end = System.nanoTime();
 			LOG.debug("rawInsert({}, {}): {}ms",
 					m_resources.getResourceEntryName(insertResource), Arrays.toString(params),
-					(end - start) / 10000000);
+					(end - start) / 1000000);
 			return rows;
 		} finally {
 			insert.close();

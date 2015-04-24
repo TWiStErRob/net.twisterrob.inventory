@@ -15,8 +15,7 @@ public abstract class LoadSingleRow extends LoadersCallbacks {
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		super.onLoadFinished(loader, data);
 		//DatabaseTools.dumpCursor(data);
-		if (data.getCount() == 1) {
-			data.moveToFirst();
+		if (data.getCount() == 1 && data.moveToFirst()) {
 			process(data);
 		} else {
 			processInvalid(data);
