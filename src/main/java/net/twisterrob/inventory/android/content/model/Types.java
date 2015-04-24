@@ -9,25 +9,17 @@ import net.twisterrob.inventory.android.content.contract.*;
 
 public class Types {
 	private final Map<String, Long> types = new HashMap<>();
-	private static final Map<String, String> DEPRECATED = Collections.unmodifiableMap(buildDeprecatedMap());
-
-	static Map<String, String> buildDeprecatedMap() {
-		Map<String, String> map = new HashMap<>();
-		map.put("category_storage_disccases", "category_storage_cases"); // XXX remove
-		map.put("category_storage", "category_group"); // XXX remove
-		return map;
-	}
-
 	public Types() {
 		putTypes(App.db().listPropertyTypes(), PropertyType.ID, PropertyType.NAME);
 		putTypes(App.db().listRoomTypes(), RoomType.ID, RoomType.NAME);
 		putTypes(App.db().listItemCategories(), Category.ID, Category.NAME);
+
+		// XXX remove these for first release
+		types.put("category_storage_disccases", types.get("category_storage_cases"));
+		types.put("category_group", types.get("category_storage"));
 	}
 
 	public Long getID(String type) {
-		while (DEPRECATED.containsKey(type)) {
-			type = DEPRECATED.get(type);
-		}
 		return types.get(type);
 	}
 

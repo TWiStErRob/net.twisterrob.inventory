@@ -22,6 +22,10 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 		setActionBarTitle(room.name);
 		current = room;
 	}
+	@Override public void roomMoved(long roomID, long newPropertyID) {
+		startActivity(PropertyViewActivity.show(newPropertyID));
+		finish();
+	}
 	public void roomDeleted(RoomDTO room) {
 		finish();
 	}

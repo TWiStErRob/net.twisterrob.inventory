@@ -228,6 +228,7 @@ public class InventoryProvider extends ContentProvider {
 		return super.openFile(uri, mode);
 	}
 
+	/** @see ContentProvider#openFileHelper(android.net.Uri, java.lang.String) */
 	protected final ParcelFileDescriptor openBlobHelper(Uri uri, String mode) throws FileNotFoundException {
 		Cursor c = query(uri, new String[] {COLUMN_BLOB}, null, null, null);
 		int count = (c != null)? c.getCount() : 0;

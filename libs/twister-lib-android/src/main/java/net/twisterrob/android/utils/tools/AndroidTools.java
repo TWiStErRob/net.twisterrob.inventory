@@ -24,7 +24,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.*;
 import android.os.Build.*;
-import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.preference.ListPreference;
 import android.support.annotation.*;
 import android.support.v4.app.Fragment;
@@ -533,6 +532,9 @@ public abstract class AndroidTools {
 			return null;
 		}
 		View view = MenuItemCompat.getActionView(item);
+		if (view == null) {
+			throw new NullPointerException("Cannot find actionView! Is it declared in XML and kept in proguard?");
+		}
 		if (view instanceof android.support.v7.widget.SearchView) {
 			android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView)view;
 			SearchableInfo info = searchManager.getSearchableInfo(activity.getComponentName());
@@ -699,6 +701,8 @@ public abstract class AndroidTools {
 			throw new RuntimeException(e);
 		}
 	}
+
+	/** @see ContentProvider#openPipeHelper */
 	public static ParcelFileDescriptor stream(final byte[] contents) throws FileNotFoundException {
 		ParcelFileDescriptor[] pipe;
 		try {
@@ -713,7 +717,7 @@ public abstract class AndroidTools {
 			@Override
 			protected Object doInBackground(Object... params) {
 				InputStream in = new ByteArrayInputStream(contents);
-				OutputStream out = new AutoCloseOutputStream(writeEnd);
+				OutputStream out = new ParcelFileDescriptor.AutoCloseOutputStream(writeEnd);
 				try {
 					IOTools.copyStream(in, out);
 				} catch (IOException e) {

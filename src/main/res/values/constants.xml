@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Based on <attr name="visibility"> in android/res/values/attrs.xml and http://stackoverflow.com/a/14358801/253468 -->
+	<integer name="View_VISIBLE">0</integer>
+	<integer name="View_INVISIBLE">1</integer>
+	<integer name="View_GONE">2</integer>
+</resources>

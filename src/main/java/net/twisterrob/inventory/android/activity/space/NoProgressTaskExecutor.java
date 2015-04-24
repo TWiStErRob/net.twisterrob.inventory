@@ -1,11 +1,13 @@
 package net.twisterrob.inventory.android.activity.space;
 
+import android.annotation.SuppressLint;
 import android.app.*;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import net.twisterrob.inventory.android.fragment.BaseDialogFragment;
 
+@SuppressLint("ValidFragment") // this should never be re-created: setRetainInstance(true)
 class NoProgressTaskExecutor extends BaseDialogFragment implements TaskEndListener {
 	interface UITask {
 		void setCallbacks(TaskEndListener callbacks);

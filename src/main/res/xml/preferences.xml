@@ -22,7 +22,7 @@
 		android:title="@string/pref_displayDebugDetails_title"
 		android:defaultValue="@bool/pref_displayDebugDetails_default"
 		android:summary="@string/pref_displayDebugDetails_desc"
-		android:enabled="@bool/in_test"
+		android:visibility="@integer/visible_in_test"
 		/>
 	<PreferenceScreen
 		android:title="App info"
@@ -42,7 +42,7 @@
 	</PreferenceScreen>
 	<PreferenceScreen
 		android:title="Market"
-		android:enabled="@bool/in_prod"
+		tools:enabled="@bool/in_prod"
 		>
 		<intent
 			android:action="android.intent.action.VIEW"

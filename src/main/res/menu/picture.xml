@@ -20,7 +20,7 @@
 		android:id="@+id/action_picture_pick"
 		android:title="@string/action_picture_pick"
 		android:icon="@android:drawable/ic_menu_gallery"
-		android:enabled="@bool/in_test"
+		android:visible="@bool/in_test"
 		app:showAsAction="never"
 		/>
 </menu>

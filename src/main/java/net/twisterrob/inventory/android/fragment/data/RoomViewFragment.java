@@ -28,6 +28,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	public interface RoomEvents {
 		void roomLoaded(RoomDTO room);
 		void roomDeleted(RoomDTO room);
+		void roomMoved(long roomID, long newPropertyID);
 	}
 
 	private long propertyID = Property.ID_ADD;
@@ -110,9 +111,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	private void move(final long roomID, final long propertyID) {
 		Dialogs.executeConfirm(getActivity(), new MoveRoomsAction(propertyID, roomID) {
 			@Override public void finished() {
-				// TODO move event in eventsListener
-				startActivity(PropertyViewActivity.show(propertyID));
-				getActivity().finish();
+				eventsListener.roomMoved(roomID, propertyID);
 			}
 			@Override public Action buildUndo() {
 				// we navigated away from current activity, no undo

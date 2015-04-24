@@ -27,7 +27,7 @@ import android.util.Log;
  *
  * @author papp.robert.s@gmail.com
  */
-@SuppressLint("LogConditional") // TODO consider Log.isLoggable(...) calls
+@SuppressLint("LogConditional") // FIXME consider Log.isLoggable(...) calls
 public class AndroidLogger extends MarkerIgnoringBase {
 	private static final long serialVersionUID = -1227274521521287937L;
 	private final String tag;

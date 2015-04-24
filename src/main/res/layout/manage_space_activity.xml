@@ -20,7 +20,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/margin2"
-			android:visibility="@string/visible_in_test"
+			android:visibility="@integer/visible_in_test"
 			app:contentPadding="@dimen/margin2"
 			>
 			<LinearLayout
@@ -153,7 +153,7 @@
 						android:id="@+id/storage_all_dump"
 						style="@style/ManageSpaceButton"
 						android:text="Dump Data"
-						android:visibility="@string/visible_in_test"
+						android:visibility="@integer/visible_in_test"
 						/>
 					<Button
 						android:id="@+id/storage_all_clear"
@@ -169,7 +169,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/margin2"
-			android:visibility="@string/visible_in_test"
+			android:visibility="@integer/visible_in_test"
 			app:contentPadding="@dimen/margin2"
 			>
 			<LinearLayout

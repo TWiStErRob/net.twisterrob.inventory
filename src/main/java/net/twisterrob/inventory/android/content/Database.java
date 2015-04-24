@@ -1,30 +1,23 @@
 package net.twisterrob.inventory.android.content;
 
-import java.util.Arrays;
-
 import org.slf4j.*;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.database.*;
-import android.database.sqlite.*;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.StringRes;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.java.utils.StringTools;
 
-// XXX extract base class for execSQL/rawQuery to variant folders
-public class Database {
+public class Database extends VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
 
-	private final Context m_context;
-	private final Resources m_resources;
 	private final DatabaseOpenHelper m_helper;
 
 	public Database(Context context) {
-		m_context = context;
-		m_resources = context.getResources();
+		super(context);
 		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 5) { // FIXME reset to 1 before release
 			@Override
 			public void onConfigure(SQLiteDatabase db) {
@@ -59,39 +52,19 @@ public class Database {
 		getWritableDatabase().setTransactionSuccessful();
 	}
 
-	private void execSQL(int queryResource, Object... params) {
+	private void execSQL(@StringRes int queryResource, Object... params) {
 		execSQL(getWritableDatabase(), queryResource, params);
 	}
-	private void execSQL(SQLiteDatabase db, int queryResource, Object... params) {
-		LOG.trace("execSQL({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
-		long start = System.nanoTime();
-		db.execSQL(m_resources.getString(queryResource), params);
-		long end = System.nanoTime();
-		if (queryResource != R.string.query_category_cache_update) {
-			LOG.debug("execSQL({}, {}): {}ms",
-					m_resources.getResourceEntryName(queryResource), Arrays.toString(params), (end - start) / 10000000);
-		}
-	}
 
-	private Cursor rawQuery(int queryResource, Object... params) {
+	private Cursor rawQuery(@StringRes int queryResource, Object... params) {
 		return rawQuery(getReadableDatabase(), queryResource, params);
 	}
-	private Cursor rawQuery(SQLiteDatabase db, int queryResource, Object... params) {
-		String name = m_resources.getResourceEntryName(queryResource);
-		String paramString = Arrays.toString(params);
-		LOG.trace("rawQuery({}, {})", name, paramString);
-		try {
-			long start = System.nanoTime();
-			Cursor cursor = db.rawQuery(m_resources.getString(queryResource), StringTools.toStringArray(params));
-			cursor.moveToFirst(); // make sure the query runs now
-			long end = System.nanoTime();
-			LOG.debug("rawQuery({}, {}): {}ms", name, paramString, (end - start) / 10000000);
-			return cursor;
-		} catch (Exception ex) {
-			throw new IllegalStateException(name + ": " + paramString, ex);
-		}
+
+	private long rawInsert(@StringRes int queryResource, Object... params) {
+		return rawInsert(getReadableDatabase(), queryResource, params);
 	}
-	private Long getID(int queryResource, Object... params) {
+
+	private Long getID(@StringRes int queryResource, Object... params) {
 		Cursor cursor = rawQuery(queryResource, params);
 		try {
 			if (cursor.moveToFirst()) {
@@ -101,28 +74,6 @@ public class Database {
 			}
 		} finally {
 			cursor.close();
-		}
-	}
-
-	@SuppressWarnings("resource")
-	private long rawInsert(int insertResource, Object... params) {
-		LOG.trace("rawInsert({}, {})", m_resources.getResourceEntryName(insertResource), Arrays.toString(params));
-		SQLiteDatabase db = getWritableDatabase();
-
-		SQLiteStatement insert = db.compileStatement(m_resources.getString(insertResource));
-		try {
-			for (int i = 0; i < params.length; ++i) {
-				DatabaseUtils.bindObjectToProgram(insert, i + 1, params[i]);
-			}
-			long start = System.nanoTime();
-			long rows = insert.executeInsert();
-			long end = System.nanoTime();
-			LOG.debug("rawInsert({}, {}): {}ms",
-					m_resources.getResourceEntryName(insertResource), Arrays.toString(params),
-					(end - start) / 10000000);
-			return rows;
-		} finally {
-			insert.close();
 		}
 	}
 
@@ -200,7 +151,7 @@ public class Database {
 		execSQL(R.string.query_property_update, type, name, description, id);
 	}
 	public void setPropertyImage(long id, byte[] imageContents, Long time) {
-		if(time != null) {
+		if (time != null) {
 			execSQL(R.string.query_property_image_set_with_time, imageContents, time, id);
 		} else {
 			execSQL(R.string.query_property_image_set, imageContents, id);
@@ -346,7 +297,7 @@ public class Database {
 		return query.trim().replaceAll("\\s+", "*") + "*";
 	}
 
-	public void updateCategoryCache() {
+	public void updateCategoryCache(Context context) {
 		LOG.info("Updating category name cache");
 		@SuppressWarnings("resource")
 		SQLiteDatabase db = getWritableDatabase();
@@ -356,7 +307,7 @@ public class Database {
 			try {
 				while (cursor.moveToNext()) {
 					String resourceName = cursor.getString(0);
-					String displayName = String.valueOf(AndroidTools.getText(m_context, resourceName));
+					String displayName = String.valueOf(AndroidTools.getText(context, resourceName));
 					execSQL(db, R.string.query_category_cache_update, displayName, resourceName);
 				}
 				db.setTransactionSuccessful();
