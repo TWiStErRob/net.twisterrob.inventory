@@ -7,6 +7,7 @@ import org.slf4j.*;
 import android.app.Activity;
 import android.content.*;
 import android.database.Cursor;
+import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.os.*;
 import android.support.annotation.*;
@@ -16,8 +17,15 @@ import android.view.*;
 import android.view.View.*;
 import android.widget.*;
 
+import com.bumptech.glide.*;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.*;
+
 import net.twisterrob.android.activity.CaptureImage;
-import net.twisterrob.android.content.glide.LongSignature;
+import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.wiring.DefaultValueUpdater;
@@ -35,14 +43,15 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
 	public static final String EDIT_IMAGE = "editImageOnStartup";
 
-	private Uri currentImage;
+	/** byte[], Uri or null */
+	private Object currentImage;
 	private boolean keepNameInSync;
 
 	protected EditText name;
 	protected EditText description;
-	protected Spinner type;
+	private Spinner type;
 	protected CursorAdapter typeAdapter;
-	protected ImageView image;
+	private ImageView image;
 	private boolean isClean;
 
 	public void setKeepNameInSync(boolean keepNameInSync) {
@@ -77,6 +86,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		return inflater.inflate(R.layout.fragment_edit, container, false);
 	}
 
+	// TODO maybe move overriding logic into this class
 	@Override public void onViewCreated(View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
 		image = (ImageView)view.findViewById(R.id.image);
@@ -144,9 +154,16 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	@SuppressWarnings("unchecked")
 	protected void doSave() {
-		new SaveTask().execute(gatherEdits());
+		DTO dto = createDTO();
+		dto.image = currentImage != null;
+		dto.tempImageBlob = currentImage instanceof byte[]? (byte[])currentImage : null;
+		dto.name = name.getText().toString();
+		dto.description = description.getText().toString();
+		dto.type = type.getSelectedItemId();
+		new SaveTask().execute(dto);
 	}
-	protected abstract DTO gatherEdits();
+	/** Create the DTO object with id set and fill in all fields needed to save (except the ones inherited from ImagedDTO) */
+	protected abstract DTO createDTO();
 	protected abstract DTO onSave(Database db, DTO param) throws Exception;
 	protected abstract void onSaved(DTO result);
 
@@ -222,21 +239,14 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		setCurrentImage(null);
 	}
 
-	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override public void onActivityResult(final int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 			case ImageTools.REQUEST_CODE_GET_PICTURE:
 			case ImageTools.REQUEST_CODE_TAKE_PICTURE:
-				if (resultCode == Activity.RESULT_OK && data != null) {
-					image.setImageResource(R.drawable.image_loading);
-					try {
-						setCurrentImage(data.getData());
-					} catch (RuntimeException ex) {
-						image.setImageResource(R.drawable.image_error);
-						throw ex;
-					}
-					return;
+				if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+					handleResult(requestCode, data.getData());
 				}
-				break;
+				return;
 			default:
 				// do as super pleases
 				break;
@@ -244,11 +254,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	protected Uri getCurrentImage() {
-		return currentImage;
-	}
-
-	protected void setCurrentImage(Uri currentImage) {
+	private void setCurrentImage(Object currentImage) {
 		this.currentImage = currentImage;
 		isClean = false;
 		reloadImage();
@@ -257,14 +263,62 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private void reloadImage() {
 		if (currentImage == null) {
 			int typeImageID = getTypeImage(type.getSelectedItemPosition());
-			Pic.SVG_REQUEST.load(typeImageID).into(image);
-		} else {
-			Pic.IMAGE_REQUEST
-					.signature(new LongSignature(System.currentTimeMillis()))
+			Pic.svg().load(typeImageID).into(image);
+		} else if (currentImage instanceof Uri) {
+			Pic.jpg()
+					.signature(new LongSignature(System.currentTimeMillis())) // TODO =image_time but from where?
 					.load(currentImage.toString())
 					.into(image);
+		} else if (currentImage instanceof byte[]) {
+			Pic.baseRequest(byte[].class) // no need for signature, the byte[] doesn't change -> TODO glide#437
+					.diskCacheStrategy(DiskCacheStrategy.NONE)
+					.skipMemoryCache(true)
+					.signature(new LongSignature(System.currentTimeMillis()))
+					.listener(new LoggingListener<byte[], GlideDrawable>("edit"))
+					.load((byte[])currentImage)
+					.into(image);
+		} else {
+			throw new IllegalStateException("Unrecognized image: " + currentImage);
 		}
 	}
+
+	private void handleResult(int requestCode, Uri uri) {
+		image.setImageResource(R.drawable.image_loading);
+		BitmapRequestBuilder<Uri, byte[]> request = Glide
+				.with(this)
+				.load(uri)
+				.asBitmap()
+				.toBytes(CompressFormat.JPEG, 80)
+				.error(R.drawable.image_error)
+				.fitCenter()
+				.override(500, 500);
+
+		if (requestCode == ImageTools.REQUEST_CODE_TAKE_PICTURE
+				&& ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+			request.listener(new RequestListener<Uri, byte[]>() {
+				@Override public boolean onException(Exception e, Uri model, Target<byte[]> target,
+						boolean isFirstResource) {
+					return false;
+				}
+				@Override public boolean onResourceReady(byte[] resource, Uri model, Target<byte[]> target,
+						boolean isFromMemoryCache, boolean isFirstResource) {
+					if (ContentResolver.SCHEME_FILE.equals(model.getScheme())) {
+						//noinspection ResultOfMethodCallIgnored: best effort, can't guarantee anything
+						new File(model.getPath()).delete();
+					}
+					return false;
+				}
+			});
+		}
+
+		request.into(new SimpleTarget<byte[]>() {
+			@Override public void onResourceReady(byte[] resource,
+					GlideAnimation<? super byte[]> glideAnimation) {
+				setCurrentImage(resource);
+			}
+		});
+	}
+
 
 	protected class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
 		@Override protected final DTO doInBackground(DTO param) throws Exception {
@@ -272,10 +326,10 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			try {
 				param = onSave(db, param);
 				db.setTransactionSuccessful();
-				return param;
 			} finally {
 				db.endTransaction();
 			}
+			return param;
 		}
 
 		@Override protected void onResult(DTO result, DTO param) {

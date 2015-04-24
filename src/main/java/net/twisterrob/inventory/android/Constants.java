@@ -70,7 +70,7 @@ public interface Constants {
 		private static final LoggingListener<String, GlideDrawable> IMAGE_LOGGING_LISTENER =
 				new LoggingListener<>("image");
 
-		private static <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz) {
+		public static <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz) {
 			ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, App.getAppContext());
 			DrawableRequestBuilder<T> builder = Glide
 					.with(App.getAppContext())
@@ -87,13 +87,22 @@ public interface Constants {
 			return builder;
 		}
 
-		public static final DrawableRequestBuilder<Integer> SVG_REQUEST = baseRequest(Integer.class)
+		private static final DrawableRequestBuilder<Integer> SVG_REQUEST = baseRequest(Integer.class)
 				.signature(new StringSignature(BuildConfig.VERSION_NAME))
+				.dontAnimate()
 				.listener(SVG_LOGGING_LISTENER)
 				.decoder(getSvgDecoder());
 
-		public static final DrawableRequestBuilder<String> IMAGE_REQUEST = baseRequest(String.class)
+		private static final DrawableRequestBuilder<String> IMAGE_REQUEST = baseRequest(String.class)
+				.animate(android.R.anim.fade_in)
 				.listener(IMAGE_LOGGING_LISTENER);
+
+		public static DrawableRequestBuilder<Integer> svg() {
+			return SVG_REQUEST.clone();
+		}
+		public static DrawableRequestBuilder<String> jpg() {
+			return IMAGE_REQUEST.clone();
+		}
 
 		private static GifBitmapWrapperResourceDecoder getSvgDecoder() {
 			Context context = App.getAppContext();

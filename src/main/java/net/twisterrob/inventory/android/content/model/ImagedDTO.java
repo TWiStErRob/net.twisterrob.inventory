@@ -1,10 +1,8 @@
 package net.twisterrob.inventory.android.content.model;
 
-import java.io.*;
-
 import org.slf4j.*;
 
-import android.content.*;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.RawRes;
@@ -13,7 +11,6 @@ import android.widget.ImageView;
 import net.twisterrob.android.content.glide.LongSignature;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
-import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.java.utils.StringTools;
 
@@ -27,7 +24,6 @@ public abstract class ImagedDTO extends DTO {
 	public String typeImage;
 	public long type;
 	public byte[] tempImageBlob;
-	public Uri tempImageUri;
 
 	@Override
 	protected ImagedDTO fromCursorInternal(Cursor cursor) {
@@ -43,18 +39,6 @@ public abstract class ImagedDTO extends DTO {
 
 	public abstract Uri getImageUri();
 
-	public byte[] getImage(Context context) throws IOException {
-		if (tempImageBlob != null) {
-			return tempImageBlob;
-		}
-		if (tempImageUri == null) {
-			return null;
-		}
-		ContentResolver cr = context.getContentResolver();
-		InputStream input = cr.openInputStream(tempImageUri);
-		return tempImageBlob = IOTools.readBytes(input);
-	}
-
 	public static @RawRes int getFallbackID(Context context, Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		return AndroidTools.getRawResourceID(context, image);
@@ -68,7 +52,6 @@ public abstract class ImagedDTO extends DTO {
 
 	public static void loadInto(ImageView image, ImageView type, Type entity, long id, long signature, String typeName,
 			boolean alwaysShowType) {
-		// @see #getImage(Context), but we're static
 		Uri uri = entity != null? entity.getImageUri(id) : null;
 		String fullImagePath = StringTools.toString(uri, null);
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
@@ -78,14 +61,14 @@ public abstract class ImagedDTO extends DTO {
 			boolean alwaysShowType) {
 		if (fullImagePath == null) {
 			if (alwaysShowType) {
-				Pic.SVG_REQUEST.load(typeID).placeholder(R.drawable.transparent_32dp).into(type);
+				Pic.svg().load(typeID).into(type);
 			} else {
 				type.setImageDrawable(null); // == Pic.IMAGE_REQUEST.load(null).into(type); Glide#268
 			}
-			Pic.SVG_REQUEST.load(typeID).into(image);
+			Pic.svg().load(typeID).into(image);
 		} else {
-			Pic.SVG_REQUEST.load(typeID).placeholder(R.drawable.transparent_32dp).into(type);
-			Pic.IMAGE_REQUEST
+			Pic.svg().load(typeID).into(type);
+			Pic.jpg()
 					.signature(new LongSignature(signature))
 					.load(fullImagePath)
 					.into(image);
@@ -100,9 +83,9 @@ public abstract class ImagedDTO extends DTO {
 	}
 	private static void loadInto(ImageView image, String fullImagePath, long signature, int typeID) {
 		if (fullImagePath == null) {
-			Pic.SVG_REQUEST.load(typeID).into(image);
+			Pic.svg().load(typeID).into(image);
 		} else {
-			Pic.IMAGE_REQUEST
+			Pic.jpg()
 					.signature(new LongSignature(signature))
 					.load(fullImagePath)
 					.into(image);

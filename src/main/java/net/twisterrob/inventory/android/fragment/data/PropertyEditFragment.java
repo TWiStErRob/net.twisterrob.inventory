@@ -14,7 +14,6 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment.PropertyEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
-import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -63,13 +62,9 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		eventsListener.propertyLoaded(property);
 	}
 
-	@Override protected PropertyDTO gatherEdits() {
+	@Override protected PropertyDTO createDTO() {
 		PropertyDTO property = new PropertyDTO();
 		property.id = getArgPropertyID();
-		property.name = name.getText().toString();
-		property.description = description.getText().toString();
-		property.type = type.getSelectedItemId();
-		property.tempImageUri = getCurrentImage();
 		return property;
 	}
 
@@ -83,8 +78,13 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		} else {
 			db.updateProperty(param.id, param.type, param.name, param.description);
 		}
-		if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
-			db.setPropertyImage(param.id, param.getImage(getContext()), null);
+		if (!param.image) {
+			// may clear already cleared images, but there's not enough info
+			db.setPropertyImage(param.id, null, null);
+		} else if (param.tempImageBlob != null) {
+			db.setPropertyImage(param.id, param.tempImageBlob, null);
+		} else {
+			// it has an image, but there's no blob -> the image is already in DB
 		}
 		return param;
 	}

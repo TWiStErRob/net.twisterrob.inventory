@@ -14,7 +14,6 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomEditFragment.RoomEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
-import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -63,14 +62,10 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		eventsListener.roomLoaded(room);
 	}
 
-	@Override protected RoomDTO gatherEdits() {
+	@Override protected RoomDTO createDTO() {
 		RoomDTO room = new RoomDTO();
 		room.propertyID = getArgPropertyID();
 		room.id = getArgRoomID();
-		room.name = name.getText().toString();
-		room.description = description.getText().toString();
-		room.type = type.getSelectedItemId();
-		room.tempImageUri = getCurrentImage();
 		return room;
 	}
 
@@ -88,8 +83,13 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		} else {
 			db.updateRoom(param.id, param.type, param.name, param.description);
 		}
-		if (!ObjectTools.equals(param.getImageUri(), param.tempImageUri)) {
-			db.setRoomImage(param.id, param.getImage(getContext()), null);
+		if (!param.image) {
+			// may clear already cleared images, but there's not enough info
+			db.setRoomImage(param.id, null, null);
+		} else if (param.tempImageBlob != null) {
+			db.setRoomImage(param.id, param.tempImageBlob, null);
+		} else {
+			// it has an image, but there's no blob -> the image is already in DB
 		}
 		return param;
 	}

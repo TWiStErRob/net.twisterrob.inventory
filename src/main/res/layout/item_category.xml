@@ -9,7 +9,7 @@
 	tools:background="@color/toolsBG"
 	tools:context=".view.CategoryAdapter"
 	>
-	<ImageView
+	<net.twisterrob.android.view.RigidImageView
 		android:id="@id/image"
 		android:layout_width="32dp"
 		android:layout_height="32dp"

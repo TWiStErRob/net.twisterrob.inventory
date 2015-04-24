@@ -228,7 +228,7 @@ public class BaseActivity extends VariantActivity {
 		getSupportActionBar().setIcon(iconDrawable);
 	}
 	@For(Children) public void setIcon(@RawRes int resourceId) {
-		Pic.SVG_REQUEST
+		Pic.svg()
 				.load(resourceId)
 				.transform(new PaddingTransformation(this, AndroidTools.dipInt(this, 4)))
 				.into(new ActionBarIconTarget(getSupportActionBar()));
