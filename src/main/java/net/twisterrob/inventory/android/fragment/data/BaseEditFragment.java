@@ -69,7 +69,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	protected void onSingleRowLoaded(DTO dto) {
 		AndroidTools.selectByID(type, dto.type);
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
-		setCurrentImage(dto.image? dto.getImageUri() : null);
+		setCurrentImage(dto.hasImage? dto.getImageUri() : null);
 		description.setText(dto.description);
 		if (getArguments().getBoolean(EDIT_IMAGE)) {
 			getArguments().remove(EDIT_IMAGE);
@@ -155,8 +155,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	@SuppressWarnings("unchecked")
 	protected void doSave() {
 		DTO dto = createDTO();
-		dto.image = currentImage != null;
-		dto.tempImageBlob = currentImage instanceof byte[]? (byte[])currentImage : null;
+		dto.hasImage = currentImage != null;
+		dto.image = currentImage instanceof byte[]? (byte[])currentImage : null;
 		dto.name = name.getText().toString();
 		dto.description = description.getText().toString();
 		dto.type = type.getSelectedItemId();

@@ -50,7 +50,7 @@ public class InventoryProvider extends ContentProvider {
 	protected static final String URI_PATH_IMAGE = "/" + Helpers.IMAGE_URI_SEGMENT;
 	protected static final String URI_PATH_ANY = "/*";
 	private static final String COLUMN_DATA_URI = "_data";
-	private static final String COLUMN_BLOB = "_dataBlob";
+	public static final String COLUMN_BLOB = "_dataBlob";
 
 	private static final UriMatcher URI_MATCHER;
 

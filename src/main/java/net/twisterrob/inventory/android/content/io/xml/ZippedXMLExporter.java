@@ -60,7 +60,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		Belonging belonging = hier.get(type, id);
 		belonging.name = cursor.getString(cursor.getColumnIndexOrThrow(nameColumn(type)));
 		belonging.type = cursor.getString(cursor.getColumnIndexOrThrow("typeName"));
-		belonging.image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+		belonging.image = cursor.getString(cursor.getColumnIndexOrThrow(ExporterTask.IMAGE_NAME));
 		belonging.description = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.DESCRIPTION));
 		belonging.comment = ExporterTask.buildComment(cursor);
 

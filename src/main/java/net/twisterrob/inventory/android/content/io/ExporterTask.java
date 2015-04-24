@@ -19,6 +19,7 @@ import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.
 
 public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
+	public static final String IMAGE_NAME = "imageName";
 
 	private Cursor cursor;
 	private ExportCallbacks callbacks = DUMMY_CALLBACK;
@@ -144,7 +145,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		cursor.moveToPosition(-1);
 		publishStart();
 		while (cursor.moveToNext()) {
-			if (!cursor.isNull(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE))) {
+			if (!cursor.isNull(cursor.getColumnIndexOrThrow(IMAGE_NAME))) {
 				progress.imagesCount++;
 			}
 			exporter.writeData(cursor);
@@ -160,7 +161,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		cursor.moveToPosition(-1);
 		publishStart();
 		while (cursor.moveToNext()) {
-			String imageFileName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+			String imageFileName = cursor.getString(cursor.getColumnIndexOrThrow(IMAGE_NAME));
 			if (imageFileName != null) {
 				try {
 					progress.imagesTried++;

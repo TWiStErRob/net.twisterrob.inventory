@@ -17,20 +17,18 @@ import net.twisterrob.java.utils.StringTools;
 public abstract class ImagedDTO extends DTO {
 	private static final Logger LOG = LoggerFactory.getLogger(ImagedDTO.class);
 
-	// FIXME rename to hasImage
-	@Deprecated
-	public boolean image;
+	public boolean hasImage;
 	public long imageTime;
 	public String typeImage;
 	public long type;
-	public byte[] tempImageBlob;
+	public byte[] image;
 
 	@Override
 	protected ImagedDTO fromCursorInternal(Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
 		typeImage = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE, typeImage);
-		image = DatabaseTools.getOptionalBoolean(cursor, CommonColumns.IMAGE, image);
+		hasImage = DatabaseTools.getOptionalBoolean(cursor, CommonColumns.HAS_IMAGE, hasImage);
 		imageTime = DatabaseTools.getOptionalLong(cursor, CommonColumns.IMAGE_TIME, imageTime);
 		type = DatabaseTools.getOptionalLong(cursor, CommonColumns.TYPE_ID, type);
 
@@ -45,7 +43,7 @@ public abstract class ImagedDTO extends DTO {
 	}
 
 	public void loadInto(ImageView image, ImageView type, boolean alwaysShowType) {
-		String fullImagePath = this.image? StringTools.toString(getImageUri(), null) : null;
+		String fullImagePath = hasImage? StringTools.toString(getImageUri(), null) : null;
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), this.typeImage);
 		loadInto(image, type, fullImagePath, imageTime, typeID, alwaysShowType);
 	}

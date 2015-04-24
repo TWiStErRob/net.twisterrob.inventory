@@ -79,7 +79,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				.append("Category", AndroidTools.getText(getContext(), entity.categoryName))
 				.append("# of items in this item", entity.numDirectItems)
 				.append("# of items inside", entity.numAllItems)
-				.append(entity.image? "image" : "image removed", new Date(entity.imageTime), DEBUG)
+				.append(entity.hasImage? "image" : "image removed", new Date(entity.imageTime), DEBUG)
 				.append("Description", entity.description)
 				.build();
 	}

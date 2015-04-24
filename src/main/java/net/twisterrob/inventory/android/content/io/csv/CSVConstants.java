@@ -23,7 +23,7 @@ public interface CSVConstants {
 			Item.ROOM_NAME,
 			"itemName",
 			CommonColumns.DESCRIPTION,
-			CommonColumns.IMAGE,
+			CommonColumns.HAS_IMAGE,
 			"parent",
 			CommonColumns.ID,
 			null

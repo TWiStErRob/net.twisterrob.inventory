@@ -7,6 +7,7 @@ import android.database.Cursor;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.content.InventoryProvider;
 import net.twisterrob.inventory.android.content.contract.*;
 
 public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
@@ -51,7 +52,7 @@ public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 	@Override public void saveImage(Cursor cursor) throws IOException {
 		byte[] image = getImage(cursor);
 		long unixUtc = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
-		String fileName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE));
+		String fileName = cursor.getString(cursor.getColumnIndexOrThrow(ExporterTask.IMAGE_NAME));
 		String comment = ExporterTask.buildComment(cursor);
 		IOTools.store(zip, image, unixUtc, fileName, comment);
 	}
@@ -76,6 +77,6 @@ public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 				cursor = App.db().getItemImage(id);
 				break;
 		}
-		return DatabaseTools.singleBlob(cursor, "_dataBlob");
+		return DatabaseTools.singleBlob(cursor, InventoryProvider.COLUMN_BLOB);
 	}
 }

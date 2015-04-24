@@ -78,11 +78,11 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 		} else {
 			db.updateItem(param.id, param.type, param.name, param.description);
 		}
-		if (!param.image) {
+		if (!param.hasImage) {
 			// may clear already cleared images, but there's not enough info
 			db.setItemImage(param.id, null, null);
-		} else if (param.tempImageBlob != null) {
-			db.setItemImage(param.id, param.tempImageBlob, null);
+		} else if (param.image != null) {
+			db.setItemImage(param.id, param.image, null);
 		} else {
 			// it has an image, but there's no blob -> the image is already in DB
 		}

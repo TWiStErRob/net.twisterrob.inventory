@@ -41,7 +41,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
 		Type type = Type.from(cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE)));
-		boolean image = DatabaseTools.getBoolean(cursor, CommonColumns.IMAGE);
+		boolean hasImage = DatabaseTools.getBoolean(cursor, CommonColumns.HAS_IMAGE);
 		long imageTime = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		String countText = getCountText(cursor);
@@ -50,7 +50,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 		count.setText(countText);
 		count.setVisibility(countText != null? View.VISIBLE : View.GONE);
 
-		ImagedDTO.loadInto(this.image, this.type, image? type : null, id, imageTime, typeImage, false);
+		ImagedDTO.loadInto(this.image, this.type, hasImage? type : null, id, imageTime, typeImage, false);
 	}
 
 	private static String getCountText(Cursor cursor) {

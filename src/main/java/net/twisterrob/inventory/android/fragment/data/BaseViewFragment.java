@@ -134,7 +134,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 		private class ImageOpenListener implements OnClickListener {
 			@Override public void onClick(View v) {
-				if (entity.image) {
+				if (entity.hasImage) {
 					startActivity(ImageActivity.show(entity.getImageUri()));
 				} else {
 					editImage();

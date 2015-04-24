@@ -6,7 +6,7 @@
 			'property'                                        as type,
 			p._id                                             as _id,
 			p.name                                            as name,
-			p.image IS NOT NULL                               as image,
+			p.image IS NOT NULL                               as hasImage,
 			strftime('%s', p.image_time) * 1000               as imageTime,
 			pt.image                                          as typeImage,
 			(select count() from Room where property = p._id) as countChildren
@@ -21,7 +21,7 @@
 			p.name                                            as name,
 			p.description                                     as description,
 			p.type                                            as typeID,
-			p.image IS NOT NULL                               as image,
+			p.image IS NOT NULL                               as hasImage,
 			strftime('%s', p.image_time) * 1000               as imageTime,
 			pt.image                                          as typeImage,
 			(select count() from Room where property = p._id) as countChildren,
@@ -56,7 +56,7 @@
 			r._id                                            as _id,
 			r.root                                           as root,
 			r.name                                           as name,
-			r.image IS NOT NULL                              as image,
+			r.image IS NOT NULL                              as hasImage,
 			strftime('%s', r.image_time) * 1000              as imageTime,
 			COALESCE(rt.image, rtk.image)                    as typeImage,
 			p._id                                            as property,
@@ -79,7 +79,7 @@
 			r.root                                           as root,
 			p._id                                            as property,
 			p.name                                           as propertyName,
-			r.image IS NOT NULL                              as image,
+			r.image IS NOT NULL                              as hasImage,
 			strftime('%s', r.image_time) * 1000              as imageTime,
 			COALESCE(rt.image, rtk.image)                    as typeImage,
 			(select count() from Item where parent = r.root) as countDirectItems,
@@ -111,7 +111,7 @@
 			--g._id                                           as gid,
 			i._id = g._id                                   as [group],
 			i.name                                          as name,
-			i.image IS NOT NULL                             as image,
+			i.image IS NOT NULL                             as hasImage,
 			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
@@ -144,7 +144,7 @@
 			i._id                                           as _id,
 			i.name                                          as name,
 			i.description                                   as description,
-			i.image IS NOT NULL                             as image,
+			i.image IS NOT NULL                             as hasImage,
 			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			ip.categoryID                                   as typeID,
@@ -175,7 +175,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image IS NOT NULL                             as image,
+			i.image IS NOT NULL                             as hasImage,
 			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
@@ -189,7 +189,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image IS NOT NULL                             as image,
+			i.image IS NOT NULL                             as hasImage,
 			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
@@ -205,7 +205,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image IS NOT NULL                             as image,
+			i.image IS NOT NULL                             as hasImage,
 			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
@@ -220,7 +220,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image IS NOT NULL                             as image,
+			i.image IS NOT NULL                             as hasImage,
 			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
@@ -243,7 +243,7 @@
 					c._id                               as typeID,
 					c.name                              as typeName,
 					c.image                             as typeImage,
-					i.image IS NOT NULL                 as image,
+					i.image IS NOT NULL                 as hasImage,
 					strftime('%s', i.image_time) * 1000 as imageTime
 				from Item_Path_Node n
 				join Item           i ON i._id = n.node
@@ -260,7 +260,7 @@
 					c._id                               as typeID,
 					c.name                              as typeName,
 					c.image                             as typeImage,
-					i.image IS NOT NULL                 as image,
+					i.image IS NOT NULL                 as hasImage,
 					strftime('%s', i.image_time) * 1000 as imageTime
 				from Item_Path_Node n
 				join Item           i ON i._id = n.node
@@ -277,7 +277,7 @@
 					rt._id                              as typeID,
 					rt.name                             as typeName,
 					COALESCE(rt.image, rtk.image)       as typeImage,
-					r.image IS NOT NULL                 as image,
+					r.image IS NOT NULL                 as hasImage,
 					strftime('%s', r.image_time) * 1000 as imageTime
 				from Item_Path_Node n
 				join Room           r   ON n.root = r.root
@@ -295,7 +295,7 @@
 					pt._id                              as typeID,
 					pt.name                             as typeName,
 					pt.image                            as typeImage,
-					p.image IS NOT NULL                 as image,
+					p.image IS NOT NULL                 as hasImage,
 					strftime('%s', p.image_time) * 1000 as imageTime
 				from Item_Path_Node n
 				join Room           r  ON n.root = r.root
@@ -313,7 +313,7 @@
 			'category'                                          as type,
 			c._id                                               as _id,
 			c.name                                              as name,
-			1 <> 2                                              as image,
+			1 <> 2                                              as hasImage,
 			c.image                                             as typeImage,
 			(select count() from Category where parent = c._id) as countChildren,
 			(select count() from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
@@ -390,7 +390,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image IS NOT NULL                             as image,
+			i.image IS NOT NULL                             as hasImage,
 			strftime('%s', i.image_time) * 1000             as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
@@ -408,7 +408,7 @@
 			'item'                              as type,
 			i._id                               as _id,
 			i.name                              as name,
-			i.image IS NOT NULL                 as image,
+			i.image IS NOT NULL                 as hasImage,
 			strftime('%s', i.image_time) * 1000 as imageTime,
 			c.image                             as typeImage,
 			datetime(r.visit, 'localtime')      as visit,
@@ -450,7 +450,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
-			i.image IS NOT NULL                             as image,
+			i.image IS NOT NULL                             as hasImage,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category
@@ -478,7 +478,7 @@
 					|| '_' || p._id
 					|| '_' || strftime('%Y%m%d_%H%M%S', p.image_time, 'localtime')
 					|| '.jpg'
-				ELSE NULL END as image,
+				ELSE NULL END as imageName,
 				strftime('%s', p.image_time) * 1000 as imageTime,
 				null          as parentType,
 				null          as parent,
@@ -499,7 +499,7 @@
 					|| '_' || r._id
 					|| '_' || strftime('%Y%m%d_%H%M%S', r.image_time, 'localtime')
 					|| '.jpg'
-				ELSE NULL END as image,
+				ELSE NULL END as imageName,
 				strftime('%s', r.image_time) * 1000 as imageTime,
 				'property'    as parentType,
 				p._id         as parent,
@@ -521,7 +521,7 @@
 					|| '_' || i._id
 					|| '_' || strftime('%Y%m%d_%H%M%S', i.image_time, 'localtime')
 					|| '.jpg'
-				ELSE NULL END as image,
+				ELSE NULL END as imageName,
 				strftime('%s', i.image_time) * 1000 as imageTime,
 				CASE WHEN i.parent <> r.root THEN 'item'  ELSE 'room' END as parentType,
 				CASE WHEN i.parent <> r.root THEN pi._id  ELSE r._id  END as parent,

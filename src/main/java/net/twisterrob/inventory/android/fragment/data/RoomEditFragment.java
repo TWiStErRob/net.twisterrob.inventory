@@ -83,11 +83,11 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		} else {
 			db.updateRoom(param.id, param.type, param.name, param.description);
 		}
-		if (!param.image) {
+		if (!param.hasImage) {
 			// may clear already cleared images, but there's not enough info
 			db.setRoomImage(param.id, null, null);
-		} else if (param.tempImageBlob != null) {
-			db.setRoomImage(param.id, param.tempImageBlob, null);
+		} else if (param.image != null) {
+			db.setRoomImage(param.id, param.image, null);
 		} else {
 			// it has an image, but there's no blob -> the image is already in DB
 		}
