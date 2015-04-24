@@ -51,7 +51,9 @@ public class BackupActivity extends BaseActivity {
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+		if (!super.onCreateOptionsMenu(menu)) {
+			return false;
+		}
 		getMenuInflater().inflate(R.menu.backup, menu);
 		return true;
 	}

@@ -245,14 +245,14 @@ public class BaseActivity extends VariantActivity {
 		public void onDrawerClosed(View view) {
 			super.onDrawerClosed(view);
 			activity.getSupportActionBar().setTitle(activity.getTitle());
-			activity.supportInvalidateOptionsMenu();
+			activity.invalidateOptionsMenu();
 		}
 
 		@Override
 		public void onDrawerOpened(View drawerView) {
 			super.onDrawerOpened(drawerView);
 			activity.getSupportActionBar().setTitle(activity.getText(R.string.navigation_title));
-			activity.supportInvalidateOptionsMenu();
+			activity.invalidateOptionsMenu();
 		}
 	}
 

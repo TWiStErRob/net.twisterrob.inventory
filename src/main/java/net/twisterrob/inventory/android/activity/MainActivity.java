@@ -172,7 +172,9 @@ public class MainActivity extends BaseActivity
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+		if (!super.onCreateOptionsMenu(menu)) {
+			return false;
+		}
 		getMenuInflater().inflate(R.menu.main, menu);
 		getMenuInflater().inflate(R.menu.search, menu);
 		AndroidTools.prepareSearch(this, menu, R.id.search);
