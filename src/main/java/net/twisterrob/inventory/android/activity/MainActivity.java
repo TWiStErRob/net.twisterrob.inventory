@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.*;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.view.*;
 
@@ -57,7 +58,7 @@ public class MainActivity extends BaseActivity
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setIcon(getResources().getDrawable(R.drawable.ic_launcher));
+		setIcon(ContextCompat.getDrawable(this, R.drawable.ic_launcher));
 		setContentView(R.layout.generic_activity_drawer);
 
 		if (savedInstanceState == null) {

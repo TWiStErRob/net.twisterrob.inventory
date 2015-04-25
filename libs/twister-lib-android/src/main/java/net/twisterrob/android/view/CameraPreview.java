@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import org.slf4j.*;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.hardware.Camera;
+import android.os.Build.*;
 import android.os.*;
 import android.util.AttributeSet;
 import android.view.*;
@@ -13,7 +14,6 @@ import android.widget.Toast;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 
-@SuppressWarnings("deprecation")
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
 
@@ -27,13 +27,18 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	private CameraHolder cameraHolder = null;
 	private CameraPreviewListener listener = null;
 
-	@SuppressWarnings("deprecation")
 	public CameraPreview(Context context, AttributeSet attributeset) {
 		super(context, attributeset);
 		LOG.trace("CameraPreview");
 
 		getHolder().addCallback(this);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+		initCompat();
+	}
+
+	@TargetApi(VERSION_CODES.HONEYCOMB)
+	@SuppressWarnings("deprecation")
+	private void initCompat() {
+		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
 			getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		}
 	}
@@ -42,7 +47,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		this.listener = listener;
 	}
 
-	public Camera getCamera() {
+	public @SuppressWarnings("deprecation") android.hardware.Camera getCamera() {
 		return cameraHolder != null? cameraHolder.camera : null;
 	}
 
@@ -119,9 +124,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			height = temp;
 		}
 
-		Camera.Size previewSize =
+		@SuppressWarnings("deprecation") android.hardware.Camera.Size previewSize =
 				AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPreviewSizes(), width, height);
-		Camera.Size pictureSize =
+		@SuppressWarnings("deprecation") android.hardware.Camera.Size pictureSize =
 				AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPictureSizes(), width, height);
 		LOG.debug("orient: {}, size: {}x{} ({}), surface: {}x{} ({}), preview: {}x{} ({}), picture: {}x{} ({})", //
 				degrees, //
@@ -191,7 +196,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	public void takePicture(Camera.PictureCallback jpegCallback) {
+	public void takePicture(@SuppressWarnings("deprecation") android.hardware.Camera.PictureCallback jpegCallback) {
 		LOG.trace("Taking picture {}", cameraHolder != null);
 		if (cameraHolder == null) {
 			return;
@@ -217,41 +222,42 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	public void setCameraFocus(Camera.AutoFocusCallback autoFocus) {
+	@SuppressWarnings("deprecation")
+	public void setCameraFocus(android.hardware.Camera.AutoFocusCallback autoFocus) {
 		LOG.trace("Camera focus {}", cameraHolder != null);
 		if (cameraHolder == null) {
 			return;
 		}
 		String focusMode = cameraHolder.camera.getParameters().getFocusMode();
-		if (Camera.Parameters.FOCUS_MODE_AUTO.equals(focusMode)
-				|| Camera.Parameters.FOCUS_MODE_MACRO.equals(focusMode)) {
+		if (android.hardware.Camera.Parameters.FOCUS_MODE_AUTO.equals(focusMode)
+				|| android.hardware.Camera.Parameters.FOCUS_MODE_MACRO.equals(focusMode)) {
 			cameraHolder.camera.autoFocus(autoFocus);
 		}
 	}
+
 	public void setFlash(boolean flash) {
 		if (cameraHolder == null) {
 			return;
 		}
-		String flashMode;
-		if (flash) {
-			flashMode = Camera.Parameters.FLASH_MODE_ON;
-		} else {
-			flashMode = Camera.Parameters.FLASH_MODE_OFF;
-		}
+		@SuppressWarnings("deprecation")
+		String flashMode = flash
+				? android.hardware.Camera.Parameters.FLASH_MODE_ON
+				: android.hardware.Camera.Parameters.FLASH_MODE_OFF;
 		cameraHolder.params.setFlashMode(flashMode);
 		cameraHolder.camera.setParameters(cameraHolder.params);
 	}
 
+	@SuppressWarnings("deprecation")
 	private static class CameraHolder {
 		int cameraID;
-		Camera camera;
-		Camera.CameraInfo cameraInfo;
-		Camera.Parameters params;
+		android.hardware.Camera camera;
+		android.hardware.Camera.CameraInfo cameraInfo;
+		android.hardware.Camera.Parameters params;
 
 		public CameraHolder(int id) {
 			cameraID = id;
 			LOG.trace("Opening camera");
-			camera = Camera.open(cameraID);
+			camera = android.hardware.Camera.open(cameraID);
 			LOG.trace("Opened camera");
 			try {
 				LOG.trace("setPreviewDisplay null");
@@ -261,9 +267,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			} catch (IOException ex) {
 				LOG.error("Error setting up camera preview", ex);
 			}
-			cameraInfo = new Camera.CameraInfo();
+			cameraInfo = new android.hardware.Camera.CameraInfo();
 			params = camera.getParameters();
-			Camera.getCameraInfo(cameraID, cameraInfo);
+			android.hardware.Camera.getCameraInfo(cameraID, cameraInfo);
 		}
 	}
 

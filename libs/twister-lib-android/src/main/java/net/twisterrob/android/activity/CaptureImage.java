@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.ColorDrawable;
-import android.hardware.Camera;
 import android.net.Uri;
 import android.os.*;
 import android.provider.MediaStore;
@@ -30,7 +29,6 @@ import net.twisterrob.android.view.CameraPreview.CameraPreviewListener;
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
-@SuppressWarnings("deprecation")
 public class CaptureImage extends Activity {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
 	private static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;
@@ -46,6 +44,7 @@ public class CaptureImage extends Activity {
 	private File mTargetFile;
 	private File mSavedFile;
 	private ImageView mImage;
+	private View controls;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class CaptureImage extends Activity {
 		}
 
 		setContentView(R.layout.activity_camera);
-		final View controls = findViewById(R.id.controls);
+		controls = findViewById(R.id.controls);
 		final ImageButton btnCapture = (ImageButton)controls.findViewById(R.id.btn_capture);
 		final ImageButton btnCrop = (ImageButton)controls.findViewById(R.id.btn_crop);
 		final ToggleButton btnFlash = (ToggleButton)controls.findViewById(R.id.btn_flash);
@@ -94,52 +93,8 @@ public class CaptureImage extends Activity {
 			}
 		});
 
-		btnCapture.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				disableControls();
-				if (mSavedFile == null) {
-					take(new Camera.PictureCallback() {
-						public void onPictureTaken(byte[] data, Camera camera) {
-							doSave(data);
-							prepareCrop();
-							enableControls();
-						}
-					});
-				} else {
-					doRestartPreview();
-					enableControls();
-				}
-			}
-			private void enableControls() {
-				// post, so everything has time to set up
-				controls.post(new Runnable() {
-					@Override public void run() {
-						controls.setVisibility(View.VISIBLE);
-					}
-				});
-			}
-			private void disableControls() {
-				controls.setVisibility(View.INVISIBLE);
-			}
-		});
-
-		btnCrop.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (mSavedFile != null) {
-					doCrop();
-					doReturn();
-				} else {
-					take(new Camera.PictureCallback() {
-						public void onPictureTaken(byte[] data, Camera camera) {
-							doSave(data);
-							doCrop();
-							doReturn();
-						}
-					});
-				}
-			}
-		});
+		btnCapture.setOnClickListener(new CaptureClickListener());
+		btnCrop.setOnClickListener(new CropClickListener());
 	}
 
 	private void prepareCrop() {
@@ -193,14 +148,16 @@ public class CaptureImage extends Activity {
 		setResult(RESULT_OK, result);
 		finish();
 	}
-	protected void take(final Camera.PictureCallback jpegCallback) {
+	protected void take(@SuppressWarnings("deprecation") final android.hardware.Camera.PictureCallback jpegCallback) {
 		LOG.trace("Initiate taking picture {}", mPreview.isRunning());
 		if (!mPreview.isRunning()) {
 			return;
 		}
 		mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
-		mPreview.setCameraFocus(new Camera.AutoFocusCallback() {
-			public void onAutoFocus(final boolean success, Camera camera) {
+		@SuppressWarnings("deprecation")
+		android.hardware.Camera.AutoFocusCallback takeAfterFocus = new android.hardware.Camera.AutoFocusCallback() {
+			public void onAutoFocus(final boolean success,
+					@SuppressWarnings("deprecation") android.hardware.Camera camera) {
 				LOG.trace("Auto-focus result: {}", success);
 				mSelection.post(new Runnable() {
 					public void run() {
@@ -209,7 +166,8 @@ public class CaptureImage extends Activity {
 				});
 				mPreview.takePicture(jpegCallback);
 			}
-		});
+		};
+		mPreview.setCameraFocus(takeAfterFocus);
 	}
 
 	private static File save(File file, byte[] data) {
@@ -274,5 +232,58 @@ public class CaptureImage extends Activity {
 			throw new IllegalStateException("Sorry, this system doesn't have a camera.");
 		}
 		return intent;
+	}
+
+	private class CaptureClickListener implements OnClickListener {
+		@Override
+		public void onClick(View v) {
+			disableControls();
+			if (mSavedFile == null) {
+				@SuppressWarnings("deprecation")
+				android.hardware.Camera.PictureCallback saveStartCrop = new android.hardware.Camera.PictureCallback() {
+					public void onPictureTaken(byte[] data,
+							@SuppressWarnings("deprecation") android.hardware.Camera camera) {
+						doSave(data);
+						prepareCrop();
+						enableControls();
+					}
+				};
+				take(saveStartCrop);
+			} else {
+				doRestartPreview();
+				enableControls();
+			}
+		}
+		private void enableControls() {
+			// post, so everything has time to set up
+			controls.post(new Runnable() {
+				@Override public void run() {
+					controls.setVisibility(View.VISIBLE);
+				}
+			});
+		}
+		private void disableControls() {
+			// TODO maybe a grayscale colorfilter on the preview?
+			controls.setVisibility(View.INVISIBLE);
+		}
+	}
+
+	private class CropClickListener implements OnClickListener {
+		public void onClick(View v) {
+			if (mSavedFile != null) {
+				doCrop();
+				doReturn();
+			} else {
+				@SuppressWarnings("deprecation")
+				android.hardware.Camera.PictureCallback cropAndReturn = new android.hardware.Camera.PictureCallback() {
+					public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
+						doSave(data);
+						doCrop();
+						doReturn();
+					}
+				};
+				take(cropAndReturn);
+			}
+		}
 	}
 }

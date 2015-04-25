@@ -87,6 +87,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		super.onViewCreated(view, savedInstanceState);
 		if (header == null) {
 			header = (BaseFragment)getChildFragmentManager().findFragmentById(R.id.header); // restore on rotation
+			// FIXME save fragment UI state from savedInstanceState into a field and use that in the adapter
 		}
 
 		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
@@ -165,7 +166,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		if (hasHeader() && header.hasUI() && /*ConstantConditions:*/ getView() != null) {
 			View headerContainer = getView().findViewById(R.id.header);
 			adapter.setHeader(headerContainer);
-			list.setOnScrollListener(new SynchronizedScrollListener(0, list, new StaticViewProvider(headerContainer)));
+			list.addOnScrollListener(new SynchronizedScrollListener(0, list, new StaticViewProvider(headerContainer)));
 			selectionAdapter.setSelectable(0, false);
 		}
 

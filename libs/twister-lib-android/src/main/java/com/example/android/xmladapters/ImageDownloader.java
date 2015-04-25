@@ -21,12 +21,8 @@ import java.lang.ref.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.http.*;
-import org.apache.http.client.methods.HttpGet;
-
 import android.graphics.*;
 import android.graphics.drawable.*;
-import android.net.http.AndroidHttpClient;
 import android.os.*;
 import android.util.Log;
 import android.widget.ImageView;
@@ -229,25 +225,30 @@ public class ImageDownloader {
 		/**
 		 * Actual download method.
 		 */
-		@Override
-		protected Bitmap doInBackground(String... params) {
-			final AndroidHttpClient client = AndroidHttpClient.newInstance("Android");
+		@Override protected Bitmap doInBackground(String... params) {
+			@SuppressWarnings("deprecation")
+			final android.net.http.AndroidHttpClient client = android.net.http.AndroidHttpClient.newInstance("Android");
 			url = params[0];
-			final HttpGet getRequest = new HttpGet(url);
+			@SuppressWarnings("deprecation")
+			final org.apache.http.client.methods.HttpGet getRequest = new org.apache.http.client.methods.HttpGet(url);
 			String cookie = params[1];
 			if (cookie != null) {
 				getRequest.setHeader("cookie", cookie);
 			}
 
 			try {
-				HttpResponse response = client.execute(getRequest);
+				@SuppressWarnings("deprecation")
+				final int HTTP_OK = org.apache.http.HttpStatus.SC_OK;
+				@SuppressWarnings("deprecation")
+				org.apache.http.HttpResponse response = client.execute(getRequest);
 				final int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode != HttpStatus.SC_OK) {
+				if (statusCode != HTTP_OK) {
 					Log.w("ImageDownloader", "Error " + statusCode + " while retrieving bitmap from " + url);
 					return null;
 				}
 
-				final HttpEntity entity = response.getEntity();
+				@SuppressWarnings("deprecation")
+				final org.apache.http.HttpEntity entity = response.getEntity();
 				if (entity != null) {
 					InputStream inputStream = null;
 					OutputStream outputStream = null;

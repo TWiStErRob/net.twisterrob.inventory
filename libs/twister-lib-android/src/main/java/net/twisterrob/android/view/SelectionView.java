@@ -6,7 +6,6 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.Paint.Style;
 import android.graphics.Region.Op;
@@ -14,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.*;
 import android.view.*;
+
+import static android.support.v4.content.ContextCompat.*;
 
 import net.twisterrob.android.R;
 
@@ -72,13 +73,13 @@ public class SelectionView extends View {
 		line.setColor(Color.CYAN);
 		line.setStrokeWidth(15);
 
-		Resources resources = getContext().getResources();
-		mLeftTopIcon = resources.getDrawable(R.drawable.selection_corner);
-		mRightTopIcon = resources.getDrawable(R.drawable.selection_corner);
-		mLeftBotIcon = resources.getDrawable(R.drawable.selection_corner);
-		mRightBotIcon = resources.getDrawable(R.drawable.selection_corner);
+		Context context = getContext();
+		mLeftTopIcon = getDrawable(context, R.drawable.selection_corner);
+		mRightTopIcon = getDrawable(context, R.drawable.selection_corner);
+		mLeftBotIcon = getDrawable(context, R.drawable.selection_corner);
+		mRightBotIcon = getDrawable(context, R.drawable.selection_corner);
 
-		mTouchDistance = resources.getDisplayMetrics().density * MAX_DISTANCE;
+		mTouchDistance = context.getResources().getDisplayMetrics().density * MAX_DISTANCE;
 	}
 
 	public Rect getSelection() {

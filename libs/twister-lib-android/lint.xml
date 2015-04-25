@@ -3,5 +3,10 @@
 	<issue id="UnusedResources">
 		<!-- Not used, but can't do anything about it :) -->
 		<ignore path="**/generated/**" />
+		<ignore path="**/generated/**" />
+	</issue>
+	<issue id="InlinedApi">
+		<!-- See http://b.android.com/170110 -->
+		<ignore path="**/net/twisterrob/android/annotation/*.java" />
 	</issue>
 </lint>

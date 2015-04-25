@@ -3,6 +3,7 @@ package net.twisterrob.android.utils.log;
 import org.slf4j.*;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.*;
@@ -89,9 +90,21 @@ public class LoggingFragment extends Fragment {
 	// Activity.onPostCreate
 	// Activity.onResume/onPostResume/onResumeFragments
 
+	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		log("onActivityResult", requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 	@Override public void onResume() {
 		log("onResume");
 		super.onResume();
+	}
+	@Override public void startActivity(Intent intent) {
+		log("startActivity", intent);
+		super.startActivity(intent);
+	}
+	@Override public void startActivityForResult(Intent intent, int requestCode) {
+		log("startActivityForResult", intent, requestCode);
+		super.startActivityForResult(intent, requestCode);
 	}
 
 	// Activity.onCreateOptionsMenu

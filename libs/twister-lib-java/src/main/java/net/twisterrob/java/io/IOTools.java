@@ -7,7 +7,7 @@ import java.util.zip.*;
 
 import javax.annotation.*;
 
-public/* static */class IOTools {
+public/*static*/ abstract class IOTools {
 	// TODO check if UTF-8 is used by cineworld
 	public static final String ENCODING = Charset.forName("UTF-8").name();
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -353,5 +353,9 @@ public/* static */class IOTools {
 		zip.putNextEntry(entry);
 		zip.write(file);
 		zip.closeEntry();
+	}
+
+	protected IOTools() {
+		// static utility class
 	}
 }

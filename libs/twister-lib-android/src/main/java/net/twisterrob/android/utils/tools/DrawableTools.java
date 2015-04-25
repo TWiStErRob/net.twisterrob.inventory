@@ -3,10 +3,12 @@ package net.twisterrob.android.utils.tools;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 
-public class DrawableTools {
+@SuppressWarnings("unused")
+public /*static*/ abstract class DrawableTools {
 	public static Bitmap toBitmap(int shapeID, int widthID, int heightID, Resources res) {
-		Drawable shape = res.getDrawable(shapeID);
+		Drawable shape = ResourcesCompat.getDrawable(res, shapeID, null);
 		return toBitmap(shape, widthID, heightID, res);
 	}
 	public static Bitmap toBitmap(Drawable shape, int widthID, int heightID, Resources res) {
@@ -20,5 +22,9 @@ public class DrawableTools {
 		shape.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
 		shape.draw(canvas);
 		return bitmap;
+	}
+
+	protected DrawableTools() {
+		// static utility class
 	}
 }

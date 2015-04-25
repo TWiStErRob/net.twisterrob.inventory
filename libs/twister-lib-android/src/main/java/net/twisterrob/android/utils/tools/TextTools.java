@@ -4,7 +4,8 @@ import android.graphics.Typeface;
 import android.text.*;
 import android.text.style.*;
 
-public class TextTools {
+@SuppressWarnings("unused")
+public /*static*/ abstract class TextTools {
 	public static class DescriptionBuilder {
 		SpannableStringBuilder text = new SpannableStringBuilder();
 
@@ -111,5 +112,9 @@ public class TextTools {
 	 */
 	public static CharSequence color(int color, CharSequence... content) {
 		return apply(content, new ForegroundColorSpan(color));
+	}
+
+	protected TextTools() {
+		// static utility class
 	}
 }

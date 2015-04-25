@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources>
+<resources
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:shrinkMode="strict"
+	tools:discard=""
+	tools:keep="@raw/category_*,@raw/room_*,@raw/property_*,@raw/ic_*"
+	/>

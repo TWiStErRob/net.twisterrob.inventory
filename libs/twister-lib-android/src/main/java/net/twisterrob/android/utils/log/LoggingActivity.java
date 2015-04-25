@@ -8,7 +8,7 @@ import android.content.res.Configuration;
 import android.os.*;
 import android.support.annotation.*;
 import android.support.v4.app.*;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.view.ActionMode.Callback;
 import android.util.AttributeSet;
@@ -19,7 +19,7 @@ import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.java.utils.*;
 
-public class LoggingActivity extends ActionBarActivity {
+public class LoggingActivity extends AppCompatActivity {
 	private static final Logger LOG = LoggerFactory.getLogger("Activity");
 
 	protected LoggingDebugProvider debugInfoProvider;
@@ -41,7 +41,11 @@ public class LoggingActivity extends ActionBarActivity {
 		LOG.trace("{}.loaderManager={}({})", getName(), lm, ReflectionTools.get(lm, "mWho"));
 	}
 
-	// @Override public void onContentChanged() { } // final in super
+	@Override public void onContentChanged() {
+		log("onContentChanged");
+		super.onContentChanged();
+	}
+	@SuppressWarnings("deprecation")
 	@Override public void onSupportContentChanged() {
 		log("onSupportContentChanged");
 		super.onSupportContentChanged();
@@ -264,9 +268,21 @@ public class LoggingActivity extends ActionBarActivity {
 		log("onSupportNavigateUp");
 		return super.onSupportNavigateUp();
 	}
+	@Override public boolean navigateUpTo(@NonNull Intent upIntent) {
+		log("navigateUpTo", upIntent);
+		return super.navigateUpTo(upIntent);
+	}
+	@Override public void supportNavigateUpTo(Intent upIntent) {
+		log("supportNavigateUpTo", upIntent);
+		super.supportNavigateUpTo(upIntent);
+	}
 	@Override public boolean onNavigateUpFromChild(Activity child) {
 		log("onNavigateUpFromChild", child);
 		return super.onNavigateUpFromChild(child);
+	}
+	@Override public boolean navigateUpToFromChild(Activity child, @NonNull Intent upIntent) {
+		log("onNavigateUpFromChild", child, upIntent);
+		return super.navigateUpToFromChild(child, upIntent);
 	}
 
 	@Override public void onCreateNavigateUpTaskStack(@NonNull android.app.TaskStackBuilder builder) {

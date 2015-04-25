@@ -15,12 +15,14 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.*;
 import android.provider.*;
+import android.support.v4.content.ContextCompat;
 
 import net.twisterrob.java.io.IOTools;
 
 // TODO crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
 // TODO crop http://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
-public class ImageTools {
+@SuppressWarnings("unused")
+public /*static*/ abstract class ImageTools {
 	public static final short REQUEST_CODE_GET_PICTURE = 0x41C0;
 	public static final short REQUEST_CODE_TAKE_PICTURE = 0x41C1;
 	public static final short REQUEST_CODE_PICK_GALLERY = 0x41C2;
@@ -129,7 +131,7 @@ public class ImageTools {
 	}
 
 	public static Bitmap loadPicture(Context context, int drawableResourceID) {
-		return drawableToBitmap(context.getResources().getDrawable(drawableResourceID));
+		return drawableToBitmap(ContextCompat.getDrawable(context, drawableResourceID));
 	}
 	public static Bitmap drawableToBitmap(Drawable drawable) {
 		if (drawable instanceof BitmapDrawable) {
@@ -520,5 +522,9 @@ public class ImageTools {
 		}
 
 		return inSampleSize;
+	}
+
+	protected ImageTools() {
+		// static utility class
 	}
 }

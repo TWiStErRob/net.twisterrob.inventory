@@ -1,7 +1,6 @@
 package net.twisterrob.android.utils.tools;
 
 import java.io.*;
-import java.lang.annotation.*;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,7 +18,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
-import android.hardware.Camera;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.*;
@@ -37,10 +35,12 @@ import android.widget.*;
 
 import static android.util.TypedValue.*;
 
+import net.twisterrob.android.annotation.*;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.ReflectionTools;
 
-public abstract class AndroidTools {
+@SuppressWarnings("unused")
+public /*static*/ abstract class AndroidTools {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidTools.class);
 
 	private static final float CIRCLE_LIMIT = 359.9999f;
@@ -55,10 +55,6 @@ public abstract class AndroidTools {
 	public static final String RES_TYPE_STRING = "string";
 	public static final String RES_TYPE_RAW = "raw";
 	public static final String RES_TYPE_DRAWABLE = "drawable";
-
-	private AndroidTools() {
-		// static class
-	}
 
 	public static boolean hasPermission(Context context, String permission) {
 		PackageManager packageManager = context.getPackageManager();
@@ -226,12 +222,12 @@ public abstract class AndroidTools {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static Camera.Size getOptimalSize(List<Camera.Size> sizes, int w, int h) {
+	public static android.hardware.Camera.Size getOptimalSize(List<android.hardware.Camera.Size> sizes, int w, int h) {
 		if (sizes == null) {
 			return null;
 		}
 
-		Camera.Size optimalSize = findClosestAspect(sizes, w, h, 0.1);
+		android.hardware.Camera.Size optimalSize = findClosestAspect(sizes, w, h, 0.1);
 
 		if (optimalSize == null) {
 			optimalSize = findClosestAspect(sizes, w, h, Double.POSITIVE_INFINITY);
@@ -241,12 +237,13 @@ public abstract class AndroidTools {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static Camera.Size findClosestAspect(List<Camera.Size> sizes, int width, int height, double tolerance) {
-		Camera.Size optimalSize = null;
+	private static android.hardware.Camera.Size findClosestAspect(
+			List<android.hardware.Camera.Size> sizes, int width, int height, double tolerance) {
+		android.hardware.Camera.Size optimalSize = null;
 
 		final double targetRatio = (double)width / (double)height;
 		double minDiff = Double.MAX_VALUE;
-		for (Camera.Size size : sizes) {
+		for (android.hardware.Camera.Size size : sizes) {
 			double ratio = (double)size.width / (double)size.height;
 			if (Math.abs(ratio - targetRatio) <= tolerance && Math.abs(size.height - height) < minDiff) {
 				optimalSize = size;
@@ -261,13 +258,13 @@ public abstract class AndroidTools {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static int calculateRotation(Context context, Camera.CameraInfo cameraInfo) {
+	public static int calculateRotation(Context context, android.hardware.Camera.CameraInfo cameraInfo) {
 		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		int rotation = windowManager.getDefaultDisplay().getRotation();
 		int degrees = rotation * 90; // consider using Surface.ROTATION_ constants
 
 		int result;
-		if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+		if (cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
 			result = (cameraInfo.orientation + degrees) % 360;
 			result = (360 - result) % 360;  // compensate the mirror
 		} else {  // back-facing
@@ -825,41 +822,7 @@ public abstract class AndroidTools {
 		//context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
 	}
 
-	@TargetApi(VERSION_CODES.LOLLIPOP)
-	@IntDef({
-			        Window.FEATURE_OPTIONS_PANEL,
-			        Window.FEATURE_NO_TITLE,
-			        Window.FEATURE_PROGRESS,
-			        Window.FEATURE_LEFT_ICON,
-			        Window.FEATURE_RIGHT_ICON,
-			        Window.FEATURE_INDETERMINATE_PROGRESS,
-			        Window.FEATURE_CONTEXT_MENU,
-			        Window.FEATURE_CUSTOM_TITLE,
-			        Window.FEATURE_ACTION_BAR,
-			        WindowCompat.FEATURE_ACTION_BAR,
-			        Window.FEATURE_ACTION_BAR_OVERLAY,
-			        WindowCompat.FEATURE_ACTION_BAR_OVERLAY,
-			        Window.FEATURE_ACTION_MODE_OVERLAY,
-			        WindowCompat.FEATURE_ACTION_MODE_OVERLAY,
-			        Window.FEATURE_SWIPE_TO_DISMISS,
-			        Window.FEATURE_CONTENT_TRANSITIONS,
-			        Window.FEATURE_ACTIVITY_TRANSITIONS
-	        })
-	@Retention(RetentionPolicy.SOURCE)
-	public @interface WindowFeature {
-	}
-
-	@TargetApi(VERSION_CODES.JELLY_BEAN)
-	@IntDef({
-			        ComponentCallbacks2.TRIM_MEMORY_COMPLETE,
-			        ComponentCallbacks2.TRIM_MEMORY_MODERATE,
-			        ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
-			        ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN,
-			        ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL,
-			        ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
-			        ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE
-	        })
-	@Retention(RetentionPolicy.SOURCE)
-	public @interface TrimMemoryLevel {
+	protected AndroidTools() {
+		// static utility class
 	}
 }

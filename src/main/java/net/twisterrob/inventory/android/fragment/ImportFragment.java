@@ -49,12 +49,13 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 	private void updateProgress(ProgressDialog dialog, Progress progress) {
 		if (progress.total == -1) {
 			dialog.setIndeterminate(true);
+			dialog.setMessage(getString(R.string.backup_import_progress_init));
 		} else {
 			dialog.setIndeterminate(false);
 			dialog.setProgress((int)progress.done);
 			dialog.setMax((int)progress.total);
+			dialog.setMessage(getString(R.string.backup_import_progress_data));
 		}
-		dialog.setMessage(getString(R.string.backup_import_progress_data));
 	}
 
 	@Override public void importFinished(Progress res) {

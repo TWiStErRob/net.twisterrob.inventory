@@ -10,7 +10,8 @@ import android.support.annotation.NonNull;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 
-public class DatabaseTools {
+@SuppressWarnings("unused")
+public /*static*/ abstract class DatabaseTools {
 	public static String escapeLike(Object string, char escape) {
 		return string.toString().replace("%", escape + "%").replace("_", escape + "_");
 	}
@@ -135,5 +136,9 @@ public class DatabaseTools {
 		StringBuilder cursorDump = new StringBuilder();
 		DatabaseUtils.dumpCursor(cursor, cursorDump);
 		return cursorDump.toString();
+	}
+
+	protected DatabaseTools() {
+		// static utility class
 	}
 }

@@ -2,7 +2,8 @@ package net.twisterrob.android.utils.tools;
 
 import android.graphics.Color;
 
-public class ColorTools {
+@SuppressWarnings("unused")
+public /*static*/ abstract class ColorTools {
 	/**
 	 * Same as {@link Color#HSVToColor(int, float[])}, but without the weird interface and much faster.
 	 * Values are not clamped, anything out of range may explode!
@@ -66,5 +67,9 @@ public class ColorTools {
 
 	public static int randomColor() {
 		return fromHsb((float)Math.random(), 1, 1, 1);
+	}
+
+	protected ColorTools() {
+		// static utility class
 	}
 }

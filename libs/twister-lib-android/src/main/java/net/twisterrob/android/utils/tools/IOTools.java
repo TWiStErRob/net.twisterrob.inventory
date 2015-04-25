@@ -5,7 +5,6 @@ import java.net.*;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.http.*;
 import org.slf4j.*;
 
 import android.annotation.TargetApi;
@@ -18,7 +17,8 @@ import android.os.ParcelFileDescriptor;
 import net.twisterrob.android.utils.cache.ImageSDNetCache;
 import net.twisterrob.java.utils.CollectionTools;
 
-public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
+@SuppressWarnings("unused")
+public/*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools {
 	private static final Logger LOG = LoggerFactory.getLogger(IOTools.class);
 
 	// TODO check if UTF-8 is used by cineworld
@@ -26,13 +26,10 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 	private static final String HTTP_HEADER_CHARSET_PREFIX = "charset=";
 	private static ImageSDNetCache imageCache;
 
-	protected IOTools() {
-		// prevent instantiation
-	}
-
-	public static String getEncoding(final HttpEntity entity) {
+	@SuppressWarnings("deprecation")
+	public static String getEncoding(final org.apache.http.HttpEntity entity) {
 		String encoding = DEFAULT_HTTP_ENCODING;
-		Header header = entity.getContentEncoding();
+		org.apache.http.Header header = entity.getContentEncoding();
 		if (header != null) {
 			return header.getValue();
 		}
@@ -160,5 +157,9 @@ public/* static */class IOTools extends net.twisterrob.java.io.IOTools {
 		} catch (IOException e) {
 			LOG.warn("Cannot close " + pfd + " with error: " + message, e);
 		}
+	}
+
+	protected IOTools() {
+		// prevent instantiation
 	}
 }

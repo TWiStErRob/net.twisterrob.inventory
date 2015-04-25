@@ -56,8 +56,8 @@ public class BaseActivity extends VariantActivity {
 		return super.onCreateOptionsMenu(menu) && !isDrawerShown();
 	}
 
-	@For(Drawer) @Override public void onSupportContentChanged() {
-		super.onSupportContentChanged();
+	@For(Drawer) @Override public void onContentChanged() {
+		super.onContentChanged();
 
 		mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer);
 		if (mDrawerLayout != null) {
@@ -235,9 +235,9 @@ public class BaseActivity extends VariantActivity {
 	}
 
 	@For(Drawer) private static class StandardMyActionBarDrawerToggle extends ActionBarDrawerToggle {
-		private final ActionBarActivity activity;
+		private final BaseActivity activity;
 
-		public StandardMyActionBarDrawerToggle(ActionBarActivity activity, DrawerLayout drawerLayout) {
+		public StandardMyActionBarDrawerToggle(BaseActivity activity, DrawerLayout drawerLayout) {
 			super(activity, drawerLayout, AndroidTools.INVALID_RESOURCE_ID, AndroidTools.INVALID_RESOURCE_ID);
 			this.activity = activity;
 		}
@@ -245,14 +245,14 @@ public class BaseActivity extends VariantActivity {
 		public void onDrawerClosed(View view) {
 			super.onDrawerClosed(view);
 			activity.getSupportActionBar().setTitle(activity.getTitle());
-			activity.invalidateOptionsMenu();
+			activity.supportInvalidateOptionsMenu();
 		}
 
 		@Override
 		public void onDrawerOpened(View drawerView) {
 			super.onDrawerOpened(drawerView);
 			activity.getSupportActionBar().setTitle(activity.getText(R.string.navigation_title));
-			activity.invalidateOptionsMenu();
+			activity.supportInvalidateOptionsMenu();
 		}
 	}
 
@@ -263,5 +263,10 @@ public class BaseActivity extends VariantActivity {
 			Children,
 			Drawer,
 		}
+	}
+
+	/** We kind of know that there's an action bar in all child classes*/
+	@Override public @NonNull ActionBar getSupportActionBar() {
+		return super.getSupportActionBar();
 	}
 }

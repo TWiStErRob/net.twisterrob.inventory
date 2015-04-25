@@ -6,7 +6,7 @@ buildscript {
 
 	dependencies {
 		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-		classpath 'net.twisterrob.gradle:plugin:0.5.0'
+		classpath 'net.twisterrob.gradle:plugin:0.5.1'
 	}
 }
 

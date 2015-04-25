@@ -95,11 +95,11 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 	}
 
 	private static class TitleEditor implements OnClickListener, OnEditorActionListener, OnFocusChangeListener {
-		private final ActionBarActivity activity;
+		private final AppCompatActivity activity;
 		private final Callback<String> listener;
 		private final EditText editor;
 
-		public TitleEditor(ActionBarActivity activity, Callback<String> listener) {
+		public TitleEditor(AppCompatActivity activity, Callback<String> listener) {
 			this.activity = activity;
 			this.listener = listener;
 			editor = new EditText(activity);

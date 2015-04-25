@@ -19,6 +19,10 @@
 		<ignore path="**/res/values*/strings_PropertyTypes.xml" />
 		<!-- Used dynamically by DB:RoomType.name and DB:RoomTypeKind.name -->
 		<ignore path="**/res/values*/strings_RoomTypes.xml" />
+		<!-- TODO Will be removed by shrinker, hopefully it won't lint then -->
+		<ignore path="**/res/raw*/helpers.js" />
+		<ignore path="**/res/raw*/icon_template.svg" />
+		<ignore path="**/res/raw*/shrink_resources.xml" />
 	</issue>
 	<issue id="SelectableText">
 		<!-- TODO SelectableText lint check ignores style: http://b.android.com/57866 -->

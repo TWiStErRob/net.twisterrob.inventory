@@ -48,8 +48,8 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 		return null;
 	}
 
-	@Override public void onSupportContentChanged() {
-		super.onSupportContentChanged();
+	@Override public void onContentChanged() {
+		super.onContentChanged();
 		setupTitleEditor();
 	}
 

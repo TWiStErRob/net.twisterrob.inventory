@@ -41,8 +41,8 @@ public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> impl
 		throw new UnsupportedOperationException("Cannot create new item here");
 	}
 
-	@Override public void onSupportContentChanged() {
-		super.onSupportContentChanged();
+	@Override public void onContentChanged() {
+		super.onContentChanged();
 		setupTitleEditor();
 	}
 

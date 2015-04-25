@@ -58,6 +58,11 @@ public class LoggingEdgeEffect implements EdgeEffectCompat.EdgeEffectImpl {
 		LOG.trace("onPull({}, {}): {}", edgeEffect, deltaDistance, result);
 		return result;
 	}
+	@Override public boolean onPull(Object edgeEffect, float deltaDistance, float displacement) {
+		boolean result = effect.onPull(edgeEffect, deltaDistance, displacement);
+		LOG.trace("onPull({}, {}, {}): {}", edgeEffect, deltaDistance, result);
+		return result;
+	}
 	@Override public boolean onRelease(Object edgeEffect) {
 		boolean result = effect.onRelease(edgeEffect);
 		LOG.trace("onRelease({}): {}", edgeEffect, result);

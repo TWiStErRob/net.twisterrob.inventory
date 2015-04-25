@@ -20,8 +20,6 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import org.apache.http.*;
-import org.apache.http.client.methods.HttpGet;
 import org.xmlpull.v1.*;
 
 import android.content.*;
@@ -29,7 +27,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.*;
 import android.net.Uri;
-import android.net.http.AndroidHttpClient;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.CursorAdapter;
@@ -119,7 +116,8 @@ public class XmlDocumentProvider extends ContentProvider {
 	 * - Support namespaces in attribute names.
 	 * - Incremental Cursor creation, pagination */
 	private static final String LOG_TAG = "XmlDocumentProvider";
-	private AndroidHttpClient mHttpClient;
+	@SuppressWarnings("deprecation")
+	private android.net.http.AndroidHttpClient mHttpClient;
 
 	@Override
 	public boolean onCreate() {
@@ -209,11 +207,18 @@ public class XmlDocumentProvider extends ContentProvider {
 
 		InputStream inputStream = null;
 		try {
-			final HttpGet get = new HttpGet(url);
-			mHttpClient = AndroidHttpClient.newInstance("Android");
-			HttpResponse response = mHttpClient.execute(get);
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				final HttpEntity entity = response.getEntity();
+			@SuppressWarnings("deprecation")
+			final int HTTP_OK = org.apache.http.HttpStatus.SC_OK;
+			@SuppressWarnings("deprecation")
+			final org.apache.http.client.methods.HttpGet get = new org.apache.http.client.methods.HttpGet(url);
+			@SuppressWarnings("deprecation")
+			android.net.http.AndroidHttpClient httpClient = android.net.http.AndroidHttpClient.newInstance("Android");
+			mHttpClient = httpClient;
+			@SuppressWarnings("deprecation")
+			org.apache.http.HttpResponse response = mHttpClient.execute(get);
+			if (response.getStatusLine().getStatusCode() == HTTP_OK) {
+				@SuppressWarnings("deprecation")
+				final org.apache.http.HttpEntity entity = response.getEntity();
 				if (entity != null) {
 					inputStream = entity.getContent();
 				}

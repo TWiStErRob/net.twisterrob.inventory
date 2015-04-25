@@ -7,7 +7,7 @@ import org.slf4j.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
@@ -36,8 +36,8 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 
 	public void start() {
 		if (!isRunning()) {
-			if (activity instanceof ActionBarActivity) {
-				actionMode = ((ActionBarActivity)activity).startSupportActionMode(callback);
+			if (activity instanceof AppCompatActivity) {
+				actionMode = ((AppCompatActivity)activity).startSupportActionMode(callback);
 			} else {
 				LOG.warn("Cannot start because activity doesn't support supportActionMode.", new StackTrace());
 			}
