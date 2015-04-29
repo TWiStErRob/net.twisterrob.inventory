@@ -1,0 +1,100 @@
+buildscript {
+	apply from: 'gradle/buildscript.gradle', to: buildscript
+}
+
+project.android.applicationVariants.all { com.android.build.gradle.api.ApkVariant variant ->
+	Task obfuscateTask = variant.obfuscation
+	def skipReason = [ ];
+	if (obfuscateTask == null) {
+		skipReason += "not obfuscated"
+	}
+	if (!variant.buildType.debuggable) {
+		skipReason += "not debuggable"
+	}
+	if (variant.testVariant != null) {
+		skipReason += "tested"
+	}
+	if (!skipReason.isEmpty()) {
+		logger.info("Skipping unfuscation of {} because it is {}", variant.name, skipReason);
+		return;
+	}
+
+	File mapping = variant.mappingFile
+	File newMapping = new File(mapping.parentFile, "unmapping.txt")
+
+	Task unfuscateTask = project.task("${obfuscateTask.name}Unfuscate") {
+		inputs.file mapping
+		outputs.file newMapping
+		outputs.upToDateWhen { mapping.lastModified() <= newMapping.lastModified() }
+		doLast {
+			logger.info("Writing new mapping file: {}", newMapping)
+			new Mapping(mapping).remap(newMapping)
+
+			logger.info("Re-executing {} with new mapping...", obfuscateTask.name)
+			java.lang.reflect.Field configField =
+					proguard.gradle.ProGuardTask.class.getDeclaredField("configuration")
+			configField.accessible = true
+			proguard.Configuration config = configField.get(obfuscateTask)
+			config.applyMapping = newMapping // use our re-written mapping file
+			//config.note = [ '**' ] // -dontnote **, it was noted in the first run
+
+			LoggingManager loggingManager = getLogging();
+			// lower level of logging to prevent duplicate output
+			loggingManager.captureStandardOutput(LogLevel.WARN);
+			loggingManager.captureStandardError(LogLevel.WARN);
+			new proguard.ProGuard(config).execute();
+		}
+	}
+	unfuscateTask.dependsOn obfuscateTask
+	variant.dex.dependsOn unfuscateTask
+}
+
+class Mapping {
+	private static java.util.regex.Pattern MAPPING_PATTERN =
+			~/^(?<member>    )?(?<location>\d+:\d+:)?(?:(?<type>.*?) )?(?<name>.*?)(?:\((?<args>.*?)\))?(?: -> )(?<obfuscated>.*?)(?<class>:?)$/;
+	private static int MAPPING_PATTERN_OBFUSCATED_INDEX = 6;
+
+	private final File source
+	public Mapping(File source) {
+		this.source = source
+	}
+
+	public void remap(File target) {
+		target.withWriter { source.eachLine Mapping.&processLine.curry(it) }
+	}
+
+	private static void processLine(Writer out, String line, int num) {
+		java.util.regex.Matcher m = MAPPING_PATTERN.matcher(line)
+		if (!m.find()) {
+			throw new IllegalArgumentException("Line #${num} is not recognized: ${line}")
+		}
+		try {
+			def originalName = m.group("name")
+			def obfuscatedName = m.group("obfuscated")
+			def newName = originalName.equals(obfuscatedName) ? obfuscatedName : unfuscate(originalName, obfuscatedName)
+			out.write(line.substring(0, m.start(MAPPING_PATTERN_OBFUSCATED_INDEX)))
+			out.write(newName)
+			out.write(line.substring(m.end(MAPPING_PATTERN_OBFUSCATED_INDEX)))
+			out.write('\n')
+		} catch (Exception ex) {
+			StringBuilder sb = new StringBuilder("Line #${num} failed: ${line}\n");
+			0.upto(m.groupCount()) { sb.append("Group #${it}: '${m.group(it)}'\n") }
+			throw new IllegalArgumentException(sb.toString(), ex)
+		}
+	}
+
+	private static String unfuscate(String original, String obfuscated) {
+		// reassemble the names with something readable, but still breaking changes
+		def origName = getName(original)
+		def obfName = getName(obfuscated)
+		obfName = obfName.equals(origName) ? "" : obfName;
+		return getPackage(original) + origName + '_' + obfName;
+	}
+	private static String getPackage(String name) {
+		int lastDot = name.lastIndexOf('.');
+		return lastDot < 0 ? "" : name.substring(0, lastDot + 1);
+	}
+	private static String getName(String name) {
+		return name.substring(name.lastIndexOf('.') + 1);
+	}
+}

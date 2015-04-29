@@ -1,11 +1,35 @@
--dontwarn javax.xml.stream.XMLStreamWriter
--dontwarn javax.xml.stream.XMLStreamException
--dontwarn com.caverock.androidsvg.R**
+### -- Inventory/proguard.pro -- ###
 
-# XXX update twisterrob.pro in plugin
--keep public class * extends android.view.View {
-	public <init>(android.content.Context);
-	public <init>(android.content.Context, android.util.AttributeSet);
-	public <init>(android.content.Context, android.util.AttributeSet, int);
+# Debugging helpers
+#-dontobfuscate
+#-dontoptimize
+#-optimizationpasses 2
+
+# See res/menu/search.xml and b.android.com/170471
+-keep class android.support.v7.widget.SearchView { <init>(...); }
+
+# Remove Logging for now
+# TODO use isLoggable in AndroidLogger and runtime control over TAGs
+
+# slf4j/slf4j-api
+-assumenosideeffects interface org.slf4j.Logger {
+	public boolean is*Enabled(...);
+	public void trace(...);
+	public void info(...);
+	public void warn(...);
+	public void debug(...);
+	public void error(...);
 }
-# Probably worth listing all the support Views I use in xml
+-assumenosideeffects class org.slf4j.LoggerFactory {
+	public static org.slf4j.Logger getLogger(...);
+}
+
+# android logging
+-assumenosideeffects class android.util.Log {
+	public static boolean isLoggable(java.lang.String, int);
+	public static int v(...);
+	public static int i(...);
+	public static int w(...);
+	public static int d(...);
+	public static int e(...);
+}

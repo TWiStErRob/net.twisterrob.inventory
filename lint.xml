@@ -19,7 +19,7 @@
 		<ignore path="**/res/values*/strings_PropertyTypes.xml" />
 		<!-- Used dynamically by DB:RoomType.name and DB:RoomTypeKind.name -->
 		<ignore path="**/res/values*/strings_RoomTypes.xml" />
-		<!-- TODO Will be removed by shrinker, hopefully it won't lint then -->
+		<!-- Will be removed by shrinker -->
 		<ignore path="**/res/raw*/helpers.js" />
 		<ignore path="**/res/raw*/icon_template.svg" />
 		<ignore path="**/res/raw*/shrink_resources.xml" />
