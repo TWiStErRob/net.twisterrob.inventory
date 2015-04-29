@@ -17,6 +17,7 @@ import android.view.*;
 import static android.support.v4.content.ContextCompat.*;
 
 import net.twisterrob.android.R;
+import net.twisterrob.android.utils.tools.AndroidTools;
 
 /**
  * @see <a href="http://adblogcat.com/a-camera-preview-with-a-bounding-box-like-google-goggles/">based on</a>
@@ -24,8 +25,6 @@ import net.twisterrob.android.R;
 public class SelectionView extends View {
 	private static final Logger LOG = LoggerFactory.getLogger(SelectionView.class);
 
-	private static final double CORNER_SIZE_PERCENT = 0.05;
-	private static final int MAX_DISTANCE = 48;
 	@SuppressLint("InlinedApi")
 	private static final int INVALID_POINTER_ID = MotionEvent.INVALID_POINTER_ID;
 
@@ -34,6 +33,7 @@ public class SelectionView extends View {
 	private Drawable mLeftBotIcon;
 	private Drawable mRightBotIcon;
 	private float mTouchDistance;
+	private int mCornerSize;
 
 	private boolean mLeftTopBool = false;
 	private boolean mRightTopBool = false;
@@ -68,18 +68,20 @@ public class SelectionView extends View {
 	}
 
 	private void init() {
-		line = new Paint();
-		line.setStyle(Style.STROKE);
-		line.setColor(Color.CYAN);
-		line.setStrokeWidth(15);
-
 		Context context = getContext();
 		mLeftTopIcon = getDrawable(context, R.drawable.selection_corner);
 		mRightTopIcon = getDrawable(context, R.drawable.selection_corner);
 		mLeftBotIcon = getDrawable(context, R.drawable.selection_corner);
 		mRightBotIcon = getDrawable(context, R.drawable.selection_corner);
 
-		mTouchDistance = context.getResources().getDisplayMetrics().density * MAX_DISTANCE;
+		mCornerSize = AndroidTools.dipInt(context, 16);
+
+		line = new Paint();
+		line.setStyle(Style.STROKE);
+		line.setColor(Color.CYAN);
+		line.setStrokeWidth(AndroidTools.dip(context, 4));
+
+		mTouchDistance = AndroidTools.dip(context, 32);
 	}
 
 	public Rect getSelection() {
@@ -411,7 +413,7 @@ public class SelectionView extends View {
 		super.invalidate();
 
 		if (selection != null) {
-			int size = (int)(Math.min(getWidth(), getHeight()) * CORNER_SIZE_PERCENT / 2);
+			int size = mCornerSize / 2;
 			Rect sel = selection;
 			mLeftTopIcon.setBounds(sel.left - size, sel.top - size, sel.left + size, sel.top + size);
 			mRightTopIcon.setBounds(sel.right - size, sel.top - size, sel.right + size, sel.top + size);

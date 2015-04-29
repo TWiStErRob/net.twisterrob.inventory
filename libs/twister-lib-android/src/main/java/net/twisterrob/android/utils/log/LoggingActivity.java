@@ -2,9 +2,11 @@ package net.twisterrob.android.utils.log;
 
 import org.slf4j.*;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.*;
 import android.content.res.Configuration;
+import android.os.Build.VERSION_CODES;
 import android.os.*;
 import android.support.annotation.*;
 import android.support.v4.app.*;
@@ -60,6 +62,7 @@ public class LoggingActivity extends AppCompatActivity {
 		return super.onCreateView(name, context, attrs);
 	}
 
+	@TargetApi(VERSION_CODES.HONEYCOMB)
 	@Override public void onAttachFragment(android.app.Fragment fragment) {
 		log("onAttachFragment", fragment);
 		super.onAttachFragment(fragment);

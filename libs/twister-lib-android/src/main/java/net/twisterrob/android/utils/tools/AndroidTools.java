@@ -22,6 +22,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.*;
 import android.os.Build.*;
+import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.preference.ListPreference;
 import android.support.annotation.*;
 import android.support.v4.app.Fragment;
@@ -189,6 +190,45 @@ public /*static*/ abstract class AndroidTools {
 		return sb.toString();
 	}
 
+	@TargetApi(VERSION_CODES.JELLY_BEAN)
+	@DebugHelper
+	public static String toString(Intent intent) {
+		if (intent == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		first = append(sb, "pkg=", intent.getPackage(), "", first);
+		first = append(sb, "cmp=", intent.getComponent(), "", first);
+
+		first = append(sb, "xtra={", toShortString(intent.getExtras()), "}", first);
+		if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
+			first = append(sb, "clip={", intent.getClipData(), "}", first);
+		}
+
+		first = append(sb, "dat=", intent.getData(), "", first);
+		first = append(sb, "typ=", intent.getType(), "", first);
+
+		first = append(sb, "act=", intent.getAction(), "", first);
+		first = append(sb, "cat=", intent.getCategories(), "", first);
+		//noinspection ResourceType TODO external annotations to Intent#getFlags?
+		first = append(sb, "flg=", IntentFlags.Converter.toString(intent.getFlags(), null), "", first);
+
+		first = append(sb, "bnds=", intent.getSourceBounds(), "", first);
+		return sb.toString();
+	}
+	private static boolean append(StringBuilder b, String prefix, Object data, String suffix,
+			boolean first) {
+		if (data != null) {
+			if (!first) {
+				b.append(' ');
+			}
+			b.append(prefix).append(data).append(suffix);
+			first = false;
+		}
+		return first;
+	}
+
 	@DebugHelper
 	public static String toString(Object value) {
 		if (value == null) {
@@ -198,7 +238,9 @@ public /*static*/ abstract class AndroidTools {
 		String display;
 		if (value instanceof Bundle) {
 			display = toString((Bundle)value, " ", "#{", "", ", ", "}");
-		} else if (value instanceof android.app.Fragment.SavedState) {
+		} else if (value instanceof Intent) {
+			display = toString((Intent)value);
+		} else if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT && value instanceof android.app.Fragment.SavedState) {
 			return "(SavedState)" + toString(ReflectionTools.get(value, "mState"));
 		} else if (value instanceof android.support.v4.app.Fragment.SavedState) {
 			return "(v4.SavedState)" + toString(ReflectionTools.get(value, "mState"));
@@ -420,7 +462,14 @@ public /*static*/ abstract class AndroidTools {
 	 */
 	@SafeVarargs
 	@TargetApi(VERSION_CODES.HONEYCOMB)
-	public static <Params> void executeParallel(AsyncTask<Params, ?, ?> as, Params... params) {
+	public static <Params> void executeParallel(final AsyncTask<Params, ?, ?> as, final Params... params) {
+		if (!isOnUIThread()) {
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override public void run() {
+					executeParallel(as, params);
+				}
+			});
+		}
 		if (VERSION.SDK_INT < VERSION_CODES.DONUT) {
 			throw new IllegalStateException("Cannot execute AsyncTask in parallel before DONUT");
 		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
@@ -436,7 +485,14 @@ public /*static*/ abstract class AndroidTools {
 	 */
 	@SafeVarargs
 	@TargetApi(VERSION_CODES.HONEYCOMB)
-	public static <Params> void executeSerial(AsyncTask<Params, ?, ?> as, Params... params) {
+	public static <Params> void executeSerial(final AsyncTask<Params, ?, ?> as, final Params... params) {
+		if (!isOnUIThread()) {
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override public void run() {
+					executeSerial(as, params);
+				}
+			});
+		}
 		if (VERSION.SDK_INT < VERSION_CODES.DONUT) {
 			as.execute(params); // default is serial
 		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
@@ -630,23 +686,13 @@ public /*static*/ abstract class AndroidTools {
 	/** @see ComponentCallbacks2 */
 	@DebugHelper
 	public static String toTrimMemoryString(@TrimMemoryLevel int level) {
-		switch (level) {
-			case ComponentCallbacks2.TRIM_MEMORY_COMPLETE:
-				return "TRIM_MEMORY_COMPLETE";
-			case ComponentCallbacks2.TRIM_MEMORY_MODERATE:
-				return "TRIM_MEMORY_MODERATE";
-			case ComponentCallbacks2.TRIM_MEMORY_BACKGROUND:
-				return "TRIM_MEMORY_BACKGROUND";
-			case ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN:
-				return "TRIM_MEMORY_UI_HIDDEN";
-			case ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL:
-				return "TRIM_MEMORY_RUNNING_CRITICAL";
-			case ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW:
-				return "TRIM_MEMORY_RUNNING_LOW";
-			case ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE:
-				return "TRIM_MEMORY_RUNNING_MODERATE";
-		}
-		return "trimMemoryLevel=" + level;
+		return TrimMemoryLevel.Converter.toString(level);
+	}
+
+	/** @see Intent#FLAG_* */
+	@DebugHelper
+	public static String toIntentFlagString(@IntentFlags int level) {
+		return IntentFlags.Converter.toString(level, true);
 	}
 
 	public static String toColorString(int color) {
@@ -656,37 +702,7 @@ public /*static*/ abstract class AndroidTools {
 
 	@DebugHelper
 	public static String toFeatureString(@WindowFeature int featureId) {
-		switch (featureId) {
-			case Window.FEATURE_OPTIONS_PANEL:
-				return "FEATURE_OPTIONS_PANEL";
-			case Window.FEATURE_NO_TITLE:
-				return "FEATURE_NO_TITLE";
-			case Window.FEATURE_PROGRESS:
-				return "FEATURE_PROGRESS";
-			case Window.FEATURE_LEFT_ICON:
-				return "FEATURE_LEFT_ICON";
-			case Window.FEATURE_RIGHT_ICON:
-				return "FEATURE_RIGHT_ICON";
-			case Window.FEATURE_INDETERMINATE_PROGRESS:
-				return "FEATURE_INDETERMINATE_PROGRESS";
-			case Window.FEATURE_CONTEXT_MENU:
-				return "FEATURE_CONTEXT_MENU";
-			case Window.FEATURE_CUSTOM_TITLE:
-				return "FEATURE_CUSTOM_TITLE";
-			case Window.FEATURE_ACTION_BAR:
-				return "FEATURE_ACTION_BAR";
-			case Window.FEATURE_ACTION_BAR_OVERLAY:
-				return "FEATURE_ACTION_BAR_OVERLAY";
-			case Window.FEATURE_ACTION_MODE_OVERLAY:
-				return "FEATURE_ACTION_MODE_OVERLAY";
-			case Window.FEATURE_SWIPE_TO_DISMISS:
-				return "FEATURE_SWIPE_TO_DISMISS";
-			case Window.FEATURE_CONTENT_TRANSITIONS:
-				return "FEATURE_CONTENT_TRANSITIONS";
-			case Window.FEATURE_ACTIVITY_TRANSITIONS:
-				return "FEATURE_ACTIVITY_TRANSITIONS";
-		}
-		return "featureId=" + featureId;
+		return WindowFeature.Converter.toString(featureId);
 	}
 
 	/** @see PackageManager#getActivityInfo(ComponentName, int) */
@@ -710,25 +726,34 @@ public /*static*/ abstract class AndroidTools {
 		final ParcelFileDescriptor readEnd = pipe[0];
 		final ParcelFileDescriptor writeEnd = pipe[1];
 
-		executeParallel(new AsyncTask<Object, Object, Object>() {
-			@Override
-			protected Object doInBackground(Object... params) {
-				InputStream in = new ByteArrayInputStream(contents);
-				OutputStream out = new ParcelFileDescriptor.AutoCloseOutputStream(writeEnd);
-				try {
-					IOTools.copyStream(in, out);
-				} catch (IOException e) {
-					IOTools.ignorantCloseWithError(writeEnd, e.toString());
-				}
-				try {
-					writeEnd.close();
-				} catch (IOException e) {
-					LOG.warn("Failure closing pipe", e);
-				}
-				return null;
+		Runnable startStreaming = new Runnable() {
+			@Override public void run() {
+				executeParallel(new AsyncTask<Object, Object, Object>() {
+					@Override
+					protected Object doInBackground(Object... params) {
+						InputStream in = new ByteArrayInputStream(contents);
+						OutputStream out = new AutoCloseOutputStream(writeEnd);
+						try {
+							IOTools.copyStream(in, out);
+						} catch (IOException e) {
+							IOTools.ignorantCloseWithError(writeEnd, e.toString());
+						}
+						try {
+							writeEnd.close();
+						} catch (IOException e) {
+							LOG.warn("Failure closing pipe", e);
+						}
+						return null;
+					}
+				});
 			}
-		});
+		};
 
+		if (isOnUIThread()) {
+			startStreaming.run();
+		} else {
+			new Handler(Looper.getMainLooper()).post(startStreaming);
+		}
 		return readEnd;
 	}
 	public static void dumpBackStack(Context context, FragmentManager fm) {
@@ -760,6 +785,16 @@ public /*static*/ abstract class AndroidTools {
 			}
 		}
 		return null;
+	}
+	public static void unparcel(Intent intent) {
+		if (intent != null) {
+			unparcel(intent.getExtras());
+		}
+	}
+	public static void unparcel(Bundle bundle) {
+		if (bundle != null) {
+			bundle.get(null);
+		}
 	}
 
 	public interface PopupCallbacks<T> {
@@ -820,6 +855,22 @@ public /*static*/ abstract class AndroidTools {
 	public static void makeFileDiscoverable(@NonNull Context context, @NonNull File file) {
 		MediaScannerConnection.scanFile(context, new String[] {file.getPath()}, null, null);
 		//context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+	}
+
+	public static boolean isOnUIThread() {
+		return Looper.myLooper() == Looper.getMainLooper();
+	}
+
+	public static void assertUIThread() {
+		if (!isOnUIThread()) {
+			throw new IllegalStateException("This should be executed on the UI thread.");
+		}
+	}
+
+	public static void assertBackgroundThread() {
+		if (isOnUIThread()) {
+			throw new IllegalStateException("This should be executed off the UI thread.");
+		}
 	}
 
 	protected AndroidTools() {

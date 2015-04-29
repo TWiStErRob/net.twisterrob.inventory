@@ -232,6 +232,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		if (android.hardware.Camera.Parameters.FOCUS_MODE_AUTO.equals(focusMode)
 				|| android.hardware.Camera.Parameters.FOCUS_MODE_MACRO.equals(focusMode)) {
 			cameraHolder.camera.autoFocus(autoFocus);
+		} else {
+			autoFocus.onAutoFocus(true, cameraHolder.camera);
 		}
 	}
 

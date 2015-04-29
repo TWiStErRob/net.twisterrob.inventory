@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.zip.ZipFile;
 
 import org.slf4j.*;
 
@@ -121,6 +122,22 @@ public/*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools {
 			return null;
 		} finally {
 			ignorantClose(stream);
+		}
+	}
+
+	/**
+	 * {@link ZipFile} doesn't implement {@link Closeable} before KitKat so we need a specialized method.
+	 * @param closeMe more specific than {@link #ignorantClose(Closeable)} won't throw {@link IncompatibleClassChangeError}
+	 * TODO figure out exact version
+	 */
+	@TargetApi(VERSION_CODES.KITKAT)
+	public static void ignorantClose(ZipFile closeMe) {
+		if (closeMe != null) {
+			try {
+				closeMe.close();
+			} catch (IOException e) {
+				LOG.warn("Cannot close " + closeMe, e);
+			}
 		}
 	}
 

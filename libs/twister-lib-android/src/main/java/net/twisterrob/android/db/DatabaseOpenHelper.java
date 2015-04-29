@@ -50,6 +50,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		this.hasWriteExternalPermission = AndroidTools.hasPermission(context, WRITE_EXTERNAL_STORAGE);
 	}
 
+	/** Polyfill for pre-ICE_CREAM_SANDWICH. */
+	@Override public String getDatabaseName() {
+		return dbName;
+	}
+
 	public void setDevMode(boolean devMode) {
 		this.devMode = devMode;
 	}
