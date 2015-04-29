@@ -18,7 +18,7 @@ public class Database extends VariantDatabase {
 
 	public Database(Context context) {
 		super(context);
-		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 5) { // FIXME reset to 1 before release
+		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 1) {
 			@Override
 			public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);

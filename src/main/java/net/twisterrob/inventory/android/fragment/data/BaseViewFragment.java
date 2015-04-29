@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import org.slf4j.*;
 
-import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -20,9 +20,10 @@ import static android.content.Context.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.ImageActivity;
+import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
-import net.twisterrob.inventory.android.content.model.ImagedDTO;
+import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.view.CursorSwapper;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
@@ -96,9 +97,11 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					view = inflater.inflate(R.layout.inc_details_image, container, false);
 					ImageView image = (ImageView)view.findViewById(R.id.image);
 					ImageView type = (ImageView)view.findViewById(R.id.type);
-					image.setOnClickListener(new ImageOpenListener());
-					image.setOnLongClickListener(new ImageChangeListener());
-					type.setOnClickListener(new ChangeTypeListener());
+					if (!(entity instanceof CategoryDTO)) {
+						image.setOnClickListener(new ImageOpenListener());
+						image.setOnLongClickListener(new ImageChangeListener());
+						type.setOnClickListener(new ChangeTypeListener());
+					}
 
 					entity.loadInto(image, type, true);
 					break;
@@ -158,15 +161,24 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 								super.onLoadFinished(loader, data);
 
 								int position = AndroidTools.findItemPosition(adapter, entity.type);
-								new AlertDialog.Builder(getContext())
+								Builder dialog = new Builder(getContext())
 										.setTitle((CharSequence)getDynamicResource(DYN_TypeChangeTitle))
-										.setSingleChoiceItems(adapter, position, new TypeSelectedListener(adapter))
-										.create()
-										.show()
-								;
+										.setSingleChoiceItems(adapter, position, new TypeSelectedListener(adapter));
+								if (entity instanceof ItemDTO) {
+									dialog.setNeutralButton("Jump to Category",
+											new DialogInterface.OnClickListener() {
+												@Override public void onClick(DialogInterface dialog,
+														int which) {
+													startActivity(CategoryActivity.show(entity.type));
+												}
+											});
+								}
+								dialog.create().show();
 							}
-						});
+						}
+				);
 			}
+
 			private class TypeSelectedListener implements DialogInterface.OnClickListener {
 				private final CursorAdapter adapter;
 				public TypeSelectedListener(CursorAdapter adapter) {

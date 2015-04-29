@@ -23,10 +23,11 @@ public class SelectionAdapter<VH extends RecyclerView.ViewHolder> extends Wrappi
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	@Override public void onBindViewHolder(VH holder, int position) {
 		boolean selected = isSelected(position);
-		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
+		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
 			holder.itemView.setSelected(selected);
-		} else {
 			holder.itemView.setActivated(selected);
+		} else {
+			holder.itemView.setSelected(selected);
 		}
 		super.onBindViewHolder(holder, position);
 	}

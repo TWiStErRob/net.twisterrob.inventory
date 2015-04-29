@@ -176,7 +176,7 @@ CREATE TRIGGER Item_image
 AFTER UPDATE OF image ON Item
 WHEN old.image_time = new.image_time
 BEGIN
-	update Item set image_time = current_timestamp where _id = new._id;--NOTEOS
+	update Item set image_time = STRFTIME('%s', CURRENT_TIMESTAMP) * 1000 where _id = new._id;--NOTEOS
 END;
 
 CREATE TRIGGER Item_categoryChange
@@ -217,7 +217,7 @@ CREATE TRIGGER Property_image
 AFTER UPDATE OF image ON Property
 WHEN old.image_time = new.image_time
 BEGIN
-	update Property set image_time = current_timestamp where _id = new._id;--NOTEOS
+	update Property set image_time = STRFTIME('%s', CURRENT_TIMESTAMP) * 1000 where _id = new._id;--NOTEOS
 END;
 
 
@@ -293,7 +293,7 @@ CREATE TRIGGER Room_image
 AFTER UPDATE OF image ON Room
 WHEN old.image_time = new.image_time
 BEGIN
-	update Room set image_time = current_timestamp where _id = new._id;--NOTEOS
+	update Room set image_time = STRFTIME('%s', CURRENT_TIMESTAMP) * 1000 where _id = new._id;--NOTEOS
 END;
 
 CREATE VIEW Room_Rooter AS select * from Room;

@@ -104,6 +104,7 @@ public class MainActivity extends BaseActivity
 		if (0 < count) {
 			if (page.equals(PAGE_HOME) && page.equals(m.getBackStackEntryAt(0).getName())) {
 				LOG.trace("Fragment '{}' already exists on the bottom of the stack, skipping the new request", page);
+				m.popBackStack(PAGE_HOME, 0);
 				return;
 			}
 			BackStackEntry top = m.getBackStackEntryAt(count - 1);

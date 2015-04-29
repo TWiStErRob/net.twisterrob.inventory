@@ -22,7 +22,6 @@
 		android:title="@string/pref_displayDebugDetails_title"
 		android:defaultValue="@bool/pref_displayDebugDetails_default"
 		android:summary="@string/pref_displayDebugDetails_desc"
-		android:visibility="@integer/visible_in_test"
 		/>
 	<PreferenceScreen
 		android:title="App info"

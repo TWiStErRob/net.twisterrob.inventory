@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- XXX clean up unknown colors before release -->
-<selector
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	>
-	<!-- FIXME check how this behaves on lower API: state_activated=11 and state_hovered=14 -->
-
-	<item android:state_hovered="true" tools:ignore="UnusedAttribute">
-		<color android:color="#f00" />
-	</item>
-	<item android:state_focused="true">
-		<color android:color="#0f0" />
-	</item>
-	<item android:state_active="true">
-		<color android:color="#ff0" />
-	</item>
-	<item android:state_checked="true">
-		<color android:color="#0ff" />
-	</item>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:state_enabled="false">
 		<color android:color="@color/primaryDark" />
 	</item>
@@ -32,9 +14,6 @@
 			<stroke android:width="@dimen/marginHalf" android:color="@color/accentDark" />
 		</shape>
 	</item>
-	<!-- Selected spinner item, Selected list item -->
-	<item android:state_activated="true" tools:ignore="UnusedAttribute">
-		<color android:color="@color/primary" />
-	</item>
+	<!-- Not supported pre-API 11, ignore: <item android:state_activated="true"> -->
 	<item android:drawable="@android:color/transparent" />
 </selector>

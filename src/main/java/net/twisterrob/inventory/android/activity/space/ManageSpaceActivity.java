@@ -173,7 +173,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 
 	void recalculate() {
 		executeParallel(new GetFolderSizesTask(imageCacheSize), Glide.getPhotoCacheDir(this));
-		executeParallel(new GetFolderSizesTask(databaseSize), new File(App.db().getWritableDatabase().getPath()));
+		executeParallel(new GetFolderSizesTask(databaseSize), getDatabasePath(App.db().getHelper().getDatabaseName()));
 		executeParallel(new GetFolderSizesTask(allSize),
 				new File(getApplicationInfo().dataDir), getExternalCacheDir(), getExternalFilesDir(null));
 		executeParallel(new GetSizeTask<Void>(searchIndexSize) {

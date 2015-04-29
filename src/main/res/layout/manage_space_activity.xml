@@ -20,7 +20,6 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/margin2"
-			android:visibility="@integer/visible_in_test"
 			app:contentPadding="@dimen/margin2"
 			>
 			<LinearLayout
