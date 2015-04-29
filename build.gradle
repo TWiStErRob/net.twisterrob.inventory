@@ -4,19 +4,12 @@ if (project.hasProperty('libFromSources')) {
 }
 
 buildscript {
-	repositories {
-		jcenter()
-		maven { name 'twisterrob'; url 'http://localhost/maven' }
-	}
-
-	dependencies {
-		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-		classpath 'net.twisterrob.gradle:plugin:0.5.1'
-	}
+	apply from: 'gradle/buildscript.gradle', to: buildscript
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'net.twisterrob.android-app'
+apply from: 'gradle/mapping.gradle'
 
 repositories {
 	jcenter()
@@ -38,9 +31,36 @@ dependencies {
 android {
 	defaultConfig {
 		applicationId 'net.twisterrob.inventory'
+		resConfigs "en", "hu"
+	}
+	buildTypes {
+		release {
+			//debuggable true
+			shrinkResources true // http://tools.android.com/tech-docs/new-build-system/resource-shrinking
+		}
 	}
 	aaptOptions {
 		noCompress 'svg' // Resources.openRawResourceFd can only open AssetFileDescriptor for uncompressed resources
 	}
 	sourceSets.main.res.srcDir 'src/main/res-icons'
+
+	afterEvaluate {
+		// Disable dex logging for --info, see http://stackoverflow.com/a/29923126/253468
+		project.android.applicationVariants.all { com.android.build.gradle.api.ApplicationVariant variant ->
+			if (variant.dex) {
+				java.lang.reflect.Field v =
+						com.android.builder.core.AndroidBuilder.class.getDeclaredField("mVerboseExec")
+				v.accessible = true
+
+				boolean originalVerbose;
+				variant.dex.doFirst {
+					originalVerbose = v.get(variant.androidBuilder)
+					v.set(variant.androidBuilder, false)
+				}
+				variant.dex.doLast {
+					v.set(variant.androidBuilder, originalVerbose)
+				}
+			}
+		}
+	}
 }
