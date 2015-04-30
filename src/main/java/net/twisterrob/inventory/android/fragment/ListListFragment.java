@@ -10,8 +10,7 @@ import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.ExtrasFactory;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.ListAdapter.ListItemEvents;
@@ -74,11 +73,11 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 
 	@Override
 	protected void onStartLoading() {
-		listController.startLoad(ExtrasFactory.bundleFromItem(getArgItemID()));
+		listController.startLoad(Intents.bundleFromItem(getArgItemID()));
 	}
 
 	private long getArgItemID() {
-		return ExtrasFactory.getItemFrom(getArguments());
+		return Intents.getItemFrom(getArguments());
 	}
 
 	@Override
@@ -96,7 +95,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 
 	public static ListListFragment newInstance(long itemID) {
 		ListListFragment fragment = new ListListFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromItem(itemID));
+		fragment.setArguments(Intents.bundleFromItem(itemID));
 		return fragment;
 	}
 }

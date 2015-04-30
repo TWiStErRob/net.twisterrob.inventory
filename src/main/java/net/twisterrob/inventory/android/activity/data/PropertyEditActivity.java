@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment;
 
@@ -21,7 +23,7 @@ public class PropertyEditActivity extends BaseEditActivity<PropertyEditFragment>
 	}
 
 	@Override public void propertySaved(long propertyID) {
-		Intent data = ExtrasFactory.intentFromProperty(propertyID);
+		Intent data = Intents.intentFromProperty(propertyID);
 		setResult(RESULT_OK, data);
 		finish();
 	}

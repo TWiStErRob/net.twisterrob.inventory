@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
@@ -13,20 +15,23 @@ import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.Categ
 
 public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragment>
 		implements CategoryEvents, CategoriesEvents {
+	private CategoryDTO current;
+
 	@Override
 	protected CategoryContentsFragment onCreateFragment(Bundle savedInstanceState) {
 		return CategoryContentsFragment.newInstance(getExtraCategoryID(), getExtraIncludeSubs()).addHeader();
 	}
 
 	public void categoryLoaded(CategoryDTO category) {
+		current = category;
 		setActionBarTitle(AndroidTools.getText(this, category.name));
 	}
 	public void categorySelected(long id) {
-		startActivity(CategoryActivity.show(id));
+		startActivity(Intents.childNav(CategoryActivity.show(id)));
 		// TODO consider tabs as breadcrumbs?
 	}
 	public void categoryActioned(long id) {
-		startActivity(CategoryActivity.show(id));
+		startActivity(Intents.childNav(CategoryActivity.show(id)));
 	}
 
 	@Override public void newItem(long parentID) {
@@ -41,28 +46,48 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 
 	@Override
 	protected String checkExtras() {
-		if (getExtraCategoryID() == Category.ID_ADD) {
+		Long id = getExtraCategoryID();
+		if (id != null && id == Category.ID_ADD) {
 			return "Invalid category ID";
 		}
 		return null;
 	}
 
-	private long getExtraCategoryID() {
-		return getIntent().getExtras().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
+	@Override public boolean onSupportNavigateUp() {
+		if (getExtraCategoryID() == null) {
+			onBackPressed();
+			return true;
+		}
+		return super.onSupportNavigateUp();
+	}
+
+	@Override public Intent getSupportParentActivityIntent() {
+		if (current != null) {
+			if (current.parentID != null) {
+				return CategoryActivity.show(current.parentID);
+			} else {
+				return CategoryActivity.show(null);
+			}
+		}
+		return null;
+	}
+
+	private Long getExtraCategoryID() {
+		return (Long)getIntent().getExtras().get(Extras.CATEGORY_ID);
 	}
 
 	private boolean getExtraIncludeSubs() {
 		return getIntent().getBooleanExtra(Extras.INCLUDE_SUBS, false);
 	}
 
-	public static Intent show(long categoryID) {
+	public static Intent show(Long categoryID) {
 		return show(categoryID, false);
 	}
-	public static Intent showFlattened(long categoryID) {
+	public static Intent showFlattened(Long categoryID) {
 		return show(categoryID, true);
 	}
 
-	private static Intent show(long categoryID, boolean flattened) {
+	private static Intent show(Long categoryID, boolean flattened) {
 		Intent intent = new Intent(App.getAppContext(), CategoryActivity.class);
 		intent.putExtra(Extras.CATEGORY_ID, categoryID);
 		intent.putExtra(Extras.INCLUDE_SUBS, flattened);

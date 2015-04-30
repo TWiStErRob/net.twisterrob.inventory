@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Item;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemEditFragment;
 
@@ -21,7 +23,7 @@ public class ItemEditActivity extends BaseEditActivity<ItemEditFragment>
 	}
 
 	@Override public void itemSaved(long itemID) {
-		Intent data = ExtrasFactory.intentFromItem(itemID);
+		Intent data = Intents.intentFromItem(itemID);
 		data.putExtra(Extras.PARENT_ID, getExtraParentID());
 		setResult(RESULT_OK, data);
 		finish();

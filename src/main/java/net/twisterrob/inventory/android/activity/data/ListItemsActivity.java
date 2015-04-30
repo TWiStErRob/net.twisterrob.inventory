@@ -4,7 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ListDTO;
 import net.twisterrob.inventory.android.fragment.ListViewFragment.ListEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment;

@@ -9,8 +9,9 @@ import android.view.View;
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Item;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemEditFragment.ItemEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
@@ -44,7 +45,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 
 		if (id != Item.ID_ADD) {
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.id(),
-					ExtrasFactory.bundleFromItem(id), new SingleRowLoaded());
+					Intents.bundleFromItem(id), new SingleRowLoaded());
 			loadItemData.dependsOn(populateCats);
 		}
 

@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.view.MenuItem;
 
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ListDTO;
 import net.twisterrob.inventory.android.fragment.ListViewFragment.ListEvents;
 import net.twisterrob.inventory.android.tasks.*;
@@ -41,7 +43,7 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 	protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleList.id(),
-				ExtrasFactory.bundleFromList(getArgListID()), new SingleRowLoaded());
+				Intents.bundleFromList(getArgListID()), new SingleRowLoaded());
 	}
 
 	@Override
@@ -94,7 +96,7 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 
 	public static ListViewFragment newInstance(long listID) {
 		ListViewFragment fragment = new ListViewFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromList(listID));
+		fragment.setArguments(Intents.bundleFromList(listID));
 		return fragment;
 	}
 }

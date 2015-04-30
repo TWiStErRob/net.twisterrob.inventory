@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomEditFragment;
@@ -21,7 +23,7 @@ public class RoomEditActivity extends BaseEditActivity<RoomEditFragment>
 	}
 
 	@Override public void roomSaved(long roomID) {
-		Intent data = ExtrasFactory.intentFromRoom(roomID);
+		Intent data = Intents.intentFromRoom(roomID);
 		data.putExtra(Extras.PROPERTY_ID, getExtraPropertyID());
 		setResult(RESULT_OK, data);
 		finish();

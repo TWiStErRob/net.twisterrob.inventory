@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 public class RigidImageView extends ImageView {
-	//private static final Logger LOG = LoggerFactory.getLogger(RigorousImageView.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(RigidImageView.class);
 
 	public RigidImageView(Context context) {
 		super(context);

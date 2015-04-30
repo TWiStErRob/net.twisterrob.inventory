@@ -16,7 +16,8 @@ import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
-import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
@@ -119,20 +120,20 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			Bundle itemsArgs;
 			if (id == null) { // all "root" categories
 				if (flatten) { // all items
-					categoriesArgs = ExtrasFactory.bundleFromCategory(Category.ID_ADD); // none
+					categoriesArgs = Intents.bundleFromCategory(Category.ID_ADD); // none
 					itemsArgs = null; // all items
 				} else { // all categories
-					categoriesArgs = ExtrasFactory.bundleFrom(Extras.CATEGORY_ID, null); // all
-					itemsArgs = ExtrasFactory.bundleFromParent(Item.ID_ADD); // no items
+					categoriesArgs = Intents.bundleFrom(Extras.CATEGORY_ID, null); // all
+					itemsArgs = Intents.bundleFromParent(Item.ID_ADD); // no items
 				}
 			} else { // specific category
 				if (flatten) { // all items in category
-					categoriesArgs = ExtrasFactory.bundleFromCategory(Category.ID_ADD); // none
-					itemsArgs = ExtrasFactory.bundleFromCategory(id);  // items in category
+					categoriesArgs = Intents.bundleFromCategory(Category.ID_ADD); // none
+					itemsArgs = Intents.bundleFromCategory(id);  // items in category
 					itemsArgs.putBoolean(Extras.INCLUDE_SUBS, true);
 				} else { // subcategories and direct items
-					categoriesArgs = ExtrasFactory.bundleFromCategory(id); // subcategories
-					itemsArgs = ExtrasFactory.bundleFromCategory(id); // items by category
+					categoriesArgs = Intents.bundleFromCategory(id); // subcategories
+					itemsArgs = Intents.bundleFromCategory(id); // items by category
 				}
 			}
 			getLoaderManager().initLoader(Loaders.Categories.ordinal(), categoriesArgs, callbackState);

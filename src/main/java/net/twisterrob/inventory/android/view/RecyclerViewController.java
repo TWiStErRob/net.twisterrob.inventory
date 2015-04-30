@@ -94,7 +94,7 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 		}
 	}
 
-	public void createNew() {
+	public final void createNew() {
 		onCreateNew();
 	}
 	public boolean canCreateNew() {

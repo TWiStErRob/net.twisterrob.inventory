@@ -18,13 +18,12 @@ import android.widget.*;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.*;
-
-import static net.twisterrob.inventory.android.content.contract.ExtrasFactory.*;
 
 public class MoveTargetActivity extends FragmentActivity implements OnBackStackChangedListener,
 		PropertyListFragment.PropertiesEvents,
@@ -135,14 +134,14 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		setResult(RESULT_CANCELED);
 		if (fragment instanceof RoomListFragment) {
 			long propertyID = fragment.getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
-			setResult(PROPERTY, ExtrasFactory.intentFromProperty(propertyID));
+			setResult(PROPERTY, Intents.intentFromProperty(propertyID));
 		} else if (fragment instanceof ItemListFragment) {
 			long roomID = fragment.getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 			long itemID = fragment.getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 			if (roomID != Room.ID_ADD) {
-				setResult(ROOM, ExtrasFactory.intentFromRoom(roomID));
+				setResult(ROOM, Intents.intentFromRoom(roomID));
 			} else if (itemID != Item.ID_ADD) {
-				setResult(ITEM, ExtrasFactory.intentFromItem(itemID));
+				setResult(ITEM, Intents.intentFromItem(itemID));
 			}
 		}
 	}
@@ -270,7 +269,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		propertySelected(propertyID, false);
 	}
 	private void propertySelected(long propertyID, boolean startMode) {
-		Bundle args = bundleFromProperty(propertyID);
+		Bundle args = Intents.bundleFromProperty(propertyID);
 		getSupportLoaderManager().destroyLoader(Loaders.SingleProperty.id());
 		getSupportLoaderManager().initLoader(Loaders.SingleProperty.id(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
@@ -289,7 +288,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		roomSelected(roomID, false);
 	}
 	private void roomSelected(long roomID, final boolean startMode) {
-		Bundle args = bundleFromRoom(roomID);
+		Bundle args = Intents.bundleFromRoom(roomID);
 		getSupportLoaderManager().destroyLoader(Loaders.SingleRoom.id());
 		getSupportLoaderManager().initLoader(Loaders.SingleRoom.id(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
@@ -316,7 +315,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		itemSelected(itemID, false);
 	}
 	private void itemSelected(final long itemID, final boolean startMode) {
-		Bundle args = bundleFromItem(itemID);
+		Bundle args = Intents.bundleFromItem(itemID);
 		getSupportLoaderManager().destroyLoader(Loaders.ItemParents.id());
 		getSupportLoaderManager().initLoader(Loaders.ItemParents.id(), args, new LoadersCallbacks(this) {
 			@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {

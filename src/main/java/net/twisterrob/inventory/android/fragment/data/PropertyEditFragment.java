@@ -9,8 +9,9 @@ import android.view.View;
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment.PropertyEditEvents;
 import net.twisterrob.inventory.android.view.CursorSwapper;
@@ -49,7 +50,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 
 		if (id != Property.ID_ADD) {
 			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.id(),
-					ExtrasFactory.bundleFromProperty(id), new SingleRowLoaded());
+					Intents.bundleFromProperty(id), new SingleRowLoaded());
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		}
 
@@ -95,7 +96,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 
 	public static PropertyEditFragment newInstance(long propertyID) {
 		PropertyEditFragment fragment = new PropertyEditFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromProperty(propertyID));
+		fragment.setArguments(Intents.bundleFromProperty(propertyID));
 		return fragment;
 	}
 }

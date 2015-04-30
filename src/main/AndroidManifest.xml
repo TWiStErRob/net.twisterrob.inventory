@@ -100,6 +100,8 @@
 			android:label="@string/category_details">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
+			<meta-data android:name="android.support.PARENT_ACTIVITY_RECURSIVE"
+			           android:value="net.twisterrob.inventory.android.activity.data.CategoryActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.PropertyEditActivity"
@@ -109,13 +111,13 @@
 		<activity
 			android:name=".activity.data.PropertyViewActivity"
 			android:label="@string/property_details">
+			<meta-data android:name="android.support.PARENT_ACTIVITY"
+			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.RoomEditActivity"
 			android:label="@string/room_edit"
 			android:windowSoftInputMode="adjustResize|stateHidden">
-			<meta-data android:name="android.support.PARENT_ACTIVITY"
-			           android:value="net.twisterrob.inventory.android.activity.data.PropertyViewActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.RoomViewActivity"
@@ -140,8 +142,6 @@
 			android:name=".activity.data.ItemEditActivity"
 			android:label="@string/item_edit"
 			android:windowSoftInputMode="adjustResize|stateHidden">
-			<meta-data android:name="android.support.PARENT_ACTIVITY"
-			           android:value="net.twisterrob.inventory.android.activity.data.ItemViewActivity" />
 		</activity>
 
 		<provider

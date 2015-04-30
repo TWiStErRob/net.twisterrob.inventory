@@ -15,19 +15,29 @@ import android.widget.TextView;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.data.*;
+import net.twisterrob.inventory.android.activity.data.ListItemsActivity;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
+import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
+import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 import net.twisterrob.inventory.android.view.RecyclerViewLoadersController;
 import net.twisterrob.inventory.android.view.adapters.*;
 
-public class MainFragment extends BaseFragment<Void> {
+public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(MainFragment.class);
+
+	public interface MainEvents extends PropertiesEvents, RoomsEvents, ItemsEvents {
+	}
 
 	private RecyclerViewLoadersController propertiesController;
 	private RecyclerViewLoadersController roomsController;
 	private RecyclerViewLoadersController listsController;
 	private RecyclerViewLoadersController recentsController;
+
+	public MainFragment() {
+		setDynamicResource(DYN_EventsClass, MainEvents.class);
+	}
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_main, container, false);
@@ -41,10 +51,11 @@ public class MainFragment extends BaseFragment<Void> {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.PropertyAdapter adapter = new MainFragment.PropertyAdapter(new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
-						getActivity().startActivity(PropertyViewActivity.show(recyclerViewItemID));
+						eventsListener.propertySelected(recyclerViewItemID);
 					}
 					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
-						return false;
+						eventsListener.propertyActioned(recyclerViewItemID);
+						return true;
 					}
 				});
 				list.setAdapter(adapter);
@@ -58,9 +69,10 @@ public class MainFragment extends BaseFragment<Void> {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.RoomAdapter adapter = new MainFragment.RoomAdapter(new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
-						getActivity().startActivity(RoomViewActivity.show(recyclerViewItemID));
+						eventsListener.roomSelected(recyclerViewItemID);
 					}
 					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
+						eventsListener.roomActioned(recyclerViewItemID);
 						return false;
 					}
 				});
@@ -92,9 +104,10 @@ public class MainFragment extends BaseFragment<Void> {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.RecentAdapter adapter = new MainFragment.RecentAdapter(new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
-						getActivity().startActivity(ItemViewActivity.show(recyclerViewItemID));
+						eventsListener.itemSelected(recyclerViewItemID);
 					}
 					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
+						// TODO make swipe delete the item
 						App.db().deleteRecentsOfItem(recyclerViewItemID); // FIXME DB on UI
 						recentsController.refresh();
 						return true;

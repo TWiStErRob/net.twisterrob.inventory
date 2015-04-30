@@ -1,14 +1,40 @@
-package net.twisterrob.inventory.android.content.contract;
+package net.twisterrob.inventory.android.content;
 
 import java.io.Serializable;
 
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
-public final class ExtrasFactory {
-	private ExtrasFactory() {
-		// static helper
+import net.twisterrob.inventory.android.content.contract.*;
+
+public final class Intents {
+	public interface Extras {
+		String PROPERTY_ID = "propertyID";
+		String ROOM_ID = "roomID";
+		String PARENT_ID = "parentID";
+		String ITEM_ID = "itemID";
+		String CATEGORY_ID = "categoryID";
+		String LIST_ID = "listID";
+		String INCLUDE_SUBS = "includeSubs";
+
+		String PARENT_EQUALS_BACK = "navigation:parent==back";
+	}
+
+	public static @NonNull Intent childNav(@NonNull Intent intent) {
+		intent.putExtra(Extras.PARENT_EQUALS_BACK, true);
+		return intent;
+	}
+	public static boolean isChildNav(Intent intent) {
+		return intent.getBooleanExtra(Extras.PARENT_EQUALS_BACK, false);
+	}
+
+	//region Bundle Factories
+	public static Bundle bundleFrom(String key, Serializable value) {
+		Bundle args = new Bundle();
+		args.putSerializable(key, value);
+		return args;
 	}
 
 	public static Bundle bundleFromProperty(long propertyID) {
@@ -41,7 +67,19 @@ public final class ExtrasFactory {
 		bundle.putLong(Extras.LIST_ID, listID);
 		return bundle;
 	}
+	public static Bundle bundleFromIDs(long[] IDs) {
+		Bundle bundle = new Bundle();
+		bundle.putLongArray("IDs", IDs);
+		return bundle;
+	}
+	public static Bundle bundleFromQuery(CharSequence query) {
+		Bundle args = new Bundle();
+		args.putCharSequence(SearchManager.QUERY, query);
+		return args;
+	}
+	//endregion Bundle Factories
 
+	//region Intent Factories
 	public static Intent intentFromProperty(long propertyID) {
 		Intent intent = new Intent();
 		intent.putExtras(bundleFromProperty(propertyID));
@@ -72,20 +110,11 @@ public final class ExtrasFactory {
 		intent.putExtras(bundleFromList(listID));
 		return intent;
 	}
+	//endregion Intent Factories
 
-	public static Bundle bundleFromIDs(long[] IDs) {
-		Bundle bundle = new Bundle();
-		bundle.putLongArray("IDs", IDs);
-		return bundle;
-	}
+	//region Getters
 	public static long[] getIDsFrom(Bundle bundle) {
 		return bundle.getLongArray("IDs");
-	}
-
-	public static Bundle bundleFromQuery(CharSequence query) {
-		Bundle args = new Bundle();
-		args.putCharSequence(SearchManager.QUERY, query);
-		return args;
 	}
 	public static long getItemFrom(Intent intent) {
 		return getItemFrom(intent.getExtras());
@@ -96,9 +125,9 @@ public final class ExtrasFactory {
 	public static long getCategory(Bundle bundle) {
 		return bundle != null? bundle.getLong(Extras.CATEGORY_ID, Category.ID_ADD) : Category.ID_ADD;
 	}
-	public static Bundle bundleFrom(String key, Serializable value) {
-		Bundle args = new Bundle();
-		args.putSerializable(key, value);
-		return args;
+	//endregion Getters
+
+	private Intents() {
+		// prevent instantiation
 	}
 }

@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.InventoryContract;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Item;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
@@ -34,7 +35,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 	}
 
 	public void itemSelected(long id) {
-		startActivity(ItemViewActivity.show(id));
+		startActivity(Intents.childNav(ItemViewActivity.show(id)));
 		// TODO consider tabs as breadcrumbs?
 	}
 

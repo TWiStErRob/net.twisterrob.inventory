@@ -7,6 +7,7 @@ import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.tasks.*;

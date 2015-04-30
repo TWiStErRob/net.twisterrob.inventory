@@ -18,9 +18,10 @@ import android.view.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.InventoryContract;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.*;
+import net.twisterrob.inventory.android.fragment.MainFragment.MainEvents;
 import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
@@ -28,7 +29,7 @@ import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEven
 import net.twisterrob.inventory.android.fragment.data.SunburstFragment.SunBurstEvents;
 
 public class MainActivity extends BaseActivity
-		implements PropertiesEvents, RoomsEvents, CategoriesEvents, SunBurstEvents {
+		implements PropertiesEvents, RoomsEvents, CategoriesEvents, SunBurstEvents, MainEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
 	public static final String EXTRA_PAGE = "page";
@@ -97,6 +98,11 @@ public class MainActivity extends BaseActivity
 
 	private void handleIntent(Intent intent) {
 		String page = getExtraPage(intent);
+
+		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_CLEAR_TOP) != 0) {
+			LOG.trace("Ignored possible up-navigation, use current page and state for: {}", intent);
+			return;
+		}
 
 		FragmentManager m = getSupportFragmentManager();
 		int count = m.getBackStackEntryCount();
@@ -210,10 +216,10 @@ public class MainActivity extends BaseActivity
 	}
 
 	public void categorySelected(long id) {
-		startActivity(CategoryActivity.show(id));
+		startActivity(Intents.childNav(CategoryActivity.show(id)));
 	}
 	public void categoryActioned(long id) {
-		startActivity(CategoryActivity.show(id));
+		startActivity(Intents.childNav(CategoryActivity.show(id)));
 	}
 
 	public void newItem(long parentID) {
@@ -230,7 +236,7 @@ public class MainActivity extends BaseActivity
 		startActivity(PropertyEditActivity.add());
 	}
 	public void propertySelected(long id) {
-		startActivity(PropertyViewActivity.show(id));
+		startActivity(Intents.childNav(PropertyViewActivity.show(id)));
 	}
 	public void propertyActioned(long id) {
 		startActivity(PropertyEditActivity.edit(id));

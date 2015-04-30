@@ -10,7 +10,9 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 
@@ -38,7 +40,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 	protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleCategory.id(),
-				ExtrasFactory.bundleFromCategory(getArgCategoryID()), new SingleRowLoaded());
+				Intents.bundleFromCategory(getArgCategoryID()), new SingleRowLoaded());
 	}
 
 	@Override
@@ -95,7 +97,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		}
 
 		CategoryViewFragment fragment = new CategoryViewFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromCategory(categoryID));
+		fragment.setArguments(Intents.bundleFromCategory(categoryID));
 		return fragment;
 	}
 }

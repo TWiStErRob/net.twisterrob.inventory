@@ -13,7 +13,8 @@ import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.ListsActivity;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
@@ -51,7 +52,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleItem.id(),
-				ExtrasFactory.bundleFromItem(getArgItemID()), new SingleRowLoaded());
+				Intents.bundleFromItem(getArgItemID()), new SingleRowLoaded());
 	}
 
 	@Override
@@ -188,7 +189,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 		}
 
 		ItemViewFragment fragment = new ItemViewFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromItem(itemID));
+		fragment.setArguments(Intents.bundleFromItem(itemID));
 		return fragment;
 	}
 }

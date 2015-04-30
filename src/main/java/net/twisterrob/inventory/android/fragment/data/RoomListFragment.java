@@ -12,8 +12,9 @@ import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
-import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 import net.twisterrob.inventory.android.tasks.*;
@@ -86,7 +87,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	}
 
 	@Override protected Bundle createLoadArgs() {
-		return ExtrasFactory.bundleFromProperty(getArgPropertyID());
+		return Intents.bundleFromProperty(getArgPropertyID());
 	}
 
 	private long getArgPropertyID() {
@@ -95,7 +96,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 
 	public static RoomListFragment newInstance(long propertyID) {
 		RoomListFragment fragment = new RoomListFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromProperty(propertyID));
+		fragment.setArguments(Intents.bundleFromProperty(propertyID));
 		return fragment;
 	}
 	public RoomListFragment addHeader() {

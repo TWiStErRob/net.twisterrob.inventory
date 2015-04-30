@@ -10,8 +10,9 @@ import android.view.MenuItem;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
 import net.twisterrob.inventory.android.tasks.DeletePropertiesAction;
@@ -44,7 +45,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleProperty.id(),
-				ExtrasFactory.bundleFromProperty(getArgPropertyID()), new SingleRowLoaded());
+				Intents.bundleFromProperty(getArgPropertyID()), new SingleRowLoaded());
 	}
 
 	@Override
@@ -111,7 +112,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 		}
 
 		PropertyViewFragment fragment = new PropertyViewFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromProperty(propertyID));
+		fragment.setArguments(Intents.bundleFromProperty(propertyID));
 		return fragment;
 	}
 }

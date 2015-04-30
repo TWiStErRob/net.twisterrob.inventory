@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
 
@@ -19,7 +20,7 @@ public class ListsActivity extends FragmentActivity implements ListsEvents {
 	}
 
 	private long getExtraItemID() {
-		return ExtrasFactory.getItemFrom(getIntent());
+		return Intents.getItemFrom(getIntent());
 	}
 
 	@Override public void listSelected(long listID) {

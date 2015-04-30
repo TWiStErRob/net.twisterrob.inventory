@@ -22,6 +22,7 @@ import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter;
 
@@ -268,5 +269,21 @@ public class BaseActivity extends VariantActivity {
 	/** We kind of know that there's an action bar in all child classes*/
 	@Override public @NonNull ActionBar getSupportActionBar() {
 		return super.getSupportActionBar();
+	}
+
+	@Override public boolean onSupportNavigateUp() {
+		if (Intents.isChildNav(getIntent())) {
+			onBackPressed();
+			return true;
+		}
+		return super.onSupportNavigateUp();
+	}
+
+	/** Workaround for broken up navigation post Jelly Bean?!
+	 * @see <a href="http://stackoverflow.com/questions/14602283/up-navigation-broken-on-jellybean">Up navigation broken on JellyBean?</a> */
+	@Override public void supportNavigateUpTo(Intent upIntent) {
+		upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(upIntent);
+		finish();
 	}
 }

@@ -13,6 +13,7 @@ import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
 import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.ListViewFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
@@ -79,7 +80,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 
 	@Override protected Bundle createLoadArgs() {
 		if (getArgQuery() != null) {
-			return ExtrasFactory.bundleFromQuery(getArgQuery());
+			return Intents.bundleFromQuery(getArgQuery());
 		} else {
 			Bundle args = new Bundle();
 			if (getArgParentItemID() != Item.ID_ADD) {
@@ -102,7 +103,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		if (getArgRoomID() != Room.ID_ADD) {
-			Bundle args = ExtrasFactory.bundleFromRoom(getArgRoomID());
+			Bundle args = Intents.bundleFromRoom(getArgRoomID());
 			getLoaderManager().initLoader(Loaders.SingleRoom.id(), args, new LoadSingleRow(getContext()) {
 				@Override protected void process(Cursor data) {
 					super.process(data);
@@ -142,20 +143,20 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 
 	public static ItemListFragment newRoomInstance(long roomID) {
 		ItemListFragment fragment = new ItemListFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromRoom(roomID));
+		fragment.setArguments(Intents.bundleFromRoom(roomID));
 		return fragment;
 	}
 
 	public static ItemListFragment newInstance(long parentItemID) {
 		ItemListFragment fragment = new ItemListFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromParent(parentItemID));
+		fragment.setArguments(Intents.bundleFromParent(parentItemID));
 		return fragment;
 	}
 
 	@Deprecated public static ItemListFragment newCategoryInstance(long categoryID, boolean include) {
 		ItemListFragment fragment = new ItemListFragment();
 
-		Bundle args = ExtrasFactory.bundleFromCategory(categoryID);
+		Bundle args = Intents.bundleFromCategory(categoryID);
 		args.putBoolean(Extras.INCLUDE_SUBS, include);
 
 		fragment.setArguments(args);
@@ -164,13 +165,13 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 
 	public static ItemListFragment newSearchInstance(CharSequence query) {
 		ItemListFragment fragment = new ItemListFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromQuery(query));
+		fragment.setArguments(Intents.bundleFromQuery(query));
 		return fragment;
 	}
 
 	public static ItemListFragment newListInstance(long listID) {
 		ItemListFragment fragment = new ItemListFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromList(listID));
+		fragment.setArguments(Intents.bundleFromList(listID));
 		return fragment;
 	}
 

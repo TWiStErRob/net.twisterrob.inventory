@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment;
@@ -34,7 +36,7 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 		startActivity(RoomEditActivity.add(propertyID));
 	}
 	public void roomSelected(long roomID) {
-		startActivity(RoomViewActivity.show(roomID));
+		startActivity(Intents.childNav(RoomViewActivity.show(roomID)));
 	}
 	public void roomActioned(long roomID) {
 		startActivity(RoomEditActivity.edit(roomID));
@@ -46,6 +48,11 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 			return "Invalid property ID";
 		}
 		return null;
+	}
+
+	@Override public boolean onSupportNavigateUp() {
+		onBackPressed();
+		return true;
 	}
 
 	@Override public void onContentChanged() {

@@ -11,7 +11,8 @@ import android.view.MenuItem;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomViewFragment.RoomEvents;
@@ -50,7 +51,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleRoom.id(),
-				ExtrasFactory.bundleFromRoom(getArgRoomID()), new SingleRowLoaded());
+				Intents.bundleFromRoom(getArgRoomID()), new SingleRowLoaded());
 	}
 
 	@Override
@@ -151,7 +152,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 		}
 
 		RoomViewFragment fragment = new RoomViewFragment();
-		fragment.setArguments(ExtrasFactory.bundleFromRoom(roomID));
+		fragment.setArguments(Intents.bundleFromRoom(roomID));
 		return fragment;
 	}
 }

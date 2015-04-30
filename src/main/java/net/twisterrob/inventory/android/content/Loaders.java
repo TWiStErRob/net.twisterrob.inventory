@@ -12,6 +12,7 @@ import android.support.v4.content.Loader;
 import net.twisterrob.android.content.loader.SimpleCursorLoader;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 
 public enum Loaders {

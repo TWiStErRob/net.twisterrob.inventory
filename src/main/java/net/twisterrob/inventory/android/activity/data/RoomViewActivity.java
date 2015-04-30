@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
@@ -34,7 +36,7 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 		startActivity(ItemEditActivity.add(parentID));
 	}
 	public void itemSelected(long id) {
-		startActivity(ItemViewActivity.show(id));
+		startActivity(Intents.childNav(ItemViewActivity.show(id)));
 		// TODO consider tabs as breadcrumbs?
 	}
 	public void itemActioned(long id) {
@@ -64,7 +66,9 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 
 	@Override public Intent getSupportParentActivityIntent() {
 		Intent intent = super.getSupportParentActivityIntent();
-		intent.putExtra(Extras.PROPERTY_ID, current != null? current.propertyID : Property.ID_ADD);
+		if (intent != null) { // shouldn't be since it's declared in AndroidManifest.xml
+			intent.putExtra(Extras.PROPERTY_ID, current != null? current.propertyID : Property.ID_ADD);
+		}
 		return intent;
 	}
 

@@ -9,7 +9,8 @@ import android.view.View;
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomEditFragment.RoomEditEvents;
@@ -49,7 +50,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 
 		if (id != Room.ID_ADD) {
 			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.id(),
-					ExtrasFactory.bundleFromRoom(id), new SingleRowLoaded());
+					Intents.bundleFromRoom(id), new SingleRowLoaded());
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		}
 
