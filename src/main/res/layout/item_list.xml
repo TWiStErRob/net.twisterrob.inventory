@@ -22,8 +22,8 @@
 		/>
 	<TextView
 		android:id="@id/count"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
+		android:layout_width="@dimen/icon_medium"
+		android:layout_height="@dimen/icon_medium"
 		android:layout_gravity="center_vertical"
 		android:padding="@dimen/margin"
 		android:background="@drawable/circle"

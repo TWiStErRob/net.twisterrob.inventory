@@ -21,8 +21,8 @@
 		>
 		<net.twisterrob.android.view.RigidImageView
 			android:id="@id/image"
-			android:layout_width="48dp"
-			android:layout_height="48dp"
+			android:layout_width="@dimen/icon_big"
+			android:layout_height="@dimen/icon_big"
 			android:layout_gravity="center_vertical"
 			android:layout_margin="@dimen/margin"
 			android:focusable="false"

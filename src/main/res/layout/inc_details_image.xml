@@ -14,8 +14,8 @@
 		/>
 	<ImageView
 		android:id="@id/type"
-		android:layout_width="48dp"
-		android:layout_height="48dp"
+		android:layout_width="@dimen/icon_big"
+		android:layout_height="@dimen/icon_big"
 		android:layout_margin="@dimen/margin"
 		android:layout_gravity="bottom|end"
 		tools:src="@drawable/category_unknown"

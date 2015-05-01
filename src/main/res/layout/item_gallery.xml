@@ -22,8 +22,8 @@
 		/>
 	<net.twisterrob.android.view.RigidImageView
 		android:id="@id/type"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
+		android:layout_width="@dimen/icon_medium"
+		android:layout_height="@dimen/icon_medium"
 		android:layout_gravity="bottom|end"
 		android:layout_marginRight="@dimen/margin"
 		android:layout_marginBottom="@dimen/margin"
@@ -34,8 +34,8 @@
 	<include
 		android:id="@id/count"
 		layout="@layout/inc_count"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
+		android:layout_width="@dimen/icon_medium"
+		android:layout_height="@dimen/icon_medium"
 		android:layout_gravity="bottom|start"
 		android:layout_margin="@dimen/margin"
 		android:shadowColor="#084"

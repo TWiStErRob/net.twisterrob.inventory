@@ -14,8 +14,8 @@
 		<ImageButton
 			android:id="@id/up"
 			style="@style/Theme.AppCompat.Light.DarkActionBar"
-			android:layout_width="48dp"
-			android:layout_height="48dp"
+			android:layout_width="@dimen/icon_big"
+			android:layout_height="@dimen/icon_big"
 			android:layout_gravity="center_vertical"
 			android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
 			/>
