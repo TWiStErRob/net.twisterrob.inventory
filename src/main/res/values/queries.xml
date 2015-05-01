@@ -101,7 +101,7 @@
 			cd.level   as level,
 			cd.image   as typeImage
 		from Category_Tree cd
-		where cd._id <> -1
+		where cd._id <> -1 -- don't return category_internal
 		order by cd._id
 	"]]></string>
 	<string name="query_items_by_item" tools:ignore="Typos"><![CDATA["
@@ -182,6 +182,7 @@
 			c.name                                          as category
 		from Item     i
 		join Category c ON i.category = c._id
+		where c._id <> -1 -- don't return category_internal items
 		order by i.name
 	"]]></string>
 	<string name="query_items_by_room"><![CDATA["
@@ -349,13 +350,7 @@
 			'list'                                              as type,
 			l._id                                               as _id,
 			l.name                                              as name,
-			case ?
-				when -1 then
-					0
-				else exists (
-					select 1 from List_Entry where list = l._id and item = ?
-				)
-			end                                                 as [exists],
+			exists ( select 1 from List_Entry where list = l._id and item = ? ) as [exists],
 			(select count() from List_Entry where list = l._id) as countChildren
 		from List       l
 	"]]></string>
@@ -529,7 +524,7 @@
 				i._id         as _id
 			from Item           i
 			join Item           pi ON i.parent = pi._id
-			join Category       c  ON i.category = c._id and c._id <> -1
+			join Category       c  ON i.category = c._id and c._id <> -1 -- don't return category_internal
 			join Item_Path_Node ip ON ip.item = i._id and ip.node = i._id
 			join Room           r  ON ip.root = r.root
 			join Property       p  ON r.property = p._id

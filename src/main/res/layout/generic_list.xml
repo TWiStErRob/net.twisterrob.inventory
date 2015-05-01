@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@id/fragmentRoot"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -11,5 +12,9 @@
 			style="@style/Theme.AppTheme.RecyclerList"
 			/>
 	</android.support.v4.widget.SwipeRefreshLayout>
+	<TextView
+		style="@style/EmptyText"
+		tools:text="Empty text, description of what it means and what you can do when this list is empty."
+		/>
 	<include layout="@layout/inc_fab" />
 </FrameLayout>

@@ -9,6 +9,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
+import android.widget.TextView;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.db.DatabaseOpenHelper;
@@ -109,6 +110,16 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 
 		@Override protected void setData(CursorRecyclerAdapter adapter, Cursor data) {
 			adapter.swapCursor(data);
+		}
+
+		@Override protected void onViewSet() {
+			super.onViewSet();
+			TextView text = getEmpty();
+			text.setText(R.string.item_empty_category);
+		}
+
+		@Override protected boolean isEmpty(CursorRecyclerAdapter adapter) {
+			return adapter.getItemCount() <= 1;
 		}
 
 		@Override public void startLoad(Bundle args) {

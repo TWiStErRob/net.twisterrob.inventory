@@ -5,16 +5,19 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.*;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
+import android.widget.TextView;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.utils.tools.DatabaseTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.ViewProvider.StaticViewProvider;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.*;
@@ -80,16 +83,16 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.generic_list_with_header, container, false);
-	}
-
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
 		if (header == null) {
 			header = (BaseFragment)getChildFragmentManager().findFragmentById(R.id.header); // restore on rotation
 			// FIXME save fragment UI state from savedInstanceState into a field and use that in the adapter
 		}
+		int layout = hasHeader()? R.layout.generic_list_with_header : R.layout.generic_list;
+		return inflater.inflate(layout, container, false);
+	}
 
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
 	}
 
@@ -231,6 +234,31 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 			} else if (holder instanceof GalleryGroupViewHolder) {
 				((GalleryGroupViewHolder)holder).bind(cursor);
 			}
+		}
+	}
+
+	protected class BaseGalleryController extends RecyclerViewLoadersController {
+		private final @StringRes int emptyText;
+
+		public BaseGalleryController(Loaders loader, @StringRes int emptyText) {
+			super(BaseGalleryFragment.this, loader);
+			this.emptyText = emptyText;
+		}
+
+		@Override protected CursorRecyclerAdapter setupList() {
+			return setupGallery(list);
+		}
+
+		@Override protected void onViewSet() {
+			super.onViewSet();
+			if (emptyText != AndroidTools.INVALID_RESOURCE_ID) {
+				TextView text = getEmpty();
+				text.setText(emptyText);
+			}
+		}
+
+		@Override protected boolean isEmpty(CursorRecyclerAdapter adapter) {
+			return hasHeader()? adapter.getItemCount() == 1 : super.isEmpty(adapter);
 		}
 	}
 }

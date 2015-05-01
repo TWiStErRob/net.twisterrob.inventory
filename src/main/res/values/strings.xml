@@ -102,6 +102,7 @@
 	<string name="list_edit">Rename List</string>
 	<string name="list_delete">Delete List</string>
 	<string name="list_manage">Manage Lists</string>
+	<string name="list_empty_main">Create a list with the below button. You can add/remove items to/from the list from the item\'s action menu.</string>
 
 	<string name="recent_list">Recents</string>
 
@@ -122,6 +123,9 @@
 	<string name="item_move_many">Move Items</string>
 	<string name="item_name_hint">Item Name</string>
 	<string name="item_description_hint">Item Description</string>
+	<string name="item_empty_child">Create an item with the button below. You can then open it and add more items inside.</string>
+	<string name="item_empty_list">Your items will show up here. Go inside a room or item to create one.</string>
+	<string name="item_empty_category">Your items will show up here. Set the category of some items for them to show up here.</string>
 
 	<plurals name="property">
 		<item quantity="one">property</item>
@@ -138,6 +142,7 @@
 	<string name="property_share">Share Property</string>
 	<string name="property_name_hint">Property Title</string>
 	<string name="property_description_hint">Property Description</string>
+	<string name="property_empty_child">Create a property with the button below. You can then open it and add rooms inside.</string>
 
 	<plurals name="room">
 		<item quantity="one">room</item>
@@ -158,6 +163,8 @@
 	<string name="room_description_hint">Room Description</string>
 	<string name="room_location">In %1$s</string>
 	<string name="room_viewAll">List All Rooms</string>
+	<string name="room_empty_child">Create a room with the button below. You can then open it and add items inside.</string>
+	<string name="room_empty_list">Your rooms will show up here. Go inside a property to create one.</string>
 
 	<string name="manage_space_title">Manage Inventory Space</string>
 	<string name="backup_title">Backup</string>

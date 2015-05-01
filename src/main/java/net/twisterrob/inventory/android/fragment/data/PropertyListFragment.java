@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
-import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.MainActivity;
@@ -32,10 +31,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		listController = new RecyclerViewLoadersController(this, Loaders.Properties) {
-			@Override protected CursorRecyclerAdapter setupList() {
-				return PropertyListFragment.super.setupGallery(list);
-			}
+		listController = new BaseGalleryController(Loaders.Properties, R.string.property_empty_child) {
 			@Override public boolean canCreateNew() {
 				return true;
 			}

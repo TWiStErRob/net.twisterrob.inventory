@@ -43,7 +43,11 @@
 						tools:scrollbars="none"
 						/>
 				</android.support.v4.widget.SwipeRefreshLayout>
-				<include layout="@layout/inc_fab" />
+				<TextView
+					style="@style/EmptyText"
+					android:text="@string/property_empty_child"
+					/>
+				<include layout="@layout/inc_fab_small" />
 			</FrameLayout>
 
 		</LinearLayout>
@@ -64,14 +68,23 @@
 				style="@style/Theme.AppTheme.Header"
 				android:text="@string/room_list"
 				/>
-			<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
-				<android.support.v7.widget.RecyclerView
-					android:id="@id/rooms"
-					style="@style/Theme.AppTheme.RecyclerList"
-					tools:listitem="@layout/item_main_room"
-					tools:scrollbars="none"
+			<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				>
+				<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
+					<android.support.v7.widget.RecyclerView
+						android:id="@id/rooms"
+						style="@style/Theme.AppTheme.RecyclerList"
+						tools:listitem="@layout/item_main_room"
+						tools:scrollbars="none"
+						/>
+				</android.support.v4.widget.SwipeRefreshLayout>
+				<TextView
+					style="@style/EmptyText"
+					android:text="@string/room_empty_list"
 					/>
-			</android.support.v4.widget.SwipeRefreshLayout>
+			</FrameLayout>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
 	<android.support.v7.widget.CardView
@@ -90,14 +103,24 @@
 				style="@style/Theme.AppTheme.Header"
 				android:text="@string/list_list"
 				/>
-			<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
-				<android.support.v7.widget.RecyclerView
-					android:id="@id/lists"
-					style="@style/Theme.AppTheme.RecyclerList"
-					tools:listitem="@layout/item_main_list"
-					tools:scrollbars="none"
+			<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				>
+				<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
+					<android.support.v7.widget.RecyclerView
+						android:id="@id/lists"
+						style="@style/Theme.AppTheme.RecyclerList"
+						tools:listitem="@layout/item_main_list"
+						tools:scrollbars="none"
+						/>
+				</android.support.v4.widget.SwipeRefreshLayout>
+				<TextView
+					style="@style/EmptyText"
+					android:text="@string/list_empty_main"
 					/>
-			</android.support.v4.widget.SwipeRefreshLayout>
+				<include layout="@layout/inc_fab_small" />
+			</FrameLayout>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
 	<android.support.v7.widget.CardView

@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.*;
 
-import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
@@ -36,11 +35,9 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Loaders loader = getArgQuery() != null? Loaders.ItemSearch : Loaders.Items;
-		listController = new RecyclerViewLoadersController(this, loader) {
-			@Override protected CursorRecyclerAdapter setupList() {
-				return ItemListFragment.super.setupGallery(list);
-			}
-
+		int emptyText = getArgParentItemID() != Item.ID_ADD || getArgRoomID() != Room.ID_ADD?
+				R.string.item_empty_child : R.string.item_empty_list;
+		listController = new BaseGalleryController(loader, emptyText) {
 			@Override public boolean canCreateNew() {
 				return getArgParentItemID() != Item.ID_ADD || getArgRoomID() != Room.ID_ADD;
 			}

@@ -14,6 +14,8 @@ import android.view.View.*;
 import android.widget.TextView;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.ListItemsActivity;
 import net.twisterrob.inventory.android.content.Loaders;
@@ -61,6 +63,12 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 				list.setAdapter(adapter);
 				return adapter;
 			}
+			@Override public boolean canCreateNew() {
+				return true;
+			}
+			@Override protected void onCreateNew() {
+				eventsListener.newProperty();
+			}
 		};
 		propertiesController.setView((RecyclerView)view.findViewById(R.id.properties));
 
@@ -95,6 +103,24 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 				});
 				list.setAdapter(adapter);
 				return adapter;
+			}
+			@Override public boolean canCreateNew() {
+				return true;
+			}
+			@Override protected void onCreateNew() {
+				AndroidTools
+						.prompt(getContext(), new PopupCallbacks<String>() {
+							@Override public void finished(String value) {
+								if (value != null) {
+									App.db().createList(value); // FIXME DB on UI
+									listsController.refresh();
+								}
+							}
+						})
+						.setTitle("New List")
+						.setMessage("Please enter a name for the list!")
+						.show()
+				;
 			}
 		};
 		listsController.setView((RecyclerView)view.findViewById(R.id.lists));

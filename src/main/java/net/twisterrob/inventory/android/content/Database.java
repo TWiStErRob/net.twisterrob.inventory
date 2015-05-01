@@ -245,7 +245,7 @@ public class Database extends VariantDatabase {
 	}
 
 	public Cursor listLists(long itemID) {
-		return rawQuery(R.string.query_list_list, itemID, itemID);
+		return rawQuery(R.string.query_list_list, itemID);
 	}
 	public Cursor getList(long listID) {
 		return rawQuery(R.string.query_list, listID);

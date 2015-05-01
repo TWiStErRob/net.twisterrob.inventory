@@ -34,7 +34,7 @@
 						tools:scrollbars="none"
 						/>
 				</android.support.v4.widget.SwipeRefreshLayout>
-				<include layout="@layout/inc_fab" />
+				<include layout="@layout/inc_fab_small" />
 			</FrameLayout>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
@@ -76,14 +76,20 @@
 				style="@style/Theme.AppTheme.Header"
 				android:text="@string/list_list"
 				/>
-			<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
-				<android.support.v7.widget.RecyclerView
-					android:id="@id/lists"
-					style="@style/Theme.AppTheme.RecyclerList"
-					tools:listitem="@layout/item_main_list"
-					tools:scrollbars="none"
-					/>
-			</android.support.v4.widget.SwipeRefreshLayout>
+			<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				>
+				<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
+					<android.support.v7.widget.RecyclerView
+						android:id="@id/lists"
+						style="@style/Theme.AppTheme.RecyclerList"
+						tools:listitem="@layout/item_main_list"
+						tools:scrollbars="none"
+						/>
+				</android.support.v4.widget.SwipeRefreshLayout>
+				<include layout="@layout/inc_fab_small" />
+			</FrameLayout>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
 	<android.support.v7.widget.CardView

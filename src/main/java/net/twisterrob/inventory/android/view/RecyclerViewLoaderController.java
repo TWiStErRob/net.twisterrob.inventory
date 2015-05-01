@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.*;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.RecyclerView.Adapter;
 
@@ -30,6 +31,7 @@ public abstract class RecyclerViewLoaderController<A extends Adapter, D> extends
 
 	@Override protected void onViewSet() {
 		super.onViewSet();
+		SwipeRefreshLayout progress = getProgress();
 		if (progress != null) {
 			progress.setOnRefreshListener(new OnRefreshListener() {
 				@Override public void onRefresh() {
