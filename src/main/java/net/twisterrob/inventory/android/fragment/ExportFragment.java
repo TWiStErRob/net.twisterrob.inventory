@@ -90,7 +90,7 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		} else {
 			message = res.getString(R.string.backup_export_result_failed, p.failure.getMessage());
 		}
-		App.toast(message);
+		App.toastUser(message);
 	}
 
 	@Override public void onCancel(DialogInterface dialog) {

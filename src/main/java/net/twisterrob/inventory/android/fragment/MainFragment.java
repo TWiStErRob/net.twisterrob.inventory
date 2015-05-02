@@ -107,13 +107,20 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 			@Override public boolean canCreateNew() {
 				return true;
 			}
+
 			@Override protected void onCreateNew() {
 				AndroidTools
 						.prompt(getContext(), new PopupCallbacks<String>() {
 							@Override public void finished(String value) {
-								if (value != null) {
+								if (value == null) {
+									return;
+								}
+								try {
 									App.db().createList(value); // FIXME DB on UI
 									listsController.refresh();
+								} catch (Exception ex) {
+									LOG.warn("Cannot create list '{}'", value, ex);
+									App.toastUser(App.getError(ex, R.string.list_error_new, value));
 								}
 							}
 						})

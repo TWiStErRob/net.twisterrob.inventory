@@ -85,7 +85,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 					.show()
 			;
 		} else {
-			App.toast(message);
+			App.toastUser(message);
 		}
 	}
 

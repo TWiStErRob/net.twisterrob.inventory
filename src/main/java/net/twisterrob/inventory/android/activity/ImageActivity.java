@@ -58,8 +58,8 @@ public class ImageActivity extends VariantActivity implements RequestListener<Ur
 
 	@Override
 	public boolean onException(Exception ex, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
-		App.toastUser("Cannot load image.");
 		LOG.warn("Cannot load image: {}", model, ex);
+		App.toastUser(App.getError(ex, "Cannot load image."));
 		finish();
 		return true;
 	}

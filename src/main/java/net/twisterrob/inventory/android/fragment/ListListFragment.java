@@ -47,9 +47,15 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 				AndroidTools
 						.prompt(getContext(), new PopupCallbacks<String>() {
 							@Override public void finished(String value) {
-								if (value != null) {
+								if (value == null) {
+									return;
+								}
+								try {
 									long id = App.db().createList(value); // FIXME DB on UI
 									eventsListener.listSelected(id);
+								} catch (Exception ex) {
+									LOG.warn("Cannot create list {}", value, ex);
+									App.toastUser(App.getError(ex, R.string.list_error_new, value));
 								}
 							}
 						})

@@ -138,6 +138,19 @@ public class App extends Application {
 		Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
 	}
 
+	public static CharSequence getError(Throwable ex, int errorResource, Object... args) {
+		return getError(ex, getAppContext().getString(errorResource, args));
+	}
+	public static CharSequence getError(Throwable ex, CharSequence message) {
+		CharSequence errorMessage = ex.toString();
+		if ("column name is not unique (code 19)".equals(ex.getMessage())) {
+			errorMessage = getAppContext().getString(R.string.generic_error_unique_name);
+		} else if ("constraint failed (code 19)".equals(ex.getMessage())) {
+			errorMessage = getAppContext().getString(R.string.generic_error_length_name);
+		}
+		return message + " " + errorMessage;
+	}
+
 	@TargetApi(VERSION_CODES.KITKAT)
 	private static void setStrictMode() {
 		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {

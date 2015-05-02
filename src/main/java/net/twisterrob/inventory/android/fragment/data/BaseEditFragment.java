@@ -230,7 +230,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 			@Override protected void onError(@NonNull Exception ex, Context context) {
 				LOG.error("Cannot take picture", ex);
-				App.toastUser("Cannot take picture: " + ex);
+				App.toastUser(App.getError(ex, "Cannot take picture."));
 			}
 		}.execute(getContext());
 	}
@@ -337,7 +337,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 		@Override protected void onError(@NonNull Exception ex, DTO param) {
 			LOG.warn("Cannot save ({}){}", param != null? param.getClass().getSimpleName() : null, param, ex);
-			App.toastUser(String.format("Cannot save %s: %s", param, ex));
+			App.toastUser(App.getError(ex, R.string.generic_error_save));
 		}
 	}
 }

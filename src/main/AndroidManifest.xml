@@ -92,7 +92,7 @@
 			/>
 		<activity
 			android:name=".activity.data.ListItemsActivity"
-			android:label="@string/list_one">
+			android:label="@string/list_details">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 		</activity>

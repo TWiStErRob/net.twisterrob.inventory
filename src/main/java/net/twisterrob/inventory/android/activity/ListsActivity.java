@@ -25,12 +25,12 @@ public class ListsActivity extends FragmentActivity implements ListsEvents {
 
 	@Override public void listSelected(long listID) {
 		App.db().addListEntry(listID, getExtraItemID()); // FIXME DB on UI
-		App.toast("Item has been added to a list.");
+		App.toastUser("Item has been added to a list.");
 		getFragment().refresh();
 	}
 	@Override public void listRemoved(long listID) {
 		App.db().deleteListEntry(listID, getExtraItemID()); // FIXME DB on UI
-		App.toast("Item has been removed from a list.");
+		App.toastUser("Item has been removed from a list.");
 		getFragment().refresh();
 	}
 

@@ -74,7 +74,12 @@
 	<string name="action_rename_title">Renaming %1$s &#8220;%2$s&#8221;</string>
 	<string name="action_rename_ask">Please enter the new name for %1$s &#8220;%2$s&#8221;!</string>
 	<string name="action_rename_success">Renamed %1$s &#8220;%2$s&#8221; to &#8220;%3$s&#8221;.</string>
-	<string name="action_rename_failed">Failed to rename %1$s &#8220;%2$s&#8221;!</string>
+	<string name="action_rename_failed">Failed to rename %1$s from &#8220;%2$s&#8221; to &#8220;%3$s&#8221;!</string>
+
+	<string name="generic_location_change">&#8220;%1$s&#8221; is now in &#8220;%2$s&#8221;.</string>
+	<string name="generic_error_save">Cannot save.</string>
+	<string name="generic_error_unique_name">The name you provided already exists.</string>
+	<string name="generic_error_length_name">The name you provided is empty.</string>
 
 	<plurals name="selection_count">
 		<item quantity="other">%d selected</item>
@@ -84,6 +89,10 @@
 	<string name="selection_selectInv">Invert selection</string>
 	<string name="selection_selectInv_short">Invert</string>
 
+	<plurals name="category">
+		<item quantity="one">category</item>
+		<item quantity="other">categories</item>
+	</plurals>
 	<string name="category_list">Categories</string>
 	<string name="category_details">Category</string>
 	<string name="category_share">Share Category</string>
@@ -97,12 +106,13 @@
 		<item quantity="one">list</item>
 		<item quantity="other">lists</item>
 	</plurals>
-	<string name="list_one">List</string>
 	<string name="list_list">Lists</string>
+	<string name="list_details">List</string>
 	<string name="list_edit">Rename List</string>
 	<string name="list_delete">Delete List</string>
 	<string name="list_manage">Manage Lists</string>
-	<string name="list_empty_main">Create a list with the below button. You can add/remove items to/from the list from the item\'s action menu.</string>
+	<string name="list_empty_main">Create a list with the below button. You can manage list contents from the menu of items.</string>
+	<string name="list_error_new">Cannot create new list named %s.</string>
 
 	<string name="recent_list">Recents</string>
 
@@ -110,7 +120,6 @@
 		<item quantity="one">item</item>
 		<item quantity="other">items</item>
 	</plurals>
-	<string name="item_one">Item</string>
 	<string name="item_list">Items</string>
 	<string name="item_details">Item</string>
 	<string name="item_add">Add Item Inside</string>
@@ -131,7 +140,6 @@
 		<item quantity="one">property</item>
 		<item quantity="other">properties</item>
 	</plurals>
-	<string name="property_one">Property</string>
 	<string name="property_list">Properties</string>
 	<string name="property_details">Property</string>
 	<string name="property_add">Add Property</string>
@@ -148,7 +156,6 @@
 		<item quantity="one">room</item>
 		<item quantity="other">rooms</item>
 	</plurals>
-	<string name="room_one">Room</string>
 	<string name="room_list">Rooms</string>
 	<string name="room_details">Room</string>
 	<string name="room_add">Add Room</string>

@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import java.util.Locale;
-
 import org.slf4j.*;
 
 import android.app.AlertDialog.Builder;
@@ -194,8 +192,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					refresh();
 
 					CharSequence newTypeDisplayName = AndroidTools.getText(getContext(), newTypeName);
-					App.toastUser(String.format(Locale.ROOT, "\"%s\" is now in \"%s\"",
-							entity.name, newTypeDisplayName));
+					App.toastUser(getString(R.string.generic_location_change, entity.name, newTypeDisplayName));
 				}
 			}
 		}
