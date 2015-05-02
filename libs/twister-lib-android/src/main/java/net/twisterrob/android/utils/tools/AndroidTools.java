@@ -4,6 +4,7 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.Math.*;
 
@@ -32,8 +33,10 @@ import android.support.v4.view.*;
 import android.support.v4.widget.SearchViewCompat;
 import android.util.*;
 import android.view.*;
-import android.view.inputmethod.InputMethodManager;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.inputmethod.*;
 import android.widget.*;
+import android.widget.TextView.OnEditorActionListener;
 
 import static android.util.TypedValue.*;
 
@@ -806,7 +809,28 @@ public /*static*/ abstract class AndroidTools {
 		final EditText input = new EditText(context);
 		input.setSingleLine(true);
 		showKeyboard(input);
-		return new AlertDialog.Builder(context)
+
+		final AtomicReference<Dialog> dialog = new AtomicReference<>();
+		input.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		input.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
+					String value = input.getText().toString();
+					callbacks.finished(value);
+					dialog.get().dismiss();
+				}
+				return false;
+			}
+		});
+		return new AlertDialog.Builder(context) {
+			@Override public @NonNull AlertDialog create() {
+				AlertDialog createdDialog = super.create();
+				if (null != dialog.getAndSet(createdDialog)) { // steal created dialog
+					throw new UnsupportedOperationException("Cannot create multiple dialogs from this builder.");
+				}
+				return createdDialog;
+			}
+		}
 				.setView(input)
 				.setPositiveButton(android.R.string.ok, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
@@ -838,6 +862,13 @@ public /*static*/ abstract class AndroidTools {
 			imm.showSoftInput(view, 0);
 		} else {
 			if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1) {
+				view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+					@SuppressWarnings("deprecation")
+					@Override public void onGlobalLayout() {
+						view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+						view.post(tryAgain);
+					}
+				});
 				view.post(tryAgain);
 			} else {
 				view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
