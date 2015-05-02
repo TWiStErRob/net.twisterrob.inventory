@@ -372,7 +372,7 @@ public /*static*/ abstract class AndroidTools {
 		if (fill != null) {
 			canvas.drawPath(segmentPath, fill);
 		}
-		if (stroke != null) {
+		if (stroke != null && fill != stroke) {
 			canvas.drawPath(segmentPath, stroke);
 		}
 	}
@@ -845,7 +845,10 @@ public /*static*/ abstract class AndroidTools {
 				});
 	}
 
-	/** Warning: call this before attaching the view to the parent if the view is created dynamically. */
+	/**
+	 * Warning: call this before attaching the view to the parent if the view is created dynamically.
+	 * @see <a href="http://stackoverflow.com/a/19004929/253468">How to show soft-keyboard when EditText is focused?</a>
+	 */
 	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)
 	public static void showKeyboard(final View view) {
 		InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -26,7 +26,8 @@ import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
-import net.twisterrob.inventory.android.fragment.data.SunburstFragment.SunBurstEvents;
+import net.twisterrob.inventory.android.sunburst.SunburstFragment;
+import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents;
 
 public class MainActivity extends BaseActivity
 		implements PropertiesEvents, RoomsEvents, CategoriesEvents, SunBurstEvents, MainEvents {
@@ -252,8 +253,8 @@ public class MainActivity extends BaseActivity
 		startActivity(RoomEditActivity.edit(roomID));
 	}
 
-	public void rootChanged(SunburstFragment.Node root) {
-		setActionBarSubtitle(root.getLabel());
+	public void rootChanged(String name) {
+		setActionBarSubtitle(name);
 	}
 
 	public static Intent home() {

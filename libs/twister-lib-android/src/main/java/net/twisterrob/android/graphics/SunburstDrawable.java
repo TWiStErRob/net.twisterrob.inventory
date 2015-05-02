@@ -13,21 +13,22 @@ public class SunburstDrawable<T> extends Drawable {
 	private static final float RANGE_START = 0;
 	private static final float RANGE_END = 1;
 
-	public static interface TreeWalker<T> {
-		String getLabel(T node);
-		Iterable<T> getChildren(T node);
+	public interface TreeWalker<T> {
+		String getLabel(T node, int level);
+		Iterable<T> getChildren(T node, int level);
 		int getDepth(T subTree);
-		float getWeight(T subTree);
+		float getWeight(T subTree, int level);
 	}
 
-	public static interface PaintStrategy<T> {
+	public interface PaintStrategy<T> {
 		Paint getFill(T node, int level, float start, float end);
 		Paint getStroke(T node, int level, float start, float end);
 		Paint getText(T node, int level, float start, float end);
+		void highlight(Paint fill, Paint stroke, Paint text, Object node, int level, float start, float end);
 	}
 
 	private T root;
-	private T highlight;
+	private T highlighted;
 	private final TreeWalker<T> walker;
 	private final PaintStrategy<? super T> paints;
 
@@ -36,11 +37,11 @@ public class SunburstDrawable<T> extends Drawable {
 		this.paints = paints;
 	}
 
-	public T getHighlight() {
-		return highlight;
+	public T getHighlighted() {
+		return highlighted;
 	}
-	public void setHighlight(T highlight) {
-		this.highlight = highlight;
+	public void setHighlighted(T highlight) {
+		this.highlighted = highlight;
 		invalidateSelf();
 	}
 
@@ -59,10 +60,10 @@ public class SunburstDrawable<T> extends Drawable {
 
 	private void draw(Canvas canvas, T subTree, int level, float thickness, float start, float end) {
 		float fullWidth = end - start;
-		float parentWeight = walker.getWeight(subTree);
+		float parentWeight = walker.getWeight(subTree, level);
 		float current = 0;
-		for (T child : walker.getChildren(subTree)) {
-			float relativeWeight = walker.getWeight(child) / parentWeight;
+		for (T child : walker.getChildren(subTree, level)) {
+			float relativeWeight = walker.getWeight(child, level + 1) / parentWeight;
 			float next = current + relativeWeight;
 			float currentStart = start + current * fullWidth;
 			float currentEnd = start + next * fullWidth;
@@ -85,21 +86,41 @@ public class SunburstDrawable<T> extends Drawable {
 		float startAngle = start * 360;
 		float sweepAngle = (end - start) * 360;
 
-		Paint fill = paints.getFill(subTree, level, start, end);
-		Paint stroke = paints.getStroke(subTree, level, start, end);
-		if (fill != null || stroke != null) {
-			if (subTree.equals(highlight)) {
-				fill.setColor(Color.WHITE);
-			}
-			AndroidTools.drawArcSegment(canvas, cx, cy, rIn, rOut, startAngle, sweepAngle, fill, stroke);
+		Paint fill;
+		Paint stroke;
+		Paint text;
+		fill = paints.getFill(subTree, level, start, end);
+		stroke = paints.getStroke(subTree, level, start, end);
+		text = paints.getText(subTree, level, start, end);
+		if (subTree.equals(highlighted)) {
+			paints.highlight(fill, stroke, text, subTree, level, start, end);
 		}
-		Paint text = paints.getText(subTree, level, start, end);
-		String label = walker.getLabel(subTree);
-		if (text != null && label != null) {
-			if (subTree.equals(highlight)) {
-				text.setColor(Color.BLACK);
+
+		if (fill != null && stroke != null) {
+			if (4 < sweepAngle) {
+				AndroidTools.drawArcSegment(canvas, cx, cy, rIn, rOut, startAngle, sweepAngle, fill, stroke);
+			} else {
+				float midAngle = (float)toRadians(startAngle + sweepAngle / 2);
+				float inX = cx + rIn * (float)cos(midAngle);
+				float inY = cy + rIn * (float)sin(midAngle);
+				float outX = cx + rOut * (float)cos(midAngle);
+				float outY = cy + rOut * (float)sin(midAngle);
+				float oldWidth = fill.getStrokeWidth();
+				Paint.Style oldStyle = fill.getStyle();
+				float width = (rIn + rOut) / 2 * (float)toRadians(sweepAngle);
+				fill.setStrokeWidth(width);
+				fill.setStyle(Paint.Style.STROKE);
+				canvas.drawLine(inX, inY, outX, outY, fill);
+				fill.setStrokeWidth(oldWidth);
+				fill.setStyle(oldStyle);
 			}
-			AndroidTools.drawTextOnArc(canvas, label, cx, cy, rIn, rOut, startAngle, sweepAngle, text);
+		}
+
+		String label = walker.getLabel(subTree, level);
+		if (text != null && label != null) {
+			if (text.measureText(label) / 2 < toRadians(sweepAngle) * (rIn + rOut) / 2) {
+				AndroidTools.drawTextOnArc(canvas, label, cx, cy, rIn, rOut, startAngle, sweepAngle, text);
+			}
 		}
 	}
 
@@ -118,7 +139,7 @@ public class SunburstDrawable<T> extends Drawable {
 	private T find(T subTree, float r, float alpha, int level, float thickness, float start, float end) {
 		float fullWidth = end - start;
 		float current = 0;
-		float parentWeight = walker.getWeight(subTree);
+		float parentWeight = walker.getWeight(subTree, level);
 
 		Rect bounds = getBounds();
 		float size = Math.min(bounds.width(), bounds.height());
@@ -129,8 +150,8 @@ public class SunburstDrawable<T> extends Drawable {
 			return subTree; // TODO invert conditions to cut subtrees from search
 		}
 
-		for (T child : walker.getChildren(subTree)) {
-			float relativeWeight = walker.getWeight(child) / parentWeight;
+		for (T child : walker.getChildren(subTree, level)) {
+			float relativeWeight = walker.getWeight(child, level) / parentWeight;
 			float next = current + relativeWeight;
 			float currentStart = start + current * fullWidth;
 			float currentEnd = start + next * fullWidth;
@@ -197,11 +218,13 @@ public class SunburstDrawable<T> extends Drawable {
 		protected final Paint text = new Paint();
 
 		public BasePaintStrategy() {
-			fill.setStyle(Paint.Style.FILL);
 			fill.setAntiAlias(true);
-			stroke.setStyle(Paint.Style.STROKE);
+			fill.setStyle(Paint.Style.FILL);
+
 			stroke.setAntiAlias(true);
+			stroke.setStyle(Paint.Style.STROKE);
 			stroke.setStrokeWidth(1);
+
 			text.setTextAlign(Align.CENTER);
 		}
 	}
@@ -216,16 +239,23 @@ public class SunburstDrawable<T> extends Drawable {
 			return paint;
 		}
 
-		public Paint getFill(Object node, int level, float start, float end) {
+		@Override public Paint getFill(Object node, int level, float start, float end) {
 			return randomize(fill, color);
 		}
 
-		public Paint getStroke(Object node, int level, float start, float end) {
+		@Override public Paint getStroke(Object node, int level, float start, float end) {
 			return randomize(stroke, color);
 		}
 
-		public Paint getText(Object node, int level, float start, float end) {
+		@Override public Paint getText(Object node, int level, float start, float end) {
 			return randomize(text, textColor);
+		}
+
+		@Override public void highlight(Paint fill, Paint stroke, Paint text, Object node, int level, float start,
+				float end) {
+			randomize(fill, color);
+			randomize(stroke, color);
+			randomize(text, textColor);
 		}
 	}
 
@@ -241,16 +271,23 @@ public class SunburstDrawable<T> extends Drawable {
 			return paint;
 		}
 
-		public Paint getFill(Object node, int level, float start, float end) {
+		@Override public Paint getFill(Object node, int level, float start, float end) {
 			return hue(fill, start, end, false);
 		}
 
-		public Paint getStroke(Object node, int level, float start, float end) {
+		@Override public Paint getStroke(Object node, int level, float start, float end) {
 			return hue(stroke, start, end, false);
 		}
 
-		public Paint getText(Object node, int level, float start, float end) {
+		@Override public Paint getText(Object node, int level, float start, float end) {
 			return hue(text, start, end, true);
+		}
+
+		@Override public void highlight(Paint fill, Paint stroke, Paint text, Object node, int level, float start,
+				float end) {
+			fill.setColor(Color.WHITE);
+			stroke.setColor(Color.BLACK);
+			text.setColor(Color.BLACK);
 		}
 	}
 }
