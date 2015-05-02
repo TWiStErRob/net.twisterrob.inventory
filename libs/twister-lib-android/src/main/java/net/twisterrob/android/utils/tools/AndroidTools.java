@@ -32,6 +32,7 @@ import android.support.v4.view.*;
 import android.support.v4.widget.SearchViewCompat;
 import android.util.*;
 import android.view.*;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import static android.util.TypedValue.*;
@@ -800,8 +801,11 @@ public /*static*/ abstract class AndroidTools {
 	public interface PopupCallbacks<T> {
 		void finished(T value);
 	}
-	public static AlertDialog.Builder prompt(Context context, final PopupCallbacks<String> callbacks) {
+
+	public static AlertDialog.Builder prompt(final Context context, final PopupCallbacks<String> callbacks) {
 		final EditText input = new EditText(context);
+		input.setSingleLine(true);
+		showKeyboard(input);
 		return new AlertDialog.Builder(context)
 				.setView(input)
 				.setPositiveButton(android.R.string.ok, new OnClickListener() {
@@ -816,6 +820,47 @@ public /*static*/ abstract class AndroidTools {
 					}
 				});
 	}
+
+	/** Warning: call this before attaching the view to the parent if the view is created dynamically. */
+	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)
+	public static void showKeyboard(final View view) {
+		InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		final Runnable tryAgain = new Runnable() {
+			@Override public void run() {
+				showKeyboard(view);
+			}
+		};
+
+		view.clearFocus();
+
+		if (view.isShown()) {
+			view.requestFocus();
+			imm.showSoftInput(view, 0);
+		} else {
+			if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1) {
+				view.post(tryAgain);
+			} else {
+				view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+					@Override
+					public void onViewAttachedToWindow(View view) {
+						view.removeOnAttachStateChangeListener(this);
+						view.post(tryAgain);
+					}
+
+					@Override
+					public void onViewDetachedFromWindow(View view) {
+						view.removeOnAttachStateChangeListener(this);
+					}
+				});
+			}
+		}
+	}
+
+	public static void hideKeyboard(Context context, View input) {
+		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+	}
+
 	public static AlertDialog.Builder confirm(Context context, final PopupCallbacks<Boolean> callbacks) {
 		return new AlertDialog.Builder(context)
 				.setPositiveButton(android.R.string.ok, new OnClickListener() {

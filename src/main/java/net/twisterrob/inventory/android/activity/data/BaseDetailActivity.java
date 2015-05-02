@@ -2,15 +2,15 @@ package net.twisterrob.inventory.android.activity.data;
 
 import org.slf4j.*;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.PluralsRes;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.*;
+import android.support.v7.app.ActionBar.LayoutParams;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.*;
-import android.view.View.*;
-import android.view.inputmethod.*;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -25,6 +25,7 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDetailActivity.class);
 
 	private final @PluralsRes int typePlural;
+	private TitleEditor editor;
 
 	protected BaseDetailActivity(@PluralsRes int typePlural) {
 		this.typePlural = typePlural;
@@ -54,7 +55,7 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 	}
 
 	protected void setupTitleEditor() {
-		new TitleEditor(this, new TitleEditor.TitleEditListener() {
+		editor = new TitleEditor(this, new TitleEditor.TitleEditListener() {
 			@Override public void titleChange(String oldName, String newName) {
 				if (TextUtils.getTrimmedLength(newName) == 0) {
 					return;
@@ -68,7 +69,24 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 							getResources().getQuantityString(typePlural, 1), oldName, newName));
 				}
 			}
-		}).install();
+		});
+		editor.install();
+	}
+
+	@Override public void onBackPressed() {
+		if (editor != null && editor.isActive()) {
+			editor.finish();
+			return;
+		}
+		super.onBackPressed();
+	}
+
+	@Override public boolean onSupportNavigateUp() {
+		if (editor != null && editor.isActive()) {
+			editor.finish();
+			return true;
+		}
+		return super.onSupportNavigateUp();
 	}
 
 	protected void updateName(String newName) {
@@ -100,7 +118,7 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 		return (C)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 
-	private static class TitleEditor implements OnClickListener, OnEditorActionListener, OnFocusChangeListener {
+	private static class TitleEditor implements OnClickListener, OnEditorActionListener {
 		private String oldName;
 
 		public interface TitleEditListener {
@@ -121,45 +139,21 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 
 		@Override public void onClick(View v) {
 			oldName = activity.getSupportActionBar().getTitle().toString();
-			editor.setText(oldName);
-			editor.setSelection(editor.getText().length());
-			editor.post(new Runnable() {
-				@Override public void run() {
-					editor.requestFocus();
-					showKeyboard();
-				}
-			});
-			editor.setOnEditorActionListener(this);
-			activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-			activity.getSupportActionBar()
-			        .setCustomView(editor, new ActionBar.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+			start(oldName);
 		}
 
 		@Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
-				hideKeyboard();
 				String newName = editor.getText().toString();
 				listener.titleChange(oldName, newName);
 
-				activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
-				activity.getSupportActionBar().setCustomView(null);
+				finish();
 			}
 			return false; // we just intercepted, didn't handle it
 		}
 
-		@Override public void onFocusChange(View v, boolean hasFocus) {
-			if (!hasFocus) {
-				hideKeyboard();
-			}
-		}
-
-		private void showKeyboard() {
-			InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.showSoftInput(editor, 0); //InputMethodManager.SHOW_IMPLICIT
-		}
-		private void hideKeyboard() {
-			InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(editor.getWindowToken(), 0);
+		public boolean isActive() {
+			return activity.getSupportActionBar().getCustomView() == editor;
 		}
 
 		public boolean install() {
@@ -174,6 +168,23 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 				return true;
 			}
 			return false;
+		}
+
+		public void start(CharSequence initial) {
+			editor.setText(initial);
+			editor.setSelection(editor.getText().length());
+			editor.setOnEditorActionListener(this);
+			AndroidTools.showKeyboard(editor);
+
+			activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+			LayoutParams fillHorizontal = new LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+			activity.getSupportActionBar().setCustomView(editor, fillHorizontal);
+		}
+
+		public void finish() {
+			AndroidTools.hideKeyboard(activity, editor);
+			activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
+			activity.getSupportActionBar().setCustomView(null);
 		}
 	}
 }

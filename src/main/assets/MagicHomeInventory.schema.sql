@@ -121,7 +121,8 @@ CREATE TABLE Item (
 			ON DELETE CASCADE,
 	PRIMARY KEY(_id AUTOINCREMENT),
 	UNIQUE (parent, name),
-	CHECK (_id <> parent)
+	CHECK (_id <> parent),
+	CHECK (0 < length(name))
 );
 CREATE INDEX Item_category ON Item(category);
 
@@ -210,7 +211,8 @@ CREATE TABLE Property (
 			ON UPDATE CASCADE
 			ON DELETE SET DEFAULT,
 	PRIMARY KEY(_id AUTOINCREMENT),
-	UNIQUE (name)
+	UNIQUE (name),
+	CHECK (0 < length(name))
 );
 
 CREATE TRIGGER Property_image
@@ -266,7 +268,8 @@ CREATE TABLE Room (
 			ON UPDATE CASCADE
 			ON DELETE CASCADE,
 	PRIMARY KEY(_id AUTOINCREMENT),
-	UNIQUE (property, name)
+	UNIQUE (property, name),
+	CHECK (0 < length(name))
 );
 CREATE INDEX Room_root ON Room(root);
 
@@ -372,7 +375,8 @@ CREATE TABLE List (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- user entered
 	PRIMARY KEY(_id AUTOINCREMENT),
-   	UNIQUE (name)
+   	UNIQUE (name),
+   	CHECK (0 < length(name))
 );
 
 CREATE TABLE List_Entry (

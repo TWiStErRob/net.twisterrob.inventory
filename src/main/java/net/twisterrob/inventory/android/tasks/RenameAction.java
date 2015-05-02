@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.view.View;
 import android.widget.EditText;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.model.DTO;
 
@@ -28,7 +29,10 @@ public abstract class RenameAction<T extends DTO> extends BaseAction {
 
 	@Override public View getConfirmationView(Context context) {
 		newNameEditor = new EditText(context);
+		newNameEditor.setSingleLine(true);
 		newNameEditor.setText(newName != null? newName : dto.name);
+		newNameEditor.setSelection(newNameEditor.getText().length());
+		AndroidTools.showKeyboard(newNameEditor);
 		return newNameEditor;
 	}
 

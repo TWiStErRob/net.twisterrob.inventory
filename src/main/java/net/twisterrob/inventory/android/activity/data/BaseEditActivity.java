@@ -54,6 +54,12 @@ public abstract class BaseEditActivity<E extends BaseEditFragment> extends BaseA
 			super.onBackPressed();
 		}
 	}
+
+	@Override public boolean onSupportNavigateUp() {
+		super.onBackPressed(); // escape activity without dirty check
+		return true;
+	}
+
 	protected abstract E onCreateFragment(Bundle savedInstanceState);
 
 	public E getEditor() {

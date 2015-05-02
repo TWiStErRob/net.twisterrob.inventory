@@ -18,11 +18,15 @@ public class DatabaseDTOTools {
 	}
 
 	public static List<String> getNames(Cursor cursor) {
-		List<String> names = new ArrayList<>(cursor.getCount());
-		while (cursor.moveToNext()) {
-			names.add(cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME)));
+		try {
+			List<String> names = new ArrayList<>(cursor.getCount());
+			while (cursor.moveToNext()) {
+				names.add(cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME)));
+			}
+			return names;
+		} finally {
+			cursor.close();
 		}
-		return names;
 	}
 
 	public static List<PropertyDTO> retrieveProperties(long... propertyIDs) {
