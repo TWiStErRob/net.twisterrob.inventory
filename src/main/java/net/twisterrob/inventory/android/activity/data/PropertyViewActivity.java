@@ -5,7 +5,7 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Property;
@@ -18,6 +18,10 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyViewActivity.class);
 
 	private PropertyDTO current;
+
+	public PropertyViewActivity() {
+		super(R.plurals.property);
+	}
 
 	@Override
 	protected RoomListFragment onCreateFragment(Bundle savedInstanceState) {

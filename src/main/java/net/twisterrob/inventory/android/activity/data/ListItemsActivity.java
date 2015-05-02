@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ListDTO;
@@ -12,9 +12,8 @@ import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
 public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> implements ItemsEvents, ListEvents {
-	@Override protected void onCreate(Bundle savedInstanceState) {
-		wantDrawer = true;
-		super.onCreate(savedInstanceState);
+	public ListItemsActivity() {
+		super(R.plurals.list);
 	}
 
 	@Override

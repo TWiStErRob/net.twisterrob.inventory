@@ -202,16 +202,16 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	}
 
 	private String toString(int type) {
-		int stringResource;
+		int typeResource;
 		switch (type) {
 			case PROPERTY:
-				stringResource = R.string.property_one;
+				typeResource = R.plurals.property;
 				break;
 			case ROOM:
-				stringResource = R.string.room_one;
+				typeResource = R.plurals.room;
 				break;
 			case ITEM:
-				stringResource = R.string.item_one;
+				typeResource = R.plurals.item;
 				break;
 			case PROPERTY | ROOM:
 				return toString(PROPERTY) + "/" + toString(ROOM);
@@ -224,7 +224,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 			default:
 				return "???";
 		}
-		return getString(stringResource);
+		return getResources().getQuantityString(typeResource, 1);
 	}
 
 	@Override public void newProperty() {

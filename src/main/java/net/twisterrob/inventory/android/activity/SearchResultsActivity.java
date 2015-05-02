@@ -16,6 +16,10 @@ import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEven
 public class SearchResultsActivity extends BaseDetailActivity<ItemListFragment> implements ItemsEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(SearchResultsActivity.class);
 
+	public SearchResultsActivity() {
+		super(R.plurals.item);
+	}
+
 	@Override
 	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
 		return handleIntent();

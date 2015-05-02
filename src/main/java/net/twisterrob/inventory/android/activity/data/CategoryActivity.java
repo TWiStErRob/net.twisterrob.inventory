@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Category;
@@ -16,6 +16,10 @@ import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.Categ
 public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragment>
 		implements CategoryEvents, CategoriesEvents {
 	private CategoryDTO current;
+
+	public CategoryActivity() {
+		super(R.plurals.category);
+	}
 
 	@Override
 	protected CategoryContentsFragment onCreateFragment(Bundle savedInstanceState) {

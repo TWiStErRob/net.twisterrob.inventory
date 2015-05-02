@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.PluralsRes;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.*;
 import android.text.TextUtils;
@@ -15,7 +16,6 @@ import android.widget.TextView.OnEditorActionListener;
 
 import static android.view.ViewGroup.LayoutParams.*;
 
-import net.twisterrob.android.utils.concurrent.Callback;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseActivity;
@@ -24,7 +24,11 @@ import net.twisterrob.inventory.android.fragment.BaseFragment;
 public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends BaseActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDetailActivity.class);
 
-	protected boolean wantDrawer;
+	private final @PluralsRes int typePlural;
+
+	protected BaseDetailActivity(@PluralsRes int typePlural) {
+		this.typePlural = typePlural;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,7 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 		setActionBarSubtitle(getTitle());
 		setActionBarTitle("...");
 
-		super.setContentView(wantDrawer? R.layout.generic_activity_drawer : R.layout.generic_activity_nodrawer);
+		super.setContentView(R.layout.generic_activity_nodrawer);
 
 		String extrasError = checkExtras();
 		if (extrasError != null) {
@@ -50,16 +54,18 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 	}
 
 	protected void setupTitleEditor() {
-		new TitleEditor(this, new Callback<String>() {
-			@Override public void call(String param) {
-				if (TextUtils.getTrimmedLength(param) != 0) {
-					try {
-						updateName(param);
-						getFragment().refresh();
-					} catch (RuntimeException ex) {
-						LOG.warn("Cannot set name to '{}'", param, ex);
-						App.toastUser("Cannot set name to '" + param + "'");
-					}
+		new TitleEditor(this, new TitleEditor.TitleEditListener() {
+			@Override public void titleChange(String oldName, String newName) {
+				if (TextUtils.getTrimmedLength(newName) == 0) {
+					return;
+				}
+				try {
+					updateName(newName);
+					getFragment().refresh();
+				} catch (Exception ex) {
+					LOG.warn("Cannot set name from '{}' to '{}'", oldName, newName, ex);
+					App.toastUser(App.getError(ex, R.string.action_rename_failed,
+							getResources().getQuantityString(typePlural, 1), oldName, newName));
 				}
 			}
 		}).install();
@@ -95,11 +101,17 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 	}
 
 	private static class TitleEditor implements OnClickListener, OnEditorActionListener, OnFocusChangeListener {
+		private String oldName;
+
+		public interface TitleEditListener {
+			void titleChange(String oldName, String newName);
+		}
+
 		private final AppCompatActivity activity;
-		private final Callback<String> listener;
+		private final TitleEditListener listener;
 		private final EditText editor;
 
-		public TitleEditor(AppCompatActivity activity, Callback<String> listener) {
+		public TitleEditor(AppCompatActivity activity, TitleEditListener listener) {
 			this.activity = activity;
 			this.listener = listener;
 			editor = new EditText(activity);
@@ -108,7 +120,8 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 		}
 
 		@Override public void onClick(View v) {
-			editor.setText(activity.getSupportActionBar().getTitle());
+			oldName = activity.getSupportActionBar().getTitle().toString();
+			editor.setText(oldName);
 			editor.setSelection(editor.getText().length());
 			editor.post(new Runnable() {
 				@Override public void run() {
@@ -125,7 +138,8 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 		@Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
 				hideKeyboard();
-				listener.call(editor.getText().toString());
+				String newName = editor.getText().toString();
+				listener.titleChange(oldName, newName);
 
 				activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 				activity.getSupportActionBar().setCustomView(null);
