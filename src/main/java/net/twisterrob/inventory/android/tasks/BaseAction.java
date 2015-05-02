@@ -20,14 +20,14 @@ public abstract class BaseAction implements Action {
 	}
 	protected abstract void doPrepare();
 
-	@Override public final String getFailureMessage(Resources res) {
+	@Override public final CharSequence getFailureMessage(Resources res) {
 		if (validationError != null) {
 			return validationError.getMessage(res);
 		} else {
 			return getGenericFailureMessage(res);
 		}
 	}
-	protected abstract String getGenericFailureMessage(Resources res);
+	protected abstract CharSequence getGenericFailureMessage(Resources res);
 
 	@Override public final void execute() {
 		doExecute();

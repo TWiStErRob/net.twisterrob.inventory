@@ -37,16 +37,16 @@ public abstract class DeleteAction extends BaseAction {
 			throw new ValidationException(R.string.action_delete_error_empty);
 		}
 	}
-	private String buildPlural(Resources res, @PluralsRes int titleRes) {
+	private CharSequence buildPlural(Resources res, @PluralsRes int titleRes) {
 		String name = res.getQuantityString(targetNameRes, targets.size());
 		return res.getQuantityString(titleRes, targets.size(), toPluralArgs(targets, name));
 	}
 
-	@Override public String getConfirmationTitle(Resources res) {
+	@Override public CharSequence getConfirmationTitle(Resources res) {
 		return buildPlural(res, R.plurals.action_delete_title);
 	}
 
-	@Override public String getConfirmationMessage(Resources res) {
+	@Override public CharSequence getConfirmationMessage(Resources res) {
 		StringBuilder sb = new StringBuilder();
 		if (children.isEmpty()) {
 			sb.append(buildPlural(res, R.plurals.action_delete_confirm_empty));
@@ -66,11 +66,11 @@ public abstract class DeleteAction extends BaseAction {
 		return sb.toString();
 	}
 
-	@Override public String getSuccessMessage(Resources res) {
+	@Override public CharSequence getSuccessMessage(Resources res) {
 		return buildPlural(res, R.plurals.action_delete_success);
 	}
 
-	@Override protected String getGenericFailureMessage(Resources res) {
+	@Override protected CharSequence getGenericFailureMessage(Resources res) {
 		return buildPlural(res, R.plurals.action_delete_failed);
 	}
 

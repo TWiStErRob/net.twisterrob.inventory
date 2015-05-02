@@ -16,8 +16,8 @@ public abstract class MoveAction extends BaseAction {
 	private final int targetTypeRes;
 
 	protected Collection<String> stuff;
-	protected String source;
-	protected String target;
+	protected CharSequence source;
+	protected CharSequence target;
 
 	public MoveAction(long targetID, @PluralsRes int typeRes, int targetTypeRes, long... IDs) {
 		this.IDs = IDs;
@@ -33,25 +33,25 @@ public abstract class MoveAction extends BaseAction {
 		}
 	}
 
-	private String buildPlural(Resources res, @PluralsRes int titleRes) {
+	private CharSequence buildPlural(Resources res, @PluralsRes int titleRes) {
 		String type = res.getQuantityString(typeRes, stuff.size());
 		String targetType = res.getQuantityString(targetTypeRes, 1);
 		return res.getQuantityString(titleRes, stuff.size(), toPluralArgs(stuff, type, targetType, target));
 	}
 
-	@Override public String getConfirmationTitle(Resources res) {
+	@Override public CharSequence getConfirmationTitle(Resources res) {
 		return buildPlural(res, R.plurals.action_move_title);
 	}
 
-	@Override public String getConfirmationMessage(Resources res) {
+	@Override public CharSequence getConfirmationMessage(Resources res) {
 		return buildPlural(res, R.plurals.action_move_confirm);
 	}
 
-	@Override public String getSuccessMessage(Resources res) {
+	@Override public CharSequence getSuccessMessage(Resources res) {
 		return buildPlural(res, R.plurals.action_move_success);
 	}
 
-	@Override protected String getGenericFailureMessage(Resources res) {
+	@Override protected CharSequence getGenericFailureMessage(Resources res) {
 		return buildPlural(res, R.plurals.action_move_failed);
 	}
 }

@@ -12,8 +12,8 @@ public interface Action {
 	 * @throws RuntimeException If any of the arguments are incorrect or load fails.
 	 */
 	void prepare();
-	String getConfirmationTitle(Resources res);
-	String getConfirmationMessage(Resources res);
+	CharSequence getConfirmationTitle(Resources res);
+	CharSequence getConfirmationMessage(Resources res);
 	/**
 	 * Custom view for confirmation dialog. Implementers must hold on to it to be able to read from it in {@link #execute}.
 	 */
@@ -33,9 +33,9 @@ public interface Action {
 	 */
 	void finished();
 	/** Will be displayed in a Toast or Undobar */
-	String getSuccessMessage(Resources res);
+	CharSequence getSuccessMessage(Resources res);
 	/** Will be displayed in a Toast or AlertDialog */
-	String getFailureMessage(Resources res);
+	CharSequence getFailureMessage(Resources res);
 	/**
 	 * Build an opposite of this action implying that all the data has been modified by {@link #execute} already.
 	 *

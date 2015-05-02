@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 
 /**
  * <ol>
@@ -49,7 +49,7 @@ public class Dialogs {
 					new NoQuestions(activity).execute(new ActionState(undo));
 				}
 			};
-			String message = state.action.getSuccessMessage(activity.getResources());
+			CharSequence message = state.action.getSuccessMessage(activity.getResources());
 			new UndobarController(activity).showUndoBar(false, message, null, undoListener);
 		}
 	}
@@ -176,9 +176,12 @@ public class Dialogs {
 			if (!hasErrors()) {
 				return true;
 			} else {
-				String message;
+				CharSequence message;
 				try {
 					message = action.getFailureMessage(context.getResources());
+					if (message != null && (prepare != null || execute != null)) {
+						message = App.getError(prepare != null? prepare : execute, message);
+					}
 				} catch (Exception ex) {
 					LOG.warn("Failed to get failure message from action {}", action, ex);
 					failureMessage = ex;
@@ -197,13 +200,13 @@ public class Dialogs {
 			return prepare != null || execute != null;
 		}
 
-		private String getError() {
+		private CharSequence getError() {
 			if (prepare != null) {
-				return prepare.getMessage();
+				return App.getError(prepare, "Failed to prepare action.");
 			} else if (execute != null) {
-				return execute.getMessage();
+				return App.getError(execute, "Failed to execute action.");
 			} else if (failureMessage != null) {
-				return failureMessage.getMessage();
+				return App.getError(failureMessage, "Failed to check action.");
 			}
 			return "Unknown error";
 		}

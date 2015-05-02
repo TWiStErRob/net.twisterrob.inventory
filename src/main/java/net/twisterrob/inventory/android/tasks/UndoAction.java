@@ -16,10 +16,10 @@ public abstract class UndoAction implements Action {
 	@Override public void prepare() {
 		// usually no preparation needed because all the information is available from the original.
 	}
-	@Override public final String getConfirmationTitle(Resources res) {
+	@Override public final CharSequence getConfirmationTitle(Resources res) {
 		return "Undo";
 	}
-	@Override public final String getConfirmationMessage(Resources res) {
+	@Override public final CharSequence getConfirmationMessage(Resources res) {
 		return "Are you sure you want to undo?";
 	}
 	@Override public View getConfirmationView(Context context) {
@@ -34,10 +34,10 @@ public abstract class UndoAction implements Action {
 		}
 	}
 
-	@Override public String getSuccessMessage(Resources res) {
+	@Override public CharSequence getSuccessMessage(Resources res) {
 		return "Un-done";
 	}
-	@Override public String getFailureMessage(Resources res) {
+	@Override public CharSequence getFailureMessage(Resources res) {
 		return "Undo failed";
 	}
 	@Override public final Action buildUndo() {
