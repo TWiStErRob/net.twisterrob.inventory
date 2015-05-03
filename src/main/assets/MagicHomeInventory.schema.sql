@@ -308,8 +308,8 @@ BEGIN
 	insert into Item(name, category, parent)
 		values ('ROOT', -1, NULL)
 	;--NOTEOS
-	insert into Room(_id, name, image, type, root, property)
-		values (new._id, new.name, new.image, new.type, last_insert_rowid(), new.property)
+	insert into Room(_id, name, description, type, root, property)
+		values (new._id, new.name, new.description, new.type, last_insert_rowid(), new.property)
 	;--NOTEOS
 END;
 

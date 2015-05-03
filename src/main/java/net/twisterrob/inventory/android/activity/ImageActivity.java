@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -20,6 +22,7 @@ import com.bumptech.glide.request.target.Target;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 
@@ -29,13 +32,16 @@ public class ImageActivity extends VariantActivity implements RequestListener<Ur
 	/** type: Boolean, true=internal, false=external, not present=auto(from prefs) */
 	public static final String EXTRA_INTERNAL = "useInternal";
 
-	private ImageView image;
-
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_image);
-		image = (ImageView)findViewById(R.id.image);
+		ImageView image = (ImageView)findViewById(R.id.image);
+		image.setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				askRedirect();
+			}
+		});
 
 		if (getExtraUseInternal()) {
 			Glide
@@ -51,9 +57,37 @@ public class ImageActivity extends VariantActivity implements RequestListener<Ur
 			;
 		} else {
 			if (savedInstanceState == null) { // start only once
-				new Redirect().execute(getIntent().getData());
+				redirect();
 			}
 		}
+	}
+
+	private void redirect() {
+		new Redirect().execute(getIntent().getData());
+	}
+
+	private void askRedirect() {
+		AndroidTools
+				.confirm(this, new PopupCallbacks<Boolean>() {
+					@Override public void finished(Boolean value) {
+						if (Boolean.TRUE.equals(value)) {
+							redirect();
+						}
+					}
+				})
+				.setTitle("Image viewer")
+				.setMessage("The built-in image viewer has limited functionality. "
+						+ "Would you like to open the image in another app?")
+				.setNeutralButton("Always", new DialogInterface.OnClickListener() {
+					@Override public void onClick(DialogInterface dialog, int which) {
+						App.getPrefEditor()
+						   .putBoolean(getString(R.string.pref_internalImageViewer), false)
+						   .apply();
+						redirect();
+					}
+				})
+				.show()
+		;
 	}
 
 	@Override
@@ -88,9 +122,10 @@ public class ImageActivity extends VariantActivity implements RequestListener<Ur
 		return intent;
 	}
 
+	/** External image viewers have horrible support for content:// uris so it's safer to hand them a temporary file. */
 	private class Redirect extends SimpleSafeAsyncTask<Uri, Void, Uri> {
 		@Override protected void onPreExecute() {
-			image.setImageResource(R.drawable.image_loading);
+			findViewById(R.id.description).setVisibility(View.VISIBLE);
 		}
 
 		@Override protected Uri doInBackground(Uri uri) throws IOException {

@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.*;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.*;
 import android.support.annotation.*;
@@ -17,12 +18,11 @@ import android.view.*;
 import android.view.View.*;
 import android.widget.*;
 
-import com.bumptech.glide.*;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.*;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.content.glide.*;
@@ -282,41 +282,33 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		}
 	}
 
-	private void handleResult(int requestCode, Uri uri) {
-		image.setImageResource(R.drawable.image_loading);
-		BitmapRequestBuilder<Uri, byte[]> request = Glide
+	private void handleResult(final int requestCode, final Uri uri) {
+		Glide
 				.with(this)
 				.load(uri)
 				.asBitmap()
-				.toBytes(CompressFormat.JPEG, 80)
-				.error(R.drawable.image_error)
+				.toBytes(CompressFormat.JPEG, 80) // XXX good enough?
+				.override(500, 500)
 				.fitCenter()
-				.override(500, 500);
-
-		if (requestCode == ImageTools.REQUEST_CODE_TAKE_PICTURE
-				&& ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
-			request.listener(new RequestListener<Uri, byte[]>() {
-				@Override public boolean onException(Exception e, Uri model, Target<byte[]> target,
-						boolean isFirstResource) {
-					return false;
-				}
-				@Override public boolean onResourceReady(byte[] resource, Uri model, Target<byte[]> target,
-						boolean isFromMemoryCache, boolean isFirstResource) {
-					if (ContentResolver.SCHEME_FILE.equals(model.getScheme())) {
-						//noinspection ResultOfMethodCallIgnored: best effort, can't guarantee anything
-						new File(model.getPath()).delete();
+				.into(new SimpleTarget<byte[]>() {
+					@Override public void onLoadStarted(Drawable placeholder) {
+						int typeImageID = getTypeImage(type.getSelectedItemPosition());
+						Pic.svg().load(typeImageID).into(image);
 					}
-					return false;
-				}
-			});
-		}
-
-		request.into(new SimpleTarget<byte[]>() {
-			@Override public void onResourceReady(byte[] resource,
-					GlideAnimation<? super byte[]> glideAnimation) {
-				setCurrentImage(resource);
-			}
-		});
+					@Override public void onResourceReady(byte[] resource,
+							GlideAnimation<? super byte[]> glideAnimation) {
+						if (requestCode == ImageTools.REQUEST_CODE_TAKE_PICTURE
+								&& ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+							//noinspection ResultOfMethodCallIgnored: best effort, can't guarantee anything
+							new File(uri.getPath()).delete();
+						}
+						setCurrentImage(resource);
+					}
+					@Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
+						App.toastUser(App.getError(e, "Cannot process image: " + uri));
+					}
+				})
+		;
 	}
 
 	protected class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {

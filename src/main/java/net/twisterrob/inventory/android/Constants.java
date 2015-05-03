@@ -53,7 +53,11 @@ public interface Constants {
 				throws IOException {
 			File folder = new File(context.getCacheDir(), folderName);
 			IOTools.ensure(folder);
-			File file = File.createTempFile(prefix, suffix, folder);
+			File file = new File(folder, prefix + 0 + suffix);
+			// TODO figure out an alternative to deleteOnExit, before that:
+			//noinspection ResultOfMethodCallIgnored, use the same image file over and over again
+			file.delete();
+			//File file = File.createTempFile(prefix, suffix, folder);
 			file.deleteOnExit();
 			return file;
 		}

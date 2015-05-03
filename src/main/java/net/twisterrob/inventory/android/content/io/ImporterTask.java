@@ -11,7 +11,7 @@ import static java.lang.String.*;
 import org.slf4j.*;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
+import android.support.annotation.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.IOTools;
@@ -30,8 +30,8 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 
 	public interface ImportCallbacks {
 		void importStarting();
-		void importProgress(Progress progress);
-		void importFinished(Progress progress);
+		void importProgress(@NonNull Progress progress);
+		void importFinished(@NonNull Progress progress);
 
 		final class Progress implements Cloneable {
 			public File input;
@@ -192,9 +192,9 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 	private static final ImportCallbacks DUMMY_CALLBACK = new ImportCallbacks() {
 		@Override public void importStarting() {
 		}
-		@Override public void importProgress(Progress progress) {
+		@Override public void importProgress(@NonNull Progress progress) {
 		}
-		@Override public void importFinished(Progress progress) {
+		@Override public void importFinished(@NonNull Progress progress) {
 		}
 	};
 }

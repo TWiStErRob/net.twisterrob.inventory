@@ -134,7 +134,6 @@ public class XMLImporter implements Importer {
 			name = attributes.getValue(ATTR_NAME);
 			image = attributes.getValue(ATTR_IMAGE);
 			factory.onNewLevel(this);
-			process();
 		}
 
 		@Override public void end(String body) {
@@ -157,6 +156,13 @@ public class XMLImporter implements Importer {
 			doProcess();
 			progress.publishIncrement();
 		}
+		/**
+		 * Will be called at states:<ul>
+		 * <li>when there are no logical children, then at the end of the tag.</li>
+		 * <li>after all the optional XML children have been parsed and stored in a member;<br>
+		 *     when the first logical child is encountered that needs inserting, this may be several levels deeper.</li>
+		 * </ul>
+		 */
 		protected abstract void doProcess();
 
 		@Override public long getID() {
@@ -168,6 +174,16 @@ public class XMLImporter implements Importer {
 
 		public int getLevel() {
 			return level;
+		}
+
+		protected void loadImage(Type type) {
+			if (image != null) {
+				try {
+					progress.importImage(type, id, name, image);
+				} catch (IOException ex) {
+					LOG.error("Cannot load image for {} #{} ({}): {}", type, id, name, image, ex);
+				}
+			}
 		}
 	}
 
@@ -204,6 +220,7 @@ public class XMLImporter implements Importer {
 			} else {
 				progress.warning(R.string.backup_import_conflict_property, name);
 			}
+			loadImage(Type.Property);
 		}
 	}
 
@@ -226,6 +243,7 @@ public class XMLImporter implements Importer {
 				progress.warning(R.string.backup_import_conflict_room, null, name);
 			}
 			rootID = getRoot(id);
+			loadImage(Type.Room);
 		}
 
 		private long getRoot(long roomID) {
@@ -279,6 +297,7 @@ public class XMLImporter implements Importer {
 				progress.warning(R.string.backup_import_conflict_item, null, null, name);
 			}
 			itemMap.put(refID, id);
+			loadImage(Type.Item);
 		}
 	}
 }

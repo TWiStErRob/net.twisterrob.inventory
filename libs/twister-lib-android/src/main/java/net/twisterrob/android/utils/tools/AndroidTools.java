@@ -13,7 +13,7 @@ import org.slf4j.*;
 import android.annotation.*;
 import android.app.*;
 import android.content.*;
-import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.*;
 import android.content.pm.*;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources.NotFoundException;
@@ -902,14 +902,20 @@ public /*static*/ abstract class AndroidTools {
 
 	public static AlertDialog.Builder confirm(Context context, final PopupCallbacks<Boolean> callbacks) {
 		return new AlertDialog.Builder(context)
-				.setPositiveButton(android.R.string.ok, new OnClickListener() {
+				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						callbacks.finished(true);
 					}
 				})
-				.setNegativeButton(android.R.string.cancel, new OnClickListener() {
+				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
 						callbacks.finished(false);
+					}
+				})
+				.setCancelable(true)
+				.setOnCancelListener(new OnCancelListener() {
+					@Override public void onCancel(DialogInterface dialog) {
+						callbacks.finished(null);
 					}
 				});
 	}

@@ -41,12 +41,15 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		parentFragmentManager = null;
 	}
 
-	@Override public void importProgress(Progress progress) {
+	@Override public void importProgress(@NonNull Progress progress) {
 		this.progress = progress;
 		LOG.trace("importProgress {}", progress);
-		updateProgress((ProgressDialog)getDialog(), progress);
+		ProgressDialog dialog = (ProgressDialog)getDialog();
+		if (dialog != null) {
+			updateProgress(dialog, progress);
+		}
 	}
-	private void updateProgress(ProgressDialog dialog, Progress progress) {
+	private void updateProgress(@NonNull ProgressDialog dialog, @NonNull Progress progress) {
 		if (progress.total == -1) {
 			dialog.setIndeterminate(true);
 			dialog.setMessage(getString(R.string.backup_import_progress_init));
@@ -58,7 +61,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		}
 	}
 
-	@Override public void importFinished(Progress res) {
+	@Override public void importFinished(@NonNull Progress res) {
 		LOG.trace("importFinished {}", res);
 		dismissAllowingStateLoss();
 		displayFinishMessage(getActivity(), res);
@@ -127,10 +130,10 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		@Override public void importStarting() {
 			// ignore
 		}
-		@Override public void importProgress(Progress progress) {
+		@Override public void importProgress(@NonNull Progress progress) {
 			// ignore
 		}
-		@Override public void importFinished(Progress p) {
+		@Override public void importFinished(@NonNull Progress p) {
 			displayFinishMessage(context, p);
 		}
 	}

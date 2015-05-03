@@ -24,7 +24,7 @@ apply from: 'http://localhost/maven/configure.gradle'
 repositories {
 	jcenter()
 	maven { name 'twisterrob'; url 'http://localhost/maven' }
-	maven { name 'glide'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
+	//maven { name 'glide'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
@@ -42,7 +42,7 @@ dependencies {
 	//compile "com.android.support:palette-v7:${supportVersion}"
 
 	compile 'com.caverock:androidsvg:1.2.1'
-	compile 'com.github.bumptech.glide:glide:3.6.0-SNAPSHOT'
+	compile 'com.github.bumptech.glide:glide:3.6.0'
 
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.easymock:easymock:3.3.1'
