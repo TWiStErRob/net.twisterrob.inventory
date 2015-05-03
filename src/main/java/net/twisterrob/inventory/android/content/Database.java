@@ -323,6 +323,19 @@ public class Database extends VariantDatabase {
 		return rawQuery(R.string.query_export);
 	}
 
+	public Cursor subtree(Long property, Long room, Long item) {
+		if (1 < (property != null? 1 : 0) + (room != null? 1 : 0) + (item != null? 1 : 0)) {
+			throw new IllegalArgumentException(
+					"Specify at most one of property (" + property + "), room (" + room + "), item" + item + ").");
+		}
+		return rawQuery(R.string.query_subtree,
+				/* property query */ property, room, item,
+				/* room query */     property, room, item,
+				/* item query */     property, room, item,
+				/* item query+ */    property, room, item
+		);
+	}
+
 	public void clearImages() {
 		SQLiteDatabase db = getWritableDatabase();
 		try {

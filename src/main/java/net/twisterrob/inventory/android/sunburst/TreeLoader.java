@@ -1,93 +1,78 @@
 package net.twisterrob.inventory.android.sunburst;
 
-import java.util.*;
-
 import android.database.Cursor;
 
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.HierarchyBuilder;
 
 class TreeLoader {
-	public void build(Node node) {
-		int count = 0;
+	private final NodeHierarchy hier = new NodeHierarchy();
+	public Node build(Node root) {
+		Type rootType = root.type.getType();
+		if (rootType != null) {
+			hier.preRegister(rootType, root.id, root);
+		}
+
+		Cursor cursor = App.db().subtree(
+				root.type == Node.Type.Property? root.id : null,
+				root.type == Node.Type.Room? root.id : null,
+				root.type == Node.Type.Item? root.id : null
+		);
+		while (cursor.moveToNext()) {
+			long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+			String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+			Type type = Type.from(cursor, CommonColumns.TYPE);
+			Node node = hier.getOrCreate(type, id);
+			node.label = name;
+
+			if (type == Type.Property) {
+				root.add(node);
+			} else {
+				Type parentType = Type.from(cursor, ParentColumns.PARENT_TYPE);
+				long parentID = cursor.getLong(cursor.getColumnIndexOrThrow(ParentColumns.PARENT_ID));
+				hier.put(parentType, parentID, node);
+			}
+		}
+		cursor.close();
+
+		decorate(root);
+		return root;
+	}
+
+	private void decorate(Node node) {
 		int depth = -1;
-		List<Node> children = loadChildren(node);
-		for (Node child : children) {
-			build(child);
+		int count = 0;
+		for (Node child : node.children) {
+			decorate(child);
 			if (depth < child.depth) {
 				depth = child.depth;
 			}
 			count += child.count;
 		}
+		node.count = node.children.isEmpty()? 1 : count;
 		node.depth = depth + 1;
-		node.count = children.isEmpty()? 1 : count;
 	}
 
-	private List<Node> loadChildren(Node node) {
-		switch (node.type) {
-			case Root:
-				node.children = loadProperties();
-				break;
-			case Property:
-				node.children = loadRooms(node);
-				break;
-			case Item:
-			case Room:
-				node.children = loadItems(node);
-				break;
-			default:
-				throw new IllegalStateException("Unknown type: " + node.type);
+	private static class NodeHierarchy extends HierarchyBuilder<Node, Node, Node, Node> {
+		@Override protected void addPropertyChild(Node parentProperty, Node childRoom) {
+			parentProperty.add(childRoom);
 		}
-		return node.children;
-	}
+		@Override protected void addRoomChild(Node parentRoom, Node childItem) {
+			parentRoom.add(childItem);
+		}
+		@Override protected void addItemChild(Node parentItem, Node childItem) {
+			parentItem.add(childItem);
+		}
 
-	private static List<Node> loadProperties() {
-		Cursor cursor = App.db().listProperties();
-		try {
-			List<Node> children = new ArrayList<>();
-			while (cursor.moveToNext()) {
-				long id = cursor.getLong(cursor.getColumnIndex(Property.ID));
-				String label = cursor.getString(cursor.getColumnIndex(Property.NAME));
-				children.add(new Node(Node.Type.Property, id, label));
-			}
-			return children;
-		} finally {
-			cursor.close();
+		@Override protected Node createProperty(long id) {
+			return new Node(Node.Type.Property, id);
 		}
-	}
-
-	private static List<Node> loadRooms(Node node) {
-		Cursor cursor = App.db().listRooms(node.id);
-		try {
-			List<Node> children = new ArrayList<>();
-			while (cursor.moveToNext()) {
-				long id = cursor.getLong(cursor.getColumnIndex(Room.ID));
-				String label = cursor.getString(cursor.getColumnIndex(Room.NAME));
-				children.add(new Node(Node.Type.Room, id, label));
-			}
-			return children;
-		} finally {
-			cursor.close();
+		@Override protected Node createRoom(long id) {
+			return new Node(Node.Type.Room, id);
 		}
-	}
-
-	private static List<Node> loadItems(Node node) {
-		Cursor cursor;
-		if (node.type == Node.Type.Room) {
-			cursor = App.db().listItemsInRoom(node.id);
-		} else {
-			cursor = App.db().listItems(node.id);
-		}
-		try {
-			List<Node> children = new ArrayList<>();
-			while (cursor.moveToNext()) {
-				long id = cursor.getLong(cursor.getColumnIndex(Item.ID));
-				String label = cursor.getString(cursor.getColumnIndex(Item.NAME));
-				children.add(new Node(Node.Type.Item, id, label));
-			}
-			return children;
-		} finally {
-			cursor.close();
+		@Override protected Node createItem(long id) {
+			return new Node(Node.Type.Item, id);
 		}
 	}
 }

@@ -531,6 +531,39 @@
 	"]]></string>
 
 
+	<string name="query_subtree"><![CDATA["
+			select
+				'property' as type,
+				p._id,
+				p.name,
+				null as parentType,
+				null as parent
+			from Property p
+			where p._id = ? or (? = 'null' and ? = 'null')
+		UNION ALL
+			select
+				'room' as type,
+				r._id,
+				r.name,
+				'property' as parentType,
+				r.property as parent
+			from Room r
+			where r.property = ? or r._id = ? or (? = 'null')
+		UNION ALL
+			select distinct
+				'item' as type,
+				i._id,
+				i.name,
+				CASE WHEN i.parent <> r.root THEN 'item'   ELSE 'room' END as parentType,
+		        CASE WHEN i.parent <> r.root THEN i.parent ELSE r._id  END as parent
+			from Item_Path_Node ipn
+			join Item i on ipn.item = i._id and i.category <> -1
+			join Room r on r.root = ipn.root
+			join Property p on r.property = p._id
+			where p._id = ? or r._id = ? or ipn.node = ? or (? = 'null' and ? = 'null' and ? = 'null')
+	"]]></string>
+
+
 	<string name="query_category_cache_names"><![CDATA["
 		select key from Category_Name_Cache
 	"]]></string>

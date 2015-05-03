@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView
+<android.support.v4.widget.SwipeRefreshLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/diagram"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:layerType="software"
-	android:scaleType="fitCenter"
-	tools:context=".activity.SunBurstActivity"
-	/>
+	style="@style/Theme.AppTheme.RecyclerRefresh"
+    android:id="@id/progress_circular"
+	>
+	<ImageView
+		android:id="@+id/diagram"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layerType="software"
+		android:scaleType="fitCenter"
+		/>
+</android.support.v4.widget.SwipeRefreshLayout>

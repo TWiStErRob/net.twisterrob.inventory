@@ -86,12 +86,9 @@ public class SunburstDrawable<T> extends Drawable {
 		float startAngle = start * 360;
 		float sweepAngle = (end - start) * 360;
 
-		Paint fill;
-		Paint stroke;
-		Paint text;
-		fill = paints.getFill(subTree, level, start, end);
-		stroke = paints.getStroke(subTree, level, start, end);
-		text = paints.getText(subTree, level, start, end);
+		Paint fill = paints.getFill(subTree, level, start, end);
+		Paint stroke = paints.getStroke(subTree, level, start, end);
+		Paint text = paints.getText(subTree, level, start, end);
 		if (subTree.equals(highlighted)) {
 			paints.highlight(fill, stroke, text, subTree, level, start, end);
 		}

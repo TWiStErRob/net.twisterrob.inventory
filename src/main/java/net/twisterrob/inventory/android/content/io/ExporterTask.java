@@ -184,7 +184,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		String property = cursor.getString(cursor.getColumnIndexOrThrow(Item.PROPERTY_NAME));
 		String room = cursor.getString(cursor.getColumnIndexOrThrow(Item.ROOM_NAME));
 		String item = cursor.getString(cursor.getColumnIndexOrThrow("itemName"));
-		String parentName = cursor.getString(cursor.getColumnIndexOrThrow(Item.PARENT_NAME));
+		String parentName = cursor.getString(cursor.getColumnIndexOrThrow(ParentColumns.PARENT_NAME));
 		Type type = Type.from(cursor, "type");
 		String format = null;
 		switch (type) {

@@ -1,10 +1,23 @@
 package net.twisterrob.inventory.android.sunburst;
 
+import java.util.*;
+
 import net.twisterrob.android.graphics.SunburstDrawable;
+import net.twisterrob.java.collections.FilteredIterator;
+import net.twisterrob.java.collections.FilteredIterator.Filter;
 
 class NodeTreeWalker implements SunburstDrawable.TreeWalker<Node> {
-	@Override public Iterable<Node> getChildren(Node node, int level) {
-		return node.children;
+	public final Set<Node> ignore = new HashSet<>();
+	@Override public Iterable<Node> getChildren(final Node node, final int level) {
+		return new Iterable<Node>() {
+			@Override public Iterator<Node> iterator() {
+				return new FilteredIterator<>(node.children.iterator(), new Filter<Node>() {
+					@Override public boolean matches(Node element) {
+						return !(element.depth == 1 && 5 <= level) && !ignore.contains(element);
+					}
+				});
+			}
+		};
 	}
 
 	@Override public int getDepth(Node subTree) {
@@ -16,6 +29,6 @@ class NodeTreeWalker implements SunburstDrawable.TreeWalker<Node> {
 	}
 
 	@Override public float getWeight(Node subTree, int level) {
-		return subTree.count;
+		return subTree.getCount();
 	}
 }

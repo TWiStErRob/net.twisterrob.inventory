@@ -1,12 +1,9 @@
 package net.twisterrob.inventory.android.content.contract;
 
-public interface Item extends CommonColumns {
+public interface Item extends ParentColumns {
 	String TABLE = "Item";
 
 	String CATEGORY_NAME = "categoryName";
-
-	String PARENT_ID = "parent";
-	String PARENT_NAME = "parentName";
 
 	String PROPERTY_ID = "propertyID";
 	String PROPERTY_NAME = "propertyName";

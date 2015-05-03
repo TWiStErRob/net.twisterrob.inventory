@@ -13,6 +13,7 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.io.*;
+import net.twisterrob.inventory.android.content.model.HierarchyBuilder;
 import net.twisterrob.java.utils.StringTools;
 
 public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
@@ -54,10 +55,10 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 
 	@Override protected void writeData(XmlSerializer output, Cursor cursor) throws IOException {
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
-		long parentID = cursor.getLong(cursor.getColumnIndexOrThrow(Item.PARENT_ID));
+		long parentID = cursor.getLong(cursor.getColumnIndexOrThrow(ParentColumns.PARENT_ID));
 		Type type = Type.from(cursor, CommonColumns.TYPE);
 
-		Belonging belonging = hier.get(type, id);
+		Belonging belonging = hier.getOrCreate(type, id);
 		belonging.name = cursor.getString(cursor.getColumnIndexOrThrow(nameColumn(type)));
 		belonging.type = cursor.getString(cursor.getColumnIndexOrThrow("typeName"));
 		belonging.image = cursor.getString(cursor.getColumnIndexOrThrow(ExporterTask.IMAGE_NAME));
@@ -65,7 +66,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		belonging.comment = ExporterTask.buildComment(cursor);
 
 		if (type != Type.Property) { // can't have parents
-			hier.put(parentID, Type.from(cursor, ParentColumns.PARENT_TYPE), belonging);
+			hier.put(Type.from(cursor, ParentColumns.PARENT_TYPE), parentID, belonging);
 		}
 	}
 
@@ -165,75 +166,37 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		}
 	}
 
-	private static class Hierarchy {
-		private Map<Long, XProperty> properties = new TreeMap<>();
-		private Map<Long, XRoom> rooms = new TreeMap<>();
-		private Map<Long, XItem> items = new TreeMap<>();
-
-		private void put(long parentID, Type parentType, Belonging<?> belonging) {
-			switch (parentType) {
-				case Property: {
-					XProperty parent = getOrCreateProperty(parentID);
-					parent.children.add((XRoom)belonging);
-					break;
-				}
-				case Room: {
-					XRoom parent = getOrCreateRoom(parentID);
-					parent.children.add((XItem)belonging);
-					break;
-				}
-				case Item: {
-					XItem parent = getOrCreateItem(parentID);
-					parent.children.add((XItem)belonging);
-					break;
-				}
-			}
+	private static class Hierarchy extends HierarchyBuilder<Belonging<?>, XProperty, XRoom, XItem> {
+		@Override protected void addPropertyChild(XProperty parentProperty, XRoom childRoom) {
+			parentProperty.children.add(childRoom);
+		}
+		@Override protected void addRoomChild(XRoom parentRoom, XItem childItem) {
+			parentRoom.children.add(childItem);
+		}
+		@Override protected void addItemChild(XItem parentItem, XItem childItem) {
+			parentItem.children.add(childItem);
 		}
 
-		public Belonging get(Type type, long id) {
-			switch (type) {
-				case Property:
-					return getOrCreateProperty(id);
-				case Room:
-					return getOrCreateRoom(id);
-				case Item:
-					return getOrCreateItem(id);
-			}
-			throw new IllegalStateException("Unknown type: " + type);
+		@Override protected XProperty createProperty(long id) {
+			XProperty property = new XProperty();
+			property.id = id;
+			return property;
 		}
 
-		private XProperty getOrCreateProperty(long id) {
-			XProperty x = properties.get(id);
-			if (x == null) {
-				x = new XProperty();
-				x.id = id;
-				properties.put(x.id, x);
-			}
-			return x;
+		@Override protected XRoom createRoom(long id) {
+			XRoom room = new XRoom();
+			room.id = id;
+			return room;
 		}
 
-		private XRoom getOrCreateRoom(long id) {
-			XRoom x = rooms.get(id);
-			if (x == null) {
-				x = new XRoom();
-				x.id = id;
-				rooms.put(x.id, x);
-			}
-			return x;
-		}
-
-		private XItem getOrCreateItem(long id) {
-			XItem x = items.get(id);
-			if (x == null) {
-				x = new XItem();
-				x.id = id;
-				items.put(x.id, x);
-			}
-			return x;
+		@Override protected XItem createItem(long id) {
+			XItem item = new XItem();
+			item.id = id;
+			return item;
 		}
 
 		public void write(XmlSerializer output) throws IOException {
-			for (XProperty property : properties.values()) {
+			for (XProperty property : getAllProperties()) {
 				property.write(output);
 			}
 		}
