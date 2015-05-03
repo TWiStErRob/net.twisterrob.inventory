@@ -31,6 +31,9 @@ dependencies {
 android {
 	defaultConfig {
 		applicationId 'net.twisterrob.inventory'
+		version {
+			major = 1
+		}
 		resConfigs "en", "hu"
 	}
 	buildTypes {
