@@ -148,6 +148,10 @@
 			android:label="@string/item_edit"
 			android:windowSoftInputMode="adjustResize|stateHidden">
 		</activity>
+		<activity
+			android:name=".sunburst.SunburstActivity"
+			android:label="@string/sunburst_title">
+		</activity>
 
 		<provider
 			android:name=".content.InventoryProvider"

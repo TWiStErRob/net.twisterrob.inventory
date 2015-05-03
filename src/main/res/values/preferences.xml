@@ -27,4 +27,10 @@
 	<string name="pref_displayDebugDetails_desc">Display some internal details of the entities,
 		these information are only relevant for debugging and hacking.</string>
 
+	<string name="pref_sunburstIgnoreLevel_title">Sunburst Ignore Level</string>
+	<string name="pref_sunburstIgnoreLevel" translatable="false">sunburstIgnoreLevel</string>
+	<integer name="pref_sunburstIgnoreLevel_default" translatable="false">4</integer>
+	<string name="pref_sunburstIgnoreLevel_desc">Sunburst diagram can be slow if there are a lot of items shown.
+		Decrease this setting to ignore single items from displaying. Values below 3 are not advised.</string>
+
 </resources>

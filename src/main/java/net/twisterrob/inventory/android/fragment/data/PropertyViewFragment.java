@@ -15,6 +15,7 @@ import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.PropertyEvents;
+import net.twisterrob.inventory.android.sunburst.SunburstActivity;
 import net.twisterrob.inventory.android.tasks.DeletePropertiesAction;
 import net.twisterrob.inventory.android.view.Dialogs;
 
@@ -78,6 +79,9 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 				return true;
 			case R.id.action_property_delete:
 				delete(getArgPropertyID());
+				return true;
+			case R.id.action_property_sunburst:
+				startActivity(SunburstActivity.displayProperty(getArgPropertyID()));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

@@ -18,6 +18,7 @@ import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
+import net.twisterrob.inventory.android.sunburst.SunburstActivity;
 import net.twisterrob.inventory.android.tasks.*;
 import net.twisterrob.inventory.android.view.*;
 
@@ -105,6 +106,9 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				return true;
 			case R.id.action_list_manage:
 				startActivity(ListsActivity.manage(getArgItemID()));
+				return true;
+			case R.id.action_item_sunburst:
+				startActivity(SunburstActivity.displayItem(getArgItemID()));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

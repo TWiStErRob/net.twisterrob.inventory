@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
 	>
 	<ListPreference
 		android:key="@string/pref_defaultEntityDetailsPage"
@@ -16,6 +16,14 @@
 		android:title="@string/pref_internalImageViewer_title"
 		android:defaultValue="@bool/pref_internalImageViewer_default"
 		android:summary="@string/pref_internalImageViewer_desc"
+		/>
+	<net.twisterrob.android.view.NumberPickerPreference
+		android:key="@string/pref_sunburstIgnoreLevel"
+		android:title="@string/pref_sunburstIgnoreLevel_title"
+		android:defaultValue="@integer/pref_sunburstIgnoreLevel_default"
+		android:summary="@string/pref_sunburstIgnoreLevel_desc"
+	    app:minValue="0"
+		app:maxValue="10"
 		/>
 	<CheckBoxPreference
 		android:key="@string/pref_displayDebugDetails"
@@ -35,8 +43,8 @@
 		android:title="@string/manage_space_title"
 		>
 		<intent
-			android:targetPackage="@string/app_package"
 			android:targetClass="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
+			android:targetPackage="@string/app_package"
 			/>
 	</PreferenceScreen>
 	<PreferenceScreen

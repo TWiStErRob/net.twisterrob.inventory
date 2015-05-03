@@ -15,9 +15,9 @@
 	<string name="action_delete">Delete</string>
 	<string name="action_move">Move</string>
 	<string name="action_search">Search Items</string>
-	<string name="action_sunburst_open">View this</string>
-	<string name="action_sunburst_ignore">Ignore this</string>
-	<string name="action_sunburst_ignore_reset">Reset ignored</string>
+	<string name="action_sunburst_open">View in Inventory</string>
+	<string name="action_sunburst_ignore">Hide from diagram</string>
+	<string name="action_sunburst_ignore_reset">Display all hidden</string>
 
 	<plurals name="action_delete_title">
 		<item quantity="one">Deleting %2$s &#8220;%3$s&#8221;</item>

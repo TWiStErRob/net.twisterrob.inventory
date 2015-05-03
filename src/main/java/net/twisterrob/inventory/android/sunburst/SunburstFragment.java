@@ -6,7 +6,8 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.graphics.Matrix;
-import android.os.*;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.*;
 import android.view.View.OnTouchListener;
@@ -14,8 +15,12 @@ import android.widget.ImageView;
 
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.graphics.SunburstDrawable;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.android.utils.concurrent.*;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.sunburst.Node.Type;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents;
@@ -31,7 +36,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	private SunburstDrawable<Node> sunburst;
 	private NodeTreeWalker walker;
 
-	private AsyncTask<Void, Void, Node> loadTreeTask;
+	private SafeAsyncTask<Node, ?, ?> loadTreeTask;
 
 	public SunburstFragment() {
 		setDynamicResource(DYN_EventsClass, SunBurstEvents.class);
@@ -39,7 +44,8 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		walker = new NodeTreeWalker();
+		walker = new NodeTreeWalker(App.getPrefs().getInt(getString(R.string.pref_sunburstIgnoreLevel),
+				getResources().getInteger(R.integer.pref_sunburstIgnoreLevel_default)));
 		sunburst = new SunburstDrawable<>(walker, new Paints());
 	}
 
@@ -66,23 +72,29 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 
 	@Override public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		loadTreeTask = new AsyncTask<Void, Void, Node>() {
+		loadTreeTask = new SimpleSafeAsyncTask<Node, Void, Node>() {
 			@Override protected void onPreExecute() {
 				setLoading(true);
 			}
-			@Override
-			protected Node doInBackground(Void... params) {
-				return new TreeLoader().build(new Node(Type.Root, -1));
+
+			@Override protected Node doInBackground(Node param) {
+				Node root = new TreeLoader().build(param);
+				root.parent = null; // clear parent in case it was set (happens when deep linking)
+				return root;
 			}
 
-			@Override
-			protected void onPostExecute(Node result) {
+			@Override protected void onResult(Node result, Node param) {
 				setLoading(false);
 				setRoot(result);
 				diagram.setImageDrawable(sunburst);
 			}
+
+			@Override protected void onError(@NonNull Exception ex, Node param) {
+				LOG.error("Cannot build {}", param, ex);
+				getActivity().finish();
+			}
 		};
-		loadTreeTask.execute();
+		loadTreeTask.execute(createStartingNode());
 	}
 
 	@Override public void onDestroy() {
@@ -135,10 +147,12 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	@Override public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		Node root = sunburst.getRoot();
-		menu.findItem(R.id.action_sunburst_open).setVisible(root != null && root.type != Type.Root);
+		menu.findItem(R.id.action_sunburst_open)
+		    .setVisible(root != null && !isArgument(root));
 		menu.findItem(R.id.action_sunburst_ignore).setVisible(root != null && root.parent != null);
 		menu.findItem(R.id.action_sunburst_ignore_reset).setVisible(!walker.ignore.isEmpty());
 	}
+
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_sunburst_open: {
@@ -221,9 +235,63 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 		}
 	}
 
+	private boolean isArgument(Node root) {
+		switch (root.type) {
+			case Item:
+				return getArgItemID() == root.id;
+			case Room:
+				return getArgRoomID() == root.id;
+			case Property:
+				return getArgPropertyID() == root.id;
+			case Root:
+				return getArgItemID() == Item.ID_ADD
+						&& getArgRoomID() == Room.ID_ADD
+						&& getArgPropertyID() == Property.ID_ADD;
+		}
+		return false;
+	}
+
+	private Node createStartingNode() {
+		if (getArgItemID() != Item.ID_ADD) {
+			return new Node(Type.Item, getArgItemID());
+		}
+		if (getArgRoomID() != Room.ID_ADD) {
+			return new Node(Type.Room, getArgRoomID());
+		}
+		if (getArgPropertyID() != Property.ID_ADD) {
+			return new Node(Type.Property, getArgPropertyID());
+		}
+		return new Node(Type.Root, -1);
+	}
+
+	private long getArgPropertyID() {
+		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
+	}
+	private long getArgRoomID() {
+		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+	}
+	private long getArgItemID() {
+		return getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
+	}
+
+	public static SunburstFragment newPropertyInstance(long propertyID) {
+		SunburstFragment fragment = new SunburstFragment();
+		fragment.setArguments(Intents.bundleFromProperty(propertyID));
+		return fragment;
+	}
+	public static SunburstFragment newRoomInstance(long roomID) {
+		SunburstFragment fragment = new SunburstFragment();
+		fragment.setArguments(Intents.bundleFromRoom(roomID));
+		return fragment;
+	}
+	public static SunburstFragment newItemInstance(long itemID) {
+		SunburstFragment fragment = new SunburstFragment();
+		fragment.setArguments(Intents.bundleFromItem(itemID));
+		return fragment;
+	}
 	public static SunburstFragment newInstance() {
 		SunburstFragment fragment = new SunburstFragment();
-		// TODO parametrize
+		fragment.setArguments(new Bundle());
 		return fragment;
 	}
 }

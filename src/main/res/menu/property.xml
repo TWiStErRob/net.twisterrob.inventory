@@ -16,6 +16,12 @@
 		app:showAsAction="never"
 		/>
 	<item
+		android:id="@+id/action_property_sunburst"
+		android:title="@string/sunburst_title"
+		android:icon="@android:drawable/ic_menu_compass"
+		app:showAsAction="never"
+		/>
+	<item
 		android:id="@+id/action_share"
 		android:title="@string/property_share"
 		android:icon="@android:drawable/ic_menu_share"

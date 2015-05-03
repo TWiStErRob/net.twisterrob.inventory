@@ -16,6 +16,7 @@ import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomViewFragment.RoomEvents;
+import net.twisterrob.inventory.android.sunburst.SunburstActivity;
 import net.twisterrob.inventory.android.tasks.*;
 import net.twisterrob.inventory.android.view.*;
 
@@ -94,6 +95,9 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				                                  .forbidProperties(propertyID)
 				                                  .build();
 				startActivityForResult(intent, MOVE_REQUEST);
+				return true;
+			case R.id.action_room_sunburst:
+				startActivity(SunburstActivity.displayRoom(getArgRoomID()));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
