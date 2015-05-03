@@ -3,36 +3,23 @@ package net.twisterrob.inventory.android.activity.data;
 import android.app.AlertDialog;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.activity.BaseActivity;
+import net.twisterrob.inventory.android.activity.SingleFragmentActivity;
 import net.twisterrob.inventory.android.fragment.data.BaseEditFragment;
 
 import static net.twisterrob.inventory.android.fragment.data.BaseEditFragment.*;
 
-public abstract class BaseEditActivity<E extends BaseEditFragment> extends BaseActivity {
-	private E editor;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.generic_activity_nodrawer);
-
-		if (savedInstanceState == null) {
-			editor = onCreateFragment(null);
-			editor.getArguments().putBoolean(EDIT_IMAGE, getIntent().getBooleanExtra(EDIT_IMAGE, false));
-			getSupportFragmentManager().beginTransaction()
-			                           .add(R.id.activityRoot, editor)
-			                           .commit()
-			;
-		} else {
-			editor = getFragment(R.id.activityRoot);
-		}
+public abstract class BaseEditActivity<E extends BaseEditFragment> extends SingleFragmentActivity<E> {
+	// TODO get rid of  setActionBarTitle in children
+	@Override protected FragmentTransaction updateFragment(E fragment) {
+		fragment.getArguments().putBoolean(EDIT_IMAGE, getIntent().getBooleanExtra(EDIT_IMAGE, false));
+		return super.updateFragment(fragment);
 	}
 
 	@Override public void onBackPressed() {
-		if (editor.isDirty()) {
+		if (getFragment().isDirty()) {
 			new AlertDialog.Builder(this)
 					.setTitle("Unsaved changes")
 					.setMessage("Continuing will discard any changes.")
@@ -44,7 +31,7 @@ public abstract class BaseEditActivity<E extends BaseEditFragment> extends BaseA
 					})
 					.setNeutralButton(R.string.action_save, new OnClickListener() {
 						@Override public void onClick(DialogInterface dialog, int which) {
-							editor.save();
+							getFragment().save();
 						}
 					})
 					.create()
@@ -58,12 +45,6 @@ public abstract class BaseEditActivity<E extends BaseEditFragment> extends BaseA
 	@Override public boolean onSupportNavigateUp() {
 		super.onBackPressed(); // escape activity without dirty check
 		return true;
-	}
-
-	protected abstract E onCreateFragment(Bundle savedInstanceState);
-
-	public E getEditor() {
-		return editor;
 	}
 
 	public static Intent takeImage(Intent edit) {

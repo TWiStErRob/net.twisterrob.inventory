@@ -3,7 +3,6 @@ package net.twisterrob.inventory.android.activity.data;
 import org.slf4j.*;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents;
@@ -23,8 +22,7 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 		super(R.plurals.property);
 	}
 
-	@Override
-	protected RoomListFragment onCreateFragment(Bundle savedInstanceState) {
+	@Override protected RoomListFragment onCreateFragment() {
 		return RoomListFragment.newInstance(getExtraPropertyID()).addHeader();
 	}
 
@@ -46,8 +44,7 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 		startActivity(RoomEditActivity.edit(roomID));
 	}
 
-	@Override
-	protected String checkExtras() {
+	@Override protected String checkExtras() {
 		if (getExtraPropertyID() == Property.ID_ADD) {
 			return "Invalid property ID";
 		}

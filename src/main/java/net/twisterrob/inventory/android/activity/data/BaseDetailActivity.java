@@ -4,7 +4,6 @@ import org.slf4j.*;
 
 import android.os.Bundle;
 import android.support.annotation.PluralsRes;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar.LayoutParams;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -18,10 +17,10 @@ import static android.view.ViewGroup.LayoutParams.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.BaseActivity;
+import net.twisterrob.inventory.android.activity.SingleFragmentActivity;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 
-public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends BaseActivity {
+public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends SingleFragmentActivity<F> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDetailActivity.class);
 
 	private final @PluralsRes int typePlural;
@@ -36,22 +35,6 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 		super.onCreate(savedInstanceState);
 		setActionBarSubtitle(getTitle());
 		setActionBarTitle("...");
-
-		super.setContentView(R.layout.generic_activity_nodrawer);
-
-		String extrasError = checkExtras();
-		if (extrasError != null) {
-			App.toast(extrasError);
-			finish();
-			return;
-		}
-
-		if (savedInstanceState == null) {
-			C fragment = onCreateFragment(null);
-			if (fragment != null) {
-				updateFragment(fragment).commit();
-			}
-		}
 	}
 
 	protected void setupTitleEditor() {
@@ -91,31 +74,6 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 
 	protected void updateName(String newName) {
 		throw new UnsupportedOperationException("Cannot update name in " + this);
-	}
-
-	protected abstract C onCreateFragment(Bundle savedInstanceState);
-
-	protected FragmentTransaction updateFragment(C fragment) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		if (fragment != null) {
-			ft.replace(R.id.activityRoot, fragment);
-		}
-		return ft;
-	}
-
-	protected String checkExtras() {
-		return null;
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		getFragment().refresh();
-	}
-
-	@SuppressWarnings("unchecked")
-	public C getFragment() {
-		return (C)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 
 	private static class TitleEditor implements OnClickListener, OnEditorActionListener {
@@ -182,7 +140,7 @@ public abstract class BaseDetailActivity<C extends BaseFragment<?>> extends Base
 		}
 
 		public void finish() {
-			AndroidTools.hideKeyboard(activity, editor);
+			AndroidTools.hideKeyboard(editor);
 			activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 			activity.getSupportActionBar().setCustomView(null);
 		}

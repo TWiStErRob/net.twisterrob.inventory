@@ -103,6 +103,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		});
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 
+		// TODO rotation and maybe SingleFragmentActivity?
 		PropertyListFragment fragment = PropertyListFragment.newInstance();
 		updateFragment(fragment);
 		updateUI(fragment);

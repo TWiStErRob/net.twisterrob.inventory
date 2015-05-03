@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents;
@@ -19,8 +18,7 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 		super(R.plurals.room);
 	}
 
-	@Override
-	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
+	@Override protected ItemListFragment onCreateFragment() {
 		return ItemListFragment.newRoomInstance(getExtraRoomID()).addHeader();
 	}
 
@@ -47,8 +45,7 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 		startActivity(ItemEditActivity.edit(id));
 	}
 
-	@Override
-	protected String checkExtras() {
+	@Override protected String checkExtras() {
 		if (getExtraRoomID() == Room.ID_ADD) {
 			return "Invalid room ID";
 		}

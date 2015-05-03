@@ -895,8 +895,8 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
-	public static void hideKeyboard(Context context, View input) {
-		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+	public static void hideKeyboard(View input) {
+		InputMethodManager imm = (InputMethodManager)input.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
 	}
 

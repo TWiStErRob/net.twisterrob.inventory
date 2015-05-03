@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
@@ -21,8 +20,7 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 		super(R.plurals.category);
 	}
 
-	@Override
-	protected CategoryContentsFragment onCreateFragment(Bundle savedInstanceState) {
+	@Override protected CategoryContentsFragment onCreateFragment() {
 		return CategoryContentsFragment.newInstance(getExtraCategoryID(), getExtraIncludeSubs()).addHeader();
 	}
 
@@ -48,8 +46,7 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 		startActivity(ItemViewActivity.show(itemID));
 	}
 
-	@Override
-	protected String checkExtras() {
+	@Override protected String checkExtras() {
 		Long id = getExtraCategoryID();
 		if (id != null && id == Category.ID_ADD) {
 			return "Invalid category ID";

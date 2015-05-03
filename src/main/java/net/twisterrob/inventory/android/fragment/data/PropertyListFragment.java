@@ -97,10 +97,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 
 	public static PropertyListFragment newInstance() {
 		PropertyListFragment fragment = new PropertyListFragment();
-
-		Bundle args = new Bundle();
-
-		fragment.setArguments(args);
+		fragment.setArguments(new Bundle());
 		return fragment;
 	}
 }

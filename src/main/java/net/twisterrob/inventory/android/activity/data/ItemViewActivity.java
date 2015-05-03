@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
@@ -20,8 +19,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 		super(R.plurals.item);
 	}
 
-	@Override
-	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
+	@Override protected ItemListFragment onCreateFragment() {
 		return ItemListFragment.newInstance(getExtraItemID()).addHeader();
 	}
 
@@ -47,8 +45,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 		startActivity(ItemEditActivity.edit(id));
 	}
 
-	@Override
-	protected String checkExtras() {
+	@Override protected String checkExtras() {
 		if (getExtraItemID() == Item.ID_ADD) {
 			return "Invalid item ID";
 		}

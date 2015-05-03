@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
@@ -16,8 +15,7 @@ public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> impl
 		super(R.plurals.list);
 	}
 
-	@Override
-	protected ItemListFragment onCreateFragment(Bundle savedInstanceState) {
+	@Override protected ItemListFragment onCreateFragment() {
 		return ItemListFragment.newListInstance(getExtraListID()).addHeader();
 	}
 
