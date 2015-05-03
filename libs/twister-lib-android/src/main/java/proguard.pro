@@ -9,6 +9,10 @@
 	android.widget.TextView mTitleTextView;
 	android.widget.TextView mSubtitleTextView;
 }
+# net.twisterrob.android.utils.tools.AndroidTools.showActionBarOverflowIcons(android.view.Menu,boolean)
+-keepclassmembers **.MenuBuilder {
+	void setOptionalIconsVisible(boolean);
+}
 # net.twisterrob.android.utils.log.LoggingFragment.onActivityCreated(android.os.Bundle)
 # net.twisterrob.android.utils.log.LoggingFragment.getLoaderManager()
 # net.twisterrob.android.utils.log.LoggingActivity.onCreate(android.os.Bundle)

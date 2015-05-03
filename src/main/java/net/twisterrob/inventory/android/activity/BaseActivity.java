@@ -47,9 +47,9 @@ public class BaseActivity extends VariantActivity {
 		super.onCreate(savedInstanceState);
 	}
 
-	@Override public boolean onMenuOpened(int featureId, Menu menu) {
-		AndroidTools.showActionBarOverflowIcons(featureId, menu, true);
-		return super.onMenuOpened(featureId, menu);
+	@Override public boolean onPrepareOptionsMenu(Menu menu) {
+		AndroidTools.showActionBarOverflowIcons(menu, true);
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {

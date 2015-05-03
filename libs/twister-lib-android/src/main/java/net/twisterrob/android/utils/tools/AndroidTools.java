@@ -639,19 +639,24 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
-	/** Call from {@link android.app.Activity#onMenuOpened(int, Menu)}. */
-	public static void showActionBarOverflowIcons(@WindowFeature int featureId, Menu menu, boolean show) {
+	/**
+	 * Call from {@link Activity#onPrepareOptionsMenu(Menu)} or from {@link Activity#onMenuOpened(int, Menu)}
+	 * when {@code featureId} is {@link WindowCompat#FEATURE_ACTION_BAR}
+	 * (may need the overlay constant too depending on theme).
+	 *
+	 * @see <a href="http://b.android.com/171440">AppCompatActivity.onMenuOpened is not called any more in 22.x</a>
+	 */
+	public static void showActionBarOverflowIcons(Menu menu, boolean show) {
 		// http://stackoverflow.com/questions/18374183/how-to-show-icons-in-overflow-menu-in-actionbar
-		if ((featureId == WindowCompat.FEATURE_ACTION_BAR || featureId == WindowCompat.FEATURE_ACTION_BAR_OVERLAY)
-				&& menu != null && "MenuBuilder".equals(menu.getClass().getSimpleName())) {
+		if (menu != null && "MenuBuilder".equals(menu.getClass().getSimpleName())) {
 			try {
 				Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
 				m.setAccessible(true);
 				m.invoke(menu, show);
-			} catch (NoSuchMethodException e) {
-				LOG.warn("ActionBar overflow icons hack failed", e);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+			} catch (NoSuchMethodException ex) {
+				LOG.warn("ActionBar overflow icons hack failed", ex);
+			} catch (Exception ex) {
+				throw new RuntimeException(ex);
 			}
 		}
 	}
