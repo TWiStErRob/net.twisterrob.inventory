@@ -28,6 +28,7 @@ import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.view.TextWatcherAdapter;
 import net.twisterrob.android.wiring.DefaultValueUpdater;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
@@ -36,7 +37,6 @@ import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.utils.PictureHelper;
-import net.twisterrob.inventory.android.view.TextWatcherAdapter;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSingleLoaderFragment<T> {

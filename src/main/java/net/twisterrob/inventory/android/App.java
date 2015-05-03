@@ -105,6 +105,7 @@ public class App extends Application {
 		return getInstance();
 	}
 
+	// TODO wrapper for resource based retrieval
 	public static SharedPreferences getPrefs() {
 		return PreferenceManager.getDefaultSharedPreferences(getAppContext());
 	}
