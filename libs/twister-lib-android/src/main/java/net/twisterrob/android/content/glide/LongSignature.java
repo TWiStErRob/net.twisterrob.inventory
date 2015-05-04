@@ -4,6 +4,11 @@ import com.bumptech.glide.signature.StringSignature;
 
 public class LongSignature extends StringSignature {
 	private final long key;
+
+	public LongSignature() {
+		this(System.currentTimeMillis());
+	}
+
 	public LongSignature(long key) {
 		super(String.valueOf(key));
 		if (key == 0) {

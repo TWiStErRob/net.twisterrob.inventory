@@ -415,7 +415,7 @@ public /*static*/ abstract class ImageTools {
 				perc.bottom = right;
 				break;
 		}
-		BitmapFactory.Options options = getSize(file);
+		BitmapFactory.Options options = getSizeInternal(file);
 
 		Rect rect = new Rect();
 		rect.left = (int)(perc.left * options.outWidth);
@@ -452,11 +452,16 @@ public /*static*/ abstract class ImageTools {
 		return null;
 	}
 
-	private static BitmapFactory.Options getSize(File file) {
+	private static BitmapFactory.Options getSizeInternal(File file) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 		return options;
+	}
+
+	public static int[] getSize(File file) {
+		BitmapFactory.Options options = getSizeInternal(file);
+		return new int[] {options.outWidth, options.outHeight};
 	}
 
 	//	private static Bitmap cropPictureDecodeRegion(File file, int x, int y, int w, int h) throws IOException {
@@ -526,5 +531,38 @@ public /*static*/ abstract class ImageTools {
 
 	protected ImageTools() {
 		// static utility class
+	}
+
+	/**
+	 * @see com.bumptech.glide.load.resource.bitmap.TransformationUtils#fitCenter
+	 */
+	public static Bitmap downscale(Bitmap source, int width, int height) {
+		if (source.getWidth() == width && source.getHeight() == height) {
+			return source;
+		}
+		final float widthPercentage = width / (float)source.getWidth();
+		final float heightPercentage = height / (float)source.getHeight();
+		final float minPercentage = Math.min(widthPercentage, heightPercentage);
+
+		final int targetWidth = Math.round(minPercentage * source.getWidth());
+		final int targetHeight = Math.round(minPercentage * source.getHeight());
+
+		if (source.getWidth() <= targetWidth && source.getHeight() <= targetHeight) {
+			return source;
+		}
+
+		Bitmap.Config config = source.getConfig() != null? source.getConfig() : Bitmap.Config.ARGB_8888;
+		Bitmap result = Bitmap.createBitmap(targetWidth, targetHeight, config);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+			result.setHasAlpha(source.hasAlpha());
+		}
+
+		Canvas canvas = new Canvas(result);
+		Matrix matrix = new Matrix();
+		matrix.setScale(minPercentage, minPercentage);
+		Paint paint = new Paint(Paint.DITHER_FLAG | Paint.FILTER_BITMAP_FLAG);
+		canvas.drawBitmap(source, matrix, paint);
+
+		return result;
 	}
 }

@@ -32,6 +32,7 @@ import net.twisterrob.java.io.IOTools;
 public class CaptureImage extends Activity {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
 	private static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;
+	private static final String EXTRA_MAXSIZE = MediaStore.EXTRA_SIZE_LIMIT;
 	private static final String EXTRA_ASPECT = "keepAspect";
 	private static final String EXTRA_SQUARE = "isSquare";
 	private static final String EXTRA_FLASH = "flash";
@@ -180,7 +181,7 @@ public class CaptureImage extends Activity {
 			out = new FileOutputStream(file);
 			out.write(data);
 			out.flush();
-			LOG.info("Raw image saved at {}", file);
+			LOG.info("Raw image ({} bytes) saved at {}", data.length, file);
 		} catch (FileNotFoundException ex) {
 			LOG.error("Cannot find file {}", file, ex);
 			file = null;
@@ -197,9 +198,22 @@ public class CaptureImage extends Activity {
 		try {
 			RectF sel = getPictureRect();
 			if (file != null && !sel.isEmpty()) {
+				int[] originalSize = ImageTools.getSize(file);
 				Bitmap bitmap = ImageTools.cropPicture(file, sel.left, sel.top, sel.right, sel.bottom);
+				int[] croppedSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
+				int maxSize = getIntent().getIntExtra(EXTRA_MAXSIZE, 0);
+				if (0 < maxSize) {
+					bitmap = ImageTools.downscale(bitmap, maxSize, maxSize);
+				}
+				int[] finalSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
 				ImageTools.savePicture(bitmap, file, CompressFormat.JPEG, 80);
-				LOG.info("Cropped file saved at {}", file);
+				LOG.info("Cropped image ({}x{} -> {}x{} @ {},{} -> {}x{} (max {})) saved at {}",
+						originalSize[0], originalSize[1],
+						croppedSize[0], croppedSize[1],
+						(int)(sel.top * originalSize[0]), (int)(sel.left * originalSize[1]),
+						finalSize[0], finalSize[1],
+						maxSize,
+						file);
 				return file;
 			}
 		} catch (IOException ex) {
@@ -220,9 +234,10 @@ public class CaptureImage extends Activity {
 		return selection;
 	}
 
-	public static Intent saveTo(Context context, File targetFile) {
+	public static Intent saveTo(Context context, File targetFile, int maxSize) {
 		Intent intent = new Intent(context, CaptureImage.class);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, targetFile.getAbsolutePath());
+		intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, maxSize);
 		PackageManager pm = context.getPackageManager();
 		if (!AndroidTools.hasPermission(context, Manifest.permission.CAMERA)) {
 			throw new IllegalStateException("Camera permission is not granted, please add it to your manifest:\n"

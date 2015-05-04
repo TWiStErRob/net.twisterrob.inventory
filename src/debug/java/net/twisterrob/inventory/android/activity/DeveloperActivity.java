@@ -126,7 +126,7 @@ public class DeveloperActivity extends ListActivity {
 				create(getString(R.string.action_picture_take), new Runnable() {
 					public void run() {
 						File target = new File(getCacheDir(), "developer_image.jpg");
-						startActivity(CaptureImage.saveTo(App.getAppContext(), target));
+						startActivity(CaptureImage.saveTo(App.getAppContext(), target, -1));
 					}
 				})
 		);

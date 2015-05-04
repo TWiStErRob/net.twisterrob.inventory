@@ -74,6 +74,9 @@ public/*static*/ abstract class IOTools {
 	public static String readAll(InputStream stream, String charsetName) throws IOException {
 		return readAll(new InputStreamReader(stream, charsetName));
 	}
+	public static byte[] readBytes(File input) throws IOException {
+		return readBytes(new FileInputStream(input));
+	}
 	public static byte[] readBytes(InputStream input) throws IOException {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		IOTools.copyStream(input, bytes);
