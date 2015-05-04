@@ -3,8 +3,6 @@ package net.twisterrob.inventory.android.fragment.data;
 import org.slf4j.*;
 
 import android.database.Cursor;
-import android.os.Bundle;
-import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -28,29 +26,19 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 
 	public PropertyEditFragment() {
 		setDynamicResource(DYN_EventsClass, PropertyEditEvents.class);
-	}
-
-	@Override public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		setDynamicResource(DYN_NameHintResource, R.string.property_name_hint);
+		setDynamicResource(DYN_DescriptionHintResource, R.string.property_description_hint);
 		setKeepNameInSync(true);
 	}
 
-	@Override public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
-		name.setHint(R.string.property_name_hint);
-		description.setHint(R.string.property_description_hint);
-	}
-
 	@Override protected void onStartLoading() {
-		long id = getArgPropertyID();
-
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper typeCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
 		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.id(), null, typeCursorSwapper);
 
-		if (id != Property.ID_ADD) {
+		if (!isNew()) {
 			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.id(),
-					Intents.bundleFromProperty(id), new SingleRowLoaded());
+					Intents.bundleFromProperty(getArgPropertyID()), new SingleRowLoaded());
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		}
 
@@ -67,6 +55,10 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		PropertyDTO property = new PropertyDTO();
 		property.id = getArgPropertyID();
 		return property;
+	}
+
+	@Override protected boolean isNew() {
+		return getArgPropertyID() == Property.ID_ADD;
 	}
 
 	private long getArgPropertyID() {

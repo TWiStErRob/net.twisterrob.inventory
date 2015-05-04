@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
 import android.support.annotation.*;
 import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
@@ -42,25 +42,27 @@ import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
 	public static final String EDIT_IMAGE = "editImageOnStartup";
+	protected static final String DYN_NameHintResource = "nameHint";
+	protected static final String DYN_DescriptionHintResource = "descriptionHint";
 	private static final int MAX_IMAGE_SIZE = 2048;
+
+	private boolean isRestored;
+	private Object restoredImage;
+	private int restoredTypePos;
 
 	/** byte[], Uri or null */
 	private Object currentImage;
 	private boolean keepNameInSync;
 
-	protected EditText name;
-	protected EditText description;
+	private EditText name;
+	private EditText description;
 	private Spinner type;
 	protected CursorAdapter typeAdapter;
 	private ImageView image;
-	private boolean isClean;
+	private boolean isClean = true;
 
-	public void setKeepNameInSync(boolean keepNameInSync) {
+	protected void setKeepNameInSync(boolean keepNameInSync) {
 		this.keepNameInSync = keepNameInSync;
-	}
-
-	public boolean isKeepNameInSync() {
-		return keepNameInSync;
 	}
 
 	public boolean isDirty() {
@@ -68,19 +70,54 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	protected void onSingleRowLoaded(DTO dto) {
+		if (tryRestore()) {
+			return;
+		}
+
 		AndroidTools.selectByID(type, dto.type);
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
-		setCurrentImage(dto.hasImage? dto.getImageUri() : null);
+		setCurrentImage(dto.hasImage? dto.getImageUri() : null); // displays image, so needs type to be selected
 		description.setText(dto.description);
 		if (getArguments().getBoolean(EDIT_IMAGE)) {
 			getArguments().remove(EDIT_IMAGE);
 			takePicture();
 		}
-		new Handler(getActivity().getMainLooper()).post(new Runnable() {
+		type.post(new Runnable() {
 			@Override public void run() {
 				isClean = true;
 			}
 		});
+	}
+
+	private boolean tryRestore() {
+		if (isRestored) {
+			setCurrentImage(restoredImage);
+			// manually restore because sometimes lost, e.g. action_take_picture, rotate, back (or crop)
+			// at this point we can be sure that types are loaded because SingleBelonging loader depends on types loader
+			type.setSelection(restoredTypePos);
+			// isClean cannot be restored even if post()-ed here, setSelection finishes after
+			return true;
+		}
+		return false;
+	}
+
+	@Override public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (currentImage instanceof byte[]) {
+			outState.putByteArray("image", (byte[])currentImage);
+		} else if (currentImage instanceof Uri) {
+			outState.putParcelable("image", (Uri)currentImage);
+		}
+		outState.putInt("typePos", type.getSelectedItemPosition());
+	}
+
+	@Override public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			restoredImage = savedInstanceState.get("image");
+			restoredTypePos = savedInstanceState.getInt("typePos");
+			isRestored = true;
+		}
 	}
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,8 +125,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	// TODO maybe move overriding logic into this class
-	@Override public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		image = (ImageView)view.findViewById(R.id.image);
 		image.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -104,6 +141,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 
 		name = (EditText)view.findViewById(R.id.title);
+		name.setHint((Integer)getDynamicResource(DYN_NameHintResource));
 		name.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 				isClean = false;
@@ -112,6 +150,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 
 		description = (EditText)view.findViewById(R.id.description);
+		description.setHint((Integer)getDynamicResource(DYN_DescriptionHintResource));
 		description.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 				isClean = false;
@@ -130,17 +169,24 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			private int oldPos = AdapterView.INVALID_POSITION;
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				if (oldPos != position) {
+				if (oldPos != position && oldPos != -1) {
 					oldPos = position;
 					isClean = false;
 				}
-				if (isKeepNameInSync()) {
+				if (keepNameInSync) {
+					boolean cleanBefore = isClean; // automatic naming shouldn't be considered a change
 					super.onItemSelected(parent, view, position, id);
+					isClean = cleanBefore;
 				}
 				reloadImage();
 			}
 		});
+
+		if (isNew()) {
+			tryRestore();
+		}
 	}
+	protected abstract boolean isNew();
 
 	public void save() {
 		doPrepareSave();
@@ -153,7 +199,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		name.setText(name.getText().toString().trim());
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void doSave() {
 		DTO dto = createDTO();
 		dto.hasImage = currentImage != null;
@@ -161,7 +206,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		dto.name = name.getText().toString();
 		dto.description = description.getText().toString();
 		dto.type = type.getSelectedItemId();
-		new SaveTask().execute(dto);
+		new SaveTask().executeSerial(dto);
 	}
 	/** Create the DTO object with id set and fill in all fields needed to save (except the ones inherited from ImagedDTO) */
 	protected abstract DTO createDTO();
@@ -187,7 +232,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private @RawRes int getTypeImage(int position) {
 		@SuppressWarnings("resource")
 		Cursor cursor = (Cursor)type.getItemAtPosition(position);
-		return ImagedDTO.getFallbackID(getContext(), cursor);
+		return cursor != null? ImagedDTO.getFallbackID(getContext(), cursor) : R.raw.category_unknown;
 	}
 
 	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -209,6 +254,10 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void removePicture() {
+		setCurrentImage(null);
 	}
 
 	private void pickPicture() {
@@ -234,10 +283,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				App.toastUser(App.getError(ex, "Cannot take picture."));
 			}
 		}.execute(getContext());
-	}
-
-	private void removePicture() {
-		setCurrentImage(null);
 	}
 
 	@Override public void onActivityResult(final int requestCode, int resultCode, final Intent data) {

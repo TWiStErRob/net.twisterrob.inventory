@@ -53,11 +53,20 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 	public void onLoadFinished(Loader<Object> loader, Object data) {
 		Dependency<?> state = loaders.get(loader.getId());
 		assert state.loader == loader;
-		@SuppressWarnings("unchecked")
-		LoaderCallbacks<Object> callbacks = (LoaderCallbacks<Object>)state.callbacks;
-		callbacks.onLoadFinished(loader, data);
 
-		state.ready = true;
+		if (!state.ready) {
+			for (Dependency<?> prev : state.producers) {
+				if (!prev.isReady()) {
+					return; // wait until it becomes ready, then that will trigger us again
+				}
+			}
+
+			state.ready = true;
+			@SuppressWarnings("unchecked")
+			LoaderCallbacks<Object> callbacks = (LoaderCallbacks<Object>)state.callbacks;
+			callbacks.onLoadFinished(loader, data);
+		}
+
 		LOG.debug("loadFinished #{}, coming up: {}", state.id, state.consumers);
 		for (Dependency<?> next : state.consumers) {
 			if (next.readyToBeExecuted()) {

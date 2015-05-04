@@ -4,7 +4,6 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -28,24 +27,18 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 
 	public ItemEditFragment() {
 		setDynamicResource(DYN_EventsClass, ItemEditEvents.class);
-	}
-
-	@Override public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
-		name.setHint(R.string.item_name_hint);
-		description.setHint(R.string.item_description_hint);
+		setDynamicResource(DYN_NameHintResource, R.string.item_name_hint);
+		setDynamicResource(DYN_DescriptionHintResource, R.string.item_description_hint);
 	}
 
 	@Override protected void onStartLoading() {
-		long id = getArgItemID();
-
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper catCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
 		Dependency<Cursor> populateCats = manager.add(ItemCategories.id(), null, catCursorSwapper);
 
-		if (id != Item.ID_ADD) {
+		if (!isNew()) {
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.id(),
-					Intents.bundleFromItem(id), new SingleRowLoaded());
+					Intents.bundleFromItem(getArgItemID()), new SingleRowLoaded());
 			loadItemData.dependsOn(populateCats);
 		}
 
@@ -63,6 +56,10 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 		item.parentID = getArgParentID();
 		item.id = getArgItemID();
 		return item;
+	}
+
+	@Override protected boolean isNew() {
+		return getArgItemID() == Item.ID_ADD;
 	}
 
 	private long getArgItemID() {

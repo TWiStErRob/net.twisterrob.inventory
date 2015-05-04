@@ -4,7 +4,6 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -28,29 +27,19 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 
 	public RoomEditFragment() {
 		setDynamicResource(DYN_EventsClass, RoomEditEvents.class);
-	}
-
-	@Override public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		setDynamicResource(DYN_NameHintResource, R.string.room_name_hint);
+		setDynamicResource(DYN_DescriptionHintResource, R.string.room_description_hint);
 		setKeepNameInSync(true);
 	}
 
-	@Override public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
-		name.setHint(R.string.room_name_hint);
-		description.setHint(R.string.room_description_hint);
-	}
-
 	@Override protected void onStartLoading() {
-		long id = getArgRoomID();
-
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper typeCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
 		Dependency<Cursor> populateTypes = manager.add(RoomTypes.id(), null, typeCursorSwapper);
 
-		if (id != Room.ID_ADD) {
+		if (!isNew()) {
 			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.id(),
-					Intents.bundleFromRoom(id), new SingleRowLoaded());
+					Intents.bundleFromRoom(getArgRoomID()), new SingleRowLoaded());
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		}
 
@@ -68,6 +57,10 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		room.propertyID = getArgPropertyID();
 		room.id = getArgRoomID();
 		return room;
+	}
+
+	@Override protected boolean isNew() {
+		return getArgRoomID() == Room.ID_ADD;
 	}
 
 	private long getArgPropertyID() {
