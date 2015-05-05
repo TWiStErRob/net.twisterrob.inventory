@@ -54,7 +54,7 @@ public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 		long unixUtc = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
 		String fileName = cursor.getString(cursor.getColumnIndexOrThrow(ExporterTask.IMAGE_NAME));
 		String comment = ExporterTask.buildComment(cursor);
-		IOTools.store(zip, image, unixUtc, fileName, comment);
+		IOTools.store(zip, fileName, image, unixUtc, comment);
 	}
 
 	@Override public void noImage(Cursor cursor) throws Throwable {

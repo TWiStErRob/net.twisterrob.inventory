@@ -25,7 +25,6 @@ dependencies {
 	} else {
 		compile('net.twisterrob:twister-lib-android:1.0-SNAPSHOT')
 	}
-	compile 'org.apache.commons:commons-csv:1.1'
 }
 
 android {

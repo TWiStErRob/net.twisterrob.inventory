@@ -5,27 +5,32 @@ import org.slf4j.*;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.view.*;
+import android.view.View.OnClickListener;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.data.*;
+import net.twisterrob.inventory.android.activity.data.ItemViewActivity;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
-public class SearchResultsActivity extends BaseDetailActivity<ItemListFragment> implements ItemsEvents {
+public class SearchResultsActivity extends SingleFragmentActivity<ItemListFragment> implements ItemsEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(SearchResultsActivity.class);
+	private SearchView search;
 
-	public SearchResultsActivity() {
-		super(R.plurals.item);
+	@Override protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setActionBarTitle(getTitle());
 	}
-
-	@Override
-	protected ItemListFragment onCreateFragment() {
+	@Override protected ItemListFragment onCreateFragment() {
 		return handleIntent();
 	}
 
-	@Override
-	protected void onNewIntent(Intent intent) {
+	@Override protected void onNewIntent(Intent intent) {
 		LOG.trace("onNewIntent(\n{} {}\n->\n{} {}\n)",
 				getIntent(), getIntent().getExtras(), intent, intent.getExtras());
 		setIntent(intent);
@@ -41,7 +46,6 @@ public class SearchResultsActivity extends BaseDetailActivity<ItemListFragment> 
 		CharSequence query = getExtraQuery(intent);
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			LOG.debug("Search '{}'", query);
-			setActionBarTitle(getTitle());
 			setActionBarSubtitle(query);
 			return ItemListFragment.newSearchInstance(query);
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -59,6 +63,30 @@ public class SearchResultsActivity extends BaseDetailActivity<ItemListFragment> 
 			}
 		}
 		return null;
+	}
+
+	@Override public boolean onCreateOptionsMenu(Menu menu) {
+		if (!super.onCreateOptionsMenu(menu)) {
+			return false;
+		}
+		getMenuInflater().inflate(R.menu.search, menu);
+		search = (SearchView)AndroidTools.prepareSearch(this, menu, R.id.search);
+		search.setQueryRefinementEnabled(true);
+		search.setOnSearchClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				search.setQuery(getExtraQuery(getIntent()), false);
+			}
+		});
+		search.setOnQueryTextListener(new OnQueryTextListener() {
+			@Override public boolean onQueryTextSubmit(String query) {
+				getSupportActionBar().collapseActionView();
+				return false;
+			}
+			@Override public boolean onQueryTextChange(String query) {
+				return false;
+			}
+		});
+		return true;
 	}
 
 	private CharSequence getExtraQuery(Intent intent) {

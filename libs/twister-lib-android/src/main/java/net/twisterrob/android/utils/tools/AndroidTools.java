@@ -582,11 +582,11 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
-	public static View prepareSearch(Activity activity, Menu menu, int searchItemID) {
+	public static @NonNull View prepareSearch(Activity activity, Menu menu, int searchItemID) {
 		SearchManager searchManager = (SearchManager)activity.getSystemService(Context.SEARCH_SERVICE);
 		MenuItem item = menu.findItem(searchItemID);
 		if (item == null) {
-			return null;
+			throw new NullPointerException("Cannot find search menu item! Did you inflate it into the menu?");
 		}
 		View view = MenuItemCompat.getActionView(item);
 		if (view == null) {

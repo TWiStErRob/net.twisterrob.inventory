@@ -446,6 +446,7 @@
 			i._id                                           as _id,
 			i.name                                          as name,
 			i.image IS NOT NULL                             as hasImage,
+			i.image_time                                    as imageTime,
 			c.image                                         as typeImage,
 			(select count() from Item where parent = i._id) as countChildren,
 			c.name                                          as category

@@ -75,10 +75,13 @@ public/*static*/ abstract class IOTools {
 		return readAll(new InputStreamReader(stream, charsetName));
 	}
 	public static byte[] readBytes(File input) throws IOException {
-		return readBytes(new FileInputStream(input));
+		return readBytes(new FileInputStream(input), input.length());
 	}
 	public static byte[] readBytes(InputStream input) throws IOException {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		return readBytes(input, 0);
+	}
+	public static byte[] readBytes(InputStream input, long size) throws IOException {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream((int)size);
 		IOTools.copyStream(input, bytes);
 		return bytes.toByteArray();
 	}
@@ -345,16 +348,16 @@ public/*static*/ abstract class IOTools {
 	}
 
 	public static void store(@Nonnull ZipOutputStream zip,
-			@Nonnull byte[] file, long unixEpoch, @Nonnull String name, @Nullable String comment) throws IOException {
+			@Nonnull String name, @Nonnull byte[] contents, long epoch, @Nullable String comment) throws IOException {
 		ZipEntry entry = new ZipEntry(name);
-		entry.setTime(unixEpoch);
+		entry.setTime(epoch);
 		entry.setMethod(ZipEntry.STORED);
-		entry.setSize(file.length);
-		entry.setCrc(IOTools.crc(file));
+		entry.setSize(contents.length);
+		entry.setCrc(IOTools.crc(contents));
 		entry.setComment(comment);
 
 		zip.putNextEntry(entry);
-		zip.write(file);
+		zip.write(contents);
 		zip.closeEntry();
 	}
 

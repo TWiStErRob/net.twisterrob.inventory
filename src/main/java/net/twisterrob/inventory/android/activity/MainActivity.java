@@ -13,6 +13,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.*;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.internal.view.menu.MenuBuilder;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -186,7 +188,17 @@ public class MainActivity extends DrawerActivity
 		}
 		getMenuInflater().inflate(R.menu.main, menu);
 		getMenuInflater().inflate(R.menu.search, menu);
-		AndroidTools.prepareSearch(this, menu, R.id.search);
+		SearchView search = (SearchView)AndroidTools.prepareSearch(this, menu, R.id.search);
+		search.setQueryRefinementEnabled(true);
+		search.setOnQueryTextListener(new OnQueryTextListener() {
+			@Override public boolean onQueryTextSubmit(String query) {
+				getSupportActionBar().collapseActionView();
+				return false;
+			}
+			@Override public boolean onQueryTextChange(String query) {
+				return false;
+			}
+		});
 		return true;
 	}
 
