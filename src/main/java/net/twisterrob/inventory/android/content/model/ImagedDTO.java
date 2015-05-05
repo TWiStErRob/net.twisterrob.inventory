@@ -12,7 +12,6 @@ import net.twisterrob.android.content.glide.LongSignature;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.java.utils.StringTools;
 
 public abstract class ImagedDTO extends DTO {
 	private static final Logger LOG = LoggerFactory.getLogger(ImagedDTO.class);
@@ -43,7 +42,7 @@ public abstract class ImagedDTO extends DTO {
 	}
 
 	public void loadInto(ImageView image, ImageView type, boolean alwaysShowType) {
-		String fullImagePath = hasImage? StringTools.toString(getImageUri(), null) : null;
+		Uri fullImagePath = hasImage? getImageUri() : null;
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), this.typeImage);
 		loadInto(image, type, fullImagePath, imageTime, typeID, alwaysShowType);
 	}
@@ -51,11 +50,10 @@ public abstract class ImagedDTO extends DTO {
 	public static void loadInto(ImageView image, ImageView type, Type entity, long id, long signature, String typeName,
 			boolean alwaysShowType) {
 		Uri uri = entity != null? entity.getImageUri(id) : null;
-		String fullImagePath = StringTools.toString(uri, null);
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
-		loadInto(image, type, fullImagePath, signature, typeID, alwaysShowType);
+		loadInto(image, type, uri, signature, typeID, alwaysShowType);
 	}
-	private static void loadInto(ImageView image, ImageView type, String fullImagePath, long signature, int typeID,
+	private static void loadInto(ImageView image, ImageView type, Uri fullImagePath, long signature, int typeID,
 			boolean alwaysShowType) {
 		if (fullImagePath == null) {
 			if (alwaysShowType) {
@@ -75,11 +73,10 @@ public abstract class ImagedDTO extends DTO {
 
 	public static void loadInto(ImageView image, Type entity, long id, long signature, String typeName) {
 		Uri uri = entity != null? entity.getImageUri(id) : null;
-		String fullImagePath = StringTools.toString(uri, null);
 		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
-		loadInto(image, fullImagePath, signature, typeID);
+		loadInto(image, uri, signature, typeID);
 	}
-	private static void loadInto(ImageView image, String fullImagePath, long signature, int typeID) {
+	private static void loadInto(ImageView image, Uri fullImagePath, long signature, int typeID) {
 		if (fullImagePath == null) {
 			Pic.svg().load(typeID).into(image);
 		} else {

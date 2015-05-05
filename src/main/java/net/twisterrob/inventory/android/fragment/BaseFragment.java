@@ -16,7 +16,7 @@ public class BaseFragment<T> extends VariantFragment {
 
 	protected static final String DYN_OptionsMenu = "optionsMenu";
 	protected static final String DYN_EventsClass = "eventsListenerClass";
-	public static final String KEY_VIEWTAG = "BaseFragment.viewTag";
+	private static final String KEY_VIEWTAG = "BaseFragment.viewTag";
 
 	private Map<String, Object> dynResources = new HashMap<>();
 	private Parcelable tag;

@@ -355,13 +355,14 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		reloadImage();
 	}
 
+	private final long startTime = System.currentTimeMillis();
 	private void reloadImage() {
 		if (currentImage == null) {
 			loadTypeImage();
 		} else if (currentImage instanceof Uri) {
 			Pic.jpg()
-					.signature(new LongSignature()) // TODO =image_time but from where?
-					.load(currentImage.toString())
+					.signature(new LongSignature(startTime)) // simulate image_time (Uri shouldn't change while editing)
+					.load((Uri)currentImage)
 					.into(image);
 		} else if (currentImage instanceof byte[]) {
 			Pic.baseRequest(byte[].class) // no need for signature, the byte[] doesn't change -> TODO glide#437

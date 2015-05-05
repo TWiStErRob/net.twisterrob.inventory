@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 
@@ -71,7 +72,7 @@ public interface Constants {
 	class Pic {
 		private static final LoggingListener<Integer, GlideDrawable> SVG_LOGGING_LISTENER =
 				new LoggingListener<>("SVG", new ResourceFormatter(App.getAppContext()));
-		private static final LoggingListener<String, GlideDrawable> IMAGE_LOGGING_LISTENER =
+		private static final LoggingListener<Uri, GlideDrawable> IMAGE_LOGGING_LISTENER =
 				new LoggingListener<>("image");
 
 		public static <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz) {
@@ -97,14 +98,16 @@ public interface Constants {
 				.listener(SVG_LOGGING_LISTENER)
 				.decoder(getSvgDecoder());
 
-		private static final DrawableRequestBuilder<String> IMAGE_REQUEST = baseRequest(String.class)
+		private static final DrawableRequestBuilder<Uri> IMAGE_REQUEST = baseRequest(Uri.class)
 				.animate(android.R.anim.fade_in)
 				.listener(IMAGE_LOGGING_LISTENER);
 
 		public static DrawableRequestBuilder<Integer> svg() {
 			return SVG_REQUEST.clone();
 		}
-		public static DrawableRequestBuilder<String> jpg() {
+
+		// TODO should be loading from Uris because it's toStringed everywhere
+		public static DrawableRequestBuilder<Uri> jpg() {
 			return IMAGE_REQUEST.clone();
 		}
 

@@ -29,7 +29,7 @@ import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEven
 import net.twisterrob.inventory.android.sunburst.SunburstFragment;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents;
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends DrawerActivity
 		implements PropertiesEvents, RoomsEvents, CategoriesEvents, SunBurstEvents, MainEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
