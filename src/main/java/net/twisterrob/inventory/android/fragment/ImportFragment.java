@@ -5,6 +5,7 @@ import java.io.File;
 import org.slf4j.*;
 
 import android.app.*;
+import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,14 +22,21 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 	private FragmentManager parentFragmentManager;
 	private Progress progress;
 
-	@Override public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		task.setCallbacks(this);
+	@Override public void onResume() {
+		super.onResume();
+		if (task == null) {
+			// recover from a state where fragment was recreated by framework
+			// this can happen if user leaves, task finishes, device rotated and user comes back
+			dismissAllowingStateLoss();
+		} else {
+			task.setCallbacks(this);
+		}
 	}
-
-	@Override public void onDetach() {
-		task.setCallbacks(new ImportFinishedListener(getActivity().getApplicationContext()));
-		super.onDetach();
+	@Override public void onPause() {
+		if (task != null) { // guard for recreated fragments, see onResume
+			task.setCallbacks(new ImportFinishedListener(getActivity().getApplicationContext()));
+		}
+		super.onPause();
 	}
 
 	public void execute(File file) {
@@ -37,7 +45,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 
 	@Override public void importStarting() {
 		LOG.trace("importStarting");
-		show(parentFragmentManager.beginTransaction().addToBackStack("import"), "import");
+		show(parentFragmentManager, "import");
 		parentFragmentManager = null;
 	}
 
@@ -47,6 +55,8 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		ProgressDialog dialog = (ProgressDialog)getDialog();
 		if (dialog != null) {
 			updateProgress(dialog, progress);
+		} else {
+			LOG.warn("Premature stop, no dialog");
 		}
 	}
 	private void updateProgress(@NonNull ProgressDialog dialog, @NonNull Progress progress) {
@@ -62,31 +72,34 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 	}
 
 	@Override public void importFinished(@NonNull Progress res) {
-		LOG.trace("importFinished {}", res);
-		dismissAllowingStateLoss();
-		displayFinishMessage(getActivity(), res);
+		onFinish(getActivity(), res);
 	}
 
-	private static void displayFinishMessage(final Context res, final Progress p) {
+	private void onFinish(Context context, final Progress p) {
+		LOG.trace("importFinished {}", context);
+		dismissAllowingStateLoss();
+
 		String message;
 		if (p.failure != null) {
-			message = res.getString(R.string.backup_import_result_failed, p.failure.getMessage());
+			message = context.getString(R.string.backup_import_result_failed, p.failure.getMessage());
 		} else {
 			if (p.conflicts.isEmpty()) {
-				message = res.getString(R.string.backup_import_result_success, p.total);
+				message = context.getString(R.string.backup_import_result_success, p.total);
 			} else {
-				message = res.getString(R.string.backup_import_result_warning, p.total, p.done);
+				message = context.getString(R.string.backup_import_result_warning,
+						p.total, p.done, p.conflicts.size());
 			}
 		}
-		if (!p.conflicts.isEmpty()) {
-			new AlertDialog.Builder(res)
-					.setTitle(message)
-					.setItems(p.conflicts.toArray(new CharSequence[p.conflicts.size()]), null)
+
+		if (context instanceof Activity) {
+			Builder builder = new Builder(context)
 					.setCancelable(true)
 					.setNeutralButton(android.R.string.ok, null)
-					.create()
-					.show()
-			;
+					.setTitle(message);
+			if (!p.conflicts.isEmpty()) {
+				builder.setItems(p.conflicts.toArray(new CharSequence[p.conflicts.size()]), null);
+			}
+			builder.create().show();
 		} else {
 			App.toastUser(message);
 		}
@@ -120,21 +133,21 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		return fragment;
 	}
 
-	private static final class ImportFinishedListener implements ImportCallbacks {
-		Context context;
+	private final class ImportFinishedListener implements ImportCallbacks {
+		private final Context context;
 
 		ImportFinishedListener(Context context) {
 			this.context = context;
 		}
 
 		@Override public void importStarting() {
-			// ignore
+			// ignore, can't start UI
 		}
 		@Override public void importProgress(@NonNull Progress progress) {
-			// ignore
+			// ignore, there's no UI
 		}
 		@Override public void importFinished(@NonNull Progress p) {
-			displayFinishMessage(context, p);
+			onFinish(context, p);
 		}
 	}
 }

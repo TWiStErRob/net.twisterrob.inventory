@@ -3,8 +3,8 @@ package net.twisterrob.inventory.android.fragment;
 import org.slf4j.*;
 
 import android.app.*;
+import android.app.AlertDialog.Builder;
 import android.content.*;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -21,14 +21,21 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 	private FragmentManager parentFragmentManager;
 	private Progress progress;
 
-	@Override public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		task.setCallbacks(this);
+	@Override public void onResume() {
+		super.onResume();
+		if (task == null) {
+			// recover from a state where fragment was recreated by framework
+			// this can happen if user leaves, task finishes, device rotated and user comes back
+			dismissAllowingStateLoss();
+		} else {
+			task.setCallbacks(this);
+		}
 	}
-
-	@Override public void onDetach() {
-		task.setCallbacks(new ExportFinishedListener(getResources()));
-		super.onDetach();
+	@Override public void onPause() {
+		if (task != null) { // guard for recreated fragments, see onResume
+			task.setCallbacks(new ExportFinishedListener(getActivity().getApplicationContext()));
+		}
+		super.onPause();
 	}
 
 	public void execute() {
@@ -37,11 +44,11 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 
 	@Override public void exportStarting() {
 		LOG.trace("exportStarting");
-		show(parentFragmentManager.beginTransaction().addToBackStack("export"), "export");
+		show(parentFragmentManager, "export");
 		parentFragmentManager = null;
 	}
 
-	@Override public void exportProgress(Progress progress) {
+	@Override public void exportProgress(@NonNull Progress progress) {
 		this.progress = progress;
 		LOG.trace("exportProgress {}", progress);
 		ProgressDialog dialog = (ProgressDialog)getDialog();
@@ -56,6 +63,8 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 			case Init:
 				dialog.setMessage(getString(R.string.backup_export_progress_init));
 				dialog.setIndeterminate(true);
+				dialog.setProgress(0);
+				dialog.setMax(0);
 				break;
 			case Data:
 				dialog.setMessage(getString(R.string.backup_export_progress_data));
@@ -73,24 +82,38 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		}
 	}
 
-	@Override public void exportFinished(Progress res) {
-		LOG.trace("exportFinished {}", res);
-		dismissAllowingStateLoss();
-		displayFinishMessage(getResources(), res);
+	@Override public void exportFinished(@NonNull Progress res) {
+		displayFinishMessage(getActivity(), res);
 	}
 
-	private static void displayFinishMessage(Resources res, Progress p) {
+	private void displayFinishMessage(Context context, Progress p) {
+		LOG.trace("exportFinished {}", context);
+		dismissAllowingStateLoss();
+
 		String message;
-		if (p.failure == null) {
-			if (p.imagesFailed == 0) {
-				message = res.getString(R.string.backup_export_result_success, p.total);
-			} else {
-				message = res.getString(R.string.backup_export_result_warning, p.total, p.imagesFailed, p.imagesTried);
-			}
+		if (p.failure != null) {
+			message = context.getString(R.string.backup_export_result_failed, p.failure.getMessage());
 		} else {
-			message = res.getString(R.string.backup_export_result_failed, p.failure.getMessage());
+			if (p.imagesFailed == 0) {
+				message = context.getString(R.string.backup_export_result_success, p.total);
+			} else {
+				message = context.getString(R.string.backup_export_result_warning,
+						p.total, p.imagesFailed, p.imagesTried);
+			}
 		}
-		App.toastUser(message);
+
+		if (context instanceof Activity) {
+			new Builder(context)
+					.setCancelable(true)
+					.setNeutralButton(android.R.string.ok, null)
+					.setTitle(message)
+					.create()
+					.show()
+			;
+
+		} else {
+			App.toastUser(message);
+		}
 	}
 
 	@Override public void onCancel(DialogInterface dialog) {
@@ -121,21 +144,21 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		return fragment;
 	}
 
-	private static final class ExportFinishedListener implements ExportCallbacks {
-		Resources res;
+	private final class ExportFinishedListener implements ExportCallbacks {
+		private final Context context;
 
-		ExportFinishedListener(Resources res) {
-			this.res = res;
+		ExportFinishedListener(Context context) {
+			this.context = context;
 		}
 
 		@Override public void exportStarting() {
-			// ignore
+			// ignore, can't start UI
 		}
-		@Override public void exportProgress(Progress progress) {
-			// ignore
+		@Override public void exportProgress(@NonNull Progress progress) {
+			// ignore, there's no UI
 		}
-		@Override public void exportFinished(Progress p) {
-			displayFinishMessage(res, p);
+		@Override public void exportFinished(@NonNull Progress p) {
+			displayFinishMessage(context, p);
 		}
 	}
 }

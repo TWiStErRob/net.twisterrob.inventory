@@ -50,11 +50,6 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 			@Override public String toString() {
 				return format(Locale.ROOT, "data=%2$d/%3$d: %4$s for %1$s", input, done, total, failure);
 			}
-
-			public enum Phase {
-				Init,
-				Data
-			}
 		}
 	}
 

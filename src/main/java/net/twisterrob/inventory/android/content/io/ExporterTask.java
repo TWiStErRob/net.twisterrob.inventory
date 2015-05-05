@@ -8,6 +8,7 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.*;
@@ -28,8 +29,8 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 
 	public interface ExportCallbacks {
 		void exportStarting();
-		void exportProgress(Progress progress);
-		void exportFinished(Progress progress);
+		void exportProgress(@NonNull Progress progress);
+		void exportFinished(@NonNull Progress progress);
 
 		final class Progress implements Cloneable {
 			public Phase phase;
@@ -102,14 +103,14 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 	}
 
 	@Override protected Progress doInBackground(Void ignore) {
-		OutputStream os = null;
 		File file = null;
 		try {
 			file = Paths.getExportFile();
-			os = new FileOutputStream(file);
+			OutputStream os = new FileOutputStream(file); // will be closed by finalizeExport
 			// TODO wakelock?
 			progress = new Progress();
 			progress.phase = Phase.Init;
+			publishStart();
 			cursor = App.db().export();
 			progress.total = cursor.getCount();
 			exporter.initExport(os);
@@ -124,15 +125,16 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		} catch (Throwable ex) {
 			LOG.warn("Export failed", ex);
 			progress.failure = ex;
-			if (!BuildConfig.DEBUG && file != null && !file.delete()) {
-				file.deleteOnExit();
-			}
 		} finally {
 			IOTools.ignorantClose(cursor);
 			exporter.finalizeExport();
-			if (file != null) {
-				AndroidTools.makeFileDiscoverable(context, file);
-			}
+		}
+		if (!BuildConfig.DEBUG && progress.failure != null && file != null && !file.delete()) {
+			file.deleteOnExit();
+			file = null;
+		}
+		if (file != null) {
+			AndroidTools.makeFileDiscoverable(context, file);
 		}
 
 		return progress;
@@ -228,9 +230,9 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 	private static final ExportCallbacks DUMMY_CALLBACK = new ExportCallbacks() {
 		@Override public void exportStarting() {
 		}
-		@Override public void exportProgress(Progress progress) {
+		@Override public void exportProgress(@NonNull Progress progress) {
 		}
-		@Override public void exportFinished(Progress progress) {
+		@Override public void exportFinished(@NonNull Progress progress) {
 		}
 	};
 }
