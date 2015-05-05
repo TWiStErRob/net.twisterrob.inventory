@@ -7,6 +7,7 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.*;
 import android.text.format.DateUtils;
 import android.view.*;
@@ -49,7 +50,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		super.onViewCreated(view, savedInstanceState);
 
 		propertiesController = new RecyclerViewLoadersController(this, Loaders.Properties) {
-			@Override protected CursorRecyclerAdapter setupList() {
+			@Override protected @NonNull CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.PropertyAdapter adapter = new MainFragment.PropertyAdapter(new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
@@ -73,7 +74,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		propertiesController.setView((RecyclerView)view.findViewById(R.id.properties));
 
 		roomsController = new RecyclerViewLoadersController(this, Loaders.Rooms) {
-			@Override protected CursorRecyclerAdapter setupList() {
+			@Override protected @NonNull CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.RoomAdapter adapter = new MainFragment.RoomAdapter(new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
@@ -91,7 +92,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		roomsController.setView((RecyclerView)view.findViewById(R.id.rooms));
 
 		listsController = new RecyclerViewLoadersController(this, Loaders.Lists) {
-			@Override protected CursorRecyclerAdapter setupList() {
+			@Override protected @NonNull CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.ListAdapter adapter = new MainFragment.ListAdapter(null, new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
@@ -133,7 +134,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		listsController.setView((RecyclerView)view.findViewById(R.id.lists));
 
 		recentsController = new RecyclerViewLoadersController(this, Loaders.Recents) {
-			@Override protected CursorRecyclerAdapter setupList() {
+			@Override protected @NonNull CursorRecyclerAdapter setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.RecentAdapter adapter = new MainFragment.RecentAdapter(new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {

@@ -101,7 +101,7 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 		updateFAB();
 	}
 
-	protected abstract A setupList(); // TODO add @NonNull
+	protected abstract @NonNull A setupList();
 
 	/** You have to call {@link #setView(RecyclerView)} first in order for the adapter to be created. */
 	public @Nullable A getAdapter() {

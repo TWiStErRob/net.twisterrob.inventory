@@ -5,7 +5,7 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
+import android.support.annotation.*;
 import android.support.v7.widget.*;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -158,7 +158,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	 * <li>BaseGalleryFragment.onViewCreated</li>
 	 * </ul>
 	 */
-	protected CursorRecyclerAdapter setupGallery(RecyclerView list) {
+	protected @NonNull CursorRecyclerAdapter setupGallery(RecyclerView list) {
 		final int columns = getResources().getInteger(R.integer.gallery_columns);
 
 		final SingleHeaderAdapter adapter = createAdapter();
@@ -245,7 +245,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 			this.emptyText = emptyText;
 		}
 
-		@Override protected CursorRecyclerAdapter setupList() {
+		@Override protected @NonNull CursorRecyclerAdapter setupList() {
 			return setupGallery(list);
 		}
 

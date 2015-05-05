@@ -5,6 +5,7 @@ import org.slf4j.*;
 import android.content.Context;
 import android.database.*;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -104,7 +105,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			super(CategoryContentsFragment.this);
 		}
 
-		@Override protected CursorRecyclerAdapter setupList() {
+		@Override protected @NonNull CursorRecyclerAdapter setupList() {
 			return setupGallery(list);
 		}
 
