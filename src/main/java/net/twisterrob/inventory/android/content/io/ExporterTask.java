@@ -34,12 +34,10 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 
 		final class Progress implements Cloneable {
 			public Phase phase;
-			/** number of images tried (may have failed) from imagesCount*/
-			public int imagesTried;
-			/** number of images failed from imagesCount */
-			public int imagesFailed;
-			/** number of images from total */
-			public int imagesCount;
+			/** number of images done from total */
+			public int imagesDone;
+			/** total number of images */
+			public int imagesTotal;
 			/** number of items done from total */
 			public int done;
 			/** total number of items */
@@ -55,7 +53,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 			}
 			@Override public String toString() {
 				return String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %s",
-						phase, done, total, imagesFailed, imagesTried, failure);
+						phase, done, total, imagesDone, imagesTotal, failure);
 			}
 
 			public enum Phase {
@@ -148,7 +146,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		publishStart();
 		while (cursor.moveToNext()) {
 			if (!cursor.isNull(cursor.getColumnIndexOrThrow(IMAGE_NAME))) {
-				progress.imagesCount++;
+				progress.imagesTotal++;
 			}
 			exporter.writeData(cursor);
 			publishIncrement();
@@ -165,13 +163,8 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		while (cursor.moveToNext()) {
 			String imageFileName = cursor.getString(cursor.getColumnIndexOrThrow(IMAGE_NAME));
 			if (imageFileName != null) {
-				try {
-					progress.imagesTried++;
-					exporter.saveImage(cursor);
-				} catch (Exception ex) {
-					progress.imagesFailed++;
-					LOG.warn("Cannot find image: {}", imageFileName, ex);
-				}
+				exporter.saveImage(cursor);
+				progress.imagesDone++;
 			} else {
 				exporter.noImage(cursor);
 			}

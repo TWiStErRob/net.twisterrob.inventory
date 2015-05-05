@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.content.io;
 
 import java.io.*;
-import java.text.*;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.zip.*;
@@ -18,7 +17,6 @@ import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.Type;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress;
-import net.twisterrob.inventory.android.content.io.csv.CSVImporter;
 import net.twisterrob.inventory.android.content.io.xml.XMLImporter;
 
 public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> implements ImportProgressHandler {
@@ -115,16 +113,12 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 
 			zip = new ZipFile(file);
 
-			ZipEntry xml = zip.getEntry(Constants.Paths.BACKUP_XML_FILENAME);
-			ZipEntry csv = zip.getEntry(Constants.Paths.BACKUP_CSV_FILENAME);
 			InputStream stream;
 			Importer importer;
-			if (xml != null) {
-				stream = zip.getInputStream(xml);
+			ZipEntry dataFile = zip.getEntry(Constants.Paths.BACKUP_DATA_FILENAME);
+			if (dataFile != null) {
+				stream = zip.getInputStream(dataFile);
 				importer = new XMLImporter(this);
-			} else if (csv != null) {
-				stream = zip.getInputStream(csv);
-				importer = new CSVImporter(this);
 			} else {
 				throw new IllegalArgumentException(
 						format("The file %s is not a valid " + context.getString(R.string.app_name) + " backup: %s",
@@ -148,22 +142,8 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 		ZipEntry imageEntry = zip.getEntry(image);
 		if (imageEntry != null) {
 			InputStream zipImage = zip.getInputStream(imageEntry);
-			ByteArrayOutputStream byteOut = new ByteArrayOutputStream((int)imageEntry.getSize());
-			IOTools.copyStream(zipImage, byteOut);
-			byte[] imageContents = byteOut.toByteArray();
-			// XXX remove CSV handling
+			byte[] imageContents = IOTools.readBytes(zipImage, Math.max(0, imageEntry.getSize()));
 			long time = imageEntry.getTime();
-			ZipEntry csv = zip.getEntry(Constants.Paths.BACKUP_CSV_FILENAME);
-			long dataTime = csv == null? Long.MAX_VALUE : csv.getTime();
-			if (dataTime < time) { // jpeg was written later than csv file, so date is invalid, use name
-				try {
-					// Item_1004_20150206_154157
-					String datePart = image.replaceFirst("^.*_(\\d{8}_\\d{6}).jpg$", "$1");
-					time = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).parse(datePart).getTime();
-				} catch (ParseException ex) {
-					LOG.warn("Cannot parse: {}", image, ex);
-				}
-			}
 			Long dbTime = time != -1? time : null;
 			switch (type) {
 				case Property:

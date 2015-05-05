@@ -36,7 +36,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 	private Hierarchy hier;
 
 	public ZippedXMLExporter() {
-		super(Paths.BACKUP_XML_FILENAME);
+		super(Paths.BACKUP_DATA_FILENAME);
 	}
 
 	@Override public void initExport(OutputStream os) {

@@ -6,9 +6,10 @@ import java.util.regex.Pattern;
 
 import android.content.*;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.*;
 import android.text.format.Formatter;
 import android.view.*;
@@ -22,7 +23,7 @@ import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.view.RecyclerViewLoaderController;
 
-public class BackupActivity extends BaseActivity {
+public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	private RecyclerViewLoaderController<ImportFilesAdapter, File[]> controller;
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,12 +38,6 @@ public class BackupActivity extends BaseActivity {
 
 		controller = new BackupListController();
 		controller.startLoad(null);
-
-		getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
-			@Override public void onBackStackChanged() {
-				controller.refresh();
-			}
-		});
 	}
 
 	@Override protected void onRestart() {
@@ -74,6 +69,10 @@ public class BackupActivity extends BaseActivity {
 	public static Intent chooser() {
 		Intent intent = new Intent(App.getAppContext(), BackupActivity.class);
 		return intent;
+	}
+
+	@Override public void onRefresh() {
+		controller.refresh();
 	}
 
 	private class ImportFilesAdapter extends RecyclerView.Adapter<ImportFilesAdapter.ViewHolder> {
@@ -157,7 +156,7 @@ public class BackupActivity extends BaseActivity {
 			getLoaderManager().getLoader(1).onContentChanged();
 		}
 
-		@Override protected ImportFilesAdapter setupList() {
+		@Override protected @NonNull ImportFilesAdapter setupList() {
 			list.setLayoutManager(new LinearLayoutManager(list.getContext()));
 			ImportFilesAdapter adapter = new ImportFilesAdapter();
 			list.setAdapter(adapter);

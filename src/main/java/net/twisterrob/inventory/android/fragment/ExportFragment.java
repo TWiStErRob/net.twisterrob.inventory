@@ -5,9 +5,11 @@ import org.slf4j.*;
 import android.app.*;
 import android.app.AlertDialog.Builder;
 import android.content.*;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.io.ExporterTask;
@@ -19,7 +21,7 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 
 	private ExporterTask task;
 	private FragmentManager parentFragmentManager;
-	private Progress progress;
+	private Progress firstProgressToShow;
 
 	@Override public void onResume() {
 		super.onResume();
@@ -31,6 +33,7 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 			task.setCallbacks(this);
 		}
 	}
+
 	@Override public void onPause() {
 		if (task != null) { // guard for recreated fragments, see onResume
 			task.setCallbacks(new ExportFinishedListener(getActivity().getApplicationContext()));
@@ -49,13 +52,13 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 	}
 
 	@Override public void exportProgress(@NonNull Progress progress) {
-		this.progress = progress;
 		LOG.trace("exportProgress {}", progress);
 		ProgressDialog dialog = (ProgressDialog)getDialog();
 		if (dialog != null) {
 			updateProgress(dialog, progress);
 		} else {
-			LOG.warn("Premature stop, no dialog");
+			firstProgressToShow = progress;
+			LOG.warn("Premature progress, no dialog");
 		}
 	}
 	private void updateProgress(ProgressDialog dialog, Progress progress) {
@@ -63,8 +66,6 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 			case Init:
 				dialog.setMessage(getString(R.string.backup_export_progress_init));
 				dialog.setIndeterminate(true);
-				dialog.setProgress(0);
-				dialog.setMax(0);
 				break;
 			case Data:
 				dialog.setMessage(getString(R.string.backup_export_progress_data));
@@ -73,11 +74,11 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 				dialog.setMax(progress.total);
 				break;
 			case Images:
-				dialog.setMessage(
-						getString(R.string.backup_export_progress_images, progress.imagesCount, progress.total));
+				dialog.setMessage(getString(R.string.backup_export_progress_images,
+						progress.imagesTotal, progress.total));
 				dialog.setIndeterminate(false);
-				dialog.setProgress(progress.imagesTried);
-				dialog.setMax(progress.imagesCount);
+				dialog.setProgress(progress.imagesDone);
+				dialog.setMax(progress.imagesTotal);
 				break;
 		}
 	}
@@ -86,7 +87,7 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		displayFinishMessage(getActivity(), res);
 	}
 
-	private void displayFinishMessage(Context context, Progress p) {
+	private void displayFinishMessage(final Context context, Progress p) {
 		LOG.trace("exportFinished {}", context);
 		dismissAllowingStateLoss();
 
@@ -94,23 +95,24 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		if (p.failure != null) {
 			message = context.getString(R.string.backup_export_result_failed, p.failure.getMessage());
 		} else {
-			if (p.imagesFailed == 0) {
-				message = context.getString(R.string.backup_export_result_success, p.total);
-			} else {
-				message = context.getString(R.string.backup_export_result_warning,
-						p.total, p.imagesFailed, p.imagesTried);
-			}
+			message = context.getString(R.string.backup_export_result_success, p.total, p.imagesTotal);
 		}
 
 		if (context instanceof Activity) {
 			new Builder(context)
-					.setCancelable(true)
-					.setNeutralButton(android.R.string.ok, null)
-					.setTitle(message)
+					.setCancelable(false)
+					.setNeutralButton(android.R.string.ok, new OnClickListener() {
+						@Override public void onClick(DialogInterface dialog, int which) {
+							if (context instanceof OnRefreshListener) {
+								((OnRefreshListener)context).onRefresh();
+							}
+						}
+					})
+					.setTitle(R.string.backup_export_progress_title)
+					.setMessage(message)
 					.create()
 					.show()
 			;
-
 		} else {
 			App.toastUser(message);
 		}
@@ -130,8 +132,8 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		dialog.setTitle(R.string.backup_export_progress_title);
 		// needs to be non-null at creation time to be able to change it later
 		dialog.setMessage(getActivity().getString(R.string.empty));
-		if (progress != null) {
-			updateProgress(dialog, progress);
+		if (firstProgressToShow != null) {
+			updateProgress(dialog, firstProgressToShow);
 		}
 		return dialog;
 	}

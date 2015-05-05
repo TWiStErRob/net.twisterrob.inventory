@@ -7,9 +7,11 @@ import org.slf4j.*;
 import android.app.*;
 import android.app.AlertDialog.Builder;
 import android.content.*;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.io.ImporterTask;
@@ -20,7 +22,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 
 	private ImporterTask task;
 	private FragmentManager parentFragmentManager;
-	private Progress progress;
+	private Progress firstProgressToShow;
 
 	@Override public void onResume() {
 		super.onResume();
@@ -32,6 +34,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 			task.setCallbacks(this);
 		}
 	}
+
 	@Override public void onPause() {
 		if (task != null) { // guard for recreated fragments, see onResume
 			task.setCallbacks(new ImportFinishedListener(getActivity().getApplicationContext()));
@@ -50,13 +53,13 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 	}
 
 	@Override public void importProgress(@NonNull Progress progress) {
-		this.progress = progress;
 		LOG.trace("importProgress {}", progress);
 		ProgressDialog dialog = (ProgressDialog)getDialog();
 		if (dialog != null) {
 			updateProgress(dialog, progress);
 		} else {
-			LOG.warn("Premature stop, no dialog");
+			firstProgressToShow = progress;
+			LOG.warn("Premature progress, no dialog");
 		}
 	}
 	private void updateProgress(@NonNull ProgressDialog dialog, @NonNull Progress progress) {
@@ -75,7 +78,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		onFinish(getActivity(), res);
 	}
 
-	private void onFinish(Context context, final Progress p) {
+	private void onFinish(final Context context, final Progress p) {
 		LOG.trace("importFinished {}", context);
 		dismissAllowingStateLoss();
 
@@ -93,11 +96,20 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 
 		if (context instanceof Activity) {
 			Builder builder = new Builder(context)
-					.setCancelable(true)
-					.setNeutralButton(android.R.string.ok, null)
-					.setTitle(message);
+					.setCancelable(false)
+					.setNeutralButton(android.R.string.ok, new OnClickListener() {
+						@Override public void onClick(DialogInterface dialog, int which) {
+							if (context instanceof OnRefreshListener) {
+								((OnRefreshListener)context).onRefresh();
+							}
+						}
+					});
 			if (!p.conflicts.isEmpty()) {
+				builder.setTitle(message);
 				builder.setItems(p.conflicts.toArray(new CharSequence[p.conflicts.size()]), null);
+			} else {
+				builder.setTitle(R.string.backup_import_progress_title);
+				builder.setMessage(message);
 			}
 			builder.create().show();
 		} else {
@@ -119,8 +131,8 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		dialog.setTitle(R.string.backup_import_progress_title);
 		// needs to be non-null at creation time to be able to change it later
 		dialog.setMessage(getActivity().getString(R.string.empty));
-		if (progress != null) {
-			updateProgress(dialog, progress);
+		if (firstProgressToShow != null) {
+			updateProgress(dialog, firstProgressToShow);
 		}
 		return dialog;
 	}

@@ -30,8 +30,7 @@ public interface Constants {
 	class Paths {
 		/** Warning: this is used inlined in paths_share.xml because path doesn't support string resources */
 		private static final String PUBLIC_SHARE_FOLDER_NAME = "share";
-		public static final String BACKUP_XML_FILENAME = "data.xml";
-		public static final String BACKUP_CSV_FILENAME = "data.csv";
+		public static final String BACKUP_DATA_FILENAME = "data.xml";
 
 		public static @NonNull File getExportFile() throws IOException {
 			Calendar now = Calendar.getInstance();
