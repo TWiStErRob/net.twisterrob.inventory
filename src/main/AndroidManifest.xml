@@ -48,7 +48,6 @@
 		<activity
 			android:name=".activity.SearchResultsActivity"
 			android:label="@string/action_search"
-			android:icon="@android:drawable/ic_menu_search"
 			android:launchMode="singleTop">
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
@@ -60,7 +59,6 @@
 		<activity
 			android:name="net.twisterrob.android.activity.CaptureImage"
 			android:label="@string/action_picture_take"
-			android:icon="@android:drawable/ic_menu_camera"
 			android:screenOrientation="fullSensor"
 			/>
 		<activity
