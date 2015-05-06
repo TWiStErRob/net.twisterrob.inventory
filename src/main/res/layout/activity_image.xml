@@ -16,7 +16,7 @@
 		android:layout_gravity="center"
 		android:padding="@dimen/marginBig"
 		android:background="@drawable/transparent_rounded"
-		android:text="Preparing image for external app..."
+		android:text="@string/image_loading_external"
 		android:textColor="@android:color/white"
 		android:visibility="gone"
 		tools:visibility="visible"

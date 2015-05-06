@@ -31,6 +31,7 @@ class ConfirmedCleanAction extends BaseDialogFragment implements DialogInterface
 				.setMessage(message)
 				.setPositiveButton(android.R.string.ok, this)
 				.setNegativeButton(android.R.string.cancel, null)
+				.setCancelable(true)
 				.create();
 	}
 }

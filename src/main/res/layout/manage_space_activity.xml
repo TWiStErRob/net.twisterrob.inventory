@@ -95,12 +95,6 @@
 						android:layout_weight="1"
 						/>
 					<Button
-						android:id="@+id/storage_db_dump"
-						style="@style/ManageSpaceButton"
-						android:visibility="@integer/visible_in_test"
-						android:text="Dump"
-						/>
-					<Button
 						android:id="@+id/storage_images_clear"
 						style="@style/ManageSpaceButton"
 						android:text="Remove Images"
@@ -108,7 +102,33 @@
 					<Button
 						android:id="@+id/storage_db_clear"
 						style="@style/ManageSpaceButton"
-						android:text="Empty"
+						android:text="Empty Database"
+						/>
+				</LinearLayout>
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:visibility="@integer/visible_in_test"
+					>
+					<View
+						android:layout_width="0dp"
+						android:layout_height="0dp"
+						android:layout_weight="1"
+						/>
+					<Button
+						android:id="@+id/storage_db_test"
+						style="@style/ManageSpaceButton"
+						android:text="Test Data"
+						/>
+					<Button
+						android:id="@+id/storage_db_dump"
+						style="@style/ManageSpaceButton"
+						android:text="Save"
+						/>
+					<Button
+						android:id="@+id/storage_db_restore"
+						style="@style/ManageSpaceButton"
+						android:text="Restore"
 						/>
 				</LinearLayout>
 			</LinearLayout>

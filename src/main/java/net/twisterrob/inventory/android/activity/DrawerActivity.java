@@ -4,7 +4,7 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import android.content.*;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +14,7 @@ import android.view.*;
 import android.widget.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter;
 
@@ -148,15 +148,6 @@ public class DrawerActivity extends BaseActivity {
 
 	private Collection<IconedItem> createActions() {
 		Collection<IconedItem> acts = new ArrayList<>();
-
-		if (BuildConfig.DEBUG) {
-			acts.add(new SVGIntentItem(AndroidTools.INVALID_RESOURCE_ID,
-					R.raw.category_chip, this, DeveloperActivity.show()) {
-				@Override public CharSequence getTitle(Context context) {
-					return "Developer Tools";
-				}
-			});
-		}
 
 		final BaseActivity activity = this;
 

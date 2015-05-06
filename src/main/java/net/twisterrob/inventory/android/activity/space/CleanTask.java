@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.activity.space;
 
+import org.slf4j.*;
+
 import android.app.*;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,6 +10,7 @@ import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 abstract class CleanTask extends SimpleSafeAsyncTask<Activity, Void, Void> implements NoProgressTaskExecutor.UITask {
+	private static final Logger LOG = LoggerFactory.getLogger(CleanTask.class);
 	private TaskEndListener callbacks;
 
 	@Override public void setCallbacks(TaskEndListener callbacks) {
@@ -32,6 +35,7 @@ abstract class CleanTask extends SimpleSafeAsyncTask<Activity, Void, Void> imple
 	}
 
 	@Override protected void onError(@NonNull Exception ex, Activity activity) {
+		LOG.warn("Could not finish task", ex);
 		callbacks.taskDone();
 	}
 

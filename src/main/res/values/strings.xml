@@ -5,6 +5,7 @@
 	<string name="home_title">Inventory</string>
 	<string name="navigation_title">Navigation</string>
 	<string name="image_title">Image</string>
+	<string name="image_loading_external">Preparing image for external app…</string>
 
 	<string name="sunburst_title">Sunburst Diagram</string>
 	<string name="action_picture_take">Take Picture</string>
@@ -197,7 +198,6 @@
 	<string name="backup_import_conflict_item">Item &#8220;%3$s&#8221; in &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>
 	<string name="backup_import_invalid_type">&#8220;%1$s&#8221; has invalid type: &#8220;%2$s&#8221;, used the default type.</string>
 	<string name="backup_import_invalid_image">&#8220;%1$s&#8221; has invalid image: &#8220;%2$s&#8221;, ignored image.</string>
-	<string name="backup_import_invalid_belonging">Cannot identify entity #%4$s: property, room or item must be set, skipped. (%1$s in %3$s, image: %2$s)</string>
 
 	<string name="backup_import_sd">Restore data from Phone</string>
 	<string name="backup_export_sd">Backup data to Phone</string>

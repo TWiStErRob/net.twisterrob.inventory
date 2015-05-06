@@ -6,7 +6,7 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.*;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
+import android.app.*;
 import android.content.Intent;
 import android.os.Build.*;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
-import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.BaseActivity;
@@ -50,7 +50,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								App.db().rebuildSearch();
 							}
 						}
-				).show(ManageSpaceActivity.this.getSupportFragmentManager(), null);
+				).show(getSupportFragmentManager(), null);
 			}
 		});
 
@@ -66,7 +66,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								glide.clearDiskCache();
 							}
 						}
-				).show(ManageSpaceActivity.this.getSupportFragmentManager(), null);
+				).show(getSupportFragmentManager(), null);
 			}
 		});
 
@@ -83,7 +83,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								helper.close();
 							}
 						}
-				).show(ManageSpaceActivity.this.getSupportFragmentManager(), null);
+				).show(getSupportFragmentManager(), null);
 			}
 		});
 		findViewById(R.id.storage_db_dump).setOnClickListener(new OnClickListener() {
@@ -95,6 +95,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						File dumpFile = new File(Paths.getPhoneHome(), "db.sqlite");
 						OutputStream out = new FileOutputStream(dumpFile);
 						IOTools.copyStream(in, out);
+						LOG.debug("Saved DB to {}", dumpFile);
 					}
 				}).show(getSupportFragmentManager(), "task");
 			}
@@ -108,7 +109,53 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								App.db().clearImages();
 							}
 						}
-				).show(ManageSpaceActivity.this.getSupportFragmentManager(), null);
+				).show(getSupportFragmentManager(), null);
+			}
+		});
+		findViewById(R.id.storage_db_test).setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				new ConfirmedCleanAction("Reset to Test Data",
+						"All of your belongings will be permanently deleted. Some test data will be set up.",
+						new CleanTask() {
+							@Override protected void doClean() {
+								DatabaseOpenHelper helper = App.db().getHelper();
+								helper.close();
+								helper.setTestMode(true);
+								helper.getReadableDatabase();
+								helper.close();
+								helper.setTestMode(false);
+							}
+						}
+				).show(getSupportFragmentManager(), null);
+			}
+		});
+		findViewById(R.id.storage_db_restore).setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				AndroidTools
+						.prompt(ManageSpaceActivity.this, new PopupCallbacks<String>() {
+							@Override public void finished(final String value) {
+								if (value == null) {
+									return;
+								}
+								NoProgressTaskExecutor.create(new CleanTask() {
+									@Override protected void doClean() throws Exception {
+										App.db().getHelper().restore(value);
+									}
+									@Override protected void onResult(Void ignore, Activity activity) {
+										super.onResult(ignore, activity);
+										LOG.debug("Restored {}", value);
+									}
+									@Override protected void onError(@NonNull Exception ex, Activity activity) {
+										super.onError(ex, activity);
+										LOG.error("Cannot restore {}", value);
+									}
+								}).show(getSupportFragmentManager(), "task");
+							}
+						})
+						.setTitle("Restore DB")
+						.setMessage("Please the absolute path of the .sqlite file to restore!")
+						.show()
+				;
 			}
 		});
 
@@ -123,7 +170,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								((ActivityManager)getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
 							}
 						}
-				).show(ManageSpaceActivity.this.getSupportFragmentManager(), null);
+				).show(getSupportFragmentManager(), null);
 			}
 		});
 		findViewById(R.id.storage_all_dump).setOnClickListener(new OnClickListener() {
@@ -135,7 +182,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								zipAllData();
 							}
 						}
-				).show(ManageSpaceActivity.this.getSupportFragmentManager(), null);
+				).show(getSupportFragmentManager(), null);
 			}
 		});
 		findViewById(R.id.storage_all)
@@ -171,7 +218,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		}
 	}
 
-	void recalculate() {
+	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH) void recalculate() {
 		executeParallel(new GetFolderSizesTask(imageCacheSize), Glide.getPhotoCacheDir(this));
 		executeParallel(new GetFolderSizesTask(databaseSize), getDatabasePath(App.db().getHelper().getDatabaseName()));
 		executeParallel(new GetFolderSizesTask(allSize),

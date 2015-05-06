@@ -1,6 +1,5 @@
-<merge>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 	<include
-		xmlns:android="http://schemas.android.com/apk/res/android"
 		layout="@layout/inc_fab"
 		android:layout_width="@dimen/icon_medium"
 		android:layout_height="@dimen/icon_medium"
