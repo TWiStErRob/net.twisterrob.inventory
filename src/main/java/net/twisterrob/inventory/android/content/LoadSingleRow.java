@@ -33,7 +33,7 @@ public abstract class LoadSingleRow extends LoadersCallbacks {
 	}
 
 	protected void processInvalid(Cursor data) {
-		App.toast(getInvalidToastMessage(data));
+		App.toastUser(getInvalidToastMessage(data));
 	}
 
 	protected String getInvalidToastMessage(Cursor data) {

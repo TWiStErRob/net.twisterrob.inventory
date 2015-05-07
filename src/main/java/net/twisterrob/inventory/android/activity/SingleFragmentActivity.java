@@ -19,7 +19,7 @@ public abstract class SingleFragmentActivity<F extends BaseFragment> extends Bas
 
 		CharSequence extrasError = checkExtras();
 		if (extrasError != null) {
-			App.toast(extrasError);
+			App.toastUser(extrasError);
 			finish();
 			return;
 		}

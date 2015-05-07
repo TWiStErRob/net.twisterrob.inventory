@@ -18,7 +18,6 @@ import android.widget.Toast;
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
 import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.StringTools;
 
 public class App extends Application {
@@ -130,8 +129,10 @@ public class App extends Application {
 	}
 
 	public static void toast(CharSequence message) {
-		LOG.info("Debug Toast: {}", message, new StackTrace());
-		Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
+		if (BuildConfig.DEBUG) {
+			//LOG.info("Debug Toast: {}", message, new StackTrace());
+			Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
+		}
 	}
 
 	public static void toastUser(CharSequence message) {
