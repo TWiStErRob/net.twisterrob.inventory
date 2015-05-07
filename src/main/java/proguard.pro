@@ -8,6 +8,13 @@
 # See res/menu/search.xml and b.android.com/170471
 -keep class android.support.v7.widget.SearchView { <init>(...); }
 
+# Note: net.twisterrob.inventory.android.content.InventoryProvider calls 'Field.getType'
+# Note: there were 1 classes trying to access generic signatures using reflection.
+#       You should consider keeping the signature attributes
+#       (using '-keepattributes Signature').
+#       (http://proguard.sourceforge.net/manual/troubleshooting.html#attributes)
+-dontnote net.twisterrob.inventory.android.content.InventoryProvider
+
 # Remove Logging for now
 # TODO use isLoggable in AndroidLogger and runtime control over TAGs
 
@@ -33,3 +40,4 @@
 	public static int d(...);
 	public static int e(...);
 }
+

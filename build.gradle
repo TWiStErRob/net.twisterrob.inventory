@@ -40,6 +40,9 @@ android {
 			//debuggable true
 			shrinkResources true // http://tools.android.com/tech-docs/new-build-system/resource-shrinking
 		}
+		debug {
+			//minifyEnabled true
+		}
 	}
 	aaptOptions {
 		noCompress 'svg' // Resources.openRawResourceFd can only open AssetFileDescriptor for uncompressed resources

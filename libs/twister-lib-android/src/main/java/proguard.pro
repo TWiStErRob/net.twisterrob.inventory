@@ -35,6 +35,9 @@
 # Note: the configuration keeps the entry point 'com.caverock.androidsvg.SVGImageView { void setSVG(com.caverock.androidsvg.SVG); }', but not the descriptor class 'com.caverock.androidsvg.SVG'
 -dontnote com.caverock.androidsvg.SVGImageView
 -dontwarn com.caverock.androidsvg.R**
+# com.caverock.androidsvg.CSSParser.selectorMatch
+-keepattributes InnerClasses # so that SVG.Line.class.getSimpleName() -> "Line" instead of "SVG$Line"
+-keepnames class * extends com.caverock.androidsvg.SVG$SvgElementBase
 
 ### bumptech/glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
