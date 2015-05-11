@@ -13,6 +13,12 @@
 			tools:summary="@array/pref_defaultEntityDetailsPage_entries"
 			/>
 		<CheckBoxPreference
+			android:key="@string/pref_preferExpandedKeywords"
+			android:title="@string/pref_preferExpandedKeywords_title"
+			android:defaultValue="@bool/pref_preferExpandedKeywords_default"
+			android:summary="@string/pref_preferExpandedKeywords_desc"
+			/>
+		<CheckBoxPreference
 			android:key="@string/pref_internalImageViewer"
 			android:title="@string/pref_internalImageViewer_title"
 			android:defaultValue="@bool/pref_internalImageViewer_default"

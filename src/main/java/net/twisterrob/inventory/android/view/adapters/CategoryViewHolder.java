@@ -9,9 +9,10 @@ import android.widget.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
-import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.CategoryDTO;
 
 public class CategoryViewHolder extends RecyclerView.ViewHolder {
 	public interface CategoryItemEvents extends RecyclerViewItemEvents {
@@ -62,7 +63,11 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 			stats.setText(context.getResources().getQuantityString(
 					R.plurals.label_category_subs, subCatCount, subCatCount));
 		} else {
-			stats.setText(null);
+			if (App.getBPref(R.string.pref_preferExpandedKeywords, R.bool.pref_preferExpandedKeywords_default)) {
+				stats.setText(CategoryDTO.getKeywords(context, name));
+			} else {
+				stats.setText(CategoryDTO.getShortKeywords(context, name));
+			}
 		}
 
 		Integer itemCountTotal = getCount(cursor, Category.COUNT_ITEM_ALL);

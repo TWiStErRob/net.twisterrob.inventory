@@ -2,10 +2,12 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.Locale;
 
+import android.content.Context;
+import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.net.Uri;
 
-import net.twisterrob.android.utils.tools.DatabaseTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.content.contract.Category;
 
@@ -36,5 +38,20 @@ public class CategoryDTO extends ImagedDTO {
 	@Override
 	public String toString() {
 		return String.format(Locale.ROOT, "Category #%1$d: '%2$s' in %3$s", id, name, parentID);
+	}
+
+	public static CharSequence getShortKeywords(Context context, String categoryName) {
+		CharSequence keywords = getKeywords(context, categoryName);
+		if (keywords == null) {
+			return null;
+		}
+		return keywords.toString().replaceAll("\\s*\\(.*?\\)", "");
+	}
+	public static CharSequence getKeywords(Context context, String categoryName) {
+		try {
+			return AndroidTools.getText(context, categoryName + "_keywords");
+		} catch (NotFoundException ex) {
+			return null;
+		}
 	}
 }

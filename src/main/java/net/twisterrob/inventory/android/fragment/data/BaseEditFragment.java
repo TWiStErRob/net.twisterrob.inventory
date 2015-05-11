@@ -32,9 +32,10 @@ import net.twisterrob.android.view.TextWatcherAdapter;
 import net.twisterrob.android.wiring.DefaultValueUpdater;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
-import net.twisterrob.inventory.android.content.model.ImagedDTO;
+import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
@@ -57,6 +58,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private EditText name;
 	private EditText description;
 	private Spinner type;
+	private TextView hint;
 	protected CursorAdapter typeAdapter;
 	private ImageView image;
 	private boolean isClean = true;
@@ -146,6 +148,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 				isClean = false;
 				doValidateTitle();
+				// TODO http://stackoverflow.com/q/9982241/253468#comment29212304_9982241
 			}
 		});
 
@@ -163,6 +166,29 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 
+		hint = (TextView)view.findViewById(android.R.id.hint);
+		hint.setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				updateHint(false);
+			}
+		});
+		hint.setOnFocusChangeListener(new OnFocusChangeListener() {
+			/** @see <a href="http://stackoverflow.com/a/30164931/253468">How to avoid double click?</a> */
+			@Override public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					updateHint(false);
+				}
+			}
+		});
+
+		ImageButton help = (ImageButton)view.findViewById(R.id.help);
+		help.setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				startActivity(CategoryActivity.show(type.getSelectedItemId()));
+			}
+		});
+		AndroidTools.displayedIf(help, this instanceof ItemEditFragment);
+
 		type = (Spinner)view.findViewById(R.id.type);
 		type.setAdapter(typeAdapter = new TypeAdapter(getContext()));
 		type.setOnItemSelectedListener(new DefaultValueUpdater(name, CommonColumns.NAME) {
@@ -179,6 +205,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 					isClean = cleanBefore;
 				}
 				reloadImage();
+				updateHint(true);
 			}
 		});
 
@@ -186,6 +213,25 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			tryRestore();
 		}
 	}
+
+	private void updateHint(boolean keepExpanded) {
+		Cursor cursor = (Cursor)type.getAdapter().getItem(type.getSelectedItemPosition());
+		String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		Boolean isExpandedTag = (Boolean)this.hint.getTag();
+		boolean isExpanded = isExpandedTag != null? isExpandedTag
+				: App.getBPref(R.string.pref_preferExpandedKeywords, R.bool.pref_preferExpandedKeywords_default);
+		isExpanded = keepExpanded? isExpanded : !isExpanded;
+		CharSequence hint;
+		if (isExpanded) {
+			hint = CategoryDTO.getKeywords(getContext(), categoryName);
+		} else {
+			hint = CategoryDTO.getShortKeywords(getContext(), categoryName);
+		}
+		this.hint.setText(hint);
+		this.hint.setTag(isExpanded);
+		AndroidTools.displayedIf(this.hint, this.hint.getText().length() != 0);
+	}
+
 	protected abstract boolean isNew();
 
 	public void save() {
