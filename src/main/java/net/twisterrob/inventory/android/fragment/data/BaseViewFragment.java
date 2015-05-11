@@ -107,8 +107,8 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 				case 1: {
 					view = inflater.inflate(R.layout.inc_details_details, container, false);
 
-					final boolean debug = App.getPrefs().getBoolean(getString(R.string.pref_displayDebugDetails),
-							getResources().getBoolean(R.bool.pref_displayDebugDetails_default));
+					final boolean debug =
+							App.getBPref(R.string.pref_displayDebugDetails, R.bool.pref_displayDebugDetails_default);
 
 					TextView details = (TextView)view.findViewById(R.id.details);
 					details.setText(getDetailsString(entity, debug));

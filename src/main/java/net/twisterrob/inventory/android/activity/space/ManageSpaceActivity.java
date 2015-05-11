@@ -185,8 +185,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 				).show(getSupportFragmentManager(), null);
 			}
 		});
-		findViewById(R.id.storage_all)
-				.setVisibility(VERSION_CODES.KITKAT <= VERSION.SDK_INT || BuildConfig.DEBUG? View.VISIBLE : View.GONE);
+		displayedIf(findViewById(R.id.storage_all), VERSION_CODES.KITKAT <= VERSION.SDK_INT || BuildConfig.DEBUG);
 	}
 
 	@Override public void taskDone() {

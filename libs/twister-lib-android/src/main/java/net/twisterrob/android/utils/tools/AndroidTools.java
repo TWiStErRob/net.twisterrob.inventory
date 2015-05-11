@@ -109,7 +109,14 @@ public /*static*/ abstract class AndroidTools {
 			throw new NotFoundException(String.format(Locale.ROOT, "Resource '%s' is not a valid string in '%s'",
 					stringResourceName, context.getPackageName()));
 		}
-		return context.getText(id);
+		try {
+			return context.getText(id);
+		} catch (NotFoundException ex) {
+			throw (NotFoundException)new NotFoundException(
+					String.format(Locale.ROOT, "Resource '%s' is not a valid string in '%s'",
+							stringResourceName, context.getPackageName())
+			).initCause(ex);
+		}
 	}
 
 	private static @AnyRes int getResourceID(Context context, String resourceType, String resourceName) {
@@ -637,6 +644,33 @@ public /*static*/ abstract class AndroidTools {
 			icon.setAlpha(enabled? 0xFF : 0x80);
 			item.setIcon(icon);
 		}
+	}
+
+	/** Burrowing from CSS terminology: <code>display:block/none</code> */
+	public static void displayedIf(View view, boolean isVisible) {
+		if (view != null) {
+			view.setVisibility(isVisible? View.VISIBLE : View.GONE);
+		}
+	}
+	/** Burrowing from CSS terminology: <code>visibility:visible/hidden</code> */
+	public static void visibleIf(View view, boolean isVisible) {
+		if (view != null) {
+			view.setVisibility(isVisible? View.VISIBLE : View.INVISIBLE);
+		}
+	}
+	public static void displayedIfHasText(TextView view) {
+		if (view == null) {
+			return;
+		}
+		CharSequence text = view.getText();
+		displayedIf(view, text != null && 0 < text.length());
+	}
+	public static void visibleIfHasText(TextView view) {
+		if (view == null) {
+			return;
+		}
+		CharSequence text = view.getText();
+		visibleIf(view, text != null && 0 < text.length());
 	}
 
 	/**

@@ -13,6 +13,7 @@ import android.os.Build.*;
 import android.os.StrictMode;
 import android.os.StrictMode.*;
 import android.preference.PreferenceManager;
+import android.support.annotation.*;
 import android.widget.Toast;
 
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
@@ -107,6 +108,12 @@ public class App extends Application {
 	// TODO wrapper for resource based retrieval
 	public static SharedPreferences getPrefs() {
 		return PreferenceManager.getDefaultSharedPreferences(getAppContext());
+	}
+
+	public static boolean getBPref(@StringRes int prefName, @BoolRes int defaultRes) {
+		String prefKey = App.getAppContext().getString(prefName);
+		boolean prefDefault = App.getAppContext().getResources().getBoolean(defaultRes);
+		return App.getPrefs().getBoolean(prefKey, prefDefault);
 	}
 
 	/** @return You must call {@link SharedPreferences.Editor#commit} as per {@link SharedPreferences#edit} contract. */

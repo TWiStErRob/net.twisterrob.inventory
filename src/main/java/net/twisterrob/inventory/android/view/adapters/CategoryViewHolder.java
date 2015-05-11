@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.view.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.annotation.RawRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.*;
@@ -52,8 +51,11 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 	}
 
 	public void bind(Cursor cursor) {
+		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+
 		Context context = itemView.getContext();
-		title.setText(getName(context, cursor));
+		title.setText(AndroidTools.getText(context, name));
 
 		Integer subCatCount = getCount(cursor, CommonColumns.COUNT_CHILDREN_DIRECT);
 		if (subCatCount != null) {
@@ -65,23 +67,11 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
 		Integer itemCountTotal = getCount(cursor, Category.COUNT_ITEM_ALL);
 		if (itemCountTotal != null) {
-			count.setVisibility(View.VISIBLE);
 			count.setText(String.valueOf(itemCountTotal));
-		} else {
-			count.setVisibility(View.GONE);
 		}
+		AndroidTools.displayedIfHasText(count);
 
-		Pic.svg().load(getTypeImage(cursor, context)).into(image);
-	}
-
-	private CharSequence getName(Context context, Cursor cursor) {
-		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-		return AndroidTools.getText(context, name);
-	}
-
-	private @RawRes int getTypeImage(Cursor cursor, Context context) {
-		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		return AndroidTools.getRawResourceID(context, typeImage);
+		Pic.svg().load(AndroidTools.getRawResourceID(context, typeImage)).into(image);
 	}
 
 	private static Integer getCount(Cursor cursor, String columnName) {

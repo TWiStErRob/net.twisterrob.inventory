@@ -139,8 +139,7 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 			return;
 		}
 		// loading or adapter being null means emptiness is undetermined, better hide it then so progress can shine
-		boolean isEmpty = !isLoading() && adapter != null && isEmpty(adapter);
-		empty.setVisibility(isEmpty? View.VISIBLE : View.GONE);
+		AndroidTools.displayedIf(empty, !isLoading() && adapter != null && isEmpty(adapter));
 	}
 
 	protected boolean isEmpty(A adapter) {

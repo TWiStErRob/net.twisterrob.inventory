@@ -14,6 +14,12 @@
 		<item>details</item>
 	</string-array>
 
+	<string name="pref_preferExpandedKeywords_title">Prefer extended keywords</string>
+	<string name="pref_preferExpandedKeywords" translatable="false">preferExpandedKeywords</string>
+	<bool name="pref_preferExpandedKeywords_default" translatable="false">false</bool>
+	<string name="pref_preferExpandedKeywords_desc">It is possible to show an extended set of keywords
+		for certain Categories, this sets the default behavior when keywords are shown.</string>
+
 	<string name="pref_internalImageViewer_title">Use internal image viewer</string>
 	<string name="pref_internalImageViewer" translatable="false">internalImageViewer</string>
 	<bool name="pref_internalImageViewer_default" translatable="false">true</bool>

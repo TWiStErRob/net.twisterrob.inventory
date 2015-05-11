@@ -27,10 +27,40 @@
 				android:scaleType="fitCenter"
 				tools:src="@drawable/category_unknown"
 				/>
-			<Spinner
-				android:id="@id/type"
+			<LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				>
+				<Spinner
+					android:id="@id/type"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					tools:listitem="@layout/item_type_spinner"
+					/>
+				<ImageButton
+					android:id="@+id/help"
+					android:layout_width="@dimen/icon_medium"
+					android:layout_height="@dimen/icon_medium"
+					android:layout_gravity="center_vertical"
+					android:padding="@dimen/margin"
+					android:src="@android:drawable/ic_menu_help"
+					android:scaleType="fitCenter"
+					/>
+			</LinearLayout>
+			<TextView
+				android:id="@android:id/hint"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/margin"
+				android:textAppearance="@style/TextAppearance.AppCompat.Small"
+				android:textIsSelectable="true"
+				android:textStyle="italic"
+				android:visibility="gone"
+				tools:text="keyw1, keywo2, keywor3, keyword4, keywor5, keywo6, keyw7, keywo8, keywor9, keyword10"
+				tools:visibility="visible"
 				/>
 			<EditText
 				android:id="@id/title"

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
@@ -177,13 +178,12 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		if (disabledMessage != null) {
 			btnOk.setEnabled(false);
 			labType.setText(disabledMessage);
-			labType.setVisibility(View.VISIBLE);
 		} else {
 			btnOk.setEnabled(true);
-			labType.setVisibility(View.GONE);
 			labType.setText(null);
 		}
-		upButton.setVisibility(0 < getSupportFragmentManager().getBackStackEntryCount()? View.VISIBLE : View.GONE);
+		AndroidTools.displayedIfHasText(labType);
+		AndroidTools.displayedIf(upButton, 0 < getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	private CharSequence buildDisabledMessage(BaseFragment fragment) {
