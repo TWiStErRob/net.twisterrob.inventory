@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/action_hint_expand"
+		android:title="Expand hint"
+		android:icon="@android:drawable/ic_menu_more"
+		android:checkable="true"
+		/>
+	<item
+		android:id="@+id/action_category_goto"
+		android:title="Jump to Category"
+		android:icon="@android:drawable/ic_menu_info_details"
+		/>
+</menu>

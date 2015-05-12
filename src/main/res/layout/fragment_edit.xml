@@ -46,7 +46,7 @@
 					android:layout_height="@dimen/icon_medium"
 					android:layout_gravity="center_vertical"
 					android:padding="@dimen/margin"
-					android:src="@android:drawable/ic_menu_help"
+					android:src="@android:drawable/ic_menu_info_details"
 					android:scaleType="fitCenter"
 					/>
 			</LinearLayout>
@@ -56,7 +56,6 @@
 				android:layout_height="wrap_content"
 				android:layout_marginBottom="@dimen/margin"
 				android:textAppearance="@style/TextAppearance.AppCompat.Small"
-				android:textIsSelectable="true"
 				android:textStyle="italic"
 				android:visibility="gone"
 				tools:text="keyw1, keywo2, keywor3, keyword4, keywor5, keywo6, keyw7, keywo8, keywor9, keyword10"

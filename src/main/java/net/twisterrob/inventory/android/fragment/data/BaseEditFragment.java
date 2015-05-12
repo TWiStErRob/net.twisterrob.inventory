@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
 import java.io.*;
+import java.util.*;
 
 import org.slf4j.*;
 
@@ -10,13 +11,18 @@ import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build.*;
 import android.os.Bundle;
 import android.support.annotation.*;
 import android.support.v4.widget.CursorAdapter;
-import android.text.TextUtils;
+import android.text.*;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.*;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.*;
 import android.widget.*;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -147,8 +153,38 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		name.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 				isClean = false;
-				doValidateTitle();
-				// TODO http://stackoverflow.com/q/9982241/253468#comment29212304_9982241
+				if (doValidateTitle()) {
+					Collection<String> suggestions = CategoryDTO.getSuggester(getContext()).suggest(s);
+
+					if (!suggestions.isEmpty() && !suggestions.contains(getTypeName())) {
+						hint.setText(buildHint(suggestions));
+						hint.setMovementMethod(LinkMovementMethod.getInstance());
+					}
+				}
+			}
+			public @NonNull CharSequence buildHint(@NonNull Collection<String> suggestions) {
+				CategorySuggester suggester = CategoryDTO.getSuggester(getContext());
+
+				SpannableStringBuilder builder = new SpannableStringBuilder("Suggested categories: ");
+				for (Iterator<String> sugIt = suggestions.iterator(); sugIt.hasNext(); ) {
+					final String categoryName = sugIt.next();
+					int start = builder.length();
+					CharSequence fullName = suggester.getFullName(categoryName);
+					builder.append(fullName);
+					int end = builder.length();
+
+					builder.setSpan(new ClickableSpan() {
+						@Override public void onClick(View widget) {
+							long id = CategoryDTO.getSuggester(widget.getContext()).getCategoryID(categoryName);
+							AndroidTools.selectByID(type, id);
+						}
+					}, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+					if (sugIt.hasNext()) {
+						builder.append(" | ");
+					}
+				}
+				return builder;
 			}
 		});
 
@@ -167,27 +203,26 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 
 		hint = (TextView)view.findViewById(android.R.id.hint);
-		hint.setOnClickListener(new OnClickListener() {
+
+		final ImageButton help = (ImageButton)view.findViewById(R.id.help);
+		help.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
-				updateHint(false);
-			}
-		});
-		hint.setOnFocusChangeListener(new OnFocusChangeListener() {
-			/** @see <a href="http://stackoverflow.com/a/30164931/253468">How to avoid double click?</a> */
-			@Override public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
-					updateHint(false);
+				if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
+					getActivity().openContextMenu(help);
+				} else {
+					PopupMenu popup = new PopupMenu(v.getContext(), v);
+					onPrepareContextMenu(popup.getMenu(), popup.getMenuInflater());
+					popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+						@Override public boolean onMenuItemClick(MenuItem item) {
+							return onContextItemSelected(item);
+						}
+					});
+					popup.show();
 				}
 			}
 		});
-
-		ImageButton help = (ImageButton)view.findViewById(R.id.help);
-		help.setOnClickListener(new OnClickListener() {
-			@Override public void onClick(View v) {
-				startActivity(CategoryActivity.show(type.getSelectedItemId()));
-			}
-		});
 		AndroidTools.displayedIf(help, this instanceof ItemEditFragment);
+		registerForContextMenu(help);
 
 		type = (Spinner)view.findViewById(R.id.type);
 		type.setAdapter(typeAdapter = new TypeAdapter(getContext()));
@@ -214,12 +249,31 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		}
 	}
 
+	@Override public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, view, menuInfo);
+		onPrepareContextMenu(menu, getActivity().getMenuInflater());
+	}
+
+	private void onPrepareContextMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.edit_context, menu);
+		menu.findItem(R.id.action_hint_expand).setChecked(isHintExpanded());
+	}
+
+	@Override public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_category_goto:
+				startActivity(CategoryActivity.show(type.getSelectedItemId()));
+				return true;
+			case R.id.action_hint_expand:
+				updateHint(false);
+				return true;
+		}
+		return super.onContextItemSelected(item);
+	}
+
 	private void updateHint(boolean keepExpanded) {
-		Cursor cursor = (Cursor)type.getAdapter().getItem(type.getSelectedItemPosition());
-		String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-		Boolean isExpandedTag = (Boolean)this.hint.getTag();
-		boolean isExpanded = isExpandedTag != null? isExpandedTag
-				: App.getBPref(R.string.pref_preferExpandedKeywords, R.bool.pref_preferExpandedKeywords_default);
+		String categoryName = getTypeName();
+		boolean isExpanded = isHintExpanded();
 		isExpanded = keepExpanded? isExpanded : !isExpanded;
 		CharSequence hint;
 		if (isExpanded) {
@@ -230,6 +284,12 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		this.hint.setText(hint);
 		this.hint.setTag(isExpanded);
 		AndroidTools.displayedIf(this.hint, this.hint.getText().length() != 0);
+	}
+
+	private boolean isHintExpanded() {
+		Boolean isExpandedTag = (Boolean)this.hint.getTag();
+		return isExpandedTag != null? isExpandedTag
+				: App.getBPref(R.string.pref_preferExpandedKeywords, R.bool.pref_preferExpandedKeywords_default);
 	}
 
 	protected abstract boolean isNew();
@@ -275,6 +335,11 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		}
 	}
 
+	private String getTypeName() {
+		@SuppressWarnings("resource")
+		Cursor cursor = (Cursor)type.getItemAtPosition(type.getSelectedItemPosition());
+		return cursor != null? cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME)) : null;
+	}
 	private @RawRes int getTypeImage(int position) {
 		@SuppressWarnings("resource")
 		Cursor cursor = (Cursor)type.getItemAtPosition(position);
