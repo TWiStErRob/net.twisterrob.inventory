@@ -11,23 +11,28 @@
 	<!--=========================================================================================================-->
 	<string name="category_clothing">Clothing</string>
 
+	<!-- http://en.wikipedia.org/wiki/Clothing#collapsibleTable0 -->
 	<string name="category_clothing_description">stuff you put on your body</string>
 	<string name="category_undress">Street Clothes</string>
-	<string name="category_undress_keywords"></string>
+	<string name="category_undress_keywords">tops (t-shirt, shirt, sweaters, jumper, cardigan, hoodie), trousers (jeans, shorts), skirt, dress, gown</string>
 	<string name="category_formal_clothing">Formal</string>
-	<string name="category_formal_clothing_keywords"></string>
+	<string name="category_formal_clothing_keywords">uniform, suit, work clothes</string>
 	<string name="category_outerwear">Outerwear</string>
-	<string name="category_outerwear_keywords"></string>
+	<string name="category_outerwear_keywords">coat, jacket, vest, costume</string>
 	<string name="category_footwear">Footwear</string>
-	<string name="category_footwear_keywords"></string>
+	<string name="category_footwear_keywords">shoes, boots, rubber boots, sandals, slippers, flip-flops, clogs</string>
 	<string name="category_underwear">Underwear</string>
-	<string name="category_underwear_keywords"></string>
+	<string name="category_underwear_keywords">socks, briefs, box, pajamas, lingerie (panties/knickers, bra, thong, nightgown), hosiery (stockings, leggings, tights/pantyhose)</string>
 	<string name="category_headwear">Headwear</string>
-	<string name="category_headwear_keywords"></string>
+	<string name="category_headwear_keywords">hat, cap, hood, headband, kerchief (bandana)</string>
 	<string name="category_accessories">Accessories</string>
-	<string name="category_accessories_keywords"></string>
+	<string name="category_accessories_keywords">
+		belt, suspenders, purse, wallet,
+		tie, glove, scarf, umbrella,
+		jewelry (glasses, monocle, watch, pocket watch)
+	</string>
 	<string name="category_sports_clothing">Sports</string>
-	<string name="category_sports_clothing_keywords"></string>
+	<string name="category_sports_clothing_keywords">swimwear, running gear, cycling shorts, ski clothes, thermal</string>
 
 
 	<!--=========================================================================================================-->
@@ -36,15 +41,15 @@
 	<string name="category_storage_description">stuff to put other stuff in</string>
 	<string name="category_boxes">Boxes</string>
 	<string name="category_packaging">Packaging</string>
-	<string name="category_packaging_keywords"></string>
+	<string name="category_packaging_keywords">wrappers, styrofoam, protective plastic, paper</string>
 	<string name="category_containers">Containers</string>
-	<string name="category_containers_keywords"></string>
+	<string name="category_containers_keywords">plastic container, tray, bucket, basket, basin, bottle, flask, jar, can</string>
 	<string name="category_containers_bulk">Large containers</string>
-	<string name="category_containers_bulk_keywords"></string>
+	<string name="category_containers_bulk_keywords">crate, trunk, chest, barrel, sack, bin</string>
 	<string name="category_cases">Cases</string>
-	<string name="category_cases_keywords"></string>
+	<string name="category_cases_keywords">jewelry-, phone-, card-, disk-, cassette-, laptop-</string>
 	<string name="category_luggage">Luggage</string>
-	<string name="category_luggage_keywords"></string>
+	<string name="category_luggage_keywords">suitcase, handbag, backpack, purse, plastic bags, pet carrier</string>
 
 
 	<!--=========================================================================================================-->
@@ -53,11 +58,16 @@
 	<string name="category_collectibles_description">stuff you don\'t need, but still have</string>
 	<string name="category_souvenirs">Souvenirs</string>
 	<string name="category_artwork">Artwork</string>
-	<string name="category_artwork_keywords"></string>
+	<string name="category_artwork_keywords">
+		picture (painting, poster, frame)
+		sculpture (statue, figurine, wax, glass, mask, origami, signs),
+		antique (painting, furniture, appliances),
+		ceramic (vase, pot, china)
+	</string>
 	<string name="category_publications">Publications</string>
-	<string name="category_publications_keywords"></string>
+	<string name="category_publications_keywords">book, magazine, newspaper, album, catalog, pamphlet, flier</string>
 	<string name="category_recordings">Recordings</string>
-	<string name="category_recordings_keywords"></string>
+	<string name="category_recordings_keywords">CD, DVD, BD, tape, cassette, vinyl</string>
 
 
 	<!--=========================================================================================================-->
@@ -65,11 +75,29 @@
 
 	<string name="category_consumables_description">stuff you can ingest raw, or processed</string>
 	<string name="category_food">Food</string>
-	<string name="category_food_keywords"></string>
+	<string name="category_food_keywords">
+		long-life (coffee, tea, chips, cigarettes, instant packets, pet food),
+		canned (fish, lunch meat, fruit),
+		jar (jam, marmalade, baby food),
+		frozen? (ready meal, vegetables, fruit, ice cream),
+		sweets (chewing gum, candy)
+	</string>
 	<string name="category_liquids">Liquids</string>
-	<string name="category_liquids_keywords"></string>
+	<string name="category_liquids_keywords">
+		drinks (mineral water, soft drink, fruit juice, concentrated fruit syrup),
+		alcoholic beverages (wine, beer, cider, champagne),
+		distilled spirit (liquor, liqueur, rum, vodka, whisky, brandy, gin, tequila),
+		condiments (lemon juice, cooking oil, vegetable oil, olive oil, vinegar, soy sauce)
+	</string>
 	<string name="category_ingredients">Ingredients</string>
-	<string name="category_ingredients_keywords"></string>
+	<string name="category_ingredients_keywords">
+		staple food (flour, rice, pasta),
+		grains (wheat, corn, breadcrumbs, semolina, bean, legumes)
+		table sauces (ketchup, mustard, wasabi, mayonnaise, BBQ sauce, hot sauce, tomato sauce, chili sauce, salsa),
+		seasoning (salt, sugar, honey, sweetener, pepper, paprika),
+		spices (vanilla, cinnamon, clove),
+		additives (food coloring)
+	</string>
 
 
 	<!--=========================================================================================================-->
@@ -77,11 +105,32 @@
 
 	<string name="category_health_description">stuff that helps you live a better life</string>
 	<string name="category_medical">Medical Products</string>
-	<string name="category_medical_keywords"></string>
+	<!-- http://en.wikipedia.org/wiki/Category:Assistive_technology -->
+	<string name="category_medical_keywords">
+		medication (pills, tablets, capsule, suppository, syringe, gel, paste, cream, lotion, balm, ear drops, eye drops, nasal spray, vitamin),
+		instruments (scale, temperature meter, sphygmomanometer, blood sugar meter),
+		dressing (gauze, bandage, adhesive bandage/Band-Aid/sticking plasters),
+		prostheses (dentures, hearing/visual aids),
+		orthoses (plaster cast, braces, knee, ankle, foot),
+		mobility aids (wheelchair, cane, crutches)
+	</string>
 	<string name="category_sanitation">Sanitation</string>
-	<string name="category_sanitation_keywords"></string>
+	<string name="category_sanitation_keywords">
+		body hygiene (soap, liquid hand soap, shower gel, shampoo),
+		oral hygiene (toothpaste, toothbrush, mouthwash, dental floss),
+		tissue (Kleenex/handkerchief, paper towel, toilet paper, wet wipe, cotton pad, cotton ball),
+		reproductive health (nappies, condom, lubricants, sanitary pad, tampon)
+	</string>
 	<string name="category_cosmetics">Cosmetics</string>
-	<string name="category_cosmetics_keywords"></string>
+	<!-- http://en.wikipedia.org/wiki/Cosmetics -->
+	<string name="category_cosmetics_keywords">
+		hair products (conditioner, hair spray, hair dye, hair gel, hair brush),
+		trimming (razors, shaving foam, shaving gel, tweezer, nail clipper, nail file),
+		perfume (deodorant, cologne, eau de toilette, essential oils, jojoba, scent, aroma),
+		makeup (lipstick, lip balm, lip gloss, foundation, concealer, toner, blush, eyeliner, mascara, nail polish, cleanser, remover),
+		skin care (exfoliants, scrubs, moisturizer, waxing, vaseline, sun lotion, body lotion),
+		manicure, pedicure
+	</string>
 
 
 	<!--=========================================================================================================-->
@@ -89,11 +138,12 @@
 
 	<string name="category_decorations_description">stuff that makes your other stuff look pretty</string>
 	<string name="category_ornaments">Ornaments</string>
-	<string name="category_ornaments_keywords"></string>
+	<string name="category_ornaments_keywords">vase, figurine, plant, candle, fridge magnet</string>
 	<string name="category_cultural_decorations">Cultural</string>
-	<string name="category_cultural_decorations_keywords"></string>
+	<!-- http://en.wikipedia.org/wiki/Holiday -->
+	<string name="category_cultural_decorations_keywords">parties (house-, birthday-, bachelor-, balls), New Year\'s, Halloween, Valentine\'s Day, Christmas, Easter, Thanksgiving; balloon</string>
 	<string name="category_traditional_decorations">Traditional</string>
-	<string name="category_traditional_decorations_keywords"></string>
+	<string name="category_traditional_decorations_keywords">folk art, religious motifs, religious objects</string>
 
 
 	<!--=========================================================================================================-->
@@ -101,31 +151,39 @@
 
 	<string name="category_furnishings_description">stuff that you put on other stuff</string>
 	<string name="category_fittings">Fittings</string>
-	<string name="category_fittings_keywords"></string>
+	<string name="category_fittings_keywords">lamp, wall-clock, alarm clock, pipe, blinds, thermostat</string>
 	<string name="category_pillows">Pillows</string>
-	<string name="category_pillows_keywords"></string>
+	<string name="category_pillows_keywords">pillow, cushion, travel cushion</string>
 	<string name="category_bedding">Bedding</string>
-	<string name="category_bedding_keywords"></string>
+	<string name="category_bedding_keywords">covers, blanket, duvet, bedsheets, fitted sheet, pillowcase, bedsheets</string>
 	<string name="category_fabrics">Fabrics</string>
-	<string name="category_fabrics_keywords"></string>
+	<string name="category_fabrics_keywords">curtains, cloths, towel, blanket, carpet, rug, embroidery</string>
 
 
 	<!--=========================================================================================================-->
 	<string name="category_furniture">Furniture</string>
 
+	<!-- http://en.wikipedia.org/wiki/List_of_furniture_types -->
 	<string name="category_furniture_description">stuff you need friends to move</string>
 	<string name="category_fixtures">Fixtures</string>
-	<string name="category_fixtures_keywords"></string>
+	<string name="category_fixtures_keywords">bathtub, sink, toilet, radiators, door, window, fireplace, shelf, hanger, holder, sockets, switch, lights, fans</string>
 	<string name="category_cabinetry">Cabinetry</string>
-	<string name="category_cabinetry_keywords"></string>
+	<string name="category_cabinetry_keywords">cupboard, cabinet, wardrobe, closet, chest of drawers, nightstand</string>
 	<string name="category_surfaces">Surfaces</string>
-	<string name="category_surfaces_keywords"></string>
+	<string name="category_surfaces_keywords">table, desk, workbench, shelf, stands (flower-, drying-, ironing-), hangers</string>
 	<string name="category_resting">Seating &amp; Resting</string>
-	<string name="category_resting_keywords"></string>
+	<string name="category_resting_keywords">
+		sitting (chair, stool, bench, sofa, couch/divan, beanbag),
+		lounging (bed, mattress, lounger, pool lilo, hammock, swim ring, swim tube),
+		pet housing (dog house, kennel, litter box, cage, aquarium)
+	</string>
 	<string name="category_outdoor">Outdoor</string>
-	<string name="category_outdoor_keywords"></string>
+	<string name="category_outdoor_keywords">
+		jacuzzi, sauna, kiddy pool, trampoline,
+		playground (swing, slide, seesaw)
+	</string>
 	<string name="category_compartments">Compartments</string>
-	<string name="category_compartments_keywords"></string>
+	<string name="category_compartments_keywords">drawer, shelf, section, display</string>
 
 
 	<!--=========================================================================================================-->
@@ -133,55 +191,87 @@
 
 	<string name="category_stationery_description">stuff around the office or studio</string>
 	<string name="category_stationery_desktop">Desktop</string>
-	<string name="category_stationery_desktop_keywords"></string>
+	<string name="category_stationery_desktop_keywords">
+		alteration (stapler, hole puncher, scissors),
+		measurement (straight ruler, angle, protractor, compass),
+		tapes (Duct/Cloth tape, Sellotape/Scotch/Sticky Tape),
+		fasteners (paperclip, push pin, binder clip)
+	</string>
 	<string name="category_stationery_paper">Paper</string>
-	<string name="category_stationery_paper_keywords"></string>
+	<string name="category_stationery_paper_keywords">sheet paper, sticky notes, notepad, notebook, scrapbook, envelope, gift card, wall calendar, desk calendar, wrapping paper, notebook cover, ribbon, bows</string>
 	<string name="category_stationery_art">Artistic</string>
-	<string name="category_stationery_art_keywords"></string>
+	<string name="category_stationery_art_keywords">pen, pencil, crayon, plasticine clay, brush (paintbrush), paint, highlighter, eraser/rubber drawing board</string>
 	<string name="category_stationery_storage">Storage</string>
-	<string name="category_stationery_storage_keywords"></string>
+	<string name="category_stationery_storage_keywords">magazine file, folder, binder, plastic wallet, photo album, messageboard, pencil holder, pencil case, tray</string>
 
 
 	<!--=========================================================================================================-->
 	<string name="category_tools">Tools</string>
 
+	<!-- http://en.wikipedia.org/wiki/Tool -->
 	<string name="category_tools_description">stuff to maintain or build other stuff with</string>
+	<!-- https://en.wikipedia.org/wiki/Workbench#collapsibleTable0 -->
 	<string name="category_diy">Utility &amp; DIY</string>
-	<string name="category_diy_keywords"></string>
+	<string name="category_diy_keywords">
+		hand tools (screwdriver, wrench, clamps, army-knife, awl, hammer, mallet, saw, pick, axe),
+		power tools (chainsaw, sander, drill, jackhammer, nail gun, blow torch, compressor, pump)
+	</string>
 	<string name="category_gardening">Gardening</string>
-	<string name="category_gardening_keywords"></string>
+	<!-- http://www.homedepot.com/b/Outdoors-Outdoor-Power-Equipment/N-5yc1vZbx5c -->
+	<string name="category_gardening_keywords">lawn mover, shovel, rake, spade, pitchfork, hoe, leaf blower, watering can, pot, saucers/drip trays, sprinkler, hose</string>
 	<string name="category_craft">Craft</string>
-	<string name="category_craft_keywords"></string>
+	<string name="category_craft_keywords">stencils, brush, needle, dye/paint
+		cutting tools (knife, scissors, blade, scalpel, sandpaper),
+		adhesive (glue, Blu-tack, wallpaper paste),
+		fastener (nails, bolts, nuts, pegs)
+	</string>
 	<string name="category_materials">Materials</string>
-	<string name="category_materials_keywords"></string>
+	<string name="category_materials_keywords">wood, sawdust, metal, glass, cat litter,
+		fabrics (textile, wool, yarn, thread, rope, twine, wire, shoelaces),
+		building blocks (bricks, tile, roof tiles),
+		aggregates (sand, gravel, pebbles, cement, limestone)
+	</string>
 	<string name="category_chemicals">Chemicals</string>
-	<string name="category_chemicals_keywords"></string>
+	<!-- http://en.wikipedia.org/wiki/Biocide#European_Community_Classification -->
+	<string name="category_chemicals_keywords">
+		air-freshener spray, air-freshener gel, furniture spary,
+		pesticide (anti-insect spray, rat poison, ant bait, mouse trap),
+		detergent (laundry detergent, washing powder, laundry pod, washing tablet, fabric softener, washing up liquid, window cleaner, windshield washer liquid),
+		disinfectants (toilet cleaner, floor &amp; surface cleaner, bleach),
+		fuel (gasoline, petrol, motor oil, petroleum, kerosene, distilled water),
+		fertilizer (plant food, compost, potting soil)
+	</string>
 	<string name="category_cleaning">Cleaning</string>
-	<string name="category_cleaning_keywords"></string>
+	<string name="category_cleaning_keywords">broom, dust pan, mop, brush, duster, cloth, sponge, scourer/steel wool, rubber gloves, plunger</string>
 	<string name="category_utensils_kitchen">Kitchen Utensils</string>
-	<string name="category_utensils_kitchen_keywords"></string>
+	<string name="category_utensils_kitchen_keywords">
+		cutlery (knife, fork, spoon, chopsticks, tongs),
+		straw, toothpick, funnel, sieve, oven mitt, grater, peeler
+		soda siphon, whipped cream dispenser
+	</string>
 	<string name="category_cookware">Cookware</string>
-	<string name="category_cookware_keywords"></string>
+	<string name="category_cookware_keywords">pans (saucepan), bowl, pot, tray, grids, baking mold</string>
 	<string name="category_tableware">Tableware / Catering?</string>
-	<string name="category_tableware_keywords"></string>
+	<string name="category_tableware_keywords">plate, bowl, drinkware (glass, mug, jug, cup), coasters (hot pads), napkins</string>
 
 
 	<!--=========================================================================================================-->
 	<string name="category_toys">Toys</string>
 
+	<!-- TODO darts, water pistol, bubble blowers, playdoh, chemistry set, foose ball table, air hockey table -->
 	<string name="category_toys_description">stuff to play with</string>
 	<string name="category_toys_soft">Soft/Plush</string>
 	<string name="category_toys_soft_keywords"></string>
 	<string name="category_toys_figures">Dolls/Action Figures</string>
-	<string name="category_toys_figures_keywords"></string>
+	<string name="category_toys_figures_keywords">dolls (Barbie), action figures (Star Wars, Star Trek, Avengers)</string>
 	<string name="category_toys_tabletop">Tabletop Games</string>
-	<string name="category_toys_tabletop_keywords"></string>
+	<string name="category_toys_tabletop_keywords">boards games (chess, checkers, go), multiplayer games (Charades, Scrabble, Monopoly, Risk, Catan), card games (Pokémon, Yu-Gi-Oh, French playing cards)</string>
 	<string name="category_toys_puzzlers">Puzzlers</string>
-	<string name="category_toys_puzzlers_keywords"></string>
+	<string name="category_toys_puzzlers_keywords">Rubik\'s Cube, Sodoku, crossword, Tetris</string>
 	<string name="category_toys_construction">Construction</string>
-	<string name="category_toys_construction_keywords"></string>
+	<string name="category_toys_construction_keywords">Lego</string>
 	<string name="category_toys_outdoors">Outdoors</string>
-	<string name="category_toys_outdoors_keywords"></string>
+	<string name="category_toys_outdoors_keywords">sandpit toys (bucket, spade, truck), mountable toys (motocycle), skipping rope, </string>
 
 
 	<!--=========================================================================================================-->
@@ -189,11 +279,11 @@
 
 	<string name="category_documents_description">stuff written on other stuff</string>
 	<string name="category_archives">Archives</string>
-	<string name="category_archives_keywords"></string>
+	<string name="category_archives_keywords">contract, certificates (birth, degree, diploma), deeds (licence, land registration, will)</string>
 	<string name="category_statements">Statements</string>
-	<string name="category_statements_keywords"></string>
+	<string name="category_statements_keywords">receipt, bill, balance sheet, income, expenses, report</string>
 	<string name="category_manuals">Manuals</string>
-	<string name="category_manuals_keywords"></string>
+	<string name="category_manuals_keywords">user guide, owner\'s manual, instructions, help</string>
 
 
 	<!--=========================================================================================================-->
@@ -201,19 +291,44 @@
 
 	<string name="category_leisure_description">stuff you mostly use in your spare time</string>
 	<string name="category_sport_accessories">Sport Accessories</string>
-	<string name="category_sport_accessories_keywords"></string>
+	<string name="category_sport_accessories_keywords">sweatband, sneakers, cap (baseball-, swimming-), snorkel, flippers
+		protective gear (helmet, gloves, goggles, glasses, knee pads)
+	</string>
 	<string name="category_sport_equipment">Sport Equipment</string>
-	<string name="category_sport_equipment_keywords"></string>
+	<string name="category_sport_equipment_keywords">
+		balls (soccer, basketball, baseball, handball, volleyball, beach ball, hockey puck),
+		rackets (tennis, squash, badminton),
+		bats (baseball bat, cricket bat, croquet mallet, polo mallet, golf club, hockey stick),
+		partition (net, basketball hoop, goal posts),
+		gliders (roller skate, rollerblade, ice skate, ski, snowboard, skateboard, surfboard)</string>
 	<string name="category_gym_equipment">Gym Equipment</string>
-	<string name="category_gym_equipment_keywords"></string>
+	<string name="category_gym_equipment_keywords">weights, medicine ball, punch bag, mat, bench, machine (bike, treadmill, cross trainer, elliptical trainer)</string>
 	<string name="category_camping">Camping</string>
-	<string name="category_camping_keywords"></string>
+	<!-- http://www.rei.com/learn/expert-advice/family-camping-checklist.html -->
+	<string name="category_camping_keywords">
+		lodging (tent, sleeping bag, air mattress),
+		catering (stove, barbecue, cool-box/cooler/chilly bin/Esky),
+		fishing tackle (rod, reel, line, hook, sinker, float, bait, net, trap),
+		mobile lighting (lantern, kerosene lamp, flashlight, torch, solar power light)
+	</string>
 	<string name="category_vehicles">Vehicles</string>
-	<string name="category_vehicles_keywords"></string>
+	<string name="category_vehicles_keywords">
+		human-powered (bicycle, unicycle, monowheel, scooter),
+		motorized (motorcycle, car, SUV, quad),
+		trucks (golf cart, pickup, lorry, van, bus),
+		trailers (recreational vehicle, wagon, carriage, trains),
+		heavy equipment (tractor, forklift),
+		aircraft (plane, helicopter, drones),
+		watercraft (boat, ship, submarine)</string>
 	<string name="category_vehicles_parts">Vehicle Parts &amp; Accessories</string>
-	<string name="category_vehicles_parts_keywords"></string>
+	<string name="category_vehicles_parts_keywords">
+		parts (wheel, engine, light, break, mirror, horn, bell, seat, basket),
+		accessories (lock, high-visibility, covers, air freshener, first aid kit, child safety seat),
+		maintenance (lubricants/oil, pump, key, puncture kit, repair kit),
+		electronics (GPS/Satellite navigation, radio, audio-visual entertainment systems)
+	</string>
 	<string name="category_instruments">Instruments</string>
-	<string name="category_instruments_keywords"></string>
+	<string name="category_instruments_keywords">percussion-, keyboard-, stringed-, woodwind-, brass-</string>
 
 
 	<!--=========================================================================================================-->
@@ -222,24 +337,40 @@
 	<string name="category_electronics_description">mostly stuff that has some silicon in it</string>
 	<string name="category_appliances">Home Appliances</string>
 	<string name="category_appliances_description">stuff that makes your life easier</string>
+	<!-- http://en.wikipedia.org/wiki/Laundry#collapsibleTable0 -->
+	<!-- http://en.wikipedia.org/wiki/Category:Home_appliances -->
 	<string name="category_appliances_keywords"></string>
 	<string name="category_appliances_major">White Goods</string>
-	<string name="category_appliances_major_keywords"></string>
+	<string name="category_appliances_major_keywords">
+		cooking (stove, oven, microwave),
+		kitchen (refrigerator, freezer),
+		laundry (dishwasher, washing machine, dryer),
+		thermoregulation (heater, fan, air conditioning, thermostat),
+		boiler, kiln, grills (barbecue)
+	</string>
 	<string name="category_appliances_minor">Small Appliances</string>
-	<string name="category_appliances_minor_keywords"></string>
+	<string name="category_appliances_minor_keywords">
+		cleaning (iron, vacuum cleaner, robovac),
+		hair styling (hairdryer, curling iron, hair straightener),
+		kitchen (toaster, kettle, coffee maker, mixer),
+		air control (humidifier, dehumidifier, vaporizer, water pipe, e-cigarette)
+	</string>
 	<string name="category_appliances_pieces">Pieces</string>
-	<string name="category_appliances_pieces_keywords"></string>
+	<string name="category_appliances_pieces_keywords">battery (AA, AAA, AAAA, B, C, D), fuse, spark plug, N2O whipped-cream charger, CO2 soda charger</string>
 	<string name="category_consumer_electronics">Brown Goods</string>
 	<string name="category_recorders">Recorders</string>
-	<string name="category_recorders_keywords"></string>
+	<string name="category_recorders_keywords">cameras (video, digital, DSC, DSLR, HD, 4K), dictaphone, photocopier</string>
 	<string name="category_playbacks">Playback Devices</string>
-	<string name="category_playbacks_keywords"></string>
+	<string name="category_playbacks_keywords">recoding player (CD, DVD, BD, VHS, MP3, MP4, vinyl), AM/FM radio, headphones</string>
 	<string name="category_displays">Displays</string>
-	<string name="category_displays_keywords"></string>
+	<string name="category_displays_keywords">monitor, TV, projector; CRT, LCD, TFT, IPS, LED, plasma, OLED</string>
 	<string name="category_computers">Computers</string>
-	<string name="category_computers_keywords"></string>
+	<string name="category_computers_keywords">Macintosh, PC/personal computer, laptop (notebook, netbook, tablet), game consoles (Xbox, Nintendo Wii, Sony Playstation, Sega, Atari), smart phone (Android, Apple iPhone, Samsung), GPS/Satellite navigation, scientific calculators</string>
 	<string name="category_computer_peripherals">Peripherals</string>
-	<string name="category_computer_peripherals_keywords"></string>
+	<string name="category_computer_peripherals_keywords">keyboard, mouse, webcam, printer, scanner,
+		computer internals (PCI, AGP, PCMCIA, PCI-Express cards),
+		storage (hard drive, external, pendrive, ATA, PATA, SATA, HDD, SSD, RAID; card reader, MMC, SD, microSD, SDHC MemoryStick Pro Duo)
+	</string>
 	<string name="category_cables">Cables</string>
-	<string name="category_cables_keywords"></string>
+	<string name="category_cables_keywords">power cord, extension cord, plug converters (mains, audio/video jack, USB, HDMI, VGA)</string>
 </resources>
