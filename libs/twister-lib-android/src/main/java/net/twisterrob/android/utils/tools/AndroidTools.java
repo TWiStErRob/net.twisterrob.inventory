@@ -103,7 +103,7 @@ public /*static*/ abstract class AndroidTools {
 		return getResourceID(context, RES_TYPE_STRING, stringResourceName);
 	}
 
-	public static CharSequence getText(Context context, String stringResourceName) {
+	public static @NonNull CharSequence getText(Context context, String stringResourceName) {
 		int id = getStringResourceID(context, stringResourceName);
 		if (id == INVALID_RESOURCE_ID) {
 			throw new NotFoundException(String.format(Locale.ROOT, "Resource '%s' is not a valid string in '%s'",

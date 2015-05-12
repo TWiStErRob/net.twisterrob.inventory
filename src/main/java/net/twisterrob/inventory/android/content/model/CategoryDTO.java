@@ -77,6 +77,14 @@ public class CategoryDTO extends ImagedDTO {
 		}
 	}
 
+	public static @Nullable CharSequence getDescription(@NonNull Context context, @NonNull String categoryName) {
+		try {
+			return AndroidTools.getText(context, categoryName + "_description");
+		} catch (NotFoundException ex) {
+			return null;
+		}
+	}
+
 	public static CategorySuggester getSuggester(Context context) {
 		SUGGESTER.init(context);
 		return SUGGESTER;

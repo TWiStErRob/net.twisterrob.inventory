@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.view.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.*;
 import android.widget.*;
@@ -54,14 +55,23 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 	public void bind(Cursor cursor) {
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+		Integer subCatCount = getCount(cursor, CommonColumns.COUNT_CHILDREN_DIRECT);
 
 		Context context = itemView.getContext();
-		title.setText(AndroidTools.getText(context, name));
 
-		Integer subCatCount = getCount(cursor, CommonColumns.COUNT_CHILDREN_DIRECT);
+		CharSequence titleText = AndroidTools.getText(context, name);
 		if (subCatCount != null) {
-			stats.setText(context.getResources().getQuantityString(
-					R.plurals.label_category_subs, subCatCount, subCatCount));
+			String subCats = context.getResources().getQuantityString(
+					R.plurals.label_category_subs, subCatCount, subCatCount);
+			CharSequence text = context.getResources().getText(R.string.label_category_subs_with_title);
+			title.setText(TextUtils.expandTemplate(text, titleText, subCats));
+		} else {
+			title.setText(titleText);
+		}
+
+		CharSequence description = CategoryDTO.getDescription(context, name);
+		if (description != null) {
+			stats.setText(description);
 		} else {
 			if (App.getBPref(R.string.pref_preferExpandedKeywords, R.bool.pref_preferExpandedKeywords_default)) {
 				stats.setText(CategoryDTO.getKeywords(context, name));
@@ -69,6 +79,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 				stats.setText(CategoryDTO.getShortKeywords(context, name));
 			}
 		}
+		AndroidTools.displayedIfHasText(stats);
 
 		Integer itemCountTotal = getCount(cursor, Category.COUNT_ITEM_ALL);
 		if (itemCountTotal != null) {

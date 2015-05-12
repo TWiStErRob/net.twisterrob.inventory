@@ -102,9 +102,10 @@
 	<string name="category_share">Share Category</string>
 	<string name="category_viewAllItems">Flatten Subcategories</string>
 	<plurals name="label_category_subs">
-		<item quantity="one">%d subcategory</item>
-		<item quantity="other">%d subcategories</item>
+		<item quantity="one">%1$d&#160;more</item>
+		<item quantity="other">%1$d&#160;more</item>
 	</plurals>
+	<string name="label_category_subs_with_title">^1 <small>(^2)</small></string>
 
 	<plurals name="list">
 		<item quantity="one">list</item>

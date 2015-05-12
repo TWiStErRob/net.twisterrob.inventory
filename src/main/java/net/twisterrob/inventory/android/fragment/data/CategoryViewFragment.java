@@ -56,6 +56,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 				.append("Category Key", entity.name, DEBUG)
 				.append("Category Name", AndroidTools.getText(getContext(), entity.name))
 				.append("Category Image", entity.typeImage, DEBUG)
+				.append("Description", CategoryDTO.getDescription(getContext(), entity.name))
 				.append("Parent ID", entity.parentID, DEBUG)
 				.append("Inside", entity.parentName)
 				.append("# of direct subcategories", entity.numDirectChildren)

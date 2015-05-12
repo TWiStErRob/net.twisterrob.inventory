@@ -1,130 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="category_internal">INTERNAL</string>
+	<string name="category_internal" translatable="false">SECRET</string>
+	<string name="category_internal_description" translatable="false">stuff you should never see</string>
 	<string name="category_uncategorized">Uncategorized</string>
+	<string name="category_uncategorized_description">any other stuff</string>
 	<string name="category_group">Group</string>
+	<string name="category_group_description">logically holds other stuff together</string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_clothing">Clothing</string>
-	<string name="category_clothing_clothes">Clothes</string>
-	<string name="category_clothing_underwear">Underwear</string>
-	<string name="category_clothing_footwear">Footwear</string>
-	<string name="category_clothing_coats">Coats</string>
+
+	<string name="category_clothing_description">stuff you put on your body</string>
+	<string name="category_undress">Street Clothes</string>
+	<string name="category_undress_keywords"></string>
+	<string name="category_formal_clothing">Formal</string>
+	<string name="category_formal_clothing_keywords"></string>
+	<string name="category_outerwear">Outerwear</string>
+	<string name="category_outerwear_keywords"></string>
+	<string name="category_footwear">Footwear</string>
+	<string name="category_footwear_keywords"></string>
+	<string name="category_underwear">Underwear</string>
+	<string name="category_underwear_keywords"></string>
+	<string name="category_headwear">Headwear</string>
+	<string name="category_headwear_keywords"></string>
 	<string name="category_accessories">Accessories</string>
-	<string name="category_accessory_jewelry">Jewelry</string>
-	<string name="category_accessory_hats">Hats</string>
-	<string name="category_accessory_gloves">Gloves</string>
-	<string name="category_accessory_scarves">Scarves</string>
-	<string name="category_luggage">Luggage</string>
-	<string name="category_luggage_backpacks">Backpacks</string>
-	<string name="category_luggage_bags">Bags</string>
-	<string name="category_luggage_suitcases">Suitcases</string>
-	<string name="category_luggage_trunks">Trunks</string>
+	<string name="category_accessories_keywords"></string>
+	<string name="category_sports_clothing">Sports</string>
+	<string name="category_sports_clothing_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_storage">Storage</string>
-	<string name="category_storage_boxes">Boxes</string>
-	<string name="category_storage_baskets">Baskets</string>
-	<string name="category_storage_crates">Crates</string>
-	<string name="category_storage_cases">Cases</string>
+
+	<string name="category_storage_description">stuff to put other stuff in</string>
+	<string name="category_boxes">Boxes</string>
+	<string name="category_packaging">Packaging</string>
+	<string name="category_packaging_keywords"></string>
+	<string name="category_containers">Containers</string>
+	<string name="category_containers_keywords"></string>
+	<string name="category_containers_bulk">Large containers</string>
+	<string name="category_containers_bulk_keywords"></string>
+	<string name="category_cases">Cases</string>
+	<string name="category_cases_keywords"></string>
+	<string name="category_luggage">Luggage</string>
+	<string name="category_luggage_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_collectibles">Collectibles</string>
-	<string name="category_collectible_albums">Albums</string>
-	<string name="category_collectible_artwork">Artwork</string>
-	<string name="category_collectible_antiques">Antiques</string>
-	<string name="category_collectible_magazines">Magazines</string>
-	<string name="category_collectible_books">Books</string>
-	<string name="category_collectible_recordings">Recordings</string>
-	<string name="category_collectible_cds">CDs</string>
-	<string name="category_collectible_dvds">DVDs</string>
-	<string name="category_collectible_blurays">Blu-Rays</string>
-	<string name="category_collectible_vinyls">Vinyls</string>
-	<string name="category_collectible_tapes">Tapes</string>
-	<string name="category_collectible_cassettes">Cassettes</string>
-	<string name="category_collectible_souvenirs">Souvenirs</string>
+
+	<string name="category_collectibles_description">stuff you don\'t need, but still have</string>
+	<string name="category_souvenirs">Souvenirs</string>
+	<string name="category_artwork">Artwork</string>
+	<string name="category_artwork_keywords"></string>
+	<string name="category_publications">Publications</string>
+	<string name="category_publications_keywords"></string>
+	<string name="category_recordings">Recordings</string>
+	<string name="category_recordings_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_consumables">Consumables</string>
-	<string name="category_consumable_food">Food</string>
-	<string name="category_consumable_ingredients">Ingredients</string>
-	<string name="category_consumable_seasoning">Seasoning</string>
-	<string name="category_consumable_conserves">Conserves</string>
-	<string name="category_consumable_liquids">Liquids</string>
-	<string name="category_kitchenware">Kitchenware</string>
-	<string name="category_kitchen_cutlery">Silverware</string>
-	<string name="category_kitchen_dishes">Dishes</string>
-	<string name="category_kitchen_pans">Pans</string>
-	<string name="category_kitchen_glasses">Glasses</string>
+
+	<string name="category_consumables_description">stuff you can ingest raw, or processed</string>
+	<string name="category_food">Food</string>
+	<string name="category_food_keywords"></string>
+	<string name="category_liquids">Liquids</string>
+	<string name="category_liquids_keywords"></string>
+	<string name="category_ingredients">Ingredients</string>
+	<string name="category_ingredients_keywords"></string>
+
+
+	<!--=========================================================================================================-->
+	<string name="category_health">Health Care</string>
+
+	<string name="category_health_description">stuff that helps you live a better life</string>
+	<string name="category_medical">Medical Products</string>
+	<string name="category_medical_keywords"></string>
+	<string name="category_sanitation">Sanitation</string>
+	<string name="category_sanitation_keywords"></string>
+	<string name="category_cosmetics">Cosmetics</string>
+	<string name="category_cosmetics_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_decorations">Decorations</string>
-	<string name="category_decor_lighting">Lighting</string>
-	<string name="category_decor_vase">Vase</string>
-	<string name="category_decor_event">Event</string>
-	<string name="category_decor_birthday">Birthday</string>
-	<string name="category_decor_wedding">Wedding</string>
-	<string name="category_decor_seasonal">Seasonal</string>
-	<string name="category_decor_easter">Easter</string>
-	<string name="category_decor_christmas">Christmas</string>
-	<string name="category_decor_cultural">Cultural</string>
+
+	<string name="category_decorations_description">stuff that makes your other stuff look pretty</string>
+	<string name="category_ornaments">Ornaments</string>
+	<string name="category_ornaments_keywords"></string>
+	<string name="category_cultural_decorations">Cultural</string>
+	<string name="category_cultural_decorations_keywords"></string>
+	<string name="category_traditional_decorations">Traditional</string>
+	<string name="category_traditional_decorations_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_furnishings">Furnishings</string>
-	<string name="category_furnishing_fixtures">Fixtures</string>
-	<string name="category_furnishing_bedding">Bedding</string>
-	<string name="category_furnishing_covers">Covers</string>
-	<string name="category_furnishing_douvets">Douvets</string>
-	<string name="category_furnishing_bedsheets">Bedsheets</string>
-	<string name="category_furnishing_blankets">Blankets</string>
-	<string name="category_furnishing_pillows">Pillows</string>
-	<string name="category_furnishing_curtains">Curtains/Draperies</string>
-	<string name="category_furnishing_linens">Linens</string>
-	<string name="category_furnishing_towels">Towels</string>
-	<string name="category_furnishing_rugs">Rugs</string>
+
+	<string name="category_furnishings_description">stuff that you put on other stuff</string>
+	<string name="category_fittings">Fittings</string>
+	<string name="category_fittings_keywords"></string>
+	<string name="category_pillows">Pillows</string>
+	<string name="category_pillows_keywords"></string>
+	<string name="category_bedding">Bedding</string>
+	<string name="category_bedding_keywords"></string>
+	<string name="category_fabrics">Fabrics</string>
+	<string name="category_fabrics_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_furniture">Furniture</string>
-	<string name="category_furniture_cabinetry">Cupboard/Cabinet/Wardrobe</string>
-	<string name="category_furniture_table">Desk/Table</string>
-	<string name="category_furniture_stand">Stand</string>
-	<string name="category_furniture_seating">Seating</string>
-	<string name="category_furniture_garden">Garden</string>
-	<string name="category_furniture_bathroom">Bathroom</string>
-	<string name="category_furniture_kitchen">Kitchen</string>
-	<string name="category_furniture_compartments">Compartments</string>
-	<string name="category_furniture_drawer">Drawer</string>
-	<string name="category_furniture_shelf">Shelf</string>
-	<string name="category_furniture_section">Section</string>
-	<string name="category_furniture_display">Display</string>
+
+	<string name="category_furniture_description">stuff you need friends to move</string>
+	<string name="category_fixtures">Fixtures</string>
+	<string name="category_fixtures_keywords"></string>
+	<string name="category_cabinetry">Cabinetry</string>
+	<string name="category_cabinetry_keywords"></string>
+	<string name="category_surfaces">Surfaces</string>
+	<string name="category_surfaces_keywords"></string>
+	<string name="category_resting">Seating &amp; Resting</string>
+	<string name="category_resting_keywords"></string>
+	<string name="category_outdoor">Outdoor</string>
+	<string name="category_outdoor_keywords"></string>
+	<string name="category_compartments">Compartments</string>
+	<string name="category_compartments_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_stationery">Stationery</string>
-	<string name="category_stationery_painting">Painting</string>
-	<string name="category_stationery_drawing">Drawing</string>
-	<string name="category_stationery_writing">Writing</string>
+
+	<string name="category_stationery_description">stuff around the office or studio</string>
+	<string name="category_stationery_desktop">Desktop</string>
+	<string name="category_stationery_desktop_keywords"></string>
 	<string name="category_stationery_paper">Paper</string>
+	<string name="category_stationery_paper_keywords"></string>
+	<string name="category_stationery_art">Artistic</string>
+	<string name="category_stationery_art_keywords"></string>
+	<string name="category_stationery_storage">Storage</string>
+	<string name="category_stationery_storage_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_tools">Tools</string>
-	<string name="category_tools_utility">Utility</string>
-	<string name="category_tools_cleaning">Cleaning</string>
-	<string name="category_tools_gardening">Gardening</string>
-	<string name="category_tools_chemicals">Chemicals</string>
+
+	<string name="category_tools_description">stuff to maintain or build other stuff with</string>
+	<string name="category_diy">Utility &amp; DIY</string>
+	<string name="category_diy_keywords"></string>
+	<string name="category_gardening">Gardening</string>
+	<string name="category_gardening_keywords"></string>
+	<string name="category_craft">Craft</string>
+	<string name="category_craft_keywords"></string>
+	<string name="category_materials">Materials</string>
+	<string name="category_materials_keywords"></string>
+	<string name="category_chemicals">Chemicals</string>
+	<string name="category_chemicals_keywords"></string>
+	<string name="category_cleaning">Cleaning</string>
+	<string name="category_cleaning_keywords"></string>
+	<string name="category_utensils_kitchen">Kitchen Utensils</string>
+	<string name="category_utensils_kitchen_keywords"></string>
+	<string name="category_cookware">Cookware</string>
+	<string name="category_cookware_keywords"></string>
+	<string name="category_tableware">Tableware / Catering?</string>
+	<string name="category_tableware_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_toys">Toys</string>
+
+	<string name="category_toys_description">stuff to play with</string>
 	<string name="category_toys_soft">Soft/Plush</string>
-	<string name="category_toys_dolls">Dolls/Action Figures</string>
+	<string name="category_toys_soft_keywords"></string>
+	<string name="category_toys_figures">Dolls/Action Figures</string>
+	<string name="category_toys_figures_keywords"></string>
 	<string name="category_toys_tabletop">Tabletop Games</string>
+	<string name="category_toys_tabletop_keywords"></string>
 	<string name="category_toys_puzzlers">Puzzlers</string>
+	<string name="category_toys_puzzlers_keywords"></string>
 	<string name="category_toys_construction">Construction</string>
+	<string name="category_toys_construction_keywords"></string>
 	<string name="category_toys_outdoors">Outdoors</string>
+	<string name="category_toys_outdoors_keywords"></string>
+
+
+	<!--=========================================================================================================-->
 	<string name="category_documents">Documents</string>
-	<string name="category_document_archives">Archives</string>
-	<string name="category_document_statements">Statements</string>
-	<string name="category_sports">Sports</string>
-	<string name="category_sport_clothing">Clothing</string>
-	<string name="category_sport_accessories">Accessories</string>
-	<string name="category_sport_equipment">Equipment</string>
-	<string name="category_electronics">Electronics</string>
-	<string name="category_electronic_appliances">Appliances</string>
-	<string name="category_electronic_cables">Cables</string>
-	<string name="category_electronic_recorders">Cameras/Recorders</string>
-	<string name="category_electronic_playbacks">Playback Devices</string>
-	<string name="category_electronic_displays">Displays</string>
-	<string name="category_electronic_monitors">Monitors</string>
-	<string name="category_electronic_tv">TV</string>
-	<string name="category_electronic_projector">Projector</string>
-	<string name="category_computers">Computers</string>
-	<string name="category_computer_components">Components</string>
-	<string name="category_computer_peripherals">Peripherals</string>
-	<string name="category_computer_datastorage">Data Storage</string>
-	<string name="category_computer_gameconsoles">Game Consoles</string>
-	<string name="category_instruments">Instruments</string>
+
+	<string name="category_documents_description">stuff written on other stuff</string>
+	<string name="category_archives">Archives</string>
+	<string name="category_archives_keywords"></string>
+	<string name="category_statements">Statements</string>
+	<string name="category_statements_keywords"></string>
+	<string name="category_manuals">Manuals</string>
+	<string name="category_manuals_keywords"></string>
+
+
+	<!--=========================================================================================================-->
+	<string name="category_leisure">Leisure &amp; Outdoors</string>
+
+	<string name="category_leisure_description">stuff you mostly use in your spare time</string>
+	<string name="category_sport_accessories">Sport Accessories</string>
+	<string name="category_sport_accessories_keywords"></string>
+	<string name="category_sport_equipment">Sport Equipment</string>
+	<string name="category_sport_equipment_keywords"></string>
+	<string name="category_gym_equipment">Gym Equipment</string>
+	<string name="category_gym_equipment_keywords"></string>
+	<string name="category_camping">Camping</string>
+	<string name="category_camping_keywords"></string>
 	<string name="category_vehicles">Vehicles</string>
-	<string name="category_vehicle_cars">Car</string>
-	<string name="category_vehicle_bicycles">Bicycle</string>
-	<string name="category_vehicle_motocycles">Motocycle</string>
-	<string name="category_vehicle_lgv">Large Vehicle</string>
+	<string name="category_vehicles_keywords"></string>
+	<string name="category_vehicles_parts">Vehicle Parts &amp; Accessories</string>
+	<string name="category_vehicles_parts_keywords"></string>
+	<string name="category_instruments">Instruments</string>
+	<string name="category_instruments_keywords"></string>
+
+
+	<!--=========================================================================================================-->
+	<string name="category_electronics">Electronics</string>
+
+	<string name="category_electronics_description">mostly stuff that has some silicon in it</string>
+	<string name="category_appliances">Home Appliances</string>
+	<string name="category_appliances_description">stuff that makes your life easier</string>
+	<string name="category_appliances_keywords"></string>
+	<string name="category_appliances_major">White Goods</string>
+	<string name="category_appliances_major_keywords"></string>
+	<string name="category_appliances_minor">Small Appliances</string>
+	<string name="category_appliances_minor_keywords"></string>
+	<string name="category_appliances_pieces">Pieces</string>
+	<string name="category_appliances_pieces_keywords"></string>
+	<string name="category_consumer_electronics">Brown Goods</string>
+	<string name="category_recorders">Recorders</string>
+	<string name="category_recorders_keywords"></string>
+	<string name="category_playbacks">Playback Devices</string>
+	<string name="category_playbacks_keywords"></string>
+	<string name="category_displays">Displays</string>
+	<string name="category_displays_keywords"></string>
+	<string name="category_computers">Computers</string>
+	<string name="category_computers_keywords"></string>
+	<string name="category_computer_peripherals">Peripherals</string>
+	<string name="category_computer_peripherals_keywords"></string>
+	<string name="category_cables">Cables</string>
+	<string name="category_cables_keywords"></string>
 </resources>
