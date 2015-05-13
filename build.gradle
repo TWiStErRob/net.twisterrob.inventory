@@ -33,7 +33,7 @@ android {
 		version {
 			major = 1
 		}
-		resConfigs "en", "hu"
+		resConfigs "en_GB", "hu"
 	}
 	buildTypes {
 		release {
