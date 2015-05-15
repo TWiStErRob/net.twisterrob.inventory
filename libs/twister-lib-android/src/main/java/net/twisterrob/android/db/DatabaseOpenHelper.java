@@ -19,6 +19,7 @@ import static android.Manifest.permission.*;
 import net.twisterrob.android.BuildConfig;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.java.annotations.DebugHelper;
+import net.twisterrob.java.utils.StringTools;
 
 import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 
@@ -177,7 +178,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			}
 		} catch (SQLException ex) {
 			String message = String.format("Error executing database file: %s while executing\n%s",
-					dbSchemaFile, statement);
+					dbSchemaFile, StringTools.partOf(statement, 0, 1000));
 			LOG.error(message, ex);
 			throw new IllegalStateException(message, ex);
 		} catch (IOException ex) {

@@ -91,4 +91,21 @@ public final class StringTools {
 	public static String hashString(Object object) {
 		return Integer.toHexString(System.identityHashCode(object));
 	}
+	public static String partOf(String str, int start, int end) {
+		if (str == null) {
+			return null;
+		}
+		if (end < start) {
+			int temp = start;
+			start = end;
+			end = temp;
+		}
+		if (start < 0) {
+			start = 0;
+		}
+		if (str.length() < end) {
+			end = str.length();
+		}
+		return str.substring(start, end);
+	}
 }
