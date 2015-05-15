@@ -28,7 +28,9 @@
 	<string name="room_gym">Gym</string>
 	<string name="room_TV">TV Room</string>
 	<string name="room_pool">Pool House</string>
-	<string name="room_laundy">Laundry Room</string>
+	<string name="room_laundry">Laundry Room</string>
+	<string name="room_stable">Stable</string>
+	<string name="room_greenhouse">Greenhouse</string>
 	<string name="room_balcony">Balcony</string>
 	<string name="room_garden">Garden</string>
 	<string name="room_lobby">Lobby</string>

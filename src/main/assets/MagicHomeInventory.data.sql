@@ -53,7 +53,9 @@ INSERT INTO RoomType
 	UNION SELECT 404,     4,        0, 'room_gym',      NULL
 	UNION SELECT 405,     4,        0, 'room_TV',       NULL
 	UNION SELECT 406,     4,        0, 'room_pool',     NULL
-	UNION SELECT 407,     4,        0, 'room_laundy',   NULL
+	UNION SELECT 407,     4,        0, 'room_laundry',   NULL
+	UNION SELECT 408,     4,        0, 'room_stable',   NULL
+	UNION SELECT 409,     4,        0, 'room_greenhouse', NULL
 -- Spaces
 	UNION SELECT 501,     5,        0, 'room_balcony',  NULL
 	UNION SELECT 502,     5,        0, 'room_garden',   NULL
@@ -77,6 +79,7 @@ INSERT INTO Category
 	UNION SELECT  1600,   1000,     'category_headwear',                   'category_tshirt'
 	UNION SELECT  1700,   1000,     'category_accessories',                'category_tshirt'
 	UNION SELECT  1800,   1000,     'category_sports_clothing',            'category_soccer'
+	UNION SELECT  1900,   1000,     'category_protective_clothing',        'category_tshirt'
 	UNION SELECT  3000,   NULL, 'category_storage',                        'category_box'
 	UNION SELECT  3100,   3000,     'category_boxes',                      'category_box'
 	UNION SELECT  3200,   3000,     'category_packaging',                  'category_box'
@@ -116,7 +119,8 @@ INSERT INTO Category
 	UNION SELECT 10300,  10000,     'category_surfaces',                   'category_sofa'
 	UNION SELECT 10400,  10000,     'category_resting',                    'category_sofa'
 	UNION SELECT 10500,  10000,     'category_outdoor',                    'category_sofa'
-	UNION SELECT 10600,  10000,     'category_compartments',               'category_sofa'
+	UNION SELECT 10600,  10000,     'category_pet_home',                   'category_sofa'
+	UNION SELECT 10700,  10000,     'category_compartments',               'category_sofa'
 	UNION SELECT 11000,   NULL, 'category_stationery',                     'category_paper'
 	UNION SELECT 11100,  11000,     'category_stationery_desktop',         'category_paper'
 	UNION SELECT 11200,  11000,     'category_stationery_paper',           'category_paper'
@@ -154,7 +158,7 @@ INSERT INTO Category
 	UNION SELECT 16100,  16000,     'category_appliances',                 'category_plug'
 	UNION SELECT 16110,  16100,         'category_appliances_major',       'category_plug'
 	UNION SELECT 16120,  16100,         'category_appliances_minor',       'category_plug'
-	UNION SELECT 16130,  16100,         'category_appliances_pieces',      'category_plug'
+	UNION SELECT 16130,  16100,         'category_electronic_parts',       'category_plug'
 	UNION SELECT 16200,  16000,     'category_recorders',                  'category_plug'
 	UNION SELECT 16300,  16000,     'category_playbacks',                  'category_disc'
 	UNION SELECT 16400,  16000,     'category_displays',                   'category_plug'

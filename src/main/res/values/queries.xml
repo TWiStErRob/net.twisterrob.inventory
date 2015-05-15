@@ -104,6 +104,7 @@
 		where cd._id <> -1 -- don't return category_internal
 		order by cd._id
 	"]]></string>
+	<!-- TODO rewrite with one argument and use it for by_room -->
 	<string name="query_items_by_item" tools:ignore="Typos"><![CDATA["
 		select
 			'item'                                          as type,
@@ -189,6 +190,7 @@
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
+			--i._id = g._id                                   as [group],
 			i.name                                          as name,
 			i.image IS NOT NULL                             as hasImage,
 			i.image_time                                    as imageTime,
