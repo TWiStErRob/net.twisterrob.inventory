@@ -10,20 +10,26 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_storage">Storage</string>
-
 	<string name="category_storage_description">stuff to put other stuff in</string>
+
 	<string name="category_boxes">Boxes</string>
 	<string name="category_packaging">Packaging</string>
 	<!-- TODO https://en.wikipedia.org/wiki/Packaging_and_labeling#collapsibleTable0 -->
 	<string name="category_packaging_keywords">plastic bag, zipper storage bag, wrappers, styrofoam, protective plastic, paper, pallet</string>
 	<string name="category_containers">Containers</string>
-	<string name="category_containers_keywords">plastic container, tray, bucket, basket, basin, potty, bottle, jar, can, flask, baby bottle, soap dispenser, thermos, lid, cap</string>
+	<string name="category_containers_keywords">plastic container, tray, bucket, basket, basin, bottle, jar, can, lid, cap</string>
 	<string name="category_containers_bulk">Large containers</string>
 	<string name="category_containers_bulk_keywords">crate, case, trunk, chest, barrel, bin, waste basket, sack, bin bag/bin liner/garbage bag/trash bag</string>
 	<string name="category_cases">Cases</string>
 	<string name="category_cases_keywords">
-		jewelry case, jewelry box, phone case, phone cover, phone skin, card case, card holder, cassette case
+		jewelry case, jewelry box, phone case, phone cover, phone skin, card case, card holder, cassette case, notebook cover
 		disk case (CD case, DVD case/keep case, paper sleeve, cake box, spindle)
+	</string>
+	<string name="category_storage_special">Specialized</string>
+	<string name="category_storage_special_keywords">
+		stationery (magazine file, folder, binder, plastic wallet, photo album, messageboard, whiteboard, pencil holder, pencil case, mouse pad),
+		kitchen (lunch box/Tuppelware, food carrier, bread bin, buckle jar, knife stand, utensil stand, utensil organizer, drying mat),
+		flask, thermos, baby bottle, soap dispenser, toolbox, laundry bin, potty
 	</string>
 	<string name="category_luggage">Luggage</string>
 	<string name="category_luggage_keywords">suitcase, backpack, laptop case, handbag/purse, fanny pack/bum bag, pouch, holster, plastic shopping bag, pet carrier</string>
@@ -31,9 +37,9 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_furniture">Furniture</string>
+	<string name="category_furniture_description">stuff you need friends to move</string>
 
 	<!-- http://en.wikipedia.org/wiki/List_of_furniture_types -->
-	<string name="category_furniture_description">stuff you need friends to move</string>
 	<string name="category_fixtures">Fixtures</string>
 	<string name="category_fixtures_keywords">
 		bathtub, sink, taps, toilet, radiators,
@@ -74,8 +80,8 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_furnishings">Furnishings</string>
-
 	<string name="category_furnishings_description">stuff that you put on other stuff</string>
+
 	<string name="category_fittings">Fittings</string>
 	<string name="category_fittings_keywords">lamp, light bulb, fluorescent tube, neon sign, laser, hanger,
 		LED wall-clock, alarm clock, doorknob, door handle, door latch, pipe, blinds, thermostat</string>
@@ -95,8 +101,8 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_decorations">Decorations</string>
-
 	<string name="category_decorations_description">stuff that makes your other stuff look pretty</string>
+
 	<string name="category_ornaments">Ornaments</string>
 	<string name="category_ornaments_keywords">vase, figurine, plant, candle, ashtray, photo frame, fridge magnet, glow-in-the-dark, keychain, keyring</string>
 	<string name="category_cultural_decorations">Cultural</string>
@@ -112,8 +118,8 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_collectibles">Collectibles</string>
-
 	<string name="category_collectibles_description">stuff you don\'t need, but still have</string>
+
 	<string name="category_souvenirs">Souvenirs</string>
 	<string name="category_artwork">Artwork</string>
 	<string name="category_artwork_keywords">
@@ -130,9 +136,9 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_clothing">Clothing</string>
+	<string name="category_clothing_description">stuff you put on your body</string>
 
 	<!-- http://en.wikipedia.org/wiki/Clothing#collapsibleTable0 -->
-	<string name="category_clothing_description">stuff you put on your body</string>
 	<string name="category_undress">Street Clothes</string>
 	<string name="category_undress_keywords">
 		tops (t-shirt, shirt, blouse, cardigan, sweater, jumper, hoodie),
@@ -183,8 +189,8 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_leisure">Leisure &amp; Outdoors</string>
-
 	<string name="category_leisure_description">stuff you mostly use in your spare time</string>
+
 	<string name="category_sport_accessories">Sport Accessories</string>
 	<string name="category_sport_accessories_keywords">sweatband, sneakers, cap (baseball-, swimming-), snorkel, flippers</string>
 	<string name="category_sport_equipment">Sport Equipment</string>
@@ -239,13 +245,13 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_toys">Toys</string>
+	<string name="category_toys_description">stuff to play with</string>
 
 	<!-- TODO darts, water pistol, bubble blowers, playdoh, chemistry set, foose ball table, air hockey table,
 	party popper, fireworks (firecrackers), child activity kit, chemistry set
 	Tamagochi, twister, rubber ball, robot, dinosaur, baby rattle, pacifier/dummy
 	-->
 	<!-- TODO By type Action figure Animal Art and craft Construction Designer Doll Educational Electronic Executive Mechanical Physical activity Weapon Vehicle-->
-	<string name="category_toys_description">stuff to play with</string>
 	<string name="category_toys_soft">Soft/Plush</string>
 	<string name="category_toys_soft_keywords"></string>
 	<string name="category_toys_figures">Dolls/Action Figures</string>
@@ -275,8 +281,8 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_electronics">Electronics</string>
-
 	<string name="category_electronics_description">mostly stuff that has some silicon in it</string>
+
 	<string name="category_appliances">Home Appliances</string>
 	<string name="category_appliances_description">stuff that makes your life easier</string>
 	<!-- http://en.wikipedia.org/wiki/Laundry#collapsibleTable0 -->
@@ -346,8 +352,8 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_household">Household</string>
-
 	<string name="category_household_description">stuff around the house</string>
+
 	<string name="category_gardening">Gardening</string>
 	<!-- http://www.homedepot.com/b/Outdoors-Outdoor-Power-Equipment/N-5yc1vZbx5c -->
 	<string name="category_gardening_keywords">
@@ -388,8 +394,6 @@
 		oven mitt/oven glove
 	</string>
 	<string name="category_cookware">Cookware</string>
-	<!-- TODO Storage: lunch box/Tuppelware, food carrier, buckle jar, toolbox, laundry bin, bread bin,-->
-	<!-- TODO knife stand, utensil stand, utensil organizer, drying mat-->
 	<string name="category_cookware_keywords">
 		cooking (stockpot, cooking pot, pressure cooker, saucepan, frying pan, wok, cauldron, kettle),
 		baking (baking pan, baking tray, baking mold, biscuit cutter/cookie cutter, ice cube mold, grille, gridiron),
@@ -408,69 +412,50 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_crafts">Crafts</string>
-
 	<string name="category_crafts_description">stuff to create other stuff with</string>
+
 	<!-- http://en.wikipedia.org/wiki/Tool -->
 	<!-- TODO https://en.wikipedia.org/wiki/Hand_tool#collapsibleTable0 -->
 	<!-- https://en.wikipedia.org/wiki/Workbench#collapsibleTable0 -->
 	<string name="category_tools">Tools</string>
 	<string name="category_tools_keywords">
+		writing/drawing (pen, pencil, calligraphy pen, highlighter, drawing board),
+		painting (paintbrush, paint roller, paint roller tray, varnish),
+		cutting tools (knife, scissors, cutter, rotary cutter, blade, scalpel, stapler, hole puncher),
+		abrasive tools (rasp, sandpaper, scraper, grinding wheel, eraser/rubber),
+		measurement (tape measure, measuring tape, spirit level, caliper, protractor, ruler, steel square, straightedge, angle, compass, stencil, multimeter),
 		construction (wheelbarrow, ladder, step ladder, step stool, trowel),
 		DIY hand tools (screwdriver, wrench/spanner, clamps, plier, pincer, crimp, army-knife, awl, hammer, mallet, saw, hacksaw, pick, axe),
-		power tools (drill, drill bit, jackhammer, nail gun, sander, chainsaw, circular saw, solder, blow torch, welding power supply, suction pump, water pump, pressure pump, compressor),
-		painting (dye/paint, paintbrush, paint roller, paint roller tray, varnish),
-		cutting tools (knife, scissors, blade, scalpel, rotary cutter),
-		abrasive tools (rasp, sandpaper, scraper, grinding wheel),
-		measurement (tape measure, measuring tape, spirit level, caliper, protractor, ruler, steel square, straightedge, stencil, multimeter),
+		power tools (drill, drill bit, jackhammer, nail gun, sander, chainsaw, circular saw, solder, blow torch, welding power supply, suction pump, water pump, pressure pump, compressor)
 	</string>
 	<string name="category_materials">Materials</string>
 	<string name="category_materials_keywords">
-		wood, sawdust, metal, glass, wax, stencil,
+		wood, sawdust, metal, glass, wax, rock, stencil, dye/paint, crayon, chalk,
+		paper (cardboard, wrapping paper, ribbon, bows),
 		fibers (fabrics, textile, wallpaper, wool, yarn, thread, rope, twine, line, trimmer line, wire, shoelaces),
-		building blocks (bricks, tile, roof tiles),
-		aggregates (sand, gravel, pebbles, cement, limestone),
-		adhesive (glue, Blu-tack, wallpaper paste, masking tape/paint tape, silicone sealant),
-		fastener (nail, pin, needle, rivet, screw, screw eye, hook, bolt, nut, shim, spacer, dowel, wall plug/rawl plug/screw anchor, peg, tie-wrap/cable tie)
+		building blocks (bricks, tile, roof tiles, modeling clay/Plasticine/Play-Doh),
+		aggregates (sand, gravel, pebbles, cement, limestone)
 	</string>
-
-
-	<!--=========================================================================================================-->
-	<string name="category_stationery">Stationery</string>
-
-	<string name="category_stationery_description">stuff around the office or studio</string>
-	<string name="category_stationery_desktop">Desktop</string>
-	<string name="category_stationery_desktop_keywords">
-		alteration (stapler, hole puncher, scissors, cutter),
-		measurement (straight ruler, angle, protractor, compass),
-		tapes (Sellotape/Scotch/Sticky Tape, Duct/Cloth tape, electric tape),
-		fasteners (paperclip, push pin, binder clip),
-		mouse pad
+	<string name="category_materials_binding">Binding Materials</string>
+	<string name="category_materials_binding_keywords">
+		adhesive (glue, Blu-tack, wallpaper paste, Sellotape/Scotch/Sticky Tape, Duct/Cloth tape, electric tape, masking tape/paint tape, silicone sealant),
+		fastener (nail, pin, needle, rivet, screw, screw eye, hook, bolt, nut, shim, spacer, dowel, wall plug/rawl plug/screw anchor, peg, tie-wrap/cable tie, paperclip, push pin, binder clip)
 	</string>
-	<string name="category_stationery_paper">Paper</string>
-	<string name="category_stationery_paper_keywords">
-		sheet paper, cardboard, sticky notes, notepad, notebook, scrapbook, envelope, greeting card, wall calendar, desk calendar, wrapping paper, notebook cover, ribbon, bows
-	</string>
-	<string name="category_stationery_art">Artistic</string>
-	<string name="category_stationery_art_keywords">
-		writing (pen, pencil, calligraphy pen, eraser/rubber),
-		drawing (drawing board, highlighter, crayon, paintbrush, chalk, paint),
-		sculpting (modeling clay/Plasticine/Play-Doh)
-	</string>
-	<string name="category_stationery_storage">Storage</string>
-	<string name="category_stationery_storage_keywords">magazine file, folder, binder, plastic wallet, photo album, messageboard, pencil holder, pencil case, tray</string>
 
 
 	<!--=========================================================================================================-->
 	<string name="category_documents">Documents</string>
-
 	<string name="category_documents_description">stuff written on other stuff</string>
+
 	<string name="category_archives">Archives</string>
 	<string name="category_archives_keywords">
 		certificates (birth, degree, diploma),
 		deeds (contract, licence, land registration, will)
 	</string>
 	<string name="category_statements">Statements</string>
-	<string name="category_statements_keywords">receipt, bill, balance sheet, income, expenses, report</string>
+	<string name="category_statements_keywords">
+		receipt, bill, balance sheet, income, expenses, report
+	</string>
 	<string name="category_cards">Cards</string>
 	<string name="category_cards_keywords">
 		identity document, personal identity card, driver\'s licence, address card,
@@ -478,13 +463,19 @@
 		tickets, credit card, debit card, gift card, telephone card, top-up card, prepaid card, pay-as-you-go cards
 	</string>
 	<string name="category_manuals">Manuals</string>
-	<string name="category_manuals_keywords">user guide, owner\'s manual, instructions, help, FAQ/Frequently Asked Questions</string>
+	<string name="category_manuals_keywords">
+		user guide, owner\'s manual, instructions, help, FAQ/Frequently Asked Questions
+	</string>
+	<string name="category_paper">Stationery Paper</string>
+	<string name="category_paper_keywords">
+		sheet paper, notepad, notebook, sticky notes, scrapbook, envelope, greeting card, wall calendar, desk calendar
+	</string>
 
 
 	<!--=========================================================================================================-->
 	<string name="category_consumables">Consumables</string>
-
 	<string name="category_consumables_description">stuff you can ingest raw, or processed</string>
+
 	<string name="category_food">Food</string>
 	<!-- TODO https://localwiki.org/davis/Culinary_Plants -->
 	<string name="category_food_keywords">
@@ -518,8 +509,8 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_health">Health</string>
-
 	<string name="category_health_description">stuff that helps you live a better life</string>
+
 	<string name="category_medical">Medical Products</string>
 	<!-- http://en.wikipedia.org/wiki/Category:Assistive_technology -->
 	<string name="category_medical_keywords">
