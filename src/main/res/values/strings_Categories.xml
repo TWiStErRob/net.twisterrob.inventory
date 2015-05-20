@@ -71,7 +71,7 @@
 	<string name="category_outdoor">Outdoor</string>
 	<string name="category_outdoor_keywords">
 		canopies (pavilion, garden parasol/garden umbrella, beach umbrella, water base, canopy swing, pool cover),
-		playground (swing, slide, seesaw, climbing frame, climbing wall, wendy house, trampoline),
+		playground (swing, slide, seesaw, climbing frame, climbing wall, wendy house, trampoline, jumpy castle, playhouse/wendy house),
 		bathing (jacuzzi/hot tub/home spa, garden shower, kiddy pool, swimming pool, spring board/diving board, sauna)
 	</string>
 	<string name="category_compartments">Compartments</string>
@@ -108,7 +108,8 @@
 	<string name="category_cultural_decorations">Cultural</string>
 	<!-- http://en.wikipedia.org/wiki/Holiday -->
 	<string name="category_cultural_decorations_keywords">
-		balloon, confetti, streamers, aerosol string, ribbon, tinsel, banner, flags, bunting,
+		balloon, ribbon, tinsel, banner, flags, bunting,
+		confetti, streamers, aerosol string, party popper, fireworks, firecrackers,
 		parties (house party, birthday party, bachelor party, hen party, balls),
 		holidays (New Year\'s, Halloween, Valentine\'s Day, Christmas, Easter, Thanksgiving)
 	</string>
@@ -195,11 +196,13 @@
 	<string name="category_sport_accessories_keywords">sweatband, sneakers, cap (baseball-, swimming-), snorkel, flippers</string>
 	<string name="category_sport_equipment">Sport Equipment</string>
 	<string name="category_sport_equipment_keywords">
-		balls (soccer, basketball, baseball, handball, volleyball, beach ball, hockey puck),
+		balls (soccer, basketball, baseball, handball, volleyball, hockey puck, shuttlecock, flying disc/Frisbee),
 		rackets (tennis, squash, badminton),
 		bats (baseball bat, cricket bat, croquet mallet, polo mallet, golf club, hockey stick),
+		weapons (gun, air rifle, paintball gun, airsoft gun, crossbow, bow, arrow, staff, stick, baton, dagger, sword, foil, sabre, shield, shuriken/throwing star, nunchaku/chainsticks),
 		partitions (net, basketball hoop, goal posts),
-		gliders (roller skate, inline skate, ice skate, ski, snowboard, skateboard, surfboard)</string>
+		gliders (roller skate, inline skate, ice skate, ski, snowboard, skateboard, surfboard)
+	</string>
 	<string name="category_gym_equipment">Gym Equipment</string>
 	<string name="category_gym_equipment_keywords">weights, medicine ball, punch bag, mat, bench, machine (bike, treadmill, cross trainer, elliptical trainer)</string>
 	<string name="category_camping">Camping</string>
@@ -246,36 +249,79 @@
 	<!--=========================================================================================================-->
 	<string name="category_toys">Toys</string>
 	<string name="category_toys_description">stuff to play with</string>
+	<!--https://en.wikipedia.org/wiki/List_of_toys-->
 
-	<!-- TODO darts, water pistol, bubble blowers, playdoh, chemistry set, foose ball table, air hockey table,
-	party popper, fireworks (firecrackers), child activity kit, chemistry set
-	Tamagochi, twister, rubber ball, robot, dinosaur, baby rattle, pacifier/dummy
-	-->
-	<!-- TODO By type Action figure Animal Art and craft Construction Designer Doll Educational Electronic Executive Mechanical Physical activity Weapon Vehicle-->
-	<string name="category_toys_soft">Soft/Plush</string>
-	<string name="category_toys_soft_keywords"></string>
-	<string name="category_toys_figures">Dolls/Action Figures</string>
-	<string name="category_toys_figures_keywords">dolls (Barbie), figurines, solders, heroes, dinosaurs, action figures (Star Wars, Star Trek, Avengers)</string>
-	<string name="category_toys_tabletop">Tabletop Games</string>
-	<string name="category_toys_tabletop_keywords">
-		boards games (chess, checkers, go),
-		multiplayer games (Charades, Scrabble, Monopoly, Risk, Catan),
-		card games (Pokémon, Yu-Gi-Oh, French playing cards),
-		puzzle, memory, battleship, dominoes, mikado?/pick-up sticks?, quiz?
+	<string name="category_toys_figurine">Figurines</string>
+	<!-- 1 Action figures -->
+	<!-- 2 Animal Toys -->
+	<!-- 6 Dolls -->
+	<!-- 8 Electronic toys and battery operated toys (virtual pets) -->
+	<!-- 18 Stuffed animals -->
+	<string name="category_toys_figurine_keywords">
+		action figure (G.I. Joe, Star Wars, Star Trek, Transformers, Avengers, Smurfs),
+		figurine (farm animals, dinosaurs, toy soldiers, puppet, marionette),
+		doll (rag doll, ball-joined doll, peg doll, bisque doll, celebrity dolls),
+		virtual pet (robotic dog, Tamagochi, Furby),
+		stuffed animal, plush figure, squeaky toy/squeeze toy, rubber duck, matryoshka doll/russian nesting doll, jack-in-the-box
 	</string>
-	<string name="category_toys_puzzlers">Puzzlers</string>
-	<string name="category_toys_puzzlers_keywords">Rubik\'s Cube, Tower of Babel, Sodoku, crossword, Tetris</string>
+	<string name="category_toys_model">Models</string>
+	<!-- 12 Model building -->
+	<!-- 3 Cars and radio controlled -->
+	<string name="category_toys_model_keywords">
+		static model (car/Matchbox, motocycle, aircraft, ship, submarine, tank),
+		working model (railway modeling/model railroading, slot cars),
+		radio controlled (RC cars, RC aircraft, RC boat, monster truck),
+		model environment (model layout, diorama, car park, Scalextric)
+		pullback motor vehicle, wind-up toy
+	</string>
+	<string name="category_toys_games">Games</string>
+	<!-- 11 Games -->
+	<string name="category_toys_games_keywords">
+		boards games (chess, checkers, go, battleship),
+		video games (action, FPS, TPS, adventure, MMO, RPG, simulation, strategy),
+		tabletop games (Charades, Scrabble, Monopoly, Risk, Catan, trivia games),
+		cards (French playing cards, Uno, trading cards, Pokémon, Yu-Gi-Oh),
+		jigsaw puzzle, memory, dominoes, pick-up sticks, Jenga,
+		puzzle (Rubik\'s Cube, Tower of Babel, Sodoku, Tetris, Tangram, 15-puzzle/sliding puzzle, disentanglement puzzle),
+		crossword, Spot the difference, Where's Waldo?
+	</string>
+	<string name="category_toys_creative">Creative</string>
+	<!-- 7 Educational toys -->
+	<!-- 15 Science and optical -->
+	<!-- 16 Sound toys -->
+	<string name="category_toys_creative_keywords">
+		child activity kit (science kit, chemistry set, lab set, kitchen set, surgery game, robot kit, molding kit),
+		Etch-a-Sketch, spirograph, playdoh?
+		toy piano, synthesizer, rattle
+	</string>
 	<string name="category_toys_construction">Construction</string>
+	<!-- 4 Construction toys -->
+	<!-- 5 Creative toys -->
+	<!-- 14 Puzzle/assembly -->
 	<string name="category_toys_construction_keywords">
-		blocks, bricks (Lego, Zometool), girders &amp; gears (Merkur/Steel Tec), geometric (K\'nex), balls &amp; sticks (Babylon),
-		Scalextric?, magnetic puzzles
+		blocks, bricks (Lego, Zometool), girders &amp; gears (Merkur/Steel Tec), geometric (K\'nex),
+		balls &amp; sticks (Babylon), magnetic puzzles, silly putty, stickers
 	</string>
-	<string name="category_toys_outdoors">Outdoors</string>
-	<string name="category_toys_outdoors_keywords">
+	<string name="category_toys_decorative">Passive/Designer/Decoration?</string>
+	<!-- 9 Executive toys -->
+	<!-- 10 Food-related toys -->
+	<string name="category_toys_decorative_keywords">
+		ferrofluid, neodymium magnet, Newton's cradle, perpetual pendulum
+		toy dishes, Pez dispenser, bubble blower/bubble ring
+		lava lamp, plasma globe, kaleidoscope, stereoscope, zoetrope, whirligig, pinwheel
+		magic 8-ball
+		snow globe, paddle ball, stress ball
+		slinky, spinning top, roly-poly toy/tilting doll/tumbler
+	</string>
+	<string name="category_toys_physical">Physical Activity</string>
+	<!-- 13 Physical activity and dexterity -->
+	<string name="category_toys_physical_keywords">
+		toy weapons (water gun/squirt gun, Nerf, cap gun, pop gun, BB gun, plastic sword),
+		dexterity (bean bag/Hacky Sack, devil sticks, meteor, yo-yo, juggling club, hula hoop, skipping rope),
+		balls (plastic ball, rubber ball, beach ball, marble, bouncy ball, Koosh ball, flying disc/Frisbee, boomerang),
 		sandpit toys (bucket, spade, truck),
-		mountable toys (motocycle, pogo stick),
-		skipping rope, bubble maker, nerf, water gun, jumpy castle
-		models (car, train, monster truck, sports car, HGV, matchbox, car park, RC car)
+		mountable toys (plastic motocycle, rocking horse, pogo stick, pogo ball, toy wagon),
+		twister, darts, table football, air hockey table
 	</string>
 
 
@@ -323,8 +369,9 @@
 	<string name="category_playbacks_keywords">
 		recoding player (CD player, DVD player, Blu-ray player, set-top box, VCR/Videocasette recorder, phonograph/turntable),
 		portable media player (digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook)
-		radio (AM/FM radio, radio player, clock radio),
-		speakers (loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker)</string>
+		radio (AM/FM radio, radio player, clock radio), walkie-talkie/handheld transceiver,
+		speakers (loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker)
+	</string>
 	<string name="category_displays">Displays</string>
 	<string name="category_displays_keywords">monitor, TV, projector, touchscreen; CRT, LCD, TFT, IPS, LED, plasma, OLED</string>
 	<string name="category_computers">Computers</string>
@@ -332,11 +379,12 @@
 		laptop (notebook, netbook, tablet),
 		game consoles (Xbox, Nintendo Wii, Sony Playstation, Sega, Atari),
 		smart phone (Android, Apple iPhone, Samsung),
-		GPS/Satellite navigation, scientific calculators</string>
+		GPS/Satellite navigation, scientific calculators
+	</string>
 	<string name="category_computer_peripherals">Peripherals</string>
 	<string name="category_computer_peripherals_keywords">
 		input devices (keyboard, mouse, trackball, touchpad, webcam/webcamera, scanner),
-		game controller (gamepad, paddle, joystick, light gun, steering wheel, pedals),
+		game controller (gamepad, paddle, joystick, light gun, guitar, steering wheel, pedals),
 		output devices (printer, 3D printer, plotter),
 		computer internals (PCI, AGP, PCMCIA, PCI-Express cards),
 		storage drives (HDD/hard drive, optical drive, external hard drive, USB stick/flash drive/pendrive, ATA, PATA, SATA, SSD, RAID),
@@ -423,7 +471,7 @@
 		painting (paintbrush, paint roller, paint roller tray, varnish),
 		cutting tools (knife, scissors, cutter, rotary cutter, blade, scalpel, stapler, hole puncher),
 		abrasive tools (rasp, sandpaper, scraper, grinding wheel, eraser/rubber),
-		measurement (tape measure, measuring tape, spirit level, caliper, protractor, ruler, steel square, straightedge, angle, compass, stencil, multimeter),
+		measurement (tape measure, measuring tape, spirit level, caliper, protractor, ruler, steel square, straightedge, angle, compass, stencil, multimeter, magnifier, microscope),
 		construction (wheelbarrow, ladder, step ladder, step stool, trowel),
 		DIY hand tools (screwdriver, wrench/spanner, clamps, plier, pincer, crimp, army-knife, awl, hammer, mallet, saw, hacksaw, pick, axe),
 		power tools (drill, drill bit, jackhammer, nail gun, sander, chainsaw, circular saw, solder, blow torch, welding power supply, suction pump, water pump, pressure pump, compressor)
@@ -527,7 +575,7 @@
 	<string name="category_sanitation">Sanitation</string>
 	<string name="category_sanitation_keywords">
 		body hygiene (soap, liquid hand soap, hand cleaning paste, shower gel, shampoo, conditioner, bath salt, bubble bath, hand sanitizer, baby powder),
-		oral hygiene (toothpaste, toothbrush, mouthwash, dental floss, tooth powder),
+		oral hygiene (toothpaste, toothbrush, mouthwash, dental floss, tooth powder, pacifier/dummy),
 		tissue (Kleenex/handkerchief, paper towel, toilet paper, wet wipe, dryer sheet, Colour Catcher/color run sheet, cotton pad, cotton ball, cotton bud/cotton swab/Q-tips),
 		reproductive health (nappies, condom, lubricants, sanitary pad, tampon)
 	</string>
