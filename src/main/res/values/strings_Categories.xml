@@ -130,7 +130,11 @@
 		ceramic (vase, pot, china, window box/flower box)
 	</string>
 	<string name="category_publications">Publications</string>
-	<string name="category_publications_keywords">book, magazine, newspaper, album, brochure, catalogue, circular, leaflet, pamphlet, flyer</string>
+	<string name="category_publications_keywords">
+		book, magazine, newspaper, photo album, yearbook,
+		advertisement (brochure, catalogue, circular, leaflet, pamphlet, flyer),
+		help (user guide, owner\'s manual, assembly instructions, FAQ/Frequently Asked Questions)
+	</string>
 	<string name="category_recordings">Recordings</string>
 	<string name="category_recordings_keywords">CD, DVD, BD, tape, cassette, vinyl, writable</string>
 
@@ -248,6 +252,7 @@
 	<!--=========================================================================================================-->
 	<string name="category_toys">Toys</string>
 	<string name="category_toys_description">stuff to play with</string>
+
 	<!-- https://en.wikipedia.org/w/index.php?title=List_of_toys&oldid=663254445 -->
 	<string name="category_model">Models</string>
 	<string name="category_model_keywords">
@@ -470,28 +475,21 @@
 	<string name="category_documents">Documents</string>
 	<string name="category_documents_description">stuff written on other stuff</string>
 
-	<string name="category_archives">Archives</string>
-	<string name="category_archives_keywords">
-		certificates (birth, degree, diploma),
-		deeds (contract, licence, land registration, will)
+	<string name="category_legal">Legal Documents</string>
+	<string name="category_legal_keywords">
+		certificates (birth certificate, professional certification, academic degree, diploma),
+		identity document (personal identity card, driver\'s licence, address card, passport, magnetic card, swipe card),
+		deed (warranty, licence, land registration, contract, will),
+		statement (receipt, invoice, balance sheet, income, expenses, report)
 	</string>
-	<string name="category_statements">Statements</string>
-	<string name="category_statements_keywords">
-		receipt, bill, balance sheet, income, expenses, report
-	</string>
-	<string name="category_cards">Cards</string>
-	<string name="category_cards_keywords">
-		identity document, personal identity card, driver\'s licence, address card,
-		passport, ID card, swipe card, magnetic card,
-		tickets, credit card, debit card, gift card, telephone card, top-up card, prepaid card, pay-as-you-go cards
-	</string>
-	<string name="category_manuals">Manuals</string>
-	<string name="category_manuals_keywords">
-		user guide, owner\'s manual, instructions, help, FAQ/Frequently Asked Questions
+	<string name="category_money">Money</string>
+	<string name="category_money_keywords">
+		currency (cash, bill/paper money/note, coin, credit card, debit card),
+		scrip (voucher/coupon, loyalty card, tickets, token, gift card, telephone card, top-up card, prepaid card, pay-as-you-go cards)
 	</string>
 	<string name="category_paper">Stationery Paper</string>
 	<string name="category_paper_keywords">
-		sheet paper, notepad, notebook, sticky notes, scrapbook, envelope, greeting card, stickers, wall calendar, desk calendar
+		sheet paper, notepad, notebook, sticky notes, scrapbook, envelope, greeting card, stickers, business card, wall calendar, desk calendar
 	</string>
 
 
