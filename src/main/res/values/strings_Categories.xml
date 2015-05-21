@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Syntax review: \)(?!,$|(\n\t+)?<)|\?(?:\w) -->
 <resources>
 	<string name="category_internal" translatable="false">SECRET</string>
 	<string name="category_internal_description" translatable="false">stuff you should never see</string>
@@ -124,7 +125,7 @@
 	<string name="category_souvenirs">Souvenirs</string>
 	<string name="category_artwork">Artwork</string>
 	<string name="category_artwork_keywords">
-		picture (painting, poster, frame)
+		picture (painting, poster, frame),
 		sculpture (statue, figurine, wax, glass, mask, origami, signs),
 		antique (painting, furniture, appliances),
 		ceramic (vase, pot, china, window box/flower box)
@@ -168,7 +169,10 @@
 		hosiery (stockings, leggings, tights/pantyhose)
 	</string>
 	<string name="category_headwear">Headwear</string>
-	<string name="category_headwear_keywords">hat (beach hat, sombrero, cowboy hat, party hat), cap (baseball cap), hood, headband, kerchief (bandana)</string>
+	<string name="category_headwear_keywords">
+		hat (beach hat, sombrero, cowboy hat, party hat),
+		cap (baseball cap), hood, headband, kerchief (bandana)
+	</string>
 	<string name="category_accessories">Accessories</string>
 	<string name="category_accessories_keywords">
 		functional accessories (leather belt, suspenders, purse, wallet, glasses, monocle, watch, pocket watch, leash, harness),
@@ -178,8 +182,8 @@
 	</string>
 	<string name="category_sports_clothing">Sports</string>
 	<string name="category_sports_clothing_keywords">
-		swimwear (swim briefs/Speedo, square leg suit, trunks, bathing suit, bikini, tankini),
-		running gear, cycling shorts, ski clothes, thermal
+		swimwear (swim briefs/Speedo, square leg suit, trunks, bathing suit, bikini, tankini, swimming cap, wetsuit, dry suit),
+		sneakers, running gear, cycling shorts, sweatband, ski clothes, thermal
 	</string>
 	<string name="category_protective_clothing">Protection</string>
 	<string name="category_protective_clothing_keywords">
@@ -196,18 +200,16 @@
 	<string name="category_leisure">Leisure &amp; Outdoors</string>
 	<string name="category_leisure_description">stuff you mostly use in your spare time</string>
 
-	<string name="category_sport_accessories">Sport Accessories</string>
-	<string name="category_sport_accessories_keywords">sweatband, sneakers, cap (baseball-, swimming-), snorkel, flippers</string>
-	<string name="category_sport_equipment">Sport Equipment</string>
-	<string name="category_sport_equipment_keywords">
+	<string name="category_sports">Sport Equipment</string>
+	<string name="category_sports_keywords">
 		balls (soccer, basketball, baseball, handball, volleyball, hockey puck, shuttlecock, flying disc/Frisbee),
 		racquets (tennis racket, squash racket, badminton racket, table tennis paddle, baseball bat, cricket bat, croquet mallet, polo mallet, golf club, hockey stick),
 		weapons (gun, air rifle, paintball gun, airsoft gun, crossbow, bow, arrow, staff, stick, baton, dagger, sword, foil, sabre, shield, shuriken/throwing star, nunchaku/chainsticks),
 		tables/boards/goals (goal posts, basketball hoop, volleyball net, darts, table tennis, table football, air hockey table),
-		gliders (roller skate, inline skate, ice skate, ski, snowboard, skateboard, surfboard)
+		gliders (roller skate, inline skate, ice skate, sled, ski, snowboard, skateboard, surfboard),
+		gym (weights, medicine ball, punch bag, mat, bench, bike, treadmill, cross trainer, elliptical trainer),
+		accessories (snorkel, flippers)
 	</string>
-	<string name="category_gym_equipment">Gym Equipment</string>
-	<string name="category_gym_equipment_keywords">weights, medicine ball, punch bag, mat, bench, machine (bike, treadmill, cross trainer, elliptical trainer)</string>
 	<string name="category_camping">Camping</string>
 	<!-- http://www.rei.com/learn/expert-advice/family-camping-checklist.html -->
 	<string name="category_camping_keywords">
@@ -224,7 +226,8 @@
 		trailers (RV/recreational vehicle, wagon, carriage, trains),
 		heavy equipment (tractor, forklift),
 		aircraft (plane, helicopter, drones),
-		watercraft (boat, ship, submarine)</string>
+		watercraft (boat, ship, submarine)
+	</string>
 	<string name="category_vehicles_parts">Vehicle Parts &amp; Accessories</string>
 	<string name="category_vehicles_parts_keywords">
 		parts (wheel, tyre, wheel trim, light, break, mirror, horn, bell, seat, basket, licence plate, windscreen wipers, engin, child safety seate),
@@ -328,7 +331,7 @@
 		electric toothbrush,
 		hair styling (hairdryer, curling iron, hair straightener, electric razor),
 		kitchen (toaster, sandwich toaster, waffle iron, coffee maker, mixer, electric kettle/electric water boiler, filter kettle),
-		food processors (blender, stick blender/immersion blender, mixer, blade grinder)
+		food processors (blender, stick blender/immersion blender, mixer, blade grinder),
 		air control (desk fan, pedestal fan, humidifier, dehumidifier, vaporizer, water pipe, e-cigarette)
 	</string>
 	<!--https://en.wikipedia.org/wiki/Category:Consumer_electronics-->
@@ -344,12 +347,15 @@
 		vacuum cleaner bag, floor nozzle, floor brush,
 	</string>
 	<string name="category_recorders">Recorders</string>
-	<string name="category_recorders_keywords">cameras (video, digital, DSC, DSLR, HD, 4K), microphone, dictaphone, photocopier</string>
+	<string name="category_recorders_keywords">
+		camera (video camera, digital camera, DSC, DSLR, HD, 4K),
+		microphone, dictaphone, photocopier
+	</string>
 	<string name="category_playbacks">Playback Devices</string>
 	<string name="category_playbacks_keywords">
 		recoding player (CD player, DVD player, Blu-ray player, set-top box, VCR/Videocasette recorder, phonograph/turntable),
-		portable media player (digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook)
-		radio (AM/FM radio, radio player, clock radio), walkie-talkie/handheld transceiver,
+		portable media player (digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook),
+		radio (AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver),
 		speakers (loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker)
 	</string>
 	<string name="category_displays">Displays</string>
@@ -401,14 +407,14 @@
 	<!-- http://en.wikipedia.org/wiki/Biocide#European_Community_Classification -->
 	<string name="category_chemicals_keywords">
 		matches, lighter, shoe polish,
-		scent (air-freshener spray, incense stick, incense cone, air-freshener gel, car freshener, toilet rim freshener)
-		insect repellent (bug spray, mosquito coil, mosquito sticks, garden incense cone, electric mosquito repellent liquid vaporizer/Baygon)
+		scent (air-freshener spray, incense stick, incense cone, air-freshener gel, car freshener, toilet rim freshener,
+		insect repellent (bug spray, mosquito coil, mosquito sticks, garden incense cone, electric mosquito repellent liquid vaporizer/Baygon),
 		pesticide (anti-insect spray, fungicide/anti-mould spray, rat poison, ant bait, mouse trap, moth ball),
 		detergent (laundry detergent, washing powder, laundry pod, washing tablet, fabric softener, washing up liquid, dishwasher tablet, window cleaner, windshield washer fluid),
 		disinfectants (toilet cleaner, toilet gel, floor &amp; surface cleaner, furniture spray),
-		solvents (turpentine, white spirit, bleach/sodium hypochlorite, degreaser, descaling agent, drain cleaner, paint thinner, ionised water, distilled water, antifreeze)
+		solvents (turpentine, white spirit, bleach/sodium hypochlorite, degreaser, descaling agent, drain cleaner, paint thinner, ionised water, distilled water, antifreeze),
 		fuel (gasoline, petrol, diesel, biofuel, motor oil, petroleum, kerosene, firewood, coal, charcoal, coke),
-		fertilizer (plant food, compost, potting soil, cat litter?)
+		fertilizer (plant food, compost, potting soil, ?cat litter)
 	</string>
 	<string name="category_utensils_kitchen">Kitchen Utensils</string>
 	<string name="category_utensils_kitchen_keywords">
@@ -429,7 +435,7 @@
 		enamel, teflon, silicone,
 		food wrapping (baking bag, parchment paper/baking paper, greaseproof paper, aluminium foil/tinfoil, plastic wrap/cling film/food wrap, skewers, toothpick)
 	</string>
-	<string name="category_tableware">Tableware / Catering?</string>
+	<string name="category_tableware">Tableware / ?Catering</string>
 	<string name="category_tableware_keywords">
 		dishes (plate, bowl, tray, dog bowl, cat bowl),
 		drinkware (glass, mug, jug, cup, tumbler, teapot),
@@ -502,9 +508,9 @@
 	<string name="category_food_keywords">
 		long-life (coffee, tea, chips, tobacco, cigarettes, instant packets, pet food),
 		canned (fish, lunch meat, fruit),
-		jar (jam, marmalade, pickles?, baby food),
-		frozen? (ready meals, vegetables, fruit, ice cream),
-		sweets (chewing gum, candy)
+		jar (jam, marmalade, ?pickles, baby food),
+		?frozen (ready meals, vegetables, fruit, ice cream),
+		sweets (chewing gum, candy),
 		culinary plants (vegetables, fruit, nuts, herbs)
 	</string>
 	<string name="category_liquids">Liquids</string>
@@ -520,7 +526,7 @@
 	<string name="category_ingredients">Ingredients</string>
 	<string name="category_ingredients_keywords">
 		staple food (flour, rice, pasta),
-		grains (wheat, corn, breadcrumbs, semolina, bean, legumes)
+		grains (wheat, corn, breadcrumbs, semolina, bean, legumes),
 		table sauces (ketchup, mustard, wasabi, mayonnaise, BBQ sauce, hot sauce, tomato sauce, chili sauce, salsa),
 		seasoning (salt, sugar, honey, sweetener, pepper, paprika),
 		spices (vanilla, cinnamon, clove),
@@ -535,7 +541,7 @@
 	<string name="category_medical">Medical Products</string>
 	<!-- http://en.wikipedia.org/wiki/Category:Assistive_technology -->
 	<string name="category_medical_keywords">
-		oral medication (pills, tablets, capsule, effervescent)
+		oral medication (pills, tablets, capsule, effervescent),
 		dermal medication (gel, paste, cream, lotion, balm, patch, ear drops, eye drops, nasal spray, heat rub, sports cream, ice gel),
 		other medication (vitamins, minerals, supplements, syringe, suppository),
 		equipment (bathroom scale, temperature meter, sphygmomanometer, blood sugar meter),
