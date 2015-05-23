@@ -48,7 +48,7 @@
 	<string name="category_storage_special">Specialized</string>
 	<string name="category_storage_special_keywords">
 		stationery (magazine file, folder, binder, plastic wallet, photo album, messageboard, whiteboard, pencil holder, pencil case),
-		household (soap dispenser, laundry bin, bread bin, knife stand, utensil stand, utensil organizer, toolbox, potty, rainwater tank/water butt),
+		household (soap dispenser, laundry bin, laundry sorter, bread bin, knife stand, utensil stand, utensil organizer, toolbox, potty, rainwater tank/water butt),
 		protective surface (beverage coaster, hot pad, drying mat, plastic tray, pallet, mouse pad)
 	</string>
 	<string name="category_luggage">Luggage</string>
@@ -71,10 +71,10 @@
 	<!-- http://en.wikipedia.org/wiki/List_of_furniture_types -->
 	<string name="category_fixtures">Fixtures</string>
 	<string name="category_fixtures_keywords">
-		bathtub, sink, taps, toilet, radiators,
+		bathtub, sink, taps, toilet,
 		door, window, ceiling, fence, room divider, mailbox/letter box,
 		shelf, coat rack, hooks, holder (soap holder/soap dish, toothbrush holder), track, rail, railing, pole,
-		pond, fountain, fireplace, smoke alarm, burglar alarm,
+		pond, fountain, smoke alarm, burglar alarm,
 		sockets, lights, switch, ceiling fan, thermostat
 	</string>
 	<string name="category_cabinetry">Cabinetry</string>
@@ -82,7 +82,7 @@
 	<string name="category_surfaces">Surfaces</string>
 	<string name="category_surfaces_keywords">
 		flat (table, desk, workbench, shelf, picnic table, folding table),
-		stands (flower stand, drying stand, tower airer, ironing stand, umbrella stand, hatstand)
+		stands (flower stand, drying stand, tower airer, ironing stand, umbrella stand, hatstand, utility cart, room service trolley)
 	</string>
 	<string name="category_resting">Seating &amp; Resting</string>
 	<string name="category_resting_keywords">
@@ -236,7 +236,7 @@
 		balls (soccer, basketball, baseball, handball, volleyball, hockey puck, shuttlecock, flying disc/Frisbee),
 		racquets (tennis racket, squash racket, badminton racket, table tennis paddle, baseball bat, cricket bat, croquet mallet, polo mallet, golf club, hockey stick),
 		weapons (gun, air rifle, paintball gun, airsoft gun, crossbow, bow, arrow, staff, stick, baton, dagger, sword, foil, sabre, shield, shuriken/throwing star, nunchaku/chainsticks),
-		tables/boards/goals (goal posts, basketball hoop, volleyball net, darts, table tennis, table football, air hockey table),
+		tables/boards/goals (goal posts, basketball hoop, volleyball net, darts, table tennis, table football, air hockey table, pinball),
 		gliders (roller skate, inline skate, ice skate, sled, ski, snowboard, skateboard, surfboard),
 		gym (weights, medicine ball, punch bag, mat, bench, bike, treadmill, cross trainer, elliptical trainer),
 		accessories (snorkel, flippers)
@@ -272,7 +272,8 @@
 		percussion (bass drum, tom-tom, cymbal, conga, bell, gong, wind chimes, triangle, xylophone),
 		stringed (guitar, violin, banjo, cello, cittern, harp, ukulele, mandolin, piano),
 		wind (trumpet, cornet, trombone, tuba, clarinet, saxophone, oboe, flute, recorder, piccolo, didgeridoo, bagpipe, accordion, harmonica, organ, air horn),
-		noise maker (party horn, vuvuzela, siren, whistle, whip, ratchet, synthesizer)
+		noise maker (party horn, vuvuzela, siren, whistle, whip, ratchet, synthesizer),
+		electronic tuner
 	</string>
 	<string name="category_organisms">Organisms</string>
 	<string name="category_organisms_keywords">
@@ -343,75 +344,67 @@
 	<string name="category_electronics">Electronics</string>
 	<string name="category_electronics_description">mostly stuff that has some silicon in it</string>
 
-	<string name="category_appliances">Home Appliances</string>
-	<string name="category_appliances_description">stuff that makes your life easier</string>
 	<!-- http://en.wikipedia.org/wiki/Laundry#collapsibleTable0 -->
-	<!-- TODO http://en.wikipedia.org/wiki/Category:Home_appliances -->
-	<!-- TODO http://www.costco.com/appliances.html -->
-	<string name="category_appliances_keywords"></string>
-	<string name="category_appliances_major">White Goods</string>
+	<!-- http://en.wikipedia.org/wiki/Category:Home_appliances -->
+	<!-- http://www.costco.com/appliances.html -->
+	<string name="category_appliances_major">Major Appliances</string>
 	<string name="category_appliances_major_keywords">
-		cooking (stove, hob, oven, microwave, kiln, grill, barbecue),
-		kitchen (refrigerator, freezer, garbage disposal unit/waste disposal unit),
+		cooking (stove, hob, cooktop, cooker, oven, range, microwave, kiln, grill, barbecue),
+		food storage (refrigerator/fridge, cooler, freezer, garbage disposal unit/waste disposal unit, vending machine),
 		laundry (dishwasher, washing machine, dryer, sewing machine),
-		thermoregulation (heater, air conditioning, thermostat, boiler/water heater)
+		thermoregulation (air conditioner, boiler/water heater, fireplace, radiator, stove)
 	</string>
 	<string name="category_appliances_minor">Small Appliances</string>
 	<string name="category_appliances_minor_keywords">
-		cleaning (iron, vacuum cleaner, robovac),
-		electric toothbrush,
-		hair styling (hairdryer, curling iron, hair straightener, electric razor),
-		kitchen (toaster, sandwich toaster, waffle iron, coffee maker, mixer, electric kettle/electric water boiler, filter kettle),
-		food processors (blender, stick blender/immersion blender, mixer, blade grinder),
-		air control (desk fan, pedestal fan, humidifier, dehumidifier, vaporizer, water pipe, e-cigarette)
+		body grooming (hairdryer, curling iron, hair straightener, electric razor, electric toothbrush),
+		kitchen appliance (toaster, sandwich toaster, waffle iron, toaster oven, rice cooker, bread maker, coffee maker/coffee machine/espresso machine, mixer, electric kettle/electric water boiler, filter kettle, vacuum sealer),
+		food processor (blender, stick blender/immersion blender, mixer, blade grinder, slicer, ice maker, food dehydrator),
+		air control (desk fan, tower fan, pedestal fan, range hood, heater, portable radiator, humidifier, dehumidifier, vaporizer, water pipe, bong, e-cigarette),
+		cleaning (iron, vacuum cleaner, steam cleaner, carpet cleaner, robovac),
+		electronic pest control (bug zapper, insecticide liquid vaporizer, ultrasonic repeller)
 	</string>
-	<!-- TODO https://en.wikipedia.org/wiki/Category:Consumer_electronics -->
-	<!-- TODO https://en.wikipedia.org/wiki/Consumer_electronics -->
-	<string name="category_consumer_electronics">Brown Goods</string>
-	<string name="category_electronic_parts">Pieces</string>
-	<string name="category_electronic_parts_keywords">
-		remote control, satellite dish, TV aerial, antenna,
-		battery (AA, AAA, AAAA, B, C, D),
-		fuse, spark plug,
-		N2O whipped-cream charger, CO2 soda charger,
-		ink cartridge, toner cartridge,
-		vacuum cleaner bag, floor nozzle, floor brush
+	<string name="category_machine_parts">Components</string>
+	<string name="category_machine_parts_keywords">
+		piece (battery cover, vacuum cleaner bag, floor nozzle, floor brush, microwave tray, stove knob),
+		controller (remote control, universal remote, satellite dish, TV aerial, antenna),
+		battery (battery charger, button cell/watch battery, coin cell, phone battery, power bank, laptop battery, camera battery, AA, AAA, AAAA, C, D, 4.5V, 9V),
+		refill (ink cartridge, toner cartridge, fuse, spark plug, N2O whipped-cream charger, CO2 soda charger)
 	</string>
-	<string name="category_recorders">Recorders</string>
-	<string name="category_recorders_keywords">
-		camera (digital camera, polaroid camera, video camera, DSC, DSLR, HD, 4K),
-		microphone, dictaphone, photocopier
-	</string>
-	<string name="category_playbacks">Playback Devices</string>
-	<string name="category_playbacks_keywords">
-		recoding player (CD player, DVD player, Blu-ray player, set-top box, VCR/Videocasette recorder, phonograph/turntable),
+	<!-- https://en.wikipedia.org/wiki/Category:Consumer_electronics -->
+	<!-- https://en.wikipedia.org/wiki/Consumer_electronics -->
+	<string name="category_consumer_electronics">Consumer Electronics</string>
+	<string name="category_consumer_electronics_keywords">
+		camera (digital camera, polaroid camera, camcorder/video camera, DSC, DSLR, HD, 4K),
+		recorder (microphone, dictaphone, VCR/videocassette recorder, DVR/digital video recorder, photocopier),
+		recoding player (entertainment center/home cinema, music center, shelf stereo, CD player, DVD player, Blu-ray player, phonograph, turntable),
 		portable media player (digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook),
-		radio (AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver),
-		speakers (loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker)
+		signal processor (set-top box, TV tuner, amplifier, mixing console, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor),
+		speakers (loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker),
+		displays (monitor, TV, projector, touchscreen; CRT, LCD, TFT, IPS, LED, plasma, OLED)
 	</string>
-	<string name="category_displays">Displays</string>
-	<string name="category_displays_keywords">monitor, TV, projector, touchscreen; CRT, LCD, TFT, IPS, LED, plasma, OLED</string>
 	<string name="category_computers">Computers</string>
-	<string name="category_computers_keywords">Mac/Macintosh, PC/personal computer,
-		laptop (notebook, netbook, tablet),
+	<string name="category_computers_keywords">
+		desktop (Mac/Macintosh, PC/personal computer),
+		laptop (notebook, netbook, tablet, PDA),
 		game consoles (Xbox, Nintendo Wii, Sony Playstation, Sega, Atari),
-		mobile phone/cell phone, smart phone (Android, Apple iPhone, Samsung),
-		GPS/Satellite navigation, scientific calculators
+		mobile phone (cell phone, smartphone, Android, Apple iPhone, Samsung),
+		wearable (activity tracker, smartwatch, MP4 watch, Apple Watch, smartglasses, Google Glass),
+		GPS/satellite navigation, calculator
 	</string>
-	<string name="category_computer_peripherals">Peripherals</string>
-	<string name="category_computer_peripherals_keywords">
+	<string name="category_computer_parts">Peripherals</string>
+	<string name="category_computer_parts_keywords">
 		input devices (keyboard, mouse, trackball, touchpad, webcam/webcamera, scanner),
 		game controller (gamepad, paddle, joystick, light gun, guitar, steering wheel, pedals),
 		output devices (printer, 3D printer, plotter),
 		computer internals (PCI, AGP, PCMCIA, PCI-Express cards),
 		storage drives (HDD/hard drive, optical drive, external hard drive, USB stick/flash drive/pendrive, ATA, PATA, SATA, SSD, RAID),
-		memory card (MMC, SD, microSD, SDHC, MemoryStick Pro Duo, card reader),
-		router, network switch
+		memory card (card reader, MMC, SD, microSD, SDHC, MemoryStick Pro Duo)
 	</string>
 	<string name="category_cables">Cables</string>
 	<string name="category_cables_keywords">
-		power source (power cord, extension cord, power strip, car charger),
-		plug converters (mains, audio jack, RCA, HDMI, VGA, DVI, SCART, USB)
+		connection cable (network cable, coaxial cable, fiber optic, twisted pair, USB data cable),
+		connector (audio jack, RCA, HDMI, VGA, DVI, SCART, USB, UTP, Ethernet, ISDN, LAN),
+		power source (power cord, extension cord, power strip, adaptor/AC adapter, US/EU/UK/AU plug, surge protector, plug converters/travel adapter, car charger)
 	</string>
 
 
@@ -432,7 +425,7 @@
 		duster, sponge, J-cloth, stainless steel scourer/steel wool, window scraper,
 		spare handle, mop head, shoe tree,
 		plunger, toilet brush,
-		shaving brush
+		pest control (flyswatter, mouse trap, rat trap, scarecrow)
 	</string>
 	<string name="category_chemicals">Chemicals</string>
 	<!-- http://en.wikipedia.org/wiki/Biocide#European_Community_Classification -->
@@ -440,7 +433,7 @@
 		matches, lighter, shoe polish,
 		scent (air-freshener spray, incense stick, incense cone, air-freshener gel, car freshener, toilet rim freshener,
 		insect repellent (bug spray, mosquito coil, mosquito sticks, garden incense cone, electric mosquito repellent liquid vaporizer/Baygon),
-		pesticide (anti-insect spray, fungicide/anti-mould spray, rat poison, ant bait, mouse trap, moth ball),
+		pesticide (anti-insect spray, fungicide/anti-mould spray, rat poison, ant bait, moth ball, sticky flypaper),
 		detergent (laundry detergent, washing powder, laundry pod, washing tablet, fabric softener, washing up liquid, dishwasher tablet, window cleaner, windshield washer fluid),
 		disinfectants (toilet cleaner, toilet gel, floor &amp; surface cleaner, furniture spray),
 		solvents (turpentine, white spirit, bleach/sodium hypochlorite, degreaser, descaling agent, drain cleaner, paint thinner, ionised water, distilled water, antifreeze),
@@ -590,8 +583,8 @@
 		mobility aids (wheelchair, cane, crutches),
 		sex toys
 	</string>
-	<string name="category_sanitation">Sanitation</string>
-	<string name="category_sanitation_keywords">
+	<string name="category_hygiene">Hygiene</string>
+	<string name="category_hygiene_keywords">
 		body hygiene (soap, liquid hand soap, hand cleaning paste, shower gel, shampoo, conditioner, bath salt, bubble bath, hand sanitizer, baby powder),
 		oral hygiene (toothpaste, toothbrush, mouthwash, dental floss, tooth powder),
 		tissue (Kleenex/handkerchief, paper towel, toilet paper, wet wipe, dryer sheet, Colour Catcher/color run sheet, cotton pad, cotton ball, cotton bud/cotton swab/Q-tips),
@@ -601,7 +594,7 @@
 	<!-- http://en.wikipedia.org/wiki/Cosmetics -->
 	<string name="category_cosmetics_keywords">
 		hair products (hair brush, comb, hair dye, hair gel, hair spray, hair volumizer, leave-in conditioner, hair wax, hair balsam),
-		trimming (razor, disposable razor, shaving foam, shaving gel, tweezer, wax, hair bleach, epilator, depilatory/hair remover cream),
+		trimming (razor, disposable razor, shaving foam, shaving gel, shaving brush, tweezer, wax, hair bleach, epilator, depilatory/hair remover cream),
 		perfume (deodorant, cologne, eau de toilette, essential oils, scent, aroma),
 		makeup (lipstick, lip balm, lip gloss, foundation, concealer, toner, blush, eyeliner, mascara, cleanser, makeup remover, mirror),
 		skin care/topical emollients (moisturizer, vaseline, sun lotion, hand cream, body milk, body lotion, skin firming cream, aftershave, massage oil, tanning cream),

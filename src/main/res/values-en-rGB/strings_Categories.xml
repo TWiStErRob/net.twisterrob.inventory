@@ -19,4 +19,7 @@
 	<string name="category_leisure_description">tackle you use in your spare time</string>
 	<string name="category_electronics_description">effects that have some silicon in them</string>
 	<string name="category_appliances_description">equipment that makes your life easier</string>
+
+	<string name="category_appliances_major">White Goods</string>
+	<string name="category_consumer_electronics">Brown Goods</string>
 </resources>
