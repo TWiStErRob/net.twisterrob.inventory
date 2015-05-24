@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Syntax review:
-    (?<!\\)'|\)(?!,$|(\n\t+)?<)|\?(?=\w)|,(?=\s*<)|\w(?!,)[\n\t]+\w|^\s+[^\n>]+?</
+    (?<!\\)'|\)(?!,$|(\n\t+)?<)|\?(?=\w)|,(?=\s*<)|\w(?!,)[\n\t]+\w|^\s+[^\n>]+?</|,(?=\s*\()|\([^)]*\(
     * unescaped apostrophe
     * ) must be at the end of line or string
     * questionmark mid-word
     * comma at end of string
     * no comma between lines
     * unwrapped string ending lines
+    * comma before open parenthesis
+    * unclosed parenthesis
 -->
 <resources>
 	<string name="category_internal" translatable="false">SECRET</string>
@@ -24,9 +26,9 @@
 	<!-- https://en.wikipedia.org/wiki/Paper_bag#collapsibleTable0 -->
 	<string name="category_containers">Containers</string>
 	<string name="category_containers_keywords">
-		cardboard box, corrugated fiberboard box, folding carton box, wooden box,
-		plastic container, clamshell, foam food container, lunch box/Tuppelware, food carrier,
-		basket, waste basket, bin, crate, case, trunk, chest
+		box (cardboard box, corrugated fiberboard box, folding carton box, wooden box),
+		plastic container (plastic container, clamshell, foam food container, lunch box/Tuppelware, food carrier),
+		bulk container (basket, waste basket, bin, crate, case, trunk, chest)
 	</string>
 	<string name="category_containers_flexible">Flexible Containers</string>
 	<string name="category_containers_flexible_keywords">
@@ -48,12 +50,12 @@
 	<string name="category_storage_special">Specialized</string>
 	<string name="category_storage_special_keywords">
 		stationery (magazine file, folder, binder, plastic wallet, photo album, messageboard, whiteboard, pencil holder, pencil case),
-		household (soap dispenser, laundry bin, laundry sorter, bread bin, knife stand, utensil stand, utensil organizer, toolbox, potty, rainwater tank/water butt),
+		household (soap dispenser, laundry bin, laundry sorter, bread bin, knife stand, utensil stand, utensil organizer, toolbox, ashtray, potty, rainwater tank/water butt),
 		protective surface (beverage coaster, hot pad, drying mat, plastic tray, pallet, mouse pad)
 	</string>
 	<string name="category_luggage">Luggage</string>
 	<string name="category_luggage_keywords">
-		carried (suitcase, briefcase, notebook case, pet carrier),
+		carried (suitcase, briefcase, notebook case),
 		worn (backpack, handbag/purse, fanny pack/bum bag, laptop bag, pouch, holster)
 	</string>
 	<string name="category_packaging">Packaging</string>
@@ -66,45 +68,50 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_furniture">Furniture</string>
-	<string name="category_furniture_description">stuff you need friends to move</string>
+	<string name="category_furniture_description">stuff you may need friends to move</string>
 
 	<!-- http://en.wikipedia.org/wiki/List_of_furniture_types -->
 	<string name="category_fixtures">Fixtures</string>
 	<string name="category_fixtures_keywords">
-		bathtub, sink, taps, toilet,
-		door, window, ceiling, fence, room divider, mailbox/letter box,
-		shelf, coat rack, hooks, holder (soap holder/soap dish, toothbrush holder), track, rail, railing, pole,
-		pond, fountain, smoke alarm, burglar alarm,
-		sockets, lights, switch, ceiling fan, thermostat
+		division (door, window, ceiling, fence, room divider),
+		storage (shelf, coat rack, hooks, holder, soap holder/soap dish, toothbrush holder, track, rail, railing, pole, mailbox/letter box),
+		wet (bathtub, toilet, toilet seat, toilet tank, sink, tap, shower, fountain),
+		electric (sockets, lights, switch, ceiling fan, smoke alarm, burglar alarm, thermostat)
 	</string>
 	<string name="category_cabinetry">Cabinetry</string>
-	<string name="category_cabinetry_keywords">cupboard, cabinet, wardrobe, closet, chest of drawers, nightstand</string>
+	<string name="category_cabinetry_keywords">
+		cupboard, cabinet, wardrobe, closet, chest of drawers, nightstand
+	</string>
 	<string name="category_surfaces">Surfaces</string>
 	<string name="category_surfaces_keywords">
 		flat (table, desk, workbench, shelf, picnic table, folding table),
-		stands (flower stand, drying stand, tower airer, ironing stand, umbrella stand, hatstand, utility cart, room service trolley)
+		stands (flower stand, drying stand, tower airer, ironing board, umbrella stand, hatstand, utility cart, room service trolley),
+		hanger, shoe tree
 	</string>
 	<string name="category_resting">Seating &amp; Resting</string>
 	<string name="category_resting_keywords">
-		sitting (chair, stool, step stool, baby high chair, bench, sofa, couch/divan, beanbag, rocking chair, folding chair),
-		lounging (bed, mattress, lounger, pool lilo, hammock, swim ring, swim tube)
+		sitting (chair, stool, step stool, baby high chair, bench, sofa, couch/divan, folding chair),
+		lounging (bed, mattress, lounger, pool lilo, hammock, beanbag, rocking chair, swim ring, swim tube)
 	</string>
-	<string name="category_pet_home">Pet Homes</string>
+	<string name="category_pet">Pet Homes</string>
 	<!--https://en.wikipedia.org/wiki/Category:Buildings_and_structures_used_to_confine_animals-->
-	<string name="category_pet_home_keywords">
-		pet housing (dog house, litter box, cat basket, cage, bird cage, habitrail),
+	<string name="category_pet_keywords">
+		pet housing (dog house, litter box/litter tray, cat basket, cage, bird cage, habitrail),
 		vivarium (aquarium, terrarium, insectarium, formicarium, paludarium),
-		animal enclosure (kennel, chicken coop, aviary, pig sty, greenhouse)
+		animal enclosure (kennel, chicken coop, aviary, pig sty, greenhouse),
+		<!-- TODO some of the above are more like buildings and can be considered room types -->
+		activity (scratching post/cat tree, hamster wheel, hamster ball, pet door, pet carrier)
 	</string>
-	<!-- TODO some of the above are more like buildings and can be considered room types -->
 	<string name="category_outdoor">Outdoor</string>
 	<string name="category_outdoor_keywords">
 		canopies (pavilion, garden parasol/garden umbrella, beach umbrella, water base, canopy swing, pool cover),
 		playground (swing, slide, seesaw, climbing frame, climbing wall, wendy house, trampoline, jumpy castle, playhouse/wendy house),
-		bathing (jacuzzi/hot tub/home spa, garden shower, kiddy pool, swimming pool, spring board/diving board, sauna)
+		bathing (jacuzzi/hot tub/home spa, garden shower, inflatable pool, kiddy pool, pond, swimming pool, spring board/diving board, sauna)
 	</string>
 	<string name="category_compartments">Compartments</string>
-	<string name="category_compartments_keywords">drawer, shelf, section, display</string>
+	<string name="category_compartments_keywords">
+		drawer, shelf, section, display, desktop, hanger railing
+	</string>
 
 
 	<!--=========================================================================================================-->
@@ -113,21 +120,26 @@
 
 	<string name="category_fittings">Fittings</string>
 	<string name="category_fittings_keywords">
-		doorknob, door handle, door latch, pipe, valve, blinds, hanger,
+		pipe, valve, tube,
+		aperture parts (window handle, blinds, doorknob, door handle, door latch, door chain, door lock),
 		lighting (lamp, light bulb, lampshade, fluorescent tube, neon sign, laser),
 		clocks (LED wall-clock, alarm clock, cuckoo clock, longcase clock/floor clock/grandfather clock)
 	</string>
 	<string name="category_pillows">Pillows</string>
-	<string name="category_pillows_keywords">pillow, cushion, travel neck pillow, seat pad</string>
+	<string name="category_pillows_keywords">
+		pillow, cushion, travel neck pillow, seat pad
+	</string>
 	<string name="category_bedding">Bedding</string>
-	<string name="category_bedding_keywords">cover, blanket, throw, duvet, bedsheets, fitted sheet, pillowcase</string>
+	<string name="category_bedding_keywords">
+		cover, blanket, throw, duvet, bedsheets, fitted sheet, pillowcase
+	</string>
 	<string name="category_fabrics">Fabrics</string>
 	<string name="category_fabrics_keywords">
 		curtains, cloth, blanket, carpet, rug,
 		towel (bath towel, beach towel, hand towel, foot towel, sports towel, kitchen towel, wash cloth),
 		mat (door-mat, car mat, bath mat/bathroom rug, bathtub mat),
-		embroidery,
-		protective cover (steering wheel cover, ironing board cover, car seat cover)
+		protective cover (steering wheel cover, ironing board cover, car seat cover),
+		embroidery
 	</string>
 
 
@@ -136,17 +148,22 @@
 	<string name="category_decorations_description">stuff that makes your other stuff look pretty</string>
 
 	<string name="category_ornaments">Ornaments</string>
-	<string name="category_ornaments_keywords">vase, figurine, plant, candle, ashtray, photo frame, fridge magnet, glow-in-the-dark</string>
+	<string name="category_ornaments_keywords">
+		vase, plant, dried flower, fake plant, candle, figurine, fridge magnet, glow-in-the-dark
+	</string>
 	<string name="category_cultural_decorations">Cultural</string>
 	<!-- http://en.wikipedia.org/wiki/Holiday -->
 	<string name="category_cultural_decorations_keywords">
-		balloon, ribbon, tinsel, banner, flags, bunting,
-		confetti, streamers, aerosol string, party popper, fireworks, firecrackers,
+		balloon, fireworks, firecrackers,
+		confetti, party popper, streamers, aerosol string,
+		ribbon, tinsel, banner, flags, bunting,
 		parties (house party, birthday party, bachelor party, hen party, balls),
 		holidays (New Year\'s, Halloween, Valentine\'s Day, Christmas, Easter, Thanksgiving)
 	</string>
 	<string name="category_traditional_decorations">Traditional</string>
-	<string name="category_traditional_decorations_keywords">folk art, religious motifs, religious objects</string>
+	<string name="category_traditional_decorations_keywords">
+		folk art, religious motifs, religious objects
+	</string>
 
 
 	<!--=========================================================================================================-->
@@ -156,19 +173,24 @@
 	<string name="category_souvenirs">Souvenirs</string>
 	<string name="category_artwork">Artwork</string>
 	<string name="category_artwork_keywords">
-		picture (painting, poster, frame),
+		picture (painting, poster, picture frame, photo holder),
 		sculpture (statue, figurine, wax, glass, mask, origami, signs),
 		antique (painting, furniture, appliances),
 		ceramic (vase, pot, china, window box/flower box)
 	</string>
 	<string name="category_publications">Publications</string>
 	<string name="category_publications_keywords">
-		book, paperback, magazine, newspaper, photo album, yearbook,
+		book (paperback, yearbook, photo album, magazine, comics, newspaper, periodical, academic journal, proceeding),
 		advertisement (brochure, catalogue, circular, leaflet, pamphlet, flyer),
 		help (user guide, owner\'s manual, assembly instructions, FAQ/Frequently Asked Questions)
 	</string>
 	<string name="category_recordings">Recordings</string>
-	<string name="category_recordings_keywords">CD, DVD, BD, tape, cassette, vinyl, film, polaroid film, writable</string>
+	<string name="category_recordings_keywords">
+		disc (optical disc, CD/compact disc, DVD/digital video disc, BD/Blu-ray Disc, floppy disk, vinyl),
+		tape (compact cassette/cassette tape/audio cassette, videotape/videocassette, DV cassette, magnetic tape/backup tape),
+		film (celluloid film, film roll, instant film/Polaroid),
+		recordable/writable/rewritable
+	</string>
 
 
 	<!--=========================================================================================================-->
@@ -178,31 +200,40 @@
 	<!-- http://en.wikipedia.org/wiki/Clothing#collapsibleTable0 -->
 	<string name="category_undress">Street Clothes</string>
 	<string name="category_undress_keywords">
-		tops (t-shirt, shirt, long-sleeve shirt, blouse, cardigan, sweater, jumper, hoodie),
+		top (t-shirt, shirt, long-sleeve shirt, blouse, cardigan, sweater, jumper, hoodie),
 		trousers (jeans, denim, dungaree, sweat pants, shorts),
-		skirt, romper suit/onesie,
-		dress (gown, wrap dress, sari, sarong, kaftan, tunic, toga)
+		dress (gown, wrap dress, sari, sarong, kaftan, tunic, toga),
+		skirt
 	</string>
 	<string name="category_formal_clothing">Formal</string>
-	<string name="category_formal_clothing_keywords">suit, dress jacket, uniform, work clothes (jumpsuit)</string>
+	<string name="category_formal_clothing_keywords">
+		suit, dress jacket, tuxedo, kilt,
+		uniform (police, military, academic dress),
+		work clothes (jumpsuit, onesie, lab coat, cleanroom suit)
+	</string>
 	<string name="category_outerwear">Outerwear</string>
-	<string name="category_outerwear_keywords">coat, jacket, vest, raincoat, cape, costume</string>
+	<string name="category_outerwear_keywords">
+		coat, jacket, vest, raincoat, cape, costume
+	</string>
 	<string name="category_footwear">Footwear</string>
 	<string name="category_footwear_keywords">
-		shoes (loafers, trainers, pumps, plimsolls/deck shoes, ballet shoes, high heels, stilettos),
+		shoes (loafers, pumps, trainers, sneakers/plimsolls/deck shoes, high heels, stilettos),
 		boots (booties, fashion boots, dress boots, hiking boots, steel-toe boots, snow boots, rubber boots),
 		light shoes (sandals, slippers, flip-flops, pool shoes, clogs, crocs)
 	</string>
 	<string name="category_underwear">Underwear</string>
-	<string name="category_underwear_keywords">briefs, boxer, pajamas,
+	<string name="category_underwear_keywords">
+		briefs, boxer,
 		socks (knee-high socks, trainer socks, shoe liner, toe socks),
-		lingerie (panties/knickers, bra, thong, nightgown),
-		hosiery (stockings, leggings, tights/pantyhose)
+		hosiery (stockings, leggings, tights/pantyhose),
+		lingerie (panties/knickers, bra/brasserie, thong, nightgown),
+		full body (pajamas, romper suit, budysuit, leotard, unitard, catsuit)
 	</string>
 	<string name="category_headwear">Headwear</string>
 	<string name="category_headwear_keywords">
+		cap, hood, headband,
 		hat (beach hat, sombrero, cowboy hat, party hat),
-		cap (baseball cap), hood, headband, kerchief (bandana, buff)
+		kerchief (bandana, buff)
 	</string>
 	<string name="category_accessories">Accessories</string>
 	<string name="category_accessories_keywords">
@@ -213,12 +244,13 @@
 	</string>
 	<string name="category_sports_clothing">Sports</string>
 	<string name="category_sports_clothing_keywords">
+		running gear, cycling shorts, sweatband, football boots/cleats/soccer shoes, ballet shoes,
 		swimwear (swim briefs/Speedo, square leg suit, trunks, bathing suit, bikini, tankini, swimming cap, wetsuit, dry suit),
-		sneakers, running gear, cycling shorts, sweatband, ski clothes, thermal
+		snowwear (ski boots, thermal, ski jacket, ski pants, ski socks, ski suit)
 	</string>
 	<string name="category_protective_clothing">Protection</string>
 	<string name="category_protective_clothing_keywords">
-		hand protection (rubber gloves, disposable gloves, gardening gloves, worker gloves, boxing gloves),
+		hand protection (rubber gloves, disposable gloves, oven mitt/oven glove, gardening gloves, worker gloves, boxing gloves),
 		head protection (hard hat/construction helmet, cycling helmet, motorcycle helmet/racing helmet, batting helmet, football helmet, hockey helmet),
 		air protection (face mask/surgical mask, respirator),
 		eye protection (goggles, safety glasses, sunglasses, welding mask),
@@ -261,7 +293,7 @@
 	</string>
 	<string name="category_vehicles_parts">Vehicle Parts &amp; Accessories</string>
 	<string name="category_vehicles_parts_keywords">
-		parts (wheel, tyre, wheel trim, light, break, mirror, horn, bell, seat, basket, pedals, paddles, licence plate, windscreen wipers, engine, child safety seate),
+		parts (wheel, tyre, hubcap/wheel cover/wheel trim, light, break, mirror, horn, bell, seat, basket, pedals, paddles, licence plate, windscreen wipers, engine, child safety seat),
 		accessories (lock, padlock, key, high-visibility, phone holder, sat nav holder, air freshener, first aid kit, windshield sunshade),
 		maintenance (lubricants/oil, spider wrench, air pump, tire-pressure gauge, puncture kit, repair kit, jumper cable),
 		electronics (GPS/satnav/satellite navigation, radio, audio-visual entertainment systems)
@@ -272,13 +304,13 @@
 		percussion (bass drum, tom-tom, cymbal, conga, bell, gong, wind chimes, triangle, xylophone),
 		stringed (guitar, violin, banjo, cello, cittern, harp, ukulele, mandolin, piano),
 		wind (trumpet, cornet, trombone, tuba, clarinet, saxophone, oboe, flute, recorder, piccolo, didgeridoo, bagpipe, accordion, harmonica, organ, air horn),
-		noise maker (party horn, vuvuzela, siren, whistle, whip, ratchet, synthesizer),
-		electronic tuner
+		noise maker (party horn, vuvuzela, siren, whistle, whip, ratchet),
+		assistive electronics (amplifier, synthesizer, sampler, mixer/mixing console, electronic tuner)
 	</string>
 	<string name="category_organisms">Organisms</string>
 	<string name="category_organisms_keywords">
 		embryo/germ (stem, root, seed, bulb, seedling/sprout),
-		plant (flower, bush, hedge, tree),
+		plant (grass, flower, bush, hedge, tree),
 		pet (dog, puppy, cat, kitten, hamster, chinchilla, guinea pig, gerbil, ferret, mouse, rabbit, fish, koi, spider, snake, turtle/tortoise, frog/toad, parrot, canary),
 		livestock (chicken, pig, sheep, cow, goat, duck, donkey, mule, horse)
 	</string>
@@ -365,7 +397,7 @@
 	</string>
 	<string name="category_machine_parts">Components</string>
 	<string name="category_machine_parts_keywords">
-		piece (battery cover, vacuum cleaner bag, floor nozzle, floor brush, microwave tray, stove knob),
+		piece (battery cover, vacuum cleaner bag, floor nozzle, floor brush, microwave tray, stove knob, lens, external flash),
 		controller (remote control, universal remote, satellite dish, TV aerial, antenna),
 		battery (battery charger, button cell/watch battery, coin cell, phone battery, power bank, laptop battery, camera battery, AA, AAA, AAAA, C, D, 4.5V, 9V),
 		refill (ink cartridge, toner cartridge, fuse, spark plug, N2O whipped-cream charger, CO2 soda charger)
@@ -378,27 +410,27 @@
 		recorder (microphone, dictaphone, VCR/videocassette recorder, DVR/digital video recorder, photocopier),
 		recoding player (entertainment center/home cinema, music center, shelf stereo, CD player, DVD player, Blu-ray player, phonograph, turntable),
 		portable media player (digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook),
-		signal processor (set-top box, TV tuner, amplifier, mixing console, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor),
+		signal processor (set-top box, TV tuner, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor),
 		speakers (loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker),
-		displays (monitor, TV, projector, touchscreen; CRT, LCD, TFT, IPS, LED, plasma, OLED)
+		displays (monitor, TV/television, projector, touchscreen; CRT, LCD, TFT, IPS, LED, plasma, OLED)
 	</string>
 	<string name="category_computers">Computers</string>
 	<string name="category_computers_keywords">
 		desktop (Mac/Macintosh, PC/personal computer),
-		laptop (notebook, netbook, tablet, PDA),
+		laptop (notebook, netbook, tablet, laplet, palmtop, PDA, pocket PC),
 		game consoles (Xbox, Nintendo Wii, Sony Playstation, Sega, Atari),
-		mobile phone (cell phone, smartphone, Android, Apple iPhone, Samsung),
+		mobile phone (cell phone, pager, smartphone, phablet, Android, Apple iPhone, Samsung),
 		wearable (activity tracker, smartwatch, MP4 watch, Apple Watch, smartglasses, Google Glass),
 		GPS/satellite navigation, calculator
 	</string>
 	<string name="category_computer_parts">Peripherals</string>
 	<string name="category_computer_parts_keywords">
-		input devices (keyboard, mouse, trackball, touchpad, webcam/webcamera, scanner),
+		input devices (keyboard, mouse, trackball, touchpad, graphics tablet, webcam/webcamera, scanner),
 		game controller (gamepad, paddle, joystick, light gun, guitar, steering wheel, pedals),
 		output devices (printer, 3D printer, plotter),
-		computer internals (PCI, AGP, PCMCIA, PCI-Express cards),
-		storage drives (HDD/hard drive, optical drive, external hard drive, USB stick/flash drive/pendrive, ATA, PATA, SATA, SSD, RAID),
-		memory card (card reader, MMC, SD, microSD, SDHC, MemoryStick Pro Duo)
+		component (PCI, AGP, PCMCIA, PCI-Express cards, sound card, Sound Blaster, network card, video card, ATI, nVidia, CPU/processor, RAM/memory, SD-RAM, DDR),
+		storage drive (SSD/solid state drive, HDD/hard drive, optical drive, floppy disk drive, card reader, external, ATA, PATA, SATA, RAID),
+		storage medium (floppy disk, CD/compact disc, DVD/digital video disc, BD/Blu-ray Disc, USB stick/flash drive/pendrive, memory card, MMC, SD, microSD, SDHC, MemoryStick Pro Duo)
 	</string>
 	<string name="category_cables">Cables</string>
 	<string name="category_cables_keywords">
@@ -421,48 +453,45 @@
 	</string>
 	<string name="category_cleaning">Cleaning</string>
 	<string name="category_cleaning_keywords">
-		broom, mop, brush, dust pan,
-		duster, sponge, J-cloth, stainless steel scourer/steel wool, window scraper,
-		spare handle, mop head, shoe tree,
-		plunger, toilet brush,
+		dry (broom, brush, dust pan, duster),
+		wet (mop, mop head, sponge, J-cloth, stainless steel scourer/steel wool, window scraper, plunger, toilet brush),
 		pest control (flyswatter, mouse trap, rat trap, scarecrow)
 	</string>
 	<string name="category_chemicals">Chemicals</string>
 	<!-- http://en.wikipedia.org/wiki/Biocide#European_Community_Classification -->
 	<string name="category_chemicals_keywords">
-		matches, lighter, shoe polish,
-		scent (air-freshener spray, incense stick, incense cone, air-freshener gel, car freshener, toilet rim freshener,
+		matches, lighter, shoe polish, cat litter,
+		scent (air-freshener spray, incense stick, incense cone, air-freshener gel, car freshener, toilet rim freshener),
 		insect repellent (bug spray, mosquito coil, mosquito sticks, garden incense cone, electric mosquito repellent liquid vaporizer/Baygon),
 		pesticide (anti-insect spray, fungicide/anti-mould spray, rat poison, ant bait, moth ball, sticky flypaper),
 		detergent (laundry detergent, washing powder, laundry pod, washing tablet, fabric softener, washing up liquid, dishwasher tablet, window cleaner, windshield washer fluid),
 		disinfectants (toilet cleaner, toilet gel, floor &amp; surface cleaner, furniture spray),
 		solvents (turpentine, white spirit, bleach/sodium hypochlorite, degreaser, descaling agent, drain cleaner, paint thinner, ionised water, distilled water, antifreeze),
-		fuel (gasoline, petrol, diesel, biofuel, motor oil, petroleum, kerosene, firewood, coal, charcoal, coke),
-		fertilizer (plant food, compost, potting soil, ?cat litter)
+		fuel (gasoline, petrol, diesel, biofuel, motor oil, petroleum, kerosene, firewood, coal, charcoal, coke, lighter fluid),
+		fertilizer (plant food, compost, potting soil)
 	</string>
-	<string name="category_utensils_kitchen">Kitchen Utensils</string>
+	<string name="category_utensils_kitchen">Food Preparation</string>
 	<string name="category_utensils_kitchen_keywords">
-		cutlery (knife, fork, spoon, spork, chopsticks),
-		straw, bottle teat,
-		funnel, colander/kitchen sieve/pasta strainer, tea sieve, salt shaker, soda siphon, whipped cream dispenser,
-		ladle, pasta spoon, spatula, wooden spoon, tongs, measuring spoon, measuring scoop, ice-cream scoop, cake server,
-		grater, peeler, whisk, rolling pin, pizza cutter, meat grinder/meat mincer, potato ricer, crusher, meat tenderizer, pepper mill, pestle &amp; mortar, potato masher, lemon squeezer, juicer,
-		can opener/tin opener, corkscrew, bottle opener, nutcracker,
-		chopping board,
-		oven mitt/oven glove,
-		parchment paper/baking paper, greaseproof paper, skewers
+		measurement (measuring spoon, measuring scoop, measuring cup, kitchen scale, kitchen balance),
+		filtering (soda siphon, whipped cream dispenser, kitchen sieve, tea sieve, colander/pasta strainer, funnel, straw, bottle teat),
+		mixing (mixing bowl, wooden spoon, whisk, rolling pin, shaker, spatula),
+		chopping (chopping board, grater, peeler, pizza cutter, biscuit cutter/cookie cutter),
+		crusher (potato masher, meat grinder/meat mincer, potato ricer, crusher, meat tenderizer, pepper mill, pestle &amp; mortar, lemon squeezer, juicer),
+		openers (corkscrew, bottle opener, can opener/tin opener, jar opener, nutcracker, cherry pitter)
 	</string>
 	<string name="category_cookware">Cookware</string>
 	<string name="category_cookware_keywords">
 		cooking (stockpot, cooking pot, pressure cooker, saucepan, dutch oven, frying pan, wok, cauldron, kettle),
-		baking (baking pan, baking tray, baking mold, biscuit cutter/cookie cutter, ice cube mold, grille, gridiron),
-		preparation (mixing bowl, measuring cup, kitchen scale, kitchen balance),
+		baking (baking pan, baking tray, baking mold, ice cube mold, grille, gridiron, skewers, parchment paper/baking paper),
 		enamel, teflon, silicone
 	</string>
-	<string name="category_tableware">Tableware / ?Catering</string>
+	<string name="category_tableware">Catering</string>
 	<string name="category_tableware_keywords">
-		dishes (plate, bowl, tray, dog bowl, cat bowl),
+		cutlery (knife, fork, spoon, spork, chopsticks),
+		tableware (dish, plate, bowl, tray, greaseproof paper, dog bowl, cat bowl),
+		cruet (caster, salt shaker, pepper shaker, sugar dispenser, oil mister, oil cruet, kitchen syrup dispenser, dripless dispenser pot),
 		drinkware (glass, mug, jug, cup, paper cup, tumbler, teapot),
+		serving (ladle, pasta spoon, tongs, ice-cream scoop, cake server),
 		napkin, toothpick
 	</string>
 
@@ -487,11 +516,11 @@
 	</string>
 	<string name="category_materials">Materials</string>
 	<string name="category_materials_keywords">
-		wood, sawdust, metal, glass, wax, rock, stencil, dye/paint, crayon, chalk,
-		paper (cardboard, wrapping paper, ribbon, bows),
-		fibers (fabrics, textile, wallpaper, wool, yarn, thread, rope, twine, line, trimmer line, wire, shoelaces),
-		building blocks (bricks, tile, roof tiles, modeling clay/Plasticine/Play-Doh),
-		aggregates (sand, gravel, pebbles, cement, limestone)
+		wood, metal, glass, wax, rock, dye/paint, crayon, chalk,
+		paper (cardboard, wrapping paper, ribbon, bow),
+		fiber (fabrics, textile, wallpaper, wool, yarn, thread, rope, twine, line, trimmer line, wire, shoelaces),
+		building block (brick, tile, roof tile, column, beam, lath, clay, zip),
+		aggregates (sand, gravel, pebbles, cement, limestone, sawdust)
 	</string>
 	<string name="category_materials_binding">Binding Materials</string>
 	<string name="category_materials_binding_keywords">
@@ -518,7 +547,8 @@
 	</string>
 	<string name="category_paper">Stationery Paper</string>
 	<string name="category_paper_keywords">
-		sheet paper, notepad, notebook, sticky notes, scrapbook, envelope, greeting card, stickers, business card, wall calendar, desk calendar
+		empty (sheet paper, notepad, notebook, sticky notes, scrapbook, envelope),
+		printed (greeting card, stickers, business card, wall calendar, desk calendar)
 	</string>
 
 
@@ -528,11 +558,12 @@
 
 	<string name="category_food">Food</string>
 	<string name="category_food_keywords">
-		long-life (coffee, tea, chips, tobacco, cigarettes, instant packets, pet food),
+		long-life (coffee, tea, tobacco, cigarettes, weed/marijuana, instant packets, pet food),
+		snacks (chips, cereal, cracker, biscuit, puffed rice, crisp bread, crouton),
 		canned (fish, lunch meat, fruit),
-		jar (jam, marmalade, ?pickles, baby food),
-		?frozen (ready meals, vegetables, fruit, ice cream),
-		sweets (chewing gum, candy)
+		jar (jam, marmalade, pickles, baby food),
+		frozen (ready meals, meat, vegetables, fruit, fries, cheese, ice cream, soup),
+		sweets (chewing gum, hard candy, fruit gum, )
 	</string>
 	<string name="category_liquids">Liquids</string>
 	<!-- http://www.ibtimes.com/what-are-most-popular-wine-grapes-world-1540272 -->
@@ -542,17 +573,17 @@
 		grape variety (Cabernet Sauvignon, Merlot, Airen, Tempranillo, Chardonnay, Syrah, Garnacha Tinta, Sauvignon Blanc, Trebbiano Toscano, Pinot Noir),
 		beer (lager, ale, stout, cider),
 		distilled spirit (liquor, liqueur, cream liqueur, rum, vodka, absinthe, whisky, brandy, gin, cognac, tequila),
-		condiments (cooking oil, vegetable oil, olive oil, vinegar, soy sauce, lemon juice),
-		names (Pilsner, Budweiser, Budlight, Heineken, Carlsberg, Unicum, Hubertus, Bacardi, Metaxa, Curaçao)
+		names (Pilsner, Budweiser, Budlight, Heineken, Carlsberg, Unicum, Hubertus, Bacardi, Metaxa, Curaçao),
+		condiments (cooking oil, vegetable oil, olive oil, vinegar, soy sauce, lemon juice)
 	</string>
 	<string name="category_ingredients">Ingredients</string>
 	<string name="category_ingredients_keywords">
-		staple food (rice, pasta, flour),
-		grains (wheat, corn, breadcrumbs, semolina, bean, legumes),
+		pasta (spaghetti, macaroni, penne, lasagne, gnocchi, farfalle, tagliatelle, spirali, rotini, alphabet),
+		grain (wheat, flour, corn, rice, breadcrumbs, semolina, bean, legumes, poppy seeds),
 		table sauces (ketchup, mustard, wasabi, mayonnaise, BBQ sauce, hot sauce, tomato sauce, chili sauce, salsa),
-		seasoning (salt, sugar, honey, sweetener, pepper, paprika),
-		spices (vanilla, cinnamon, clove),
-		additives (food coloring, baking soda, jelly powder, pudding powder)
+		seasoning (salt, sugar, vanilla sugar, honey, sweetener, lemon peel, pepper, paprika powder, spread),
+		spices (vanilla, cinnamon, clove, curry),
+		additives (food coloring, aroma, yeast, baking soda, baking powder, jelly powder, pudding powder, ice cream powder, gelatin, frosting)
 	</string>
 	<string name="category_plants">Culinary Plants</string>
 	<!-- https://localwiki.org/davis/Culinary_Plants -->
@@ -560,9 +591,9 @@
 	<string name="category_plants_keywords">
 		vegetables (potato, bean, pea, corn, carrot, broccoli, capsicum/pepper, radish, garlic, onion, cucumber, pumpkin, squash, leek, lettuce),
 		fruit (apple, cherry, peach, plum, lemon, orange, raspberry, strawberry, grapes, melon, pineapple, tomato),
-		nuts, (walnut, almond, sunflower, acorn),
+		nuts (walnut, almond, sunflower, acorn),
 		herbs (basil, bay leaf, chives, lavender, mint, oregano, parsley, rosemary),
-		spices (black pepper, chili pepper, clove, cinnamon, celery seed, ginger, horseradish, mustard, poppy seed, saffron, sesame, vanilla, wasabi)
+		spices (black pepper, chili pepper, clove, cinnamon, celery seed, ginger, horseradish, mustard, poppy, saffron, sesame, vanilla, wasabi)
 	</string>
 
 
@@ -573,21 +604,21 @@
 	<string name="category_medical">Medical Products</string>
 	<!-- http://en.wikipedia.org/wiki/Category:Assistive_technology -->
 	<string name="category_medical_keywords">
-		oral medication (pills, tablets, capsule, effervescent),
+		oral medication (pill, tablet, capsule, powder, effervescent),
 		dermal medication (gel, paste, cream, lotion, balm, patch, ear drops, eye drops, nasal spray, heat rub, sports cream, ice gel),
 		other medication (vitamins, minerals, supplements, syringe, suppository),
 		equipment (bathroom scale, temperature meter, sphygmomanometer, blood sugar meter),
 		dressing (gauze, bandage, adhesive bandage/Band-Aid/sticking plasters),
-		prostheses (dentures, hearing/visual aids),
-		orthoses (plaster cast, braces, knee, ankle, foot),
-		mobility aids (wheelchair, cane, crutches),
+		prostheses (dentures, hearing aids, visual aids, pacemaker),
+		orthoses (plaster cast, braces, knee, ankle, foot, shoulder, arm, elbow, hand, hip, spine),
+		mobility aids (wheelchair, walker/walking frame, walking stick, cane, crutches, exoskeleton, insole, heel lift),
 		sex toys
 	</string>
 	<string name="category_hygiene">Hygiene</string>
 	<string name="category_hygiene_keywords">
 		body hygiene (soap, liquid hand soap, hand cleaning paste, shower gel, shampoo, conditioner, bath salt, bubble bath, hand sanitizer, baby powder),
 		oral hygiene (toothpaste, toothbrush, mouthwash, dental floss, tooth powder),
-		tissue (Kleenex/handkerchief, paper towel, toilet paper, wet wipe, dryer sheet, Colour Catcher/color run sheet, cotton pad, cotton ball, cotton bud/cotton swab/Q-tips),
+		tissue (handkerchief/Kleenex, paper towel, toilet paper, wet wipe, dryer sheet, color run sheet/Colour Catcher, cotton pad, cotton ball, cotton bud/cotton swab/Q-tips),
 		reproductive health (nappies, condom, lubricants, sanitary pad, tampon)
 	</string>
 	<string name="category_cosmetics">Cosmetics</string>

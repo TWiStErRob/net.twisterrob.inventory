@@ -84,7 +84,7 @@ INSERT INTO Category
 	UNION SELECT   200,  230,     'category_surfaces',                   'category_sofa'
 	UNION SELECT   200,  240,     'category_resting',                    'category_sofa'
 	UNION SELECT   200,  250,     'category_outdoor',                    'category_sofa'
-	UNION SELECT   200,  260,     'category_pet_home',                   'category_sofa'
+	UNION SELECT   200,  260,     'category_pet',                        'category_sofa'
 	UNION SELECT   200,  270,     'category_compartments',               'category_sofa'
 	UNION SELECT  NULL,  300, 'category_furnishings',                    'category_hung_towel'
 	UNION SELECT   300,  310,     'category_fittings',                   'category_hung_towel'

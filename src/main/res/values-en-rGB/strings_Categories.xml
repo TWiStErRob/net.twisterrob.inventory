@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="category_uncategorized">Uncategorised</string>
+	<string name="category_storage_special">Specialised</string>
 	<!-- replacements for stuff based on (each is unique, i.e. not used twice; and meanings match categories)
 	http://www.thefreedictionary.com/stuff#Thesaurus Collins Thesaurus of the English Language noun 1.
 	Complete and Unabridged 2nd Edition. 2002 © HarperCollins Publishers 1995, 2002 -->
@@ -11,7 +13,7 @@
 	<string name="category_health_description">staples that helps you live a better life</string>
 	<string name="category_decorations_description">trappings that makes your junk look pretty</string>
 	<string name="category_furnishings_description">matter that you put on your belongings</string>
-	<string name="category_furniture_description">goods and chattels you need friends to move</string>
+	<string name="category_furniture_description">goods and chattels you may need friends to move</string>
 	<string name="category_stationery_description">kit around the office or studio</string>
 	<string name="category_tools_description">gear to maintain or build objects with</string>
 	<string name="category_toys_description">paraphernalia to play with</string>
