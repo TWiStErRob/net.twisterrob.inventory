@@ -4,31 +4,47 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import net.twisterrob.inventory.android.content.InventoryContract;
+import net.twisterrob.inventory.android.content.model.*;
 
 public enum Type {
 	Category("category", false) {
 		@Override public Uri getImageUri(long id) {
 			return InventoryContract.Category.imageUri(id);
 		}
+		@Override public DTO fromCursor(Cursor cursor) {
+			return CategoryDTO.fromCursor(cursor);
+		}
 	},
 	Property("property", true) {
 		@Override public Uri getImageUri(long id) {
 			return InventoryContract.Property.imageUri(id);
+		}
+		@Override public DTO fromCursor(Cursor cursor) {
+			return PropertyDTO.fromCursor(cursor);
 		}
 	},
 	Room("room", true) {
 		@Override public Uri getImageUri(long id) {
 			return InventoryContract.Room.imageUri(id);
 		}
+		@Override public DTO fromCursor(Cursor cursor) {
+			return RoomDTO.fromCursor(cursor);
+		}
 	},
 	Root("root", false) {
 		@Override public Uri getImageUri(long id) {
 			return null;
 		}
+		@Override public DTO fromCursor(Cursor cursor) {
+			throw new UnsupportedOperationException("No DTO for root.");
+		}
 	},
 	Item("item", true) {
 		@Override public Uri getImageUri(long id) {
 			return InventoryContract.Item.imageUri(id);
+		}
+		@Override public DTO fromCursor(Cursor cursor) {
+			return ItemDTO.fromCursor(cursor);
 		}
 	};
 
@@ -41,6 +57,7 @@ public enum Type {
 	}
 
 	public abstract Uri getImageUri(long id);
+	public abstract DTO fromCursor(Cursor cursor); // FIXME add second argument for "old DTO" and allow reuse
 
 	public boolean isMain() {
 		return isMain;

@@ -86,10 +86,6 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		throw new UnsupportedOperationException("Can't edit image of category");
 	}
 
-	@Override protected void update(CategoryDTO cursor, long newType) {
-		throw new UnsupportedOperationException("Can't edit category");
-	}
-
 	private long getArgCategoryID() {
 		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 	}

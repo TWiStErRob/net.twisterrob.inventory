@@ -18,11 +18,12 @@ import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.ViewProvider.StaticViewProvider;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.*;
 
-public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements RecyclerViewItemEvents {
+public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements GalleryEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseGalleryFragment.class);
 
 	private BaseFragment header;
@@ -148,6 +149,10 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	}
 	protected abstract void onListItemLongClick(int position, long recyclerViewItemID);
 
+	@Override public void onTypeClick(int position, ImagedDTO dto) {
+		new ChangeTypeListener(this, dto).onClick(listController.getView());
+	}
+
 	/**
 	 * Called through:
 	 * <ul>
@@ -195,9 +200,9 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	}
 
 	private static class GalleryAdapter extends SingleHeaderAdapter<ViewHolder> {
-		private final RecyclerViewItemEvents listener;
+		private final GalleryEvents listener;
 
-		public GalleryAdapter(Cursor cursor, RecyclerViewItemEvents listener) {
+		public GalleryAdapter(Cursor cursor, GalleryEvents listener) {
 			super(cursor);
 			this.listener = listener;
 		}

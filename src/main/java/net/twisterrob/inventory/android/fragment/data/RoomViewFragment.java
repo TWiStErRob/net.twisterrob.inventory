@@ -9,9 +9,9 @@ import android.database.Cursor;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
@@ -38,8 +38,6 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	public RoomViewFragment() {
 		setDynamicResource(DYN_EventsClass, RoomEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.room);
-		setDynamicResource(DYN_TypeLoader, Loaders.RoomTypes);
-		setDynamicResource(DYN_TypeChangeTitle, "Change Type");
 	}
 
 	@Override
@@ -140,10 +138,6 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 
 	@Override protected void editImage() {
 		startActivity(BaseEditActivity.takeImage(RoomEditActivity.edit(getArgRoomID())));
-	}
-
-	@Override protected void update(RoomDTO entity, long newType) {
-		App.db().updateRoom(entity.id, newType, entity.name, entity.description);
 	}
 
 	private long getArgRoomID() {

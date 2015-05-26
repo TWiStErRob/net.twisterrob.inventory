@@ -8,9 +8,9 @@ import android.database.Cursor;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
@@ -32,8 +32,6 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	public PropertyViewFragment() {
 		setDynamicResource(DYN_EventsClass, PropertyEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.property);
-		setDynamicResource(DYN_TypeLoader, Loaders.PropertyTypes);
-		setDynamicResource(DYN_TypeChangeTitle, "Change Type");
 	}
 
 	@Override
@@ -100,10 +98,6 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 
 	@Override protected void editImage() {
 		startActivity(BaseEditActivity.takeImage(PropertyEditActivity.edit(getArgPropertyID())));
-	}
-
-	@Override protected void update(PropertyDTO entity, long newType) {
-		App.db().updateProperty(entity.id, newType, entity.name, entity.description);
 	}
 
 	private long getArgPropertyID() {

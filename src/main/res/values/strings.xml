@@ -132,6 +132,8 @@
 	<string name="item_edit">Edit Item</string>
 	<string name="item_delete">Delete Item</string>
 	<string name="item_delete_many">Delete Items</string>
+	<string name="item_categorize">Change Category</string>
+	<string name="item_categorize_many">@string/item_categorize</string>
 	<string name="item_share">Share Item</string>
 	<string name="item_move">Move Item</string>
 	<string name="item_move_many">Move Items</string>

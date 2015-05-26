@@ -6,14 +6,14 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.view.MenuItem;
+import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.ListsActivity;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
@@ -39,8 +39,6 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	public ItemViewFragment() {
 		setDynamicResource(DYN_EventsClass, ItemEvents.class);
 		setDynamicResource(DYN_OptionsMenu, R.menu.item);
-		setDynamicResource(DYN_TypeLoader, Loaders.ItemCategories);
-		setDynamicResource(DYN_TypeChangeTitle, "Change Category");
 	}
 
 	@Override
@@ -100,6 +98,15 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				                                  .forbidItems(getArgItemID())
 				                                  .build();
 				startActivityForResult(intent, MOVE_REQUEST);
+				return true;
+			case R.id.action_item_categorize:
+				View view = getView();
+				if (view != null) {
+					view = view.findViewById(R.id.type);
+					if (view != null) {
+						view.performClick();
+					}
+				}
 				return true;
 			case R.id.action_item_delete:
 				delete(getArgItemID());
@@ -177,10 +184,6 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 
 	@Override protected void editImage() {
 		startActivity(BaseEditActivity.takeImage(ItemEditActivity.edit(getArgItemID())));
-	}
-
-	@Override protected void update(ItemDTO entity, long newType) {
-		App.db().updateItem(entity.id, newType, entity.name, entity.description);
 	}
 
 	private long getArgItemID() {

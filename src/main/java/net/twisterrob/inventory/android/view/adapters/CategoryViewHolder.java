@@ -84,6 +84,8 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		Integer itemCountTotal = getCount(cursor, Category.COUNT_ITEM_ALL);
 		if (itemCountTotal != null) {
 			count.setText(String.valueOf(itemCountTotal));
+		} else {
+			count.setText(null);
 		}
 		AndroidTools.displayedIfHasText(count);
 

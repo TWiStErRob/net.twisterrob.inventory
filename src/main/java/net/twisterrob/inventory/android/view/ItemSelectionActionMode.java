@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.view.*;
 
 import net.twisterrob.android.view.SelectionAdapter;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
 import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.tasks.*;
+import net.twisterrob.inventory.android.view.ChangeTypeListener.ChangeTypeDialog.Variants;
 
 public class ItemSelectionActionMode extends SelectionActionMode {
 	private static final int PICK_REQUEST = 1;
@@ -39,6 +42,23 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 				                       .forbidItems(getSelectedIDs())
 				                       .build();
 				fragment.startActivityForResult(intent, PICK_REQUEST);
+				return true;
+			case R.id.action_item_categorize:
+				final long[] itemIDs = getSelectedIDs();
+				new ChangeTypeListener.ChangeTypeDialog(fragment).show(new Variants() {
+					@Override void update(long newType) {
+						for (long itemID : itemIDs) {
+							ItemDTO item = ItemDTO.fromCursor(App.db().getItem(itemID, false));
+							App.db().updateItem(item.id, newType, item.name, item.description);
+						}
+					}
+					@Override protected CharSequence getTitle() {
+						return "Change Category";
+					}
+					@Override Loaders getTypesLoader() {
+						return Loaders.ItemCategories;
+					}
+				}, Category.INTERNAL, "selection");
 				return true;
 		}
 		return super.onActionItemClicked(mode, item);

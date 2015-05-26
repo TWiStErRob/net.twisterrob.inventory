@@ -17,8 +17,9 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 	private ImageView image;
 	private ImageView type;
 	private TextView count;
+	private ImagedDTO entity;
 
-	public GalleryViewHolder(View view, final RecyclerViewItemEvents listener) {
+	public GalleryViewHolder(View view, final GalleryEvents listener) {
 		super(view);
 		title = (TextView)view.findViewById(R.id.title);
 		image = (ImageView)view.findViewById(R.id.image);
@@ -35,6 +36,16 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 				return listener.onItemLongClick(getAdapterPosition(), getItemId());
 			}
 		});
+		type.setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				listener.onTypeClick(getAdapterPosition(), entity);
+			}
+		});
+		type.setOnLongClickListener(new OnLongClickListener() {
+			@Override public boolean onLongClick(View v) {
+				return listener.onItemLongClick(getAdapterPosition(), getItemId());
+			}
+		});
 	}
 
 	public void bind(Cursor cursor) {
@@ -45,6 +56,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 		long imageTime = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		String countText = getCountText(cursor);
+		entity = (ImagedDTO)type.fromCursor(cursor); // TODO collapse cursor getters to use DTO
 
 		title.setText(name);
 		count.setText(countText);

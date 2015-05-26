@@ -2,13 +2,8 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
 import android.support.v4.view.*;
-import android.support.v4.widget.CursorAdapter;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
@@ -18,19 +13,12 @@ import static android.content.Context.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.ImageActivity;
-import net.twisterrob.inventory.android.activity.data.CategoryActivity;
-import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
-import net.twisterrob.inventory.android.view.CursorSwapper;
-import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
+import net.twisterrob.inventory.android.view.ChangeTypeListener;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
-
-	protected static final String DYN_TypeLoader = "typeLoader";
-	protected static final String DYN_TypeChangeTitle = "typeTitle";
 
 	protected ViewPager pager;
 
@@ -95,10 +83,12 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					view = inflater.inflate(R.layout.inc_details_image, container, false);
 					ImageView image = (ImageView)view.findViewById(R.id.image);
 					ImageView type = (ImageView)view.findViewById(R.id.type);
+					AndroidTools.visibleIf(type, !(entity instanceof CategoryDTO));
+
 					if (!(entity instanceof CategoryDTO)) {
 						image.setOnClickListener(new ImageOpenListener());
 						image.setOnLongClickListener(new ImageChangeListener());
-						type.setOnClickListener(new ChangeTypeListener());
+						type.setOnClickListener(new ChangeTypeListener(BaseViewFragment.this, entity));
 					}
 
 					entity.loadInto(image, type, true);
@@ -149,56 +139,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 				return true;
 			}
 		}
-
-		private class ChangeTypeListener implements OnClickListener {
-			@Override public void onClick(View v) {
-				Loaders typeLoader = getDynamicResource(DYN_TypeLoader);
-				getLoaderManager().initLoader(typeLoader.id(), null,
-						new CursorSwapper(getContext(), new TypeAdapter(getContext())) {
-							@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-								super.onLoadFinished(loader, data);
-
-								int position = AndroidTools.findItemPosition(adapter, entity.type);
-								Builder dialog = new Builder(getContext())
-										.setTitle((CharSequence)getDynamicResource(DYN_TypeChangeTitle))
-										.setSingleChoiceItems(adapter, position, new TypeSelectedListener(adapter));
-								if (entity instanceof ItemDTO) {
-									dialog.setNeutralButton("Jump to Category",
-											new DialogInterface.OnClickListener() {
-												@Override public void onClick(DialogInterface dialog,
-														int which) {
-													startActivity(CategoryActivity.show(entity.type));
-												}
-											});
-								}
-								dialog.create().show();
-							}
-						}
-				);
-			}
-
-			private class TypeSelectedListener implements DialogInterface.OnClickListener {
-				private final CursorAdapter adapter;
-				public TypeSelectedListener(CursorAdapter adapter) {
-					this.adapter = adapter;
-				}
-
-				@Override public void onClick(DialogInterface dialog, int which) {
-					Cursor cursor = (Cursor)adapter.getItem(which);
-					long newType = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
-					String newTypeName = cursor.getString(cursor.getColumnIndex(CommonColumns.NAME));
-					update(entity, newType); // FIXME DB on UI
-					dialog.dismiss();
-					refresh();
-
-					CharSequence newTypeDisplayName = AndroidTools.getText(getContext(), newTypeName);
-					App.toastUser(getString(R.string.generic_location_change, entity.name, newTypeDisplayName));
-				}
-			}
-		}
 	}
-
-	protected abstract void update(DTO cursor, long newType);
 
 	protected abstract void editImage();
 }

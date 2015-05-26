@@ -16,6 +16,12 @@
 		app:showAsAction="ifRoom"
 		/>
 	<item
+		android:id="@+id/action_item_categorize"
+		android:title="@string/item_categorize"
+		android:icon="@android:drawable/ic_menu_set_as"
+		app:showAsAction="never"
+		/>
+	<item
 		android:id="@+id/action_item_delete"
 		android:title="@string/item_delete"
 		android:icon="@android:drawable/ic_menu_delete"

@@ -17,4 +17,10 @@
 		android:titleCondensed="@string/action_move"
 		app:showAsAction="ifRoom|withText"
 		/>
+	<item
+		android:id="@+id/action_item_categorize"
+		android:title="@string/item_categorize_many"
+		android:icon="@android:drawable/ic_menu_set_as"
+		app:showAsAction="ifRoom|withText"
+		/>
 </menu>

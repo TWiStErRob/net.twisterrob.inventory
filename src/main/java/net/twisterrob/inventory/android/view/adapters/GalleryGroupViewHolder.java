@@ -16,7 +16,7 @@ public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
 	private ImageView image;
 	private TextView count;
 
-	public GalleryGroupViewHolder(View view, final RecyclerViewItemEvents listener) {
+	public GalleryGroupViewHolder(View view, final GalleryEvents listener) {
 		super(view);
 		title = (TextView)view.findViewById(R.id.title);
 		image = (ImageView)view.findViewById(R.id.image);
