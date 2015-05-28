@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.slf4j.*;
 
@@ -9,15 +10,17 @@ import android.app.Activity;
 import android.content.*;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build.*;
 import android.os.Bundle;
 import android.support.annotation.*;
+import android.support.v4.util.LongSparseArray;
 import android.support.v4.widget.CursorAdapter;
 import android.text.*;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
+import android.text.style.*;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.*;
@@ -42,6 +45,7 @@ import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.*;
+import net.twisterrob.inventory.android.content.model.CategorySuggester.Suggestion;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
@@ -154,37 +158,76 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 				isClean = false;
 				if (doValidateTitle()) {
-					Collection<String> suggestions = CategoryDTO.getSuggester(getContext()).suggest(s);
+					Collection<Suggestion> suggestions = CategoryDTO.getSuggester(getContext()).suggest(s);
 
-					if (!suggestions.isEmpty() && !suggestions.contains(getTypeName())) {
+					if (!suggestions.isEmpty()) {
 						hint.setText(buildHint(suggestions));
 						hint.setMovementMethod(LinkMovementMethod.getInstance());
 					}
 				}
 			}
-			public @NonNull CharSequence buildHint(@NonNull Collection<String> suggestions) {
-				CategorySuggester suggester = CategoryDTO.getSuggester(getContext());
+			public @NonNull CharSequence buildHint(@NonNull Collection<Suggestion> suggestions) {
+				LongSparseArray<Map<CharSequence, Collection<Suggestion>>> grouped = group(suggestions);
 
-				SpannableStringBuilder builder = new SpannableStringBuilder("Suggested categories: ");
-				for (Iterator<String> sugIt = suggestions.iterator(); sugIt.hasNext(); ) {
-					final String categoryName = sugIt.next();
+				SpannableStringBuilder builder = new SpannableStringBuilder("Suggested categories:\n");
+				for (int i = 0; i < grouped.size(); ++i) {
+					Map<CharSequence, Collection<Suggestion>> matchGroup = grouped.valueAt(i);
+
+					final Suggestion first = matchGroup.entrySet().iterator().next().getValue().iterator().next();
 					int start = builder.length();
-					CharSequence fullName = suggester.getFullName(categoryName);
-					builder.append(fullName);
+					builder.append(first.getCategoryPath());
 					int end = builder.length();
 
 					builder.setSpan(new ClickableSpan() {
 						@Override public void onClick(View widget) {
-							long id = CategoryDTO.getSuggester(widget.getContext()).getCategoryID(categoryName);
-							AndroidTools.selectByID(type, id);
+							AndroidTools.selectByID(type, first.category);
 						}
 					}, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-					if (sugIt.hasNext()) {
-						builder.append(" | ");
+					builder.append(" (");
+					for (Iterator<Entry<CharSequence, Collection<Suggestion>>> sugIt =
+					     matchGroup.entrySet().iterator(); sugIt.hasNext(); ) {
+						Entry<CharSequence, Collection<Suggestion>> group = sugIt.next();
+						int matchStart = builder.length();
+						builder.append(group.getKey());
+						for (Suggestion suggestion : group.getValue()) {
+							builder.setSpan(new ForegroundColorSpan(Color.RED),
+									matchStart + suggestion.matchStart,
+									matchStart + suggestion.matchEnd,
+									Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+						}
+						if (sugIt.hasNext()) {
+							builder.append(", ");
+						}
+					}
+					builder.append(")");
+					if (i < grouped.size() - 1) {
+						builder.append("\n");
 					}
 				}
 				return builder;
+			}
+			private LongSparseArray<Map<CharSequence, Collection<Suggestion>>> group(
+					@NonNull Collection<Suggestion> suggestions) {
+				LongSparseArray<Map<CharSequence, Collection<Suggestion>>> grouped = new LongSparseArray<>();
+				for (Suggestion suggestion : suggestions) {
+					Map<CharSequence, Collection<Suggestion>> matchGroup = grouped.get(suggestion.category);
+					if (matchGroup == null) {
+						matchGroup = new TreeMap<>();
+						grouped.put(suggestion.category, matchGroup);
+					}
+					Collection<Suggestion> group = matchGroup.get(suggestion.match);
+					if (group == null) {
+						group = new TreeSet<>(new Comparator<Suggestion>() {
+							@Override public int compare(Suggestion lhs, Suggestion rhs) {
+								return lhs.search.toString().compareToIgnoreCase(rhs.search.toString());
+							}
+						});
+						matchGroup.put(suggestion.match, group);
+					}
+					group.add(suggestion);
+				}
+				return grouped;
 			}
 		});
 

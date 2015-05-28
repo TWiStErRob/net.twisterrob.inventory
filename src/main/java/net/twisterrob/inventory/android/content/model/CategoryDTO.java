@@ -17,6 +17,7 @@ import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.content.contract.Category;
 
 public class CategoryDTO extends ImagedDTO {
+	public static final Pattern KEYWORDS_PATTERN = Pattern.compile("\\s*\\(.*?\\)|\\s*[,;]\\s*"); // match parentheses and list separators
 	private static final Uri APP_RESOURCE_RAW = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/");
 	private static final CategorySuggester SUGGESTER = new CategorySuggester();
 
@@ -58,8 +59,7 @@ public class CategoryDTO extends ImagedDTO {
 		try {
 			CharSequence text = AndroidTools.getText(context, categoryName + "_keywords");
 			SpannableStringBuilder builder = new SpannableStringBuilder(text);
-			Pattern p = Pattern.compile("\\s*\\(.*?\\)|\\s*[,;]\\s*"); // match parentheses and list separators
-			Matcher m = p.matcher(builder);
+			Matcher m = KEYWORDS_PATTERN.matcher(builder);
 
 			// inverse of appendReplacement and appendTail, treat everything that's not matched
 			//int start = m.regionStart();
