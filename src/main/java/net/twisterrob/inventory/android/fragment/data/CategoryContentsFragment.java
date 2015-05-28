@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.*;
@@ -111,6 +112,18 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 
 		@Override protected void setData(CursorRecyclerAdapter adapter, Cursor data) {
 			adapter.swapCursor(data);
+			if (data != null && selectionMode != null) {
+				SelectionAdapter<?> selectionAdapter = selectionMode.getAdapter();
+				Cursor cursor = ((CursorRecyclerAdapter<?>)selectionAdapter.getWrappedAdapter()).getCursor();
+				selectionAdapter.resetSelectable();
+				for (int i = 0; i < selectionAdapter.getItemCount(); ++i) {
+					cursor.moveToPosition(i);
+					if ("item".equals(DatabaseTools.getOptionalString(cursor, "type"))) {
+						break;
+					}
+					selectionAdapter.setSelectable(i, false);
+				}
+			}
 		}
 
 		@Override protected void onViewSet() {

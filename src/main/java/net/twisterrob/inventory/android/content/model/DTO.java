@@ -17,8 +17,8 @@ public class DTO {
 	public Integer numAllChildren;
 
 	protected DTO fromCursorInternal(Cursor cursor) {
-		if (cursor.isBeforeFirst() && !cursor.moveToFirst()) {
-			throw new IllegalArgumentException("Cursor has no data.");
+		if (cursor.isBeforeFirst() || cursor.isAfterLast()) {
+			throw new IllegalArgumentException("Did you forget to advance the cursor? See DatabaseDTOTools.");
 		}
 
 		id = DatabaseTools.getOptionalLong(cursor, CommonColumns.ID, CommonColumns.ID_ADD);

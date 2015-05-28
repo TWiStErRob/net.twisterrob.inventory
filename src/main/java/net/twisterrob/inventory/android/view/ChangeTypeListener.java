@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
-import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
@@ -103,7 +103,7 @@ public class ChangeTypeListener implements OnClickListener {
 
 	private class PropertyVariants extends ImagedVariants {
 		@Override public void update(long newType) {
-			PropertyDTO property = PropertyDTO.fromCursor(App.db().getProperty(entity.id));
+			PropertyDTO property = DatabaseDTOTools.retrieveProperty(entity.id);
 			App.db().updateProperty(property.id, newType, property.name, property.description);
 		}
 		@Override public CharSequence getTitle() {
@@ -116,7 +116,7 @@ public class ChangeTypeListener implements OnClickListener {
 
 	private class RoomVariants extends ImagedVariants {
 		@Override public void update(long newType) {
-			RoomDTO room = RoomDTO.fromCursor(App.db().getRoom(entity.id));
+			RoomDTO room = DatabaseDTOTools.retrieveRoom(entity.id);
 			App.db().updateRoom(room.id, newType, room.name, room.description);
 		}
 		@Override public CharSequence getTitle() {
@@ -129,7 +129,7 @@ public class ChangeTypeListener implements OnClickListener {
 
 	private class ItemVariants extends ImagedVariants {
 		@Override public void update(long newType) {
-			ItemDTO item = ItemDTO.fromCursor(App.db().getItem(entity.id, false));
+			ItemDTO item = DatabaseDTOTools.retrieveItem(entity.id);
 			App.db().updateItem(item.id, newType, item.name, item.description);
 		}
 		@Override public CharSequence getTitle() {

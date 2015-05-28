@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 
 import net.twisterrob.android.view.SelectionAdapter;
@@ -32,6 +33,11 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 
 	public Activity getActivity() {
 		return activity;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends ViewHolder> SelectionAdapter<T> getAdapter() {
+		return (SelectionAdapter<T>)adapter;
 	}
 
 	public void start() {
@@ -119,7 +125,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 			case R.id.action_select_invert:
 				Set<Integer> selection = new TreeSet<>(adapter.getSelectedPositions());
 				adapter.clearSelections();
-				for (int i = 0; i < adapter.getItemCount(); i++) {
+				for (int i = 0, end = adapter.getItemCount(); i < end; i++) {
 					adapter.setSelected(i, !selection.contains(i));
 				}
 				mode.invalidate();

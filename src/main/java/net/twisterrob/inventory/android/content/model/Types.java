@@ -14,8 +14,7 @@ public class Types {
 		putTypes(App.db().listRoomTypes(), RoomType.ID, RoomType.NAME);
 		putTypes(App.db().listItemCategories(), Category.ID, Category.NAME);
 
-		// types.put("category_old", "category_new"); // transitive must be resolved manually
-		// TODO add mappings for huge category refactor to convert my inventory
+		// types.put("category_old", types.get("category_new")); // transitive must be resolved manually
 	}
 
 	public Long getID(String type) {

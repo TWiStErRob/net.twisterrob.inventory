@@ -114,6 +114,7 @@
 			--g._id                                           as gid,
 			i._id = g._id                                   as [group],
 			i.name                                          as name,
+			c._id                                           as typeID,
 			i.image IS NOT NULL                             as hasImage,
 			i.image_time                                    as imageTime,
 			c.image                                         as typeImage,
@@ -330,7 +331,18 @@
 		left join Category_Name_Cache cnc ON cnc.key = c.name
 		where c.parent = ? or (? = 'null' and c.parent is null)
 		      and c._id <> -1 -- don't return category_internal
-		order by (CASE WHEN c.name <> 'category_uncategorized' and c.name <> 'category_group' THEN ifNULL(cnc.value, c.name) ELSE CAST(X'FFFD' AS TEXT) END)
+		order by (
+			CASE
+			WHEN NOT EXISTS (select descendant from Category_Descendant where category = c._id and descendant <> category)
+			THEN CAST(X'FFFD' AS TEXT) || (
+				CASE
+					WHEN c.name = 'category_uncategorized' THEN CAST(X'FFFD' AS TEXT)
+					ELSE ifNULL(cnc.value, c.name)
+				END
+			)
+			ELSE ifNULL(cnc.value, c.name)
+			END
+		)
 		;
 	"]]></string>
 	<string name="query_category"><![CDATA["
@@ -454,6 +466,7 @@
 			'item'                                          as type,
 			i._id                                           as _id,
 			i.name                                          as name,
+			c._id                                           as typeID,
 			i.image IS NOT NULL                             as hasImage,
 			i.image_time                                    as imageTime,
 			c.image                                         as typeImage,
@@ -538,6 +551,7 @@
 			join Item_Path_Node ip ON ip.item = i._id and ip.node = i._id
 			join Room           r  ON ip.root = r.root
 			join Property       p  ON r.property = p._id
+		-- TODO order by type, _id?
 	"]]></string>
 
 

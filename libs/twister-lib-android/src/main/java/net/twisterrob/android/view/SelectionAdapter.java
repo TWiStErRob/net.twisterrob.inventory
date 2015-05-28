@@ -32,6 +32,10 @@ public class SelectionAdapter<VH extends RecyclerView.ViewHolder> extends Wrappi
 		super.onBindViewHolder(holder, position);
 	}
 
+	public void resetSelectable() {
+		excludedItems.clear();
+	}
+
 	public void setSelectable(int position, boolean isSelectable) {
 		if (!isSelectable) {
 			excludedItems.put(position, true);
