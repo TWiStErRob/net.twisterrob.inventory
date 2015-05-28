@@ -2,25 +2,26 @@
 <resources>
 	<string name="category_uncategorized">Uncategorised</string>
 	<string name="category_storage_special">Specialised</string>
-	<!-- replacements for stuff based on (each is unique, i.e. not used twice; and meanings match categories)
+	<!-- replacements for stuff based mostly on (each is unique, i.e. not used twice; and meanings match categories)
 	http://www.thefreedictionary.com/stuff#Thesaurus Collins Thesaurus of the English Language noun 1.
 	Complete and Unabridged 2nd Edition. 2002 © HarperCollins Publishers 1995, 2002 -->
 	<string name="category_group_description">logically holds other possessions together</string>
-	<string name="category_clothing_description">clobber you put on your body</string>
+	<string name="category_parts_description">kit that\'s useless by itself</string>
+	<string name="category_images_description">extra images of your properties</string>
 	<string name="category_storage_description">impedimenta to put your things in</string>
-	<string name="category_collectibles_description">lares and penates you don\'t need, but still have</string>
-	<string name="category_consumables_description">substances you can ingest raw, or processed</string>
-	<string name="category_health_description">staples that helps you live a better life</string>
-	<string name="category_decorations_description">trappings that makes your junk look pretty</string>
-	<string name="category_furnishings_description">matter that you put on your belongings</string>
 	<string name="category_furniture_description">goods and chattels you may need friends to move</string>
-	<string name="category_stationery_description">kit around the office or studio</string>
-	<string name="category_tools_description">gear to maintain or build objects with</string>
+	<string name="category_furnishings_description">matter to put on your belongings</string>
+	<string name="category_decorations_description">trappings that make your junk look pretty</string>
+	<string name="category_collectibles_description">lares and penates you don\'t need, but still have</string>
+	<string name="category_clothing_description">clobber to put on your body</string>
+	<string name="category_leisure_description">tackle to use mostly in your spare time</string>
 	<string name="category_toys_description">paraphernalia to play with</string>
+	<string name="category_electronics_description">effects containing some silicon</string>
+	<string name="category_household_description">equipment around the house</string>
+	<string name="category_crafts_description">gear to maintain or build objects with</string>
 	<string name="category_documents_description">essence written on bits and pieces</string>
-	<string name="category_leisure_description">tackle you use in your spare time</string>
-	<string name="category_electronics_description">effects that have some silicon in them</string>
-	<string name="category_appliances_description">equipment that makes your life easier</string>
+	<string name="category_consumables_description">substances to ingest raw, or processed</string>
+	<string name="category_health_description">staples helping you live a better life</string>
 
 	<string name="category_appliances_major">White Goods</string>
 	<string name="category_consumer_electronics">Brown Goods</string>

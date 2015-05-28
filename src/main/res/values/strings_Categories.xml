@@ -17,6 +17,10 @@
 	<string name="category_uncategorized_description">any other stuff</string>
 	<string name="category_group">Group</string>
 	<string name="category_group_description">logically holds other stuff together</string>
+	<string name="category_parts">Parts</string>
+	<string name="category_parts_description">stuff that\'s useless by itself</string>
+	<string name="category_images">Extra Images</string>
+	<string name="category_images_description">extra images of your stuff</string>
 
 
 	<!--=========================================================================================================-->
@@ -64,6 +68,10 @@
 		wrapping (aluminium foil/tinfoil, plastic wrap/cling film/food wrap, strapping),
 		cushioning (bubble wrap, styrofoam, foam peanut, molded pulp, paperboard, protective plastic)
 	</string>
+	<string name="category_compartments">Compartments</string>
+	<string name="category_compartments_keywords">
+		drawer, shelf, section, display, pocket, desktop, hanger railing
+	</string>
 
 
 	<!--=========================================================================================================-->
@@ -85,13 +93,13 @@
 	<string name="category_surfaces">Surfaces</string>
 	<string name="category_surfaces_keywords">
 		flat (table, desk, workbench, shelf, picnic table, folding table),
-		stands (flower stand, drying stand, tower airer, ironing board, umbrella stand, hatstand, utility cart, room service trolley),
+		stands (flower stand, drying stand, tower airer, tripod, camera stand, telescope stand, ironing board, umbrella stand, hatstand, utility cart, room service trolley),
 		hanger, shoe tree
 	</string>
 	<string name="category_resting">Seating &amp; Resting</string>
 	<string name="category_resting_keywords">
 		sitting (chair, stool, step stool, baby high chair, bench, sofa, couch/divan, folding chair),
-		lounging (bed, mattress, lounger, pool lilo, hammock, beanbag, rocking chair, swim ring, swim tube)
+		lounging (bed, mattress, lounger, pool lilo, hammock, beanbag, rocking chair, inflatable air mattress, swim ring, swim tube)
 	</string>
 	<string name="category_pet">Pet Homes</string>
 	<!--https://en.wikipedia.org/wiki/Category:Buildings_and_structures_used_to_confine_animals-->
@@ -108,21 +116,17 @@
 		playground (swing, slide, seesaw, climbing frame, climbing wall, wendy house, trampoline, jumpy castle, playhouse/wendy house),
 		bathing (jacuzzi/hot tub/home spa, garden shower, inflatable pool, kiddy pool, pond, swimming pool, spring board/diving board, sauna)
 	</string>
-	<string name="category_compartments">Compartments</string>
-	<string name="category_compartments_keywords">
-		drawer, shelf, section, display, desktop, hanger railing
-	</string>
 
 
 	<!--=========================================================================================================-->
 	<string name="category_furnishings">Furnishings</string>
-	<string name="category_furnishings_description">stuff that you put on other stuff</string>
+	<string name="category_furnishings_description">stuff to you put on other stuff</string>
 
 	<string name="category_fittings">Fittings</string>
 	<string name="category_fittings_keywords">
 		pipe, valve, tube,
 		aperture parts (window handle, blinds, doorknob, door handle, door latch, door chain, door lock),
-		lighting (lamp, light bulb, lampshade, fluorescent tube, neon sign, laser),
+		lighting (desk lamp, standing lamp, ceiling lamp, light bulb, lampshade, fluorescent tube, neon sign, laser),
 		clocks (LED wall-clock, alarm clock, cuckoo clock, longcase clock/floor clock/grandfather clock)
 	</string>
 	<string name="category_pillows">Pillows</string>
@@ -131,7 +135,7 @@
 	</string>
 	<string name="category_bedding">Bedding</string>
 	<string name="category_bedding_keywords">
-		cover, blanket, throw, duvet, bedsheets, fitted sheet, pillowcase
+		cover, blanket, throw, duvet, bedsheets, fitted sheet, pillowcase, sleeping bag, straw beach mat
 	</string>
 	<string name="category_fabrics">Fabrics</string>
 	<string name="category_fabrics_keywords">
@@ -145,7 +149,7 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_decorations">Decorations</string>
-	<string name="category_decorations_description">stuff that makes your other stuff look pretty</string>
+	<string name="category_decorations_description">stuff that makes other stuff look pretty</string>
 
 	<string name="category_ornaments">Ornaments</string>
 	<string name="category_ornaments_keywords">
@@ -171,6 +175,7 @@
 	<string name="category_collectibles_description">stuff you don\'t need, but still have</string>
 
 	<string name="category_souvenirs">Souvenirs</string>
+	<string name="category_souvenirs_keywords"></string>
 	<string name="category_artwork">Artwork</string>
 	<string name="category_artwork_keywords">
 		picture (painting, poster, picture frame, photo holder),
@@ -181,7 +186,7 @@
 	<string name="category_publications">Publications</string>
 	<string name="category_publications_keywords">
 		book (paperback, yearbook, photo album, magazine, comics, newspaper, periodical, academic journal, proceeding),
-		advertisement (brochure, catalogue, circular, leaflet, pamphlet, flyer),
+		information (advertisement, brochure, catalogue, circular, leaflet, pamphlet, flyer, invitation),
 		help (user guide, owner\'s manual, assembly instructions, FAQ/Frequently Asked Questions)
 	</string>
 	<string name="category_recordings">Recordings</string>
@@ -195,7 +200,7 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_clothing">Clothing</string>
-	<string name="category_clothing_description">stuff you put on your body</string>
+	<string name="category_clothing_description">stuff to put on your body</string>
 
 	<!-- http://en.wikipedia.org/wiki/Clothing#collapsibleTable0 -->
 	<string name="category_undress">Street Clothes</string>
@@ -233,12 +238,11 @@
 	<string name="category_headwear_keywords">
 		cap, hood, headband,
 		hat (beach hat, sombrero, cowboy hat, party hat),
-		kerchief (bandana, buff)
+		scarf (shawl, kerchief, bandana, buff)
 	</string>
 	<string name="category_accessories">Accessories</string>
 	<string name="category_accessories_keywords">
-		functional accessories (leather belt, suspenders, purse, wallet, eyeglasses, monocle, contact lenses, watch, pocket watch, leash, harness),
-		environmental protection (glove, scarf, shawl, umbrella, sunshade),
+		functional accessories (leather belt, suspenders, purse, wallet, eyeglasses, monocle, contact lenses, watch, pocket watch, leash, harness, umbrella, sunshade),
 		decorative accessories (tie, bowtie, badge, rosette, hairband, hair clip, scrunchies, rubber band, hairnet, headpiece, collar),
 		jewelry (earrings, bracelet, necklace, pendant, medallion, tiara)
 	</string>
@@ -250,7 +254,7 @@
 	</string>
 	<string name="category_protective_clothing">Protection</string>
 	<string name="category_protective_clothing_keywords">
-		hand protection (rubber gloves, disposable gloves, oven mitt/oven glove, gardening gloves, worker gloves, boxing gloves),
+		hand protection (gloves, rubber gloves, disposable gloves, oven mitt/oven glove, gardening gloves, worker gloves, boxing gloves),
 		head protection (hard hat/construction helmet, cycling helmet, motorcycle helmet/racing helmet, batting helmet, football helmet, hockey helmet),
 		air protection (face mask/surgical mask, respirator),
 		eye protection (goggles, safety glasses, sunglasses, welding mask),
@@ -261,7 +265,7 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_leisure">Leisure &amp; Outdoors</string>
-	<string name="category_leisure_description">stuff you mostly use in your spare time</string>
+	<string name="category_leisure_description">stuff to use mostly in your spare time</string>
 
 	<string name="category_sports">Sport Equipment</string>
 	<string name="category_sports_keywords">
@@ -271,15 +275,16 @@
 		tables/boards/goals (goal posts, basketball hoop, volleyball net, darts, table tennis, table football, air hockey table, pinball),
 		gliders (roller skate, inline skate, ice skate, sled, ski, snowboard, skateboard, surfboard),
 		gym (weights, medicine ball, punch bag, mat, bench, bike, treadmill, cross trainer, elliptical trainer),
-		accessories (snorkel, flippers)
+		accessories (snorkel, flippers, ski goggles)
 	</string>
-	<string name="category_travel">Camping</string>
+	<string name="category_travel">Travel</string>
 	<!-- http://www.rei.com/learn/expert-advice/family-camping-checklist.html -->
 	<string name="category_travel_keywords">
-		lodging (tent, tent footprint, tarp shelter, sleeping bag, inflatable air mattress, straw beach mat),
+		lodging (tent, tent footprint, tarp shelter),
 		catering (stove, campfire, barbecue, cool-box/cooler/chilly bin/Esky),
 		fishing tackle (rod, reel, line, hook, sinker, float, bait, net, trap),
-		mobile lighting (lantern, kerosene lamp, flashlight, headlamp, torch, solar power light)
+		mobile lighting (lantern, kerosene lamp, flashlight, headlamp, torch, solar power light),
+		?binoculars, periscope
 	</string>
 	<string name="category_vehicles">Vehicles</string>
 	<string name="category_vehicles_keywords">
@@ -293,7 +298,7 @@
 	</string>
 	<string name="category_vehicles_parts">Vehicle Parts &amp; Accessories</string>
 	<string name="category_vehicles_parts_keywords">
-		parts (wheel, tyre, hubcap/wheel cover/wheel trim, light, break, mirror, horn, bell, seat, basket, pedals, paddles, licence plate, windscreen wipers, engine, child safety seat),
+		parts (wheel, tyre, hubcap/wheel cover/wheel trim, light, prism, break, mirror, horn, bell, seat, basket, pedals, paddles, licence plate, windscreen wipers, engine, child safety seat),
 		accessories (lock, padlock, key, high-visibility, phone holder, sat nav holder, air freshener, first aid kit, windshield sunshade),
 		maintenance (lubricants/oil, spider wrench, air pump, tire-pressure gauge, puncture kit, repair kit, jumper cable),
 		electronics (GPS/satnav/satellite navigation, radio, audio-visual entertainment systems)
@@ -374,7 +379,7 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_electronics">Electronics</string>
-	<string name="category_electronics_description">mostly stuff that has some silicon in it</string>
+	<string name="category_electronics_description">stuff that has some silicon in it</string>
 
 	<!-- http://en.wikipedia.org/wiki/Laundry#collapsibleTable0 -->
 	<!-- http://en.wikipedia.org/wiki/Category:Home_appliances -->
@@ -397,7 +402,7 @@
 	</string>
 	<string name="category_machine_parts">Components</string>
 	<string name="category_machine_parts_keywords">
-		piece (battery cover, vacuum cleaner bag, floor nozzle, floor brush, microwave tray, stove knob, lens, external flash),
+		part (battery cover, vacuum cleaner bag, floor nozzle, floor brush, microwave tray, stove knob, lens, external flash),
 		controller (remote control, universal remote, satellite dish, TV aerial, antenna),
 		battery (battery charger, button cell/watch battery, coin cell, phone battery, power bank, laptop battery, camera battery, AA, AAA, AAAA, C, D, 4.5V, 9V),
 		refill (ink cartridge, toner cartridge, fuse, spark plug, N2O whipped-cream charger, CO2 soda charger)
@@ -516,10 +521,11 @@
 	</string>
 	<string name="category_materials">Materials</string>
 	<string name="category_materials_keywords">
-		wood, metal, glass, wax, rock, dye/paint, crayon, chalk,
-		paper (cardboard, wrapping paper, ribbon, bow),
-		fiber (fabrics, textile, wallpaper, wool, yarn, thread, rope, twine, line, trimmer line, wire, shoelaces),
-		building block (brick, tile, roof tile, column, beam, lath, clay, zip),
+		raw (wood, metal, glass, wax, rock, clay),
+		coloring (dye, paint, crayon, chalk),
+		paper (wallpaper, cardboard, wrapping paper, ribbon, bow),
+		fiber (fabrics, textile, wool, yarn, thread, rope, twine, line, trimmer line, wire, shoelaces),
+		building block (brick, tile, roof tile, column, beam, lath, button, zip),
 		aggregates (sand, gravel, pebbles, cement, limestone, sawdust)
 	</string>
 	<string name="category_materials_binding">Binding Materials</string>
@@ -533,17 +539,21 @@
 	<string name="category_documents">Documents</string>
 	<string name="category_documents_description">stuff written on other stuff</string>
 
-	<string name="category_legal">Legal Documents</string>
-	<string name="category_legal_keywords">
+	<string name="category_official">Official Documents</string>
+	<string name="category_official_keywords">
 		certificates (birth certificate, professional certification, academic degree, diploma),
 		identity document (personal identity card, driver\'s licence, address card, passport, magnetic card, swipe card),
-		deed (warranty, licence, land registration, contract, agreement, insurance, will),
-		statement (receipt, invoice, utility bill, balance sheet, income, expenses, report, prescription, treatment report, medical records)
+		deed (warranty, licence, land registration, contract, agreement, insurance, will)
+	</string>
+	<string name="category_archives">Archives</string>
+	<string name="category_archives_keywords">
+		statement (receipt, invoice, utility bill, balance sheet, income, expenses, report, prescription, treatment report, medical records),
+		notes (exercise book, school notes, lesson notes, printout, pop quiz, test, midterm, exam, final exam)
 	</string>
 	<string name="category_money">Money</string>
 	<string name="category_money_keywords">
 		currency (cash, bill/paper money/note, coin, credit card, debit card),
-		scrip (voucher/coupon, loyalty card, tickets, token, gift card, telephone card, top-up card, prepaid card, pay-as-you-go cards)
+		scrip (voucher/coupon, loyalty card, ticket, season pass, press pass, token, gift card, telephone card, top-up card, prepaid card, pay-as-you-go cards)
 	</string>
 	<string name="category_paper">Stationery Paper</string>
 	<string name="category_paper_keywords">
@@ -554,7 +564,7 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_consumables">Consumables</string>
-	<string name="category_consumables_description">stuff you can ingest raw, or processed</string>
+	<string name="category_consumables_description">stuff to ingest raw or processed</string>
 
 	<string name="category_food">Food</string>
 	<string name="category_food_keywords">
