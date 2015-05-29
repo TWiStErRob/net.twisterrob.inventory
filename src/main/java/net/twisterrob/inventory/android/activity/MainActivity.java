@@ -1,12 +1,11 @@
 package net.twisterrob.inventory.android.activity;
 
+import java.io.File;
 import java.util.*;
 
 import org.slf4j.*;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -19,9 +18,11 @@ import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.*;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.contract.Room;
+import net.twisterrob.inventory.android.content.model.CategoryHelpBuilder;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.MainFragment.MainEvents;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -41,6 +42,7 @@ public class MainActivity extends DrawerActivity
 	public static final String PAGE_PROPERTIES = "properties";
 	public static final String PAGE_ROOMS = "rooms";
 	public static final String PAGE_CATEGORIES = "categories";
+	public static final String PAGE_CATEGORY_HELP = "category-help";
 	public static final String PAGE_ITEMS = "items";
 	public static final String PAGE_SUNBURST = "sunburst";
 
@@ -49,6 +51,7 @@ public class MainActivity extends DrawerActivity
 			put(PAGE_EMPTY, R.string.empty);
 			put(PAGE_HOME, R.string.home_title);
 			put(PAGE_CATEGORIES, R.string.category_list);
+			put(PAGE_CATEGORY_HELP, R.string.category_help);
 			put(PAGE_PROPERTIES, R.string.property_list);
 			put(PAGE_ROOMS, R.string.room_list);
 			put(PAGE_ITEMS, R.string.item_list);
@@ -151,6 +154,9 @@ public class MainActivity extends DrawerActivity
 			case PAGE_CATEGORIES:
 				fragment = CategoryContentsFragment.newInstance(null, false);
 				break;
+			case PAGE_CATEGORY_HELP:
+				fragment = CategoryHelpFragment.newInstance();
+				break;
 			case PAGE_PROPERTIES:
 				fragment = PropertyListFragment.newInstance();
 				break;
@@ -201,16 +207,16 @@ public class MainActivity extends DrawerActivity
 		});
 		return true;
 	}
-
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.debug: {
-				Cursor cursor = App.db().listItems();
-				cursor.moveToPosition(cursor.getCount() / 2);
-				long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
-				cursor.close();
-				Uri uri = InventoryContract.Item.imageUri(id);
-				startActivity(ImageActivity.show(uri));
+				try {
+					File file = new File(Paths.getPhoneHome(), "categories.html");
+					new CategoryHelpBuilder(this).export(file);
+				} catch (Exception ex) {
+					LOG.error("Cannot export categories", ex);
+				}
+				//startActivity(ImageActivity.show(InventoryContract.Item.imageUri(id)));
 				//startActivity(CategoryActivity.show(7000));
 				//startActivity(ItemViewActivity.show(1723));
 				//startActivityForResult(CaptureImage.saveTo(this, new File(getCacheDir(), "dev.jpg")), 32767);
