@@ -1,6 +1,6 @@
 package net.twisterrob.android.utils.tools;
 
-import java.util.Locale;
+import java.util.*;
 
 import javax.annotation.Nullable;
 
@@ -136,6 +136,27 @@ public /*static*/ abstract class DatabaseTools {
 		StringBuilder cursorDump = new StringBuilder();
 		DatabaseUtils.dumpCursor(cursor, cursorDump);
 		return cursorDump.toString();
+	}
+
+	public static Iterable<Cursor> iterate(final Cursor cursor) {
+		return new Iterable<Cursor>() {
+			@Override public Iterator<Cursor> iterator() {
+				return new Iterator<Cursor>() {
+					@Override public boolean hasNext() {
+						return cursor.getPosition() + 1 < cursor.getCount();
+					}
+					@Override public Cursor next() {
+						if (!cursor.moveToNext()) {
+							throw new IllegalStateException("Cannot move to next row in Cursor.");
+						}
+						return cursor;
+					}
+					@Override public void remove() {
+						throw new UnsupportedOperationException("Cannot remove a row from a Cursor");
+					}
+				};
+			}
+		};
 	}
 
 	protected DatabaseTools() {

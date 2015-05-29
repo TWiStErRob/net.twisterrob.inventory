@@ -158,6 +158,7 @@ public class DrawerActivity extends BaseActivity {
 		acts.add(new SVGIntentItem(R.string.room_list, R.raw.room_unknown, activity, MainActivity.list(PAGE_ROOMS)));
 		acts.add(new SVGIntentItem(R.string.item_list, R.raw.category_box, activity, MainActivity.list(PAGE_ITEMS)));
 		acts.add(new SVGIntentItem(R.string.sunburst_title, R.raw.ic_sunburst, activity, MainActivity.list(PAGE_SUNBURST)));
+		acts.add(new SVGIntentItem(R.string.category_help, R.raw.category_paper, activity, MainActivity.list(PAGE_CATEGORY_HELP)));
 		acts.add(new SVGIntentItem(R.string.backup_title, R.raw.category_disc, activity, BackupActivity.chooser()));
 		// @formatter:on
 		acts.add(new ResourceItem(R.string.pref_activity_title, android.R.drawable.ic_menu_preferences) {

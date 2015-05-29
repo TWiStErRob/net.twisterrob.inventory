@@ -11,4 +11,9 @@
 		android:title="Jump to Category"
 		android:icon="@android:drawable/ic_menu_info_details"
 		/>
+	<item
+		android:id="@+id/action_category_help"
+		android:title="@string/category_help"
+		android:icon="@android:drawable/ic_menu_help"
+		/>
 </menu>

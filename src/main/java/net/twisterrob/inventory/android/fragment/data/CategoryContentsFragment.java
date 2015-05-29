@@ -2,8 +2,9 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
-import android.content.Context;
+import android.content.*;
 import android.database.*;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
@@ -17,6 +18,7 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
 import net.twisterrob.inventory.android.content.*;
@@ -39,6 +41,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 
 	public CategoryContentsFragment() {
 		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
+		setDynamicResource(DYN_OptionsMenu, R.menu.category_list);
 	}
 
 	@Override protected Bundle createLoadArgs() {
@@ -52,6 +55,22 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
+	}
+
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_category_feedback:
+				startActivity(new Intent(Intent.ACTION_VIEW)
+						.setData(Uri.parse("mailto:feedback@twisterrob.net"))
+						.putExtra(Intent.EXTRA_TEXT, "How can we improve the Categories?")
+						.putExtra(Intent.EXTRA_SUBJECT, "Magic Home Inventory Category Feedback"));
+				return true;
+			case R.id.action_category_help:
+				startActivity(MainActivity.list(MainActivity.PAGE_CATEGORY_HELP));
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override protected SingleHeaderAdapter createAdapter() {

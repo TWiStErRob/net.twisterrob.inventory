@@ -43,8 +43,11 @@ public interface Constants {
 			return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		}
 
+		public static File getShareFile(Context context, String ext) throws IOException {
+			return getTemporaryCacheFile(context, PUBLIC_SHARE_FOLDER_NAME, "share_", "." + ext);
+		}
 		public static File getShareImage(Context context) throws IOException {
-			return getTemporaryCacheFile(context, PUBLIC_SHARE_FOLDER_NAME, "share_", ".jpg");
+			return getShareFile(context, "jpg");
 		}
 		public static File getTempImage(Context context) throws IOException {
 			return getTemporaryCacheFile(context, "temp", "temp_", ".jpg");

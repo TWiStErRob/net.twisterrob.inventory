@@ -41,6 +41,7 @@ import net.twisterrob.android.view.TextWatcherAdapter;
 import net.twisterrob.android.wiring.DefaultValueUpdater;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
@@ -306,6 +307,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		switch (item.getItemId()) {
 			case R.id.action_category_goto:
 				startActivity(CategoryActivity.show(type.getSelectedItemId()));
+				return true;
+			case R.id.action_category_help:
+				startActivity(MainActivity.list(MainActivity.PAGE_CATEGORY_HELP));
 				return true;
 			case R.id.action_hint_expand:
 				updateHint(false);
