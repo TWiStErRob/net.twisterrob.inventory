@@ -252,7 +252,7 @@
 		swimwear (swim briefs/Speedo, square leg suit, trunks, bathing suit, bikini, tankini, swimming cap, wetsuit, dry suit),
 		snowwear (thermal, ski jacket, ski pants, ski socks, ski suit, ski boots, snowboard boots)
 	</string>
-	<string name="category_protective_clothing">Protection</string>
+	<string name="category_protective_clothing">Protective</string>
 	<string name="category_protective_clothing_keywords">
 		hand protection (gloves, rubber gloves, disposable gloves, oven mitt/oven glove, gardening gloves, worker gloves, boxing gloves),
 		head protection (hard hat/construction helmet, cycling helmet, motorcycle helmet/racing helmet, batting helmet, football helmet, hockey helmet),

@@ -16,7 +16,7 @@
 	<string name="category_clothing_description">clobber to put on your body</string>
 	<string name="category_leisure_description">tackle to use mostly in your spare time</string>
 	<string name="category_toys_description">paraphernalia to play with</string>
-	<string name="category_machines">effects consuming energy during operation</string>
+	<string name="category_machines_description">effects consuming energy during operation</string>
 	<string name="category_household_description">equipment around the house</string>
 	<string name="category_crafts_description">gear to maintain or build objects with</string>
 	<string name="category_documents_description">essence written on bits and pieces</string>
