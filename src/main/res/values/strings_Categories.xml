@@ -17,7 +17,7 @@
 	<string name="category_uncategorized_description">any other stuff</string>
 	<string name="category_group">Group</string>
 	<string name="category_group_description">logically holds other stuff together</string>
-	<string name="category_parts">Parts</string>
+	<string name="category_parts">Other Pieces</string>
 	<string name="category_parts_description">stuff that\'s useless by itself</string>
 	<string name="category_images">Extra Images</string>
 	<string name="category_images_description">extra images of your stuff</string>
@@ -31,7 +31,7 @@
 	<string name="category_containers">Containers</string>
 	<string name="category_containers_keywords">
 		box (cardboard box, corrugated fiberboard box, folding carton box, wooden box),
-		plastic container (plastic container, clamshell, foam food container, lunch box/Tuppelware, food carrier),
+		plastic container (plastic container, clamshell, foam food container, lunch box/Tuppelware, food carrier, cool-box/cooler/chilly bin/Esky),
 		bulk container (basket, waste basket, bin, crate, case, trunk, chest)
 	</string>
 	<string name="category_containers_flexible">Flexible Containers</string>
@@ -55,7 +55,7 @@
 	<string name="category_storage_special_keywords">
 		stationery (magazine file, folder, binder, plastic wallet, photo album, messageboard, whiteboard, pencil holder, pencil case),
 		household (soap dispenser, laundry bin, laundry sorter, bread bin, knife stand, utensil stand, utensil organizer, toolbox, ashtray, potty, rainwater tank/water butt),
-		protective surface (beverage coaster, hot pad, drying mat, plastic tray, pallet, mouse pad)
+		protective surface (beverage coaster, hot pad, drying mat, plastic tray, pallet, tent footprint, mouse pad)
 	</string>
 	<string name="category_luggage">Luggage</string>
 	<string name="category_luggage_keywords">
@@ -112,7 +112,7 @@
 	</string>
 	<string name="category_outdoor">Outdoor</string>
 	<string name="category_outdoor_keywords">
-		canopies (pavilion, garden parasol/garden umbrella, beach umbrella, water base, canopy swing, pool cover),
+		canopies (pavilion, tent, garden parasol/garden umbrella, beach umbrella, water base, canopy swing, pool cover, tarp shelter),
 		playground (swing, slide, seesaw, climbing frame, climbing wall, wendy house, trampoline, jumpy castle, playhouse/wendy house),
 		bathing (jacuzzi/hot tub/home spa, garden shower, inflatable pool, kiddy pool, pond, swimming pool, spring board/diving board, sauna)
 	</string>
@@ -125,7 +125,7 @@
 	<string name="category_fittings">Fittings</string>
 	<string name="category_fittings_keywords">
 		pipe, valve, tube,
-		aperture parts (window handle, blinds, doorknob, door handle, door latch, door chain, door lock),
+		aperture components (window handle, blinds, doorknob, door handle, door latch, door chain, door lock),
 		lighting (desk lamp, standing lamp, ceiling lamp, light bulb, lampshade, fluorescent tube, neon sign, laser),
 		clocks (LED wall-clock, alarm clock, cuckoo clock, longcase clock/floor clock/grandfather clock)
 	</string>
@@ -175,7 +175,7 @@
 	<string name="category_collectibles_description">stuff you don\'t need, but still have</string>
 
 	<string name="category_souvenirs">Souvenirs</string>
-	<string name="category_souvenirs_keywords"></string>
+	<string name="category_souvenirs_keywords">@string/empty</string>
 	<string name="category_artwork">Artwork</string>
 	<string name="category_artwork_keywords">
 		picture (painting, poster, picture frame, photo holder),
@@ -250,7 +250,7 @@
 	<string name="category_sports_clothing_keywords">
 		running gear, cycling shorts, sweatband, football boots/cleats/soccer shoes, ballet shoes,
 		swimwear (swim briefs/Speedo, square leg suit, trunks, bathing suit, bikini, tankini, swimming cap, wetsuit, dry suit),
-		snowwear (ski boots, thermal, ski jacket, ski pants, ski socks, ski suit)
+		snowwear (thermal, ski jacket, ski pants, ski socks, ski suit, ski boots, snowboard boots)
 	</string>
 	<string name="category_protective_clothing">Protection</string>
 	<string name="category_protective_clothing_keywords">
@@ -264,7 +264,7 @@
 
 
 	<!--=========================================================================================================-->
-	<string name="category_leisure">Leisure &amp; Outdoors</string>
+	<string name="category_leisure">Leisure</string>
 	<string name="category_leisure_description">stuff to use mostly in your spare time</string>
 
 	<string name="category_sports">Sport Equipment</string>
@@ -275,33 +275,8 @@
 		tables/boards/goals (goal posts, basketball hoop, volleyball net, darts, table tennis, table football, air hockey table, pinball),
 		gliders (roller skate, inline skate, ice skate, sled, ski, snowboard, skateboard, surfboard),
 		gym (weights, medicine ball, punch bag, mat, bench, bike, treadmill, cross trainer, elliptical trainer),
-		accessories (snorkel, flippers, ski goggles)
-	</string>
-	<string name="category_travel">Travel</string>
-	<!-- http://www.rei.com/learn/expert-advice/family-camping-checklist.html -->
-	<string name="category_travel_keywords">
-		lodging (tent, tent footprint, tarp shelter),
-		catering (stove, campfire, barbecue, cool-box/cooler/chilly bin/Esky),
 		fishing tackle (rod, reel, line, hook, sinker, float, bait, net, trap),
-		mobile lighting (lantern, kerosene lamp, flashlight, headlamp, torch, solar power light),
-		?binoculars, periscope
-	</string>
-	<string name="category_vehicles">Vehicles</string>
-	<string name="category_vehicles_keywords">
-		human-powered (bicycle, unicycle, monowheel, scooter, shopping cart/trolley, stroller/buggy/pram),
-		motorized (motorcycle, car, SUV, quad, buggy, go-kart),
-		trucks (golf cart, pickup, lorry, van, bus),
-		trailers (RV/recreational vehicle, wagon, carriage, trains),
-		heavy equipment (tractor, forklift),
-		aircraft (plane, helicopter, drones),
-		watercraft (boat, kayak, canoe, inflatable boat, ship, submarine)
-	</string>
-	<string name="category_vehicles_parts">Vehicle Parts &amp; Accessories</string>
-	<string name="category_vehicles_parts_keywords">
-		parts (wheel, tyre, hubcap/wheel cover/wheel trim, light, prism, break, mirror, horn, bell, seat, basket, pedals, paddles, licence plate, windscreen wipers, engine, child safety seat),
-		accessories (lock, padlock, key, high-visibility, phone holder, sat nav holder, air freshener, first aid kit, windshield sunshade),
-		maintenance (lubricants/oil, spider wrench, air pump, tire-pressure gauge, puncture kit, repair kit, jumper cable),
-		electronics (GPS/satnav/satellite navigation, radio, audio-visual entertainment systems)
+		accessories (snorkel, flippers, ski goggles, binoculars, periscope)
 	</string>
 	<string name="category_instruments">Instruments</string>
 	<!-- https://en.wikipedia.org/wiki/List_of_musical_instruments -->
@@ -378,8 +353,8 @@
 
 
 	<!--=========================================================================================================-->
-	<string name="category_electronics">Electronics</string>
-	<string name="category_electronics_description">stuff that has some silicon in it</string>
+	<string name="category_machines">Machines</string>
+	<string name="category_machines_description">stuff that consumes energy during operation</string>
 
 	<!-- http://en.wikipedia.org/wiki/Laundry#collapsibleTable0 -->
 	<!-- http://en.wikipedia.org/wiki/Category:Home_appliances -->
@@ -398,14 +373,16 @@
 		food processor (blender, stick blender/immersion blender, mixer, blade grinder, slicer, ice maker, food dehydrator),
 		air control (desk fan, tower fan, pedestal fan, range hood, heater, portable radiator, humidifier, dehumidifier, vaporizer, water pipe, bong, e-cigarette),
 		cleaning (iron, vacuum cleaner, steam cleaner, carpet cleaner, robovac),
-		electronic pest control (bug zapper, insecticide liquid vaporizer, ultrasonic repeller)
+		pest control (bug zapper, insecticide liquid vaporizer, ultrasonic repeller, flyswatter, mouse trap, rat trap, scarecrow)
 	</string>
-	<string name="category_machine_parts">Components</string>
+	<string name="category_machine_parts">Parts &amp; Accessories</string>
 	<string name="category_machine_parts_keywords">
-		part (battery cover, vacuum cleaner bag, floor nozzle, floor brush, microwave tray, stove knob, lens, external flash),
+		appliance parts (battery cover, vacuum cleaner bag, floor nozzle, floor brush, microwave tray, stove knob, lens, external flash),
 		controller (remote control, universal remote, satellite dish, TV aerial, antenna),
 		battery (battery charger, button cell/watch battery, coin cell, phone battery, power bank, laptop battery, camera battery, AA, AAA, AAAA, C, D, 4.5V, 9V),
-		refill (ink cartridge, toner cartridge, fuse, spark plug, N2O whipped-cream charger, CO2 soda charger)
+		refill (ink cartridge, toner cartridge, fuse, spark plug, N2O whipped-cream charger, CO2 soda charger),
+		vehicle parts (wheel, tyre, hubcap/wheel cover/wheel trim, light, prism, break, mirror, horn, bell, seat, basket, pedals, paddles, licence plate, windscreen wipers, engine, child safety seat),
+		vehicle accessories (lock, padlock, key, high-visibility, phone holder, sat nav holder, first aid kit, puncture kit, repair kit, windshield sunshade)
 	</string>
 	<!-- https://en.wikipedia.org/wiki/Category:Consumer_electronics -->
 	<!-- https://en.wikipedia.org/wiki/Consumer_electronics -->
@@ -426,7 +403,7 @@
 		game consoles (Xbox, Nintendo Wii, Sony Playstation, Sega, Atari),
 		mobile phone (cell phone, pager, smartphone, phablet, Android, Apple iPhone, Samsung),
 		wearable (activity tracker, smartwatch, MP4 watch, Apple Watch, smartglasses, Google Glass),
-		GPS/satellite navigation, calculator
+		GPS/satnav/satellite navigation, calculator
 	</string>
 	<string name="category_computer_parts">Peripherals</string>
 	<string name="category_computer_parts_keywords">
@@ -441,7 +418,17 @@
 	<string name="category_cables_keywords">
 		connection cable (network cable, coaxial cable, fiber optic, twisted pair, USB data cable),
 		connector (audio jack, RCA, HDMI, VGA, DVI, SCART, USB, UTP, Ethernet, ISDN, LAN),
-		power source (power cord, extension cord, power strip, adaptor/AC adapter, US/EU/UK/AU plug, surge protector, plug converters/travel adapter, car charger)
+		power source (power cord, extension cord, power strip, adaptor/AC adapter, US/EU/UK/AU plug, surge protector, plug converters/travel adapter, car charger, jumper cable)
+	</string>
+	<string name="category_vehicles">Vehicles</string>
+	<string name="category_vehicles_keywords">
+		human-powered (bicycle, unicycle, monowheel, scooter, shopping cart/trolley, stroller/buggy/pram),
+		motorized (motorcycle, car, SUV, quad, buggy, go-kart),
+		trucks (golf cart, pickup, lorry, van, bus, trolley bus),
+		trailers (RV/recreational vehicle, wagon, carriage, train, tram),
+		heavy equipment (tractor, forklift, crane, excavator, dump truck/dumper/tipper truck, bulldozer, loader, road roller),
+		aircraft (plane, helicopter, glider, hot air balloon, drone, rocket),
+		watercraft (boat, kayak, canoe, inflatable boat, ship, yacht, submarine)
 	</string>
 
 
@@ -459,8 +446,7 @@
 	<string name="category_cleaning">Cleaning</string>
 	<string name="category_cleaning_keywords">
 		dry (broom, brush, dust pan, duster),
-		wet (mop, mop head, sponge, J-cloth, stainless steel scourer/steel wool, window scraper, plunger, toilet brush),
-		pest control (flyswatter, mouse trap, rat trap, scarecrow)
+		wet (mop, mop head, sponge, J-cloth, stainless steel scourer/steel wool, window scraper, plunger, toilet brush)
 	</string>
 	<string name="category_chemicals">Chemicals</string>
 	<!-- http://en.wikipedia.org/wiki/Biocide#European_Community_Classification -->
@@ -472,7 +458,8 @@
 		detergent (laundry detergent, washing powder, laundry pod, washing tablet, fabric softener, washing up liquid, dishwasher tablet, window cleaner, windshield washer fluid),
 		disinfectants (toilet cleaner, toilet gel, floor &amp; surface cleaner, furniture spray),
 		solvents (turpentine, white spirit, bleach/sodium hypochlorite, degreaser, descaling agent, drain cleaner, paint thinner, ionised water, distilled water, antifreeze),
-		fuel (gasoline, petrol, diesel, biofuel, motor oil, petroleum, kerosene, firewood, coal, charcoal, coke, lighter fluid),
+		fuel (gasoline, petrol, diesel, biofuel, petroleum, kerosene, firewood, coal, charcoal, coke, lighter fluid),
+		lubricants (motor oil, penetrating fluid/WD-40, anti-corrosion spray, corrosion inhibitor, silicone lubricant),
 		fertilizer (plant food, compost, potting soil)
 	</string>
 	<string name="category_utensils_kitchen">Food Preparation</string>
@@ -494,9 +481,9 @@
 	<string name="category_tableware_keywords">
 		cutlery (knife, fork, spoon, spork, chopsticks),
 		tableware (dish, plate, bowl, tray, greaseproof paper, dog bowl, cat bowl),
-		cruet (caster, salt shaker, pepper shaker, sugar dispenser, oil mister, oil cruet, kitchen syrup dispenser, dripless dispenser pot),
 		drinkware (glass, mug, jug, cup, paper cup, tumbler, teapot),
-		serving (ladle, pasta spoon, tongs, ice-cream scoop, cake server),
+		serving (ladle, pasta spoon, tongs, ice-cream scoop, cake server, saucer),
+		cruet (caster, salt shaker, pepper shaker, sugar dispenser, oil mister, oil cruet, kitchen syrup dispenser, dripless dispenser pot),
 		napkin, toothpick
 	</string>
 
@@ -516,8 +503,9 @@
 		abrasive tools (rasp, sandpaper, scraper, grinding wheel, eraser/rubber),
 		measurement (tape measure, measuring tape, spirit level, caliper, protractor, ruler, steel square, straightedge, angle, compass, stencil, multimeter, magnifier, microscope),
 		construction (wheelbarrow, ladder, step ladder, step stool, trowel),
-		utility tools/DIY hand tools (screwdriver, wrench/spanner, pipe wrench, clamps, plier, pincer, crimp, army-knife, awl, hammer, sledgehammer, mallet, saw, hacksaw, pick, axe, crowbar),
-		power tools (drill, drill bit, impact driver, jackhammer, nail gun, sander, chainsaw, circular saw, solder, blow torch, welding power supply, suction pump, water pump, pressure pump, compressor)
+		utility tools/DIY hand tools (screwdriver, wrench/spanner, pipe wrench, spider wrench, clamps, plier, pincer, crimp, army-knife, awl, hammer, sledgehammer, mallet, saw, hacksaw, pick, axe, crowbar),
+		power tools (drill, drill bit, impact driver, nail gun, sander, chainsaw, circular saw, solder, blow torch, welding power supply, jackhammer/demolition hammer, rammer, suction pump, water pump, pressure pump, compressor, air pump, tire-pressure gauge),
+		mobile lighting (lantern, kerosene lamp, flashlight, headlamp, torch, solar power light)
 	</string>
 	<string name="category_materials">Materials</string>
 	<string name="category_materials_keywords">
@@ -558,7 +546,7 @@
 	<string name="category_paper">Stationery Paper</string>
 	<string name="category_paper_keywords">
 		empty (sheet paper, notepad, notebook, sticky notes, scrapbook, envelope),
-		printed (greeting card, stickers, business card, wall calendar, desk calendar)
+		printed (greeting card, postcard, stickers, business card, wall calendar, desk calendar)
 	</string>
 
 
@@ -638,7 +626,7 @@
 		trimming (razor, disposable razor, shaving foam, shaving gel, shaving brush, tweezer, wax, hair bleach, epilator, depilatory/hair remover cream),
 		perfume (deodorant, cologne, eau de toilette, essential oils, scent, aroma),
 		makeup (lipstick, lip balm, lip gloss, foundation, concealer, toner, blush, eyeliner, mascara, cleanser, makeup remover, mirror),
-		skin care/topical emollients (moisturizer, vaseline, sun lotion, hand cream, body milk, body lotion, skin firming cream, aftershave, massage oil, tanning cream),
+		skin care/topical emollients (moisturizer, vaseline, sun lotion, hand cream, body milk, body lotion, skin firming cream, aftershave, tanning cream, massage oil, lube),
 		exfoliants (scrubs, loofah/body wash scrubber, callus remover/foot scrubber),
 		manicure/pedicure (nail clipper, nail file, nail pick, cuticle pusher/hoof stick, nail polish, nail polish remover)
 	</string>
