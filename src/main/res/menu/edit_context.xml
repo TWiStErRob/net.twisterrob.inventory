@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
-		android:id="@+id/action_hint_expand"
-		android:title="Expand hint"
-		android:icon="@android:drawable/ic_menu_more"
-		android:checkable="true"
+		android:id="@+id/action_category_keywords"
+		android:title="Show Keywords"
+		android:icon="@android:drawable/ic_menu_info_details"
 		/>
 	<item
 		android:id="@+id/action_category_goto"
 		android:title="Jump to Category"
-		android:icon="@android:drawable/ic_menu_info_details"
+		android:icon="@android:drawable/ic_menu_view"
+		/>
+	<item
+		android:id="@+id/action_category_suggest"
+		android:title="Suggest Categories"
+		android:icon="@android:drawable/ic_menu_directions"
 		/>
 	<item
 		android:id="@+id/action_category_help"

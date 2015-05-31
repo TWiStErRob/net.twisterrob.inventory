@@ -4,6 +4,8 @@
 	<issue id="ContentDescription" severity="ignore" />
 	<!-- TODO re-check when it's really translated -->
 	<issue id="MissingTranslation" severity="ignore" />
+	<!-- TODO re-check when it's really translated -->
+	<issue id="ExtraTranslation" severity="ignore" />
 	<!-- TODO review later -->
 	<issue id="Overdraw" severity="ignore" />
 	<issue id="UnusedResources">

@@ -4,6 +4,7 @@
 #-dontobfuscate
 #-dontoptimize
 #-optimizationpasses 2
+-keepattributes EnclosingMethod
 
 # See res/menu/search.xml and b.android.com/170471
 -keep class android.support.v7.widget.SearchView { <init>(...); }

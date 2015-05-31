@@ -12,13 +12,20 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		addPreferencesFromResource(R.xml.preferences);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		onSharedPreferenceChanged(getPrefs(), getString(R.string.pref_defaultEntityDetailsPage));
+		SharedPreferences prefs = getPrefs();
+		for (String prefKey : prefs.getAll().keySet()) {
+			Preference pref = findPreference(prefKey);
+			if (pref instanceof ListPreference) {
+				onSharedPreferenceChanged(getPrefs(), prefKey);
+			}
+		}
 	}
 
 	@Override
@@ -35,7 +42,7 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Preference pref = findPreference(key);
-		if (key.equals(getString(R.string.pref_defaultEntityDetailsPage))) {
+		if (pref instanceof ListPreference) {
 			pref.setSummary(((ListPreference)pref).getEntry());
 		}
 	}

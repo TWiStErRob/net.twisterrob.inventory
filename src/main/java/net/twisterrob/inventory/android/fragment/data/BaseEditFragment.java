@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import org.slf4j.*;
 
-import android.app.Activity;
+import android.app.*;
 import android.content.*;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
@@ -159,76 +159,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 				isClean = false;
 				if (doValidateTitle()) {
-					Collection<Suggestion> suggestions = CategoryDTO.getSuggester(getContext()).suggest(s);
-
-					if (!suggestions.isEmpty()) {
-						hint.setText(buildHint(suggestions));
-						hint.setMovementMethod(LinkMovementMethod.getInstance());
-					}
+					updateHint(s, false);
 				}
-			}
-			public @NonNull CharSequence buildHint(@NonNull Collection<Suggestion> suggestions) {
-				LongSparseArray<Map<CharSequence, Collection<Suggestion>>> grouped = group(suggestions);
-
-				SpannableStringBuilder builder = new SpannableStringBuilder("Suggested categories:\n");
-				for (int i = 0; i < grouped.size(); ++i) {
-					Map<CharSequence, Collection<Suggestion>> matchGroup = grouped.valueAt(i);
-
-					final Suggestion first = matchGroup.entrySet().iterator().next().getValue().iterator().next();
-					int start = builder.length();
-					builder.append(first.getCategoryPath());
-					int end = builder.length();
-
-					builder.setSpan(new ClickableSpan() {
-						@Override public void onClick(View widget) {
-							AndroidTools.selectByID(type, first.category);
-						}
-					}, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-
-					builder.append(" (");
-					for (Iterator<Entry<CharSequence, Collection<Suggestion>>> sugIt =
-					     matchGroup.entrySet().iterator(); sugIt.hasNext(); ) {
-						Entry<CharSequence, Collection<Suggestion>> group = sugIt.next();
-						int matchStart = builder.length();
-						builder.append(group.getKey());
-						for (Suggestion suggestion : group.getValue()) {
-							builder.setSpan(new ForegroundColorSpan(Color.RED),
-									matchStart + suggestion.matchStart,
-									matchStart + suggestion.matchEnd,
-									Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-						}
-						if (sugIt.hasNext()) {
-							builder.append(", ");
-						}
-					}
-					builder.append(")");
-					if (i < grouped.size() - 1) {
-						builder.append("\n");
-					}
-				}
-				return builder;
-			}
-			private LongSparseArray<Map<CharSequence, Collection<Suggestion>>> group(
-					@NonNull Collection<Suggestion> suggestions) {
-				LongSparseArray<Map<CharSequence, Collection<Suggestion>>> grouped = new LongSparseArray<>();
-				for (Suggestion suggestion : suggestions) {
-					Map<CharSequence, Collection<Suggestion>> matchGroup = grouped.get(suggestion.category);
-					if (matchGroup == null) {
-						matchGroup = new TreeMap<>();
-						grouped.put(suggestion.category, matchGroup);
-					}
-					Collection<Suggestion> group = matchGroup.get(suggestion.match);
-					if (group == null) {
-						group = new TreeSet<>(new Comparator<Suggestion>() {
-							@Override public int compare(Suggestion lhs, Suggestion rhs) {
-								return lhs.search.toString().compareToIgnoreCase(rhs.search.toString());
-							}
-						});
-						matchGroup.put(suggestion.match, group);
-					}
-					group.add(suggestion);
-				}
-				return grouped;
 			}
 		});
 
@@ -284,13 +216,112 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 					isClean = cleanBefore;
 				}
 				reloadImage();
-				updateHint(true);
+				updateHint(name.getText(), false);
 			}
 		});
 
 		if (isNew()) {
 			tryRestore();
 		}
+	}
+
+	private void updateHint(CharSequence s, boolean forceSuggest) {
+		String suggest = App.getSPref(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
+		String always = getString(R.string.pref_suggestCategory_always);
+		String unmatched = getString(R.string.pref_suggestCategory_unmatched);
+		CharSequence hintText = null;
+		if (always.equals(suggest) || unmatched.equals(suggest) || forceSuggest) {
+			Collection<Suggestion> suggestions = CategoryDTO.getSuggester(name.getContext()).suggest(s);
+
+			if (!suggestions.isEmpty()) {
+				hintText = buildHint(suggestions, getTypeName());
+				if (unmatched.equals(suggest) && !forceSuggest) {
+					for (Suggestion suggestion : suggestions) {
+						String currentCategoryKey = getTypeName();
+						if (suggestion.getCategoryKey().equals(currentCategoryKey)) {
+							hintText = null;
+						}
+					}
+				}
+			} else {
+				if (forceSuggest) {
+					hintText = "Can't find any matching categories, sorry.";
+				}
+			}
+		}
+		hint.setText(hintText);
+		hint.setMovementMethod(LinkMovementMethod.getInstance());
+		AndroidTools.displayedIfHasText(hint);
+	}
+	public CharSequence buildHint(@NonNull Collection<Suggestion> suggestions, String current) {
+		LongSparseArray<Map<CharSequence, Collection<Suggestion>>> grouped = group(suggestions);
+
+		SpannableStringBuilder builder = new SpannableStringBuilder();
+		for (int i = 0; i < grouped.size(); ++i) {
+			Map<CharSequence, Collection<Suggestion>> matchGroup = grouped.valueAt(i);
+
+			final Suggestion categorySuggestion = matchGroup.entrySet().iterator().next().getValue().iterator().next();
+			boolean isCurrent = categorySuggestion.getCategoryKey().equals(current);
+
+			if (isCurrent) {
+				builder.append("\u2714");
+			}
+			int start = builder.length();
+			builder.append(categorySuggestion.getCategoryPath());
+			int end = builder.length();
+
+			if (!isCurrent) {
+				builder.setSpan(new ClickableSpan() {
+					@Override public void onClick(View widget) {
+						AndroidTools.selectByID(type, categorySuggestion.category);
+					}
+				}, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			}
+
+			builder.append(" (");
+			for (Iterator<Entry<CharSequence, Collection<Suggestion>>> sugIt =
+			     matchGroup.entrySet().iterator(); sugIt.hasNext(); ) {
+				Entry<CharSequence, Collection<Suggestion>> group = sugIt.next();
+				int matchStart = builder.length();
+				builder.append(group.getKey());
+				for (Suggestion suggestion : group.getValue()) {
+					builder.setSpan(new ForegroundColorSpan(Color.RED),
+							matchStart + suggestion.matchStart,
+							matchStart + suggestion.matchEnd,
+							Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+				}
+				if (sugIt.hasNext()) {
+					builder.append(", ");
+				}
+			}
+			builder.append(")");
+			if (i < grouped.size() - 1) {
+				builder.append("\n");
+			}
+		}
+		return builder;
+	}
+	private LongSparseArray<Map<CharSequence, Collection<Suggestion>>> group(
+			@NonNull Collection<Suggestion> suggestions) {
+		LongSparseArray<Map<CharSequence, Collection<Suggestion>>> grouped = new LongSparseArray<>();
+		for (Suggestion suggestion : suggestions) {
+			Map<CharSequence, Collection<Suggestion>> matchGroup = grouped.get(suggestion.category);
+			if (matchGroup == null) {
+				matchGroup = new TreeMap<>();
+				grouped.put(suggestion.category, matchGroup);
+			}
+			Collection<Suggestion> group = matchGroup.get(suggestion.match);
+			if (group == null) {
+				group = new TreeSet<>(new Comparator<Suggestion>() {
+					@Override public int compare(Suggestion lhs, Suggestion rhs) {
+						return lhs.search.toString().compareToIgnoreCase(rhs.search.toString());
+					}
+				});
+				matchGroup.put(suggestion.match, group);
+			}
+			group.add(suggestion);
+		}
+		return grouped;
 	}
 
 	@Override public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
@@ -300,7 +331,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	private void onPrepareContextMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.edit_context, menu);
-		menu.findItem(R.id.action_hint_expand).setChecked(isHintExpanded());
+		String suggest = App.getSPref(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
+		String always = getString(R.string.pref_suggestCategory_always);
+		menu.findItem(R.id.action_category_suggest).setVisible(!always.equals(suggest));
 	}
 
 	@Override public boolean onContextItemSelected(MenuItem item) {
@@ -311,32 +344,20 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			case R.id.action_category_help:
 				startActivity(MainActivity.list(MainActivity.PAGE_CATEGORY_HELP));
 				return true;
-			case R.id.action_hint_expand:
-				updateHint(false);
+			case R.id.action_category_suggest:
+				updateHint(name.getText(), true);
+				return true;
+			case R.id.action_category_keywords:
+				CharSequence categoryTitle = AndroidTools.getText(getContext(), getTypeName());
+				CharSequence categoryKeywords = CategoryDTO.getKeywords(getContext(), getTypeName());
+				new AlertDialog.Builder(getContext())
+						.setTitle(getString(R.string.category_keywords, categoryTitle))
+						.setMessage(categoryKeywords)
+						.show()
+				;
 				return true;
 		}
 		return super.onContextItemSelected(item);
-	}
-
-	private void updateHint(boolean keepExpanded) {
-		String categoryName = getTypeName();
-		boolean isExpanded = isHintExpanded();
-		isExpanded = keepExpanded? isExpanded : !isExpanded;
-		CharSequence hint;
-		if (isExpanded) {
-			hint = CategoryDTO.getKeywords(getContext(), categoryName);
-		} else {
-			hint = CategoryDTO.getShortKeywords(getContext(), categoryName);
-		}
-		this.hint.setText(hint);
-		this.hint.setTag(isExpanded);
-		AndroidTools.displayedIf(this.hint, this.hint.getText().length() != 0);
-	}
-
-	private boolean isHintExpanded() {
-		Boolean isExpandedTag = (Boolean)this.hint.getTag();
-		return isExpandedTag != null? isExpandedTag
-				: App.getBPref(R.string.pref_preferExpandedKeywords, R.bool.pref_preferExpandedKeywords_default);
 	}
 
 	protected abstract boolean isNew();

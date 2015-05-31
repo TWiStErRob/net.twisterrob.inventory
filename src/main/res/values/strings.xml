@@ -104,6 +104,7 @@
 	<string name="category_feedback">Suggest Category</string>
 	<string name="category_open">Open with…</string>
 	<string name="category_save">Export Help</string>
+	<string name="category_keywords">Keywords of %s</string>
 	<string name="category_viewAllItems">Flatten Subcategories</string>
 	<plurals name="label_category_subs">
 		<item quantity="one">%1$d&#160;more</item>

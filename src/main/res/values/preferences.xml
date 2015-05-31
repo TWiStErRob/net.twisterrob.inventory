@@ -2,16 +2,18 @@
 <resources>
 	<string name="pref_activity_title">Settings</string>
 
-	<string name="pref_defaultEntityDetailsPage_title">Default Details Page</string>
-	<string name="pref_defaultEntityDetailsPage" translatable="false">defaultEntityDetailsPage</string>
-	<string name="pref_defaultEntityDetailsPage_default" translatable="false">image</string>
-	<string-array name="pref_defaultEntityDetailsPage_entries">
+	<string name="pref_defaultViewPage_title">Default Details Page</string>
+	<string name="pref_defaultViewPage" translatable="false">defaultViewPage</string>
+	<string name="pref_defaultViewPage_default" translatable="false">@string/pref_defaultViewPage_image</string>
+	<string name="pref_defaultViewPage_image" translatable="false">image</string>
+	<string name="pref_defaultViewPage_details" translatable="false">details</string>
+	<string-array name="pref_defaultViewPage_entries">
 		<item>Image</item>
 		<item>Details &amp; Statistics</item>
 	</string-array>
-	<string-array name="pref_defaultEntityDetailsPage_values" translatable="false">
-		<item>image</item>
-		<item>details</item>
+	<string-array name="pref_defaultViewPage_values" translatable="false">
+		<item>@string/pref_defaultViewPage_image</item>
+		<item>@string/pref_defaultViewPage_details</item>
 	</string-array>
 
 	<string name="pref_preferExpandedKeywords_title">Prefer extended keywords</string>
@@ -19,6 +21,26 @@
 	<bool name="pref_preferExpandedKeywords_default" translatable="false">false</bool>
 	<string name="pref_preferExpandedKeywords_desc">It is possible to show an extended set of keywords
 		for certain Categories, this sets the default behavior when keywords are shown.</string>
+
+	<string name="pref_suggestCategory_title">Suggest Categories</string>
+	<string name="pref_suggestCategory" translatable="false">suggestCategory</string>
+	<string name="pref_suggestCategory_default" translatable="false">@string/pref_suggestCategory_unmatched</string>
+	<string name="pref_suggestCategory_always" translatable="false">always</string>
+	<string name="pref_suggestCategory_unmatched" translatable="false">unmatched</string>
+	<string name="pref_suggestCategory_manual" translatable="false">manual</string>
+	<string-array name="pref_suggestCategory_entries">
+		<!-- Suggest Categories every time regardless of current selection. -->
+		<item>Always</item>
+		<!-- Suggest Categories when suggestions contain better ones than current. -->
+		<item>When better</item>
+		<!-- Never suggest Categories. Manual suggestion is still there via action_category_suggest in context menu -->
+		<item>Never</item>
+	</string-array>
+	<string-array name="pref_suggestCategory_values" translatable="false">
+		<item>@string/pref_suggestCategory_always</item>
+		<item>@string/pref_suggestCategory_unmatched</item>
+		<item>@string/pref_suggestCategory_manual</item>
+	</string-array>
 
 	<string name="pref_internalImageViewer_title">Use internal image viewer</string>
 	<string name="pref_internalImageViewer" translatable="false">internalImageViewer</string>

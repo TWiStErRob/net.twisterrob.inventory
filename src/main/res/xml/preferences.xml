@@ -5,12 +5,18 @@
 	>
 	<PreferenceCategory android:title="Preferences">
 		<ListPreference
-			android:key="@string/pref_defaultEntityDetailsPage"
-			android:title="@string/pref_defaultEntityDetailsPage_title"
-			android:defaultValue="@string/pref_defaultEntityDetailsPage_default"
-			android:entries="@array/pref_defaultEntityDetailsPage_entries"
-			android:entryValues="@array/pref_defaultEntityDetailsPage_values"
-			tools:summary="@array/pref_defaultEntityDetailsPage_entries"
+			android:key="@string/pref_defaultViewPage"
+			android:title="@string/pref_defaultViewPage_title"
+			android:defaultValue="@string/pref_defaultViewPage_default"
+			android:entries="@array/pref_defaultViewPage_entries"
+			android:entryValues="@array/pref_defaultViewPage_values"
+			tools:summary="@array/pref_defaultViewPage_entries"
+			/>
+		<CheckBoxPreference
+			android:key="@string/pref_internalImageViewer"
+			android:title="@string/pref_internalImageViewer_title"
+			android:defaultValue="@bool/pref_internalImageViewer_default"
+			android:summary="@string/pref_internalImageViewer_desc"
 			/>
 		<CheckBoxPreference
 			android:key="@string/pref_preferExpandedKeywords"
@@ -18,11 +24,13 @@
 			android:defaultValue="@bool/pref_preferExpandedKeywords_default"
 			android:summary="@string/pref_preferExpandedKeywords_desc"
 			/>
-		<CheckBoxPreference
-			android:key="@string/pref_internalImageViewer"
-			android:title="@string/pref_internalImageViewer_title"
-			android:defaultValue="@bool/pref_internalImageViewer_default"
-			android:summary="@string/pref_internalImageViewer_desc"
+		<ListPreference
+			android:key="@string/pref_suggestCategory"
+			android:title="@string/pref_suggestCategory_title"
+			android:defaultValue="@string/pref_suggestCategory_default"
+			android:entries="@array/pref_suggestCategory_entries"
+			android:entryValues="@array/pref_suggestCategory_values"
+			tools:summary="@array/pref_suggestCategory_entries"
 			/>
 	</PreferenceCategory>
 

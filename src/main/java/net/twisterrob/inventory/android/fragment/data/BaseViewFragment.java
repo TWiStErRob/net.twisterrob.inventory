@@ -22,8 +22,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 	protected ViewPager pager;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_details, container, false);
 	}
 
@@ -33,53 +32,63 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 	}
 
 	public void onSingleRowLoaded(DTO entity) {
-		pager.setAdapter(new ImageAndDescriptionAdapter(entity));
-		pager.setCurrentItem(getDefaultPageIndex());
+		ImageAndDescriptionAdapter adapter = new ImageAndDescriptionAdapter(entity);
+		pager.setAdapter(adapter);
+		pager.setCurrentItem(adapter.getDefaultPosition());
 	}
 
-	private int getDefaultPageIndex() {
-		String key = getString(R.string.pref_defaultEntityDetailsPage);
-		String defaultValue = getString(R.string.pref_defaultEntityDetailsPage_default);
-		String defaultPage = App.getPrefs().getString(key, defaultValue);
-		return AndroidTools.findIndexInResourceArray(getContext(),
-				R.array.pref_defaultEntityDetailsPage_values, defaultPage);
-	}
 	protected abstract CharSequence getDetailsString(DTO entity, boolean DEBUG);
 
 	private class ImageAndDescriptionAdapter extends PagerAdapter {
+		private static final int POSITION_UNKNOWN = -1;
+		private static final int POSITION_IMAGE = 0;
+		private static final int POSITION_DETAILS = 1;
+		private static final int POSITION_COUNT = 2;
+
 		private DTO entity;
 
 		public ImageAndDescriptionAdapter(DTO imageData) {
 			this.entity = imageData;
 		}
 
-		@Override
-		public int getCount() {
-			return 2;
+		@Override public int getCount() {
+			return POSITION_COUNT;
 		}
 
-		@Override
-		public CharSequence getPageTitle(int position) {
-			return getResources().getTextArray(R.array.pref_defaultEntityDetailsPage_entries)[position];
+		@Override public CharSequence getPageTitle(int position) {
+			return getResources().getTextArray(R.array.pref_defaultViewPage_entries)[position];
 		}
 
-		@Override
-		public int getItemPosition(Object object) {
+		public int getDefaultPosition() {
+			return getPositionOf(App.getSPref(R.string.pref_defaultViewPage, R.string.pref_suggestCategory_default));
+		}
+		public int getPositionOf(String page) {
+			String image = getString(R.string.pref_defaultViewPage_image);
+			String details = getString(R.string.pref_defaultViewPage_details);
+			if (image.equals(page)) {
+				return POSITION_IMAGE;
+			}
+			if (details.equals(page)) {
+				return POSITION_DETAILS;
+			}
+			return POSITION_UNKNOWN;
+		}
+
+		@Override public int getItemPosition(Object object) {
 			View view = (View)object;
 			if (view.findViewById(R.id.image) != null) {
-				return 0;
+				return POSITION_IMAGE;
 			} else if (view.findViewById(R.id.details) != null) {
-				return 1;
+				return POSITION_DETAILS;
 			}
-			return -1;
+			return POSITION_UNKNOWN;
 		}
 
-		@Override
-		public Object instantiateItem(final ViewGroup container, int position) {
+		@Override public Object instantiateItem(final ViewGroup container, int position) {
 			LayoutInflater inflater = (LayoutInflater)container.getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 			View view;
 			switch (position) {
-				case 0: {
+				case POSITION_IMAGE: {
 					view = inflater.inflate(R.layout.inc_details_image, container, false);
 					ImageView image = (ImageView)view.findViewById(R.id.image);
 					ImageView type = (ImageView)view.findViewById(R.id.type);
@@ -94,7 +103,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					entity.loadInto(image, type, true);
 					break;
 				}
-				case 1: {
+				case POSITION_DETAILS: {
 					view = inflater.inflate(R.layout.inc_details_details, container, false);
 
 					final boolean debug =
@@ -113,13 +122,11 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			return view;
 		}
 
-		@Override
-		public void destroyItem(ViewGroup container, int position, Object object) {
+		@Override public void destroyItem(ViewGroup container, int position, Object object) {
 			container.removeView((View)object);
 		}
 
-		@Override
-		public boolean isViewFromObject(View view, Object obj) {
+		@Override public boolean isViewFromObject(View view, Object obj) {
 			return view == obj;
 		}
 

@@ -110,10 +110,17 @@ public class App extends Application {
 		return PreferenceManager.getDefaultSharedPreferences(getAppContext());
 	}
 
+	/** Get boolean Preference */
 	public static boolean getBPref(@StringRes int prefName, @BoolRes int defaultRes) {
 		String prefKey = App.getAppContext().getString(prefName);
 		boolean prefDefault = App.getAppContext().getResources().getBoolean(defaultRes);
 		return App.getPrefs().getBoolean(prefKey, prefDefault);
+	}
+	/** Get String Preference */
+	public static String getSPref(@StringRes int prefName, @StringRes int defaultRes) {
+		String prefKey = App.getAppContext().getString(prefName);
+		String prefDefault = App.getAppContext().getResources().getString(defaultRes);
+		return App.getPrefs().getString(prefKey, prefDefault);
 	}
 
 	/** @return You must call {@link SharedPreferences.Editor#commit} as per {@link SharedPreferences#edit} contract. */
