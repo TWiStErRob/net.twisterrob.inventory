@@ -1,0 +1,24 @@
+To create the Smiley Side:
+	Duplicate & merge Smiley layer group
+	Scale down to 512x512
+	Merge Down onto Side
+	Set Layer Boundary Size and Center to 1024x796 (same ratio as boxScaleX:boxScaleY)
+	Fill the area outside the image with Side's copies
+
+To create paper-like material (Side):
+	Fill: #ca9e6d
+	RGB Noise: correlated, 0.04,0.04,0.04
+
+Map Object to Box:
+	!Select a layer which fills the image (Top)
+	tick Create new image
+	tick Transparent background
+	Box: top=Top, front=Smiley Side, rest=Side
+	Dimensions:
+		Scale=.7,.45,.4
+		Position=.5,.5,.15
+		Rotation=20,35,2
+	Material: amb=.3, diff=1, refl diff=.5, spec=1, high=30
+	Light: point, white, position=.7,.3,2
+
+Rendering takes ~1 minute
