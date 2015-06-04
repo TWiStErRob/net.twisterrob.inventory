@@ -74,7 +74,7 @@ INSERT INTO Category
 	UNION SELECT  NULL,    3, 'category_images',                         'category_box'
 	UNION SELECT  NULL,  100, 'category_storage',                        'category_box'
 	UNION SELECT   100,  110,     'category_containers',                 'category_box'
-	UNION SELECT   100,  120,     'category_containers_flexible',        'category_box'
+	UNION SELECT   100,  120,     'category_bags',                       'category_box'
 	UNION SELECT   100,  130,     'category_containers_liquid',          'category_box'
 	UNION SELECT   100,  140,     'category_cases',                      'category_suitcase'
 	UNION SELECT   100,  150,     'category_storage_special',            'category_box'

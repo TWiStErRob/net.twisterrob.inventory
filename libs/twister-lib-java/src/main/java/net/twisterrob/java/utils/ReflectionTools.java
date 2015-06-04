@@ -2,13 +2,15 @@ package net.twisterrob.java.utils;
 
 import java.lang.reflect.Field;
 
+import javax.annotation.Nonnull;
+
 import org.slf4j.*;
 
 public class ReflectionTools {
 	private static final Logger LOG = LoggerFactory.getLogger(ReflectionTools.class);
 
 	@SuppressWarnings("unchecked")
-	public static <T> T get(Object object, String fieldName) {
+	public static <T> T get(@Nonnull Object object, @Nonnull String fieldName) {
 		try {
 			Field field = findDeclaredField(object.getClass(), fieldName);
 			field.setAccessible(true);
@@ -24,7 +26,8 @@ public class ReflectionTools {
 	 * @throws NoSuchFieldException if a field with the specified name is not found in the class hierarchy.
 	 * @see Class#getDeclaredField(String)
 	 */
-	public static Field findDeclaredField(Class<?> clazz, String fieldName) throws NoSuchFieldException {
+	public static Field findDeclaredField(@Nonnull Class<?> clazz, @Nonnull String fieldName) throws NoSuchFieldException {
+		//noinspection ConstantConditions
 		do {
 			try {
 				return clazz.getDeclaredField(fieldName);

@@ -35,18 +35,15 @@ public class IconedItemAdapter extends BaseListAdapter<IconedItem, ViewHolder> {
 		}
 	}
 
-	@Override
-	protected int getItemLayoutId() {
+	@Override protected int getItemLayoutId() {
 		return layout;
 	}
 
-	@Override
-	protected ViewHolder createHolder(View convertView) {
+	@Override protected ViewHolder createHolder(View convertView) {
 		return new ViewHolder(convertView);
 	}
 
-	@Override
-	protected void bindView(ViewHolder holder, IconedItem currentItem, View convertView) {
+	@Override protected void bindView(ViewHolder holder, IconedItem currentItem, View convertView) {
 		setActive(holder.view, currentItem != active);
 		CharSequence title = currentItem.getTitle(convertView.getContext());
 		holder.label.setText(title);

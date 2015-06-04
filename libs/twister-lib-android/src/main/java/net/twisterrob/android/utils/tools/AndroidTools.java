@@ -91,19 +91,19 @@ public /*static*/ abstract class AndroidTools {
 		return (int)dip(context, number);
 	}
 
-	public static @RawRes int getRawResourceID(Context context, String rawResourceName) {
+	public static @RawRes int getRawResourceID(@Nullable Context context, @NonNull String rawResourceName) {
 		return getResourceID(context, RES_TYPE_RAW, rawResourceName);
 	}
 
-	public static @DrawableRes int getDrawableResourceID(Context context, String drawableResourceName) {
+	public static @DrawableRes int getDrawableResourceID(@Nullable Context context, String drawableResourceName) {
 		return getResourceID(context, RES_TYPE_DRAWABLE, drawableResourceName);
 	}
 
-	public static @StringRes int getStringResourceID(Context context, String stringResourceName) {
+	public static @StringRes int getStringResourceID(@Nullable Context context, @NonNull String stringResourceName) {
 		return getResourceID(context, RES_TYPE_STRING, stringResourceName);
 	}
 
-	public static @NonNull CharSequence getText(Context context, String stringResourceName) {
+	public static @NonNull CharSequence getText(@NonNull Context context, @NonNull String stringResourceName) {
 		int id = getStringResourceID(context, stringResourceName);
 		if (id == INVALID_RESOURCE_ID) {
 			throw new NotFoundException(String.format(Locale.ROOT, "Resource '%s' is not a valid string in '%s'",
@@ -119,9 +119,10 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
-	private static @AnyRes int getResourceID(Context context, String resourceType, String resourceName) {
+	private static @AnyRes int getResourceID(@Nullable Context context,
+			@NonNull String resourceType, @NonNull String resourceName) {
 		int resID = INVALID_RESOURCE_ID;
-		if (context != null && resourceType != null && resourceName != null) {
+		if (context != null) {
 			resID = context.getResources().getIdentifier(resourceName, resourceType, context.getPackageName());
 		}
 		if (resID == INVALID_RESOURCE_ID) {
@@ -132,15 +133,16 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	/** @param root usually Activity.getWindow().getDecorView() or custom Toolbar */
-	public static View findActionBarTitle(View root) {
+	public static @Nullable View findActionBarTitle(@NonNull View root) {
 		return findActionBarItem(root, "action_bar_title", "mTitleTextView");
 	}
 	/** @param root usually Activity.getWindow().getDecorView() or custom Toolbar */
-	public static View findActionBarSubTitle(View root) {
+	public static @Nullable View findActionBarSubTitle(@NonNull View root) {
 		return findActionBarItem(root, "action_bar_subtitle", "mSubtitleTextView");
 	}
 
-	private static View findActionBarItem(View root, String resourceName, String toolbarFieldName) {
+	private static @Nullable View findActionBarItem(@NonNull View root,
+			@NonNull String resourceName, @NonNull String toolbarFieldName) {
 		View result = findViewSupportOrAndroid(root, resourceName);
 
 		if (result == null) {
@@ -156,7 +158,7 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	@SuppressWarnings("ConstantConditions")
-	private static View findViewSupportOrAndroid(View root, String resourceName) {
+	private static @Nullable View findViewSupportOrAndroid(@NonNull View root, @NonNull String resourceName) {
 		Context context = root.getContext();
 		View result = null;
 		if (result == null) {

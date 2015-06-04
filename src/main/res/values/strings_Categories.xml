@@ -31,20 +31,20 @@
 	<string name="category_containers">Containers</string>
 	<string name="category_containers_keywords">
 		box (cardboard box, corrugated fiberboard box, folding carton box, wooden box),
-		plastic container (plastic container, clamshell, foam food container, lunch box/Tuppelware, food carrier, cool-box/cooler/chilly bin/Esky),
+		plastic container (plastic container, clamshell, foam food container, lunch box/Tupperware, food carrier, cool-box/cooler/chilly bin/Esky),
 		bulk container (basket, waste basket, bin, crate, case, trunk, chest)
 	</string>
-	<string name="category_containers_flexible">Flexible Containers</string>
-	<string name="category_containers_flexible_keywords">
+	<string name="category_bags">Bags</string>
+	<string name="category_bags_keywords">
 		storage bag (plastic bag, biodegradable bag, zipper storage bag, antistatic bag, paper bag, baking bag),
 		carrier bag (plastic shopping bag, reusable shopping bag/bag for life, string bag),
-		sack (plastic sack, paper sack, sand bag, bin bag/bin liner/garbage bag/trash bag)
+		sack (plastic sack, paper sack, sandbag/hessian bag/burlap bag, bin bag/bin liner/garbage bag/trash bag)
 	</string>
 	<string name="category_containers_liquid">Liquid Containers</string>
 	<string name="category_containers_liquid_keywords">
 		liquid container (bottle, plastic bottle, bottle cap, baby bottle, flask, thermos),
-		viscous food container (mason jar, buckle jar, jar lid, aluminium can/tin can),
-		bulk container (basin, bucket, pail, jerrycan, barrel/drum)
+		viscous food container/?jars and cans (mason jar, buckle jar, jar lid, aluminium can/tin can),
+		bulk container (basin, bucket, pail, jerrycan/gas can, barrel/drum)
 	</string>
 	<string name="category_cases">Cases</string>
 	<string name="category_cases_keywords">
@@ -53,7 +53,7 @@
 	</string>
 	<string name="category_storage_special">Specialized</string>
 	<string name="category_storage_special_keywords">
-		stationery (magazine file, folder, binder, plastic wallet, photo album, messageboard, whiteboard, pencil holder, pencil case),
+		stationery (magazine file, folder, binder, plastic wallet, photo album, message board, whiteboard, pencil holder, pencil case),
 		household (soap dispenser, laundry bin, laundry sorter, bread bin, knife stand, utensil stand, utensil organizer, toolbox, ashtray, potty, rainwater tank/water butt),
 		protective surface (beverage coaster, hot pad, drying mat, plastic tray, pallet, tent footprint, mouse pad)
 	</string>
@@ -64,7 +64,7 @@
 	</string>
 	<string name="category_packaging">Packaging</string>
 	<string name="category_packaging_keywords">
-		label,
+		label, silica gel,
 		wrapping (aluminium foil/tinfoil, plastic wrap/cling film/food wrap, strapping),
 		cushioning (bubble wrap, styrofoam, foam peanut, molded pulp, paperboard, protective plastic)
 	</string>
@@ -114,7 +114,7 @@
 	<string name="category_outdoor_keywords">
 		canopies (pavilion, tent, garden parasol/garden umbrella, beach umbrella, water base, canopy swing, pool cover, tarp shelter),
 		playground (swing, slide, seesaw, climbing frame, climbing wall, wendy house, trampoline, jumpy castle, playhouse/wendy house),
-		bathing (jacuzzi/hot tub/home spa, garden shower, inflatable pool, kiddy pool, pond, swimming pool, spring board/diving board, sauna)
+		wet (jacuzzi/hot tub/home spa, garden shower, inflatable pool, kiddy pool, pond, swimming pool, spring board/diving board, sauna)
 	</string>
 
 
@@ -139,11 +139,10 @@
 	</string>
 	<string name="category_fabrics">Fabrics</string>
 	<string name="category_fabrics_keywords">
-		curtains, cloth, blanket, carpet, rug,
+		curtains, cloth, blanket, embroidery,
 		towel (bath towel, beach towel, hand towel, foot towel, sports towel, kitchen towel, wash cloth),
-		mat (door-mat, car mat, bath mat/bathroom rug, bathtub mat),
-		protective cover (steering wheel cover, ironing board cover, car seat cover),
-		embroidery
+		mat (carpet, rug, door-mat, car mat, bath mat/bathroom rug, bathtub mat),
+		protective cover (steering wheel cover, ironing board cover, car seat cover)
 	</string>
 
 
@@ -206,7 +205,7 @@
 	<string name="category_undress">Street Clothes</string>
 	<string name="category_undress_keywords">
 		top (t-shirt, shirt, long-sleeve shirt, blouse, cardigan, sweater, jumper, hoodie),
-		trousers (jeans, denim, dungaree, sweat pants, shorts),
+		trousers (jeans, denim, dungaree, khakis, sweat pants, shorts),
 		dress (gown, wrap dress, sari, sarong, kaftan, tunic, toga),
 		skirt
 	</string>
@@ -232,7 +231,7 @@
 		socks (knee-high socks, trainer socks, shoe liner, toe socks),
 		hosiery (stockings, leggings, tights/pantyhose),
 		lingerie (panties/knickers, bra/brasserie, thong, nightgown),
-		full body (pajamas, romper suit, budysuit, leotard, unitard, catsuit)
+		full body (pajamas, romper suit, bodysuit, leotard, unitard, catsuit)
 	</string>
 	<string name="category_headwear">Headwear</string>
 	<string name="category_headwear_keywords">
@@ -243,7 +242,7 @@
 	<string name="category_accessories">Accessories</string>
 	<string name="category_accessories_keywords">
 		functional accessories (leather belt, suspenders, purse, wallet, eyeglasses, monocle, contact lenses, watch, pocket watch, leash, harness, umbrella, sunshade),
-		decorative accessories (tie, bowtie, badge, rosette, hairband, hair clip, scrunchies, rubber band, hairnet, headpiece, collar),
+		decorative accessories (tie, neck tie, bow tie, badge, rosette, hairband, hair clip, scrunchies, rubber band, hairnet, headpiece, collar),
 		jewelry (earrings, bracelet, necklace, pendant, medallion, tiara)
 	</string>
 	<string name="category_sports_clothing">Sports</string>
@@ -329,7 +328,7 @@
 		child activity kit (science kit, chemistry set, lab set, kitchen set, surgery game, robot kit, molding kit),
 		artistic (erasable drawing board, spirograph, toy piano, synthesizer),
 		construction games (blocks, neodymium magnet/magnetic puzzle, bricks, girders &amp; gears, geometric, balls &amp; sticks, modeling clay),
-		puzzles (Rubik\'s Cube, Tower of Babel, Sodoku, Tangram, 15-puzzle/sliding puzzle, disentanglement puzzle, jigsaw puzzle),
+		puzzles (Rubik\'s Cube, Tower of Babel, Sudoku, Tangram, 15-puzzle/sliding puzzle, disentanglement puzzle, jigsaw puzzle),
 		example brands (Etch-a-Sketch, Lego, Merkur/Steel Tec, K\'nex, Zometool/Babylon, Plasticine/Play-Doh)
 	</string>
 	<string name="category_novelties">Novelty Toys</string>
@@ -390,7 +389,7 @@
 	<string name="category_consumer_electronics_keywords">
 		camera (digital camera, polaroid camera, camcorder/video camera, DSC, DSLR, HD, 4K),
 		recorder (microphone, dictaphone, VCR/videocassette recorder, DVR/digital video recorder, photocopier),
-		recoding player (entertainment center/home cinema, music center, shelf stereo, CD player, DVD player, Blu-ray player, phonograph, turntable),
+		recording player (entertainment center/home cinema, music center, shelf stereo, CD player, DVD player, Blu-ray player, phonograph, turntable),
 		portable media player (digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook),
 		signal processor (set-top box, TV tuner, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor),
 		speakers (loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker),
@@ -441,7 +440,7 @@
 	<string name="category_gardening_keywords">
 		hand tools (shovel, rake, spade, transplanter, dibber, pitchfork, hoe, mattock, pickaxe, pruning shears),
 		irrigation (watering can, spray bottle, sprinkler, hose, saucer/drip tray, seed tray),
-		power tools (lawn mover, string trimmer, leaf blower, cultivator, tiller, pressure washer, wood chipper, generator)
+		power tools (lawn mower, string trimmer, leaf blower, cultivator, tiller, pressure washer, wood chipper, generator)
 	</string>
 	<string name="category_cleaning">Cleaning</string>
 	<string name="category_cleaning_keywords">
@@ -518,7 +517,7 @@
 	</string>
 	<string name="category_materials_binding">Binding Materials</string>
 	<string name="category_materials_binding_keywords">
-		adhesive (glue, Blu-tack, wallpaper paste, Sellotape/Scotch/Sticky Tape, Duct/Cloth tape, electric tape, masking tape/paint tape, silicone sealant, caulking),
+		adhesive (glue, Blu-tack, wallpaper paste, Sellotape/Scotch/Sticky Tape, Duct/Cloth tape, electric tape, masking tape/paint tape, silicone sealant, caulking, thermal paste/thermal gel),
 		fastener (nail, pin, needle, rivet, screw, screw eye, hook, bolt, nut, shim, spacer, dowel, wall plug/rawl plug/screw anchor, peg, tie-wrap/cable tie, paperclip, push pin, binder clip)
 	</string>
 
