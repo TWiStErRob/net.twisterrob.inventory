@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import com.bumptech.glide.*;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.engine.cache.*;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.stream.StreamModelLoader;
 import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
@@ -97,20 +98,27 @@ public interface Constants {
 		private static final DrawableRequestBuilder<Integer> SVG_REQUEST = baseRequest(Integer.class)
 				.signature(new StringSignature(BuildConfig.VERSION_NAME))
 				.dontAnimate()
-				.listener(SVG_LOGGING_LISTENER)
+				.priority(Priority.HIGH)
 				.decoder(getSvgDecoder());
 
 		private static final DrawableRequestBuilder<Uri> IMAGE_REQUEST = baseRequest(Uri.class)
 				.animate(android.R.anim.fade_in)
-				.listener(IMAGE_LOGGING_LISTENER);
+				.priority(Priority.NORMAL);
 
 		public static DrawableRequestBuilder<Integer> svg() {
-			return SVG_REQUEST.clone();
+			DrawableRequestBuilder<Integer> clone = SVG_REQUEST.clone();
+			if (DISABLE && BuildConfig.DEBUG) {
+				clone.listener(SVG_LOGGING_LISTENER);
+			}
+			return clone;
 		}
 
-		// TODO should be loading from Uris because it's toStringed everywhere
 		public static DrawableRequestBuilder<Uri> jpg() {
-			return IMAGE_REQUEST.clone();
+			DrawableRequestBuilder<Uri> clone = IMAGE_REQUEST.clone();
+			if (DISABLE && BuildConfig.DEBUG) {
+				clone.listener(IMAGE_LOGGING_LISTENER);
+			}
+			return clone;
 		}
 
 		private static GifBitmapWrapperResourceDecoder getSvgDecoder() {
@@ -128,14 +136,14 @@ public interface Constants {
 
 		public static class GlideSetup implements GlideModule {
 			@Override public void applyOptions(final Context context, GlideBuilder builder) {
-//				if (BuildConfig.DEBUG) {
-//					builder.setDiskCache(new DiskCache.Factory() {
-//						@Override public DiskCache build() {
-//							final File cacheDir = new File(context.getExternalCacheDir(), "image_manager_disk_cache");
-//							return DiskLruCacheWrapper.get(cacheDir, 250 * 1024 * 1024);
-//						}
-//					});
-//				}
+				if (DISABLE && BuildConfig.DEBUG) {
+					builder.setDiskCache(new DiskCache.Factory() {
+						@Override public DiskCache build() {
+							final File cacheDir = new File(context.getExternalCacheDir(), "image_manager_disk_cache");
+							return DiskLruCacheWrapper.get(cacheDir, 250 * 1024 * 1024);
+						}
+					});
+				}
 			}
 			@Override public void registerComponents(Context context, Glide glide) {
 			}

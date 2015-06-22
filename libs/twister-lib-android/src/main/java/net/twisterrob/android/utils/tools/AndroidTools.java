@@ -30,7 +30,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.view.*;
-import android.support.v4.widget.SearchViewCompat;
+import android.support.v4.widget.*;
 import android.util.*;
 import android.view.*;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -648,13 +648,13 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
-	/** Burrowing from CSS terminology: <code>display:block/none</code> */
+	/** Borrowing from CSS terminology: <code>display:block/none</code> */
 	public static void displayedIf(View view, boolean isVisible) {
 		if (view != null) {
 			view.setVisibility(isVisible? View.VISIBLE : View.GONE);
 		}
 	}
-	/** Burrowing from CSS terminology: <code>visibility:visible/hidden</code> */
+	/** Borrowing from CSS terminology: <code>visibility:visible/hidden</code> */
 	public static void visibleIf(View view, boolean isVisible) {
 		if (view != null) {
 			view.setVisibility(isVisible? View.VISIBLE : View.INVISIBLE);
@@ -673,6 +673,64 @@ public /*static*/ abstract class AndroidTools {
 		}
 		CharSequence text = view.getText();
 		visibleIf(view, text != null && 0 < text.length());
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	public static void updateStartMargin(View view, int margin) {
+		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			params.leftMargin = margin;
+		} else {
+			params.setMarginStart(margin);
+		}
+		view.setLayoutParams(params);
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	public static void updateEndMargin(View view, int margin) {
+		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			params.rightMargin = margin;
+		} else {
+			params.setMarginEnd(margin);
+		}
+		view.setLayoutParams(params);
+	}
+
+	public static void updateHeight(View view, int height) {
+		ViewGroup.LayoutParams params = (ViewGroup.LayoutParams)view.getLayoutParams();
+		params.height = height;
+		view.setLayoutParams(params);
+	}
+
+	public static void updateWidth(View view, int width) {
+		ViewGroup.LayoutParams params = (ViewGroup.LayoutParams)view.getLayoutParams();
+		params.width = width;
+		view.setLayoutParams(params);
+	}
+
+	public static void updateWidthAndHeight(View view, int width, int height) {
+		ViewGroup.LayoutParams params = (ViewGroup.LayoutParams)view.getLayoutParams();
+		params.width = width;
+		params.height = height;
+		view.setLayoutParams(params);
+	}
+
+	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
+	// TODO check all LayoutParams
+	public static void updateGravity(View view, int gravity) {
+		ViewGroup.LayoutParams params = view.getLayoutParams();
+		if (params instanceof FrameLayout.LayoutParams) {
+			((FrameLayout.LayoutParams)params).gravity = gravity;
+		} else if (params instanceof LinearLayout.LayoutParams) {
+			((LinearLayout.LayoutParams)params).gravity = gravity;
+		} else if (params instanceof DrawerLayout.LayoutParams) {
+			((DrawerLayout.LayoutParams)params).gravity = gravity;
+		} else if (VERSION_CODES.ICE_CREAM_SANDWICH <= Build.VERSION.SDK_INT
+				&& params instanceof GridLayout.LayoutParams) {
+			((GridLayout.LayoutParams)params).setGravity(gravity);
+		}
+		view.setLayoutParams(params);
 	}
 
 	/**

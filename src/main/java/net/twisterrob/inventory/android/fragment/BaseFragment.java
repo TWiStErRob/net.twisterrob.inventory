@@ -43,7 +43,7 @@ public class BaseFragment<T> extends VariantFragment {
 		return (D)dynResources.get(type);
 	}
 
-	@Override	public void onAttach(Activity activity) {
+	@Override public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		Class<T> eventsClass = getDynamicResource(DYN_EventsClass);
 		if (eventsClass != null) {
@@ -51,12 +51,12 @@ public class BaseFragment<T> extends VariantFragment {
 		}
 	}
 
-	@Override	public void onDetach() {
+	@Override public void onDetach() {
 		super.onDetach();
 		eventsListener = null;
 	}
 
-	@Override	public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(Bundle savedInstanceState) {
 		LOG.debug("Creating {}@{} {}",
 				getClass().getSimpleName(),
 				Integer.toHexString(System.identityHashCode(this)),
@@ -73,12 +73,12 @@ public class BaseFragment<T> extends VariantFragment {
 		return true;
 	}
 
-	@Override	public void onActivityCreated(Bundle savedInstanceState) {
+	@Override public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		onStartLoading();
 	}
 
-	@Override	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		if (hasDynResource(DYN_OptionsMenu)) {
 			inflater.inflate(this.<Integer>getDynamicResource(DYN_OptionsMenu), menu);
@@ -104,7 +104,7 @@ public class BaseFragment<T> extends VariantFragment {
 		// optional override
 	}
 
-	protected final Context getContext() {
+	public final Context getContext() {
 		return getActivity();
 	}
 }

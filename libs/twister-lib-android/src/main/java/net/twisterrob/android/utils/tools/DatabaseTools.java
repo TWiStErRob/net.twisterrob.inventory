@@ -24,12 +24,33 @@ public /*static*/ abstract class DatabaseTools {
 		int col = cursor.getColumnIndex(columnName);
 		return cursor.getInt(col) != 0;
 	}
+
+	public static int getInt(Cursor cursor, String columnName) {
+		int col = cursor.getColumnIndexOrThrow(columnName);
+		return cursor.getInt(col);
+	}
+	public static long getLong(Cursor cursor, String columnName) {
+		int col = cursor.getColumnIndexOrThrow(columnName);
+		return cursor.getLong(col);
+	}
+	public static String getString(Cursor cursor, String columnName) {
+		int col = cursor.getColumnIndexOrThrow(columnName);
+		return cursor.getString(col);
+	}
+
 	public static boolean getOptionalBoolean(Cursor cursor, String columnName, boolean defaultValue) {
 		int col = cursor.getColumnIndex(columnName);
 		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
 			return cursor.getInt(col) != 0;
 		}
 		return defaultValue;
+	}
+	public static Boolean getOptionalBoolean(Cursor cursor, String columnName) {
+		int col = cursor.getColumnIndex(columnName);
+		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			return cursor.getInt(col) != 0;
+		}
+		return null;
 	}
 
 	public static int getOptionalInt(Cursor cursor, String columnName, int defaultValue) {
@@ -46,6 +67,7 @@ public /*static*/ abstract class DatabaseTools {
 		}
 		return null;
 	}
+
 	public static long getOptionalLong(Cursor cursor, String columnName, long defaultValue) {
 		int col = cursor.getColumnIndex(columnName);
 		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
@@ -60,6 +82,7 @@ public /*static*/ abstract class DatabaseTools {
 		}
 		return null;
 	}
+
 	public static String getOptionalString(Cursor cursor, String columnName) {
 		return getOptionalString(cursor, columnName, null);
 	}

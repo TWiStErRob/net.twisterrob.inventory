@@ -1,9 +1,13 @@
 package net.twisterrob.android.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.*;
+import android.os.Build.*;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.*;
+
+import net.twisterrob.android.BuildConfig;
 
 public abstract class ResourceCursorAdapterWithHolder<VH> extends ResourceCursorAdapter {
 	public ResourceCursorAdapterWithHolder(Context context, int layout, Cursor c, boolean autoRequery) {
@@ -14,28 +18,34 @@ public abstract class ResourceCursorAdapterWithHolder<VH> extends ResourceCursor
 		super(context, layout, c, flags);
 	}
 
-	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+	@Override public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = super.newView(context, cursor, parent);
 		view.setTag(createHolder(view));
 		return view;
 	}
 
-	@Override
-	public View newDropDownView(Context context, Cursor cursor, ViewGroup parent) {
+	@Override public View newDropDownView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = super.newDropDownView(context, cursor, parent);
 		view.setTag(createHolder(view));
 		return view;
 	}
 
-	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
+	@TargetApi(VERSION_CODES.KITKAT)
+	@Override public void bindView(View view, Context context, Cursor cursor) {
 		try {
 			@SuppressWarnings("unchecked")
 			VH holder = (VH)view.getTag();
 			bindView(holder, cursor, view);
 		} catch (RuntimeException ex) {
-			DatabaseUtils.dumpCurrentRow(cursor);
+			if (BuildConfig.DEBUG) {
+				try {
+					DatabaseUtils.dumpCurrentRow(cursor);
+				} catch (RuntimeException e) {
+					if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
+						ex.addSuppressed(e);
+					}
+				}
+			}
 			throw ex;
 		}
 	}
