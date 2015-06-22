@@ -93,25 +93,70 @@
 		where r._id = ?
 	"]]></string>
 
+	<string name="query_categories_all" translatable="false"><![CDATA["
+		select
+			'category'        as type,
+			ct._id            as _id,
+			ct.name           as name,
+			ct.parent         as parent,
+			ct.level          as level,
+			ct.children       as countChildren,
+			ct.descendants    as countAllChildren,
+			ct.image          as typeImage,
+			ct.parent IS NULL as strong,
+			ct.root           as root
+		from Category_Tree ct
+		where ct._id <> -1 -- don't return category_internal
+		order by ct._id
+	"]]></string>
 
 	<string name="query_item_categories" translatable="false"><![CDATA["
 		select
-			'category' as type,
-			cd._id     as _id,
-			cd.name    as name,
-			cd.parent  as parent,
-			cd.level   as level,
-			cd.image   as typeImage
-		from Category_Tree cd
-		where cd._id <> -1 -- don't return category_internal
-		order by cd._id
+			'category'     as type,
+			ct._id         as _id,
+			ct.name        as name,
+--			cnc.value      as name,
+			ct.parent      as parent,
+			ct.level       as level,
+			ct.children    as countChildren,
+			ct.descendants as countAllChildren,
+			ct.mixed       as mixed,
+			ct.root        as root,
+			cr.source as source,
+			(
+				-- both the selected and the related are top-level
+--				(c.parent is null and ct.parent is null)
+--				or
+				-- the related is an ascendant of selected
+				exists (select 1 from Category_Descendant where category = ct._id and descendant = c._id)
+				or
+				(
+					-- the related is a descendant of selected
+					exists (select 1 from Category_Descendant where category = c._id and descendant = ct._id)
+					and
+					(
+						-- the related has children
+						ct.descendants > 0
+						or
+						-- the related is a direct child of selected
+						ct.parent = c._id
+					)
+				)
+			) as strong,
+			ct.image       as typeImage
+		from Category            c
+		join Category_Related    cr  ON cr.category = c._id
+		join Category_Tree       ct  ON ct._id = cr.related
+--		join Category_Name_Cache cnc ON cnc.key = ct.name
+		where c._id = ? and ct._id <> -1 -- don't return category_internal
+		order by _id, level
 	"]]></string>
 	<!-- TODO rewrite with one argument and use it for by_room -->
 	<string name="query_items_by_item" tools:ignore="Typos" translatable="false"><![CDATA["
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
-			--g._id                                           as gid,
+--			g._id                                           as gid,
 			i._id = g._id                                   as [group],
 			i.name                                          as name,
 			c._id                                           as typeID,
@@ -194,7 +239,7 @@
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
-			--i._id = g._id                                   as [group],
+--			i._id = g._id                                   as [group],
 			i.name                                          as name,
 			c._id                                           as typeID,
 			i.image IS NOT NULL                             as hasImage,
@@ -451,13 +496,13 @@
 			NULL       as suggest_intent_action,  -- SearchManager.SUGGEST_COLUMN_INTENT_ACTION
 			s._id      as suggest_intent_data_id, -- SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
 			NULL       as suggest_icon_1,         -- SearchManager.SUGGEST_COLUMN_ICON_1
-			--'content://net.twisterrob.inventory.debug/item/'     || i._id || '/image' as suggest_icon_1, -- SearchManager.SUGGEST_COLUMN_ICON_1
-			--'content://net.twisterrob.inventory.debug/category/' || c._id || '/image' as suggest_icon_2, -- SearchManager.SUGGEST_COLUMN_ICON_2
+--			'content://net.twisterrob.inventory.debug/item/'     || i._id || '/image' as suggest_icon_1, -- SearchManager.SUGGEST_COLUMN_ICON_1
+--			'content://net.twisterrob.inventory.debug/category/' || c._id || '/image' as suggest_icon_2, -- SearchManager.SUGGEST_COLUMN_ICON_2
 			s.name     as suggest_text_1,         -- SearchManager.SUGGEST_COLUMN_TEXT_1
 			s.location as suggest_text_2          -- SearchManager.SUGGEST_COLUMN_TEXT_2
-		from Search s
-		--join Item i ON s._id = i._id
-		--join Category c ON i.category = c._id
+		from Search   s
+--		join Item     i ON s._id = i._id
+--		join Category c ON i.category = c._id
 		where s.name MATCH ?
 		order by s.name
 	"]]></string>
@@ -551,7 +596,7 @@
 			join Item_Path_Node ip ON ip.item = i._id and ip.node = i._id
 			join Room           r  ON ip.root = r.root
 			join Property       p  ON r.property = p._id
-		-- TODO order by type, _id?
+-- TODO			order by type, _id?
 	"]]></string>
 
 

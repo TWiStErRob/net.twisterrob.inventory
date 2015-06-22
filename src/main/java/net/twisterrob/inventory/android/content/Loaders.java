@@ -18,13 +18,13 @@ import net.twisterrob.inventory.android.content.contract.*;
 public enum Loaders {
 	PropertyTypes {
 		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		protected Cursor createCursor(Context context, Bundle ignore) {
 			return App.db().listPropertyTypes();
 		}
 	},
 	Properties {
 		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		protected Cursor createCursor(Context context, Bundle ignore) {
 			return App.db().listProperties();
 		}
 	},
@@ -37,7 +37,7 @@ public enum Loaders {
 	},
 	RoomTypes {
 		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		protected Cursor createCursor(Context context, Bundle ignore) {
 			return App.db().listRoomTypes();
 		}
 	},
@@ -62,7 +62,14 @@ public enum Loaders {
 	ItemCategories {
 		@Override
 		protected Cursor createCursor(Context context, Bundle args) {
-			return App.db().listItemCategories();
+			Long id = (Long)args.get(Extras.CATEGORY_ID);
+			return App.db().listRelatedCategories(id);
+		}
+	},
+	ItemCategoriesAll {
+		@Override
+		protected Cursor createCursor(Context context, Bundle ignore) {
+			return App.db().listRelatedCategories(null);
 		}
 	},
 	Items {
@@ -139,7 +146,7 @@ public enum Loaders {
 	},
 	Recents {
 		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		protected Cursor createCursor(Context context, Bundle ignore) {
 			return App.db().listRecents();
 		}
 	},;

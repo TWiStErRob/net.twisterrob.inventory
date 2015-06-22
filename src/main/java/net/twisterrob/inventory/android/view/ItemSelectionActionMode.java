@@ -1,9 +1,11 @@
 package net.twisterrob.inventory.android.view;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
@@ -14,7 +16,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.tasks.*;
-import net.twisterrob.inventory.android.view.ChangeTypeListener.ChangeTypeDialog.Variants;
+import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 
 public class ItemSelectionActionMode extends SelectionActionMode {
 	private static final int PICK_REQUEST = 1;
@@ -46,20 +48,28 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 				return true;
 			case R.id.action_item_categorize:
 				final long[] itemIDs = getSelectedIDs();
-				new ChangeTypeListener.ChangeTypeDialog(fragment).show(new Variants() {
-					@Override void update(long newType) {
+				new ChangeTypeDialog(fragment).show(new Variants() {
+					@Override protected void update(long newType, Cursor cursor) {
 						for (long itemID : itemIDs) {
 							ItemDTO item = DatabaseDTOTools.retrieveItem(itemID);
 							App.db().updateItem(item.id, newType, item.name, item.description);
 						}
+						String newTypeKey = cursor.getString(cursor.getColumnIndex(CommonColumns.NAME));
+						CharSequence newTypeName = AndroidTools.getText(fragment.getContext(), newTypeKey);
+						App.toastUser(fragment.getContext()
+						                      .getString(R.string.generic_location_change, "selection", newTypeName));
+						fragment.refresh();
 					}
 					@Override protected CharSequence getTitle() {
 						return "Change Category";
 					}
-					@Override Loaders getTypesLoader() {
+					@Override protected Loaders getTypesLoader() {
 						return Loaders.ItemCategories;
 					}
-				}, Category.INTERNAL, "selection");
+					@Override protected CharSequence getName() {
+						return "selection";
+					}
+				}, Category.INTERNAL);
 				return true;
 		}
 		return super.onActionItemClicked(mode, item);

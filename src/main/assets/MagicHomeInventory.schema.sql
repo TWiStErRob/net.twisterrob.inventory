@@ -32,7 +32,7 @@ BEGIN
 	insert into Category_Name_Cache values(new.name, NULL);--NOTEOS
 END;
 
--- Assumes internal (c0) -> root (c1) -> level1 (c2) -> level2 (c3) maximum depth
+-- Assumes root -> level1 -> level2 -> level3 maximum depth
 CREATE VIEW Category_Descendant AS
 	select c0._id as category, 0 as level, c0._id as descendant
 		from Category c0
@@ -53,20 +53,125 @@ CREATE VIEW Category_Descendant AS
 		join Category c3 ON c2._id = c3.parent
 ;
 
--- Assumes internal -> root -> level1 -> level2 maximum depth
+
+-- Assumes root -> level1 -> level2 -> level3 maximum depth
 CREATE VIEW Category_Tree AS
 	select
-		c0._id,
-		c0.name,
-		c0.image,
-		2 - ((c1._id IS NULL) + (c2._id IS NULL)) as level,
-		c0.parent,
-		COALESCE(c2._id, c1._id) as root
+		c0._id                                                       as _id,
+		c0.name                                                      as name,
+		c0.image                                                     as image,
+		3 - ((c1._id IS NULL) + (c2._id IS NULL) + (c3._id IS NULL)) as level,
+		c0.parent                                                    as parent,
+		COALESCE(c3._id, c2._id, c1._id, c0._id)                     as root,
+		(select count(1) from Category where parent = c0._id)        as children,
+		(select count(1) from Category_Descendant where category = c0._id and category <> descendant) as descendants,
+		(
+			0 < (select count(1) from Category c1 where c1.parent = c0._id
+        		and 0 < (select count(1) from Category c2 where c2.parent = c1._id))
+        	and
+        	0 < (select count(1) from Category c1 where c1.parent = c0._id
+        		and 0 = (select count(1) from Category c2 where c2.parent = c1._id))
+        )                                                            as mixed
 	from Category c0
-	left join Category c1 on c0.parent = c1._id and c1._id <> -1
-	left join Category c2 on c1.parent = c2._id and c2._id <> -1
-	order by c0.name, c1.name, c2.name
+	left join Category c1 on c0.parent = c1._id
+	left join Category c2 on c1.parent = c2._id
+	left join Category c3 on c2.parent = c3._id
+	order by c0.name, c1.name, c2.name, c3.name
 ;
+
+CREATE VIEW Category_Related AS
+		select
+			'descendant'  as source,
+			c._id         as category,
+			cd.descendant as related
+		from Category c
+		join Category_Descendant cd ON c._id = cd.category and cd.category <> cd.descendant
+	UNION ALL
+		select
+			'siblings1' as source,
+			cp0._id     as category,
+			cs1._id     as related
+		from Category cp0
+		join Category cp1 ON cp0.parent = cp1._id
+		join Category cs1 ON cs1.parent = cp1._id
+	UNION ALL
+		select
+			'siblings1-sub' as source,
+			cp0._id         as category,
+			cd.descendant   as related
+		from Category cp0
+		join Category cp1 ON cp0.parent = cp1._id
+		join Category cs1 ON cs1.parent = cp1._id and cp0._id <> cs1._id
+		join Category_Descendant cd ON cs1._id = cd.category
+		                               and cd.category <> cd.descendant
+		                               and exists (select 1 from Category where parent = cd.descendant)
+	UNION ALL
+		select
+			'siblings2' as source,
+			cp0._id     as category,
+			cs2._id     as related
+		from Category cp0
+		join Category cp1 ON cp0.parent = cp1._id
+		join Category cp2 ON cp1.parent = cp2._id
+		join Category cs2 ON cs2.parent = cp2._id
+	UNION ALL
+		select
+			'siblings2-sub' as source,
+			cp0._id         as category,
+			cd.descendant   as related
+		from Category cp0
+		join Category cp1 ON cp0.parent = cp1._id
+		join Category cp2 ON cp1.parent = cp2._id
+		join Category cs2 ON cs2.parent = cp2._id and cp1._id <> cs2._id
+		join Category_Descendant cd ON cs2._id = cd.category
+		                               and cd.category <> cd.descendant
+		                               and exists (select 1 from Category where parent = cd.descendant)
+	UNION ALL
+		select
+			'siblings3' as source,
+			cp0._id     as category,
+			cs3._id     as related
+		from Category cp0
+		join Category cp1 ON cp0.parent = cp1._id
+		join Category cp2 ON cp1.parent = cp2._id
+		join Category cp3 ON cp2.parent = cp3._id
+		join Category cs3 ON cs3.parent = cp3._id
+	UNION ALL
+		select
+			'siblings3-sub' as source,
+			cp0._id         as category,
+			cd.descendant   as related
+		from Category cp0
+		join Category cp1 ON cp0.parent = cp1._id
+		join Category cp2 ON cp1.parent = cp2._id
+		join Category cp3 ON cp2.parent = cp3._id
+		join Category cs3 ON cs3.parent = cp3._id and cp2._id <> cs3._id
+		join Category_Descendant cd ON cs3._id = cd.category
+		                               and cd.category <> cd.descendant
+		                               and exists (select 1 from Category where parent = cd.descendant)
+	UNION ALL
+		select
+			'toplevel' as source,
+			c._id      as category,
+			cs._id     as related
+		from Category c
+		join Category cs
+		where
+			cs.parent is null
+	UNION ALL
+		select
+			'toplevel-sub' as source,
+			c._id          as category,
+			cs._id         as related
+		from Category c
+		join Category cs ON cs.parent is not null
+		                    and not exists (select 1 from Category_Descendant where category = c._id and descendant = cs._id)
+		join Category cp ON cp._id = cs.parent
+		                    and (cp.parent is null or exists (select 1 from Category where parent = cs._id))
+		where
+			c.parent is null
+;
+
 
 CREATE TABLE Category_Name_Cache (
 	key         VARCHAR      NOT NULL, -- string resource name

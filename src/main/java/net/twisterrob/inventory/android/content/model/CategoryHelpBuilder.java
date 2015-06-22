@@ -130,7 +130,7 @@ public class CategoryHelpBuilder {
 	}
 
 	private void write(PrintWriter out) throws IOException {
-		Cursor cursor = App.db().listItemCategories();
+		Cursor cursor = App.db().listRelatedCategories(null);
 		try {
 			out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n");
 			out.write(STYLE);

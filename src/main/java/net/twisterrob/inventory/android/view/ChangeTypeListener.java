@@ -1,10 +1,9 @@
 package net.twisterrob.inventory.android.view;
 
-import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.database.Cursor;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
+import android.os.Bundle;
+import android.support.v7.app.AlertDialog.Builder;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -15,8 +14,7 @@ import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
-import net.twisterrob.inventory.android.view.ChangeTypeListener.ChangeTypeDialog.Variants;
-import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
+import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 
 public class ChangeTypeListener implements OnClickListener {
 	private BaseFragment fragment;
@@ -30,56 +28,7 @@ public class ChangeTypeListener implements OnClickListener {
 	}
 
 	@Override public void onClick(View v) {
-		new ChangeTypeDialog(fragment).show(variants, variants.entity.type, variants.entity.name);
-	}
-
-	public static class ChangeTypeDialog {
-		private final BaseFragment fragment;
-		private final Context context;
-		ChangeTypeDialog(BaseFragment fragment) {
-			this.fragment = fragment;
-			this.context = fragment.getActivity();
-		}
-
-		void show(final Variants variants, final long initialType, final CharSequence name) {
-			fragment.getLoaderManager().initLoader(variants.getTypesLoader().id(), null,
-					new CursorSwapper(context, new TypeAdapter(context)) {
-						@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-							super.onLoadFinished(loader, data);
-							show(variants, adapter, initialType, name);
-						}
-					}
-			);
-		}
-
-		void show(final Variants variants, final CursorAdapter adapter, long initialType, final CharSequence name) {
-			int position = AndroidTools.findItemPosition(adapter, initialType);
-			Builder dialog = new Builder(context)
-					.setSingleChoiceItems(adapter, position, new DialogInterface.OnClickListener() {
-						@Override public void onClick(DialogInterface dialog, int which) {
-							Cursor cursor = (Cursor)adapter.getItem(which);
-							long newType = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
-							String newTypeKey = cursor.getString(cursor.getColumnIndex(CommonColumns.NAME));
-							variants.update(newType); // FIXME DB on UI
-							dialog.dismiss();
-							fragment.refresh();
-
-							CharSequence newTypeName = AndroidTools.getText(context, newTypeKey);
-							App.toastUser(context.getString(R.string.generic_location_change, name, newTypeName));
-						}
-					});
-			variants.augment(dialog);
-			dialog.create().show();
-		}
-
-		public static abstract class Variants {
-			abstract void update(long newType);
-			protected abstract CharSequence getTitle();
-			abstract Loaders getTypesLoader();
-			void augment(Builder dialog) {
-				dialog.setTitle(getTitle());
-			}
-		}
+		new ChangeTypeDialog(fragment).show(variants, variants.entity.type);
 	}
 
 	private ImagedVariants which(ImagedDTO entity) {
@@ -99,15 +48,27 @@ public class ChangeTypeListener implements OnClickListener {
 
 	private abstract class ImagedVariants extends Variants {
 		ImagedDTO entity;
+
+		@Override protected CharSequence getName() {
+			return entity.name;
+		}
+
+		public void notifyUserOfUpdate(Cursor cursor) {
+			String newTypeKey = cursor.getString(cursor.getColumnIndex(CommonColumns.NAME));
+			CharSequence newTypeName = AndroidTools.getText(context, newTypeKey);
+			App.toastUser(context.getString(R.string.generic_location_change, getName(), newTypeName));
+			fragment.refresh();
+		}
 	}
 
 	private class PropertyVariants extends ImagedVariants {
-		@Override public void update(long newType) {
+		@Override public void update(long newType, Cursor cursor) {
 			PropertyDTO property = DatabaseDTOTools.retrieveProperty(entity.id);
 			App.db().updateProperty(property.id, newType, property.name, property.description);
+			super.notifyUserOfUpdate(cursor);
 		}
 		@Override public CharSequence getTitle() {
-			return "Change Type of " + entity.name;
+			return "Change Type of " + getName();
 		}
 		@Override public Loaders getTypesLoader() {
 			return Loaders.PropertyTypes;
@@ -115,12 +76,13 @@ public class ChangeTypeListener implements OnClickListener {
 	}
 
 	private class RoomVariants extends ImagedVariants {
-		@Override public void update(long newType) {
+		@Override public void update(long newType, Cursor cursor) {
 			RoomDTO room = DatabaseDTOTools.retrieveRoom(entity.id);
 			App.db().updateRoom(room.id, newType, room.name, room.description);
+			super.notifyUserOfUpdate(cursor);
 		}
 		@Override public CharSequence getTitle() {
-			return "Change Type of " + entity.name;
+			return "Change Type of " + getName();
 		}
 		@Override public Loaders getTypesLoader() {
 			return Loaders.RoomTypes;
@@ -128,17 +90,21 @@ public class ChangeTypeListener implements OnClickListener {
 	}
 
 	private class ItemVariants extends ImagedVariants {
-		@Override public void update(long newType) {
+		@Override public void update(long newType, Cursor cursor) {
 			ItemDTO item = DatabaseDTOTools.retrieveItem(entity.id);
 			App.db().updateItem(item.id, newType, item.name, item.description);
+			super.notifyUserOfUpdate(cursor);
 		}
 		@Override public CharSequence getTitle() {
-			return "Change Category of " + entity.name;
+			return "Change Category of " + getName();
 		}
 		@Override public Loaders getTypesLoader() {
 			return Loaders.ItemCategories;
 		}
-		@Override void augment(Builder dialog) {
+		@Override protected Bundle createArgs(long type) {
+			return Intents.bundleFromCategory(type);
+		}
+		@Override protected void augment(Builder dialog) {
 			super.augment(dialog);
 			dialog.setNeutralButton("Jump to Category", new DialogInterface.OnClickListener() {
 				@Override public void onClick(DialogInterface dialog, int which) {

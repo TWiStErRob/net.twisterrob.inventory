@@ -102,8 +102,12 @@ public class Database extends VariantDatabase {
 	public Cursor getRoom(long roomID) {
 		return rawQuery(R.string.query_room, roomID);
 	}
-	public Cursor listItemCategories() {
-		return rawQuery(R.string.query_item_categories);
+	public Cursor listRelatedCategories(Long categoryID) {
+		if(categoryID == null) {
+			return rawQuery(R.string.query_categories_all);
+		} else {
+			return rawQuery(R.string.query_item_categories, categoryID);
+		}
 	}
 	public Cursor listItems(long parentID) {
 		return rawQuery(R.string.query_items_by_item, parentID, parentID, parentID);

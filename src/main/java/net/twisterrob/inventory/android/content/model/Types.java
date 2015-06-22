@@ -12,7 +12,7 @@ public class Types {
 	public Types() {
 		putTypes(App.db().listPropertyTypes(), PropertyType.ID, PropertyType.NAME);
 		putTypes(App.db().listRoomTypes(), RoomType.ID, RoomType.NAME);
-		putTypes(App.db().listItemCategories(), Category.ID, Category.NAME);
+		putTypes(App.db().listRelatedCategories(null), Category.ID, Category.NAME);
 
 		// types.put("category_old", types.get("category_new")); // transitive must be resolved manually
 	}

@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS Item;
 DROP TABLE IF EXISTS Category_Name_Cache;
 DROP VIEW IF EXISTS Category_Descendant;
 DROP VIEW IF EXISTS Category_Tree;
+DROP VIEW IF EXISTS Category_Related;
 DROP TABLE IF EXISTS Category;
 
 DROP VIEW IF EXISTS Search_Refresher;

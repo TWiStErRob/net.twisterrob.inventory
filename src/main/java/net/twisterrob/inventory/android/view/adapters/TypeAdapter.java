@@ -1,19 +1,16 @@
 package net.twisterrob.inventory.android.view.adapters;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
-import android.os.Build;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.*;
 
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
-import net.twisterrob.android.db.DatabaseOpenHelper;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
-import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter.ViewHolder;
@@ -25,6 +22,8 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 
 	class ViewHolder {
 		ImageView image;
+		View spacer;
+		TextView state;
 		TextView title;
 	}
 
@@ -32,6 +31,8 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	protected ViewHolder createHolder(View convertView) {
 		ViewHolder holder = new ViewHolder();
 		holder.image = (ImageView)convertView.findViewById(R.id.image);
+		holder.spacer = convertView.findViewById(R.id.spacer);
+		holder.state = (TextView)convertView.findViewById(R.id.type);
 		holder.title = (TextView)convertView.findViewById(R.id.title);
 		return holder;
 	}
@@ -39,45 +40,85 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	@Override
 	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
 		holder.title.setText(getName(cursor));
-		int margin = updateFormat(cursor, holder.title);
-		updateLeftStartMargin(holder.title, margin);
+		int level = DatabaseTools.getOptionalInt(cursor, "level", 0);
+		int indent = (int)(mContext.getResources().getDimension(R.dimen.marginBig) * level);
+		AndroidTools.updateWidth(holder.spacer, indent);
+
+		if (DatabaseTools.getOptionalBoolean(cursor, "strong", false)) {
+			holder.title.setTypeface(null, Typeface.BOLD);
+		} else {
+			holder.title.setTypeface(null, Typeface.NORMAL);
+		}
+
+		boolean isOpen = isOpen(cursor);
+		boolean hasChildren = 0 < DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_DIRECT, 0);
+		if (hasChildren) {
+			if (isOpen) {
+				holder.state.setText("-");
+			} else {
+				holder.state.setText("+");
+				if (DatabaseTools.getOptionalBoolean(cursor, "mixed", false)) {
+					holder.title.setText(TextUtils.concat(holder.title.getText(), " (more)"));
+				}
+			}
+		} else {
+			holder.state.setText(" ");
+		}
+
+		if (BuildConfig.DEBUG) {
+			String source = DatabaseTools.getOptionalString(cursor, "source");
+			if (source != null) {
+				holder.title.setText(TextUtils.concat(holder.title.getText(), " - ", source));
+			}
+		}
 
 		int fallbackID = ImagedDTO.getFallbackID(mContext, cursor);
 		Pic.svg().load(fallbackID).into(holder.image);
 	}
-
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	private void updateLeftStartMargin(View view, int margin) {
-		MarginLayoutParams marginParams = (MarginLayoutParams)view.getLayoutParams();
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-			marginParams.leftMargin = margin;
+	private boolean isOpen(Cursor cursor) {
+		int position = cursor.getPosition();
+		boolean mixed = DatabaseTools.getOptionalBoolean(cursor, "mixed", false);
+		int level = DatabaseTools.getOptionalInt(cursor, "level", 0);
+		if (!mixed) {
+			if (cursor.moveToNext()) {
+				int nextLevel = DatabaseTools.getOptionalInt(cursor, "level", 0);
+				boolean open = level < nextLevel;
+				if (!cursor.moveToPosition(position)) {
+					throw new IllegalStateException("Cannot restore cursor position");
+				}
+				return open;
+			}
 		} else {
-			marginParams.setMarginStart(margin);
+			boolean foundTerminal = false;
+			boolean foundGroup = false;
+			while (cursor.moveToNext() && !(foundGroup && foundTerminal)) {
+				int nextLevel = DatabaseTools.getOptionalInt(cursor, "level", 0);
+				if (nextLevel <= level) {
+					break;
+				}
+				int children = DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_DIRECT, 0);
+				if (level + 1 == nextLevel && children > 0) {
+					foundGroup = true;
+				}
+				if (level + 1 == nextLevel && children == 0) {
+					foundTerminal = true;
+				}
+			}
+			if (!cursor.moveToPosition(position)) {
+				throw new IllegalStateException("Cannot restore cursor position");
+			}
+			return foundGroup && foundTerminal;
 		}
+		if (cursor.isAfterLast()) {
+			if (!cursor.moveToPosition(position)) {
+				throw new IllegalStateException("Cannot restore cursor position");
+			}
+		}
+		return false;
 	}
+
 	private CharSequence getName(Cursor cursor) {
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 		return AndroidTools.getText(mContext, name);
-	}
-
-	private int updateFormat(Cursor cursor, TextView title) {
-		int level = getLevel(cursor);
-
-		if (level == 0) {
-			title.setTypeface(null, Typeface.BOLD);
-		} else {
-			title.setTypeface(null, Typeface.NORMAL);
-		}
-
-		return (int)(mContext.getResources().getDimension(R.dimen.margin) * (4 * level));
-	}
-
-	private static int getLevel(Cursor cursor) {
-		int levelColumn = cursor.getColumnIndex("level");
-		int level = 0;
-		if (levelColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			level = cursor.getInt(levelColumn);
-		}
-		return level;
 	}
 }

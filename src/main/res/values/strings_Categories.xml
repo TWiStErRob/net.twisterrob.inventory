@@ -99,7 +99,7 @@
 	<string name="category_resting">Seating &amp; Resting</string>
 	<string name="category_resting_keywords">
 		sitting (chair, stool, step stool, baby high chair, bench, sofa, couch/divan, folding chair),
-		lounging (bed, mattress, lounger, pool lilo, hammock, beanbag, rocking chair, inflatable air mattress, swim ring, swim tube)
+		lounging (bed, mattress, lounger, pool lilo, hammock, beanbag, rocking chair, inflatable air mattress, swim ring/swim tube)
 	</string>
 	<string name="category_pet">Pet Homes</string>
 	<!--https://en.wikipedia.org/wiki/Category:Buildings_and_structures_used_to_confine_animals-->
@@ -112,7 +112,7 @@
 	</string>
 	<string name="category_outdoor">Outdoor</string>
 	<string name="category_outdoor_keywords">
-		canopies (pavilion, tent, garden parasol/garden umbrella, beach umbrella, water base, canopy swing, pool cover, tarp shelter),
+		canopies (pavilion, tent, garden parasol/garden umbrella, beach parasol/beach umbrella, water base, canopy swing, pool cover, tarp shelter),
 		playground (swing, slide, seesaw, climbing frame, climbing wall, wendy house, trampoline, jumpy castle, playhouse/wendy house),
 		wet (jacuzzi/hot tub/home spa, garden shower, inflatable pool, kiddy pool, pond, swimming pool, spring board/diving board, sauna)
 	</string>
@@ -141,7 +141,7 @@
 	<string name="category_fabrics_keywords">
 		curtains, cloth, blanket, embroidery,
 		towel (bath towel, beach towel, hand towel, foot towel, sports towel, kitchen towel, wash cloth),
-		mat (carpet, rug, door-mat, car mat, bath mat/bathroom rug, bathtub mat),
+		mat (carpet, rug, doormat, car mat, bath mat/bathroom rug, bathtub mat),
 		protective cover (steering wheel cover, ironing board cover, car seat cover)
 	</string>
 
@@ -177,15 +177,16 @@
 	<string name="category_souvenirs_keywords">@string/empty</string>
 	<string name="category_artwork">Artwork</string>
 	<string name="category_artwork_keywords">
-		picture (painting, poster, picture frame, photo holder),
+		picture (painting, poster, centerfold/centrefold, picture frame, photo holder),
 		sculpture (statue, figurine, wax, glass, mask, origami, signs),
 		antique (painting, furniture, appliances),
 		ceramic (vase, pot, china, window box/flower box)
 	</string>
 	<string name="category_publications">Publications</string>
 	<string name="category_publications_keywords">
-		book (paperback, yearbook, photo album, magazine, comics, newspaper, periodical, academic journal, proceeding),
-		information (advertisement, brochure, catalogue, circular, leaflet, pamphlet, flyer, invitation),
+		book (paperback, yearbook, photo album, magazine, comics, newsletter, newspaper, periodical, academic journal, proceeding),
+		?booklet (advertisement, marketing, brochure, catalogue, circular, programme, leaflet, pamphlet, flyer, invitation),
+		?information (map, travel guide, guide, white paper, blueprint, plans, patent, essay, thesis, journal, paper, wall calendar, desk calendar),
 		help (user guide, owner\'s manual, assembly instructions, FAQ/Frequently Asked Questions)
 	</string>
 	<string name="category_recordings">Recordings</string>
@@ -205,7 +206,7 @@
 	<string name="category_undress">Street Clothes</string>
 	<string name="category_undress_keywords">
 		top (t-shirt, shirt, long-sleeve shirt, blouse, cardigan, sweater, jumper, hoodie),
-		trousers (jeans, denim, dungaree, khakis, sweat pants, shorts),
+		trousers (jeans, denim, dungarees, khakis, sweat pants, shorts),
 		dress (gown, wrap dress, sari, sarong, kaftan, tunic, toga),
 		skirt
 	</string>
@@ -241,7 +242,7 @@
 	</string>
 	<string name="category_accessories">Accessories</string>
 	<string name="category_accessories_keywords">
-		functional accessories (leather belt, suspenders, purse, wallet, eyeglasses, monocle, contact lenses, watch, pocket watch, leash, harness, umbrella, sunshade),
+		functional accessories (leather belt, suspenders, purse, wallet, eyeglasses, monocle, contact lenses, watch, pocket watch, leash, harness, umbrella, sunshade/parasol),
 		decorative accessories (tie, neck tie, bow tie, badge, rosette, hairband, hair clip, scrunchies, rubber band, hairnet, headpiece, collar),
 		jewelry (earrings, bracelet, necklace, pendant, medallion, tiara)
 	</string>
@@ -391,18 +392,18 @@
 		recorder (microphone, dictaphone, VCR/videocassette recorder, DVR/digital video recorder, photocopier),
 		recording player (entertainment center/home cinema, music center, shelf stereo, CD player, DVD player, Blu-ray player, phonograph, turntable),
 		portable media player (digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook),
-		signal processor (set-top box, TV tuner, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor),
+		signal processor (set-top box, TV tuner, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor, GPS/satnav/satellite navigation),
 		speakers (loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker),
 		displays (monitor, TV/television, projector, touchscreen; CRT, LCD, TFT, IPS, LED, plasma, OLED)
 	</string>
 	<string name="category_computers">Computers</string>
 	<string name="category_computers_keywords">
+		calculator,
 		desktop (Mac/Macintosh, PC/personal computer),
 		laptop (notebook, netbook, tablet, laplet, palmtop, PDA, pocket PC),
 		game consoles (Xbox, Nintendo Wii, Sony Playstation, Sega, Atari),
-		mobile phone (cell phone, pager, smartphone, phablet, Android, Apple iPhone, Samsung),
-		wearable (activity tracker, smartwatch, MP4 watch, Apple Watch, smartglasses, Google Glass),
-		GPS/satnav/satellite navigation, calculator
+		mobile phone (cell phone, pager, smartphone, phablet, Android, Apple iPhone, Samsung, Nokia, HTC, LG, Sony),
+		wearable (activity tracker, smartwatch, MP4 watch, Apple Watch, smartglasses, Google Glass)
 	</string>
 	<string name="category_computer_parts">Peripherals</string>
 	<string name="category_computer_parts_keywords">
@@ -426,7 +427,7 @@
 		trucks (golf cart, pickup, lorry, van, bus, trolley bus),
 		trailers (RV/recreational vehicle, wagon, carriage, train, tram),
 		heavy equipment (tractor, forklift, crane, excavator, dump truck/dumper/tipper truck, bulldozer, loader, road roller),
-		aircraft (plane, helicopter, glider, hot air balloon, drone, rocket),
+		aircraft (plane, helicopter, glider, hot air balloon, parachute, drone, rocket, jetpack),
 		watercraft (boat, kayak, canoe, inflatable boat, ship, yacht, submarine)
 	</string>
 
@@ -466,8 +467,8 @@
 		measurement (measuring spoon, measuring scoop, measuring cup, kitchen scale, kitchen balance),
 		filtering (soda siphon, whipped cream dispenser, kitchen sieve, tea sieve, colander/pasta strainer, funnel, straw, bottle teat),
 		mixing (mixing bowl, wooden spoon, whisk, rolling pin, shaker, spatula),
-		chopping (chopping board, grater, peeler, pizza cutter, biscuit cutter/cookie cutter),
-		crusher (potato masher, meat grinder/meat mincer, potato ricer, crusher, meat tenderizer, pepper mill, pestle &amp; mortar, lemon squeezer, juicer),
+		chopping (chopping board, grater, slicer, peeler, pizza cutter, biscuit cutter/cookie cutter, wedger, dicer, egg slicer),
+		crusher (potato masher, meat grinder/meat mincer, potato ricer, lemon squeezer, garlic press, crusher, meat tenderizer, pepper mill, pestle &amp; mortar, juicer),
 		openers (corkscrew, bottle opener, can opener/tin opener, jar opener, nutcracker, cherry pitter)
 	</string>
 	<string name="category_cookware">Cookware</string>
@@ -500,10 +501,10 @@
 		painting (paintbrush, paint roller, paint roller tray, varnish),
 		cutting tools (knife, scissors, cutter, rotary cutter, blade, scalpel, stapler, hole puncher),
 		abrasive tools (rasp, sandpaper, scraper, grinding wheel, eraser/rubber),
-		measurement (tape measure, measuring tape, spirit level, caliper, protractor, ruler, steel square, straightedge, angle, compass, stencil, multimeter, magnifier, microscope),
+		measurement (tape measure, measuring tape, spirit level, caliper, protractor, ruler, steel square, straightedge, angle, pair of compasses, stencil, multimeter, magnifier, microscope, compass),
 		construction (wheelbarrow, ladder, step ladder, step stool, trowel),
 		utility tools/DIY hand tools (screwdriver, wrench/spanner, pipe wrench, spider wrench, clamps, plier, pincer, crimp, army-knife, awl, hammer, sledgehammer, mallet, saw, hacksaw, pick, axe, crowbar),
-		power tools (drill, drill bit, impact driver, nail gun, sander, chainsaw, circular saw, solder, blow torch, welding power supply, jackhammer/demolition hammer, rammer, suction pump, water pump, pressure pump, compressor, air pump, tire-pressure gauge),
+		power tools (?vice, drill, drill bit, impact driver, nail gun, sander, chainsaw, circular saw, solder, blow torch, welding power supply, jackhammer/demolition hammer, rammer, suction pump, water pump, pressure pump, compressor, air pump, tire-pressure gauge),
 		mobile lighting (lantern, kerosene lamp, flashlight, headlamp, torch, solar power light)
 	</string>
 	<string name="category_materials">Materials</string>
@@ -535,7 +536,7 @@
 	<string name="category_archives">Archives</string>
 	<string name="category_archives_keywords">
 		statement (receipt, invoice, utility bill, balance sheet, income, expenses, report, prescription, treatment report, medical records),
-		notes (exercise book, school notes, lesson notes, printout, pop quiz, test, midterm, exam, final exam)
+		notes (exercise book, school notes, lesson notes, printout, pop quiz, test, midterm, exam, final exam, thesis)
 	</string>
 	<string name="category_money">Money</string>
 	<string name="category_money_keywords">
@@ -545,7 +546,7 @@
 	<string name="category_paper">Stationery Paper</string>
 	<string name="category_paper_keywords">
 		empty (sheet paper, notepad, notebook, sticky notes, scrapbook, envelope),
-		printed (greeting card, postcard, stickers, business card, wall calendar, desk calendar)
+		?printed (greeting card, postcard, stickers, business card)
 	</string>
 
 

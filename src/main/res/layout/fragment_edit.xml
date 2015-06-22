@@ -18,14 +18,10 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 			>
-			<ImageView
-				android:id="@id/image"
-				android:layout_width="match_parent"
+			<include
+				layout="@layout/inc_details_image"
+				android:layout_width="fill_parent"
 				android:layout_height="128dp"
-				android:layout_margin="4dp"
-				android:adjustViewBounds="true"
-				android:scaleType="fitCenter"
-				tools:src="@drawable/category_unknown"
 				/>
 			<LinearLayout
 				android:layout_width="fill_parent"
@@ -33,7 +29,7 @@
 				android:orientation="horizontal"
 				>
 				<Spinner
-					android:id="@id/type"
+					android:id="@+id/type_edit"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"

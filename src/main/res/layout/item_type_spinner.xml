@@ -7,6 +7,7 @@
 	android:layout_height="wrap_content"
 	android:background="@drawable/item_state"
 	tools:background="@color/toolsBG"
+	tools:layout_height="24dp"
 	>
 	<net.twisterrob.android.view.RigidImageView
 		android:id="@id/image"
@@ -19,15 +20,39 @@
 		android:focusable="false"
 		tools:src="@drawable/category_unknown"
 		/>
-	<!-- Too much hassle: CheckedTextView.android:checkMark="?android:attr/listChoiceIndicatorSingle" -->
-	<TextView
-		android:id="@id/title"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_centerVertical="true"
+	<android.support.v4.widget.Space
+		android:id="@id/spacer"
+		android:layout_width="0dp"
+		android:layout_height="fill_parent"
 		android:layout_toEndOf="@id/image"
 		android:layout_toRightOf="@id/image"
 		android:focusable="false"
+		tools:layout_width="32dp"
+		/>
+	<TextView
+		android:id="@id/type"
+		android:layout_width="@dimen/marginBig"
+		android:layout_height="fill_parent"
+		android:layout_toEndOf="@id/spacer"
+		android:layout_toRightOf="@id/spacer"
+		android:focusable="false"
+		android:gravity="center"
+		android:includeFontPadding="false"
+		android:textIsSelectable="false"
+		android:textSize="@dimen/marginBig"
+		android:typeface="monospace"
+		tools:text="+"
+		tools:ignore="SpUsage"
+		/>
+	<!-- Too much hassle: CheckedTextView.android:checkMark="?android:attr/listChoiceIndicatorSingle" -->
+	<TextView
+		android:id="@id/title"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+		android:layout_toEndOf="@id/type"
+		android:layout_toRightOf="@id/type"
+		android:focusable="false"
+		android:gravity="center_vertical"
 		android:textIsSelectable="false"
 		tools:text="Category Name"
 		/>

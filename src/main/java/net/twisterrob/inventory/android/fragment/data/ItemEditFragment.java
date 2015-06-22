@@ -34,7 +34,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 	@Override protected void onStartLoading() {
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		CursorSwapper catCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
-		Dependency<Cursor> populateCats = manager.add(ItemCategories.id(), null, catCursorSwapper);
+		Dependency<Cursor> populateCats = manager.add(ItemCategoriesAll.id(), null, catCursorSwapper);
 
 		if (!isNew()) {
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.id(),

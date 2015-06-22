@@ -43,12 +43,14 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
-import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.content.model.CategorySuggester.Suggestion;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.utils.PictureHelper;
+import net.twisterrob.inventory.android.view.ChangeTypeDialog;
+import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSingleLoaderFragment<T> {
@@ -72,6 +74,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private TextView hint;
 	protected CursorAdapter typeAdapter;
 	private ImageView image;
+	private ImageView typeImage;
 	private boolean isClean = true;
 
 	protected void setKeepNameInSync(boolean keepNameInSync) {
@@ -82,7 +85,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		return !isClean;
 	}
 
-	protected void onSingleRowLoaded(DTO dto) {
+	protected void onSingleRowLoaded(final DTO dto) {
 		if (tryRestore()) {
 			return;
 		}
@@ -100,6 +103,29 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				isClean = true;
 			}
 		});
+		if (this instanceof ItemEditFragment) {
+			typeImage.setOnClickListener(new OnClickListener() {
+				@Override public void onClick(View v) {
+					new ChangeTypeDialog(BaseEditFragment.this).show(new Variants() {
+						@Override protected void update(long newType, Cursor cursor) {
+							AndroidTools.selectByID(type, newType);
+						}
+						@Override protected CharSequence getTitle() {
+							return  "Change Category of " + getName();
+						}
+						@Override protected Loaders getTypesLoader() {
+							return Loaders.ItemCategories;
+						}
+						@Override protected CharSequence getName() {
+							return name.getText();
+						}
+						@Override protected Bundle createArgs(long type) {
+							return Intents.bundleFromCategory(type);
+						}
+					}, type.getSelectedItemId());
+				}
+			});
+		}
 	}
 
 	private boolean tryRestore() {
@@ -153,6 +179,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 
+		typeImage = (ImageView)view.findViewById(R.id.type);
+		AndroidTools.displayedIf(typeImage, this instanceof ItemEditFragment);
+
 		name = (EditText)view.findViewById(R.id.title);
 		name.setHint((Integer)getDynamicResource(DYN_NameHintResource));
 		name.addTextChangedListener(new TextWatcherAdapter() {
@@ -200,7 +229,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		AndroidTools.displayedIf(help, this instanceof ItemEditFragment);
 		registerForContextMenu(help);
 
-		type = (Spinner)view.findViewById(R.id.type);
+		type = (Spinner)view.findViewById(R.id.type_edit);
 		type.setAdapter(typeAdapter = new TypeAdapter(getContext()));
 		type.setOnItemSelectedListener(new DefaultValueUpdater(name, CommonColumns.NAME) {
 			private int oldPos = AdapterView.INVALID_POSITION;
@@ -226,6 +255,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	private void updateHint(CharSequence s, boolean forceSuggest) {
+		if(!(this instanceof ItemEditFragment)) {
+			return;
+		}
 		String suggest = App.getSPref(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
 		String always = getString(R.string.pref_suggestCategory_always);
 		String unmatched = getString(R.string.pref_suggestCategory_unmatched);
@@ -404,14 +436,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	private String getTypeName() {
-		@SuppressWarnings("resource")
 		Cursor cursor = (Cursor)type.getItemAtPosition(type.getSelectedItemPosition());
 		return cursor != null? cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME)) : null;
-	}
-	private @RawRes int getTypeImage(int position) {
-		@SuppressWarnings("resource")
-		Cursor cursor = (Cursor)type.getItemAtPosition(position);
-		return cursor != null? ImagedDTO.getFallbackID(getContext(), cursor) : R.raw.category_unknown;
 	}
 
 	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -486,7 +512,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private void loadInternal(File file) {
 		new SimpleSafeAsyncTask<File, Void, byte[]>() {
 			@Override protected void onPreExecute() {
-				loadTypeImage();
+				loadTypeImage(image);
 			}
 			@Override protected byte[] doInBackground(File file) throws Exception {
 				byte[] bytes = IOTools.readBytes(file);
@@ -516,7 +542,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				.skipMemoryCache(true)
 				.into(new SimpleTarget<byte[]>() {
 					@Override public void onLoadStarted(Drawable placeholder) {
-						loadTypeImage();
+						loadTypeImage(image);
 					}
 					@Override public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> ignore) {
 						setCurrentImage(resource);
@@ -537,7 +563,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private final long startTime = System.currentTimeMillis();
 	private void reloadImage() {
 		if (currentImage == null) {
-			loadTypeImage();
+			loadTypeImage(image);
 		} else if (currentImage instanceof Uri) {
 			Pic.jpg()
 					.signature(new LongSignature(startTime)) // simulate image_time (Uri shouldn't change while editing)
@@ -554,11 +580,13 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		} else {
 			throw new IllegalStateException("Unrecognized image: " + currentImage);
 		}
+		loadTypeImage(typeImage);
 	}
 
-	private void loadTypeImage() {
-		int typeImageID = getTypeImage(type.getSelectedItemPosition());
-		Pic.svg().load(typeImageID).into(image);
+	private void loadTypeImage(ImageView target) {
+		Cursor cursor = (Cursor)type.getItemAtPosition(type.getSelectedItemPosition());
+		int typeImageID = cursor != null? ImagedDTO.getFallbackID(getContext(), cursor) : R.raw.category_unknown;
+		Pic.svg().load(typeImageID).into(target);
 	}
 
 	protected class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {

@@ -22,6 +22,7 @@ public class CategorySuggester {
 	private final LongSparseArray<String> categoriesByID = new LongSparseArray<>();
 	private final Map<String, String> categoryParents = new TreeMap<>();
 	private final LongSparseArray<CharSequence> categoryFullNames = new LongSparseArray<>();
+	private final LongSparseArray<String> categoryIcons = new LongSparseArray<>();
 	private Locale lastLocale;
 
 	CategorySuggester() {
@@ -59,12 +60,14 @@ public class CategorySuggester {
 		}
 		lastLocale = currentLocale;
 
-		Cursor cursor = App.db().listItemCategories();
+		Cursor cursor = App.db().listRelatedCategories(null);
 		while (cursor.moveToNext()) {
 			String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 			long categoryID = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
 			Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
+			String categoryIcon = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 			categoriesByID.put(categoryID, categoryName);
+			categoryIcons.put(categoryID, categoryIcon);
 			if (parentID != null) {
 				String parentName = categoriesByID.get(parentID);
 				assert parentName != null : "Missing parent. Is the cursor returning them in parent-first order?";
@@ -126,6 +129,9 @@ public class CategorySuggester {
 				wordSuggestions.add(index);
 			}
 		}
+	}
+	public String getIcon(long type) {
+		return categoryIcons.get(type);
 	}
 
 	private static class IndexEntry {
