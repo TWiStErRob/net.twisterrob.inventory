@@ -106,9 +106,9 @@
 	<string name="category_save">Export Help</string>
 	<string name="category_keywords">Keywords of %s</string>
 	<string name="category_viewAllItems">Flatten Subcategories</string>
-	<plurals name="label_category_subs">
-		<item quantity="one">%1$d&#160;more</item>
-		<item quantity="other">%1$d&#160;more</item>
+	<plurals name="label_category_subs"><!-- Alternatively %1$d&#160;more -->
+		<item quantity="one">+%1$d</item>
+		<item quantity="other">+%1$d</item>
 	</plurals>
 	<string name="label_category_subs_with_title">^1 <small>(^2)</small></string>
 
@@ -144,7 +144,7 @@
 	<string name="item_move_many">Move Items</string>
 	<string name="item_name_hint">Item Name</string>
 	<string name="item_description_hint">Item Description</string>
-	<string name="item_empty_child">Create an item with the button below. You can then open it and add more items inside.</string>
+	<string name="item_empty_child">Create items with the button below. You can then open them and add more inside.</string>
 	<string name="item_empty_list">Your items will show up here. Go inside a room or item to create one.</string>
 	<string name="item_empty_category">Your items will show up here. Set the category of some items for them to show up here.</string>
 

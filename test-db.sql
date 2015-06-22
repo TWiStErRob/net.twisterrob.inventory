@@ -4,7 +4,7 @@
 -- Some triggers populate the Log table if those lines are uncommented.
 
 -- fake some values for Category names
-update Category_Name_Cache set value = UPPER(key);
+update Category_Name_Cache set value = replace(UPPER(substr(key, 10, 1)) || substr(key, 11), '_', ' ');
 
 -- Helps to figure out problems with foreign key constraints
 --PRAGMA defer_foreign_keys = 1;
@@ -14,9 +14,9 @@ select '';
 select '__________________________________.- Before -.__________________________________';
 insert into Log(message) values('Before');
 .headers on
+.width auto
 
-select * from Item order by _id;
-
+-- verifiy preconditions or pre-state
 
 .headers off
 select '';
@@ -39,15 +39,16 @@ select '__________________________________.- After -.___________________________
 insert into Log(message) values('After');
 select '--------------------------------------------------------------------------------';
 .headers on
+.width auto
 
-select * from Item order by _id;
+-- verify postconditions or post-state
 
 .headers off
 select '';
 select '__________________________________.- Log -._____________________________________';
 .headers on
 
-.width 3 23 200
+.width 4 23 200
 select * from Log
 --where _id >= 217
 order by _id

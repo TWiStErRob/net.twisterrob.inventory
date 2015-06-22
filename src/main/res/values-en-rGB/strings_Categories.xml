@@ -5,13 +5,14 @@
 	<!-- replacements for stuff based mostly on (each is unique, i.e. not used twice; and meanings match categories)
 	http://www.thefreedictionary.com/stuff#Thesaurus Collins Thesaurus of the English Language noun 1.
 	Complete and Unabridged 2nd Edition. 2002 © HarperCollins Publishers 1995, 2002 -->
+	<!-- extra words: contraption, junk -->
 	<string name="category_group_description">logically holds other possessions together</string>
 	<string name="category_parts_description">kit that\'s useless by itself</string>
 	<string name="category_images_description">extra images of your properties</string>
 	<string name="category_storage_description">impedimenta to put your things in</string>
 	<string name="category_furniture_description">goods and chattels you may need friends to move</string>
 	<string name="category_furnishings_description">matter to put on your belongings</string>
-	<string name="category_decorations_description">trappings that make your junk look pretty</string>
+	<string name="category_decorations_description">trappings that make your clutter look pretty</string>
 	<string name="category_collectibles_description">lares and penates you don\'t need, but still have</string>
 	<string name="category_clothing_description">clobber to put on your body</string>
 	<string name="category_leisure_description">tackle to use mostly in your spare time</string>
