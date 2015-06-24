@@ -50,7 +50,7 @@ public class MainActivity extends DrawerActivity
 			put(PAGE_EMPTY, R.string.empty);
 			put(PAGE_HOME, R.string.home_title);
 			put(PAGE_CATEGORIES, R.string.category_list);
-			put(PAGE_CATEGORY_HELP, R.string.category_help);
+			put(PAGE_CATEGORY_HELP, R.string.category_guide);
 			put(PAGE_PROPERTIES, R.string.property_list);
 			put(PAGE_ROOMS, R.string.room_list);
 			put(PAGE_ITEMS, R.string.item_list);
