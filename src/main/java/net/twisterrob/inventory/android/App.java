@@ -87,9 +87,13 @@ public class App extends Application {
 			App.toast(message);
 			new BackgroundExecution(new Runnable() {
 				@Override public void run() {
-					database.updateCategoryCache(App.getAppContext());
-					LOG.debug("Locale update successful: {} -> {}", storedLanguage, currentLanguage);
-					prefs.edit().putString(Prefs.CURRENT_LANGUAGE, currentLanguage).apply();
+					try {
+						database.updateCategoryCache(App.getAppContext());
+						LOG.debug("Locale update successful: {} -> {}", storedLanguage, currentLanguage);
+						prefs.edit().putString(Prefs.CURRENT_LANGUAGE, currentLanguage).apply();
+					} catch (Exception ex) {
+						LOG.error("Locale update failed: {} -> {}", storedLanguage, currentLanguage, ex);
+					}
 				}
 			}).execute();
 		}
