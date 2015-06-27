@@ -11,6 +11,19 @@ apply plugin: 'com.android.application'
 apply plugin: 'net.twisterrob.android-app'
 apply from: 'gradle/mapping.gradle'
 
+apply plugin: InventoryDatabasePlugin
+
+databaseEntities {
+	categories {
+		input = file(/i:\src\main\res\values\strings_Categories.xml/)
+		output = file(/i:\src\main\assets\MagicHomeInventory.data.Categories.sql/)
+		conversion = "SQL"
+	}
+}
+android.applicationVariants.all { com.android.build.gradle.api.ApplicationVariant  variant ->
+	variant.mergeAssets.dependsOn tasks.generateDataBase
+}
+
 repositories {
 	jcenter()
 	maven { name 'twisterrob'; url 'http://localhost/maven' }

@@ -1,0 +1,14 @@
+// To enable developing buildSrc in IDEA import buildSrc/build.gradle as a separate project
+
+apply plugin: 'groovy'
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+	compile localGroovy()
+	compile gradleApi()
+
+	testCompile 'junit:junit:4.12'
+}

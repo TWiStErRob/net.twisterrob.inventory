@@ -24,6 +24,12 @@ public class Database extends VariantDatabase {
 				super.onConfigure(db);
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 			}
+			@Override protected String[] getDataFiles() {
+				return new String[] {
+						super.getDataFiles()[0],
+						String.format("%s.data.Categories.sql", getDatabaseName())
+				};
+			}
 		};
 		// TODO App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
 		m_helper.setDevMode(BuildConfig.DEBUG);
@@ -103,7 +109,7 @@ public class Database extends VariantDatabase {
 		return rawQuery(R.string.query_room, roomID);
 	}
 	public Cursor listRelatedCategories(Long categoryID) {
-		if(categoryID == null) {
+		if (categoryID == null) {
 			return rawQuery(R.string.query_categories_all);
 		} else {
 			return rawQuery(R.string.query_item_categories, categoryID);
