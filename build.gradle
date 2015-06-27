@@ -46,7 +46,7 @@ android {
 		version {
 			major = 1
 		}
-		resConfigs "en_GB", "hu"
+		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
 	}
 	buildTypes {
 		release {
