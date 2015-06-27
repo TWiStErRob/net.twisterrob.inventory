@@ -2,16 +2,17 @@ package net.twisterrob.inventory.android.view.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
+import android.text.*;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.View.*;
 import android.widget.*;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 
@@ -70,14 +71,15 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		}
 
 		CharSequence description = CategoryDTO.getDescription(context, name);
-		if (description != null) {
+		if (description != null && description.length() != 0) {
 			stats.setText(description);
 		} else {
-			if (App.getBPref(R.string.pref_preferExpandedKeywords, R.bool.pref_preferExpandedKeywords_default)) {
-				stats.setText(CategoryDTO.getKeywords(context, name));
-			} else {
-				stats.setText(CategoryDTO.getShortKeywords(context, name));
+			CharSequence keywords = CategoryDTO.getKeywords(context, name);
+			String childrenString = DatabaseTools.getOptionalString(cursor, "children");
+			if (!TextUtils.isEmpty(childrenString)) {
+				keywords = appendChildren(context, keywords, TextUtils.split(childrenString, ","));
 			}
+			stats.setText(keywords);
 		}
 		AndroidTools.displayedIfHasText(stats);
 
@@ -92,14 +94,34 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		Pic.svg().load(AndroidTools.getRawResourceID(context, typeImage)).into(image);
 	}
 
-	private static Integer getCount(Cursor cursor, String columnName) {
-		int countIndex = cursor.getColumnIndex(columnName);
-		if (countIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-			int count = cursor.getInt(countIndex);
-			if (count > 0) {
-				return count;
+	private SpannableStringBuilder appendChildren(Context context, CharSequence keywords, String... children) {
+		SpannableStringBuilder sb = new SpannableStringBuilder();
+		if (!TextUtils.isEmpty(keywords)) {
+			sb.append(keywords);
+			sb.append("; ");
+		}
+		int start = sb.length();
+		appendNames(context, sb, children);
+		int end = sb.length();
+		sb.setSpan(new StyleSpan(Typeface.ITALIC), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		return sb;
+	}
+
+	private void appendNames(Context context, SpannableStringBuilder sb, String... names) {
+		for (int i = 0; i < names.length; i++) {
+			String name = names[i];
+			sb.append(AndroidTools.getText(context, name));
+			if (i < names.length - 1) {
+				sb.append(", ");
 			}
 		}
-		return null;
+	}
+
+	private static Integer getCount(Cursor cursor, String columnName) {
+		Integer result = DatabaseTools.getOptionalInt(cursor, columnName);
+		if (result != null && result == 0) {
+			result = null;
+		}
+		return result;
 	}
 }

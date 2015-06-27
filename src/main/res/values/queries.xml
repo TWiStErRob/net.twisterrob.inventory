@@ -142,7 +142,7 @@
 						ct.parent = c._id
 					)
 				)
-			) as strong,
+			)              as strong,
 			ct.image       as typeImage
 		from Category            c
 		join Category_Related    cr  ON cr.category = c._id
@@ -371,7 +371,8 @@
 			1 <> 2                                              as hasImage,
 			c.image                                             as typeImage,
 			(select count() from Category where parent = c._id) as countChildren,
-			(select count() from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems
+			(select count() from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems,
+			(select group_concat(name) from Category where parent = c._id) as children
 		from      Category            c
 		left join Category_Name_Cache cnc ON cnc.key = c.name
 		where c.parent = ? or (? = 'null' and c.parent is null)
