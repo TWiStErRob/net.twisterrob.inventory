@@ -62,7 +62,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 		count.setText(countText);
 		AndroidTools.displayedIfHasText(count);
 
-		ImagedDTO.loadInto(this.image, this.type, hasImage? type : null, id, imageTime, typeImage, false);
+		ImagedDTO.loadInto(this.image, this.type, hasImage? type : null, id, imageTime, typeImage, true);
 	}
 
 	private static String getCountText(Cursor cursor) {

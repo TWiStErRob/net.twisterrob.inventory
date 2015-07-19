@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
@@ -67,6 +68,9 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 					}
 					@Override protected Loaders getTypesLoader() {
 						return Loaders.ItemCategories;
+					}
+					@Override protected Bundle createArgs(long type) {
+						return Intents.bundleFromCategory(type);
 					}
 					@Override protected CharSequence getName() {
 						return "selection";

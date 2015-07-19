@@ -167,7 +167,7 @@
 	<string name="category_pillow_keywords">pillow, cushion, travel neck pillow, seat pad</string>
 
 	<string name="category_fabric" level="1">Fabrics</string>
-	<string name="category_fabric_keywords">curtains, cloth, blanket, embroidery</string>
+	<string name="category_fabric_keywords">curtains, cloth, embroidery</string>
 	<string name="category_bedding" level="2">bedding</string>
 	<string name="category_bedding_keywords">cover, blanket, throw, duvet, bedsheets, fitted sheet, pillowcase, sleeping bag, straw beach mat</string>
 	<string name="category_towel" level="2">towels</string>
@@ -284,9 +284,9 @@
 	<string name="category_full_body_keywords">pajamas, romper suit, bodysuit, leotard, unitard, catsuit</string>
 
 	<string name="category_headwear" level="1">Headwear</string>
-	<string name="category_headwear_keywords">cap, hood, headband</string>
+	<string name="category_headwear_keywords">hood, headband</string>
 	<string name="category_hat" level="2">hats</string>
-	<string name="category_hat_keywords">beach hat, sombrero, cowboy hat, party hat</string>
+	<string name="category_hat_keywords">cap, beach hat, sombrero, cowboy hat, party hat</string>
 	<string name="category_scarf" level="2">scarves</string>
 	<string name="category_scarf_keywords">shawl, kerchief, bandana, buff</string>
 
@@ -297,7 +297,7 @@
 	<string name="category_accessory_decorative" level="2">decorative accessories</string>
 	<string name="category_accessory_decorative_keywords">tie, neck tie, bow tie, badge, rosette, hairband, hair clip, scrunchies, rubber band, hairnet, headpiece, collar</string>
 	<string name="category_jewelry" level="2">jewelry</string>
-	<string name="category_jewelry_keywords">tiara, earrings, necklace, pendant, medallion, bracelet, ring, piercing</string>
+	<string name="category_jewelry_keywords">tiara, earrings, necklace, pendant, medallion, medal, bracelet, ring, piercing</string>
 
 	<string name="category_sport_clothing" level="1" icon="@raw/category_soccer">Sports</string>
 	<string name="category_sport_clothing_keywords">running gear, cycling shorts, sweatband, football boots/cleats/soccer shoes, ballet shoes</string>
@@ -344,7 +344,7 @@
 	<string name="category_fishing" level="2">fishing tackle</string>
 	<string name="category_fishing_keywords">rod, reel, line, hook, sinker, float, bait, net, trap</string>
 	<string name="category_sport_accessory" level="2">accessories</string>
-	<string name="category_sport_accessory_keywords">snorkel, flippers, ski goggles, binoculars, periscope</string>
+	<string name="category_sport_accessory_keywords">snorkel, earplug, noseclip, flippers, ski goggles, binoculars, periscope</string>
 
 	<string name="category_instrument" level="1" icon="@raw/category_musical_note">Instruments</string>
 	<!-- https://en.wikipedia.org/wiki/List_of_musical_instruments -->
