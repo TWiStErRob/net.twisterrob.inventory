@@ -156,7 +156,9 @@ public class ChangeTypeDialog {
 		}
 		@Override public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
 			super.onLoadFinished(loader, data);
-			autoSelect(adapter, type);
+			if (type != -1) {
+				autoSelect(adapter, type);
+			}
 		}
 		@Override protected void updateAdapter(Cursor data) {
 			super.updateAdapter(data);

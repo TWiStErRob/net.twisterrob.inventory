@@ -48,6 +48,7 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 				return true;
 			case R.id.action_item_categorize:
 				final long[] itemIDs = getSelectedIDs();
+				long category = App.db().findCommonCategory(itemIDs);
 				new ChangeTypeDialog(fragment).show(new Variants() {
 					@Override protected void update(long newType, Cursor cursor) {
 						for (long itemID : itemIDs) {
@@ -58,6 +59,7 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 						CharSequence newTypeName = AndroidTools.getText(fragment.getContext(), newTypeKey);
 						App.toastUser(fragment.getContext()
 						                      .getString(R.string.generic_location_change, "selection", newTypeName));
+						finish();
 						fragment.refresh();
 					}
 					@Override protected CharSequence getTitle() {
@@ -69,7 +71,7 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 					@Override protected CharSequence getName() {
 						return "selection";
 					}
-				}, Category.INTERNAL);
+				}, category);
 				return true;
 		}
 		return super.onActionItemClicked(mode, item);

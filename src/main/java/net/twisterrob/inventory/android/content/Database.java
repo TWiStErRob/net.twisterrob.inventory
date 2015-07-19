@@ -10,6 +10,7 @@ import android.support.annotation.StringRes;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.content.contract.Category;
 
 public class Database extends VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
@@ -149,6 +150,27 @@ public class Database extends VariantDatabase {
 	}
 	public Cursor getCategory(long itemID) {
 		return rawQuery(R.string.query_category, itemID);
+	}
+	public long findCommonCategory(long... ids) {
+		StringBuilder sb = new StringBuilder("select distinct category from Item where _id in (");
+		for (int i = 0; i < ids.length; i++) {
+			if (0 < i) {
+				sb.append(",");
+			}
+			sb.append(ids[i]);
+		}
+		sb.append(");");
+
+		Cursor cursor = getReadableDatabase().rawQuery(sb.toString(), null);
+		try {
+			if (cursor.getCount() == 1 && cursor.moveToPosition(0)) {
+				return DatabaseTools.getInt(cursor, "category");
+			} else {
+				return Category.INTERNAL;
+			}
+		} finally {
+			cursor.close();
+		}
 	}
 
 	public long createProperty(long type, String name, String description) {
