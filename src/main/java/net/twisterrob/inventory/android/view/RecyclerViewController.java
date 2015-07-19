@@ -142,7 +142,7 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 		AndroidTools.displayedIf(empty, !isLoading() && adapter != null && isEmpty(adapter));
 	}
 
-	protected boolean isEmpty(A adapter) {
+	protected boolean isEmpty(@NonNull A adapter) {
 		return adapter.getItemCount() == 0;
 	}
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.*;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.*;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -38,6 +39,9 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	}
 	public boolean hasHeader() {
 		return header != null;
+	}
+	public boolean hasHeaderUI() {
+		return header != null && header.hasUI();
 	}
 
 	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -72,11 +76,13 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState == null && hasHeader()) {
-			getChildFragmentManager()
-					.beginTransaction()
-					.add(R.id.header, header)
-					.commit()
-			;
+			FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+			if (hasHeaderUI()) {
+				ft.add(R.id.header, header);
+			} else {
+				ft.add(header, "header");
+			}
+			ft.commit();
 			// header is scheduled to be added, will be available: whenever,
 			// any post() will have header.getView() available, don't executePendingTransactions
 			// because we're (parent) not activated yet!
@@ -84,12 +90,20 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (header == null) {
-			header = (BaseFragment)getChildFragmentManager().findFragmentById(R.id.header); // restore on rotation
-			// FIXME save fragment UI state from savedInstanceState into a field and use that in the adapter
-		}
-		int layout = hasHeader()? R.layout.generic_list_with_header : R.layout.generic_list;
+		restoreOnRotation();
+
+		int layout = hasHeaderUI()? R.layout.generic_list_with_header : R.layout.generic_list;
 		return inflater.inflate(layout, container, false);
+	}
+	
+	private void restoreOnRotation() {
+		if (header == null) {
+			header = (BaseFragment)getChildFragmentManager().findFragmentByTag("header");
+		}
+		if (header == null) {
+			header = (BaseFragment)getChildFragmentManager().findFragmentById(R.id.header);
+		}
+		// FIXME save fragment UI state from savedInstanceState into a field and use that in the adapter
 	}
 
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -120,7 +134,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	}
 	@Override public void setMenuVisibility(boolean menuVisible) {
 		super.setMenuVisibility(menuVisible);
-		if (header != null) {
+		if (hasHeader()) {
 			// FIXME needed for hierarchy view? header.setMenuVisibility(menuVisible);
 		}
 	}
@@ -171,7 +185,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		SelectionAdapter selectionAdapter = new SelectionAdapter(adapter);
 		selectionMode = onPrepareSelectionMode(selectionAdapter);
 
-		if (hasHeader() && header.hasUI() && /*ConstantConditions:*/ getView() != null) {
+		if (hasHeaderUI() && /*ConstantConditions:*/ getView() != null) {
 			View headerContainer = getView().findViewById(R.id.header);
 			adapter.setHeader(headerContainer);
 			list.addOnScrollListener(new SynchronizedScrollListener(0, list, new StaticViewProvider(headerContainer)));
@@ -183,7 +197,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		//layout.setSmoothScrollbarEnabled(true);
 		layout.setSpanSizeLookup(new SpanSizeLookup() {
 			@Override public int getSpanSize(int position) {
-				if (hasHeader() && header.hasUI() && position == 0) {
+				if (hasHeaderUI() && position == 0) {
 					return columns;
 				}
 				return adapter.getSpanSize(position, columns);
@@ -262,8 +276,8 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 			}
 		}
 
-		@Override protected boolean isEmpty(CursorRecyclerAdapter adapter) {
-			return hasHeader()? adapter.getItemCount() == 1 : super.isEmpty(adapter);
+		@Override protected boolean isEmpty(@NonNull CursorRecyclerAdapter adapter) {
+			return hasHeaderUI()? adapter.getItemCount() == 1 : super.isEmpty(adapter);
 		}
 	}
 }

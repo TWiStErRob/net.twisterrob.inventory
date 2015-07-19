@@ -151,7 +151,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			text.setText(R.string.item_empty_category);
 		}
 
-		@Override protected boolean isEmpty(CursorRecyclerAdapter adapter) {
+		@Override protected boolean isEmpty(@NonNull CursorRecyclerAdapter adapter) {
 			return adapter.getItemCount() <= 1;
 		}
 
