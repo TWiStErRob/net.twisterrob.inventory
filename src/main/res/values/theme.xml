@@ -21,7 +21,7 @@
 		<item name="android:textColorHighlight">@color/accent</item>
 	</style>
 
-	<style name="Theme.AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+	<style name="Theme.AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
 		<!--<item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>-->
 		<!--<item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>-->
 	</style>

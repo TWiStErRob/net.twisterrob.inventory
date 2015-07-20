@@ -2,11 +2,16 @@ package net.twisterrob.inventory.android.view;
 
 import org.slf4j.*;
 
-import android.app.*;
+import android.app.Activity;
+import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
+import android.os.Build.*;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
@@ -69,18 +74,29 @@ public class Dialogs {
 		@Override
 		protected void onPostExecute(final ActionState state) {
 			if (state.check(context)) {
-				new AlertDialog.Builder(context)
+				Builder builder = new Builder(context)
 						.setTitle(state.action.getConfirmationTitle(context.getResources()))
 						.setMessage(state.action.getConfirmationMessage(context.getResources()))
-						.setIcon(android.R.drawable.ic_dialog_alert)
 						.setView(state.action.getConfirmationView(context))
 						.setPositiveButton(android.R.string.yes, new OnClickListener() {
 							@Override public void onClick(DialogInterface dialog, int which) {
 								new Execute(context).execute(state);
 							}
 						})
-						.setNegativeButton(android.R.string.no, null)
-						.show();
+						.setNegativeButton(android.R.string.no, null);
+				if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
+					Drawable icon = ContextCompat.getDrawable(context, android.R.drawable.ic_dialog_alert).mutate();
+					icon.setColorFilter(new ColorMatrixColorFilter(new float[] {
+							-1, 0, 0, 0, 255, // red = 255 - red
+							0, -1, 0, 0, 255, // green = 255 - green
+							0, 0, -1, 0, 255, // blue = 255 - blue
+							0, 0, 0, 1, 0     // alpha = alpha
+					}));
+					builder.setIcon(icon);
+				} else {
+					builder.setIconAttribute(android.R.attr.alertDialogIcon);
+				}
+				builder.show();
 			}
 		}
 	}

@@ -24,7 +24,7 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDetailActivity.class);
 
 	private final @PluralsRes int typePlural;
-	private TitleEditor editor;
+	private TitleEditor titleEditor;
 
 	protected BaseDetailActivity(@PluralsRes int typePlural) {
 		this.typePlural = typePlural;
@@ -37,8 +37,8 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 		setActionBarTitle("...");
 	}
 
-	protected void setupTitleEditor() {
-		editor = new TitleEditor(this, new TitleEditor.TitleEditListener() {
+	protected boolean setupTitleEditor() {
+		titleEditor = new TitleEditor(this, new TitleEditor.TitleEditListener() {
 			@Override public void titleChange(String oldName, String newName) {
 				if (TextUtils.getTrimmedLength(newName) == 0) {
 					return;
@@ -53,20 +53,24 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 				}
 			}
 		});
-		editor.install();
+		boolean installed = titleEditor.install();
+		if (!installed) {
+			titleEditor = null;
+		}
+		return installed;
 	}
 
 	@Override public void onBackPressed() {
-		if (editor != null && editor.isActive()) {
-			editor.finish();
+		if (titleEditor != null && titleEditor.isActive()) {
+			titleEditor.finish();
 			return;
 		}
 		super.onBackPressed();
 	}
 
 	@Override public boolean onSupportNavigateUp() {
-		if (editor != null && editor.isActive()) {
-			editor.finish();
+		if (titleEditor != null && titleEditor.isActive()) {
+			titleEditor.finish();
 			return true;
 		}
 		return super.onSupportNavigateUp();
@@ -114,6 +118,9 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 			return activity.getSupportActionBar().getCustomView() == editor;
 		}
 
+		/**
+		 * @return whether the it managed to install the action bar title listener hack
+		 */
 		public boolean install() {
 			View actionBarTitle = AndroidTools.findActionBarTitle(activity.getWindow().getDecorView());
 			if (actionBarTitle != null) {

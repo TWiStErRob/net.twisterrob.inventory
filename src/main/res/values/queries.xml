@@ -418,6 +418,7 @@
 			exists ( select 1 from List_Entry where list = l._id and item = ? ) as [exists],
 			(select count() from List_Entry where list = l._id) as countChildren
 		from List       l
+		order by l.name
 	"]]></string>
 	<string name="query_list" translatable="false"><![CDATA["
 		select

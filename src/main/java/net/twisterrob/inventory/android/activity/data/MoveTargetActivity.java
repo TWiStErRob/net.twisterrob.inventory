@@ -83,7 +83,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		title = (TextView)findViewById(R.id.selection);
 		labType = (TextView)findViewById(R.id.type);
 		upButton = (ImageButton)findViewById(R.id.up);
-		upButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+		upButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
 		upButton.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				getSupportFragmentManager().popBackStack();
@@ -104,11 +104,11 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		});
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-		// TODO rotation and maybe SingleFragmentActivity?
-		PropertyListFragment fragment = PropertyListFragment.newInstance();
-		updateFragment(fragment);
-		updateUI(fragment);
+		// TODO maybe SingleFragmentActivity?
 		if (savedInstanceState == null) {
+			PropertyListFragment fragment = PropertyListFragment.newInstance();
+			updateFragment(fragment);
+			updateUI(fragment);
 			switch (getArgStartType()) {
 				case PROPERTY:
 					propertySelected(getArgStartId(), true);
@@ -120,6 +120,8 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 					itemSelected(getArgStartId(), true);
 					break;
 			}
+		} else {
+			updateUI(getFragment());
 		}
 	}
 
