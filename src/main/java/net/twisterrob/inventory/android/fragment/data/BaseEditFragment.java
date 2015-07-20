@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import org.slf4j.*;
 
-import android.app.*;
+import android.app.Activity;
 import android.content.*;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
@@ -111,7 +111,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 							AndroidTools.selectByID(type, newType);
 						}
 						@Override protected CharSequence getTitle() {
-							return  "Change Category of " + getName();
+							return "Change Category of " + getName();
 						}
 						@Override protected Loaders getTypesLoader() {
 							return Loaders.ItemCategories;
@@ -248,6 +248,13 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				updateHint(name.getText(), false);
 			}
 		});
+		// TODO setOnItemLongClickListener is not supported, any way to work around? So user has the same "tooltip" as in ChangeTypeDialog
+		type.setOnLongClickListener(new OnLongClickListener() {
+			@Override public boolean onLongClick(View view) {
+				ChangeTypeDialog.showKeywords(view.getContext(), getTypeName());
+				return true;
+			}
+		});
 
 		if (isNew()) {
 			tryRestore();
@@ -255,7 +262,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	private void updateHint(CharSequence s, boolean forceSuggest) {
-		if(!(this instanceof ItemEditFragment)) {
+		if (!(this instanceof ItemEditFragment)) {
 			return;
 		}
 		String suggest = App.getSPref(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
@@ -380,13 +387,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				updateHint(name.getText(), true);
 				return true;
 			case R.id.action_category_keywords:
-				CharSequence categoryTitle = AndroidTools.getText(getContext(), getTypeName());
-				CharSequence categoryKeywords = CategoryDTO.getKeywords(getContext(), getTypeName());
-				new AlertDialog.Builder(getContext())
-						.setTitle(getString(R.string.category_keywords, categoryTitle))
-						.setMessage(categoryKeywords)
-						.show()
-				;
+				ChangeTypeDialog.showKeywords(getContext(), getTypeName());
 				return true;
 		}
 		return super.onContextItemSelected(item);

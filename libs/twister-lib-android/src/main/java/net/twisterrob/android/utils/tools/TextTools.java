@@ -114,6 +114,22 @@ public /*static*/ abstract class TextTools {
 		return apply(content, new ForegroundColorSpan(color));
 	}
 
+	public static SpannableStringBuilder appendItalic(SpannableStringBuilder builder, CharSequence content) {
+		int start = builder.length();
+		builder.append(content);
+		int end = builder.length();
+		builder.setSpan(new StyleSpan(Typeface.ITALIC), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		return builder;
+	}
+
+	public static SpannableStringBuilder appendBold(SpannableStringBuilder builder, CharSequence content) {
+		int start = builder.length();
+		builder.append(content);
+		int end = builder.length();
+		builder.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		return builder;
+	}
+
 	protected TextTools() {
 		// static utility class
 	}

@@ -18,12 +18,6 @@
 			android:defaultValue="@bool/pref_internalImageViewer_default"
 			android:summary="@string/pref_internalImageViewer_desc"
 			/>
-		<CheckBoxPreference
-			android:key="@string/pref_preferExpandedKeywords"
-			android:title="@string/pref_preferExpandedKeywords_title"
-			android:defaultValue="@bool/pref_preferExpandedKeywords_default"
-			android:summary="@string/pref_preferExpandedKeywords_desc"
-			/>
 		<ListPreference
 			android:key="@string/pref_suggestCategory"
 			android:title="@string/pref_suggestCategory_title"

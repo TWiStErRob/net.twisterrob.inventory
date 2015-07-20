@@ -7,23 +7,23 @@
 	Complete and Unabridged 2nd Edition. 2002 © HarperCollins Publishers 1995, 2002 -->
 	<!-- extra words: contraption, junk -->
 	<string name="category_group_description">logically holds other possessions together</string>
-	<string name="category_parts_description">kit that\'s useless by itself</string>
-	<string name="category_images_description">extra images of your properties</string>
+	<string name="category_part_description">kit that\'s useless by itself</string>
+	<string name="category_image_description">extra images of your properties</string>
 	<string name="category_storage_description">impedimenta to put your things in</string>
 	<string name="category_furniture_description">goods and chattels you may need friends to move</string>
-	<string name="category_furnishings_description">matter to put on your belongings</string>
-	<string name="category_decorations_description">trappings that make your clutter look pretty</string>
-	<string name="category_collectibles_description">lares and penates you don\'t need, but still have</string>
+	<string name="category_furnishing_description">matter to put on your belongings</string>
+	<string name="category_decoration_description">trappings that make your clutter look pretty</string>
+	<string name="category_collectible_description">lares and penates you don\'t need, but still have</string>
 	<string name="category_clothing_description">clobber to put on your body</string>
 	<string name="category_leisure_description">tackle to use mostly in your spare time</string>
-	<string name="category_toys_description">paraphernalia to play with</string>
-	<string name="category_machines_description">effects consuming energy during operation</string>
+	<string name="category_toy_description">paraphernalia to play with</string>
+	<string name="category_machine_description">effects consuming energy during operation</string>
 	<string name="category_household_description">equipment around the house</string>
-	<string name="category_crafts_description">gear to maintain or build objects with</string>
-	<string name="category_documents_description">essence written on bits and pieces</string>
-	<string name="category_consumables_description">substances to ingest raw, or processed</string>
+	<string name="category_craft_description">gear to maintain or build objects with</string>
+	<string name="category_document_description">essence written on bits and pieces</string>
+	<string name="category_consumable_description">substances to ingest raw, or processed</string>
 	<string name="category_health_description">staples helping you live a better life</string>
 
-	<string name="category_appliances_major">White Goods</string>
-	<string name="category_consumer_electronics">Brown Goods</string>
+	<string name="category_appliance_major">White Goods</string>
+	<string name="category_electronic">Brown Goods</string>
 </resources>

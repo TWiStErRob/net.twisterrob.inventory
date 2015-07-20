@@ -2,10 +2,8 @@ package net.twisterrob.inventory.android.view.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.text.*;
-import android.text.style.StyleSpan;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.*;
 import android.widget.*;
@@ -74,12 +72,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		if (description != null && description.length() != 0) {
 			stats.setText(description);
 		} else {
-			CharSequence keywords = CategoryDTO.getKeywords(context, name);
-			String childrenString = DatabaseTools.getOptionalString(cursor, "children");
-			if (!TextUtils.isEmpty(childrenString)) {
-				keywords = appendChildren(context, keywords, TextUtils.split(childrenString, ","));
-			}
-			stats.setText(keywords);
+			stats.setText(CategoryDTO.getKeywordsExtended(context, name));
 		}
 		AndroidTools.displayedIfHasText(stats);
 
@@ -92,29 +85,6 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		AndroidTools.displayedIfHasText(count);
 
 		Pic.svg().load(AndroidTools.getRawResourceID(context, typeImage)).into(image);
-	}
-
-	private SpannableStringBuilder appendChildren(Context context, CharSequence keywords, String... children) {
-		SpannableStringBuilder sb = new SpannableStringBuilder();
-		if (!TextUtils.isEmpty(keywords)) {
-			sb.append(keywords);
-			sb.append("; ");
-		}
-		int start = sb.length();
-		appendNames(context, sb, children);
-		int end = sb.length();
-		sb.setSpan(new StyleSpan(Typeface.ITALIC), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-		return sb;
-	}
-
-	private void appendNames(Context context, SpannableStringBuilder sb, String... names) {
-		for (int i = 0; i < names.length; i++) {
-			String name = names[i];
-			sb.append(AndroidTools.getText(context, name));
-			if (i < names.length - 1) {
-				sb.append(", ");
-			}
-		}
 	}
 
 	private static Integer getCount(Cursor cursor, String columnName) {

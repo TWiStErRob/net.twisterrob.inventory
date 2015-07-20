@@ -1,23 +1,19 @@
 package net.twisterrob.inventory.android.content.model;
 
-import java.util.Locale;
-import java.util.regex.*;
+import java.util.*;
 
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.*;
-import android.text.*;
-import android.text.style.ForegroundColorSpan;
+import android.text.SpannableStringBuilder;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.content.contract.Category;
 
 public class CategoryDTO extends ImagedDTO {
-	public static final Pattern KEYWORDS_PATTERN = Pattern.compile("\\s*\\(.*?\\)|\\s*[,;]\\s*"); // match parentheses and list separators
 	private static final Uri APP_RESOURCE_RAW = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/");
 	private static final CategorySuggester SUGGESTER = new CategorySuggester();
 
@@ -47,34 +43,59 @@ public class CategoryDTO extends ImagedDTO {
 		return String.format(Locale.ROOT, "Category #%1$d: '%2$s' in %3$s", id, name, parentID);
 	}
 
-	public static @Nullable CharSequence getShortKeywords(@NonNull Context context, @NonNull String categoryName) {
+	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName) {
+		return getKeywords(context, categoryName, false);
+	}
+	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName,
+			boolean deep) {
 		try {
 			CharSequence keywords = AndroidTools.getText(context, categoryName + "_keywords");
-			return keywords.toString().replaceAll("\\s*\\(.*?\\)", ""); // remove stuff in parentheses
+			if (deep) {
+				SUGGESTER.init(context);
+				SpannableStringBuilder more = new SpannableStringBuilder(keywords);
+				for (String sub : SUGGESTER.getChildren(categoryName)) {
+					if (more.length() > 0) {
+						more.append(",\n");
+					}
+					TextTools.appendBold(more, AndroidTools.getText(context, sub));
+
+					CharSequence extended = getKeywordsExtended(context, sub);
+					if (extended != null) {
+						more.append(" (").append(extended).append(")");
+					}
+				}
+				keywords = more;
+			}
+			return keywords.length() != 0? keywords : null;
 		} catch (NotFoundException ex) {
 			return null;
 		}
 	}
-	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName) {
-		try {
-			CharSequence text = AndroidTools.getText(context, categoryName + "_keywords");
-			SpannableStringBuilder builder = new SpannableStringBuilder(text);
-			Matcher m = KEYWORDS_PATTERN.matcher(builder);
 
-			// inverse of appendReplacement and appendTail, treat everything that's not matched
-			//int start = m.regionStart();
-			while (m.find()) {
-				builder.setSpan(new ForegroundColorSpan(Color.LTGRAY),
-						m.start(), m.end(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-				//builder.setSpan(new StyleSpan(Typeface.BOLD), start, m.start(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-				//start = m.end();
-			}
-			//builder.setSpan(new StyleSpan(Typeface.BOLD), start, m.regionEnd(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+	public static @Nullable CharSequence getKeywordsExtended(@NonNull Context context, @NonNull String categoryName) {
+		SpannableStringBuilder keywords = new SpannableStringBuilder();
 
-			return builder;
-		} catch (NotFoundException ex) {
-			return null;
+		CharSequence myKeywords = getKeywords(context, categoryName, false);
+		if (myKeywords != null) {
+			keywords.append(myKeywords);
 		}
+
+		Collection<String> children = SUGGESTER.getChildren(categoryName);
+		if (!children.isEmpty()) {
+			if (0 < keywords.length()) {
+				keywords.append("; ");
+			}
+			TextTools.appendBold(keywords, "more");
+			keywords.append(": ");
+			for (Iterator<String> it = children.iterator(); it.hasNext(); ) {
+				TextTools.appendItalic(keywords, AndroidTools.getText(context, it.next()));
+				if (it.hasNext()) {
+					keywords.append(", ");
+				}
+			}
+		}
+
+		return keywords.length() != 0? keywords : null;
 	}
 
 	public static @Nullable CharSequence getDescription(@NonNull Context context, @NonNull String categoryName) {

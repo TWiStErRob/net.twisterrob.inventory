@@ -372,7 +372,6 @@
 			c.image                                             as typeImage,
 			(select count() from Category where parent = c._id) as countChildren,
 			(select count() from Item where category in (select descendant from Category_Descendant where category = c._id)) as countAllItems,
-			(select group_concat(name) from Category where parent = c._id) as children
 		from      Category            c
 		left join Category_Name_Cache cnc ON cnc.key = c.name
 		where c.parent = ? or (? = 'null' and c.parent is null)

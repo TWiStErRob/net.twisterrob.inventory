@@ -13,12 +13,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
 import android.view.View;
 import android.view.View.MeasureSpec;
-import android.widget.ListView;
+import android.widget.*;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
@@ -88,6 +90,13 @@ public class ChangeTypeDialog {
 		variants.augment(builder);
 		AlertDialog dialog = builder.create();
 		list = dialog.getListView();
+		list.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				Cursor cursor = (Cursor)parent.getAdapter().getItem(position);
+				showKeywords(parent.getContext(), DatabaseTools.getString(cursor, Category.NAME));
+				return true;
+			}
+		});
 		dialog.show();
 		load(variants, adapter, initialType);
 	}
@@ -132,6 +141,16 @@ public class ChangeTypeDialog {
 		int UNBOUNDED = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 		view.measure(UNBOUNDED, UNBOUNDED);
 		return view.getMeasuredHeight() + list.getDividerHeight();
+	}
+
+	public static void showKeywords(Context context, String categoryName) {
+		CharSequence categoryTitle = getText(context, categoryName);
+		CharSequence categoryKeywords = CategoryDTO.getKeywords(context, categoryName, true);
+		new android.app.AlertDialog.Builder(context)
+				.setTitle(context.getString(R.string.category_keywords, categoryTitle))
+				.setMessage(categoryKeywords)
+				.show()
+		;
 	}
 
 	public static abstract class Variants {

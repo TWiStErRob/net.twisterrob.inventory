@@ -21,6 +21,7 @@ public class CategorySuggester {
 	private final Map<String, Collection<IndexEntry>> index = new HashMap<>();
 	private final LongSparseArray<String> categoriesByID = new LongSparseArray<>();
 	private final Map<String, String> categoryParents = new TreeMap<>();
+	private final Map<String, Set<String>> categoryChildren = new TreeMap<>();
 	private final LongSparseArray<CharSequence> categoryFullNames = new LongSparseArray<>();
 	private final LongSparseArray<String> categoryIcons = new LongSparseArray<>();
 	private Locale lastLocale;
@@ -72,6 +73,12 @@ public class CategorySuggester {
 				String parentName = categoriesByID.get(parentID);
 				assert parentName != null : "Missing parent. Is the cursor returning them in parent-first order?";
 				categoryParents.put(categoryName, parentName);
+				Set<String> children = categoryChildren.get(parentName);
+				if (children == null) {
+					children = new TreeSet<>();
+					categoryChildren.put(parentName, children);
+				}
+				children.add(categoryName);
 			}
 			List<String> categoryPath = getPath(categoryName);
 			CharSequence fullName = buildFullName(context, categoryPath);
@@ -132,6 +139,14 @@ public class CategorySuggester {
 	}
 	public String getIcon(long type) {
 		return categoryIcons.get(type);
+	}
+	public Collection<String> getChildren(String name) {
+		Set<String> children = categoryChildren.get(name);
+		if(children != null) {
+			return Collections.unmodifiableSet(children);
+		} else {
+			return Collections.emptySet();
+		}
 	}
 
 	private static class IndexEntry {

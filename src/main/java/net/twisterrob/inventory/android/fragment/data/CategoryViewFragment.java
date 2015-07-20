@@ -63,8 +63,8 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 				.append("# of subcategories", entity.numAllChildren)
 				.append("# of items in this category", entity.numDirectItems)
 				.append("# of items in subcategories", entity.numAllItems)
-				.append("Main Keywords", CategoryDTO.getShortKeywords(getContext(), entity.name), DEBUG)
 				.append("Keywords", CategoryDTO.getKeywords(getContext(), entity.name))
+				.append("Extended Keywords", CategoryDTO.getKeywordsExtended(getContext(), entity.name), DEBUG)
 				.build();
 	}
 
