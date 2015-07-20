@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.io.*;
 import java.util.*;
-import java.util.regex.*;
 
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
@@ -40,15 +39,6 @@ public class CategoryHelpBuilder {
 			+ ".description:before {\n"
 			+ "    content: '\\200A\\2014\\200A'; /* x200A=hairline space, x2014=emdash */ \n"
 			+ "}\n"
-			+ ".keyword-group {\n"
-			+ "    display: block;\n"
-			+ "}\n"
-			+ ".keyword-group.collapsed.has-examples {\n"
-			+ "    /*text-decoration: underline;*/\n"
-			+ "}\n"
-			+ ".keyword-group.collapsed {\n"
-			+ "    display: inline;\n"
-			+ "}\n"
 			+ "\n"
 			+ "#legend {\n"
 			+ "     font-size: small;\n"
@@ -58,10 +48,7 @@ public class CategoryHelpBuilder {
 			+ "    #legend {\n"
 			+ "        display: none;\n"
 			+ "    }\n"
-			+ "    .keyword-group.has-examples .keyword {\n"
-			+ "        font-weight: bold;\n"
-			+ "    }\n"
-			+ "    .keyword-group.collapsed.has-examples {\n"
+			+ "    .subcategory.collapsed + .keywords {\n"
 			+ "        display: block;\n"
 			+ "    }\n"
 			+ "    body {\n"
@@ -72,16 +59,13 @@ public class CategoryHelpBuilder {
 			+ "    .description {\n"
 			+ "        color: #888;\n"
 			+ "    }\n"
-			+ "    .examples {\n"
-			+ "        color: #888;\n"
-			+ "    }\n"
-			+ "    .keyword-group.has-examples .keyword {\n"
+			+ "    .subcategory.has-keywords {\n"
 			+ "        cursor: pointer;\n"
 			+ "    }\n"
-			+ "    .keyword-group.collapsed .examples {\n"
+			+ "    .subcategory.collapsed + .keywords {\n"
 			+ "        display: none;\n"
 			+ "    }\n"
-			+ "    .keyword-group.collapsed.has-examples .keyword:after {\n"
+			+ "    .subcategory.collapsed:after {\n"
 			+ "        content: '*';\n"
 			+ "    }\n"
 			+ "}\n"
@@ -92,17 +76,17 @@ public class CategoryHelpBuilder {
 			+ "<p id=\"legend\">\n"
 			+ "     It is advised to look at this document in landscape.\n"
 			+ "     <br/>\n"
-			+ "     <button onclick=\"for (var i = 0; i < window.keywords.length; ++i) { window.keywords[i].classList.remove('collapsed'); }\">Expand All</button>\n"
-			+ "     <button onclick=\"for (var i = 0; i < window.keywords.length; ++i) { window.keywords[i].classList.add('collapsed'); }\">Collapse All</button>\n"
+			+ "     <button onclick=\"for (var i = 0; i < window.subcategories.length; ++i) { window.subcategories[i].classList.remove('collapsed'); }\">Expand All</button>\n"
+			+ "     <button onclick=\"for (var i = 0; i < window.subcategories.length; ++i) { window.subcategories[i].classList.add('collapsed'); }\">Collapse All</button>\n"
 			+ "     <br/>\n"
-			+ "     <span>*</span> Click individual generic keywords to collapse and expand.\n"
+			+ "     <span>*</span> Click subcategories to collapse and expand their keywords.\n"
 			+ "</p>\n\n";
 
 	private static final String FOOTER = "<script>\n"
-			+ "var keywords = document.querySelectorAll('.keyword-group.has-examples');\n"
-			+ "for (var i = 0; i < keywords.length; ++i) {\n"
-			+ "    keywords[i].querySelector('.keyword').onclick = function() {\n"
-			+ "        this.parentElement.classList.toggle('collapsed');\n"
+			+ "var subcategories = document.querySelectorAll('.subcategory.has-keywords');\n"
+			+ "for (var i = 0; i < subcategories.length; ++i) {\n"
+			+ "    subcategories[i].onclick = function() {\n"
+			+ "        this.classList.toggle('collapsed');\n"
 			+ "    }\n"
 			+ "}\n"
 			+ "</script>\n\n";
@@ -154,32 +138,19 @@ public class CategoryHelpBuilder {
 					"<h2 class=\"category\" id=\"%s\">%s<span class=\"description\">%s</span></h3>\n",
 					categoryName, categoryTitle, AndroidTools.getText(context, categoryName + "_description"));
 		} else {
-			out.printf(Locale.ROOT, "<h3 class=\"subcategory\" id=\"%s\">%s</h3>\n"
+			CharSequence keywords = buildKeywords(categoryName);
+			out.printf(Locale.ROOT, "<h3 class=\"subcategory%s\" id=\"%s\">%s</h3>\n"
 							+ "<p class=\"keywords level\">\n%s\n</p>",
-					categoryName, categoryTitle, buildKeywords(categoryName));
+					keywords.length() != 0? " has-keywords" : "", categoryName, categoryTitle, keywords);
 		}
 	}
 
 	private CharSequence buildKeywords(String categoryName) {
 		try {
-			CharSequence keywords = AndroidTools.getText(context, categoryName + "_keywords");
-			Pattern p = Pattern.compile("\\s*([^,]+?)\\s*(?:\\(([^)]+)\\))?([,;]|\\z)", Pattern.MULTILINE);
-			Matcher m = p.matcher(keywords);
-
-			StringBuffer builder = new StringBuffer();
-			while (m.find()) {
-				if (m.end(2) - m.start(2) == 0) {
-					m.appendReplacement(builder,
-							"<span class=\"keyword-group collapsed\"><span class=\"keyword\">$1</span>$3 </span>\n");
-				} else {
-					m.appendReplacement(builder,
-							"<span class=\"keyword-group has-examples\"><span class=\"keyword\">$1</span><span class=\"examples\"> ($2)</span>$3 </span>\n");
-				}
-			}
-			m.appendTail(builder);
-			return builder.toString();
+			String keywords = AndroidTools.getText(context, categoryName + "_keywords").toString();
+			return keywords.replaceAll("(?m)\\s*([^,]+?)\\s*([,;]|\\z)", "<span class=\"keyword\">$1</span>$2 ");
 		} catch (NotFoundException ex) {
-			return String.format(Locale.ROOT, "<span class=\"error\">Keywords not found for %s</span>", categoryName);
+			return String.format(Locale.ROOT, "<span class=\"error\">No keywords for %s</span>", categoryName);
 		}
 	}
 
