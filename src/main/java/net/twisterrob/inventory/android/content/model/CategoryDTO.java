@@ -15,6 +15,10 @@ import net.twisterrob.inventory.android.content.contract.Category;
 
 public class CategoryDTO extends ImagedDTO {
 	private static final Uri APP_RESOURCE_RAW = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/");
+	/**
+	 * Do not access this field directly.
+	 * @see #getSuggester(Context)
+	 */
 	private static final CategorySuggester SUGGESTER = new CategorySuggester();
 
 	public Long parentID;
@@ -51,9 +55,8 @@ public class CategoryDTO extends ImagedDTO {
 		try {
 			CharSequence keywords = AndroidTools.getText(context, categoryName + "_keywords");
 			if (deep) {
-				SUGGESTER.init(context);
 				SpannableStringBuilder more = new SpannableStringBuilder(keywords);
-				for (String sub : SUGGESTER.getChildren(categoryName)) {
+				for (String sub : getSuggester(context).getChildren(categoryName)) {
 					if (more.length() > 0) {
 						more.append(",\n");
 					}
@@ -80,7 +83,7 @@ public class CategoryDTO extends ImagedDTO {
 			keywords.append(myKeywords);
 		}
 
-		Collection<String> children = SUGGESTER.getChildren(categoryName);
+		Collection<String> children = getSuggester(context).getChildren(categoryName);
 		if (!children.isEmpty()) {
 			if (0 < keywords.length()) {
 				keywords.append("; ");
