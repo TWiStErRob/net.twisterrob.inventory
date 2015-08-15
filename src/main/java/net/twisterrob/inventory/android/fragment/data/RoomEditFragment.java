@@ -13,7 +13,6 @@ import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomEditFragment.RoomEditEvents;
-import net.twisterrob.inventory.android.view.CursorSwapper;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -34,8 +33,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 
 	@Override protected void onStartLoading() {
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper typeCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
-		Dependency<Cursor> populateTypes = manager.add(RoomTypes.id(), null, typeCursorSwapper);
+		Dependency<Cursor> populateTypes = manager.add(RoomTypes.id(), null, getTypeCallback());
 
 		if (!isNew()) {
 			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.id(),

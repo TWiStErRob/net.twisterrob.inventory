@@ -12,7 +12,6 @@ import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment.PropertyEditEvents;
-import net.twisterrob.inventory.android.view.CursorSwapper;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -33,8 +32,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 
 	@Override protected void onStartLoading() {
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper typeCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
-		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.id(), null, typeCursorSwapper);
+		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.id(), null, getTypeCallback());
 
 		if (!isNew()) {
 			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.id(),

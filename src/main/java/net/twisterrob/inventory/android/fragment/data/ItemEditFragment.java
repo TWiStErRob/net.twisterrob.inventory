@@ -13,7 +13,6 @@ import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Item;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemEditFragment.ItemEditEvents;
-import net.twisterrob.inventory.android.view.CursorSwapper;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -33,8 +32,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 
 	@Override protected void onStartLoading() {
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
-		CursorSwapper catCursorSwapper = new CursorSwapper(getContext(), typeAdapter);
-		Dependency<Cursor> populateCats = manager.add(ItemCategoriesAll.id(), null, catCursorSwapper);
+		Dependency<Cursor> populateCats = manager.add(ItemCategoriesAll.id(), null, getTypeCallback());
 
 		if (!isNew()) {
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.id(),

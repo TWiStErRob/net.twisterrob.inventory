@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Build.*;
 import android.os.Bundle;
 import android.support.annotation.*;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.widget.CursorAdapter;
 import android.text.*;
@@ -49,7 +50,7 @@ import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.content.model.CategorySuggester.Suggestion;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.utils.PictureHelper;
-import net.twisterrob.inventory.android.view.ChangeTypeDialog;
+import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
@@ -72,7 +73,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private EditText description;
 	private Spinner type;
 	private TextView hint;
-	protected CursorAdapter typeAdapter;
+	private CursorAdapter typeAdapter;
 	private ImageView image;
 	private ImageView typeImage;
 	private boolean isClean = true;
@@ -83,6 +84,17 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	public boolean isDirty() {
 		return !isClean;
+	}
+
+	protected LoaderCallbacks<Cursor> getTypeCallback() {
+		return new CursorSwapper(getContext(), typeAdapter) {
+			@Override protected void updateAdapter(Cursor data) {
+				super.updateAdapter(data);
+				if (isNew()) {
+					tryRestore();
+				}
+			}
+		};
 	}
 
 	protected void onSingleRowLoaded(final DTO dto) {
@@ -235,7 +247,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			private int oldPos = AdapterView.INVALID_POSITION;
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				if (oldPos != position && oldPos != -1) {
+				if (oldPos != position && oldPos != AdapterView.INVALID_POSITION) {
 					oldPos = position;
 					isClean = false;
 				}
@@ -255,10 +267,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				return true;
 			}
 		});
-
-		if (isNew()) {
-			tryRestore();
-		}
 	}
 
 	private void updateHint(CharSequence s, boolean forceSuggest) {
