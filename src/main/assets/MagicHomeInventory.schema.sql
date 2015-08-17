@@ -298,7 +298,6 @@ END;
 CREATE TABLE PropertyType (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- string resource name
-	priority    INTEGER      NOT NULL,
 	image       VARCHAR      NOT NULL, -- raw resource name
 	PRIMARY KEY(_id),
 	UNIQUE (name)
@@ -332,7 +331,6 @@ CREATE TABLE RoomTypeKind (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- string resource name
 	image       VARCHAR      NOT NULL, -- raw resource name
-	priority    INTEGER      NOT NULL,
 	PRIMARY KEY(_id),
 	UNIQUE (name)
 );
@@ -341,7 +339,6 @@ CREATE TABLE RoomType (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- string resource name
 	image       VARCHAR          NULL, -- raw resource name
-	priority    INTEGER      NOT NULL,
 	kind        INTEGER      NOT NULL
 		CONSTRAINT fk_RoomType_kind
 			REFERENCES RoomTypeKind(_id)

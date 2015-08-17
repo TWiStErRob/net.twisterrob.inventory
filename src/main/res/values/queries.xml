@@ -38,18 +38,35 @@
 			pt.name  as name,
 			pt.image as typeImage
 		from PropertyType pt
-		order by pt.priority
+		order by pt._id
 	"]]></string>
 
 
 	<string name="query_room_types" translatable="false"><![CDATA["
-		select
-			rt._id                        as _id,
-			rt.name                       as name,
-			COALESCE(rt.image, rtk.image) as typeImage
-		from RoomType     rt
-		join RoomTypeKind rtk ON rt.kind = rtk._id
-		order by rt.priority
+			select
+				rtk._id                                 as kind,
+				CASE WHEN rt._id == 0 THEN 1 ELSE 0 END as strong,
+				1 == 1                                  as enabled,
+				CASE WHEN rt._id == 0 THEN 0 ELSE 1 END as level,
+				'RoomType'                              as source,
+				rt._id                                  as _id,
+				rt.name                                 as name,
+				COALESCE(rt.image, rtk.image)           as typeImage
+			from RoomType     rt
+			join RoomTypeKind rtk ON rt.kind = rtk._id
+		UNION
+			select
+				rtk._id                                 as kind,
+				1 == 1                                  as strong,
+				1 == 2                                  as enabled,
+				0                                       as level,
+				'RoomTypeKind'                          as source,
+				-1                                      as _id,
+				rtk.name                                as name,
+				rtk.image                               as typeImage
+			from RoomTypeKind rtk
+			where rtk._id <> 0
+		order by kind, _id
 	"]]></string>
 	<string name="query_rooms" translatable="false"><![CDATA["
 		select

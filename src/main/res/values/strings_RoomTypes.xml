@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="room_group_other">Other</string>
-	<string name="room_group_general">General</string>
-	<string name="room_group_storage">Storage</string>
-	<string name="room_group_common">Common</string>
-	<string name="room_group_function">Function</string>
-	<string name="room_group_space">Space</string>
 	<string name="room_other">Other</string>
+
+	<string name="room_group_general">General</string>
 	<string name="room_bath">Bathroom</string>
 	<string name="room_bed">Bedroom</string>
 	<string name="room_kitchen">Kitchen</string>
 	<string name="room_toilet">Restroom</string>
+
+	<string name="room_group_storage">Storage</string>
 	<string name="room_storage">Storage Room</string>
 	<string name="room_closet">Closet</string>
 	<string name="room_garage">Garage</string>
@@ -19,9 +18,13 @@
 	<string name="room_attic">Attic</string>
 	<string name="room_basement">Basement</string>
 	<string name="room_cellar">Cellar</string>
+
+	<string name="room_group_common">Common</string>
 	<string name="room_living">Living Room</string>
 	<string name="room_family">Family Room</string>
 	<string name="room_play">Play Room</string>
+
+	<string name="room_group_function">Function</string>
 	<string name="room_dining">Dining Room</string>
 	<string name="room_library">Library</string>
 	<string name="room_office">Office</string>
@@ -31,6 +34,9 @@
 	<string name="room_laundry">Laundry Room</string>
 	<string name="room_stable">Stable</string>
 	<string name="room_greenhouse">Greenhouse</string>
+	<string name="room_animal">Animal Enclosure</string>
+
+	<string name="room_group_space">Space</string>
 	<string name="room_balcony">Balcony</string>
 	<string name="room_garden">Garden</string>
 	<string name="room_lobby">Lobby</string>

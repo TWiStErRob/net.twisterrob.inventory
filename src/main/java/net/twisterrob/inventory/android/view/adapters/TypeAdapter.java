@@ -27,8 +27,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		TextView title;
 	}
 
-	@Override
-	protected ViewHolder createHolder(View convertView) {
+	@Override protected ViewHolder createHolder(View convertView) {
 		ViewHolder holder = new ViewHolder();
 		holder.image = (ImageView)convertView.findViewById(R.id.image);
 		holder.spacer = convertView.findViewById(R.id.spacer);
@@ -37,8 +36,12 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		return holder;
 	}
 
-	@Override
-	protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
+	@Override public boolean isEnabled(int position) {
+		Cursor cursor = (Cursor)getItem(position);
+		return DatabaseTools.getOptionalBoolean(cursor, "enabled", false) || super.isEnabled(position);
+	}
+
+	@Override protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
 		holder.title.setText(getName(cursor));
 		int level = DatabaseTools.getOptionalInt(cursor, "level", 0);
 		int indent = (int)(mContext.getResources().getDimension(R.dimen.marginBig) * level);
