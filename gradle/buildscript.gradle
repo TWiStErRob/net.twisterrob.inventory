@@ -13,5 +13,5 @@ repositories {
 dependencies {
 	//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	//noinspection GradleDynamicVersion
-	classpath 'net.twisterrob.gradle:plugin:0.5.+'
+	classpath 'net.twisterrob.gradle:plugin:0.5.3.5'
 }
