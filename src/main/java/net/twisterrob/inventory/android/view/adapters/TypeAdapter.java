@@ -38,7 +38,8 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 
 	@Override public boolean isEnabled(int position) {
 		Cursor cursor = (Cursor)getItem(position);
-		return DatabaseTools.getOptionalBoolean(cursor, "enabled", false) || super.isEnabled(position);
+		Boolean enabled = DatabaseTools.getOptionalBoolean(cursor, "enabled");
+		return enabled != null? enabled : super.isEnabled(position);
 	}
 
 	@Override protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
