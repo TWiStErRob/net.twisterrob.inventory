@@ -1,4 +1,5 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 	<!--suppress CheckTagEmptyBody -->
 	<string name="empty"></string>
+	<string name="pref_number_picker_invalid_input" tools:ignore="PluralsCandidate">Please enter a number between %1$d and %2$d.</string>
 </resources>

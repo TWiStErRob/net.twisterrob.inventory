@@ -9,7 +9,7 @@ import android.text.format.Formatter;
 import android.widget.TextView;
 
 import net.twisterrob.android.utils.concurrent.SafeAsyncTask;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 
 abstract class GetSizeTask<Param> extends SafeAsyncTask<Param, Long, Long> {
 	private static final Logger LOG = LoggerFactory.getLogger(GetSizeTask.class);
@@ -18,7 +18,7 @@ abstract class GetSizeTask<Param> extends SafeAsyncTask<Param, Long, Long> {
 		this.result = result;
 	}
 	@Override protected void onPreExecute() {
-		result.setText("Calculating...");
+		result.setText(R.string.manage_space_calculating);
 	}
 
 	@Override protected void onProgressUpdate(Long... values) {

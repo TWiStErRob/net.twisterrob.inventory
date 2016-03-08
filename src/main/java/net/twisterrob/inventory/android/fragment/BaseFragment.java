@@ -43,8 +43,8 @@ public class BaseFragment<T> extends VariantFragment {
 		return (D)dynResources.get(type);
 	}
 
-	@Override public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	@Override public void onAttach(Context context) {
+		super.onAttach(context);
 		Class<T> eventsClass = getDynamicResource(DYN_EventsClass);
 		if (eventsClass != null) {
 			eventsListener = AndroidTools.findAttachedListener(this, eventsClass);

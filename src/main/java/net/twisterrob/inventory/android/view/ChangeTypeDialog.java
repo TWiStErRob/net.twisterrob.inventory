@@ -147,7 +147,7 @@ public class ChangeTypeDialog {
 		CharSequence categoryTitle = getText(context, categoryName);
 		CharSequence categoryKeywords = CategoryDTO.getKeywords(context, categoryName, true);
 		new android.app.AlertDialog.Builder(context)
-				.setTitle(context.getString(R.string.category_keywords, categoryTitle))
+				.setTitle(context.getString(R.string.category_keywords_of, categoryTitle))
 				.setMessage(categoryKeywords)
 				.show()
 		;

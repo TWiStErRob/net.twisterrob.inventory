@@ -12,7 +12,7 @@ import android.view.Window;
 
 import net.twisterrob.java.annotations.DebugHelper;
 
-@SuppressLint("InlinedApi")
+@SuppressLint({"InlinedApi", "UniqueConstants"})
 @TargetApi(VERSION_CODES.LOLLIPOP)
 @IntDef({
 		        Window.FEATURE_OPTIONS_PANEL,

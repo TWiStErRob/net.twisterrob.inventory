@@ -37,7 +37,14 @@ dependencies {
 		compile project(':twister-lib-android')
 	} else {
 		compile('net.twisterrob:twister-lib-android:1.0-SNAPSHOT')
+		compile('net.twisterrob:twister-lib-java:1.0-SNAPSHOT')
 	}
+	// TODO otherwise VariantFragment descendants don't see Fragment and its methods
+	def supportVersion = '23.2.0'
+	compile "com.android.support:support-v4:${supportVersion}"
+	compile "com.android.support:appcompat-v7:${supportVersion}"
+//	compile "com.android.support:cardview-v7:${supportVersion}"
+//	compile "com.android.support:recyclerview-v7:${supportVersion}"
 }
 
 android {
@@ -63,24 +70,4 @@ android {
 		ignoreAssetsPattern defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
 	sourceSets.main.res.srcDir 'src/main/res-icons'
-
-	afterEvaluate {
-		// Disable dex logging for --info, see http://stackoverflow.com/a/29923126/253468
-		project.android.applicationVariants.all { com.android.build.gradle.api.ApplicationVariant variant ->
-			if (variant.dex) {
-				java.lang.reflect.Field v =
-						com.android.builder.core.AndroidBuilder.class.getDeclaredField("mVerboseExec")
-				v.accessible = true
-
-				boolean originalVerbose;
-				variant.dex.doFirst {
-					originalVerbose = v.get(variant.androidBuilder)
-					v.set(variant.androidBuilder, false)
-				}
-				variant.dex.doLast {
-					v.set(variant.androidBuilder, originalVerbose)
-				}
-			}
-		}
-	}
 }

@@ -10,6 +10,13 @@
 		app:showAsAction="never"
 		/>
 	<item
+		android:id="@+id/action_category_save"
+		android:title="@string/category_save"
+		android:icon="@android:drawable/ic_menu_save"
+		android:visible="@bool/in_test"
+		app:showAsAction="never"
+		/>
+	<item
 		android:id="@+id/action_category_feedback"
 		android:title="@string/category_feedback"
 		android:icon="@android:drawable/ic_menu_add"

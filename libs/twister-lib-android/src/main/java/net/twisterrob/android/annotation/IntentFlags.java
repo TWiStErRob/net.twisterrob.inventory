@@ -14,7 +14,7 @@ import static android.content.Intent.*;
 import net.twisterrob.java.annotations.DebugHelper;
 
 @SuppressWarnings("deprecation")
-@SuppressLint("InlinedApi")
+@SuppressLint({"InlinedApi", "UniqueConstants"})
 @TargetApi(VERSION_CODES.LOLLIPOP)
 @IntDef(flag = true, value = {
 		FLAG_GRANT_READ_URI_PERMISSION,
@@ -36,7 +36,7 @@ import net.twisterrob.java.annotations.DebugHelper;
 		FLAG_ACTIVITY_BROUGHT_TO_FRONT,
 		FLAG_ACTIVITY_RESET_TASK_IF_NEEDED,
 		FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY,
-		//Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, // deprecated and can't suppress
+		FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET,
 		FLAG_ACTIVITY_NEW_DOCUMENT,
 		FLAG_ACTIVITY_NO_USER_ACTION,
 		FLAG_ACTIVITY_REORDER_TO_FRONT,
@@ -48,14 +48,15 @@ import net.twisterrob.java.annotations.DebugHelper;
 		FLAG_RECEIVER_REPLACE_PENDING,
 		FLAG_RECEIVER_FOREGROUND,
 		FLAG_RECEIVER_NO_ABORT,
-		0x04000000, // FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT
-		0x02000000, // FLAG_RECEIVER_BOOT_UPGRADE
+		0x04000000, // @hide FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT
+		0x02000000, // @hide FLAG_RECEIVER_BOOT_UPGRADE
 })
 @Target({FIELD, LOCAL_VARIABLE, PARAMETER, METHOD})
 @Retention(RetentionPolicy.SOURCE)
 public @interface IntentFlags {
 	class Converter {
 		/** @see Intent#IMMUTABLE_FLAGS */
+		@SuppressWarnings("JavadocReference" /* @hide IMMUTABLE_FLAGS */)
 		private static final int IMMUTABLE_FLAGS = FLAG_GRANT_READ_URI_PERMISSION
 				| FLAG_GRANT_WRITE_URI_PERMISSION | FLAG_GRANT_PERSISTABLE_URI_PERMISSION
 				| FLAG_GRANT_PREFIX_URI_PERMISSION;
@@ -77,34 +78,10 @@ public @interface IntentFlags {
 			f = handleFlag(sb, f, FLAG_GRANT_PERSISTABLE_URI_PERMISSION, "FLAG_GRANT_PERSISTABLE_URI_PERMISSION");
 			f = handleFlag(sb, f, FLAG_GRANT_PREFIX_URI_PERMISSION, "FLAG_GRANT_PREFIX_URI_PERMISSION");
 			if (isActivity == null || isActivity) {
-				f = handleFlag(sb, f, FLAG_ACTIVITY_NO_HISTORY, "FLAG_ACTIVITY_NO_HISTORY");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_SINGLE_TOP, "FLAG_ACTIVITY_SINGLE_TOP");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_NEW_TASK, "FLAG_ACTIVITY_NEW_TASK");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_MULTIPLE_TASK, "FLAG_ACTIVITY_MULTIPLE_TASK");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_CLEAR_TOP, "FLAG_ACTIVITY_CLEAR_TOP");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_FORWARD_RESULT, "FLAG_ACTIVITY_FORWARD_RESULT");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_PREVIOUS_IS_TOP, "FLAG_ACTIVITY_PREVIOUS_IS_TOP");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, "FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_BROUGHT_TO_FRONT, "FLAG_ACTIVITY_BROUGHT_TO_FRONT");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, "FLAG_ACTIVITY_RESET_TASK_IF_NEEDED");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, "FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY");
-				//noinspection ResourceType
-				f = handleFlag(sb, f, FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET,
-						"FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET(=FLAG_ACTIVITY_NEW_DOCUMENT)");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_NO_USER_ACTION, "FLAG_ACTIVITY_NO_USER_ACTION");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_REORDER_TO_FRONT, "FLAG_ACTIVITY_REORDER_TO_FRONT");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_NO_ANIMATION, "FLAG_ACTIVITY_NO_ANIMATION");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_CLEAR_TASK, "FLAG_ACTIVITY_CLEAR_TASK");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_TASK_ON_HOME, "FLAG_ACTIVITY_TASK_ON_HOME");
-				f = handleFlag(sb, f, FLAG_ACTIVITY_RETAIN_IN_RECENTS, "FLAG_ACTIVITY_RETAIN_IN_RECENTS");
+				f = handleActivityFlags(sb, f);
 			}
 			if (isActivity == null || !isActivity) {
-				f = handleFlag(sb, f, FLAG_RECEIVER_REGISTERED_ONLY, "FLAG_RECEIVER_REGISTERED_ONLY");
-				f = handleFlag(sb, f, FLAG_RECEIVER_REPLACE_PENDING, "FLAG_RECEIVER_REPLACE_PENDING");
-				f = handleFlag(sb, f, FLAG_RECEIVER_FOREGROUND, "FLAG_RECEIVER_FOREGROUND");
-				f = handleFlag(sb, f, FLAG_RECEIVER_NO_ABORT, "FLAG_RECEIVER_NO_ABORT");
-				f = handleFlag(sb, f, 0x04000000, "FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT");
-				f = handleFlag(sb, f, 0x02000000, "FLAG_RECEIVER_BOOT_UPGRADE");
+				f = handleReceiverFlags(sb, f);
 			}
 
 			if (f != 0) {
@@ -114,6 +91,40 @@ public @interface IntentFlags {
 			return sb.toString();
 		}
 
+		private static int handleActivityFlags(StringBuilder sb, int f) {
+			f = handleFlag(sb, f, FLAG_ACTIVITY_NO_HISTORY, "FLAG_ACTIVITY_NO_HISTORY");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_SINGLE_TOP, "FLAG_ACTIVITY_SINGLE_TOP");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_NEW_TASK, "FLAG_ACTIVITY_NEW_TASK");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_MULTIPLE_TASK, "FLAG_ACTIVITY_MULTIPLE_TASK");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_CLEAR_TOP, "FLAG_ACTIVITY_CLEAR_TOP");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_FORWARD_RESULT, "FLAG_ACTIVITY_FORWARD_RESULT");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_PREVIOUS_IS_TOP, "FLAG_ACTIVITY_PREVIOUS_IS_TOP");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, "FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_BROUGHT_TO_FRONT, "FLAG_ACTIVITY_BROUGHT_TO_FRONT");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, "FLAG_ACTIVITY_RESET_TASK_IF_NEEDED");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, "FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET,"FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_NEW_DOCUMENT,"=FLAG_ACTIVITY_NEW_DOCUMENT"); // same as prev!
+			f = handleFlag(sb, f, FLAG_ACTIVITY_NO_USER_ACTION, "FLAG_ACTIVITY_NO_USER_ACTION");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_REORDER_TO_FRONT, "FLAG_ACTIVITY_REORDER_TO_FRONT");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_NO_ANIMATION, "FLAG_ACTIVITY_NO_ANIMATION");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_CLEAR_TASK, "FLAG_ACTIVITY_CLEAR_TASK");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_TASK_ON_HOME, "FLAG_ACTIVITY_TASK_ON_HOME");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_RETAIN_IN_RECENTS, "FLAG_ACTIVITY_RETAIN_IN_RECENTS");
+			return f;
+		}
+
+		@SuppressLint("WrongConstant")
+		private static int handleReceiverFlags(StringBuilder sb, int f) {
+			f = handleFlag(sb, f, FLAG_RECEIVER_REGISTERED_ONLY, "FLAG_RECEIVER_REGISTERED_ONLY");
+			f = handleFlag(sb, f, FLAG_RECEIVER_REPLACE_PENDING, "FLAG_RECEIVER_REPLACE_PENDING");
+			f = handleFlag(sb, f, FLAG_RECEIVER_FOREGROUND, "FLAG_RECEIVER_FOREGROUND");
+			f = handleFlag(sb, f, FLAG_RECEIVER_NO_ABORT, "FLAG_RECEIVER_NO_ABORT");
+			f = handleFlag(sb, f, 0x04000000, "FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT");
+			f = handleFlag(sb, f, 0x02000000, "FLAG_RECEIVER_BOOT_UPGRADE");
+			return f;
+		}
+		
 		private static @IntentFlags int handleFlag(StringBuilder sb,
 				@IntentFlags int flags, @IntentFlags int flag, String flagName) {
 			if ((flags & flag) != 0) {

@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
 import java.io.*;
+import java.util.Locale;
 
 import org.slf4j.*;
 
@@ -8,12 +9,13 @@ import android.annotation.SuppressLint;
 import android.content.*;
 import android.net.Uri;
 import android.os.Build.*;
-import android.os.Bundle;
+import android.os.*;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.*;
+import android.widget.Toast;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
@@ -36,6 +38,7 @@ public class CategoryHelpFragment extends BaseFragment {
 			WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
 		}
 		web.setWebViewClient(new WebViewClient() {
+			@SuppressWarnings("deprecation") // cannot use API 23 version, app supports API 10
 			@Override public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 				LOG.warn("WebView error #{} loading {}:\n{}", errorCode, failingUrl, description);
 			}
@@ -59,7 +62,7 @@ public class CategoryHelpFragment extends BaseFragment {
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_open: {
-				Context context = getActivity();
+				Context context = getContext();
 				File file = null;
 				try {
 					file = Paths.getShareFile(context, "html");
@@ -74,9 +77,24 @@ public class CategoryHelpFragment extends BaseFragment {
 				}
 				return true;
 			}
+			case R.id.action_category_save: {
+				Context context = getContext();
+				File file = null;
+				try {
+					File downloads = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+					String name = String.format(Locale.ROOT,
+							"%s - %s.html", getString(R.string.app_name), getString(R.string.category_guide));
+					file = new File(downloads, name);
+					new CategoryHelpBuilder(context).export(file);
+					Toast.makeText(context, "Exported to " + file, Toast.LENGTH_LONG).show();
+				} catch (IOException ex) {
+					LOG.warn("Cannot save to {}", file, ex);
+				}
+				return true;
+			}
 			case R.id.action_category_feedback:
 				startActivity(new Intent(Intent.ACTION_VIEW)
-						.setData(Uri.parse("mailto:feedback@twisterrob.net"))
+						.setData(Uri.parse("mailto:" + BuildConfig.EMAIL))
 						.putExtra(Intent.EXTRA_TEXT, "How can we improve the Categories?")
 						.putExtra(Intent.EXTRA_SUBJECT, "Magic Home Inventory Category Feedback"));
 				return true;

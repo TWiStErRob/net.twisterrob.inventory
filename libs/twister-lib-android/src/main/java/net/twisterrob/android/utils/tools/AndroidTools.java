@@ -205,6 +205,7 @@ public /*static*/ abstract class AndroidTools {
 
 	@TargetApi(VERSION_CODES.JELLY_BEAN)
 	@DebugHelper
+	@SuppressWarnings({"ConstantConditions", "UnusedAssignment"}) // just so all lines look similar
 	public static String toString(Intent intent) {
 		if (intent == null) {
 			return NULL;
@@ -698,18 +699,21 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	public static void updateHeight(View view, int height) {
+		@SuppressWarnings("RedundantCast")
 		ViewGroup.LayoutParams params = (ViewGroup.LayoutParams)view.getLayoutParams();
 		params.height = height;
 		view.setLayoutParams(params);
 	}
 
 	public static void updateWidth(View view, int width) {
+		@SuppressWarnings("RedundantCast")
 		ViewGroup.LayoutParams params = (ViewGroup.LayoutParams)view.getLayoutParams();
 		params.width = width;
 		view.setLayoutParams(params);
 	}
 
 	public static void updateWidthAndHeight(View view, int width, int height) {
+		@SuppressWarnings("RedundantCast")
 		ViewGroup.LayoutParams params = (ViewGroup.LayoutParams)view.getLayoutParams();
 		params.width = width;
 		params.height = height;
@@ -793,6 +797,7 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	/** @see Intent#FLAG_* */
+	@SuppressWarnings("JavadocReference")
 	@DebugHelper
 	public static String toIntentFlagString(@IntentFlags int level) {
 		return IntentFlags.Converter.toString(level, true);

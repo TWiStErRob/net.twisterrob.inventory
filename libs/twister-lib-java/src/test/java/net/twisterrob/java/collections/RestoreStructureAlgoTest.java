@@ -73,8 +73,8 @@ public class RestoreStructureAlgoTest {
 				return data.entrySet().iterator();
 			}
 
-			@Override protected int getLevel(@Nonnull Entry<String, Integer> entry) {
-				return entry.getValue();
+			@Override protected int getLevel(Entry<String, Integer> entry) {
+				return entry == null ? 0 : entry.getValue();
 			}
 
 			@Override protected void onIncrementLevel(int level, Entry<String, Integer> item) {

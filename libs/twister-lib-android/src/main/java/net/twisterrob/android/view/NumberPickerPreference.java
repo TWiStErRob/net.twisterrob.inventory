@@ -45,9 +45,9 @@ public class NumberPickerPreference extends DialogPreference {
 
 	private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
-			picker = new EditTextPicker();
+			picker = new EditTextPicker(context);
 		} else {
-			picker = new NumberPickerPicker();
+			picker = new NumberPickerPicker(context);
 		}
 
 		TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -62,7 +62,7 @@ public class NumberPickerPreference extends DialogPreference {
 	}
 
 	@Override protected View onCreateDialogView() {
-		return picker.createView(getContext());
+		return picker.createView();
 	}
 
 	@Override protected void onBindDialogView(@NonNull View view) {
@@ -92,7 +92,7 @@ public class NumberPickerPreference extends DialogPreference {
 	}
 
 	interface Picker {
-		View createView(Context context);
+		View createView();
 		void setMaxValue(int maxValue);
 		void setMinValue(int minValue);
 		int getValue();
@@ -100,13 +100,17 @@ public class NumberPickerPreference extends DialogPreference {
 	}
 
 	private static class EditTextPicker extends TextWatcherAdapter implements Picker {
+		private final Context context;
 		private int value;
 		private int minValue = Integer.MIN_VALUE;
 		private int maxValue = Integer.MAX_VALUE;
 		private EditText editor;
 		private TextView message;
+		public EditTextPicker(Context context) {
+			this.context = context;
+		}
 
-		@Override public View createView(Context context) {
+		@Override public View createView() {
 			LinearLayout layout = new LinearLayout(context);
 			layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -133,7 +137,7 @@ public class NumberPickerPreference extends DialogPreference {
 		}
 		private void updateMessage() {
 			if (message != null) {
-				message.setText("Please enter a number between " + minValue + " and " + maxValue + ".");
+				message.setText(context.getString(R.string.pref_number_picker_invalid_input, minValue, maxValue));
 			}
 		}
 
@@ -203,9 +207,13 @@ public class NumberPickerPreference extends DialogPreference {
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private static class NumberPickerPicker implements Picker {
+		private final Context context;
 		private NumberPicker picker;
+		public NumberPickerPicker(Context context) {
+			this.context = context;
+		}
 
-		public View createView(Context context) {
+		public View createView() {
 			FrameLayout layout = new FrameLayout(context);
 
 			picker = new NumberPicker(context);

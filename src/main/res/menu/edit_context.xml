@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
 		android:id="@+id/action_category_keywords"
-		android:title="Show Keywords"
+		android:title="@string/category_keywords"
 		android:icon="@android:drawable/ic_menu_info_details"
 		/>
 	<item
 		android:id="@+id/action_category_goto"
-		android:title="Jump to Category"
+		android:title="@string/category_goto"
 		android:icon="@android:drawable/ic_menu_view"
 		/>
 	<item
 		android:id="@+id/action_category_suggest"
-		android:title="Suggest Categories"
+		android:title="@string/category_suggest"
 		android:icon="@android:drawable/ic_menu_directions"
 		/>
 	<item

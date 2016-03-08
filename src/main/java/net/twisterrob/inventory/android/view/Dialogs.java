@@ -1,7 +1,10 @@
 package net.twisterrob.inventory.android.view;
 
+import java.lang.annotation.Target;
+
 import org.slf4j.*;
 
+import android.annotation.*;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.*;
@@ -71,6 +74,7 @@ public class Dialogs {
 			return state;
 		}
 
+		@TargetApi(VERSION_CODES.HONEYCOMB)
 		@Override
 		protected void onPostExecute(final ActionState state) {
 			if (state.check(context)) {

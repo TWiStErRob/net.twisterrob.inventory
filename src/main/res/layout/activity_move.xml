@@ -16,7 +16,7 @@
 			android:layout_width="@dimen/icon_big"
 			android:layout_height="@dimen/icon_big"
 			android:layout_gravity="center_vertical"
-			android:src="@drawable/abc_ic_commit_search_api_mtrl_alpha"
+			android:src="@android:drawable/ic_menu_upload"
 			tools:tint="#000000"
 			/>
 		<TextView

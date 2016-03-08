@@ -1,10 +1,14 @@
 package net.twisterrob.inventory.android.content;
 
+import java.lang.annotation.Target;
+
 import org.slf4j.*;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build.VERSION_CODES;
 import android.support.annotation.StringRes;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
@@ -25,6 +29,7 @@ public class Database extends VariantDatabase {
 				super.onConfigure(db);
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 			}
+			@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
 			@Override protected String[] getDataFiles() {
 				return new String[] {
 						super.getDataFiles()[0],

@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.*;
 import android.widget.*;
@@ -18,6 +19,7 @@ import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter;
 
+import static net.twisterrob.android.utils.tools.AndroidTools.*;
 import static net.twisterrob.inventory.android.activity.MainActivity.*;
 
 // TODO extract as composit class not inheritance
@@ -38,9 +40,10 @@ public class DrawerActivity extends BaseActivity {
 
 		mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer);
 		if (mDrawerLayout != null) {
-			mDrawerToggle = new StandardMyActionBarDrawerToggle(this, mDrawerLayout);
-			mDrawerLayout.setDrawerListener(mDrawerToggle);
-
+			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, INVALID_RESOURCE_ID, INVALID_RESOURCE_ID);
+			mDrawerLayout.addDrawerListener(mDrawerToggle);
+			mDrawerLayout.addDrawerListener(new TitleUpdater());
+			mDrawerLayout.addDrawerListener(new OptionsMenuInvalidator());
 			initDrawers();
 		}
 	}
@@ -48,12 +51,12 @@ public class DrawerActivity extends BaseActivity {
 	private void initDrawers() {
 		createDrawerLeft();
 		if (mDrawerLeft == null) {
-			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.START);
+			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 			mDrawerToggle.setDrawerIndicatorEnabled(false);
 		}
 		createDrawerRight();
 		if (mDrawerRight == null) {
-			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
 		}
 		refreshDrawers(getIntent());
 	}
@@ -179,25 +182,25 @@ public class DrawerActivity extends BaseActivity {
 				&& (mDrawerLayout.isDrawerOpen(GravityCompat.START) || mDrawerLayout.isDrawerOpen(GravityCompat.END));
 	}
 
-	private static class StandardMyActionBarDrawerToggle extends ActionBarDrawerToggle {
-		private final DrawerActivity activity;
-
-		public StandardMyActionBarDrawerToggle(DrawerActivity activity, DrawerLayout drawerLayout) {
-			super(activity, drawerLayout, AndroidTools.INVALID_RESOURCE_ID, AndroidTools.INVALID_RESOURCE_ID);
-			this.activity = activity;
-		}
+	private class TitleUpdater extends SimpleDrawerListener {
 		@Override
 		public void onDrawerClosed(View view) {
-			super.onDrawerClosed(view);
-			activity.getSupportActionBar().setTitle(activity.getTitle());
-			activity.supportInvalidateOptionsMenu();
+			getSupportActionBar().setTitle(getTitle());
 		}
-
 		@Override
 		public void onDrawerOpened(View drawerView) {
-			super.onDrawerOpened(drawerView);
-			activity.getSupportActionBar().setTitle(activity.getText(R.string.navigation_title));
-			activity.supportInvalidateOptionsMenu();
+			getSupportActionBar().setTitle(getText(R.string.navigation_title));
+		}
+	}
+
+	private class OptionsMenuInvalidator extends SimpleDrawerListener {
+		@Override
+		public void onDrawerClosed(View view) {
+			supportInvalidateOptionsMenu();
+		}
+		@Override
+		public void onDrawerOpened(View drawerView) {
+			supportInvalidateOptionsMenu();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package net.twisterrob.android.map;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.*;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ public class LocationRetriever {
 	// /////////////////////////////////////////////////////
 	// Provider location listeners
 	boolean m_isGPSEnabled;
+	@SuppressLint("Assert")
 	private final LocationListener m_locationListenerGPS = new LocationListener() {
 		public void onLocationChanged(Location location) {
 			m_locResultListener.locationRetrieved(LocationRetriever.this, location, LocationType.GPS);
@@ -32,6 +34,7 @@ public class LocationRetriever {
 	};
 
 	boolean m_isNetworkEnabled = false;
+	@SuppressLint("Assert")
 	private final LocationListener m_locationListenerNetwork = new LocationListener() {
 		public void onLocationChanged(Location location) {
 			m_locResultListener.locationRetrieved(LocationRetriever.this, location, LocationType.Network);
@@ -71,6 +74,7 @@ public class LocationRetriever {
 		return m_isGPSEnabled || m_isNetworkEnabled;
 	}
 
+	@SuppressWarnings("ResourceType") @SuppressLint("MissingPermission")
 	private void startImpl() {
 		if (!m_isGPSEnabled && !m_isNetworkEnabled) {
 			return;
@@ -83,11 +87,14 @@ public class LocationRetriever {
 			m_manager.requestLocationUpdates(NETWORK_PROVIDER, 0, 0, m_locationListenerNetwork);
 		}
 	}
+
+	@SuppressWarnings("ResourceType") @SuppressLint("MissingPermission")
 	public void stop() {
 		m_manager.removeUpdates(m_locationListenerGPS);
 		m_manager.removeUpdates(m_locationListenerNetwork);
 	}
-
+	
+	@SuppressWarnings("ResourceType") @SuppressLint("MissingPermission")
 	private void getLastLocation() {
 		Location locNetwork = null, locGPS = null;
 		if (m_isGPSEnabled) {

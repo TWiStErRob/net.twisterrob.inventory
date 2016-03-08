@@ -3,7 +3,7 @@ package net.twisterrob.android.utils.log;
 import org.slf4j.*;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.*;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.*;
@@ -24,6 +24,12 @@ public class LoggingFragment extends Fragment {
 		log("ctor");
 	}
 
+	@Override public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
+		log("onInflate", context, attrs, savedInstanceState);
+		super.onInflate(context, attrs, savedInstanceState);
+	}
+
+	@SuppressWarnings("deprecation")
 	@Override public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
 		log("onInflate", activity, attrs, savedInstanceState);
 		super.onInflate(activity, attrs, savedInstanceState);
@@ -39,6 +45,12 @@ public class LoggingFragment extends Fragment {
 		super.setInitialSavedState(state);
 	}
 
+	@Override public void onAttach(Context context) {
+		log("onAttach", context);
+		super.onAttach(context);
+	}
+
+	@SuppressWarnings("deprecation")
 	@Override public void onAttach(Activity activity) {
 		log("onAttach", activity);
 		super.onAttach(activity);

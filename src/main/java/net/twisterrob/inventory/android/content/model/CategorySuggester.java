@@ -35,7 +35,7 @@ public class CategorySuggester {
 
 		Matcher m = WORD_SEARCH.matcher(name);
 		while (m.find()) {
-			String word = m.group().toLowerCase();
+			String word = m.group().toLowerCase(Locale.getDefault());
 			Collection<IndexEntry> categories = index.get(word);
 			if (categories != null) {
 				for (IndexEntry index : categories) {
@@ -121,7 +121,7 @@ public class CategorySuggester {
 			keyword = keyword.trim();
 			Matcher m = WORD_SEARCH.matcher(keyword);
 			while (m.find()) {
-				String word = m.group().toLowerCase();
+				String word = m.group().toLowerCase(Locale.getDefault());
 				Collection<IndexEntry> wordSuggestions = index.get(word);
 				if (wordSuggestions == null) {
 					wordSuggestions = new ArrayList<>();

@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.slf4j.*;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.SQLException;
@@ -52,6 +53,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 
 	/** Polyfill for pre-ICE_CREAM_SANDWICH. */
+	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override public String getDatabaseName() {
 		return dbName;
 	}
