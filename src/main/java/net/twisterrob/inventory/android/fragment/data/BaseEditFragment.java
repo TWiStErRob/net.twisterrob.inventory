@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.slf4j.*;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.*;
 import android.database.Cursor;
@@ -29,6 +30,7 @@ import android.widget.*;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -223,6 +225,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 		final ImageButton help = (ImageButton)view.findViewById(R.id.help);
 		help.setOnClickListener(new OnClickListener() {
+			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void onClick(View v) {
 				if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
 					getActivity().openContextMenu(help);
@@ -545,6 +548,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				.load(uri)
 				.asBitmap()
 				.toBytes(CompressFormat.JPEG, 80)
+				.format(DecodeFormat.PREFER_ARGB_8888)
 				.atMost()
 				.override(MAX_IMAGE_SIZE, MAX_IMAGE_SIZE)
 				.diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -574,12 +578,14 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		if (currentImage == null) {
 			loadTypeImage(image);
 		} else if (currentImage instanceof Uri) {
-			Pic.jpg()
+			Pic
+					.jpg()
 					.signature(new LongSignature(startTime)) // simulate image_time (Uri shouldn't change while editing)
 					.load((Uri)currentImage)
 					.into(image);
 		} else if (currentImage instanceof byte[]) {
-			Pic.baseRequest(byte[].class) // no need for signature, the byte[] doesn't change -> TODO glide#437
+			Pic
+					.baseRequest(byte[].class) // no need for signature, the byte[] doesn't change -> TODO glide#437
 					.diskCacheStrategy(DiskCacheStrategy.NONE)
 					.skipMemoryCache(true)
 					.signature(new LongSignature())
