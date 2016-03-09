@@ -36,7 +36,11 @@ public class DatabaseGenerator {
 					//printAttributes(xml);
 
 					if (category.id == Category.INVALID_ID) {
-						category.id = level.newItem(category.level);
+						try {
+							category.id = level.newItem(category.level);
+						} catch (Exception ex) {
+							throw new IllegalStateException("Cannot create category ID for " + category, ex);
+						}
 					} else if (1000 <= category.id) {
 						throw new IllegalStateException("Specific ID cannot be bigger than 1000");
 					}
