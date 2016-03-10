@@ -252,24 +252,7 @@
 		where c._id <> -1 -- don't return category_internal items
 		order by i.name
 	"]]></string>
-	<string name="query_items_by_room" translatable="false"><![CDATA["
-		select
-			'item'                                          as type,
-			i._id                                           as _id,
---			i._id = g._id                                   as [group],
-			i.name                                          as name,
-			c._id                                           as typeID,
-			i.image IS NOT NULL                             as hasImage,
-			i.image_time                                    as imageTime,
-			c.image                                         as typeImage,
-			(select count() from Item where parent = i._id) as countChildren,
-			c.name                                          as category
-		from Room     r
-		join Item     i ON r.root = i.parent
-		join Category c ON i.category = c._id
-		where r._id = ?
-		order by i.name
-	"]]></string>
+
 	<string name="query_items_by_category" translatable="false"><![CDATA["
 		select
 			'item'                                          as type,

@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.content;
 
-import java.lang.annotation.Target;
-
 import org.slf4j.*;
 
 import android.annotation.TargetApi;
@@ -14,7 +12,7 @@ import android.support.annotation.StringRes;
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.content.contract.Category;
+import net.twisterrob.inventory.android.content.contract.*;
 
 public class Database extends VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
@@ -125,7 +123,14 @@ public class Database extends VariantDatabase {
 		return rawQuery(R.string.query_items_by_item, parentID, parentID, parentID);
 	}
 	public Cursor listItemsInRoom(long roomID) {
-		return rawQuery(R.string.query_items_by_room, roomID);
+		Cursor room = getRoom(roomID);
+		try {
+			room.moveToFirst();
+			long root = room.getLong(room.getColumnIndex(Room.ROOT_ITEM));
+			return listItems(root);
+		} finally {
+			room.close();
+		}
 	}
 	public Cursor listItemsInList(long listID) {
 		return rawQuery(R.string.query_items_by_list, listID);
