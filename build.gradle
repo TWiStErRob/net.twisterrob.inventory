@@ -39,12 +39,12 @@ dependencies {
 		compile('net.twisterrob:twister-lib-android:1.0-SNAPSHOT')
 		compile('net.twisterrob:twister-lib-java:1.0-SNAPSHOT')
 	}
-	// TODO otherwise VariantFragment descendants don't see Fragment and its methods
+	// TODO otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
 	def supportVersion = '23.2.0'
 	compile "com.android.support:support-v4:${supportVersion}"
 	compile "com.android.support:appcompat-v7:${supportVersion}"
 //	compile "com.android.support:cardview-v7:${supportVersion}"
-//	compile "com.android.support:recyclerview-v7:${supportVersion}"
+	compile "com.android.support:recyclerview-v7:${supportVersion}"
 }
 
 android {

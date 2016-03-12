@@ -9,6 +9,7 @@
 /prof
 /test-db-concatenated.sql
 /.idea
+/.shelf
 /*.iml
 /*.ipr
 /*.iws

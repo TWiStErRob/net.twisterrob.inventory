@@ -47,7 +47,7 @@ import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.*;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.content.model.CategorySuggester.Suggestion;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
@@ -144,7 +144,11 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	private boolean tryRestore() {
 		if (isRestored) {
-			setCurrentImage(restoredImage);
+			if (currentImage == null) {
+				// only restore if there's not an image currently set
+				// (onActivityResult called before the loader finishes)
+				setCurrentImage(restoredImage);
+			}
 			// manually restore because sometimes lost, e.g. action_take_picture, rotate, back (or crop)
 			// at this point we can be sure that types are loaded because SingleBelonging loader depends on types loader
 			type.setSelection(restoredTypePos);
@@ -251,9 +255,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				if (oldPos != position && oldPos != AdapterView.INVALID_POSITION) {
-					oldPos = position;
 					isClean = false;
 				}
+				oldPos = position;
 				if (keepNameInSync) {
 					boolean cleanBefore = isClean; // automatic naming shouldn't be considered a change
 					super.onItemSelected(parent, view, position, id);
@@ -281,7 +285,12 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		String unmatched = getString(R.string.pref_suggestCategory_unmatched);
 		CharSequence hintText = null;
 		if (always.equals(suggest) || unmatched.equals(suggest) || forceSuggest) {
-			Collection<Suggestion> suggestions = CategoryDTO.getSuggester(name.getContext()).suggest(s);
+			Collection<Suggestion> suggestions;
+			if (!forceSuggest && Category.SKIP_SUGGEST.contains(getTypeName())) {
+				suggestions = Collections.emptyList();
+			} else {
+				suggestions = CategoryDTO.getSuggester(name.getContext()).suggest(s);
+			}
 
 			if (!suggestions.isEmpty()) {
 				hintText = buildHint(suggestions, getTypeName());

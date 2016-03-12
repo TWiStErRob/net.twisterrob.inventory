@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.widget.*;
@@ -146,6 +147,9 @@ public class ChangeTypeDialog {
 	public static void showKeywords(Context context, String categoryName) {
 		CharSequence categoryTitle = getText(context, categoryName);
 		CharSequence categoryKeywords = CategoryDTO.getKeywords(context, categoryName, true);
+		if (TextUtils.isEmpty(categoryKeywords)) {
+			categoryKeywords = context.getText(R.string.category_keywords_empty);
+		}
 		new android.app.AlertDialog.Builder(context)
 				.setTitle(context.getString(R.string.category_keywords_of, categoryTitle))
 				.setMessage(categoryKeywords)

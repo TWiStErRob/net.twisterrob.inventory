@@ -6,6 +6,10 @@ import android.net.Uri;
 
 import net.twisterrob.inventory.android.content.InventoryContract.*;
 
+/**
+ * @see net.twisterrob.inventory.android.content.InventoryContract
+ * @see net.twisterrob.inventory.android.content.InventoryProvider
+ */
 public class InventoryDatabase {
 	private static final InventoryDatabase INSTANCE = new InventoryDatabase();
 	private static final String[] NO_PROJ = null;

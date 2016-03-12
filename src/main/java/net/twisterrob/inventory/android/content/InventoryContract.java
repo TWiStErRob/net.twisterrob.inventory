@@ -8,6 +8,9 @@ import static android.content.ContentResolver.*;
 
 import net.twisterrob.inventory.android.BuildConfig;
 
+/**
+ * @see net.twisterrob.inventory.android.content.InventoryProvider
+ */
 // content://net.twisterrob.inventory/item/12345
 public final class InventoryContract {
 	public static final String AUTHORITY = BuildConfig.APPLICATION_ID;
