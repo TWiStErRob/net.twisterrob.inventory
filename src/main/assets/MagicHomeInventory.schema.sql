@@ -295,10 +295,23 @@ BEGIN
 END;
 
 
-CREATE TABLE PropertyType (
+CREATE TABLE PropertyTypeKind (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- string resource name
 	image       VARCHAR      NOT NULL, -- raw resource name
+	PRIMARY KEY(_id),
+	UNIQUE (name)
+);
+
+CREATE TABLE PropertyType (
+	_id         INTEGER      NOT NULL,
+	name        VARCHAR      NOT NULL, -- string resource name
+	image       VARCHAR          NULL, -- raw resource name
+	kind        INTEGER      NOT NULL
+		CONSTRAINT fk_PropertyType_kind
+		REFERENCES PropertyTypeKind(_id)
+		ON UPDATE CASCADE
+		ON DELETE RESTRICT,
 	PRIMARY KEY(_id),
 	UNIQUE (name)
 );

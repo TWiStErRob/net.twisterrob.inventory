@@ -3,6 +3,9 @@ package net.twisterrob.inventory.android.fragment.data;
 import org.slf4j.*;
 
 import android.database.Cursor;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -12,6 +15,7 @@ import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Property;
 import net.twisterrob.inventory.android.content.model.PropertyDTO;
 import net.twisterrob.inventory.android.fragment.data.PropertyEditFragment.PropertyEditEvents;
+import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -29,7 +33,12 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		setDynamicResource(DYN_DescriptionHintResource, R.string.property_description_hint);
 		setKeepNameInSync(true);
 	}
-
+	
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		((TypeAdapter)((AdapterView)view.findViewById(R.id.type_edit)).getAdapter()).setDisplayKeywords(true);
+	}
+	
 	@Override protected void onStartLoading() {
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.id(), null, getTypeCallback());

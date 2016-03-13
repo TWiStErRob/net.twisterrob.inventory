@@ -1,18 +1,25 @@
+INSERT INTO PropertyTypeKind
+	           (_id, name,                        image)
+	      SELECT  0, 'property_group_other',      'property_unknown'
+	UNION SELECT  1, 'property_group_dwelling',   'property_home'
+	UNION SELECT  2, 'property_group_commercial', 'property_office'
+;
 INSERT INTO PropertyType
-	           (_id, name,                 image)
-	      SELECT  0, 'property_other',     'property_unknown'
-	UNION SELECT  1, 'property_home',      'property_home'
-	UNION SELECT  2, 'property_workplace', 'property_office'
-	UNION SELECT  3, 'property_apartment', 'property_office'
-	UNION SELECT  4, 'property_house',     'property_home'
-	UNION SELECT  5, 'property_condo',     'property_unknown'
-	UNION SELECT  6, 'property_cottage',   'property_home'
-	UNION SELECT  7, 'property_farm',      'property_unknown'
-	UNION SELECT  8, 'property_vacation',  'property_unknown'
-	UNION SELECT  9, 'property_villa',     'property_unknown'
-	UNION SELECT 10, 'property_camp',      'property_unknown'
-	UNION SELECT 11, 'property_rent',      'property_rent'
-	UNION SELECT 12, 'property_storage',   'room_storage'
+	            (_id, kind, name,                 image)
+	      SELECT   0,    0, 'property_other',     NULL
+-- Residential
+	UNION SELECT 101,    1, 'property_apartment', NULL
+	UNION SELECT 102,    1, 'property_house',     NULL
+	UNION SELECT 103,    1, 'property_estate',    NULL
+	UNION SELECT 104,    1, 'property_vacation',  NULL
+	UNION SELECT 105,    1, 'property_mobile',    NULL
+-- Non-residential
+	UNION SELECT 201,    2, 'property_storage',       'room_storage'
+	UNION SELECT 202,    2, 'property_manufacturing', 'category_tools'
+	UNION SELECT 203,    2, 'property_productivity',  NULL
+	UNION SELECT 204,    2, 'property_retail',        'category_collectibles'
+	UNION SELECT 205,    2, 'property_services',      NULL
+	UNION SELECT 206,    2, 'property_recreation',    'category_soccer'
 ;
 
 INSERT INTO RoomTypeKind

@@ -20,6 +20,9 @@
 	<color name="accentTitleText">#FFFFFF</color>
 	<color name="accentBodyText">#000000</color>
 
+	<!-- Secondary -->
+	<color name="secondaryText">#40000000</color>
+
 	<!-- TOOLS colors -->
 	<color name="toolsBG">#8888</color>
 	<color name="transparent">#00000000</color>

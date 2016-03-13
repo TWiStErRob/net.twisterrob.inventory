@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+	<string name="property_group_other">Other</string>
 	<string name="property_other">Other</string>
-	<string name="property_home">Home</string>
-	<string name="property_workplace">Workplace</string>
+	<string name="property_other_keywords">@string/empty</string>
+
+	<string name="property_group_dwelling">Dwelling</string>
 	<string name="property_apartment">Apartment</string>
-	<string name="property_house">Townhouse</string>
-	<string name="property_condo">Condo(minium)</string>
-	<string name="property_cottage">Cottage</string>
-	<string name="property_farm">Farm</string>
+	<string name="property_apartment_keywords">flat, condo, condominium</string>
+	<string name="property_house">House</string>
+	<string name="property_house_keywords">townhouse, cottage, bungalow, suburban house</string>
+	<string name="property_estate">Estate</string>
+	<string name="property_estate_keywords">mansion, villa, manor, palace, castle</string>
 	<string name="property_vacation">Vacation Home</string>
-	<string name="property_villa">Villa</string>
-	<string name="property_camp">Camp</string>
-	<string name="property_rent">Rent</string>
+	<string name="property_vacation_keywords">lodge, chalet, mountain house, cabin, lake house</string>
+	<string name="property_mobile">Moving Home</string>
+	<string name="property_mobile_keywords">camp, caravan, recreational vehicle/RV, houseboat</string>
+
+	<string name="property_group_commercial">Non-residential</string>
 	<string name="property_storage">Storage</string>
+	<string name="property_storage_keywords">warehouse, garage, self-storage</string>
+	<string name="property_manufacturing">Manufacturing</string>
+	<string name="property_manufacturing_keywords">workshop, factory, farm, greenhouse, mill</string>
+	<string name="property_productivity">Productivity</string>
+	<string name="property_productivity_keywords">office, studio, laboratory</string>
+	<string name="property_retail">Retail</string>
+	<string name="property_retail_keywords">shop, outlet, restaurant, bar</string>
+	<string name="property_services">Services</string>
+	<string name="property_services_keywords">bank, post office, library, estate agent, travel agent, cinema, internet cafe</string>
+	<string name="property_recreation">Recreational</string>
+	<string name="property_recreation_keywords">community center, sports center, lido, bath, spa</string>
 </resources>

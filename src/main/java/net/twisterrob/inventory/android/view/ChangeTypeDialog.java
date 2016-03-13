@@ -18,7 +18,7 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
@@ -66,6 +66,8 @@ public class ChangeTypeDialog {
 
 	public void show(final Variants variants, long initialType) {
 		final TypeAdapter adapter = new TypeAdapter(context);
+		adapter.setExpandable(true);
+		adapter.setIndented(true);
 		Builder builder = new Builder(context)
 				.setIcon(spinner)
 				.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
@@ -98,6 +100,7 @@ public class ChangeTypeDialog {
 				return true;
 			}
 		});
+		dialog.setCanceledOnTouchOutside(true);
 		dialog.show();
 		load(variants, adapter, initialType);
 	}
@@ -150,11 +153,12 @@ public class ChangeTypeDialog {
 		if (TextUtils.isEmpty(categoryKeywords)) {
 			categoryKeywords = context.getText(R.string.category_keywords_empty);
 		}
-		new android.app.AlertDialog.Builder(context)
+		android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(context)
 				.setTitle(context.getString(R.string.category_keywords_of, categoryTitle))
 				.setMessage(categoryKeywords)
-				.show()
-		;
+				.create();
+		dialog.setCanceledOnTouchOutside(true);
+		dialog.show();
 	}
 
 	public static abstract class Variants {

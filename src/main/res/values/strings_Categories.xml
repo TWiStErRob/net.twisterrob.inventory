@@ -137,7 +137,7 @@
 	<string name="category_vivarium_keywords">aquarium, terrarium, insectarium, formicarium, paludarium</string>
 	<string name="category_animal_enclosure" level="2">animal enclosures</string>
 	<string name="category_animal_enclosure_keywords">kennel, chicken coop, aviary, pig sty, greenhouse</string>
-	<!-- TODO some of the above are more like buildings and can be considered room types -->
+	<!-- FIXME some of the above are more like buildings and can be considered room types -->
 	<string name="category_pet_activity" level="2">activity</string>
 	<string name="category_pet_activity_keywords">scratching post/cat tree, hamster wheel, hamster ball, pet door, pet carrier</string>
 
@@ -464,6 +464,7 @@
 	<!-- http://en.wikipedia.org/wiki/Category:Home_appliances -->
 	<!-- http://www.costco.com/appliances.html -->
 	<string name="category_appliance_major" level="1">Major Appliances</string>
+	<string name="category_appliance_major_keywords">@string/empty</string>
 	<string name="category_appliance_cook" level="2">cooking</string>
 	<string name="category_appliance_cook_keywords">stove, hob, cooktop, cooker, oven, range, microwave, kiln, grill, barbecue</string>
 	<string name="category_appliance_storage" level="2">food storage</string>
@@ -474,6 +475,7 @@
 	<string name="category_appliance_climate_keywords">air conditioner, boiler/water heater, fireplace, radiator, stove</string>
 
 	<string name="category_appliance_minor" level="1">Small Appliances</string>
+	<string name="category_appliance_minor_keywords">@string/empty</string>
 	<string name="category_appliance_groom" level="2">body grooming</string>
 	<string name="category_appliance_groom_keywords">hairdryer, curling iron, hair straightener, electric razor, electric toothbrush</string>
 	<string name="category_appliance_kitchen" level="2">kitchen appliance</string>
@@ -488,6 +490,7 @@
 	<string name="category_pest_control_keywords">bug zapper, insecticide liquid vaporizer, ultrasonic repeller, flyswatter, mouse trap, rat trap, scarecrow</string>
 
 	<string name="category_machine_part" level="1">Parts &amp; Accessories</string>
+	<string name="category_machine_part_keywords">@string/empty</string>
 	<string name="category_appliance_part" level="2">appliance parts</string>
 	<string name="category_appliance_part_keywords">leg, battery cover, vacuum cleaner bag, floor nozzle, floor brush, microwave tray, stove knob, lens, external flash</string>
 	<string name="category_controller" level="2">controllers</string>
@@ -673,7 +676,7 @@
 	<string name="category_tool_abrasive_keywords">rasp, sandpaper, scraper, grinding wheel, eraser/rubber</string>
 	<string name="category_tool_measure" level="2">measurement</string>
 	<string name="category_tool_measure_keywords">tape measure, measuring tape, micrometer, balance, scale, spirit level, gauge, caliper, protractor, ruler, steel square, straightedge, angle, pair of compasses, stencil, multimeter, magnifier, microscope, compass</string>
-	<string name="category_tool_measure_weather" level="2">weather measurement</string>
+	<string name="category_tool_measure_weather" level="3">weather measurement</string>
 	<string name="category_tool_measure_weather_keywords">thermometer, barometer, hygrometer, forecast/weather station, wind vane, windsock, rain gauge, snow gauge, lightning detector</string>
 
 	<string name="category_tool_construction" level="2">construction</string>
@@ -813,11 +816,11 @@
 	<!-- http://en.wikipedia.org/wiki/Category:Assistive_technology -->
 	<string name="category_medical_keywords">@string/empty</string>
 	<string name="category_medication_oral" level="2">oral medications</string>
-	<string name="category_medication_oral_keywords">pill, tablet, capsule, powder, effervescent, Aspirin</string>
+	<string name="category_medication_oral_keywords">pill, tablet, capsule, powder, effervescent; Aspirin</string>
 	<string name="category_medication_dermal" level="2">dermal medications</string>
 	<string name="category_medication_dermal_keywords">gel, paste, cream, lotion, balm, patch, ear drops, eye drops, nasal spray, heat rub, sports cream, ice gel</string>
 	<string name="category_medication_other" level="2">other medications</string>
-	<string name="category_medication_other_keywords">vitamin, multivitamin, mineral, supplement, syringe, suppository, Vitamin C, Calcium, Magnesium</string>
+	<string name="category_medication_other_keywords">vitamin, multivitamin, mineral, supplement, syringe, suppository; Vitamin C, Calcium, Magnesium</string>
 	<string name="category_medical_equipment" level="2">equipment</string>
 	<string name="category_medical_equipment_keywords">bathroom scale, temperature meter, sphygmomanometer, blood sugar meter</string>
 	<string name="category_medical_dressing" level="2">dressing</string>

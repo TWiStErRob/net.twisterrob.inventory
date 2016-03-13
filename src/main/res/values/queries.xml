@@ -9,10 +9,11 @@
 			p.type                                            as typeID,
 			p.image IS NOT NULL                               as hasImage,
 			p.image_time                                      as imageTime,
-			pt.image                                          as typeImage,
+			COALESCE(pt.image, ptk.image)                     as typeImage,
 			(select count() from Room where property = p._id) as countChildren
-		from Property     p
-		join PropertyType pt ON p.type = pt._id
+		from Property         p
+		join PropertyType     pt  ON p.type = pt._id
+		join PropertyTypeKind ptk ON pt.kind = ptk._id
 		order by p.name
 	"]]></string>
 	<string name="query_property" translatable="false"><![CDATA["
@@ -24,21 +25,40 @@
 			p.type                                            as typeID,
 			p.image IS NOT NULL                               as hasImage,
 			p.image_time                                      as imageTime,
-			pt.image                                          as typeImage,
+			COALESCE(pt.image, ptk.image)                     as typeImage,
 			(select count() from Room where property = p._id) as countChildren,
 			(select count() from Item where parent in (select root from Room where property = p._id)) as countDirectItems,
 			(select count(distinct item) from Item_Path_Node where root in (select root from Room where property = p._id) and root <> node) as countAllItems
-		from Property     p
-		join PropertyType pt ON p.type = pt._id
+		from Property         p
+		join PropertyType     pt  ON p.type = pt._id
+		join PropertyTypeKind ptk ON pt.kind = ptk._id
 		where p._id = ?
 	"]]></string>
 	<string name="query_property_types" translatable="false"><![CDATA["
-		select
-			pt._id   as _id,
-			pt.name  as name,
-			pt.image as typeImage
-		from PropertyType pt
-		order by pt._id
+			select
+				ptk._id                                 as kind,
+				CASE WHEN pt._id == 0 THEN 1 ELSE 0 END as strong,
+				1 == 1                                  as enabled,
+				CASE WHEN pt._id == 0 THEN 0 ELSE 1 END as level,
+				'PropertyType'                          as source,
+				pt._id                                  as _id,
+				pt.name                                 as name,
+				COALESCE(pt.image, ptk.image)           as typeImage
+			from PropertyType     pt
+			join PropertyTypeKind ptk ON pt.kind = ptk._id
+		UNION
+			select
+				ptk._id                                 as kind,
+				1 == 1                                  as strong,
+				1 == 2                                  as enabled,
+				0                                       as level,
+				'PropertyTypeKind'                      as source,
+				-1                                      as _id,
+				ptk.name                                as name,
+				ptk.image                               as typeImage
+			from PropertyTypeKind ptk
+			where ptk._id <> 0
+		order by kind, _id
 	"]]></string>
 
 
@@ -349,13 +369,14 @@
 					p.name                              as name,
 					pt._id                              as typeID,
 					pt.name                             as typeName,
-					pt.image                            as typeImage,
+					COALESCE(pt.image, ptk.image)       as typeImage,
 					p.image IS NOT NULL                 as hasImage,
 					p.image_time                        as imageTime
 				from Item_Path_Node n
-				join Room           r  ON n.root = r.root
-				join Property       p  ON r.property = p._id
-				join PropertyType   pt ON p.type = pt._id
+				join Room             r   ON n.root = r.root
+				join Property         p   ON r.property = p._id
+				join PropertyType     pt  ON p.type = pt._id
+				join PropertyTypeKind ptk ON pt.kind = ptk._id
 				where n.root = n.node
 		)
 		where item = ?
