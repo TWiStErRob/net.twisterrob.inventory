@@ -1,6 +1,7 @@
 package net.twisterrob.java.collections;
 
 import java.util.Iterator;
+import java.util.concurrent.Callable;
 
 import javax.annotation.*;
 
@@ -42,4 +43,12 @@ public abstract class RestoreStructureAlgo<Container, Item, Result> {
 	protected abstract void onEntity(int level, @Nonnull Item item);
 	protected abstract void onDecrementLevel(int level);
 	protected abstract Result finish();
+	
+	public Callable<Result> toCallable(@Nonnull final Container data) {
+		return new Callable<Result>() {
+			@Override public Result call() throws Exception {
+				return  RestoreStructureAlgo.this.run(data);
+			}
+		};
+	}
 }

@@ -14,7 +14,7 @@
 		android:layout_height="0dp"
 		android:layout_margin="@dimen/marginHalf"
 		android:layout_centerInParent="true"
-	    tools:ignore="InconsistentLayout"
+		tools:ignore="InconsistentLayout"
 		/>
 	<android.support.v7.widget.CardView
 		android:layout_width="fill_parent"
@@ -23,35 +23,7 @@
 		android:layout_toLeftOf="@id/spacer"
 		android:layout_toStartOf="@id/spacer"
 		>
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			>
-			<TextView
-				style="@style/Theme.AppTheme.Header"
-				android:text="@string/property_list"
-				/>
-			<FrameLayout
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				>
-				<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
-					<android.support.v7.widget.RecyclerView
-						android:id="@id/properties"
-						style="@style/Theme.AppTheme.RecyclerList"
-						tools:listitem="@layout/item_main_property"
-						tools:scrollbars="none"
-						/>
-				</android.support.v4.widget.SwipeRefreshLayout>
-				<TextView
-					style="@style/EmptyText"
-					android:text="@string/property_empty_child"
-					/>
-				<include layout="@layout/inc_fab_small" />
-			</FrameLayout>
-
-		</LinearLayout>
+		<include layout="@layout/inc_main_properties" />
 	</android.support.v7.widget.CardView>
 	<android.support.v7.widget.CardView
 		android:layout_width="fill_parent"
@@ -60,33 +32,7 @@
 		android:layout_toEndOf="@id/spacer"
 		android:layout_toRightOf="@id/spacer"
 		>
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			>
-			<TextView
-				style="@style/Theme.AppTheme.Header"
-				android:text="@string/room_list"
-				/>
-			<FrameLayout
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				>
-				<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
-					<android.support.v7.widget.RecyclerView
-						android:id="@id/rooms"
-						style="@style/Theme.AppTheme.RecyclerList"
-						tools:listitem="@layout/item_main_room"
-						tools:scrollbars="none"
-						/>
-				</android.support.v4.widget.SwipeRefreshLayout>
-				<TextView
-					style="@style/EmptyText"
-					android:text="@string/room_empty_list"
-					/>
-			</FrameLayout>
-		</LinearLayout>
+		<include layout="@layout/inc_main_rooms" />
 	</android.support.v7.widget.CardView>
 	<android.support.v7.widget.CardView
 		android:layout_width="fill_parent"
@@ -95,34 +41,7 @@
 		android:layout_toLeftOf="@id/spacer"
 		android:layout_toStartOf="@id/spacer"
 		>
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			>
-			<TextView
-				style="@style/Theme.AppTheme.Header"
-				android:text="@string/list_list"
-				/>
-			<FrameLayout
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				>
-				<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
-					<android.support.v7.widget.RecyclerView
-						android:id="@id/lists"
-						style="@style/Theme.AppTheme.RecyclerList"
-						tools:listitem="@layout/item_main_list"
-						tools:scrollbars="none"
-						/>
-				</android.support.v4.widget.SwipeRefreshLayout>
-				<TextView
-					style="@style/EmptyText"
-					android:text="@string/list_empty_main"
-					/>
-				<include layout="@layout/inc_fab_small" />
-			</FrameLayout>
-		</LinearLayout>
+		<include layout="@layout/inc_main_lists" />
 	</android.support.v7.widget.CardView>
 	<android.support.v7.widget.CardView
 		android:layout_width="fill_parent"
@@ -131,24 +50,7 @@
 		android:layout_toEndOf="@id/spacer"
 		android:layout_toRightOf="@id/spacer"
 		>
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			>
-			<TextView
-				style="@style/Theme.AppTheme.Header"
-				android:text="@string/recent_list"
-				/>
-			<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
-				<android.support.v7.widget.RecyclerView
-					android:id="@id/items"
-					style="@style/Theme.AppTheme.RecyclerList"
-					tools:listitem="@layout/item_main_recent"
-					tools:scrollbars="none"
-					/>
-			</android.support.v4.widget.SwipeRefreshLayout>
-		</LinearLayout>
+		<include layout="@layout/inc_main_recents" />
 	</android.support.v7.widget.CardView>
 
 </RelativeLayout>

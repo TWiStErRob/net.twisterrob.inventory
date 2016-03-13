@@ -15,6 +15,8 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.java.collections.RestoreStructureAlgo;
 
 public class CategoryHelpBuilder {
+	private static final String LEVEL_COLUMN = "level";
+
 	private static final String STYLE = "<style>\n"
 			+ "h2.category {\n"
 			+ "    margin: 0;\n"
@@ -38,6 +40,9 @@ public class CategoryHelpBuilder {
 			+ "}\n"
 			+ ".description:before {\n"
 			+ "    content: '\\200A\\2014\\200A'; /* x200A=hairline space, x2014=emdash */ \n"
+			+ "}\n" 
+			+ "a {\n" 
+			+ "    text-decoration: none;" 
 			+ "}\n"
 			+ "\n"
 			+ "#legend {\n"
@@ -45,7 +50,7 @@ public class CategoryHelpBuilder {
 			+ "     margin: 0;\n"
 			+ "}\n"
 			+ "@media print {\n"
-			+ "    #legend {\n"
+			+ "    #legend, #toc {\n"
 			+ "        display: none;\n"
 			+ "    }\n"
 			+ "    .subcategory.collapsed + .keywords {\n"
@@ -72,14 +77,16 @@ public class CategoryHelpBuilder {
 			+ "</style>\n\n";
 
 	private static final String HEADER = ""
-			+ "<h1>%s Category Keywords</h1>\n"
-			+ "<p id=\"legend\">\n"
-			+ "     It is advised to look at this document in landscape.\n"
+			+ "<h1>%s Category Keywords</h1>\n";
+
+	private static final String LEGEND = "<p id=\"legend\">\n"
+			+ "     It is advised to view this document in landscape orientation.\n"
 			+ "     <br/>\n"
 			+ "     <button onclick=\"for (var i = 0; i < window.subcategories.length; ++i) { window.subcategories[i].classList.remove('collapsed'); }\">Expand All</button>\n"
 			+ "     <button onclick=\"for (var i = 0; i < window.subcategories.length; ++i) { window.subcategories[i].classList.add('collapsed'); }\">Collapse All</button>\n"
 			+ "     <br/>\n"
-			+ "     <span>*</span> Click subcategories to collapse and expand their keywords.\n"
+			+ "     <span>*</span> Click subcategories to toggle their keywords.<br/>\n"
+			+ "     <span>^</span> Click the up arrows to go to the top of the page.<br/>\n"
 			+ "</p>\n\n";
 
 	private static final String FOOTER = "<script>\n"
@@ -119,6 +126,8 @@ public class CategoryHelpBuilder {
 			out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n");
 			out.write(STYLE);
 			out.printf(HEADER, context.getString(R.string.app_name));
+			new WriteCategoryTOC(out).run(cursor);
+			out.write(LEGEND);
 			new WriteCategoryTree(out).run(cursor);
 			out.write(FOOTER);
 			out.close();
@@ -135,13 +144,14 @@ public class CategoryHelpBuilder {
 		CharSequence categoryTitle = AndroidTools.getText(context, categoryName);
 		if (parentID == null) {
 			out.printf(Locale.ROOT,
-					"<h2 class=\"category\" id=\"%s\">%s<span class=\"description\">%s</span></h3>\n",
+					"<h2 class=\"category\" id=\"%s\">%s<a href=\"#toc\">^</a><span class=\"description\">%s</span></h2>\n",
 					categoryName, categoryTitle, AndroidTools.getText(context, categoryName + "_description"));
 		} else {
 			CharSequence keywords = buildKeywords(categoryName);
-			out.printf(Locale.ROOT, "<h3 class=\"subcategory%s\" id=\"%s\">%s</h3>\n"
+			String toc = getLevel(cursor) <= 1 ? "<a href=\"#toc\" onclick=\"arguments[0].stopPropagation()\">^</a>" : "";
+			out.printf(Locale.ROOT, "<h3 class=\"subcategory%s\" id=\"%s\">%s%s</h3>\n"
 							+ "<p class=\"keywords level\">\n%s\n</p>",
-					keywords.length() != 0? " has-keywords" : "", categoryName, categoryTitle, keywords);
+					keywords.length() != 0? " has-keywords" : "", categoryName, categoryTitle, toc, keywords);
 		}
 	}
 
@@ -151,6 +161,59 @@ public class CategoryHelpBuilder {
 			return keywords.replaceAll("(?m)\\s*([^,]+?)\\s*([,;]|\\z)", "<span class=\"keyword\">$1</span>$2 ");
 		} catch (NotFoundException ex) {
 			return String.format(Locale.ROOT, "<span class=\"error\">No keywords for %s</span>", categoryName);
+		}
+	}
+
+	private int getLevel(Cursor cursor) {
+		int level = 0;
+		if (cursor != null) {
+			int levelColumn = cursor.getColumnIndex(LEVEL_COLUMN);
+			if (levelColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+				level = cursor.getInt(levelColumn);
+			}
+		}
+		return level;
+	}
+
+	private class WriteCategoryTOC extends RestoreStructureAlgo<Cursor, Cursor, Void> {
+		private final PrintWriter out;
+		/** TODO not implemented for deeper levels */
+		private final int maxLevel = 1;
+		WriteCategoryTOC(PrintWriter out) {
+			this.out = out;
+		}
+
+		@Override protected @NonNull Iterator<Cursor> start(@NonNull Cursor data) {
+			out.write("<div id=\"toc\">\n");
+			out.write("<h2>Table of Contents</h2>\n");
+			out.write("<ul>\n");
+			data.moveToPosition(-1);
+			return DatabaseTools.iterate(data).iterator();
+		}
+		@Override protected int getLevel(Cursor cursor) {
+			return CategoryHelpBuilder.this.getLevel(cursor);
+		}
+		@Override protected void onIncrementLevel(int level, @Nullable Cursor cursor) {
+			if (level < maxLevel) {
+				out.write("<ul>\n");
+			}
+		}
+		@Override protected void onEntity(int level, @NonNull Cursor cursor) {
+			if (level < maxLevel) {
+				String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+				CharSequence categoryTitle = AndroidTools.getText(context, categoryName);
+				out.printf(Locale.ROOT, "\t<li><a href=\"#%s\">%s</a></li>\n", categoryName, categoryTitle);
+			}
+		}
+		@Override protected void onDecrementLevel(int level) {
+			if (level < maxLevel) {
+				out.write("</ul>\n");
+			}
+		}
+		@Override protected Void finish() {
+			out.write("</ul>\n");
+			out.write("</div>\n");
+			return null;
 		}
 	}
 
@@ -165,14 +228,7 @@ public class CategoryHelpBuilder {
 			return DatabaseTools.iterate(data).iterator();
 		}
 		@Override protected int getLevel(Cursor cursor) {
-			int level = 0;
-			if (cursor != null) {
-				int levelColumn = cursor.getColumnIndex("level");
-				if (levelColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
-					level = cursor.getInt(levelColumn);
-				}
-			}
-			return level;
+			return CategoryHelpBuilder.this.getLevel(cursor);
 		}
 		@Override protected void onIncrementLevel(int level, @Nullable Cursor cursor) {
 			out.print("<div class=\"level\">\n");

@@ -7,7 +7,6 @@
 /build
 /.settings
 /prof
-/test-db-concatenated.sql
 /.idea
 /.shelf
 /*.iml

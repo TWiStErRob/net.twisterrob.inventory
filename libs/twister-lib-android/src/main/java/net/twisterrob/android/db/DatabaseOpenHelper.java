@@ -204,8 +204,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			}
 		} catch (SQLException ex) {
 			String message = String.format("Error executing database file: %s while executing\n%s",
-					dbSchemaFile, StringTools.partOf(statement, 0, 1000));
-			LOG.error(message, ex);
+					dbSchemaFile, statement);
+			LOG.error(message); // to have the SQL statement, but need additional log line to display stack trace
+			LOG.error("Error executing database file: {}", dbSchemaFile, ex);
 			throw new IllegalStateException(message, ex);
 		} catch (IOException ex) {
 			String message = String.format("Error executing database file: %s", dbSchemaFile);
