@@ -213,7 +213,7 @@ public class XMLImporter implements Importer {
 			if (id == null) {
 				Long typeID = types.getID(type);
 				if (typeID == null) {
-					progress.warning(R.string.backup_import_invalid_type, type, name);
+					progress.warning(R.string.backup_import_invalid_type, name, type);
 					typeID = PropertyType.DEFAULT;
 				}
 				id = App.db().createProperty(typeID, name, description);
@@ -235,7 +235,7 @@ public class XMLImporter implements Importer {
 			if (id == null) {
 				Long typeID = types.getID(type);
 				if (typeID == null) {
-					progress.warning(R.string.backup_import_invalid_type, type, name);
+					progress.warning(R.string.backup_import_invalid_type, name, type);
 					typeID = RoomType.DEFAULT;
 				}
 				id = App.db().createRoom(propertyID, typeID, name, description);
@@ -289,7 +289,7 @@ public class XMLImporter implements Importer {
 			if (id == null) {
 				Long typeID = types.getID(type);
 				if (typeID == null) {
-					progress.warning(R.string.backup_import_invalid_type, type, name);
+					progress.warning(R.string.backup_import_invalid_type, name, type);
 					typeID = Category.DEFAULT;
 				}
 				id = App.db().createItem(parentID, typeID, name, description);

@@ -15,7 +15,7 @@ CREATE TABLE Category (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- string resource name
 	image       VARCHAR      NOT NULL, -- raw resource name
-	parent      INTEGER          NULL
+	parent      INTEGER      /*NULL*/
 		CONSTRAINT fk_Category_parent
 			REFERENCES Category(_id)
 			ON UPDATE CASCADE
@@ -63,14 +63,14 @@ CREATE VIEW Category_Tree AS
 		3 - ((c1._id IS NULL) + (c2._id IS NULL) + (c3._id IS NULL)) as level,
 		c0.parent                                                    as parent,
 		COALESCE(c3._id, c2._id, c1._id, c0._id)                     as root,
-		(select count(1) from Category where parent = c0._id)        as children,
-		(select count(1) from Category_Descendant where category = c0._id and category <> descendant) as descendants,
+		(select count(*) from Category where parent = c0._id)        as children,
+		(select count(*) from Category_Descendant where category = c0._id and category <> descendant) as descendants,
 		(
-			0 < (select count(1) from Category c1 where c1.parent = c0._id
-        		and 0 < (select count(1) from Category c2 where c2.parent = c1._id))
+			0 < (select count(*) from Category c1 where c1.parent = c0._id
+        		and 0 < (select count(*) from Category c2 where c2.parent = c1._id))
         	and
-        	0 < (select count(1) from Category c1 where c1.parent = c0._id
-        		and 0 = (select count(1) from Category c2 where c2.parent = c1._id))
+        	0 < (select count(*) from Category c1 where c1.parent = c0._id
+        		and 0 = (select count(*) from Category c2 where c2.parent = c1._id))
         )                                                            as mixed
 	from Category c0
 	left join Category c1 on c0.parent = c1._id
@@ -175,7 +175,7 @@ CREATE VIEW Category_Related AS
 
 CREATE TABLE Category_Name_Cache (
 	key         VARCHAR      NOT NULL, -- string resource name
-	value       NVARCHAR         NULL, -- translated display name by Android resources
+	value       NVARCHAR     /*NULL*/, -- translated display name by Android resources
 	PRIMARY KEY(key)
 );
 
@@ -211,15 +211,15 @@ END;
 CREATE TABLE Item (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
-	description TEXT         NULL,     -- user entered
-	image       BLOB         NULL,     -- JPEG image
+	description TEXT         /*NULL*/, -- user entered
+	image       BLOB         /*NULL*/, -- JPEG image
 	image_time  DATETIME     NOT NULL DEFAULT (STRFTIME('%s', 'NOW') * 1000),
 	category    INTEGER      DEFAULT 0 -- uncategorized
 		CONSTRAINT fk_Item_category
 			REFERENCES Category(_id)
 			ON UPDATE CASCADE
 			ON DELETE SET DEFAULT,
-	parent      INTEGER          NULL -- -1 -> ROOT item
+	parent      INTEGER      /*NULL*/  -- -1 -> ROOT item
 		CONSTRAINT fk_Item_parent
 			REFERENCES Item(_id)
 			ON UPDATE CASCADE
@@ -306,7 +306,7 @@ CREATE TABLE PropertyTypeKind (
 CREATE TABLE PropertyType (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- string resource name
-	image       VARCHAR          NULL, -- raw resource name
+	image       VARCHAR      /*NULL*/, -- raw resource name
 	kind        INTEGER      NOT NULL
 		CONSTRAINT fk_PropertyType_kind
 		REFERENCES PropertyTypeKind(_id)
@@ -319,8 +319,8 @@ CREATE TABLE PropertyType (
 CREATE TABLE Property (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
-	description TEXT         NULL,     -- user entered
-	image       BLOB         NULL,     -- JPEG image
+	description TEXT         /*NULL*/, -- user entered
+	image       BLOB         /*NULL*/, -- JPEG image
 	image_time  DATETIME     NOT NULL DEFAULT (STRFTIME('%s', 'NOW') * 1000),
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Property_type
@@ -351,7 +351,7 @@ CREATE TABLE RoomTypeKind (
 CREATE TABLE RoomType (
 	_id         INTEGER      NOT NULL,
 	name        VARCHAR      NOT NULL, -- string resource name
-	image       VARCHAR          NULL, -- raw resource name
+	image       VARCHAR      /*NULL*/, -- raw resource name
 	kind        INTEGER      NOT NULL
 		CONSTRAINT fk_RoomType_kind
 			REFERENCES RoomTypeKind(_id)
@@ -364,8 +364,8 @@ CREATE TABLE RoomType (
 CREATE TABLE Room (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
-	description TEXT         NULL,     -- user entered
-	image       BLOB         NULL,     -- JPEG image
+	description TEXT         /*NULL*/, -- user entered
+	image       BLOB         /*NULL*/, -- JPEG image
 	image_time  DATETIME     NOT NULL DEFAULT (STRFTIME('%s', 'NOW') * 1000),
 	type        INTEGER      DEFAULT 0 -- other
 		CONSTRAINT fk_Room_type
@@ -447,15 +447,15 @@ CREATE TRIGGER Recent_insert
 AFTER INSERT ON Recent
 BEGIN
 	delete from Recent where 100 < (
-		select count() from Recent r where Recent.visit <= r.visit
+		select count(*) from Recent r where Recent.visit <= r.visit
 	);--NOTEOS
 END;
 
 CREATE VIEW Recent_Stats AS
 	select
 		_id,
-		count(1) as population,
-		count(1)/cast(s.count as float) as percentage,
+		count(*) as population,
+		count(*)/cast(s.count as float) as percentage,
 		max(visit) as visit,
 		(julianday(max(visit)) - julianday(s.firstVisit)) / (julianday(s.lastVisit) - julianday(s.firstVisit)) as recency
 	from Recent,
@@ -464,7 +464,7 @@ CREATE VIEW Recent_Stats AS
 			min(visit) as firstVisit,
 			max(visit) as lastVisit,
 			--datetime(avg(julianday(visit))) as meanVisit,
-			count() as count
+			count(*) as count
 		from Recent
 	) s
 	group by _id
