@@ -26,12 +26,12 @@ public class Hinter {
 	}
 
 	public void highlight(Spannable input) {
-		for (WordMatch word : CategoryDTO.getCache(context).split(input)) {
-			input.setSpan(
-					new ForegroundColorSpan(getColor(word.word().toString())),
-					word.wordStart,
-					word.wordEnd,
-					SPAN_EXCLUSIVE_EXCLUSIVE);
+		boolean colorMatches = App.getBPref(R.string.pref_highlightSuggestion, R.bool.pref_highlightSuggestion_default);
+		if (colorMatches) {
+			for (WordMatch word : CategoryDTO.getCache(context).split(input)) {
+				int color = getColor(word.word().toString());
+				input.setSpan(new ForegroundColorSpan(color), word.wordStart, word.wordEnd, SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
 		}
 	}
 	public static void unhighlight(Spannable input) {
@@ -42,6 +42,7 @@ public class Hinter {
 	}
 
 	public boolean hint(CharSequence userInput, boolean suggestForced, String currentTypeName) {
+		boolean colorMatches = App.getBPref(R.string.pref_highlightSuggestion, R.bool.pref_highlightSuggestion_default);
 		String suggestPrefVal = App.getSPref(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
 		boolean suggestAlways =
 				context.getString(R.string.pref_suggestCategory_always).equals(suggestPrefVal);
@@ -61,7 +62,7 @@ public class Hinter {
 					}
 					if (hintText == null) {
 						hintText = new HintBuilder(CategoryDTO.getCache(context), suggestions, clickHandler)
-								.buildHint(currentTypeName);
+								.buildHint(currentTypeName, colorMatches);
 						built = true;
 					}
 				} else {
@@ -96,11 +97,11 @@ public class Hinter {
 				@Override public int compare(CategorySuggestion<Long> o1, CategorySuggestion<Long> o2) {
 					int m1 = o1.getMinDistance();
 					int m2 = o2.getMinDistance();
-					int diff = Integer.compare(m1, m2);
+					int diff = m1 < m2? -1 : (m1 == m2? 0 : 1); // Integer.compare(m1, m2)
 					if (diff == 0) {
 						int d1 = o1.getDistanceCount(m1);
 						int d2 = o2.getDistanceCount(m2);
-						diff = -Integer.compare(d1, d2);
+						diff = (d1 < d2? 1 : (d1 == d2? 0 : -1)); // -Integer.compare(d1, d2)
 					}
 					return diff;
 				}
@@ -120,12 +121,13 @@ public class Hinter {
 			this.clickHandler = clickHandler;
 		}
 
-		public CharSequence buildHint(String currentTypeName) {
-			append(currentTypeName, categorySuggestions);
+		public CharSequence buildHint(String currentTypeName, boolean colorMatches) {
+			append(categorySuggestions, currentTypeName, colorMatches);
 			return builder;
 		}
 
-		private void append(final String currentTypeName, final List<CategorySuggestion<Long>> suggestions) {
+		private void append(final List<CategorySuggestion<Long>> suggestions,
+				final String currentTypeName, final boolean colorMatches) {
 			CategorySuggestion<Long> last = null;
 			int index = 0;
 			for (CategorySuggestion<Long> categorySuggestion : suggestions) {
@@ -138,7 +140,7 @@ public class Hinter {
 					builder.setSpan(new ClickableSpan() {
 						@Override public void onClick(View widget) {
 							builder.delete(start, end);
-							append(currentTypeName, more); // continue appending
+							append(more, currentTypeName, colorMatches); // continue appending
 							clickHandler.updated(builder);
 						}
 					}, start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -148,13 +150,14 @@ public class Hinter {
 					builder.append("\n");
 				}
 				String categoryKey = cache.getCategoryKey(categorySuggestion.getId());
-				appendSuggestion(categorySuggestion, categoryKey.equals(currentTypeName));
+				appendSuggestion(categorySuggestion, categoryKey.equals(currentTypeName), colorMatches);
 				last = categorySuggestion;
 				index++;
 			}
 		}
 
-		private void appendSuggestion(final CategorySuggestion<Long> categorySuggestion, boolean isCurrent) {
+		private void appendSuggestion(final CategorySuggestion<Long> categorySuggestion,
+				boolean isCurrent, boolean colorMatches) {
 			if (isCurrent) {
 				builder.append("\u2714"); // ✔
 			}
@@ -186,33 +189,36 @@ public class Hinter {
 					builder.setSpan(new StyleSpan(Typeface.BOLD),
 							start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
-				ArrayList<WordSuggestion<Long>> all = new ArrayList<>();
-				for (WordSuggestion<Long> wordSuggestion : keywordSuggestion) {
-					all.add(wordSuggestion);
-				}
-				Collections.sort(all, new Comparator<WordSuggestion<Long>>() {
-					@Override public int compare(WordSuggestion<Long> lhs, WordSuggestion<Long> rhs) {
-						int end1 = lhs.getKeywordMatchEnd();
-						int end2 = rhs.getKeywordMatchEnd();
-						int increasing = end1 < end2? -1 : (end1 == end2? 0 : 1);
-						return -increasing;
+
+				if (colorMatches) {
+					ArrayList<WordSuggestion<Long>> all = new ArrayList<>();
+					for (WordSuggestion<Long> wordSuggestion : keywordSuggestion) {
+						all.add(wordSuggestion);
 					}
-				});
-				for (WordSuggestion<Long> wordSuggestion : all) {
-					String dist = String.valueOf(wordSuggestion.getDistance());
-					int start = keywordStart + wordSuggestion.getKeywordMatchEnd();
-					int end = start + dist.length();
-					SuperscriptSpan[] spans = builder.getSpans(start, start, SuperscriptSpan.class);
-					if (spans.length > 0) {
-						builder.insert(start, ",");
+					Collections.sort(all, new Comparator<WordSuggestion<Long>>() {
+						@Override public int compare(WordSuggestion<Long> lhs, WordSuggestion<Long> rhs) {
+							int end1 = lhs.getKeywordMatchEnd();
+							int end2 = rhs.getKeywordMatchEnd();
+							int increasing = end1 < end2? -1 : (end1 == end2? 0 : 1);
+							return -increasing;
+						}
+					});
+					for (WordSuggestion<Long> wordSuggestion : all) {
+						String dist = String.valueOf(wordSuggestion.getDistance());
+						int start = keywordStart + wordSuggestion.getKeywordMatchEnd();
+						int end = start + dist.length();
+						SuperscriptSpan[] spans = builder.getSpans(start, start, SuperscriptSpan.class);
+						if (spans.length > 0) {
+							builder.insert(start, ",");
+							builder.setSpan(new SuperscriptSpan(), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
+							builder.setSpan(new RelativeSizeSpan(0.6f), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+						builder.insert(start, dist);
 						builder.setSpan(new SuperscriptSpan(), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
 						builder.setSpan(new RelativeSizeSpan(0.6f), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
+						int color = getColor(wordSuggestion.getInputWord().toString());
+						builder.setSpan(new ForegroundColorSpan(color), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
 					}
-					builder.insert(start, dist);
-					builder.setSpan(new SuperscriptSpan(), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
-					builder.setSpan(new RelativeSizeSpan(0.6f), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
-					builder.setSpan(new ForegroundColorSpan(getColor(wordSuggestion.getInputWord().toString())),
-							start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
 			}
 			builder.append(")");

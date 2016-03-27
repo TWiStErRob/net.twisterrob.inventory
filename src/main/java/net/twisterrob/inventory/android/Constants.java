@@ -26,7 +26,8 @@ import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
 import net.twisterrob.android.utils.tools.IOTools;
 
 public interface Constants {
-	boolean DISABLE = Boolean.parseBoolean("false");
+	/** Turn off parts of the app permanently during build time, never change it to <code>true</code>. */
+	boolean DISABLE = false;
 
 	class Paths {
 		/** Warning: this is used inlined in paths_share.xml because path doesn't support string resources */
@@ -67,17 +68,7 @@ public interface Constants {
 		}
 	}
 
-	interface Prefs {
-		String CURRENT_LANGUAGE = "currentLanguage";
-		String LAST_EXPORT_DRIVE_ID = "lastExportDriveId";
-	}
-
 	class Pic {
-		private static final LoggingListener<Integer, GlideDrawable> SVG_LOGGING_LISTENER =
-				new LoggingListener<>("SVG", new ResourceFormatter(App.getAppContext()));
-		private static final LoggingListener<Uri, GlideDrawable> IMAGE_LOGGING_LISTENER =
-				new LoggingListener<>("image");
-
 		public static <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz) {
 			ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, App.getAppContext());
 			DrawableRequestBuilder<T> builder = Glide
@@ -108,7 +99,8 @@ public interface Constants {
 		public static DrawableRequestBuilder<Integer> svg() {
 			DrawableRequestBuilder<Integer> clone = SVG_REQUEST.clone();
 			if (DISABLE && BuildConfig.DEBUG) {
-				clone.listener(SVG_LOGGING_LISTENER);
+				LoggingListener.ResourceFormatter formatter = new ResourceFormatter(App.getAppContext());
+				clone.listener(new LoggingListener<Integer, GlideDrawable>("SVG", formatter));
 			}
 			return clone;
 		}
@@ -116,7 +108,7 @@ public interface Constants {
 		public static DrawableRequestBuilder<Uri> jpg() {
 			DrawableRequestBuilder<Uri> clone = IMAGE_REQUEST.clone();
 			if (DISABLE && BuildConfig.DEBUG) {
-				clone.listener(IMAGE_LOGGING_LISTENER);
+				clone.listener(new LoggingListener<Uri, GlideDrawable>("image"));
 			}
 			return clone;
 		}

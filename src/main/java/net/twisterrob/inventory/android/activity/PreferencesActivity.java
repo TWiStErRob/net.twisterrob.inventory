@@ -52,7 +52,6 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 	}
 
 	public static Intent show() {
-		Intent intent = new Intent(App.getAppContext(), PreferencesActivity.class);
-		return intent;
+		return new Intent(App.getAppContext(), PreferencesActivity.class);
 	}
 }

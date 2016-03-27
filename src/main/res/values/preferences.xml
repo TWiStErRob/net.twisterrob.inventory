@@ -2,6 +2,8 @@
 <resources>
 	<string name="pref_activity_title">Settings</string>
 
+	<string name="pref_currentLanguage" translatable="false">currentLanguage</string>
+
 	<string name="pref_defaultViewPage_title">Default Details Page</string>
 	<string name="pref_defaultViewPage" translatable="false">defaultViewPage</string>
 	<string name="pref_defaultViewPage_default" translatable="false">@string/pref_defaultViewPage_image</string>
@@ -35,6 +37,12 @@
 		<item>@string/pref_suggestCategory_unmatched</item>
 		<item>@string/pref_suggestCategory_manual</item>
 	</string-array>
+
+	<string name="pref_highlightSuggestion_title">Highlight Matches</string>
+	<string name="pref_highlightSuggestion" translatable="false">highlightSuggestions</string>
+	<bool name="pref_highlightSuggestion_default" translatable="false">false</bool>
+	<string name="pref_highlightSuggestion_desc">Display the edit distance of the entered name and the match
+		in the suggestions list.</string>
 
 	<string name="pref_internalImageViewer_title">Use internal image viewer</string>
 	<string name="pref_internalImageViewer" translatable="false">internalImageViewer</string>

@@ -12,13 +12,14 @@ import android.content.res.*;
 import android.os.Build.*;
 import android.os.StrictMode;
 import android.os.StrictMode.*;
+import android.os.StrictMode.ThreadPolicy.Builder;
 import android.preference.PreferenceManager;
 import android.support.annotation.*;
 import android.widget.Toast;
 
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
-import net.twisterrob.inventory.android.Constants.Prefs;
 import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.java.utils.StringTools;
 
 public class App extends Application {
@@ -33,8 +34,8 @@ public class App extends Application {
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
 	static {
+		setStrictMode();
 		if (BuildConfig.DEBUG) {
-			setStrictMode();
 			//android.app.FragmentManager.enableDebugLogging(true);
 			//android.support.v4.app.FragmentManager.enableDebugLogging(true);
 			//android.app.LoaderManager.enableDebugLogging(true);
@@ -67,10 +68,20 @@ public class App extends Application {
 		// StrictModeDiskReadViolation on startup, but there isn't really a good way around it,
 		// since it needs to be loaded for the following code to work, make an exception:
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		database = new Database(this);
-		updateLanguage(Locale.getDefault()); // reads prefs, so may cause StrictModeDiskReadViolation if not loaded yet
-		StrictMode.setThreadPolicy(originalPolicy);
+		try {
+			PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+			database = new Database(this);
+			// reads prefs, so may cause StrictModeDiskReadViolation if not loaded yet
+			updateLanguage(Locale.getDefault());
+			new BackgroundExecution(new Runnable() {
+				@Override public void run() {
+					// preload on startup
+					CategoryDTO.getCache(App.this);
+				}
+			}).execute();
+		} finally {
+			StrictMode.setThreadPolicy(originalPolicy);
+		}
 	}
 
 	@Override
@@ -81,7 +92,7 @@ public class App extends Application {
 
 	private void updateLanguage(Locale newLocale) {
 		final SharedPreferences prefs = getPrefs();
-		final String storedLanguage = prefs.getString(Prefs.CURRENT_LANGUAGE, null);
+		final String storedLanguage = prefs.getString(getString(R.string.pref_currentLanguage), null);
 		final String currentLanguage = newLocale.toString();
 		if (!currentLanguage.equals(storedLanguage)) {
 			String from = StringTools.toLocale(storedLanguage).getDisplayName();
@@ -94,7 +105,7 @@ public class App extends Application {
 					try {
 						database.updateCategoryCache(App.getAppContext());
 						LOG.debug("Locale update successful: {} -> {}", storedLanguage, currentLanguage);
-						prefs.edit().putString(Prefs.CURRENT_LANGUAGE, currentLanguage).apply();
+						prefs.edit().putString(getString(R.string.pref_currentLanguage), currentLanguage).apply();
 					} catch (Exception ex) {
 						LOG.error("Locale update failed: {} -> {}", storedLanguage, currentLanguage, ex);
 					}
@@ -182,10 +193,20 @@ public class App extends Application {
 		return message + " " + errorMessage;
 	}
 
-	@TargetApi(VERSION_CODES.KITKAT)
+	/**
+	 * Set up StrictMode in a way that doesn't interfere much with development,
+	 * but tries to tell you any violations available in all possible ways (except death).
+	 */
+	@TargetApi(VERSION_CODES.M)
 	private static void setStrictMode() {
+		if (!BuildConfig.DEBUG) {
+			return;
+		}
+		if (VERSION_CODES.GINGERBREAD > VERSION.SDK_INT) {
+			return; // StrictMode was added in API 9
+		}
+		Builder threadBuilder = new Builder();
 		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
-			ThreadPolicy.Builder threadBuilder = new ThreadPolicy.Builder();
 			threadBuilder = threadBuilder
 					.detectDiskReads()
 					.detectDiskWrites()
@@ -193,40 +214,55 @@ public class App extends Application {
 					.penaltyLog()
 					.penaltyDialog()
 					.penaltyDropBox()
+//					.penaltyDeath() // don't die on android.os.StrictMode$InstanceCountViolation: class ...Activity; instances=2; limit=1 
 			;
-			if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
-				threadBuilder = threadBuilder
-						.penaltyDeathOnNetwork()
-						.detectCustomSlowCalls()
-						.penaltyFlashScreen()
-				;
-			}
-			StrictMode.setThreadPolicy(threadBuilder.build());
+		}
+		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+			threadBuilder = threadBuilder
+					.detectCustomSlowCalls()
+					.penaltyFlashScreen()
+					.penaltyDeathOnNetwork()
+			;
+		}
 
-			VmPolicy.Builder vmBuilder = new VmPolicy.Builder();
+		if (VERSION_CODES.M <= VERSION.SDK_INT) {
+			threadBuilder = threadBuilder
+					.detectResourceMismatches()
+			;
+		}
+		StrictMode.setThreadPolicy(threadBuilder.build());
+
+		VmPolicy.Builder vmBuilder = new VmPolicy.Builder();
+		if (VERSION_CODES.GINGERBREAD <= VERSION.SDK_INT) {
 			vmBuilder = vmBuilder
 					.detectLeakedSqlLiteObjects()
-					//.penaltyDeath()
 					.penaltyLog()
+					.penaltyDropBox()
+					.penaltyDeath()
 			;
-			if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
-				vmBuilder = vmBuilder
-						.detectLeakedClosableObjects()
-						.detectActivityLeaks()
-				;
-			}
-			if (VERSION_CODES.JELLY_BEAN_MR2 <= VERSION.SDK_INT) {
-				vmBuilder = vmBuilder
-						.detectFileUriExposure()
-				;
-			}
-			if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
-				vmBuilder = vmBuilder
-						.detectLeakedRegistrationObjects()
-				;
-			}
-
-			StrictMode.setVmPolicy(vmBuilder.build());
 		}
+		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+			vmBuilder = vmBuilder
+					.detectLeakedClosableObjects()
+					.detectActivityLeaks()
+			;
+		}
+		if (VERSION_CODES.JELLY_BEAN_MR2 <= VERSION.SDK_INT) {
+			vmBuilder = vmBuilder
+					.detectFileUriExposure()
+			;
+		}
+		if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
+			vmBuilder = vmBuilder
+					.detectLeakedRegistrationObjects()
+			;
+		}
+		if (VERSION_CODES.M <= VERSION.SDK_INT) {
+			vmBuilder = vmBuilder
+					.detectCleartextNetwork()
+					.penaltyDeathOnCleartextNetwork()
+			;
+		}
+		StrictMode.setVmPolicy(vmBuilder.build());
 	}
 }

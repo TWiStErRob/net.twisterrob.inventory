@@ -14,7 +14,8 @@ import net.twisterrob.inventory.android.R;
 import net.twisterrob.java.utils.StringTools;
 
 public class VariantDatabase {
-	private static final Logger LOG = LoggerFactory.getLogger(Database.class); // intentionally other class
+	@SuppressWarnings("LoggerInitializedWithForeignClass") // intentionally other class
+	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
 
 	private final Resources m_resources;
 

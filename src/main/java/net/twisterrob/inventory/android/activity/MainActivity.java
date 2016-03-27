@@ -58,8 +58,8 @@ public class MainActivity extends DrawerActivity
 		}
 	};
 
-	private BaseFragment getFragment() {
-		return (BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
+	private BaseFragment<?> getFragment() {
+		return (BaseFragment<?>)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class MainActivity extends DrawerActivity
 				if (count == 0) {
 					finish();
 				} else {
-					BaseFragment fragment = getFragment();
+					BaseFragment<?> fragment = getFragment();
 					refreshDrawers((Intent)fragment.getViewTag());
 
 					BackStackEntry top = fm.getBackStackEntryAt(count - 1);
@@ -135,7 +135,7 @@ public class MainActivity extends DrawerActivity
 			}
 		}
 
-		BaseFragment fragment = createPage(page);
+		BaseFragment<?> fragment = createPage(page);
 		fragment.setViewTag(intent);
 		m
 				.beginTransaction()
@@ -144,11 +144,11 @@ public class MainActivity extends DrawerActivity
 				.commit()
 		;
 	}
-	private BaseFragment createPage(String page) {
-		BaseFragment fragment;
+	private BaseFragment<?> createPage(String page) {
+		BaseFragment<?> fragment;
 		switch (page) {
 			case PAGE_EMPTY:
-				fragment = new BaseFragment();
+				fragment = new BaseFragment<>();
 				break;
 			case PAGE_CATEGORIES:
 				fragment = CategoryContentsFragment.newInstance(null, false);
@@ -276,6 +276,7 @@ public class MainActivity extends DrawerActivity
 
 	public static Intent home() {
 		Intent intent = new Intent(App.getAppContext(), MainActivity.class);
+		intent.putExtra(EXTRA_PAGE, PAGE_HOME);
 		return intent;
 	}
 

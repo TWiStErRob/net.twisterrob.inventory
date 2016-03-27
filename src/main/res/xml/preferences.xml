@@ -73,6 +73,12 @@
 			android:defaultValue="@bool/pref_displayDebugDetails_default"
 			android:summary="@string/pref_displayDebugDetails_desc"
 			/>
+		<CheckBoxPreference
+			android:key="@string/pref_highlightSuggestion"
+			android:title="@string/pref_highlightSuggestion_title"
+			android:defaultValue="@bool/pref_highlightSuggestion_default"
+			android:summary="@string/pref_highlightSuggestion_desc"
+			/>
 		<PreferenceScreen
 			android:title="@string/manage_space_title"
 			>
