@@ -17,9 +17,9 @@ public class CategoryDTO extends ImagedDTO {
 	private static final Uri APP_RESOURCE_RAW = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/");
 	/**
 	 * Do not access this field directly.
-	 * @see #getSuggester(Context)
+	 * @see #getCache(Context)
 	 */
-	private static final CategorySuggester SUGGESTER = new CategorySuggester();
+	private static final CategoryCache CACHE = new CategoryCache();
 
 	public Long parentID;
 	public String parentName;
@@ -56,7 +56,7 @@ public class CategoryDTO extends ImagedDTO {
 			CharSequence keywords = AndroidTools.getText(context, categoryName + "_keywords");
 			if (deep) {
 				SpannableStringBuilder more = new SpannableStringBuilder(keywords);
-				for (String sub : getSuggester(context).getChildren(categoryName)) {
+				for (String sub : getCache(context).getChildren(categoryName)) {
 					if (more.length() > 0) {
 						more.append(",\n");
 					}
@@ -83,7 +83,7 @@ public class CategoryDTO extends ImagedDTO {
 			keywords.append(myKeywords);
 		}
 
-		Collection<String> children = getSuggester(context).getChildren(categoryName);
+		Collection<String> children = getCache(context).getChildren(categoryName);
 		if (!children.isEmpty()) {
 			if (0 < keywords.length()) {
 				keywords.append("; ");
@@ -109,8 +109,8 @@ public class CategoryDTO extends ImagedDTO {
 		}
 	}
 
-	public static CategorySuggester getSuggester(Context context) {
-		SUGGESTER.init(context);
-		return SUGGESTER;
+	public static CategoryCache getCache(Context context) {
+		CACHE.init(context);
+		return CACHE;
 	}
 }

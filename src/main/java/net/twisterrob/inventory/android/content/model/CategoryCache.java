@@ -1,7 +1,8 @@
 package net.twisterrob.inventory.android.content.model;
 
 import java.util.*;
-import java.util.regex.*;
+
+import org.slf4j.*;
 
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
@@ -13,12 +14,11 @@ import android.text.SpannableStringBuilder;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.java.text.*;
+import net.twisterrob.java.text.Suggester.*;
 
-public class CategorySuggester {
-	private static final Pattern WORD_SEARCH = Pattern.compile("(\\p{L}\\p{M}*+){3,}");
-	private static final Pattern KEYWORD_SPLITTER = Pattern.compile("[,;/()]+");
-	/** word -> { (category, keyword) } */
-	private final Map<String, Collection<IndexEntry>> index = new HashMap<>();
+public class CategoryCache {
+	private static final Logger LOG = LoggerFactory.getLogger(CategoryCache.class);
 	private final LongSparseArray<String> categoriesByID = new LongSparseArray<>();
 	private final Map<String, String> categoryParents = new TreeMap<>();
 	private final Map<String, Set<String>> categoryChildren = new TreeMap<>();
@@ -26,41 +26,30 @@ public class CategorySuggester {
 	private final LongSparseArray<String> categoryIcons = new LongSparseArray<>();
 	private Locale lastLocale;
 
-	CategorySuggester() {
+	private final Suggester<Long> suggester = new Suggester<>(new EditAllowingIndexer<DictionaryWord<Long>>(2), 3);
+
+	CategoryCache() {
 		// limit visibility
 	}
 
-	public @NonNull Collection<Suggestion> suggest(@NonNull CharSequence name) {
-		List<Suggestion> suggestions = new ArrayList<>();
-
-		Matcher m = WORD_SEARCH.matcher(name);
-		while (m.find()) {
-			String word = m.group().toLowerCase(Locale.getDefault());
-			Collection<IndexEntry> categories = index.get(word);
-			if (categories != null) {
-				for (IndexEntry index : categories) {
-					Suggestion suggestion = new Suggestion();
-					suggestion.input = name;
-					suggestion.search = word;
-					suggestion.match = index.keyword;
-					suggestion.matchStart = index.wordStart;
-					suggestion.matchEnd = index.wordEnd;
-					suggestion.category = index.category;
-					suggestions.add(suggestion);
-				}
-			}
-		}
-
-		return suggestions;
+	public @NonNull Collection<CategorySuggestion<Long>> suggest(@NonNull CharSequence name) {
+		return suggester.suggest(name);
+	}
+	public @NonNull Iterable<WordMatch> split(@NonNull CharSequence name) {
+		return suggester.split(name);
 	}
 
-	void init(@NonNull Context context) {
+	synchronized void init(@NonNull Context context) {
 		Locale currentLocale = context.getResources().getConfiguration().locale;
 		if (currentLocale.equals(lastLocale)) {
 			return;
 		}
+		LOG.warn("Locale changed from {} to {}", lastLocale, currentLocale);
 		lastLocale = currentLocale;
+		doInit(context);
+	}
 
+	private void doInit(@NonNull Context context) {
 		Cursor cursor = App.db().listRelatedCategories(null);
 		while (cursor.moveToNext()) {
 			String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
@@ -84,9 +73,9 @@ public class CategorySuggester {
 			CharSequence fullName = buildFullName(context, categoryPath);
 			categoryFullNames.put(categoryID, fullName);
 
-			addToIndex(categoryID, AndroidTools.getText(context, categoryName));
+			suggester.addText(categoryID, AndroidTools.getText(context, categoryName));
 			try {
-				addToIndex(categoryID, AndroidTools.getText(context, categoryName + "_keywords"));
+				suggester.addText(categoryID, AndroidTools.getText(context, categoryName + "_keywords"));
 			} catch (NotFoundException ex) {
 				// ignore and continue
 			}
@@ -115,64 +104,21 @@ public class CategorySuggester {
 		return cats;
 	}
 
-	private void addToIndex(long categoryID, CharSequence categoryText) {
-		String[] keywords = KEYWORD_SPLITTER.split(categoryText);
-		for (String keyword : keywords) {
-			keyword = keyword.trim();
-			Matcher m = WORD_SEARCH.matcher(keyword);
-			while (m.find()) {
-				String word = m.group().toLowerCase(Locale.getDefault());
-				Collection<IndexEntry> wordSuggestions = index.get(word);
-				if (wordSuggestions == null) {
-					wordSuggestions = new ArrayList<>();
-					index.put(word, wordSuggestions);
-				}
-				IndexEntry index = new IndexEntry();
-				index.word = word;
-				index.keyword = keyword;
-				index.wordStart = m.start();
-				index.wordEnd = m.end();
-				index.category = categoryID;
-				wordSuggestions.add(index);
-			}
-		}
-	}
 	public String getIcon(long type) {
 		return categoryIcons.get(type);
 	}
 	public Collection<String> getChildren(String name) {
 		Set<String> children = categoryChildren.get(name);
-		if(children != null) {
+		if (children != null) {
 			return Collections.unmodifiableSet(children);
 		} else {
 			return Collections.emptySet();
 		}
 	}
-
-	private static class IndexEntry {
-		long category;
-		String keyword;
-		String word;
-		int wordStart;
-		int wordEnd;
+	public CharSequence getCategoryPath(long categoryID) {
+		return categoryFullNames.get(categoryID);
 	}
-
-	public class Suggestion {
-		/** Suggestion created for this input. */
-		public CharSequence input;
-		/** Matched part of index when looking for {@code search}. */
-		public CharSequence match;
-		public int matchStart;
-		public int matchEnd;
-		/** Part of input that was searched in index. */
-		public CharSequence search;
-		public long category;
-
-		public CharSequence getCategoryPath() {
-			return categoryFullNames.get(category);
-		}
-		public String getCategoryKey() {
-			return categoriesByID.get(category);
-		}
+	public String getCategoryKey(long categoryID) {
+		return categoriesByID.get(categoryID);
 	}
 }

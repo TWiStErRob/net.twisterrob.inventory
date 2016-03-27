@@ -1,8 +1,6 @@
 package net.twisterrob.inventory.android.fragment.data;
 
 import java.io.*;
-import java.util.*;
-import java.util.Map.Entry;
 
 import org.slf4j.*;
 
@@ -11,18 +9,15 @@ import android.app.Activity;
 import android.content.*;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build.*;
 import android.os.Bundle;
 import android.support.annotation.*;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.util.LongSparseArray;
 import android.support.v4.widget.CursorAdapter;
-import android.text.*;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.style.*;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.*;
@@ -47,9 +42,10 @@ import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.*;
-import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.*;
-import net.twisterrob.inventory.android.content.model.CategorySuggester.Suggestion;
+import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.model.ImagedDTO;
+import net.twisterrob.inventory.android.content.model.helpers.Hinter;
+import net.twisterrob.inventory.android.content.model.helpers.Hinter.CategorySelectedEvent;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.inventory.android.view.*;
@@ -275,112 +271,24 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 	}
-
-	private void updateHint(CharSequence s, boolean forceSuggest) {
-		if (!(this instanceof ItemEditFragment)) {
+	private void updateHint(CharSequence text, boolean b) {
+		if (!(BaseEditFragment.this instanceof ItemEditFragment)) {
 			return;
 		}
-		String suggest = App.getSPref(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
-		String always = getString(R.string.pref_suggestCategory_always);
-		String unmatched = getString(R.string.pref_suggestCategory_unmatched);
-		CharSequence hintText = null;
-		if (always.equals(suggest) || unmatched.equals(suggest) || forceSuggest) {
-			Collection<Suggestion> suggestions;
-			if (!forceSuggest && Category.SKIP_SUGGEST.contains(getTypeName())) {
-				suggestions = Collections.emptyList();
-			} else {
-				suggestions = CategoryDTO.getSuggester(name.getContext()).suggest(s);
+		Hinter hinter = new Hinter(getContext(), new CategorySelectedEvent() {
+			@Override public void categorySelected(long categoryID) {
+				AndroidTools.selectByID(type, categoryID);
+				Hinter.unhighlight(name.getText());
 			}
-
-			if (!suggestions.isEmpty()) {
-				hintText = buildHint(suggestions, getTypeName());
-				if (unmatched.equals(suggest) && !forceSuggest) {
-					for (Suggestion suggestion : suggestions) {
-						String currentCategoryKey = getTypeName();
-						if (suggestion.getCategoryKey().equals(currentCategoryKey)) {
-							hintText = null;
-						}
-					}
-				}
-			} else {
-				if (forceSuggest) {
-					hintText = "Can't find any matching categories, sorry.";
-				}
+			@Override public void updated(CharSequence hintText) {
+				hint.setText(hintText);
+				hint.setMovementMethod(LinkMovementMethod.getInstance());
+				AndroidTools.displayedIfHasText(hint);
 			}
+		});
+		if (hinter.hint(text.toString(), b, getTypeName())) {
+			hinter.highlight(name.getText());
 		}
-		hint.setText(hintText);
-		hint.setMovementMethod(LinkMovementMethod.getInstance());
-		AndroidTools.displayedIfHasText(hint);
-	}
-	public CharSequence buildHint(@NonNull Collection<Suggestion> suggestions, String current) {
-		LongSparseArray<Map<CharSequence, Collection<Suggestion>>> grouped = group(suggestions);
-
-		SpannableStringBuilder builder = new SpannableStringBuilder();
-		for (int i = 0; i < grouped.size(); ++i) {
-			Map<CharSequence, Collection<Suggestion>> matchGroup = grouped.valueAt(i);
-
-			final Suggestion categorySuggestion = matchGroup.entrySet().iterator().next().getValue().iterator().next();
-			boolean isCurrent = categorySuggestion.getCategoryKey().equals(current);
-
-			if (isCurrent) {
-				builder.append("\u2714");
-			}
-			int start = builder.length();
-			builder.append(categorySuggestion.getCategoryPath());
-			int end = builder.length();
-
-			if (!isCurrent) {
-				builder.setSpan(new ClickableSpan() {
-					@Override public void onClick(View widget) {
-						AndroidTools.selectByID(type, categorySuggestion.category);
-					}
-				}, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-			}
-
-			builder.append(" (");
-			for (Iterator<Entry<CharSequence, Collection<Suggestion>>> sugIt =
-			     matchGroup.entrySet().iterator(); sugIt.hasNext(); ) {
-				Entry<CharSequence, Collection<Suggestion>> group = sugIt.next();
-				int matchStart = builder.length();
-				builder.append(group.getKey());
-				for (Suggestion suggestion : group.getValue()) {
-					builder.setSpan(new ForegroundColorSpan(Color.RED),
-							matchStart + suggestion.matchStart,
-							matchStart + suggestion.matchEnd,
-							Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-				}
-				if (sugIt.hasNext()) {
-					builder.append(", ");
-				}
-			}
-			builder.append(")");
-			if (i < grouped.size() - 1) {
-				builder.append("\n");
-			}
-		}
-		return builder;
-	}
-	private LongSparseArray<Map<CharSequence, Collection<Suggestion>>> group(
-			@NonNull Collection<Suggestion> suggestions) {
-		LongSparseArray<Map<CharSequence, Collection<Suggestion>>> grouped = new LongSparseArray<>();
-		for (Suggestion suggestion : suggestions) {
-			Map<CharSequence, Collection<Suggestion>> matchGroup = grouped.get(suggestion.category);
-			if (matchGroup == null) {
-				matchGroup = new TreeMap<>();
-				grouped.put(suggestion.category, matchGroup);
-			}
-			Collection<Suggestion> group = matchGroup.get(suggestion.match);
-			if (group == null) {
-				group = new TreeSet<>(new Comparator<Suggestion>() {
-					@Override public int compare(Suggestion lhs, Suggestion rhs) {
-						return lhs.search.toString().compareToIgnoreCase(rhs.search.toString());
-					}
-				});
-				matchGroup.put(suggestion.match, group);
-			}
-			group.add(suggestion);
-		}
-		return grouped;
 	}
 
 	@Override public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
