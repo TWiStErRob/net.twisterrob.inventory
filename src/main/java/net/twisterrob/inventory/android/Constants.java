@@ -128,7 +128,7 @@ public interface Constants {
 
 		public static class GlideSetup implements GlideModule {
 			@Override public void applyOptions(final Context context, GlideBuilder builder) {
-				if (DISABLE && BuildConfig.DEBUG) {
+				if (BuildConfig.DEBUG) {
 					builder.setDiskCache(new DiskCache.Factory() {
 						@Override public DiskCache build() {
 							final File cacheDir = new File(context.getExternalCacheDir(), "image_manager_disk_cache");

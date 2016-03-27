@@ -20,6 +20,7 @@ import net.twisterrob.java.text.Suggester.*;
 public class CategoryCache {
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryCache.class);
 	private final LongSparseArray<String> categoriesByID = new LongSparseArray<>();
+	private final Map<String, Long> categoriesByKey = new HashMap<>();
 	private final Map<String, String> categoryParents = new TreeMap<>();
 	private final Map<String, Set<String>> categoryChildren = new TreeMap<>();
 	private final LongSparseArray<CharSequence> categoryFullNames = new LongSparseArray<>();
@@ -57,6 +58,7 @@ public class CategoryCache {
 			Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
 			String categoryIcon = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 			categoriesByID.put(categoryID, categoryName);
+			categoriesByKey.put(categoryName, categoryID);
 			categoryIcons.put(categoryID, categoryIcon);
 			if (parentID != null) {
 				String parentName = categoriesByID.get(parentID);
@@ -120,5 +122,8 @@ public class CategoryCache {
 	}
 	public String getCategoryKey(long categoryID) {
 		return categoriesByID.get(categoryID);
+	}
+	public long getId(String categoryKey) {
+		return categoriesByKey.get(categoryKey);
 	}
 }

@@ -18,23 +18,23 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.CategoryDTO;
+import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
 
 public class ChangeTypeDialog {
-	private final BaseFragment fragment;
+	private final BaseFragment<?> fragment;
 	private final Context context;
 	private ListView list;
 	private Drawable spinner;
 	private Animator spinnerAnim;
 
-	public ChangeTypeDialog(BaseFragment fragment) {
+	public ChangeTypeDialog(BaseFragment<?> fragment) {
 		this.fragment = fragment;
 		this.context = fragment.getActivity();
 
@@ -96,7 +96,7 @@ public class ChangeTypeDialog {
 		list.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				Cursor cursor = (Cursor)parent.getAdapter().getItem(position);
-				showKeywords(parent.getContext(), DatabaseTools.getString(cursor, Category.NAME));
+				showKeywords(parent.getContext(), DatabaseTools.getLong(cursor, Category.ID));
 				return true;
 			}
 		});
@@ -115,7 +115,7 @@ public class ChangeTypeDialog {
 	}
 
 	private void userSelected(Cursor cursor, Variants variants) {
-		long newType = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
+		long newType = DatabaseTools.getLong(cursor, CommonColumns.ID);
 		variants.update(newType, cursor); // FIXME DB on UI
 	}
 
@@ -147,9 +147,10 @@ public class ChangeTypeDialog {
 		return view.getMeasuredHeight() + list.getDividerHeight();
 	}
 
-	public static void showKeywords(Context context, String categoryName) {
-		CharSequence categoryTitle = getText(context, categoryName);
-		CharSequence categoryKeywords = CategoryDTO.getKeywords(context, categoryName, true);
+	public static void showKeywords(Context context, long categoryId) {
+		CategoryCache cache = CategoryDTO.getCache(context);
+		CharSequence categoryTitle = cache.getCategoryPath(categoryId);
+		CharSequence categoryKeywords = CategoryDTO.getKeywords(context, cache.getCategoryKey(categoryId), true);
 		if (TextUtils.isEmpty(categoryKeywords)) {
 			categoryKeywords = context.getText(R.string.category_keywords_empty);
 		}

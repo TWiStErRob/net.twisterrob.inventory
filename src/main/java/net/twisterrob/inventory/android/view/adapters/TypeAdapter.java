@@ -90,6 +90,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		}
 
 		if (this.expandable) {
+			holder.state.setVisibility(View.VISIBLE);
 			boolean isOpen = isOpen(cursor);
 			boolean hasChildren = 0 < DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_DIRECT, 0);
 			if (hasChildren) {

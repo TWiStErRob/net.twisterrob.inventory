@@ -266,7 +266,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		// TODO setOnItemLongClickListener is not supported, any way to work around? So user has the same "tooltip" as in ChangeTypeDialog
 		type.setOnLongClickListener(new OnLongClickListener() {
 			@Override public boolean onLongClick(View view) {
-				ChangeTypeDialog.showKeywords(view.getContext(), getTypeName());
+				ChangeTypeDialog.showKeywords(view.getContext(), getTypeId());
 				return true;
 			}
 		});
@@ -315,7 +315,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				updateHint(name.getText(), true);
 				return true;
 			case R.id.action_category_keywords:
-				ChangeTypeDialog.showKeywords(getContext(), getTypeName());
+				ChangeTypeDialog.showKeywords(getContext(), getTypeId());
 				return true;
 		}
 		return super.onContextItemSelected(item);
@@ -364,9 +364,13 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		}
 	}
 
+	private long getTypeId() {
+		Cursor cursor = (Cursor)type.getItemAtPosition(type.getSelectedItemPosition());
+		return cursor != null? DatabaseTools.getLong(cursor, CommonColumns.ID) : CommonColumns.ID_ADD;
+	}
 	private String getTypeName() {
 		Cursor cursor = (Cursor)type.getItemAtPosition(type.getSelectedItemPosition());
-		return cursor != null? cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME)) : null;
+		return cursor != null? DatabaseTools.getString(cursor, CommonColumns.NAME) : null;
 	}
 
 	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
