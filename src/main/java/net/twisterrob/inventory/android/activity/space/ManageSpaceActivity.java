@@ -22,6 +22,7 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
+import net.twisterrob.inventory.android.Constants.Pic.GlideSetup;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
@@ -60,9 +61,12 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 				new ConfirmedCleanAction("Clear Image Cache",
 						"You're about to remove all files in the image cache. There will be no permanent loss. The cache will be re-filled as required in the future.",
 						new CleanTask() {
-							@Override protected void doClean() {
+							@Override protected void onPreExecute() {
 								Glide glide = Glide.get(getApplicationContext());
 								glide.clearMemory();
+							}
+							@Override protected void doClean() {
+								Glide glide = Glide.get(getApplicationContext());
 								glide.clearDiskCache();
 							}
 						}
@@ -121,6 +125,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								DatabaseOpenHelper helper = App.db().getHelper();
 								helper.close();
 								helper.setTestMode(true);
+								//noinspection resource it is closed by helper.close()
 								helper.getReadableDatabase();
 								helper.close();
 								helper.setTestMode(false);
@@ -218,7 +223,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	}
 
 	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH) void recalculate() {
-		executeParallel(new GetFolderSizesTask(imageCacheSize), Glide.getPhotoCacheDir(this));
+		executeParallel(new GetFolderSizesTask(imageCacheSize), GlideSetup.getCacheDir(this));
 		executeParallel(new GetFolderSizesTask(databaseSize), getDatabasePath(App.db().getHelper().getDatabaseName()));
 		executeParallel(new GetFolderSizesTask(allSize),
 				new File(getApplicationInfo().dataDir), getExternalCacheDir(), getExternalFilesDir(null));
@@ -235,7 +240,6 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	}
 
 	public static Intent launch() {
-		Intent intent = new Intent(App.getAppContext(), ManageSpaceActivity.class);
-		return intent;
+		return new Intent(App.getAppContext(), ManageSpaceActivity.class);
 	}
 }

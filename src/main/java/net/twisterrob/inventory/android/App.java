@@ -214,7 +214,7 @@ public class App extends Application {
 					.penaltyLog()
 					.penaltyDialog()
 					.penaltyDropBox()
-//					.penaltyDeath() // don't die on android.os.StrictMode$InstanceCountViolation: class ...Activity; instances=2; limit=1 
+					.penaltyDeath()
 			;
 		}
 		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
@@ -238,7 +238,7 @@ public class App extends Application {
 					.detectLeakedSqlLiteObjects()
 					.penaltyLog()
 					.penaltyDropBox()
-					.penaltyDeath()
+//					.penaltyDeath() // don't die on android.os.StrictMode$InstanceCountViolation: class ...Activity; instances=2; limit=1
 			;
 		}
 		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {

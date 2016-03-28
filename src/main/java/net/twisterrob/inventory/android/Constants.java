@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import android.content.Context;
+import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -18,12 +19,14 @@ import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifResourceDecoder;
 import com.bumptech.glide.load.resource.gifbitmap.GifBitmapWrapperResourceDecoder;
+import com.bumptech.glide.load.resource.transcode.GifBitmapWrapperDrawableTranscoder;
 import com.bumptech.glide.module.GlideModule;
 import com.bumptech.glide.signature.StringSignature;
 
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
 import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.inventory.android.utils.PictureHelper;
 
 public interface Constants {
 	/** Turn off parts of the app permanently during build time, never change it to <code>true</code>. */
@@ -90,7 +93,8 @@ public interface Constants {
 				.signature(new StringSignature(BuildConfig.VERSION_NAME))
 				.dontAnimate()
 				.priority(Priority.HIGH)
-				.decoder(getSvgDecoder());
+				.decoder(getSvgDecoder())
+				.transcoder(getSvgTranscoder());
 
 		private static final DrawableRequestBuilder<Uri> IMAGE_REQUEST = baseRequest(Uri.class)
 				.animate(android.R.anim.fade_in)
@@ -125,19 +129,31 @@ public interface Constants {
 					pool
 			);
 		}
+		@NonNull private static GifBitmapWrapperDrawableTranscoder getSvgTranscoder() {
+			return new GifBitmapWrapperDrawableTranscoder(
+					new FilteredGlideBitmapDrawableTranscoder(
+							App.getAppContext(),
+							new ColorMatrixColorFilter(PictureHelper.tintMatrix(App.getAppContext()))
+					)
+			);
+		}
 
 		public static class GlideSetup implements GlideModule {
+			private static File CACHE_DIR = null;
 			@Override public void applyOptions(final Context context, GlideBuilder builder) {
 				if (BuildConfig.DEBUG) {
 					builder.setDiskCache(new DiskCache.Factory() {
 						@Override public DiskCache build() {
-							final File cacheDir = new File(context.getExternalCacheDir(), "image_manager_disk_cache");
-							return DiskLruCacheWrapper.get(cacheDir, 250 * 1024 * 1024);
+							CACHE_DIR = new File(context.getExternalCacheDir(), "image_manager_disk_cache");
+							return DiskLruCacheWrapper.get(CACHE_DIR, 250 * 1024 * 1024);
 						}
 					});
 				}
 			}
 			@Override public void registerComponents(Context context, Glide glide) {
+			}
+			public static File getCacheDir(Context context) {
+				return CACHE_DIR != null? CACHE_DIR : Glide.getPhotoCacheDir(context);
 			}
 		}
 	}
