@@ -1,10 +1,8 @@
 package net.twisterrob.inventory.android.view;
 
-import java.lang.annotation.Target;
-
 import org.slf4j.*;
 
-import android.annotation.*;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.*;
@@ -12,9 +10,10 @@ import android.content.DialogInterface.OnClickListener;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build.*;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.Toast;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
@@ -52,13 +51,16 @@ public class Dialogs {
 	static void undo(final Activity activity, ActionState state) {
 		final Action undo = state.action.buildUndo();
 		if (undo != null) {
-			UndobarController.UndoListener undoListener = new UndobarController.UndoListener() {
-				@Override public void onUndo(Parcelable token) {
-					new NoQuestions(activity).execute(new ActionState(undo));
-				}
-			};
 			CharSequence message = state.action.getSuccessMessage(activity.getResources());
-			new UndobarController(activity).showUndoBar(false, message, null, undoListener);
+			Snackbar
+					.make(activity.getWindow().getDecorView().getRootView(), message, 5000)
+					.setAction(R.string.action_undo, new View.OnClickListener() {
+						@Override public void onClick(View v) {
+							new NoQuestions(activity).execute(new ActionState(undo));
+						}
+					})
+					.show()
+			;
 		}
 	}
 

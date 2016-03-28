@@ -26,6 +26,7 @@ import android.os.Build.*;
 import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.preference.ListPreference;
 import android.support.annotation.*;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
@@ -116,6 +117,23 @@ public /*static*/ abstract class AndroidTools {
 					String.format(Locale.ROOT, "Resource '%s' is not a valid string in '%s'",
 							stringResourceName, context.getPackageName())
 			).initCause(ex);
+		}
+	}
+
+	public static void setHint(EditText edit, @StringRes int resourceID) {
+		ViewParent parent = edit.getParent();
+		if (parent instanceof TextInputLayout) {
+			((TextInputLayout)parent).setHint(edit.getResources().getText(resourceID));
+		} else {
+			edit.setHint(resourceID);
+		}
+	}
+	public static void setHint(EditText edit, CharSequence text) {
+		ViewParent parent = edit.getParent();
+		if (parent instanceof TextInputLayout) {
+			((TextInputLayout)parent).setHint(text);
+		} else {
+			edit.setHint(text);
 		}
 	}
 

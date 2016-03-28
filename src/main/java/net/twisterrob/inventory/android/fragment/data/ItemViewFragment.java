@@ -95,6 +95,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				                                  .startFromItem(parentID)
 				                                  .allowRooms()
 				                                  .allowItems()
+				                                  //.forbidItems(parentID) // cannot forbid, siblings would be disabled
 				                                  .forbidItems(getArgItemID())
 				                                  .build();
 				startActivityForResult(intent, MOVE_REQUEST);

@@ -79,6 +79,13 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		long[] forbiddenProperties = getIntent().getLongArrayExtra(EXTRA_NO_PROPERTIES);
+		Arrays.sort(forbiddenProperties);
+		long[] forbiddenRooms = getIntent().getLongArrayExtra(EXTRA_NO_ROOMS);
+		Arrays.sort(forbiddenRooms);
+		long[] forbiddenItems = getIntent().getLongArrayExtra(EXTRA_NO_ITEMS);
+		Arrays.sort(forbiddenItems);
+
 		setContentView(R.layout.activity_move);
 		title = (TextView)findViewById(R.id.selection);
 		labType = (TextView)findViewById(R.id.type);

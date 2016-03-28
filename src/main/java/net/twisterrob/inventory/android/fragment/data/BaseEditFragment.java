@@ -199,7 +199,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		AndroidTools.displayedIf(typeImage, this instanceof ItemEditFragment);
 
 		name = (EditText)view.findViewById(R.id.title);
-		name.setHint((Integer)getDynamicResource(DYN_NameHintResource));
+		AndroidTools.setHint(name, (Integer)getDynamicResource(DYN_NameHintResource));
 		name.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 				isClean = false;
@@ -210,7 +210,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 
 		description = (EditText)view.findViewById(R.id.description);
-		description.setHint((Integer)getDynamicResource(DYN_DescriptionHintResource));
+		AndroidTools.setHint(description, (Integer)getDynamicResource(DYN_DescriptionHintResource));
 		description.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 				isClean = false;
