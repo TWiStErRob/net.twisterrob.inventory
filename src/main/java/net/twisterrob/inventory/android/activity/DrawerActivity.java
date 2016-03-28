@@ -16,7 +16,7 @@ import android.widget.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.IconedItem;
 import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
@@ -163,12 +163,8 @@ public class DrawerActivity extends BaseActivity {
 		acts.add(new SVGIntentItem(R.string.sunburst_title, R.raw.ic_sunburst, activity, MainActivity.list(PAGE_SUNBURST)));
 		acts.add(new SVGIntentItem(R.string.category_guide, R.raw.category_paper, activity, MainActivity.list(PAGE_CATEGORY_HELP)));
 		acts.add(new SVGIntentItem(R.string.backup_title, R.raw.category_disc, activity, BackupActivity.chooser()));
+		acts.add(new SVGIntentItem(R.string.pref_activity_title, R.raw.category_tools, activity, PreferencesActivity.show()));
 		// @formatter:on
-		acts.add(new ResourceItem(R.string.pref_activity_title, android.R.drawable.ic_menu_preferences) {
-			@Override public void onClick() {
-				activity.startActivity(PreferencesActivity.show());
-			}
-		});
 
 		return acts;
 	}

@@ -9,13 +9,18 @@ import org.slf4j.*;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.*;
-import android.graphics.Bitmap;
+import android.graphics.*;
 import android.net.Uri;
 import android.os.*;
 import android.provider.MediaStore;
+import android.support.annotation.*;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
+
+import static android.graphics.Color.*;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 
 public abstract class PictureHelper {
 	private static final Logger LOG = LoggerFactory.getLogger(PictureHelper.class);
@@ -23,6 +28,12 @@ public abstract class PictureHelper {
 	private static final String CROPPED_SUFFIX = "_crop";
 	private static final String EXTENSION_SEPARATOR = ".";
 	private static final String EXTRACT_PARTS = "(.*)" + Pattern.quote(EXTENSION_SEPARATOR) + "(.*)";
+	private static final float[] NEGATIVE = new float[] {
+			-1, 0, 0, 0, 255,
+			0, -1, 0, 0, 255,
+			0, 0, -1, 0, 255,
+			0, 0, 0, 1, 0
+	};
 	private Bitmap thumb;
 	private Bitmap image;
 	private File file;
@@ -31,6 +42,31 @@ public abstract class PictureHelper {
 
 	public PictureHelper(Activity activity) {
 		this.activity = activity;
+	}
+
+	/**
+	 * Given a transparent greyscale image this tints the blacks/greys with the given color, leaves white intact.
+	 * <ul>
+	 * <li>first negative hides the whites</li>
+	 * <li>whites (originally black) are replaced to inverse of accent via a PorterDuff.MULTIPLY</li>
+	 * <li>blacks (originally white) are not affected by multiply (<code>0 * c == c</code>)</li>
+	 * <li>inverse of accent through another negative will become accent</li>
+	 * </ul>
+	 */
+	public static @NonNull ColorMatrix tintMatrix(Context context) {
+		@ColorInt int accent = ContextCompat.getColor(context, R.color.accent);
+		@ColorInt int accentDark = ContextCompat.getColor(context, R.color.accentDark);
+		@ColorInt int color = ColorUtils.blendARGB(accent, accentDark, 0.5f);
+		ColorMatrix matrix = new ColorMatrix();
+		matrix.postConcat(new ColorMatrix(NEGATIVE));
+		matrix.postConcat(new ColorMatrix(new float[] {
+				1 - red(color) / 255f, 0, 0, 0, 0,
+				0, 1 - green(color) / 255f, 0, 0, 0,
+				0, 0, 1 - blue(color) / 255f, 0, 0,
+				0, 0, 0, alpha(color) / 255f, 0
+		}));
+		matrix.postConcat(new ColorMatrix(NEGATIVE));
+		return matrix;
 	}
 
 	protected abstract File getTargetFile();
