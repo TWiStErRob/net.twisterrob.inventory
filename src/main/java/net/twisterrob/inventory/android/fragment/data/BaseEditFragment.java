@@ -16,12 +16,13 @@ import android.os.Bundle;
 import android.support.annotation.*;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.widget.*;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.*;
 import android.widget.*;
+import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import com.bumptech.glide.Glide;
@@ -47,7 +48,7 @@ import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.content.model.helpers.Hinter;
 import net.twisterrob.inventory.android.content.model.helpers.Hinter.CategorySelectedEvent;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
-import net.twisterrob.inventory.android.utils.PictureHelper;
+import net.twisterrob.inventory.android.utils.*;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
@@ -70,7 +71,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private EditText name;
 	private EditText description;
 	private Spinner type;
-	private TextView hint;
+	private RecyclerView hint;
+	private Hinter hinter;
 	private CursorAdapter typeAdapter;
 	private ImageView image;
 	private ImageView typeImage;
@@ -221,7 +223,19 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 
-		hint = (TextView)view.findViewById(android.R.id.hint);
+		hint = (RecyclerView)view.findViewById(android.R.id.hint);
+		hint.setLayoutManager(new LinearLayoutManager(getContext()));
+		hint.addOnItemTouchListener(new NestedScrollableRecyclerViewListener(hint));
+		hinter = new Hinter(getContext(), new CategorySelectedEvent() {
+			@Override public void categorySelected(long categoryID) {
+				AndroidTools.selectByID(type, categoryID);
+				Hinter.unhighlight(name.getText());
+			}
+			@Override public void categoryQueried(long categoryID) {
+				ChangeTypeDialog.showKeywords(getContext(), categoryID);
+			}
+		});
+		hint.setAdapter(hinter.getAdapter());
 
 		final ImageButton help = (ImageButton)view.findViewById(R.id.help);
 		help.setOnClickListener(new OnClickListener() {
@@ -271,23 +285,17 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 	}
+
 	private void updateHint(CharSequence text, boolean b) {
 		if (!(BaseEditFragment.this instanceof ItemEditFragment)) {
 			return;
 		}
-		Hinter hinter = new Hinter(getContext(), new CategorySelectedEvent() {
-			@Override public void categorySelected(long categoryID) {
-				AndroidTools.selectByID(type, categoryID);
-				Hinter.unhighlight(name.getText());
-			}
-			@Override public void updated(CharSequence hintText) {
-				hint.setText(hintText);
-				hint.setMovementMethod(LinkMovementMethod.getInstance());
-				AndroidTools.displayedIfHasText(hint);
-			}
-		});
+		Hinter.unhighlight(name.getText());
 		if (hinter.hint(text.toString(), b, getTypeName())) {
+			AndroidTools.displayedIf(hint, true);
 			hinter.highlight(name.getText());
+		} else {
+			AndroidTools.displayedIf(hint, false);
 		}
 	}
 

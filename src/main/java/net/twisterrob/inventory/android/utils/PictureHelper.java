@@ -69,6 +69,24 @@ public abstract class PictureHelper {
 		return matrix;
 	}
 
+	/**
+	 * @see <a href="http://stackoverflow.com/a/31217267/253468">SO</a>
+	 * @see <a href="https://gist.github.com/ro-sharp/49fd46a071a267d9e5dd">Gist</a>
+	 */
+	@SuppressWarnings("UnusedAssignment")
+	public static int getColor(Object thing) {
+		int seed = thing.hashCode();
+		// Math.sin jumps big enough even when adding 1, because argument is radian and period is ~3
+		int rand_r = (int)Math.abs(Math.sin(seed++) * 10000) & 0xFF;
+		int rand_g = (int)Math.abs(Math.sin(seed++) * 10000) & 0xFF;
+		int rand_b = (int)Math.abs(Math.sin(seed++) * 10000) & 0xFF;
+
+		int r = Math.round((160 + rand_r) / 2);
+		int g = Math.round((160 + rand_g) / 2);
+		int b = Math.round((160 + rand_b) / 2);
+		return argb(0xFF, r, g, b);
+	}
+
 	protected abstract File getTargetFile();
 
 	protected File getTargetFileCropped() {

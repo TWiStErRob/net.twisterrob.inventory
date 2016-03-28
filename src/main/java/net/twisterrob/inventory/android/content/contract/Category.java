@@ -12,4 +12,5 @@ public interface Category extends CommonColumns {
 	String PARENT_NAME = "parentName";
 	/** No suggestions for these */
 	Set<String> SKIP_SUGGEST = new HashSet<>(Arrays.asList("category_group", "category_image"));
+	Set<String> MUST_SUGGEST = Collections.singleton("category_uncategorized");
 }

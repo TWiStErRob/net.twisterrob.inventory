@@ -109,6 +109,8 @@
 	<string name="category_keywords">Show Keywords</string>
 	<string name="category_goto">Jump to Category</string>
 	<string name="category_suggest">Suggest Categories</string>
+	<string name="category_suggest_show_more">Tap to show more…</string>
+	<string name="category_suggest_empty">Can\'t find any matching categories, sorry. Try to enter more text, or select a category from the dropdown.</string>
 	<string name="category_viewAllItems">Flatten Subcategories</string>
 	<plurals name="label_category_subs"><!-- Alternatively %1$d&#160;more -->
 		<item quantity="one">+%1$d</item>
