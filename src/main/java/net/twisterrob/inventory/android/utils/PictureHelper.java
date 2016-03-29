@@ -56,7 +56,7 @@ public abstract class PictureHelper {
 	public static @NonNull ColorMatrix tintMatrix(Context context) {
 		@ColorInt int accent = ContextCompat.getColor(context, R.color.accent);
 		@ColorInt int accentDark = ContextCompat.getColor(context, R.color.accentDark);
-		@ColorInt int color = ColorUtils.blendARGB(accent, accentDark, 0.5f);
+		@ColorInt int color = ColorUtils.blendARGB(accent, accentDark, 0.8f);
 		ColorMatrix matrix = new ColorMatrix();
 		matrix.postConcat(new ColorMatrix(NEGATIVE));
 		matrix.postConcat(new ColorMatrix(new float[] {

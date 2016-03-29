@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.view;
 import org.slf4j.*;
 
 import android.support.annotation.*;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.*;
@@ -98,7 +99,10 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 		if (empty != null) {
 			adapter.registerAdapterDataObserver(emptyObserver);
 		}
-		updateFAB();
+		if (fab != null) {
+			fab.setVisibility(View.INVISIBLE); // force a layout, but don't show
+			fab.setOnClickListener(createNew);
+		}
 	}
 
 	protected abstract @NonNull A setupList();
@@ -122,14 +126,17 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 		if (fab == null) {
 			return;
 		}
-		if (isLoading()) {
-			fab.setVisibility(View.GONE);
-		} else {
-			if (canCreateNew()) {
-				fab.setVisibility(View.VISIBLE);
-				fab.setOnClickListener(createNew);
+		if (isLoading() || !canCreateNew()) {
+			if (fab instanceof FloatingActionButton) {
+				((FloatingActionButton)fab).hide();
 			} else {
 				fab.setVisibility(View.INVISIBLE);
+			}
+		} else {
+			if (fab instanceof FloatingActionButton) {
+				((FloatingActionButton)fab).show();
+			} else {
+				fab.setVisibility(View.VISIBLE);
 			}
 		}
 	}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:left="@dimen/marginBig"
+		android:top="@dimen/marginBig"
+		android:right="@dimen/marginBig"
+		android:bottom="@dimen/marginBig"
+		android:drawable="@drawable/fab_interior_plus"
+		/>
+</layer-list>
