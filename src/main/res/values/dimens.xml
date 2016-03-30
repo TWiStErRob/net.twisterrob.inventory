@@ -18,4 +18,5 @@
 	<dimen name="icon_small">16dp</dimen>
 	<dimen name="icon_medium">32dp</dimen>
 	<dimen name="icon_big">48dp</dimen>
+	<dimen name="design_navigation_icon_size" tools:override="true">@dimen/icon_medium</dimen>
 </resources>

@@ -1,26 +1,23 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.util.*;
-
 import org.slf4j.*;
 
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.*;
-import android.widget.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.view.IconedItem;
-import net.twisterrob.inventory.android.view.adapters.IconedItemAdapter;
+import net.twisterrob.inventory.android.view.DrawerNavigator;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
-import static net.twisterrob.inventory.android.activity.MainActivity.*;
 
 // TODO extract as composit class not inheritance
 public class DrawerActivity extends BaseActivity {
@@ -29,9 +26,9 @@ public class DrawerActivity extends BaseActivity {
 	protected DrawerLayout mDrawerLayout;
 	protected View mDrawerLeft;
 	protected View mDrawerRight;
+	private NavigationView mNavLeft;
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO still shows up when drawer is up
 		return super.onCreateOptionsMenu(menu) && !isDrawerShown();
 	}
 
@@ -44,10 +41,21 @@ public class DrawerActivity extends BaseActivity {
 			mDrawerLayout.addDrawerListener(mDrawerToggle);
 			mDrawerLayout.addDrawerListener(new TitleUpdater());
 			mDrawerLayout.addDrawerListener(new OptionsMenuInvalidator());
+			mDrawerLayout.addDrawerListener(new CountUpdater());
 			initDrawers();
 		}
 	}
 
+	@Override protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		// handle rotation correctly (rotate when drawer is open)
+		if (mDrawerLeft != null && mDrawerLayout.isDrawerOpen(mDrawerLeft)) {
+			new TitleUpdater().onDrawerOpened(mDrawerLeft);
+		}
+		if (mDrawerRight != null && mDrawerLayout.isDrawerOpen(mDrawerRight)) {
+			new TitleUpdater().onDrawerOpened(mDrawerRight);
+		}
+	}
 	private void initDrawers() {
 		createDrawerLeft();
 		if (mDrawerLeft == null) {
@@ -64,13 +72,13 @@ public class DrawerActivity extends BaseActivity {
 	/** Initialize mDrawerLeft */
 	protected void createDrawerLeft() {
 		mDrawerLeft = getLayoutInflater().inflate(R.layout.inc_drawer_left_main, mDrawerLayout);
-		ListView list = (ListView)mDrawerLeft.findViewById(R.id.drawer_left_list);
-		IconedItemAdapter adapter = new IconedItemAdapter(this, R.layout.item_drawer_left, createActions());
-		list.setAdapter(adapter);
-		list.setOnItemClickListener(new IconedItem.OnClick() {
-			@Override public void onItemClick(AdapterView parent, View view, int position, long id) {
-				super.onItemClick(parent, view, position, id);
-				mDrawerLayout.closeDrawer(parent);
+		mNavLeft = (NavigationView)mDrawerLeft.findViewById(R.id.drawer_left_list);
+		DrawerNavigator data = DrawerNavigator.createDefault(this, mNavLeft);
+		DrawerNavigator.get(mNavLeft).updateCounts();
+		data.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
+			@Override public boolean onNavigationItemSelected(MenuItem item) {
+				mDrawerLayout.closeDrawer(mNavLeft);
+				return false;
 			}
 		});
 	}
@@ -78,21 +86,6 @@ public class DrawerActivity extends BaseActivity {
 	/** Initialize mDrawerRight */
 	protected void createDrawerRight() {
 
-	}
-
-	private int findActivePosition(ListView drawerLeft, Intent intent) {
-		for (int pos = 0; pos < drawerLeft.getAdapter().getCount(); pos++) {
-			Object item = drawerLeft.getItemAtPosition(pos);
-			if (item instanceof SVGIntentItem) {
-				SVGIntentItem intentItem = (SVGIntentItem)item;
-				if (intent.getComponent().equals(intentItem.getIntent().getComponent())
-						&& AndroidTools.toString(intent.getExtras())
-						               .equals(AndroidTools.toString(intentItem.getIntent().getExtras()))) {
-					return pos;
-				}
-			}
-		}
-		return -1;
 	}
 
 	protected final void refreshDrawers(Intent intent) {
@@ -105,10 +98,7 @@ public class DrawerActivity extends BaseActivity {
 	}
 
 	protected void refreshDrawerLeft(Intent intent) {
-		ListView list = (ListView)mDrawerLeft.findViewById(R.id.drawer_left_list);
-		IconedItemAdapter adapter = (IconedItemAdapter)list.getAdapter();
-		adapter.setActive(findActivePosition(list, intent));
-		adapter.notifyDataSetChanged();
+		DrawerNavigator.get(mNavLeft).select(intent);
 	}
 
 	protected void refreshDrawerRight(Intent intent) {
@@ -149,31 +139,11 @@ public class DrawerActivity extends BaseActivity {
 		}
 	}
 
-	private Collection<IconedItem> createActions() {
-		Collection<IconedItem> acts = new ArrayList<>();
-
-		final BaseActivity activity = this;
-
-		// @formatter:off
-		acts.add(new SVGIntentItem(R.string.home_title, R.raw.property_home, activity, MainActivity.home()));
-		acts.add(new SVGIntentItem(R.string.category_list, R.raw.category_unknown, activity, MainActivity.list(PAGE_CATEGORIES)));
-		acts.add(new SVGIntentItem(R.string.property_list, R.raw.property_unknown, activity, MainActivity.list(PAGE_PROPERTIES)));
-		acts.add(new SVGIntentItem(R.string.room_list, R.raw.room_unknown, activity, MainActivity.list(PAGE_ROOMS)));
-		acts.add(new SVGIntentItem(R.string.item_list, R.raw.category_box, activity, MainActivity.list(PAGE_ITEMS)));
-		acts.add(new SVGIntentItem(R.string.sunburst_title, R.raw.ic_sunburst, activity, MainActivity.list(PAGE_SUNBURST)));
-		acts.add(new SVGIntentItem(R.string.category_guide, R.raw.category_paper, activity, MainActivity.list(PAGE_CATEGORY_HELP)));
-		acts.add(new SVGIntentItem(R.string.backup_title, R.raw.category_disc, activity, BackupActivity.chooser()));
-		acts.add(new SVGIntentItem(R.string.pref_activity_title, R.raw.category_tools, activity, PreferencesActivity.show()));
-		// @formatter:on
-
-		return acts;
-	}
-
 	protected boolean hasDrawer() {
 		return mDrawerLayout != null && mDrawerToggle != null && (mDrawerLeft != null || mDrawerRight != null);
 	}
 
-	protected boolean isDrawerShown() {
+	public boolean isDrawerShown() {
 		return hasDrawer()
 				&& (mDrawerLayout.isDrawerOpen(GravityCompat.START) || mDrawerLayout.isDrawerOpen(GravityCompat.END));
 	}
@@ -197,6 +167,14 @@ public class DrawerActivity extends BaseActivity {
 		@Override
 		public void onDrawerOpened(View drawerView) {
 			supportInvalidateOptionsMenu();
+		}
+	}
+
+	private class CountUpdater extends SimpleDrawerListener {
+		@Override public void onDrawerStateChanged(int newState) {
+			if (newState == DrawerLayout.STATE_DRAGGING || newState == DrawerLayout.STATE_SETTLING) {
+				DrawerNavigator.get(mNavLeft).updateCounts();
+			}
 		}
 	}
 }

@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView
+<android.support.design.widget.NavigationView
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/drawer_left_list"
 	android:layout_width="240dp"
 	android:layout_height="match_parent"
 	android:layout_gravity="start"
-	android:background="?attr/colorPrimary"
-	android:divider="@android:color/transparent"
-	android:dividerHeight="0dp"
-	android:listSelector="@android:color/transparent"
-	tools:context=".activity.BaseActivity"
-	tools:listitem="@layout/item_drawer_left"
+	app:menu="@menu/main_drawer"
+	tools:context=".activity.DrawerActivity"
 	/>

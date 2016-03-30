@@ -654,6 +654,14 @@
 			where p._id = ? or r._id = ? or ipn.node = ? or (? = 'null' and ? = 'null' and ? = 'null')
 	"]]></string>
 
+	<string name="query_stats" translatable="false"><![CDATA["
+		select
+			(select count(*) from Property) as properties,
+			(select count(*) from Room) as rooms,
+			(select count(*) from Item) - (select count(*) from Room) as items,
+			(select count(*) from Category) as categories
+	"]]></string>
+
 
 	<string name="query_category_cache_names" translatable="false"><![CDATA["
 		select key from Category_Name_Cache
@@ -737,5 +745,4 @@
 	<string name="query_item_move" translatable="false"><![CDATA["
 		update Item set parent = ? where _id = ?
 	"]]></string>
-
 </resources>

@@ -4,7 +4,6 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.*;
 import android.view.*;
@@ -22,6 +21,15 @@ public class BaseFragment<T> extends VariantFragment {
 	private Parcelable tag;
 
 	protected T eventsListener;
+
+	public BaseFragment() {
+		// prevent headaches when querying arguments (see Main.onCreateOptionsMenu)
+		setArguments(null);
+	}
+
+	@Override public void setArguments(Bundle args) {
+		super.setArguments(args != null? args : new Bundle());
+	}
 
 	@SuppressWarnings("unchecked")
 	public <P extends Parcelable> P getViewTag() {

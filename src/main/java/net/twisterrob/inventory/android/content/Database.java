@@ -339,6 +339,12 @@ public class Database extends VariantDatabase {
 		return DatabaseTools.singleLong(rawQuery(R.string.query_search_size), null);
 	}
 
+	public Cursor stats() {
+		Cursor cursor = rawQuery(R.string.query_stats);
+		cursor.moveToFirst();
+		return cursor;
+	}
+
 	private static String fixQuery(String query) {
 		if (query.contains("*")) {
 			return query;

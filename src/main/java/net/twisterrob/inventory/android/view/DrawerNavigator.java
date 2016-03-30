@@ -1,0 +1,169 @@
+package net.twisterrob.inventory.android.view;
+
+import java.util.Locale;
+
+import org.slf4j.*;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.ColorFilter;
+import android.support.annotation.*;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.v7.graphics.drawable.DrawableWrapper;
+import android.util.SparseArray;
+import android.view.*;
+
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
+import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.activity.*;
+
+import static net.twisterrob.inventory.android.activity.MainActivity.*;
+
+public class DrawerNavigator {
+	private static final Logger LOG = LoggerFactory.getLogger(DrawerNavigator.class);
+
+	private final NavigationView nav;
+	private final Activity activity;
+	private final SparseArray<NavItem> items = new SparseArray<>();
+	private final int iconSize;
+	private OnNavigationItemSelectedListener navigationItemSelectedListener;
+
+	@SuppressLint("PrivateResource") // overridden resource, TODO report to AS team
+	public DrawerNavigator(NavigationView nav, Activity activity) {
+		this.nav = nav;
+		this.activity = activity;
+		this.iconSize = activity.getResources().getDimensionPixelSize(R.dimen.design_navigation_icon_size);
+		nav.setTag(this);
+		nav.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
+			@Override public boolean onNavigationItemSelected(MenuItem item) {
+				boolean result = navigationItemSelectedListener.onNavigationItemSelected(item);
+				return result || trigger(item.getItemId());
+			}
+		});
+	}
+
+	public void setNavigationItemSelectedListener(OnNavigationItemSelectedListener navigationItemSelectedListener) {
+		this.navigationItemSelectedListener = navigationItemSelectedListener;
+	}
+
+	public void add(@IdRes int id, @RawRes int icon, Intent intent) {
+		items.put(id, new NavItem(id, icon, intent));
+	}
+
+	public boolean trigger(@IdRes int id) {
+		NavItem item = items.get(id);
+		if (item != null) {
+			activity.startActivity(item.intent);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public @IdRes int find(Intent intent) {
+		for (int pos = 0; pos < items.size(); pos++) {
+			NavItem item = items.get(items.keyAt(pos));
+			if (intent.getComponent().equals(item.intent.getComponent())
+					&& AndroidTools.toString(intent.getExtras())
+					               .equals(AndroidTools.toString(item.intent.getExtras()))) {
+				return item.id;
+			}
+		}
+		return View.NO_ID;
+	}
+
+	public void addIcons() {
+		nav.setItemIconTintList(null);
+		Menu menu = nav.getMenu();
+		for (int i = 0; i < menu.size(); ++i) {
+			loadIcon(menu.getItem(i));
+		}
+	}
+
+	private void loadIcon(final MenuItem menuItem) {
+		final NavItem navItem = items.get(menuItem.getItemId());
+		if (navItem == null) {
+			LOG.warn("{} has no data defined.", AndroidTools.toNameString(activity, menuItem.getItemId()));
+			return;
+		}
+		Pic.svg().load(navItem.icon).into(new MenuItemTarget(menuItem, iconSize));
+	}
+
+	public static DrawerNavigator get(View nav) {
+		return (DrawerNavigator)nav.getTag();
+	}
+
+	public static DrawerNavigator createDefault(Activity activity, NavigationView nav) {
+		DrawerNavigator data = new DrawerNavigator(nav, activity);
+		data.add(R.id.action_drawer_home, R.raw.property_home, MainActivity.home());
+		data.add(R.id.action_drawer_categories, R.raw.category_unknown, MainActivity.list(PAGE_CATEGORIES));
+		data.add(R.id.action_drawer_properties, R.raw.property_unknown, MainActivity.list(PAGE_PROPERTIES));
+		data.add(R.id.action_drawer_rooms, R.raw.room_unknown, MainActivity.list(PAGE_ROOMS));
+		data.add(R.id.action_drawer_items, R.raw.category_box, MainActivity.list(PAGE_ITEMS));
+		data.add(R.id.action_drawer_sunburst, R.raw.ic_sunburst, MainActivity.list(PAGE_SUNBURST));
+		data.add(R.id.action_drawer_category_guide, R.raw.category_paper, MainActivity.list(PAGE_CATEGORY_HELP));
+		data.add(R.id.action_drawer_backup, R.raw.category_disc, BackupActivity.chooser());
+		data.add(R.id.action_drawer_preferences, R.raw.category_tools, PreferencesActivity.show());
+		data.addIcons();
+		return data;
+	}
+
+	public void select(Intent intent) {
+		int id = find(intent);
+		nav.setCheckedItem(id);
+	}
+	public void updateCounts() {
+		new DrawerUpdateCountersTask(nav).executeParallel();
+	}
+
+	private class NavItem {
+		private final @IdRes int id;
+		private final @RawRes int icon;
+		private final Intent intent;
+		NavItem(@IdRes int id, @RawRes int icon, Intent intent) {
+			this.id = id;
+			this.icon = icon;
+			this.intent = intent;
+		}
+		@Override public String toString() {
+			return String.format(Locale.ROOT, "[%s] %s: %s",
+					activity.getResources().getResourceName(icon),
+					activity.getResources().getResourceName(id),
+					AndroidTools.toString(intent)
+			);
+		}
+	}
+
+	private static class MenuItemTarget extends SimpleTarget<GlideDrawable> {
+		private final MenuItem menuItem;
+		public MenuItemTarget(MenuItem menuItem, int iconSize) {
+			super(iconSize, iconSize);
+			this.menuItem = menuItem;
+		}
+		@Override
+		public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+			resource.setColorFilter(Pic.TINT_FILTER);
+			menuItem.setIcon(new DrawableWrapper(resource) {
+				@Override public void setColorFilter(ColorFilter cf) {
+					//super.setColorFilter(cf); // don't call
+					// when the item's icon is used in navigation view:
+					// android.support.design.internal.NavigationMenuItemView.setIcon()
+					// it'll wrap the drawable for tinting and set tintList (which is null, see #addIcons)
+					// DrawableCompat.setTintList(icon, mIconTintList);
+					// android.support.v4.graphics.drawable.DrawableWrapperDonut.setCompatTintList()
+					// it finally reaches the updateTint method which clears the color filter:
+					// if (tintList == null || tintMode == null) clearColorFilter();
+					// which will propagate back to resource.setColorFilter(null), because it is wrapped.
+					// Workaround: Wrap it in another layer which ignores that call.
+				}
+			});
+		}
+	}
+}

@@ -45,6 +45,7 @@ public class MainActivity extends DrawerActivity
 	public static final String PAGE_ITEMS = "items";
 	public static final String PAGE_SUNBURST = "sunburst";
 
+	private static final String OPTIONS_MENU_BACKUP = "OptionsMenu_backup";
 	private static final Map<String, Integer> TITLES = new HashMap<String, Integer>() {
 		{
 			put(PAGE_EMPTY, R.string.empty);
@@ -73,27 +74,32 @@ public class MainActivity extends DrawerActivity
 			if (Constants.DISABLE) {
 				onOptionsItemSelected(new MenuBuilder(this).add(0, R.id.debug, 0, "Debug"));
 			}
+		} else {
+			updateTitle(); // on rotation
 		}
 
 		getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			@Override public void onBackStackChanged() {
-				FragmentManager fm = getSupportFragmentManager();
-				int count = fm.getBackStackEntryCount();
-				//AndroidTools.dumpBackStack(getApplicationContext(), fm);
-				if (count == 0) {
-					finish();
-				} else {
-					BaseFragment<?> fragment = getFragment();
-					refreshDrawers((Intent)fragment.getViewTag());
-
-					BackStackEntry top = fm.getBackStackEntryAt(count - 1);
-					CharSequence title = getString(TITLES.get(top.getName()));
-					setActionBarTitle(title); // to display now
-					setActionBarSubtitle(null); // clear to change
-					setTitle(title); // to persist and display later (e.g. onDrawerClosed)
-				}
+				updateTitle();
 			}
 		});
+	}
+	private void updateTitle() {
+		FragmentManager fm = getSupportFragmentManager();
+		int count = fm.getBackStackEntryCount();
+		//AndroidTools.dumpBackStack(getApplicationContext(), fm);
+		if (count == 0) {
+			finish();
+		} else {
+			BaseFragment<?> fragment = getFragment();
+			refreshDrawers((Intent)fragment.getViewTag());
+
+			BackStackEntry top = fm.getBackStackEntryAt(count - 1);
+			CharSequence title = getString(TITLES.get(top.getName()));
+			setActionBarTitle(title); // to display now
+			setActionBarSubtitle(null); // clear to change
+			setTitle(title); // to persist and display later (e.g. onDrawerClosed)
+		}
 	}
 
 	@Override protected void onNewIntent(Intent intent) {
@@ -188,7 +194,7 @@ public class MainActivity extends DrawerActivity
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
-		if (!super.onCreateOptionsMenu(menu)) {
+		if (!shouldCreateOptionsMenu(menu)) {
 			return false;
 		}
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -204,6 +210,24 @@ public class MainActivity extends DrawerActivity
 				return false;
 			}
 		});
+		return true;
+	}
+	private boolean shouldCreateOptionsMenu(Menu menu) {
+		BaseFragment<?> fragment = getFragment();
+		if (fragment == null) {
+			return super.onCreateOptionsMenu(menu);
+		}
+		// save current state to arguments because it will be preserved on rotation
+		Bundle args = fragment.getArguments();
+		if (args.containsKey(OPTIONS_MENU_BACKUP)) {
+			fragment.setHasOptionsMenu(args.getBoolean(OPTIONS_MENU_BACKUP));
+			args.remove(OPTIONS_MENU_BACKUP);
+		}
+		if (!super.onCreateOptionsMenu(menu)) {
+			args.putBoolean(OPTIONS_MENU_BACKUP, fragment.hasOptionsMenu());
+			fragment.setHasOptionsMenu(false);
+			return false;
+		}
 		return true;
 	}
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -275,9 +299,8 @@ public class MainActivity extends DrawerActivity
 	}
 
 	public static Intent home() {
-		Intent intent = new Intent(App.getAppContext(), MainActivity.class);
-		intent.putExtra(EXTRA_PAGE, PAGE_HOME);
-		return intent;
+		// Don't include EXTRA_PAGE to have the navigation drawer match with outside launch Intent
+		return new Intent(App.getAppContext(), MainActivity.class);
 	}
 
 	public static Intent list(String page) {
