@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.View.*;
 import android.widget.*;
 
+import com.bumptech.glide.Glide;
+
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.R;
@@ -85,6 +87,11 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		AndroidTools.displayedIfHasText(count);
 
 		Pic.svg().load(AndroidTools.getRawResourceID(context, typeImage)).into(image);
+	}
+
+	public void unBind() {
+		// TODO replace this with proper Glide.with calls
+		Glide.clear(image);
 	}
 
 	private static Integer getCount(Cursor cursor, String columnName) {

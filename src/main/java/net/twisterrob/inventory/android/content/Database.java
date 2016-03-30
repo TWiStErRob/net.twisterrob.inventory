@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.content;
 
+import java.io.File;
+
 import org.slf4j.*;
 
 import android.annotation.TargetApi;
@@ -14,6 +16,7 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 
+@SuppressWarnings({"TryFinallyCanBeTryWithResources", "resource"})
 public class Database extends VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
 
@@ -45,6 +48,9 @@ public class Database extends VariantDatabase {
 
 	public SQLiteDatabase getWritableDatabase() {
 		return m_helper.getWritableDatabase();
+	}
+	public File getFile() {
+		return new File(m_helper.getReadableDatabase().getPath());
 	}
 
 	public DatabaseOpenHelper getHelper() {
@@ -123,7 +129,7 @@ public class Database extends VariantDatabase {
 		return rawQuery(R.string.query_items_by_item, parentID, parentID, parentID);
 	}
 	public Cursor listItemsInRoom(long roomID) {
-		Cursor room = getRoom(roomID);
+		@SuppressWarnings("resource") Cursor room = getRoom(roomID);
 		try {
 			room.moveToFirst();
 			long root = room.getLong(room.getColumnIndex(Room.ROOT_ITEM));
@@ -232,7 +238,7 @@ public class Database extends VariantDatabase {
 	public void moveRoom(long id, long propertyID) {
 		execSQL(R.string.query_room_move, propertyID, id);
 	}
-	public void moveRooms(long propertyID, long[] roomIDs) {
+	public void moveRooms(long propertyID, long... roomIDs) {
 		SQLiteDatabase db = getWritableDatabase();
 		try {
 			db.beginTransaction();
@@ -273,7 +279,7 @@ public class Database extends VariantDatabase {
 	public void moveItem(long id, long parentID) {
 		execSQL(R.string.query_item_move, parentID, id);
 	}
-	public void moveItems(long parentID, long[] itemIDs) {
+	public void moveItems(long parentID, long... itemIDs) {
 		SQLiteDatabase db = getWritableDatabase();
 		try {
 			db.beginTransaction();
@@ -328,6 +334,7 @@ public class Database extends VariantDatabase {
 		return rawQuery(R.string.query_search, query);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public long getSearchSize() {
 		return DatabaseTools.singleLong(rawQuery(R.string.query_search_size), null);
 	}

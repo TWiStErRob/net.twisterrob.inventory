@@ -294,5 +294,13 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 				((GalleryViewHolder)holder).bind(cursor);
 			}
 		}
+		@Override public void onViewRecycled(ViewHolder holder) {
+			super.onViewRecycled(holder);
+			if (holder instanceof CategoryViewHolder) {
+				((CategoryViewHolder)holder).unBind();
+			} else if (holder instanceof GalleryViewHolder) {
+				((GalleryViewHolder)holder).unBind();
+			}
+		}
 	}
 }

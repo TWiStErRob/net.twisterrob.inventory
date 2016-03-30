@@ -94,7 +94,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 			@Override public void onClick(View v) {
 				NoProgressTaskExecutor.create(new CleanTask() {
 					@Override protected void doClean() throws IOException {
-						String path = App.db().getWritableDatabase().getPath();
+						File path = App.db().getFile();
 						InputStream in = new FileInputStream(path);
 						File dumpFile = new File(Paths.getPhoneHome(), "db.sqlite");
 						OutputStream out = new FileOutputStream(dumpFile);
@@ -144,7 +144,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								}
 								NoProgressTaskExecutor.create(new CleanTask() {
 									@Override protected void doClean() throws Exception {
-										App.db().getHelper().restore(value);
+										App.db().getHelper().restore(new File(value));
 									}
 									@Override protected void onResult(Void ignore, Activity activity) {
 										super.onResult(ignore, activity);

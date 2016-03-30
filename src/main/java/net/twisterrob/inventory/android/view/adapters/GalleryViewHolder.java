@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.View.*;
 import android.widget.*;
 
+import com.bumptech.glide.Glide;
+
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.R;
@@ -63,6 +65,12 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 		AndroidTools.displayedIfHasText(count);
 
 		ImagedDTO.loadInto(this.image, this.type, hasImage? type : null, id, imageTime, typeImage, true);
+	}
+
+	public void unBind() {
+		// TODO replace this with proper Glide.with calls
+		Glide.clear(image);
+		Glide.clear(type);
 	}
 
 	private static String getCountText(Cursor cursor) {

@@ -126,11 +126,16 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	}
 
 	@Override public void onDestroyView() {
-		super.onDestroyView();
 		if (selectionMode.isRunning()) {
 			selectionMode.finish();
 		}
 		selectionMode = null;
+		RecyclerView view = listController.getView();
+		if (view != null) {
+			// TODO replace this with proper Glide.with calls
+			view.setAdapter(null); // force onViewRecycled calls
+		}
+		super.onDestroyView();
 	}
 	@Override public void setMenuVisibility(boolean menuVisible) {
 		super.setMenuVisibility(menuVisible);
@@ -252,6 +257,15 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 				((GalleryViewHolder)holder).bind(cursor);
 			} else if (holder instanceof GalleryGroupViewHolder) {
 				((GalleryGroupViewHolder)holder).bind(cursor);
+			}
+		}
+
+		@Override public void onViewRecycled(ViewHolder holder) {
+			super.onViewRecycled(holder);
+			if (holder instanceof GalleryViewHolder) {
+				((GalleryViewHolder)holder).unBind();
+			} else if (holder instanceof GalleryGroupViewHolder) {
+				((GalleryGroupViewHolder)holder).unBind();
 			}
 		}
 	}

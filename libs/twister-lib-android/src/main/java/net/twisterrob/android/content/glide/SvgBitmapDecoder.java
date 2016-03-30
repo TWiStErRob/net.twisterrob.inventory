@@ -28,11 +28,19 @@ public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
 	public Resource<Bitmap> decode(InputStream source, int width, int height) throws IOException {
 		try {
 			SVG svg = SVG.getFromInputStream(source);
-			if (width == Target.SIZE_ORIGINAL) {
-				width = (int)(height * svg.getDocumentAspectRatio());
+			if (width == Target.SIZE_ORIGINAL && height == Target.SIZE_ORIGINAL) {
+				width = (int)svg.getDocumentWidth();
+				height = (int)svg.getDocumentHeight();
+			} else {
+				if (width == Target.SIZE_ORIGINAL) {
+					width = (int)(height * svg.getDocumentAspectRatio());
+				}
+				if (height == Target.SIZE_ORIGINAL) {
+					height = (int)(width / svg.getDocumentAspectRatio());
+				}
 			}
-			if (height == Target.SIZE_ORIGINAL) {
-				height = (int)(width / svg.getDocumentAspectRatio());
+			if (width <= 0 || height <= 0) {
+				throw new IllegalArgumentException("Either the Target or the SVG document must declare a size.");
 			}
 
 			Bitmap bitmap = findBitmap(width, height);

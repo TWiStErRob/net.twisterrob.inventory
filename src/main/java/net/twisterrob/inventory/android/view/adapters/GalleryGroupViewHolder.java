@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.View.*;
 import android.widget.*;
 
+import com.bumptech.glide.Glide;
+
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -44,6 +46,11 @@ public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
 		Type type = Type.from(cursor, CommonColumns.TYPE);
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
 		ImagedDTO.loadInto(image, hasImage? type : null, id, imageTime, typeImage);
+	}
+
+	public void unBind() {
+		// TODO replace this with proper Glide.with calls
+		Glide.clear(image);
 	}
 
 	private static String getName(Cursor cursor) {

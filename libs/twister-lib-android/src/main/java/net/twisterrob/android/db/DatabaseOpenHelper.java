@@ -20,7 +20,6 @@ import static android.Manifest.permission.*;
 import net.twisterrob.android.BuildConfig;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.java.annotations.DebugHelper;
-import net.twisterrob.java.utils.StringTools;
 
 import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 
@@ -158,11 +157,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 
 	@DebugHelper
-	public void restore(String from) throws IOException {
-		String target = getReadableDatabase().getPath();
+	public void restore(File from) throws IOException {
+		File target = new File(getReadableDatabase().getPath());
 		close();
-		if (!new File(target).delete()) {
-			throw new IOException("Couldn't delete current DB file: " + target);
+		if (!target.delete()) {
+			throw new IOException("Couldn't delete current DB file: " + target.getAbsolutePath());
 		}
 		IOTools.copyFile(from, target);
 	}

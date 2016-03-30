@@ -16,6 +16,7 @@ import android.content.*;
 import android.content.DialogInterface.*;
 import android.content.pm.*;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -821,6 +822,19 @@ public /*static*/ abstract class AndroidTools {
 		return IntentFlags.Converter.toString(level, true);
 	}
 
+	public static String toDrawerLayoutStateString(int state) {
+		switch (state) {
+			case DrawerLayout.STATE_IDLE:
+				return "STATE_IDLE";
+			case DrawerLayout.STATE_DRAGGING:
+				return "STATE_DRAGGING";
+			case DrawerLayout.STATE_SETTLING:
+				return "STATE_SETTLING";
+			default:
+				return "state=" + state;
+		}
+	}
+
 	public static String toColorString(int color) {
 		return String.format(Locale.ROOT, "#%02X%02X%02X%02X",
 				Color.alpha(color), Color.red(color), Color.green(color), Color.blue(color));
@@ -920,6 +934,16 @@ public /*static*/ abstract class AndroidTools {
 	public static void unparcel(Bundle bundle) {
 		if (bundle != null) {
 			bundle.get(null);
+		}
+	}
+	public static String toNameString(Context context, @IdRes int id) {
+		return toNameString(context.getResources(), id);
+	}
+	public static String toNameString(Resources resources, @IdRes int id) {
+		try {
+			return resources.getResourceName(id);
+		} catch (Resources.NotFoundException ignore) {
+			return "not-found=" + id;
 		}
 	}
 

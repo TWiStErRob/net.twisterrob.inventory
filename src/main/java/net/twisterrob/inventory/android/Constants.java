@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import android.content.Context;
-import android.graphics.ColorMatrixColorFilter;
+import android.graphics.*;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -72,8 +72,11 @@ public interface Constants {
 	}
 
 	class Pic {
+		public static final ColorFilter TINT_FILTER =
+				new ColorMatrixColorFilter(PictureHelper.tintMatrix(App.getAppContext()));
 		public static <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz) {
 			ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, App.getAppContext());
+			// TODO replace this with proper Glide.with calls, don't use App Context
 			DrawableRequestBuilder<T> builder = Glide
 					.with(App.getAppContext())
 					.using((StreamModelLoader<T>)loader)
@@ -133,7 +136,7 @@ public interface Constants {
 			return new GifBitmapWrapperDrawableTranscoder(
 					new FilteredGlideBitmapDrawableTranscoder(
 							App.getAppContext(),
-							new ColorMatrixColorFilter(PictureHelper.tintMatrix(App.getAppContext()))
+							TINT_FILTER
 					)
 			);
 		}
