@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.activity;
 
 import org.slf4j.*;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.view.DrawerNavigator;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
+import static net.twisterrob.inventory.android.activity.MainActivity.*;
 
 // TODO extract as composit class not inheritance
 public class DrawerActivity extends BaseActivity {
@@ -26,7 +28,6 @@ public class DrawerActivity extends BaseActivity {
 	protected DrawerLayout mDrawerLayout;
 	protected View mDrawerLeft;
 	protected View mDrawerRight;
-	private NavigationView mNavLeft;
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
 		return super.onCreateOptionsMenu(menu) && !isDrawerShown();
@@ -72,12 +73,11 @@ public class DrawerActivity extends BaseActivity {
 	/** Initialize mDrawerLeft */
 	protected void createDrawerLeft() {
 		mDrawerLeft = getLayoutInflater().inflate(R.layout.inc_drawer_left_main, mDrawerLayout);
-		mNavLeft = (NavigationView)mDrawerLeft.findViewById(R.id.drawer_left_list);
-		DrawerNavigator data = DrawerNavigator.createDefault(this, mNavLeft);
-		DrawerNavigator.get(mNavLeft).updateCounts();
-		data.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
+		mDrawerLeft = mDrawerLeft.findViewById(R.id.drawer_left_list);
+		DrawerNavigator nav = createDefaultDrawer(this, (NavigationView)mDrawerLeft);
+		nav.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
 			@Override public boolean onNavigationItemSelected(MenuItem item) {
-				mDrawerLayout.closeDrawer(mNavLeft);
+				mDrawerLayout.closeDrawer(mDrawerLeft);
 				return false;
 			}
 		});
@@ -98,7 +98,7 @@ public class DrawerActivity extends BaseActivity {
 	}
 
 	protected void refreshDrawerLeft(Intent intent) {
-		DrawerNavigator.get(mNavLeft).select(intent);
+		DrawerNavigator.get(mDrawerLeft).select(intent);
 	}
 
 	protected void refreshDrawerRight(Intent intent) {
@@ -144,8 +144,28 @@ public class DrawerActivity extends BaseActivity {
 	}
 
 	public boolean isDrawerShown() {
-		return hasDrawer()
-				&& (mDrawerLayout.isDrawerOpen(GravityCompat.START) || mDrawerLayout.isDrawerOpen(GravityCompat.END));
+		//@formatter:off
+		return hasDrawer() && (
+				   mDrawerLeft  != null && mDrawerLayout.isDrawerOpen(mDrawerLeft)
+				|| mDrawerRight != null && mDrawerLayout.isDrawerOpen(mDrawerRight)
+		);
+		//@formatter:on
+	}
+
+	public static DrawerNavigator createDefaultDrawer(Activity activity, NavigationView nav) {
+		DrawerNavigator data = new DrawerNavigator(nav, activity);
+		data.add(R.id.action_drawer_home, R.raw.property_home, MainActivity.home());
+		data.add(R.id.action_drawer_categories, R.raw.category_unknown, MainActivity.list(PAGE_CATEGORIES));
+		data.add(R.id.action_drawer_properties, R.raw.property_unknown, MainActivity.list(PAGE_PROPERTIES));
+		data.add(R.id.action_drawer_rooms, R.raw.room_unknown, MainActivity.list(PAGE_ROOMS));
+		data.add(R.id.action_drawer_items, R.raw.category_box, MainActivity.list(PAGE_ITEMS));
+		data.add(R.id.action_drawer_sunburst, R.raw.ic_sunburst, MainActivity.list(PAGE_SUNBURST));
+		data.add(R.id.action_drawer_category_guide, R.raw.category_paper, MainActivity.list(PAGE_CATEGORY_HELP));
+		data.add(R.id.action_drawer_backup, R.raw.category_disc, BackupActivity.chooser());
+		data.add(R.id.action_drawer_preferences, R.raw.category_tools, PreferencesActivity.show());
+		data.addIcons();
+		data.updateCounts();
+		return data;
 	}
 
 	private class TitleUpdater extends SimpleDrawerListener {
@@ -173,7 +193,7 @@ public class DrawerActivity extends BaseActivity {
 	private class CountUpdater extends SimpleDrawerListener {
 		@Override public void onDrawerStateChanged(int newState) {
 			if (newState == DrawerLayout.STATE_DRAGGING || newState == DrawerLayout.STATE_SETTLING) {
-				DrawerNavigator.get(mNavLeft).updateCounts();
+				DrawerNavigator.get(mDrawerLeft).updateCounts();
 			}
 		}
 	}

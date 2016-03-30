@@ -22,9 +22,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.activity.*;
-
-import static net.twisterrob.inventory.android.activity.MainActivity.*;
 
 public class DrawerNavigator {
 	private static final Logger LOG = LoggerFactory.getLogger(DrawerNavigator.class);
@@ -98,21 +95,6 @@ public class DrawerNavigator {
 
 	public static DrawerNavigator get(View nav) {
 		return (DrawerNavigator)nav.getTag();
-	}
-
-	public static DrawerNavigator createDefault(Activity activity, NavigationView nav) {
-		DrawerNavigator data = new DrawerNavigator(nav, activity);
-		data.add(R.id.action_drawer_home, R.raw.property_home, MainActivity.home());
-		data.add(R.id.action_drawer_categories, R.raw.category_unknown, MainActivity.list(PAGE_CATEGORIES));
-		data.add(R.id.action_drawer_properties, R.raw.property_unknown, MainActivity.list(PAGE_PROPERTIES));
-		data.add(R.id.action_drawer_rooms, R.raw.room_unknown, MainActivity.list(PAGE_ROOMS));
-		data.add(R.id.action_drawer_items, R.raw.category_box, MainActivity.list(PAGE_ITEMS));
-		data.add(R.id.action_drawer_sunburst, R.raw.ic_sunburst, MainActivity.list(PAGE_SUNBURST));
-		data.add(R.id.action_drawer_category_guide, R.raw.category_paper, MainActivity.list(PAGE_CATEGORY_HELP));
-		data.add(R.id.action_drawer_backup, R.raw.category_disc, BackupActivity.chooser());
-		data.add(R.id.action_drawer_preferences, R.raw.category_tools, PreferencesActivity.show());
-		data.addIcons();
-		return data;
 	}
 
 	public void select(Intent intent) {
