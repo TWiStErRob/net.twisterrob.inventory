@@ -5,6 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
+	tools:context=".activity.data.MoveTargetActivity"
 	>
 	<LinearLayout
 		android:layout_width="fill_parent"
@@ -17,7 +18,7 @@
 			android:layout_height="@dimen/icon_big"
 			android:layout_gravity="center_vertical"
 			android:src="@android:drawable/ic_menu_upload"
-			tools:tint="#000000"
+			android:tint="@android:color/black"
 			/>
 		<TextView
 			android:id="@+id/selection"

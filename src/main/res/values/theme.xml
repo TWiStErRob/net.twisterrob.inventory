@@ -15,13 +15,16 @@
 		<!--<item name="colorControlActivated">@color/accent</item>-->
 		<!--<item name="colorControlHighlight">@color/accent</item>-->
 		<!--<item name="colorSwitchThumbNormal">@color/accent</item>-->
-
 		<!-- Probably a bug in appcompat or my themes, but cursor was white on white since v7:22.x -->
 		<item name="android:textCursorDrawable" tools:ignore="NewApi">@null</item>
 		<item name="android:textColorHighlight">@color/accent</item>
 	</style>
 
 	<style name="Theme.AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+		<item name="colorPrimary">@color/primary</item>
+		<item name="colorPrimaryDark">@color/primaryDark</item>
+		<item name="colorAccent">@color/accent</item>
+
 		<!--<item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>-->
 		<!--<item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>-->
 	</style>

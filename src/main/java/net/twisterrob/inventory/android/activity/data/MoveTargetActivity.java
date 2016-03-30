@@ -6,7 +6,6 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.*;
 import android.os.*;
 import android.support.annotation.NonNull;
 import android.support.v4.app.*;
@@ -73,24 +72,20 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	private View btnOk;
 	private final Handler handler = new Handler();
 
-	private BaseFragment getFragment() {
-		return (BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
+	private BaseFragment<?> getFragment() {
+		return (BaseFragment<?>)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		long[] forbiddenProperties = getIntent().getLongArrayExtra(EXTRA_NO_PROPERTIES);
-		Arrays.sort(forbiddenProperties);
-		long[] forbiddenRooms = getIntent().getLongArrayExtra(EXTRA_NO_ROOMS);
-		Arrays.sort(forbiddenRooms);
-		long[] forbiddenItems = getIntent().getLongArrayExtra(EXTRA_NO_ITEMS);
-		Arrays.sort(forbiddenItems);
+		fixArray(EXTRA_NO_PROPERTIES);
+		fixArray(EXTRA_NO_ROOMS);
+		fixArray(EXTRA_NO_ITEMS);
 
 		setContentView(R.layout.activity_move);
 		title = (TextView)findViewById(R.id.selection);
 		labType = (TextView)findViewById(R.id.type);
 		upButton = (ImageButton)findViewById(R.id.up);
-		upButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
 		upButton.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				getSupportFragmentManager().popBackStack();
@@ -132,8 +127,16 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		}
 	}
 
-	private void updateFragment(@NonNull BaseFragment fragment) {
+	private void fixArray(String properties) {
+		long[] forbidden = getIntent().getLongArrayExtra(properties);
+		if (forbidden != null) {
+			Arrays.sort(forbidden);
+		}
+	}
+
+	private void updateFragment(@NonNull BaseFragment<?> fragment) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		LOG.trace("Using fragment {}", fragment);
 		ft.replace(R.id.activityRoot, fragment);
 		if (getFragment() != null) { // prevent backing up to empty dialog
 			ft.addToBackStack(null);
@@ -176,7 +179,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		updateUI(getFragment());
 	}
 
-	private void updateUI(BaseFragment fragment) {
+	private void updateUI(BaseFragment<?> fragment) {
 		String name = fragment.getArguments().getString(ARG_TITLE);
 		if (name != null) {
 			title.setText(getString(R.string.action_move_pick_title, toString(getType(fragment)), name));
@@ -195,7 +198,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		AndroidTools.displayedIf(upButton, 0 < getSupportFragmentManager().getBackStackEntryCount());
 	}
 
-	private CharSequence buildDisabledMessage(BaseFragment fragment) {
+	private CharSequence buildDisabledMessage(BaseFragment<?> fragment) {
 		int currentType = getType(fragment);
 		int requestedType = getArgWhat();
 		boolean allowed = (requestedType & currentType) != 0;
@@ -265,7 +268,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private void startFragment(final BaseFragment fragment) {
+	private void startFragment(final BaseFragment<?> fragment) {
 		// FragmentTransaction.commit: Can not perform this action inside of onLoadFinished
 		// so must do it on the UI thread, but later!
 		handler.post(new Runnable() {
@@ -278,18 +281,22 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	@Override public void propertySelected(long propertyID) {
 		propertySelected(propertyID, false);
 	}
-	private void propertySelected(long propertyID, boolean startMode) {
+	private void propertySelected(long propertyID, final boolean startMode) {
 		Bundle args = Intents.bundleFromProperty(propertyID);
 		getSupportLoaderManager().destroyLoader(Loaders.SingleProperty.id());
 		getSupportLoaderManager().initLoader(Loaders.SingleProperty.id(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
 				PropertyDTO property = PropertyDTO.fromCursor(cursor);
-				BaseFragment fragment = RoomListFragment.newInstance(property.id);
+				BaseFragment<?> fragment = RoomListFragment.newInstance(property.id);
 				fragment.getArguments().putString(ARG_TITLE, property.name);
 				if (isForbidden(EXTRA_NO_PROPERTIES, property.id)) {
 					fragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
 				}
-				startFragment(fragment);
+				if (startMode) {
+					startFragment(fragment);
+				} else {
+					startFragment(fragment);
+				}
 			}
 		});
 	}
@@ -303,13 +310,13 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		getSupportLoaderManager().initLoader(Loaders.SingleRoom.id(), args, new LoadSingleRow(this) {
 			@Override protected void process(Cursor cursor) {
 				RoomDTO room = RoomDTO.fromCursor(cursor);
-				BaseFragment roomFragment = ItemListFragment.newRoomInstance(room.id);
+				BaseFragment<?> roomFragment = ItemListFragment.newRoomInstance(room.id);
 				roomFragment.getArguments().putString(ARG_TITLE, room.name);
 				if (isForbidden(EXTRA_NO_PROPERTIES, room.propertyID) || isForbidden(EXTRA_NO_ROOMS, room.id)) {
 					roomFragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
 				}
 				if (startMode) {
-					BaseFragment propertyFragment = RoomListFragment.newInstance(room.propertyID);
+					BaseFragment<?> propertyFragment = RoomListFragment.newInstance(room.propertyID);
 					propertyFragment.getArguments().putString(ARG_TITLE, room.propertyName);
 					if (isForbidden(EXTRA_NO_PROPERTIES, room.propertyID)) {
 						propertyFragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
@@ -335,7 +342,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 					Type type = Type.from(data.getString(data.getColumnIndexOrThrow(ParentColumns.PARENT_TYPE)));
 					forbidden = forbidden || isAnyForbidden(id, type);
 					if (type.isMain() && (startMode || data.isLast())) {
-						BaseFragment fragment = createFragment(type, id);
+						BaseFragment<?> fragment = createFragment(type, id);
 						String name = data.getString(data.getColumnIndexOrThrow(ParentColumns.NAME));
 						fragment.getArguments().putString(ARG_TITLE, name);
 						fragment.getArguments().putBoolean(ARG_FORBIDDEN, forbidden);
@@ -344,7 +351,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 				}
 			}
 
-			private BaseFragment createFragment(Type type, long id) {
+			private BaseFragment<?> createFragment(Type type, long id) {
 				switch (type) {
 					case Property:
 						return RoomListFragment.newInstance(id);
@@ -395,6 +402,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		return new Builder();
 	}
 
+	@SuppressWarnings("unused")
 	public static final class Builder {
 		private final Intent intent = new Intent(App.getAppContext(), MoveTargetActivity.class);
 		private int what;

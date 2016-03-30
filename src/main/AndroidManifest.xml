@@ -81,17 +81,19 @@
 		<activity
 			android:name=".activity.data.MoveTargetActivity"
 			android:label="@string/action_move"
+			android:excludeFromRecents="true"
 			android:theme="@style/Theme.AppTheme.Dialog"
 			/>
 		<activity
 			android:name=".activity.ListsActivity"
 			android:label="@string/list_list"
+			android:excludeFromRecents="true"
 			android:theme="@style/Theme.AppTheme.Dialog"
 			/>
 		<activity
 			android:name=".activity.data.ListItemsActivity"
-			android:windowSoftInputMode="adjustNothing"
-			android:label="@string/list_details">
+			android:label="@string/list_details"
+			android:windowSoftInputMode="adjustNothing">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 		</activity>
@@ -110,8 +112,8 @@
 		</activity>
 		<activity
 			android:name=".activity.data.PropertyViewActivity"
-			android:windowSoftInputMode="adjustNothing"
-			android:label="@string/property_details">
+			android:label="@string/property_details"
+			android:windowSoftInputMode="adjustNothing">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 		</activity>
@@ -122,15 +124,15 @@
 		</activity>
 		<activity
 			android:name=".activity.data.RoomViewActivity"
-			android:windowSoftInputMode="adjustNothing"
-			android:label="@string/room_details">
+			android:label="@string/room_details"
+			android:windowSoftInputMode="adjustNothing">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.data.PropertyViewActivity" />
 		</activity>
 		<activity
 			android:name=".activity.data.ItemViewActivity"
-			android:windowSoftInputMode="adjustNothing"
-			android:label="@string/item_details">
+			android:label="@string/item_details"
+			android:windowSoftInputMode="adjustNothing">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
