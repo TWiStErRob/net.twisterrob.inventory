@@ -19,4 +19,7 @@
 	<dimen name="icon_medium">32dp</dimen>
 	<dimen name="icon_big">48dp</dimen>
 	<dimen name="design_navigation_icon_size" tools:override="true">@dimen/icon_medium</dimen>
+	<!-- Overridden for sw###dp: smallest-width - 56dp
+	     See https://medium.com/sebs-top-tips/material-navigation-drawer-sizing-558aea1ad266 -->
+	<dimen name="design_navigation_width">240dp</dimen>
 </resources>

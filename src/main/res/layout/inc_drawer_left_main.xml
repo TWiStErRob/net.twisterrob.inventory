@@ -4,7 +4,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/drawer_left_list"
-	android:layout_width="240dp"
+	android:layout_width="@dimen/design_navigation_width"
 	android:layout_height="match_parent"
 	android:layout_gravity="start"
 	app:menu="@menu/main_drawer"

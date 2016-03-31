@@ -37,6 +37,10 @@ public /*static*/ abstract class DatabaseTools {
 		int col = cursor.getColumnIndexOrThrow(columnName);
 		return cursor.getString(col);
 	}
+	public static byte[] getBlob(Cursor cursor, String columnName) {
+		int col = cursor.getColumnIndexOrThrow(columnName);
+		return cursor.getBlob(col);
+	}
 
 	public static boolean getOptionalBoolean(Cursor cursor, String columnName, boolean defaultValue) {
 		int col = cursor.getColumnIndex(columnName);
@@ -94,6 +98,17 @@ public /*static*/ abstract class DatabaseTools {
 		return defaultValue;
 	}
 
+	public static byte[] getOptionalBlob(Cursor cursor, String columnName) {
+		return getOptionalBlob(cursor, columnName, (byte[])null);
+	}
+	public static byte[] getOptionalBlob(Cursor cursor, String columnName, byte... defaultValue) {
+		int col = cursor.getColumnIndex(columnName);
+		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			return cursor.isNull(col)? null : cursor.getBlob(col);
+		}
+		return defaultValue;
+	}
+	
 	public static Long singleLong(@NonNull Cursor cursor, @Nullable String columnName) {
 		try {
 			checkSingleRow(cursor);
