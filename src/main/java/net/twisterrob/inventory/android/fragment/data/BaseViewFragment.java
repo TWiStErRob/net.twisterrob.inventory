@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.*;
 import android.view.*;
@@ -21,13 +22,14 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
 
 	protected ViewPager pager;
+	private Intent shareIntent;
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_details, container, false);
 	}
 
-	@Override public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		pager = (ViewPager)view.findViewById(R.id.pager);
 	}
 
@@ -35,9 +37,30 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		ImageAndDescriptionAdapter adapter = new ImageAndDescriptionAdapter(entity);
 		pager.setAdapter(adapter);
 		pager.setCurrentItem(adapter.getDefaultPosition());
+		shareIntent = new Intent(Intent.ACTION_SEND)
+				.setType("image/jpeg")
+				.putExtra(Intent.EXTRA_SUBJECT, entity.name)
+				.putExtra(Intent.EXTRA_TEXT, entity.getShareDescription(getContext()))
+				.putExtra(Intent.EXTRA_STREAM, entity.getImageUri())
+				.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+		;
 	}
 
 	protected abstract CharSequence getDetailsString(DTO entity, boolean DEBUG);
+
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_share:
+				if (shareIntent != null) {
+					startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
+				} else {
+					App.toast("Not implemented yet");
+				}
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
 
 	private class ImageAndDescriptionAdapter extends PagerAdapter {
 		private static final int POSITION_UNKNOWN = -1;

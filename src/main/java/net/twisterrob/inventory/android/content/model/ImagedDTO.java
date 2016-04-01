@@ -35,6 +35,7 @@ public abstract class ImagedDTO extends DTO {
 	}
 
 	public abstract Uri getImageUri();
+	public abstract CharSequence getShareDescription(Context context);
 
 	public static @RawRes int getFallbackID(Context context, Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));

@@ -15,6 +15,7 @@
 	<string name="action_undo">Undo</string>
 	<string name="action_delete">Delete</string>
 	<string name="action_move">Move</string>
+	<string name="action_share">Share</string>
 	<string name="action_search">Search Items</string>
 	<string name="action_sunburst_open">View in Inventory</string>
 	<string name="action_sunburst_ignore">Hide from diagram</string>
@@ -146,6 +147,11 @@
 	<string name="item_categorize">Change Category</string>
 	<string name="item_categorize_many">@string/item_categorize</string>
 	<string name="item_share">Share Item</string>
+	<!-- %1$s is the item name, %2$s is all the containers of item, %3$s is the room name, %4$s is the property name -->
+	<string name="item_share_desc">%1$s inside %2$s in %3$s at %4$s</string>
+	<!-- %1$s is the item name, %2$s is the room name, %3$s is the property name -->
+	<string name="item_share_desc_room">%1$s in %2$s at %3$s</string>
+
 	<string name="item_move">Move Item</string>
 	<string name="item_move_many">Move Items</string>
 	<string name="item_name_hint">Item Name</string>
@@ -166,6 +172,8 @@
 	<string name="property_delete">Delete Property</string>
 	<string name="property_delete_many">Delete Properties</string>
 	<string name="property_share">Share Property</string>
+	<!-- %1$s is the property name -->
+	<string name="property_share_desc">%1$s</string>
 	<string name="property_name_hint">Property Title</string>
 	<string name="property_description_hint">Property Description</string>
 	<string name="property_empty_child">Create a property with the button below. You can then open it and add rooms inside.</string>
@@ -182,6 +190,8 @@
 	<string name="room_delete">Delete Room</string>
 	<string name="room_delete_many">Delete Rooms</string>
 	<string name="room_share">Share Room</string>
+	<!-- %1$s is the room name, %2$s is the property name -->
+	<string name="room_share_desc">%1$s at %2$s</string>
 	<string name="room_move">Move Room</string>
 	<string name="room_move_many">Move Rooms</string>
 	<string name="room_name_hint">Room Title</string>

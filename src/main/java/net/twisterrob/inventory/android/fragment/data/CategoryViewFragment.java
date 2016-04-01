@@ -4,7 +4,6 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
@@ -73,9 +72,6 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		switch (item.getItemId()) {
 			case R.id.action_category_viewAllItems:
 				startActivity(CategoryActivity.showFlattened(getArgCategoryID()));
-				return true;
-			case R.id.action_share:
-				Toast.makeText(getContext(), "Not implemented yet", Toast.LENGTH_LONG).show();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

@@ -94,9 +94,6 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				                                  .build();
 				startActivityForResult(intent, MOVE_REQUEST);
 				return true;
-			case R.id.action_share:
-
-				return true;
 			case R.id.action_room_sunburst:
 				startActivity(SunburstActivity.displayRoom(getArgRoomID()));
 				return true;

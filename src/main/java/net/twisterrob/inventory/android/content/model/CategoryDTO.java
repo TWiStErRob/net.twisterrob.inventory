@@ -41,6 +41,9 @@ public class CategoryDTO extends ImagedDTO {
 	@Override public Uri getImageUri() {
 		return APP_RESOURCE_RAW.buildUpon().appendPath(typeImage).build();
 	}
+	@Override public CharSequence getShareDescription(Context context) {
+		return null;
+	}
 
 	@Override
 	public String toString() {

@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.Locale;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -27,6 +28,9 @@ public class ParentDTO extends ImagedDTO {
 	}
 	@Override public Uri getImageUri() {
 		return parentType.getImageUri(this.id);
+	}
+	@Override public CharSequence getShareDescription(Context context) {
+		return null;
 	}
 
 	@Override

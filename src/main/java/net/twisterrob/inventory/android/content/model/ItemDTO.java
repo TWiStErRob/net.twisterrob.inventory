@@ -2,10 +2,13 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.Locale;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.content.contract.*;
 
@@ -46,6 +49,19 @@ public class ItemDTO extends ImagedDTO {
 
 	@Override public Uri getImageUri() {
 		return InventoryContract.Item.imageUri(id);
+	}
+	@Override public CharSequence getShareDescription(Context context) {
+		StringBuilder sb = new StringBuilder();
+		if (parentName == null) {
+			sb.append(context.getString(R.string.item_share_desc_room, name, roomName, propertyName));
+		} else {
+			sb.append(context.getString(R.string.item_share_desc, name, parentName, roomName, propertyName));
+		}
+
+		if (!TextUtils.isEmpty(description)) {
+			sb.append("\n").append(description);
+		}
+		return sb.toString();
 	}
 
 	@Override

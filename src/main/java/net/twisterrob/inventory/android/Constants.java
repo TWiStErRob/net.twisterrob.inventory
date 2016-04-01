@@ -3,11 +3,12 @@ package net.twisterrob.inventory.android;
 import java.io.*;
 import java.util.*;
 
-import android.content.Context;
+import android.content.*;
 import android.graphics.*;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 
 import com.bumptech.glide.*;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -25,7 +26,7 @@ import com.bumptech.glide.signature.StringSignature;
 
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
-import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 
 public interface Constants {
@@ -48,6 +49,15 @@ public interface Constants {
 			return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		}
 
+		/**
+		 * Make sure to add <code>.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)</code> to the intent.
+		 * @param file from {@link #getShareFile}
+		 * @return {@link Uri} to be shared in {@link Intent#setData(Uri)}
+		 */
+		public static Uri getShareUri(Context context, File file) {
+			String authority = AndroidTools.findProviderAuthority(context, FileProvider.class).authority;
+			return FileProvider.getUriForFile(context, authority, file);
+		}
 		public static File getShareFile(Context context, String ext) throws IOException {
 			return getTemporaryCacheFile(context, PUBLIC_SHARE_FOLDER_NAME, "share_", "." + ext);
 		}

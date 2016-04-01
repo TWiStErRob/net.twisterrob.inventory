@@ -8,7 +8,6 @@ import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -132,8 +131,7 @@ public class ImageActivity extends VariantActivity implements RequestListener<Ur
 			Context context = ImageActivity.this;
 			File tempImage = Paths.getShareImage(context);
 			IOTools.copyStream(context.getContentResolver().openInputStream(uri), new FileOutputStream(tempImage));
-			String authority = AndroidTools.findProviderAuthority(context, FileProvider.class).authority;
-			return FileProvider.getUriForFile(context, authority, tempImage);
+			return Paths.getShareUri(context, tempImage);
 		}
 
 		@Override protected void onResult(Uri result, Uri param) {
