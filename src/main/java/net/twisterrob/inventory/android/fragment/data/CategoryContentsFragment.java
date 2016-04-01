@@ -4,7 +4,6 @@ import org.slf4j.*;
 
 import android.content.*;
 import android.database.*;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
@@ -60,13 +59,12 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_feedback:
-				startActivity(new Intent(Intent.ACTION_VIEW)
-						.setData(Uri.parse("mailto:feedback@twisterrob.net"))
-						.putExtra(Intent.EXTRA_TEXT, "How can we improve the Categories?")
-						.putExtra(Intent.EXTRA_SUBJECT, "Magic Home Inventory Category Feedback"));
+				startActivity(MainActivity.improveCategories(getContext(), getArgCategoryID()));
 				return true;
 			case R.id.action_category_help:
-				startActivity(MainActivity.list(MainActivity.PAGE_CATEGORY_HELP));
+				Intent intent = MainActivity.list(MainActivity.PAGE_CATEGORY_HELP);
+				intent.putExtras(Intents.bundleFromCategory(getArgCategoryID()));
+				startActivity(intent);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

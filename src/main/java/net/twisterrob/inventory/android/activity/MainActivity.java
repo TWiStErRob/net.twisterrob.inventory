@@ -5,7 +5,8 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import android.content.Intent;
+import android.content.*;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +22,7 @@ import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.contract.Room;
-import net.twisterrob.inventory.android.content.model.CategoryHelpBuilder;
+import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.MainFragment.MainEvents;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -69,7 +70,7 @@ public class MainActivity extends DrawerActivity
 		setContentView(R.layout.generic_activity_drawer);
 
 		if (savedInstanceState == null) {
-			handleIntent(getIntent());
+			handleIntent();
 
 			if (Constants.DISABLE) {
 				onOptionsItemSelected(new MenuBuilder(this).add(0, R.id.debug, 0, "Debug"));
@@ -99,19 +100,21 @@ public class MainActivity extends DrawerActivity
 			setActionBarTitle(title); // to display now
 			setActionBarSubtitle(null); // clear to change
 			setTitle(title); // to persist and display later (e.g. onDrawerClosed)
+			// TODO Navigation title still shows subtitle (e.g. Sunburst)
 		}
 	}
 
 	@Override protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		handleIntent(intent);
+		setIntent(intent);
+		handleIntent();
 	}
 
-	private void handleIntent(Intent intent) {
-		String page = getExtraPage(intent);
+	private void handleIntent() {
+		String page = getExtraPage();
 
-		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_CLEAR_TOP) != 0) {
-			LOG.trace("Ignored possible up-navigation, use current page and state for: {}", intent);
+		if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_CLEAR_TOP) != 0) {
+			LOG.trace("Ignored possible up-navigation, use current page and state for: {}", getIntent());
 			return;
 		}
 
@@ -142,7 +145,7 @@ public class MainActivity extends DrawerActivity
 		}
 
 		BaseFragment<?> fragment = createPage(page);
-		fragment.setViewTag(intent);
+		fragment.setViewTag(getIntent());
 		m
 				.beginTransaction()
 				.replace(R.id.activityRoot, fragment)
@@ -160,7 +163,7 @@ public class MainActivity extends DrawerActivity
 				fragment = CategoryContentsFragment.newInstance(null, false);
 				break;
 			case PAGE_CATEGORY_HELP:
-				fragment = CategoryHelpFragment.newInstance();
+				fragment = CategoryHelpFragment.newInstance(Intents.getCategory(getIntent().getExtras()));
 				break;
 			case PAGE_PROPERTIES:
 				fragment = PropertyListFragment.newInstance();
@@ -183,8 +186,8 @@ public class MainActivity extends DrawerActivity
 		return fragment;
 	}
 
-	private @NonNull String getExtraPage(Intent intent) {
-		String page = intent.getStringExtra(EXTRA_PAGE);
+	private @NonNull String getExtraPage() {
+		String page = getIntent().getStringExtra(EXTRA_PAGE);
 		return page != null? page : PAGE_HOME;
 	}
 
@@ -306,6 +309,18 @@ public class MainActivity extends DrawerActivity
 	public static Intent list(String page) {
 		Intent intent = new Intent(App.getAppContext(), MainActivity.class);
 		intent.putExtra(EXTRA_PAGE, page);
+		return intent;
+	}
+	public static Intent improveCategories(Context context, Long categoryId) {
+		Intent intent = new Intent(Intent.ACTION_VIEW)
+				.setData(Uri.parse("mailto:" + BuildConfig.EMAIL))
+				.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) + " Category Feedback");
+		String text = "How can we improve the Categories?";
+		if (categoryId != null) {
+			String categoryKey = CategoryDTO.getCache(context).getCategoryKey(categoryId);
+			text += "\n(Suggestion was triggered in context of category: " + categoryKey + ")";
+		}
+		intent.putExtra(Intent.EXTRA_TEXT, text);
 		return intent;
 	}
 }

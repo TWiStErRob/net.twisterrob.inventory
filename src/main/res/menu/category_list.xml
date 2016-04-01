@@ -7,6 +7,7 @@
 		android:id="@+id/action_category_help"
 		android:title="@string/category_guide"
 		android:icon="@android:drawable/ic_menu_help"
+		android:visible="@bool/in_test"
 		app:showAsAction="never"
 		/>
 	<item

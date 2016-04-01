@@ -7,23 +7,26 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.content.*;
-import android.net.Uri;
 import android.os.Build.*;
 import android.os.*;
 import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.*;
 import android.widget.Toast;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.content.model.CategoryHelpBuilder;
+import net.twisterrob.inventory.android.activity.MainActivity;
+import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.Intents.Extras;
+import net.twisterrob.inventory.android.content.contract.Category;
+import net.twisterrob.inventory.android.content.model.*;
 
-public class CategoryHelpFragment extends BaseFragment {
+public class CategoryHelpFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryHelpFragment.class);
+	private WebView web;
 
 	public CategoryHelpFragment() {
 		setDynamicResource(DYN_OptionsMenu, R.menu.category_help);
@@ -31,13 +34,26 @@ public class CategoryHelpFragment extends BaseFragment {
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		WebView web = new WebView(container.getContext());
+		web = new WebView(container.getContext());
 		web.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		web.getSettings().setJavaScriptEnabled(true);
+		//web.getSettings().setBuiltInZoomControls(true);
 		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
 			WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
 		}
 		web.setWebViewClient(new WebViewClient() {
+			@Override public void onPageFinished(WebView view, String url) {
+				long category = Intents.getCategory(getArguments());
+				getArguments().remove(Extras.CATEGORY_ID); // run only once
+				if (category != Category.ID_ADD) {
+					String key = CategoryDTO.getCache(getContext()).getCategoryKey(category);
+					LOG.trace("Navigating to {} ({})", key, category);
+					// http://stackoverflow.com/a/12266640/253468
+					String jumpToCategory = "document.location.hash = '" + key + "';";
+					view.loadUrl("javascript:(function() { " + jumpToCategory + "})()");
+					// view.evaluateJavascript was added in API 19, so it cannot be used
+				}
+			}
 			@SuppressWarnings("deprecation") // cannot use API 23 version, app supports API 10
 			@Override public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 				LOG.warn("WebView error #{} loading {}:\n{}", errorCode, failingUrl, description);
@@ -52,11 +68,33 @@ public class CategoryHelpFragment extends BaseFragment {
 		return web;
 	}
 
-	@Override public void onViewCreated(View view, Bundle bundle) {
-		super.onViewCreated(view, bundle);
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 
-		WebView web = (WebView)view;
-		web.loadData(new CategoryHelpBuilder(getActivity()).buildHTML(), "text/html", null);
+		if (savedInstanceState == null) {
+			new SimpleSafeAsyncTask<Void, Float, String>() {
+				@Override protected void onPreExecute() {
+					web.loadData("Loading...", "text/html", null);
+				}
+				@Override protected String doInBackground(Void ignore) throws Exception {
+					return new CategoryHelpBuilder(getActivity()).buildHTML();
+				}
+				@Override protected void onResult(String result, Void ignore) {
+					web.loadData(result, "text/html", null);
+				}
+				@Override protected void onError(@NonNull Exception ex, Void ignore) {
+					App.toastUser(ex.toString());
+					getActivity().finish();
+				}
+			}.executeParallel();
+		} else {
+			web.restoreState(savedInstanceState);
+		}
+	}
+
+	@Override public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		web.saveState(outState);
 	}
 
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -67,11 +105,10 @@ public class CategoryHelpFragment extends BaseFragment {
 				try {
 					file = Paths.getShareFile(context, "html");
 					new CategoryHelpBuilder(context).export(file);
-					String authority = AndroidTools.findProviderAuthority(context, FileProvider.class).authority;
-					Uri uri = FileProvider.getUriForFile(context, authority, file);
 					startActivity(new Intent(Intent.ACTION_VIEW)
-							.setDataAndType(uri, "text/html")
-							.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION));
+							.setDataAndType(Paths.getShareUri(context, file), "text/html")
+							.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+					);
 				} catch (IOException ex) {
 					LOG.warn("Cannot save to {}", file, ex);
 				}
@@ -93,16 +130,15 @@ public class CategoryHelpFragment extends BaseFragment {
 				return true;
 			}
 			case R.id.action_category_feedback:
-				startActivity(new Intent(Intent.ACTION_VIEW)
-						.setData(Uri.parse("mailto:" + BuildConfig.EMAIL))
-						.putExtra(Intent.EXTRA_TEXT, "How can we improve the Categories?")
-						.putExtra(Intent.EXTRA_SUBJECT, "Magic Home Inventory Category Feedback"));
+				startActivity(MainActivity.improveCategories(getContext(), null));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
-	public static CategoryHelpFragment newInstance() {
-		return new CategoryHelpFragment();
+	public static CategoryHelpFragment newInstance(long categoryID) {
+		CategoryHelpFragment fragment = new CategoryHelpFragment();
+		fragment.setArguments(Intents.bundleFromCategory(categoryID));
+		return fragment;
 	}
 }

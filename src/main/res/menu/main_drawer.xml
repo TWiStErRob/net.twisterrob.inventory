@@ -8,7 +8,9 @@
 		<item android:id="@+id/action_drawer_rooms" android:title="@string/room_list" />
 		<item android:id="@+id/action_drawer_items" android:title="@string/item_list" />
 		<item android:id="@+id/action_drawer_sunburst" android:title="@string/sunburst_title" />
-		<item android:id="@+id/action_drawer_category_guide" android:title="@string/category_guide" />
+		<item android:id="@+id/action_drawer_category_guide"
+		      android:title="@string/category_guide"
+		      android:visible="@bool/in_test" />
 	</group>
 	<group android:id="@+id/action_drawer_group_remote" android:checkableBehavior="none">
 		<item android:id="@+id/action_drawer_backup" android:title="@string/backup_title" />
