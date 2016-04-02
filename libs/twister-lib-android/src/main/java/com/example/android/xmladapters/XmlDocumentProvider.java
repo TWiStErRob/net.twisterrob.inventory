@@ -22,11 +22,13 @@ import java.util.regex.Pattern;
 
 import org.xmlpull.v1.*;
 
+import android.annotation.SuppressLint;
 import android.content.*;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.*;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.CursorAdapter;
@@ -108,6 +110,7 @@ import android.widget.CursorAdapter;
  * will retrieve the associated data. Note that the author of the second book as well as the id of
  * the third are empty strings.
  */
+@SuppressLint("Registered") // this is a reusable component in the library
 public class XmlDocumentProvider extends ContentProvider {
 	/* Ideas for improvement:
 	 * - Expand XPath-like syntax to allow for [nb] child number selector
@@ -119,8 +122,7 @@ public class XmlDocumentProvider extends ContentProvider {
 	@SuppressWarnings("deprecation")
 	private android.net.http.AndroidHttpClient mHttpClient;
 
-	@Override
-	public boolean onCreate() {
+	@Override public boolean onCreate() {
 		return true;
 	}
 
@@ -152,8 +154,8 @@ public class XmlDocumentProvider extends ContentProvider {
 	 * the XML document. This parameter is ignored.
 	 * @return A Cursor or null in case of error.
 	 */
-	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+	@Override public Cursor query(@NonNull Uri uri,
+			String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
 		XmlPullParser parser = null;
 		mHttpClient = null;
@@ -164,6 +166,7 @@ public class XmlDocumentProvider extends ContentProvider {
 		} else {
 			final String resource = uri.getQueryParameter("resource");
 			if (resource != null) {
+				//noinspection ConstantConditions context is available at this point
 				Uri resourceUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
 						+ getContext().getPackageName() + "/" + resource);
 				parser = getResourceXmlPullParser(resourceUri);
@@ -253,6 +256,7 @@ public class XmlDocumentProvider extends ContentProvider {
 				throw new FileNotFoundException("No authority: " + resourceUri);
 			} else {
 				try {
+					//noinspection ConstantConditions context is available at this point
 					r = getContext().getPackageManager().getResourcesForApplication(authority);
 				} catch (NameNotFoundException ex) {
 					throw new FileNotFoundException("No package found for authority: " + resourceUri);
@@ -289,32 +293,28 @@ public class XmlDocumentProvider extends ContentProvider {
 	/**
 	 * Returns "vnd.android.cursor.dir/xmldoc".
 	 */
-	@Override
-	public String getType(Uri uri) {
+	@Override public String getType(@NonNull Uri uri) {
 		return "vnd.android.cursor.dir/xmldoc";
 	}
 
 	/**
 	 * This ContentProvider is read-only. This method throws an UnsupportedOperationException.
 	 **/
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
+	@Override public Uri insert(@NonNull Uri uri, ContentValues values) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * This ContentProvider is read-only. This method throws an UnsupportedOperationException.
 	 **/
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
+	@Override public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * This ContentProvider is read-only. This method throws an UnsupportedOperationException.
 	 **/
-	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+	@Override public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -326,7 +326,7 @@ public class XmlDocumentProvider extends ContentProvider {
 		private BitSet[] mActiveTextDepthMask;
 		private final int mNumberOfProjections;
 
-		public XMLCursor(String selection, String[] projections) {
+		public XMLCursor(String selection, String... projections) {
 			super(projections);
 			// The first column in projections is used for the _ID
 			mNumberOfProjections = projections.length - 1;
@@ -339,7 +339,7 @@ public class XmlDocumentProvider extends ContentProvider {
 			return Pattern.compile(pattern);
 		}
 
-		private void createProjectionPattern(String[] projections) {
+		private void createProjectionPattern(String... projections) {
 			mProjectionPatterns = new Pattern[mNumberOfProjections];
 			mAttributeNames = new String[mNumberOfProjections];
 			mActiveTextDepthMask = new BitSet[mNumberOfProjections];
@@ -367,7 +367,7 @@ public class XmlDocumentProvider extends ContentProvider {
 
 		public void parseWith(XmlPullParser parser) throws IOException, XmlPullParserException {
 			StringBuilder path = new StringBuilder();
-			Stack<Integer> pathLengthStack = new Stack<Integer>();
+			Stack<Integer> pathLengthStack = new Stack<>();
 
 			// There are two parsing mode: in root mode, rootPath is updated and nodes matching
 			// selectionPattern are searched for and currentNodeDepth is negative.

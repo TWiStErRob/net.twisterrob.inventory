@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <lint>
-	<!-- TODO review accessibility -->
+	<!-- TOFIX review accessibility -->
 	<issue id="ContentDescription" severity="ignore" />
-	<!-- TODO re-check when it's really translated -->
+	<!-- FIXME re-check when it's really translated -->
 	<issue id="MissingTranslation" severity="ignore" />
-	<!-- TODO re-check when it's really translated -->
+	<!-- FIXME re-check when it's really translated -->
 	<issue id="ExtraTranslation" severity="ignore" />
-	<!-- TODO review later -->
+	<!-- TODEL review later -->
 	<issue id="Overdraw" severity="ignore" />
 	<issue id="UnusedResources">
 		<!-- Used dynamically by DB:Category.image -->
@@ -27,7 +27,7 @@
 		<ignore path="**/res/raw*/shrink_resources.xml" />
 	</issue>
 	<issue id="SelectableText">
-		<!-- TODO SelectableText lint check ignores style: http://b.android.com/57866 -->
+		<!-- TODEL SelectableText lint check ignores style: http://b.android.com/57866 -->
 		<ignore path="src/main/res/layout/manage_space_activity.xml" />
 	</issue>
 	<issue id="IconMissingDensityFolder">
@@ -40,7 +40,7 @@
 		<ignore path="src/main/res-icons/drawable-xxxhdpi" />
 	</issue>
 	<issue id="UnusedAttribute">
-		<!-- TODO review, hopefully anything used by layouts which are not available doesn't affect the layout just the looks. -->
+		<!-- TODEL review, hopefully anything used by layouts which are not available doesn't affect the layout just the looks. -->
 		<ignore path="**/res/layout*/*.xml" />
 	</issue>
 	<issue id="InvalidPackage">

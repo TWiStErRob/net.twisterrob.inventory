@@ -10,7 +10,7 @@ import android.util.SparseBooleanArray;
 
 import net.twisterrob.android.adapter.WrappingAdapter;
 
-// TODO override mDataObserver to adjust selectedItems and excludedItems indices when items move
+// XXX override mDataObserver to adjust selectedItems and excludedItems indices when items move
 // based on http://www.grokkingandroid.com/statelistdrawables-for-recyclerview-selection/
 public class SelectionAdapter<VH extends RecyclerView.ViewHolder> extends WrappingAdapter<VH> {
 	private final SparseBooleanArray selectedItems = new SparseBooleanArray();

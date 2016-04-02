@@ -4,6 +4,9 @@ import org.slf4j.*;
 
 import android.view.View;
 
+import net.twisterrob.java.annotations.DebugHelper;
+
+@DebugHelper
 public class LoggingOnClickListener implements View.OnClickListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger("ViewOnClick");
 	private final Logger LOG;

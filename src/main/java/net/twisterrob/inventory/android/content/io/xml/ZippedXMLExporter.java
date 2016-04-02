@@ -58,7 +58,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		long parentID = cursor.getLong(cursor.getColumnIndexOrThrow(ParentColumns.PARENT_ID));
 		Type type = Type.from(cursor, CommonColumns.TYPE);
 
-		Belonging belonging = hier.getOrCreate(type, id);
+		Belonging<?> belonging = hier.getOrCreate(type, id);
 		belonging.name = cursor.getString(cursor.getColumnIndexOrThrow(nameColumn(type)));
 		belonging.type = cursor.getString(cursor.getColumnIndexOrThrow("typeName"));
 		belonging.image = cursor.getString(cursor.getColumnIndexOrThrow(ExporterTask.IMAGE_NAME));
@@ -78,24 +78,37 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		output.flush();
 	}
 
+	@SuppressWarnings({"resource", "TryFinallyCanBeTryWithResources"})
 	private void writeLists(XmlSerializer output) throws IOException {
-		Cursor listsCursor = App.db().listLists(Item.ID_ADD);
-		while (listsCursor.moveToNext()) {
-			output.startTag(NS, TAG_LIST);
-			output.attribute(NS, ATTR_NAME, listsCursor.getString(listsCursor.getColumnIndex(CommonColumns.NAME)));
-			Cursor list = App.db().listItemsInList(listsCursor.getLong(listsCursor.getColumnIndex(CommonColumns.ID)));
-			while (list.moveToNext()) {
+		Cursor lists = App.db().listLists(Item.ID_ADD);
+		try {
+			while (lists.moveToNext()) {
+				writeList(output, lists);
+			}
+		} finally {
+			lists.close();
+		}
+	}
+	@SuppressWarnings({"resource", "TryFinallyCanBeTryWithResources"})
+	private void writeList(XmlSerializer output, Cursor list) throws IOException {
+		long listID = list.getLong(list.getColumnIndex(CommonColumns.ID));
+		String listName = list.getString(list.getColumnIndex(CommonColumns.NAME));
+		output.startTag(NS, TAG_LIST);
+		output.attribute(NS, ATTR_NAME, listName);
+		Cursor item = App.db().listItemsInList(listID);
+		try {
+			while (item.moveToNext()) {
 				output.startTag(NS, TAG_ITEM_REF);
-				long itemID = list.getLong(list.getColumnIndex(CommonColumns.ID));
-				String itemName = list.getString(list.getColumnIndex(CommonColumns.NAME));
+				long itemID = item.getLong(item.getColumnIndex(CommonColumns.ID));
+				String itemName = item.getString(item.getColumnIndex(CommonColumns.NAME));
 				output.attribute(NS, ATTR_ID, String.valueOf(itemID));
 				output.endTag(NS, TAG_ITEM_REF);
 				output.comment(itemName);
 			}
-			list.close();
 			output.endTag(NS, TAG_LIST);
+		} finally {
+			item.close();
 		}
-		listsCursor.close();
 	}
 
 	public static String nameColumn(Type type) {
@@ -110,14 +123,14 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		throw new IllegalStateException("Unknown type: " + type);
 	}
 
-	private abstract static class Belonging<T extends Belonging> {
+	private abstract static class Belonging<T extends Belonging<?>> {
 		long id;
 		String name;
 		String type;
 		String image;
 		String description;
 		String comment;
-		List<T> children = new ArrayList<>();
+		final List<T> children = new ArrayList<>();
 
 		void write(XmlSerializer output) throws IOException {
 			String tag = getTag();

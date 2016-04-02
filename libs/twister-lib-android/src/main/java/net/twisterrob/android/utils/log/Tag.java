@@ -36,11 +36,11 @@ public enum Tag {
 
 	private final String m_tag;
 
-	private Tag() {
+	Tag() {
 		this(null);
 	}
 
-	private Tag(final String tag) {
+	Tag(final String tag) {
 		m_tag = TAG_PREFIX + (tag == null? name() : tag);
 	}
 

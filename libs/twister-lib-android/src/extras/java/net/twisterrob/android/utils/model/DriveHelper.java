@@ -55,7 +55,7 @@ public class DriveHelper {
 				LOG.trace("getConnectedClient({}) Lazy init in getGoogleApiClient", extracted());
 				client = createClientBuilder().build();
 				LOG.trace("getConnectedClient({}) starting to connect", extracted());
-				client.connect(); // TODO consider blockingConnect without a latch
+				client.connect(); // CONSIDER blockingConnect without a latch
 				try {
 					LOG.trace("getConnectedClient({}) waiting for response", extracted());
 					latch.await(30, TimeUnit.SECONDS);

@@ -10,6 +10,7 @@ import static java.lang.String.*;
 import org.slf4j.*;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
@@ -105,11 +106,12 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 		progress = new Progress();
 		progress.input = file;
 		zip = null;
+		@SuppressWarnings("resource") SQLiteDatabase db = App.db().getWritableDatabase();
 		try {
-			// TODO wakelock?
+			// CONSIDER wakelock?
 
 			publishStart(-1);
-			App.db().getWritableDatabase().beginTransaction();
+			db.beginTransaction();
 
 			zip = new ZipFile(file);
 
@@ -117,6 +119,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 			Importer importer;
 			ZipEntry dataFile = zip.getEntry(Constants.Paths.BACKUP_DATA_FILENAME);
 			if (dataFile != null) {
+				//noinspection resource zip is closed in finally
 				stream = zip.getInputStream(dataFile);
 				importer = new XMLImporter(this);
 			} else {
@@ -126,14 +129,14 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 			}
 			importer.doImport(stream);
 
-			App.db().getWritableDatabase().setTransactionSuccessful();
+			db.setTransactionSuccessful();
 		} catch (ZipException ex) {
 			progress.failure = new IllegalArgumentException(format("%s: %s", file, "invalid zip file"), ex);
 		} catch (Throwable ex) {
 			progress.failure = ex;
 		} finally {
 			IOTools.ignorantClose(zip);
-			App.db().getWritableDatabase().endTransaction();
+			db.endTransaction();
 		}
 		return progress;
 	}

@@ -1,17 +1,16 @@
 package net.twisterrob.inventory.android.utils;
 
 import java.io.File;
-import java.util.*;
 import java.util.regex.Pattern;
 
 import org.slf4j.*;
 
 import android.app.Activity;
 import android.content.*;
-import android.content.pm.*;
+import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.*;
 import android.support.v4.content.ContextCompat;
@@ -98,32 +97,7 @@ public abstract class PictureHelper {
 
 	public Intent startCapture() {
 		file = getTargetFile();
-		List<Intent> camIntents = createCameraIntents(file);
-		Intent chooserIntent = Intent.createChooser(createGalleryIntent(), null);
-		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, camIntents.toArray(new Parcelable[camIntents.size()]));
-		return chooserIntent;
-	}
-
-	private List<Intent> createCameraIntents(File file) {
-		Uri uri = Uri.fromFile(file);
-		List<Intent> cameraIntents = new ArrayList<>();
-		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		PackageManager packageManager = activity.getPackageManager();
-		List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-		for (ResolveInfo res : listCam) {
-			Intent intent = new Intent(captureIntent);
-			intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-			intent.setPackage(res.activityInfo.packageName);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-			cameraIntents.add(intent);
-		}
-		return cameraIntents;
-	}
-
-	public static Intent createGalleryIntent() {
-		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-		galleryIntent.setType("image/*");
-		return galleryIntent;
+		return ImageTools.createCaptureIntent(activity, file);
 	}
 
 	/**
@@ -143,16 +117,7 @@ public abstract class PictureHelper {
 			file = null;
 			return false;
 		}
-		if (intent != null) {
-			file = ImageTools.getFile(activity, intent.getData());
-			Bundle extras = intent.getExtras();
-			if (extras != null) {
-				Object data = extras.get("data");
-				if (data instanceof Bitmap) {
-					thumb = (Bitmap)data;
-				}
-			}
-		}
+		file = processReceivedIntent(intent);
 		return true;
 	}
 
@@ -199,8 +164,14 @@ public abstract class PictureHelper {
 			cropFile = null;
 			return false;
 		}
+		cropFile = processReceivedIntent(intent);
+		return true;
+	}
+
+	private File processReceivedIntent(Intent intent) {
+		File file = null;
 		if (intent != null) {
-			cropFile = ImageTools.getFile(activity, intent.getData());
+			file = ImageTools.getFile(activity, intent.getData());
 			Bundle extras = intent.getExtras();
 			if (extras != null) {
 				Object data = extras.get("data");
@@ -209,6 +180,6 @@ public abstract class PictureHelper {
 				}
 			}
 		}
-		return true;
+		return file;
 	}
 }

@@ -31,8 +31,7 @@ public class PropertyEditActivity extends BaseEditActivity<PropertyEditFragment>
 	}
 
 	public static Intent add() {
-		Intent intent = new Intent(App.getAppContext(), PropertyEditActivity.class);
-		return intent;
+		return new Intent(App.getAppContext(), PropertyEditActivity.class);
 	}
 
 	public static Intent edit(long propertyId) {

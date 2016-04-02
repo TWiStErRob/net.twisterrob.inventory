@@ -5,7 +5,10 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.view.*;
 
+import net.twisterrob.java.annotations.DebugHelper;
+
 @SuppressLint("ClickableViewAccessibility")
+@DebugHelper
 public class LoggingOnTouchListener implements View.OnTouchListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger("ViewOnTouch");
 	private final Logger LOG;

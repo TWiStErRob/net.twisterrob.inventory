@@ -8,25 +8,16 @@ import android.database.sqlite.*;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.os.Build;
 
+import net.twisterrob.java.annotations.DebugHelper;
+
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@DebugHelper
 public final class LoggingCursorFactory implements CursorFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(LoggingCursorFactory.class);
 
-	private final boolean m_debugQueries;
-
-	public LoggingCursorFactory() {
-		this(false);
-	}
-
-	public LoggingCursorFactory(boolean debugQueries) {
-		m_debugQueries = debugQueries;
-	}
-
-	public Cursor newCursor(final SQLiteDatabase db, final SQLiteCursorDriver masterQuery, final String editTable,
-			final SQLiteQuery query) {
-		if (m_debugQueries) {
-			LoggingCursorFactory.LOG.trace("{}", query);
-		}
+	@Override
+	public Cursor newCursor(SQLiteDatabase db, SQLiteCursorDriver masterQuery, String editTable, SQLiteQuery query) {
+		LOG.trace("{}", query);
 		return new SQLiteCursor(masterQuery, editTable, query);
 	}
 }

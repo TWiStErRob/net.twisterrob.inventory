@@ -38,7 +38,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 
 	public void itemSelected(long id) {
 		startActivity(Intents.childNav(ItemViewActivity.show(id)));
-		// TODO consider tabs as breadcrumbs?
+		// CONSIDER tabs as breadcrumbs?
 	}
 
 	public void itemActioned(long id) {
@@ -85,11 +85,14 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 			return invalid;
 		}
 		if (uri != invalid && extra != invalid && uri != extra) {
-			throw new IllegalArgumentException("Cannot get ID from both URI (" + uri + ") and extras (" + extra + ")");
+			throw new IllegalArgumentException(
+					"Inconclusive ID resolution: URI (" + uri + ") and extras (" + extra + "), invalid = " + invalid);
 		}
 		if (uri != invalid) {
 			return uri;
 		}
+		// if execution reaches this uri == invalid and extra must be valid, because the first if didn't execute
+		//noinspection ConstantConditions can be simplified, but more readable this way
 		if (extra != invalid) {
 			return extra;
 		}

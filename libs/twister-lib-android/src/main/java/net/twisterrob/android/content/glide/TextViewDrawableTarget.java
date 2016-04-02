@@ -33,8 +33,7 @@ public class TextViewDrawableTarget<Z extends Drawable>
 		return view.getCompoundDrawables()[location.ordinal()];
 	}
 
-	@Override
-	public void onResourceReady(Z resource, GlideAnimation<? super Z> glideAnimation) {
+	@Override public void onResourceReady(Z resource, GlideAnimation<? super Z> glideAnimation) {
 		if (glideAnimation == null || !glideAnimation.animate(resource, this)) {
 			set(resource);
 		}

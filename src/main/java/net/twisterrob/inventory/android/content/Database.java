@@ -38,7 +38,7 @@ public class Database extends VariantDatabase {
 				};
 			}
 		};
-		// TODO App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
+//		App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
 		m_helper.setDevMode(BuildConfig.DEBUG);
 	}
 
@@ -49,6 +49,7 @@ public class Database extends VariantDatabase {
 	public SQLiteDatabase getWritableDatabase() {
 		return m_helper.getWritableDatabase();
 	}
+
 	public File getFile() {
 		return new File(m_helper.getReadableDatabase().getPath());
 	}

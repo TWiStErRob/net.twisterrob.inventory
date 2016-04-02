@@ -16,17 +16,15 @@ import com.bumptech.glide.request.target.*;
  * @param <R> not used, exists to prevent unchecked warnings at usage
  */
 public class SoftwareLayerSetter<T, R> implements RequestListener<T, R> {
-	@Override
-	public boolean onResourceReady(R resource, T model, Target<R> target, boolean isFromMemoryCache,
-			boolean isFirstResource) {
-		View view = ((ViewTarget)target).getView();
+	@Override public boolean onResourceReady(R resource, T model, Target<R> target,
+			boolean isFromMemoryCache, boolean isFirstResource) {
+		View view = ((ViewTarget<?, R>)target).getView();
 		ViewCompat.setLayerType(view, ViewCompat.LAYER_TYPE_SOFTWARE, null);
 		return false;
 	}
 
-	@Override
-	public boolean onException(Exception e, T model, Target<R> target, boolean isFirstResource) {
-		View view = ((ViewTarget)target).getView();
+	@Override public boolean onException(Exception e, T model, Target<R> target, boolean isFirstResource) {
+		View view = ((ViewTarget<?, R>)target).getView();
 		ViewCompat.setLayerType(view, ViewCompat.LAYER_TYPE_SOFTWARE, null);
 		return false;
 	}

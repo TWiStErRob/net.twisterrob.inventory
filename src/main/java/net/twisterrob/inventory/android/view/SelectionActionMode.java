@@ -23,7 +23,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 	private final Activity activity;
 	private final SelectionAdapter<?> adapter;
 
-	private ActionMode.Callback callback = this;
+	private final ActionMode.Callback callback = this;
 	private ActionMode actionMode;
 
 	public SelectionActionMode(Activity activity, SelectionAdapter<?> adapter) {

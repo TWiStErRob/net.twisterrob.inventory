@@ -6,6 +6,7 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.os.*;
+import android.support.annotation.NonNull;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -17,7 +18,7 @@ public class BaseFragment<T> extends VariantFragment {
 	protected static final String DYN_EventsClass = "eventsListenerClass";
 	private static final String KEY_VIEWTAG = "BaseFragment.viewTag";
 
-	private Map<String, Object> dynResources = new HashMap<>();
+	private final Map<String, Object> dynResources = new HashMap<>();
 	private Parcelable tag;
 
 	protected T eventsListener;
@@ -114,5 +115,14 @@ public class BaseFragment<T> extends VariantFragment {
 
 	public final Context getContext() {
 		return getActivity();
+	}
+
+	/**
+	 * Don't use {@link android.support.v4.app.Fragment#getView}
+	 * outside lifecycle methods that don't guarantee its existence.
+	 */
+	@SuppressWarnings("ConstantConditions")
+	@Override public @NonNull View getView() {
+		return super.getView();
 	}
 }

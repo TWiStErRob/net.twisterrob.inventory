@@ -93,7 +93,7 @@ public class LocationRetriever {
 		m_manager.removeUpdates(m_locationListenerGPS);
 		m_manager.removeUpdates(m_locationListenerNetwork);
 	}
-	
+
 	@SuppressWarnings("ResourceType") @SuppressLint("MissingPermission")
 	private void getLastLocation() {
 		Location locNetwork = null, locGPS = null;
@@ -176,6 +176,6 @@ public class LocationRetriever {
 		 * @param location new fix location
 		 * @param type type of the fix
 		 */
-		public void locationRetrieved(LocationRetriever retriever, Location location, LocationType type);
+		void locationRetrieved(LocationRetriever retriever, Location location, LocationType type);
 	}
 }

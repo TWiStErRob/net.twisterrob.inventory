@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 
-public abstract class SingleFragmentActivity<F extends BaseFragment> extends BaseActivity {
+public abstract class SingleFragmentActivity<F extends BaseFragment<?>> extends BaseActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(SingleFragmentActivity.class);
 
 	@Override

@@ -10,7 +10,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * @see <a href="https://code.google.com/p/android/issues/detail?id=14944">Honeycomb: initLoader() nor restartLoader() actually starts the loader</a>
  * @param <D> the data type to be loaded
  */
-// TODO post to http://stackoverflow.com/questions/10524667/android-asynctaskloader-doesnt-start-loadinbackground
+// CONSIDER post to http://stackoverflow.com/questions/10524667/android-asynctaskloader-doesnt-start-loadinbackground
 public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 	private D mData;
 
@@ -19,8 +19,7 @@ public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 	}
 
 	/* Runs on a worker thread */
-	@Override
-	public abstract D loadInBackground();
+	@Override public abstract D loadInBackground();
 
 	/**
 	 * Called when there is new data to deliver to the client.
@@ -28,8 +27,7 @@ public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 	 * <p/>
 	 * Runs on the UI thread
 	 */
-	@Override
-	public void deliverResult(D data) {
+	@Override public void deliverResult(D data) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped. We don't need the result.
 			releaseResources(data);
@@ -57,8 +55,7 @@ public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 	 * <p/>
 	 * Must be called from the UI thread
 	 */
-	@Override
-	protected void onStartLoading() {
+	@Override protected void onStartLoading() {
 		if (mData != null) {
 			// If we currently have a result available, deliver it immediately.
 			deliverResult(mData);
@@ -73,8 +70,7 @@ public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 	/**
 	 * Must be called from the UI thread
 	 */
-	@Override
-	protected void onStopLoading() {
+	@Override protected void onStopLoading() {
 		// Attempt to cancel the current load task if possible.
 		cancelLoad();
 	}
@@ -84,8 +80,7 @@ public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 		releaseResources(data);
 	}
 
-	@Override
-	protected void onReset() {
+	@Override protected void onReset() {
 		super.onReset();
 
 		// Ensure the loader is stopped
@@ -100,7 +95,7 @@ public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 	}
 
 	protected boolean needsLoading() {
-		// start looking for changes and  check if anything changed that invalidates the result
+		// start looking for changes and check if anything changed that invalidates the result
 		// stop looking for changes in onReset
 		return false;
 	}

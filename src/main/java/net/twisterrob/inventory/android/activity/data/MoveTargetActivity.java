@@ -106,7 +106,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		});
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-		// TODO maybe SingleFragmentActivity?
+		// CONSIDER this extends SingleFragmentActivity?
 		if (savedInstanceState == null) {
 			PropertyListFragment fragment = PropertyListFragment.newInstance();
 			updateFragment(fragment);
@@ -402,7 +402,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 		return new Builder();
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused", "UnusedReturnValue"})
 	public static final class Builder {
 		private final Intent intent = new Intent(App.getAppContext(), MoveTargetActivity.class);
 		private int what;

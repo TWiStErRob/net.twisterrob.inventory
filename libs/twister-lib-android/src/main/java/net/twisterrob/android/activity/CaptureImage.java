@@ -77,6 +77,7 @@ public class CaptureImage extends Activity {
 				btnFlash.setChecked(getInitialFlashEnabled()); // calls setOnCheckedChangeListener
 			}
 			@Override public void onFinished(CameraPreview preview) {
+				// no op
 			}
 		});
 
@@ -129,7 +130,7 @@ public class CaptureImage extends Activity {
 		return flash;
 	}
 
-	protected void doSave(byte[] data) {
+	protected void doSave(byte... data) {
 		mSavedFile = save(mTargetFile, data);
 	}
 	protected void doCrop() {
@@ -155,6 +156,7 @@ public class CaptureImage extends Activity {
 			return;
 		}
 		mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
+		//noinspection deprecation TODEL https://youtrack.jetbrains.com/issue/IDEA-154026
 		@SuppressWarnings("deprecation")
 		android.hardware.Camera.AutoFocusCallback takeAfterFocus = new android.hardware.Camera.AutoFocusCallback() {
 			public void onAutoFocus(final boolean success,
@@ -171,13 +173,14 @@ public class CaptureImage extends Activity {
 		mPreview.setCameraFocus(takeAfterFocus);
 	}
 
-	private static File save(File file, byte[] data) {
+	private static File save(File file, byte... data) {
 		if (data == null) {
 			return null;
 		}
 		LOG.trace("Saving {} bytes to {}", data.length, file);
 		OutputStream out = null;
 		try {
+			//noinspection resource cannot use try-with-resources at this API level
 			out = new FileOutputStream(file);
 			out.write(data);
 			out.flush();
@@ -278,7 +281,7 @@ public class CaptureImage extends Activity {
 			});
 		}
 		private void disableControls() {
-			// TODO maybe a grayscale colorfilter on the preview?
+			// CONSIDER a grayscale colorfilter on the preview?
 			controls.setVisibility(View.INVISIBLE);
 		}
 	}

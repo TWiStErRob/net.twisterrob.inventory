@@ -3,8 +3,11 @@ package net.twisterrob.android.utils.log;
 import org.slf4j.Logger;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.java.annotations.DebugHelper;
 
+@DebugHelper
 public interface LoggingDebugProvider {
+	@SuppressWarnings("RedundantThrows")
 	String getDebugInfo() throws Throwable;
 
 	class LoggingHelper {

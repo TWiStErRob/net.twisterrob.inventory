@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 
 import net.twisterrob.inventory.android.content.contract.*;
 
+@SuppressWarnings("SameParameterValue")
 public final class Intents {
 	public interface Extras {
 		String PROPERTY_ID = "propertyID";
@@ -67,7 +68,7 @@ public final class Intents {
 		bundle.putLong(Extras.LIST_ID, listID);
 		return bundle;
 	}
-	public static Bundle bundleFromIDs(long[] IDs) {
+	public static Bundle bundleFromIDs(long... IDs) {
 		Bundle bundle = new Bundle();
 		bundle.putLongArray("IDs", IDs);
 		return bundle;

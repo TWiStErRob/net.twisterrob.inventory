@@ -6,7 +6,8 @@ import java.util.*;
  * from http://www.movable-type.co.uk/scripts/latlong-gridref.html
  * from http://yetanotheruser.blogspot.co.uk/2007/01/converting-os-coodinates-to-longitude.html
  */
-public class MoveableTypeGridRefLocationConverter {
+@SuppressWarnings("SpellCheckingInspection")
+public class MovableTypeGridRefLocationConverter {
 	public static Location f(double E, double N) {
 		double a = 6377563.396, b = 6356256.910;              // Airy 1830 major & minor semi-axes
 		double F0 = 0.9996012717;                             // NatGrid scale factor on central meridian
@@ -57,7 +58,8 @@ public class MoveableTypeGridRefLocationConverter {
 	}
 
 	// ellipse parameters
-	@SuppressWarnings("serial") static Map<String, Ellipse> ellipse = new HashMap<String, Ellipse>() {
+	@SuppressWarnings("serial")
+	private static final Map<String, Ellipse> ellipse = new HashMap<String, Ellipse>() {
 		{
 			put("WGS84", new Ellipse(6378137, 6356752.3142, 1 / 298.257223563));
 			put("GRS80", new Ellipse(6378137, 6356752.314140, 1 / 298.257222101));
@@ -81,7 +83,8 @@ public class MoveableTypeGridRefLocationConverter {
 	}
 
 	// helmert transform parameters from WGS84 to other datums
-	@SuppressWarnings("serial") static Map<String, DatumTransform> datumTransform =
+	@SuppressWarnings("serial")
+	private static final Map<String, DatumTransform> datumTransform =
 			new HashMap<String, DatumTransform>() {
 				{
 					put("toOSGB36", new DatumTransform(

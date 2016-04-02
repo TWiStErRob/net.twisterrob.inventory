@@ -19,12 +19,23 @@ import android.view.ContextMenu.ContextMenuInfo;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.*;
 
-public class LoggingActivity extends AppCompatActivity {
+@DebugHelper
+public abstract class LoggingActivity extends AppCompatActivity {
 	private static final Logger LOG = LoggerFactory.getLogger("Activity");
 
+	@SuppressWarnings("unused") // assign in child constructor for debugging something specific
 	protected LoggingDebugProvider debugInfoProvider;
+	@SuppressWarnings("unused") // assign in child constructor for debugging something specific
+	protected boolean logOnCreateView = globalLogOnCreateView;
+	private static boolean globalLogOnCreateView = false;
+
+	@SuppressWarnings("unused")
+	public static void setGlobalLogOnCreateView(boolean log) {
+		globalLogOnCreateView = log;
+	}
 
 	public LoggingActivity() {
 		log("ctor");
@@ -54,11 +65,15 @@ public class LoggingActivity extends AppCompatActivity {
 	}
 	@Override public View onCreateView(View parent, String name, @NonNull Context context,
 			@NonNull AttributeSet attrs) {
-		//log("onCreateView", parent, name, context, attrs);
+		if (logOnCreateView) {
+			log("onCreateView", parent, name, context, attrs);
+		}
 		return super.onCreateView(parent, name, context, attrs);
 	}
 	@Override public View onCreateView(String name, @NonNull Context context, @NonNull AttributeSet attrs) {
-		//log("onCreateView", name, context, attrs);
+		if (logOnCreateView) {
+			log("onCreateView", name, context, attrs);
+		}
 		return super.onCreateView(name, context, attrs);
 	}
 
@@ -208,15 +223,15 @@ public class LoggingActivity extends AppCompatActivity {
 
 	//region ActionMode
 
-	@Override public void onSupportActionModeStarted(ActionMode mode) {
+	@Override public void onSupportActionModeStarted(@NonNull ActionMode mode) {
 		log("onSupportActionModeStarted", mode);
 		super.onSupportActionModeStarted(mode);
 	}
-	@Override public void onSupportActionModeFinished(ActionMode mode) {
+	@Override public void onSupportActionModeFinished(@NonNull ActionMode mode) {
 		log("onSupportActionModeFinished", mode);
 		super.onSupportActionModeFinished(mode);
 	}
-	@Override public ActionMode startSupportActionMode(Callback callback) {
+	@Override public ActionMode startSupportActionMode(@NonNull Callback callback) {
 		log("startSupportActionMode", callback);
 		return super.startSupportActionMode(callback);
 	}
@@ -275,7 +290,7 @@ public class LoggingActivity extends AppCompatActivity {
 		log("navigateUpTo", upIntent);
 		return super.navigateUpTo(upIntent);
 	}
-	@Override public void supportNavigateUpTo(Intent upIntent) {
+	@Override public void supportNavigateUpTo(@NonNull Intent upIntent) {
 		log("supportNavigateUpTo", upIntent);
 		super.supportNavigateUpTo(upIntent);
 	}
@@ -292,7 +307,7 @@ public class LoggingActivity extends AppCompatActivity {
 		log("onCreateNavigateUpTaskStack", builder);
 		super.onCreateNavigateUpTaskStack(builder);
 	}
-	@Override public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+	@Override public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
 		log("onCreateSupportNavigateUpTaskStack", builder);
 		super.onCreateSupportNavigateUpTaskStack(builder);
 	}
@@ -301,7 +316,7 @@ public class LoggingActivity extends AppCompatActivity {
 		log("onPrepareNavigateUpTaskStack", builder);
 		super.onPrepareNavigateUpTaskStack(builder);
 	}
-	@Override public void onPrepareSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+	@Override public void onPrepareSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
 		log("onPrepareSupportNavigateUpTaskStack", builder);
 		super.onPrepareSupportNavigateUpTaskStack(builder);
 	}

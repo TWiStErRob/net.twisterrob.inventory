@@ -7,10 +7,12 @@ import android.widget.ImageView;
 import net.twisterrob.android.utils.log.*;
 import net.twisterrob.android.utils.tools.IOTools;
 
+/** @deprecated use Glide */
+@Deprecated @SuppressWarnings("deprecation")
 public class ImageViewDownloader extends AsyncTask<String, Void, Bitmap> {
 	private static final Log LOG = LogFactory.getLog(Tag.IO);
 	private final ImageView m_view;
-	private Callback<ImageView> m_callback;
+	private final Callback<ImageView> m_callback;
 
 	public ImageViewDownloader(ImageView view, Callback<ImageView> callback) {
 		m_view = view;

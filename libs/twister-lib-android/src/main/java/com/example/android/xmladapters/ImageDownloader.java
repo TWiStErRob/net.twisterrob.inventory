@@ -49,7 +49,7 @@ public class ImageDownloader {
 		protected boolean removeEldestEntry(Map.Entry<String, Bitmap> eldest) {
 			if (size() > HARD_CACHE_CAPACITY) {
 				// Entries push-out of hard reference cache are transferred to soft reference cache
-				sSoftBitmapCache.put(eldest.getKey(), new SoftReference<Bitmap>(eldest.getValue()));
+				sSoftBitmapCache.put(eldest.getKey(), new SoftReference<>(eldest.getValue()));
 				return true;
 			} else {
 				return false;
@@ -59,7 +59,7 @@ public class ImageDownloader {
 
 	// Soft cache for bitmap kicked out of hard cache
 	private final static ConcurrentHashMap<String, SoftReference<Bitmap>> sSoftBitmapCache =
-			new ConcurrentHashMap<String, SoftReference<Bitmap>>(HARD_CACHE_CAPACITY / 2);
+			new ConcurrentHashMap<>(HARD_CACHE_CAPACITY / 2);
 
 	private final Handler purgeHandler = new Handler();
 
@@ -219,7 +219,7 @@ public class ImageDownloader {
 		private final WeakReference<ImageView> imageViewReference;
 
 		public BitmapDownloaderTask(ImageView imageView) {
-			imageViewReference = new WeakReference<ImageView>(imageView);
+			imageViewReference = new WeakReference<>(imageView);
 		}
 
 		/**
@@ -259,17 +259,21 @@ public class ImageDownloader {
 						copy(inputStream, outputStream);
 						outputStream.flush();
 
-						// FIXME return BitmapFactory.decodeStream(inputStream);
+						// CONSIDER return BitmapFactory.decodeStream(inputStream);
 						final byte[] data = dataStream.toByteArray();
 						return BitmapFactory.decodeByteArray(data, 0, data.length);
 					} finally {
-						if (inputStream != null) {
-							inputStream.close();
+						try {
+							if (inputStream != null) {
+								inputStream.close();
+							}
+							if (outputStream != null) {
+								outputStream.close();
+							}
+							entity.consumeContent();
+						} catch (IOException ex) {
+							Log.w(LOG_TAG, "Cannot clean up: " + url, ex);
 						}
-						if (outputStream != null) {
-							outputStream.close();
-						}
-						entity.consumeContent();
 					}
 				}
 			} catch (IOException e) {
@@ -303,8 +307,8 @@ public class ImageDownloader {
 				}
 			}
 
-			if (imageViewReference != null) {
-				ImageView imageView = imageViewReference.get();
+			ImageView imageView = imageViewReference.get();
+			if (imageView != null) {
 				BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
 				// Change bitmap only if this process is still associated with it
 				if (this == bitmapDownloaderTask) {
@@ -334,7 +338,7 @@ public class ImageDownloader {
 
 		public DownloadedDrawable(BitmapDownloaderTask bitmapDownloaderTask) {
 			super(Color.BLACK);
-			bitmapDownloaderTaskReference = new WeakReference<BitmapDownloaderTask>(bitmapDownloaderTask);
+			bitmapDownloaderTaskReference = new WeakReference<>(bitmapDownloaderTask);
 		}
 
 		public BitmapDownloaderTask getBitmapDownloaderTask() {

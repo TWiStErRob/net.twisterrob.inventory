@@ -29,6 +29,6 @@
 		<item name="android:layout_height">match_parent</item>
 		<item name="android:layout_margin">@dimen/margin2</item>
 		<item name="android:gravity">center</item>
-		<!-- TODO http://b.andorid.com/171144 <item name="tools:text">...</item> -->
+		<!-- TODEL http://b.android.com/171144 <item name="tools:text">...</item> -->
 	</style>
 </resources>

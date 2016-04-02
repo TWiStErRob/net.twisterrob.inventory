@@ -2,8 +2,6 @@ package net.twisterrob.inventory.android.tasks;
 
 import java.util.Collections;
 
-import android.database.Cursor;
-
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.model.ListDTO;
 
@@ -17,9 +15,8 @@ public abstract class DeleteListAction extends DeleteAction {
 	@Override protected void doPrepare() {
 		super.doPrepare();
 		ListDTO list = retrieveList(IDs[0]);
-		Cursor items = App.db().listItemsInList(list.id);
 		targets = Collections.singleton(list.name);
-		children.addAll(getNames(items));
+		children.addAll(getNames(App.db().listItemsInList(list.id)));
 	}
 
 	@Override protected void doExecute() {

@@ -7,6 +7,9 @@ import org.slf4j.*;
 import android.content.Context;
 import android.graphics.Canvas;
 
+import net.twisterrob.java.annotations.DebugHelper;
+
+@DebugHelper
 public class LoggingEdgeEffect implements EdgeEffectCompat.EdgeEffectImpl {
 	private static final Logger LOG = LoggerFactory.getLogger(LoggingEdgeEffect.class);
 

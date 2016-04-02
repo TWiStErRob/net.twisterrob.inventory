@@ -14,14 +14,14 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 	private static final Logger LOG = LoggerFactory.getLogger(DynamicLoaderManager.class);
 
 	private final LoaderManager manager;
-	private final TreeMap<Integer, Dependency<?>> loaders = new TreeMap<Integer, Dependency<?>>();
+	private final TreeMap<Integer, Dependency<?>> loaders = new TreeMap<>();
 
 	public DynamicLoaderManager(LoaderManager manager) {
 		this.manager = manager;
 	}
 
 	public <T> Dependency<T> add(int id, Bundle args, LoaderCallbacks<T> callbacks) {
-		Dependency<T> state = new Dependency<T>(id, args, callbacks);
+		Dependency<T> state = new Dependency<>(id, args, callbacks);
 		loaders.put(id, state);
 		return state;
 	}
@@ -100,8 +100,8 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 		private final LoaderCallbacks<T> callbacks;
 		private Loader<T> loader;
 
-		private final Set<Dependency<?>> producers = new HashSet<Dependency<?>>();
-		private final Set<Dependency<?>> consumers = new HashSet<Dependency<?>>();
+		private final Set<Dependency<?>> producers = new HashSet<>();
+		private final Set<Dependency<?>> consumers = new HashSet<>();
 		private boolean ready = false;
 
 		private Dependency(int id, Bundle args, LoaderCallbacks<T> callbacks) {

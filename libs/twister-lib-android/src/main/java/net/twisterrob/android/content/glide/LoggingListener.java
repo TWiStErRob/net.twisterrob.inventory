@@ -11,6 +11,9 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import net.twisterrob.java.annotations.DebugHelper;
+
+@DebugHelper
 public class LoggingListener<T, Z> implements RequestListener<T, Z> {
 	public interface ModelFormatter<T> {
 		String toString(T model);

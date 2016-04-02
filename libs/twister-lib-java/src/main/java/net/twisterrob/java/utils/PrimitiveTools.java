@@ -1,7 +1,6 @@
 package net.twisterrob.java.utils;
 
 public class PrimitiveTools {
-
 	/**
 	 * Mimicking static {@link Integer} methods.
 	 *

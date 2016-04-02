@@ -50,7 +50,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		super.onViewCreated(view, savedInstanceState);
 
 		propertiesController = new RecyclerViewLoadersController(this, Loaders.Properties) {
-			@Override protected @NonNull CursorRecyclerAdapter setupList() {
+			@Override protected @NonNull CursorRecyclerAdapter<?> setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.PropertyAdapter adapter = new MainFragment.PropertyAdapter(new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
@@ -74,7 +74,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		propertiesController.setView((RecyclerView)view.findViewById(R.id.properties));
 
 		roomsController = new RecyclerViewLoadersController(this, Loaders.Rooms) {
-			@Override protected @NonNull CursorRecyclerAdapter setupList() {
+			@Override protected @NonNull CursorRecyclerAdapter<?> setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.RoomAdapter adapter = new MainFragment.RoomAdapter(new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
@@ -92,7 +92,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		roomsController.setView((RecyclerView)view.findViewById(R.id.rooms));
 
 		listsController = new RecyclerViewLoadersController(this, Loaders.Lists) {
-			@Override protected @NonNull CursorRecyclerAdapter setupList() {
+			@Override protected @NonNull CursorRecyclerAdapter<?> setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.ListAdapter adapter = new MainFragment.ListAdapter(null, new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
@@ -134,7 +134,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		listsController.setView((RecyclerView)view.findViewById(R.id.lists));
 
 		recentsController = new RecyclerViewLoadersController(this, Loaders.Recents) {
-			@Override protected @NonNull CursorRecyclerAdapter setupList() {
+			@Override protected @NonNull CursorRecyclerAdapter<?> setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.RecentAdapter adapter = new MainFragment.RecentAdapter(new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
@@ -168,7 +168,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		recentsController.refresh();
 	}
 
-	static class PropertyAdapter extends BaseImagedAdapter {
+	static class PropertyAdapter extends BaseImagedAdapter<BaseImagedAdapter<?>.ViewHolder> {
 		public PropertyAdapter(RecyclerViewItemEvents listener) {
 			super(null, R.layout.item_main_property, listener);
 		}
@@ -179,7 +179,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 			super(null, listener);
 		}
 
-		class ViewHolder extends BaseImagedAdapter.ViewHolder {
+		class ViewHolder extends BaseImagedAdapter<?>.ViewHolder {
 			public ViewHolder(View view) {
 				super(view);
 				details = (TextView)view.findViewById(R.id.details);
@@ -200,13 +200,13 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 	}
 
 	static class RecentAdapter extends BaseImagedAdapter<RecentAdapter.ViewHolder> {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
+		private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
 
 		public RecentAdapter(RecyclerViewItemEvents listener) {
 			super(null, listener);
 		}
 
-		class ViewHolder extends BaseImagedAdapter.ViewHolder {
+		class ViewHolder extends BaseImagedAdapter<?>.ViewHolder {
 			public ViewHolder(View view) {
 				super(view);
 				details = (TextView)view.findViewById(R.id.details);
@@ -281,7 +281,6 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 	}
 
 	public static MainFragment newInstance() {
-		MainFragment fragment = new MainFragment();
-		return fragment;
+		return new MainFragment();
 	}
 }

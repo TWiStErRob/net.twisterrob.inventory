@@ -31,11 +31,15 @@ import android.support.v4.app.*;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
+import com.jakewharton.disklrucache.DiskLruCache;
+
 import net.twisterrob.java.io.IOTools;
 
 /**
  * This class holds our bitmap caches (memory and disk).
+ * @deprecated use Glide
  */
+@Deprecated @SuppressWarnings("deprecation")
 public class ImageCache {
 	private static final String TAG = "ImageCache";
 
@@ -150,19 +154,17 @@ public class ImageCache {
 			if (mDiskLruCache == null || mDiskLruCache.isClosed()) {
 				File diskCacheDir = mCacheParams.diskCacheDir;
 				if (mCacheParams.diskCacheEnabled && diskCacheDir != null) {
-					if (!diskCacheDir.exists()) {
-						diskCacheDir.mkdirs();
-					}
-					if (ImageCache.getUsableSpace(diskCacheDir) > mCacheParams.diskCacheSize) {
-						try {
+					try {
+						IOTools.ensure(diskCacheDir);
+						if (ImageCache.getUsableSpace(diskCacheDir) > mCacheParams.diskCacheSize) {
 							mDiskLruCache = DiskLruCache.open(diskCacheDir, 1, 1, mCacheParams.diskCacheSize);
 							if (mCacheParams.logCacheLifecycle) {
 								Log.d(TAG, "Disk cache initialized");
 							}
-						} catch (final IOException e) {
-							mCacheParams.diskCacheDir = null;
-							Log.e(TAG, "initDiskCache - " + e);
 						}
+					} catch (IOException e) {
+						mCacheParams.diskCacheDir = null;
+						Log.e(TAG, "initDiskCache - " + e);
 					}
 				}
 			}
@@ -207,8 +209,6 @@ public class ImageCache {
 					} else {
 						snapshot.getInputStream(DISK_CACHE_INDEX).close();
 					}
-				} catch (final IOException e) {
-					Log.e(TAG, "addBitmapToCache - " + e);
 				} catch (Exception e) {
 					Log.e(TAG, "addBitmapToCache - " + e);
 				} finally {
@@ -221,7 +221,8 @@ public class ImageCache {
 	/**
 	 * @param bitmap no need for now
 	 */
-	private static CompressFormat getCompressFormat(String data, Bitmap bitmap, ImageCacheParams params) {
+	private static CompressFormat getCompressFormat(
+			String data, @SuppressWarnings("unused") Bitmap bitmap, ImageCacheParams params) {
 		if (params.forceCompressFormat) {
 			return params.compressFormat;
 		}
@@ -276,8 +277,7 @@ public class ImageCache {
 					final DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
 					if (snapshot != null) {
 						if (mCacheParams.logCacheLifecycle) {
-							Log.d(TAG, String.format("Disk cache hit for %s: %s", data,
-									snapshot.getFile(DISK_CACHE_INDEX)));
+							Log.d(TAG, String.format("Disk cache hit for %s: %s=%s", data, key, snapshot));
 						}
 						inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
 						if (inputStream != null) {
@@ -367,6 +367,7 @@ public class ImageCache {
 	/**
 	 * A holder class that contains cache parameters.
 	 */
+	@SuppressWarnings("CanBeFinal") // Data class
 	public static class ImageCacheParams {
 		public boolean forceCompressFormat = false;
 		public CompressFormat compressFormat = DEFAULT_COMPRESS_FORMAT;
@@ -447,8 +448,8 @@ public class ImageCache {
 	private static String bytesToHexString(final byte[] bytes) {
 		// http://stackoverflow.com/questions/332079
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < bytes.length; i++) {
-			String hex = Integer.toHexString(0xFF & bytes[i]);
+		for (byte b : bytes) {
+			String hex = Integer.toHexString(0xFF & b);
 			if (hex.length() == 1) {
 				sb.append('0');
 			}
@@ -460,7 +461,7 @@ public class ImageCache {
 	/**
 	 * Get the size in bytes of a bitmap.
 	 *
-	 * @param bitmap
+	 * @param bitmap object to get size of
 	 * @return size in bytes
 	 */
 	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	>
-	<group android:id="@+id/action_drawer_group_main" android:checkableBehavior="single">
+	<group android:checkableBehavior="single">
 		<item android:id="@+id/action_drawer_home" android:title="@string/home_title" />
 		<item android:id="@+id/action_drawer_categories" android:title="@string/category_list" />
 		<item android:id="@+id/action_drawer_properties" android:title="@string/property_list" />
 		<item android:id="@+id/action_drawer_rooms" android:title="@string/room_list" />
 		<item android:id="@+id/action_drawer_items" android:title="@string/item_list" />
+	</group>
+	<group android:checkableBehavior="single">
 		<item android:id="@+id/action_drawer_sunburst" android:title="@string/sunburst_title" />
 		<item android:id="@+id/action_drawer_category_guide"
 		      android:title="@string/category_guide"
 		      android:visible="@bool/in_test" />
-	</group>
-	<group android:id="@+id/action_drawer_group_remote" android:checkableBehavior="none">
 		<item android:id="@+id/action_drawer_backup" android:title="@string/backup_title" />
 		<item android:id="@+id/action_drawer_preferences" android:title="@string/pref_activity_title" />
 	</group>

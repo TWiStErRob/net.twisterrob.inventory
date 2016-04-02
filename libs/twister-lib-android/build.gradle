@@ -43,6 +43,8 @@ dependencies {
 	compile "com.android.support:design:${supportVersion}"
 	//compile "com.android.support:palette-v7:${supportVersion}"
 
+	// XXX @Deprecated, use Glide
+	compile 'com.jakewharton:disklrucache:2.0.2'
 	compile 'com.caverock:androidsvg:1.2.1'
 	compile 'com.github.bumptech.glide:glide:3.7.0'
 
@@ -52,7 +54,7 @@ dependencies {
 }
 
 android {
-	// TODO http://stackoverflow.com/a/30556702/253468
+	// TODEL http://stackoverflow.com/a/30556702/253468
 	useLibrary 'org.apache.http.legacy'
 	testOptions {
 		unitTests.returnDefaultValues = true

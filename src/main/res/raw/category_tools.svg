@@ -30,7 +30,7 @@
 				a &wrenchW;,&wrenchW; 0 0 1 &wrenchW;,-&wrenchW; a &wrenchW;,&wrenchW; 0 0 1 &wrenchW;,&wrenchW;
 				z
 				"
-			/>
+		/>
 		<circle id="wrench-hole" cx="0" cy="0" r="25" fill="white" />
 	</g>
 	<g id="hammer" transform="translate(&hammerHandle;,&hammerHandle;) rotate(-225) translate(50, 100)">
@@ -52,6 +52,6 @@
 				h+&hammerW;
 				z
 				"
-			/>
+		/>
 	</g>
 </svg>

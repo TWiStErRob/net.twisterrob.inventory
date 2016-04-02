@@ -36,14 +36,7 @@ public interface Indexer<T> {
 			}
 
 			MatchResult<?> result = (MatchResult<?>)o;
-
-			if (!input.equals(result.input)) {
-				return false;
-			}
-			if (!source.equals(result.source)) {
-				return false;
-			}
-			return search.equals(result.search);
+			return input.equals(result.input) && source.equals(result.source) && search.equals(result.search);
 		}
 		@Override public int hashCode() {
 			int result = input.hashCode();

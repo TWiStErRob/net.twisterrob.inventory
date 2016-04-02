@@ -32,7 +32,7 @@ public class LocationToScreenTransformer {
 	}
 
 	public void init(int width, int height) {
-		resetTranform();
+		resetTransform();
 		scaleX = width / (maxLon - minLon);
 		scaleY = height / (maxLat - minLat);
 		scaleX = Math.min(scaleX, scaleY); // preserve aspect ratio
@@ -46,10 +46,10 @@ public class LocationToScreenTransformer {
 		maxLat = Double.NEGATIVE_INFINITY;
 		minLon = Double.POSITIVE_INFINITY;
 		maxLon = Double.NEGATIVE_INFINITY;
-		resetTranform();
+		resetTransform();
 	}
 
-	protected void resetTranform() {
+	protected void resetTransform() {
 		scaleX = scaleY = 1;
 		alignX = alignY = 0;
 	}

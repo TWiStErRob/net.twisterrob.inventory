@@ -4,8 +4,6 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.*;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -15,7 +13,6 @@ import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Item;
 import net.twisterrob.inventory.android.content.model.ItemDTO;
 import net.twisterrob.inventory.android.fragment.data.ItemEditFragment.ItemEditEvents;
-import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 

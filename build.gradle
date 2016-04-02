@@ -17,10 +17,11 @@ databaseEntities {
 	categories {
 		input = file(/i:\src\main\res\values\strings_Categories.xml/)
 		output = file(/i:\src\main\assets\MagicHomeInventory.data.Categories.sql/)
+		iconFolder = file(/i:\src\main\res\raw/)
 		conversion = "SQL"
 	}
 }
-android.applicationVariants.all { com.android.build.gradle.api.ApplicationVariant  variant ->
+android.applicationVariants.all { com.android.build.gradle.api.ApplicationVariant variant ->
 	variant.mergeAssets.dependsOn tasks.generateDataBase
 }
 
@@ -39,7 +40,7 @@ dependencies {
 		compile('net.twisterrob:twister-lib-android:1.0-SNAPSHOT')
 		compile('net.twisterrob:twister-lib-java:1.0-SNAPSHOT')
 	}
-	// TODO otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
+	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
 	def supportVersion = '23.2.0'
 	compile "com.android.support:support-v4:${supportVersion}"
 	compile "com.android.support:appcompat-v7:${supportVersion}"
@@ -53,6 +54,7 @@ android {
 	defaultConfig {
 		applicationId 'net.twisterrob.inventory'
 		version {
+			// XXX what's up with this? is it properties file or this
 			major = 1
 		}
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"

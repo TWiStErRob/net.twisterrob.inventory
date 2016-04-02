@@ -10,6 +10,7 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.InventoryProvider;
 import net.twisterrob.inventory.android.content.contract.*;
 
+@SuppressWarnings("RedundantThrows")
 public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 	private final String fileName;
 	private ZipOutputStream zip;
@@ -63,6 +64,7 @@ public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 	@Override public void finishImages(Cursor cursor) throws Throwable {
 		// nop
 	}
+	@SuppressWarnings("resource") // Cursors are closed in singleBlob
 	public byte[] getImage(Cursor cursor) {
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
 		Type type = Type.from(cursor, CommonColumns.TYPE);

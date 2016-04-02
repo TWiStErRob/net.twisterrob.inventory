@@ -17,7 +17,7 @@
 package com.example.android.xmladapters;
 
 import java.io.IOException;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
 import java.util.*;
 
 import org.xmlpull.v1.*;
@@ -399,7 +399,6 @@ public class Adapters {
 	 * @see #loadAdapter(android.content.Context, int, Object[])
 	 */
 	public static CursorAdapter loadCursorAdapter(Context context, int id, String uri, Object... parameters) {
-
 		XmlCursorAdapter adapter = (XmlCursorAdapter)loadAdapter(context, id, ADAPTER_CURSOR, parameters);
 
 		if (uri != null) {
@@ -435,7 +434,6 @@ public class Adapters {
 	 * @see #loadAdapter(android.content.Context, int, Object[])
 	 */
 	public static CursorAdapter loadCursorAdapter(Context context, int id, Cursor cursor, Object... parameters) {
-
 		XmlCursorAdapter adapter = (XmlCursorAdapter)loadAdapter(context, id, ADAPTER_CURSOR, parameters);
 
 		if (cursor != null) {
@@ -486,17 +484,11 @@ public class Adapters {
 	 * @return An instance of {@link android.widget.BaseAdapter}.
 	 */
 	private static BaseAdapter loadAdapter(Context context, int id, String assertName, Object... parameters) {
-
 		XmlResourceParser parser = null;
 		try {
 			parser = context.getResources().getXml(id);
 			return createAdapterFromXml(context, parser, Xml.asAttributeSet(parser), id, parameters, assertName);
-		} catch (XmlPullParserException ex) {
-			Resources.NotFoundException rnf = new Resources.NotFoundException(
-					"Can't load adapter resource ID " + context.getResources().getResourceEntryName(id));
-			rnf.initCause(ex);
-			throw rnf;
-		} catch (IOException ex) {
+		} catch (XmlPullParserException | IOException ex) {
 			Resources.NotFoundException rnf = new Resources.NotFoundException(
 					"Can't load adapter resource ID " + context.getResources().getResourceEntryName(id));
 			rnf.initCause(ex);
@@ -519,7 +511,6 @@ public class Adapters {
 	 */
 	private static BaseAdapter createAdapterFromXml(Context c, XmlPullParser parser, AttributeSet attrs, int id,
 			Object[] parameters, String assertName) throws XmlPullParserException, IOException {
-
 		BaseAdapter adapter = null;
 
 		// Make sure we are on a start tag.
@@ -554,8 +545,7 @@ public class Adapters {
 	 * Creates an XmlCursorAdapter using an XmlCursorAdapterParser.
 	 */
 	private static XmlCursorAdapter createCursorAdapter(Context c, XmlPullParser parser, AttributeSet attrs, int id,
-			Object[] parameters) throws IOException, XmlPullParserException {
-
+			Object... parameters) throws IOException, XmlPullParserException {
 		return new XmlCursorAdapterParser(c, parser, attrs, id).parse(parameters);
 	}
 
@@ -579,9 +569,9 @@ public class Adapters {
 		private final AttributeSet mAttrs;
 		private final int mId;
 
-		private final HashMap<String, CursorBinder> mBinders;
-		private final ArrayList<String> mFrom;
-		private final ArrayList<Integer> mTo;
+		private final HashMap<String, CursorBinder> mBinders = new HashMap<>();
+		private final ArrayList<String> mFrom = new ArrayList<>();
+		private final ArrayList<Integer> mTo = new ArrayList<>();
 		private final CursorTransformation mIdentity;
 		private final Resources mResources;
 
@@ -592,14 +582,10 @@ public class Adapters {
 			mId = id;
 
 			mResources = mContext.getResources();
-			mBinders = new HashMap<String, CursorBinder>();
-			mFrom = new ArrayList<String>();
-			mTo = new ArrayList<Integer>();
 			mIdentity = new IdentityTransformation(mContext);
 		}
 
-		public XmlCursorAdapter parse(Object[] parameters) throws IOException, XmlPullParserException {
-
+		public XmlCursorAdapter parse(Object... parameters) throws IOException, XmlPullParserException {
 			Resources resources = mResources;
 			TypedArray a = resources.obtainAttributes(mAttrs, R.styleable.CursorAdapter);
 
@@ -757,21 +743,9 @@ public class Adapters {
 					final Constructor<?> c = klass.getDeclaredConstructor(Context.class, CursorTransformation.class);
 					return (CursorBinder)c.newInstance(mContext, transformation);
 				}
-			} catch (ClassNotFoundException e) {
+			} catch (Exception ex) {
 				throw new IllegalArgumentException("Cannot instantiate binder type in "
-						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
-			} catch (NoSuchMethodException e) {
-				throw new IllegalArgumentException("Cannot instantiate binder type in "
-						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
-			} catch (InvocationTargetException e) {
-				throw new IllegalArgumentException("Cannot instantiate binder type in "
-						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
-			} catch (InstantiationException e) {
-				throw new IllegalArgumentException("Cannot instantiate binder type in "
-						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
-			} catch (IllegalAccessException e) {
-				throw new IllegalArgumentException("Cannot instantiate binder type in "
-						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, e);
+						+ mContext.getResources().getResourceEntryName(mId) + ": " + type, ex);
 			}
 
 			return null;
@@ -823,21 +797,9 @@ public class Adapters {
 						final Constructor<?> c = klas.getDeclaredConstructor(Context.class);
 						transformation = (CursorTransformation)c.newInstance(mContext);
 					}
-				} catch (ClassNotFoundException e) {
+				} catch (Exception ex) {
 					throw new IllegalArgumentException("Cannot instantiate transform type in "
-							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
-				} catch (NoSuchMethodException e) {
-					throw new IllegalArgumentException("Cannot instantiate transform type in "
-							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
-				} catch (InvocationTargetException e) {
-					throw new IllegalArgumentException("Cannot instantiate transform type in "
-							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
-				} catch (InstantiationException e) {
-					throw new IllegalArgumentException("Cannot instantiate transform type in "
-							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
-				} catch (IllegalAccessException e) {
-					throw new IllegalArgumentException("Cannot instantiate transform type in "
-							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, e);
+							+ mContext.getResources().getResourceEntryName(mId) + ": " + className, ex);
 				}
 			}
 
@@ -859,7 +821,7 @@ public class Adapters {
 	/**
 	 * Interface used by adapters that require to be loaded after creation.
 	 */
-	private static interface ManagedAdapter {
+	private interface ManagedAdapter {
 		/**
 		 * Loads the content of the adapter, asynchronously.
 		 */
@@ -871,7 +833,7 @@ public class Adapters {
 	 * of a SimpleCursorAdapter. The main difference is the ability to handle CursorBinders.
 	 */
 	private static class XmlCursorAdapter extends SimpleCursorAdapter implements ManagedAdapter {
-		private Context mContext;
+		private final Context mContext;
 		private String mUri;
 		private final String mSelection;
 		private final String[] mSelectionArgs;
@@ -1093,8 +1055,8 @@ public class Adapters {
 
 		public MapTransformation(Context context) {
 			super(context);
-			mStringMappings = new HashMap<String, String>();
-			mResourceMappings = new HashMap<String, Integer>();
+			mStringMappings = new HashMap<>();
+			mResourceMappings = new HashMap<>();
 		}
 
 		void addStringMapping(String from, String to) {
@@ -1118,7 +1080,7 @@ public class Adapters {
 			final Integer transformed = mResourceMappings.get(value);
 			try {
 				return transformed == null? Integer.parseInt(value) : transformed;
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException ex) {
 				return 0;
 			}
 		}

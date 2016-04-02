@@ -38,6 +38,8 @@ public class RigidImageView extends ImageView {
 		}
 	}
 
+	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+	@SuppressWarnings("EmptyMethod")
 	@Override public void setImageBitmap(Bitmap bm) {
 		// Calls through to setImageDrawable since Eclair
 		super.setImageBitmap(bm);

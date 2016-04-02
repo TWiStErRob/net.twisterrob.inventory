@@ -3,7 +3,7 @@ package net.twisterrob.android.utils.log;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public final class LogFactory {
-	private static final AtomicReferenceArray<Log> LOGS = new AtomicReferenceArray<Log>(Tag.values().length);
+	private static final AtomicReferenceArray<Log> LOGS = new AtomicReferenceArray<>(Tag.values().length);
 
 	private LogFactory() {
 		// prevent instantiation

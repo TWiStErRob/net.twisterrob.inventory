@@ -21,6 +21,7 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 		this.header = header;
 	}
 
+	@SuppressWarnings("resource") // these cursor don't need to be closed
 	@Override public Cursor swapCursor(Cursor newCursor) {
 		if (header != null) { // add one extra row for header
 			MatrixCursor header = new MatrixCursor(new String[] {"type", "_id"}, 1);
@@ -35,7 +36,7 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 	}
 
 	private static class HeaderViewHolder extends ViewHolder {
-		private View header;
+		private final View header;
 
 		HeaderViewHolder(View view, View header) {
 			super(view);

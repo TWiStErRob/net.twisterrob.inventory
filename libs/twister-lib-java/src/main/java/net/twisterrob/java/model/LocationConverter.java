@@ -1,12 +1,12 @@
 package net.twisterrob.java.model;
 
-// TODO https://groups.google.com/forum/#!topic/Google-Maps-API/6459F-hBMqc
-// TODO http://www.uwgb.edu/dutchs/UsefulData/UTMFormulas.HTM
-// TODO http://www.uwgb.edu/dutchs/UsefulData/ConvertUTMNoOZ.HTM
+// CONSIDER https://groups.google.com/forum/#!topic/Google-Maps-API/6459F-hBMqc
+// CONSIDER http://www.uwgb.edu/dutchs/UsefulData/UTMFormulas.HTM
+// CONSIDER http://www.uwgb.edu/dutchs/UsefulData/ConvertUTMNoOZ.HTM
 public class LocationConverter {
 	public static net.twisterrob.java.model.Location gridRef2LatLon(int easting, int northing) {
-		Location OSGB36 = MoveableTypeGridRefLocationConverter.f(easting, northing);
-		return MoveableTypeGridRefLocationConverter.convertOSGB36toWGS84(OSGB36);
+		Location OSGB36 = MovableTypeGridRefLocationConverter.f(easting, northing);
+		return MovableTypeGridRefLocationConverter.convertOSGB36toWGS84(OSGB36);
 	}
 
 	/** WGS84: a in meters*/

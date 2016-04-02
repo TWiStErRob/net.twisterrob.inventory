@@ -137,7 +137,7 @@
 	<string name="category_vivarium_keywords">aquarium, terrarium, insectarium, formicarium, paludarium</string>
 	<string name="category_animal_enclosure" level="2">animal enclosures</string>
 	<string name="category_animal_enclosure_keywords">kennel, chicken coop, aviary, pig sty, greenhouse</string>
-	<!-- FIXME some of the above are more like buildings and can be considered room types -->
+	<!-- XXX some of the above are more like buildings and can be considered room types -->
 	<string name="category_pet_activity" level="2">activity</string>
 	<string name="category_pet_activity_keywords">scratching post/cat tree, hamster wheel, hamster ball, pet door, pet carrier</string>
 
@@ -382,7 +382,7 @@
 	<!-- https://en.wikipedia.org/w/index.php?title=List_of_toys&oldid=663254445 -->
 	<string name="category_model" level="1">Models</string>
 	<string name="category_model_keywords">@string/empty</string>
-		<!-- 1,2,3,6,8,12,18 -->
+	<!-- 1,2,3,6,8,12,18 -->
 	<string name="category_figurine" level="2">figurine</string>
 	<string name="category_figurine_keywords">action figure, farm animal, dinosaur, toy soldier, puppet, marionette; G.I. Joe, Star Wars, Star Trek, Transformers, Avengers, Smurfs, Barbi, Monster High</string>
 	<string name="category_doll" level="2">doll</string>
@@ -400,7 +400,7 @@
 
 	<string name="category_game" level="1">Seated Games</string>
 	<string name="category_game_keywords">@string/empty</string>
-		<!-- 11 -->
+	<!-- 11 -->
 	<string name="category_game_board" level="2">board games</string>
 	<string name="category_game_board_keywords">chess, checkers, go, battleship</string>
 	<string name="category_game_video" level="2">video games</string>
@@ -416,7 +416,7 @@
 
 	<string name="category_game_creative" level="1">Creative Games</string>
 	<string name="category_game_creative_keywords">@string/empty</string>
-		<!-- 4,5,7,14,16 -->
+	<!-- 4,5,7,14,16 -->
 	<string name="category_game_creative_kit" level="2">child activity kit</string>
 	<string name="category_game_creative_kit_keywords">science kit, chemistry set, lab set, kitchen set, surgery game, robot kit, molding kit</string>
 	<string name="category_game_artistic" level="2">artistic</string>
@@ -428,7 +428,7 @@
 
 	<string name="category_novelty" level="1">Novelty Toys</string>
 	<string name="category_novelty_keywords">@string/empty</string>
-		<!-- 9,10,15,19 -->
+	<!-- 9,10,15,19 -->
 	<string name="category_novelty_visual" level="2">visual</string>
 	<string name="category_novelty_visual_keywords">lava lamp, plasma globe, snow globe, kaleidoscope, stereoscope, zoetrope</string>
 	<string name="category_novelty_motion" level="2">motion</string>
@@ -440,7 +440,7 @@
 
 	<string name="category_toy_activity" level="1">Physical Activities</string>
 	<string name="category_toy_activity_keywords">@string/empty</string>
-		<!-- 13 -->
+	<!-- 13 -->
 	<string name="category_toy_weapon" level="2">toy weapons</string>
 	<string name="category_toy_weapon_keywords">water gun/squirt gun, Nerf, cap gun, pop gun, BB gun, plastic sword</string>
 	<string name="category_juggling" level="2">juggling/object manipulation</string>

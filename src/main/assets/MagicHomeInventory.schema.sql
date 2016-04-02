@@ -258,7 +258,7 @@ BEGIN
 	--insert into Log(message) values ('Item_move on (' || new._id || ', ' || ifNULL(old.parent, 'NULL') || '->' || ifNULL(new.parent, 'NULL') || '): '  || 'started');--NOTEOS
 	select RAISE(ABORT, 'Cannot change Item.parent nullity: NULL -> NOT NULL!') where old.parent IS NULL and new.parent IS NOT NULL;--NOTEOS
 	select RAISE(ABORT, 'Cannot change Item.parent nullity: NOT NULL -> NULL!') where old.parent IS NOT NULL and new.parent IS NULL;--NOTEOS
-	-- TODO check for recursive move to prevent loops in the tree
+	-- CONSIDER check for recursive move to prevent loops in the tree
 	insert into Item_Path_Node_Refresher(_id)
 		select distinct item from Item_Path_Node
 		where node = new._id

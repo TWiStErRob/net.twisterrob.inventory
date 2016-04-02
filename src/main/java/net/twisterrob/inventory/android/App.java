@@ -59,8 +59,7 @@ public class App extends Application {
 		return s_instance;
 	}
 
-	@Override
-	public void onCreate() {
+	@Override public void onCreate() {
 		super.onCreate();
 		LOG.info("************* Starting up {} {} built at {}",
 				getPackageName(), BuildConfig.VERSION_NAME, BuildConfig.BUILD_TIME);
@@ -84,8 +83,7 @@ public class App extends Application {
 		}
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
+	@Override public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		updateLanguage(newConfig.locale);
 	}
@@ -114,8 +112,7 @@ public class App extends Application {
 		}
 	}
 
-	@Override
-	public void onTerminate() {
+	@Override public void onTerminate() {
 		database.getWritableDatabase().close();
 		super.onTerminate();
 	}
@@ -124,8 +121,8 @@ public class App extends Application {
 		return getInstance();
 	}
 
-	// TODO wrapper for resource based retrieval
-	public static SharedPreferences getPrefs() {
+	// TODO wrapper for resource based retrieval: getBPref/getSPref/etc...
+	public static @NonNull SharedPreferences getPrefs() {
 		return PreferenceManager.getDefaultSharedPreferences(getAppContext());
 	}
 
@@ -144,9 +141,8 @@ public class App extends Application {
 
 	/** @return You must call {@link SharedPreferences.Editor#commit} as per {@link SharedPreferences#edit} contract. */
 	@SuppressLint("CommitPrefEdits")
-	public static SharedPreferences.Editor getPrefEditor() {
-		SharedPreferences prefs = getPrefs();
-		return prefs != null? prefs.edit() : null;
+	public static @NonNull SharedPreferences.Editor getPrefEditor() {
+		return getPrefs().edit();
 	}
 
 	public static void exit() {

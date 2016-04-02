@@ -13,7 +13,7 @@ import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
 
 public abstract class RecyclerViewLoadersController
-		extends RecyclerViewLoaderController<CursorRecyclerAdapter, Cursor> {
+		extends RecyclerViewLoaderController<CursorRecyclerAdapter<?>, Cursor> {
 	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewLoadersController.class);
 
 	private final Loaders loader;
@@ -27,7 +27,7 @@ public abstract class RecyclerViewLoadersController
 		return loader;
 	}
 
-	@Override protected void setData(CursorRecyclerAdapter adapter, Cursor data) {
+	@Override protected void setData(CursorRecyclerAdapter<?> adapter, Cursor data) {
 		adapter.swapCursor(data);
 	}
 

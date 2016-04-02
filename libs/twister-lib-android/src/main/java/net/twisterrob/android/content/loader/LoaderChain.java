@@ -69,7 +69,7 @@ public class LoaderChain {
 
 		public <N> SequenceAction<N> then(InitAction<N> next) {
 			this.next = next;
-			return new SequenceAction<N>(next);
+			return new SequenceAction<>(next);
 		}
 
 		public SequenceAction<T> finishWith(Runnable r) {
@@ -81,15 +81,15 @@ public class LoaderChain {
 		public LoaderCallbacks<T> getCallback() {
 			LoaderCallbacks<T> callbacks = super.getCallback();
 			if (next != null) {
-				callbacks = new ChainCallback<T>(callbacks, next);
+				callbacks = new ChainCallback<>(callbacks, next);
 			}
 			return callbacks;
 		}
 	}
 
 	public static final class ChainCallback<T> implements LoaderCallbacks<T> {
-		private LoaderCallbacks<T> wrapped;
-		private Runnable next;
+		private final LoaderCallbacks<T> wrapped;
+		private final Runnable next;
 		private ChainCallback(LoaderCallbacks<T> current, Runnable next) {
 			this.wrapped = current;
 			this.next = next;

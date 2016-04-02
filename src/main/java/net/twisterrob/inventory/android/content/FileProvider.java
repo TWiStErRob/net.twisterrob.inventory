@@ -54,11 +54,13 @@ public class FileProvider extends android.support.v4.content.FileProvider {
 	 * but {@link android.support.v4.content.FileProvider} returns a one line zero column cursor.
 	 * @return original cursor or a 1x1 cursor with a NULL _data column.
 	 */
-	private Cursor fix(Cursor result, String[] projection) {
+	private Cursor fix(Cursor result, String... projection) {
 		if (projection.length == 1 && "_data".equals(projection[0])
 				&& result.getCount() == 1 && result.getColumnCount() == 0) {
+			//noinspection resource the value is returned, the receiver will close it
 			MatrixCursor newCursor = new MatrixCursor(new String[] {"_data"});
 			newCursor.addRow(new Object[] {null});
+			result.close();
 			result = newCursor;
 		}
 		return result;
@@ -111,10 +113,7 @@ public class FileProvider extends android.support.v4.content.FileProvider {
 			ParcelFileDescriptor result = super.openFile(uri, mode);
 			LOG.trace("{}.openFile({}, {}): {}", this, uri, mode, result);
 			return result;
-		} catch (RuntimeException ex) {
-			LOG.trace("{}.openFile({}, {}): thrown {}", this, uri, mode, ex.getClass().getSimpleName(), ex);
-			throw ex;
-		} catch (FileNotFoundException ex) {
+		} catch (RuntimeException | FileNotFoundException ex) {
 			LOG.trace("{}.openFile({}, {}): thrown {}", this, uri, mode, ex.getClass().getSimpleName(), ex);
 			throw ex;
 		}

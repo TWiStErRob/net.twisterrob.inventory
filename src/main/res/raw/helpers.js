@@ -6,19 +6,30 @@ function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
 	};
 }
 
-function describeArc(x, y, radius, startAngle, endAngle) {
-	var start = polarToCartesian(x, y, radius, endAngle);
-	var end = polarToCartesian(x, y, radius, startAngle);
-	var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
-	return [
-			"M", x, y,
-			"l", start.x, start.y,
-			"A", radius, radius, 0, arcSweep, 0, end.x, end.y,
-			"Z"
-	].join(" ");
-	return d;
+function round(numberOrCoord) {
+	if (typeof numberOrCoord === 'number') {
+		return Math.round(numberOrCoord * 1000) / 1000;
+	} else {
+		numberOrCoord.x = round(numberOrCoord.x);
+		numberOrCoord.y = round(numberOrCoord.y);
+		return numberOrCoord;
+	}
 }
 
+//noinspection JSUnusedGlobalSymbols
+function describeArc(x, y, radius, startAngle, endAngle) {
+	var start = round(polarToCartesian(x, y, radius, endAngle));
+	var end = round(polarToCartesian(x, y, radius, startAngle));
+	var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
+	return [
+		"M", x, y,
+		"l", start.x, start.y,
+		"A", radius, radius, 0, arcSweep, 0, end.x, end.y,
+		"Z"
+	].join(" ");
+}
+
+//noinspection JSUnusedGlobalSymbols
 function rounded_rect_uni(x, y, w, h, tl, tr, bl, br) {
 	return rounded_rect(x, y, w, h, tl, tl, tr, tr, bl, bl, br, br);
 }
@@ -58,9 +69,9 @@ function rounded_rect(x, y, w, h, rTLx, rTLy, rTRx, rTRy, rBLx, rBLy, rBRx, rBRy
 	path += "v" + -(h - (rBLy + rTLy));
 	path += "\n";
 	if (rTLx > 0 && rTLy > 0) {
-		path +=  "a " + rTLx + "," + rTLy + " 0 0 1 " + rTLx + "," + -rTLy;
+		path += "a " + rTLx + "," + rTLy + " 0 0 1 " + rTLx + "," + -rTLy;
 	} else {
-		path += "v" + -rTLy
+		path += "v" + -rTLy;
 		path += "h" + rTLx;
 	}
 	path += "\n";

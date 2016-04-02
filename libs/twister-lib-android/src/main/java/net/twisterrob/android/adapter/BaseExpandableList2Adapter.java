@@ -5,6 +5,8 @@ import java.util.*;
 import android.content.Context;
 import android.view.*;
 
+// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+@SuppressWarnings({"unused", "EmptyMethod"})
 public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 		extends android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;
@@ -50,8 +52,8 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 		return getChildren(getGroup(groupPosition)).size();
 	}
 	@Override
-	public Child getChild(int groupPosition, int childPosititon) {
-		return getChildren(getGroup(groupPosition)).get(childPosititon);
+	public Child getChild(int groupPosition, int childPosition) {
+		return getChildren(getGroup(groupPosition)).get(childPosition);
 	}
 	public int getChildIndex(Group group, Child child) {
 		return getChildren(group).indexOf(child);
@@ -71,10 +73,6 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	}
 
 	@Override
-	/**
-	 * @param groupPosition
-	 * @param childPosition
-	 */
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
 	}
@@ -135,10 +133,6 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 
 	/**
 	 * Update the view-model object {@link Group} on the first usage.
-	 *
-	 * @param groupHolder
-	 * @param currentChildren
-	 * @param currentGroup
 	 */
 	protected void bindGroupModel(GroupVH groupHolder, List<Child> currentChildren, Group currentGroup) {
 		// optional @Override
@@ -147,11 +141,6 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	protected abstract void bindGroupView(GroupVH groupHolder, Group currentGroup, List<Child> currentChildren,
 			View groupConvertView);
 
-	/**
-	 * @param groupHolder
-	 * @param currentChildren
-	 * @param groupConvertView
-	 */
 	protected void bindEmptyGroupView(GroupVH groupHolder, List<Child> currentChildren, View groupConvertView) {
 		// optional @Override
 	}
@@ -162,9 +151,6 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 
 	/**
 	 * Update the view-model object {@link Child} on the first usage.
-	 * @param childHolder
-	 * @param currentGroup
-	 * @param currentChild
 	 */
 	protected void bindChildModel(ChildVH childHolder, Group currentGroup, Child currentChild) {
 		// optional @Override
@@ -173,11 +159,6 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	protected abstract void bindChildView(ChildVH childHolder, Group currentGroup, Child currentChild,
 			View childConvertView);
 
-	/**
-	 * @param childHolder
-	 * @param currentGroup
-	 * @param childConvertView
-	 */
 	protected void bindEmptyChildView(ChildVH childHolder, Group currentGroup, View childConvertView) {
 		// optional @Override
 	}

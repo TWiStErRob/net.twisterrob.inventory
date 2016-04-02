@@ -3,24 +3,27 @@ package net.twisterrob.android.utils.cache;
 import java.io.IOException;
 import java.net.URL;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import net.twisterrob.android.utils.LibContextProvider;
-import net.twisterrob.android.utils.cache.lowlevel.ImageCache;
-import net.twisterrob.android.utils.cache.lowlevel.ImageCache.ImageCacheParams;
 import net.twisterrob.android.utils.log.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.java.utils.StringTools;
 
+/** @deprecated use Glide */
+@Deprecated @SuppressWarnings("deprecation")
 public class ImageSDNetCache implements Cache<URL, Bitmap> {
 	private static final Log LOG = LogFactory.getLog(Tag.IO);
-	private final ImageCache m_cache;
+	private final net.twisterrob.android.utils.cache.lowlevel.ImageCache m_cache;
 
 	public ImageSDNetCache() {
-		ImageCacheParams params = new ImageCache.ImageCacheParams(LibContextProvider.getApplicationContext(), "");
+		Context context = LibContextProvider.getApplicationContext();
+		net.twisterrob.android.utils.cache.lowlevel.ImageCache.ImageCacheParams params =
+				new net.twisterrob.android.utils.cache.lowlevel.ImageCache.ImageCacheParams(context, "");
 		params.initDiskCacheOnCreate = true;
 		params.memoryCacheEnabled = false;
-		m_cache = new ImageCache(params);
+		m_cache = new net.twisterrob.android.utils.cache.lowlevel.ImageCache(params);
 	}
 
 	public Bitmap get(final URL key) throws IOException {

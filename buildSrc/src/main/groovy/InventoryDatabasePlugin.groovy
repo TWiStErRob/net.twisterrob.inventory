@@ -1,17 +1,22 @@
 import org.gradle.api.*
+
+// TODEL @formatter https://youtrack.jetbrains.com/issue/IDEA-154077
+//@formatter:off
 /**
  * Use it as
- * <code>
+ * <pre><code>
  *     apply plugin: InventoryDatabasePlugin
  *     databaseEntities {
  *         categories {
  *             input = file(path to Android res xml with Strings)
  *             output = file(path to asset SQL file)
  *             conversion = "structure|SQL"
+ *             iconFolder = file(path to SVG files)
  *         }
  *     }
- * </code>
+ * </code></pre>
  */
+//@formatter:on
 @SuppressWarnings("GroovyUnusedDeclaration")
 class InventoryDatabasePlugin implements Plugin<Project> {
 	void apply(Project project) {
@@ -27,6 +32,7 @@ class InventoryDatabasePlugin implements Plugin<Project> {
 					input = entity.input
 					output = entity.output
 					conversion = entity.conversion
+					iconFolder = entity.iconFolder
 				}
 				allTasks.dependsOn task
 				// clean task is automagically generated for every task that has output
@@ -39,6 +45,7 @@ class InventoryDatabasePlugin implements Plugin<Project> {
 class InventoryDatabaseEntity {
 	def input
 	def output
+	def iconFolder
 	String conversion
 
 	final String name

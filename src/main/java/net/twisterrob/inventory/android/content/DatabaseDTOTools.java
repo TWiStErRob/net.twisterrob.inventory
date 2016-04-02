@@ -8,6 +8,7 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
 
+@SuppressWarnings({"TryFinallyCanBeTryWithResources", "resource"}) // all methods use the correct try-finally structure
 public class DatabaseDTOTools {
 	public static List<String> getNames(Collection<? extends DTO> dtos) {
 		List<String> names = new ArrayList<>(dtos.size());
@@ -116,6 +117,16 @@ public class DatabaseDTOTools {
 			return ListDTO.fromCursor(list);
 		} finally {
 			list.close();
+		}
+	}
+
+	public static long getRoot(long roomID) {
+		Cursor room = App.db().getRoom(roomID);
+		try {
+			room.moveToFirst();
+			return room.getLong(room.getColumnIndexOrThrow(Room.ROOT_ITEM));
+		} finally {
+			room.close();
 		}
 	}
 }

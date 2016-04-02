@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.*;
 import android.view.ViewGroup;
 
+@SuppressWarnings("rawtypes") // hope for the implementation to handle the position mapping correctly
 public class ConcatAdapter extends Adapter<ViewHolder> {
 	private final Adapter<? extends ViewHolder>[] mWrappedAdapters;
 	private final Map<Integer, Adapter<? extends ViewHolder>> mViewTypes = new HashMap<>();
@@ -31,7 +32,7 @@ public class ConcatAdapter extends Adapter<ViewHolder> {
 	}
 	@Override public int getItemCount() {
 		int count = 0;
-		for (Adapter adapter : mWrappedAdapters) {
+		for (Adapter<?> adapter : mWrappedAdapters) {
 			count += adapter.getItemCount();
 		}
 		return count;
@@ -66,7 +67,7 @@ public class ConcatAdapter extends Adapter<ViewHolder> {
 	}
 	private List<Integer> getCounts() {
 		List<Integer> counts = new ArrayList<>(mWrappedAdapters.length);
-		for (Adapter adapter : mWrappedAdapters) {
+		for (Adapter<?> adapter : mWrappedAdapters) {
 			counts.add(adapter.getItemCount());
 		}
 		return counts;
@@ -93,12 +94,12 @@ public class ConcatAdapter extends Adapter<ViewHolder> {
 		getAdapter(holder.getAdapterPosition()).onViewDetachedFromWindow(holder);
 	}
 	@Override public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-		for (Adapter adapter : mWrappedAdapters) {
+		for (Adapter<?> adapter : mWrappedAdapters) {
 			adapter.onDetachedFromRecyclerView(recyclerView);
 		}
 	}
 	@Override public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-		for (Adapter adapter : mWrappedAdapters) {
+		for (Adapter<?> adapter : mWrappedAdapters) {
 			adapter.onAttachedToRecyclerView(recyclerView);
 		}
 	}
@@ -108,7 +109,7 @@ public class ConcatAdapter extends Adapter<ViewHolder> {
 
 	private int getOffsetOf(Adapter<? extends ViewHolder> wrapped) {
 		int count = 0;
-		for (Adapter adapter : mWrappedAdapters) {
+		for (Adapter<?> adapter : mWrappedAdapters) {
 			if (adapter == wrapped) {
 				break;
 			}
@@ -141,7 +142,7 @@ public class ConcatAdapter extends Adapter<ViewHolder> {
 		}
 
 		@Override public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-			// TODO: No notifyItemRangeMoved method?
+			// TOFIX No notifyItemRangeMoved method?
 			int offset = getOffsetOf(wrapped);
 			notifyItemRangeChanged(offset + fromPosition, offset + toPosition + itemCount);
 		}

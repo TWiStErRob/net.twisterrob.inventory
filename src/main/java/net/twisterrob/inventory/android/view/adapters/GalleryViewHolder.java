@@ -15,10 +15,10 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
 public class GalleryViewHolder extends RecyclerView.ViewHolder {
-	private TextView title;
-	private ImageView image;
-	private ImageView type;
-	private TextView count;
+	private final TextView title;
+	private final ImageView image;
+	private final ImageView type;
+	private final TextView count;
 	private ImagedDTO entity;
 
 	public GalleryViewHolder(View view, final GalleryEvents listener) {
@@ -68,7 +68,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 	}
 
 	public void unBind() {
-		// TODO replace this with proper Glide.with calls
+		// FIXME replace this with proper Glide.with calls
 		Glide.clear(image);
 		Glide.clear(type);
 	}

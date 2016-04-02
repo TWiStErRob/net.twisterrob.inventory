@@ -3,26 +3,25 @@ package net.twisterrob.java.web;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * <ul>
  * <li>Primitive method call: <code>{@link Math#max(int, int) Math.max}(2, 4)</code>:<br>
- * <code>${call.static['java.lang.Math'].arg[2].arg[4].invoke['max']}</code>
+ * <code>${call.static['java.lang.Math'].arg[2].arg[4].invoke['max']}</code></li>
  * <li>Collection as result: <code>container.lookup(film.edi, cinema.id).size()</code>:<br>
- * <code>${fn:length(call.init[container].arg[film.edi].arg[cinema.id].invoke['lookup']}</code>
+ * <code>${fn:length(call.init[container].arg[film.edi].arg[cinema.id].invoke['lookup']}</code></li>
  * <li>Explicit primitive args (required for anything other than int)<code>{@link Short#valueOf(short)}</code>:<br>
- * <code>${call.static['java.lang.Short'].shortArg[3].invoke['valueOf']}</code>
+ * <code>${call.static['java.lang.Short'].shortArg[3].invoke['valueOf']}</code></li>
  * <li>Void method call, given {@link StringBuilder} {@code sb}: <code>sb.{@link StringBuilder#append(CharSequence) append}("hello")</code>:<br>
- * <code>${call.init[sb].type('java.lang.CharSequence').arg['hello'].invoke['append']}</code>
- * <li>
+ * <code>${call.init[sb].type('java.lang.CharSequence').arg['hello'].invoke['append']}</code></li>
  * </ul>
  *
  * @author Based on How to call methods from EL expressions- pre JSP 2.0 trick for JSPs with JSTL
- * @see http://technology.amis.nl/2005/06/15/how-to-call-methods-from-el-expressions-pre-jsp-20-trick-for-jsps-with-jstl
- * @author papp.robert.s
- *
+ * @see <a href="http://technology.amis.nl/2005/06/15/how-to-call-methods-from-el-expressions-pre-jsp-20-trick-for-jsps-with-jstl">How to call methods from EL expressions- pre JSP 2.0 trick for JSPs with JSTL</a>
  */
 public class InvokerMap implements Map<Object, Object> {
-	private static enum Mode {
+	private enum Mode {
 		Operation,
 		Target,
 		ParameterType,
@@ -36,8 +35,8 @@ public class InvokerMap implements Map<Object, Object> {
 	private Object target;
 	private String methodName;
 	private Class<?> nextArgType;
-	private ArrayList<Object> args = new ArrayList<Object>();
-	private ArrayList<Class<?>> argTypes = new ArrayList<Class<?>>();
+	private final ArrayList<Object> args = new ArrayList<>();
+	private final ArrayList<Class<?>> argTypes = new ArrayList<>();
 
 	public Object get(Object key) {
 		try {
@@ -219,54 +218,40 @@ public class InvokerMap implements Map<Object, Object> {
 	public int size() {
 		return 0;
 	}
-
 	public boolean isEmpty() {
 		return false;
 	}
-
 	public boolean containsKey(Object key) {
 		return true;
 	}
-
 	public boolean containsValue(Object value) {
 		return true;
 	}
-
 	public Object put(Object key, Object value) {
 		return null;
 	}
-
 	public Object remove(Object key) {
 		return null;
 	}
-
-	public void putAll(Map<?, ?> t) {
+	public void putAll(@Nonnull Map<?, ?> m) {
 		// do nothing
 	}
-
 	public void clear() {
 		// do nothing
 	}
-
-	public Set<Object> keySet() {
-		return null;
+	public @Nonnull Set<Object> keySet() {
+		throw new UnsupportedOperationException();
 	}
-
-	public Collection<Object> values() {
-		return null;
+	public @Nonnull Collection<Object> values() {
+		throw new UnsupportedOperationException();
 	}
-
-	public Set<Map.Entry<Object, Object>> entrySet() {
-		return null;
+	public @Nonnull Set<Map.Entry<Object, Object>> entrySet() {
+		throw new UnsupportedOperationException();
 	}
-
-	@Override
-	public boolean equals(Object o) {
+	@Override public boolean equals(Object o) {
 		return false;
 	}
-
-	@Override
-	public int hashCode() {
+	@Override public int hashCode() {
 		return 0;
 	}
 }

@@ -25,45 +25,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 	private Cursor cursor;
 	private ExportCallbacks callbacks = DUMMY_CALLBACK;
 	private Progress progress;
-	private Exporter exporter;
-
-	public interface ExportCallbacks {
-		void exportStarting();
-		void exportProgress(@NonNull Progress progress);
-		void exportFinished(@NonNull Progress progress);
-
-		final class Progress implements Cloneable {
-			public Phase phase;
-			/** number of images done from total */
-			public int imagesDone;
-			/** total number of images */
-			public int imagesTotal;
-			/** number of items done from total */
-			public int done;
-			/** total number of items */
-			public int total;
-			public Throwable failure;
-
-			@Override public Progress clone() {
-				try {
-					return (Progress)super.clone();
-				} catch (CloneNotSupportedException ex) {
-					throw new InternalError(ex.toString());
-				}
-			}
-			@Override public String toString() {
-				return String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %s",
-						phase, done, total, imagesDone, imagesTotal, failure);
-			}
-
-			public enum Phase {
-				Init,
-				Data,
-				Images
-			}
-		}
-	}
-
+	private final Exporter exporter;
 	private final Context context;
 
 	public ExporterTask(Exporter exporter, Context context) {
@@ -105,7 +67,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		try {
 			file = Paths.getExportFile();
 			OutputStream os = new FileOutputStream(file); // will be closed by finalizeExport
-			// TODO wakelock?
+			// CONSIDER wakelock?
 			progress = new Progress();
 			progress.phase = Phase.Init;
 			publishStart();
@@ -138,7 +100,7 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		return progress;
 	}
 
-	// TODO check http://stackoverflow.com/questions/13229294/how-do-i-create-a-google-spreadsheet-with-a-service-account-and-share-to-other-g
+	// CONSIDER exporting Google Spreadsheet: http://stackoverflow.com/q/13229294/253468
 	protected void saveData() throws Throwable {
 		exporter.initData(cursor);
 
@@ -204,6 +166,8 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		}
 	}
 
+	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+	@SuppressWarnings({"EmptyMethod", "RedundantThrows"})
 	public interface Exporter {
 		void initExport(OutputStream os);
 		void finishExport() throws Throwable;
@@ -217,6 +181,43 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		void saveImage(Cursor cursor) throws Throwable;
 		void noImage(Cursor cursor) throws Throwable;
 		void finishImages(Cursor cursor) throws Throwable;
+	}
+
+	public interface ExportCallbacks {
+		void exportStarting();
+		void exportProgress(@NonNull Progress progress);
+		void exportFinished(@NonNull Progress progress);
+
+		final class Progress implements Cloneable {
+			public Phase phase;
+			/** number of images done from total */
+			public int imagesDone;
+			/** total number of images */
+			public int imagesTotal;
+			/** number of items done from total */
+			public int done;
+			/** total number of items */
+			public int total;
+			public Throwable failure;
+
+			@Override public Progress clone() {
+				try {
+					return (Progress)super.clone();
+				} catch (CloneNotSupportedException ex) {
+					throw new InternalError(ex.toString());
+				}
+			}
+			@Override public String toString() {
+				return String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %s",
+						phase, done, total, imagesDone, imagesTotal, failure);
+			}
+
+			public enum Phase {
+				Init,
+				Data,
+				Images
+			}
+		}
 	}
 
 	/** To prevent NullPointerException and null-checks in code */

@@ -25,8 +25,8 @@ public class LocationUtils {
 	private static double vincenty(double phi_s, double lambda_s, double phi_f, double lambda_f) {
 		double delta_lambda = lambda_s - lambda_f;
 		return atan2(sqrt(
-						pow(cos(phi_f) * sin(delta_lambda), 2)
-								+ pow(cos(phi_s) * sin(phi_f) - sin(phi_s) * cos(phi_f) * cos(delta_lambda), 2)
+				pow(cos(phi_f) * sin(delta_lambda), 2)
+						+ pow(cos(phi_s) * sin(phi_f) - sin(phi_s) * cos(phi_f) * cos(delta_lambda), 2)
 				),
 				sin(phi_s) * sin(phi_f) + cos(phi_s) * cos(phi_f) * cos(delta_lambda)
 		);

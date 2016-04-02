@@ -108,7 +108,7 @@ public /*static*/ abstract class DatabaseTools {
 		}
 		return defaultValue;
 	}
-	
+
 	public static Long singleLong(@NonNull Cursor cursor, @Nullable String columnName) {
 		try {
 			checkSingleRow(cursor);

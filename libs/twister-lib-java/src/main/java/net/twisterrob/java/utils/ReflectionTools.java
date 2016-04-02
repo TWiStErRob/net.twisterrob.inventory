@@ -26,7 +26,8 @@ public class ReflectionTools {
 	 * @throws NoSuchFieldException if a field with the specified name is not found in the class hierarchy.
 	 * @see Class#getDeclaredField(String)
 	 */
-	public static Field findDeclaredField(@Nonnull Class<?> clazz, @Nonnull String fieldName) throws NoSuchFieldException {
+	public static Field findDeclaredField(@Nonnull Class<?> clazz, @Nonnull String fieldName)
+			throws NoSuchFieldException {
 		//noinspection ConstantConditions
 		do {
 			try {

@@ -33,12 +33,14 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		setDynamicResource(DYN_DescriptionHintResource, R.string.property_description_hint);
 		setKeepNameInSync(true);
 	}
-	
+
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		((TypeAdapter)((AdapterView)view.findViewById(R.id.type_edit)).getAdapter()).setDisplayKeywords(true);
+		AdapterView<?> list = (AdapterView<?>)view.findViewById(R.id.type_edit);
+		TypeAdapter adapter = (TypeAdapter)list.getAdapter();
+		adapter.setDisplayKeywords(true);
 	}
-	
+
 	@Override protected void onStartLoading() {
 		DynamicLoaderManager manager = new DynamicLoaderManager(getLoaderManager());
 		Dependency<Cursor> populateTypes = manager.add(PropertyTypes.id(), null, getTypeCallback());

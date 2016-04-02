@@ -23,10 +23,10 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
 	private final CategoryItemEvents listener;
 
-	private ImageView image;
-	private TextView title;
-	private TextView stats;
-	private TextView count;
+	private final ImageView image;
+	private final TextView title;
+	private final TextView stats;
+	private final TextView count;
 
 	public CategoryViewHolder(View view, CategoryItemEvents events) {
 		super(view);
@@ -90,7 +90,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 	}
 
 	public void unBind() {
-		// TODO replace this with proper Glide.with calls
+		// FIXME replace this with proper Glide.with calls
 		Glide.clear(image);
 	}
 

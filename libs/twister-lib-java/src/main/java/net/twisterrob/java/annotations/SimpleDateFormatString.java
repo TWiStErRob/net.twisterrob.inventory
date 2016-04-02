@@ -1,6 +1,7 @@
 package net.twisterrob.java.annotations;
 
 import java.lang.annotation.*;
+import java.util.Locale;
 
 import javax.annotation.*;
 import javax.annotation.meta.*;
@@ -15,15 +16,14 @@ import javax.annotation.meta.*;
 public @interface SimpleDateFormatString {
 	When when() default When.ALWAYS;
 
-	static class Checker implements TypeQualifierValidator<SimpleDateFormatString> {
+	class Checker implements TypeQualifierValidator<SimpleDateFormatString> {
 		public @Nonnull When forConstantValue(@Nonnull SimpleDateFormatString annotation, Object value) {
 			if (!(value instanceof String)) {
 				return When.NEVER;
 			}
 
 			try {
-				@SuppressWarnings("unused")
-				java.text.SimpleDateFormat validFormat = new java.text.SimpleDateFormat((String)value);
+				new java.text.SimpleDateFormat((String)value, Locale.ROOT);
 			} catch (IllegalArgumentException e) {
 				return When.NEVER;
 			}

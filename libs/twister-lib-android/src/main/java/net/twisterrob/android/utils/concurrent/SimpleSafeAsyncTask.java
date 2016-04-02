@@ -19,7 +19,10 @@ public abstract class SimpleSafeAsyncTask<Param, Progress, Result>
 		onProgressUpdate(getSingleOrThrow("progress update", values, true));
 	}
 
-	protected void onProgressUpdate(@Nullable Progress value) {
+	// TODEL UnusedParameters: https://youtrack.jetbrains.com/issue/IDEA-154071
+	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+	@SuppressWarnings("EmptyMethod")
+	protected void onProgressUpdate(@SuppressWarnings({"unused", "UnusedParameters"}) @Nullable Progress value) {
 		// optional override
 	}
 

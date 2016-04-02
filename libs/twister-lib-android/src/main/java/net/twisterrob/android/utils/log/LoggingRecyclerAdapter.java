@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.java.annotations.DebugHelper;
 
+@DebugHelper
 public abstract class LoggingRecyclerAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 	private static final Logger LOG = LoggerFactory.getLogger(LoggingRecyclerAdapter.class);
 

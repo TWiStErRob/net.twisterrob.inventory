@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@id/progress_circular"
 	style="@style/Theme.AppTheme.RecyclerRefresh"
-    android:id="@id/progress_circular"
 	>
 	<ImageView
 		android:id="@+id/diagram"

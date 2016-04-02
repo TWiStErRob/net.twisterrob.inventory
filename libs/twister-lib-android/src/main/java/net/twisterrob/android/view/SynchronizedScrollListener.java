@@ -29,7 +29,7 @@ public class SynchronizedScrollListener extends OnScrollListener {
 	 * @param view to adjust the top of, it's useful to use a provider when the view is not yet available or may change,
 	 *             for example {@link android.support.v4.app.Fragment#getView()}
 	 */
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation") // deprecated without support Compat method
 	public SynchronizedScrollListener(float ratio, final RecyclerView list, ViewProvider view) {
 		this.ratio = ratio;
 		this.view = view;

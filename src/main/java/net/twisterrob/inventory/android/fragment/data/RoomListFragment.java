@@ -101,10 +101,10 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	}
 
 	private static class RoomSelectionActionMode extends SelectionActionMode {
-		private final BaseFragment fragment;
+		private final BaseFragment<?> fragment;
 		private final Builder builder;
 
-		public RoomSelectionActionMode(BaseFragment fragment, SelectionAdapter<?> adapter, Builder builder) {
+		public RoomSelectionActionMode(BaseFragment<?> fragment, SelectionAdapter<?> adapter, Builder builder) {
 			super(fragment.getActivity(), adapter);
 			this.fragment = fragment;
 			this.builder = builder;

@@ -21,8 +21,8 @@ import net.twisterrob.inventory.android.view.DrawerNavigator;
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
 import static net.twisterrob.inventory.android.activity.MainActivity.*;
 
-// TODO extract as composit class not inheritance
-public class DrawerActivity extends BaseActivity {
+// CONSIDER extract as composite class not inheritance
+public abstract class DrawerActivity extends BaseActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(DrawerActivity.class);
 	protected ActionBarDrawerToggle mDrawerToggle;
 	protected DrawerLayout mDrawerLayout;
@@ -84,8 +84,9 @@ public class DrawerActivity extends BaseActivity {
 	}
 
 	/** Initialize mDrawerRight */
+	@SuppressWarnings("EmptyMethod") // TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
 	protected void createDrawerRight() {
-
+		// optional override
 	}
 
 	protected final void refreshDrawers(Intent intent) {
@@ -101,8 +102,11 @@ public class DrawerActivity extends BaseActivity {
 		DrawerNavigator.get(mDrawerLeft).select(intent);
 	}
 
-	protected void refreshDrawerRight(Intent intent) {
-
+	// TODEL UnusedParameters: https://youtrack.jetbrains.com/issue/IDEA-154071
+	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+	@SuppressWarnings("EmptyMethod")
+	protected void refreshDrawerRight(@SuppressWarnings({"unused", "UnusedParameters"}) Intent intent) {
+		// optional override
 	}
 
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -118,6 +122,7 @@ public class DrawerActivity extends BaseActivity {
 	}
 
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
+		//noinspection SimplifiableIfStatement
 		if (hasDrawer() && mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}

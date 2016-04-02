@@ -5,9 +5,9 @@
 	package="net.twisterrob.android"
 	>
 
-	<!-- TODO for what? -->
+	<!-- TODEL for what? -->
 	<!--  <uses-permission android:name="android.permission.INTERNET" />-->
-	<!-- TODO for what? -->
+	<!-- TODEL for what? -->
 	<!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
 	<application android:supportsRtl="true" tools:ignore="UnusedAttribute">

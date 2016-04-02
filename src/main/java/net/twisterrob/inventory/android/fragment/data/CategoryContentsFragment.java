@@ -71,7 +71,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		}
 	}
 
-	@Override protected SingleHeaderAdapter createAdapter() {
+	@Override protected SingleHeaderAdapter<?> createAdapter() {
 		return new CategoryAndItemsAdapter();
 	}
 
@@ -95,6 +95,8 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	private Long getArgCategoryID() {
 		return (Long)getArguments().get(Extras.CATEGORY_ID);
 	}
+	/** @see #createLoadArgs() */
+	@SuppressWarnings("unused")
 	private boolean getArgFlatten() {
 		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
@@ -116,18 +118,18 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		return this;
 	}
 
-	private class CategoriesItemsController extends RecyclerViewLoaderController<CursorRecyclerAdapter, Cursor> {
+	private class CategoriesItemsController extends RecyclerViewLoaderController<CursorRecyclerAdapter<?>, Cursor> {
 		private final Callbacks callbackState = new Callbacks(getContext());
 
 		public CategoriesItemsController() {
 			super(CategoryContentsFragment.this);
 		}
 
-		@Override protected @NonNull CursorRecyclerAdapter setupList() {
+		@Override protected @NonNull CursorRecyclerAdapter<?> setupList() {
 			return setupGallery(list);
 		}
 
-		@Override protected void setData(CursorRecyclerAdapter adapter, Cursor data) {
+		@Override protected void setData(CursorRecyclerAdapter<?> adapter, Cursor data) {
 			adapter.swapCursor(data);
 			if (data != null && selectionMode != null) {
 				SelectionAdapter<?> selectionAdapter = selectionMode.getAdapter();
@@ -149,7 +151,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			text.setText(R.string.item_empty_category);
 		}
 
-		@Override protected boolean isEmpty(@NonNull CursorRecyclerAdapter adapter) {
+		@Override protected boolean isEmpty(@NonNull CursorRecyclerAdapter<?> adapter) {
 			return adapter.getItemCount() <= 1;
 		}
 

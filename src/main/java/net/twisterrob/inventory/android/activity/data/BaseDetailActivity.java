@@ -5,7 +5,6 @@ import org.slf4j.*;
 import android.os.Bundle;
 import android.support.annotation.PluralsRes;
 import android.support.v7.app.ActionBar.LayoutParams;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -17,7 +16,7 @@ import static android.view.ViewGroup.LayoutParams.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.SingleFragmentActivity;
+import net.twisterrob.inventory.android.activity.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 
 public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends SingleFragmentActivity<F> {
@@ -37,6 +36,7 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 		setActionBarTitle("...");
 	}
 
+	@SuppressWarnings("UnusedReturnValue") // best effort to do the editing in title, so it's safe to ignore
 	protected boolean setupTitleEditor() {
 		titleEditor = new TitleEditor(this, new TitleEditor.TitleEditListener() {
 			@Override public void titleChange(String oldName, String newName) {
@@ -87,11 +87,11 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 			void titleChange(String oldName, String newName);
 		}
 
-		private final AppCompatActivity activity;
+		private final BaseActivity activity;
 		private final TitleEditListener listener;
 		private final EditText editor;
 
-		public TitleEditor(AppCompatActivity activity, TitleEditListener listener) {
+		public TitleEditor(BaseActivity activity, TitleEditListener listener) {
 			this.activity = activity;
 			this.listener = listener;
 			editor = new EditText(activity);
@@ -100,7 +100,8 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 		}
 
 		@Override public void onClick(View v) {
-			oldName = activity.getSupportActionBar().getTitle().toString();
+			CharSequence oldTitle = activity.getSupportActionBar().getTitle();
+			oldName = oldTitle != null? oldTitle.toString() : null;
 			start(oldName);
 		}
 

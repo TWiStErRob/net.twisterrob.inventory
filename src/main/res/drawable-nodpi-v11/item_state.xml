@@ -5,7 +5,7 @@
 		<color android:color="#f00" />
 	</item>
 	-->
-	<!-- TODO figure out what these are
+	<!-- CONSIDER figure out what these are
 	<item android:state_focused="true">
 		<color android:color="#0f0" />
 	</item>
@@ -30,7 +30,7 @@
 			<stroke android:width="@dimen/marginHalf" android:color="@color/accentDark" />
 		</shape>
 	</item>
-	<!-- Selected spinner item, requires API 11, FIXME figure something out for pre-11 -->
+	<!-- Selected spinner item, requires API 11, CONSIDER figure something out for pre-11 -->
 	<item android:state_activated="true">
 		<color android:color="@color/primary" />
 	</item>

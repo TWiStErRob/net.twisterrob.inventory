@@ -188,7 +188,7 @@
 		where c._id = ? and ct._id <> -1 -- don't return category_internal
 		order by _id, level
 	"]]></string>
-	<!-- TODO rewrite with one argument and use it for by_room -->
+	<!-- CONSIDER rewrite with one argument and use it for by_room -->
 	<string name="query_items_by_item" tools:ignore="Typos" translatable="false"><![CDATA["
 		select
 			'item'                                          as type,
@@ -618,7 +618,7 @@
 			join Item_Path_Node ip ON ip.item = i._id and ip.node = i._id
 			join Room           r  ON ip.root = r.root
 			join Property       p  ON r.property = p._id
--- TODO			order by type, _id?
+-- FIXME			order by type, _id?
 	"]]></string>
 
 

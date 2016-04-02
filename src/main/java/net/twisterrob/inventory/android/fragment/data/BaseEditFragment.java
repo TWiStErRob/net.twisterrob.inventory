@@ -48,7 +48,7 @@ import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.content.model.helpers.Hinter;
 import net.twisterrob.inventory.android.content.model.helpers.Hinter.CategorySelectedEvent;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
-import net.twisterrob.inventory.android.utils.*;
+import net.twisterrob.inventory.android.utils.NestedScrollableRecyclerViewListener;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
@@ -179,7 +179,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		return inflater.inflate(R.layout.fragment_edit, container, false);
 	}
 
-	// TODO maybe move overriding logic into this class
+	// CONSIDER moving overriding logic into this class
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		image = (ImageView)view.findViewById(R.id.image);
@@ -217,6 +217,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 
+		//noinspection RedundantCast verify that btn_save is indeed a button 
 		((Button)view.findViewById(R.id.btn_save)).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				save();
@@ -277,7 +278,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				updateHint(name.getText(), false);
 			}
 		});
-		// TODO setOnItemLongClickListener is not supported, any way to work around? So user has the same "tooltip" as in ChangeTypeDialog
+		// CONSIDER setOnItemLongClickListener is not supported, any way to work around? So user has the same "tooltip" as in ChangeTypeDialog
 		type.setOnLongClickListener(new OnLongClickListener() {
 			@Override public boolean onLongClick(View view) {
 				ChangeTypeDialog.showKeywords(view.getContext(), getTypeId());
@@ -355,13 +356,12 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 	/** Create the DTO object with id set and fill in all fields needed to save (except the ones inherited from ImagedDTO) */
 	protected abstract DTO createDTO();
+	@SuppressWarnings("RedundantThrows")
 	protected abstract DTO onSave(Database db, DTO param) throws Exception;
 	protected abstract void onSaved(DTO result);
 
-	protected boolean doValidate() {
-		boolean valid = true;
-		valid &= doValidateTitle();
-		return valid;
+	private boolean doValidate() {
+		return doValidateTitle();
 	}
 
 	protected boolean doValidateTitle() {
@@ -409,8 +409,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	private void pickPicture() {
-		Intent intent = PictureHelper.createGalleryIntent();
-		startActivityForResult(intent, ImageTools.REQUEST_CODE_GET_PICTURE);
+		startActivityForResult(ImageTools.createGalleryIntent(), ImageTools.REQUEST_CODE_GET_PICTURE);
 	}
 
 	private void takePicture() {
@@ -516,7 +515,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 					.into(image);
 		} else if (currentImage instanceof byte[]) {
 			Pic
-					.baseRequest(byte[].class) // no need for signature, the byte[] doesn't change -> TODO glide#437
+					.baseRequest(byte[].class) // no need for signature, the byte[] doesn't change -> TOFIX glide#437
 					.diskCacheStrategy(DiskCacheStrategy.NONE)
 					.skipMemoryCache(true)
 					.signature(new LongSignature())

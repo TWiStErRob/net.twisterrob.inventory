@@ -56,6 +56,7 @@ public class VariantDatabase {
 
 		long start = System.nanoTime();
 		SQLiteStatement insert = db.compileStatement(m_resources.getString(insertResource));
+		//noinspection TryFinallyCanBeTryWithResources
 		try {
 			for (int i = 0; i < params.length; ++i) {
 				DatabaseUtils.bindObjectToProgram(insert, i + 1, params[i]);

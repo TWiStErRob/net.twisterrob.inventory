@@ -67,8 +67,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	}
 
 	public static Intent chooser() {
-		Intent intent = new Intent(App.getAppContext(), BackupActivity.class);
-		return intent;
+		return new Intent(App.getAppContext(), BackupActivity.class);
 	}
 
 	@Override public void onRefresh() {
@@ -104,8 +103,8 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 
 		class ViewHolder extends RecyclerView.ViewHolder {
-			TextView text;
-			TextView count;
+			final TextView text;
+			final TextView count;
 
 			public ViewHolder(View view) {
 				super(view);
@@ -163,7 +162,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			return adapter;
 		}
 
-		@Override protected void setData(ImportFilesAdapter adapter, File[] data) {
+		@Override protected void setData(ImportFilesAdapter adapter, File... data) {
 			adapter.setFiles(data);
 		}
 

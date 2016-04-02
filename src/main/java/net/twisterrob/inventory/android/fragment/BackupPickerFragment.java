@@ -28,26 +28,23 @@ public class BackupPickerFragment extends DialogFragment {
 
 	private BackupPickerListener mListener;
 
-	@Override
-	public void onAttach(Activity activity) {
+	@Override public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		mListener = AndroidTools.findAttachedListener(this, BackupPickerListener.class);
 	}
 
-	@Override
-	public void onDetach() {
+	@Override public void onDetach() {
 		mListener = null;
 		super.onDetach();
 	}
 
-	@Override
-	public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
+	@Override public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
 		File root = Constants.Paths.getPhoneHome();
 		final File[] files = getImportableFiles(root);
 		Arrays.sort(files);
 		return new AlertDialog.Builder(getActivity())
 				.setTitle(getArgTitle())
-						//.setMessage(R.string.backup_select)
+//				.setMessage(R.string.backup_select)
 				.setItems(IOTools.getNames(files), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						File file = files[which];

@@ -34,8 +34,8 @@ public class ListsActivity extends FragmentActivity implements ListsEvents {
 		getFragment().refresh();
 	}
 
-	private BaseFragment getFragment() {
-		return (BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
+	private BaseFragment<?> getFragment() {
+		return (BaseFragment<?>)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 
 	public static Intent manage(long itemID) {

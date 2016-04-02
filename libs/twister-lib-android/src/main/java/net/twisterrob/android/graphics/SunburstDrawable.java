@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 
+@SuppressWarnings("UnusedParameters")
 public class SunburstDrawable<T> extends Drawable {
 	private static final int BASE_LEVEL = 0;
 	private static final float RANGE_START = 0;
@@ -230,7 +231,7 @@ public class SunburstDrawable<T> extends Drawable {
 		private final float[] color = new float[] {0, 0.5f, 1.0f};
 		private final float[] textColor = new float[] {0, 1.0f, 0.5f};
 
-		private static Paint randomize(Paint paint, float[] color) {
+		private static Paint randomize(Paint paint, float... color) {
 			color[0] = (float)(Math.random() * 360);
 			paint.setColor(Color.HSVToColor(color));
 			return paint;

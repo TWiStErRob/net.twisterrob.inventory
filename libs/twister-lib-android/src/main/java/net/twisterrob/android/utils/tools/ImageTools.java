@@ -15,18 +15,22 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.*;
 import android.provider.*;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import net.twisterrob.java.io.IOTools;
 
-// TODO crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
-// TODO crop http://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
+// CONSIDER crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
+// CONSIDER crop http://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
 @SuppressWarnings("unused")
 public /*static*/ abstract class ImageTools {
 	public static final short REQUEST_CODE_GET_PICTURE = 0x41C0;
 	public static final short REQUEST_CODE_TAKE_PICTURE = 0x41C1;
 	public static final short REQUEST_CODE_PICK_GALLERY = 0x41C2;
 	public static final short REQUEST_CODE_CROP_PICTURE = 0x41C3;
+	private static final String NO_SORT = null;
+	private static final String NO_SELECTION = null;
+	private static final String[] NO_ARGS = null;
 
 	public static boolean takePicture(Activity activity, File targetFile) {
 		if (activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
@@ -42,38 +46,42 @@ public /*static*/ abstract class ImageTools {
 		return false;
 	}
 
-	public static void getPicture(Activity activity, File targetFile) {
-		Uri outputFileUri = Uri.fromFile(targetFile);
-
-		// Camera
-		List<Intent> camIntents = new ArrayList<Intent>();
+	public static List<Intent> createCameraIntents(Context context, File file) {
+		Uri outputFileUri = Uri.fromFile(file);
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		PackageManager packageManager = activity.getPackageManager();
+		PackageManager packageManager = context.getPackageManager();
 		List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+		List<Intent> cameraIntents = new ArrayList<>();
 		for (ResolveInfo res : listCam) {
 			Intent intent = new Intent(captureIntent);
 			intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
 			intent.setPackage(res.activityInfo.packageName);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-			camIntents.add(intent);
+			cameraIntents.add(intent);
 		}
-
-		// Filesystem
-		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-		galleryIntent.setType("image/*");
-
-		// Chooser of filesystem options
-		Intent chooserIntent = Intent.createChooser(galleryIntent, null);
-		// Add the camera options
-		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, camIntents.toArray(new Parcelable[camIntents.size()]));
-
-		activity.startActivityForResult(chooserIntent, REQUEST_CODE_GET_PICTURE);
+		return cameraIntents;
 	}
 
+	public static Intent createGalleryIntent() {
+		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+		galleryIntent.setType("image/*");
+		return galleryIntent;
+	}
+
+	public static @NonNull Intent createCaptureIntent(Activity activity, File targetFile) {
+		List<Intent> camIntents = createCameraIntents(activity, targetFile);
+		// Chooser of filesystem options
+		Intent chooserIntent = Intent.createChooser(createGalleryIntent(), null);
+		// Add the camera options
+		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, camIntents.toArray(new Parcelable[camIntents.size()]));
+		return chooserIntent;
+	}
+
+	public static void getPicture(Activity activity, File targetFile) {
+		activity.startActivityForResult(createCaptureIntent(activity, targetFile), REQUEST_CODE_GET_PICTURE);
+	}
 	public static void pickImageInGallery(Activity activity) {
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		intent.setType("image/*");
-		activity.startActivityForResult(intent, REQUEST_CODE_PICK_GALLERY);
+		activity.startActivityForResult(createGalleryIntent(), REQUEST_CODE_PICK_GALLERY);
 	}
 
 	public static void openImageInGallery(Activity activity, File sourceFile) {
@@ -167,14 +175,18 @@ public /*static*/ abstract class ImageTools {
 	}
 
 	public static int getOrientation(Context context, Uri photoUri) {
-		Cursor cursor = context.getContentResolver().query(photoUri,
-				new String[] {MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
-
+		@SuppressWarnings("resource") Cursor cursor = context.getContentResolver().query(photoUri,
+				new String[] {MediaStore.Images.ImageColumns.ORIENTATION}, NO_SELECTION, NO_ARGS, NO_SORT);
 		int result = ExifInterface.ORIENTATION_UNDEFINED;
-		if (cursor.moveToFirst()) {
-			result = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION));
+		if (cursor != null) {
+			try {
+				if (cursor.moveToFirst()) {
+					result = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION));
+				}
+			} finally {
+				cursor.close();
+			}
 		}
-		cursor.close();
 		return result;
 	}
 
@@ -229,23 +241,16 @@ public /*static*/ abstract class ImageTools {
 	}
 
 	public static Uri getPictureUriFromResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == REQUEST_CODE_GET_PICTURE) {
-				boolean isCamera = false;
-				if (data != null) {
-					isCamera = MediaStore.ACTION_IMAGE_CAPTURE.equals(data.getAction());
-				}
-
-				Uri selectedImageUri;
-				if (isCamera) {
-					selectedImageUri = data != null? (Uri)data.getParcelableExtra(MediaStore.EXTRA_OUTPUT) : null;
-				} else {
-					selectedImageUri = data == null? null : data.getData();
-				}
-				return selectedImageUri;
+		Uri selectedImageUri = null;
+		if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_GET_PICTURE && data != null) {
+			boolean isCamera = MediaStore.ACTION_IMAGE_CAPTURE.equals(data.getAction());
+			if (isCamera) {
+				selectedImageUri = data.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+			} else {
+				selectedImageUri = data.getData();
 			}
 		}
-		return null;
+		return selectedImageUri;
 	}
 
 	/**
@@ -304,7 +309,7 @@ public /*static*/ abstract class ImageTools {
 			if ("com.google.android.apps.photos.content".equals(uri.getAuthority())) {
 				result = uri.getLastPathSegment();
 			} else {
-				result = getDataColumn(context, uri, null, null);
+				result = getDataColumn(context, uri, NO_SELECTION, NO_ARGS);
 			}
 		} else if ("file".equalsIgnoreCase(uri.getScheme())) { // File
 			result = uri.getPath();
@@ -330,7 +335,7 @@ public /*static*/ abstract class ImageTools {
 				String id = DocumentsContract.getDocumentId(uri);
 				Uri base = Uri.parse("content://downloads/public_downloads");
 				Uri contentUri = ContentUris.withAppendedId(base, Long.valueOf(id));
-				return getDataColumn(context, contentUri, null, null);
+				return getDataColumn(context, contentUri, NO_SELECTION, NO_ARGS);
 			} else if ("com.android.providers.media.documents".equals(uri.getAuthority())) { // MediaProvider
 				String docId = DocumentsContract.getDocumentId(uri);
 				String[] split = docId.split(":");
@@ -345,7 +350,7 @@ public /*static*/ abstract class ImageTools {
 					contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 				}
 
-				return getDataColumn(context, contentUri, "_id=?", new String[] {split[1]});
+				return getDataColumn(context, contentUri, "_id=?", split[1]);
 			}
 		}
 		return null;
@@ -362,11 +367,12 @@ public /*static*/ abstract class ImageTools {
 	 * @return The value of the _data column, which is typically a file path.
 	 * @author paulburke
 	 */
-	public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+	public static String getDataColumn(Context context, Uri uri, String selection, String... selectionArgs) {
 		final String column = "_data";
 		Cursor cursor = null;
 		try {
-			cursor = context.getContentResolver().query(uri, new String[] {column}, selection, selectionArgs, null);
+			//noinspection resource cursor is closed nicely
+			cursor = context.getContentResolver().query(uri, new String[] {column}, selection, selectionArgs, NO_SORT);
 			if (cursor != null && cursor.moveToFirst()) {
 				//DatabaseTools.dumpCursor(cursor);
 				return cursor.getString(cursor.getColumnIndexOrThrow(column));

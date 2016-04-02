@@ -12,7 +12,7 @@ import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
-public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends CursorRecyclerAdapter<VH> {
+public class BaseImagedAdapter<VH extends BaseImagedAdapter<?>.ViewHolder> extends CursorRecyclerAdapter<VH> {
 	private final int layoutResource;
 	private final RecyclerViewItemEvents listener;
 
@@ -26,6 +26,9 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {
+		public final ImageView image;
+		public final TextView title;
+
 		public ViewHolder(View view) {
 			super(view);
 			image = (ImageView)view.findViewById(R.id.image);
@@ -43,9 +46,6 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter.ViewHolder> extends 
 				}
 			});
 		}
-
-		public final ImageView image;
-		public final TextView title;
 	}
 
 	@SuppressWarnings("unchecked")

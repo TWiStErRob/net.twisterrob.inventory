@@ -25,11 +25,12 @@ public class InventoryDatabase {
 		return INSTANCE;
 	}
 
-	public long createProperty(ContentResolver cr, String name, String image) {
+	public long createProperty(ContentResolver cr, String name, String image) throws NullPointerException {
 		ContentValues cv = new ContentValues();
 		cv.put(Item.NAME, name);
 		cv.put(Item.IMAGE, image);
 		Uri result = cr.insert(Item.ITEM_URI, cv);
+		//noinspection ConstantConditions not yet used, likely will change
 		return Long.parseLong(result.getLastPathSegment());
 	}
 

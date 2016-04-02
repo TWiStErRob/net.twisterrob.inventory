@@ -11,9 +11,9 @@ import net.twisterrob.inventory.android.fragment.BaseDialogFragment;
 
 @SuppressLint("ValidFragment") // this should never be re-created: setRetainInstance(true)
 class ConfirmedCleanAction extends BaseDialogFragment implements DialogInterface.OnClickListener {
-	private NoProgressTaskExecutor.UITask task;
-	private CharSequence title;
-	private CharSequence message;
+	private final NoProgressTaskExecutor.UITask task;
+	private final CharSequence title;
+	private final CharSequence message;
 
 	ConfirmedCleanAction(CharSequence title, CharSequence message, NoProgressTaskExecutor.UITask task) {
 		this.title = title;

@@ -6,7 +6,7 @@ import android.graphics.Rect;
 
 // http://www.blackpawn.com/texts/lightmaps/default.html
 public class RectPacker<T> {
-	public Node<T> root = new Node<T>();
+	public final Node<T> root = new Node<>();
 
 	public RectPacker(Rect rect) {
 		root.rect = rect;
@@ -46,8 +46,8 @@ public class RectPacker<T> {
 					return null;
 				}
 
-				child1 = new Node<T>();
-				child2 = new Node<T>();
+				child1 = new Node<>();
+				child2 = new Node<>();
 
 				int width = bounds.width();
 				int height = bounds.width();

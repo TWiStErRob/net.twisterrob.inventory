@@ -220,7 +220,7 @@ public enum Loaders {
 	private static class LoadersCursorLoader extends SimpleCursorLoader {
 		private final Loaders loaders;
 		private final Bundle args;
-		private long timeCreateLoader = System.nanoTime();
+		private final long timeCreateLoader = System.nanoTime();
 		private long timeForceLoad = timeCreateLoader;
 		private long timeCursorWanted = timeCreateLoader; // BG entry
 		private long timeCursorCreated = timeCreateLoader; // in BG

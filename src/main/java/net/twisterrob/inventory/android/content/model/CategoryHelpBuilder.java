@@ -186,7 +186,7 @@ public class CategoryHelpBuilder {
 
 	private class WriteCategoryTOC extends RestoreStructureAlgo<Cursor, Cursor, Void> {
 		private final StringBuilder out;
-		/** TODO not implemented for deeper levels */
+		// FIXME not implemented for deeper levels
 		private final int maxLevel = 1;
 		WriteCategoryTOC(StringBuilder out) {
 			this.out = out;

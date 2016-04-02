@@ -11,6 +11,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 import android.widget.ExpandableListView.OnGroupClickListener;
 
+// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+@SuppressWarnings({"unused", "EmptyMethod", "UnusedParameters"})
 public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH>
 		extends android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;
@@ -150,20 +152,12 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	protected abstract void bindLevel1View(Level1VH level1Holder, Level1 currentLevel1, List<Level2> currentLevel2,
 			View level1ConvertView);
 
-	/**
-	 * @param level1Holder
-	 * @param level1ConvertView
-	 */
 	protected void bindEmptyLevel1View(Level1VH level1Holder, View level1ConvertView) {
 		// optional @Override
 	}
 
 	// Level 2
 
-	/**
-	 * @param list
-	 * @param adapter
-	 */
 	protected void bindLevel2Groups(ExpandableListView list, BaseExpandableListAdapter adapter) {
 		// optional @Override
 	}
@@ -175,11 +169,6 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	protected abstract void bindLevel2View(Level2VH level2Holder, Level1 currentLevel1, Level2 currentLevel2,
 			List<Level3> currentLevel3, View level2ConvertView);
 
-	/**
-	 * @param level2Holder
-	 * @param currentLevel1
-	 * @param level1ConvertView
-	 */
 	protected void bindEmptyLevel2View(Level2VH level2Holder, Level1 currentLevel1, View level1ConvertView) {
 		// optional @Override
 	}
@@ -193,12 +182,6 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 	protected abstract void bindLevel3View(Level3VH level3Holder, Level1 currentLevel1, Level2 currentLevel2,
 			Level3 currentLevel3, View level3ConvertView);
 
-	/**
-	 * @param level3Holder
-	 * @param currentLevel1
-	 * @param currentLevel2
-	 * @param level3ConvertView
-	 */
 	protected void bindEmptyLevel3View(Level3VH level3Holder, Level1 currentLevel1, Level2 currentLevel2,
 			View level3ConvertView) {
 		// optional @Override
@@ -256,11 +239,6 @@ public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1V
 			assert parent == this;
 			outerList.requestLayout();
 			return false;
-		}
-
-		@Override
-		public void setOnGroupClickListener(OnGroupClickListener onGroupClickListener) {
-			super.setOnGroupClickListener(onGroupClickListener);
 		}
 	}
 }

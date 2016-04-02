@@ -11,21 +11,21 @@ import android.database.*;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 
 import static android.app.SearchManager.*;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.InventoryContract.*;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
 
 import static net.twisterrob.inventory.android.content.InventoryContract.*;
 
-// TODO http://www.grokkingandroid.com/android-tutorial-writing-your-own-content-provider/
-// TODO http://www.vogella.com/tutorials/AndroidSQLite/article.html
-// TODO https://code.google.com/p/iosched/source/browse/#git%2Fandroid%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgoogle%2Fandroid%2Fapps%2Fiosched%2Fprovider
-// TODO https://raw.githubusercontent.com/android/platform_packages_providers_contactsprovider/master/src/com/android/providers/contacts/ContactsProvider2.java
+// CONSIDER http://www.grokkingandroid.com/android-tutorial-writing-your-own-content-provider/
+// CONSIDER http://www.vogella.com/tutorials/AndroidSQLite/article.html
+// CONSIDER https://code.google.com/p/iosched/source/browse/#git%2Fandroid%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgoogle%2Fandroid%2Fapps%2Fiosched%2Fprovider
+// CONSIDER https://raw.githubusercontent.com/android/platform_packages_providers_contactsprovider/master/src/com/android/providers/contacts/ContactsProvider2.java
 public class InventoryProvider extends ContentProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(InventoryProvider.class);
 
@@ -48,8 +48,11 @@ public class InventoryProvider extends ContentProvider {
 
 	protected static final String URI_PATH_ID = "/#";
 	protected static final String URI_PATH_IMAGE = "/" + Helpers.IMAGE_URI_SEGMENT;
-	protected static final String URI_PATH_ANY = "/*";
-	private static final String COLUMN_DATA_URI = "_data";
+
+	//	protected static final String URI_PATH_ANY = "/*";
+//	private static final String COLUMN_DATA_URI = "_data";
+//	private static final String COLUMN_SIZE = "_size";
+//	private static final String COLUMN_DISPLAY_NAME = "_display_name";
 	public static final String COLUMN_BLOB = "_dataBlob";
 
 	private static final UriMatcher URI_MATCHER;
@@ -76,12 +79,12 @@ public class InventoryProvider extends ContentProvider {
 		return false;
 	}
 
-	@Override public String getType(Uri uri) {
+	@Override public String getType(@NonNull Uri uri) {
 		String type = getTypeInternal(uri);
 		LOG.trace("getType/{}({}): {}", resolveMatch(URI_MATCHER.match(uri)), uri, type);
 		return type;
 	}
-	private String getTypeInternal(Uri uri) {
+	private String getTypeInternal(@NonNull Uri uri) {
 		switch (URI_MATCHER.match(uri)) {
 			case ITEM_IMAGE:
 			case ROOM_IMAGE:
@@ -114,7 +117,7 @@ public class InventoryProvider extends ContentProvider {
 		}
 	}
 
-	@Override public Cursor query(Uri uri,
+	@Override public Cursor query(@NonNull Uri uri,
 			String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		LOG.trace("query/{}({}, {}, {}, {}, {})",
 				resolveMatch(URI_MATCHER.match(uri)), uri, projection, selection, selectionArgs, sortOrder);
@@ -133,8 +136,10 @@ public class InventoryProvider extends ContentProvider {
 					uri, projection, selection, selectionArgs, sortOrder, (end - start) / 1e6);
 		}
 	}
-	private Cursor queryInternal(Uri uri,
-			String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+	private Cursor queryInternal(@NonNull Uri uri,
+			@SuppressWarnings("UnusedParameters") String[] projection,
+			@SuppressWarnings("UnusedParameters") String selection, String[] selectionArgs,
+			@SuppressWarnings("UnusedParameters") String sortOrder) {
 		switch (URI_MATCHER.match(uri)) {
 			case SEARCH_ITEMS_SUGGEST: {
 				// uri.getLastPathSegment().toLowerCase(Locale.getDefault());
@@ -191,25 +196,26 @@ public class InventoryProvider extends ContentProvider {
 		return cursor;
 	}
 
-	@Override public Uri insert(Uri uri, ContentValues values) {
+	@Override public Uri insert(@NonNull Uri uri, ContentValues values) {
 		LOG.trace("insert/{}({}, {})",
 				resolveMatch(URI_MATCHER.match(uri)), uri, values);
 		throw new UnsupportedOperationException("Unknown URI: " + uri);
 	}
 
-	@Override public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+	@Override public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		LOG.trace("update/{}({}, {}, {}, {})",
 				resolveMatch(URI_MATCHER.match(uri)), uri, values, selection, selectionArgs);
 		throw new UnsupportedOperationException("Unknown URI: " + uri);
 	}
 
-	@Override public int delete(Uri uri, String selection, String[] selectionArgs) {
+	@Override public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 		LOG.trace("delete/{}({}, {}, {})",
 				resolveMatch(URI_MATCHER.match(uri)), uri, selection, selectionArgs);
 		throw new UnsupportedOperationException("Unknown URI: " + uri);
 	}
 
-	@Override public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+	@Override public ParcelFileDescriptor openFile(@NonNull Uri uri, @NonNull String mode)
+			throws FileNotFoundException {
 		LOG.trace("openFile/{}({}, {})",
 				resolveMatch(URI_MATCHER.match(uri)), uri, mode);
 		switch (URI_MATCHER.match(uri)) {
@@ -223,13 +229,16 @@ public class InventoryProvider extends ContentProvider {
 						net.twisterrob.inventory.android.content.contract.Category.TYPE_IMAGE);
 				int svgID = AndroidTools.getRawResourceID(getContext(), name);
 				// The following only works if the resource is uncompressed: android.aaptOptions.noCompress 'svg'
+				//noinspection ConstantConditions,resource AssetFileDescriptor is closed by caller
 				return getContext().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();
 		}
 		return super.openFile(uri, mode);
 	}
 
 	/** @see ContentProvider#openFileHelper(android.net.Uri, java.lang.String) */
-	protected final ParcelFileDescriptor openBlobHelper(Uri uri, String mode) throws FileNotFoundException {
+	protected final ParcelFileDescriptor openBlobHelper(@NonNull Uri uri,
+			@SuppressWarnings("UnusedParameters") @NonNull String mode) throws FileNotFoundException {
+		//noinspection resource
 		Cursor c = query(uri, new String[] {COLUMN_BLOB}, null, null, null);
 		if (c == null) {
 			throw new NullPointerException("No cursor returned for " + uri);

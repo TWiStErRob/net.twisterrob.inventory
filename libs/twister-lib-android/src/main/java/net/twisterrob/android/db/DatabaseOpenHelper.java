@@ -34,7 +34,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private static final String DB_TEST_FILE = "%s.test.sql";
 	private static final String DB_DEVELOPMENT_FILE = "%s.development.sql";
 	private static final CursorFactory s_factory = VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT
-			? new LoggingCursorFactory(BuildConfig.DEBUG)
+			? (BuildConfig.DEBUG? new LoggingCursorFactory() : null)
 			: null;
 
 	protected final AssetManager assets;
@@ -158,6 +158,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	@DebugHelper
 	public void restore(File from) throws IOException {
+		@SuppressWarnings("resource")
 		File target = new File(getReadableDatabase().getPath());
 		close();
 		if (!target.delete()) {
@@ -193,6 +194,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		String statement = null;
 		BufferedReader reader = null;
 		try {
+			//noinspection resource closed in finally
 			s = assets.open(dbSchemaFile);
 			reader = new BufferedReader(new InputStreamReader(s, IOTools.ENCODING));
 			while ((statement = DatabaseOpenHelper.getNextStatement(reader)) != null) {

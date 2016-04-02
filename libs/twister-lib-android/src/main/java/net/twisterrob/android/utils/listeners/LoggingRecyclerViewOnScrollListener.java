@@ -4,6 +4,9 @@ import org.slf4j.*;
 
 import android.support.v7.widget.RecyclerView;
 
+import net.twisterrob.java.annotations.DebugHelper;
+
+@DebugHelper
 public class LoggingRecyclerViewOnScrollListener extends RecyclerView.OnScrollListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger("RecyclerViewOnScroll");
 	private final Logger LOG;

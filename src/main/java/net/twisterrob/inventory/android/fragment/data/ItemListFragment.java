@@ -150,6 +150,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		return fragment;
 	}
 
+	// XXX remove
 	@Deprecated public static ItemListFragment newCategoryInstance(long categoryID, boolean include) {
 		ItemListFragment fragment = new ItemListFragment();
 

@@ -6,22 +6,22 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.*;
 
 public class IndentingXMLStreamWriter implements XMLStreamWriter {
-	private XMLStreamWriter writer;
+	private final XMLStreamWriter writer;
 
-	private static enum State {
+	private enum State {
 		NONE,
 		ELEMENT,
 		DATA
 	}
 
 	private State state;
-	private Stack<State> states;
+	private final Stack<State> states;
 	private int depth;
 
 	public IndentingXMLStreamWriter(XMLStreamWriter writer) {
 		this.writer = writer;
 		state = State.NONE;
-		states = new Stack<State>();
+		states = new Stack<>();
 		depth = 0;
 	}
 

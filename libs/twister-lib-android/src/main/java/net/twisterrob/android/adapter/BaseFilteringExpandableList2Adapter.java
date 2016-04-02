@@ -40,7 +40,7 @@ public abstract class BaseFilteringExpandableList2Adapter<Group, Child, GroupVH,
 	@Override
 	public List<Child> getChildren(Group group) {
 		if (m_filteredChildren == null) {
-			m_filteredChildren = new HashMap<Group, List<Child>>();
+			m_filteredChildren = new HashMap<>();
 		}
 		List<Child> filteredChildren = m_filteredChildren.get(group);
 		if (filteredChildren == null) {

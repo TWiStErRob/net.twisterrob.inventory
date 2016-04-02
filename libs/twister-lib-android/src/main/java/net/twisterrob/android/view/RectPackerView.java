@@ -21,7 +21,7 @@ import net.twisterrob.android.utils.tools.ColorTools;
  * </pre></code>
  */
 public class RectPackerView extends View {
-	private Paint paint = new Paint();
+	private final Paint paint = new Paint();
 	private RectPacker.Node<Integer> root;
 
 	public RectPackerView(Context context) {
@@ -43,7 +43,7 @@ public class RectPackerView extends View {
 	private void init() {
 		paint.setStyle(Paint.Style.STROKE);
 
-		RectPacker<Integer> packer = new RectPacker<Integer>(new Rect(0, 0, 1000, 1200));
+		RectPacker<Integer> packer = new RectPacker<>(new Rect(0, 0, 1000, 1200));
 		this.root = packer.root;
 		int n = 6;
 		float x = root.rect.width();

@@ -47,10 +47,6 @@ public class SQLPrinter implements Printer {
 		prev = c;
 	}
 
-	public static void x() {
-		ClassLoader loader = SQLPrinter.class.getClassLoader();
-		System.out.println(loader.getResource("net/twisterrob/inventory/database/SQLPrinter.class"));
-	}
 	@Override public void finish(Writer output) throws IOException {
 		if (prev != null) {
 			output.write(FOOTER);

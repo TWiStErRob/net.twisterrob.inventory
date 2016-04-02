@@ -8,13 +8,15 @@ import android.content.Context;
 import android.view.*;
 import android.widget.*;
 
+// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+@SuppressWarnings({"unused", "EmptyMethod", "UnusedParameters"})
 public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filterable {
 	private List<T> m_allItems;
 	protected List<T> m_items;
 	protected final Context m_context;
 	protected final LayoutInflater m_inflater;
 	private boolean m_hasDefaultItem;
-	private SimplifyingFilter filter = new SimplifyingFilter();
+	private final SimplifyingFilter filter = new SimplifyingFilter();
 
 	public BaseListAdapter(Context context, Collection<T> items) {
 		this(context, items, false);
@@ -30,7 +32,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		this.m_context = context;
 		m_hasDefaultItem = hasDefaultItem;
 		this.m_inflater = LayoutInflater.from(m_context);
-		setItems(items instanceof List? (List<T>)items : new ArrayList<T>(items));
+		setItems(items instanceof List? (List<T>)items : new ArrayList<>(items));
 	}
 
 	public int getCount() {
@@ -56,7 +58,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 	public void setItems(Collection<T> items) {
 		int prefixSize = m_hasDefaultItem? 1 : 0;
 		int size = items == null? 0 : items.size();
-		ArrayList<T> newItems = new ArrayList<T>(prefixSize + size);
+		ArrayList<T> newItems = new ArrayList<>(prefixSize + size);
 		if (m_hasDefaultItem) {
 			newItems.add(null);
 		}
@@ -122,9 +124,6 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 
 	/**
 	 * Update the view-model object {@link T} on the first usage.
-	 *
-	 * @param holder
-	 * @param currentItem
 	 */
 	protected void bindModel(VH holder, T currentItem) {
 		// optional @Override
@@ -132,10 +131,6 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 
 	protected abstract void bindView(VH holder, T currentItem, View convertView);
 
-	/**
-	 * @param holder
-	 * @param convertView
-	 */
 	protected void bindEmptyView(VH holder, View convertView) {
 		if (m_hasDefaultItem) {
 			throw new IllegalStateException("You must override at least bindEmptyView if hasDefaultItem is true");
@@ -203,7 +198,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		protected FilterResults performFiltering(CharSequence constraint) {
 			LOG.debug("performFiltering: {}", constraint);
 			FilterResults results = new FilterResults();
-			List<T> resultList = new ArrayList<T>();
+			List<T> resultList = new ArrayList<>();
 			if (constraint == null) {
 				resultList = BaseListAdapter.this.filterNoQuery(getAllItems(), resultList);
 			} else {

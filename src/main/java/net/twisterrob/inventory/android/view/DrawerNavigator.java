@@ -32,7 +32,7 @@ public class DrawerNavigator {
 	private final int iconSize;
 	private OnNavigationItemSelectedListener navigationItemSelectedListener;
 
-	@SuppressLint("PrivateResource") // overridden resource, TODO report to AS team
+	@SuppressLint("PrivateResource") // overridden resource, XXX report to AS team
 	public DrawerNavigator(NavigationView nav, Activity activity) {
 		this.nav = nav;
 		this.activity = activity;

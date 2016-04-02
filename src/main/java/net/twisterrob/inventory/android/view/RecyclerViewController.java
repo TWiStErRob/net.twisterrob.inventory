@@ -6,14 +6,13 @@ import android.support.annotation.*;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.*;
 import android.view.*;
 import android.view.View.OnClickListener;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
 
-public abstract class RecyclerViewController<A extends Adapter, D> {
+public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, D> {
 	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewController.class);
 
 	private SwipeRefreshLayout progress;
@@ -24,7 +23,7 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 	private A adapter;
 	private D pendingData;
 
-	private Runnable finishLoading = new Runnable() {
+	private final Runnable finishLoading = new Runnable() {
 		@Override public void run() {
 			progress.setRefreshing(false);
 			updateEmpty();
@@ -32,7 +31,7 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 		}
 	};
 
-	private Runnable startLoading = new Runnable() {
+	private final Runnable startLoading = new Runnable() {
 		@Override public void run() {
 			progress.setRefreshing(true);
 			updateEmpty();
@@ -40,13 +39,13 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 		}
 	};
 
-	private OnClickListener createNew = new OnClickListener() {
+	private final OnClickListener createNew = new OnClickListener() {
 		@Override public void onClick(View v) {
 			onCreateNew();
 		}
 	};
 
-	private AdapterDataObserver emptyObserver = new AdapterDataObserver() {
+	private final RecyclerView.AdapterDataObserver emptyObserver = new RecyclerView.AdapterDataObserver() {
 		@Override public void onChanged() {
 			updateEmpty();
 		}
@@ -120,6 +119,7 @@ public abstract class RecyclerViewController<A extends Adapter, D> {
 			finishLoading();
 		}
 	}
+	// XXX Do overrides need to use changeCursor instead of swapCursor? Who closes these Cursors atm?
 	protected abstract void setData(A adapter, D data);
 
 	protected void updateFAB() {

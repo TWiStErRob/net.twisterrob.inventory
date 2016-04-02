@@ -6,6 +6,7 @@ import android.text.style.*;
 
 @SuppressWarnings("unused")
 public /*static*/ abstract class TextTools {
+	@SuppressWarnings("UnusedReturnValue")
 	public static class DescriptionBuilder {
 		SpannableStringBuilder text = new SpannableStringBuilder();
 
@@ -114,6 +115,7 @@ public /*static*/ abstract class TextTools {
 		return apply(content, new ForegroundColorSpan(color));
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	public static SpannableStringBuilder appendItalic(SpannableStringBuilder builder, CharSequence content) {
 		int start = builder.length();
 		builder.append(content);
@@ -122,6 +124,7 @@ public /*static*/ abstract class TextTools {
 		return builder;
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	public static SpannableStringBuilder appendBold(SpannableStringBuilder builder, CharSequence content) {
 		int start = builder.length();
 		builder.append(content);

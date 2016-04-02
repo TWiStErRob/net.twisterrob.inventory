@@ -17,13 +17,15 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
 
+	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+	@SuppressWarnings("EmptyMethod")
 	public interface CameraPreviewListener {
 		void onStarted(CameraPreview preview);
 		void onFinished(CameraPreview preview);
 	}
 
 	private CameraHandlerThread mCameraThread = null;
-	private MissedSurfaceEvents missedEvents = new MissedSurfaceEvents();
+	private final MissedSurfaceEvents missedEvents = new MissedSurfaceEvents();
 	private CameraHolder cameraHolder = null;
 	private CameraPreviewListener listener = null;
 
@@ -100,9 +102,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 				LOG.trace("setPreviewDisplay {}", getHolder());
 				cameraHolder.camera.setPreviewDisplay(getHolder());
 			}
-		} catch (RuntimeException ex) {
-			LOG.error("Error setting up camera preview", ex);
-		} catch (IOException ex) {
+		} catch (RuntimeException | IOException ex) {
 			LOG.error("Error setting up camera preview", ex);
 		}
 	}
@@ -205,7 +205,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	public void cancelTakePicture() {
-		LOG.trace("Initiaite cancel take picture");
+		LOG.trace("Initiate cancel take picture");
 		mCameraThread.mHandler.post(new Runnable() {
 			public void run() {
 				LOG.trace("Cancel take picture");
@@ -216,7 +216,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	private void cancelAutoFocus() {
-		LOG.trace("Cancel autofocus {}", cameraHolder != null);
+		LOG.trace("Cancel auto-focus {}", cameraHolder != null);
 		if (cameraHolder != null) {
 			cameraHolder.camera.cancelAutoFocus();
 		}
@@ -251,10 +251,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 	@SuppressWarnings("deprecation")
 	private static class CameraHolder {
-		int cameraID;
-		android.hardware.Camera camera;
-		android.hardware.Camera.CameraInfo cameraInfo;
-		android.hardware.Camera.Parameters params;
+		final int cameraID;
+		final android.hardware.Camera camera;
+		final android.hardware.Camera.CameraInfo cameraInfo;
+		final android.hardware.Camera.Parameters params;
 
 		public CameraHolder(int id) {
 			cameraID = id;
@@ -264,9 +264,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			try {
 				LOG.trace("setPreviewDisplay null");
 				camera.setPreviewDisplay(null);
-			} catch (RuntimeException ex) {
-				LOG.error("Error setting up camera preview", ex);
-			} catch (IOException ex) {
+			} catch (RuntimeException | IOException ex) {
 				LOG.error("Error setting up camera preview", ex);
 			}
 			cameraInfo = new android.hardware.Camera.CameraInfo();

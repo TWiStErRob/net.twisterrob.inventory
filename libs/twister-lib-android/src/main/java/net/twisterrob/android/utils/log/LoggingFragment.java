@@ -12,9 +12,11 @@ import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
+import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.*;
 
+@DebugHelper
 public class LoggingFragment extends Fragment {
 	private static final Logger LOG = LoggerFactory.getLogger("Fragment");
 
@@ -66,9 +68,9 @@ public class LoggingFragment extends Fragment {
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
-	@Override public void onViewCreated(View view, Bundle bundle) {
-		log("onViewCreated", view, bundle);
-		super.onViewCreated(view, bundle);
+	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+		log("onViewCreated", view, savedInstanceState);
+		super.onViewCreated(view, savedInstanceState);
 	}
 
 	@Override public void onActivityCreated(Bundle savedInstanceState) {

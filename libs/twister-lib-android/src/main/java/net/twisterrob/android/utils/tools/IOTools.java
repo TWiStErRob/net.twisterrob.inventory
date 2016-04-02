@@ -15,17 +15,18 @@ import android.graphics.*;
 import android.os.Build.*;
 import android.os.ParcelFileDescriptor;
 
-import net.twisterrob.android.utils.cache.ImageSDNetCache;
 import net.twisterrob.java.utils.CollectionTools;
 
 @SuppressWarnings("unused")
-public/*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools {
+public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools {
 	private static final Logger LOG = LoggerFactory.getLogger(IOTools.class);
 
-	// TODO check if UTF-8 is used by cineworld
+	// FIXME check if UTF-8 is used by cineworld
 	private static final String DEFAULT_HTTP_ENCODING = ENCODING;
 	private static final String HTTP_HEADER_CHARSET_PREFIX = "charset=";
-	private static ImageSDNetCache imageCache;
+	/** @deprecated use Glide */
+	@Deprecated @SuppressWarnings("deprecation")
+	private static net.twisterrob.android.utils.cache.ImageSDNetCache imageCache;
 
 	@SuppressWarnings("deprecation")
 	public static String getEncoding(final org.apache.http.HttpEntity entity) {
@@ -51,7 +52,8 @@ public/*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools {
 		return encoding;
 	}
 
-	@SuppressWarnings("resource")
+	/** @deprecated use Glide */
+	@Deprecated @SuppressWarnings("deprecation")
 	public static Bitmap getImage(final URL url) throws IOException {
 		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 		InputStream input = null;
@@ -65,9 +67,16 @@ public/*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools {
 		}
 	}
 
+	/** @deprecated use Glide */
+	@Deprecated @SuppressWarnings("deprecation")
 	private static Set<Object> s_getImageLocks =
 			CollectionTools.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
 
+	/**
+	 * @param url will be used for synchronization
+	 * @deprecated use Glide
+	 */
+	@Deprecated @SuppressWarnings("deprecation")
 	public static Bitmap getImage(final URL url, boolean cache) throws IOException {
 		if (!cache) {
 			return getImage(url);
@@ -79,6 +88,7 @@ public/*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools {
 			if (result == null) {
 				boolean added = s_getImageLocks.add(url);
 				if (added) {
+					//noinspection SynchronizationOnLocalVariableOrMethodParameter
 					synchronized (url) {
 						if (s_getImageLocks.contains(url)) {
 							Bitmap newImage = getImage(url, false);
@@ -98,14 +108,20 @@ public/*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools {
 			throw new IOException("Cannot use cache", ex);
 		}
 	}
+	/** @deprecated use Glide */
+	@Deprecated @SuppressWarnings("deprecation")
 	private static synchronized void ensureImageCache() {
 		if (imageCache == null) {
-			imageCache = new ImageSDNetCache();
+			imageCache = new net.twisterrob.android.utils.cache.ImageSDNetCache();
 		}
 	}
+	/** @deprecated use Glide */
+	@Deprecated @SuppressWarnings("deprecation")
 	public static Bitmap getImage(final String urlString) throws IOException {
 		return getImage(urlString, false);
 	}
+	/** @deprecated use Glide */
+	@Deprecated @SuppressWarnings("deprecation")
 	public static Bitmap getImage(final String urlString, boolean cache) throws IOException {
 		URL url = new URL(urlString);
 		return IOTools.getImage(url, cache);
@@ -128,7 +144,7 @@ public/*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools {
 	/**
 	 * {@link ZipFile} doesn't implement {@link Closeable} before KitKat so we need a specialized method.
 	 * @param closeMe more specific than {@link #ignorantClose(Closeable)} won't throw {@link IncompatibleClassChangeError}
-	 * TODO figure out exact version
+	 * FIXME figure out exact version, maybe not kitkat?
 	 */
 	@TargetApi(VERSION_CODES.KITKAT)
 	public static void ignorantClose(ZipFile closeMe) {

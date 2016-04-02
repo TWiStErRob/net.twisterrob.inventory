@@ -17,7 +17,7 @@
 -dontnote net.twisterrob.inventory.android.content.InventoryProvider
 
 # Remove Logging for now
-# TODO use isLoggable in AndroidLogger and runtime control over TAGs
+# FIXME use isLoggable in AndroidLogger and runtime control over TAGs
 
 # slf4j/slf4j-api
 -assumenosideeffects interface org.slf4j.Logger {

@@ -10,7 +10,7 @@ class Node {
 	int filteredCount;
 	int depth;
 	Node parent;
-	List<Node> children = new ArrayList<>();
+	final List<Node> children = new ArrayList<>();
 
 	public Node(Type type, long id) {
 		this.type = type;

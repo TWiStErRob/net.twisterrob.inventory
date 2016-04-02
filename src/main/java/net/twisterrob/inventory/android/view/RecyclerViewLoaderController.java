@@ -7,7 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.RecyclerView.Adapter;
 
-public abstract class RecyclerViewLoaderController<A extends Adapter, D> extends RecyclerViewController<A, D> {
+public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> extends RecyclerViewController<A, D> {
 	private final Context context;
 	private final LoaderManagerProvider manager;
 

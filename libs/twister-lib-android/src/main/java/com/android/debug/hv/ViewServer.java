@@ -33,6 +33,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
 
+import net.twisterrob.java.annotations.DebugHelper;
+
 /**
  * <p>This class can be used to enable the use of HierarchyViewer inside an
  * application. HierarchyViewer is an Android SDK tool that can be used
@@ -96,6 +98,8 @@ import android.view.*;
  * }
  * </pre>
  */
+@SuppressWarnings("all")
+@DebugHelper
 public class ViewServer implements Runnable {
 	/**
 	 * The default port used to start view servers.
@@ -128,9 +132,9 @@ public class ViewServer implements Runnable {
 	private Thread mThread;
 	private ExecutorService mThreadPool;
 
-	private final List<WindowListener> mListeners = new CopyOnWriteArrayList<ViewServer.WindowListener>();
+	private final List<WindowListener> mListeners = new CopyOnWriteArrayList<>();
 
-	private final HashMap<View, String> mWindows = new HashMap<View, String>();
+	private final HashMap<View, String> mWindows = new HashMap<>();
 	private final ReentrantReadWriteLock mWindowsLock = new ReentrantReadWriteLock();
 
 	private View mFocusedWindow;
@@ -372,7 +376,6 @@ public class ViewServer implements Runnable {
 		while (mServer != null && Thread.currentThread() == mThread) {
 			// Any uncaught exception will crash the system process
 			try {
-				@SuppressWarnings("resource")
 				Socket client = mServer.accept();
 				if (mThreadPool != null) {
 					mThreadPool.submit(new ViewServerWorker(client));
@@ -447,43 +450,35 @@ public class ViewServer implements Runnable {
 			mStream = stream;
 		}
 
-		@Override
-		public void close() {
+		@Override public void close() {
 			// Don't close the stream
 		}
 
-		@Override
-		public boolean equals(Object o) {
+		@Override public boolean equals(Object o) {
 			return mStream.equals(o);
 		}
 
-		@Override
-		public void flush() throws IOException {
+		@Override public void flush() throws IOException {
 			mStream.flush();
 		}
 
-		@Override
-		public int hashCode() {
+		@Override public int hashCode() {
 			return mStream.hashCode();
 		}
 
-		@Override
-		public String toString() {
+		@Override public String toString() {
 			return mStream.toString();
 		}
 
-		@Override
-		public void write(@NonNull byte[] buffer, int offset, int count) throws IOException {
+		@Override public void write(@NonNull byte[] buffer, int offset, int count) throws IOException {
 			mStream.write(buffer, offset, count);
 		}
 
-		@Override
-		public void write(@NonNull byte[] buffer) throws IOException {
+		@Override public void write(@NonNull byte[] buffer) throws IOException {
 			mStream.write(buffer);
 		}
 
-		@Override
-		public void write(int oneByte) throws IOException {
+		@Override public void write(int oneByte) throws IOException {
 			mStream.write(oneByte);
 		}
 	}
@@ -491,46 +486,26 @@ public class ViewServer implements Runnable {
 	private static class NoopViewServer extends ViewServer {
 		private NoopViewServer() {
 		}
-
-		@Override
-		public boolean start() {
+		@Override public boolean start() {
 			return false;
 		}
-
-		@Override
-		public boolean stop() {
+		@Override public boolean stop() {
 			return false;
 		}
-
-		@Override
-		public boolean isRunning() {
+		@Override public boolean isRunning() {
 			return false;
 		}
-
-		@Override
-		public void addWindow(Activity activity) { /* no op */}
-
-		@Override
-		public void removeWindow(Activity activity) { /* no op */}
-
-		@Override
-		public void addWindow(View view, String name) { /* no op */}
-
-		@Override
-		public void removeWindow(View view) { /* no op */}
-
-		@Override
-		public void setFocusedWindow(Activity activity) { /* no op */}
-
-		@Override
-		public void setFocusedWindow(View view) { /* no op */}
-
-		@Override
-		public void run() { /* no op */}
+		@Override public void addWindow(Activity activity) { /* no op */ }
+		@Override public void removeWindow(Activity activity) { /* no op */ }
+		@Override public void addWindow(View view, String name) { /* no op */ }
+		@Override public void removeWindow(View view) { /* no op */ }
+		@Override public void setFocusedWindow(Activity activity) { /* no op */ }
+		@Override public void setFocusedWindow(View view) { /* no op */ }
+		@Override public void run() { /* no op */ }
 	}
 
 	private class ViewServerWorker implements Runnable, WindowListener {
-		private Socket mClient;
+		private final Socket mClient;
 		private boolean mNeedWindowListUpdate;
 		private boolean mNeedFocusedWindowUpdate;
 
@@ -593,7 +568,7 @@ public class ViewServer implements Runnable {
 					try {
 						mClient.close();
 					} catch (IOException e) {
-						Log.wtf(LOG_TAG, "Cannot close sockeet", e);
+						Log.wtf(LOG_TAG, "Cannot close socket", e);
 					}
 				}
 			}
@@ -624,7 +599,6 @@ public class ViewServer implements Runnable {
 					return false;
 				}
 
-				@SuppressWarnings("resource")
 				UncloseableOutputStream stream = new UncloseableOutputStream(client.getOutputStream());
 
 				// call stuff

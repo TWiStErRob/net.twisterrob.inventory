@@ -72,7 +72,7 @@ public interface Constants {
 			File folder = new File(context.getCacheDir(), folderName);
 			IOTools.ensure(folder);
 			File file = new File(folder, prefix + 0 + suffix);
-			// TODO figure out an alternative to deleteOnExit, before that:
+			// TODO figure out an alternative to deleteOnExit, until then:
 			//noinspection ResultOfMethodCallIgnored, use the same image file over and over again
 			file.delete();
 			//File file = File.createTempFile(prefix, suffix, folder);
@@ -86,7 +86,7 @@ public interface Constants {
 				new ColorMatrixColorFilter(PictureHelper.tintMatrix(App.getAppContext()));
 		public static <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz) {
 			ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, App.getAppContext());
-			// TODO replace this with proper Glide.with calls, don't use App Context
+			// FIXME replace this with proper Glide.with calls, don't use App Context
 			DrawableRequestBuilder<T> builder = Glide
 					.with(App.getAppContext())
 					.using((StreamModelLoader<T>)loader)

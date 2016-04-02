@@ -15,7 +15,7 @@
 		android:icon="@drawable/ic_menu_picture_remove"
 		app:showAsAction="ifRoom"
 		/>
-	<!-- TODO crop picked picture -->
+	<!-- XXX crop picked picture -->
 	<item
 		android:id="@+id/action_picture_pick"
 		android:title="@string/action_picture_pick"

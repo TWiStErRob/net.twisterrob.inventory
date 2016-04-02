@@ -5,10 +5,9 @@ import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.SingleFragmentActivity;
-import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents;
 
-public class SunburstActivity extends SingleFragmentActivity implements SunBurstEvents {
+public class SunburstActivity extends SingleFragmentActivity<SunburstFragment> implements SunBurstEvents {
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setIcon(R.raw.ic_sunburst);
@@ -23,7 +22,7 @@ public class SunburstActivity extends SingleFragmentActivity implements SunBurst
 		return super.checkExtras();
 	}
 
-	@Override protected BaseFragment onCreateFragment() {
+	@Override protected SunburstFragment onCreateFragment() {
 		SunburstFragment fragment = SunburstFragment.newInstance();
 		fragment.setArguments(getIntent().getExtras());
 		return fragment;

@@ -45,29 +45,7 @@ public class DelegatingOnGestureListener implements OnGestureListener, OnDoubleT
 		if (onDoubleTapListener != null) {
 			this.m_onDoubleTapListener = onDoubleTapListener;
 		} else {
-			this.m_onDoubleTapListener = new GestureDetector.OnDoubleTapListener() {
-				/**
-				 * No-op event handler.
-				 * @param e unused event
-				 */
-				public boolean onSingleTapConfirmed(MotionEvent e) {
-					return false;
-				}
-				/**
-				 * No-op event handler.
-				 * @param e unused event
-				 */
-				public boolean onDoubleTapEvent(MotionEvent e) {
-					return false;
-				}
-				/**
-				 * No-op event handler.
-				 * @param e unused event
-				 */
-				public boolean onDoubleTap(MotionEvent e) {
-					return false;
-				}
-			};
+			this.m_onDoubleTapListener = new GestureDetector.SimpleOnGestureListener();
 		}
 	}
 

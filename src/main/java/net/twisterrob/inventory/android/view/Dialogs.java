@@ -4,7 +4,6 @@ import org.slf4j.*;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.ColorMatrixColorFilter;
@@ -13,6 +12,7 @@ import android.os.Build.*;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog.Builder;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,9 +24,9 @@ import net.twisterrob.inventory.android.*;
  * <li>{@link #executeConfirm}
  * <li>{@link ConfirmedExecute}<ol>
  *     <li>doInBackground: prepare</li>
- *     <li>onPostExecute: showDialog</li>
+ *     <li>onPostExecute: {@link Builder#show}</li>
  * </ol>
- * <li>{@link #showDialog}<ol>
+ * <li>{@link ConfirmedExecute#onPostExecute}<ol>
  *     <li>AlertDialog.show</li>
  *     <li>setPositiveButton.OnClickListener: executeDirect</li>
  * </ol>
@@ -52,6 +52,7 @@ public class Dialogs {
 		final Action undo = state.action.buildUndo();
 		if (undo != null) {
 			CharSequence message = state.action.getSuccessMessage(activity.getResources());
+			//noinspection ResourceType custom delay is acceptable, see Snackbar#setDuration
 			Snackbar
 					.make(activity.getWindow().getDecorView().getRootView(), message, 5000)
 					.setAction(R.string.action_undo, new View.OnClickListener() {
@@ -91,6 +92,7 @@ public class Dialogs {
 						})
 						.setNegativeButton(android.R.string.no, null);
 				if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
+					// FIXME check if this is needed after transitioning to v7 AlertDialog
 					Drawable icon = ContextCompat.getDrawable(context, android.R.drawable.ic_dialog_alert).mutate();
 					icon.setColorFilter(new ColorMatrixColorFilter(new float[] {
 							-1, 0, 0, 0, 255, // red = 255 - red
@@ -138,7 +140,7 @@ public class Dialogs {
 		@Override
 		protected ActionState doInBackground(ActionState state) {
 			state.prepare();
-			if (!state.hasErrors()) {
+			if (state.hasPassed()) {
 				state.execute();
 			}
 			return state;
@@ -195,31 +197,31 @@ public class Dialogs {
 		}
 
 		boolean check(Context context) {
-			if (!hasErrors()) {
+			if (hasPassed()) {
 				return true;
-			} else {
-				CharSequence message;
-				try {
-					message = action.getFailureMessage(context.getResources());
-					if (message != null && (prepare != null || execute != null)) {
-						message = App.getError(prepare != null? prepare : execute, message);
-					}
-				} catch (Exception ex) {
-					LOG.warn("Failed to get failure message from action {}", action, ex);
-					failureMessage = ex;
-					message = null;
-				}
-				if (message == null) { // getFailureMessage returned null or thrown an Exception
-					message = getError();
-					LOG.warn("No error message from action {}, using one of the exceptions:\n{}", action, message);
-					message = context.getString(R.string.action_error, message);
-				}
-				Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-				return false;
 			}
+			CharSequence message;
+			try {
+				message = action.getFailureMessage(context.getResources());
+				if (message != null && (prepare != null || execute != null)) {
+					message = App.getError(prepare != null? prepare : execute, message);
+				}
+			} catch (Exception ex) {
+				LOG.warn("Failed to get failure message from action {}", action, ex);
+				failureMessage = ex;
+				message = null;
+			}
+			if (message == null) { // getFailureMessage returned null or thrown an Exception
+				message = getError();
+				LOG.warn("No error message from action {}, using one of the exceptions:\n{}", action, message);
+				message = context.getString(R.string.action_error, message);
+			}
+			Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+			return false;
 		}
-		private boolean hasErrors() {
-			return prepare != null || execute != null;
+
+		private boolean hasPassed() {
+			return prepare == null && execute == null;
 		}
 
 		private CharSequence getError() {

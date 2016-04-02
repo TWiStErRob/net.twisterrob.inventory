@@ -12,16 +12,14 @@ import com.caverock.androidsvg.SVG;
  * Convert the {@link SVG}'s internal representation to an Android-compatible one ({@link Picture}).
  */
 public class SvgDrawableTranscoder implements ResourceTranscoder<SVG, PictureDrawable> {
-	@Override
-	public Resource<PictureDrawable> transcode(Resource<SVG> toTranscode) {
+	@Override public Resource<PictureDrawable> transcode(Resource<SVG> toTranscode) {
 		SVG svg = toTranscode.get();
 		Picture picture = svg.renderToPicture();
 		PictureDrawable drawable = new PictureDrawable(picture);
-		return new SimpleResource<PictureDrawable>(drawable);
+		return new SimpleResource<>(drawable);
 	}
 
-	@Override
-	public String getId() {
+	@Override public String getId() {
 		return "";
 	}
 }

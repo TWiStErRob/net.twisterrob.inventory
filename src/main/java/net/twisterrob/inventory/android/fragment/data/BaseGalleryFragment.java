@@ -27,14 +27,14 @@ import net.twisterrob.inventory.android.view.adapters.*;
 public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements GalleryEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseGalleryFragment.class);
 
-	private BaseFragment header;
-	protected RecyclerViewLoaderController listController;
+	private BaseFragment<?> header;
+	protected RecyclerViewLoaderController<?, ?> listController;
 	protected SelectionActionMode selectionMode;
 
-	public void setHeader(BaseFragment headerFragment) {
+	public void setHeader(BaseFragment<?> headerFragment) {
 		this.header = headerFragment;
 	}
-	public BaseFragment getHeader() {
+	public BaseFragment<?> getHeader() {
 		return header;
 	}
 	public boolean hasHeader() {
@@ -49,7 +49,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 			return;
 		}
 		if (hasHeader()) {
-			// TODO this is workaround for https://code.google.com/p/android/issues/detail?id=40537
+			// TOFIX this is workaround for https://code.google.com/p/android/issues/detail?id=40537
 			header.onActivityResult(requestCode, resultCode, data);
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -95,13 +95,13 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		int layout = hasHeaderUI()? R.layout.generic_list_with_header : R.layout.generic_list;
 		return inflater.inflate(layout, container, false);
 	}
-	
+
 	private void restoreOnRotation() {
 		if (header == null) {
-			header = (BaseFragment)getChildFragmentManager().findFragmentByTag("header");
+			header = (BaseFragment<?>)getChildFragmentManager().findFragmentByTag("header");
 		}
 		if (header == null) {
-			header = (BaseFragment)getChildFragmentManager().findFragmentById(R.id.header);
+			header = (BaseFragment<?>)getChildFragmentManager().findFragmentById(R.id.header);
 		}
 		// FIXME save fragment UI state from savedInstanceState into a field and use that in the adapter
 	}
@@ -132,7 +132,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		selectionMode = null;
 		RecyclerView view = listController.getView();
 		if (view != null) {
-			// TODO replace this with proper Glide.with calls
+			// FIXME replace this with proper Glide.with calls
 			view.setAdapter(null); // force onViewRecycled calls
 		}
 		super.onDestroyView();
@@ -182,15 +182,15 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	 * <li>BaseGalleryFragment.onViewCreated</li>
 	 * </ul>
 	 */
-	protected @NonNull CursorRecyclerAdapter setupGallery(RecyclerView list) {
+	protected @NonNull CursorRecyclerAdapter<?> setupGallery(RecyclerView list) {
 		final int columns = getResources().getInteger(R.integer.gallery_columns);
 
-		final SingleHeaderAdapter adapter = createAdapter();
+		final SingleHeaderAdapter<?> adapter = createAdapter();
 		@SuppressWarnings("unchecked")
-		SelectionAdapter selectionAdapter = new SelectionAdapter(adapter);
+		SelectionAdapter<?> selectionAdapter = new SelectionAdapter<>(adapter);
 		selectionMode = onPrepareSelectionMode(selectionAdapter);
 
-		if (hasHeaderUI() && /*ConstantConditions:*/ getView() != null) {
+		if (hasHeaderUI()) {
 			View headerContainer = getView().findViewById(R.id.header);
 			adapter.setHeader(headerContainer);
 			list.addOnScrollListener(new SynchronizedScrollListener(0, list, new StaticViewProvider(headerContainer)));
@@ -198,7 +198,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		}
 
 		GridLayoutManager layout = new GridLayoutManager(getContext(), columns);
-		// TODO v21.0.3: doesn't work, false -> ladder jumpy, true -> chaotic jumpy
+		// TOFIX v21.0.3: doesn't work, false -> ladder jumpy, true -> chaotic jumpy
 		//layout.setSmoothScrollbarEnabled(true);
 		layout.setSpanSizeLookup(new SpanSizeLookup() {
 			@Override public int getSpanSize(int position) {
@@ -214,7 +214,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		return adapter;
 	}
 
-	protected SingleHeaderAdapter createAdapter() {
+	protected SingleHeaderAdapter<?> createAdapter() {
 		return new GalleryAdapter(null, this);
 	}
 
@@ -278,7 +278,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 			this.emptyText = emptyText;
 		}
 
-		@Override protected @NonNull CursorRecyclerAdapter setupList() {
+		@Override protected @NonNull CursorRecyclerAdapter<?> setupList() {
 			return setupGallery(list);
 		}
 
@@ -290,7 +290,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 			}
 		}
 
-		@Override protected boolean isEmpty(@NonNull CursorRecyclerAdapter adapter) {
+		@Override protected boolean isEmpty(@NonNull CursorRecyclerAdapter<?> adapter) {
 			return hasHeaderUI()? adapter.getItemCount() == 1 : super.isEmpty(adapter);
 		}
 	}

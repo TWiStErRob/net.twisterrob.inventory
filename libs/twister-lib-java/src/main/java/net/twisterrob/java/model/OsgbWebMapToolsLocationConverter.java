@@ -3,7 +3,7 @@ package net.twisterrob.java.model;
 import static java.lang.Math.*;
 
 /**
- * This code is based on {@link http://osgbwebmaptools.cvs.sourceforge.net/viewvc/osgbwebmaptools/OSGBWebMapTools/OSGBWebMapTools-API/lib/OSGBWebMapTools/GridProjection.js?revision=1.1&view=markup}.
+ * This code is based on <a href="http://osgbwebmaptools.cvs.sourceforge.net/viewvc/osgbwebmaptools/OSGBWebMapTools/OSGBWebMapTools-API/lib/OSGBWebMapTools/GridProjection.js?revision=1.1&view=markup">GridProjection.js</a>.
  */
 @SuppressWarnings("unused")
 public class OsgbWebMapToolsLocationConverter {
@@ -18,7 +18,7 @@ public class OsgbWebMapToolsLocationConverter {
 	private static final double falseE = 400000.0; /* false origin eastings */
 	private static final double falseN = -100000.0; /* false origin northings */
 	private static final double scl = 0.9996012717; /* scale factor */
-	private static final double ety = (a - b) / (a + b); /* ellipticity */
+	private static final double ety = (a - b) / (a + b); /* flattening/ellipticity */
 	private static final double aS = a * scl; /* scaled major_axis */
 	private static final double bS = b * scl; /* scaled minor axis */
 
@@ -29,6 +29,7 @@ public class OsgbWebMapToolsLocationConverter {
 	 * @return {<OpenLayers.LonLat>} The point converted into WGS84
 	 * @see E_N_to_LonLat E_N_to_LonLat from JS source
 	 */
+	@SuppressWarnings("JavadocReference")
 	public static Location E_N_to_LonLat(double easting, double northing) {
 		// Un-project Transverse Mercator eastings and northings back to latitude.
 		// Input:

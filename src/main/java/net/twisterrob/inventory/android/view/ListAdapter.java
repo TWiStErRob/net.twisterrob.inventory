@@ -35,8 +35,8 @@ public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 	}
 
 	class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
-		TextView title;
-		TextView count;
+		private final TextView title;
+		private final TextView count;
 
 		public ViewHolder(View view) {
 			super(view);

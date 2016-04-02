@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.*;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.database.DatabaseUtilsCompat;
 
 /**
@@ -43,10 +44,9 @@ import android.support.v4.database.DatabaseUtilsCompat;
  * 		&lt;/provider>
  * 	...
  * </pre>
- * @author TWiStEr
  * @see <a href="http://www.vogella.com/tutorials/AndroidSQLite/article.html">based on</a>
  */
-@SuppressWarnings("resource")
+@SuppressWarnings("resource") // getDB is not closed at each point, it's handled in shutdown
 public abstract class SimpleTableContentProvider extends ContentProvider {
 	private static final int ALL_IN_DIR = 0;
 	private static final int SINGLE_BY_ID = 1;
@@ -75,15 +75,13 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 
 	protected abstract SQLiteOpenHelper createDatabaseOpenHelper();
 
-	@Override
-	public synchronized boolean onCreate() {
+	@Override public synchronized boolean onCreate() {
 		database = createDatabaseOpenHelper();
 		return true;
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@Override
-	public synchronized void shutdown() {
+	@Override public synchronized void shutdown() {
 		super.shutdown();
 		database.close();
 		database = null;
@@ -93,8 +91,7 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		return database.getWritableDatabase();
 	}
 
-	@Override
-	public synchronized String getType(Uri uri) {
+	@Override public synchronized String getType(@NonNull Uri uri) {
 		switch (uriMatcher.match(uri)) {
 			case ALL_IN_DIR:
 				return ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + mimeType;
@@ -105,9 +102,8 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		}
 	}
 
-	@Override
-	public synchronized Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-			String sortOrder) {
+	@Override public synchronized Cursor query(@NonNull Uri uri,
+			String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		SQLiteDatabase db = getDB();
 		checkColumns(projection);
 
@@ -126,15 +122,14 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 
 		Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 		// make sure that potential listeners are getting notified
+		//noinspection ConstantConditions we're past onCreate so we have a Context
 		cursor.setNotificationUri(getContext().getContentResolver(), uri);
-
 		return cursor;
 	}
 
-	@Override
-	public synchronized Uri insert(Uri uri, ContentValues values) {
+	@Override public synchronized Uri insert(@NonNull Uri uri, ContentValues values) {
 		SQLiteDatabase db = getDB();
-		long id = 0;
+		long id;
 		switch (uriMatcher.match(uri)) {
 			case ALL_IN_DIR:
 				id = db.insert(tableName, null, values);
@@ -143,32 +138,28 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 			default:
 				throw unmatched(uri);
 		}
-		getContext().getContentResolver().notifyChange(uri, null);
+		notify(uri);
 		return uri.buildUpon().appendPath(String.valueOf(id)).build();
 	}
 
-	@Override
-	public synchronized int delete(Uri uri, String selection, String[] selectionArgs) {
+	@Override public synchronized int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 		SQLiteDatabase db = getDB();
-		switch (uriMatcher.match(uri)) {
-			case ALL_IN_DIR:
-				// nothing to do
-				break;
-			case SINGLE_BY_ID:
-				String id = uri.getLastPathSegment();
-				selection = DatabaseUtilsCompat.concatenateWhere(idFilter(id), selection);
-				break;
-			default:
-				throw unmatched(uri);
-		}
+		selection = filterId(uri, selection);
 		int rowsDeleted = db.delete(tableName, selection, selectionArgs);
-		getContext().getContentResolver().notifyChange(uri, null);
+		notify(uri);
 		return rowsDeleted;
 	}
 
-	@Override
-	public synchronized int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+	@Override public synchronized int update(@NonNull Uri uri, ContentValues values, String selection,
+			String[] selectionArgs) {
 		SQLiteDatabase db = getDB();
+		selection = filterId(uri, selection);
+		int rowsUpdated = db.update(tableName, values, selection, selectionArgs);
+		notify(uri);
+		return rowsUpdated;
+	}
+
+	private String filterId(Uri uri, String selection) {
 		switch (uriMatcher.match(uri)) {
 			case ALL_IN_DIR:
 				// nothing to do
@@ -180,9 +171,12 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 			default:
 				throw unmatched(uri);
 		}
-		int rowsUpdated = db.update(tableName, values, selection, selectionArgs);
+		return selection;
+	}
+
+	private void notify(@NonNull Uri uri) {
+		//noinspection ConstantConditions we're past onCreate so we have a Context
 		getContext().getContentResolver().notifyChange(uri, null);
-		return rowsUpdated;
 	}
 
 	protected String idFilter(String id) {
@@ -194,11 +188,11 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 	}
 
 	/** Check if the caller has requested a column which does not exists */
-	protected void checkColumns(String[] projection) {
+	protected void checkColumns(String... projection) {
 		if (projection == null) {
 			return;
 		}
-		Set<String> invalidColumns = new LinkedHashSet<String>(Arrays.asList(projection));
+		Set<String> invalidColumns = new LinkedHashSet<>(Arrays.asList(projection));
 		invalidColumns.removeAll(Arrays.asList(allColumns)); // known columns are not invalid
 		if (!invalidColumns.isEmpty()) {
 			throw new IllegalArgumentException("Unknown columns in projection: " + invalidColumns);

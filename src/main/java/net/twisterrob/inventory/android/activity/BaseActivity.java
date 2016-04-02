@@ -21,7 +21,7 @@ import net.twisterrob.inventory.android.content.Intents;
 
 import static net.twisterrob.java.utils.CollectionTools.*;
 
-public class BaseActivity extends VariantActivity {
+public abstract class BaseActivity extends VariantActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseActivity.class);
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,7 @@ public class BaseActivity extends VariantActivity {
 	}
 
 	@Override protected void onNewIntent(Intent intent) {
+		//setIntent(intent); call this in child activity if you handle this event
 		LOG.trace("Refreshing {}@{} {}\n{}",
 				getClass().getSimpleName(),
 				Integer.toHexString(System.identityHashCode(this)),
@@ -111,8 +112,10 @@ public class BaseActivity extends VariantActivity {
 		   .into(new ActionBarIconTarget(getSupportActionBar()));
 	}
 
-	/** We kind of know that there's an action bar in all child classes*/
+	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+	@SuppressWarnings({"ConstantConditions", "EmptyMethod"})
 	@Override public @NonNull ActionBar getSupportActionBar() {
+		// We know that there's an action bar in all child classes.
 		return super.getSupportActionBar();
 	}
 
@@ -126,7 +129,7 @@ public class BaseActivity extends VariantActivity {
 
 	/** Workaround for broken up navigation post Jelly Bean?!
 	 * @see <a href="http://stackoverflow.com/questions/14602283/up-navigation-broken-on-jellybean">Up navigation broken on JellyBean?</a> */
-	@Override public void supportNavigateUpTo(Intent upIntent) {
+	@Override public void supportNavigateUpTo(@NonNull Intent upIntent) {
 		upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(upIntent);
 		finish();

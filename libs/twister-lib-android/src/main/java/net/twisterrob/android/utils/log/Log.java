@@ -10,7 +10,7 @@ import net.twisterrob.java.utils.StringTools;
  * @author Zoltán Kiss
  * @author Róbert Papp
  */
-@SuppressLint("LogConditional") // TODO consider automatic Log.isLoggable(...) calls
+@SuppressLint("LogConditional") // CONSIDER automatic Log.isLoggable(...) calls
 public class Log {
 	private final String m_tag;
 

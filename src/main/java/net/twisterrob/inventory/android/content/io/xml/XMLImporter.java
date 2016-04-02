@@ -4,14 +4,14 @@ import java.io.*;
 import java.util.*;
 
 import org.slf4j.*;
-import org.xml.sax.*;
+import org.xml.sax.Attributes;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.sax.*;
 import android.util.Xml;
 
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.content.DatabaseDTOTools;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.io.*;
 import net.twisterrob.inventory.android.content.model.Types;
@@ -33,7 +33,7 @@ public class XMLImporter implements Importer {
 		Xml.parse(stream, Xml.Encoding.UTF_8, structure.getContentHandler());
 	}
 
-	public RootElement getStructure() throws IOException, SAXException {
+	public RootElement getStructure() {
 		RootElement root = new RootElement(TAG_ROOT);
 		Element propertyElement = root.getChild(TAG_PROPERTY);
 		final Element roomElement = propertyElement.getChild(TAG_ROOM);
@@ -112,8 +112,8 @@ public class XMLImporter implements Importer {
 
 	private abstract class BaseElementListener implements ElementListener, EndTextElementListener, Parent {
 		protected final Parent parent;
-		private TraverseFactory factory;
-		private int level;
+		private final TraverseFactory factory;
+		private final int level;
 
 		protected Long id;
 
@@ -225,6 +225,8 @@ public class XMLImporter implements Importer {
 	}
 
 	private class RoomElementListener extends BaseElementListener {
+		long rootID;
+
 		public RoomElementListener(Parent parent, TraverseFactory factory) {
 			super(parent, factory);
 		}
@@ -242,21 +244,9 @@ public class XMLImporter implements Importer {
 			} else {
 				progress.warning(R.string.backup_import_conflict_room, null, name);
 			}
-			rootID = getRoot(id);
+			rootID = DatabaseDTOTools.getRoot(id);
 			loadImage(Type.Room);
 		}
-
-		private long getRoot(long roomID) {
-			Cursor room = App.db().getRoom(roomID);
-			try {
-				room.moveToFirst();
-				return room.getLong(room.getColumnIndexOrThrow(Room.ROOT_ITEM));
-			} finally {
-				room.close();
-			}
-		}
-
-		long rootID;
 
 		@Override public void end() {
 			super.end();

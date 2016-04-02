@@ -100,7 +100,7 @@ public class MainActivity extends DrawerActivity
 			setActionBarTitle(title); // to display now
 			setActionBarSubtitle(null); // clear to change
 			setTitle(title); // to persist and display later (e.g. onDrawerClosed)
-			// TODO Navigation title still shows subtitle (e.g. Sunburst)
+			// FIXME Navigation title still shows subtitle (e.g. Sunburst)
 		}
 	}
 

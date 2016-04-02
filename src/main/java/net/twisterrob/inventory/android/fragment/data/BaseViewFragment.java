@@ -68,7 +68,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		private static final int POSITION_DETAILS = 1;
 		private static final int POSITION_COUNT = 2;
 
-		private DTO entity;
+		private final DTO entity;
 
 		public ImageAndDescriptionAdapter(DTO imageData) {
 			this.entity = imageData;

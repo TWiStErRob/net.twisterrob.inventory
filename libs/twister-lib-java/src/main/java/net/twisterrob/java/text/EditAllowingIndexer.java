@@ -105,7 +105,7 @@ public class EditAllowingIndexer<T> implements Indexer<T> {
 					if (DEBUG_PATH) {
 						newPath = path + " +[" + index + "]'" + child.curr + "'";
 					}
-					child.match(results, input, index + 0, edits - 1, maxEdits, newPath);
+					child.match(results, input, index, edits - 1, maxEdits, newPath);
 					// change char (pretend this matched)
 					if (DEBUG_PATH) {
 						newPath = path + " *[" + index + "]'" + inputChar + "'->'" + child.curr + "'";

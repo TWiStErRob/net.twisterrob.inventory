@@ -46,7 +46,7 @@ public class SelectionView extends View {
 	private boolean keepAspectRatio = false;
 	private boolean fadeNonSelection = true;
 
-	private PointF mLastTouch = new PointF();
+	private final PointF mLastTouch = new PointF();
 
 	private Paint line;
 
@@ -110,10 +110,19 @@ public class SelectionView extends View {
 		return fadeNonSelection;
 	}
 
+	/**
+	 * @param margin ratio of screen that should be used as margin [0 .. 0.5)
+	 */
 	public void setSelectionMargin(float margin) {
 		setSelectionMargin(margin, margin, margin, margin);
 	}
 
+	/**
+	 * @param left ratio of screen that should be used as margin [0 .. 0.5)
+	 * @param top ratio of screen that should be used as margin [0 .. 0.5)
+	 * @param right ratio of screen that should be used as margin [0 .. 0.5)
+	 * @param bottom ratio of screen that should be used as margin [0 .. 0.5)
+	 */
 	public void setSelectionMargin(float left, float top, float right, float bottom) {
 		WindowManager windowManager = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -129,6 +138,9 @@ public class SelectionView extends View {
 		setSelection(selection);
 	}
 
+	/**
+	 * @param margin ratio of screen that should be used as margin [0 .. 0.5)
+	 */
 	public void setSelectionMarginSquare(float margin) {
 		WindowManager windowManager = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -151,10 +163,6 @@ public class SelectionView extends View {
 			selection.bottom = (int)((screenHeight - squareSize) / 2 + squareSize);
 		}
 		setSelection(selection);
-	}
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 
 	/** @see @SuppressLint("DrawAllocation") */
@@ -273,9 +281,7 @@ public class SelectionView extends View {
 		return handled || super.onTouchEvent(ev);
 	}
 
-	/**
-	 * TODO widening the selection with left going out left and right going towards right double speed
-	 */
+	// FIXME widening the selection with left going out left and right going towards right double speed
 	private void correctSelection() {
 		Rect s = selection;
 		if (keepAspectRatio) {

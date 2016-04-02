@@ -33,7 +33,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		listController = new RecyclerViewLoadersController(this, Loaders.Lists) {
-			@Override protected @NonNull CursorRecyclerAdapter setupList() {
+			@Override protected @NonNull CursorRecyclerAdapter<?> setupList() {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				ListAdapter cursorAdapter = new ListAdapter(null, ListListFragment.this);
 				list.setAdapter(cursorAdapter);

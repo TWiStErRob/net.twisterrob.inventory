@@ -30,7 +30,7 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 	}
 	public void categorySelected(long id) {
 		startActivity(Intents.childNav(CategoryActivity.show(id)));
-		// TODO consider tabs as breadcrumbs?
+		// CONSIDER tabs as breadcrumbs?
 	}
 	public void categoryActioned(long id) {
 		startActivity(Intents.childNav(CategoryActivity.show(id)));

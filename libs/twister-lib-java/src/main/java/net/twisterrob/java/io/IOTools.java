@@ -7,11 +7,12 @@ import java.util.zip.*;
 
 import javax.annotation.*;
 
-public/*static*/ abstract class IOTools {
+public /*static*/ abstract class IOTools {
 	// TODO check if UTF-8 is used by cineworld
 	public static final String ENCODING = Charset.forName("UTF-8").name();
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
+	@SuppressWarnings("UnusedReturnValue") // optional convenience value
 	public static long copyFile(final String sourceFileName, final String destinationFileName) throws IOException {
 		File sourceFile = new File(sourceFileName);
 		File destinationFile = new File(destinationFileName);
@@ -19,7 +20,7 @@ public/*static*/ abstract class IOTools {
 	}
 
 	public static void ensure(File dir) throws IOException {
-		if (!(dir.mkdirs() || dir.isDirectory())) {
+		if (!dir.mkdirs() && (!dir.exists() || !dir.isDirectory())) {
 			throw new FileNotFoundException("Failed to ensure directory: " + dir);
 		}
 	}
@@ -29,13 +30,11 @@ public/*static*/ abstract class IOTools {
 		ensure(destinationFile.getParentFile());
 		InputStream in = new FileInputStream(sourceFile);
 		OutputStream out = new FileOutputStream(destinationFile);
-		long totalBytes;
 		try {
-			totalBytes = IOTools.copyStream(in, out);
+			return IOTools.copyStream(in, out);
 		} finally {
 			ignorantClose(in, out);
 		}
-		return totalBytes;
 	}
 
 	public static long copyStream(InputStream in, OutputStream out) throws IOException {
@@ -120,7 +119,7 @@ public/*static*/ abstract class IOTools {
 		}
 	}
 
-	public static void writeAll(OutputStream stream, byte[] contents) throws IOException {
+	public static void writeAll(OutputStream stream, byte... contents) throws IOException {
 		try {
 			stream.write(contents);
 		} finally {
@@ -313,7 +312,8 @@ public/*static*/ abstract class IOTools {
 		}
 	}
 
-	public static long crc(byte[] arr) throws IOException {
+	@SuppressWarnings("RedundantThrows") // keep it consistent
+	public static long crc(byte... arr) throws IOException {
 		CRC32 crc = new CRC32();
 		crc.update(arr);
 		return crc.getValue();

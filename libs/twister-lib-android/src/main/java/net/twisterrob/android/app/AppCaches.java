@@ -4,6 +4,8 @@ import java.util.*;
 
 import net.twisterrob.android.utils.cache.*;
 
+/** @deprecated use Glide */
+@Deprecated @SuppressWarnings("deprecation")
 public class AppCaches {
 	public static final String CACHE_IMAGE = ImageSDNetCache.class.getName();
 	private final Map<String, Cache<?, ?>> m_caches = new HashMap<>();

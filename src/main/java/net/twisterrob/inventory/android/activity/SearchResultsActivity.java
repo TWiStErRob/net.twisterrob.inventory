@@ -116,7 +116,6 @@ public class SearchResultsActivity extends SingleFragmentActivity<ItemListFragme
 	}
 
 	public static Intent show() {
-		Intent intent = new Intent(App.getAppContext(), SearchResultsActivity.class);
-		return intent;
+		return new Intent(App.getAppContext(), SearchResultsActivity.class);
 	}
 }

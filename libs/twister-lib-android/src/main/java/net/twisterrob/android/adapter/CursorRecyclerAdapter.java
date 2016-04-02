@@ -267,8 +267,10 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 *
 	 * @see ContentObserver#onChange(boolean)
 	 */
+	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+	@SuppressWarnings("EmptyMethod")
 	protected void onContentChanged() {
-
+		// optional override
 	}
 
 	private class ChangeObserver extends ContentObserver {
@@ -276,26 +278,22 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 			super(new Handler());
 		}
 
-		@Override
-		public boolean deliverSelfNotifications() {
+		@Override public boolean deliverSelfNotifications() {
 			return true;
 		}
 
-		@Override
-		public void onChange(boolean selfChange) {
+		@Override public void onChange(boolean selfChange) {
 			onContentChanged();
 		}
 	}
 
 	private class MyDataSetObserver extends DataSetObserver {
-		@Override
-		public void onChanged() {
+		@Override public void onChanged() {
 			mDataValid = true;
 			notifyDataSetChanged();
 		}
 
-		@Override
-		public void onInvalidated() {
+		@Override public void onInvalidated() {
 			mDataValid = false;
 			// notifyDataSetInvalidated();
 			notifyItemRangeRemoved(0, getItemCount());
@@ -309,8 +307,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
  * that can be used by auto-completion widgets.
  */
 class CursorFilter extends Filter {
-
-	CursorFilterClient mClient;
+	private final CursorFilterClient mClient;
 
 	interface CursorFilterClient {
 		CharSequence convertToString(Cursor cursor);
@@ -323,13 +320,11 @@ class CursorFilter extends Filter {
 		mClient = client;
 	}
 
-	@Override
-	public CharSequence convertResultToString(Object resultValue) {
+	@Override public CharSequence convertResultToString(Object resultValue) {
 		return mClient.convertToString((Cursor)resultValue);
 	}
 
-	@Override
-	protected FilterResults performFiltering(CharSequence constraint) {
+	@Override protected FilterResults performFiltering(CharSequence constraint) {
 		Cursor cursor = mClient.runQueryOnBackgroundThread(constraint);
 
 		FilterResults results = new FilterResults();
@@ -343,8 +338,7 @@ class CursorFilter extends Filter {
 		return results;
 	}
 
-	@Override
-	protected void publishResults(CharSequence constraint, FilterResults results) {
+	@Override protected void publishResults(CharSequence constraint, FilterResults results) {
 		Cursor oldCursor = mClient.getCursor();
 
 		if (results.values != null && results.values != oldCursor) {

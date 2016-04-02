@@ -22,10 +22,10 @@ import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 public class ItemSelectionActionMode extends SelectionActionMode {
 	private static final int PICK_REQUEST = 1;
 
-	private final BaseFragment fragment;
+	private final BaseFragment<?> fragment;
 	private final Builder builder;
 
-	public ItemSelectionActionMode(BaseFragment fragment, SelectionAdapter<?> adapter, Builder builder) {
+	public ItemSelectionActionMode(BaseFragment<?> fragment, SelectionAdapter<?> adapter, Builder builder) {
 		super(fragment.getActivity(), adapter);
 		this.fragment = fragment;
 		this.builder = builder;

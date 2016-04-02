@@ -244,7 +244,7 @@ public /*static*/ abstract class AndroidTools {
 
 		first = append(sb, "act=", intent.getAction(), "", first);
 		first = append(sb, "cat=", intent.getCategories(), "", first);
-		//noinspection ResourceType TODO external annotations to Intent#getFlags?
+		//noinspection ResourceType TOFIX external annotations to Intent#getFlags?
 		first = append(sb, "flg=", IntentFlags.Converter.toString(intent.getFlags(), null), "", first);
 
 		first = append(sb, "bnds=", intent.getSourceBounds(), "", first);
@@ -336,7 +336,7 @@ public /*static*/ abstract class AndroidTools {
 	public static int calculateRotation(Context context, android.hardware.Camera.CameraInfo cameraInfo) {
 		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		int rotation = windowManager.getDefaultDisplay().getRotation();
-		int degrees = rotation * 90; // consider using Surface.ROTATION_ constants
+		int degrees = rotation * 90; // CONSIDER using Surface.ROTATION_ constants
 
 		int result;
 		if (cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
@@ -740,7 +740,7 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
-	// TODO check all LayoutParams
+	// TOFIX all built-in and support LayoutParams
 	public static void updateGravity(View view, int gravity) {
 		ViewGroup.LayoutParams params = view.getLayoutParams();
 		if (params instanceof FrameLayout.LayoutParams) {
@@ -779,7 +779,7 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)
-	public static void setItemChecked(AdapterView parent, int position, boolean value) {
+	public static void setItemChecked(AdapterView<?> parent, int position, boolean value) {
 		if (parent instanceof ListView) {
 			((ListView)parent).setItemChecked(position, value);
 		} else if (parent instanceof AbsListView) {
@@ -856,7 +856,7 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	/** @see ContentProvider#openPipeHelper */
-	public static ParcelFileDescriptor stream(final byte[] contents) throws FileNotFoundException {
+	public static ParcelFileDescriptor stream(final byte... contents) throws FileNotFoundException {
 		ParcelFileDescriptor[] pipe;
 		try {
 			pipe = ParcelFileDescriptor.createPipe();
@@ -1069,7 +1069,7 @@ public /*static*/ abstract class AndroidTools {
 			PackageInfo info = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_PROVIDERS);
 			for (ProviderInfo p : info.providers) {
 				try {
-					Class providerClass = Class.forName(p.name);
+					Class<?> providerClass = Class.forName(p.name);
 					if (clazz.isAssignableFrom(providerClass)) {
 						return p;
 					}

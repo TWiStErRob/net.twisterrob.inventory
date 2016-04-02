@@ -3,7 +3,7 @@
 	<dimen name="margin">4dp</dimen>
 	<dimen name="margin2">8dp</dimen>
 	<dimen name="marginHalf">2dp</dimen>
-	<!-- TODO this SpUsage ignore should be recognized in item_type_spinner -->
+	<!-- TODEL this SpUsage ignore should be recognized in item_type_spinner -->
 	<dimen name="marginBig" tools:ignore="SpUsage">16dp</dimen>
 	<dimen name="margin_negative">-4dp</dimen>
 	<dimen name="margin_negative_double">-8dp</dimen>
@@ -11,8 +11,6 @@
 	<dimen name="margin_negative_quad" tools:ignore="SpUsage">-16dp</dimen>
 	<!-- Overridden for w###dp: (width-50)/150, i.e. 150dp columns -->
 	<integer name="gallery_columns">2</integer>
-	<!-- FIXME calculate for each dpi -->
-	<fraction name="fabShadow">45000%</fraction>
 	<!-- Overridden for h###dp: height*40%; default is used pre Android 3.0 -->
 	<dimen name="header">150dp</dimen>
 	<dimen name="icon_small">16dp</dimen>

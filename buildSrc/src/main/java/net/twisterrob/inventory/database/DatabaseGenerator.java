@@ -13,14 +13,17 @@ public class DatabaseGenerator {
 	private final Stack<Category> parents = new Stack<>();
 	private final LevelBasedID level = new LevelBasedID();
 	private final Printer printer;
-	public DatabaseGenerator(Printer printer) {
+	private final File svgFolder;
+	public DatabaseGenerator(Printer printer, File svgFolder) {
 		this.printer = printer;
+		this.svgFolder = svgFolder;
 	}
 
-	public static void main(String[] args) throws Throwable {
+	public static void main(String... args) throws Throwable {
+		File svgFolder = new File("..\\src\\main\\res\\raw");
 		Reader input = new FileReader(new File("..\\src\\main\\res\\values\\strings_Categories.xml"));
 		Writer output = new PrintWriter(System.out, true);
-		new DatabaseGenerator(new SQLPrinter()).transform(input, output);
+		new DatabaseGenerator(new SQLPrinter(), svgFolder).transform(input, output);
 	}
 
 	public void transform(Reader input, Writer output) throws XMLStreamException, IOException {
@@ -35,6 +38,7 @@ public class DatabaseGenerator {
 					//System.out.println(); // new category found
 					//printAttributes(xml);
 
+					checkCategory(category);
 					if (category.id == Category.INVALID_ID) {
 						try {
 							category.id = level.newItem(category.level);
@@ -94,8 +98,10 @@ public class DatabaseGenerator {
 	}
 
 	private void checkCategory(Category category) {
-		final File RES_SVG = new File("i:\\src\\main\\res\\raw");
-		if (!new File(RES_SVG, category.icon + ".svg").exists()) {
+		if (svgFolder == null || category == null || category.icon == null) {
+			return;
+		}
+		if (!new File(svgFolder, category.icon + ".svg").exists()) {
 			throw new IllegalArgumentException("Missing icon: " + category);
 		}
 	}

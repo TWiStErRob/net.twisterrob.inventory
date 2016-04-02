@@ -39,7 +39,7 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 	}
 	public void itemSelected(long id) {
 		startActivity(Intents.childNav(ItemViewActivity.show(id)));
-		// TODO consider tabs as breadcrumbs?
+		// CONSIDER tabs as breadcrumbs?
 	}
 	public void itemActioned(long id) {
 		startActivity(ItemEditActivity.edit(id));

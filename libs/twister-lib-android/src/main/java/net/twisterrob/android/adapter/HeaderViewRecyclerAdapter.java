@@ -20,6 +20,7 @@ import java.util.*;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 
 /**
@@ -40,6 +41,8 @@ import android.view.*;
  *
  * @see <a href="https://gist.github.com/darnmason/7bbf8beae24fe7296c8a">GitHub > darnmason > HeaderViewRecyclerAdapter.java</a>
  */
+// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
+@SuppressWarnings({"unused", "EmptyMethod", "UnusedParameters"})
 public class HeaderViewRecyclerAdapter extends WrappingAdapter<RecyclerView.ViewHolder> {
 	private static final int HEADERS_START = Integer.MIN_VALUE;
 	private static final int FOOTERS_START = Integer.MIN_VALUE / 2;
@@ -52,9 +55,9 @@ public class HeaderViewRecyclerAdapter extends WrappingAdapter<RecyclerView.View
 	 * @param adapter The underlying adapter to wrap
 	 */
 	@SuppressWarnings("unchecked")
-	public HeaderViewRecyclerAdapter(@NonNull RecyclerView.Adapter adapter) {
+	public HeaderViewRecyclerAdapter(@NonNull RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
 		mDataObserver = new HeaderFooterAwareNotifyingObserver();
-		setWrappedAdapter(adapter);
+		setWrappedAdapter((RecyclerView.Adapter<ViewHolder>)adapter);
 	}
 
 	/**
@@ -62,11 +65,11 @@ public class HeaderViewRecyclerAdapter extends WrappingAdapter<RecyclerView.View
 	 * @param adapter The new adapter to wrap
 	 */
 	@SuppressWarnings("unchecked")
-	public void setAdapter(@NonNull RecyclerView.Adapter adapter) {
+	public void setAdapter(@NonNull RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
 		if (0 < mWrappedAdapter.getItemCount()) {
 			notifyItemRangeRemoved(getHeaderCount(), mWrappedAdapter.getItemCount());
 		}
-		setWrappedAdapter(adapter);
+		setWrappedAdapter((RecyclerView.Adapter<ViewHolder>)adapter);
 		notifyItemRangeInserted(getHeaderCount(), mWrappedAdapter.getItemCount());
 	}
 
@@ -140,8 +143,10 @@ public class HeaderViewRecyclerAdapter extends WrappingAdapter<RecyclerView.View
 	}
 
 	protected void onBindHeader(RecyclerView.ViewHolder viewHolder, int position) {
+		// optional override
 	}
 	protected void onBindFooter(RecyclerView.ViewHolder viewHolder, int position) {
+		// optional override
 	}
 
 	/**

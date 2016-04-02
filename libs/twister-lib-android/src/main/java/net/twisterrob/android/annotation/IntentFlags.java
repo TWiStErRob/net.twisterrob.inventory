@@ -103,8 +103,8 @@ public @interface IntentFlags {
 			f = handleFlag(sb, f, FLAG_ACTIVITY_BROUGHT_TO_FRONT, "FLAG_ACTIVITY_BROUGHT_TO_FRONT");
 			f = handleFlag(sb, f, FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, "FLAG_ACTIVITY_RESET_TASK_IF_NEEDED");
 			f = handleFlag(sb, f, FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, "FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY");
-			f = handleFlag(sb, f, FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET,"FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET");
-			f = handleFlag(sb, f, FLAG_ACTIVITY_NEW_DOCUMENT,"=FLAG_ACTIVITY_NEW_DOCUMENT"); // same as prev!
+			f = handleFlag(sb, f, FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, "FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET");
+			f = handleFlag(sb, f, FLAG_ACTIVITY_NEW_DOCUMENT, "=FLAG_ACTIVITY_NEW_DOCUMENT"); // same as prev!
 			f = handleFlag(sb, f, FLAG_ACTIVITY_NO_USER_ACTION, "FLAG_ACTIVITY_NO_USER_ACTION");
 			f = handleFlag(sb, f, FLAG_ACTIVITY_REORDER_TO_FRONT, "FLAG_ACTIVITY_REORDER_TO_FRONT");
 			f = handleFlag(sb, f, FLAG_ACTIVITY_NO_ANIMATION, "FLAG_ACTIVITY_NO_ANIMATION");
@@ -124,7 +124,7 @@ public @interface IntentFlags {
 			f = handleFlag(sb, f, 0x02000000, "FLAG_RECEIVER_BOOT_UPGRADE");
 			return f;
 		}
-		
+
 		private static @IntentFlags int handleFlag(StringBuilder sb,
 				@IntentFlags int flags, @IntentFlags int flag, String flagName) {
 			if ((flags & flag) != 0) {
