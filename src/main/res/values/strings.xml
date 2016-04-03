@@ -16,6 +16,8 @@
 	<string name="action_delete">Delete</string>
 	<string name="action_move">Move</string>
 	<string name="action_share">Share</string>
+	<string name="action_share_details">Share Details</string>
+	<string name="action_share_image">Share Image</string>
 	<string name="action_search">Search Items</string>
 	<string name="action_sunburst_open">View in Inventory</string>
 	<string name="action_sunburst_ignore">Hide from diagram</string>

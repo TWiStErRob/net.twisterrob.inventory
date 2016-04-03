@@ -16,6 +16,12 @@
 		app:showAsAction="ifRoom"
 		/>
 	<item
+		android:id="@+id/action_list_manage"
+		android:title="@string/list_manage"
+		android:icon="@android:drawable/ic_menu_myplaces"
+		app:showAsAction="ifRoom"
+		/>
+	<item
 		android:id="@+id/action_item_categorize"
 		android:title="@string/item_categorize"
 		android:icon="@android:drawable/ic_menu_set_as"
@@ -37,13 +43,6 @@
 		android:id="@+id/action_share"
 		android:title="@string/item_share"
 		android:icon="@android:drawable/ic_menu_share"
-		android:visible="@bool/in_test"
 		app:showAsAction="never"
-		/>
-	<item
-		android:id="@+id/action_list_manage"
-		android:title="@string/list_manage"
-		android:icon="@android:drawable/ic_menu_myplaces"
-		app:showAsAction="ifRoom"
 		/>
 </menu>

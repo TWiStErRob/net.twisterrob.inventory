@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.*;
 
-import android.content.Context;
+import android.content.*;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.net.Uri;
@@ -44,7 +44,9 @@ public class CategoryDTO extends ImagedDTO {
 	@Override public CharSequence getShareDescription(Context context) {
 		return null;
 	}
-
+	@Override public Intent createShareIntent(Context context) {
+		return null;
+	}
 	@Override
 	public String toString() {
 		return String.format(Locale.ROOT, "Category #%1$d: '%2$s' in %3$s", id, name, parentID);

@@ -70,6 +70,23 @@ public /*static*/ abstract class AndroidTools {
 		return permissionResult == PackageManager.PERMISSION_GRANTED;
 	}
 
+	public static List<Intent> resolveIntents(Context context, Intent originalIntent, int flags) {
+		PackageManager packageManager = context.getPackageManager();
+		List<ResolveInfo> resolved = packageManager.queryIntentActivities(originalIntent, flags);
+		List<Intent> result = new ArrayList<>(resolved.size());
+		for (ResolveInfo info : resolved) {
+			Intent intent = new Intent(originalIntent);
+			intent.setComponent(new ComponentName(info.activityInfo.packageName, info.activityInfo.name));
+			intent.setPackage(info.activityInfo.packageName);
+			result.add(intent);
+		}
+		return result;
+	}
+	public static Intent setInitialIntents(Intent intent, Collection<Intent> intents) {
+		intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toArray(new Parcelable[intents.size()]));
+		return intent;
+	}
+
 	public static int findItemPosition(Adapter adapter, long id) {
 		for (int position = 0, n = adapter.getCount(); position < n; position++) {
 			if (adapter.getItemId(position) == id) {
@@ -658,15 +675,27 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
-	public static void setEnabled(MenuItem item, boolean enabled) {
-		item.setEnabled(enabled);
+	public static void enabledIf(View view, boolean isEnabled) {
+		if (view != null) {
+			view.setEnabled(isEnabled);
+		}
+	}
+	public static void enabledIf(Menu menu, @IdRes int itemID, boolean isEnabled) {
+		enabledIf(menu.findItem(itemID), isEnabled);
+	}
+	public static void enabledIf(MenuItem item, boolean isEnabled) {
+		if (item == null) {
+			return;
+		}
+		item.setEnabled(isEnabled);
 		Drawable icon = item.getIcon();
 		if (icon != null) {
 			icon = icon.mutate();
-			icon.setAlpha(enabled? 0xFF : 0x80);
+			icon.setAlpha(isEnabled? 0xFF : 0x80);
 			item.setIcon(icon);
 		}
 	}
+
 
 	/** Borrowing from CSS terminology: <code>display:block/none</code> */
 	public static void displayedIf(View view, boolean isVisible) {
@@ -678,6 +707,14 @@ public /*static*/ abstract class AndroidTools {
 	public static void visibleIf(View view, boolean isVisible) {
 		if (view != null) {
 			view.setVisibility(isVisible? View.VISIBLE : View.INVISIBLE);
+		}
+	}
+	public static void visibleIf(Menu menu, @IdRes int itemID, boolean isVisible) {
+		visibleIf(menu.findItem(itemID), isVisible);
+	}
+	public static void visibleIf(MenuItem item, boolean isVisible) {
+		if (item != null) {
+			item.setVisible(isVisible);
 		}
 	}
 	public static void displayedIfHasText(TextView view) {

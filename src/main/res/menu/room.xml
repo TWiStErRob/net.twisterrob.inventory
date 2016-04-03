@@ -31,7 +31,6 @@
 		android:id="@+id/action_share"
 		android:title="@string/room_share"
 		android:icon="@android:drawable/ic_menu_share"
-		android:visible="@bool/in_test"
 		app:showAsAction="never"
 		/>
 </menu>

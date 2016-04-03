@@ -37,25 +37,20 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		ImageAndDescriptionAdapter adapter = new ImageAndDescriptionAdapter(entity);
 		pager.setAdapter(adapter);
 		pager.setCurrentItem(adapter.getDefaultPosition());
-		shareIntent = new Intent(Intent.ACTION_SEND)
-				.setType("image/jpeg")
-				.putExtra(Intent.EXTRA_SUBJECT, entity.name)
-				.putExtra(Intent.EXTRA_TEXT, entity.getShareDescription(getContext()))
-				.putExtra(Intent.EXTRA_STREAM, entity.getImageUri())
-				.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-		;
+		shareIntent = entity.createShareIntent(getContext());
 	}
 
 	protected abstract CharSequence getDetailsString(DTO entity, boolean DEBUG);
 
+	@Override public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		AndroidTools.enabledIf(menu, R.id.action_share, shareIntent != null);
+	}
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_share:
-				if (shareIntent != null) {
-					startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
-				} else {
-					App.toast("Not implemented yet");
-				}
+				// CONSIDER context sensitive sharing based on visible ViewPager page
+				startActivity(shareIntent);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

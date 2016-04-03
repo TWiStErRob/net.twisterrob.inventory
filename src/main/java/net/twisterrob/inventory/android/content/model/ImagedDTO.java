@@ -2,15 +2,16 @@ package net.twisterrob.inventory.android.content.model;
 
 import org.slf4j.*;
 
-import android.content.Context;
+import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.annotation.RawRes;
+import android.support.annotation.*;
 import android.widget.ImageView;
 
 import net.twisterrob.android.content.glide.LongSignature;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
 
 public abstract class ImagedDTO extends DTO {
@@ -36,6 +37,30 @@ public abstract class ImagedDTO extends DTO {
 
 	public abstract Uri getImageUri();
 	public abstract CharSequence getShareDescription(Context context);
+
+	public Intent createShareIntent(Context context) {
+		@StringRes int id = R.string.action_share;
+		Intent shareIntent = new Intent(Intent.ACTION_SEND)
+				.setType("text/plain")
+				.putExtra(Intent.EXTRA_SUBJECT, name)
+				.putExtra(Intent.EXTRA_TEXT, name);
+		// use better description if available
+		CharSequence text = getShareDescription(context);
+		if (text != null) {
+			id = R.string.action_share_details;
+			shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+		}
+		// attach image if possible
+		if (hasImage) {
+			id = R.string.action_share_image;
+			shareIntent
+					.setType("image/jpeg")
+					.putExtra(Intent.EXTRA_STREAM, getImageUri())
+					.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+			;
+		}
+		return Intent.createChooser(shareIntent, context.getText(id));
+	}
 
 	public static @RawRes int getFallbackID(Context context, Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));

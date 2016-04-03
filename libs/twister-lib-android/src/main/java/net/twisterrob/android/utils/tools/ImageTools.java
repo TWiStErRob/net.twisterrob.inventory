@@ -1,12 +1,12 @@
 package net.twisterrob.android.utils.tools;
 
 import java.io.*;
-import java.util.*;
+import java.util.List;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.*;
-import android.content.pm.*;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
@@ -49,15 +49,9 @@ public /*static*/ abstract class ImageTools {
 	public static List<Intent> createCameraIntents(Context context, File file) {
 		Uri outputFileUri = Uri.fromFile(file);
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		PackageManager packageManager = context.getPackageManager();
-		List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-		List<Intent> cameraIntents = new ArrayList<>();
-		for (ResolveInfo res : listCam) {
-			Intent intent = new Intent(captureIntent);
-			intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-			intent.setPackage(res.activityInfo.packageName);
+		List<Intent> cameraIntents = AndroidTools.resolveIntents(context, captureIntent, 0);
+		for (Intent intent : cameraIntents) {
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-			cameraIntents.add(intent);
 		}
 		return cameraIntents;
 	}
@@ -69,12 +63,11 @@ public /*static*/ abstract class ImageTools {
 	}
 
 	public static @NonNull Intent createCaptureIntent(Activity activity, File targetFile) {
-		List<Intent> camIntents = createCameraIntents(activity, targetFile);
 		// Chooser of filesystem options
 		Intent chooserIntent = Intent.createChooser(createGalleryIntent(), null);
 		// Add the camera options
-		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, camIntents.toArray(new Parcelable[camIntents.size()]));
-		return chooserIntent;
+		List<Intent> camIntents = createCameraIntents(activity, targetFile);
+		return AndroidTools.setInitialIntents(chooserIntent, camIntents);
 	}
 
 	public static void getPicture(Activity activity, File targetFile) {
