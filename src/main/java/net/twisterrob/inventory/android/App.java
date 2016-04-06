@@ -18,6 +18,7 @@ import android.support.annotation.*;
 import android.widget.Toast;
 
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.java.utils.StringTools;
@@ -61,6 +62,7 @@ public class App extends Application {
 
 	@Override public void onCreate() {
 		super.onCreate();
+		AndroidTools.setContext(this);
 		LOG.info("************* Starting up {} {} built at {}",
 				getPackageName(), BuildConfig.VERSION_NAME, BuildConfig.BUILD_TIME);
 

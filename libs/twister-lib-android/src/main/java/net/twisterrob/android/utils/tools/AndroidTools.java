@@ -50,6 +50,14 @@ import net.twisterrob.java.utils.ReflectionTools;
 public /*static*/ abstract class AndroidTools {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidTools.class);
 
+	private static Context appContext;
+	public static synchronized void setContext(Context context) {
+		if (appContext != null || context == null) {
+			throw new IllegalArgumentException("Cannot set context twice or to null");
+		}
+		appContext = context.getApplicationContext();
+	}
+
 	private static final float CIRCLE_LIMIT = 359.9999f;
 	private static final int INVALID_POSITION = -1;
 
@@ -210,33 +218,97 @@ public /*static*/ abstract class AndroidTools {
 
 	@DebugHelper
 	public static String toLongString(Bundle bundle) {
-		return toString(bundle, "Bundle of ", "\n", "\t", "\n", "");
+		return toString(bundle, "", " of ", "\n", "\t", "\n", "");
 	}
 
 	@DebugHelper
 	public static String toShortString(Bundle bundle) {
-		return toString(bundle, "(Bundle)", "#{", "", ", ", "}");
+		return toString(bundle, "(", ")", "#{", "", ", ", "}");
 	}
 
 	@DebugHelper
-	private static String toString(Bundle bundle, String number, String start, String preItem, String postItem,
+	private static String toString(Bundle bundle, String preType, String postType, String start, String preItem,
+			String postItem,
 			String end) {
 		if (bundle == null) {
 			return NULL;
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append(number).append(bundle.size()).append(start);
+		toStringRec(sb, 1, bundle, preType, postType, start, preItem, postItem, end);
+		return sb.toString();
+	}
+	private static void toStringRec(StringBuilder sb, int level,
+			Bundle bundle, String preType, String postType, String start, String preItem, String postItem, String end) {
+		sb.append(preType).append(debugType(bundle)).append(postType).append(bundle.size()).append(start);
 		for (Iterator<String> it = new TreeSet<>(bundle.keySet()).iterator(); it.hasNext(); ) {
 			String key = it.next();
-			String value = toString(bundle.get(key));
+			for (int i = 0; i < level; i++) {
+				sb.append(preItem);
+			}
+			sb.append(key).append("=");
 
-			sb.append(preItem).append(key).append("=").append(value);
+			Object value = bundle.get(key);
+			if (value instanceof Bundle) {
+				toStringRec(sb, level + 1, (Bundle)value, preType, postType, start, preItem, postItem, end);
+			} else if (value instanceof SparseArray) {
+				boolean resolveKeysAsIds = appContext != null && "android:views".equals(key);
+				SparseArray<?> array = (SparseArray<?>)value;
+				sb.append(preType).append(debugType(array)).append(postType).append(array.size()).append(start);
+				for (int index = 0; index < array.size(); index++) {
+					int arrayKey = array.keyAt(index);
+					Object arrayValue = array.get(arrayKey);
+					for (int i = 0; i < level + 1; i++) {
+						sb.append(preItem);
+					}
+					if (resolveKeysAsIds) {
+						sb.append(toNameString(appContext, arrayKey));
+					} else {
+						sb.append(arrayKey);
+					}
+					sb.append('=');
+					if (arrayValue instanceof Bundle) {
+						toStringRec(sb, level + 2, (Bundle)arrayValue, preType, postType, start, preItem, postItem,
+								end);
+					} else {
+						sb.append(toString(arrayValue));
+					}
+					if (index + 1 < array.size()) {
+						sb.append(postItem);
+					}
+				}
+				sb.append(end);
+			} else {
+				if (appContext != null && "android:focusedViewId".equals(key) && value instanceof Integer) {
+					sb.append(toNameString(appContext, (Integer)value));
+				} else {
+					sb.append(toString(value));
+				}
+			}
 			if (it.hasNext()) {
 				sb.append(postItem);
 			}
 		}
 		sb.append(end);
-		return sb.toString();
+	}
+
+	@TargetApi(VERSION_CODES.HONEYCOMB)
+	@DebugHelper
+	private static String toString(android.content.Loader<?> loader) {
+		if (loader == null) {
+			return NULL;
+		}
+		StringWriter writer = new StringWriter();
+		loader.dump("", null, new PrintWriter(writer), null);
+		return writer.toString();
+	}
+	@DebugHelper
+	private static String toString(android.support.v4.content.Loader<?> loader) {
+		if (loader == null) {
+			return NULL;
+		}
+		StringWriter writer = new StringWriter();
+		loader.dump("", null, new PrintWriter(writer), null);
+		return writer.toString();
 	}
 
 	@TargetApi(VERSION_CODES.JELLY_BEAN)
@@ -284,24 +356,43 @@ public /*static*/ abstract class AndroidTools {
 		if (value == null) {
 			return NULL;
 		}
-		String type = value.getClass().getName();
+		String type = debugType(value);
 		String display;
 		if (value instanceof Bundle) {
-			display = toString((Bundle)value, " ", "#{", "", ", ", "}");
+			display = toString((Bundle)value, "", " ", "#{", "", ", ", "}");
 		} else if (value instanceof Intent) {
 			display = toString((Intent)value);
 		} else if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT && value instanceof android.app.Fragment.SavedState) {
-			return "(SavedState)" + toString(ReflectionTools.get(value, "mState"));
+			type = "Fragment.SavedState";
+			display = toString(ReflectionTools.get(value, "mState"));
 		} else if (value instanceof android.support.v4.app.Fragment.SavedState) {
-			return "(v4.SavedState)" + toString(ReflectionTools.get(value, "mState"));
+			type = "v4.Fragment.SavedState";
+			display = toString(ReflectionTools.get(value, "mState"));
+		} else if (value instanceof android.support.v4.content.Loader<?>) {
+			display = toString((android.support.v4.content.Loader<?>)value);
+		} else if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT && value instanceof android.content.Loader<?>) {
+			display = toString((android.content.Loader<?>)value);
+		} else if (value == AbsSavedState.EMPTY_STATE) {
+			type = null;
+			display = "AbsSavedState.EMPTY_STATE";
 		} else {
-			display = value.toString();
+			display = shortenPackageNames(value.toString());
 			if (type.length() <= display.length() && display.startsWith(type)) {
 				display = display.substring(type.length()); // from @ sign or { in case of View
 			}
-			display = shortenPackageNames(display);
 		}
-		return "(" + shortenPackageNames(type) + ")" + display;
+		return (type != null? "(" + type + ")" : "") + display;
+	}
+
+	private static String debugType(Object value) {
+		if (value == null) {
+			return NULL;
+		}
+		String name = value.getClass().getCanonicalName();
+		if (name == null) {
+			name = value.getClass().toString();
+		}
+		return shortenPackageNames(name);
 	}
 
 	@DebugHelper
@@ -696,7 +787,6 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
-
 	/** Borrowing from CSS terminology: <code>display:block/none</code> */
 	public static void displayedIf(View view, boolean isVisible) {
 		if (view != null) {
@@ -973,9 +1063,15 @@ public /*static*/ abstract class AndroidTools {
 			bundle.get(null);
 		}
 	}
+	@DebugHelper
 	public static String toNameString(Context context, @IdRes int id) {
-		return toNameString(context.getResources(), id);
+		String name = toNameString(context.getResources(), id);
+		if (name.startsWith(context.getPackageName())) {
+			name = "app" + name.substring(context.getPackageName().length());
+		}
+		return name;
 	}
+	@DebugHelper
 	public static String toNameString(Resources resources, @IdRes int id) {
 		try {
 			return resources.getResourceName(id);

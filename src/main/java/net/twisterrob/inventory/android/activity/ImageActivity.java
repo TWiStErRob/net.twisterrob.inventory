@@ -25,7 +25,7 @@ import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 
-public class ImageActivity extends VariantActivity implements RequestListener<Uri, GlideDrawable> {
+public class ImageActivity extends DebugHelperActivity implements RequestListener<Uri, GlideDrawable> {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageActivity.class);
 
 	/** type: Boolean, true=internal, false=external, not present=auto(from prefs) */
