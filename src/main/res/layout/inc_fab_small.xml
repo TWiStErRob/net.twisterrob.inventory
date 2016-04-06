@@ -13,6 +13,10 @@
 	android:visibility="gone"
 	tools:visibility="visible"
 	tools:ignore="NegativeMargin"
+	tools:src="@android:drawable/ic_menu_add"
+	tools:background="@null"
+	tools:layout_width="@dimen/icon_big"
+	tools:layout_height="@dimen/icon_big"
 	app:fabSize="mini"
 	/>
 

@@ -50,13 +50,13 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	}
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_sunburst, container, false);
+		View view = inflater.inflate(R.layout.fragment_sunburst, container, false);
+		diagram = (ImageView)view.findViewById(R.id.diagram);
+		return view;
 	}
 
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
-		diagram = (ImageView)view.findViewById(R.id.diagram);
 		diagram.setOnTouchListener(new Toucher());
 		setLoading(true);
 	}
@@ -69,9 +69,14 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 			}
 		});
 	}
-
-	@Override public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	@Override public void onStart() {
+		super.onStart();
+		if (sunburst.getRoot() != null) {
+			setLoading(false);
+			setRootInternal(sunburst.getRoot());
+			diagram.setImageDrawable(sunburst);
+			return;
+		}
 		loadTreeTask = new SimpleSafeAsyncTask<Node, Void, Node>() {
 			@Override protected void onPreExecute() {
 				setLoading(true);
@@ -84,9 +89,15 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 			}
 
 			@Override protected void onResult(Node result, Node param) {
-				setLoading(false);
+				if (isCancelled()) {
+					return;
+				}
 				setRoot(result);
-				diagram.setImageDrawable(sunburst);
+				//noinspection ConstantConditions in this case super conditions apply and it can be null
+				if (getView() != null) {
+					setLoading(false);
+					diagram.setImageDrawable(sunburst);
+				}
 			}
 
 			@Override protected void onError(@NonNull Exception ex, Node param) {
@@ -95,6 +106,13 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 			}
 		};
 		loadTreeTask.execute(createStartingNode());
+	}
+
+	@Override public void onDestroyView() {
+		setLoading(false);
+		diagram.setImageDrawable(null); // unschedule and clear callback
+		diagram = null;
+		super.onDestroyView();
 	}
 
 	@Override public void onDestroy() {
@@ -202,6 +220,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 				return super.onOptionsItemSelected(item);
 		}
 	}
+
 	private class Toucher implements OnTouchListener {
 		public boolean onTouch(View v, MotionEvent event) {
 			switch (event.getActionMasked()) {

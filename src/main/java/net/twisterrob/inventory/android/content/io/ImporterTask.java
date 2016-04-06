@@ -16,6 +16,7 @@ import android.support.annotation.*;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.Type;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.xml.XMLImporter;
@@ -106,7 +107,8 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 		progress = new Progress();
 		progress.input = file;
 		zip = null;
-		@SuppressWarnings("resource") SQLiteDatabase db = App.db().getWritableDatabase();
+		Database appDB = App.db();
+		@SuppressWarnings("resource") SQLiteDatabase db = appDB.getWritableDatabase();
 		try {
 			// CONSIDER wakelock?
 
@@ -121,11 +123,10 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 			if (dataFile != null) {
 				//noinspection resource zip is closed in finally
 				stream = zip.getInputStream(dataFile);
-				importer = new XMLImporter(this);
+				importer = new XMLImporter(this, appDB);
 			} else {
-				throw new IllegalArgumentException(
-						format("The file %s is not a valid " + context.getString(R.string.app_name) + " backup: %s",
-								zip.getName(), "missing data file"));
+				throw new IllegalArgumentException(format("The file %s is not a valid %s backup: %s",
+						zip.getName(), context.getString(R.string.app_name), "missing data file"));
 			}
 			importer.doImport(stream);
 

@@ -11,5 +11,5 @@ public interface ImportProgressHandler {
 	void publishIncrement();
 	void warning(@StringRes int stringID, Object... args);
 	void error(String message);
-	void importImage(Type type, long id, String coalesce, String image) throws IOException;
+	void importImage(Type type, long id, String name, String image) throws IOException;
 }

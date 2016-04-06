@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+	android:id="@+id/backup_browser_toolbar"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="?attr/colorPrimary"
+	android:minHeight="?attr/actionBarSize"
+	app:title="Backup Folder"
+	app:navigationIcon="@android:drawable/ic_menu_upload"
+>
+	<Button
+		android:id="@+id/action_export"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="end"
+		android:background="?attr/selectableItemBackground"
+		android:text="@string/backup_export"
+		android:drawableLeft="@android:drawable/ic_menu_save"
+		android:drawableStart="@android:drawable/ic_menu_save"
+		android:textColor="#FFF"
+		android:textSize="12sp"
+	/>
+</android.support.v7.widget.Toolbar>

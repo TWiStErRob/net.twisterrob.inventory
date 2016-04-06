@@ -40,6 +40,7 @@ public abstract class DrawerActivity extends BaseActivity {
 		if (mDrawerLayout != null) {
 			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, INVALID_RESOURCE_ID, INVALID_RESOURCE_ID);
 			mDrawerLayout.addDrawerListener(mDrawerToggle);
+			mDrawerLayout.addDrawerListener(new ActiveItemSelector());
 			mDrawerLayout.addDrawerListener(new TitleUpdater());
 			mDrawerLayout.addDrawerListener(new OptionsMenuInvalidator());
 			mDrawerLayout.addDrawerListener(new CountUpdater());
@@ -89,24 +90,8 @@ public abstract class DrawerActivity extends BaseActivity {
 		// optional override
 	}
 
-	protected final void refreshDrawers(Intent intent) {
-		if (mDrawerLeft != null) {
-			refreshDrawerLeft(intent);
-		}
-		if (mDrawerRight != null) {
-			refreshDrawerRight(intent);
-		}
-	}
+	protected void refreshDrawers(Intent intent) {
 
-	protected void refreshDrawerLeft(Intent intent) {
-		DrawerNavigator.get(mDrawerLeft).select(intent);
-	}
-
-	// TODEL UnusedParameters: https://youtrack.jetbrains.com/issue/IDEA-154071
-	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-	@SuppressWarnings("EmptyMethod")
-	protected void refreshDrawerRight(@SuppressWarnings({"unused", "UnusedParameters"}) Intent intent) {
-		// optional override
 	}
 
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -173,24 +158,29 @@ public abstract class DrawerActivity extends BaseActivity {
 		return data;
 	}
 
+	private class ActiveItemSelector extends SimpleDrawerListener {
+		@Override public void onDrawerStateChanged(int newState) {
+			super.onDrawerStateChanged(newState);
+			if (newState == DrawerLayout.STATE_DRAGGING || newState == DrawerLayout.STATE_SETTLING) {
+				DrawerNavigator.get(mDrawerLeft).select(getIntent());
+			}
+		}
+	}
+
 	private class TitleUpdater extends SimpleDrawerListener {
-		@Override
-		public void onDrawerClosed(View view) {
+		@Override public void onDrawerClosed(View view) {
 			getSupportActionBar().setTitle(getTitle());
 		}
-		@Override
-		public void onDrawerOpened(View drawerView) {
+		@Override public void onDrawerOpened(View drawerView) {
 			getSupportActionBar().setTitle(getText(R.string.navigation_title));
 		}
 	}
 
 	private class OptionsMenuInvalidator extends SimpleDrawerListener {
-		@Override
-		public void onDrawerClosed(View view) {
+		@Override public void onDrawerClosed(View view) {
 			supportInvalidateOptionsMenu();
 		}
-		@Override
-		public void onDrawerOpened(View drawerView) {
+		@Override public void onDrawerOpened(View drawerView) {
 			supportInvalidateOptionsMenu();
 		}
 	}
