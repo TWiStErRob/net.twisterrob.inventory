@@ -7,13 +7,14 @@
 		android:id="@+id/action_export"
 		android:title="@string/backup_export"
 		android:icon="@android:drawable/ic_menu_save"
-		app:showAsAction="ifRoom|withText"
+		app:showAsAction="never"
 		/>
 	<item
 		android:id="@+id/action_export_home"
 		android:title="@string/backup_go_home"
+		android:titleCondensed="@string/backup_go_home_condensed"
 		android:icon="@android:drawable/ic_menu_revert"
-		app:showAsAction="never"
+		app:showAsAction="always|withText"
 		/>
 	<item
 		android:id="@+id/action_manage_space"

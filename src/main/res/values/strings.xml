@@ -209,6 +209,7 @@
 	<string name="backup_export">Backup here</string>
 	<string name="backup_no_parent">Current directory doesn\'t have a parent.</string>
 	<string name="backup_go_home">Go to Downloads folder</string>
+	<string name="backup_go_home_condensed">Downloads</string>
 
 	<string name="backup_export_progress_title">Export</string>
 	<string name="backup_export_progress_init">Preparing export…</string>

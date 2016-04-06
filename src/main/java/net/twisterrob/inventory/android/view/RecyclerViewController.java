@@ -6,6 +6,7 @@ import android.support.annotation.*;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.*;
 import android.view.View.OnClickListener;
 
@@ -16,6 +17,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewController.class);
 
 	private SwipeRefreshLayout progress;
+	private boolean lastScrollUp = true;
 	protected RecyclerView list;
 	private View fab;
 	private View empty;
@@ -45,6 +47,15 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 		}
 	};
 
+	private final OnScrollListener hideOnUp = new OnScrollListener() {
+		@Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+			// no op
+		}
+		@Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+			lastScrollUp = dx > 0 || dy > 0;
+			updateFAB();
+		}
+	};
 	private final RecyclerView.AdapterDataObserver emptyObserver = new RecyclerView.AdapterDataObserver() {
 		@Override public void onChanged() {
 			updateEmpty();
@@ -102,6 +113,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 			fab.setVisibility(View.INVISIBLE); // force a layout, but don't show
 			fab.setOnClickListener(createNew);
 		}
+		list.addOnScrollListener(hideOnUp);
 	}
 
 	protected abstract @NonNull A setupList();
@@ -126,7 +138,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 		if (fab == null) {
 			return;
 		}
-		if (isLoading() || !canCreateNew()) {
+		if (isLoading() || !canCreateNew() || lastScrollUp) {
 			if (fab instanceof FloatingActionButton) {
 				((FloatingActionButton)fab).hide();
 			} else {

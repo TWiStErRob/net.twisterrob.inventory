@@ -94,7 +94,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 				filePicked(Paths.getPhoneHome(), true);
 				return true;
 			case R.id.action_export:
-				ExportFragment.create(BackupActivity.this, getSupportFragmentManager()).execute(getDir());
+				controller.createNew();
 				return true;
 			case R.id.action_manage_space:
 				startActivity(ManageSpaceActivity.launch());
@@ -281,10 +281,21 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			return adapter;
 		}
 
+		@Override protected void onViewSet() {
+			super.onViewSet();
+			ImageView fab = getFAB();
+			fab.setImageResource(android.R.drawable.ic_menu_save);
+		}
 		@Override protected void setData(ImportFilesAdapter adapter, List<File> data) {
 			adapter.setFiles(getDir(), data);
 		}
 
+		@Override public boolean canCreateNew() {
+			return true;
+		}
+		@Override protected void onCreateNew() {
+			ExportFragment.create(BackupActivity.this, getSupportFragmentManager()).execute(getDir());
+		}
 		private class FileLoaderCallbacks implements LoaderCallbacks<List<File>> {
 			@Override public Loader<List<File>> onCreateLoader(int id, Bundle args) {
 				startLoading();
