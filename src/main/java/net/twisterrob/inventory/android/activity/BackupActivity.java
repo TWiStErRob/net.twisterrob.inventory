@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.*;
+import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -60,14 +61,6 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				File parent = getDir().getParentFile();
-				if (parent != null) {
-					filePicked(parent);
-				} else {
-					App.toastUser(getString(R.string.backup_no_parent));
-				}
-				return true;
 			case R.id.action_export_home:
 				filePicked(Paths.getPhoneHome());
 				return true;
@@ -99,22 +92,44 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	}
 
 	private class ImportFilesAdapter extends RecyclerView.Adapter<ImportFilesAdapter.ViewHolder> {
+		private File parent;
 		private List<File> files;
 
-		public void setFiles(List<File> files) {
+		public void setFiles(File root, List<File> files) {
+			this.parent = root != null? root.getParentFile() : null;
 			this.files = files;
 			notifyDataSetChanged();
 		}
 
+		@Override public int getItemCount() {
+			return (parent != null? 1 : 0) + (files != null? files.size() : 0);
+		}
+		private @NonNull File getItem(int position) {
+			if (parent != null) {
+				return position == 0? parent : files.get(position - 1);
+			} else {
+				return files.get(position);
+			}
+		}
+		@Override public long getItemId(int position) {
+			return getItem(position).hashCode();
+		}
 		@Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 			return new ViewHolder(inflater.inflate(R.layout.item_backup, parent, false));
 		}
 
 		@Override public void onBindViewHolder(ImportFilesAdapter.ViewHolder holder, int position) {
-			File file = files.get(position);
+			File file = getItem(position);
 
 			String name = file.getName();
+			if (file == parent) {
+				StringBuilder sb = new StringBuilder("..");
+				if (TextUtils.getTrimmedLength(name) != 0) {
+					sb.append(' ').append('(').append(name).append(')');
+				}
+				name = sb.toString();
+			}
 			String size = null;
 			@RawRes int icon;
 			if (name.startsWith("Inventory_") && name.endsWith(".zip")) {
@@ -136,10 +151,6 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			AndroidTools.displayedIfHasText(holder.count);
 		}
 
-		@Override public int getItemCount() {
-			return files != null? files.size() : 0;
-		}
-
 		class ViewHolder extends RecyclerView.ViewHolder {
 			final ImageView icon;
 			final TextView text;
@@ -153,7 +164,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 
 				view.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {
-						filePicked(files.get(getAdapterPosition()));
+						filePicked(getItem(getAdapterPosition()));
 					}
 				});
 			}
@@ -221,7 +232,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 
 		@Override protected void setData(ImportFilesAdapter adapter, List<File> data) {
-			adapter.setFiles(data);
+			adapter.setFiles(getDir(), data);
 		}
 
 		private class FileLoaderCallbacks implements LoaderCallbacks<List<File>> {
@@ -232,9 +243,9 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			}
 			@Override public void onLoadFinished(Loader<List<File>> loader, List<File> data) {
 				File root = ((FilesLoader)loader).getRoot();
+				App.setSPref(R.string.pref_state_backup_path, root.getAbsolutePath());
 				((TextView)findViewById(R.id.backup_location)).setText(root.toString());
 				updateAdapter(data);
-				App.setSPref(R.string.pref_state_backup_path, root.getAbsolutePath());
 			}
 			@Override public void onLoaderReset(Loader<List<File>> loader) {
 				updateAdapter(null);
