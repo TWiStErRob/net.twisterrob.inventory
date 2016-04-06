@@ -4,9 +4,21 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	>
 	<item
+		android:id="@+id/action_export"
+		android:title="@string/backup_export"
+		android:icon="@android:drawable/ic_menu_save"
+		app:showAsAction="ifRoom|withText"
+		/>
+	<item
+		android:id="@+id/action_export_home"
+		android:title="@string/backup_go_home"
+		android:icon="@android:drawable/ic_menu_revert"
+		app:showAsAction="never"
+		/>
+	<item
 		android:id="@+id/action_manage_space"
 		android:title="@string/manage_space_title"
 		android:icon="@android:drawable/ic_popup_disk_full"
-		app:showAsAction="always|withText"
+		app:showAsAction="never"
 		/>
 </menu>

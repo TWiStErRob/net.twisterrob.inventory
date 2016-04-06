@@ -3,6 +3,7 @@
 	<string name="pref_activity_title">Settings</string>
 
 	<string name="pref_currentLanguage" translatable="false">currentLanguage</string>
+	<string name="pref_state_backup_path" translatable="false">backupPath</string>
 
 	<string name="pref_defaultViewPage_title">Default Details Page</string>
 	<string name="pref_defaultViewPage" translatable="false">defaultViewPage</string>

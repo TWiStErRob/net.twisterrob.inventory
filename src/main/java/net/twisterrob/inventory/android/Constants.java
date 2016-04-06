@@ -38,10 +38,9 @@ public interface Constants {
 		private static final String PUBLIC_SHARE_FOLDER_NAME = "share";
 		public static final String BACKUP_DATA_FILENAME = "data.xml";
 
-		public static @NonNull File getExportFile() throws IOException {
+		public static @NonNull File getExportFile(File exportFolder) throws IOException {
 			Calendar now = Calendar.getInstance();
 			String fileName = String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
-			File exportFolder = getPhoneHome();
 			IOTools.ensure(exportFolder);
 			return new File(exportFolder, fileName);
 		}

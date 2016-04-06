@@ -133,10 +133,20 @@ public class App extends Application {
 		return App.getPrefs().getBoolean(prefKey, prefDefault);
 	}
 	/** Get String Preference */
+	public static String getSPref(@StringRes int prefName, String prefDefaultValue) {
+		String prefKey = App.getAppContext().getString(prefName);
+		return App.getPrefs().getString(prefKey, prefDefaultValue);
+	}
+	/** Get String Preference */
 	public static String getSPref(@StringRes int prefName, @StringRes int defaultRes) {
 		String prefKey = App.getAppContext().getString(prefName);
-		String prefDefault = App.getAppContext().getResources().getString(defaultRes);
-		return App.getPrefs().getString(prefKey, prefDefault);
+		String prefDefaultValue = App.getAppContext().getResources().getString(defaultRes);
+		return App.getPrefs().getString(prefKey, prefDefaultValue);
+	}
+	/** Set String Preference */
+	public static void setSPref(@StringRes int prefName, String value) {
+		String prefKey = App.getAppContext().getString(prefName);
+		getPrefEditor().putString(prefKey, value).apply();
 	}
 
 	/** @return You must call {@link SharedPreferences.Editor#commit} as per {@link SharedPreferences#edit} contract. */
@@ -260,5 +270,8 @@ public class App extends Application {
 			;
 		}
 		StrictMode.setVmPolicy(vmBuilder.build());
+	}
+	public static void notImplemented() {
+		toastUser("Not implemented yet, sorry. Please send feedback on what you were using so we can implement it.");
 	}
 }

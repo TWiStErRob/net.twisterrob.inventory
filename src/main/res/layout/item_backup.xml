@@ -9,6 +9,14 @@
 	android:background="@drawable/item_state"
 	tools:background="@color/toolsBG"
 	>
+	<ImageView
+		android:id="@id/type"
+		android:layout_width="@dimen/icon_medium"
+		android:layout_height="@dimen/icon_medium"
+		android:layout_marginRight="@dimen/margin"
+		android:layout_marginEnd="@dimen/margin"
+		tools:src="@drawable/category_unknown"
+		/>
 	<TextView
 		android:id="@id/title"
 		android:layout_width="0dp"

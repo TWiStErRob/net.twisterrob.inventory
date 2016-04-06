@@ -206,6 +206,9 @@
 	<string name="manage_space_title">Manage Inventory Space</string>
 	<string name="manage_space_calculating">Calculating…</string>
 	<string name="backup_title">Backup</string>
+	<string name="backup_export">Backup here</string>
+	<string name="backup_no_parent">Current directory doesn\'t have a parent.</string>
+	<string name="backup_go_home">Go to Downloads folder</string>
 
 	<string name="backup_export_progress_title">Export</string>
 	<string name="backup_export_progress_init">Preparing export…</string>
@@ -225,8 +228,5 @@
 	<string name="backup_import_conflict_item">Item &#8220;%3$s&#8221; in &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>
 	<string name="backup_import_invalid_type">&#8220;%1$s&#8221; has invalid type: &#8220;%2$s&#8221;, used the default type.</string>
 	<string name="backup_import_invalid_image">&#8220;%1$s&#8221; has invalid image: &#8220;%2$s&#8221;, ignored image.</string>
-
-	<string name="backup_import_sd">Restore data from Phone</string>
-	<string name="backup_export_sd">Backup data to Phone</string>
 
 </resources>

@@ -1,12 +1,14 @@
 package net.twisterrob.inventory.android.activity;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.*;
 import java.util.regex.Pattern;
+
+import org.slf4j.*;
 
 import android.content.*;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -14,35 +16,38 @@ import android.support.v7.widget.*;
 import android.text.format.Formatter;
 import android.view.*;
 import android.view.View.OnClickListener;
-import android.widget.TextView;
+import android.widget.*;
 
 import net.twisterrob.android.content.loader.AsyncLoader;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Paths;
+import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
+import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.view.RecyclerViewLoaderController;
 
 public class BackupActivity extends BaseActivity implements OnRefreshListener {
-	private RecyclerViewLoaderController<ImportFilesAdapter, File[]> controller;
+	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
+	private static final String EXTRA_PATH = "path";
+	private RecyclerViewLoaderController<ImportFilesAdapter, List<File>> controller;
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_backup);
 
-		((TextView)findViewById(R.id.backup_location)).setText(Paths.getPhoneHome().toString());
-		findViewById(R.id.btn_export).setOnClickListener(new OnClickListener() {
-			@Override public void onClick(View v) {
-				ExportFragment.create(BackupActivity.this, getSupportFragmentManager()).execute();
-			}
-		});
-
 		controller = new BackupListController();
-		controller.startLoad(null);
+		controller.setView((RecyclerView)findViewById(R.id.backups));
+		filePicked(getDir());
 	}
 
 	@Override protected void onRestart() {
 		super.onRestart();
 		controller.refresh();
+	}
+
+	@NonNull private File getDir() {
+		String backupPath = App.getSPref(R.string.pref_state_backup_path, Paths.getPhoneHome().toString());
+		return new File(backupPath);
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,6 +60,20 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case android.R.id.home:
+				File parent = getDir().getParentFile();
+				if (parent != null) {
+					filePicked(parent);
+				} else {
+					App.toastUser(getString(R.string.backup_no_parent));
+				}
+				return true;
+			case R.id.action_export_home:
+				filePicked(Paths.getPhoneHome());
+				return true;
+			case R.id.action_export:
+				ExportFragment.create(BackupActivity.this, getSupportFragmentManager()).execute(getDir());
+				return true;
 			case R.id.action_manage_space:
 				startActivity(ManageSpaceActivity.launch());
 				return true;
@@ -63,7 +82,12 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 	}
 	public void filePicked(File file) {
-		ImportFragment.create(this, getSupportFragmentManager()).execute(file);
+		LOG.trace("File picked (dir={}, exists={}): {}", file.isDirectory(), file.exists(), file);
+		if (file.isDirectory()) {
+			controller.startLoad(Intents.bundleFrom(EXTRA_PATH, file));
+		} else {
+			ImportFragment.create(this, getSupportFragmentManager()).execute(file);
+		}
 	}
 
 	public static Intent chooser() {
@@ -75,9 +99,9 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	}
 
 	private class ImportFilesAdapter extends RecyclerView.Adapter<ImportFilesAdapter.ViewHolder> {
-		private File[] files;
+		private List<File> files;
 
-		public void setFiles(File... files) {
+		public void setFiles(List<File> files) {
 			this.files = files;
 			notifyDataSetChanged();
 		}
@@ -88,68 +112,102 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 
 		@Override public void onBindViewHolder(ImportFilesAdapter.ViewHolder holder, int position) {
-			String name = files[position].getName();
-			if (name.startsWith("Inventory_") && name.endsWith(".zip")) {
-				name = name.replaceAll("^Inventory_(.*)\\.zip$", "$1").replace('_', ' ');
-			}
-			String size = Formatter.formatShortFileSize(holder.count.getContext(), files[position].length());
+			File file = files.get(position);
 
+			String name = file.getName();
+			String size = null;
+			@RawRes int icon;
+			if (name.startsWith("Inventory_") && name.endsWith(".zip")) {
+				icon = R.raw.category_disc;
+				name = name.replaceAll("^Inventory_(.*)\\.zip$", "$1").replace('_', ' ');
+			} else {
+				icon = R.raw.category_unknown;
+			}
+
+			if (file.isDirectory()) {
+				icon = R.raw.category_box;
+			} else {
+				size = Formatter.formatShortFileSize(holder.count.getContext(), file.length());
+			}
+
+			Pic.svg().load(icon).into(holder.icon);
 			holder.text.setText(name);
 			holder.count.setText(size);
+			AndroidTools.displayedIfHasText(holder.count);
 		}
 
 		@Override public int getItemCount() {
-			return files != null? files.length : 0;
+			return files != null? files.size() : 0;
 		}
 
 		class ViewHolder extends RecyclerView.ViewHolder {
+			final ImageView icon;
 			final TextView text;
 			final TextView count;
 
 			public ViewHolder(View view) {
 				super(view);
+				icon = (ImageView)view.findViewById(R.id.type);
 				text = (TextView)view.findViewById(R.id.title);
 				count = (TextView)view.findViewById(R.id.count);
 
 				view.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {
-						filePicked(files[getAdapterPosition()]);
+						filePicked(files.get(getAdapterPosition()));
 					}
 				});
 			}
 		}
 	}
 
-	private static class FilesLoader extends AsyncLoader<File[]> {
-		public FilesLoader(Context context) {
+	private static class FilesLoader extends AsyncLoader<List<File>> {
+		private final File root;
+		public FilesLoader(Context context, File root) {
 			super(context);
+			this.root = root;
 		}
-
-		@Override public File[] loadInBackground() {
-			File root = Paths.getPhoneHome();
+		public File getRoot() {
+			return root;
+		}
+		@Override public List<File> loadInBackground() {
+			File[] folders = getFolders(root);
+			Arrays.sort(folders);
 			File[] files = getImportableFiles(root);
 			Arrays.sort(files);
-			return files;
+
+			List<File> result = new ArrayList<>(folders.length + files.length);
+			result.addAll(Arrays.asList(folders));
+			result.addAll(Arrays.asList(files));
+			return result;
 		}
 
-		private File[] getImportableFiles(File root) {
-			return root.listFiles(new FileFilter() {
+		private @NonNull File[] getFolders(File root) {
+			File[] folders = root.listFiles(new FileFilter() {
+				@Override public boolean accept(File file) {
+					return file.isDirectory();
+				}
+			});
+			return folders != null? folders : new File[0];
+		}
+
+		private @NonNull File[] getImportableFiles(File root) {
+			File[] files = root.listFiles(new FileFilter() {
 				final Pattern pattern = Pattern.compile(".*\\.zip$");
 				public boolean accept(File file) {
 					return file.isFile() && file.canRead() && pattern.matcher(file.getName()).matches();
 				}
 			});
+			return files != null? files : new File[0];
 		}
 	}
 
-	private class BackupListController extends RecyclerViewLoaderController<ImportFilesAdapter, File[]> {
+	private class BackupListController extends RecyclerViewLoaderController<ImportFilesAdapter, List<File>> {
 		public BackupListController() {
 			super(BackupActivity.this);
-			setView((RecyclerView)findViewById(R.id.backups));
 		}
 
 		@Override public void startLoad(Bundle args) {
-			getLoaderManager().initLoader(1, null, new FileLoaderCallbacks());
+			getLoaderManager().restartLoader(1, args, new FileLoaderCallbacks());
 		}
 		@Override public void refresh() {
 			getLoaderManager().getLoader(1).onContentChanged();
@@ -162,19 +220,23 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			return adapter;
 		}
 
-		@Override protected void setData(ImportFilesAdapter adapter, File... data) {
+		@Override protected void setData(ImportFilesAdapter adapter, List<File> data) {
 			adapter.setFiles(data);
 		}
 
-		private class FileLoaderCallbacks implements LoaderCallbacks<File[]> {
-			@Override public Loader<File[]> onCreateLoader(int id, Bundle args) {
+		private class FileLoaderCallbacks implements LoaderCallbacks<List<File>> {
+			@Override public Loader<List<File>> onCreateLoader(int id, Bundle args) {
 				startLoading();
-				return new FilesLoader(getContext());
+				File file = (File)args.getSerializable(EXTRA_PATH);
+				return new FilesLoader(getContext(), file);
 			}
-			@Override public void onLoadFinished(Loader<File[]> loader, File[] data) {
+			@Override public void onLoadFinished(Loader<List<File>> loader, List<File> data) {
+				File root = ((FilesLoader)loader).getRoot();
+				((TextView)findViewById(R.id.backup_location)).setText(root.toString());
 				updateAdapter(data);
+				App.setSPref(R.string.pref_state_backup_path, root.getAbsolutePath());
 			}
-			@Override public void onLoaderReset(Loader<File[]> loader) {
+			@Override public void onLoaderReset(Loader<List<File>> loader) {
 				updateAdapter(null);
 			}
 		}

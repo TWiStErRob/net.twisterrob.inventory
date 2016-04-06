@@ -200,7 +200,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	private void zipAllData() {
 		ZipOutputStream zip = null;
 		try {
-			zip = new ZipOutputStream(new FileOutputStream(Paths.getExportFile()));
+			zip = new ZipOutputStream(new FileOutputStream(Paths.getExportFile(Paths.getPhoneHome())));
 			StringBuilder description = new StringBuilder();
 			if (getApplicationInfo().dataDir != null) {
 				File internalDataDir = new File(getApplicationInfo().dataDir);

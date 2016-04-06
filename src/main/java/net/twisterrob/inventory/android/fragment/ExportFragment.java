@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
+import java.io.File;
+
 import org.slf4j.*;
 
 import android.app.*;
@@ -41,8 +43,8 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		super.onPause();
 	}
 
-	public void execute() {
-		task.execute();
+	public void execute(File dir) {
+		task.execute(dir);
 	}
 
 	@Override public void exportStarting() {
@@ -87,7 +89,7 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		displayFinishMessage(getActivity(), res);
 	}
 
-	private void displayFinishMessage(final Context context, Progress p) {
+	private void displayFinishMessage(final Context context, @NonNull Progress p) {
 		LOG.trace("exportFinished {}", context);
 		dismissAllowingStateLoss();
 

@@ -18,7 +18,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress.Phase;
 
-public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
+public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
 	public static final String IMAGE_NAME = "imageName";
 
@@ -62,13 +62,14 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		publishProgress(progress.clone());
 	}
 
-	@Override protected Progress doInBackground(Void ignore) {
+	@Override protected @NonNull Progress doInBackground(File dir) {
+		Progress progress = this.progress = new Progress();
+
 		File file = null;
 		try {
-			file = Paths.getExportFile();
+			file = Paths.getExportFile(dir);
 			OutputStream os = new FileOutputStream(file); // will be closed by finalizeExport
 			// CONSIDER wakelock?
-			progress = new Progress();
 			progress.phase = Phase.Init;
 			publishStart();
 			cursor = App.db().export();
@@ -88,12 +89,13 @@ public class ExporterTask extends SimpleAsyncTask<Void, Progress, Progress> {
 		} finally {
 			IOTools.ignorantClose(cursor);
 			exporter.finalizeExport();
+			this.progress = null;
 		}
 		if (!BuildConfig.DEBUG && progress.failure != null && file != null && !file.delete()) {
 			file.deleteOnExit();
 			file = null;
 		}
-		if (file != null) {
+		if (file != null && file.exists()) {
 			AndroidTools.makeFileDiscoverable(context, file);
 		}
 
