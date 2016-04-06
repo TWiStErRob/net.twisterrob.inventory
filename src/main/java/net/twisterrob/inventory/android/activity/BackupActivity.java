@@ -31,24 +31,53 @@ import net.twisterrob.inventory.android.view.RecyclerViewLoaderController;
 public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
 	private static final String EXTRA_PATH = "path";
+	private static final String EXTRA_HISTORY = "history";
+
 	private RecyclerViewLoaderController<ImportFilesAdapter, List<File>> controller;
+	private final Deque<File> history = new ArrayDeque<>();
+
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_backup);
 
 		controller = new BackupListController();
 		controller.setView((RecyclerView)findViewById(R.id.backups));
-		filePicked(getDir());
+		if (savedInstanceState != null) {
+			//noinspection ConstantConditions,unchecked if we're restoring onSaveInstanceState must have filled it
+			history.addAll((Collection<File>)savedInstanceState.getSerializable(EXTRA_HISTORY));
+			filePicked(history.peek(), false);
+		} else {
+			filePicked(getDir(), true);
+		}
+	}
+
+	@Override protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putSerializable(EXTRA_HISTORY, (Serializable)history);
 	}
 
 	@Override protected void onRestart() {
 		super.onRestart();
-		controller.refresh();
+		onRefresh();
 	}
 
-	@NonNull private File getDir() {
+	private @NonNull File getDir() {
 		String backupPath = App.getSPref(R.string.pref_state_backup_path, Paths.getPhoneHome().toString());
 		return new File(backupPath);
+	}
+
+	private void onDirLoaded(File root) {
+		App.setSPref(R.string.pref_state_backup_path, root.getAbsolutePath());
+		((TextView)findViewById(R.id.backup_location)).setText(root.toString());
+	}
+
+	@Override public void onBackPressed() {
+		if (history.size() > 1) {
+			history.pop();
+			filePicked(history.peek(), false);
+			return;
+		}
+		super.onBackPressed();
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,7 +91,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_export_home:
-				filePicked(Paths.getPhoneHome());
+				filePicked(Paths.getPhoneHome(), true);
 				return true;
 			case R.id.action_export:
 				ExportFragment.create(BackupActivity.this, getSupportFragmentManager()).execute(getDir());
@@ -74,9 +103,13 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 				return super.onOptionsItemSelected(item);
 		}
 	}
-	public void filePicked(File file) {
+
+	public void filePicked(File file, boolean addHistory) {
 		LOG.trace("File picked (dir={}, exists={}): {}", file.isDirectory(), file.exists(), file);
 		if (file.isDirectory()) {
+			if (addHistory) {
+				history.push(file);
+			}
 			controller.startLoad(Intents.bundleFrom(EXTRA_PATH, file));
 		} else {
 			ImportFragment.create(this, getSupportFragmentManager()).execute(file);
@@ -164,7 +197,10 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 
 				view.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {
-						filePicked(getItem(getAdapterPosition()));
+						int position = getAdapterPosition();
+						if (position != RecyclerView.NO_POSITION) {
+							filePicked(getItem(position), true);
+						}
 					}
 				});
 			}
@@ -218,7 +254,21 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 
 		@Override public void startLoad(Bundle args) {
-			getLoaderManager().restartLoader(1, args, new FileLoaderCallbacks());
+			Loader<?> previous = getLoaderManager().getLoader(1);
+			Loader<?> current = getLoaderManager().restartLoader(1, args, new FileLoaderCallbacks());
+			if (current.getId() == 0 && previous != null) {
+				// TODO figure out why this is needed: when the user taps on two folders at the same time
+				// this method is called twice, but restartLoader doesn't like to be called in quick succession
+				// see "This function does some throttling of Loaders." paragraph on LoaderManagerImpl.restartLoader
+				// the first call replaces the finished loader, and starts the second loader
+				// the second call cancels the second loader and queues the third loader
+				// problem is that onLoadCanceled is called before info.mPendingLoader is set to the third loader
+				// which leaves the second loader cancelled and the third one in initial state
+				// delivering a cancellation to the second loader will start the enqueued third loader
+				previous.deliverCancellation();
+				// To test the effect of this call do a postDelayed(before.deliverCancellation, 5000)
+				// and observe that the loading indicator will be visible for 5 seconds
+			}
 		}
 		@Override public void refresh() {
 			getLoaderManager().getLoader(1).onContentChanged();
@@ -243,8 +293,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			}
 			@Override public void onLoadFinished(Loader<List<File>> loader, List<File> data) {
 				File root = ((FilesLoader)loader).getRoot();
-				App.setSPref(R.string.pref_state_backup_path, root.getAbsolutePath());
-				((TextView)findViewById(R.id.backup_location)).setText(root.toString());
+				onDirLoaded(root);
 				updateAdapter(data);
 			}
 			@Override public void onLoaderReset(Loader<List<File>> loader) {

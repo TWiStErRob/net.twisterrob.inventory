@@ -93,7 +93,7 @@ public class MainActivity extends DrawerActivity
 			finish();
 		} else {
 			BaseFragment<?> fragment = getFragment();
-			refreshDrawers((Intent)fragment.getViewTag());
+			setIntent((Intent)fragment.getViewTag());
 
 			BackStackEntry top = fm.getBackStackEntryAt(count - 1);
 			CharSequence title = getString(TITLES.get(top.getName()));
