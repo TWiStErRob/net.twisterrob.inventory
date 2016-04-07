@@ -245,7 +245,7 @@ public class MainActivity extends DrawerActivity
 				//startActivity(ImageActivity.show(InventoryContract.Item.imageUri(id)));
 				//startActivity(CategoryActivity.show(7000));
 				//startActivity(ItemViewActivity.show(1723));
-				//startActivityForResult(CaptureImage.saveTo(this, new File(getCacheDir(), "dev.jpg")), 32767);
+				//startActivityForResult(CaptureImage.saveTo(this, new File(getCacheDir(), "dev.jpg"), 8192), 32767);
 				return true;
 			}
 			default:

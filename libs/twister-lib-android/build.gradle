@@ -25,7 +25,7 @@ apply from: 'http://localhost/maven/configure.gradle'
 repositories {
 	jcenter()
 	maven { name 'twisterrob'; url 'http://localhost/maven' }
-	//maven { name 'glide'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
+	maven { name 'glide'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
@@ -46,7 +46,7 @@ dependencies {
 	// XXX @Deprecated, use Glide
 	compile 'com.jakewharton:disklrucache:2.0.2'
 	compile 'com.caverock:androidsvg:1.2.1'
-	compile 'com.github.bumptech.glide:glide:3.7.0'
+	compile 'com.github.bumptech.glide:glide:3.8.0-SNAPSHOT'
 
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.easymock:easymock:3.4'

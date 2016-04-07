@@ -20,6 +20,7 @@ import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import net.twisterrob.android.R;
@@ -33,12 +34,15 @@ public class CaptureImage extends Activity {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
 	private static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;
 	private static final String EXTRA_MAXSIZE = MediaStore.EXTRA_SIZE_LIMIT;
+	private static final String EXTRA_QUALITY = "quality";
+	private static final String EXTRA_FORMAT = "format";
 	private static final String EXTRA_ASPECT = "keepAspect";
 	private static final String EXTRA_SQUARE = "isSquare";
 	private static final String EXTRA_FLASH = "flash";
 	private static final String PREF_FLASH = EXTRA_FLASH;
 	private static final float DEFAULT_MARGIN = 0.10f;
 	private static final boolean DEFAULT_FLASH = false;
+	private static final int EXTRA_MAXSIZE_NO_MAX = 0;
 
 	private CameraPreview mPreview;
 	private SelectionView mSelection;
@@ -110,13 +114,15 @@ public class CaptureImage extends Activity {
 		}
 		LOG.trace("Loading taken image to crop: {}", mSavedFile);
 		Glide
-				.with(CaptureImage.this)
+				.with(this)
 				.load(mSavedFile)
+				.asBitmap()
+				.format(DecodeFormat.PREFER_ARGB_8888)
 				.diskCacheStrategy(DiskCacheStrategy.NONE)
 				.skipMemoryCache(true)
 				.placeholder(new ColorDrawable(Color.BLACK))
 				.thumbnail(0.1f)
-				.dontAnimate()
+				.crossFade()
 				.into(mImage);
 	}
 
@@ -204,12 +210,18 @@ public class CaptureImage extends Activity {
 				int[] originalSize = ImageTools.getSize(file);
 				Bitmap bitmap = ImageTools.cropPicture(file, sel.left, sel.top, sel.right, sel.bottom);
 				int[] croppedSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
-				int maxSize = getIntent().getIntExtra(EXTRA_MAXSIZE, 0);
-				if (0 < maxSize) {
+				int maxSize = getIntent().getIntExtra(EXTRA_MAXSIZE, EXTRA_MAXSIZE_NO_MAX);
+				if (maxSize != EXTRA_MAXSIZE_NO_MAX) {
 					bitmap = ImageTools.downscale(bitmap, maxSize, maxSize);
 				}
+				CompressFormat format = (CompressFormat)getIntent().getSerializableExtra(EXTRA_FORMAT);
+				if (format == null) {
+					format = CompressFormat.JPEG;
+				}
+				int quality = getIntent().getIntExtra(EXTRA_QUALITY, 85);
+				ImageTools.savePicture(bitmap, file, format, quality);
+
 				int[] finalSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
-				ImageTools.savePicture(bitmap, file, CompressFormat.JPEG, 80);
 				LOG.info("Cropped image ({}x{} -> {}x{} @ {},{} -> {}x{} (max {})) saved at {}",
 						originalSize[0], originalSize[1],
 						croppedSize[0], croppedSize[1],
@@ -237,10 +249,16 @@ public class CaptureImage extends Activity {
 		return selection;
 	}
 
+	public static Intent saveTo(Context context, File targetFile, int maxSize, CompressFormat format, int quality) {
+		Intent intent = saveTo(context, targetFile, maxSize);
+		intent.putExtra(CaptureImage.EXTRA_FORMAT, format);
+		intent.putExtra(CaptureImage.EXTRA_QUALITY, quality);
+		return intent;
+	}
 	public static Intent saveTo(Context context, File targetFile, int maxSize) {
 		Intent intent = new Intent(context, CaptureImage.class);
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, targetFile.getAbsolutePath());
-		intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, maxSize);
+		intent.putExtra(CaptureImage.EXTRA_OUTPUT, targetFile.getAbsolutePath());
+		intent.putExtra(CaptureImage.EXTRA_MAXSIZE, maxSize);
 		PackageManager pm = context.getPackageManager();
 		if (!AndroidTools.hasPermission(context, Manifest.permission.CAMERA)) {
 			throw new IllegalStateException("Camera permission is not granted, please add it to your manifest:\n"

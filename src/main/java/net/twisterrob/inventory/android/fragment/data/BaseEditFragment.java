@@ -59,6 +59,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	protected static final String DYN_NameHintResource = "nameHint";
 	protected static final String DYN_DescriptionHintResource = "descriptionHint";
 	private static final int MAX_IMAGE_SIZE = 2048;
+	private static final CompressFormat COMPRESS_FORMAT = CompressFormat.JPEG;
+	private static final int COMPRESS_QUALITY = 85;
 
 	private boolean isRestored;
 	private Object restoredImage;
@@ -419,7 +421,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 			@Override protected void onResult(@Nullable File file, Context context) {
 				try {
-					Intent intent = CaptureImage.saveTo(getContext(), file, MAX_IMAGE_SIZE);
+					Intent intent = CaptureImage.saveTo(getContext(), file,
+							MAX_IMAGE_SIZE, COMPRESS_FORMAT, COMPRESS_QUALITY);
 					startActivityForResult(intent, ImageTools.REQUEST_CODE_TAKE_PICTURE);
 				} catch (RuntimeException ex) {
 					onError(ex, context);
@@ -477,7 +480,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				.with(this)
 				.load(uri)
 				.asBitmap()
-				.toBytes(CompressFormat.JPEG, 80)
+				.toBytes(COMPRESS_FORMAT, COMPRESS_QUALITY)
 				.format(DecodeFormat.PREFER_ARGB_8888)
 				.atMost()
 				.override(MAX_IMAGE_SIZE, MAX_IMAGE_SIZE)

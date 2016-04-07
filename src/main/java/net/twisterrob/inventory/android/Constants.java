@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 
 import com.bumptech.glide.*;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.engine.cache.*;
@@ -153,6 +154,7 @@ public interface Constants {
 		public static class GlideSetup implements GlideModule {
 			private static File CACHE_DIR = null;
 			@Override public void applyOptions(final Context context, GlideBuilder builder) {
+				builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
 				if (BuildConfig.DEBUG) {
 					builder.setDiskCache(new DiskCache.Factory() {
 						@Override public DiskCache build() {

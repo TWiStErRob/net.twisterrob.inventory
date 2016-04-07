@@ -9,7 +9,8 @@ import android.content.*;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.*;
-import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Bitmap.*;
+import android.graphics.BitmapFactory.Options;
 import android.graphics.drawable.*;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -438,17 +439,34 @@ public /*static*/ abstract class ImageTools {
 	}
 
 	private static Bitmap cropBitmap(File file, Rect rect) {
-		Bitmap source = BitmapFactory.decodeFile(file.getAbsolutePath());
+		Bitmap source = BitmapFactory.decodeFile(file.getAbsolutePath(), cropOptions());
 		return Bitmap.createBitmap(source, rect.left, rect.top, rect.width(), rect.height());
 	}
 
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
 	private static Bitmap cropRegion(File file, Rect rect) throws IOException {
-		BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(file.getAbsolutePath(), false);
-		if (decoder != null) {
-			return decoder.decodeRegion(rect, null);
+		BitmapRegionDecoder decoder = null;
+		try {
+			decoder = BitmapRegionDecoder.newInstance(file.getAbsolutePath(), true);
+			if (decoder != null) {
+				return decoder.decodeRegion(rect, cropOptions());
+			}
+		} finally {
+			if (decoder != null) {
+				decoder.recycle();
+			}
 		}
 		return null;
+	}
+
+	private static Options cropOptions() {
+		Options options = new Options();
+		options.inPreferredConfig = Config.ARGB_8888;
+		options.inDither = false;
+		if (Build.VERSION_CODES.GINGERBREAD_MR1 <= Build.VERSION.SDK_INT) {
+			options.inPreferQualityOverSpeed = true;
+		}
+		return options;
 	}
 
 	private static BitmapFactory.Options getSizeInternal(File file) {
@@ -536,6 +554,9 @@ public /*static*/ abstract class ImageTools {
 	 * @see com.bumptech.glide.load.resource.bitmap.TransformationUtils#fitCenter
 	 */
 	public static Bitmap downscale(Bitmap source, int width, int height) {
+		if (width <= 0 || height <= 0) {
+			throw new IllegalArgumentException("Non-positive sizes are not allowed.");
+		}
 		if (source.getWidth() == width && source.getHeight() == height) {
 			return source;
 		}
