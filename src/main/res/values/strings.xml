@@ -9,7 +9,7 @@
 
 	<string name="sunburst_title">Sunburst Diagram</string>
 	<string name="action_picture_take">Take Picture</string>
-	<string name="action_picture_pick">Pick Picture</string>
+	<string name="action_picture_reset">Reset Picture</string>
 	<string name="action_picture_remove">Remove Picture</string>
 	<string name="action_save">Save</string>
 	<string name="action_undo">Undo</string>

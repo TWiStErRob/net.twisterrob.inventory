@@ -205,14 +205,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	public void cancelTakePicture() {
-		LOG.trace("Initiate cancel take picture");
-		mCameraThread.mHandler.post(new Runnable() {
-			public void run() {
-				LOG.trace("Cancel take picture");
-				cancelAutoFocus();
-				startPreview();
-			}
-		});
+		LOG.trace("Cancel take picture");
+		cancelAutoFocus();
+		startPreview();
 	}
 
 	private void cancelAutoFocus() {
@@ -284,8 +279,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 		void startOpenCamera() {
 			mHandler.post(new Runnable() {
-				@Override
-				public void run() { // on Camera's Looper
+				@Override public void run() { // on Camera's Looper
 					try {
 						final CameraHolder holder = new CameraHolder(findCamera());
 						CameraPreview.this.post(new Runnable() {

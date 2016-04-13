@@ -234,8 +234,8 @@ public /*static*/ abstract class ImageTools {
 		}
 	}
 
-	public static Uri getPictureUriFromResult(int requestCode, int resultCode, Intent data) {
-		Uri selectedImageUri = null;
+	public static Uri getPictureUriFromResult(int requestCode, int resultCode, Intent data, Uri fallback) {
+		Uri selectedImageUri = fallback;
 		if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_GET_PICTURE && data != null) {
 			boolean isCamera = MediaStore.ACTION_IMAGE_CAPTURE.equals(data.getAction());
 			if (isCamera) {

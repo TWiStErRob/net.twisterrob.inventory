@@ -22,8 +22,10 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import net.twisterrob.android.R;
+import net.twisterrob.android.content.glide.WrapViewTarget;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.CameraPreview.CameraPreviewListener;
@@ -32,13 +34,14 @@ import net.twisterrob.java.io.IOTools;
 
 public class CaptureImage extends Activity {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
-	private static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;
-	private static final String EXTRA_MAXSIZE = MediaStore.EXTRA_SIZE_LIMIT;
-	private static final String EXTRA_QUALITY = "quality";
-	private static final String EXTRA_FORMAT = "format";
-	private static final String EXTRA_ASPECT = "keepAspect";
-	private static final String EXTRA_SQUARE = "isSquare";
-	private static final String EXTRA_FLASH = "flash";
+	public static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;
+	public static final String EXTRA_MAXSIZE = MediaStore.EXTRA_SIZE_LIMIT;
+	public static final String EXTRA_QUALITY = "quality";
+	public static final String EXTRA_FORMAT = "format";
+	public static final String EXTRA_ASPECT = "keepAspect";
+	public static final String EXTRA_SQUARE = "isSquare";
+	public static final String EXTRA_FLASH = "flash";
+	public static final String EXTRA_PICK = "pickImage";
 	private static final String PREF_FLASH = EXTRA_FLASH;
 	private static final float DEFAULT_MARGIN = 0.10f;
 	private static final boolean DEFAULT_FLASH = false;
@@ -50,9 +53,9 @@ public class CaptureImage extends Activity {
 	private File mSavedFile;
 	private ImageView mImage;
 	private View controls;
+	private View cameraControls;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -67,18 +70,19 @@ public class CaptureImage extends Activity {
 
 		setContentView(R.layout.activity_camera);
 		controls = findViewById(R.id.controls);
-		final ImageButton btnCapture = (ImageButton)controls.findViewById(R.id.btn_capture);
-		final ImageButton btnCrop = (ImageButton)controls.findViewById(R.id.btn_crop);
-		final ToggleButton btnFlash = (ToggleButton)controls.findViewById(R.id.btn_flash);
+		cameraControls = findViewById(R.id.camera_controls);
+		ImageButton btnPick = (ImageButton)controls.findViewById(R.id.btn_pick);
+		ImageButton btnCapture = (ImageButton)controls.findViewById(R.id.btn_capture);
+		ImageButton btnCrop = (ImageButton)controls.findViewById(R.id.btn_crop);
+		final ToggleButton btnFlash = (ToggleButton)cameraControls.findViewById(R.id.btn_flash);
 		mPreview = (CameraPreview)findViewById(R.id.preview);
 		mImage = (ImageView)findViewById(R.id.image);
 		mSelection = (SelectionView)findViewById(R.id.selection);
 
-		btnFlash.setVisibility(View.INVISIBLE); // hide until it can operate
 		mPreview.setListener(new CameraPreviewListener() {
 			@Override public void onStarted(CameraPreview preview) {
-				btnFlash.setVisibility(View.VISIBLE);
 				btnFlash.setChecked(getInitialFlashEnabled()); // calls setOnCheckedChangeListener
+				cameraControls.setVisibility(View.VISIBLE);
 			}
 			@Override public void onFinished(CameraPreview preview) {
 				// no op
@@ -100,7 +104,33 @@ public class CaptureImage extends Activity {
 		});
 
 		btnCapture.setOnClickListener(new CaptureClickListener());
+		btnPick.setOnClickListener(new PickClickListener());
+		// XXX what happens on crop after pick and cancel? CONSIDER hiding it
 		btnCrop.setOnClickListener(new CropClickListener());
+
+		if (getIntent().getBooleanExtra(EXTRA_PICK, false) && savedInstanceState == null) {
+			btnPick.performClick();
+		}
+	}
+
+	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != Activity.RESULT_OK) {
+			enableControls();
+			return;
+		}
+		Uri fallback = Uri.fromFile(mTargetFile);
+		Uri result = ImageTools.getPictureUriFromResult(requestCode, resultCode, data, fallback);
+		if (!fallback.equals(result)) {
+			try {
+				InputStream stream = getContentResolver().openInputStream(result);
+				IOTools.copyStream(stream, new FileOutputStream(mTargetFile));
+			} catch (IOException ex) {
+				LOG.error("Cannot grab data from {} into {}", result, mTargetFile, ex);
+			}
+		}
+		mSavedFile = mTargetFile;
+		prepareCrop();
+		enableControls();
 	}
 
 	private void prepareCrop() {
@@ -117,13 +147,14 @@ public class CaptureImage extends Activity {
 				.with(this)
 				.load(mSavedFile)
 				.asBitmap()
-				.format(DecodeFormat.PREFER_ARGB_8888)
-				.diskCacheStrategy(DiskCacheStrategy.NONE)
-				.skipMemoryCache(true)
-				.placeholder(new ColorDrawable(Color.BLACK))
-				.thumbnail(0.1f)
-				.crossFade()
-				.into(mImage);
+				.format(DecodeFormat.PREFER_ARGB_8888) // don't lose quality (may be disabled to gain memory for crop)
+				.diskCacheStrategy(DiskCacheStrategy.NONE) // no need to cache, it's on disk already
+				.skipMemoryCache(true) // won't ever be loaded again, or if it is, probably contains different bytes
+				.placeholder(new ColorDrawable(Color.BLACK)) // immediately hide the preview to prevent weird jump
+				//.thumbnail(0.1f) // CONSIDER if it's possible with wrap target
+				.crossFade() // fade from black to image (or black to thumb to image)
+				.fitCenter() // make sure full image is visible
+				.into(new WrapViewTarget<>(new BitmapImageViewTarget(mImage)));
 	}
 
 	private boolean getInitialFlashEnabled() {
@@ -144,11 +175,13 @@ public class CaptureImage extends Activity {
 	}
 	protected void doRestartPreview() {
 		LOG.trace("Restarting preview");
+		mPreview.setVisibility(View.VISIBLE);
+		cameraControls.setVisibility(View.INVISIBLE); // will be visible once the camera preview is set up
 		mSavedFile = null;
 		mSelection.setSelectionStatus(SelectionStatus.NORMAL);
 		mPreview.cancelTakePicture();
 		Glide.clear(mImage);
-		mImage.setImageDrawable(null);
+		mImage.setImageDrawable(null); // remove Glide placeholder for the view to be transparent
 	}
 	protected void doReturn() {
 		Intent result = new Intent();
@@ -206,37 +239,37 @@ public class CaptureImage extends Activity {
 	private File crop(File file) {
 		try {
 			RectF sel = getPictureRect();
-			if (file != null && !sel.isEmpty()) {
-				int[] originalSize = ImageTools.getSize(file);
-				Bitmap bitmap = ImageTools.cropPicture(file, sel.left, sel.top, sel.right, sel.bottom);
-				int[] croppedSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
-				int maxSize = getIntent().getIntExtra(EXTRA_MAXSIZE, EXTRA_MAXSIZE_NO_MAX);
-				if (maxSize != EXTRA_MAXSIZE_NO_MAX) {
-					bitmap = ImageTools.downscale(bitmap, maxSize, maxSize);
-				}
-				CompressFormat format = (CompressFormat)getIntent().getSerializableExtra(EXTRA_FORMAT);
-				if (format == null) {
-					format = CompressFormat.JPEG;
-				}
-				int quality = getIntent().getIntExtra(EXTRA_QUALITY, 85);
-				ImageTools.savePicture(bitmap, file, format, quality);
-
-				int[] finalSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
-				LOG.info("Cropped image ({}x{} -> {}x{} @ {},{} -> {}x{} (max {})) saved at {}",
-						originalSize[0], originalSize[1],
-						croppedSize[0], croppedSize[1],
-						(int)(sel.top * originalSize[0]), (int)(sel.left * originalSize[1]),
-						finalSize[0], finalSize[1],
-						maxSize,
-						file);
-				return file;
+			if (file == null || sel.isEmpty()) {
+				return null;
 			}
-		} catch (IOException ex) {
+			int[] originalSize = ImageTools.getSize(file);
+			Bitmap bitmap = ImageTools.cropPicture(file, sel.left, sel.top, sel.right, sel.bottom);
+			int[] croppedSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
+			int maxSize = getIntent().getIntExtra(EXTRA_MAXSIZE, EXTRA_MAXSIZE_NO_MAX);
+			if (maxSize != EXTRA_MAXSIZE_NO_MAX) {
+				bitmap = ImageTools.downscale(bitmap, maxSize, maxSize);
+			}
+			CompressFormat format = (CompressFormat)getIntent().getSerializableExtra(EXTRA_FORMAT);
+			if (format == null) {
+				format = CompressFormat.JPEG;
+			}
+			int quality = getIntent().getIntExtra(EXTRA_QUALITY, 85);
+			ImageTools.savePicture(bitmap, file, format, quality);
+
+			int[] finalSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
+			LOG.info("Cropped image ({}x{} -> {}x{} @ {},{} -> {}x{} (max {})) saved at {}",
+					originalSize[0], originalSize[1],
+					croppedSize[0], croppedSize[1],
+					(int)(sel.top * originalSize[0]), (int)(sel.left * originalSize[1]),
+					finalSize[0], finalSize[1],
+					maxSize,
+					file);
+			return file;
+		} catch (Exception ex) {
 			LOG.error("Cannot crop image file {}", file, ex);
 		}
 		return null;
 	}
-
 	private RectF getPictureRect() {
 		float width = mSelection.getWidth();
 		float height = mSelection.getHeight();
@@ -256,9 +289,13 @@ public class CaptureImage extends Activity {
 		return intent;
 	}
 	public static Intent saveTo(Context context, File targetFile, int maxSize) {
+		assertFeatures(context);
 		Intent intent = new Intent(context, CaptureImage.class);
 		intent.putExtra(CaptureImage.EXTRA_OUTPUT, targetFile.getAbsolutePath());
 		intent.putExtra(CaptureImage.EXTRA_MAXSIZE, maxSize);
+		return intent;
+	}
+	private static void assertFeatures(Context context) {
 		PackageManager pm = context.getPackageManager();
 		if (!AndroidTools.hasPermission(context, Manifest.permission.CAMERA)) {
 			throw new IllegalStateException("Camera permission is not granted, please add it to your manifest:\n"
@@ -267,12 +304,23 @@ public class CaptureImage extends Activity {
 		if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
 			throw new IllegalStateException("Sorry, this system doesn't have a camera.");
 		}
-		return intent;
+	}
+
+	private class PickClickListener implements OnClickListener {
+		@Override public void onClick(View v) {
+			mPreview.setVisibility(View.INVISIBLE);
+			cameraControls.setVisibility(View.INVISIBLE);
+			disableControls();
+			ImageTools.getPicture(CaptureImage.this, mTargetFile); // continues in onActivityResult
+		}
 	}
 
 	private class CaptureClickListener implements OnClickListener {
-		@Override
-		public void onClick(View v) {
+		@Override public void onClick(View v) {
+			if (!mPreview.isRunning()) { // picked gallery -> camera
+				doRestartPreview();
+				return;
+			}
 			disableControls();
 			if (mSavedFile == null) {
 				@SuppressWarnings("deprecation")
@@ -290,22 +338,23 @@ public class CaptureImage extends Activity {
 				enableControls();
 			}
 		}
-		private void enableControls() {
-			// post, so everything has time to set up
-			controls.post(new Runnable() {
-				@Override public void run() {
-					controls.setVisibility(View.VISIBLE);
-				}
-			});
-		}
-		private void disableControls() {
-			// CONSIDER a grayscale colorfilter on the preview?
-			controls.setVisibility(View.INVISIBLE);
-		}
+	}
+
+	private void enableControls() {
+		// post, so everything has time to set up
+		controls.post(new Runnable() {
+			@Override public void run() {
+				controls.setVisibility(View.VISIBLE);
+			}
+		});
+	}
+	private void disableControls() {
+		// CONSIDER a grayscale colorfilter on the preview?
+		controls.setVisibility(View.INVISIBLE);
 	}
 
 	private class CropClickListener implements OnClickListener {
-		public void onClick(View v) {
+		@Override public void onClick(View v) {
 			if (mSavedFile != null) {
 				doCrop();
 				doReturn();

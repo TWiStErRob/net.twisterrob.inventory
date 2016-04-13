@@ -4,22 +4,21 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	>
 	<item
-		android:id="@+id/action_picture_take"
+		android:id="@+id/action_picture_get"
 		android:title="@string/action_picture_take"
 		android:icon="@android:drawable/ic_menu_camera"
 		app:showAsAction="always"
 		/>
 	<item
+		android:id="@+id/action_picture_reset"
+		android:title="@string/action_picture_reset"
+		android:icon="@android:drawable/ic_menu_revert"
+		app:showAsAction="never"
+		/>
+	<item
 		android:id="@+id/action_picture_remove"
 		android:title="@string/action_picture_remove"
 		android:icon="@drawable/ic_menu_picture_remove"
-		app:showAsAction="ifRoom"
-		/>
-	<!-- XXX crop picked picture -->
-	<item
-		android:id="@+id/action_picture_pick"
-		android:title="@string/action_picture_pick"
-		android:icon="@android:drawable/ic_menu_gallery"
 		app:showAsAction="never"
 		/>
 </menu>

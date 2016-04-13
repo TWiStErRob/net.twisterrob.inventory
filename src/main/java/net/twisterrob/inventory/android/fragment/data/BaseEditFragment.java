@@ -1,19 +1,18 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import java.io.*;
+import java.io.File;
 
 import org.slf4j.*;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.*;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build.*;
 import android.os.Bundle;
-import android.support.annotation.*;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.*;
@@ -25,15 +24,12 @@ import android.widget.*;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.DrawableRequestBuilder;
+
+import static com.bumptech.glide.load.engine.DiskCacheStrategy.*;
 
 import net.twisterrob.android.activity.CaptureImage;
-import net.twisterrob.android.content.glide.*;
+import net.twisterrob.android.content.glide.LongSignature;
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.TextWatcherAdapter;
@@ -58,17 +54,14 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	public static final String EDIT_IMAGE = "editImageOnStartup";
 	protected static final String DYN_NameHintResource = "nameHint";
 	protected static final String DYN_DescriptionHintResource = "descriptionHint";
-	private static final int MAX_IMAGE_SIZE = 2048;
-	private static final CompressFormat COMPRESS_FORMAT = CompressFormat.JPEG;
-	private static final int COMPRESS_QUALITY = 85;
 
 	private boolean isRestored;
-	private Object restoredImage;
+	private Uri restoredImage;
 	private int restoredTypePos;
 
-	/** byte[], Uri or null */
-	private Object currentImage;
+	private Uri currentImage;
 	private boolean keepNameInSync;
+	private DTO original;
 
 	private EditText name;
 	private EditText description;
@@ -100,17 +93,18 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	protected void onSingleRowLoaded(final DTO dto) {
+		original = dto;
 		if (tryRestore()) {
 			return;
 		}
 
 		AndroidTools.selectByID(type, dto.type);
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
-		setCurrentImage(dto.hasImage? dto.getImageUri() : null); // displays image, so needs type to be selected
+		resetPicture(); // displays image, so needs type to be selected
 		description.setText(dto.description);
 		if (getArguments().getBoolean(EDIT_IMAGE)) {
 			getArguments().remove(EDIT_IMAGE);
-			takePicture();
+			getPicture();
 		}
 		type.post(new Runnable() {
 			@Override public void run() {
@@ -160,18 +154,14 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	@Override public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (currentImage instanceof byte[]) {
-			outState.putByteArray("image", (byte[])currentImage);
-		} else if (currentImage instanceof Uri) {
-			outState.putParcelable("image", (Uri)currentImage);
-		}
+		outState.putParcelable("image", currentImage);
 		outState.putInt("typePos", type.getSelectedItemPosition());
 	}
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-			restoredImage = savedInstanceState.get("image");
+			restoredImage = savedInstanceState.getParcelable("image");
 			restoredTypePos = savedInstanceState.getInt("typePos");
 			isRestored = true;
 		}
@@ -187,7 +177,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		image = (ImageView)view.findViewById(R.id.image);
 		image.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				takePicture();
+				getPicture();
 			}
 		});
 		image.setOnLongClickListener(new OnLongClickListener() {
@@ -349,8 +339,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	protected void doSave() {
 		DTO dto = createDTO();
-		dto.hasImage = currentImage != null;
-		dto.image = currentImage instanceof byte[]? (byte[])currentImage : null;
+		dto.hasImage = false; // will be set later on a background thread see SaveTask
+		dto.image = null; // will be set later on a background thread see SaveTask
 		dto.name = name.getText().toString();
 		dto.description = description.getText().toString();
 		dto.type = type.getSelectedItemId();
@@ -392,17 +382,25 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_picture_take:
-				takePicture();
+			case R.id.action_picture_get:
+				getPicture();
+				return true;
+			case R.id.action_picture_reset:
+				resetPicture();
 				return true;
 			case R.id.action_picture_remove:
 				removePicture();
 				return true;
-			case R.id.action_picture_pick:
-				pickPicture();
-				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void resetPicture() {
+		if (original.hasImage) {
+			setCurrentImage(original.getImageUri());
+		} else {
+			setCurrentImage(null);
 		}
 	}
 
@@ -410,41 +408,22 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		setCurrentImage(null);
 	}
 
-	private void pickPicture() {
-		startActivityForResult(ImageTools.createGalleryIntent(), ImageTools.REQUEST_CODE_GET_PICTURE);
-	}
-
-	private void takePicture() {
-		new SimpleSafeAsyncTask<Context, Void, File>() {
-			@Override protected @Nullable File doInBackground(@Nullable Context context) throws IOException {
-				return Constants.Paths.getTempImage(context);
-			}
-			@Override protected void onResult(@Nullable File file, Context context) {
-				try {
-					Intent intent = CaptureImage.saveTo(getContext(), file,
-							MAX_IMAGE_SIZE, COMPRESS_FORMAT, COMPRESS_QUALITY);
-					startActivityForResult(intent, ImageTools.REQUEST_CODE_TAKE_PICTURE);
-				} catch (RuntimeException ex) {
-					onError(ex, context);
-				}
-			}
-			@Override protected void onError(@NonNull Exception ex, Context context) {
-				LOG.error("Cannot take picture", ex);
-				App.toastUser(App.getError(ex, "Cannot take picture."));
-			}
-		}.execute(getContext());
+	private void getPicture() {
+		try {
+			File file = Constants.Paths.getTempImage(getContext());
+			Intent intent = CaptureImage.saveTo(getContext(), file, 2048/*px*/, CompressFormat.JPEG, 85/*%*/);
+			startActivityForResult(intent, ImageTools.REQUEST_CODE_GET_PICTURE);
+		} catch (Exception ex) {
+			LOG.error("Cannot get picture", ex);
+			App.toastUser(App.getError(ex, "Cannot get picture."));
+		}
 	}
 
 	@Override public void onActivityResult(final int requestCode, int resultCode, final Intent data) {
 		switch (requestCode) {
 			case ImageTools.REQUEST_CODE_GET_PICTURE:
 				if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-					loadExternal(data.getData());
-				}
-				return;
-			case ImageTools.REQUEST_CODE_TAKE_PICTURE:
-				if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-					loadInternal(new File(data.getData().getPath()));
+					setCurrentImage(data.getData());
 				}
 				return;
 			default:
@@ -454,79 +433,27 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private void loadInternal(File file) {
-		new SimpleSafeAsyncTask<File, Void, byte[]>() {
-			@Override protected void onPreExecute() {
-				loadTypeImage(image);
-			}
-			@Override protected byte[] doInBackground(File file) throws Exception {
-				byte[] bytes = IOTools.readBytes(file);
-				if (!file.delete()) {
-					throw new IOException("Cannot remove temporary file.");
-				}
-				return bytes;
-			}
-			@Override protected void onResult(byte[] bytes, File file) {
-				setCurrentImage(bytes);
-			}
-			@Override protected void onError(@NonNull Exception ex, File file) {
-				App.toastUser(App.getError(ex, "Cannot process image in " + file));
-			}
-		}.executeParallel(file);
-	}
-
-	private void loadExternal(final Uri uri) {
-		Glide
-				.with(this)
-				.load(uri)
-				.asBitmap()
-				.toBytes(COMPRESS_FORMAT, COMPRESS_QUALITY)
-				.format(DecodeFormat.PREFER_ARGB_8888)
-				.atMost()
-				.override(MAX_IMAGE_SIZE, MAX_IMAGE_SIZE)
-				.diskCacheStrategy(DiskCacheStrategy.NONE)
-				.skipMemoryCache(true)
-				.into(new SimpleTarget<byte[]>() {
-					@Override public void onLoadStarted(Drawable placeholder) {
-						loadTypeImage(image);
-					}
-					@Override public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> ignore) {
-						setCurrentImage(resource);
-					}
-					@Override public void onLoadFailed(Exception ex, Drawable ignore) {
-						App.toastUser(App.getError(ex, "Cannot process image: " + uri));
-					}
-				})
-		;
-	}
-
-	private void setCurrentImage(Object currentImage) {
+	private void setCurrentImage(Uri currentImage) {
 		this.currentImage = currentImage;
 		isClean = false;
 		reloadImage();
 	}
 
-	private final long startTime = System.currentTimeMillis();
 	private void reloadImage() {
 		if (currentImage == null) {
 			loadTypeImage(image);
-		} else if (currentImage instanceof Uri) {
-			Pic
-					.jpg()
-					.signature(new LongSignature(startTime)) // simulate image_time (Uri shouldn't change while editing)
-					.load((Uri)currentImage)
-					.into(image);
-		} else if (currentImage instanceof byte[]) {
-			Pic
-					.baseRequest(byte[].class) // no need for signature, the byte[] doesn't change -> TOFIX glide#437
-					.diskCacheStrategy(DiskCacheStrategy.NONE)
-					.skipMemoryCache(true)
-					.signature(new LongSignature())
-					.listener(new LoggingListener<byte[], GlideDrawable>("edit"))
-					.load((byte[])currentImage)
-					.into(image);
 		} else {
-			throw new IllegalStateException("Unrecognized image: " + currentImage);
+			DrawableRequestBuilder<Uri> jpg = Pic.jpg();
+			if (currentImage.equals(original.getImageUri())) {
+				// original image needs timestamp to refresh between edits (in case user made save changes)
+				jpg.signature(new LongSignature(original.imageTime));
+			} else {
+				// temporary image should be reloaded every time from the disk
+				jpg.skipMemoryCache(true);
+			}
+			jpg.load(currentImage)
+			   .diskCacheStrategy(NONE) // don't save any version: it's already on disk or used only once
+			   .into(image);
 		}
 		loadTypeImage(typeImage);
 	}
@@ -539,6 +466,11 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	protected class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
 		@Override protected final DTO doInBackground(DTO param) throws Exception {
+			if (!param.hasImage && currentImage != null
+					&& !InventoryContract.AUTHORITY.equals(currentImage.getAuthority())) {
+				param.hasImage = true;
+				param.image = IOTools.readBytes(getContext().getContentResolver().openInputStream(currentImage));
+			}
 			Database db = App.db().beginTransaction();
 			try {
 				param = onSave(db, param);
