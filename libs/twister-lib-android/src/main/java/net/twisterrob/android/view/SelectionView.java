@@ -28,16 +28,11 @@ public class SelectionView extends View {
 	private static final int INVALID_POINTER_ID = MotionEvent.INVALID_POINTER_ID;
 
 	private Corners corners;
-	private float mTouchDistance;
+	private int mTouchDistance;
 	private final CornerSelection cornerSelection = new CornerSelection();
 
-	private Rect selection;
-	private float originalRatio;
+	private Selection selection;
 	private boolean keepAspectRatio = false;
-	@SuppressWarnings("FieldCanBeLocal") // field exists just for documentation for now
-	private final boolean shrinkWhenTouchesEdge = false;
-	@SuppressWarnings("FieldCanBeLocal") // field exists just for documentation for now
-	private final boolean stopWhenTouchesEdge = true;
 
 	private static abstract class PendingMargin {
 		protected abstract Rect produce(int width, int height);
@@ -77,23 +72,26 @@ public class SelectionView extends View {
 		line.setColor(Color.CYAN);
 		line.setStrokeWidth(AndroidTools.dip(context, 4));
 
-		mTouchDistance = AndroidTools.dip(context, 32);
+		mTouchDistance = (int)AndroidTools.dip(context, 32);
 	}
 
 	public Rect getSelection() {
-		return selection != null? new Rect(selection) : null;
+		return selection != null? new Rect(selection.selection) : null;
 	}
 
 	public void setSelection(Rect selection) {
-		this.selection = selection != null? new Rect(selection) : null;
 		if (selection != null) {
-			this.originalRatio = (float)selection.width() / (float)selection.height();
+			Rect size = new Rect(mTouchDistance, mTouchDistance, getWidth(), getHeight());
+			this.selection = new Selection(selection, size, keepAspectRatio);
+		} else {
+			this.selection = null;
 		}
 		invalidate();
 	}
 
 	public void setKeepAspectRatio(boolean keepAspectRatio) {
 		this.keepAspectRatio = keepAspectRatio;
+		setSelection(getSelection());
 	}
 	public boolean isKeepAspectRatio() {
 		return keepAspectRatio;
@@ -134,10 +132,10 @@ public class SelectionView extends View {
 				return "rect: " + pendingMargin;
 			}
 		};
-		updatePendingSelection();
+		usePendingSelection();
 	}
 
-	private void updatePendingSelection() {
+	private void usePendingSelection() {
 		if (pendingMargin == null) {
 			LOG.trace("No pending margin, update skipped");
 			return;
@@ -179,28 +177,17 @@ public class SelectionView extends View {
 				return "square: " + margin;
 			}
 		};
-		updatePendingSelection();
+		usePendingSelection();
 	}
 
 	@Override protected void onSizeChanged(int newW, int newH, int oldW, int oldH) {
 		super.onSizeChanged(newW, newH, oldW, oldH);
 		hasSize = true;
-		resizeSelectionRelatively(newW, newH, oldW, oldH);
-		updatePendingSelection();
-	}
-
-	private void resizeSelectionRelatively(int newW, int newH, int oldW, int oldH) {
-		if (selection == null || (oldW == 0 && oldH == 0)) {
-			return;
+		if (oldW != 0 && oldH != 0) {
+			selection.setMaxSize(newW, newH);
+			invalidate();
 		}
-		Rect s = selection;
-		s.left = Math.round((float)s.left / oldW * newW);
-		s.right = Math.round((float)s.right / oldW * newW);
-		s.top = Math.round((float)s.top / oldH * newH);
-		s.bottom = Math.round((float)s.bottom / oldH * newH);
-		limitSize();
-		correctSelection();
-		invalidate();
+		usePendingSelection();
 	}
 
 	/** @see @SuppressLint("DrawAllocation") */
@@ -211,7 +198,7 @@ public class SelectionView extends View {
 		if (selection == null) {
 			return;
 		}
-		tmpDrawSelection.set(selection);
+		tmpDrawSelection.set(selection.selection);
 		tmpDrawSelection.sort(); // need to order because of CCW ordering I guess
 
 		if (fadeNonSelection) {
@@ -247,7 +234,7 @@ public class SelectionView extends View {
 				break;
 			}
 			case MotionEvent.ACTION_DOWN: { // first pointer down
-				cornerSelection.pickCorner(selection, x, y, mTouchDistance);
+				cornerSelection.pickCorner(selection.selection, x, y, mTouchDistance);
 				mLastTouch.set(x, y); // Remember where we started
 				mActivePointerId = ev.getPointerId(pointerIndex);
 				break;
@@ -260,17 +247,15 @@ public class SelectionView extends View {
 
 				float dx = x - mLastTouch.x;
 				float dy = y - mLastTouch.y;
-				cornerSelection.onMovement(selection, dx, dy);
-
-				correctSelection();
+				selection.onMovement(cornerSelection, dx, dy);
 				mLastTouch.set(x, y); // Remember this touch position for the next move event
 				break;
 			}
 			case MotionEvent.ACTION_CANCEL:
 			case MotionEvent.ACTION_UP: { // last pointer up
 				cornerSelection.clear();
-				limitSize();
-				correctSelection();
+				selection.correctMinSize();
+				selection.correctSelection();
 				mActivePointerId = INVALID_POINTER_ID;
 				break;
 			}
@@ -289,117 +274,163 @@ public class SelectionView extends View {
 		}
 		return handled || super.onTouchEvent(ev);
 	}
-	private void limitSize() {
-		selection.sort();
-		int limit = (int)(mTouchDistance * 2);
-		// (w/h - limit) will be negative if w/h is too small, min() constrains it to expand-only
-		selection.inset(
-				Math.min(0, (selection.width() - limit) / 2),
-				Math.min(0, (selection.height() - limit) / 2)
-		);
-	}
 
-	// FIXME widening the selection with left going out left and right going towards right double speed
-	@SuppressWarnings("ConstantConditions") // *WhenTouchesEdge is constant for now
-	private void correctSelection() {
-		Rect s = selection;
-		// s.sort(); // cannot sort the rectangle because it wouldn't allow natural selection to the user
-		if (keepAspectRatio) {
-			float currentRatio = (float)s.width() / (float)s.height();
+	private static class Selection {
+		/**
+		 * Sides of the selection within bounds of Rect[0,0 - size.right,size.bottom]<br>
+		 * <b>DO NOT MODIFY from outside, accessible for performance reasons.</b>
+		 */
+		final Rect selection;
+		/**
+		 * Keep the aspect ratio that was the original selection passed in.
+		 * @see #originalRatio
+		 */
+		private final boolean keepAspectRatio;
+		/**
+		 * The aspect ratio of the original selection, at the time of construction.
+		 * @see #keepAspectRatio
+		 */
+		private final float originalRatio;
+		/**
+		 * width of selection should be between size.left and size.right
+		 * height of selection should be between size.top and size.bottom
+		 */
+		private final Rect size;
+
+		Selection(Rect selection, Rect size, boolean keepAspectRatio) {
+			this.selection = selection;
+			this.originalRatio = (float)selection.width() / (float)selection.height();
+			this.size = size;
+			this.keepAspectRatio = keepAspectRatio;
+		}
+
+		void correctMinSize() {
+			selection.sort();
+			// (w|h - limit) will be negative if w|h is too small, min() constrains it to expand-only
+			selection.inset(
+					Math.min(0, (selection.width() - size.left * 2) / 2),
+					Math.min(0, (selection.height() - size.top * 2) / 2)
+			);
+		}
+
+		/**
+		 * Cut current selection down to allowed size. Anything outside the range will be set to nearest value.
+		 */
+		void clampSelection() {
+			Rect s = selection;
+			s.left = clamp(s.left, 0, size.right);
+			s.right = clamp(s.right, 0, size.right);
+			s.top = clamp(s.top, 0, size.bottom);
+			s.bottom = clamp(s.bottom, 0, size.bottom);
+		}
+		private static int clamp(int value, int min, int max) {
+			return value < min? min : (value > max? max : value);
+		}
+
+		void correctSelection() {
+			// s.sort(); // cannot sort the rectangle because it wouldn't allow natural selection to the user
+			if (this.keepAspectRatio) {
+				correctRatio();
+			}
+			// selection may not be sorted, so can't assume left < right and top < bottom,
+			// which also implies negative width and height are possible -> abs and min/max are used
+			correctMaxSize();
+			correctSides();
+		}
+		void correctRatio() {
+			float currentRatio = (float)selection.width() / (float)selection.height();
 			if (Math.abs(currentRatio - originalRatio) > 1e-5) {
 				if (currentRatio > originalRatio) {
-					int dx = (int)(s.width() - s.height() * originalRatio);
+					int dx = (int)(selection.width() - selection.height() * originalRatio);
 //					LOG.trace("RatioX {}, original: {}, inset: {}", currentRatio, originalRatio, dx);
-					s.inset(dx / 2, 0);
+					selection.inset(dx / 2, 0);
 				} else {
-					int dy = (int)(s.height() - s.width() / originalRatio);
+					int dy = (int)(selection.height() - selection.width() / originalRatio);
 //					LOG.trace("RatioY {}, original: {}, inset: {}", currentRatio, originalRatio, dy);
-					s.inset(0, dy / 2);
+					selection.inset(0, dy / 2);
 				}
 			}
 		}
-
-		// selection may not be sorted, so can't assume left < right and top < bottom,
-		// which also implies negative width and height are possible -> abs and min/max are used
-
-		int width = Math.abs(s.width());
-		if (getWidth() < width) {
-			int dx = width - getWidth();
-			dx *= s.width() < 0? -1 : +1;
+		void correctMaxSize() {
+			int width = Math.abs(selection.width());
+			if (size.right < width) {
+				int dx = width - size.right;
+				dx *= selection.width() < 0? -1 : +1;
 //			LOG.trace("Too wide: {} > {}, inset: {}", width, getWidth(), dx / 2);
-			s.inset(dx / 2, 0);
-		}
+				selection.inset(dx / 2, 0);
+			}
 
-		int height = Math.abs(s.height());
-		if (getHeight() < height) {
-			int dy = height - getHeight();
-			dy *= s.height() < 0? -1 : +1;
+			int height = Math.abs(selection.height());
+			if (size.bottom < height) {
+				int dy = height - size.bottom;
+				dy *= selection.height() < 0? -1 : +1;
 //			LOG.trace("Too tall: {} > {}, inset: {}", height, getHeight(), dy / 2);
-			s.inset(0, dy / 2);
+				selection.inset(0, dy / 2);
+			}
 		}
-
-		int left = Math.min(s.left, s.right);
-		if (left < 0) {
+		void correctSides() {
+			int left = Math.min(selection.left, selection.right);
+			if (left < 0) {
 //			LOG.trace("Out left: {}, offset: {}", left, -left);
-			left = 0 - left; // undershoot value
-			if (stopWhenTouchesEdge) {
-				s.offset(+left, 0);
-				if (shrinkWhenTouchesEdge) {
-					if (s.left < s.right) {
-						s.right -= left;
-					} else {
-						s.left -= left;
-					}
-				}
+				left = 0 - left; // undershoot value
+				selection.offset(+left, 0);
 			}
-		}
 
-		int top = Math.min(s.top, s.bottom);
-		if (top < 0) {
+			int top = Math.min(selection.top, selection.bottom);
+			if (top < 0) {
 //			LOG.trace("Out top: {}, offset: {}", top, -top);
-			top = 0 - top; // undershoot value
-			if (stopWhenTouchesEdge) {
-				s.offset(0, +top);
-				if (shrinkWhenTouchesEdge) {
-					if (s.top < s.bottom) {
-						s.bottom -= top;
-					} else {
-						s.top -= top;
-					}
-				}
+				top = 0 - top; // undershoot value
+				selection.offset(0, +top);
 			}
-		}
 
-		int right = Math.max(s.right, s.left);
-		if (getWidth() < right) {
+			int right = Math.max(selection.right, selection.left);
+			if (size.right < right) {
 //			LOG.trace("Out right: {} (>{}), offset: {}", right, getWidth(), -(right - getWidth()));
-			right = right - getWidth(); // overshoot value
-			if (stopWhenTouchesEdge) {
-				s.offset(-right, 0);
-				if (shrinkWhenTouchesEdge) {
-					if (s.left < s.right) {
-						s.left += right;
-					} else {
-						s.right += right;
-					}
-				}
+				right = right - size.right; // overshoot value
+				selection.offset(-right, 0);
+			}
+
+			int bottom = Math.max(selection.bottom, selection.top);
+			if (size.bottom < bottom) {
+//			LOG.trace("Out bottom: {} (>{}), offset: {}", bottom, getHeight(), -(bottom - getHeight()));
+				bottom = bottom - size.bottom; // overshoot value
+				selection.offset(0, -bottom);
 			}
 		}
+		void setMaxSize(int newW, int newH) {
+			selection.left = Math.round((float)selection.left / size.right * newW);
+			selection.right = Math.round((float)selection.right / size.right * newW);
+			selection.top = Math.round((float)selection.top / size.bottom * newH);
+			selection.bottom = Math.round((float)selection.bottom / size.bottom * newH);
+			size.right = newW;
+			size.bottom = newH;
+			correctMinSize();
+			correctSelection();
+		}
 
-		int bottom = Math.max(s.bottom, s.top);
-		if (getHeight() < bottom) {
-//			LOG.trace("Out bottom: {} (>{}), offset: {}", bottom, getHeight(), -(bottom - getHeight()));
-			bottom = bottom - getHeight(); // overshoot value
-			if (stopWhenTouchesEdge) {
-				s.offset(0, -bottom);
-				if (shrinkWhenTouchesEdge) {
-					if (s.top < s.bottom) {
-						s.top += bottom;
-					} else {
-						s.bottom += bottom;
-					}
+		void onMovement(CornerSelection cornerSelection, float dx, float dy) {
+			if (cornerSelection.hasPickedCorner()) {
+				if (cornerSelection.isLeftTop()) {
+					dx *= +1;
+					dy *= +1;
+				} else if (cornerSelection.isLeftBottom()) {
+					dx *= +1;
+					dy *= -1;
+				} else if (cornerSelection.isRightBottom()) {
+					dx *= -1;
+					dy *= -1;
+				} else if (cornerSelection.isRightTop()) {
+					dx *= -1;
+					dy *= +1;
 				}
+				selection.inset((int)dx, (int)dy);
+			} else if (cornerSelection.isRelocating()) {
+				selection.offset((int)dx, (int)dy);
 			}
+			if (!cornerSelection.isRelocating()) {
+				clampSelection();
+			}
+			correctSides();
 		}
 	}
 
@@ -411,35 +442,26 @@ public class SelectionView extends View {
 		private boolean mRightBottomBool = false;
 		private boolean mRelocating = false;
 
-		private boolean hasPickedCorner() {
+		boolean isLeftTop() {
+			return mLeftTopBool;
+		}
+		boolean isRightTop() {
+			return mRightTopBool;
+		}
+		boolean isLeftBottom() {
+			return mLeftBottomBool;
+		}
+		boolean isRightBottom() {
+			return mRightBottomBool;
+		}
+		boolean hasPickedCorner() {
 			return mLeftTopBool || mLeftBottomBool || mRightBottomBool || mRightTopBool;
 		}
-		private boolean isRelocating() {
+		boolean isRelocating() {
 			return mRelocating;
 		}
 
-		public void onMovement(Rect selection, float dx, float dy) {
-			if (hasPickedCorner()) {
-				if (mLeftTopBool) {
-					dx *= +1;
-					dy *= +1;
-				} else if (mLeftBottomBool) {
-					dx *= +1;
-					dy *= -1;
-				} else if (mRightBottomBool) {
-					dx *= -1;
-					dy *= -1;
-				} else if (mRightTopBool) {
-					dx *= -1;
-					dy *= +1;
-				}
-				selection.inset((int)dx, (int)dy);
-			} else if (isRelocating()) {
-				selection.offset((int)dx, (int)dy);
-			}
-		}
-
-		public void clear() {
+		void clear() {
 			mLeftTopBool = false;
 			mRightTopBool = false;
 			mLeftBottomBool = false;
@@ -451,7 +473,7 @@ public class SelectionView extends View {
 		 * Calculate the distance closest to one of the 4 corners at a given location,
 		 * so that it can get the pressed and moved later. Only 1 corner at a time can be moved.
 		 */
-		public void pickCorner(Rect selection, float x, float y, double touchDistance) {
+		void pickCorner(Rect selection, float x, float y, double touchDistance) {
 			double leftTop = distance(x, y, selection.left, selection.top);
 			double rightTop = distance(x, y, selection.right, selection.top);
 			double leftBottom = distance(x, y, selection.left, selection.bottom);
@@ -490,16 +512,16 @@ public class SelectionView extends View {
 		@Override public String toString() {
 			StringBuilder sb = new StringBuilder();
 			if (mLeftTopBool) {
-				sb.append("mLeftTopBool");
+				sb.append("LeftTop");
 			}
 			if (mLeftBottomBool) {
-				sb.append("mLeftBottomBool");
+				sb.append("LeftBottom");
 			}
 			if (mRightTopBool) {
-				sb.append("mRightTopBool");
+				sb.append("RightTop");
 			}
 			if (mRightBottomBool) {
-				sb.append("mRightBottomBool");
+				sb.append("RightBottom");
 			}
 			if (sb.length() == 0) {
 				sb.append("none");
@@ -514,10 +536,7 @@ public class SelectionView extends View {
 
 	@Override public void invalidate() {
 		super.invalidate();
-
-		if (selection != null) {
-			corners.invalidate(selection);
-		}
+		corners.invalidate(selection.selection);
 	}
 
 	private static class Corners {
@@ -527,7 +546,7 @@ public class SelectionView extends View {
 		private final Drawable mRightBotIcon;
 		private final int mCornerSize;
 
-		public Corners(Context context) {
+		Corners(Context context) {
 			mLeftTopIcon = getDrawable(context, R.drawable.selection_corner);
 			mRightTopIcon = getDrawable(context, R.drawable.selection_corner);
 			mLeftBotIcon = getDrawable(context, R.drawable.selection_corner);
@@ -536,14 +555,17 @@ public class SelectionView extends View {
 			mCornerSize = AndroidTools.dipInt(context, 16);
 		}
 
-		public void draw(Canvas canvas) {
+		void draw(Canvas canvas) {
 			mLeftTopIcon.draw(canvas);
 			mRightTopIcon.draw(canvas);
 			mRightBotIcon.draw(canvas);
 			mLeftBotIcon.draw(canvas);
 		}
 
-		public void invalidate(Rect sel) {
+		void invalidate(Rect sel) {
+			if (sel == null) {
+				return;
+			}
 			int size = mCornerSize / 2;
 			mLeftTopIcon.setBounds(sel.left - size, sel.top - size, sel.left + size, sel.top + size);
 			mRightTopIcon.setBounds(sel.right - size, sel.top - size, sel.right + size, sel.top + size);
