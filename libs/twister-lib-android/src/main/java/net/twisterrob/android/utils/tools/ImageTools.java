@@ -604,8 +604,8 @@ public /*static*/ abstract class ImageTools {
 		//noinspection UnusedAssignment let GC take it away, not used any more
 		argb = null;
 		// YuvImage doesn't handle odd-sized images, but the YCC conversion does.
-		// Make sure to skip the extra CrCb data by setting the interleaved chroma stride to a rounded up value
-		YuvImage yuvImage = new YuvImage(ycc, ImageFormat.NV21, w, h, new int[] {w, (w + 1) >> 1 << 1});
+		// Make sure to skip the extra CrCb data by setting the interleaved chroma stride to a value rounded up to even
+		YuvImage yuvImage = new YuvImage(ycc, ImageFormat.NV21, w, h, new int[] {w, (w + 1) & ~1});
 		if (!yuvImage.compressToJpeg(new Rect(0, 0, w, h), quality, stream)) {
 			throw new IOException("JPEG compress failed for Bitmap of size " + w + "x" + h);
 		}
@@ -629,7 +629,7 @@ public /*static*/ abstract class ImageTools {
 	 * <li>inlined FIX method to constant initialization (563229 bytes): 210~2</li>
 	 * <li>%2==0 -> |&==0 (548441 bytes): 208~2</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see <a href="http://stackoverflow.com/q/36487971/253468">Compress JPEG with least quality loss on Android?</a>
 	 */
 	@SuppressWarnings({"PointlessArithmeticExpression", "PointlessBitwiseExpression"})
