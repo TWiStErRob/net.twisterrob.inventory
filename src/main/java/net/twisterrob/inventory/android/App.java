@@ -1,13 +1,16 @@
 package net.twisterrob.inventory.android;
 
-import java.util.Locale;
+import java.util.*;
 
 import org.slf4j.*;
+import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.impl.AndroidLoggerFactory;
 
 import android.annotation.*;
 import android.app.Application;
 import android.content.*;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.*;
 import android.os.Build.*;
 import android.os.StrictMode;
@@ -15,6 +18,7 @@ import android.os.StrictMode.*;
 import android.os.StrictMode.ThreadPolicy.Builder;
 import android.preference.PreferenceManager;
 import android.support.annotation.*;
+import android.util.Log;
 import android.widget.Toast;
 
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
@@ -63,8 +67,14 @@ public class App extends Application {
 	@Override public void onCreate() {
 		super.onCreate();
 		AndroidTools.setContext(this);
-		LOG.info("************* Starting up {} {} built at {}",
-				getPackageName(), BuildConfig.VERSION_NAME, BuildConfig.BUILD_TIME);
+
+		try {
+			PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+			Log.wtf("App", MessageFormatter.arrayFormat("************ Starting up {} {} installed at {}", new Object[] {
+					getPackageName(), BuildConfig.VERSION_NAME, new Date(info.lastUpdateTime)}).getMessage());
+		} catch (NameNotFoundException ex) {
+			LOG.warn("************* Starting up {} {}", getPackageName(), BuildConfig.VERSION_NAME, ex);
+		}
 
 		// StrictModeDiskReadViolation on startup, but there isn't really a good way around it,
 		// since it needs to be loaded for the following code to work, make an exception:

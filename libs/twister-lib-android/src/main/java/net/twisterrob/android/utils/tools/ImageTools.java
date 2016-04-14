@@ -23,7 +23,6 @@ import net.twisterrob.java.io.IOTools;
 
 // CONSIDER crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
 // CONSIDER crop http://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
-@SuppressWarnings("unused")
 public /*static*/ abstract class ImageTools {
 	public static final short REQUEST_CODE_GET_PICTURE = 0x41C0;
 	public static final short REQUEST_CODE_TAKE_PICTURE = 0x41C1;
@@ -502,15 +501,21 @@ public /*static*/ abstract class ImageTools {
 	//		return null;
 	//	}
 
-	public static void savePicture(Bitmap bitmap, File file, CompressFormat format, int quality) throws IOException {
-		@SuppressWarnings("resource")
-		FileOutputStream out = null;
+	public static void savePicture(Bitmap bitmap, CompressFormat format, int quality, boolean useCorrectEncoder,
+			File file) throws IOException {
+		savePicture(bitmap, format, quality, useCorrectEncoder, new FileOutputStream(file));
+	}
+	public static void savePicture(Bitmap bitmap, CompressFormat format, int quality, boolean useCorrectEncoder,
+			OutputStream stream) throws IOException {
 		try {
-			out = new FileOutputStream(file);
-			bitmap.compress(format, quality, out);
-			out.flush();
+			if (useCorrectEncoder && format == CompressFormat.JPEG) {
+				compressAsJPEG(bitmap, quality, stream);
+			} else {
+				bitmap.compress(format, quality, stream);
+			}
+			stream.flush();
 		} finally {
-			IOTools.ignorantClose(out);
+			IOTools.ignorantClose(stream);
 		}
 	}
 
@@ -584,5 +589,124 @@ public /*static*/ abstract class ImageTools {
 		canvas.drawBitmap(source, matrix, paint);
 
 		return result;
+	}
+
+	/**
+	 * Only even sized Bitmaps will be compressed 1:1, odd sized ones will have their last column/row removed.
+	 * @see <a href="http://stackoverflow.com/q/36487971/253468">Compress JPEG with least quality loss on Android?</a>
+	 */
+	public static void compressAsJPEG(Bitmap bitmap, int quality, OutputStream stream) throws IOException {
+		final int w = bitmap.getWidth();
+		final int h = bitmap.getHeight();
+		int[] argb = new int[w * h];
+		bitmap.getPixels(argb, 0, w, 0, 0, w, h);
+		byte[] ycc = LibJPEG.rgb_ycc_convert(argb, w, h);
+		//noinspection UnusedAssignment let GC take it away, not used any more
+		argb = null;
+		// YuvImage doesn't handle odd-sized images, but the YCC conversion does.
+		// Make sure to skip the extra CrCb data by setting the interleaved chroma stride to a rounded up value
+		YuvImage yuvImage = new YuvImage(ycc, ImageFormat.NV21, w, h, new int[] {w, (w + 1) >> 1 << 1});
+		if (!yuvImage.compressToJpeg(new Rect(0, 0, w, h), quality, stream)) {
+			throw new IOException("JPEG compress failed for Bitmap of size " + w + "x" + h);
+		}
+	}
+
+	/**
+	 * Mathematically correct lossless RGB-YCC conversion
+	 * based on {@code rgb_ycc_start} and {@code rgb_ycc_convert} from LibJPEG's {@code jcolor.c}.
+	 * @see <a href="http://stackoverflow.com/q/36487971/253468">Compress JPEG with least quality loss on Android?</a>
+	 */
+	@SuppressWarnings({"PointlessArithmeticExpression", "PointlessBitwiseExpression"})
+	private static class LibJPEG {
+		/** {@code JSAMPLE} is defined to by an {@code unsigned char} in the original, so the range is [0, 256) */
+		private static final int JSAMPLE_SIZE = Byte.MAX_VALUE - Byte.MIN_VALUE + 1;
+		private static final int CENTER_JSAMPLE = 128;
+		/** speediest right-shift on some machines */
+		private static final int SCALE_BITS = 16;
+		private static final int CbCr_OFFSET = CENTER_JSAMPLE << SCALE_BITS;
+		private static final int ONE_HALF = 1 << (SCALE_BITS - 1);
+		/** tiny number in up-scaled range */
+		private static final int EPSILON = 1;
+		private static int FIX(double x) {
+			return ((int)((x) * (1L << SCALE_BITS) + 0.5));
+		}
+
+		/* offsets to RGB => YCbCr sections in the table */
+		private static final int R_Y_OFFSET = 0 * JSAMPLE_SIZE;
+		private static final int G_Y_OFFSET = 1 * JSAMPLE_SIZE;
+		private static final int B_Y_OFFSET = 2 * JSAMPLE_SIZE;
+		private static final int R_Cb_OFFSET = 3 * JSAMPLE_SIZE;
+		private static final int G_Cb_OFFSET = 4 * JSAMPLE_SIZE;
+		/** B=>Cb, R=>Cr are the same */
+		private static final int B_Cb_OFFSET = 5 * JSAMPLE_SIZE;
+		/** B=>Cb, R=>Cr are the same */
+		private static final int R_Cr_OFFSET = 6 * JSAMPLE_SIZE;
+		private static final int G_Cr_OFFSET = 7 * JSAMPLE_SIZE;
+		private static final int B_Cr_OFFSET = 8 * JSAMPLE_SIZE;
+		private static final int TABLE_SIZE = 9 * JSAMPLE_SIZE;
+		/**
+		 * We allocate one big table and divide it up into eight parts, instead of doing eight alloc_small requests.
+		 * This lets us use a single table base address, which can be held in a register in the inner loops on many
+		 * machines (more than can hold all eight addresses, anyway).
+		 * FIXME inline table into constants, Java may have faster float than checked array access
+		 */
+		private static final int[] rgb_ycc_tab = new int[TABLE_SIZE];
+
+		static { // rgb_ycc_start
+			for (int i = 0; i < JSAMPLE_SIZE; i++) {
+				rgb_ycc_tab[R_Y_OFFSET + i] = FIX(0.299) * i;
+				rgb_ycc_tab[G_Y_OFFSET + i] = FIX(0.587) * i;
+				rgb_ycc_tab[B_Y_OFFSET + i] = FIX(0.114) * i + ONE_HALF;
+				rgb_ycc_tab[R_Cb_OFFSET + i] = -FIX(0.168735892) * i;
+				rgb_ycc_tab[G_Cb_OFFSET + i] = -FIX(0.331264108) * i;
+				/* We use a rounding fudge-factor of 0.5-epsilon for Cb and Cr.
+				 * This ensures that the maximum output will round to MAXJSAMPLE
+				 * not MAXJSAMPLE+1, and thus that we don't have to range-limit.
+				 */
+				rgb_ycc_tab[B_Cb_OFFSET + i] = FIX(0.5) * i + CbCr_OFFSET + ONE_HALF - EPSILON;
+				rgb_ycc_tab[R_Cr_OFFSET + i] = FIX(0.5) * i + CbCr_OFFSET + ONE_HALF - EPSILON;
+				rgb_ycc_tab[G_Cr_OFFSET + i] = -FIX(0.418687589) * i;
+				rgb_ycc_tab[B_Cr_OFFSET + i] = -FIX(0.081312411) * i;
+			}
+		}
+
+		static byte[] rgb_ycc_convert(int[] argb, int width, int height) {
+			// Handle odd-sized images based on http://stackoverflow.com/a/33821066/253468
+			// [w * h * ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8] would only work for even sizes
+			// round width/height up to nearest even, e.g. 3x5 image would have 3*5 Y values and 4*6 chroma pairs
+			final int chromaWidth = (width + 1) / 2;
+			final int chromaHeight = (height + 1) / 2;
+			final int frameSize = width * height;
+			final byte[] ycc = new byte[frameSize + chromaWidth * chromaHeight * 2];
+
+			int yIndex = 0; // Ys start at the beginning of the array, there are 1 for each pixel
+			int uvIndex = frameSize; // CrCb pairs start after the Ys, there are 1 for each 4 pixels (or 1 or 2 if odd)
+			int sourceIndex = 0;
+			final int[] T = LibJPEG.rgb_ycc_tab;
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					//int A = (argb[sourceIndex] >>> 24) & 0xff; // ignore alpha, no place for it in NV21/YUV420SP
+					int R = (argb[sourceIndex] >>> 16) & 0xff;
+					int G = (argb[sourceIndex] >>> 8) & 0xff;
+					int B = (argb[sourceIndex] >>> 0) & 0xff;
+					sourceIndex++;
+
+					/* If the inputs are 0..MAXJSAMPLE (guaranteed by masking the component part we need),
+					 * the outputs of these equations must be too; we do not need an explicit range-limiting operation.
+					 * Hence the value being shifted is never negative, so it's safe to narrow-cast to byte.
+					 */
+					// (R, G, B) * T = (Y, Cb, Cr)
+					byte Y = (byte)((T[R + R_Y_OFFSET] + T[G + G_Y_OFFSET] + T[B + B_Y_OFFSET]) >>> SCALE_BITS);
+					ycc[yIndex++] = Y;
+					if (y % 2 == 0 && x % 2 == 0) { // top-left corner of a 2x2 sampling block
+						byte Cb = (byte)((T[R + R_Cb_OFFSET] + T[G + G_Cb_OFFSET] + T[B + B_Cb_OFFSET]) >>> SCALE_BITS);
+						byte Cr = (byte)((T[R + R_Cr_OFFSET] + T[G + G_Cr_OFFSET] + T[B + B_Cr_OFFSET]) >>> SCALE_BITS);
+						ycc[uvIndex++] = Cr;
+						ycc[uvIndex++] = Cb;
+					}
+				}
+			}
+			return ycc;
+		}
 	}
 }

@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.*;
 import android.provider.MediaStore;
+import android.support.annotation.CheckResult;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -105,7 +106,6 @@ public class CaptureImage extends Activity {
 
 		btnCapture.setOnClickListener(new CaptureClickListener());
 		btnPick.setOnClickListener(new PickClickListener());
-		// XXX what happens on crop after pick and cancel? CONSIDER hiding it
 		btnCrop.setOnClickListener(new CropClickListener());
 
 		if (getIntent().getBooleanExtra(EXTRA_PICK, false) && savedInstanceState == null) {
@@ -115,6 +115,7 @@ public class CaptureImage extends Activity {
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode != Activity.RESULT_OK) {
+			mSelection.setSelectionStatus(SelectionStatus.BLURRY);
 			enableControls();
 			return;
 		}
@@ -129,6 +130,7 @@ public class CaptureImage extends Activity {
 			}
 		}
 		mSavedFile = mTargetFile;
+		mSelection.setSelectionStatus(SelectionStatus.FOCUSED);
 		prepareCrop();
 		enableControls();
 	}
@@ -184,15 +186,21 @@ public class CaptureImage extends Activity {
 		mImage.setImageDrawable(null); // remove Glide placeholder for the view to be transparent
 	}
 	protected void doReturn() {
-		Intent result = new Intent();
-		result.setDataAndType(Uri.fromFile(mSavedFile), "image/jpeg");
-		setResult(RESULT_OK, result);
+		if (mSavedFile != null) {
+			Intent result = new Intent();
+			result.setDataAndType(Uri.fromFile(mSavedFile), "image/jpeg");
+			setResult(RESULT_OK, result);
+		} else {
+			setResult(RESULT_CANCELED);
+		}
 		finish();
 	}
-	protected void take(@SuppressWarnings("deprecation") final android.hardware.Camera.PictureCallback jpegCallback) {
+
+	protected @CheckResult boolean take(
+			@SuppressWarnings("deprecation") final android.hardware.Camera.PictureCallback jpegCallback) {
 		LOG.trace("Initiate taking picture {}", mPreview.isRunning());
 		if (!mPreview.isRunning()) {
-			return;
+			return false;
 		}
 		mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
 		//noinspection deprecation TODEL https://youtrack.jetbrains.com/issue/IDEA-154026
@@ -210,6 +218,7 @@ public class CaptureImage extends Activity {
 			}
 		};
 		mPreview.setCameraFocus(takeAfterFocus);
+		return true;
 	}
 
 	private static File save(File file, byte... data) {
@@ -254,15 +263,16 @@ public class CaptureImage extends Activity {
 				format = CompressFormat.JPEG;
 			}
 			int quality = getIntent().getIntExtra(EXTRA_QUALITY, 85);
-			ImageTools.savePicture(bitmap, file, format, quality);
+			ImageTools.savePicture(bitmap, format, quality, true /* custom encoder */, file);
 
 			int[] finalSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
-			LOG.info("Cropped image ({}x{} -> {}x{} @ {},{} -> {}x{} (max {})) saved at {}",
+			LOG.info("Cropped image ({}x{} -> {}x{} @ {},{} -> {}x{} (max {})) saved {}@{} at {}",
 					originalSize[0], originalSize[1],
 					croppedSize[0], croppedSize[1],
 					(int)(sel.top * originalSize[0]), (int)(sel.left * originalSize[1]),
 					finalSize[0], finalSize[1],
 					maxSize,
+					format, quality,
 					file);
 			return file;
 		} catch (Exception ex) {
@@ -311,13 +321,14 @@ public class CaptureImage extends Activity {
 			mPreview.setVisibility(View.INVISIBLE);
 			cameraControls.setVisibility(View.INVISIBLE);
 			disableControls();
+			mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
 			ImageTools.getPicture(CaptureImage.this, mTargetFile); // continues in onActivityResult
 		}
 	}
 
 	private class CaptureClickListener implements OnClickListener {
 		@Override public void onClick(View v) {
-			if (!mPreview.isRunning()) { // picked gallery -> camera
+			if (!mPreview.isRunning()) { // picked gallery, camera button -> enable preview
 				doRestartPreview();
 				return;
 			}
@@ -332,7 +343,10 @@ public class CaptureImage extends Activity {
 						enableControls();
 					}
 				};
-				take(saveStartCrop);
+				if (!take(saveStartCrop)) {
+					String message = "Please enable camera before taking a picture.";
+					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+				}
 			} else {
 				doRestartPreview();
 				enableControls();
@@ -367,7 +381,10 @@ public class CaptureImage extends Activity {
 						doReturn();
 					}
 				};
-				take(cropAndReturn);
+				if (!take(cropAndReturn)) {
+					String message = "Please select or take a picture before cropping.";
+					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+				}
 			}
 		}
 	}

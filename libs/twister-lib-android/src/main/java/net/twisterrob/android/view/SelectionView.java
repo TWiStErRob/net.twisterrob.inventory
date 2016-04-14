@@ -536,7 +536,9 @@ public class SelectionView extends View {
 
 	@Override public void invalidate() {
 		super.invalidate();
-		corners.invalidate(selection.selection);
+		if (selection != null) {
+			corners.invalidate(selection.selection);
+		}
 	}
 
 	private static class Corners {
@@ -563,9 +565,6 @@ public class SelectionView extends View {
 		}
 
 		void invalidate(Rect sel) {
-			if (sel == null) {
-				return;
-			}
 			int size = mCornerSize / 2;
 			mLeftTopIcon.setBounds(sel.left - size, sel.top - size, sel.left + size, sel.top + size);
 			mRightTopIcon.setBounds(sel.right - size, sel.top - size, sel.right + size, sel.top + size);
