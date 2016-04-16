@@ -22,6 +22,7 @@ public class WrapViewTarget<Z> extends WrappingTarget<Z> {
 		imageView = target.getView();
 		subsitute = new ViewTarget<View, Object>((View)imageView.getParent()) {
 			@Override public void onResourceReady(Object resource, GlideAnimation<? super Object> glideAnimation) {
+				// override just to access ViewTarget.SizeDeterminer's logic as it happens naturally
 				throw new UnsupportedOperationException();
 			}
 		};
@@ -47,7 +48,7 @@ public class WrapViewTarget<Z> extends WrappingTarget<Z> {
 		update(LayoutParams.MATCH_PARENT);
 		super.onLoadStarted(placeholder);
 	}
-	private void update(int size) {
+	protected void update(int size) {
 		imageView.layout(0, 0, 0, 0);
 		LayoutParams params = imageView.getLayoutParams();
 		params.width = size;

@@ -5,31 +5,36 @@ import java.io.*;
 import org.slf4j.*;
 
 import android.Manifest;
+import android.animation.*;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.*;
 import android.net.Uri;
 import android.os.*;
 import android.provider.MediaStore;
 import android.support.annotation.CheckResult;
 import android.view.*;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.*;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.*;
 
 import net.twisterrob.android.R;
 import net.twisterrob.android.content.glide.WrapViewTarget;
+import net.twisterrob.android.utils.concurrent.Callback;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.*;
-import net.twisterrob.android.view.CameraPreview.CameraPreviewListener;
+import net.twisterrob.android.view.CameraPreview.*;
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
@@ -54,7 +59,6 @@ public class CaptureImage extends Activity {
 	private File mSavedFile;
 	private ImageView mImage;
 	private View controls;
-	private View cameraControls;
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,21 +75,45 @@ public class CaptureImage extends Activity {
 
 		setContentView(R.layout.activity_camera);
 		controls = findViewById(R.id.controls);
-		cameraControls = findViewById(R.id.camera_controls);
-		ImageButton btnPick = (ImageButton)controls.findViewById(R.id.btn_pick);
-		ImageButton btnCapture = (ImageButton)controls.findViewById(R.id.btn_capture);
-		ImageButton btnCrop = (ImageButton)controls.findViewById(R.id.btn_crop);
+		final View cameraControls = findViewById(R.id.camera_controls);
+		final ImageButton btnPick = (ImageButton)controls.findViewById(R.id.btn_pick);
+		final ImageButton btnCapture = (ImageButton)controls.findViewById(R.id.btn_capture);
+		final ImageButton btnCrop = (ImageButton)controls.findViewById(R.id.btn_crop);
 		final ToggleButton btnFlash = (ToggleButton)cameraControls.findViewById(R.id.btn_flash);
 		mPreview = (CameraPreview)findViewById(R.id.preview);
 		mImage = (ImageView)findViewById(R.id.image);
 		mSelection = (SelectionView)findViewById(R.id.selection);
 
 		mPreview.setListener(new CameraPreviewListener() {
-			@Override public void onStarted(CameraPreview preview) {
+			@Override public void onCreate(CameraPreview preview) {
 				btnFlash.setChecked(getInitialFlashEnabled()); // calls setOnCheckedChangeListener
+			}
+			@Override public void onResume(CameraPreview preview) {
 				cameraControls.setVisibility(View.VISIBLE);
 			}
-			@Override public void onFinished(CameraPreview preview) {
+			@Override public void onShutter(CameraPreview preview) {
+				final View flashView = mSelection;
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+					ObjectAnimator whiteFlashIn = ObjectAnimator.ofObject(flashView,
+							"backgroundColor", new ArgbEvaluator(), 0x00FFFFFF, 0xAAFFFFFF);
+					ObjectAnimator whiteFlashOut = ObjectAnimator.ofObject(flashView,
+							"backgroundColor", new ArgbEvaluator(), 0xAAFFFFFF, 0x00000000);
+					whiteFlashIn.setDuration(200);
+					whiteFlashOut.setDuration(300);
+					AnimatorSet whiteFlash = new AnimatorSet();
+					whiteFlash.playSequentially(whiteFlashIn, whiteFlashOut);
+					whiteFlash.addListener(new AnimatorListenerAdapter() {
+						@Override public void onAnimationEnd(Animator animation) {
+							flashView.setBackgroundDrawable(null);
+						}
+					});
+					whiteFlash.start();
+				}
+			}
+			@Override public void onPause(CameraPreview preview) {
+				cameraControls.setVisibility(View.INVISIBLE);
+			}
+			@Override public void onDestroy(CameraPreview preview) {
 				// no op
 			}
 		});
@@ -145,18 +173,40 @@ public class CaptureImage extends Activity {
 			return;
 		}
 		LOG.trace("Loading taken image to crop: {}", mSavedFile);
-		Glide
+		// Use a special target that will adjust the size of the ImageView to wrap the image (adjustViewBounds).
+		// The selection view's size will match this hence the user can only select part of the image. 
+		ThumbWrapViewTarget<Bitmap> target = new ThumbWrapViewTarget<>(new BitmapImageViewTarget(mImage) {
+			@Override public void setDrawable(Drawable drawable) {
+				if (drawable instanceof TransitionDrawable) {
+					// TODEL see https://github.com/bumptech/glide/issues/943
+					((TransitionDrawable)drawable).setCrossFadeEnabled(false);
+				}
+				super.setDrawable(drawable);
+			}
+		});
+
+		BitmapRequestBuilder<File, Bitmap> image = Glide
 				.with(this)
 				.load(mSavedFile)
-				.asBitmap()
-				.format(DecodeFormat.PREFER_ARGB_8888) // don't lose quality (may be disabled to gain memory for crop)
+				.asBitmap() // no matter the format, just a single frame of bitmap
 				.diskCacheStrategy(DiskCacheStrategy.NONE) // no need to cache, it's on disk already
 				.skipMemoryCache(true) // won't ever be loaded again, or if it is, probably contains different bytes
-				.placeholder(new ColorDrawable(Color.BLACK)) // immediately hide the preview to prevent weird jump
-				//.thumbnail(0.1f) // CONSIDER if it's possible with wrap target
-				.crossFade() // fade from black to image (or black to thumb to image)
+				//.placeholder(new ColorDrawable(Color.BLACK)) // immediately hide the preview to prevent weird jump
 				.fitCenter() // make sure full image is visible
-				.into(new WrapViewTarget<>(new BitmapImageViewTarget(mImage)));
+				.listener(target) // for the target to know if it's the thumbnail or not, also relies on skipMemoryCache
+				;
+		image
+				.format(DecodeFormat.PREFER_ARGB_8888) // don't lose quality (may be disabled to gain memory for crop)
+				// need the special target/listener
+				.thumbnail(image
+						.clone() // inherit everything (including listener), but load lower quality
+						.format(DecodeFormat.PREFER_RGB_565)
+						.sizeMultiplier(0.1f)
+						.animate(android.R.anim.fade_in) // fade thumbnail in (=crossFade from background)
+				)
+				.crossFade(150) // fade from thumb to image
+				.into(target)
+		;
 	}
 
 	private boolean getInitialFlashEnabled() {
@@ -178,7 +228,6 @@ public class CaptureImage extends Activity {
 	protected void doRestartPreview() {
 		LOG.trace("Restarting preview");
 		mPreview.setVisibility(View.VISIBLE);
-		cameraControls.setVisibility(View.INVISIBLE); // will be visible once the camera preview is set up
 		mSavedFile = null;
 		mSelection.setSelectionStatus(SelectionStatus.NORMAL);
 		mPreview.cancelTakePicture();
@@ -196,28 +245,27 @@ public class CaptureImage extends Activity {
 		finish();
 	}
 
-	protected @CheckResult boolean take(
-			@SuppressWarnings("deprecation") final android.hardware.Camera.PictureCallback jpegCallback) {
+	protected @CheckResult boolean take(final Callback<byte[]> jpegCallback) {
 		LOG.trace("Initiate taking picture {}", mPreview.isRunning());
 		if (!mPreview.isRunning()) {
 			return false;
 		}
 		mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
-		//noinspection deprecation TODEL https://youtrack.jetbrains.com/issue/IDEA-154026
-		@SuppressWarnings("deprecation")
-		android.hardware.Camera.AutoFocusCallback takeAfterFocus = new android.hardware.Camera.AutoFocusCallback() {
-			public void onAutoFocus(final boolean success,
-					@SuppressWarnings("deprecation") android.hardware.Camera camera) {
+		mPreview.takePicture(new CameraPictureListener() {
+			@Override public boolean onFocus(final boolean success) {
 				LOG.trace("Auto-focus result: {}", success);
+				//noinspection ResourceType post should be safe to call from background
 				mSelection.post(new Runnable() {
 					public void run() {
 						mSelection.setSelectionStatus(success? SelectionStatus.FOCUSED : SelectionStatus.BLURRY);
 					}
 				});
-				mPreview.takePicture(jpegCallback);
+				return true; // take the picture even if not in focus
 			}
-		};
-		mPreview.setCameraFocus(takeAfterFocus);
+			@Override public void onTaken(byte... image) {
+				jpegCallback.call(image);
+			}
+		}, true);
 		return true;
 	}
 
@@ -319,7 +367,6 @@ public class CaptureImage extends Activity {
 	private class PickClickListener implements OnClickListener {
 		@Override public void onClick(View v) {
 			mPreview.setVisibility(View.INVISIBLE);
-			cameraControls.setVisibility(View.INVISIBLE);
 			disableControls();
 			mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
 			ImageTools.getPicture(CaptureImage.this, mTargetFile); // continues in onActivityResult
@@ -334,16 +381,13 @@ public class CaptureImage extends Activity {
 			}
 			disableControls();
 			if (mSavedFile == null) {
-				@SuppressWarnings("deprecation")
-				android.hardware.Camera.PictureCallback saveStartCrop = new android.hardware.Camera.PictureCallback() {
-					public void onPictureTaken(byte[] data,
-							@SuppressWarnings("deprecation") android.hardware.Camera camera) {
+				if (!take(new Callback<byte[]>() {
+					@Override public void call(byte... data) {
 						doSave(data);
 						prepareCrop();
 						enableControls();
 					}
-				};
-				if (!take(saveStartCrop)) {
+				})) {
 					String message = "Please enable camera before taking a picture.";
 					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 				}
@@ -373,19 +417,43 @@ public class CaptureImage extends Activity {
 				doCrop();
 				doReturn();
 			} else {
-				@SuppressWarnings("deprecation")
-				android.hardware.Camera.PictureCallback cropAndReturn = new android.hardware.Camera.PictureCallback() {
-					public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
+				if (!take(new Callback<byte[]>() {
+					@Override public void call(byte... data) {
 						doSave(data);
 						doCrop();
 						doReturn();
 					}
-				};
-				if (!take(cropAndReturn)) {
+				})) {
 					String message = "Please select or take a picture before cropping.";
 					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 				}
 			}
+		}
+	}
+
+	private static class ThumbWrapViewTarget<Z> extends WrapViewTarget<Z> implements RequestListener<Object, Z> {
+		private boolean isThumbnail;
+		public ThumbWrapViewTarget(ImageViewTarget<? super Z> target) {
+			super(target);
+		}
+		@Override public void onLoadStarted(Drawable placeholder) {
+			super.onLoadStarted(placeholder);
+			isThumbnail = false;
+		}
+		@Override public boolean onResourceReady(Z resource, Object model, Target<Z> target,
+				boolean isFromMemoryCache, boolean isFirstResource) {
+			this.isThumbnail = isFirstResource;
+			return false; // normal route, just capture arguments
+		}
+		@Override public void onResourceReady(Z resource, GlideAnimation<? super Z> glideAnimation) {
+			super.onResourceReady(resource, glideAnimation);
+			if (isThumbnail) {
+				update(LayoutParams.MATCH_PARENT);
+			}
+		}
+		@Override public boolean onException(Exception e, Object model, Target<Z> target,
+				boolean isFirstResource) {
+			return false; // go for onLoadFailed
 		}
 	}
 }
