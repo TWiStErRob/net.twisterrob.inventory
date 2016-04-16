@@ -13,7 +13,10 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.content.glide.PauseOnFling;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.ViewProvider.StaticViewProvider;
@@ -169,7 +172,11 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	protected abstract void onListItemLongClick(int position, long recyclerViewItemID);
 
 	@Override public void onTypeClick(int position, ImagedDTO dto) {
-		new ChangeTypeListener(this, dto).onClick(listController.getView());
+		if (!selectionMode.isRunning()) {
+			new ChangeTypeListener(this, dto).onClick(listController.getView());
+		} else {
+			onItemClick(position, dto.id);
+		}
 	}
 
 	/**
@@ -210,6 +217,8 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		});
 		list.setLayoutManager(layout);
 		list.setAdapter(selectionAdapter);
+		// FIXME replace this with proper Glide.with calls
+		list.addOnScrollListener(new PauseOnFling(Glide.with(getContext().getApplicationContext())));
 
 		return adapter;
 	}

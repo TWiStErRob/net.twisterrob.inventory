@@ -17,7 +17,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewController.class);
 
 	private SwipeRefreshLayout progress;
-	private boolean lastScrollUp = true;
+	private boolean lastScrollUp = false;
 	protected RecyclerView list;
 	private View fab;
 	private View empty;
