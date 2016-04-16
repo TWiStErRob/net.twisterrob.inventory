@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents;
@@ -12,8 +13,14 @@ import net.twisterrob.inventory.android.fragment.data.ItemEditFragment;
 public class ItemEditActivity extends BaseEditActivity<ItemEditFragment>
 		implements ItemEditFragment.ItemEditEvents {
 	@Override protected ItemEditFragment onCreateFragment() {
-		setActionBarTitle(getString(R.string.item_new));
 		return ItemEditFragment.newInstance(getExtraParentID(), getExtraItemID());
+	}
+
+	@Override protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getExtraItemID() == Item.ID_ADD) {
+			setActionBarTitle(getString(R.string.item_new));
+		}
 	}
 
 	@Override public void itemLoaded(ItemDTO item) {

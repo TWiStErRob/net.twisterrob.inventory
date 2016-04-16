@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents;
@@ -12,8 +13,14 @@ import net.twisterrob.inventory.android.fragment.data.RoomEditFragment;
 public class RoomEditActivity extends BaseEditActivity<RoomEditFragment>
 		implements RoomEditFragment.RoomEditEvents {
 	@Override protected RoomEditFragment onCreateFragment() {
-		setActionBarTitle(getString(R.string.room_new));
 		return RoomEditFragment.newInstance(getExtraPropertyID(), getExtraRoomID());
+	}
+
+	@Override protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getExtraRoomID() == Room.ID_ADD) {
+			setActionBarTitle(getString(R.string.room_new));
+		}
 	}
 
 	@Override public void roomLoaded(RoomDTO room) {

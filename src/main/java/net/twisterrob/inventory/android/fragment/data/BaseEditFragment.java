@@ -397,7 +397,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	private void resetPicture() {
-		if (original.hasImage) {
+		if (original != null && original.hasImage) {
 			setCurrentImage(original.getImageUri());
 		} else {
 			setCurrentImage(null);
@@ -444,7 +444,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			loadTypeImage(image);
 		} else {
 			DrawableRequestBuilder<Uri> jpg = Pic.jpg();
-			if (currentImage.equals(original.getImageUri())) {
+			if (original != null && currentImage.equals(original.getImageUri())) {
 				// original image needs timestamp to refresh between edits (in case user made save changes)
 				jpg.signature(new LongSignature(original.imageTime));
 			} else {
