@@ -137,7 +137,7 @@
 	<string name="category_vivarium_keywords">aquarium, terrarium, insectarium, formicarium, paludarium</string>
 	<string name="category_animal_enclosure" level="2">animal enclosures</string>
 	<string name="category_animal_enclosure_keywords">kennel, chicken coop, aviary, pig sty, greenhouse</string>
-	<!-- XXX some of the above are more like buildings and can be considered room types -->
+	<!-- STOPSHIP some of the above are more like buildings and can be considered room types -->
 	<string name="category_pet_activity" level="2">activity</string>
 	<string name="category_pet_activity_keywords">scratching post/cat tree, hamster wheel, hamster ball, pet door, pet carrier</string>
 

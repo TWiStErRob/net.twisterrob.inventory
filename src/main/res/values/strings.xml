@@ -210,6 +210,13 @@
 	<string name="backup_no_parent">Current directory doesn\'t have a parent.</string>
 	<string name="backup_go_home">Go to Downloads folder</string>
 	<string name="backup_go_home_condensed">Downloads</string>
+	<string name="backup_experimental"><font fgcolor="#AAFF0000" color="-#55010000">WARNING</font>: experimental feature\n
+		<b>Exporting the whole inventory is working fine.</b>
+		<b>Importing a backup into an empty inventory is also fine.</b>
+		Importing a backup into an existing inventory with conflicting structure may result in some mess.
+		The best effort is made is to preserve data, but proper conflict resolution is not implemented yet.
+		<i>Any feedback/ideas regarding this is welcome!</i>
+	</string>
 
 	<string name="backup_export_progress_title">Export</string>
 	<string name="backup_export_progress_init">Preparing export…</string>

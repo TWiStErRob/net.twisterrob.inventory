@@ -43,7 +43,7 @@ dependencies {
 	compile "com.android.support:design:${supportVersion}"
 	//compile "com.android.support:palette-v7:${supportVersion}"
 
-	// XXX @Deprecated, use Glide
+	// FIXME @Deprecated, use Glide
 	compile 'com.jakewharton:disklrucache:2.0.2'
 	compile 'com.caverock:androidsvg:1.2.1'
 	compile 'com.github.bumptech.glide:glide:3.8.0-SNAPSHOT'

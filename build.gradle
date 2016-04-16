@@ -54,7 +54,7 @@ android {
 	defaultConfig {
 		applicationId 'net.twisterrob.inventory'
 		version {
-			// XXX what's up with this? is it properties file or this
+			versionFile = null
 			major = 1
 		}
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
