@@ -17,33 +17,28 @@ import net.twisterrob.inventory.android.content.contract.*;
 
 public enum Loaders {
 	PropertyTypes {
-		@Override
-		protected Cursor createCursor(Context context, Bundle ignore) {
+		@Override protected Cursor createCursor(Context context, Bundle ignore) {
 			return App.db().listPropertyTypes();
 		}
 	},
 	Properties {
-		@Override
-		protected Cursor createCursor(Context context, Bundle ignore) {
+		@Override protected Cursor createCursor(Context context, Bundle ignore) {
 			return App.db().listProperties();
 		}
 	},
 	SingleProperty {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 			return App.db().getProperty(id);
 		}
 	},
 	RoomTypes {
-		@Override
-		protected Cursor createCursor(Context context, Bundle ignore) {
+		@Override protected Cursor createCursor(Context context, Bundle ignore) {
 			return App.db().listRoomTypes();
 		}
 	},
 	Rooms {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 			if (id == Property.ID_ADD) {
 				return App.db().listRooms();
@@ -53,28 +48,24 @@ public enum Loaders {
 		}
 	},
 	SingleRoom {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.ROOM_ID, Room.ID_ADD);
 			return App.db().getRoom(id);
 		}
 	},
 	ItemCategories {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			Long id = (Long)args.get(Extras.CATEGORY_ID);
 			return App.db().listRelatedCategories(id);
 		}
 	},
 	ItemCategoriesAll {
-		@Override
-		protected Cursor createCursor(Context context, Bundle ignore) {
+		@Override protected Cursor createCursor(Context context, Bundle ignore) {
 			return App.db().listRelatedCategories(null);
 		}
 	},
 	Items {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			if (args.containsKey(Extras.PARENT_ID)) {
 				long id = args.getLong(Extras.PARENT_ID);
 				return App.db().listItems(id);
@@ -96,57 +87,49 @@ public enum Loaders {
 		}
 	},
 	SingleItem {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
 			return App.db().getItem(id, true);
 		}
 	},
 	Categories {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			Long id = (Long)args.get(Extras.CATEGORY_ID);
 			return App.db().listCategories(id);
 		}
 	},
 	SingleCategory {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 			return App.db().getCategory(id);
 		}
 	},
 	ItemParents {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
 			return App.db().listItemParents(id);
 		}
 	},
 	ItemSearch {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			CharSequence query = args.getCharSequence(SearchManager.QUERY);
 			return InventoryDatabase.getInstance().searchItems(context.getContentResolver(), query);
 		}
 	},
 	SingleList {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.LIST_ID, CommonColumns.ID_ADD);
 			return App.db().getList(id);
 		}
 	},
 	Lists {
-		@Override
-		protected Cursor createCursor(Context context, Bundle args) {
+		@Override protected Cursor createCursor(Context context, Bundle args) {
 			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
 			return App.db().listLists(id);
 		}
 	},
 	Recents {
-		@Override
-		protected Cursor createCursor(Context context, Bundle ignore) {
+		@Override protected Cursor createCursor(Context context, Bundle ignore) {
 			return App.db().listRecents();
 		}
 	},;
@@ -195,6 +178,14 @@ public enum Loaders {
 			}
 			LOG.trace("{}.onLoadFinished({}){}", loader, data, getTimings(loader));
 		}
+
+		@Override public void onLoaderReset(Loader<Cursor> loader) {
+			if (loader instanceof LoadersCursorLoader) {
+				((LoadersCursorLoader)loader).timeLoaderReset = System.nanoTime();
+			}
+			LOG.trace("{}.onLoaderReset(){}", loader, getTimings(loader));
+		}
+
 		private String getTimings(Loader<Cursor> loader) {
 			if (BuildConfig.DEBUG && loader instanceof LoadersCursorLoader) {
 				LoadersCursorLoader l = ((LoadersCursorLoader)loader);
@@ -208,12 +199,6 @@ public enum Loaders {
 						+ "]";
 			}
 			return "";
-		}
-		@Override public void onLoaderReset(Loader<Cursor> loader) {
-			if (loader instanceof LoadersCursorLoader) {
-				((LoadersCursorLoader)loader).timeLoaderReset = System.nanoTime();
-			}
-			LOG.trace("{}.onLoaderReset(){}", loader, getTimings(loader));
 		}
 	}
 
@@ -234,16 +219,14 @@ public enum Loaders {
 			this.args = args;
 		}
 
-		@Override
-		public Cursor loadInBackground() {
+		@Override public Cursor loadInBackground() {
 			timeCursorWanted = System.nanoTime();
 			Cursor cursor = loaders.createCursor(getContext(), args != null? args : NO_ARGS);
 			timeCursorCreated = System.nanoTime();
-			return cursor;
+			return cursor; // closed in SimpleCursorLoader when the LoaderManager is destroyed
 		}
 
-		@Override
-		public void deliverResult(Cursor cursor) {
+		@Override public void deliverResult(Cursor cursor) {
 			timeCursorDelivered = System.nanoTime();
 			try {
 				super.deliverResult(cursor);

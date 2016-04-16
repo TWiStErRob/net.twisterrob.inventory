@@ -2,14 +2,18 @@ package net.twisterrob.inventory.android.view;
 
 import org.slf4j.*;
 
+import android.database.Cursor;
 import android.support.annotation.*;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.*;
 import android.view.View.OnClickListener;
 
+import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
 
@@ -131,7 +135,13 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 			finishLoading();
 		}
 	}
-	// XXX Do overrides need to use changeCursor instead of swapCursor? Who closes these Cursors atm?
+
+	/**
+	 * If {@link D data's type} is a {@link Cursor}, and it is coming from a {@link Loader}
+	 * use {@link CursorRecyclerAdapter#swapCursor(Cursor)} (keeps it open)
+	 * instead of {@link CursorRecyclerAdapter#changeCursor(Cursor)} (closes it).
+	 * The {@link LoaderManager} will take care of disposing the data.
+	 */
 	protected abstract void setData(A adapter, D data);
 
 	protected void updateFAB() {

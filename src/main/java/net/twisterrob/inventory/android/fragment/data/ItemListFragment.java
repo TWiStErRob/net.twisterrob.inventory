@@ -83,16 +83,12 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 			if (getArgParentItemID() != Item.ID_ADD) {
 				args.putLong(Extras.PARENT_ID, getArgParentItemID());
 			}
-			if (getArgCategoryID() != Category.ID_ADD) {
-				args.putLong(Extras.CATEGORY_ID, getArgCategoryID());
-			}
 			if (getArgRoomID() != Room.ID_ADD) {
 				args.putLong(Extras.ROOM_ID, getArgRoomID());
 			}
 			if (getArgListID() != CommonColumns.ID_ADD) {
 				args.putLong(Extras.LIST_ID, getArgListID());
 			}
-			args.putBoolean(Extras.INCLUDE_SUBS, getArgIncludeSubs());
 			return args;
 		}
 	}
@@ -117,14 +113,8 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	private long getArgParentItemID() {
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
-	@Deprecated private long getArgCategoryID() {
-		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
-	}
 	private long getArgRoomID() {
 		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
-	}
-	@Deprecated private boolean getArgIncludeSubs() {
-		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
 	private CharSequence getArgQuery() {
 		return getArguments().getCharSequence(SearchManager.QUERY);
@@ -150,17 +140,6 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		return fragment;
 	}
 
-	// XXX remove
-	@Deprecated public static ItemListFragment newCategoryInstance(long categoryID, boolean include) {
-		ItemListFragment fragment = new ItemListFragment();
-
-		Bundle args = Intents.bundleFromCategory(categoryID);
-		args.putBoolean(Extras.INCLUDE_SUBS, include);
-
-		fragment.setArguments(args);
-		return fragment;
-	}
-
 	public static ItemListFragment newSearchInstance(CharSequence query) {
 		ItemListFragment fragment = new ItemListFragment();
 		fragment.setArguments(Intents.bundleFromQuery(query));
@@ -179,8 +158,6 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 			setHeader(ItemViewFragment.newInstance(getArgParentItemID()));
 		} else if (args.containsKey(Extras.ROOM_ID)) {
 			setHeader(RoomViewFragment.newInstance(getArgRoomID()));
-		} else if (args.containsKey(Extras.CATEGORY_ID)) {
-			setHeader(CategoryViewFragment.newInstance(getArgCategoryID()));
 		} else if (args.containsKey(Extras.LIST_ID)) {
 			setHeader(ListViewFragment.newInstance(getArgListID()));
 		}

@@ -1,7 +1,7 @@
 package net.twisterrob.android.content.loader;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import android.support.annotation.*;
 import android.support.v4.content.AsyncTaskLoader;
 
 /**
@@ -18,15 +18,14 @@ public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 		super(context);
 	}
 
-	/* Runs on a worker thread */
+	@WorkerThread
 	@Override public abstract D loadInBackground();
 
 	/**
 	 * Called when there is new data to deliver to the client.
 	 * The super class will take care of delivering it; the implementation here just adds a little more logic.
-	 * <p/>
-	 * Runs on the UI thread
 	 */
+	@MainThread
 	@Override public void deliverResult(D data) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped. We don't need the result.
@@ -52,9 +51,8 @@ public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 	 * Starts an asynchronous load of the data.
 	 * When the result is ready the callbacks will be called on the UI thread.
 	 * If a previous load has been completed and is still valid the result may be passed to the callbacks immediately.
-	 * <p/>
-	 * Must be called from the UI thread
 	 */
+	@MainThread
 	@Override protected void onStartLoading() {
 		if (mData != null) {
 			// If we currently have a result available, deliver it immediately.
@@ -67,19 +65,19 @@ public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 		}
 	}
 
-	/**
-	 * Must be called from the UI thread
-	 */
+	@MainThread
 	@Override protected void onStopLoading() {
 		// Attempt to cancel the current load task if possible.
 		cancelLoad();
 	}
 
+	@MainThread
 	@Override public void onCanceled(D data) {
 		// At this point we can release the resources associated with data
 		releaseResources(data);
 	}
 
+	@MainThread
 	@Override protected void onReset() {
 		super.onReset();
 
