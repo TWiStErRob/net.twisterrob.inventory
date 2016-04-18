@@ -66,7 +66,7 @@ public class ChangeTypeDialog {
 
 	public void show(final Variants variants, long initialType) {
 		final TypeAdapter adapter = new TypeAdapter(context);
-		adapter.setExpandable(true);
+		adapter.setExpandable(variants.isExpandable());
 		adapter.setIndented(true);
 		Builder builder = new Builder(context)
 				.setIcon(spinner)
@@ -167,6 +167,7 @@ public class ChangeTypeDialog {
 		protected abstract CharSequence getTitle();
 		protected abstract Loaders getTypesLoader();
 		protected abstract CharSequence getName();
+		protected abstract boolean isExpandable();
 		protected void augment(Builder dialog) {
 			dialog.setTitle(getTitle());
 		}

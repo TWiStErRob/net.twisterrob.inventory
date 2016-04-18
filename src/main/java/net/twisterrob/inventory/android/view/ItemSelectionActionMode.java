@@ -75,6 +75,9 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 					@Override protected CharSequence getName() {
 						return "selection";
 					}
+					@Override protected boolean isExpandable() {
+						return true;
+					}
 				}, category);
 				return true;
 		}

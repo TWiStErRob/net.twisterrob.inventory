@@ -73,6 +73,9 @@ public class ChangeTypeListener implements OnClickListener {
 		@Override public Loaders getTypesLoader() {
 			return Loaders.PropertyTypes;
 		}
+		@Override protected boolean isExpandable() {
+			return false;
+		}
 	}
 
 	private class RoomVariants extends ImagedVariants {
@@ -86,6 +89,9 @@ public class ChangeTypeListener implements OnClickListener {
 		}
 		@Override public Loaders getTypesLoader() {
 			return Loaders.RoomTypes;
+		}
+		@Override protected boolean isExpandable() {
+			return false;
 		}
 	}
 
@@ -111,6 +117,9 @@ public class ChangeTypeListener implements OnClickListener {
 					context.startActivity(CategoryActivity.show(entity.type));
 				}
 			});
+		}
+		@Override protected boolean isExpandable() {
+			return true;
 		}
 	}
 }

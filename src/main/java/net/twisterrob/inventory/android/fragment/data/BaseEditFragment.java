@@ -127,6 +127,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 						@Override protected CharSequence getName() {
 							return name.getText();
 						}
+						@Override protected boolean isExpandable() {
+							return true; // only for items (see instanceof above)
+						}
 						@Override protected Bundle createArgs(long type) {
 							return Intents.bundleFromCategory(type);
 						}
