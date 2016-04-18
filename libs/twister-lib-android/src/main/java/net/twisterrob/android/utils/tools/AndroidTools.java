@@ -33,6 +33,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.view.*;
 import android.support.v4.widget.*;
+import android.text.TextUtils;
 import android.util.*;
 import android.view.*;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -812,7 +813,7 @@ public /*static*/ abstract class AndroidTools {
 			return;
 		}
 		CharSequence text = view.getText();
-		displayedIf(view, text != null && 0 < text.length());
+		displayedIf(view, !TextUtils.isEmpty(text) && 0 < TextUtils.getTrimmedLength(text));
 	}
 	public static void visibleIfHasText(TextView view) {
 		if (view == null) {

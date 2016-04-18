@@ -192,7 +192,7 @@
 	<!-- http://en.wikipedia.org/wiki/Holiday -->
 	<string name="category_decoration_cultural_keywords">balloon, fireworks, firecrackers, confetti, party popper, streamers, aerosol string, ribbon, tinsel, banner, flag, bunting</string>
 	<string name="category_decoration_party" level="2">parties</string>
-	<string name="category_decoration_party_keywords">house party, birthday party, bachelor party, hen party, balls</string>
+	<string name="category_decoration_party_keywords">house party, birthday party, bachelor party, hen party, balls, unicorn horn</string>
 	<string name="category_decoration_holiday" level="2">holidays</string>
 	<string name="category_decoration_holiday_keywords">New Year\'s, Halloween, Valentine\'s Day, Christmas, Easter, Thanksgiving</string>
 

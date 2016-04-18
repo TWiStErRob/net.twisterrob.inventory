@@ -10,6 +10,18 @@ public class ReflectionTools {
 	private static final Logger LOG = LoggerFactory.getLogger(ReflectionTools.class);
 
 	@SuppressWarnings("unchecked")
+	public static <T> T getStatic(@Nonnull String className, @Nonnull String fieldName) {
+		try {
+			Field field = findDeclaredField(Class.forName(className), fieldName);
+			field.setAccessible(true);
+			return (T)field.get(null);
+		} catch (Exception ex) {
+			LOG.warn("Cannot read static field {} of {}", fieldName, className, ex);
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
 	public static <T> T get(@Nonnull Object object, @Nonnull String fieldName) {
 		try {
 			Field field = findDeclaredField(object.getClass(), fieldName);

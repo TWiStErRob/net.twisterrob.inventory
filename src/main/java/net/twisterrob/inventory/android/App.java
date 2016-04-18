@@ -21,6 +21,8 @@ import android.support.annotation.*;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
+
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.content.Database;
@@ -80,6 +82,9 @@ public class App extends Application {
 		// since it needs to be loaded for the following code to work, make an exception:
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		try {
+			if (BuildConfig.DEBUG) {
+				Stetho.initializeWithDefaults(this); // reads /proc/self/cmdline
+			}
 			PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 			database = new Database(this);
 			// reads prefs, so may cause StrictModeDiskReadViolation if not loaded yet

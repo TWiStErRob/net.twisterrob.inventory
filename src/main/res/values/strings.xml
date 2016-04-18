@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+	<!ENTITY nbsp "&#160;"><!-- non-breaking space, http://www.fileformat.info/info/unicode/char/00A0/index.htm -->
+	<!ENTITY lquot "&#8220;"><!-- left double quotation mark, http://www.fileformat.info/info/unicode/char/201C/index.htm -->
+	<!ENTITY rquot "&#8221;"><!-- right double quotation mark, http://www.fileformat.info/info/unicode/char/201D/index.htm -->
+	]>
 <resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="app_name">Magic Home Inventory</string>
 	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
@@ -210,8 +215,8 @@
 	<string name="backup_no_parent">Current directory doesn\'t have a parent.</string>
 	<string name="backup_go_home">Go to Downloads folder</string>
 	<string name="backup_go_home_condensed">Downloads</string>
-	<string name="backup_experimental"><font fgcolor="#AAFF0000" color="-#55010000">WARNING</font>: experimental feature\n
-		<b>Exporting the whole inventory is working fine.</b>
+	<string name="backup_experimental"><font fgcolor="#AAFF0000" color="-#55010000">WARNING</font>: experimental feature
+		\n<b>Exporting the whole inventory is working fine.</b>
 		<b>Importing a backup into an empty inventory is also fine.</b>
 		Importing a backup into an existing inventory with conflicting structure may result in some mess.
 		The best effort is made is to preserve data, but proper conflict resolution is not implemented yet.

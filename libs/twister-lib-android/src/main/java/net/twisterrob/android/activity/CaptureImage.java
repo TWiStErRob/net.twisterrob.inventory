@@ -103,6 +103,7 @@ public class CaptureImage extends Activity {
 					AnimatorSet whiteFlash = new AnimatorSet();
 					whiteFlash.playSequentially(whiteFlashIn, whiteFlashOut);
 					whiteFlash.addListener(new AnimatorListenerAdapter() {
+						@SuppressWarnings("deprecation")
 						@Override public void onAnimationEnd(Animator animation) {
 							flashView.setBackgroundDrawable(null);
 						}

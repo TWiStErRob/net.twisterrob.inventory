@@ -7,8 +7,6 @@ import org.slf4j.*;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.hardware.Camera;
-import android.hardware.Camera.AutoFocusCallback;
 import android.os.Build.*;
 import android.os.*;
 import android.support.annotation.*;
@@ -284,8 +282,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		if (cameraHolder == null) {
 			return;
 		}
-		AutoFocusCallback cameraCallback = new AutoFocusCallback() {
-			@Override public void onAutoFocus(boolean success, Camera camera) {
+		android.hardware.Camera.AutoFocusCallback cameraCallback = new android.hardware.Camera.AutoFocusCallback() {
+			@Override public void onAutoFocus(boolean success, android.hardware.Camera camera) {
 				if (callback.onFocus(success)) {
 					takePicture(callback, false);
 				}

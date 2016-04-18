@@ -53,7 +53,7 @@ public /*static*/ abstract class TextTools {
 	 * @param content an array of character sequences to apply a style to
 	 * @param tags the styled span objects to apply to the content
 	 *        such as android.text.style.StyleSpan
-	 *
+	 * @see <a href="http://developer.android.com/guide/topics/resources/string-resource.html#StylingWithSpannables">String Resources > Styling with Spannables</a>
 	 */
 	private static CharSequence apply(CharSequence[] content, Object... tags) {
 		SpannableStringBuilder text = new SpannableStringBuilder();
@@ -69,6 +69,7 @@ public /*static*/ abstract class TextTools {
 	 * Iterates over an array of tags and applies them to the beginning of the specified
 	 * Spannable object so that future text appended to the text will have the styling
 	 * applied to it. Do not call this method directly.
+	 * @see <a href="http://developer.android.com/guide/topics/resources/string-resource.html#StylingWithSpannables">String Resources > Styling with Spannables</a>
 	 */
 	private static void openTags(Spannable text, Object... tags) {
 		for (Object tag : tags) {
@@ -80,6 +81,7 @@ public /*static*/ abstract class TextTools {
 	 * "Closes" the specified tags on a Spannable by updating the spans to be
 	 * endpoint-exclusive so that future text appended to the end will not take
 	 * on the same styling. Do not call this method directly.
+	 * @see <a href="http://developer.android.com/guide/topics/resources/string-resource.html#StylingWithSpannables">String Resources > Styling with Spannables</a>
 	 */
 	private static void closeTags(Spannable text, Object... tags) {
 		int len = text.length();
@@ -94,6 +96,7 @@ public /*static*/ abstract class TextTools {
 	/**
 	 * Returns a CharSequence that applies boldface to the concatenation
 	 * of the specified CharSequence objects.
+	 * @see <a href="http://developer.android.com/guide/topics/resources/string-resource.html#StylingWithSpannables">String Resources > Styling with Spannables</a>
 	 */
 	public static CharSequence bold(CharSequence... content) {
 		return apply(content, new StyleSpan(Typeface.BOLD));
@@ -102,6 +105,7 @@ public /*static*/ abstract class TextTools {
 	/**
 	 * Returns a CharSequence that applies italics to the concatenation
 	 * of the specified CharSequence objects.
+	 * @see <a href="http://developer.android.com/guide/topics/resources/string-resource.html#StylingWithSpannables">String Resources > Styling with Spannables</a>
 	 */
 	public static CharSequence italic(CharSequence... content) {
 		return apply(content, new StyleSpan(Typeface.ITALIC));
@@ -110,6 +114,7 @@ public /*static*/ abstract class TextTools {
 	/**
 	 * Returns a CharSequence that applies a foreground color to the
 	 * concatenation of the specified CharSequence objects.
+	 * @see <a href="http://developer.android.com/guide/topics/resources/string-resource.html#StylingWithSpannables">String Resources > Styling with Spannables</a>
 	 */
 	public static CharSequence color(int color, CharSequence... content) {
 		return apply(content, new ForegroundColorSpan(color));
