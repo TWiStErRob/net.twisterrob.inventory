@@ -50,8 +50,8 @@
 			>
 			<ToggleButton
 				android:id="@+id/btn_flash"
-				android:layout_width="48dp"
-				android:layout_height="48dp"
+				android:layout_width="@dimen/icon_action_button"
+				android:layout_height="@dimen/icon_action_button"
 				android:layout_gravity="top|end"
 				android:layout_margin="8dp"
 				android:background="@drawable/btn_flash_toggle"
@@ -67,24 +67,24 @@
 			>
 			<ImageButton
 				android:id="@+id/btn_pick"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
+				android:layout_width="@dimen/icon_action_button"
+				android:layout_height="@dimen/icon_action_button"
 				android:layout_margin="8dp"
 				android:src="@android:drawable/ic_menu_gallery"
 				android:contentDescription="pick"
 				/>
 			<ImageButton
 				android:id="@+id/btn_capture"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
+				android:layout_width="@dimen/icon_action_button"
+				android:layout_height="@dimen/icon_action_button"
 				android:layout_margin="8dp"
 				android:src="@android:drawable/ic_menu_camera"
 				android:contentDescription="capture"
 				/>
 			<ImageButton
 				android:id="@+id/btn_crop"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
+				android:layout_width="@dimen/icon_action_button"
+				android:layout_height="@dimen/icon_action_button"
 				android:layout_margin="8dp"
 				android:src="@android:drawable/ic_menu_crop"
 				android:contentDescription="crop"

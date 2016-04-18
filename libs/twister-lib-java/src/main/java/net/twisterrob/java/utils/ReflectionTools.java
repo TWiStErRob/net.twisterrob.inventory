@@ -28,7 +28,7 @@ public class ReflectionTools {
 			field.setAccessible(true);
 			return (T)field.get(object);
 		} catch (Exception ex) {
-			LOG.warn("Cannot read field {} of {}", fieldName, object, ex);
+			LOG.warn("Cannot read field {} of ({}){}", fieldName, object.getClass(), object, ex);
 		}
 		return null;
 	}

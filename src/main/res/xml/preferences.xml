@@ -29,23 +29,23 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="Links">
-		<PreferenceScreen
+		<Preference
 			android:title="App info in Settings"
 			>
 			<intent
 				android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
 				android:data="@string/package_url_settings"
 				/>
-		</PreferenceScreen>
-		<PreferenceScreen
+		</Preference>
+		<Preference
 			android:title="App details in Play Store"
 			>
 			<intent
 				android:action="android.intent.action.VIEW"
 				android:data="market://details?id=net.twisterrob.inventory"
 				/>
-		</PreferenceScreen>
-		<PreferenceScreen
+		</Preference>
+		<Preference
 			android:title="Feedback"
 			android:summary="Ask a question, request features you'd like to see, or just tell me what you think about the app. Any feedback is welcome.">
 			<intent android:action="android.intent.action.VIEW"
@@ -55,7 +55,7 @@
 				<extra android:name="android.intent.extra.SUBJECT"
 				       android:value="Magic Home Inventory feedback" />
 			</intent>
-		</PreferenceScreen>
+		</Preference>
 		<Preference
 			android:title="About"
 			android:summary="@string/app_name"
@@ -88,13 +88,13 @@
 			android:defaultValue="@bool/pref_highlightSuggestion_default"
 			android:summary="@string/pref_highlightSuggestion_desc"
 			/>
-		<PreferenceScreen
+		<Preference
 			android:title="@string/manage_space_title"
 			>
 			<intent
 				android:targetClass="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
 				android:targetPackage="@string/app_package"
 				/>
-		</PreferenceScreen>
+		</Preference>
 	</PreferenceCategory>
 </PreferenceScreen>
