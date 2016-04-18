@@ -5,7 +5,7 @@
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:padding="@dimen/margin"
+	android:padding="@dimen/unit_half"
 	android:background="@drawable/item_state"
 	tools:background="@color/toolsBG"
 	>
@@ -22,10 +22,10 @@
 		/>
 	<TextView
 		android:id="@id/count"
-		android:layout_width="@dimen/icon_medium"
-		android:layout_height="@dimen/icon_medium"
+		android:layout_width="@dimen/icon_action"
+		android:layout_height="@dimen/icon_action"
 		android:layout_gravity="center_vertical"
-		android:padding="@dimen/margin"
+		android:padding="@dimen/unit_half"
 		android:background="@drawable/circle"
 		android:focusable="false"
 		android:gravity="center"

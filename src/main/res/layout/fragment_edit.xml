@@ -38,10 +38,10 @@
 					/>
 				<ImageButton
 					android:id="@+id/help"
-					android:layout_width="@dimen/icon_medium"
-					android:layout_height="@dimen/icon_medium"
+					android:layout_width="@dimen/icon_action"
+					android:layout_height="@dimen/icon_action"
 					android:layout_gravity="center_vertical"
-					android:padding="@dimen/margin"
+					android:padding="@dimen/unit_half"
 					android:src="@android:drawable/ic_menu_info_details"
 					android:scaleType="fitCenter"
 					/>
@@ -50,7 +50,7 @@
 				android:id="@android:id/hint"
 				android:layout_width="match_parent"
 				android:layout_height="150dp"
-				android:layout_marginBottom="@dimen/margin"
+				android:layout_marginBottom="@dimen/unit_half"
 				android:visibility="gone"
 				tools:visibility="visible"
 				tools:listitem="@layout/item_suggestion"

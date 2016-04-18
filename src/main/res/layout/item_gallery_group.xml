@@ -11,7 +11,7 @@
 	>
 	<View
 		android:layout_width="fill_parent"
-		android:layout_height="@dimen/marginHalf"
+		android:layout_height="@dimen/unit_quarter"
 		android:background="@color/primary"
 		/>
 	<LinearLayout
@@ -21,10 +21,10 @@
 		>
 		<net.twisterrob.android.view.RigidImageView
 			android:id="@id/image"
-			android:layout_width="@dimen/icon_big"
-			android:layout_height="@dimen/icon_big"
+			android:layout_width="@dimen/icon_action_button"
+			android:layout_height="@dimen/icon_action_button"
 			android:layout_gravity="center_vertical"
-			android:layout_margin="@dimen/margin"
+			android:layout_margin="@dimen/unit_half"
 			android:focusable="false"
 			android:scaleType="fitCenter"
 			tools:src="@drawable/category_unknown"
@@ -34,7 +34,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
-			android:padding="@dimen/margin"
+			android:padding="@dimen/unit_half"
 			android:layout_weight="1"
 			android:focusable="false"
 			android:gravity="center"
@@ -51,7 +51,7 @@
 	</LinearLayout>
 	<View
 		android:layout_width="fill_parent"
-		android:layout_height="@dimen/margin"
+		android:layout_height="@dimen/unit_half"
 		android:background="@color/primary"
 		/>
 </LinearLayout>

@@ -11,7 +11,7 @@
 	<item android:state_selected="true">
 		<shape android:shape="rectangle">
 			<solid android:color="@color/accent" />
-			<stroke android:width="@dimen/marginHalf" android:color="@color/accentDark" />
+			<stroke android:width="@dimen/unit_quarter" android:color="@color/accentDark" />
 		</shape>
 	</item>
 	<!-- Not supported pre-API 11, ignore: <item android:state_activated="true"> -->

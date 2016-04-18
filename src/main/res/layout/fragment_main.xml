@@ -4,7 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:padding="@dimen/margin"
+	android:padding="@dimen/unit_half"
 	android:orientation="horizontal"
 	tools:context=".activity.MainActivity"
 	>
@@ -12,7 +12,7 @@
 		android:id="@+id/spacer"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
-		android:layout_margin="@dimen/marginHalf"
+		android:layout_margin="@dimen/unit_quarter"
 		android:layout_centerInParent="true"
 		tools:ignore="InconsistentLayout"
 		/>

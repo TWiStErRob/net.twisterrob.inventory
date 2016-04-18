@@ -10,7 +10,7 @@
 		android:id="@+id/title"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/margin"
+		android:padding="@dimen/unit_half"
 		android:text="@string/list_list"
 		android:gravity="center"
 		android:textAppearance="@style/TextAppearance.AppCompat.Headline"

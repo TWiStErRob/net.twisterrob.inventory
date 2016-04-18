@@ -19,8 +19,8 @@
 			tools:id="@id/storage_imageCache"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/margin2"
-			app:contentPadding="@dimen/margin2"
+			android:layout_margin="@dimen/unit"
+			app:contentPadding="@dimen/unit"
 			>
 			<LinearLayout
 				android:layout_width="fill_parent"
@@ -58,8 +58,8 @@
 			tools:id="@id/storage_database"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/margin2"
-			app:contentPadding="@dimen/margin2"
+			android:layout_margin="@dimen/unit"
+			app:contentPadding="@dimen/unit"
 			>
 			<LinearLayout
 				android:layout_width="fill_parent"
@@ -138,8 +138,8 @@
 			android:id="@+id/storage_all"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/margin2"
-			app:contentPadding="@dimen/margin2"
+			android:layout_margin="@dimen/unit"
+			app:contentPadding="@dimen/unit"
 			>
 			<LinearLayout
 				android:layout_width="fill_parent"
@@ -193,9 +193,9 @@
 			tools:id="@id/storage_search"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/margin2"
+			android:layout_margin="@dimen/unit"
 			android:visibility="@integer/visible_in_test"
-			app:contentPadding="@dimen/margin2"
+			app:contentPadding="@dimen/unit"
 			>
 			<LinearLayout
 				android:layout_width="fill_parent"

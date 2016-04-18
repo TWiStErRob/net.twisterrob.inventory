@@ -4,7 +4,7 @@
 	<style name="ManageSpaceText">
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">wrap_content</item>
-		<item name="android:paddingTop">@dimen/margin</item>
+		<item name="android:paddingTop">@dimen/unit_half</item>
 		<item name="android:textAppearance">?android:textAppearanceSmall</item>
 	</style>
 
@@ -32,7 +32,7 @@
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_gravity">end</item>
-		<item name="android:paddingLeft">@dimen/marginBig</item>
-		<item name="android:paddingRight">@dimen/marginBig</item>
+		<item name="android:paddingLeft">@dimen/unit_double</item>
+		<item name="android:paddingRight">@dimen/unit_double</item>
 	</style>
 </resources>

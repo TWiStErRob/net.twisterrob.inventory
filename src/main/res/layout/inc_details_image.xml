@@ -14,9 +14,9 @@
 		/>
 	<ImageView
 		android:id="@id/type"
-		android:layout_width="@dimen/icon_big"
-		android:layout_height="@dimen/icon_big"
-		android:layout_margin="@dimen/margin"
+		android:layout_width="@dimen/icon_action_button"
+		android:layout_height="@dimen/icon_action_button"
+		android:layout_margin="@dimen/unit_half"
 		android:layout_gravity="bottom|end"
 		tools:src="@drawable/category_unknown"
 		/>

@@ -27,7 +27,7 @@
 		<item name="android:id">@android:id/empty</item>
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">match_parent</item>
-		<item name="android:layout_margin">@dimen/margin2</item>
+		<item name="android:layout_margin">@dimen/unit</item>
 		<item name="android:gravity">center</item>
 		<!-- TODEL http://b.android.com/171144 <item name="tools:text">...</item> -->
 	</style>
