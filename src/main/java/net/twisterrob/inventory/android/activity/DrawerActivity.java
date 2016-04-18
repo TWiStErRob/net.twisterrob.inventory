@@ -15,7 +15,8 @@ import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.*;
 
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.android.activity.AboutActivity;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.view.DrawerNavigator;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
@@ -153,6 +154,7 @@ public abstract class DrawerActivity extends BaseActivity {
 		data.add(R.id.action_drawer_category_guide, R.raw.category_paper, MainActivity.list(PAGE_CATEGORY_HELP));
 		data.add(R.id.action_drawer_backup, R.raw.category_disc, BackupActivity.chooser());
 		data.add(R.id.action_drawer_preferences, R.raw.category_tools, PreferencesActivity.show());
+		data.add(R.id.action_drawer_about, R.raw.category_chip, new Intent(App.getAppContext(), AboutActivity.class));
 		data.addIcons();
 		data.updateCounts();
 		return data;

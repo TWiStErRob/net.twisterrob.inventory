@@ -56,6 +56,15 @@
 				       android:value="Magic Home Inventory feedback" />
 			</intent>
 		</PreferenceScreen>
+		<Preference
+			android:title="About"
+			android:summary="@string/app_name"
+			>
+			<intent
+				android:targetClass="net.twisterrob.android.activity.AboutActivity"
+				android:targetPackage="@string/app_package"
+				/>
+		</Preference>
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="Advanced">

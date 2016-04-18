@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+	<!ENTITY nbsp "&#160;"><!-- non-breaking space, http://www.fileformat.info/info/unicode/char/00A0/index.htm -->
+	<!ENTITY LI "\n&#8195;&#8226;&#8194;"><!-- m-space (\u2003) bullet (\u2022) n-space (\u2002) -->
+	]>
+<resources>
+	<string name="about_faq"><b>What is this application?</b>
+		\nThis is a home inventory application.
+		\nIt helps you maintain a list of stuff you have, with efficient interface and easy navigation.
+		\nIt\'s useful when:
+		&LI;You have a remote storage and you don\'t remember what\'s there.
+		&LI;You\'re not at home, but your family member/flatmate wants something.
+		&LI;You\'re tidy and organized and want to know where your stuff belongs.
+
+		\n\n<b>How can I leave feedback? What is feedback?</b>
+		\nTap on the link below the application name/version in the About.
+		\nFeel free to send any kind of comment, request, suggestion, error report;
+		just about any thought regarding this application.
+	</string>
+</resources>

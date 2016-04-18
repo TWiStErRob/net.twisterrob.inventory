@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+	<!ENTITY nbsp "&#160;"><!-- non-breaking space, http://www.fileformat.info/info/unicode/char/00A0/index.htm -->
+	<!ENTITY lquot "&#8220;"><!-- left double quotation mark, http://www.fileformat.info/info/unicode/char/201C/index.htm -->
+	<!ENTITY rquot "&#8221;"><!-- right double quotation mark, http://www.fileformat.info/info/unicode/char/201D/index.htm -->
+	<!ENTITY LI "\n&#8195;&#8226;&#8194;"><!-- m-space (\u2003) bullet (\u2022) n-space (\u2002) -->
+	]>
+<!--
+To use this:
+ * Add net.twisterrob.android.activity.AboutActivity to the manifest (see lib's manifest)
+ * Define about_licenses, about_licenses_content string arrays
+ * Optionally define about_tips, about_faq strings
+-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+	<string name="about_title">About</string>
+
+	<string name="about_application_title">Application</string>
+	<string name="about_version">Version %1$s</string>
+	<string name="about_feedback">Feedback? <a href="#">Tap here</a>!</string>
+	<string name="about_feedback_subject">%1$s feedback</string>
+
+	<!-- %1: app_name, %2: app_package, %3: app_version -->
+	<string name="about_feedback_body">Package: %1$s\nVersion: %2$s\n\nHey,\nI have some comments regarding your app:\n</string>
+
+	<string name="about_tips_title">Tips and Tricks</string>
+	<string name="about_tips"><!--
+		<big><b>General</b></big>
+		&LI;Tip description 1
+		&LI;Tip description 2 referencing &#8220;UI part&#8221; to use
+		
+		\n\n<big><b>Specific part of the app</b></big>
+		&LI;Tip description 3 containing <tt>code</tt>
+	--></string>
+
+	<string name="about_faq_title">FAQ (Frequently Asked Questions)</string>
+	<string name="about_faq"><!--
+		<b>What is this application?</b>
+		\nDescription of the application
+		\n\n<b>How can I leave feedback? What is feedback?</b>
+		\nTap on the link below the application name/version in the About.
+		\nFeel free to send any kind of comment, request, suggestion, error report;
+		just about any thought regarding this application.
+		\n\n<b>Further question?</b>
+		\nAnd answer
+	--></string>
+
+	<string name="about_licenses_title">Acknowledgements and Licenses</string>
+	<string name="about_licenses_missing">Missing License</string>
+	<string-array name="about_licenses" translatable="false">
+		<item>@string/about_license_glide_title</item>
+		<item>@string/about_license_libjpeg_title</item>
+		<item>@string/about_license_stackoverflow_title</item>
+		<!--<item>Other stuff</item>-->
+	</string-array>
+
+	<string-array name="about_licenses_content" translatable="false" tools:ignore="TypographyQuotes,TypographyOther">
+		<item>@string/about_license_glide</item>
+		<item>@string/about_license_libjpeg</item>
+		<item>@string/about_license_stackoverflow</item>
+		<!--
+		<string><b>Thanks to <a href="http://website">company/group/person</a> for writing <a href="http://original">stuff</a> about stuff.</b>
+		</p>
+			\n<i>License obtained from <a href="http://original-license">origin name</a> follows:</i>
+			\n<i>License obtained from .java source code follows:</i>
+			\n<i>Stuff is licensed under <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY</a>.</i>
+			\n
+			\nORIGINAL LICENSE text with `' changed to \", escape with apos and quot with \ and lines unwrapped to flowing text
+		</string>
+		-->
+	</string-array>
+
+	<string name="about_license_glide_title">Glide 3.8.0, library</string>
+	<string name="about_license_glide" tools:ignore="TypographyQuotes,TypographyOther"><b>Big thanks to <a href="https://github.com/sjudd">Sam&nbsp;Judd</a> and <a href="https://github.com/twisterrob">Róbert&nbsp;Papp (TWiStErRob)</a> for maintaining <a href="https://github.com/bumptech/glide">Glide</a>, the most flexible Android image loader API on the market.</b>
+		\n
+		\n<i>License obtained from <a href="https://github.com/bumptech/glide/blob/v3.7.0/LICENSE">GitHub</a> follows:</i>
+		\n
+		\nLicense for everything not in third_party and not otherwise marked:
+		\n
+		\nCopyright 2014 Google, Inc. All rights reserved.
+		\n
+		\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+		\n
+		\n   1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+		\n
+		\n   2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+		\n
+		\nTHIS SOFTWARE IS PROVIDED BY GOOGLE, INC. \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GOOGLE, INC. OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+		\n
+		\nThe views and conclusions contained in the software and documentation are those of the authors and should not be interpreted as representing official policies, either expressed or implied, of Google, Inc.
+		\n\n<b>-------------------------------------</b>\n
+		\nLicense for third_party/disklrucache:
+		\n
+		\nCopyright 2012 Jake Wharton
+		\nCopyright 2011 The Android Open Source Project
+		\n
+		\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+		\n
+		\n   http://www.apache.org/licenses/LICENSE-2.0
+		\n
+		\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+		\n\n<b>-------------------------------------</b>\n
+		\nLicense for third_party/gif_decoder:
+		\n
+		\nCopyright (c) 2013 Xcellent Creations, Inc.
+		\n
+		\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+		\n
+		\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+		\n
+		\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+		\n\n<b>-------------------------------------</b>\n
+		\nLicense for third_party/gif_encoder/AnimatedGifEncoder.java and third_party/gif_encoder/LZWEncoder.java:
+		\n
+		\nNo copyright asserted on the source code of this class. May be used for any purpose, however, refer to the Unisys LZW patent for restrictions on use of the associated LZWEncoder class. Please forward any corrections to kweiner@fmsware.com.
+		\n
+		\n\n<b>-------------------------------------</b>\n
+		\nLicense for third_party/gif_encoder/NeuQuant.java
+		\n
+		\nCopyright (c) 1994 Anthony Dekker
+		\n
+		\nNEUQUANT Neural-Net quantization algorithm by Anthony Dekker, 1994. See \"Kohonen neural networks for optimal colour quantization\" in \"Network: Computation in Neural Systems\" Vol. 5 (1994) pp 351-367. for a discussion of the algorithm.
+		\n
+		\nAny party obtaining a copy of these files from the author, directly or indirectly, is granted, free of charge, a full and unrestricted irrevocable, world-wide, paid up, royalty-free, nonexclusive right and license to deal in this software and documentation files (the \"Software\"), including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons who receive copies from any such party to do so, with the only requirement being that this copyright notice remain intact.
+	</string>
+
+	<string name="about_license_libjpeg_title">libjpeg v9b, adapted code</string>
+	<string name="about_license_libjpeg" tools:ignore="TypographyOther"><b>Thanks to <a href="http://www.ijg.org/">Independent JPEG Group</a> for writing their <a href="http://www.ijg.org/files/jpegsrc.v9b.tar.gz">JPEG encoder implementation</a>, I used the <tt>rgb_ycc_convert</tt> function (translated into Java and heavily refactored) and related code to produce a high-quality well-compressed JPEG file. See my <a href="http://stackoverflow.com/a/36560663/253468">StackOverflow Q&amp;A</a> for technical details on why this was needed.</b>
+		\n
+		\n<i>License obtained from README inside <a href="http://www.ijg.org/files/jpegsrc.v9b.tar.gz">sources</a> follows:</i>
+		\n
+		\nIn plain English:
+		\n
+		\n1. We don\'t promise that this software works. (But if you find any bugs, please let us know!)
+		\n2. You can use this software for whatever you want. You don\'t have to pay us.
+		\n3. You may not pretend that you wrote this software. If you use it in a program, you must acknowledge somewhere in your documentation that you\'ve used the IJG code.
+		\n
+		\nIn legalese:
+		\n
+		\nThe authors make NO WARRANTY or representation, either express or implied, with respect to this software, its quality, accuracy, merchantability, or fitness for a particular purpose.  This software is provided \"AS IS\", and you, its user, assume the entire risk as to its quality and accuracy.
+		\n
+		\nThis software is copyright (C) 1991-2016, Thomas G. Lane, Guido Vollbeding.
+		\nAll Rights Reserved except as specified below.
+		\n
+		\nPermission is hereby granted to use, copy, modify, and distribute this software (or portions thereof) for any purpose, without fee, subject to these conditions:
+		\n (1) If any part of the source code for this software is distributed, then this README file must be included, with this copyright and no-warranty notice unaltered; and any additions, deletions, or changes to the original files must be clearly indicated in accompanying documentation.
+		\n (2) If only executable code is distributed, then the accompanying documentation must state that \"this software is based in part on the work of the Independent JPEG Group\".
+		\n (3) Permission for use of this software is granted only if the user accepts full responsibility for any undesirable consequences; the authors accept NO LIABILITY for damages of any kind.
+		\n
+		\nThese conditions apply to any software derived from or based on the IJG code, not just to the unmodified library.  If you use our work, you ought to acknowledge us.
+		\n		
+		\nPermission is NOT granted for the use of any IJG author\'s name or company name in advertising or publicity relating to this software or products derived from it.  This software may be referred to only as \"the Independent JPEG Group\'s software\".
+		\n
+		\nWe specifically permit and encourage the use of this software as the basis of commercial products, provided that all warranty or liability claims are assumed by the product vendor.
+		\n
+		\n
+		\nThe Unix configuration script \"configure\" was produced with GNU Autoconf.
+		\nIt is copyright by the Free Software Foundation but is freely distributable.
+		\nThe same holds for its supporting scripts (config.guess, config.sub, ltmain.sh).  Another support script, install-sh, is copyright by X Consortium but is also freely distributable.
+		\n
+		\nThe IJG distribution formerly included code to read and write GIF files.
+		\nTo avoid entanglement with the Unisys LZW patent (now expired), GIF reading support has been removed altogether, and the GIF writer has been simplified to produce "uncompressed GIFs". This technique does not use the LZW algorithm; the resulting GIF files are larger than usual, but are readable by all standard GIF decoders. 
+	</string>
+
+	<string name="about_license_stackoverflow_title">StackOverflow snippets, adapted code</string>
+	<string name="about_license_stackoverflow"><b>Thanks to the community of <a href="http://stackoverflow.com/">StackOverflow</a> (and <a href="https://stackexchange.com/sites">sister sites</a>) for filling in the gaps in my knowledge.</b>
+		\n
+		\n<i>According to <a href="http://stackexchange.com/legal">Stack Exchange Network Terms of Service</a> &lquot;Subscriber Content&rquot; is licensed under <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>. Adapted source code is documented with links where appropriate in the apps source code.</i>
+	</string>
+
+</resources>

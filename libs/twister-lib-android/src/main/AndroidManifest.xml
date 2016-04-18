@@ -23,6 +23,11 @@
 			<uses-feature android:name="android.hardware.camera" android:required="false" />
 			<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 		</activity>
+		<activity
+			android:name="net.twisterrob.android.activity.AboutActivity"
+			android:label="@string/about_title"
+			android:exported="false"
+			/>
 		-->
 	</application>
 

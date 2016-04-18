@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	tools:context=".AboutActivity"
+	>
+	<TextView
+		android:id="@+id/about_faq_title"
+		style="?android:listSeparatorTextViewStyle"
+		android:text="@string/about_faq_title"
+		/>
+	<TextView
+		android:id="@+id/about_faq"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/margin_activity"
+		android:layout_marginTop="@dimen/margin_activity_half"
+		android:layout_marginRight="@dimen/margin_activity"
+		android:layout_marginBottom="@dimen/margin_activity_half"
+		android:text="@string/about_faq"
+		android:textIsSelectable="true"
+		tools:text="&lt;b>What is this application?&lt;/b>\nDescription of the application"
+		/>
+	<TextView
+		android:id="@+id/about_tips_title"
+		style="?android:listSeparatorTextViewStyle"
+		android:text="@string/about_tips_title"
+		/>
+	<TextView
+		android:id="@+id/about_tips"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/margin_activity"
+		android:layout_marginTop="@dimen/margin_activity_half"
+		android:layout_marginRight="@dimen/margin_activity"
+		android:layout_marginBottom="@dimen/margin_activity_half"
+		android:text="@string/about_tips"
+		android:textIsSelectable="true"
+		tools:text="General\n&#8195;&#8226;&#8194;Tip description 1\n&#8195;&#8226;&#8194;Tip description 2"
+		/>
+</LinearLayout>
