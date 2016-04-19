@@ -223,11 +223,13 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	}
 
 	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH) void recalculate() {
-		executeParallel(new GetFolderSizesTask(imageCacheSize), GlideSetup.getCacheDir(this));
-		executeParallel(new GetFolderSizesTask(databaseSize), getDatabasePath(App.db().getHelper().getDatabaseName()));
-		executeParallel(new GetFolderSizesTask(allSize),
+		executePreferParallel(new GetFolderSizesTask(imageCacheSize),
+				GlideSetup.getCacheDir(this));
+		executePreferParallel(new GetFolderSizesTask(databaseSize),
+				getDatabasePath(App.db().getHelper().getDatabaseName()));
+		executePreferParallel(new GetFolderSizesTask(allSize),
 				new File(getApplicationInfo().dataDir), getExternalCacheDir(), getExternalFilesDir(null));
-		executeParallel(new GetSizeTask<Void>(searchIndexSize) {
+		executePreferParallel(new GetSizeTask<Void>(searchIndexSize) {
 			@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
 				return App.db().getSearchSize();
 			}

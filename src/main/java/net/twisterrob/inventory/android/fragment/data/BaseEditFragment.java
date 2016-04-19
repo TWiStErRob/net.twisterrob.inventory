@@ -347,7 +347,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		dto.name = name.getText().toString();
 		dto.description = description.getText().toString();
 		dto.type = type.getSelectedItemId();
-		new SaveTask().executeSerial(dto);
+		AndroidTools.executePreferSerial(new SaveTask(), dto);
 	}
 	/** Create the DTO object with id set and fill in all fields needed to save (except the ones inherited from ImagedDTO) */
 	protected abstract DTO createDTO();

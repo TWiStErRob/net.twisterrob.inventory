@@ -3,11 +3,15 @@ package net.twisterrob.android.utils.concurrent;
 import android.os.AsyncTask;
 import android.support.annotation.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
-
+/**
+ * {@link AsyncTask} implementation that separates positive and negative outcome, so {@link #doInBackground(Object[])}
+ * can simply throw exceptions and simply return the value.
+ * @see net.twisterrob.android.utils.tools.AndroidTools#executeParallel
+ * @see net.twisterrob.android.utils.tools.AndroidTools#executeSerial
+ */
 public abstract class SafeAsyncTask<Param, Progress, Result>
-		extends AsyncTask<Param, Progress, AsyncTaskResult<Param, Result>>
-		implements Executable<Param> {
+		extends AsyncTask<Param, Progress, AsyncTaskResult<Param, Result>> {
+	@WorkerThread
 	@SafeVarargs
 	@Override protected final @NonNull AsyncTaskResult<Param, Result> doInBackground(@Nullable Param... params) {
 		try {
@@ -17,10 +21,13 @@ public abstract class SafeAsyncTask<Param, Progress, Result>
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@WorkerThread
+	@SuppressWarnings("unchecked" /* @SafeVarargs is not allowed here */)
 	protected abstract @Nullable Result doInBackgroundSafe(@Nullable Param... params) throws Exception;
 
-	@Override protected final void onPostExecute(@NonNull AsyncTaskResult<Param, Result> result) {
+	@UiThread
+	@Override protected final void onPostExecute(
+			@SuppressWarnings("NullableProblems") @NonNull AsyncTaskResult<Param, Result> result) {
 		Exception error = result.getError();
 		if (error != null) {
 			onError(error, result.getParams());
@@ -29,17 +36,10 @@ public abstract class SafeAsyncTask<Param, Progress, Result>
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@UiThread
+	@SuppressWarnings("unchecked" /* @SafeVarargs is not allowed here */)
 	protected abstract void onResult(@Nullable Result result, Param... params);
-	@SuppressWarnings("unchecked")
+	@UiThread
+	@SuppressWarnings("unchecked" /* @SafeVarargs is not allowed here */)
 	protected abstract void onError(@NonNull Exception ex, Param... params);
-
-	@SafeVarargs
-	public final void executeParallel(Param... params) {
-		AndroidTools.executeParallel(this, params);
-	}
-	@SafeVarargs
-	public final void executeSerial(Param... params) {
-		AndroidTools.executeSerial(this, params);
-	}
 }

@@ -597,6 +597,17 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	/**
+	 * Try to execute in parallel if the API level allows.
+	 * @see #executeParallel(AsyncTask, boolean, Object[])
+	 */
+	@SafeVarargs
+	public static <Params> void executePreferParallel(final AsyncTask<Params, ?, ?> task, final Params... params) {
+		executeParallel(task, false, params);
+	}
+
+	/**
+	 * @param force Force execution to be parallel.
+	 *              It will not work before {@link VERSION_CODES#DONUT}, because it was not possible back then.
 	 * @see AsyncTask#execute(Object[])
 	 * @see <a href="http://commonsware.com/blog/2012/04/20/asynctask-threading-regression-confirmed.html">AsyncTask Threading Regression Confirmed</a>
 	 * @see <a href="https://groups.google.com/forum/#!topic/android-developers/8M0RTFfO7-M">AsyncTask in Android 4.0</a>
@@ -604,43 +615,69 @@ public /*static*/ abstract class AndroidTools {
 	 */
 	@SafeVarargs
 	@TargetApi(VERSION_CODES.HONEYCOMB)
-	public static <Params> void executeParallel(final AsyncTask<Params, ?, ?> as, final Params... params) {
+	public static <Params> void executeParallel(
+			final AsyncTask<Params, ?, ?> task, boolean force, final Params... params) {
+		if (force && VERSION.SDK_INT < VERSION_CODES.DONUT) {
+			throw new IllegalStateException("Cannot execute AsyncTask in parallel before DONUT");
+		}
 		if (!isOnUIThread()) {
+			// execute/executeOnExecutor: This method must be invoked on the UI thread.
+			// This is required because onPreExecute is called on the UI thread
 			new Handler(Looper.getMainLooper()).post(new Runnable() {
 				@Override public void run() {
-					executeParallel(as, params);
+					executePreferParallel(task, params);
 				}
 			});
+			return;
 		}
-		if (VERSION.SDK_INT < VERSION_CODES.DONUT) {
-			throw new IllegalStateException("Cannot execute AsyncTask in parallel before DONUT");
-		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
-			as.execute(params); // default is pooling, cannot be explicit
-		} else {
-			as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params); // default is serial, explicit pooling
+		if (VERSION.SDK_INT < VERSION_CODES.DONUT) { // (0, 4)
+			task.execute(params); // default is serial, but not forced, so let's do it
+		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) { // [4, 11)
+			task.execute(params); // default is pooling, cannot be explicit
+		} else { // [11, ∞)
+			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params); // default is serial, explicit pooling
 		}
 	}
 
 	/**
+	 * Try to execute in serial if the API level allows.
+	 * @see #executeSerial(AsyncTask, boolean, Object[])
+	 */
+	@SafeVarargs
+	public static <Params> void executePreferSerial(final AsyncTask<Params, ?, ?> task, final Params... params) {
+		executeSerial(task, false, params);
+	}
+
+	/**
+	 * @param force Force execution to be serial.
+	 *              It will not work between {@link VERSION_CODES#DONUT} and {@link VERSION_CODES#HONEYCOMB}, they made
+	 *              a breaking change in {@link VERSION_CODES#DONUT} with no way to get back the old serial behavior.
 	 * @see AsyncTask#execute(Object[])
-	 * @see #executeParallel(AsyncTask, Object[])
+	 * @see #executeParallel(AsyncTask, boolean, Object[])
 	 */
 	@SafeVarargs
 	@TargetApi(VERSION_CODES.HONEYCOMB)
-	public static <Params> void executeSerial(final AsyncTask<Params, ?, ?> as, final Params... params) {
+	public static <Params> void executeSerial(
+			final AsyncTask<Params, ?, ?> task, boolean force, final Params... params) {
+		if (force && VERSION_CODES.DONUT <= VERSION.SDK_INT && VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
+			throw new IllegalStateException("Cannot execute AsyncTask in serial between DONUT and HONEYCOMB");
+		}
 		if (!isOnUIThread()) {
+			// execute/executeOnExecutor: This method must be invoked on the UI thread.
+			// This is required because onPreExecute is called on the UI thread
 			new Handler(Looper.getMainLooper()).post(new Runnable() {
 				@Override public void run() {
-					executeSerial(as, params);
+					executePreferSerial(task, params);
 				}
 			});
+			return;
 		}
-		if (VERSION.SDK_INT < VERSION_CODES.DONUT) {
-			as.execute(params); // default is serial
-		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
-			throw new IllegalStateException("Cannot execute AsyncTask in serial between DONUT and HONEYCOMB");
-		} else {
-			as.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params); // default is serial, explicit serial
+		if (VERSION.SDK_INT < VERSION_CODES.DONUT) { // (0, 4) 
+			task.execute(params); // default is serial
+		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) { // [4, 11)
+			task.execute(params); // default is pooling, but not forced, so let's do it
+		} else { // [11, ∞)
+			task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params); // default is serial, explicit serial
 		}
 	}
 
@@ -996,7 +1033,7 @@ public /*static*/ abstract class AndroidTools {
 
 		Runnable startStreaming = new Runnable() {
 			@Override public void run() {
-				executeParallel(new AsyncTask<Object, Object, Object>() {
+				executePreferParallel(new AsyncTask<Object, Object, Object>() {
 					@Override
 					protected Object doInBackground(Object... params) {
 						InputStream in = new ByteArrayInputStream(contents);

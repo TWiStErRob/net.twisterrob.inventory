@@ -16,6 +16,7 @@ import android.webkit.*;
 import android.widget.Toast;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.MainActivity;
@@ -72,7 +73,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (savedInstanceState == null) {
-			new SimpleSafeAsyncTask<Void, Float, String>() {
+			AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Float, String>() {
 				@Override protected void onPreExecute() {
 					web.loadData("Loading...", "text/html", null);
 				}
@@ -86,7 +87,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					App.toastUser(ex.toString());
 					getActivity().finish();
 				}
-			}.executeParallel();
+			});
 		} else {
 			web.restoreState(savedInstanceState);
 		}

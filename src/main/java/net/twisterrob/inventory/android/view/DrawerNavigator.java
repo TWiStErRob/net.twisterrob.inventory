@@ -102,7 +102,7 @@ public class DrawerNavigator {
 		nav.setCheckedItem(id);
 	}
 	public void updateCounts() {
-		new DrawerUpdateCountersTask(nav).executeParallel();
+		AndroidTools.executePreferParallel(new DrawerUpdateCountersTask(nav));
 	}
 
 	private class NavItem {
