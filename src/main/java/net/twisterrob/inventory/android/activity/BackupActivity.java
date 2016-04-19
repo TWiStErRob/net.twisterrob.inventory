@@ -43,9 +43,11 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		controller = new BackupListController();
 		controller.setView((RecyclerView)findViewById(R.id.backups));
 		if (savedInstanceState != null) {
-			//noinspection ConstantConditions,unchecked if we're restoring onSaveInstanceState must have filled it
-			history.addAll((Collection<File>)savedInstanceState.getSerializable(EXTRA_HISTORY));
-			filePicked(history.peek(), false);
+			@SuppressWarnings("unchecked")
+			Collection<File> history = (Collection<File>)savedInstanceState.getSerializable(EXTRA_HISTORY);
+			//noinspection ConstantConditions if we're restoring onSaveInstanceState must have filled it
+			this.history.addAll(history);
+			filePicked(this.history.peek(), false);
 		} else {
 			filePicked(getDir(), true);
 		}

@@ -14,7 +14,7 @@
 		android:title="@string/backup_go_home"
 		android:titleCondensed="@string/backup_go_home_condensed"
 		android:icon="@android:drawable/ic_menu_revert"
-		app:showAsAction="always|withText"
+		app:showAsAction="ifRoom|withText"
 		/>
 	<item
 		android:id="@+id/action_manage_space"

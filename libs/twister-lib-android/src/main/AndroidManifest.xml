@@ -10,25 +10,26 @@
 	<!-- TODEL for what? -->
 	<!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
-	<application android:supportsRtl="true" tools:ignore="UnusedAttribute">
-		<!--
+	<application
+		android:supportsRtl="true"
+		tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 		<activity
 			android:name="net.twisterrob.android.activity.CaptureImage"
-			android:label="Take picture"
 			android:exported="false"
 			android:screenOrientation="fullSensor"
 			>
+			<!--
 			<uses-permission android:name="android.permission.CAMERA" />
 			<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 			<uses-feature android:name="android.hardware.camera" android:required="false" />
 			<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+			-->
 		</activity>
 		<activity
 			android:name="net.twisterrob.android.activity.AboutActivity"
 			android:label="@string/about_title"
 			android:exported="false"
 			/>
-		-->
 	</application>
 
 </manifest>

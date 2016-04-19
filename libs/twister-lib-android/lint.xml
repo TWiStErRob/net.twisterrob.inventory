@@ -3,6 +3,12 @@
 	<issue id="UnusedResources">
 		<!-- Not used, but can't do anything about it :) -->
 		<ignore path="**/generated/**" />
-		<ignore path="**/generated/**" />
+		<!-- Not used, because this is a library, used by consuming apps -->
+		<ignore path="src/main/res/values/dimens.xml" />
+	</issue>
+	<issue id="GradleDependency">
+		<!-- I'm not a free tester, leave me alone -->
+		<ignore regexp="A newer version of com.android.support.*-alpha" />
+		<ignore regexp="A newer version of com.android.support.*-beta" />
 	</issue>
 </lint>

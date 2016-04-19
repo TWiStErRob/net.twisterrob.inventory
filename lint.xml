@@ -47,4 +47,11 @@
 		<!-- Invalid package reference in library; not included in Android: javax.xml.stream. Referenced from net.twisterrob.java.io.IndentingXMLStreamWriter. -->
 		<ignore path="**twister-lib-java*.jar" />
 	</issue>
+	<issue id="GradleDependency">
+		<!-- I'm not a free tester, leave me alone -->
+		<ignore regexp="A newer version of com.android.support.*-alpha" />
+		<ignore regexp="A newer version of com.android.support.*-beta" />
+	</issue>
+	<!-- This app doesn't have a public website with URLs. Warning comes up in manifest and/or ItemViewActivity -->
+	<issue id="GoogleAppIndexingApiWarning" severity="ignore" />
 </lint>

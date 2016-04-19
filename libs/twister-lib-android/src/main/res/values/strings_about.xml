@@ -125,7 +125,7 @@ To use this:
 	</string>
 
 	<string name="about_license_libjpeg_title">libjpeg v9b, adapted code</string>
-	<string name="about_license_libjpeg" tools:ignore="TypographyOther"><b>Thanks to <a href="http://www.ijg.org/">Independent JPEG Group</a> for writing their <a href="http://www.ijg.org/files/jpegsrc.v9b.tar.gz">JPEG encoder implementation</a>, I used the <tt>rgb_ycc_convert</tt> function (translated into Java and heavily refactored) and related code to produce a high-quality well-compressed JPEG file. See my <a href="http://stackoverflow.com/a/36560663/253468">StackOverflow Q&amp;A</a> for technical details on why this was needed.</b>
+	<string name="about_license_libjpeg" tools:ignore="TypographyQuotes,TypographyOther"><b>Thanks to <a href="http://www.ijg.org/">Independent JPEG Group</a> for writing their <a href="http://www.ijg.org/files/jpegsrc.v9b.tar.gz">JPEG encoder implementation</a>, I used the <tt>rgb_ycc_convert</tt> function (translated into Java and heavily refactored) and related code to produce a high-quality well-compressed JPEG file. See my <a href="http://stackoverflow.com/a/36560663/253468">StackOverflow Q&amp;A</a> for technical details on why this was needed.</b>
 		\n
 		\n<i>License obtained from README inside <a href="http://www.ijg.org/files/jpegsrc.v9b.tar.gz">sources</a> follows:</i>
 		\n

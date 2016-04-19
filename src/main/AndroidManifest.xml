@@ -59,8 +59,6 @@
 		<activity
 			android:name="net.twisterrob.android.activity.CaptureImage"
 			android:label="@string/action_picture_take"
-			android:exported="false"
-			android:screenOrientation="fullSensor"
 			/>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.ImageActivity"
@@ -68,11 +66,6 @@
 			android:exported="false"
 			android:screenOrientation="fullSensor"
 			android:theme="@style/Theme.AppTheme.FullScreen"
-			/>
-		<activity
-			android:name="net.twisterrob.android.activity.AboutActivity"
-			android:label="@string/about_title"
-			android:exported="false"
 			/>
 		<activity
 			android:name=".activity.space.ManageSpaceActivity"

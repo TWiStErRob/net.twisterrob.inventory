@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.content.Context;
 import android.os.Build.*;
 import android.os.*;
@@ -360,6 +360,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 		void startOpenCamera() {
 			mHandler.post(new Runnable() {
+				@SuppressLint("WrongThread")
 				@WorkerThread
 				@Override public void run() {
 					try {

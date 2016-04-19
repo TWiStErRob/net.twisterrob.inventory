@@ -6,6 +6,7 @@ import org.slf4j.*;
 
 import android.Manifest;
 import android.animation.*;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.*;
 import android.net.Uri;
+import android.os.Build.*;
 import android.os.*;
 import android.provider.MediaStore;
 import android.support.annotation.CheckResult;
@@ -51,7 +53,7 @@ public class CaptureImage extends Activity {
 	private static final String PREF_FLASH = EXTRA_FLASH;
 	private static final float DEFAULT_MARGIN = 0.10f;
 	private static final boolean DEFAULT_FLASH = false;
-	private static final int EXTRA_MAXSIZE_NO_MAX = 0;
+	public static final int EXTRA_MAXSIZE_NO_MAX = 0;
 
 	private CameraPreview mPreview;
 	private SelectionView mSelection;
@@ -91,9 +93,10 @@ public class CaptureImage extends Activity {
 			@Override public void onResume(CameraPreview preview) {
 				cameraControls.setVisibility(View.VISIBLE);
 			}
+			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void onShutter(CameraPreview preview) {
 				final View flashView = mSelection;
-				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+				if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
 					ObjectAnimator whiteFlashIn = ObjectAnimator.ofObject(flashView,
 							"backgroundColor", new ArgbEvaluator(), 0x00FFFFFF, 0xAAFFFFFF);
 					ObjectAnimator whiteFlashOut = ObjectAnimator.ofObject(flashView,
@@ -341,12 +344,7 @@ public class CaptureImage extends Activity {
 		return selection;
 	}
 
-	public static Intent saveTo(Context context, File targetFile, int maxSize, CompressFormat format, int quality) {
-		Intent intent = saveTo(context, targetFile, maxSize);
-		intent.putExtra(CaptureImage.EXTRA_FORMAT, format);
-		intent.putExtra(CaptureImage.EXTRA_QUALITY, quality);
-		return intent;
-	}
+	/** @param maxSize pixel size or {@link #EXTRA_MAXSIZE_NO_MAX} */
 	public static Intent saveTo(Context context, File targetFile, int maxSize) {
 		assertFeatures(context);
 		Intent intent = new Intent(context, CaptureImage.class);

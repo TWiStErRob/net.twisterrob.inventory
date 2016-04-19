@@ -414,7 +414,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private void getPicture() {
 		try {
 			File file = Constants.Paths.getTempImage(getContext());
-			Intent intent = CaptureImage.saveTo(getContext(), file, 2048/*px*/, CompressFormat.JPEG, 85/*%*/);
+			Intent intent = CaptureImage.saveTo(getContext(), file, 2048/*px*/);
+			intent.putExtra(CaptureImage.EXTRA_FORMAT, CompressFormat.JPEG);
+			intent.putExtra(CaptureImage.EXTRA_QUALITY, 85/*%*/);
 			startActivityForResult(intent, ImageTools.REQUEST_CODE_GET_PICTURE);
 		} catch (Exception ex) {
 			LOG.error("Cannot get picture", ex);
