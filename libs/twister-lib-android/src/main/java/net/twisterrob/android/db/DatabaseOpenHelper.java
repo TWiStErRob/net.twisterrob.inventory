@@ -30,6 +30,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private static final String DB_SCHEMA_FILE = "%s.schema.sql";
 	private static final String DB_UPGRADE_FILE = "%s.upgrade.%d.sql";
 	private static final String DB_DATA_FILE = "%s.data.sql";
+	private static final String DB_INIT_FILE = "%s.init.sql";
 	private static final String DB_CLEAN_FILE = "%s.clean.sql";
 	private static final String DB_TEST_FILE = "%s.test.sql";
 	private static final String DB_DEVELOPMENT_FILE = "%s.development.sql";
@@ -84,6 +85,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	protected String[] getSchemaFiles() {
 		return new String[] {String.format(DB_SCHEMA_FILE, dbName)};
 	}
+	protected String[] getScriptFiles() {
+		return new String[] {String.format(DB_INIT_FILE, dbName)};
+	}
 	protected String[] getCleanFiles() {
 		return new String[] {String.format(DB_CLEAN_FILE, dbName)};
 	}
@@ -105,6 +109,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		LOG.debug("Creating database: {}", dbToString(db));
 		execFiles(db, getSchemaFiles());
 		execFiles(db, getDataFiles());
+		execFiles(db, getScriptFiles());
 		LOG.info("Created database: {}", dbToString(db));
 	}
 

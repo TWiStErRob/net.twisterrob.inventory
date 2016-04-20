@@ -32,27 +32,14 @@ BEGIN
 	insert into Category_Name_Cache values(new.name, NULL);--NOTEOS
 END;
 
--- Assumes root -> level1 -> level2 -> level3 maximum depth
-CREATE VIEW Category_Descendant AS
-	select c0._id as category, 0 as level, c0._id as descendant
-		from Category c0
-	UNION ALL
-	select c0._id as category, 1 as level, c1._id as descendant
-		from Category c0
-		join Category c1 ON c0._id = c1.parent
-	UNION ALL
-	select c0._id as category, 2 as level, c2._id as descendant
-		from Category c0
-		join Category c1 ON c0._id = c1.parent
-		join Category c2 ON c1._id = c2.parent
-	UNION ALL
-	select c0._id as category, 3 as level, c3._id as descendant
-		from Category c0
-		join Category c1 ON c0._id = c1.parent
-		join Category c2 ON c1._id = c2.parent
-		join Category c3 ON c2._id = c3.parent
-;
-
+-- Materialized View to speed up other views and queries
+CREATE TABLE Category_Descendant (
+	category   INTEGER NOT NULL,
+	descendant INTEGER NOT NULL,
+	level      INTEGER NOT NULL
+);
+CREATE INDEX Category_Descendant_category_descendant ON Category_Descendant (category, descendant);
+CREATE INDEX Category_Descendant_descendant_category ON Category_Descendant (descendant, category);
 
 -- Assumes root -> level1 -> level2 -> level3 maximum depth
 CREATE VIEW Category_Tree AS

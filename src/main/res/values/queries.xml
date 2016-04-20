@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
-           tools:ignore="TypographyDashes">
+           tools:ignore="TypographyDashes,TypographyQuotes">
 	<string name="query_properties" translatable="false"><![CDATA["
 		select
 			'property'                                        as type,
@@ -14,7 +14,7 @@
 		from Property         p
 		join PropertyType     pt  ON p.type = pt._id
 		join PropertyTypeKind ptk ON pt.kind = ptk._id
-		order by p.name
+		order by p.name COLLATE NOCASE
 	"]]></string>
 	<string name="query_property" translatable="false"><![CDATA["
 		select
@@ -106,7 +106,7 @@
 		join RoomTypeKind rtk ON rt.kind = rtk._id
 		join Property     p   ON r.property = p._id
 		where p._id = ? or ? = 'null'
-		order by r.name
+		order by r.name COLLATE NOCASE
 	"]]></string>
 	<string name="query_room" translatable="false"><![CDATA["
 		select
@@ -222,7 +222,7 @@
 		where i.parent = ? -- children
 			or i.parent in -- grandchildren
 				(select _id from Item where parent = ? and category = 1 /* category_group */)
-		order by g.name, not [group], i.category <> 1, name
+		order by g.name COLLATE NOCASE, not [group], i.category <> 1, name COLLATE NOCASE
 	"]]></string>
 	<string name="query_item" translatable="false"><![CDATA["
 		select
@@ -270,7 +270,7 @@
 		from Item     i
 		join Category c ON i.category = c._id
 		where c._id <> -1 -- don't return category_internal items
-		order by i.name
+		order by i.name COLLATE NOCASE
 	"]]></string>
 
 	<string name="query_items_by_category" translatable="false"><![CDATA["
@@ -287,7 +287,7 @@
 		from Item     i
 		join Category c ON i.category = c._id
 		where i.category = ?
-		order by i.name
+		order by i.name COLLATE NOCASE
 	"]]></string>
 	<string name="query_items_in_category" translatable="false"><![CDATA["
 		select
@@ -304,7 +304,7 @@
 		join Category_Descendant cd ON i.category = cd.descendant
 		join Category            c  ON cd.descendant = c._id
 		where cd.category = ?
-		order by i.name
+		order by i.name COLLATE NOCASE
 	"]]></string>
 	<string name="query_item_parents" formatted="false" translatable="false"><![CDATA["
 		select * from (
@@ -409,7 +409,6 @@
 			ELSE ifNULL(cnc.value, c.name)
 			END
 		)
-		;
 	"]]></string>
 	<string name="query_category" translatable="false"><![CDATA["
 		select
@@ -439,7 +438,7 @@
 			exists ( select 1 from List_Entry where list = l._id and item = ? ) as [exists],
 			(select count(*) from List_Entry where list = l._id) as countChildren
 		from List       l
-		order by l.name
+		order by l.name COLLATE NOCASE
 	"]]></string>
 	<string name="query_list" translatable="false"><![CDATA["
 		select
@@ -483,7 +482,7 @@
 		join Item       i  ON le.item = i._id
 		join Category   c  ON i.category = c._id
 		where l._id = ?
-		order by i.name
+		order by i.name COLLATE NOCASE
 	"]]></string>
 
 	<string name="query_recents" translatable="false"><![CDATA["
@@ -526,7 +525,7 @@
 --		join Item     i ON s._id = i._id
 --		join Category c ON i.category = c._id
 		where s.name MATCH ?
-		order by s.name
+		order by s.name COLLATE NOCASE
 	"]]></string>
 	<string name="query_search" translatable="false"><![CDATA["
 		select
@@ -543,7 +542,7 @@
 		join Category c ON i.category = c._id
 		join Search   s ON i._id = s._id
 		where s.name MATCH ?
-		order by i.name
+		order by i.name COLLATE NOCASE
 	"]]></string>
 	<string name="query_search_size" translatable="false"><![CDATA["
 		-- sum 0 rows is NULL, count 0 rows is 0

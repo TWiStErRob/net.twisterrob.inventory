@@ -24,6 +24,8 @@ echo select %NOW%, 'data.sql'; >> %TARGET%
 type %ASSETS%\MagicHomeInventory.data.sql >> %TARGET%
 echo select %NOW%, 'data.Categories.sql'; >> %TARGET%
 type %ASSETS%\MagicHomeInventory.data.Categories.sql >> %TARGET%
+echo select %NOW%, 'init.sql'; >> %TARGET%
+type %ASSETS%\MagicHomeInventory.init.sql >> %TARGET%
 echo select %NOW%, 'development.sql'; >> %TARGET%
 type %ASSETSD%\MagicHomeInventory.development.sql >> %TARGET%
 echo select %NOW%, 'verify.sql'; >> %TARGET%
@@ -40,6 +42,8 @@ echo select %NOW%, 'data.sql'; >> %TARGET%
 type %ASSETS%\MagicHomeInventory.data.sql >> %TARGET%
 echo select %NOW%, 'data.Categories.sql'; >> %TARGET%
 type %ASSETS%\MagicHomeInventory.data.Categories.sql >> %TARGET%
+echo select %NOW%, 'init.sql'; >> %TARGET%
+type %ASSETS%\MagicHomeInventory.init.sql >> %TARGET%
 echo select %NOW%, 'development.sql'; >> %TARGET%
 type %ASSETSD%\MagicHomeInventory.development.sql >> %TARGET%
 echo select %NOW%, 'verify.sql'; >> %TARGET%
