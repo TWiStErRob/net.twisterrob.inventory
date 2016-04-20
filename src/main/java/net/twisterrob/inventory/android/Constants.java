@@ -152,22 +152,29 @@ public interface Constants {
 		}
 
 		public static class GlideSetup implements GlideModule {
-			private static File CACHE_DIR = null;
 			@Override public void applyOptions(final Context context, GlideBuilder builder) {
 				builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
 				if (BuildConfig.DEBUG) {
 					builder.setDiskCache(new DiskCache.Factory() {
 						@Override public DiskCache build() {
-							CACHE_DIR = new File(context.getExternalCacheDir(), "image_manager_disk_cache");
-							return DiskLruCacheWrapper.get(CACHE_DIR, 250 * 1024 * 1024);
+							return DiskLruCacheWrapper.get(getDir(context), 250 * 1024 * 1024);
 						}
 					});
 				}
 			}
 			@Override public void registerComponents(Context context, Glide glide) {
+				// no op
 			}
-			public static File getCacheDir(Context context) {
-				return CACHE_DIR != null? CACHE_DIR : Glide.getPhotoCacheDir(context);
+
+			private static @NonNull File getDir(Context context) {
+				return new File(context.getExternalCacheDir(), DiskCache.Factory.DEFAULT_DISK_CACHE_DIR);
+			}
+
+			public static @NonNull File getCacheDir(Context context) {
+				if (BuildConfig.DEBUG) {
+					return getDir(context);
+				}
+				return Glide.getPhotoCacheDir(context);
 			}
 		}
 	}

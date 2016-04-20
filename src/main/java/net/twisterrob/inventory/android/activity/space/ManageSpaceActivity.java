@@ -12,6 +12,8 @@ import android.os.Build.*;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup;
 import net.twisterrob.inventory.android.activity.BaseActivity;
+import net.twisterrob.inventory.android.content.Database;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
 
@@ -34,13 +37,20 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	TextView databaseSize;
 	TextView searchIndexSize;
 	TextView allSize;
+	private SwipeRefreshLayout swiper;
 
-	protected void onCreate(Bundle var1) {
-		super.onCreate(var1);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.manage_space_activity);
 		setIcon(ContextCompat.getDrawable(this, R.drawable.ic_launcher));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
+		swiper = (SwipeRefreshLayout)findViewById(R.id.refresher);
+		swiper.setOnRefreshListener(new OnRefreshListener() {
+			@Override public void onRefresh() {
+				recalculate();
+			}
+		});
 		searchIndexSize = (TextView)this.findViewById(R.id.storage_search_size);
 		findViewById(R.id.storage_search_clear).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
@@ -62,12 +72,10 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						"You're about to remove all files in the image cache. There will be no permanent loss. The cache will be re-filled as required in the future.",
 						new CleanTask() {
 							@Override protected void onPreExecute() {
-								Glide glide = Glide.get(getApplicationContext());
-								glide.clearMemory();
+								Glide.get(getApplicationContext()).clearMemory();
 							}
 							@Override protected void doClean() {
-								Glide glide = Glide.get(getApplicationContext());
-								glide.clearDiskCache();
+								Glide.get(getApplicationContext()).clearDiskCache();
 							}
 						}
 				).show(getSupportFragmentManager(), null);
@@ -166,13 +174,25 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 
 		allSize = (TextView)this.findViewById(R.id.storage_all_size);
 		findViewById(R.id.storage_all_clear).setOnClickListener(new OnClickListener() {
-			@TargetApi(VERSION_CODES.KITKAT)
 			@Override public void onClick(View v) {
 				new ConfirmedCleanAction("Clear Data",
 						"All of your belongings and user preferences will be permanently deleted. Any backups will be kept, even after you uninstall the app.",
 						new CleanTask() {
+							@TargetApi(VERSION_CODES.KITKAT)
 							@Override protected void doClean() {
-								((ActivityManager)getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
+								if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
+									((ActivityManager)getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
+								} else {
+									// Best effort: clear prefs, db and Glide cache; CONSIDER deltree getFilesDir()
+									App.getPrefs().edit().clear().apply();
+									Glide.get(getApplicationContext()).clearDiskCache();
+									Database db = App.db();
+									File dbFile = db.getFile();
+									db.getHelper().close();
+									if (dbFile.exists() && !dbFile.delete()) {
+										App.toast("Cannot delete database file: " + dbFile);
+									}
+								}
 							}
 						}
 				).show(getSupportFragmentManager(), null);
@@ -234,6 +254,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 				return App.db().getSearchSize();
 			}
 		});
+		swiper.setRefreshing(false);
 	}
 
 	protected void onResume() {
