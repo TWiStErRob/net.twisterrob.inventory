@@ -3,11 +3,13 @@ package net.twisterrob.inventory.android.content;
 import java.util.*;
 
 import android.database.Cursor;
+import android.support.annotation.WorkerThread;
 
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
 
+@WorkerThread
 @SuppressWarnings({"TryFinallyCanBeTryWithResources", "resource"}) // all methods use the correct try-finally structure
 public class DatabaseDTOTools {
 	public static List<String> getNames(Collection<? extends DTO> dtos) {

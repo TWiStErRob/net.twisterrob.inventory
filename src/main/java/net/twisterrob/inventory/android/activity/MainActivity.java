@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,13 +17,13 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.*;
 
+import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.contract.Room;
-import net.twisterrob.inventory.android.content.model.*;
+import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.MainFragment.MainEvents;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -235,22 +236,29 @@ public class MainActivity extends DrawerActivity
 	}
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.debug: {
-				try {
-					File file = new File(Paths.getPhoneHome(), "categories.html");
-					new CategoryHelpBuilder(this).export(file);
-				} catch (Exception ex) {
-					LOG.error("Cannot export categories", ex);
-				}
-				//startActivity(ImageActivity.show(InventoryContract.Item.imageUri(id)));
-				//startActivity(CategoryActivity.show(7000));
-				//startActivity(ItemViewActivity.show(1723));
-				//startActivityForResult(CaptureImage.saveTo(this, new File(getCacheDir(), "dev.jpg"), 8192), 32767);
-				return true;
-			}
+			case R.id.debug:
+				if (BuildConfig.DEBUG) {
+					quickDebug();
+					return true;
+				} // else fall back to default
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@SuppressLint("all")
+	@SuppressWarnings("all")
+	private void quickDebug() {
+//		try {
+//			File file = new File(Paths.getPhoneHome(), "categories.html");
+//			new CategoryHelpBuilder(this).export(file);
+//		} catch (Exception ex) {
+//			LOG.error("Cannot export categories", ex);
+//		}
+//		startActivity(ImageActivity.show(InventoryContract.Item.imageUri(id)));
+//		startActivity(CategoryActivity.show(7000));
+//		startActivity(ItemViewActivity.show(1723));
+		startActivityForResult(CaptureImage.saveTo(this, new File("/sdcard/dev.jpg"), 8192), 32767);
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

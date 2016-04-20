@@ -634,7 +634,7 @@ public /*static*/ abstract class AndroidTools {
 			task.execute(params); // default is serial, but not forced, so let's do it
 		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) { // [4, 11)
 			task.execute(params); // default is pooling, cannot be explicit
-		} else { // [11, ∞)
+		} else { // [11, ∞) android commit: 81de61bfddceba0eb77b3aacea317594b0f1de49
 			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params); // default is serial, explicit pooling
 		}
 	}
@@ -676,7 +676,7 @@ public /*static*/ abstract class AndroidTools {
 			task.execute(params); // default is serial
 		} else if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) { // [4, 11)
 			task.execute(params); // default is pooling, but not forced, so let's do it
-		} else { // [11, ∞)
+		} else { // [11, ∞) android commit: 81de61bfddceba0eb77b3aacea317594b0f1de49
 			task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params); // default is serial, explicit serial
 		}
 	}

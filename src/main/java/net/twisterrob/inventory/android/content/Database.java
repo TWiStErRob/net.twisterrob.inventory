@@ -9,13 +9,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.StringRes;
+import android.support.annotation.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 
+@WorkerThread
 @SuppressWarnings({"TryFinallyCanBeTryWithResources", "resource"})
 public class Database extends VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);

@@ -21,8 +21,6 @@ import android.support.annotation.*;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.facebook.stetho.Stetho;
-
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.content.Database;
@@ -83,7 +81,7 @@ public class App extends Application {
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		try {
 			if (BuildConfig.DEBUG) {
-				Stetho.initializeWithDefaults(this); // reads /proc/self/cmdline
+//				com.facebook.stetho.Stetho.initializeWithDefaults(this); // reads /proc/self/cmdline
 			}
 			PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 			database = new Database(this);
@@ -184,6 +182,7 @@ public class App extends Application {
 		return getInstance().database;
 	}
 
+	@UiThread
 	public static void toast(CharSequence message) {
 		if (BuildConfig.DEBUG) {
 			//LOG.info("Debug Toast: {}", message, new StackTrace());
@@ -191,6 +190,7 @@ public class App extends Application {
 		}
 	}
 
+	@UiThread
 	public static void toastUser(CharSequence message) {
 		//LOG.trace("User Toast: {}", message, new StackTrace());
 		Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
