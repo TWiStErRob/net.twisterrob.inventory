@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Build.*;
 import android.os.Bundle;
+import android.support.annotation.UiThread;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
@@ -95,9 +96,13 @@ public class ChangeTypeDialog {
 		list = dialog.getListView();
 		list.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				Cursor cursor = (Cursor)parent.getAdapter().getItem(position);
-				showKeywords(parent.getContext(), DatabaseTools.getLong(cursor, Category.ID));
-				return true;
+				if (variants.isCategory()) {
+					Cursor cursor = (Cursor)parent.getAdapter().getItem(position);
+					showKeywords(parent.getContext(), DatabaseTools.getLong(cursor, Category.ID));
+					return true;
+				} else {
+					return false;
+				}
 			}
 		});
 		dialog.setCanceledOnTouchOutside(true);
@@ -115,8 +120,7 @@ public class ChangeTypeDialog {
 	}
 
 	private void userSelected(Cursor cursor, Variants variants) {
-		long newType = DatabaseTools.getLong(cursor, CommonColumns.ID);
-		variants.update(newType, cursor); // FIXME DB on UI
+		variants.update(cursor);
 	}
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)
@@ -163,16 +167,19 @@ public class ChangeTypeDialog {
 	}
 
 	public static abstract class Variants {
-		protected abstract void update(long newType, Cursor cursor);
-		protected abstract CharSequence getTitle();
-		protected abstract Loaders getTypesLoader();
-		protected abstract CharSequence getName();
-		protected abstract boolean isExpandable();
-		protected void augment(Builder dialog) {
+		@UiThread protected abstract void update(Cursor cursor);
+		@UiThread protected abstract CharSequence getTitle();
+		@UiThread protected abstract Loaders getTypesLoader();
+		@UiThread protected abstract CharSequence getName();
+		@UiThread protected abstract boolean isExpandable();
+		@UiThread protected void augment(Builder dialog) {
 			dialog.setTitle(getTitle());
 		}
-		protected Bundle createArgs(long type) {
+		@UiThread protected Bundle createArgs(long type) {
 			return null;
+		}
+		@UiThread public boolean isCategory() {
+			return false;
 		}
 	}
 

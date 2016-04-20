@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
@@ -51,12 +51,14 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 				final long[] itemIDs = getSelectedIDs();
 				long category = App.db().findCommonCategory(itemIDs);
 				new ChangeTypeDialog(fragment).show(new Variants() {
-					@Override protected void update(long newType, Cursor cursor) {
+					@Override protected void update(Cursor cursor) {
+						long newType = DatabaseTools.getLong(cursor, Item.ID);
+						// FIXME DB on UI
 						for (long itemID : itemIDs) {
 							ItemDTO item = DatabaseDTOTools.retrieveItem(itemID);
 							App.db().updateItem(item.id, newType, item.name, item.description);
 						}
-						String newTypeKey = cursor.getString(cursor.getColumnIndex(CommonColumns.NAME));
+						String newTypeKey = DatabaseTools.getString(cursor, CommonColumns.NAME);
 						CharSequence newTypeName = AndroidTools.getText(fragment.getContext(), newTypeKey);
 						App.toastUser(fragment.getContext()
 						                      .getString(R.string.generic_location_change, "selection", newTypeName));

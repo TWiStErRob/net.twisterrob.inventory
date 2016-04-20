@@ -39,7 +39,7 @@ import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.*;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.content.model.helpers.Hinter;
 import net.twisterrob.inventory.android.content.model.helpers.Hinter.CategorySelectedEvent;
@@ -115,8 +115,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			typeImage.setOnClickListener(new OnClickListener() {
 				@Override public void onClick(View v) {
 					new ChangeTypeDialog(BaseEditFragment.this).show(new Variants() {
-						@Override protected void update(long newType, Cursor cursor) {
-							AndroidTools.selectByID(type, newType);
+						@Override protected void update(Cursor cursor) {
+							AndroidTools.selectByID(type, DatabaseTools.getLong(cursor, Item.ID));
 						}
 						@Override protected CharSequence getTitle() {
 							return "Change Category of " + getName();

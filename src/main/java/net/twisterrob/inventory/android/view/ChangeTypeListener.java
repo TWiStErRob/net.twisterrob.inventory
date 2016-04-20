@@ -3,11 +3,13 @@ package net.twisterrob.inventory.android.view;
 import android.content.*;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.*;
 import android.support.v7.app.AlertDialog.Builder;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.concurrent.ClosureAsyncTask;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.*;
@@ -53,19 +55,32 @@ public class ChangeTypeListener implements OnClickListener {
 			return entity.name;
 		}
 
-		public void notifyUserOfUpdate(Cursor cursor) {
-			String newTypeKey = cursor.getString(cursor.getColumnIndex(CommonColumns.NAME));
-			CharSequence newTypeName = AndroidTools.getText(context, newTypeKey);
-			App.toastUser(context.getString(R.string.generic_location_change, getName(), newTypeName));
-			fragment.refresh();
+		@Override protected final void update(Cursor cursor) {
+			// prefetch, because the cursor may re-position once this method returns
+			final long newType = DatabaseTools.getLong(cursor, CommonColumns.ID);
+			final String newTypeKey = DatabaseTools.getString(cursor, CommonColumns.NAME);
+			AndroidTools.executePreferSerial(new ClosureAsyncTask() {
+				@Override protected void doInBackgroundSafe() throws Exception {
+					doUpdate(newType);
+				}
+				@Override protected void onResult() {
+					CharSequence newTypeName = AndroidTools.getText(context, newTypeKey);
+					App.toastUser(context.getString(R.string.generic_location_change, getName(), newTypeName));
+					fragment.refresh();
+				}
+				@Override protected void onError(@NonNull Exception ex) {
+					App.toastUser(App.getError(null, "Cannot change type"));
+				}
+			});
 		}
+		@WorkerThread
+		protected abstract void doUpdate(long newType);
 	}
 
 	private class PropertyVariants extends ImagedVariants {
-		@Override public void update(long newType, Cursor cursor) {
+		@Override public void doUpdate(long newType) {
 			PropertyDTO property = DatabaseDTOTools.retrieveProperty(entity.id);
 			App.db().updateProperty(property.id, newType, property.name, property.description);
-			super.notifyUserOfUpdate(cursor);
 		}
 		@Override public CharSequence getTitle() {
 			return "Change Type of " + getName();
@@ -79,10 +94,9 @@ public class ChangeTypeListener implements OnClickListener {
 	}
 
 	private class RoomVariants extends ImagedVariants {
-		@Override public void update(long newType, Cursor cursor) {
+		@Override public void doUpdate(long newType) {
 			RoomDTO room = DatabaseDTOTools.retrieveRoom(entity.id);
 			App.db().updateRoom(room.id, newType, room.name, room.description);
-			super.notifyUserOfUpdate(cursor);
 		}
 		@Override public CharSequence getTitle() {
 			return "Change Type of " + getName();
@@ -96,10 +110,9 @@ public class ChangeTypeListener implements OnClickListener {
 	}
 
 	private class ItemVariants extends ImagedVariants {
-		@Override public void update(long newType, Cursor cursor) {
+		@Override public void doUpdate(long newType) {
 			ItemDTO item = DatabaseDTOTools.retrieveItem(entity.id);
 			App.db().updateItem(item.id, newType, item.name, item.description);
-			super.notifyUserOfUpdate(cursor);
 		}
 		@Override public CharSequence getTitle() {
 			return "Change Category of " + getName();
@@ -119,6 +132,9 @@ public class ChangeTypeListener implements OnClickListener {
 			});
 		}
 		@Override protected boolean isExpandable() {
+			return true;
+		}
+		@Override public boolean isCategory() {
 			return true;
 		}
 	}
