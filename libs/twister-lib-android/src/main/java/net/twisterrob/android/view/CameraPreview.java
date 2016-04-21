@@ -7,6 +7,7 @@ import org.slf4j.*;
 
 import android.annotation.*;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build.*;
 import android.os.*;
 import android.support.annotation.*;
@@ -56,7 +57,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		void onTaken(byte... image);
 	}
 
-	private CameraHandlerThread mCameraThread = null;
 	private final MissedSurfaceEvents missedEvents = new MissedSurfaceEvents();
 	private CameraHolder cameraHolder = null;
 	private @NonNull CameraPreviewListener listener = new CameraPreviewListenerAdapter();
@@ -66,6 +66,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		LOG.trace("CameraPreview");
 
 		getHolder().addCallback(this);
+		getHolder().addCallback(new CameraThreadHandler());
 		initCompat();
 	}
 
@@ -75,6 +76,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
 			getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public boolean canHasCamera(Context context) {
+		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)
+				&& android.hardware.Camera.getNumberOfCameras() > 0;
 	}
 
 	public void setListener(@Nullable CameraPreviewListener listener) {
@@ -94,17 +101,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		if (cameraHolder != null) {
 			usePreview();
 		} else {
-			if (mCameraThread != null) {
-				throw new IllegalStateException("Camera Thread already started");
-			}
-			mCameraThread = new CameraHandlerThread();
-			mCameraThread.startOpenCamera();
 			missedEvents.surfaceCreated(holder);
 		}
 	}
 
 	@Override public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-		LOG.trace("{} surfaceChanged({}, format={}, w={}, h={}) {}", cameraHolder, holder, format, h);
+		LOG.trace("{} surfaceChanged({}, format={}, w={}, h={}) {}", cameraHolder, holder, format, w, h);
 		if (cameraHolder != null) {
 			stopPreview();
 			updatePreview(w, h);
@@ -181,10 +183,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			LOG.info("Releasing {}", cameraHolder.camera);
 			cameraHolder.camera.release();
 			finished();
-		}
-		if (mCameraThread != null) {
-			mCameraThread.stopThread();
-			mCameraThread = null;
 		}
 	}
 
@@ -379,6 +377,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 							@UiThread
 							public void run() {
 								Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+								setVisibility(View.INVISIBLE); // destroy surface for callbacks to trigger
 							}
 						});
 					}
@@ -392,6 +391,28 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 		void stopThread() {
 			getLooper().quit();
+		}
+	}
+
+	private class CameraThreadHandler implements SurfaceHolder.Callback {
+		private CameraHandlerThread mCameraThread = null;
+		@Override public void surfaceCreated(SurfaceHolder holder) {
+			if (mCameraThread != null) {
+				throw new IllegalStateException("Camera Thread already started");
+			}
+			mCameraThread = new CameraHandlerThread();
+			LOG.trace("Starting thread {}", mCameraThread);
+			mCameraThread.startOpenCamera();
+		}
+		@Override public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+		}
+		@Override public void surfaceDestroyed(SurfaceHolder holder) {
+			if (mCameraThread != null) {
+				LOG.trace("Stopping thread {}", mCameraThread);
+				mCameraThread.stopThread();
+				mCameraThread = null;
+			}
 		}
 	}
 

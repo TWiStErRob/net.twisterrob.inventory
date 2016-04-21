@@ -17,7 +17,9 @@ import android.net.Uri;
 import android.os.Build.*;
 import android.os.*;
 import android.provider.MediaStore;
-import android.support.annotation.CheckResult;
+import android.support.annotation.*;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.PermissionChecker;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -40,7 +42,7 @@ import net.twisterrob.android.view.CameraPreview.*;
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
-public class CaptureImage extends Activity {
+public class CaptureImage extends Activity implements ActivityCompat.OnRequestPermissionsResultCallback {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
 	public static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;
 	public static final String EXTRA_MAXSIZE = MediaStore.EXTRA_SIZE_LIMIT;
@@ -51,20 +53,29 @@ public class CaptureImage extends Activity {
 	public static final String EXTRA_FLASH = "flash";
 	public static final String EXTRA_PICK = "pickImage";
 	private static final String PREF_FLASH = EXTRA_FLASH;
+	private static final String PREF_DENIED = "camera_permission_declined";
+	private static final String KEY_STATE = "activityState";
+	private static final String STATE_CAPTURING = "capturing";
+	private static final String STATE_CROPPING = "cropping";
+	private static final String STATE_PICKING = "picking";
 	private static final float DEFAULT_MARGIN = 0.10f;
 	private static final boolean DEFAULT_FLASH = false;
 	public static final int EXTRA_MAXSIZE_NO_MAX = 0;
 
+	private SharedPreferences prefs;
+	
 	private CameraPreview mPreview;
 	private SelectionView mSelection;
 	private File mTargetFile;
 	private File mSavedFile;
 	private ImageView mImage;
 	private View controls;
+	private String state;
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		prefs = getPreferences(MODE_PRIVATE);
 
 		String output = getIntent().getStringExtra(EXTRA_OUTPUT);
 		if (output == null) {
@@ -132,7 +143,7 @@ public class CaptureImage extends Activity {
 		btnFlash.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				mPreview.setFlash(isChecked);
-				getPreferences(MODE_PRIVATE).edit().putBoolean(PREF_FLASH, isChecked).apply();
+				prefs.edit().putBoolean(PREF_FLASH, isChecked).apply();
 			}
 		});
 
@@ -140,11 +151,44 @@ public class CaptureImage extends Activity {
 		btnPick.setOnClickListener(new PickClickListener());
 		btnCrop.setOnClickListener(new CropClickListener());
 
-		if (getIntent().getBooleanExtra(EXTRA_PICK, false) && savedInstanceState == null) {
-			btnPick.performClick();
+		boolean hasCamera = mPreview.canHasCamera(this);
+		if (!hasCamera) {
+			btnCapture.setVisibility(View.GONE);
+		}
+		if (savedInstanceState == null) {
+			boolean userDeclined = hasCamera && !hasCameraPermission() && prefs.getBoolean(PREF_DENIED, false);
+			if (getIntent().getBooleanExtra(EXTRA_PICK, false) // forcing an immediate pick
+					|| !hasCamera // device doesn't have camera
+					|| userDeclined // device has camera, but user explicitly declined the permission
+					) {
+				btnPick.performClick();
+			} else {
+				btnCapture.performClick();
+			}
+		} else {
+			LOG.debug("{}", AndroidTools.toLongString(savedInstanceState));
+			String state = savedInstanceState.getString(KEY_STATE);
+			if (state != null) {
+				switch (state) {
+					case STATE_CAPTURING:
+						btnCapture.performClick();
+						break;
+					case STATE_PICKING:
+						// automatically restored
+						break;
+					case STATE_CROPPING:
+						mSavedFile = mTargetFile;
+						mSelection.setSelectionStatus(SelectionStatus.FOCUSED);
+						prepareCrop();
+						break;
+				}
+			}
 		}
 	}
-
+	@Override protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(KEY_STATE, state);
+	}
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode != Activity.RESULT_OK) {
 			mSelection.setSelectionStatus(SelectionStatus.BLURRY);
@@ -176,6 +220,7 @@ public class CaptureImage extends Activity {
 			});
 			return;
 		}
+		state = STATE_CROPPING;
 		LOG.trace("Loading taken image to crop: {}", mSavedFile);
 		// Use a special target that will adjust the size of the ImageView to wrap the image (adjustViewBounds).
 		// The selection view's size will match this hence the user can only select part of the image. 
@@ -218,7 +263,7 @@ public class CaptureImage extends Activity {
 		if (getIntent().hasExtra(EXTRA_FLASH)) {
 			flash = getIntent().getBooleanExtra(EXTRA_FLASH, DEFAULT_FLASH);
 		} else {
-			flash = getPreferences(MODE_PRIVATE).getBoolean(PREF_FLASH, DEFAULT_FLASH);
+			flash = prefs.getBoolean(PREF_FLASH, DEFAULT_FLASH);
 		}
 		return flash;
 	}
@@ -230,6 +275,11 @@ public class CaptureImage extends Activity {
 		mSavedFile = crop(mSavedFile);
 	}
 	protected void doRestartPreview() {
+		if (requestCameraPermissionIfNeeded()) {
+			mPreview.setVisibility(View.INVISIBLE);
+			return;
+		}
+		state = STATE_CAPTURING;
 		LOG.trace("Restarting preview");
 		mPreview.setVisibility(View.VISIBLE);
 		mSavedFile = null;
@@ -237,6 +287,52 @@ public class CaptureImage extends Activity {
 		mPreview.cancelTakePicture();
 		Glide.clear(mImage);
 		mImage.setImageDrawable(null); // remove Glide placeholder for the view to be transparent
+	}
+	protected void doPick() {
+		state = STATE_PICKING;
+		mPreview.setVisibility(View.INVISIBLE);
+		disableControls();
+		mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
+		ImageTools.getPicture(CaptureImage.this, mTargetFile); // continues in onActivityResult
+	}
+
+	private static final int PERMISSIONS_REQUEST_CAMERA = 1;
+	private boolean requestCameraPermissionIfNeeded() {
+		if (hasCameraPermission()) {
+			return false;
+		} else {
+			// TODO if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) showDialog
+			ActivityCompat.requestPermissions(this,
+					new String[] {Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_CAMERA);
+			return true;
+		}
+	}
+	@Override public void onRequestPermissionsResult(
+			int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		switch (requestCode) {
+			case PERMISSIONS_REQUEST_CAMERA: {
+				if (grantResults.length == 0) { // If request is cancelled, the result arrays are empty.
+					break; // nothing we can do really, let's try again later when user interactions warrants it
+				}
+				// TODEL double-checking hasCameraPermission only needed while target API is below 23
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED && hasCameraPermission()) {
+					// all ok, we have the permission, remember the user's approval
+					prefs.edit().remove(PREF_DENIED).apply();
+					doRestartPreview(); // start using the camera
+				} else {
+					// no permission: remember the user's disapproval, and don't bug again until explicit action
+					prefs.edit().putBoolean(PREF_DENIED, true).apply();
+					doPick(); // start picking as that's likely the action the user will need
+				}
+				break;
+			}
+			default:
+				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		}
+	}
+	private boolean hasCameraPermission() {
+		int permissionState = PermissionChecker.checkSelfPermission(this, Manifest.permission.CAMERA);
+		return permissionState == PermissionChecker.PERMISSION_GRANTED;
 	}
 	protected void doReturn() {
 		if (mSavedFile != null) {
@@ -346,29 +442,15 @@ public class CaptureImage extends Activity {
 
 	/** @param maxSize pixel size or {@link #EXTRA_MAXSIZE_NO_MAX} */
 	public static Intent saveTo(Context context, File targetFile, int maxSize) {
-		assertFeatures(context);
 		Intent intent = new Intent(context, CaptureImage.class);
 		intent.putExtra(CaptureImage.EXTRA_OUTPUT, targetFile.getAbsolutePath());
 		intent.putExtra(CaptureImage.EXTRA_MAXSIZE, maxSize);
 		return intent;
 	}
-	private static void assertFeatures(Context context) {
-		PackageManager pm = context.getPackageManager();
-		if (!AndroidTools.hasPermission(context, Manifest.permission.CAMERA)) {
-			throw new IllegalStateException("Camera permission is not granted, please add it to your manifest:\n"
-					+ "<uses-permission android:name=\"android.permission.CAMERA\" />");
-		}
-		if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-			throw new IllegalStateException("Sorry, this system doesn't have a camera.");
-		}
-	}
 
 	private class PickClickListener implements OnClickListener {
 		@Override public void onClick(View v) {
-			mPreview.setVisibility(View.INVISIBLE);
-			disableControls();
-			mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
-			ImageTools.getPicture(CaptureImage.this, mTargetFile); // continues in onActivityResult
+			doPick();
 		}
 	}
 

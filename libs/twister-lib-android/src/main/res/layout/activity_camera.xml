@@ -8,6 +8,8 @@
 		android:id="@+id/preview"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:visibility="invisible"
+		tools:visibility="visible"
 		/>
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -17,11 +19,11 @@
 			android:id="@+id/image"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			tools:layout_height="wrap_content"
 			android:layout_centerInParent="true"
 			android:adjustViewBounds="true"
-			tools:src="@drawable/selection_corner"
 			android:contentDescription="Image taken"
+			tools:layout_height="wrap_content"
+			tools:src="@drawable/selection_corner"
 			/>
 		<net.twisterrob.android.view.SelectionView
 			android:id="@+id/selection"
