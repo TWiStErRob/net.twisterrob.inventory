@@ -8,7 +8,8 @@ import android.content.*;
 import android.content.pm.ProviderInfo;
 import android.database.*;
 import android.net.Uri;
-import android.os.ParcelFileDescriptor;
+import android.os.*;
+import android.os.StrictMode.ThreadPolicy;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 
@@ -18,7 +19,7 @@ public class FileProvider extends android.support.v4.content.FileProvider {
 	@Override public boolean onCreate() {
 		try {
 			boolean result = super.onCreate();
-			LOG.trace("{}.onCreate()", this);
+			LOG.trace("{}.onCreate(): {}", this, result);
 			return result;
 		} catch (RuntimeException ex) {
 			LOG.trace("{}.onCreate(): thrown {}", this, ex.getClass().getSimpleName(), ex);
@@ -27,8 +28,13 @@ public class FileProvider extends android.support.v4.content.FileProvider {
 	}
 	@Override public void attachInfo(Context context, ProviderInfo info) {
 		try {
-			super.attachInfo(context, info);
 			LOG.trace("{}.attachInfo({}, {})", this, context, info);
+			ThreadPolicy policy = StrictMode.allowThreadDiskReads();
+			try {
+				super.attachInfo(context, info);
+			} finally {
+				StrictMode.setThreadPolicy(policy);
+			}
 		} catch (RuntimeException ex) {
 			LOG.trace("{}.attachInfo({}, {}): thrown {}", this, context, info, ex.getClass().getSimpleName(), ex);
 			throw ex;

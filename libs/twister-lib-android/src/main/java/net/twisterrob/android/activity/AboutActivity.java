@@ -1,5 +1,9 @@
 package net.twisterrob.android.activity;
 
+import java.util.Locale;
+
+import org.slf4j.*;
+
 import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.*;
@@ -18,11 +22,13 @@ import android.widget.*;
 
 import static android.widget.ArrayAdapter.*;
 
-import net.twisterrob.android.*;
+import net.twisterrob.android.R;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.java.utils.ReflectionTools;
 
 public class AboutActivity extends ListActivity {
+	private static final Logger LOG = LoggerFactory.getLogger(AboutActivity.class);
+
 	private CharSequence[] licenseContents;
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,7 @@ public class AboutActivity extends ListActivity {
 		AndroidTools.displayedIf(findViewById(R.id.about_licenses_title), !getListAdapter().isEmpty());
 
 		final AboutInfo aboutInfo = getAboutInfo();
+		LOG.trace("About info: {}", aboutInfo);
 
 		TextView feedback = (TextView)findViewById(R.id.about_feedback);
 		feedback.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +85,12 @@ public class AboutActivity extends ListActivity {
 	}
 
 	protected void onFeedback(AboutInfo aboutInfo) {
-		startActivity(createFeedbackIntent(aboutInfo));
+		try {
+			startActivity(createFeedbackIntent(aboutInfo));
+		} catch (ActivityNotFoundException ex) {
+			LOG.error("Cannot start feedback intent({})", aboutInfo, ex);
+			Toast.makeText(this, getString(R.string.about_feedback_fail, aboutInfo.email), Toast.LENGTH_LONG).show();
+		}
 	}
 
 	protected @NonNull Intent createFeedbackIntent(AboutInfo aboutInfo) {
@@ -148,5 +160,10 @@ public class AboutActivity extends ListActivity {
 		protected int versionCode;
 		protected String applicationId;
 		protected String email;
+
+		@Override public String toString() {
+			return String.format(Locale.ROOT, "%s(%s): %s v%s(%d) -> %s",
+					appLabel, appIcon, applicationId, versionName, versionCode, email);
+		}
 	}
 }

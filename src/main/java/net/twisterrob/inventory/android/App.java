@@ -225,7 +225,7 @@ public class App extends Application {
 		if (!BuildConfig.DEBUG) {
 			return;
 		}
-		if (VERSION_CODES.GINGERBREAD > VERSION.SDK_INT) {
+		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
 			return; // StrictMode was added in API 9
 		}
 		Builder threadBuilder = new Builder();
