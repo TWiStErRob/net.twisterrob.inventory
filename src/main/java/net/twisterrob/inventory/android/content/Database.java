@@ -191,6 +191,23 @@ public class Database extends VariantDatabase {
 		}
 	}
 
+	private void setImage(@StringRes int imageSetter, long id, byte[] imageContents, Long time) {
+		long imageID;
+		if (imageContents == null) {
+			// delete old image (via trigger)
+			execSQL(imageSetter, null, id);
+		} else {
+			// create new image
+			if (time != null) {
+				imageID = rawInsert(R.string.query_image_create_with_time, imageContents, time);
+			} else {
+				imageID = rawInsert(R.string.query_image_create, (Object)imageContents);
+			}
+			// use new image (old will be deleted via trigger)
+			execSQL(imageSetter, imageID, id);
+		}
+	}
+
 	public long createProperty(long type, String name, String description) {
 		return rawInsert(R.string.query_property_create, type, name, description);
 	}
@@ -201,12 +218,9 @@ public class Database extends VariantDatabase {
 		execSQL(R.string.query_property_update, type, name, description, id);
 	}
 	public void setPropertyImage(long id, byte[] imageContents, Long time) {
-		if (time != null) {
-			execSQL(R.string.query_property_image_set_with_time, imageContents, time, id);
-		} else {
-			execSQL(R.string.query_property_image_set, imageContents, id);
-		}
+		setImage(R.string.query_property_image_set, id, imageContents, time);
 	}
+
 	public Cursor getPropertyImage(long id) {
 		return rawQuery(R.string.query_property_image_get, id);
 	}
@@ -225,11 +239,7 @@ public class Database extends VariantDatabase {
 		execSQL(R.string.query_room_update, type, name, description, id);
 	}
 	public void setRoomImage(long id, byte[] imageContents, Long time) {
-		if (time != null) {
-			execSQL(R.string.query_room_image_set_with_time, imageContents, time, id);
-		} else {
-			execSQL(R.string.query_room_image_set, imageContents, id);
-		}
+		setImage(R.string.query_room_image_set, id, imageContents, time);
 	}
 	public Cursor getRoomImage(long id) {
 		return rawQuery(R.string.query_room_image_get, id);
@@ -266,11 +276,7 @@ public class Database extends VariantDatabase {
 		execSQL(R.string.query_item_update, category, name, description, id);
 	}
 	public void setItemImage(long id, byte[] imageContents, Long time) {
-		if (time != null) {
-			execSQL(R.string.query_item_image_set_with_time, imageContents, time, id);
-		} else {
-			execSQL(R.string.query_item_image_set, imageContents, id);
-		}
+		setImage(R.string.query_item_image_set, id, imageContents, time);
 	}
 	public Cursor getItemImage(long id) {
 		return rawQuery(R.string.query_item_image_get, id);

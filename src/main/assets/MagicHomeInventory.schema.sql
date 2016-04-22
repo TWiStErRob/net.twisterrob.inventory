@@ -1,6 +1,7 @@
 -- Notes
 -- ;--NOTEOS is need in trigger bodies so statement execution to android driver is delayed until correct semicolon
 -- RAISE(action, msg) doesn't support expressions
+-- Be careful with WHEN conditions in triggers for NULLABLE columns <> returns NULL, need to check if IS NULL changed
 
 
 -- Usage: insert into Log(message) values ('Log message');
@@ -194,14 +195,36 @@ BEGIN
 	insert into Search_Refresher(_id) select itemID from Item_Path where categoryName = old.key;--NOTEOS
 END;
 
+CREATE TABLE Image (
+	_id     INTEGER  NOT NULL,
+	data    BLOB     NOT NULL, -- JPEG image bytes
+	updated DATETIME NOT NULL DEFAULT (STRFTIME('%s', 'NOW') * 1000),
+	PRIMARY KEY (_id AUTOINCREMENT
+),
+CHECK (0 < length (data
+)
+)
+);
+
+CREATE TRIGGER Image_image
+AFTER UPDATE OF data ON Image
+	WHEN old.updated = new.updated
+BEGIN
+	update Image
+	set updated = STRFTIME('%s', CURRENT_TIMESTAMP) * 1000
+	where _id = new._id; --NOTEOS
+END;
 
 CREATE TABLE Item (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         /*NULL*/, -- user entered
-	image       BLOB         /*NULL*/, -- JPEG image
-	image_time  DATETIME     NOT NULL DEFAULT (STRFTIME('%s', 'NOW') * 1000),
-	category    INTEGER      DEFAULT 0 -- uncategorized
+	image       INTEGER /*NULL*/ DEFAULT NULL
+		CONSTRAINT fk_Item_image
+		REFERENCES Image (_id)
+		ON UPDATE CASCADE
+		ON DELETE SET DEFAULT,
+	category    INTEGER          DEFAULT 0 -- uncategorized
 		CONSTRAINT fk_Item_category
 			REFERENCES Category(_id)
 			ON UPDATE CASCADE
@@ -217,6 +240,7 @@ CREATE TABLE Item (
 	CHECK (0 < length(name))
 );
 CREATE INDEX Item_category ON Item(category);
+CREATE INDEX Item_parent ON Item (parent);
 
 CREATE TRIGGER Item_insert
 AFTER INSERT ON Item
@@ -265,11 +289,15 @@ BEGIN
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || '): '  || 'finished');--NOTEOS
 END;
 
+-- CONSIDER removing this, in case the UI allows sharing images between multiple belongings
 CREATE TRIGGER Item_image
 AFTER UPDATE OF image ON Item
-WHEN old.image_time = new.image_time
+	WHEN old.image <> new.image or ((old.image IS NULL) <> (new.image IS NULL))
 BEGIN
-	update Item set image_time = STRFTIME('%s', CURRENT_TIMESTAMP) * 1000 where _id = new._id;--NOTEOS
+	--insert into Log(message) values ('Item_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'started');--NOTEOS
+	delete from Image
+	where _id = old.image; --NOTEOS
+	--insert into Log(message) values ('Item_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'finished');--NOTEOS
 END;
 
 CREATE TRIGGER Item_categoryChange
@@ -307,9 +335,12 @@ CREATE TABLE Property (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         /*NULL*/, -- user entered
-	image       BLOB         /*NULL*/, -- JPEG image
-	image_time  DATETIME     NOT NULL DEFAULT (STRFTIME('%s', 'NOW') * 1000),
-	type        INTEGER      DEFAULT 0 -- other
+	image       INTEGER /*NULL*/ DEFAULT NULL
+		CONSTRAINT fk_Property_image
+		REFERENCES Image (_id)
+		ON UPDATE CASCADE
+		ON DELETE SET DEFAULT,
+	type        INTEGER          DEFAULT 0 -- other
 		CONSTRAINT fk_Property_type
 			REFERENCES PropertyType(_id)
 			ON UPDATE CASCADE
@@ -318,13 +349,6 @@ CREATE TABLE Property (
 	UNIQUE (name),
 	CHECK (0 < length(name))
 );
-
-CREATE TRIGGER Property_image
-AFTER UPDATE OF image ON Property
-WHEN old.image_time = new.image_time
-BEGIN
-	update Property set image_time = STRFTIME('%s', CURRENT_TIMESTAMP) * 1000 where _id = new._id;--NOTEOS
-END;
 
 
 CREATE TABLE RoomTypeKind (
@@ -352,9 +376,12 @@ CREATE TABLE Room (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         /*NULL*/, -- user entered
-	image       BLOB         /*NULL*/, -- JPEG image
-	image_time  DATETIME     NOT NULL DEFAULT (STRFTIME('%s', 'NOW') * 1000),
-	type        INTEGER      DEFAULT 0 -- other
+	image       INTEGER /*NULL*/ DEFAULT NULL
+		CONSTRAINT fk_Room_image
+		REFERENCES Image (_id)
+		ON UPDATE CASCADE
+		ON DELETE SET DEFAULT,
+	type        INTEGER          DEFAULT 0 -- other
 		CONSTRAINT fk_Room_type
 			REFERENCES RoomType(_id)
 			ON UPDATE CASCADE
@@ -392,13 +419,6 @@ BEGIN
 		where ip.rootItemID <> ip.itemID and ip.roomID = new._id
 	;--NOTEOS
 	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || old.property || '->' || new.property || ', ' || new.root || ', ' || new.name || '): ' || 'finished');--NOTEOS
-END;
-
-CREATE TRIGGER Room_image
-AFTER UPDATE OF image ON Room
-WHEN old.image_time = new.image_time
-BEGIN
-	update Room set image_time = STRFTIME('%s', CURRENT_TIMESTAMP) * 1000 where _id = new._id;--NOTEOS
 END;
 
 CREATE VIEW Room_Rooter AS select * from Room;
