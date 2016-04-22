@@ -36,7 +36,7 @@ import com.bumptech.glide.request.target.*;
 import net.twisterrob.android.R;
 import net.twisterrob.android.content.glide.WrapViewTarget;
 import net.twisterrob.android.utils.concurrent.Callback;
-import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.ImageTools;
 import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.CameraPreview.*;
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
@@ -166,7 +166,6 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				btnCapture.performClick();
 			}
 		} else {
-			LOG.debug("{}", AndroidTools.toLongString(savedInstanceState));
 			String state = savedInstanceState.getString(KEY_STATE);
 			if (state != null) {
 				switch (state) {

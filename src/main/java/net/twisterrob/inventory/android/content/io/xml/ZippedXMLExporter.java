@@ -7,9 +7,10 @@ import org.slf4j.*;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.util.Xml;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.io.*;
@@ -63,7 +64,9 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		belonging.type = cursor.getString(cursor.getColumnIndexOrThrow("typeName"));
 		belonging.image = cursor.getString(cursor.getColumnIndexOrThrow(ExporterTask.IMAGE_NAME));
 		belonging.description = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.DESCRIPTION));
-		belonging.comment = ExporterTask.buildComment(cursor);
+		if (BuildConfig.DEBUG) {
+			belonging.comment = ExporterTask.buildComment(cursor);
+		}
 
 		if (type != Type.Property) { // can't have parents
 			hier.put(Type.from(cursor, ParentColumns.PARENT_TYPE), parentID, belonging);
@@ -142,7 +145,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 				output.attribute(NS, ATTR_IMAGE, image);
 			}
 			boolean hasBody = !children.isEmpty() || !StringTools.isNullOrEmpty(description);
-			if (hasBody) {
+			if (hasBody && !TextUtils.isEmpty(comment)) {
 				output.comment(comment);
 			}
 			if (!StringTools.isNullOrEmpty(description)) {
@@ -154,7 +157,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 				child.write(output);
 			}
 			output.endTag(NS, tag);
-			if (!hasBody) {
+			if (!hasBody && !TextUtils.isEmpty(comment)) {
 				output.comment(comment);
 			}
 		}

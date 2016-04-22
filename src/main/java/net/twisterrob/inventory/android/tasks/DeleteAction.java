@@ -36,6 +36,7 @@ public abstract class DeleteAction extends BaseAction {
 		if (IDs == null || IDs.length == 0) {
 			throw new ValidationException(R.string.action_delete_error_empty);
 		}
+		// TODO limit number of items shown in the dialog (deleting 2000 items takes a minute)
 	}
 	private CharSequence buildPlural(Resources res, @PluralsRes int titleRes) {
 		String name = res.getQuantityString(targetNameRes, targets.size());
