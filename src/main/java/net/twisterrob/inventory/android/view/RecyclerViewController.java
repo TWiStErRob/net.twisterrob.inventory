@@ -56,7 +56,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 			// no op
 		}
 		@Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-			lastScrollUp = dx > 0 || dy > 0;
+			lastScrollUp = dy > 0 || dx > 0;
 			updateFAB();
 		}
 	};
@@ -145,6 +145,20 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 	protected abstract void setData(A adapter, D data);
 
 	protected void updateFAB() {
+		if (fab == null) {
+			return;
+		}
+		// TODEL report this and hope for a fix in design lib: Need to post visibility changes to prevent this scenario:
+		// fab.show(); fab.hide(); fab.show(); hides the button, because FAB.mIsHiding is set
+		// in FAB.hide().onAnimationStart which didn't have a chance to execute yet, so the second show() is no-op
+		// by queueing the visibility changes here we make sure that we run after the animation has started
+		fab.post(new Runnable() {
+			@Override public void run() {
+				doUpdateFAB();
+			}
+		});
+	}
+	private void doUpdateFAB() {
 		if (fab == null) {
 			return;
 		}

@@ -62,7 +62,7 @@ public class MainActivity extends DrawerActivity
 	};
 
 	private BaseFragment<?> getFragment() {
-		return (BaseFragment<?>)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
+		return getFragment(R.id.activityRoot);
 	}
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
@@ -76,33 +76,31 @@ public class MainActivity extends DrawerActivity
 			if (Constants.DISABLE) {
 				onOptionsItemSelected(new MenuBuilder(this).add(0, R.id.debug, 0, "Debug"));
 			}
-		} else {
-			updateTitle(); // on rotation
+		} else { // on rotation, or warm start
+			updateTitle();
 		}
 
 		getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			@Override public void onBackStackChanged() {
-				updateTitle();
+				AndroidTools.dumpBackStack(getApplicationContext(), getSupportFragmentManager());
+				if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+					finish();
+				} else {
+					setIntent((Intent)getFragment().getViewTag());
+					updateTitle();
+					getFragment().refresh(); // XXX why was this working a month ago?
+				}
 			}
 		});
 	}
 	private void updateTitle() {
 		FragmentManager fm = getSupportFragmentManager();
-		int count = fm.getBackStackEntryCount();
-		//AndroidTools.dumpBackStack(getApplicationContext(), fm);
-		if (count == 0) {
-			finish();
-		} else {
-			BaseFragment<?> fragment = getFragment();
-			setIntent((Intent)fragment.getViewTag());
-
-			BackStackEntry top = fm.getBackStackEntryAt(count - 1);
-			CharSequence title = getString(TITLES.get(top.getName()));
-			setActionBarTitle(title); // to display now
-			setActionBarSubtitle(null); // clear to change
-			setTitle(title); // to persist and display later (e.g. onDrawerClosed)
-			// FIXME Navigation title still shows subtitle (e.g. Sunburst)
-		}
+		BackStackEntry top = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1);
+		CharSequence title = getString(TITLES.get(top.getName()));
+		setActionBarTitle(title); // to display now
+		setActionBarSubtitle(null); // clear to change
+		setTitle(title); // to persist and display later (e.g. onDrawerClosed)
+		// FIXME Navigation title still shows subtitle (e.g. Sunburst)
 	}
 
 	@Override protected void onNewIntent(Intent intent) {

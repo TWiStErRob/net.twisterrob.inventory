@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.graphics.SunburstDrawable;
 import net.twisterrob.android.utils.concurrent.*;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
@@ -108,16 +108,17 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 		loadTreeTask.execute(createStartingNode());
 	}
 
+	@Override public void onStop() {
+		super.onStop();
+		loadTreeTask.cancel(true);
+		loadTreeTask = null;
+	}
+
 	@Override public void onDestroyView() {
 		setLoading(false);
 		diagram.setImageDrawable(null); // unschedule and clear callback
 		diagram = null;
 		super.onDestroyView();
-	}
-
-	@Override public void onDestroy() {
-		loadTreeTask.cancel(true);
-		super.onDestroy();
 	}
 
 	private final Stack<Node> stack = new Stack<>();

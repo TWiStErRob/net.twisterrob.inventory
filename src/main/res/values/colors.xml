@@ -16,6 +16,7 @@
 
 	<!-- Vibrant -->
 	<color name="accent">#FFB38C4C</color>
+	<color name="accentTransparent">#A0B38C4C</color>
 	<color name="accentDark">#FF654F2B</color>
 	<color name="accentTitleText">#FFFFFF</color>
 	<color name="accentBodyText">#000000</color>

@@ -469,12 +469,13 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		Pic.svg().load(typeImageID).into(target);
 	}
 
-	protected class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
+	private class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
 		@Override protected final DTO doInBackground(DTO param) throws Exception {
-			if (!param.hasImage && currentImage != null
-					&& !InventoryContract.AUTHORITY.equals(currentImage.getAuthority())) {
+			if (!param.hasImage && currentImage != null) {
 				param.hasImage = true;
-				param.image = IOTools.readBytes(getContext().getContentResolver().openInputStream(currentImage));
+				if (!InventoryContract.AUTHORITY.equals(currentImage.getAuthority())) { // do not read own image
+					param.image = IOTools.readBytes(getContext().getContentResolver().openInputStream(currentImage));
+				}
 			}
 			Database db = App.db().beginTransaction();
 			try {

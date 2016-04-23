@@ -5,8 +5,8 @@
 	android:id="@id/adapterRoot"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:layout_margin="@dimen/unit_half"
 	android:padding="@dimen/unit_half"
+	android:layout_margin="@dimen/unit_half"
 	android:background="@drawable/item_state"
 	tools:background="@color/toolsBG"
 	tools:context=".view.GalleryAdapter"
@@ -38,9 +38,6 @@
 		android:layout_height="@dimen/icon_action"
 		android:layout_gravity="bottom|start"
 		android:layout_margin="@dimen/unit_half"
-		android:shadowColor="#084"
-		android:shadowDx="2" android:shadowDy="2"
-		android:shadowRadius="1"
 		/>
 	<net.twisterrob.android.view.WrappedTextView
 		android:id="@id/title"
@@ -54,13 +51,12 @@
 		android:gravity="center"
 		android:labelFor="@id/adapterRoot"
 		android:shadowColor="#420"
-		android:shadowDx="2"
-		android:shadowDy="2"
+		android:shadowDx="2" android:shadowDy="2"
 		android:shadowRadius="2"
-		android:textColor="#f80"
+		android:textColor="@color/accentTitleText"
 		android:textIsSelectable="false"
-		android:textSize="18sp"
-		tools:shadowColor="#00000000"
-		tools:text="Gallery List Item, title will wrap in case it's too long"
+		android:textSize="16sp"
+		tools:shadowColor="#00FFFFFF"
+		tools:text="Gallery List Item, title will wrap in case it's too long, mostly because the gallery item only uses half the screen"
 		/>
 </net.twisterrob.android.view.SquareFrameLayout>
