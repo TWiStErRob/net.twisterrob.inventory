@@ -2,6 +2,7 @@
 -- ;--NOTEOS is need in trigger bodies so statement execution to android driver is delayed until correct semicolon
 -- RAISE(action, msg) doesn't support expressions
 -- Be careful with WHEN conditions in triggers for NULLABLE columns <> returns NULL, need to check if IS NULL changed
+-- WITH clause support was added in SQLite 3.8.3, first to support it is Android 5.0
 
 
 -- Usage: insert into Log(message) values ('Log message');
@@ -219,17 +220,17 @@ CREATE TABLE Item (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         /*NULL*/, -- user entered
-	image       INTEGER /*NULL*/ DEFAULT NULL
+	image       INTEGER      /*NULL*/ DEFAULT NULL
 		CONSTRAINT fk_Item_image
 		REFERENCES Image (_id)
 		ON UPDATE CASCADE
 		ON DELETE SET DEFAULT,
-	category    INTEGER          DEFAULT 0 -- uncategorized
+	category    INTEGER      NOT NULL DEFAULT 0 -- uncategorized
 		CONSTRAINT fk_Item_category
 			REFERENCES Category(_id)
 			ON UPDATE CASCADE
 			ON DELETE SET DEFAULT,
-	parent      INTEGER      /*NULL*/  -- -1 -> ROOT item
+	parent      INTEGER      /*NULL*/ /*NO DEFAULT*/ -- NULL -> ROOT item
 		CONSTRAINT fk_Item_parent
 			REFERENCES Item(_id)
 			ON UPDATE CASCADE
@@ -270,8 +271,9 @@ BEGIN
 	select RAISE(ABORT, 'Cannot change Item.parent nullity: NULL -> NOT NULL!') where old.parent IS NULL and new.parent IS NOT NULL;--NOTEOS
 	select RAISE(ABORT, 'Cannot change Item.parent nullity: NOT NULL -> NULL!') where old.parent IS NOT NULL and new.parent IS NULL;--NOTEOS
 	-- CONSIDER check for recursive move to prevent loops in the tree
+	-- Refresh all old descendants' hierarchy (including this item)
 	insert into Item_Path_Node_Refresher(_id)
-		select distinct item from Item_Path_Node
+		select item from Item_Path_Node
 		where node = new._id
 	;--NOTEOS
 	--insert into Log(message) values ('Item_move on (' || new._id || ', ' || ifNULL(old.parent, 'NULL') || '->' || ifNULL(new.parent, 'NULL') || '): '  || 'finished');--NOTEOS
@@ -282,8 +284,9 @@ AFTER UPDATE OF name ON Item
 WHEN old.name <> new.name
 BEGIN
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || '): '  || 'started');--NOTEOS
-	insert into Item_Path_Node_Refresher(_id)
-		select distinct item from Item_Path_Node
+	-- Refresh all descendants' Search data (name changed for this item and location changed all descendants)
+	insert into Search_Refresher (_id)
+		select item from Item_Path_Node
 		where node = new._id
 	;--NOTEOS
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || '): '  || 'finished');--NOTEOS
@@ -453,6 +456,9 @@ CREATE TABLE Recent (
 CREATE TRIGGER Recent_insert
 AFTER INSERT ON Recent
 BEGIN
+	-- Delete old items, all those who have more than 100 items before them.
+	-- Could simply delete the oldest item,
+	-- this is a safety so that the recents never exceed 100 entries.
 	delete from Recent where 100 < (
 		select count(*) from Recent r where Recent.visit <= r.visit
 	);--NOTEOS
@@ -516,6 +522,28 @@ CREATE TABLE List_Entry (
 );
 
 
+/**
+Structural lookup table to work around not having Hierarchical queries: e.g. STARTS WITH/CONNECT BY/PRIOR in Oracle.
+WITH [RECURSIVE] CTEs are supported, but only on very new devices at this time.
+The table needs to be updated when there's a structural change (e.g. Item changes parent), see Item_Path_Node_Refresher
+
+
+This table can give answers to the following questions:
+-- Who are the ascendants of an Item? (excluding self)
+-- (ordered by closest (=parent) to farthest (=room root))
+select node from Item_Path_Node where node <> item and item = 110008 order by level desc
+-- Who are the descendants of an Item? (excluding self)
+select item from Item_Path_Node where node <> item and node = 100005
+-- How deep in the tree is an Item?
+-- (level 0 is room root, level 1 is directly in the room, level 2 is child of something directly in the room etc.)
+select level from Item_Path_Node where node = item and item = 110008
+-- What is the root Item for an Item?
+select root from Item_Path_Node where node = item and item = 110008
+-- Which Room is an item in? (based on previous)
+select r._id from Room r join Item_Path_Node ipn ON ipn.root = r.root where ipn.node = ipn.item and ipn.item = 110008
+-- What's in a Room? (excluding root)
+select ipn.item from Item_Path_Node ipn join Room r ON ipn.node = r.root where ipn.item <> ipn.node and r._id = 4
+*/
 CREATE TABLE Item_Path_Node (
 	item        INTEGER      NOT NULL
 		CONSTRAINT fk_Item_Path_Node_item
@@ -542,8 +570,11 @@ CREATE TRIGGER Item_Path_Node_traverse
 AFTER INSERT ON Item_Path_Node
 BEGIN
 	--insert into Log(message) values ('Item_Path_Node_traverse on (' || new.item || ', ' || new.level || ', ' || new.node || ', ' || new.root || '): ' || 'started');--NOTEOS
-	-- Go up in the Tree
-	insert into Item_Path_Node
+	-- Go up in the Tree inserting a new item for each ascendant
+	insert into Item_Path_Node (item, level, node, root)
+	-- level is increasing as we go up the tree, but later it'll be flipped
+	-- root column is temporary, will be replaced as well
+	-- see Item_Path_Node_refresh for more details
 		select new.item, new.level + 1, i.parent, i.parent from Item i
 		where i._id = new.node and i.parent IS NOT NULL
 	;--NOTEOS
@@ -558,36 +589,44 @@ CREATE TRIGGER Item_Path_Node_refresh
 INSTEAD OF INSERT ON Item_Path_Node_Refresher
 BEGIN
 	--insert into Log(message) values ('Item_Path_Node_refresh on (' || new._id || '): ' || 'started');--NOTEOS
-	-- Go up in the Tree
+	-- Clean up stale values for this item, the hierarchy will be fully rebuilt from current structure for the item
 	delete from Item_Path_Node where item = new._id;--NOTEOS
-	insert into Item_Path_Node
-		select new._id, 0, new._id, new._id
+
+	-- insert a new row for the item this is called for this will trigger Item_Path_Node_traverse
+	-- and all ascendants will be inserted as well
+	insert into Item_Path_Node (item, node, level, root)
+	-- level starts from this item for now, it'll be flipped later
+	-- root is just a temporary value
+		select new._id, new._id, 0, new._id
 		from Item where _id = new._id -- need to restrict in case the item doesn't exist any more
 	;--NOTEOS
+
+	-- Flip level values: level([current..root]) = [0..depth] -> [depth..0]
+	-- Before inserting all ascendants the information of how deep an item is is not available.
+	-- The levels are originally inserted starting from the current item.
+	-- This query get's the max level and does a simple "1-x" transformation on it so they're reversed
+	-- Having the level values decreasing from item to root makes it easier to query later
 	update Item_Path_Node
 		set level = (select max(level) from Item_Path_Node where item = new._id) - level
 		where item = new._id
 	;--NOTEOS
+
+	-- Find the real value for root column. Now that the ascendants are in place (each having node == root at this time)
+	-- and the level being set: 0 as root .. n as leaf, it's easy to find the root node
 	update Item_Path_Node
-		set root = (select node from Item_Path_Node where item = new._id and level = 0) -- dependent on level being set: 0 as root .. n as leaf
+	set root = (select node from Item_Path_Node where item = new._id and level = 0)
 		where item = new._id
 	;--NOTEOS
+
+	-- CONSIDER moving it somewhere else
+	-- This is called here for now, because the structural change affects Search.location
 	insert into Search_Refresher(_id)
 		values (new._id)
 	;--NOTEOS
 	--insert into Log(message) values ('Item_Path_Node_refresh on (' || new._id || '): ' || 'finished');--NOTEOS
 END;
 
--- WITH clause support was added in SQLite 3.8.3, first to support it is Android 5.0
-CREATE VIEW Item_Path_WITH_Node_Name AS
-	select
-		ipn.*,
-		n.name as nodeName
-	from Item_Path_Node ipn
-	join Item           n   ON ipn.node = n._id
-	where ipn.item <> ipn.node and ipn.node <> ipn.root
-;
-
+-- FIXME this is either badly named or not useful, usages are confusing
 CREATE VIEW Item_Path AS
 	select
 		p._id      as propertyID,
@@ -609,7 +648,6 @@ CREATE VIEW Item_Path AS
 
 
 CREATE VIRTUAL TABLE Search USING FTS3 (
-	_id,
 	name,
 	location
 );
@@ -622,14 +660,15 @@ CREATE TRIGGER Search_refresh
 INSTEAD OF INSERT ON Search_Refresher
 BEGIN
 	--insert into Log(message) values ('Search_refresh on (' || new._id || ')');--NOTEOS
-	delete from Search where _id = new._id;--NOTEOS
-	insert into Search
+	delete from Search where rowid = new._id;--NOTEOS
+	insert into Search (rowid, name, location)
 		select
-			i._id                                           as _id,
+			i._id                                           as rowid,
 			i.name || ' (' || ifNULL(cnc.value, '?') || ')' as name,
 			group_concat(Path.part, ' < ')                  as location
-		from Item i
-		join Category       c   ON i.category = c._id
+		from Item                     i
+		join Category                 c   ON i.category = c._id
+		left join Category_Name_Cache cnc ON c.name = cnc.key
 		left join (
 			select n.name as part
 			from Item_Path_Node ipn
@@ -637,7 +676,6 @@ BEGIN
 			where ipn.item = new._id and ipn.item <> ipn.node and ipn.node <> ipn.root
 			order by level DESC
 		) as Path
-		left join Category_Name_Cache cnc ON c.name = cnc.key
 		where i._id = new._id
 	;--NOTEOS
 END;

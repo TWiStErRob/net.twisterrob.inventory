@@ -532,7 +532,7 @@
 		select
 			s.rowid    as _id,                    -- BaseColumns._ID (for ListView)
 			NULL       as suggest_intent_action,  -- SearchManager.SUGGEST_COLUMN_INTENT_ACTION
-			s._id      as suggest_intent_data_id, -- SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
+			s.rowid    as suggest_intent_data_id, -- SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
 			NULL       as suggest_icon_1,         -- SearchManager.SUGGEST_COLUMN_ICON_1
 --			'content://net.twisterrob.inventory.debug/item/'     || i._id || '/image' as suggest_icon_1, -- SearchManager.SUGGEST_COLUMN_ICON_1
 --			'content://net.twisterrob.inventory.debug/category/' || c._id || '/image' as suggest_icon_2, -- SearchManager.SUGGEST_COLUMN_ICON_2
@@ -557,7 +557,7 @@
 			c.name                                          as category
 		from Item       i
 		join Category   c ON i.category = c._id
-		join Search     s ON i._id = s._id
+		join Search     s ON i._id = s.rowid
 		left join Image im ON i.image = im._id
 		where s.name MATCH ?
 		order by i.name COLLATE NOCASE
