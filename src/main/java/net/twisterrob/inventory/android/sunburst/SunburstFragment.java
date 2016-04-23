@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.graphics.SunburstDrawable;
 import net.twisterrob.android.utils.concurrent.*;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;

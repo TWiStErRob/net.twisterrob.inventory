@@ -10,7 +10,7 @@ import android.view.*;
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
 import net.twisterrob.inventory.android.view.*;

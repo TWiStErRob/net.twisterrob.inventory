@@ -16,7 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
