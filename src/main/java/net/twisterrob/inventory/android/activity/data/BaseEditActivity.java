@@ -12,7 +12,6 @@ import net.twisterrob.inventory.android.fragment.data.BaseEditFragment;
 import static net.twisterrob.inventory.android.fragment.data.BaseEditFragment.*;
 
 public abstract class BaseEditActivity<E extends BaseEditFragment<?, ?>> extends SingleFragmentActivity<E> {
-	// FIXME get rid of setActionBarTitle in children
 	@Override protected FragmentTransaction updateFragment(E fragment) {
 		fragment.getArguments().putBoolean(EDIT_IMAGE, getIntent().getBooleanExtra(EDIT_IMAGE, false));
 		return super.updateFragment(fragment);
@@ -47,7 +46,7 @@ public abstract class BaseEditActivity<E extends BaseEditFragment<?, ?>> extends
 		return true;
 	}
 
-	public static Intent takeImage(Intent edit) {
+	public static Intent editImage(Intent edit) {
 		edit.putExtra(EDIT_IMAGE, true);
 		return edit;
 	}

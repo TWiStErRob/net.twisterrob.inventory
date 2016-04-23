@@ -21,9 +21,8 @@ public class DebugHelperActivity extends VariantActivity {
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) {
-			LOG.debug("Creating {}@{} {}\nextras={}\nsavedInstanceState={}",
-					getClass().getSimpleName(),
-					Integer.toHexString(System.identityHashCode(this)),
+			LOG.debug("Creating {} {}\nextras={}\nsavedInstanceState={}",
+					AndroidTools.toNameString(this),
 					getIntent().toString(),
 					AndroidTools.toLongString(getIntent().getExtras()),
 					AndroidTools.toLongString(savedInstanceState)
@@ -63,11 +62,10 @@ public class DebugHelperActivity extends VariantActivity {
 	}
 
 	@Override protected void onNewIntent(Intent intent) {
-		//setIntent(intent); call this in child activity if you handle this event
+		//setIntent(intent); // call this in child activity if you handle this event
 		if (BuildConfig.DEBUG) {
-			LOG.debug("Refreshing {}@{} {}\n{}",
-					getClass().getSimpleName(),
-					Integer.toHexString(System.identityHashCode(this)),
+			LOG.debug("Refreshing {} {}\n{}",
+					AndroidTools.toNameString(this),
 					AndroidTools.toString(intent.getExtras()),
 					AndroidTools.toString(intent)
 			);

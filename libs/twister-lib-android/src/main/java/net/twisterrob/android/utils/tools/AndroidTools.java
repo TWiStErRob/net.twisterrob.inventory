@@ -45,7 +45,7 @@ import static android.util.TypedValue.*;
 
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.java.annotations.DebugHelper;
-import net.twisterrob.java.utils.ReflectionTools;
+import net.twisterrob.java.utils.*;
 
 @SuppressWarnings("unused")
 public /*static*/ abstract class AndroidTools {
@@ -1116,6 +1116,45 @@ public /*static*/ abstract class AndroidTools {
 		} catch (Resources.NotFoundException ignore) {
 			return "not-found=" + id;
 		}
+	}
+
+	@DebugHelper
+	public static String toNameString(Fragment fragment) {
+		return fragment.getClass().getSimpleName() + "@" + StringTools.hashString(fragment)
+				+ "(" + ReflectionTools.get(fragment, "mWho") + ")";
+	}
+	@DebugHelper
+	public static String toNameString(Activity activity) {
+		return activity.getClass().getSimpleName() + "@" + StringTools.hashString(activity);
+	}
+	@DebugHelper
+	public static String toLongString(Fragment fragment) {
+		if (fragment == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(toNameString(fragment)).append('[').append(fragment).append(']');
+		sb.append(':').append(toLongString(fragment.getArguments())).append('\n');
+		sb.append("view=").append(fragment.getView()).append('\n');
+		sb.append("activity=").append(fragment.getActivity()).append('\n');
+		sb.append("context=").append(fragment.getContext()).append('\n');
+		sb.append("host=").append(fragment.getHost()).append('\n');
+		appendState(sb, fragment.isDetached(), "detached", ", ");
+		appendState(sb, fragment.isAdded(), "added", ", ");
+		appendState(sb, fragment.isResumed(), "resumed", ", ");
+		appendState(sb, fragment.isHidden(), "hidden", ", ");
+		appendState(sb, fragment.isVisible(), "visible", "");
+		appendState(sb, fragment.isMenuVisible(), "menu visible", ", ");
+		appendState(sb, fragment.isInLayout(), "in layout", ", ");
+		appendState(sb, fragment.isRemoving(), "removing", ", ");
+		return sb.toString();
+	}
+	private static void appendState(StringBuilder sb, boolean condition, String conditionName, String separator) {
+		if (!condition) {
+			sb.append("not ");
+		}
+		sb.append(conditionName);
+		sb.append(separator);
 	}
 
 	public interface PopupCallbacks<T> {

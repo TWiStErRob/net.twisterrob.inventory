@@ -1,22 +1,16 @@
 package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
-import net.twisterrob.inventory.android.fragment.*;
+import net.twisterrob.inventory.android.fragment.ListListFragment;
 import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
 
-public class ListsActivity extends FragmentActivity implements ListsEvents {
-	@Override protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_lists);
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.activityRoot, ListListFragment.newInstance(getExtraItemID()))
-		                           .commit();
+public class ListsActivity extends SingleFragmentActivity<ListListFragment> implements ListsEvents {
+	@Override protected ListListFragment onCreateFragment() {
+		return ListListFragment.newInstance(getExtraItemID());
 	}
 
 	private long getExtraItemID() {
@@ -32,10 +26,6 @@ public class ListsActivity extends FragmentActivity implements ListsEvents {
 		App.db().deleteListEntry(listID, getExtraItemID()); // FIXME DB on UI
 		App.toastUser("Item has been removed from a list.");
 		getFragment().refresh();
-	}
-
-	private BaseFragment<?> getFragment() {
-		return (BaseFragment<?>)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
 	}
 
 	public static Intent manage(long itemID) {

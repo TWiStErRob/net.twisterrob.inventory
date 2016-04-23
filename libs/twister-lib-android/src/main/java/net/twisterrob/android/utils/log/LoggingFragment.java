@@ -12,9 +12,10 @@ import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.exceptions.StackTrace;
-import net.twisterrob.java.utils.*;
+import net.twisterrob.java.utils.ReflectionTools;
 
 @DebugHelper
 public class LoggingFragment extends Fragment {
@@ -211,7 +212,6 @@ public class LoggingFragment extends Fragment {
 	}
 
 	private String getName() {
-		return getClass().getSimpleName() + "@" + StringTools.hashString(this)
-				+ "(" + ReflectionTools.get(this, "mWho") + ")";
+		return AndroidTools.toNameString(this);
 	}
 }

@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -24,7 +24,7 @@ public class RoomEditActivity extends BaseEditActivity<RoomEditFragment>
 	}
 
 	@Override public void roomLoaded(RoomDTO room) {
-		setActionBarTitle(room.name);
+		//setActionBarTitle(room.name); // don't set
 	}
 
 	@Override public void roomSaved(long roomID) {

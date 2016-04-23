@@ -86,6 +86,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 	}
 
 	@Override protected void onSaved(ItemDTO result) {
+		// FIXME this can be called when it's null if Save-rotate or Save-home is done quick enough
 		eventsListener.itemSaved(result.id);
 	}
 

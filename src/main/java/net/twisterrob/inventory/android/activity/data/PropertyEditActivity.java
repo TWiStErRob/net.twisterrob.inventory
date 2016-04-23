@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Property;
@@ -24,7 +24,7 @@ public class PropertyEditActivity extends BaseEditActivity<PropertyEditFragment>
 	}
 
 	@Override public void propertyLoaded(PropertyDTO property) {
-		setActionBarTitle(property.name);
+		//setActionBarTitle(property.name); // don't set
 	}
 
 	@Override public void propertySaved(long propertyID) {

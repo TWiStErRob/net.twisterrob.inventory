@@ -137,7 +137,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	@Override protected void editImage() {
-		startActivity(BaseEditActivity.takeImage(RoomEditActivity.edit(getArgRoomID())));
+		startActivity(BaseEditActivity.editImage(RoomEditActivity.edit(getArgRoomID())));
 	}
 
 	private long getArgRoomID() {

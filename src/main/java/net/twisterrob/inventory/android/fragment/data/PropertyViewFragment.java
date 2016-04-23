@@ -97,7 +97,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	}
 
 	@Override protected void editImage() {
-		startActivity(BaseEditActivity.takeImage(PropertyEditActivity.edit(getArgPropertyID())));
+		startActivity(BaseEditActivity.editImage(PropertyEditActivity.edit(getArgPropertyID())));
 	}
 
 	private long getArgPropertyID() {

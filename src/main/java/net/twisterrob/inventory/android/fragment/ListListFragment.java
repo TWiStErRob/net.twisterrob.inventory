@@ -10,7 +10,7 @@ import android.view.*;
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
 import net.twisterrob.inventory.android.view.*;
@@ -68,8 +68,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 		};
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.generic_list, container, false);
 	}
 
@@ -78,8 +77,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
 	}
 
-	@Override
-	protected void onStartLoading() {
+	@Override protected void onStartLoading() {
 		listController.startLoad(Intents.bundleFromItem(getArgItemID()));
 	}
 
@@ -87,8 +85,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 		return Intents.getItemFrom(getArguments());
 	}
 
-	@Override
-	protected void onRefresh() {
+	@Override protected void onRefresh() {
 		listController.refresh();
 	}
 

@@ -513,7 +513,7 @@
 	<string name="category_electronic_recorder" level="2">recorder</string>
 	<string name="category_electronic_recorder_keywords">microphone, dictaphone, VCR/videocassette recorder, DVR/digital video recorder, photocopier</string>
 	<string name="category_electronic_player" level="2">recording players</string>
-	<string name="category_electronic_player_keywords">entertainment center/home cinema, music center, shelf stereo, CD player, DVD player, Blu-ray player, phonograph, turntable</string>
+	<string name="category_electronic_player_keywords">entertainment center/home cinema, music center, shelf stereo, CD player, DVD player, Blu-ray player, phonograph, turntable, karaoke system</string>
 	<string name="category_electronic_portable" level="2">portable media players</string>
 	<string name="category_electronic_portable_keywords">digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook</string>
 	<string name="category_electronic_transmission" level="2">signal processors</string>

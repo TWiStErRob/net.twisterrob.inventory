@@ -16,7 +16,8 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
@@ -25,7 +26,7 @@ import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.*;
 
-public class MoveTargetActivity extends FragmentActivity implements OnBackStackChangedListener,
+public class MoveTargetActivity extends BaseActivity implements OnBackStackChangedListener,
 		PropertyListFragment.PropertiesEvents,
 		RoomListFragment.RoomsEvents,
 		ItemListFragment.ItemsEvents {
@@ -73,7 +74,7 @@ public class MoveTargetActivity extends FragmentActivity implements OnBackStackC
 	private final Handler handler = new Handler();
 
 	private BaseFragment<?> getFragment() {
-		return (BaseFragment<?>)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
+		return getFragment(R.id.activityRoot);
 	}
 
 	@Override protected void onCreate(Bundle savedInstanceState) {

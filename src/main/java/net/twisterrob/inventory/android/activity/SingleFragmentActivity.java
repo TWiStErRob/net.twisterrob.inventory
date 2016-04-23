@@ -5,7 +5,7 @@ import org.slf4j.*;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 
 public abstract class SingleFragmentActivity<F extends BaseFragment<?>> extends BaseActivity {
@@ -54,6 +54,6 @@ public abstract class SingleFragmentActivity<F extends BaseFragment<?>> extends 
 
 	@SuppressWarnings("unchecked")
 	public F getFragment() {
-		return (F)getSupportFragmentManager().findFragmentById(R.id.activityRoot);
+		return getFragment(R.id.activityRoot);
 	}
 }
