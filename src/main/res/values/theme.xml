@@ -29,6 +29,10 @@
 		<!--<item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>-->
 	</style>
 
+	<style name="Theme.AppTheme.Dialog.NoTitle" parent="Theme.AppTheme.Dialog">
+		<item name="windowNoTitle">true</item>
+	</style>
+
 	<style name="Theme.AppTheme.FullScreen" parent="@style/Theme.AppCompat.NoActionBar">
 		<item name="android:progressDrawable">?android:attr/progress</item>
 		<item name="android:windowFullscreen">true</item>

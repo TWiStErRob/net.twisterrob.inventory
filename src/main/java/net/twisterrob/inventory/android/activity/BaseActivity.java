@@ -5,17 +5,27 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.*;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Intents;
 
 import static net.twisterrob.java.utils.CollectionTools.*;
 
 public abstract class BaseActivity extends DebugHelperActivity {
+	@Override public void onContentChanged() {
+		super.onContentChanged();
+		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			setSupportActionBar(toolbar);
+		}
+	}
+	
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
 		AndroidTools.showActionBarOverflowIcons(menu, true);
 		return super.onPrepareOptionsMenu(menu);

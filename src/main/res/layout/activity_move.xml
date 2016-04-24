@@ -7,30 +7,17 @@
 	android:orientation="vertical"
 	tools:context=".activity.data.MoveTargetActivity"
 	>
-	<LinearLayout
+	<include layout="@layout/inc_toolbar" />
+	<TextView
+		android:id="@+id/selection"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		>
-		<ImageButton
-			android:id="@id/up"
-			android:layout_width="@dimen/icon_action_button"
-			android:layout_height="@dimen/icon_action_button"
-			android:layout_gravity="center_vertical"
-			android:src="@android:drawable/ic_menu_upload"
-			android:tint="@android:color/black"
-			/>
-		<TextView
-			android:id="@+id/selection"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/unit_half"
-			android:gravity="center"
-			android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-			android:textIsSelectable="true"
-			tools:text="@string/action_move_pick_title"
-			/>
-	</LinearLayout>
+		android:padding="@dimen/unit_half"
+		android:gravity="center"
+		android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+		android:textIsSelectable="true"
+		tools:text="@string/action_move_pick_title"
+		/>
 	<FrameLayout
 		android:id="@id/activityRoot"
 		android:layout_width="fill_parent"

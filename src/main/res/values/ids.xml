@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<item type="id" name="toolbar" />
 	<item type="id" name="activityRoot" />
 	<item type="id" name="fragmentRoot" />
 	<item type="id" name="adapterRoot" />

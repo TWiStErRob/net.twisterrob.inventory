@@ -7,13 +7,13 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.*;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v4.app.*;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.TextView;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
@@ -33,7 +33,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	private static final Logger LOG = LoggerFactory.getLogger(MoveTargetActivity.class);
 
 	/**
-	 * What to search for, use {@link #PROPERTY}, {@link #ROOM} and {@link #ITEM} as flags,
+	 * What to search for, use {@link #PROPERTY}, {@link #ROOM} and {@link #ITEM} as {@linkplain BelongingTarget flags},
 	 * one of the flags will be the result code in {@link android.app.Activity#onActivityResult}.
 	 */
 	private static final String EXTRA_WHAT = "what";
@@ -60,6 +60,10 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	public static final int ITEM = 1 << 3;
 	private static final int EVERYTHING = PROPERTY | ROOM | ITEM;
 
+	@IntDef(flag = true, value = {PROPERTY, ROOM, ITEM})
+	private @interface BelongingTarget {
+	}
+
 	private static final int REQUEST_ADD_PROPERTY = 1;
 	private static final int REQUEST_ADD_ROOM = 2;
 	private static final int REQUEST_ADD_ITEM = 3;
@@ -69,7 +73,6 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 
 	private TextView title;
 	private TextView labType;
-	private ImageButton upButton;
 	private View btnOk;
 	private final Handler handler = new Handler();
 
@@ -86,12 +89,6 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		setContentView(R.layout.activity_move);
 		title = (TextView)findViewById(R.id.selection);
 		labType = (TextView)findViewById(R.id.type);
-		upButton = (ImageButton)findViewById(R.id.up);
-		upButton.setOnClickListener(new OnClickListener() {
-			@Override public void onClick(View v) {
-				getSupportFragmentManager().popBackStack();
-			}
-		});
 		findViewById(android.R.id.closeButton).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				setResult(null);
@@ -122,6 +119,8 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 				case ITEM:
 					itemSelected(getArgStartId(), true);
 					break;
+				default:
+					throw new IllegalArgumentException("Cannot start browsing at " + toString(getArgStartType()));
 			}
 		} else {
 			updateUI(getFragment());
@@ -161,7 +160,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		}
 	}
 
-	private int getType(Fragment fragment) {
+	private @BelongingTarget int getType(Fragment fragment) {
 		if (fragment instanceof RoomListFragment) {
 			return PROPERTY;
 		} else if (fragment instanceof ItemListFragment) {
@@ -182,10 +181,11 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 
 	private void updateUI(BaseFragment<?> fragment) {
 		String name = fragment.getArguments().getString(ARG_TITLE);
+		title.setText(name);
 		if (name != null) {
-			title.setText(getString(R.string.action_move_pick_title, toString(getType(fragment)), name));
+			setActionBarTitle(getString(R.string.action_move_pick_title, toString(getType(fragment))));
 		} else {
-			title.setText(getString(R.string.action_move_pick_title_initial, toString(getArgWhat())));
+			setActionBarTitle(getString(R.string.action_move));
 		}
 		CharSequence disabledMessage = buildDisabledMessage(fragment);
 		if (disabledMessage != null) {
@@ -196,7 +196,8 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 			labType.setText(null);
 		}
 		AndroidTools.displayedIfHasText(labType);
-		AndroidTools.displayedIf(upButton, 0 < getSupportFragmentManager().getBackStackEntryCount());
+		AndroidTools.displayedIfHasText(title);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(0 < getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	private CharSequence buildDisabledMessage(BaseFragment<?> fragment) {
@@ -215,7 +216,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		return null;
 	}
 
-	private String toString(int type) {
+	private String toString(@BelongingTarget int type) {
 		int typeResource;
 		switch (type) {
 			case PROPERTY:
@@ -249,6 +250,15 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	}
 	@Override public void newItem(long parentID) {
 		startActivityForResult(ItemEditActivity.add(parentID), REQUEST_ADD_ITEM);
+	}
+
+	@Override public boolean onSupportNavigateUp() {
+		FragmentManager fm = getSupportFragmentManager();
+		if (0 < fm.getBackStackEntryCount()) {
+			fm.popBackStack();
+			return true;
+		} // else it shouldn't be visible so this method is not called
+		return super.onSupportNavigateUp();
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -384,13 +394,15 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		itemSelected(itemID);
 	}
 
-	private int getArgStartType() {
-		return getIntent().getIntExtra(EXTRA_START_TYPE, NOTHING);
+	@SuppressWarnings("ResourceType")
+	private @BelongingTarget int getArgStartType() {
+		return getIntent().getIntExtra(EXTRA_START_TYPE, NOTHING) & EVERYTHING;
 	}
 	private long getArgStartId() {
 		return getIntent().getLongExtra(EXTRA_START_ID, CommonColumns.ID_ADD);
 	}
-	private int getArgWhat() {
+	@SuppressWarnings("ResourceType")
+	private @BelongingTarget int getArgWhat() {
 		return getIntent().getIntExtra(EXTRA_WHAT, NOTHING) & EVERYTHING;
 	}
 
@@ -406,7 +418,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	@SuppressWarnings({"unused", "UnusedReturnValue"})
 	public static final class Builder {
 		private final Intent intent = new Intent(App.getAppContext(), MoveTargetActivity.class);
-		private int what;
+		private @BelongingTarget int what;
 		private final Set<Long> forbiddenPropertyIDs = new TreeSet<>();
 		private final Set<Long> forbiddenRoomIDs = new TreeSet<>();
 		private final Set<Long> forbiddenItemIDs = new TreeSet<>();
