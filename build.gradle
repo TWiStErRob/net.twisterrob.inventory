@@ -61,6 +61,9 @@ android {
 		}
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
 	}
+	lintOptions {
+		//abortOnError false
+	}
 	buildTypes {
 		release {
 			//debuggable true
