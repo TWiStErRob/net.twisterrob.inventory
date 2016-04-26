@@ -193,7 +193,7 @@
 		order by _id, level
 	"]]></string>
 	<!-- CONSIDER rewrite with one argument and use it for by_room -->
-	<string name="query_items_by_item" tools:ignore="Typos" translatable="false"><![CDATA["
+	<string name="query_items_by_item" translatable="false" tools:ignore="Typos"><![CDATA["
 		select
 			'item'                                          as type,
 			i._id                                           as _id,

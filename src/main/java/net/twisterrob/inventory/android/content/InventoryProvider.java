@@ -279,6 +279,6 @@ public class InventoryProvider extends ContentProvider {
 				LOG.warn("Can't resolve field for {} from {}", result, f, ex);
 			}
 		}
-		return "NOT_FOUND";
+		return "NOT_FOUND::" + result;
 	}
 }

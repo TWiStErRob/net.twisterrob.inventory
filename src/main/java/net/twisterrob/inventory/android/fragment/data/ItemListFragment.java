@@ -67,6 +67,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 
 	@Override
 	protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+		// one of parentItem or room will be a valid ID, so try both
 		Builder builder = MoveTargetActivity.pick()
 		                                    .startFromItem(getArgParentItemID())
 		                                    .startFromRoom(getArgRoomID())

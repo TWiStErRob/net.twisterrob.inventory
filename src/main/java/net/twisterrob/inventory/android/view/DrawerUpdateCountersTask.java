@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import org.slf4j.*;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.*;
 import android.support.design.widget.NavigationView;
@@ -16,6 +17,7 @@ import net.twisterrob.inventory.android.*;
 
 public class DrawerUpdateCountersTask extends SimpleSafeAsyncTask<Void, Void, DrawerUpdateCountersTask.Stats> {
 	private static final Logger LOG = LoggerFactory.getLogger(DrawerUpdateCountersTask.class);
+	private final Context context;
 
 	static class Stats {
 		private String properties;
@@ -28,6 +30,7 @@ public class DrawerUpdateCountersTask extends SimpleSafeAsyncTask<Void, Void, Dr
 	private final NavigationView nav;
 	public DrawerUpdateCountersTask(NavigationView nav) {
 		this.nav = nav;
+		this.context = nav.getContext();
 	}
 	@Override protected Stats doInBackground(@Nullable Void ignore) throws Exception {
 		Stats stats = new Stats();
@@ -39,7 +42,7 @@ public class DrawerUpdateCountersTask extends SimpleSafeAsyncTask<Void, Void, Dr
 			stats.rooms = DatabaseTools.getOptionalString(cursor, "rooms");
 			stats.items = DatabaseTools.getOptionalString(cursor, "items");
 			stats.categories = DatabaseTools.getOptionalString(cursor, "categories");
-			stats.backupSize = size != 0? Formatter.formatFileSize(nav.getContext(), size) : null;
+			stats.backupSize = size != 0? Formatter.formatFileSize(context, size) : null;
 		} finally {
 			cursor.close();
 		}
