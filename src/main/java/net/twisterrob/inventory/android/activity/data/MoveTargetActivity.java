@@ -110,6 +110,9 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 			updateFragment(fragment);
 			updateUI(fragment);
 			switch (getArgStartType()) {
+				case NOTHING:
+					// show property list (instantiated just above)
+					break;
 				case PROPERTY:
 					propertySelected(getArgStartId(), true);
 					break;
@@ -183,9 +186,11 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		String name = fragment.getArguments().getString(ARG_TITLE);
 		title.setText(name);
 		if (name != null) {
-			setActionBarTitle(getString(R.string.action_move_pick_title, toString(getType(fragment))));
+			setActionBarTitle(getString(R.string.action_move_pick_title));
+			setActionBarSubtitle(toString(getType(fragment)));
 		} else {
 			setActionBarTitle(getString(R.string.action_move));
+			setActionBarSubtitle(null);
 		}
 		CharSequence disabledMessage = buildDisabledMessage(fragment);
 		if (disabledMessage != null) {
@@ -237,7 +242,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 			case EVERYTHING:
 				return toString(PROPERTY) + "/" + toString(ROOM) + "/" + toString(ITEM);
 			default:
-				return "???";
+				return BelongingTarget.class.getSimpleName() + "::" + Integer.toBinaryString(type);
 		}
 		return getResources().getQuantityString(typeResource, 1);
 	}
