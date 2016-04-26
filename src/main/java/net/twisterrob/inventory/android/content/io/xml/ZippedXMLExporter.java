@@ -7,9 +7,11 @@ import org.slf4j.*;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Xml;
 
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -55,15 +57,15 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 	}
 
 	@Override protected void writeData(XmlSerializer output, Cursor cursor) throws IOException {
-		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
-		long parentID = cursor.getLong(cursor.getColumnIndexOrThrow(ParentColumns.PARENT_ID));
+		long id = DatabaseTools.getLong(cursor, CommonColumns.ID);
+		long parentID = DatabaseTools.getLong(cursor, ParentColumns.PARENT_ID);
 		Type type = Type.from(cursor, CommonColumns.TYPE);
 
 		Belonging<?> belonging = hier.getOrCreate(type, id);
-		belonging.name = cursor.getString(cursor.getColumnIndexOrThrow(nameColumn(type)));
-		belonging.type = cursor.getString(cursor.getColumnIndexOrThrow("typeName"));
-		belonging.image = cursor.getString(cursor.getColumnIndexOrThrow(ExporterTask.IMAGE_NAME));
-		belonging.description = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.DESCRIPTION));
+		belonging.name = DatabaseTools.getString(cursor, nameColumn(type));
+		belonging.type = DatabaseTools.getString(cursor, "typeName");
+		belonging.image = DatabaseTools.getString(cursor, ExporterTask.IMAGE_NAME);
+		belonging.description = DatabaseTools.getString(cursor, CommonColumns.DESCRIPTION);
 		if (BuildConfig.DEBUG) {
 			belonging.comment = ExporterTask.buildComment(cursor);
 		}
@@ -94,16 +96,16 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 	}
 	@SuppressWarnings({"resource", "TryFinallyCanBeTryWithResources"})
 	private void writeList(XmlSerializer output, Cursor list) throws IOException {
-		long listID = list.getLong(list.getColumnIndex(CommonColumns.ID));
-		String listName = list.getString(list.getColumnIndex(CommonColumns.NAME));
+		long listID = DatabaseTools.getLong(list, CommonColumns.ID);
+		String listName = DatabaseTools.getString(list, CommonColumns.NAME);
 		output.startTag(NS, TAG_LIST);
 		output.attribute(NS, ATTR_NAME, listName);
 		Cursor item = App.db().listItemsInList(listID);
 		try {
 			while (item.moveToNext()) {
 				output.startTag(NS, TAG_ITEM_REF);
-				long itemID = item.getLong(item.getColumnIndex(CommonColumns.ID));
-				String itemName = item.getString(item.getColumnIndex(CommonColumns.NAME));
+				long itemID = DatabaseTools.getLong(item, CommonColumns.ID);
+				String itemName = DatabaseTools.getString(item, CommonColumns.NAME);
 				output.attribute(NS, ATTR_ID, String.valueOf(itemID));
 				output.endTag(NS, TAG_ITEM_REF);
 				output.comment(itemName);
@@ -183,29 +185,29 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 	}
 
 	private static class Hierarchy extends HierarchyBuilder<Belonging<?>, XProperty, XRoom, XItem> {
-		@Override protected void addPropertyChild(XProperty parentProperty, XRoom childRoom) {
+		@Override protected void addPropertyChild(@NonNull XProperty parentProperty, @NonNull XRoom childRoom) {
 			parentProperty.children.add(childRoom);
 		}
-		@Override protected void addRoomChild(XRoom parentRoom, XItem childItem) {
+		@Override protected void addRoomChild(@NonNull XRoom parentRoom, @NonNull XItem childItem) {
 			parentRoom.children.add(childItem);
 		}
-		@Override protected void addItemChild(XItem parentItem, XItem childItem) {
+		@Override protected void addItemChild(@NonNull XItem parentItem, @NonNull XItem childItem) {
 			parentItem.children.add(childItem);
 		}
 
-		@Override protected XProperty createProperty(long id) {
+		@Override protected @NonNull XProperty createProperty(long id) {
 			XProperty property = new XProperty();
 			property.id = id;
 			return property;
 		}
 
-		@Override protected XRoom createRoom(long id) {
+		@Override protected @NonNull XRoom createRoom(long id) {
 			XRoom room = new XRoom();
 			room.id = id;
 			return room;
 		}
 
-		@Override protected XItem createItem(long id) {
+		@Override protected @NonNull XItem createItem(long id) {
 			XItem item = new XItem();
 			item.id = id;
 			return item;

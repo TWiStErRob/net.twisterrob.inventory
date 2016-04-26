@@ -123,6 +123,9 @@ public class SunburstDrawable<T> extends Drawable {
 	}
 
 	public T at(float x, float y) {
+		if (root == null) {
+			return null;
+		}
 		Rect bounds = getBounds();
 		float cx = bounds.exactCenterX();
 		float cy = bounds.exactCenterY();

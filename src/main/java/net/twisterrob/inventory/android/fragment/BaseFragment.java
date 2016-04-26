@@ -7,6 +7,7 @@ import org.slf4j.*;
 import android.content.Context;
 import android.os.*;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -95,6 +96,16 @@ public class BaseFragment<T> extends VariantFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 		if (hasDynResource(DYN_OptionsMenu)) {
 			inflater.inflate(this.<Integer>getDynamicResource(DYN_OptionsMenu), menu);
+		}
+	}
+
+	public void invalidateOptionsMenu() {
+		if (!hasOptionsMenu()) {
+			return;
+		}
+		FragmentActivity activity = getActivity();
+		if (activity != null) {
+			activity.supportInvalidateOptionsMenu();
 		}
 	}
 

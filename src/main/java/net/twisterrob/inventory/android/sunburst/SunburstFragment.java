@@ -102,16 +102,18 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 
 			@Override protected void onError(@NonNull Exception ex, Node param) {
 				LOG.error("Cannot build {}", param, ex);
-				getActivity().finish();
+				throw new RuntimeException("Cannot load " + param, ex);
 			}
 		};
 		loadTreeTask.execute(createStartingNode());
 	}
 
-	@Override public void onStop() {
-		super.onStop();
-		loadTreeTask.cancel(true);
-		loadTreeTask = null;
+	@Override public void onDestroy() {
+		super.onDestroy();
+		if (loadTreeTask != null) {
+			loadTreeTask.cancel(true);
+			loadTreeTask = null;
+		}
 	}
 
 	@Override public void onDestroyView() {
@@ -146,8 +148,10 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	}
 	private void setRootInternal(Node root) {
 		sunburst.setRoot(root);
-		getActivity().supportInvalidateOptionsMenu();
-		eventsListener.rootChanged(root.getLabel());
+		invalidateOptionsMenu();
+		if (eventsListener != null) {
+			eventsListener.rootChanged(root.getLabel());
+		}
 	}
 
 	@Override public boolean onBackPressed() {
@@ -166,8 +170,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	@Override public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		Node root = sunburst.getRoot();
-		menu.findItem(R.id.action_sunburst_open)
-		    .setVisible(root != null && !isArgument(root));
+		menu.findItem(R.id.action_sunburst_open).setVisible(root != null && !isArgument(root));
 		menu.findItem(R.id.action_sunburst_ignore).setVisible(root != null && root.parent != null);
 		menu.findItem(R.id.action_sunburst_ignore_reset).setVisible(!walker.ignore.isEmpty());
 	}

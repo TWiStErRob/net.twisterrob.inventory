@@ -392,10 +392,9 @@ public class Database extends VariantDatabase {
 					"Specify at most one of property (" + property + "), room (" + room + "), item" + item + ").");
 		}
 		return rawQuery(R.string.query_subtree,
-				/* property query */ property, room, item,
-				/* room query */     property, room, item,
-				/* item query */     property, room, item,
-				/* item query+ */    property, room, item
+				/* full tree*/ property, room, item, /* property query */ property,
+				/* full tree*/ property, room, item, /* room     query */ property, room,
+				/* full tree*/ property, room, item, /* item     query */ property, room, item
 		);
 	}
 

@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.*;
 
+import android.support.annotation.*;
+
 import net.twisterrob.inventory.android.content.contract.Type;
 
 public abstract class HierarchyBuilder<B, P extends B, R extends B, I extends B> {
@@ -10,7 +12,7 @@ public abstract class HierarchyBuilder<B, P extends B, R extends B, I extends B>
 	private final Map<Long, I> items = new TreeMap<>();
 
 	@SuppressWarnings("unchecked")
-	public void preRegister(Type type, long id, B belonging) {
+	public void preRegister(@NonNull Type type, long id, @NonNull B belonging) {
 		switch (type) {
 			case Property:
 				properties.put(id, (P)belonging);
@@ -25,7 +27,7 @@ public abstract class HierarchyBuilder<B, P extends B, R extends B, I extends B>
 	}
 
 	@SuppressWarnings("unchecked")
-	public void put(Type parentType, long parentID, B child) {
+	public void put(@NonNull Type parentType, long parentID, @NonNull B child) {
 		switch (parentType) {
 			case Property: {
 				P parent = getOrCreateProperty(parentID);
@@ -44,12 +46,12 @@ public abstract class HierarchyBuilder<B, P extends B, R extends B, I extends B>
 			}
 		}
 	}
-	protected abstract void addPropertyChild(P parentProperty, R childRoom);
-	protected abstract void addRoomChild(R parentRoom, I childItem);
-	protected abstract void addItemChild(I parentItem, I childItem);
+	protected abstract void addPropertyChild(@NonNull P parentProperty, @NonNull R childRoom);
+	protected abstract void addRoomChild(@NonNull R parentRoom, @NonNull I childItem);
+	protected abstract void addItemChild(@NonNull I parentItem, @NonNull I childItem);
 
 	@SuppressWarnings("unchecked")
-	public <T extends B> T get(Type type, long id) {
+	public @Nullable <T extends B> T get(@NonNull Type type, long id) {
 		switch (type) {
 			case Property:
 				return (T)getProperty(id);
@@ -62,7 +64,7 @@ public abstract class HierarchyBuilder<B, P extends B, R extends B, I extends B>
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends B> T getOrCreate(Type type, long id) {
+	public @NonNull <T extends B> T getOrCreate(@NonNull Type type, long id) {
 		switch (type) {
 			case Property:
 				return (T)getOrCreateProperty(id);
@@ -74,7 +76,7 @@ public abstract class HierarchyBuilder<B, P extends B, R extends B, I extends B>
 		throw new IllegalStateException("Unknown type: " + type);
 	}
 
-	public P getOrCreateProperty(long id) {
+	public @NonNull P getOrCreateProperty(long id) {
 		P x = getProperty(id);
 		if (x == null) {
 			x = createProperty(id);
@@ -82,12 +84,12 @@ public abstract class HierarchyBuilder<B, P extends B, R extends B, I extends B>
 		}
 		return x;
 	}
-	public P getProperty(long id) {
+	public @Nullable P getProperty(long id) {
 		return properties.get(id);
 	}
-	protected abstract P createProperty(long id);
+	protected abstract @NonNull P createProperty(long id);
 
-	public R getOrCreateRoom(long id) {
+	public @NonNull R getOrCreateRoom(long id) {
 		R x = getRoom(id);
 		if (x == null) {
 			x = createRoom(id);
@@ -95,12 +97,12 @@ public abstract class HierarchyBuilder<B, P extends B, R extends B, I extends B>
 		}
 		return x;
 	}
-	public R getRoom(long id) {
+	public @Nullable R getRoom(long id) {
 		return rooms.get(id);
 	}
-	protected abstract R createRoom(long id);
+	protected abstract @NonNull R createRoom(long id);
 
-	public I getOrCreateItem(long id) {
+	public @NonNull I getOrCreateItem(long id) {
 		I x = getItem(id);
 		if (x == null) {
 			x = createItem(id);
@@ -108,18 +110,18 @@ public abstract class HierarchyBuilder<B, P extends B, R extends B, I extends B>
 		}
 		return x;
 	}
-	public I getItem(long id) {
+	public @Nullable I getItem(long id) {
 		return items.get(id);
 	}
-	protected abstract I createItem(long id);
+	protected abstract @NonNull I createItem(long id);
 
-	public Collection<P> getAllProperties() {
+	public @NonNull Collection<P> getAllProperties() {
 		return Collections.unmodifiableCollection(properties.values());
 	}
-	public Collection<R> getAllFooms() {
+	public @NonNull Collection<R> getAllFooms() {
 		return Collections.unmodifiableCollection(rooms.values());
 	}
-	public Collection<I> getAllItems() {
+	public @NonNull Collection<I> getAllItems() {
 		return Collections.unmodifiableCollection(items.values());
 	}
 }

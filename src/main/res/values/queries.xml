@@ -643,6 +643,8 @@
 
 
 	<string name="query_subtree" translatable="false"><![CDATA["
+		-- CONSIDER a longer query or multiple queries to make it faster
+		-- (current query plan doesn't include indices everywhere)
 			select
 				'property' as type,
 				p._id,
@@ -650,7 +652,8 @@
 				null as parentType,
 				null as parent
 			from Property p
-			where p._id = ? or (? = 'null' and ? = 'null')
+			where (? = 'null' and ? = 'null' and ? = 'null')
+				or p._id = ?
 		UNION ALL
 			select
 				'room' as type,
@@ -659,9 +662,10 @@
 				'property' as parentType,
 				r.property as parent
 			from Room r
-			where r.property = ? or r._id = ? or (? = 'null')
+			where (? = 'null' and ? = 'null' and ? = 'null')
+				or r.property = ? or r._id = ?
 		UNION ALL
-			select distinct
+			select
 				'item' as type,
 				i._id,
 				i.name,
@@ -671,7 +675,10 @@
 			join Item           i   ON ipn.item = i._id and i.category <> -1
 			join Room           r   ON r.root = ipn.root
 			join Property       p   ON r.property = p._id
-			where p._id = ? or r._id = ? or ipn.node = ? or (? = 'null' and ? = 'null' and ? = 'null')
+			where  (ipn.node == ipn.item and ? = 'null' and ? = 'null' and ? = 'null')
+				or (ipn.node == ipn.item and p._id = ?)
+				or (ipn.node == ipn.item and r._id = ?)
+				or (ipn.node <> ipn.item and ipn.node = ?)
 	"]]></string>
 
 	<string name="query_stats" translatable="false"><![CDATA["
