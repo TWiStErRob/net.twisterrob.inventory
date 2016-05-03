@@ -81,6 +81,7 @@ public class App extends Application {
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		try {
 			if (BuildConfig.DEBUG) {
+//				CONSIDER com.idescout.sql.SqlScoutServer.create(this, getPackageName());
 //				com.facebook.stetho.Stetho.initializeWithDefaults(this); // reads /proc/self/cmdline
 			}
 			PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
