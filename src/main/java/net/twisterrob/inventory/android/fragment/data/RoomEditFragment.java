@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -13,6 +14,7 @@ import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomEditFragment.RoomEditEvents;
+import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
@@ -29,6 +31,12 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		setDynamicResource(DYN_NameHintResource, R.string.room_name_hint);
 		setDynamicResource(DYN_DescriptionHintResource, R.string.room_description_hint);
 		setKeepNameInSync(true);
+	}
+
+	protected @NonNull TypeAdapter createTypeAdapter() {
+		TypeAdapter adapter = super.createTypeAdapter();
+		adapter.setDisplayKeywords(true);
+		return adapter;
 	}
 
 	@Override protected void onStartLoading() {

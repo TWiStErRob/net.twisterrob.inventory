@@ -40,7 +40,7 @@ import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.ImagedDTO;
+import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.content.model.helpers.Hinter;
 import net.twisterrob.inventory.android.content.model.helpers.Hinter.CategorySelectedEvent;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
@@ -132,6 +132,16 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 						}
 						@Override protected Bundle createArgs(long type) {
 							return Intents.bundleFromCategory(type);
+						}
+						@Override public CharSequence getTypeName(Cursor cursor) {
+							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+							CategoryCache cache = CategoryDTO.getCache(getContext());
+							return cache.getCategoryPath(categoryID);
+						}
+						@Override public CharSequence getKeywords(Cursor cursor) {
+							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+							CategoryCache cache = CategoryDTO.getCache(getContext());
+							return CategoryDTO.getKeywords(getContext(), cache.getCategoryKey(categoryID), true);
 						}
 					}, type.getSelectedItemId());
 				}
@@ -228,7 +238,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				Hinter.unhighlight(name.getText());
 			}
 			@Override public void categoryQueried(long categoryID) {
-				ChangeTypeDialog.showKeywords(getContext(), categoryID);
+				CategoryDTO.showKeywords(getContext(), categoryID);
 			}
 		});
 		hint.setAdapter(hinter.getAdapter());
@@ -255,7 +265,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		registerForContextMenu(help);
 
 		type = (Spinner)view.findViewById(R.id.type_edit);
-		type.setAdapter(typeAdapter = new TypeAdapter(getContext()));
+		type.setAdapter(typeAdapter = createTypeAdapter());
 		type.setOnItemSelectedListener(new DefaultValueUpdater(name, CommonColumns.NAME) {
 			private int oldPos = AdapterView.INVALID_POSITION;
 			@Override
@@ -276,10 +286,14 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		// CONSIDER setOnItemLongClickListener is not supported, any way to work around? So user has the same "tooltip" as in ChangeTypeDialog
 		type.setOnLongClickListener(new OnLongClickListener() {
 			@Override public boolean onLongClick(View view) {
-				ChangeTypeDialog.showKeywords(view.getContext(), getTypeId());
+				CategoryDTO.showKeywords(view.getContext(), getTypeId());
 				return true;
 			}
 		});
+	}
+
+	protected @NonNull TypeAdapter createTypeAdapter() {
+		return new TypeAdapter(getContext());
 	}
 
 	private void updateHint(CharSequence text, boolean b) {
@@ -321,7 +335,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				updateHint(name.getText(), true);
 				return true;
 			case R.id.action_category_keywords:
-				ChangeTypeDialog.showKeywords(getContext(), getTypeId());
+				CategoryDTO.showKeywords(getContext(), getTypeId());
 				return true;
 		}
 		return super.onContextItemSelected(item);

@@ -12,6 +12,7 @@ import android.text.SpannableStringBuilder;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.content.contract.Category;
+import net.twisterrob.inventory.android.view.ChangeTypeDialog;
 
 public class CategoryDTO extends ImagedDTO {
 	private static final Uri APP_RESOURCE_RAW = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/");
@@ -112,6 +113,12 @@ public class CategoryDTO extends ImagedDTO {
 		} catch (NotFoundException ex) {
 			return null;
 		}
+	}
+
+	public static void showKeywords(@NonNull Context context, long categoryID) {
+		CategoryCache cache = CategoryDTO.getCache(context);
+		CharSequence keywords = CategoryDTO.getKeywords(context, cache.getCategoryKey(categoryID), true);
+		ChangeTypeDialog.showKeywords(context, cache.getCategoryPath(categoryID), keywords);
 	}
 
 	public static CategoryCache getCache(Context context) {

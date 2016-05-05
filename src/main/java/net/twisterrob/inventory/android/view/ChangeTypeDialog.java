@@ -21,8 +21,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Loaders;
-import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.*;
+import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
@@ -96,13 +95,9 @@ public class ChangeTypeDialog {
 		list = dialog.getListView();
 		list.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				if (variants.isCategory()) {
-					Cursor cursor = (Cursor)parent.getAdapter().getItem(position);
-					showKeywords(parent.getContext(), DatabaseTools.getLong(cursor, Category.ID));
-					return true;
-				} else {
-					return false;
-				}
+				Cursor cursor = (Cursor)parent.getAdapter().getItem(position);
+				showKeywords(context, variants.getTypeName(cursor), variants.getKeywords(cursor));
+				return true;
 			}
 		});
 		dialog.setCanceledOnTouchOutside(true);
@@ -151,16 +146,17 @@ public class ChangeTypeDialog {
 		return view.getMeasuredHeight() + list.getDividerHeight();
 	}
 
-	public static void showKeywords(Context context, long categoryId) {
-		CategoryCache cache = CategoryDTO.getCache(context);
-		CharSequence categoryTitle = cache.getCategoryPath(categoryId);
-		CharSequence categoryKeywords = CategoryDTO.getKeywords(context, cache.getCategoryKey(categoryId), true);
-		if (TextUtils.isEmpty(categoryKeywords)) {
-			categoryKeywords = context.getText(R.string.category_keywords_empty);
+	public static void showKeywords(Context context, CharSequence title, CharSequence keywords) {
+		if (TextUtils.isEmpty(title)) {
+			return;
 		}
+		if (TextUtils.isEmpty(keywords)) {
+			keywords = context.getText(R.string.category_keywords_empty);
+		}
+		title = context.getString(R.string.category_keywords_of, title);
 		android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(context)
-				.setTitle(context.getString(R.string.category_keywords_of, categoryTitle))
-				.setMessage(categoryKeywords)
+				.setTitle(title)
+				.setMessage(keywords)
 				.create();
 		dialog.setCanceledOnTouchOutside(true);
 		dialog.show();
@@ -178,9 +174,8 @@ public class ChangeTypeDialog {
 		@UiThread protected Bundle createArgs(long type) {
 			return null;
 		}
-		@UiThread public boolean isCategory() {
-			return false;
-		}
+		@UiThread public abstract CharSequence getTypeName(Cursor cursor);
+		@UiThread public abstract CharSequence getKeywords(Cursor cursor);
 	}
 
 	private class MyCursorSwapper extends CursorSwapper {

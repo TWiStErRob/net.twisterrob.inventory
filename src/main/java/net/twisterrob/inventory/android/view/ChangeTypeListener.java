@@ -13,7 +13,7 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.*;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
@@ -91,6 +91,14 @@ public class ChangeTypeListener implements OnClickListener {
 		@Override protected boolean isExpandable() {
 			return false;
 		}
+		@Override public CharSequence getTypeName(Cursor cursor) {
+			String propertyType = DatabaseTools.getString(cursor, PropertyType.NAME);
+			return AndroidTools.getText(context, propertyType);
+		}
+		@Override public CharSequence getKeywords(Cursor cursor) {
+			String propertyType = DatabaseTools.getString(cursor, PropertyType.NAME);
+			return AndroidTools.getText(context, propertyType + "_keywords");
+		}
 	}
 
 	private class RoomVariants extends ImagedVariants {
@@ -106,6 +114,14 @@ public class ChangeTypeListener implements OnClickListener {
 		}
 		@Override protected boolean isExpandable() {
 			return false;
+		}
+		@Override public CharSequence getTypeName(Cursor cursor) {
+			String roomType = DatabaseTools.getString(cursor, RoomType.NAME);
+			return AndroidTools.getText(context, roomType);
+		}
+		@Override public CharSequence getKeywords(Cursor cursor) {
+			String roomType = DatabaseTools.getString(cursor, RoomType.NAME);
+			return AndroidTools.getText(context, roomType + "_keywords");
 		}
 	}
 
@@ -134,8 +150,15 @@ public class ChangeTypeListener implements OnClickListener {
 		@Override protected boolean isExpandable() {
 			return true;
 		}
-		@Override public boolean isCategory() {
-			return true;
+		@Override public CharSequence getTypeName(Cursor cursor) {
+			long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+			CategoryCache cache = CategoryDTO.getCache(context);
+			return cache.getCategoryPath(categoryID);
+		}
+		@Override public CharSequence getKeywords(Cursor cursor) {
+			long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+			CategoryCache cache = CategoryDTO.getCache(context);
+			return CategoryDTO.getKeywords(context, cache.getCategoryKey(categoryID), true);
 		}
 	}
 }

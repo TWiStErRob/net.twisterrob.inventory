@@ -15,7 +15,7 @@ import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.ItemDTO;
+import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.tasks.*;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
@@ -80,6 +80,16 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 					}
 					@Override protected boolean isExpandable() {
 						return true;
+					}
+					@Override public CharSequence getTypeName(Cursor cursor) {
+						long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+						CategoryCache cache = CategoryDTO.getCache(fragment.getContext());
+						return cache.getCategoryPath(categoryID);
+					}
+					@Override public CharSequence getKeywords(Cursor cursor) {
+						long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+						CategoryCache cache = CategoryDTO.getCache(fragment.getContext());
+						return CategoryDTO.getKeywords(fragment.getContext(), cache.getCategoryKey(categoryID), true);
 					}
 				}, category);
 				return true;

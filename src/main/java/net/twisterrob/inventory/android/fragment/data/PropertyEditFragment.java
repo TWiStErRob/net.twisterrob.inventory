@@ -3,9 +3,7 @@ package net.twisterrob.inventory.android.fragment.data;
 import org.slf4j.*;
 
 import android.database.Cursor;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -34,11 +32,10 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		setKeepNameInSync(true);
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		AdapterView<?> list = (AdapterView<?>)view.findViewById(R.id.type_edit);
-		TypeAdapter adapter = (TypeAdapter)list.getAdapter();
+	protected @NonNull TypeAdapter createTypeAdapter() {
+		TypeAdapter adapter = super.createTypeAdapter();
 		adapter.setDisplayKeywords(true);
+		return adapter;
 	}
 
 	@Override protected void onStartLoading() {
