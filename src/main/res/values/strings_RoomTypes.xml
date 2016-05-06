@@ -7,6 +7,7 @@
 <resources>
 	<string name="room_group_other">Other</string>
 
+	<string name="room_other">Other</string>
 	<!-- Considered, but not included separately: -->
 	<!-- Stoop (US): a porch with steps in front of a house or other building. -->
 	<!-- Crawl space: an area of limited height under a floor or roof, giving access to wiring and plumbing. -->
@@ -22,23 +23,22 @@
 	<!-- Stand: a raised platform for a band, orchestra, or speaker. -->
 	<!-- Booth: a small temporary tent or structure at a market, fair, or exhibition, used for selling goods, providing information, or staging shows. -->
 	<!-- Kiosk: a small open-fronted hut or cubicle from which newspapers, refreshments, tickets, etc., are sold. -->
-	<string name="room_other">Other</string>
 	<string name="room_other_keywords">@string/empty</string>
 
 
 	<!-- Communal: shared by all members of a community; for common use. involving the sharing of work and property. -->
 	<string name="room_group_communal">Communal</string>
 
+	<string name="room_bath">Bathroom</string>
 	<!-- Bathroom (UK): a room containing a bath or shower and typically also a washbasin and a toilet. -->
 	<!-- Bathroom (US): a room containing a toilet and sink and typically also a bathtub or shower. -->
 	<!-- Washroom (US): a room with washing and toilet facilities. -->
-	<string name="room_bath">Bathroom</string>
 	<string name="room_bath_keywords">washroom</string>
 
+	<string name="room_bed">Bedroom</string>
 	<!-- Bedroom: a room for sleeping in. -->
 	<!-- Nursery: a room in a house for the special use of young children. -->
 	<!-- Boudoir: a woman's bedroom or private room. -->
-	<string name="room_bed">Bedroom</string>
 	<string name="room_bed_keywords">guest room, nursery, boudoir</string>
 
 	<string name="room_kitchen">Kitchen</string>
@@ -46,34 +46,35 @@
 	<!-- Kitchenette: a small kitchen or part of a room equipped as a kitchen. -->
 	<string name="room_kitchen_keywords">kitchenette</string>
 
+	<string name="room_toilet">Restroom</string>
 	<!-- Restroom/Bathroom (US): a public lavatory; a restroom. a bathroom in a public building. -->
 	<!-- WC/Water closet: a flush toilet. a room containing a flush toilet. -->
 	<!-- Toilet: a fixed receptacle into which a person may urinate or defecate, typically consisting of a large bowl connected to a system for flushing away the waste into a sewer or septic tank. -->
 	<!-- Outhouse (US): an outbuilding containing a toilet, typically with no plumbing. -->
 	<!-- Privy: a toilet located in a small shed outside a house or other building; an outhouse. -->
 	<!-- Latrine: a toilet or outhouse, especially a communal one in a camp or barracks. -->
-	<string name="room_toilet">Restroom</string>
 	<string name="room_toilet_keywords">WC, toilet, bathroom, latrine, outhouse, privy</string>
 
+	<string name="room_living">Living Room</string>
 	<!-- Living room: a room in a house for general and informal everyday use. -->
 	<!-- Parlour (dated): a sitting room in a private house. -->
 	<!-- Lounge: a public room, as in a hotel, theater, or club, in which to sit and relax. -->
 	<!-- Lounge (UK): living room (http://www.effingpot.com/house.shtml) -->
-	<string name="room_living">Living Room</string>
 	<string name="room_living_keywords">lounge, parlour</string>
 
+	<string name="room_recreation">Recreational Area</string>
 	<!-- Family room (US): a living room used by all family members for recreation and relaxation. -->
 	<!-- Playroom: a room in a house that is set aside for children to play in. -->
 	<!-- Den: a small, comfortable room in a house where a person can pursue an activity in private. -->
 	<!-- Man cave: a room or other part of a home regarded as a refuge for the man or men of a household. -->
 	<!-- Sauna: a small room used as a hot-air or steam bath for cleaning and refreshing the body. -->
 	<!-- Swimming pool: an artificial pool for swimming in. -->
-	<string name="room_recreation">Recreational Area</string>
 	<string name="room_recreation_keywords">den, playroom, family room, TV room, home cinema, man cave, swimming pool, sauna</string>
 
 
 	<string name="room_group_storage">Storage</string>
 
+	<string name="room_storage">Storeroom</string>
 	<!-- Pantry: a small room or closet in which food, dishes, and utensils are kept. -->
 	<!-- Larder: a room or large cupboard for storing food. -->
 	<!-- Storeroom: a room in which items are stored. -->
@@ -81,7 +82,6 @@
 	<!-- Closet: a small room, especially one used for storing things or for private study. -->
 	<!-- Cloakroom: a room in a public building where coats and other belongings may be left temporarily. -->
 	<!-- Coatroom (US): a cloakroom. -->
-	<string name="room_storage">Storeroom</string>
 	<string name="room_storage_keywords">storage, pantry, larder, closet, cloakroom, coatroom</string>
 
 	<string name="room_garage">Garage</string>
@@ -98,12 +98,12 @@
 	<!-- Lean-to: a building sharing one wall with a larger building, and having a roof that leans against that wall. -->
 	<string name="room_outbuilding_keywords">outbuilding, shack, hut, lean-to, hovel</string>
 
+	<string name="room_utility">Utility Room</string>
 	<!-- Utility is more generic than laundry: this room may also include an extra big freezer, for example. -->
 	<!-- Utility room (UK of laundry room): a room within a house where equipment not used in day-to-day activities is kept. -->
 	<!-- Laundry room (US/AU of utility room): a room where clothes are washed. -->
 	<!-- Laundry: a room in a house, hotel, or institution where clothes and linens can be washed and ironed. -->
 	<!-- Scullery (UK): a room in a house traditionally used for washing up dishes and laundering clothes, or as an overflow kitchen when the main kitchen is overloaded. -->
-	<string name="room_utility">Utility Room</string>
 	<string name="room_utility_keywords">laundry room, scullery</string>
 
 	<string name="room_equipment">Equipment Room</string>
@@ -121,10 +121,10 @@
 	<!-- Garret: a top-floor or attic room, especially a small dismal one (traditionally inhabited by an artist). -->
 	<string name="room_attic_keywords">loft, garret</string>
 
+	<string name="room_basement">Basement</string>
 	<!-- Cellar: a room below ground level in a house, typically one used for storing wine or coal. -->
 	<!-- Basement: the floor of a building partly or entirely below ground level. -->
 	<!-- Vault: a space, chamber, or passage enclosed by a vault or vault-like structure, especially one located underground. -->
-	<string name="room_basement">Basement</string>
 	<string name="room_basement_keywords">cellar, storm shelter, panic room, vault, subterranean room</string>
 
 
@@ -132,10 +132,11 @@
 	<!-- not to be confused with "Function: a large or formal social event or ceremony." which are held in a Function hall. -->
 	<string name="room_group_function">Function</string>
 
-	<!-- Dining room: a room in a house or hotel in which meals are eaten. -->
 	<string name="room_dining">Dining Room</string>
+	<!-- Dining room: a room in a house or hotel in which meals are eaten. -->
 	<string name="room_dining_keywords">@string/empty</string>
 
+	<string name="room_work">Workspace</string>
 	<!-- Workspace: space in which to work. -->
 	<!-- Office: a room, set of rooms, or building used as a place for commercial, professional, or bureaucratic work. -->
 	<!-- Office: a room, department, or building used to provide a particular service. -->
@@ -145,16 +146,15 @@
 	<!-- Library: a building or room containing collections of books, periodicals, and sometimes films and recorded music for people to read, borrow, or refer to. -->
 	<!-- Library: a room in a private house where books are kept. -->
 	<!-- Workroom: a room for working in, especially one equipped for a particular kind of work. -->
-	<string name="room_work">Workspace</string>
 	<string name="room_work_keywords">office, studio, workshop, study, library, workroom</string>
 
-	<!-- Gymnasium: a room or building equipped for gymnastics, games, and other physical exercise. -->
 	<string name="room_gym">Gym</string>
+	<!-- Gymnasium: a room or building equipped for gymnastics, games, and other physical exercise. -->
 	<string name="room_gym_keywords">gymnasium</string>
 
+	<string name="room_greenhouse">Greenhouse</string>
 	<!-- Conservatory: a room with a glass roof and walls, attached to a house at one side and used as a greenhouse or a sun parlor. -->
 	<!-- Glasshouse (UK): a greenhouse. -->
-	<string name="room_greenhouse">Greenhouse</string>
 	<string name="room_greenhouse_keywords">glasshouse, conservatory</string>
 
 	<string name="room_animal">Animal Enclosure</string>
@@ -172,13 +172,13 @@
 
 	<string name="room_group_space">Space</string>
 
+	<string name="room_garden">Garden</string>
 	<!-- Garden: a piece of ground, often near a house, used for growing flowers, fruit, or vegetables. -->
 	<!-- Lawn: an area of short, mown grass in a yard, garden, or park. -->
 	<!-- Courtyard: an unroofed area that is completely or mostly enclosed by the walls of a large building. -->
 	<!-- Backyard: a yard behind a house or other building, typically surrounded by a fence. -->
 	<!-- Yard (US): a piece of ground adjoining a building or house. -->
 	<!-- Court: a quadrangular area, either open or covered, marked out for ball games such as tennis or basketball. -->
-	<string name="room_garden">Garden</string>
 	<string name="room_garden_keywords">lawn, courtyard, backyard, court, yard</string>
 
 	<string name="room_shelter">Shelter</string>
@@ -196,6 +196,7 @@
 	<!-- Pergola: an archway in a garden or park consisting of a framework covered with trained climbing or trailing plants. -->
 	<string name="room_shelter_keywords">summerhouse, gazebo, bandstand, pavilion, bower, poolhouse, cabana, arbor, pergola</string>
 
+	<string name="room_patio">Patio</string>
 	<!-- Deck: a floor or platform resembling or compared to a ship's deck, especially the floor of a pier or a platform for sunbathing. -->
 	<!-- Deck: a platform-like structure, typically made of lumber and unroofed, attached to a house or other building. -->
 	<!-- Patio: a paved outdoor area adjoining a house. -->
@@ -204,38 +205,37 @@
 	<!-- Terrace (UK): a block of row houses. a row house. -->
 	<!-- Veranda (US=porch): a roofed platform along the outside of a house, level with the ground floor. -->
 	<!-- Porch: a covered shelter projecting in front of the entrance of a building. -->
-	<string name="room_patio">Patio</string>
 	<string name="room_patio_keywords">porch, deck, terrace, veranda</string>
 
+	<string name="room_entrance">Lobby</string>
 	<!-- Lobby: a room providing a space out of which one or more other rooms or corridors lead, typically one near the entrance of a public building. -->
 	<!-- Entrance Hall: the room or space immediately inside the main door of a large or grand building. -->
 	<!-- Foyer: an entrance hall or other open area in a building used by the public, especially a hotel or theater. -->
 	<!-- Vestibule: an antechamber, hall, or lobby next to the outer door of a building. -->
-	<string name="room_entrance">Lobby</string>
 	<string name="room_entrance_keywords">entrance hall, foyer, vestibule</string>
 
-	<!-- Balcony: a platform enclosed by a wall or balustrade on the outside of a building, with access from an upper-floor window or door. -->
 	<string name="room_balcony">Balcony</string>
+	<!-- Balcony: a platform enclosed by a wall or balustrade on the outside of a building, with access from an upper-floor window or door. -->
 	<string name="room_balcony_keywords">@string/empty</string>
 
+	<string name="room_corridor">Corridor</string>
 	<!-- Corridor: a long passage in a building from which doors lead into rooms. -->
 	<!-- Hall/Hallway (US): an area in a building onto which rooms open; a corridor. -->
 	<!-- Landing: a level area at the top of a staircase or between one flight of stairs and another. -->
 	<!-- Entryway (US): a way in to somewhere or something; an entrance. -->
-	<string name="room_corridor">Corridor</string>
 	<string name="room_corridor_keywords">hallway, hall, entryway, landing</string>
 
+	<string name="room_stairs">Staircase</string>
 	<!-- Stairwell: a shaft in a building in which a staircase is built. -->
 	<!-- Staircase: a set of stairs and its surrounding walls or structure. -->
 	<!-- Stair (set of stairs): a set of steps leading from one floor of a building to another, typically inside the building. -->
 	<!-- Ramp: a slope or inclined plane for joining two different levels, as at the entrance or between floors of a building. -->
-	<string name="room_stairs">Staircase</string>
 	<string name="room_stairs_keywords">stairs, stairwell, ramp</string>
-
 
 	<string name="room_parking">Driveway</string>
 	<!-- Carport: a shelter for a car consisting of a roof supported on posts, built beside a house. -->
 	<!-- Driveway: a short road leading from a public road to a house or garage. -->
 	<!-- Parking lot (US): an area where cars or other vehicles may be left temporarily. -->
 	<string name="room_parking_keywords">carport, parking lot</string>
+
 </resources>
