@@ -29,22 +29,24 @@
 	<!-- Communal: shared by all members of a community; for common use. involving the sharing of work and property. -->
 	<string name="room_group_communal">Communal</string>
 
-	<string name="room_bath">Bathroom</string>
-	<!-- Bathroom (UK): a room containing a bath or shower and typically also a washbasin and a toilet. -->
-	<!-- Bathroom (US): a room containing a toilet and sink and typically also a bathtub or shower. -->
-	<!-- Washroom (US): a room with washing and toilet facilities. -->
-	<string name="room_bath_keywords">washroom</string>
-
 	<string name="room_bed">Bedroom</string>
 	<!-- Bedroom: a room for sleeping in. -->
 	<!-- Nursery: a room in a house for the special use of young children. -->
 	<!-- Boudoir: a woman's bedroom or private room. -->
 	<string name="room_bed_keywords">guest room, nursery, boudoir</string>
 
-	<string name="room_kitchen">Kitchen</string>
-	<!-- Kitchen: a room or area where food is prepared and cooked. -->
-	<!-- Kitchenette: a small kitchen or part of a room equipped as a kitchen. -->
-	<string name="room_kitchen_keywords">kitchenette</string>
+	<string name="room_living">Living Room</string>
+	<!-- Living room: a room in a house for general and informal everyday use. -->
+	<!-- Parlour (dated): a sitting room in a private house. -->
+	<!-- Lounge: a public room, as in a hotel, theater, or club, in which to sit and relax. -->
+	<!-- Lounge (UK): living room (http://www.effingpot.com/house.shtml) -->
+	<string name="room_living_keywords">lounge, parlour</string>
+
+	<string name="room_bath">Bathroom</string>
+	<!-- Bathroom (UK): a room containing a bath or shower and typically also a washbasin and a toilet. -->
+	<!-- Bathroom (US): a room containing a toilet and sink and typically also a bathtub or shower. -->
+	<!-- Washroom (US): a room with washing and toilet facilities. -->
+	<string name="room_bath_keywords">washroom</string>
 
 	<string name="room_toilet">Restroom</string>
 	<!-- Restroom/Bathroom (US): a public lavatory; a restroom. a bathroom in a public building. -->
@@ -55,12 +57,14 @@
 	<!-- Latrine: a toilet or outhouse, especially a communal one in a camp or barracks. -->
 	<string name="room_toilet_keywords">WC, toilet, bathroom, latrine, outhouse, privy</string>
 
-	<string name="room_living">Living Room</string>
-	<!-- Living room: a room in a house for general and informal everyday use. -->
-	<!-- Parlour (dated): a sitting room in a private house. -->
-	<!-- Lounge: a public room, as in a hotel, theater, or club, in which to sit and relax. -->
-	<!-- Lounge (UK): living room (http://www.effingpot.com/house.shtml) -->
-	<string name="room_living_keywords">lounge, parlour</string>
+	<string name="room_kitchen">Kitchen</string>
+	<!-- Kitchen: a room or area where food is prepared and cooked. -->
+	<!-- Kitchenette: a small kitchen or part of a room equipped as a kitchen. -->
+	<string name="room_kitchen_keywords">kitchenette</string>
+
+	<string name="room_dining">Dining Room</string>
+	<!-- Dining room: a room in a house or hotel in which meals are eaten. -->
+	<string name="room_dining_keywords">@string/empty</string>
 
 	<string name="room_recreation">Recreational Area</string>
 	<!-- Family room (US): a living room used by all family members for recreation and relaxation. -->
@@ -98,22 +102,6 @@
 	<!-- Lean-to: a building sharing one wall with a larger building, and having a roof that leans against that wall. -->
 	<string name="room_outbuilding_keywords">outbuilding, shack, hut, lean-to, hovel</string>
 
-	<string name="room_utility">Utility Room</string>
-	<!-- Utility is more generic than laundry: this room may also include an extra big freezer, for example. -->
-	<!-- Utility room (UK of laundry room): a room within a house where equipment not used in day-to-day activities is kept. -->
-	<!-- Laundry room (US/AU of utility room): a room where clothes are washed. -->
-	<!-- Laundry: a room in a house, hotel, or institution where clothes and linens can be washed and ironed. -->
-	<!-- Scullery (UK): a room in a house traditionally used for washing up dishes and laundering clothes, or as an overflow kitchen when the main kitchen is overloaded. -->
-	<string name="room_utility_keywords">laundry room, scullery</string>
-
-	<string name="room_equipment">Equipment Room</string>
-	<!-- Equipment room: a room or space within a building for the storage or installation of mechanical or electrical/electronic devices. -->
-	<!-- Electrical room: a room or space in a building (or craft) dedicated to electrical equipment. -->
-	<!-- Mechanical/Boiler room: a room in a building (typically in the basement) or a compartment in a ship containing a boiler and related heating or steam-generating equipment. -->
-	<!-- A mechanical room or a boiler room is a room or space in a building dedicated to the mechanical equipment and its associated electrical equipment. -->
-	<!-- Furnace room: a room in a building for locating a furnace and auxiliary equipment. -->
-	<string name="room_equipment_keywords">mechanical room, boiler room, furnace room, electrical room</string>
-
 	<string name="room_attic">Attic</string>
 	<!-- Attic: a space or room just below the roof of a building. -->
 	<!-- Loft: a room or space directly under the roof of a house or other building, which may be used for accommodations or storage. -->
@@ -132,10 +120,6 @@
 	<!-- not to be confused with "Function: a large or formal social event or ceremony." which are held in a Function hall. -->
 	<string name="room_group_function">Function</string>
 
-	<string name="room_dining">Dining Room</string>
-	<!-- Dining room: a room in a house or hotel in which meals are eaten. -->
-	<string name="room_dining_keywords">@string/empty</string>
-
 	<string name="room_work">Workspace</string>
 	<!-- Workspace: space in which to work. -->
 	<!-- Office: a room, set of rooms, or building used as a place for commercial, professional, or bureaucratic work. -->
@@ -147,6 +131,22 @@
 	<!-- Library: a room in a private house where books are kept. -->
 	<!-- Workroom: a room for working in, especially one equipped for a particular kind of work. -->
 	<string name="room_work_keywords">office, studio, workshop, study, library, workroom</string>
+
+	<string name="room_utility">Utility Room</string>
+	<!-- Utility is more generic than laundry: this room may also include an extra big freezer, for example. -->
+	<!-- Utility room (UK of laundry room): a room within a house where equipment not used in day-to-day activities is kept. -->
+	<!-- Laundry room (US/AU of utility room): a room where clothes are washed. -->
+	<!-- Laundry: a room in a house, hotel, or institution where clothes and linens can be washed and ironed. -->
+	<!-- Scullery (UK): a room in a house traditionally used for washing up dishes and laundering clothes, or as an overflow kitchen when the main kitchen is overloaded. -->
+	<string name="room_utility_keywords">laundry room, scullery</string>
+
+	<string name="room_equipment">Equipment Room</string>
+	<!-- Equipment room: a room or space within a building for the storage or installation of mechanical or electrical/electronic devices. -->
+	<!-- Electrical room: a room or space in a building (or craft) dedicated to electrical equipment. -->
+	<!-- Mechanical/Boiler room: a room in a building (typically in the basement) or a compartment in a ship containing a boiler and related heating or steam-generating equipment. -->
+	<!-- A mechanical room or a boiler room is a room or space in a building dedicated to the mechanical equipment and its associated electrical equipment. -->
+	<!-- Furnace room: a room in a building for locating a furnace and auxiliary equipment. -->
+	<string name="room_equipment_keywords">mechanical room, boiler room, furnace room, electrical room</string>
 
 	<string name="room_gym">Gym</string>
 	<!-- Gymnasium: a room or building equipped for gymnastics, games, and other physical exercise. -->
