@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<!-- Considered, but not included separately: -->
+	<!-- Hovel: a small, squalid, unpleasant, or simply constructed dwelling. -->
+	<!-- Slum: a house or building unfit for human habitation. -->
 	<string name="property_group_other">Other</string>
 	<string name="property_other">Other</string>
 	<string name="property_other_keywords">@string/empty</string>
@@ -9,11 +11,16 @@
 	<string name="property_apartment">Apartment</string>
 	<string name="property_apartment_keywords">flat, condo, condominium</string>
 	<string name="property_house">House</string>
+	<!-- Cottage: a small simple house, typically one near a lake or beach. -->
+	<!-- Cottage: a dwelling forming part of a farm establishment, used by a worker. -->
 	<string name="property_house_keywords">townhouse, cottage, bungalow, suburban house</string>
 	<string name="property_estate">Estate</string>
 	<string name="property_estate_keywords">mansion, villa, manor, palace, castle</string>
 	<string name="property_vacation">Vacation Home</string>
-	<string name="property_vacation_keywords">lodge, chalet, mountain house, cabin, lake house</string>
+	<!-- Cabin: a small shelter or house, made of wood and situated in a wild or remote area. -->
+	<!-- Chalet: a wooden house or cottage with overhanging eaves, typically found in the Swiss Alps. -->
+	<!-- Lodge: a small house at the gates of a park or in the grounds of a large house, typically occupied by a gatekeeper, gardener, or other employee. -->
+	<string name="property_vacation_keywords">lodge, cabin, chalet, mountain house, lake house</string>
 	<string name="property_mobile">Moving Home</string>
 	<string name="property_mobile_keywords">camp, caravan, recreational vehicle/RV, houseboat</string>
 

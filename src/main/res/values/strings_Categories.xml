@@ -74,7 +74,7 @@
 	<string name="category_storage_household" level="2">household</string>
 	<string name="category_storage_household_keywords">soap dispenser, laundry bin, laundry sorter, bread bin, knife stand, utensil stand, utensil organizer, toolbox, ashtray, potty, rainwater tank/water butt</string>
 	<string name="category_protective_surface" level="2">protective surface</string>
-	<string name="category_protective_surface_keywords">beverage coaster, hot pad, drying mat, plastic tray, pallet, tent footprint, mouse pad, notebook cover</string>
+	<string name="category_protective_surface_keywords">beverage coaster, trivet, hot pad, drying mat, plastic tray, pallet, tent footprint, mouse pad, notebook cover</string>
 
 	<string name="category_luggage" level="1" icon="@raw/category_suitcase">Luggage</string>
 	<string name="category_luggage_keywords">@string/empty</string>
@@ -124,7 +124,7 @@
 	<string name="category_resting" level="1">Resting</string>
 	<string name="category_resting_keywords">@string/empty</string>
 	<string name="category_seating" level="2">seating</string>
-	<string name="category_seating_keywords">seat, chair, stool, step stool, baby high chair, bench, sofa, couch/divan, folding chair</string>
+	<string name="category_seating_keywords">seat, chair, stool, step stool, baby high chair, bench, sofa, couch, divan, folding chair</string>
 	<string name="category_lounging" level="2">lounging</string>
 	<string name="category_lounging_keywords">bed, mattress, lounger, pool lilo, hammock, beanbag, rocking chair, inflatable air mattress, swim ring/swim tube</string>
 
@@ -143,9 +143,9 @@
 	<string name="category_furniture_outdoor" level="1">Outdoor</string>
 	<string name="category_furniture_outdoor_keywords">@string/empty</string>
 	<string name="category_canopy" level="2">canopies</string>
-	<string name="category_canopy_keywords">pavilion, tent, garden parasol/garden umbrella, beach parasol/beach umbrella, water base, canopy swing, pool cover, tarp shelter</string>
+	<string name="category_canopy_keywords">pavilion, marquee, tent, teepee, garden parasol/garden umbrella, beach parasol/beach umbrella, water base, canopy swing, pool cover, tarp shelter</string>
 	<string name="category_playground" level="2">playground</string>
-	<string name="category_playground_keywords">swing, slide, seesaw, climbing frame, climbing wall, wendy house, trampoline, jumpy castle, playhouse/wendy house</string>
+	<string name="category_playground_keywords">swing, slide, seesaw, climbing frame, climbing wall, playhouse, wendy house, trampoline, jumpy castle</string>
 	<string name="category_furniture_wet" level="2">wet</string>
 	<string name="category_furniture_wet_keywords">jacuzzi/hot tub/home spa, garden shower, inflatable pool, kiddy pool, pond, swimming pool, spring board/diving board, sauna</string>
 

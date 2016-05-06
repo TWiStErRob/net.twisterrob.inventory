@@ -42,25 +42,26 @@ INSERT INTO RoomType
 	UNION SELECT 105,    1, 'room_kitchen',    'room_kitchen'
 	UNION SELECT 106,    1, 'room_dining',     'room_kitchen'
 	UNION SELECT 107,    1, 'room_recreation', NULL
--- Storage & Utility
+-- Storage
 	UNION SELECT 201,    2, 'room_storage',    'room_storage'
-	UNION SELECT 202,    2, 'room_shed',       NULL
-	UNION SELECT 203,    2, 'room_garage',     NULL
+	UNION SELECT 202,    2, 'room_garage',     NULL
+	UNION SELECT 203,    2, 'room_outbuilding',NULL
 	UNION SELECT 204,    2, 'room_attic',      NULL
 	UNION SELECT 205,    2, 'room_basement',   NULL
-	UNION SELECT 206,    2, 'room_laundry',    NULL
-	UNION SELECT 207,    2, 'room_furnace',    NULL
 -- Function
-	UNION SELECT 302,    3, 'room_work',       NULL
-	UNION SELECT 303,    3, 'room_gym',        NULL
-	UNION SELECT 304,    3, 'room_greenhouse', NULL
-	UNION SELECT 305,    3, 'room_animal',     NULL
+	UNION SELECT 301,    3, 'room_work',       NULL
+	UNION SELECT 302,    3, 'room_utility',    NULL
+	UNION SELECT 303,    3, 'room_equipment',  NULL
+	UNION SELECT 304,    3, 'room_gym',        NULL
+	UNION SELECT 305,    3, 'room_greenhouse', NULL
+	UNION SELECT 306,    3, 'room_animal',     NULL
 -- Spaces
 	UNION SELECT 401,    4, 'room_garden',     NULL
-	UNION SELECT 402,    4, 'room_patio',      NULL
-	UNION SELECT 403,    4, 'room_lobby',      NULL
-	UNION SELECT 404,    4, 'room_balcony',    NULL
-	UNION SELECT 405,    4, 'room_corridor',   NULL
-	UNION SELECT 406,    4, 'room_stairs',     NULL
-	UNION SELECT 407,    4, 'room_parking',    NULL
+	UNION SELECT 402,    4, 'room_shelter',    NULL
+	UNION SELECT 403,    4, 'room_patio',      NULL
+	UNION SELECT 404,    4, 'room_entrance',   NULL
+	UNION SELECT 405,    4, 'room_balcony',    NULL
+	UNION SELECT 406,    4, 'room_corridor',   NULL
+	UNION SELECT 407,    4, 'room_stairs',     NULL
+	UNION SELECT 408,    4, 'room_parking',    NULL
 ;
