@@ -62,6 +62,6 @@ INSERT INTO RoomType
 	UNION SELECT 404,    4, 'room_entrance',   NULL
 	UNION SELECT 405,    4, 'room_balcony',    NULL
 	UNION SELECT 406,    4, 'room_corridor',   NULL
-	UNION SELECT 407,    4, 'room_stairs',     NULL
+	UNION SELECT 407,    4, 'room_access',     NULL
 	UNION SELECT 408,    4, 'room_parking',    NULL
 ;

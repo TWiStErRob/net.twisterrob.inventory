@@ -90,7 +90,10 @@
 
 	<string name="room_garage">Garage</string>
 	<!-- Garage: a building or shed for housing a motor vehicle or vehicles. -->
-	<string name="room_garage_keywords">@string/empty</string>
+	<!-- Hangar: a large building with extensive floor area, typically for housing aircraft. -->
+	<!-- Boathouse: a shed at the edge of a river or lake used for housing boats. -->
+	<!-- Harbor: a place on the coast where vessels may find shelter, especially one protected from rough water by piers, jetties, and other artificial structures. -->
+	<string name="room_garage_keywords">hangar, boathouse, harbor</string>
 
 	<string name="room_outbuilding">Shed</string>
 	<!-- Shed: A shed, outhouse, outbuilding or shack, is typically a simple, single-storey roofed structure in a back garden or on an allotment that is used for storage, hobbies, or as a workshop. -->
@@ -225,17 +228,33 @@
 	<!-- Entryway (US): a way in to somewhere or something; an entrance. -->
 	<string name="room_corridor_keywords">hallway, hall, entryway, landing</string>
 
-	<string name="room_stairs">Staircase</string>
+	<string name="room_access">Staircase</string>
 	<!-- Stairwell: a shaft in a building in which a staircase is built. -->
 	<!-- Staircase: a set of stairs and its surrounding walls or structure. -->
 	<!-- Stair (set of stairs): a set of steps leading from one floor of a building to another, typically inside the building. -->
 	<!-- Ramp: a slope or inclined plane for joining two different levels, as at the entrance or between floors of a building. -->
-	<string name="room_stairs_keywords">stairs, stairwell, ramp</string>
+	<!-- Escalator: a moving staircase consisting of an endlessly circulating belt of steps driven by a motor, conveying people between the floors of a public building. -->
+	<!-- Travelator: a moving walkway, typically at an airport. -->
+	<!-- Elevator: a platform or compartment housed in a shaft for raising and lowering people or things to different floors or levels. -->
+	<!-- Lift (UK): British term for elevator. -->
+	<string name="room_access_keywords">stairs, stairwell, ramp, escalator, elevator</string>
 
-	<string name="room_parking">Driveway</string>
+	<string name="room_parking">Parking</string>
 	<!-- Carport: a shelter for a car consisting of a roof supported on posts, built beside a house. -->
 	<!-- Driveway: a short road leading from a public road to a house or garage. -->
 	<!-- Parking lot (US): an area where cars or other vehicles may be left temporarily. -->
-	<string name="room_parking_keywords">carport, parking lot</string>
+	<!-- Landing stage: a platform, typically a floating one, onto which passengers from a boat or ship disembark or cargo is unloaded. -->
+	<!-- Jetty: a landing stage or small pier at which boats can dock or be moored. -->
+	<!-- Pier: a structure leading out from the shore into a body of water, in particular. -->
+	<!-- Pier: a platform supported on pillars or girders, used as a landing stage for boats. -->
+	<!-- Quay: a concrete, stone, or metal platform lying alongside or projecting into water for loading and unloading ships. -->
+	<!-- Wharf: a level quayside area to which a ship may be moored to load and unload. -->
+	<!-- Dock: a structure extending alongshore or out from the shore into a body of water, to which boats may be moored. -->
+	<!-- Dock: an enclosed area of water in a port for the loading, unloading, and repair of ships. -->
+	<!-- Marina: a specially designed harbor with moorings for pleasure craft and small boats. -->
+	<!-- Port: a town or city with a harbor where ships load or unload, especially one where customs officers are stationed. -->
+	<!-- Mole: a large solid structure on a shore serving as a pier, breakwater, or causeway. a harbor formed or protected by a mole. -->
+	<!-- Levee: a landing place; a quay. -->
+	<string name="room_parking_keywords">driveway, carport, parking lot, jetty, pier, mole, dock, marina, levee, landing stage</string>
 
 </resources>
