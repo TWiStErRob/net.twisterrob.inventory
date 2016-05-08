@@ -12,7 +12,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 
-import net.twisterrob.android.view.SelectionAdapter;
+import net.twisterrob.android.view.*;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.java.exceptions.StackTrace;
 
@@ -142,4 +142,22 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 	}
 
 	public abstract boolean onActivityResult(int requestCode, int resultCode, Intent data);
+
+	public static class NoOp extends SelectionActionMode {
+		public NoOp(Activity activity) {
+			super(activity, new SelectionAdapter<>(new EmptyAdapter<>()));
+		}
+		@Override public void start() {
+			// no op
+		}
+		@Override public boolean isRunning() {
+			return false;
+		}
+		@Override public void finish() {
+			// no op
+		}
+		@Override public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+			return false;
+		}
+	}
 }

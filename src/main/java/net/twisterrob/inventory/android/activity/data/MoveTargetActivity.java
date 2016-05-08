@@ -285,6 +285,9 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	}
 
 	private void startFragment(final BaseFragment<?> fragment) {
+		if (fragment instanceof BaseGalleryFragment) {
+			fragment.getArguments().putBoolean(BaseGalleryFragment.KEY_ENABLE_SELECTION, false);
+		}
 		// FragmentTransaction.commit: Can not perform this action inside of onLoadFinished
 		// so must do it on the UI thread, but later!
 		handler.post(new Runnable() {

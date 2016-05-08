@@ -29,6 +29,8 @@ import net.twisterrob.inventory.android.view.adapters.*;
 
 public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements GalleryEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseGalleryFragment.class);
+	/** boolean argument, defaults to true */
+	public static final String KEY_ENABLE_SELECTION = "enable_selection";
 
 	private BaseFragment<?> header;
 	protected RecyclerViewLoaderController<?, ?> listController;
@@ -195,7 +197,11 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		final SingleHeaderAdapter<?> adapter = createAdapter();
 		@SuppressWarnings("unchecked")
 		SelectionAdapter<?> selectionAdapter = new SelectionAdapter<>(adapter);
-		selectionMode = onPrepareSelectionMode(selectionAdapter);
+		if (getArgSelectionEnabled()) {
+			selectionMode = onPrepareSelectionMode(selectionAdapter);
+		} else {
+			selectionMode = new SelectionActionMode.NoOp(getActivity());
+		}
 
 		if (hasHeaderUI()) {
 			View headerContainer = getView().findViewById(R.id.header);
@@ -221,6 +227,10 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		list.addOnScrollListener(new PauseOnFling(Glide.with(getContext().getApplicationContext())));
 
 		return adapter;
+	}
+
+	private boolean getArgSelectionEnabled() {
+		return getArguments().getBoolean(KEY_ENABLE_SELECTION, true);
 	}
 
 	protected SingleHeaderAdapter<?> createAdapter() {
