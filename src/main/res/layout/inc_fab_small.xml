@@ -12,11 +12,11 @@
 	android:src="@drawable/fab_interior_plus_mini"
 	android:visibility="gone"
 	tools:visibility="visible"
+	app:fabSize="mini"
+	app:useCompatPadding="true"
 	tools:ignore="NegativeMargin"
 	tools:src="@android:drawable/ic_menu_add"
-	tools:background="@null"
 	tools:layout_width="@dimen/icon_action_button"
 	tools:layout_height="@dimen/icon_action_button"
-	app:fabSize="mini"
 	/>
 

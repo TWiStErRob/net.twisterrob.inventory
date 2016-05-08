@@ -64,10 +64,7 @@ public class App extends Application {
 		return s_instance;
 	}
 
-	@Override public void onCreate() {
-		super.onCreate();
-		AndroidTools.setContext(this);
-
+	private void logStartup() {
 		try {
 			PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
 			Log.wtf("App", MessageFormatter.arrayFormat("************ Starting up {} {} installed at {}", new Object[] {
@@ -75,18 +72,26 @@ public class App extends Application {
 		} catch (NameNotFoundException ex) {
 			LOG.warn("************* Starting up {} {}", getPackageName(), BuildConfig.VERSION_NAME, ex);
 		}
+	}
 
-		// StrictModeDiskReadViolation on startup, but there isn't really a good way around it,
-		// since it needs to be loaded for the following code to work, make an exception:
+	@Override public void onCreate() {
+		// StrictModeDiskReadViolation on startup, but there isn't really a good way around these
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		try {
+			// may cause StrictModeDiskReadViolation if Application.onCreate calls
+			// android.graphics.Typeface.SetAppTypeFace (this happened on Galaxy S3 with custom font set up)
+			super.onCreate();
+			AndroidTools.setContext(this);
+			logStartup();
+
 			if (BuildConfig.DEBUG) {
 //				CONSIDER com.idescout.sql.SqlScoutServer.create(this, getPackageName());
 //				com.facebook.stetho.Stetho.initializeWithDefaults(this); // reads /proc/self/cmdline
 			}
+			// may cause StrictModeDiskReadViolation, but necessary for startup since anything can read the preferences
 			PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 			database = new Database(this);
-			// reads prefs, so may cause StrictModeDiskReadViolation if not loaded yet
+			// may cause StrictModeDiskReadViolation if prefs are not loaded yet, because it reads prefs 
 			updateLanguage(Locale.getDefault());
 			new BackgroundExecution(new Runnable() {
 				@Override public void run() {

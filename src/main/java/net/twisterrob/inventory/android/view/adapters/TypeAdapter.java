@@ -176,7 +176,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	}
 
 	private CharSequence getName(Cursor cursor) {
-		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		String name = DatabaseTools.getString(cursor, CommonColumns.NAME);
 		return AndroidTools.getText(mContext, name);
 	}
 }
