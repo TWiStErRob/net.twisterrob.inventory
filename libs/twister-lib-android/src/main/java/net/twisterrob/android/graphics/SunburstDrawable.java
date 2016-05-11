@@ -5,6 +5,7 @@ import static java.lang.Math.*;
 import android.graphics.*;
 import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
+import android.text.TextPaint;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 
@@ -24,7 +25,7 @@ public class SunburstDrawable<T> extends Drawable {
 	public interface PaintStrategy<T> {
 		Paint getFill(T node, int level, float start, float end);
 		Paint getStroke(T node, int level, float start, float end);
-		Paint getText(T node, int level, float start, float end);
+		TextPaint getText(T node, int level, float start, float end);
 		void highlight(Paint fill, Paint stroke, Paint text, Object node, int level, float start, float end);
 	}
 
@@ -216,7 +217,7 @@ public class SunburstDrawable<T> extends Drawable {
 	public static abstract class BasePaintStrategy<T> implements PaintStrategy<T> {
 		protected final Paint fill = new Paint();
 		protected final Paint stroke = new Paint();
-		protected final Paint text = new Paint();
+		protected final TextPaint text = new TextPaint();
 
 		public BasePaintStrategy() {
 			fill.setAntiAlias(true);
@@ -227,6 +228,7 @@ public class SunburstDrawable<T> extends Drawable {
 			stroke.setStrokeWidth(1);
 
 			text.setTextAlign(Align.CENTER);
+			text.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
 		}
 	}
 
@@ -234,7 +236,7 @@ public class SunburstDrawable<T> extends Drawable {
 		private final float[] color = new float[] {0, 0.5f, 1.0f};
 		private final float[] textColor = new float[] {0, 1.0f, 0.5f};
 
-		private static Paint randomize(Paint paint, float... color) {
+		private static <P extends Paint> P randomize(P paint, float... color) {
 			color[0] = (float)(Math.random() * 360);
 			paint.setColor(Color.HSVToColor(color));
 			return paint;
@@ -248,7 +250,7 @@ public class SunburstDrawable<T> extends Drawable {
 			return randomize(stroke, color);
 		}
 
-		@Override public Paint getText(Object node, int level, float start, float end) {
+		@Override public TextPaint getText(Object node, int level, float start, float end) {
 			return randomize(text, textColor);
 		}
 
@@ -263,7 +265,7 @@ public class SunburstDrawable<T> extends Drawable {
 	public static class HueVaryingPaints extends BasePaintStrategy<Object> {
 		private final float[] hsv = new float[] {0.0f, 0.5f, 1.0f};
 
-		private Paint hue(Paint paint, float start, float end, boolean opposite) {
+		private <P extends Paint> P hue(P paint, float start, float end, boolean opposite) {
 			hsv[0] = (start + end) / 2 * 360;
 			if (opposite) {
 				hsv[0] = (hsv[0] + 180) % 360;
@@ -280,7 +282,7 @@ public class SunburstDrawable<T> extends Drawable {
 			return hue(stroke, start, end, false);
 		}
 
-		@Override public Paint getText(Object node, int level, float start, float end) {
+		@Override public TextPaint getText(Object node, int level, float start, float end) {
 			return hue(text, start, end, true);
 		}
 

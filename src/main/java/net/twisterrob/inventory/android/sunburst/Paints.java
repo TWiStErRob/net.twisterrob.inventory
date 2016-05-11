@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.sunburst;
 
 import android.graphics.*;
+import android.text.TextPaint;
 
 import net.twisterrob.android.graphics.SunburstDrawable.BasePaintStrategy;
 
@@ -23,7 +24,7 @@ class Paints extends BasePaintStrategy<Node> {
 		return stroke;
 	}
 
-	@Override public Paint getText(Node node, int level, float start, float end) {
+	@Override public TextPaint getText(Node node, int level, float start, float end) {
 		text.setARGB(255, 0, 0, 0);
 		return text;
 	}

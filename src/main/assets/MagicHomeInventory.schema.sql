@@ -338,12 +338,12 @@ CREATE TABLE Property (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         /*NULL*/, -- user entered
-	image       INTEGER /*NULL*/ DEFAULT NULL
+	image       INTEGER      /*NULL*/ DEFAULT NULL
 		CONSTRAINT fk_Property_image
 		REFERENCES Image (_id)
 		ON UPDATE CASCADE
 		ON DELETE SET DEFAULT,
-	type        INTEGER          DEFAULT 0 -- other
+	type        INTEGER      NOT NULL DEFAULT 0 -- other
 		CONSTRAINT fk_Property_type
 			REFERENCES PropertyType(_id)
 			ON UPDATE CASCADE
@@ -379,12 +379,12 @@ CREATE TABLE Room (
 	_id         INTEGER      NOT NULL,
 	name        NVARCHAR     NOT NULL, -- user entered
 	description TEXT         /*NULL*/, -- user entered
-	image       INTEGER /*NULL*/ DEFAULT NULL
+	image       INTEGER      /*NULL*/ DEFAULT NULL
 		CONSTRAINT fk_Room_image
 		REFERENCES Image (_id)
 		ON UPDATE CASCADE
 		ON DELETE SET DEFAULT,
-	type        INTEGER          DEFAULT 0 -- other
+	type        INTEGER      NOT NULL DEFAULT 0 -- other
 		CONSTRAINT fk_Room_type
 			REFERENCES RoomType(_id)
 			ON UPDATE CASCADE

@@ -2,6 +2,8 @@ package net.twisterrob.android.content.glide;
 
 import java.io.*;
 
+import org.slf4j.*;
+
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
@@ -15,6 +17,7 @@ import com.bumptech.glide.request.target.Target;
 import com.caverock.androidsvg.*;
 
 public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
+	private static final Logger LOG = LoggerFactory.getLogger(SvgBitmapDecoder.class);
 	private final BitmapPool bitmapPool;
 
 	public SvgBitmapDecoder(Context context) {
@@ -48,6 +51,7 @@ public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
 			svg.renderToCanvas(canvas);
 			return BitmapResource.obtain(bitmap, bitmapPool);
 		} catch (SVGParseException ex) {
+			LOG.warn("Cannot load SVG from stream", ex);
 			throw new IOException("Cannot load SVG from stream", ex);
 		}
 	}

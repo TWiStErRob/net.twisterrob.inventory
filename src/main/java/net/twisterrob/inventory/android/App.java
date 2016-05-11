@@ -60,7 +60,7 @@ public class App extends Application {
 		}
 	}
 
-	public static App getInstance() {
+	public static @NonNull App getInstance() {
 		return s_instance;
 	}
 
@@ -138,7 +138,7 @@ public class App extends Application {
 		super.onTerminate();
 	}
 
-	public static Context getAppContext() {
+	public static @NonNull Context getAppContext() {
 		return getInstance();
 	}
 
