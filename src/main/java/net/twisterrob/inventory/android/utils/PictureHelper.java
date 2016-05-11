@@ -6,20 +6,18 @@ import java.util.regex.Pattern;
 import org.slf4j.*;
 
 import android.app.Activity;
-import android.content.*;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.*;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.ColorUtils;
 
 import static android.graphics.Color.*;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 
 public abstract class PictureHelper {
 	private static final Logger LOG = LoggerFactory.getLogger(PictureHelper.class);
@@ -52,10 +50,7 @@ public abstract class PictureHelper {
 	 * <li>inverse of accent through another negative will become accent</li>
 	 * </ul>
 	 */
-	public static @NonNull ColorMatrix tintMatrix(Context context) {
-		@ColorInt int accent = ContextCompat.getColor(context, R.color.accent);
-		@ColorInt int accentDark = ContextCompat.getColor(context, R.color.accentDark);
-		@ColorInt int color = ColorUtils.blendARGB(accent, accentDark, 0.8f);
+	public static @NonNull ColorMatrix tintMatrix(@ColorInt int color) {
 		ColorMatrix matrix = new ColorMatrix();
 		matrix.postConcat(new ColorMatrix(NEGATIVE));
 		matrix.postConcat(new ColorMatrix(new float[] {
@@ -65,6 +60,17 @@ public abstract class PictureHelper {
 				0, 0, 0, alpha(color) / 255f, 0
 		}));
 		matrix.postConcat(new ColorMatrix(NEGATIVE));
+		return matrix;
+	}
+
+	public static @NonNull ColorMatrix postAlpha(
+			@FloatRange(from = 0, to = 1) float alpha, @NonNull ColorMatrix matrix) {
+		matrix.postConcat(new ColorMatrix(new float[] {
+				1, 0, 0, 0, 0,
+				0, 1, 0, 0, 0,
+				0, 0, 1, 0, 0,
+				0, 0, 0, alpha, 0
+		}));
 		return matrix;
 	}
 

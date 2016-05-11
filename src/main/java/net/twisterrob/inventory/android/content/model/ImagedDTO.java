@@ -87,7 +87,7 @@ public abstract class ImagedDTO extends DTO {
 			} else {
 				type.setImageDrawable(null); // == Pic.IMAGE_REQUEST.load(null).into(type); Glide#268
 			}
-			Pic.svg().load(typeID).into(image);
+			Pic.svgNoTint().load(typeID).into(image);
 		} else {
 			Pic.svg().load(typeID).into(type);
 			Pic.jpg()
@@ -104,7 +104,7 @@ public abstract class ImagedDTO extends DTO {
 	}
 	private static void loadInto(ImageView image, Uri fullImagePath, long signature, int typeID) {
 		if (fullImagePath == null) {
-			Pic.svg().load(typeID).into(image);
+			Pic.svgNoTint().load(typeID).into(image);
 		} else {
 			Pic.jpg()
 			   .signature(new LongSignature(signature))

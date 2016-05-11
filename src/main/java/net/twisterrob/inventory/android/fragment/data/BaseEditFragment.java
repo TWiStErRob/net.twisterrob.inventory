@@ -12,7 +12,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.os.Build.*;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.*;
@@ -460,7 +460,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	private void reloadImage() {
 		if (currentImage == null) {
-			loadTypeImage(image);
+			Pic.svgNoTint().load(getTypeImageID()).into(image);
 		} else {
 			DrawableRequestBuilder<Uri> jpg = Pic.jpg();
 			if (original != null && currentImage.equals(original.getImageUri())) {
@@ -474,13 +474,12 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			   .diskCacheStrategy(NONE) // don't save any version: it's already on disk or used only once
 			   .into(image);
 		}
-		loadTypeImage(typeImage);
+		Pic.svg().load(getTypeImageID()).into(typeImage);
 	}
 
-	private void loadTypeImage(ImageView target) {
+	private @RawRes int getTypeImageID() {
 		Cursor cursor = (Cursor)type.getItemAtPosition(type.getSelectedItemPosition());
-		int typeImageID = cursor != null? ImagedDTO.getFallbackID(getContext(), cursor) : R.raw.category_unknown;
-		Pic.svg().load(typeImageID).into(target);
+		return cursor != null? ImagedDTO.getFallbackID(getContext(), cursor) : R.raw.category_unknown;
 	}
 
 	private class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
