@@ -47,7 +47,7 @@ select '';
 select '__________________________________.- Log -._____________________________________';
 .headers on
 
-.width 4 23 200
+.width 10 23 80
 select *
 from Log
 --where _id >= 217

@@ -1,30 +1,78 @@
-INSERT INTO Property (_id, type, name) VALUES (1, 102, 'Szentesi haz');
-INSERT INTO Property (_id, type, name) VALUES (2, 101, 'Szegedi albi');
-INSERT INTO Property (_id, type, name) VALUES (3, 101, 'Londoni albi');
-INSERT INTO Property (_id, type, name) VALUES (4, 201, 'Sarah storage');
+-- All Rooms with distinct icons
+INSERT INTO Property (_id, name) VALUES (0, '!All Rooms');
+INSERT INTO Room_Rooter (property, type, name)
+	select
+		0                                            as property,
+		_id                                          as type,
+		upper(substr(name, 6, 1)) || substr(name, 7) as name
+	from RoomType pt
+	join (
+		select
+			MIN(pt._id)                 as representative,
+			IFNULL(pt.image, ptk.image) as image
+		from RoomType     pt
+		join RoomTypeKind ptk on pt.kind = ptk._id
+		group by 2
+		order by 1
+	) im on pt._id = im.representative
+;
 
-INSERT INTO Room_Rooter(_id, property, type, name) VALUES(0, 1,   0, '?');
-INSERT INTO Room_Rooter(_id, property, type, name) VALUES(1, 1, 102, 'Nagyszoba');
-INSERT INTO Room_Rooter(_id, property, type, name) VALUES(2, 1, 102, 'Robi szoba');
-INSERT INTO Room_Rooter(_id, property, type, name) VALUES(3, 1, 103, 'Konyha');
-INSERT INTO Item (_id, parent, category, name) VALUES (200001, (
-	select root
-	from Room
-	where _id = 3), 10600, 'Poharak');
-INSERT INTO Item (_id, parent, category, name) VALUES (200002, 200001, 10600, 'Neon pohar 9');
-INSERT INTO Item (_id, parent, category, name) VALUES (200003, 200001, 10600, 'Neon pohar 10');
-INSERT INTO Room_Rooter(_id, property, type, name) VALUES(4, 1, 201, 'Spajz');
-	INSERT INTO Item(_id, parent, category, name) VALUES(100005, (select root from Room where _id = 4), 1100, 'Papirdoboz kek karikakkal');
-		INSERT INTO Item(_id, parent, category, name) VALUES(100006, 100005, 10600, 'Piros muanyag tanyer');
-		INSERT INTO Item(_id, parent, category, name) VALUES(100007, 100005, 10600, 'Neon pohar 1');
-			INSERT INTO Item(_id, parent, category, name) VALUES(110008, 100007, 13200, 'Viz');
-				INSERT INTO Item(_id, parent, category, name) VALUES(110009, 110008, 3, 'H20');
-		INSERT INTO Item(_id, parent, category, name) VALUES(100008, 100005, 10600, 'Neon pohar 2');
-		INSERT INTO Item(_id, parent, category, name) VALUES(100009, 100005, 10600, 'Neon pohar 3');
-		INSERT INTO Item(_id, parent, category, name) VALUES(100010, 100005, 10600, 'Neon pohar 4');
-		INSERT INTO Item(_id, parent, category, name) VALUES(100011, 100005, 10600, 'Neon pohar 5');
-		INSERT INTO Item(_id, parent, category, name) VALUES(100012, 100005, 10600, 'Neon pohar 6');
-		INSERT INTO Item(_id, parent, category, name) VALUES(100013, 100005, 10600, 'Neon pohar 7');
-		INSERT INTO Item(_id, parent, category, name) VALUES(100014, 100005, 10600, 'Neon pohar 8');
-INSERT INTO Room_Rooter(_id, property, type, name) VALUES(5, 1, 101, 'Furdoszoba');
-INSERT INTO Room_Rooter(_id, property, type, name) VALUES(6, 1, 104, 'WC');
+-- All Categories with distinct icons
+INSERT INTO Property (_id, name) VALUES (1, '!Test');
+INSERT INTO Room_Rooter (property, type, name) VALUES (1, 0, '!All Categories');
+INSERT INTO Item (parent, category, name)
+	select
+		(select root from Room where name = '!All Categories')            as parent,
+		c._id                                                             as category,
+		replace(upper(substr(name, 10, 1)) || substr(name, 11), '_', ' ') as name
+	from Category c
+	join (
+		select
+			MIN(_id) as representative,
+			image    as image
+		from Category
+		group by 2
+		order by 1
+	) im on c._id = im.representative
+;
+
+-- All Properties with distinct icons
+INSERT INTO Property (type, name)
+	select
+		pt._id                                         as type,
+		upper(substr(name, 10, 1)) || substr(name, 11) as name
+	from PropertyType pt
+	join (
+		select
+			MIN(pt._id)                 as representative,
+			IFNULL(pt.image, ptk.image) as image
+		from PropertyType     pt
+		join PropertyTypeKind ptk on pt.kind = ptk._id
+		group by 2
+		order by 1
+	) im on pt._id = im.representative
+;
+
+-- Other test items in !Test property
+INSERT INTO Room_Rooter (property, type, name) VALUES (1, 0, '!Test Hierarchy');
+	INSERT INTO Item(_id, parent, category, name)
+		VALUES(10001, (select root from Room where name = '!Test Hierarchy'), (select _id from Category where name = 'category_internal'), 'Stuff');
+	INSERT INTO Item(_id, parent, category, name)
+		VALUES(10002, (select root from Room where name = '!Test Hierarchy'), (select _id from Category where name = 'category_drinkware'), 'Glass');
+		INSERT INTO Item(_id, parent, category, name)
+			VALUES(10100, 10002, (select _id from Category where name = 'category_liquid'), 'Water');
+			INSERT INTO Item(_id, parent, category, name)
+				VALUES(10101, 10100, (select _id from Category where name = 'category_part'), 'H x2');
+			INSERT INTO Item(_id, parent, category, name)
+				VALUES(10102, 10100, (select _id from Category where name = 'category_part'), 'O');
+	INSERT INTO Item(_id, parent, category, name)
+		VALUES(10010, (select root from Room where name = '!Test Hierarchy'), (select _id from Category where name = 'category_group'), 'Items');
+		INSERT INTO Item(_id, parent, category, name) VALUES(10011, 10010, 0, 'Item 10011');
+		INSERT INTO Item(_id, parent, category, name) VALUES(10012, 10010, 0, 'Item 10012');
+		INSERT INTO Item(_id, parent, category, name) VALUES(10013, 10010, 0, 'Item 10013');
+		INSERT INTO Item(_id, parent, category, name) VALUES(10014, 10010, 0, 'Item 10014');
+		INSERT INTO Item(_id, parent, category, name) VALUES(10015, 10010, 0, 'Item 10015');
+		INSERT INTO Item(_id, parent, category, name) VALUES(10016, 10010, 0, 'Item 10016');
+		INSERT INTO Item(_id, parent, category, name) VALUES(10017, 10010, 0, 'Item 10017');
+		INSERT INTO Item(_id, parent, category, name) VALUES(10018, 10010, 0, 'Item 10018');
+		INSERT INTO Item(_id, parent, category, name) VALUES(10019, 10010, 0, 'Item 10019');
