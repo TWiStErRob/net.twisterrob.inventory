@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.inmotionhosting.com/support/images/stories/icons/ecommerce/empty-cart-dark.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1000 725">
+	<g transform="translate(50, 50)">
+		<path id="body" d="M0,0 h+100 l+200,450 h+400 l+200,-350 h-700"
+		      fill="none" stroke="black" stroke-width="100" stroke-linejoin="round" stroke-linecap="round" />
+		<g transform="translate(275, 600)">
+			<circle id="light-left" cx="0" cy="0" r="75" />
+			<circle id="light-right" cx="400" cy="0" r="75" />
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.freepik.com/free-icon/clock-of-circular-shape-at-two-o-clock_739811.htm -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,-25 550 550">
+	<g transform="translate(250, 250)">
+		<circle r="250" stroke="black" stroke-width="25" fill="white" />
+		<rect x="-20" width="40" height="215" rx="15" ry="15" transform="rotate(160)" />
+		<rect x="-20" width="40" height="175" rx="15" ry="15" transform="rotate(260)" />
+		<circle r="30" />
+	</g>
+</svg>

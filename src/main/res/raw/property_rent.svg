@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Based on http://blog.owlline.com/home.png -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-90,-610 780 620">
-	<rect id="interior" x="0" y="-300" width="600" height="300" fill="white" />
+	<rect id="interior" x="0" y="-300" width="600" height="300" fill="lightgrey" />
 	<path id="house" d="
 		M 0,0
 		v-300

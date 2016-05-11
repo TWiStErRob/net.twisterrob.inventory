@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.lovenewfs.com/images/PawPrintLg.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-150,-150 380 380">
+	<g transform="rotate(-45)">
+		<ellipse rx="40" ry="60" transform="translate(-130, 10) rotate(-40)" />
+		<ellipse rx="40" ry="60" transform="translate(-50, -50) rotate(-10)" />
+		<ellipse rx="40" ry="60" transform="translate(50, -50) rotate(10)" />
+		<ellipse rx="40" ry="60" transform="translate(130, 10) rotate(40)" />
+		<!-- TODO make it symmetric and clean maybe use entity variables -->
+		<path d="M 0,0
+			c 45,0 100,100 115,155
+			c 15,60 -50,90 -115,90
+			c -60,0 -130,-25 -115,-90
+			c 5,-60 90,-160 115,-155
+		" />
+	</g>
+</svg>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Based on http://www.iconarchive.com/show/windows-8-icons-by-icons8/Clothing-T-Shirt-icon.html -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50,-200 150 240">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-45,-200 150 240">
 	<ellipse id="bottom" cx="0" cy="0" rx="50" ry="40" fill="black" />
 	<line id="line" x1="37" x2="50" y1="0" y2="-200" stroke="black" stroke-width="25" />
 	<line id="line2" x1="55" x2="100" y1="-195" y2="-100" stroke="black" stroke-width="15" />

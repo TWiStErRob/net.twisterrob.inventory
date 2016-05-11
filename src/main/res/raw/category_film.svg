@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY stripThick "150">
+	<!ENTITY holeH "75">
+	<!ENTITY holeW "80">
+	<!ENTITY holeWSpace "170">
+	<!ENTITY holeHOff "37.5">
+	]>
+<!-- Based on http://xatalert.com/wp-content/uploads/2015/09/film-strip-icon-220x162.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="425,0 575 600"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--<rect id="interior" x="0" y="-300" width="600" height="300" fill="lightgrey" />-->
+	<defs>
+		<path id="strip" d="
+			M 0,0 h+1500 v+&stripThick; h-1500 z
+			M -&holeWSpace;,&holeHOff;
+			m+&holeWSpace;,0 v+&holeH; h+&holeW; v-&holeH; h-&holeW; Z
+			m+&holeWSpace;,0 v+&holeH; h+&holeW; v-&holeH; h-&holeW; Z
+			m+&holeWSpace;,0 v+&holeH; h+&holeW; v-&holeH; h-&holeW; Z
+			m+&holeWSpace;,0 v+&holeH; h+&holeW; v-&holeH; h-&holeW; Z
+			m+&holeWSpace;,0 v+&holeH; h+&holeW; v-&holeH; h-&holeW; Z
+			m+&holeWSpace;,0 v+&holeH; h+&holeW; v-&holeH; h-&holeW; Z
+			m+&holeWSpace;,0 v+&holeH; h+&holeW; v-&holeH; h-&holeW; Z
+			m+&holeWSpace;,0 v+&holeH; h+&holeW; v-&holeH; h-&holeW; Z
+			m+&holeWSpace;,0 v+&holeH; h+&holeW; v-&holeH; h-&holeW; Z
+			" fill="black" stroke="none" stroke-width="10" stroke-linejoin="round" />
+	</defs>
+	<use xlink:href="#strip" y="0" />
+	<use xlink:href="#strip" y="450" />
+	<rect id="negative" x="0" y="&stripThick;" width="1500" height="300" fill="grey" fill-opacity="0.4" />
+	<rect x="   0" y="&stripThick;" width="&holeW;" height="300" />
+	<rect x=" 450" y="&stripThick;" width="&holeW;" height="300" />
+	<rect x=" 900" y="&stripThick;" width="&holeW;" height="300" />
+	<rect x="1350" y="&stripThick;" width="&holeW;" height="300" />
+</svg>

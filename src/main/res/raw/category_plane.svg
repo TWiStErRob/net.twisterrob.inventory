@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY wingOffset "250">
+	<!ENTITY wingSpan "200">
+	<!ENTITY wingThick "150">
+	<!ENTITY wingShort "75">
+	<!ENTITY noseLength "100">
+	<!ENTITY bodyWidth "100">
+	<!ENTITY bodyWidthHalf "50">
+	<!ENTITY bodyLength "400">
+	<!ENTITY tailSpan "85">
+	<!ENTITY tailThick "50">
+	<!ENTITY tailShort "40">
+	]>
+<!-- Based on http://s1377.photobucket.com/user/alansimmons1/media/plane-512_zpsipctchau.png.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-500,0 500 500">
+	<g transform="rotate(45)">
+		<path id="body" d="M 0,0
+			a &bodyWidthHalf;,&noseLength; -30 0 1 &bodyWidthHalf;,&noseLength;
+			v+&bodyLength;
+			h-&bodyWidth;
+			v-&bodyLength;
+			a &bodyWidthHalf;,-&noseLength; 30 0 1 &bodyWidthHalf;,-&noseLength;
+			z
+			" fill="black" />
+		<g id="wings" transform="translate(0, &wingOffset;)">
+			<path id="wing-right" stroke-width="50" stroke="black" stroke-linejoin="round"
+			      d="m +&bodyWidthHalf;,0 l +&wingSpan;,&wingThick; l-&wingSpan;,-&wingShort; z" />
+			<path id="wing-left" stroke-width="50" stroke="black" stroke-linejoin="round"
+			      d="m -&bodyWidthHalf;,0 l -&wingSpan;,&wingThick; l+&wingSpan;,-&wingShort; z" />
+		</g>
+		<g id="tails" transform="translate(0,&noseLength;) translate(0,&bodyLength;)">
+			<path id="tail-right" stroke-width="50" stroke="black" stroke-linejoin="round"
+			      d="M 0,0 l +&tailSpan;,&tailThick; l-&tailSpan;,-&tailShort; z" />
+			<path id="tail-left" stroke-width="50" stroke="black" stroke-linejoin="round"
+			      d="M 0,0 l -&tailSpan;,&tailThick; l+&tailSpan;,-&tailShort; z" />
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://www.iconfinder.com/icons/174646/shop_icon -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-75,-525 650 550"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style type="text/css"><![CDATA[
+			#house, #cap-cover {
+				fill: black;
+				stroke: black;
+				stroke-width: 50;
+				stroke-linejoin: round;
+			}
+		]]></style>
+		<line id="cover" x2="0" y2="100" stroke="white" stroke-width="100" stroke-linecap="round" />
+		<line id="rail" x2="0" y2="160" stroke="black" stroke-width="50" stroke-linecap="round" />
+	</defs>
+	<rect id="interior" x="0" y="-500" width="500" height="500" fill="lightgray" />
+	<path id="house" d="
+		M 0,0
+		v-225 h+175 v+225
+		h+325
+		v-500
+		h-500
+		Z
+		M 175,0 v-250 h+325 v+250 Z
+		" />
+	<g transform="translate(0,-450)">
+		<use xlink:href="#cover" transform="translate(050) rotate(+20)" />
+		<use xlink:href="#cover" transform="translate(050) rotate(+20)" />
+		<use xlink:href="#cover" transform="translate(150) rotate(+12)" />
+		<use xlink:href="#cover" transform="translate(250) rotate(0)" />
+		<use xlink:href="#cover" transform="translate(350) rotate(-12)" />
+		<use xlink:href="#cover" transform="translate(450) rotate(-20)" />
+	</g>
+	<g transform="translate(0,-500)">
+		<use xlink:href="#rail" transform="translate(000,0) rotate(+15)" />
+		<use xlink:href="#rail" transform="translate(100,0) rotate(+10)" />
+		<use xlink:href="#rail" transform="translate(200,0) rotate(+5)" />
+		<use xlink:href="#rail" transform="translate(300,0) rotate(-5)" />
+		<use xlink:href="#rail" transform="translate(400,0) rotate(-10)" />
+		<use xlink:href="#rail" transform="translate(500,0) rotate(-15)" />
+	</g>
+	<line id="cap-cover" x1="0" y1="-500" x2="500" y2="-500" />
+</svg>

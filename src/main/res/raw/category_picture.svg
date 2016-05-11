@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25 -25 1050 800">
+	<rect id="frame" width="1000" height="750" fill="white" stroke="black" stroke-width="50" />
+	<circle id="sun" r="75" cx="200" cy="200" fill="gray" />
+	<path id="mountain" d="M 100, 650
+		l 250,-350
+		l 150,150
+		l 200,-300
+		l 200,475
+	z" fill="black" />
+</svg>

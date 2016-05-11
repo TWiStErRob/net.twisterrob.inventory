@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://www.iconfinder.com/icons/273286/cash_currency_finance_money_note_icon -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,-25 1050 650">
+	<rect id="note" x="0" y="0" width="1000" height="600" rx="10" ry="10"
+	      fill="white" stroke="black" stroke-width="50" />
+	<path id="corner-upper-left" d=" M 0000,000 h+200 a 250,250 0 0 1 -200,+200 z" />
+	<path id="corner-lower-left" d=" M 0000,600 v-200 a 250,250 0 0 1 +200,+200 z" />
+	<path id="corner-upper-right" d="M 1000,000 v+200 a 250,250 0 0 1 -200,-200 z" />
+	<path id="corner-lower-right" d="M 1000,600 h-200 a 250,250 0 0 1 +200,-200 z" />
+
+	<circle id="denomination-background" cx="500" cy="300" r="200" fill="grey" />
+	<!-- alignment-baseline="central" is not supported by AndroidSVG -->
+	<text id="denomination" x="500" y="300" text-anchor="middle" dy="100" font-family="serif"
+	      font-size="300" fill="white" font-weight="bold">
+		1
+	</text>
+</svg>

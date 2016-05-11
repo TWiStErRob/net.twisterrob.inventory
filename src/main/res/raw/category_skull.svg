@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY skullRadius "200">
+	<!ENTITY skullDiameter "400">
+	<!ENTITY eyeRadius "50">
+	<!ENTITY eyeDiameter "100">
+	<!ENTITY eyeCX "75">
+	<!ENTITY eyeCY "25">
+	<!ENTITY boneLength "500">
+	<!ENTITY boneLengthHalf "250">
+	<!ENTITY jawHeight "100">
+	]>
+<!-- Based on http://www.outlawcustomdesigns.com/products/icon-skull-crossbones-001.html -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="-300,-200 600 685">
+	<defs>
+		<g id="bone">
+			<rect width="&boneLength;" height="50" />
+			<circle r="40" cx="0" cy="-10" />
+			<circle r="40" cx="0" cy="+60" />
+			<circle r="40" cx="&boneLength;" cy="-10" />
+			<circle r="40" cx="&boneLength;" cy="+60" />
+		</g>
+	</defs>
+	<g id="skull">
+		<!-- Circles based on http://stackoverflow.com/a/10477334/253468 -->
+		<path id="cranium" d="
+			M 0,0 m 0,+&skullRadius; a &skullRadius;,&skullRadius; 0 0 0 0,-&skullDiameter;
+			M 0,0 m 0,-&skullRadius; a &skullRadius;,&skullRadius; 0 0 0 0,+&skullDiameter;
+			M &eyeCX;,&eyeCY; m 0,+&eyeRadius; a &eyeRadius;,&eyeRadius; 0 0 1 0,-&eyeDiameter;
+			M &eyeCX;,&eyeCY; m 0,-&eyeRadius; a &eyeRadius;,&eyeRadius; 0 0 1 0,+&eyeDiameter;
+			M -&eyeCX;,&eyeCY; m 0,+&eyeRadius; a &eyeRadius;,&eyeRadius; 0 0 1 0,-&eyeDiameter;
+			M -&eyeCX;,&eyeCY; m 0,-&eyeRadius; a &eyeRadius;,&eyeRadius; 0 0 1 0,+&eyeDiameter;
+		z" />
+		<rect id="jaw" width="&skullRadius;" height="&jawHeight;" rx="25" ry="25" y="&skullRadius;"
+		      transform="translate(-100,-50)" />
+	</g>
+	<g transform="translate(0,&skullRadius;) translate(0,&jawHeight;)">
+		<use xlink:href="#bone" x="-&boneLengthHalf;" transform="rotate(+20)" />
+		<use xlink:href="#bone" x="-&boneLengthHalf;" transform="rotate(-20)" />
+	</g>
+</svg>

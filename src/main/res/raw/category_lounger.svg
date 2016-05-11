@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://www.123rf.com/clipart-vector/patio_furniture.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,-230 700 375">
+	<g id="bed">
+		<path d="M 0,0 h+500 l+150,-200" fill="none" stroke="black" stroke-width="100" stroke-linejoin="bevel" />
+		<rect id="leg-left" x="75" width="75" height="150" rx="15" ry="15" />
+		<rect id="leg-right" x="375" width="75" height="150" rx="15" ry="15" />
+	</g>
+</svg>

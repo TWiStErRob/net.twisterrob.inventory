@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY cupBottom "200">
+	<!ENTITY cupHeight "500">
+	<!ENTITY cupEdge "100">
+	]>
+<!-- Based on category_burger_and_drink.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,-200 450 700">
+	<g id="drink">
+		<line id="straw" x1="&cupBottom;" x2="0" y1="&cupHeight;" y2="-&cupBottom;" fill="black" stroke="black"
+		      stroke-width="35" />
+		<path id="cup" d="M 0,0 h+&cupEdge;+&cupBottom;+&cupEdge; l-&cupEdge;,&cupHeight; h-&cupBottom; z" fill="white"
+		      fill-opacity="0.5" stroke="black" stroke-width="25" />
+	</g>
+</svg>

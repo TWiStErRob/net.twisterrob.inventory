@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://commons.wikimedia.org/wiki/File:Heart_font_awesome.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,75 950 725">
+	<rect id="left" width="500" height="800" x="-250" y="-350" rx="250" transform="translate(300,400) rotate(-45)" />
+	<rect id="right" width="500" height="800" x="-250" y="-350" rx="250" transform="translate(600,400) rotate(+45)" />
+</svg>

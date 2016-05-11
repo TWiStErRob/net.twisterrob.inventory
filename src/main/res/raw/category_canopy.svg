@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://www.iconfinder.com/icons/761509/beach_bench_canopy_relax_sun_shade_sunbathing_umbrella_icon#size=512 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="-50,-50 1100 1050">
+	<defs>
+		<path id="chair" d="
+			M 0,0 l-50,-200
+			M 0,0 h+250
+			M 200,0 l+25,150
+			M 25,0 l-25,150
+		" fill="none" stroke="black" stroke-linejoin="round" stroke-linecap="round" stroke-width="75" />
+	</defs>
+	<path id="umbrella" transform="translate(500,350)" d="M 0,0
+		h+500 a 500,350 0 0 0 -1000,0 h+500
+		h+200 a 200,350 0 0 0 -400,0 h+200
+		v+600
+		" fill="white" stroke="black" stroke-linejoin="round" stroke-linecap="round" stroke-width="75" />
+	<use xlink:href="#chair" transform="translate(090,800)" />
+	<use xlink:href="#chair" transform="translate(910,800) scale(-1,1)" />
+</svg>

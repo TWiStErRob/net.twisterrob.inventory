@@ -46,7 +46,7 @@
 	<string name="property_retail">Retail</string>
 	<string name="property_retail_keywords">shop, outlet, restaurant, bar</string>
 
-	<string name="property_services">Services</string>
+	<string name="property_services">Service</string>
 	<string name="property_services_keywords">bank, post office, library, estate agent, travel agent, cinema, internet cafe</string>
 
 	<string name="property_recreation">Recreational</string>

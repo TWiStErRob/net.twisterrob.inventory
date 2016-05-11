@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on category_burger_and_drink.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,0 450 300">
+	<g id="burger">
+		<rect id="base" width="400" height="300" rx="200" ry="75" fill="black" />
+		<rect id="top" x="-25" y="75" width="450" height="50" rx="50" ry="50" fill="white" />
+		<rect id="bottom" x="-25" y="175" width="450" height="50" rx="50" ry="50" fill="white" />
+		<rect id="middle" x="-25" y="113" width="450" height="75" rx="50" ry="50" fill="black" />
+	</g>
+</svg>

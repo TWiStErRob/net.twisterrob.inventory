@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY thick "120">
+	<!ENTITY thick_half "60">
+	<!ENTITY len "350">
+	<!ENTITY len_half "175">
+	<!ENTITY rad "10">
+	]>
+<!-- Based on https://svn.openstreetmap.org/applications/share/map-icons/svg-twotone/health/hospital.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15,-15 530 530">
+	<defs>
+		<style type="text/css"><![CDATA[
+			rect {
+				fill: black;
+			}
+			circle {
+				stroke: black;
+				fill: white;
+			}
+		]]></style>
+	</defs>
+	<g transform="translate(250, 250)">
+		<circle r="250" stroke-width="30" />
+		<rect id="vert" x="-&thick_half;" y="-&len_half;" width="&thick;" height="&len;" rx="&rad;" ry="&rad;" />
+		<rect id="hori" x="-&len_half;" y="-&thick_half;" width="&len;" height="&thick;" rx="&rad;" ry="&rad;" />
+	</g>
+</svg>

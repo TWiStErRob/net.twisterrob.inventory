@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- based on https://www.iconfinder.com/icons/280823/drug_drugs_pharmacy_pill_pills_icon -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,0 1000 850">
+	<g id="pill" transform="translate(700,600)">
+		<circle id="pill-body" r="250" />
+		<rect id="pill-separator" x="-250" width="500" y="-30" height="60" fill="white" rx="8" />
+	</g>
+	<g id="capsule" transform="translate(125,325) rotate(20) translate(0,-350)">
+		<rect id="capsule-edge" width="300" height="800" rx="150" ry="150"
+		      fill="white" fill-opacity="0.5" stroke="black" stroke-width="50" />
+		<rect id="capsule-bottom" width="300" height="400" y="400" rx="150" ry="150" />
+		<rect id="capsule-separator" width="300" height="150" y="400" />
+	</g>
+</svg>

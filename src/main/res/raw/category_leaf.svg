@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://megaicons.net/iconspack-60/995/ -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-155,-340 430 450">
+	<g transform="scale(-1,1) rotate(-30)">
+		<path d="M 0,0
+			C 200,100 300,-100 -50,-400
+			C -300,-100 -200,100 0,0
+			z
+		" fill="gray" stroke="black" stroke-width="25" />
+		<path d="M -40,-250 C 0,-50 -50,-50 75,150" fill="none" stroke="black" stroke-width="25" stroke-linecap="round" />
+	</g>
+</svg>
