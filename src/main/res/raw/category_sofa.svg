@@ -4,13 +4,13 @@
 	]>
 <!-- Based on https://s3.amazonaws.com/media-p.slid.es/uploads/semeano/images/249210/icon_6429.png -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1000 400">
-	<style type="text/css">
+	<style type="text/css"><![CDATA[
 		rect {
 			fill: black;
 			stroke: white;
 			stroke-width: 25;
 		}
-	</style>
+	]]></style>
 	<rect id="back" x="100" y="0" width="800" height="200" rx="&radius;" ry="&radius;" />
 	<rect id="left" x="0" y="100" width="250" height="300" rx="&radius;" ry="&radius;" />
 	<rect id="right" x="750" y="100" width="250" height="300" rx="&radius;" ry="&radius;" />

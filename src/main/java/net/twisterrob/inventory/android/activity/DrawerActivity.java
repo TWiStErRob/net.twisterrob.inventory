@@ -145,7 +145,7 @@ public abstract class DrawerActivity extends BaseActivity {
 
 	public static DrawerNavigator createDefaultDrawer(Activity activity, NavigationView nav) {
 		DrawerNavigator data = new DrawerNavigator(nav, activity);
-		data.add(R.id.action_drawer_home, R.raw.property_home, MainActivity.home());
+		data.add(R.id.action_drawer_home, R.raw.property_house, MainActivity.home());
 		data.add(R.id.action_drawer_categories, R.raw.category_unknown, MainActivity.list(PAGE_CATEGORIES));
 		data.add(R.id.action_drawer_properties, R.raw.property_unknown, MainActivity.list(PAGE_PROPERTIES));
 		data.add(R.id.action_drawer_rooms, R.raw.room_unknown, MainActivity.list(PAGE_ROOMS));

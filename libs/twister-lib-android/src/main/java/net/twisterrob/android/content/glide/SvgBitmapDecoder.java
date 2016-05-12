@@ -19,21 +19,31 @@ import com.caverock.androidsvg.*;
 public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
 	private static final Logger LOG = LoggerFactory.getLogger(SvgBitmapDecoder.class);
 	private final BitmapPool bitmapPool;
+	private final SvgManipulator manipulator;
 
-	public SvgBitmapDecoder(Context context) {
-		this(Glide.get(context).getBitmapPool());
+	public SvgBitmapDecoder(Context context, SvgManipulator manipulator) {
+		this(Glide.get(context).getBitmapPool(), manipulator);
 	}
 
-	public SvgBitmapDecoder(BitmapPool bitmapPool) {
+	public SvgBitmapDecoder(BitmapPool bitmapPool, SvgManipulator manipulator) {
 		this.bitmapPool = bitmapPool;
+		this.manipulator = manipulator;
 	}
 
 	public Resource<Bitmap> decode(InputStream source, int width, int height) throws IOException {
 		try {
 			SVG svg = SVG.getFromInputStream(source);
+			if (manipulator != null) {
+				svg = manipulator.manipulate(svg);
+			}
 			if (width == Target.SIZE_ORIGINAL && height == Target.SIZE_ORIGINAL) {
 				width = (int)svg.getDocumentWidth();
 				height = (int)svg.getDocumentHeight();
+				if (width <= 0 || height <= 0) {
+					RectF viewBox = svg.getDocumentViewBox();
+					width = (int)viewBox.width();
+					height = (int)viewBox.height();
+				}
 			} else {
 				if (width == Target.SIZE_ORIGINAL) {
 					width = (int)(height * svg.getDocumentAspectRatio());
@@ -64,8 +74,12 @@ public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
 		return bitmap;
 	}
 
-	@Override
-	public String getId() {
-		return "";
+	@Override public String getId() {
+		return getClass().getSimpleName() + "!" + manipulator;
+	}
+
+	public interface SvgManipulator {
+		SVG manipulate(SVG svg);
+		String toString();
 	}
 }

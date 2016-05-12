@@ -1,7 +1,7 @@
 INSERT INTO PropertyTypeKind
 	           (_id, name,                        image)
 	      SELECT  0, 'property_group_other',      'property_unknown'
-	UNION SELECT  1, 'property_group_dwelling',   'property_home'
+	UNION SELECT  1, 'property_group_dwelling',   'property_house'
 	UNION SELECT  2, 'property_group_commercial', 'property_office'
 ;
 INSERT INTO PropertyType
@@ -44,7 +44,7 @@ INSERT INTO RoomType
 	UNION SELECT 107,    1, 'room_recreation', NULL
 -- Storage
 	UNION SELECT 201,    2, 'room_storage',    'room_storage'
-	UNION SELECT 202,    2, 'room_garage',     NULL
+	UNION SELECT 202,    2, 'room_garage',     'room_garage'
 	UNION SELECT 203,    2, 'room_outbuilding',NULL
 	UNION SELECT 204,    2, 'room_attic',      NULL
 	UNION SELECT 205,    2, 'room_basement',   NULL

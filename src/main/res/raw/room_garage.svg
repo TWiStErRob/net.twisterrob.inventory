@@ -15,8 +15,8 @@
 		<line id="wall-right" x1="+400" y1="-350" x2="+400" y2="+500" stroke-width=" 50" />
 		<line id="roof-left" x1="   0" y1="-450" x2="-500" y2="-450" stroke-width="100" transform="skewY(-15)" />
 		<line id="roof-right" x1="   0" y1="-450" x2="+500" y2="-450" stroke-width="100" transform="skewY(+15)" />
-		<g id="in-the-house" transform="translate(0, 100)">
-			<image width="600" height="600" x="-300" y="-300" xlink:href="category_unknown.svg" />
+		<g id="in-the-house" transform="translate(0, 150)">
+			<image width="700" height="700" x="-350" y="-350" xlink:href="category_car_front.svg" />
 		</g>
 	</g>
 </svg>

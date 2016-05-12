@@ -17,7 +17,7 @@ console.log(`<style>
 		width: 256px;
 		height: 256px;
 	}
-	div.icon > img {
+	div.icon > embed {
 		max-height: 100%;
 		max-width: 100%;
 		border: 1px solid lightgrey;
@@ -30,7 +30,7 @@ fs.readdir('.', function (err, list) {
 		if (!file.match(icons)) return;
 		console.log(`<div class="item"><a href="` + file + `">
 			<div class="caption">` + file + `</div>
-			<div class="icon"><img src="` + file + `"/></div>
+			<div class="icon"><embed src="` + file + `"></embed></div>
 		</a></div>`);
 	});
 });

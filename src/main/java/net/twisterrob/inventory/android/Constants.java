@@ -29,6 +29,7 @@ import com.bumptech.glide.signature.StringSignature;
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.inventory.android.content.io.RawResourceResolver;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 
 public interface Constants {
@@ -172,7 +173,7 @@ public interface Constants {
 			BitmapPool pool = Glide.get(context).getBitmapPool();
 			return new GifBitmapWrapperResourceDecoder(
 					new ImageVideoBitmapDecoder(
-							new SvgBitmapDecoder(pool),
+							new SvgBitmapDecoder(pool, new RawResourceResolver(context, pool)),
 							null /*fileDescriptorDecoder*/
 					),
 					new GifResourceDecoder(context, pool),

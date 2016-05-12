@@ -2,6 +2,16 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Based on http://interiordesignable.com/wp-content/uploads/2014/01/church-house-clip-art-vector%2D%2Droyalty-public.png -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-500 -500 1000 1000">
+	<defs>
+		<filter id="negative">
+			<feColorMatrix type="matrix" values="
+				-1  0  0 0 1
+				 0 -1  0 0 1
+				 0  0 -1 0 1
+				 0  0  0 1 0
+			" />
+		</filter>
+	</defs>
 	<path d="
 		M 0,-300
 		l+300,+300
@@ -12,6 +22,8 @@
 		L +450,0
 		" fill="black" stroke="black" stroke-width="100" stroke-linejoin="round" stroke-linecap="round" />
 	<g id="on-the-house" transform="translate(0, 100)">
+		<!-- AndroidSVG doesn't support filters yet, so need to copy in the contents for now -->
+		<!--<image width="550" height="550" x="-275" y="-275" xlink:href="category_unknown.svg" filter="url(#negative)" />-->
 		<circle r="250" stroke="white" stroke-width="50" fill="none" />
 		<text text-anchor="middle" font-size="400" font-weight="bold" dy="125" fill="white">?</text>
 	</g>
