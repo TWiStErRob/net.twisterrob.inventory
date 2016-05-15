@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY houseW "600">
+	<!ENTITY houseH "1000">
+	<!ENTITY windowW "40">
+	<!ENTITY windowH "75">
+	<!ENTITY windowGap "15">
+	<!ENTITY windowGapH "52.5">
+	<!ENTITY windowGapV "75">
+	<!ENTITY window "v+&windowH; h+&windowW; v-&windowH; h-&windowW;z m&windowW;,0">
+	<!ENTITY doubleWindow "m&windowGapH;,0 &window; m&windowGap;,0 &window; m&windowGapH;,0">
+	<!ENTITY doorW "125">
+	<!ENTITY doorH "125">
+	<!ENTITY door "h+&doorW; v-&doorH; h-&doorW; v+&doorH; z">
+	]>
+<!-- Based on http://unrestrictedstock.com/wp-content/uploads/holmes-houses-apartment-condominium-condo-building-window-chimney-door-stairs-elevator-free-stock-vector-set-1.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 600 1000">
+	<path d="
+		M0,0 h+&houseW; v+&houseH; h-&houseW; v-&houseH; z
+		m0,&windowGapV; &doubleWindow; &doubleWindow; &doubleWindow; m-&houseW;,&windowH; 
+		m0,&windowGapV; &doubleWindow; &doubleWindow; &doubleWindow; m-&houseW;,&windowH;
+		m0,&windowGapV; &doubleWindow; &doubleWindow; &doubleWindow; m-&houseW;,&windowH;
+		m0,&windowGapV; &doubleWindow; &doubleWindow; &doubleWindow; m-&houseW;,&windowH;
+		m0,&windowGapV; &doubleWindow; &doubleWindow; &doubleWindow; m-&houseW;,&windowH;
+		M75,&houseH; &door;
+		M400,&houseH; &door;
+	" />
+</svg>

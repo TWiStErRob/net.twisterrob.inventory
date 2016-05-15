@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY tilt "40">
+	<!ENTITY squash "200">
+	<!ENTITY diam "400">
+	<!ENTITY height "50">
+	<!ENTITY bump "5">
+	]>
+<!-- Based on https://thenounproject.com/term/scarf/307860/ -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,-75 450 450"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<rect id="thread" width="15" height="30" rx="5" fill="white" />
+	</defs>
+	<rect x="225" y="75" height="250" width="150" fill="black" stroke="white" stroke-width="15" transform="skewX(-10)" />
+	<g transform="translate(165,325)">
+		<use xlink:href="#thread" transform="translate(0)" />
+		<use xlink:href="#thread" transform="translate(35)" />
+		<use xlink:href="#thread" transform="translate(70)" />
+		<use xlink:href="#thread" transform="translate(105)" />
+		<use xlink:href="#thread" transform="translate(140)" />
+	</g>
+	<path d="
+		M 0,0 a &squash;,&tilt; 0 0 1 &diam;,0
+		l-&bump;,+&height;
+		l+&bump;,+&height;
+		a &squash;,&tilt; 0 0 1 -&diam;,0
+		l+&bump;,-&height;
+		l-&bump;,-&height;
+		M 0,0 m50,0 a &squash;,&tilt; 0 0 0 300,0
+	" fill="black" stroke="white" stroke-width="15" stroke-linejoin="round" stroke-linecap="round" />
+</svg>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.freepik.com/free-icon/constructor-with-hard-hat-protection-on-his-head_720949.htm -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-525,-475 1050 600">
+	<!--h->1050: <ellipse id="head" cy="175" rx="325" ry="375" fill="white" stroke="black" stroke-width="25" />-->
+	<rect id="bottom" x="-500" width="1000" height="100"
+	      stroke="white" stroke-width="25" />
+	<path id="bulb" d="m-450,0 a 455,450 0 0 1 900,0"
+	      stroke="white" stroke-width="25" />
+	<rect id="protector" x="-100" y="-450" width="200" height="450"
+	      stroke="white" stroke-width="25" rx="50" ry="50" />
+</svg>

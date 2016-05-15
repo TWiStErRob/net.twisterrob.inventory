@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.123rf.com/photo_49122453_stock-vector-head-of-snowman-with-scarf-simple-icon-isolated-on-white-background.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-525,-600 1050 1400"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<g id="hat">
+			<!--<rect x="-500" width="1000" height="200" rx="25" ry="25" />-->
+			<circle r="100" cy="-300" fill="black" stroke="white" stroke-width="25" />
+			<path d="m-450,0 a 475,450 0 0 1 900,0 z" fill="black" stroke="white" stroke-width="25" stroke-linejoin="round" />
+		</g>
+		<g id="scarf">
+			<rect x="-450" width="900" height="200" rx="25" ry="25" />
+			<rect x="250" y="150" width="200" height="500" transform="skewX(15) translate(-150)" />
+			<rect x="250" y="150" width="200" height="300" transform="skewX(25) translate(-150)" />
+		</g>
+	</defs>
+	<ellipse id="head" rx="500" ry="350"
+	      fill="white" stroke="black" stroke-width="10" />
+	<use xlink:href="#hat" y="-200" />
+	<use xlink:href="#scarf" y="175" />
+</svg>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY middle "h-200 v-500 l+200,-200 l+200,+200 v+500 h-200">
+	<!ENTITY windowSize "100">
+	<!ENTITY window "h+&windowSize; v-&windowSize; h-&windowSize; v+&windowSize; z">
+	<!ENTITY doorW "150">
+	<!ENTITY doorH "200">
+	<!ENTITY door "h+&doorW; v-&doorH; h-&doorW; v+&doorH; z">
+	]>
+<!-- Based on http://www.gettyimages.com/detail/illustration/house-icon-flat-graphic-design-royalty-free-illustration/486294900 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-625,-325 1250 900"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<g id="side">
+			<path d="
+				M0,0 v-500 h+350 v+500 h-350 z
+				M50,-300 &window;
+				M200,-300 &window;
+				M50,-100 &window;
+				M200,-100 &window;
+				" fill="black" />
+		</g>
+	</defs>
+	<path id="roof" d="M0,0 h-600 l200,-300 h+800 l200,300 h-600 z"
+	      fill="black" stroke="white" stroke-width="25" stroke-linejoin="round" />
+	<g id="front" transform="translate(0,500)">
+		<g id="middle">
+			<path id="middle-stroke" d="M0,0 &middle;" fill="none" stroke="white" stroke-width="50" />
+			<path d="
+				M0,0 &middle;
+				M-150,-350 &window;
+				M+50,-350 &window;
+				M-75,0 &door;
+			" />
+		</g>
+		<use xlink:href="#side" transform="scale(+1,1) translate(-575,12.5)" />
+		<use xlink:href="#side" transform="scale(-1,1) translate(-575,12.5)" />
+	</g>
+	<rect id="foot" x="-600" y="500" width="1200" height="50" stroke="black" stroke-width="25" stroke-linejoin="round" />
+</svg>

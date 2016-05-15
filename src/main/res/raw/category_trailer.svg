@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY curve "100">
+	<!ENTITY width "600">
+	<!ENTITY height "300">
+	<!ENTITY hook "120">
+	<!ENTITY hookD "40">
+	]>
+<!-- Based on https://www.iconfinder.com/icons/306348/caravan_mobile_home_tourism_travel_vacation_wagon_icon -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-800,-525 950 625">
+	<path d="
+		M0,0 h-&curve;
+		h-&width; a &curve;,&curve; 0 0 1 -&curve;,-&curve;
+		v-&height; a &curve;,&curve; 0 0 1 &curve;,-&curve;
+		h+&width; a &curve;,&curve; 0 0 1 &curve;,&curve;
+		v+&height; v+&curve; 
+		M0,0 h+&hook; a 1,1 0 0 0, 0,-&hookD; h-&hook; 
+		M-300,0 a 1,1 0 0 0 -250,0 z
+		M-650,-250 h+200 v-150 h-200 v+150 z
+		M-300,-250 h+100 v-150 h-100 v+150 z
+	" />
+	<circle r="100" cx="-425" />
+	<circle r="35" cx="-425" fill="grey" />
+</svg>

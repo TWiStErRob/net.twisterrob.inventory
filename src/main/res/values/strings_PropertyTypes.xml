@@ -50,6 +50,6 @@
 	<string name="property_services_keywords">bank, post office, library, estate agent, travel agent, cinema, internet cafe</string>
 
 	<string name="property_recreation">Recreational</string>
-	<string name="property_recreation_keywords">community center, sports center, lido, bath, spa</string>
+	<string name="property_recreation_keywords">community center, sports center, golf course, gym, lido, bath, spa</string>
 
 </resources>

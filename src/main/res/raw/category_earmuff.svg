@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY muffR "100">
+	<!ENTITY muffD "200">
+	<!ENTITY muffW "50">
+	]>
+<!-- Based on http://icons.mysitemyway.com/legacy-icon/092031-glossy-black-icon-signs-headset2/ -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-275,-325 550 550"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<g id="muff">
+			<path d="M0,0
+			v-&muffR; h-&muffW;
+			a &muffR;,&muffR; 0 0 0 0,&muffD;
+			h+&muffW; v-&muffR;
+		" fill="white" stroke="black" stroke-width="35" />
+			<circle r="10" cx="-50" cy="-50" />
+			<circle r="10" cx="-50" cy="0" />
+			<circle r="10" cx="-50" cy="+50" />
+		</g>
+	</defs>
+	<path id="band" d="M0,0 m-200,0 a 225,200 0 1 1 400,0"
+	      stroke="black" stroke-width="50" fill="none" />
+	<use xlink:href="#muff" transform="translate(-100,&muffR;) scale(+1,1)" />
+	<use xlink:href="#muff" transform="translate(+100,&muffR;) scale(-1,1)" />
+</svg>

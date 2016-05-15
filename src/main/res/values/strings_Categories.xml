@@ -284,11 +284,11 @@
 	<string name="category_full_body" level="2">full body</string>
 	<string name="category_full_body_keywords">pajamas, romper suit, bodysuit, leotard, unitard, catsuit</string>
 
-	<string name="category_headwear" level="1">Headwear</string>
+	<string name="category_headwear" level="1" icon="@raw/category_headwear">Headwear</string>
 	<string name="category_headwear_keywords">hood, headband</string>
-	<string name="category_hat" level="2">hats</string>
-	<string name="category_hat_keywords">cap, beach hat, sombrero, cowboy hat, party hat</string>
-	<string name="category_scarf" level="2">scarves</string>
+	<string name="category_hat" level="2" icon="@raw/category_hat">hats</string>
+	<string name="category_hat_keywords">cap, beach hat, sombrero, cowboy hat, party hat, graduate cap</string>
+	<string name="category_scarf" level="2" icon="@raw/category_scarf">scarves</string>
 	<string name="category_scarf_keywords">scarf, shawl, kerchief, bandana, buff, balaclava</string>
 
 	<string name="category_accessory" level="1">Accessories</string>
@@ -307,17 +307,17 @@
 	<string name="category_snowwear" level="2">snowwear</string>
 	<string name="category_snowwear_keywords">thermal, ski jacket, ski pants, ski socks, ski suit, ski mask, ski boots, snowboard boots</string>
 
-	<string name="category_clothing_protective" level="1">Protective</string>
+	<string name="category_clothing_protective" level="1" icon="@raw/category_safety_helmet">Protective</string>
 	<string name="category_clothing_protective_keywords">@string/empty</string>
 	<string name="category_clothing_protective_hand" level="2">hand protection</string>
 	<string name="category_clothing_protective_hand_keywords">gloves, rubber gloves, disposable gloves, oven mitt/oven glove, gardening gloves, worker gloves, boxing gloves</string>
 	<string name="category_clothing_protective_head" level="2">head protection</string>
-	<string name="category_clothing_protective_head_keywords">hard hat/construction helmet, cycling helmet, motorcycle helmet/racing helmet, batting helmet, football helmet, hockey helmet</string>
+	<string name="category_clothing_protective_head_keywords" icon="@raw/category_safety_helmet">hard hat/construction helmet, cycling helmet, motorcycle helmet/racing helmet, batting helmet, football helmet, hockey helmet</string>
 	<string name="category_clothing_protective_air" level="2">air protection</string>
 	<string name="category_clothing_protective_air_keywords">face mask/surgical mask, respirator</string>
 	<string name="category_clothing_protective_eye" level="2">eye protection</string>
 	<string name="category_clothing_protective_eye_keywords">goggles, safety glasses, sunglasses, welding mask</string>
-	<string name="category_clothing_protective_ear" level="2">ear protection</string>
+	<string name="category_clothing_protective_ear" level="2" icon="@raw/category_earmuff">ear protection</string>
 	<string name="category_clothing_protective_ear_keywords">earplugs, earmuffs</string>
 	<string name="category_clothing_protective_impact" level="2">impact protection</string>
 	<string name="category_clothing_protective_impact_keywords">knee pads, elbow pads, padded girdle, impact pad, snipe protector, body armor, bulletproof vest</string>
@@ -567,7 +567,7 @@
 	<string name="category_vehicle_motorized_keywords">motorcycle, car, SUV, quad, buggy, go-kart</string>
 	<string name="category_vehicle_truck" level="2">trucks</string>
 	<string name="category_vehicle_truck_keywords">golf cart, pickup, lorry, van, bus, trolley bus</string>
-	<string name="category_vehicle_trailer" level="2">trailers</string>
+	<string name="category_vehicle_trailer" level="2" icon="@raw/category_trailer">trailers</string>
 	<string name="category_vehicle_trailer_keywords">RV/recreational vehicle, wagon, carriage, train, tram</string>
 	<string name="category_vehicle_heavy" level="2">heavy equipment</string>
 	<string name="category_vehicle_heavy_keywords">tractor, forklift, crane, excavator, dump truck/dumper/tipper truck, bulldozer, loader, road roller</string>

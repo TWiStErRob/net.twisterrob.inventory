@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://www.iconfinder.com/icons/305687/cloth_clothing_fashion_hat_icon -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-550,-400 1100 600">
+	<ellipse rx="500" ry="200" cy="-25" fill="black" stroke="white" stroke-width="25" />
+	<path d="M-300,0
+		a 250,300 0 0 1 600,0
+		a 600,300 0 0 1 -600,0
+	z" fill="black" stroke="white" stroke-width="25" stroke-linejoin="round" />
+</svg>
