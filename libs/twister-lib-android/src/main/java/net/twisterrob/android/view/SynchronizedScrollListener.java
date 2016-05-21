@@ -11,6 +11,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
  * Mostly useful for headers where the {@link RecyclerView} has a placeholder and the header is on top of it.
  */
 public class SynchronizedScrollListener extends OnScrollListener {
+	private static final int TOP_POSITION = 0;
 	/**
 	 * <li><code>0</code> means that the view will scroll just outside the screen
 	 * and come back only when the list is towards it's beginning.
@@ -56,10 +57,10 @@ public class SynchronizedScrollListener extends OnScrollListener {
 			int height = view.getHeight();
 			int offset;
 			if (ratio == 0) {
-				if (recyclerView.getAdapter().getItemCount() == 0) { // no data yet
-					offset = 0; // don't do anything
+				if (recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() == 0) {
+					offset = 0; // no data yet, don't do anything
 				} else {
-					View placeholder = recyclerView.getLayoutManager().findViewByPosition(0);
+					View placeholder = recyclerView.getLayoutManager().findViewByPosition(TOP_POSITION);
 					if (placeholder == null) { // no first view
 						offset = -(top + height); // offset the bottom to 0 to hide
 					} else { // placeholder on screen, but may be half hidden
@@ -71,7 +72,7 @@ public class SynchronizedScrollListener extends OnScrollListener {
 				offset = (int)(-dy * ratio);
 			}
 
-			// prevent visual weirdness
+			// prevent visual weirdness, snap to top-bottom
 			if (top + offset < -height) { // would scroll out of screen on top
 				offset = -(top + height); // offset the bottom to 0
 			}

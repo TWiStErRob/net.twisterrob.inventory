@@ -77,6 +77,11 @@ public final class CollectionTools {
 	public static <T> Set<T> nonNull(Set<T> listOrNull) {
 		return listOrNull != null? listOrNull : Collections.<T>emptySet();
 	}
+	public static <T> TreeSet<T> newTreeSet(Set<T> items, Comparator<T> comparator) {
+		TreeSet<T> set = new TreeSet<>(comparator);
+		set.addAll(items);
+		return set;
+	}
 
 	private static class SetFromMap<E> extends AbstractSet<E> implements Serializable {
 		private static final long serialVersionUID = 2454657854757543876L;

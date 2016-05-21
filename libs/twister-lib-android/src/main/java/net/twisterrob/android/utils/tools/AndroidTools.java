@@ -45,6 +45,7 @@ import static android.util.TypedValue.*;
 
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.java.annotations.DebugHelper;
+import net.twisterrob.java.collections.NullsSafeComparator;
 import net.twisterrob.java.utils.*;
 
 @SuppressWarnings("unused")
@@ -240,8 +241,17 @@ public /*static*/ abstract class AndroidTools {
 	}
 	private static void toStringRec(StringBuilder sb, int level,
 			Bundle bundle, String preType, String postType, String start, String preItem, String postItem, String end) {
-		sb.append(preType).append(debugType(bundle)).append(postType).append(bundle.size()).append(start);
-		for (Iterator<String> it = new TreeSet<>(bundle.keySet()).iterator(); it.hasNext(); ) {
+		sb.append(preType).append(debugType(bundle)).append(postType);
+		try {
+			sb.append(bundle.size());
+		} catch (RuntimeException ex) {
+			LOG.error("Cannot unparcel Bundle for logging", ex);
+			sb.append(ex.toString());
+			return; // skip the rest, there's quite possible no data
+		}
+		sb.append(start);
+		TreeSet<String> sortedKeys = CollectionTools.newTreeSet(bundle.keySet(), new NullsSafeComparator<String>());
+		for (Iterator<String> it = sortedKeys.iterator(); it.hasNext(); ) {
 			String key = it.next();
 			for (int i = 0; i < level; i++) {
 				sb.append(preItem);
@@ -363,7 +373,7 @@ public /*static*/ abstract class AndroidTools {
 			display = toString((Bundle)value, "", " ", "#{", "", ", ", "}");
 		} else if (value instanceof Intent) {
 			display = toString((Intent)value);
-		} else if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT && value instanceof android.app.Fragment.SavedState) {
+		} else if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB && value instanceof android.app.Fragment.SavedState) {
 			type = "Fragment.SavedState";
 			display = toString(ReflectionTools.get(value, "mState"));
 		} else if (value instanceof android.support.v4.app.Fragment.SavedState) {
@@ -371,7 +381,7 @@ public /*static*/ abstract class AndroidTools {
 			display = toString(ReflectionTools.get(value, "mState"));
 		} else if (value instanceof android.support.v4.content.Loader<?>) {
 			display = toString((android.support.v4.content.Loader<?>)value);
-		} else if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT && value instanceof android.content.Loader<?>) {
+		} else if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB && value instanceof android.content.Loader<?>) {
 			display = toString((android.content.Loader<?>)value);
 		} else if (value == AbsSavedState.EMPTY_STATE) {
 			type = null;
@@ -774,7 +784,9 @@ public /*static*/ abstract class AndroidTools {
 				throw new NullPointerException("No searchable info for " + activity.getComponentName()
 						+ "\nDid you define <meta-data android:name=\"android.app.default_searchable\" android:value=\".SearchActivity\" />"
 						+ "\neither on application level or inside the activity in AndroidManifest.xml?"
-						+ "\nAlso make sure that in the merged manifest the class name resolves correctly (package).");
+						+ "\nAlso make sure that in the merged manifest the class name resolves correctly (package)."
+						+ "\nDouble check that the searchable.xml doesn't contain literal strings!"
+				);
 			}
 			searchView.setSearchableInfo(info);
 			return searchView;
