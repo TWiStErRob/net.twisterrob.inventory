@@ -1132,12 +1132,31 @@ public /*static*/ abstract class AndroidTools {
 
 	@DebugHelper
 	public static String toNameString(Fragment fragment) {
-		return fragment.getClass().getSimpleName() + "@" + StringTools.hashString(fragment)
-				+ "(" + ReflectionTools.get(fragment, "mWho") + ")";
+		return toNameString((Object)fragment) + "(" + ReflectionTools.get(fragment, "mWho") + ")";
 	}
 	@DebugHelper
 	public static String toNameString(Activity activity) {
-		return activity.getClass().getSimpleName() + "@" + StringTools.hashString(activity);
+		return toNameString((Object)activity);
+	}
+	@DebugHelper
+	public static String toNameString(Object object) {
+		if (object != null) {
+			Class<?> clazz = object.getClass();
+			String className = clazz.getSimpleName();
+			if (TextUtils.isEmpty(className)) {
+				className = clazz.getName();
+				if (className != null) {
+					className = className.substring(className.lastIndexOf('.'));
+					if (className.endsWith(";")) {
+						// unknown dimensioned array
+						className = className.substring(0, className.length() - 1) + "[?]";
+					}
+				}
+			}
+			return className + "@" + StringTools.hashString(object);
+		} else {
+			return "<null>";
+		}
 	}
 	@DebugHelper
 	public static String toLongString(Fragment fragment) {
