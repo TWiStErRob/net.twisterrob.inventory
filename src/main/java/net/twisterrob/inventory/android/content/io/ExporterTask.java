@@ -168,8 +168,7 @@ public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 		}
 	}
 
-	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-	@SuppressWarnings({"EmptyMethod", "RedundantThrows"})
+	@SuppressWarnings("RedundantThrows")
 	public interface Exporter {
 		void initExport(OutputStream os);
 		void finishExport() throws Throwable;

@@ -8,8 +8,7 @@ import android.content.Context;
 import android.view.*;
 import android.widget.*;
 
-// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-@SuppressWarnings({"unused", "EmptyMethod", "UnusedParameters"})
+@SuppressWarnings({"unused", "UnusedParameters"})
 public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filterable {
 	private List<T> m_allItems;
 	protected List<T> m_items;

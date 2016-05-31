@@ -23,8 +23,6 @@ public abstract class LoadSingleRow extends LoadersCallbacks {
 		//data.close(); // don't close SimpleCursorLoader (created in Loaders) will do it
 	}
 
-	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-	@SuppressWarnings("EmptyMethod")
 	public void onLoaderReset(Loader<Cursor> loader) {
 		super.onLoaderReset(loader);
 		// no op, we didn't keep any reference to data

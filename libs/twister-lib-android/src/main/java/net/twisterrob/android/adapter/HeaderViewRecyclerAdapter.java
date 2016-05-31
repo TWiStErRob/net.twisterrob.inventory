@@ -41,8 +41,7 @@ import android.view.*;
  *
  * @see <a href="https://gist.github.com/darnmason/7bbf8beae24fe7296c8a">GitHub > darnmason > HeaderViewRecyclerAdapter.java</a>
  */
-// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-@SuppressWarnings({"unused", "EmptyMethod", "UnusedParameters"})
+@SuppressWarnings({"unused", "UnusedParameters"})
 public class HeaderViewRecyclerAdapter extends WrappingAdapter<RecyclerView.ViewHolder> {
 	private static final int HEADERS_START = Integer.MIN_VALUE;
 	private static final int FOOTERS_START = Integer.MIN_VALUE / 2;

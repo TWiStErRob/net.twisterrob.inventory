@@ -11,8 +11,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 import android.widget.ExpandableListView.OnGroupClickListener;
 
-// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-@SuppressWarnings({"unused", "EmptyMethod", "UnusedParameters"})
+@SuppressWarnings({"unused", "UnusedParameters"})
 public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH>
 		extends android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;

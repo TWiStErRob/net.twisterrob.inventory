@@ -86,7 +86,6 @@ public abstract class DrawerActivity extends BaseActivity {
 	}
 
 	/** Initialize mDrawerRight */
-	@SuppressWarnings("EmptyMethod") // TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
 	protected void createDrawerRight() {
 		// optional override
 	}

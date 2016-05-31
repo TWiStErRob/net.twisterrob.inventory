@@ -21,8 +21,6 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
 
-	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-	@SuppressWarnings("EmptyMethod")
 	public interface CameraPreviewListener {
 		void onCreate(CameraPreview preview);
 		void onResume(CameraPreview preview);
@@ -49,8 +47,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-	@SuppressWarnings("EmptyMethod")
 	@WorkerThread
 	public interface CameraPictureListener {
 		boolean onFocus(boolean success);
@@ -138,7 +134,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	@SuppressWarnings("SuspiciousNameCombination")
 	private void updatePreview(int w, int h) {
 		LOG.trace("{} Updating preview", cameraHolder);
 		if (cameraHolder == null) {
@@ -151,6 +146,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		boolean landscape = degrees % 180 == 0;
 		if (!landscape) {
 			int temp = width;
+			//noinspection SuspiciousNameCombination we need them when orientation is portrait
 			width = height;
 			height = temp;
 		}

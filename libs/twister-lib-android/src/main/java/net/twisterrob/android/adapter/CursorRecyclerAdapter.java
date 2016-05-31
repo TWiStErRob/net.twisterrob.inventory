@@ -267,8 +267,6 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 *
 	 * @see ContentObserver#onChange(boolean)
 	 */
-	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-	@SuppressWarnings("EmptyMethod")
 	protected void onContentChanged() {
 		// optional override
 	}

@@ -63,8 +63,7 @@ public abstract class BaseActivity extends DebugHelperActivity {
 		   .into(new ActionBarIconTarget(getSupportActionBar()));
 	}
 
-	// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-	@SuppressWarnings({"ConstantConditions", "EmptyMethod"})
+	@SuppressWarnings("ConstantConditions")
 	@Override public @NonNull ActionBar getSupportActionBar() {
 		// We know that there's an action bar in all child classes.
 		return super.getSupportActionBar();

@@ -5,8 +5,7 @@ import java.util.*;
 import android.content.Context;
 import android.view.*;
 
-// TODEL EmptyMethod: https://youtrack.jetbrains.com/issue/IDEA-154073
-@SuppressWarnings({"unused", "EmptyMethod"})
+@SuppressWarnings("unused")
 public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 		extends android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;
