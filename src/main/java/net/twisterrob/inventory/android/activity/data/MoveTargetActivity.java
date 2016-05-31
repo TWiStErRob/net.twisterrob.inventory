@@ -205,6 +205,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		getSupportActionBar().setDisplayHomeAsUpEnabled(0 < getSupportFragmentManager().getBackStackEntryCount());
 	}
 
+	@SuppressWarnings("TooBroadScope")
 	private CharSequence buildDisabledMessage(BaseFragment<?> fragment) {
 		int currentType = getType(fragment);
 		int requestedType = getArgWhat();

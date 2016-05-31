@@ -91,7 +91,7 @@ public abstract class DrawerActivity extends BaseActivity {
 	}
 
 	protected void refreshDrawers(Intent intent) {
-
+		// optional override
 	}
 
 	protected void onPostCreate(Bundle savedInstanceState) {

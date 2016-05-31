@@ -11,6 +11,7 @@ import org.slf4j.*;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.graphics.*;
 import android.os.Build.*;
 import android.os.ParcelFileDescriptor;
@@ -88,7 +89,7 @@ public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools 
 			if (result == null) {
 				boolean added = s_getImageLocks.add(url);
 				if (added) {
-					//noinspection SynchronizationOnLocalVariableOrMethodParameter
+					//noinspection SynchronizationOnLocalVariableOrMethodParameter this method is deprecated
 					synchronized (url) {
 						if (s_getImageLocks.contains(url)) {
 							Bitmap newImage = getImage(url, false);
@@ -142,9 +143,9 @@ public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools 
 	}
 
 	/**
-	 * {@link ZipFile} doesn't implement {@link Closeable} before KitKat so we need a specialized method.
+	 * {@link ZipFile} doesn't implement {@link Closeable} before API 19 so we need a specialized method.
 	 * @param closeMe more specific than {@link #ignorantClose(Closeable)} won't throw {@link IncompatibleClassChangeError}
-	 * FIXME figure out exact version, maybe not kitkat?
+	 * @see <a href="https://android.googlesource.com/platform/libcore/+/9902f3494c6d983879d8b9cfe6b1f771cfefe703%5E%21/#F7">Finish off AutoCloseable.</a>
 	 */
 	@TargetApi(VERSION_CODES.KITKAT)
 	public static void ignorantClose(ZipFile closeMe) {
@@ -156,6 +157,20 @@ public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools 
 			}
 		}
 	}
+
+	/**
+	 * {@link Cursor} doesn't implement {@link Closeable} before 4.1.1_r1 so we need a specialized method.
+	 * @param closeMe more specific than {@link #ignorantClose(Closeable)} won't throw {@link IncompatibleClassChangeError}
+	 * @see <a href="https://github.com/android/platform_frameworks_base/commit/03bd302aebbb77f4f95789a269c8a5463ac5a840">Don't close the database until all references released.</a>
+	 */
+	@TargetApi(VERSION_CODES.JELLY_BEAN)
+	public static void ignorantClose(Cursor closeMe) {
+		if (closeMe != null) {
+			closeMe.close(); // doesn't declare to throw IOException
+		}
+	}
+
+	// CONSIDER adding more specializations for other (Auto)Closeables 
 
 	/**
 	 * {@link ParcelFileDescriptor} doesn't implement {@link Closeable} before 4.1.1_r1 so we need a specialized method.

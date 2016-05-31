@@ -43,6 +43,9 @@ public class XMLImporter implements Importer {
 		Element listEntryElement = listElement.getChild(TAG_ITEM_REF);
 
 		final PropertyElementListener propertyListener = new PropertyElementListener();
+		propertyElement.setElementListener(propertyListener);
+		propertyElement.getChild(TAG_DESCRIPTION).setEndTextElementListener(propertyListener);
+
 		RoomElementListener roomListener = new RoomElementListener(propertyListener, new TraverseFactory() {
 			private Element element = roomElement;
 			private int deepestLevel = propertyListener.getLevel();
@@ -56,10 +59,6 @@ public class XMLImporter implements Importer {
 				}
 			}
 		});
-
-		propertyElement.setElementListener(propertyListener);
-		propertyElement.getChild(TAG_DESCRIPTION).setEndTextElementListener(propertyListener);
-
 		roomElement.setElementListener(roomListener);
 		roomElement.getChild(TAG_DESCRIPTION).setEndTextElementListener(roomListener);
 

@@ -140,11 +140,10 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		if (!mixed) {
 			if (cursor.moveToNext()) {
 				int nextLevel = DatabaseTools.getOptionalInt(cursor, "level", 0);
-				boolean open = level < nextLevel;
 				if (!cursor.moveToPosition(position)) {
 					throw new IllegalStateException("Cannot restore cursor position");
 				}
-				return open;
+				return level < nextLevel; // the next item is deeper, so this current item must be open
 			}
 		} else {
 			boolean foundTerminal = false;

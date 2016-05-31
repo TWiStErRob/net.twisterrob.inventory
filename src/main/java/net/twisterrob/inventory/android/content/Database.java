@@ -192,12 +192,12 @@ public class Database extends VariantDatabase {
 	}
 
 	private void setImage(@StringRes int imageSetter, long id, byte[] imageContents, Long time) {
-		long imageID;
 		if (imageContents == null) {
 			// delete old image (via trigger)
 			execSQL(imageSetter, null, id);
 		} else {
 			// create new image
+			long imageID;
 			if (time != null) {
 				imageID = rawInsert(R.string.query_image_create_with_time, imageContents, time);
 			} else {

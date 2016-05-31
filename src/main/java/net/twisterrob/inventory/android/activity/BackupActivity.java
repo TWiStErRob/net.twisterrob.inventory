@@ -165,7 +165,6 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 				}
 				name = sb.toString();
 			}
-			String size = null;
 			@RawRes int icon;
 			if (name.startsWith("Inventory_") && name.endsWith(".zip")) {
 				icon = R.raw.category_disc;
@@ -174,6 +173,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 				icon = R.raw.category_unknown;
 			}
 
+			String size = null;
 			if (file.isDirectory()) {
 				icon = R.raw.category_box;
 			} else {
