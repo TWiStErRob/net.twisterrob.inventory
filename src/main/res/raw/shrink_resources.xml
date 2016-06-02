@@ -5,6 +5,6 @@
 <resources
 	xmlns:tools="http://schemas.android.com/tools"
 	tools:shrinkMode="strict"
-	tools:discard=""
+	tools:discard="@raw/icon_*"
 	tools:keep="@raw/category_*,@raw/room_*,@raw/property_*,@raw/ic_*"
 	/>

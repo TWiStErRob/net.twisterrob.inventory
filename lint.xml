@@ -23,7 +23,7 @@
 		<ignore path="**/res/values*/strings_RoomTypes.xml" />
 		<!-- Will be removed by shrinker -->
 		<ignore path="**/res/raw*/helpers.js" />
-		<ignore path="**/res/raw*/icon_template.svg" />
+		<ignore path="**/res/raw*/icon_*" />
 		<ignore path="**/res/raw*/shrink_resources.xml" />
 	</issue>
 	<issue id="SelectableText">

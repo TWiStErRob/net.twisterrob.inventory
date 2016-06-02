@@ -14,7 +14,7 @@ public class SQLPrinter implements Printer {
 	public static final String HEADER =
 			"INSERT INTO Category\n\t           (parent,   _id, name,                                      image)\n";
 	public static final String FOOTER = ";\n";
-	private static final String SELECT = "SELECT %5s, %5s, %-42s %-25s";
+	private static final String SELECT = "SELECT %5s, %5s, %-42s %s";
 
 	private Category prev;
 

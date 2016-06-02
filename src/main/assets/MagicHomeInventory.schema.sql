@@ -200,11 +200,8 @@ CREATE TABLE Image (
 	_id     INTEGER  NOT NULL,
 	data    BLOB     NOT NULL, -- JPEG image bytes
 	updated DATETIME NOT NULL DEFAULT (STRFTIME('%s', 'NOW') * 1000),
-	PRIMARY KEY (_id AUTOINCREMENT
-),
-CHECK (0 < length (data
-)
-)
+	PRIMARY KEY (_id AUTOINCREMENT),
+	CHECK (0 < length (data))
 );
 
 CREATE TRIGGER Image_image
@@ -213,7 +210,7 @@ AFTER UPDATE OF data ON Image
 BEGIN
 	update Image
 	set updated = STRFTIME('%s', CURRENT_TIMESTAMP) * 1000
-	where _id = new._id; --NOTEOS
+	where _id = new._id;--NOTEOS
 END;
 
 CREATE TABLE Item (
@@ -299,7 +296,7 @@ AFTER UPDATE OF image ON Item
 BEGIN
 	--insert into Log(message) values ('Item_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'started');--NOTEOS
 	delete from Image
-	where _id = old.image; --NOTEOS
+	where _id = old.image;--NOTEOS
 	--insert into Log(message) values ('Item_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'finished');--NOTEOS
 END;
 
