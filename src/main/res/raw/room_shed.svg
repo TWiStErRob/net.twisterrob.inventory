@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"[
+	<!ENTITY doorW "100">
+	<!ENTITY doorH "175">
+	<!ENTITY houseW "75">
+	<!ENTITY houseH "225">
+	<!-- roofHalf = (houseW*2 + doorW) / 2 -->
+	<!ENTITY roofHalf "125">
+	]>
+<!-- Based on http://comps.canstockphoto.com/can-stock-photo_csp15563027.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-125,-350 250 350"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<path d="M-&roofHalf;,0
+		h+&houseW; v-&doorH; h+&doorW; v+&doorH; h+&houseW;
+		v-&houseH;
+		l-&roofHalf;,-&roofHalf; l-&roofHalf;,+&roofHalf;
+		v+&houseH;
+	" />
+	<image x="-50" y="-150" width="100" height="100" xlink:href="category_tools.svg" />
+</svg>

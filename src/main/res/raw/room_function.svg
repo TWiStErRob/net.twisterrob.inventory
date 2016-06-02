@@ -15,7 +15,7 @@
 		<line id="roof-left" x1="   0" y1="-450" x2="-500" y2="-450" stroke-width="100" transform="skewY(-15)" />
 		<line id="roof-right" x1="   0" y1="-450" x2="+500" y2="-450" stroke-width="100" transform="skewY(+15)" />
 		<g id="in-the-house" transform="translate(0, 100)">
-			<image width="600" height="600" x="-300" y="-300" xlink:href="category_unknown.svg" />
+			<image width="600" height="600" x="-300" y="-300" xlink:href="category_exclamation.svg" />
 		</g>
 	</g>
 </svg>

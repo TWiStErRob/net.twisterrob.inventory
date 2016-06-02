@@ -7,22 +7,11 @@
 <resources>
 	<string name="room_group_other">Other</string>
 
+	<!-- Considered, but not included separately. -->
 	<string name="room_other">Other</string>
-	<!-- Considered, but not included separately: -->
-	<!-- Stoop (US): a porch with steps in front of a house or other building. -->
 	<!-- Crawl space: an area of limited height under a floor or roof, giving access to wiring and plumbing. -->
-	<!-- Sanctuary: a place of refuge or safety. -->
-	<!-- Lair: a secret or private place in which a person seeks concealment or seclusion. -->
-	<!-- Belvedere: a summerhouse or open-sided gallery, usually at rooftop level, commanding a fine view. -->
 	<!-- Alcove: a recess, typically in the wall of a room or of a garden. -->
 	<!-- Recess: a small space created by building part of a wall further back from the rest. -->
-	<!-- Grotto: a small picturesque cave, especially an artificial one in a park or garden. -->
-	<!-- Platform: a raised level surface on which people or things can stand. -->
-	<!-- Stand: a place where, or an object on which, someone or something stands, sits, or rests, in particular. -->
-	<!-- Stand: a small stall or booth in a street, market, or public building from which goods are sold. -->
-	<!-- Stand: a raised platform for a band, orchestra, or speaker. -->
-	<!-- Booth: a small temporary tent or structure at a market, fair, or exhibition, used for selling goods, providing information, or staging shows. -->
-	<!-- Kiosk: a small open-fronted hut or cubicle from which newspapers, refreshments, tickets, etc., are sold. -->
 	<string name="room_other_keywords">@string/empty</string>
 
 
@@ -40,7 +29,8 @@
 	<!-- Parlour (dated): a sitting room in a private house. -->
 	<!-- Lounge: a public room, as in a hotel, theater, or club, in which to sit and relax. -->
 	<!-- Lounge (UK): living room (http://www.effingpot.com/house.shtml) -->
-	<string name="room_living_keywords">lounge, parlour</string>
+	<!-- Conservatory: a room with a glass roof and walls, attached to a house at one side and used as a greenhouse or a sun parlor. -->
+	<string name="room_living_keywords">lounge, parlour, conservatory</string>
 
 	<string name="room_bath">Bathroom</string>
 	<!-- Bathroom (UK): a room containing a bath or shower and typically also a washbasin and a toilet. -->
@@ -71,9 +61,11 @@
 	<!-- Playroom: a room in a house that is set aside for children to play in. -->
 	<!-- Den: a small, comfortable room in a house where a person can pursue an activity in private. -->
 	<!-- Man cave: a room or other part of a home regarded as a refuge for the man or men of a household. -->
+	<!-- -Lair: a secret or private place in which a person seeks concealment or seclusion. -->
 	<!-- Sauna: a small room used as a hot-air or steam bath for cleaning and refreshing the body. -->
 	<!-- Swimming pool: an artificial pool for swimming in. -->
-	<string name="room_recreation_keywords">den, playroom, family room, TV room, home cinema, man cave, swimming pool, sauna</string>
+	<!-- Jacuzzi: a large bath with a system of underwater jets of water to massage the body. -->
+	<string name="room_recreation_keywords">den, playroom, family room, TV room, home cinema, man cave, swimming pool, infinity pool, jacuzzi, sauna</string>
 
 
 	<string name="room_group_storage">Storage</string>
@@ -155,11 +147,6 @@
 	<!-- Gymnasium: a room or building equipped for gymnastics, games, and other physical exercise. -->
 	<string name="room_gym_keywords">gymnasium</string>
 
-	<string name="room_greenhouse">Greenhouse</string>
-	<!-- Conservatory: a room with a glass roof and walls, attached to a house at one side and used as a greenhouse or a sun parlor. -->
-	<!-- Glasshouse (UK): a greenhouse. -->
-	<string name="room_greenhouse_keywords">glasshouse, conservatory</string>
-
 	<string name="room_animal">Animal Enclosure</string>
 	<!-- Pen: a small enclosure in which sheep, pigs, cattle, or other domestic animals are kept. -->
 	<!-- Cage: a structure of bars or wires in which birds or other animals are confined. -->
@@ -170,24 +157,41 @@
 	<!-- Coop: a cage or pen for confining poultry. -->
 	<!-- Stall: an individual compartment for an animal in a stable or barn, enclosed on three sides. -->
 	<!-- Corral (US): a pen for livestock, especially cattle or horses, on a farm or ranch. -->
-	<string name="room_animal_keywords">pen, cage, barn, stall, corral, aviary, kennel, stable, coop, sty</string>
+	<!-- Paddock: a small field or enclosure where horses are kept or exercised. -->
+	<!-- Pasture: land covered with grass and other low plants suitable for grazing animals, especially cattle or sheep. -->
+	<string name="room_animal_keywords">pen, cage, barn, stall, corral, aviary, kennel, stable, coop, sty, paddock, pasture</string>
 
 
 	<string name="room_group_space">Space</string>
 
-	<string name="room_garden">Garden</string>
+	<string name="room_plant">Vegetation</string>
+	<!-- Greenhouse: a glass building in which plants are grown that need protection from cold weather. -->
+	<!-- -Glasshouse (UK): a greenhouse. -->
 	<!-- Garden: a piece of ground, often near a house, used for growing flowers, fruit, or vegetables. -->
 	<!-- Lawn: an area of short, mown grass in a yard, garden, or park. -->
+	<!-- Plantation: an estate on which crops such as coffee, sugar, and tobacco are cultivated by resident labor. -->
+	<!-- Field: an area of open land, especially one planted with crops or pasture, typically bounded by hedges or fences. -->
+	<!-- Meadow: a piece of low ground near a river. -->
+	<!-- Forest: a large area covered chiefly with trees and undergrowth. -->
+
+	<!-- Marsh: an area of low-lying land that is flooded in wet seasons or at high tide, and typically remains waterlogged at all times. -->
+	<!-- Swamp: an area of low-lying, uncultivated ground where water collects; a bog or marsh. -->
+	<!-- Wetland: land consisting of marshes or swamps; saturated land. -->
+	<string name="room_plant_keywords">greenhouse, garden, lawn, field, plantation, meadow, forest, marsh, swamp, wetland</string>
+
+	<!-- Yard (US): a piece of ground adjoining a building or house. -->
+	<string name="room_yard">Yard</string>
 	<!-- Courtyard: an unroofed area that is completely or mostly enclosed by the walls of a large building. -->
 	<!-- Backyard: a yard behind a house or other building, typically surrounded by a fence. -->
-	<!-- Yard (US): a piece of ground adjoining a building or house. -->
 	<!-- Court: a quadrangular area, either open or covered, marked out for ball games such as tennis or basketball. -->
-	<string name="room_garden_keywords">lawn, courtyard, backyard, court, yard</string>
+	<string name="room_yard_keywords">courtyard, backyard, court</string>
 
-	<string name="room_shelter">Shelter</string>
+	<!-- -Sanctuary: a place of refuge or safety. -->
 	<!-- Shelter: a place giving temporary protection from bad weather or danger. -->
+	<string name="room_shelter">Shelter</string>
 	<!-- Gazebo: a roofed structure that offers an open view of the surrounding area, typically used for relaxation or entertainment. -->
 	<!-- Summerhouse: a small, typically rustic building in a garden or park, used for sitting in during the summer months. -->
+	<!-- -Belvedere: a summerhouse or open-sided gallery, usually at rooftop level, commanding a fine view. -->
 	<!-- Bandstand: a covered outdoor platform for a band to play on, typically in a park. -->
 	<!-- Pavilion: a building or similar structure used for a specific purpose, in particular. -->
 	<!-- Pavilion: a large tent with a peak and crenellated decorations, used especially at a show or fair. -->
@@ -197,9 +201,16 @@
 	<!-- Cabana (US): a cabin, hut, or shelter, especially one at a beach or swimming pool. -->
 	<!-- Arbor: a shady garden alcove with sides and a roof formed by trees or climbing plants trained over a wooden framework. -->
 	<!-- Pergola: an archway in a garden or park consisting of a framework covered with trained climbing or trailing plants. -->
+	<!-- -Stand: a place where, or an object on which, someone or something stands, sits, or rests, in particular. -->
+	<!-- -Stand: a small stall or booth in a street, market, or public building from which goods are sold. -->
+	<!-- -Stand: a raised platform for a band, orchestra, or speaker. -->
+	<!-- -Booth: a small temporary tent or structure at a market, fair, or exhibition, used for selling goods, providing information, or staging shows. -->
+	<!-- -Kiosk: a small open-fronted hut or cubicle from which newspapers, refreshments, tickets, etc., are sold. -->
 	<string name="room_shelter_keywords">summerhouse, gazebo, bandstand, pavilion, bower, poolhouse, cabana, arbor, pergola</string>
 
-	<string name="room_patio">Patio</string>
+	<!-- Platform: a raised level surface on which people or things can stand. -->
+	<string name="room_platform">Platform</string>
+	<!-- Balcony: a platform enclosed by a wall or balustrade on the outside of a building, with access from an upper-floor window or door. -->
 	<!-- Deck: a floor or platform resembling or compared to a ship's deck, especially the floor of a pier or a platform for sunbathing. -->
 	<!-- Deck: a platform-like structure, typically made of lumber and unroofed, attached to a house or other building. -->
 	<!-- Patio: a paved outdoor area adjoining a house. -->
@@ -208,36 +219,63 @@
 	<!-- Terrace (UK): a block of row houses. a row house. -->
 	<!-- Veranda (US=porch): a roofed platform along the outside of a house, level with the ground floor. -->
 	<!-- Porch: a covered shelter projecting in front of the entrance of a building. -->
-	<string name="room_patio_keywords">porch, deck, terrace, veranda</string>
+	<string name="room_platform_keywords">balcony, patio, porch, deck, terrace, veranda</string>
 
-	<string name="room_entrance">Lobby</string>
+	<string name="room_entrance">Entrance</string>
+	<!-- Entryway (US): a way in to somewhere or something; an entrance. -->
 	<!-- Lobby: a room providing a space out of which one or more other rooms or corridors lead, typically one near the entrance of a public building. -->
 	<!-- Entrance Hall: the room or space immediately inside the main door of a large or grand building. -->
 	<!-- Foyer: an entrance hall or other open area in a building used by the public, especially a hotel or theater. -->
 	<!-- Vestibule: an antechamber, hall, or lobby next to the outer door of a building. -->
-	<string name="room_entrance_keywords">entrance hall, foyer, vestibule</string>
+	<!-- Antechamber: a small room leading to a main one. -->
+	<string name="room_entrance_keywords">lobby, entrance hall, foyer, entryway, vestibule, antechamber</string>
 
-	<string name="room_balcony">Balcony</string>
-	<!-- Balcony: a platform enclosed by a wall or balustrade on the outside of a building, with access from an upper-floor window or door. -->
-	<string name="room_balcony_keywords">@string/empty</string>
-
-	<string name="room_corridor">Corridor</string>
+	<!-- Access: a means of approaching or entering a place. -->
+	<!-- CONSIDER Splitting access into: static/dynamic, step-based/and non-~, horizontal/vertical -->
+	<string name="room_access">Access</string>
 	<!-- Corridor: a long passage in a building from which doors lead into rooms. -->
 	<!-- Hall/Hallway (US): an area in a building onto which rooms open; a corridor. -->
+	<!-- Alley (-Alleyway): a narrow passageway between or behind buildings. -->
+	<!-- Alley (-Alleyway): a path lined with trees, bushes, or stones. -->
+	<!-- Passage: a narrow way, typically having walls on either side, allowing access between buildings or to different rooms within a building; a passageway. -->
+	<!-- -Passageway: a long, narrow way, typically having walls on either side, that allows access between buildings or to different rooms within a building. -->
 	<!-- Landing: a level area at the top of a staircase or between one flight of stairs and another. -->
-	<!-- Entryway (US): a way in to somewhere or something; an entrance. -->
-	<string name="room_corridor_keywords">hallway, hall, entryway, landing</string>
-
-	<string name="room_access">Staircase</string>
 	<!-- Stairwell: a shaft in a building in which a staircase is built. -->
 	<!-- Staircase: a set of stairs and its surrounding walls or structure. -->
 	<!-- Stair (set of stairs): a set of steps leading from one floor of a building to another, typically inside the building. -->
+	<!-- -Stoop (US): a porch with steps in front of a house or other building. -->
 	<!-- Ramp: a slope or inclined plane for joining two different levels, as at the entrance or between floors of a building. -->
 	<!-- Escalator: a moving staircase consisting of an endlessly circulating belt of steps driven by a motor, conveying people between the floors of a public building. -->
-	<!-- Travelator: a moving walkway, typically at an airport. -->
+	<!-- -Travelator: a moving walkway, typically at an airport. -->
 	<!-- Elevator: a platform or compartment housed in a shaft for raising and lowering people or things to different floors or levels. -->
 	<!-- Lift (UK): British term for elevator. -->
-	<string name="room_access_keywords">stairs, stairwell, ramp, escalator, elevator</string>
+	<string name="room_access_keywords">corridor, alley, passage, hallway, hall, landing, stairs, staircase, stairwell, ramp, escalator, elevator, lift</string>
+
+	<!-- Way: a road, track, path, or street for traveling along. -->
+	<!-- Path: a way or track laid down for walking or made by continual treading. -->
+	<string name="room_way">Path</string>
+	<!-- -Walk: a sidewalk or path. -->
+	<!-- Pathway: a way that constitutes or serves as a path. -->
+	<!-- Trail: a beaten path through rough country such as a forest or moor. -->
+	<!-- Footpath: a path for people to walk along, especially one in the countryside. -->
+	<!-- -Bridle path: a path or track used for horseback riding. -->
+	<!-- -Walkway: a passage or path for walking along, especially a raised passageway connecting different sections of a building or a wide path in a park or garden. -->
+	<!-- -Thoroughfare: a road or path forming a route between two places. -->
+	<!-- Track: a rough path or minor road, typically one beaten by use rather than constructed. -->
+	<!-- Track: a prepared course or circuit for athletes, horses, motor vehicles, bicycles, or dogs to race on. -->
+	<!-- -Trackway: a path formed by the repeated treading of people or animals. -->
+	<!-- Pavement/Sidewalk [people may use it in front of the property]: a paved path for pedestrians at the side of a road. -->
+	<!-- -Pedway (US): a footway built for pedestrians in an urban area. -->
+	<!-- Road: a wide way leading from one place to another, especially one with a specially prepared surface that vehicles can use. -->
+	<!-- -Lane: a narrow road, especially in a rural area. -->
+	<!-- -Boulevard strip: a grassy strip between a road and a sidewalk. -->
+	<!-- Bridge: a structure carrying a road, path, railroad, or canal across a river, ravine, road, railroad, or other obstacle. -->
+
+	<!-- -Route: the line of a road, path, railroad, etc. -->
+	<!-- -Course: an area of land set aside and prepared for racing, golf, or another sport. -->
+	<!-- -Bikeway: a path or lane for the use of bicycles. -->
+	<string name="room_way_keywords">pathway, trail, footpath, track, pavement, sidewalk, road, bridge</string>
+
 
 	<string name="room_parking">Parking</string>
 	<!-- Carport: a shelter for a car consisting of a roof supported on posts, built beside a house. -->
@@ -249,12 +287,76 @@
 	<!-- Pier: a platform supported on pillars or girders, used as a landing stage for boats. -->
 	<!-- Quay: a concrete, stone, or metal platform lying alongside or projecting into water for loading and unloading ships. -->
 	<!-- Wharf: a level quayside area to which a ship may be moored to load and unload. -->
+	<!-- Helipad: a landing and takeoff area for helicopters. -->
 	<!-- Dock: a structure extending alongshore or out from the shore into a body of water, to which boats may be moored. -->
 	<!-- Dock: an enclosed area of water in a port for the loading, unloading, and repair of ships. -->
 	<!-- Marina: a specially designed harbor with moorings for pleasure craft and small boats. -->
 	<!-- Port: a town or city with a harbor where ships load or unload, especially one where customs officers are stationed. -->
 	<!-- Mole: a large solid structure on a shore serving as a pier, breakwater, or causeway. a harbor formed or protected by a mole. -->
 	<!-- Levee: a landing place; a quay. -->
-	<string name="room_parking_keywords">driveway, carport, parking lot, jetty, pier, mole, dock, marina, levee, landing stage</string>
+	<!-- CONSIDER Approach: a road, sea passage, or other way leading to a place. -->
+	<!-- Drive: a street or road. short for driveway. -->
+	<!-- -Avenue: a tree-lined road or path, especially one that leads to a country house or similar building. -->
+	<!-- Airstrip: a strip of ground set aside for the takeoff and landing of aircraft. -->
+	<!-- Runway: a leveled strip of smooth ground along which aircraft take off and land. -->
+	<string name="room_parking_keywords">driveway, carport, parking lot; helipad, airstrip, runway; mole, dock, marina, jetty, pier, levee, landing stage</string>
+
+
+	<string name="room_group_nature">Nature</string>
+
+	<string name="room_water">Water Feature</string>
+	<!-- Pond: a small body of still water formed naturally or by hollowing or embanking. -->
+	<!-- Pool: a small area of still water, typically one formed naturally. -->
+	<!-- -Puddle [temporary and small]: a small pool of liquid, especially of rainwater on the ground. -->
+	<!-- Lake: a large body of water surrounded by land. -->
+	<!-- -Tarn [Scottish]: a small mountain lake. -->
+	<!-- Waterhole: a depression in which water collects, especially one from which animals regularly drink. -->
+	<!-- Reservoir: a large natural or artificial lake used as a source of water supply. -->
+	<!-- Grotto: a small picturesque cave, especially an artificial one in a park or garden. -->
+
+	<!-- Ditch: a narrow channel dug in the ground, typically used for drainage alongside a road or the edge of a field. -->
+	<!-- Channel: a length of water wider than a strait, joining two larger areas of water, especially two seas. -->
+	<!-- Canal: -->
+	<!-- -Trench [too army / geo]: a long, narrow ditch. dug by troops or deep depression in the ocean floor-->
+
+	<!-- Brook: a small stream. -->
+	<!-- Creek: a stream, brook, or minor tributary of a river. -->
+	<!-- Stream: a small, narrow river. -->
+	<!-- River: a large natural stream of water flowing in a channel to the sea, a lake, or another such stream. -->
+	<!-- -Kill (in place names, especially in New York, New Jersey, and Pennsylvania): a stream, creek, or tributary. -->
+	<!-- -Run: a small stream or brook. -->
+	<!-- -Burn (UK): a small stream; a brook. -->
+	<!-- -Bayou (Southern US): a marshy outlet of a lake or river. -->
+	<!-- -Seaway: an inland waterway capable of accommodating seagoing ships. -->
+	<string name="room_water_keywords">pool, pond, lake, reservoir, waterhole, grotto; ditch, canal, channel; brook, stream, creek, river</string>
+
+	<string name="room_land">Land Feature</string>
+	<!-- Hill: a naturally raised area of land, not as high or craggy as a mountain. -->
+	<!-- Dune: a mound or ridge of sand or other loose sediment formed by the wind, especially on the sea coast or in a desert. -->
+	<!-- Hump: a rounded raised mass of earth or land. -->
+	<!-- Mound: a raised mass of earth, stones, or other compacted material, sometimes created artificially. -->
+	<!-- Hillock: a small hill or mound. -->
+	<!-- Knoll: a small hill or mound. -->
+	<!-- -Hummock: a hillock, knoll, or mound. -->
+
+	<!-- Cliff: a steep rock face, especially at the edge of the sea. -->
+	<!-- Ledge: a narrow horizontal surface projecting from a wall, cliff, or other surface. -->
+	<!-- Ridge: a long narrow hilltop, mountain range, or watershed. -->
+	<!-- Rock: a large piece of rock that has become detached from a cliff or mountain; a boulder. -->
+
+	<!-- Hole: a hollow place in a solid body or surface. -->
+	<!-- Pit: a large hole in the ground. -->
+
+	<!-- Beach: a pebbly or sandy shore, especially by the ocean between high- and low-water marks. -->
+	<!-- Shore: the land along the edge of a sea, lake, or other large body of water. -->
+	<!-- Coast: the part of the land near the sea; the edge of the land. -->
+	<!-- Strand: the shore of a sea, lake, or large river. -->
+	<!-- Waterfront: a part of a town that borders a body of water. -->
+	<!-- Embankment: a wall or bank of earth or stone built to prevent a river flooding an area. -->
+	<!-- Embankment: a bank of earth or stone built to carry a road or railroad over an area of low ground. -->
+	<!-- Bank: the land alongside or sloping down to a river or lake. -->
+	<!-- Bay: a broad inlet of the sea where the land curves inward. -->
+	<!-- Bay: a recessed or enclosed area, in particular. -->
+	<string name="room_land_keywords">hill, dune, hump, mound, hillock, knoll; rock, cliff, ledge, ridge; hole, pit; embankment, bank, waterfront, shore, coast, bay, beach, strand</string>
 
 </resources>

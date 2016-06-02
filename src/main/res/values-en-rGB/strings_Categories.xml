@@ -2,28 +2,67 @@
 <resources>
 	<string name="category_uncategorized">Uncategorised</string>
 	<string name="category_storage_special">Specialised</string>
-	<!-- replacements for stuff based mostly on (each is unique, i.e. not used twice; and meanings match categories)
-	http://www.thefreedictionary.com/stuff#Thesaurus Collins Thesaurus of the English Language noun 1.
-	Complete and Unabridged 2nd Edition. 2002 © HarperCollins Publishers 1995, 2002 -->
-	<!-- extra words: contraption, junk -->
-	<string name="category_group_description">logically holds other possessions together</string>
-	<string name="category_part_description">kit that\'s useless by itself</string>
-	<string name="category_image_description">extra images of your properties</string>
-	<string name="category_storage_description">impedimenta to put your things in</string>
-	<string name="category_furniture_description">goods and chattels you may need friends to move</string>
-	<string name="category_furnishing_description">matter to put on your belongings</string>
-	<string name="category_decoration_description">trappings that make your clutter look pretty</string>
-	<string name="category_collectible_description">lares and penates you don\'t need, but still have</string>
-	<string name="category_clothing_description">clobber to put on your body</string>
-	<string name="category_leisure_description">tackle to use mostly in your spare time</string>
-	<string name="category_toy_description">paraphernalia to play with</string>
-	<string name="category_machine_description">effects consuming energy during operation</string>
-	<string name="category_household_description">equipment around the house</string>
-	<string name="category_craft_description">gear to maintain or build objects with</string>
-	<string name="category_document_description">essence written on bits and pieces</string>
-	<string name="category_consumable_description">substances to ingest raw, or processed</string>
-	<string name="category_health_description">staples helping you live a better life</string>
-
 	<string name="category_appliance_major">White Goods</string>
 	<string name="category_electronic">Brown Goods</string>
+
+
+	<!-- Replacements for stuff: each is unique, i.e. not used twice; and meanings try to closely match categories. -->
+	<!-- Words from http://www.thefreedictionary.com/stuff#Thesaurus and related articles
+	Collins Thesaurus of the English Language - Complete and Unabridged 2nd Edition. 2002 © HarperCollins Publishers 1995, 2002
+	stuff: noun 1. things, gear, possessions, effects, materials, equipment, objects, tackle, kit, junk, luggage,
+		belongings, trappings, bits and pieces, paraphernalia, clobber (Brit. slang), impedimenta, goods and chattels -->
+
+	<!-- Extra words (with reasons of exclusion) -->
+	<!-- materials (matter sounded better): The equipment necessary for a particular activity. -->
+	<!-- luggage (used as category name): Containers for a traveler's belongings. The cases and belongings of a traveler. -->
+	<!-- effects (contraption was better): Movable belongings; goods. Personal effects: personal property or belongings. -->
+
+	<!-- stuff: Material, objects, or items of some unspecified kind. Worthless objects. Household or personal articles considered as a group. -->
+	<string name="category_uncategorized_description">any other stuff</string>
+	<!-- junk (may be too offensive): Articles that are worn-out or fit to be discarded. -->
+	<!-- junk: Discarded material, such as glass, rags, paper, or metal, some of which may be reused in some form. -->
+	<string name="category_internal_description">junk you should never see</string>
+	<!-- possession: goods that someone owns. -->
+	<string name="category_group_description">logically holds other possessions together</string>
+	<!-- kit: A set of articles or implements used for a specific purpose. A set of parts or materials to be assembled. A packaged set of related materials. -->
+	<string name="category_part_description">kit that\'s useless by itself</string>
+	<!-- property: Something owned; a possession. Possessions collectively or the fact of owning possessions of value. -->
+	<string name="category_image_description">extra images of your properties</string>
+	<!-- impedimenta: Objects, such as provisions or baggage, that impede or encumber. -->
+	<!-- thing: An object or entity that is not or cannot be named specifically. An individual object, especially an inanimate object. -->
+	<!-- thing: A possession or item in one's control; that which can be possessed or owned. -->
+	<string name="category_storage_description">impedimenta to put your things in</string>
+	<!-- chattel: An article of movable personal property. -->
+	<!-- goods: Things that are made to be sold. -->
+	<!-- goods and chattels: Any property that is not freehold, usually limited to include only moveable property. -->
+	<string name="category_furniture_description">goods and chattels you may need friends to move</string>
+	<!-- matter: Something that occupies space. Substance of a specified type. That which makes up something, esp a physical object; material. -->
+	<!-- belongings: Personal items that one owns; possessions. the things that a person owns or has with him; possessions; effects. -->
+	<string name="category_furnishing_description">matter to put on your belongings</string>
+	<!-- trappings: Articles of dress or adornment, especially accessories. An ornamental covering or harness for a horse; a caparison. -->
+	<!-- clutter: A disordered heap or mass of objects. A confused or disordered state or collection; a jumble. -->
+	<string name="category_decoration_description">trappings that make your clutter look pretty</string>
+	<!-- lares and penates: The cherished possessions of a family or household. Treasured household possessions. -->
+	<string name="category_collectible_description">lares and penates you don\'t need, but still have</string>
+	<!-- clobber (UK slang): Personal belongings, such as clothes and accessories. -->
+	<string name="category_clothing_description">clobber to put on your body</string>
+	<!-- tackle: The equipment used in a particular activity, especially in fishing; gear. -->
+	<string name="category_leisure_description">tackle to use mostly in your spare time</string>
+	<!-- paraphernalia: Miscellaneous articles or equipment. The articles used in a particular activity; equipment. -->
+	<string name="category_toy_description">paraphernalia to play with</string>
+	<!-- contraption: A mechanical device; a gadget. -->
+	<string name="category_machine_description">contraptions consuming energy during operation</string>
+	<!-- equipment: A set of tools, devices, kit, etc, assembled for a specific purpose. -->
+	<string name="category_household_description">equipment around the house</string>
+	<!-- gear: Equipment, such as tools or clothing, used for a particular activity. -->
+	<!-- object: Something perceptible by one or more of the senses, especially by vision or touch; a material thing. -->
+	<string name="category_craft_description">gear to maintain or build objects with</string>
+	<!-- essence: The intrinsic or indispensable quality or qualities that serve to characterize or identify something. -->
+	<!-- bits and pieces: small things of different types. bits and bobs (UK)-->
+	<string name="category_document_description">essence written on bits and pieces</string>
+	<!-- substance: The real physical matter of which a person or thing consists. -->
+	<string name="category_consumable_description">substances to ingest raw, or processed</string>
+	<!-- staple: A major item of trade in steady demand. A basic dietary item. A principal raw material or commodity grown or produced in a region. -->
+	<string name="category_health_description">staples helping you live a better life</string>
+
 </resources>

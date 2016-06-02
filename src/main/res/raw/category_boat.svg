@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY size "400">
+	<!ENTITY boatH "200">
+	<!ENTITY curve "100">
+	]>
+<!-- Based on http://downloadicons.net/sailing-logo-icon-46016 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-500,-500 1000 700">
+	<path id="body" d="M0,0
+		a &curve;,&boatH; 0 0 0 &curve;,-&boatH;
+		h-&curve; h-&size;-&size; h-&curve;
+		a &curve;,&boatH; 0 0 0 &curve;,&boatH;
+	" transform="translate(&size;,&boatH;)" />
+	<rect id="sail-base" x="-50" y="-&curve;" width="50" height="&curve;" />
+	<path id="sail" d="M0,0 h-&size; l+&size;,-&size; v+&size;" transform="translate(0,-&curve;)" />
+</svg>

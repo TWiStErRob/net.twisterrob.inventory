@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO Don't forget to run gradlew genDB after modifying this file -->
+<!-- You can use gradlew genDB to force generate MagicHomeInventory.data.Categories.sql will after modifying this file. -->
 <!-- Syntax review:
     (?<!\\)'|(\n\t+)?<)|\?(?=\w)|,(?=\s*<)|\w(?!,)[\n\t]+\w|^\s+[^\n>]+?</|,(?=\s*\()|\([^)]{0,100}+(?!\))
     * unescaped apostrophe
@@ -10,6 +10,11 @@
     * comma before open parenthesis
     * unclosed parenthesis
 -->
+
+<!-- Categories for items.
+	An item is a possession that you can *practically* bring with you when you move.
+	The trick here is that *technically* you can disassemble a house, and rebuild it in another place,
+	but *practically* you're losing a lot of value and they won't be the "same" house. --> 
 <resources>
 	<string name="category_internal" id="-1" level="0" icon="@raw/category_unknown" translatable="false">SECRET</string>
 	<string name="category_internal_description" translatable="false">stuff you should never see</string>
@@ -91,7 +96,7 @@
 	<string name="category_packaging_cushioning_keywords">bubble wrap, styrofoam, foam peanut, molded pulp, paperboard, protective plastic</string>
 
 	<string name="category_compartment" level="1">Compartments</string>
-	<string name="category_compartment_keywords">drawer, shelf, section, display, pocket, desktop, hanger railing</string>
+	<string name="category_compartment_keywords">drawer, shelf, section, display, pocket, desktop, hanger railing; top, bottom, left, right, middle, atop, below, above, front, back, behind</string>
 
 
 	<!--=========================================================================================================-->
@@ -107,7 +112,7 @@
 	<string name="category_fixture_storage" level="2">storage</string>
 	<string name="category_fixture_storage_keywords">shelf, coat rack, hook, holder, soap holder/soap dish, toothbrush holder, track, rail, railing, pole, mailbox/letter box</string>
 	<string name="category_fixture_wet" level="2">wet</string>
-	<string name="category_fixture_wet_keywords">bathtub, toilet, toilet seat, toilet tank, sink, tap, shower, fountain</string>
+	<string name="category_fixture_wet_keywords">bathtub, toilet, toilet seat, toilet tank, sink, tap, well, shower, garden shower, jacuzzi/hot tub/home spa, sauna, swimming pool, fountain, pond</string>
 	<string name="category_fixture_electric" level="2">electric</string>
 	<string name="category_fixture_electric_keywords">socket, light, switch, ceiling fan, smoke alarm, burglar alarm, thermostat</string>
 
@@ -145,9 +150,7 @@
 	<string name="category_canopy" level="2" icon="@raw/category_canopy">canopies</string>
 	<string name="category_canopy_keywords">pavilion, marquee, tent, teepee, garden parasol/garden umbrella, beach parasol/beach umbrella, water base, canopy swing, pool cover, tarp shelter</string>
 	<string name="category_playground" level="2">playground</string>
-	<string name="category_playground_keywords">swing, slide, seesaw, climbing frame, climbing wall, playhouse, wendy house, trampoline, jumpy castle</string>
-	<string name="category_furniture_wet" level="2">wet</string>
-	<string name="category_furniture_wet_keywords">jacuzzi/hot tub/home spa, garden shower, inflatable pool, kiddy pool, pond, swimming pool, spring board/diving board, sauna</string>
+	<string name="category_playground_keywords">swing, slide, seesaw, climbing frame, climbing wall, playhouse, wendy house, trampoline, jumpy castle, spring board/diving board, inflatable pool, kiddy pool</string>
 
 
 	<!--=========================================================================================================-->
@@ -185,7 +188,7 @@
 	<string name="category_decoration_description">stuff that makes other stuff look pretty</string>
 
 	<string name="category_ornament" level="1">Ornaments</string>
-	<string name="category_ornament_keywords">vase, plant, dried flower, fake plant, candle, figurine, fridge magnet, glow-in-the-dark</string>
+	<string name="category_ornament_keywords">vase, plant, dried flower, fake plant, candle, figurine, fountain, fridge magnet, glow-in-the-dark</string>
 
 	<string name="category_decoration_cultural" level="1">Cultural</string>
 	<!-- http://en.wikipedia.org/wiki/Holiday -->
@@ -465,7 +468,7 @@
 	<string name="category_appliance_major" level="1">Major Appliances</string>
 	<string name="category_appliance_major_keywords">@string/empty</string>
 	<string name="category_appliance_cook" level="2" icon="@raw/category_pot_hot">cooking</string>
-	<string name="category_appliance_cook_keywords">stove, hob, cooktop, cooker, oven, range, microwave, kiln, grill, barbecue</string>
+	<string name="category_appliance_cook_keywords">stove, hob, cooktop, cooker, oven, range, microwave, kiln, stone oven, grill, barbecue</string>
 	<string name="category_appliance_storage" level="2">food storage</string>
 	<string name="category_appliance_storage_keywords">refrigerator/fridge, cooler, freezer, garbage disposal unit/waste disposal unit, vending machine</string>
 	<string name="category_appliance_laundry" level="2">laundry</string>
@@ -499,7 +502,7 @@
 	<string name="category_refill" level="2">refills</string>
 	<string name="category_refill_keywords">ink cartridge, toner cartridge, fuse, spark plug, N2O whipped-cream charger, CO2 soda charger</string>
 	<string name="category_vehicle_part" level="2">vehicle parts</string>
-	<string name="category_vehicle_part_keywords">wheel, tyre, hubcap/wheel cover/wheel trim, light, prism, break, mirror, horn, bell, seat, basket, pedal, paddle, licence plate, windscreen wiper, engine, child safety seat</string>
+	<string name="category_vehicle_part_keywords">wheel, tyre, hubcap/wheel cover/wheel trim, light, prism, break, mirror, horn, bell, seat, basket, pedal, paddle, crank, licence plate, windscreen wiper, engine, child safety seat</string>
 	<string name="category_vehicle_accessory" level="2">vehicle accessories</string>
 	<string name="category_vehicle_accessory_keywords">lock, padlock, key, high-visibility, phone holder, sat nav holder, first aid kit, puncture kit, repair kit, windshield sunshade</string>
 
@@ -561,7 +564,7 @@
 
 	<string name="category_vehicle" level="1" icon="@raw/category_car_front">Vehicles</string>
 	<string name="category_vehicle_keywords">@string/empty</string>
-	<string name="category_vehicle_human" level="2" icon="@raw/category_cart">human-powered</string>
+	<string name="category_vehicle_human" level="2" icon="@raw/category_bicycle">human-powered</string>
 	<string name="category_vehicle_human_keywords">bicycle, unicycle, monowheel, scooter, shopping cart/trolley, stroller/buggy/pram</string>
 	<string name="category_vehicle_motorized" level="2">motorized</string>
 	<string name="category_vehicle_motorized_keywords">motorcycle, car, SUV, quad, buggy, go-kart</string>
@@ -573,7 +576,7 @@
 	<string name="category_vehicle_heavy_keywords">tractor, forklift, crane, excavator, dump truck/dumper/tipper truck, bulldozer, loader, road roller</string>
 	<string name="category_vehicle_air" level="2" icon="@raw/category_plane">aircraft</string>
 	<string name="category_vehicle_air_keywords">plane, helicopter, glider, hot air balloon, parachute, drone, rocket, jetpack</string>
-	<string name="category_vehicle_water" level="2">watercraft</string>
+	<string name="category_vehicle_water" level="2" icon="@raw/category_boat">watercraft</string>
 	<string name="category_vehicle_water_keywords">boat, kayak, canoe, inflatable boat, ship, sailing boat, yacht, submarine</string>
 
 

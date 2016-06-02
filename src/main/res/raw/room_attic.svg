@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.isenbergsprayfoam.com/interactive-application-guide.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-375,-275 750 400">
+	<path id="roof" d="M -350,0 l+350,-250 l+350,+250 z"
+	      fill="black" stroke="black" stroke-width="25" stroke-linejoin="round" />
+	<path id="chimney" d="M 0,0 v-75 h-25 h+150 h-25 v+150 Z" transform="translate(125,-150)"
+	      fill="black" stroke="black" stroke-width="20" stroke-linejoin="round" />
+	<circle id="hole" r="45" cy="-100" fill="white" />
+	<rect x="-300" width="600" height="400" fill="lightgray" stroke="black" stroke-width="25" />
+</svg>

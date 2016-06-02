@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"[
+	<!ENTITY wheelY "-30">
+	<!ENTITY frontWheelX "+350">
+	<!ENTITY backWheelX "-250">
+	<!ENTITY seatX "-100">
+	<!ENTITY seatY "-275">
+	<!ENTITY handleX "+250">
+	<!ENTITY handleY "-270">
+	]>
+<!-- Based on https://images-na.ssl-images-amazon.com/images/I/81E4Ed2LyIL._SL1500_.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-450,-400 1000 575">
+	<defs>
+		<style type="text/css"><![CDATA[
+			.rod, .wheel, #handle {
+				stroke: black;
+				stroke-width: 30;
+				stroke-linecap: round;
+			}
+			.wheel {
+				stroke-width: 40;
+			}
+		]]></style>
+	</defs>
+	<line class="rod" id="rod-pedal-back" x2="&backWheelX;" y2="&wheelY;" />
+	<line class="rod" id="rod-pedal-seat" x2="&seatX;" y2="&seatY;" />
+	<circle class="wheel" id="wheel-back" r="175" cx="&backWheelX;" cy="&wheelY;" fill="none" />
+	<circle class="wheel" id="wheel-front" r="175" cx="&frontWheelX;" cy="&wheelY;" fill="none" />
+	<line class="rod" id="rod-back-seat" x1="&backWheelX;" y1="&wheelY;" x2="&seatX;" y2="&seatY;" />
+	<line class="rod" id="rod-pedal-handle" x2="&handleX;" y2="&handleY;" />
+	<line class="rod" id="rod-front-handle" x1="&frontWheelX;" y1="&wheelY;" x2="&handleX;" y2="&handleY;" />
+	<circle id="crank" r="50" />
+	<!--<rect id="pedal" width="100" height="20" y="-10" rx="10" ry="10" transform="rotate(+40)" />-->
+	<rect id="seat" x="-70" y="-75" width="150" height="60" rx="30" transform="translate(&seatX;,&seatY;)" />
+	<path id="handle" d="M&handleX;,&handleY; l-25,-50 l+35,-35 l-50,-10" fill="none" />
+</svg>
