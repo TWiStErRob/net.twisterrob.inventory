@@ -36,25 +36,22 @@
 	<!-- Bathroom (UK): a room containing a bath or shower and typically also a washbasin and a toilet. -->
 	<!-- Bathroom (US): a room containing a toilet and sink and typically also a bathtub or shower. -->
 	<!-- Washroom (US): a room with washing and toilet facilities. -->
-	<string name="room_bath_keywords">washroom</string>
-
-	<string name="room_toilet">Restroom</string>
 	<!-- Restroom/Bathroom (US): a public lavatory; a restroom. a bathroom in a public building. -->
 	<!-- WC/Water closet: a flush toilet. a room containing a flush toilet. -->
 	<!-- Toilet: a fixed receptacle into which a person may urinate or defecate, typically consisting of a large bowl connected to a system for flushing away the waste into a sewer or septic tank. -->
 	<!-- Outhouse (US): an outbuilding containing a toilet, typically with no plumbing. -->
 	<!-- Privy: a toilet located in a small shed outside a house or other building; an outhouse. -->
 	<!-- Latrine: a toilet or outhouse, especially a communal one in a camp or barracks. -->
-	<string name="room_toilet_keywords">WC, toilet, bathroom, latrine, outhouse, privy</string>
+	<string name="room_bath_keywords">bathroom, washroom, wetroom; toilet, WC, latrine, outhouse, privy</string>
 
-	<string name="room_kitchen">Kitchen</string>
+	<!-- Dining: eat dinner; dinner: the main meal of the day, taken either around midday or in the evening. -->
+	<string name="room_dining">Dining</string>
 	<!-- Kitchen: a room or area where food is prepared and cooked. -->
 	<!-- Kitchenette: a small kitchen or part of a room equipped as a kitchen. -->
-	<string name="room_kitchen_keywords">kitchenette</string>
-
-	<string name="room_dining">Dining Room</string>
 	<!-- Dining room: a room in a house or hotel in which meals are eaten. -->
-	<string name="room_dining_keywords">@string/empty</string>
+	<!-- Bar: a room in a restaurant or hotel in which alcohol is served. -->
+	<!-- Counter: a long flat-topped fixture in a store or bank across which business is conducted with customers. -->
+	<string name="room_dining_keywords">kitchen, kitchenette, dining room, bar, counter</string>
 
 	<string name="room_recreation">Recreational Area</string>
 	<!-- Family room (US): a living room used by all family members for recreation and relaxation. -->
@@ -78,14 +75,8 @@
 	<!-- Closet: a small room, especially one used for storing things or for private study. -->
 	<!-- Cloakroom: a room in a public building where coats and other belongings may be left temporarily. -->
 	<!-- Coatroom (US): a cloakroom. -->
-	<string name="room_storage_keywords">storage, pantry, larder, closet, cloakroom, coatroom</string>
-
-	<string name="room_garage">Garage</string>
-	<!-- Garage: a building or shed for housing a motor vehicle or vehicles. -->
-	<!-- Hangar: a large building with extensive floor area, typically for housing aircraft. -->
-	<!-- Boathouse: a shed at the edge of a river or lake used for housing boats. -->
-	<!-- Harbor: a place on the coast where vessels may find shelter, especially one protected from rough water by piers, jetties, and other artificial structures. -->
-	<string name="room_garage_keywords">hangar, boathouse, harbor</string>
+	<!-- Garage [when used as storage (and maybe car)]: a building or shed for housing a motor vehicle or vehicles. -->
+	<string name="room_storage_keywords">storage, pantry, larder, closet, cloakroom, coatroom, garage</string>
 
 	<string name="room_outbuilding">Shed</string>
 	<!-- Shed: A shed, outhouse, outbuilding or shack, is typically a simple, single-storey roofed structure in a back garden or on an allotment that is used for storage, hobbies, or as a workshop. -->
@@ -253,6 +244,7 @@
 
 	<!-- Way: a road, track, path, or street for traveling along. -->
 	<!-- Path: a way or track laid down for walking or made by continual treading. -->
+	<!-- -Approach: a road, sea passage, or other way leading to a place. -->
 	<string name="room_way">Path</string>
 	<!-- -Walk: a sidewalk or path. -->
 	<!-- Pathway: a way that constitutes or serves as a path. -->
@@ -270,14 +262,20 @@
 	<!-- -Lane: a narrow road, especially in a rural area. -->
 	<!-- -Boulevard strip: a grassy strip between a road and a sidewalk. -->
 	<!-- Bridge: a structure carrying a road, path, railroad, or canal across a river, ravine, road, railroad, or other obstacle. -->
-
+	<!-- -Avenue: a tree-lined road or path, especially one that leads to a country house or similar building. -->
+	<!-- Airstrip: a strip of ground set aside for the takeoff and landing of aircraft. -->
+	<!-- Runway: a leveled strip of smooth ground along which aircraft take off and land. -->
 	<!-- -Route: the line of a road, path, railroad, etc. -->
 	<!-- -Course: an area of land set aside and prepared for racing, golf, or another sport. -->
 	<!-- -Bikeway: a path or lane for the use of bicycles. -->
-	<string name="room_way_keywords">pathway, trail, footpath, track, pavement, sidewalk, road, bridge</string>
+	<string name="room_way_keywords">pathway, trail, footpath, track, pavement, sidewalk; road, drive, airstrip, runway; bridge</string>
 
 
 	<string name="room_parking">Parking</string>
+	<!-- Garage: a building or shed for housing a motor vehicle or vehicles. -->
+	<!-- Hangar: a large building with extensive floor area, typically for housing aircraft. -->
+	<!-- Boathouse: a shed at the edge of a river or lake used for housing boats. -->
+	<!-- Harbor: a place on the coast where vessels may find shelter, especially one protected from rough water by piers, jetties, and other artificial structures. -->
 	<!-- Carport: a shelter for a car consisting of a roof supported on posts, built beside a house. -->
 	<!-- Driveway: a short road leading from a public road to a house or garage. -->
 	<!-- Parking lot (US): an area where cars or other vehicles may be left temporarily. -->
@@ -292,14 +290,10 @@
 	<!-- Dock: an enclosed area of water in a port for the loading, unloading, and repair of ships. -->
 	<!-- Marina: a specially designed harbor with moorings for pleasure craft and small boats. -->
 	<!-- Port: a town or city with a harbor where ships load or unload, especially one where customs officers are stationed. -->
-	<!-- Mole: a large solid structure on a shore serving as a pier, breakwater, or causeway. a harbor formed or protected by a mole. -->
+	<!-- -Mole: a large solid structure on a shore serving as a pier, breakwater, or causeway. a harbor formed or protected by a mole. -->
 	<!-- Levee: a landing place; a quay. -->
-	<!-- CONSIDER Approach: a road, sea passage, or other way leading to a place. -->
 	<!-- Drive: a street or road. short for driveway. -->
-	<!-- -Avenue: a tree-lined road or path, especially one that leads to a country house or similar building. -->
-	<!-- Airstrip: a strip of ground set aside for the takeoff and landing of aircraft. -->
-	<!-- Runway: a leveled strip of smooth ground along which aircraft take off and land. -->
-	<string name="room_parking_keywords">driveway, carport, parking lot; helipad, airstrip, runway; mole, dock, marina, jetty, pier, levee, landing stage</string>
+	<string name="room_parking_keywords">garage, carport, driveway, parking lot; hangar, helipad; boathouse, harbor, dock, marina, jetty, pier, port, wharf, quay, levee, landing stage</string>
 
 
 	<string name="room_group_nature">Nature</string>

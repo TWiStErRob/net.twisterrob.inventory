@@ -4,6 +4,7 @@ INSERT INTO PropertyTypeKind
 	UNION SELECT  1, 'property_group_dwelling',   'property_house'
 	UNION SELECT  2, 'property_group_commercial', 'property_office'
 ;
+
 INSERT INTO PropertyType
 	            (_id, kind, name,                     image)
 	      SELECT   0,    0, 'property_other',         NULL
@@ -22,6 +23,7 @@ INSERT INTO PropertyType
 	UNION SELECT 206,    2, 'property_recreation',    'category_soccer'
 ;
 
+
 INSERT INTO RoomTypeKind
 	           (_id, name,                  image)
 	      SELECT  0, 'room_group_other',    'room_unknown'
@@ -36,16 +38,14 @@ INSERT INTO RoomType
 	            (_id, kind, name,              image)
 	      SELECT   0,    0, 'room_other',      NULL
 -- Communal
-	UNION SELECT 101,    1, 'room_bed',        'room_bedroom'
-	UNION SELECT 102,    1, 'room_living',     NULL
-	UNION SELECT 103,    1, 'room_bath',       'room_bathroom'
-	UNION SELECT 104,    1, 'room_toilet',     'room_toilet'
-	UNION SELECT 105,    1, 'room_kitchen',    'category_pot_hot'
-	UNION SELECT 106,    1, 'room_dining',     'category_pot_hot'
-	UNION SELECT 107,    1, 'room_recreation', NULL
+	UNION SELECT 101,    1, 'room_living',     NULL
+	UNION SELECT 102,    1, 'room_bed',        'room_bedroom'
+	UNION SELECT 103,    1, 'room_bath',       'room_toilet'
+	UNION SELECT 104,    1, 'room_dining',     'category_pot_hot'
+	UNION SELECT 105,    1, 'room_recreation', NULL
 -- Storage
 	UNION SELECT 201,    2, 'room_storage',    'room_storage'
-	UNION SELECT 202,    2, 'room_garage',     'room_garage'
+	UNION SELECT 202,    2, 'room_parking',    'room_garage'
 	UNION SELECT 203,    2, 'room_outbuilding','room_shed'
 	UNION SELECT 204,    2, 'room_attic',      'room_attic'
 	UNION SELECT 205,    2, 'room_basement',   'room_basement'
@@ -62,7 +62,6 @@ INSERT INTO RoomType
 	UNION SELECT 404,    4, 'room_entrance',   NULL
 	UNION SELECT 405,    4, 'room_access',     'room_stairs'
 	UNION SELECT 406,    4, 'room_way',        NULL
-	UNION SELECT 407,    4, 'room_parking',    NULL
 -- Nature
 	UNION SELECT 501,    5, 'room_plant',      NULL
 	UNION SELECT 502,    5, 'room_water',      NULL
