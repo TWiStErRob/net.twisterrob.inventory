@@ -107,8 +107,8 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 			}
 		}
 
-		if (this.displayKeywords) {
-			String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		if (this.displayKeywords && (!indented || DatabaseTools.getOptionalInt(cursor, "level", 0) != 0)) {
+			String name = DatabaseTools.getString(cursor, CommonColumns.NAME);
 			CharSequence keywords;
 			try {
 				keywords = AndroidTools.getText(mContext, name + "_keywords");

@@ -127,13 +127,13 @@ public @interface IntentFlags {
 
 		private static @IntentFlags int handleFlag(StringBuilder sb,
 				@IntentFlags int flags, @IntentFlags int flag, String flagName) {
-			if ((flags & flag) != 0) {
-				flags = flags & ~flag;
+			if ((flags & flag) == flag) {
+				flags &= ~flag;
 				if (sb.charAt(sb.length() - 1) != '[') {
 					sb.append(" | ");
 				}
 				sb.append(flagName);
-				if ((IMMUTABLE_FLAGS & flag) != 0) {
+				if ((IMMUTABLE_FLAGS & flag) == flag) {
 					sb.append('*');
 				}
 			}

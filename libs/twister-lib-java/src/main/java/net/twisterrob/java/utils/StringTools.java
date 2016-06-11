@@ -91,6 +91,12 @@ public final class StringTools {
 	public static String hashString(Object object) {
 		return Integer.toHexString(System.identityHashCode(object));
 	}
+
+	public static boolean endsWith(StringBuilder builder, String needle) {
+		int index = builder.lastIndexOf(needle);
+		return index != -1 && index == builder.length() - needle.length();
+	}
+
 	public static String partOf(String str, int start, int end) {
 		if (str == null) {
 			return null;

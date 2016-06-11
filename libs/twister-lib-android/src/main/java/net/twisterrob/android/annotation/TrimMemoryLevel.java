@@ -13,15 +13,15 @@ import net.twisterrob.java.annotations.DebugHelper;
 
 @SuppressLint("InlinedApi")
 @TargetApi(VERSION_CODES.JELLY_BEAN)
-@IntDef({
-		        ComponentCallbacks2.TRIM_MEMORY_COMPLETE,
-		        ComponentCallbacks2.TRIM_MEMORY_MODERATE,
-		        ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
-		        ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN,
-		        ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL,
-		        ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
-		        ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE
-        })
+@IntDef(value = {
+		ComponentCallbacks2.TRIM_MEMORY_COMPLETE,
+		ComponentCallbacks2.TRIM_MEMORY_MODERATE,
+		ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
+		ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN,
+		ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL,
+		ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
+		ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE
+})
 @Retention(RetentionPolicy.SOURCE)
 @Target({FIELD, LOCAL_VARIABLE, PARAMETER, METHOD})
 public @interface TrimMemoryLevel {
@@ -45,7 +45,7 @@ public @interface TrimMemoryLevel {
 				case ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE:
 					return "TRIM_MEMORY_RUNNING_MODERATE";
 			}
-			return "trimMemoryLevel=" + level;
+			return "trimMemoryLevel::" + level;
 		}
 	}
 }

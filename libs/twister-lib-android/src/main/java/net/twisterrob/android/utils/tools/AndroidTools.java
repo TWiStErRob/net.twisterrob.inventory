@@ -27,12 +27,15 @@ import android.os.Build.*;
 import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.preference.ListPreference;
 import android.support.annotation.*;
-import android.support.design.widget.TextInputLayout;
+import android.support.design.widget.*;
+import android.support.design.widget.NavigationView.SavedState;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
+import android.support.v4.app.*;
 import android.support.v4.view.*;
 import android.support.v4.widget.*;
+import android.support.v7.widget.*;
 import android.text.TextUtils;
 import android.util.*;
 import android.view.*;
@@ -59,11 +62,16 @@ public /*static*/ abstract class AndroidTools {
 		}
 		appContext = context.getApplicationContext();
 	}
+	public static Context getContext() {
+		return appContext;
+	}
 
 	private static final float CIRCLE_LIMIT = 359.9999f;
 	private static final int INVALID_POSITION = -1;
 
 	public static final @AnyRes int INVALID_RESOURCE_ID = 0;
+	/** @see View#toString() */
+	private static final int RESOURCE_ID_MASK = 0xff000000;
 	public static final String NULL = "null";
 	public static final String ERROR = "error";
 
@@ -239,6 +247,13 @@ public /*static*/ abstract class AndroidTools {
 		toStringRec(sb, 1, bundle, preType, postType, start, preItem, postItem, end);
 		return sb.toString();
 	}
+	private static final Collection<String> RESOLVE_RESOURCE_ID_KEYS = new HashSet<>(Arrays.asList(
+			"android:views", // savedInstanceState > android:viewHierarchyState
+			"android:view_state",
+			// (FragmentManagerState)android:support:fragments > FragmentManagerImpl.VIEW_STATE_TAG
+			"android:menu:action_views", // savedInstanceState > NavigationView.SavedState
+			"android:focusedViewId"
+	));
 	private static void toStringRec(StringBuilder sb, int level,
 			Bundle bundle, String preType, String postType, String start, String preItem, String postItem, String end) {
 		sb.append(preType).append(debugType(bundle)).append(postType);
@@ -249,47 +264,36 @@ public /*static*/ abstract class AndroidTools {
 			sb.append(ex.toString());
 			return; // skip the rest, there's quite possible no data
 		}
-		sb.append(start);
+		if (bundle.size() == 0) {
+			return;
+		}
+		boolean shortcut = bundle.size() <= 1;
+		if (shortcut) {
+			sb.append(": ");
+		} else {
+			sb.append(start);
+		}
+		int deeperLevel = shortcut? level : level + 1;
 		TreeSet<String> sortedKeys = CollectionTools.newTreeSet(bundle.keySet(), new NullsSafeComparator<String>());
 		for (Iterator<String> it = sortedKeys.iterator(); it.hasNext(); ) {
 			String key = it.next();
-			for (int i = 0; i < level; i++) {
-				sb.append(preItem);
+			if (!shortcut) {
+				for (int i = 0; i < level; i++) {
+					sb.append(preItem);
+				}
 			}
-			sb.append(key).append("=");
+			sb.append(key).append(" -> ");
 
 			Object value = bundle.get(key);
+			boolean resolveValueAsId = appContext != null && RESOLVE_RESOURCE_ID_KEYS.contains(key);
 			if (value instanceof Bundle) {
-				toStringRec(sb, level + 1, (Bundle)value, preType, postType, start, preItem, postItem, end);
+				Bundle val = (Bundle)value;
+				toStringRec(sb, deeperLevel, val, preType, postType, start, preItem, postItem, end);
 			} else if (value instanceof SparseArray) {
-				boolean resolveKeysAsIds = appContext != null && "android:views".equals(key);
-				SparseArray<?> array = (SparseArray<?>)value;
-				sb.append(preType).append(debugType(array)).append(postType).append(array.size()).append(start);
-				for (int index = 0; index < array.size(); index++) {
-					int arrayKey = array.keyAt(index);
-					Object arrayValue = array.get(arrayKey);
-					for (int i = 0; i < level + 1; i++) {
-						sb.append(preItem);
-					}
-					if (resolveKeysAsIds) {
-						sb.append(toNameString(appContext, arrayKey));
-					} else {
-						sb.append(arrayKey);
-					}
-					sb.append('=');
-					if (arrayValue instanceof Bundle) {
-						toStringRec(sb, level + 2, (Bundle)arrayValue, preType, postType, start, preItem, postItem,
-								end);
-					} else {
-						sb.append(toString(arrayValue));
-					}
-					if (index + 1 < array.size()) {
-						sb.append(postItem);
-					}
-				}
-				sb.append(end);
+				SparseArray<?> arr = (SparseArray<?>)value;
+				toStringRec(sb, deeperLevel, arr, preType, postType, start, preItem, postItem, end, resolveValueAsId);
 			} else {
-				if (appContext != null && "android:focusedViewId".equals(key) && value instanceof Integer) {
+				if (value instanceof Integer && (resolveValueAsId || ((Integer)value & RESOURCE_ID_MASK) != 0)) {
 					sb.append(toNameString(appContext, (Integer)value));
 				} else {
 					sb.append(toString(value));
@@ -299,7 +303,49 @@ public /*static*/ abstract class AndroidTools {
 				sb.append(postItem);
 			}
 		}
-		sb.append(end);
+		if (!shortcut) {
+			sb.append(end);
+		}
+	}
+	private static void toStringRec(StringBuilder sb, int level, SparseArray<?> array, String preType, String postType,
+			String start, String preItem, String postItem, String end, boolean resolveKeysAsIds) {
+		sb.append(preType).append(debugType(array)).append(postType).append(array.size());
+		boolean shortcut = array.size() <= 1;
+		if (shortcut) {
+			sb.append(": ");
+		} else {
+			sb.append(start);
+		}
+		int deeperLevel = shortcut? level : level + 1;
+		for (int index = 0; index < array.size(); index++) {
+			int arrayKey = array.keyAt(index);
+			Object arrayValue = array.get(arrayKey);
+			if (!shortcut) {
+				for (int i = 0; i < level; i++) {
+					sb.append(preItem);
+				}
+			}
+			if (resolveKeysAsIds || (arrayKey & RESOURCE_ID_MASK) != 0) {
+				sb.append(toNameString(appContext, arrayKey));
+			} else {
+				sb.append(arrayKey);
+			}
+			sb.append(" -> ");
+			if (arrayValue instanceof Bundle) {
+				toStringRec(sb, deeperLevel, (Bundle)arrayValue, preType, postType, start, preItem, postItem, end);
+			} else if (arrayValue instanceof SparseArray) {
+				SparseArray<?> arr = (SparseArray<?>)arrayValue;
+				toStringRec(sb, deeperLevel, arr, preType, postType, start, preItem, postItem, end, false);
+			} else {
+				sb.append(toString(arrayValue));
+			}
+			if (index + 1 < array.size()) {
+				sb.append(postItem);
+			}
+		}
+		if (!shortcut) {
+			sb.append(end);
+		}
 	}
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)
@@ -363,16 +409,68 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	@DebugHelper
+	@SuppressWarnings("ConstantConditions") // field are declared primitive so reflection can't return null
+	public static String toString(android.support.v7.widget.Toolbar.SavedState state) {
+		int expandedMenuItemId = ReflectionTools.get(state, "expandedMenuItemId");
+		boolean isOverflowOpen = ReflectionTools.get(state, "isOverflowOpen");
+		return String.format(Locale.ROOT,
+				"Overflow open=%b, Expanded MenuItem=%s",
+				isOverflowOpen, toNameString(getContext(), expandedMenuItemId));
+	}
+
+	@DebugHelper
+	@SuppressWarnings("ConstantConditions") // field are declared primitive so reflection can't return null
+	public static String toString(LinearLayoutManager.SavedState state) {
+		int mAnchorPosition = ReflectionTools.get(state, "mAnchorPosition");
+		int mAnchorOffset = ReflectionTools.get(state, "mAnchorOffset");
+		boolean mAnchorLayoutFromEnd = ReflectionTools.get(state, "mAnchorLayoutFromEnd");
+		return String.format(Locale.ROOT,
+				"Anchor: {pos=%d, offset=%d, fromEnd=%b}",
+				mAnchorPosition, mAnchorOffset, mAnchorLayoutFromEnd);
+	}
+
+	@DebugHelper
+	@SuppressWarnings("ConstantConditions") // field are declared primitive so reflection can't return null
+	public static String toString(StaggeredGridLayoutManager.SavedState state) {
+		int mAnchorPosition = ReflectionTools.get(state, "mAnchorPosition");
+		int mVisibleAnchorPosition = ReflectionTools.get(state, "mVisibleAnchorPosition");
+		int mSpanOffsetsSize = ReflectionTools.get(state, "mSpanOffsetsSize");
+		int[] mSpanOffsets = ReflectionTools.get(state, "mSpanOffsets");
+		int mSpanLookupSize = ReflectionTools.get(state, "mSpanLookupSize");
+		int[] mSpanLookup = ReflectionTools.get(state, "mSpanLookup");
+//		List<LazySpanLookup.FullSpanItem> mFullSpanItems = ReflectionTools.get(state, "mFullSpanItems");
+		boolean mReverseLayout = ReflectionTools.get(state, "mReverseLayout");
+		boolean mLastLayoutRTL = ReflectionTools.get(state, "mLastLayoutRTL");
+		return String.format(Locale.ROOT,
+				"Anchor: {pos=%d, visPos=%d}, reverse=%b, RTL=%b, Spans: {offsets=%s, lookups=%s}",
+				mAnchorPosition, mVisibleAnchorPosition, mReverseLayout, mLastLayoutRTL,
+				toString(mSpanOffsetsSize, mSpanOffsets), toString(mSpanLookupSize, mSpanLookup));
+	}
+
+	private static String toString(int size, int... values) {
+		if (size == 0 || values == null) {
+			return "[]";
+		} else if (size < 0) {
+			return String.valueOf(size);
+		}
+		return Arrays.toString(values);
+	}
+
+	@DebugHelper
 	public static String toString(Object value) {
 		if (value == null) {
 			return NULL;
 		}
 		String type = debugType(value);
-		String display;
+		String display = null;
 		if (value instanceof Bundle) {
-			display = toString((Bundle)value, "", " ", "#{", "", ", ", "}");
+			display = toString((Bundle)value, "", " ", "#{", "", ", ", "}"); // FIXME use toLongString((Bundle)value)
 		} else if (value instanceof Intent) {
 			display = toString((Intent)value);
+		} else if (value instanceof String) {
+			display = '"' + (String)value + '"';
+		} else if (value.getClass().isArray()) {
+			display = ArrayTools.toString(value);
 		} else if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB && value instanceof android.app.Fragment.SavedState) {
 			type = "Fragment.SavedState";
 			display = toString(ReflectionTools.get(value, "mState"));
@@ -386,9 +484,28 @@ public /*static*/ abstract class AndroidTools {
 		} else if (value == AbsSavedState.EMPTY_STATE) {
 			type = null;
 			display = "AbsSavedState.EMPTY_STATE";
-		} else {
+		} else if (value instanceof RecyclerView.SavedState) {
+			Parcelable mLayoutState = ReflectionTools.get(value, "mLayoutState");
+			if (mLayoutState instanceof LinearLayoutManager.SavedState
+					|| mLayoutState instanceof StaggeredGridLayoutManager.SavedState) {
+				display = toString(mLayoutState);
+			}
+		} else if (value instanceof LinearLayoutManager.SavedState) {
+			display = toString((LinearLayoutManager.SavedState)value);
+		} else if (value instanceof StaggeredGridLayoutManager.SavedState) {
+			display = toString((StaggeredGridLayoutManager.SavedState)value);
+		} else if (value instanceof NavigationView.SavedState) {
+			display = toString(((SavedState)value).menuState);
+		} else if (SupportV4WidgetAccess.instanceOf(value)) {
+			display = SupportV4WidgetAccess.toString(value);
+		} else if (value instanceof android.support.v7.widget.Toolbar.SavedState) {
+			display = toString((android.support.v7.widget.Toolbar.SavedState)value);
+		} else if (SupportV4AppAccess.instanceOf(value)) {
+			display = SupportV4AppAccess.toString(value);
+		}
+		if (display == null) {
 			display = shortenPackageNames(value.toString());
-			if (type.length() <= display.length() && display.startsWith(type)) {
+			if (type != null && type.length() <= display.length() && display.startsWith(type)) {
 				display = display.substring(type.length()); // from @ sign or { in case of View
 			}
 		}
@@ -407,7 +524,7 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	@DebugHelper
-	private static String shortenPackageNames(String string) {
+	public static String shortenPackageNames(String string) {
 		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+(v4|v7|v13)\\.(?:[a-z0-9]+\\.)+", "$1.");
 		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+", "");
 		string = string.replaceAll("^javax?\\.(?:[a-z0-9]+\\.)+", "");
@@ -895,22 +1012,19 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	public static void updateHeight(View view, int height) {
-		@SuppressWarnings("RedundantCast")
-		ViewGroup.LayoutParams params = (ViewGroup.LayoutParams)view.getLayoutParams();
+		ViewGroup.LayoutParams params = view.getLayoutParams();
 		params.height = height;
 		view.setLayoutParams(params);
 	}
 
 	public static void updateWidth(View view, int width) {
-		@SuppressWarnings("RedundantCast")
-		ViewGroup.LayoutParams params = (ViewGroup.LayoutParams)view.getLayoutParams();
+		ViewGroup.LayoutParams params = view.getLayoutParams();
 		params.width = width;
 		view.setLayoutParams(params);
 	}
 
 	public static void updateWidthAndHeight(View view, int width, int height) {
-		@SuppressWarnings("RedundantCast")
-		ViewGroup.LayoutParams params = (ViewGroup.LayoutParams)view.getLayoutParams();
+		ViewGroup.LayoutParams params = view.getLayoutParams();
 		params.width = width;
 		params.height = height;
 		view.setLayoutParams(params);
@@ -995,8 +1109,8 @@ public /*static*/ abstract class AndroidTools {
 	/** @see Intent#FLAG_* */
 	@SuppressWarnings("JavadocReference")
 	@DebugHelper
-	public static String toIntentFlagString(@IntentFlags int level) {
-		return IntentFlags.Converter.toString(level, true);
+	public static String toActivityIntentFlagString(@IntentFlags int flags) {
+		return IntentFlags.Converter.toString(flags, true);
 	}
 
 	public static String toDrawerLayoutStateString(int state) {
@@ -1008,7 +1122,7 @@ public /*static*/ abstract class AndroidTools {
 			case DrawerLayout.STATE_SETTLING:
 				return "STATE_SETTLING";
 			default:
-				return "state=" + state;
+				return "state::" + state;
 		}
 	}
 
@@ -1121,18 +1235,33 @@ public /*static*/ abstract class AndroidTools {
 		}
 		return name;
 	}
+
+	/**
+	 * -1 will be resolved to {@code "NO_ID"}, 0 is {@code "invalid"}, everything else will be tried to be resolved.
+	 * @see View#NO_ID
+	 * @see Resources#getIdentifier
+	 * @return Fully qualified name of the resource,
+	 *         or special values: {@code "View.NO_ID"}, {@code "invalid"}, {@code "not-found::<id>"}
+	 */
 	@DebugHelper
 	public static String toNameString(Resources resources, @IdRes int id) {
-		try {
-			return resources.getResourceName(id);
-		} catch (Resources.NotFoundException ignore) {
-			return "not-found=" + id;
+		if (id == View.NO_ID) {
+			return "View.NO_ID";
+		} else if (id == INVALID_RESOURCE_ID) {
+			return "invalid";
+		} else {
+			try {
+				return resources.getResourceName(id);
+			} catch (Resources.NotFoundException ignore) {
+				return "not-found::" + id;
+			}
 		}
 	}
 
 	@DebugHelper
 	public static String toNameString(Fragment fragment) {
-		return toNameString((Object)fragment) + "(" + ReflectionTools.get(fragment, "mWho") + ")";
+		return toNameString((Object)fragment)
+				+ (fragment != null? "(" + ReflectionTools.get(fragment, "mWho") + ")" : "");
 	}
 	@DebugHelper
 	public static String toNameString(Activity activity) {

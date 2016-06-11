@@ -14,25 +14,25 @@ import net.twisterrob.java.annotations.DebugHelper;
 
 @SuppressLint({"InlinedApi", "UniqueConstants"})
 @TargetApi(VERSION_CODES.LOLLIPOP)
-@IntDef({
-		        Window.FEATURE_OPTIONS_PANEL,
-		        Window.FEATURE_NO_TITLE,
-		        Window.FEATURE_PROGRESS,
-		        Window.FEATURE_LEFT_ICON,
-		        Window.FEATURE_RIGHT_ICON,
-		        Window.FEATURE_INDETERMINATE_PROGRESS,
-		        Window.FEATURE_CONTEXT_MENU,
-		        Window.FEATURE_CUSTOM_TITLE,
-		        Window.FEATURE_ACTION_BAR,
-		        WindowCompat.FEATURE_ACTION_BAR,
-		        Window.FEATURE_ACTION_BAR_OVERLAY,
-		        WindowCompat.FEATURE_ACTION_BAR_OVERLAY,
-		        Window.FEATURE_ACTION_MODE_OVERLAY,
-		        WindowCompat.FEATURE_ACTION_MODE_OVERLAY,
-		        Window.FEATURE_SWIPE_TO_DISMISS,
-		        Window.FEATURE_CONTENT_TRANSITIONS,
-		        Window.FEATURE_ACTIVITY_TRANSITIONS
-        })
+@IntDef(value = {
+		Window.FEATURE_OPTIONS_PANEL,
+		Window.FEATURE_NO_TITLE,
+		Window.FEATURE_PROGRESS,
+		Window.FEATURE_LEFT_ICON,
+		Window.FEATURE_RIGHT_ICON,
+		Window.FEATURE_INDETERMINATE_PROGRESS,
+		Window.FEATURE_CONTEXT_MENU,
+		Window.FEATURE_CUSTOM_TITLE,
+		Window.FEATURE_ACTION_BAR,
+		WindowCompat.FEATURE_ACTION_BAR,
+		Window.FEATURE_ACTION_BAR_OVERLAY,
+		WindowCompat.FEATURE_ACTION_BAR_OVERLAY,
+		Window.FEATURE_ACTION_MODE_OVERLAY,
+		WindowCompat.FEATURE_ACTION_MODE_OVERLAY,
+		Window.FEATURE_SWIPE_TO_DISMISS,
+		Window.FEATURE_CONTENT_TRANSITIONS,
+		Window.FEATURE_ACTIVITY_TRANSITIONS
+})
 @Retention(RetentionPolicy.SOURCE)
 @Target({FIELD, LOCAL_VARIABLE, PARAMETER, METHOD})
 public @interface WindowFeature {
@@ -69,7 +69,7 @@ public @interface WindowFeature {
 				case Window.FEATURE_ACTIVITY_TRANSITIONS:
 					return "FEATURE_ACTIVITY_TRANSITIONS";
 			}
-			return "featureId=" + featureId;
+			return "featureId::" + featureId;
 		}
 	}
 }
