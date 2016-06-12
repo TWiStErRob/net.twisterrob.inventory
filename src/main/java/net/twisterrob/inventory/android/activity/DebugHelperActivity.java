@@ -24,8 +24,8 @@ public class DebugHelperActivity extends VariantActivity {
 			LOG.debug("Creating {} {}\nextras={}\nsavedInstanceState={}",
 					AndroidTools.toNameString(this),
 					getIntent().toString(),
-					AndroidTools.toLongString(getIntent().getExtras()),
-					AndroidTools.toLongString(savedInstanceState)
+					AndroidTools.toString(getIntent().getExtras()),
+					AndroidTools.toString(savedInstanceState)
 			);
 		}
 		super.onCreate(savedInstanceState);
@@ -66,8 +66,8 @@ public class DebugHelperActivity extends VariantActivity {
 		if (BuildConfig.DEBUG) {
 			LOG.debug("Refreshing {} {}\n{}",
 					AndroidTools.toNameString(this),
-					AndroidTools.toString(intent.getExtras()),
-					AndroidTools.toString(intent)
+					AndroidTools.toShortString(intent.getExtras()),
+					AndroidTools.toShortString(intent)
 			);
 		}
 		super.onNewIntent(intent);

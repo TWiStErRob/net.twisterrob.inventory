@@ -74,7 +74,7 @@ public class BaseFragment<T> extends VariantFragment {
 		LOG.debug("Creating {}@{} {}",
 				getClass().getSimpleName(),
 				Integer.toHexString(System.identityHashCode(this)),
-				AndroidTools.toLongString(getArguments())
+				AndroidTools.toString(getArguments())
 		);
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {

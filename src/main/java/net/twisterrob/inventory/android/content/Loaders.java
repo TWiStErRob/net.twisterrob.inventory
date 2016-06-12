@@ -246,7 +246,7 @@ public enum Loaders {
 		}
 
 		@Override public String toString() {
-			return super.toString() + "=" + loaders + "(" + AndroidTools.toString(args) + ")";
+			return super.toString() + "=" + loaders + "(" + AndroidTools.toShortString(args) + ")";
 		}
 	}
 }

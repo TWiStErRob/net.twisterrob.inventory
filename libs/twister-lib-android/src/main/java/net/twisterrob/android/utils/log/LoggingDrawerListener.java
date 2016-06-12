@@ -28,6 +28,6 @@ public class LoggingDrawerListener implements DrawerListener {
 	}
 
 	private void log(String name, Object... args) {
-		LoggingHelper.log(LOG, AndroidTools.toString(this), name, null, args);
+		LoggingHelper.log(LOG, AndroidTools.toNameString(this), name, null, args);
 	}
 }

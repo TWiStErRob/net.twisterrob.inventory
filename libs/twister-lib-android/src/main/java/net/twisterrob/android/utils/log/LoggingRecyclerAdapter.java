@@ -77,6 +77,6 @@ public abstract class LoggingRecyclerAdapter<VH extends RecyclerView.ViewHolder>
 	}
 
 	private void log(String name, Object... args) {
-		LoggingHelper.log(LOG, AndroidTools.toString(this), name, null, args);
+		LoggingHelper.log(LOG, AndroidTools.toNameString(this), name, null, args);
 	}
 }

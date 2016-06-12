@@ -371,7 +371,7 @@ public /*static*/ abstract class AndroidTools {
 	@TargetApi(VERSION_CODES.JELLY_BEAN)
 	@DebugHelper
 	@SuppressWarnings({"ConstantConditions", "UnusedAssignment"}) // just so all lines look similar
-	public static String toString(Intent intent) {
+	public static String toShortString(Intent intent) {
 		if (intent == null) {
 			return NULL;
 		}
@@ -464,9 +464,9 @@ public /*static*/ abstract class AndroidTools {
 		String type = debugType(value);
 		String display = null;
 		if (value instanceof Bundle) {
-			display = toString((Bundle)value, "", " ", "#{", "", ", ", "}"); // FIXME use toLongString((Bundle)value)
+			display = toLongString((Bundle)value);
 		} else if (value instanceof Intent) {
-			display = toString((Intent)value);
+			display = toShortString((Intent)value);
 		} else if (value instanceof String) {
 			display = '"' + (String)value + '"';
 		} else if (value.getClass().isArray()) {
@@ -1294,7 +1294,7 @@ public /*static*/ abstract class AndroidTools {
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(toNameString(fragment)).append('[').append(fragment).append(']');
-		sb.append(':').append(toLongString(fragment.getArguments())).append('\n');
+		sb.append(':').append(toString(fragment.getArguments())).append('\n');
 		sb.append("view=").append(fragment.getView()).append('\n');
 		sb.append("activity=").append(fragment.getActivity()).append('\n');
 		sb.append("context=").append(fragment.getContext()).append('\n');

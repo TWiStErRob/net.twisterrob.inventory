@@ -100,11 +100,11 @@ public class SupportV4AppAccess {
 		private void appendDetails(StringBuilder sb, FragmentState state) {
 			if (state.mArguments != null) {
 				sb.append('\n');
-				sb.append("Arguments: ").append(AndroidTools.toLongString(state.mArguments));
+				sb.append("Arguments: ").append(AndroidTools.toString(state.mArguments));
 			}
 			if (state.mSavedFragmentState != null) {
 				sb.append('\n');
-				sb.append("Saved instance state: ").append(AndroidTools.toLongString(state.mSavedFragmentState));
+				sb.append("Saved instance state: ").append(AndroidTools.toString(state.mSavedFragmentState));
 			}
 		}
 		private void appendNullDetails(StringBuilder sb, FragmentState state) {

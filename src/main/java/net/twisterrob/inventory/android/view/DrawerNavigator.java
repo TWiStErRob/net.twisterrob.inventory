@@ -68,8 +68,8 @@ public class DrawerNavigator {
 		for (int pos = 0; pos < items.size(); pos++) {
 			NavItem item = items.get(items.keyAt(pos));
 			if (intent.getComponent().equals(item.intent.getComponent())
-					&& AndroidTools.toString(intent.getExtras())
-					               .equals(AndroidTools.toString(item.intent.getExtras()))) {
+					&& AndroidTools.toShortString(intent.getExtras())
+					               .equals(AndroidTools.toShortString(item.intent.getExtras()))) {
 				return item.id;
 			}
 		}

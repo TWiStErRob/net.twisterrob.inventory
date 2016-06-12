@@ -118,7 +118,7 @@ public abstract class PictureHelper {
 	 */
 	public boolean endCapture(int resultCode, Intent intent) {
 		LOG.trace("endCapture(resultCode={}, intent={}): {}\nextras={}", resultCode, intent, file,
-				intent != null? AndroidTools.toString(intent.getExtras()) : null);
+				intent != null? AndroidTools.toShortString(intent.getExtras()) : null);
 		if (resultCode == Activity.RESULT_CANCELED) {
 			file = null;
 			return false;
@@ -165,7 +165,7 @@ public abstract class PictureHelper {
 
 	public boolean endCrop(int resultCode, Intent intent) {
 		LOG.trace("endCrop(resultCode={}, intent={}): {}\nextras={}", resultCode, intent, cropFile,
-				intent != null? AndroidTools.toString(intent.getExtras()) : null);
+				intent != null? AndroidTools.toShortString(intent.getExtras()) : null);
 		if (resultCode == Activity.RESULT_CANCELED) {
 			cropFile = null;
 			return false;
