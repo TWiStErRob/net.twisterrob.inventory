@@ -82,7 +82,7 @@ public class MainActivity extends DrawerActivity
 
 		getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			@Override public void onBackStackChanged() {
-				AndroidTools.dumpBackStack(getApplicationContext(), getSupportFragmentManager());
+				LOG.trace(AndroidTools.toString(getSupportFragmentManager()));
 				if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
 					finish();
 				} else {

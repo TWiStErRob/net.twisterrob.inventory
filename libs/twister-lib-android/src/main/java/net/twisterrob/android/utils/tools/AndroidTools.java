@@ -16,7 +16,6 @@ import android.content.*;
 import android.content.DialogInterface.*;
 import android.content.pm.*;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -27,15 +26,10 @@ import android.os.Build.*;
 import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.preference.ListPreference;
 import android.support.annotation.*;
-import android.support.design.widget.*;
-import android.support.design.widget.NavigationView.SavedState;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.BackStackEntry;
-import android.support.v4.app.*;
 import android.support.v4.view.*;
 import android.support.v4.widget.*;
-import android.support.v7.widget.*;
 import android.text.TextUtils;
 import android.util.*;
 import android.view.*;
@@ -47,9 +41,12 @@ import android.widget.TextView.OnEditorActionListener;
 import static android.util.TypedValue.*;
 
 import net.twisterrob.android.annotation.*;
+import net.twisterrob.android.utils.tostring.*;
+import net.twisterrob.android.utils.tostring.stringers.detailed.DefaultStringer;
+import net.twisterrob.android.utils.tostring.stringers.map.*;
+import net.twisterrob.android.utils.tostring.stringers.name.*;
 import net.twisterrob.java.annotations.DebugHelper;
-import net.twisterrob.java.collections.NullsSafeComparator;
-import net.twisterrob.java.utils.*;
+import net.twisterrob.java.utils.ReflectionTools;
 
 @SuppressWarnings("unused")
 public /*static*/ abstract class AndroidTools {
@@ -70,8 +67,6 @@ public /*static*/ abstract class AndroidTools {
 	private static final int INVALID_POSITION = -1;
 
 	public static final @AnyRes int INVALID_RESOURCE_ID = 0;
-	/** @see View#toString() */
-	private static final int RESOURCE_ID_MASK = 0xff000000;
 	public static final String NULL = "null";
 	public static final String ERROR = "error";
 
@@ -225,294 +220,40 @@ public /*static*/ abstract class AndroidTools {
 		}
 		return result;
 	}
-
 	@DebugHelper
-	public static String toLongString(Bundle bundle) {
-		return toString(bundle, "", " of ", "\n", "\t", "\n", "");
+	public static String toShortString(Intent intent) {
+		return toString(intent);
 	}
 
 	@DebugHelper
 	public static String toShortString(Bundle bundle) {
-		return toString(bundle, "(", ")", "#{", "", ", ", "}");
-	}
-
-	@DebugHelper
-	private static String toString(Bundle bundle, String preType, String postType, String start, String preItem,
-			String postItem,
-			String end) {
 		if (bundle == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
-		toStringRec(sb, 1, bundle, preType, postType, start, preItem, postItem, end);
-		return sb.toString();
-	}
-	private static final Collection<String> RESOLVE_RESOURCE_ID_KEYS = new HashSet<>(Arrays.asList(
-			"android:views", // savedInstanceState > android:viewHierarchyState
-			"android:view_state",
-			// (FragmentManagerState)android:support:fragments > FragmentManagerImpl.VIEW_STATE_TAG
-			"android:menu:action_views", // savedInstanceState > NavigationView.SavedState
-			"android:focusedViewId"
-	));
-	private static void toStringRec(StringBuilder sb, int level,
-			Bundle bundle, String preType, String postType, String start, String preItem, String postItem, String end) {
-		sb.append(preType).append(debugType(bundle)).append(postType);
-		try {
-			sb.append(bundle.size());
-		} catch (RuntimeException ex) {
-			LOG.error("Cannot unparcel Bundle for logging", ex);
-			sb.append(ex.toString());
-			return; // skip the rest, there's quite possible no data
-		}
-		if (bundle.size() == 0) {
-			return;
-		}
-		boolean shortcut = bundle.size() <= 1;
-		if (shortcut) {
-			sb.append(": ");
-		} else {
-			sb.append(start);
-		}
-		int deeperLevel = shortcut? level : level + 1;
-		TreeSet<String> sortedKeys = CollectionTools.newTreeSet(bundle.keySet(), new NullsSafeComparator<String>());
-		for (Iterator<String> it = sortedKeys.iterator(); it.hasNext(); ) {
-			String key = it.next();
-			if (!shortcut) {
-				for (int i = 0; i < level; i++) {
-					sb.append(preItem);
-				}
-			}
-			sb.append(key).append(" -> ");
-
-			Object value = bundle.get(key);
-			boolean resolveValueAsId = appContext != null && RESOLVE_RESOURCE_ID_KEYS.contains(key);
-			if (value instanceof Bundle) {
-				Bundle val = (Bundle)value;
-				toStringRec(sb, deeperLevel, val, preType, postType, start, preItem, postItem, end);
-			} else if (value instanceof SparseArray) {
-				SparseArray<?> arr = (SparseArray<?>)value;
-				toStringRec(sb, deeperLevel, arr, preType, postType, start, preItem, postItem, end, resolveValueAsId);
-			} else {
-				if (value instanceof Integer && (resolveValueAsId || ((Integer)value & RESOURCE_ID_MASK) != 0)) {
-					sb.append(toNameString(appContext, (Integer)value));
-				} else {
-					sb.append(toString(value));
-				}
-			}
-			if (it.hasNext()) {
-				sb.append(postItem);
-			}
-		}
-		if (!shortcut) {
-			sb.append(end);
-		}
-	}
-	private static void toStringRec(StringBuilder sb, int level, SparseArray<?> array, String preType, String postType,
-			String start, String preItem, String postItem, String end, boolean resolveKeysAsIds) {
-		sb.append(preType).append(debugType(array)).append(postType).append(array.size());
-		boolean shortcut = array.size() <= 1;
-		if (shortcut) {
-			sb.append(": ");
-		} else {
-			sb.append(start);
-		}
-		int deeperLevel = shortcut? level : level + 1;
-		for (int index = 0; index < array.size(); index++) {
-			int arrayKey = array.keyAt(index);
-			Object arrayValue = array.get(arrayKey);
-			if (!shortcut) {
-				for (int i = 0; i < level; i++) {
-					sb.append(preItem);
-				}
-			}
-			if (resolveKeysAsIds || (arrayKey & RESOURCE_ID_MASK) != 0) {
-				sb.append(toNameString(appContext, arrayKey));
-			} else {
-				sb.append(arrayKey);
-			}
-			sb.append(" -> ");
-			if (arrayValue instanceof Bundle) {
-				toStringRec(sb, deeperLevel, (Bundle)arrayValue, preType, postType, start, preItem, postItem, end);
-			} else if (arrayValue instanceof SparseArray) {
-				SparseArray<?> arr = (SparseArray<?>)arrayValue;
-				toStringRec(sb, deeperLevel, arr, preType, postType, start, preItem, postItem, end, false);
-			} else {
-				sb.append(toString(arrayValue));
-			}
-			if (index + 1 < array.size()) {
-				sb.append(postItem);
-			}
-		}
-		if (!shortcut) {
-			sb.append(end);
-		}
-	}
-
-	@TargetApi(VERSION_CODES.HONEYCOMB)
-	@DebugHelper
-	private static String toString(android.content.Loader<?> loader) {
-		if (loader == null) {
-			return NULL;
-		}
-		StringWriter writer = new StringWriter();
-		loader.dump("", null, new PrintWriter(writer), null);
-		return writer.toString();
-	}
-	@DebugHelper
-	private static String toString(android.support.v4.content.Loader<?> loader) {
-		if (loader == null) {
-			return NULL;
-		}
-		StringWriter writer = new StringWriter();
-		loader.dump("", null, new PrintWriter(writer), null);
-		return writer.toString();
-	}
-
-	@TargetApi(VERSION_CODES.JELLY_BEAN)
-	@DebugHelper
-	@SuppressWarnings({"ConstantConditions", "UnusedAssignment"}) // just so all lines look similar
-	public static String toShortString(Intent intent) {
-		if (intent == null) {
-			return NULL;
-		}
-		StringBuilder sb = new StringBuilder();
-		boolean first = true;
-		first = append(sb, "pkg=", intent.getPackage(), "", first);
-		first = append(sb, "cmp=", intent.getComponent(), "", first);
-
-		first = append(sb, "xtra={", toShortString(intent.getExtras()), "}", first);
-		if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
-			first = append(sb, "clip={", intent.getClipData(), "}", first);
-		}
-
-		first = append(sb, "dat=", intent.getData(), "", first);
-		first = append(sb, "typ=", intent.getType(), "", first);
-
-		first = append(sb, "act=", intent.getAction(), "", first);
-		first = append(sb, "cat=", intent.getCategories(), "", first);
-		//noinspection ResourceType TOFIX external annotations to Intent#getFlags?
-		first = append(sb, "flg=", IntentFlags.Converter.toString(intent.getFlags(), null), "", first);
-
-		first = append(sb, "bnds=", intent.getSourceBounds(), "", first);
-		return sb.toString();
-	}
-	private static boolean append(StringBuilder b, String prefix, Object data, String suffix,
-			boolean first) {
-		if (data != null) {
-			if (!first) {
-				b.append(' ');
-			}
-			b.append(prefix).append(data).append(suffix);
-			first = false;
-		}
-		return first;
+		MapStringer canvas = MapStringer.SHORT.start();
+		canvas.toStringRec(new BundleDeepCollection(bundle), false);
+		return canvas.finish();
 	}
 
 	@DebugHelper
-	@SuppressWarnings("ConstantConditions") // field are declared primitive so reflection can't return null
-	public static String toString(android.support.v7.widget.Toolbar.SavedState state) {
-		int expandedMenuItemId = ReflectionTools.get(state, "expandedMenuItemId");
-		boolean isOverflowOpen = ReflectionTools.get(state, "isOverflowOpen");
-		return String.format(Locale.ROOT,
-				"Overflow open=%b, Expanded MenuItem=%s",
-				isOverflowOpen, toNameString(getContext(), expandedMenuItemId));
-	}
-
-	@DebugHelper
-	@SuppressWarnings("ConstantConditions") // field are declared primitive so reflection can't return null
-	public static String toString(LinearLayoutManager.SavedState state) {
-		int mAnchorPosition = ReflectionTools.get(state, "mAnchorPosition");
-		int mAnchorOffset = ReflectionTools.get(state, "mAnchorOffset");
-		boolean mAnchorLayoutFromEnd = ReflectionTools.get(state, "mAnchorLayoutFromEnd");
-		return String.format(Locale.ROOT,
-				"Anchor: {pos=%d, offset=%d, fromEnd=%b}",
-				mAnchorPosition, mAnchorOffset, mAnchorLayoutFromEnd);
-	}
-
-	@DebugHelper
-	@SuppressWarnings("ConstantConditions") // field are declared primitive so reflection can't return null
-	public static String toString(StaggeredGridLayoutManager.SavedState state) {
-		int mAnchorPosition = ReflectionTools.get(state, "mAnchorPosition");
-		int mVisibleAnchorPosition = ReflectionTools.get(state, "mVisibleAnchorPosition");
-		int mSpanOffsetsSize = ReflectionTools.get(state, "mSpanOffsetsSize");
-		int[] mSpanOffsets = ReflectionTools.get(state, "mSpanOffsets");
-		int mSpanLookupSize = ReflectionTools.get(state, "mSpanLookupSize");
-		int[] mSpanLookup = ReflectionTools.get(state, "mSpanLookup");
-//		List<LazySpanLookup.FullSpanItem> mFullSpanItems = ReflectionTools.get(state, "mFullSpanItems");
-		boolean mReverseLayout = ReflectionTools.get(state, "mReverseLayout");
-		boolean mLastLayoutRTL = ReflectionTools.get(state, "mLastLayoutRTL");
-		return String.format(Locale.ROOT,
-				"Anchor: {pos=%d, visPos=%d}, reverse=%b, RTL=%b, Spans: {offsets=%s, lookups=%s}",
-				mAnchorPosition, mVisibleAnchorPosition, mReverseLayout, mLastLayoutRTL,
-				toString(mSpanOffsetsSize, mSpanOffsets), toString(mSpanLookupSize, mSpanLookup));
-	}
-
-	private static String toString(int size, int... values) {
-		if (size == 0 || values == null) {
-			return "[]";
-		} else if (size < 0) {
-			return String.valueOf(size);
-		}
-		return Arrays.toString(values);
-	}
-
-	@DebugHelper
-	public static String toString(Object value) {
+	public static <T> String toString(T value) {
 		if (value == null) {
-			return NULL;
+			return AndroidTools.NULL;
 		}
-		String type = debugType(value);
-		String display = null;
-		if (value instanceof Bundle) {
-			display = toLongString((Bundle)value);
-		} else if (value instanceof Intent) {
-			display = toShortString((Intent)value);
-		} else if (value instanceof String) {
-			display = '"' + (String)value + '"';
-		} else if (value.getClass().isArray()) {
-			display = ArrayTools.toString(value);
-		} else if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB && value instanceof android.app.Fragment.SavedState) {
-			type = "Fragment.SavedState";
-			display = toString(ReflectionTools.get(value, "mState"));
-		} else if (value instanceof android.support.v4.app.Fragment.SavedState) {
-			type = "v4.Fragment.SavedState";
-			display = toString(ReflectionTools.get(value, "mState"));
-		} else if (value instanceof android.support.v4.content.Loader<?>) {
-			display = toString((android.support.v4.content.Loader<?>)value);
-		} else if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB && value instanceof android.content.Loader<?>) {
-			display = toString((android.content.Loader<?>)value);
-		} else if (value == AbsSavedState.EMPTY_STATE) {
-			type = null;
-			display = "AbsSavedState.EMPTY_STATE";
-		} else if (value instanceof RecyclerView.SavedState) {
-			Parcelable mLayoutState = ReflectionTools.get(value, "mLayoutState");
-			if (mLayoutState instanceof LinearLayoutManager.SavedState
-					|| mLayoutState instanceof StaggeredGridLayoutManager.SavedState) {
-				display = toString(mLayoutState);
-			}
-		} else if (value instanceof LinearLayoutManager.SavedState) {
-			display = toString((LinearLayoutManager.SavedState)value);
-		} else if (value instanceof StaggeredGridLayoutManager.SavedState) {
-			display = toString((StaggeredGridLayoutManager.SavedState)value);
-		} else if (value instanceof NavigationView.SavedState) {
-			display = toString(((SavedState)value).menuState);
-		} else if (SupportV4WidgetAccess.instanceOf(value)) {
-			display = SupportV4WidgetAccess.toString(value);
-		} else if (value instanceof android.support.v7.widget.Toolbar.SavedState) {
-			display = toString((android.support.v7.widget.Toolbar.SavedState)value);
-		} else if (SupportV4AppAccess.instanceOf(value)) {
-			display = SupportV4AppAccess.toString(value);
+		StringBuilder sb = new StringBuilder();
+		Stringer<? super T> stringer = StringerRepo.INSTANCE.findByValue(value);
+
+		String type = AndroidTools.debugType(value);
+		if (type != null) {
+			sb.append("(").append(type).append(")");
 		}
-		if (display == null) {
-			display = shortenPackageNames(value.toString());
-			if (type != null && type.length() <= display.length() && display.startsWith(type)) {
-				display = display.substring(type.length()); // from @ sign or { in case of View
-			}
-		}
-		return (type != null? "(" + type + ")" : "") + display;
+
+		String display = stringer.toString(value);
+		sb.append(display);
+		return sb.toString();
 	}
 
-	private static String debugType(Object value) {
+	public static String debugType(Object value) {
 		if (value == null) {
 			return NULL;
 		}
@@ -520,16 +261,7 @@ public /*static*/ abstract class AndroidTools {
 		if (name == null) {
 			name = value.getClass().toString();
 		}
-		return shortenPackageNames(name);
-	}
-
-	@DebugHelper
-	public static String shortenPackageNames(String string) {
-		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+(v4|v7|v13)\\.(?:[a-z0-9]+\\.)+", "$1.");
-		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+", "");
-		string = string.replaceAll("^javax?\\.(?:[a-z0-9]+\\.)+", "");
-		string = string.replaceAll("^net\\.twisterrob\\.([a-z0-9.]+\\.)+", "tws.");
-		return string;
+		return DefaultStringer.shortenPackageNames(name);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -1187,36 +919,7 @@ public /*static*/ abstract class AndroidTools {
 		}
 		return readEnd;
 	}
-	public static void dumpBackStack(Context context, FragmentManager fm) {
-		int count = fm.getBackStackEntryCount();
-		StringBuilder sb = new StringBuilder();
-		sb.append(String.format(Locale.ROOT, "There are %d entries in the backstack of %s:", count, fm));
-		for (int i = 0; i < count; ++i) {
-			BackStackEntry entry = fm.getBackStackEntryAt(i);
 
-			int id = entry.getId();
-			String name = entry.getName();
-			CharSequence title = entry.getBreadCrumbTitle();
-			CharSequence shortTitle = entry.getBreadCrumbShortTitle();
-			String titleRes = resourceIdToString(context, entry.getBreadCrumbTitleRes());
-			String shortTitleRes = resourceIdToString(context, entry.getBreadCrumbShortTitleRes());
-
-			sb.append(String.format(Locale.ROOT, "\n\t#%d @%d: %s. shortTitle=(%s)%s, title=(%s)%s",
-					i, id, name, shortTitleRes, shortTitle, titleRes, title));
-		}
-		LOG.trace(sb.toString());
-	}
-	private static String resourceIdToString(Context context, @AnyRes int shortTitleRes) {
-		if (shortTitleRes != INVALID_RESOURCE_ID) {
-			try {
-				return context.getResources().getResourceName(shortTitleRes)
-						+ " (" + Integer.toHexString(shortTitleRes) + ")";
-			} catch (NotFoundException ex) {
-				return Integer.toHexString(shortTitleRes);
-			}
-		}
-		return null;
-	}
 	public static void unparcel(Intent intent) {
 		if (intent != null) {
 			unparcel(intent.getExtras());
@@ -1229,92 +932,19 @@ public /*static*/ abstract class AndroidTools {
 	}
 	@DebugHelper
 	public static String toNameString(Context context, @IdRes int id) {
-		String name = toNameString(context.getResources(), id);
-		if (name.startsWith(context.getPackageName())) {
-			name = "app" + name.substring(context.getPackageName().length());
-		}
-		return name;
+		return ResourceNameStringer.INSTANCE.toString(id);
 	}
-
-	/**
-	 * -1 will be resolved to {@code "NO_ID"}, 0 is {@code "invalid"}, everything else will be tried to be resolved.
-	 * @see View#NO_ID
-	 * @see Resources#getIdentifier
-	 * @return Fully qualified name of the resource,
-	 *         or special values: {@code "View.NO_ID"}, {@code "invalid"}, {@code "not-found::<id>"}
-	 */
-	@DebugHelper
-	public static String toNameString(Resources resources, @IdRes int id) {
-		if (id == View.NO_ID) {
-			return "View.NO_ID";
-		} else if (id == INVALID_RESOURCE_ID) {
-			return "invalid";
-		} else {
-			try {
-				return resources.getResourceName(id);
-			} catch (Resources.NotFoundException ignore) {
-				return "not-found::" + id;
-			}
-		}
-	}
-
 	@DebugHelper
 	public static String toNameString(Fragment fragment) {
-		return toNameString((Object)fragment)
-				+ (fragment != null? "(" + ReflectionTools.get(fragment, "mWho") + ")" : "");
+		return FragmentNameStringer.INSTANCE.toString(fragment);
 	}
 	@DebugHelper
 	public static String toNameString(Activity activity) {
-		return toNameString((Object)activity);
+		return DefaultNameStringer.INSTANCE.toString(activity);
 	}
 	@DebugHelper
 	public static String toNameString(Object object) {
-		if (object != null) {
-			Class<?> clazz = object.getClass();
-			String className = clazz.getSimpleName();
-			if (TextUtils.isEmpty(className)) {
-				className = clazz.getName();
-				if (className != null) {
-					className = className.substring(className.lastIndexOf('.'));
-					if (className.endsWith(";")) {
-						// unknown dimensioned array
-						className = className.substring(0, className.length() - 1) + "[?]";
-					}
-				}
-			}
-			return className + "@" + StringTools.hashString(object);
-		} else {
-			return "<null>";
-		}
-	}
-	@DebugHelper
-	public static String toLongString(Fragment fragment) {
-		if (fragment == null) {
-			return null;
-		}
-		StringBuilder sb = new StringBuilder();
-		sb.append(toNameString(fragment)).append('[').append(fragment).append(']');
-		sb.append(':').append(toString(fragment.getArguments())).append('\n');
-		sb.append("view=").append(fragment.getView()).append('\n');
-		sb.append("activity=").append(fragment.getActivity()).append('\n');
-		sb.append("context=").append(fragment.getContext()).append('\n');
-		sb.append("host=").append(fragment.getHost()).append('\n');
-		appendState(sb, fragment.isDetached(), "detached", ", ");
-		appendState(sb, fragment.isAdded(), "added", ", ");
-		appendState(sb, fragment.isResumed(), "resumed", ", ");
-		appendState(sb, fragment.isHidden(), "hidden", ", ");
-		appendState(sb, fragment.isVisible(), "visible", "");
-		appendState(sb, fragment.isMenuVisible(), "menu visible", ", ");
-		appendState(sb, fragment.isInLayout(), "in layout", ", ");
-		appendState(sb, fragment.isRemoving(), "removing", ", ");
-		return sb.toString();
-	}
-	private static void appendState(StringBuilder sb, boolean condition, String conditionName, String separator) {
-		if (!condition) {
-			sb.append("not ");
-		}
-		sb.append(conditionName);
-		sb.append(separator);
+		return DefaultNameStringer.INSTANCE.toString(object);
 	}
 
 	public interface PopupCallbacks<T> {
