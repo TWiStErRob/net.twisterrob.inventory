@@ -7,6 +7,8 @@ import java.util.*;
 import javax.annotation.Nullable;
 
 public final class StringTools {
+	public static final String NULL_STRING = "null";
+
 	private StringTools() {
 		// prevent instantiation
 	}

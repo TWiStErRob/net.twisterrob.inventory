@@ -1,17 +1,32 @@
 package net.twisterrob.android.utils.tostring.stringers.name;
 
+import java.util.*;
+
+import javax.annotation.Nonnull;
+
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tostring.Stringer;
+import net.twisterrob.java.utils.tostring.*;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
 
-public class ResourceNameStringer implements Stringer<Integer> {
+public class ResourceNameStringer extends Stringer<Integer> {
 	public static final Stringer<Integer> INSTANCE = new ResourceNameStringer(AndroidTools.getContext());
+
+	// TODO figure out a way to utilize this @see BundleStringer
+	private static final Collection<String> RESOLVE_RESOURCE_ID_KEYS = new HashSet<>(Arrays.asList(
+			// savedInstanceState > android:viewHierarchyState
+			"android:views",
+			// (FragmentManagerState)android:support:fragments > FragmentManagerImpl.VIEW_STATE_TAG
+			"android:view_state",
+			// savedInstanceState > NavigationView.SavedState
+			"android:menu:action_views",
+			// Activity > savedInstanceState > android:viewHierarchyState
+			"android:focusedViewId"
+	));
 
 	private final Context context;
 	private final Resources resources;
@@ -19,9 +34,13 @@ public class ResourceNameStringer implements Stringer<Integer> {
 		this.context = context.getApplicationContext();
 		this.resources = context.getResources();
 	}
-	@Override public @NonNull String toString(Integer object) {
-		int id = object;
-		return shortenName(getName(id));
+
+	@Override public String getType(Integer object) {
+		return null;
+	}
+	@Override public void toString(@Nonnull ToStringAppender append, Integer object) {
+		int id = object; // force unbox
+		append.selfDescribingProperty(shortenName(getName(id)));
 	}
 	private String shortenName(String name) {
 		if (name.startsWith(context.getPackageName())) {

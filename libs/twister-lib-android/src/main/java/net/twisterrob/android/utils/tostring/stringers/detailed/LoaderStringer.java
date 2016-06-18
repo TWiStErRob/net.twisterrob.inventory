@@ -2,18 +2,20 @@ package net.twisterrob.android.utils.tostring.stringers.detailed;
 
 import java.io.*;
 
+import javax.annotation.Nonnull;
+
 import android.annotation.TargetApi;
 import android.content.Loader;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.NonNull;
 
-import net.twisterrob.android.utils.tostring.Stringer;
+import net.twisterrob.java.utils.tostring.*;
 
+@SuppressWarnings("rawtypes")
 @TargetApi(VERSION_CODES.HONEYCOMB)
-public class LoaderStringer implements Stringer<Loader<?>> {
-	@Override public @NonNull String toString(Loader<?> loader) {
+public class LoaderStringer extends Stringer<Loader> {
+	@Override public void toString(@Nonnull ToStringAppender append, Loader loader) {
 		StringWriter writer = new StringWriter();
 		loader.dump("", null, new PrintWriter(writer), null);
-		return writer.toString();
+		append.selfDescribingProperty(writer.toString());
 	}
 }

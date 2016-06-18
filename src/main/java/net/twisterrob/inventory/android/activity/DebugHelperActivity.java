@@ -21,11 +21,10 @@ public class DebugHelperActivity extends VariantActivity {
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) {
-			LOG.debug("Creating {} {}\nextras={}\nsavedInstanceState={}",
+			LOG.debug("Creating {}\n{}\nsavedInstanceState={}",
 					AndroidTools.toNameString(this),
-					getIntent().toString(),
-					AndroidTools.toString(getIntent().getExtras()),
-					AndroidTools.toString(savedInstanceState)
+					AndroidTools.toShortString(getIntent()),
+					AndroidTools.toShortString(savedInstanceState)
 			);
 		}
 		super.onCreate(savedInstanceState);

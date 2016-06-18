@@ -41,12 +41,12 @@ import android.widget.TextView.OnEditorActionListener;
 import static android.util.TypedValue.*;
 
 import net.twisterrob.android.annotation.*;
-import net.twisterrob.android.utils.tostring.*;
-import net.twisterrob.android.utils.tostring.stringers.detailed.DefaultStringer;
-import net.twisterrob.android.utils.tostring.stringers.map.*;
+import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
 import net.twisterrob.android.utils.tostring.stringers.name.*;
 import net.twisterrob.java.annotations.DebugHelper;
-import net.twisterrob.java.utils.ReflectionTools;
+import net.twisterrob.java.utils.*;
+import net.twisterrob.java.utils.tostring.*;
+import net.twisterrob.java.utils.tostring.stringers.DefaultNameStringer;
 
 @SuppressWarnings("unused")
 public /*static*/ abstract class AndroidTools {
@@ -58,6 +58,7 @@ public /*static*/ abstract class AndroidTools {
 			throw new IllegalArgumentException("Cannot set context twice or to null");
 		}
 		appContext = context.getApplicationContext();
+		AndroidStringerRepo.init(StringerRepo.INSTANCE, appContext);
 	}
 	public static Context getContext() {
 		return appContext;
@@ -67,7 +68,7 @@ public /*static*/ abstract class AndroidTools {
 	private static final int INVALID_POSITION = -1;
 
 	public static final @AnyRes int INVALID_RESOURCE_ID = 0;
-	public static final String NULL = "null";
+	public static final String NULL = StringTools.NULL_STRING;
 	public static final String ERROR = "error";
 
 	public static final String ANDROID_PACKAGE = "android";
@@ -220,48 +221,15 @@ public /*static*/ abstract class AndroidTools {
 		}
 		return result;
 	}
-	@DebugHelper
-	public static String toShortString(Intent intent) {
-		return toString(intent);
-	}
 
 	@DebugHelper
-	public static String toShortString(Bundle bundle) {
-		if (bundle == null) {
-			return NULL;
-		}
-		MapStringer canvas = MapStringer.SHORT.start();
-		canvas.toStringRec(new BundleDeepCollection(bundle), false);
-		return canvas.finish();
+	public static <T> String toShortString(T value) {
+		return new ToStringer(StringerRepo.INSTANCE, value, false).toString();
 	}
 
 	@DebugHelper
 	public static <T> String toString(T value) {
-		if (value == null) {
-			return AndroidTools.NULL;
-		}
-		StringBuilder sb = new StringBuilder();
-		Stringer<? super T> stringer = StringerRepo.INSTANCE.findByValue(value);
-
-		String type = AndroidTools.debugType(value);
-		if (type != null) {
-			sb.append("(").append(type).append(")");
-		}
-
-		String display = stringer.toString(value);
-		sb.append(display);
-		return sb.toString();
-	}
-
-	public static String debugType(Object value) {
-		if (value == null) {
-			return NULL;
-		}
-		String name = value.getClass().getCanonicalName();
-		if (name == null) {
-			name = value.getClass().toString();
-		}
-		return DefaultStringer.shortenPackageNames(name);
+		return new ToStringer(StringerRepo.INSTANCE, value, true).toString();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -932,19 +900,19 @@ public /*static*/ abstract class AndroidTools {
 	}
 	@DebugHelper
 	public static String toNameString(Context context, @IdRes int id) {
-		return ResourceNameStringer.INSTANCE.toString(id);
+		return new ToStringer(StringerRepo.INSTANCE, id, ResourceNameStringer.INSTANCE).toString();
 	}
 	@DebugHelper
 	public static String toNameString(Fragment fragment) {
-		return FragmentNameStringer.INSTANCE.toString(fragment);
+		return new ToStringer(StringerRepo.INSTANCE, fragment, FragmentNameStringer.INSTANCE).toString();
 	}
 	@DebugHelper
 	public static String toNameString(Activity activity) {
-		return DefaultNameStringer.INSTANCE.toString(activity);
+		return new ToStringer(StringerRepo.INSTANCE, activity, DefaultNameStringer.INSTANCE).toString();
 	}
 	@DebugHelper
 	public static String toNameString(Object object) {
-		return DefaultNameStringer.INSTANCE.toString(object);
+		return new ToStringer(StringerRepo.INSTANCE, object, DefaultNameStringer.INSTANCE).toString();
 	}
 
 	public interface PopupCallbacks<T> {

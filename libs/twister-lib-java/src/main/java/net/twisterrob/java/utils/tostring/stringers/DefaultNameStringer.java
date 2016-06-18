@@ -1,21 +1,21 @@
-package net.twisterrob.android.utils.tostring.stringers.name;
+package net.twisterrob.java.utils.tostring.stringers;
 
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import javax.annotation.Nonnull;
 
-import net.twisterrob.android.utils.tostring.Stringer;
 import net.twisterrob.java.utils.StringTools;
+import net.twisterrob.java.utils.tostring.*;
 
-public class DefaultNameStringer implements Stringer<Object> {
+public class DefaultNameStringer extends Stringer<Object> {
 	public static final Stringer<Object> INSTANCE = new DefaultNameStringer();
 
-	@Override public @NonNull String toString(Object object) {
+	@Override public void toString(@Nonnull ToStringAppender append, Object object) {
 		if (object == null) {
-			return "<null>";
+			append.selfDescribingProperty("<null>");
+			return;
 		}
 		Class<?> clazz = object.getClass();
 		String className = clazz.getSimpleName();
-		if (TextUtils.isEmpty(className)) {
+		if (StringTools.isNullOrEmpty(className)) {
 			className = clazz.getName();
 			if (className != null) {
 				className = className.substring(className.lastIndexOf('.'));
@@ -25,6 +25,7 @@ public class DefaultNameStringer implements Stringer<Object> {
 				}
 			}
 		}
-		return className + "@" + StringTools.hashString(object);
+		// TODO use className?
+		append.selfDescribingProperty("@" + StringTools.hashString(object));
 	}
 }

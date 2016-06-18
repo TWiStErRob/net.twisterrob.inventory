@@ -24,11 +24,17 @@ repositories {
 }
 
 dependencies {
-	compile 'org.slf4j:slf4j-api:1.7.7'
+	compile 'org.slf4j:slf4j-api:1.7.21'
+	testCompile 'org.slf4j:slf4j-simple:1.7.21'
 	compile 'com.google.code.findbugs:jsr305:3.0.0'
-	testCompile 'junit:junit:4.12'
-	testCompile 'org.hamcrest:hamcrest-junit:2.0.0.0'
-	testCompile 'org.mockito:mockito-core:2.0.44-beta'
+	testCompile('junit:junit:4.12') {
+		exclude module: 'hamcrest'
+		exclude module: 'hamcrest-core'
+	}
+	testCompile('org.hamcrest:hamcrest-junit:2.0.0.0') {
+		exclude module: 'junit'
+	}
+	testCompile 'org.mockito:mockito-core:2.0.54-beta'
 //	testCompile 'org.powermock:powermock-api-mockito:1.6.4'
 //	testCompile 'cglib:cglib:3.2.1'
 //	testCompile 'pl.pragmatists:JUnitParams:1.0.4'

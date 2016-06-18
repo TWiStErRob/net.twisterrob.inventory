@@ -1,70 +1,55 @@
 package android.support.v4.app;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
+import javax.annotation.Nonnull;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tostring.Stringer;
-import net.twisterrob.android.utils.tostring.stringers.detailed.DefaultStringer;
+import net.twisterrob.android.utils.tostring.stringers.name.*;
+import net.twisterrob.java.utils.tostring.*;
+import net.twisterrob.java.utils.tostring.stringers.DefaultStringer;
 
-import static net.twisterrob.android.utils.tools.AndroidTools.*;
-
-public class SupportFragmentStateStringer implements Stringer<FragmentState> {
-	private final Context context;
-	public SupportFragmentStateStringer(Context context) {
-		this.context = context;
-	}
-
-	@Override public @NonNull String toString(FragmentState state) {
-		StringBuilder sb = new StringBuilder();
-		appendName(sb, state);
-		sb.append(' ');
-		sb.append('(');
+public class SupportFragmentStateStringer extends Stringer<FragmentState> {
+	@Override public void toString(@Nonnull ToStringAppender append, FragmentState state) {
+		append.identity(state.mIndex, DefaultStringer.shortenPackageNames(state.mClassName));
+		append.complexProperty("instance", state.mInstance, FragmentNameStringer.INSTANCE);
+		append.beginPropertyGroup(null);
 		{
-			appendIdentity(sb, state);
-			appendFlags(sb, state);
+			appendIdentity(append, state);
+			appendFlags(append, state);
 		}
-		sb.append(')');
-		appendDetails(sb, state);
-		return sb.toString();
-	}
-	private void appendName(StringBuilder sb, FragmentState state) {
-		sb.append('[').append('#').append(state.mIndex).append(']');
-		sb.append(' ');
-		sb.append('(').append(DefaultStringer.shortenPackageNames(state.mClassName)).append(')');
-		sb.append(toNameString(state.mInstance));
+		append.endPropertyGroup();
+		appendDetails(append, state);
 	}
 
-	private void appendIdentity(StringBuilder sb, FragmentState state) {
-		sb.append(toNameString(context, state.mFragmentId));
+	private void appendIdentity(ToStringAppender append, FragmentState state) {
+		append.complexProperty("id", state.mFragmentId, ResourceNameStringer.INSTANCE);
 		if (state.mTag != null) {
-			sb.append(" as ").append(state.mTag);
+			append.rawProperty("tag", state.mTag);
 		} else {
-			sb.append(" in ").append(toNameString(context, state.mContainerId));
+			append.complexProperty("container", state.mContainerId, ResourceNameStringer.INSTANCE);
 		}
 	}
-	private void appendFlags(StringBuilder sb, FragmentState state) {
-		sb.append(',').append(' ').append("layout=").append(state.mFromLayout);
-		sb.append(',').append(' ').append("retain=").append(state.mRetainInstance);
-		sb.append(',').append(' ').append("detached=").append(state.mDetached);
-		appendNullDetails(sb, state);
+
+	private void appendFlags(ToStringAppender append, FragmentState state) {
+		append.booleanProperty(state.mFromLayout, "from layout");
+		append.booleanProperty(state.mRetainInstance, "retained");
+		append.booleanProperty(state.mDetached, "detached", "attached");
+		appendNullDetails(append, state);
 	}
-	private void appendDetails(StringBuilder sb, FragmentState state) {
+
+	private void appendDetails(ToStringAppender append, FragmentState state) {
 		if (state.mArguments != null) {
-			sb.append('\n');
-			sb.append("Arguments: ").append(AndroidTools.toString(state.mArguments));
+			append.item("Arguments", state.mArguments);
 		}
 		if (state.mSavedFragmentState != null) {
-			sb.append('\n');
-			sb.append("Saved instance state: ").append(AndroidTools.toString(state.mSavedFragmentState));
+			append.item("Saved instance state", state.mSavedFragmentState);
 		}
 	}
-	private void appendNullDetails(StringBuilder sb, FragmentState state) {
+
+	private void appendNullDetails(ToStringAppender append, FragmentState state) {
 		if (state.mArguments == null) {
-			sb.append(',').append(' ').append("args=").append((String)null);
+			append.rawProperty("args", null);
 		}
 		if (state.mSavedFragmentState == null) {
-			sb.append(',').append(' ').append("saved=").append((String)null);
+			append.rawProperty("saved", null);
 		}
 	}
 }

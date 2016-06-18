@@ -1,14 +1,13 @@
 package net.twisterrob.android.utils.tostring.stringers.detailed;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
+import javax.annotation.Nonnull;
+
 import android.support.design.widget.NavigationView.SavedState;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tostring.Stringer;
+import net.twisterrob.java.utils.tostring.*;
 
-public class NavigationViewSavedStateStringer implements Stringer<NavigationView.SavedState> {
-	@Override public @NonNull String toString(SavedState state) {
-		return AndroidTools.toString(state.menuState);
+public class NavigationViewSavedStateStringer extends Stringer<SavedState> {
+	@Override public void toString(@Nonnull ToStringAppender append, SavedState state) {
+		append.item(state.menuState);
 	}
 }

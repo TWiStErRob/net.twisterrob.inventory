@@ -48,9 +48,14 @@ dependencies {
 	compile 'com.caverock:androidsvg:1.2.1'
 	compile 'com.github.bumptech.glide:glide:3.8.0-SNAPSHOT'
 
-	testCompile 'junit:junit:4.12'
+	testCompile('junit:junit:4.12') {
+		exclude module: 'hamcrest'
+		exclude module: 'hamcrest-core'
+	}
+	testCompile('org.hamcrest:hamcrest-junit:2.0.0.0') {
+		exclude module: 'junit'
+	}
 	testCompile 'org.easymock:easymock:3.4'
-	testCompile 'org.hamcrest:hamcrest-junit:2.0.0.0'
 }
 
 android {

@@ -1,36 +1,23 @@
 package android.support.v4.app;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
 
-import android.support.annotation.NonNull;
-
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tostring.Stringer;
+import net.twisterrob.java.utils.tostring.*;
 
 import static net.twisterrob.java.utils.ArrayTools.*;
 
-public class SupportFragmentManagerStateStringer implements Stringer<FragmentManagerState> {
-	@Override public @NonNull String toString(FragmentManagerState state) {
-		StringBuilder sb = new StringBuilder();
-		appendArray(sb, "Backstack", state.mBackStack);
-		sb.append("\n\t\tAdded (").append(safeLength(state.mAdded)).append("):");
-		sb.append(' ').append(Arrays.toString(state.mAdded));
-		appendArray(sb, "Fragments", state.mActive);
-		return sb.toString();
-	}
-
-	@SafeVarargs
-	private final <T> void appendArray(StringBuilder sb, String label, T... arr) {
-		sb.append("\n\t\t").append(label).append(" (").append(safeLength(arr)).append(")");
-		if (arr != null) {
-			sb.append(':');
-			for (T fState : arr) {
-				String fString = AndroidTools.toString(fState);
-				if (fString != null) {
-					fString = fString.replace("\n", "\n\t\t\t\t");
-				}
-				sb.append("\n\t\t\t").append(fString);
-			}
+public class SupportFragmentManagerStateStringer extends Stringer<FragmentManagerState> {
+	@Override public void toString(@Nonnull ToStringAppender append, FragmentManagerState state) {
+		append.beginSizedList("backstack", safeLength(state.mBackStack), false);
+		for (BackStackState bs : state.mBackStack) {
+			append.item(bs);
 		}
+		append.endSizedList();
+		append.item("added", state.mAdded);
+		append.beginSizedList("active fragments", safeLength(state.mActive), false);
+		for (FragmentState bs : state.mActive) {
+			append.item(bs);
+		}
+		append.endSizedList();
 	}
 }

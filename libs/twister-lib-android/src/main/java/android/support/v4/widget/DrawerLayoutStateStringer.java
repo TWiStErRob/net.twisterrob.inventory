@@ -1,24 +1,20 @@
 package android.support.v4.widget;
 
-import java.util.Locale;
+import javax.annotation.Nonnull;
 
-import android.support.annotation.NonNull;
+import android.support.v4.widget.DrawerLayout.SavedState;
 
 import net.twisterrob.android.annotation.*;
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tostring.Stringer;
+import net.twisterrob.java.utils.tostring.*;
 
-public class DrawerLayoutStateStringer implements Stringer<DrawerLayout.SavedState> {
-	@Override public @NonNull String toString(DrawerLayout.SavedState state) {
-		if (state == null) {
-			return AndroidTools.NULL;
-		}
-		return String.format(Locale.ROOT, "OpenDrawer=%s, LockMode: {left=%s, right=%s, start=%s, end=%s}",
-				GravityFlag.Converter.toString(state.openDrawerGravity),
-				LockMode.Converter.toString(state.lockModeLeft),
-				LockMode.Converter.toString(state.lockModeRight),
-				LockMode.Converter.toString(state.lockModeStart),
-				LockMode.Converter.toString(state.lockModeEnd)
-		);
+public class DrawerLayoutStateStringer extends Stringer<SavedState> {
+	@Override public void toString(@Nonnull ToStringAppender append, SavedState state) {
+		append.rawProperty("OpenDrawer", GravityFlag.Converter.toString(state.openDrawerGravity));
+		append.beginPropertyGroup("LockMode");
+		append.rawProperty("left", LockMode.Converter.toString(state.lockModeLeft));
+		append.rawProperty("right", LockMode.Converter.toString(state.lockModeRight));
+		append.rawProperty("start", LockMode.Converter.toString(state.lockModeStart));
+		append.rawProperty("end", LockMode.Converter.toString(state.lockModeEnd));
+		append.endPropertyGroup();
 	}
 }

@@ -1,18 +1,21 @@
 package net.twisterrob.android.utils.tostring.stringers.detailed;
 
-import android.support.annotation.NonNull;
+import javax.annotation.Nonnull;
+
 import android.view.AbsSavedState;
 
-import net.twisterrob.android.utils.tostring.Stringer;
+import net.twisterrob.java.utils.tostring.*;
 
-public class AbsSavedStateStringer implements Stringer<AbsSavedState> {
-	@Override public @NonNull String toString(AbsSavedState object) {
-		// FIXME type = null
+public class AbsSavedStateStringer extends Stringer<AbsSavedState> {
+	@Override public String getType(AbsSavedState object) {
+		return null;
+	}
+	@Override public void toString(@Nonnull ToStringAppender append, AbsSavedState object) {
 		if (object == AbsSavedState.EMPTY_STATE) {
-			return "AbsSavedState.EMPTY_STATE";
+			append.selfDescribingProperty("AbsSavedState.EMPTY_STATE");
 		} else {
-			return "unknown SavedState: " + object;
-			// AndroidTools.toString(object/* FIXME, object.getClass().getSuperclass()*/);
+			append.selfDescribingProperty("unknown SavedState: " + object);
+			// FIXME somehow start from object.getClass().getSuperclass()
 		}
 	}
 }

@@ -1,24 +1,33 @@
 package android.support.v7.widget;
 
-import java.util.*;
+import java.util.Arrays;
 
-import android.support.annotation.NonNull;
+import javax.annotation.Nonnull;
+
 import android.support.v7.widget.StaggeredGridLayoutManager.SavedState;
 
-import net.twisterrob.android.utils.tostring.Stringer;
 import net.twisterrob.java.annotations.DebugHelper;
+import net.twisterrob.java.utils.tostring.*;
 
 @DebugHelper
-public class StaggeredGridLayoutManagerSavedStateStringer implements Stringer<SavedState> {
-	@Override public @NonNull String toString(SavedState state) {
+public class StaggeredGridLayoutManagerSavedStateStringer extends Stringer<SavedState> {
+	@Override public void toString(@Nonnull ToStringAppender append, SavedState state) {
 		// TODO List<LazySpanLookup.FullSpanItem> mFullSpanItems = state.mFullSpanItems;
-		return String.format(Locale.ROOT,
-				"Anchor: {pos=%d, visPos=%d}, reverse=%b, RTL=%b, Spans: {offsets=%s, lookups=%s}",
-				state.mAnchorPosition, state.mVisibleAnchorPosition, state.mReverseLayout, state.mLastLayoutRTL,
-				toString(state.mSpanOffsetsSize, state.mSpanOffsets),
-				toString(state.mSpanLookupSize, state.mSpanLookup));
+		append.beginPropertyGroup("Anchor");
+		append.rawProperty("pos", state.mAnchorPosition);
+		append.rawProperty("visPos", state.mVisibleAnchorPosition);
+		append.endPropertyGroup();
+
+		append.rawProperty("reverse", state.mReverseLayout);
+		append.rawProperty("RTL", state.mLastLayoutRTL);
+
+		append.beginPropertyGroup("Spans");
+		append.rawProperty("offsets", toString(state.mSpanOffsetsSize, state.mSpanOffsets));
+		append.rawProperty("lookups", toString(state.mSpanLookupSize, state.mSpanLookup));
+		append.endPropertyGroup();
 	}
 
+	// FIXME try to get rid of this
 	private static String toString(int size, int... values) {
 		if (size == 0 || values == null) {
 			return "[]";

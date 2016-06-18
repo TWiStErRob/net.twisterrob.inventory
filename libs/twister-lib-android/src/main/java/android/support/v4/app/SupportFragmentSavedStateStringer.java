@@ -1,14 +1,16 @@
 package android.support.v4.app;
 
-import android.support.annotation.NonNull;
+import javax.annotation.Nonnull;
+
 import android.support.v4.app.Fragment.SavedState;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tostring.Stringer;
+import net.twisterrob.java.utils.tostring.*;
 
-public class SupportFragmentSavedStateStringer implements Stringer<Fragment.SavedState> {
-	@Override public @NonNull String toString(SavedState object) {
-		// FIXME type = "v4.Fragment.SavedState";
-		return AndroidTools.toString(object.mState);
+public class SupportFragmentSavedStateStringer extends Stringer<SavedState> {
+	@Override public String getType(SavedState object) {
+		return "v4.Fragment.SavedState";
+	}
+	@Override public void toString(@Nonnull ToStringAppender append, SavedState object) {
+		append.item(object.mState);
 	}
 }

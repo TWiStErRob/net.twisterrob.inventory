@@ -1,13 +1,13 @@
 package android.support.v7.widget;
 
-import android.support.annotation.NonNull;
+import javax.annotation.Nonnull;
+
 import android.support.v7.widget.RecyclerView.SavedState;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tostring.Stringer;
+import net.twisterrob.java.utils.tostring.*;
 
-public class RecyclerViewSavedStateStringer implements Stringer<SavedState> {
-	@NonNull @Override public String toString(SavedState state) {
-		return AndroidTools.toString(state.mLayoutState);
+public class RecyclerViewSavedStateStringer extends Stringer<SavedState> {
+	@Override public void toString(@Nonnull ToStringAppender append, SavedState state) {
+		append.item(state.mLayoutState);
 	}
 }

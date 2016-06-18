@@ -1,18 +1,20 @@
 package net.twisterrob.android.utils.tostring.stringers.name;
 
-import android.support.annotation.NonNull;
+import javax.annotation.Nonnull;
+
 import android.support.v4.app.Fragment;
 
-import net.twisterrob.android.utils.tostring.Stringer;
-import net.twisterrob.java.utils.ReflectionTools;
+import net.twisterrob.java.utils.*;
+import net.twisterrob.java.utils.tostring.*;
 
-import static net.twisterrob.android.utils.tools.AndroidTools.*;
-
-public class FragmentNameStringer implements Stringer<Fragment> {
+public class FragmentNameStringer extends Stringer<Fragment> {
 	public static final Stringer<Fragment> INSTANCE = new FragmentNameStringer();
 
-	@Override public @NonNull String toString(Fragment fragment) {
-		return toNameString((Object)fragment)
-				+ (fragment != null? "(" + ReflectionTools.get(fragment, "mWho") + ")" : "");
+	@Override public void toString(@Nonnull ToStringAppender append, Fragment fragment) {
+		if (fragment == null) {
+			append.selfDescribingProperty(StringTools.NULL_STRING);
+			return;
+		}
+		append.identity(StringTools.hashString(fragment), ReflectionTools.get(fragment, "mWho"));
 	}
 }

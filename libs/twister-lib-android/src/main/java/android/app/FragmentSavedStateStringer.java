@@ -1,18 +1,21 @@
 package android.app;
 
+import javax.annotation.Nonnull;
+
 import android.annotation.TargetApi;
 import android.app.Fragment.SavedState;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.NonNull;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tostring.Stringer;
 import net.twisterrob.java.utils.ReflectionTools;
+import net.twisterrob.java.utils.tostring.*;
 
 @TargetApi(VERSION_CODES.HONEYCOMB)
-public class FragmentSavedStateStringer implements Stringer<Fragment.SavedState> {
-	@Override public @NonNull String toString(SavedState state) {
-		// FIXME type = "Fragment.SavedState";
-		return AndroidTools.toString(ReflectionTools.get(state, "mState"));
+public class FragmentSavedStateStringer extends Stringer<SavedState> {
+	@Override public String getType(SavedState object) {
+		return "Fragment.SavedState";
+	}
+	@Override public void toString(@Nonnull ToStringAppender append, SavedState state) {
+		// mState is package private, but probably @hide too, because it's not accessible
+		append.item(ReflectionTools.get(state, "mState"));
 	}
 }
