@@ -2,6 +2,11 @@ package android.support.v4.app;
 
 import javax.annotation.Nonnull;
 
+import android.annotation.TargetApi;
+import android.os.Build.*;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+
 import net.twisterrob.android.utils.tostring.stringers.name.*;
 import net.twisterrob.java.utils.tostring.*;
 import net.twisterrob.java.utils.tostring.stringers.DefaultStringer;
@@ -37,10 +42,27 @@ public class SupportFragmentStateStringer extends Stringer<FragmentState> {
 
 	private void appendDetails(ToStringAppender append, FragmentState state) {
 		if (state.mArguments != null) {
+			fixClassLoader(state.mArguments);
 			append.item("Arguments", state.mArguments);
 		}
 		if (state.mSavedFragmentState != null) {
+			fixClassLoader(state.mSavedFragmentState);
 			append.item("Saved instance state", state.mSavedFragmentState);
+		}
+	}
+
+	/**
+	 * setClassLoader to mimic proper lifecycle, without this a
+	 * <code>android.os.BadParcelableException:
+	 * ClassNotFoundException when unmarshalling: android.support.v7.widget.RecyclerView$SavedState</code>
+	 * would manifest itself.
+	 * @see Fragment#instantiate
+	 * @see <a href="https://code.google.com/p/android/issues/detail?id=196430">ClassNotFoundException when unmarshalling SavedState</a>
+	 */
+	@TargetApi(VERSION_CODES.HONEYCOMB)
+	private void fixClassLoader(@NonNull Bundle bundle) {
+		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB || bundle.getClassLoader() == null) {
+			bundle.setClassLoader(FragmentState.class.getClassLoader());
 		}
 	}
 

@@ -545,7 +545,13 @@ public /*static*/ abstract class AndroidTools {
 			listener = tryGetAttachedListener(iterator.next(), eventsClass);
 		}
 		if (listener == null) {
+			listener = tryGetAttachedListener(fragment.getContext(), eventsClass);
+		}
+		if (listener == null) {
 			listener = tryGetAttachedListener(fragment.getActivity(), eventsClass);
+		}
+		if (listener == null) {
+			listener = tryGetAttachedListener(fragment.getHost(), eventsClass);
 		}
 		if (listener != null) {
 			return listener;

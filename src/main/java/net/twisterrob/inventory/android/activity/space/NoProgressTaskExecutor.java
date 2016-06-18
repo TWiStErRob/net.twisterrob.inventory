@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.activity.space;
 
 import android.annotation.SuppressLint;
 import android.app.*;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -17,9 +18,9 @@ class NoProgressTaskExecutor extends BaseDialogFragment implements TaskEndListen
 	private TaskEndListener listener;
 	private UITask task;
 
-	@Override public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		listener = (TaskEndListener)activity;
+	@Override public void onAttach(Context context) {
+		super.onAttach(context);
+		listener = (TaskEndListener)context;
 		task.setCallbacks(this);
 	}
 

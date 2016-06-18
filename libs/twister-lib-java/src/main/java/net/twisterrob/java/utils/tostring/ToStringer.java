@@ -80,7 +80,7 @@ public class ToStringer implements ToStringAppender {
 		if (sb.length() == 0) {
 			process(value, toString);
 			if (!contexts.isEmpty()) {
-				throw new IllegalStateException("Someone didn't close the itemized list");
+				throw new IllegalStateException("Someone didn't end a collection");
 			}
 		}
 		return sb.toString();
@@ -93,6 +93,7 @@ public class ToStringer implements ToStringAppender {
 	protected <T> void process(@Nullable T value, @Nonnull Stringer<? super T> stringer) {
 		begin(value, stringer);
 		int start = sb.length();
+		int startSize = contexts.size();
 		try {
 			appendType(stringer.getType(value));
 			start = sb.length();
@@ -101,6 +102,12 @@ public class ToStringer implements ToStringAppender {
 			LOG.trace("Cannot process {} via {}", value, stringer, ex);
 			sb.setLength(start);
 			sb.append(ex.toString());
+			while (contexts.size() > startSize) {
+				restoreLatest();
+			}
+		}
+		if (contexts.size() < startSize) {
+			throw new IllegalStateException("Someone ended too many collections");
 		}
 		end(value, stringer);
 	}

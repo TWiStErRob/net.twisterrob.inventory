@@ -42,7 +42,7 @@ dependencies {
 		compile('net.twisterrob:twister-lib-java:1.0-SNAPSHOT')
 	}
 	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
-	def supportVersion = '23.4.0'
+	def supportVersion = '24.0.0'
 	compile "com.android.support:support-v4:${supportVersion}"
 	compile "com.android.support:appcompat-v7:${supportVersion}"
 	compile "com.android.support:design:${supportVersion}"

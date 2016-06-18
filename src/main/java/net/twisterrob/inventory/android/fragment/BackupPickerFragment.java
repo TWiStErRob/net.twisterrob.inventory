@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import javax.annotation.RegEx;
 
 import android.app.*;
-import android.content.DialogInterface;
+import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,8 +28,8 @@ public class BackupPickerFragment extends DialogFragment {
 
 	private BackupPickerListener mListener;
 
-	@Override public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	@Override public void onAttach(Context context) {
+		super.onAttach(context);
 		mListener = AndroidTools.findAttachedListener(this, BackupPickerListener.class);
 	}
 

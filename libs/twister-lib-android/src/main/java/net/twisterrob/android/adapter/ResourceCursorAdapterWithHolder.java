@@ -10,6 +10,9 @@ import android.view.*;
 import net.twisterrob.android.BuildConfig;
 
 public abstract class ResourceCursorAdapterWithHolder<VH> extends ResourceCursorAdapter {
+	/** @deprecated {@link ResourceCursorAdapter#ResourceCursorAdapter(android.content.Context, int, android.database.Cursor, boolean)} */
+	@SuppressWarnings("deprecation")
+	@Deprecated
 	public ResourceCursorAdapterWithHolder(Context context, int layout, Cursor c, boolean autoRequery) {
 		super(context, layout, c, autoRequery);
 	}
