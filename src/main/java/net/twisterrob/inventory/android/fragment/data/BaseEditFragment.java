@@ -232,16 +232,18 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		hint = (RecyclerView)view.findViewById(android.R.id.hint);
 		hint.setLayoutManager(new LinearLayoutManager(getContext()));
 		hint.addOnItemTouchListener(new NestedScrollableRecyclerViewListener(hint));
-		hinter = new Hinter(getContext(), new CategorySelectedEvent() {
-			@Override public void categorySelected(long categoryID) {
-				AndroidTools.selectByID(type, categoryID);
-				Hinter.unhighlight(name.getText());
-			}
-			@Override public void categoryQueried(long categoryID) {
-				CategoryDTO.showKeywords(getContext(), categoryID);
-			}
-		});
-		hint.setAdapter(hinter.getAdapter());
+		if (this instanceof ItemEditFragment) {
+			hinter = new Hinter(getContext(), new CategorySelectedEvent() {
+				@Override public void categorySelected(long categoryID) {
+					AndroidTools.selectByID(type, categoryID);
+					Hinter.unhighlight(name.getText());
+				}
+				@Override public void categoryQueried(long categoryID) {
+					CategoryDTO.showKeywords(getContext(), categoryID);
+				}
+			});
+			hint.setAdapter(hinter.getAdapter());
+		}
 
 		final ImageButton help = (ImageButton)view.findViewById(R.id.help);
 		help.setOnClickListener(new OnClickListener() {
@@ -297,7 +299,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	private void updateHint(CharSequence text, boolean b) {
-		if (!(BaseEditFragment.this instanceof ItemEditFragment)) {
+		if (hinter == null) {
 			return;
 		}
 		Hinter.unhighlight(name.getText());

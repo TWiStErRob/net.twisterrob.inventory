@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.*;
 
+import org.slf4j.*;
+
 import android.content.*;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
@@ -16,11 +18,6 @@ import net.twisterrob.inventory.android.view.ChangeTypeDialog;
 
 public class CategoryDTO extends ImagedDTO {
 	private static final Uri APP_RESOURCE_RAW = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/");
-	/**
-	 * Do not access this field directly.
-	 * @see #getCache(Context)
-	 */
-	private static final CategoryCache CACHE = new CategoryCache();
 
 	public Long parentID;
 	public String parentName;
@@ -121,8 +118,25 @@ public class CategoryDTO extends ImagedDTO {
 		ChangeTypeDialog.showKeywords(context, cache.getCategoryPath(categoryID), keywords);
 	}
 
-	public static CategoryCache getCache(Context context) {
-		CACHE.init(context);
-		return CACHE;
+	public static @NonNull CategoryCache getCache(Context context) {
+		return CategoryCacheInitializer.get(context);
+	}
+
+	private static class CategoryCacheInitializer {
+		private static final Logger LOG = LoggerFactory.getLogger(CategoryCacheInitializer.class);
+		/** @see #getCache(Context) */
+		private static CategoryCache CACHE;
+		private static Locale lastLocale;
+
+		synchronized
+		public static CategoryCache get(Context context) {
+			Locale currentLocale = context.getResources().getConfiguration().locale;
+			if (!currentLocale.equals(lastLocale)) {
+				LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
+				CACHE = new CategoryCache(context);
+				lastLocale = currentLocale;
+			}
+			return CACHE;
+		}
 	}
 }

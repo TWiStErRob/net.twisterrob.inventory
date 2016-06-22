@@ -95,8 +95,13 @@ public class App extends Application {
 			updateLanguage(Locale.getDefault());
 			new BackgroundExecution(new Runnable() {
 				@Override public void run() {
-					// preload on startup
-					CategoryDTO.getCache(App.this);
+					try {
+						// preload on startup
+						CategoryDTO.getCache(App.this);
+					} catch (Exception ex) {
+						// if fails we'll crash later when used, but at least let the app start up
+						LOG.error("Failed to initialize Category cache", ex);
+					}
 				}
 			}).execute();
 		} finally {

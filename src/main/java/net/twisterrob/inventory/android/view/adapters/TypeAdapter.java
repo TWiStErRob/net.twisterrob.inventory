@@ -12,16 +12,18 @@ import static android.support.v4.content.ContextCompat.*;
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter.ViewHolder;
+
+import static net.twisterrob.inventory.android.Constants.*;
 
 @SuppressWarnings("unused")
 public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	private boolean expandable = false;
 	private boolean indented = true;
-	private boolean displaySource = BuildConfig.DEBUG;
+	private boolean displaySource = DISABLE && BuildConfig.DEBUG;
 	private boolean displayKeywords = false;
 
 	public TypeAdapter(Context context) {

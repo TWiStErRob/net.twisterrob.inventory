@@ -40,6 +40,10 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 		return (SelectionAdapter<T>)adapter;
 	}
 
+	public void start(Collection<Integer> initialSelection) {
+		adapter.setSelectedItems(initialSelection);
+		start();
+	}
 	public void start() {
 		if (!isRunning()) {
 			if (activity instanceof AppCompatActivity) {
@@ -48,6 +52,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 				LOG.warn("Cannot start because activity doesn't support supportActionMode.", new StackTrace());
 			}
 		} else {
+			actionMode.invalidate();
 			LOG.warn("Cannot start because it is already running.", new StackTrace());
 		}
 	}
@@ -82,9 +87,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 		if (savedInstanceState != null) {
 			ArrayList<Integer> selection = savedInstanceState.getIntegerArrayList(KEY_SELECTION);
 			if (selection != null) {
-				start();
-				adapter.setSelectedItems(selection);
-				actionMode.invalidate();
+				start(selection);
 			}
 		}
 	}
@@ -112,7 +115,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 		} else {
 			mode.setTitle(activity.getResources().getQuantityString(R.plurals.selection_count, count, count));
 		}
-		return false;
+		return true;
 	}
 
 	@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {

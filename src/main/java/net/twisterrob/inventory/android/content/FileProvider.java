@@ -63,6 +63,7 @@ public class FileProvider extends android.support.v4.content.FileProvider {
 	private Cursor fix(Cursor result, String... projection) {
 		if (projection.length == 1 && "_data".equals(projection[0])
 				&& result.getCount() == 1 && result.getColumnCount() == 0) {
+			LOG.warn("{} Replacing cursor with [ _data = null ] for Google+ Photos", this);
 			//noinspection resource the value is returned, the receiver will close it
 			MatrixCursor newCursor = new MatrixCursor(new String[] {"_data"});
 			newCursor.addRow(new Object[] {null});

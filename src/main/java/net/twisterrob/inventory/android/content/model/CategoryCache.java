@@ -25,13 +25,8 @@ public class CategoryCache {
 	private final Map<String, Set<String>> categoryChildren = new TreeMap<>();
 	private final LongSparseArray<CharSequence> categoryFullNames = new LongSparseArray<>();
 	private final LongSparseArray<String> categoryIcons = new LongSparseArray<>();
-	private Locale lastLocale;
 
 	private final Suggester<Long> suggester = new Suggester<>(new EditAllowingIndexer<DictionaryWord<Long>>(2), 3);
-
-	CategoryCache() {
-		// limit visibility
-	}
 
 	public @NonNull Collection<CategorySuggestion<Long>> suggest(@NonNull CharSequence name) {
 		return suggester.suggest(name);
@@ -40,49 +35,46 @@ public class CategoryCache {
 		return suggester.split(name);
 	}
 
-	synchronized void init(@NonNull Context context) {
-		Locale currentLocale = context.getResources().getConfiguration().locale;
-		if (currentLocale.equals(lastLocale)) {
-			return;
-		}
-		LOG.warn("Locale changed from {} to {}", lastLocale, currentLocale);
-		lastLocale = currentLocale;
-		doInit(context);
-	}
-
-	private void doInit(@NonNull Context context) {
+	public CategoryCache(@NonNull Context context) {
 		Cursor cursor = App.db().listRelatedCategories(null);
-		while (cursor.moveToNext()) {
-			String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-			long categoryID = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
-			Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
-			String categoryIcon = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-			categoriesByID.put(categoryID, categoryName);
-			categoriesByKey.put(categoryName, categoryID);
-			categoryIcons.put(categoryID, categoryIcon);
-			if (parentID != null) {
-				String parentName = categoriesByID.get(parentID);
-				assert parentName != null : "Missing parent. Is the cursor returning them in parent-first order?";
-				categoryParents.put(categoryName, parentName);
-				Set<String> children = categoryChildren.get(parentName);
-				if (children == null) {
-					children = new TreeSet<>();
-					categoryChildren.put(parentName, children);
-				}
-				children.add(categoryName);
+		//noinspection TryFinallyCanBeTryWithResources
+		try {
+			while (cursor.moveToNext()) {
+				addCategoryToCache(cursor, context);
 			}
-			List<String> categoryPath = getPath(categoryName);
-			CharSequence fullName = buildFullName(context, categoryPath);
-			categoryFullNames.put(categoryID, fullName);
-
-			suggester.addText(categoryID, AndroidTools.getText(context, categoryName));
-			try {
-				suggester.addText(categoryID, AndroidTools.getText(context, categoryName + "_keywords"));
-			} catch (NotFoundException ex) {
-				// ignore and continue
-			}
+		} finally {
+			cursor.close();
 		}
-		cursor.close();
+	}
+	private void addCategoryToCache(@NonNull Cursor cursor, @NonNull Context context) {
+		String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		long categoryID = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+		Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
+		String categoryIcon = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+		categoriesByID.put(categoryID, categoryName);
+		categoriesByKey.put(categoryName, categoryID);
+		categoryIcons.put(categoryID, categoryIcon);
+		if (parentID != null) {
+			String parentName = categoriesByID.get(parentID);
+			assert parentName != null : "Missing parent. Is the cursor returning them in parent-first order?";
+			categoryParents.put(categoryName, parentName);
+			Set<String> children = categoryChildren.get(parentName);
+			if (children == null) {
+				children = new TreeSet<>();
+				categoryChildren.put(parentName, children);
+			}
+			children.add(categoryName);
+		}
+		List<String> categoryPath = getPath(categoryName);
+		CharSequence fullName = buildFullName(context, categoryPath);
+		categoryFullNames.put(categoryID, fullName);
+
+		suggester.addText(categoryID, AndroidTools.getText(context, categoryName));
+		try {
+			suggester.addText(categoryID, AndroidTools.getText(context, categoryName + "_keywords"));
+		} catch (NotFoundException ex) {
+			// ignore and continue
+		}
 	}
 
 	private CharSequence buildFullName(@NonNull Context context, List<String> categoryPath) {

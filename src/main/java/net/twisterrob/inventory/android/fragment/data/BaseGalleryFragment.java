@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import java.util.Collections;
+
 import org.slf4j.*;
 
 import android.content.Intent;
@@ -162,12 +164,12 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 	@Override public final boolean onItemLongClick(int position, long recyclerViewItemID) {
 		if (!selectionMode.isRunning()) {
-			selectionMode.start();
-		}
-		if (selectionMode.isRunning()) {
-			selectionMode.toggle(position);
+			selectionMode.start(Collections.singleton(position));
+			if (!selectionMode.isRunning()) {
+				onListItemLongClick(position, recyclerViewItemID);
+			}
 		} else {
-			onListItemLongClick(position, recyclerViewItemID);
+			selectionMode.toggle(position);
 		}
 		return true;
 	}

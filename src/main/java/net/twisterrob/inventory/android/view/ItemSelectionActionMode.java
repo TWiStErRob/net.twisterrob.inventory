@@ -1,6 +1,5 @@
 package net.twisterrob.inventory.android.view;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -52,7 +51,7 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 				final long[] itemIDs = getSelectedIDs();
 				long category = App.db().findCommonCategory(itemIDs);
 				new ChangeTypeDialog(fragment).show(new Variants() {
-					@SuppressLint("WrongThread") // FIXME DB on UI
+					@SuppressWarnings("WrongThread") // FIXME DB on UI
 					@Override protected void update(Cursor cursor) {
 						long newType = DatabaseTools.getLong(cursor, Item.ID);
 						for (long itemID : itemIDs) {

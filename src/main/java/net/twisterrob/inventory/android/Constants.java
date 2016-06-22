@@ -37,7 +37,7 @@ public interface Constants {
 	 * Turn off parts of the app permanently during build time regardless of flavor.
 	 * Never change it to <code>true</code> rather remove the usage from code to enable that code path.
 	 */
-	boolean DISABLE = false;
+	boolean DISABLE = Boolean.parseBoolean("false"); // TODEL IDEA-157715
 
 	class Paths {
 		/** Warning: this is used inlined in paths_share.xml because path doesn't support string resources */
