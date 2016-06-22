@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-175,-165 400 165"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<path id="wave" d="m 0,0
+			c 15,-50 -100,-200 -150,-150
+			c -5,5 0,15 15,5
+			c 25,0 75,100 -75,145
+			z
+		" stroke="black" fill="black" stroke-width="1" />
+	</defs>
+	<use xlink:href="#wave" transform="translate(0,0)" />
+	<use xlink:href="#wave" transform="translate(100,0)" />
+	<use xlink:href="#wave" transform="translate(200,0)" />
+</svg>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://pbs.twimg.com/profile_images/1390597359/icon-color.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100,-350 350 350">
+	<path id="land" d="M-100,-200
+			C -25,-225 0,-195 50,-200
+			C 100,-200 150,-250 250,-250
+			V+0 H-100 Z
+		" fill="black" />
+	<path id="road" d="M0,0
+			C -50,-100 200,-100 50,-200
+			C 300,-100 -50,-100 200,0
+		" fill="white" stroke="white" stroke-width="2" />
+</svg>

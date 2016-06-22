@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.customcodecrafters.com/shopimages/products/extras/utility-room-prev.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 800 1000">
+	<rect id="body" width="800" height="1000" />
+	<circle id="hole" r="250" cx="400" cy="600" fill="white" stroke="grey" stroke-width="25" />
+	<circle id="ring" r="215" cx="400" cy="600" fill="white" stroke="darkgrey" stroke-width="25" />
+	<rect width="775" height="150" x="12.5" y="10" stroke="gray" stroke-width="10" />
+	<g id="knob" transform="translate(700, 85)">
+		<circle r="50" fill="white" />
+		<line y1="-40" y2="40" stroke="gray" stroke-width="15" transform="rotate(60)" />
+	</g>
+	<circle id="small-knob-left" r="20" cx="150" cy="75" fill="white" />
+	<circle id="small-knob-right" r="20" cx="250" cy="75" fill="white" />
+</svg>

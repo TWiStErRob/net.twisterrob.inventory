@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 800 500">
+	<path id="mountain" d="M 0, 500
+		l 250,-350
+		l 150,150
+		l 200,-300
+		l 200,475
+	z" fill="black" />
+</svg>

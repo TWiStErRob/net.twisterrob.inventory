@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.iconarchive.com/show/windows-8-icons-by-icons8/Clothing-T-Shirt-icon.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-350,-150 700 300"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<g id="half">
+			<rect id="rod" width="350" height="50" rx="20" ry="20" y="-25" />
+			<rect id="weightOuter" width="45" height="150" x="25" y="-75" rx="20" ry="20" />
+			<rect id="weightMiddle" width="45" height="250" x="75" y="-125" rx="20" ry="20" />
+			<rect id="weightInner" width="45" height="300" x="125" y="-150" rx="20" ry="20" />
+		</g>
+	</defs>
+	<use xlink:href="#half" transform="translate(50) translate(-350)" />
+	<use xlink:href="#half" transform="translate(-50) translate(+350) scale(-1,1)" />
+</svg>

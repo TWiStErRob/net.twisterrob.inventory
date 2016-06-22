@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://broderickmoving.com/communities/0/000/001/655/620//images/9000329_100x100.png -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12.5,-312.5 250 370">
+	<rect id="door-frame" y="-300" width="225" height="300" fill="none" stroke="black" stroke-width="25" />
+	<g transform="skewY(+15)">
+		<rect id="door" y="-300" width="200" height="300" stroke="darkgray" stroke-width="1" />
+		<circle id="door-knob" cx="150" cy="-125" r="20" fill="white" />
+	</g>
+</svg>

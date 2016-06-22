@@ -36,13 +36,14 @@
 	<!-- Bathroom (UK): a room containing a bath or shower and typically also a washbasin and a toilet. -->
 	<!-- Bathroom (US): a room containing a toilet and sink and typically also a bathtub or shower. -->
 	<!-- Washroom (US): a room with washing and toilet facilities. -->
+	<!-- Powder room (US): (in a private home) a bathroom, especially one which does not have a bathtub or shower and is intended for use by guests. -->
 	<!-- Restroom/Bathroom (US): a public lavatory; a restroom. a bathroom in a public building. -->
 	<!-- WC/Water closet: a flush toilet. a room containing a flush toilet. -->
 	<!-- Toilet: a fixed receptacle into which a person may urinate or defecate, typically consisting of a large bowl connected to a system for flushing away the waste into a sewer or septic tank. -->
 	<!-- Outhouse (US): an outbuilding containing a toilet, typically with no plumbing. -->
 	<!-- Privy: a toilet located in a small shed outside a house or other building; an outhouse. -->
 	<!-- Latrine: a toilet or outhouse, especially a communal one in a camp or barracks. -->
-	<string name="room_bath_keywords">bathroom, washroom, wetroom; toilet, WC, latrine, outhouse, privy</string>
+	<string name="room_bath_keywords">bathroom, washroom, wetroom, powder room; toilet, WC, latrine, outhouse, privy</string>
 
 	<!-- Dining: eat dinner; dinner: the main meal of the day, taken either around midday or in the evening. -->
 	<string name="room_dining">Dining</string>

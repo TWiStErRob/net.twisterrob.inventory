@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.customcodecrafters.com/shopimages/products/extras/study-prev.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-500,-500 1000 1000"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<image width="1000" height="1000" x="-500" y="-500" xlink:href="category_paper.svg" />
+	<image width="500" height="500" xlink:href="category_pencil.svg"
+	       x="-200" y="-200" transform="translate(-50) rotate(110)"  />
+	<image width="500" height="500" xlink:href="category_pen.svg"
+	       x="-200" y="-200" transform="translate(+150) rotate(120)" />
+</svg>

@@ -2,16 +2,10 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Based on http://broderickmoving.com/communities/0/000/001/655/620//images/9000329_100x100.png -->
 <!-- Based on https://www.iconfinder.com/icons/309361/basement_cellar_storage_warehouse_wine_cellar_wine_vault_icon#size=512 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-500,-300 1000 815"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-500,-400 1000 915"
      xmlns:xlink="http://www.w3.org/1999/xlink">
 	<image id="stairs" width="500" height="500" xlink:href="room_stairs.svg" transform="scale(-1,1) translate(-250,25)" />
 	<rect id="basement-floor" y="-5" width="1000" height="25" transform="translate(-500,500)" />
 	<rect id="ground-floor" width="350" height="25" transform="translate(-500,25)" />
-	<g id="entrance" transform="translate(-500,25) translate(12.5,0)">
-		<rect id="door-frame" y="-300" width="225" height="300" fill="none" stroke="black" stroke-width="25" />
-		<g transform="skewY(+15)">
-			<rect id="door" y="-300" width="200" height="300" stroke="darkgray" stroke-width="1" />
-			<circle id="door-knob" cx="150" cy="-125" r="20" fill="white" />
-		</g>
-	</g>
+	<image id="entrance" y="-425" width="350" height="500" xlink:href="snippet_door.svg" transform="translate(-500,25) translate(12.5,0)" />
 </svg>

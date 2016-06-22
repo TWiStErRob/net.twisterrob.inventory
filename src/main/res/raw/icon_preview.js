@@ -25,7 +25,7 @@ console.log(`<style>
 </style>`);
 fs.readdir('.', function (err, list) {
 	if (err) throw err;
-	var icons = /^(category|property|room|ic).*\.svg$/;
+	var icons = /^(category|property|room|ic|snippet).*\.svg$/;
 	list.forEach(function (file) {
 		if (!file.match(icons)) return;
 		console.log(`<div class="item"><a href="` + file + `">

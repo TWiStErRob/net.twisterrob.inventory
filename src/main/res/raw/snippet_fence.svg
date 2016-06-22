@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY picketW "25">
+	<!ENTITY picketH "60">
+	<!ENTITY picketTall "200">
+	<!ENTITY picketGap "20">
+	<!ENTITY fullWidth "330"><!-- = 2*picketW * n + picketGap * (n-1) -->
+	<!ENTITY fullHeight "260"><!-- = picketH + picketTall -->
+	<!ENTITY space "translate(&picketW;) translate(&picketW;) translate(&picketGap;)">
+]>
+<!-- Based on https://www.iconfinder.com/icons/817567/garden_theme_house_house_yard_rural_house_sun_icon -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-&picketW;,0 &fullWidth; &fullHeight;"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<path id="picket" d="M0,0
+			l &picketW;,&picketH;
+			v &picketTall;
+			h -&picketW; -&picketW;
+			v -&picketTall;
+			l &picketW;,-&picketH;
+		z" />
+		<rect id="holder" x="-&picketW;" width="&fullWidth;" height="25" />
+	</defs>
+	<g id="holders">
+		<use xlink:href="#holder" transform="translate(0,100)" />
+		<use xlink:href="#holder" transform="translate(0,200)" />
+	</g>
+	<g id="pickets">
+		<use xlink:href="#picket" transform="" />
+		<use xlink:href="#picket" transform="&space;" />
+		<use xlink:href="#picket" transform="&space;&space;" />
+		<use xlink:href="#picket" transform="&space;&space;&space;" />
+		<use xlink:href="#picket" transform="&space;&space;&space;&space;" />
+	</g>
+</svg>

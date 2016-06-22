@@ -3,6 +3,6 @@
 	<!ENTITY size "100">
 	<!ENTITY step "v-&size; h+&size;">
 	]>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25,-425 450 450">
-	<path d="M0,0 &step;&step;&step;&step;" stroke="black" stroke-width="30" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15,-315 315 315">
+	<path d="M0,0 &step;&step;&step;" stroke="black" stroke-width="30" />
 </svg>

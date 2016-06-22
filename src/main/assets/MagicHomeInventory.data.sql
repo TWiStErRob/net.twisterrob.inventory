@@ -30,8 +30,8 @@ INSERT INTO RoomTypeKind
 	UNION SELECT  1, 'room_group_communal', 'room_community'
 	UNION SELECT  2, 'room_group_storage',  'room_storage'
 	UNION SELECT  3, 'room_group_function', 'room_function'
-	UNION SELECT  4, 'room_group_space',    'room_sun'
-	UNION SELECT  5, 'room_group_nature',   'room_sun'
+	UNION SELECT  4, 'room_group_space',    'room_space'
+	UNION SELECT  5, 'room_group_nature',   'room_nature'
 ;
 
 INSERT INTO RoomType
@@ -41,8 +41,8 @@ INSERT INTO RoomType
 	UNION SELECT 101,    1, 'room_living',     NULL
 	UNION SELECT 102,    1, 'room_bed',        'room_bedroom'
 	UNION SELECT 103,    1, 'room_bath',       'room_toilet'
-	UNION SELECT 104,    1, 'room_dining',     'category_pot_hot'
-	UNION SELECT 105,    1, 'room_recreation', NULL
+	UNION SELECT 104,    1, 'room_dining',     'room_kitchen'
+	UNION SELECT 105,    1, 'room_recreation', 'room_rec'
 -- Storage
 	UNION SELECT 201,    2, 'room_storage',    'room_storage'
 	UNION SELECT 202,    2, 'room_parking',    'room_garage'
@@ -50,20 +50,20 @@ INSERT INTO RoomType
 	UNION SELECT 204,    2, 'room_attic',      'room_attic'
 	UNION SELECT 205,    2, 'room_basement',   'room_basement'
 -- Function
-	UNION SELECT 301,    3, 'room_work',       NULL
-	UNION SELECT 302,    3, 'room_utility',    NULL
-	UNION SELECT 303,    3, 'room_equipment',  NULL
-	UNION SELECT 304,    3, 'room_gym',        NULL
-	UNION SELECT 305,    3, 'room_animal',     NULL
+	UNION SELECT 301,    3, 'room_work',       'room_study'
+	UNION SELECT 302,    3, 'room_utility',    'room_laundry'
+	UNION SELECT 303,    3, 'room_equipment',  'room_furnace'
+	UNION SELECT 304,    3, 'room_gym',        'room_gym'
+	UNION SELECT 305,    3, 'room_animal',     'room_animal'
 -- Spaces
-	UNION SELECT 401,    4, 'room_yard',       NULL
-	UNION SELECT 402,    4, 'room_shelter',    NULL
-	UNION SELECT 403,    4, 'room_platform',   NULL
-	UNION SELECT 404,    4, 'room_entrance',   NULL
+	UNION SELECT 401,    4, 'room_yard',       'room_yard'
+	UNION SELECT 402,    4, 'room_shelter',    'room_shelter'
+	UNION SELECT 403,    4, 'room_platform',   'room_platform'
+	UNION SELECT 404,    4, 'room_entrance',   'room_entrance'
 	UNION SELECT 405,    4, 'room_access',     'room_stairs'
-	UNION SELECT 406,    4, 'room_way',        NULL
+	UNION SELECT 406,    4, 'room_way',        'room_pathway'
 -- Nature
-	UNION SELECT 501,    5, 'room_plant',      NULL
-	UNION SELECT 502,    5, 'room_water',      NULL
-	UNION SELECT 503,    5, 'room_land',       NULL
+	UNION SELECT 501,    5, 'room_plant',      'room_vegetation'
+	UNION SELECT 502,    5, 'room_water',      'room_water'
+	UNION SELECT 503,    5, 'room_land',       'room_land'
 ;

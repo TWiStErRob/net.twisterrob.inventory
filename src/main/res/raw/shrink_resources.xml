@@ -8,3 +8,4 @@
 	tools:discard="@raw/icon_*"
 	tools:keep="@raw/category_*,@raw/room_*,@raw/property_*,@raw/ic_*"
 	/>
+<!-- See also values/aliases.xml -->
