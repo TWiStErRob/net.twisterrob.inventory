@@ -67,7 +67,7 @@ public class App extends Application {
 	private void logStartup() {
 		try {
 			PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-			Log.wtf("App", MessageFormatter.arrayFormat("************ Starting up {} {} installed at {}", new Object[] {
+			Log.e("App", MessageFormatter.arrayFormat("************ Starting up {} {} installed at {}", new Object[] {
 					getPackageName(), BuildConfig.VERSION_NAME, new Date(info.lastUpdateTime)}).getMessage());
 		} catch (NameNotFoundException ex) {
 			LOG.warn("************* Starting up {} {}", getPackageName(), BuildConfig.VERSION_NAME, ex);
@@ -81,10 +81,10 @@ public class App extends Application {
 			// may cause StrictModeDiskReadViolation if Application.onCreate calls
 			// android.graphics.Typeface.SetAppTypeFace (this happened on Galaxy S3 with custom font set up)
 			super.onCreate();
-			AndroidTools.setContext(this);
 			logStartup();
 
 			if (BuildConfig.DEBUG) {
+				AndroidTools.setContext(this);
 //				CONSIDER com.idescout.sql.SqlScoutServer.create(this, getPackageName());
 //				com.facebook.stetho.Stetho.initializeWithDefaults(this); // reads /proc/self/cmdline
 			}
@@ -111,7 +111,7 @@ public class App extends Application {
 
 	@Override public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		updateLanguage(newConfig.locale);
+		updateLanguage(AndroidTools.getLocale(newConfig));
 	}
 
 	private void updateLanguage(Locale newLocale) {

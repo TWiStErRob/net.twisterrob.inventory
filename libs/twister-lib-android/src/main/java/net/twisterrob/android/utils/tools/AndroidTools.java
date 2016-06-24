@@ -16,6 +16,7 @@ import android.content.*;
 import android.content.DialogInterface.*;
 import android.content.pm.*;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -919,6 +920,16 @@ public /*static*/ abstract class AndroidTools {
 	@DebugHelper
 	public static String toNameString(Object object) {
 		return new ToStringer(StringerRepo.INSTANCE, object, DefaultNameStringer.INSTANCE).toString();
+	}
+
+	@SuppressWarnings("deprecation")
+	@TargetApi(VERSION_CODES.N)
+	public static Locale getLocale(Configuration configuration) {
+		if (VERSION.SDK_INT < VERSION_CODES.N) {
+			return configuration.locale;
+		} else {
+			return configuration.getLocales().get(0);
+		}
 	}
 
 	public interface PopupCallbacks<T> {

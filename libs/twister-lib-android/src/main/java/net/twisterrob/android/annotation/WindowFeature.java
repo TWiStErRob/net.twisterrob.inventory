@@ -12,6 +12,7 @@ import android.view.Window;
 
 import net.twisterrob.java.annotations.DebugHelper;
 
+@SuppressWarnings("deprecation")
 @SuppressLint({"InlinedApi", "UniqueConstants"})
 @TargetApi(VERSION_CODES.LOLLIPOP)
 @IntDef(value = {
@@ -37,6 +38,7 @@ import net.twisterrob.java.annotations.DebugHelper;
 @Target({FIELD, LOCAL_VARIABLE, PARAMETER, METHOD})
 public @interface WindowFeature {
 	class Converter {
+		@SuppressLint("SwitchIntDef") // TODEL http://b.android.com/214161
 		@DebugHelper
 		public static String toString(@WindowFeature int featureId) {
 			switch (featureId) {

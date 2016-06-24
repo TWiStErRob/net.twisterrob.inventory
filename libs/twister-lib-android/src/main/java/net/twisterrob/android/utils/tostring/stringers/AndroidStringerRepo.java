@@ -2,6 +2,7 @@ package net.twisterrob.android.utils.tostring.stringers;
 
 import android.app.FragmentSavedStateStringer;
 import android.content.Context;
+import android.os.Build.*;
 import android.support.v4.app.*;
 import android.support.v4.widget.DrawerLayoutStateStringer;
 import android.support.v7.widget.*;
@@ -22,10 +23,14 @@ public class AndroidStringerRepo {
 				new StaggeredGridLayoutManagerSavedStateStringer());
 		repo.register("android.support.v4.widget.DrawerLayout$SavedState", new DrawerLayoutStateStringer());
 		repo.register(android.support.v4.app.Fragment.SavedState.class, new SupportFragmentSavedStateStringer());
-		repo.register(android.app.Fragment.SavedState.class, new FragmentSavedStateStringer());
+		if (VERSION.SDK_INT > VERSION_CODES.HONEYCOMB_MR2) {
+			repo.register(android.app.Fragment.SavedState.class, new FragmentSavedStateStringer());
+		}
 		repo.register("android.support.v4.app.FragmentManagerState", new SupportFragmentManagerStateStringer());
 		repo.register(android.support.v4.content.Loader.class, new SupportLoaderStringer());
-		repo.register(android.content.Loader.class, new LoaderStringer());
+		if (VERSION.SDK_INT > VERSION_CODES.HONEYCOMB) {
+			repo.register(android.content.Loader.class, new LoaderStringer());
+		}
 		repo.register(android.content.Intent.class, new IntentStringer());
 		repo.register(android.os.Bundle.class, new BundleStringer());
 		repo.register(android.util.SparseArray.class, new SparseArrayStringer(context));

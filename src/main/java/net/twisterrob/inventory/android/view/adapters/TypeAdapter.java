@@ -27,7 +27,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 	private boolean displayKeywords = false;
 
 	public TypeAdapter(Context context) {
-		super(context, R.layout.item_type_spinner, null, false);
+		super(context, R.layout.item_type_spinner, null, 0);
 	}
 
 	public boolean isExpandable() {

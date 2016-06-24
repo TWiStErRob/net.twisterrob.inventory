@@ -14,7 +14,8 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.drawable.*;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.*;
+import android.os.Build.*;
+import android.os.Environment;
 import android.provider.*;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -295,7 +296,7 @@ public /*static*/ abstract class ImageTools {
 
 		String result = null;
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
 			result = getPathKitKat(context, uri);
 		}
 		if ("content".equalsIgnoreCase(uri.getScheme())) { // MediaStore (and general)
@@ -311,7 +312,7 @@ public /*static*/ abstract class ImageTools {
 		return result;
 	}
 
-	@TargetApi(Build.VERSION_CODES.KITKAT)
+	@TargetApi(VERSION_CODES.KITKAT)
 	private static String getPathKitKat(final Context context, final Uri uri) {
 		if (DocumentsContract.isDocumentUri(context, uri)) { // DocumentProvider
 			if ("com.android.externalstorage.documents".equals(uri.getAuthority())) { // ExternalStorageProvider
@@ -430,7 +431,7 @@ public /*static*/ abstract class ImageTools {
 	}
 
 	public static Bitmap crop(File file, Rect rect) throws IOException {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
+		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD_MR1) {
 			return cropBitmap(file, rect);
 		} else {
 			return cropRegion(file, rect);
@@ -442,7 +443,7 @@ public /*static*/ abstract class ImageTools {
 		return Bitmap.createBitmap(source, rect.left, rect.top, rect.width(), rect.height());
 	}
 
-	@TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
+	@TargetApi(VERSION_CODES.GINGERBREAD_MR1)
 	private static Bitmap cropRegion(File file, Rect rect) throws IOException {
 		BitmapRegionDecoder decoder = null;
 		try {
@@ -458,11 +459,13 @@ public /*static*/ abstract class ImageTools {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	private static Options cropOptions() {
 		Options options = new Options();
 		options.inPreferredConfig = Config.ARGB_8888;
+		// the following two are deprecated and ignored in N, but the below are the default values anyway
 		options.inDither = false;
-		if (Build.VERSION_CODES.GINGERBREAD_MR1 <= Build.VERSION.SDK_INT) {
+		if (VERSION_CODES.GINGERBREAD_MR1 <= VERSION.SDK_INT) {
 			options.inPreferQualityOverSpeed = true;
 		}
 		return options;
@@ -578,7 +581,7 @@ public /*static*/ abstract class ImageTools {
 
 		Bitmap.Config config = source.getConfig() != null? source.getConfig() : Bitmap.Config.ARGB_8888;
 		Bitmap result = Bitmap.createBitmap(targetWidth, targetHeight, config);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+		if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB_MR1) {
 			result.setHasAlpha(source.hasAlpha());
 		}
 

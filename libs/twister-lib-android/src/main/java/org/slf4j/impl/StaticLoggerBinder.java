@@ -1,8 +1,5 @@
 /*
- * Created 21.10.2009
- *
- * Copyright (c) 2009 SLF4J.ORG
- *
+ * Copyright (c) 2004-2011 QOS.ch
  * All rights reserved.
  *
  * Permission is hereby granted, free  of charge, to any person obtaining
@@ -35,7 +32,6 @@ import org.slf4j.spi.LoggerFactoryBinder;
  *
  * @author Ceki G&uuml;lc&uuml;
  * @author Thorsten M&ouml;ler
- * @version $Rev:$; $Author:$; $Date:$
  */
 public class StaticLoggerBinder implements LoggerFactoryBinder {
 	/**
@@ -53,11 +49,11 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
 	}
 
 	/**
-	 * Declare the version of the SLF4J API this implementation is compiled
-	 * against. The value of this field is usually modified with each release.
+	 * Declare the version of the SLF4J API this implementation is compiled against.
+	 * The value of this field is modified with each major release.
 	 */
 	// to avoid constant folding by the compiler, this field must *not* be final
-	public static /*final*/ String REQUESTED_API_VERSION = "1.7.4";
+	public static /*final*/ String REQUESTED_API_VERSION = "1.7.21";
 
 	private static final String loggerFactoryClassStr = AndroidLoggerFactory.class.getName();
 

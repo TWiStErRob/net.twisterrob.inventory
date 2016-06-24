@@ -130,7 +130,7 @@ public class CategoryDTO extends ImagedDTO {
 
 		synchronized
 		public static CategoryCache get(Context context) {
-			Locale currentLocale = context.getResources().getConfiguration().locale;
+			Locale currentLocale = AndroidTools.getLocale(context.getResources().getConfiguration());
 			if (!currentLocale.equals(lastLocale)) {
 				LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
 				CACHE = new CategoryCache(context);

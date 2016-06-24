@@ -11,7 +11,7 @@ buildscript {
 	dependencies {
 		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		//noinspection GradleDynamicVersion
-		classpath 'net.twisterrob.gradle:plugin:0.6.+'
+		classpath 'net.twisterrob.gradle:plugin:0.7.+'
 	}
 }
 

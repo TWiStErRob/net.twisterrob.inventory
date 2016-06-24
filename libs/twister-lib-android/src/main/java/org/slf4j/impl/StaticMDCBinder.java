@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2004-2011 QOS.ch
  * All rights reserved.
  *
@@ -20,7 +20,6 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 package org.slf4j.impl;
 
@@ -40,6 +39,16 @@ public class StaticMDCBinder {
 
 	private StaticMDCBinder() {
 		// Singleton
+	}
+
+	/**
+	 * Return the singleton of this class.
+	 *
+	 * @return the StaticMDCBinder singleton
+	 * @since 1.7.14
+	 */
+	public static StaticMDCBinder getSingleton() {
+		return SINGLETON;
 	}
 
 	/**
