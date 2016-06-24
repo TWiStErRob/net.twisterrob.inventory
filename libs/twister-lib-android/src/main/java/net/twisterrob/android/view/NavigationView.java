@@ -22,7 +22,7 @@ public class NavigationView extends android.support.design.widget.NavigationView
 
 	@Override protected void onRestoreInstanceState(Parcelable savedState) {
 		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB && savedState instanceof SavedState) {
-			// Only work around for 2.3.x; based on https://code.google.com/p/android/issues/detail?id=196430#c10
+			// TODEL Only work around for 2.3.x; based on https://code.google.com/p/android/issues/detail?id=196430#c10
 			Bundle menuState = ((SavedState)savedState).menuState;
 			if (menuState != null) {
 				menuState.setClassLoader(SavedState.class.getClassLoader());

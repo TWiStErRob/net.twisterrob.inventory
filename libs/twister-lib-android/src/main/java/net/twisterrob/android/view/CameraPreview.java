@@ -18,6 +18,7 @@ import android.widget.Toast;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 @UiThread
+// Deprecation warnings are constrained to methods by using FQCNs, because suppression doesn't work on imports.
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
 
@@ -74,10 +75,16 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
+	@TargetApi(VERSION_CODES.JELLY_BEAN_MR1)
 	@SuppressWarnings("deprecation")
 	public boolean canHasCamera(Context context) {
-		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)
-				&& android.hardware.Camera.getNumberOfCameras() > 0;
+		PackageManager pm = context.getPackageManager();
+		boolean hasCameraAny = VERSION_CODES.JELLY_BEAN_MR1 < VERSION.SDK_INT;
+		return android.hardware.Camera.getNumberOfCameras() > 0 && (
+				hasCameraAny && pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+						|| pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)
+						|| pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)
+		);
 	}
 
 	public void setListener(@Nullable CameraPreviewListener listener) {
@@ -344,21 +351,25 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	private class CameraHandlerThread extends HandlerThread {
+		private final Looper mLooper;
 		private final Handler mHandler;
 
-		@MainThread CameraHandlerThread() {
+		@MainThread
+		public CameraHandlerThread() {
 			super("CameraHandlerThread");
 			start();
-			mHandler = new Handler(getLooper());
+			mLooper = getLooper();
+			mHandler = new Handler(mLooper);
 		}
 
-		void startOpenCamera() {
+		public void startOpenCamera() {
 			mHandler.post(new Runnable() {
-				@SuppressLint("WrongThread")
+				@SuppressLint("WrongThread") // TODEL http://b.android.com/207302 (+ ResourceTypes below)
 				@WorkerThread
 				@Override public void run() {
+					int cameraID = findCamera();
 					try {
-						final CameraHolder holder = new CameraHolder(findCamera());
+						final CameraHolder holder = new CameraHolder(cameraID);
 						//noinspection ResourceType post should be safe to call from background
 						CameraPreview.this.post(new Runnable() {
 							@UiThread
@@ -367,7 +378,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 							}
 						});
 					} catch (final RuntimeException ex) {
-						LOG.error("Error setting up camera", ex);
+						LOG.error("Error setting up camera #{}", cameraID, ex);
 						//noinspection ResourceType post should be safe to call from background
 						CameraPreview.this.post(new Runnable() {
 							@UiThread
@@ -379,14 +390,29 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 					}
 				}
 
+				@SuppressWarnings("deprecation")
 				private int findCamera() {
-					return 0; // TODO front camera?
+					int cameras = android.hardware.Camera.getNumberOfCameras();
+					int frontId = -1;
+					int backId = -1;
+					for (int i = 0; i < cameras; ++i) {
+						android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+						android.hardware.Camera.getCameraInfo(0, info);
+						if (backId == -1 && info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK) {
+							backId = i;
+						}
+						if (frontId == -1 && info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
+							frontId = i;
+						}
+					}
+					int id = backId != -1? backId : frontId;
+					return id != -1? id : 0;
 				}
 			});
 		}
 
-		void stopThread() {
-			getLooper().quit();
+		public void stopThread() {
+			mLooper.quit();
 		}
 	}
 

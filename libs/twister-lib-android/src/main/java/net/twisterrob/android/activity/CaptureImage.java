@@ -494,7 +494,15 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 	private class CropClickListener implements OnClickListener {
 		@Override public void onClick(View v) {
 			if (mSavedFile != null) {
-				doCrop();
+				try {
+					doCrop();
+				} catch (OutOfMemoryError ex) {
+					mSavedFile = null;
+					// CONSIDER http://stackoverflow.com/a/26239077/253468, or other solution on the same question
+					String message = "There's not enough memory to crop the image, sorry. Try a smaller selection.";
+					LOG.warn(message, ex);
+					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+				}
 				doReturn();
 			} else {
 				if (!take(new Callback<byte[]>() {
