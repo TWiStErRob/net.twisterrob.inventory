@@ -1,12 +1,9 @@
 package net.twisterrob.android.utils.tools;
 
 import java.io.*;
-import java.util.List;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.*;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.*;
@@ -17,7 +14,6 @@ import android.net.Uri;
 import android.os.Build.*;
 import android.os.Environment;
 import android.provider.*;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import net.twisterrob.java.io.IOTools;
@@ -25,65 +21,9 @@ import net.twisterrob.java.io.IOTools;
 // CONSIDER crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
 // CONSIDER crop http://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
 public /*static*/ abstract class ImageTools {
-	public static final short REQUEST_CODE_GET_PICTURE = 0x41C0;
-	public static final short REQUEST_CODE_TAKE_PICTURE = 0x41C1;
-	public static final short REQUEST_CODE_PICK_GALLERY = 0x41C2;
-	public static final short REQUEST_CODE_CROP_PICTURE = 0x41C3;
 	private static final String NO_SORT = null;
 	private static final String NO_SELECTION = null;
 	private static final String[] NO_ARGS = null;
-
-	public static boolean takePicture(Activity activity, File targetFile) {
-		if (activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			if (intent.resolveActivity(activity.getPackageManager()) != null) {
-				if (targetFile != null) {
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(targetFile));
-				}
-				activity.startActivityForResult(intent, REQUEST_CODE_TAKE_PICTURE);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static List<Intent> createCameraIntents(Context context, File file) {
-		Uri outputFileUri = Uri.fromFile(file);
-		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		List<Intent> cameraIntents = AndroidTools.resolveIntents(context, captureIntent, 0);
-		for (Intent intent : cameraIntents) {
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-		}
-		return cameraIntents;
-	}
-
-	public static Intent createGalleryIntent() {
-		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-		galleryIntent.setType("image/*");
-		return galleryIntent;
-	}
-
-	public static @NonNull Intent createCaptureIntent(Activity activity, File targetFile) {
-		// Chooser of filesystem options
-		Intent chooserIntent = Intent.createChooser(createGalleryIntent(), null);
-		// Add the camera options
-		List<Intent> camIntents = createCameraIntents(activity, targetFile);
-		return AndroidTools.setInitialIntents(chooserIntent, camIntents);
-	}
-
-	public static void getPicture(Activity activity, File targetFile) {
-		activity.startActivityForResult(createCaptureIntent(activity, targetFile), REQUEST_CODE_GET_PICTURE);
-	}
-	public static void pickImageInGallery(Activity activity) {
-		activity.startActivityForResult(createGalleryIntent(), REQUEST_CODE_PICK_GALLERY);
-	}
-
-	public static void openImageInGallery(Activity activity, File sourceFile) {
-		Uri base = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-		Uri uri = base.buildUpon().appendPath(sourceFile.getAbsolutePath()).build();
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		activity.startActivity(intent);
-	}
 
 	@SuppressWarnings("resource")
 	public static Bitmap loadPicture(String sourceFile, int targetW, int targetH) throws IOException {
@@ -232,19 +172,6 @@ public /*static*/ abstract class ImageTools {
 			default:
 				return "unknown";
 		}
-	}
-
-	public static Uri getPictureUriFromResult(int requestCode, int resultCode, Intent data, Uri fallback) {
-		Uri selectedImageUri = fallback;
-		if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_GET_PICTURE && data != null) {
-			boolean isCamera = MediaStore.ACTION_IMAGE_CAPTURE.equals(data.getAction());
-			if (isCamera) {
-				selectedImageUri = data.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-			} else {
-				selectedImageUri = data.getData();
-			}
-		}
-		return selectedImageUri;
 	}
 
 	/**

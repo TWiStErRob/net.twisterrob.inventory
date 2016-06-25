@@ -16,6 +16,7 @@ import android.support.annotation.*;
 
 import static android.graphics.Color.*;
 
+import net.twisterrob.android.content.ImageRequest;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
 
@@ -103,7 +104,7 @@ public abstract class PictureHelper {
 
 	public Intent startCapture() {
 		file = getTargetFile();
-		return ImageTools.createCaptureIntent(activity, file);
+		return new ImageRequest.Builder(activity).addCameraIntents(file).build().getIntent();
 	}
 
 	/**

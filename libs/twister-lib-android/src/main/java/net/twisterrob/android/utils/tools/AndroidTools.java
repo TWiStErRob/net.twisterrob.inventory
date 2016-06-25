@@ -97,10 +97,6 @@ public /*static*/ abstract class AndroidTools {
 		}
 		return result;
 	}
-	public static Intent setInitialIntents(Intent intent, Collection<Intent> intents) {
-		intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toArray(new Parcelable[intents.size()]));
-		return intent;
-	}
 
 	public static int findItemPosition(Adapter adapter, long id) {
 		for (int position = 0, n = adapter.getCount(); position < n; position++) {

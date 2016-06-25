@@ -7,7 +7,6 @@ import org.slf4j.*;
 
 import android.annotation.*;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build.*;
 import android.os.*;
 import android.support.annotation.*;
@@ -73,18 +72,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
 			getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		}
-	}
-
-	@TargetApi(VERSION_CODES.JELLY_BEAN_MR1)
-	@SuppressWarnings("deprecation")
-	public boolean canHasCamera(Context context) {
-		PackageManager pm = context.getPackageManager();
-		boolean hasCameraAny = VERSION_CODES.JELLY_BEAN_MR1 < VERSION.SDK_INT;
-		return android.hardware.Camera.getNumberOfCameras() > 0 && (
-				hasCameraAny && pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
-						|| pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)
-						|| pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)
-		);
 	}
 
 	public void setListener(@Nullable CameraPreviewListener listener) {

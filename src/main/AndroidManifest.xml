@@ -57,7 +57,12 @@
 		<activity
 			android:name="net.twisterrob.android.activity.CaptureImage"
 			android:label="@string/action_picture_take"
-			/>
+			>
+			<intent-filter>
+				<action android:name="net.twisterrob.android.intent.action.CAPTURE_IMAGE" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.ImageActivity"
 			android:label="@string/image_title"

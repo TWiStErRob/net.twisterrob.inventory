@@ -35,7 +35,7 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.TextWatcherAdapter;
 import net.twisterrob.android.wiring.DefaultValueUpdater;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.*;
@@ -54,6 +54,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	public static final String EDIT_IMAGE = "editImageOnStartup";
 	protected static final String DYN_NameHintResource = "nameHint";
 	protected static final String DYN_DescriptionHintResource = "descriptionHint";
+	private static final int REQUEST_CODE_GET_PICTURE = 0x3245;
 
 	private boolean isRestored;
 	private Uri restoredImage;
@@ -430,10 +431,11 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private void getPicture() {
 		try {
 			File file = Constants.Paths.getTempImage(getContext());
-			Intent intent = CaptureImage.saveTo(getContext(), file, 2048/*px*/);
+			Uri fileUri = Paths.getShareUri(getContext(), file);
+			Intent intent = CaptureImage.saveTo(getContext(), file, fileUri, 2048/*px*/);
 			intent.putExtra(CaptureImage.EXTRA_FORMAT, CompressFormat.JPEG);
 			intent.putExtra(CaptureImage.EXTRA_QUALITY, 85/*%*/);
-			startActivityForResult(intent, ImageTools.REQUEST_CODE_GET_PICTURE);
+			startActivityForResult(intent, REQUEST_CODE_GET_PICTURE);
 		} catch (Exception ex) {
 			LOG.error("Cannot get picture", ex);
 			App.toastUser(App.getError(ex, "Cannot get picture."));
@@ -442,7 +444,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	@Override public void onActivityResult(final int requestCode, int resultCode, final Intent data) {
 		switch (requestCode) {
-			case ImageTools.REQUEST_CODE_GET_PICTURE:
+			case REQUEST_CODE_GET_PICTURE:
 				if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
 					setCurrentImage(data.getData());
 				}

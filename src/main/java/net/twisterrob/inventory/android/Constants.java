@@ -42,6 +42,8 @@ public interface Constants {
 	class Paths {
 		/** Warning: this is used inlined in paths_share.xml because path doesn't support string resources */
 		private static final String PUBLIC_SHARE_FOLDER_NAME = "share";
+		/** Warning: this is used inlined in paths_share.xml because path doesn't support string resources */
+		private static final String PUBLIC_TEMP_FOLDER_NAME = "temp";
 		public static final String BACKUP_DATA_FILENAME = "data.xml";
 
 		public static @NonNull File getExportFile(File exportFolder) throws IOException {
@@ -70,7 +72,7 @@ public interface Constants {
 			return getShareFile(context, "jpg");
 		}
 		public static File getTempImage(Context context) throws IOException {
-			return getTemporaryCacheFile(context, "temp", "temp_", ".jpg");
+			return getTemporaryCacheFile(context, PUBLIC_TEMP_FOLDER_NAME, "temp_", ".jpg");
 		}
 		private static File getTemporaryCacheFile(Context context, String folderName, String prefix, String suffix)
 				throws IOException {
