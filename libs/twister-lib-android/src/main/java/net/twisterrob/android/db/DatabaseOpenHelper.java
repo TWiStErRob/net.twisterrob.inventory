@@ -44,6 +44,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private boolean devMode;
 	private boolean testMode;
 	private boolean dumpOnOpen;
+	private boolean allowDump = true;
 
 	public DatabaseOpenHelper(Context context, String dbName, int dbVersion) {
 		super(context, dbName, s_factory, dbVersion);
@@ -79,26 +80,33 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		return dumpOnOpen;
 	}
 
+	public boolean isAllowDump() {
+		return allowDump;
+	}
+	public void setAllowDump(boolean allowDump) {
+		this.allowDump = allowDump;
+	}
+
 	protected String[] getDataFiles() {
-		return new String[] {String.format(DB_DATA_FILE, dbName)};
+		return new String[] {String.format(Locale.ROOT, DB_DATA_FILE, dbName)};
 	}
 	protected String[] getSchemaFiles() {
-		return new String[] {String.format(DB_SCHEMA_FILE, dbName)};
+		return new String[] {String.format(Locale.ROOT, DB_SCHEMA_FILE, dbName)};
 	}
 	protected String[] getScriptFiles() {
-		return new String[] {String.format(DB_INIT_FILE, dbName)};
+		return new String[] {String.format(Locale.ROOT, DB_INIT_FILE, dbName)};
 	}
 	protected String[] getCleanFiles() {
-		return new String[] {String.format(DB_CLEAN_FILE, dbName)};
+		return new String[] {String.format(Locale.ROOT, DB_CLEAN_FILE, dbName)};
 	}
 	protected String[] getTestFiles() {
-		return new String[] {String.format(DB_TEST_FILE, dbName)};
+		return new String[] {String.format(Locale.ROOT, DB_TEST_FILE, dbName)};
 	}
 	protected String[] getDevelopmentFiles() {
-		return new String[] {String.format(DB_DEVELOPMENT_FILE, dbName)};
+		return new String[] {String.format(Locale.ROOT, DB_DEVELOPMENT_FILE, dbName)};
 	}
 	protected String[] getUpgradeFiles(int oldVersion, int newVersion) {
-		return new String[] {String.format(DB_UPGRADE_FILE, dbName, newVersion)};
+		return new String[] {String.format(Locale.ROOT, DB_UPGRADE_FILE, dbName, newVersion)};
 	}
 
 	@Override public void onCreate(SQLiteDatabase db) {
@@ -209,13 +217,13 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 				db.execSQL(statement);
 			}
 		} catch (SQLException ex) {
-			String message = String.format("Error executing database file: %s while executing\n%s",
+			String message = String.format(Locale.ROOT, "Error executing database file: %s while executing\n%s",
 					dbSchemaFile, statement);
 			LOG.error(message); // to have the SQL statement, but need additional log line to display stack trace
 			LOG.error("Error executing database file: {}", dbSchemaFile, ex);
 			throw new IllegalStateException(message, ex);
 		} catch (IOException ex) {
-			String message = String.format("Error executing database file: %s", dbSchemaFile);
+			String message = String.format(Locale.ROOT, "Error executing database file: %s", dbSchemaFile);
 			LOG.error(message, ex);
 			throw new IllegalStateException(message, ex);
 		} finally {
@@ -243,7 +251,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 
 	private void backupDB(SQLiteDatabase db, String when) {
-		if (hasWriteExternalPermission) {
+		if (allowDump && hasWriteExternalPermission) {
 			String date = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
 			String fileName = dbName + "." + date + "." + when + ".sqlite";
 			try {

@@ -13,6 +13,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.text.TextUtils;
 import android.view.*;
 
 import net.twisterrob.android.activity.AboutActivity;
@@ -169,11 +170,20 @@ public abstract class DrawerActivity extends BaseActivity {
 	}
 
 	private class TitleUpdater extends SimpleDrawerListener {
+		private CharSequence savedTitle;
+		private CharSequence savedSubTitle;
 		@Override public void onDrawerClosed(View view) {
-			getSupportActionBar().setTitle(getTitle());
+			setActionBarTitle(getTitle());
+			if (TextUtils.equals(savedTitle, getTitle())) {
+				setActionBarSubtitle(savedSubTitle);
+			}
+			savedSubTitle = null;
 		}
 		@Override public void onDrawerOpened(View drawerView) {
-			getSupportActionBar().setTitle(getText(R.string.navigation_title));
+			savedTitle = getSupportActionBar().getTitle();
+			savedSubTitle = getSupportActionBar().getSubtitle();
+			setActionBarTitle(getText(R.string.navigation_title));
+			setActionBarSubtitle(null);
 		}
 	}
 

@@ -73,7 +73,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 		super.onStart();
 		if (sunburst.getRoot() != null) {
 			setLoading(false);
-			setRootInternal(sunburst.getRoot());
+			refreshRoot();
 			diagram.setImageDrawable(sunburst);
 			return;
 		}
@@ -108,6 +108,10 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 		loadTreeTask.execute(createStartingNode());
 	}
 
+	@Override public void onResume() {
+		super.onResume();
+		refreshRoot();
+	}
 	@Override public void onDestroy() {
 		super.onDestroy();
 		if (loadTreeTask != null) {
@@ -146,11 +150,17 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 		sunburst.setHighlighted(sunburst.getRoot());
 		setRootInternal(root);
 	}
-	private void setRootInternal(Node root) {
+	private void setRootInternal(@NonNull Node root) {
 		sunburst.setRoot(root);
 		invalidateOptionsMenu();
 		if (eventsListener != null) {
 			eventsListener.rootChanged(root.getLabel());
+		}
+	}
+	private void refreshRoot() {
+		Node root = sunburst.getRoot();
+		if (root != null) {
+			setRootInternal(root);
 		}
 	}
 
@@ -217,7 +227,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 					}
 				}
 				walker.ignore.clear();
-				setRootInternal(sunburst.getRoot());
+				refreshRoot();
 				return true;
 			}
 			default:

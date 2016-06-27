@@ -16,6 +16,8 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 
+import static net.twisterrob.inventory.android.Constants.*;
+
 @WorkerThread
 @SuppressWarnings({"TryFinallyCanBeTryWithResources", "resource"})
 public class Database extends VariantDatabase {
@@ -41,6 +43,7 @@ public class Database extends VariantDatabase {
 		};
 //		App.getPrefEditor().remove(Prefs.CURRENT_LANGUAGE).apply();
 		m_helper.setDevMode(BuildConfig.DEBUG);
+		m_helper.setAllowDump(DISABLE);
 	}
 
 	public SQLiteDatabase getReadableDatabase() {
@@ -423,5 +426,16 @@ public class Database extends VariantDatabase {
 			db.endTransaction();
 		}
 		//db.execSQL("VACUUM"); // must be outside a transaction
+	}
+
+	public static void resetToTest() {
+		//noinspection WrongThread TODEL illegal detection http://b.android.com/207317
+		DatabaseOpenHelper helper = App.db().getHelper();
+		helper.close();
+		helper.setTestMode(true);
+		//noinspection resource it is closed by helper.close()
+		helper.getReadableDatabase();
+		helper.close();
+		helper.setTestMode(false);
 	}
 }

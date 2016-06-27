@@ -4,12 +4,22 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	>
-	<item
+	<group
 		android:id="@+id/debug"
-		android:title="@string/pref_activity_title"
 		android:icon="@android:drawable/sym_def_app_icon"
 		android:visible="@bool/in_test"
 		app:showAsAction="always"
-		tools:ignore="AlwaysShowAction"
-		/>
+		tools:ignore="AlwaysShowAction,HardcodedText"
+		>
+		<item android:id="@+id/debug_testdb" android:menuCategory="container" android:title="Reset to Test DB" />
+		<item android:id="@+id/debug_showCategory" android:menuCategory="container" android:title="Show Category" />
+		<item android:id="@+id/debug_showItem" android:menuCategory="container" android:title="Show Item" />
+		<item android:id="@+id/debug_exportCategories"
+		      android:menuCategory="container"
+		      android:title="Export categories" />
+		<item android:id="@+id/debug_capture" android:menuCategory="container" android:title="Capture  Image" />
+		<item android:id="@+id/debug_showImage"
+		      android:menuCategory="container"
+		      android:title="Show Image (InventoryProvider)" />
+	</group>
 </menu>

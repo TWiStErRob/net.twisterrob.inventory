@@ -8,7 +8,7 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.content.*;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.*;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.*;
@@ -17,13 +17,16 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.*;
 
+import com.bumptech.glide.Glide;
+
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.Room;
-import net.twisterrob.inventory.android.content.model.CategoryDTO;
+import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.MainFragment.MainEvents;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -32,6 +35,7 @@ import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.Prope
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents;
+import net.twisterrob.java.annotations.DebugHelper;
 
 public class MainActivity extends DrawerActivity
 		implements PropertiesEvents, RoomsEvents, CategoriesEvents, SunBurstEvents, MainEvents {
@@ -88,7 +92,7 @@ public class MainActivity extends DrawerActivity
 				} else {
 					setIntent((Intent)getFragment().getViewTag());
 					updateTitle();
-					getFragment().refresh(); // XXX why was this working a month ago?
+					getFragment().refresh(); // FIXME why was this working a month ago?
 				}
 			}
 		});
@@ -100,7 +104,6 @@ public class MainActivity extends DrawerActivity
 		setActionBarTitle(title); // to display now
 		setActionBarSubtitle(null); // clear to change
 		setTitle(title); // to persist and display later (e.g. onDrawerClosed)
-		// FIXME Navigation title still shows subtitle (e.g. Sunburst)
 	}
 
 	@Override protected void onNewIntent(Intent intent) {
@@ -233,30 +236,62 @@ public class MainActivity extends DrawerActivity
 		return true;
 	}
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getGroupId() == R.id.debug && onDebugOptionsItemSelected(item)) {
+			return true;
+		}
 		switch (item.getItemId()) {
-			case R.id.debug:
-				if (BuildConfig.DEBUG) {
-					quickDebug();
-					return true;
-				} // else fall back to default
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
+	@DebugHelper
 	@SuppressLint("all")
 	@SuppressWarnings("all")
-	private void quickDebug() {
-//		try {
-//			File file = new File(Paths.getPhoneHome(), "categories.html");
-//			new CategoryHelpBuilder(this).export(file);
-//		} catch (Exception ex) {
-//			LOG.error("Cannot export categories", ex);
-//		}
-//		startActivity(ImageActivity.show(InventoryContract.Item.imageUri(id)));
-//		startActivity(CategoryActivity.show(7000));
-//		startActivity(ItemViewActivity.show(1723));
-		startActivityForResult(CaptureImage.saveTo(this, new File("/sdcard/dev.jpg"), 8192), 32767);
+	public boolean onDebugOptionsItemSelected(MenuItem item) {
+		if (BuildConfig.DEBUG) {
+			switch (item.getItemId()) {
+				case R.id.debug_exportCategories:
+					try {
+						File file = new File(Paths.getPhoneHome(), "categories.html");
+						new CategoryHelpBuilder(this).export(file);
+					} catch (Exception ex) {
+						LOG.error("Cannot export categories", ex);
+					}
+					return true;
+				case R.id.debug_showImage:
+					startActivity(ImageActivity.show(InventoryContract.Item.imageUri(1L)));
+					return true;
+				case R.id.debug_showCategory:
+					startActivity(CategoryActivity.show(7000L));
+					return true;
+				case R.id.debug_showItem:
+					startActivity(ItemViewActivity.show(10010L));
+					return true;
+				case R.id.debug_capture:
+					File devFile = new File("/sdcard/dev.jpg");
+					startActivityForResult(CaptureImage.saveTo(this, devFile, Uri.fromFile(devFile), 8192), 32767);
+					return true;
+				case R.id.debug_testdb:
+					new AsyncTask<Void, Void, Void>() {
+						@Override protected void onPreExecute() {
+							Glide.get(getApplicationContext()).clearMemory();
+						}
+						@Override protected Void doInBackground(Void... params) {
+							Glide.get(getApplicationContext()).clearDiskCache();
+							Database.resetToTest();
+							return null;
+						}
+						@Override protected void onPostExecute(Void aVoid) {
+							getFragment().refresh();
+						}
+					}.execute();
+					return true;
+				default:
+					return false;
+			}
+		}
+		return false;
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -308,7 +343,7 @@ public class MainActivity extends DrawerActivity
 	}
 
 	public static Intent home() {
-		// Don't include EXTRA_PAGE to have the navigation drawer match with outside launch Intent
+		// Don't include EXTRA_PAGE to have the navigation drawer match with external launch Intent
 		return new Intent(App.getAppContext(), MainActivity.class);
 	}
 

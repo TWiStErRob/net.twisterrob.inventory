@@ -130,13 +130,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						"All of your belongings will be permanently deleted. Some test data will be set up.",
 						new CleanTask() {
 							@Override protected void doClean() {
-								DatabaseOpenHelper helper = App.db().getHelper();
-								helper.close();
-								helper.setTestMode(true);
-								//noinspection resource it is closed by helper.close()
-								helper.getReadableDatabase();
-								helper.close();
-								helper.setTestMode(false);
+								Database.resetToTest();
 							}
 						}
 				).show(getSupportFragmentManager(), null);
@@ -245,6 +239,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH) void recalculate() {
 		executePreferParallel(new GetFolderSizesTask(imageCacheSize),
 				GlideSetup.getCacheDir(this));
+		//noinspection WrongThread TODEL illegal detection http://b.android.com/207317
 		executePreferParallel(new GetFolderSizesTask(databaseSize),
 				getDatabasePath(App.db().getHelper().getDatabaseName()));
 		executePreferParallel(new GetFolderSizesTask(allSize),
