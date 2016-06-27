@@ -15,7 +15,7 @@ import net.twisterrob.inventory.android.BuildConfig;
  * This class is debug-only but in a way that's available in release builds too.
  * This is to be able to just enable debugging in a release build and get some basic help for debug. 
  */
-public class DebugHelperActivity extends VariantActivity {
+public abstract class DebugHelperActivity extends VariantActivity {
 	@SuppressWarnings("LoggerInitializedWithForeignClass") // looks better with BaseActivity
 	private static final Logger LOG = LoggerFactory.getLogger(BaseActivity.class);
 

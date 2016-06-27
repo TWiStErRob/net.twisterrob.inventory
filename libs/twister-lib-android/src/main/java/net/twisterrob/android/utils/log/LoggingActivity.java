@@ -2,7 +2,7 @@ package net.twisterrob.android.utils.log;
 
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.app.Activity;
 import android.content.*;
 import android.content.res.Configuration;
@@ -23,7 +23,8 @@ import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.*;
 
 @DebugHelper
-public abstract class LoggingActivity extends AppCompatActivity {
+@SuppressLint("Registered") // allow registration if wanted without needing to subclass
+public class LoggingActivity extends AppCompatActivity {
 	private static final Logger LOG = LoggerFactory.getLogger("Activity");
 
 	@SuppressWarnings("unused") // assign in child constructor for debugging something specific

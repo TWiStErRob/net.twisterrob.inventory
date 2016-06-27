@@ -9,7 +9,7 @@ import android.os.Build.VERSION_CODES;
 import net.twisterrob.java.utils.ReflectionTools;
 import net.twisterrob.java.utils.tostring.*;
 
-@TargetApi(VERSION_CODES.HONEYCOMB)
+@TargetApi(VERSION_CODES.HONEYCOMB_MR2)
 public class FragmentSavedStateStringer extends Stringer<SavedState> {
 	@Override public String getType(SavedState object) {
 		return "Fragment.SavedState";

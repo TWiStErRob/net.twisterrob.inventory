@@ -1,6 +1,7 @@
 package net.twisterrob.java.model;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class Location implements Serializable {
 	private static final long serialVersionUID = 6864526975444885245L;
@@ -27,7 +28,7 @@ public class Location implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("%.10f, %.10f", m_latitude, m_longitude);
+		return String.format(Locale.ROOT, "%.10f, %.10f", m_latitude, m_longitude);
 	}
 
 	@Override

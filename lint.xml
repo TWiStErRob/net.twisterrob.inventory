@@ -25,6 +25,9 @@
 		<ignore path="**/res/raw*/helpers.js" />
 		<ignore path="**/res/raw*/icon_*" />
 		<ignore path="**/res/raw*/shrink_resources.xml" />
+		<!-- Not used, but can't do anything about it :) -->
+		<ignore regexp="R\.bool\.in_prod" />
+		<ignore regexp="R\.bool\.in_test" />
 	</issue>
 	<issue id="SelectableText">
 		<!-- TODEL SelectableText lint check ignores style: http://b.android.com/57866 -->

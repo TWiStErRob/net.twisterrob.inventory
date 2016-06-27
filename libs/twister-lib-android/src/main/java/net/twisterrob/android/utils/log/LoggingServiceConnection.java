@@ -7,7 +7,9 @@ import android.os.IBinder;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.java.annotations.DebugHelper;
 
+@DebugHelper
 public class LoggingServiceConnection implements ServiceConnection {
 	private static final Logger LOG = LoggerFactory.getLogger("ServiceConnection");
 

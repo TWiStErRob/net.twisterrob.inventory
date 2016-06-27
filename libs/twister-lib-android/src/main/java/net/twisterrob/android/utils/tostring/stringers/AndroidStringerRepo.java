@@ -1,5 +1,6 @@
 package net.twisterrob.android.utils.tostring.stringers;
 
+import android.annotation.TargetApi;
 import android.app.FragmentSavedStateStringer;
 import android.content.Context;
 import android.os.Build.*;
@@ -12,6 +13,7 @@ import net.twisterrob.android.utils.tostring.stringers.detailed.*;
 import net.twisterrob.android.utils.tostring.stringers.name.ResourceNameStringer;
 import net.twisterrob.java.utils.tostring.StringerRepo;
 
+@TargetApi(VERSION_CODES.HONEYCOMB_MR2)
 public class AndroidStringerRepo {
 	public static void init(StringerRepo repo, Context context) {
 		repo.register(AbsSavedState.class, new AbsSavedStateStringer());
@@ -23,12 +25,12 @@ public class AndroidStringerRepo {
 				new StaggeredGridLayoutManagerSavedStateStringer());
 		repo.register("android.support.v4.widget.DrawerLayout$SavedState", new DrawerLayoutStateStringer());
 		repo.register(android.support.v4.app.Fragment.SavedState.class, new SupportFragmentSavedStateStringer());
-		if (VERSION.SDK_INT > VERSION_CODES.HONEYCOMB_MR2) {
+		if (VERSION_CODES.HONEYCOMB_MR2 <= VERSION.SDK_INT) {
 			repo.register(android.app.Fragment.SavedState.class, new FragmentSavedStateStringer());
 		}
 		repo.register("android.support.v4.app.FragmentManagerState", new SupportFragmentManagerStateStringer());
 		repo.register(android.support.v4.content.Loader.class, new SupportLoaderStringer());
-		if (VERSION.SDK_INT > VERSION_CODES.HONEYCOMB) {
+		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
 			repo.register(android.content.Loader.class, new LoaderStringer());
 		}
 		repo.register(android.content.Intent.class, new IntentStringer());

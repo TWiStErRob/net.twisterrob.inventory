@@ -1,12 +1,13 @@
 package net.twisterrob.android.wiring;
 
-import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 import net.twisterrob.android.R;
+import net.twisterrob.android.utils.tools.AndroidTools;
 
 public class DefaultValueUpdater implements OnItemSelectedListener {
 	private static final int INVALID = -1;
@@ -34,10 +35,9 @@ public class DefaultValueUpdater implements OnItemSelectedListener {
 		prevPosition = position;
 	}
 
-	protected int getStringID(AdapterView<?> parent, int position) {
+	protected @StringRes int getStringID(AdapterView<?> parent, int position) {
 		String newName = getString(parent, position);
-		Context context = parent.getContext();
-		return context.getResources().getIdentifier(newName, "string", context.getPackageName());
+		return AndroidTools.getStringResourceID(parent.getContext(), newName);
 	}
 	protected String getString(AdapterView<?> parent, int position) {
 		Cursor newData = (Cursor)parent.getAdapter().getItem(position);

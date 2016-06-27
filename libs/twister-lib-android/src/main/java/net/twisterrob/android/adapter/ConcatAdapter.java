@@ -61,7 +61,8 @@ public class ConcatAdapter extends Adapter<ViewHolder> {
 		// if there are multiple adapters at this position, then the first n-1 must be 0 length
 		List<Adapter> adapters = getAdapters(position);
 		if (adapters.isEmpty()) {
-			throw new IllegalStateException("Cannot find position: " + position + " in " + getCounts());
+			throw new IllegalStateException(String.format(Locale.ROOT,
+					"Cannot find position: %d in %s", position, getCounts()));
 		}
 		return adapters.listIterator(adapters.size()).previous();
 	}
@@ -82,7 +83,7 @@ public class ConcatAdapter extends Adapter<ViewHolder> {
 		int type = adapter.getItemViewType(position - getOffsetOf(adapter));
 		Adapter<? extends ViewHolder> overwritten = mViewTypes.put(type, adapter);
 		if (adapter != overwritten && overwritten != null) {
-			throw new IllegalStateException(String.format(
+			throw new IllegalStateException(String.format(Locale.ROOT,
 					"Two colliding adapters (%s, %s) have the same itemViewType #%d", adapter, overwritten, type));
 		}
 		return type;
