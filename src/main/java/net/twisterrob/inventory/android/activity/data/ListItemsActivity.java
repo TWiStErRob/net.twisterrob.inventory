@@ -45,6 +45,7 @@ public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> impl
 	}
 
 	@Override protected void updateName(String newName) {
+		//noinspection WrongThread FIXME DB on UI
 		App.db().updateList(getExtraListID(), newName);
 	}
 

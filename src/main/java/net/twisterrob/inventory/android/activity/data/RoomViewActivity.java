@@ -58,6 +58,7 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 	}
 
 	@Override protected void updateName(String newName) {
+		//noinspection WrongThread FIXME DB on UI
 		App.db().updateRoom(current.id, current.type, newName, current.description);
 	}
 

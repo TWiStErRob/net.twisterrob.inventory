@@ -25,6 +25,7 @@ public class Database extends VariantDatabase {
 
 	private final DatabaseOpenHelper m_helper;
 
+	@AnyThread
 	public Database(Context context) {
 		super(context);
 		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 1) {
@@ -58,6 +59,7 @@ public class Database extends VariantDatabase {
 		return new File(m_helper.getReadableDatabase().getPath());
 	}
 
+	@AnyThread
 	public DatabaseOpenHelper getHelper() {
 		return m_helper;
 	}

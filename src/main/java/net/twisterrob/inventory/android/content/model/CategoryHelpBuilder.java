@@ -16,6 +16,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.java.collections.RestoreStructureAlgo;
 
+@WorkerThread
 public class CategoryHelpBuilder {
 	private static final String LEVEL_COLUMN = "level";
 

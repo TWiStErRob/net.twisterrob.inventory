@@ -17,6 +17,7 @@ import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
 
+@UiThread
 public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, D> {
 	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewController.class);
 

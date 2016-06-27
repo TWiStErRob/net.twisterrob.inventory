@@ -76,6 +76,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 	}
 
 	@Override protected void updateName(String newName) {
+		//noinspection WrongThread FIXME DB on UI
 		App.db().updateItem(current.id, current.type, newName, current.description);
 	}
 

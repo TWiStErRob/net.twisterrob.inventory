@@ -928,10 +928,12 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
+	@UiThread
 	public interface PopupCallbacks<T> {
 		void finished(T value);
 	}
 
+	@UiThread
 	public static AlertDialog.Builder prompt(final Context context, final PopupCallbacks<String> callbacks) {
 		final EditText input = new EditText(context);
 		input.setSingleLine(true);

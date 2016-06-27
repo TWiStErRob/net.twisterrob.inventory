@@ -62,6 +62,7 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 	}
 
 	@Override protected void updateName(String newName) {
+		//noinspection WrongThread FIXME DB on UI
 		App.db().updateProperty(current.id, current.type, newName, current.description);
 	}
 

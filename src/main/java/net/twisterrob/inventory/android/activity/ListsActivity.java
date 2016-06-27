@@ -18,12 +18,14 @@ public class ListsActivity extends SingleFragmentActivity<ListListFragment> impl
 	}
 
 	@Override public void listSelected(long listID) {
-		App.db().addListEntry(listID, getExtraItemID()); // FIXME DB on UI
+		//noinspection WrongThread FIXME DB on UI
+		App.db().addListEntry(listID, getExtraItemID());
 		App.toastUser("Item has been added to a list.");
 		getFragment().refresh();
 	}
 	@Override public void listRemoved(long listID) {
-		App.db().deleteListEntry(listID, getExtraItemID()); // FIXME DB on UI
+		//noinspection WrongThread FIXME DB on UI
+		App.db().deleteListEntry(listID, getExtraItemID());
 		App.toastUser("Item has been removed from a list.");
 		getFragment().refresh();
 	}

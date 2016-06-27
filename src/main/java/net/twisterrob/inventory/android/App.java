@@ -125,6 +125,7 @@ public class App extends Application {
 			LOG.debug(message);
 			App.toast(message);
 			new BackgroundExecution(new Runnable() {
+				@WorkerThread
 				@Override public void run() {
 					try {
 						database.updateCategoryCache(App.getAppContext());
@@ -138,8 +139,14 @@ public class App extends Application {
 		}
 	}
 
+	@SuppressWarnings("WrongThread")
 	@Override public void onTerminate() {
-		database.getWritableDatabase().close();
+		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+		try {
+			database.getWritableDatabase().close();
+		} finally {
+			StrictMode.setThreadPolicy(originalPolicy);
+		}
 		super.onTerminate();
 	}
 

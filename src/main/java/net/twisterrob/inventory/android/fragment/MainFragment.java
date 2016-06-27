@@ -117,7 +117,8 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 									return;
 								}
 								try {
-									App.db().createList(value); // FIXME DB on UI
+									//noinspection WrongThread FIXME DB on UI
+									App.db().createList(value);
 									listsController.refresh();
 								} catch (Exception ex) {
 									LOG.warn("Cannot create list '{}'", value, ex);
@@ -142,7 +143,8 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 					}
 					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
 						// TODO make swipe delete the item
-						App.db().deleteRecentsOfItem(recyclerViewItemID); // FIXME DB on UI
+						//noinspection WrongThread FIXME DB on UI
+						App.db().deleteRecentsOfItem(recyclerViewItemID);
 						recentsController.refresh();
 						return true;
 					}
@@ -232,7 +234,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 			// float perc = cursor.getFloat(cursor.getColumnIndexOrThrow("percentage"));
 			// int pRank = cursor.getInt(cursor.getColumnIndexOrThrow("populationRank"));
 
-			holder.details.setText(String.format("%1$s (%2$dx)", visit, pop));
+			holder.details.setText(String.format(Locale.getDefault(), "%1$s (%2$dx)", visit, pop));
 		}
 	}
 

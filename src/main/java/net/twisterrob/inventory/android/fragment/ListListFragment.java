@@ -52,7 +52,8 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 									return;
 								}
 								try {
-									long id = App.db().createList(value); // FIXME DB on UI
+									//noinspection WrongThread FIXME DB on UI
+									long id = App.db().createList(value);
 									eventsListener.listSelected(id);
 								} catch (Exception ex) {
 									LOG.warn("Cannot create list {}", value, ex);
