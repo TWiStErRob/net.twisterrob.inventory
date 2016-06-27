@@ -274,6 +274,9 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				//.placeholder(new ColorDrawable(Color.BLACK)) // immediately hide the preview to prevent weird jump
 				.fitCenter() // make sure full image is visible
 				;
+		@SuppressWarnings("unchecked") // TODO report IDEA doesn't pick up this unchecked warning
+				MultiRequestListener<Object, Bitmap> listener =
+				new MultiRequestListener<>(visualFeedbackListener, target);
 		image
 				.format(DecodeFormat.PREFER_ARGB_8888) // don't lose quality (may be disabled to gain memory for crop)
 				// need the special target/listener
@@ -284,7 +287,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 						.sizeMultiplier(0.1f)
 						.animate(android.R.anim.fade_in) // fade thumbnail in (=crossFade from background)
 				)
-				.listener(new MultiRequestListener<>(visualFeedbackListener, target))
+				.listener(listener)
 				.error(R.drawable.image_error)
 				.crossFade(150) // fade from thumb to image
 				.into(target)
