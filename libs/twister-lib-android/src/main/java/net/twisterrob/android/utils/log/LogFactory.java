@@ -2,6 +2,7 @@ package net.twisterrob.android.utils.log;
 
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
+@Deprecated @SuppressWarnings("deprecation")
 public final class LogFactory {
 	private static final AtomicReferenceArray<Log> LOGS = new AtomicReferenceArray<>(Tag.values().length);
 

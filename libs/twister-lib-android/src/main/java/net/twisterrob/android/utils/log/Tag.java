@@ -7,6 +7,7 @@ import android.util.Log;
  *
  * @author Zoltán Kiss
  */
+@Deprecated
 public enum Tag {
 	/*
 	 * Bear in mind that the length of tags cannot be longer than 23 characters according to the Android API.

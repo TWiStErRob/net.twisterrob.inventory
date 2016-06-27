@@ -7,9 +7,11 @@ import net.twisterrob.java.utils.StringTools;
 /**
  * Class to hide the complexity of Logging in android.
  *
+ * @deprecated only used by deprecated classes, use SLF4J Logger
  * @author Zoltán Kiss
  * @author Róbert Papp
  */
+@Deprecated @SuppressWarnings("deprecation")
 @SuppressLint("LogConditional") // CONSIDER automatic Log.isLoggable(...) calls
 public class Log {
 	private final String m_tag;
