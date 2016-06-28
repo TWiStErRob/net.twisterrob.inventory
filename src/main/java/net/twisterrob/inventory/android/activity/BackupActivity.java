@@ -20,7 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import net.twisterrob.android.content.loader.AsyncLoader;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
@@ -47,7 +47,8 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			Collection<File> history = (Collection<File>)savedInstanceState.getSerializable(EXTRA_HISTORY);
 			//noinspection ConstantConditions if we're restoring onSaveInstanceState must have filled it
 			this.history.addAll(history);
-			filePicked(this.history.peek(), false);
+			this.history.push(new File("")); // pretend current directory after restore
+			backToLastValidDirectory(); // essentially backing out of it, so the fake dir won't ever be relevant
 		} else {
 			filePicked(getDir(), true);
 		}
@@ -74,12 +75,20 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	}
 
 	@Override public void onBackPressed() {
-		if (history.size() > 1) {
-			history.pop();
-			filePicked(history.peek(), false);
-			return;
+		if (!backToLastValidDirectory()) {
+			super.onBackPressed();
 		}
-		super.onBackPressed();
+	}
+	private boolean backToLastValidDirectory() {
+		while (!history.isEmpty()) {
+			history.pop();
+			File dir = history.peek();
+			if (IOTools.isValidDir(dir)) {
+				filePicked(dir, false);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,15 +115,22 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 	}
 
-	public void filePicked(File file, boolean addHistory) {
+	public void filePicked(@NonNull File file, boolean addHistory) {
 		LOG.trace("File picked (dir={}, exists={}): {}", file.isDirectory(), file.exists(), file);
-		if (file.isDirectory()) {
-			if (addHistory) {
-				history.push(file);
-			}
-			controller.startLoad(Intents.bundleFrom(EXTRA_PATH, file));
-		} else {
+		if (IOTools.isValidFile(file)) {
 			ImportFragment.create(this, getSupportFragmentManager()).execute(file);
+		} else {
+			File dir = file;
+			while (!IOTools.isValidDir(dir)) {
+				dir = dir.getParentFile();
+			}
+			if (dir != file) {
+				App.toastUser(String.format(Locale.ROOT, "%s is not a directory, using %s.", file, dir));
+			}
+			if (addHistory) {
+				history.push(dir);
+			}
+			controller.startLoad(Intents.bundleFrom(EXTRA_PATH, dir));
 		}
 	}
 
@@ -251,13 +267,14 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	}
 
 	private class BackupListController extends RecyclerViewLoaderController<ImportFilesAdapter, List<File>> {
+		private static final int LOADER_ID = 1;
 		public BackupListController() {
 			super(BackupActivity.this);
 		}
 
 		@Override public void startLoad(Bundle args) {
-			Loader<?> previous = getLoaderManager().getLoader(1);
-			Loader<?> current = getLoaderManager().restartLoader(1, args, new FileLoaderCallbacks());
+			Loader<?> previous = getLoaderManager().getLoader(LOADER_ID);
+			Loader<?> current = getLoaderManager().restartLoader(LOADER_ID, args, new FileLoaderCallbacks());
 			if (current.getId() == 0 && previous != null) {
 				// TODO figure out why this is needed: when the user taps on two folders at the same time
 				// this method is called twice, but restartLoader doesn't like to be called in quick succession
@@ -273,7 +290,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			}
 		}
 		@Override public void refresh() {
-			getLoaderManager().getLoader(1).onContentChanged();
+			getLoaderManager().getLoader(LOADER_ID).onContentChanged();
 		}
 
 		@Override protected @NonNull ImportFilesAdapter setupList() {

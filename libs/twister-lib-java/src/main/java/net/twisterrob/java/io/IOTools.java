@@ -364,4 +364,10 @@ public /*static*/ abstract class IOTools {
 	protected IOTools() {
 		// static utility class
 	}
+	public static boolean isValidDir(File dir) {
+		return dir != null && dir.isDirectory() && dir.exists();
+	}
+	public static boolean isValidFile(File file) {
+		return file != null && file.isFile() && file.exists();
+	}
 }

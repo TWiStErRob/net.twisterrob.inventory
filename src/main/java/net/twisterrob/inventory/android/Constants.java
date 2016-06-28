@@ -53,7 +53,14 @@ public interface Constants {
 			return new File(exportFolder, fileName);
 		}
 		public static @NonNull File getPhoneHome() {
-			return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+			File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+			if (!IOTools.isValidDir(dir)) { // fall back to /sdcard
+				dir = Environment.getExternalStorageDirectory();
+			}
+			if (!IOTools.isValidDir(dir)) { // fall back to /
+				dir = Environment.getRootDirectory();
+			}
+			return dir;
 		}
 
 		/**
