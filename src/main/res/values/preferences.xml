@@ -70,24 +70,6 @@
 	<string name="pref_showWelcome_title">Show Welcome</string>
 	<string name="pref_showWelcome" translatable="false">showWelcome</string>
 	<bool name="pref_showWelcome_default" translatable="false">true</bool>
-	<bool name="pref_showWelcome_disable" translatable="false">false</bool>
 	<string name="pref_showWelcome_desc">Asks for what to do on startup.</string>
-	<string name="firstAction_title">What do you want to do first?</string>
-	<string name="firstAction_none_title">Start using the app</string>
-	<string name="firstAction_none" translatable="false">none</string>
-	<string name="firstAction_import_title">Import backup</string>
-	<string name="firstAction_import" translatable="false">import</string>
-	<string name="firstAction_sample_title">Populate sample inventory</string>
-	<string name="firstAction_sample" translatable="false">sample</string>
-	<string-array name="firstAction_entries">
-		<item>@string/firstAction_sample_title</item>
-		<item>@string/firstAction_import_title</item>
-		<item>@string/firstAction_none_title</item>
-	</string-array>
-	<string-array name="firstAction_values" translatable="false">
-		<item>@string/firstAction_sample</item>
-		<item>@string/firstAction_import</item>
-		<item>@string/firstAction_none</item>
-	</string-array>
 
 </resources>

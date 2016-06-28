@@ -13,6 +13,11 @@
 	<string name="navigation_title">Navigation</string>
 	<string name="image_title">Image</string>
 	<string name="image_loading_external">Preparing image for external app…</string>
+	<string name="welcome_title">First startup… Welcome!</string>
+	<string name="welcome_question">Would you like me to create a sample inventory for you?
+		<i><font color="grey">(You can also do it later from the action bar if your inventory is empty.)</font></i>
+	</string>
+	<string name="welcome_backup">Import backup</string>
 
 	<string name="sunburst_title">Sunburst Diagram</string>
 	<string name="action_picture_take">Take Picture</string>
@@ -29,6 +34,7 @@
 	<string name="action_sunburst_open">View in Inventory</string>
 	<string name="action_sunburst_ignore">Hide from diagram</string>
 	<string name="action_sunburst_ignore_reset">Display all hidden</string>
+	<string name="action_demo_inventory">Create sample inventory</string>
 
 	<plurals name="action_delete_title">
 		<item quantity="one">Deleting %2$s &#8220;%3$s&#8221;</item>

@@ -7,7 +7,7 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.content.*;
-import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.*;
 import android.support.annotation.NonNull;
@@ -94,42 +94,40 @@ public class MainActivity extends DrawerActivity
 				} else {
 					setIntent((Intent)getFragment().getViewTag());
 					updateTitle();
-					getFragment().refresh(); // FIXME why was this working a month ago?
+					refresh(); // FIXME why was this working a month ago?
 				}
 			}
 		});
 
 		if (App.getBPref(R.string.pref_showWelcome, R.bool.pref_showWelcome_default)) {
-			Context context = this;
-			final Resources res = context.getResources();
-			AlertDialog dialog = new AlertDialog.Builder(context)
-					.setTitle(R.string.firstAction_title)
-					.setItems(R.array.firstAction_entries, new DialogInterface.OnClickListener() {
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.welcome_title)
+					.setMessage(R.string.welcome_question)
+					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							App.setBPref(R.string.pref_showWelcome, false);
+							populateSampleInventory();
+						}
+					})
+					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 						@Override public void onClick(DialogInterface dialog, int which) {
-							String[] values = res.getStringArray(R.array.firstAction_values);
-							String selected = values[which];
-							if (selected.equals(res.getString(R.string.firstAction_import))) {
-								startActivity(BackupActivity.chooser());
-							} else if (selected.equals(res.getString(R.string.firstAction_sample))) {
-								try {
-									App.db().getHelper().execFile("MagicHomeInventory.demo.sql");
-								} catch (IOException ex) {
-									LOG.error("Cannot populate demo sample", ex);
-									App.toastUser("Cannot populate demo sample.");
-								} finally {
-									getFragment().refresh();
-								}
-							}
+							App.setBPref(R.string.pref_showWelcome, false);
 						}
 					})
-					.setOnDismissListener(new DialogInterface.OnDismissListener() {
-						@Override public void onDismiss(DialogInterface dialog) {
-							App.setBPref(R.string.pref_showWelcome, res.getBoolean(R.bool.pref_showWelcome_disable));
+					.setNeutralButton(R.string.welcome_backup, new DialogInterface.OnClickListener() {
+						@Override public void onClick(DialogInterface dialog, int which) {
+							App.setBPref(R.string.pref_showWelcome, false);
+							startActivity(BackupActivity.chooser());
 						}
 					})
-					.create();
-			dialog.setCanceledOnTouchOutside(true);
-			dialog.show();
+					.setCancelable(true)
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						@Override public void onCancel(DialogInterface dialog) {
+							App.setBPref(R.string.pref_showWelcome, true); // just to be explicit
+							MainActivity.this.finish();
+						}
+					})
+					.show();
 		}
 	}
 	private void updateTitle() {
@@ -230,7 +228,11 @@ public class MainActivity extends DrawerActivity
 
 	@Override protected void onResume() {
 		super.onResume();
+		refresh();
+	}
+	private void refresh() {
 		getFragment().refresh();
+		invalidateOptionsMenu(); // make the populate icon appear/disappear (may hide overflow altogether)
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -275,8 +277,43 @@ public class MainActivity extends DrawerActivity
 			return true;
 		}
 		switch (item.getItemId()) {
+			case R.id.action_demo_inventory:
+				populateSampleInventory();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean result = super.onPrepareOptionsMenu(menu);
+		MenuItem item = menu.findItem(R.id.action_demo_inventory);
+		item.setVisible(isInventoryEmpty());
+		return result;
+	}
+	private void populateSampleInventory() {
+		try {
+			if (isInventoryEmpty()) {
+				//noinspection WrongThread FIXME DB on UI thread
+				App.db().getHelper().execFile("MagicHomeInventory.demo.sql");
+			} else {
+				throw new IOException("Cannot add demo sample to a non-empty inventory.");
+			}
+		} catch (IOException ex) {
+			LOG.error("Cannot populate demo sample", ex);
+			App.toastUser("Cannot populate demo sample, sorry.");
+		} finally {
+			refresh();
+		}
+	}
+	@SuppressWarnings("TryFinallyCanBeTryWithResources")
+	private boolean isInventoryEmpty() {
+		//noinspection WrongThread FIXME DB on UI thread
+		Cursor cursor = App.db().listProperties();
+		try {
+			return cursor.getCount() == 0;
+		} finally {
+			cursor.close();
 		}
 	}
 
@@ -318,7 +355,7 @@ public class MainActivity extends DrawerActivity
 							return null;
 						}
 						@Override protected void onPostExecute(Void aVoid) {
-							getFragment().refresh();
+							refresh();
 						}
 					}.execute();
 					return true;
