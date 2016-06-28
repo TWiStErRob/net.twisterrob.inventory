@@ -21,6 +21,7 @@ import android.view.*;
 
 import com.bumptech.glide.Glide;
 
+import net.twisterrob.android.BuildConfig;
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
@@ -107,11 +108,13 @@ public class MainActivity extends DrawerActivity
 						public void onClick(DialogInterface dialog, int whichButton) {
 							App.setBPref(R.string.pref_showWelcome, false);
 							populateSampleInventory();
+							App.toastUser(getString(R.string.welcome_help_tip));
 						}
 					})
 					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 						@Override public void onClick(DialogInterface dialog, int which) {
 							App.setBPref(R.string.pref_showWelcome, false);
+							App.toastUser(getString(R.string.welcome_help_tip));
 						}
 					})
 					.setNeutralButton(R.string.welcome_backup, new DialogInterface.OnClickListener() {

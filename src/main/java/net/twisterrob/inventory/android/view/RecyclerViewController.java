@@ -63,19 +63,25 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 	};
 	private final RecyclerView.AdapterDataObserver emptyObserver = new RecyclerView.AdapterDataObserver() {
 		@Override public void onChanged() {
-			updateEmpty();
+			// delay updating the empty view, otherwise it's possible that the empty view will show too soon
+			// right below the list that is animating and that looks buggy
+			list.post(new Runnable() {
+				@Override public void run() {
+					updateEmpty();
+				}
+			});
 		}
 		@Override public void onItemRangeChanged(int positionStart, int itemCount) {
-			//updateEmpty();
+			//onChanged();
 		}
 		@Override public void onItemRangeInserted(int positionStart, int itemCount) {
-			updateEmpty();
+			onChanged();
 		}
 		@Override public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-			//updateEmpty();
+			//onChanged();
 		}
 		@Override public void onItemRangeRemoved(int positionStart, int itemCount) {
-			updateEmpty();
+			onChanged();
 		}
 	};
 

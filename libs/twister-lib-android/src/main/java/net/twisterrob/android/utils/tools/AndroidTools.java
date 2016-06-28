@@ -31,6 +31,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.*;
 import android.support.v4.widget.*;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.*;
 import android.view.*;
@@ -142,6 +143,7 @@ public /*static*/ abstract class AndroidTools {
 		try {
 			return context.getText(id);
 		} catch (NotFoundException ex) {
+			//noinspection UnnecessaryInitCause NotFoundException(String, ex) was added in API 24
 			throw (NotFoundException)new NotFoundException(
 					String.format(Locale.ROOT, "Resource '%s' is not a valid string in '%s'",
 							stringResourceName, context.getPackageName())

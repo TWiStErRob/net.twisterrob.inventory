@@ -18,6 +18,7 @@ import android.os.StrictMode.*;
 import android.os.StrictMode.ThreadPolicy.Builder;
 import android.preference.PreferenceManager;
 import android.support.annotation.*;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -123,7 +124,9 @@ public class App extends Application {
 			String to = StringTools.toLocale(currentLanguage).getDisplayName();
 			String message = getAppContext().getString(R.string.message_locale_changed, from, to);
 			LOG.debug(message);
-			App.toast(message);
+			if (!TextUtils.isEmpty(from)) {
+				App.toast(message);
+			}
 			new BackgroundExecution(new Runnable() {
 				@WorkerThread
 				@Override public void run() {

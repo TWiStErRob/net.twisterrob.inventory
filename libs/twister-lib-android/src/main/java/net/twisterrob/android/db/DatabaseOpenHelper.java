@@ -14,6 +14,7 @@ import android.database.sqlite.*;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.os.Build.*;
 import android.os.Environment;
+import android.support.annotation.WorkerThread;
 
 import static android.Manifest.permission.*;
 
@@ -201,6 +202,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		long executionTime = (end - time) / 1000 / 1000;
 		LOG.debug("Finished ({} ms) executed file {} into database: {}", executionTime, dbFile, dbToString(db));
 	}
+	@WorkerThread
 	public void execFile(String assetPath) throws IOException, SQLException {
 		realExecuteFile(getWritableDatabase(), assetPath);
 	}
