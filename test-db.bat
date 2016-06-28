@@ -32,6 +32,8 @@ echo select %NOW%, 'verify.sql'; >> %TARGET%
 type %ASSETSD%\MagicHomeInventory.verify.sql >> %TARGET%
 echo select %NOW%, 'test.sql'; >> %TARGET%
 type %ASSETSD%\MagicHomeInventory.test.sql >> %TARGET%
+echo select %NOW%, 'demo.sql'; >> %TARGET%
+type %ASSETS%\MagicHomeInventory.demo.sql >> %TARGET%
 
 echo select %NOW%, 'Tear-down and initialize again'; >> %TARGET%
 echo select %NOW%, 'clean.sql'; >> %TARGET%
@@ -50,6 +52,8 @@ echo select %NOW%, 'verify.sql'; >> %TARGET%
 type %ASSETSD%\MagicHomeInventory.verify.sql >> %TARGET%
 echo select %NOW%, 'test.sql'; >> %TARGET%
 type %ASSETSD%\MagicHomeInventory.test.sql >> %TARGET%
+echo select %NOW%, 'demo.sql'; >> %TARGET%
+type %ASSETS%\MagicHomeInventory.demo.sql >> %TARGET%
 
 echo select %NOW%, '%BASE_NAME%.sql'; >> %TARGET%
 

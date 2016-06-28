@@ -176,6 +176,11 @@ public class App extends Application {
 		String prefDefaultValue = App.getAppContext().getResources().getString(defaultRes);
 		return App.getPrefs().getString(prefKey, prefDefaultValue);
 	}
+	/** Set boolean Preference */
+	public static void setBPref(@StringRes int prefName, boolean value) {
+		String prefKey = App.getAppContext().getString(prefName);
+		getPrefEditor().putBoolean(prefKey, value).apply();
+	}
 	/** Set String Preference */
 	public static void setSPref(@StringRes int prefName, String value) {
 		String prefKey = App.getAppContext().getString(prefName);

@@ -201,33 +201,38 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		long executionTime = (end - time) / 1000 / 1000;
 		LOG.debug("Finished ({} ms) executed file {} into database: {}", executionTime, dbFile, dbToString(db));
 	}
-
-	private void realExecuteFile(SQLiteDatabase db, String dbSchemaFile) {
-		InputStream s = null;
-		String statement = null;
-		BufferedReader reader = null;
+	public void execFile(String assetPath) throws IOException, SQLException {
+		realExecuteFile(getWritableDatabase(), assetPath);
+	}
+	private void realExecuteFile(SQLiteDatabase db, String assetPath) {
 		try {
-			//noinspection resource closed in finally
-			s = assets.open(dbSchemaFile);
-			reader = new BufferedReader(new InputStreamReader(s, IOTools.ENCODING));
-			while ((statement = DatabaseOpenHelper.getNextStatement(reader)) != null) {
+			realExecuteFile(db, new InputStreamReader(assets.open(assetPath), IOTools.ENCODING));
+		} catch (SQLException | IOException ex) {
+			String message = String.format(Locale.ROOT, "Error executing database file: %s", assetPath);
+			LOG.error(message, ex);
+			throw new IllegalStateException(message, ex);
+		}
+	}
+	private static void realExecuteFile(SQLiteDatabase db, Reader reader) throws IOException, SQLException {
+		String statement = null;
+		BufferedReader buffered = null;
+		try {
+			buffered = new BufferedReader(reader);
+			while ((statement = getNextStatement(buffered)) != null) {
 				if (statement.trim().isEmpty()) {
 					continue;
 				}
 				db.execSQL(statement);
 			}
 		} catch (SQLException ex) {
-			String message = String.format(Locale.ROOT, "Error executing database file: %s while executing\n%s",
-					dbSchemaFile, statement);
-			LOG.error(message); // to have the SQL statement, but need additional log line to display stack trace
-			LOG.error("Error executing database file: {}", dbSchemaFile, ex);
-			throw new IllegalStateException(message, ex);
-		} catch (IOException ex) {
-			String message = String.format(Locale.ROOT, "Error executing database file: %s", dbSchemaFile);
-			LOG.error(message, ex);
-			throw new IllegalStateException(message, ex);
+			String message = String.format(Locale.ROOT, "Error while executing\n%s", statement);
+			LOG.error(message);
+			SQLException decorated = new SQLException(message);
+			//noinspection UnnecessaryInitCause SQLException(String,ex) was introduced in API 16
+			decorated.initCause(ex);
+			throw decorated;
 		} finally {
-			IOTools.ignorantClose(s, reader);
+			IOTools.ignorantClose(reader, buffered);
 		}
 	}
 

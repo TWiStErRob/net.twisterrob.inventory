@@ -1,17 +1,19 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.content.*;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.*;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.*;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
@@ -96,6 +98,39 @@ public class MainActivity extends DrawerActivity
 				}
 			}
 		});
+
+		if (App.getBPref(R.string.pref_showWelcome, R.bool.pref_showWelcome_default)) {
+			Context context = this;
+			final Resources res = context.getResources();
+			AlertDialog dialog = new AlertDialog.Builder(context)
+					.setTitle(R.string.firstAction_title)
+					.setItems(R.array.firstAction_entries, new DialogInterface.OnClickListener() {
+						@Override public void onClick(DialogInterface dialog, int which) {
+							String[] values = res.getStringArray(R.array.firstAction_values);
+							String selected = values[which];
+							if (selected.equals(res.getString(R.string.firstAction_import))) {
+								startActivity(BackupActivity.chooser());
+							} else if (selected.equals(res.getString(R.string.firstAction_sample))) {
+								try {
+									App.db().getHelper().execFile("MagicHomeInventory.demo.sql");
+								} catch (IOException ex) {
+									LOG.error("Cannot populate demo sample", ex);
+									App.toastUser("Cannot populate demo sample.");
+								} finally {
+									getFragment().refresh();
+								}
+							}
+						}
+					})
+					.setOnDismissListener(new DialogInterface.OnDismissListener() {
+						@Override public void onDismiss(DialogInterface dialog) {
+							App.setBPref(R.string.pref_showWelcome, res.getBoolean(R.bool.pref_showWelcome_disable));
+						}
+					})
+					.create();
+			dialog.setCanceledOnTouchOutside(true);
+			dialog.show();
+		}
 	}
 	private void updateTitle() {
 		FragmentManager fm = getSupportFragmentManager();
@@ -297,6 +332,7 @@ public class MainActivity extends DrawerActivity
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == 32767 && resultCode == RESULT_OK) {
 			startActivity(ImageActivity.show(data.getData()));
+			return;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -343,13 +379,15 @@ public class MainActivity extends DrawerActivity
 	}
 
 	public static Intent home() {
-		// Don't include EXTRA_PAGE to have the navigation drawer match with external launch Intent
-		return new Intent(App.getAppContext(), MainActivity.class);
+		return list(PAGE_HOME);
 	}
 
 	public static Intent list(String page) {
 		Intent intent = new Intent(App.getAppContext(), MainActivity.class);
-		intent.putExtra(EXTRA_PAGE, page);
+		if (!PAGE_HOME.equals(page)) {
+			// Don't include EXTRA_PAGE for home() to have the navigation drawer match with external launch Intent
+			intent.putExtra(EXTRA_PAGE, page);
+		}
 		return intent;
 	}
 	public static Intent improveCategories(Context context, Long categoryId) {

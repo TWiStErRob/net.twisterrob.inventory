@@ -22,16 +22,19 @@
 	<string name="pref_suggestCategory_title">Suggest Categories</string>
 	<string name="pref_suggestCategory" translatable="false">suggestCategory</string>
 	<string name="pref_suggestCategory_default" translatable="false">@string/pref_suggestCategory_unmatched</string>
+	<!-- Suggest Categories every time regardless of current selection. -->
+	<string name="pref_suggestCategory_always_title">Always</string>
 	<string name="pref_suggestCategory_always" translatable="false">always</string>
+	<!-- Suggest Categories when suggestions contain better ones than current. -->
+	<string name="pref_suggestCategory_unmatched_title">When better</string>
 	<string name="pref_suggestCategory_unmatched" translatable="false">unmatched</string>
+	<!-- Never suggest Categories. Manual suggestion is still there via action_category_suggest in context menu -->
+	<string name="pref_suggestCategory_manual_title">Never</string>
 	<string name="pref_suggestCategory_manual" translatable="false">manual</string>
 	<string-array name="pref_suggestCategory_entries">
-		<!-- Suggest Categories every time regardless of current selection. -->
-		<item>Always</item>
-		<!-- Suggest Categories when suggestions contain better ones than current. -->
-		<item>When better</item>
-		<!-- Never suggest Categories. Manual suggestion is still there via action_category_suggest in context menu -->
-		<item>Never</item>
+		<item>@string/pref_suggestCategory_always_title</item>
+		<item>@string/pref_suggestCategory_unmatched_title</item>
+		<item>@string/pref_suggestCategory_manual_title</item>
 	</string-array>
 	<string-array name="pref_suggestCategory_values" translatable="false">
 		<item>@string/pref_suggestCategory_always</item>
@@ -63,5 +66,28 @@
 	<integer name="pref_sunburstIgnoreLevel_default" translatable="false">4</integer>
 	<string name="pref_sunburstIgnoreLevel_desc">Sunburst diagram can be slow if there are a lot of items shown.
 		Decrease this setting to ignore single items from displaying. Values below 3 are not advised.</string>
+
+	<string name="pref_showWelcome_title">Show Welcome</string>
+	<string name="pref_showWelcome" translatable="false">showWelcome</string>
+	<bool name="pref_showWelcome_default" translatable="false">true</bool>
+	<bool name="pref_showWelcome_disable" translatable="false">false</bool>
+	<string name="pref_showWelcome_desc">Asks for what to do on startup.</string>
+	<string name="firstAction_title">What do you want to do first?</string>
+	<string name="firstAction_none_title">Start using the app</string>
+	<string name="firstAction_none" translatable="false">none</string>
+	<string name="firstAction_import_title">Import backup</string>
+	<string name="firstAction_import" translatable="false">import</string>
+	<string name="firstAction_sample_title">Populate sample inventory</string>
+	<string name="firstAction_sample" translatable="false">sample</string>
+	<string-array name="firstAction_entries">
+		<item>@string/firstAction_sample_title</item>
+		<item>@string/firstAction_import_title</item>
+		<item>@string/firstAction_none_title</item>
+	</string-array>
+	<string-array name="firstAction_values" translatable="false">
+		<item>@string/firstAction_sample</item>
+		<item>@string/firstAction_import</item>
+		<item>@string/firstAction_none</item>
+	</string-array>
 
 </resources>

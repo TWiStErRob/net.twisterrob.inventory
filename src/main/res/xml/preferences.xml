@@ -88,6 +88,12 @@
 			android:defaultValue="@bool/pref_highlightSuggestion_default"
 			android:summary="@string/pref_highlightSuggestion_desc"
 			/>
+		<CheckBoxPreference
+			android:key="@string/pref_showWelcome"
+			android:title="@string/pref_showWelcome_title"
+			android:defaultValue="@bool/pref_showWelcome_default"
+			android:summary="@string/pref_showWelcome_desc"
+			/>
 		<Preference
 			android:title="@string/manage_space_title"
 			>
