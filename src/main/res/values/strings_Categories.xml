@@ -100,7 +100,7 @@
 
 
 	<!--=========================================================================================================-->
-	<string name="category_furniture" level="0" icon="@raw/category_sofa">Furniture</string>
+	<string name="category_furniture" level="0" icon="@raw/category_wardrobe">Furniture</string>
 	<string name="category_furniture_keywords">@string/empty</string>
 	<string name="category_furniture_description">stuff you may need friends to move</string>
 
@@ -116,10 +116,10 @@
 	<string name="category_fixture_electric" level="2">electric</string>
 	<string name="category_fixture_electric_keywords">socket, light, switch, ceiling fan, smoke alarm, burglar alarm, thermostat</string>
 
-	<string name="category_cabinetry" level="1">Cabinetry</string>
+	<string name="category_cabinetry" level="1" icon="@raw/category_wardrobe">Cabinetry</string>
 	<string name="category_cabinetry_keywords">cupboard, cabinet, wardrobe, closet, chest of drawers, nightstand</string>
 
-	<string name="category_surface" level="1">Surfaces</string>
+	<string name="category_surface" level="1" icon="@raw/category_table">Surfaces</string>
 	<string name="category_surface_keywords">hanger, shoe tree</string>
 	<string name="category_surface_flat" level="2">flat</string>
 	<string name="category_surface_flat_keywords">table, desk, workbench, shelf, picnic table, folding table</string>
@@ -128,10 +128,10 @@
 
 	<string name="category_resting" level="1" icon="@raw/category_lounger">Resting</string>
 	<string name="category_resting_keywords">@string/empty</string>
-	<string name="category_seating" level="2">seating</string>
-	<string name="category_seating_keywords">seat, chair, stool, step stool, baby high chair, bench, sofa, couch, divan, folding chair</string>
-	<string name="category_lounging" level="2">lounging</string>
-	<string name="category_lounging_keywords">bed, mattress, lounger, pool lilo, hammock, beanbag, rocking chair; crib/cot, bassinet, cradle; inflatable air mattress, swim ring/swim tube</string>
+	<string name="category_seating" level="2" icon="@raw/snippet_chair">seating</string>
+	<string name="category_seating_keywords">seat, chair, stool, step stool, baby high chair, bench, folding chair</string>
+	<string name="category_lounging" level="2" icon="@raw/category_sofa">lounging</string>
+	<string name="category_lounging_keywords">bed, sofa, couch, divan, mattress, lounger, pool lilo, hammock, beanbag, rocking chair; crib/cot, bassinet, cradle; inflatable air mattress, swim ring/swim tube</string>
 
 	<string name="category_animal_keeping" level="1" icon="@raw/category_paw">Animal Keeping</string>
 	<!--https://en.wikipedia.org/wiki/Category:Buildings_and_structures_used_to_confine_animals-->

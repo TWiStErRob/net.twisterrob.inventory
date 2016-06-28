@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.freeiconspng.com/free-images/desk-icon-9298 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-350,-25 700 275">
+	<line x1="-350" x2="+350" stroke="black" stroke-width="50" />
+	<line x1="-300" x2="-300" y2="250" stroke="black" stroke-width="50" />
+	<line x1="+300" x2="+300" y2="250" stroke="black" stroke-width="50" />
+	<line x1="-300" x2="+300" y1="75" y2="75" stroke="black" stroke-width="25" />
+</svg>

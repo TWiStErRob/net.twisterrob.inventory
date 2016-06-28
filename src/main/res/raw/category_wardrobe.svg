@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://downloadicons.net/wardrobe-icon-22972 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-275,-375 550 650"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<rect id="knob" width="50" height="100" ry="25" x="-25" y="-50" />
+	</defs>
+	<rect width="500" height="600" x="-250" y="-350" fill="none" stroke-width="50" stroke="black" stroke-linejoin="round" />
+	<line y1="-350" y2="250" stroke-width="40" stroke="black" />
+	<use xlink:href="#knob" transform="translate(-75)" />
+	<use xlink:href="#knob" transform="translate(+75)" />
+</svg>

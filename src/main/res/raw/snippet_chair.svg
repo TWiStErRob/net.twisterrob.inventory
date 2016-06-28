@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100,-250 400 450">
+	<path id="chair" d="
+		M 0,0 l-50,-200
+		M 0,0 h+250
+		M 200,0 l+25,150
+		M 25,0 l-25,150
+	" fill="none" stroke="black" stroke-linejoin="round" stroke-linecap="round" stroke-width="75" />
+</svg>
