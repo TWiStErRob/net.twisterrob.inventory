@@ -17,6 +17,7 @@ import net.twisterrob.android.R;
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.*;
 
+// FIXME https://developer.android.com/guide/topics/providers/document-provider.html
 public class ImageRequest {
 	private Activity activity;
 	private Intent intent;

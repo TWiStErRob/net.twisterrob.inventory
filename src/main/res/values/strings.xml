@@ -147,6 +147,7 @@
 	<string name="list_error_new">Cannot create new list named %s.</string>
 
 	<string name="recent_list">Recents</string>
+	<string name="recent_empty_list">Your recently viewed items will show up here. Create or navigate your inventory.</string>
 
 	<plurals name="item">
 		<item quantity="one">item</item>

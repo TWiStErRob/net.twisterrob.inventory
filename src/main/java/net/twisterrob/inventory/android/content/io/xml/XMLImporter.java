@@ -30,7 +30,7 @@ public class XMLImporter implements Importer {
 		this.db = db;
 	}
 
-	public void doImport(InputStream stream) throws Throwable {
+	public void doImport(InputStream stream) throws Exception {
 		RootElement structure = getStructure();
 		Xml.parse(stream, Xml.Encoding.UTF_8, structure.getContentHandler());
 	}

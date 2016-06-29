@@ -18,6 +18,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks.Progress.Phase;
 
+// FIXME convert to Service
 public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
 	public static final String IMAGE_NAME = "imageName";

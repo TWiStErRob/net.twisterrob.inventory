@@ -21,6 +21,7 @@ import net.twisterrob.inventory.android.content.contract.Type;
 import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress;
 import net.twisterrob.inventory.android.content.io.xml.XMLImporter;
 
+// FIXME convert to Service
 public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> implements ImportProgressHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(ImporterTask.class);
 

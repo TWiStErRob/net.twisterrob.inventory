@@ -63,9 +63,9 @@
 
 	<string name="pref_sunburstIgnoreLevel_title">Sunburst Ignore Level</string>
 	<string name="pref_sunburstIgnoreLevel" translatable="false">sunburstIgnoreLevel</string>
-	<integer name="pref_sunburstIgnoreLevel_default" translatable="false">4</integer>
+	<integer name="pref_sunburstIgnoreLevel_default" translatable="false">5</integer>
 	<string name="pref_sunburstIgnoreLevel_desc">Sunburst diagram can be slow if there are a lot of items shown.
-		Decrease this setting to ignore single items from displaying. Values below 3 are not advised.</string>
+		Decrease this setting to ignore items stored deep within other items from displaying. Values below 3 are not advised.</string>
 
 	<string name="pref_showWelcome_title">Show Welcome</string>
 	<string name="pref_showWelcome" translatable="false">showWelcome</string>
