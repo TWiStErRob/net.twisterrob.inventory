@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<inventory approximateCount="34" version="1.0">
+	<property type="property_house" name="Home" id="1">
+		<room type="room_bed" name="My room" id="1">
+			<item type="category_lounging" name="Double Bed" id="2" />
+			<item type="category_surface_flat" name="Study Desk" id="3">
+				<item type="category_compartment" name="Desktop" id="4">
+					<item type="category_lighting" name="Desk Lamp" id="5" />
+					<item type="category_computer_portable" name="Laptop" id="6" />
+				</item>
+				<item type="category_compartment" name="Drawer" id="7" />
+			</item>
+			<item type="category_seating" name="Chair" id="8" />
+		</room>
+		<room type="room_dining" name="Kitchen" id="2">
+			<item type="category_appliance_storage" name="Fridge" id="10" />
+			<item type="category_cabinetry" name="Base Cabinet" id="11">
+				<item type="category_compartment" name="Left Drawer" id="12">
+					<item type="category_cutlery" name="Dessert Spoon x2" id="13" />
+					<item type="category_cutlery" name="Stainless Steel Knife x2" id="14" />
+					<item type="category_cutlery" name="Plastic Fork x10" id="15" />
+				</item>
+				<item type="category_compartment" name="Right Drawer" id="16">
+					<item type="category_utensil_chop" name="Peeler" id="17" />
+					<item type="category_utensil_open" name="Can Opener" id="18" />
+				</item>
+			</item>
+			<item type="category_group" name="Dining Area" id="19">
+				<item type="category_seating" name="Chair x3" id="20" />
+				<item type="category_surface_flat" name="Table" id="21" />
+			</item>
+			<item type="category_fixture_wet" name="Sink" id="29">
+				<item type="category_cleaning_wet" name="Yellow Kitchen Sponge" id="30" />
+			</item>
+		</room>
+		<room type="room_bath" name="Bathroom" id="3">
+			<item type="category_fixture_wet" name="Sink" id="23">
+				<item type="category_hygiene_body" name="Silky Smooth Soap" id="31" />
+			</item>
+			<item type="category_cabinetry" name="Mirror Cabinet" id="24">
+				<item type="category_hygiene_oral" name="Toothbrush" id="25" />
+				<item type="category_cosmetic_trim" name="Shaving Razor" id="26" />
+			</item>
+			<item type="category_fixture_wet" name="Bathtub" id="27">
+				<item type="category_hygiene_body" name="Shower Gel" id="32" />
+				<item type="category_hygiene_body" name="Anti-Dandruff Shampoo" id="33" />
+			</item>
+			<item type="category_fixture_wet" name="Toilet" id="28" />
+		</room>
+	</property>
+	<list name="Travel Items">
+		<item-ref id="6" /><!--Laptop-->
+		<item-ref id="25" /><!--Toothbrush-->
+	</list>
+</inventory>

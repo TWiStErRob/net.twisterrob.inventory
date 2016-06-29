@@ -10,7 +10,7 @@ import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.*;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.*;
 import android.support.v7.app.AlertDialog;
@@ -22,12 +22,14 @@ import android.view.*;
 import com.bumptech.glide.Glide;
 
 import net.twisterrob.android.activity.CaptureImage;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.*;
-import net.twisterrob.inventory.android.content.contract.Room;
+import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.io.ImportProgressHandler;
+import net.twisterrob.inventory.android.content.io.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.MainFragment.MainEvents;
@@ -71,6 +73,8 @@ public class MainActivity extends DrawerActivity
 		return getFragment(R.id.activityRoot);
 	}
 
+	private boolean isInventoryEmptyCache;
+
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setIcon(ContextCompat.getDrawable(this, R.drawable.ic_launcher));
@@ -94,7 +98,7 @@ public class MainActivity extends DrawerActivity
 				} else {
 					setIntent((Intent)getFragment().getViewTag());
 					updateTitle();
-					refresh(); // FIXME why was this working a month ago?
+					refresh(); // FIXME why was this working a month ago without this?
 				}
 			}
 		});
@@ -106,14 +110,15 @@ public class MainActivity extends DrawerActivity
 					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							App.setBPref(R.string.pref_showWelcome, false);
-							populateSampleInventory();
 							App.toastUser(getString(R.string.welcome_help_tip));
+							new PopulateSampleInventoryTask().execute();
 						}
 					})
 					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 						@Override public void onClick(DialogInterface dialog, int which) {
 							App.setBPref(R.string.pref_showWelcome, false);
 							App.toastUser(getString(R.string.welcome_help_tip));
+							// NO OP the app is ready to be used
 						}
 					})
 					.setNeutralButton(R.string.welcome_backup, new DialogInterface.OnClickListener() {
@@ -234,7 +239,7 @@ public class MainActivity extends DrawerActivity
 	}
 	private void refresh() {
 		getFragment().refresh();
-		invalidateOptionsMenu(); // make the populate icon appear/disappear (may hide overflow altogether)
+		new RefreshInventorySizeTask().execute();
 	}
 
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -280,7 +285,7 @@ public class MainActivity extends DrawerActivity
 		}
 		switch (item.getItemId()) {
 			case R.id.action_demo_inventory:
-				populateSampleInventory();
+				new PopulateSampleInventoryTask().execute();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -290,33 +295,8 @@ public class MainActivity extends DrawerActivity
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
 		boolean result = super.onPrepareOptionsMenu(menu);
 		MenuItem item = menu.findItem(R.id.action_demo_inventory);
-		item.setVisible(isInventoryEmpty());
+		item.setVisible(isInventoryEmptyCache);
 		return result;
-	}
-	private void populateSampleInventory() {
-		try {
-			if (isInventoryEmpty()) {
-				//noinspection WrongThread FIXME DB on UI thread
-				App.db().getHelper().execFile("MagicHomeInventory.demo.sql");
-			} else {
-				throw new IOException("Cannot add demo sample to a non-empty inventory.");
-			}
-		} catch (IOException ex) {
-			LOG.error("Cannot populate demo sample", ex);
-			App.toastUser("Cannot populate demo sample, sorry.");
-		} finally {
-			refresh();
-		}
-	}
-	@SuppressWarnings("TryFinallyCanBeTryWithResources")
-	private boolean isInventoryEmpty() {
-		//noinspection WrongThread FIXME DB on UI thread
-		Cursor cursor = App.db().listProperties();
-		try {
-			return cursor.getCount() == 0;
-		} finally {
-			cursor.close();
-		}
 	}
 
 	@DebugHelper
@@ -440,5 +420,71 @@ public class MainActivity extends DrawerActivity
 		}
 		intent.putExtra(Intent.EXTRA_TEXT, text);
 		return intent;
+	}
+
+	private class RefreshInventorySizeTask extends AsyncTask<Void, Void, Boolean> {
+		@Override protected void onPreExecute() {
+			isInventoryEmptyCache = false;
+			invalidateOptionsMenu();
+		}
+		@SuppressWarnings("TryFinallyCanBeTryWithResources")
+		@Override protected Boolean doInBackground(Void... params) {
+			Cursor cursor = App.db().listProperties();
+			try {
+				return cursor.getCount() == 0;
+			} catch (Exception ex) {
+				LOG.error("Cannot get property list to check empty inventory", ex);
+				return null;
+			} finally {
+				cursor.close();
+			}
+		}
+		@Override protected void onPostExecute(Boolean result) {
+			isInventoryEmptyCache = Boolean.TRUE.equals(result);
+			invalidateOptionsMenu(); // make the populate icon appear/disappear (may hide overflow altogether)
+		}
+	}
+
+	private class PopulateSampleInventoryTask extends AsyncTask<Void, Void, Boolean> {
+		@Override protected void onPreExecute() {
+			isInventoryEmptyCache = false;
+			invalidateOptionsMenu();
+		}
+		@Override protected Boolean doInBackground(Void... params) {
+			InputStream demo = null;
+			try {
+				demo = getAssets().open("demo.xml");
+				new XMLImporter(new ImportProgressHandler() {
+					@Override public void publishStart(long size) {
+						// NO OP
+					}
+					@Override public void publishIncrement() {
+						// NO OP
+					}
+					@Override public void warning(@StringRes int stringID, Object... args) {
+						throw new UnsupportedOperationException();
+					}
+					@Override public void error(String message) {
+						throw new UnsupportedOperationException();
+					}
+					@Override public void importImage(Type type, long id, String name, String image)
+							throws IOException {
+						throw new UnsupportedOperationException();
+					}
+				}, App.db()).doImport(demo);
+				return true;
+			} catch (Exception ex) {
+				LOG.error("Cannot populate demo sample", ex);
+				return null;
+			} finally {
+				IOTools.ignorantClose(demo);
+			}
+		}
+		@Override protected void onPostExecute(Boolean aBoolean) {
+			if (!Boolean.TRUE.equals(aBoolean)) {
+				App.toastUser("Cannot populate demo sample, sorry.");
+			}
+			refresh();
+		}
 	}
 }

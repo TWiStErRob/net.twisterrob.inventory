@@ -24,6 +24,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 	public static final String NS = "";
 	public static final String TAG_ROOT = "inventory";
 	public static final String ATTR_COUNT = "approximateCount";
+	public static final String ATTR_VERSION = "version";
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_NAME = "name";
 	public static final String ATTR_TYPE = "type";
@@ -53,6 +54,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		serializer.startDocument(ENCODING, true);
 		serializer.startTag(NS, TAG_ROOT);
 		serializer.attribute(NS, ATTR_COUNT, String.valueOf(cursor.getCount()));
+		serializer.attribute(NS, ATTR_VERSION, "1.0");
 		return serializer;
 	}
 
