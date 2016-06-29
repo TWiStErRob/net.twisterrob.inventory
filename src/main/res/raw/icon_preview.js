@@ -22,15 +22,30 @@ console.log(`<style>
 		max-width: 100%;
 		border: 1px solid lightgrey;
 	}
+	h2 {
+		clear: both;
+		color: red;
+	}
 </style>`);
 fs.readdir('.', function (err, list) {
 	if (err) throw err;
-	var icons = /^(category|property|room|ic|snippet).*\.svg$/;
-	list.forEach(function (file) {
-		if (!file.match(icons)) return;
+	var pattern = /^(category|property|room|item|snippet|ic).*\.svg$/;
+	list = list.filter(function isInterestingSVG(file) { return file.match(pattern); });
+	list.sort();
+	function outputImage(file) {
 		console.log(`<div class="item"><a href="` + file + `">
 			<div class="caption">` + file + `</div>
 			<div class="icon"><embed src="` + file + `"></embed></div>
 		</a></div>`);
-	});
+	}
+	function outGroup(keyStart, title) {
+		console.log(`<h2>${title}</h2>`);
+		list.filter(function(file) { return file.startsWith(keyStart) }).forEach(outputImage);
+	}
+	outGroup('category_', "Categories");
+	outGroup('item_', "Items");
+	outGroup('room_', "Rooms");
+	outGroup('property_', "Properties");
+	outGroup('ic_', "Icons");
+	outGroup('snippet_', "Snippets");
 });

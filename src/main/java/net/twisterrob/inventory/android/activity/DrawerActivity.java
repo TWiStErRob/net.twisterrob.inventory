@@ -149,12 +149,12 @@ public abstract class DrawerActivity extends BaseActivity {
 		data.add(R.id.action_drawer_categories, R.raw.category_unknown, MainActivity.list(PAGE_CATEGORIES));
 		data.add(R.id.action_drawer_properties, R.raw.property_unknown, MainActivity.list(PAGE_PROPERTIES));
 		data.add(R.id.action_drawer_rooms, R.raw.room_unknown, MainActivity.list(PAGE_ROOMS));
-		data.add(R.id.action_drawer_items, R.raw.category_box, MainActivity.list(PAGE_ITEMS));
+		data.add(R.id.action_drawer_items, R.raw.item_box, MainActivity.list(PAGE_ITEMS));
 		data.add(R.id.action_drawer_sunburst, R.raw.ic_sunburst, MainActivity.list(PAGE_SUNBURST));
-		data.add(R.id.action_drawer_category_guide, R.raw.category_paper, MainActivity.list(PAGE_CATEGORY_HELP));
-		data.add(R.id.action_drawer_backup, R.raw.category_disc, BackupActivity.chooser());
+		data.add(R.id.action_drawer_category_guide, R.raw.item_paper, MainActivity.list(PAGE_CATEGORY_HELP));
+		data.add(R.id.action_drawer_backup, R.raw.item_disc, BackupActivity.chooser());
 		data.add(R.id.action_drawer_preferences, R.raw.category_tools, PreferencesActivity.show());
-		data.add(R.id.action_drawer_about, R.raw.category_chip, new Intent(App.getAppContext(), AboutActivity.class));
+		data.add(R.id.action_drawer_about, R.raw.item_chip, new Intent(App.getAppContext(), AboutActivity.class));
 		data.addIcons();
 		data.updateCounts();
 		return data;

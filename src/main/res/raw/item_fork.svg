@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://thenounproject.com/term/cutlery/175142/ -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-150,-400 300 875">
+	<rect id="handle" width="75" height="500" x="-37.5" y="-25" />
+	<path id="base" d="M-150,-150 a 1,1 0 0 0 300,0" />
+	<line id="left"   y2="225" stroke-width="50" transform="translate(-125, -375)" stroke="black" stroke-linecap="round" />
+	<line id="middle" y2="225" stroke-width="50" transform="translate(   0, -375)" stroke="black" stroke-linecap="round" />
+	<line id="right"  y2="225" stroke-width="50" transform="translate(+125, -375)" stroke="black" stroke-linecap="round" />
+</svg>

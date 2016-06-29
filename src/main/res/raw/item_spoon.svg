@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://thenounproject.com/term/cutlery/175142/ -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-150,-400 300 875">
+	<rect id="handle" width="75" height="500" x="-37.5" y="-25" />
+	<ellipse id="bowl" rx="150" ry="200" cy="-200" />
+</svg>

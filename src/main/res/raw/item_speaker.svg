@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://thumbs.dreamstime.com/z/compact-stereo-system-24809542.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100,-300 200 300">
+	<rect id="body" width="200" height="300" rx="15" x="-100" y="-300" />
+	<circle id="ring-outer" r="70" cy="-100" fill="gray" />
+	<circle id="ring-inner" r="60" cy="-100" fill="black" />
+	<circle id="woofer" r="55" cy="-100" fill="white" />
+	<circle id="treble" r="20" cy="-225" fill="white" />
+</svg>

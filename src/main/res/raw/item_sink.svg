@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://www.iconfinder.com/icons/194571/bathroom_sink_icon#size=512 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-250,-210 500 410">
+	<path id="basin" d="M0,0
+		h-250
+		a 200,200 0 0 0 200,200
+		h+100
+		a 200,200 0 0 0 200,-200
+		h-250
+	" />
+	<path id="tap" d="M-50,0
+		v-100
+		a 10,13 0 0 1 150,0
+	" stroke="black" stroke-width="25" fill="none" />
+</svg>

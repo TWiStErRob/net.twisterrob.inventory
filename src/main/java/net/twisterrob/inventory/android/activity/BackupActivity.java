@@ -183,7 +183,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			}
 			@RawRes int icon;
 			if (name.startsWith("Inventory_") && name.endsWith(".zip")) {
-				icon = R.raw.category_disc;
+				icon = R.raw.item_disc;
 				name = name.replaceAll("^Inventory_(.*)\\.zip$", "$1").replace('_', ' ');
 			} else {
 				icon = R.raw.category_unknown;
@@ -191,7 +191,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 
 			String size = null;
 			if (file.isDirectory()) {
-				icon = R.raw.category_box;
+				icon = R.raw.item_box;
 			} else {
 				size = Formatter.formatShortFileSize(holder.count.getContext(), file.length());
 			}

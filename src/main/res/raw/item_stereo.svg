@@ -6,13 +6,7 @@
 	<defs>
 		<style type="text/css"><![CDATA[
 		]]></style>
-		<g id="speaker">
-			<rect width="200" height="300" rx="15" x="-100" y="-300" />
-			<circle r="70" cy="-100" fill="gray" />
-			<circle r="60" cy="-100" fill="black" />
-			<circle r="55" cy="-100" fill="white" />
-			<circle r="20" cy="-225" fill="white" />
-		</g>
+		<image id="speaker" width="200" height="300" x="-100" y="-300" xlink:href="item_speaker.svg" />
 	</defs>
 	<use xlink:href="#speaker" transform="translate(-200)" />
 	<use xlink:href="#speaker" transform="translate(+200)" />

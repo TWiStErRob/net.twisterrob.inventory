@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on http://www.iconarchive.com/show/windows-8-icons-by-icons8/Clothing-T-Shirt-icon.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-150,0 300 450">
+	<rect id="freezer" width="300" height="150" x="-150" y="0" rx="15" />
+	<ellipse id="freezer-handle" ry="30" rx="10" cx="-100" cy="80" fill="white" />
+	<rect id="fridge" width="300" height="300" x="-150" y="150" rx="15" />
+	<ellipse id="fridge-handle" ry="40" rx="10" cx="-100" cy="230" fill="white" />
+	<rect id="separator" width="300" height="10"  x="-150" y="145" fill="white" />
+</svg>

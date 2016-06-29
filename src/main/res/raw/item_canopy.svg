@@ -4,7 +4,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
      viewBox="-50,-50 1100 1050">
 	<defs>
-		<image id="chair" width="400" height="450" x="-125" y="-250" xlink:href="snippet_chair.svg" />
+		<image id="chair" width="400" height="450" x="-125" y="-250" xlink:href="item_chair.svg" />
 	</defs>
 	<path id="umbrella" transform="translate(500,350)" d="M 0,0
 		h+500 a 500,350 0 0 0 -1000,0 h+500

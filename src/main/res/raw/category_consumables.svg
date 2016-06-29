@@ -3,6 +3,6 @@
 <!-- Based on http://www.pd4pic.com/images/fast-food-meal-food-lunch-drink-burger-hamburger.png -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 850 700"
      xmlns:xlink="http://www.w3.org/1999/xlink">
-	<image width="450" height="400" y="325" xlink:href="category_burger.svg" />
-	<image width="400" height="700" x="450" y="0" xlink:href="category_drink.svg" />
+	<image width="450" height="400" y="325" xlink:href="item_burger.svg" />
+	<image width="400" height="700" x="450" y="0" xlink:href="item_drink.svg" />
 </svg>

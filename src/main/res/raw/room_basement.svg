@@ -4,8 +4,8 @@
 <!-- Based on https://www.iconfinder.com/icons/309361/basement_cellar_storage_warehouse_wine_cellar_wine_vault_icon#size=512 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-500,-400 1000 915"
      xmlns:xlink="http://www.w3.org/1999/xlink">
-	<image id="stairs" width="500" height="500" xlink:href="room_stairs.svg" transform="scale(-1,1) translate(-250,25)" />
+	<image id="stairs" width="500" height="500" xlink:href="item_stairs.svg" transform="scale(-1,1) translate(-250,25)" />
 	<rect id="basement-floor" y="-5" width="1000" height="25" transform="translate(-500,500)" />
 	<rect id="ground-floor" width="350" height="25" transform="translate(-500,25)" />
-	<image id="entrance" y="-425" width="350" height="500" xlink:href="snippet_door.svg" transform="translate(-500,25) translate(12.5,0)" />
+	<image id="entrance" y="-425" width="350" height="500" xlink:href="item_door.svg" transform="translate(-500,25) translate(12.5,0)" />
 </svg>

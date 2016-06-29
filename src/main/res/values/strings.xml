@@ -227,7 +227,8 @@
 		<b>Importing a backup into an empty inventory is also fine.</b>
 		Importing a backup into an existing inventory with conflicting structure may result in some mess.
 		The best effort is made is to preserve data, but proper conflict resolution is not implemented yet.
-		<i>Any feedback/ideas regarding this is welcome!</i>
+		Selecting a file will start the import immediately.
+		<i>Any feedback/ideas regarding backup is very welcome!</i>
 	</string>
 
 	<string name="backup_export_progress_title">Export</string>

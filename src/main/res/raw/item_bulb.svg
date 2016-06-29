@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://thenounproject.com/term/light-bulb/8735/ -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-250,-500 500 700">
+	<circle id="bulb" r="250" cy="-250" />
+	<g id="connector" transform="translate(0,25)">
+		<rect id="base" width="200" height="200" x="-100" y="-50" rx="25" />
+		<rect id="screw1" width="210" height="25" x="-105" y="0" fill="white" rx="25" />
+		<rect id="screw2" width="210" height="25" x="-105" y="50" fill="white" rx="25" />
+		<rect id="screw3" width="210" height="25" x="-105" y="100" fill="white" rx="25" />
+		<rect id="contact" width="100" height="50" x="-50" y="125" rx="25" />
+	</g>
+</svg>

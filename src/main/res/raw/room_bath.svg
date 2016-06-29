@@ -2,14 +2,8 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-500,-500 1000 1000"
      xmlns:xlink="http://www.w3.org/1999/xlink">
-	<defs>
-		<image id="note" width="150" height="150" x="-75" y="-75" xlink:href="snippet_musical_note.svg" />
-	</defs>
 	<image width="1000" height="1000" x="-500" y="-500" xlink:href="room_empty.svg" />
 	<g id="in-the-house" transform="translate(0, 100)">
-		<image width="700" height="700" x="-350" y="-250" xlink:href="item_stereo.svg" />
-		<use xlink:href="#note" transform="translate(-200,-250) rotate(-25)" />
-		<use xlink:href="#note" transform="translate(0,-225) rotate(-10)"/>
-		<use xlink:href="#note" transform="translate(+200,-250) rotate(20)"/>
+		<image width="650" height="650" x="-325" y="-250" xlink:href="item_bathtub.svg" />
 	</g>
 </svg>

@@ -4,6 +4,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-25 -25 1050 800"
      xmlns:xlink="http://www.w3.org/1999/xlink">
 	<rect id="frame" width="1000" height="750" fill="white" stroke="black" stroke-width="50" />
-	<circle id="sun" r="75" cx="200" cy="200" fill="gray" />
+	<image width="250" height="250" x="100" y="75" xlink:href="snippet_sun.svg" />
 	<image width="800" height="500" x="100" y="150" xlink:href="snippet_mountain.svg" />
 </svg>

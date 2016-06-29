@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://www.iconfinder.com/icons/333026/cut_knife_operating_scalpel_surgery_icon -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100,-450 150 700">
+	<rect id="handle" width="75" height="250" x="-37.5" />
+	<path id="blade" d="M 0,0 a 1,2 10 0 0 0,+450 z" stroke-width="5" transform="translate(+37.5,-450)" />
+</svg>

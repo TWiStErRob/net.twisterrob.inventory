@@ -2,13 +2,13 @@
 <!DOCTYPE resources>
 <!-- See http://tools.android.com/tech-docs/new-build-system/resource-shrinking -->
 <!-- See build.gradle android.buildTypes.release.shrinkResources -->
+<!-- More icons:
+	http://www.isenbergsprayfoam.com/interactive-application-guide.html
+	https://thenounproject.com
+-->
 <resources
 	xmlns:tools="http://schemas.android.com/tools"
 	tools:shrinkMode="strict"
 	tools:discard="@raw/icon_*"
-	tools:keep="@raw/category_*,@raw/room_*,@raw/property_*,@raw/snippet_*,@raw/ic_*"
+	tools:keep="@raw/category_*,@raw/item_*,@raw/room_*,@raw/property_*,@raw/snippet_*,@raw/ic_*"
 />
-	<!-- See also values/aliases.xml -->
-	<!-- More icons:
-		http://www.isenbergsprayfoam.com/interactive-application-guide.html
-	-->

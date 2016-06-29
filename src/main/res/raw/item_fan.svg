@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://www.iconfinder.com/icons/509105/air_blow_blowing_circulate_circulation_cooling_fan_icon#size=512 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-410,-410 820 820"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<g id="blade" transform="translate(0,-100) skewX(15)">
+			<!-- TODO find a better way to do this -->
+			<path d="M-50,0 l-100,-200 a 1,1 0 1 1 +300,100 l-100,200" />
+			<path d="M+50,0 l+100,-200 a 1,1 0 1 0 -300,100 l+100,200" />
+		</g>
+	</defs>
+	<use xlink:href="#blade" transform="rotate(+90)" />
+	<use xlink:href="#blade" transform="rotate(-90)" />
+	<use xlink:href="#blade" transform="rotate(180)" />
+	<use xlink:href="#blade" transform="rotate(0)" />
+	<circle r="75" fill="white" />
+	<circle r="50" />
+</svg>

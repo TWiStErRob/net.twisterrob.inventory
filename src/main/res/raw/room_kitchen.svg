@@ -4,6 +4,6 @@
      xmlns:xlink="http://www.w3.org/1999/xlink">
 	<image width="1000" height="1000" x="-500" y="-500" xlink:href="room_empty.svg" />
 	<g id="in-the-house" transform="translate(0, 100)">
-		<image width="700" height="700" x="-350" y="-350" xlink:href="category_pot_hot.svg" />
+		<image width="700" height="700" x="-350" y="-350" xlink:href="item_pot_hot.svg" />
 	</g>
 </svg>

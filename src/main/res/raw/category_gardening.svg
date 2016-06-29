@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Based on https://thenounproject.com/term/cutlery/175142/ -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-350,-500 725 1000"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<image width="800" height="800" x="-400" y="-400" xlink:href="item_leaf.svg" transform="rotate(-25)" opacity=".60" />
+	<image width="600" height="600" x="-300" y="-300" xlink:href="category_tools.svg" transform="translate(50,-0)" />
+</svg>

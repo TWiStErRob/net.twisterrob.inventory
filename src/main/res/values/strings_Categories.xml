@@ -3,7 +3,7 @@
 <!-- Syntax review:
     (?<!\\)'|(\n\t+)?<)|\?(?=\w)|,(?=\s*<)|\w(?!,)[\n\t]+\w|^\s+[^\n>]+?</|,(?=\s*\()|\([^)]{0,100}+(?!\))
     * unescaped apostrophe
-    * questionmark mid-word
+    * question mark mid-word
     * comma at end of string
     * no comma between lines
     * unwrapped string ending lines
@@ -16,24 +16,24 @@
 	The trick here is that *technically* you can disassemble a house, and rebuild it in another place,
 	but *practically* you're losing a lot of value and they won't be the "same" house. -->
 <resources>
-	<string name="category_internal" id="-1" level="0" icon="@raw/category_unknown" translatable="false">SECRET</string>
+	<string name="category_internal" id="-1" level="0" icon="@raw/category_exclamation" translatable="false">SECRET</string>
 	<string name="category_internal_description" translatable="false">stuff you should never see</string>
 	<string name="category_uncategorized" id="0" level="0" icon="@raw/category_unknown">Uncategorized</string>
 	<string name="category_uncategorized_keywords">@string/empty</string>
 	<string name="category_uncategorized_description">any other stuff</string>
-	<string name="category_group" id="1" level="0" icon="@raw/category_box">Group</string>
+	<string name="category_group" id="1" level="0" icon="@raw/item_box">Group</string>
 	<string name="category_group_keywords">@string/empty</string>
 	<string name="category_group_description">logically holds other stuff together</string>
 	<string name="category_part" id="2" level="0" icon="@raw/category_unknown">Other Pieces</string>
 	<string name="category_part_keywords">@string/empty</string>
 	<string name="category_part_description">stuff that\'s useless by itself</string>
-	<string name="category_image" id="3" level="0" icon="@raw/category_picture">Extra Images</string>
+	<string name="category_image" id="3" level="0" icon="@raw/item_picture">Extra Images</string>
 	<string name="category_image_keywords">@string/empty</string>
 	<string name="category_image_description">extra images of your stuff</string>
 
 
 	<!--=========================================================================================================-->
-	<string name="category_storage" level="0" icon="@raw/category_box">Storage</string>
+	<string name="category_storage" level="0" icon="@raw/item_box">Storage</string>
 	<string name="category_storage_keywords">@string/empty</string>
 	<string name="category_storage_description">stuff to put other stuff in</string>
 
@@ -67,7 +67,7 @@
 	<string name="category_container_small_leakproof" level="2">small containers</string>
 	<string name="category_container_small_leakproof_keywords" level="2">test tube, flask, beaker, pipette, dropper, vial/phial, ampoule, crucible</string>
 
-	<string name="category_case" level="1" icon="@raw/category_suitcase">Cases</string>
+	<string name="category_case" level="1" icon="@raw/item_suitcase">Cases</string>
 	<string name="category_case_keywords">jewelry case, jewelry box, pill box, pill organizer, phone case, phone cover, phone skin, card case, card holder, cassette case</string>
 	<string name="category_media_case" level="2">disk cases</string>
 	<string name="category_media_case_keywords">CD case, DVD case/keep case, paper sleeve, cake box, spindle</string>
@@ -81,7 +81,7 @@
 	<string name="category_protective_surface" level="2">protective surface</string>
 	<string name="category_protective_surface_keywords">beverage coaster, trivet, hot pad, drying mat, plastic tray, pallet, tent footprint, mouse pad, notebook cover</string>
 
-	<string name="category_luggage" level="1" icon="@raw/category_suitcase">Luggage</string>
+	<string name="category_luggage" level="1" icon="@raw/item_suitcase">Luggage</string>
 	<string name="category_luggage_keywords">@string/empty</string>
 	<string name="category_luggage_carried" level="2">carried</string>
 	<string name="category_luggage_carried_keywords">suitcase, briefcase, notebook case</string>
@@ -100,40 +100,40 @@
 
 
 	<!--=========================================================================================================-->
-	<string name="category_furniture" level="0" icon="@raw/category_wardrobe">Furniture</string>
+	<string name="category_furniture" level="0" icon="@raw/item_wardrobe">Furniture</string>
 	<string name="category_furniture_keywords">@string/empty</string>
 	<string name="category_furniture_description">stuff you may need friends to move</string>
 
 	<!-- http://en.wikipedia.org/wiki/List_of_furniture_types -->
-	<string name="category_fixture" level="1" icon="@raw/category_hung_towel">Fixtures</string>
+	<string name="category_fixture" level="1" icon="@raw/item_door">Fixtures</string>
 	<string name="category_fixture_keywords">@string/empty</string>
-	<string name="category_fixture_division" level="2">division</string>
+	<string name="category_fixture_division" level="2" icon="@raw/item_fence">division</string>
 	<string name="category_fixture_division_keywords">door, window, ceiling, fence, gate, room divider</string>
-	<string name="category_fixture_storage" level="2">storage</string>
+	<string name="category_fixture_storage" level="2" icon="@raw/item_hung_towel">storage</string>
 	<string name="category_fixture_storage_keywords">shelf, coat rack, hook, holder, soap holder/soap dish, toothbrush holder, track, rail, railing, pole, mailbox/letter box</string>
-	<string name="category_fixture_wet" level="2">wet</string>
+	<string name="category_fixture_wet" level="2" icon="@raw/item_sink">wet</string>
 	<string name="category_fixture_wet_keywords">bathtub, toilet, toilet seat, toilet tank, sink, tap, well, shower, garden shower, jacuzzi/hot tub/home spa, sauna, swimming pool, fountain, pond</string>
-	<string name="category_fixture_electric" level="2">electric</string>
+	<string name="category_fixture_electric" level="2" icon="@raw/item_bulb">electric</string>
 	<string name="category_fixture_electric_keywords">socket, light, switch, ceiling fan, smoke alarm, burglar alarm, thermostat</string>
 
-	<string name="category_cabinetry" level="1" icon="@raw/category_wardrobe">Cabinetry</string>
+	<string name="category_cabinetry" level="1" icon="@raw/item_wardrobe">Cabinetry</string>
 	<string name="category_cabinetry_keywords">cupboard, cabinet, wardrobe, closet, chest of drawers, nightstand</string>
 
-	<string name="category_surface" level="1" icon="@raw/category_table">Surfaces</string>
+	<string name="category_surface" level="1" icon="@raw/item_table">Surfaces</string>
 	<string name="category_surface_keywords">hanger, shoe tree</string>
-	<string name="category_surface_flat" level="2">flat</string>
+	<string name="category_surface_flat" level="2" icon="@raw/item_table">flat</string>
 	<string name="category_surface_flat_keywords">table, desk, workbench, shelf, picnic table, folding table</string>
-	<string name="category_stand" level="2">stands</string>
+	<string name="category_stand" level="2" icon="@raw/item_platform">stands</string>
 	<string name="category_stand_keywords">flower stand, drying stand, tower airer, tripod, camera stand, telescope stand, ironing board, umbrella stand, hatstand, utility cart, room service trolley</string>
 
-	<string name="category_resting" level="1" icon="@raw/category_lounger">Resting</string>
+	<string name="category_resting" level="1" icon="@raw/item_lounger">Resting</string>
 	<string name="category_resting_keywords">@string/empty</string>
-	<string name="category_seating" level="2" icon="@raw/snippet_chair">seating</string>
+	<string name="category_seating" level="2" icon="@raw/item_chair">seating</string>
 	<string name="category_seating_keywords">seat, chair, stool, step stool, baby high chair, bench, folding chair</string>
-	<string name="category_lounging" level="2" icon="@raw/category_sofa">lounging</string>
+	<string name="category_lounging" level="2" icon="@raw/item_sofa">lounging</string>
 	<string name="category_lounging_keywords">bed, sofa, couch, divan, mattress, lounger, pool lilo, hammock, beanbag, rocking chair; crib/cot, bassinet, cradle; inflatable air mattress, swim ring/swim tube</string>
 
-	<string name="category_animal_keeping" level="1" icon="@raw/category_paw">Animal Keeping</string>
+	<string name="category_animal_keeping" level="1" icon="@raw/snippet_paw">Animal Keeping</string>
 	<!--https://en.wikipedia.org/wiki/Category:Buildings_and_structures_used_to_confine_animals-->
 	<string name="category_animal_keeping_keywords">@string/empty</string>
 	<string name="category_pet_housing" level="2">pet housing</string>
@@ -145,26 +145,26 @@
 	<string name="category_pet_activity" level="2">activity</string>
 	<string name="category_pet_activity_keywords">scratching post/cat tree, hamster wheel, hamster ball, pet door, pet carrier</string>
 
-	<string name="category_furniture_outdoor" level="1" icon="@raw/category_canopy">Outdoor</string>
+	<string name="category_furniture_outdoor" level="1" icon="@raw/item_canopy">Outdoor</string>
 	<string name="category_furniture_outdoor_keywords">@string/empty</string>
-	<string name="category_canopy" level="2" icon="@raw/category_canopy">canopies</string>
+	<string name="category_canopy" level="2" icon="@raw/item_canopy">canopies</string>
 	<string name="category_canopy_keywords">pavilion, marquee, tent, teepee, garden parasol/garden umbrella, beach parasol/beach umbrella, water base, canopy swing, pool cover, tarp shelter</string>
 	<string name="category_playground" level="2">playground</string>
 	<string name="category_playground_keywords">swing, slide, seesaw, climbing frame, climbing wall, playhouse, wendy house, trampoline, jumpy castle, spring board/diving board, inflatable pool, kiddy pool</string>
 
 
 	<!--=========================================================================================================-->
-	<string name="category_furnishing" level="0" icon="@raw/category_hung_towel">Furnishings</string>
+	<string name="category_furnishing" level="0" icon="@raw/item_hung_towel">Furnishings</string>
 	<string name="category_furnishing_keywords">@string/empty</string>
 	<string name="category_furnishing_description">stuff to you put on other stuff</string>
 
 	<string name="category_fitting" level="1">Fittings</string>
 	<string name="category_fitting_keywords">pipe, valve, tube</string>
-	<string name="category_aperture" level="2">aperture components</string>
+	<string name="category_aperture" level="2" icon="@raw/item_door">aperture components</string>
 	<string name="category_aperture_keywords">window handle, blinds, doorknob, door handle, door latch, door chain, door lock, key/keys</string>
-	<string name="category_lighting" level="2">lighting</string>
+	<string name="category_lighting" level="2" icon="@raw/item_bulb">lighting</string>
 	<string name="category_lighting_keywords">desk lamp, standing lamp, ceiling lamp, light bulb, lampshade, fluorescent tube, neon sign, laser</string>
-	<string name="category_clock" level="2" icon="@raw/category_clock">clocks</string>
+	<string name="category_clock" level="2" icon="@raw/item_clock">clocks</string>
 	<string name="category_clock_keywords">wall-clock, digital wall-clock, alarm clock, cuckoo clock, longcase clock/floor clock/grandfather clock</string>
 
 	<string name="category_pillow" level="1">Pillows</string>
@@ -183,7 +183,7 @@
 
 
 	<!--=========================================================================================================-->
-	<string name="category_decoration" level="0" icon="@raw/category_balloon">Decorations</string>
+	<string name="category_decoration" level="0" icon="@raw/item_balloon">Decorations</string>
 	<string name="category_decoration_keywords">@string/empty</string>
 	<string name="category_decoration_description">stuff that makes other stuff look pretty</string>
 
@@ -210,7 +210,7 @@
 	<string name="category_souvenir" level="1">Souvenirs</string>
 	<string name="category_souvenir_keywords">@string/empty</string>
 
-	<string name="category_artwork" level="1" icon="@raw/category_picture">Artwork</string>
+	<string name="category_artwork" level="1" icon="@raw/item_picture">Artwork</string>
 	<string name="category_artwork_keywords">@string/empty</string>
 	<string name="category_picture" level="2">pictures</string>
 	<string name="category_picture_keywords">painting, poster, centerfold/centrefold, picture frame, photo holder, greeting card, postcard, stickers</string>
@@ -221,7 +221,7 @@
 	<string name="category_ceramic" level="2">ceramics</string>
 	<string name="category_ceramic_keywords">vase, pot, china, window box/flower box, amphora</string>
 
-	<string name="category_publication" level="1" icon="@raw/category_paper">Publications</string>
+	<string name="category_publication" level="1" icon="@raw/item_paper">Publications</string>
 	<string name="category_publication_keywords">@string/empty</string>
 	<string name="category_book" level="2">book</string>
 	<string name="category_book_keywords">paperback, yearbook, photo album, magazine, comics, newsletter, newspaper, periodical, academic journal, proceeding</string>
@@ -232,18 +232,18 @@
 	<string name="category_help" level="2">help</string>
 	<string name="category_help_keywords">user guide, owner\'s manual, assembly instructions, FAQ/Frequently Asked Questions</string>
 
-	<string name="category_recording" level="1" icon="@raw/category_disc">Recordings</string>
+	<string name="category_recording" level="1" icon="@raw/item_disc">Recordings</string>
 	<string name="category_recording_keywords">@string/empty</string>
 	<string name="category_disc" level="2">discs</string>
 	<string name="category_disc_keywords">optical disc, CD/compact disc, DVD/digital video disc, BD/Blu-ray Disc, floppy disk, vinyl; recordable/writable/rewritable</string>
-	<string name="category_tape" level="2" icon="@raw/category_tape">tapes</string>
+	<string name="category_tape" level="2" icon="@raw/item_tape">tapes</string>
 	<string name="category_tape_keywords">compact cassette/cassette tape/audio cassette, videotape/videocassette, DV cassette, magnetic tape/backup tape</string>
-	<string name="category_film" level="2" icon="@raw/category_film">films</string>
+	<string name="category_film" level="2" icon="@raw/item_film">films</string>
 	<string name="category_film_keywords">celluloid film, film roll, instant film/Polaroid</string>
 
 
 	<!--=========================================================================================================-->
-	<string name="category_clothing" level="0" icon="@raw/category_tshirt">Clothing</string>
+	<string name="category_clothing" level="0" icon="@raw/item_tshirt">Clothing</string>
 	<string name="category_clothing_keywords">@string/empty</string>
 	<string name="category_clothing_description">stuff to put on your body</string>
 
@@ -289,9 +289,9 @@
 
 	<string name="category_headwear" level="1" icon="@raw/category_headwear">Headwear</string>
 	<string name="category_headwear_keywords">hood, headband</string>
-	<string name="category_hat" level="2" icon="@raw/category_hat">hats</string>
+	<string name="category_hat" level="2" icon="@raw/item_hat">hats</string>
 	<string name="category_hat_keywords">cap, beach hat, sombrero, cowboy hat, party hat, graduate cap</string>
-	<string name="category_scarf" level="2" icon="@raw/category_scarf">scarves</string>
+	<string name="category_scarf" level="2" icon="@raw/item_scarf">scarves</string>
 	<string name="category_scarf_keywords">scarf, shawl, kerchief, bandana, buff, balaclava</string>
 
 	<string name="category_accessory" level="1">Accessories</string>
@@ -305,22 +305,22 @@
 
 	<string name="category_sport_clothing" level="1" icon="@raw/category_soccer">Sports</string>
 	<string name="category_sport_clothing_keywords">running gear, cycling shorts, sweatband, football boots/cleats/soccer shoes, ballet shoes</string>
-	<string name="category_swimwear" level="2">swimwear</string>
+	<string name="category_swimwear" level="2" icon="@raw/snippet_water">swimwear</string>
 	<string name="category_swimwear_keywords">swim briefs/Speedo, square leg suit, trunks, bathing suit, bikini, tankini, swimming cap, wetsuit, dry suit</string>
-	<string name="category_snowwear" level="2">snowwear</string>
+	<string name="category_snowwear" level="2" icon="@raw/category_headwear">snowwear</string>
 	<string name="category_snowwear_keywords">thermal, ski jacket, ski pants, ski socks, ski suit, ski mask, ski boots, snowboard boots</string>
 
-	<string name="category_protective" level="1" icon="@raw/category_safety_helmet">Protective</string>
+	<string name="category_protective" level="1" icon="@raw/item_safety_helmet">Protective</string>
 	<string name="category_protective_keywords">@string/empty</string>
 	<string name="category_protective_hand" level="2">hand protection</string>
 	<string name="category_protective_hand_keywords">gloves, rubber gloves, disposable gloves, oven mitt/oven glove, gardening gloves, worker gloves, boxing gloves</string>
 	<string name="category_protective_head" level="2">head protection</string>
-	<string name="category_protective_head_keywords" icon="@raw/category_safety_helmet">hard hat/construction helmet, cycling helmet, motorcycle helmet/racing helmet, batting helmet, football helmet, hockey helmet</string>
+	<string name="category_protective_head_keywords" icon="@raw/item_safety_helmet">hard hat/construction helmet, cycling helmet, motorcycle helmet/racing helmet, batting helmet, football helmet, hockey helmet</string>
 	<string name="category_protective_air" level="2">air protection</string>
 	<string name="category_protective_air_keywords">face mask/surgical mask, respirator</string>
 	<string name="category_protective_eye" level="2">eye protection</string>
 	<string name="category_protective_eye_keywords">goggles, safety glasses, sunglasses, welding mask</string>
-	<string name="category_protective_ear" level="2" icon="@raw/category_earmuff">ear protection</string>
+	<string name="category_protective_ear" level="2" icon="@raw/item_earmuff">ear protection</string>
 	<string name="category_protective_ear_keywords">earplugs, earmuffs</string>
 	<string name="category_protective_impact" level="2">impact protection</string>
 	<string name="category_protective_impact_keywords">knee pads, elbow pads, padded girdle, impact pad, snipe protector, body armor, bulletproof vest</string>
@@ -343,14 +343,14 @@
 	<string name="category_game_area_keywords">goal posts, basketball hoop, volleyball net, darts, table tennis, table football, air hockey table, pinball</string>
 	<string name="category_glider" level="2">gliders</string>
 	<string name="category_glider_keywords">roller skate, inline skate, ice skate, sled, ski, snowboard, skateboard, surfboard</string>
-	<string name="category_gym" level="2" icon="@raw/category_dumbbell">gym</string>
+	<string name="category_gym" level="2" icon="@raw/item_dumbbell">gym</string>
 	<string name="category_gym_keywords">weight, dumbbell, medicine ball, punch bag, mat, bench, bike, treadmill, cross trainer, elliptical trainer</string>
 	<string name="category_fishing" level="2">fishing tackle</string>
 	<string name="category_fishing_keywords">rod, reel, line, hook, sinker, float, bait, net, trap</string>
 	<string name="category_sport_accessory" level="2">accessories</string>
 	<string name="category_sport_accessory_keywords">snorkel, earplug, noseclip, flippers, ski goggles, binoculars, periscope</string>
 
-	<string name="category_instrument" level="1" icon="@raw/category_musical_note">Instruments</string>
+	<string name="category_instrument" level="1" icon="@raw/snippet_musical_note">Instruments</string>
 	<!-- https://en.wikipedia.org/wiki/List_of_musical_instruments -->
 	<string name="category_instrument_keywords">@string/empty</string>
 	<string name="category_instrument_percussion" level="2">percussion</string>
@@ -364,20 +364,20 @@
 	<string name="category_instrument_studio" level="2">assistive electronics</string>
 	<string name="category_instrument_studio_keywords">amplifier, synthesizer, sampler, mixer/mixing console, electronic tuner</string>
 
-	<string name="category_organism" level="1" icon="@raw/category_paw">Organisms</string>
+	<string name="category_organism" level="1" icon="@raw/snippet_paw">Organisms</string>
 	<string name="category_organism_keywords">@string/empty</string>
-	<string name="category_embryo" level="2" icon="@raw/category_leaf">embryos (germ)</string>
+	<string name="category_embryo" level="2" icon="@raw/item_leaf">embryos (germ)</string>
 	<string name="category_embryo_keywords">stem, root, seed, bulb, seedling/sprout</string>
-	<string name="category_plant" level="2" icon="@raw/category_leaf">plants</string>
+	<string name="category_plant" level="2" icon="@raw/item_leaf">plants</string>
 	<string name="category_plant_keywords">grass, flower, bush, hedge, tree</string>
-	<string name="category_pet" level="2" icon="@raw/category_paw">pets</string>
+	<string name="category_pet" level="2">pets</string>
 	<string name="category_pet_keywords">dog, puppy, cat, kitten, hamster, chinchilla, guinea pig, gerbil, ferret, mouse, rabbit, fish, koi, spider, snake, turtle/tortoise, frog/toad, parrot, canary</string>
-	<string name="category_livestock" level="2" icon="@raw/category_paw">livestock</string>
+	<string name="category_livestock" level="2">livestock</string>
 	<string name="category_livestock_keywords">chicken, pig, sheep, cow, goat, duck, donkey, mule, horse</string>
 
 
 	<!--=========================================================================================================-->
-	<string name="category_toy" level="0" icon="@raw/category_teddy">Toys</string>
+	<string name="category_toy" level="0" icon="@raw/item_teddy">Toys</string>
 	<string name="category_toy_keywords">@string/empty</string>
 	<string name="category_toy_description">stuff to play with</string>
 
@@ -458,7 +458,7 @@
 
 
 	<!--=========================================================================================================-->
-	<string name="category_machine" level="0" icon="@raw/category_plug">Machines</string>
+	<string name="category_machine" level="0" icon="@raw/item_plug">Machines</string>
 	<string name="category_machine_keywords">@string/empty</string>
 	<string name="category_machine_description">stuff that consumes energy during operation</string>
 
@@ -467,24 +467,24 @@
 	<!-- http://www.costco.com/appliances.html -->
 	<string name="category_appliance_major" level="1">Major Appliances</string>
 	<string name="category_appliance_major_keywords">@string/empty</string>
-	<string name="category_appliance_cook" level="2" icon="@raw/category_pot_hot">cooking</string>
+	<string name="category_appliance_cook" level="2" icon="@raw/item_pot_hot">cooking</string>
 	<string name="category_appliance_cook_keywords">stove, hob, cooktop, cooker, oven, range, microwave, kiln, stone oven, grill, barbecue</string>
-	<string name="category_appliance_storage" level="2">food storage</string>
+	<string name="category_appliance_storage" level="2" icon="@raw/item_fridge">food storage</string>
 	<string name="category_appliance_storage_keywords">refrigerator/fridge, cooler, freezer, garbage disposal unit/waste disposal unit, vending machine</string>
-	<string name="category_appliance_laundry" level="2" icon="@raw/category_washing_machine">laundry</string>
+	<string name="category_appliance_laundry" level="2" icon="@raw/item_washing_machine">laundry</string>
 	<string name="category_appliance_laundry_keywords">dishwasher, washing machine, dryer, sewing machine</string>
-	<string name="category_appliance_climate" level="2">thermoregulation</string>
+	<string name="category_appliance_climate" level="2" icon="@raw/snippet_hot">thermoregulation</string>
 	<string name="category_appliance_climate_keywords">air conditioner, boiler/water heater, fireplace, radiator, stove</string>
 
 	<string name="category_appliance_minor" level="1">Small Appliances</string>
 	<string name="category_appliance_minor_keywords">@string/empty</string>
 	<string name="category_appliance_groom" level="2">body grooming</string>
 	<string name="category_appliance_groom_keywords">hairdryer, curling iron, hair straightener, electric razor, electric toothbrush</string>
-	<string name="category_appliance_kitchen" level="2">kitchen appliance</string>
+	<string name="category_appliance_kitchen" level="2" icon="@raw/item_pot_hot">kitchen appliance</string>
 	<string name="category_appliance_kitchen_keywords">toaster, sandwich toaster, waffle iron, toaster oven, rice cooker, bread maker, coffee maker/coffee machine/espresso machine, mixer, electric kettle/electric water boiler, filter kettle, vacuum sealer</string>
-	<string name="category_appliance_food_processor" level="2">food processor</string>
+	<string name="category_appliance_food_processor" level="2" icon="@raw/item_pot_hot">food processor</string>
 	<string name="category_appliance_food_processor_keywords">blender, stick blender/immersion blender, mixer, blade grinder, slicer, ice maker, food dehydrator</string>
-	<string name="category_appliance_air" level="2">air control</string>
+	<string name="category_appliance_air" level="2" icon="@raw/item_fan">air control</string>
 	<string name="category_appliance_air_keywords">desk fan, tower fan, pedestal fan, range hood, heater, portable radiator, humidifier, dehumidifier, vaporizer, water pipe, bong, e-cigarette</string>
 	<string name="category_appliance_clean" level="2">cleaning</string>
 	<string name="category_appliance_clean_keywords">iron, vacuum cleaner, steam cleaner, carpet cleaner, robovac</string>
@@ -514,23 +514,23 @@
 	<string name="category_electronic_camera_keywords">digital camera, polaroid camera, camcorder/video camera, DSC, DSLR, HD, 4K</string>
 	<string name="category_electronic_recorder" level="2">recorder</string>
 	<string name="category_electronic_recorder_keywords">microphone, dictaphone, VCR/videocassette recorder, DVR/digital video recorder, photocopier</string>
-	<string name="category_electronic_player" level="2" icon="@raw/category_stereo">recording players</string>
+	<string name="category_electronic_player" level="2" icon="@raw/item_stereo">recording players</string>
 	<string name="category_electronic_player_keywords">entertainment center/home cinema, music center, shelf stereo, CD player, DVD player, Blu-ray player, phonograph, turntable, karaoke system</string>
 	<string name="category_electronic_portable" level="2">portable media players</string>
 	<string name="category_electronic_portable_keywords">digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook</string>
 	<string name="category_electronic_transmission" level="2">signal processors</string>
 	<string name="category_electronic_transmission_keywords">set-top box, TV tuner, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor, GPS/satnav/satellite navigation</string>
-	<string name="category_electronic_speaker" level="2">speakers</string>
+	<string name="category_electronic_speaker" level="2" icon="@raw/item_speaker">speakers</string>
 	<string name="category_electronic_speaker_keywords">loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker</string>
 	<string name="category_electronic_display" level="2">displays</string>
 	<string name="category_electronic_display_keywords">monitor, TV/television, projector, touchscreen; CRT, LCD, TFT, IPS, LED, plasma, OLED</string>
 
-	<string name="category_computer" level="1" icon="@raw/category_chip">Computers</string>
+	<string name="category_computer" level="1" icon="@raw/item_chip">Computers</string>
 	<string name="category_computer_keywords">calculator</string>
 	<string name="category_computer_desktop" level="2">desktop</string>
 	<string name="category_computer_desktop_keywords">Mac/Macintosh, PC/personal computer</string>
 	<string name="category_computer_portable" level="2">portable</string>
-	<string name="category_computer_portable_keywords">notebook, netbook, tablet, laplet, palmtop, PDA, pocket PC</string>
+	<string name="category_computer_portable_keywords">laptop, notebook, netbook, tablet, laplet, palmtop, PDA, pocket PC</string>
 	<string name="category_computer_console" level="2">game consoles</string>
 	<string name="category_computer_console_keywords">Xbox, Nintendo Wii, Sony Playstation, Sega, Atari</string>
 	<string name="category_computer_mobile" level="2">mobile phones</string>
@@ -538,7 +538,7 @@
 	<string name="category_computer_wearable" level="2">wearables</string>
 	<string name="category_computer_wearable_keywords">activity tracker, smartwatch, MP4 watch, Apple Watch, smartglasses, Google Glass</string>
 
-	<string name="category_computer_part" level="1" icon="@raw/category_chip">Peripherals</string>
+	<string name="category_computer_part" level="1" icon="@raw/item_chip">Peripherals</string>
 	<string name="category_computer_part_keywords">@string/empty</string>
 	<string name="category_computer_input" level="2">input devices</string>
 	<string name="category_computer_input_keywords">keyboard, mouse, trackball, touchpad, graphics tablet, webcam/webcamera, scanner</string>
@@ -562,21 +562,21 @@
 	<string name="category_cable_power" level="2">power source</string>
 	<string name="category_cable_power_keywords">power cord, extension cord, power strip, adaptor/AC adapter, US/EU/UK/AU plug, surge protector, plug converters/travel adapter, car charger, jumper cable</string>
 
-	<string name="category_vehicle" level="1" icon="@raw/category_car_front">Vehicles</string>
+	<string name="category_vehicle" level="1" icon="@raw/item_car_front">Vehicles</string>
 	<string name="category_vehicle_keywords">@string/empty</string>
-	<string name="category_vehicle_human" level="2" icon="@raw/category_bicycle">human-powered</string>
+	<string name="category_vehicle_human" level="2" icon="@raw/item_bicycle">human-powered</string>
 	<string name="category_vehicle_human_keywords">bicycle, unicycle, monowheel, scooter, shopping cart/trolley, stroller/buggy/pram</string>
 	<string name="category_vehicle_motorized" level="2">motorized</string>
 	<string name="category_vehicle_motorized_keywords">motorcycle, car, SUV, quad, buggy, go-kart</string>
 	<string name="category_vehicle_truck" level="2">trucks</string>
 	<string name="category_vehicle_truck_keywords">golf cart, pickup, lorry, van, bus, trolley bus</string>
-	<string name="category_vehicle_trailer" level="2" icon="@raw/category_trailer">trailers</string>
+	<string name="category_vehicle_trailer" level="2" icon="@raw/item_trailer">trailers</string>
 	<string name="category_vehicle_trailer_keywords">RV/recreational vehicle, wagon, carriage, train, tram</string>
 	<string name="category_vehicle_heavy" level="2">heavy equipment</string>
 	<string name="category_vehicle_heavy_keywords">tractor, forklift, crane, excavator, dump truck/dumper/tipper truck, bulldozer, loader, road roller</string>
-	<string name="category_vehicle_air" level="2" icon="@raw/category_plane">aircraft</string>
+	<string name="category_vehicle_air" level="2" icon="@raw/item_plane">aircraft</string>
 	<string name="category_vehicle_air_keywords">plane, helicopter, glider, hot air balloon, parachute, drone, rocket, jetpack</string>
-	<string name="category_vehicle_water" level="2" icon="@raw/category_boat">watercraft</string>
+	<string name="category_vehicle_water" level="2" icon="@raw/item_boat">watercraft</string>
 	<string name="category_vehicle_water_keywords">boat, kayak, canoe, inflatable boat, ship, sailing boat, yacht, submarine</string>
 
 
@@ -585,12 +585,12 @@
 	<string name="category_household_keywords">@string/empty</string>
 	<string name="category_household_description">stuff around the house</string>
 
-	<string name="category_gardening" level="1">Gardening</string>
+	<string name="category_gardening" level="1" icon="@raw/item_leaf">Gardening</string>
 	<!-- http://www.homedepot.com/b/Outdoors-Outdoor-Power-Equipment/N-5yc1vZbx5c -->
 	<string name="category_gardening_keywords">@string/empty</string>
 	<string name="category_gardening_hand" level="2">hand gardening tools</string>
 	<string name="category_gardening_hand_keywords">shovel, rake, spade, transplanter, dibber, pitchfork, hoe, mattock, pickaxe, pruning shears</string>
-	<string name="category_gardening_irrigation" level="2">irrigation tools</string>
+	<string name="category_gardening_irrigation" level="2" icon="@raw/snippet_water">irrigation tools</string>
 	<string name="category_gardening_irrigation_keywords">watering can, spray bottle, sprinkler, hose, saucer/drip tray, seed tray</string>
 	<string name="category_gardening_power" level="2">power gardening tools</string>
 	<string name="category_gardening_power_keywords">lawn mower, string trimmer, leaf blower, cultivator, tiller, pressure washer, wood chipper, generator</string>
@@ -599,12 +599,12 @@
 	<string name="category_cleaning_keywords">@string/empty</string>
 	<string name="category_cleaning_dry" level="2">dry</string>
 	<string name="category_cleaning_dry_keywords">broom, brush, dust pan, duster, dusting cloth</string>
-	<string name="category_cleaning_wet" level="2">wet</string>
+	<string name="category_cleaning_wet" level="2" icon="@raw/snippet_water">wet</string>
 	<string name="category_cleaning_wet_keywords">mop, mop head, sponge, rag, J-cloth, stainless steel scourer/steel wool, window scraper, plunger, toilet brush</string>
 
-	<string name="category_chemical" level="1" icon="@raw/category_skull">Chemicals</string>
+	<string name="category_chemical" level="1" icon="@raw/item_skull">Chemicals</string>
 	<!-- http://en.wikipedia.org/wiki/Biocide#European_Community_Classification -->
-	<string name="category_chemical_keywords">matches, lighter, shoe polish, cat litter</string>
+	<string name="category_chemical_keywords">shoe polish, cat litter</string>
 	<string name="category_chemical_scent" level="2">scent</string>
 	<string name="category_chemical_scent_keywords">air-freshener spray, incense stick, incense cone, air-freshener gel, car freshener, toilet rim freshener</string>
 	<string name="category_chemical_insect" level="2">insect repellent</string>
@@ -617,42 +617,42 @@
 	<string name="category_chemical_disinfectant_keywords">toilet cleaner, toilet gel, floor &amp; surface cleaner, furniture spray</string>
 	<string name="category_chemical_solvent" level="2">solvents</string>
 	<string name="category_chemical_solvent_keywords">turpentine, white spirit, bleach/sodium hypochlorite, degreaser, descaling agent, drain cleaner, paint thinner, ionised water, distilled water, antifreeze</string>
-	<string name="category_chemical_fuel" level="2">fuel</string>
-	<string name="category_chemical_fuel_keywords">gasoline, petrol, diesel, biofuel, petroleum, kerosene, firewood, coal, charcoal, coke, lighter fluid</string>
+	<string name="category_chemical_fuel" level="2" icon="@raw/snippet_flame">fuel</string>
+	<string name="category_chemical_fuel_keywords">matches, lighter, gasoline, petrol, diesel, biofuel, petroleum, kerosene, firewood, coal, charcoal, coke, lighter fluid</string>
 	<string name="category_chemical_lubricant" level="2">lubricants</string>
 	<string name="category_chemical_lubricant_keywords">motor oil, penetrating fluid/WD-40, anti-corrosion spray, corrosion inhibitor, silicone lubricant, polishing compound</string>
-	<string name="category_chemical_fertilizer" level="2" icon="@raw/category_leaf">fertilizer</string>
+	<string name="category_chemical_fertilizer" level="2" icon="@raw/item_leaf">fertilizer</string>
 	<string name="category_chemical_fertilizer_keywords">plant food, compost, potting soil</string>
 
-	<string name="category_utensil_kitchen" level="1" icon="@raw/category_pot_hot">Food Preparation</string>
+	<string name="category_utensil_kitchen" level="1" icon="@raw/item_pot_hot">Food Preparation</string>
 	<string name="category_utensil_kitchen_keywords">@string/empty</string>
-	<string name="category_utensil_measure" level="2">measurement</string>
+	<string name="category_utensil_measure" level="2" icon="@raw/item_spoon">measurement</string>
 	<string name="category_utensil_measure_keywords">measuring spoon, measuring scoop, measuring cup, kitchen scale, kitchen balance</string>
 	<string name="category_utensil_filter" level="2">filtering</string>
 	<string name="category_utensil_filter_keywords">soda siphon, whipped cream dispenser, kitchen sieve, tea sieve, colander/pasta strainer, funnel, straw, bottle teat</string>
-	<string name="category_utensil_mix" level="2">mixing</string>
+	<string name="category_utensil_mix" level="2" icon="@raw/item_spoon">mixing</string>
 	<string name="category_utensil_mix_keywords">mixing bowl, wooden spoon, whisk, rolling pin, shaker, spatula</string>
-	<string name="category_utensil_chop" level="2">chopping</string>
+	<string name="category_utensil_chop" level="2" icon="@raw/item_knife">chopping</string>
 	<string name="category_utensil_chop_keywords">chopping board, grater, slicer, peeler, pizza cutter, biscuit cutter/cookie cutter, wedger, dicer, egg slicer</string>
 	<string name="category_utensil_crush" level="2">crusher</string>
 	<string name="category_utensil_crush_keywords">potato masher, meat grinder/meat mincer, potato ricer, lemon squeezer, garlic press, crusher, meat tenderizer, pepper mill, pestle &amp; mortar, juicer</string>
-	<string name="category_utensil_open" level="2">openers</string>
+	<string name="category_utensil_open" level="2" icon="@raw/item_knife">openers</string>
 	<string name="category_utensil_open_keywords">corkscrew, bottle opener, can opener/tin opener, jar opener, nutcracker, cherry pitter</string>
 
-	<string name="category_cookware" level="1" icon="@raw/category_pot_hot">Cookware</string>
+	<string name="category_cookware" level="1" icon="@raw/item_pot_hot">Cookware</string>
 	<string name="category_cookware_keywords">@string/empty</string>
 	<string name="category_cooking" level="2">cooking</string>
 	<string name="category_cooking_keywords">stockpot, cooking pot, pressure cooker, saucepan, dutch oven, frying pan, wok, cauldron, kettle; enamel, teflon, silicone</string>
 	<string name="category_baking" level="2">baking</string>
 	<string name="category_baking_keywords">baking pan, baking tray, baking mold, ice cube mold, grille, gridiron, skewer, parchment paper/baking paper; enamel, teflon, silicone</string>
 
-	<string name="category_tableware" level="1" icon="@raw/category_pot_hot">Catering</string>
+	<string name="category_tableware" level="1" icon="@raw/item_pot_hot">Catering</string>
 	<string name="category_tableware_keywords">dish, plate, bowl, tray, greaseproof paper, dog bowl, cat bowl, napkin, toothpick</string>
-	<string name="category_cutlery" level="2">cutlery</string>
+	<string name="category_cutlery" level="2" icon="@raw/category_cutlery">cutlery</string>
 	<string name="category_cutlery_keywords">knife, fork, spoon, spork, chopsticks</string>
-	<string name="category_drinkware" level="2">drinkware</string>
+	<string name="category_drinkware" level="2" icon="@raw/item_drink">drinkware</string>
 	<string name="category_drinkware_keywords">glass, mug, jug, cup, paper cup, tumbler, teapot</string>
-	<string name="category_cutlery_serving" level="2">serving</string>
+	<string name="category_cutlery_serving" level="2" icon="@raw/item_spoon">serving</string>
 	<string name="category_cutlery_serving_keywords">ladle, pasta spoon, tongs, ice-cream scoop, cake server, saucer</string>
 	<string name="category_cruet" level="2">cruet</string>
 	<string name="category_cruet_keywords">caster, salt shaker, pepper shaker, sugar dispenser, oil mister, oil cruet, kitchen syrup dispenser, dripless dispenser pot</string>
@@ -668,11 +668,11 @@
 	<!-- https://en.wikipedia.org/wiki/Workbench#collapsibleTable0 -->
 	<string name="category_tool" level="1">Tools</string>
 	<string name="category_tool_keywords">@string/empty</string>
-	<string name="category_tool_draw" level="2">writing/drawing</string>
+	<string name="category_tool_draw" level="2" icon="@raw/item_pen">writing/drawing</string>
 	<string name="category_tool_draw_keywords">pen, pencil, calligraphy pen, highlighter, drawing board</string>
-	<string name="category_tool_paint" level="2">painting</string>
+	<string name="category_tool_paint" level="2" icon="@raw/item_paint">painting</string>
 	<string name="category_tool_paint_keywords">paintbrush, paint roller, paint roller tray, varnish</string>
-	<string name="category_tool_cut" level="2">cutting tools</string>
+	<string name="category_tool_cut" level="2" icon="@raw/item_knife">cutting tools</string>
 	<string name="category_tool_cut_keywords">knife, scissors, cutter, rotary cutter, blade, scalpel, stapler, hole puncher</string>
 	<string name="category_tool_abrasive" level="2">abrasive tools</string>
 	<string name="category_tool_abrasive_keywords">rasp, sandpaper, scraper, grinding wheel, eraser/rubber</string>
@@ -683,20 +683,20 @@
 
 	<string name="category_tool_construction" level="2">construction</string>
 	<string name="category_tool_construction_keywords">wheelbarrow, ladder, step ladder, step stool, trowel</string>
-	<string name="category_tool_utility" level="2">utility tools (DIY)</string>
+	<string name="category_tool_utility" level="2" icon="@raw/item_hammer">utility tools (DIY)</string>
 	<string name="category_tool_utility_keywords">screwdriver, wrench/spanner, pipe wrench, spider wrench, clamp, plier, pincer, crimp, army-knife, awl, hammer, sledgehammer, mallet, saw, hacksaw, pick, axe, crowbar</string>
 	<string name="category_tool_power" level="2">power tools</string>
 	<string name="category_tool_power_keywords">drill, drill bit, impact driver, nail gun, sander, chainsaw, circular saw, vice, solder, blow torch, welding power supply, jackhammer/demolition hammer, rammer, suction pump, water pump, pressure pump, compressor, air pump, tire-pressure gauge</string>
-	<string name="category_tool_lighting" level="2">mobile lighting</string>
+	<string name="category_tool_lighting" level="2" icon="@raw/item_bulb">mobile lighting</string>
 	<string name="category_tool_lighting_keywords">lantern, kerosene lamp, flashlight, headlamp, torch, solar power light</string>
 
 	<string name="category_material" level="1">Materials</string>
 	<string name="category_material_keywords">@string/empty</string>
 	<string name="category_material_raw" level="2">raw</string>
 	<string name="category_material_raw_keywords">wood, metal, glass, wax, rock, clay, bark</string>
-	<string name="category_material_color" level="2">coloring</string>
+	<string name="category_material_color" level="2" icon="@raw/item_paint">coloring</string>
 	<string name="category_material_color_keywords">dye, paint, crayon, chalk, glitter</string>
-	<string name="category_material_paper" level="2">paper</string>
+	<string name="category_material_paper" level="2" icon="@raw/item_paper">paper</string>
 	<string name="category_material_paper_keywords">wallpaper, cardboard, wrapping paper, ribbon, bow</string>
 	<string name="category_material_strand" level="2">strands</string>
 	<string name="category_material_strand_keywords">yarn, thread, string, twine, rope, cord, cable, line, trimmer line, wire, shoelaces</string>
@@ -716,7 +716,7 @@
 
 
 	<!--=========================================================================================================-->
-	<string name="category_document" level="0" icon="@raw/category_paper">Documents</string>
+	<string name="category_document" level="0" icon="@raw/item_paper">Documents</string>
 	<string name="category_document_keywords">@string/empty</string>
 	<string name="category_document_description">stuff written on other stuff</string>
 
@@ -735,7 +735,7 @@
 	<string name="category_note" level="1">Notes</string>
 	<string name="category_note_keywords">exercise book, school notes, lesson notes, printout, pop quiz, test, midterm, exam, final exam, thesis</string>
 
-	<string name="category_money" level="1" icon="@raw/category_money">Money</string>
+	<string name="category_money" level="1" icon="@raw/item_money">Money</string>
 	<string name="category_money_keywords">@string/empty</string>
 	<string name="category_currency" level="2">currency</string>
 	<string name="category_currency_keywords">cash, bill/paper money/note, coin, credit card, debit card</string>
@@ -747,11 +747,11 @@
 
 
 	<!--=========================================================================================================-->
-	<string name="category_consumable" level="0" icon="@raw/category_burger_and_drink">Consumables</string>
+	<string name="category_consumable" level="0" icon="@raw/category_consumables">Consumables</string>
 	<string name="category_consumable_keywords">@string/empty</string>
 	<string name="category_consumable_description">stuff to ingest raw or processed</string>
 
-	<string name="category_food" level="1" icon="@raw/category_burger">Food</string>
+	<string name="category_food" level="1" icon="@raw/item_burger">Food</string>
 	<string name="category_food_keywords">@string/empty</string>
 	<string name="category_food_dry" level="2">long-life</string>
 	<string name="category_food_dry_keywords">coffee, tea, tobacco, cigarettes, instant packets, pet food</string>
@@ -766,7 +766,7 @@
 	<string name="category_sweet" level="2">sweets</string>
 	<string name="category_sweet_keywords">chocolate, chewing gum, bubble gum, dragee, liquorice, Turkish delight, jelly, gummy, hard candy, lollipop, mint, crackle candy, fudge</string>
 
-	<string name="category_liquid" level="1" icon="@raw/category_drink">Liquids</string>
+	<string name="category_liquid" level="1" icon="@raw/item_drink">Liquids</string>
 	<!-- http://www.ibtimes.com/what-are-most-popular-wine-grapes-world-1540272 -->
 	<string name="category_liquid_keywords">@string/empty</string>
 	<string name="category_drink" level="2">drinks</string>
@@ -795,7 +795,7 @@
 	<string name="category_food_additive" level="2">additives</string>
 	<string name="category_food_additive_keywords">food coloring, aroma, yeast, baking soda, baking powder, jelly powder, pudding powder, ice cream powder, gelatin, frosting</string>
 
-	<string name="category_plant_culinary" level="1" icon="@raw/category_leaf">Culinary Plants</string>
+	<string name="category_plant_culinary" level="1" icon="@raw/item_leaf">Culinary Plants</string>
 	<!-- https://localwiki.org/davis/Culinary_Plants -->
 	<!-- https://en.wikipedia.org/wiki/List_of_culinary_herbs_and_spices -->
 	<string name="category_plant_culinary_keywords">@string/empty</string>
@@ -812,18 +812,18 @@
 
 
 	<!--=========================================================================================================-->
-	<string name="category_health" level="0" icon="@raw/category_health_plus">Health</string>
+	<string name="category_health" level="0" icon="@raw/category_health">Health</string>
 	<string name="category_health_keywords">@string/empty</string>
 	<string name="category_health_description">stuff that helps you live a better life</string>
 
 	<string name="category_medical" level="1">Medical Products</string>
 	<!-- http://en.wikipedia.org/wiki/Category:Assistive_technology -->
 	<string name="category_medical_keywords">@string/empty</string>
-	<string name="category_medication_oral" level="2" icon="@raw/category_pills">oral medications</string>
+	<string name="category_medication_oral" level="2" icon="@raw/item_pills">oral medications</string>
 	<string name="category_medication_oral_keywords">pill, tablet, capsule, powder, effervescent; Aspirin</string>
-	<string name="category_medication_dermal" level="2" icon="@raw/category_pills">dermal medications</string>
+	<string name="category_medication_dermal" level="2" icon="@raw/item_pills">dermal medications</string>
 	<string name="category_medication_dermal_keywords">gel, paste, cream, lotion, balm, patch, ear drops, eye drops, nasal spray, heat rub, sports cream, ice gel</string>
-	<string name="category_medication_other" level="2" icon="@raw/category_pills">other medications</string>
+	<string name="category_medication_other" level="2" icon="@raw/item_pills">other medications</string>
 	<string name="category_medication_other_keywords">vitamin, multivitamin, mineral, supplement, syringe, suppository; Vitamin C, Calcium, Magnesium</string>
 	<string name="category_medical_equipment" level="2">equipment</string>
 	<string name="category_medical_equipment_keywords">bathroom scale, temperature meter, sphygmomanometer, blood sugar meter</string>
@@ -849,7 +849,7 @@
 	<string name="category_medical_reproductive" level="2">reproductive health</string>
 	<string name="category_medical_reproductive_keywords">diaper/nappy/nappies, condom, lubricant, sanitary pad, tampon</string>
 
-	<string name="category_cosmetic" level="1" icon="@raw/category_heart">Cosmetics</string>
+	<string name="category_cosmetic" level="1" icon="@raw/snippet_heart">Cosmetics</string>
 	<!-- http://en.wikipedia.org/wiki/Cosmetics -->
 	<string name="category_cosmetic_keywords">@string/empty</string>
 	<string name="category_cosmetic_hair" level="2">hair products</string>

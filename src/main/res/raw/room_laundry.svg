@@ -4,6 +4,6 @@
      xmlns:xlink="http://www.w3.org/1999/xlink">
 	<image width="1000" height="1000" x="-500" y="-500" xlink:href="room_empty.svg" />
 	<g id="in-the-house" transform="translate(0, 100)">
-		<image width="650" height="650" x="-325" y="-250" xlink:href="category_washing_machine.svg" />
+		<image width="650" height="650" x="-325" y="-250" xlink:href="item_washing_machine.svg" />
 	</g>
 </svg>
