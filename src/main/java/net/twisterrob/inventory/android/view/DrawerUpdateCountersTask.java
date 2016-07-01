@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
+import java.text.NumberFormat;
+
 import org.slf4j.*;
 
 import android.content.Context;
@@ -17,6 +19,7 @@ import net.twisterrob.inventory.android.*;
 
 public class DrawerUpdateCountersTask extends SimpleSafeAsyncTask<Void, Void, DrawerUpdateCountersTask.Stats> {
 	private static final Logger LOG = LoggerFactory.getLogger(DrawerUpdateCountersTask.class);
+	private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
 	private final Context context;
 
 	static class Stats {
@@ -38,16 +41,22 @@ public class DrawerUpdateCountersTask extends SimpleSafeAsyncTask<Void, Void, Dr
 		//noinspection TryFinallyCanBeTryWithResources
 		try {
 			long size = App.db().getFile().length();
-			stats.properties = DatabaseTools.getOptionalString(cursor, "properties");
-			stats.rooms = DatabaseTools.getOptionalString(cursor, "rooms");
-			stats.items = DatabaseTools.getOptionalString(cursor, "items");
-			stats.categories = DatabaseTools.getOptionalString(cursor, "categories");
+			stats.properties = getFormattedInt(cursor, "properties");
+			stats.rooms = getFormattedInt(cursor, "rooms");
+			stats.items = getFormattedInt(cursor, "items");
+			stats.categories = getFormattedInt(cursor, "categories");
 			stats.backupSize = size != 0? Formatter.formatFileSize(context, size) : null;
 		} finally {
 			cursor.close();
 		}
 		return stats;
 	}
+
+	private String getFormattedInt(Cursor cursor, String column) {
+		int value = DatabaseTools.getOptionalInt(cursor, column, -1);
+		return value < 0? null : NUMBER.format(value);
+	}
+
 	@Override protected void onResult(Stats result, Void ignore) {
 		update(result);
 	}

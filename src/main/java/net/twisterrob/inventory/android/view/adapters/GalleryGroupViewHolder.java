@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.view.adapters;
 
+import java.text.NumberFormat;
+
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,6 +16,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 
 public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
+	private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
 	private final TextView title;
 	private final ImageView image;
 	private final TextView count;
@@ -59,6 +62,6 @@ public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
 
 	private static String getCountText(Cursor cursor) {
 		int count = cursor.getInt(cursor.getColumnIndexOrThrow(CommonColumns.COUNT_CHILDREN_DIRECT));
-		return String.valueOf(count);
+		return NUMBER.format(count);
 	}
 }

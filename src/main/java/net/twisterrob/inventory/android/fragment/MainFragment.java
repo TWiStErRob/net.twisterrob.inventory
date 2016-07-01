@@ -239,6 +239,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 	}
 
 	static class ListAdapter extends CursorRecyclerAdapter<ListAdapter.ViewHolder> {
+		private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
 		private final RecyclerViewItemEvents listener;
 
 		public ListAdapter(Cursor cursor, RecyclerViewItemEvents listener) {
@@ -278,7 +279,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 			String listName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 			int listCount = cursor.getInt(cursor.getColumnIndexOrThrow(CommonColumns.COUNT_CHILDREN_DIRECT));
 			holder.title.setText(listName);
-			holder.count.setText(String.valueOf(listCount));
+			holder.count.setText(NUMBER.format(listCount));
 		}
 	}
 

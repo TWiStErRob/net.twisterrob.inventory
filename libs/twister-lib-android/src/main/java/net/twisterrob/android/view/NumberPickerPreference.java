@@ -1,5 +1,7 @@
 package net.twisterrob.android.view;
 
+import java.text.NumberFormat;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -100,6 +102,7 @@ public class NumberPickerPreference extends DialogPreference {
 	}
 
 	private static class EditTextPicker extends TextWatcherAdapter implements Picker {
+		private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
 		private final Context context;
 		private int value;
 		private int minValue = Integer.MIN_VALUE;
@@ -199,7 +202,7 @@ public class NumberPickerPreference extends DialogPreference {
 			}
 			this.value = value;
 			if (editor != null) {
-				editor.setText(String.valueOf(value));
+				editor.setText(NUMBER.format(value));
 				editor.setSelection(editor.getText().length());
 			}
 		}

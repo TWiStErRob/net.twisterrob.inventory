@@ -113,6 +113,7 @@ public class App extends Application {
 	@Override public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		updateLanguage(AndroidTools.getLocale(newConfig));
+		// FIXME private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
 	}
 
 	private void updateLanguage(Locale newLocale) {
@@ -124,7 +125,7 @@ public class App extends Application {
 			String to = StringTools.toLocale(currentLanguage).getDisplayName();
 			String message = getAppContext().getString(R.string.message_locale_changed, from, to);
 			LOG.debug(message);
-			if (!TextUtils.isEmpty(from)) {
+			if (BuildConfig.DEBUG && !TextUtils.isEmpty(from)) {
 				App.toast(message);
 			}
 			new BackgroundExecution(new Runnable() {

@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.content.model.helpers;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 import android.content.Context;
@@ -235,6 +236,7 @@ public class Hinter {
 			}
 		}
 
+		private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
 		private class HintHolder extends RecyclerView.ViewHolder {
 			private static final int TYPE = 0;
 			private final ImageView image;
@@ -321,7 +323,7 @@ public class Hinter {
 						if (maxDistance < wordSuggestion.getDistance()) {
 							continue;
 						}
-						String dist = String.valueOf(wordSuggestion.getDistance());
+						String dist = NUMBER.format(wordSuggestion.getDistance());
 						int start = keywordStart + wordSuggestion.getKeywordMatchEnd();
 						int end = start + dist.length();
 						if (!first) {

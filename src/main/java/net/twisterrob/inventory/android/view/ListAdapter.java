@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
+import java.text.NumberFormat;
+
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -17,6 +19,7 @@ public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		void addToList(long listID);
 	}
 
+	private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
 	private final ListItemEvents listener;
 
 	public ListAdapter(Cursor cursor, ListItemEvents listener) {
@@ -65,7 +68,7 @@ public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 			boolean exists = cursor.getShort(cursor.getColumnIndexOrThrow("exists")) != 0;
 
 			title.setText(name);
-			count.setText(String.valueOf(childCount));
+			count.setText(NUMBER.format(childCount));
 			itemView.setSelected(exists);
 			itemView.setEnabled(true);
 		}
