@@ -16,7 +16,7 @@ import android.support.annotation.NonNull;
 import static android.app.SearchManager.*;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
 
@@ -150,7 +150,7 @@ public class InventoryProvider extends ContentProvider {
 				return App.db().searchSuggest(query);
 			}
 			case SEARCH_ITEMS: {
-				if (selectionArgs == null || StringTools.isNullOrEmpty(selectionArgs[0])) {
+				if (BuildConfig.DEBUG && (selectionArgs == null || StringTools.isNullOrEmpty(selectionArgs[0]))) {
 					return App.db().listItemsForCategory(
 							net.twisterrob.inventory.android.content.contract.Category.INTERNAL, true);
 				}

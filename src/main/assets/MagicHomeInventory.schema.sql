@@ -673,6 +673,6 @@ BEGIN
 			where ipn.item = new._id and ipn.item <> ipn.node and ipn.node <> ipn.root
 			order by level DESC
 		) as Path
-		where i._id = new._id
+		where i._id = new._id and c._id <> -1 -- category_internal
 	;--NOTEOS
 END;

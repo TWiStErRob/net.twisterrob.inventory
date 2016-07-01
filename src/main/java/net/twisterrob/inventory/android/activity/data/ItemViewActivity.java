@@ -63,7 +63,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 		if (current == null) {
 			return null;
 		}
-		if (current.parentID == current.roomRoot) {
+		if (current.parentID == current.roomRoot || current.id == current.roomRoot) {
 			return RoomViewActivity.show(current.room);
 		} else {
 			return ItemViewActivity.show(current.parentID);

@@ -261,6 +261,7 @@
 				order by level DESC
 		) as      Path
 		where i._id = ?
+		group by i._id -- without this group_concat forces an empty row with all NULLs when Item doesn't exist
 	"]]></string>
 	<string name="query_items" translatable="false"><![CDATA["
 		select
