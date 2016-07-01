@@ -35,6 +35,10 @@ public class EditAllowingIndexer<T> implements Indexer<T> {
 		return word;
 	}
 
+	public int size() {
+		return root.deepSize();
+	}
+
 	private static class TrieNode<T> {
 		final char curr;
 		final Map<Character, TrieNode<T>> children = new HashMap<>();
@@ -50,6 +54,16 @@ public class EditAllowingIndexer<T> implements Indexer<T> {
 				children.put(key, node);
 			}
 			return node;
+		}
+
+		int deepSize() {
+			int size = terminals.size();
+			for (TrieNode<T> child : children.values()) {
+				if (child != null) {
+					size += child.deepSize();
+				}
+			}
+			return size;
 		}
 
 		Set<MatchResult<T>> match(String input, int maxDistance) {

@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 public interface Indexer<T> {
 	@Nonnull Collection<MatchResult<T>> match(@Nonnull CharSequence input);
 	void add(CharSequence word, T entry);
+	int size();
 
 	class MatchResult<T> {
 		/** Suggestion was created for this input. */

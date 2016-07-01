@@ -30,6 +30,14 @@ public class PerfectMatchIndexer<T> implements Indexer<T> {
 		wordSuggestions.add(entry);
 	}
 
+	@Override public int size() {
+		int size = 0;
+		for (Collection<T> match : index.values()) {
+			size += match.size();
+		}
+		return size;
+	}
+
 	private CharSequence clean(CharSequence word) {
 		return word.toString().toLowerCase(Locale.getDefault());
 	}
