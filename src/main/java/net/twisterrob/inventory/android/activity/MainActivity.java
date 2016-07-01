@@ -7,7 +7,6 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.content.*;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.*;
 import android.support.annotation.*;
@@ -429,14 +428,11 @@ public class MainActivity extends DrawerActivity
 		}
 		@SuppressWarnings("TryFinallyCanBeTryWithResources")
 		@Override protected Boolean doInBackground(Void... params) {
-			Cursor cursor = App.db().listProperties();
 			try {
-				return cursor.getCount() == 0;
+				return App.db().isEmpty();
 			} catch (Exception ex) {
 				LOG.error("Cannot get property list to check empty inventory", ex);
 				return null;
-			} finally {
-				cursor.close();
 			}
 		}
 		@Override protected void onPostExecute(Boolean result) {

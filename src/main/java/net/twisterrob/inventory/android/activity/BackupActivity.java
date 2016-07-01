@@ -21,6 +21,7 @@ import android.widget.*;
 
 import net.twisterrob.android.content.loader.AsyncLoader;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
@@ -115,10 +116,25 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 	}
 
-	public void filePicked(@NonNull File file, boolean addHistory) {
+	public void filePicked(@NonNull final File file, boolean addHistory) {
 		LOG.trace("File picked (dir={}, exists={}): {}", file.isDirectory(), file.exists(), file);
 		if (IOTools.isValidFile(file)) {
-			ImportFragment.create(this, getSupportFragmentManager()).execute(file);
+			//noinspection WrongThread FIXME DB on UI thread
+			if (!App.db().isEmpty()) {
+				AndroidTools
+						.confirm(this, new PopupCallbacks<Boolean>() {
+							@Override public void finished(Boolean value) {
+								if (Boolean.TRUE.equals(value)) {
+									doImport(file);
+								}
+							}
+						})
+						.setTitle(R.string.backup_import_confirm_title)
+						.setMessage(getString(R.string.backup_import_confirm_warning, file.getName()))
+						.show();
+			} else {
+				doImport(file);
+			}
 		} else {
 			File dir = file;
 			while (!IOTools.isValidDir(dir)) {
@@ -132,6 +148,9 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			}
 			controller.startLoad(Intents.bundleFrom(EXTRA_PATH, dir));
 		}
+	}
+	private void doImport(@NonNull File file) {
+		ImportFragment.create(getApplicationContext(), getSupportFragmentManager()).execute(file);
 	}
 
 	public static Intent chooser() {

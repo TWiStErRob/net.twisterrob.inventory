@@ -440,4 +440,12 @@ public class Database extends VariantDatabase {
 		helper.close();
 		helper.setTestMode(false);
 	}
+	public boolean isEmpty() {
+		Cursor cursor = stats();
+		try {
+			return DatabaseTools.getOptionalInt(cursor, "properties", 0) == 0;
+		} finally {
+			cursor.close();
+		}
+	}
 }

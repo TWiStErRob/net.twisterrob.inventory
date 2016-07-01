@@ -239,6 +239,8 @@
 	<string name="backup_export_result_success" tools:ignore="PluralsCandidate">Done exporting %1$d belongings with %2$d images.</string>
 	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>
 
+	<string name="backup_import_confirm_title">Import</string>
+	<string name="backup_import_confirm_warning">You\'re about to import %1$s into your inventory, which is not empty. The best effort will be made to merge conflicting items. Do you want to continue?</string>
 	<string name="backup_import_progress_title">Import</string>
 	<string name="backup_import_progress_init">Preparing import…</string>
 	<string name="backup_import_progress_data">Importing belongings…\nPlease stay here while the import is in progress, background import is not fully supported yet. You may cancel by pressing the back button.</string>
