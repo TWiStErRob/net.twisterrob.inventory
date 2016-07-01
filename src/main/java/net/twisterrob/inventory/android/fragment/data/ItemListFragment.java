@@ -10,7 +10,6 @@ import android.view.*;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
-import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -67,12 +66,16 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 
 	@Override
 	protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+		MoveTargetActivity.Builder builder = MoveTargetActivity
+				.pick()
+				.allowRooms()
+				.allowItems();
 		// one of parentItem or room will be a valid ID, so try both
-		Builder builder = MoveTargetActivity.pick()
-		                                    .startFromItem(getArgParentItemID())
-		                                    .startFromRoom(getArgRoomID())
-		                                    .allowRooms()
-		                                    .allowItems();
+		if (getArgParentItemID() != Item.ID_ADD) {
+			builder.startFromItem(getArgParentItemID());
+		} else if (getArgRoomID() != Item.ID_ADD) {
+			builder.startFromRoom(getArgRoomID());
+		}
 		return new ItemSelectionActionMode(this, adapter, builder);
 	}
 

@@ -67,10 +67,11 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 
 	@Override
 	protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
-		Builder builder = MoveTargetActivity.pick()
-		                                    .startFromPropertyList()
-		                                    .allowProperties()
-		                                    .forbidProperties(getArgPropertyID());
+		MoveTargetActivity.Builder builder = MoveTargetActivity
+				.pick()
+				.startFromPropertyList()
+				.allowProperties()
+				.forbidProperties(getArgPropertyID());
 		return new RoomSelectionActionMode(this, adapter, builder);
 	}
 

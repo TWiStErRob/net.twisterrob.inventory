@@ -426,6 +426,8 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 
 	@SuppressWarnings({"unused", "UnusedReturnValue"})
 	public static final class Builder {
+		// cannot automatically forbid starting points, because siblings would be disabled
+
 		private final Intent intent = new Intent(App.getAppContext(), MoveTargetActivity.class);
 		private @BelongingTarget int what;
 		private final Set<Long> forbiddenPropertyIDs = new TreeSet<>();
@@ -498,30 +500,46 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 			return this;
 		}
 		public Builder startFromPropertyList() {
+			checkAlreadyStarted();
 			intent.removeExtra(EXTRA_START_TYPE);
 			intent.removeExtra(EXTRA_START_ID);
 			return this;
 		}
 		public Builder startFromProperty(long propertyID) {
+			checkAlreadyStarted();
 			if (propertyID != Property.ID_ADD) {
 				intent.putExtra(EXTRA_START_TYPE, PROPERTY);
 				intent.putExtra(EXTRA_START_ID, propertyID);
+			} else {
+				throw new IllegalArgumentException("Cannot start from a new property.");
 			}
 			return this;
 		}
 		public Builder startFromRoom(long roomID) {
+			checkAlreadyStarted();
 			if (roomID != Room.ID_ADD) {
 				intent.putExtra(EXTRA_START_TYPE, ROOM);
 				intent.putExtra(EXTRA_START_ID, roomID);
+			} else {
+				throw new IllegalArgumentException("Cannot start from a new room.");
 			}
 			return this;
 		}
 		public Builder startFromItem(long itemID) {
+			checkAlreadyStarted();
 			if (itemID != Item.ID_ADD) {
 				intent.putExtra(EXTRA_START_TYPE, ITEM);
 				intent.putExtra(EXTRA_START_ID, itemID);
+			} else {
+				throw new IllegalArgumentException("Cannot start from a new item.");
 			}
 			return this;
+		}
+
+		private void checkAlreadyStarted() {
+			if (intent.hasExtra(EXTRA_START_TYPE) || intent.hasExtra(EXTRA_START_ID)) {
+				throw new IllegalStateException("You can only have one starting belonging.");
+			}
 		}
 
 		public Intent build() {

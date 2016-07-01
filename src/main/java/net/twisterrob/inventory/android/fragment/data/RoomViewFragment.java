@@ -87,11 +87,12 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				delete(getArgRoomID());
 				return true;
 			case R.id.action_room_move:
-				Intent intent = MoveTargetActivity.pick()
-				                                  .startFromPropertyList()
-				                                  .allowProperties()
-				                                  .forbidProperties(propertyID)
-				                                  .build();
+				Intent intent = MoveTargetActivity
+						.pick()
+						.startFromPropertyList()
+						.allowProperties()
+						.forbidProperties(propertyID)
+						.build();
 				startActivityForResult(intent, MOVE_REQUEST);
 				return true;
 			case R.id.action_room_sunburst:
