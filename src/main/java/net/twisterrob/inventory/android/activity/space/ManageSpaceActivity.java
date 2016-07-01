@@ -93,6 +93,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								helper.onDestroy(helper.getWritableDatabase());
 								helper.onCreate(helper.getWritableDatabase());
 								helper.close();
+								App.setSPref(R.string.pref_currentLanguage, null);
 								App.setBPref(R.string.pref_showWelcome, true);
 							}
 						}

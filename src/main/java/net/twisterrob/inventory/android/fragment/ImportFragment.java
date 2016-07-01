@@ -140,7 +140,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 	public static ImportFragment create(Context context, FragmentManager fm) {
 		ImportFragment fragment = new ImportFragment();
 		fragment.parentFragmentManager = fm;
-		fragment.task = new ImporterTask(context);
+		fragment.task = new ImporterTask(context.getResources());
 		fragment.task.setCallbacks(fragment);
 		return fragment;
 	}

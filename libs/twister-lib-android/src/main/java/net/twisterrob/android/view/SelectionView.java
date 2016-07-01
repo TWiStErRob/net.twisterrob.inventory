@@ -33,6 +33,7 @@ public class SelectionView extends View {
 
 	private Selection selection;
 	private boolean keepAspectRatio = false;
+	private SelectionStatus status;
 
 	private static abstract class PendingMargin {
 		protected abstract Rect produce(int width, int height);
@@ -595,7 +596,11 @@ public class SelectionView extends View {
 	}
 
 	public void setSelectionStatus(SelectionStatus status) {
+		this.status = status;
 		status.updatePaint(line);
 		invalidate();
+	}
+	public SelectionStatus getSelectionStatus() {
+		return status;
 	}
 }

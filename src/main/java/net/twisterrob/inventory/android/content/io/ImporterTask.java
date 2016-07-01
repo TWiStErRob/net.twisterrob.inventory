@@ -9,7 +9,7 @@ import static java.lang.String.*;
 
 import org.slf4j.*;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.*;
 
@@ -54,10 +54,10 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 		}
 	}
 
-	private final Context context;
+	private final Resources res;
 
-	public ImporterTask(Context context) {
-		this.context = context;
+	public ImporterTask(Resources res) {
+		this.res = res;
 	}
 
 	public void setCallbacks(ImportCallbacks callbacks) {
@@ -94,7 +94,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 	}
 
 	public void warning(@StringRes int stringID, Object... args) {
-		String message = context.getString(stringID, args);
+		String message = res.getString(stringID, args);
 		LOG.warn("Warning: {}", message);
 		progress.conflicts.add(message);
 	}
@@ -127,7 +127,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 				importer = new XMLImporter(this, appDB);
 			} else {
 				throw new IllegalArgumentException(format("The file %s is not a valid %s backup: %s",
-						zip.getName(), context.getString(R.string.app_name), "missing data file"));
+						zip.getName(), res.getString(R.string.app_name), "missing data file"));
 			}
 			importer.doImport(stream);
 

@@ -251,17 +251,21 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			}
 		});
 
+		final SelectionStatus oldStatus = mSelection.getSelectionStatus();
 		mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
 		RequestListener<Object, Bitmap> visualFeedbackListener = new RequestListener<Object, Bitmap>() {
 			@Override public boolean onException(Exception e,
 					Object model, Target<Bitmap> target, boolean isFirstResource) {
 				mSelection.setSelectionStatus(SelectionStatus.BLURRY);
-
 				return false;
 			}
 			@Override public boolean onResourceReady(Bitmap resource,
 					Object model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-				mSelection.setSelectionStatus(SelectionStatus.FOCUSED);
+				if (oldStatus == SelectionStatus.BLURRY) {
+					mSelection.setSelectionStatus(SelectionStatus.BLURRY);
+				} else {
+					mSelection.setSelectionStatus(SelectionStatus.FOCUSED);
+				}
 				return false;
 			}
 		};
