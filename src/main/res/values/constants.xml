@@ -4,4 +4,5 @@
 	<integer name="View_VISIBLE" tools:ignore="UnusedResources">0</integer>
 	<integer name="View_INVISIBLE" tools:ignore="UnusedResources">1</integer>
 	<integer name="View_GONE" tools:ignore="UnusedResources">2</integer>
+	<bool name="show_category_help">@bool/in_test</bool>
 </resources>

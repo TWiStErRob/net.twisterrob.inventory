@@ -12,7 +12,7 @@
 		<item android:id="@+id/action_drawer_sunburst" android:title="@string/sunburst_title" />
 		<item android:id="@+id/action_drawer_category_guide"
 		      android:title="@string/category_guide"
-		      android:visible="@bool/in_test" />
+		      android:visible="@bool/show_category_help" />
 		<item android:id="@+id/action_drawer_backup" android:title="@string/backup_title" />
 		<item android:id="@+id/action_drawer_preferences" android:title="@string/pref_activity_title" />
 		<item android:id="@+id/action_drawer_about" android:title="@string/about_title" />
