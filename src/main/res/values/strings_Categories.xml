@@ -521,7 +521,7 @@
 	<string name="category_electronic_transmission" level="2">signal processors</string>
 	<string name="category_electronic_transmission_keywords">set-top box, TV tuner, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor, GPS/satnav/satellite navigation</string>
 	<string name="category_electronic_speaker" level="2" icon="@raw/item_speaker">speakers</string>
-	<string name="category_electronic_speaker_keywords">loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, headphones, headset, portable speakers/wireless speaker</string>
+	<string name="category_electronic_speaker_keywords">loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, earbuds, headphones, headset, portable speakers/wireless speaker, noise cancelling</string>
 	<string name="category_electronic_display" level="2">displays</string>
 	<string name="category_electronic_display_keywords">monitor, TV/television, projector, touchscreen; CRT, LCD, TFT, IPS, LED, plasma, OLED</string>
 
@@ -534,7 +534,7 @@
 	<string name="category_computer_console" level="2">game consoles</string>
 	<string name="category_computer_console_keywords">Xbox, Nintendo Wii, Sony Playstation, Sega, Atari</string>
 	<string name="category_computer_mobile" level="2">mobile phones</string>
-	<string name="category_computer_mobile_keywords">cell phone, pager, smartphone, phablet, Android, Apple iPhone, Samsung, Nokia, HTC, LG, Sony</string>
+	<string name="category_computer_mobile_keywords">cell phone, pager, smartphone, phablet; Android, Apple iPhone, Samsung, Nokia, HTC, LG, Sony; GPRS, EDGE, 3G, 4G LTE, HSDPA, HSPA+</string>
 	<string name="category_computer_wearable" level="2">wearables</string>
 	<string name="category_computer_wearable_keywords">activity tracker, smartwatch, MP4 watch, Apple Watch, smartglasses, Google Glass</string>
 
@@ -575,7 +575,7 @@
 	<string name="category_vehicle_heavy" level="2">heavy equipment</string>
 	<string name="category_vehicle_heavy_keywords">tractor, forklift, crane, excavator, dump truck/dumper/tipper truck, bulldozer, loader, road roller</string>
 	<string name="category_vehicle_air" level="2" icon="@raw/item_plane">aircraft</string>
-	<string name="category_vehicle_air_keywords">plane, helicopter, glider, hot air balloon, parachute, drone, rocket, jetpack</string>
+	<string name="category_vehicle_air_keywords">plane, helicopter, glider, hot air balloon, parachute, drone, rocket, jetpack, jet</string>
 	<string name="category_vehicle_water" level="2" icon="@raw/item_boat">watercraft</string>
 	<string name="category_vehicle_water_keywords">boat, kayak, canoe, inflatable boat, ship, sailing boat, yacht, submarine</string>
 
@@ -697,7 +697,7 @@
 	<string name="category_material_color" level="2" icon="@raw/item_paint">coloring</string>
 	<string name="category_material_color_keywords">dye, paint, crayon, chalk, glitter</string>
 	<string name="category_material_paper" level="2" icon="@raw/item_paper">paper</string>
-	<string name="category_material_paper_keywords">wallpaper, cardboard, wrapping paper, ribbon, bow</string>
+	<string name="category_material_paper_keywords">wallpaper, cardboard/paperboard, carton, wrapping paper, ribbon, bow</string>
 	<string name="category_material_strand" level="2">strands</string>
 	<string name="category_material_strand_keywords">yarn, thread, string, twine, rope, cord, cable, line, trimmer line, wire, shoelaces</string>
 	<string name="category_material_fabric" level="2">fabrics</string>
@@ -740,7 +740,7 @@
 	<string name="category_currency" level="2">currency</string>
 	<string name="category_currency_keywords">cash, bill/paper money/note, coin, credit card, debit card</string>
 	<string name="category_scrip" level="2">scrips</string>
-	<string name="category_scrip_keywords">voucher/coupon, loyalty card, ticket, season pass, press pass, token, gift card, telephone card, top-up card, prepaid card, pay-as-you-go cards</string>
+	<string name="category_scrip_keywords">voucher/coupon, loyalty card, ticket, season pass, press pass, token, gift card, telephone card/calling card, top-up card, prepaid card, pay-as-you-go cards</string>
 
 	<string name="category_material_stationery" level="1">stationery paper</string>
 	<string name="category_material_stationery_keywords">sheet paper, notepad, notebook, sticky notes, scrapbook, envelope</string>

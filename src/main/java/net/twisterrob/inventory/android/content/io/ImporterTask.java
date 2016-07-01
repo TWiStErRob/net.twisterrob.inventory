@@ -72,7 +72,7 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 	}
 	@Override protected void onPostExecute(Progress progress) {
 		if (progress.failure != null) {
-			LOG.warn("Export failed", progress.failure);
+			LOG.warn("Import failed", progress.failure);
 		}
 		callbacks.importFinished(progress);
 	}
@@ -138,7 +138,15 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 			progress.failure = ex;
 		} finally {
 			IOTools.ignorantClose(zip);
-			db.endTransaction();
+			try {
+				db.endTransaction();
+			} catch (Exception ex) {
+				if (progress.failure != null) {
+					LOG.warn("Cannot end transaction, exception suppressed by {}", progress.failure, ex);
+				} else {
+					progress.failure = ex;
+				}
+			}
 		}
 		return progress;
 	}

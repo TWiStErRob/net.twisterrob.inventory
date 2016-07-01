@@ -185,5 +185,6 @@
 		It also helps to create separate <i>Groups</i> in that room: “<i>Broken</i>”, “<i>Expired</i>”, “<i>Used up</i>”, “<i>Sold</i>”, “<i>Gave away</i>” to record the reason.
 		&LI;Create an “<i>Original Packaging</i>” room in a “<i>Virtual</i>” property to record what was in the original boxes in case you want to re-sell stuff later.
 		&LI;Put an exclamation mark (!) in front of a belonging\'s name to bring it to the top of the list.
+		<!--&LI;In case your device doesn\'t have enough free space to export a backup use an USB stick with an OTG cable.-->
 	</string>
 </resources>
