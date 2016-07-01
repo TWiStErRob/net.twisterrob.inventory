@@ -321,7 +321,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		inflater.inflate(R.menu.edit_context, menu);
 		String suggest = App.getSPref(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
 		String always = getString(R.string.pref_suggestCategory_always);
-		menu.findItem(R.id.action_category_suggest).setVisible(!always.equals(suggest));
+		AndroidTools.visibleIf(menu, R.id.action_category_suggest, !always.equals(suggest));
 	}
 
 	@Override public boolean onContextItemSelected(MenuItem item) {

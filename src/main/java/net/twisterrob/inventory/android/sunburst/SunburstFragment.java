@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.graphics.SunburstDrawable;
 import net.twisterrob.android.utils.concurrent.*;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Intents;
@@ -180,9 +181,9 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	@Override public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		Node root = sunburst.getRoot();
-		menu.findItem(R.id.action_sunburst_open).setVisible(root != null && !isArgument(root));
-		menu.findItem(R.id.action_sunburst_ignore).setVisible(root != null && root.parent != null);
-		menu.findItem(R.id.action_sunburst_ignore_reset).setVisible(!walker.ignore.isEmpty());
+		AndroidTools.visibleIf(menu, R.id.action_sunburst_open, root != null && !isArgument(root));
+		AndroidTools.visibleIf(menu, R.id.action_sunburst_ignore, root != null && root.parent != null);
+		AndroidTools.visibleIf(menu, R.id.action_sunburst_ignore_reset, !walker.ignore.isEmpty());
 	}
 
 	@Override public boolean onOptionsItemSelected(MenuItem item) {

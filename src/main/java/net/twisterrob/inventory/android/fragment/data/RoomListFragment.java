@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
@@ -51,7 +52,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		menu.findItem(R.id.action_room_add).setVisible(listController.canCreateNew());
+		AndroidTools.visibleIf(menu, R.id.action_room_add, listController.canCreateNew());
 	}
 
 	@Override
