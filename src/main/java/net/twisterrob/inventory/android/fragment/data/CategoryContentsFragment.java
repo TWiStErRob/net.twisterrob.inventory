@@ -19,7 +19,6 @@ import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
@@ -76,10 +75,11 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	}
 
 	@Override protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
-		Builder builder = MoveTargetActivity.pick()
-		                                    .startFromPropertyList()
-		                                    .allowRooms()
-		                                    .allowItems();
+		MoveTargetActivity.Builder builder = MoveTargetActivity
+				.pick()
+				.startFromPropertyList()
+				.allowRooms()
+				.allowItems();
 		return new ItemSelectionActionMode(this, adapter, builder);
 	}
 	@Override protected void onListItemClick(int position, long recyclerViewItemID) {
