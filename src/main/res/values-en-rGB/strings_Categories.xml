@@ -16,6 +16,9 @@
 	<!-- materials (matter sounded better): The equipment necessary for a particular activity. -->
 	<!-- luggage (used as category name): Containers for a traveler's belongings. The cases and belongings of a traveler. -->
 	<!-- effects (contraption was better): Movable belongings; goods. Personal effects: personal property or belongings. -->
+	<!-- swag (stolen): money or goods taken by a thief or burglar. products given away free, typically for promotional purposes. -->
+	<!-- booty (stolen): valuable stolen goods, especially those seized in war; something gained or won. -->
+	<!-- loot (stolen): goods, especially private property, taken from an enemy in war. -->
 
 	<!-- stuff: Material, objects, or items of some unspecified kind. Worthless objects. Household or personal articles considered as a group. -->
 	<string name="category_uncategorized_description">any other stuff</string>

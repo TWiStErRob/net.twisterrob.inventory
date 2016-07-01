@@ -11,7 +11,7 @@ import android.support.annotation.*;
 import android.support.v4.app.*;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.content.Loader;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
@@ -256,6 +256,12 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	}
 	@Override public void newItem(long parentID) {
 		startActivityForResult(ItemEditActivity.add(parentID), REQUEST_ADD_ITEM);
+	}
+
+	@Override public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean result = super.onPrepareOptionsMenu(menu);
+		AndroidTools.visibleIf(menu, R.id.action_room_list, false);
+		return result;
 	}
 
 	@Override public boolean onSupportNavigateUp() {

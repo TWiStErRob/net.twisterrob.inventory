@@ -855,7 +855,7 @@
 	<string name="category_cosmetic_hair" level="2">hair products</string>
 	<string name="category_cosmetic_hair_keywords">hair brush, comb, hair dye, hair gel, hair spray, hair volumizer, leave-in conditioner, hair wax, hair balsam</string>
 	<string name="category_cosmetic_trim" level="2">trimming</string>
-	<string name="category_cosmetic_trim_keywords">razor, disposable razor, shaving foam, shaving gel, shaving brush, tweezer, wax, hair bleach, epilator, depilatory/hair remover cream</string>
+	<string name="category_cosmetic_trim_keywords">razor, disposable razor, shaving foam, shaving gel, shaving brush, tweezers, wax, hair bleach, epilator, depilatory/hair remover cream</string>
 	<string name="category_cosmetic_perfume" level="2">perfume</string>
 	<string name="category_cosmetic_perfume_keywords">deodorant, cologne, eau de toilette, essential oil, scent, aroma</string>
 	<string name="category_cosmetic_makeup" level="2">makeup</string>
