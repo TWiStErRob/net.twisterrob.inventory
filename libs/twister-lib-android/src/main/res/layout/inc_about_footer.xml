@@ -5,8 +5,9 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	tools:context=".AboutActivity"
+	tools:context=".activity.AboutActivity"
 	>
+
 	<TextView
 		android:id="@+id/about_faq_title"
 		style="?android:listSeparatorTextViewStyle"
@@ -24,6 +25,25 @@
 		android:textIsSelectable="true"
 		tools:text="&lt;b>What is this application?&lt;/b>\nDescription of the application"
 		/>
+
+	<TextView
+		android:id="@+id/about_help_title"
+		style="?android:listSeparatorTextViewStyle"
+		android:text="@string/about_help_title"
+		/>
+	<TextView
+		android:id="@+id/about_help"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/margin_activity"
+		android:layout_marginTop="@dimen/margin_activity_half"
+		android:layout_marginRight="@dimen/margin_activity"
+		android:layout_marginBottom="@dimen/margin_activity_half"
+		android:text="@string/about_help"
+		android:textIsSelectable="true"
+		tools:text="General\nLong rambling about what the app can do."
+		/>
+
 	<TextView
 		android:id="@+id/about_tips_title"
 		style="?android:listSeparatorTextViewStyle"
@@ -41,4 +61,5 @@
 		android:textIsSelectable="true"
 		tools:text="General\n&#8195;&#8226;&#8194;Tip description 1\n&#8195;&#8226;&#8194;Tip description 2"
 		/>
+
 </LinearLayout>

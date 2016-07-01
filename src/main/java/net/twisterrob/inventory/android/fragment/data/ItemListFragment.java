@@ -34,11 +34,11 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Loaders loader = getArgQuery() != null? Loaders.ItemSearch : Loaders.Items;
-		int emptyText = getArgParentItemID() != Item.ID_ADD || getArgRoomID() != Room.ID_ADD?
-				R.string.item_empty_child : R.string.item_empty_list;
+		final boolean canContainItems = getArgParentItemID() != Item.ID_ADD || getArgRoomID() != Room.ID_ADD;
+		int emptyText = canContainItems? R.string.item_empty_child : R.string.item_empty_list;
 		listController = new BaseGalleryController(loader, emptyText) {
 			@Override public boolean canCreateNew() {
-				return getArgParentItemID() != Item.ID_ADD || getArgRoomID() != Room.ID_ADD;
+				return canContainItems || getArgListID() != CommonColumns.ID_ADD;
 			}
 
 			@Override protected void onCreateNew() {

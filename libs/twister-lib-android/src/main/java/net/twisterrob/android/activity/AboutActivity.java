@@ -79,6 +79,10 @@ public class AboutActivity extends ListActivity {
 		AndroidTools.displayedIfHasText(faq);
 		findViewById(R.id.about_faq_title).setVisibility(faq.getVisibility());
 
+		TextView help = (TextView)findViewById(R.id.about_help);
+		AndroidTools.displayedIfHasText(help);
+		findViewById(R.id.about_help_title).setVisibility(help.getVisibility());
+
 		TextView tips = (TextView)findViewById(R.id.about_tips);
 		AndroidTools.displayedIfHasText(tips);
 		findViewById(R.id.about_tips_title).setVisibility(tips.getVisibility());

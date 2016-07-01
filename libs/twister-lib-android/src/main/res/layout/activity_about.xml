@@ -8,5 +8,5 @@
 	tools:listitem="@android:layout/simple_list_item_1"
 	tools:listheader="@layout/inc_about_header"
 	tools:listfooter="@layout/inc_about_footer"
-	tools:context=".AboutActivity"
+	tools:context=".activity.AboutActivity"
 	/>

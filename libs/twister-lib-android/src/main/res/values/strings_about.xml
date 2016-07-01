@@ -13,7 +13,7 @@ To use this:
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-	<string name="about_title">About</string>
+	<string name="about_title">About &amp; Help</string>
 
 	<string name="about_application_title">Application</string>
 	<string name="about_version">Version %1$s</string>
@@ -26,17 +26,15 @@ To use this:
 
 	<string name="about_tips_title">Tips and Tricks</string>
 	<string name="about_tips"><!--
-		<big><b>General</b></big>
+		\n\n<big><b>Section</b></big>
 		&LI;Tip description 1
 		&LI;Tip description 2 referencing &#8220;UI part&#8221; to use
-		
-		\n\n<big><b>Specific part of the app</b></big>
 		&LI;Tip description 3 containing <tt>code</tt>
 	--></string>
 
 	<string name="about_faq_title">FAQ (Frequently Asked Questions)</string>
 	<string name="about_faq"><!--
-		<b>What is this application?</b>
+		\n\n<b>What is this application?</b>
 		\nDescription of the application
 		\n\n<b>How can I leave feedback? What is feedback?</b>
 		\nTap on the link below the application name/version in the About.
@@ -44,6 +42,17 @@ To use this:
 		just about any thought regarding this application.
 		\n\n<b>Further question?</b>
 		\nAnd answer
+	--></string>
+
+	<string name="about_help_title">Help</string>
+	<string name="about_help"><!--
+		\n\n\n<big><b>Section</b></big>
+
+		\n\n<b>Subsection</b>
+		Blah blah.
+
+		\n\n<b>Subsection</b>
+		Blah blah.
 	--></string>
 
 	<string name="about_licenses_title">Acknowledgements and Licenses</string>

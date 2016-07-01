@@ -1,7 +1,11 @@
 package net.twisterrob.inventory.android.activity.data;
 
-import android.content.Intent;
+import android.content.*;
+import android.content.DialogInterface.OnClickListener;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AlertDialog.Builder;
 
+import net.twisterrob.android.activity.AboutActivity;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
@@ -36,7 +40,18 @@ public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> impl
 	}
 
 	public void newItem(long parentID) {
-		throw new UnsupportedOperationException("Cannot create new item here");
+		AlertDialog dialog = new Builder(this)
+				.setTitle(R.string.list_add_item_title)
+				.setMessage(getString(R.string.list_add_item_description, getString(R.string.list_manage)))
+				.setPositiveButton(android.R.string.ok, null)
+				.setNeutralButton(R.string.action_read_more, new OnClickListener() {
+					@Override public void onClick(DialogInterface dialog, int which) {
+						startActivity(new Intent(getApplicationContext(), AboutActivity.class));
+					}
+				})
+				.create();
+		dialog.setCanceledOnTouchOutside(true);
+		dialog.show();
 	}
 
 	@Override public void onContentChanged() {

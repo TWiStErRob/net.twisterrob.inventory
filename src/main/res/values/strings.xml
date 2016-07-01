@@ -21,6 +21,7 @@
 	<string name="welcome_backup">Import backup</string>
 
 	<string name="sunburst_title">Sunburst Diagram</string>
+	<string name="action_read_more">Read more</string>
 	<string name="action_picture_take">Take Picture</string>
 	<string name="action_picture_reset">Reset Picture</string>
 	<string name="action_picture_remove">Remove Picture</string>
@@ -143,8 +144,11 @@
 	<string name="list_edit">Rename List</string>
 	<string name="list_delete">Delete List</string>
 	<string name="list_manage">Manage Lists</string>
-	<string name="list_empty_main">Create a list with the below button. You can manage list contents from the menu of items.</string>
+	<string name="list_empty_main">Create a list with the button below. You can manage list contents from the menu of items.</string>
+	<string name="item_empty_list">Your items will show up here. You can manage list contents from the menu of items.</string>
 	<string name="list_error_new">Cannot create new list named %s.</string>
+	<string name="list_add_item_title">Adding Items to Lists</string>
+	<string name="list_add_item_description">Navigate to an Item that you want to add to a List and select “%s” from the menu.</string>
 
 	<string name="recent_list">Recents</string>
 	<string name="recent_empty_list">Your recently viewed items will show up here. Create or navigate your inventory.</string>
@@ -173,7 +177,6 @@
 	<string name="item_name_hint">Item Name</string>
 	<string name="item_description_hint">Item Description</string>
 	<string name="item_empty_child">Create items with the button below. You can then open them and add more inside.</string>
-	<string name="item_empty_list">Your items will show up here. Go inside a room or item to create one.</string>
 	<string name="item_empty_category">Your items will show up here. Set the category of some items for them to show up here.</string>
 
 	<plurals name="property">
