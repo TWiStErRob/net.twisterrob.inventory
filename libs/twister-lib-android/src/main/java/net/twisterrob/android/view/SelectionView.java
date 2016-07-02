@@ -10,6 +10,7 @@ import android.graphics.*;
 import android.graphics.Paint.Style;
 import android.graphics.Region.Op;
 import android.graphics.drawable.Drawable;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.*;
 
@@ -80,6 +81,7 @@ public class SelectionView extends View {
 		return selection != null? new Rect(selection.selection) : null;
 	}
 
+	// TODO @AnyThread (currently IDEA warns all over the place)
 	public void setSelection(Rect selection) {
 		if (selection != null) {
 			Rect size = new Rect(mTouchDistance, mTouchDistance, getWidth(), getHeight());
@@ -87,7 +89,15 @@ public class SelectionView extends View {
 		} else {
 			this.selection = null;
 		}
-		invalidate();
+		if (Looper.myLooper() != Looper.getMainLooper()) {
+			post(new Runnable() {
+				@Override public void run() {
+					invalidate();
+				}
+			});
+		} else {
+			invalidate();
+		}
 	}
 
 	public void setKeepAspectRatio(boolean keepAspectRatio) {

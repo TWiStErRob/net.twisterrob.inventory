@@ -136,32 +136,40 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 		int width = getWidth();
 		int height = getHeight();
-		int degrees = AndroidTools.calculateRotation(getContext(), cameraHolder.cameraInfo);
-		boolean landscape = degrees % 180 == 0;
+		int displayDegrees = AndroidTools.calculateDisplayOrientation(getContext(), cameraHolder.cameraInfo);
+		int cameraDegrees = AndroidTools.calculateRotation(getContext(), cameraHolder.cameraInfo);
+		boolean landscape = displayDegrees % 180 == 0;
 		if (!landscape) {
 			int temp = width;
-			//noinspection SuspiciousNameCombination we need them when orientation is portrait
+			//noinspection SuspiciousNameCombination we need to swap them when orientation is portrait
 			width = height;
 			height = temp;
 		}
+
+		// if (cameraHolder.cameraInfo.facing == CAMERA_FACING_FRONT) setScaleX(-1); doesn't work
+		// @see http://stackoverflow.com/a/10390407/253468#comment63748074_10390407
 
 		@SuppressWarnings("deprecation") android.hardware.Camera.Size previewSize =
 				AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPreviewSizes(), width, height);
 		@SuppressWarnings("deprecation") android.hardware.Camera.Size pictureSize =
 				AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPictureSizes(), width, height);
-		LOG.debug("orient: {}, size: {}x{} ({}), surface: {}x{} ({}), preview: {}x{} ({}), picture: {}x{} ({})", //
-				degrees, //
-				width, height, (float)width / (float)height, //
-				w, h, (float)w / (float)h, //
-				previewSize.width, previewSize.height, (float)previewSize.width / (float)previewSize.height, //
-				pictureSize.width, pictureSize.height, (float)pictureSize.width / (float)pictureSize.height //
+		LOG.debug("orient={}, rotate={}, landscape={}, "
+						+ "size: {}x{} ({}), "
+						+ "surface: {}x{} ({}), "
+						+ "preview: {}x{} ({}), "
+						+ "picture: {}x{} ({})",
+				displayDegrees, cameraDegrees, landscape,
+				width, height, (float)width / (float)height,
+				w, h, (float)w / (float)h,
+				previewSize.width, previewSize.height, (float)previewSize.width / (float)previewSize.height,
+				pictureSize.width, pictureSize.height, (float)pictureSize.width / (float)pictureSize.height
 		);
 		cameraHolder.params.setPreviewSize(previewSize.width, previewSize.height);
 		cameraHolder.params.setPictureSize(pictureSize.width, pictureSize.height);
-		cameraHolder.params.setRotation(degrees);
+		cameraHolder.params.setRotation(cameraDegrees);
 		cameraHolder.params.set("orientation", landscape? "landscape" : "portrait");
 		cameraHolder.camera.setParameters(cameraHolder.params);
-		cameraHolder.camera.setDisplayOrientation(degrees);
+		cameraHolder.camera.setDisplayOrientation(displayDegrees);
 	}
 
 	private void releaseCamera() {
@@ -209,6 +217,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	private void finished() {
 		cameraHolder = null;
 		listener.onDestroy(this);
+	}
+
+	public Boolean isFrontFacing() {
+		return cameraHolder == null? null
+				: cameraHolder.cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT;
 	}
 
 	/**

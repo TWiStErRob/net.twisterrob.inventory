@@ -311,6 +311,15 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 	protected void doSave(byte... data) {
 		mSavedFile = save(mTargetFile, data);
 	}
+	private void flipSelection() {
+		if (Boolean.TRUE.equals(mPreview.isFrontFacing())) {
+			Rect selection = mSelection.getSelection();
+			int width = mSelection.getWidth();
+			selection.left = width - selection.left;
+			selection.right = width - selection.right;
+			mSelection.setSelection(selection);
+		}
+	}
 	protected void doCrop() {
 		try {
 			mSavedFile = crop(mSavedFile);
@@ -323,6 +332,9 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		if (requestCameraPermissionIfNeeded()) {
 			mPreview.setVisibility(View.INVISIBLE);
 			return;
+		}
+		if (STATE_CROPPING.equals(state)) {
+			flipSelection();
 		}
 		state = STATE_CAPTURING;
 		LOG.trace("Restarting preview");
@@ -475,7 +487,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				file);
 		return file;
 	}
-	private RectF getPictureRect() {
+	private @NonNull RectF getPictureRect() {
 		float width = mSelection.getWidth();
 		float height = mSelection.getHeight();
 
@@ -484,6 +496,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		selection.top = selection.top / height;
 		selection.right = selection.right / width;
 		selection.bottom = selection.bottom / height;
+		selection.sort();
 		return selection;
 	}
 
@@ -513,6 +526,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				if (!take(new Callback<byte[]>() {
 					@Override public void call(byte... data) {
 						doSave(data);
+						flipSelection();
 						prepareCrop();
 						enableControls();
 					}
@@ -556,6 +570,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				if (!take(new Callback<byte[]>() {
 					@Override public void call(byte... data) {
 						doSave(data);
+						flipSelection();
 						doCrop();
 						doReturn();
 					}

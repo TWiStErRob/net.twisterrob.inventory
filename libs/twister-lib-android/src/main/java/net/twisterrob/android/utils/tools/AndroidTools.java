@@ -267,17 +267,62 @@ public /*static*/ abstract class AndroidTools {
 		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
 	}
 
+	/**
+	 * @see android.view.Display#getOrientation()
+	 * @see android.view.Display#getRotation()
+	 * @param displayOrientation one of {@code Surface.ROTATION_d} constants
+	 * @return The {@code d} in the constant name as an integer
+	 */
+	private static int orientationToDegrees(/*@Surface.Rotation*/ int displayOrientation) {
+		//return displayOrientation * 90;
+		switch (displayOrientation) {
+			case Surface.ROTATION_0:
+				return 0;
+			case Surface.ROTATION_90:
+				return 90;
+			case Surface.ROTATION_180:
+				return 180;
+			case Surface.ROTATION_270:
+				return 270;
+			default:
+				throw new IllegalArgumentException("Display orientation " + displayOrientation + " is not recognized.");
+		}
+	}
+
+	/**
+	 * @see android.hardware.Camera#setDisplayOrientation(int)
+	 * @return the display's orientation in 90-increment degrees (0, 90, 180, 270)
+	 */
 	@SuppressWarnings("deprecation")
-	public static int calculateRotation(Context context, android.hardware.Camera.CameraInfo cameraInfo) {
+	public static int calculateDisplayOrientation(Context context, android.hardware.Camera.CameraInfo cameraInfo) {
 		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-		int rotation = windowManager.getDefaultDisplay().getRotation();
-		int degrees = rotation * 90; // CONSIDER using Surface.ROTATION_ constants
+		int displayOrientation = windowManager.getDefaultDisplay().getRotation();
+		int degrees = orientationToDegrees(displayOrientation);
 
 		int result;
 		if (cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
 			result = (cameraInfo.orientation + degrees) % 360;
-			result = (360 - result) % 360;  // compensate the mirror
-		} else {  // back-facing
+			result = (360 - result) % 360; // compensate the mirror
+		} else { // back-facing
+			result = (cameraInfo.orientation - degrees + 360) % 360;
+		}
+		return result;
+	}
+
+	/**
+	 * @see android.hardware.Camera.Parameters#setRotation(int)
+	 * @return the camera rotation to use in 90-increment degrees (0, 90, 180, 270)
+	 */
+	@SuppressWarnings("deprecation")
+	public static int calculateRotation(Context context, android.hardware.Camera.CameraInfo cameraInfo) {
+		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		int displayOrientation = windowManager.getDefaultDisplay().getRotation();
+		int degrees = orientationToDegrees(displayOrientation);
+
+		int result;
+		if (cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
+			result = (cameraInfo.orientation + degrees) % 360;
+		} else { // back-facing
 			result = (cameraInfo.orientation - degrees + 360) % 360;
 		}
 		return result;
