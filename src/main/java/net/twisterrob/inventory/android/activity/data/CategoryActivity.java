@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Category;
@@ -89,6 +90,13 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 	}
 
 	private static Intent show(Long categoryID, boolean flattened) {
+		if (categoryID == null) {
+			if (flattened) {
+				return MainActivity.list(MainActivity.PAGE_ITEMS);
+			} else {
+				return MainActivity.list(MainActivity.PAGE_CATEGORIES);
+			}
+		}
 		Intent intent = new Intent(App.getAppContext(), CategoryActivity.class);
 		intent.putExtra(Extras.CATEGORY_ID, categoryID);
 		intent.putExtra(Extras.INCLUDE_SUBS, flattened);
