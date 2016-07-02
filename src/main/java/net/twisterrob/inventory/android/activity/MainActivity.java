@@ -408,9 +408,10 @@ public class MainActivity extends DrawerActivity
 		return intent;
 	}
 	public static Intent improveCategories(Context context, Long categoryId) {
+		String subject = context.getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME + " Category Feedback";
 		Intent intent = new Intent(Intent.ACTION_VIEW)
 				.setData(Uri.parse("mailto:" + BuildConfig.EMAIL))
-				.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) + " Category Feedback");
+				.putExtra(Intent.EXTRA_SUBJECT, subject);
 		String text = "How can we improve the Categories?";
 		if (categoryId != null) {
 			String categoryKey = CategoryDTO.getCache(context).getCategoryKey(categoryId);
@@ -418,6 +419,14 @@ public class MainActivity extends DrawerActivity
 		}
 		intent.putExtra(Intent.EXTRA_TEXT, text);
 		return intent;
+	}
+	public static void startImproveCategories(Context context, Long categoryId) {
+		try {
+			context.startActivity(improveCategories(context, categoryId));
+		} catch (ActivityNotFoundException ex) {
+			LOG.warn("Cannot start feedback intent", ex);
+			App.toastUser(context.getString(R.string.about_feedback_fail, BuildConfig.EMAIL));
+		}
 	}
 
 	private class RefreshInventorySizeTask extends AsyncTask<Void, Void, Boolean> {

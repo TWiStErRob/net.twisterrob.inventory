@@ -92,7 +92,7 @@ public class AboutActivity extends ListActivity {
 		try {
 			startActivity(createFeedbackIntent(aboutInfo));
 		} catch (ActivityNotFoundException ex) {
-			LOG.error("Cannot start feedback intent({})", aboutInfo, ex);
+			LOG.warn("Cannot start feedback intent({})", aboutInfo, ex);
 			Toast.makeText(this, getString(R.string.about_feedback_fail, aboutInfo.email), Toast.LENGTH_LONG).show();
 		}
 	}

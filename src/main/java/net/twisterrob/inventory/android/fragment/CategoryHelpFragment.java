@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.fragment;
 
-import java.io.*;
+import java.io.File;
 import java.util.Locale;
 
 import org.slf4j.*;
@@ -9,7 +9,8 @@ import android.annotation.SuppressLint;
 import android.content.*;
 import android.os.Build.*;
 import android.os.*;
-import android.support.annotation.NonNull;
+import android.os.StrictMode.ThreadPolicy;
+import android.support.annotation.*;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.*;
@@ -35,7 +36,12 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		web = new WebView(container.getContext());
+		ThreadPolicy realPolicy = StrictMode.allowThreadDiskWrites();
+		try { // in older versions of Android WebViewDatabase.getInstance creates/opens a DB
+			web = new WebView(container.getContext());
+		} finally {
+			StrictMode.setThreadPolicy(realPolicy);
+		}
 		web.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		web.getSettings().setJavaScriptEnabled(true);
 		//web.getSettings().setBuiltInZoomControls(true);
@@ -101,37 +107,49 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_open: {
-				Context context = getContext();
-				File file = null;
-				try {
-					file = Paths.getShareFile(context, "html");
-					new CategoryHelpBuilder(context).export(file);
-					startActivity(new Intent(Intent.ACTION_VIEW)
-							.setDataAndType(Paths.getShareUri(context, file), "text/html")
-							.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-					);
-				} catch (IOException ex) {
-					LOG.warn("Cannot save to {}", file, ex);
-				}
+				final Context context = getContext();
+				new SimpleSafeAsyncTask<Void, Void, File>() {
+					private File file;
+					@Nullable @Override protected File doInBackground(@Nullable Void ignore) throws Exception {
+						file = Paths.getShareFile(getContext(), "html");
+						new CategoryHelpBuilder(context).export(file);
+						return file;
+					}
+					@Override protected void onResult(@Nullable File file, Void ignore) {
+						startActivity(new Intent(Intent.ACTION_VIEW)
+								.setDataAndType(Paths.getShareUri(context, file), "text/html")
+								.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+						);
+					}
+					@Override protected void onError(@NonNull Exception ex, Void ignore) {
+						LOG.warn("Cannot save to {}", file, ex);
+					}
+				}.execute();
 				return true;
 			}
 			case R.id.action_category_save: {
-				Context context = getContext();
-				File file = null;
-				try {
-					File downloads = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-					String name = String.format(Locale.ROOT,
-							"%s - %s.html", getString(R.string.app_name), getString(R.string.category_guide));
-					file = new File(downloads, name);
-					new CategoryHelpBuilder(context).export(file);
-					Toast.makeText(context, "Exported to " + file, Toast.LENGTH_LONG).show();
-				} catch (IOException ex) {
-					LOG.warn("Cannot save to {}", file, ex);
-				}
+				final Context context = getContext();
+				new SimpleSafeAsyncTask<Void, Void, File>() {
+					private File file;
+					@Nullable @Override protected File doInBackground(@Nullable Void aVoid) throws Exception {
+						File downloads = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+						String name = String.format(Locale.ROOT,
+								"%s - %s.html", getString(R.string.app_name), getString(R.string.category_guide));
+						file = new File(downloads, name);
+						new CategoryHelpBuilder(context).export(file);
+						return file;
+					}
+					@Override protected void onResult(@Nullable File file, Void aVoid) {
+						Toast.makeText(context, "Exported to " + file, Toast.LENGTH_LONG).show();
+					}
+					@Override protected void onError(@NonNull Exception ex, Void aVoid) {
+						LOG.warn("Cannot save to {}", file, ex);
+					}
+				}.execute();
 				return true;
 			}
 			case R.id.action_category_feedback:
-				startActivity(MainActivity.improveCategories(getContext(), null));
+				MainActivity.startImproveCategories(getContext(), null);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
