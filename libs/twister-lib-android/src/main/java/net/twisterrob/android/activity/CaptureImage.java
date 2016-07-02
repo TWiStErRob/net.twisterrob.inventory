@@ -68,6 +68,12 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 	private SharedPreferences prefs;
 
 	private CameraPreview mPreview;
+	/**
+	 * If we set {@code mPreview.setVisibility(INVISIBLE)}, the camera is released. Acquiring it again takes ~1 second.
+	 * When the user is taking an image, but not satisfied with it, starting the camera again is an unnecessary delay.
+	 * To prevent this delay: don't hide {@code mPreview}, but draw over it by toggling the visibility of this view.
+	 */
+	private View mPreviewHider;
 	private SelectionView mSelection;
 	private File mTargetFile;
 	private File mSavedFile;
@@ -102,6 +108,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		mBtnCrop = (ImageButton)controls.findViewById(R.id.btn_crop);
 		mBtnFlash = (ToggleButton)cameraControls.findViewById(R.id.btn_flash);
 		mPreview = (CameraPreview)findViewById(R.id.preview);
+		mPreviewHider = findViewById(R.id.previewHider);
 		mImage = (ImageView)findViewById(R.id.image);
 		mSelection = (SelectionView)findViewById(R.id.selection);
 
@@ -269,6 +276,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				return false;
 			}
 		};
+		mPreviewHider.setVisibility(View.VISIBLE);
 		BitmapRequestBuilder<File, Bitmap> image = Glide
 				.with(this)
 				.load(mSavedFile)
@@ -338,6 +346,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		}
 		state = STATE_CAPTURING;
 		LOG.trace("Restarting preview");
+		mPreviewHider.setVisibility(View.INVISIBLE);
 		mPreview.setVisibility(View.VISIBLE);
 		mSavedFile = null;
 		mSelection.setSelectionStatus(SelectionStatus.NORMAL);

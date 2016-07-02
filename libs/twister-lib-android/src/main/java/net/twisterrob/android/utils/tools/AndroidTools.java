@@ -975,6 +975,16 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
+	@TargetApi(VERSION_CODES.JELLY_BEAN)
+	public static void setBackground(View view, Drawable backgroundDrawable) {
+		if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
+			view.setBackground(backgroundDrawable);
+		} else {
+			view.setBackgroundDrawable(backgroundDrawable);
+		}
+	}
+
 	@UiThread
 	public interface PopupCallbacks<T> {
 		void finished(T value);
