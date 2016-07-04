@@ -49,12 +49,19 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 	@WorkerThread
 	public interface CameraPictureListener {
+		/**
+		 * @param success whether auto-focus succeeded.
+		 *                If there's no auto-focus it always succeeds with {@code true}.
+		 *                If the focus call failed with an exception it'll be {@code false}.
+		 * @return whether you want to continue by taking a picture, {@code return success;} is a reasonable implementation
+		 */
 		boolean onFocus(boolean success);
-		void onTaken(byte... image);
+		void onTaken(@Nullable byte... image);
 	}
 
 	private final MissedSurfaceEvents missedEvents = new MissedSurfaceEvents();
-	private CameraHolder cameraHolder = null;
+	private final CameraThreadHandler thread = new CameraThreadHandler();
+	private @Nullable CameraHolder cameraHolder = null;
 	private @NonNull CameraPreviewListener listener = new CameraPreviewListenerAdapter();
 
 	public CameraPreview(Context context, AttributeSet attributeset) {
@@ -62,7 +69,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		LOG.trace("CameraPreview");
 
 		getHolder().addCallback(this);
-		getHolder().addCallback(new CameraThreadHandler());
+		getHolder().addCallback(thread);
 		initCompat();
 	}
 
@@ -241,24 +248,33 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			focus(callback);
 			return;
 		}
-		cameraHolder.camera.takePicture(new android.hardware.Camera.ShutterCallback() {
-			@Override public void onShutter() {
-				post(new Runnable() {
-					@Override public void run() {
-						listener.onShutter(CameraPreview.this);
-					}
-				});
-				post(new Runnable() {
-					@Override public void run() {
-						listener.onPause(CameraPreview.this);
-					}
-				});
-			}
-		}, null, null, new android.hardware.Camera.PictureCallback() {
-			@Override public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
-				callback.onTaken(data);
-			}
-		});
+		try {
+			cameraHolder.camera.takePicture(new android.hardware.Camera.ShutterCallback() {
+				@Override public void onShutter() {
+					post(new Runnable() {
+						@Override public void run() {
+							listener.onShutter(CameraPreview.this);
+						}
+					});
+					post(new Runnable() {
+						@Override public void run() {
+							listener.onPause(CameraPreview.this);
+						}
+					});
+				}
+			}, null, null, new android.hardware.Camera.PictureCallback() {
+				@Override public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
+					callback.onTaken(data);
+				}
+			});
+		} catch (RuntimeException ex) {
+			LOG.warn("Cannot take picture", ex);
+			thread.post(new Runnable() {
+				@Override public void run() {
+					callback.onTaken((byte[])null);
+				}
+			});
+		}
 	}
 
 	public void cancelTakePicture() {
@@ -420,6 +436,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		public void stopThread() {
 			mLooper.quit();
 		}
+		public void post(Runnable runnable) {
+			mHandler.post(runnable);
+		}
 	}
 
 	private class CameraThreadHandler implements SurfaceHolder.Callback {
@@ -441,6 +460,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 				mCameraThread.stopThread();
 				mCameraThread = null;
 			}
+		}
+		public void post(Runnable runnable) {
+			mCameraThread.post(runnable);
 		}
 	}
 

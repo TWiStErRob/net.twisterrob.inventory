@@ -207,7 +207,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 	}
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode != Activity.RESULT_OK) {
-			if (data != null && data.getAction().equals(ACTION)) {
+			if (data != null && ACTION.equals(data.getAction())) {
 				mBtnCapture.performClick();
 			} else {
 				mSelection.setSelectionStatus(SelectionStatus.BLURRY);
@@ -318,7 +318,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		return flash;
 	}
 
-	protected void doSave(byte... data) {
+	protected void doSave(@Nullable byte... data) {
 		mSavedFile = save(mTargetFile, data);
 	}
 	private void flipSelection() {
@@ -445,14 +445,14 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				});
 				return true; // take the picture even if not in focus
 			}
-			@Override public void onTaken(byte... image) {
+			@Override public void onTaken(@Nullable byte... image) {
 				jpegCallback.call(image);
 			}
 		}, true);
 		return true;
 	}
 
-	private static File save(File file, byte... data) {
+	private static @Nullable File save(@NonNull File file, @Nullable byte... data) {
 		if (data == null) {
 			return null;
 		}
@@ -590,7 +590,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			disableControls();
 			if (mSavedFile == null) {
 				if (!take(new Callback<byte[]>() {
-					@Override public void call(byte... data) {
+					@Override public void call(@Nullable byte... data) {
 						doSave(data);
 						flipSelection();
 						prepareCrop();

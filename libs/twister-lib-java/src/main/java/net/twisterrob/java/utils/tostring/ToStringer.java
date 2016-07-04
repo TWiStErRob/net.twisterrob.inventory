@@ -76,7 +76,7 @@ public class ToStringer implements ToStringAppender {
 		}
 	}
 
-	@Override public String toString() {
+	@Override public @Nonnull String toString() {
 		if (sb.length() == 0) {
 			process(value, toString);
 			if (!contexts.isEmpty()) {

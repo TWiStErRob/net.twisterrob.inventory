@@ -222,12 +222,12 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	@DebugHelper
-	public static <T> String toShortString(T value) {
+	public static @NonNull <T> String toShortString(T value) {
 		return new ToStringer(StringerRepo.INSTANCE, value, false).toString();
 	}
 
 	@DebugHelper
-	public static <T> String toString(T value) {
+	public static @NonNull <T> String toString(T value) {
 		return new ToStringer(StringerRepo.INSTANCE, value, true).toString();
 	}
 

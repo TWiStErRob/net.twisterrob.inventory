@@ -125,8 +125,8 @@ public class CategoryDTO extends ImagedDTO {
 	private static class CategoryCacheInitializer {
 		private static final Logger LOG = LoggerFactory.getLogger(CategoryCacheInitializer.class);
 		/** @see #getCache(Context) */
-		private static CategoryCache CACHE;
-		private static Locale lastLocale;
+		private static @Nullable CategoryCache CACHE;
+		private static @Nullable Locale lastLocale;
 
 		synchronized
 		public static CategoryCache get(Context context) {

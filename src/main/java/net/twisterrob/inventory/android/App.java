@@ -117,7 +117,7 @@ public class App extends Application {
 		// FIXME private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
 	}
 
-	private void updateLanguage(Locale newLocale) {
+	private void updateLanguage(@NonNull Locale newLocale) {
 		final SharedPreferences prefs = getPrefs();
 		final String storedLanguage = prefs.getString(getString(R.string.pref_currentLanguage), null);
 		final String currentLanguage = newLocale.toString();
