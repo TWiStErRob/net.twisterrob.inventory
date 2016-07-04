@@ -15,9 +15,10 @@ apply plugin: InventoryDatabasePlugin
 
 databaseEntities {
 	categories {
-		input = file(/i:\src\main\res\values\strings_Categories.xml/)
-		output = file(/i:\src\main\assets\MagicHomeInventory.data.Categories.sql/)
-		iconFolder = file(/i:\src\main\res\raw/)
+		def ss = android.sourceSets.main
+		input = file(new File(ss.res.srcDirs.first(), 'values/strings_Categories.xml'))
+		output = file(new File(ss.assets.srcDirs.first(), 'MagicHomeInventory.data.Categories.sql'))
+		iconFolder = file(new File(ss.res.srcDirs.first(), 'raw'))
 		conversion = "SQL"
 	}
 }
