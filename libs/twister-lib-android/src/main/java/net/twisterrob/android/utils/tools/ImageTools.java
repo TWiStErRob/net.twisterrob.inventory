@@ -2,12 +2,13 @@ package net.twisterrob.android.utils.tools;
 
 import java.io.*;
 
-import android.annotation.TargetApi;
+import org.slf4j.*;
+
+import android.annotation.*;
 import android.content.*;
 import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.*;
-import android.graphics.BitmapFactory.Options;
 import android.graphics.drawable.*;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -20,7 +21,10 @@ import net.twisterrob.java.io.IOTools;
 
 // CONSIDER crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
 // CONSIDER crop http://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
+@SuppressWarnings("unused")
 public /*static*/ abstract class ImageTools {
+	private static final Logger LOG = LoggerFactory.getLogger(ImageTools.class);
+
 	private static final String NO_SORT = null;
 	private static final String NO_SELECTION = null;
 	private static final String[] NO_ARGS = null;
@@ -307,76 +311,100 @@ public /*static*/ abstract class ImageTools {
 	}
 
 	public static Bitmap cropPicture(File file, int x, int y, int w, int h) throws IOException {
-		return crop(file, new Rect(x, y, x + w, y + h));
+		return crop(file, new Rect(x, y, x + w, y + h), 1);
 	}
 
 	@SuppressWarnings("SuspiciousNameCombination")
-	public static Bitmap cropPicture(File file, float left, float top, float right, float bottom) throws IOException {
-		RectF perc = new RectF();
-		int orientation = getExifOrientation(file);
+	public static RectF rotateUnitRect(RectF rect, int orientation) {
+		RectF result = new RectF();
 		switch (orientation) {
 			default:
 			case ExifInterface.ORIENTATION_UNDEFINED:
 			case ExifInterface.ORIENTATION_NORMAL:
-				perc.left = left;
-				perc.top = top;
-				perc.right = right;
-				perc.bottom = bottom;
+				// for consist copying, `return rect` would work too
+				result.left = rect.left;
+				result.top = rect.top;
+				result.right = rect.right;
+				result.bottom = rect.bottom;
 				break;
 			case ExifInterface.ORIENTATION_ROTATE_90:
-				perc.left = top;
-				perc.top = 1 - right;
-				perc.right = bottom;
-				perc.bottom = 1 - left;
+				result.left = rect.top;
+				result.top = 1 - rect.right;
+				result.right = rect.bottom;
+				result.bottom = 1 - rect.left;
 				break;
 			case ExifInterface.ORIENTATION_ROTATE_180:
-				perc.left = 1 - right;
-				perc.top = 1 - bottom;
-				perc.right = 1 - left;
-				perc.bottom = 1 - top;
+				result.left = 1 - rect.right;
+				result.top = 1 - rect.bottom;
+				result.right = 1 - rect.left;
+				result.bottom = 1 - rect.top;
 				break;
 			case ExifInterface.ORIENTATION_ROTATE_270:
-				perc.left = 1 - bottom;
-				perc.top = left;
-				perc.right = 1 - top;
-				perc.bottom = right;
+				result.left = 1 - rect.bottom;
+				result.top = rect.left;
+				result.right = 1 - rect.top;
+				result.bottom = rect.right;
 				break;
 		}
-		BitmapFactory.Options options = getSizeInternal(file);
-
-		Rect rect = new Rect();
-		rect.left = (int)(perc.left * options.outWidth);
-		rect.top = (int)(perc.top * options.outHeight);
-		rect.right = (int)(perc.right * options.outWidth);
-		rect.bottom = (int)(perc.bottom * options.outHeight);
-
-		//LOG.debug("cropPicture({}, {}, {}, {}, {}) --{}--> {} --{}x{}--> {}", file.getName(), left, top, right, bottom,
-		//		getExifString(orientation), perc, options.outWidth, options.outHeight, rect);
-
-		Bitmap crop = crop(file, rect);
-		return rotateImage(crop, getExifRotation(orientation));
+		return result;
 	}
 
-	public static Bitmap crop(File file, Rect rect) throws IOException {
+	public static Rect percentToSize(RectF unit, int width, int height) {
+		return percentToSize(unit.left, unit.top, unit.right, unit.bottom, width, height);
+	}
+
+	@SuppressLint("Assert")
+	private static Rect percentToSize(float left, float top, float right, float bottom, int width, int height) {
+		assert 0 <= left && left <= 1 : "Left is not a percentage: " + left;
+		assert 0 <= top && top <= 1 : "Top is not a percentage: " + top;
+		assert 0 <= right && right <= 1 : "Right is not a percentage: " + right;
+		assert 0 <= bottom && bottom <= 1 : "Bottom is not a percentage: " + bottom;
+		Rect rect = new Rect();
+		rect.left = (int)(left * width);
+		rect.top = (int)(top * height);
+		rect.right = (int)(right * width);
+		rect.bottom = (int)(bottom * height);
+		return rect;
+	}
+
+	/**
+	 * @param rect in image space, no scaling applied
+	 * @param sampleSize {@link BitmapFactory.Options#inSampleSize}, rect will be scaled as necessary
+	 */
+	@SuppressWarnings("deprecation")
+	@TargetApi(VERSION_CODES.N)
+	public static Bitmap crop(File file, Rect rect, int sampleSize) throws IOException {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inPreferredConfig = Config.ARGB_8888;
+		// the following is deprecated and ignored in N, but the below is the default value anyway
+		options.inDither = false;
+		options.inSampleSize = sampleSize;
 		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD_MR1) {
-			return cropBitmap(file, rect);
+			return cropBitmap(file, rect, options);
 		} else {
-			return cropRegion(file, rect);
+			// the following is deprecated and ignored in N, but the below is the default value anyway
+			options.inPreferQualityOverSpeed = true;
+			return cropRegion(file, rect, options);
 		}
 	}
 
-	private static Bitmap cropBitmap(File file, Rect rect) {
-		Bitmap source = BitmapFactory.decodeFile(file.getAbsolutePath(), cropOptions());
+	private static Bitmap cropBitmap(File file, Rect rect, BitmapFactory.Options options) {
+		int sampleSize = options.inSampleSize <= 1? 1 : Integer.highestOneBit(options.inSampleSize);
+		rect.left /= sampleSize;
+		rect.top /= sampleSize;
+		rect.right /= sampleSize;
+		rect.bottom /= sampleSize;
+		Bitmap source = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 		return Bitmap.createBitmap(source, rect.left, rect.top, rect.width(), rect.height());
 	}
 
 	@TargetApi(VERSION_CODES.GINGERBREAD_MR1)
-	private static Bitmap cropRegion(File file, Rect rect) throws IOException {
+	private static Bitmap cropRegion(File file, Rect rect, BitmapFactory.Options options) throws IOException {
 		BitmapRegionDecoder decoder = null;
 		try {
 			decoder = BitmapRegionDecoder.newInstance(file.getAbsolutePath(), true);
 			if (decoder != null) {
-				return decoder.decodeRegion(rect, cropOptions());
+				return decoder.decodeRegion(rect, options);
 			}
 		} finally {
 			if (decoder != null) {
@@ -384,18 +412,6 @@ public /*static*/ abstract class ImageTools {
 			}
 		}
 		return null;
-	}
-
-	@SuppressWarnings("deprecation")
-	private static Options cropOptions() {
-		Options options = new Options();
-		options.inPreferredConfig = Config.ARGB_8888;
-		// the following two are deprecated and ignored in N, but the below are the default values anyway
-		options.inDither = false;
-		if (VERSION_CODES.GINGERBREAD_MR1 <= VERSION.SDK_INT) {
-			options.inPreferQualityOverSpeed = true;
-		}
-		return options;
 	}
 
 	private static BitmapFactory.Options getSizeInternal(File file) {
@@ -486,13 +502,17 @@ public /*static*/ abstract class ImageTools {
 	}
 
 	/**
+	 * Fits source into box defined by width/height, only one side will match.
+	 *
+	 * @param leewayPercent shortcut when source is between [targetSize, targetSize * (1+leeway)], use 0 for no leeway
 	 * @see com.bumptech.glide.load.resource.bitmap.TransformationUtils#fitCenter
 	 */
-	public static Bitmap downscale(Bitmap source, int width, int height) {
+	public static Bitmap downscale(Bitmap source, int width, int height, float leewayPercent) {
 		if (width <= 0 || height <= 0) {
 			throw new IllegalArgumentException("Non-positive sizes are not allowed.");
 		}
 		if (source.getWidth() == width && source.getHeight() == height) {
+			LOG.trace("downscale: Source matches target: {}x{}, returning original", width, height);
 			return source;
 		}
 		final float widthPercentage = width / (float)source.getWidth();
@@ -503,9 +523,28 @@ public /*static*/ abstract class ImageTools {
 		final int targetHeight = Math.round(minPercentage * source.getHeight());
 
 		if (source.getWidth() <= targetWidth && source.getHeight() <= targetHeight) {
+			LOG.trace("downscale: Source ({}x{}) smaller than target ({}x{}), returning original",
+					source.getWidth(), source.getHeight(), targetWidth, targetHeight);
 			return source;
 		}
+		float leewayFactor = 1 + leewayPercent; // 100% + leeway
+		if (source.getWidth() <= targetWidth * leewayFactor && source.getHeight() <= targetHeight * leewayFactor) {
+			// this allows the image size to be between [targetSize, targetSize * (1+leeway)]
+			// image sizes between [targetSize * (1-leeway), targetSize] will be handled by the previous if
+			LOG.trace("downscale: Source ({}x{}) smaller than target ({}x{}) with {}% leeway, returning original",
+					source.getWidth(), source.getHeight(),
+					targetWidth * leewayFactor, targetHeight * leewayFactor,
+					leewayPercent * 100);
+			return source;
+		}
+		return scale(source, minPercentage);
+	}
 
+	public static Bitmap scale(Bitmap source, float scale) {
+		final int targetWidth = Math.round(scale * source.getWidth());
+		final int targetHeight = Math.round(scale * source.getHeight());
+		LOG.trace("Downscaling {}({}x{}) by {}x -> {}x{}",
+				source, source.getWidth(), source.getHeight(), scale, targetWidth, targetHeight);
 		Bitmap.Config config = source.getConfig() != null? source.getConfig() : Bitmap.Config.ARGB_8888;
 		Bitmap result = Bitmap.createBitmap(targetWidth, targetHeight, config);
 		if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB_MR1) {
@@ -514,7 +553,7 @@ public /*static*/ abstract class ImageTools {
 
 		Canvas canvas = new Canvas(result);
 		Matrix matrix = new Matrix();
-		matrix.setScale(minPercentage, minPercentage);
+		matrix.setScale(scale, scale);
 		Paint paint = new Paint(Paint.DITHER_FLAG | Paint.FILTER_BITMAP_FLAG);
 		canvas.drawBitmap(source, matrix, paint);
 

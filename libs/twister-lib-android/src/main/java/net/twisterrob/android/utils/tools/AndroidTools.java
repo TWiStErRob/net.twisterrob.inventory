@@ -232,35 +232,36 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static android.hardware.Camera.Size getOptimalSize(List<android.hardware.Camera.Size> sizes, int w, int h) {
-		if (sizes == null) {
-			return null;
+	public static @NonNull android.hardware.Camera.Size getOptimalSize(
+			@NonNull Collection<android.hardware.Camera.Size> sizes, int w, int h) {
+		//noinspection ConstantConditions it's still possible the call the method with null
+		if (sizes == null || sizes.isEmpty()) {
+			throw new IllegalArgumentException("There must be at least one size to choose from.");
 		}
+		ArrayList<android.hardware.Camera.Size> sorted = new ArrayList<>(sizes);
+		Collections.sort(sorted, new CameraSizeComparator(w, h));
 
-		android.hardware.Camera.Size optimalSize = findClosestAspect(sizes, w, h, 0.1);
-
-		if (optimalSize == null) {
-			optimalSize = findClosestAspect(sizes, w, h, Double.POSITIVE_INFINITY);
+		android.hardware.Camera.Size optimalSize = sorted.get(0);
+		if (LOG.isTraceEnabled()) {
+			LOG.trace("Optimal size selected is {}x{} from {}.",
+					optimalSize.width, optimalSize.height, toString(sorted));
 		}
 
 		return optimalSize;
 	}
 
 	@SuppressWarnings("deprecation")
-	private static android.hardware.Camera.Size findClosestAspect(
-			List<android.hardware.Camera.Size> sizes, int width, int height, double tolerance) {
-		android.hardware.Camera.Size optimalSize = null;
-
-		final double targetRatio = (double)width / (double)height;
-		double minDiff = Double.MAX_VALUE;
-		for (android.hardware.Camera.Size size : sizes) {
-			double ratio = (double)size.width / (double)size.height;
-			if (Math.abs(ratio - targetRatio) <= tolerance && Math.abs(size.height - height) < minDiff) {
-				optimalSize = size;
-				minDiff = Math.abs(size.height - height);
+	private static StringBuilder toString(List<android.hardware.Camera.Size> sorted) {
+		StringBuilder sizesString = new StringBuilder();
+		sizesString.append('[');
+		for (android.hardware.Camera.Size size : sorted) {
+			if (sizesString.length() > 1) {
+				sizesString.append(", ");
 			}
+			sizesString.append(size.width).append('x').append(size.height);
 		}
-		return optimalSize;
+		sizesString.append(']');
+		return sizesString;
 	}
 
 	public static boolean hasCameraHardware(Context context) {

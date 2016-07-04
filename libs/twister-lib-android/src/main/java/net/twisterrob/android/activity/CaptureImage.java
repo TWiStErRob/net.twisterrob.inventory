@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.*;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build.*;
 import android.os.*;
@@ -90,6 +91,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		// FIXME fast 180 rotation results in flipped image: http://stackoverflow.com/a/19599599/253468 
 		prefs = getPreferences(MODE_PRIVATE);
 
 		String output = getIntent().getStringExtra(EXTRA_OUTPUT);
@@ -328,12 +330,20 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			mSelection.setSelection(selection);
 		}
 	}
-	protected void doCrop() {
+	protected boolean doCrop() {
 		try {
 			mSavedFile = crop(mSavedFile);
+			return true;
 		} catch (Exception ex) {
-			Toast.makeText(this, "Cannot crop image: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "Cannot crop image: " + ex.getMessage(), Toast.LENGTH_LONG).show();
 			LOG.warn("Cannot crop image file {}", mSavedFile, ex);
+			return false;
+		} catch (OutOfMemoryError ex) {
+			// CONSIDER http://stackoverflow.com/a/26239077/253468, or other solution on the same question
+			String message = "There's not enough memory to crop the image, sorry. Try a smaller selection.";
+			LOG.warn(message, ex);
+			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+			return false;
 		}
 	}
 	protected void doRestartPreview() {
@@ -467,16 +477,44 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 	}
 
 	private File crop(File file) throws IOException {
-		RectF sel = getPictureRect();
+		final RectF sel = getPictureRect();
 		if (file == null || sel.isEmpty()) {
 			return null;
 		}
-		int[] originalSize = ImageTools.getSize(file);
-		Bitmap bitmap = ImageTools.cropPicture(file, sel.left, sel.top, sel.right, sel.bottom);
-		int[] croppedSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
-		int maxSize = getIntent().getIntExtra(EXTRA_MAXSIZE, EXTRA_MAXSIZE_NO_MAX);
+		final int[] originalSize = ImageTools.getSize(file);
+		LOG.trace("Original image size: {}x{}", originalSize[0], originalSize[1]);
+
+		// keep a single Bitmap variable so the rest could be garbage collected
+		final int orientation = ImageTools.getExifOrientation(file);
+		final RectF rotatedSel = ImageTools.rotateUnitRect(sel, orientation);
+		final Rect imageRect = ImageTools.percentToSize(rotatedSel, originalSize[0], originalSize[1]);
+		final int maxSize = getIntent().getIntExtra(EXTRA_MAXSIZE, EXTRA_MAXSIZE_NO_MAX);
+
+		final float leeway = 0.10f;
+		// calculating a sample size should speed up loading and lessen the probability of OOMs.
+		final int sampleSize = maxSize == EXTRA_MAXSIZE_NO_MAX
+				? 1 : calcSampleSize(maxSize, leeway, imageRect.width(), imageRect.height());
+		LOG.trace("Downsampling by {}x", sampleSize);
+
+		Bitmap bitmap = ImageTools.crop(file, imageRect, sampleSize);
+		LOG.info("Cropped {} = {} to size {}x{}", sel, imageRect, bitmap.getWidth(), bitmap.getHeight());
 		if (maxSize != EXTRA_MAXSIZE_NO_MAX) {
-			bitmap = ImageTools.downscale(bitmap, maxSize, maxSize);
+			bitmap = ImageTools.downscale(bitmap, maxSize, maxSize, leeway);
+			LOG.info("Downscaled to size {}x{} by constraint {}±{}",
+					bitmap.getWidth(), bitmap.getHeight(), maxSize, maxSize * leeway);
+		}
+
+		@Deprecated // experimental for now, don't enable; this would reduce OOMs even more,
+		// because it would skip rotation which create a full copy of the bitmap
+		// on the other hand, rotation should use less memory as saving (getPixels + YCC), so it may be unnecessary.
+		final boolean exifRotate = Boolean.parseBoolean("false");
+		ExifInterface exif = null;
+		if (exifRotate) {
+			exif = new ExifInterface(file.getAbsolutePath());
+		} else {
+			bitmap = ImageTools.rotateImage(bitmap, ImageTools.getExifRotation(orientation));
+			LOG.info("Rotated to size {}x{} because {}({})",
+					bitmap.getWidth(), bitmap.getHeight(), ImageTools.getExifString(orientation), orientation);
 		}
 		CompressFormat format = (CompressFormat)getIntent().getSerializableExtra(EXTRA_FORMAT);
 		if (format == null) {
@@ -484,17 +522,36 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		}
 		int quality = getIntent().getIntExtra(EXTRA_QUALITY, 85);
 		ImageTools.savePicture(bitmap, format, quality, true /* custom encoder */, file);
+		if (exifRotate) {
+			exif.saveAttributes(); // restore original Exif (most importantly the orientation
+		}
 
-		int[] finalSize = new int[] {bitmap.getWidth(), bitmap.getHeight()};
-		LOG.info("Cropped image ({}x{} -> {}x{} @ {},{} -> {}x{} (max {})) saved {}@{} at {}",
-				originalSize[0], originalSize[1],
-				croppedSize[0], croppedSize[1],
-				(int)(sel.top * originalSize[0]), (int)(sel.left * originalSize[1]),
-				finalSize[0], finalSize[1],
-				maxSize,
-				format, quality,
-				file);
+		LOG.info("Saved {}x{} {}@{} into {}", bitmap.getWidth(), bitmap.getHeight(), format, quality, file);
 		return file;
+	}
+	private int calcSampleSize(int maxSize, float leewayPercent, int sourceWidth, int sourceHeight) {
+		// mirror calculations in ImageTools.downscale
+		final float widthPercentage = maxSize / (float)sourceWidth;
+		final float heightPercentage = maxSize / (float)sourceHeight;
+		final float minPercentage = Math.min(widthPercentage, heightPercentage);
+
+		final int targetWidth = Math.round(minPercentage * sourceWidth);
+		final int targetHeight = Math.round(minPercentage * sourceHeight);
+		LOG.trace("Downscale: {}x{} -> {}x{} ({}%) ± {}x{} ({}%)",
+				sourceWidth, sourceHeight, targetWidth, targetHeight, minPercentage * 100,
+				targetWidth * leewayPercent, targetHeight * leewayPercent, leewayPercent * 100);
+		final int exactSampleSize = Math.min(sourceWidth / targetWidth, sourceHeight / targetHeight);
+		int sampleSize = exactSampleSize <= 1? 1 : Integer.highestOneBit(exactSampleSize); // round down to 2^x
+		LOG.trace("Chosen sample size based on size is {} rounded to {}", exactSampleSize, sampleSize);
+		int longerSide = Math.max(sourceWidth, sourceHeight);
+		int targetLongerSide = Math.max(targetWidth, targetHeight);
+		if (Math.abs((float)longerSide / (sampleSize * 2) - targetLongerSide) < targetLongerSide * leewayPercent) {
+			LOG.trace("The longer side {}px allows for leeway ({}%) of {}px when using sample size {}",
+					longerSide, leewayPercent * 100, targetLongerSide * leewayPercent, sampleSize * 2);
+			// this allows the loaded image size to be between [targetLongerSide * (1-leewayPercent), targetLongerSide]
+			sampleSize = sampleSize * 2;
+		}
+		return sampleSize;
 	}
 	private @NonNull RectF getPictureRect() {
 		float width = mSelection.getWidth();
@@ -565,23 +622,17 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 	private class CropClickListener implements OnClickListener {
 		@Override public void onClick(View v) {
 			if (mSavedFile != null) {
-				try {
-					doCrop();
-				} catch (OutOfMemoryError ex) {
-					// CONSIDER http://stackoverflow.com/a/26239077/253468, or other solution on the same question
-					String message = "There's not enough memory to crop the image, sorry. Try a smaller selection.";
-					LOG.warn(message, ex);
-					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-					return;
+				if (doCrop()) {
+					doReturn();
 				}
-				doReturn();
 			} else {
 				if (!take(new Callback<byte[]>() {
 					@Override public void call(byte... data) {
 						doSave(data);
 						flipSelection();
-						doCrop();
-						doReturn();
+						if (doCrop()) {
+							doReturn();
+						}
 					}
 				})) {
 					String message = "Please select or take a picture before cropping.";
