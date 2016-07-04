@@ -432,7 +432,7 @@ public class MainActivity extends DrawerActivity
 	private class RefreshInventorySizeTask extends AsyncTask<Void, Void, Boolean> {
 		@Override protected void onPreExecute() {
 			isInventoryEmptyCache = false;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 		}
 		@SuppressWarnings("TryFinallyCanBeTryWithResources")
 		@Override protected Boolean doInBackground(Void... params) {
@@ -445,14 +445,14 @@ public class MainActivity extends DrawerActivity
 		}
 		@Override protected void onPostExecute(Boolean result) {
 			isInventoryEmptyCache = Boolean.TRUE.equals(result);
-			invalidateOptionsMenu(); // make the populate icon appear/disappear (may hide overflow altogether)
+			supportInvalidateOptionsMenu(); // make the populate icon appear/disappear (may hide overflow altogether)
 		}
 	}
 
 	private class PopulateSampleInventoryTask extends AsyncTask<Void, Void, Boolean> {
 		@Override protected void onPreExecute() {
 			isInventoryEmptyCache = false;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 		}
 		@Override protected Boolean doInBackground(Void... params) {
 			InputStream demo = null;

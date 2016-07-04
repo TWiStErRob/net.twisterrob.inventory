@@ -67,9 +67,7 @@
 	<string name="pref_sunburstIgnoreLevel_desc">Sunburst diagram can be slow if there are a lot of items shown.
 		Decrease this setting to ignore items stored deep within other items from displaying. Values below 3 are not advised.</string>
 
-	<string name="pref_showWelcome_title">Show Welcome</string>
 	<string name="pref_showWelcome" translatable="false">showWelcome</string>
 	<bool name="pref_showWelcome_default" translatable="false">true</bool>
-	<string name="pref_showWelcome_desc">Asks for what to do on startup.</string>
 
 </resources>
