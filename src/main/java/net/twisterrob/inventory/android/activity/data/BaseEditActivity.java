@@ -42,7 +42,8 @@ public abstract class BaseEditActivity<E extends BaseEditFragment<?, ?>> extends
 	}
 
 	@Override public boolean onSupportNavigateUp() {
-		super.onBackPressed(); // escape activity without dirty check
+		onBackPressed(); // CONSIDER escape activity without dirty check (add `super.`)
+		// Sarah was using up as back. I was thinking as up nav from edit as ESC (don't save). Who is right?
 		return true;
 	}
 

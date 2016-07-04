@@ -88,7 +88,7 @@ public interface Constants {
 			File file = new File(folder, prefix + 0 + suffix);
 			// TODO figure out an alternative to deleteOnExit, until then:
 			//noinspection ResultOfMethodCallIgnored, use the same image file over and over again
-			file.delete();
+			//file.delete(); // don't delete because it causes strange behavior (edit, take, crop, take, back, save -> ENOENT)
 			//File file = File.createTempFile(prefix, suffix, folder);
 			file.deleteOnExit();
 			return file;

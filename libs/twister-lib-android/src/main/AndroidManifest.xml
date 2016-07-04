@@ -16,8 +16,12 @@
 		<activity
 			android:name="net.twisterrob.android.activity.CaptureImage"
 			android:exported="false"
-			android:screenOrientation="fullSensor"
+			android:screenOrientation="fullUser"
 			>
+			<intent-filter>
+				<action android:name="net.twisterrob.android.intent.action.CAPTURE_IMAGE" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
 			<!--
 			<uses-permission android:name="android.permission.CAMERA" />
 			<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />

@@ -30,6 +30,7 @@ import net.twisterrob.java.utils.StringTools;
 
 public class App extends Application {
 	static {
+		// TODO figure out something so IDEA sees these classes, but they're not on lib's test classpath.
 		// Make sure to set up LoggerFactory before the first logger is created
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
 		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.android\\.(.+\\.)?", "");

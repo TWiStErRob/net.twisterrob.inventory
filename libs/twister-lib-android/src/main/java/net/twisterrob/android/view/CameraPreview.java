@@ -219,6 +219,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		listener.onDestroy(this);
 	}
 
+	@SuppressWarnings("deprecation")
 	public Boolean isFrontFacing() {
 		return cameraHolder == null? null
 				: cameraHolder.cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT;
@@ -293,7 +294,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		String focusMode = cameraHolder.camera.getParameters().getFocusMode();
 		if (android.hardware.Camera.Parameters.FOCUS_MODE_AUTO.equals(focusMode)
 				|| android.hardware.Camera.Parameters.FOCUS_MODE_MACRO.equals(focusMode)) {
-			cameraHolder.camera.autoFocus(cameraCallback);
+			try {
+				cameraHolder.camera.autoFocus(cameraCallback);
+			} catch (RuntimeException ex) {
+				LOG.warn("Failed to autofocus", ex);
+				cameraCallback.onAutoFocus(false, cameraHolder.camera);
+			}
 		} else {
 			cameraCallback.onAutoFocus(true, cameraHolder.camera);
 		}

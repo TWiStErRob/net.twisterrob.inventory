@@ -139,6 +139,13 @@
 		&LI;<font color="yellow">yellow</font> for work in progress
 		&LI;<font color="green">green</font> for focused and ready
 		&LI;<font color="red">red</font> for out of focus or error
+		\n<b>To take a picture</b> using the built-in camera:
+		&LI;if the image is still, press the middle picture button, to start the preview
+		&LI;if the image is moving, press the middle picture button, to take a picture
+		&LI;highlight the area you want to crop using the selection
+		&LI;press the right crop button
+		&LI;save the belonging
+		\nAs a shortcut: pressing the crop button while the preview is showing will take the picture and immediately crop it.
 
 		\n\n\n<big><b>Actions</b></big>
 

@@ -54,15 +54,11 @@
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 			<meta-data android:name="android.app.searchable" android:resource="@xml/searchable_suggest" />
 		</activity>
+		<!-- Just adds a label, the rest is in the lib -->
 		<activity
 			android:name="net.twisterrob.android.activity.CaptureImage"
 			android:label="@string/action_picture_take"
-			>
-			<intent-filter>
-				<action android:name="net.twisterrob.android.intent.action.CAPTURE_IMAGE" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
+			/>
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.ImageActivity"
 			android:label="@string/image_title"
