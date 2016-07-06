@@ -148,6 +148,11 @@
 		\nAs a shortcut: pressing the crop button while the preview is showing will take the picture and immediately crop it.
 
 		\n\n\n<big><b>Actions</b></big>
+		
+		\n\n<b>Navigation</b>
+		\nTapping a single belonging in any list will open it, and show the details and contained belongings.
+		To go back to the <b>previous screen</b> use the device\'s <i>back</i> button.
+		To go to the <b>container\'s details</b> use the <i>up navigation</i> button in the action bar.
 
 		\n\n<b>Single belongings</b>
 		\nTo take any action on a single belonging, open it and check the available actions on the action bar.
