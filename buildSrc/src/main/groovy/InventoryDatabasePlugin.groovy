@@ -1,4 +1,5 @@
 import org.gradle.api.*
+import org.gradle.api.plugins.BasePlugin
 
 // TODEL @formatter https://youtrack.jetbrains.com/issue/IDEA-154077
 //@formatter:off
@@ -24,6 +25,7 @@ class InventoryDatabasePlugin implements Plugin<Project> {
 		project.extensions.databaseEntities = entities
 
 		def allTasks = project.task('generateDataBase')
+		allTasks.group = BasePlugin.BUILD_GROUP
 		def allTasksClean = project.task('cleanGenerateDataBase')
 		project.afterEvaluate {
 			entities.all { entity ->
