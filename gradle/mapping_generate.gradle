@@ -1,0 +1,79 @@
+// Currently not used, this version was just a test to try to generate a mapping from *.jar/**/*.class files
+android {
+	afterEvaluate {
+		applicationVariants.all { BaseVariant variant ->
+			if (variant.obfuscation) {
+				File mapping = variant.mappingFile
+				File newMapping = new File(mapping.parentFile, mapping.getName() + ".gen");
+				def generateDebugMapping = project.task('generateDebugMapping') {
+					description = "Generate mapping.txt for readable output"
+					outputs.files newMapping
+					outputs.upToDateWhen { false } // TODO inputs as jar files below
+					doFirst {
+						AndroidProGuardTask pg = variant.obfuscation
+						println project.files(pg.inJarFiles).files
+						println project.files(pg.libraryJarFiles).files
+						println project.files(variant.androidBuilder.getBootClasspath()).files
+						def mapJars = project.files(pg.inJarFiles)
+						def allJars = mapJars
+						+project.files(pg.libraryJarFiles)
+						+project.files(variant.androidBuilder.getBootClasspath())
+						ClassLoader loader = java.net.URLClassLoader.newInstance(allJars*.toURI()*.toURL() as URL[]);
+						PrintWriter out = new PrintWriter(newMapping);
+						def output = { File source, String path, Class<?> clazz ->
+							//println "${source}/${path}: ${clazz}"
+							def swapCase = org.apache.commons.lang.StringUtils.&swapCase
+							def className = { s -> s.toLowerCase() }
+							def methodName = { s -> s }
+							def fieldName = { s -> s }
+							def getClassName = { c -> java.lang.Class.getDeclaredMethod("getName").invoke(c) }
+							out.printf("%s -> %s:\n", getClassName(clazz), className(getClassName(clazz)))
+							for (java.lang.reflect.Field field : clazz.declaredFields) {
+								out.printf("\t%s %s -> %s\n",
+										field.type.canonicalName ?: getClassName(field.type),
+										field.name,
+										fieldName(field.name))
+							}
+							for (java.lang.reflect.Method method : clazz.declaredMethods) {
+								out.printf("\t%s %s(%s) -> %s\n",
+										method.returnType.canonicalName ?: getClassName(field.type),
+										method.name,
+										method.parameterTypes*.canonicalName.join(","),
+										methodName(method.name))
+							}
+						}
+						mapJars.each { File jar ->
+							if (jar.directory) {
+								println "Dir: " + jar
+								project.fileTree(jar).visit { org.gradle.api.file.FileVisitDetails f ->
+									if (!f.directory && f.name.endsWith(".class")) {
+										String className = f.relativePath.segments.join(".");
+										className = className.substring(0, className.length() - ".class".length());
+										output(jar, f.relativePath.pathString, Class.forName(className, false, loader));
+									}
+								}
+							} else {
+								println "File: " + jar
+								java.util.zip.ZipInputStream zip = new java.util.zip.ZipInputStream(
+										new FileInputStream(jar));
+								for (java.util.zip.ZipEntry f = zip.getNextEntry(); f != null; f = zip.getNextEntry()) {
+									if (!f.directory && f.name.endsWith(".class")) {
+										String className = f.name.replace('/', '.');
+										className = className.substring(0, className.length() - ".class".length());
+										output(jar, f.name, Class.forName(className, false, loader));
+									}
+								}
+							}
+						}
+						out.close()
+					}
+					doLast {
+						AndroidProGuardTask task = variant.obfuscation as AndroidProGuardTask
+						task.applymapping(newMapping)
+					}
+				}
+				variant.obfuscation.dependsOn generateDebugMapping
+			}
+		}
+	}
+}

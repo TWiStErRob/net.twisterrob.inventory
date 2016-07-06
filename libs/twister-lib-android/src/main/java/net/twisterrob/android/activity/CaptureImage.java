@@ -44,6 +44,15 @@ import net.twisterrob.android.view.CameraPreview.*;
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
+/**
+ * TODO check how others did it
+ * <a href="https://github.com/lvillani/android-cropimage/tree/678f453d577232bbeed6b025dace823fa6bee43b">Crop Image from Gallery (as was 2014)</a>
+ * <br>
+ * <a href="http://adblogcat.com/a-camera-preview-with-a-bounding-box-like-google-goggles/">A camera preview with a bounding box like Google goggles</a>
+ * > <a href="http://mobile.mymasterpeice.comxa.com/wp-content/uploads/2015/10/adblogcat.com-A-camera-preview-with-a-bounding-box-like-Google-goggles.pdf">as PDF</a>
+ * > <a href="https://code.google.com/archive/p/ece301-examples/downloads">Downloads</a>
+ * > <a href="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ece301-examples/CameraPreview.zip">CameraPreview.zip</a> (password preview).
+ */
 public class CaptureImage extends Activity implements ActivityCompat.OnRequestPermissionsResultCallback {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
 	public static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;

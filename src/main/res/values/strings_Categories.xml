@@ -243,6 +243,7 @@
 
 
 	<!--=========================================================================================================-->
+	<!-- Garment: an item of clothing -->
 	<string name="category_clothing" level="0" icon="@raw/item_tshirt">Clothing</string>
 	<string name="category_clothing_keywords">@string/empty</string>
 	<string name="category_clothing_description">stuff to put on your body</string>
