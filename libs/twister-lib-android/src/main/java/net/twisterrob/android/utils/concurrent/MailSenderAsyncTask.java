@@ -1,12 +1,13 @@
 package net.twisterrob.android.utils.concurrent;
 
+import org.slf4j.*;
+
 import android.os.AsyncTask;
 
-import net.twisterrob.android.utils.log.*;
 import net.twisterrob.java.io.MailSender;
 
 public class MailSenderAsyncTask extends AsyncTask<String, Void, Boolean> {
-	private static final Log LOG = LogFactory.getLog(Tag.IO);
+	private static final Logger LOG = LoggerFactory.getLogger(MailSenderAsyncTask.class);
 
 	private final MailSender m = new MailSender();
 
@@ -23,7 +24,7 @@ public class MailSenderAsyncTask extends AsyncTask<String, Void, Boolean> {
 			m.send();
 			return true;
 		} catch (Exception ex) {
-			LOG.error("Cannot send %s.", ex, m);
+			LOG.error("Cannot send {}.", m, ex);
 			return false;
 		}
 	}
