@@ -17,17 +17,17 @@ public class StringerRepoTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void registerNonExistent() throws Exception {
+	public void registerNonExistent() {
 		repo.register("non.existent.Class", stringer());
 	}
 
 	@SuppressWarnings("ConstantConditions")
 	@Test(expected = IllegalArgumentException.class)
-	public void registerNull() throws Exception {
+	public void registerNull() {
 		repo.register("java.lang.Object", null);
 	}
 
-	@Test public void registerValid() throws Exception {
+	@Test public void registerValid() {
 		repo.register(DirectFromObject.class, StringerRepoTest.<DirectFromObject>stringer());
 		//noinspection RedundantTypeArguments let's be explicit
 		repo.register(DirectFromObject.class, StringerRepoTest.<Object>stringer());
@@ -47,16 +47,16 @@ public class StringerRepoTest {
 		repo.register(ChildInterfaces.class, StringerRepoTest.<ChildInterface2>stringer());
 	}
 
-	@Test public void findNullType() throws Exception {
+	@Test public void findNullType() {
 		assertThat(repo.find(null), instanceOf(NullTypeStringer.class));
 	}
-	@Test public void findNullValue() throws Exception {
+	@Test public void findNullValue() {
 		assertThat(repo.findByValue(null), instanceOf(NullStringer.class));
 	}
-	@Test public void findUnregisteredValue() throws Exception {
+	@Test public void findUnregisteredValue() {
 		assertThat(repo.findByValue(new Object()), sameInstance(repo.getDefault()));
 	}
-	@Test public void findRegisteredValue() throws Exception {
+	@Test public void findRegisteredValue() {
 		Stringer<DirectFromObject> stringer = stringer();
 
 		repo.register(DirectFromObject.class, stringer);
@@ -64,7 +64,7 @@ public class StringerRepoTest {
 		assertThat(repo.findByValue(new DirectFromObject()), sameInstance(stringer));
 	}
 
-	@Test public void findNonRegistered() throws Exception {
+	@Test public void findNonRegistered() {
 		@SuppressWarnings("rawtypes") Matcher<Stringer> returnsDefaultStringer = sameInstance(repo.getDefault());
 		assertThat(repo.find(DirectFromObject.class), returnsDefaultStringer);
 		assertThat(repo.find(Object.class), returnsDefaultStringer);
@@ -72,7 +72,7 @@ public class StringerRepoTest {
 		assertThat(repo.find(int.class), returnsDefaultStringer);
 	}
 
-	@Test public void findSimple() throws Exception {
+	@Test public void findSimple() {
 		Stringer<DirectFromObject> stringer = stringer();
 
 		repo.register(DirectFromObject.class, stringer);
@@ -80,7 +80,7 @@ public class StringerRepoTest {
 		assertSame(stringer, repo.find(DirectFromObject.class));
 	}
 
-	@Test public void findsInherited() throws Exception {
+	@Test public void findsInherited() {
 		Stringer<Child> stringer = stringer();
 
 		repo.register(Child.class, stringer);
@@ -88,7 +88,7 @@ public class StringerRepoTest {
 		assertSame(stringer, repo.find(Child.class));
 	}
 
-	@Test public void findsSuper() throws Exception {
+	@Test public void findsSuper() {
 		Stringer<Super> stringer = stringer();
 
 		repo.register(Super.class, stringer);
@@ -97,7 +97,7 @@ public class StringerRepoTest {
 		assertSame(stringer, repo.find(GrandChild.class));
 	}
 
-	@Test public void findsClosestClass() throws Exception {
+	@Test public void findsClosestClass() {
 		Stringer<Super> superStringer = stringer("super");
 		Stringer<Child> childStringer = stringer("child");
 		Stringer<GrandChild> grandChildStringer = stringer("grandchild");
@@ -112,7 +112,7 @@ public class StringerRepoTest {
 	}
 
 	@SuppressWarnings("rawtypes")
-	@Test public void findsInterfaceOnChild() throws Exception {
+	@Test public void findsInterfaceOnChild() {
 		Stringer<ChildInterface1> ifaceStringer1 = stringer("child1");
 		Stringer<ChildInterface2> ifaceStringer2 = stringer("child2");
 
@@ -124,7 +124,7 @@ public class StringerRepoTest {
 	}
 
 	@SuppressWarnings("rawtypes")
-	@Test public void findsInterfaceOnSuper() throws Exception {
+	@Test public void findsInterfaceOnSuper() {
 		Stringer<SuperInterface1> ifaceStringer1 = stringer("super1");
 		Stringer<SuperInterface2> ifaceStringer2 = stringer("super2");
 
@@ -136,7 +136,7 @@ public class StringerRepoTest {
 	}
 
 	@SuppressWarnings("rawtypes")
-	@Test public void findsExtendedInterface() throws Exception {
+	@Test public void findsExtendedInterface() {
 		Stringer<BaseInterface> stringer = stringer();
 
 		repo.register(BaseInterface.class, stringer);
@@ -160,7 +160,7 @@ public class StringerRepoTest {
 	interface ChildInterface2 {}
 	class ChildInterfacesSuper {}
 	class ChildInterfaces extends ChildInterfacesSuper implements ChildInterface1, ChildInterface2 {}
-	
+
 	interface BaseInterface {}
 	interface ExtendedInterface extends BaseInterface {}
 	class ExtendedInterfaceImpl implements ExtendedInterface {}
@@ -168,11 +168,11 @@ public class StringerRepoTest {
 
 	@SuppressWarnings("unchecked")
 	private static <T> Stringer<T> stringer() {
-		return (Stringer<T>)Mockito.mock(Stringer.class);
+		return Mockito.mock(Stringer.class);
 	}
 	@SuppressWarnings("unchecked")
 	private static <T> Stringer<T> stringer(String name) {
-		return (Stringer<T>)Mockito.mock(Stringer.class, name);
+		return Mockito.mock(Stringer.class, name);
 	}
 	@SuppressWarnings("rawtypes")
 	private static Matcher<Stringer> sameInstance(Stringer<?> stringer) {

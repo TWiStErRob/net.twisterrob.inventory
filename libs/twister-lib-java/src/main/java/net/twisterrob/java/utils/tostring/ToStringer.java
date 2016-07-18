@@ -10,6 +10,7 @@ import net.twisterrob.java.utils.tostring.stringers.DefaultStringer;
 
 public class ToStringer implements ToStringAppender {
 	private static final Logger LOG = LoggerFactory.getLogger(ToStringer.class);
+	private static final boolean LOG_ALL = Boolean.parseBoolean("false");
 	private final StringerRepo repo;
 
 	private final StringBuilder sb = new StringBuilder();
@@ -114,10 +115,14 @@ public class ToStringer implements ToStringAppender {
 	protected <T> void begin(T object, Stringer<? super T> stringer) {
 		saveCurrent();
 		context.setStyle(context.style.properties, true);
-		//LOG.trace("Starting {} with {}", object, stringer);
+		if (LOG_ALL) {
+			LOG.trace("Starting {} with {}", object, stringer);
+		}
 	}
 	protected <T> void end(T object, Stringer<? super T> stringer) {
-		//LOG.trace("Finished {} with {}", object, stringer);
+		if (LOG_ALL) {
+			LOG.trace("Finished {} with {}", object, stringer);
+		}
 		restoreLatest();
 	}
 

@@ -46,7 +46,7 @@ public abstract class RestoreStructureAlgo<Container, Item, Result> {
 
 	public Callable<Result> toCallable(@Nonnull final Container data) {
 		return new Callable<Result>() {
-			@Override public Result call() throws Exception {
+			@Override public Result call() {
 				return RestoreStructureAlgo.this.run(data);
 			}
 		};

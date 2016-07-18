@@ -1,6 +1,7 @@
 package net.twisterrob.java.annotations;
 
 import java.lang.annotation.*;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import javax.annotation.*;
@@ -23,7 +24,8 @@ public @interface SimpleDateFormatString {
 			}
 
 			try {
-				new java.text.SimpleDateFormat((String)value, Locale.ROOT);
+				@SuppressWarnings("unused")
+				SimpleDateFormat testFormatByParsing = new java.text.SimpleDateFormat((String)value, Locale.ROOT);
 			} catch (IllegalArgumentException e) {
 				return When.NEVER;
 			}
