@@ -77,8 +77,7 @@ public class LoaderChain {
 			return this;
 		}
 
-		@Override
-		public LoaderCallbacks<T> getCallback() {
+		@Override public LoaderCallbacks<T> getCallback() {
 			LoaderCallbacks<T> callbacks = super.getCallback();
 			if (next != null) {
 				callbacks = new ChainCallback<>(callbacks, next);

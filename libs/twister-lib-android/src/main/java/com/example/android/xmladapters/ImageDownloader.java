@@ -45,8 +45,7 @@ public class ImageDownloader {
 	private final static HashMap<String, Bitmap> sHardBitmapCache = new LinkedHashMap<String, Bitmap>(
 			HARD_CACHE_CAPACITY / 2, 0.75f, true) {
 		private static final long serialVersionUID = -7190622541619388252L;
-		@Override
-		protected boolean removeEldestEntry(Map.Entry<String, Bitmap> eldest) {
+		@Override protected boolean removeEldestEntry(Map.Entry<String, Bitmap> eldest) {
 			if (size() > HARD_CACHE_CAPACITY) {
 				// Entries push-out of hard reference cache are transferred to soft reference cache
 				sSoftBitmapCache.put(eldest.getKey(), new SoftReference<>(eldest.getValue()));
@@ -294,8 +293,7 @@ public class ImageDownloader {
 		/**
 		 * Once the image is downloaded, associates it to the imageView
 		 */
-		@Override
-		protected void onPostExecute(Bitmap bitmap) {
+		@Override protected void onPostExecute(Bitmap bitmap) {
 			if (isCancelled()) {
 				bitmap = null;
 			}

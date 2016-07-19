@@ -123,15 +123,13 @@ public class DriveHelper {
 	}
 
 	private class LifeCycle implements ConnectionCallbacks, OnConnectionFailedListener {
-		@Override
-		public void onConnected(Bundle connectionHint) {
+		@Override public void onConnected(Bundle connectionHint) {
 			LOG.info("GoogleApiClient connected");
 			// connect() may be blocking an AsyncTask
 			AndroidTools.executeParallel(new Task(), delayed.toArray(new ConnectedTask[delayed.size()]));
 		}
 
-		@Override
-		public void onConnectionFailed(ConnectionResult result) {
+		@Override public void onConnectionFailed(ConnectionResult result) {
 			LOG.info("GoogleApiClient connection failed: {}", result);
 			if (!result.hasResolution()) {
 				Dialog dialog = GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), activity, 0);
@@ -150,15 +148,13 @@ public class DriveHelper {
 			}
 		}
 
-		@Override
-		public void onConnectionSuspended(int reason) {
+		@Override public void onConnectionSuspended(int reason) {
 			LOG.info("GoogleApiClient disconnected");
 		}
 	}
 
 	private class Task extends AsyncTask<ConnectedTask, Void, Void> {
-		@Override
-		protected Void doInBackground(ConnectedTask... params) {
+		@Override protected Void doInBackground(ConnectedTask... params) {
 			for (ConnectedTask run : params) {
 				try {
 					run.execute(client);
@@ -170,8 +166,7 @@ public class DriveHelper {
 			return null;
 		}
 
-		@Override
-		protected void onPostExecute(Void result) {
+		@Override protected void onPostExecute(Void result) {
 			result(true);
 		}
 	}

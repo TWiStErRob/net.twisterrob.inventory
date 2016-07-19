@@ -217,14 +217,10 @@ public /*static*/ abstract class ImageTools {
 	 * @author paulburke
 	 */
 	public static String getPath(final Context context, final Uri uri) {
-		//LOG.debug("Authority: " + uri.getAuthority() //
-		//		+ ", Fragment: " + uri.getFragment() //
-		//		+ ", Port: " + uri.getPort() //
-		//		+ ", Query: " + uri.getQuery() //
-		//		+ ", Scheme: " + uri.getScheme() //
-		//		+ ", Host: " + uri.getHost() //
-		//		+ ", Segments: " + uri.getPathSegments().toString());
-
+		LOG.trace("Authority: {}, Fragment: {}, Port: {}, Query: {}, Scheme: {}, Host: {}, Segments: {}",
+				uri.getAuthority(), uri.getFragment(), uri.getPort(), uri.getQuery(), uri.getScheme(), uri.getHost(),
+				uri.getPathSegments().toString()
+		);
 		String result = null;
 
 		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {

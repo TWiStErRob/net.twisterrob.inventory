@@ -17,8 +17,7 @@ public class MailSenderAsyncTask extends AsyncTask<String, Void, Boolean> {
 		m.setSubject(subject);
 	}
 
-	@Override
-	protected Boolean doInBackground(String... params) {
+	@Override protected Boolean doInBackground(String... params) {
 		try {
 			m.setBody(params[0]);
 			m.send();

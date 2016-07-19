@@ -1,6 +1,6 @@
 package net.twisterrob.java.io;
 
-import java.io.*;
+import java.io.OutputStream;
 import java.util.zip.CRC32;
 
 import javax.annotation.Nonnull;

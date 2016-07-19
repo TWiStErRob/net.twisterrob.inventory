@@ -31,12 +31,10 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	public List<Group> getGroups() {
 		return m_groups;
 	}
-	@Override
-	public int getGroupCount() {
+	@Override public int getGroupCount() {
 		return getGroups().size();
 	}
-	@Override
-	public Group getGroup(int groupPosition) {
+	@Override public Group getGroup(int groupPosition) {
 		return getGroups().get(groupPosition);
 	}
 	public int getGroupIndex(Group group) {
@@ -46,39 +44,33 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	public List<Child> getChildren(Group group) {
 		return m_children.get(group);
 	}
-	@Override
-	public int getChildrenCount(int groupPosition) {
+	@Override public int getChildrenCount(int groupPosition) {
 		return getChildren(getGroup(groupPosition)).size();
 	}
-	@Override
-	public Child getChild(int groupPosition, int childPosition) {
+	@Override public Child getChild(int groupPosition, int childPosition) {
 		return getChildren(getGroup(groupPosition)).get(childPosition);
 	}
 	public int getChildIndex(Group group, Child child) {
 		return getChildren(group).indexOf(child);
 	}
 
-	@Override
-	public long getGroupId(int groupPosition) {
+	@Override public long getGroupId(int groupPosition) {
 		return groupPosition;
 	}
-	@Override
-	public long getChildId(int groupPosition, int childPosition) {
+	@Override public long getChildId(int groupPosition, int childPosition) {
 		return childPosition;
 	}
-	@Override
-	public boolean hasStableIds() {
+	@Override public boolean hasStableIds() {
 		return false;
 	}
 
-	@Override
-	public boolean isChildSelectable(int groupPosition, int childPosition) {
+	@Override public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
-	public View getGroupView(int groupPosition, boolean isExpanded, View groupConvertView, ViewGroup parentGroupView) {
+	@Override public View getGroupView(int groupPosition, boolean isExpanded,
+			View groupConvertView, ViewGroup parentGroupView) {
 		Group currentGroup = getGroup(groupPosition);
 		List<Child> currentChildren = getChildren(currentGroup);
 		GroupVH groupHolder;
@@ -100,10 +92,9 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 		return groupConvertView;
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
-	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View childConvertView,
-			ViewGroup parentGroupViewGroup) {
+	@Override public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+			View childConvertView, ViewGroup parentGroupViewGroup) {
 		Group currentGroup = getGroup(groupPosition);
 		Child currentChild = getChild(groupPosition, childPosition);
 		ChildVH childHolder;
@@ -134,14 +125,14 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	 * Update the view-model object {@link Group} on the first usage.
 	 */
 	protected void bindGroupModel(GroupVH groupHolder, List<Child> currentChildren, Group currentGroup) {
-		// optional @Override
+		// optional override
 	}
 
-	protected abstract void bindGroupView(GroupVH groupHolder, Group currentGroup, List<Child> currentChildren,
-			View groupConvertView);
+	protected abstract void bindGroupView(GroupVH groupHolder,
+			Group currentGroup, List<Child> currentChildren, View groupConvertView);
 
 	protected void bindEmptyGroupView(GroupVH groupHolder, List<Child> currentChildren, View groupConvertView) {
-		// optional @Override
+		// optional override
 	}
 
 	protected abstract int getChildLayoutId();
@@ -152,13 +143,13 @@ public abstract class BaseExpandableList2Adapter<Group, Child, GroupVH, ChildVH>
 	 * Update the view-model object {@link Child} on the first usage.
 	 */
 	protected void bindChildModel(ChildVH childHolder, Group currentGroup, Child currentChild) {
-		// optional @Override
+		// optional override
 	}
 
-	protected abstract void bindChildView(ChildVH childHolder, Group currentGroup, Child currentChild,
-			View childConvertView);
+	protected abstract void bindChildView(ChildVH childHolder,
+			Group currentGroup, Child currentChild, View childConvertView);
 
 	protected void bindEmptyChildView(ChildVH childHolder, Group currentGroup, View childConvertView) {
-		// optional @Override
+		// optional override
 	}
 }

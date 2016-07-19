@@ -92,8 +92,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		return convertView;
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
+	@Override @SuppressWarnings("unchecked")
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		T currentItem = m_items.get(position);
 		VH holder;
@@ -125,7 +124,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 	 * Update the view-model object {@link T} on the first usage.
 	 */
 	protected void bindModel(VH holder, T currentItem) {
-		// optional @Override
+		// optional override
 	}
 
 	protected abstract void bindView(VH holder, T currentItem, View convertView);
@@ -193,8 +192,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		public SimplifyingFilter() {
 		}
 
-		@Override
-		protected FilterResults performFiltering(CharSequence constraint) {
+		@Override protected FilterResults performFiltering(CharSequence constraint) {
 			LOG.debug("performFiltering: {}", constraint);
 			FilterResults results = new FilterResults();
 			List<T> resultList = new ArrayList<>();
@@ -209,8 +207,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 			return results;
 		}
 		@SuppressWarnings("unchecked")
-		@Override
-		protected void publishResults(CharSequence constraint, FilterResults results) {
+		@Override protected void publishResults(CharSequence constraint, FilterResults results) {
 			LOG.debug("Publishing: {} -> {}", constraint, results.count);
 			m_items = (List<T>)results.values;
 			m_lastFinished = constraint != null? constraint.toString() : null;

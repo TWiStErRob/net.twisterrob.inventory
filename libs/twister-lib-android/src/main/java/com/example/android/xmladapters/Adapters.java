@@ -872,8 +872,7 @@ public class Adapters {
 			}
 		}
 
-		@Override
-		public void bindView(View view, Context context, Cursor cursor) {
+		@Override public void bindView(View view, Context context, Cursor cursor) {
 			final int count = mTo.length;
 			final int[] to = mTo;
 			final CursorBinder[] binders = mBinders;
@@ -897,8 +896,7 @@ public class Adapters {
 			mUri = uri;
 		}
 
-		@Override
-		public void changeCursor(Cursor c) {
+		@Override public void changeCursor(Cursor c) {
 			if (mLoadTask != null && mLoadTask.getStatus() != QueryTask.Status.FINISHED) {
 				mLoadTask.cancel(true);
 				mLoadTask = null;
@@ -907,9 +905,8 @@ public class Adapters {
 		}
 
 		class QueryTask extends AsyncTask<Void, Void, Cursor> {
-			@Override
 			@SuppressWarnings("deprecation")
-			protected Cursor doInBackground(Void... params) {
+			@Override protected Cursor doInBackground(Void... params) {
 				if (mContext instanceof Activity) {
 					return ((Activity)mContext).managedQuery(Uri.parse(mUri), mColumns,
 							mSelection, mSelectionArgs, mSortOrder);
@@ -919,8 +916,7 @@ public class Adapters {
 				}
 			}
 
-			@Override
-			protected void onPostExecute(Cursor cursor) {
+			@Override protected void onPostExecute(Cursor cursor) {
 				if (!isCancelled()) {
 					XmlCursorAdapter.super.changeCursor(cursor);
 				}
@@ -937,8 +933,7 @@ public class Adapters {
 			super(context);
 		}
 
-		@Override
-		public String transform(Cursor cursor, int columnIndex) {
+		@Override public String transform(Cursor cursor, int columnIndex) {
 			return cursor.getString(columnIndex);
 		}
 	}
@@ -991,8 +986,7 @@ public class Adapters {
 			}
 		}
 
-		@Override
-		public String transform(Cursor cursor, int columnIndex) {
+		@Override public String transform(Cursor cursor, int columnIndex) {
 			final StringBuilder builder = mBuilder;
 			builder.delete(0, builder.length());
 
@@ -1018,8 +1012,7 @@ public class Adapters {
 				mConstant = constant;
 			}
 
-			@Override
-			public String asString(Cursor cursor) {
+			@Override public String asString(Cursor cursor) {
 				return mConstant;
 			}
 		}
@@ -1033,8 +1026,7 @@ public class Adapters {
 				mColumnName = columnName;
 			}
 
-			@Override
-			public String asString(Cursor cursor) {
+			@Override public String asString(Cursor cursor) {
 				if (cursor != mSignature || mColumnIndex == -1) {
 					mColumnIndex = cursor.getColumnIndex(mColumnName);
 					mSignature = cursor;
@@ -1067,15 +1059,13 @@ public class Adapters {
 			mResourceMappings.put(from, to);
 		}
 
-		@Override
-		public String transform(Cursor cursor, int columnIndex) {
+		@Override public String transform(Cursor cursor, int columnIndex) {
 			final String value = cursor.getString(columnIndex);
 			final String transformed = mStringMappings.get(value);
 			return transformed == null? value : transformed;
 		}
 
-		@Override
-		public int transformToResource(Cursor cursor, int columnIndex) {
+		@Override public int transformToResource(Cursor cursor, int columnIndex) {
 			final String value = cursor.getString(columnIndex);
 			final Integer transformed = mResourceMappings.get(value);
 			try {
@@ -1094,8 +1084,7 @@ public class Adapters {
 			super(context, transformation);
 		}
 
-		@Override
-		public boolean bind(View view, Cursor cursor, int columnIndex) {
+		@Override public boolean bind(View view, Cursor cursor, int columnIndex) {
 			if (view instanceof TextView) {
 				final String text = mTransformation.transform(cursor, columnIndex);
 				((TextView)view).setText(text);
@@ -1113,8 +1102,7 @@ public class Adapters {
 			super(context, transformation);
 		}
 
-		@Override
-		public boolean bind(View view, Cursor cursor, int columnIndex) {
+		@Override public boolean bind(View view, Cursor cursor, int columnIndex) {
 			if (view instanceof ImageView) {
 				final byte[] data = cursor.getBlob(columnIndex);
 				((ImageView)view).setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
@@ -1129,8 +1117,7 @@ public class Adapters {
 			super(context, transformation);
 		}
 
-		@Override
-		public boolean bind(View view, Cursor cursor, int columnIndex) {
+		@Override public boolean bind(View view, Cursor cursor, int columnIndex) {
 			final String text = mTransformation.transform(cursor, columnIndex);
 			view.setTag(text);
 			return true;
@@ -1145,8 +1132,7 @@ public class Adapters {
 			super(context, transformation);
 		}
 
-		@Override
-		public boolean bind(View view, Cursor cursor, int columnIndex) {
+		@Override public boolean bind(View view, Cursor cursor, int columnIndex) {
 			if (view instanceof ImageView) {
 				((ImageView)view).setImageURI(Uri.parse(mTransformation.transform(cursor, columnIndex)));
 				return true;
@@ -1163,8 +1149,7 @@ public class Adapters {
 			super(context, transformation);
 		}
 
-		@Override
-		public boolean bind(View view, Cursor cursor, int columnIndex) {
+		@Override public boolean bind(View view, Cursor cursor, int columnIndex) {
 			if (view instanceof ImageView) {
 				final int resource = mTransformation.transformToResource(cursor, columnIndex);
 				if (resource == 0) {

@@ -26,13 +26,11 @@ public class Location implements Serializable {
 		return new Location(this.m_latitude - loc.m_latitude, this.m_longitude - loc.m_longitude);
 	}
 
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		return String.format(Locale.ROOT, "%.10f, %.10f", m_latitude, m_longitude);
 	}
 
-	@Override
-	public int hashCode() {
+	@Override public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		long temp;
@@ -43,8 +41,7 @@ public class Location implements Serializable {
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
+	@Override public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}

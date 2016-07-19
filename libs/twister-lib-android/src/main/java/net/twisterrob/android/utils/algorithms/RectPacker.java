@@ -84,8 +84,7 @@ public class RectPacker<T> {
 			return child1 == null && child2 == null;
 		}
 
-		@Override
-		public String toString() {
+		@Override public String toString() {
 			return String.format(Locale.ROOT, "%s: %dx%d", rect, rect.width(), rect.height()); //NON-NLS
 		}
 	}

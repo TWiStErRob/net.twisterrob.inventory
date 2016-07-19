@@ -34,8 +34,7 @@ public class UrlImageBinder extends Adapters.CursorBinder {
 		imageDownloader = new ImageDownloader();
 	}
 
-	@Override
-	public boolean bind(View view, Cursor cursor, int columnIndex) {
+	@Override public boolean bind(View view, Cursor cursor, int columnIndex) {
 		if (view instanceof ImageView) {
 			final String url = mTransformation.transform(cursor, columnIndex);
 			imageDownloader.download(url, (ImageView)view);

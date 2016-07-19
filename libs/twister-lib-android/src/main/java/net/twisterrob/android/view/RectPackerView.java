@@ -56,8 +56,7 @@ public class RectPackerView extends View {
 		}
 	}
 
-	@Override
-	public void draw(Canvas canvas) {
+	@Override public void draw(Canvas canvas) {
 		super.draw(canvas);
 		draw(canvas, root);
 	}

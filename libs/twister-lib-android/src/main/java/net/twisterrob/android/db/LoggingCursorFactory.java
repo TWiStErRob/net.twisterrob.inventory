@@ -15,8 +15,8 @@ import net.twisterrob.java.annotations.DebugHelper;
 public final class LoggingCursorFactory implements CursorFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(LoggingCursorFactory.class);
 
-	@Override
-	public Cursor newCursor(SQLiteDatabase db, SQLiteCursorDriver masterQuery, String editTable, SQLiteQuery query) {
+	@Override public Cursor newCursor(SQLiteDatabase db,
+			SQLiteCursorDriver masterQuery, String editTable, SQLiteQuery query) {
 		LOG.trace("{}", query);
 		return new SQLiteCursor(masterQuery, editTable, query);
 	}

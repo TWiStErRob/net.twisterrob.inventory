@@ -81,8 +81,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 		state.loader = (Loader)manager.initLoader(state.id, state.args, this);
 	}
 
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder(manager.toString());
 		sb.append('\n');
 		for (Dependency<?> state : loaders.values()) {
@@ -155,8 +154,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 			return DynamicLoaderManager.this;
 		}
 
-		@Override
-		public String toString() {
+		@Override public String toString() {
 			return String.format(Locale.ROOT, "%d(%b)", id, isReady());
 		}
 	}
@@ -173,8 +171,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 		public final Loader<Void> onCreateLoader(int id, Bundle args) {
 			if (test(id, args)) {
 				return new Loader<Void>(context) {
-					@Override
-					protected void onStartLoading() {
+					@Override protected void onStartLoading() {
 						deliverResult(null);
 					}
 				};

@@ -71,8 +71,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 * @param holder {@inheritDoc}
 	 * @param i {@inheritDoc}
 	 */
-	@Override
-	public void onBindViewHolder(VH holder, int i) {
+	@Override public void onBindViewHolder(VH holder, int i) {
 		if (!mDataValid) {
 			throw new IllegalStateException("this should only be called when the cursor is valid");
 		}
@@ -93,8 +92,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 */
 	public abstract void onBindViewHolder(VH holder, Cursor cursor);
 
-	@Override
-	public int getItemCount() {
+	@Override public int getItemCount() {
 		if (mDataValid && mCursor != null) {
 			return mCursor.getCount();
 		} else {
@@ -105,8 +103,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	/**
 	 * @see android.widget.ListAdapter#getItemId(int)
 	 */
-	@Override
-	public long getItemId(int position) {
+	@Override public long getItemId(int position) {
 		if (mDataValid && mCursor != null) {
 			if (mCursor.moveToPosition(position)) {
 				return mCursor.getLong(mRowIDColumn);

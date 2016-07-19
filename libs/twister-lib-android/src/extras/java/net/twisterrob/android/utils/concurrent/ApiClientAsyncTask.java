@@ -26,8 +26,7 @@ public abstract class ApiClientAsyncTask<Params, Progress, Result> extends Async
 	}
 
 	@SafeVarargs
-	@Override
-	protected final Result doInBackground(Params... params) {
+	@Override protected final Result doInBackground(Params... params) {
 		GoogleApiClient client = getConnectedClient(mClient);
 		if (client == null) {
 			return null;
@@ -54,8 +53,8 @@ public abstract class ApiClientAsyncTask<Params, Progress, Result> extends Async
 	}
 
 	public static GoogleApiClient createClient(Context context) {
-		GoogleApiClient.Builder builder = new GoogleApiClient.Builder(context) //
-				.addApi(Drive.API) //
+		GoogleApiClient.Builder builder = new GoogleApiClient.Builder(context)
+				.addApi(Drive.API)
 				.addScope(Drive.SCOPE_FILE);
 		return builder.build();
 	}
@@ -70,18 +69,15 @@ public abstract class ApiClientAsyncTask<Params, Progress, Result> extends Async
 		}
 		final CountDownLatch latch = new CountDownLatch(1);
 		client.registerConnectionCallbacks(new ConnectionCallbacks() {
-			@Override
-			public void onConnected(Bundle connectionHint) {
+			@Override public void onConnected(Bundle connectionHint) {
 				latch.countDown();
 			}
-			@Override
-			public void onConnectionSuspended(int cause) {
+			@Override public void onConnectionSuspended(int cause) {
 				// ignore
 			}
 		});
 		client.registerConnectionFailedListener(new OnConnectionFailedListener() {
-			@Override
-			public void onConnectionFailed(ConnectionResult result) {
+			@Override public void onConnectionFailed(ConnectionResult result) {
 				LOG.error("Cannot connect to Google Drive: {}", result.toString());
 				latch.countDown();
 			}

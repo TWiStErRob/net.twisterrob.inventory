@@ -15,12 +15,10 @@ public abstract class BaseFilteringExpandableList3Adapter<Level1, Level2, Level3
 			Map<Level1, ? extends Map<Level2, ? extends List<Level3>>> data) {
 		super(context, outerList, data);
 		registerDataSetObserver(new DataSetObserver() {
-			@Override
-			public void onChanged() {
+			@Override public void onChanged() {
 				resetFiltered();
 			}
-			@Override
-			public void onInvalidated() {
+			@Override public void onInvalidated() {
 				resetFiltered();
 			}
 			void resetFiltered() {
@@ -30,16 +28,14 @@ public abstract class BaseFilteringExpandableList3Adapter<Level1, Level2, Level3
 		});
 	}
 
-	@Override
-	public List<Level1> getGroups() {
+	@Override public List<Level1> getGroups() {
 		if (m_filteredGroups == null) {
 			m_filteredGroups = filterGroups(super.getGroups());
 		}
 		return m_filteredGroups;
 	}
 
-	@Override
-	public List<Level2> getChildren(Level1 group) {
+	@Override public List<Level2> getChildren(Level1 group) {
 		if (m_filteredChildren == null) {
 			m_filteredChildren = createChildrenMap();
 		}

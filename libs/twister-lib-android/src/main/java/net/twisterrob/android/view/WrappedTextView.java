@@ -16,8 +16,7 @@ public class WrappedTextView extends TextView {
 		super(context, attrs, defStyle);
 	}
 
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+	@Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
 		int maxLineWidth = (int)Math.ceil(getMaxLineWidth());

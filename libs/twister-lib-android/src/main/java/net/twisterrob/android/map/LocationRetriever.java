@@ -29,7 +29,7 @@ public class LocationRetriever {
 			m_isGPSEnabled = true;
 		}
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// optional @Override
+			// optional override
 		}
 	};
 
@@ -48,7 +48,7 @@ public class LocationRetriever {
 			m_isNetworkEnabled = true;
 		}
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// optional @Override
+			// optional override
 		}
 	};
 
@@ -126,32 +126,27 @@ public class LocationRetriever {
 
 	public enum LocationType {
 		GPS {
-			@Override
-			public boolean isCurrent() {
+			@Override public boolean isCurrent() {
 				return true;
 			}
 		},
 		Network {
-			@Override
-			public boolean isCurrent() {
+			@Override public boolean isCurrent() {
 				return true;
 			}
 		},
 		LastGPS {
-			@Override
-			public boolean isCurrent() {
+			@Override public boolean isCurrent() {
 				return false;
 			}
 		},
 		LastNetwork {
-			@Override
-			public boolean isCurrent() {
+			@Override public boolean isCurrent() {
 				return false;
 			}
 		},
 		Other {
-			@Override
-			public boolean isCurrent() {
+			@Override public boolean isCurrent() {
 				return true;
 			}
 		};

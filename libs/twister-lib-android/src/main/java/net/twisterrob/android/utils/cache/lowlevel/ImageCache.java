@@ -128,8 +128,7 @@ public class ImageCache {
 				/**
 				 * Measure item size in bytes rather than units which is more practical for a bitmap cache
 				 */
-				@Override
-				protected int sizeOf(final String key, final Bitmap bitmap) {
+				@Override protected int sizeOf(final String key, final Bitmap bitmap) {
 					return ImageCache.getBitmapSize(bitmap);
 				}
 			};
@@ -555,8 +554,7 @@ public class ImageCache {
 			// Empty constructor as per the Fragment documentation
 		}
 
-		@Override
-		public void onCreate(final Bundle savedInstanceState) {
+		@Override public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 
 			// Make sure this Fragment is retained over a configuration change

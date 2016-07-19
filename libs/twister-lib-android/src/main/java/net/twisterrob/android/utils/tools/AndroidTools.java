@@ -911,8 +911,7 @@ public /*static*/ abstract class AndroidTools {
 		Runnable startStreaming = new Runnable() {
 			@Override public void run() {
 				executePreferParallel(new AsyncTask<Object, Object, Object>() {
-					@Override
-					protected Object doInBackground(Object... params) {
+					@Override protected Object doInBackground(Object... params) {
 						InputStream in = new ByteArrayInputStream(contents);
 						OutputStream out = new AutoCloseOutputStream(writeEnd);
 						try {
@@ -1062,14 +1061,12 @@ public /*static*/ abstract class AndroidTools {
 				view.post(tryAgain);
 			} else {
 				view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-					@Override
-					public void onViewAttachedToWindow(View view) {
+					@Override public void onViewAttachedToWindow(View view) {
 						view.removeOnAttachStateChangeListener(this);
 						view.post(tryAgain);
 					}
 
-					@Override
-					public void onViewDetachedFromWindow(View view) {
+					@Override public void onViewDetachedFromWindow(View view) {
 						view.removeOnAttachStateChangeListener(this);
 					}
 				});

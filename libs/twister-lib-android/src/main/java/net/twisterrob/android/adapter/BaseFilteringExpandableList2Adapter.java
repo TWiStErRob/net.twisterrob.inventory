@@ -14,12 +14,10 @@ public abstract class BaseFilteringExpandableList2Adapter<Group, Child, GroupVH,
 			final Map<Group, ? extends List<Child>> children) {
 		super(context, groups, children);
 		this.registerDataSetObserver(new DataSetObserver() {
-			@Override
-			public void onChanged() {
+			@Override public void onChanged() {
 				resetFiltered();
 			}
-			@Override
-			public void onInvalidated() {
+			@Override public void onInvalidated() {
 				resetFiltered();
 			}
 			void resetFiltered() {
@@ -29,16 +27,14 @@ public abstract class BaseFilteringExpandableList2Adapter<Group, Child, GroupVH,
 		});
 	}
 
-	@Override
-	public List<Group> getGroups() {
+	@Override public List<Group> getGroups() {
 		if (m_filteredGroups == null) {
 			m_filteredGroups = filterGroups(super.getGroups());
 		}
 		return m_filteredGroups;
 	}
 
-	@Override
-	public List<Child> getChildren(Group group) {
+	@Override public List<Child> getChildren(Group group) {
 		if (m_filteredChildren == null) {
 			m_filteredChildren = new HashMap<>();
 		}

@@ -20,8 +20,7 @@ public class SvgDecoder implements ResourceDecoder<InputStream, SVG> {
 		}
 	}
 
-	@Override
-	public String getId() {
+	@Override public String getId() {
 		return "";
 	}
 }

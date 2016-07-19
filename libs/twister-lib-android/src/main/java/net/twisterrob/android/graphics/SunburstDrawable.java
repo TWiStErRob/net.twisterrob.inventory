@@ -55,8 +55,7 @@ public class SunburstDrawable<T> extends Drawable {
 		invalidateSelf();
 	}
 
-	@Override
-	public void draw(Canvas canvas) {
+	@Override public void draw(Canvas canvas) {
 		draw(canvas, root, BASE_LEVEL, queryThickness(), RANGE_START, RANGE_END);
 	}
 
@@ -172,33 +171,28 @@ public class SunburstDrawable<T> extends Drawable {
 		return 1.0f / (levels + 1); // +1 = middle gap
 	}
 
-	@Override
-	public int getIntrinsicHeight() {
+	@Override public int getIntrinsicHeight() {
 		return 500;
 	}
-	@Override
-	public int getIntrinsicWidth() {
+	@Override public int getIntrinsicWidth() {
 		return 500;
 	}
 
-	@Override
-	public void setAlpha(int alpha) {
+	@Override public void setAlpha(int alpha) {
 		setAlpha(paints.getFill(root, 0, 0, 1), alpha);
 		setAlpha(paints.getStroke(root, 0, 0, 1), alpha);
 		setAlpha(paints.getText(root, 0, 0, 1), alpha);
 		invalidateSelf();
 	}
 
-	@Override
-	public void setColorFilter(ColorFilter cf) {
+	@Override public void setColorFilter(ColorFilter cf) {
 		setColorFilter(paints.getFill(root, 0, 0, 1), cf);
 		setColorFilter(paints.getStroke(root, 0, 0, 1), cf);
 		setColorFilter(paints.getText(root, 0, 0, 1), cf);
 		invalidateSelf();
 	}
 
-	@Override
-	public int getOpacity() {
+	@Override public int getOpacity() {
 		return 1;
 	}
 
