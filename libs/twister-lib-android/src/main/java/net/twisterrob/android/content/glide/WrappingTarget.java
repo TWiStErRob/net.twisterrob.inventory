@@ -23,7 +23,7 @@ public class WrappingTarget<Z> implements Target<Z> {
 	@Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
 		target.onLoadFailed(e, errorDrawable);
 	}
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override public void onResourceReady(Z resource, GlideAnimation<? super Z> glideAnimation) {
 		target.onResourceReady(resource, (GlideAnimation)glideAnimation);
 	}
