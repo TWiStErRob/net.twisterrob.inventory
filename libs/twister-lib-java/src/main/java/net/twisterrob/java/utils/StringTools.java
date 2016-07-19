@@ -49,7 +49,7 @@ public final class StringTools {
 			try {
 				return new URL(url);
 			} catch (MalformedURLException ex) {
-				throw new IOException(StringTools.format("Cannot associate %s Url: %s", type, url), ex);
+				throw new IOException(String.format(Locale.ROOT, "Cannot associate %s Url: %s", type, url), ex);
 			}
 		}
 		return null;

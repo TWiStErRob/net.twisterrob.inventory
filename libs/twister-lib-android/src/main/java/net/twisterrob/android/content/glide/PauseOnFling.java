@@ -1,7 +1,6 @@
 package net.twisterrob.android.content.glide;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.*;
 
 import static android.support.v7.widget.RecyclerView.*;
 

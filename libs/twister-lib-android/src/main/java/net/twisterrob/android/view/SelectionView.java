@@ -201,7 +201,7 @@ public class SelectionView extends View {
 		usePendingSelection();
 	}
 
-	/** @see @SuppressLint("DrawAllocation") */
+	/** @see com.android.tools.lint.checks.JavaPerformanceDetector#PAINT_ALLOC */
 	private final Rect tmpDrawSelection = new Rect();
 	@Override protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);

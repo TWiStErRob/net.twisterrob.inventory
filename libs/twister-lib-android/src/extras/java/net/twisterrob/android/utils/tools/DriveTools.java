@@ -67,7 +67,7 @@ public class DriveTools {
 			MetadataBuffer children = MetaBufferUtils.sync(folder.listChildren(client));
 			for (Metadata child : children) {
 				DriveId childId = child.getDriveId();
-				System.out.printf("%s / %s (%s) shared:%b\n",
+				System.out.printf(Locale.ROOT, "%s / %s (%s) shared:%b\n",
 						childId.getResourceId(), childId.encodeToString(), child.getTitle(), child.isShared());
 			}
 			children.close();

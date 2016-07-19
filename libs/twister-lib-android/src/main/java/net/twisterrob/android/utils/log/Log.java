@@ -11,7 +11,8 @@ import net.twisterrob.java.utils.StringTools;
  * @author Zoltán Kiss
  * @author Róbert Papp
  */
-@Deprecated @SuppressWarnings("deprecation")
+@Deprecated
+@SuppressWarnings({"deprecation", "WrongConstant"})
 @SuppressLint("LogConditional") // CONSIDER automatic Log.isLoggable(...) calls
 public class Log {
 	private final String m_tag;

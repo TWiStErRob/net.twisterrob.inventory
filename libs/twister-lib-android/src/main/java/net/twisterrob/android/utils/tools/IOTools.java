@@ -31,7 +31,6 @@ public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools 
 
 	@SuppressWarnings("deprecation")
 	public static String getEncoding(final org.apache.http.HttpEntity entity) {
-		String encoding = DEFAULT_HTTP_ENCODING;
 		org.apache.http.Header header = entity.getContentEncoding();
 		if (header != null) {
 			return header.getValue();
@@ -50,7 +49,7 @@ public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools 
 				return value.substring(startIndex, endIndex);
 			}
 		}
-		return encoding;
+		return DEFAULT_HTTP_ENCODING;
 	}
 
 	/** @deprecated use Glide */

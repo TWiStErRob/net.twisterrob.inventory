@@ -1,5 +1,7 @@
 package net.twisterrob.android.map;
 
+import java.util.Locale;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.*;
@@ -53,7 +55,7 @@ public class LocationRetriever {
 	};
 
 	static String getProviderError(String expectedProvider, String provider) {
-		return String.format("%s provider didn't get the right provider update, instead it was %s",
+		return String.format(Locale.ROOT, "%s provider didn't get the right provider update, instead it was %s",
 				expectedProvider, provider);
 	}
 	// Provider location listeners

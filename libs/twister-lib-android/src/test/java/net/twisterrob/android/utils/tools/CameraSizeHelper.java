@@ -1,7 +1,7 @@
 package net.twisterrob.android.utils.tools;
 
 import java.lang.reflect.Constructor;
-import java.util.List;
+import java.util.*;
 
 import org.easymock.internal.ReflectionUtils;
 
@@ -38,7 +38,7 @@ import org.easymock.internal.ReflectionUtils;
 				shorter = longer;
 				longer = temp;
 			}
-			System.out.printf("%d: %dx%d(land%s=%.3f, port%s=%.3f)",
+			System.out.printf(Locale.ROOT, "%d: %dx%d(land%s=%.3f, port%s=%.3f)",
 					i, size.width, size.height,
 					land? "*" : "", longer / shorter, land? "" : "*", shorter / longer);
 			System.out.println();

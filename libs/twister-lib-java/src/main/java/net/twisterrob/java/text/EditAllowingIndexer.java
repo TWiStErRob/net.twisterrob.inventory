@@ -68,7 +68,7 @@ public class EditAllowingIndexer<T> implements Indexer<T> {
 
 		Set<MatchResult<T>> match(String input, int maxDistance) {
 			Map<MatchResult<T>, MatchResult<T>> result = new HashMap<>();
-			//System.out.printf("matching %s against %s\n", input, this);
+			//System.out.printf(Locale.ROOT, "matching %s against %s\n", input, this);
 			match(result, input, 0, maxDistance, maxDistance, "");
 			return result.keySet();
 		}
@@ -76,7 +76,7 @@ public class EditAllowingIndexer<T> implements Indexer<T> {
 		private static final boolean DEBUG_PATH = false;
 		void match(Map<MatchResult<T>, MatchResult<T>> results, String input, int index, int edits, int maxEdits,
 				String path) {
-//			System.out.printf("%s\n\t%s[%d]=%c (edits=%d): %s\n",
+//			System.out.printf(Locale.ROOT, "%s\n\t%s[%d]=%c (edits=%d): %s\n",
 //					this, input, index, index < input.length()? input.charAt(index) : 0, edits, result);
 			if (edits < 0) {
 				return;

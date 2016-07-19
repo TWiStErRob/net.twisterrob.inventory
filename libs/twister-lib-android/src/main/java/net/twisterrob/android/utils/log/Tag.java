@@ -1,5 +1,7 @@
 package net.twisterrob.android.utils.log;
 
+import java.util.Locale;
+
 import android.util.Log;
 
 /**
@@ -30,7 +32,8 @@ public enum Tag {
 		 */
 		for (Tag tag : Tag.values()) {
 			if (tag.getTag().length() > TAG_MAX_LENGTH) {
-				Log.w(null, String.format("Tag value is longer than 23 chars: %s=%s", tag.name(), tag.getTag()));
+				Log.w(null, String.format(Locale.ROOT, "Tag value is longer than 23 chars: %s=%s",
+						tag.name(), tag.getTag()));
 			}
 		}
 	}

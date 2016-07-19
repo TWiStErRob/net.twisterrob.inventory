@@ -19,6 +19,7 @@ package net.twisterrob.android.utils.cache.lowlevel;
 
 import java.io.*;
 import java.security.*;
+import java.util.Locale;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -245,7 +246,7 @@ public class ImageCache {
 			final Bitmap memBitmap = mMemoryCache.get(data);
 			if (memBitmap != null) {
 				if (mCacheParams.logCacheLifecycle) {
-					Log.d(TAG, String.format("Memory cache hit for %s", data));
+					Log.d(TAG, String.format(Locale.ROOT, "Memory cache hit for %s", data));
 				}
 				return memBitmap;
 			}
@@ -276,7 +277,7 @@ public class ImageCache {
 					final DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
 					if (snapshot != null) {
 						if (mCacheParams.logCacheLifecycle) {
-							Log.d(TAG, String.format("Disk cache hit for %s: %s=%s", data, key, snapshot));
+							Log.d(TAG, String.format(Locale.ROOT, "Disk cache hit for %s: %s=%s", data, key, snapshot));
 						}
 						inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
 						if (inputStream != null) {

@@ -27,7 +27,7 @@ public class MailSender {
 			InputStream response = new BufferedInputStream(conn.getInputStream());
 			String result = IOTools.readAll(response, "UTF-8");
 			conn.disconnect();
-			if (result != null && result.trim().length() != 0) {
+			if (result.trim().length() != 0) {
 				throw new IOException("Server responded with: " + result);
 			}
 		} catch (IOException ex) {

@@ -2,6 +2,7 @@ package net.twisterrob.android.utils.cache;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,7 +10,6 @@ import android.graphics.Bitmap;
 import net.twisterrob.android.utils.LibContextProvider;
 import net.twisterrob.android.utils.log.*;
 import net.twisterrob.android.utils.tools.IOTools;
-import net.twisterrob.java.utils.StringTools;
 
 /** @deprecated use Glide */
 @Deprecated @SuppressWarnings("deprecation")
@@ -42,7 +42,7 @@ public class ImageSDNetCache implements Cache<URL, Bitmap> {
 		try {
 			return IOTools.getImage(key);
 		} catch (IOException ex) {
-			IOException newEx = new IOException(StringTools.format("Cannot get image: %s", key), ex);
+			IOException newEx = new IOException(String.format(Locale.ROOT, "Cannot get image: %s", key), ex);
 			LOG.warn(newEx.getMessage(), ex);
 			throw newEx;
 		}

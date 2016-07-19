@@ -65,7 +65,7 @@ public class AndroidToolsTest_getOptimalSize {
 	}
 
 	private static void sortedPrint(List<android.hardware.Camera.Size> previews, int w, int h) {
-		System.out.printf("Screen size %dx%d (%.3f)%n", w, h, w / (float)h);
+		System.out.printf(Locale.ROOT, "Screen size %dx%d (%.3f)%n", w, h, w / (float)h);
 		List<android.hardware.Camera.Size> sizes = new ArrayList<>(previews);
 		Collections.sort(sizes, new CameraSizeComparator(w, h));
 		printSizes(sizes);

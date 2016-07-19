@@ -284,7 +284,7 @@ public /*static*/ abstract class IOTools {
 	 * @param subDir relative parent path of the entry inside the zip
 	 * @param rootDir the original root folder of the source files
 	 * @param entry the current entry inside the root folder
-	 * @throws IOException
+	 * @throws IOException if something fails
 	 */
 	private static void addToZip(ZipOutputStream zipOut, String subDir, File rootDir, File entry) throws IOException {
 		String relativePath = rootDir.toURI().relativize(entry.toURI()).getPath();

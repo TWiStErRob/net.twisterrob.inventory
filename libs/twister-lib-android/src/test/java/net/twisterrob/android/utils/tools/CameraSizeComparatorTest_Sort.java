@@ -49,7 +49,7 @@ public class CameraSizeComparatorTest_Sort {
 		Collections.sort(actual, comparator);
 
 		if (PRINT_ALL) {
-			System.out.printf("Screen %dx%d (%.3f)%n", width, height, width / (float)height);
+			System.out.printf(Locale.ROOT, "Screen %dx%d (%.3f)%n", width, height, width / (float)height);
 			System.out.println("Expected:");
 			printSizes(expected);
 		}
