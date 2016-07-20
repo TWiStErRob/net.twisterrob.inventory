@@ -3,6 +3,7 @@ package net.twisterrob.android.utils.tostring.stringers;
 import android.annotation.TargetApi;
 import android.app.FragmentSavedStateStringer;
 import android.content.Context;
+import android.location.Address;
 import android.os.Build.*;
 import android.support.v4.app.*;
 import android.support.v4.widget.DrawerLayoutStateStringer;
@@ -47,5 +48,7 @@ public class AndroidStringerRepo {
 		repo.register(android.support.v4.app.FragmentManager.class, new SupportFragmentManagerStringer());
 		repo.register(android.support.v4.app.FragmentManager.BackStackEntry.class,
 				new SupportBackStackEntryStringer(context));
+
+		repo.register(Address.class, new AddressStringer());
 	}
 }
