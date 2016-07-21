@@ -122,6 +122,13 @@ public /*static*/ abstract class AndroidTools {
 		return (int)dip(context, number);
 	}
 
+	public static float sp(Context context, float number) {
+		return TypedValue.applyDimension(COMPLEX_UNIT_SP, number, context.getResources().getDisplayMetrics());
+	}
+	public static int spInt(Context context, float number) {
+		return (int)sp(context, number);
+	}
+	
 	public static @RawRes int getRawResourceID(@Nullable Context context, @NonNull String rawResourceName) {
 		return getResourceID(context, RES_TYPE_RAW, rawResourceName);
 	}
@@ -988,6 +995,17 @@ public /*static*/ abstract class AndroidTools {
 	@UiThread
 	public interface PopupCallbacks<T> {
 		void finished(T value);
+		PopupCallbacks<?> NO_CALLBACK = new DoNothing();
+
+		class DoNothing implements PopupCallbacks<Object> {
+			@Override public void finished(Object value) {
+
+			}
+			@SuppressWarnings("unchecked")
+			public static <T> PopupCallbacks<T> instance() {
+				return (PopupCallbacks<T>)NO_CALLBACK;
+			}
+		}
 	}
 
 	@UiThread
@@ -1080,7 +1098,13 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	public static AlertDialog.Builder confirm(Context context, final PopupCallbacks<Boolean> callbacks) {
-		return new AlertDialog.Builder(context)
+		return new AlertDialog.Builder(context) {
+			@Override public AlertDialog create() {
+				AlertDialog dialog = super.create();
+				dialog.setCanceledOnTouchOutside(true);
+				return dialog;
+			}
+		}
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						callbacks.finished(true);
@@ -1089,6 +1113,26 @@ public /*static*/ abstract class AndroidTools {
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
 						callbacks.finished(false);
+					}
+				})
+				.setCancelable(true)
+				.setOnCancelListener(new OnCancelListener() {
+					@Override public void onCancel(DialogInterface dialog) {
+						callbacks.finished(null);
+					}
+				});
+	}
+	public static AlertDialog.Builder notify(Context context, final PopupCallbacks<Boolean> callbacks) {
+		return new AlertDialog.Builder(context) {
+			@Override public AlertDialog create() {
+				AlertDialog dialog = super.create();
+				dialog.setCanceledOnTouchOutside(true);
+				return dialog;
+			}
+		}
+				.setNeutralButton(android.R.string.ok, new OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						callbacks.finished(true);
 					}
 				})
 				.setCancelable(true)
