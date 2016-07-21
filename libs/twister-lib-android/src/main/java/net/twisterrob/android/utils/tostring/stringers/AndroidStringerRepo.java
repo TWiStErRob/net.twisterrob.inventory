@@ -4,12 +4,14 @@ import android.annotation.TargetApi;
 import android.app.FragmentSavedStateStringer;
 import android.content.Context;
 import android.location.Address;
+import android.os.AsyncTask;
 import android.os.Build.*;
 import android.support.v4.app.*;
 import android.support.v4.widget.DrawerLayoutStateStringer;
 import android.support.v7.widget.*;
 import android.view.AbsSavedState;
 
+import net.twisterrob.android.utils.concurrent.AsyncTaskResult;
 import net.twisterrob.android.utils.tostring.stringers.detailed.*;
 import net.twisterrob.android.utils.tostring.stringers.name.ResourceNameStringer;
 import net.twisterrob.java.utils.tostring.StringerRepo;
@@ -49,6 +51,8 @@ public class AndroidStringerRepo {
 		repo.register(android.support.v4.app.FragmentManager.BackStackEntry.class,
 				new SupportBackStackEntryStringer(context));
 
+		repo.register(AsyncTask.class, new AsyncTaskStringer());
+		repo.register(AsyncTaskResult.class, new AsyncTaskResultStringer());
 		repo.register(Address.class, new AddressStringer());
 	}
 }

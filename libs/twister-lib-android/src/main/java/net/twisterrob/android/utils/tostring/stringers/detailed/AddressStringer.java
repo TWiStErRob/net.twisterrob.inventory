@@ -20,12 +20,6 @@ public class AddressStringer extends Stringer<Address> {
 		append.rawProperty("subThoroughfare", address.getSubThoroughfare());
 		append.endPropertyGroup();
 
-		append.beginSizedList("addressLine", address.getMaxAddressLineIndex(), true);
-		for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-			append.item(i, address.getAddressLine(i));
-		}
-		append.endSizedList();
-
 		append.beginPropertyGroup("Global");
 		append.rawProperty("postalCode", address.getPostalCode());
 		append.rawProperty("subAdmin", address.getSubAdminArea());
@@ -45,5 +39,11 @@ public class AddressStringer extends Stringer<Address> {
 		}
 		append.complexProperty("extras", address.getExtras());
 		append.endPropertyGroup();
+
+		append.beginSizedList("addressLine", address.getMaxAddressLineIndex(), true);
+		for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+			append.item(i, address.getAddressLine(i));
+		}
+		append.endSizedList();
 	}
 }

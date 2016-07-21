@@ -2,6 +2,8 @@ package net.twisterrob.android.utils;
 
 import android.content.Context;
 
+/** @deprecated find other ways! */
+@Deprecated
 public class LibContextProvider {
 	private static Context s_context;
 	public static Context getApplicationContext() {
