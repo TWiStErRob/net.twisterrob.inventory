@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_gravity="center"
+	android:orientation="horizontal"
+	android:gravity="center"
+	>
+	<Button
+		android:id="@+id/widget_number_decrease"
+		android:layout_width="32dp"
+		android:layout_height="32dp"
+		android:padding="0dp"
+		android:text="&lt;"
+		android:gravity="center"
+		/>
+	<TextView
+		android:id="@+id/widget_number_display"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		tools:text="12"
+		/>
+	<Button
+		android:id="@+id/widget_number_increase"
+		android:layout_width="32dp"
+		android:layout_height="32dp"
+		android:padding="0dp"
+		android:text="&gt;"
+		android:gravity="center"
+		/>
+</LinearLayout>

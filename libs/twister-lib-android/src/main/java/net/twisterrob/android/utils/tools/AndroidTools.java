@@ -42,6 +42,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import static android.util.TypedValue.*;
 
+import net.twisterrob.android.R;
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
 import net.twisterrob.android.utils.tostring.stringers.name.*;
@@ -128,7 +129,7 @@ public /*static*/ abstract class AndroidTools {
 	public static int spInt(Context context, float number) {
 		return (int)sp(context, number);
 	}
-	
+
 	public static @RawRes int getRawResourceID(@Nullable Context context, @NonNull String rawResourceName) {
 		return getResourceID(context, RES_TYPE_RAW, rawResourceName);
 	}
@@ -1141,6 +1142,47 @@ public /*static*/ abstract class AndroidTools {
 						callbacks.finished(null);
 					}
 				});
+	}
+
+	@TargetApi(VERSION_CODES.HONEYCOMB)
+	public static AlertDialog.Builder pickNumber(Context context,
+			int initial, Integer min, Integer max, final PopupCallbacks<Integer> callbacks) {
+		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+			LayoutInflater inflater = LayoutInflater.from(context);
+			@SuppressLint("InflateParams") final NumberPicker picker = // there's nothing to pass as parent
+					(NumberPicker)inflater.inflate(R.layout.dialog_number_picker, null);
+			if (min != null) {
+				picker.setMinValue(min);
+			}
+			if (max != null) {
+				picker.setMaxValue(max);
+			}
+			picker.setValue(initial);
+			return new AlertDialog.Builder(context)
+					.setView(picker)
+					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							callbacks.finished(picker.getValue());
+						}
+					})
+					.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							callbacks.finished(null);
+						}
+					})
+					.setTitle("Pick a number");
+		} else {
+			return prompt(context, new PopupCallbacks<String>() {
+				@Override public void finished(String value) {
+					try {
+						callbacks.finished(Integer.parseInt(value));
+					} catch (NumberFormatException ex) {
+						callbacks.finished(null);
+					}
+				}
+			})
+					.setTitle("Pick a number");
+		}
 	}
 
 	/** Will return the first if there are more. */
