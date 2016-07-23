@@ -1197,8 +1197,8 @@ public /*static*/ abstract class AndroidTools {
 			imm.showSoftInput(view, 0);
 		} else {
 			if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1) {
-				new DoAfterLayout(view) {
-					@Override public void onLayout() {
+				new DoAfterLayout(view, false) {
+					@Override public void onLayout(@NonNull View view) {
 						view.post(tryAgain);
 					}
 				};

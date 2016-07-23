@@ -1,5 +1,6 @@
 package net.twisterrob.android.view;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
@@ -38,7 +39,7 @@ public class SynchronizedScrollListener extends OnScrollListener {
 
 		if (list != null) { // need to mock a scroll event when the first layout happens
 			new DoAfterLayout(list) {
-				@Override protected void onLayout() {
+				@Override protected void onLayout(@NonNull View view) {
 					onScrolled(list, 0, 0);
 				}
 			};
