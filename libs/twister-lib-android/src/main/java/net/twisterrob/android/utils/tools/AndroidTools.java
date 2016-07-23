@@ -1105,6 +1105,19 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
+	@TargetApi(VERSION_CODES.HONEYCOMB_MR2)
+	public static Point getScreenSize(Display display) {
+		Point point = new Point();
+		if (VERSION_CODES.HONEYCOMB_MR2 <= VERSION.SDK_INT) {
+			display.getSize(point);
+		} else {
+			point.x = display.getWidth();
+			point.y = display.getHeight();
+		}
+		return point;
+	}
+
 	@UiThread
 	public interface PopupCallbacks<T> {
 		void finished(T value);
