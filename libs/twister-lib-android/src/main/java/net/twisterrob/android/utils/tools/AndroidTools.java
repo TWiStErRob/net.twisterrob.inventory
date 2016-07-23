@@ -35,6 +35,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.*;
 import android.view.*;
+import android.view.ViewGroup.*;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.*;
 import android.widget.*;
@@ -47,6 +48,7 @@ import net.twisterrob.android.annotation.*;
 import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
 import net.twisterrob.android.utils.tostring.stringers.name.*;
 import net.twisterrob.java.annotations.DebugHelper;
+import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.*;
 import net.twisterrob.java.utils.tostring.*;
 import net.twisterrob.java.utils.tostring.stringers.DefaultNameStringer;
@@ -748,6 +750,24 @@ public /*static*/ abstract class AndroidTools {
 		visibleIf(view, text != null && 0 < text.length());
 	}
 
+	public static int getTopMargin(View view) {
+		LayoutParams params = view.getLayoutParams();
+		if (params instanceof MarginLayoutParams) {
+			return ((MarginLayoutParams)params).topMargin;
+		} else {
+			return 0;
+		}
+	}
+
+	public static int getBottomMargin(View view) {
+		LayoutParams params = view.getLayoutParams();
+		if (params instanceof MarginLayoutParams) {
+			return ((MarginLayoutParams)params).bottomMargin;
+		} else {
+			return 0;
+		}
+	}
+
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public static void updateStartMargin(View view, int margin) {
 		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
@@ -826,6 +846,97 @@ public /*static*/ abstract class AndroidTools {
 				throw new RuntimeException(ex);
 			}
 		}
+	}
+
+	/**
+	 * Similar to using the below flags in the theme, but works after the fact.
+	 * <pre><code>
+	 * &lt;item name="android:windowTranslucentStatus">true&lt;/item>
+	 * &lt;item name="android:windowTranslucentNavigation">true&lt;/item>
+	 * </code></pre>
+	 * Leaves the scrim (shadow) intact.
+	 */
+	@TargetApi(VERSION_CODES.KITKAT)
+	public static void setTranslucentStatusBar(Window window) {
+		if (window == null) {
+			LOG.warn("No window while setting translucent status bar!", new StackTrace());
+			return;
+		}
+		if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
+			window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+			window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		}
+	}
+	@TargetApi(VERSION_CODES.LOLLIPOP)
+	public static void setTranslucentStatusBar(Window window, @ColorInt int lollipopColor) {
+		if (window == null) {
+			LOG.warn("No window while setting translucent status bar to {}!", lollipopColor, new StackTrace());
+			return;
+		}
+		setTranslucentStatusBar(window);
+		if (VERSION_CODES.LOLLIPOP <= VERSION.SDK_INT) {
+			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+			window.setStatusBarColor(lollipopColor);
+			if (Color.alpha(lollipopColor) < 0xFF) {
+				window.getDecorView()
+				      .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+			}
+		}
+	}
+
+	/**
+	 * @see <a href="http://blog.raffaeu.com/archive/2015/04/11/android-and-the-transparent-status-bar.aspx">
+	 *     Make the StatusBar transparent</a>
+	 */
+	public static int getStatusBarHeight(Context context) {
+		int result = 25; // safe bet, better bigger than nothing
+		int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId != INVALID_RESOURCE_ID) {
+			result = context.getResources().getDimensionPixelSize(resourceId);
+		}
+		return result;
+	}
+
+	@TargetApi(VERSION_CODES.LOLLIPOP)
+	public static void accountForStatusBar(View view) {
+		boolean needsOffset = false;
+		Activity activity = findActivity(view);
+		if (activity != null) {
+			Window window = activity.getWindow();
+			int flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS // set pre-Lollipop
+					| WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS; // set post-Lollipop
+			needsOffset = (window.getAttributes().flags & flags) != 0;
+		} else {
+			LOG.warn("Cannot account for status bar, {} is not in an Activity.", view);
+		}
+		if (needsOffset) {
+			ViewGroup.LayoutParams params = view.getLayoutParams();
+			if (params instanceof MarginLayoutParams) {
+				MarginLayoutParams marginParams = (MarginLayoutParams)params;
+				marginParams.topMargin += AndroidTools.getStatusBarHeight(view.getContext());
+				view.setLayoutParams(marginParams);
+			} else if (params == null) {
+				MarginLayoutParams marginParams =
+						new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+				marginParams.topMargin = AndroidTools.getStatusBarHeight(view.getContext());
+				view.setLayoutParams(marginParams);
+			} else {
+				LOG.warn("Cannot account for status bar, {} doesn't have margin layout params: {}", view, params);
+			}
+		}
+	}
+
+	private static Activity findActivity(View view) {
+		Context context = view.getContext();
+		while (context != null && !(context instanceof Activity)) {
+			if (context instanceof ContextWrapper) {
+				context = ((ContextWrapper)context).getBaseContext();
+			} else {
+				context = null;
+			}
+		}
+		return (Activity)context;
 	}
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)
