@@ -10,6 +10,7 @@ import static net.twisterrob.android.utils.concurrent.SimpleAsyncTaskHelper.*;
  * @see net.twisterrob.android.utils.tools.AndroidTools#executeParallel
  * @see net.twisterrob.android.utils.tools.AndroidTools#executeSerial
  */
+// TODO create a non-null version
 public abstract class SimpleAsyncTask<Param, Progress, Result>
 		extends AsyncTask<Param, Progress, Result> {
 	@WorkerThread
