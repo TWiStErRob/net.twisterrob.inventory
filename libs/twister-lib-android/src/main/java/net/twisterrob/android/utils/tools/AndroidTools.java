@@ -36,7 +36,6 @@ import android.text.TextUtils;
 import android.util.*;
 import android.view.*;
 import android.view.ViewGroup.*;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.*;
 import android.widget.*;
 import android.widget.TextView.OnEditorActionListener;
@@ -48,6 +47,7 @@ import com.rarepebble.colorpicker.ColorPickerView;
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
 import net.twisterrob.android.utils.tostring.stringers.name.*;
+import net.twisterrob.android.view.layout.DoAfterLayout;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.*;
@@ -1197,13 +1197,11 @@ public /*static*/ abstract class AndroidTools {
 			imm.showSoftInput(view, 0);
 		} else {
 			if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1) {
-				view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-					@SuppressWarnings("deprecation")
-					@Override public void onGlobalLayout() {
-						view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				new DoAfterLayout(view) {
+					@Override public void onLayout() {
 						view.post(tryAgain);
 					}
-				});
+				};
 				view.post(tryAgain);
 			} else {
 				view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {

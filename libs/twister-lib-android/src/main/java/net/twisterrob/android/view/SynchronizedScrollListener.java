@@ -4,7 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+
+import net.twisterrob.android.view.layout.DoAfterLayout;
 
 /**
  * Listener for {@link RecyclerView} to synchronize the scroll with another view.
@@ -36,12 +37,11 @@ public class SynchronizedScrollListener extends OnScrollListener {
 		this.view = view;
 
 		if (list != null) { // need to mock a scroll event when the first layout happens
-			list.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-				@Override public void onGlobalLayout() {
+			new DoAfterLayout(list) {
+				@Override protected void onLayout() {
 					onScrolled(list, 0, 0);
-					list.getViewTreeObserver().removeGlobalOnLayoutListener(this); // call to get non-floating observer
 				}
-			});
+			};
 		}
 	}
 	@Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
