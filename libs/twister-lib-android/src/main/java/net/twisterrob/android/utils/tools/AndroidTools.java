@@ -43,7 +43,8 @@ import android.widget.TextView.OnEditorActionListener;
 
 import static android.util.TypedValue.*;
 
-import net.twisterrob.android.R;
+import com.rarepebble.colorpicker.ColorPickerView;
+
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
 import net.twisterrob.android.utils.tostring.stringers.name.*;
@@ -1121,9 +1122,11 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	@UiThread
-	public static AlertDialog.Builder prompt(final Context context, final PopupCallbacks<String> callbacks) {
+	public static AlertDialog.Builder prompt(final Context context,
+			String initialValue, final PopupCallbacks<String> callbacks) {
 		final EditText input = new EditText(context);
 		input.setSingleLine(true);
+		input.setText(initialValue);
 		showKeyboard(input);
 
 		final AtomicReference<Dialog> dialog = new AtomicReference<>();
@@ -1260,8 +1263,7 @@ public /*static*/ abstract class AndroidTools {
 			int initial, Integer min, Integer max, final PopupCallbacks<Integer> callbacks) {
 		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
 			LayoutInflater inflater = LayoutInflater.from(context);
-			@SuppressLint("InflateParams") final NumberPicker picker = // there's nothing to pass as parent
-					(NumberPicker)inflater.inflate(R.layout.dialog_number_picker, null);
+			final NumberPicker picker = new NumberPicker(context);
 			if (min != null) {
 				picker.setMinValue(min);
 			}
@@ -1283,7 +1285,7 @@ public /*static*/ abstract class AndroidTools {
 					})
 					.setTitle("Pick a number");
 		} else {
-			return prompt(context, new PopupCallbacks<String>() {
+			return prompt(context, Integer.toString(initial), new PopupCallbacks<String>() {
 				@Override public void finished(String value) {
 					try {
 						callbacks.finished(Integer.parseInt(value));
@@ -1293,6 +1295,38 @@ public /*static*/ abstract class AndroidTools {
 				}
 			})
 					.setTitle("Pick a number");
+		}
+	}
+	@TargetApi(VERSION_CODES.HONEYCOMB)
+	public static AlertDialog.Builder pickColor(Context context,
+			@ColorInt int initial, final PopupCallbacks<Integer> callbacks) {
+		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+			final ColorPickerView picker = new ColorPickerView(context);
+			picker.setColor(initial);
+			return new AlertDialog.Builder(context)
+					.setView(picker)
+					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							callbacks.finished(picker.getColor());
+						}
+					})
+					.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							callbacks.finished(null);
+						}
+					})
+					.setTitle("Pick a color");
+		} else {
+			return prompt(context, Integer.toHexString(initial), new PopupCallbacks<String>() {
+				@Override public void finished(String value) {
+					try {
+						callbacks.finished(Integer.parseInt(value, 16));
+					} catch (NumberFormatException ex) {
+						callbacks.finished(null);
+					}
+				}
+			})
+					.setTitle("Pick a color");
 		}
 	}
 
