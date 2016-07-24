@@ -41,7 +41,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private boolean devMode;
 	private boolean testMode;
 	private boolean dumpOnOpen;
-	private boolean allowDump = true;
+	private boolean allowDump;
 
 	public DatabaseOpenHelper(Context context, String dbName, int dbVersion, boolean isDebugBuild) {
 		super(context, dbName, createCursorFactory(isDebugBuild), dbVersion);

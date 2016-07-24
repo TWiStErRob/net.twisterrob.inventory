@@ -35,7 +35,7 @@ public class BaseApp extends android.app.Application {
 	// Make sure the strict mode is set up after this!
 	private static final Logger LOG = LoggerFactory.getLogger(BaseApp.class);
 
-	protected static BaseApp s_instance;
+	private static BaseApp s_instance;
 	private boolean BuildConfigDEBUG;
 	/**
 	 * android.database.DatabaseTools.dumpCursor(net.twisterrob.inventory.android.
@@ -97,8 +97,10 @@ public class BaseApp extends android.app.Application {
 			AndroidTools.setContext(this);
 			initStetho();
 		}
-		// may cause StrictModeDiskReadViolation, but necessary for startup since anything can read the preferences
-		PreferenceManager.setDefaultValues(this, preferencesResource, false);
+		if (preferencesResource != AndroidTools.INVALID_RESOURCE_ID) {
+			// may cause StrictModeDiskReadViolation, but necessary for startup since anything can read the preferences
+			PreferenceManager.setDefaultValues(this, preferencesResource, false);
+		}
 		prefs = new ResourcePreferences(getResources(), PreferenceManager.getDefaultSharedPreferences(this));
 		database = createDatabase();
 	}
