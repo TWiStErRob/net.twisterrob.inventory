@@ -66,12 +66,12 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	}
 
 	private @NonNull File getDir() {
-		String backupPath = App.getSPref(R.string.pref_state_backup_path, Paths.getPhoneHome().toString());
+		String backupPath = App.prefs().getString(R.string.pref_state_backup_path, Paths.getPhoneHome().toString());
 		return new File(backupPath);
 	}
 
 	private void onDirLoaded(File root) {
-		App.setSPref(R.string.pref_state_backup_path, root.getAbsolutePath());
+		App.prefs().setString(R.string.pref_state_backup_path, root.getAbsolutePath());
 		((TextView)findViewById(R.id.backup_location)).setText(root.toString());
 	}
 

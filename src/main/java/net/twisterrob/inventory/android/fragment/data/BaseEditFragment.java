@@ -319,7 +319,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	private void onPrepareContextMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.edit_context, menu);
-		String suggest = App.getSPref(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
+		String suggest = App.prefs().getString(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
 		String always = getString(R.string.pref_suggestCategory_always);
 		AndroidTools.visibleIf(menu, R.id.action_category_suggest, !always.equals(suggest));
 	}

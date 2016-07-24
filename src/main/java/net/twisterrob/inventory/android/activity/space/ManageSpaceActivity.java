@@ -93,8 +93,8 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								helper.onDestroy(helper.getWritableDatabase());
 								helper.onCreate(helper.getWritableDatabase());
 								helper.close();
-								App.setSPref(R.string.pref_currentLanguage, null);
-								App.setBPref(R.string.pref_showWelcome, true);
+								App.prefs().setString(R.string.pref_currentLanguage, null);
+								App.prefs().setBoolean(R.string.pref_showWelcome, true);
 							}
 						}
 				).show(getSupportFragmentManager(), null);
@@ -180,7 +180,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 									((ActivityManager)getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
 								} else {
 									// Best effort: clear prefs, db and Glide cache; CONSIDER deltree getFilesDir()
-									App.getPrefs().edit().clear().apply();
+									App.prefs().edit().clear().apply();
 									Glide.get(getApplicationContext()).clearDiskCache();
 									Database db = App.db();
 									File dbFile = db.getFile();

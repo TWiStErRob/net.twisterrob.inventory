@@ -33,7 +33,8 @@ public class Hinter {
 	}
 
 	public void highlight(Spannable input) {
-		boolean colorMatches = App.getBPref(R.string.pref_highlightSuggestion, R.bool.pref_highlightSuggestion_default);
+		boolean colorMatches =
+				App.prefs().getBoolean(R.string.pref_highlightSuggestion, R.bool.pref_highlightSuggestion_default);
 		if (colorMatches) {
 			for (WordMatch word : CategoryDTO.getCache(context).split(input)) {
 				int color = PictureHelper.getColor(word.word().toString());
@@ -49,9 +50,11 @@ public class Hinter {
 	}
 
 	public boolean hint(CharSequence userInput, boolean suggestForced, String currentTypeName) {
-		boolean colorMatches = App.getBPref(R.string.pref_highlightSuggestion, R.bool.pref_highlightSuggestion_default);
+		boolean colorMatches =
+				App.prefs().getBoolean(R.string.pref_highlightSuggestion, R.bool.pref_highlightSuggestion_default);
 		adapter.setShowEditDistances(colorMatches);
-		String suggestPrefVal = App.getSPref(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
+		String suggestPrefVal =
+				App.prefs().getString(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
 		boolean suggestAlways =
 				context.getString(R.string.pref_suggestCategory_always).equals(suggestPrefVal);
 		boolean suggestUnmatchedOnly =

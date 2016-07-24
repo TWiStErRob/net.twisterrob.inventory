@@ -6,9 +6,9 @@ import org.slf4j.*;
 import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.impl.AndroidLoggerFactory;
 
-import android.annotation.*;
+import android.annotation.TargetApi;
 import android.app.Application;
-import android.content.*;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.*;
@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.concurrent.BackgroundExecution;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.content.Database;
@@ -52,6 +53,7 @@ public class App extends Application {
 
 	private static App s_instance;
 	private Database database;
+	private ResourcePreferences prefs;
 
 	public App() {
 		synchronized (App.class) {
@@ -92,6 +94,7 @@ public class App extends Application {
 			}
 			// may cause StrictModeDiskReadViolation, but necessary for startup since anything can read the preferences
 			PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+			prefs = new ResourcePreferences(getResources(), PreferenceManager.getDefaultSharedPreferences(this));
 			database = new Database(this);
 			// may cause StrictModeDiskReadViolation if prefs are not loaded yet, because it reads prefs 
 			updateLanguage(Locale.getDefault());
@@ -118,8 +121,8 @@ public class App extends Application {
 	}
 
 	private void updateLanguage(@NonNull Locale newLocale) {
-		final SharedPreferences prefs = getPrefs();
-		final String storedLanguage = prefs.getString(getString(R.string.pref_currentLanguage), null);
+		final ResourcePreferences prefs = prefs();
+		final String storedLanguage = prefs.getString(R.string.pref_currentLanguage, null);
 		final String currentLanguage = newLocale.toString();
 		if (!currentLanguage.equals(storedLanguage)) {
 			String from = StringTools.toLocale(storedLanguage).getDisplayName();
@@ -135,7 +138,7 @@ public class App extends Application {
 					try {
 						database.updateCategoryCache(App.getAppContext());
 						LOG.debug("Locale update successful: {} -> {}", storedLanguage, currentLanguage);
-						prefs.edit().putString(getString(R.string.pref_currentLanguage), currentLanguage).apply();
+						prefs.setString(R.string.pref_currentLanguage, currentLanguage);
 					} catch (Exception ex) {
 						LOG.error("Locale update failed: {} -> {}", storedLanguage, currentLanguage, ex);
 					}
@@ -159,43 +162,8 @@ public class App extends Application {
 		return getInstance();
 	}
 
-	// TODO wrapper for resource based retrieval: getBPref/getSPref/etc...
-	public static @NonNull SharedPreferences getPrefs() {
-		return PreferenceManager.getDefaultSharedPreferences(getAppContext());
-	}
-
-	/** Get boolean Preference */
-	public static boolean getBPref(@StringRes int prefName, @BoolRes int defaultRes) {
-		String prefKey = App.getAppContext().getString(prefName);
-		boolean prefDefault = App.getAppContext().getResources().getBoolean(defaultRes);
-		return App.getPrefs().getBoolean(prefKey, prefDefault);
-	}
-	/** Get String Preference */
-	public static String getSPref(@StringRes int prefName, String prefDefaultValue) {
-		String prefKey = App.getAppContext().getString(prefName);
-		return App.getPrefs().getString(prefKey, prefDefaultValue);
-	}
-	/** Get String Preference */
-	public static String getSPref(@StringRes int prefName, @StringRes int defaultRes) {
-		String prefKey = App.getAppContext().getString(prefName);
-		String prefDefaultValue = App.getAppContext().getResources().getString(defaultRes);
-		return App.getPrefs().getString(prefKey, prefDefaultValue);
-	}
-	/** Set boolean Preference */
-	public static void setBPref(@StringRes int prefName, boolean value) {
-		String prefKey = App.getAppContext().getString(prefName);
-		getPrefEditor().putBoolean(prefKey, value).apply();
-	}
-	/** Set String Preference */
-	public static void setSPref(@StringRes int prefName, String value) {
-		String prefKey = App.getAppContext().getString(prefName);
-		getPrefEditor().putString(prefKey, value).apply();
-	}
-
-	/** @return You must call {@link SharedPreferences.Editor#commit} as per {@link SharedPreferences#edit} contract. */
-	@SuppressLint("CommitPrefEdits")
-	public static @NonNull SharedPreferences.Editor getPrefEditor() {
-		return getPrefs().edit();
+	public static @NonNull ResourcePreferences prefs() {
+		return getInstance().prefs;
 	}
 
 	public static void exit() {

@@ -82,9 +82,7 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 						+ "Would you like to open the image in another app?")
 				.setNeutralButton("Always", new DialogInterface.OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
-						App.getPrefEditor()
-						   .putBoolean(getString(R.string.pref_internalImageViewer), false)
-						   .apply();
+						App.prefs().setBoolean(R.string.pref_internalImageViewer, false);
 						redirect();
 					}
 				})
@@ -112,9 +110,7 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 			return extras.getBoolean(EXTRA_INTERNAL);
 		}
 		// if not overridden in extras, return the value in preferences
-		return App.getPrefs().getBoolean(
-				getResources().getString(R.string.pref_internalImageViewer),
-				getResources().getBoolean(R.bool.pref_internalImageViewer_default));
+		return App.prefs().getBoolean(R.string.pref_internalImageViewer, R.bool.pref_internalImageViewer_default);
 	}
 
 	/** Optional {@link #EXTRA_INTERNAL} can be added. */

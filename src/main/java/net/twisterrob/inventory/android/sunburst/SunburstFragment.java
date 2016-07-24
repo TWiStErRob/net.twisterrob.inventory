@@ -45,8 +45,8 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		walker = new NodeTreeWalker(App.getPrefs().getInt(getString(R.string.pref_sunburstIgnoreLevel),
-				getResources().getInteger(R.integer.pref_sunburstIgnoreLevel_default)));
+		int ignore = App.prefs().getInt(R.string.pref_sunburstIgnoreLevel, R.integer.pref_sunburstIgnoreLevel_default);
+		walker = new NodeTreeWalker(ignore);
 		sunburst = new SunburstDrawable<>(walker, new Paints());
 	}
 

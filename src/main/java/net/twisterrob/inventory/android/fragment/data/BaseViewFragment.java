@@ -78,7 +78,8 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		}
 
 		public int getDefaultPosition() {
-			return getPositionOf(App.getSPref(R.string.pref_defaultViewPage, R.string.pref_suggestCategory_default));
+			String page = App.prefs().getString(R.string.pref_defaultViewPage, R.string.pref_defaultViewPage_default);
+			return getPositionOf(page);
 		}
 		public int getPositionOf(String page) {
 			String image = getString(R.string.pref_defaultViewPage_image);
@@ -124,8 +125,8 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 				case POSITION_DETAILS: {
 					view = inflater.inflate(R.layout.inc_details_details, container, false);
 
-					final boolean debug =
-							App.getBPref(R.string.pref_displayDebugDetails, R.bool.pref_displayDebugDetails_default);
+					final boolean debug = App.prefs().getBoolean(
+							R.string.pref_displayDebugDetails, R.bool.pref_displayDebugDetails_default);
 
 					TextView details = (TextView)view.findViewById(R.id.details);
 					details.setText(getDetailsString(entity, debug));
