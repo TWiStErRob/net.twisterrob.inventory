@@ -53,6 +53,7 @@ public class DefaultStringer extends Stringer<Object> {
 		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+(v4|v7|v13)\\.(?:[a-z0-9]+\\.)+", "$1.");
 		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+", "");
 		string = string.replaceAll("^javax?\\.(?:[a-z0-9]+\\.)+", "");
+		string = string.replaceAll("^com.google.android.gms\\.(?:[a-z0-9]+\\.)+", "gms.");
 		string = string.replaceAll("^net\\.twisterrob\\.([a-z0-9.]+\\.)+", "tws.");
 		return string;
 	}
