@@ -7,7 +7,6 @@ import java.util.Locale;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import net.twisterrob.android.utils.LibContextProvider;
 import net.twisterrob.android.utils.log.*;
 import net.twisterrob.android.utils.tools.IOTools;
 
@@ -18,7 +17,7 @@ public class ImageSDNetCache implements Cache<URL, Bitmap> {
 	private final net.twisterrob.android.utils.cache.lowlevel.ImageCache m_cache;
 
 	public ImageSDNetCache() {
-		Context context = LibContextProvider.getApplicationContext();
+		Context context = net.twisterrob.android.utils.LibContextProvider.getApplicationContext();
 		net.twisterrob.android.utils.cache.lowlevel.ImageCache.ImageCacheParams params =
 				new net.twisterrob.android.utils.cache.lowlevel.ImageCache.ImageCacheParams(context, "");
 		params.initDiskCacheOnCreate = true;

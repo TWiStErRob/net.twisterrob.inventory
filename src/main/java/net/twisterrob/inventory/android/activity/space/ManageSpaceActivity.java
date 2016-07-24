@@ -141,7 +141,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		findViewById(R.id.storage_db_restore).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				AndroidTools
-						.prompt(ManageSpaceActivity.this, new PopupCallbacks<String>() {
+						.prompt(ManageSpaceActivity.this, null, new PopupCallbacks<String>() {
 							@Override public void finished(final String value) {
 								if (value == null) {
 									return;

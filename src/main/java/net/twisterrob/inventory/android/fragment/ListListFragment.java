@@ -46,7 +46,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 
 			@Override protected void onCreateNew() {
 				AndroidTools
-						.prompt(getContext(), new PopupCallbacks<String>() {
+						.prompt(getContext(), null, new PopupCallbacks<String>() {
 							@Override public void finished(String value) {
 								if (value == null) {
 									return;
