@@ -8,6 +8,9 @@
 		<ignore regexp="R\.bool\.in_test" />
 		<!-- Not used, because this is a library, used by consuming apps -->
 		<ignore path="src/main/res/values/dimens.xml" />
+		<!-- Used by consuming applications -->
+		<ignore path="src/main/res/layout/inc_empty.xml" />
+		<ignore regexp="R\.(.+)\.menu_widget_(.+)" />
 	</issue>
 	<issue id="GradleDependency">
 		<!-- I'm not a free tester, leave me alone -->

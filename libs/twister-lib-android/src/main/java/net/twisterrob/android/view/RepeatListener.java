@@ -1,5 +1,6 @@
 package net.twisterrob.android.view;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.support.annotation.*;
 import android.view.*;
@@ -86,6 +87,7 @@ public class RepeatListener implements OnTouchListener {
 		this.clickListener = clickListener;
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
 	public boolean onTouch(View view, MotionEvent motionEvent) {
 		switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
@@ -93,7 +95,7 @@ public class RepeatListener implements OnTouchListener {
 				handler.postDelayed(handlerRunnable, initialInterval);
 				downView = view;
 				downView.setPressed(true);
-				clickListener.onClick(view);
+				clickListener.onClick(view); // the default listener is to call view.performClick()
 				return true;
 			case MotionEvent.ACTION_UP:
 			case MotionEvent.ACTION_CANCEL:

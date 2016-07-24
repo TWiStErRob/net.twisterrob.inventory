@@ -13,13 +13,14 @@
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:padding="0dp"
-		android:text="&lt;"
+		android:text="@string/menu_widget_number_decrease"
 		android:gravity="center"
 		/>
 	<TextView
 		android:id="@+id/widget_number_display"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:textIsSelectable="false"
 		tools:text="12"
 		/>
 	<Button
@@ -27,7 +28,7 @@
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:padding="0dp"
-		android:text="&gt;"
+		android:text="@string/menu_widget_number_increase"
 		android:gravity="center"
 		/>
 </LinearLayout>
