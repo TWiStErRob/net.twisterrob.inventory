@@ -224,7 +224,7 @@
 	<string name="category_publication" level="1" icon="@raw/item_paper">Publications</string>
 	<string name="category_publication_keywords">@string/empty</string>
 	<string name="category_book" level="2">book</string>
-	<string name="category_book_keywords">paperback, yearbook, photo album, magazine, comics, newsletter, newspaper, periodical, academic journal, proceeding</string>
+	<string name="category_book_keywords">paperback, dictionary, atlas, yearbook, photo album, magazine, comics, newsletter, newspaper, periodical, academic journal, proceeding</string>
 	<string name="category_booklet" level="2">booklet</string>
 	<string name="category_booklet_keywords">advertisement, marketing, brochure, catalogue, circular, programme, leaflet, pamphlet, flyer, invitation</string>
 	<string name="category_information" level="2">informative</string>
