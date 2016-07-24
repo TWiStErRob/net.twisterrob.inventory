@@ -18,7 +18,6 @@ import android.support.annotation.WorkerThread;
 
 import static android.Manifest.permission.*;
 
-import net.twisterrob.android.BuildConfig;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.java.annotations.DebugHelper;
 
@@ -35,9 +34,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private static final String DB_CLEAN_FILE = "%s.clean.sql";
 	private static final String DB_TEST_FILE = "%s.test.sql";
 	private static final String DB_DEVELOPMENT_FILE = "%s.development.sql";
-	private static final CursorFactory s_factory = VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT
-			? (BuildConfig.DEBUG? new LoggingCursorFactory() : null)
-			: null;
 
 	protected final AssetManager assets;
 	private final boolean hasWriteExternalPermission;
@@ -47,11 +43,19 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private boolean dumpOnOpen;
 	private boolean allowDump = true;
 
-	public DatabaseOpenHelper(Context context, String dbName, int dbVersion) {
-		super(context, dbName, s_factory, dbVersion);
+	public DatabaseOpenHelper(Context context, String dbName, int dbVersion, boolean isDebugBuild) {
+		super(context, dbName, createCursorFactory(isDebugBuild), dbVersion);
 		this.assets = context.getAssets();
 		this.dbName = dbName;
 		this.hasWriteExternalPermission = AndroidTools.hasPermission(context, WRITE_EXTERNAL_STORAGE);
+	}
+
+	@TargetApi(VERSION_CODES.HONEYCOMB)
+	private static CursorFactory createCursorFactory(boolean isDebugBuild) {
+		if (isDebugBuild && VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+			return new LoggingCursorFactory();
+		}
+		return null;
 	}
 
 	/** Polyfill for pre-ICE_CREAM_SANDWICH. */
@@ -269,7 +273,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 				LOG.error("Cannot back up DB on open", ex);
 			}
 		} else {
-			LOG.warn("No {} permission to back up DB at {}", WRITE_EXTERNAL_STORAGE, when);
+			if (hasWriteExternalPermission) {
+				LOG.warn("No {} permission to back up DB at {}", WRITE_EXTERNAL_STORAGE, when);
+			}
 		}
 	}
 }
