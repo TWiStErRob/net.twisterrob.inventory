@@ -33,6 +33,7 @@ import android.support.v4.view.*;
 import android.support.v4.widget.*;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.*;
 import android.view.*;
 import android.view.ViewGroup.*;
@@ -1224,13 +1225,7 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	public static AlertDialog.Builder confirm(Context context, final PopupCallbacks<Boolean> callbacks) {
-		return new AlertDialog.Builder(context) {
-			@Override public AlertDialog create() {
-				AlertDialog dialog = super.create();
-				dialog.setCanceledOnTouchOutside(true);
-				return dialog;
-			}
-		}
+		return new DefaultBuilder(context)
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						callbacks.finished(true);
@@ -1249,13 +1244,7 @@ public /*static*/ abstract class AndroidTools {
 				});
 	}
 	public static AlertDialog.Builder notify(Context context, final PopupCallbacks<Boolean> callbacks) {
-		return new AlertDialog.Builder(context) {
-			@Override public AlertDialog create() {
-				AlertDialog dialog = super.create();
-				dialog.setCanceledOnTouchOutside(true);
-				return dialog;
-			}
-		}
+		return new DefaultBuilder(context)
 				.setNeutralButton(android.R.string.ok, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						callbacks.finished(true);
@@ -1386,5 +1375,26 @@ public /*static*/ abstract class AndroidTools {
 
 	protected AndroidTools() {
 		// static utility class
+	}
+
+	private static class DefaultBuilder extends AlertDialog.Builder {
+		public DefaultBuilder(Context context) {
+			super(context);
+		}
+
+		@Override public AlertDialog create() {
+			final AlertDialog dialog = super.create();
+			dialog.setCanceledOnTouchOutside(true);
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override public void run() {
+					// TODO is this available earlier somehow?
+					View message = dialog.findViewById(android.R.id.message);
+					if (message instanceof TextView) {
+						((TextView)message).setMovementMethod(LinkMovementMethod.getInstance());
+					}
+				}
+			});
+			return dialog;
+		}
 	}
 }
