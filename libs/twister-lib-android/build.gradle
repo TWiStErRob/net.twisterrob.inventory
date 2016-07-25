@@ -65,4 +65,9 @@ android {
 	testOptions {
 		unitTests.returnDefaultValues = true
 	}
+	variantFilter {
+		if (it.buildType.name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
+			it.setIgnore(true);
+		}
+	}
 }

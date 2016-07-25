@@ -23,7 +23,7 @@ import android.widget.Toast;
 import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
-public class BaseApp extends android.app.Application {
+public abstract class BaseApp extends android.app.Application {
 	static {
 		// TODO figure out something so IDEA sees these classes, but they're not on lib's test classpath.
 		// Make sure to set up LoggerFactory before the first logger is created
