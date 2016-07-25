@@ -12,7 +12,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
 import android.text.TextUtils;
@@ -75,17 +75,16 @@ public class AboutActivity extends ListActivity {
 		packageText.setText(aboutInfo.applicationId);
 		packageText.setSelected(true); // hack to start marquee
 
-		TextView faq = (TextView)findViewById(R.id.about_faq);
-		AndroidTools.displayedIfHasText(faq);
-		findViewById(R.id.about_faq_title).setVisibility(faq.getVisibility());
-
-		TextView help = (TextView)findViewById(R.id.about_help);
-		AndroidTools.displayedIfHasText(help);
-		findViewById(R.id.about_help_title).setVisibility(help.getVisibility());
-
-		TextView tips = (TextView)findViewById(R.id.about_tips);
-		AndroidTools.displayedIfHasText(tips);
-		findViewById(R.id.about_tips_title).setVisibility(tips.getVisibility());
+		initSection(R.id.about_faq, R.id.about_faq_title);
+		initSection(R.id.about_help, R.id.about_help_title);
+		initSection(R.id.about_tips, R.id.about_tips_title);
+	}
+	private void initSection(@IdRes int sectionContentID, @IdRes int sectionTitleID) {
+		TextView contentView = (TextView)findViewById(sectionContentID);
+		contentView.setMovementMethod(LinkMovementMethod.getInstance());
+		AndroidTools.displayedIfHasText(contentView);
+		View titleView = findViewById(sectionTitleID);
+		titleView.setVisibility(contentView.getVisibility());
 	}
 
 	protected void onFeedback(AboutInfo aboutInfo) {

@@ -4,6 +4,7 @@
 	<!ENTITY lquot "&#8220;"><!-- left double quotation mark, http://www.fileformat.info/info/unicode/char/201C/index.htm -->
 	<!ENTITY rquot "&#8221;"><!-- right double quotation mark, http://www.fileformat.info/info/unicode/char/201D/index.htm -->
 	<!ENTITY LI "\n&#8195;&#8226;&#8194;"><!-- m-space (\u2003) bullet (\u2022) n-space (\u2002) -->
+	<!ENTITY LLI "\n&#8195;&#8195;&#8226;&#8194;"><!-- 2x m-space (\u2003) bullet (\u2022) n-space (\u2002) -->
 	]>
 <!--
 To use this:
@@ -57,31 +58,39 @@ To use this:
 
 	<string name="about_licenses_title">Acknowledgements and Licenses</string>
 	<string name="about_licenses_missing">Missing License</string>
-	<string-array name="about_licenses" translatable="false">
+
+	<string-array name="about_licenses" translatable="false"><!--
 		<item>@string/about_license_glide_title</item>
 		<item>@string/about_license_libjpeg_title</item>
 		<item>@string/about_license_stackoverflow_title</item>
-		<!--<item>Other stuff</item>-->
-	</string-array>
+		<item>@string/about_license_asset_studio_title</item>
+		<item>@string/about_license_gms_title</item>
+	--></string-array>
 
-	<string-array name="about_licenses_content" translatable="false" tools:ignore="TypographyQuotes,TypographyOther">
+	<string-array name="about_licenses_content" translatable="false"><!--
 		<item>@string/about_license_glide</item>
 		<item>@string/about_license_libjpeg</item>
 		<item>@string/about_license_stackoverflow</item>
-		<!--
-		<string><b>Thanks to <a href="http://website">company/group/person</a> for writing <a href="http://original">stuff</a> about stuff.</b>
-		</p>
-			\n<i>License obtained from <a href="http://original-license">origin name</a> follows:</i>
-			\n<i>License obtained from .java source code follows:</i>
-			\n<i>Stuff is licensed under <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY</a>.</i>
-			\n
-			\nORIGINAL LICENSE text with `' changed to \", escape with apos and quot with \ and lines unwrapped to flowing text
-		</string>
-		-->
-	</string-array>
+		<item>@string/about_license_asset_studio</item>
+		<item>@string/about_license_gms</item>
+	--></string-array>
+
+	<!--
+	<string name="about_license_name_title">Name of licenced stuff</string>
+	<string name="about_license_name" tools:ignore="TypographyQuotes,TypographyOther">
+		<b>Thanks to <a href="http://website">company/group/person</a> for writing <a href="http://original">stuff</a> about stuff.</b>
+		\n
+		\n<i>License obtained from <a href="http://original-license">origin name</a> follows:</i>
+		\n<i>License obtained from .java source code follows:</i>
+		\n<i>Stuff is licensed under <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY</a>.</i>
+		\n
+		\nORIGINAL LICENSE text with `' changed to \", escape with apos and quot with \ and lines unwrapped to flowing text
+	</string>
+	-->
 
 	<string name="about_license_glide_title">Glide 3.8.0, library</string>
-	<string name="about_license_glide" tools:ignore="TypographyQuotes,TypographyOther"><b>Big thanks to <a href="https://github.com/sjudd">Sam&nbsp;Judd</a> and <a href="https://github.com/twisterrob">Róbert&nbsp;Papp (TWiStErRob)</a> for maintaining <a href="https://github.com/bumptech/glide">Glide</a>, the most flexible Android image loader API on the market.</b>
+	<string name="about_license_glide" tools:ignore="TypographyQuotes,TypographyOther">
+		<b>Big thanks to <a href="https://github.com/sjudd">Sam&nbsp;Judd</a> and <a href="https://github.com/twisterrob">Róbert&nbsp;Papp (TWiStErRob)</a> for maintaining <a href="https://github.com/bumptech/glide">Glide</a>, the most flexible Android image loader API on the market.</b>
 		\n
 		\n<i>License obtained from <a href="https://github.com/bumptech/glide/blob/v3.7.0/LICENSE">GitHub</a> follows:</i>
 		\n
@@ -135,7 +144,10 @@ To use this:
 	</string>
 
 	<string name="about_license_libjpeg_title">libjpeg v9b, adapted code</string>
-	<string name="about_license_libjpeg" tools:ignore="TypographyQuotes,TypographyOther"><b>Thanks to <a href="http://www.ijg.org/">Independent JPEG Group</a> for writing their <a href="http://www.ijg.org/files/jpegsrc.v9b.tar.gz">JPEG encoder implementation</a>, I used the <tt>rgb_ycc_convert</tt> function (translated into Java and heavily refactored) and related code to produce a high-quality well-compressed JPEG file. See my <a href="http://stackoverflow.com/a/36560663/253468">StackOverflow Q&amp;A</a> for technical details on why this was needed.</b>
+	<string name="about_license_libjpeg" tools:ignore="TypographyQuotes,TypographyOther">
+		<b>Thanks to <a href="http://www.ijg.org/">Independent JPEG Group</a> for writing their <a href="http://www.ijg.org/files/jpegsrc.v9b.tar.gz">JPEG encoder implementation</a>.
+			I used the <tt>rgb_ycc_convert</tt> function (translated into Java and heavily refactored) and related code to produce a high-quality well-compressed JPEG file.
+			See my <a href="http://stackoverflow.com/a/36560663/253468">StackOverflow Q&amp;A</a> for technical details on why this was needed.</b>
 		\n
 		\n<i>License obtained from README inside <a href="http://www.ijg.org/files/jpegsrc.v9b.tar.gz">sources</a> follows:</i>
 		\n
@@ -173,9 +185,30 @@ To use this:
 	</string>
 
 	<string name="about_license_stackoverflow_title">StackOverflow snippets, adapted code</string>
-	<string name="about_license_stackoverflow"><b>Thanks to the community of <a href="http://stackoverflow.com/">StackOverflow</a> (and <a href="https://stackexchange.com/sites">sister sites</a>) for filling in the gaps in my knowledge.</b>
+	<string name="about_license_stackoverflow">
+		<b>Thanks to the community of <a href="http://stackoverflow.com/">StackOverflow</a> (and <a href="https://stackexchange.com/sites">sister sites</a>) for filling in the gaps in my knowledge.</b>
 		\n
 		\n<i>According to <a href="http://stackexchange.com/legal">Stack Exchange Network Terms of Service</a> &lquot;Subscriber Content&rquot; is licensed under <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>. Adapted source code is documented with links where appropriate in the apps source code.</i>
+	</string>
+
+	<string name="about_license_asset_studio_title">Android Asset Studio</string>
+	<string name="about_license_asset_studio">
+		<b>Thanks to <a href="https://github.com/romannurik">Roman Nurik</a> for creating <a href="http://romannurik.github.io/AndroidAssetStudio/">Android Asset Studio</a> to make it easier to generate icons.</b>
+		\n
+		\n<i>License obtained from <a href="http://romannurik.github.io/AndroidAssetStudio/attribution.html">Attribution</a> follows:</i>
+		\n
+		\nAll art generated by the Android Asset Studio is licensed under a <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported</a> License.
+
+		\nNo particular form of attribution is required, but please follow best practices for attribution. A minimal form of attribution would be to mention in your application\'s source project that some assets were created with the Android Asset Studio.
+	</string>
+
+	<string name="about_license_gms_title">Google Play Services</string>
+	<string name="about_license_gms" tools:ignore="TypographyQuotes,TypographyOther">
+		<b>Thanks to <a href="https://www.google.com/about/">Google</a> for publishing <a href="https://developers.google.com/android/">Google APIs</a> so developers build better apps.</b>
+		\n
+		\n<i>License obtained from the footer of <a href="https://developers.google.com">Google Developers website</a>:</i>
+		\n
+		\nExcept as otherwise noted, the content of this page is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>, and code samples are licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. For details, see our Site Policies. Java is a registered trademark of Oracle and/or its affiliates.
 	</string>
 
 </resources>
