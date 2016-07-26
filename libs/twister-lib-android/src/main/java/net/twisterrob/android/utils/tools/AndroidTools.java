@@ -1119,6 +1119,10 @@ public /*static*/ abstract class AndroidTools {
 		return point;
 	}
 
+	public static @NonNull Point getMaximumBitmapSize(@Nullable Canvas canvas) {
+		return CanvasTools.getMaximumBitmapSize(canvas);
+	}
+
 	@UiThread
 	public interface PopupCallbacks<T> {
 		void finished(T value);
@@ -1184,7 +1188,8 @@ public /*static*/ abstract class AndroidTools {
 	 */
 	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)
 	public static void showKeyboard(final View view) {
-		InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm =
+				(InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		final Runnable tryAgain = new Runnable() {
 			@Override public void run() {
 				showKeyboard(view);
