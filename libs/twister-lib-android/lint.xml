@@ -10,6 +10,7 @@
 		<ignore path="src/main/res/values/dimens.xml" />
 		<!-- Used by consuming applications -->
 		<ignore path="src/main/res/layout/inc_empty.xml" />
+		<ignore path="src/main/res/values/strings_about.xml" />
 		<ignore regexp="R\.(.+)\.menu_widget_(.+)" />
 	</issue>
 	<issue id="GradleDependency">
