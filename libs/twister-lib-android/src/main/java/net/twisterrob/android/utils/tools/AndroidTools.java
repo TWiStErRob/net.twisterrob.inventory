@@ -857,6 +857,7 @@ public /*static*/ abstract class AndroidTools {
 	 * &lt;item name="android:windowTranslucentNavigation">true&lt;/item>
 	 * </code></pre>
 	 * Leaves the scrim (shadow) intact.
+	 * CONSIDER do something with FLAG_TRANSLUCENT_NAVIGATION as well?
 	 */
 	@TargetApi(VERSION_CODES.KITKAT)
 	public static void setTranslucentStatusBar(Window window) {
@@ -866,7 +867,6 @@ public /*static*/ abstract class AndroidTools {
 		}
 		if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
 			window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		}
 	}
 	@TargetApi(VERSION_CODES.LOLLIPOP)
