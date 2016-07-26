@@ -26,39 +26,39 @@ import android.support.annotation.*;
  * Here's the definition of a sample setting (single choice of 3 values):
  * <pre><code>
  * &lt;!-- Description of Some Setting --&gt;
- * &lt;string name="pref_someSetting_title"&gt;Some Setting&lt;/string&gt;
- * &lt;string name="pref_someSetting" translatable="false"&gt;someSetting&lt;/string&gt;
- * &lt;string name="pref_someSetting_default" translatable="false"&gt;@string/pref_someSetting_option2&lt;/string&gt;
+ * &lt;string name="pref$someSetting$title"&gt;Some Setting&lt;/string&gt;
+ * &lt;string name="pref$someSetting" translatable="false"&gt;someSetting&lt;/string&gt;
+ * &lt;string name="pref$someSetting$default" translatable="false"&gt;@string/pref$someSetting_option2&lt;/string&gt;
  * &lt;!-- Description of Option 1 --&gt;
- * &lt;string name="pref_someSetting_option1_title"&gt;Option 1&lt;/string&gt;
- * &lt;string name="pref_someSetting_option1" translatable="false"&gt;option1&lt;/string&gt;
+ * &lt;string name="pref$someSetting_option1$title"&gt;Option 1&lt;/string&gt;
+ * &lt;string name="pref$someSetting_option1" translatable="false"&gt;option1&lt;/string&gt;
  * &lt;!-- Description of Option 2 --&gt;
- * &lt;string name="pref_someSetting_option2_title"&gt;Option 2&lt;/string&gt;
- * &lt;string name="pref_someSetting_option2" translatable="false"&gt;option2&lt;/string&gt;
+ * &lt;string name="pref$someSetting_option2$title"&gt;Option 2&lt;/string&gt;
+ * &lt;string name="pref$someSetting_option2" translatable="false"&gt;option2&lt;/string&gt;
  * &lt;!-- Description of Option 3 --&gt;
- * &lt;string name="pref_someSetting_option3_title"&gt;Option 3&lt;/string&gt;
- * &lt;string name="pref_someSetting_option3" translatable="false"&gt;option3&lt;/string&gt;
- * &lt;string-array name="pref_someSetting_entries"&gt;
- * 	&lt;item&gt;@string/pref_someSetting_option1_title&lt;/item&gt;
- * 	&lt;item&gt;@string/pref_someSetting_option2_title&lt;/item&gt;
- * 	&lt;item&gt;@string/pref_someSetting_option3_title&lt;/item&gt;
+ * &lt;string name="pref$someSetting_option3$title"&gt;Option 3&lt;/string&gt;
+ * &lt;string name="pref$someSetting_option3" translatable="false"&gt;option3&lt;/string&gt;
+ * &lt;string-array name="pref$someSetting_entries"&gt;
+ * 	&lt;item&gt;@string/pref$someSetting_option1$title&lt;/item&gt;
+ * 	&lt;item&gt;@string/pref$someSetting_option2$title&lt;/item&gt;
+ * 	&lt;item&gt;@string/pref$someSetting_option3$title&lt;/item&gt;
  * &lt;/string-array&gt;
- * &lt;string-array name="pref_someSetting_values" translatable="false"&gt;
- * 	&lt;item&gt;@string/pref_someSetting_option1&lt;/item&gt;
- * 	&lt;item&gt;@string/pref_someSetting_option2&lt;/item&gt;
- * 	&lt;item&gt;@string/pref_someSetting_option3&lt;/item&gt;
+ * &lt;string-array name="pref$someSetting_values" translatable="false"&gt;
+ * 	&lt;item&gt;@string/pref$someSetting_option1&lt;/item&gt;
+ * 	&lt;item&gt;@string/pref$someSetting_option2&lt;/item&gt;
+ * 	&lt;item&gt;@string/pref$someSetting_option3&lt;/item&gt;
  * &lt;/string-array&gt;
  * </code></pre>
  *
  * Here's how it is used in a preference activity:
  * <pre><code>
  * &lt;ListPreference
- * 	android:key="@string/pref_someSetting"
- * 	android:title="@string/pref_someSetting_title"
- * 	android:defaultValue="@string/pref_someSetting_default"
- * 	android:entries="@array/pref_someSetting_entries"
- * 	android:entryValues="@array/pref_someSetting_values"
- * 	tools:summary="@array/pref_someSetting_entries"
+ * 	android:key="@string/pref$someSetting"
+ * 	android:title="@string/pref$someSetting$title"
+ * 	android:defaultValue="@string/pref$someSetting$default"
+ * 	android:entries="@array/pref$someSetting_entries"
+ * 	android:entryValues="@array/pref$someSetting_values"
+ * 	tools:summary="@array/pref$someSetting_entries"
  * 	/&gt;
  * </code></pre>
  *
@@ -66,11 +66,11 @@ import android.support.annotation.*;
  * <pre><code>
  * private ResourcePreferences prefs;
  *
- * String currentValue = prefs.getString(R.string.pref_someSetting, R.string.pref_someSetting_default);
- * String option1 = context.getString(R.string.pref_someSetting_option1);
+ * String currentValue = prefs.getString(R.string.pref$someSetting, R.string.pref$someSetting$default);
+ * String option1 = context.getString(R.string.pref$someSetting_option1);
  * if (option1.equals(currentValue)) {
  * 	// behave according to option1, for example change the value to option2
- * 	prefs.setString(R.string.pref_someSetting, R.string.pref_someSetting_option2);
+ * 	prefs.setString(R.string.pref$someSetting, R.string.pref$someSetting_option2);
  * }
  * </code></pre>
  *
