@@ -18,6 +18,7 @@ package com.example.android.xmladapters;
 
 import java.io.*;
 import java.lang.ref.*;
+import java.net.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -225,67 +226,48 @@ public class ImageDownloader {
 		 * Actual download method.
 		 */
 		@Override protected Bitmap doInBackground(String... params) {
-			@SuppressWarnings("deprecation")
-			final android.net.http.AndroidHttpClient client = android.net.http.AndroidHttpClient.newInstance("Android");
-			url = params[0];
-			@SuppressWarnings("deprecation")
-			final org.apache.http.client.methods.HttpGet getRequest = new org.apache.http.client.methods.HttpGet(url);
-			String cookie = params[1];
-			if (cookie != null) {
-				getRequest.setHeader("cookie", cookie);
-			}
-
+			HttpURLConnection connection = null;
 			try {
-				@SuppressWarnings("deprecation")
-				final int HTTP_OK = org.apache.http.HttpStatus.SC_OK;
-				@SuppressWarnings("deprecation")
-				org.apache.http.HttpResponse response = client.execute(getRequest);
-				final int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode != HTTP_OK) {
+				url = params[0];
+				String cookie = params[1];
+				connection = (HttpURLConnection)new URL(url).openConnection();
+				connection.setConnectTimeout(2500);
+				connection.setReadTimeout(2500);
+				connection.setUseCaches(false);
+				connection.setDoInput(true);
+				if (cookie != null) {
+					connection.addRequestProperty("cookie", cookie);
+				}
+				int statusCode = connection.getResponseCode();
+				if (statusCode != HttpURLConnection.HTTP_OK) {
 					Log.w("ImageDownloader", "Error " + statusCode + " while retrieving bitmap from " + url);
 					return null;
 				}
 
-				@SuppressWarnings("deprecation")
-				final org.apache.http.HttpEntity entity = response.getEntity();
-				if (entity != null) {
-					InputStream inputStream = null;
-					OutputStream outputStream = null;
+				InputStream inputStream = null;
+				OutputStream outputStream = null;
+				try {
+					inputStream = connection.getInputStream();
+					return BitmapFactory.decodeStream(inputStream);
+				} finally {
 					try {
-						inputStream = entity.getContent();
-						final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-						outputStream = new BufferedOutputStream(dataStream, IO_BUFFER_SIZE);
-						copy(inputStream, outputStream);
-						outputStream.flush();
-
-						// CONSIDER return BitmapFactory.decodeStream(inputStream);
-						final byte[] data = dataStream.toByteArray();
-						return BitmapFactory.decodeByteArray(data, 0, data.length);
-					} finally {
-						try {
-							if (inputStream != null) {
-								inputStream.close();
-							}
-							if (outputStream != null) {
-								outputStream.close();
-							}
-							entity.consumeContent();
-						} catch (IOException ex) {
-							Log.w(LOG_TAG, "Cannot clean up: " + url, ex);
+						if (inputStream != null) {
+							inputStream.close();
 						}
+					} catch (IOException ex) {
+						Log.w(LOG_TAG, "Cannot clean up: " + url, ex);
 					}
 				}
 			} catch (IOException e) {
-				getRequest.abort();
 				Log.w(LOG_TAG, "I/O error while retrieving bitmap from " + url, e);
 			} catch (IllegalStateException e) {
-				getRequest.abort();
 				Log.w(LOG_TAG, "Incorrect URL: " + url);
 			} catch (Exception e) {
-				getRequest.abort();
 				Log.w(LOG_TAG, "Error while retrieving bitmap from " + url, e);
 			} finally {
-				client.close();
+				if (connection != null) {
+					connection.disconnect();
+				}
 			}
 			return null;
 		}
@@ -312,14 +294,6 @@ public class ImageDownloader {
 				if (this == bitmapDownloaderTask) {
 					imageView.setImageBitmap(bitmap);
 				}
-			}
-		}
-
-		public void copy(InputStream in, OutputStream out) throws IOException {
-			byte[] b = new byte[IO_BUFFER_SIZE];
-			int read;
-			while ((read = in.read(b)) != -1) {
-				out.write(b, 0, read);
 			}
 		}
 	}

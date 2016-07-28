@@ -17,6 +17,7 @@
 package com.example.android.xmladapters;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -119,8 +120,7 @@ public class XmlDocumentProvider extends ContentProvider {
 	 * - Support namespaces in attribute names.
 	 * - Incremental Cursor creation, pagination */
 	private static final String LOG_TAG = "XmlDocumentProvider";
-	@SuppressWarnings("deprecation")
-	private android.net.http.AndroidHttpClient mHttpClient;
+	private HttpURLConnection mHttpClient;
 
 	@Override public boolean onCreate() {
 		return true;
@@ -184,7 +184,7 @@ public class XmlDocumentProvider extends ContentProvider {
 				Log.w(LOG_TAG, "Error while parsing XML " + uri, e);
 			} finally {
 				if (mHttpClient != null) {
-					mHttpClient.close();
+					mHttpClient.disconnect();
 				}
 			}
 		}
@@ -210,21 +210,14 @@ public class XmlDocumentProvider extends ContentProvider {
 
 		InputStream inputStream = null;
 		try {
-			@SuppressWarnings("deprecation")
-			final int HTTP_OK = org.apache.http.HttpStatus.SC_OK;
-			@SuppressWarnings("deprecation")
-			final org.apache.http.client.methods.HttpGet get = new org.apache.http.client.methods.HttpGet(url);
-			@SuppressWarnings("deprecation")
-			android.net.http.AndroidHttpClient httpClient = android.net.http.AndroidHttpClient.newInstance("Android");
-			mHttpClient = httpClient;
-			@SuppressWarnings("deprecation")
-			org.apache.http.HttpResponse response = mHttpClient.execute(get);
-			if (response.getStatusLine().getStatusCode() == HTTP_OK) {
-				@SuppressWarnings("deprecation")
-				final org.apache.http.HttpEntity entity = response.getEntity();
-				if (entity != null) {
-					inputStream = entity.getContent();
-				}
+			mHttpClient = (HttpURLConnection)new URL(url).openConnection();
+			mHttpClient.setConnectTimeout(2500);
+			mHttpClient.setReadTimeout(2500);
+			mHttpClient.setUseCaches(false);
+			mHttpClient.setDoInput(true);
+			mHttpClient.connect();
+			if (mHttpClient.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				inputStream = mHttpClient.getInputStream();
 			}
 		} catch (IOException e) {
 			Log.w(LOG_TAG, "Error while retrieving XML file " + url, e);

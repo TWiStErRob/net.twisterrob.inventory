@@ -29,28 +29,8 @@ public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools 
 	@Deprecated @SuppressWarnings("deprecation")
 	private static net.twisterrob.android.utils.cache.ImageSDNetCache imageCache;
 
-	@SuppressWarnings("deprecation")
-	public static String getEncoding(final org.apache.http.HttpEntity entity) {
-		org.apache.http.Header header = entity.getContentEncoding();
-		if (header != null) {
-			return header.getValue();
-		}
-		// else
-		header = entity.getContentType();
-		if (header != null) {
-			String value = header.getValue();
-			int startIndex = value.indexOf(HTTP_HEADER_CHARSET_PREFIX);
-			if (startIndex != -1) {
-				startIndex += HTTP_HEADER_CHARSET_PREFIX.length();
-				int endIndex = value.indexOf(';', startIndex);
-				if (endIndex == -1) {
-					endIndex = value.length();
-				}
-				return value.substring(startIndex, endIndex);
-			}
-		}
-		return DEFAULT_HTTP_ENCODING;
-	}
+	// TODO merge with Cineworld
+	//public static String getEncoding(final org.apache.http.HttpEntity entity);
 
 	/** @deprecated use Glide */
 	@Deprecated @SuppressWarnings("deprecation")
