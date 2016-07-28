@@ -6,6 +6,13 @@
 #}
 #-whyareyoukeeping class net.twisterrob.java.annotations.DebugHelper
 
+# Don't note about missing Stetho, it's initialized reflectively so it's there if it's on the classpath
+-dontnote com.facebook.stetho.Stetho
+# In fact, remove the reference fully as it shouldn't be ever present in production.
+-assumenosideeffects class net.twisterrob.android.app.BaseApp {
+	void initStetho();
+}
+
 # net.twisterrob.android.utils.tools.AndroidTools.findActionBarTitle(android.view.View)
 # net.twisterrob.android.utils.tools.AndroidTools.findActionBarSubTitle(android.view.View)
 -keepclassmembernames class android.support.v7.widget.Toolbar {
