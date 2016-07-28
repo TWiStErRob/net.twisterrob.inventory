@@ -23,7 +23,7 @@
 			android:layout_gravity="center_horizontal"
 			android:gravity="center"
 			android:singleLine="true"
-			android:textIsSelectable="true"
+			android:textIsSelectable="false"
 			tools:text="\@string/app_name"
 			/>
 		<TextView
@@ -32,7 +32,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"
 			android:gravity="center"
-			android:textIsSelectable="true"
+			android:textIsSelectable="false"
 			tools:text="@string/about_version"
 			/>
 		<TextView
@@ -41,7 +41,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"
 			android:gravity="center"
-			android:textIsSelectable="true"
+			android:textIsSelectable="false"
 			android:visibility="gone"
 			tools:text="(2147483648)"
 			tools:visibility="visible"
@@ -52,7 +52,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"
 			android:gravity="center"
-			android:textIsSelectable="true"
+			android:textIsSelectable="false"
 			tools:text="\@string/app_package"
 			/>
 		<TextView

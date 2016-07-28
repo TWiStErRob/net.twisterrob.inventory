@@ -12,12 +12,14 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.*;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.*;
 
 import static android.widget.ArrayAdapter.*;
@@ -43,42 +45,60 @@ public class AboutActivity extends ListActivity {
 		licenseContents = getResources().getTextArray(R.array.about_licenses_content);
 		AndroidTools.displayedIf(findViewById(R.id.about_licenses_title), !getListAdapter().isEmpty());
 
-		final AboutInfo aboutInfo = getAboutInfo();
+		AboutInfo aboutInfo = getAboutInfo();
 		LOG.trace("About info: {}", aboutInfo);
-
-		TextView feedback = (TextView)findViewById(R.id.about_feedback);
-		feedback.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				onFeedback(aboutInfo);
-			}
-		});
 		populateInfo(aboutInfo);
 	}
 
-	protected void populateInfo(AboutInfo aboutInfo) {
+	protected void populateInfo(final AboutInfo aboutInfo) {
+		OnClickListener feedbackAction = new OnClickListener() {
+			@Override public void onClick(View v) {
+				onFeedback(aboutInfo);
+			}
+		};
+		OnClickListener settingsAction = new OnClickListener() {
+			@Override public void onClick(View v) {
+				openInSettings(aboutInfo);
+			}
+		};
+		OnClickListener playStoreAction = new OnClickListener() {
+			@Override public void onClick(View v) {
+				openInPlayStore(aboutInfo);
+			}
+		};
+
+		TextView feedback = (TextView)findViewById(R.id.about_feedback);
+		feedback.setOnClickListener(feedbackAction);
+
 		TextView nameText = (TextView)findViewById(R.id.about_name);
 		nameText.setText(aboutInfo.appLabel);
 		nameText.setSelected(true); // hack to start marquee
+		nameText.setOnClickListener(playStoreAction);
 
 		ImageView iconImage = (ImageView)findViewById(R.id.about_icon);
 		iconImage.setImageDrawable(aboutInfo.appIcon);
+		iconImage.setOnClickListener(playStoreAction);
 
 		TextView versionText = (TextView)findViewById(R.id.about_version);
 		versionText.setText(getString(R.string.about_version, aboutInfo.versionName));
 		versionText.setSelected(true); // hack to start marquee
+		versionText.setOnClickListener(settingsAction);
 
 		TextView versionCodeText = (TextView)findViewById(R.id.about_version_code);
 		versionCodeText.setText(String.valueOf(aboutInfo.versionCode));
-		versionCodeText.setVisibility(getResources().getBoolean(R.bool.in_test)? View.VISIBLE : View.GONE);
+		versionCodeText.setOnClickListener(settingsAction);
+		AndroidTools.displayedIf(versionCodeText, getResources().getBoolean(R.bool.in_test));
 
 		TextView packageText = (TextView)findViewById(R.id.about_package);
 		packageText.setText(aboutInfo.applicationId);
 		packageText.setSelected(true); // hack to start marquee
+		packageText.setOnClickListener(settingsAction);
 
 		initSection(R.id.about_faq, R.id.about_faq_title);
 		initSection(R.id.about_help, R.id.about_help_title);
 		initSection(R.id.about_tips, R.id.about_tips_title);
 	}
+
 	private void initSection(@IdRes int sectionContentID, @IdRes int sectionTitleID) {
 		TextView contentView = (TextView)findViewById(sectionContentID);
 		contentView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -93,6 +113,26 @@ public class AboutActivity extends ListActivity {
 		} catch (ActivityNotFoundException ex) {
 			LOG.warn("Cannot start feedback intent({})", aboutInfo, ex);
 			Toast.makeText(this, getString(R.string.about_feedback_fail, aboutInfo.email), Toast.LENGTH_LONG).show();
+		}
+	}
+
+	protected void openInSettings(AboutInfo aboutInfo) {
+		try {
+			startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+					.setData(Uri.parse("package:" + aboutInfo.applicationId))
+			);
+		} catch (ActivityNotFoundException ex) {
+			LOG.warn("Cannot open app info in Settings", ex);
+		}
+	}
+
+	protected void openInPlayStore(AboutInfo aboutInfo) {
+		try {
+			startActivity(new Intent(Intent.ACTION_VIEW)
+					.setData(Uri.parse("market://details?id=" + aboutInfo.applicationId))
+			);
+		} catch (ActivityNotFoundException ex) {
+			LOG.warn("Cannot open app info in Play Store", ex);
 		}
 	}
 
