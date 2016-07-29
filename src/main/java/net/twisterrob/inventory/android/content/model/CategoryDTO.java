@@ -13,7 +13,7 @@ import android.text.SpannableStringBuilder;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
-import net.twisterrob.inventory.android.content.contract.Category;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog;
 
 public class CategoryDTO extends ImagedDTO {
@@ -56,7 +56,7 @@ public class CategoryDTO extends ImagedDTO {
 	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName,
 			boolean deep) {
 		try {
-			CharSequence keywords = AndroidTools.getText(context, categoryName + "_keywords");
+			CharSequence keywords = AndroidTools.getText(context, ResourceNames.getKeywordsName(categoryName));
 			if (deep) {
 				SpannableStringBuilder more = new SpannableStringBuilder(keywords);
 				for (String sub : getCache(context).getChildren(categoryName)) {
@@ -106,7 +106,7 @@ public class CategoryDTO extends ImagedDTO {
 
 	public static @Nullable CharSequence getDescription(@NonNull Context context, @NonNull String categoryName) {
 		try {
-			return AndroidTools.getText(context, categoryName + "_description");
+			return AndroidTools.getText(context, ResourceNames.getDescriptionName(categoryName));
 		} catch (NotFoundException ex) {
 			return null;
 		}

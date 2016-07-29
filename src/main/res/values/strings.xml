@@ -256,4 +256,11 @@
 	<string name="backup_import_invalid_type">&#8220;%1$s&#8221; has invalid type: &#8220;%2$s&#8221;, used the default type.</string>
 	<string name="backup_import_invalid_image">&#8220;%1$s&#8221; has invalid image: &#8220;%2$s&#8221;, ignored image.</string>
 
+	<string name="types$prefix$opened" translatable="false">-</string>
+	<string name="types$prefix$closed" translatable="false">+</string>
+	<string name="types$prefix$no_children" translatable="false">&#32;</string>
+	<string name="types$format$more">%1$s <annotation color="secondaryText">(more)</annotation></string>
+	<string name="types$format$keywords">%1$s <annotation color="secondaryText">(%2$s)</annotation></string>
+	<string name="types$format$source">%1$s <annotation color="secondaryText">- %2$s</annotation></string>
+
 </resources>

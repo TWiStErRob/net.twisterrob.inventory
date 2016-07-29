@@ -139,13 +139,14 @@ public class CategoryHelpBuilder {
 		Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
 		CharSequence categoryTitle = AndroidTools.getText(context, categoryName);
 		if (parentID == null) {
+			CharSequence description = AndroidTools.getText(context, ResourceNames.getDescriptionName(categoryName));
 			out.append(String.format(Locale.ROOT,
 					"<h2 class=\"category\" id=\"%s\">%s<a href=\"#toc\">^</a><span class=\"description\">%s</span></h2>\n",
-					categoryName, categoryTitle, AndroidTools.getText(context, categoryName + "_description")));
+					categoryName, categoryTitle, description));
 		} else {
 			CharSequence keywords;
 			try {
-				keywords = AndroidTools.getText(context, categoryName + "_keywords");
+				keywords = AndroidTools.getText(context, ResourceNames.getKeywordsName(categoryName));
 			} catch (NotFoundException ignore) {
 				keywords = null;
 			}

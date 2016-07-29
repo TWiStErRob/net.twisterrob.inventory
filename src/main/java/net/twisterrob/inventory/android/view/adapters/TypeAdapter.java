@@ -7,13 +7,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.*;
 
-import static android.support.v4.content.ContextCompat.*;
-
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
-import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter.ViewHolder;
 
@@ -73,19 +71,19 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 
 	@Override public boolean isEnabled(int position) {
 		Cursor cursor = (Cursor)getItem(position);
-		Boolean enabled = DatabaseTools.getOptionalBoolean(cursor, "enabled");
+		Boolean enabled = DatabaseTools.getOptionalBoolean(cursor, TypeSource.ENABLED);
 		return enabled != null? enabled : super.isEnabled(position);
 	}
 
 	@Override protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
-		holder.title.setText(getName(cursor));
+		CharSequence title = getName(cursor);
 		if (this.indented) {
-			int level = DatabaseTools.getOptionalInt(cursor, "level", 0);
+			int level = DatabaseTools.getOptionalInt(cursor, TypeSource.LEVEL, 0);
 			int indent = (int)(mContext.getResources().getDimension(R.dimen.icon_context) * level);
 			AndroidTools.updateWidth(holder.spacer, indent);
 		}
 
-		if (DatabaseTools.getOptionalBoolean(cursor, "strong", false)) {
+		if (DatabaseTools.getOptionalBoolean(cursor, TypeSource.STRONG, false)) {
 			holder.title.setTypeface(null, Typeface.BOLD);
 		} else {
 			holder.title.setTypeface(null, Typeface.NORMAL);
@@ -97,51 +95,51 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 			boolean hasChildren = 0 < DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_DIRECT, 0);
 			if (hasChildren) {
 				if (isOpen) {
-					holder.state.setText("-");
+					holder.state.setText(R.string.types$prefix$opened);
 				} else {
-					holder.state.setText("+");
-					if (DatabaseTools.getOptionalBoolean(cursor, "mixed", false)) {
-						holder.title.setText(TextUtils.concat(holder.title.getText(), " (more)"));
+					holder.state.setText(R.string.types$prefix$closed);
+					if (DatabaseTools.getOptionalBoolean(cursor, TypeSource.MIXED, false)) {
+						title = TextTools.formatFormatted(mContext, R.string.types$format$more, title);
 					}
 				}
 			} else {
-				holder.state.setText(" ");
+				holder.state.setText(R.string.types$prefix$no_children);
 			}
 		}
 
-		if (this.displayKeywords && (!indented || DatabaseTools.getOptionalInt(cursor, "level", 0) != 0)) {
+		if (this.displayKeywords && (!indented || DatabaseTools.getOptionalInt(cursor, TypeSource.LEVEL, 0) != 0)) {
 			String name = DatabaseTools.getString(cursor, CommonColumns.NAME);
 			CharSequence keywords;
 			try {
-				keywords = AndroidTools.getText(mContext, name + "_keywords");
+				keywords = AndroidTools.getText(mContext, ResourceNames.getKeywordsName(name));
 			} catch (Exception ex) {
 				keywords = null;
 			}
 			if (!TextUtils.isEmpty(keywords)) {
-				keywords = TextTools.color(getColor(mContext, R.color.secondaryText), " (", keywords, ")");
-				holder.title.setText(TextUtils.concat(holder.title.getText(), keywords));
+				title = TextTools.formatFormatted(mContext, R.string.types$format$keywords, title, keywords);
 			}
 		}
 
 		if (this.displaySource) {
-			CharSequence source = DatabaseTools.getOptionalString(cursor, "source");
+			CharSequence source = DatabaseTools.getOptionalString(cursor, TypeSource.SOURCE);
 			if (!TextUtils.isEmpty(source)) {
-				source = TextTools.color(getColor(mContext, R.color.secondaryText), " - ", source);
-				holder.title.setText(TextUtils.concat(holder.title.getText(), source));
+				title = TextTools.formatFormatted(mContext, R.string.types$format$source, title, source);
 			}
 		}
 
+		TextTools.replaceColors(mContext, title);
+		holder.title.setText(title);
 		int fallbackID = ImagedDTO.getFallbackID(mContext, cursor);
 		Pic.svg().load(fallbackID).into(holder.image);
 	}
 
 	private boolean isOpen(Cursor cursor) {
 		int position = cursor.getPosition();
-		boolean mixed = DatabaseTools.getOptionalBoolean(cursor, "mixed", false);
-		int level = DatabaseTools.getOptionalInt(cursor, "level", 0);
+		boolean mixed = DatabaseTools.getOptionalBoolean(cursor, TypeSource.MIXED, false);
+		int level = DatabaseTools.getOptionalInt(cursor, TypeSource.LEVEL, 0);
 		if (!mixed) {
 			if (cursor.moveToNext()) {
-				int nextLevel = DatabaseTools.getOptionalInt(cursor, "level", 0);
+				int nextLevel = DatabaseTools.getOptionalInt(cursor, TypeSource.LEVEL, 0);
 				if (!cursor.moveToPosition(position)) {
 					throw new IllegalStateException("Cannot restore cursor position");
 				}
@@ -151,7 +149,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 			boolean foundTerminal = false;
 			boolean foundGroup = false;
 			while (cursor.moveToNext() && !(foundGroup && foundTerminal)) {
-				int nextLevel = DatabaseTools.getOptionalInt(cursor, "level", 0);
+				int nextLevel = DatabaseTools.getOptionalInt(cursor, TypeSource.LEVEL, 0);
 				if (nextLevel <= level) {
 					break;
 				}

@@ -1,11 +1,87 @@
 package net.twisterrob.android.utils.tools;
 
+import java.util.Locale;
+
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.support.annotation.*;
+import android.support.v4.content.ContextCompat;
 import android.text.*;
 import android.text.style.*;
 
 @SuppressWarnings("unused")
 public /*static*/ abstract class TextTools {
+	/**
+	 * Format a formatter-like styled text with other styled arguments.
+	 * Only works with indexed non-aligned strings, but multiple occurrences are allowed.
+	 * For example {@code "%1$s %2$s %1$s" + "<b>b</b>", "<i>i</i>"} will result in {@code "<b>b</b> <i>i</i> <b>b</b>"}.
+	 *
+	 * @param formatStringID a styled resource containing {@code %i$s} placeholders
+	 *                       where {@code i} is a number between {@code 1} (inclusive) and {@code args.length} (exclusive).
+	 *
+	 * @param args styled texts to put in placeholders
+	 * @return formatted text mixing all the arguments
+	 */
+	public static CharSequence formatFormatted(Context context, int formatStringID, CharSequence... args) {
+		CharSequence formatString = context.getText(formatStringID);
+		SpannableStringBuilder format = new SpannableStringBuilder(formatString);
+		for (int i = 0; i < args.length; i++) {
+			CharSequence arg = args[i];
+			String placeholder = "%" + (i + 1) + "$s";
+			int placeholderIndex = 0;
+			while (true) {
+				placeholderIndex = TextUtils.indexOf(format, placeholder, placeholderIndex);
+				if (placeholderIndex == -1) {
+					break;
+				}
+				format.replace(placeholderIndex, placeholderIndex + placeholder.length(), arg);
+			}
+		}
+		return format;
+	}
+
+	/**
+	 * Does a color replacement if the type of the text allows it.
+	 * @see #replaceColors(Context, Spannable)
+	 */
+	public static CharSequence replaceColors(Context context, CharSequence text) {
+		if (!(text instanceof Spannable)) {
+			return text;
+		}
+		return replaceColors(context, (Spannable)text);
+	}
+
+	/**
+	 * Replaces all {@code <annotation color="colorResource">text</annotation>} markers
+	 * with a {@link ForegroundColorSpan} with the corresponding color loaded from resources.
+	 *
+	 * @return the original object with replaced placeholders
+	 * @throws android.content.res.Resources.NotFoundException if the color name is not found
+	 */
+	public static <T extends Spannable> T replaceColors(Context context, T text) throws Resources.NotFoundException {
+		Annotation[] spans = text.getSpans(0, text.length(), Annotation.class);
+		for (Annotation a : spans) {
+			if ("color".equals(a.getKey())) {
+				try {
+					@ColorRes int colorId = AndroidTools.getColorResourceID(context, a.getValue());
+					@ColorInt int color = ContextCompat.getColor(context, colorId);
+					text.setSpan(new ForegroundColorSpan(color),
+							text.getSpanStart(a), text.getSpanEnd(a), text.getSpanFlags(a));
+					text.removeSpan(a);
+				} catch (Resources.NotFoundException ex) {
+					String message = String.format(Locale.ROOT, "Cannot find color resource named %s in %s",
+							a.getValue(), context.getPackageName());
+					Resources.NotFoundException newEx = new Resources.NotFoundException(message);
+					//noinspection UnnecessaryInitCause it's necessary, constructor was introduced in API 24
+					newEx.initCause(ex);
+					throw newEx;
+				}
+			}
+		}
+		return text;
+	}
+
 	@SuppressWarnings("UnusedReturnValue")
 	public static class DescriptionBuilder {
 		SpannableStringBuilder text = new SpannableStringBuilder();

@@ -71,7 +71,7 @@ public class CategoryCache {
 
 		suggester.addText(categoryID, AndroidTools.getText(context, categoryName));
 		try {
-			suggester.addText(categoryID, AndroidTools.getText(context, categoryName + "_keywords"));
+			suggester.addText(categoryID, AndroidTools.getText(context, ResourceNames.getKeywordsName(categoryName)));
 		} catch (NotFoundException ex) {
 			// ignore and continue
 		}

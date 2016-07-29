@@ -83,6 +83,7 @@ public /*static*/ abstract class AndroidTools {
 	public static final String RES_TYPE_STRING = "string";
 	public static final String RES_TYPE_RAW = "raw";
 	public static final String RES_TYPE_DRAWABLE = "drawable";
+	public static final String RES_TYPE_COLOR = "color";
 
 	public static boolean hasPermission(Context context, String permission) {
 		PackageManager packageManager = context.getPackageManager();
@@ -138,6 +139,10 @@ public /*static*/ abstract class AndroidTools {
 		return getResourceID(context, RES_TYPE_RAW, rawResourceName);
 	}
 
+	public static @ColorRes int getColorResourceID(@Nullable Context context, String drawableResourceName) {
+		return getResourceID(context, RES_TYPE_COLOR, drawableResourceName);
+	}
+	
 	public static @DrawableRes int getDrawableResourceID(@Nullable Context context, String drawableResourceName) {
 		return getResourceID(context, RES_TYPE_DRAWABLE, drawableResourceName);
 	}

@@ -97,7 +97,7 @@ public class ChangeTypeListener implements OnClickListener {
 		}
 		@Override public CharSequence getKeywords(Cursor cursor) {
 			String propertyType = DatabaseTools.getString(cursor, PropertyType.NAME);
-			return AndroidTools.getText(context, propertyType + "_keywords");
+			return AndroidTools.getText(context, ResourceNames.getKeywordsName(propertyType));
 		}
 	}
 
@@ -121,7 +121,7 @@ public class ChangeTypeListener implements OnClickListener {
 		}
 		@Override public CharSequence getKeywords(Cursor cursor) {
 			String roomType = DatabaseTools.getString(cursor, RoomType.NAME);
-			return AndroidTools.getText(context, roomType + "_keywords");
+			return AndroidTools.getText(context, ResourceNames.getKeywordsName(roomType));
 		}
 	}
 
