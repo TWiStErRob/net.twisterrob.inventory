@@ -90,6 +90,11 @@ public class ResourcePreferences extends SharedPreferencesWrapper {
 		return new ResourcePreferences.Editor(res, super.edit());
 	}
 
+	public boolean contains(@StringRes int prefName) {
+		String prefKey = res.getString(prefName);
+		return super.contains(prefKey);
+	}
+
 	public String getString(@StringRes int prefName, String defValue) {
 		String prefKey = res.getString(prefName);
 		return super.getString(prefKey, defValue);
@@ -199,6 +204,11 @@ public class ResourcePreferences extends SharedPreferencesWrapper {
 		public Editor(Resources res, SharedPreferences.Editor editor) {
 			super(editor);
 			this.res = res;
+		}
+
+		public Editor remove(@StringRes int prefName) {
+			String prefKey = res.getString(prefName);
+			return super.remove(prefKey);
 		}
 
 		public Editor putString(@StringRes int prefName, @StringRes int resource) {

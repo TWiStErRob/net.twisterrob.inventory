@@ -97,12 +97,16 @@ public abstract class BaseApp extends android.app.Application {
 			AndroidTools.setContext(this);
 			initStetho();
 		}
+		initPreferences();
+		database = createDatabase();
+	}
+
+	protected void initPreferences() {
 		if (preferencesResource != AndroidTools.INVALID_RESOURCE_ID) {
 			// may cause StrictModeDiskReadViolation, but necessary for startup since anything can read the preferences
 			PreferenceManager.setDefaultValues(this, preferencesResource, false);
 		}
 		prefs = new ResourcePreferences(getResources(), PreferenceManager.getDefaultSharedPreferences(this));
-		database = createDatabase();
 	}
 
 	/**

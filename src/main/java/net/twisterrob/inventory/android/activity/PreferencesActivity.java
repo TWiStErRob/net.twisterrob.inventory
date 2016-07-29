@@ -9,15 +9,13 @@ import net.twisterrob.inventory.android.*;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		addPreferencesFromResource(R.xml.preferences);
 	}
 
-	@Override
-	protected void onStart() {
+	@Override protected void onStart() {
 		super.onStart();
 		SharedPreferences prefs = getPrefs();
 		for (String prefKey : prefs.getAll().keySet()) {
@@ -28,14 +26,12 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 		}
 	}
 
-	@Override
-	protected void onResume() {
+	@Override protected void onResume() {
 		super.onResume();
 		getPrefs().registerOnSharedPreferenceChangeListener(this);
 	}
 
-	@Override
-	protected void onPause() {
+	@Override protected void onPause() {
 		getPrefs().unregisterOnSharedPreferenceChangeListener(this);
 		super.onPause();
 	}

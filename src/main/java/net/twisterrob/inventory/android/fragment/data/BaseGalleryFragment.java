@@ -38,10 +38,10 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	protected RecyclerViewLoaderController<?, ?> listController;
 	protected SelectionActionMode selectionMode;
 
-	public void setHeader(BaseFragment<?> headerFragment) {
+	public void setHeader(@Nullable BaseFragment<?> headerFragment) {
 		this.header = headerFragment;
 	}
-	public BaseFragment<?> getHeader() {
+	public @Nullable BaseFragment<?> getHeader() {
 		return header;
 	}
 	public boolean hasHeader() {
