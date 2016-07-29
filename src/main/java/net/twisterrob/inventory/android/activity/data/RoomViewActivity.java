@@ -19,7 +19,7 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 	}
 
 	@Override protected ItemListFragment onCreateFragment() {
-		return ItemListFragment.newRoomInstance(getExtraRoomID()).addHeader();
+		return ItemListFragment.newRoomInstance(getExtraRoomID()).addHeader(null);
 	}
 
 	public void roomLoaded(RoomDTO room) {

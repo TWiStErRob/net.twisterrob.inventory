@@ -20,7 +20,7 @@ public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 	}
 
 	@Override protected ItemListFragment onCreateFragment() {
-		return ItemListFragment.newInstance(getExtraItemID()).addHeader();
+		return ItemListFragment.newInstance(getExtraItemID()).addHeader(getIntent().getExtras());
 	}
 
 	public void itemLoaded(ItemDTO item) {

@@ -5,6 +5,7 @@ import org.slf4j.*;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -14,7 +15,7 @@ import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.fragment.ListViewFragment;
+import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.view.*;
 
@@ -157,15 +158,21 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		return fragment;
 	}
 
-	public ItemListFragment addHeader() {
+	public ItemListFragment addHeader(@Nullable Bundle extras) {
 		Bundle args = getArguments();
+		BaseFragment<?> header = null;
 		if (args.containsKey(Extras.PARENT_ID)) {
-			setHeader(ItemViewFragment.newInstance(getArgParentItemID()));
+			header = ItemViewFragment.newInstance(getArgParentItemID());
 		} else if (args.containsKey(Extras.ROOM_ID)) {
-			setHeader(RoomViewFragment.newInstance(getArgRoomID()));
+			header = RoomViewFragment.newInstance(getArgRoomID());
 		} else if (args.containsKey(Extras.LIST_ID)) {
-			setHeader(ListViewFragment.newInstance(getArgListID()));
+			header = ListViewFragment.newInstance(getArgListID());
 		}
+		if (header != null && extras != null) {
+			// TODO lazy one, maybe be more explicit with BaseViewFragment.SHOW_DETAILS
+			header.getArguments().putAll(extras);
+		}
+		setHeader(header);
 		return this;
 	}
 }

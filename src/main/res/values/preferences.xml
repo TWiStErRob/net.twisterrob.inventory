@@ -2,19 +2,29 @@
 <resources>
 	<string name="pref_activity_title">Settings</string>
 
+	<string name="pref_version" translatable="false">version</string>
+	<integer name="pref_version_default" translatable="false">1</integer>
+
 	<string name="pref_currentLanguage" translatable="false">currentLanguage</string>
 	<string name="pref_state_backup_path" translatable="false">backupPath</string>
 
 	<string name="pref_defaultViewPage_title">Default Details Page</string>
 	<string name="pref_defaultViewPage" translatable="false">defaultViewPage</string>
-	<string name="pref_defaultViewPage_default" translatable="false">@string/pref_defaultViewPage_image</string>
+	<string name="pref_defaultViewPage_default" translatable="false">@string/pref_defaultViewPage_auto</string>
+	<!-- Certain places, for example opening a search result, may benefit from displaying a different page in the header. -->
+	<string name="pref_defaultViewPage_auto_title">Automatic</string>
+	<string name="pref_defaultViewPage_auto" translatable="false">auto</string>
+	<string name="pref_defaultViewPage_image_title">Image</string>
 	<string name="pref_defaultViewPage_image" translatable="false">image</string>
+	<string name="pref_defaultViewPage_details_title">Details &amp; Statistics</string>
 	<string name="pref_defaultViewPage_details" translatable="false">details</string>
-	<string-array name="pref_defaultViewPage_entries">
-		<item>Image</item>
-		<item>Details &amp; Statistics</item>
+	<string-array name="pref_defaultViewPage_entries" translatable="false">
+		<item>@string/pref_defaultViewPage_auto_title</item>
+		<item>@string/pref_defaultViewPage_image_title</item>
+		<item>@string/pref_defaultViewPage_details_title</item>
 	</string-array>
 	<string-array name="pref_defaultViewPage_values" translatable="false">
+		<item>@string/pref_defaultViewPage_auto</item>
 		<item>@string/pref_defaultViewPage_image</item>
 		<item>@string/pref_defaultViewPage_details</item>
 	</string-array>
@@ -31,7 +41,7 @@
 	<!-- Never suggest Categories. Manual suggestion is still there via action_category_suggest in context menu -->
 	<string name="pref_suggestCategory_manual_title">Never</string>
 	<string name="pref_suggestCategory_manual" translatable="false">manual</string>
-	<string-array name="pref_suggestCategory_entries">
+	<string-array name="pref_suggestCategory_entries" translatable="false">
 		<item>@string/pref_suggestCategory_always_title</item>
 		<item>@string/pref_suggestCategory_unmatched_title</item>
 		<item>@string/pref_suggestCategory_manual_title</item>

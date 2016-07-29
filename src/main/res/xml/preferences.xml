@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:key="root_screen"
 	>
 	<PreferenceCategory android:title="Preferences">
 		<ListPreference
@@ -97,4 +99,17 @@
 				/>
 		</Preference>
 	</PreferenceCategory>
+
+	<net.twisterrob.android.content.pref.InvisiblePreferences
+		android:title="Internals"
+		android:dependency="root_screen">
+		<net.twisterrob.android.content.pref.ValuePreference
+			android:key="@string/pref_showWelcome"
+			android:defaultValue="@bool/pref_showWelcome_default"
+			/>
+		<net.twisterrob.android.content.pref.ValuePreference
+			android:key="@string/pref_version"
+			android:defaultValue="@integer/pref_version_default"
+			/>
+	</net.twisterrob.android.content.pref.InvisiblePreferences>
 </PreferenceScreen>

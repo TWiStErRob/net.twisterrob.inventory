@@ -20,6 +20,7 @@ import net.twisterrob.inventory.android.view.ChangeTypeListener;
 
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
+	public static final String KEY_PAGE = "detailsPage";
 
 	protected ViewPager pager;
 	private Intent shareIntent;
@@ -36,8 +37,19 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 	public void onSingleRowLoaded(DTO entity) {
 		ImageAndDescriptionAdapter adapter = new ImageAndDescriptionAdapter(entity);
 		pager.setAdapter(adapter);
-		pager.setCurrentItem(adapter.getDefaultPosition());
+		pager.setCurrentItem(adapter.getPositionOf(getDefaultPosition()));
 		shareIntent = entity.createShareIntent(getContext());
+	}
+
+	private String getDefaultPosition() {
+		String auto = getString(R.string.pref_defaultViewPage_auto);
+		String preference = App.prefs().getString(R.string.pref_defaultViewPage, R.string.pref_defaultViewPage_default);
+		String override = getArguments().getString(KEY_PAGE);
+		String page = preference;
+		if (auto.equals(page) && override != null) {
+			page = override;
+		}
+		return page;
 	}
 
 	protected abstract CharSequence getDetailsString(DTO entity, boolean DEBUG);
@@ -77,10 +89,6 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			return getResources().getTextArray(R.array.pref_defaultViewPage_entries)[position];
 		}
 
-		public int getDefaultPosition() {
-			String page = App.prefs().getString(R.string.pref_defaultViewPage, R.string.pref_defaultViewPage_default);
-			return getPositionOf(page);
-		}
 		public int getPositionOf(String page) {
 			String image = getString(R.string.pref_defaultViewPage_image);
 			String details = getString(R.string.pref_defaultViewPage_details);

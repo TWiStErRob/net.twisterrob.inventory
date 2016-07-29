@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.ItemViewActivity;
-import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
+import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
 public class SearchResultsActivity extends SingleFragmentActivity<ItemListFragment> implements ItemsEvents {
@@ -52,6 +52,7 @@ public class SearchResultsActivity extends SingleFragmentActivity<ItemListFragme
 			Uri uri = fixUri(intent.getData());
 			LOG.debug("Search '{}' redirecting VIEW for {}", query, uri);
 			Intent redirect = new Intent(Intent.ACTION_VIEW, uri);
+			redirect.putExtra(BaseViewFragment.KEY_PAGE, getString(R.string.pref_defaultViewPage_details));
 			if (Constants.DISABLE) {
 				TaskStackBuilder.create(getApplicationContext())
 				                .addNextIntentWithParentStack(redirect)
@@ -104,7 +105,9 @@ public class SearchResultsActivity extends SingleFragmentActivity<ItemListFragme
 	}
 
 	public void itemSelected(long itemID) {
-		startActivity(ItemViewActivity.show(itemID));
+		Intent view = ItemViewActivity.show(itemID);
+		view.putExtra(BaseViewFragment.KEY_PAGE, getString(R.string.pref_defaultViewPage_details));
+		startActivity(view);
 	}
 
 	public void itemActioned(long itemID) {

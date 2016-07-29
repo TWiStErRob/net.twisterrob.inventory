@@ -59,6 +59,11 @@ public class App extends BaseApp {
 		}).execute();
 	}
 
+	@Override protected void initPreferences() {
+		super.initPreferences();
+		new PreferencesMigrator(this, prefs()).migrate();
+	}
+
 	@Override public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		updateLanguage(AndroidTools.getLocale(newConfig));
