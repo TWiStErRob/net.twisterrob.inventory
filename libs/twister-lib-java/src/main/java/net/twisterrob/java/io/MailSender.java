@@ -7,17 +7,14 @@ import java.util.Locale;
 import net.twisterrob.java.utils.ArrayTools;
 
 public class MailSender {
-	private String[] m_to;
-	private String m_from = ""; // email sent from
-
-	private String m_host = "http://twisterrob-london.appspot.com/InternalFeedback"; // default smtp server
-
-	private String m_subject = ""; // email subject
-	private String m_body = ""; // email body
+	private String from = "";
+	private String[] to;
+	private String subject = "";
+	private String body = "";
 
 	public void send() throws IOException {
 		try {
-			URL url = new URL(m_host);
+			URL url = new URL("http://twisterrob-london.appspot.com/InternalFeedback");
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
@@ -36,31 +33,31 @@ public class MailSender {
 	}
 
 	public String getBody() {
-		return m_body;
+		return body;
 	}
 	public void setBody(String body) {
-		this.m_body = body;
+		this.body = body;
 	}
 
 	public String[] getTo() {
-		return m_to;
+		return to;
 	}
 	public void setTo(String... toArr) {
-		this.m_to = toArr;
+		this.to = toArr;
 	}
 
 	public String getFrom() {
-		return m_from;
+		return from;
 	}
 	public void setFrom(String string) {
-		this.m_from = string;
+		this.from = string;
 	}
 
 	public String getSubject() {
-		return m_subject;
+		return subject;
 	}
 	public void setSubject(String string) {
-		this.m_subject = string;
+		this.subject = string;
 	}
 
 	@Override public String toString() {
