@@ -3,8 +3,6 @@ package net.twisterrob.android.utils.tools;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
-import org.easymock.internal.ReflectionUtils;
-
 /** Some idiot made the Size class a non-static inner class of Camera... and there's also no toString on it. */
 @SuppressWarnings("deprecation")
 /*default*/ class CameraSizeHelper {
@@ -12,7 +10,7 @@ import org.easymock.internal.ReflectionUtils;
 
 	static {
 		try {
-			Constructor<android.hardware.Camera> ctor = ReflectionUtils.getConstructor(android.hardware.Camera.class);
+			Constructor<android.hardware.Camera> ctor = android.hardware.Camera.class.getDeclaredConstructor();
 			ctor.setAccessible(true);
 			CAMERA = ctor.newInstance();
 		} catch (Exception e) {

@@ -21,6 +21,7 @@ public class ObjectTools {
 
 	/**
 	 * Null-safe equals.
+	 * @see java.util.Objects#equals(Object, Object)
 	 */
 	public static boolean equals(Object o1, Object o2) {
 		//noinspection ConstantConditions o1 is always null at the end, but still call equals with it
