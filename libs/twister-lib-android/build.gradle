@@ -11,7 +11,7 @@ buildscript {
 	dependencies {
 		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		//noinspection GradleDynamicVersion
-		classpath 'net.twisterrob.gradle:plugin:0.7.+'
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}
 }
 
@@ -35,28 +35,20 @@ dependencies {
 	} else {
 		compile 'net.twisterrob:twister-lib-java:1.0-SNAPSHOT'
 	}
-	def supportVersion = '24.1.1'
-	compile "com.android.support:support-v4:${supportVersion}"
-	compile "com.android.support:appcompat-v7:${supportVersion}"
-	compile "com.android.support:cardview-v7:${supportVersion}"
-	compile "com.android.support:recyclerview-v7:${supportVersion}"
-	compile "com.android.support:design:${supportVersion}"
-	//compile "com.android.support:palette-v7:${supportVersion}"
+	compile "com.android.support:support-v4:${VERSION_SUPPORT}"
+	compile "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
+	compile "com.android.support:cardview-v7:${VERSION_SUPPORT}"
+	compile "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
+	compile "com.android.support:design:${VERSION_SUPPORT}"
+	//compile "com.android.support:palette-v7:${VERSION_SUPPORT}"
 
 	// FIXME @Deprecated, use Glide
 	compile 'com.jakewharton:disklrucache:2.0.2'
 	compile 'com.caverock:androidsvg:1.2.1'
 	compile 'com.rarepebble:colorpicker:1.7.0'
-	compile 'com.github.bumptech.glide:glide:3.8.0-SNAPSHOT'
+	compile "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
 
-	testCompile('junit:junit:4.12') {
-		exclude module: 'hamcrest'
-		exclude module: 'hamcrest-core'
-	}
-	testCompile('org.hamcrest:hamcrest-junit:2.0.0.0') {
-		exclude module: 'junit'
-	}
-	testCompile 'org.easymock:easymock:3.4'
+	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 }
 
 android {
@@ -64,6 +56,7 @@ android {
 		unitTests.returnDefaultValues = true
 	}
 	variantFilter {
+		// have only a release variant
 		if (it.buildType.name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
 			it.setIgnore(true);
 		}
