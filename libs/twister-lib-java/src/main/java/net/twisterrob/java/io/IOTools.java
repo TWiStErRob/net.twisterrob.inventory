@@ -370,4 +370,10 @@ public /*static*/ abstract class IOTools {
 	public static boolean isValidFile(File file) {
 		return file != null && file.isFile() && file.exists();
 	}
+
+	public static void writeUTF8BOM(OutputStream out) throws IOException {
+		out.write(0xEF);
+		out.write(0xBB);
+		out.write(0xBF);
+	}
 }
