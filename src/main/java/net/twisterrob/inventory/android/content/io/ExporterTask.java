@@ -49,13 +49,20 @@ public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 	}
 
 	protected void publishStart() {
+		progress.pending = false;
 		progress.done = 0;
 		publishProgress();
 	}
 	protected void publishIncrement() {
-		progress.done++;
+		progress.pending = false;
+		++progress.done;
 		publishProgress();
 	}
+	protected void publishFinishing() {
+		progress.pending = true;
+		publishProgress();
+	}
+
 	protected void publishProgress() {
 		if (isCancelled()) {
 			throw new CancellationException();
@@ -72,15 +79,13 @@ public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 			OutputStream os = new FileOutputStream(file); // will be closed by finalizeExport
 			// CONSIDER wakelock?
 			progress.phase = Phase.Init;
-			publishStart();
+			publishProgress();
 			cursor = App.db().export();
 			progress.total = cursor.getCount();
+			publishStart();
 			exporter.initExport(os);
 
-			progress.phase = Phase.Data;
 			saveData();
-
-			progress.phase = Phase.Images;
 			saveImages();
 
 			exporter.finishExport();
@@ -105,6 +110,7 @@ public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 
 	// CONSIDER exporting Google Spreadsheet: http://stackoverflow.com/q/13229294/253468
 	protected void saveData() throws Throwable {
+		progress.phase = Phase.Data;
 		exporter.initData(cursor);
 
 		cursor.moveToPosition(-1);
@@ -116,11 +122,12 @@ public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 			exporter.writeData(cursor);
 			publishIncrement();
 		}
-
+		publishFinishing();
 		exporter.finishData(cursor);
 	}
 
 	private void saveImages() throws Throwable {
+		progress.phase = Phase.Images;
 		exporter.initImages(cursor);
 
 		cursor.moveToPosition(-1);
@@ -135,7 +142,7 @@ public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 			}
 			publishIncrement();
 		}
-
+		publishFinishing();
 		exporter.finishImages(cursor);
 	}
 
@@ -191,7 +198,7 @@ public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 		void exportFinished(@NonNull Progress progress);
 
 		final class Progress implements Cloneable {
-			public Phase phase;
+			public Phase phase = Phase.Init;
 			/** number of images done from total */
 			public int imagesDone;
 			/** total number of images */
@@ -200,6 +207,7 @@ public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 			public int done;
 			/** total number of items */
 			public int total;
+			public boolean pending = true;
 			public Throwable failure;
 
 			@Override public Progress clone() {
@@ -210,8 +218,9 @@ public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> {
 				}
 			}
 			@Override public String toString() {
-				return String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %s",
-						phase, done, total, imagesDone, imagesTotal, failure);
+				return String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %spending, %s",
+						phase, done, total, imagesDone, imagesTotal,
+						pending? "" : "not ", failure != null? failure : "no error");
 			}
 
 			public enum Phase {

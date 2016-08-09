@@ -23,7 +23,7 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 
 	private ExporterTask task;
 	private FragmentManager parentFragmentManager;
-	private Progress firstProgressToShow;
+	private Progress firstProgressToShow = new Progress();
 
 	@Override public void onResume() {
 		super.onResume();
@@ -63,26 +63,34 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 			LOG.warn("Premature progress, no dialog");
 		}
 	}
+
 	private void updateProgress(ProgressDialog dialog, Progress progress) {
 		switch (progress.phase) {
 			case Init:
 				dialog.setMessage(getString(R.string.backup_export_progress_init));
-				dialog.setIndeterminate(true);
+				updateProgress(dialog, progress.pending, 0, progress.total);
 				break;
 			case Data:
 				dialog.setMessage(getString(R.string.backup_export_progress_data));
-				dialog.setIndeterminate(false);
-				dialog.setProgress(progress.done);
-				dialog.setMax(progress.total);
+				updateProgress(dialog, progress.pending, progress.done, progress.total);
 				break;
 			case Images:
 				dialog.setMessage(getString(R.string.backup_export_progress_images,
 						progress.imagesTotal, progress.total));
-				dialog.setIndeterminate(false);
-				dialog.setProgress(progress.imagesDone);
-				dialog.setMax(progress.imagesTotal);
+				updateProgress(dialog, progress.pending, progress.imagesDone, progress.imagesTotal);
 				break;
 		}
+	}
+
+	private void updateProgress(ProgressDialog dialog, boolean pending, int current, int total) {
+		if (pending || total <= 0) {
+			pending = true;
+			current = 0;
+			total = 1;
+		}
+		dialog.setMax(total);
+		dialog.setProgress(current);
+		dialog.setIndeterminate(pending);
 	}
 
 	@Override public void exportFinished(@NonNull Progress res) {
@@ -134,9 +142,7 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 		dialog.setTitle(R.string.backup_export_progress_title);
 		// needs to be non-null at creation time to be able to change it later
 		dialog.setMessage(getActivity().getString(R.string.empty));
-		if (firstProgressToShow != null) {
-			updateProgress(dialog, firstProgressToShow);
-		}
+		updateProgress(dialog, firstProgressToShow);
 		return dialog;
 	}
 
