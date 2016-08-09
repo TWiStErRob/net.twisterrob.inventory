@@ -16,7 +16,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.io.*;
 import net.twisterrob.inventory.android.content.model.Types;
 
-import static net.twisterrob.inventory.android.content.io.xml.ZippedXMLExporter.*;
+import static net.twisterrob.inventory.android.content.io.xml.XMLExporter.*;
 
 public class XMLImporter implements Importer {
 	private static final Logger LOG = LoggerFactory.getLogger(XMLImporter.class);

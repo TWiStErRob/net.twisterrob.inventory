@@ -13,14 +13,13 @@ import android.util.Xml;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.io.*;
+import net.twisterrob.inventory.android.content.io.ExporterTask;
 import net.twisterrob.inventory.android.content.model.HierarchyBuilder;
 import net.twisterrob.java.utils.StringTools;
 
-public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
-	private static final Logger LOG = LoggerFactory.getLogger(ZippedXMLExporter.class);
+public class XMLExporter implements CursorExporter {
+	private static final Logger LOG = LoggerFactory.getLogger(XMLExporter.class);
 	public static final String NS = "";
 	public static final String TAG_ROOT = "inventory";
 	public static final String ATTR_COUNT = "approximateCount";
@@ -37,28 +36,19 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 	public static final String TAG_ITEM_REF = "item-ref";
 	public static final String ENCODING = "utf-8";
 
-	private Hierarchy hier;
+	private final Hierarchy hier = new Hierarchy();
+	private final XmlSerializer serializer = Xml.newSerializer();
 
-	public ZippedXMLExporter() {
-		super(Paths.BACKUP_DATA_FILENAME);
-	}
-
-	@Override public void initExport(OutputStream os) {
-		super.initExport(os);
-		hier = new Hierarchy();
-	}
-	@Override protected XmlSerializer initData(OutputStream dataStream, Cursor cursor) throws IOException {
-		XmlSerializer serializer = Xml.newSerializer();
+	@Override public void start(OutputStream dataStream, Cursor cursor) throws IOException {
 		serializer.setOutput(dataStream, ENCODING);
 		serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
 		serializer.startDocument(ENCODING, true);
 		serializer.startTag(NS, TAG_ROOT);
 		serializer.attribute(NS, ATTR_COUNT, String.valueOf(cursor.getCount()));
 		serializer.attribute(NS, ATTR_VERSION, "1.0");
-		return serializer;
 	}
 
-	@Override protected void writeData(XmlSerializer output, Cursor cursor) throws IOException {
+	@Override public void processEntry(Cursor cursor) throws IOException {
 		long id = DatabaseTools.getLong(cursor, CommonColumns.ID);
 		long parentID = DatabaseTools.getLong(cursor, ParentColumns.PARENT_ID);
 		Type type = Type.from(cursor, CommonColumns.TYPE);
@@ -77,12 +67,12 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		}
 	}
 
-	@Override protected void finishData(XmlSerializer output, Cursor cursor) throws IOException {
-		hier.write(output);
-		writeLists(output);
-		output.endTag(NS, TAG_ROOT);
-		output.endDocument();
-		output.flush();
+	@Override public void finish(Cursor cursor) throws IOException {
+		hier.write(serializer);
+		writeLists(serializer);
+		serializer.endTag(NS, TAG_ROOT);
+		serializer.endDocument();
+		serializer.flush();
 	}
 
 	@SuppressWarnings({"resource", "TryFinallyCanBeTryWithResources"})
@@ -96,6 +86,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 			lists.close();
 		}
 	}
+
 	@SuppressWarnings({"resource", "TryFinallyCanBeTryWithResources"})
 	private void writeList(XmlSerializer output, Cursor list) throws IOException {
 		long listID = DatabaseTools.getLong(list, CommonColumns.ID);
@@ -118,7 +109,7 @@ public class ZippedXMLExporter extends ZippedExporter<XmlSerializer> {
 		}
 	}
 
-	public static String nameColumn(Type type) {
+	private static String nameColumn(Type type) {
 		switch (type) {
 			case Property:
 				return Item.PROPERTY_NAME;

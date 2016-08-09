@@ -9,15 +9,17 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.InventoryProvider;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.io.xml.CursorExporter;
 
 @SuppressWarnings("RedundantThrows")
-public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
-	private final String fileName;
-	private ZipOutputStream zip;
-	private T dataOutput;
+public class ZippedExporter implements ExporterTask.Exporter {
+	protected final String fileName;
+	protected ZipOutputStream zip;
+	private CursorExporter dataOutput;
 
-	protected ZippedExporter(String fileName) {
+	public ZippedExporter(String fileName, CursorExporter exporter) {
 		this.fileName = fileName;
+		this.dataOutput = exporter;
 	}
 
 	@Override public void initExport(OutputStream os) {
@@ -31,21 +33,24 @@ public abstract class ZippedExporter<T> implements ExporterTask.Exporter {
 	}
 
 	@Override public void initData(Cursor cursor) throws Throwable {
-		zip.putNextEntry(new ZipEntry(fileName));
-		dataOutput = initData(zip, cursor);
+		dataOutput.start(startStream(zip), cursor);
 	}
-	protected abstract T initData(OutputStream dataStream, Cursor cursor) throws Throwable;
+	protected OutputStream startStream(ZipOutputStream zip) throws IOException {
+		zip.putNextEntry(new ZipEntry(fileName));
+		return zip;
+	}
 
 	@Override public void writeData(Cursor cursor) throws Throwable {
-		writeData(dataOutput, cursor);
+		dataOutput.processEntry(cursor);
 	}
-	protected abstract void writeData(T output, Cursor cursor) throws Throwable;
 
 	@Override public void finishData(Cursor cursor) throws Throwable {
-		finishData(dataOutput, cursor);
+		dataOutput.finish(cursor);
+		endStream();
+	}
+	protected void endStream() throws IOException {
 		zip.closeEntry();
 	}
-	protected abstract void finishData(T output, Cursor cursor) throws Throwable;
 
 	@Override public void initImages(Cursor cursor) {
 		// nop
