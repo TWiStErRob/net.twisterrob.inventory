@@ -4,7 +4,8 @@
 	<!ENTITY LI "\n&#8195;&#8226;&#8194;"><!-- m-space (\u2003) bullet (\u2022) n-space (\u2002) -->
 	]>
 <resources>
-	<string name="about_faq"><b>What is this app?</b>
+	<string name="about_faq"
+		><b>What is this app?</b>
 		\nThis is a home inventory application.
 		It helps you maintain a list of stuff you have, with an efficient interface and easy navigation.
 
@@ -34,7 +35,8 @@
 		Feel free to send any kind of comment, request, suggestion, error report;
 		just about any thought regarding this app.
 	</string>
-	<string name="about_help"><big><b>Structure</b></big>
+	<string name="about_help"
+		><big><b>Structure</b></big>
 		\n\n<b>Properties</b>
 		\nYour inventory, everything you own, must be located somewhere.
 		In the app, these locations are called <i>properties</i>;
@@ -188,15 +190,26 @@
 		\n\n\n<big><b>Backup</b></big>
 		\nYou can select a directory where you want to export the whole inventory and then press the “<i>Export</i>” button.
 		You can use the same browser to find an existing inventory backup and import it by tapping on it.
+		\nA backup contains all the images (JPEG), and details (XML) of the belongings in a compressed ZIP file.
+		As a convenience there\'s also an exported version of the inventory in the ZIP file
+		in HTML format (for Web&nbsp;Browsers) and in CSV format (for Excel).
 	</string>
-	<string name="about_tips">
+	<string name="about_tips"
+		><b>Usage</b>
 		&LI;If you have a steady hand, you can use the <i>Crop</i> button to take an image and crop it immediately.
-		&LI;If a belonging doesn\'t have an image, tap the ghost image to add a new image.
-		&LI;Other than the basic shelves and drawers, create compartments for atop a cupboard, and in front of or below for stuff on the ground.
-		&LI;Instead of deleting items you can create a “<i>Thrown Away</i>” room in a “<i>Virtual</i>” property and move stuff there.
-		It also helps to create separate <i>Groups</i> in that room: “<i>Broken</i>”, “<i>Expired</i>”, “<i>Used up</i>”, “<i>Sold</i>”, “<i>Gave away</i>” to record the reason.
-		&LI;Create an “<i>Original Packaging</i>” room in a “<i>Virtual</i>” property to record what was in the original boxes in case you want to re-sell stuff later.
+		&LI;If a belonging doesn\'t have an image, tap the ghost image in the header to add a new image; editing will start automatically.
+
+		\n\n<b>Organization</b>
+		&LI;When inventorying a cupboard, create compartments for “<i>Atop</i>”, “<i>In&nbsp;front&nbsp;of</i>”, “<i>Below</i>” for stuff around it.
+		&LI;Instead of deleting items you can create a “<i>Thrown&nbsp;Away</i>” room in a “<i>Virtual</i>” property and move stuff there.
+		It also helps to create separate <i>Groups</i> in that room: “<i>Broken</i>”, “<i>Expired</i>”, “<i>Used&nbsp;up</i>”, “<i>Sold</i>”, “<i>Gave&nbsp;away</i>” to record the reason.
+		&LI;Create an “<i>Original&nbsp;Packaging</i>” room in a “<i>Virtual</i>” property to record what was in the original boxes in case you want to re-sell stuff later.
+
+		\n\n<b>Naming</b>
 		&LI;Put an exclamation mark (!) in front of a belonging\'s name to bring it to the top of the list.
+		&LI;To inventory how many you have of an indistinguishable item, name it similar to “<i>Steel spoon&nbsp;x5</i>”.
+		&LI;To inventory the color/size of an item, name it similar to “<i>USB cable&nbsp;(white,&nbsp;30cm)</i>”, “<i>Shoe box&nbsp;(blue,&nbsp;30×20×10&nbsp;cm)</i>”.
+
 		<!--&LI;In case your device doesn\'t have enough free space to export a backup use an USB stick with an OTG cable.-->
 	</string>
 </resources>

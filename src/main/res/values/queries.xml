@@ -246,7 +246,7 @@
 			ip.roomID                                       as roomID,
 			ip.roomName                                     as roomName,
 			i.parent                                        as parent,
-			group_concat(Path.part, ' < ')                  as parentName,
+			group_concat(Path.part, ' ◄ ')                  as parentName,
 			(select count(*) from Item where parent = i._id) as countDirectItems,
 			(select count(distinct item) from Item_Path_Node where node = i._id and item <> node) as countAllItems
 		from      Item      i
@@ -433,7 +433,7 @@
 			c.name                                              as name,
 			c.image                                             as typeImage,
 			c.parent                                            as parent,
-			ifNULL(ppnc.value || ' > ', '') || pnc.value        as parentName,
+			ifNULL(ppnc.value || ' ► ', '') || pnc.value        as parentName,
 			(select count(*) from Category where parent = c._id) as countChildren,
 			(select count(*) from Category_Descendant where category = c._id and category <> descendant) as countAllChildren,
 			(select count(*) from Item where category = c._id)   as countDirectItems,
