@@ -45,6 +45,7 @@ public class ZippedXMLExporter extends ZippedExporter {
 	}
 
 	private void copyXSLT(InputStream xsltStream) throws IOException {
+		LOG.trace("Copying into " + XSLT_NAME);
 		try {
 			zip.putNextEntry(new ZipEntry(XSLT_NAME));
 			IOTools.copyStream(xsltStream, zip, false);
@@ -56,6 +57,7 @@ public class ZippedXMLExporter extends ZippedExporter {
 
 	private void transform(String filename, InputStream xml, InputStream xslt) throws IOException {
 		try {
+			LOG.trace("Transforming into {}", filename);
 			zip.putNextEntry(new ZipEntry(filename));
 			IOTools.writeUTF8BOM(zip); // required, because XSLT 1.0 cannot force a BOM, and some tools need it (Excel)
 			TransformerFactory factory = TransformerFactory.newInstance();

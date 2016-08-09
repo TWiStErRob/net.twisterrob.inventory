@@ -39,21 +39,22 @@ public class XMLExporter implements CursorExporter {
 
 	private final Hierarchy hier = new Hierarchy();
 	private final XmlSerializer serializer = Xml.newSerializer();
-	private final String stylesheetHref;
+	private final String xsltHref;
 
-	public XMLExporter(String stylesheetHref) {
-		this.stylesheetHref = stylesheetHref;
+	public XMLExporter(String xsltHref) {
+		this.xsltHref = xsltHref;
 	}
 
 	@Override public void start(OutputStream dataStream, Cursor cursor) throws IOException {
 		serializer.setOutput(dataStream, ENCODING);
 		serializer.startDocument(ENCODING, true);
-		if (stylesheetHref != null) {
-//			output.ignorableWhitespace("\n"); // this is output as text() and that resets indent[depth] to false
-			serializer
-					.comment("Some browsers may not show anything if the " + stylesheetHref + " file cannot be found, "
-							+ "in that case remove the <?xml-stylesheet... ?> processing instruction.");
-			serializer.processingInstruction("xml-stylesheet type=\"text/xsl\" href=\"" + stylesheetHref + "\"");
+		if (xsltHref != null) {
+			// this is output as text() and that resets indent[depth] to false, need to set indent after this
+			serializer.ignorableWhitespace(System.getProperty("line.separator"));
+			serializer.comment(" Some browsers may not show anything if the " + xsltHref + " file cannot be found,\n"
+					+ "     in that case remove the <?xml-stylesheet... ?> processing instruction. ");
+			serializer.ignorableWhitespace(System.getProperty("line.separator"));
+			serializer.processingInstruction("xml-stylesheet type=\"text/xsl\" href=\"" + xsltHref + "\"");
 		}
 		serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true); // must be after text()
 		serializer.startTag(NS, TAG_ROOT);
