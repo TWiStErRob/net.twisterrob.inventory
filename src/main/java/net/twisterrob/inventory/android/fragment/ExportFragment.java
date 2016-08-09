@@ -14,10 +14,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.content.io.*;
+import net.twisterrob.inventory.android.content.io.ExporterTask;
 import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks;
-import net.twisterrob.inventory.android.content.io.xml.XMLExporter;
+import net.twisterrob.inventory.android.content.io.xml.ZippedXMLExporter;
 
 public class ExportFragment extends BaseDialogFragment implements ExportCallbacks {
 	private static final Logger LOG = LoggerFactory.getLogger(ExportFragment.class);
@@ -144,7 +143,7 @@ public class ExportFragment extends BaseDialogFragment implements ExportCallback
 	public static ExportFragment create(Context context, FragmentManager fm) {
 		ExportFragment fragment = new ExportFragment();
 		fragment.parentFragmentManager = fm;
-		fragment.task = new ExporterTask(new ZippedExporter(Paths.BACKUP_DATA_FILENAME, new XMLExporter()), context);
+		fragment.task = new ExporterTask(new ZippedXMLExporter(), context);
 		fragment.task.setCallbacks(fragment);
 		return fragment;
 	}

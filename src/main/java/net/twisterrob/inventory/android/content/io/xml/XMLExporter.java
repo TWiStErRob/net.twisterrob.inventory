@@ -20,6 +20,7 @@ import net.twisterrob.java.utils.StringTools;
 
 public class XMLExporter implements CursorExporter {
 	private static final Logger LOG = LoggerFactory.getLogger(XMLExporter.class);
+
 	public static final String NS = "";
 	public static final String TAG_ROOT = "inventory";
 	public static final String ATTR_COUNT = "approximateCount";
@@ -38,11 +39,23 @@ public class XMLExporter implements CursorExporter {
 
 	private final Hierarchy hier = new Hierarchy();
 	private final XmlSerializer serializer = Xml.newSerializer();
+	private final String stylesheetHref;
+
+	public XMLExporter(String stylesheetHref) {
+		this.stylesheetHref = stylesheetHref;
+	}
 
 	@Override public void start(OutputStream dataStream, Cursor cursor) throws IOException {
 		serializer.setOutput(dataStream, ENCODING);
-		serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
 		serializer.startDocument(ENCODING, true);
+		if (stylesheetHref != null) {
+//			output.ignorableWhitespace("\n"); // this is output as text() and that resets indent[depth] to false
+			serializer
+					.comment("Some browsers may not show anything if the " + stylesheetHref + " file cannot be found, "
+							+ "in that case remove the <?xml-stylesheet... ?> processing instruction.");
+			serializer.processingInstruction("xml-stylesheet type=\"text/xsl\" href=\"" + stylesheetHref + "\"");
+		}
+		serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true); // must be after text()
 		serializer.startTag(NS, TAG_ROOT);
 		serializer.attribute(NS, ATTR_COUNT, String.valueOf(cursor.getCount()));
 		serializer.attribute(NS, ATTR_VERSION, "1.0");
