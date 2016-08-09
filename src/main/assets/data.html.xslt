@@ -203,7 +203,7 @@
 	<xsl:template name="location">
 		<xsl:variable name="location" xml:space="preserve"><!--
 		--><xsl:for-each select="ancestor::*/@name"><!--
-			--><xsl:value-of select="." /> ► <!--
+			--><xsl:value-of select="." /> ▶ <!--
 		--></xsl:for-each><!--
 		--><xsl:value-of select="@name" /><!--
 		--></xsl:variable>

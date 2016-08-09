@@ -73,7 +73,7 @@
 		&LI;there are possibly boxes on top of the wardrobe
 		\nAll of these (main area, bottom, atop) can be represented as items in the <i>compartment</i> category.
 		For example, imagine there\'s a squash ball inside it\'s packaging in that box at the bottom, the hierarchy of items are:
-		(<i>Home</i> ► <i>Bedroom</i> ►) <i>Wardrobe</i> ► <i>Bottom</i> ► <i>Carton box</i> ► <i>Squash ball box</i> ► <i>Blue squash ball</i>.
+		(<i>Home</i> ▶ <i>Bedroom</i> ▶) <i>Wardrobe</i> ▶ <i>Bottom</i> ▶ <i>Carton box</i> ▶ <i>Squash ball box</i> ▶ <i>Blue squash ball</i>.
 		Remember, using compartments to organize items, and inputting the packaging are optional.
 
 		\n\n<b>Items (Groups)</b>

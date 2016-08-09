@@ -69,7 +69,7 @@
 				<xsl:with-param name="text" xml:space="preserve"><!--
 				--><xsl:for-each select="ancestor::item"><!--
 					--><xsl:value-of select="@name" /><!--
-					 --><xsl:if test="position() != last()"> ► </xsl:if><!--
+					 --><xsl:if test="position() != last()"> ▶ </xsl:if><!--
 				--></xsl:for-each><!--
 			--></xsl:with-param>
 			</xsl:call-template>
