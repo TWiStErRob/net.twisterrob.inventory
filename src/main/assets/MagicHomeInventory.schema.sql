@@ -662,7 +662,7 @@ BEGIN
 		select
 			i._id                                           as rowid,
 			i.name || ' (' || ifNULL(cnc.value, '?') || ')' as name,
-			group_concat(Path.part, ' < ')                  as location
+			group_concat(Path.part, ' ◀ ')                  as location
 		from Item                     i
 		join Category                 c   ON i.category = c._id
 		left join Category_Name_Cache cnc ON c.name = cnc.key

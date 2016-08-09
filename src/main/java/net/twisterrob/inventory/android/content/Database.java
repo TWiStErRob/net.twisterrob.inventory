@@ -28,7 +28,7 @@ public class Database extends VariantDatabase {
 	@AnyThread
 	public Database(Context context) {
 		super(context);
-		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 1, BuildConfig.DEBUG) {
+		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 2, BuildConfig.DEBUG) {
 			@Override
 			public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);

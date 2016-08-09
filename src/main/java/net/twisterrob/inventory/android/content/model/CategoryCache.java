@@ -83,7 +83,7 @@ public class CategoryCache {
 			CharSequence category = AndroidTools.getText(context, it.next());
 			builder.append(category);
 			if (it.hasNext()) {
-				builder.append(" > ");
+				builder.append(" ▶ ");
 			}
 		}
 		return builder;

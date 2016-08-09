@@ -142,6 +142,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			if (devMode) {
 				backupDB(db, "onUpgrade_" + oldVersion + "-" + newVersion);
 			}
+			LOG.debug("Upgrading database v{} to v{}, step {} to {}: {}",
+					oldVersion, newVersion, version - 1, version, dbToString(db));
 			execFiles(db, getUpgradeFiles(version - 1, version));
 		}
 	}
@@ -197,7 +199,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 	private void execFile(SQLiteDatabase db, String dbFile) {
-		LOG.debug("Executing file {} into database: {}", dbFile, dbToString(db));
+		LOG.trace("Executing file {} into database: {}", dbFile, dbToString(db));
 		long time = System.nanoTime();
 
 		realExecuteFile(db, dbFile);
