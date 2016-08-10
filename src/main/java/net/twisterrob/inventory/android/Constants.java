@@ -47,10 +47,12 @@ public interface Constants {
 		public static final String BACKUP_DATA_FILENAME = "data.xml";
 
 		public static @NonNull File getExportFile(File exportFolder) throws IOException {
-			Calendar now = Calendar.getInstance();
-			String fileName = String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
 			IOTools.ensure(exportFolder);
-			return new File(exportFolder, fileName);
+			return new File(exportFolder, getExportFileName());
+		}
+		public static @NonNull String getExportFileName() {
+			Calendar now = Calendar.getInstance();
+			return String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
 		}
 		public static @NonNull File getPhoneHome() {
 			File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);

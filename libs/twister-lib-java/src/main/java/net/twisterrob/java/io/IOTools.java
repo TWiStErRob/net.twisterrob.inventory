@@ -376,4 +376,10 @@ public /*static*/ abstract class IOTools {
 		out.write(0xBB);
 		out.write(0xBF);
 	}
+
+	public static FileNotFoundException FileNotFoundException(String message, IOException ex) {
+		FileNotFoundException fnf = new FileNotFoundException(message);
+		fnf.initCause(ex);
+		return fnf;
+	}
 }

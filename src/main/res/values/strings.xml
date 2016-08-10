@@ -231,7 +231,6 @@
 		<b>Importing a backup into an empty inventory is also fine.</b>
 		Importing a backup into an existing inventory with conflicting structure may result in some mess.
 		The best effort is made is to preserve data, but proper conflict resolution is not implemented yet.
-		Selecting a file will start the import immediately.
 		<i>Any feedback/ideas regarding backup is very welcome!</i>
 	</string>
 
@@ -243,10 +242,17 @@
 	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>
 
 	<string name="backup_import_confirm_title">Import</string>
-	<string name="backup_import_confirm_warning">You\'re about to import %1$s into your inventory, which is not empty. The best effort will be made to merge conflicting items. Do you want to continue?</string>
+	<string name="backup_import_confirm_warning"
+		>You\'re about to import %1$s into your inventory.
+		<i>In case your inventory is not empty, the best effort will be made to merge conflicting items.</i>
+		Do you want to continue?
+	</string>
 	<string name="backup_import_progress_title">Import</string>
 	<string name="backup_import_progress_init">Preparing import…</string>
-	<string name="backup_import_progress_data">Importing belongings…\nPlease stay here while the import is in progress, background import is not fully supported yet. You may cancel by pressing the back button.</string>
+	<string name="backup_import_progress_data"
+		>Importing belongings…
+		\nPlease stay here while the import is in progress, background import is not fully supported yet.
+		You may cancel by pressing the back button.</string>
 	<string name="backup_import_result_success" tools:ignore="PluralsCandidate">Done importing %1$d belongings.</string>
 	<string name="backup_import_result_warning" tools:ignore="PluralsCandidate">There were %3$d issues during importing %2$d/%1$d belongings.</string>
 	<string name="backup_import_result_failed">Failed to import belongings:\n%1$s</string>
@@ -255,6 +261,7 @@
 	<string name="backup_import_conflict_item">Item &#8220;%3$s&#8221; in &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>
 	<string name="backup_import_invalid_type">&#8220;%1$s&#8221; has invalid type: &#8220;%2$s&#8221;, used the default type.</string>
 	<string name="backup_import_invalid_image">&#8220;%1$s&#8221; has invalid image: &#8220;%2$s&#8221;, ignored image.</string>
+	<string name="backup_import_invalid_list_entry">List &#8220;%1$s&#8221; has invalid or duplicate entry: id=%2$d, ignored.</string>
 
 	<string name="types$prefix$opened" translatable="false">-</string>
 	<string name="types$prefix$closed" translatable="false">+</string>

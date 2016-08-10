@@ -119,22 +119,17 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	public void filePicked(@NonNull final File file, boolean addHistory) {
 		LOG.trace("File picked (dir={}, exists={}): {}", file.isDirectory(), file.exists(), file);
 		if (IOTools.isValidFile(file)) {
-			//noinspection WrongThread FIXME DB on UI thread
-			if (!App.db().isEmpty()) {
-				AndroidTools
-						.confirm(this, new PopupCallbacks<Boolean>() {
-							@Override public void finished(Boolean value) {
-								if (Boolean.TRUE.equals(value)) {
-									doImport(file);
-								}
+			AndroidTools
+					.confirm(this, new PopupCallbacks<Boolean>() {
+						@Override public void finished(Boolean value) {
+							if (Boolean.TRUE.equals(value)) {
+								doImport(file);
 							}
-						})
-						.setTitle(R.string.backup_import_confirm_title)
-						.setMessage(getString(R.string.backup_import_confirm_warning, file.getName()))
-						.show();
-			} else {
-				doImport(file);
-			}
+						}
+					})
+					.setTitle(R.string.backup_import_confirm_title)
+					.setMessage(getString(R.string.backup_import_confirm_warning, file.getName()))
+					.show();
 		} else {
 			File dir = file;
 			while (!IOTools.isValidDir(dir)) {

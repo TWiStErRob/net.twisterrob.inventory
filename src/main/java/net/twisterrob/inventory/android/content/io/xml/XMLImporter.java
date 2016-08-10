@@ -63,6 +63,7 @@ public class XMLImporter implements Importer {
 		roomElement.getChild(TAG_DESCRIPTION).setEndTextElementListener(roomListener);
 
 		final ThreadLocal<Long> currentListID = new ThreadLocal<>();
+		final ThreadLocal<String> currentListName = new ThreadLocal<>();
 		listElement.setElementListener(new ElementListener() {
 			@Override public void start(Attributes attributes) {
 				String name = attributes.getValue(ATTR_NAME);
@@ -71,9 +72,11 @@ public class XMLImporter implements Importer {
 					id = db.createList(name);
 				}
 				currentListID.set(id);
+				currentListName.set(name);
 			}
 			@Override public void end() {
 				currentListID.remove();
+				currentListName.remove();
 			}
 		});
 		listEntryElement.setElementListener(new ElementListener() {
@@ -82,16 +85,12 @@ public class XMLImporter implements Importer {
 				long itemID = Long.parseLong(attributes.getValue(ATTR_ID));
 				Long dbItemID = itemMap.get(itemID);
 				if (dbItemID == null) {
-					throw new IllegalArgumentException("Invalid item reference to id=" + itemID);
+					throw new IllegalArgumentException("Missing item reference to id=" + itemID);
 				}
 				try {
 					db.addListEntry(id, dbItemID);
 				} catch (SQLiteConstraintException ex) {
-					if (!ex.getMessage().contains("19")) {
-						throw ex;
-					} else {
-						progress.warning(R.string.backup_import_invalid_image, "", "", "");
-					}
+					progress.warning(R.string.backup_import_invalid_list_entry, currentListName.get(), id, dbItemID);
 				}
 			}
 			@Override public void end() {

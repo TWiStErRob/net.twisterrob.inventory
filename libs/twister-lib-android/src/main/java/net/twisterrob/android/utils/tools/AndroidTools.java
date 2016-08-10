@@ -142,7 +142,7 @@ public /*static*/ abstract class AndroidTools {
 	public static @ColorRes int getColorResourceID(@Nullable Context context, String drawableResourceName) {
 		return getResourceID(context, RES_TYPE_COLOR, drawableResourceName);
 	}
-	
+
 	public static @DrawableRes int getDrawableResourceID(@Nullable Context context, String drawableResourceName) {
 		return getResourceID(context, RES_TYPE_DRAWABLE, drawableResourceName);
 	}
@@ -1023,44 +1023,53 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
+	public static ParcelFileDescriptor stream(final @NonNull byte... contents) throws FileNotFoundException {
+		return stream(new ByteArrayInputStream(contents));
+	}
 	/** @see ContentProvider#openPipeHelper */
-	public static ParcelFileDescriptor stream(final byte... contents) throws FileNotFoundException {
+	public static ParcelFileDescriptor stream(final @NonNull InputStream in) throws FileNotFoundException {
+		return stream(new OutWriter() {
+			@Override public void write(OutputStream out) throws IOException {
+				try {
+					IOTools.copyStream(in, out, false);
+				} finally {
+					IOTools.ignorantClose(in);
+				}
+			}
+		});
+	}
+	public interface OutWriter {
+		void write(OutputStream out) throws IOException;
+	}
+	/** @see ContentProvider#openPipeHelper */
+	public static ParcelFileDescriptor stream(final OutWriter writer) throws FileNotFoundException {
 		ParcelFileDescriptor[] pipe;
 		try {
 			pipe = ParcelFileDescriptor.createPipe();
-		} catch (IOException e) {
-			throw new FileNotFoundException(e.toString());
+		} catch (IOException ex) {
+			throw IOTools.FileNotFoundException("Cannot create pipe", ex);
 		}
 		final ParcelFileDescriptor readEnd = pipe[0];
 		final ParcelFileDescriptor writeEnd = pipe[1];
 
-		Runnable startStreaming = new Runnable() {
-			@Override public void run() {
-				executePreferParallel(new AsyncTask<Object, Object, Object>() {
-					@Override protected Object doInBackground(Object... params) {
-						InputStream in = new ByteArrayInputStream(contents);
-						OutputStream out = new AutoCloseOutputStream(writeEnd);
-						try {
-							IOTools.copyStream(in, out);
-						} catch (IOException e) {
-							IOTools.ignorantCloseWithError(writeEnd, e.toString());
-						}
-						try {
-							writeEnd.close();
-						} catch (IOException e) {
-							LOG.warn("Failure closing pipe", e);
-						}
-						return null;
-					}
-				});
+		AsyncTask<Void, Void, Void> copyTask = new AsyncTask<Void, Void, Void>() {
+			@Override protected Void doInBackground(Void... params) {
+				AutoCloseOutputStream out = new AutoCloseOutputStream(writeEnd);
+				try {
+					writer.write(out);
+				} catch (IOException ex) {
+					LOG.error("Streaming to pipe failed", ex);
+					IOTools.ignorantCloseWithError(writeEnd, ex.toString());
+				}
+				try {
+					out.close();
+				} catch (IOException ex) {
+					LOG.warn("Failure closing pipe", ex);
+				}
+				return null;
 			}
 		};
-
-		if (isOnUIThread()) {
-			startStreaming.run();
-		} else {
-			new Handler(Looper.getMainLooper()).post(startStreaming);
-		}
+		executePreferParallel(copyTask);
 		return readEnd;
 	}
 
