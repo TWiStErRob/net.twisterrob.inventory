@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.content.io.xml;
+package net.twisterrob.inventory.android.backup.xml;
 
 import java.io.*;
 import java.util.zip.*;
@@ -13,7 +13,7 @@ import android.content.res.AssetManager;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.content.io.ZippedExporter;
+import net.twisterrob.inventory.android.backup.ZippedExporter;
 import net.twisterrob.java.io.TeeOutputStream;
 
 public class ZippedXMLExporter extends ZippedExporter {
@@ -31,6 +31,10 @@ public class ZippedXMLExporter extends ZippedExporter {
 	}
 
 	@Override protected OutputStream startStream(ZipOutputStream zip) throws IOException {
+		// Google Drive upload opens two instances of the backup, we need to write something to the stream quick,
+		// because otherwise it would take a long time for Google Drive to break one of them with EPIPE 
+		copyXSLT(App.getAppContext().getAssets().open("data.html.xslt"));
+		zip.flush();
 		OutputStream out = super.startStream(zip);
 		return new TeeOutputStream(out, capturedXML);
 	}
@@ -39,7 +43,6 @@ public class ZippedXMLExporter extends ZippedExporter {
 		byte[] xml = capturedXML.toByteArray();
 		super.endStream();
 		AssetManager assets = App.getAppContext().getAssets();
-		copyXSLT(assets.open("data.html.xslt"));
 		transform(HTML_NAME, new ByteArrayInputStream(xml), assets.open("data.html.xslt"));
 		transform(CSV_NAME, new ByteArrayInputStream(xml), assets.open("data.csv.xslt"));
 	}

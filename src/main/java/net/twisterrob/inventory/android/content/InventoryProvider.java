@@ -1,25 +1,35 @@
 package net.twisterrob.inventory.android.content;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
 import org.slf4j.*;
 
+import android.app.Service;
 import android.content.*;
 import android.database.*;
 import android.net.Uri;
-import android.os.ParcelFileDescriptor;
-import android.provider.BaseColumns;
+import android.os.*;
+import android.provider.*;
 import android.support.annotation.NonNull;
 
 import static android.app.SearchManager.*;
 
+import net.twisterrob.android.utils.log.LoggingServiceConnection;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.AndroidTools.OutWriter;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants.Paths;
+import net.twisterrob.inventory.android.backup.BackupStreamExporter;
+import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks.Progress;
+import net.twisterrob.inventory.android.backup.concurrent.ExporterService;
+import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
 
+import static net.twisterrob.inventory.android.backup.BackupStreamExporter.ProgressDispatcher.*;
+import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
 import static net.twisterrob.inventory.android.content.InventoryContract.*;
 
 // CONSIDER http://www.grokkingandroid.com/android-tutorial-writing-your-own-content-provider/
@@ -45,14 +55,16 @@ public class InventoryProvider extends ContentProvider {
 	private static final int CATEGORY_IMAGE = FIRST_ITEM + 41;
 	private static final int SEARCH_ITEMS = FIRST_DIR + 50;
 	private static final int SEARCH_ITEMS_SUGGEST = FIRST_DIR + 51;
+	private static final int FULL_BACKUP = FIRST_DIR + 61;
 
 	protected static final String URI_PATH_ID = "/#";
 	protected static final String URI_PATH_IMAGE = "/" + Helpers.IMAGE_URI_SEGMENT;
 
 	//	protected static final String URI_PATH_ANY = "/*";
 //	private static final String COLUMN_DATA_URI = "_data";
-//	private static final String COLUMN_SIZE = "_size";
-//	private static final String COLUMN_DISPLAY_NAME = "_display_name";
+	private static final String COLUMN_ID = BaseColumns._ID;
+	private static final String COLUMN_SIZE = OpenableColumns.SIZE;
+	private static final String COLUMN_DISPLAY_NAME = OpenableColumns.DISPLAY_NAME;
 	public static final String COLUMN_BLOB = "_dataBlob";
 
 	private static final UriMatcher URI_MATCHER;
@@ -73,6 +85,7 @@ public class InventoryProvider extends ContentProvider {
 		URI_MATCHER.addURI(AUTHORITY, Category.ITEM_URI_SEGMENT + URI_PATH_ID + URI_PATH_IMAGE, CATEGORY_IMAGE);
 		URI_MATCHER.addURI(AUTHORITY, Search.URI_PATH, SEARCH_ITEMS);
 		URI_MATCHER.addURI(AUTHORITY, Search.URI_PATH_SUGGEST, SEARCH_ITEMS_SUGGEST);
+		URI_MATCHER.addURI(AUTHORITY, Export.BACKUP_URI_SEGMENT, FULL_BACKUP);
 	}
 
 	@Override public boolean onCreate() {
@@ -112,6 +125,8 @@ public class InventoryProvider extends ContentProvider {
 				return Search.TYPE;
 			case SEARCH_ITEMS_SUGGEST:
 				return Search.TYPE_SUGGEST;
+			case FULL_BACKUP:
+				return Export.TYPE_BACKUP;
 			default:
 				return null;
 		}
@@ -167,6 +182,12 @@ public class InventoryProvider extends ContentProvider {
 			case ITEM_IMAGE: {
 				return App.db().getItemImage(Item.getID(uri));
 			}
+			case FULL_BACKUP: {
+				MatrixCursor details = new MatrixCursor(new String[] {COLUMN_SIZE, COLUMN_DISPLAY_NAME});
+				long estimatedSize = App.db().getFile().length();
+				details.addRow(new Object[] {estimatedSize, Paths.getExportFileName()});
+				return details;
+			}
 			default:
 				throw new UnsupportedOperationException("Unknown URI: " + uri);
 		}
@@ -177,7 +198,7 @@ public class InventoryProvider extends ContentProvider {
 	 * Tapping it would open the search activity.
 	 */
 	private Cursor createItemSearchHelp() {
-		MatrixCursor cursor = new MatrixCursor(new String[] {BaseColumns._ID
+		MatrixCursor cursor = new MatrixCursor(new String[] {COLUMN_ID
 				, SUGGEST_COLUMN_INTENT_ACTION
 				, SUGGEST_COLUMN_INTENT_DATA
 				, SUGGEST_COLUMN_ICON_1
@@ -231,6 +252,8 @@ public class InventoryProvider extends ContentProvider {
 				// The following only works if the resource is uncompressed: android.aaptOptions.noCompress 'svg'
 				//noinspection ConstantConditions,resource AssetFileDescriptor is closed by caller
 				return getContext().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();
+			case FULL_BACKUP:
+				return generateBackup();
 		}
 		return super.openFile(uri, mode);
 	}
@@ -262,6 +285,38 @@ public class InventoryProvider extends ContentProvider {
 			return AndroidTools.stream(contents);
 		} finally {
 			c.close();
+		}
+	}
+
+	private ParcelFileDescriptor generateBackup() throws FileNotFoundException {
+		return AndroidTools.stream(new OutWriter() {
+			@Override public void write(OutputStream out) throws IOException {
+				BackupStreamExporter exporter = new BackupStreamExporter(new ZippedXMLExporter(), IGNORE);
+				Progress result = exporter.export(out);
+				LOG.debug("Backup finished: " + result);
+			}
+		});
+	}
+
+	private ParcelFileDescriptor generateBackupWithService() throws FileNotFoundException {
+		try {
+			final ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
+			Intent intent = new Intent(getContext(), ExporterService.class)
+					.putExtra(EXTRA_BACKGROUND_BIND, true);
+			getContext().bindService(intent, new LoggingServiceConnection() {
+				@Override public void onServiceConnected(ComponentName name, IBinder service) {
+					super.onServiceConnected(name, service);
+					final ServiceConnection that = this;
+					((ExporterService.LocalBinder)service).export(pipe[1], new Runnable() {
+						@Override public void run() {
+							getContext().unbindService(that);
+						}
+					});
+				}
+			}, Service.BIND_AUTO_CREATE | Service.BIND_NOT_FOREGROUND);
+			return pipe[0];
+		} catch (IOException ex) {
+			throw IOTools.FileNotFoundException("Cannot create piped stream", ex);
 		}
 	}
 

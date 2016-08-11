@@ -14,8 +14,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.content.io.ImporterTask;
-import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks;
+import net.twisterrob.inventory.android.backup.concurrent.ImporterTask;
+import net.twisterrob.inventory.android.backup.concurrent.ImporterTask.ImportCallbacks;
 
 public class ImportFragment extends BaseDialogFragment implements ImportCallbacks {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportFragment.class);

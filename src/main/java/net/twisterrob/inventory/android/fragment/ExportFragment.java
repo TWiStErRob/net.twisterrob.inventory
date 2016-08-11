@@ -14,9 +14,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.content.io.ExporterTask;
-import net.twisterrob.inventory.android.content.io.ExporterTask.ExportCallbacks;
-import net.twisterrob.inventory.android.content.io.xml.ZippedXMLExporter;
+import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks;
+import net.twisterrob.inventory.android.backup.concurrent.ExporterTask;
+import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 
 public class ExportFragment extends BaseDialogFragment implements ExportCallbacks {
 	private static final Logger LOG = LoggerFactory.getLogger(ExportFragment.class);

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.content.io;
+package net.twisterrob.inventory.android.backup;
 
 import java.io.*;
 import java.util.zip.*;
@@ -7,12 +7,12 @@ import android.database.Cursor;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.backup.xml.CursorExporter;
 import net.twisterrob.inventory.android.content.InventoryProvider;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.io.xml.CursorExporter;
 
 @SuppressWarnings("RedundantThrows")
-public class ZippedExporter implements ExporterTask.Exporter {
+public class ZippedExporter implements Exporter {
 	protected final String fileName;
 	protected ZipOutputStream zip;
 	private CursorExporter dataOutput;
@@ -58,8 +58,8 @@ public class ZippedExporter implements ExporterTask.Exporter {
 	@Override public void saveImage(Cursor cursor) throws IOException {
 		byte[] image = getImage(cursor);
 		long unixUtc = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
-		String fileName = cursor.getString(cursor.getColumnIndexOrThrow(ExporterTask.IMAGE_NAME));
-		String comment = ExporterTask.buildComment(cursor);
+		String fileName = cursor.getString(cursor.getColumnIndexOrThrow(BackupStreamExporter.IMAGE_NAME));
+		String comment = BackupStreamExporter.buildComment(cursor);
 		IOTools.store(zip, fileName, image, unixUtc, comment);
 	}
 

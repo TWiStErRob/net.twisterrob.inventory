@@ -110,6 +110,12 @@ public final class InventoryContract {
 		public static final String TYPE_SUGGEST = SearchManager.SUGGEST_MIME_TYPE;
 	}
 
+	public static final class Export {
+		static final String BACKUP_URI_SEGMENT = "backup";
+		public static final Uri BACKUP_URI = Uri.withAppendedPath(CONTENT_URI, BACKUP_URI_SEGMENT);
+		public static final String TYPE_BACKUP = "application/zip";
+	}
+
 	static final class Helpers {
 		static final String IMAGE_URI_SEGMENT = "image";
 

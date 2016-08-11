@@ -167,5 +167,11 @@
 			android:grantUriPermissions="true">
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/paths_share" />
 		</provider>
+
+		<service
+			android:name=".backup.concurrent.ExporterService"
+			android:enabled="false"
+			android:exported="false"
+			/>
 	</application>
 </manifest>

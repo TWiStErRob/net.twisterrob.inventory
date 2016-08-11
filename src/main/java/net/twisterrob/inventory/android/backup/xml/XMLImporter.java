@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.content.io.xml;
+package net.twisterrob.inventory.android.backup.xml;
 
 import java.io.*;
 import java.util.*;
@@ -11,12 +11,12 @@ import android.sax.*;
 import android.util.Xml;
 
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.backup.Importer;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.io.*;
 import net.twisterrob.inventory.android.content.model.Types;
 
-import static net.twisterrob.inventory.android.content.io.xml.XMLExporter.*;
+import static net.twisterrob.inventory.android.backup.xml.XMLExporter.*;
 
 public class XMLImporter implements Importer {
 	private static final Logger LOG = LoggerFactory.getLogger(XMLImporter.class);

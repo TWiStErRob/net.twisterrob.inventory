@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.content.io.xml;
+package net.twisterrob.inventory.android.backup.xml;
 
 import java.io.*;
 import java.util.*;
@@ -13,8 +13,8 @@ import android.util.Xml;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.backup.BackupStreamExporter;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.io.ExporterTask;
 import net.twisterrob.inventory.android.content.model.HierarchyBuilder;
 import net.twisterrob.java.utils.StringTools;
 
@@ -70,10 +70,10 @@ public class XMLExporter implements CursorExporter {
 		Belonging<?> belonging = hier.getOrCreate(type, id);
 		belonging.name = DatabaseTools.getString(cursor, nameColumn(type));
 		belonging.type = DatabaseTools.getString(cursor, "typeName");
-		belonging.image = DatabaseTools.getString(cursor, ExporterTask.IMAGE_NAME);
+		belonging.image = DatabaseTools.getString(cursor, BackupStreamExporter.IMAGE_NAME);
 		belonging.description = DatabaseTools.getString(cursor, CommonColumns.DESCRIPTION);
 		if (BuildConfig.DEBUG) {
-			belonging.comment = ExporterTask.buildComment(cursor);
+			belonging.comment = BackupStreamExporter.buildComment(cursor);
 		}
 
 		if (type != Type.Property) { // can't have parents

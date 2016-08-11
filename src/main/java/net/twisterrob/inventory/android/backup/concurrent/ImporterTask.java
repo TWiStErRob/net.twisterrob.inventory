@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.content.io;
+package net.twisterrob.inventory.android.backup.concurrent;
 
 import java.io.*;
 import java.util.*;
@@ -16,13 +16,14 @@ import android.support.annotation.*;
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.backup.Importer;
+import net.twisterrob.inventory.android.backup.concurrent.ImporterTask.ImportCallbacks.Progress;
+import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.Type;
-import net.twisterrob.inventory.android.content.io.ImporterTask.ImportCallbacks.Progress;
-import net.twisterrob.inventory.android.content.io.xml.XMLImporter;
 
 // FIXME convert to Service
-public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> implements ImportProgressHandler {
+public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> implements Importer.ImportProgressHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(ImporterTask.class);
 
 	private ImportCallbacks callbacks = DUMMY_CALLBACK;

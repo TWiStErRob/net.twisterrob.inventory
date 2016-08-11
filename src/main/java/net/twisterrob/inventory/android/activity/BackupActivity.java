@@ -25,7 +25,7 @@ import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
-import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.view.RecyclerViewLoaderController;
 
@@ -105,8 +105,17 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			case R.id.action_export_home:
 				filePicked(Paths.getPhoneHome(), true);
 				return true;
-			case R.id.action_export:
+			case R.id.action_export_internal:
 				controller.createNew();
+				return true;
+			case R.id.action_export_external:
+				Intent intent = new Intent(Intent.ACTION_SEND)
+						.setData(InventoryContract.Export.BACKUP_URI) // Drive's stream
+						.setType(InventoryContract.Export.TYPE_BACKUP)
+						.putExtra(Intent.EXTRA_STREAM, InventoryContract.Export.BACKUP_URI) // GMail's stream
+						.putExtra(Intent.EXTRA_SUBJECT, Paths.getExportFileName()) // Drive's file name
+						.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+				startActivity(Intent.createChooser(intent, getString(R.string.backup_export_external)));
 				return true;
 			case R.id.action_manage_space:
 				startActivity(ManageSpaceActivity.launch());

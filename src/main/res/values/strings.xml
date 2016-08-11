@@ -223,16 +223,10 @@
 	<string name="manage_space_title">Manage Inventory Space</string>
 	<string name="manage_space_calculating">Calculating…</string>
 	<string name="backup_title">Backup</string>
-	<string name="backup_export">Backup here</string>
+	<string name="backup_export_internal">Backup here</string>
+	<string name="backup_export_external">Backup to…</string>
 	<string name="backup_go_home">Go to Downloads folder</string>
 	<string name="backup_go_home_condensed">Downloads</string>
-	<string name="backup_experimental"><font fgcolor="#AAFF0000" color="-#55010000">WARNING</font>: experimental feature
-		\n<b>Exporting the whole inventory is working fine.</b>
-		<b>Importing a backup into an empty inventory is also fine.</b>
-		Importing a backup into an existing inventory with conflicting structure may result in some mess.
-		The best effort is made is to preserve data, but proper conflict resolution is not implemented yet.
-		<i>Any feedback/ideas regarding backup is very welcome!</i>
-	</string>
 
 	<string name="backup_export_progress_title">Export</string>
 	<string name="backup_export_progress_init">Preparing export…</string>
@@ -244,8 +238,10 @@
 	<string name="backup_import_confirm_title">Import</string>
 	<string name="backup_import_confirm_warning"
 		>You\'re about to import %1$s into your inventory.
-		<i>In case your inventory is not empty, the best effort will be made to merge conflicting items.</i>
-		Do you want to continue?
+		In case your inventory is not empty,
+		conflicting details (image, description) of belongings will be ignored,
+		but the best effort will be made to merge contents.
+		\n\nDo you want to continue?
 	</string>
 	<string name="backup_import_progress_title">Import</string>
 	<string name="backup_import_progress_init">Preparing import…</string>

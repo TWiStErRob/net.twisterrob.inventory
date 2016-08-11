@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.content.io.xml;
+package net.twisterrob.inventory.android.backup.xml;
 
 import java.io.*;
 
