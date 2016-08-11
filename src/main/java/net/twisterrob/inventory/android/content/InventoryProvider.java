@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.content;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.util.Locale;
+import java.util.*;
 
 import org.slf4j.*;
 
@@ -183,9 +183,10 @@ public class InventoryProvider extends ContentProvider {
 				return App.db().getItemImage(Item.getID(uri));
 			}
 			case FULL_BACKUP: {
+				Calendar now = Export.getNow(uri);
 				MatrixCursor details = new MatrixCursor(new String[] {COLUMN_SIZE, COLUMN_DISPLAY_NAME});
 				long estimatedSize = App.db().getFile().length();
-				details.addRow(new Object[] {estimatedSize, Paths.getExportFileName()});
+				details.addRow(new Object[] {estimatedSize, Paths.getExportFileName(now)});
 				return details;
 			}
 			default:

@@ -109,11 +109,11 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 				controller.createNew();
 				return true;
 			case R.id.action_export_external:
+				Calendar now = Calendar.getInstance();
 				Intent intent = new Intent(Intent.ACTION_SEND)
-						.setData(InventoryContract.Export.BACKUP_URI) // Drive's stream
 						.setType(InventoryContract.Export.TYPE_BACKUP)
-						.putExtra(Intent.EXTRA_STREAM, InventoryContract.Export.BACKUP_URI) // GMail's stream
-						.putExtra(Intent.EXTRA_SUBJECT, Paths.getExportFileName()) // Drive's file name
+						.putExtra(Intent.EXTRA_STREAM, InventoryContract.Export.getUri(now))
+						.putExtra(Intent.EXTRA_SUBJECT, Paths.getExportFileName(now))
 						.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 				startActivity(Intent.createChooser(intent, getString(R.string.backup_export_external)));
 				return true;

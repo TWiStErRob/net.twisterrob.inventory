@@ -48,10 +48,9 @@ public interface Constants {
 
 		public static @NonNull File getExportFile(File exportFolder) throws IOException {
 			IOTools.ensure(exportFolder);
-			return new File(exportFolder, getExportFileName());
+			return new File(exportFolder, getExportFileName(Calendar.getInstance()));
 		}
-		public static @NonNull String getExportFileName() {
-			Calendar now = Calendar.getInstance();
+		public static @NonNull String getExportFileName(Calendar now) {
 			return String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
 		}
 		public static @NonNull File getPhoneHome() {

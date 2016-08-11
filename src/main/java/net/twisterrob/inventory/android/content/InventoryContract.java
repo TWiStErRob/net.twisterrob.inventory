@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.content;
 
+import java.util.Calendar;
+
 import android.app.SearchManager;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -114,6 +116,24 @@ public final class InventoryContract {
 		static final String BACKUP_URI_SEGMENT = "backup";
 		public static final Uri BACKUP_URI = Uri.withAppendedPath(CONTENT_URI, BACKUP_URI_SEGMENT);
 		public static final String TYPE_BACKUP = "application/zip";
+		public static final String PARAM_NOW = "now";
+
+		public static Uri getUri(Calendar now) {
+			return BACKUP_URI
+					.buildUpon()
+					.appendQueryParameter(PARAM_NOW, Long.toString(now.getTimeInMillis()))
+					.build();
+		}
+
+		public static Calendar getNow(Uri uri) {
+			if (!uri.toString().startsWith(BACKUP_URI.toString())) {
+				throw new IllegalArgumentException("Uri is not a valid backup uri: " + uri);
+			}
+			String nowString = uri.getQueryParameter(PARAM_NOW);
+			Calendar now = Calendar.getInstance();
+			now.setTimeInMillis(Long.parseLong(nowString));
+			return now;
+		}
 	}
 
 	static final class Helpers {
