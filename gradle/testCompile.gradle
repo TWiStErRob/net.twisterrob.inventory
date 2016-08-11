@@ -1,0 +1,23 @@
+dependencies {
+	testCompile("junit:junit:${VERSION_JUNIT}") {
+		// we don't need this because we use org.hamcrest v2
+		exclude module: 'hamcrest-core'
+	}
+	testCompile("org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}") {
+		// this needs to be excluded because otherwise the hamcrest-core exclusion above doesn't work
+		exclude module: 'junit'
+	}
+	testCompile("org.mockito:mockito-core:${VERSION_MOCKITO}") {}
+	testCompile("org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}") {
+		// this depends on hamcrest-core too which we don't want
+		exclude module: 'hamcrest-core'
+	}
+	testCompile("org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}") {
+		// this needs to be excluded because otherwise the hamcrest-core exclusion above doesn't work
+		exclude module: 'junit'
+	}
+	testCompile 'com.shazam:gwen:1.0.2'
+//	testCompile 'cglib:cglib:3.2.4'
+//	testCompile 'pl.pragmatists:JUnitParams:1.0.4'
+//	testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.2'
+}

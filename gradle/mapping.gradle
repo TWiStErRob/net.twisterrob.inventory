@@ -1,7 +1,15 @@
 buildscript {
-	apply from: 'gradle/buildscript.gradle', to: buildscript
-}
+	repositories {
+		jcenter()
+		maven { name 'twisterrob'; url 'http://localhost/maven' }
+	}
 
+	dependencies {
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		//noinspection GradleDynamicVersion
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
 project.android.applicationVariants.all { com.android.build.gradle.api.ApkVariant variant ->
 	Task obfuscateTask = variant.obfuscation
 	def skipReason = [ ];
