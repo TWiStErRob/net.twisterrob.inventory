@@ -33,7 +33,7 @@ public class ZippedXMLExporter extends ZippedExporter {
 	@Override protected OutputStream startStream(ZipOutputStream zip) throws IOException {
 		// Google Drive upload opens two instances of the backup, we need to write something to the stream quick,
 		// because otherwise it would take a long time for Google Drive to break one of them with EPIPE 
-		copyXSLT(App.getAppContext().getAssets().open("data.html.xslt"));
+		copyXSLT(XSLT_NAME, App.getAppContext().getAssets().open("data.html.xslt"));
 		zip.flush();
 		OutputStream out = super.startStream(zip);
 		return new TeeOutputStream(out, capturedXML);
@@ -47,21 +47,22 @@ public class ZippedXMLExporter extends ZippedExporter {
 		transform(CSV_NAME, new ByteArrayInputStream(xml), assets.open("data.csv.xslt"));
 	}
 
-	private void copyXSLT(InputStream xsltStream) throws IOException {
-		LOG.trace("Copying into " + XSLT_NAME);
+	private void copyXSLT(String zipFileName, InputStream stream) throws IOException {
+		LOG.trace("Copying into {}", zipFileName);
 		try {
-			zip.putNextEntry(new ZipEntry(XSLT_NAME));
-			IOTools.copyStream(xsltStream, zip, false);
+			zip.putNextEntry(new ZipEntry(zipFileName));
+			IOTools.copyStream(stream, zip, false);
 			zip.closeEntry();
 		} finally {
-			IOTools.ignorantClose(xsltStream);
+			IOTools.ignorantClose(stream);
+			LOG.trace("Copying done: {}", zipFileName);
 		}
 	}
 
-	private void transform(String filename, InputStream xml, InputStream xslt) throws IOException {
+	private void transform(String zipFileName, InputStream xml, InputStream xslt) throws IOException {
 		try {
-			LOG.trace("Transforming into {}", filename);
-			zip.putNextEntry(new ZipEntry(filename));
+			LOG.trace("Transforming into {}", zipFileName);
+			zip.putNextEntry(new ZipEntry(zipFileName));
 			IOTools.writeUTF8BOM(zip); // required, because XSLT 1.0 cannot force a BOM, and some tools need it (Excel)
 			TransformerFactory factory = TransformerFactory.newInstance();
 			Transformer transformer = factory.newTransformer(new StreamSource(xslt));
@@ -81,6 +82,7 @@ public class ZippedXMLExporter extends ZippedExporter {
 			throw new IOException(e);
 		} finally {
 			IOTools.ignorantClose(xml, xslt);
+			LOG.trace("Transformation done: {}", zipFileName);
 		}
 	}
 }

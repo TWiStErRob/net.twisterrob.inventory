@@ -20,7 +20,12 @@
 	-->
 	<xsl:output method="html" encoding="utf-8" indent="yes" omit-xml-declaration="yes" xalan:indent-amount="0" />
 
+	<!-- Lookup to quickly find <item>s referenced from <item-ref>s -->
+	<xsl:key name="items" match="item" use="@id" />
+
+	<!-- Google Play Store link -->
 	<xsl:variable name="appLink">https://play.google.com/store/apps/details?id=net.twisterrob.inventory</xsl:variable>
+
 	<xsl:template match="/inventory">
 		<xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
 		<html>
@@ -53,32 +58,38 @@
 
 	<xsl:template name="toc">
 		<ul class="toc-properties">
-			<xsl:for-each select="property">
-				<li data-id="toc-property-{@id}">
-					<a href="#property-{@id}">
-						<xsl:value-of select="@name" />
-					</a>
-					<ul class="toc-rooms">
-						<xsl:for-each select="room">
-							<li data-id="toc-room-{@id}">
-								<a href="#room-{@id}">
-									<xsl:value-of select="@name" />
-								</a>
-							</li>
-						</xsl:for-each>
-					</ul>
-				</li>
-			</xsl:for-each>
+			<xsl:apply-templates select="property" mode="toc" />
 		</ul>
 		<ul class="toc-lists">
-			<xsl:for-each select="list">
-				<li data-id="toc-list-{position()}">
-					<a href="#list-{position()}">
-						<xsl:value-of select="@name" />
-					</a>
-				</li>
-			</xsl:for-each>
+			<xsl:apply-templates select="list" mode="toc" />
 		</ul>
+	</xsl:template>
+
+	<xsl:template match="property" mode="toc">
+		<li data-id="toc-property-{@id}">
+			<a href="#property-{@id}">
+				<xsl:value-of select="@name" />
+			</a>
+			<ul class="toc-rooms">
+				<xsl:apply-templates select="room" mode="toc" />
+			</ul>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="room" mode="toc">
+		<li data-id="toc-room-{@id}">
+			<a href="#room-{@id}">
+				<xsl:value-of select="@name" />
+			</a>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="list" mode="toc">
+		<li data-id="toc-list-{position()}">
+			<a href="#list-{position()}">
+				<xsl:value-of select="@name" />
+			</a>
+		</li>
 	</xsl:template>
 
 	<xsl:template match="list">
@@ -90,18 +101,21 @@
 				</xsl:with-param>
 			</xsl:call-template>
 			<ul class="items">
-				<xsl:for-each select="item-ref">
-					<li class="item-ref" data-id="item-{@id}">
-						<a href="#item-{@id}"></a>
-						<div class="belonging item">
-							<!-- This is a single-iteration, always! -->
-							<xsl:for-each select="//item[@id=current()/@id]">
-								<xsl:call-template name="details" />
-							</xsl:for-each>
-						</div>
-					</li>
-				</xsl:for-each>
+				<xsl:apply-templates select="item-ref" />
 			</ul>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="item-ref">
+		<li class="item-ref" data-id="item-{@id}">
+			<a href="#item-{@id}"></a>
+			<xsl:apply-templates select="key('items', @id)" mode="ref" />
+		</li>
+	</xsl:template>
+
+	<xsl:template match="item" mode="ref">
+		<div class="belonging item">
+			<xsl:call-template name="details" />
 		</div>
 	</xsl:template>
 
