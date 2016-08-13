@@ -1,0 +1,98 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+configurations {
+	xalan
+	saxon
+}
+
+idea {
+	module {
+		scopes.PROVIDED.plus += [ configurations.saxon ]
+		scopes.RUNTIME.plus += [ configurations.xalan ]
+	}
+}
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+//	compile 'xalan:xalan:2.7.1' // useful to force it on the classpath to run in IDEA
+	xalan 'xalan:xalan:2.7.1'
+	saxon 'net.sf.saxon:Saxon-HE:9.7.0-7'
+}
+
+def dataXml = file("../temp/test/data.xml")
+def dataXsltCsv = file("../src/main/assets/data.csv.xslt")
+def dataXsltHtml = file("../src/main/assets/data.html.xslt")
+def transformDir = file("../temp")
+
+// run with: gradlew -p buildSrc cRT rTHJ rTCJ | grep -v "^:"
+task runTransformHtmlJava(type: Transform) {
+	xml = dataXml
+	xslt = dataXsltHtml
+	out = new File(transformDir, "data-java.html")
+}
+task runTransformCsvJava(type: Transform) {
+	xml = dataXml
+	xslt = dataXsltCsv
+	out = new File(transformDir, "data-java.csv")
+}
+
+// run with: gradlew -p buildSrc cRT rTHX rTCX | grep -v "^:"
+task runTransformHtmlXalan(type: Transform) {
+	xml = dataXml
+	xslt = dataXsltHtml
+	out = new File(transformDir, "data-xalan.html")
+	classpath += configurations.xalan
+}
+task runTransformCsvXalan(type: Transform) {
+	xml = dataXml
+	xslt = dataXsltCsv
+	out = new File(transformDir, "data-xalan.csv")
+	classpath += configurations.xalan
+}
+
+// run with: gradlew -p buildSrc cRT rTHS rTCS | grep -v "^:"
+task runTransformHtmlSaxon(type: Transform) {
+	xml = dataXml
+	xslt = dataXsltHtml
+	out = new File(transformDir, "data-saxon.html")
+	classpath += configurations.saxon
+}
+task runTransformCsvSaxon(type: Transform) {
+	xml = dataXml
+	xslt = dataXsltCsv
+	out = new File(transformDir, "data-saxon.csv")
+	classpath += configurations.saxon
+}
+
+// run with: gradlew -p buildSrc cRT rT | grep -v "^:"
+task runTransforms() {
+	dependsOn tasks.withType(Transform)
+}
+task cleanRunTransforms {
+	dependsOn tasks.withType(Transform).asList().collect { tasks."clean${it.name.capitalize()}" }
+	tasks.clean.dependsOn it
+}
+
+class Transform extends JavaExec {
+	@InputFile File xml
+	@InputFile File xslt
+	@OutputFile File out
+
+	Transform() {
+		classpath = project.sourceSets.main.runtimeClasspath
+		enableAssertions = true
+		main = 'net.twisterrob.build.Transform'
+	}
+
+	@Override void exec() {
+		args = [ xml, xslt, out ]
+		super.exec()
+	}
+}
