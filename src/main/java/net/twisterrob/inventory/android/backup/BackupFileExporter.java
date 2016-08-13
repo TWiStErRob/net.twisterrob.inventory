@@ -5,7 +5,7 @@ import java.io.*;
 import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.backup.BackupStreamExporter.ProgressDispatcher;
 import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks.Progress;
@@ -25,7 +25,12 @@ public class BackupFileExporter {
 
 	public Progress exportTo(File file) throws IOException {
 		OutputStream os = new FileOutputStream(file);
-		Progress progress = exporter.export(os);
+		Progress progress;
+		try {
+			progress = exporter.export(os);
+		} finally {
+			IOTools.ignorantClose(os);
+		}
 		if (!BuildConfig.DEBUG && progress.failure != null && file != null && !file.delete()) {
 			file.deleteOnExit();
 			file = null;

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet
-	xmlns:str="xalan://java.lang.String"
 	xmlns:xalan="http://xml.apache.org/xalan"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	extension-element-prefixes="xalan str"
+	extension-element-prefixes="xalan"
 	exclude-result-prefixes="xml xsi"
 	version="1.0">
 
@@ -92,23 +91,14 @@
 
 	<xsl:template name="cell-value">
 		<xsl:param name="text" />
-		<xsl:variable name="quote">&quot;</xsl:variable>
-		<xsl:variable name="double-quote">&quot;&quot;</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="function-available('str:replace')">
-				<xsl:value-of select="str:replace(string($text), $quote, $double-quote)" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:variable name="escaped">
-					<xsl:call-template name="string-replace-all">
-						<xsl:with-param name="text" select="$text" />
-						<xsl:with-param name="replace" select="$quote" />
-						<xsl:with-param name="with" select="$double-quote" />
-					</xsl:call-template>
-				</xsl:variable>
-				<xsl:value-of select="$escaped" />
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:variable name="escaped">
+			<xsl:call-template name="string-replace-all">
+				<xsl:with-param name="text" select="$text" />
+				<xsl:with-param name="replace" select="'&quot;'" />
+				<xsl:with-param name="with" select="'&quot;&quot;'" />
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:value-of select="$escaped" />
 	</xsl:template>
 
 	<!-- @see http://stackoverflow.com/a/10528912/253468 -->
