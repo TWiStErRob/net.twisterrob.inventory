@@ -235,6 +235,16 @@
 	<string name="backup_export_result_success" tools:ignore="PluralsCandidate">Done exporting %1$d belongings with %2$d images.</string>
 	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>
 
+	<string name="backup_export_external_confirm_title">@string/backup_export_external</string>
+	<string name="backup_export_external_confirm_warning"
+		>You\'re about to export your inventory to a third party.
+		Once you leave the app there are no guarantees.
+		For example, some apps (Google Drive, Dropbox) don\'t allow cancelling this procedure.
+		Once you started, be patient; give it a few minutes, if you have a large inventory.
+		Even if the progress disappears, the export may still be ongoing in the background.
+		Where possible I have plans to work around these external limitations in the future.
+		\n\nDo you want to continue?
+	</string>
 	<string name="backup_import_confirm_title">Import</string>
 	<string name="backup_import_confirm_warning"
 		>You\'re about to import %1$s into your inventory.

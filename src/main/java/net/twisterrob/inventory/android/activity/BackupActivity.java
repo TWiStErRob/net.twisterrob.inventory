@@ -109,13 +109,17 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 				controller.createNew();
 				return true;
 			case R.id.action_export_external:
-				Calendar now = Calendar.getInstance();
-				Intent intent = new Intent(Intent.ACTION_SEND)
-						.setType(InventoryContract.Export.TYPE_BACKUP)
-						.putExtra(Intent.EXTRA_STREAM, InventoryContract.Export.getUri(now))
-						.putExtra(Intent.EXTRA_SUBJECT, Paths.getExportFileName(now))
-						.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-				startActivity(Intent.createChooser(intent, getString(R.string.backup_export_external)));
+				AndroidTools
+						.confirm(this, new PopupCallbacks<Boolean>() {
+							@Override public void finished(Boolean value) {
+								if (Boolean.TRUE.equals(value)) {
+									doExport();
+								}
+							}
+						})
+						.setTitle(R.string.backup_export_external_confirm_title)
+						.setMessage(R.string.backup_export_external_confirm_warning)
+						.show();
 				return true;
 			case R.id.action_manage_space:
 				startActivity(ManageSpaceActivity.launch());
@@ -153,8 +157,19 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			controller.startLoad(Intents.bundleFrom(EXTRA_PATH, dir));
 		}
 	}
+
 	private void doImport(@NonNull File file) {
 		ImportFragment.create(getApplicationContext(), getSupportFragmentManager()).execute(file);
+	}
+
+	private void doExport() {
+		Calendar now = Calendar.getInstance();
+		Intent intent = new Intent(Intent.ACTION_SEND)
+				.setType(InventoryContract.Export.TYPE_BACKUP)
+				.putExtra(Intent.EXTRA_STREAM, InventoryContract.Export.getUri(now))
+				.putExtra(Intent.EXTRA_SUBJECT, Paths.getExportFileName(now))
+				.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		startActivity(Intent.createChooser(intent, getString(R.string.backup_export_external)));
 	}
 
 	public static Intent chooser() {
