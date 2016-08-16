@@ -57,7 +57,7 @@ android {
 	}
 	variantFilter {
 		// have only a release variant
-		if (it.buildType.name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
+		if (it.buildType.name == com.android.builder.core.BuilderConstants.DEBUG) {
 			it.setIgnore(true);
 		}
 	}

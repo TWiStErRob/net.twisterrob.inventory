@@ -28,3 +28,35 @@ dependencies {
 	compile "com.android.support:support-annotations:${VERSION_SUPPORT}"
 	compile "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 }
+
+android {
+	lintOptions {
+		tasks.lint.enabled = false
+	}
+	variantFilter {
+		// have only a release variant
+		if (it.buildType.name == com.android.builder.core.BuilderConstants.DEBUG) {
+			it.setIgnore(true);
+		}
+	}
+}
+
+task jar(type: Jar, dependsOn: tasks.assembleRelease) {
+	exclude "**/R.class"
+	exclude "**/R\$*.class"
+	exclude "**/BuildConfig.class"
+	//from files(project.android.sourceSets.main.output)
+}
+afterEvaluate {
+	com.android.build.gradle.LibraryExtension android = project.android
+	def dirs = android
+			.libraryVariants
+			.findAll { it.buildType.name == android.buildTypes.release.name }
+			.collect { it.javaCompiler.destinationDir }
+	tasks.jar.from files(dirs)
+}
+artifacts {
+	// reference as dependencies { apk project(path: ':twister-lib-android-slf4j', configuration: 'jar') }
+	configurations.create 'jar'
+	add('jar', tasks.jar)
+}
