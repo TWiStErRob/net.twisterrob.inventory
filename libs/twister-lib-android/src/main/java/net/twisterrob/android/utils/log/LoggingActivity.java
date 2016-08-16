@@ -349,7 +349,11 @@ public class LoggingActivity extends AppCompatActivity {
 		super.onActivityReenter(resultCode, data);
 	}
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		log("onActivityResult", requestCode, resultCode, data);
+		// TODO figure out a generic way to toString ints
+		String code = resultCode == Activity.RESULT_OK? "RESULT_OK"
+				: resultCode == Activity.RESULT_CANCELED? "RESULT_CANCELLED"
+						: "RESULT_" + resultCode;
+		log("onActivityResult", String.valueOf(requestCode), code, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
