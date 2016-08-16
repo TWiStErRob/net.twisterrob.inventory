@@ -2,9 +2,11 @@ package net.twisterrob.android.utils.tools;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.jar.*;
 
 import static java.lang.Math.*;
 
@@ -1390,6 +1392,27 @@ public /*static*/ abstract class AndroidTools {
 		if (isOnUIThread()) {
 			throw new IllegalStateException("This should be executed off the UI thread.");
 		}
+	}
+
+	/**
+	 * Returns resource files (not res) from the classpath (i.e. from within the APK file).
+	 * @param filter to filter the result,
+	 *               the {@code dir} in the callback will reference the APK file itself, not a directory.
+	 */
+	public static List<JarEntry> findOnClasspath(FilenameFilter filter) throws IOException {
+		URL manifest = AndroidTools.class.getResource("/AndroidManifest.xml"); // every app must have this
+		JarURLConnection manifestConnection = (JarURLConnection)manifest.openConnection();
+		JarFile apk = manifestConnection.getJarFile();
+		File apkFile = new File(apk.getName());
+		Enumeration<JarEntry> entries = apk.entries();
+		List<JarEntry> result = new ArrayList<>();
+		while (entries.hasMoreElements()) {
+			JarEntry entry = entries.nextElement();
+			if (filter.accept(apkFile, entry.getName())) {
+				result.add(entry);
+			}
+		}
+		return result;
 	}
 
 	protected AndroidTools() {

@@ -47,9 +47,11 @@ dependencies {
 	if (project.hasProperty('libFromSources')) {
 		compile project(':twister-lib-java')
 		compile project(':twister-lib-android')
+		compile project(':twister-lib-android-slf4j')
 	} else {
 		compile('net.twisterrob:twister-lib-android:1.0-SNAPSHOT')
 		compile('net.twisterrob:twister-lib-java:1.0-SNAPSHOT')
+		compile('net.twisterrob:twister-lib-android-slf4j:1.0-SNAPSHOT')
 	}
 	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
 	compile "com.android.support:support-v4:${VERSION_SUPPORT}"

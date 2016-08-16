@@ -3,7 +3,6 @@ package net.twisterrob.inventory.android;
 import java.util.Locale;
 
 import org.slf4j.*;
-import org.slf4j.impl.AndroidLoggerFactory;
 
 import android.content.res.*;
 import android.os.StrictMode;
@@ -20,10 +19,6 @@ import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.java.utils.StringTools;
 
 public class App extends BaseApp {
-	static {
-		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.inventory\\.android\\.(.+\\.)?", "");
-	}
-
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
 	public App() {

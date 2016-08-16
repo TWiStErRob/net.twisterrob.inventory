@@ -5,5 +5,7 @@ if (hasProperty('libFromSources')) {
 	project(':twister-lib-java').projectDir = file('libs/twister-lib-java')
 	include ':twister-lib-android'
 	project(':twister-lib-android').projectDir = file('libs/twister-lib-android')
+	include ':twister-lib-android-slf4j'
+	project(':twister-lib-android-slf4j').projectDir = file('libs/twister-lib-android-slf4j')
 }
 include ':transform'

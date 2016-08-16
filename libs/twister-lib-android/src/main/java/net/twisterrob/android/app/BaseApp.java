@@ -5,7 +5,6 @@ import java.util.Date;
 
 import org.slf4j.*;
 import org.slf4j.helpers.*;
-import org.slf4j.impl.AndroidLoggerFactory;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -24,13 +23,6 @@ import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 public abstract class BaseApp extends android.app.Application {
-	static {
-		// TODO figure out something so IDEA sees these classes, but they're not on lib's test classpath.
-		// Make sure to set up LoggerFactory before the first logger is created
-		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.android\\.(.+\\.)?", "");
-		AndroidLoggerFactory.addReplacement("^net\\.twisterrob\\.java\\.(.+\\.)?", "");
-	}
-
 	// This is the first Logger created which will result in reading the classpath to create the binding.
 	// Make sure the strict mode is set up after this!
 	private static final Logger LOG = LoggerFactory.getLogger(BaseApp.class);
