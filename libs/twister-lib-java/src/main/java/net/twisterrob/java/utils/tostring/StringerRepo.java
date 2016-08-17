@@ -1,6 +1,7 @@
 package net.twisterrob.java.utils.tostring;
 
 import java.util.*;
+import java.util.zip.ZipEntry;
 
 import javax.annotation.*;
 
@@ -18,6 +19,7 @@ public class StringerRepo {
 
 	protected StringerRepo() {
 		register(String.class, new StringStringer());
+		register(ZipEntry.class, new ZipEntryStringer());
 	}
 
 	public @Nonnull Stringer<Object> getDefault() {
