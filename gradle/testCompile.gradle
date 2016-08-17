@@ -1,23 +1,83 @@
+def isAndroid = plugins.hasPlugin('com.android.application') || plugins.hasPlugin('com.android.library')
+
+configurations.all {
+	resolutionStrategy {
+		force "junit:junit:${VERSION_JUNIT}"
+		force "org.mockito:mockito-core:${VERSION_MOCKITO}"
+		force 'org.objenesis:objenesis:2.4' // 2.1 vs 2.2
+		force 'com.thoughtworks.xstream:xstream:1.4.9' // 1.4.8 vs 1.4.9
+		dependencySubstitution {
+			substitute(module('org.hamcrest:hamcrest-core'))
+					.with module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}")
+			substitute(module('org.hamcrest:hamcrest-library'))
+					.with module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}")
+		}
+	}
+}
+
+if (isAndroid) {
+	configurations {
+		// need to go for all, because of the hidden _debugAndroidTestCompile and friends
+		/*[ androidTestCompile ].each*/ all {
+			it.resolutionStrategy {
+				force 'com.google.code.findbugs:jsr305:3.0.0' // 2.0.1 vs 3.0.0
+				// Force some dependencies to be consistent between compile and androidTestCompile
+				dependencySubstitution {
+					[ 'support-annotations', 'support-v4', 'appcompat-v7', 'support-v13',
+					  'design', 'customtabs', 'preference-v7', 'preference-v14',
+					  'recyclerview-v7', 'cardview-v7', 'gridlayout-v7', 'percent', 'palette-v7',
+					  'mediarouter-v7', 'leanback-v17', 'preference-leanback-v17', 'recommendation',
+					  'support-vector-drawable', 'animated-vector-drawable'
+					].each {
+						substitute(module("com.android.support:${it}"))
+								.with module("com.android.support:${it}:${VERSION_SUPPORT}")
+					}
+				}
+			}
+		}
+	}
+}
+
 dependencies {
-	testCompile("junit:junit:${VERSION_JUNIT}") {
-		// we don't need this because we use org.hamcrest v2
-		exclude module: 'hamcrest-core'
-	}
-	testCompile("org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}") {
-		// this needs to be excluded because otherwise the hamcrest-core exclusion above doesn't work
-		exclude module: 'junit'
-	}
-	testCompile("org.mockito:mockito-core:${VERSION_MOCKITO}") {}
-	testCompile("org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}") {
-		// this depends on hamcrest-core too which we don't want
-		exclude module: 'hamcrest-core'
-	}
-	testCompile("org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}") {
-		// this needs to be excluded because otherwise the hamcrest-core exclusion above doesn't work
-		exclude module: 'junit'
-	}
+	testCompile "junit:junit:${VERSION_JUNIT}"
+	testCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
+	testCompile "org.mockito:mockito-core:${VERSION_MOCKITO}"
+	testCompile "org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}"
+	testCompile "org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}"
+	testCompile "org.powermock:powermock-module-junit4-rule:${VERSION_POWERMOCK}"
+	testCompile "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
 	testCompile 'com.shazam:gwen:1.0.2'
 //	testCompile 'cglib:cglib:3.2.4'
 //	testCompile 'pl.pragmatists:JUnitParams:1.0.4'
 //	testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.2'
+
+	if (isAndroid) {
+//	configurations
+//			.compile
+//			.resolvedConfiguration
+//			.resolvedArtifacts
+//			.collect { it.id.componentIdentifier }
+//			.grep { it instanceof ModuleComponentIdentifier }
+//			.grep { it.group == 'com.android.support' }
+//			.each { androidTestCompile it.displayName }
+
+		androidTestCompile "junit:junit:${VERSION_JUNIT}"
+		androidTestCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
+		// Android JUnit Runner
+		androidTestCompile 'com.android.support.test:runner:0.5'
+
+		// JUnit4 Rules
+		androidTestCompile 'com.android.support.test:rules:0.5'
+
+		// Espresso core
+		androidTestCompile "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
+		// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
+		androidTestCompile "com.android.support.test.espresso:espresso-contrib:${VERSION_ESPRESSO}"
+		// Espresso-web for WebView support
+		androidTestCompile "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
+		// Espresso-intents for capturing Intents and mocking onActivityResult
+		androidTestCompile "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+		// Espresso-idling-resource for synchronization with background jobs
+		androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
+	}
 }

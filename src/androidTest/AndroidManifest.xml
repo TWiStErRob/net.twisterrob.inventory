@@ -1,0 +1,12 @@
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	package="net.twisterrob.inventory.android.test"
+	android:sharedUserId="net.twisterrob.inventory">
+	<uses-sdk tools:overrideLibrary="android.support.graphics.drawable.animated" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+	<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
+
+	<application android:label="@string/app_name" tools:replace="android:label" />
+</manifest>

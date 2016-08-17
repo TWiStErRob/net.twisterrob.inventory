@@ -155,8 +155,7 @@ public class MainActivity extends DrawerActivity
 		String page = getExtraPage();
 
 		if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_CLEAR_TOP) != 0) {
-			LOG.trace("Ignored possible up-navigation, use current page and state for: {}", getIntent());
-			return;
+			LOG.warn("Possible up-navigation: {}", AndroidTools.toString(getIntent()));
 		}
 
 		FragmentManager m = getSupportFragmentManager();

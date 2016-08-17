@@ -43,6 +43,8 @@ repositories {
 //	maven { name 'idescout'; url 'http://www.idescout.com/maven/repo/' }
 }
 
+configurations.all { it.resolutionStrategy.failOnVersionConflict() }
+
 dependencies {
 	//configurations.compile.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	if (project.hasProperty('libFromSources')) {
@@ -54,12 +56,6 @@ dependencies {
 		compile('net.twisterrob:twister-lib-java:1.0-SNAPSHOT')
 		apk('net.twisterrob:twister-lib-android-slf4j:1.0-SNAPSHOT')
 	}
-	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
-	compile "com.android.support:support-v4:${VERSION_SUPPORT}"
-	compile "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
-	compile "com.android.support:design:${VERSION_SUPPORT}"
-//	compile "com.android.support:cardview-v7:${VERSION_SUPPORT}"
-	compile "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows Serializer Java 2.7.1 on Genymotion 2.3.7 and S5 5.0.0
 //	provided "xalan:xalan:2.7.1"
@@ -79,6 +75,7 @@ android {
 			major = 1
 		}
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
+		testInstrumentationRunner 'net.twisterrob.android.test.AndroidJUnitRunner'
 	}
 	lintOptions {
 		//abortOnError false
@@ -98,4 +95,23 @@ android {
 		ignoreAssetsPattern defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
 	sourceSets.main.res.srcDir 'src/main/res-icons'
+
+	packagingOptions {
+		/* Execution failed for task ':transformResourcesWithMergeJavaResForDebugAndroidTest'.
+			> com.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException:
+			Duplicate files copied in APK META-INF/maven/com.google.guava/guava/pom.xml
+			File1: I:\build\intermediates\exploded-aar\com.android.support.test.espresso\espresso-web\2.2.2\jars\classes.jar
+			File2: I:\build\intermediates\exploded-aar\com.android.support.test.espresso\espresso-core\2.2.2\jars\classes.jar
+		 */
+		exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+		exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+	}
+}
+android.testVariants.all { com.android.build.gradle.api.TestVariant test ->
+	def grantPermissions = project.task(type: Exec, "grant${test.name.capitalize()}Permissions") {
+		mustRunAfter test.install // not dependsOn, because that wouldn't allow running the task by itself
+		def permission = 'android.permission.SET_ANIMATION_SCALE';
+		commandLine "adb shell pm grant ${test./*testedVariant.*/ applicationId} ${permission}".split(' ')
+	}
+	test.connectedInstrumentTest.dependsOn grantPermissions
 }
