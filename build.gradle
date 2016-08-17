@@ -115,3 +115,10 @@ android.testVariants.all { com.android.build.gradle.api.TestVariant test ->
 	}
 	test.connectedInstrumentTest.dependsOn grantPermissions
 }
+
+tasks.withType(JavaCompile.class) { com.android.build.gradle.tasks.factory.AndroidJavaCompile it ->
+	if (it.name.contains('UnitTestJava')) {
+		it.sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+		it.targetCompatibility = JavaVersion.VERSION_1_8.toString()
+	}
+}

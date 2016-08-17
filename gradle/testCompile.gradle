@@ -52,6 +52,11 @@ dependencies {
 //	testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.2'
 
 	if (isAndroid) {
+		testCompile("org.robolectric:robolectric:3.1.2") {
+			exclude group: 'org.codehaus.plexus', module: 'plexus-utils'
+		}
+		testCompile 'org.codehaus.plexus:plexus-utils:1.5.15' // robolectric has inconsistent dependencies
+
 //	configurations
 //			.compile
 //			.resolvedConfiguration
