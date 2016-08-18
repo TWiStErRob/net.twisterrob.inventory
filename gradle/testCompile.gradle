@@ -46,8 +46,10 @@ dependencies {
 	testCompile "org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-module-junit4-rule:${VERSION_POWERMOCK}"
+	testCompile "org.powermock:powermock-module-junit4-rule-agent:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
 	testCompile 'com.shazam:gwen:1.0.2'
+	testCompile 'org.slf4j:slf4j-simple:1.7.21'
 //	testCompile 'cglib:cglib:3.2.4'
 //	testCompile 'pl.pragmatists:JUnitParams:1.0.4'
 //	testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.2'
@@ -69,6 +71,8 @@ dependencies {
 
 		androidTestCompile "junit:junit:${VERSION_JUNIT}"
 		androidTestCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
+//		androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
+//		androidTestCompile 'com.google.dexmaker:dexmaker:1.0'
 		// Android JUnit Runner
 		androidTestCompile 'com.android.support.test:runner:0.5'
 
