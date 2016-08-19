@@ -79,9 +79,9 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		}
 		if (!param.hasImage) {
 			// may clear already cleared images, but there's not enough info
-			db.setPropertyImage(param.id, null, null);
+			db.setPropertyImage(param.id, null);
 		} else if (param.image != null) {
-			db.setPropertyImage(param.id, param.image, null);
+			db.setPropertyImage(param.id, db.addImage(param.image, null));
 		} else {
 			// it has an image, but there's no blob -> the image is already in DB
 		}

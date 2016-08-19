@@ -6,8 +6,10 @@ import java.util.*;
 import org.slf4j.*;
 import org.xml.sax.Attributes;
 
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteConstraintException;
 import android.sax.*;
+import android.support.annotation.*;
 import android.util.Xml;
 
 import net.twisterrob.inventory.android.R;
@@ -20,17 +22,19 @@ import static net.twisterrob.inventory.android.backup.xml.XMLExporter.*;
 
 public class XMLImporter implements Importer {
 	private static final Logger LOG = LoggerFactory.getLogger(XMLImporter.class);
-	private final ImportProgressHandler progress;
+	private ImportProgressHandler progress;
+	private final Resources res;
 	private final Database db;
 	private final Types types = new Types();
 	private final Map<Long, Long> itemMap = new TreeMap<>();
 
-	public XMLImporter(ImportProgressHandler progress, Database db) {
-		this.progress = progress;
+	public XMLImporter(Resources res, Database db) {
+		this.res = res;
 		this.db = db;
 	}
 
-	public void doImport(InputStream stream) throws Exception {
+	public void doImport(@NonNull InputStream stream, @Nullable ImportProgressHandler progress) throws Exception {
+		this.progress = progress == null? DUMMY_HANDLER : progress;
 		RootElement structure = getStructure();
 		Xml.parse(stream, Xml.Encoding.UTF_8, structure.getContentHandler());
 	}
@@ -90,7 +94,8 @@ public class XMLImporter implements Importer {
 				try {
 					db.addListEntry(id, dbItemID);
 				} catch (SQLiteConstraintException ex) {
-					progress.warning(R.string.backup_import_invalid_list_entry, currentListName.get(), id, dbItemID);
+					progress.warning(res.getString(R.string.backup_import_invalid_list_entry,
+							currentListName.get(), id));
 				}
 			}
 			@Override public void end() {
@@ -102,7 +107,7 @@ public class XMLImporter implements Importer {
 			@Override public void start(Attributes attributes) {
 				String count = attributes.getValue(ATTR_COUNT);
 				if (count != null) {
-					progress.publishStart(Long.parseLong(count));
+					progress.publishStart(Integer.parseInt(count));
 				}
 			}
 		});
@@ -213,12 +218,12 @@ public class XMLImporter implements Importer {
 			if (id == null) {
 				Long typeID = types.getID(type);
 				if (typeID == null) {
-					progress.warning(R.string.backup_import_invalid_type, name, type);
+					progress.warning(res.getString(R.string.backup_import_invalid_type, name, type));
 					typeID = PropertyType.DEFAULT;
 				}
 				id = db.createProperty(typeID, name, description);
 			} else {
-				progress.warning(R.string.backup_import_conflict_property, name);
+				progress.warning(res.getString(R.string.backup_import_conflict_property, name));
 			}
 			loadImage(Type.Property);
 		}
@@ -237,12 +242,12 @@ public class XMLImporter implements Importer {
 			if (id == null) {
 				Long typeID = types.getID(type);
 				if (typeID == null) {
-					progress.warning(R.string.backup_import_invalid_type, name, type);
+					progress.warning(res.getString(R.string.backup_import_invalid_type, name, type));
 					typeID = RoomType.DEFAULT;
 				}
 				id = db.createRoom(propertyID, typeID, name, description);
 			} else {
-				progress.warning(R.string.backup_import_conflict_room, parent.getName(), name);
+				progress.warning(res.getString(R.string.backup_import_conflict_room, parent.getName(), name));
 			}
 			rootID = DatabaseDTOTools.getRoot(id);
 			loadImage(Type.Room);
@@ -279,14 +284,14 @@ public class XMLImporter implements Importer {
 			if (id == null) {
 				Long typeID = types.getID(type);
 				if (typeID == null) {
-					progress.warning(R.string.backup_import_invalid_type, name, type);
+					progress.warning(res.getString(R.string.backup_import_invalid_type, name, type));
 					typeID = Category.DEFAULT;
 				}
 				id = db.createItem(parentID, typeID, name, description);
 			} else {
 				Parent room = findRoom(this);
-				progress.warning(R.string.backup_import_conflict_item,
-						room.getParent().getName(), room.getName(), name);
+				progress.warning(res.getString(R.string.backup_import_conflict_item,
+						room.getParent().getName(), room.getName(), name));
 			}
 			itemMap.put(refID, id);
 			loadImage(Type.Item);
@@ -304,4 +309,22 @@ public class XMLImporter implements Importer {
 			return room;
 		}
 	}
+
+	private static final ImportProgressHandler DUMMY_HANDLER = new ImportProgressHandler() {
+		@Override public void publishStart(int size) {
+			// NO OP
+		}
+		@Override public void publishIncrement() {
+			// NO OP
+		}
+		@Override public void warning(String message) {
+			// NO OP
+		}
+		@Override public void error(String message) {
+			// NO OP
+		}
+		@Override public void importImage(Type type, long id, String name, String image) throws IOException {
+			// NO OP
+		}
+	};
 }

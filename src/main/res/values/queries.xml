@@ -709,6 +709,9 @@
 	<string name="query_image_create_with_time" translatable="false"><![CDATA["
 		insert into Image(data, updated) values(?, ?)
 	"]]></string>
+	<string name="query_image_delete" translatable="false"><![CDATA["
+		delete from Image where _id = ?
+	"]]></string>
 
 	<!-- Property CRUD -->
 	<string name="query_property_create" translatable="false"><![CDATA["

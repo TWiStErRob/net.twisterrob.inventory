@@ -9,7 +9,7 @@ import android.annotation.SuppressLint;
 import android.content.*;
 import android.net.Uri;
 import android.os.*;
-import android.support.annotation.*;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.*;
 import android.support.v7.app.AlertDialog;
@@ -457,14 +457,14 @@ public class MainActivity extends DrawerActivity
 			InputStream demo = null;
 			try {
 				demo = getAssets().open("demo.xml");
-				new XMLImporter(new ImportProgressHandler() {
-					@Override public void publishStart(long size) {
+				new XMLImporter(getResources(), App.db()).doImport(demo, new ImportProgressHandler() {
+					@Override public void publishStart(int size) {
 						// NO OP
 					}
 					@Override public void publishIncrement() {
 						// NO OP
 					}
-					@Override public void warning(@StringRes int stringID, Object... args) {
+					@Override public void warning(String message) {
 						throw new UnsupportedOperationException();
 					}
 					@Override public void error(String message) {
@@ -474,7 +474,7 @@ public class MainActivity extends DrawerActivity
 							throws IOException {
 						throw new UnsupportedOperationException();
 					}
-				}, App.db()).doImport(demo);
+				});
 				return true;
 			} catch (Exception ex) {
 				LOG.error("Cannot populate demo sample", ex);

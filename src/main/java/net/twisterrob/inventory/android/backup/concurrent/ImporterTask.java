@@ -1,76 +1,39 @@
 package net.twisterrob.inventory.android.backup.concurrent;
 
-import java.io.*;
-import java.util.*;
 import java.util.concurrent.CancellationException;
-import java.util.zip.*;
-
-import static java.lang.String.*;
 
 import org.slf4j.*;
 
-import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
-import net.twisterrob.android.utils.tools.IOTools;
-import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.backup.Importer;
-import net.twisterrob.inventory.android.backup.concurrent.ImporterTask.ImportCallbacks.Progress;
-import net.twisterrob.inventory.android.backup.xml.XMLImporter;
-import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.content.contract.Type;
+import net.twisterrob.inventory.android.backup.*;
 
 // FIXME convert to Service
-public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> implements Importer.ImportProgressHandler {
+public class ImporterTask extends SimpleAsyncTask<Uri, Progress, Progress> implements ProgressDispatcher {
 	private static final Logger LOG = LoggerFactory.getLogger(ImporterTask.class);
 
-	private ImportCallbacks callbacks = DUMMY_CALLBACK;
-	private Progress progress;
-	private ZipFile zip;
+	private Importer.ImportCallbacks callbacks = DUMMY_CALLBACK;
+	private final BackupZipUriImporter importer;
 
-	public interface ImportCallbacks {
-		void importStarting();
-		void importProgress(@NonNull Progress progress);
-		void importFinished(@NonNull Progress progress);
-
-		final class Progress implements Cloneable {
-			public File input;
-			public long done;
-			public long total;
-			public Throwable failure;
-			public final List<CharSequence> conflicts = new ArrayList<>();
-
-			@Override public Progress clone() {
-				try {
-					return (Progress)super.clone();
-				} catch (CloneNotSupportedException ex) {
-					throw new InternalError(ex.toString());
-				}
-			}
-			@Override public String toString() {
-				return format(Locale.ROOT, "data=%2$d/%3$d: %4$s for %1$s", input, done, total, failure);
-			}
-		}
+	public ImporterTask(Context context) {
+		this.importer = new BackupZipUriImporter(context, this);
 	}
 
-	private final Resources res;
-
-	public ImporterTask(Resources res) {
-		this.res = res;
-	}
-
-	public void setCallbacks(ImportCallbacks callbacks) {
+	public void setCallbacks(Importer.ImportCallbacks callbacks) {
 		this.callbacks = callbacks != null? callbacks : DUMMY_CALLBACK;
 	}
 
 	@Override protected void onPreExecute() {
 		callbacks.importStarting();
 	}
+
 	@Override protected void onProgressUpdate(Progress progress) {
 		callbacks.importProgress(progress);
 	}
+
 	@Override protected void onPostExecute(Progress progress) {
 		if (progress.failure != null) {
 			LOG.warn("Import failed", progress.failure);
@@ -78,107 +41,23 @@ public class ImporterTask extends SimpleAsyncTask<File, Progress, Progress> impl
 		callbacks.importFinished(progress);
 	}
 
-	public void publishStart(long size) {
-		progress.done = 0;
-		progress.total = size;
-		publishProgress();
-	}
-	public void publishIncrement() {
-		progress.done++;
-		publishProgress();
-	}
-	private void publishProgress() {
+	@Override public void dispatchProgress(@NonNull Progress progress) throws CancellationException {
 		if (isCancelled()) {
 			throw new CancellationException();
 		}
-		publishProgress(progress.clone());
+		publishProgress(progress);
 	}
 
-	public void warning(@StringRes int stringID, Object... args) {
-		String message = res.getString(stringID, args);
-		LOG.warn("Warning: {}", message);
-		progress.conflicts.add(message);
-	}
-
-	public void error(String message) {
-		LOG.warn("Error: {}", message);
-		progress.conflicts.add(message);
-	}
-
-	@Override protected Progress doInBackground(File file) {
-		progress = new Progress();
-		progress.input = file;
-		zip = null;
-		Database appDB = App.db();
-		@SuppressWarnings("resource") SQLiteDatabase db = appDB.getWritableDatabase();
+	@Override protected @Nullable Progress doInBackground(@Nullable Uri source) {
 		try {
-			// CONSIDER wakelock?
-
-			publishStart(-1);
-			db.beginTransaction();
-
-			zip = new ZipFile(file);
-
-			InputStream stream;
-			Importer importer;
-			ZipEntry dataFile = zip.getEntry(Constants.Paths.BACKUP_DATA_FILENAME);
-			if (dataFile != null) {
-				//noinspection resource zip is closed in finally
-				stream = zip.getInputStream(dataFile);
-				importer = new XMLImporter(this, appDB);
-			} else {
-				throw new IllegalArgumentException(format("The file %s is not a valid %s backup: %s",
-						zip.getName(), res.getString(R.string.app_name), "missing data file"));
-			}
-			importer.doImport(stream);
-
-			db.setTransactionSuccessful();
-		} catch (ZipException ex) {
-			progress.failure = new IllegalArgumentException(format("%s: %s", file, "invalid zip file"), ex);
+			return importer.importFrom(source);
 		} catch (Throwable ex) {
-			progress.failure = ex;
-		} finally {
-			IOTools.ignorantClose(zip);
-			try {
-				db.endTransaction();
-			} catch (Exception ex) {
-				if (progress.failure != null) {
-					LOG.warn("Cannot end transaction, exception suppressed by {}", progress.failure, ex);
-				} else {
-					progress.failure = ex;
-				}
-			}
-		}
-		return progress;
-	}
-
-	public void importImage(Type type, long id, String name, String image) throws IOException {
-		ZipEntry imageEntry = zip.getEntry(image);
-		if (imageEntry != null) {
-			InputStream zipImage = zip.getInputStream(imageEntry);
-			byte[] imageContents = IOTools.readBytes(zipImage, Math.max(0, imageEntry.getSize()));
-			long time = imageEntry.getTime();
-			Long dbTime = time != -1? time : null;
-			switch (type) {
-				case Property:
-					App.db().setPropertyImage(id, imageContents, dbTime);
-					break;
-				case Room:
-					App.db().setRoomImage(id, imageContents, dbTime);
-					break;
-				case Item:
-					App.db().setItemImage(id, imageContents, dbTime);
-					break;
-				default:
-					throw new IllegalArgumentException(type + " cannot have images.");
-			}
-		} else {
-			warning(R.string.backup_import_invalid_image, name, image);
+			return new Progress(ex);
 		}
 	}
 
 	/** To prevent NullPointerException and null-checks in code */
-	private static final ImportCallbacks DUMMY_CALLBACK = new ImportCallbacks() {
+	private static final Importer.ImportCallbacks DUMMY_CALLBACK = new Importer.ImportCallbacks() {
 		@Override public void importStarting() {
 		}
 		@Override public void importProgress(@NonNull Progress progress) {

@@ -6,8 +6,6 @@ import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.backup.BackupStreamExporter.ProgressDispatcher;
-import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks.Progress;
 
 public class BackupDirExporter {
 	private final BackupFileExporter exporter;

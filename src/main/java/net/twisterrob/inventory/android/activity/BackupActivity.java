@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import org.slf4j.*;
 
 import android.content.*;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.*;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -33,6 +34,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
 	private static final String EXTRA_PATH = "path";
 	private static final String EXTRA_HISTORY = "history";
+	private static final int REQUEST_CODE_PICK_EXTERNAL = 0x4412;
 
 	private RecyclerViewLoaderController<ImportFilesAdapter, List<File>> controller;
 	private final Deque<File> history = new ArrayDeque<>();
@@ -105,6 +107,13 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			case R.id.action_export_home:
 				filePicked(Paths.getPhoneHome(), true);
 				return true;
+			case R.id.action_import_external:
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+				intent.addCategory(Intent.CATEGORY_OPENABLE);
+				intent.setType("*/*");
+				intent = Intent.createChooser(intent, getString(R.string.backup_import_external));
+				startActivityForResult(intent, REQUEST_CODE_PICK_EXTERNAL);
+				return true;
 			case R.id.action_export_internal:
 				controller.createNew();
 				return true;
@@ -129,6 +138,19 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 	}
 
+	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+			case REQUEST_CODE_PICK_EXTERNAL: {
+				if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+					Uri uri = data.getData();
+					doImport(uri);
+				}
+				break;
+			}
+		}
+	}
+
 	public void filePicked(@NonNull final File file, boolean addHistory) {
 		LOG.trace("File picked (dir={}, exists={}): {}", file.isDirectory(), file.exists(), file);
 		if (IOTools.isValidFile(file)) {
@@ -136,7 +158,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 					.confirm(this, new PopupCallbacks<Boolean>() {
 						@Override public void finished(Boolean value) {
 							if (Boolean.TRUE.equals(value)) {
-								doImport(file);
+								doImport(Uri.fromFile(file));
 							}
 						}
 					})
@@ -158,8 +180,8 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 	}
 
-	private void doImport(@NonNull File file) {
-		ImportFragment.create(getApplicationContext(), getSupportFragmentManager()).execute(file);
+	private void doImport(Uri source) {
+		ImportFragment.create(getApplicationContext(), getSupportFragmentManager()).execute(source);
 	}
 
 	private void doExport() {

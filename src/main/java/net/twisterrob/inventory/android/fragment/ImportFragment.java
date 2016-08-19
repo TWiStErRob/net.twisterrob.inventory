@@ -1,28 +1,28 @@
 package net.twisterrob.inventory.android.fragment;
 
-import java.io.File;
-
 import org.slf4j.*;
 
 import android.app.*;
 import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.backup.Importer.ImportCallbacks;
+import net.twisterrob.inventory.android.backup.Progress;
 import net.twisterrob.inventory.android.backup.concurrent.ImporterTask;
-import net.twisterrob.inventory.android.backup.concurrent.ImporterTask.ImportCallbacks;
 
 public class ImportFragment extends BaseDialogFragment implements ImportCallbacks {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportFragment.class);
 
 	private ImporterTask task;
 	private FragmentManager parentFragmentManager;
-	private Progress firstProgressToShow;
+	private Progress firstProgressToShow = new Progress();
 
 	@Override public void onResume() {
 		super.onResume();
@@ -42,8 +42,8 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		super.onPause();
 	}
 
-	public void execute(File file) {
-		task.execute(file);
+	public void execute(Uri source) {
+		task.execute(source);
 	}
 
 	@Override public void importStarting() {
@@ -62,23 +62,24 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 			LOG.warn("Premature progress, no dialog");
 		}
 	}
+
 	private void updateProgress(@NonNull ProgressDialog dialog, @NonNull Progress progress) {
 		if (progress.total == -1) {
 			dialog.setIndeterminate(true);
 			dialog.setMessage(getString(R.string.backup_import_progress_init));
 		} else {
 			dialog.setIndeterminate(false);
-			dialog.setProgress((int)progress.done);
-			dialog.setMax((int)progress.total);
+			dialog.setMax(progress.total);
+			dialog.setProgress(progress.done);
 			dialog.setMessage(getString(R.string.backup_import_progress_data));
 		}
 	}
 
 	@Override public void importFinished(@NonNull Progress res) {
-		onFinish(getActivity(), res);
+		displayFinishMessage(getActivity(), res);
 	}
 
-	private void onFinish(final Context context, final Progress p) {
+	private void displayFinishMessage(final Context context, final Progress p) {
 		LOG.trace("importFinished {}", context);
 		dismissAllowingStateLoss();
 
@@ -86,11 +87,11 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		if (p.failure != null) {
 			message = context.getString(R.string.backup_import_result_failed, p.failure.getMessage());
 		} else {
-			if (p.conflicts.isEmpty()) {
+			if (p.warnings.isEmpty()) {
 				message = context.getString(R.string.backup_import_result_success, p.total);
 			} else {
 				message = context.getString(R.string.backup_import_result_warning,
-						p.total, p.done, p.conflicts.size());
+						p.total, p.done, p.warnings.size());
 			}
 		}
 
@@ -104,9 +105,9 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 							}
 						}
 					});
-			if (!p.conflicts.isEmpty()) {
+			if (!p.warnings.isEmpty()) {
 				builder.setTitle(message);
-				builder.setItems(p.conflicts.toArray(new CharSequence[p.conflicts.size()]), null);
+				builder.setItems(p.warnings.toArray(new CharSequence[p.warnings.size()]), null);
 			} else {
 				builder.setTitle(R.string.backup_import_progress_title);
 				builder.setMessage(message);
@@ -131,16 +132,14 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 		dialog.setTitle(R.string.backup_import_progress_title);
 		// needs to be non-null at creation time to be able to change it later
 		dialog.setMessage(getActivity().getString(R.string.empty));
-		if (firstProgressToShow != null) {
-			updateProgress(dialog, firstProgressToShow);
-		}
+		updateProgress(dialog, firstProgressToShow);
 		return dialog;
 	}
 
 	public static ImportFragment create(Context context, FragmentManager fm) {
 		ImportFragment fragment = new ImportFragment();
 		fragment.parentFragmentManager = fm;
-		fragment.task = new ImporterTask(context.getResources());
+		fragment.task = new ImporterTask(context);
 		fragment.task.setCallbacks(fragment);
 		return fragment;
 	}
@@ -159,7 +158,7 @@ public class ImportFragment extends BaseDialogFragment implements ImportCallback
 			// ignore, there's no UI
 		}
 		@Override public void importFinished(@NonNull Progress p) {
-			onFinish(context, p);
+			displayFinishMessage(context, p);
 		}
 	}
 }

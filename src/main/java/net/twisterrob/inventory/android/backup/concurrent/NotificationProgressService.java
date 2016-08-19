@@ -12,7 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.log.LoggingIntentService;
 
-public class NotificationProgressService<Progress> extends LoggingIntentService {
+public abstract class NotificationProgressService<Progress> extends LoggingIntentService {
 	public NotificationProgressService(String name) {
 		super(name);
 	}

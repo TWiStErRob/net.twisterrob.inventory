@@ -21,14 +21,13 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.utils.tools.AndroidTools.OutWriter;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.backup.BackupStreamExporter;
-import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks.Progress;
+import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.concurrent.ExporterService;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
 
-import static net.twisterrob.inventory.android.backup.BackupStreamExporter.ProgressDispatcher.*;
+import static net.twisterrob.inventory.android.backup.ProgressDispatcher.*;
 import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
 import static net.twisterrob.inventory.android.content.InventoryContract.*;
 

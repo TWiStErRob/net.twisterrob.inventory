@@ -17,9 +17,7 @@ import android.support.annotation.*;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.system.*;
 
-import net.twisterrob.inventory.android.backup.BackupStreamExporter;
-import net.twisterrob.inventory.android.backup.BackupStreamExporter.ProgressDispatcher;
-import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks.Progress;
+import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 
 public class ExporterService extends NotificationProgressService<Progress> {

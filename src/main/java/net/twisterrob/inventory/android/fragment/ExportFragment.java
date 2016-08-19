@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks;
+import net.twisterrob.inventory.android.backup.Progress;
 import net.twisterrob.inventory.android.backup.concurrent.ExporterTask;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 

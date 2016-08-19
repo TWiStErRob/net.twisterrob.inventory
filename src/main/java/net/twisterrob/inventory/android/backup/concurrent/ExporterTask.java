@@ -10,11 +10,9 @@ import android.support.annotation.NonNull;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.android.backup.*;
-import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks.Progress;
 
 // FIXME convert to Service
-public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress>
-		implements BackupStreamExporter.ProgressDispatcher {
+public class ExporterTask extends SimpleAsyncTask<File, Progress, Progress> implements ProgressDispatcher {
 	private static final Logger LOG = LoggerFactory.getLogger(ExporterTask.class);
 
 	private Exporter.ExportCallbacks callbacks = DUMMY_CALLBACK;

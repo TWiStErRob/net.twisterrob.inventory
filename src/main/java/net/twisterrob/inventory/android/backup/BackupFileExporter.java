@@ -7,8 +7,6 @@ import android.support.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
-import net.twisterrob.inventory.android.backup.BackupStreamExporter.ProgressDispatcher;
-import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks.Progress;
 
 public class BackupFileExporter {
 	private final BackupStreamExporter exporter;

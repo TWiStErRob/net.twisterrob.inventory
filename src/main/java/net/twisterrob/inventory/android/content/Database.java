@@ -202,15 +202,24 @@ public class Database extends VariantDatabase {
 			execSQL(imageSetter, null, id);
 		} else {
 			// create new image
-			long imageID;
-			if (time != null) {
-				imageID = rawInsert(R.string.query_image_create_with_time, imageContents, time);
-			} else {
-				imageID = rawInsert(R.string.query_image_create, (Object)imageContents);
-			}
+			long imageID = addImage(imageContents, time);
 			// use new image (old will be deleted via trigger)
 			execSQL(imageSetter, imageID, id);
 		}
+	}
+
+	public long addImage(byte[] imageContents, Long time) {
+		long imageID;
+		if (time != null) {
+			imageID = rawInsert(R.string.query_image_create_with_time, imageContents, time);
+		} else {
+			imageID = rawInsert(R.string.query_image_create, (Object)imageContents);
+		}
+		return imageID;
+	}
+
+	public void deleteImage(long id) {
+		execSQL(R.string.query_image_delete, id);
 	}
 
 	public long createProperty(long type, String name, String description) {
@@ -222,8 +231,8 @@ public class Database extends VariantDatabase {
 	public void updateProperty(long id, long type, String name, String description) {
 		execSQL(R.string.query_property_update, type, name, description, id);
 	}
-	public void setPropertyImage(long id, byte[] imageContents, Long time) {
-		setImage(R.string.query_property_image_set, id, imageContents, time);
+	public void setPropertyImage(long id, Long imageId) {
+		execSQL(R.string.query_property_image_set, imageId, id);
 	}
 
 	public Cursor getPropertyImage(long id) {
@@ -243,8 +252,8 @@ public class Database extends VariantDatabase {
 	public void updateRoom(long id, long type, String name, String description) {
 		execSQL(R.string.query_room_update, type, name, description, id);
 	}
-	public void setRoomImage(long id, byte[] imageContents, Long time) {
-		setImage(R.string.query_room_image_set, id, imageContents, time);
+	public void setRoomImage(long id, Long imageId) {
+		execSQL(R.string.query_room_image_set, imageId, id);
 	}
 	public Cursor getRoomImage(long id) {
 		return rawQuery(R.string.query_room_image_get, id);
@@ -280,8 +289,8 @@ public class Database extends VariantDatabase {
 	public void updateItem(long id, long category, String name, String description) {
 		execSQL(R.string.query_item_update, category, name, description, id);
 	}
-	public void setItemImage(long id, byte[] imageContents, Long time) {
-		setImage(R.string.query_item_image_set, id, imageContents, time);
+	public void setItemImage(long id, Long imageId) {
+		execSQL(R.string.query_item_image_set, imageId, id);
 	}
 	public Cursor getItemImage(long id) {
 		return rawQuery(R.string.query_item_image_get, id);

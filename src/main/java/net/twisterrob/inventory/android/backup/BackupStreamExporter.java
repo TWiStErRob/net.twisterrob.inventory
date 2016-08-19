@@ -11,8 +11,7 @@ import android.support.annotation.*;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks.Progress;
-import net.twisterrob.inventory.android.backup.Exporter.ExportCallbacks.Progress.Phase;
+import net.twisterrob.inventory.android.backup.Progress.Phase;
 import net.twisterrob.inventory.android.content.contract.*;
 
 // FIXME convert to Service
@@ -146,19 +145,5 @@ public class BackupStreamExporter {
 		} else {
 			return null;
 		}
-	}
-
-	public interface ProgressDispatcher {
-		/**
-		 * @throws CancellationException is a good place to notify the exporter to quit immediately
-		 */
-		@WorkerThread
-		void dispatchProgress(@NonNull Progress progress) throws CancellationException;
-
-		ProgressDispatcher IGNORE = new ProgressDispatcher() {
-			@Override public void dispatchProgress(@NonNull Progress progress) throws CancellationException {
-
-			}
-		};
 	}
 }

@@ -225,6 +225,7 @@
 	<string name="backup_title">Backup</string>
 	<string name="backup_export_internal">Backup here</string>
 	<string name="backup_export_external">Backup to…</string>
+	<string name="backup_import_external">Import from…</string>
 	<string name="backup_go_home">Go to Downloads folder</string>
 	<string name="backup_go_home_condensed">Downloads</string>
 
