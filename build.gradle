@@ -11,8 +11,7 @@ buildscript {
 	}
 
 	dependencies {
-		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-		//noinspection GradleDynamicVersion
+		configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}
 }
@@ -39,7 +38,7 @@ android.applicationVariants.all { com.android.build.gradle.api.ApplicationVarian
 repositories {
 	jcenter()
 	maven { name 'twisterrob'; url 'http://localhost/maven' }
-	maven { name 'glide'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
+	maven { name 'sonatype'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
 //	maven { name 'idescout'; url 'http://www.idescout.com/maven/repo/' }
 }
 
@@ -80,6 +79,7 @@ android {
 	lintOptions {
 		//abortOnError false
 	}
+	testBuildType "debug" // CONSIDER release
 	buildTypes {
 		release {
 			//debuggable true
@@ -115,11 +115,4 @@ android.testVariants.all { com.android.build.gradle.api.TestVariant test ->
 		commandLine "adb shell pm grant ${test./*testedVariant.*/ applicationId} ${permission}".split(' ')
 	}
 	test.connectedInstrumentTest.dependsOn grantPermissions
-}
-
-tasks.withType(JavaCompile.class) { com.android.build.gradle.tasks.factory.AndroidJavaCompile it ->
-	if (it.name.contains('UnitTestJava')) {
-		it.sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-		it.targetCompatibility = JavaVersion.VERSION_1_8.toString()
-	}
 }

@@ -2,6 +2,8 @@ package net.twisterrob.java.utils;
 
 import java.lang.reflect.*;
 
+import static java.lang.reflect.Modifier.*;
+
 import javax.annotation.*;
 
 import org.slf4j.*;
@@ -42,6 +44,18 @@ public class ReflectionTools {
 			LOG.warn("Cannot read field {} of ({}){}", fieldName, object != null? object.getClass() : null, object, ex);
 		}
 		return null;
+	}
+
+	public static void set(@Nonnull Object object, @Nonnull String fieldName, Object value) {
+		try {
+			Field field = findDeclaredField(object.getClass(), fieldName);
+			field.setAccessible(true);
+			field.set(object, value);
+		} catch (Exception ex) {
+			//noinspection ConstantConditions prevent NPE when object is null, even though it was declared not null
+			LOG.warn("Cannot write field {} of ({}){}", fieldName, object != null? object.getClass() : null, object,
+					ex);
+		}
 	}
 
 	/**
@@ -105,5 +119,26 @@ public class ReflectionTools {
 			return null;
 		}
 		return reflected;
+	}
+
+	public static @Nullable Field tryFindConstant(@Nonnull Class<?> clazz, @Nonnull Object value) {
+		try {
+			return findConstant(clazz, value);
+		} catch (IllegalAccessException e) {
+			return null;
+		} catch (NoSuchFieldException e) {
+			return null;
+		}
+	}
+
+	public static @Nonnull Field findConstant(@Nonnull Class<?> clazz, @Nonnull Object value)
+			throws IllegalAccessException, NoSuchFieldException {
+		for (Field field : clazz.getDeclaredFields()) {
+			field.setAccessible(true);
+			if (isStatic(field.getModifiers()) && value.equals(field.get(null))) {
+				return field;
+			}
+		}
+		throw new NoSuchFieldException("Cannot find field on " + clazz + " with value: " + value);
 	}
 }

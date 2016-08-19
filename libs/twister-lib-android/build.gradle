@@ -9,8 +9,7 @@ buildscript {
 	}
 
 	dependencies {
-		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-		//noinspection GradleDynamicVersion
+		configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}
 }
@@ -25,7 +24,7 @@ apply from: 'http://localhost/maven/configure.gradle'
 repositories {
 	jcenter()
 	maven { name 'twisterrob'; url 'http://localhost/maven' }
-	maven { name 'glide'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
+	maven { name 'sonatype'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {

@@ -1,5 +1,9 @@
 def isAndroid = plugins.hasPlugin('com.android.application') || plugins.hasPlugin('com.android.library')
 
+repositories {
+	maven { name 'sonatype'; url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
 configurations.all {
 	resolutionStrategy {
 		force "junit:junit:${VERSION_JUNIT}"
@@ -50,6 +54,7 @@ dependencies {
 	testCompile "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
 	testCompile 'com.shazam:gwen:1.0.2'
 	testCompile 'org.slf4j:slf4j-simple:1.7.21'
+	testCompile 'com.diffplug.durian:durian:3.4.0'
 //	testCompile 'cglib:cglib:3.2.4'
 //	testCompile 'pl.pragmatists:JUnitParams:1.0.4'
 //	testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.2'

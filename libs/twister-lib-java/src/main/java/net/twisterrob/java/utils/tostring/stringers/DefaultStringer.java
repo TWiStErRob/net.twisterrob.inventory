@@ -49,7 +49,7 @@ public class DefaultStringer extends Stringer<Object> {
 		return shortenPackageNames(name);
 	}
 
-	public static String shortenPackageNames(String string) {
+	public static @Nonnull String shortenPackageNames(@Nonnull String string) {
 		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+(v4|v7|v13)\\.(?:[a-z0-9]+\\.)+", "$1.");
 		string = string.replaceAll("^android\\.(?:[a-z0-9]+\\.)+", "");
 		string = string.replaceAll("^javax?\\.(?:[a-z0-9]+\\.)+", "");

@@ -14,6 +14,7 @@ import android.os.PowerManager.WakeLock;
  * getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
  * </pre></code>
  */
+@SuppressWarnings("MissingPermission")
 public class DeviceUnlocker {
 	private final KeyguardManager keyguardManager;
 	private final PowerManager powerManager;
