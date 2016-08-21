@@ -8,8 +8,8 @@ import android.support.v7.widget.*;
 import android.view.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
+import net.twisterrob.android.utils.tools.DialogTools;
+import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
@@ -45,7 +45,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 			}
 
 			@Override protected void onCreateNew() {
-				AndroidTools
+				DialogTools
 						.prompt(getContext(), null, new PopupCallbacks<String>() {
 							@Override public void finished(String value) {
 								if (value == null) {

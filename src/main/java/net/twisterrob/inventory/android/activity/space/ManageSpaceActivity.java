@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup;
@@ -140,7 +141,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		});
 		findViewById(R.id.storage_db_restore).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
-				AndroidTools
+				DialogTools
 						.prompt(ManageSpaceActivity.this, null, new PopupCallbacks<String>() {
 							@Override public void finished(final String value) {
 								if (value == null) {

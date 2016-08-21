@@ -15,8 +15,8 @@ import android.view.View.*;
 import android.widget.TextView;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
+import net.twisterrob.android.utils.tools.DialogTools;
+import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.ListItemsActivity;
 import net.twisterrob.inventory.android.content.Loaders;
@@ -110,7 +110,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 			}
 
 			@Override protected void onCreateNew() {
-				AndroidTools
+				DialogTools
 						.prompt(getContext(), null, new PopupCallbacks<String>() {
 							@Override public void finished(String value) {
 								if (value == null) {

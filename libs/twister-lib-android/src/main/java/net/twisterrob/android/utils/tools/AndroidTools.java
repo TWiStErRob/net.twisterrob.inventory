@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.*;
 
 import static java.lang.Math.*;
@@ -15,7 +14,6 @@ import org.slf4j.*;
 import android.annotation.*;
 import android.app.*;
 import android.content.*;
-import android.content.DialogInterface.*;
 import android.content.pm.*;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
@@ -35,17 +33,13 @@ import android.support.v4.view.*;
 import android.support.v4.widget.*;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.*;
 import android.view.*;
 import android.view.ViewGroup.*;
-import android.view.inputmethod.*;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
-import android.widget.TextView.OnEditorActionListener;
 
 import static android.util.TypedValue.*;
-
-import com.rarepebble.colorpicker.ColorPickerView;
 
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
@@ -1139,63 +1133,14 @@ public /*static*/ abstract class AndroidTools {
 		return CanvasTools.getMaximumBitmapSize(canvas);
 	}
 
-	@UiThread
-	public interface PopupCallbacks<T> {
-		void finished(T value);
-		PopupCallbacks<?> NO_CALLBACK = new DoNothing();
-
-		class DoNothing implements PopupCallbacks<Object> {
-			@Override public void finished(Object value) {
-
-			}
-			@SuppressWarnings("unchecked")
-			public static <T> PopupCallbacks<T> instance() {
-				return (PopupCallbacks<T>)NO_CALLBACK;
-			}
-		}
+	/** @deprecated use DialogTools */
+	interface PopupCallbacks<T> extends DialogTools.PopupCallbacks<T> {
 	}
-
-	@UiThread
+	/** @deprecated use DialogTools */
+	@SuppressWarnings("deprecation")
 	public static AlertDialog.Builder prompt(final Context context,
-			String initialValue, final PopupCallbacks<String> callbacks) {
-		final EditText input = new EditText(context);
-		input.setSingleLine(true);
-		input.setText(initialValue);
-		showKeyboard(input);
-
-		final AtomicReference<Dialog> dialog = new AtomicReference<>();
-		input.setImeOptions(EditorInfo.IME_ACTION_DONE);
-		input.setOnEditorActionListener(new OnEditorActionListener() {
-			@Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {
-					String value = input.getText().toString();
-					callbacks.finished(value);
-					dialog.get().dismiss();
-				}
-				return false;
-			}
-		});
-		return new AlertDialog.Builder(context) {
-			@Override public @NonNull AlertDialog create() {
-				AlertDialog createdDialog = super.create();
-				if (null != dialog.getAndSet(createdDialog)) { // steal created dialog
-					throw new UnsupportedOperationException("Cannot create multiple dialogs from this builder.");
-				}
-				return createdDialog;
-			}
-		}
-				.setView(input)
-				.setPositiveButton(android.R.string.ok, new OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String value = input.getText().toString();
-						callbacks.finished(value);
-					}
-				})
-				.setNegativeButton(android.R.string.cancel, new OnClickListener() {
-					@Override public void onClick(DialogInterface dialog, int which) {
-						callbacks.finished(null);
-					}
-				});
+			String initialValue, PopupCallbacks<String> callbacks) {
+		return DialogTools.prompt(context, initialValue, callbacks);
 	}
 
 	/**
@@ -1245,110 +1190,27 @@ public /*static*/ abstract class AndroidTools {
 		imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
 	}
 
-	public static AlertDialog.Builder confirm(Context context, final PopupCallbacks<Boolean> callbacks) {
-		return new DefaultBuilder(context)
-				.setPositiveButton(android.R.string.yes, new OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						callbacks.finished(true);
-					}
-				})
-				.setNegativeButton(android.R.string.no, new OnClickListener() {
-					@Override public void onClick(DialogInterface dialog, int which) {
-						callbacks.finished(false);
-					}
-				})
-				.setCancelable(true)
-				.setOnCancelListener(new OnCancelListener() {
-					@Override public void onCancel(DialogInterface dialog) {
-						callbacks.finished(null);
-					}
-				});
+	/** @deprecated use DialogTools */
+	@SuppressWarnings("deprecation")
+	public static AlertDialog.Builder confirm(Context context, PopupCallbacks<Boolean> callbacks) {
+		return DialogTools.confirm(context, callbacks);
 	}
-	public static AlertDialog.Builder notify(Context context, final PopupCallbacks<Boolean> callbacks) {
-		return new DefaultBuilder(context)
-				.setNeutralButton(android.R.string.ok, new OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						callbacks.finished(true);
-					}
-				})
-				.setCancelable(true)
-				.setOnCancelListener(new OnCancelListener() {
-					@Override public void onCancel(DialogInterface dialog) {
-						callbacks.finished(null);
-					}
-				});
+	/** @deprecated use DialogTools */
+	@SuppressWarnings("deprecation")
+	public static AlertDialog.Builder notify(Context context, PopupCallbacks<Boolean> callbacks) {
+		return DialogTools.notify(context, callbacks);
 	}
-
-	@TargetApi(VERSION_CODES.HONEYCOMB)
+	/** @deprecated use DialogTools */
+	@SuppressWarnings("deprecation")
 	public static AlertDialog.Builder pickNumber(Context context,
-			int initial, Integer min, Integer max, final PopupCallbacks<Integer> callbacks) {
-		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
-			LayoutInflater inflater = LayoutInflater.from(context);
-			final NumberPicker picker = new NumberPicker(context);
-			if (min != null) {
-				picker.setMinValue(min);
-			}
-			if (max != null) {
-				picker.setMaxValue(max);
-			}
-			picker.setValue(initial);
-			return new AlertDialog.Builder(context)
-					.setView(picker)
-					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							callbacks.finished(picker.getValue());
-						}
-					})
-					.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							callbacks.finished(null);
-						}
-					})
-					.setTitle("Pick a number");
-		} else {
-			return prompt(context, Integer.toString(initial), new PopupCallbacks<String>() {
-				@Override public void finished(String value) {
-					try {
-						callbacks.finished(Integer.parseInt(value));
-					} catch (NumberFormatException ex) {
-						callbacks.finished(null);
-					}
-				}
-			})
-					.setTitle("Pick a number");
-		}
+			int initial, Integer min, Integer max, PopupCallbacks<Integer> callbacks) {
+		return DialogTools.pickNumber(context, initial, min, max, callbacks);
 	}
-	@TargetApi(VERSION_CODES.HONEYCOMB)
+	/** @deprecated use DialogTools */
+	@SuppressWarnings("deprecation")
 	public static AlertDialog.Builder pickColor(Context context,
 			@ColorInt int initial, final PopupCallbacks<Integer> callbacks) {
-		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
-			final ColorPickerView picker = new ColorPickerView(context);
-			picker.setColor(initial);
-			return new AlertDialog.Builder(context)
-					.setView(picker)
-					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							callbacks.finished(picker.getColor());
-						}
-					})
-					.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							callbacks.finished(null);
-						}
-					})
-					.setTitle("Pick a color");
-		} else {
-			return prompt(context, Integer.toHexString(initial), new PopupCallbacks<String>() {
-				@Override public void finished(String value) {
-					try {
-						callbacks.finished(Integer.parseInt(value, 16));
-					} catch (NumberFormatException ex) {
-						callbacks.finished(null);
-					}
-				}
-			})
-					.setTitle("Pick a color");
-		}
+		return DialogTools.pickColor(context, initial, callbacks);
 	}
 
 	/** Will return the first if there are more. */
@@ -1417,26 +1279,5 @@ public /*static*/ abstract class AndroidTools {
 
 	protected AndroidTools() {
 		// static utility class
-	}
-
-	private static class DefaultBuilder extends AlertDialog.Builder {
-		public DefaultBuilder(Context context) {
-			super(context);
-		}
-
-		@Override public AlertDialog create() {
-			final AlertDialog dialog = super.create();
-			dialog.setCanceledOnTouchOutside(true);
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
-				@Override public void run() {
-					// TODO is this available earlier somehow?
-					View message = dialog.findViewById(android.R.id.message);
-					if (message instanceof TextView) {
-						((TextView)message).setMovementMethod(LinkMovementMethod.getInstance());
-					}
-				}
-			});
-			return dialog;
-		}
 	}
 }

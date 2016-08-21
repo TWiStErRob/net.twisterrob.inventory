@@ -22,7 +22,7 @@ import com.bumptech.glide.request.target.Target;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.android.utils.tools.AndroidTools.PopupCallbacks;
+import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 
@@ -69,7 +69,7 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 	}
 
 	private void askRedirect() {
-		AndroidTools
+		DialogTools
 				.confirm(this, new PopupCallbacks<Boolean>() {
 					@Override public void finished(Boolean value) {
 						if (Boolean.TRUE.equals(value)) {
