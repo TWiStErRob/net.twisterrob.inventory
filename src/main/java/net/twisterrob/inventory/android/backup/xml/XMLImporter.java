@@ -17,24 +17,28 @@ import net.twisterrob.inventory.android.backup.Importer;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.Types;
+import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.backup.xml.XMLExporter.*;
 
 public class XMLImporter implements Importer {
 	private static final Logger LOG = LoggerFactory.getLogger(XMLImporter.class);
-	private ImportProgressHandler progress;
+	private ImportProgress progress;
+	private ImportImageGetter images;
 	private final Resources res;
 	private final Database db;
 	private final Types types = new Types();
 	private final Map<Long, Long> itemMap = new TreeMap<>();
 
 	public XMLImporter(Resources res, Database db) {
-		this.res = res;
-		this.db = db;
+		this.res = ObjectTools.checkNotNull(res);
+		this.db = ObjectTools.checkNotNull(db);
 	}
 
-	public void doImport(@NonNull InputStream stream, @Nullable ImportProgressHandler progress) throws Exception {
+	public void doImport(@NonNull InputStream stream, @Nullable ImportProgress progress,
+			@Nullable ImportImageGetter getter) throws Exception {
 		this.progress = progress == null? DUMMY_HANDLER : progress;
+		this.images = getter == null? DUMMY_GETTER : getter;
 		RootElement structure = getStructure();
 		Xml.parse(stream, Xml.Encoding.UTF_8, structure.getContentHandler());
 	}
@@ -189,8 +193,9 @@ public class XMLImporter implements Importer {
 		protected void loadImage(Type type) {
 			if (image != null) {
 				try {
-					progress.importImage(type, id, name, image);
+					images.importImage(type, id, name, image);
 				} catch (IOException ex) {
+					// CONSIDER throwing to stop import?
 					LOG.error("Cannot load image for {} #{} ({}): {}", type, id, name, image, ex);
 				}
 			}
@@ -310,7 +315,7 @@ public class XMLImporter implements Importer {
 		}
 	}
 
-	private static final ImportProgressHandler DUMMY_HANDLER = new ImportProgressHandler() {
+	private static final ImportProgress DUMMY_HANDLER = new ImportProgress() {
 		@Override public void publishStart(int size) {
 			// NO OP
 		}
@@ -323,6 +328,9 @@ public class XMLImporter implements Importer {
 		@Override public void error(String message) {
 			// NO OP
 		}
+	};
+
+	private static final ImportImageGetter DUMMY_GETTER = new ImportImageGetter() {
 		@Override public void importImage(Type type, long id, String name, String image) throws IOException {
 			// NO OP
 		}

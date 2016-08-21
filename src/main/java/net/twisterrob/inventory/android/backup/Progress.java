@@ -6,7 +6,7 @@ public final class Progress implements Cloneable {
 	public Phase phase;
 	/** number of images done from total */
 	public int imagesDone;
-	/** total number of images */
+	/** total number of images, may not be consistent until import finishes */
 	public int imagesTotal;
 	/** number of items done from total */
 	public int done;

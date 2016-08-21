@@ -25,7 +25,7 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.backup.Importer.ImportProgressHandler;
+import net.twisterrob.inventory.android.backup.Importer.*;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -457,7 +457,7 @@ public class MainActivity extends DrawerActivity
 			InputStream demo = null;
 			try {
 				demo = getAssets().open("demo.xml");
-				new XMLImporter(getResources(), App.db()).doImport(demo, new ImportProgressHandler() {
+				new XMLImporter(getResources(), App.db()).doImport(demo, new ImportProgress() {
 					@Override public void publishStart(int size) {
 						// NO OP
 					}
@@ -470,6 +470,7 @@ public class MainActivity extends DrawerActivity
 					@Override public void error(String message) {
 						throw new UnsupportedOperationException();
 					}
+				}, new ImportImageGetter() {
 					@Override public void importImage(Type type, long id, String name, String image)
 							throws IOException {
 						throw new UnsupportedOperationException();

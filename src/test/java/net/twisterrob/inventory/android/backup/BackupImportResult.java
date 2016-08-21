@@ -11,8 +11,8 @@ import com.shazam.gwen.collaborators.Asserter;
 
 class BackupImportResult implements Asserter {
 	private final Progress progress;
-	private final ProgressDispatcher dispatcher;
-	public BackupImportResult(Progress progress, ProgressDispatcher dispatcher) {
+	private final ImportProgressHandler dispatcher;
+	public BackupImportResult(Progress progress, ImportProgressHandler dispatcher) {
 		assertNotNull(progress);
 		this.progress = progress;
 		this.dispatcher = Preconditions.checkNotNull(dispatcher);

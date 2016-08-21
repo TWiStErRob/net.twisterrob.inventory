@@ -2,6 +2,8 @@ package net.twisterrob.java.utils;
 
 import java.io.*;
 
+import javax.annotation.*;
+
 public class ObjectTools {
 
 	private ObjectTools() {
@@ -26,5 +28,16 @@ public class ObjectTools {
 	public static boolean equals(Object o1, Object o2) {
 		//noinspection ConstantConditions o1 is always null at the end, but still call equals with it
 		return o1 == o2 || (o1 != null? o1.equals(o2) : o2.equals(o1));
+	}
+
+	/**
+	 * Assert a non-null object state
+	 * @see com.google.common.base.Preconditions#checkNotNull(java.lang.Object)
+	 */
+	public static @Nonnull <T> T checkNotNull(@Nullable T reference) {
+		if (reference == null) {
+			throw new NullPointerException();
+		}
+		return reference;
 	}
 }

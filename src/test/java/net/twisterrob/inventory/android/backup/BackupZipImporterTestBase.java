@@ -19,7 +19,7 @@ import com.diffplug.common.base.Errors;
 import com.shazam.gwen.Gwen;
 
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.backup.Importer.ImportProgressHandler;
+import net.twisterrob.inventory.android.backup.Importer.ImportImageGetter;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.Type;
@@ -37,7 +37,7 @@ public abstract class BackupZipImporterTestBase {
 	protected static final String IMAGE3 = "item_3_00000000_000000.jpg";
 	protected static final String IMAGE4 = "item_4_00000000_000000.jpg";
 
-	@Mock protected ProgressDispatcher dispatcherMock;
+	@Spy protected ImportProgressHandler dispatcherMock;
 	@Mock protected XMLImporter xmlImporterMock;
 	@Mock protected Database dbMock;
 
@@ -53,8 +53,8 @@ public abstract class BackupZipImporterTestBase {
 	protected abstract Progress callImport(InputStream stream) throws IOException;
 
 	@After public void noMoreInteractions() {
-		verify(dispatcherMock, atLeastOnce()).dispatchProgress(any(Progress.class));
-		verifyNoMoreInteractions(dispatcherMock, xmlImporterMock, dbMock);
+		verify(dispatcherMock, atLeastOnce()).publishProgress();
+		verifyNoMoreInteractions(xmlImporterMock, dbMock); // TODO add dispatcherMock
 	}
 
 	@Test public void testEmptyZip() throws Throwable {
@@ -145,8 +145,8 @@ public abstract class BackupZipImporterTestBase {
 		Gwen.given(input).withDataXML().withImages(IMAGE1);
 		BackupImportResult result = Gwen.when(importer).imports(input, new Answer<Void>() {
 			@Override public Void answer(InvocationOnMock invocation) throws Throwable {
-				ImportProgressHandler handler = invocation.getArgumentAt(1, ImportProgressHandler.class);
-				handler.importImage(Type.Root, 0, "item name", IMAGE1);
+				ImportImageGetter getter = invocation.getArgumentAt(2, ImportImageGetter.class);
+				getter.importImage(Type.Root, 0, "item name", IMAGE1);
 				return null;
 			}
 		});

@@ -11,58 +11,34 @@ import android.support.annotation.VisibleForTesting;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.backup.Importer.ImportProgressHandler;
+import net.twisterrob.inventory.android.backup.Importer.ImportImageGetter;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.Type;
+import net.twisterrob.java.utils.ObjectTools;
 
-public class BackupZipFileImporter implements ImportProgressHandler, ZipImporter<File> {
+public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<File> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupZipFileImporter.class);
-	private final ProgressDispatcher dispatcher;
-	Progress progress;
+	private final ImportProgressHandler progress;
 	private ZipFile zip;
 	private final Resources res;
 	private Database db;
 	private XMLImporter importer;
 
 	public BackupZipFileImporter(Resources res, ProgressDispatcher dispatcher) {
-		this(res, dispatcher, App.db(), new XMLImporter(res, App.db()));
+		this(res, App.db(), new XMLImporter(res, App.db()), new ImportProgressHandler(dispatcher));
 	}
-	@VisibleForTesting BackupZipFileImporter(Resources res, ProgressDispatcher dispatcher,
-			Database db, XMLImporter importer) {
-		this.dispatcher = dispatcher;
-		this.res = res;
-		this.db = db;
-		this.importer = importer;
-	}
-
-	public void publishStart(int size) {
-		progress.done = 0;
-		progress.total = size;
-		publishProgress();
-	}
-	public void publishIncrement() {
-		progress.done++;
-		publishProgress();
-	}
-	private void publishProgress() {
-		dispatcher.dispatchProgress(progress.clone());
-	}
-
-	@Override public void warning(String message) {
-		LOG.warn("Warning: {}", message);
-		progress.warnings.add(message);
-	}
-
-	@Override public void error(String message) {
-		LOG.warn("Error: {}", message);
-		progress.warnings.add(message);
+	@VisibleForTesting BackupZipFileImporter(Resources res,
+			Database db, XMLImporter importer, ImportProgressHandler progress) {
+		this.progress = ObjectTools.checkNotNull(progress);
+		this.res = ObjectTools.checkNotNull(res);
+		this.db = ObjectTools.checkNotNull(db);
+		this.importer = ObjectTools.checkNotNull(importer);
 	}
 
 	public Progress importFrom(File file) {
-		progress = new Progress();
 		zip = null;
-		publishStart(-1);
+		progress.publishStart(-1);
 		try {
 			db.beginTransaction();
 
@@ -72,7 +48,7 @@ public class BackupZipFileImporter implements ImportProgressHandler, ZipImporter
 			if (dataFile != null) {
 				//noinspection resource zip is closed in finally
 				InputStream stream = zip.getInputStream(dataFile);
-				importer.doImport(stream, this);
+				importer.doImport(stream, progress, this);
 			} else {
 				throw new IllegalArgumentException(String.format("The file %s is not a valid %s backup: %s",
 						zip.getName(),
@@ -82,27 +58,27 @@ public class BackupZipFileImporter implements ImportProgressHandler, ZipImporter
 
 			db.setTransactionSuccessful();
 		} catch (ZipException ex) {
-			progress.failure = new IllegalArgumentException(String.format("%s: %s", file, "invalid zip file"), ex);
+			progress.fail(new IllegalArgumentException(String.format("%s: %s", file, "invalid zip file"), ex));
 		} catch (Throwable ex) {
-			progress.failure = ex;
+			progress.fail(ex);
 		} finally {
 			IOTools.ignorantClose(zip);
 			try {
 				db.endTransaction();
 			} catch (Exception ex) {
-				if (progress.failure != null) {
-					LOG.warn("Cannot end transaction, exception suppressed by {}", progress.failure, ex);
-					warning(String.format("Cannot end transaction: %s", ex));
+				if (progress.isFailed()) {
+					LOG.warn("Cannot end transaction, exception suppressed by {}", progress.getFailure(), ex);
+					progress.warning(String.format("Cannot end transaction: %s", ex));
 				} else {
-					progress.failure = ex;
+					progress.fail(ex);
 				}
 			}
 		}
-		return progress;
+		return progress.finalProgress();
 	}
 
-	public void importImage(Type type, long id, String name, String image) throws IOException {
-		progress.imagesTotal++;
+	@Override public void importImage(Type type, long id, String name, String image) throws IOException {
+		progress.imageTotalIncrement();
 		ZipEntry imageEntry = zip.getEntry(image);
 		if (imageEntry != null) {
 			InputStream zipImage = zip.getInputStream(imageEntry);
@@ -123,9 +99,9 @@ public class BackupZipFileImporter implements ImportProgressHandler, ZipImporter
 				default:
 					throw new IllegalArgumentException(type + " cannot have images.");
 			}
-			progress.imagesDone++;
+			progress.imageIncrement();
 		} else {
-			warning(res.getString(R.string.backup_import_invalid_image, name, image));
+			progress.warning(res.getString(R.string.backup_import_invalid_image, name, image));
 		}
 	}
 }

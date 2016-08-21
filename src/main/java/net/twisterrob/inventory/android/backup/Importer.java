@@ -7,15 +7,26 @@ import android.support.annotation.*;
 import net.twisterrob.inventory.android.content.contract.Type;
 
 public interface Importer {
-	void doImport(@NonNull InputStream stream, @Nullable ImportProgressHandler progress) throws Exception;
+	void doImport(
+			@NonNull InputStream stream,
+			@Nullable ImportProgress progress,
+			@Nullable ImportImageGetter getter
+	) throws Exception;
 
-	// TODO split this interface into ImageGetter and ProgressHandler
-	interface ImportProgressHandler {
+	interface ImportProgress {
 		void publishStart(int size);
 		void publishIncrement();
 		void warning(String message);
 		void error(String message);
-		void importImage(Type type, long id, String name, String image) throws IOException;
+	}
+
+	interface ImportImageGetter {
+		void importImage(
+				Type type,
+				long id,
+				String name,
+				String image
+		) throws IOException;
 	}
 
 	interface ImportCallbacks {

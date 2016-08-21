@@ -15,17 +15,17 @@ import com.google.common.base.Preconditions;
 import com.shazam.gwen.collaborators.*;
 
 import net.twisterrob.inventory.android.backup.BackupZip.Item;
-import net.twisterrob.inventory.android.backup.Importer.ImportProgressHandler;
+import net.twisterrob.inventory.android.backup.Importer.*;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.contract.Type;
 
 class BackupImporter implements Actor, Asserter {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupImporter.class);
 
-	private ProgressDispatcher dispatcherMock;
+	private ImportProgressHandler dispatcherMock;
 	private XMLImporter xmlImporterMock;
 	private final Function<InputStream, Progress> importer;
-	public BackupImporter(ProgressDispatcher dispatcherMock, XMLImporter xmlImporterMock, 
+	public BackupImporter(ImportProgressHandler dispatcherMock, XMLImporter xmlImporterMock,
 			Function<InputStream, Progress> importer) {
 		this.dispatcherMock = Preconditions.checkNotNull(dispatcherMock);
 		this.xmlImporterMock = Preconditions.checkNotNull(xmlImporterMock);
@@ -34,12 +34,13 @@ class BackupImporter implements Actor, Asserter {
 	public BackupImportResult imports(final BackupZip input) throws Throwable {
 		return imports(input, new Answer<Void>() {
 			@Override public Void answer(InvocationOnMock invocation) throws Throwable {
-				ImportProgressHandler handler = invocation.getArgumentAt(1, ImportProgressHandler.class);
+				ImportProgress handler = invocation.getArgumentAt(1, ImportProgress.class);
+				ImportImageGetter getter = invocation.getArgumentAt(2, ImportImageGetter.class);
 				List<Item> items = input.getItems();
 				handler.publishStart(items.size());
 				for (Item item : items) {
 					if (item.image != null) {
-						handler.importImage(Type.Item, item.id, item.name, item.image);
+						getter.importImage(Type.Item, item.id, item.name, item.image);
 					}
 					handler.publishIncrement();
 				}
@@ -50,7 +51,8 @@ class BackupImporter implements Actor, Asserter {
 	public BackupImportResult imports(final BackupZip input, Answer<Void> importAnswer) throws Throwable {
 		if (input.hasXML()) {
 			doAnswer(importAnswer)
-					.when(xmlImporterMock).doImport(any(InputStream.class), any(ImportProgressHandler.class));
+					.when(xmlImporterMock)
+					.doImport(any(InputStream.class), any(ImportProgress.class), any(ImportImageGetter.class));
 		}
 		Progress progress = importer.apply(input.getStream());
 		if (progress.failure instanceof AssertionError) {
@@ -60,7 +62,8 @@ class BackupImporter implements Actor, Asserter {
 		return new BackupImportResult(progress, dispatcherMock);
 	}
 	public BackupImporter importedXML() throws Throwable {
-		verify(xmlImporterMock).doImport(any(InputStream.class), any(ImportProgressHandler.class));
+		verify(xmlImporterMock)
+				.doImport(any(InputStream.class), any(ImportProgress.class), any(ImportImageGetter.class));
 		return this;
 	}
 }
