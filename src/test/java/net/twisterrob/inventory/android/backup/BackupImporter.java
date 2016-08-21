@@ -17,19 +17,16 @@ import com.shazam.gwen.collaborators.*;
 import net.twisterrob.inventory.android.backup.BackupZip.Item;
 import net.twisterrob.inventory.android.backup.Importer.ImportProgressHandler;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
-import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.Type;
 
 class BackupImporter implements Actor, Asserter {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupImporter.class);
 
-	private Database dbMock;
 	private ProgressDispatcher dispatcherMock;
 	private XMLImporter xmlImporterMock;
 	private final Function<InputStream, Progress> importer;
-	public BackupImporter(Database dbMock, ProgressDispatcher dispatcherMock, XMLImporter xmlImporterMock,
+	public BackupImporter(ProgressDispatcher dispatcherMock, XMLImporter xmlImporterMock, 
 			Function<InputStream, Progress> importer) {
-		this.dbMock = Preconditions.checkNotNull(dbMock);
 		this.dispatcherMock = Preconditions.checkNotNull(dispatcherMock);
 		this.xmlImporterMock = Preconditions.checkNotNull(xmlImporterMock);
 		this.importer = Preconditions.checkNotNull(importer);
@@ -51,12 +48,6 @@ class BackupImporter implements Actor, Asserter {
 		});
 	}
 	public BackupImportResult imports(final BackupZip input, Answer<Void> importAnswer) throws Throwable {
-//		when(dbMock.addImage(any(byte[].class), anyLong())).thenAnswer(new Answer<Long>() {
-//			private long id = 1000;
-//			@Override public Long answer(InvocationOnMock invocation) throws Throwable {
-//				return id++;
-//			}
-//		});
 		if (input.hasXML()) {
 			doAnswer(importAnswer)
 					.when(xmlImporterMock).doImport(any(InputStream.class), any(ImportProgressHandler.class));

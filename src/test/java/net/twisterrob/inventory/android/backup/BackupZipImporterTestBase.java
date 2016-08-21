@@ -47,7 +47,7 @@ public abstract class BackupZipImporterTestBase {
 
 	@Before public void initImporter() {
 		Function<InputStream, Progress> callImport = Errors.rethrow().wrap(this::callImport);
-		importer = new BackupImporter(dbMock, dispatcherMock, xmlImporterMock, callImport);
+		importer = new BackupImporter(dispatcherMock, xmlImporterMock, callImport);
 	}
 
 	protected abstract Progress callImport(InputStream stream) throws IOException;

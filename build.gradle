@@ -95,6 +95,7 @@ android {
 		ignoreAssetsPattern defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
 	sourceSets.main.res.srcDir 'src/main/res-icons'
+	sourceSets.test.java.srcDir 'src/test/robolectricJava'
 
 	packagingOptions {
 		/* Execution failed for task ':transformResourcesWithMergeJavaResForDebugAndroidTest'.
