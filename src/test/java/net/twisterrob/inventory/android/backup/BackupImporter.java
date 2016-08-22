@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.backup;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -24,9 +24,9 @@ class BackupImporter implements Actor, Asserter {
 
 	private ImportProgressHandler dispatcherMock;
 	private XMLImporter xmlImporterMock;
-	private final Function<InputStream, Progress> importer;
+	private final Consumer<InputStream> importer;
 	public BackupImporter(ImportProgressHandler dispatcherMock, XMLImporter xmlImporterMock,
-			Function<InputStream, Progress> importer) {
+			Consumer<InputStream> importer) {
 		this.dispatcherMock = Preconditions.checkNotNull(dispatcherMock);
 		this.xmlImporterMock = Preconditions.checkNotNull(xmlImporterMock);
 		this.importer = Preconditions.checkNotNull(importer);
@@ -54,10 +54,8 @@ class BackupImporter implements Actor, Asserter {
 					.when(xmlImporterMock)
 					.doImport(any(InputStream.class), any(ImportProgress.class), any(ImportImageGetter.class));
 		}
-		Progress progress = importer.apply(input.getStream());
-		if (progress.failure instanceof AssertionError) {
-			throw progress.failure;
-		}
+		importer.accept(input.getStream());
+		Progress progress = dispatcherMock.finalProgress();
 		LOG.trace("Import resulted in {}", progress, progress.failure);
 		return new BackupImportResult(progress, dispatcherMock);
 	}

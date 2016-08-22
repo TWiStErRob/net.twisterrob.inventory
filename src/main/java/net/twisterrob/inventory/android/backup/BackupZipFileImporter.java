@@ -25,8 +25,8 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 	private Database db;
 	private XMLImporter importer;
 
-	public BackupZipFileImporter(Resources res, ProgressDispatcher dispatcher) {
-		this(res, App.db(), new XMLImporter(res, App.db()), new ImportProgressHandler(dispatcher));
+	public BackupZipFileImporter(Resources res, ImportProgressHandler progress) {
+		this(res, App.db(), new XMLImporter(res, App.db()), progress);
 	}
 	@VisibleForTesting BackupZipFileImporter(Resources res,
 			Database db, XMLImporter importer, ImportProgressHandler progress) {
@@ -36,12 +36,10 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 		this.importer = ObjectTools.checkNotNull(importer);
 	}
 
-	public Progress importFrom(File file) {
+	@Override public void importFrom(File file) throws Exception {
 		zip = null;
 		progress.publishStart(-1);
 		try {
-			db.beginTransaction();
-
 			zip = new ZipFile(file);
 
 			ZipEntry dataFile = zip.getEntry(Paths.BACKUP_DATA_FILENAME);
@@ -55,26 +53,11 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 						res.getString(R.string.app_name),
 						"missing data file " + Paths.BACKUP_DATA_FILENAME));
 			}
-
-			db.setTransactionSuccessful();
 		} catch (ZipException ex) {
-			progress.fail(new IllegalArgumentException(String.format("%s: %s", file, "invalid zip file"), ex));
-		} catch (Throwable ex) {
-			progress.fail(ex);
+			throw new IllegalArgumentException(String.format("Invalid zip file: %s", file), ex);
 		} finally {
 			IOTools.ignorantClose(zip);
-			try {
-				db.endTransaction();
-			} catch (Exception ex) {
-				if (progress.isFailed()) {
-					LOG.warn("Cannot end transaction, exception suppressed by {}", progress.getFailure(), ex);
-					progress.warning(String.format("Cannot end transaction: %s", ex));
-				} else {
-					progress.fail(ex);
-				}
-			}
 		}
-		return progress.finalProgress();
 	}
 
 	@Override public void importImage(Type type, long id, String name, String image) throws IOException {

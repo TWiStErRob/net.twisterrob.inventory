@@ -52,9 +52,10 @@ dependencies {
 	testCompile "org.powermock:powermock-module-junit4-rule:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-module-junit4-rule-agent:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
-	testCompile 'com.shazam:gwen:1.0.2'
+	testCompile 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then 
 	testCompile 'org.slf4j:slf4j-simple:1.7.21'
 	testCompile 'com.diffplug.durian:durian:3.4.0'
+	testCompile 'com.github.stefanbirkner:fishbowl:1.4.0' // exceptionThrownBy (assertThrows-like)
 //	testCompile 'cglib:cglib:3.2.4'
 //	testCompile 'pl.pragmatists:JUnitParams:1.0.4'
 //	testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.2'

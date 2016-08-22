@@ -1,28 +1,27 @@
 package net.twisterrob.inventory.android.backup;
 
-import java.io.*;
-import java.util.function.Function;
+import java.io.InputStream;
+import java.util.function.Consumer;
 
+import org.hamcrest.Matcher;
 import org.junit.*;
 import org.junit.rules.*;
 import org.mockito.*;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.*;
-import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
+import static org.junit.Assert.*;
+import static org.junit.internal.matchers.ThrowableMessageMatcher.*;
 import static org.mockito.Mockito.*;
 
 import com.diffplug.common.base.Errors;
 import com.shazam.gwen.Gwen;
 
+import static com.github.stefanbirkner.fishbowl.Fishbowl.*;
+
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.backup.Importer.ImportImageGetter;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.content.contract.Type;
 import net.twisterrob.test.PackageNameShortener;
 
 public abstract class BackupZipImporterTestBase {
@@ -42,15 +41,15 @@ public abstract class BackupZipImporterTestBase {
 	@Mock protected Database dbMock;
 
 	@InjectMocks protected BackupZip input;
-	@InjectMocks protected BackupImageDatabase database;
+	@InjectMocks protected BackupImageDatabase database; // TODO change to BackupDatabase
 	protected BackupImporter importer;
 
 	@Before public void initImporter() {
-		Function<InputStream, Progress> callImport = Errors.rethrow().wrap(this::callImport);
+		Consumer<InputStream> callImport = Errors.rethrow().wrap(this::callImport);
 		importer = new BackupImporter(dispatcherMock, xmlImporterMock, callImport);
 	}
 
-	protected abstract Progress callImport(InputStream stream) throws IOException;
+	protected abstract void callImport(InputStream stream) throws Exception;
 
 	@After public void noMoreInteractions() {
 		verify(dispatcherMock, atLeastOnce()).publishProgress();
@@ -59,16 +58,18 @@ public abstract class BackupZipImporterTestBase {
 
 	@Test public void testEmptyZip() throws Throwable {
 		Gwen.given(input);
-		BackupImportResult result = Gwen.when(importer).imports(input);
-		Gwen.then(database).transacted().incompletely();
-		Gwen.then(result).started().failedWith("missing data").failedWith(Paths.BACKUP_DATA_FILENAME);
+
+		Throwable thrown = exceptionThrownBy(() -> Gwen.when(importer).imports(input));
+
+		Matcher<String> aboutMissingXML =
+				both(containsStringIgnoringCase("missing data")).and(containsString(Paths.BACKUP_DATA_FILENAME));
+		assertThat(thrown, hasMessage(aboutMissingXML));
 	}
 
 	@Test public void testOnlyXMLData() throws Throwable {
 		Gwen.given(input).withDataXML().withImages(NONE);
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
-		Gwen.then(database).transacted().successfully();
 		Gwen.then(result).started().successful();
 	}
 
@@ -82,7 +83,6 @@ public abstract class BackupZipImporterTestBase {
 		;
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
-		Gwen.then(database).transacted().successfully();
 		Gwen.then(result).started().successful().importedItems(3, 3).importedImages(0, 0).noInvalidImages();
 	}
 
@@ -96,7 +96,7 @@ public abstract class BackupZipImporterTestBase {
 		;
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
-		Gwen.then(database).transacted().successfully().matchedImages(IMAGE1, IMAGE2);
+		Gwen.then(database).matchedImages(IMAGE1, IMAGE2);
 		Gwen.then(result).started().successful().importedItems(3, 3).importedImages(2, 2).noInvalidImages();
 	}
 
@@ -111,9 +111,9 @@ public abstract class BackupZipImporterTestBase {
 		;
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
-		Gwen.then(database).transacted().successfully();
 		Gwen.then(result).started().successful().importedItems(4, 4).importedImages(0, 2).invalidImages(IMAGE1, IMAGE3);
 	}
+
 	@Test public void testWithPartialMissingImageReferences() throws Throwable {
 		Gwen.given(input)
 		    .withDataXML()
@@ -124,7 +124,7 @@ public abstract class BackupZipImporterTestBase {
 		;
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
-		Gwen.then(database).transacted().successfully().matchedImages(IMAGE1);
+		Gwen.then(database).matchedImages(IMAGE1);
 		Gwen.then(result).started().successful().importedItems(3, 3).importedImages(1, 2).invalidImages(IMAGE3);
 	}
 
@@ -137,44 +137,7 @@ public abstract class BackupZipImporterTestBase {
 		;
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
-		Gwen.then(database).transacted().successfully().matchedImages(IMAGE1, IMAGE2);
+		Gwen.then(database).matchedImages(IMAGE1, IMAGE2);
 		Gwen.then(result).started().successful().importedItems(2, 2).importedImages(2, 2).noInvalidImages();
-	}
-
-	@Test public void testInvalidImageType() throws Throwable {
-		Gwen.given(input).withDataXML().withImages(IMAGE1);
-		BackupImportResult result = Gwen.when(importer).imports(input, new Answer<Void>() {
-			@Override public Void answer(InvocationOnMock invocation) throws Throwable {
-				ImportImageGetter getter = invocation.getArgumentAt(2, ImportImageGetter.class);
-				getter.importImage(Type.Root, 0, "item name", IMAGE1);
-				return null;
-			}
-		});
-		Gwen.then(importer).importedXML();
-		Gwen.then(database).transacted().incompletely();
-		Gwen.then(result).started().failedWith(Type.Root.toString());
-		verify(dbMock, atMost(1)).addImage(any(byte[].class), anyLong());
-	}
-
-	@Test public void testCannotCommit() throws Throwable {
-		Gwen.given(input).withDataXML();
-		doThrow(new IllegalStateException("Test cannot commit")).when(dbMock).endTransaction();
-		BackupImportResult result = Gwen.when(importer).imports(input);
-		Gwen.then(importer).importedXML();
-		Gwen.then(database).transacted().successfully();
-		Gwen.then(result).started().failedWith("Test cannot commit");
-	}
-
-	@Test public void testCannotCommitAfterError() throws Throwable {
-		Gwen.given(input).withDataXML();
-		doThrow(new IllegalStateException("Test cannot commit")).when(dbMock).endTransaction();
-		BackupImportResult result = Gwen.when(importer).imports(input, new Answer<Void>() {
-			@Override public Void answer(InvocationOnMock invocation) throws Throwable {
-				throw new IllegalStateException("Test failing import");
-			}
-		});
-		Gwen.then(importer).importedXML();
-		Gwen.then(database).transacted().incompletely();
-		Gwen.then(result).started().failedWith("Test failing import").hasWarning(containsString("Test cannot commit"));
 	}
 }

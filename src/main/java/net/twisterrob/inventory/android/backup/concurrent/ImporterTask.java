@@ -14,12 +14,14 @@ import net.twisterrob.inventory.android.backup.*;
 // FIXME convert to Service
 public class ImporterTask extends SimpleAsyncTask<Uri, Progress, Progress> implements ProgressDispatcher {
 	private static final Logger LOG = LoggerFactory.getLogger(ImporterTask.class);
+	private final ImportProgressHandler progress;
 
 	private Importer.ImportCallbacks callbacks = DUMMY_CALLBACK;
-	private final BackupZipUriImporter importer;
+	private final ZipImporter<Uri> importer;
 
 	public ImporterTask(Context context) {
-		this.importer = new BackupZipUriImporter(context, this);
+		this.progress = new ImportProgressHandler(this);
+		this.importer = new BackupTransactingImporter<>(new BackupZipUriImporter(context, progress), progress);
 	}
 
 	public void setCallbacks(Importer.ImportCallbacks callbacks) {
@@ -50,10 +52,11 @@ public class ImporterTask extends SimpleAsyncTask<Uri, Progress, Progress> imple
 
 	@Override protected @Nullable Progress doInBackground(@Nullable Uri source) {
 		try {
-			return importer.importFrom(source);
+			importer.importFrom(source);
 		} catch (Throwable ex) {
-			return new Progress(ex);
+			progress.fail(ex);
 		}
+		return progress.finalProgress();
 	}
 
 	/** To prevent NullPointerException and null-checks in code */

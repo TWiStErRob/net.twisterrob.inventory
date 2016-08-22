@@ -21,34 +21,31 @@ import net.twisterrob.inventory.android.content.contract.Type;
 import net.twisterrob.java.io.NonClosableStream;
 import net.twisterrob.java.utils.ObjectTools;
 
-// TODO extract DB transaction
-public class BackupZipStreamImporter {
+public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupZipStreamImporter.class);
 
 	private final @NonNull ImportProgressHandler progress;
 	private final @NonNull Resources res;
 	private final @NonNull XMLImporter importer;
-	private final @NonNull Database db;
 	private final @NonNull ImportImageReconciler images;
 
-	public BackupZipStreamImporter(Resources res, ProgressDispatcher dispatcher) {
-		this(res, new XMLImporter(res, App.db()), App.db(), new ImportProgressHandler(dispatcher));
+	public BackupZipStreamImporter(Resources res, ImportProgressHandler progress) {
+		this(res, new XMLImporter(res, App.db()), App.db(), progress);
 	}
 	@VisibleForTesting BackupZipStreamImporter(@NonNull Resources res,
 			@NonNull XMLImporter importer, @NonNull Database db, @NonNull ImportProgressHandler progress) {
 		this.res = ObjectTools.checkNotNull(res);
 		this.progress = ObjectTools.checkNotNull(progress);
 		this.importer = ObjectTools.checkNotNull(importer);
-		this.db = ObjectTools.checkNotNull(db);
 		// TODO extract param => tests don't need to check DB interactions in importer test
 		this.images = new ImportImageReconciler(db, res, progress);
 	}
 
-	public Progress importFrom(InputStream source) {
+	@Override public void importFrom(InputStream source) throws Exception {
 		progress.publishProgress();
+
 		ZipInputStream zip = null;
 		try {
-			db.beginTransaction();
 			Pattern image = Pattern.compile("(property|room|item)_(\\d+)_(\\d{8}_\\d{6}).jpg");
 
 			zip = new ZipInputStream(source);
@@ -64,11 +61,14 @@ public class BackupZipStreamImporter {
 					importer.doImport(nonClosableZip, progress, images);
 					progress.progress.imagesTotal = progress.progress.imagesDone + images.size();
 					progress.publishProgress();
+					images.hasData();
 					LOG.trace("Finished importing XML data");
 				} else if (image.matcher(entry.getName()).matches()) {
 					LOG.trace("Importing image file: {}", entry.getName());
 					progress.progress.phase = Phase.Images;
-					images.foundImageFile(entry, nonClosableZip, seenEntry);
+					long time = entry.getTime();
+					Long dbTime = time != -1? time : null;
+					images.foundImageFile(entry.getName(), nonClosableZip, dbTime);
 					progress.publishProgress();
 					LOG.trace("Finished importing image file");
 				} else {
@@ -80,24 +80,9 @@ public class BackupZipStreamImporter {
 				throw new IllegalArgumentException(String.format("The import is not a valid %s backup: %s",
 						res.getString(R.string.app_name), "missing data file " + Paths.BACKUP_DATA_FILENAME));
 			}
-
-			db.setTransactionSuccessful();
-		} catch (Throwable ex) {
-			progress.fail(ex);
 		} finally {
 			IOTools.ignorantClose(zip);
-			try {
-				db.endTransaction();
-			} catch (Exception ex) {
-				if (progress.isFailed()) {
-					LOG.warn("Cannot end transaction, exception suppressed by {}", progress.getFailure(), ex);
-					progress.warning(String.format("Cannot end transaction: %s", ex));
-				} else {
-					progress.fail(ex);
-				}
-			}
 		}
-		return progress.finalProgress();
 	}
 
 	@VisibleForTesting static class ImportImageReconciler implements ImportImageGetter, Closeable {
@@ -119,10 +104,10 @@ public class BackupZipStreamImporter {
 
 		private static class Image {
 			final long imageId;
-			final ZipEntry entry;
+			final String name;
 
-			private Image(ZipEntry imageEntry, long imageId) throws IOException {
-				this.entry = imageEntry;
+			private Image(String name, long imageId) throws IOException {
+				this.name = name;
 				this.imageId = imageId;
 			}
 		}
@@ -131,6 +116,7 @@ public class BackupZipStreamImporter {
 		private final Resources res;
 		private final ImportProgressHandler progress;
 		private final Map<String, Object> reconcile = new HashMap<>();
+		private boolean seenXML;
 
 		public ImportImageReconciler(Database db, Resources res, ImportProgressHandler progress) {
 			this.db = ObjectTools.checkNotNull(db);
@@ -142,14 +128,17 @@ public class BackupZipStreamImporter {
 			return reconcile.size();
 		}
 
-		public void foundImageFile(ZipEntry imageEntry, InputStream stream, boolean seenXML) throws IOException {
-			String imageName = imageEntry.getName();
-			String imageKey = imageEntry.getName();
+		public void hasData() {
+			seenXML = true;
+		}
+
+		public void foundImageFile(String imageName, InputStream stream, Long time) throws IOException {
+			String imageKey = imageName;
 			Object existing = reconcile.get(imageKey);
 			if (existing == null) {
 				if (!seenXML) {
 					LOG.trace("Creating image '{}', in hopes of future reference.", imageName);
-					Image image = createImage(imageEntry, stream);
+					Image image = createImage(imageName, time, stream);
 					reconcile.put(imageKey, image);
 				} else {
 					LOG.trace("Skipping image creation for '{}', because this image is not referenced.", imageName);
@@ -160,23 +149,21 @@ public class BackupZipStreamImporter {
 				Belonging belonging = (Belonging)existing;
 				LOG.trace("Image '{}' matched with {} #{} '{}', creating and associating them.",
 						imageName, belonging.type, belonging.id, belonging.name);
-				Image image = createImage(imageEntry, stream);
+				Image image = createImage(imageName, time, stream);
 				setImage(belonging, image);
 				reconcile.remove(imageKey);
 			} else {
-				throw new IllegalStateException("Unknown object in image reconciler: " + existing);
+				throw unknown(existing);
 			}
 			if (!seenXML) {
 				progress.imageTotalIncrement();
 			}
 		}
 
-		private Image createImage(ZipEntry imageEntry, InputStream stream) throws IOException {
-			long time = imageEntry.getTime();
-			Long dbTime = time != -1? time : null;
-			byte[] imageContents = IOTools.readBytes(stream, Math.max(0, imageEntry.getSize()));
-			long imageId = db.addImage(imageContents, dbTime);
-			return new Image(imageEntry, imageId);
+		private Image createImage(String name, Long time, InputStream stream) throws IOException {
+			byte[] imageContents = IOTools.readBytes(stream);
+			long imageId = db.addImage(imageContents, time);
+			return new Image(name, imageId);
 		}
 
 		private void setImage(Belonging belonging, Image image) {
@@ -197,6 +184,9 @@ public class BackupZipStreamImporter {
 		}
 
 		@Override public void importImage(Type type, long id, String name, String imageName) {
+			if (seenXML) {
+				throw new IllegalStateException("Cannot import belongings once data import is finished.");
+			}
 			Belonging belonging = new Belonging(type, id, name, imageName);
 			@SuppressWarnings("UnnecessaryLocalVariable")
 			String imageKey = imageName;
@@ -215,7 +205,7 @@ public class BackupZipStreamImporter {
 				setImage(belonging, image);
 				reconcile.remove(imageKey);
 			} else {
-				throw new IllegalStateException("Unknown object in image reconciler: " + existing);
+				throw unknown(existing);
 			}
 		}
 
@@ -225,7 +215,7 @@ public class BackupZipStreamImporter {
 					// found image, but it wasn't referenced by any belongings
 					// if it was, it would've been removed already from the collection
 					Image image = (Image)existing;
-					LOG.trace("Deleting image '{}' from database, it wasn't referenced.", image.entry);
+					LOG.trace("Deleting image '{}' from database, it wasn't referenced.", image.name);
 					db.deleteImage(image.imageId);
 				} else if (existing instanceof Belonging) {
 					// found belonging, but its reference wasn't resolved by an image in the zip
@@ -235,6 +225,10 @@ public class BackupZipStreamImporter {
 							res.getString(R.string.backup_import_invalid_image, belonging.name, belonging.image));
 				}
 			}
+		}
+
+		private RuntimeException unknown(Object existing) {
+			return new IllegalStateException("Unknown object in image reconciler: " + existing);
 		}
 	}
 }

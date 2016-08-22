@@ -8,48 +8,40 @@ import android.support.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.IOTools;
 
-public class BackupZipUriImporter {
+public class BackupZipUriImporter implements ZipImporter<Uri> {
 	private final Context context;
-	private final ProgressDispatcher dispatcher;
 	private final BackupZipStreamImporter streamImporter;
 	private final BackupZipFileImporter fileImporter;
 
-	@VisibleForTesting 
-	/*default*/ BackupZipUriImporter(Context context, ProgressDispatcher dispatcher,
+	public BackupZipUriImporter(Context context, ImportProgressHandler progress) {
+		this(context,
+				new BackupZipStreamImporter(context.getResources(), progress),
+				new BackupZipFileImporter(context.getResources(), progress));
+	}
+	@VisibleForTesting BackupZipUriImporter(Context context,
 			BackupZipStreamImporter streamImporter, BackupZipFileImporter fileImporter) {
 		this.context = context;
-		this.dispatcher = dispatcher;
 		this.streamImporter = streamImporter;
 		this.fileImporter = fileImporter;
 	}
-	public BackupZipUriImporter(Context context, ProgressDispatcher dispatcher) {
-		this(context, dispatcher,
-				new BackupZipStreamImporter(context.getResources(), dispatcher),
-				new BackupZipFileImporter(context.getResources(), dispatcher));
-	}
 
-	public Progress importFrom(Uri uri) throws IOException {
-		dispatcher.dispatchProgress(new Progress());
-		try {
-			if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
-				return importFile(uri);
-			} else {
-				return importStream(uri);
-			}
-		} catch (Throwable ex) {
-			return new Progress(ex);
+	@Override public void importFrom(Uri uri) throws Exception {
+		if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+			importFile(uri);
+		} else {
+			importStream(uri);
 		}
 	}
 
-	private Progress importFile(Uri uri) {
-		return fileImporter.importFrom(new File(uri.getPath()));
+	private void importFile(Uri uri) throws Exception {
+		fileImporter.importFrom(new File(uri.getPath()));
 	}
 
-	private Progress importStream(Uri uri) throws FileNotFoundException {
+	private void importStream(Uri uri) throws Exception {
 		InputStream stream = null;
 		try {
 			stream = context.getContentResolver().openInputStream(uri);
-			return streamImporter.importFrom(stream);
+			streamImporter.importFrom(stream);
 		} finally {
 			IOTools.ignorantClose(stream);
 		}

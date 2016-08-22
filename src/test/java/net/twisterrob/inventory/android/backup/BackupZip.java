@@ -50,6 +50,10 @@ class BackupZip implements Arranger {
 	static byte[] getContents(String imageName) throws UnsupportedEncodingException {
 		return (imageName + " contents").getBytes("utf-8");
 	}
+	static String getName(byte[] contents) throws UnsupportedEncodingException {
+		String full = new String(contents, "utf-8");
+		return full.substring(0, full.length() - " contents".length());
+	}
 
 	boolean hasXML() {
 		return hasXML;

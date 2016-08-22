@@ -56,13 +56,13 @@ public class ImportProgressHandler implements ImportProgress {
 	public Progress finalProgress() {
 		return progress;
 	}
+
 	public void fail(Throwable ex) {
-		progress.failure = ex;
-	}
-	public boolean isFailed() {
-		return progress.failure != null;
-	}
-	public Throwable getFailure() {
-		return progress.failure;
+		if (progress.failure != null) {
+			LOG.warn("Exception suppressed by {}", progress.failure, ex);
+			error(ex.toString());
+		} else {
+			progress.failure = ex;
+		}
 	}
 }

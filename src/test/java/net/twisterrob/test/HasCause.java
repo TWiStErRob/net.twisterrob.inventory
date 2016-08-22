@@ -29,7 +29,7 @@ public class HasCause extends TypeSafeDiagnosingMatcher<Throwable> {
 			causes.add(item);
 			item = item.getCause();
 		}
-		mismatchDescription.appendValueList("was nested exceptions:" + NL, NL, "", causes);
+		mismatchDescription.appendValueList("was " + causes.size() + " nested exceptions:" + NL, NL, "", causes);
 		return false;
 	}
 

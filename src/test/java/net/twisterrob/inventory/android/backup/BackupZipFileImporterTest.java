@@ -22,9 +22,9 @@ public class BackupZipFileImporterTest extends BackupZipImporterTestBase {
 		when(res.getString(anyInt(), Matchers.anyVararg())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
 	}
 
-	@Override protected Progress callImport(InputStream stream) throws IOException {
+	@Override protected void callImport(InputStream stream) throws Exception {
 		File file = temp.newFile();
 		IOTools.copyStream(stream, new FileOutputStream(file));
-		return realImporter.importFrom(file);
+		realImporter.importFrom(file);
 	}
 }
