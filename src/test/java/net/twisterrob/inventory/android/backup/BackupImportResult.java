@@ -4,7 +4,7 @@ import org.hamcrest.Matcher;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.junit.internal.matchers.ThrowableMessageMatcher.*;
+import static org.mockito.Mockito.*;
 
 import com.google.common.base.Preconditions;
 import com.shazam.gwen.collaborators.Asserter;
@@ -18,30 +18,20 @@ class BackupImportResult implements Asserter {
 		this.dispatcher = Preconditions.checkNotNull(dispatcher);
 	}
 
-	public BackupImportResult started() throws Throwable {
-		// TODO verify progress
-//		verify(dispatcher).dispatchProgress(notNull(Progress.class)); // publishStart
+	public BackupImportResult published(int count) {
+		// atMost is a dirty hack to make Base test work with both File and Stream importer
+		verify(dispatcher, atMost(count)).publishProgress();
 		return this;
 	}
 	public BackupImportResult successful() throws Throwable {
 		assertThat(progress.failure, nullValue());
 		return this;
 	}
-	public BackupImportResult failedWith(String message) {
-		failedWith(hasMessage(containsString(message)));
-		return this;
-	}
-	public BackupImportResult failedWith(Class<? extends Throwable> exception) {
-		failedWith(org.hamcrest.Matchers.<Throwable>instanceOf(exception));
-		return this;
-	}
-	public BackupImportResult failedWith(Matcher<Throwable> matcher) {
-		assertThat(progress.failure, both(notNullValue(Throwable.class)).and(matcher));
-		return this;
-	}
 	public BackupImportResult importedImages(int done, int total) {
 		assertEquals("Total image count", total, progress.imagesTotal);
 		assertEquals("Finished image count", done, progress.imagesDone);
+		verify(dispatcher, atMost(done)).imageIncrement();
+		verify(dispatcher, atMost(total)).imageTotalIncrement();
 		return this;
 	}
 	public BackupImportResult importedItems(int done, int total) {
@@ -55,8 +45,9 @@ class BackupImportResult implements Asserter {
 	}
 	public BackupImportResult invalidImages(String... images) {
 		for (String image : images) {
-			assertThat(progress.warnings, hasItem(both(containsString("invalid")).and(containsString(image))));
+			hasWarning(both(containsString("invalid")).and(containsString(image)));
 		}
+		verify(dispatcher, times(images.length)).warning(anyString());
 		return this;
 	}
 	public BackupImportResult hasWarning(Matcher<String> message) {

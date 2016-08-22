@@ -38,8 +38,8 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 
 	@Override public void importFrom(File file) throws Exception {
 		zip = null;
-		progress.publishStart(-1);
 		try {
+			LOG.trace("Starting import from {}", file.getAbsolutePath());
 			zip = new ZipFile(file);
 
 			ZipEntry dataFile = zip.getEntry(Paths.BACKUP_DATA_FILENAME);

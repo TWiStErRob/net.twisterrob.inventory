@@ -2,27 +2,13 @@ package net.twisterrob.inventory.android.backup;
 
 import java.io.InputStream;
 
-import org.junit.*;
-import org.mockito.*;
-
-import static org.mockito.Mockito.*;
-
-import android.content.res.Resources;
+import org.junit.Test;
+import org.mockito.InjectMocks;
 
 import com.shazam.gwen.Gwen;
 
-import net.twisterrob.android.test.GetStringVarargsAnswer;
-import net.twisterrob.inventory.android.R;
-
-// TODO make sure total image count doesn't include redundant images
-// TODO add assertions for counts
 public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
-	@Mock private Resources res;
 	@InjectMocks BackupZipStreamImporter realImporter;
-
-	@Before public void setUp() {
-		when(res.getString(anyInt(), Matchers.anyVararg())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
-	}
 
 	@Override protected void callImport(InputStream stream) throws Exception {
 		realImporter.importFrom(stream);
@@ -38,7 +24,7 @@ public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
 		Gwen.then(database).matchedImages(IMAGE1, IMAGE2).redundantImages(IMAGE3, IMAGE4);
-		Gwen.then(result).started().successful().importedItems(2, 2).importedImages(2, 4).noInvalidImages();
+		Gwen.then(result).published(4).successful().importedImages(2, 4).noInvalidImages();
 	}
 
 	@Test public void testXMLThenImagesNoItems() throws Throwable {
@@ -46,7 +32,7 @@ public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
 		Gwen.then(database).danglingImages(IMAGE1, IMAGE2, IMAGE3);
-		Gwen.then(result).started().successful().importedItems(0, 0).importedImages(0, 0).noInvalidImages();
+		Gwen.then(result).published(3).successful().importedImages(0, 0).noInvalidImages();
 	}
 
 	@Test public void testImagesThenXMLNoItems() throws Throwable {
@@ -54,7 +40,7 @@ public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
 		Gwen.then(database).redundantImages(IMAGE1, IMAGE2, IMAGE3);
-		Gwen.then(result).started().successful().importedItems(0, 0).importedImages(0, 3);
+		Gwen.then(result).published(3).successful().importedImages(0, 3);
 	}
 
 	@Test public void testXMLBetweenImagesNoItems() throws Throwable {
@@ -62,7 +48,7 @@ public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
 		Gwen.then(database).redundantImages(IMAGE1, IMAGE2);
-		Gwen.then(result).started().successful().noInvalidImages();
+		Gwen.then(result).published(4).successful().importedImages(0, 2).noInvalidImages();
 	}
 
 	@Test public void testXMLBetweenImagesBeforeOnly() throws Throwable {
@@ -76,7 +62,7 @@ public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
 		Gwen.then(database).matchedImages(IMAGE1, IMAGE2).danglingImages(IMAGE3, IMAGE4);
-		Gwen.then(result).started().successful().noInvalidImages();
+		Gwen.then(result).published(4).successful().importedImages(2, 2).noInvalidImages();
 	}
 
 	@Test public void testXMLBetweenImagesAfterOnly() throws Throwable {
@@ -90,7 +76,7 @@ public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
 		Gwen.then(database).matchedImages(IMAGE3, IMAGE4).redundantImages(IMAGE1, IMAGE2);
-		Gwen.then(result).started().successful().noInvalidImages();
+		Gwen.then(result).published(4).successful().importedImages(2, 4).noInvalidImages();
 	}
 
 	@Test public void testXMLBetweenImagesPartial() throws Throwable {
@@ -104,7 +90,7 @@ public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
 		Gwen.then(database).redundantImages(IMAGE1).matchedImages(IMAGE2, IMAGE3).danglingImages(IMAGE4);
-		Gwen.then(result).started().successful().noInvalidImages();
+		Gwen.then(result).published(4).successful().importedImages(2, 3).noInvalidImages();
 	}
 
 	@Test public void testXMLBetweenImagesAll() throws Throwable {
@@ -120,6 +106,6 @@ public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
 		BackupImportResult result = Gwen.when(importer).imports(input);
 		Gwen.then(importer).importedXML();
 		Gwen.then(database).matchedImages(IMAGE1, IMAGE2, IMAGE3, IMAGE4);
-		Gwen.then(result).started().successful().noInvalidImages();
+		Gwen.then(result).published(4).successful().importedImages(4, 4).noInvalidImages();
 	}
 }

@@ -19,13 +19,14 @@ import com.shazam.gwen.collaborators.Asserter;
 
 import net.twisterrob.inventory.android.content.Database;
 
-class BackupImageDatabase extends BackupDatabase implements Asserter {
+class BackupImageDatabase implements Asserter {
+	private final Database db;
 	private long imageId = 100;
 	private Map<String, Long> imageIds = new HashMap<>();
 	private Map<Long, byte[]> imageContents = new HashMap<>();
 	private Map<Long, Long> itemImages = new HashMap<>();
 	public BackupImageDatabase(Database mock) {
-		super(mock);
+		db = mock;
 		Answer<Long> insertImage = new Answer<Long>() {
 			@Override public Long answer(InvocationOnMock invocation) throws Throwable {
 				byte[] contents = invocation.getArgumentAt(0, byte[].class);
@@ -86,12 +87,5 @@ class BackupImageDatabase extends BackupDatabase implements Asserter {
 			verify(db, atMost(1)).deleteImage(eq(imageIds.get(image)));
 		}
 		return this;
-	}
-
-	@Override public BackupImageDatabase transacted() {
-		return (BackupImageDatabase)super.transacted();
-	}
-	@Override public BackupImageDatabase transacted(boolean isSuccessful) {
-		return (BackupImageDatabase)super.transacted(isSuccessful);
 	}
 }

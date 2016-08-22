@@ -42,8 +42,6 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 	}
 
 	@Override public void importFrom(InputStream source) throws Exception {
-		progress.publishProgress();
-
 		ZipInputStream zip = null;
 		try {
 			Pattern image = Pattern.compile("(property|room|item)_(\\d+)_(\\d{8}_\\d{6}).jpg");
@@ -60,7 +58,7 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 					progress.progress.phase = Phase.Data;
 					importer.doImport(nonClosableZip, progress, images);
 					progress.progress.imagesTotal = progress.progress.imagesDone + images.size();
-					progress.publishProgress();
+					//progress.publishProgress();
 					images.hasData();
 					LOG.trace("Finished importing XML data");
 				} else if (image.matcher(entry.getName()).matches()) {
