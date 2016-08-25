@@ -230,11 +230,13 @@
 	<string name="backup_go_home_condensed">Downloads</string>
 
 	<string name="backup_export_progress_title">Export</string>
+	<string name="backup_export_progress_background">Export continues in background</string>
 	<string name="backup_export_progress_init">Preparing export…</string>
 	<string name="backup_export_progress_data">Exporting belongings…</string>
 	<string name="backup_export_progress_images" tools:ignore="PluralsCandidate">Exporting %1$d images for %2$d belongings…</string>
 	<string name="backup_export_result_success" tools:ignore="PluralsCandidate">Done exporting %1$d belongings with %2$d images.</string>
 	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>
+	<string name="backup_export_result_cancelled">Export cancelled.</string>
 
 	<string name="backup_export_external_confirm_title">@string/backup_export_external</string>
 	<string name="backup_export_external_confirm_warning"
@@ -255,14 +257,14 @@
 		\n\nDo you want to continue?
 	</string>
 	<string name="backup_import_progress_title">Import</string>
+	<string name="backup_import_progress_background">Import continues in background</string>
 	<string name="backup_import_progress_init">Preparing import…</string>
-	<string name="backup_import_progress_data"
-		>Importing belongings…
-		\nPlease stay here while the import is in progress, background import is not fully supported yet.
-		You may cancel by pressing the back button.</string>
+	<string name="backup_import_progress_data">Importing belongings…</string>
+	<string name="backup_import_progress_images">Importing images…</string>
 	<string name="backup_import_result_success" tools:ignore="PluralsCandidate">Done importing %1$d belongings.</string>
 	<string name="backup_import_result_warning" tools:ignore="PluralsCandidate">There were %3$d issues during importing %2$d/%1$d belongings.</string>
 	<string name="backup_import_result_failed">Failed to import belongings:\n%1$s</string>
+	<string name="backup_import_result_cancelled">Import cancelled, no modifications were done.</string>
 	<string name="backup_import_conflict_property">Property &#8220;%1$s&#8221; already exists, used existing one.</string>
 	<string name="backup_import_conflict_room">Room &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>
 	<string name="backup_import_conflict_item">Item &#8220;%3$s&#8221; in &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>

@@ -12,6 +12,7 @@ import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.backup.Importer.ImportImageGetter;
+import net.twisterrob.inventory.android.backup.Progress.Phase;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.Type;
@@ -44,6 +45,7 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 
 			ZipEntry dataFile = zip.getEntry(Paths.BACKUP_DATA_FILENAME);
 			if (dataFile != null) {
+				progress.progress.phase = Phase.Data;
 				//noinspection resource zip is closed in finally
 				InputStream stream = zip.getInputStream(dataFile);
 				importer.doImport(stream, progress, this);

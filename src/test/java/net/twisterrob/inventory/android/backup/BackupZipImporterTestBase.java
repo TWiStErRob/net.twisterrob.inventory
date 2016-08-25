@@ -61,7 +61,7 @@ public abstract class BackupZipImporterTestBase {
 	protected abstract void callImport(InputStream stream) throws Exception;
 
 	@After public void noMoreInteractions() {
-		verify(dispatcherMock, atLeast(0)).finalProgress();
+		verify(dispatcherMock, atLeast(0)).end();
 		verifyNoMoreInteractions(xmlImporterMock, dbMock, dispatcherMock);
 	}
 

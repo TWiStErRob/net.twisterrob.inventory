@@ -3,7 +3,6 @@ package net.twisterrob.inventory.android.backup;
 import java.io.OutputStream;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 
 @SuppressWarnings("RedundantThrows")
 public interface Exporter {
@@ -19,10 +18,4 @@ public interface Exporter {
 	void saveImage(Cursor cursor) throws Throwable;
 	void noImage(Cursor cursor) throws Throwable;
 	void finishImages(Cursor cursor) throws Throwable;
-
-	interface ExportCallbacks {
-		void exportStarting();
-		void exportProgress(@NonNull Progress progress);
-		void exportFinished(@NonNull Progress progress);
-	}
 }

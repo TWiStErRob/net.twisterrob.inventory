@@ -11,17 +11,17 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.log.LoggingIntentService;
+import net.twisterrob.android.utils.tools.AndroidTools;
 
 public abstract class NotificationProgressService<Progress> extends LoggingIntentService {
-	public NotificationProgressService(String name) {
-		super(name);
-	}
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-	private static final Logger LOG = LoggerFactory.getLogger(NotificationProgressService.class);
-
-	private static final int ONGOING_NOTIFICATION_ID = 1;
-	private static final int DONE_NOTIFICATION_ID = 2;
-	public static final String ACTION_PROGRESS = "net.twisterrob.intent.action.PROGRESS";
+	private static final int ONGOING_NOTIFICATION_OFFSET = 1;
+	private static final int DONE_NOTIFICATION_OFFSET = 2;
+	public static final String ACTION_PROGRESS_BROADCAST = "net.twisterrob.intent.action.PROGRESS_BROADCAST";
+	public static final String ACTION_FINISHED_BROADCAST = "net.twisterrob.intent.action.FINISHED_BROADCAST";
+	public static final String ACTION_PROGRESS_NOTIFICATION = "net.twisterrob.intent.action.PROGRESS_NOTIFICATION";
+	public static final String ACTION_FINISHED_NOTIFICATION = "net.twisterrob.intent.action.FINISHED_NOTIFICATION";
 	/**
 	 * A {@code boolean} to signify that the {@link Context#bindService(Intent, ServiceConnection, int) bindService}
 	 * action should not clear the current notification.
@@ -31,25 +31,19 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 	 * @see #isBindWithUI extending services have the ability to ignore this and implement custom logic
 	 */
 	public static final String EXTRA_BACKGROUND_BIND = "net.twisterrob:background-bind";
-	/**
-	 * @see #EXTRA_STATE_IN_PROGRESS
-	 * @see #EXTRA_STATE_FINISHED
-	 */
-	public static final String EXTRA_STATE = "net.twisterrob:progress";
-	public static final int EXTRA_STATE_IN_PROGRESS = 0;
-	public static final int EXTRA_STATE_FINISHED = 1;
+	private static final int NEVER = Integer.MIN_VALUE;
 	private NotificationCompat.Builder onGoingNotification;
 	private boolean inBackground;
 	/** Used to generate unique notification for each job that this service starts. */
-	private long currentJobStarted;
+	private long currentJobStarted = NEVER;
+	private Progress lastProgress;
+	private Progress lastProgressSentToNotification;
 
-	@Override public void onCreate() {
-		super.onCreate();
-		onGoingNotification = createOnGoingNotification().setOngoing(true);
-		setIntent(onGoingNotification, createInProgressPendingIntent());
+	public NotificationProgressService(String name) {
+		super(name);
 	}
 
-	protected @NonNull Builder createOnGoingNotification() {
+	protected @NonNull Builder createOnGoingNotification(Intent intent) {
 		return new android.support.v7.app.NotificationCompat.Builder(this)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 				.setTicker("Action continues in background...")
@@ -73,54 +67,59 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 	}
 	protected @Nullable PendingIntent createInProgressPendingIntent() {
 		Intent intent = createInProgressIntent();
-		if (intent != null) {
-			intent.putExtra(EXTRA_STATE, EXTRA_STATE_IN_PROGRESS);
-			return PendingIntent.getActivity(getApplicationContext(), getClass().getName().hashCode() + 1, intent, 0);
-		} else {
-			return null;
-		}
+		return acquirePendingIntent(intent, ACTION_PROGRESS_NOTIFICATION, ONGOING_NOTIFICATION_OFFSET);
 	}
 
-	protected @Nullable Intent createFinishedIntent() {
+	protected @Nullable Intent createFinishedIntent(@NonNull Progress result) {
 		return null;
 	}
-	protected @Nullable PendingIntent createFinishedPendingIntent() {
-		Intent intent = createFinishedIntent();
+	protected @Nullable PendingIntent createFinishedPendingIntent(@NonNull Progress result) {
+		Intent intent = createFinishedIntent(result);
+		return acquirePendingIntent(intent, ACTION_FINISHED_NOTIFICATION, DONE_NOTIFICATION_OFFSET);
+	}
+
+	private PendingIntent acquirePendingIntent(@Nullable Intent intent, @NonNull String defaultAction, int codeOffset) {
 		if (intent != null) {
-			intent.putExtra(EXTRA_STATE, EXTRA_STATE_FINISHED);
-			return PendingIntent.getActivity(getApplicationContext(), getClass().getName().hashCode() + 2, intent, 0);
+			//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // behaves weirdly when app is already running
+			if (intent.getAction() == null) {
+				intent.setAction(defaultAction);
+			}
+			int code = getClass().getName().hashCode() + codeOffset;
+			return PendingIntent.getActivity(getApplicationContext(), code, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		} else {
 			return null;
 		}
 	}
 
-	protected final void finished(Progress result) {
-		LOG.info("Done: {}", result);
+	protected final void finished(@NonNull Progress result) {
+		LOG.info("Finished with: {}", result);
+		lastProgress = result;
+		broadcast(result, ACTION_FINISHED_BROADCAST);
 		if (inBackground) {
-			LOG.info("In background, sending replacing progress with done notification");
+			LOG.trace("In background, replacing progress notification with done notification");
 			stopNotification();
 			NotificationManager notificationManager =
 					(NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
 			NotificationCompat.Builder doneNotification = createFinishedNotification(result);
-			setIntent(doneNotification, createFinishedPendingIntent());
-			notificationManager.notify((int)currentJobStarted + DONE_NOTIFICATION_ID, doneNotification.build());
+			setIntentAndDefalts(doneNotification, createFinishedPendingIntent(result));
+			notificationManager.notify((int)currentJobStarted + DONE_NOTIFICATION_OFFSET, doneNotification.build());
 		} else {
-			LOG.info("Not in background, no notification is needed (should be bound)");
+			LOG.trace("Not in background, no notification is needed (should be bound)");
 		}
+		currentJobStarted = NEVER;
 	}
 
-	private void setIntent(@NonNull NotificationCompat.Builder doneNotification, @Nullable PendingIntent intent) {
-		if (intent != null) {
-			doneNotification.setContentIntent(intent);
-		} else {
-			doneNotification.setAutoCancel(true);
-		}
+	private void setIntentAndDefalts(@NonNull NotificationCompat.Builder notification, @Nullable PendingIntent intent) {
+		LOG.trace("Updating notification {} with {}", notification, AndroidTools.toString(intent));
+		notification.setContentIntent(intent);
+		notification.setAutoCancel(true);
 	}
 
 	@Override public IBinder onBind(Intent intent) {
 		super.onBind(intent);
 		if (isBindWithUI(intent)) {
+			LOG.trace("Stopping notification, because bind has a UI that displays progress.");
 			stopNotification();
 		}
 		return null;
@@ -129,14 +128,18 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 	@Override protected void onHandleIntent(Intent intent) {
 		super.onHandleIntent(intent);
 		currentJobStarted = System.currentTimeMillis();
+		onGoingNotification = createOnGoingNotification(intent).setOngoing(true);
+		setIntentAndDefalts(onGoingNotification, createInProgressPendingIntent());
 		if (!isBindWithUI(intent)) {
+			LOG.trace("Starting notification, because the intent doesn't bind with UI.");
 			startNotification();
 		}
 	}
 
 	@Override public void onRebind(Intent intent) {
 		super.onRebind(intent);
-		if (isBindWithUI(intent)) {
+		if (isBindWithUI(intent)) { // STOPSHIP not that any extras ... from onRebind docs?
+			LOG.trace("Stopping notification, because re-bind has a UI that displays progress.");
 			stopNotification();
 		}
 	}
@@ -144,6 +147,7 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 	@Override public boolean onUnbind(Intent intent) {
 		super.onUnbind(intent);
 		if (isBindWithUI(intent)) {
+			LOG.trace("Starting notification, because it was stopped when this bind happened, but now it's needed.");
 			startNotification();
 		}
 		return true;
@@ -153,33 +157,41 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 		return !intent.getBooleanExtra(EXTRA_BACKGROUND_BIND, false);
 	}
 
+	protected Progress getLastProgress() {
+		return lastProgress;
+	}
+	public Progress getLastProgressSentToNotification() {
+		return lastProgressSentToNotification;
+	}
+	protected boolean isInProgress() {
+		return currentJobStarted != NEVER;
+	}
+
 	private void startNotification() {
-		LOG.info("Starting notification");
+		lastProgressSentToNotification = lastProgress;
 		inBackground = true;
-		reportProgress(null);
+		startForeground((int)currentJobStarted + ONGOING_NOTIFICATION_OFFSET, onGoingNotification.build());
 	}
 
 	private void stopNotification() {
-		LOG.info("Stopping notification");
 		inBackground = false;
 		stopForeground(true);
 	}
 
-	protected final void reportProgress(@Nullable Progress progress) {
-		if (progress != null) {
-			Intent progressIntent = new Intent();
-			fillBroadcast(progressIntent, progress);
-			progressIntent.setAction(ACTION_PROGRESS);
-			progressIntent.putExtra(EXTRA_STATE, EXTRA_STATE_IN_PROGRESS);
-			LOG.trace("Broadcasting {}: {}", progress, progressIntent);
-			LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(progressIntent);
-		}
+	private void broadcast(@NonNull Progress progress, String action) {
+		Intent progressIntent = new Intent();
+		fillBroadcast(progressIntent, progress);
+		progressIntent.setAction(action);
+		LOG.trace("Broadcasting {}: {}", progress, progressIntent);
+		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(progressIntent);
+	}
 
-		if (inBackground) {
-			if (progress != null) {
-				fillNotification(onGoingNotification, progress);
-			}
-			startForeground((int)currentJobStarted + ONGOING_NOTIFICATION_ID, onGoingNotification.build());
+	protected final void reportProgress(@NonNull Progress progress) {
+		lastProgress = progress;
+		broadcast(progress, ACTION_PROGRESS_BROADCAST);
+		boolean notify = fillNotification(onGoingNotification, progress);
+		if (inBackground && notify) {
+			startNotification();
 		}
 	}
 
@@ -187,7 +199,13 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 		//intent.putExtra(EXTRA_PROGRESS, progress.toString());
 	}
 
-	protected void fillNotification(@NonNull NotificationCompat.Builder notification, @NonNull Progress progress) {
+	/**
+	 * @return {@code false} to skip some updates
+	 * @see <a href="http://stackoverflow.com/questions/18043568#comment26397268_18043568">
+	 *     Why NotificationManager works so slow during the update progress?</a>
+	 */
+	protected boolean fillNotification(@NonNull NotificationCompat.Builder notification, @NonNull Progress progress) {
 		onGoingNotification.setWhen(System.currentTimeMillis());
+		return true;
 	}
 }

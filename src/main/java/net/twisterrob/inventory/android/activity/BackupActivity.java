@@ -26,8 +26,9 @@ import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
+import net.twisterrob.inventory.android.backup.*;
+import net.twisterrob.inventory.android.backup.concurrent.BackupService;
 import net.twisterrob.inventory.android.content.*;
-import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.view.RecyclerViewLoaderController;
 
 public class BackupActivity extends BaseActivity implements OnRefreshListener {
@@ -54,6 +55,18 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			backToLastValidDirectory(); // essentially backing out of it, so the fake dir won't ever be relevant
 		} else {
 			filePicked(getDir(), true);
+		}
+		handleIntent();
+	}
+	@Override protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+		handleIntent();
+	}
+	private void handleIntent() {
+		Progress progress = (Progress)getIntent().getSerializableExtra(BackupService.EXTRA_PROGRESS);
+		if (progress != null && progress.phase == Progress.Phase.Finished) {
+			new ProgressDisplayer(this, progress).displayFinishMessage();
 		}
 	}
 
@@ -122,7 +135,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 						.confirm(this, new PopupCallbacks<Boolean>() {
 							@Override public void finished(Boolean value) {
 								if (Boolean.TRUE.equals(value)) {
-									doExport();
+									doExportExternal();
 								}
 							}
 						})
@@ -180,18 +193,27 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 		}
 	}
 
+	// STOPSHIP don't allow calling these methods when another one is in progress!
 	private void doImport(Uri source) {
-		ImportFragment.create(getApplicationContext(), getSupportFragmentManager()).execute(source);
+		Intent intent = new Intent(BackupService.ACTION_IMPORT, source, getApplicationContext(), BackupService.class);
+		startService(intent);
 	}
 
-	private void doExport() {
+	private void doExportExternal() {
 		Calendar now = Calendar.getInstance();
 		Intent intent = new Intent(Intent.ACTION_SEND)
 				.setType(InventoryContract.Export.TYPE_BACKUP)
 				.putExtra(Intent.EXTRA_STREAM, InventoryContract.Export.getUri(now))
 				.putExtra(Intent.EXTRA_SUBJECT, Paths.getExportFileName(now))
 				.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		// this makes the user choose a target and that target will call the provider later, which starts the service
 		startActivity(Intent.createChooser(intent, getString(R.string.backup_export_external)));
+	}
+
+	private void doExportInternal() {
+		Uri dir = Uri.fromFile(getDir());
+		Intent intent = new Intent(BackupService.ACTION_EXPORT_DIR, dir, getApplicationContext(), BackupService.class);
+		startService(intent);
 	}
 
 	public static Intent chooser() {
@@ -373,7 +395,7 @@ public class BackupActivity extends BaseActivity implements OnRefreshListener {
 			return true;
 		}
 		@Override protected void onCreateNew() {
-			ExportFragment.create(BackupActivity.this, getSupportFragmentManager()).execute(getDir());
+			doExportInternal();
 		}
 		private class FileLoaderCallbacks implements LoaderCallbacks<List<File>> {
 			@Override public Loader<List<File>> onCreateLoader(int id, Bundle args) {

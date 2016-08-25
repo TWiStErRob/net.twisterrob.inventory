@@ -5,6 +5,7 @@ import org.slf4j.*;
 import android.support.annotation.VisibleForTesting;
 
 import net.twisterrob.inventory.android.backup.Importer.ImportProgress;
+import net.twisterrob.inventory.android.backup.Progress.Phase;
 import net.twisterrob.java.utils.ObjectTools;
 
 @SuppressWarnings("deprecation")
@@ -13,7 +14,7 @@ public class ImportProgressHandler implements ImportProgress {
 	private final ProgressDispatcher dispatcher;
 
 	/** @deprecated don't use it directly */
-	final Progress progress = new Progress();
+	final Progress progress = new Progress(Progress.Type.Import);
 
 	@VisibleForTesting ImportProgressHandler() {
 		this(ProgressDispatcher.IGNORE);
@@ -23,12 +24,14 @@ public class ImportProgressHandler implements ImportProgress {
 	}
 
 	public void publishStart(int size) {
+		progress.pending = false;
 		progress.done = 0;
 		progress.total = size;
 		publishProgress();
 	}
 
 	public void publishIncrement() {
+		progress.pending = false;
 		progress.done++;
 		publishProgress();
 	}
@@ -53,7 +56,11 @@ public class ImportProgressHandler implements ImportProgress {
 		progress.warnings.add(message);
 	}
 
-	public Progress finalProgress() {
+	public void begin() {
+		publishProgress();
+	}
+	public Progress end() {
+		progress.phase = Phase.Finished;
 		return progress;
 	}
 

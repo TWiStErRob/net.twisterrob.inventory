@@ -1,8 +1,14 @@
 package net.twisterrob.inventory.android.backup;
 
+import java.io.Serializable;
 import java.util.*;
 
-public final class Progress implements Cloneable {
+import android.support.annotation.NonNull;
+
+import static net.twisterrob.inventory.android.Constants.*;
+
+public final class Progress implements Cloneable, Serializable {
+	public final Type type;
 	public Phase phase;
 	/** number of images done from total */
 	public int imagesDone;
@@ -16,13 +22,15 @@ public final class Progress implements Cloneable {
 	public Throwable failure;
 	public List<String> warnings = new ArrayList<>();
 
-	public Progress() {
+	public Progress(@NonNull Type type) {
+		this.type = type;
 		phase = Phase.Init;
 		pending = true;
 	}
 
-	public Progress(Throwable ex) {
-		this();
+	public Progress(@NonNull Type type, @NonNull Throwable ex) {
+		this(type);
+		phase = Phase.Finished;
 		failure = ex;
 	}
 
@@ -38,7 +46,7 @@ public final class Progress implements Cloneable {
 		String header = String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %spending, %d warnings, %s",
 				phase, done, total, imagesDone, imagesTotal,
 				pending? "" : "not ", warnings.size(), failure != null? failure : "no error");
-		if (warnings.isEmpty()) {
+		if (DISABLE && warnings.isEmpty()) {
 			return header;
 		}
 		StringBuilder sb = new StringBuilder(header);
@@ -52,6 +60,12 @@ public final class Progress implements Cloneable {
 	public enum Phase {
 		Init,
 		Data,
-		Images
+		Images,
+		Finished
+	}
+
+	public enum Type {
+		Import,
+		Export
 	}
 }

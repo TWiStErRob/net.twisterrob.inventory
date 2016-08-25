@@ -14,7 +14,6 @@ import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.backup.Progress.Phase;
 import net.twisterrob.inventory.android.content.contract.*;
 
-// FIXME convert to Service
 @WorkerThread
 public class BackupStreamExporter {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupStreamExporter.class);
@@ -54,7 +53,7 @@ public class BackupStreamExporter {
 	 */
 	@SuppressWarnings("JavaDoc")
 	public @NonNull Progress export(OutputStream os) {
-		Progress progress = this.progress = new Progress();
+		Progress progress = this.progress = new Progress(Progress.Type.Export);
 
 		try {
 			progress.phase = Phase.Init;
@@ -76,6 +75,7 @@ public class BackupStreamExporter {
 			exporter.finalizeExport();
 			this.progress = null;
 		}
+		progress.phase = Phase.Finished;
 		return progress;
 	}
 

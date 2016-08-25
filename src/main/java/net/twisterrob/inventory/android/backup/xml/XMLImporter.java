@@ -89,17 +89,17 @@ public class XMLImporter implements Importer {
 		});
 		listEntryElement.setElementListener(new ElementListener() {
 			@Override public void start(Attributes attributes) {
-				long id = currentListID.get();
+				long listID = currentListID.get();
 				long itemID = Long.parseLong(attributes.getValue(ATTR_ID));
 				Long dbItemID = itemMap.get(itemID);
 				if (dbItemID == null) {
 					throw new IllegalArgumentException("Missing item reference to id=" + itemID);
 				}
 				try {
-					db.addListEntry(id, dbItemID);
+					db.addListEntry(listID, dbItemID);
 				} catch (SQLiteConstraintException ex) {
 					progress.warning(res.getString(R.string.backup_import_invalid_list_entry,
-							currentListName.get(), id));
+							currentListName.get(), itemID));
 				}
 			}
 			@Override public void end() {

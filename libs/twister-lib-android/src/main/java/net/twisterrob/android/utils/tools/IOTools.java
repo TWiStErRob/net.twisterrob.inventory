@@ -1,6 +1,7 @@
 package net.twisterrob.android.utils.tools;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.*;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +16,8 @@ import android.database.Cursor;
 import android.graphics.*;
 import android.os.Build.*;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.Nullable;
+import android.system.*;
 
 import net.twisterrob.java.utils.CollectionTools;
 
@@ -188,5 +191,29 @@ public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools 
 
 	protected IOTools() {
 		// prevent instantiation
+	}
+
+	@TargetApi(VERSION_CODES.LOLLIPOP)
+	public static boolean isEPIPE(@Nullable Throwable ex) {
+		if (ex == null) {
+			return false;
+		}
+		int code = -1;
+		if (ex instanceof IOException) {
+			ex = ex.getCause();
+		}
+		if (VERSION_CODES.LOLLIPOP <= VERSION.SDK_INT && ex instanceof ErrnoException) {
+			code = ((ErrnoException)ex).errno;
+		} else if ("ErrnoException".equals(ex.getClass().getSimpleName())) {
+			// before 21 it's libcore.io.ErrnoException
+			try {
+				Field errno = ex.getClass().getDeclaredField("errno");
+				code = (Integer)errno.get(ex);
+			} catch (Throwable ignore) {
+				// don't bother, we're doing best effort
+			}
+		}
+		int epipe = VERSION_CODES.LOLLIPOP <= VERSION.SDK_INT? OsConstants.EPIPE : 32 /* from errno.h */;
+		return code == epipe || ex.getMessage().contains("EPIPE");
 	}
 }

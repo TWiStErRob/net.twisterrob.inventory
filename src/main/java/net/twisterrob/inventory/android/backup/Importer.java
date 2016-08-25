@@ -28,10 +28,4 @@ public interface Importer {
 				String image
 		) throws IOException;
 	}
-
-	interface ImportCallbacks {
-		void importStarting();
-		void importProgress(@NonNull Progress progress);
-		void importFinished(@NonNull Progress progress);
-	}
 }

@@ -18,22 +18,42 @@ public class IntentStringer extends Stringer<Intent> {
 	}
 	@Override public void toString(@Nonnull ToStringAppender append, Intent intent) {
 		append.beginSizedList(intent, 10, false); // TODO figure out a better way
-		append.item("pkg", intent.getPackage());
-		append.item("cmp", intent.getComponent());
-		//noinspection ResourceType TOFIX external annotations to Intent#getFlags?
-		append.item("flg", IntentFlags.Converter.toString(intent.getFlags(), null));
+		if (intent.getPackage() != null) {
+			append.item("pkg", intent.getPackage());
+		}
+		if (intent.getComponent() != null) {
+			append.item("cmp", intent.getComponent());
+		}
+		if (intent.getFlags() != 0) {
+			//noinspection ResourceType TOFIX external annotations to Intent#getFlags?
+			append.item("flg", IntentFlags.Converter.toString(intent.getFlags(), null));
+		}
 
-		append.item("dat", intent.getData());
-		append.item("typ", intent.getType());
+		if (intent.getData() != null) {
+			append.item("dat", intent.getData());
+		}
+		if (intent.getType() != null) {
+			append.item("typ", intent.getType());
+		}
 
-		append.item("act", intent.getAction());
-		append.item("cat", intent.getCategories());
+		if (intent.getAction() != null) {
+			append.item("act", intent.getAction());
+		}
+		if (intent.getCategories() != null) {
+			append.item("cat", intent.getCategories());
+		}
 
-		append.item("bnds", intent.getSourceBounds());
+		if (intent.getSourceBounds() != null) {
+			append.item("bnds", intent.getSourceBounds());
+		}
 
-		append.item("xtra", intent.getExtras());
+		if (intent.getExtras() != null) {
+			append.item("xtra", intent.getExtras());
+		}
 		if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
-			append.item("clip", intent.getClipData());
+			if (intent.getClipData() != null) {
+				append.item("clip", intent.getClipData());
+			}
 		}
 		append.endSizedList();
 	}

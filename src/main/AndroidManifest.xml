@@ -169,8 +169,7 @@
 		</provider>
 
 		<service
-			android:name=".backup.concurrent.ExporterService"
-			android:enabled="false"
+			android:name=".backup.concurrent.BackupService"
 			android:exported="false"
 			/>
 	</application>

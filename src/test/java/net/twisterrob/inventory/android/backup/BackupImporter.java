@@ -55,7 +55,7 @@ class BackupImporter implements Actor, Asserter {
 					.doImport(any(InputStream.class), any(ImportProgress.class), any(ImportImageGetter.class));
 		}
 		importer.accept(input.getStream());
-		Progress progress = dispatcherMock.finalProgress();
+		Progress progress = dispatcherMock.end();
 		LOG.trace("Import resulted in {}", progress, progress.failure);
 		return new BackupImportResult(progress, dispatcherMock);
 	}

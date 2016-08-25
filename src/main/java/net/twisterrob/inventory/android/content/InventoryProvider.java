@@ -18,16 +18,12 @@ import static android.app.SearchManager.*;
 
 import net.twisterrob.android.utils.log.LoggingServiceConnection;
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.android.utils.tools.AndroidTools.OutWriter;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.backup.*;
-import net.twisterrob.inventory.android.backup.concurrent.ExporterService;
-import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
+import net.twisterrob.inventory.android.backup.concurrent.BackupService;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
 
-import static net.twisterrob.inventory.android.backup.ProgressDispatcher.*;
 import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
 import static net.twisterrob.inventory.android.content.InventoryContract.*;
 
@@ -253,7 +249,7 @@ public class InventoryProvider extends ContentProvider {
 				//noinspection ConstantConditions,resource AssetFileDescriptor is closed by caller
 				return getContext().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();
 			case FULL_BACKUP:
-				return generateBackup();
+				return generateBackupWithService();
 		}
 		return super.openFile(uri, mode);
 	}
@@ -288,27 +284,18 @@ public class InventoryProvider extends ContentProvider {
 		}
 	}
 
-	private ParcelFileDescriptor generateBackup() throws FileNotFoundException {
-		return AndroidTools.stream(new OutWriter() {
-			@Override public void write(OutputStream out) throws IOException {
-				BackupStreamExporter exporter = new BackupStreamExporter(new ZippedXMLExporter(), IGNORE);
-				Progress result = exporter.export(out);
-				LOG.debug("Backup finished: " + result);
-			}
-		});
-	}
-
 	private ParcelFileDescriptor generateBackupWithService() throws FileNotFoundException {
 		try {
 			final ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
-			Intent intent = new Intent(getContext(), ExporterService.class)
+			Intent intent = new Intent(getContext(), BackupService.class)
 					.putExtra(EXTRA_BACKGROUND_BIND, true);
 			getContext().bindService(intent, new LoggingServiceConnection() {
 				@Override public void onServiceConnected(ComponentName name, IBinder service) {
 					super.onServiceConnected(name, service);
 					final ServiceConnection that = this;
-					((ExporterService.LocalBinder)service).export(pipe[1], new Runnable() {
+					((BackupService.LocalBinder)service).export(pipe[1], new Runnable() {
 						@Override public void run() {
+							// FIXME can unbind immediately after export?
 							getContext().unbindService(that);
 						}
 					});
