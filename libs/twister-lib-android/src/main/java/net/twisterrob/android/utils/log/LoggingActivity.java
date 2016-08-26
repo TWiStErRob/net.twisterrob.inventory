@@ -426,11 +426,11 @@ public class LoggingActivity extends AppCompatActivity {
 		super.onChildTitleChanged(childActivity, title);
 	}
 
-	private void log(String name, Object... args) {
+	protected void log(String name, Object... args) {
 		LoggingHelper.log(LOG, getName(), name, debugInfoProvider, args);
 	}
 
-	private String getName() {
+	protected String getName() {
 		return getClass().getSimpleName() + "@" + StringTools.hashString(this);
 	}
 }

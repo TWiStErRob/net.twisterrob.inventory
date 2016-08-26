@@ -67,6 +67,7 @@ public class MainActivity extends DrawerActivity
 			put(PAGE_SUNBURST, R.string.sunburst_title);
 		}
 	};
+	public static final int REQUEST_CODE_IMAGE = 32767;
 
 	private BaseFragment<?> getFragment() {
 		return getFragment(R.id.activityRoot);
@@ -321,7 +322,8 @@ public class MainActivity extends DrawerActivity
 					return true;
 				case R.id.debug_capture:
 					File devFile = new File("/sdcard/dev.jpg");
-					startActivityForResult(CaptureImage.saveTo(this, devFile, Uri.fromFile(devFile), 8192), 32767);
+					Uri target = Uri.fromFile(devFile);
+					startActivityForResult(CaptureImage.saveTo(this, devFile, target, 8192), REQUEST_CODE_IMAGE);
 					return true;
 				case R.id.debug_testdb:
 					new AsyncTask<Void, Void, Void>() {
@@ -346,7 +348,7 @@ public class MainActivity extends DrawerActivity
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 32767 && resultCode == RESULT_OK) {
+		if (requestCode == REQUEST_CODE_IMAGE && resultCode == RESULT_OK) {
 			startActivity(ImageActivity.show(data.getData()));
 			return;
 		}

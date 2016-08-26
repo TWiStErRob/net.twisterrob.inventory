@@ -20,8 +20,8 @@ import com.rarepebble.colorpicker.ColorPickerView;
 
 public class DialogTools {
 	@UiThread
-	public static AlertDialog.Builder prompt(final Context context,
-			String initialValue, final PopupCallbacks<String> callbacks) {
+	public static AlertDialog.Builder prompt(final @NonNull Context context,
+			@Nullable String initialValue, final @NonNull PopupCallbacks<String> callbacks) {
 		final EditText input = new EditText(context);
 		input.setSingleLine(true);
 		input.setText(initialValue);
@@ -61,7 +61,8 @@ public class DialogTools {
 					}
 				});
 	}
-	public static AlertDialog.Builder confirm(Context context, final PopupCallbacks<Boolean> callbacks) {
+	public static AlertDialog.Builder confirm(@NonNull Context context,
+			final @NonNull PopupCallbacks<Boolean> callbacks) {
 		return new DefaultBuilder(context)
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
@@ -80,7 +81,8 @@ public class DialogTools {
 					}
 				});
 	}
-	public static AlertDialog.Builder notify(Context context, final PopupCallbacks<Boolean> callbacks) {
+	public static AlertDialog.Builder notify(@NonNull Context context,
+			final @NonNull PopupCallbacks<Boolean> callbacks) {
 		return new DefaultBuilder(context)
 				.setNeutralButton(android.R.string.ok, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
@@ -95,10 +97,10 @@ public class DialogTools {
 				});
 	}
 	@TargetApi(VERSION_CODES.HONEYCOMB)
-	public static AlertDialog.Builder pickNumber(Context context,
-			int initial, Integer min, Integer max, final PopupCallbacks<Integer> callbacks) {
+	public static AlertDialog.Builder pickNumber(@NonNull Context context,
+			@IntRange(from = 0) int initial, @IntRange(from = 0) Integer min, @IntRange(from = 0) Integer max,
+			final @NonNull PopupCallbacks<Integer> callbacks) {
 		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
-			LayoutInflater inflater = LayoutInflater.from(context);
 			final NumberPicker picker = new NumberPicker(context);
 			if (min != null) {
 				picker.setMinValue(min);
@@ -134,8 +136,8 @@ public class DialogTools {
 		}
 	}
 	@TargetApi(VERSION_CODES.HONEYCOMB)
-	public static AlertDialog.Builder pickColor(Context context,
-			@ColorInt int initial, final PopupCallbacks<Integer> callbacks) {
+	public static AlertDialog.Builder pickColor(@NonNull Context context,
+			@ColorInt int initial, final @NonNull PopupCallbacks<Integer> callbacks) {
 		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
 			final ColorPickerView picker = new ColorPickerView(context);
 			picker.setColor(initial);
@@ -168,6 +170,9 @@ public class DialogTools {
 	@UiThread
 	public interface PopupCallbacks<T> {
 		void finished(T value);
+		/**
+		 * @see DoNothing#instance()
+		 */
 		PopupCallbacks<?> NO_CALLBACK = new DoNothing();
 
 		class DoNothing implements PopupCallbacks<Object> {

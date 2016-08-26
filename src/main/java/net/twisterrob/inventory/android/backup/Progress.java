@@ -46,7 +46,7 @@ public final class Progress implements Cloneable, Serializable {
 		String header = String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %spending, %d warnings, %s",
 				phase, done, total, imagesDone, imagesTotal,
 				pending? "" : "not ", warnings.size(), failure != null? failure : "no error");
-		if (DISABLE && warnings.isEmpty()) {
+		if (!DISABLE || warnings.isEmpty()) {
 			return header;
 		}
 		StringBuilder sb = new StringBuilder(header);

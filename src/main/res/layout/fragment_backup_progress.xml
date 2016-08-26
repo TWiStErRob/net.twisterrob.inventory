@@ -65,6 +65,7 @@
 		android:layout_below="@id/progress"
 		android:layout_toLeftOf="@id/progress$cancel"
 		android:layout_toStartOf="@id/progress$cancel"
+		android:textIsSelectable="false"
 		tools:text="666/1000"
 		/>
 	<TextView
@@ -74,6 +75,7 @@
 		android:layout_below="@id/progress"
 		android:layout_toEndOf="@id/progress$icon"
 		android:layout_toRightOf="@id/progress$icon"
+		android:textIsSelectable="false"
 		tools:text="66%"
 		/>
 	<TextView
@@ -81,6 +83,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/progress$percentage"
+		android:textIsSelectable="false"
 		tools:text="Exporting blah blah"
 		/>
 </RelativeLayout>

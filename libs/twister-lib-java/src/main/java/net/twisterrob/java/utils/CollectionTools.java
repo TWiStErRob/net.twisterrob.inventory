@@ -144,6 +144,13 @@ public final class CollectionTools {
 		}
 	}
 
+	public static <T> T only(Collection<T> coll) {
+		if (coll == null || coll.size() != 1) {
+			throw new IllegalArgumentException("Collection is not a singleton: " + coll);
+		}
+		return coll.iterator().next();
+	}
+
 	/**
 	 * Tries to get the last item in the quickest time complexity possible.
 	 * @return last element of the set, or <code>null</code> instead of {@link NoSuchElementException}.

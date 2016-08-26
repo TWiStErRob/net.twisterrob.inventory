@@ -151,7 +151,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 	 */
 	protected abstract void setData(A adapter, D data);
 
-	protected void updateFAB() {
+	private void updateFAB() {
 		if (fab == null) {
 			return;
 		}
@@ -169,6 +169,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 		if (fab == null) {
 			return;
 		}
+		// STOPSHIP not animated any more?
 		if (isLoading() || !canCreateNew() || lastScrollUp) {
 			if (fab instanceof FloatingActionButton) {
 				((FloatingActionButton)fab).hide();

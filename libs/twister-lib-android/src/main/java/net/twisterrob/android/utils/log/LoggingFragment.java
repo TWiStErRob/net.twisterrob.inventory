@@ -207,11 +207,11 @@ public class LoggingFragment extends Fragment {
 		super.onLowMemory();
 	}
 
-	private void log(String name, Object... args) {
+	protected void log(String name, Object... args) {
 		LoggingHelper.log(LOG, getName(), name, debugInfoProvider, args);
 	}
 
-	private String getName() {
+	protected String getName() {
 		return AndroidTools.toNameString(this);
 	}
 }
