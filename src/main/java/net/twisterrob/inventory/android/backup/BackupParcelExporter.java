@@ -1,0 +1,30 @@
+package net.twisterrob.inventory.android.backup;
+
+import java.util.concurrent.CancellationException;
+
+import android.os.ParcelFileDescriptor;
+import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
+import android.support.annotation.VisibleForTesting;
+
+import net.twisterrob.android.utils.tools.IOTools;
+
+public class BackupParcelExporter {
+	private final BackupStreamExporter exporter;
+
+	@VisibleForTesting BackupParcelExporter(BackupStreamExporter exporter) {
+		this.exporter = exporter;
+	}
+	public BackupParcelExporter(Exporter exporter, ProgressDispatcher dispatcher) {
+		this(new BackupStreamExporter(exporter, dispatcher));
+	}
+
+	public Progress exportTo(ParcelFileDescriptor file) {
+		Progress progress = exporter.export(new AutoCloseOutputStream(file));
+		if (IOTools.isEPIPE(progress.failure)) {
+			Exception newFailure = new CancellationException();
+			newFailure.initCause(progress.failure);
+			progress.failure = newFailure;
+		}
+		return progress;
+	}
+}

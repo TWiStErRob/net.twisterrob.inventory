@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.backup.concurrent;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -12,12 +12,10 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.*;
-import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.support.annotation.*;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 
-import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BackupActivity;
 import net.twisterrob.inventory.android.backup.*;
@@ -40,7 +38,15 @@ public class BackupService extends NotificationProgressService<Progress> {
 	private /*final*/ ProgressDisplayer displayer;
 	private final AtomicBoolean cancelled = new AtomicBoolean(false);
 	private final BackupListeners listeners = new BackupListeners();
-	private final WorkaroundQueue queue = new WorkaroundQueue();
+	/**
+	 * Not all parcelables can be put into Extras of an Intent.
+	 * Specifically {@link ParcelFileDescriptor} can't: <q>"Not allowed to write file descriptors here"</q>.
+	 * This means that the {@link BackupService} can't be just started nicely with an {@link Intent}
+	 * from {@link net.twisterrob.inventory.android.content.InventoryProvider},
+	 * but it needs to bind and pass the target differently.
+	 * @see <a href="http://stackoverflow.com/q/18706062/253468">Exception with sending ParcelFileDescriptor via Intent</a>
+	 */
+	private final Queue<ParcelFileDescriptor> queue = new LinkedBlockingDeque<>();
 	private final ProgressDispatcher progress = new ProgressDispatcher() {
 		@Override public void dispatchProgress(@NonNull Progress progress) throws CancellationException {
 			if (cancelled.compareAndSet(true, false)) {
@@ -114,26 +120,15 @@ public class BackupService extends NotificationProgressService<Progress> {
 		super.onHandleIntent(intent);
 		try {
 			if (ACTION_EXPORT_PFD_WORKAROUND.equals(intent.getAction())) {
-				WorkaroundQueue.Job job = queue.next();
-				try {
-					BackupStreamExporter exporter = new BackupStreamExporter(new ZippedXMLExporter(), progress);
-					Progress export = exporter.export(job.open());
-					if (IOTools.isEPIPE(export.failure)) {
-						Exception newFailure = new CancellationException();
-						newFailure.initCause(export.failure);
-						export.failure = newFailure;
-					}
-					finished(export);
-				} finally {
-					job.finished();
-				}
+				BackupParcelExporter exporter = new BackupParcelExporter(new ZippedXMLExporter(), progress);
+				ParcelFileDescriptor file = queue.remove();
+				finished(exporter.exportTo(file));
 			} else if (ACTION_EXPORT.equals(intent.getAction())) {
-				OutputStream stream = getContentResolver().openOutputStream(intent.getData());
-				BackupStreamExporter exporter = new BackupStreamExporter(new ZippedXMLExporter(), progress);
-				finished(exporter.export(stream));
+				BackupUriExporter exporter = new BackupUriExporter(this, new ZippedXMLExporter(), progress);
+				Uri uri = intent.getData();
+				finished(exporter.exportTo(uri));
 			} else if (ACTION_EXPORT_DIR.equals(intent.getAction())) {
-				BackupDirExporter exporter =
-						new BackupDirExporter(getApplicationContext(), new ZippedXMLExporter(), progress);
+				BackupDirExporter exporter = new BackupDirExporter(this, new ZippedXMLExporter(), progress);
 				File dir = new File(intent.getData().getPath());
 				finished(exporter.exportTo(dir));
 			}
@@ -171,12 +166,8 @@ public class BackupService extends NotificationProgressService<Progress> {
 	}
 
 	public class LocalBinder extends Binder {
-		public void export(ParcelFileDescriptor pfd) {
-			queue.add(pfd, new Runnable() {
-				@Override public void run() {
-					// STOPSHIP remove
-				}
-			});
+		public void export(@NonNull ParcelFileDescriptor pfd) {
+			queue.add(ObjectTools.checkNotNull(pfd));
 			startService(new Intent(ACTION_EXPORT_PFD_WORKAROUND, (Uri)null, BackupService.this, BackupService.class));
 		}
 
@@ -264,44 +255,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 						}
 					});
 				}
-			}
-		}
-	}
-
-	/**
-	 * Not all parcelables can be put into Extras of an Intent.
-	 * Specifically {@link ParcelFileDescriptor} can't: <q>"Not allowed to write file descriptors here"</q>.
-	 * This means that the {@link BackupService} can't be just started nicely with an {@link Intent}
-	 * from {@link net.twisterrob.inventory.android.content.InventoryProvider},
-	 * but it needs to bind and pass the target differently.
-	 * @see <a href="http://stackoverflow.com/q/18706062/253468"></a>
-	 */
-	private static class WorkaroundQueue {
-		private final Queue<Job> queue = new LinkedBlockingDeque<>();
-
-		public Job next() throws FileNotFoundException {
-			Job job = queue.poll();
-			if (job == null) {
-				throw new FileNotFoundException("Cannot find job to work on, did you forget to set data?");
-			}
-			return job;
-		}
-
-		public void add(ParcelFileDescriptor pfd, Runnable doneCallback) {
-			WorkaroundQueue.Job job = new WorkaroundQueue.Job();
-			job.pfd = pfd;
-			job.doneCallback = doneCallback;
-			queue.add(job);
-		}
-
-		private static class Job {
-			private Runnable doneCallback;
-			private ParcelFileDescriptor pfd;
-			public OutputStream open() {
-				return new AutoCloseOutputStream(pfd);
-			}
-			public void finished() {
-				doneCallback.run();
 			}
 		}
 	}
