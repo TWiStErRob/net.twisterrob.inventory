@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 
 import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.backup.Progress.Phase;
 
 public class ProgressDisplayer {
 	private final Context context;
@@ -122,8 +123,14 @@ public class ProgressDisplayer {
 	public String getTitle() {
 		switch (progress.type) {
 			case Import:
+				if (progress.phase == Phase.Finished) {
+					return context.getString(R.string.backup_import_result_finished);
+				}
 				return context.getString(R.string.backup_import_progress_title);
 			case Export:
+				if (progress.phase == Phase.Finished) {
+					return context.getString(R.string.backup_export_result_finished);
+				}
 				return context.getString(R.string.backup_export_progress_title);
 		}
 		throw notImplementedType();

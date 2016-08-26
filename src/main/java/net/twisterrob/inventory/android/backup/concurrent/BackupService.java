@@ -88,11 +88,14 @@ public class BackupService extends NotificationProgressService<Progress> {
 
 	@Override protected @NonNull Builder createFinishedNotification(@NonNull Progress result) {
 		displayer.setProgress(result);
+		String title = displayer.getTitle();
+		String message = displayer.getMessage();
 		return new android.support.v7.app.NotificationCompat.Builder(this)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-				.setTicker(displayer.getMessage())
-				.setContentTitle(displayer.getTitle())
-				.setContentText(displayer.getMessage())
+				.setTicker(title)
+				.setContentTitle(title)
+				.setContentText(message)
+				.setStyle(new NotificationCompat.BigTextStyle().bigText(message))
 				.setSmallIcon(android.R.drawable.stat_sys_download_done)
 				;
 	}
