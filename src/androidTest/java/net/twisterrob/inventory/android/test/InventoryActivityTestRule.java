@@ -1,4 +1,4 @@
-package net.twisterrob.android.inventory;
+package net.twisterrob.inventory.android.test;
 
 import java.io.File;
 import java.lang.reflect.Field;

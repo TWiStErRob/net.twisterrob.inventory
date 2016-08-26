@@ -1,4 +1,4 @@
-package net.twisterrob.android.inventory;
+package net.twisterrob.inventory.android.activity;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -11,21 +11,19 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
 import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
-import static android.support.test.espresso.matcher.RootMatchers.*;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.activity.*;
+import net.twisterrob.inventory.android.test.InventoryActivityTestRule;
+
+import static net.twisterrob.android.test.DialogMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest_Welcome {
-	public static final int BUTTON_POSITIVE = android.R.id.button1;
-	public static final int BUTTON_NEGATIVE = android.R.id.button2;
-	public static final int BUTTON_NEUTRAL = android.R.id.button3;
 
 	private static final ViewAssertion NON_EMPTY =
 			matches(allOf(isDisplayed(), hasDescendant(notNullValue(View.class))));
@@ -36,7 +34,7 @@ public class MainActivityTest_Welcome {
 
 	@Test public void testWelcomeDontPopulateDemo() {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
-		onView(withId(BUTTON_NEGATIVE)).perform(click());
+		clickNegativeInDialog();
 
 		onView(withId(R.id.properties)).check(EMPTY);
 		onView(withId(R.id.rooms)).check(EMPTY);
@@ -46,7 +44,7 @@ public class MainActivityTest_Welcome {
 
 	@Test public void testWelcomePopulateDemo() {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
-		onView(withId(BUTTON_POSITIVE)).perform(click());
+		clickPositiveInDialog();
 
 		onView(withId(R.id.properties)).check(NON_EMPTY);
 		onView(withId(R.id.rooms)).check(NON_EMPTY);
@@ -56,7 +54,7 @@ public class MainActivityTest_Welcome {
 
 	@Test public void testWelcomeBackup() {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
-		onView(withId(BUTTON_NEUTRAL)).perform(click());
+		clickNeutralInDialog();
 		intended(allOf(isInternal(), hasComponent(BackupActivity.class.getName())));
 	}
 }
