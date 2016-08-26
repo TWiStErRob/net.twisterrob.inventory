@@ -7,6 +7,7 @@
 	android:padding="@dimen/unit_half"
 	android:orientation="vertical"
 	tools:context=".activity.BackupActivity"
+	tools:ignore="UnusedIds"
 	>
 	<fragment
 		android:id="@+id/backup_progress"

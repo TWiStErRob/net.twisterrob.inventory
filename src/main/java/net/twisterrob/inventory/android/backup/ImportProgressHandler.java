@@ -43,7 +43,7 @@ public class ImportProgressHandler implements ImportProgress {
 		progress.imagesTotal++;
 	}
 
-	protected void publishProgress() {
+	public void publishProgress() {
 		dispatcher.dispatchProgress(progress.clone());
 	}
 

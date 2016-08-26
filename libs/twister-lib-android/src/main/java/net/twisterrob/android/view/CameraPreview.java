@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import org.slf4j.*;
 
-import android.annotation.*;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build.*;
 import android.os.*;
@@ -386,7 +386,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 		public void startOpenCamera() {
 			mHandler.post(new Runnable() {
-				@SuppressLint("WrongThread") // TODEL http://b.android.com/207302 (+ ResourceTypes below)
+				// TODEL ResourceTypes below http://b.android.com/207302
 				@WorkerThread
 				@Override public void run() {
 					int cameraID = findCamera();

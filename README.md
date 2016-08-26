@@ -40,7 +40,7 @@ From `Magic Home Inventory.iws`:
 Release play-by-play
 --------------------
 
-1. Fix all warnings `gradlew lint` should yield 0 warnings.
+1. Fix all warnings `gradlew lint check connectedCheck` should yield 0 warnings.
 1. Commit all changes (`svn status` should be empty)
 1. `svn update` just to be sure (double-check with `svn info`)
 1. `gradlew clean releaseRelease` (1m before ProGuard, 1m for ProGuard)

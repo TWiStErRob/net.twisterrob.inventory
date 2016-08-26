@@ -92,7 +92,7 @@ public class App extends BaseApp {
 		}
 	}
 
-	@SuppressWarnings("WrongThread")
+	@SuppressWarnings("WrongThread") // TODEL http://b.android.com/207302
 	@Override public void onTerminate() {
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 		try {

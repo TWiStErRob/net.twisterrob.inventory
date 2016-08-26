@@ -116,6 +116,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		return ACTION_IMPORT.equals(intent.getAction());
 	}
 
+	@SuppressWarnings("WrongThread") // TODEL http://b.android.com/207302
 	@WorkerThread
 	@Override protected void onHandleIntent(Intent intent) {
 		listeners.started();
