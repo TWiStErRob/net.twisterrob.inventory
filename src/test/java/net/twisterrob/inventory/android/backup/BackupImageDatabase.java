@@ -19,7 +19,7 @@ import com.shazam.gwen.collaborators.Asserter;
 
 import net.twisterrob.inventory.android.content.Database;
 
-class BackupImageDatabase implements Asserter {
+public class BackupImageDatabase implements Asserter {
 	private final Database db;
 	private long imageId = 100;
 	private Map<String, Long> imageIds = new HashMap<>();

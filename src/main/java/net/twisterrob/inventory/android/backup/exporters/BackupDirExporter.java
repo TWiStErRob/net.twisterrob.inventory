@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.exporters;
 
 import java.io.*;
 
@@ -6,12 +6,12 @@ import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 
 import net.twisterrob.inventory.android.Constants.Paths;
+import net.twisterrob.inventory.android.backup.*;
 
 public class BackupDirExporter {
 	private final BackupFileExporter exporter;
 
-	@VisibleForTesting 
-	/*default*/ BackupDirExporter(BackupFileExporter exporter) {
+	@VisibleForTesting BackupDirExporter(BackupFileExporter exporter) {
 		this.exporter = exporter;
 	}
 

@@ -2,6 +2,7 @@ package net.twisterrob.test;
 
 public class TestCheckedException extends Exception {
 	public TestCheckedException() {
+		super("test");
 	}
 	public TestCheckedException(String message) {
 		super(message);

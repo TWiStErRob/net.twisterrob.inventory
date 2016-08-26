@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.exporters;
 
 import java.io.*;
 import java.util.zip.*;
@@ -7,6 +7,7 @@ import android.database.Cursor;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.backup.Exporter;
 import net.twisterrob.inventory.android.backup.xml.CursorExporter;
 import net.twisterrob.inventory.android.content.InventoryProvider;
 import net.twisterrob.inventory.android.content.contract.*;

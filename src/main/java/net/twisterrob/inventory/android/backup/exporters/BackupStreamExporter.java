@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.exporters;
 
 import java.io.OutputStream;
 import java.util.Locale;
@@ -11,6 +11,7 @@ import android.support.annotation.*;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.Progress.Phase;
 import net.twisterrob.inventory.android.content.contract.*;
 
@@ -68,6 +69,7 @@ public class BackupStreamExporter {
 
 			exporter.finishExport();
 		} catch (Throwable ex) {
+			// FIXME refactor to throws like imports
 			LOG.warn("Export failed", ex);
 			progress.failure = ex;
 		} finally {

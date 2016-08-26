@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.importers;
 
 import java.io.InputStream;
 import java.util.function.Consumer;
@@ -24,6 +24,7 @@ import static com.github.stefanbirkner.fishbowl.Fishbowl.*;
 import net.twisterrob.android.test.GetStringVarargsAnswer;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.test.PackageNameShortener;

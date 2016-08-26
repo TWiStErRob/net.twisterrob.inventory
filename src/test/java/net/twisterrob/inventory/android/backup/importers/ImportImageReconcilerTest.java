@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.importers;
 
 import java.io.*;
 
@@ -27,6 +27,7 @@ import static com.github.stefanbirkner.fishbowl.Fishbowl.*;
 
 import net.twisterrob.android.test.*;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.Type;
 

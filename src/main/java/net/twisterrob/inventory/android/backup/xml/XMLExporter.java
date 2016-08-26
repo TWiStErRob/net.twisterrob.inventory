@@ -13,7 +13,7 @@ import android.util.Xml;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.backup.BackupStreamExporter;
+import net.twisterrob.inventory.android.backup.exporters.BackupStreamExporter;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.HierarchyBuilder;
 import net.twisterrob.java.utils.StringTools;

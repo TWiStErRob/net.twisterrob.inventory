@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.exporters;
 
 import java.io.*;
 
@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.inventory.android.backup.*;
 
 public class BackupUriExporter {
 	private final BackupStreamExporter exporter;

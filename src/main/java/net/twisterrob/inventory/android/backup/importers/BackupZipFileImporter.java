@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.importers;
 
 import java.io.*;
 import java.util.zip.*;
@@ -11,6 +11,7 @@ import android.support.annotation.VisibleForTesting;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
+import net.twisterrob.inventory.android.backup.ImportProgressHandler;
 import net.twisterrob.inventory.android.backup.Importer.ImportImageGetter;
 import net.twisterrob.inventory.android.backup.Progress.Phase;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;

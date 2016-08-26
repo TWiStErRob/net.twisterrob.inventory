@@ -2,6 +2,7 @@ package net.twisterrob.test;
 
 public class TestError extends Error {
 	public TestError() {
+		super("test");
 	}
 	public TestError(String message) {
 		super(message);

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.exporters;
 
 import java.io.*;
 
@@ -7,13 +7,13 @@ import android.support.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
+import net.twisterrob.inventory.android.backup.*;
 
 public class BackupFileExporter {
 	private final BackupStreamExporter exporter;
 	private final Context context;
 
-	@VisibleForTesting 
-	/*default*/ BackupFileExporter(Context context, BackupStreamExporter exporter) {
+	@VisibleForTesting BackupFileExporter(Context context, BackupStreamExporter exporter) {
 		this.context = context;
 		this.exporter = exporter;
 	}

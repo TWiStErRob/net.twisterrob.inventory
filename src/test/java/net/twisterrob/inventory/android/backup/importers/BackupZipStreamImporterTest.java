@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.importers;
 
 import java.io.InputStream;
 
@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 
 import com.shazam.gwen.Gwen;
+
+import net.twisterrob.inventory.android.backup.BackupImportResult;
 
 public class BackupZipStreamImporterTest extends BackupZipImporterTestBase {
 	@InjectMocks BackupZipStreamImporter realImporter;

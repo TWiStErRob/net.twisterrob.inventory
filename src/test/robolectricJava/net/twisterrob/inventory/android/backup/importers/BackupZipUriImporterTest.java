@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.importers;
 
 import java.io.*;
 
@@ -16,6 +16,7 @@ import android.content.*;
 import android.net.Uri;
 
 import net.twisterrob.android.test.LoggingAnswer;
+import net.twisterrob.inventory.android.backup.ImportProgressHandler;
 import net.twisterrob.test.frameworks.RobolectricTestBase;
 
 import static net.twisterrob.test.HasCause.*;

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.exporters;
 
 import java.util.concurrent.CancellationException;
 
@@ -7,6 +7,7 @@ import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.support.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.inventory.android.backup.*;
 
 public class BackupParcelExporter {
 	private final BackupStreamExporter exporter;

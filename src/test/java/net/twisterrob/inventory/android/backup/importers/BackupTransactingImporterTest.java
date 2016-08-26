@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.importers;
 
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -14,6 +14,7 @@ import com.shazam.gwen.Gwen;
 import static com.github.stefanbirkner.fishbowl.Fishbowl.*;
 
 import net.twisterrob.android.test.LoggingAnswer;
+import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.test.*;
 
@@ -60,7 +61,7 @@ public class BackupTransactingImporterTest {
 	@Test public void testSuccessCannotCommitSuppressed() throws Exception {
 		Throwable dbFailure = new TestRuntimeException("test cannot commit");
 		doThrow(dbFailure).when(db).endTransaction();
-		Throwable innerFailure = new TestRuntimeException("test");
+		Throwable innerFailure = new TestRuntimeException();
 		doThrow(innerFailure).when(inner).importFrom(any());
 
 		Throwable thrown = exceptionThrownBy(() -> importer.importFrom(INPUT));
@@ -71,7 +72,7 @@ public class BackupTransactingImporterTest {
 	}
 
 	@Test public void testFailureRuntime() throws Exception {
-		Throwable failure = new TestRuntimeException("test");
+		Throwable failure = new TestRuntimeException();
 		doThrow(failure).when(inner).importFrom(any());
 
 		Throwable thrown = exceptionThrownBy(() -> importer.importFrom(INPUT));
@@ -81,7 +82,7 @@ public class BackupTransactingImporterTest {
 	}
 
 	@Test public void testFailureChecked() throws Exception {
-		Throwable failure = new TestCheckedException("test");
+		Throwable failure = new TestCheckedException();
 		doThrow(failure).when(inner).importFrom(any());
 
 		Throwable thrown = exceptionThrownBy(() -> importer.importFrom(INPUT));
@@ -91,7 +92,7 @@ public class BackupTransactingImporterTest {
 	}
 
 	@Test public void testFailureError() throws Exception {
-		Throwable failure = new TestError("test");
+		Throwable failure = new TestError();
 		doThrow(failure).when(inner).importFrom(any());
 
 		Throwable thrown = exceptionThrownBy(() -> importer.importFrom(INPUT));

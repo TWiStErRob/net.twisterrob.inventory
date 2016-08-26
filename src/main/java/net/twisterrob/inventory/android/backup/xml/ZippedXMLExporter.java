@@ -13,7 +13,7 @@ import android.content.res.AssetManager;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.backup.ZippedExporter;
+import net.twisterrob.inventory.android.backup.exporters.ZippedExporter;
 import net.twisterrob.java.io.TeeOutputStream;
 
 public class ZippedXMLExporter extends ZippedExporter {

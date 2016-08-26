@@ -9,7 +9,7 @@ import static org.mockito.Mockito.*;
 import com.google.common.base.Preconditions;
 import com.shazam.gwen.collaborators.Asserter;
 
-class BackupImportResult implements Asserter {
+public class BackupImportResult implements Asserter {
 	private final Progress progress;
 	private final ImportProgressHandler dispatcher;
 	public BackupImportResult(Progress progress, ImportProgressHandler dispatcher) {

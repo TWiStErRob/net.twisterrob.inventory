@@ -2,6 +2,7 @@ package net.twisterrob.test;
 
 public class TestRuntimeException extends RuntimeException {
 	public TestRuntimeException() {
+		super("test");
 	}
 	public TestRuntimeException(String message) {
 		super(message);

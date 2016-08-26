@@ -9,7 +9,7 @@ import com.shazam.gwen.collaborators.Arranger;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants;
 
-class BackupZip implements Arranger {
+public class BackupZip implements Arranger {
 	private final ZipOutputStream preparedZip;
 	private final PipedInputStream preparedInput;
 	private final List<String> images = new ArrayList<>();
@@ -47,7 +47,7 @@ class BackupZip implements Arranger {
 		return this;
 	}
 
-	static byte[] getContents(String imageName) throws UnsupportedEncodingException {
+	public static byte[] getContents(String imageName) throws UnsupportedEncodingException {
 		return (imageName + " contents").getBytes("utf-8");
 	}
 	static String getName(byte[] contents) throws UnsupportedEncodingException {

@@ -19,7 +19,7 @@ import net.twisterrob.inventory.android.backup.Importer.*;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.contract.Type;
 
-class BackupImporter implements Actor, Asserter {
+public class BackupImporter implements Actor, Asserter {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupImporter.class);
 
 	private final ImportProgressHandler dispatcherMock;

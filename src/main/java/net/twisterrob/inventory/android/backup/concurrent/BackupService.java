@@ -19,6 +19,8 @@ import android.support.v4.app.NotificationCompat.Builder;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BackupActivity;
 import net.twisterrob.inventory.android.backup.*;
+import net.twisterrob.inventory.android.backup.exporters.*;
+import net.twisterrob.inventory.android.backup.importers.*;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.ObjectTools;

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.importers;
 
 import java.io.*;
 
@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.inventory.android.backup.ImportProgressHandler;
 
 public class BackupZipUriImporter implements ZipImporter<Uri> {
 	private final Context context;
@@ -38,9 +39,8 @@ public class BackupZipUriImporter implements ZipImporter<Uri> {
 	}
 
 	private void importStream(Uri uri) throws Exception {
-		InputStream stream = null;
+		InputStream stream = context.getContentResolver().openInputStream(uri);
 		try {
-			stream = context.getContentResolver().openInputStream(uri);
 			streamImporter.importFrom(stream);
 		} finally {
 			IOTools.ignorantClose(stream);

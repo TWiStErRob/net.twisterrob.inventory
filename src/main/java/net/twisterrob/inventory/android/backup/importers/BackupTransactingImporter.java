@@ -1,10 +1,11 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.importers;
 
 import org.slf4j.*;
 
 import android.support.annotation.*;
 
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.backup.ImportProgressHandler;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.java.utils.ObjectTools;
 

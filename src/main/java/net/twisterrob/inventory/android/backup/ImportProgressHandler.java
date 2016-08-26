@@ -8,13 +8,14 @@ import net.twisterrob.inventory.android.backup.Importer.ImportProgress;
 import net.twisterrob.inventory.android.backup.Progress.Phase;
 import net.twisterrob.java.utils.ObjectTools;
 
+// TODO generalize to import/export and refactor deprecation
 @SuppressWarnings("deprecation")
 public class ImportProgressHandler implements ImportProgress {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportProgressHandler.class);
 	private final ProgressDispatcher dispatcher;
 
 	/** @deprecated don't use it directly */
-	final Progress progress = new Progress(Progress.Type.Import);
+	public final Progress progress = new Progress(Progress.Type.Import);
 
 	@VisibleForTesting ImportProgressHandler() {
 		this(ProgressDispatcher.IGNORE);
