@@ -1,9 +1,11 @@
 package net.twisterrob.inventory.android.backup.concurrent;
 
 import java.io.*;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.*;
 
@@ -21,6 +23,7 @@ import net.twisterrob.inventory.android.activity.BackupActivity;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 import net.twisterrob.java.exceptions.StackTrace;
+import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.backup.ProgressDisplayer.*;
 
@@ -31,10 +34,12 @@ public class BackupService extends NotificationProgressService<Progress> {
 	public static final String ACTION_EXPORT = "net.twisterrob.inventory.intent.action.EXPORT";
 	public static final String ACTION_EXPORT_DIR = "net.twisterrob.inventory.intent.action.EXPORT_DIR";
 	public static final String ACTION_IMPORT = "net.twisterrob.inventory.intent.action.IMPORT";
+	// TODO Parcelable or ProgressDisplayer?
 	public static final String EXTRA_PROGRESS = "net.twisterrob.inventory:backup_progress";
 
 	private /*final*/ ProgressDisplayer displayer;
 	private final AtomicBoolean cancelled = new AtomicBoolean(false);
+	private final BackupListeners listeners = new BackupListeners();
 	private final WorkaroundQueue queue = new WorkaroundQueue();
 	private final ProgressDispatcher progress = new ProgressDispatcher() {
 		@Override public void dispatchProgress(@NonNull Progress progress) throws CancellationException {
@@ -90,20 +95,22 @@ public class BackupService extends NotificationProgressService<Progress> {
 
 	@Override protected @Nullable Intent createFinishedIntent(@NonNull Progress progress) {
 		Intent intent = new Intent(getApplicationContext(), BackupActivity.class);
-		intent.putExtra(EXTRA_PROGRESS, progress); // TODO Parcelable or ProgressDisplayer?
+		intent.putExtra(EXTRA_PROGRESS, progress);
 		return intent;
 	}
 
 	@Override protected void fillBroadcast(@NonNull Intent intent, @NonNull Progress progress) {
 		super.fillBroadcast(intent, progress);
-		intent.putExtra(EXTRA_PROGRESS, progress); // TODO Parcelable or ProgressDisplayer?
+		intent.putExtra(EXTRA_PROGRESS, progress);
 	}
 
 	private boolean isImport(Intent intent) {
 		return ACTION_IMPORT.equals(intent.getAction());
 	}
+
 	@WorkerThread
 	@Override protected void onHandleIntent(Intent intent) {
+		listeners.started();
 		super.onHandleIntent(intent);
 		try {
 			if (ACTION_EXPORT_PFD_WORKAROUND.equals(intent.getAction())) {
@@ -141,6 +148,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		} catch (Throwable ex) {
 			finished(new Progress(Progress.Type.Import, ex));
 		}
+		listeners.finished();
 		displayer.setProgress(null);
 	}
 
@@ -163,8 +171,12 @@ public class BackupService extends NotificationProgressService<Progress> {
 	}
 
 	public class LocalBinder extends Binder {
-		public void export(ParcelFileDescriptor pfd, Runnable doneCallback) {
-			queue.add(pfd, doneCallback);
+		public void export(ParcelFileDescriptor pfd) {
+			queue.add(pfd, new Runnable() {
+				@Override public void run() {
+					// STOPSHIP remove
+				}
+			});
 			startService(new Intent(ACTION_EXPORT_PFD_WORKAROUND, (Uri)null, BackupService.this, BackupService.class));
 		}
 
@@ -176,6 +188,16 @@ public class BackupService extends NotificationProgressService<Progress> {
 		}
 		public Progress getLastProgress() {
 			return BackupService.this.getLastProgress();
+		}
+
+		public void addBackupListener(@NonNull BackupListener listener) {
+			if (isInProgress()) {
+				listener.started();
+			}
+			listeners.add(listener);
+		}
+		public void removeBackupListener(@NonNull BackupListener listener) {
+			listeners.remove(ObjectTools.checkNotNull(listener));
 		}
 	}
 
@@ -196,6 +218,55 @@ public class BackupService extends NotificationProgressService<Progress> {
 			reportProgress(progress);
 		}
 	};
+
+	@UiThread
+	public interface BackupListener {
+		void started();
+		void finished();
+	}
+
+	@ThreadSafe
+	@AnyThread
+	private static class BackupListeners implements BackupListener {
+		private final List<BackupListener> listeners = new LinkedList<>();
+		private final Handler main = new Handler(Looper.getMainLooper());
+
+		public void add(@NonNull BackupListener listener) {
+			synchronized (listeners) {
+				listeners.add(ObjectTools.checkNotNull(listener));
+			}
+		}
+
+		public void remove(@NonNull BackupListener listener) {
+			synchronized (listeners) {
+				listeners.remove(ObjectTools.checkNotNull(listener));
+			}
+		}
+
+		@Override public void started() {
+			synchronized (listeners) {
+				for (final BackupListener listener : listeners) {
+					main.post(new Runnable() {
+						@Override public void run() {
+							listener.started();
+						}
+					});
+				}
+			}
+		}
+
+		@Override public void finished() {
+			synchronized (listeners) {
+				for (final BackupListener listener : listeners) {
+					main.post(new Runnable() {
+						@Override public void run() {
+							listener.finished();
+						}
+					});
+				}
+			}
+		}
+	}
 
 	/**
 	 * Not all parcelables can be put into Extras of an Intent.

@@ -3,10 +3,10 @@ package net.twisterrob.inventory.android.backup;
 import java.util.concurrent.CancellationException;
 
 import android.content.*;
-import android.support.annotation.DrawableRes;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.annotation.*;
 import android.support.v7.app.AlertDialog;
 
+import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.inventory.android.R;
 
 public class ProgressDisplayer {
@@ -47,7 +47,7 @@ public class ProgressDisplayer {
 					case Finished:
 						if (progress.failure != null) {
 							if (progress.failure instanceof CancellationException) {
-								return context.getString(R.string.backup_import_result_cancelled);
+								return context.getString(R.string.backup_export_result_cancelled);
 							} else {
 								return context.getString(R.string.backup_export_result_failed,
 										progress.failure.getMessage());
@@ -168,16 +168,14 @@ public class ProgressDisplayer {
 		return threshold <= imageDifferencePercent;
 	}
 
-	public void displayFinishMessage() {
-		// TODO handle power button of this
-		// TODO handle rotation of this and also WindowLeaked probably related
-		// (android.view.WindowLeaked: Activity net.twisterrob.inventory.android.activity.BackupActivity has leaked window)
+	public AlertDialog displayFinishMessage(final @Nullable DialogTools.PopupCallbacks<Void> callback) {
+		// TODO (android.view.WindowLeaked: Activity net.twisterrob.inventory.android.activity.BackupActivity has leaked window)
 		AlertDialog.Builder builder = new AlertDialog.Builder(context)
 				.setCancelable(false)
 				.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
-						if (context instanceof OnRefreshListener) {
-							((OnRefreshListener)context).onRefresh();
+						if (callback != null) {
+							callback.finished(null);
 						}
 					}
 				});
@@ -188,6 +186,6 @@ public class ProgressDisplayer {
 			builder.setTitle(getTitle());
 			builder.setMessage(getMessage());
 		}
-		builder.show();
+		return builder.show();
 	}
 }

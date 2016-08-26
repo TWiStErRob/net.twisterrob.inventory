@@ -256,6 +256,7 @@
 		but the best effort will be made to merge contents.
 		\n\nDo you want to continue?
 	</string>
+	<string name="backup_warning_inprogress">Backup operation is in progress, please wait until it is finished.</string>
 	<string name="backup_import_progress_title">Import</string>
 	<string name="backup_import_progress_background">Import continues in background</string>
 	<string name="backup_import_progress_init">Preparing import…</string>

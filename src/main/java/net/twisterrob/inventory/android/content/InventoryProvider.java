@@ -6,25 +6,22 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import android.app.Service;
 import android.content.*;
 import android.database.*;
 import android.net.Uri;
-import android.os.*;
+import android.os.ParcelFileDescriptor;
 import android.provider.*;
 import android.support.annotation.NonNull;
 
 import static android.app.SearchManager.*;
 
-import net.twisterrob.android.utils.log.LoggingServiceConnection;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.backup.concurrent.BackupService;
+import net.twisterrob.inventory.android.backup.concurrent.*;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
 
-import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
 import static net.twisterrob.inventory.android.content.InventoryContract.*;
 
 // CONSIDER http://www.grokkingandroid.com/android-tutorial-writing-your-own-content-provider/
@@ -84,7 +81,15 @@ public class InventoryProvider extends ContentProvider {
 	}
 
 	@Override public boolean onCreate() {
-		return false;
+		return true;
+	}
+
+	public @NonNull Context getSafeContext() {
+		Context context = getContext();
+		if (context == null) {
+			throw new IllegalStateException("Content provider not created yet.");
+		}
+		return context;
 	}
 
 	@Override public String getType(@NonNull Uri uri) {
@@ -244,10 +249,10 @@ public class InventoryProvider extends ContentProvider {
 				Cursor category = App.db().getCategory(Category.getID(uri));
 				String name = DatabaseTools.singleString(category,
 						net.twisterrob.inventory.android.content.contract.Category.TYPE_IMAGE);
-				int svgID = AndroidTools.getRawResourceID(getContext(), name);
+				int svgID = AndroidTools.getRawResourceID(getSafeContext(), name);
 				// The following only works if the resource is uncompressed: android.aaptOptions.noCompress 'svg'
-				//noinspection ConstantConditions,resource AssetFileDescriptor is closed by caller
-				return getContext().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();
+				//noinspection resource AssetFileDescriptor is closed by caller
+				return getSafeContext().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();
 			case FULL_BACKUP:
 				return generateBackupWithService();
 		}
@@ -287,20 +292,13 @@ public class InventoryProvider extends ContentProvider {
 	private ParcelFileDescriptor generateBackupWithService() throws FileNotFoundException {
 		try {
 			final ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
-			Intent intent = new Intent(getContext(), BackupService.class)
-					.putExtra(EXTRA_BACKGROUND_BIND, true);
-			getContext().bindService(intent, new LoggingServiceConnection() {
-				@Override public void onServiceConnected(ComponentName name, IBinder service) {
-					super.onServiceConnected(name, service);
-					final ServiceConnection that = this;
-					((BackupService.LocalBinder)service).export(pipe[1], new Runnable() {
-						@Override public void run() {
-							// FIXME can unbind immediately after export?
-							getContext().unbindService(that);
-						}
-					});
+			final Context context = getSafeContext();
+			new BackupServiceConnection() {
+				@Override protected void serviceBound(ComponentName name, BackupService.LocalBinder service) {
+					service.export(pipe[1]);
+					unbind();
 				}
-			}, Service.BIND_AUTO_CREATE | Service.BIND_NOT_FOREGROUND);
+			}.bind(context);
 			return pipe[0];
 		} catch (IOException ex) {
 			throw IOTools.FileNotFoundException("Cannot create piped stream", ex);

@@ -4,17 +4,9 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:padding="@dimen/unit_half"
 	android:orientation="vertical"
-	tools:context=".activity.BackupActivity"
+	tools:context=".fragment.BackupListFragment"
 	>
-	<fragment
-		android:id="@+id/backup_progress"
-		class="net.twisterrob.inventory.android.fragment.BackupProgressFragment"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		tools:layout="@layout/fragment_backup_progress"
-		/>
 	<TextView
 		android:id="@+id/backup_location"
 		style="@style/Theme.AppTheme.Header"

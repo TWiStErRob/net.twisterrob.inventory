@@ -22,16 +22,8 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 	public static final String ACTION_FINISHED_BROADCAST = "net.twisterrob.intent.action.FINISHED_BROADCAST";
 	public static final String ACTION_PROGRESS_NOTIFICATION = "net.twisterrob.intent.action.PROGRESS_NOTIFICATION";
 	public static final String ACTION_FINISHED_NOTIFICATION = "net.twisterrob.intent.action.FINISHED_NOTIFICATION";
-	/**
-	 * A {@code boolean} to signify that the {@link Context#bindService(Intent, ServiceConnection, int) bindService}
-	 * action should not clear the current notification.
-	 * Normal binds don't need this, because they're giving a UI for the service.
-	 * Background binds however, still don't have a UI, so the notification should be kept.
-	 *
-	 * @see #isBindWithUI extending services have the ability to ignore this and implement custom logic
-	 */
-	public static final String EXTRA_BACKGROUND_BIND = "net.twisterrob:background-bind";
-	private static final int NEVER = Integer.MIN_VALUE;
+
+	private static final long NEVER = Long.MIN_VALUE;
 	private NotificationCompat.Builder onGoingNotification;
 	private boolean inBackground;
 	/** Used to generate unique notification for each job that this service starts. */
@@ -102,7 +94,7 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 					(NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
 			NotificationCompat.Builder doneNotification = createFinishedNotification(result);
-			setIntentAndDefalts(doneNotification, createFinishedPendingIntent(result));
+			setIntentAndDefaults(doneNotification, createFinishedPendingIntent(result));
 			notificationManager.notify((int)currentJobStarted + DONE_NOTIFICATION_OFFSET, doneNotification.build());
 		} else {
 			LOG.trace("Not in background, no notification is needed (should be bound)");
@@ -110,7 +102,8 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 		currentJobStarted = NEVER;
 	}
 
-	private void setIntentAndDefalts(@NonNull NotificationCompat.Builder notification, @Nullable PendingIntent intent) {
+	private void setIntentAndDefaults(@NonNull NotificationCompat.Builder notification,
+			@Nullable PendingIntent intent) {
 		LOG.trace("Updating notification {} with {}", notification, AndroidTools.toString(intent));
 		notification.setContentIntent(intent);
 		notification.setAutoCancel(true);
@@ -118,7 +111,7 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 
 	@Override public IBinder onBind(Intent intent) {
 		super.onBind(intent);
-		if (isBindWithUI(intent)) {
+		if (needsNotification(intent)) {
 			LOG.trace("Stopping notification, because bind has a UI that displays progress.");
 			stopNotification();
 		}
@@ -129,16 +122,12 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 		super.onHandleIntent(intent);
 		currentJobStarted = System.currentTimeMillis();
 		onGoingNotification = createOnGoingNotification(intent).setOngoing(true);
-		setIntentAndDefalts(onGoingNotification, createInProgressPendingIntent());
-		if (!isBindWithUI(intent)) {
-			LOG.trace("Starting notification, because the intent doesn't bind with UI.");
-			startNotification();
-		}
+		setIntentAndDefaults(onGoingNotification, createInProgressPendingIntent());
 	}
 
 	@Override public void onRebind(Intent intent) {
 		super.onRebind(intent);
-		if (isBindWithUI(intent)) { // STOPSHIP not that any extras ... from onRebind docs?
+		if (needsNotification(intent)) {
 			LOG.trace("Stopping notification, because re-bind has a UI that displays progress.");
 			stopNotification();
 		}
@@ -146,15 +135,15 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 
 	@Override public boolean onUnbind(Intent intent) {
 		super.onUnbind(intent);
-		if (isBindWithUI(intent)) {
+		if (needsNotification(intent) && isInProgress()) {
 			LOG.trace("Starting notification, because it was stopped when this bind happened, but now it's needed.");
 			startNotification();
 		}
 		return true;
 	}
 
-	protected boolean isBindWithUI(Intent intent) {
-		return !intent.getBooleanExtra(EXTRA_BACKGROUND_BIND, false);
+	protected boolean needsNotification(Intent intent) {
+		return true;
 	}
 
 	protected Progress getLastProgress() {
