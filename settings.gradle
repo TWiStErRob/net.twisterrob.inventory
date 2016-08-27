@@ -1,5 +1,9 @@
 rootProject.name = 'Magic Home Inventory'
 
+include ':android'
+include ':tools:transform'
+include ':tools:database'
+
 if (hasProperty('libFromSources')) {
 	include ':twister-lib-java'
 	project(':twister-lib-java').projectDir = file('libs/twister-lib-java')
@@ -8,4 +12,3 @@ if (hasProperty('libFromSources')) {
 	include ':twister-lib-android-slf4j'
 	project(':twister-lib-android-slf4j').projectDir = file('libs/twister-lib-android-slf4j')
 }
-include ':transform'

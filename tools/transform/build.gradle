@@ -26,10 +26,10 @@ dependencies {
 	saxon 'net.sf.saxon:Saxon-HE:9.7.0-7'
 }
 
-def dataXml = file("../temp/test/data.xml")
-def dataXsltCsv = file("../src/main/assets/data.csv.xslt")
-def dataXsltHtml = file("../src/main/assets/data.html.xslt")
-def transformDir = file("../temp")
+def dataXsltCsv = project(':android').file("src/main/assets/data.csv.xslt")
+def dataXsltHtml = project(':android').file("src/main/assets/data.html.xslt")
+def dataXml = project(':android').file("${rootDir}/temp/test/data.xml")
+def transformDir = file('build/transformed')
 
 // run with: gradlew -p buildSrc cRT rTHJ rTCJ | grep -v "^:"
 task runTransformHtmlJava(type: Transform) {
@@ -78,7 +78,11 @@ task runTransforms() {
 task cleanRunTransforms {
 	dependsOn tasks.withType(Transform).asList().collect { tasks."clean${it.name.capitalize()}" }
 	tasks.clean.dependsOn it
+	runTransforms.mustRunAfter it
 }
+
+tasks.check.dependsOn tasks.cleanRunTransforms
+tasks.check.dependsOn tasks.runTransforms
 
 class Transform extends JavaExec {
 	@InputFile File xml
