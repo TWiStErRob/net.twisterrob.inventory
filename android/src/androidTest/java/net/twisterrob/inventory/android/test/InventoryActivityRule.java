@@ -11,7 +11,7 @@ import android.support.test.InstrumentationRegistry;
 
 import com.bumptech.glide.Glide;
 
-import net.twisterrob.android.test.SensibleActivityTestRule;
+import net.twisterrob.android.test.junit.SensibleActivityTestRule;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.Database;

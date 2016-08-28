@@ -1,4 +1,4 @@
-package net.twisterrob.android.test;
+package net.twisterrob.android.test.junit;
 
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;

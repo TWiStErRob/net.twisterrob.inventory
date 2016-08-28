@@ -14,13 +14,13 @@ import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
-import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
-import static net.twisterrob.android.test.DialogMatchers.*;
+import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest_Welcome {

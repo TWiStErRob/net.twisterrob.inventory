@@ -1,4 +1,4 @@
-package net.twisterrob.android.test;
+package net.twisterrob.android.test.espresso;
 
 import android.app.*;
 import android.content.Context;

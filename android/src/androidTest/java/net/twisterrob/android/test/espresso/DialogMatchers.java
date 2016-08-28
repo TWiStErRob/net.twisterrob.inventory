@@ -1,18 +1,19 @@
-package net.twisterrob.android.test;
+package net.twisterrob.android.test.espresso;
 
 import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
+import android.support.annotation.IdRes;
 import android.support.test.espresso.*;
 import android.support.test.espresso.Root.Builder;
-import android.support.test.espresso.matcher.RootMatchers;
 import android.support.test.espresso.util.*;
 import android.view.*;
 
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
+import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 public class DialogMatchers {
@@ -39,37 +40,40 @@ public class DialogMatchers {
 		};
 	}
 
-	public static Matcher<View> isDialog() {
-		return root(RootMatchers.isDialog());
+	public static Matcher<View> isDialogView() {
+		return root(isDialog());
 	}
 
+	private static void clickInDialog(@IdRes int buttonId) {
+		onView(withId(buttonId)).inRoot(isDialog()).perform(click());
+	}
 	public static void clickPositiveInDialog() {
-		onView(withId(BUTTON_POSITIVE)).inRoot(RootMatchers.isDialog()).perform(click());
+		clickInDialog(BUTTON_POSITIVE);
 	}
 	public static void clickNegativeInDialog() {
-		onView(withId(BUTTON_NEGATIVE)).inRoot(RootMatchers.isDialog()).perform(click());
+		clickInDialog(BUTTON_NEGATIVE);
 	}
 	public static void clickNeutralInDialog() {
-		onView(withId(BUTTON_NEUTRAL)).inRoot(RootMatchers.isDialog()).perform(click());
+		clickInDialog(BUTTON_NEUTRAL);
 	}
 
 	/**
-	 * <pre><code>onView(isDialog()).perform(clickPositive());</code></pre>
-	 * @see #isDialog()
+	 * <pre><code>onView(isDialogView()).perform(clickPositive());</code></pre>
+	 * @see #isDialogView()
 	 */
 	public static ViewAction clickPositive() {
 		return new ClickInDialog(withId(BUTTON_POSITIVE));
 	}
 	/**
-	 * <pre><code>onView(isDialog()).perform(clickNegative());</code></pre>
-	 * @see #isDialog()
+	 * <pre><code>onView(isDialogView()).perform(clickNegative());</code></pre>
+	 * @see #isDialogView()
 	 */
 	public static ViewAction clickNegative() {
 		return new ClickInDialog(withId(BUTTON_NEGATIVE));
 	}
 	/**
-	 * <pre><code>onView(isDialog()).perform(clickNeutral());</code></pre>
-	 * @see #isDialog()
+	 * <pre><code>onView(isDialogView()).perform(clickNeutral());</code></pre>
+	 * @see #isDialogView()
 	 */
 	public static ViewAction clickNeutral() {
 		return new ClickInDialog(withId(BUTTON_NEUTRAL));
@@ -77,8 +81,8 @@ public class DialogMatchers {
 
 	public static void assertDialogIsDisplayed() {
 		// both of the below statements should be equivalent
-		onView(isRoot()).inRoot(RootMatchers.isDialog()).check(matches(isDisplayed()));
-		onView(isRoot()).check(matches(root(RootMatchers.isDialog())));
+		onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()));
+		onView(isRoot()).check(matches(root(isDialog())));
 	}
 
 	public static void assertNoDialogIsDisplayed() {
@@ -87,7 +91,7 @@ public class DialogMatchers {
 		//onView(isRoot()).inRoot(isDialog()).check(matches(not(isDisplayed())));
 		// this works but the other is more concise
 		//onView(isRoot()).check(matches(root(not(RootMatchers.isDialog()))));
-		onView(isDialog()).check(doesNotExist());
+		onView(isDialogView()).check(doesNotExist());
 	}
 
 	private static class ClickInDialog implements ViewAction {
@@ -96,7 +100,7 @@ public class DialogMatchers {
 			this.viewMatcher = viewMatcher;
 		}
 		@Override public Matcher<View> getConstraints() {
-			return allOf(isDisplayed(), root(RootMatchers.isDialog()));
+			return allOf(isDisplayed(), root(isDialog()));
 		}
 		@Override public String getDescription() {
 			return "Click " + StringDescription.asString(viewMatcher) + " in a dialog.";

@@ -20,19 +20,19 @@ import android.support.test.runner.AndroidJUnit4;
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import net.twisterrob.android.test.IdlingResourceRule;
+import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
-import static net.twisterrob.android.test.DialogMatchers.*;
-import static net.twisterrob.android.test.EspressoExtensions.*;
+import static net.twisterrob.android.test.espresso.DialogMatchers.*;
+import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
+import static net.twisterrob.inventory.android.activity.BackupActivityTest.*;
 
 @RunWith(AndroidJUnit4.class)
 public class BackupActivityTest_ImportExternal {
@@ -40,11 +40,11 @@ public class BackupActivityTest_ImportExternal {
 	@Rule public final TemporaryFolder temp = new TemporaryFolder();
 	@Rule public final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
 
-	@Test public void testImportCalled() throws Exception {
-		assertNoDialogIsDisplayed();
-		// progress is not displayed
-		onView(withId(R.id.progress)).check(matches(not(isDisplayed())));
+	@Before public void assertBackupActivityIsClean() {
+		assertEmptyState();
+	}
 
+	@Test public void testImportCalled() throws Exception {
 		File inventory = temp.newFile();
 		ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(inventory));
 		zip.putNextEntry(new ZipEntry(Paths.BACKUP_DATA_FILENAME));

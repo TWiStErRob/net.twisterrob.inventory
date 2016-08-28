@@ -26,8 +26,9 @@ import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
-import static net.twisterrob.android.test.DialogMatchers.*;
-import static net.twisterrob.android.test.EspressoExtensions.*;
+import static net.twisterrob.android.test.espresso.DialogMatchers.*;
+import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
+import static net.twisterrob.inventory.android.activity.BackupActivityTest.*;
 import static net.twisterrob.java.utils.CollectionTools.*;
 
 @RunWith(AndroidJUnit4.class)
@@ -41,11 +42,11 @@ public class BackupActivityTest_ExportInternal {
 			.around(temp)
 			.around(files);
 
-	@Test public void testBackupCompletes() throws Exception {
-		assertNoDialogIsDisplayed();
-		// progress is not displayed
-		onView(withId(R.id.progress)).check(matches(not(isDisplayed())));
+	@Before public void assertBackupActivityIsClean() {
+		assertEmptyState();
+	}
 
+	@Test public void testBackupCompletes() throws Exception {
 		clickExport();
 
 		assertDialogIsDisplayed();

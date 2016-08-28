@@ -1,4 +1,4 @@
-package net.twisterrob.android.test;
+package net.twisterrob.android.test.junit;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;

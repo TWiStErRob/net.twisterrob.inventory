@@ -1,4 +1,4 @@
-package net.twisterrob.android.test;
+package net.twisterrob.android.test.espresso;
 
 import java.util.concurrent.TimeoutException;
 

@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import static android.support.test.InstrumentationRegistry.*;
 
-import net.twisterrob.android.test.IntentServiceIdlingResource;
+import net.twisterrob.android.test.espresso.IntentServiceIdlingResource;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService.LocalBinder;
 
