@@ -42,8 +42,11 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 			filter.addAction(ACTION_FINISHED_BROADCAST);
 			LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, filter);
 
-			if (!displayer.hasProgress() && service.isInProgress()) {
+			if (service.isInProgress()) {
 				displayer.setProgress(service.getLastProgress());
+				started();
+			} else {
+				finished();
 			}
 			updateUI();
 		}

@@ -192,9 +192,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 		}
 
 		public void addBackupListener(@NonNull BackupListener listener) {
-			if (isInProgress()) {
-				listener.started();
-			}
 			listeners.add(listener);
 		}
 		public void removeBackupListener(@NonNull BackupListener listener) {
