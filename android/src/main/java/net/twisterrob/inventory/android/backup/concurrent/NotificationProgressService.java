@@ -32,7 +32,7 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 	private boolean inBackground;
 	/** Used to generate unique notification for each job that this service starts. */
 	private long currentJobStarted = NEVER;
-	private Progress lastProgress;
+	private Progress lastProgress = null;
 	private Progress lastProgressSentToNotification;
 	private boolean debugMode = false;
 
@@ -128,6 +128,7 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 
 	@Override protected void onHandleIntent(Intent intent) {
 		super.onHandleIntent(intent);
+		lastProgress = null;
 		currentJobStarted = System.currentTimeMillis();
 		onGoingNotification = createOnGoingNotification(intent).setOngoing(true);
 		setIntentAndDefaults(onGoingNotification, createInProgressPendingIntent());
