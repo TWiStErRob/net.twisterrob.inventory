@@ -29,6 +29,8 @@ public abstract class BackupServiceConnection extends LoggingServiceConnection i
 		binding.addBackupListener(this);
 		serviceBound(name, binding);
 	}
+	/** {@link Context#registerReceiver(BroadcastReceiver, IntentFilter)} should be called first inside this method. */
+
 	protected void serviceBound(ComponentName name, LocalBinder service) {
 		// optional operation
 	}
@@ -40,6 +42,7 @@ public abstract class BackupServiceConnection extends LoggingServiceConnection i
 		binding.removeBackupListener(this);
 		binding = null;
 	}
+	/** {@link Context#unregisterReceiver(BroadcastReceiver)} should be called last inside this method. */
 	protected void serviceUnbound(ComponentName name, LocalBinder service) {
 		// optional operation
 	}

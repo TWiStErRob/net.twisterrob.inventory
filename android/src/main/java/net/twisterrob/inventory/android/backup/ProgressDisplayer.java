@@ -14,7 +14,7 @@ public class ProgressDisplayer {
 	private final Context context;
 	private Progress progress;
 
-	public ProgressDisplayer(Context context, Progress progress) {
+	public ProgressDisplayer(Context context, @NonNull Progress progress) {
 		this(context);
 		this.progress = progress;
 	}
@@ -176,7 +176,12 @@ public class ProgressDisplayer {
 	}
 
 	public AlertDialog displayFinishMessage(final @Nullable DialogTools.PopupCallbacks<Void> callback) {
-		// TODO (android.view.WindowLeaked: Activity net.twisterrob.inventory.android.activity.BackupActivity has leaked window)
+		if (progress == null) {
+			throw new IllegalArgumentException("Not progress, make sure there's one or check hasProgress first.");
+		}
+		if (progress.phase != Phase.Finished) {
+			throw new IllegalArgumentException("Not finished: " + progress);
+		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(context)
 				.setCancelable(false)
 				.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {

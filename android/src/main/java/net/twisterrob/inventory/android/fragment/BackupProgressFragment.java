@@ -16,9 +16,9 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.concurrent.*;
-import net.twisterrob.inventory.android.backup.concurrent.BackupService.*;
+import net.twisterrob.inventory.android.backup.concurrent.BackupService.LocalBinder;
 
-import static net.twisterrob.inventory.android.backup.concurrent.BackupService.*;
+import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
 
 public class BackupProgressFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupProgressFragment.class);
@@ -35,10 +35,18 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 
 	private final BackupServiceConnection backupService = new BackupServiceConnection() {
 		@Override protected void serviceBound(ComponentName name, LocalBinder service) {
+			IntentFilter filter = new IntentFilter();
+			filter.addAction(ACTION_PROGRESS_BROADCAST);
+			filter.addAction(ACTION_FINISHED_BROADCAST);
+			LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, filter);
+
 			if (!displayer.hasProgress() && service.isInProgress()) {
 				displayer.setProgress(service.getLastProgress());
 			}
 			updateUI();
+		}
+		@Override protected void serviceUnbound(ComponentName name, LocalBinder service) {
+			LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
 		}
 		@Override public void started() {
 			setCancellable(true);
@@ -53,14 +61,6 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 		@Override public void onReceive(Context context, Intent intent) {
 			Progress current = (Progress)intent.getSerializableExtra(BackupService.EXTRA_PROGRESS);
 			displayer.setProgress(current);
-			if (displayer.hasProgress() && displayer.getProgress().phase == Progress.Phase.Finished) {
-				LOG.debug("Delegating to onNewIntent: {}", current);
-				// @see BackupService.createFinishedIntent
-				Intent activityIntent = new Intent(getContext(), getActivity().getClass());
-				activityIntent.putExtra(EXTRA_PROGRESS, current);
-				startActivity(activityIntent);
-				return;
-			}
 			updateUI();
 		}
 	};
@@ -93,16 +93,11 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 
 	@Override public void onStart() {
 		super.onStart();
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(ACTION_PROGRESS_BROADCAST);
-		filter.addAction(ACTION_FINISHED_BROADCAST);
 		backupService.bind(getContext());
-		LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, filter);
 	}
 
 	@Override public void onStop() {
 		super.onStop();
-		LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
 		backupService.unbind();
 	}
 

@@ -73,8 +73,7 @@
 			android:process=":managespace" />
 		<activity
 			android:name=".activity.BackupActivity"
-			android:label="Backup"
-			android:launchMode="singleTop">
+			android:label="Backup">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
 		</activity>

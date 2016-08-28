@@ -9,6 +9,8 @@ import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.*;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.*;
@@ -22,17 +24,30 @@ import net.twisterrob.inventory.android.backup.concurrent.*;
 import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.fragment.BackupListFragment;
 
+import static net.twisterrob.android.utils.tools.AndroidTools.*;
+import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
+
 public class BackupActivity extends BaseActivity implements BackupListFragment.BackupListCallbacks {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
 	private static final int REQUEST_CODE_PICK_EXTERNAL = 0x4412;
 	private BackupListFragment fileList;
 	private boolean allowNew;
+	/** Prevents {@code android.view.WindowLeaked} "Activity BackupActivity has leaked window". See usages. */
+	private AlertDialog finishDialog; // CONSIDER DialogFragment to auto-dismiss? and handle rotation
+	private Progress unhandled;
+
 	@VisibleForTesting final BackupServiceConnection backupService = new BackupServiceConnection() {
 		@Override protected void serviceBound(ComponentName name, BackupService.LocalBinder service) {
+			IntentFilter filter = new IntentFilter();
+			filter.addAction(ACTION_FINISHED_BROADCAST);
+			LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, filter);
+
 			setAllowNew(!service.isInProgress());
 		}
 		@Override protected void serviceUnbound(ComponentName name, BackupService.LocalBinder service) {
 			setAllowNew(true);
+
+			LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
 		}
 		@Override public void started() {
 			setAllowNew(false);
@@ -41,6 +56,13 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 			setAllowNew(true);
 		}
 	};
+	private final BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override public void onReceive(Context context, Intent intent) {
+			Progress progress = (Progress)intent.getSerializableExtra(BackupService.EXTRA_PROGRESS);
+			displayPopup(progress);
+		}
+	};
+
 	private void setAllowNew(boolean allowNew) {
 		this.allowNew = allowNew;
 		fileList.onRefresh();
@@ -53,25 +75,41 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_backup);
-		handleIntent();
 		fileList = getFragment(R.id.backup_list);
+
+		displayPopup(findProgress(savedInstanceState, getIntent()));
+	}
+	private @Nullable Progress findProgress(@Nullable Bundle savedInstanceState, @Nullable Intent intent) {
+		if (savedInstanceState != null) {
+			return (Progress)savedInstanceState.getSerializable(BackupService.EXTRA_PROGRESS);
+		} else if (intent != null) {
+			return (Progress)intent.getSerializableExtra(BackupService.EXTRA_PROGRESS);
+		} else {
+			return null;
+		}
 	}
 	@Override protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		handleIntent();
+		displayPopup(findProgress(null, getIntent()));
 	}
-	private void handleIntent() {
-		Progress progress = (Progress)getIntent().getSerializableExtra(BackupService.EXTRA_PROGRESS);
-		if (progress != null && progress.phase == Progress.Phase.Finished) {
-			new ProgressDisplayer(this, progress).displayFinishMessage(new PopupCallbacks<Void>() {
-				@Override public void finished(Void value) {
-					getIntent().removeExtra(BackupService.EXTRA_PROGRESS);
-				}
-			});
+	private void displayPopup(@Nullable Progress progress) {
+		if (progress == null) {
+			return;
 		}
+		unhandled = progress;
+		finishDialog = new ProgressDisplayer(this, progress).displayFinishMessage(new PopupCallbacks<Void>() {
+			@Override public void finished(Void value) {
+				unhandled = null;
+				finishDialog = null;
+			}
+		});
 	}
 
+	@Override protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putSerializable(BackupService.EXTRA_PROGRESS, unhandled);
+	}
 	@Override protected void onStart() {
 		super.onStart();
 		backupService.bind(this);
@@ -79,6 +117,15 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 	@Override protected void onStop() {
 		super.onStop();
 		backupService.unbind();
+		if (finishDialog != null) {
+			finishDialog.dismiss();
+		}
+	}
+	@Override protected void onRestart() {
+		super.onRestart();
+		if (finishDialog != null) {
+			finishDialog.show();
+		}
 	}
 	@Override public boolean onCreateOptionsMenu(Menu menu) {
 		if (!super.onCreateOptionsMenu(menu)) {
