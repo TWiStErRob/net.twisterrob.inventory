@@ -18,7 +18,7 @@ import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.test.InventoryActivityTestRule;
+import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
 import static net.twisterrob.android.test.DialogMatchers.*;
 
@@ -30,7 +30,7 @@ public class MainActivityTest_Welcome {
 	private static final ViewAssertion EMPTY =
 			matches(allOf(isDisplayed(), not(hasDescendant(notNullValue(View.class)))));
 
-	@Rule public ActivityTestRule<MainActivity> activity = new InventoryActivityTestRule<>(MainActivity.class);
+	@Rule public ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class);
 
 	@Test public void testWelcomeDontPopulateDemo() {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));

@@ -24,7 +24,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.test.InventoryActivityTestRule;
+import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
 import static net.twisterrob.android.test.DialogMatchers.*;
 import static net.twisterrob.android.test.EspressoExtensions.*;
@@ -32,7 +32,7 @@ import static net.twisterrob.java.utils.CollectionTools.*;
 
 @RunWith(AndroidJUnit4.class)
 public class BackupActivityTest_ExportInternal {
-	private final ActivityTestRule<BackupActivity> activity = new InventoryActivityTestRule<>(BackupActivity.class);
+	private final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
 	private final TemporaryFolder temp = new TemporaryFolder(Paths.getPhoneHome());
 	private final CheckExportedFiles files = new CheckExportedFiles();
 

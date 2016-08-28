@@ -18,16 +18,16 @@ import net.twisterrob.inventory.android.content.Database;
 
 import static net.twisterrob.android.app.BaseApp.*;
 
-public class InventoryActivityTestRule<T extends Activity> extends SensibleActivityTestRule<T> {
-	private static final Logger LOG = LoggerFactory.getLogger(InventoryActivityTestRule.class);
+public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
+	private static final Logger LOG = LoggerFactory.getLogger(InventoryActivityRule.class);
 
-	public InventoryActivityTestRule(Class<T> activityClass) {
+	public InventoryActivityRule(Class<T> activityClass) {
 		super(activityClass);
 	}
-	public InventoryActivityTestRule(Class<T> activityClass, boolean initialTouchMode) {
+	public InventoryActivityRule(Class<T> activityClass, boolean initialTouchMode) {
 		super(activityClass, initialTouchMode);
 	}
-	public InventoryActivityTestRule(Class<T> activityClass, boolean initialTouchMode, boolean launchActivity) {
+	public InventoryActivityRule(Class<T> activityClass, boolean initialTouchMode, boolean launchActivity) {
 		super(activityClass, initialTouchMode, launchActivity);
 	}
 

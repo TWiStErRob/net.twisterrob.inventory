@@ -29,15 +29,14 @@ import net.twisterrob.android.test.IdlingResourceRule;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.test.InventoryActivityTestRule;
+import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
 import static net.twisterrob.android.test.DialogMatchers.*;
 import static net.twisterrob.android.test.EspressoExtensions.*;
 
 @RunWith(AndroidJUnit4.class)
 public class BackupActivityTest_ImportExternal {
-	@Rule public final ActivityTestRule<BackupActivity> activity =
-			new InventoryActivityTestRule<>(BackupActivity.class);
+	@Rule public final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
 	@Rule public final TemporaryFolder temp = new TemporaryFolder();
 	@Rule public final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
 
