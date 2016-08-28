@@ -61,7 +61,7 @@ android {
 			major = 1
 		}
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
-		testInstrumentationRunner 'net.twisterrob.android.test.AndroidJUnitRunner'
+		testInstrumentationRunner 'net.twisterrob.android.test.junit.AndroidJUnitRunner'
 	}
 	lintOptions {
 		//abortOnError false

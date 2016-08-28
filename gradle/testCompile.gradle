@@ -100,5 +100,7 @@ dependencies {
 		androidTestCompile "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 		// Espresso-idling-resource for synchronization with background jobs
 		androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
+		// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
+		androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:2.+"
 	}
 }

@@ -3,7 +3,8 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	package="net.twisterrob.inventory.android.test"
 	android:sharedUserId="net.twisterrob.inventory">
-	<uses-sdk tools:overrideLibrary="android.support.graphics.drawable.animated" />
+	<uses-sdk tools:overrideLibrary="android.support.graphics.drawable.animated, android.support.test.uiautomator.v18" />
+
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 	<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
