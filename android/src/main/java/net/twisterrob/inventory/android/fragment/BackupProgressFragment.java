@@ -116,12 +116,24 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 
 	@Override public void onStart() {
 		super.onStart();
+		// bind at the earliest possible time and unbind at the latest possible time.
 		backupService.bind(getContext());
 	}
-
+	@Override public void onPause() {
+		super.onPause();
+		if (getActivity().isFinishing()) {
+			// unbind earlier because we won't be able to handle any more stuff
+			// this helps to lessen the probability of losing progress notifications
+			backupService.unbind();
+		}
+	}
 	@Override public void onStop() {
 		super.onStop();
-		backupService.unbind();
+		if (!getActivity().isFinishing()) {
+			// unbind later; even though the activity is paused it may still be visible
+			// (in case of Drive export a nice progress is displayed behind the huge spinner)
+			backupService.unbind();
+		}
 	}
 
 	private void setCancelling(boolean cancelling) {

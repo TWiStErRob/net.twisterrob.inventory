@@ -147,13 +147,16 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(BackupService.EXTRA_PROGRESS, unhandled);
 	}
-	@Override protected void onStart() {
-		super.onStart();
+	@Override protected void onResume() {
+		super.onResume();
 		backupService.bind(this);
+	}
+	@Override protected void onPause() {
+		super.onPause();
+		backupService.unbind();
 	}
 	@Override protected void onStop() {
 		super.onStop();
-		backupService.unbind();
 		if (finishDialog != null) {
 			finishDialog.dismiss();
 		}
