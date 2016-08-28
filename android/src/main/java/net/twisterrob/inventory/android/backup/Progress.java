@@ -5,8 +5,6 @@ import java.util.*;
 
 import android.support.annotation.NonNull;
 
-import static net.twisterrob.inventory.android.Constants.*;
-
 public final class Progress implements Cloneable, Serializable {
 	public final Type type;
 	public Phase phase;
@@ -43,16 +41,19 @@ public final class Progress implements Cloneable, Serializable {
 	}
 
 	@Override public String toString() {
+		return toString(false);
+	}
+	public String toString(boolean detailed) {
 		String header = String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %spending, %d warnings, %s",
 				phase, done, total, imagesDone, imagesTotal,
 				pending? "" : "not ", warnings.size(), failure != null? failure : "no error");
-		if (!DISABLE || warnings.isEmpty()) {
+		if (!detailed || warnings.isEmpty()) {
 			return header;
 		}
 		StringBuilder sb = new StringBuilder(header);
 		sb.append(":");
 		for (String warning : warnings) {
-			sb.append("\n").append(warning);
+			sb.append('\n').append(warning);
 		}
 		return sb.toString();
 	}

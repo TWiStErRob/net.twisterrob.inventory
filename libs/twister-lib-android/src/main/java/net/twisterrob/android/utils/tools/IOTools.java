@@ -214,6 +214,6 @@ public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools 
 			}
 		}
 		int epipe = VERSION_CODES.LOLLIPOP <= VERSION.SDK_INT? OsConstants.EPIPE : 32 /* from errno.h */;
-		return code == epipe || ex.getMessage().contains("EPIPE");
+		return code == epipe || (ex.getMessage() != null && ex.getMessage().contains("EPIPE"));
 	}
 }

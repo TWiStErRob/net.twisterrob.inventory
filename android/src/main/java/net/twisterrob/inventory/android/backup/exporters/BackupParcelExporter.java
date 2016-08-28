@@ -20,12 +20,17 @@ public class BackupParcelExporter {
 	}
 
 	public Progress exportTo(ParcelFileDescriptor file) {
-		Progress progress = exporter.export(new AutoCloseOutputStream(file));
-		if (IOTools.isEPIPE(progress.failure)) {
-			Exception newFailure = new CancellationException();
-			newFailure.initCause(progress.failure);
-			progress.failure = newFailure;
+		AutoCloseOutputStream output = new AutoCloseOutputStream(file);
+		try {
+			Progress progress = exporter.export(output);
+			if (IOTools.isEPIPE(progress.failure)) {
+				Exception newFailure = new CancellationException();
+				newFailure.initCause(progress.failure);
+				progress.failure = newFailure;
+			}
+			return progress;
+		} finally {
+			IOTools.ignorantClose(output);
 		}
-		return progress;
 	}
 }

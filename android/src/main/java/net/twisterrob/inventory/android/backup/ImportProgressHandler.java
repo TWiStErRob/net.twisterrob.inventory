@@ -48,12 +48,12 @@ public class ImportProgressHandler implements ImportProgress {
 	}
 
 	@Override public void warning(String message) {
-		LOG.warn("Warning: {}", message);
+		//LOG.warn("Warning: {}", message);
 		progress.warnings.add(message);
 	}
 
 	@Override public void error(String message) {
-		LOG.warn("Error: {}", message);
+		//LOG.warn("Error: {}", message);
 		progress.warnings.add(message);
 	}
 

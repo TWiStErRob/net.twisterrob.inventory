@@ -70,7 +70,6 @@ public class BackupStreamExporter {
 			exporter.finishExport();
 		} catch (Throwable ex) {
 			// FIXME refactor to throws like imports
-			LOG.warn("Export failed", ex);
 			progress.failure = ex;
 		} finally {
 			IOTools.ignorantClose(cursor);

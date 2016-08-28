@@ -25,14 +25,23 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 
 	private static final long NEVER = Long.MIN_VALUE;
 	private NotificationCompat.Builder onGoingNotification;
+	// TODO somehow make sure this is not possible:
+	// onStop -> unbind -> onServiceDisconnected -> unregisterReceiver is called first
+	// then service finishes in background thread and broadcasts and doesn't create notification -> /dev/null
+	// then Service.onUnbind
 	private boolean inBackground;
 	/** Used to generate unique notification for each job that this service starts. */
 	private long currentJobStarted = NEVER;
 	private Progress lastProgress;
 	private Progress lastProgressSentToNotification;
+	private boolean debugMode = false;
 
 	public NotificationProgressService(String name) {
 		super(name);
+	}
+
+	public void setDebugMode(boolean debugMode) {
+		this.debugMode = debugMode;
 	}
 
 	protected @NonNull Builder createOnGoingNotification(Intent intent) {
@@ -84,12 +93,11 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 	}
 
 	protected final void finished(@NonNull Progress result) {
-		LOG.info("Finished with: {}", result);
 		lastProgress = result;
 		broadcast(result, ACTION_FINISHED_BROADCAST);
 		if (inBackground) {
 			LOG.trace("In background, replacing progress notification with done notification");
-			stopNotification();
+			stopForeground(true);
 			NotificationManager notificationManager =
 					(NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -171,7 +179,9 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 		Intent progressIntent = new Intent();
 		fillBroadcast(progressIntent, progress);
 		progressIntent.setAction(action);
-		LOG.trace("Broadcasting {}: {}", progress, progressIntent);
+		if (debugMode) {
+			LOG.trace("Broadcasting {}: {}", progress, progressIntent);
+		}
 		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(progressIntent);
 	}
 

@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.backup.concurrent;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -16,15 +16,15 @@ import android.support.annotation.*;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BackupActivity;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.exporters.*;
 import net.twisterrob.inventory.android.backup.importers.*;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
-import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.ObjectTools;
 
+import static net.twisterrob.inventory.android.Constants.*;
 import static net.twisterrob.inventory.android.backup.ProgressDisplayer.*;
 
 public class BackupService extends NotificationProgressService<Progress> {
@@ -38,7 +38,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 	public static final String EXTRA_PROGRESS = "net.twisterrob.inventory:backup_progress";
 
 	private /*final*/ ProgressDisplayer displayer;
-	private final AtomicBoolean cancelled = new AtomicBoolean(false);
 	private final BackupListeners listeners = new BackupListeners();
 	/**
 	 * Not all parcelables can be put into Extras of an Intent.
@@ -49,17 +48,11 @@ public class BackupService extends NotificationProgressService<Progress> {
 	 * @see <a href="http://stackoverflow.com/q/18706062/253468">Exception with sending ParcelFileDescriptor via Intent</a>
 	 */
 	private final Queue<ParcelFileDescriptor> queue = new LinkedBlockingDeque<>();
-	private final ProgressDispatcher progress = new ProgressDispatcher() {
-		@Override public void dispatchProgress(@NonNull Progress progress) throws CancellationException {
-			if (cancelled.compareAndSet(true, false)) {
-				throw new CancellationException();
-			}
-			reportProgress(progress);
-		}
-	};
+	private final ProgressDispatcher dispatcher = new ProgressDispatcher();
 
 	public BackupService() {
 		super(BackupService.class.getSimpleName());
+		setDebugMode(DISABLE && BuildConfig.DEBUG);
 	}
 
 	@Override public void onCreate() {
@@ -126,31 +119,39 @@ public class BackupService extends NotificationProgressService<Progress> {
 		super.onHandleIntent(intent);
 		try {
 			if (ACTION_EXPORT_PFD_WORKAROUND.equals(intent.getAction())) {
-				BackupParcelExporter exporter = new BackupParcelExporter(new ZippedXMLExporter(), progress);
+				BackupParcelExporter exporter = new BackupParcelExporter(new ZippedXMLExporter(), dispatcher);
 				ParcelFileDescriptor file = queue.remove();
-				finished(exporter.exportTo(file));
+				finish(exporter.exportTo(file));
 			} else if (ACTION_EXPORT.equals(intent.getAction())) {
-				BackupUriExporter exporter = new BackupUriExporter(this, new ZippedXMLExporter(), progress);
+				BackupUriExporter exporter = new BackupUriExporter(this, new ZippedXMLExporter(), dispatcher);
 				Uri uri = intent.getData();
-				finished(exporter.exportTo(uri));
+				finish(exporter.exportTo(uri));
 			} else if (ACTION_EXPORT_DIR.equals(intent.getAction())) {
-				BackupDirExporter exporter = new BackupDirExporter(this, new ZippedXMLExporter(), progress);
+				BackupDirExporter exporter = new BackupDirExporter(this, new ZippedXMLExporter(), dispatcher);
 				File dir = new File(intent.getData().getPath());
-				finished(exporter.exportTo(dir));
+				finish(exporter.exportTo(dir));
 			}
 		} catch (Throwable ex) {
-			finished(new Progress(Progress.Type.Export, ex));
+			finish(new Progress(Progress.Type.Export, ex));
 		}
 		try {
 			if (ACTION_IMPORT.equals(intent.getAction())) {
 				Uri uri = intent.getData();
-				finished(importFrom(uri));
+				finish(importFrom(uri));
 			}
 		} catch (Throwable ex) {
-			finished(new Progress(Progress.Type.Import, ex));
+			finish(new Progress(Progress.Type.Import, ex));
+		}
+		if (isInProgress()) {
+			throw new IllegalStateException("Unknown intent action: " + intent.getAction());
 		}
 		listeners.finished();
 		displayer.setProgress(null);
+	}
+
+	private void finish(Progress result) {
+		LOG.info("Finished with: {}", result.toString(true), result.failure);
+		finished(result);
 	}
 
 	private Progress importFrom(Uri input) {
@@ -178,7 +179,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		}
 
 		public void cancel() {
-			BackupService.this.cancel();
+			dispatcher.cancel();
 		}
 		public boolean isInProgress() {
 			return BackupService.this.isInProgress();
@@ -198,23 +199,27 @@ public class BackupService extends NotificationProgressService<Progress> {
 		}
 	}
 
-	private void cancel() {
-		// FIXME interrupt/close output, so that XSLT transform dies
-		LOG.info("Cancelling", new StackTrace());
-		if (!cancelled.compareAndSet(false, true)) {
-			throw new IllegalStateException("Already cancelled, but cancellation not yet picked up.");
-		}
-	}
+	private class ProgressDispatcher implements net.twisterrob.inventory.android.backup.ProgressDispatcher {
+		private final AtomicReference<CancellationException> cancelled = new AtomicReference<>(null);
 
-	private final ProgressDispatcher dispatcher = new ProgressDispatcher() {
-		@Override public void dispatchProgress(@NonNull Progress progress)
-				throws CancellationException {
-			if (cancelled.compareAndSet(true, false)) {
-				throw new CancellationException();
+		@AnyThread
+		public void cancel() {
+			// FIXME interrupt/close output, so that XSLT transform dies
+			if (!cancelled.compareAndSet(null, new CancellationException())) {
+				throw new IllegalStateException("Already cancelled, but cancellation not yet picked up.");
+			}
+		}
+
+		@Override public void dispatchProgress(@NonNull Progress progress) throws CancellationException {
+			CancellationException cancellationCause = cancelled.getAndSet(null);
+			if (cancellationCause != null) {
+				CancellationException realCancel = new CancellationException();
+				realCancel.initCause(cancellationCause);
+				throw realCancel;
 			}
 			reportProgress(progress);
 		}
-	};
+	}
 
 	@UiThread
 	public interface BackupListener {
