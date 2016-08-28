@@ -24,7 +24,7 @@ public class BackupParcelExporter {
 		try {
 			Progress progress = exporter.export(output);
 			if (IOTools.isEPIPE(progress.failure)) {
-				Exception newFailure = new CancellationException();
+				Exception newFailure = new CancellationException("external app cancelled");
 				newFailure.initCause(progress.failure);
 				progress.failure = newFailure;
 			}

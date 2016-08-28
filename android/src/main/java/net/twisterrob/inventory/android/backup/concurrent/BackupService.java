@@ -205,7 +205,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		@AnyThread
 		public void cancel() {
 			// FIXME interrupt/close output, so that XSLT transform dies
-			if (!cancelled.compareAndSet(null, new CancellationException())) {
+			if (!cancelled.compareAndSet(null, new CancellationException("initiating stack trace"))) {
 				throw new IllegalStateException("Already cancelled, but cancellation not yet picked up.");
 			}
 		}
@@ -213,7 +213,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		@Override public void dispatchProgress(@NonNull Progress progress) throws CancellationException {
 			CancellationException cancellationCause = cancelled.getAndSet(null);
 			if (cancellationCause != null) {
-				CancellationException realCancel = new CancellationException();
+				CancellationException realCancel = new CancellationException("user cancelled");
 				realCancel.initCause(cancellationCause);
 				throw realCancel;
 			}
