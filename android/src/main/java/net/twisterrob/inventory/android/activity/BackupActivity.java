@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.activity;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.concurrent.CancellationException;
 
 import org.slf4j.*;
 
@@ -21,6 +22,7 @@ import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.concurrent.*;
+import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.fragment.BackupListFragment;
 
@@ -94,7 +96,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		displayPopup(findProgress(null, getIntent()));
 	}
 	private void displayPopup(@Nullable Progress progress) {
-		if (progress == null) {
+		if (!shouldDisplay(progress)) {
 			return;
 		}
 		unhandled = progress;
@@ -104,6 +106,41 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 				finishDialog = null;
 			}
 		});
+	}
+
+	private boolean shouldDisplay(@Nullable Progress progress) {
+		if (progress == null) {
+			return false;
+		}
+		// this should ignore any incoming finish progress while the dialog is up
+		// and hopefully that only happens when Google Drive reads the second time
+		// lack of initiating component (see doExportExternal), try the best heuristic to filter Drive peeking for size:
+		if (unhandled != null) {
+			// while another finish is already displayed (because the BackupService is sequential)
+			LOG.warn("Double-finish\n{}\n{}", unhandled, progress);
+			boolean cancelled = false, pipe = false;
+			if (progress.failure instanceof CancellationException) {
+				cancelled = true;
+				Throwable cause = progress.failure.getCause();
+				if (IOTools.isEPIPE(cause)) {
+					pipe = true;
+					// EPIPE error (this just means that external party closed the PIPE)
+					for (StackTraceElement st : cause.getStackTrace()) {
+						// stack trace failed in ZippedXMLExporter.copyXSLT
+						if (ZippedXMLExporter.class.getName().equals(st.getClassName())
+								&& "copyXSLT".equals(st.getMethodName())) {
+							// very likely the external app closed the stream
+							// or the user has 100kb free space, but then... good for them
+							LOG.warn("Ignoring Google Drive's weirdness of peeking for size.", progress.failure);
+							return false;
+						}
+					}
+				}
+			}
+			LOG.warn("Letting double-dialog display: cancelled={}, pipe={}, stack={}", cancelled, pipe, false);
+			// anything that doesn't match the above: it's better to display double dialog
+		}
+		return true;
 	}
 
 	@Override protected void onSaveInstanceState(Bundle outState) {
@@ -190,6 +227,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 	}
 
 	public void filePicked(@NonNull final File file) {
+		//ensureNotInProgress(); // for other operations the UI is disabled, but the user can still tap in the file list
 		if (!allowNew) {
 			DialogTools
 					.notify(this, DoNothing.<Boolean>instance())
@@ -212,17 +250,13 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 	}
 
 	private void doImport(Uri source) {
-		if (!allowNew) {
-			throw new IllegalStateException(getString(R.string.backup_warning_inprogress));
-		}
+		ensureNotInProgress();
 		Intent intent = new Intent(BackupService.ACTION_IMPORT, source, getApplicationContext(), BackupService.class);
 		startService(intent);
 	}
 
 	private void doExportExternal() {
-		if (!allowNew) {
-			throw new IllegalStateException(getString(R.string.backup_warning_inprogress));
-		}
+		ensureNotInProgress();
 		Calendar now = Calendar.getInstance();
 		Intent intent = new Intent(Intent.ACTION_SEND)
 				.setType(InventoryContract.Export.TYPE_BACKUP)
@@ -231,15 +265,22 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 				.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		// this makes the user choose a target and that target will call the provider later, which starts the service
 		startActivity(Intent.createChooser(intent, getString(R.string.backup_export_external)));
+		// alternatives would be:
+		// ACTION_PICK_ACTIVITY which calls onActivityResult, but it looks ugly
+		// createChooser(..., PendingIntent.getBroadcast.getIntentSender), but it's API 22 and only notifies after started
 	}
 
 	@Override public void newIntoDir(@NonNull File targetDir) {
-		if (!allowNew) {
-			throw new IllegalStateException(getString(R.string.backup_warning_inprogress));
-		}
+		ensureNotInProgress();
 		Uri dir = Uri.fromFile(targetDir);
 		Intent intent = new Intent(BackupService.ACTION_EXPORT_DIR, dir, getApplicationContext(), BackupService.class);
 		startService(intent);
+	}
+
+	private void ensureNotInProgress() {
+		if (!allowNew) {
+			throw new IllegalStateException(getString(R.string.backup_warning_inprogress));
+		}
 	}
 
 	public static Intent chooser() {

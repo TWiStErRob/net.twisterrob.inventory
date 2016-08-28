@@ -15,6 +15,11 @@
 #       (http://proguard.sourceforge.net/manual/troubleshooting.html#attributes)
 -dontnote net.twisterrob.inventory.android.content.InventoryProvider
 
+# See net.twisterrob.inventory.android.activity.BackupActivity.shouldDisplay
+-keepclassmembernames class net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter {
+	*** copyXSLT(...);
+}
+
 # Remove Logging for now
 # FIXME use isLoggable in AndroidLogger and runtime control over TAGs
 
