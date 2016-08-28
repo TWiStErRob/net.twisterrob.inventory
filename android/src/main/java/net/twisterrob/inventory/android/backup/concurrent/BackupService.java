@@ -210,7 +210,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 	@AnyThread
 	private class ProgressDispatcher implements net.twisterrob.inventory.android.backup.ProgressDispatcher {
 		private final AtomicReference<CancellationException> cancelled = new AtomicReference<>(null);
-		private boolean cancellable = true;
+		private volatile boolean cancellable = true;
 
 		public void reset() {
 			cancelled.set(null);
