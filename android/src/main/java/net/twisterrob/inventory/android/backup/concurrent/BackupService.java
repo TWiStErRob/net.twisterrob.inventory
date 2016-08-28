@@ -115,8 +115,9 @@ public class BackupService extends NotificationProgressService<Progress> {
 	@SuppressWarnings("WrongThread") // TODEL http://b.android.com/207302
 	@WorkerThread
 	@Override protected void onHandleIntent(Intent intent) {
-		listeners.started();
 		super.onHandleIntent(intent);
+		dispatcher.reset(); // call before started, so the listener may cancel immediately
+		listeners.started();
 		try {
 			if (ACTION_EXPORT_PFD_WORKAROUND.equals(intent.getAction())) {
 				dispatcher.setCancellable(false);
@@ -129,7 +130,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 				Uri uri = intent.getData();
 				finish(exporter.exportTo(uri));
 			} else if (ACTION_EXPORT_DIR.equals(intent.getAction())) {
-				dispatcher.setCancellable(true);
 				BackupDirExporter exporter = new BackupDirExporter(this, new ZippedXMLExporter(), dispatcher);
 				File dir = new File(intent.getData().getPath());
 				finish(exporter.exportTo(dir));
@@ -139,7 +139,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 		}
 		try {
 			if (ACTION_IMPORT.equals(intent.getAction())) {
-				dispatcher.setCancellable(true);
 				Uri uri = intent.getData();
 				finish(importFrom(uri));
 			}
@@ -205,18 +204,35 @@ public class BackupService extends NotificationProgressService<Progress> {
 		public boolean isCancellable() {
 			return dispatcher.isCancellable();
 		}
+		public boolean isCancelled() {
+			return dispatcher.isCancelled();
+		}
 	}
 
+	@ThreadSafe
+	@AnyThread
 	private class ProgressDispatcher implements net.twisterrob.inventory.android.backup.ProgressDispatcher {
 		private final AtomicReference<CancellationException> cancelled = new AtomicReference<>(null);
-		private boolean cancellable;
+		private boolean cancellable = true;
 
-		@AnyThread
+		public void reset() {
+			cancelled.set(null);
+			setCancellable(true);
+		}
+
 		public void cancel() {
+			if (!isInProgress()) {
+				throw new IllegalStateException("There's nothing to cancel.");
+			}
 			// FIXME interrupt/close output, so that XSLT transform dies
 			if (!cancelled.compareAndSet(null, new CancellationException("initiating stack trace"))) {
 				throw new IllegalStateException("Already cancelled, but cancellation not yet picked up.");
 			}
+		}
+
+		@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+		public boolean isCancelled() {
+			return cancelled.get() != null;
 		}
 
 		@Override public void dispatchProgress(@NonNull Progress progress) throws CancellationException {

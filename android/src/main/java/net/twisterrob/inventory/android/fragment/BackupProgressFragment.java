@@ -51,7 +51,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 			LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
 		}
 		@Override public void started() {
-			setCancellable(true);
+			setCancelling(getBinding().isCancelled());
 			AndroidTools.displayedIf(getView(), true);
 		}
 		@Override public void finished() {
@@ -92,7 +92,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				final LocalBinder binding = backupService.getBinding();
-				setCancellable(false); // start displaying pending cancellation
+				setCancelling(true); // start displaying pending cancellation
 				if (!binding.isCancellable()) {
 					cancelling = DialogTools
 							.confirm(v.getContext(), new PopupCallbacks<Boolean>() {
@@ -101,7 +101,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 									if (Boolean.TRUE.equals(value)) {
 										binding.cancel();
 									} else {
-										setCancellable(true); // restore UI state
+										setCancelling(false); // restore UI state
 									}
 								}
 							})
@@ -124,10 +124,10 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 		backupService.unbind();
 	}
 
-	private void setCancellable(boolean cancellable) {
-		AndroidTools.enabledIf(cancel, cancellable);
-		AndroidTools.visibleIf(cancel, cancellable);
-		AndroidTools.visibleIf(cancelWait, !cancellable);
+	private void setCancelling(boolean cancelling) {
+		AndroidTools.enabledIf(cancel, !cancelling);
+		AndroidTools.visibleIf(cancel, !cancelling);
+		AndroidTools.visibleIf(cancelWait, cancelling);
 	}
 
 	private void updateUI() {
