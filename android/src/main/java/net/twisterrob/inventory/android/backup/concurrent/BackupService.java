@@ -119,14 +119,17 @@ public class BackupService extends NotificationProgressService<Progress> {
 		super.onHandleIntent(intent);
 		try {
 			if (ACTION_EXPORT_PFD_WORKAROUND.equals(intent.getAction())) {
+				dispatcher.setCancellable(false);
 				BackupParcelExporter exporter = new BackupParcelExporter(new ZippedXMLExporter(), dispatcher);
 				ParcelFileDescriptor file = queue.remove();
 				finish(exporter.exportTo(file));
 			} else if (ACTION_EXPORT.equals(intent.getAction())) {
+				dispatcher.setCancellable(false);
 				BackupUriExporter exporter = new BackupUriExporter(this, new ZippedXMLExporter(), dispatcher);
 				Uri uri = intent.getData();
 				finish(exporter.exportTo(uri));
 			} else if (ACTION_EXPORT_DIR.equals(intent.getAction())) {
+				dispatcher.setCancellable(true);
 				BackupDirExporter exporter = new BackupDirExporter(this, new ZippedXMLExporter(), dispatcher);
 				File dir = new File(intent.getData().getPath());
 				finish(exporter.exportTo(dir));
@@ -136,6 +139,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		}
 		try {
 			if (ACTION_IMPORT.equals(intent.getAction())) {
+				dispatcher.setCancellable(true);
 				Uri uri = intent.getData();
 				finish(importFrom(uri));
 			}
@@ -197,10 +201,15 @@ public class BackupService extends NotificationProgressService<Progress> {
 		public void removeBackupListener(@NonNull BackupListener listener) {
 			listeners.remove(ObjectTools.checkNotNull(listener));
 		}
+		/** Signifies whether the current backup operation can clean up after itself. */
+		public boolean isCancellable() {
+			return dispatcher.isCancellable();
+		}
 	}
 
 	private class ProgressDispatcher implements net.twisterrob.inventory.android.backup.ProgressDispatcher {
 		private final AtomicReference<CancellationException> cancelled = new AtomicReference<>(null);
+		private boolean cancellable;
 
 		@AnyThread
 		public void cancel() {
@@ -218,6 +227,12 @@ public class BackupService extends NotificationProgressService<Progress> {
 				throw realCancel;
 			}
 			reportProgress(progress);
+		}
+		public boolean isCancellable() {
+			return cancellable;
+		}
+		public void setCancellable(boolean cancellable) {
+			this.cancellable = cancellable;
 		}
 	}
 

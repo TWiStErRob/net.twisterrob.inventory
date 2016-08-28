@@ -8,11 +8,13 @@ import org.slf4j.*;
 import android.content.*;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.concurrent.*;
@@ -60,10 +62,14 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override public void onReceive(Context context, Intent intent) {
 			Progress current = (Progress)intent.getSerializableExtra(BackupService.EXTRA_PROGRESS);
+			if (cancelling != null && current != null && current.phase == Progress.Phase.Finished) {
+				cancelling.dismiss();
+			}
 			displayer.setProgress(current);
 			updateUI();
 		}
 	};
+	private AlertDialog cancelling;
 
 	@Override public void onAttach(Context context) {
 		super.onAttach(context);
@@ -85,8 +91,25 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 		cancelWait = view.findViewById(R.id.progress$cancel_wait);
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
-				setCancellable(false);
-				backupService.getBinding().cancel();
+				final LocalBinder binding = backupService.getBinding();
+				setCancellable(false); // start displaying pending cancellation
+				if (!binding.isCancellable()) {
+					cancelling = DialogTools
+							.confirm(v.getContext(), new PopupCallbacks<Boolean>() {
+								@Override public void finished(Boolean value) {
+									cancelling = null; // dialog is handled
+									if (Boolean.TRUE.equals(value)) {
+										binding.cancel();
+									} else {
+										setCancellable(true); // restore UI state
+									}
+								}
+							})
+							.setMessage(R.string.backup$cancel_partial)
+							.show();
+				} else {
+					binding.cancel();
+				}
 			}
 		});
 	}
