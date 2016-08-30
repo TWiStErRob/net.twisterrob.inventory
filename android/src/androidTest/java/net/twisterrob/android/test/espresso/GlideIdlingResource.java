@@ -16,6 +16,9 @@ import net.twisterrob.java.utils.ReflectionTools;
 
 import static net.twisterrob.java.utils.ReflectionTools.*;
 
+/**
+ * @see <a href="https://gist.github.com/stefanodacchille/9995163">ThreadPoolIdlingResource.java, a simlar idler</a>
+ */
 @Beta
 public class GlideIdlingResource extends PollingIdlingResource {
 	private static final Class<?> EngineJobFactory =

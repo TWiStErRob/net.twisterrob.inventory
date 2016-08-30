@@ -8,13 +8,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.java.utils.tostring.*;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
 
 public class ResourceNameStringer extends Stringer<Integer> {
-	public static final Stringer<Integer> INSTANCE = new ResourceNameStringer(AndroidTools.getContext());
+	public static /*final*/ Stringer<Integer> INSTANCE;
 
 	// TODO figure out a way to utilize this @see BundleStringer
 	private static final Collection<String> RESOLVE_RESOURCE_ID_KEYS = new HashSet<>(Arrays.asList(
@@ -39,7 +38,7 @@ public class ResourceNameStringer extends Stringer<Integer> {
 		return null;
 	}
 	@Override public void toString(@Nonnull ToStringAppender append, Integer object) {
-		int id = object; // force unbox
+		int id = object; // force un-box
 		append.selfDescribingProperty(shortenName(getName(id)));
 	}
 	private String shortenName(String name) {

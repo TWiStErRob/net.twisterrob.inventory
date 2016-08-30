@@ -19,6 +19,7 @@ import net.twisterrob.java.utils.tostring.StringerRepo;
 @TargetApi(VERSION_CODES.HONEYCOMB_MR2)
 public class AndroidStringerRepo {
 	public static void init(StringerRepo repo, Context context) {
+		ResourceNameStringer.INSTANCE = new ResourceNameStringer(context);
 		repo.register(AbsSavedState.class, new AbsSavedStateStringer());
 		repo.register(android.support.design.widget.NavigationView.SavedState.class,
 				new NavigationViewSavedStateStringer());

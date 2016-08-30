@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
+import net.twisterrob.java.utils.tostring.StringerRepo;
 
 public abstract class BaseApp extends android.app.Application {
 	// This is the first Logger created which will result in reading the classpath to create the binding.
@@ -84,9 +86,14 @@ public abstract class BaseApp extends android.app.Application {
 		}
 	}
 
+	@Override public void onTerminate() {
+		super.onTerminate();
+		s_instance = null;
+	}
+
 	protected void safeOnCreate() {
 		if (BuildConfigDEBUG) {
-			AndroidTools.setContext(this);
+			AndroidStringerRepo.init(StringerRepo.INSTANCE, this);
 			initStetho();
 		}
 		initPreferences();

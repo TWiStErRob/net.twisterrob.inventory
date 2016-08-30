@@ -42,7 +42,6 @@ import android.widget.*;
 import static android.util.TypedValue.*;
 
 import net.twisterrob.android.annotation.*;
-import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
 import net.twisterrob.android.utils.tostring.stringers.name.*;
 import net.twisterrob.android.view.layout.DoAfterLayout;
 import net.twisterrob.java.annotations.DebugHelper;
@@ -54,18 +53,6 @@ import net.twisterrob.java.utils.tostring.stringers.DefaultNameStringer;
 @SuppressWarnings("unused")
 public /*static*/ abstract class AndroidTools {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidTools.class);
-
-	private static Context appContext;
-	public static synchronized void setContext(Context context) {
-		if (appContext != null || context == null) {
-			throw new IllegalArgumentException("Cannot set context twice or to null");
-		}
-		appContext = context.getApplicationContext();
-		AndroidStringerRepo.init(StringerRepo.INSTANCE, appContext);
-	}
-	public static Context getContext() {
-		return appContext;
-	}
 
 	private static final float CIRCLE_LIMIT = 359.9999f;
 	private static final int INVALID_POSITION = -1;

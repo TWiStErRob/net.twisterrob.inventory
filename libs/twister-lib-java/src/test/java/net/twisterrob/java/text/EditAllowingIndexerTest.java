@@ -10,28 +10,32 @@ import static org.junit.Assert.*;
 import net.twisterrob.java.text.Indexer.MatchResult;
 
 public class EditAllowingIndexerTest {
-	@Ignore @Test public void debugDelete() {
+	@Ignore("debug helper only")
+	@Test public void debugDelete() {
 		EditAllowingIndexer<String> indexer = new EditAllowingIndexer<>(2);
 		indexer.add("abcd", "test");
 		Collection<MatchResult<String>> matches = indexer.match("abxcd"); // x deleted
 		System.out.println(matches);
 	}
 
-	@Ignore @Test public void debugInsert() {
+	@Ignore("debug helper only")
+	@Test public void debugInsert() {
 		EditAllowingIndexer<String> indexer = new EditAllowingIndexer<>(2);
 		indexer.add("abxcd", "test");
 		Collection<MatchResult<String>> matches = indexer.match("abcd"); // x inserted
 		System.out.println(matches);
 	}
 
-	@Ignore @Test public void debugReplace() {
+	@Ignore("debug helper only")
+	@Test public void debugReplace() {
 		EditAllowingIndexer<String> indexer = new EditAllowingIndexer<>(2);
 		indexer.add("abycd", "test");
 		Collection<MatchResult<String>> matches = indexer.match("abxcd"); // x replaced to y
 		System.out.println(matches);
 	}
 
-	@Ignore @Test public void debugSwap() {
+	@Ignore("debug helper only")
+	@Test public void debugSwap() {
 		EditAllowingIndexer<String> indexer = new EditAllowingIndexer<>(2);
 		indexer.add("abcd", "test");
 		Collection<MatchResult<String>> matches = indexer.match("acbd"); // b and c swapped in middle

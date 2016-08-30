@@ -26,7 +26,6 @@ import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.fragment.BackupListFragment;
 
-import static net.twisterrob.android.utils.tools.AndroidTools.*;
 import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
 
 public class BackupActivity extends BaseActivity implements BackupListFragment.BackupListCallbacks {
@@ -42,14 +41,14 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		@Override protected void serviceBound(ComponentName name, BackupService.LocalBinder service) {
 			IntentFilter filter = new IntentFilter();
 			filter.addAction(ACTION_FINISHED_BROADCAST);
-			LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, filter);
+			LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(receiver, filter);
 
 			setAllowNew(!service.isInProgress());
 		}
 		@Override protected void serviceUnbound(ComponentName name, BackupService.LocalBinder service) {
 			setAllowNew(true);
 
-			LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
+			LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(receiver);
 		}
 		@Override public void started() {
 			setAllowNew(false);

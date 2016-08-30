@@ -30,6 +30,7 @@ def dataXsltCsv = project(':android').file("src/main/assets/data.csv.xslt")
 def dataXsltHtml = project(':android').file("src/main/assets/data.html.xslt")
 def dataXml = project(':android').file("${rootDir}/temp/test/data.xml")
 def transformDir = file('build/transformed')
+idea.module.excludeDirs += [ transformDir ]
 
 // run with: gradlew -p buildSrc cRT rTHJ rTCJ | grep -v "^:"
 task runTransformHtmlJava(type: Transform) {

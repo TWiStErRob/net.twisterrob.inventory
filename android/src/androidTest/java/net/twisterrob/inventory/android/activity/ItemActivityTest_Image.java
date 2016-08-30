@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 import android.content.Intent;
+import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.EditText;
@@ -35,6 +36,7 @@ import static net.twisterrob.inventory.android.test.InventoryEspressoUtils.*;
 
 @RunWith(AndroidJUnit4.class)
 public class ItemActivityTest_Image {
+	public static final String TEST_ITEM_NAME = "Test Item";
 	@Rule public final ScreenshotFailure screenshot = new ScreenshotFailure();
 	@Rule public TemporaryFolder temp = new TemporaryFolder();
 	@Rule public TestName name = new TestName();
@@ -59,30 +61,31 @@ public class ItemActivityTest_Image {
 		;
 	}
 
+	@LargeTest
 	@Test public void testImageDeletedWithItem() throws IOException {
 		onView(withId(R.id.fab)).perform(click());
-		onView(allOf(withId(R.id.title), isAssignableFrom(EditText.class))).perform(typeText("Test Item"));
+		onView(allOf(withId(R.id.title), isAssignableFrom(EditText.class))).perform(typeText(TEST_ITEM_NAME));
 		onView(withId(R.id.btn_save)).perform(click());
 
-		assertThat(db, hasInvItem("Test Item"));
+		assertThat(db, hasInvItem(TEST_ITEM_NAME));
 		assertThat(db, countImages(is(0L)));
 
-		onRecyclerItem(withText("Test Item")).perform(click());
+		onRecyclerItem(withText(TEST_ITEM_NAME)).perform(click());
 		onView(withId(R.id.action_item_edit)).perform(click());
 
-		Matcher<Intent> cameraIntent = intendCamera(temp.newFile(), "Test Item" + "\nin " + name.getMethodName());
+		Matcher<Intent> cameraIntent = intendCamera(temp.newFile(), TEST_ITEM_NAME + "\nin " + name.getMethodName());
 		onView(withId(R.id.action_picture_get)).perform(click());
 		intended(cameraIntent);
 		onView(withId(R.id.btn_save)).perform(click());
 
-		assertThat(db, hasInvItem("Test Item"));
+		assertThat(db, hasInvItem(TEST_ITEM_NAME));
 		assertThat(db, countImages(is(1L)));
 
 		openActionBarOverflowOrOptionsMenu(getTargetContext());
 		onView(withText(R.string.item_delete)).perform(click());
 		clickPositiveInDialog();
 
-		assertThat(db, not(hasInvItem("Test Item")));
+		assertThat(db, not(hasInvItem(TEST_ITEM_NAME)));
 		assertThat(db, countImages(is(0L)));
 	}
 }
