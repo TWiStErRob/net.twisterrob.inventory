@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="query_image_count" translatable="false"><![CDATA["
+		select count(*) from Image;
+	"]]></string>
+	<string name="query_item_exists_by_name" translatable="false"><![CDATA["
+		select 1 from Item where name = ?;
+	"]]></string>
+</resources>

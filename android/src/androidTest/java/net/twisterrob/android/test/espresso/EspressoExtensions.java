@@ -18,6 +18,8 @@ import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
+
 public class EspressoExtensions {
 	/**
 	 * Perform action of waiting for a specific view id.
@@ -71,5 +73,15 @@ public class EspressoExtensions {
 
 	public static Matcher<Intent> chooser(Matcher<Intent> matcher) {
 		return allOf(hasAction(Intent.ACTION_CHOOSER), hasExtra(is(Intent.EXTRA_INTENT), matcher));
+	}
+
+	/** @see Espresso#onData(Matcher) */
+	public static RecyclerViewDataInteraction onRecyclerItem(Matcher<View> dataMatcher) {
+		return new RecyclerViewDataInteraction(hasDescendant(dataMatcher));
+	}
+
+	/** @see Espresso#onData(Matcher) */
+	public static RecyclerViewDataInteraction onRecyclerItemExact(Matcher<View> dataMatcher) {
+		return new RecyclerViewDataInteraction(dataMatcher);
 	}
 }

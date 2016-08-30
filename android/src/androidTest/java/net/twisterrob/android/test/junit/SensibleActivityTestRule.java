@@ -48,13 +48,16 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		systemAnimations.restore();
 	}
 
-	public static Stage getActivityStage(final ActivityTestRule<?> activity) {
+	public static Stage getActivityStage(ActivityTestRule<?> activity) {
+		return getActivityStage(activity.getActivity());
+	}
+	public static Stage getActivityStage(final Activity activity) {
 		getInstrumentation().waitForIdleSync();
 		final AtomicReference<Stage> stage = new AtomicReference<>();
 		getInstrumentation().runOnMainSync(new Runnable() {
 			@Override public void run() {
 				Stage currentStage = ActivityLifecycleMonitorRegistry.getInstance().
-						getLifecycleStageOf(activity.getActivity());
+						getLifecycleStageOf(activity);
 				stage.set(currentStage);
 			}
 		});

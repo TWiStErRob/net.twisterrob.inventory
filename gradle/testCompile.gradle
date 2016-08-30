@@ -25,6 +25,7 @@ if (isAndroid) {
 		/*[ androidTestCompile ].each*/ all {
 			it.resolutionStrategy {
 				force 'com.google.code.findbugs:jsr305:3.0.0' // 2.0.1 vs 3.0.0
+				force 'com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.1'
 				// Force some dependencies to be consistent between compile and androidTestCompile
 				dependencySubstitution {
 					[ 'support-annotations', 'support-v4', 'appcompat-v7', 'support-v13',

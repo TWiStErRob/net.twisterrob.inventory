@@ -51,7 +51,7 @@ public class BackupActivityTest_ImportExternal {
 		IOTools.copyStream(activity.getActivity().getAssets().open("demo.xml"), zip);
 		Intent mockIntent = new Intent().setData(Uri.fromFile(inventory));
 		intending(not(isInternal())).respondWith(new ActivityResult(Activity.RESULT_OK, mockIntent));
-		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+		openActionBarOverflowOrOptionsMenu(getTargetContext());
 		// FIXME lookup by id with custom matcher: MenuView.ItemView.getItemData().getId()
 		onView(withText(R.string.backup_import_external)).perform(click());
 		intended(chooser(allOf(

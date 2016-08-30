@@ -42,28 +42,14 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	}
 
 	public void reset() {
+		resetGlide();
+		resetDB();
+		resetPreferences();
+		resetFiles();
+	}
+
+	protected void resetFiles() {
 		Context context = InstrumentationRegistry.getTargetContext();
-		LOG.info("Resetting Glide");
-		try {
-			Glide.get(context).clearDiskCache();
-			Field glide = Glide.class.getDeclaredField("glide");
-			glide.setAccessible(true);
-			glide.set(null, null);
-		} catch (Exception ex) {
-			throw new IllegalStateException(ex);
-		}
-
-		Database db = App.db();
-		File dbFile = db.getFile();
-		LOG.info("Closing and deleting DB {}", dbFile);
-		db.getHelper().close();
-		if (dbFile.exists() && !dbFile.delete()) {
-			throw new IllegalStateException("Cannot delete Database");
-		}
-
-		LOG.info("Clearing preferences");
-		prefs().edit().clear().apply();
-
 		File intDir = context.getFilesDir();
 		LOG.info("Deleting {}", intDir);
 		if (!IOTools.delete(intDir)) {
@@ -73,6 +59,33 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		LOG.info("Deleting {}", extDir);
 		if (!IOTools.delete(extDir)) {
 			throw new IllegalStateException("Cannot delete " + extDir);
+		}
+	}
+
+	protected void resetPreferences() {
+		LOG.info("Clearing preferences");
+		prefs().edit().clear().apply();
+	}
+
+	protected void resetDB() {
+		Database db = App.db();
+		File dbFile = db.getFile();
+		LOG.info("Closing and deleting DB {}", dbFile);
+		db.getHelper().close();
+		if (dbFile.exists() && !dbFile.delete()) {
+			throw new IllegalStateException("Cannot delete Database");
+		}
+	}
+
+	protected void resetGlide() {
+		LOG.info("Resetting Glide");
+		try {
+			Glide.get(InstrumentationRegistry.getTargetContext()).clearDiskCache();
+			Field glide = Glide.class.getDeclaredField("glide");
+			glide.setAccessible(true);
+			glide.set(null, null);
+		} catch (Exception ex) {
+			throw new IllegalStateException(ex);
 		}
 	}
 }

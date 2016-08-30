@@ -12,6 +12,7 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 
 @SuppressWarnings("unused")
 public /*static*/ abstract class DatabaseTools {
+	public static final String[] NO_ARGS = new String[0];
 	public static String escapeLike(Object string, char escape) {
 		return string.toString().replace("%", escape + "%").replace("_", escape + "_");
 	}
@@ -148,6 +149,19 @@ public /*static*/ abstract class DatabaseTools {
 			} else {
 				return cursor.getBlob(cursor.getColumnIndexOrThrow(columnName));
 			}
+		} finally {
+			cursor.close();
+		}
+	}
+
+	/** Convenience for reading {@code select 1 from ...;} style query results. */
+	public static boolean singleBoolean(@NonNull Cursor cursor) {
+		try {
+			int onlyColumn = 0;
+			return cursor.moveToFirst() // no row -> false
+					&& !cursor.isNull(onlyColumn) // non-null column value
+					&& cursor.getLong(onlyColumn) != 0 // coerce integer to boolean C-style
+					;
 		} finally {
 			cursor.close();
 		}

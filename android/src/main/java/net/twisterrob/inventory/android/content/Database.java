@@ -6,6 +6,7 @@ import org.slf4j.*;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build.VERSION_CODES;
@@ -27,8 +28,14 @@ public class Database extends VariantDatabase {
 
 	@AnyThread
 	public Database(Context context) {
-		super(context);
-		m_helper = new DatabaseOpenHelper(context, "MagicHomeInventory", 2, BuildConfig.DEBUG) {
+		this(context, context.getResources());
+	}
+
+	@AnyThread
+	@VisibleForTesting
+	public Database(Context hostContext, Resources resources) {
+		super(resources);
+		m_helper = new DatabaseOpenHelper(hostContext, "MagicHomeInventory", 2, BuildConfig.DEBUG) {
 			@Override
 			public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);
@@ -75,15 +82,15 @@ public class Database extends VariantDatabase {
 		getWritableDatabase().setTransactionSuccessful();
 	}
 
-	private void execSQL(@StringRes int queryResource, Object... params) {
+	@VisibleForTesting void execSQL(@StringRes int queryResource, Object... params) {
 		execSQL(getWritableDatabase(), queryResource, params);
 	}
 
-	private Cursor rawQuery(@StringRes int queryResource, Object... params) {
+	@VisibleForTesting Cursor rawQuery(@StringRes int queryResource, Object... params) {
 		return rawQuery(getReadableDatabase(), queryResource, params);
 	}
 
-	private long rawInsert(@StringRes int queryResource, Object... params) {
+	@VisibleForTesting long rawInsert(@StringRes int queryResource, Object... params) {
 		return rawInsert(getReadableDatabase(), queryResource, params);
 	}
 

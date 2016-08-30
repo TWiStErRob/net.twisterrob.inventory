@@ -63,8 +63,8 @@ public class ReflectionTools {
 	 * @throws NoSuchFieldException if a field with the specified name is not found in the class hierarchy.
 	 * @see Class#getDeclaredField(String)
 	 */
-	public static @Nonnull Field findDeclaredField(@Nonnull Class<?> clazz,
-			@Nonnull String fieldName) throws NoSuchFieldException {
+	public static @Nonnull Field findDeclaredField(@Nonnull Class<?> clazz, @Nonnull String fieldName)
+			throws NoSuchFieldException {
 		do {
 			try {
 				return clazz.getDeclaredField(fieldName);
@@ -73,6 +73,14 @@ public class ReflectionTools {
 			}
 		} while (clazz != null);
 		throw new NoSuchFieldException(fieldName);
+	}
+
+	public static @Nullable Field tryFindDeclaredField(@Nonnull Class<?> clazz, @Nonnull String fieldName) {
+		try {
+			return findDeclaredField(clazz, fieldName);
+		} catch (NoSuchFieldException e) {
+			return null;
+		}
 	}
 
 	public static boolean instanceOf(String clazz, Object value) {
@@ -140,5 +148,13 @@ public class ReflectionTools {
 			}
 		}
 		throw new NoSuchFieldException("Cannot find field on " + clazz + " with value: " + value);
+	}
+
+	public static @Nonnull Class<?> forName(String className) {
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException ex) {
+			throw new IllegalStateException(ex);
+		}
 	}
 }

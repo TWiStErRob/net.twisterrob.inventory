@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.slf4j.*;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.database.*;
 import android.database.sqlite.*;
@@ -19,8 +18,8 @@ public class VariantDatabase {
 
 	private final Resources m_resources;
 
-	public VariantDatabase(Context context) {
-		m_resources = context.getResources();
+	public VariantDatabase(Resources resources) {
+		m_resources = resources;
 	}
 
 	protected void execSQL(SQLiteDatabase db, @StringRes int queryResource, Object... params) {
