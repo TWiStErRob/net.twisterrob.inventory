@@ -244,20 +244,17 @@ CREATE TRIGGER Item_insert
 AFTER INSERT ON Item
 BEGIN
 	--insert into Log(message) values ('Item_insert on (' || new._id || ', ' || new.name || ', ' || ifNULL(new.image, 'NULL') || ', ' || new.category || ', ' || ifNULL(new.parent, 'NULL') || '): ' || 'started');--NOTEOS
-	insert into Item_Path_Node_Refresher(_id)
-		values (new._id)
-	;--NOTEOS
+	insert into Item_Path_Node_Refresher(_id) values (new._id);--NOTEOS
 	--insert into Log(message) values ('Item_insert on (' || new._id || ', ' || new.name || ', ' || ifNULL(new.image, 'NULL') || ', ' || new.category || ', ' || ifNULL(new.parent, 'NULL') || '): ' || 'finished');--NOTEOS
 END;
 
 CREATE TRIGGER Item_delete
 AFTER DELETE ON Item
 BEGIN
-	--insert into Log(message) values ('Item_delete on (' || old._id || '): '  || 'started');--NOTEOS
-	insert into Item_Path_Node_Refresher(_id)
-		values (old._id)
-	;--NOTEOS
-	--insert into Log(message) values ('Item_delete on (' || old._id || '): '  || 'finished');--NOTEOS
+	--insert into Log(message) values ('Item_delete on (' || old._id || ', ' || old.name || ', ' || ifNULL(old.image, 'NULL') || '): '  || 'started');--NOTEOS
+	delete from Image where _id = old.image;--NOTEOS
+	insert into Item_Path_Node_Refresher(_id) values (old._id);--NOTEOS
+	--insert into Log(message) values ('Item_delete on (' || old._id || ', ' || old.name || ', ' || ifNULL(old.image, 'NULL') || '): '  || 'finished');--NOTEOS
 END;
 
 CREATE TRIGGER Item_move
@@ -289,14 +286,12 @@ BEGIN
 	--insert into Log(message) values ('Item_rename on (' || new._id || ', ' || old.name || '->' || new.name || '): '  || 'finished');--NOTEOS
 END;
 
--- CONSIDER removing this, in case the UI allows sharing images between multiple belongings
 CREATE TRIGGER Item_image
 AFTER UPDATE OF image ON Item
 	WHEN old.image <> new.image or ((old.image IS NULL) <> (new.image IS NULL))
 BEGIN
 	--insert into Log(message) values ('Item_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'started');--NOTEOS
-	delete from Image
-	where _id = old.image;--NOTEOS
+	delete from Image where _id = old.image;--NOTEOS
 	--insert into Log(message) values ('Item_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'finished');--NOTEOS
 END;
 
@@ -350,6 +345,23 @@ CREATE TABLE Property (
 	CHECK (0 < length(name))
 );
 
+CREATE TRIGGER Property_image
+AFTER UPDATE OF image ON Property
+	WHEN old.image <> new.image or ((old.image IS NULL) <> (new.image IS NULL))
+BEGIN
+	--insert into Log(message) values ('Property_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'started');--NOTEOS
+	delete from Image where _id = old.image;--NOTEOS
+	--insert into Log(message) values ('Property_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'finished');--NOTEOS
+END;
+
+CREATE TRIGGER Property_delete
+AFTER DELETE ON Property
+BEGIN
+	--insert into Log(message) values ('Property_delete on (' || old._id || ', ' || old.name || ', ' || ifNULL(old.image, 'NULL') || '): '  || 'started');--NOTEOS
+	delete from Image where _id = old.image;--NOTEOS
+	--insert into Log(message) values ('Property_delete on (' || old._id || ', ' || old.name || ', ' || ifNULL(old.image, 'NULL') || '): '  || 'finished');--NOTEOS
+END;
+
 
 CREATE TABLE RoomTypeKind (
 	_id         INTEGER      NOT NULL,
@@ -402,23 +414,33 @@ CREATE TABLE Room (
 );
 CREATE INDEX Room_root ON Room(root);
 
-CREATE TRIGGER Room_delete_root
+CREATE TRIGGER Room_image
+AFTER UPDATE OF image ON Room
+	WHEN old.image <> new.image or ((old.image IS NULL) <> (new.image IS NULL))
+BEGIN
+	--insert into Log(message) values ('Room_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'started');--NOTEOS
+	delete from Image where _id = old.image;--NOTEOS
+	--insert into Log(message) values ('Room_image on (' || new._id || ', ' || old.name || '->' || new.name || ', ' || ifNULL(old.image, 'NULL') || '->' || ifNULL(new.image, 'NULL') || '): '  || 'finished');--NOTEOS
+END;
+
+CREATE TRIGGER Room_delete
 AFTER DELETE ON Room
 BEGIN
-	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || ', ' || old.root || '): '  || 'started');--NOTEOS
+	--insert into Log(message) values ('Room_delete on (' || old._id || ', ' || old.root || '): '  || 'started');--NOTEOS
 	delete from Item where _id = old.root;--NOTEOS
-	--insert into Log(message) values ('Room_Delete_Root on (' || old._id || ', ' || old.root || '): '  || 'finished');--NOTEOS
+	delete from Image where _id = old.image;--NOTEOS
+	--insert into Log(message) values ('Room_delete on (' || old._id || ', ' || old.root || '): '  || 'finished');--NOTEOS
 END;
 
 CREATE TRIGGER Room_move
 AFTER UPDATE OF property ON Room
 BEGIN
-	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || old.property || '->' || new.property || ', ' || new.root || ', ' || new.name || '): ' || 'started');--NOTEOS
+	--insert into Log(message) values ('Room_move on (' || new._id || ', ' || old.property || '->' || new.property || ', ' || new.root || ', ' || new.name || '): ' || 'started');--NOTEOS
 	insert into Search_Refresher(_id)
 		select ip.itemID from Item_Path ip
 		where ip.rootItemID <> ip.itemID and ip.roomID = new._id
 	;--NOTEOS
-	--insert into Log(message) values ('Room_Property_Move on (' || new._id || ', ' || old.property || '->' || new.property || ', ' || new.root || ', ' || new.name || '): ' || 'finished');--NOTEOS
+	--insert into Log(message) values ('Room_move on (' || new._id || ', ' || old.property || '->' || new.property || ', ' || new.root || ', ' || new.name || '): ' || 'finished');--NOTEOS
 END;
 
 CREATE VIEW Room_Rooter AS select * from Room;
