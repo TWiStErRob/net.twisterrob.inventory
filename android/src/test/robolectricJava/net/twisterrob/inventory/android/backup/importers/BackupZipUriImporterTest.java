@@ -4,6 +4,7 @@ import java.io.*;
 
 import org.junit.*;
 import org.mockito.*;
+import org.robolectric.annotation.Config;
 import org.slf4j.*;
 
 import static org.mockito.Matchers.argThat;
@@ -16,12 +17,14 @@ import android.content.*;
 import android.net.Uri;
 
 import net.twisterrob.android.test.LoggingAnswer;
+import net.twisterrob.inventory.android.TestIgnoreApp;
 import net.twisterrob.inventory.android.backup.ImportProgressHandler;
 import net.twisterrob.test.frameworks.RobolectricTestBase;
 
 import static net.twisterrob.test.HasCause.*;
 import static net.twisterrob.test.SameFile.*;
 
+@Config(application = TestIgnoreApp.class)
 public class BackupZipUriImporterTest extends RobolectricTestBase {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupZipUriImporterTest.class);
 

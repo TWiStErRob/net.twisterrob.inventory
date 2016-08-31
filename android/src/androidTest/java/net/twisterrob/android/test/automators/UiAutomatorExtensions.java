@@ -22,37 +22,39 @@ import static net.twisterrob.android.test.matchers.AndroidMatchers.hasProperty;
  * It signifies a normal string of pointing to no particular type of resource, but containing a value of a resource. 
  */
 public class UiAutomatorExtensions {
-	@RequiresApi(VERSION_CODES.JELLY_BEAN_MR2)
+	public static final int UI_AUTOMATOR_VERSION = VERSION_CODES.JELLY_BEAN_MR2;
+
+	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static String getText(@IdRes String id) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
 		return object.getText();
 	}
-	@RequiresApi(VERSION_CODES.JELLY_BEAN_MR2)
+	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static void setText(@IdRes String id, @RawRes String value) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
 		object.setText(value);
 	}
-	@RequiresApi(VERSION_CODES.JELLY_BEAN_MR2)
+	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static void clickOn(@IdRes String id) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
 		object.clickAndWaitForNewWindow();
 	}
-	@RequiresApi(VERSION_CODES.JELLY_BEAN_MR2)
+	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static void clickOnLabel(@RawRes String label) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().text(label));
 		object.clickAndWaitForNewWindow();
 	}
-	@RequiresApi(VERSION_CODES.JELLY_BEAN_MR2)
+	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static void shortClickOn(@IdRes String id) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
 		object.click();
 	}
-	@RequiresApi(VERSION_CODES.JELLY_BEAN_MR2)
+	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static void shortClickOnLabel(@RawRes String label) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().text(label));

@@ -11,7 +11,6 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
 
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build.VERSION_CODES;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -38,7 +37,6 @@ import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.inventory.android.activity.BackupActivityTest.*;
 
 @RunWith(AndroidJUnit4.class)
-@SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
 public class BackupActivityTest_ExportExternal {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_ExportExternal.class);
 	@Rule public final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
@@ -64,6 +62,7 @@ public class BackupActivityTest_ExportExternal {
 		clickNegativeInDialog();
 	}
 
+	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Test public void testCancelChooser() throws Exception {
 		clickPositiveInDialog();
 
@@ -71,6 +70,7 @@ public class BackupActivityTest_ExportExternal {
 		pressBackExternal();
 	}
 
+	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Test public void testCancelDrive() throws Exception {
 		assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
 
@@ -81,6 +81,7 @@ public class BackupActivityTest_ExportExternal {
 		pressBackExternal();
 	}
 
+	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Test public void testSuccessfulFullExport() throws Exception {
 		assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
 

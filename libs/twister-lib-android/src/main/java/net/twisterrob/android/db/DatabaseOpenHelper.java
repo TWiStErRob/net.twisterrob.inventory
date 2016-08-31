@@ -275,8 +275,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 				LOG.error("Cannot back up DB on open", ex);
 			}
 		} else {
-			if (hasWriteExternalPermission) {
-				LOG.warn("No {} permission to back up DB at {}", WRITE_EXTERNAL_STORAGE, when);
+			if (!hasWriteExternalPermission) {
+				LOG.debug("No {} permission to back up DB at {}", WRITE_EXTERNAL_STORAGE, when);
 			}
 		}
 	}
