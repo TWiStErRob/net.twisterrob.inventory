@@ -1,21 +1,28 @@
-package net.twisterrob.android.test.espresso;
+package net.twisterrob.android.test.espresso.idle;
 
 import org.slf4j.*;
 
 import android.support.test.espresso.IdlingResource;
 
 public abstract class PollingIdlingResource implements IdlingResource {
-	private static final Logger LOG = LoggerFactory.getLogger(PollingIdlingResource.class);
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
 
 	private ResourceCallback resourceCallback;
 
 	@Override public final boolean isIdleNow() {
 		boolean idle = isIdle();
 		LOG.trace("isIdleNow: {}, callback: {}", idle, resourceCallback);
-		if (idle && resourceCallback != null) {
-			resourceCallback.onTransitionToIdle();
+		if (idle) {
+			onTransitionToIdle();
 		}
 		return idle;
+	}
+
+	protected void onTransitionToIdle() {
+		LOG.trace("onTransitionToIdle");
+		if (resourceCallback != null) {
+			resourceCallback.onTransitionToIdle();
+		}
 	}
 
 	protected abstract boolean isIdle();

@@ -15,8 +15,6 @@ import static android.support.test.InstrumentationRegistry.*;
 
 import net.twisterrob.android.test.espresso.DialogMatchers;
 
-import static net.twisterrob.android.test.matchers.AndroidMatchers.hasProperty;
-
 /**
  * {@link RawRes} is intentionally misused in this class.
  * It signifies a normal string of pointing to no particular type of resource, but containing a value of a resource. 
@@ -79,7 +77,7 @@ public class UiAutomatorExtensions {
 		if (resId != 0) {
 			resValue = res.getString(resId);
 		} else {
-			assumeThat(Locale.getDefault(), hasProperty("language", equalTo("en")));
+			assumeThat(Locale.getDefault().getLanguage(), is("en"));
 			resValue = englishFallback;
 		}
 		return resValue;

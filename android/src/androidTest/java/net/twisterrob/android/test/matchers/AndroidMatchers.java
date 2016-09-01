@@ -19,7 +19,7 @@ public class AndroidMatchers {
 			@StringRes int stringId) {
 		return equalTo(getTargetContext().getResources().getString(stringId));
 	}
-	public static @NonNull <T> Matcher<T> hasProperty(
+	public static @NonNull <T> Matcher<T> hasPropertyLite(
 			@NonNull String propertyName, @NonNull Matcher<?> valueMatcher) {
 		return HasPropertyWithValueLite.hasProperty(propertyName, valueMatcher);
 	}

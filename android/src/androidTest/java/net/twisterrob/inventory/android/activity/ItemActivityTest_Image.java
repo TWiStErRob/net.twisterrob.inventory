@@ -23,7 +23,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import net.twisterrob.android.test.espresso.ScreenshotFailure;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -37,7 +36,6 @@ import static net.twisterrob.inventory.android.test.InventoryEspressoUtils.*;
 @RunWith(AndroidJUnit4.class)
 public class ItemActivityTest_Image {
 	public static final String TEST_ITEM_NAME = "Test Item";
-	@Rule public final ScreenshotFailure screenshot = new ScreenshotFailure();
 	@Rule public TemporaryFolder temp = new TemporaryFolder();
 	@Rule public TestName name = new TestName();
 

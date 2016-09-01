@@ -74,9 +74,7 @@ public final class RecyclerViewDataLoaderAction implements ViewAction {
 		RecyclerView adapterView = (RecyclerView)view;
 		List<AdaptedData> matchedDataItems = Lists.newArrayList();
 
-		for (RecyclerViewProtocol.AdaptedData data : adapterViewProtocol.getDataInAdapterView(
-				adapterView)) {
-
+		for (RecyclerViewProtocol.AdaptedData data : adapterViewProtocol.getDataInAdapterView(adapterView)) {
 			if (dataToLoadMatcher.matches(data.getData())) {
 				matchedDataItems.add(data);
 			}

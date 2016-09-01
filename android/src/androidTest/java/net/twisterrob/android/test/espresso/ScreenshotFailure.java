@@ -39,6 +39,11 @@ public class ScreenshotFailure implements TestRule {
 	public ScreenshotFailure(@NonNull Instrumentation instrumentation) {
 		this(instrumentation, getDefaultDir(instrumentation));
 	}
+	public ScreenshotFailure(@NonNull Instrumentation instrumentation, @NonNull File targetDir) {
+		this.instrumentation = instrumentation;
+		this.targetDir = targetDir;
+	}
+
 	private static @NonNull File getDefaultDir(@NonNull Instrumentation instrumentation) {
 		Context context = instrumentation.getContext();
 
@@ -47,10 +52,6 @@ public class ScreenshotFailure implements TestRule {
 			result = new File(context.getFilesDir(), DEFAULT_FOLDER_NAME);
 		}
 		return result;
-	}
-	public ScreenshotFailure(@NonNull Instrumentation instrumentation, @NonNull File targetDir) {
-		this.instrumentation = instrumentation;
-		this.targetDir = targetDir;
 	}
 
 	@Override public Statement apply(final Statement base, final Description description) {

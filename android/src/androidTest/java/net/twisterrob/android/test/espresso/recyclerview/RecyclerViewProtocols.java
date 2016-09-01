@@ -86,7 +86,12 @@ public final class RecyclerViewProtocols {
 		public Iterable<AdaptedData> getDataInAdapterView(RecyclerView adapterView) {
 			List<AdaptedData> datas = Lists.newArrayList();
 			for (int position = 0; position < adapterView.getAdapter().getItemCount(); position++) {
-				Object dataAtPosition = adapterView.findViewHolderForAdapterPosition(position);
+				RecyclerView.ViewHolder dataAtPosition = adapterView.findViewHolderForAdapterPosition(position);
+				if (dataAtPosition == null) {
+					int itemType = adapterView.getAdapter().getItemViewType(position);
+					dataAtPosition = adapterView.getAdapter().createViewHolder(adapterView, itemType);
+					adapterView.getAdapter().bindViewHolder(dataAtPosition, position);
+				}
 				datas.add(
 						new AdaptedData.Builder()
 								.withDataFunction(new StandardDataFunction(dataAtPosition, position))
