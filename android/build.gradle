@@ -104,3 +104,5 @@ android.testVariants.all { com.android.build.gradle.api.TestVariant test ->
 	}
 	test.connectedInstrumentTest.dependsOn grantPermissions
 }
+
+apply from: "${rootDir}/gradle/upgradeTest.gradle"

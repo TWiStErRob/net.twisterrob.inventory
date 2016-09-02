@@ -1,0 +1,94 @@
+buildscript {
+	repositories {
+		jcenter()
+		maven { name 'twisterrob'; url 'http://localhost/maven' }
+	}
+	dependencies {
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
+
+import com.android.build.gradle.api.ApplicationVariant
+import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
+import com.android.build.gradle.internal.variant.BaseVariantData
+import com.android.builder.internal.testing.CustomTestRunListener
+import com.android.builder.testing.TestData
+import com.android.builder.testing.api.DeviceConnector
+import com.android.ddmlib.IDevice
+import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
+import com.android.utils.StdLogger
+
+task upgradeTest {
+	dependsOn tasks.assembleDebug
+	dependsOn tasks.assembleAndroidTest
+	doFirst { task ->
+		ApplicationVariant debugVariant =
+				android.applicationVariants.grep { ApplicationVariant var -> var.buildType.name == 'debug' }.first()
+
+		DeviceProviderInstrumentTestTask instrument = debugVariant.testVariant.connectedInstrumentTest
+
+		instrument.deviceProvider.init()
+		def device = instrument.deviceProvider.devices.first()
+		IDevice realDevice = device.iDevice
+		instrument.deviceProvider.terminate()
+
+		File testApk = debugVariant.testVariant.outputs.first().outputFile
+		logger.info("Unnstalling test package: ${debugVariant.testVariant.applicationId}")
+		realDevice.uninstallPackage(debugVariant.testVariant.applicationId);
+		logger.info("Installing test package: ${testApk}")
+		realDevice.installPackage(testApk.absolutePath, false, null);
+
+		def testListener = new CustomTestRunListener(
+				device.name, project.name, debugVariant.name, new StdLogger(StdLogger.Level.VERBOSE))
+
+		installOld(realDevice, debugVariant, "10001934-v1.0.0#1934")
+		pushData(realDevice, debugVariant, "10001934-v1.0.0#1934")
+		runTest(instrument.testData, debugVariant.variantData, device, testListener,
+				"net.twisterrob.inventory.android.UpgradeTests#testPrepareVersion1"
+		)
+
+		File newApk = debugVariant.outputs.first().outputFile
+		logger.info("Installing package: ${newApk}")
+		realDevice.installPackage(newApk.absolutePath, true, null);
+		runTest(instrument.testData, debugVariant.variantData, device, testListener,
+				"net.twisterrob.inventory.android.UpgradeTests#testVerifyVersion2"
+		)
+	}
+}
+def installOld(IDevice realDevice, ApplicationVariant debugVariant, String version) {
+	// FIXME release debug build as well
+	File oldApk = file("${System.env.RELEASE_HOME}/android/${debugVariant.applicationId}@${version}d+debug.apk")
+	logger.info("Unnstalling package: ${debugVariant.applicationId}")
+	realDevice.uninstallPackage(debugVariant.applicationId);
+	logger.info("Installing package: ${oldApk}")
+	realDevice.installPackage(oldApk.absolutePath, false, null);
+}
+def pushData(IDevice realDevice, ApplicationVariant debugVariant, String version) {
+	def localData = "${System.env.RELEASE_HOME}/android/${debugVariant.applicationId}@${version}d+debug-data.zip"
+	logger.info("Pushing ${localData}")
+	realDevice.pushFile(localData, "/sdcard/Download/data.zip")
+}
+def runTest(TestData testData, BaseVariantData data, DeviceConnector device, CustomTestRunListener runListener,
+		String test) {
+	// TODO use TestReport to generate HTML
+	runListener.reportDir = new File(data.scope.globalScope.reportsDir, "upgrade-tests");
+	// from com.android.builder.internal.testing.SimpleTestCallable#call
+	def runner = new RemoteAndroidTestRunner(testData.applicationId, testData.instrumentationRunner, device);
+	for (Map.Entry<String, String> argument : testData.instrumentationRunnerArguments.entrySet()) {
+		runner.addInstrumentationArg(argument.getKey(), argument.getValue());
+	}
+	runner.addInstrumentationArg("class", test)
+	runner.addInstrumentationArg("annotation", "org.junit.Test")
+	runner.runName = device.name
+	runner.maxtimeToOutputResponse = 60000
+
+	logger.info("Running: ${runner.amInstrumentCommand}")
+	runner.run(runListener);
+	def result = runListener.runResult
+	if (result.hasFailedTests()
+			|| result.isRunFailure()
+			|| result.getNumTests() <= 0
+			|| result.numCompleteTests != result.numTests) {
+		throw new StopExecutionException("Tests failed, see ${reports}")
+	}
+}
