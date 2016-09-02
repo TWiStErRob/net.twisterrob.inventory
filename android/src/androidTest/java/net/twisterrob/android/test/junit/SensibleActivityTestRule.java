@@ -1,15 +1,10 @@
 package net.twisterrob.android.test.junit;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import android.app.Activity;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.lifecycle.*;
-
-import static android.support.test.InstrumentationRegistry.*;
 
 import net.twisterrob.android.test.*;
 
@@ -46,21 +41,5 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		super.afterActivityFinished();
 		Intents.release();
 		systemAnimations.restore();
-	}
-
-	public static Stage getActivityStage(ActivityTestRule<?> activity) {
-		return getActivityStage(activity.getActivity());
-	}
-	public static Stage getActivityStage(final Activity activity) {
-		getInstrumentation().waitForIdleSync();
-		final AtomicReference<Stage> stage = new AtomicReference<>();
-		getInstrumentation().runOnMainSync(new Runnable() {
-			@Override public void run() {
-				Stage currentStage = ActivityLifecycleMonitorRegistry.getInstance().
-						getLifecycleStageOf(activity);
-				stage.set(currentStage);
-			}
-		});
-		return stage.get();
 	}
 }

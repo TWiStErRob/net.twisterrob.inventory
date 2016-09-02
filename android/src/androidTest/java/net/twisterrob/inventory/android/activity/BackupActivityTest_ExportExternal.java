@@ -32,7 +32,7 @@ import static net.twisterrob.android.test.automators.AndroidAutomator.*;
 import static net.twisterrob.android.test.automators.GoogleDriveAutomator.*;
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
-import static net.twisterrob.android.test.junit.SensibleActivityTestRule.*;
+import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.inventory.android.activity.BackupActivityTest.*;
 

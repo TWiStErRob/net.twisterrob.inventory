@@ -9,27 +9,25 @@ import org.junit.runner.Description;
 import org.junit.runners.model.*;
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.app.*;
-import android.app.Instrumentation.ActivityMonitor;
-import android.content.*;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Build.*;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.util.HumanReadables;
-import android.support.test.runner.lifecycle.Stage;
 import android.support.test.uiautomator.UiDevice;
 import android.view.View;
 
-import net.twisterrob.android.test.junit.SensibleActivityTestRule;
+import net.twisterrob.android.test.automators.ActivityCollector;
 import net.twisterrob.android.utils.tools.IOTools;
 
 public class ScreenshotFailure implements TestRule {
 	private static final Logger LOG = LoggerFactory.getLogger(ScreenshotFailure.class);
 	public static final String DEFAULT_FOLDER_NAME = "testruns";
-	private final ActivityCollector activities = new ActivityCollector();
+	private final ActivityCollector activities;
 	private final File targetDir;
 	private final Instrumentation instrumentation;
 
@@ -42,6 +40,7 @@ public class ScreenshotFailure implements TestRule {
 	public ScreenshotFailure(@NonNull Instrumentation instrumentation, @NonNull File targetDir) {
 		this.instrumentation = instrumentation;
 		this.targetDir = targetDir;
+		this.activities = new ActivityCollector(instrumentation);
 	}
 
 	private static @NonNull File getDefaultDir(@NonNull Instrumentation instrumentation) {
@@ -67,7 +66,7 @@ public class ScreenshotFailure implements TestRule {
 						String dirName = String.format(Locale.ROOT, "%s", description.getClassName());
 						String shotName = String.format(Locale.ROOT, "%d_%s.png", started, description.getMethodName());
 						File shot = takeScreenshot(dirName, shotName);
-						LOG.info("Screenshot taken to {}", shot);
+						LOG.info("Screenshot taken to {}", getADBPullPath(shot));
 					} catch (Throwable shotEx) {
 						if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
 							ex.addSuppressed(shotEx);
@@ -83,12 +82,20 @@ public class ScreenshotFailure implements TestRule {
 		};
 	}
 
+	@SuppressLint("SdCardPath")
+	private static File getADBPullPath(File shot) {
+		if (shot == null) {
+			return null;
+		}
+		return new File(shot.getAbsolutePath().replace("/storage/emulated/0/", "/sdcard/"));
+	}
+
 	/**
 	 * Ignored <code>com.googlecode.eyesfree.utils.ScreenshotUtils.createScreenshot(getTargetContext());</code>,
 	 * because it requires {@code  android.permission.READ_FRAME_BUFFER} which is signature level.
 	 */
 	@TargetApi(VERSION_CODES.JELLY_BEAN_MR2)
-	private File takeScreenshot(String dirName, String shotName) throws IOException {
+	private @NonNull File takeScreenshot(@NonNull String dirName, @NonNull String shotName) throws IOException {
 		File dir = new File(targetDir, dirName);
 		File target = new File(dir, shotName);
 		IOTools.ensure(dir);
@@ -104,14 +111,7 @@ public class ScreenshotFailure implements TestRule {
 		}
 		if (shot == null) {
 			LOG.trace("Taking screenshot with drawing cache.");
-			Activity activity = null;
-			for (Activity seen : activities.getActivities()) {
-				Stage stage = SensibleActivityTestRule.getActivityStage(seen);
-				LOG.trace("Candidate activity: {} {}", stage, seen);
-				if (stage == Stage.RESUMED) {
-					activity = seen;
-				}
-			}
+			Activity activity = activities.getLatestResumed();
 			if (activity != null) {
 				shot = shootActivity(activity);
 			} else {
@@ -144,38 +144,6 @@ public class ScreenshotFailure implements TestRule {
 			}
 		});
 		return viewShot.get();
-	}
-
-	private class ActivityCollector {
-		private final ActivityMonitor monitor = new ActivityMonitor(new IntentFilter(), null, false);
-		private final LinkedHashSet<Activity> activities = new LinkedHashSet<>();
-		private final Thread thread = new Thread(new Runnable() {
-			@Override public void run() {
-				while (true) {
-					// monitor.waitForActivity() cannot be interrupted because of the while loop inside it
-					Activity activity = monitor.waitForActivityWithTimeout(Long.MAX_VALUE);
-					if (activity != null) {
-						LOG.trace("Seen activity {}", activity);
-						activities.add(activity);
-					} else {
-						LOG.trace("Stopping listening.");
-						break;
-					}
-				}
-			}
-		});
-
-		public void start() {
-			instrumentation.addMonitor(monitor);
-			thread.start();
-		}
-		public void stop() {
-			thread.interrupt();
-			instrumentation.removeMonitor(monitor);
-		}
-		public Collection<Activity> getActivities() {
-			return Collections.unmodifiableCollection(activities);
-		}
 	}
 }
 
