@@ -49,7 +49,7 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 				@Override public void onDrawerStateChanged(int newState) {
 					super.onDrawerStateChanged(newState);
 					if (newState == DrawerLayout.STATE_IDLE) {
-						onTransitionToIdle();
+						transitionToIdle();
 						drawer.removeDrawerListener(this);
 					}
 				}

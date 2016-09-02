@@ -2,14 +2,17 @@ package net.twisterrob.android.test.espresso;
 
 import java.util.Iterator;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.hamcrest.*;
+import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.support.test.annotation.Beta;
 import android.support.test.espresso.*;
 import android.support.test.espresso.NoMatchingViewException.Builder;
 import android.support.test.espresso.core.deps.guava.collect.*;
@@ -29,26 +32,84 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
 
 public class EspressoExtensions {
+	private static final Logger LOG = LoggerFactory.getLogger(EspressoExtensions.class);
+
+	/**
+	 * Lazy version of an idling resource that waits for a view to become available.
+	 * <code>onDelayedView(isDialogView(), 100).perform(clickNeutral());</code>
+	 * TODO the root is locked on the first call, try to get a fresh one every so root(rootMatcher) can work too
+	 */
+	@Beta
+	public static ViewInteraction onDelayedView(final Matcher<View> viewMatcher, final long timeout) {
+		final AtomicReference<ViewInteraction> result = new AtomicReference<>();
+		onView(isRoot()).perform(new ViewAction() {
+			@Override public Matcher<View> getConstraints() {
+				return isRoot();
+			}
+
+			@Override public String getDescription() {
+				return "wait for " + viewMatcher + " for " + timeout + " milliseconds.";
+			}
+
+			@Override public void perform(final UiController uiController, final View view) {
+				uiController.loopMainThreadUntilIdle();
+				final long startTime = System.currentTimeMillis();
+				final long endTime = startTime + timeout;
+
+				long step = Math.max(1, Math.min(50, timeout / 10)); // 10th of input between 1..50ms 
+				timeout:
+				do {
+					LOG.trace("Checking for {}", viewMatcher);
+					for (View child : TreeIterables.breadthFirstViewTraversal(view)) {
+						if (viewMatcher.matches(child)) {
+							ViewInteraction interaction = onView(viewMatcher);
+							result.set(interaction);
+							LOG.info("Found it: {}", interaction);
+							break timeout;
+						}
+					}
+					LOG.trace("Stepping: {}", step);
+					uiController.loopMainThreadForAtLeast(step);
+				} while (System.currentTimeMillis() < endTime);
+
+				if (result.get() == null) {
+					TimeoutException timeout = new TimeoutException();
+					NoMatchingViewException noMatchException = new Builder()
+							.withRootView(view)
+							.withViewMatcher(viewMatcher)
+							.build();
+					timeout.initCause(noMatchException);
+					throw new PerformException.Builder()
+							.withActionDescription(this.getDescription())
+							.withViewDescription(HumanReadables.describe(view))
+							.withCause(timeout)
+							.build();
+				}
+			}
+		});
+		return result.get();
+	}
 	/**
 	 * Perform action of waiting for a specific view id.
 	 * @see <a href="http://stackoverflow.com/a/22563297/253468">Espresso: Thread.sleep( );</a>
 	 */
-	public static ViewAction waitFor(final Matcher<View> viewMatcher, final long millis) {
+	@Beta
+	public static ViewAction waitFor(final Matcher<View> viewMatcher, final long timeout) {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
 				return isRoot();
 			}
 
 			@Override public String getDescription() {
-				return "wait for " + StringDescription.asString(viewMatcher) + " for " + millis + " milliseconds.";
+				return "wait for " + StringDescription.asString(viewMatcher) + " for " + timeout + " milliseconds.";
 			}
 
 			@Override public void perform(final UiController uiController, final View view) {
 				uiController.loopMainThreadUntilIdle();
 				final long startTime = System.currentTimeMillis();
-				final long endTime = startTime + millis;
+				final long endTime = startTime + timeout;
 
-				long step = Math.max(1, Math.min(50, millis / 10)); // 10th of input between 1..50ms 
+				long step = Math.max(1, Math.min(50, timeout / 10)); // 10th of input between 1..50ms 
 				do {
 					for (View child : TreeIterables.breadthFirstViewTraversal(view)) {
 						if (viewMatcher.matches(child)) {
@@ -56,7 +117,6 @@ public class EspressoExtensions {
 						}
 					}
 					uiController.loopMainThreadForAtLeast(step);
-					//uiController.loopMainThreadUntilIdle();
 				} while (System.currentTimeMillis() < endTime);
 
 				TimeoutException timeout = new TimeoutException();

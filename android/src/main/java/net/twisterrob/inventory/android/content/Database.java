@@ -21,6 +21,7 @@ import static net.twisterrob.inventory.android.Constants.*;
 @SuppressWarnings({"TryFinallyCanBeTryWithResources", "resource"})
 public class Database extends VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
+	public static final String NAME = "MagicHomeInventory";
 
 	private final DatabaseOpenHelper m_helper;
 
@@ -33,7 +34,7 @@ public class Database extends VariantDatabase {
 	@VisibleForTesting
 	public Database(Context hostContext, Resources resources) {
 		super(resources);
-		m_helper = new DatabaseOpenHelper(hostContext, "MagicHomeInventory", 3, BuildConfig.DEBUG) {
+		m_helper = new DatabaseOpenHelper(hostContext, NAME, 3, BuildConfig.DEBUG) {
 			@Override
 			public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);

@@ -11,16 +11,17 @@ public abstract class AsyncIdlingResource implements IdlingResource {
 
 	@Override public final boolean isIdleNow() {
 		boolean idle = isIdle();
-		LOG.trace("isIdleNow: {}, callback: {}", idle, resourceCallback);
+		LOG.trace("{}.isIdleNow: {}", getName(), idle);
 		if (idle) {
-			onTransitionToIdle();
+			transitionToIdle();
 		} else {
 			waitForIdleAsync();
 		}
 		return idle;
 	}
 
-	protected void onTransitionToIdle() {
+	protected void transitionToIdle() {
+		LOG.trace("{}.onTransitionToIdle with {}", getName(), resourceCallback);
 		if (resourceCallback != null) {
 			resourceCallback.onTransitionToIdle();
 		}
