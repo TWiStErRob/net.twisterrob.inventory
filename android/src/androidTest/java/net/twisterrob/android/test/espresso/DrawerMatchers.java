@@ -32,8 +32,7 @@ public class DrawerMatchers {
 	public static ViewAction openDrawerAction() {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
-				// TODO check if the drawer is closed
-				return isAnyDrawer();
+				return allOf(isAnyDrawer(), withParent(not(isAnyOpen())));
 			}
 			@Override public String getDescription() {
 				return "open the drawer";
@@ -47,8 +46,7 @@ public class DrawerMatchers {
 	public static ViewAction closeDrawerAction() {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
-				// TODO check if the drawer is open
-				return isAnyDrawer();
+				return allOf(isAnyDrawer(), withParent(isAnyOpen()));
 			}
 			@Override public String getDescription() {
 				return "close the drawer";
@@ -98,6 +96,9 @@ public class DrawerMatchers {
 	}
 	public static ViewInteraction closeDrawer(@GravityFlag int gravity) {
 		return onView(isDrawerLayout()).check(matches(isOpen(gravity))).perform(close(gravity));
+	}
+	private static Matcher<View> isAnyOpen() {
+		return anyOf(isOpen(GravityCompat.START), isOpen(GravityCompat.END));
 	}
 	/** Matches view containing the drawers and the contents. */
 	public static Matcher<View> isDrawerLayout() {
