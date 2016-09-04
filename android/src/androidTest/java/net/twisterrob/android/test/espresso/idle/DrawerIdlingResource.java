@@ -16,18 +16,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.*;
 import android.view.*;
 
-import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static android.support.test.espresso.util.TreeIterables.*;
 
 import net.twisterrob.android.annotation.GravityFlag;
-import net.twisterrob.android.test.automators.ActivityCollector;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.log.LoggingDrawerListener;
 import net.twisterrob.android.view.ViewProvider;
 import net.twisterrob.java.annotations.DebugHelper;
 
 import static net.twisterrob.android.test.espresso.DrawerMatchers.*;
+import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 
 public class DrawerIdlingResource extends AsyncIdlingResource {
 	private static final Logger LOG = LoggerFactory.getLogger(DrawerIdlingResource.class);
@@ -108,17 +107,12 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 	}
 
 	@VisibleForTesting static class TopDrawer implements ViewProvider {
-		private final ActivityCollector activities = new ActivityCollector(getInstrumentation());
 		private WeakReference<Activity> lastActivityRef = new WeakReference<>(null);
 
-		public TopDrawer() {
-			activities.start();
-		}
-
 		@Override public View getView() {
-			Activity currentActivity = activities.getLatestResumed();
+			Activity currentActivity = InstrumentationExtensions.tryGetActivityInStage(Stage.RESUMED);
 			if (currentActivity == null) {
-				LOG.warn("No resumed activity in {}", activities);
+				LOG.warn("No resumed activity in {}", getAllActivities());
 				return null;
 			}
 			Activity lastActivity = lastActivityRef.get();
@@ -138,11 +132,6 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 						.build());
 			}
 			return null;
-		}
-
-		@Override protected void finalize() throws Throwable {
-			super.finalize();
-			activities.stop();
 		}
 	}
 

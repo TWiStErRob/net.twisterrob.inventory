@@ -18,16 +18,16 @@ import android.os.Build.*;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.util.HumanReadables;
+import android.support.test.runner.lifecycle.Stage;
 import android.support.test.uiautomator.UiDevice;
 import android.view.View;
 
-import net.twisterrob.android.test.automators.ActivityCollector;
+import net.twisterrob.android.test.junit.InstrumentationExtensions;
 import net.twisterrob.android.utils.tools.IOTools;
 
 public class ScreenshotFailure implements TestRule {
 	private static final Logger LOG = LoggerFactory.getLogger(ScreenshotFailure.class);
 	public static final String DEFAULT_FOLDER_NAME = "testruns";
-	private final ActivityCollector activities;
 	private final File targetDir;
 	private final Instrumentation instrumentation;
 
@@ -40,7 +40,6 @@ public class ScreenshotFailure implements TestRule {
 	public ScreenshotFailure(@NonNull Instrumentation instrumentation, @NonNull File targetDir) {
 		this.instrumentation = instrumentation;
 		this.targetDir = targetDir;
-		this.activities = new ActivityCollector(instrumentation);
 	}
 
 	private static @NonNull File getDefaultDir(@NonNull Instrumentation instrumentation) {
@@ -59,7 +58,6 @@ public class ScreenshotFailure implements TestRule {
 			@Override public void evaluate() throws Throwable {
 				long started = System.currentTimeMillis();
 				try {
-					activities.start();
 					base.evaluate();
 				} catch (Throwable ex) {
 					try {
@@ -75,8 +73,6 @@ public class ScreenshotFailure implements TestRule {
 						}
 					}
 					throw ex;
-				} finally {
-					activities.stop();
 				}
 			}
 		};
@@ -111,11 +107,11 @@ public class ScreenshotFailure implements TestRule {
 		}
 		if (shot == null) {
 			LOG.trace("Taking screenshot with drawing cache.");
-			Activity activity = activities.getLatestResumed();
-			if (activity != null) {
+			try {
+				Activity activity = InstrumentationExtensions.getActivityInStage(Stage.RESUMED);
 				shot = shootActivity(activity);
-			} else {
-				LOG.warn("No activity found to shoot.");
+			} catch (Exception ex) {
+				LOG.warn("No activity found to shoot.", ex);
 			}
 		}
 		if (shot != null) {
