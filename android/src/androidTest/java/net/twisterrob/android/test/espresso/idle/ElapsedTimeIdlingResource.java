@@ -37,7 +37,7 @@ public class ElapsedTimeIdlingResource extends AsyncIdlingResource {
 		this.startTime = System.currentTimeMillis();
 		this.waitingTime = waitingTime;
 		Espresso.registerIdlingResources(this);
-		// TODO backup and restore timeouts
+		// CONSIDER backup and restore timeouts
 		// Make sure Espresso does not time out
 //		IdlingPolicies.setMasterPolicyTimeout(waitingTime * 2, TimeUnit.MILLISECONDS);
 //		IdlingPolicies.setIdlingResourceTimeout(waitingTime * 2, TimeUnit.MILLISECONDS);

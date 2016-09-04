@@ -5,6 +5,7 @@ import org.hamcrest.*;
 import static org.hamcrest.Matchers.*;
 
 import android.support.test.espresso.*;
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.v4.view.*;
 import android.support.v4.widget.DrawerLayout;
@@ -12,28 +13,29 @@ import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 
 import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.contrib.DrawerActions.*;
 import static android.support.test.espresso.contrib.DrawerMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
+import static android.support.v4.view.GravityCompat.*;
 
 import net.twisterrob.android.annotation.GravityFlag;
 
-// TODO clean up open/close matchers areBothDrawersOpen, isAnyDrawerOpen, isStartDrawerOpen, etc.
+/**
+ * {@code onView(isDrawerLayout()).check(matches(isClosed(gravity))).perform(open(gravity));}
+ */
 public class DrawerMatchers {
 	public static ViewInteraction onDrawerDescendant(Matcher<View> viewMatcher) {
 		return onView(allOf(viewMatcher, inDrawer())).perform(openContainingDrawer());
 	}
 	public static ViewAction openContainingDrawer() {
-		return onContainingDrawer(openDrawerAction());
+		return onContainingDrawer(openDrawer());
 	}
 	public static ViewAction closeContainingDrawer() {
-		return onContainingDrawer(closeDrawerAction());
+		return onContainingDrawer(closeDrawer());
 	}
-	public static ViewAction openDrawerAction() {
+	public static ViewAction openDrawer() {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
-				return allOf(isAnyDrawer(), withParent(not(isAnyOpen())));
+				return anyOf(isOpenableDrawer(Gravity.START), isOpenableDrawer(Gravity.END));
 			}
 			@Override public String getDescription() {
 				return "open the drawer";
@@ -42,12 +44,16 @@ public class DrawerMatchers {
 				DrawerLayout layout = (DrawerLayout)drawer.getParent();
 				layout.openDrawer(drawer);
 			}
+			private Matcher<View> isOpenableDrawer(@GravityFlag int gravity) {
+				return allOf(isDrawer(gravity), withParent(allOf(
+						isDrawerLayout(), not(isDrawerOpen(gravity)), not(isDrawerLocked(gravity)))));
+			}
 		};
 	}
-	public static ViewAction closeDrawerAction() {
+	public static ViewAction closeDrawer() {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
-				return allOf(isAnyDrawer(), withParent(isAnyOpen()));
+				return anyOf(isCloseableDrawer(START), isCloseableDrawer(END));
 			}
 			@Override public String getDescription() {
 				return "close the drawer";
@@ -55,6 +61,10 @@ public class DrawerMatchers {
 			@Override public void perform(UiController uiController, View drawer) {
 				DrawerLayout layout = (DrawerLayout)drawer.getParent();
 				layout.closeDrawer(drawer);
+			}
+			private Matcher<View> isCloseableDrawer(@GravityFlag int gravity) {
+				return allOf(isDrawer(gravity), withParent(allOf(
+						isDrawerLayout(), not(isDrawerClosed(gravity)), not(isDrawerLocked(gravity)))));
 			}
 		};
 	}
@@ -86,50 +96,85 @@ public class DrawerMatchers {
 			}
 		};
 	}
-	public static ViewInteraction openDrawer() {
-		return openDrawer(GravityCompat.START);
+	public static Matcher<View> isDrawerOpen(@GravityFlag int gravity) {
+		return isOpen(gravity);
 	}
-	public static ViewInteraction openDrawer(@GravityFlag int gravity) {
-		return onView(isDrawerLayout()).check(matches(isClosed(gravity))).perform(open(gravity));
+	public static Matcher<View> isAnyDrawerOpen() {
+		return anyOf(isStartDrawerOpen(), isEndDrawerOpen());
 	}
-	public static ViewInteraction closeDrawer() {
-		return closeDrawer(GravityCompat.START);
+	public static Matcher<View> isStartDrawerOpen() {
+		return isOpen(START);
 	}
-	public static ViewInteraction closeDrawer(@GravityFlag int gravity) {
-		return onView(isDrawerLayout()).check(matches(isOpen(gravity))).perform(close(gravity));
+	public static Matcher<View> isEndDrawerOpen() {
+		return isOpen(END);
 	}
-	private static Matcher<View> isAnyOpen() {
-		return anyOf(isOpen(GravityCompat.START), isOpen(GravityCompat.END));
+	public static Matcher<View> areBothDrawersOpen() {
+		return allOf(isStartDrawerOpen(), isEndDrawerOpen());
 	}
+	public static Matcher<View> isDrawerClosed(@GravityFlag int gravity) {
+		return isClosed(gravity);
+	}
+	public static Matcher<View> isAnyDrawerClosed() {
+		return anyOf(isStartDrawerClosed(), isEndDrawerClosed());
+	}
+	public static Matcher<View> isStartDrawerClosed() {
+		return isClosed(START);
+	}
+	public static Matcher<View> isEndDrawerClosed() {
+		return isClosed(END);
+	}
+	public static Matcher<View> areBothDrawersClosed() {
+		return allOf(isStartDrawerClosed(), isEndDrawerClosed());
+	}
+
 	/** Matches view containing the drawers and the contents. */
 	public static Matcher<View> isDrawerLayout() {
 		return isAssignableFrom(DrawerLayout.class);
 	}
 	/** Matches a usual left-side (RTL right-side) drawer view. */
-	public static Matcher<View> isDrawer() {
-		return isDrawerWithGravity(GravityCompat.START);
+	public static Matcher<View> isStartDrawer() {
+		return isDrawer(START);
 	}
-	public static Matcher<View> isAnyDrawer() {
-		return allOf(
-				withParent(isDrawerLayout()),
-				anyOf(hasDrawerGravity(GravityCompat.START), hasDrawerGravity(GravityCompat.END))
-		);
+	/** Matches a usual left-side (RTL right-side) drawer view. */
+	public static Matcher<View> isEndDrawer() {
+		return isDrawer(START);
 	}
-	/** Matches any view inside the usual left-side (RTL right-side) drawer view. */
 	public static Matcher<View> inDrawer() {
 		return isDescendantOfA(isDrawer());
 	}
+	/** Matches any view inside the drawer view, excluding the drawer view itself. */
+	public static Matcher<View> inDrawer(@GravityFlag int gravity) {
+		return isDescendantOfA(isDrawer(gravity));
+	}
 	public static Matcher<View> isDrawerContents() {
 		return allOf(withParent(isDrawerLayout()),
-				not(hasDrawerGravity(GravityCompat.START)),
-				not(hasDrawerGravity(GravityCompat.END)));
+				not(hasDrawerGravity(START)),
+				not(hasDrawerGravity(END)));
 	}
 	public static Matcher<View> inDrawerContents() {
 		return isDescendantOfA(isDrawerContents());
 	}
+	public static Matcher<View> isDrawer() {
+		return allOf(withParent(isDrawerLayout()), anyOf(hasDrawerGravity(START), hasDrawerGravity(END)));
+	}
 	/** Matches the view that is on the {@code gravity} side of the drawer layout. */
-	public static Matcher<View> isDrawerWithGravity(final @GravityFlag int gravity) {
+	public static Matcher<View> isDrawer(final @GravityFlag int gravity) {
 		return allOf(withParent(isDrawerLayout()), hasDrawerGravity(gravity));
+	}
+	private static Matcher<View> isDrawerLocked(final @GravityFlag int gravity) {
+		if (!Gravity.isHorizontal(gravity) || Gravity.isVertical(gravity)) {
+			throw new IllegalArgumentException(
+					"Expected to match for a horizontal gravity, got " + GravityFlag.Converter.toString(gravity));
+		}
+		return new BoundedMatcher<View, DrawerLayout>(DrawerLayout.class) {
+			@Override public void describeTo(Description description) {
+				description.appendValue(GravityFlag.Converter.toString(gravity)).appendText(" drawer is locked");
+			}
+			@Override protected boolean matchesSafely(DrawerLayout item) {
+				int mode = item.getDrawerLockMode(gravity);
+				return mode == DrawerLayout.LOCK_MODE_LOCKED_OPEN || mode == DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
+			}
+		};
 	}
 	private static Matcher<View> hasDrawerGravity(final @GravityFlag int gravity) {
 		if (!Gravity.isHorizontal(gravity) || Gravity.isVertical(gravity)) {

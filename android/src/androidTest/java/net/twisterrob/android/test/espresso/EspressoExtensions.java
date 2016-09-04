@@ -138,9 +138,14 @@ public class EspressoExtensions {
 		});
 		return result.get();
 	}
+	@Beta
+	public static ViewAction waitFor(final Matcher<View> viewMatcher) {
+		IdlingPolicy policy = IdlingPolicies.getDynamicIdlingResourceErrorPolicy();
+		long timeout = policy.getIdleTimeoutUnit().toMillis(policy.getIdleTimeout());
+		return waitFor(viewMatcher, timeout);
+	}
 	/**
 	 * Perform action of waiting for a specific view id.
-	 * @param timeout TODO default with espresso/instrumentation configured timeout
 	 * @see <a href="http://stackoverflow.com/a/22563297/253468">Espresso: Thread.sleep( );</a>
 	 */
 	@Beta
@@ -240,13 +245,14 @@ public class EspressoExtensions {
 		return isDescendantOfA(isActionBar());
 	}
 	private static Matcher<View> isActionBar() {
-		return withResourceName(endsWith(":id/action_bar"));
-	}
-	public static Matcher<View> withResourceName(String resourceName) {
-		return withResourceName(is(resourceName));
+		return withFullResourceName(endsWith(":id/action_bar"));
 	}
 
-	public static Matcher<View> withResourceName(final Matcher<String> resourceNameMatcher) {
+	public static Matcher<View> withFullResourceName(String resourceName) {
+		return withFullResourceName(is(resourceName));
+	}
+
+	public static Matcher<View> withFullResourceName(final Matcher<String> resourceNameMatcher) {
 		return new TypeSafeDiagnosingMatcher<View>(View.class) {
 			@Override public void describeTo(Description description) {
 				description.appendText("with resource name: ").appendDescriptionOf(resourceNameMatcher);
