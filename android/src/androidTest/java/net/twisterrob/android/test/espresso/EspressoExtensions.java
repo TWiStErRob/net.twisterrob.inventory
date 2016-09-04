@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.*;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
+import android.content.res.*;
 import android.support.test.annotation.Beta;
 import android.support.test.espresso.*;
 import android.support.test.espresso.NoMatchingViewException.Builder;
@@ -140,7 +140,7 @@ public class EspressoExtensions {
 	}
 	/**
 	 * Perform action of waiting for a specific view id.
-	 * @param TODO default with espresso/instrumentation configured timeout
+	 * @param timeout TODO default with espresso/instrumentation configured timeout
 	 * @see <a href="http://stackoverflow.com/a/22563297/253468">Espresso: Thread.sleep( );</a>
 	 */
 	@Beta
@@ -189,8 +189,15 @@ public class EspressoExtensions {
 	}
 
 	public static void rotateDevice(ActivityTestRule<?> activity) {
-		activity.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		getInstrumentation().waitForIdleSync();
+		int orientation = activity.getActivity().getResources().getConfiguration().orientation;
+		int request;
+		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+			request = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+		} else {
+			request = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+		}
+		activity.getActivity().setRequestedOrientation(request);
+		onView(isRoot()).perform(loopMainThreadUntilIdle());
 	}
 
 	public static Matcher<Intent> chooser(Matcher<Intent> matcher) {
