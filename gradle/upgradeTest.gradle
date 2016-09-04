@@ -21,6 +21,8 @@ import com.android.utils.StdLogger
 task upgradeTest {
 	dependsOn tasks.assembleDebug
 	dependsOn tasks.assembleAndroidTest
+	tasks.connectedCheck.dependsOn it
+
 	doFirst { task ->
 		ApplicationVariant debugVariant =
 				android.applicationVariants.grep { ApplicationVariant var -> var.buildType.name == 'debug' }.first()
@@ -71,14 +73,17 @@ def pushData(IDevice realDevice, ApplicationVariant debugVariant, String version
 def runTest(TestData testData, BaseVariantData data, DeviceConnector device, CustomTestRunListener runListener,
 		String test) {
 	// TODO use TestReport to generate HTML
-	runListener.reportDir = new File(data.scope.globalScope.reportsDir, "upgrade-tests");
+	def reports = new File(data.scope.globalScope.reportsDir, "upgrade-tests")
+	reports.mkdirs()
+	runListener.reportDir = reports;
 	// from com.android.builder.internal.testing.SimpleTestCallable#call
 	def runner = new RemoteAndroidTestRunner(testData.applicationId, testData.instrumentationRunner, device);
 	for (Map.Entry<String, String> argument : testData.instrumentationRunnerArguments.entrySet()) {
 		runner.addInstrumentationArg(argument.getKey(), argument.getValue());
 	}
 	runner.addInstrumentationArg("class", test)
-	runner.addInstrumentationArg("annotation", "org.junit.Test")
+	//runner.addInstrumentationArg("annotation", "org.junit.Test")
+	runner.addInstrumentationArg("upgrade", "true")
 	runner.runName = device.name
 	runner.maxtimeToOutputResponse = 60000
 

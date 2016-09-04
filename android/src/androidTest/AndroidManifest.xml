@@ -9,7 +9,11 @@
 	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 	<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
 
+	<!-- Added by Gradle: <instrumentation android:name="....AndroidJUnitRunner" ... /> -->
+
 	<application android:label="@string/app_name" tools:replace="android:label">
+		<!-- Added by Gradle: <uses-library android:name="android.test.runner" /> -->
+
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.CompatibleLauncher"
 			android:process="net.twisterrob.inventory.debug">
