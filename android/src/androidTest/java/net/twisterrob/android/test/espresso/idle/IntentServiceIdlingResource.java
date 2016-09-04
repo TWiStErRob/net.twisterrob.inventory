@@ -6,7 +6,7 @@ import android.content.Context;
 /**
  * @see <a href="http://blog.sqisland.com/2015/04/espresso-custom-idling-resource.html">Refactred from</a>
  */
-public class IntentServiceIdlingResource extends PollingIdlingResource {
+public class IntentServiceIdlingResource extends AsyncIdlingResource {
 	private final Context context;
 	private final Class<? extends Service> serviceClass;
 
@@ -19,8 +19,11 @@ public class IntentServiceIdlingResource extends PollingIdlingResource {
 		return IntentServiceIdlingResource.class.getSimpleName() + " for " + serviceClass.getName();
 	}
 
-	protected boolean isIdle() {
+	@Override protected boolean isIdle() {
 		return !isIntentServiceRunning();
+	}
+	@Override protected void waitForIdleAsync() {
+		// NO OP since can't subscribe to IntentService lifecycle changes, override if you can
 	}
 
 	private boolean isIntentServiceRunning() {

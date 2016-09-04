@@ -20,6 +20,6 @@ public class HasInstalledPackage extends TypeSafeMatcher<Context> {
 		}
 	}
 	@Override public void describeTo(Description description) {
-		description.appendText("There is an installed package named: " + packageName);
+		description.appendValue(packageName).appendText(" package installed");
 	}
 }

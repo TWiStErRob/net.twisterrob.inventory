@@ -10,6 +10,7 @@ import android.support.test.runner.lifecycle.Stage;
 
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
 
+// FIXME replace with ActivityLifecycleMonitorRegistry.getInstance()?
 public class ActivityCollector {
 	private final Instrumentation instrumentation;
 	private final ActivityMonitor monitor = new ActivityMonitor(new IntentFilter(), null, false);

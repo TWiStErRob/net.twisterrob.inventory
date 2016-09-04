@@ -19,6 +19,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.annotation.GravityFlag;
 
+// TODO clean up open/close matchers areBothDrawersOpen, isAnyDrawerOpen, isStartDrawerOpen, etc.
 public class DrawerMatchers {
 	public static ViewInteraction onDrawerDescendant(Matcher<View> viewMatcher) {
 		return onView(allOf(viewMatcher, inDrawer())).perform(openContainingDrawer());
@@ -63,12 +64,12 @@ public class DrawerMatchers {
 				return inDrawer();
 			}
 			@Override public String getDescription() {
-				return "open drawer the view is in";
+				return drawerAction.getDescription() + " the view is in";
 			}
 			@Override public void perform(UiController uiController, View view) {
+				Matcher<View> actionConstraints = drawerAction.getConstraints();
+				Matcher<View> isDrawer = isDrawer();
 				for (View drawer : EspressoExtensions.parentViewTraversal(view)) {
-					Matcher<View> actionConstraints = drawerAction.getConstraints();
-					Matcher<View> isDrawer = isDrawer();
 					if (isDrawer.matches(drawer)) {
 						if (actionConstraints.matches(drawer)) {
 							drawerAction.perform(uiController, drawer);
@@ -77,7 +78,7 @@ public class DrawerMatchers {
 						throw new IllegalArgumentException(HumanReadables.describe(drawer)
 								+ " matches " + isDrawer
 								+ ", but doesn't match " + actionConstraints
-								+ " from " + drawerAction
+								+ " from " + drawerAction.getDescription()
 						);
 					}
 				}

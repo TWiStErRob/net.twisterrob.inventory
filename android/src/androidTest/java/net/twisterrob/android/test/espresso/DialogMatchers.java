@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.*;
 
 import android.support.annotation.IdRes;
 import android.support.test.espresso.*;
-import android.support.test.espresso.Root.Builder;
 import android.support.test.espresso.util.*;
 import android.view.*;
 
@@ -26,7 +25,7 @@ public class DialogMatchers {
 			@Override protected boolean matchesSafely(View view) {
 				boolean isRoot = isRoot().matches(view);
 				if (isRoot) {
-					Root root = new Builder()
+					Root root = new Root.Builder()
 							.withDecorView(view)
 							.withWindowLayoutParams((WindowManager.LayoutParams)view.getLayoutParams())
 							.build();
