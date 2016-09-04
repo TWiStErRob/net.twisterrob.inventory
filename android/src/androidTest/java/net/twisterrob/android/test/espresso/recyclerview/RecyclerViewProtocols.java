@@ -82,6 +82,7 @@ public final class RecyclerViewProtocols {
 			}
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public Iterable<AdaptedData> getDataInAdapterView(RecyclerView adapterView) {
 			List<AdaptedData> datas = Lists.newArrayList();
