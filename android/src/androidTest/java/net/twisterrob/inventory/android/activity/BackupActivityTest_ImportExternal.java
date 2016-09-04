@@ -17,8 +17,6 @@ import android.net.Uri;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
@@ -32,7 +30,6 @@ import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
-import static net.twisterrob.inventory.android.activity.BackupActivityTest.*;
 
 @RunWith(AndroidJUnit4.class)
 public class BackupActivityTest_ImportExternal {
@@ -41,7 +38,7 @@ public class BackupActivityTest_ImportExternal {
 	@Rule public final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
 
 	@Before public void assertBackupActivityIsClean() {
-		assertEmptyState();
+		BackupActivityTest.assertEmptyState();
 	}
 
 	@Test public void testImportCalled() throws Exception {
@@ -51,9 +48,7 @@ public class BackupActivityTest_ImportExternal {
 		IOTools.copyStream(activity.getActivity().getAssets().open("demo.xml"), zip);
 		Intent mockIntent = new Intent().setData(Uri.fromFile(inventory));
 		intending(not(isInternal())).respondWith(new ActivityResult(Activity.RESULT_OK, mockIntent));
-		openActionBarOverflowOrOptionsMenu(getTargetContext());
-		// FIXME lookup by id with custom matcher: MenuView.ItemView.getItemData().getId()
-		onView(withText(R.string.backup_import_external)).perform(click());
+		onActionMenuView(withText(R.string.backup_import_external)).perform(click());
 		intended(chooser(allOf(
 				hasAction(Intent.ACTION_GET_CONTENT),
 				hasCategories(Collections.singleton(Intent.CATEGORY_OPENABLE)),

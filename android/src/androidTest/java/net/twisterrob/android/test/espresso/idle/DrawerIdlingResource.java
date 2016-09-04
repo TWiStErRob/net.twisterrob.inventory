@@ -1,15 +1,20 @@
 package net.twisterrob.android.test.espresso.idle;
 
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
+
 import org.hamcrest.Matcher;
+import org.slf4j.*;
 
 import android.app.Activity;
 import android.support.annotation.*;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.lifecycle.Stage;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
-import android.view.View;
+import android.support.v4.widget.DrawerLayout.*;
+import android.view.*;
 
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
@@ -17,15 +22,29 @@ import static android.support.test.espresso.util.TreeIterables.*;
 
 import net.twisterrob.android.annotation.GravityFlag;
 import net.twisterrob.android.test.automators.ActivityCollector;
-import net.twisterrob.android.test.junit.IdlingResourceRule;
+import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.log.LoggingDrawerListener;
 import net.twisterrob.android.view.ViewProvider;
+import net.twisterrob.java.annotations.DebugHelper;
 
 import static net.twisterrob.android.test.espresso.DrawerMatchers.*;
 
 public class DrawerIdlingResource extends AsyncIdlingResource {
+	private static final Logger LOG = LoggerFactory.getLogger(DrawerIdlingResource.class);
+
 	private final int drawerGravity;
 	private final ViewProvider drawerProvider;
+	private static final Field openState = reflectOnOpenState();
+	private static Field reflectOnOpenState() {
+		try {
+			Field result = LayoutParams.class.getDeclaredField("openState");
+			result.setAccessible(true);
+			return result;
+		} catch (NoSuchFieldException ex) {
+			throw new IllegalStateException("This version of design library doesn't support querying state.", ex);
+		}
+	}
+
 	public DrawerIdlingResource(@NonNull ViewProvider drawerProvider, int drawerGravity) {
 		this.drawerProvider = drawerProvider;
 		this.drawerGravity = drawerGravity;
@@ -33,14 +52,32 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 	@Override public String getName() {
 		return GravityFlag.Converter.toString(drawerGravity) + " drawer";
 	}
-	private LoggingDrawerListener logger = new LoggingDrawerListener();
+	///** Debug helper to log all events happening with a DrawerLayout as soon as we know about it. */
+	//private final IdleLogger logger = new IdleLogger();
 	@Override protected boolean isIdle() {
-		DrawerLayout drawer = (DrawerLayout)drawerProvider.getView();
-		if (drawer != null) {
-			drawer.removeDrawerListener(logger);
-			drawer.addDrawerListener(logger);
+		DrawerLayout drawerLayout = (DrawerLayout)drawerProvider.getView();
+		//logger.onNewDrawer(drawerLayout);
+		if (drawerLayout == null) {
+			return true;
 		}
-		return drawer == null || !drawer.isDrawerVisible(drawerGravity) || drawer.isDrawerOpen(drawerGravity);
+		// drawerLayout.isDrawerVisible(drawerGravity) && !drawerLayout.isDrawerOpen(drawerGravity) is not enough
+		// right after openDrawer() call nothing is visible and drawer is not open
+		for (int i = 0; i < drawerLayout.getChildCount(); ++i) {
+			View child = drawerLayout.getChildAt(i);
+			DrawerLayout.LayoutParams params = (LayoutParams)child.getLayoutParams();
+			if (params.gravity == Gravity.NO_GRAVITY) {
+				continue;
+			}
+			try {
+				int state = (Integer)openState.get(params);
+				if (state > 1) { // 0 = closed, 1 = opened
+					return false; // state flag contains opening or closing
+				}
+			} catch (IllegalAccessException e) {
+				throw new IllegalStateException(e);
+			}
+		}
+		return true;
 	}
 	@Override protected void waitForIdleAsync() {
 		final DrawerLayout drawer = (DrawerLayout)drawerProvider.getView();
@@ -72,6 +109,7 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 
 	@VisibleForTesting static class TopDrawer implements ViewProvider {
 		private final ActivityCollector activities = new ActivityCollector(getInstrumentation());
+		private WeakReference<Activity> lastActivityRef = new WeakReference<>(null);
 
 		public TopDrawer() {
 			activities.start();
@@ -80,14 +118,24 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 		@Override public View getView() {
 			Activity currentActivity = activities.getLatestResumed();
 			if (currentActivity == null) {
+				LOG.warn("No resumed activity in {}", activities);
 				return null;
 			}
+			Activity lastActivity = lastActivityRef.get();
+			lastActivityRef = new WeakReference<>(currentActivity);
+
 			Matcher<View> isDrawer = isDrawerLayout();
 			View rootView = currentActivity.getWindow().getDecorView();
 			for (View view : breadthFirstViewTraversal(rootView)) {
 				if (isDrawer.matches(view)) {
 					return view;
 				}
+			}
+			if (lastActivity != currentActivity) {
+				LOG.warn("No DrawerLayout found in {}", currentActivity, new NoMatchingViewException.Builder()
+						.withRootView(rootView)
+						.withViewMatcher(isDrawer)
+						.build());
 			}
 			return null;
 		}
@@ -107,7 +155,8 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 
 		@Override public View getView() {
 			Activity currentActivity = activity.getActivity();
-			if (currentActivity == null) {
+			if (currentActivity == null
+					|| InstrumentationExtensions.getActivityStage(currentActivity) != Stage.RESUMED) {
 				return null;
 			}
 			Matcher<View> isDrawer = isDrawerLayout();
@@ -132,7 +181,8 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 
 		@Override public View getView() {
 			Activity currentActivity = activity.getActivity();
-			if (currentActivity == null) {
+			if (currentActivity == null
+					|| InstrumentationExtensions.getActivityStage(currentActivity) != Stage.RESUMED) {
 				return null;
 			}
 			View view = currentActivity.findViewById(drawerId);
@@ -146,6 +196,22 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 						.build();
 			}
 			return view;
+		}
+	}
+
+	@DebugHelper
+	@VisibleForTesting static class IdleLogger extends LoggingDrawerListener {
+		private WeakReference<DrawerLayout> lastDrawerLayout = new WeakReference<>(null);
+		public void onNewDrawer(DrawerLayout newDrawer) {
+			DrawerLayout lastDrawer = lastDrawerLayout.get();
+			if (lastDrawer != newDrawer) {
+				if (lastDrawer != null) {
+					lastDrawer.removeDrawerListener(this);
+				} else {
+					lastDrawerLayout = new WeakReference<>(newDrawer);
+					newDrawer.addDrawerListener(this);
+				}
+			}
 		}
 	}
 }

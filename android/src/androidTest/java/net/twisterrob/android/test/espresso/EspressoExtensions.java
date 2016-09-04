@@ -2,7 +2,7 @@ package net.twisterrob.android.test.espresso;
 
 import java.util.Iterator;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.*;
 
 import org.hamcrest.*;
 import org.slf4j.*;
@@ -26,13 +26,62 @@ import android.widget.*;
 
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
+import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
+import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
+import net.twisterrob.java.annotations.DebugHelper;
+
+import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 
 public class EspressoExtensions {
 	private static final Logger LOG = LoggerFactory.getLogger(EspressoExtensions.class);
+
+	public static ViewAction loopMainThreadUntilIdle() {
+		return new ViewAction() {
+			@Override public Matcher<View> getConstraints() {
+				return any(View.class);
+			}
+			@Override public String getDescription() {
+				return "loop main thread until idle";
+			}
+			@Override public void perform(UiController uiController, View view) {
+				uiController.loopMainThreadUntilIdle();
+			}
+		};
+	}
+	public static ViewAction loopMainThreadForAtLeast(final long time) {
+		return new ViewAction() {
+			@Override public Matcher<View> getConstraints() {
+				return any(View.class);
+			}
+			@Override public String getDescription() {
+				return "loop main thread for at least " + time + " milliseconds";
+			}
+			@Override public void perform(UiController uiController, View view) {
+				uiController.loopMainThreadForAtLeast(time);
+			}
+		};
+	}
+
+	@DebugHelper
+	public static UiController getUIController() {
+		final AtomicReference<UiController> controller = new AtomicReference<>();
+		onView(isRoot()).perform(new ViewAction() {
+			@Override public Matcher<View> getConstraints() {
+				return any(View.class);
+			}
+			@Override public String getDescription() {
+				return "steal UI controller";
+			}
+			@Override public void perform(UiController uiController, View view) {
+				controller.set(uiController);
+			}
+		});
+		return controller.get();
+	}
 
 	/**
 	 * Lazy version of an idling resource that waits for a view to become available.
@@ -91,6 +140,7 @@ public class EspressoExtensions {
 	}
 	/**
 	 * Perform action of waiting for a specific view id.
+	 * @param TODO default with espresso/instrumentation configured timeout
 	 * @see <a href="http://stackoverflow.com/a/22563297/253468">Espresso: Thread.sleep( );</a>
 	 */
 	@Beta
@@ -105,17 +155,21 @@ public class EspressoExtensions {
 			}
 
 			@Override public void perform(final UiController uiController, final View view) {
+				LOG.trace("waiting for {} to match {}", HumanReadables.describe(view), viewMatcher);
 				uiController.loopMainThreadUntilIdle();
 				final long startTime = System.currentTimeMillis();
 				final long endTime = startTime + timeout;
-
-				long step = Math.max(1, Math.min(50, timeout / 10)); // 10th of input between 1..50ms 
+				final long step = Math.max(1, Math.min(50, timeout / 10)); // 10th of input between 1..50ms
+				LOG.trace("From {} to {} by {}", startTime, endTime, step);
 				do {
+					LOG.trace("Checking all children of {}", HumanReadables.describe(view));
 					for (View child : TreeIterables.breadthFirstViewTraversal(view)) {
 						if (viewMatcher.matches(child)) {
+							LOG.trace("Found child: {}", HumanReadables.describe(child));
 							return;
 						}
 					}
+					LOG.trace("Stepping {}", step);
 					uiController.loopMainThreadForAtLeast(step);
 				} while (System.currentTimeMillis() < endTime);
 
@@ -142,9 +196,37 @@ public class EspressoExtensions {
 	public static Matcher<Intent> chooser(Matcher<Intent> matcher) {
 		return allOf(hasAction(Intent.ACTION_CHOOSER), hasExtra(is(Intent.EXTRA_INTENT), matcher));
 	}
+
+	// FIXME allow lookup by id with custom matcher: MenuView.ItemView.getItemData().getId()
+	public static ViewInteraction onActionMenuView(Matcher<View> matcher) {
+		// to prevent overflow button click from oversleeping and clicking the first item in the popup via a longClick
+		// the Touch & Hold Delay (aka longClick()) has to be set to at least Medium for this to be less flaky.
+		// On Nexus 5 SDK emulator Short is 30%, Medium is 20%, Long is 5% flaky.
+
+		// An extra loop until idle helps to make them less flaky by itself, even though each perform does that anyway.
+		onView(isRoot()).perform(loopMainThreadUntilIdle());
+		openActionBarOverflowOrOptionsMenu(getTargetContext());
+		// wait for a platform popup to become available as root, this is the action bar overflow menu popup
+		for (final AtomicBoolean failed = new AtomicBoolean(false); failed.get(); failed.set(false)) {
+			onView(isRoot())
+					.inRoot(isPlatformPopup())
+					.check(matches(anything()))
+					.withFailureHandler(new FailureHandler() {
+						@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
+							LOG.trace("FailureHandler({}, {})", error, viewMatcher);
+							if (error instanceof NoMatchingViewException) {
+								failed.set(true);
+							}
+						}
+					});
+		}
+		// double-check the root is available
+		onView(isRoot()).inRoot(isPlatformPopup()).check(matches(isDisplayed()));
+		// check that the current default root is the popup
+		onView(isRoot()).check(matches(root(isPlatformPopup())));
+		return onView(matcher);//.inRoot(isPlatformPopup()); // not needed as the popup is topmost & focused
+	}
 	public static ViewInteraction onActionBarDescendant(Matcher<View> viewMatcher) {
-		// need to wait, otherwise android.support.v4.widget.DrawerLayout.SimpleDrawerListener.onDrawerClosed may not finish
-//		getInstrumentation().waitForIdleSync();
 		return onView(allOf(viewMatcher, inActionBar()));
 	}
 	public static Matcher<View> inActionBar() {

@@ -28,7 +28,6 @@ import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
-import static net.twisterrob.inventory.android.activity.BackupActivityTest.*;
 import static net.twisterrob.java.utils.CollectionTools.*;
 
 @RunWith(AndroidJUnit4.class)
@@ -43,7 +42,7 @@ public class BackupActivityTest_ExportInternal {
 			.around(files);
 
 	@Before public void assertBackupActivityIsClean() {
-		assertEmptyState();
+		BackupActivityTest.assertEmptyState();
 	}
 
 	@Test public void testBackupCompletes() throws Exception {

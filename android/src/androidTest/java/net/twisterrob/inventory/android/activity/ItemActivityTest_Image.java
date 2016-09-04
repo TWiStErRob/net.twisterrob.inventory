@@ -79,8 +79,7 @@ public class ItemActivityTest_Image {
 		assertThat(db, hasInvItem(TEST_ITEM_NAME));
 		assertThat(db, countImages(is(1L)));
 
-		openActionBarOverflowOrOptionsMenu(getTargetContext());
-		onView(withText(R.string.item_delete)).perform(click());
+		onActionMenuView(withText(R.string.item_delete)).perform(click());
 		clickPositiveInDialog();
 
 		assertThat(db, not(hasInvItem(TEST_ITEM_NAME)));

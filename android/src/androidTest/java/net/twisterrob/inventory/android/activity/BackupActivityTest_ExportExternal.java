@@ -32,9 +32,9 @@ import static net.twisterrob.android.test.automators.AndroidAutomator.*;
 import static net.twisterrob.android.test.automators.GoogleDriveAutomator.*;
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
+import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
-import static net.twisterrob.inventory.android.activity.BackupActivityTest.*;
 
 @RunWith(AndroidJUnit4.class)
 public class BackupActivityTest_ExportExternal {
@@ -44,17 +44,12 @@ public class BackupActivityTest_ExportExternal {
 	@Rule public final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
 	@Rule public final TestName name = new TestName();
 
-	@Before public void cleanStartExportExternal() {
-		assertEmptyState();
-		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-		onView(withText(R.string.backup_export_external)).perform(click());
-	}
-
-	@After public void cleanState() {
-		assertEmptyState();
+	@Before public void assertBackupActivityIsClean() {
+		BackupActivityTest.assertEmptyState();
 	}
 
 	@Test public void testCancelWarning() throws Exception {
+		onActionMenuView(withText(R.string.backup_export_external)).perform(click());
 		onView(withId(R.id.alertTitle))
 				.inRoot(isDialog())
 				.check(matches(allOf(isDisplayed(), withText(R.string.backup_export_external))));
@@ -64,6 +59,7 @@ public class BackupActivityTest_ExportExternal {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Test public void testCancelChooser() throws Exception {
+		onActionMenuView(withText(R.string.backup_export_external)).perform(click());
 		clickPositiveInDialog();
 
 		assertThat(getChooserTitle(), isString(R.string.backup_export_external));
@@ -73,6 +69,7 @@ public class BackupActivityTest_ExportExternal {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Test public void testCancelDrive() throws Exception {
 		assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
+		onActionMenuView(withText(R.string.backup_export_external)).perform(click());
 
 		clickPositiveInDialog();
 		clickOnLabel(saveToDrive());
@@ -84,6 +81,7 @@ public class BackupActivityTest_ExportExternal {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Test public void testSuccessfulFullExport() throws Exception {
 		assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
+		onActionMenuView(withText(R.string.backup_export_external)).perform(click());
 
 		clickPositiveInDialog();
 
