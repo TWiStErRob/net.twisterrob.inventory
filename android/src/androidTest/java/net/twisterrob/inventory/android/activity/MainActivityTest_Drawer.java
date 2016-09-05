@@ -24,7 +24,7 @@ import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
 public class MainActivityTest_Drawer {
 	@Rule public final ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class);
-	@Rule public final IdlingResourceRule drawer = DrawerIdlingResource.rule(activity);
+	@Rule public final IdlingResourceRule drawer = DrawerIdlingResource.rule();
 
 	@Before public void startup() {
 		clickNegativeInDialog();

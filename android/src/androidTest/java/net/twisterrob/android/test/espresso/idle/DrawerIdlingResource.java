@@ -93,20 +93,37 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 		}
 	}
 
+	/**
+	 * Create a rule that will watch for any drawers in the topmost resumed activity
+	 * and prevent the test from continuing until it's settled in place (open or closed).
+	 */
 	public static IdlingResourceRule rule() {
 		return rule(new TopDrawer(), GravityCompat.START);
 	}
+	/**
+	 * <p><i>Note: this is not viable if the test rotates the activity
+	 * or for any other reason the activity may be re-created during test.</i></p>
+	 */
 	public static IdlingResourceRule rule(ActivityTestRule<?> activity) {
 		return rule(new ActivityRuleDrawer(activity), GravityCompat.START);
 	}
+	/**
+	 * <p><i>Note: this is not viable if the test rotates the activity
+	 * or for any other reason the activity may be re-created during test.</i></p>
+	 */
 	public static IdlingResourceRule rule(ActivityTestRule<?> activity, @IdRes int drawerId) {
 		return rule(new ActivityRuleDrawerById(activity, drawerId), GravityCompat.START);
 	}
+	/**
+	 * @see TopDrawer
+	 * @see ActivityRuleDrawer
+	 * @see ActivityRuleDrawerById
+	 */
 	public static IdlingResourceRule rule(ViewProvider drawerProvider, @GravityFlag int gravity) {
 		return new IdlingResourceRule(new DrawerIdlingResource(drawerProvider, gravity));
 	}
 
-	@VisibleForTesting static class TopDrawer implements ViewProvider {
+	public static class TopDrawer implements ViewProvider {
 		private WeakReference<Activity> lastActivityRef = new WeakReference<>(null);
 
 		@Override public View getView() {
@@ -135,7 +152,7 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 		}
 	}
 
-	@VisibleForTesting static class ActivityRuleDrawer implements ViewProvider {
+	public static class ActivityRuleDrawer implements ViewProvider {
 		private final ActivityTestRule<?> activity;
 
 		public ActivityRuleDrawer(ActivityTestRule<?> activity) {
@@ -159,7 +176,7 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 		}
 	}
 
-	@VisibleForTesting static class ActivityRuleDrawerById implements ViewProvider {
+	public static class ActivityRuleDrawerById implements ViewProvider {
 		private final ActivityTestRule<?> activity;
 		private final int drawerId;
 
