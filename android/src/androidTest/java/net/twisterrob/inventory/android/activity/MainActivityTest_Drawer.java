@@ -18,7 +18,6 @@ import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
-import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.DrawerMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
@@ -27,7 +26,6 @@ public class MainActivityTest_Drawer {
 	@Rule public final IdlingResourceRule drawer = DrawerIdlingResource.rule();
 
 	@Before public void startup() {
-		clickNegativeInDialog();
 		assertHomeOpened();
 	}
 	@Test(expected = NoActivityResumedException.class)

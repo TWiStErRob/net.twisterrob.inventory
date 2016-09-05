@@ -6,6 +6,7 @@ import org.junit.runners.model.Statement;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.CallSuper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
@@ -41,6 +42,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		return base;
 	}
 
+	@CallSuper
 	@Override protected void beforeActivityLaunched() {
 		systemAnimations.backup();
 		systemAnimations.disableAll();
@@ -49,12 +51,14 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		super.beforeActivityLaunched();
 	}
 
+	@CallSuper
 	@Override protected void afterActivityLaunched() {
 		Log.d(TAG, "Activity launched at the beginning of test.");
 		super.afterActivityLaunched();
 		Intents.init();
 	}
 
+	@CallSuper
 	@Override protected void afterActivityFinished() {
 		super.afterActivityFinished();
 		Intents.release();

@@ -20,7 +20,6 @@ import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
-import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
 @RunWith(AndroidJUnit4.class)
@@ -28,15 +27,14 @@ public class ImageLoadingTest {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageLoadingTest.class);
 	@Rule public final ActivityTestRule<MainActivity> activity
 			= new InventoryActivityRule<MainActivity>(MainActivity.class) {
-		@Override protected void beforeActivityLaunched() {
-			super.beforeActivityLaunched();
+		@Override protected void setDefaults() {
+			super.setDefaults();
 			Database.resetToTest();
 		}
 	};
 	@Rule public final TestRule glide = new IdlingResourceRule(new GlideIdlingResource());
 
 	@Test public void test() {
-		clickNegativeInDialog();
 		onRecyclerItem(withText("!All Categories")).inAdapterView(withId(R.id.rooms)).perform(click());
 		getInstrumentation().waitForIdleSync();
 		onView(withId(android.R.id.list)).perform(scrollToLast());

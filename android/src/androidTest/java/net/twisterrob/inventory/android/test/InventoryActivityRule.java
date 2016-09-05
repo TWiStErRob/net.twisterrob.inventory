@@ -7,13 +7,14 @@ import org.slf4j.*;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.CallSuper;
 import android.support.test.InstrumentationRegistry;
 
 import com.bumptech.glide.Glide;
 
 import net.twisterrob.android.test.junit.SensibleActivityTestRule;
 import net.twisterrob.android.utils.tools.IOTools;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 
 import static net.twisterrob.android.app.BaseApp.*;
@@ -31,8 +32,15 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		super(activityClass, initialTouchMode, launchActivity);
 	}
 
+	private boolean clearWelcomeFlag = true;
+	public InventoryActivityRule<T> dontClearWelcomeFlag() {
+		this.clearWelcomeFlag = false;
+		return this;
+	}
+
 	@Override protected void beforeActivityLaunched() {
 		reset();
+		setDefaults();
 		super.beforeActivityLaunched();
 	}
 
@@ -41,11 +49,18 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		reset();
 	}
 
-	public void reset() {
+	public final void reset() {
 		resetGlide();
 		resetDB();
 		resetPreferences();
 		resetFiles();
+	}
+
+	@CallSuper
+	protected void setDefaults() {
+		if (clearWelcomeFlag) {
+			prefs().edit().putBoolean(R.string.pref_showWelcome, false).apply();
+		}
 	}
 
 	protected void resetFiles() {

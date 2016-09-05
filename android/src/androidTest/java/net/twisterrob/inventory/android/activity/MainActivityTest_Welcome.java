@@ -30,7 +30,8 @@ public class MainActivityTest_Welcome {
 	private static final ViewAssertion EMPTY =
 			matches(allOf(isDisplayed(), not(hasDescendant(notNullValue(View.class)))));
 
-	@Rule public ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class);
+	@Rule public ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class)
+			.dontClearWelcomeFlag();
 
 	@Test public void testWelcomeDontPopulateDemo() {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));

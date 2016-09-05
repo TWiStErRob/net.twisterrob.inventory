@@ -41,8 +41,8 @@ public class ItemActivityTest_Image {
 
 	@Rule public final ActivityTestRule<MainActivity> activity
 			= new InventoryActivityRule<MainActivity>(MainActivity.class) {
-		@Override protected void beforeActivityLaunched() {
-			super.beforeActivityLaunched();
+		@Override protected void setDefaults() {
+			super.setDefaults();
 			long propertyID = App.db().createProperty(PropertyType.DEFAULT, "Test Property", null);
 			long roomID = App.db().createRoom(propertyID, RoomType.DEFAULT, "Test Room", null);
 		}
@@ -50,7 +50,6 @@ public class ItemActivityTest_Image {
 	private final Database db = new Database(getTargetContext(), getContext().getResources());
 
 	@Before public void goToRoom() {
-		clickNegativeInDialog();
 		onRecyclerItem(withText("Test Room"))
 				.inAdapterView(withId(R.id.rooms))
 				.onChildView(withId(R.id.details))
