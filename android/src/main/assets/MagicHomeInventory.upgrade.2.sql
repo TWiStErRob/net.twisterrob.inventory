@@ -2,7 +2,6 @@ DROP TRIGGER IF EXISTS Search_refresh;
 CREATE TRIGGER Search_refresh
 INSTEAD OF INSERT ON Search_Refresher
 BEGIN
-	--insert into Log(message) values ('Search_refresh on (' || new._id || ')');--NOTEOS
 	delete from Search
 	where rowid = new._id; --NOTEOS
 	insert into Search (rowid, name, location)

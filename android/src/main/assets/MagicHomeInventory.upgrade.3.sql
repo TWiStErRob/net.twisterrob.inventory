@@ -36,3 +36,15 @@ BEGIN
 	delete from Image where _id = old.image;--NOTEOS
 	insert into Item_Path_Node_Refresher(_id) values (old._id);--NOTEOS
 END;
+
+-- Clean up unused images
+-- These should have been deleted when their belongings were deleted.
+delete from Image
+where _id IN (
+	select im._id
+	from Image im
+		left join Property p on p.image = im._id
+		left join Room r on r.image = im._id
+		left join Item i on i.image = im._id
+	where p._id IS NULL and r._id IS NULL and i._id IS NULL
+);
