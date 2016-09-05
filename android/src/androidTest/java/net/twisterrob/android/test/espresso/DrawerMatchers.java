@@ -18,31 +18,48 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static android.support.v4.view.GravityCompat.*;
 
 import net.twisterrob.android.annotation.GravityFlag;
+import net.twisterrob.android.test.junit.InstrumentationExtensions;
 
 /**
  * {@code onView(isDrawerLayout()).check(matches(isClosed(gravity))).perform(open(gravity));}
  */
 public class DrawerMatchers {
+	/** Overridable with {@code -e animateDrawers true} passed to instrumentation. */
+	private static final boolean DEFAULT_DRAWER_ANIMATE =
+			InstrumentationExtensions.getBooleanArgument("animateDrawers", false);
+
 	public static ViewInteraction onDrawerDescendant(Matcher<View> viewMatcher) {
-		return onView(allOf(viewMatcher, inDrawer())).perform(openContainingDrawer());
+		return onDrawerDescendant(viewMatcher, DEFAULT_DRAWER_ANIMATE);
+	}
+	public static ViewInteraction onDrawerDescendant(Matcher<View> viewMatcher, boolean animate) {
+		return onView(allOf(viewMatcher, inDrawer())).perform(openContainingDrawer(animate));
 	}
 	public static ViewAction openContainingDrawer() {
-		return onContainingDrawer(openDrawer());
+		return openContainingDrawer(DEFAULT_DRAWER_ANIMATE);
+	}
+	public static ViewAction openContainingDrawer(boolean animate) {
+		return onContainingDrawer(openDrawer(animate));
 	}
 	public static ViewAction closeContainingDrawer() {
-		return onContainingDrawer(closeDrawer());
+		return closeContainingDrawer(DEFAULT_DRAWER_ANIMATE);
+	}
+	public static ViewAction closeContainingDrawer(boolean animate) {
+		return onContainingDrawer(closeDrawer(animate));
 	}
 	public static ViewAction openDrawer() {
+		return openDrawer(DEFAULT_DRAWER_ANIMATE);
+	}
+	public static ViewAction openDrawer(final boolean animate) {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
 				return anyOf(isOpenableDrawer(Gravity.START), isOpenableDrawer(Gravity.END));
 			}
 			@Override public String getDescription() {
-				return "open the drawer";
+				return "open the drawer" + (animate? " (animated)" : "");
 			}
 			@Override public void perform(UiController uiController, View drawer) {
 				DrawerLayout layout = (DrawerLayout)drawer.getParent();
-				layout.openDrawer(drawer);
+				layout.openDrawer(drawer, animate);
 			}
 			private Matcher<View> isOpenableDrawer(@GravityFlag int gravity) {
 				return allOf(isDrawer(gravity), withParent(allOf(
@@ -51,16 +68,19 @@ public class DrawerMatchers {
 		};
 	}
 	public static ViewAction closeDrawer() {
+		return closeDrawer(DEFAULT_DRAWER_ANIMATE);
+	}
+	public static ViewAction closeDrawer(final boolean animate) {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
 				return anyOf(isCloseableDrawer(START), isCloseableDrawer(END));
 			}
 			@Override public String getDescription() {
-				return "close the drawer";
+				return "close the drawer" + (animate? " (animated)" : "");
 			}
 			@Override public void perform(UiController uiController, View drawer) {
 				DrawerLayout layout = (DrawerLayout)drawer.getParent();
-				layout.closeDrawer(drawer);
+				layout.closeDrawer(drawer, animate);
 			}
 			private Matcher<View> isCloseableDrawer(@GravityFlag int gravity) {
 				return allOf(isDrawer(gravity), withParent(allOf(

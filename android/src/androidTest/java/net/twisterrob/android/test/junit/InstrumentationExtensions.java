@@ -11,6 +11,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.lifecycle.*;
 
+import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.core.deps.guava.base.Throwables.*;
 import static android.support.test.espresso.core.deps.guava.collect.Iterables.*;
 
@@ -86,5 +87,10 @@ public class InstrumentationExtensions {
 			}
 		});
 		return ref.get();
+	}
+
+	public static boolean getBooleanArgument(String key, boolean defaultValue) {
+		String value = getArguments().getString(key);
+		return value != null? Boolean.parseBoolean(value) : defaultValue;
 	}
 }
