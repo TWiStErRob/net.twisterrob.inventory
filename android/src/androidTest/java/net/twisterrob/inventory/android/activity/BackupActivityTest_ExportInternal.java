@@ -58,7 +58,7 @@ public class BackupActivityTest_ExportInternal {
 	@Test public void testBackupDialogStaysWhenRotated() throws Exception {
 		clickExport();
 
-		rotateDevice(activity);
+		onView(isRoot()).perform(rotateActivity());
 
 		assertDialogIsDisplayed();
 	}
@@ -67,7 +67,7 @@ public class BackupActivityTest_ExportInternal {
 		clickExport();
 		clickNeutralInDialog();
 
-		rotateDevice(activity);
+		onView(isRoot()).perform(rotateActivity());
 
 		assertNoDialogIsDisplayed();
 	}
@@ -76,7 +76,7 @@ public class BackupActivityTest_ExportInternal {
 		clickExport();
 		clickNeutralInDialog();
 
-		rotateDevice(activity);
+		onView(isRoot()).perform(rotateActivity());
 
 		onView(withId(R.id.progress)).check(matches(not(isDisplayed())));
 	}

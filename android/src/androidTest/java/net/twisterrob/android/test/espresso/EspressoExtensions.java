@@ -9,7 +9,8 @@ import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
 
-import android.content.Intent;
+import android.app.Activity;
+import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.res.*;
 import android.support.test.annotation.Beta;
@@ -18,7 +19,7 @@ import android.support.test.espresso.NoMatchingViewException.Builder;
 import android.support.test.espresso.core.deps.guava.collect.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.util.*;
-import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.lifecycle.Stage;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -32,6 +33,7 @@ import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
+import net.twisterrob.android.test.junit.InstrumentationExtensions;
 import net.twisterrob.java.annotations.DebugHelper;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
@@ -193,16 +195,46 @@ public class EspressoExtensions {
 		};
 	}
 
-	public static void rotateDevice(ActivityTestRule<?> activity) {
-		int orientation = activity.getActivity().getResources().getConfiguration().orientation;
-		int request;
-		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-			request = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-		} else {
-			request = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-		}
-		activity.getActivity().setRequestedOrientation(request);
-		onView(isRoot()).perform(loopMainThreadUntilIdle());
+	public static ViewAction rotateActivity() {
+		return new ViewAction() {
+			@Override public Matcher<View> getConstraints() {
+				return any(View.class);
+			}
+			@Override public String getDescription() {
+				return "rotate activity to opposite orientation";
+			}
+			@Override public void perform(UiController uiController, View view) {
+				Activity activity = findActivity(view.getContext());
+				if (activity == null) {
+					LOG.warn("No activity from {}, using topmost resumed activity.", HumanReadables.describe(view));
+					activity = InstrumentationExtensions.tryGetActivityInStage(Stage.RESUMED);
+				}
+				if (activity == null) {
+					throw new IllegalStateException("No activity can be found from " + HumanReadables.describe(view));
+				}
+				//noinspection WrongConstant it's the right one
+				activity.setRequestedOrientation(getOppositeOrientation(activity));
+			}
+			private int getOppositeOrientation(Activity activity) {
+				int orientation = activity.getResources().getConfiguration().orientation;
+				int request;
+				if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+					request = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+				} else {
+					request = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+				}
+				return request;
+			}
+			private Activity findActivity(Context context) {
+				while (context instanceof ContextWrapper) {
+					if (context instanceof Activity) {
+						return (Activity)context;
+					}
+					context = ((ContextWrapper)context).getBaseContext();
+				}
+				return null;
+			}
+		};
 	}
 
 	public static Matcher<Intent> chooser(Matcher<Intent> matcher) {
