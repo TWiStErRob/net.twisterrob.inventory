@@ -1,5 +1,6 @@
 package net.twisterrob.android.test.junit;
 
+import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
@@ -8,11 +9,14 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
+import android.util.Log;
 
 import net.twisterrob.android.test.*;
 import net.twisterrob.android.test.espresso.ScreenshotFailure;
 
 public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRule<T> {
+	private static final String TAG = "ActivityTestRule";
+
 	private final SystemAnimations systemAnimations;
 	private final DeviceUnlocker unlocker;
 
@@ -30,6 +34,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 	}
 
 	@Override public Statement apply(Statement base, Description description) {
+		base = new TestLogger().apply(base, description);
 		base = super.apply(base, description);
 		//base = new PackageNameShortener().apply(base, description); // TODO make it available
 		base = new ScreenshotFailure().apply(base, description);
@@ -40,10 +45,12 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		systemAnimations.backup();
 		systemAnimations.disableAll();
 		unlocker.wakeUpWithDisabledKeyguard();
+		Log.i("ViewInteraction", "Launching activity at the beginning of test.");
 		super.beforeActivityLaunched();
 	}
 
 	@Override protected void afterActivityLaunched() {
+		Log.d(TAG, "Activity launched at the beginning of test.");
 		super.afterActivityLaunched();
 		Intents.init();
 	}
@@ -52,5 +59,23 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		super.afterActivityFinished();
 		Intents.release();
 		systemAnimations.restore();
+	}
+
+	/**
+	 * This needs to be applied right inside {@link ActivityTestRule.ActivityStatement}
+	 * so the logging happens at the correct time.
+	 */
+	private static class TestLogger implements TestRule {
+		@Override public Statement apply(final Statement base, Description description) {
+			return new Statement() {
+				@Override public void evaluate() throws Throwable {
+					try {
+						base.evaluate();
+					} finally {
+						Log.i(TAG, "Finishing activity at the end of test.");
+					}
+				}
+			};
+		}
 	}
 }
