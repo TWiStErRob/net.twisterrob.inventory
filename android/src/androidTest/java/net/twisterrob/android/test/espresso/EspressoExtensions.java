@@ -10,6 +10,7 @@ import org.slf4j.*;
 import static org.hamcrest.Matchers.*;
 
 import android.app.Activity;
+import android.app.Instrumentation.ActivityResult;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.res.*;
@@ -193,6 +194,10 @@ public class EspressoExtensions {
 						.build();
 			}
 		};
+	}
+
+	public static ActivityResult cancelResult() {
+		return new ActivityResult(Activity.RESULT_CANCELED, null);
 	}
 
 	public static ViewAction rotateActivity() {
