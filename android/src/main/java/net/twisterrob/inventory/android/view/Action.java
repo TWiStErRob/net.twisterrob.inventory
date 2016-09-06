@@ -20,7 +20,7 @@ public interface Action {
 	View getConfirmationView(Context context);
 	/**
 	 * Send all the requested actions the user has confirmed to the database.
-	 * TODO Should be ACID, that is either all operations fail or all succeed.
+	 * FIXME Should be ACID, that is either all operations fail or all succeed.
 	 *
 	 * <i>Called in background.</i>
 	 * @throws RuntimeException If the operation cannot be completed.

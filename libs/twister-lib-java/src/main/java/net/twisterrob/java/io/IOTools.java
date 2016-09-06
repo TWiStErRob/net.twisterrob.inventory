@@ -10,7 +10,6 @@ import javax.annotation.*;
 public /*static*/ abstract class IOTools {
 	// TODO check if UTF-8 is used by cineworld
 	public static final String ENCODING = Charset.forName("UTF-8").name();
-	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	@SuppressWarnings("UnusedReturnValue") // optional convenience value
 	public static long copyFile(final String sourceFileName, final String destinationFileName) throws IOException {

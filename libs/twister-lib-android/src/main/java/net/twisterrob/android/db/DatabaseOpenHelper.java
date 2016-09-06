@@ -3,6 +3,7 @@ package net.twisterrob.android.db;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import org.slf4j.*;
 
@@ -20,6 +21,7 @@ import static android.Manifest.permission.*;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.java.annotations.DebugHelper;
+import net.twisterrob.java.exceptions.StackTrace;
 
 import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 
@@ -142,9 +144,34 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			if (devMode) {
 				backupDB(db, "onUpgrade_" + oldVersion + "-" + newVersion);
 			}
-			LOG.debug("Upgrading database v{} to v{}, step {} to {}: {}",
+
+			LOG.trace("Upgrading database v{} to v{}, step {} to {}: {}",
 					oldVersion, newVersion, version - 1, version, dbToString(db));
-			execFiles(db, getUpgradeFiles(version - 1, version));
+			long time = System.nanoTime();
+
+			onUpgradeStep(db, version - 1, version);
+
+			long end = System.nanoTime();
+			long executionTime = (end - time) / 1000 / 1000;
+			LOG.debug("Upgraded ({} ms) database v{} to v{}, step {} to {}: {}",
+					executionTime, oldVersion, newVersion, version - 1, version, dbToString(db));
+		}
+	}
+	/**
+	 * Executed one-by-one, the difference between {@code oldVersion} and {@code newVersion} will be always {@code 1}.
+	 */
+	protected void onUpgradeStep(SQLiteDatabase db, int oldVersion, int newVersion) {
+		execFiles(db, getUpgradeFiles(oldVersion, newVersion));
+	}
+
+	@Override public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		if (devMode) {
+			for (int version = oldVersion; version > newVersion; --version) {
+				LOG.trace("Downgrading database v{} to v{}, step {} to {}: {}",
+						oldVersion, newVersion, version, version - 1, dbToString(db));
+			}
+		} else {
+			super.onDowngrade(db, oldVersion, newVersion);
 		}
 	}
 
@@ -170,7 +197,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	/** This is the first interaction with the DB whenever it's being opened. */
 	@Override public void onConfigure(SQLiteDatabase db) {
+		LOG.debug("Initializing database: {}", dbToString(db), new StackTrace());
 		if (!db.isReadOnly()) {
 			db.execSQL("PRAGMA foreign_keys=ON;"); // db.setForeignKeyConstraintsEnabled(true);
 		}
@@ -223,14 +252,22 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 	private static void realExecuteFile(SQLiteDatabase db, Reader reader) throws IOException, SQLException {
 		String statement = null;
-		BufferedReader buffered = null;
+		SQLStatementParser parser = null;
 		try {
-			buffered = new BufferedReader(reader);
-			while ((statement = getNextStatement(buffered)) != null) {
-				if (statement.trim().isEmpty()) {
+			parser = new SQLStatementParser(reader);
+			while ((statement = parser.getNextStatement()) != null) {
+				if (statement.isEmpty()) {
 					continue;
 				}
-				db.execSQL(statement);
+				if (parser.isPragma(statement)) {
+					// For some reason some PRAGMAs need this, even when they're setters or function calls.
+					// For example, db.execSQL("PRAGMA secure_delete = FALSE;") throws this:
+					// "Caused by: android.database.sqlite.SQLiteException: unknown error (code 0):
+					// Queries can be performed using SQLiteDatabase query or rawQuery methods only."
+					DatabaseTools.consume(db.rawQuery(statement, NO_ARGS));
+				} else {
+					db.execSQL(statement);
+				}
 			}
 		} catch (SQLException ex) {
 			String message = String.format(Locale.ROOT, "Error while executing\n%s", statement);
@@ -240,27 +277,60 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			decorated.initCause(ex);
 			throw decorated;
 		} finally {
-			IOTools.ignorantClose(reader, buffered);
+			IOTools.ignorantClose(reader, parser);
 		}
 	}
 
-	private static String getNextStatement(BufferedReader reader) throws IOException {
-		StringBuilder sb = new StringBuilder();
-		String line;
-		while ((line = reader.readLine()) != null) {
-			if (line.matches("^\\s*$")) {
-				continue; // empty lines
-			}
-			if (line.matches("^\\s*--.*")) {
-				continue; // comment lines
-			}
-			sb.append(line);
-			sb.append(IOTools.LINE_SEPARATOR);
-			if (line.matches(".*;\\s*(?!--NOTEOS)(--.*)?$")) {
-				return sb.toString(); // ends in a semicolon -> end of statement
-			}
+	private static class SQLStatementParser implements Closeable {
+		private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+		private static final Pattern EMPTY_LINE = Pattern.compile("^\\s*$");
+		private static final Pattern COMMENTED_LINE = Pattern.compile("^\\s*--.*");
+		private static final Pattern END_OF_STATEMENT = Pattern.compile(".*;\\s*(?!--NOTEOS)(--.*)?$");
+		/**
+		 * Matches the usual pragma commands (with or without schemas):
+		 * <ul>
+		 * <li>PRAGMA pragma_name;</li>
+		 * <li>PRAGMA pragma_name = value;</li>
+		 * <li>PRAGMA pragma_name(value);</li>
+		 * </ul>
+		 * Skips parsing the end of the statement, only matches until it's clear that it's read/write/function style.
+		 * The {@code (schema.)?name} part of the regex is reversed to {@code schemaOrName(.surelyName)?},
+		 * because it's more likely that the schema will be missing.
+		 * TODO proper schema support, current one is limited, I guess name can be quoted and stuff,
+		 * but didn't find definition of (schema-name) from the syntax diagram.
+		 */
+		private static final Pattern PRAGMA = Pattern.compile("^\\s*PRAGMA\\s+[a-z_]+(?:\\s*\\.\\s*[a-z_]+)?[\\s=(].*$",
+				Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+
+		private final BufferedReader reader;
+
+		public SQLStatementParser(Reader reader) {
+			this.reader = new BufferedReader(reader);
 		}
-		return null;
+		private String getNextStatement() throws IOException {
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (EMPTY_LINE.matcher(line).matches()) {
+					continue;
+				}
+				if (COMMENTED_LINE.matcher(line).matches()) {
+					continue;
+				}
+				sb.append(line);
+				sb.append(LINE_SEPARATOR);
+				if (END_OF_STATEMENT.matcher(line).matches()) {
+					return sb.toString().trim(); // ends in a semicolon -> end of statement
+				}
+			}
+			return null;
+		}
+		@Override public void close() throws IOException {
+			reader.close();
+		}
+		public boolean isPragma(String statement) {
+			return PRAGMA.matcher(statement).matches();
+		}
 	}
 
 	private void backupDB(SQLiteDatabase db, String when) {

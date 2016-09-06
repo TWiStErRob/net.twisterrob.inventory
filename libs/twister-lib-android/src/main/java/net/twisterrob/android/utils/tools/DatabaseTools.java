@@ -184,6 +184,16 @@ public /*static*/ abstract class DatabaseTools {
 		}
 	}
 
+	public static void consume(Cursor cursor) {
+		try {
+			while (cursor.moveToNext()) {
+				// read to the end
+			}
+		} finally {
+			cursor.close();
+		}
+	}
+
 	public static String dumpCursorToString(Cursor cursor) {
 		StringBuilder cursorDump = new StringBuilder();
 		DatabaseUtils.dumpCursor(cursor, cursorDump);
