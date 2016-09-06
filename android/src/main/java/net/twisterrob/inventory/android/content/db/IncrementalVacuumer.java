@@ -51,17 +51,9 @@ public class IncrementalVacuumer implements Callable<Boolean> {
 		LOG.trace("There are {} pages on freelist occupying {} bytes, freeing {} pages occupying {} bytes.",
 				freelistCount, freelistCount * pageSize, pagesToFree, pagesToFree * pageSize);
 		Cursor vacuum = db.rawQuery("PRAGMA incremental_vacuum(" + pagesToFree + ");", NO_ARGS); // (?) doesn't work
-		//noinspection TryFinallyCanBeTryWithResources
-		try {
-			int count = 0;
-			while (vacuum.moveToNext()) {
-				count++;
-			}
-			LOG.trace("Freed {} out of {} requested pages from {} pages on freelist.",
-					count, pagesToFree, freelistCount);
-		} finally {
-			vacuum.close();
-		}
+		int count = DatabaseTools.consume(vacuum);
+		LOG.trace("Freed {} out of {} requested pages from {} pages on freelist.",
+				count, pagesToFree, freelistCount);
 		return true;
 	}
 }

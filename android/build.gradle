@@ -41,6 +41,7 @@ dependencies {
 	compile "com.android.support:design:${VERSION_SUPPORT}"
 //	compile "com.android.support:cardview-v7:${VERSION_SUPPORT}"
 	compile "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
+	compile 'com.google.android:flexbox:0.2.3'
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows Serializer Java 2.7.1 on Genymotion 2.3.7 and S5 5.0.0

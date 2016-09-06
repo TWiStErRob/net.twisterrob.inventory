@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:card="http://schemas.android.com/apk/res-auto"
+	xmlns:flex="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	tools:context=".activity.space.ManageSpaceActivity"
+	tools:ignore="HardcodedText"
+	>
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		>
+
+		<android.support.v7.widget.CardView
+			tools:id="@+id/storage_imageCache"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/unit"
+			card:contentPadding="@dimen/unit"
+			>
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				>
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					>
+					<TextView
+						style="@style/ManageSpaceTitle"
+						android:text="Image Cache"
+						/>
+					<ImageView style="@style/ManageSpaceDots" />
+					<TextView
+						android:id="@+id/storage_imageCache_size"
+						style="@style/ManageSpaceTitle"
+						tools:text="12MB"
+						/>
+				</LinearLayout>
+				<TextView
+					style="@style/ManageSpaceText"
+					android:text="Some images are resized and saved to the phone so next time it's not necessary to load the whole image and transform it again, this saves battery life when using the app."
+					/>
+				<Button
+					android:id="@+id/storage_imageCache_clear"
+					style="@style/ManageSpaceButton"
+					android:text="Clear Image Cache"
+					/>
+			</LinearLayout>
+		</android.support.v7.widget.CardView>
+
+		<android.support.v7.widget.CardView
+			tools:id="@+id/storage_database"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/unit"
+			card:contentPadding="@dimen/unit"
+			>
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				>
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					>
+					<TextView
+						style="@style/ManageSpaceTitle"
+						android:text="Database"
+						/>
+					<ImageView style="@style/ManageSpaceDots" />
+					<TextView
+						android:id="@+id/storage_db_size"
+						style="@style/ManageSpaceTitle"
+						tools:text="256MB"
+						/>
+				</LinearLayout>
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					>
+					<TextView
+						style="@style/ManageSpaceTitle"
+						android:text="Freelist Size"
+						/>
+					<ImageView style="@style/ManageSpaceDots" />
+					<TextView
+						android:id="@+id/storage_db_freelist_size"
+						style="@style/ManageSpaceTitle"
+						tools:text="50MB"
+						/>
+				</LinearLayout>
+				<TextView
+					style="@style/ManageSpaceText"
+					android:text="The database stores data for all your belongings (properties, rooms, items), including, but not limited to: name, description and image."
+					/>
+				<com.google.android.flexbox.FlexboxLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					flex:flexDirection="row"
+					flex:justifyContent="flex_end"
+					flex:flexWrap="wrap"
+					>
+					<Button
+						android:id="@+id/storage_images_clear"
+						style="@style/ManageSpaceButton"
+						android:text="Remove Images"
+						/>
+					<Button
+						android:id="@+id/storage_db_clear"
+						style="@style/ManageSpaceButton"
+						android:text="Empty Database"
+						/>
+					<Button
+						android:id="@+id/storage_db_test"
+						style="@style/ManageSpaceButton"
+						android:text="Test Data"
+						android:visibility="@integer/visible_in_test"
+						/>
+					<Button
+						android:id="@+id/storage_db_dump"
+						style="@style/ManageSpaceButton"
+						android:text="Save"
+						android:visibility="@integer/visible_in_test"
+						/>
+					<Button
+						android:id="@+id/storage_db_restore"
+						style="@style/ManageSpaceButton"
+						android:text="Restore"
+						android:visibility="@integer/visible_in_test"
+						/>
+					<Button
+						android:id="@+id/storage_db_vacuum"
+						style="@style/ManageSpaceButton"
+						android:text="Vacuum"
+						android:visibility="@integer/visible_in_test"
+						/>
+					<Button
+						android:id="@+id/storage_db_vacuum_incremental"
+						style="@style/ManageSpaceButton"
+						android:text="Incremental Vacuum"
+						android:visibility="@integer/visible_in_test"
+						/>
+				</com.google.android.flexbox.FlexboxLayout>
+			</LinearLayout>
+		</android.support.v7.widget.CardView>
+
+		<android.support.v7.widget.CardView
+			android:id="@+id/storage_all"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/unit"
+			card:contentPadding="@dimen/unit"
+			>
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				>
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					>
+					<TextView
+						style="@style/ManageSpaceTitle"
+						android:text="All Data"
+						/>
+					<ImageView style="@style/ManageSpaceDots" />
+					<TextView
+						android:id="@+id/storage_all_size"
+						style="@style/ManageSpaceTitle"
+						tools:text="340MB"
+						/>
+				</LinearLayout>
+				<TextView
+					style="@style/ManageSpaceText"
+					android:text="All of the above and some more, like your preferences."
+					/>
+				<com.google.android.flexbox.FlexboxLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					flex:flexDirection="row"
+					flex:justifyContent="flex_end"
+					flex:flexWrap="wrap"
+					>
+					<Button
+						android:id="@+id/storage_all_dump"
+						style="@style/ManageSpaceButton"
+						android:text="Dump Data"
+						android:visibility="@integer/visible_in_test"
+						/>
+					<Button
+						android:id="@+id/storage_all_clear"
+						style="@style/ManageSpaceButton"
+						android:text="Clear Data"
+						/>
+				</com.google.android.flexbox.FlexboxLayout>
+			</LinearLayout>
+		</android.support.v7.widget.CardView>
+
+		<android.support.v7.widget.CardView
+			tools:id="@+id/storage_search"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/unit"
+			android:visibility="@integer/visible_in_test"
+			card:contentPadding="@dimen/unit"
+			>
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				>
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					>
+					<TextView
+						style="@style/ManageSpaceTitle"
+						android:text="Search Index"
+						/>
+					<ImageView style="@style/ManageSpaceDots" />
+					<TextView
+						android:id="@+id/storage_search_size"
+						style="@style/ManageSpaceTitle"
+						tools:text="850kB"
+						/>
+				</LinearLayout>
+				<TextView
+					style="@style/ManageSpaceText"
+					android:text="Search index is used to quickly find items based on parts of their name. Sometimes this index gets messed up, so it's worth to re-build it."
+					/>
+				<Button
+					android:id="@+id/storage_search_clear"
+					style="@style/ManageSpaceButton"
+					android:text="Re-build Search"
+					/>
+			</LinearLayout>
+		</android.support.v7.widget.CardView>
+
+	</LinearLayout>
+</ScrollView>

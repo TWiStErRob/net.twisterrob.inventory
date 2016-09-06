@@ -8,6 +8,8 @@ import org.slf4j.*;
 import android.annotation.TargetApi;
 import android.app.*;
 import android.content.Intent;
+import android.database.*;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build.*;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,12 +33,14 @@ import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
+import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 
 public class ManageSpaceActivity extends BaseActivity implements TaskEndListener {
 	private static final Logger LOG = LoggerFactory.getLogger(ManageSpaceActivity.class);
 
 	TextView imageCacheSize;
 	TextView databaseSize;
+	TextView freelistSize;
 	TextView searchIndexSize;
 	TextView allSize;
 	private SwipeRefreshLayout swiper;
@@ -85,6 +89,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		});
 
 		databaseSize = (TextView)this.findViewById(R.id.storage_db_size);
+		freelistSize = (TextView)this.findViewById(R.id.storage_db_freelist_size);
 		findViewById(R.id.storage_db_clear).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				new ConfirmedCleanAction("Empty Database",
@@ -144,7 +149,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 			@Override public void onClick(View v) {
 				String defaultPath = getDumpFile().getAbsolutePath();
 				DialogTools
-						.prompt(ManageSpaceActivity.this, defaultPath, new PopupCallbacks<String>() {
+						.prompt(v.getContext(), defaultPath, new PopupCallbacks<String>() {
 							@Override public void finished(final String value) {
 								if (value == null) {
 									return;
@@ -170,6 +175,44 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						})
 						.setTitle("Restore DB")
 						.setMessage("Please enter the absolute path of the .sqlite file to restore!")
+						.show()
+				;
+			}
+		});
+		findViewById(R.id.storage_db_vacuum).setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				new ConfirmedCleanAction("Vacuum the whole Database",
+						"May take a while depending on database size, also requires at least the size of the database as free space.",
+						new CleanTask() {
+							@Override protected void doClean() {
+								App.db().getWritableDatabase().execSQL("VACUUM;");
+							}
+						}
+				).show(getSupportFragmentManager(), null);
+			}
+		});
+		findViewById(R.id.storage_db_vacuum_incremental).setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				int tenMB = 10 * 1024 * 1024;
+				DialogTools
+						.pickNumber(v.getContext(), tenMB, 0, Integer.MAX_VALUE, new PopupCallbacks<Integer>() {
+							@Override public void finished(final Integer value) {
+								if (value == null) {
+									return;
+								}
+								NoProgressTaskExecutor.create(new CleanTask() {
+									@Override protected void doClean() {
+										SQLiteDatabase db = App.db().getWritableDatabase();
+										long pagesToFree = value / db.getPageSize();
+										Cursor vacuum =
+												db.rawQuery("PRAGMA incremental_vacuum(" + pagesToFree + ");", NO_ARGS);
+										DatabaseTools.consume(vacuum);
+									}
+								}).show(getSupportFragmentManager(), null);
+							}
+						})
+						.setTitle("Incremental Vacuum")
+						.setMessage("How many bytes do you want to vacuum?")
 						.show()
 				;
 			}
@@ -260,6 +303,12 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		executePreferParallel(new GetSizeTask<Void>(searchIndexSize) {
 			@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
 				return App.db().getSearchSize();
+			}
+		});
+		executePreferParallel(new GetSizeTask<Void>(freelistSize) {
+			@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
+				SQLiteDatabase db = App.db().getReadableDatabase();
+				return DatabaseUtils.longForQuery(db, "PRAGMA freelist_count;", NO_ARGS) * db.getPageSize();
 			}
 		});
 		swiper.setRefreshing(false);

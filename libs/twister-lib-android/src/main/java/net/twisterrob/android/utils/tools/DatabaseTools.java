@@ -184,11 +184,15 @@ public /*static*/ abstract class DatabaseTools {
 		}
 	}
 
-	public static void consume(Cursor cursor) {
+	/** @return the number of items consumed until the end of the cursor reached (may be different than getCount. */
+	public static int consume(Cursor cursor) {
 		try {
+			int count = 0;
 			while (cursor.moveToNext()) {
 				// read to the end
+				count++;
 			}
+			return count;
 		} finally {
 			cursor.close();
 		}
