@@ -171,7 +171,25 @@
 
 		<service
 			android:name=".backup.concurrent.BackupService"
+			android:label="Background Import/Export"
+			android:enabled="true"
 			android:exported="false"
+			android:stopWithTask="false"
 			/>
+		<service
+			android:name=".content.db.DatabaseService"
+			android:label="Background Database Operations"
+			android:enabled="true"
+			android:exported="false"
+			android:stopWithTask="true"
+			>
+			<intent-filter>
+				<!-- Actions' constants available in service class -->
+				<action android:name="net.twisterrob.inventory.action.OPEN_DATABASE" />
+				<action android:name="net.twisterrob.inventory.action.UPDATE_LANGUAGE" />
+				<action android:name="net.twisterrob.inventory.action.PRELOAD_CATEGORIES" />
+				<action android:name="net.twisterrob.inventory.action.VACUUM_INCREMENTAL" />
+			</intent-filter>
+		</service>
 	</application>
 </manifest>

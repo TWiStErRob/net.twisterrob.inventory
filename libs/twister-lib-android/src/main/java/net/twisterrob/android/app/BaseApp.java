@@ -84,6 +84,12 @@ public abstract class BaseApp extends android.app.Application {
 		} finally {
 			StrictMode.setThreadPolicy(originalPolicy);
 		}
+		onStart();
+	}
+
+	@CallSuper
+	public void onStart() {
+		// optional override
 	}
 
 	@Override public void onTerminate() {
@@ -91,6 +97,7 @@ public abstract class BaseApp extends android.app.Application {
 		s_instance = null;
 	}
 
+	@CallSuper
 	protected void safeOnCreate() {
 		if (BuildConfigDEBUG) {
 			AndroidStringerRepo.init(StringerRepo.INSTANCE, this);

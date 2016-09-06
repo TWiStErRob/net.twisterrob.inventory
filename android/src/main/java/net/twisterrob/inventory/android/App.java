@@ -4,19 +4,16 @@ import java.util.Locale;
 
 import org.slf4j.*;
 
+import android.content.Intent;
 import android.content.res.*;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
-import android.support.annotation.*;
-import android.text.TextUtils;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.android.app.BaseApp;
-import net.twisterrob.android.content.pref.ResourcePreferences;
-import net.twisterrob.android.utils.concurrent.BackgroundExecution;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.content.model.CategoryDTO;
-import net.twisterrob.java.utils.StringTools;
+import net.twisterrob.inventory.android.content.db.DatabaseService;
 
 public class App extends BaseApp {
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
@@ -37,21 +34,12 @@ public class App extends BaseApp {
 		return new Database(this);
 	}
 
-	@Override protected void safeOnCreate() {
-		super.safeOnCreate();
-		// may cause StrictModeDiskReadViolation if prefs are not loaded yet, because it reads prefs 
+	@Override public void onStart() {
+		super.onStart();
+		startService(new Intent(DatabaseService.ACTION_OPEN_DATABASE).setPackage(getPackageName()));
 		updateLanguage(Locale.getDefault());
-		new BackgroundExecution(new Runnable() {
-			@Override public void run() {
-				try {
-					// preload on startup
-					CategoryDTO.getCache(App.this);
-				} catch (Exception ex) {
-					// if fails we'll crash later when used, but at least let the app start up
-					LOG.error("Failed to initialize Category cache", ex);
-				}
-			}
-		}).execute();
+		startService(new Intent(DatabaseService.ACTION_PRELOAD_CATEGORIES).setPackage(getPackageName()));
+		startService(new Intent(DatabaseService.ACTION_VACUUM_INCREMENTAL).setPackage(getPackageName()));
 	}
 
 	@Override protected void initPreferences() {
@@ -66,30 +54,9 @@ public class App extends BaseApp {
 	}
 
 	private void updateLanguage(@NonNull Locale newLocale) {
-		final ResourcePreferences prefs = prefs();
-		final String storedLanguage = prefs.getString(R.string.pref_currentLanguage, null);
-		final String currentLanguage = newLocale.toString();
-		if (!currentLanguage.equals(storedLanguage)) {
-			String from = StringTools.toLocale(storedLanguage).getDisplayName();
-			String to = StringTools.toLocale(currentLanguage).getDisplayName();
-			String message = getAppContext().getString(R.string.message_locale_changed, from, to);
-			LOG.debug(message);
-			if (BuildConfig.DEBUG && !TextUtils.isEmpty(from)) {
-				App.toast(message);
-			}
-			new BackgroundExecution(new Runnable() {
-				@WorkerThread
-				@Override public void run() {
-					try {
-						db().updateCategoryCache(App.getAppContext());
-						LOG.debug("Locale update successful: {} -> {}", storedLanguage, currentLanguage);
-						prefs.setString(R.string.pref_currentLanguage, currentLanguage);
-					} catch (Exception ex) {
-						LOG.error("Locale update failed: {} -> {}", storedLanguage, currentLanguage, ex);
-					}
-				}
-			}).execute();
-		}
+		startService(new Intent(DatabaseService.ACTION_UPDATE_LANGUAGE)
+				.setPackage(getPackageName())
+				.putExtra(DatabaseService.EXTRA_LOCALE, newLocale));
 	}
 
 	@SuppressWarnings("WrongThread") // TODEL http://b.android.com/207302

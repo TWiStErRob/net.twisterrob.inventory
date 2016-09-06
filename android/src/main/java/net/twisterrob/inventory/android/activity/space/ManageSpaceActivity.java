@@ -28,6 +28,7 @@ import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.content.db.DatabaseService;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
 
@@ -107,7 +108,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 					@Override protected void doClean() throws IOException {
 						File path = App.db().getFile();
 						InputStream in = new FileInputStream(path);
-						File dumpFile = new File(Paths.getPhoneHome(), "db.sqlite");
+						File dumpFile = getDumpFile();
 						OutputStream out = new FileOutputStream(dumpFile);
 						IOTools.copyStream(in, out);
 						LOG.debug("Saved DB to {}", dumpFile);
@@ -141,13 +142,18 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		});
 		findViewById(R.id.storage_db_restore).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
+				String defaultPath = getDumpFile().getAbsolutePath();
 				DialogTools
-						.prompt(ManageSpaceActivity.this, null, new PopupCallbacks<String>() {
+						.prompt(ManageSpaceActivity.this, defaultPath, new PopupCallbacks<String>() {
 							@Override public void finished(final String value) {
 								if (value == null) {
 									return;
 								}
 								NoProgressTaskExecutor.create(new CleanTask() {
+									@Override protected void onPreExecute() {
+										super.onPreExecute();
+										DatabaseService.clearVacuumAlarm(getApplicationContext());
+									}
 									@Override protected void doClean() throws Exception {
 										App.db().getHelper().restore(new File(value));
 									}
@@ -163,7 +169,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 							}
 						})
 						.setTitle("Restore DB")
-						.setMessage("Please the absolute path of the .sqlite file to restore!")
+						.setMessage("Please enter the absolute path of the .sqlite file to restore!")
 						.show()
 				;
 			}
@@ -212,6 +218,10 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 
 	@Override public void taskDone() {
 		recalculate();
+	}
+
+	private File getDumpFile() {
+		return new File(Paths.getPhoneHome(), "db.sqlite");
 	}
 
 	private void zipAllData() {
