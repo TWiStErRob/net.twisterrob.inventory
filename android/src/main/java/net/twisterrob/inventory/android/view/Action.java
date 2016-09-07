@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
+import java.lang.annotation.*;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.*;
@@ -12,7 +14,7 @@ public interface Action {
 	 * @throws RuntimeException If any of the arguments are incorrect or load fails.
 	 */
 	@WorkerThread
-	void prepare();
+	void prepare() throws RuntimeException;
 	@UiThread
 	@NonNull CharSequence getConfirmationTitle(@NonNull Resources res);
 	@UiThread
@@ -34,10 +36,10 @@ public interface Action {
 	 */
 	@UiThread
 	void finished();
-	/** Will be displayed in a Toast or Undobar */
+	/** Will be displayed in a Toast or Undobar. */
 	@UiThread
 	@NonNull CharSequence getSuccessMessage(@NonNull Resources res);
-	/** Will be displayed in a Toast or AlertDialog */
+	/** Will be displayed in a Toast or AlertDialog. {@link #prepare()} might not have been called or failed. */
 	@UiThread
 	@NonNull CharSequence getFailureMessage(@NonNull Resources res);
 	/**
@@ -53,4 +55,23 @@ public interface Action {
 	 */
 	@UiThread
 	void undoFinished();
+
+	/**
+	 * Tagging annotation to mark fields that are populated during action construction.
+	 * They are always be available during the entire lifecycle of the action.
+	 */
+	@Documented
+	@Retention(RetentionPolicy.SOURCE)
+	@Target({ElementType.FIELD}) @interface Input {
+	}
+
+	/**
+	 * Tagging annotation to mark fields that are populated during action {@link #prepare()}.
+	 * They are be available during {@link #execute()}.
+	 * They might not be available in {@link #getFailureMessage(Resources)} if {@link #prepare()} failed.
+	 */
+	@Documented
+	@Retention(RetentionPolicy.SOURCE)
+	@Target({ElementType.FIELD}) @interface Prepared {
+	}
 }

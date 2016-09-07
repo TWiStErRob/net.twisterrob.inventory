@@ -12,13 +12,13 @@ import net.twisterrob.java.utils.StringTools;
 import static net.twisterrob.inventory.android.utils.Plurals.*;
 
 public abstract class DeleteAction extends BaseAction {
-	protected final long[] IDs;
-	private final int targetNameRes;
-	private final int childNameRes;
-	private final boolean affectsChildren;
+	@Input protected final long[] IDs;
+	@Input private final int targetNameRes;
+	@Input private final int childNameRes;
+	@Input private final boolean affectsChildren;
 
-	protected Collection<String> targets;
-	protected final Collection<String> children = new TreeSet<>();
+	@Prepared protected Collection<String> targets;
+	@Prepared protected final Collection<String> children = new TreeSet<>();
 
 	public DeleteAction(@PluralsRes int targetNameRes, @PluralsRes int childNameRes, long... IDs) {
 		this(targetNameRes, childNameRes, true, IDs);
@@ -72,6 +72,9 @@ public abstract class DeleteAction extends BaseAction {
 	}
 
 	@Override protected @NonNull CharSequence getGenericFailureMessage(@NonNull Resources res) {
+		if (targets == null) {
+			targets = Arrays.asList(StringTools.toStringArray(IDs));
+		}
 		return buildPlural(res, R.plurals.action_delete_failed);
 	}
 

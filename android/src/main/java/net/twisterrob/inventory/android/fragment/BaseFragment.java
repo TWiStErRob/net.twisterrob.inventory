@@ -119,7 +119,8 @@ public class BaseFragment<T> extends VariantFragment {
 	}
 
 	public final void refresh() {
-		if (!getLoaderManager().hasRunningLoaders()) {
+		// FIXME remove getHost() check and fix action calling refresh() a rotated dead fragment, see Dialogs.class
+		if (getHost() != null && !getLoaderManager().hasRunningLoaders()) {
 			onRefresh();
 		}
 	}

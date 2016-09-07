@@ -102,6 +102,7 @@
 	<string name="generic_error_save">Cannot save.</string>
 	<string name="generic_error_unique_name">The name you provided already exists.</string>
 	<string name="generic_error_length_name">The name you provided is empty.</string>
+	<string name="generic_error_missing">The %1$s with id=%2$d does not exist.</string>
 
 	<plurals name="selection_count">
 		<item quantity="other">%d selected</item>

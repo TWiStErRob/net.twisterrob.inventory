@@ -32,6 +32,16 @@ public final class StringTools {
 		return sb.toString();
 	}
 
+	public static String[] toStringArray(long... objectArr) {
+		if (objectArr == null) {
+			return null;
+		}
+		String[] stringArr = new String[objectArr.length];
+		for (int i = 0; i < stringArr.length; ++i) {
+			stringArr[i] = /*objectArr[i] == null? null :*/ String.valueOf(objectArr[i]);
+		}
+		return stringArr;
+	}
 	public static String[] toStringArray(Object... objectArr) {
 		if (objectArr == null) {
 			return null;

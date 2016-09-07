@@ -2,17 +2,19 @@ package net.twisterrob.inventory.android.content;
 
 import java.util.*;
 
+import android.content.res.Resources;
 import android.database.Cursor;
-import android.support.annotation.WorkerThread;
+import android.support.annotation.*;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
+import net.twisterrob.inventory.android.tasks.BaseAction.ValidationException;
 
 @WorkerThread
 @SuppressWarnings({"TryFinallyCanBeTryWithResources", "resource"}) // all methods use the correct try-finally structure
 public class DatabaseDTOTools {
-	public static List<String> getNames(Collection<? extends DTO> dtos) {
+	public static @NonNull List<String> getNames(Collection<? extends DTO> dtos) {
 		List<String> names = new ArrayList<>(dtos.size());
 		for (DTO dto : dtos) {
 			names.add(dto.name);
@@ -20,7 +22,7 @@ public class DatabaseDTOTools {
 		return names;
 	}
 
-	public static List<String> getNames(Cursor cursor) {
+	public static @NonNull List<String> getNames(Cursor cursor) {
 		try {
 			List<String> names = new ArrayList<>(cursor.getCount());
 			while (cursor.moveToNext()) {
@@ -32,7 +34,7 @@ public class DatabaseDTOTools {
 		}
 	}
 
-	public static List<PropertyDTO> retrieveProperties(long... propertyIDs) {
+	public static @NonNull List<PropertyDTO> retrieveProperties(long... propertyIDs) {
 		List<PropertyDTO> properties = new ArrayList<>(propertyIDs.length);
 		for (long propertyID : propertyIDs) {
 			properties.add(retrieveProperty(propertyID));
@@ -40,17 +42,20 @@ public class DatabaseDTOTools {
 		return properties;
 	}
 
-	public static PropertyDTO retrieveProperty(long propertyID) {
+	public static @NonNull PropertyDTO retrieveProperty(long propertyID) {
 		Cursor property = App.db().getProperty(propertyID);
 		try {
-			property.moveToFirst();
+			if (!property.moveToFirst()) {
+				throw new ValidationException(
+						R.string.generic_error_missing, new Plural(R.plurals.property, 1), propertyID);
+			}
 			return PropertyDTO.fromCursor(property);
 		} finally {
 			property.close();
 		}
 	}
 
-	public static List<String> retrieveRoomNames(long propertyID) {
+	public static @NonNull List<String> retrieveRoomNames(long propertyID) {
 		Cursor rooms = App.db().listRooms(propertyID);
 		try {
 			List<String> roomNames = new ArrayList<>(rooms.getCount());
@@ -63,7 +68,7 @@ public class DatabaseDTOTools {
 		}
 	}
 
-	public static List<RoomDTO> retrieveRooms(long... roomIDs) {
+	public static @NonNull List<RoomDTO> retrieveRooms(long... roomIDs) {
 		List<RoomDTO> rooms = new ArrayList<>(roomIDs.length);
 		for (long roomID : roomIDs) {
 			rooms.add(retrieveRoom(roomID));
@@ -71,17 +76,20 @@ public class DatabaseDTOTools {
 		return rooms;
 	}
 
-	public static RoomDTO retrieveRoom(long roomID) {
+	public static @NonNull RoomDTO retrieveRoom(long roomID) {
 		Cursor room = App.db().getRoom(roomID);
 		try {
-			room.moveToFirst();
+			if (!room.moveToFirst()) {
+				throw new ValidationException(
+						R.string.generic_error_missing, new Plural(R.plurals.room, 1), roomID);
+			}
 			return RoomDTO.fromCursor(room);
 		} finally {
 			room.close();
 		}
 	}
 
-	public static List<ItemDTO> retrieveItems(long... itemIDs) {
+	public static @NonNull List<ItemDTO> retrieveItems(long... itemIDs) {
 		List<ItemDTO> items = new ArrayList<>(itemIDs.length);
 		for (long itemID : itemIDs) {
 			items.add(retrieveItem(itemID));
@@ -89,17 +97,20 @@ public class DatabaseDTOTools {
 		return items;
 	}
 
-	public static ItemDTO retrieveItem(long itemID) {
+	public static @NonNull ItemDTO retrieveItem(long itemID) {
 		Cursor item = App.db().getItem(itemID, false);
 		try {
-			item.moveToFirst();
+			if (!item.moveToFirst()) {
+				throw new ValidationException(
+						R.string.generic_error_missing, new Plural(R.plurals.item, 1), itemID);
+			}
 			return ItemDTO.fromCursor(item);
 		} finally {
 			item.close();
 		}
 	}
 
-	public static List<String> retrieveItemNames(long itemID) {
+	public static @NonNull List<String> retrieveItemNames(long itemID) {
 		Cursor items = App.db().listItems(itemID);
 		try {
 			List<String> itemNames = new ArrayList<>(items.getCount());
@@ -112,10 +123,13 @@ public class DatabaseDTOTools {
 		}
 	}
 
-	public static ListDTO retrieveList(long listID) {
+	public static @NonNull ListDTO retrieveList(long listID) {
 		Cursor list = App.db().getList(listID);
 		try {
-			list.moveToFirst();
+			if (!list.moveToFirst()) {
+				throw new ValidationException(
+						R.string.generic_error_missing, new Plural(R.plurals.list, 1), listID);
+			}
 			return ListDTO.fromCursor(list);
 		} finally {
 			list.close();
@@ -125,10 +139,25 @@ public class DatabaseDTOTools {
 	public static long getRoot(long roomID) {
 		Cursor room = App.db().getRoom(roomID);
 		try {
-			room.moveToFirst();
+			if (!room.moveToFirst()) {
+				throw new ValidationException(
+						R.string.generic_error_missing, new Plural(R.plurals.room, 1), roomID);
+			}
 			return room.getLong(room.getColumnIndexOrThrow(Room.ROOT_ITEM));
 		} finally {
 			room.close();
+		}
+	}
+
+	private static class Plural implements ValidationException.Resolvable {
+		private final @PluralsRes int resID;
+		private final int count;
+		public Plural(int resID, int count) {
+			this.resID = resID;
+			this.count = count;
+		}
+		public String resolve(@NonNull Resources res) {
+			return res.getQuantityString(resID, count);
 		}
 	}
 }

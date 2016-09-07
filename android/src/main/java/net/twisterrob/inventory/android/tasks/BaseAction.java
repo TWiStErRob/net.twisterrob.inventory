@@ -8,7 +8,7 @@ import android.view.View;
 import net.twisterrob.inventory.android.view.Action;
 
 public abstract class BaseAction implements Action {
-	private ValidationException validationError;
+	@Prepared private ValidationException validationError;
 
 	@Override public final void prepare() {
 		try {
@@ -18,8 +18,9 @@ public abstract class BaseAction implements Action {
 			throw validationError;
 		}
 	}
+	/** @throws ValidationException if the action cannot be executed, it must contain an error message. */
 	@WorkerThread
-	protected abstract void doPrepare();
+	protected abstract void doPrepare() throws ValidationException;
 
 	@Override public final @NonNull CharSequence getFailureMessage(@NonNull Resources res) {
 		if (validationError != null) {
@@ -28,6 +29,7 @@ public abstract class BaseAction implements Action {
 			return getGenericFailureMessage(res);
 		}
 	}
+	/** @see #getFailureMessage(Resources) */
 	@UiThread
 	protected abstract @NonNull CharSequence getGenericFailureMessage(@NonNull Resources res);
 
@@ -49,7 +51,7 @@ public abstract class BaseAction implements Action {
 		return getClass().getName() + "(" + actionClass.getSimpleName() + ")" + '@' + Integer.toHexString(hashCode());
 	}
 
-	protected static final class ValidationException extends RuntimeException {
+	public static final class ValidationException extends RuntimeException {
 		private final int validationError;
 		private final Object[] args;
 
@@ -64,7 +66,18 @@ public abstract class BaseAction implements Action {
 		}
 
 		public String getMessage(Resources res) {
+			resolveArgs(res);
 			return res.getString(validationError, args);
+		}
+		private void resolveArgs(Resources res) {
+			for (int i = 0; i < args.length; i++) {
+				if (args[i] instanceof Resolvable) {
+					args[i] = ((Resolvable)args[i]).resolve(res);
+				}
+			}
+		}
+		public interface Resolvable {
+			@Nullable Object resolve(@NonNull Resources res);
 		}
 	}
 }

@@ -1,23 +1,24 @@
 package net.twisterrob.inventory.android.tasks;
 
-import java.util.Collection;
+import java.util.*;
 
 import android.content.res.Resources;
 import android.support.annotation.*;
 
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.java.utils.StringTools;
 
 import static net.twisterrob.inventory.android.utils.Plurals.*;
 
 public abstract class MoveAction extends BaseAction {
-	protected final long[] IDs;
-	protected long targetID;
-	private final int typeRes;
-	private final int targetTypeRes;
+	@Input protected final long[] IDs;
+	@Input protected long targetID;
+	@Input private final int typeRes;
+	@Input private final int targetTypeRes;
 
-	protected Collection<String> stuff;
-	protected CharSequence source;
-	protected CharSequence target;
+	@Prepared protected Collection<String> stuff;
+	@Prepared protected CharSequence source;
+	@Prepared protected CharSequence target;
 
 	public MoveAction(long targetID, @PluralsRes int typeRes, int targetTypeRes, long... IDs) {
 		this.IDs = IDs;
@@ -52,6 +53,12 @@ public abstract class MoveAction extends BaseAction {
 	}
 
 	@Override protected @NonNull CharSequence getGenericFailureMessage(@NonNull Resources res) {
+		if (stuff == null) {
+			stuff = Arrays.asList(StringTools.toStringArray(IDs));
+		}
+		if (target == null) {
+			target = String.valueOf(targetID);
+		}
 		return buildPlural(res, R.plurals.action_move_failed);
 	}
 }

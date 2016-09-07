@@ -3,21 +3,23 @@ package net.twisterrob.inventory.android.view;
 import org.slf4j.*;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
+import android.app.*;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build.*;
+import android.os.Bundle;
 import android.support.annotation.*;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog.Builder;
 import android.view.View;
-import android.widget.Toast;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.fragment.BaseDialogFragment;
 
 /**
  * <ol>
@@ -37,22 +39,23 @@ import net.twisterrob.inventory.android.*;
  * </ol>
  * </ol>
  */
+// FIXME make these dialogs rotation-proof, the actions need to have another way of communicating their results
+// See BaseFragment.refresh() as well.
 public class Dialogs {
 	private static final Logger LOG = LoggerFactory.getLogger(Dialogs.class);
 
-	public static void executeConfirm(@NonNull Context activity, @NonNull Action action) {
+	public static void executeConfirm(@NonNull FragmentActivity activity, @NonNull Action action) {
 		new ConfirmedExecute(activity).execute(new ActionState(action));
 	}
 
-	public static void executeDirect(@NonNull Activity activity, @NonNull Action action) {
+	public static void executeDirect(@NonNull FragmentActivity activity, @NonNull Action action) {
 		new NoQuestionsWithUndo(activity).execute(new ActionState(action));
 	}
 
-	static void undo(final @NonNull Activity activity, @NonNull ActionState state) {
+	static void undo(final @NonNull FragmentActivity activity, @NonNull ActionState state) {
 		final Action undo = state.action.buildUndo();
 		if (undo != null) {
 			CharSequence message = state.action.getSuccessMessage(activity.getResources());
-			//noinspection ResourceType custom delay is acceptable, see Snackbar#setDuration
 			Snackbar
 					.make(activity.getWindow().getDecorView().getRootView(), message, 5000)
 					.setAction(R.string.action_undo, new View.OnClickListener() {
@@ -65,10 +68,9 @@ public class Dialogs {
 		}
 	}
 
-	static class ConfirmedExecute extends SimpleAsyncTask<ActionState, Void, ActionState> {
-		private final Context context;
-		ConfirmedExecute(@NonNull Context context) {
-			this.context = context;
+	static class ConfirmedExecute extends ProgressAsyncTask {
+		ConfirmedExecute(@NonNull FragmentActivity context) {
+			super(context);
 		}
 
 		@Override protected ActionState doInBackground(ActionState state) {
@@ -78,6 +80,7 @@ public class Dialogs {
 
 		@TargetApi(VERSION_CODES.HONEYCOMB)
 		@Override protected void onPostExecute(final ActionState state) {
+			super.onPostExecute(state);
 			if (state.check(context)) {
 				Builder builder = new Builder(context)
 						.setTitle(state.action.getConfirmationTitle(context.getResources()))
@@ -107,32 +110,62 @@ public class Dialogs {
 		}
 	}
 
-	static class Execute extends SimpleAsyncTask<ActionState, Void, ActionState> {
-		protected final Context context;
+	private static abstract class ProgressAsyncTask extends SimpleAsyncTask<ActionState, Void, ActionState> {
+		protected final FragmentActivity context;
+		private final BaseDialogFragment progress;
 
-		Execute(@NonNull Context context) {
+		protected ProgressAsyncTask(@NonNull FragmentActivity context) {
 			this.context = context;
+			this.progress = new ActionProgressFragment();
 		}
 
+		@CallSuper
+		@Override protected void onPreExecute() {
+			super.onPreExecute();
+			progress.show(context.getSupportFragmentManager(), "dialog-action-progress");
+		}
+
+		@CallSuper
+		@Override protected void onPostExecute(ActionState state) {
+			super.onPostExecute(state);
+			progress.dismiss();
+		}
+
+		public static class ActionProgressFragment extends BaseDialogFragment {
+			@Override public void onCreate(Bundle savedInstanceState) {
+				super.onCreate(savedInstanceState);
+				setCancelable(false);
+			}
+			@Override public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
+				ProgressDialog dialog = new ProgressDialog(getActivity());
+				dialog.setMessage("Please wait...");
+				dialog.setIndeterminate(true);
+				return dialog;
+			}
+		}
+	}
+
+	static class Execute extends ProgressAsyncTask {
+		protected Execute(@NonNull FragmentActivity context) {
+			super(context);
+		}
 		@Override protected ActionState doInBackground(ActionState state) {
 			state.execute();
 			return state;
 		}
 
 		@Override protected void onPostExecute(ActionState state) {
+			super.onPostExecute(state);
 			if (state.check(context)) {
 				state.action.finished();
 			}
 		}
 	}
 
-	static class NoQuestions extends SimpleAsyncTask<ActionState, Void, ActionState> {
-		protected final Context context;
-
-		NoQuestions(@NonNull Context context) {
-			this.context = context;
+	static class NoQuestions extends ProgressAsyncTask {
+		protected NoQuestions(@NonNull FragmentActivity context) {
+			super(context);
 		}
-
 		@Override protected ActionState doInBackground(ActionState state) {
 			state.prepare();
 			if (state.hasPassed()) {
@@ -142,6 +175,7 @@ public class Dialogs {
 		}
 
 		@Override protected void onPostExecute(ActionState state) {
+			super.onPostExecute(state);
 			if (state.check(context)) {
 				state.action.finished();
 			}
@@ -149,14 +183,14 @@ public class Dialogs {
 	}
 
 	static class NoQuestionsWithUndo extends NoQuestions {
-		NoQuestionsWithUndo(@NonNull Activity activity) {
+		NoQuestionsWithUndo(@NonNull FragmentActivity activity) {
 			super(activity);
 		}
 
 		@Override protected void onPostExecute(ActionState state) {
-			if (state.check(context)) {
-				state.action.finished();
-				undo((Activity)context, state);
+			super.onPostExecute(state);
+			if (state.hasPassed()) {
+				undo(context, state);
 			}
 		}
 	}
@@ -199,7 +233,7 @@ public class Dialogs {
 			CharSequence message;
 			try {
 				message = action.getFailureMessage(context.getResources());
-				if (message != null && (prepare != null || execute != null)) {
+				if (prepare != null || execute != null) {
 					message = App.getError(prepare != null? prepare : execute, message);
 				}
 			} catch (Exception ex) {
@@ -212,7 +246,7 @@ public class Dialogs {
 				LOG.warn("No error message from action {}, using one of the exceptions:\n{}", action, message);
 				message = context.getString(R.string.action_error, message);
 			}
-			Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+			App.toastUser(message);
 			return false;
 		}
 

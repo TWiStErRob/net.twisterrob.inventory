@@ -11,12 +11,12 @@ import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.model.DTO;
 
 public abstract class RenameAction<T extends DTO> extends BaseAction {
-	private final int typeRes;
-	protected final long id;
+	@Input private final int typeRes;
+	@Input protected final long id;
 
-	protected T dto;
+	@Prepared protected T dto;
 	private EditText newNameEditor;
-	private String newName;
+	@Input private String newName;
 
 	public RenameAction(long id, int typeRes) {
 		this.id = id;
@@ -42,7 +42,8 @@ public abstract class RenameAction<T extends DTO> extends BaseAction {
 	}
 
 	@Override protected @NonNull CharSequence getGenericFailureMessage(@NonNull Resources res) {
-		return res.getString(R.string.action_rename_failed, res.getQuantityString(typeRes, 1), dto.name, getNewName());
+		String oldName = dto != null? dto.name : "?";
+		return res.getString(R.string.action_rename_failed, res.getQuantityString(typeRes, 1), oldName, getNewName());
 	}
 	@Override public @NonNull CharSequence getConfirmationTitle(@NonNull Resources res) {
 		return res.getString(R.string.action_rename_title, res.getQuantityString(typeRes, 1), dto.name);

@@ -17,9 +17,9 @@ public abstract class MoveRoomsAction extends MoveAction {
 
 	@Override protected void doPrepare() {
 		super.doPrepare();
+		target = retrieveProperty(targetID).name;
 		rooms = retrieveRooms(IDs);
 		stuff = getNames(rooms);
-		target = retrieveProperty(targetID).name;
 	}
 
 	@Override protected void doExecute() {

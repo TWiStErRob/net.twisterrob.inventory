@@ -4,10 +4,10 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.*;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -21,18 +21,18 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(SelectionActionMode.class);
 	private static final String KEY_SELECTION = "selection";
 
-	private final Activity activity;
+	private final AppCompatActivity activity;
 	private final SelectionAdapter<?> adapter;
 
 	private final ActionMode.Callback callback = this;
 	private ActionMode actionMode;
 
-	public SelectionActionMode(@NonNull Activity activity, @NonNull SelectionAdapter<?> adapter) {
-		this.activity = activity;
+	public SelectionActionMode(@NonNull FragmentActivity activity, @NonNull SelectionAdapter<?> adapter) {
+		this.activity = (AppCompatActivity)activity;
 		this.adapter = adapter;
 	}
 
-	public @NonNull Activity getActivity() {
+	public @NonNull AppCompatActivity getActivity() {
 		return activity;
 	}
 
@@ -47,11 +47,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 	}
 	public void start() {
 		if (!isRunning()) {
-			if (activity instanceof AppCompatActivity) {
-				actionMode = ((AppCompatActivity)activity).startSupportActionMode(callback);
-			} else {
-				LOG.warn("Cannot start because activity doesn't support supportActionMode.", new StackTrace());
-			}
+			actionMode = activity.startSupportActionMode(callback);
 		} else {
 			actionMode.invalidate();
 			LOG.warn("Cannot start because it is already running.", new StackTrace());
@@ -148,7 +144,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 	public abstract boolean onActivityResult(int requestCode, int resultCode, @Nullable Intent data);
 
 	public static class NoOp extends SelectionActionMode {
-		public NoOp(Activity activity) {
+		public NoOp(FragmentActivity activity) {
 			super(activity, new SelectionAdapter<>(new EmptyAdapter<>()));
 		}
 		@Override public void start() {

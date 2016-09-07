@@ -9,7 +9,7 @@ import net.twisterrob.inventory.android.view.Action;
 import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
 
 public abstract class MoveItemsToRoomAction extends MoveAction {
-	private List<ItemDTO> items;
+	@Prepared private List<ItemDTO> items;
 
 	public MoveItemsToRoomAction(long roomID, long... itemIDs) {
 		super(roomID, R.plurals.item, R.plurals.room, itemIDs);

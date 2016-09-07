@@ -9,7 +9,7 @@ import net.twisterrob.inventory.android.view.Action;
 import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
 
 public abstract class MoveItemsAction extends MoveAction {
-	private List<ItemDTO> items;
+	@Prepared private List<ItemDTO> items;
 
 	public MoveItemsAction(long parentID, long... itemIDs) {
 		super(parentID, R.plurals.item, R.plurals.item, itemIDs);
@@ -17,9 +17,9 @@ public abstract class MoveItemsAction extends MoveAction {
 
 	@Override protected void doPrepare() {
 		super.doPrepare();
+		target = retrieveItem(targetID).name;
 		items = retrieveItems(IDs);
 		stuff = getNames(items);
-		target = retrieveItem(targetID).name;
 	}
 
 	@Override protected void doExecute() {
