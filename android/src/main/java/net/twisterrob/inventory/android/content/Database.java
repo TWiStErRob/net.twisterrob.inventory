@@ -41,6 +41,8 @@ public class Database extends VariantDatabase {
 			public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
+				// CONSIDER enabling auto_vacuum=INCREMENTAL as it speeds up a large delete a lot
+				//db.execSQL("PRAGMA auto_vacuum = INCREMENTAL;");
 			}
 			@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
 			@Override protected String[] getDataFiles() {

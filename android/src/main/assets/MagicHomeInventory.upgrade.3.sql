@@ -40,4 +40,4 @@ END;
 -- Deleting 2000 belongings takes a long time, now with this new trigger:
 -- 38 seconds with secure_delete off.
 -- 30 seconds with secure_delete on. (weird)
--- TODO before it was 2 seconds for the same amount; either restore that speed or show progress
+-- Before it was 2 seconds for the same amount, that's what we get for removing images

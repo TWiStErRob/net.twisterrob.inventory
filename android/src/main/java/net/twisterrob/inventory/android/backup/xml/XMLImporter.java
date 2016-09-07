@@ -227,10 +227,10 @@ public class XMLImporter implements Importer {
 					typeID = PropertyType.DEFAULT;
 				}
 				id = db.createProperty(typeID, name, description);
+				loadImage(Type.Property);
 			} else {
 				progress.warning(res.getString(R.string.backup_import_conflict_property, name));
 			}
-			loadImage(Type.Property);
 		}
 	}
 
@@ -251,11 +251,11 @@ public class XMLImporter implements Importer {
 					typeID = RoomType.DEFAULT;
 				}
 				id = db.createRoom(propertyID, typeID, name, description);
+				loadImage(Type.Room);
 			} else {
 				progress.warning(res.getString(R.string.backup_import_conflict_room, parent.getName(), name));
 			}
 			rootID = DatabaseDTOTools.getRoot(id);
-			loadImage(Type.Room);
 		}
 
 		@Override public void end() {
@@ -293,13 +293,13 @@ public class XMLImporter implements Importer {
 					typeID = Category.DEFAULT;
 				}
 				id = db.createItem(parentID, typeID, name, description);
+				loadImage(Type.Item);
 			} else {
 				Parent room = findRoom(this);
 				progress.warning(res.getString(R.string.backup_import_conflict_item,
 						room.getParent().getName(), room.getName(), name));
 			}
 			itemMap.put(refID, id);
-			loadImage(Type.Item);
 		}
 		private Parent findRoom(Parent item) {
 			// try direct item in room
