@@ -14,6 +14,9 @@
 		      android:title="@string/category_guide"
 		      android:visible="@bool/show_category_help" />
 		<item android:id="@+id/action_drawer_backup" android:title="@string/backup_title" />
+		<item android:id="@+id/action_drawer_manage"
+		      android:title="@string/manage_space_title"
+		      android:visible="@bool/in_test" />
 		<item android:id="@+id/action_drawer_preferences" android:title="@string/pref_activity_title" />
 		<item android:id="@+id/action_drawer_about" android:title="@string/about_title" />
 	</group>
