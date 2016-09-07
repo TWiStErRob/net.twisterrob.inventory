@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.text.*;
 import android.view.*;
 
 import com.bumptech.glide.Glide;
@@ -104,39 +105,45 @@ public class MainActivity extends DrawerActivity
 		});
 
 		if (App.prefs().getBoolean(R.string.pref_showWelcome, R.bool.pref_showWelcome_default)) {
-			new AlertDialog.Builder(this)
-					.setTitle(R.string.welcome_title)
-					.setMessage(R.string.welcome_question)
-					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							App.prefs().setBoolean(R.string.pref_showWelcome, false);
-							App.toastUser(getString(R.string.welcome_help_tip));
-							new PopulateSampleInventoryTask().execute();
-						}
-					})
-					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-						@Override public void onClick(DialogInterface dialog, int which) {
-							App.prefs().setBoolean(R.string.pref_showWelcome, false);
-							App.toastUser(getString(R.string.welcome_help_tip));
-							// NO OP the app is ready to be used
-						}
-					})
-					.setNeutralButton(R.string.welcome_backup, new DialogInterface.OnClickListener() {
-						@Override public void onClick(DialogInterface dialog, int which) {
-							App.prefs().setBoolean(R.string.pref_showWelcome, false);
-							startActivity(BackupActivity.chooser());
-						}
-					})
-					.setCancelable(true)
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						@Override public void onCancel(DialogInterface dialog) {
-							App.prefs().setBoolean(R.string.pref_showWelcome, true); // just to be explicit
-							MainActivity.this.finish();
-						}
-					})
-					.show();
+			welcome();
 		}
 	}
+
+	private void welcome() {
+		@SuppressWarnings("deprecation") Spanned message = Html.fromHtml(getString(R.string.welcome_question));
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.welcome_title)
+				.setMessage(message)
+				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						App.prefs().setBoolean(R.string.pref_showWelcome, false);
+						App.toastUser(getString(R.string.welcome_help_tip));
+						new PopulateSampleInventoryTask().execute();
+					}
+				})
+				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+					@Override public void onClick(DialogInterface dialog, int which) {
+						App.prefs().setBoolean(R.string.pref_showWelcome, false);
+						App.toastUser(getString(R.string.welcome_help_tip));
+						// NO OP the app is ready to be used
+					}
+				})
+				.setNeutralButton(R.string.welcome_backup, new DialogInterface.OnClickListener() {
+					@Override public void onClick(DialogInterface dialog, int which) {
+						App.prefs().setBoolean(R.string.pref_showWelcome, false);
+						startActivity(BackupActivity.chooser());
+					}
+				})
+				.setCancelable(true)
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override public void onCancel(DialogInterface dialog) {
+						App.prefs().setBoolean(R.string.pref_showWelcome, true); // just to be explicit
+						MainActivity.this.finish();
+					}
+				})
+				.show();
+	}
+
 	private void updateTitle() {
 		FragmentManager fm = getSupportFragmentManager();
 		BackStackEntry top = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1);

@@ -14,9 +14,10 @@
 	<string name="image_title">Image</string>
 	<string name="image_loading_external">Preparing image for external app…</string>
 	<string name="welcome_title">First startup… Welcome!</string>
-	<string name="welcome_question">Would you like me to create a sample inventory for you?
-		<i><font color="grey">(You can also do it later from the action bar if your inventory is empty.)</font></i>
-	</string>
+	<string name="welcome_question" tools:ignore="TypographyQuotes"><![CDATA[
+		Would you like me to create a sample inventory for you?
+		<i><font color="#808080">(You can also do it later from the action bar if your inventory is empty.)</font></i>
+	]]></string>
 	<string name="welcome_help_tip">See About for help and usage tips!</string>
 	<string name="welcome_backup">Import backup</string>
 
