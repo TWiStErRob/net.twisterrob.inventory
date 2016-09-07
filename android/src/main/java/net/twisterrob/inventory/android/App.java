@@ -1,17 +1,19 @@
 package net.twisterrob.inventory.android;
 
-import java.util.Locale;
+import java.util.*;
 
 import org.slf4j.*;
 
 import android.content.Intent;
 import android.content.res.*;
+import android.graphics.Color;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import net.twisterrob.android.app.BaseApp;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
 
@@ -80,13 +82,29 @@ public class App extends BaseApp {
 		if (msg == null) {
 			msg = "";
 		}
-		if (msg.equals("constraint failed (code 19)")) {
+		if (EMPTY_ERRORS.contains(msg)) {
 			errorMessage = res.getString(R.string.generic_error_length_name);
-		} else if (msg.equals("column name is not unique (code 19)")
-				|| msg.equals("columns property, name are not unique (code 19)")
-				|| msg.equals("columns parent, name are not unique (code 19)")) {
+		} else if (NAME_ERRORS.contains(msg)) {
 			errorMessage = res.getString(R.string.generic_error_unique_name);
 		}
-		return message + " " + errorMessage;
+		return TextUtils.concat(message, "\n", TextTools.color(Color.GRAY, errorMessage));
 	}
+
+	// 2013-03-18 (SQLite 3.7.16): Added new extended error codes for all SQLITE_CONSTRAINT errors
+	private static final Collection<String> EMPTY_ERRORS = new HashSet<>(Arrays.asList(
+			// Galaxy S4 4.4.2 3.7.11
+			"constraint failed (code 19)",
+			// Galaxy S5 5.0.1 3.8.6.1
+			"CHECK constraint failed: Room (code 275)"
+	));
+	private static final Collection<String> NAME_ERRORS = new HashSet<>(Arrays.asList(
+			// Galaxy S4 4.4.2 3.7.11
+			"column name is not unique (code 19)",
+			"columns property, name are not unique (code 19)",
+			"columns parent, name are not unique (code 19)",
+			// Galaxy S5 5.0.1 3.8.6.1 
+			"UNIQUE constraint failed: Property.name (code 2067)",
+			"UNIQUE constraint failed: Room.property, Room.name (code 2067)",
+			"UNIQUE constraint failed: Item.parent, Item.name (code 2067)"
+	));
 }

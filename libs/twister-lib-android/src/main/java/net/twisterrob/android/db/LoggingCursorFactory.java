@@ -6,11 +6,13 @@ import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.database.sqlite.*;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.os.Build;
+import android.os.Build.VERSION_CODES;
+import android.support.annotation.RequiresApi;
 
 import net.twisterrob.java.annotations.DebugHelper;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@TargetApi(VERSION_CODES.HONEYCOMB)
+@RequiresApi(VERSION_CODES.HONEYCOMB)
 @DebugHelper
 public final class LoggingCursorFactory implements CursorFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(LoggingCursorFactory.class);

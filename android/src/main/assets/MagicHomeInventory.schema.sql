@@ -1,5 +1,5 @@
 -- Notes
--- ;--NOTEOS is need in trigger bodies so statement execution to android driver is delayed until correct semicolon
+-- ;--NOTEOS is needed in trigger bodies so statement execution to android driver is delayed until correct semicolon
 -- RAISE(action, msg) doesn't support expressions
 -- Be careful with WHEN conditions in triggers for NULLABLE columns <> returns NULL, need to check if IS NULL changed
 -- WITH clause support was added in SQLite 3.8.3, first to support it is Android 5.0

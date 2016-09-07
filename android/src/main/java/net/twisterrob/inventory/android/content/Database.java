@@ -7,7 +7,7 @@ import org.slf4j.*;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
-import android.database.Cursor;
+import android.database.*;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build.VERSION_CODES;
 import android.support.annotation.*;
@@ -40,6 +40,7 @@ public class Database extends VariantDatabase {
 			@Override
 			public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);
+				// 2009-09-11 (SQLite 3.6.18): Recursive triggers can be enabled using the PRAGMA recursive_triggers statement.
 				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 				// CONSIDER enabling auto_vacuum=INCREMENTAL as it speeds up a large delete a lot
 				//db.execSQL("PRAGMA auto_vacuum = INCREMENTAL;");
@@ -148,9 +149,13 @@ public class Database extends VariantDatabase {
 	public @NonNull Cursor listItemsInRoom(long roomID) {
 		@SuppressWarnings("resource") Cursor room = getRoom(roomID);
 		try {
-			room.moveToFirst();
-			long root = room.getLong(room.getColumnIndex(Room.ROOT_ITEM));
-			return listItems(root);
+			if (room.moveToFirst()) {
+				long root = room.getLong(room.getColumnIndex(Room.ROOT_ITEM));
+				return listItems(root);
+			} else {
+				// Behave like a select would, an empty result set
+				return new MatrixCursor(new String[0], 0);
+			}
 		} finally {
 			room.close();
 		}

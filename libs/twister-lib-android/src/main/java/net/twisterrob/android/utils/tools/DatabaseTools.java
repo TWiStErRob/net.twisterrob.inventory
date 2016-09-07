@@ -17,9 +17,15 @@ public /*static*/ abstract class DatabaseTools {
 		return string.toString().replace("%", escape + "%").replace("_", escape + "_");
 	}
 	public static String dbToString(final SQLiteDatabase database) {
-		int version = database != null? database.getVersion() : 0;
-		String path = database != null? database.getPath() : null;
-		return String.format(Locale.ROOT, "v%d@%s", version, path);
+		int userVersion = database == null? 0
+				: database.getVersion();
+		int schemaVersion = database == null? 0
+				: (int)DatabaseUtils.longForQuery(database, "PRAGMA schema_version;", null);
+		String path = database == null? null
+				: database.getPath();
+		String sqliteVersion = database == null? null
+				: DatabaseTools.singleString(database.rawQuery("select sqlite_version();", NO_ARGS), null);
+		return String.format(Locale.ROOT, "v%d(%d)::%s@%s", userVersion, schemaVersion, sqliteVersion, path);
 	}
 	public static boolean getBoolean(Cursor cursor, String columnName) {
 		int col = cursor.getColumnIndex(columnName);

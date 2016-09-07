@@ -59,7 +59,10 @@ class TreeLoader {
 		}
 		if (rootBelonging != null) {
 			try {
-				rootBelonging.moveToFirst();
+				if (!rootBelonging.moveToFirst()) {
+					throw new IllegalArgumentException(
+							"Root of type " + root.type + " with id=" + root.id + " doesn't exist.");
+				}
 				root.label = DatabaseTools.getString(rootBelonging, CommonColumns.NAME);
 			} finally {
 				rootBelonging.close();
