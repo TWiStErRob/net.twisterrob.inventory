@@ -51,7 +51,7 @@ public abstract class MoveAction extends BaseAction {
 		return buildPlural(res, R.plurals.action_move_success);
 	}
 
-	@Override protected CharSequence getGenericFailureMessage(Resources res) {
+	@Override protected @NonNull CharSequence getGenericFailureMessage(@NonNull Resources res) {
 		return buildPlural(res, R.plurals.action_move_failed);
 	}
 }

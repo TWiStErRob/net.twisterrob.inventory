@@ -41,7 +41,7 @@ public abstract class RenameAction<T extends DTO> extends BaseAction {
 		return newNameEditor != null? newNameEditor.getText().toString() : newName;
 	}
 
-	@Override protected CharSequence getGenericFailureMessage(Resources res) {
+	@Override protected @NonNull CharSequence getGenericFailureMessage(@NonNull Resources res) {
 		return res.getString(R.string.action_rename_failed, res.getQuantityString(typeRes, 1), dto.name, getNewName());
 	}
 	@Override public @NonNull CharSequence getConfirmationTitle(@NonNull Resources res) {

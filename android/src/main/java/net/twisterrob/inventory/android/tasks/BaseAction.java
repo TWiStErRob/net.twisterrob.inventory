@@ -29,7 +29,7 @@ public abstract class BaseAction implements Action {
 		}
 	}
 	@UiThread
-	protected abstract CharSequence getGenericFailureMessage(Resources res);
+	protected abstract @NonNull CharSequence getGenericFailureMessage(@NonNull Resources res);
 
 	@Override public final void execute() {
 		doExecute();
