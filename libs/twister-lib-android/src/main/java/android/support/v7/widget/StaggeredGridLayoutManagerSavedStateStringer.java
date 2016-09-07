@@ -4,14 +4,12 @@ import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 
-import android.support.v7.widget.StaggeredGridLayoutManager.SavedState;
-
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.tostring.*;
 
 @DebugHelper
-public class StaggeredGridLayoutManagerSavedStateStringer extends Stringer<SavedState> {
-	@Override public void toString(@Nonnull ToStringAppender append, SavedState state) {
+public class StaggeredGridLayoutManagerSavedStateStringer extends Stringer<StaggeredGridLayoutManager.SavedState> {
+	@Override public void toString(@Nonnull ToStringAppender append, StaggeredGridLayoutManager.SavedState state) {
 		// TODO List<LazySpanLookup.FullSpanItem> mFullSpanItems = state.mFullSpanItems;
 		append.beginPropertyGroup("Anchor");
 		append.rawProperty("pos", state.mAnchorPosition);

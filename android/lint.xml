@@ -31,7 +31,7 @@
 	</issue>
 	<issue id="SelectableText">
 		<!-- TODEL SelectableText lint check ignores style: http://b.android.com/57866 -->
-		<ignore path="src/main/res/layout/manage_space_activity.xml" />
+		<ignore path="src/main/res/layout/manage_space_activity_contents.xml" />
 	</issue>
 	<issue id="IconMissingDensityFolder">
 		<!-- Resources are separate into res and res-icons, and only icons need density-folders. -->

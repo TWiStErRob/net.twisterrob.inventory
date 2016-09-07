@@ -143,7 +143,7 @@ public class ConcatAdapter extends Adapter<ViewHolder> {
 		}
 
 		@Override public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-			// TOFIX No notifyItemRangeMoved method?
+			// TOFIX No notifyItemRangeMoved method? http://b.android.com/125984
 			int offset = getOffsetOf(wrapped);
 			notifyItemRangeChanged(offset + fromPosition, offset + toPosition + itemCount);
 		}
