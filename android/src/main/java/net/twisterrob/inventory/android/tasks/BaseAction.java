@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.tasks;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.StringRes;
+import android.support.annotation.*;
 import android.view.View;
 
 import net.twisterrob.inventory.android.view.Action;
@@ -18,23 +18,26 @@ public abstract class BaseAction implements Action {
 			throw validationError;
 		}
 	}
+	@WorkerThread
 	protected abstract void doPrepare();
 
-	@Override public final CharSequence getFailureMessage(Resources res) {
+	@Override public final @NonNull CharSequence getFailureMessage(@NonNull Resources res) {
 		if (validationError != null) {
 			return validationError.getMessage(res);
 		} else {
 			return getGenericFailureMessage(res);
 		}
 	}
+	@UiThread
 	protected abstract CharSequence getGenericFailureMessage(Resources res);
 
 	@Override public final void execute() {
 		doExecute();
 	}
+	@WorkerThread
 	protected abstract void doExecute();
 
-	@Override public View getConfirmationView(Context context) {
+	@Override public View getConfirmationView(@NonNull Context context) {
 		return null;
 	}
 

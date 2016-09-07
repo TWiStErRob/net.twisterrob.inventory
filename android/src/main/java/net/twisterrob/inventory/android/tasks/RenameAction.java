@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.tasks;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.EditText;
 
@@ -27,7 +28,7 @@ public abstract class RenameAction<T extends DTO> extends BaseAction {
 		this.newName = newName;
 	}
 
-	@Override public View getConfirmationView(Context context) {
+	@Override public View getConfirmationView(@NonNull Context context) {
 		newNameEditor = new EditText(context);
 		newNameEditor.setSingleLine(true);
 		newNameEditor.setText(newName != null? newName : dto.name);
@@ -43,13 +44,13 @@ public abstract class RenameAction<T extends DTO> extends BaseAction {
 	@Override protected CharSequence getGenericFailureMessage(Resources res) {
 		return res.getString(R.string.action_rename_failed, res.getQuantityString(typeRes, 1), dto.name, getNewName());
 	}
-	@Override public CharSequence getConfirmationTitle(Resources res) {
+	@Override public @NonNull CharSequence getConfirmationTitle(@NonNull Resources res) {
 		return res.getString(R.string.action_rename_title, res.getQuantityString(typeRes, 1), dto.name);
 	}
-	@Override public CharSequence getConfirmationMessage(Resources res) {
+	@Override public @NonNull CharSequence getConfirmationMessage(@NonNull Resources res) {
 		return res.getString(R.string.action_rename_ask, res.getQuantityString(typeRes, 1), dto.name);
 	}
-	@Override public CharSequence getSuccessMessage(Resources res) {
+	@Override public @NonNull CharSequence getSuccessMessage(@NonNull Resources res) {
 		return res.getString(R.string.action_rename_success, res.getQuantityString(typeRes, 1), dto.name, newName);
 	}
 }

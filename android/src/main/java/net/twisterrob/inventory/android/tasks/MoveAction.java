@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.tasks;
 import java.util.Collection;
 
 import android.content.res.Resources;
-import android.support.annotation.PluralsRes;
+import android.support.annotation.*;
 
 import net.twisterrob.inventory.android.R;
 
@@ -39,15 +39,15 @@ public abstract class MoveAction extends BaseAction {
 		return res.getQuantityString(titleRes, stuff.size(), toPluralArgs(stuff, type, targetType, target));
 	}
 
-	@Override public CharSequence getConfirmationTitle(Resources res) {
+	@Override public @NonNull CharSequence getConfirmationTitle(@NonNull Resources res) {
 		return buildPlural(res, R.plurals.action_move_title);
 	}
 
-	@Override public CharSequence getConfirmationMessage(Resources res) {
+	@Override public @NonNull CharSequence getConfirmationMessage(@NonNull Resources res) {
 		return buildPlural(res, R.plurals.action_move_confirm);
 	}
 
-	@Override public CharSequence getSuccessMessage(Resources res) {
+	@Override public @NonNull CharSequence getSuccessMessage(@NonNull Resources res) {
 		return buildPlural(res, R.plurals.action_move_success);
 	}
 

@@ -9,7 +9,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build.*;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog.Builder;
@@ -40,15 +40,15 @@ import net.twisterrob.inventory.android.*;
 public class Dialogs {
 	private static final Logger LOG = LoggerFactory.getLogger(Dialogs.class);
 
-	public static void executeConfirm(Context activity, Action action) {
+	public static void executeConfirm(@NonNull Context activity, @NonNull Action action) {
 		new ConfirmedExecute(activity).execute(new ActionState(action));
 	}
 
-	public static void executeDirect(Activity activity, Action action) {
+	public static void executeDirect(@NonNull Activity activity, @NonNull Action action) {
 		new NoQuestionsWithUndo(activity).execute(new ActionState(action));
 	}
 
-	static void undo(final Activity activity, ActionState state) {
+	static void undo(final @NonNull Activity activity, @NonNull ActionState state) {
 		final Action undo = state.action.buildUndo();
 		if (undo != null) {
 			CharSequence message = state.action.getSuccessMessage(activity.getResources());
@@ -71,15 +71,13 @@ public class Dialogs {
 			this.context = context;
 		}
 
-		@Override
-		protected ActionState doInBackground(ActionState state) {
+		@Override protected ActionState doInBackground(ActionState state) {
 			state.prepare();
 			return state;
 		}
 
 		@TargetApi(VERSION_CODES.HONEYCOMB)
-		@Override
-		protected void onPostExecute(final ActionState state) {
+		@Override protected void onPostExecute(final ActionState state) {
 			if (state.check(context)) {
 				Builder builder = new Builder(context)
 						.setTitle(state.action.getConfirmationTitle(context.getResources()))
@@ -116,14 +114,12 @@ public class Dialogs {
 			this.context = context;
 		}
 
-		@Override
-		protected ActionState doInBackground(ActionState state) {
+		@Override protected ActionState doInBackground(ActionState state) {
 			state.execute();
 			return state;
 		}
 
-		@Override
-		protected void onPostExecute(ActionState state) {
+		@Override protected void onPostExecute(ActionState state) {
 			if (state.check(context)) {
 				state.action.finished();
 			}
@@ -137,8 +133,7 @@ public class Dialogs {
 			this.context = context;
 		}
 
-		@Override
-		protected ActionState doInBackground(ActionState state) {
+		@Override protected ActionState doInBackground(ActionState state) {
 			state.prepare();
 			if (state.hasPassed()) {
 				state.execute();
@@ -146,8 +141,7 @@ public class Dialogs {
 			return state;
 		}
 
-		@Override
-		protected void onPostExecute(ActionState state) {
+		@Override protected void onPostExecute(ActionState state) {
 			if (state.check(context)) {
 				state.action.finished();
 			}
@@ -159,8 +153,7 @@ public class Dialogs {
 			super(activity);
 		}
 
-		@Override
-		protected void onPostExecute(ActionState state) {
+		@Override protected void onPostExecute(ActionState state) {
 			if (state.check(context)) {
 				state.action.finished();
 				undo((Activity)context, state);
@@ -174,10 +167,11 @@ public class Dialogs {
 		Throwable execute;
 		Throwable failureMessage;
 
-		public ActionState(Action action) {
+		public ActionState(@NonNull Action action) {
 			this.action = action;
 		}
 
+		@WorkerThread
 		void prepare() {
 			try {
 				action.prepare();
@@ -187,6 +181,7 @@ public class Dialogs {
 			}
 		}
 
+		@WorkerThread
 		void execute() {
 			try {
 				action.execute();
@@ -196,7 +191,8 @@ public class Dialogs {
 			}
 		}
 
-		boolean check(Context context) {
+		@UiThread
+		boolean check(@NonNull Context context) {
 			if (hasPassed()) {
 				return true;
 			}

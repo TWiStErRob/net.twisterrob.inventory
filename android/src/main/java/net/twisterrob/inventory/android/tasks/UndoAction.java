@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.tasks;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import net.twisterrob.inventory.android.view.Action;
@@ -16,13 +17,13 @@ public abstract class UndoAction implements Action {
 	@Override public void prepare() {
 		// usually no preparation needed because all the information is available from the original.
 	}
-	@Override public final CharSequence getConfirmationTitle(Resources res) {
+	@Override public final @NonNull CharSequence getConfirmationTitle(@NonNull Resources res) {
 		return "Undo";
 	}
-	@Override public final CharSequence getConfirmationMessage(Resources res) {
+	@Override public final @NonNull CharSequence getConfirmationMessage(@NonNull Resources res) {
 		return "Are you sure you want to undo?";
 	}
-	@Override public View getConfirmationView(Context context) {
+	@Override public View getConfirmationView(@NonNull Context context) {
 		return null;
 	}
 
@@ -34,10 +35,10 @@ public abstract class UndoAction implements Action {
 		}
 	}
 
-	@Override public CharSequence getSuccessMessage(Resources res) {
+	@Override public @NonNull CharSequence getSuccessMessage(@NonNull Resources res) {
 		return "Un-done";
 	}
-	@Override public CharSequence getFailureMessage(Resources res) {
+	@Override public @NonNull CharSequence getFailureMessage(@NonNull Resources res) {
 		return "Undo failed";
 	}
 	@Override public final Action buildUndo() {

@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.tasks;
 import java.util.*;
 
 import android.content.res.Resources;
-import android.support.annotation.PluralsRes;
+import android.support.annotation.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.view.Action;
@@ -43,11 +43,11 @@ public abstract class DeleteAction extends BaseAction {
 		return res.getQuantityString(titleRes, targets.size(), toPluralArgs(targets, name));
 	}
 
-	@Override public CharSequence getConfirmationTitle(Resources res) {
+	@Override public @NonNull CharSequence getConfirmationTitle(@NonNull Resources res) {
 		return buildPlural(res, R.plurals.action_delete_title);
 	}
 
-	@Override public CharSequence getConfirmationMessage(Resources res) {
+	@Override public @NonNull CharSequence getConfirmationMessage(@NonNull Resources res) {
 		StringBuilder sb = new StringBuilder();
 		if (children.isEmpty()) {
 			sb.append(buildPlural(res, R.plurals.action_delete_confirm_empty));
@@ -67,7 +67,7 @@ public abstract class DeleteAction extends BaseAction {
 		return sb.toString();
 	}
 
-	@Override public CharSequence getSuccessMessage(Resources res) {
+	@Override public @NonNull CharSequence getSuccessMessage(@NonNull Resources res) {
 		return buildPlural(res, R.plurals.action_delete_success);
 	}
 
