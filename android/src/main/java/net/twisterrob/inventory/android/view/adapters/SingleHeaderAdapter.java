@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.view.adapters;
 
 import android.database.*;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
@@ -77,7 +78,7 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 	}
 
 	protected abstract void onBindNonHeaderViewHolder(VH holder, Cursor cursor);
-	@Override public final void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+	@Override public final void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Cursor cursor) {
 		if (holder instanceof HeaderViewHolder) {
 			((HeaderViewHolder)holder).bind();
 		} else {

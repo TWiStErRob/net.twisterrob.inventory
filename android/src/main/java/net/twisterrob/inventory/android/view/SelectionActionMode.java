@@ -7,6 +7,7 @@ import org.slf4j.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.*;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -26,21 +27,21 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 	private final ActionMode.Callback callback = this;
 	private ActionMode actionMode;
 
-	public SelectionActionMode(Activity activity, SelectionAdapter<?> adapter) {
+	public SelectionActionMode(@NonNull Activity activity, @NonNull SelectionAdapter<?> adapter) {
 		this.activity = activity;
 		this.adapter = adapter;
 	}
 
-	public Activity getActivity() {
+	public @NonNull Activity getActivity() {
 		return activity;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends ViewHolder> SelectionAdapter<T> getAdapter() {
+	public @NonNull <T extends ViewHolder> SelectionAdapter<T> getAdapter() {
 		return (SelectionAdapter<T>)adapter;
 	}
 
-	public void start(Collection<Integer> initialSelection) {
+	public void start(@NonNull Collection<Integer> initialSelection) {
 		adapter.setSelectedItems(initialSelection);
 		start();
 	}
@@ -144,7 +145,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 		adapter.clearSelections();
 	}
 
-	public abstract boolean onActivityResult(int requestCode, int resultCode, Intent data);
+	public abstract boolean onActivityResult(int requestCode, int resultCode, @Nullable Intent data);
 
 	public static class NoOp extends SelectionActionMode {
 		public NoOp(Activity activity) {

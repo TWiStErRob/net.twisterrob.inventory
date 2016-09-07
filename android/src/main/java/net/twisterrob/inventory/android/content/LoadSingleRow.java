@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.content;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.*;
 import android.support.v4.content.Loader;
 
 import net.twisterrob.inventory.android.App;
@@ -12,10 +13,10 @@ public abstract class LoadSingleRow extends LoadersCallbacks {
 		super(context);
 	}
 
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+	public void onLoadFinished(Loader<Cursor> loader, @Nullable Cursor data) {
 		super.onLoadFinished(loader, data);
 		//DatabaseTools.dumpCursor(data);
-		if (data.getCount() == 1 && data.moveToFirst()) {
+		if (data != null && data.getCount() == 1 && data.moveToFirst()) {
 			process(data);
 		} else {
 			processInvalid(data);
@@ -29,17 +30,17 @@ public abstract class LoadSingleRow extends LoadersCallbacks {
 	}
 
 	// TODEL UnusedParameters: https://youtrack.jetbrains.com/issue/IDEA-154071
-	protected void process(@SuppressWarnings({"unused", "UnusedParameters"}) Cursor data) {
+	protected void process(@SuppressWarnings({"unused", "UnusedParameters"}) @NonNull Cursor data) {
 		// no op, optional override
 	}
 
-	protected void processInvalid(Cursor data) {
+	protected void processInvalid(@Nullable Cursor data) {
 		App.toastUser(getInvalidToastMessage(data));
 	}
 
 	protected String getInvalidToastMessage(Cursor data) {
 		String msg;
-		if (data.getCount() == 0) {
+		if (data == null || data.getCount() == 0) {
 			msg = "No data found!";
 		} else {
 			msg = "Multiple (" + data.getCount() + ") data found!";

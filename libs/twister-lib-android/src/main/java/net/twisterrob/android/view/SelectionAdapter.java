@@ -4,6 +4,7 @@ import java.util.*;
 
 import android.annotation.TargetApi;
 import android.os.Build.*;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.util.SparseBooleanArray;
@@ -92,7 +93,7 @@ public class SelectionAdapter<VH extends RecyclerView.ViewHolder> extends Wrappi
 		return selectedItems.size();
 	}
 
-	public Collection<Integer> getSelectedPositions() {
+	public @NonNull Collection<Integer> getSelectedPositions() {
 		List<Integer> items = new ArrayList<>(selectedItems.size());
 		for (int i = 0; i < selectedItems.size(); i++) {
 			int key = selectedItems.keyAt(i);
@@ -102,7 +103,7 @@ public class SelectionAdapter<VH extends RecyclerView.ViewHolder> extends Wrappi
 		return items;
 	}
 
-	public void setSelectedItems(Collection<Integer> positions) {
+	public void setSelectedItems(@NonNull Collection<Integer> positions) {
 		selectedItems.clear();
 		for (int position : positions) {
 			if (isSelectable(position)) {

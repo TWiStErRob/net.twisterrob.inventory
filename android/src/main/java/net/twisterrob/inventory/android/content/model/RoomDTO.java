@@ -5,6 +5,7 @@ import java.util.Locale;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
@@ -21,13 +22,12 @@ public class RoomDTO extends ImagedDTO {
 		type = RoomType.DEFAULT;
 	}
 
-	public static RoomDTO fromCursor(Cursor cursor) {
+	public static RoomDTO fromCursor(@NonNull Cursor cursor) {
 		RoomDTO room = new RoomDTO();
 		return room.fromCursorInternal(cursor);
 	}
 
-	@Override
-	protected RoomDTO fromCursorInternal(Cursor cursor) {
+	@Override protected RoomDTO fromCursorInternal(@NonNull Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
 		rootItemID = DatabaseTools.getOptionalLong(cursor, Room.ROOT_ITEM, Item.ID_ADD);
@@ -48,8 +48,7 @@ public class RoomDTO extends ImagedDTO {
 		return sb.toString();
 	}
 
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		return String.format(Locale.ROOT, "Room #%2$d: '%3$s' / %4$s in property #%1$d", propertyID, id, name, type);
 	}
 }

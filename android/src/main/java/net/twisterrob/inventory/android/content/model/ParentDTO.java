@@ -5,19 +5,19 @@ import java.util.Locale;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.inventory.android.content.contract.*;
 
 public class ParentDTO extends ImagedDTO {
 	public Type parentType;
 
-	public static ParentDTO fromCursor(Cursor cursor) {
+	public static ParentDTO fromCursor(@NonNull Cursor cursor) {
 		ParentDTO item = new ParentDTO();
 		return item.fromCursorInternal(cursor);
 	}
 
-	@Override
-	protected ParentDTO fromCursorInternal(Cursor cursor) {
+	@Override protected ParentDTO fromCursorInternal(@NonNull Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
 		id = cursor.getLong(cursor.getColumnIndexOrThrow(ParentColumns.ID));
@@ -33,8 +33,7 @@ public class ParentDTO extends ImagedDTO {
 		return null;
 	}
 
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		return String.format(Locale.ROOT, "Parent %3$s #%1$d: '%2$s'", id, name, parentType);
 	}
 }

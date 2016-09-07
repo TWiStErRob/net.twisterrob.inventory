@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.fragment;
 import org.slf4j.*;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.view.MenuItem;
 
 import net.twisterrob.inventory.android.R;
@@ -33,27 +34,23 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 		return false;
 	}
 
-	@Override
-	protected void onRefresh() {
+	@Override protected void onRefresh() {
 		super.onRefresh();
 		getLoaderManager().getLoader(SingleList.id()).onContentChanged();
 	}
 
-	@Override
-	protected void onStartLoading() {
+	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleList.id(),
 				Intents.bundleFromList(getArgListID()), new SingleRowLoaded());
 	}
 
-	@Override
-	protected void onSingleRowLoaded(Cursor cursor) {
+	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {
 		ListDTO list = ListDTO.fromCursor(cursor);
 		eventsListener.listLoaded(list);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_list_edit: {
 				rename(getArgListID());

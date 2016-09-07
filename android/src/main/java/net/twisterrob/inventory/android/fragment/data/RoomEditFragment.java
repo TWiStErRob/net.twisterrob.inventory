@@ -52,7 +52,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		manager.startLoading();
 	}
 
-	@Override protected void onSingleRowLoaded(Cursor cursor) {
+	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 		onSingleRowLoaded(room);
 		eventsListener.roomLoaded(room);

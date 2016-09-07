@@ -6,6 +6,7 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
@@ -40,29 +41,25 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 		setDynamicResource(DYN_OptionsMenu, R.menu.room);
 	}
 
-	@Override
-	protected void onRefresh() {
+	@Override protected void onRefresh() {
 		super.onRefresh();
 		getLoaderManager().getLoader(SingleRoom.id()).onContentChanged();
 	}
 
-	@Override
-	protected void onStartLoading() {
+	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleRoom.id(),
 				Intents.bundleFromRoom(getArgRoomID()), new SingleRowLoaded());
 	}
 
-	@Override
-	protected void onSingleRowLoaded(Cursor cursor) {
+	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {
 		RoomDTO room = RoomDTO.fromCursor(cursor);
 		propertyID = room.propertyID;
 		super.onSingleRowLoaded(room);
 		eventsListener.roomLoaded(room);
 	}
 
-	@Override
-	protected CharSequence getDetailsString(RoomDTO entity, boolean DEBUG) {
+	@Override protected CharSequence getDetailsString(RoomDTO entity, boolean DEBUG) {
 		return new DescriptionBuilder()
 				.append("Room ID", entity.id, DEBUG)
 				.append("Room Name", entity.name)
@@ -77,8 +74,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 				.build();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_room_edit:
 				startActivity(RoomEditActivity.edit(getArgRoomID()));

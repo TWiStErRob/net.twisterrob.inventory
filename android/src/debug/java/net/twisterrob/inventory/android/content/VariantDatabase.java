@@ -7,7 +7,7 @@ import org.slf4j.*;
 import android.content.res.Resources;
 import android.database.*;
 import android.database.sqlite.*;
-import android.support.annotation.StringRes;
+import android.support.annotation.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.java.utils.StringTools;
@@ -22,7 +22,8 @@ public class VariantDatabase {
 		m_resources = resources;
 	}
 
-	protected void execSQL(SQLiteDatabase db, @StringRes int queryResource, Object... params) {
+	protected void execSQL(@NonNull SQLiteDatabase db,
+			@StringRes int queryResource, @NonNull Object... params) {
 		LOG.trace("execSQL({}, {})", m_resources.getResourceEntryName(queryResource), Arrays.toString(params));
 		long start = System.nanoTime();
 		db.execSQL(m_resources.getString(queryResource), params);
@@ -33,7 +34,8 @@ public class VariantDatabase {
 		}
 	}
 
-	protected Cursor rawQuery(SQLiteDatabase db, @StringRes int queryResource, Object... params) {
+	protected @NonNull Cursor rawQuery(@NonNull SQLiteDatabase db,
+			@StringRes int queryResource, @NonNull Object... params) {
 		String name = m_resources.getResourceEntryName(queryResource);
 		String paramString = Arrays.toString(params);
 		LOG.trace("rawQuery({}, {})", name, paramString);
@@ -50,7 +52,8 @@ public class VariantDatabase {
 	}
 
 	@SuppressWarnings("resource")
-	protected long rawInsert(SQLiteDatabase db, @StringRes int insertResource, Object... params) {
+	protected long rawInsert(@NonNull SQLiteDatabase db,
+			@StringRes int insertResource, @NonNull Object... params) {
 		LOG.trace("rawInsert({}, {})", m_resources.getResourceEntryName(insertResource), Arrays.toString(params));
 
 		long start = System.nanoTime();

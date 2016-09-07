@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.content.model;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
@@ -16,7 +17,7 @@ public class DTO {
 	public Integer numDirectChildren;
 	public Integer numAllChildren;
 
-	protected DTO fromCursorInternal(Cursor cursor) {
+	protected DTO fromCursorInternal(@NonNull Cursor cursor) {
 		if (cursor.isBeforeFirst() || cursor.isAfterLast()) {
 			throw new IllegalArgumentException("Did you forget to advance the cursor? See DatabaseDTOTools.");
 		}

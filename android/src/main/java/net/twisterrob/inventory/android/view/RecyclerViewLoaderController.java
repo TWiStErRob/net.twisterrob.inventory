@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.*;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -11,21 +12,21 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 	private final Context context;
 	private final LoaderManagerProvider manager;
 
-	public RecyclerViewLoaderController(FragmentActivity activity) {
+	public RecyclerViewLoaderController(@NonNull FragmentActivity activity) {
 		this(activity, new ActivityLoaderManagerProvider(activity));
 	}
-	public RecyclerViewLoaderController(Fragment fragment) {
+	public RecyclerViewLoaderController(@NonNull Fragment fragment) {
 		this(fragment.getActivity(), new FragmentLoaderManagerProvider(fragment));
 	}
-	private RecyclerViewLoaderController(Context context, LoaderManagerProvider manager) {
+	private RecyclerViewLoaderController(@NonNull Context context, @NonNull LoaderManagerProvider manager) {
 		this.context = context;
 		this.manager = manager;
 	}
 
-	protected Context getContext() {
+	protected @NonNull Context getContext() {
 		return context;
 	}
-	protected LoaderManager getLoaderManager() {
+	protected @NonNull LoaderManager getLoaderManager() {
 		return manager.get();
 	}
 
@@ -48,7 +49,7 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 	public abstract void refresh();
 
 	protected interface LoaderManagerProvider {
-		LoaderManager get();
+		@NonNull LoaderManager get();
 	}
 
 	protected static class ActivityLoaderManagerProvider implements LoaderManagerProvider {
@@ -58,7 +59,7 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 			this.activity = activity;
 		}
 
-		@Override public LoaderManager get() {
+		@Override public @NonNull LoaderManager get() {
 			return activity.getSupportLoaderManager();
 		}
 	}
@@ -70,7 +71,7 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 			this.fragment = fragment;
 		}
 
-		@Override public LoaderManager get() {
+		@Override public @NonNull LoaderManager get() {
 			return fragment.getLoaderManager();
 		}
 	}

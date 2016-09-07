@@ -11,6 +11,7 @@ import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.PropertiesEvents;
 import net.twisterrob.inventory.android.tasks.DeletePropertiesAction;
 import net.twisterrob.inventory.android.view.*;
@@ -41,8 +42,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		};
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_property_add:
 				listController.createNew();
@@ -55,36 +55,8 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		}
 	}
 
-	@Override
-	protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
-		return new SelectionActionMode(getActivity(), adapter) {
-			@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-				mode.getMenuInflater().inflate(R.menu.property_bulk, menu);
-				return super.onCreateActionMode(mode, menu);
-			}
-
-			@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-				switch (item.getItemId()) {
-					case R.id.action_property_delete:
-						delete(selectionMode.getSelectedIDs());
-						return true;
-				}
-				return super.onActionItemClicked(mode, item);
-			}
-
-			@Override public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-				return false;
-			}
-
-			private void delete(final long... propertyIDs) {
-				Dialogs.executeConfirm(getActivity(), new DeletePropertiesAction(propertyIDs) {
-					public void finished() {
-						finish();
-						refresh();
-					}
-				});
-			}
-		};
+	@Override protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+		return new PropertySelectionActionMode(this, adapter);
 	}
 
 	@Override protected void onListItemClick(int position, long recyclerViewItemID) {
@@ -99,5 +71,40 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		PropertyListFragment fragment = new PropertyListFragment();
 		fragment.setArguments(new Bundle());
 		return fragment;
+	}
+
+	private static class PropertySelectionActionMode extends SelectionActionMode {
+		private final BaseFragment<?> fragment;
+
+		public PropertySelectionActionMode(BaseFragment<?> fragment, SelectionAdapter<?> adapter) {
+			super(fragment.getActivity(), adapter);
+			this.fragment = fragment;
+		}
+		@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			mode.getMenuInflater().inflate(R.menu.property_bulk, menu);
+			return super.onCreateActionMode(mode, menu);
+		}
+
+		@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+				case R.id.action_property_delete:
+					delete(getSelectedIDs());
+					return true;
+			}
+			return super.onActionItemClicked(mode, item);
+		}
+
+		@Override public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+			return false;
+		}
+
+		private void delete(final long... propertyIDs) {
+			Dialogs.executeConfirm(getActivity(), new DeletePropertiesAction(propertyIDs) {
+				public void finished() {
+					finish();
+					fragment.refresh();
+				}
+			});
+		}
 	}
 }

@@ -311,7 +311,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		Bundle args = Intents.bundleFromProperty(propertyID);
 		getSupportLoaderManager().destroyLoader(Loaders.SingleProperty.id());
 		getSupportLoaderManager().initLoader(Loaders.SingleProperty.id(), args, new LoadSingleRow(this) {
-			@Override protected void process(Cursor cursor) {
+			@Override protected void process(@NonNull Cursor cursor) {
 				PropertyDTO property = PropertyDTO.fromCursor(cursor);
 				BaseFragment<?> fragment = RoomListFragment.newInstance(property.id);
 				fragment.getArguments().putString(ARG_TITLE, property.name);
@@ -334,7 +334,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		Bundle args = Intents.bundleFromRoom(roomID);
 		getSupportLoaderManager().destroyLoader(Loaders.SingleRoom.id());
 		getSupportLoaderManager().initLoader(Loaders.SingleRoom.id(), args, new LoadSingleRow(this) {
-			@Override protected void process(Cursor cursor) {
+			@Override protected void process(@NonNull Cursor cursor) {
 				RoomDTO room = RoomDTO.fromCursor(cursor);
 				BaseFragment<?> roomFragment = ItemListFragment.newRoomInstance(room.id);
 				roomFragment.getArguments().putString(ARG_TITLE, room.name);

@@ -5,7 +5,7 @@ import org.slf4j.*;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.*;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -104,7 +104,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		if (getArgRoomID() != Room.ID_ADD) {
 			Bundle args = Intents.bundleFromRoom(getArgRoomID());
 			getLoaderManager().initLoader(Loaders.SingleRoom.id(), args, new LoadSingleRow(getContext()) {
-				@Override protected void process(Cursor data) {
+				@Override protected void process(@NonNull Cursor data) {
 					super.process(data);
 					long root = data.getLong(data.getColumnIndex(Room.ROOT_ITEM));
 					getArguments().putLong(Extras.PARENT_ID, root);

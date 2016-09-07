@@ -5,7 +5,7 @@ import org.slf4j.*;
 import android.content.*;
 import android.database.*;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -129,7 +129,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			return setupGallery(list);
 		}
 
-		@Override protected void setData(CursorRecyclerAdapter<?> adapter, Cursor data) {
+		@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
 			adapter.swapCursor(data);
 			if (data != null && selectionMode != null) {
 				SelectionAdapter<?> selectionAdapter = selectionMode.getAdapter();

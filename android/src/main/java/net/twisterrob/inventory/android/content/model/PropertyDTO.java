@@ -5,6 +5,7 @@ import java.util.Locale;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import net.twisterrob.inventory.android.R;
@@ -16,13 +17,12 @@ public class PropertyDTO extends ImagedDTO {
 		type = PropertyType.DEFAULT;
 	}
 
-	public static PropertyDTO fromCursor(Cursor cursor) {
+	public static PropertyDTO fromCursor(@NonNull Cursor cursor) {
 		PropertyDTO property = new PropertyDTO();
 		return property.fromCursorInternal(cursor);
 	}
 
-	@Override
-	protected PropertyDTO fromCursorInternal(Cursor cursor) {
+	@Override protected PropertyDTO fromCursorInternal(@NonNull Cursor cursor) {
 		super.fromCursorInternal(cursor);
 		return this;
 	}
@@ -38,8 +38,7 @@ public class PropertyDTO extends ImagedDTO {
 		return sb.toString();
 	}
 
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		return String.format(Locale.ROOT, "Property #%1$d: '%2$s' / %3$s", id, name, type);
 	}
 }

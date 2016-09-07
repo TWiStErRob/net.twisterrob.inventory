@@ -5,6 +5,7 @@ import java.util.Date;
 import org.slf4j.*;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.view.MenuItem;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
@@ -34,28 +35,24 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 		setDynamicResource(DYN_OptionsMenu, R.menu.property);
 	}
 
-	@Override
-	protected void onRefresh() {
+	@Override protected void onRefresh() {
 		super.onRefresh();
 		getLoaderManager().getLoader(SingleProperty.id()).onContentChanged();
 	}
 
-	@Override
-	protected void onStartLoading() {
+	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleProperty.id(),
 				Intents.bundleFromProperty(getArgPropertyID()), new SingleRowLoaded());
 	}
 
-	@Override
-	protected void onSingleRowLoaded(Cursor cursor) {
+	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {
 		PropertyDTO property = PropertyDTO.fromCursor(cursor);
 		super.onSingleRowLoaded(property);
 		eventsListener.propertyLoaded(property);
 	}
 
-	@Override
-	protected CharSequence getDetailsString(PropertyDTO entity, boolean DEBUG) {
+	@Override protected CharSequence getDetailsString(PropertyDTO entity, boolean DEBUG) {
 		return new DescriptionBuilder()
 				.append("Property ID", entity.id, DEBUG)
 				.append("Property Name", entity.name)
@@ -69,8 +66,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 				.build();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_property_edit:
 				startActivity(PropertyEditActivity.edit(getArgPropertyID()));

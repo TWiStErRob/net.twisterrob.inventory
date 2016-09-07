@@ -23,8 +23,7 @@ public abstract class ImagedDTO extends DTO {
 	public long type;
 	public byte[] image;
 
-	@Override
-	protected ImagedDTO fromCursorInternal(Cursor cursor) {
+	@Override protected ImagedDTO fromCursorInternal(@NonNull Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
 		typeImage = DatabaseTools.getOptionalString(cursor, CommonColumns.TYPE_IMAGE, typeImage);

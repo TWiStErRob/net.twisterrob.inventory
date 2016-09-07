@@ -6,6 +6,7 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -41,29 +42,25 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 		setDynamicResource(DYN_OptionsMenu, R.menu.item);
 	}
 
-	@Override
-	protected void onRefresh() {
+	@Override protected void onRefresh() {
 		super.onRefresh();
 		getLoaderManager().getLoader(SingleItem.id()).onContentChanged();
 	}
 
-	@Override
-	protected void onStartLoading() {
+	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleItem.id(),
 				Intents.bundleFromItem(getArgItemID()), new SingleRowLoaded());
 	}
 
-	@Override
-	protected void onSingleRowLoaded(Cursor cursor) {
+	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
 		parentID = item.parentID;
 		super.onSingleRowLoaded(item);
 		eventsListener.itemLoaded(item);
 	}
 
-	@Override
-	protected CharSequence getDetailsString(ItemDTO entity, boolean DEBUG) {
+	@Override protected CharSequence getDetailsString(ItemDTO entity, boolean DEBUG) {
 		return new DescriptionBuilder()
 				.append("Item ID", entity.id, DEBUG)
 				.append("Item Name", entity.name)
@@ -84,8 +81,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				.build();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_item_edit:
 				startActivity(ItemEditActivity.edit(getArgItemID()));

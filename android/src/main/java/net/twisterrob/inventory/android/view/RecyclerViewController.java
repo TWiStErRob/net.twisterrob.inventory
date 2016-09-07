@@ -134,7 +134,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 		return adapter;
 	}
 
-	public void updateAdapter(D data) {
+	public void updateAdapter(@Nullable D data) {
 		if (adapter == null) {
 			pendingData = data;
 		} else {
@@ -149,7 +149,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 	 * instead of {@link CursorRecyclerAdapter#changeCursor(Cursor)} (closes it).
 	 * The {@link LoaderManager} will take care of disposing the data.
 	 */
-	protected abstract void setData(A adapter, D data);
+	protected abstract void setData(@NonNull A adapter, @Nullable D data);
 
 	private void updateFAB() {
 		if (fab == null) {

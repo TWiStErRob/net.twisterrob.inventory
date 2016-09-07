@@ -114,38 +114,38 @@ public class Database extends VariantDatabase {
 	// where pt.name like ? escape '\'
 	// return rawQuery(R.string.query_..., "%" + DatabaseTools.escapeLike(nameFilter, '\\') + "%");
 
-	public Cursor listPropertyTypes() {
+	public @NonNull Cursor listPropertyTypes() {
 		return rawQuery(R.string.query_property_types);
 	}
-	public Cursor listRoomTypes() {
+	public @NonNull Cursor listRoomTypes() {
 		return rawQuery(R.string.query_room_types);
 	}
-	public Cursor listProperties() {
+	public @NonNull Cursor listProperties() {
 		return rawQuery(R.string.query_properties);
 	}
-	public Cursor getProperty(long propertyID) {
+	public @NonNull Cursor getProperty(long propertyID) {
 		return rawQuery(R.string.query_property, propertyID);
 	}
-	public Cursor listRooms() {
+	public @NonNull Cursor listRooms() {
 		return rawQuery(R.string.query_rooms, null, null);
 	}
-	public Cursor listRooms(long propertyID) {
+	public @NonNull Cursor listRooms(long propertyID) {
 		return rawQuery(R.string.query_rooms, propertyID, propertyID);
 	}
-	public Cursor getRoom(long roomID) {
+	public @NonNull Cursor getRoom(long roomID) {
 		return rawQuery(R.string.query_room, roomID);
 	}
-	public Cursor listRelatedCategories(Long categoryID) {
+	public @NonNull Cursor listRelatedCategories(Long categoryID) {
 		if (categoryID == null) {
 			return rawQuery(R.string.query_categories_all);
 		} else {
 			return rawQuery(R.string.query_item_categories, categoryID);
 		}
 	}
-	public Cursor listItems(long parentID) {
+	public @NonNull Cursor listItems(long parentID) {
 		return rawQuery(R.string.query_items_by_item, parentID, parentID, parentID);
 	}
-	public Cursor listItemsInRoom(long roomID) {
+	public @NonNull Cursor listItemsInRoom(long roomID) {
 		@SuppressWarnings("resource") Cursor room = getRoom(roomID);
 		try {
 			room.moveToFirst();
@@ -155,33 +155,33 @@ public class Database extends VariantDatabase {
 			room.close();
 		}
 	}
-	public Cursor listItemsInList(long listID) {
+	public @NonNull Cursor listItemsInList(long listID) {
 		return rawQuery(R.string.query_items_by_list, listID);
 	}
-	public Cursor listItems() {
+	public @NonNull Cursor listItems() {
 		return rawQuery(R.string.query_items);
 	}
-	public Cursor listItemsForCategory(long categoryID, boolean include) {
+	public @NonNull Cursor listItemsForCategory(long categoryID, boolean include) {
 		if (include) {
 			return rawQuery(R.string.query_items_in_category, categoryID);
 		} else {
 			return rawQuery(R.string.query_items_by_category, categoryID);
 		}
 	}
-	public Cursor listItemParents(long itemID) {
+	public @NonNull Cursor listItemParents(long itemID) {
 		return rawQuery(R.string.query_item_parents, itemID);
 	}
 
-	public Cursor getItem(long itemID, boolean addToRecents) {
+	public @NonNull Cursor getItem(long itemID, boolean addToRecents) {
 		if (addToRecents) {
 			execSQL(R.string.query_recent_add, itemID);
 		}
 		return rawQuery(R.string.query_item, itemID, itemID);
 	}
-	public Cursor listCategories(Long parentCategoryID) {
+	public @NonNull Cursor listCategories(Long parentCategoryID) {
 		return rawQuery(R.string.query_categories, parentCategoryID, parentCategoryID);
 	}
-	public Cursor getCategory(long itemID) {
+	public @NonNull Cursor getCategory(long itemID) {
 		return rawQuery(R.string.query_category, itemID);
 	}
 	public long findCommonCategory(long... ids) {
@@ -245,7 +245,7 @@ public class Database extends VariantDatabase {
 		execSQL(R.string.query_property_image_set, imageId, id);
 	}
 
-	public Cursor getPropertyImage(long id) {
+	public @NonNull Cursor getPropertyImage(long id) {
 		return rawQuery(R.string.query_property_image_get, id);
 	}
 	public void deleteProperty(long id) {
@@ -265,7 +265,7 @@ public class Database extends VariantDatabase {
 	public void setRoomImage(long id, Long imageId) {
 		execSQL(R.string.query_room_image_set, imageId, id);
 	}
-	public Cursor getRoomImage(long id) {
+	public @NonNull Cursor getRoomImage(long id) {
 		return rawQuery(R.string.query_room_image_get, id);
 	}
 	public void deleteRoom(long id) {
@@ -302,7 +302,7 @@ public class Database extends VariantDatabase {
 	public void setItemImage(long id, Long imageId) {
 		execSQL(R.string.query_item_image_set, imageId, id);
 	}
-	public Cursor getItemImage(long id) {
+	public @NonNull Cursor getItemImage(long id) {
 		return rawQuery(R.string.query_item_image_get, id);
 	}
 	public void deleteItem(long id) {
@@ -324,10 +324,10 @@ public class Database extends VariantDatabase {
 		}
 	}
 
-	public Cursor listLists(long itemID) {
+	public @NonNull Cursor listLists(long itemID) {
 		return rawQuery(R.string.query_list_list, itemID);
 	}
-	public Cursor getList(long listID) {
+	public @NonNull Cursor getList(long listID) {
 		return rawQuery(R.string.query_list, listID);
 	}
 	public long createList(String name) {
@@ -352,16 +352,16 @@ public class Database extends VariantDatabase {
 	public void deleteRecentsOfItem(long itemID) {
 		execSQL(R.string.query_recent_delete, itemID);
 	}
-	public Cursor listRecents() {
+	public @NonNull Cursor listRecents() {
 		return rawQuery(R.string.query_recents, 1, 0.5);
 	}
 
-	public Cursor searchSuggest(String query) {
+	public @NonNull Cursor searchSuggest(String query) {
 		query = fixQuery(query);
 		return rawQuery(R.string.query_search_suggest, query);
 	}
 
-	public Cursor search(String query) {
+	public @NonNull Cursor search(String query) {
 		query = fixQuery(query);
 		return rawQuery(R.string.query_search, query);
 	}
@@ -371,7 +371,7 @@ public class Database extends VariantDatabase {
 		return DatabaseTools.singleLong(rawQuery(R.string.query_search_size), null);
 	}
 
-	public Cursor stats() {
+	public @NonNull Cursor stats() {
 		Cursor cursor = rawQuery(R.string.query_stats);
 		cursor.moveToFirst();
 		return cursor;
@@ -406,11 +406,11 @@ public class Database extends VariantDatabase {
 		}
 	}
 
-	public Cursor export() {
+	public @NonNull Cursor export() {
 		return rawQuery(R.string.query_export);
 	}
 
-	public Cursor subtree(Long property, Long room, Long item) {
+	public @NonNull Cursor subtree(Long property, Long room, Long item) {
 		if (1 < (property != null? 1 : 0) + (room != null? 1 : 0) + (item != null? 1 : 0)) {
 			throw new IllegalArgumentException(
 					"Specify at most one of property (" + property + "), room (" + room + "), item" + item + ").");

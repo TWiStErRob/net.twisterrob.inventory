@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.*;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -18,26 +19,26 @@ public abstract class RecyclerViewLoadersController
 
 	private final Loaders loader;
 
-	public RecyclerViewLoadersController(Fragment fragment, Loaders loader) {
+	public RecyclerViewLoadersController(@NonNull Fragment fragment, @NonNull Loaders loader) {
 		super(fragment);
 		this.loader = loader;
 	}
 
-	public Loaders getLoader() {
+	public @NonNull Loaders getLoader() {
 		return loader;
 	}
 
-	@Override protected void setData(CursorRecyclerAdapter<?> adapter, Cursor data) {
+	@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
 		adapter.swapCursor(data);
 	}
 
-	private LoaderCallbacks<Cursor> createLoaderCallbacks() {
+	private @NonNull LoaderCallbacks<Cursor> createLoaderCallbacks() {
 		return new LoadersCallbacks(getContext()) {
 			@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 				startLoading();
 				return super.onCreateLoader(id, args);
 			}
-			@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+			@Override public void onLoadFinished(Loader<Cursor> loader, @Nullable Cursor data) {
 				updateAdapter(data);
 				super.onLoadFinished(loader, data);
 			}
@@ -48,7 +49,7 @@ public abstract class RecyclerViewLoadersController
 		};
 	}
 
-	public void startLoad(Bundle args) {
+	public void startLoad(@Nullable Bundle args) {
 		getLoaderManager().initLoader(loader.id(), args, createLoaderCallbacks());
 	}
 

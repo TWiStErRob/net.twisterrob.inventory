@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.view.adapters;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.view.View.*;
@@ -57,7 +58,7 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter<?>.ViewHolder> exten
 		return inflater.inflate(layoutResource, parent, false);
 	}
 
-	@Override public void onBindViewHolder(VH holder, Cursor cursor) {
+	@Override public void onBindViewHolder(@NonNull VH holder, @NonNull Cursor cursor) {
 		long id = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
 		Type type = Type.from(cursor, CommonColumns.TYPE);
 		String name = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));

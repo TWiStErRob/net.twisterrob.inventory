@@ -5,6 +5,7 @@ import java.util.Locale;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
@@ -26,13 +27,12 @@ public class ItemDTO extends ImagedDTO {
 		type = Category.DEFAULT;
 	}
 
-	public static ItemDTO fromCursor(Cursor cursor) {
+	public static ItemDTO fromCursor(@NonNull Cursor cursor) {
 		ItemDTO item = new ItemDTO();
 		return item.fromCursorInternal(cursor);
 	}
 
-	@Override
-	protected ItemDTO fromCursorInternal(Cursor cursor) {
+	@Override protected ItemDTO fromCursorInternal(@NonNull Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
 		parentID = DatabaseTools.getOptionalLong(cursor, Item.PARENT_ID, Item.ID_ADD);
@@ -64,8 +64,7 @@ public class ItemDTO extends ImagedDTO {
 		return sb.toString();
 	}
 
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		return String.format(Locale.ROOT, "Item #%1$d: '%2$s' / %3$s", id, name, type);
 	}
 }

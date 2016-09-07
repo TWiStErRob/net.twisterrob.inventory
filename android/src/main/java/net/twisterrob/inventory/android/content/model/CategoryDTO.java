@@ -22,13 +22,12 @@ public class CategoryDTO extends ImagedDTO {
 	public Long parentID;
 	public String parentName;
 
-	public static CategoryDTO fromCursor(Cursor cursor) {
+	public static CategoryDTO fromCursor(@NonNull Cursor cursor) {
 		CategoryDTO category = new CategoryDTO();
 		return category.fromCursorInternal(cursor);
 	}
 
-	@Override
-	protected CategoryDTO fromCursorInternal(Cursor cursor) {
+	@Override protected CategoryDTO fromCursorInternal(@NonNull Cursor cursor) {
 		super.fromCursorInternal(cursor);
 
 		parentID = DatabaseTools.getOptionalLong(cursor, Category.PARENT_ID);

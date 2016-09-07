@@ -1,11 +1,12 @@
 package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
+import android.support.annotation.*;
 
 import net.twisterrob.inventory.android.content.LoadSingleRow;
 
 public abstract class BaseSingleLoaderFragment<T> extends BaseFragment<T> {
-	protected abstract void onSingleRowLoaded(Cursor cursor);
+	protected abstract void onSingleRowLoaded(@NonNull Cursor cursor);
 
 	/** <code>getLoaderManager().initLoader(Loaders.X.getID(0), args, new SingleRowLoaded());</code> */
 	protected class SingleRowLoaded extends LoadSingleRow {
@@ -13,14 +14,12 @@ public abstract class BaseSingleLoaderFragment<T> extends BaseFragment<T> {
 			super(getContext());
 		}
 
-		@Override
-		protected void process(Cursor cursor) {
+		@Override protected void process(@NonNull Cursor cursor) {
 			super.process(cursor);
 			onSingleRowLoaded(cursor);
 		}
 
-		@Override
-		protected void processInvalid(Cursor item) {
+		@Override protected void processInvalid(@Nullable Cursor item) {
 			super.processInvalid(item);
 			getActivity().finish();
 		}

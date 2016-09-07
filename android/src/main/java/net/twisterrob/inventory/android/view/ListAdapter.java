@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.view;
 import java.text.NumberFormat;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -33,7 +34,7 @@ public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		return new ViewHolder(view);
 	}
 
-	@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+	@Override public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Cursor cursor) {
 		holder.bind(cursor);
 	}
 

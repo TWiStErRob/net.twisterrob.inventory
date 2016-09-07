@@ -194,7 +194,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 			return new ViewHolder(inflateView(parent, R.layout.item_main_room));
 		}
 
-		@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+		@Override public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Cursor cursor) {
 			super.onBindViewHolder(holder, cursor);
 			String property = cursor.getString(cursor.getColumnIndexOrThrow(Room.PROPERTY_NAME));
 			holder.details.setText(holder.details.getContext().getString(R.string.room_location, property));
@@ -221,7 +221,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 			return new ViewHolder(inflateView(parent, R.layout.item_main_recent));
 		}
 
-		@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+		@Override public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Cursor cursor) {
 			super.onBindViewHolder(holder, cursor);
 			CharSequence visit = cursor.getString(cursor.getColumnIndexOrThrow("visit"));
 			try {
@@ -275,7 +275,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 			return new ViewHolder(inflater.inflate(R.layout.item_main_list, parent, false));
 		}
 
-		@Override public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+		@Override public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Cursor cursor) {
 			String listName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 			int listCount = cursor.getInt(cursor.getColumnIndexOrThrow(CommonColumns.COUNT_CHILDREN_DIRECT));
 			holder.title.setText(listName);

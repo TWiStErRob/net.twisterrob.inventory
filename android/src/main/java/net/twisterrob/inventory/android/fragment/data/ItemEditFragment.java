@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -43,7 +44,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 		manager.startLoading();
 	}
 
-	@Override protected void onSingleRowLoaded(Cursor cursor) {
+	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {
 		ItemDTO item = ItemDTO.fromCursor(cursor);
 		onSingleRowLoaded(item);
 		eventsListener.itemLoaded(item);

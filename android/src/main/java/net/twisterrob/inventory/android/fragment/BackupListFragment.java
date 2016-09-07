@@ -295,7 +295,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 			ImageView fab = getFAB();
 			fab.setImageResource(android.R.drawable.ic_menu_save);
 		}
-		@Override protected void setData(ImportFilesAdapter adapter, List<File> data) {
+		@Override protected void setData(@NonNull ImportFilesAdapter adapter, List<File> data) {
 			adapter.setFiles(getDir(), data);
 		}
 

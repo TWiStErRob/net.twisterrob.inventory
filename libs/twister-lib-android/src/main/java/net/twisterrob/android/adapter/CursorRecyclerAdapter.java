@@ -2,6 +2,7 @@ package net.twisterrob.android.adapter;
 
 import android.database.*;
 import android.os.Handler;
+import android.support.annotation.*;
 import android.support.v7.widget.RecyclerView;
 import android.widget.*;
 
@@ -31,15 +32,15 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	private CursorFilter mCursorFilter;
 	private FilterQueryProvider mFilterQueryProvider;
 
-	public CursorRecyclerAdapter(Cursor cursor) {
+	public CursorRecyclerAdapter(@Nullable Cursor cursor) {
 		this(cursor, 0);
 	}
-	public CursorRecyclerAdapter(Cursor cursor, int flags) {
+	public CursorRecyclerAdapter(@Nullable Cursor cursor, int flags) {
 		setHasStableIds(true);
 		init(cursor, flags);
 	}
 
-	void init(Cursor c, int flags) {
+	void init(@Nullable Cursor c, int flags) {
 		boolean cursorPresent = c != null;
 		mCursor = c;
 		mDataValid = cursorPresent;
@@ -71,7 +72,8 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 * @param holder {@inheritDoc}
 	 * @param i {@inheritDoc}
 	 */
-	@Override public void onBindViewHolder(VH holder, int i) {
+	@SuppressWarnings("NullableProblems")
+	@Override public void onBindViewHolder(@NonNull VH holder, int i) {
 		if (!mDataValid) {
 			throw new IllegalStateException("this should only be called when the cursor is valid");
 		}
@@ -90,7 +92,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 * @param cursor The cursor from which to get the data. The cursor is already
 	 * moved to the correct position.
 	 */
-	public abstract void onBindViewHolder(VH holder, Cursor cursor);
+	public abstract void onBindViewHolder(@NonNull VH holder, @NonNull Cursor cursor);
 
 	@Override public int getItemCount() {
 		if (mDataValid && mCursor != null) {
@@ -115,7 +117,9 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 		}
 	}
 
-	public Cursor getCursor() {
+	// it's better to make this nullable , because most of the time the cursor is available when this is called
+	@SuppressWarnings("ConstantConditions")
+	public /*@Nullable*/ Cursor getCursor() {
 		return mCursor;
 	}
 
@@ -125,7 +129,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 *
 	 * @param cursor The new cursor to be used
 	 */
-	public void changeCursor(Cursor cursor) {
+	public void changeCursor(@Nullable Cursor cursor) {
 		Cursor old = swapCursor(cursor);
 		if (old != null) {
 			old.close();
@@ -142,7 +146,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 * If the given new Cursor is the same instance is the previously set
 	 * Cursor, null is also returned.
 	 */
-	public Cursor swapCursor(Cursor newCursor) {
+	public @Nullable Cursor swapCursor(@Nullable Cursor newCursor) {
 		if (newCursor == mCursor) {
 			return null;
 		}
@@ -185,7 +189,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 * @param cursor the cursor to convert to a CharSequence
 	 * @return a CharSequence representing the value
 	 */
-	public CharSequence convertToString(Cursor cursor) {
+	public @NonNull CharSequence convertToString(@Nullable Cursor cursor) {
 		return cursor == null? "" : cursor.toString();
 	}
 
@@ -214,7 +218,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	 * @see #getFilterQueryProvider()
 	 * @see #setFilterQueryProvider(android.widget.FilterQueryProvider)
 	 */
-	public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
+	public @Nullable Cursor runQueryOnBackgroundThread(CharSequence constraint) {
 		if (mFilterQueryProvider != null) {
 			return mFilterQueryProvider.runQuery(constraint);
 		}
