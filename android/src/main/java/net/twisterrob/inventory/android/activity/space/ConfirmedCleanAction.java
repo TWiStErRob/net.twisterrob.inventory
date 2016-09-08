@@ -19,6 +19,7 @@ class ConfirmedCleanAction extends BaseDialogFragment implements DialogInterface
 		this.title = title;
 		this.message = message;
 		this.task = task;
+		setRetainInstance(true);
 	}
 
 	@Override public void onClick(DialogInterface var1, int var2) {

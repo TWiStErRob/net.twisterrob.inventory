@@ -1,5 +1,7 @@
 package net.twisterrob.java.utils.tostring.stringers;
 
+import java.lang.reflect.Array;
+
 import javax.annotation.Nonnull;
 
 import net.twisterrob.java.annotations.DebugHelper;
@@ -43,6 +45,12 @@ public class DefaultStringer extends Stringer<Object> {
 			return StringTools.NULL_STRING;
 		}
 		String name = value.getClass().getCanonicalName();
+		if (value.getClass().isArray()) {
+			// CONSIDER multidimensional cases String[5][6][][]
+			Class<?> type = value.getClass().getComponentType();
+			int length = Array.getLength(value);
+			name = type + "[" + length + "]";
+		}
 		if (name == null) {
 			name = value.getClass().toString();
 		}

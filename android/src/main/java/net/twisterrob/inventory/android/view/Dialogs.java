@@ -195,18 +195,18 @@ public class Dialogs {
 		}
 	}
 
-	static class ActionState {
-		final Action action;
-		Throwable prepare;
-		Throwable execute;
-		Throwable failureMessage;
+	private static class ActionState {
+		public final Action action;
+		private Throwable prepare;
+		private Throwable execute;
+		private Throwable failureMessage;
 
 		public ActionState(@NonNull Action action) {
 			this.action = action;
 		}
 
 		@WorkerThread
-		void prepare() {
+		public void prepare() {
 			try {
 				action.prepare();
 			} catch (Exception ex) {
@@ -216,7 +216,7 @@ public class Dialogs {
 		}
 
 		@WorkerThread
-		void execute() {
+		public void execute() {
 			try {
 				action.execute();
 			} catch (Exception ex) {
@@ -226,7 +226,7 @@ public class Dialogs {
 		}
 
 		@UiThread
-		boolean check(@NonNull Context context) {
+		public boolean check(@NonNull Context context) {
 			if (hasPassed()) {
 				return true;
 			}
@@ -250,7 +250,7 @@ public class Dialogs {
 			return false;
 		}
 
-		private boolean hasPassed() {
+		public boolean hasPassed() {
 			return prepare == null && execute == null;
 		}
 

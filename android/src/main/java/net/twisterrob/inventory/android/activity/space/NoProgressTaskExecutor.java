@@ -18,6 +18,10 @@ class NoProgressTaskExecutor extends BaseDialogFragment implements TaskEndListen
 	private TaskEndListener listener;
 	private UITask task;
 
+	public NoProgressTaskExecutor() {
+		setRetainInstance(true);
+	}
+
 	@Override public void onAttach(Context context) {
 		super.onAttach(context);
 		listener = (TaskEndListener)context;

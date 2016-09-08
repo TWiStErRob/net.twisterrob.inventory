@@ -86,7 +86,7 @@
 		<item quantity="other">Moving %1$d %2$s to %3$s &#8220;%4$s&#8221; failed!</item>
 	</plurals>
 	<plurals name="action_move_confirm">
-		<item quantity="one">Are you sure you want to move the %2$s named &#8220;%7$s&#8221; with everything in it to %3$s &#8220;%4$s&#8221;?</item>
+		<item quantity="one">Are you sure you want to move the %2$s named &#8220;%5$s&#8221; with everything in it to %3$s &#8220;%4$s&#8221;?</item>
 		<item quantity="other">Are you sure you want to move %1$d %2$s with everything in them to %3$s &#8220;%4$s&#8221;?</item>
 	</plurals>
 	<string name="action_move_pick_title">Move to</string>

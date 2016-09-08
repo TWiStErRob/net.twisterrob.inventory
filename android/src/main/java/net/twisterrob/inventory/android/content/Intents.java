@@ -120,6 +120,9 @@ public final class Intents {
 	public static long getItemFrom(Intent intent) {
 		return getItemFrom(intent.getExtras());
 	}
+	public static long getPropertyFrom(Bundle bundle) {
+		return bundle != null? bundle.getLong(Extras.PROPERTY_ID, Property.ID_ADD) : Property.ID_ADD;
+	}
 	public static long getItemFrom(Bundle bundle) {
 		return bundle != null? bundle.getLong(Extras.ITEM_ID, Item.ID_ADD) : Item.ID_ADD;
 	}
