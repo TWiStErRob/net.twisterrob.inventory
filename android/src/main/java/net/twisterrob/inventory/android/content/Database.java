@@ -181,7 +181,7 @@ public class Database extends VariantDatabase {
 		if (addToRecents) {
 			execSQL(R.string.query_recent_add, itemID);
 		}
-		return rawQuery(R.string.query_item, itemID, itemID);
+		return rawQuery(R.string.query_item, itemID, itemID, itemID);
 	}
 	public @NonNull Cursor listCategories(Long parentCategoryID) {
 		return rawQuery(R.string.query_categories, parentCategoryID, parentCategoryID);

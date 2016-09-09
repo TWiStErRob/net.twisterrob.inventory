@@ -89,7 +89,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		setContentView(R.layout.activity_move);
 		title = (TextView)findViewById(R.id.selection);
 		labType = (TextView)findViewById(R.id.type);
-		findViewById(android.R.id.closeButton).setOnClickListener(new OnClickListener() {
+		findViewById(android.R.id.button2).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				setResult(null);
 				finish();

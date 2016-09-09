@@ -42,7 +42,7 @@
 		android:orientation="horizontal"
 		>
 		<Button
-			android:id="@android:id/closeButton"
+			android:id="@android:id/button2"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="50"

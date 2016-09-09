@@ -238,7 +238,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	/** This is the first interaction with the DB whenever it's being opened. */
 	@Override public void onConfigure(SQLiteDatabase db) {
-		LOG.debug("Initializing database: {}", dbToString(db), new StackTrace());
+		LOG.trace("Initializing database: {}", dbToString(db), new StackTrace());
 		if (!db.isReadOnly()) {
 			db.execSQL("PRAGMA foreign_keys=ON;"); // db.setForeignKeyConstraintsEnabled(true);
 		}
