@@ -25,6 +25,7 @@ public interface ToStringAppender {
 	<T> void selfDescribingProperty(@Nonnull T value);
 	void rawProperty(@Nonnull String name, @Nullable Object value);
 	void typedProperty(@Nonnull String name, @Nullable String type, @Nullable Object value);
+	void measuredProperty(@Nonnull String name, @Nullable String measure, @Nullable Object value);
 	void formattedProperty(@Nonnull String name, @Nullable String type, String format, Object... args);
 	<T> void complexProperty(@Nonnull String name, @Nullable T value);
 	<T> void complexProperty(@Nonnull String name, @Nullable T value, Stringer<? super T> toString);

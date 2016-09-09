@@ -1,7 +1,7 @@
 package net.twisterrob.android.utils.tostring.stringers;
 
 import android.annotation.TargetApi;
-import android.app.FragmentSavedStateStringer;
+import android.app.*;
 import android.content.Context;
 import android.location.Address;
 import android.os.AsyncTask;
@@ -13,6 +13,7 @@ import android.view.AbsSavedState;
 
 import net.twisterrob.android.utils.concurrent.AsyncTaskResult;
 import net.twisterrob.android.utils.tostring.stringers.detailed.*;
+import net.twisterrob.android.utils.tostring.stringers.detailed.activitymanager.*;
 import net.twisterrob.android.utils.tostring.stringers.name.ResourceNameStringer;
 import net.twisterrob.java.utils.tostring.StringerRepo;
 
@@ -48,7 +49,8 @@ public class AndroidStringerRepo {
 				new SupportToolbarSavedStateStringer());
 		repo.register("android.support.v4.app.FragmentState", new SupportFragmentStateStringer());
 		repo.register("android.support.v4.app.BackStackState", new SupportBackStackStateStringer());
-		repo.register(Integer.class, new ResourceNameStringer(context));
+		// Don't use this, it converts every integer and warns a lot, find out a better way
+		//repo.register(Integer.class, new ResourceNameStringer(context));
 		repo.register(android.support.v4.app.FragmentManager.class, new SupportFragmentManagerStringer());
 		repo.register(android.support.v4.app.FragmentManager.BackStackEntry.class,
 				new SupportBackStackEntryStringer(context));
@@ -56,5 +58,9 @@ public class AndroidStringerRepo {
 		repo.register(AsyncTask.class, new AsyncTaskStringer());
 		repo.register(AsyncTaskResult.class, new AsyncTaskResultStringer());
 		repo.register(Address.class, new AddressStringer());
+
+		repo.register(ActivityManager.RunningAppProcessInfo.class, new RunningAppProcessInfoStringer());
+		repo.register(ActivityManager.MemoryInfo.class, new MemoryInfoStringer());
+		repo.register(ActivityManager.class, new ActivityManagerStringer());
 	}
 }

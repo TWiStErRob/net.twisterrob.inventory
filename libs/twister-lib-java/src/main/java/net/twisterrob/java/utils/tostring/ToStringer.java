@@ -223,6 +223,7 @@ public class ToStringer implements ToStringAppender {
 		if (name != null) {
 			sb.append(name);
 		}
+		context.first = false;
 	}
 
 	@Override public void beginPropertyGroup(@Nullable String name) {
@@ -263,6 +264,11 @@ public class ToStringer implements ToStringAppender {
 		beginItem(name);
 		appendType(type);
 		sb.append(value);
+		endItem();
+	}
+	@Override public void measuredProperty(@Nonnull String name, @Nullable String measure, @Nullable Object value) {
+		beginItem(name);
+		f.format("%2$s %1$s", measure, value);
 		endItem();
 	}
 	@Override public void formattedProperty(@Nonnull String name, @Nullable String type, String format,
