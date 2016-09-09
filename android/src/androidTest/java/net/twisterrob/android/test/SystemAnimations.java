@@ -1,10 +1,11 @@
 package net.twisterrob.android.test;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Arrays;
 
 import org.slf4j.*;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
@@ -18,6 +19,18 @@ import android.os.IBinder;
  * </pre></code>
  * but requires
  * <code>adb shell pm grant app.package.id {@value #ANIMATION_PERMISSION}</code>
+ *
+ * Usage:
+ * <code><pre>
+ * SystemAnimations anims = new SystemAnimations();
+ * try {
+ *     anims.backup();
+ *     anims.disableAll();
+ *     // do stuff that requires animations to be disabled
+ * } finally {
+ *     anims.restore();
+ * }
+ * </pre></code>
  * @see <a href="https://product.reverb.com/2015/06/06/disabling-animations-in-espresso-for-android-testing/">Disabling Animations</a>
  * @see <a href="https://gist.github.com/danielgomezrico/9371a79a7222a156ddad">Gist</a>
  */
@@ -27,23 +40,35 @@ public class SystemAnimations {
 	private static final float DISABLED = 0.0f;
 	private static final float DEFAULT = 1.0f;
 
-	private static final Class<?> windowManagerStubClazz;
+	private static final Class<?> windowManagerStubClass;
 	private static final Method asInterface;
-	private static final Class<?> serviceManagerClazz;
+	private static final Class<?> serviceManagerClass;
 	private static final Method getService;
-	private static final Class<?> windowManagerClazz;
+	private static final Class<?> windowManagerClass;
 	private static final Method setAnimationScales;
 	private static final Method getAnimationScales;
 
+	private static final Method getWindowSession;
+	private static final Method getDurationScale;
+	private static final Method setDurationScale;
+
 	static {
 		try {
-			windowManagerStubClazz = Class.forName("android.view.IWindowManager$Stub");
-			asInterface = windowManagerStubClazz.getDeclaredMethod("asInterface", IBinder.class);
-			serviceManagerClazz = Class.forName("android.os.ServiceManager");
-			getService = serviceManagerClazz.getDeclaredMethod("getService", String.class);
-			windowManagerClazz = Class.forName("android.view.IWindowManager");
-			setAnimationScales = windowManagerClazz.getDeclaredMethod("setAnimationScales", float[].class);
-			getAnimationScales = windowManagerClazz.getDeclaredMethod("getAnimationScales");
+			windowManagerStubClass = Class.forName("android.view.IWindowManager$Stub");
+			asInterface = windowManagerStubClass.getDeclaredMethod("asInterface", IBinder.class);
+			serviceManagerClass = Class.forName("android.os.ServiceManager");
+			getService = serviceManagerClass.getDeclaredMethod("getService", String.class);
+			windowManagerClass = Class.forName("android.view.IWindowManager");
+			setAnimationScales = windowManagerClass.getDeclaredMethod("setAnimationScales", float[].class);
+			getAnimationScales = windowManagerClass.getDeclaredMethod("getAnimationScales");
+		} catch (Throwable ex) {
+			throw new IllegalStateException(ex);
+		}
+		try {
+			Class<?> windowManagerGlobalClass = Class.forName("android.view.WindowManagerGlobal");
+			getWindowSession = windowManagerGlobalClass.getDeclaredMethod("getWindowSession");
+			getDurationScale = ValueAnimator.class.getDeclaredMethod("getDurationScale");
+			setDurationScale = ValueAnimator.class.getDeclaredMethod("setDurationScale", Float.TYPE);
 		} catch (Throwable ex) {
 			throw new IllegalStateException(ex);
 		}
@@ -62,33 +87,25 @@ public class SystemAnimations {
 		}
 		int permStatus = context.checkCallingOrSelfPermission(ANIMATION_PERMISSION);
 		canSetAnimationScales = permStatus == PackageManager.PERMISSION_GRANTED;
-		if (canSetAnimationScales) {
-			LOG.warn("Application doesn't have " + ANIMATION_PERMISSION);
+		if (!canSetAnimationScales) {
+			LOG.warn("Application doesn't have {}, using ValueAnimator hack as fallback.", ANIMATION_PERMISSION);
 		}
 	}
 
 	public void backup() {
-		if (canSetAnimationScales) {
-			previousScales = getScales();
-		}
+		previousScales = getScales();
 	}
 
 	public void restore() {
-		if (canSetAnimationScales) {
-			setScales(previousScales);
-		}
+		setScales(previousScales);
 	}
 
 	public void disableAll() {
-		if (canSetAnimationScales) {
-			setSystemAnimationsScale(DISABLED);
-		}
+		setSystemAnimationsScale(DISABLED);
 	}
 
 	public void enableAll() {
-		if (canSetAnimationScales) {
-			setSystemAnimationsScale(DEFAULT);
-		}
+		setSystemAnimationsScale(DEFAULT);
 	}
 
 	public void setSystemAnimationsScale(float animationScale) {
@@ -101,17 +118,49 @@ public class SystemAnimations {
 		}
 	}
 	public void setScales(float... currentScales) {
-		try {
-			setAnimationScales.invoke(windowManager, new Object[] {currentScales});
-		} catch (Throwable ex) {
-			throw new IllegalStateException(ex);
+		if (canSetAnimationScales) {
+			try {
+				setAnimationScales.invoke(windowManager, new Object[] {currentScales});
+			} catch (Throwable ex) {
+				throw new IllegalStateException(ex);
+			}
+		} else {
+			try {
+				preWindowSessionFix();
+				setDurationScale.invoke(null, currentScales[0]);
+			} catch (Throwable ex) {
+				throw new IllegalStateException(ex);
+			}
 		}
 	}
 	public float[] getScales() {
-		try {
-			return (float[])getAnimationScales.invoke(windowManager);
-		} catch (Throwable ex) {
-			throw new IllegalStateException(ex);
+		if (canSetAnimationScales) {
+			try {
+				return (float[])getAnimationScales.invoke(windowManager);
+			} catch (Throwable ex) {
+				throw new IllegalStateException(ex);
+			}
+		} else {
+			try {
+				preWindowSessionFix();
+				return new float[] {(Float)getDurationScale.invoke(null)};
+			} catch (Throwable ex) {
+				throw new IllegalStateException(ex);
+			}
 		}
+	}
+	/**
+	 * Calling {@code getWindowSession()} is required to ensure that the duration scale
+	 * in {@link ValueAnimator} is read from the preferences first, so it doesn't overwrite our hacked value.
+	 * If this method is not called before hacking the duration scale, the {@link android.view.ViewRootImpl} constructor
+	 * will call it during {@link android.app.Activity#onResume onResume}.
+	 * To see the exact call stack, add a field write breakpoint on {@code sDurationScale} and start an activity.
+	 *
+	 * @see android.view.WindowManagerGlobal#getWindowSession() how getWindowSession sets ValueAnimator.setDurationScale
+	 * @see android.animation.ValueAnimator#sDurationScale
+	 */
+	@SuppressWarnings("JavadocReference")
+	private void preWindowSessionFix() throws IllegalAccessException, InvocationTargetException {
+		getWindowSession.invoke(null);
 	}
 }

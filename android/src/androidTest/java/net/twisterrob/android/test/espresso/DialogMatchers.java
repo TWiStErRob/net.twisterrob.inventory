@@ -4,6 +4,7 @@ import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
+import android.os.IBinder;
 import android.support.annotation.IdRes;
 import android.support.test.espresso.*;
 import android.support.test.espresso.util.*;
@@ -35,6 +36,33 @@ public class DialogMatchers {
 			}
 			@Override public void describeTo(Description description) {
 				description.appendText("is a root view and matches ").appendDescriptionOf(matcher);
+			}
+		};
+	}
+
+	/**
+	 * @see <a href="http://stackoverflow.com/a/33387980/253468">
+	 *     Checking toast message in android espresso</a>
+	 * @see <a href="http://baroqueworksdev.blogspot.hu/2015/03/how-to-check-toast-window-on-android.html">
+	 *     How to check Toast window, on android test-kit Espresso</a>
+	 */
+	public static Matcher<Root> isToast() {
+		return new TypeSafeMatcher<Root>() {
+			@Override public void describeTo(Description description) {
+				description.appendText("is toast");
+			}
+			@Override public boolean matchesSafely(Root root) {
+				int type = root.getWindowLayoutParams().get().type;
+				if ((type == WindowManager.LayoutParams.TYPE_TOAST)) {
+					IBinder windowToken = root.getDecorView().getWindowToken();
+					IBinder appToken = root.getDecorView().getApplicationWindowToken();
+					if (windowToken == appToken) {
+						// windowToken == appToken means this window isn't contained by any other windows.
+						// if it was a window for an activity, it would have TYPE_BASE_APPLICATION.
+						return true;
+					}
+				}
+				return false;
 			}
 		};
 	}
