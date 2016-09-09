@@ -129,6 +129,13 @@ public class ReflectionTools {
 		return reflected;
 	}
 
+	public static <T extends AccessibleObject> T ensureAccessible(T reflected) {
+		if (reflected != null) {
+			reflected.setAccessible(true);
+		}
+		return reflected;
+	}
+
 	public static @Nullable Field tryFindConstant(@Nonnull Class<?> clazz, @Nonnull Object value) {
 		try {
 			return findConstant(clazz, value);

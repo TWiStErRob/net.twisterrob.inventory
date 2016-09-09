@@ -16,6 +16,12 @@ public class TestPackageIntentRule<T extends Activity> extends SensibleActivityT
 	@Override protected Intent getActivityIntent() {
 		// Using the test package's context instead of target context and not letting anyone change that.
 		return new Intent(testContext, Activity.class) {
+			@Override public Intent setAction(String action) {
+				if (!Intent.ACTION_MAIN.equals(action)) {
+					return super.setAction(action);
+				}
+				return this;
+			}
 			@Override public Intent setComponent(ComponentName component) {
 				return super.setComponent(new ComponentName(testContext, component.getClassName()));
 			}

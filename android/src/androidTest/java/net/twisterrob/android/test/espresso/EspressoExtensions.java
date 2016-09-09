@@ -1,7 +1,9 @@
 package net.twisterrob.android.test.espresso;
 
+import java.io.*;
 import java.lang.reflect.Field;
-import java.util.Iterator;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.*;
 
@@ -42,6 +44,10 @@ import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 
 public class EspressoExtensions {
 	private static final Logger LOG = LoggerFactory.getLogger(EspressoExtensions.class);
+	/** @see android.support.test.espresso.action.MotionEvents#sendDown */
+	private static final String OVERSLEEP_MESSAGE = "Overslept and turned a tap into a long press";
+	/** @see android.support.test.espresso.action.MotionEvents#TAG */
+	private static final String OVERSLEEP_TAG = "MotionEvents";
 
 	public static ViewAction loopMainThreadUntilIdle() {
 		return new ViewAction() {
@@ -265,7 +271,15 @@ public class EspressoExtensions {
 
 		// An extra loop until idle helps to make them less flaky by itself, even though each perform does that anyway.
 		onView(isRoot()).perform(loopMainThreadUntilIdle());
+
+		// Look for "Overslept and turned a tap into a long press" to detect failure early, otherwise
+		// a NoMatchingRootException will be thrown which is hard to decode and separated by at least ~30 lines of logs.
+		long oversleepBarrier = System.currentTimeMillis();
 		openActionBarOverflowOrOptionsMenu(getTargetContext());
+		if (hasOversleptLogMessageAfter(oversleepBarrier)) {
+			throw new IllegalStateException(OVERSLEEP_TAG + ": " + OVERSLEEP_MESSAGE);
+		}
+
 		// wait for a platform popup to become available as root, this is the action bar overflow menu popup
 		for (final AtomicBoolean failed = new AtomicBoolean(false); failed.get(); failed.set(false)) {
 			onView(isRoot())
@@ -286,6 +300,39 @@ public class EspressoExtensions {
 		onView(isRoot()).check(matches(root(isPlatformPopup())));
 		return onView(matcher);//.inRoot(isPlatformPopup()); // not needed as the popup is topmost & focused
 	}
+
+	private static boolean hasOversleptLogMessageAfter(long oversleepBarrier) {
+		try {
+			// -d: dump and stop, don't block; -b main: app's logs; -v time: output format
+			// -s: silent by default; MotionEvents:E: only interested in lines starting with E/MotionEvents
+			Process process = Runtime.getRuntime().exec("logcat -d -b main -v time -s " + OVERSLEEP_TAG + ":E");
+			BufferedReader pipe = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String lastLine = null;
+			String line;
+			while ((line = pipe.readLine()) != null) {
+				LOG.trace(line);
+				if (line.contains(OVERSLEEP_MESSAGE)) {
+					lastLine = line;
+				}
+			}
+			pipe.close();
+			if (lastLine != null && lastLine.contains(String.valueOf(android.os.Process.myPid()))) {
+				// -v time formats the log like this:
+				// 09-09 18:20:25.539 E/MotionEvents( 4441): Overslept and turned a tap into a long press
+				int year = Calendar.getInstance().get(Calendar.YEAR);
+				Date parse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.ROOT).parse(year + "-" + lastLine);
+				if (oversleepBarrier < parse.getTime()) {
+					// pretty sure it happened "just now"
+					return true;
+				}
+			}
+		} catch (Exception /*IOException | ParseException*/ ex) {
+			// oh well, let's continue and we'll see what life gets us: it should throw/fail something later
+			LOG.warn("Cannot get last logcat line to detect MotionEvents oversleeping.", ex);
+		}
+		return false;
+	}
+	
 	public static ViewInteraction onActionBarDescendant(Matcher<View> viewMatcher) {
 		return onView(allOf(viewMatcher, inActionBar()));
 	}
@@ -334,7 +381,21 @@ public class EspressoExtensions {
 		};
 	}
 
-	/** @see Espresso#onData(Matcher) */
+	public static Matcher<View> isRV() {
+		return isAssignableFrom(RecyclerView.class);
+	}
+
+	public static ViewInteraction assertRecyclerItemDoesNotExists(Matcher<View> dataMatcher) {
+		return onView(isRV()).check(matches(not(withAdaptedData(dataMatcher))));
+	}
+
+	/**
+	 * For a negative match (i.e. check for non-existent data), use
+	 * {@code onView(isRV()).check(matches(not(withAdaptedData(withText(TEST_ROOM)))))}
+	 * @see Espresso#onData(Matcher)
+	 * @see #withAdaptedData(Matcher)
+	 * @see #assertRecyclerItemDoesNotExists(Matcher)
+	 */
 	public static RecyclerViewDataInteraction onRecyclerItem(Matcher<View> dataMatcher) {
 		return new RecyclerViewDataInteraction(hasDescendant(dataMatcher));
 	}
@@ -360,6 +421,39 @@ public class EspressoExtensions {
 			}
 		};
 	}
+
+	/**
+	 * Positive match: {@code onView(withId(R.id.list)).check(matches(withAdaptedData(...)))},
+	 * but {@link #onRecyclerItem(Matcher)} is a better approach
+	 * Negative match: {@code onView(withId(R.id.list)).check(matches(not(withAdaptedData(...))))}
+	 * @see <a href="https://google.github.io/android-testing-support-library/docs/espresso/advanced/#asserting-that-a-data-item-is-not-in-an-adapter">
+	 *     Asserting that a data item is not in an adapter</a>
+	 */
+	public static Matcher<View> withAdaptedData(final Matcher<View> dataMatcher) {
+		return new TypeSafeMatcher<View>() {
+			@Override public void describeTo(Description description) {
+				description.appendText("with adapted data: ").appendDescriptionOf(dataMatcher);
+			}
+
+			@Override public boolean matchesSafely(View view) {
+				return view instanceof RecyclerView && hasBoundView(((RecyclerView)view));
+			}
+			private <T extends RecyclerView.ViewHolder> boolean hasBoundView(RecyclerView rv) {
+				@SuppressWarnings("unchecked")
+				RecyclerView.Adapter<T> adapter = (RecyclerView.Adapter<T>)rv.getAdapter();
+				for (int i = 0; i < adapter.getItemCount(); i++) {
+					int type = adapter.getItemViewType(i);
+					T viewHolder = adapter.createViewHolder(rv, type);
+					adapter.bindViewHolder(viewHolder, i);
+					if (dataMatcher.matches(viewHolder.itemView)) {
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+	}
+
 	public static Iterable<View> parentViewTraversal(final View view) {
 		return new Iterable<View>() {
 			@Override public Iterator<View> iterator() {

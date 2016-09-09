@@ -20,7 +20,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
 
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
@@ -117,7 +116,7 @@ public class UpgradeTests {
 		Espresso.pressBack(); // exit Backup activity and go to Main activity
 
 		onDrawerDescendant(withText("Properties")).perform(click());
-		onView(allOf(isAssignableFrom(RecyclerView.class), inDrawerContents()))
+		onView(allOf(isRV(), inDrawerContents()))
 				.perform(actionOnItemAtPosition(0, longClick()))
 				.perform(actionOnItemAtPosition(1, longClick()))
 		;
