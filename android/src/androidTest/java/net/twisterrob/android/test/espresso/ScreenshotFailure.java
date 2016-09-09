@@ -53,29 +53,37 @@ public class ScreenshotFailure implements TestRule {
 	}
 
 	@Override public Statement apply(final Statement base, final Description description) {
-		return new Statement() {
-			@TargetApi(VERSION_CODES.KITKAT)
-			@Override public void evaluate() throws Throwable {
-				long started = System.currentTimeMillis();
+		return new ScreenshotStatement(base, description);
+	}
+
+	private class ScreenshotStatement extends Statement {
+		private final Statement base;
+		private final Description description;
+		public ScreenshotStatement(Statement base, Description description) {
+			this.base = base;
+			this.description = description;
+		}
+		@TargetApi(VERSION_CODES.KITKAT)
+		@Override public void evaluate() throws Throwable {
+			long started = System.currentTimeMillis();
+			try {
+				base.evaluate();
+			} catch (Throwable ex) {
 				try {
-					base.evaluate();
-				} catch (Throwable ex) {
-					try {
-						String dirName = String.format(Locale.ROOT, "%s", description.getClassName());
-						String shotName = String.format(Locale.ROOT, "%d_%s.png", started, description.getMethodName());
-						File shot = takeScreenshot(dirName, shotName);
-						LOG.info("Screenshot taken to {}", getADBPullPath(shot));
-					} catch (Throwable shotEx) {
-						if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
-							ex.addSuppressed(shotEx);
-						} else {
-							throw new MultipleFailureException(Arrays.asList(ex, shotEx));
-						}
+					String dirName = String.format(Locale.ROOT, "%s", description.getClassName());
+					String shotName = String.format(Locale.ROOT, "%d_%s.png", started, description.getMethodName());
+					File shot = takeScreenshot(dirName, shotName);
+					LOG.info("Screenshot taken to {}", getADBPullPath(shot));
+				} catch (Throwable shotEx) {
+					if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
+						ex.addSuppressed(shotEx);
+					} else {
+						throw new MultipleFailureException(Arrays.asList(ex, shotEx));
 					}
-					throw ex;
 				}
+				throw ex;
 			}
-		};
+		}
 	}
 
 	@SuppressLint("SdCardPath")

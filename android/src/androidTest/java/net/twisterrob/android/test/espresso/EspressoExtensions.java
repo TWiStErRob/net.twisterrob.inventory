@@ -1,5 +1,6 @@
 package net.twisterrob.android.test.espresso;
 
+import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.*;
@@ -67,6 +68,16 @@ public class EspressoExtensions {
 				uiController.loopMainThreadForAtLeast(time);
 			}
 		};
+	}
+	public static UiController getUIControllerHack() {
+		try {
+			ViewInteraction interaction = onView(any(View.class));
+			Field field = ViewInteraction.class.getDeclaredField("uiController");
+			field.setAccessible(true);
+			return (UiController)field.get(interaction);
+		} catch (Exception ex) {
+			throw new IllegalStateException("Cannot find a UIController");
+		}
 	}
 
 	@DebugHelper

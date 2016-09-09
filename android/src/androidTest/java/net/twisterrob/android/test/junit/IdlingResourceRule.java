@@ -19,15 +19,21 @@ public class IdlingResourceRule implements TestRule {
 	}
 
 	@Override public Statement apply(final Statement base, Description description) {
-		return new Statement() {
-			@Override public void evaluate() throws Throwable {
-				try {
-					Espresso.registerIdlingResources(idlingResource);
-					base.evaluate();
-				} finally {
-					Espresso.unregisterIdlingResources(idlingResource);
-				}
+		return new IdlingResourceStatement(base);
+	}
+
+	private class IdlingResourceStatement extends Statement {
+		private final Statement base;
+		public IdlingResourceStatement(Statement base) {
+			this.base = base;
+		}
+		@Override public void evaluate() throws Throwable {
+			try {
+				Espresso.registerIdlingResources(idlingResource);
+				base.evaluate();
+			} finally {
+				Espresso.unregisterIdlingResources(idlingResource);
 			}
-		};
+		}
 	}
 }

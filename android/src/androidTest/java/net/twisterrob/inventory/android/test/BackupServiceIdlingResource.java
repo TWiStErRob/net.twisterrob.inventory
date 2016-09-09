@@ -2,8 +2,6 @@ package net.twisterrob.inventory.android.test;
 
 import android.support.annotation.Nullable;
 
-import static android.support.test.InstrumentationRegistry.*;
-
 import net.twisterrob.android.test.espresso.idle.IntentServiceIdlingResource;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService.*;
@@ -15,7 +13,7 @@ public class BackupServiceIdlingResource extends IntentServiceIdlingResource {
 		@Nullable LocalBinder getBinding();
 	}
 	public BackupServiceIdlingResource(BindingProvider provider) {
-		super(getInstrumentation().getTargetContext(), BackupService.class);
+		super(BackupService.class);
 		this.provider = provider;
 	}
 	@Override protected boolean isIdle() {

@@ -124,12 +124,21 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 	}
 
 	public static class TopDrawer implements ViewProvider {
+		private final boolean debug;
+		public TopDrawer() {
+			this(true);
+		}
+		public TopDrawer(boolean silent) {
+			this.debug = !silent;
+		}
 		private WeakReference<Activity> lastActivityRef = new WeakReference<>(null);
 
 		@Override public View getView() {
 			Activity currentActivity = InstrumentationExtensions.tryGetActivityInStage(Stage.RESUMED);
 			if (currentActivity == null) {
-				LOG.warn("No resumed activity in {}", getAllActivities());
+				if (debug) {
+					LOG.warn("No resumed activity in {}", getAllActivities());
+				}
 				return null;
 			}
 			Activity lastActivity = lastActivityRef.get();
@@ -143,10 +152,12 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 				}
 			}
 			if (lastActivity != currentActivity) {
-				LOG.warn("No DrawerLayout found in {}", currentActivity, new NoMatchingViewException.Builder()
-						.withRootView(rootView)
-						.withViewMatcher(isDrawer)
-						.build());
+				if (debug) {
+					LOG.warn("No DrawerLayout found in {}", currentActivity, new NoMatchingViewException.Builder()
+							.withRootView(rootView)
+							.withViewMatcher(isDrawer)
+							.build());
+				}
 			}
 			return null;
 		}

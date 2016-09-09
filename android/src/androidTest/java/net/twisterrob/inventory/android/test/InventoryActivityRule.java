@@ -3,6 +3,8 @@ package net.twisterrob.inventory.android.test;
 import java.io.File;
 import java.lang.reflect.Field;
 
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 import org.slf4j.*;
 
 import android.app.Activity;
@@ -12,12 +14,15 @@ import android.support.test.InstrumentationRegistry;
 
 import com.bumptech.glide.Glide;
 
-import net.twisterrob.android.test.junit.SensibleActivityTestRule;
+import net.twisterrob.android.test.espresso.idle.*;
+import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.content.db.DatabaseService;
 
 import static net.twisterrob.android.app.BaseApp.*;
+import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
 public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(InventoryActivityRule.class);
@@ -38,7 +43,27 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		return this;
 	}
 
+	@Override public Statement apply(Statement base, Description description) {
+		base = super.apply(base, description);
+		base = DrawerIdlingResource.rule().apply(base, description);
+		base = new IdlingResourceRule(new IntentServiceIdlingResource(DatabaseService.class)).apply(base, description);
+		return base;
+	}
+
+	private void waitForIdleSync() {
+		try {
+			runOnUiThread(new Runnable() {
+				@Override public void run() {
+					getUIControllerHack().loopMainThreadUntilIdle();
+				}
+			});
+		} catch (Throwable throwable) {
+			throwable.printStackTrace();
+		}
+	}
+
 	@Override protected void beforeActivityLaunched() {
+		waitForIdleSync();
 		reset();
 		setDefaults();
 		super.beforeActivityLaunched();
@@ -46,7 +71,9 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 
 	@Override protected void afterActivityFinished() {
 		super.afterActivityFinished();
-		reset();
+		// TODO is it really necessary?
+		//waitForIdleSync();
+		//reset();
 	}
 
 	public final void reset() {

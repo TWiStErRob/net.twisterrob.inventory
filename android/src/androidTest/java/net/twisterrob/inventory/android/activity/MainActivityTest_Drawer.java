@@ -13,8 +13,6 @@ import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import net.twisterrob.android.test.espresso.idle.DrawerIdlingResource;
-import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 
@@ -23,7 +21,6 @@ import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
 public class MainActivityTest_Drawer {
 	@Rule public final ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class);
-	@Rule public final IdlingResourceRule drawer = DrawerIdlingResource.rule();
 
 	@Before public void startup() {
 		assertHomeOpened();
