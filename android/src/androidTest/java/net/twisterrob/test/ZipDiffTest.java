@@ -434,6 +434,11 @@ public class ZipDiffTest {
 	}
 
 	private static class Zip {
+		public static final byte[] EMPTY_ZIP = {
+				0x50, 0x4b, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+		};
 		private final File target;
 		private final ZipOutputStream zipStream;
 		public Zip(File target) throws FileNotFoundException {
@@ -448,7 +453,17 @@ public class ZipDiffTest {
 			return withFile(name, contents.getBytes("UTF-8"));
 		}
 		public File build() throws IOException {
-			zipStream.close();
+			try {
+				zipStream.close();
+			} catch (ZipException ex) {
+				if ("No entries".equals(ex.getMessage())) {
+					withFile("dummy", "so I can close the zip");
+					zipStream.close();
+					IOTools.writeAll(new FileOutputStream(target), EMPTY_ZIP);
+				} else {
+					throw ex;
+				}
+			}
 			return target;
 		}
 	}

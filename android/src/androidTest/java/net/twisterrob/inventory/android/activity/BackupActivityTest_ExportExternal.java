@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
 
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.support.test.filters.SdkSuppress;
+import android.support.test.filters.*;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.runner.lifecycle.Stage;
@@ -78,6 +78,7 @@ public class BackupActivityTest_ExportExternal {
 		pressBackExternal();
 	}
 
+	@FlakyTest(detail = "Sometimes it doesn't find clickOnLabel(selectFolder()): UiObjectNotFoundException: UiSelector[TEXT=Select folder]")
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Test public void testSuccessfulFullExport() throws Exception {
 		assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));

@@ -216,9 +216,24 @@ public class ZipDiff {
 		private final Map<Long, Set<ZipEntry>> bySize = new HashMap<>();
 		private final Map<String, Set<ZipEntry>> byName = new HashMap<>();
 		public ZipIndex(File file) throws IOException {
-			zip = new ZipFile(file);
-			for (Enumeration<? extends ZipEntry> it = zip.entries(); it.hasMoreElements(); ) {
-				add(it.nextElement());
+			this.zip = openZip(file);
+			if (zip != null) {
+				for (Enumeration<? extends ZipEntry> it = zip.entries(); it.hasMoreElements(); ) {
+					add(it.nextElement());
+				}
+			}
+		}
+		private ZipFile openZip(File file) throws IOException {
+			try {
+				return new ZipFile(file);
+			} catch (ZipException ex) {
+				// Work around Android weirdness.
+				// java.util.zip.ZipException: Empty zip archive not supported
+				//  at java.util.zip.ZipFile.readCentralDir(ZipFile.java:382)
+				if (!"Empty zip archive not supported".equals(ex.getMessage())) {
+					throw ex;
+				}
+				return null;
 			}
 		}
 
