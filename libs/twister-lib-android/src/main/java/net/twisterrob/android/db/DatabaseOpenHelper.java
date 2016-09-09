@@ -71,6 +71,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	private static final String DB_TEST_FILE = "%s.test.sql";
 	private static final String DB_DEVELOPMENT_FILE = "%s.development.sql";
 
+	protected final Context context;
 	protected final AssetManager assets;
 	private final boolean hasWriteExternalPermission;
 	private final String dbName;
@@ -81,6 +82,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	public DatabaseOpenHelper(Context context, String dbName, int dbVersion, boolean isDebugBuild) {
 		super(context, dbName, createCursorFactory(isDebugBuild), dbVersion);
+		this.context = context;
 		this.assets = context.getAssets();
 		this.dbName = dbName;
 		this.hasWriteExternalPermission = AndroidTools.hasPermission(context, WRITE_EXTERNAL_STORAGE);
@@ -98,6 +100,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override public String getDatabaseName() {
 		return dbName;
+	}
+	public File getDatabaseFile() {
+		return context.getDatabasePath(getDatabaseName());
 	}
 
 	public void setDevMode(boolean devMode) {

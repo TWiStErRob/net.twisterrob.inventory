@@ -67,7 +67,7 @@ public class Database extends VariantDatabase {
 	}
 
 	public File getFile() {
-		return new File(m_helper.getReadableDatabase().getPath());
+		return m_helper.getDatabaseFile();
 	}
 
 	@AnyThread
