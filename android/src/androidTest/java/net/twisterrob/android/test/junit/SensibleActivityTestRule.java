@@ -5,8 +5,8 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.annotation.CallSuper;
+import android.content.*;
+import android.support.annotation.*;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
@@ -20,6 +20,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 
 	private final SystemAnimations systemAnimations;
 	private final DeviceUnlocker unlocker;
+	private Intent startIntent;
 
 	public SensibleActivityTestRule(Class<T> activityClass) {
 		this(activityClass, false);
@@ -40,6 +41,15 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		//base = new PackageNameShortener().apply(base, description); // TODO make it available
 		base = new ScreenshotFailure().apply(base, description);
 		return base;
+	}
+
+	public Intent getStartIntent() {
+		return startIntent;
+	}
+
+	@Override public T launchActivity(@Nullable Intent startIntent) {
+		this.startIntent = startIntent;
+		return super.launchActivity(startIntent);
 	}
 
 	@CallSuper

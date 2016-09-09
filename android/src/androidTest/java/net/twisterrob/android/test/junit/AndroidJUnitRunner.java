@@ -6,6 +6,8 @@ import android.os.StrictMode.ThreadPolicy;
 
 public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnitRunner {
 	@Override public void onCreate(Bundle arguments) {
+		// Tried to put it in manifest, but it failed with cannot cast Boolean to String in super.onCreate
+		arguments.putString("disableAnalytics", Boolean.TRUE.toString());
 		// specifyDexMakerCacheProperty is unconditionally called, but behavior was observed in Android 5.0)
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 		try {

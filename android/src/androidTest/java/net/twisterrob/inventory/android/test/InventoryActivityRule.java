@@ -83,6 +83,13 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		resetFiles();
 	}
 
+	/**
+	 * Used to set up the database and/or preferences right before launching the activity.
+	 * The Database and preferences are reset to an empty state already (to mimic state right after installation).
+	 * Use {@link #getActivityIntent()} in this method to add extras to the launch.
+	 *
+	 * @see #getActivityIntent()
+	 */
 	@CallSuper
 	protected void setDefaults() {
 		if (clearWelcomeFlag) {
