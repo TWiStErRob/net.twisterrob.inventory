@@ -248,12 +248,20 @@
 			i.parent                                        as parent,
 			-- ◄ (LEFT POINTING POINTER) doesn't work on Genymotion 4.2.2, but ◀ (LEFT POINTING TRIANGLE) does
 			group_concat(Path.part, ' ◀ ')                  as parentName,
+			Lists.lists                                     as lists,
 			(select count(*) from Item where parent = i._id) as countDirectItems,
 			(select count(distinct item) from Item_Path_Node where node = i._id and item <> node) as countAllItems
 		from      Item      i
 		join      Category  c  ON i.category = c._id
 		join      Item_Path ip ON i._id = ip.itemID
 		left join Image     im ON i.image = im._id
+		left join (
+			select group_concat(l.name, ', ') as lists
+			from List_Entry le
+			join List       l  ON le.list = l._id
+			where le.item = ?
+			group by le.item
+		) as      Lists
 		left join (
 				select n.name as part
 				from Item_Path_Node ipn

@@ -4,6 +4,7 @@ public interface Item extends ParentColumns {
 	String TABLE = "Item";
 
 	String CATEGORY_NAME = "categoryName";
+	String LISTS = "lists";
 
 	String PROPERTY_ID = "propertyID";
 	String PROPERTY_NAME = "propertyName";

@@ -19,6 +19,7 @@ public class ItemDTO extends ImagedDTO {
 	public String categoryName;
 	public long property;
 	public String propertyName;
+	public String lists;
 	public long room;
 	public long roomRoot;
 	public String roomName;
@@ -43,6 +44,7 @@ public class ItemDTO extends ImagedDTO {
 		room = DatabaseTools.getOptionalLong(cursor, Item.ROOM_ID, Room.ID_ADD);
 		roomRoot = DatabaseTools.getOptionalLong(cursor, Item.ROOM_ROOT, Room.ID_ADD);
 		roomName = DatabaseTools.getOptionalString(cursor, Item.ROOM_NAME);
+		lists = DatabaseTools.getOptionalString(cursor, Item.LISTS);
 
 		return this;
 	}
