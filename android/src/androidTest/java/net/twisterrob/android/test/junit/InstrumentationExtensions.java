@@ -45,6 +45,18 @@ public class InstrumentationExtensions {
 			}
 		});
 	}
+	public static @NonNull Map<Stage, Collection<Activity>> getAllActivitiesByStage() {
+		return runOnMainIfNecessary(new Callable<Map<Stage, Collection<Activity>>>() {
+			@Override public Map<Stage, Collection<Activity>> call() throws Exception {
+				ActivityLifecycleMonitor monitor = ActivityLifecycleMonitorRegistry.getInstance();
+				Map<Stage, Collection<Activity>> activities = new EnumMap<>(Stage.class);
+				for (Stage stage : Stage.values()) {
+					activities.put(stage, monitor.getActivitiesInStage(stage));
+				}
+				return activities;
+			}
+		});
+	}
 
 	/**
 	 * @throws NoSuchElementException if there's no such activity

@@ -6,14 +6,14 @@ import java.text.DecimalFormat;
 
 import static java.lang.annotation.ElementType.*;
 
-import android.annotation.SuppressLint;
+import android.annotation.*;
 import android.os.Build.*;
 import android.support.annotation.*;
 import android.util.DisplayMetrics;
 
 import net.twisterrob.java.annotations.DebugHelper;
 
-@SuppressLint("InlinedApi")
+@SuppressLint({"InlinedApi", "UniqueConstants"})
 @IntDef(value = {
 		DisplayMetrics.DENSITY_LOW,
 		DisplayMetrics.DENSITY_MEDIUM,
@@ -38,6 +38,7 @@ public @interface Density {
 		}
 
 		@SuppressWarnings("WrongConstant")
+		@TargetApi(VERSION_CODES.N)
 		@DebugHelper
 		public static String toString(@Density int density) {
 			StringBuilder name = new StringBuilder(getName(density));
