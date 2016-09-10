@@ -46,7 +46,7 @@ public class PropertyViewActivityTest_Delete {
 		assertThat(db.get(), hasInvProperty(TEST_PROPERTY));
 	}
 	@After public void closeDialog() {
-		ensureDialogClosed();
+		attemptCloseDialog();
 	}
 
 	@Test public void testDeleteCancel() throws IOException {

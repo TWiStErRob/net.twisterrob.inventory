@@ -48,7 +48,7 @@ public class RoomViewActivityTest_Delete {
 		assertThat(db.get(), hasInvRoom(TEST_ROOM));
 	}
 	@After public void closeDialog() {
-		ensureDialogClosed();
+		attemptCloseDialog();
 	}
 
 	@Test public void testDeleteCancel() throws IOException {

@@ -57,7 +57,7 @@ public class ItemViewActivityTest_Move {
 		assertThat(db.get(), both(hasInvItem(TEST_ITEM)).and(hasInvItemInRoom(TEST_ROOM, TEST_ITEM)));
 	}
 	@After public void closeDialog() {
-		ensureDialogClosed();
+		attemptCloseDialog();
 	}
 
 	@Test public void testMoveCancel() throws IOException {

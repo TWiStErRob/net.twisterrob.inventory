@@ -57,7 +57,7 @@ public class RoomViewActivityTest_Move {
 		assertThat(db.get(), not(hasInvRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM)));
 	}
 	@After public void closeDialog() {
-		ensureDialogClosed();
+		attemptCloseDialog();
 	}
 
 	@Test public void testMoveCancel() throws IOException {

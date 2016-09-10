@@ -8,13 +8,17 @@ import android.os.IBinder;
 import android.support.annotation.IdRes;
 import android.support.test.espresso.*;
 import android.support.test.espresso.util.*;
+import android.support.test.runner.lifecycle.Stage;
 import android.view.*;
 
+import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
+
+import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 
 public class DialogMatchers {
 	public static final int BUTTON_POSITIVE = android.R.id.button1;
@@ -133,7 +137,22 @@ public class DialogMatchers {
 	 *     at android.support.v7.app.AlertDialog$Builder.show(AlertDialog.java:953)
 	 * </pre>
 	 */
+	public static void attemptCloseDialog() {
+		tryCloseDialog(false);
+	}
 	public static void ensureDialogClosed() {
+		tryCloseDialog(true);
+	}
+	private static void tryCloseDialog(boolean wait) {
+		if (!wait) {
+			// It's not that important to close the dialog, so prevent
+			// RootViewPicker.waitForAtLeastOneActivityToBeResumed from waiting ~40 seconds and then throwing:
+			// No activities found. Did you forget to launch the activity [...]?
+			getInstrumentation().waitForIdleSync(); // quick wait, don't care about idling resources
+			if (getActivitiesInStage(Stage.RESUMED).isEmpty()) {
+				return;
+			}
+		}
 		onView(isDialogView())
 				.withFailureHandler(new FailureHandler() {
 					@Override public void handle(Throwable error, Matcher<View> viewMatcher) {

@@ -50,7 +50,7 @@ public class ItemViewActivityTest_Delete {
 		assertThat(db.get(), hasInvItem(TEST_ITEM));
 	}
 	@After public void closeDialog() {
-		ensureDialogClosed();
+		attemptCloseDialog();
 	}
 
 	@Test public void testDeleteCancel() throws IOException {
