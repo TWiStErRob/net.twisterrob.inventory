@@ -121,6 +121,29 @@ public class DialogMatchers {
 		onView(isDialogView()).check(doesNotExist());
 	}
 
+	/**
+	 * Some tests may leave open dialogs, because they match the message or fail during the dialog being open.
+	 * Ensure in that case there's no exception logged:
+	 * <pre>
+	 * E/WindowManager: android.view.WindowLeaked: Activity ... has leaked window
+	 * com.android.internal.policy.impl.PhoneWindow$DecorView{3816351a V.E..... R......D 0,0-1041,875}
+	 * that was originally added here
+	 *     at android.view.ViewRootImpl.<init>(ViewRootImpl.java:457)
+	 *     ...
+	 *     at android.support.v7.app.AlertDialog$Builder.show(AlertDialog.java:953)
+	 * </pre>
+	 */
+	public static void ensureDialogClosed() {
+		onView(isDialogView())
+				.withFailureHandler(new FailureHandler() {
+					@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
+						clickNegativeInDialog(); // only runs if doesNotExist failed
+					}
+				})
+				.check(doesNotExist());
+		assertNoDialogIsDisplayed(); // double-check ourselves
+	}
+
 	private static class ClickInDialog implements ViewAction {
 		private final Matcher<View> viewMatcher;
 		public ClickInDialog(Matcher<View> viewMatcher) {
