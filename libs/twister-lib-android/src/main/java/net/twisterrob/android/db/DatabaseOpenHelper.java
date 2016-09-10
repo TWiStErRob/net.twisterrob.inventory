@@ -21,7 +21,6 @@ import static android.Manifest.permission.*;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.java.annotations.DebugHelper;
-import net.twisterrob.java.exceptions.StackTrace;
 
 import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 
@@ -238,7 +237,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	/** This is the first interaction with the DB whenever it's being opened. */
 	@Override public void onConfigure(SQLiteDatabase db) {
-		LOG.trace("Initializing database: {}", dbToString(db), new StackTrace());
+		LOG.trace("Initializing database: {}", dbToString(db));
 		if (!db.isReadOnly()) {
 			db.execSQL("PRAGMA foreign_keys=ON;"); // db.setForeignKeyConstraintsEnabled(true);
 		}

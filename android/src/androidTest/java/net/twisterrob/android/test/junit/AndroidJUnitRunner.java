@@ -1,8 +1,15 @@
 package net.twisterrob.android.test.junit;
 
+import org.hamcrest.Matcher;
+
 import android.os.Build.*;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
+import android.support.test.espresso.*;
+import android.support.test.espresso.base.DefaultFailureHandler;
+import android.view.View;
+
+import net.twisterrob.java.exceptions.StackTrace;
 
 public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnitRunner {
 	@Override public void onCreate(Bundle arguments) {
@@ -15,6 +22,17 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 		} finally {
 			StrictMode.setThreadPolicy(originalPolicy);
 		}
+		Espresso.setFailureHandler(new FailureHandler() {
+			FailureHandler defaultFailureHandler = new DefaultFailureHandler(getTargetContext());
+			@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
+				Throwable cause = error;
+				while (error.getCause() != null) {
+					cause = error.getCause();
+				}
+				cause.initCause(new StackTrace("View interaction was initiated here"));
+				defaultFailureHandler.handle(error, viewMatcher);
+			}
+		});
 	}
 
 	@Override public void onStart() {

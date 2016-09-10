@@ -78,6 +78,7 @@ public class UpgradeTests {
 
 	private static final int MB = 1000 * 1000;
 	private static final String IMPORT_FILE = "data.zip";
+	public static final String LAUNCH_KEY = "upgrade";
 
 	@Rule public final ActivityTestRule<CompatibleLauncher> activity =
 			new TestPackageIntentRule<>(CompatibleLauncher.class);
@@ -87,7 +88,8 @@ public class UpgradeTests {
 
 	/** @see net.twisterrob.inventory.android.activity.CompatibleLauncher */
 	@Before public void launchMain() {
-		assumeThat(getArguments(), hasKey("upgrade"));
+		assumeThat("Only run when instrumentation arguments contain \"" + LAUNCH_KEY + "\"",
+				getArguments(), hasKey(LAUNCH_KEY));
 		downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		db = getTargetContext().getDatabasePath(Database.NAME);
 		assumeThat(downloads, anExistingDirectory());

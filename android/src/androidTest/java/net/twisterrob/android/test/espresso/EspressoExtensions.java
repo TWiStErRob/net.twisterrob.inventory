@@ -39,6 +39,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
 import net.twisterrob.java.annotations.DebugHelper;
+import net.twisterrob.test.junit.FlakyTestException;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 
@@ -121,7 +122,6 @@ public class EspressoExtensions {
 			}
 
 			@Override public void perform(final UiController uiController, final View view) {
-				uiController.loopMainThreadUntilIdle();
 				final long startTime = System.currentTimeMillis();
 				final long endTime = startTime + timeout;
 
@@ -181,7 +181,6 @@ public class EspressoExtensions {
 
 			@Override public void perform(final UiController uiController, final View view) {
 				LOG.trace("waiting for {} to match {}", HumanReadables.describe(view), viewMatcher);
-				uiController.loopMainThreadUntilIdle();
 				final long startTime = System.currentTimeMillis();
 				final long endTime = startTime + timeout;
 				final long step = Math.max(1, Math.min(50, timeout / 10)); // 10th of input between 1..50ms
@@ -277,7 +276,7 @@ public class EspressoExtensions {
 		long oversleepBarrier = System.currentTimeMillis();
 		openActionBarOverflowOrOptionsMenu(getTargetContext());
 		if (hasOversleptLogMessageAfter(oversleepBarrier)) {
-			throw new IllegalStateException(OVERSLEEP_TAG + ": " + OVERSLEEP_MESSAGE);
+			throw new FlakyTestException(OVERSLEEP_TAG + ": " + OVERSLEEP_MESSAGE);
 		}
 
 		// wait for a platform popup to become available as root, this is the action bar overflow menu popup

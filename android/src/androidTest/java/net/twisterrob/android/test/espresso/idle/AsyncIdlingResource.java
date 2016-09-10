@@ -8,10 +8,18 @@ public abstract class AsyncIdlingResource implements IdlingResource {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 
 	private ResourceCallback resourceCallback;
+	private boolean verbose = false;
+
+	public AsyncIdlingResource beVerbose() {
+		verbose = true;
+		return this;
+	}
 
 	@Override public final boolean isIdleNow() {
 		boolean idle = isIdle();
-		LOG.trace("{}.isIdleNow: {}", getName(), idle);
+		if (verbose || !idle) {
+			LOG.trace("{}.isIdleNow: {}", getName(), idle);
+		}
 		if (idle) {
 			transitionToIdle(false);
 		} else {
