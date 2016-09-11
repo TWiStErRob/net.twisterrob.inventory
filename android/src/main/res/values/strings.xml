@@ -101,7 +101,6 @@
 	<string name="generic_location_change">&#8220;%1$s&#8221; is now in &#8220;%2$s&#8221;.</string>
 	<string name="generic_error_save">Cannot save.</string>
 	<string name="generic_error_unique_name">The name you provided already exists.</string>
-	<string name="generic_error_length_name">The name you provided is empty.</string>
 	<string name="generic_error_missing" tools:ignore="PluralsCandidate">The %1$s with id=%2$d does not exist.</string>
 
 	<plurals name="selection_count">
