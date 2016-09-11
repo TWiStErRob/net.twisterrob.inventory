@@ -63,12 +63,12 @@ public class VariantDatabase {
 			for (int i = 0; i < params.length; ++i) {
 				DatabaseUtils.bindObjectToProgram(insert, i + 1, params[i]);
 			}
-			long rows = insert.executeInsert();
+			long rowID = insert.executeInsert();
 			long end = System.nanoTime();
-			LOG.debug("rawInsert({}, {}): {}ms",
-					m_resources.getResourceEntryName(insertResource), Arrays.toString(params),
+			LOG.debug("rawInsert({}, {}): result={} in {}ms",
+					m_resources.getResourceEntryName(insertResource), Arrays.toString(params), rowID,
 					(end - start) / 1000000);
-			return rows;
+			return rowID;
 		} finally {
 			insert.close();
 		}

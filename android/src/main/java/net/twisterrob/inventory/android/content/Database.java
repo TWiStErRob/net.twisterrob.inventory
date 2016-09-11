@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.content;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 import org.slf4j.*;
 
@@ -16,7 +17,9 @@ import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.java.annotations.DebugHelper;
 
+import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 import static net.twisterrob.inventory.android.Constants.*;
 
 @WorkerThread
@@ -24,6 +27,7 @@ import static net.twisterrob.inventory.android.Constants.*;
 public class Database extends VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
 	public static final String NAME = "MagicHomeInventory";
+	private static final boolean SANITY_CHECKS = false;
 
 	private final DatabaseOpenHelper m_helper;
 
@@ -37,13 +41,10 @@ public class Database extends VariantDatabase {
 	public Database(Context hostContext, Resources resources) {
 		super(resources);
 		m_helper = new DatabaseOpenHelper(hostContext, NAME, 4, BuildConfig.DEBUG) {
-			@Override
-			public void onConfigure(SQLiteDatabase db) {
+			@Override public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);
-				// 2009-09-11 (SQLite 3.6.18): Recursive triggers can be enabled using the PRAGMA recursive_triggers statement.
-				db.execSQL("PRAGMA recursive_triggers = TRUE;");
 				// CONSIDER enabling auto_vacuum=INCREMENTAL as it speeds up a large delete a lot
-				//db.execSQL("PRAGMA auto_vacuum = INCREMENTAL;");
+				//DatabaseTools.setPragma(db, "auto_vacuum", "INCREMENTAL");
 			}
 			@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
 			@Override protected String[] getDataFiles() {
@@ -238,7 +239,17 @@ public class Database extends VariantDatabase {
 	}
 
 	public long createProperty(long type, String name, String description) {
-		return rawInsert(R.string.query_property_create, type, name, description);
+		long id = rawInsert(R.string.query_property_create, type, name, description);
+		if (SANITY_CHECKS) {
+			Long foundID = findProperty(name);
+			if (foundID == null) {
+				throw new IllegalStateException("Just inserted property doesn't exist.");
+			} else if (id != foundID) {
+				LOG.warn("Just inserted property id mismatch: executeInsert: {} VS findProperty: {}", id, foundID);
+				return foundID;
+			}
+		}
+		return id;
 	}
 	public Long findProperty(String name) {
 		return getID(R.string.query_property_find, name);
@@ -292,11 +303,18 @@ public class Database extends VariantDatabase {
 		}
 	}
 
-	private long createItem(Long parentID, long category, String name, String description) {
-		return rawInsert(R.string.query_item_create, parentID, category, name, description);
-	}
 	public long createItem(long parentID, long category, String name, String description) {
-		return createItem((Long)parentID, category, name, description);
+		long id = rawInsert(R.string.query_item_create, parentID, category, name, description);
+		if (SANITY_CHECKS) {
+			Long foundID = findItem(parentID, name);
+			if (foundID == null) {
+				throw new IllegalStateException("Just inserted item doesn't exist.");
+			} else if (id != foundID) {
+				LOG.warn("Just inserted item id mismatch: executeInsert: {} VS findItem: {}", id, foundID);
+				return foundID;
+			}
+		}
+		return id;
 	}
 	public Long findItem(long parentID, String name) {
 		return getID(R.string.query_item_find, parentID, name);
@@ -470,6 +488,22 @@ public class Database extends VariantDatabase {
 			return DatabaseTools.getOptionalInt(cursor, "properties", 0) == 0;
 		} finally {
 			cursor.close();
+		}
+	}
+
+	/** To be called from immediate window. */
+	@DebugHelper
+	public Object debug(String query) {
+		if (Pattern.matches("(?i)^\\s*(select|pragma)\\b.*$", query)) {
+			Cursor cursor = getWritableDatabase().rawQuery(query, NO_ARGS);
+			try {
+				return DatabaseTools.dumpCursorToString(cursor);
+			} finally {
+				cursor.close();
+			}
+		} else {
+			getWritableDatabase().execSQL(query);
+			return "execSQL finished";
 		}
 	}
 }

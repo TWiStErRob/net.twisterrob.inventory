@@ -204,6 +204,44 @@ public /*static*/ abstract class DatabaseTools {
 		}
 	}
 
+	public static boolean isPragma(SQLiteDatabase db, String pragmaName) {
+		Cursor cursor = db.rawQuery("PRAGMA " + pragmaName + ";", NO_ARGS);
+		return singleBoolean(cursor);
+	}
+	// long for now, explode to more return types if needed
+	public static long getPragma(SQLiteDatabase db, String pragmaName) {
+		Cursor cursor = db.rawQuery("PRAGMA " + pragmaName + ";", NO_ARGS);
+		Long value = singleLong(cursor, null);
+		if (value == null) {
+			throw new IllegalArgumentException("Pragma " + pragmaName + " doesn't have a value");
+		}
+		return value;
+	}
+	public static void setPragma(SQLiteDatabase db, String pragmaName, boolean isEnabled) {
+		setPragma(db, pragmaName, String.valueOf(isEnabled));
+	}
+	public static void setPragma(SQLiteDatabase db, String pragmaName, String value) {
+		Cursor cursor = db.rawQuery("PRAGMA " + pragmaName + " = " + value + ";", NO_ARGS);
+		consume(cursor);
+	}
+	public static int callPragma(SQLiteDatabase db, String pragmaName, Object... args) {
+		StringBuilder query = new StringBuilder("PRAGMA");
+		query.append(' ').append(pragmaName);
+		query.append('(');
+		boolean first = true;
+		for (Object arg : args) { // for some reason using ? doesn't work with pragmas
+			if (!first) {
+				query.append(", ");
+			} else {
+				first = false;
+			}
+			query.append(arg);
+		}
+		query.append(')');
+		Cursor cursor = db.rawQuery(query.append(';').toString(), NO_ARGS);
+		return consume(cursor);
+	}
+
 	public static String dumpCursorToString(Cursor cursor) {
 		StringBuilder cursorDump = new StringBuilder();
 		DatabaseUtils.dumpCursor(cursor, cursorDump);
