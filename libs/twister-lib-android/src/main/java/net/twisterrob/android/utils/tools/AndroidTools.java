@@ -20,7 +20,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.*;
 import android.os.Build.*;
@@ -494,12 +493,13 @@ public /*static*/ abstract class AndroidTools {
 		}
 		if (!isOnUIThread()) {
 			// execute/executeOnExecutor: This method must be invoked on the UI thread.
-			// This is required because onPreExecute is called on the UI thread
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
+			class DelegateToUIThread implements Runnable {
 				@Override public void run() {
 					executePreferParallel(task, params);
 				}
-			});
+			}
+			// This is required because onPreExecute is called on the UI thread
+			new Handler(Looper.getMainLooper()).post(new DelegateToUIThread());
 			return;
 		}
 		if (VERSION.SDK_INT < VERSION_CODES.DONUT) { // (0, 4)
@@ -536,12 +536,13 @@ public /*static*/ abstract class AndroidTools {
 		}
 		if (!isOnUIThread()) {
 			// execute/executeOnExecutor: This method must be invoked on the UI thread.
-			// This is required because onPreExecute is called on the UI thread
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
+			class DelegateToUIThread implements Runnable {
 				@Override public void run() {
 					executePreferSerial(task, params);
 				}
-			});
+			}
+			// This is required because onPreExecute is called on the UI thread
+			new Handler(Looper.getMainLooper()).post(new DelegateToUIThread());
 			return;
 		}
 		if (VERSION.SDK_INT < VERSION_CODES.DONUT) { // (0, 4) 
@@ -1011,7 +1012,7 @@ public /*static*/ abstract class AndroidTools {
 	}
 	/** @see ContentProvider#openPipeHelper */
 	public static ParcelFileDescriptor stream(final @NonNull InputStream in) throws FileNotFoundException {
-		return stream(new OutWriter() {
+		class Streamer implements OutWriter {
 			@Override public void write(OutputStream out) throws IOException {
 				try {
 					IOTools.copyStream(in, out, false);
@@ -1019,7 +1020,8 @@ public /*static*/ abstract class AndroidTools {
 					IOTools.ignorantClose(in);
 				}
 			}
-		});
+		}
+		return stream(new Streamer());
 	}
 	public interface OutWriter {
 		void write(OutputStream out) throws IOException;
@@ -1035,7 +1037,7 @@ public /*static*/ abstract class AndroidTools {
 		final ParcelFileDescriptor readEnd = pipe[0];
 		final ParcelFileDescriptor writeEnd = pipe[1];
 
-		AsyncTask<Void, Void, Void> copyTask = new AsyncTask<Void, Void, Void>() {
+		class PipeCloserAsyncTask extends AsyncTask<Void, Void, Void> {
 			@Override protected Void doInBackground(Void... params) {
 				AutoCloseOutputStream out = new AutoCloseOutputStream(writeEnd);
 				try {
@@ -1051,8 +1053,8 @@ public /*static*/ abstract class AndroidTools {
 				}
 				return null;
 			}
-		};
-		executePreferParallel(copyTask);
+		}
+		executePreferParallel(new PipeCloserAsyncTask());
 		return readEnd;
 	}
 
@@ -1138,11 +1140,11 @@ public /*static*/ abstract class AndroidTools {
 	public static void showKeyboard(final View view) {
 		InputMethodManager imm =
 				(InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		final Runnable tryAgain = new Runnable() {
+		class TryAgain implements Runnable {
 			@Override public void run() {
 				showKeyboard(view);
 			}
-		};
+		}
 
 		view.clearFocus();
 
@@ -1153,15 +1155,14 @@ public /*static*/ abstract class AndroidTools {
 			if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1) {
 				new DoAfterLayout(view, false) {
 					@Override public void onLayout(@NonNull View view) {
-						view.post(tryAgain);
+						view.post(new TryAgain());
 					}
 				};
-				view.post(tryAgain);
 			} else {
 				view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
 					@Override public void onViewAttachedToWindow(View view) {
 						view.removeOnAttachStateChangeListener(this);
-						view.post(tryAgain);
+						view.post(new TryAgain());
 					}
 
 					@Override public void onViewDetachedFromWindow(View view) {
@@ -1223,8 +1224,11 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	public static void makeFileDiscoverable(@NonNull Context context, @NonNull File file) {
-		MediaScannerConnection.scanFile(context, new String[] {file.getPath()}, null, null);
-		//context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+		// MediaScannerConnection doesn't unbind for some reason, so let's send an intent instead:
+		// android.app.ServiceConnectionLeaked: [...] has leaked ServiceConnection
+		// android.media.MediaScannerConnection@XXXXXXXX that was originally bound here
+		//MediaScannerConnection.scanFile(context, new String[] {file.getPath()}, null, null);
+		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
 	}
 
 	public static boolean isOnUIThread() {

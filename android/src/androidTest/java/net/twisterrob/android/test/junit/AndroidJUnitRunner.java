@@ -22,17 +22,7 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 		} finally {
 			StrictMode.setThreadPolicy(originalPolicy);
 		}
-		Espresso.setFailureHandler(new FailureHandler() {
-			FailureHandler defaultFailureHandler = new DefaultFailureHandler(getTargetContext());
-			@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
-				Throwable cause = error;
-				while (error.getCause() != null) {
-					cause = error.getCause();
-				}
-				cause.initCause(new StackTrace("View interaction was initiated here"));
-				defaultFailureHandler.handle(error, viewMatcher);
-			}
-		});
+		Espresso.setFailureHandler(new DetailedFailureHandler(new DefaultFailureHandler(getTargetContext())));
 	}
 
 	@Override public void onStart() {
@@ -59,6 +49,20 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 					}
 				}
 			});
+		}
+	}
+	private static class DetailedFailureHandler implements FailureHandler {
+		private final FailureHandler defaultFailureHandler;
+		private DetailedFailureHandler(DefaultFailureHandler handler) {
+			defaultFailureHandler = handler;
+		}
+		@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
+			Throwable cause = error;
+			while (cause.getCause() != null) {
+				cause = cause.getCause();
+			}
+			cause.initCause(new StackTrace("View interaction was initiated here"));
+			defaultFailureHandler.handle(error, viewMatcher);
 		}
 	}
 }
