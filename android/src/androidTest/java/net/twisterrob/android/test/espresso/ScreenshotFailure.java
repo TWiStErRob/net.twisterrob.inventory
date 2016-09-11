@@ -99,7 +99,7 @@ public class ScreenshotFailure implements TestRule {
 	 * because it requires {@code  android.permission.READ_FRAME_BUFFER} which is signature level.
 	 */
 	@TargetApi(VERSION_CODES.JELLY_BEAN_MR2)
-	private @NonNull File takeScreenshot(@NonNull String dirName, @NonNull String shotName) throws IOException {
+	private File takeScreenshot(@NonNull String dirName, @NonNull String shotName) throws IOException {
 		File dir = new File(targetDir, dirName);
 		File target = new File(dir, shotName);
 		IOTools.ensure(dir);
@@ -120,6 +120,7 @@ public class ScreenshotFailure implements TestRule {
 				shot = shootActivity(activity);
 			} catch (Exception ex) {
 				LOG.warn("No activity found to shoot.", ex);
+				return null;
 			}
 		}
 		if (shot != null) {

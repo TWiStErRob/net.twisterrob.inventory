@@ -6,9 +6,11 @@ import java.util.Arrays;
 import org.slf4j.*;
 
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.IBinder;
+import android.os.Build.*;
+import android.os.*;
 
 /**
  * Equivalent to:
@@ -65,10 +67,23 @@ public class SystemAnimations {
 			throw new IllegalStateException(ex);
 		}
 		try {
-			Class<?> windowManagerGlobalClass = Class.forName("android.view.WindowManagerGlobal");
-			getWindowSession = windowManagerGlobalClass.getDeclaredMethod("getWindowSession");
-			getDurationScale = ValueAnimator.class.getDeclaredMethod("getDurationScale");
-			setDurationScale = ValueAnimator.class.getDeclaredMethod("setDurationScale", Float.TYPE);
+			if (VERSION_CODES.JELLY_BEAN_MR1 <= VERSION.SDK_INT) {
+				Class<?> windowManagerGlobalClass = Class.forName("android.view.WindowManagerGlobal");
+				getWindowSession = windowManagerGlobalClass.getDeclaredMethod("getWindowSession");
+			} else if (VERSION_CODES.JELLY_BEAN == VERSION.SDK_INT) {
+				Class<?> viewRootImplClass = Class.forName("android.view.ViewRootImpl");
+				getWindowSession = viewRootImplClass.getDeclaredMethod("getWindowSession");
+			} else {
+				getWindowSession = null;
+			}
+			if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
+				// ValueAnimator is HONEYCOMB, but scaling was introduced in JELLY_BEAN
+				getDurationScale = ValueAnimator.class.getDeclaredMethod("getDurationScale");
+				setDurationScale = ValueAnimator.class.getDeclaredMethod("setDurationScale", Float.TYPE);
+			} else {
+				getDurationScale = null;
+				setDurationScale = null;
+			}
 		} catch (Throwable ex) {
 			throw new IllegalStateException(ex);
 		}
@@ -76,6 +91,7 @@ public class SystemAnimations {
 
 	private final Object windowManager;
 	private final boolean canSetAnimationScales;
+	private final boolean canSetDurationScale;
 	private float[] previousScales;
 
 	public SystemAnimations(Context context) {
@@ -87,8 +103,12 @@ public class SystemAnimations {
 		}
 		int permStatus = context.checkCallingOrSelfPermission(ANIMATION_PERMISSION);
 		canSetAnimationScales = permStatus == PackageManager.PERMISSION_GRANTED;
+		canSetDurationScale = getDurationScale != null && setDurationScale != null;
 		if (!canSetAnimationScales) {
-			LOG.warn("Application doesn't have {}, using ValueAnimator hack as fallback.", ANIMATION_PERMISSION);
+			String resolution = canSetDurationScale
+					? "using ValueAnimator hack as fallback"
+					: "all operations will be no-op";
+			LOG.warn("Application doesn't have {}, {}.", ANIMATION_PERMISSION, resolution);
 		}
 	}
 
@@ -124,7 +144,7 @@ public class SystemAnimations {
 			} catch (Throwable ex) {
 				throw new IllegalStateException(ex);
 			}
-		} else {
+		} else if (canSetDurationScale) {
 			try {
 				preWindowSessionFix();
 				setDurationScale.invoke(null, currentScales[0]);
@@ -140,13 +160,15 @@ public class SystemAnimations {
 			} catch (Throwable ex) {
 				throw new IllegalStateException(ex);
 			}
-		} else {
+		} else if (canSetDurationScale) {
 			try {
 				preWindowSessionFix();
 				return new float[] {(Float)getDurationScale.invoke(null)};
 			} catch (Throwable ex) {
 				throw new IllegalStateException(ex);
 			}
+		} else {
+			return new float[0];
 		}
 	}
 	/**
@@ -160,7 +182,14 @@ public class SystemAnimations {
 	 * @see android.animation.ValueAnimator#sDurationScale
 	 */
 	@SuppressWarnings("JavadocReference")
+	@TargetApi(VERSION_CODES.JELLY_BEAN_MR1)
 	private void preWindowSessionFix() throws IllegalAccessException, InvocationTargetException {
-		getWindowSession.invoke(null);
+		if (getWindowSession != null) {
+			if (VERSION.SDK_INT <= VERSION_CODES.JELLY_BEAN_MR1) {
+				getWindowSession.invoke(null, Looper.getMainLooper());
+			} else {
+				getWindowSession.invoke(null);
+			}
+		}
 	}
 }

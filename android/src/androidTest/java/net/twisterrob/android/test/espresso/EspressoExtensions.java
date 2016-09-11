@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.hamcrest.*;
 import org.slf4j.*;
@@ -17,6 +17,7 @@ import android.app.Instrumentation.ActivityResult;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.res.*;
+import android.support.annotation.*;
 import android.support.test.annotation.Beta;
 import android.support.test.espresso.*;
 import android.support.test.espresso.NoMatchingViewException.Builder;
@@ -33,7 +34,6 @@ import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
-import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
@@ -42,6 +42,7 @@ import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.test.junit.FlakyTestException;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
+import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 public class EspressoExtensions {
 	private static final Logger LOG = LoggerFactory.getLogger(EspressoExtensions.class);
@@ -50,6 +51,9 @@ public class EspressoExtensions {
 	/** @see android.support.test.espresso.action.MotionEvents#TAG */
 	private static final String OVERSLEEP_TAG = "MotionEvents";
 
+	public static ViewAssertion exists() {
+		return matches(anything());
+	}
 	public static ViewAction loopMainThreadUntilIdle() {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
@@ -102,6 +106,24 @@ public class EspressoExtensions {
 			}
 		});
 		return controller.get();
+	}
+
+	public static @Nullable View stealView(@NonNull Matcher<View> viewMatcher) {
+		class StealViewAction implements ViewAction {
+			private View matchedView;
+			@Override public Matcher<View> getConstraints() {
+				return anyView();
+			}
+			@Override public String getDescription() {
+				return "steal view";
+			}
+			@Override public void perform(UiController uiController, View view) {
+				matchedView = view;
+			}
+		}
+		StealViewAction stealView = new StealViewAction();
+		onView(viewMatcher).withFailureHandler(new IgnoreFailure()).perform(stealView);
+		return stealView.matchedView;
 	}
 
 	/**
@@ -280,23 +302,19 @@ public class EspressoExtensions {
 		}
 
 		// wait for a platform popup to become available as root, this is the action bar overflow menu popup
-		for (final AtomicBoolean failed = new AtomicBoolean(false); failed.get(); failed.set(false)) {
-			onView(isRoot())
-					.inRoot(isPlatformPopup())
-					.check(matches(anything()))
-					.withFailureHandler(new FailureHandler() {
-						@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
-							LOG.trace("FailureHandler({}, {})", error, viewMatcher);
-							if (error instanceof NoMatchingViewException) {
-								failed.set(true);
-							}
-						}
-					});
+		for (long waitTime : new long[] {10, 50, 100, 500, 1000, 3000}) {
+			try {
+				onView(isRoot()).inRoot(isPopupMenu()).check(matches(anything()));
+				break;
+			} catch (NoMatchingRootException ex) {
+				LOG.warn("No popup menu is available - waiting: " + waitTime + "ms for one to appear.");
+				onView(isRoot()).perform(loopMainThreadForAtLeast(waitTime));
+			}
 		}
 		// double-check the root is available
-		onView(isRoot()).inRoot(isPlatformPopup()).check(matches(isDisplayed()));
+		onView(isRoot()).inRoot(isPopupMenu()).check(matches(isDisplayed()));
 		// check that the current default root is the popup
-		onView(isRoot()).check(matches(root(isPlatformPopup())));
+		onView(isRoot()).check(matches(root(isPopupMenu())));
 		return onView(matcher);//.inRoot(isPlatformPopup()); // not needed as the popup is topmost & focused
 	}
 
@@ -331,7 +349,7 @@ public class EspressoExtensions {
 		}
 		return false;
 	}
-	
+
 	public static ViewInteraction onActionBarDescendant(Matcher<View> viewMatcher) {
 		return onView(allOf(viewMatcher, inActionBar()));
 	}

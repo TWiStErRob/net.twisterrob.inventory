@@ -71,6 +71,15 @@ public class DialogMatchers {
 		};
 	}
 
+	public static Matcher<Root> isPopupMenu() {
+		return anyOf(
+				// normal ActionBar compat overflow popup (e.g. on 5.0 without hardware key)
+				isPlatformPopup(),
+				// old ActionBar compat bottom menu popup (e.g. on 2.3.7 with hardware key)
+				withDecorView(withClassName(is("android.support.v7.app.AppCompatDelegateImplV7$ListMenuDecorView")))
+		);
+	}
+
 	public static Matcher<View> isDialogView() {
 		return root(isDialog());
 	}
