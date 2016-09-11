@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 import android.support.test.rule.ActivityTestRule;
@@ -61,15 +61,21 @@ public class PropertyViewActivityTest_Delete {
 	@Test public void testDeleteMessage() throws IOException {
 		onActionMenuView(withText(R.string.property_delete)).perform(click());
 
-		onView(isRoot()).check(matches(not(hasDescendant(withText(matchesPattern("%\\d"))))));
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_PROPERTY)))));
+		onView(withText(matchesPattern("%\\d"))).check(doesNotExist());
+		onView(withId(android.R.id.message)).check(matches(allOf(
+				isDisplayed(),
+				withText(containsString(TEST_PROPERTY))
+		)));
 	}
 	@Test public void testDeleteMessageWithContents() throws IOException {
 		App.db().createRoom(propertyID, RoomType.DEFAULT, TEST_ROOM, NO_DESCRIPTION);
 
 		testDeleteMessage();
 
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_ROOM)))));
+		onView(withId(android.R.id.message)).check(matches(allOf(
+				isDisplayed(),
+				withText(containsString(TEST_ROOM))
+		)));
 	}
 	@Test public void testDeleteMessageWithContentsMultiple() throws IOException {
 		App.db().createRoom(propertyID, RoomType.DEFAULT, TEST_ROOM, NO_DESCRIPTION);
@@ -79,8 +85,11 @@ public class PropertyViewActivityTest_Delete {
 
 		testDeleteMessage();
 
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_ROOM)))));
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_ROOM_OTHER)))));
+		onView(withId(android.R.id.message)).check(matches(allOf(
+				isDisplayed(),
+				withText(containsString(TEST_ROOM)),
+				withText(containsString(TEST_ROOM_OTHER))
+		)));
 	}
 
 	@Test public void testDeleteConfirm() throws IOException {

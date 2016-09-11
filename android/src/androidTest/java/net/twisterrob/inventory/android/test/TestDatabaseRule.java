@@ -8,6 +8,10 @@ import static android.support.test.InstrumentationRegistry.*;
 
 import net.twisterrob.inventory.android.content.Database;
 
+/**
+ * It is safe to apply this rule at any time,
+ * because it won't open the database until the first query on the returned DB from {@link #get()}.
+ */
 public class TestDatabaseRule implements TestRule {
 	private Database db;
 

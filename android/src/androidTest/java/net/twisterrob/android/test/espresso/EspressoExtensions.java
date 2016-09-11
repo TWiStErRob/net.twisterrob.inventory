@@ -24,6 +24,7 @@ import android.support.test.espresso.NoMatchingViewException.Builder;
 import android.support.test.espresso.core.deps.guava.collect.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.util.*;
+import android.support.test.espresso.web.matcher.AmbiguousElementMatcherException;
 import android.support.test.runner.lifecycle.Stage;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -54,6 +55,29 @@ public class EspressoExtensions {
 	public static ViewAssertion exists() {
 		return matches(anything());
 	}
+	/** @see <a href="http://stackoverflow.com/a/39436238/253468">Espresso: return boolean if view exists</a> */
+	public static boolean exists(ViewInteraction interaction) {
+		try {
+			interaction.perform(new ViewAction() {
+				@Override public Matcher<View> getConstraints() {
+					return any(View.class);
+				}
+				@Override public String getDescription() {
+					return "check for existence";
+				}
+				@Override public void perform(UiController uiController, View view) {
+					// no op, if this run, then the code will continue after .perform(...)
+				}
+			});
+			return true;
+		} catch (AmbiguousElementMatcherException e) {
+			// if there's any interaction later with the same matcher, that'll fail anyway
+			return true; // we found more than one
+		} catch (NoMatchingViewException e) {
+			return false;
+		}
+	}
+
 	public static ViewAction loopMainThreadUntilIdle() {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
@@ -122,7 +146,7 @@ public class EspressoExtensions {
 			}
 		}
 		StealViewAction stealView = new StealViewAction();
-		onView(viewMatcher).withFailureHandler(new IgnoreFailure()).perform(stealView);
+		onView(viewMatcher).withFailureHandler(new Ignore()).perform(stealView);
 		return stealView.matchedView;
 	}
 
@@ -284,6 +308,10 @@ public class EspressoExtensions {
 		return allOf(hasAction(Intent.ACTION_CHOOSER), hasExtra(is(Intent.EXTRA_INTENT), matcher));
 	}
 
+	/**
+	 * @see <a href="https://code.google.com/p/android/issues/detail?id=199544">
+	 * perform(click()) is doing a long press randomly and causing tests to fail</a>
+	 */
 	// FIXME allow lookup by id with custom matcher: MenuView.ItemView.getItemData().getId()
 	public static ViewInteraction onActionMenuView(Matcher<View> matcher) {
 		// to prevent overflow button click from oversleeping and clicking the first item in the popup via a longClick

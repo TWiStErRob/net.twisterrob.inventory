@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 import android.support.test.rule.ActivityTestRule;
@@ -27,6 +27,7 @@ import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
+import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
 import static net.twisterrob.inventory.android.content.DatabaseMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
@@ -37,7 +38,7 @@ public class ItemViewActivityTest_Delete {
 			super.setDefaults();
 			long propertyID = App.db().createProperty(PropertyType.DEFAULT, TEST_PROPERTY, NO_DESCRIPTION);
 			long roomID = App.db().createRoom(propertyID, RoomType.DEFAULT, TEST_ROOM, NO_DESCRIPTION);
-			itemID = App.db().createItem(roomID, Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
+			itemID = App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
 			getStartIntent().putExtras(Intents.bundleFromParent(itemID));
 		}
 	};
@@ -65,15 +66,21 @@ public class ItemViewActivityTest_Delete {
 	@Test public void testDeleteMessage() throws IOException {
 		onActionMenuView(withText(R.string.item_delete)).perform(click());
 
-		onView(isRoot()).check(matches(not(hasDescendant(withText(matchesPattern("%\\d"))))));
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_ITEM)))));
+		onView(withText(matchesPattern("%\\d"))).check(doesNotExist());
+		onView(withId(android.R.id.message)).check(matches(allOf(
+				isDisplayed(),
+				withText(containsString(TEST_ITEM))
+		)));
 	}
 	@Test public void testDeleteMessageWithContents() throws IOException {
 		App.db().createItem(itemID, Category.DEFAULT, TEST_SUBITEM, NO_DESCRIPTION);
 
 		testDeleteMessage();
 
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_SUBITEM)))));
+		onView(withId(android.R.id.message)).check(matches(allOf(
+				isDisplayed(),
+				withText(containsString(TEST_SUBITEM))
+		)));
 	}
 	@Test public void testDeleteMessageWithContentsMultiple() throws IOException {
 		App.db().createItem(itemID, Category.DEFAULT, TEST_SUBITEM, NO_DESCRIPTION);
@@ -81,8 +88,11 @@ public class ItemViewActivityTest_Delete {
 
 		testDeleteMessage();
 
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_SUBITEM)))));
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_SUBITEM_OTHER)))));
+		onView(withId(android.R.id.message)).check(matches(allOf(
+				isDisplayed(),
+				withText(containsString(TEST_SUBITEM)),
+				withText(containsString(TEST_SUBITEM_OTHER))
+		)));
 	}
 
 	@Test public void testDeleteConfirm() throws IOException {

@@ -42,7 +42,7 @@ public class ItemViewActivityTest_Move {
 			super.setDefaults();
 			propertyID = App.db().createProperty(PropertyType.DEFAULT, TEST_PROPERTY, NO_DESCRIPTION);
 			roomID = App.db().createRoom(propertyID, RoomType.DEFAULT, TEST_ROOM, NO_DESCRIPTION);
-			itemID = App.db().createItem(roomID, Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
+			itemID = App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
 			getStartIntent().putExtras(Intents.bundleFromParent(itemID));
 		}
 	};
@@ -83,7 +83,7 @@ public class ItemViewActivityTest_Move {
 	}
 
 	@Test public void testMoveAlreadyExists() throws IOException {
-		long targetID = App.db().createItem(roomID, Category.DEFAULT, TEST_ITEM_OTHER, NO_DESCRIPTION);
+		long targetID = App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM_OTHER, NO_DESCRIPTION);
 		long duplicateID = App.db().createItem(targetID, Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
 		assertThat(db.get(), both(hasInvItem(TEST_ITEM_OTHER)).and(hasInvItemInRoom(TEST_ROOM, TEST_ITEM_OTHER)));
 		assertThat(db.get(), both(hasInvItem(TEST_ITEM)).and(hasInvItemIn(TEST_ITEM_OTHER, TEST_ITEM)));
@@ -98,16 +98,16 @@ public class ItemViewActivityTest_Move {
 		assertThat(db.get(), hasInvItemInRoom(TEST_ROOM, TEST_ITEM));
 		assertThat(db.get(), hasInvItemIn(TEST_ITEM_OTHER, TEST_ITEM));
 
-		onView(isRoot())
-				.inRoot(isToast())
-				.check(matches(hasDescendant(withText(containsString(TEST_ITEM)))))
-				.check(matches(hasDescendant(withText(containsString(R.string.generic_error_unique_name)))))
-				.check(matches(hasDescendant(withText(containsString(TEST_ITEM_OTHER)))))
-		;
+		onView(withId(android.R.id.message)).inRoot(isToast()).check(matches(allOf(
+				isDisplayed(),
+				withText(containsString(TEST_ITEM)),
+				withText(containsString(R.string.generic_error_unique_name)),
+				withText(containsString(TEST_ITEM_OTHER))
+		)));
 	}
 
 	@Test public void testMoveToAnotherItem() throws IOException {
-		long targetID = App.db().createItem(roomID, Category.DEFAULT, TEST_ITEM_OTHER, NO_DESCRIPTION);
+		long targetID = App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM_OTHER, NO_DESCRIPTION);
 		assertThat(db.get(), both(hasInvItem(TEST_ITEM_OTHER)).and(hasInvItemInRoom(TEST_ROOM, TEST_ITEM_OTHER)));
 
 		onActionBarDescendant(withId(R.id.action_item_move)).perform(click());

@@ -78,9 +78,12 @@ public class RoomViewActivityTest_Move {
 			MoveTargetActivityActions.confirm();
 		}
 
-		onView(isRoot()).check(matches(not(hasDescendant(withText(matchesPattern("%\\d"))))));
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_ROOM)))));
-		onView(isRoot()).check(matches(hasDescendant(withText(containsString(TEST_PROPERTY)))));
+		onView(withText(matchesPattern("%\\d"))).check(doesNotExist());
+		onView(withId(android.R.id.message)).check(matches(allOf(
+				isDisplayed(),
+				withText(containsString(TEST_ROOM)),
+				withText(containsString(TEST_PROPERTY))
+		)));
 	}
 
 	@Test public void testMoveConfirmCancel() throws IOException {
@@ -133,12 +136,12 @@ public class RoomViewActivityTest_Move {
 		assertThat(db.get(), hasInvRoomInProperty(TEST_PROPERTY, TEST_ROOM));
 		assertThat(db.get(), hasInvRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM));
 
-		onView(isRoot())
-				.inRoot(isToast())
-				.check(matches(hasDescendant(withText(containsString(TEST_ROOM)))))
-				.check(matches(hasDescendant(withText(containsString(R.string.generic_error_unique_name)))))
-				.check(matches(hasDescendant(withText(containsString(TEST_PROPERTY_OTHER)))))
-		;
+		onView(withId(android.R.id.message)).inRoot(isToast()).check(matches(allOf(
+				isDisplayed(),
+				withText(containsString(TEST_ROOM)),
+				withText(containsString(R.string.generic_error_unique_name)),
+				withText(containsString(TEST_PROPERTY_OTHER))
+		)));
 	}
 
 	private void assertPropertyOpenedWithVisibleRoom(long propertyID, String roomName) {

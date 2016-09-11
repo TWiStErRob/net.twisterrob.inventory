@@ -44,7 +44,12 @@ public class DatabaseMatchers {
 			}
 			@Override protected boolean matchesSafely(Database db, Description mismatch) {
 				Cursor cursor = db.rawQuery(R.string.query_item_exists_by_parent, parentName, childName);
-				return DatabaseTools.singleBoolean(cursor);
+				if (!DatabaseTools.singleBoolean(cursor)) {
+					mismatch.appendText("found item named ").appendValue(childName);
+					appendParents(mismatch, db, childName, R.string.query_item_parent);
+					return false;
+				}
+				return true;
 			}
 		};
 	}
