@@ -12,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.os.Build.*;
 import android.os.*;
 
+import static android.os.Build.VERSION.*;
+
 /**
  * Equivalent to:
  * <code><pre>
@@ -51,6 +53,7 @@ public class SystemAnimations {
 	private static final Method getAnimationScales;
 
 	private static final Method getWindowSession;
+	private static final Field sDurationScale;
 	private static final Method getDurationScale;
 	private static final Method setDurationScale;
 
@@ -67,20 +70,35 @@ public class SystemAnimations {
 			throw new IllegalStateException(ex);
 		}
 		try {
-			if (VERSION_CODES.JELLY_BEAN_MR1 <= VERSION.SDK_INT) {
+			if (VERSION_CODES.JELLY_BEAN_MR1 < VERSION.SDK_INT) {
 				Class<?> windowManagerGlobalClass = Class.forName("android.view.WindowManagerGlobal");
 				getWindowSession = windowManagerGlobalClass.getDeclaredMethod("getWindowSession");
-			} else if (VERSION_CODES.JELLY_BEAN == VERSION.SDK_INT) {
+			} else if (VERSION_CODES.JELLY_BEAN_MR1 == VERSION.SDK_INT) {
+				Class<?> windowManagerGlobalClass = Class.forName("android.view.WindowManagerGlobal");
+				getWindowSession = windowManagerGlobalClass.getDeclaredMethod("getWindowSession", Looper.class);
+			} else if (VERSION_CODES.ICE_CREAM_SANDWICH <= SDK_INT && SDK_INT < VERSION_CODES.JELLY_BEAN_MR1) {
 				Class<?> viewRootImplClass = Class.forName("android.view.ViewRootImpl");
-				getWindowSession = viewRootImplClass.getDeclaredMethod("getWindowSession");
+				getWindowSession = viewRootImplClass.getDeclaredMethod("getWindowSession", Looper.class);
+			} else if (VERSION_CODES.GINGERBREAD_MR1 < SDK_INT && SDK_INT < VERSION_CODES.ICE_CREAM_SANDWICH) {
+				// No sources or devices available, so don't know.
+				// It doesn't really matter anyway < JELLY_BEAN (16), because there's no ValueAnimator.sDurationScale.
+				getWindowSession = null;
 			} else {
 				getWindowSession = null;
 			}
-			if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
-				// ValueAnimator is HONEYCOMB, but scaling was introduced in JELLY_BEAN
+			// ValueAnimator is since HONEYCOMB, but scaling was introduced in JELLY_BEAN
+			// c38fa1f63674971f9ac6ced1a449fb81026b62f7: Add Developer Option setting for Animator scaling.
+			if (VERSION_CODES.JELLY_BEAN == VERSION.SDK_INT) {
+				sDurationScale = ValueAnimator.class.getDeclaredField("sDurationScale");
+				sDurationScale.setAccessible(true);
+				getDurationScale = SystemAnimations.class.getDeclaredMethod("getDurationScaleFillIn");
+				setDurationScale = ValueAnimator.class.getDeclaredMethod("setDurationScale", Float.TYPE);
+			} else if (VERSION_CODES.JELLY_BEAN < VERSION.SDK_INT) {
+				sDurationScale = null; // not needed, we have a getter
 				getDurationScale = ValueAnimator.class.getDeclaredMethod("getDurationScale");
 				setDurationScale = ValueAnimator.class.getDeclaredMethod("setDurationScale", Float.TYPE);
 			} else {
+				sDurationScale = null;
 				getDurationScale = null;
 				setDurationScale = null;
 			}
@@ -96,7 +114,7 @@ public class SystemAnimations {
 
 	public SystemAnimations(Context context) {
 		try {
-			IBinder windowManagerBinder = (IBinder)getService.invoke(null, "window");
+			IBinder windowManagerBinder = (IBinder)getService.invoke(null, Context.WINDOW_SERVICE);
 			windowManager = asInterface.invoke(null, windowManagerBinder);
 		} catch (Throwable ex) {
 			throw new IllegalStateException(ex);
@@ -185,11 +203,15 @@ public class SystemAnimations {
 	@TargetApi(VERSION_CODES.JELLY_BEAN_MR1)
 	private void preWindowSessionFix() throws IllegalAccessException, InvocationTargetException {
 		if (getWindowSession != null) {
-			if (VERSION.SDK_INT <= VERSION_CODES.JELLY_BEAN_MR1) {
-				getWindowSession.invoke(null, Looper.getMainLooper());
-			} else {
+			if (VERSION_CODES.JELLY_BEAN_MR2 <= VERSION.SDK_INT) {
 				getWindowSession.invoke(null);
+			} else {
+				getWindowSession.invoke(null, Looper.getMainLooper());
 			}
 		}
+	}
+
+	private static float getDurationScaleFillIn() throws IllegalAccessException {
+		return (float)sDurationScale.get(null);
 	}
 }

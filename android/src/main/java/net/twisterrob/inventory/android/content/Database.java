@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.*;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build.VERSION_CODES;
+import android.os.Build.*;
 import android.support.annotation.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
@@ -27,7 +27,7 @@ import static net.twisterrob.inventory.android.Constants.*;
 public class Database extends VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
 	public static final String NAME = "MagicHomeInventory";
-	private static final boolean SANITY_CHECKS = false;
+	private static final boolean SANITY_CHECKS = VERSION.SDK_INT < VERSION_CODES.HONEYCOMB;
 
 	private final DatabaseOpenHelper m_helper;
 

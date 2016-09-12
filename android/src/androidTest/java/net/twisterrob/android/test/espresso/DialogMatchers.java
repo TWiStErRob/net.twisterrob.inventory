@@ -4,7 +4,6 @@ import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
-import android.os.IBinder;
 import android.support.annotation.IdRes;
 import android.support.test.espresso.*;
 import android.support.test.espresso.util.*;
@@ -17,6 +16,7 @@ import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
+import static android.view.WindowManager.LayoutParams.*;
 
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 
@@ -51,32 +51,21 @@ public class DialogMatchers {
 	 *     How to check Toast window, on android test-kit Espresso</a>
 	 */
 	public static Matcher<Root> isToast() {
-		return new TypeSafeMatcher<Root>() {
-			@Override public void describeTo(Description description) {
-				description.appendText("is toast");
-			}
-			@Override public boolean matchesSafely(Root root) {
-				int type = root.getWindowLayoutParams().get().type;
-				if ((type == WindowManager.LayoutParams.TYPE_TOAST)) {
-					IBinder windowToken = root.getDecorView().getWindowToken();
-					IBinder appToken = root.getDecorView().getApplicationWindowToken();
-					if (windowToken == appToken) {
-						// windowToken == appToken means this window isn't contained by any other windows.
-						// if it was a window for an activity, it would have TYPE_BASE_APPLICATION.
-						return true;
-					}
-				}
-				return false;
-			}
-		};
+		return new WindowManagerLayoutParamTypeMatcher("is toast", WindowManager.LayoutParams.TYPE_TOAST);
 	}
 
 	public static Matcher<Root> isPopupMenu() {
 		return anyOf(
 				// normal ActionBar compat overflow popup (e.g. on 5.0 without hardware key)
 				isPlatformPopup(),
-				// old ActionBar compat bottom menu popup (e.g. on 2.3.7 with hardware key)
-				withDecorView(withClassName(is("android.support.v7.app.AppCompatDelegateImplV7$ListMenuDecorView")))
+				// support bottom menu popup (e.g. on Genymotion 2.3.7 with hardware key)
+				withDecorView(withClassName(is("android.support.v7.app.AppCompatDelegateImplV7$ListMenuDecorView"))),
+				// bottom menu popup (e.g. on Genymotion 4.1.1 with hardware key):
+				// application-window-token=android.view.ViewRootImpl$W@537c56c8,
+				// window-token=android.view.ViewRootImpl$W@53804678,
+				// layout-params-string=WM.LayoutParams{(0,0)(wrapxwrap) gr=#51 ty=1003 fl=#1821000 fmt=-3 wanim=0x10301e4},
+				// decor-view-string=DecorView{id=-1, ...}}
+				new WindowManagerLayoutParamTypeMatcher("is bottom menu popup", TYPE_APPLICATION_ATTACHED_DIALOG, false)
 		);
 	}
 

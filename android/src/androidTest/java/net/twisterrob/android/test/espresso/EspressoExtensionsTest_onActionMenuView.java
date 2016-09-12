@@ -1,6 +1,6 @@
 package net.twisterrob.android.test.espresso;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 
 import javax.inject.Provider;
 
@@ -8,9 +8,11 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.junit.MatcherAssume.*;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.*;
@@ -20,6 +22,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.*;
 
+import static android.os.Build.VERSION_CODES.*;
+import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
@@ -36,6 +40,15 @@ public class EspressoExtensionsTest_onActionMenuView {
 
 	@Test(expected = IllegalStateException.class)
 	public void testOversleep() throws Exception {
+		// see android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu()
+		// pressMenuKey() can't oversleep because it's a key, not a touchDown followed by a touchUp
+		assumeThat("app target SDK version need to be newer than Gingerbread to have overflow menu",
+				getTargetContext().getApplicationInfo().targetSdkVersion, greaterThanOrEqualTo(HONEYCOMB));
+		Method hasVirtualOverflowButton =
+				ensureAccessible(Espresso.class.getDeclaredMethod("hasVirtualOverflowButton", Context.class));
+		assumeThat("device expected to have an action bar overflow button",
+				(Boolean)hasVirtualOverflowButton.invoke(null, getTargetContext()), is(true));
+
 		Field BASE =
 				ensureAccessible(findDeclaredField(Espresso.class, "BASE"));
 		Field uiControllerProvider =

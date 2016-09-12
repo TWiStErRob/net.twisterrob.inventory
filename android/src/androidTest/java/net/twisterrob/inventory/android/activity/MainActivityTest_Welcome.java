@@ -37,6 +37,7 @@ public class MainActivityTest_Welcome {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
 		clickNegativeInDialog();
 
+		onView(isRoot()).inRoot(isToast()).check(matches(isDisplayed()));
 		onView(withId(R.id.properties)).check(EMPTY);
 		onView(withId(R.id.rooms)).check(EMPTY);
 		onView(withId(R.id.lists)).check(EMPTY);
@@ -47,6 +48,7 @@ public class MainActivityTest_Welcome {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
 		clickPositiveInDialog();
 
+		onView(isRoot()).inRoot(isToast()).check(matches(isDisplayed()));
 		onView(withId(R.id.properties)).check(NON_EMPTY);
 		onView(withId(R.id.rooms)).check(NON_EMPTY);
 		onView(withId(R.id.lists)).check(NON_EMPTY);
