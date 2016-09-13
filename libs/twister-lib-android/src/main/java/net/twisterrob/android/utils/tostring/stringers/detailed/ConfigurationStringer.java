@@ -9,13 +9,17 @@ import android.os.Build.*;
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.java.utils.tostring.*;
 
+/**
+ * @see <a href="https://developer.android.com/guide/topics/resources/providing-resources.html#table2">
+ *     API Guides > App Resources > Providing Resources > Configuration qualifier names</a>
+ */
 @TargetApi(VERSION_CODES.N)
 public class ConfigurationStringer extends Stringer<Configuration> {
 	@SuppressWarnings("deprecation")
 	@Override public void toString(@Nonnull ToStringAppender append, Configuration config) {
 		append.beginPropertyGroup("screen");
 		append.rawProperty("orientation", ConfigurationOrientation.Converter.toString(config.orientation));
-		append.rawProperty("touchscreen", ConfigurationTouchscreen.Converter.toString(config.touchscreen));
+		append.rawProperty("touchScreen", ConfigurationTouchscreen.Converter.toString(config.touchscreen));
 		append.rawProperty("layout", ConfigurationScreenLayout.Converter.toString(config.screenLayout));
 		if (VERSION_CODES.M <= VERSION.SDK_INT) {
 			append.booleanProperty(config.isScreenRound(), "round");
