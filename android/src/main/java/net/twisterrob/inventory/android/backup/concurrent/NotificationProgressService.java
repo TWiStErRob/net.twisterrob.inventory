@@ -93,6 +93,9 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 	}
 
 	protected final void finished(@NonNull Progress result) {
+		if (currentJobStarted == NEVER) {
+			throw new IllegalStateException("Did you call super.onHandleIntent?");
+		}
 		lastProgress = result;
 		broadcast(result, ACTION_FINISHED_BROADCAST);
 		if (inBackground) {

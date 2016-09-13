@@ -4,15 +4,15 @@ import java.util.*;
 
 import android.database.Cursor;
 
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 
 public class Types {
 	private final Map<String, Long> types = new HashMap<>();
-	public Types() {
-		putTypes(App.db().listPropertyTypes(), PropertyType.ID, PropertyType.NAME);
-		putTypes(App.db().listRoomTypes(), RoomType.ID, RoomType.NAME);
-		putTypes(App.db().listRelatedCategories(null), Category.ID, Category.NAME);
+	public Types(Database db) {
+		putTypes(db.listPropertyTypes(), PropertyType.ID, PropertyType.NAME);
+		putTypes(db.listRoomTypes(), RoomType.ID, RoomType.NAME);
+		putTypes(db.listRelatedCategories(null), Category.ID, Category.NAME);
 
 		// types.put("category_old", types.get("category_new")); // transitive must be resolved manually
 	}

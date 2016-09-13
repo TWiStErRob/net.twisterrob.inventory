@@ -27,7 +27,7 @@ public class XMLImporter implements Importer {
 	private ImportImageGetter images;
 	private final Resources res;
 	private final Database db;
-	private final Types types = new Types();
+	private Types types;
 	private final Map<Long, Long> itemMap = new TreeMap<>();
 
 	public XMLImporter(Resources res, Database db) {
@@ -39,6 +39,7 @@ public class XMLImporter implements Importer {
 			@Nullable ImportImageGetter getter) throws Exception {
 		this.progress = progress == null? DUMMY_HANDLER : progress;
 		this.images = getter == null? DUMMY_GETTER : getter;
+		this.types = new Types(db);
 		RootElement structure = getStructure();
 		Xml.parse(stream, Xml.Encoding.UTF_8, structure.getContentHandler());
 	}
