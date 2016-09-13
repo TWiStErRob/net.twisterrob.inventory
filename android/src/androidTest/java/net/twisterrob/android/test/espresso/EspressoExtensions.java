@@ -330,7 +330,7 @@ public class EspressoExtensions {
 		}
 
 		// wait for a platform popup to become available as root, this is the action bar overflow menu popup
-		for (long waitTime : new long[] {10, 50, 100, 500, 1000, 3000}) {
+		for (long waitTime : new long[] {10, 50, 100, 500, 1000, 3000, 5000}) { // ~10 seconds altogether
 			try {
 				onView(isRoot()).inRoot(isPopupMenu()).check(matches(anything()));
 				break;
@@ -339,7 +339,7 @@ public class EspressoExtensions {
 				onView(isRoot()).perform(loopMainThreadForAtLeast(waitTime));
 			}
 		}
-		// double-check the root is available
+		// double-check the root is available, if test fails here it means the popup didn't show up
 		onView(isRoot()).inRoot(isPopupMenu()).check(matches(isDisplayed()));
 		// check that the current default root is the popup
 		onView(isRoot()).check(matches(root(isPopupMenu())));

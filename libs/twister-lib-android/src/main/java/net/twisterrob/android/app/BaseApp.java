@@ -137,6 +137,25 @@ public abstract class BaseApp extends android.app.Application {
 		}
 	}
 
+	// TODEL either remove it or use it, depends on if the AndroidJUnitRunner::notPackage solves this issue
+	private void delayIfTested() {
+		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
+			// a lot of the times gradlew connectedCheck simply crashes with a SIGSEGV on 2.3.7 emulator
+			// to make this less frequent a little sleep may help before continuing
+			// the crash only happens if startService is called from onStart, otherwise all is ok
+			// of course since this is only for tests we need to check for that
+			try {
+				Class.forName("android.support.test.BuildConfig");
+				LOG.warn("android.support.test is on classpath, assuming test mode!");
+				Thread.sleep(0);
+			} catch (ClassNotFoundException ignore) {
+				// we're not testing
+			} catch (InterruptedException ignore) {
+				Thread.interrupted();
+			}
+		}
+	}
+
 	protected Object createDatabase() {
 		return null;
 	}

@@ -114,7 +114,12 @@ public class BackupActivityTest_ExportExternal {
 				setText(newFolderTitle(), folder);
 				clickPositiveInExternalDialog(); // OK to create folder
 			}
-			clickOnLabel(selectFolder());
+			try {
+				clickOnLabel(selectFolder());
+			} catch (UiObjectNotFoundException ex) {
+				LOG.warn("'Select folder' is flaky, try again", ex);
+				clickOnLabel(selectFolder());
+			}
 		}
 	}
 

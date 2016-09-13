@@ -19,6 +19,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.test.junit.FlakyTestException;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 
@@ -35,9 +36,10 @@ public class MainActivityTest_Welcome {
 
 	@Test public void testWelcomeDontPopulateDemo() {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
+		long beforePotentiallyLongAction = System.currentTimeMillis();
 		clickNegativeInDialog();
 
-		onView(isRoot()).inRoot(isToast()).check(matches(isDisplayed()));
+		checkToasted(beforePotentiallyLongAction);
 		onView(withId(R.id.properties)).check(EMPTY);
 		onView(withId(R.id.rooms)).check(EMPTY);
 		onView(withId(R.id.lists)).check(EMPTY);
@@ -46,9 +48,10 @@ public class MainActivityTest_Welcome {
 
 	@Test public void testWelcomePopulateDemo() {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
+		long beforePotentiallyLongAction = System.currentTimeMillis();
 		clickPositiveInDialog();
 
-		onView(isRoot()).inRoot(isToast()).check(matches(isDisplayed()));
+		checkToasted(beforePotentiallyLongAction);
 		onView(withId(R.id.properties)).check(NON_EMPTY);
 		onView(withId(R.id.rooms)).check(NON_EMPTY);
 		onView(withId(R.id.lists)).check(NON_EMPTY);
@@ -59,5 +62,19 @@ public class MainActivityTest_Welcome {
 		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
 		clickNeutralInDialog();
 		intended(allOf(isInternal(), hasComponent(BackupActivity.class.getName())));
+	}
+
+	private void checkToasted(long start) {
+		try {
+			onView(isRoot()).inRoot(isToast()).check(matches(isDisplayed()));
+		} catch (RuntimeException ex) {
+			long checkDuration = System.currentTimeMillis() - start;
+			if (2000 < checkDuration) { // NotificationManagerService.SHORT_DELAY = 2000
+				// TODO is there a way to ignore some idle resources (AsyncTasks in this case) and go ahead with check?
+				throw new FlakyTestException("Idle resources took too long, the toast probably disappeared.", ex);
+			} else {
+				throw ex;
+			}
+		}
 	}
 }

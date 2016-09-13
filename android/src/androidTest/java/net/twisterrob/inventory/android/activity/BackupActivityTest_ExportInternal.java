@@ -22,6 +22,7 @@ import static android.support.test.espresso.contrib.RecyclerViewActions.*;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -35,9 +36,11 @@ public class BackupActivityTest_ExportInternal {
 	private final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
 	private final TemporaryFolder temp = new TemporaryFolder(Paths.getPhoneHome());
 	private final CheckExportedFiles files = new CheckExportedFiles();
+	private final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
 
 	@Rule public final RuleChain rules = RuleChain
 			.outerRule(activity)
+			.around(backupService)
 			.around(temp)
 			.around(files);
 

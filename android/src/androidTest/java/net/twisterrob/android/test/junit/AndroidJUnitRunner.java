@@ -13,8 +13,7 @@ import net.twisterrob.java.exceptions.StackTrace;
 
 public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnitRunner {
 	@Override public void onCreate(Bundle arguments) {
-		// Tried to put it in manifest, but it failed with cannot cast Boolean to String in super.onCreate
-		arguments.putString("disableAnalytics", Boolean.TRUE.toString());
+		setDefaults(arguments);
 		// specifyDexMakerCacheProperty is unconditionally called, but behavior was observed in Android 5.0)
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 		try {
@@ -51,17 +50,34 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 			});
 		}
 	}
+
+	private void setDefaults(Bundle arguments) {
+		if (!arguments.containsKey("disableAnalytics")) {
+			// Tried to put it in manifest, but it failed with cannot cast Boolean to String in super.onCreate
+			arguments.putString("disableAnalytics", Boolean.TRUE.toString());
+		}
+		if (!arguments.containsKey("class")) { // @see TestRequestBuilder#validate
+			String packages = "java,javax,android,com.google,net.twisterrob.android.test,net.twisterrob.test";
+			if (arguments.containsKey("notPackage")) {
+				packages += "," + arguments.getString("notPackage");
+			}
+			arguments.putString("notPackage", packages);
+		}
+	}
+
 	private static class DetailedFailureHandler implements FailureHandler {
 		private final FailureHandler defaultFailureHandler;
 		private DetailedFailureHandler(DefaultFailureHandler handler) {
 			defaultFailureHandler = handler;
 		}
 		@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
-			Throwable cause = error;
-			while (cause.getCause() != null) {
-				cause = cause.getCause();
+			if (false) { // TODO when is this needed again?
+				Throwable cause = error;
+				while (cause.getCause() != null) {
+					cause = cause.getCause();
+				}
+				cause.initCause(new StackTrace("View interaction was initiated here"));
 			}
-			cause.initCause(new StackTrace("View interaction was initiated here"));
 			defaultFailureHandler.handle(error, viewMatcher);
 		}
 	}
