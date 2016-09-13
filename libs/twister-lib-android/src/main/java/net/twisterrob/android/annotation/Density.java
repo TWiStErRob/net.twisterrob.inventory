@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import static java.lang.annotation.ElementType.*;
 
 import android.annotation.*;
+import android.content.res.Configuration;
 import android.os.Build.*;
 import android.support.annotation.*;
 import android.util.DisplayMetrics;
@@ -15,6 +16,7 @@ import net.twisterrob.java.annotations.DebugHelper;
 
 @SuppressLint({"InlinedApi", "UniqueConstants"})
 @IntDef(value = {
+		Configuration.DENSITY_DPI_UNDEFINED,
 		DisplayMetrics.DENSITY_LOW,
 		DisplayMetrics.DENSITY_MEDIUM,
 		DisplayMetrics.DENSITY_TV,
@@ -60,6 +62,8 @@ public @interface Density {
 		@SuppressLint("SwitchIntDef")
 		private static String getName(@Density int state) {
 			switch (state) {
+				case Configuration.DENSITY_DPI_UNDEFINED:
+					return "DENSITY_DPI_UNDEFINED";
 				case DisplayMetrics.DENSITY_LOW:
 					return "DENSITY_LOW";
 				case DisplayMetrics.DENSITY_MEDIUM:

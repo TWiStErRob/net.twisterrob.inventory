@@ -16,14 +16,20 @@ import net.twisterrob.java.utils.tostring.*;
 public class PendingIntentStringer extends Stringer<PendingIntent> {
 	private static final Logger LOG = LoggerFactory.getLogger(PendingIntentStringer.class);
 
+	/** @since API 18 */
 	private static final Method getIntent = ReflectionTools.tryFindDeclaredMethod(PendingIntent.class, "getIntent");
+	/** @since API 16 */
 	private static final Method isActivity = ReflectionTools.tryFindDeclaredMethod(PendingIntent.class, "isActivity");
 
 	@Override public void toString(@Nonnull ToStringAppender append, PendingIntent pending) {
 		append.identity(pending, null);
 		try {
-			append.booleanProperty((Boolean)isActivity.invoke(pending), "activity");
-			append.complexProperty("intent", getIntent.invoke(pending));
+			if (isActivity != null) {
+				append.booleanProperty((Boolean)isActivity.invoke(pending), "activity");
+			}
+			if (getIntent != null) {
+				append.complexProperty("intent", getIntent.invoke(pending));
+			}
 		} catch (Exception ex) {
 			LOG.warn("Cannot inspect PendingIntent", ex);
 		}
