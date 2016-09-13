@@ -189,8 +189,8 @@ public class ToStringerTest {
 		});
 		assertEquals("Test of 3:\n"
 						+ "\tkey1 -> \"value1\"\n"
-						+ "\tkey2 -> (Double)2.0\n"
-						+ "\tkey3 -> (Byte)3"
+						+ "\tkey2 -> (double)2.0\n"
+						+ "\tkey3 -> (byte)3"
 				, toString.toString());
 	}
 	@Test public void testList_Nested() {
@@ -234,7 +234,7 @@ public class ToStringerTest {
 						+ "\tTest3 of 2:\n"
 						+ "\t\t31 -> \"value3.1\"\n"
 						+ "\t\t32 -> \"value3.2\"\n"
-						+ "\tkey5 -> (Short)5"
+						+ "\tkey5 -> (short)5"
 				, toString.toString());
 	}
 
@@ -285,7 +285,7 @@ public class ToStringerTest {
 						+ "\t(Object)Test3 of 2:\n"
 						+ "\t\t31 -> \"value3.1\"\n"
 						+ "\t\t32 -> \"value3.2\"\n"
-						+ "\tkey5 -> (Short)5"
+						+ "\tkey5 -> (short)5"
 				, toString.toString());
 	}
 
@@ -370,12 +370,12 @@ public class ToStringerTest {
 			}
 		});
 		assertEquals("(Object)"
-						+ "key1=(Integer)1, key2=(Float)2.0\n"
+						+ "key1=(int)1, key2=(float)2.0\n"
 						+ "Test of 2:\n"
 						+ "\t\"value1\"\n"
 						+ "\t\"value2\""
 						+ "\n"
-						+ "key3=(Integer)3\n"
+						+ "key3=(int)3\n"
 						+ "Test of 2:\n"
 						+ "\t\"value1\"\n"
 						+ "\t\"value2\""
@@ -397,8 +397,8 @@ public class ToStringerTest {
 		});
 		assertEquals("Test of 3#{"
 						+ "key1->\"value1\""
-						+ ", key2->(Double)2.0"
-						+ ", key3->(Byte)3"
+						+ ", key2->(double)2.0"
+						+ ", key3->(byte)3"
 						+ "}"
 				, toString.toString());
 	}
