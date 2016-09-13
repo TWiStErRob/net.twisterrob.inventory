@@ -25,7 +25,7 @@ import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.Constants.*;
-import static net.twisterrob.inventory.android.backup.ProgressDisplayer.*;
+import static net.twisterrob.inventory.android.backup.StrictProgressInfoProvider.*;
 
 public class BackupService extends NotificationProgressService<Progress> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupService.class);
@@ -37,7 +37,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 	// TODO Parcelable or ProgressDisplayer?
 	public static final String EXTRA_PROGRESS = "net.twisterrob.inventory:backup_progress";
 
-	private /*final*/ ProgressDisplayer displayer;
+	private /*final*/ ProgressInfoProvider displayer;
 	private final BackupListeners listeners = new BackupListeners();
 	/**
 	 * Not all parcelables can be put into Extras of an Intent.
@@ -56,7 +56,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 	}
 
 	@Override public void onCreate() {
-		displayer = new ProgressDisplayer(this);
+		displayer = new LenientProgressInfoProvider(this);
 		super.onCreate();
 	}
 
@@ -146,6 +146,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 			finish(new Progress(Progress.Type.Import, ex));
 		}
 		if (isInProgress()) {
+			// no finish methods were called
 			throw new IllegalStateException("Unknown intent action: " + intent.getAction());
 		}
 		listeners.finished();

@@ -25,7 +25,7 @@ import static net.twisterrob.inventory.android.backup.concurrent.NotificationPro
 public class BackupProgressFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupProgressFragment.class);
 
-	private ProgressDisplayer displayer;
+	private LenientProgressInfoProvider displayer;
 	private ProgressBar progress;
 
 	private View cancel;
@@ -44,11 +44,11 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 
 			if (service.isInProgress()) {
 				displayer.setProgress(service.getLastProgress());
+				updateUI();
 				started();
 			} else {
 				finished();
 			}
-			updateUI();
 		}
 		@Override protected void serviceUnbound(ComponentName name, LocalBinder service) {
 			LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
@@ -59,6 +59,8 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 		}
 		@Override public void finished() {
 			AndroidTools.displayedIf(getView(), false);
+			displayer.setProgress(null);
+			updateUI();
 		}
 	};
 
@@ -76,7 +78,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 
 	@Override public void onAttach(Context context) {
 		super.onAttach(context);
-		displayer = new ProgressDisplayer(context);
+		displayer = new LenientProgressInfoProvider(context);
 	}
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -119,22 +121,22 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 
 	@Override public void onStart() {
 		super.onStart();
-		// bind at the earliest possible time and unbind at the latest possible time.
+		// Bind at the earliest possible time and unbind at the right time (see below).
 		backupService.bind(getContext());
 	}
 	@Override public void onPause() {
 		super.onPause();
 		if (getActivity().isFinishing()) {
-			// unbind earlier because we won't be able to handle any more stuff
-			// this helps to lessen the probability of losing progress notifications
+			// Unbind earlier, because we won't be able to handle any more stuff.
+			// This helps to lessen the probability of losing progress notifications.
 			backupService.unbind();
 		}
 	}
 	@Override public void onStop() {
 		super.onStop();
 		if (!getActivity().isFinishing()) {
-			// unbind later; even though the activity is paused it may still be visible
-			// (in case of Drive export a nice progress is displayed behind the huge spinner)
+			// Unbind later than onPause. Even though the activity is paused it may still be visible.
+			// For example in case of a Drive export, a nice progress is displayed by us behind the huge spinner.
 			backupService.unbind();
 		}
 	}
@@ -146,10 +148,6 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 	}
 
 	private void updateUI() {
-		if (!displayer.hasProgress()) {
-			LOG.debug("Not active");
-			return;
-		}
 		int done = displayer.getDone();
 		int total = displayer.getTotal();
 		boolean indeterminate = displayer.isIndeterminate();

@@ -100,7 +100,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		}
 		LOG.trace("Displaying popup for {}", progress);
 		unhandled = progress;
-		finishDialog = new ProgressDisplayer(this, progress).displayFinishMessage(new PopupCallbacks<Void>() {
+		finishDialog = new StrictProgressInfoProvider(this, progress).displayFinishMessage(new PopupCallbacks<Void>() {
 			@Override public void finished(Void value) {
 				unhandled = null;
 				finishDialog = null;

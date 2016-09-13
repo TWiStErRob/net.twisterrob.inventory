@@ -7,9 +7,7 @@
 	android:padding="@dimen/unit_half"
 	android:orientation="horizontal"
 	android:animateLayoutChanges="true"
-	android:visibility="gone"
 	tools:context=".fragment.BackupProgressFragment"
-	tools:visibility="visible"
 	>
 	<ImageButton
 		android:id="@+id/progress$cancel"

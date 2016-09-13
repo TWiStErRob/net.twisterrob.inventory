@@ -9,32 +9,30 @@ import android.support.v7.app.AlertDialog;
 import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.backup.Progress.Phase;
+import net.twisterrob.java.utils.ObjectTools;
 
-public class ProgressDisplayer {
+/** Strict in a sense that it doesn't deal with {@code null}s. */
+public class StrictProgressInfoProvider implements ProgressInfoProvider {
 	private final Context context;
-	private Progress progress;
+	private @NonNull Progress progress;
 
-	public ProgressDisplayer(Context context, @NonNull Progress progress) {
-		this(context);
-		this.progress = progress;
-	}
-	public ProgressDisplayer(Context context) {
+	public StrictProgressInfoProvider(@NonNull Context context, @NonNull Progress progress) {
 		this.context = context;
+		this.progress = ObjectTools.checkNotNull(progress);
 	}
 
-	public boolean hasProgress() {
-		return progress != null;
-	}
-
-	public void setProgress(Progress progress) {
+	public void setProgress(@Nullable Progress progress) {
+		if (progress == null) {
+			throw new IllegalArgumentException("Cannot work without progress.");
+		}
 		this.progress = progress;
 	}
 
-	public Progress getProgress() {
+	public @NonNull Progress getProgress() {
 		return progress;
 	}
 
-	public String getMessage() {
+	@Override public @NonNull String getMessage() {
 		switch (progress.type) {
 			case Export:
 				switch (progress.phase) {
@@ -90,11 +88,11 @@ public class ProgressDisplayer {
 		throw notImplementedPhase();
 	}
 
-	public boolean isIndeterminate() {
+	@Override public boolean isIndeterminate() {
 		return progress.pending || getTotal() <= 0;
 	}
 
-	public int getDone() {
+	@Override public int getDone() {
 		switch (progress.phase) {
 			case Init:
 				return 0;
@@ -107,7 +105,7 @@ public class ProgressDisplayer {
 		throw notImplementedPhase();
 	}
 
-	public int getTotal() {
+	@Override public int getTotal() {
 		switch (progress.phase) {
 			case Init:
 				return 0;
@@ -120,7 +118,7 @@ public class ProgressDisplayer {
 		throw notImplementedPhase();
 	}
 
-	public String getTitle() {
+	@Override public @NonNull String getTitle() {
 		switch (progress.type) {
 			case Import:
 				if (progress.phase == Phase.Finished) {
@@ -136,7 +134,7 @@ public class ProgressDisplayer {
 		throw notImplementedType();
 	}
 
-	public @DrawableRes int getIcon() {
+	@Override public @DrawableRes int getIcon() {
 		switch (progress.type) {
 			case Import:
 				return android.R.drawable.ic_menu_upload;
@@ -175,10 +173,8 @@ public class ProgressDisplayer {
 		return threshold <= imageDifferencePercent;
 	}
 
-	public AlertDialog displayFinishMessage(final @Nullable DialogTools.PopupCallbacks<Void> callback) {
-		if (progress == null) {
-			throw new IllegalArgumentException("Not progress, make sure there's one or check hasProgress first.");
-		}
+	@Override
+	public @NonNull AlertDialog displayFinishMessage(final @Nullable DialogTools.PopupCallbacks<Void> callback) {
 		if (progress.phase != Phase.Finished) {
 			throw new IllegalArgumentException("Not finished: " + progress);
 		}
