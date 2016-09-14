@@ -18,6 +18,7 @@ import android.content.*;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.test.espresso.Espresso;
+import android.support.test.filters.FlakyTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -128,18 +129,26 @@ public class UpgradeTests {
 		assertThat("dangling images", db, aFileWithSize(between(0.5, 1.5)));
 
 		onDrawerDescendant(withText("Backup")).perform(click());
+		intended(hasComponent("net.twisterrob.inventory.android.activity.BackupActivity"), times(2));
 		onRecyclerItem(withText(IMPORT_FILE)).perform(click());
 		clickNeutralInDialog();
 
 		assertThat("re-imported data with dangling images", db, aFileWithSize(between(1.5, 2.5)));
 	}
 
+	@FlakyTest(detail = "On 2.3.7 it sometimes taps on Properties instead of Backup in the drawer")
 	@Test public void testVerifyVersion2() throws Throwable {
 		assertThat("Second released version", BuildConfig.class, hasVersionCode(greaterThanOrEqualTo(10002111)));
 		assertNoDialogIsDisplayed();
 		assertThat("upgraded size without dangling images", db, aFileWithSize(between(0.5, 1.5)));
 
 		onDrawerDescendant(withText("Backup")).perform(click());
+		try {
+			intended(hasComponent("net.twisterrob.inventory.android.activity.BackupActivity"));
+		} catch (junit.framework.AssertionFailedError ex) { // for some reason intended throws this old shit
+			LOG.warn("Trying to go to backup activity again.", ex);
+			onDrawerDescendant(withText("Backup")).perform(click());
+		}
 
 		FolderDiff diff = new FolderDiff(downloads);
 		onView(isAssignableFrom(FloatingActionButton.class)).perform(click());
