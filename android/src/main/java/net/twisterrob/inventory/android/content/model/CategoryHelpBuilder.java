@@ -163,9 +163,9 @@ public class CategoryHelpBuilder {
 			out.append("\n</p>");
 		}
 	}
-	private final Pattern keywordSplitter = Pattern.compile("(?m)\\s*([^,]+?)\\s*([,;]|\\z)");
+	private static final Pattern KEYWORD_SPLITTER = Pattern.compile("(?m)\\s*([^,]+?)\\s*([,;]|\\z)");
 	private void appendKeywords(StringBuilder out, CharSequence keywords) {
-		Matcher matcher = keywordSplitter.matcher(keywords);
+		Matcher matcher = KEYWORD_SPLITTER.matcher(keywords);
 		while (matcher.find()) {
 			out.append("<span class=\"keyword\">");
 			out.append(keywords, matcher.start(1), matcher.end(1));

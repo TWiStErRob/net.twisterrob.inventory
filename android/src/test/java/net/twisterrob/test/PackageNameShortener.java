@@ -11,8 +11,7 @@ import net.twisterrob.java.utils.tostring.stringers.DefaultStringer;
 
 public class PackageNameShortener implements TestRule {
 	private static final String ID_PATTERN = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
-	// non-static for Thread safety, at least in fork mode Class
-	private final Pattern FQCN = Pattern.compile(ID_PATTERN + "(\\." + ID_PATTERN + ")*");
+	private static final Pattern FQCN = Pattern.compile(ID_PATTERN + "(\\." + ID_PATTERN + ")*");
 
 	@Override public Statement apply(final Statement base, Description description) {
 		return new Statement() {

@@ -216,6 +216,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 	}
 
 	private static class FilesLoader extends AsyncLoader<List<File>> {
+		private static final Pattern IMPORT_FILTER = Pattern.compile(".*\\.zip$");
 		private final File root;
 		public FilesLoader(Context context, File root) {
 			super(context);
@@ -247,9 +248,8 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 
 		private @NonNull File[] getImportableFiles(File root) {
 			File[] files = root.listFiles(new FileFilter() {
-				final Pattern pattern = Pattern.compile(".*\\.zip$");
 				public boolean accept(File file) {
-					return file.isFile() && file.canRead() && pattern.matcher(file.getName()).matches();
+					return file.isFile() && file.canRead() && IMPORT_FILTER.matcher(file.getName()).matches();
 				}
 			});
 			return files != null? files : new File[0];

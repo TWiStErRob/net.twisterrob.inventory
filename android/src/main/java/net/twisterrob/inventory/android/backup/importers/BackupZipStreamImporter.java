@@ -24,6 +24,7 @@ import net.twisterrob.java.utils.ObjectTools;
 
 public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupZipStreamImporter.class);
+	private static final Pattern IMAGE_FILENAME = Pattern.compile("(property|room|item)_(\\d+)_(\\d{8}_\\d{6}).jpg");
 
 	private final @NonNull ImportProgressHandler progress;
 	private final @NonNull Resources res;
@@ -45,8 +46,6 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 	@Override public void importFrom(InputStream source) throws Exception {
 		ZipInputStream zip = null;
 		try {
-			Pattern image = Pattern.compile("(property|room|item)_(\\d+)_(\\d{8}_\\d{6}).jpg");
-
 			zip = new ZipInputStream(source);
 			boolean seenEntry = false;
 			NonClosableStream nonClosableZip = new NonClosableStream(zip);
@@ -62,7 +61,7 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 					//progress.publishProgress();
 					images.hasData();
 					LOG.trace("Finished importing XML data");
-				} else if (image.matcher(entry.getName()).matches()) {
+				} else if (IMAGE_FILENAME.matcher(entry.getName()).matches()) {
 					LOG.trace("Importing image file: {}", entry.getName());
 					progress.progress.phase = Phase.Images;
 					long time = entry.getTime();
