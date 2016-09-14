@@ -6,7 +6,7 @@ if (project.hasProperty('libFromSources')) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'net.twisterrob.android-app'
-apply from: "${rootDir}gradle/mapping.gradle"
+apply from: new File(rootDir, 'gradle/mapping.gradle')
 
 apply plugin: InventoryDatabasePlugin
 
@@ -107,3 +107,9 @@ android.testVariants.all { com.android.build.gradle.api.TestVariant test ->
 }
 
 apply from: "${rootDir}/gradle/upgradeTest.gradle"
+
+task generateHtmlReportFromXml(type: net.twisterrob.gradle.android.tasks.TestReportGenerator) {
+	input = new File(rootDir, 'temp/tests')
+	output = new File(rootDir, 'temp/tests_results')
+	outputs.upToDateWhen { false }
+}
