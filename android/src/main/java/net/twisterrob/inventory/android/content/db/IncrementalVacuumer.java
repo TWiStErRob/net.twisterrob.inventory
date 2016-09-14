@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 
+import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 import static net.twisterrob.java.utils.ObjectTools.*;
 
 public class IncrementalVacuumer implements Callable<Boolean> {
@@ -27,20 +28,20 @@ public class IncrementalVacuumer implements Callable<Boolean> {
 
 	@Override public Boolean call() throws Exception {
 		LOG.trace("Working with {}", DatabaseTools.dbToString(db));
-		long vacuumState = DatabaseTools.getPragma(db, "auto_vacuum");
+		long vacuumState = DatabaseTools.getPragma(db, Pragma.AUTO_VACUUM);
 		if (vacuumState != 2) {
 			LOG.trace("auto_vacuum is not INCREMENTAL, ignoring.");
 			return false;
 		} else {
 			LOG.trace("auto_vacuum is INCREMENTAL, checking freelist.");
 		}
-		long freelistCount = DatabaseTools.getPragma(db, "freelist_count");
+		long freelistCount = DatabaseTools.getPragma(db, Pragma.FREELIST_COUNT);
 		if (freelistCount == 0) {
 			LOG.trace("No more pages on freelist, reset auto_vacuum to FULL.");
-			DatabaseTools.setPragma(db, "auto_vacuum", "FULL");
+			DatabaseTools.setPragma(db, Pragma.AUTO_VACUUM, Pragma.AUTO_VACUUM_FULL);
 			return false;
 		}
-		long pageSize = DatabaseTools.getPragma(db, "page_size");
+		long pageSize = DatabaseTools.getPragma(db, Pragma.PAGE_SIZE);
 		if (maxBytesToFree < pageSize) {
 			throw new IllegalArgumentException("The maximum bytes to free (" + maxBytesToFree
 					+ ") are less than a single page's size (" + pageSize + ") which means no pages would be freed.");
@@ -48,7 +49,7 @@ public class IncrementalVacuumer implements Callable<Boolean> {
 		long pagesToFree = Math.min(maxBytesToFree / pageSize, freelistCount);
 		LOG.trace("There are {} pages on freelist occupying {} bytes, freeing {} pages occupying {} bytes.",
 				freelistCount, freelistCount * pageSize, pagesToFree, pagesToFree * pageSize);
-		int count = DatabaseTools.callPragma(db, "incremental_vacuum", pagesToFree);
+		int count = DatabaseTools.callPragma(db, Pragma.INCREMENTAL_VACUUM, pagesToFree);
 		LOG.trace("Freed {} out of {} requested pages from {} pages on freelist.",
 				count, pagesToFree, freelistCount);
 		return true;

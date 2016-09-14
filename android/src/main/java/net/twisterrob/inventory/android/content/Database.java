@@ -44,7 +44,7 @@ public class Database extends VariantDatabase {
 			@Override public void onConfigure(SQLiteDatabase db) {
 				super.onConfigure(db);
 				// CONSIDER enabling auto_vacuum=INCREMENTAL as it speeds up a large delete a lot
-				//DatabaseTools.setPragma(db, "auto_vacuum", "INCREMENTAL");
+				//DatabaseTools.setPragma(db, Pragma.AUTO_VACUUM, Pragma.AUTO_VACUUM_INCREMENTAL);
 			}
 			@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
 			@Override protected String[] getDataFiles() {

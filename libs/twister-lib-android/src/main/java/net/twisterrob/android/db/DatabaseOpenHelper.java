@@ -109,11 +109,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelperCompat {
 	}
 
 	@Override public void onCreate(SQLiteDatabase db) {
+		LOG.debug("Creating database: {}", dbToString(db));
 		super.onCreate(db);
 		if (devMode) {
 			backupDB(db, "onCreate");
 		}
-		LOG.debug("Creating database: {}", dbToString(db));
 		execFiles(db, getSchemaFiles());
 		execFiles(db, getDataFiles());
 		execFiles(db, getScriptFiles());
@@ -121,11 +121,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelperCompat {
 	}
 
 	public void onDestroy(SQLiteDatabase db) {
+		LOG.debug("Destroying database: {}", dbToString(db));
 		super.onDestroy(db);
 		if (devMode) {
 			backupDB(db, "onDestroy");
 		}
-		LOG.debug("Destroying database: {}", dbToString(db));
 		execFiles(db, getCleanFiles());
 		LOG.info("Destroyed database: {}", dbToString(db));
 	}
@@ -169,8 +169,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelperCompat {
 	}
 
 	@Override public void onOpen(SQLiteDatabase db) {
-		super.onOpen(db);
 		LOG.debug("Opening database: {}", dbToString(db));
+		super.onOpen(db);
 		if (testMode) {
 			// for DB development, always clear and initialize
 			onDestroy(db);
@@ -183,30 +183,52 @@ public class DatabaseOpenHelper extends SQLiteOpenHelperCompat {
 			}
 			execFiles(db, getDevelopmentFiles());
 		}
-		LOG.info("Opened database: {}", dbToString(db));
 		if (dumpOnOpen) {
 			backupDB(db, "onOpen");
 		}
+		LOG.info("Opened database: {}", dbToString(db));
 	}
 
 	/** This is the first interaction with the DB whenever it's being opened. */
-	@TargetApi(VERSION_CODES.JELLY_BEAN)
 	@Override public void onConfigure(SQLiteDatabase db) {
-		super.onConfigure(db);
 		LOG.trace("Initializing database: {}", dbToString(db));
+		super.onConfigure(db);
 		if (!db.isReadOnly()) {
-			if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
-				db.setForeignKeyConstraintsEnabled(true);
-			} else {
-				DatabaseTools.setPragma(db, "foreign_keys", true);
-			}
-			if (VERSION_CODES.FROYO <= VERSION.SDK_INT) {
-				// SQLite 3.6.18 (2009-09-11)
-				// Recursive triggers can be enabled using the PRAGMA recursive_triggers statement.
-				DatabaseTools.setPragma(db, "recursive_triggers", true);
-			}
+			enableForeignKeys(db);
+			enableRecursiveTriggers(db);
 		} else {
 			throw new IllegalStateException("Database is read only");
+		}
+	}
+
+	@RequiresApi(VERSION_CODES.FROYO)
+	protected void enableRecursiveTriggers(SQLiteDatabase db) {
+		// SQLite 3.6.18 (2009-09-11)
+		// Recursive triggers can be enabled using the PRAGMA recursive_triggers statement.
+		if (VERSION.SDK_INT < VERSION_CODES.FROYO) {
+			throw new IllegalStateException("Cannot enable foreign keys, SQLite version doesn't support it.");
+		}
+		DatabaseTools.setPragma(db, Pragma.RECURSIVE_TRIGGERS, true);
+		if (!DatabaseTools.isPragma(db, Pragma.RECURSIVE_TRIGGERS)) {
+			throw new IllegalStateException("Cannot enable " + Pragma.RECURSIVE_TRIGGERS);
+		}
+	}
+
+	@RequiresApi(VERSION_CODES.FROYO)
+	@TargetApi(VERSION_CODES.JELLY_BEAN)
+	protected void enableForeignKeys(SQLiteDatabase db) {
+		// SQLite 3.6.19 (2009-10-14)
+		// Added support for foreign key constraints. Foreign key constraints are disabled by default.
+		if (VERSION.SDK_INT < VERSION_CODES.FROYO) {
+			throw new IllegalStateException("Cannot enable foreign keys, SQLite version doesn't support it.");
+		}
+		if (VERSION_CODES.JELLY_BEAN <= VERSION.SDK_INT) {
+			db.setForeignKeyConstraintsEnabled(true);
+		} else {
+			DatabaseTools.setPragma(db, Pragma.FOREIGN_KEYS, true);
+		}
+		if (!DatabaseTools.isPragma(db, Pragma.FOREIGN_KEYS)) {
+			throw new IllegalStateException("Cannot enable " + Pragma.FOREIGN_KEYS);
 		}
 	}
 

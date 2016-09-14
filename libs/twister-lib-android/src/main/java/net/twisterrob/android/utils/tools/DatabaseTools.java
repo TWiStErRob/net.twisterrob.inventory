@@ -272,4 +272,15 @@ public /*static*/ abstract class DatabaseTools {
 	protected DatabaseTools() {
 		// static utility class
 	}
+
+	public interface Pragma {
+		String RECURSIVE_TRIGGERS = "recursive_triggers";
+		String FOREIGN_KEYS = "foreign_keys";
+		String AUTO_VACUUM = "auto_vacuum";
+		String AUTO_VACUUM_FULL = "FULL";
+		String AUTO_VACUUM_INCREMENTAL = "INCREMENTAL";
+		String INCREMENTAL_VACUUM = "incremental_vacuum";
+		String PAGE_SIZE = "page_size";
+		String FREELIST_COUNT = "freelist_count";
+	}
 }

@@ -39,10 +39,15 @@ public class App extends BaseApp {
 
 	@Override public void onStart() {
 		super.onStart();
+		// open a database first, this should lock any other accesses, so it's clearer when the DB open fails
 		startService(new Intent(DatabaseService.ACTION_OPEN_DATABASE).setPackage(getPackageName()));
-		updateLanguage(Locale.getDefault());
-		startService(new Intent(DatabaseService.ACTION_PRELOAD_CATEGORIES).setPackage(getPackageName()));
+		// run vacuum next, it's quick and most of the time does nothing anyway
 		startService(new Intent(DatabaseService.ACTION_VACUUM_INCREMENTAL).setPackage(getPackageName()));
+		// this may take a while, but it's necessary for correct display of searc reults
+		updateLanguage(Locale.getDefault());
+		// last, preload categories, this would happen when editing and suggestions kick in
+		// so, prevent a delay on first suggestion, load it in the background
+		startService(new Intent(DatabaseService.ACTION_PRELOAD_CATEGORIES).setPackage(getPackageName()));
 	}
 
 	@Override protected void initPreferences() {

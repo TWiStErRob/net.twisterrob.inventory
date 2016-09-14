@@ -48,6 +48,7 @@ public class SQLiteOpenHelperCompat extends SQLiteOpenHelper {
 
 	protected final Context context;
 	private final String name;
+	private boolean needsConfigure;
 
 	public SQLiteOpenHelperCompat(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);
@@ -65,11 +66,30 @@ public class SQLiteOpenHelperCompat extends SQLiteOpenHelper {
 		return context.getDatabasePath(getDatabaseName());
 	}
 
+	@Override public synchronized SQLiteDatabase getWritableDatabase() {
+		try {
+			needsConfigure = true;
+			return super.getWritableDatabase();
+		} finally {
+			needsConfigure = false;
+		}
+	}
+	@Override public synchronized SQLiteDatabase getReadableDatabase() {
+		try {
+			needsConfigure = true;
+			return super.getReadableDatabase();
+		} finally {
+			needsConfigure = false;
+		}
+	}
+
 	@CallSuper
 	@Override public void onCreate(SQLiteDatabase db) {
 		onConfigureCompat(db);
 	}
 
+	/** Not a real lifecycle method, exists solely for testing and debugging. */
+	// CONSIDER getting rid of this or renaming to something better
 	@CallSuper
 	public void onDestroy(SQLiteDatabase db) {
 		onConfigureCompat(db);
@@ -93,27 +113,25 @@ public class SQLiteOpenHelperCompat extends SQLiteOpenHelper {
 	/** This is the first interaction with the DB whenever it's being opened. */
 	@TargetApi(VERSION_CODES.JELLY_BEAN)
 	@Override public void onConfigure(SQLiteDatabase db) {
-		configured = true;
+		// optional override
 	}
 
-	private boolean configured = false;
 	/**
 	 * Protected to be callable in case the lifecycle methods are overridden without calling super.
 	 */
 	protected void onConfigureCompat(SQLiteDatabase db) {
-		if (VERSION.SDK_INT < VERSION_CODES.JELLY_BEAN) {
-			if (!configured || db.getVersion() == 0) { // FIXME better check than this
-				boolean transactionWorkaround = db.inTransaction();
-				if (transactionWorkaround) {
-					// close & reopen transaction opened in super
-					// because onConfigure may set pragmas that need to be outside a transaction
-					db.setTransactionSuccessful();
-					db.endTransaction();
-				}
-				//onConfigure(db);
-				if (transactionWorkaround) {
-					db.beginTransaction();
-				}
+		if (VERSION.SDK_INT < VERSION_CODES.JELLY_BEAN && needsConfigure) {
+			boolean transactionWorkaround = db.inTransaction();
+			if (transactionWorkaround) {
+				// close & reopen transaction opened in super
+				// because onConfigure may set pragmas that need to be outside a transaction
+				db.setTransactionSuccessful();
+				db.endTransaction();
+			}
+			onConfigure(db);
+			needsConfigure = false;
+			if (transactionWorkaround) {
+				db.beginTransaction();
 			}
 		} // otherwise onConfigure was already called by super
 	}
