@@ -1,156 +1,87 @@
 package net.twisterrob.android.test.espresso.idle;
 
-import java.lang.reflect.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.lang.reflect.Field;
+import java.util.*;
 
 import org.slf4j.*;
 
 import android.support.annotation.*;
-import android.support.test.espresso.IdlingResource;
 
 import static android.support.test.InstrumentationRegistry.*;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.Engine;
-import com.bumptech.glide.load.engine.executor.Prioritized;
-
-import net.twisterrob.java.utils.ReflectionTools;
+import com.bumptech.glide.load.Key;
+import com.bumptech.glide.load.engine.*;
 
 import static net.twisterrob.java.utils.ReflectionTools.*;
 
-/**
- * CONSIDER https://gist.github.com/stefanodacchille/9995163
- */
-public class GlideIdlingResource implements IdlingResource, Runnable {
+public class GlideIdlingResource extends AsyncIdlingResource {
 	private static final Logger LOG = LoggerFactory.getLogger(GlideIdlingResource.class);
-	private static final Class<?> EngineJobFactory =
-			ReflectionTools.forName("com.bumptech.glide.load.engine.Engine$EngineJobFactory");
-	private static final Field mEngine =
-			trySetAccessible(tryFindDeclaredField(Glide.class, "engine"));
-	private static final Field mEngineJobFactory =
-			trySetAccessible(tryFindDeclaredField(Engine.class, "engineJobFactory"));
-	private static final Field mDiskCacheService =
-			trySetAccessible(tryFindDeclaredField(EngineJobFactory, "diskCacheService"));
-	private static final Field mSourceService =
-			trySetAccessible(tryFindDeclaredField(EngineJobFactory, "sourceService"));
-
-	private ResourceCallback resourceCallback;
-
-	@Override public void registerIdleTransitionCallback(ResourceCallback resourceCallback) {
-		this.resourceCallback = resourceCallback;
-	}
+	private final Runnable callTransitionToIdle = new Runnable() {
+		@Override public void run() {
+			//LOG.trace("{}(callTransitionToIdle).run", this);
+			if (isIdleCore()) {
+				transitionToIdle();
+			}
+		}
+	};
+	private final EngineDigger digger = new EngineDigger();
+	private EngineWatcher current;
 
 	@Override public String getName() {
-		return "Glide";
+		return "Glide-jobs";
+	}
+	@Override protected boolean isIdle() {
+		// Glide is a singleton, hence Engine should be too; just lazily initialize when needed.
+		// In case Glide is replaced, this will work anyway, because a new rule is created for every test method.
+		EngineWatcher current = digger.getCurrent();
+		if (this.current != current) {
+			//LOG.trace("{}.isIdle, replacing {}({}) with {}({})",
+			//		this, this.current, this.current != null? this.current.engine : null, current, current.engine);
+			if (this.current != null) {
+				this.current.unsubscribe(callTransitionToIdle);
+			}
+			this.current = current;
+		}
+		return isIdleCore();
+	}
+	private boolean isIdleCore() {
+		Map<Key, ?> jobs = current.getJobs();
+		//LOG.trace("{}.isIdle: {}", this, jobs);
+		return jobs.isEmpty();
+	}
+	@Override protected void waitForIdleAsync() {
+		//LOG.trace("{}.waitForIdleAsync", this);
+		current.subscribe(callTransitionToIdle);
 	}
 
-	private ThreadPoolExecutor sourceExecutor;
-	private ThreadPoolExecutor diskExecutor;
-	private boolean initialized = false;
-	private final AtomicBoolean checkInProgress = new AtomicBoolean();
+	// Glide is a singleton, hence Engine should be too; just lazily initialize when needed.
+	// In case Glide is replaced in the test this will take care of always giving the latest version.
+	private static class EngineDigger {
+		private static final Field mEngine = trySetAccessible(tryFindDeclaredField(Glide.class, "engine"));
 
-	private ExecutorService service = Executors.newSingleThreadExecutor(new ThreadFactory() {
-		@Override public Thread newThread(@NonNull Runnable r) {
-			return new Thread(r, "Glide checker");
+		private final Map<Engine, EngineWatcher> engines = new HashMap<>();
+
+		public @NonNull EngineWatcher getCurrent() {
+			Engine engine = getEngine();
+			EngineWatcher watcher = engines.get(engine);
+			if (watcher == null) {
+				watcher = new EngineWatcher(engine);
+				engines.put(engine, watcher);
+			}
+			return watcher;
 		}
-	});
 
-	private void ensureInitialized() {
-		if (!initialized) {
+		private @Nullable Engine getEngine() {
+			if (mEngine == null) {
+				return null;
+			}
 			try {
-				doInit();
-			} catch (Exception ex) {
-				throw new IllegalStateException("Cannot access Glide executors", ex);
+				Glide glide = Glide.get(getTargetContext());
+				return (Engine)mEngine.get(glide);
+			} catch (IllegalAccessException ex) {
+				return null;
 			}
-		}
-	}
-
-	@MainThread
-	private void doInit() throws IllegalAccessException, InvocationTargetException {
-		Glide glide = Glide.get(getTargetContext());
-		Engine engine = (Engine)mEngine.get(glide);
-		ExecutorService sourceService = (ExecutorService)mSourceService.get(mEngineJobFactory.get(engine));
-		ExecutorService diskService = (ExecutorService)mDiskCacheService.get(mEngineJobFactory.get(engine));
-		if (!(sourceService instanceof ThreadPoolExecutor) || !(diskService instanceof ThreadPoolExecutor)) {
-			throw new IllegalArgumentException("No way to determine idleness.");
-		}
-		sourceExecutor = (ThreadPoolExecutor)sourceService;
-		diskExecutor = (ThreadPoolExecutor)diskService;
-		initialized = true;
-	}
-
-	@Override public boolean isIdleNow() {
-		ensureInitialized();
-		return doCheck();
-	}
-
-	private boolean doCheck() {
-		if (syncCheck()) {
-			if (resourceCallback != null) {
-				resourceCallback.onTransitionToIdle();
-			}
-			return true;
-		} else {
-			asyncCheck();
-			return false;
-		}
-	}
-	private boolean syncCheck() {
-		int sourceActive = sourceExecutor.getActiveCount();
-		int sourceQueue = sourceExecutor.getQueue().size();
-		int sourceCount = sourceActive + sourceQueue;
-		int diskActive = diskExecutor.getActiveCount();
-		int diskQueue = diskExecutor.getQueue().size();
-		int diskCount = diskActive + diskQueue;
-		//LOG.trace("sourceCount={}={}+{}, diskCount={}={}+{}",
-		//      sourceCount, sourceActive, sourceQueue, diskCount, diskActive, diskQueue);
-		return sourceCount + diskCount == 0;
-	}
-	private void asyncCheck() {
-		if (checkInProgress.compareAndSet(false, true)) {
-			LOG.trace("Scheduling a check for later");
-			service.submit(this);
-		} else {
-			LOG.trace("Check already in progress");
-		}
-	}
-
-	@Override public void run() {
-		Future<?> sourceFuture = sourceExecutor.submit(EmptyTask.INSTANCE);
-		Future<?> diskFuture = diskExecutor.submit(EmptyTask.INSTANCE);
-		try {
-			sourceFuture.get();
-			diskFuture.get();
-			try {
-				// wait a little so the executors have time to report active correctly.
-				Thread.sleep(1);
-			} catch (InterruptedException ex) {
-				Thread.interrupted();
-				return;
-			}
-		} catch (InterruptedException ex) {
-			Thread.interrupted();
-			return;
-		} catch (ExecutionException ex) {
-			throw new IllegalStateException(ex);
-		}
-		if (!checkInProgress.compareAndSet(true, false)) {
-			throw new IllegalStateException("Who else could've set it to false already?");
-		}
-		if (doCheck()) {
-			LOG.trace("onTransitionToIdle");
-		}
-	}
-
-	private static class EmptyTask implements Runnable, Prioritized {
-		private static final Runnable INSTANCE = new EmptyTask();
-		@Override public int getPriority() {
-			// safer, FifoPriorityThreadPoolExecutor.LoadTask.compareTo() uses minus
-			return Integer.MAX_VALUE / 2; // lowest priority, see com.bumptech.glide.Priority
-		}
-		@Override public void run() {
-			// NO OP
 		}
 	}
 }
