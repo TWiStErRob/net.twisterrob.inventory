@@ -72,7 +72,7 @@ public class ScreenshotFailure implements TestRule {
 					String dirName = String.format(Locale.ROOT, "%s", description.getClassName());
 					String shotName = String.format(Locale.ROOT, "%d_%s.png", started, description.getMethodName());
 					File shot = takeScreenshot(dirName, shotName);
-					LOG.info("Screenshot taken to {}", getADBPullPath(shot));
+					LOG.warn("Screenshot taken to {}", getADBPullPath(shot));
 				} catch (Throwable shotEx) {
 					if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
 						ex.addSuppressed(shotEx);

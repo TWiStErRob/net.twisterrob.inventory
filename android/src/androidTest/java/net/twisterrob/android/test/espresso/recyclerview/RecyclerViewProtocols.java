@@ -41,7 +41,7 @@ public final class RecyclerViewProtocols {
 	 * Consider views which have over this percentage of their area visible to the user
 	 * to be fully rendered.
 	 */
-	private static final int FULLY_RENDERED_PERCENTAGE_CUTOFF = 90;
+	private static final int FULLY_RENDERED_PERCENTAGE_CUTOFF = 100;
 
 	private RecyclerViewProtocols() {
 	}
@@ -143,8 +143,7 @@ public final class RecyclerViewProtocols {
 						// that's a huge element.
 						inView = true;
 					} else {
-						inView = isElementFullyRendered(adapterView,
-								dataPosition);
+						inView = isElementFullyRendered(adapterView, dataPosition);
 					}
 				}
 			}
