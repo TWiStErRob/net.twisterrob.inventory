@@ -42,6 +42,11 @@
 # Ignore tryGetLastJava/tryGetLastAndroid
 -dontnote net.twisterrob.java.utils.CollectionTools
 
+# Note: net.twisterrob.android.utils.tools.IOTools accesses a declared field 'errno' dynamically
+#      Maybe this is library field 'android.system.ErrnoException { int errno; }'
+# Ignore isEPIPE
+-dontnote net.twisterrob.android.utils.tools.IOTools
+
 ### caverock/androidsvg
 # Warning: com.caverock.androidsvg.SVGImageView: can't find referenced class com.caverock.androidsvg.R
 # Warning: com.caverock.androidsvg.SVGImageView: can't find referenced class com.caverock.androidsvg.R$styleable
