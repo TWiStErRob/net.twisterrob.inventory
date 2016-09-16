@@ -33,7 +33,6 @@ import static net.twisterrob.android.test.automators.GoogleDriveAutomator.*;
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
-import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
@@ -45,6 +44,12 @@ public class BackupActivityTest_ExportExternal {
 	@Rule public final TestName name = new TestName();
 
 	@Before public void assertBackupActivityIsClean() {
+		BackupActivityTest.assertEmptyState();
+	}
+
+	@After public void activityIsActive() {
+		onView(isRoot()).perform(loopMainThreadUntilIdle()); // otherwise the assertion may fail
+		assertThat(activity.getActivity(), isInStage(Stage.RESUMED));
 		BackupActivityTest.assertEmptyState();
 	}
 
@@ -75,7 +80,7 @@ public class BackupActivityTest_ExportExternal {
 		clickOnLabel(saveToDrive());
 		assertThat(getText(dialogTitle()), is(saveToDrive()));
 
-		pressBackExternal();
+		clickNegativeInExternalDialog();
 	}
 
 	@FlakyTest(detail = "Sometimes it doesn't find clickOnLabel(selectFolder()): UiObjectNotFoundException: UiSelector[TEXT=Select folder]")
@@ -88,12 +93,12 @@ public class BackupActivityTest_ExportExternal {
 
 		clickOnLabel(saveToDrive());
 		{
-			assertThat(getActivityStage(activity), is(Stage.PAUSED));
+			assertThat(activity.getActivity(), isInStage(Stage.PAUSED));
 			String fileName = getText(documentTitle());
 			String folder = generateFolderName();
 			LOG.info("Saving {}/{}", folder, fileName);
 			saveToAndroidTests(folder);
-			assertThat(getActivityStage(activity), is(Stage.PAUSED));
+			assertThat(activity.getActivity(), isInStage(Stage.PAUSED));
 			clickOnLabel(save());
 		}
 		onView(withText(R.string.backup_export_result_finished)).inRoot(isDialog()).check(matches(isDisplayed()));
@@ -117,7 +122,7 @@ public class BackupActivityTest_ExportExternal {
 			try {
 				clickOnLabel(selectFolder());
 			} catch (UiObjectNotFoundException ex) {
-				LOG.warn("'Select folder' is flaky, try again", ex);
+				LOG.warn("'{}' is flaky, try again", selectFolder(), ex);
 				clickOnLabel(selectFolder());
 			}
 		}

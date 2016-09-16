@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.os.Looper;
 import android.support.annotation.*;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.lifecycle.*;
 
 import static android.support.test.InstrumentationRegistry.*;
@@ -16,9 +15,6 @@ import static android.support.test.espresso.core.deps.guava.base.Throwables.*;
 import static android.support.test.espresso.core.deps.guava.collect.Iterables.*;
 
 public class InstrumentationExtensions {
-	public static @NonNull Stage getActivityStage(@NonNull ActivityTestRule<?> activity) {
-		return getActivityStage(activity.getActivity());
-	}
 	public static @NonNull Stage getActivityStage(final @NonNull Activity activity) {
 		return runOnMainIfNecessary(new Callable<Stage>() {
 			@Override public Stage call() throws Exception {
