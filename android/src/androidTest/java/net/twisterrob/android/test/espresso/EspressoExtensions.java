@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.hamcrest.*;
+import org.hamcrest.core.AnyOf;
 import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
@@ -509,11 +510,7 @@ public class EspressoExtensions {
 	public static ViewAction scrollToLast() {
 		return new ViewAction() {
 			@Override public Matcher<View> getConstraints() {
-				return anyOf(
-						both(isAssignableFrom(AbsListView.class)).and(hasAdapter()),
-						both(isAssignableFrom(RecyclerView.class)).and(hasRecyclerAdapter()),
-						both(isAssignableFrom(ViewPager.class)).and(hasViewPagerAdapter())
-				);
+				return isScrollPositionAware();
 			}
 			@Override public String getDescription() {
 				return "scroll to last item";
@@ -532,6 +529,37 @@ public class EspressoExtensions {
 			}
 		};
 	}
+	public static ViewAction jumpToLast() {
+		return new ViewAction() {
+			@Override public Matcher<View> getConstraints() {
+				return isScrollPositionAware();
+			}
+			@Override public String getDescription() {
+				return "scroll to last item";
+			}
+			@Override public void perform(UiController uiController, View view) {
+				if (view instanceof AbsListView) {
+					AbsListView adapterView = (AbsListView)view;
+					adapterView.setSelection(adapterView.getAdapter().getCount() - 1);
+				} else if (view instanceof RecyclerView) {
+					RecyclerView recycler = (RecyclerView)view;
+					recycler.scrollToPosition(recycler.getAdapter().getItemCount() - 1);
+				} else if (view instanceof ViewPager) {
+					ViewPager pager = (ViewPager)view;
+					pager.setCurrentItem(pager.getAdapter().getCount() - 1, false);
+				}
+			}
+		};
+	}
+
+	private static AnyOf<View> isScrollPositionAware() {
+		return anyOf(
+				both(isAssignableFrom(AbsListView.class)).and(hasAdapter()),
+				both(isAssignableFrom(RecyclerView.class)).and(hasRecyclerAdapter()),
+				both(isAssignableFrom(ViewPager.class)).and(hasViewPagerAdapter())
+		);
+	}
+
 	private static Matcher<View> hasViewPagerAdapter() {
 		return new BoundedMatcher<View, ViewPager>(ViewPager.class) {
 			@Override public void describeTo(Description description) {
@@ -561,6 +589,17 @@ public class EspressoExtensions {
 			}
 			@Override protected boolean matchesSafely(AdapterView<A> item) {
 				return item.getAdapter() != null;
+			}
+		};
+	}
+
+	public static Matcher<View> hasImage() {
+		return new BoundedMatcher<View, ImageView>(ImageView.class) {
+			@Override public void describeTo(Description description) {
+				description.appendText("ImageView has image");
+			}
+			@Override protected boolean matchesSafely(ImageView item) {
+				return item.getDrawable() != null;
 			}
 		};
 	}

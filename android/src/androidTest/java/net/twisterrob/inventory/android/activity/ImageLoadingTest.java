@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.activity;
 
 import org.junit.*;
-import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.slf4j.*;
 
@@ -9,13 +8,11 @@ import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
+import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import net.twisterrob.android.test.espresso.idle.GlideIdlingResource;
-import net.twisterrob.android.test.junit.IdlingResourceRule;
+import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -32,13 +29,17 @@ public class ImageLoadingTest {
 			Database.resetToTest();
 		}
 	};
-	@Rule public final TestRule glide = new IdlingResourceRule(new GlideIdlingResource());
 
 	@Test public void test() {
-		onRecyclerItem(withText("!All Categories")).inAdapterView(withId(R.id.rooms)).perform(click());
-		getInstrumentation().waitForIdleSync();
-		onView(withId(android.R.id.list)).perform(scrollToLast());
-		onRecyclerItem(withText("Vehicle water")).onChildView(withId(R.id.type)).perform(click());
-		Espresso.pressBack();
+		onRecyclerItem(withText("!All Categories"))
+				.inAdapterView(withId(R.id.rooms))
+				.onChildView(withId(R.id.image))
+				.check(matches(hasImage()))
+				.perform(click());
+		RecyclerViewDataInteraction lastItem = onRecyclerItem(withText("Vehicle water"));
+		lastItem.onChildView(withId(R.id.image)).check(matches(hasImage()));
+		lastItem.onChildView(withId(R.id.type)).check(matches(hasImage()));
+		lastItem.perform(click()); // TODO this will bring up the type editor, not the item
+		Espresso.pressBack(); // don't leak the dialog
 	}
 }

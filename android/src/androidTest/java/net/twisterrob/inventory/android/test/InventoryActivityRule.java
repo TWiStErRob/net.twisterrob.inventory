@@ -47,6 +47,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		base = super.apply(base, description);
 		base = DrawerIdlingResource.rule().apply(base, description);
 		base = new IdlingResourceRule(new IntentServiceIdlingResource(DatabaseService.class)).apply(base, description);
+		base = new IdlingResourceRule(new GlideIdlingResource()).apply(base, description);
 		return base;
 	}
 
