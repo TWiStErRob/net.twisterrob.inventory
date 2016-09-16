@@ -23,9 +23,8 @@ allprojects {
 	configurations.all({ it.resolutionStrategy.failOnVersionConflict() })
 }
 
-// run `gradlew releaseCheck -x clean -x check -x connectedCheck` to just get the output of this
+// run `gradlew releaseCheck -x check -x connectedCheck` to just get the output of this
 task releaseCheck() {
-	dependsOn getTasksByName('clean', true)
 	dependsOn getTasksByName('check', true)
 	dependsOn ':android:connectedCheck'
 	doLast {
