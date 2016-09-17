@@ -51,7 +51,9 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 			NonClosableStream nonClosableZip = new NonClosableStream(zip);
 			ZipEntry entry;
 			while ((entry = zip.getNextEntry()) != null) {
-				LOG.trace("Found ZIP entry {}", AndroidTools.toString(entry));
+				if (BuildConfig.DEBUG) {
+					LOG.trace("Found ZIP entry {}", AndroidTools.toString(entry));
+				}
 				if (Constants.Paths.BACKUP_DATA_FILENAME.equals(entry.getName())) {
 					seenEntry = true;
 					LOG.trace("Importing XML data: {}", entry.getName());

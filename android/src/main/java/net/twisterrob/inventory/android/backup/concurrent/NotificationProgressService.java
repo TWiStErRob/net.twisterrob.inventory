@@ -10,10 +10,11 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
 
-import net.twisterrob.android.utils.log.LoggingIntentService;
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.BuildConfig;
+import net.twisterrob.inventory.android.content.VariantIntentService;
 
-public abstract class NotificationProgressService<Progress> extends LoggingIntentService {
+public abstract class NotificationProgressService<Progress> extends VariantIntentService {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 
 	private static final int ONGOING_NOTIFICATION_OFFSET = 1;
@@ -115,7 +116,9 @@ public abstract class NotificationProgressService<Progress> extends LoggingInten
 
 	private void setIntentAndDefaults(@NonNull NotificationCompat.Builder notification,
 			@Nullable PendingIntent intent) {
-		LOG.trace("Updating notification {} with {}", notification, AndroidTools.toString(intent));
+		if (BuildConfig.DEBUG) {
+			LOG.trace("Updating notification {} with {}", notification, AndroidTools.toString(intent));
+		}
 		notification.setContentIntent(intent);
 		notification.setAutoCancel(true);
 	}

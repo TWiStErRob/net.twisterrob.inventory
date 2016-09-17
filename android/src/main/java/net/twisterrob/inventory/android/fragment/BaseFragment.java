@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.BuildConfig;
 
 public class BaseFragment<T> extends VariantFragment {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseFragment.class);
@@ -71,11 +72,13 @@ public class BaseFragment<T> extends VariantFragment {
 	}
 
 	@Override public void onCreate(Bundle savedInstanceState) {
-		LOG.debug("Creating {}@{} {}",
-				getClass().getSimpleName(),
-				Integer.toHexString(System.identityHashCode(this)),
-				AndroidTools.toString(getArguments())
-		);
+		if (BuildConfig.DEBUG) {
+			LOG.debug("Creating {}@{} {}",
+					getClass().getSimpleName(),
+					Integer.toHexString(System.identityHashCode(this)),
+					AndroidTools.toString(getArguments())
+			);
+		}
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
 			tag = savedInstanceState.getParcelable(KEY_VIEWTAG);

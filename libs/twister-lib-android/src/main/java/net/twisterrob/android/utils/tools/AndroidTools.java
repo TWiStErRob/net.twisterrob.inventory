@@ -241,10 +241,8 @@ public /*static*/ abstract class AndroidTools {
 		Collections.sort(sorted, new CameraSizeComparator(w, h));
 
 		android.hardware.Camera.Size optimalSize = sorted.get(0);
-		if (LOG.isTraceEnabled()) {
-			LOG.trace("Optimal size selected is {}x{} from {}.",
-					optimalSize.width, optimalSize.height, toString(sorted));
-		}
+		LOG.trace("Optimal size selected is {}x{} from {}.",
+				optimalSize.width, optimalSize.height, toString(sorted));
 
 		return optimalSize;
 	}
@@ -1056,6 +1054,33 @@ public /*static*/ abstract class AndroidTools {
 		}
 		executePreferParallel(new PipeCloserAsyncTask());
 		return readEnd;
+	}
+
+	/**
+	 * @see <a href="http://stackoverflow.com/a/13238729/253468">Check if two Bundle objects are equal in Android?</a>
+	 */
+	public static boolean equals(Bundle bundle1, Bundle bundle2) {
+		if (bundle1.size() != bundle2.size()) {
+			return false;
+		}
+
+		Set<String> keys = bundle1.keySet();
+
+		for (String key : keys) {
+			Object value1 = bundle1.get(key);
+			Object value2 = bundle2.get(key);
+			if (value1 instanceof Bundle && value2 instanceof Bundle && !equals((Bundle)value1, (Bundle)value2)) {
+				return false;
+			} else if (value1 == null) {
+				if (!(value2 == null && bundle2.containsKey(key))) {
+					return false;
+				}
+			} else if (!value1.equals(value2)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public static void unparcel(Intent intent) {

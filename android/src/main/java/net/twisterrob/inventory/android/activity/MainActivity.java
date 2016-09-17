@@ -93,7 +93,9 @@ public class MainActivity extends DrawerActivity
 
 		getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			@Override public void onBackStackChanged() {
-				LOG.trace(AndroidTools.toString(getSupportFragmentManager()));
+				if (BuildConfig.DEBUG) {
+					LOG.trace(AndroidTools.toString(getSupportFragmentManager()));
+				}
 				if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
 					finish();
 				} else {
@@ -162,7 +164,7 @@ public class MainActivity extends DrawerActivity
 	private void handleIntent() {
 		String page = getExtraPage();
 
-		if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_CLEAR_TOP) != 0) {
+		if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_CLEAR_TOP) != 0 && BuildConfig.DEBUG) {
 			LOG.warn("Possible up-navigation: {}", AndroidTools.toString(getIntent()));
 		}
 

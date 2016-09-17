@@ -4,10 +4,9 @@ import android.app.Service;
 import android.content.*;
 import android.os.IBinder;
 
-import net.twisterrob.android.utils.log.LoggingServiceConnection;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService.*;
 
-public abstract class BackupServiceConnection extends LoggingServiceConnection implements BackupListener {
+public abstract class BackupServiceConnection implements ServiceConnection, BackupListener {
 	private LocalBinder binding;
 	private Context context;
 	/**
@@ -24,7 +23,6 @@ public abstract class BackupServiceConnection extends LoggingServiceConnection i
 	}
 
 	@Override public final void onServiceConnected(ComponentName name, IBinder service) {
-		super.onServiceConnected(name, service);
 		binding = (LocalBinder)service;
 		binding.addBackupListener(this);
 		serviceBound(name, binding);
@@ -37,7 +35,6 @@ public abstract class BackupServiceConnection extends LoggingServiceConnection i
 
 	@Override public final void onServiceDisconnected(ComponentName name) {
 		onServiceDisconnectedCalled = true;
-		super.onServiceDisconnected(name);
 		serviceUnbound(name, binding);
 		binding.removeBackupListener(this);
 		binding = null;

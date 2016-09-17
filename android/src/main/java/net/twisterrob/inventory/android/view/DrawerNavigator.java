@@ -20,8 +20,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
-import net.twisterrob.inventory.android.R;
 
 public class DrawerNavigator {
 	private static final Logger LOG = LoggerFactory.getLogger(DrawerNavigator.class);
@@ -68,8 +68,7 @@ public class DrawerNavigator {
 		for (int pos = 0; pos < items.size(); pos++) {
 			NavItem item = items.get(items.keyAt(pos));
 			if (intent.getComponent().equals(item.intent.getComponent())
-					&& AndroidTools.toShortString(intent.getExtras())
-					               .equals(AndroidTools.toShortString(item.intent.getExtras()))) {
+					&& AndroidTools.equals(intent.getExtras(), item.intent.getExtras())) {
 				return item.id;
 			}
 		}
@@ -87,7 +86,9 @@ public class DrawerNavigator {
 	private void loadIcon(final MenuItem menuItem) {
 		final NavItem navItem = items.get(menuItem.getItemId());
 		if (navItem == null) {
-			LOG.warn("{} has no data defined.", AndroidTools.toNameString(activity, menuItem.getItemId()));
+			if (BuildConfig.DEBUG) {
+				LOG.warn("{} has no data defined.", AndroidTools.toNameString(activity, menuItem.getItemId()));
+			}
 			return;
 		}
 		Pic.svg().load(navItem.icon).into(new MenuItemTarget(menuItem, iconSize));
@@ -115,11 +116,15 @@ public class DrawerNavigator {
 			this.intent = intent;
 		}
 		@Override public String toString() {
-			return String.format(Locale.ROOT, "[%s] %s: %s",
-					activity.getResources().getResourceName(icon),
-					activity.getResources().getResourceName(id),
-					AndroidTools.toString(intent)
-			);
+			if (BuildConfig.DEBUG) {
+				return String.format(Locale.ROOT, "[%s] %s: %s",
+						activity.getResources().getResourceName(icon),
+						activity.getResources().getResourceName(id),
+						AndroidTools.toString(intent)
+				);
+			} else {
+				return super.toString();
+			}
 		}
 	}
 

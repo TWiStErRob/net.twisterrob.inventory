@@ -9,12 +9,12 @@ import android.app.*;
 import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
 
-import net.twisterrob.android.utils.log.LoggingIntentService;
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.content.VariantIntentService;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 
-public class DatabaseService extends LoggingIntentService {
+public class DatabaseService extends VariantIntentService {
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseService.class);
 	private static final long SLEEP_BETWEEN_VACUUMS = TimeUnit.SECONDS.toMillis(10);
 	public static final String ACTION_OPEN_DATABASE = "net.twisterrob.inventory.action.OPEN_DATABASE";

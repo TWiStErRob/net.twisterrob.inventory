@@ -100,7 +100,7 @@ public abstract class BaseApp extends android.app.Application {
 	@CallSuper
 	protected void safeOnCreate() {
 		if (BuildConfigDEBUG) {
-			AndroidStringerRepo.init(StringerRepo.INSTANCE, this);
+			AndroidStringerRepo.init(StringerRepo.getInstance(), this);
 			initStetho();
 		}
 		initPreferences();

@@ -1,9 +1,9 @@
 ### -- Inventory/proguard.pro -- ###
 
 # Debugging helpers
-#-dontobfuscate
+-dontobfuscate
 #-dontoptimize
-#-optimizationpasses 2
+-optimizationpasses 2
 
 # See res/menu/search.xml and b.android.com/170471
 -keep class android.support.v7.widget.SearchView { <init>(...); }
@@ -35,6 +35,11 @@
 -assumenosideeffects class org.slf4j.LoggerFactory {
 	public static org.slf4j.Logger getLogger(...);
 }
+# see https://sourceforge.net/p/proguard/bugs/621/
+-assumenosideeffects class ** {
+	final org.slf4j.Logger LOG;
+	static synthetic org.slf4j.Logger access$*();
+}
 
 # android logging
 -assumenosideeffects class android.util.Log {
@@ -45,4 +50,3 @@
 	public static int d(...);
 	public static int e(...);
 }
-

@@ -13,6 +13,11 @@ public class StringerRepo {
 	private static final Logger LOG = LoggerFactory.getLogger(StringerRepo.class);
 	public static final StringerRepo INSTANCE = new StringerRepo();
 
+	/** Added just so it can be optimized away from BaseApp */
+	public static StringerRepo getInstance() {
+		return INSTANCE;
+	}
+	
 	private final Map<Class<?>, Stringer<?>> stringers = new HashMap<>();
 	private final Map<Class<?>, Stringer<?>> cache = new HashMap<>();
 	private Stringer<Object> defaultStringer = DefaultStringer.INSTANCE;
