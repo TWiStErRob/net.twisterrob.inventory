@@ -20,6 +20,7 @@ import net.twisterrob.test.PackageNameShortener;
  * You can use Powermock together with Robolectric.
  *
  * @see <a href="https://github.com/robolectric/robolectric/wiki/Using-PowerMock">Using PowerMock</a>
+ * @see org.robolectric.RuntimeEnvironment#application
  */
 @RunWith(RobolectricTestRunner.class)
 @PowerMockRunnerDelegate(RobolectricTestRunner.class)

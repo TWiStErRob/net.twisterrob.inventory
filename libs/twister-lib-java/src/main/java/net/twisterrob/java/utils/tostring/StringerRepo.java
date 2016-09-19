@@ -17,14 +17,23 @@ public class StringerRepo {
 	public static StringerRepo getInstance() {
 		return INSTANCE;
 	}
-	
+
 	private final Map<Class<?>, Stringer<?>> stringers = new HashMap<>();
 	private final Map<Class<?>, Stringer<?>> cache = new HashMap<>();
 	private Stringer<Object> defaultStringer = DefaultStringer.INSTANCE;
 
 	protected StringerRepo() {
+		initDefaults();
+	}
+
+	/** Visible for testing only. */
+	public void initDefaults() {
 		register(String.class, new StringStringer());
 		register(ZipEntry.class, new ZipEntryStringer());
+	}
+	public void clear() {
+		stringers.clear();
+		cache.clear();
 	}
 
 	public @Nonnull Stringer<Object> getDefault() {
