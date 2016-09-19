@@ -118,7 +118,7 @@ public class UpgradeTests {
 
 		Espresso.pressBack(); // exit Backup activity and go to Main activity
 
-		onDrawerDescendant(withText("Properties")).perform(click());
+		onOpenDrawerDescendant(withText("Properties")).perform(click());
 		onView(allOf(isRV(), inDrawerContents()))
 				.perform(actionOnItemAtPosition(0, longClick()))
 				.perform(actionOnItemAtPosition(1, longClick()))
@@ -128,7 +128,7 @@ public class UpgradeTests {
 
 		assertThat("dangling images", db, aFileWithSize(between(0.5, 1.5)));
 
-		onDrawerDescendant(withText("Backup")).perform(click());
+		onOpenDrawerDescendant(withText("Backup")).perform(click());
 		intended(hasComponent("net.twisterrob.inventory.android.activity.BackupActivity"), times(2));
 		onRecyclerItem(withText(IMPORT_FILE)).perform(click());
 		clickNeutralInDialog();
@@ -142,12 +142,12 @@ public class UpgradeTests {
 		assertNoDialogIsDisplayed();
 		assertThat("upgraded size without dangling images", db, aFileWithSize(between(0.5, 1.5)));
 
-		onDrawerDescendant(withText("Backup")).perform(click());
+		onOpenDrawerDescendant(withText("Backup")).perform(click());
 		try {
 			intended(hasComponent("net.twisterrob.inventory.android.activity.BackupActivity"));
 		} catch (junit.framework.AssertionFailedError ex) { // for some reason intended throws this old shit
 			LOG.warn("Trying to go to backup activity again.", ex);
-			onDrawerDescendant(withText("Backup")).perform(click());
+			onOpenDrawerDescendant(withText("Backup")).perform(click());
 		}
 
 		FolderDiff diff = new FolderDiff(downloads);

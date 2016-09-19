@@ -29,10 +29,13 @@ public class DrawerMatchers {
 			InstrumentationExtensions.getBooleanArgument("animateDrawers", false);
 
 	public static ViewInteraction onDrawerDescendant(Matcher<View> viewMatcher) {
-		return onDrawerDescendant(viewMatcher, DEFAULT_DRAWER_ANIMATE);
+		return onView(allOf(viewMatcher, inDrawer()));
 	}
-	public static ViewInteraction onDrawerDescendant(Matcher<View> viewMatcher, boolean animate) {
-		return onView(allOf(viewMatcher, inDrawer())).perform(openContainingDrawer(animate));
+	public static ViewInteraction onOpenDrawerDescendant(Matcher<View> viewMatcher) {
+		return onOpenDrawerDescendant(viewMatcher, DEFAULT_DRAWER_ANIMATE);
+	}
+	public static ViewInteraction onOpenDrawerDescendant(Matcher<View> viewMatcher, boolean animate) {
+		return onDrawerDescendant(viewMatcher).perform(openContainingDrawer(animate));
 	}
 	public static ViewAction openContainingDrawer() {
 		return openContainingDrawer(DEFAULT_DRAWER_ANIMATE);

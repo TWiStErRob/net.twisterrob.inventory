@@ -39,6 +39,7 @@ import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.Prope
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents;
+import net.twisterrob.inventory.android.view.DrawerNavigator;
 import net.twisterrob.java.annotations.DebugHelper;
 
 public class MainActivity extends DrawerActivity
@@ -88,7 +89,7 @@ public class MainActivity extends DrawerActivity
 				onOptionsItemSelected(new MenuBuilder(this).add(0, R.id.debug, 0, "Debug"));
 			}
 		} else { // on rotation, or warm start
-			updateTitle();
+			// see onRestoreInstanceState and onRestart
 		}
 
 		getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
@@ -99,8 +100,7 @@ public class MainActivity extends DrawerActivity
 				if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
 					finish();
 				} else {
-					setIntent((Intent)getFragment().getViewTag());
-					updateTitle();
+					updateUI();
 					refresh(); // FIXME why was this working a month ago without this?
 				}
 			}
@@ -146,7 +146,23 @@ public class MainActivity extends DrawerActivity
 				.show();
 	}
 
-	private void updateTitle() {
+	@Override protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		// In case MainActivity is being restored after coming back from another activity the drawer will restore its
+		// state to when the drawer item was clicked, restore our known good selection to override that behavior.
+		updateUI();
+	}
+	@Override protected void onRestart() {
+		super.onRestart();
+		// In case MainActivity is being restarted from behind another activity that may have been launched from
+		// the drawer. Selecting the drawer item may have checked it, so let's restore our known selection.
+		updateUI();
+	}
+
+	private void updateUI() {
+		setIntent((Intent)getFragment().getViewTag());
+		DrawerNavigator.get(mDrawerLeft).select(getIntent());
+
 		FragmentManager fm = getSupportFragmentManager();
 		BackStackEntry top = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1);
 		CharSequence title = getString(TITLES.get(top.getName()));

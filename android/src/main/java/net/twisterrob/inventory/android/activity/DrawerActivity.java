@@ -43,7 +43,6 @@ public abstract class DrawerActivity extends BaseActivity {
 		if (mDrawerLayout != null) {
 			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, INVALID_RESOURCE_ID, INVALID_RESOURCE_ID);
 			mDrawerLayout.addDrawerListener(mDrawerToggle);
-			mDrawerLayout.addDrawerListener(new ActiveItemSelector());
 			mDrawerLayout.addDrawerListener(new TitleUpdater());
 			mDrawerLayout.addDrawerListener(new OptionsMenuInvalidator());
 			mDrawerLayout.addDrawerListener(new CountUpdater());
@@ -160,15 +159,6 @@ public abstract class DrawerActivity extends BaseActivity {
 		data.addIcons();
 		data.updateCounts();
 		return data;
-	}
-
-	private class ActiveItemSelector extends SimpleDrawerListener {
-		@Override public void onDrawerStateChanged(int newState) {
-			super.onDrawerStateChanged(newState);
-			if (newState == DrawerLayout.STATE_DRAGGING || newState == DrawerLayout.STATE_SETTLING) {
-				DrawerNavigator.get(mDrawerLeft).select(getIntent());
-			}
-		}
 	}
 
 	private class TitleUpdater extends SimpleDrawerListener {
