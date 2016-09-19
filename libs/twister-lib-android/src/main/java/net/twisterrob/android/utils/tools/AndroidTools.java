@@ -151,19 +151,36 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	public static void setHint(EditText edit, @StringRes int resourceID) {
-		ViewParent parent = edit.getParent();
-		if (parent instanceof TextInputLayout) {
-			((TextInputLayout)parent).setHint(edit.getResources().getText(resourceID));
-		} else {
-			edit.setHint(resourceID);
-		}
+		setHint(edit, edit.getResources().getText(resourceID));
 	}
 	public static void setHint(EditText edit, CharSequence text) {
-		ViewParent parent = edit.getParent();
-		if (parent instanceof TextInputLayout) {
+		ViewParent parent = edit.getParent(); // support < 24.2.0 has direct child
+		ViewParent grandParent = edit.getParent().getParent(); // 24.2.+ uses an intermediate FrameLayout
+		if (grandParent instanceof TextInputLayout) {
+			((TextInputLayout)grandParent).setHint(text);
+		} else if (parent instanceof TextInputLayout) {
 			((TextInputLayout)parent).setHint(text);
 		} else {
 			edit.setHint(text);
+		}
+	}
+
+	public static void setError(EditText edit, @StringRes int resourceID) {
+		setError(edit, edit.getResources().getText(resourceID));
+	}
+	public static void setError(EditText edit, CharSequence text) {
+		ViewParent parent = edit.getParent(); // support < 24.2.0 has direct child
+		ViewParent grandParent = edit.getParent().getParent(); // 24.2.+ uses an intermediate FrameLayout
+		if (grandParent instanceof TextInputLayout) {
+			TextInputLayout layout = (TextInputLayout)grandParent;
+			layout.setErrorEnabled(text != null);
+			layout.setError(text);
+		} else if (parent instanceof TextInputLayout) {
+			TextInputLayout layout = (TextInputLayout)parent;
+			layout.setErrorEnabled(text != null);
+			layout.setError(text);
+		} else {
+			edit.setError(text);
 		}
 	}
 

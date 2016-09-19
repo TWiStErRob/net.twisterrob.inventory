@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build.*;
 import android.os.Bundle;
@@ -378,17 +377,12 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	protected boolean doValidateTitle() {
+		CharSequence error = null;
 		if (TextUtils.getTrimmedLength(name.getText()) == 0) {
-			if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
-				name.setError(TextTools.color(Color.BLACK, "Please enter some text"));
-			} else {
-				name.setError("Please enter some text");
-			}
-			return false;
-		} else {
-			name.setError(null);
-			return true;
+			error = getString(R.string.generic_error_empty_text);
 		}
+		AndroidTools.setError(name, error);
+		return error != null;
 	}
 
 	private long getTypeId() {
