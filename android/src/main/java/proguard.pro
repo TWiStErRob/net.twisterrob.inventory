@@ -1,9 +1,9 @@
 ### -- Inventory/proguard.pro -- ###
 
 # Debugging helpers
--dontobfuscate
+#-dontobfuscate
 #-dontoptimize
--optimizationpasses 2
+#-optimizationpasses 2
 
 # See res/menu/search.xml and b.android.com/170471
 -keep class android.support.v7.widget.SearchView { <init>(...); }
