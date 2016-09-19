@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Color;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.text.TextUtils;
 
 import net.twisterrob.android.app.BaseApp;
@@ -78,26 +78,40 @@ public class App extends BaseApp {
 		super.onTerminate();
 	}
 
-	public static CharSequence getError(Throwable ex, int errorResource, Object... args) {
+	public static CharSequence getError(@NonNull Throwable ex, @StringRes int errorResource, Object... args) {
 		return getError(ex, getAppContext().getString(errorResource, args));
 	}
-	public static CharSequence getError(Throwable ex, CharSequence message) {
+	public static CharSequence getError(@NonNull Throwable ex, @NonNull CharSequence message) {
 		CharSequence errorMessage = ex.toString();
 		Resources res = getAppContext().getResources();
-		if (ex instanceof SQLiteConstraintException && NAME_ERRORS.contains(ex.getMessage())) {
+		String msg = ex.getMessage();
+		if (ex instanceof SQLiteConstraintException && NAME_ERRORS.contains(msg)) {
 			errorMessage = res.getString(R.string.generic_error_unique_name);
+		} else if (ex instanceof SQLiteConstraintException && EMPTY_ERRORS.contains(msg)) {
+			errorMessage = res.getString(R.string.generic_error_length_name);
 		}
 		return TextUtils.concat(message, "\n", TextTools.color(Color.GRAY, errorMessage));
 	}
+
+	// 2013-03-18 (SQLite 3.7.16): Added new extended error codes for all SQLITE_CONSTRAINT errors
+	private static final Collection<String> EMPTY_ERRORS = new HashSet<>(Arrays.asList(
+			// Galaxy S4 4.4.2 3.7.11
+			"constraint failed (code 19)",
+			// Galaxy S5 5.0.1 3.8.6.1
+			"CHECK constraint failed: Property (code 275)", // should be guarded by BaseEditFragment
+			"CHECK constraint failed: Room (code 275)", // should be guarded by BaseEditFragment
+			"CHECK constraint failed: Item (code 275)", // should be guarded by BaseEditFragment
+			"CHECK constraint failed: List (code 275)"
+	));
 
 	// SQLite 3.7.16 released 2013-03-18: Added new extended error codes for all SQLITE_CONSTRAINT errors
 	private static final Collection<String> NAME_ERRORS = new HashSet<>(Arrays.asList(
 			// Galaxy S2 2.3.7 3.6.22
 			"error code 19: constraint failed",
 			// Galaxy S4 4.4.2 3.7.11
-			"column name is not unique (code 19)",
-			"columns property, name are not unique (code 19)",
-			"columns parent, name are not unique (code 19)",
+			"column name is not unique (code 19)", // property, list
+			"columns property, name are not unique (code 19)", // room
+			"columns parent, name are not unique (code 19)", // item
 			// Galaxy S5 5.0.1 3.8.6.1 
 			"UNIQUE constraint failed: Property.name (code 2067)",
 			"UNIQUE constraint failed: Room.property, Room.name (code 2067)",

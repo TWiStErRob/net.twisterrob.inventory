@@ -69,7 +69,7 @@ public class ChangeTypeListener implements OnClickListener {
 					fragment.refresh();
 				}
 				@Override protected void onError(@NonNull Exception ex) {
-					App.toastUser(App.getError(null, "Cannot change type"));
+					App.toastUser(App.getError(ex, "Cannot change type"));
 				}
 			});
 		}
