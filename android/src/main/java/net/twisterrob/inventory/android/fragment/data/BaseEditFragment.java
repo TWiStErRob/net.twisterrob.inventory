@@ -382,7 +382,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			error = getString(R.string.generic_error_empty_text);
 		}
 		AndroidTools.setError(name, error);
-		return error != null;
+		return error == null;
 	}
 
 	private long getTypeId() {
