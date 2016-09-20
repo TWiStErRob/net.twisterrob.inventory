@@ -74,7 +74,7 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 			long imageId = db.addImage(imageContents, dbTime);
 			switch (type) {
 				case Property:
-					db.setItemImage(id, imageId);
+					db.setPropertyImage(id, imageId);
 					break;
 				case Room:
 					db.setRoomImage(id, imageId);
