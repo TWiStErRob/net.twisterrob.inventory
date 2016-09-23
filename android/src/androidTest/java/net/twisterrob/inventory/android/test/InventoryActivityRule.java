@@ -19,7 +19,6 @@ import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.inventory.android.content.db.DatabaseService;
 
 import static net.twisterrob.android.app.BaseApp.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
@@ -46,7 +45,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	@Override public Statement apply(Statement base, Description description) {
 		base = super.apply(base, description);
 		base = DrawerIdlingResource.rule().apply(base, description);
-		base = new IdlingResourceRule(new IntentServiceIdlingResource(DatabaseService.class)).apply(base, description);
+		base = new IdlingResourceRule(new DatabaseServiceIdlingResource()).apply(base, description);
 		base = new IdlingResourceRule(new GlideIdlingResource()).apply(base, description);
 		return base;
 	}

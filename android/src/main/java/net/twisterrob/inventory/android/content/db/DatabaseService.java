@@ -8,6 +8,7 @@ import org.slf4j.*;
 import android.app.*;
 import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.App;
@@ -21,6 +22,7 @@ public class DatabaseService extends VariantIntentService {
 	public static final String ACTION_VACUUM_INCREMENTAL = "net.twisterrob.inventory.action.VACUUM_INCREMENTAL";
 	public static final String ACTION_PRELOAD_CATEGORIES = "net.twisterrob.inventory.action.PRELOAD_CATEGORIES";
 	public static final String ACTION_UPDATE_LANGUAGE = "net.twisterrob.inventory.action.UPDATE_LANGUAGE";
+	public static final String ACTION_SERVICE_SHUTDOWN = "net.twisterrob.inventory.action.SERVICE_SHUTDOWN";
 	public static final String EXTRA_LOCALE = "net.twisterrob.inventory.extra.update_language_locale";
 	private static final int CODE_INCREMENTAL_VACUUM = 16336;
 
@@ -48,6 +50,12 @@ public class DatabaseService extends VariantIntentService {
 			default:
 				throw new UnsupportedOperationException("Action " + action + " is not implemented for " + intent);
 		}
+	}
+
+	@Override public void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
+		bm.sendBroadcast(new Intent(ACTION_SERVICE_SHUTDOWN).setClass(getApplicationContext(), getClass()));
 	}
 
 	private void updateLanguage(Intent intent) {
