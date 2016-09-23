@@ -2,6 +2,7 @@ package net.twisterrob.android.test.espresso.idle;
 
 import org.slf4j.*;
 
+import android.support.annotation.MainThread;
 import android.support.test.espresso.IdlingResource;
 
 public abstract class AsyncIdlingResource implements IdlingResource {
@@ -10,11 +11,20 @@ public abstract class AsyncIdlingResource implements IdlingResource {
 	private ResourceCallback resourceCallback;
 	private boolean verbose = false;
 
+	protected AsyncIdlingResource() {
+		//beVerbose();
+	}
+
 	public AsyncIdlingResource beVerbose() {
 		verbose = true;
 		return this;
 	}
 
+	protected boolean isVerbose() {
+		return verbose;
+	}
+
+	@MainThread
 	@Override public final boolean isIdleNow() {
 		boolean idle = isIdle();
 		if (verbose || !idle) {
@@ -28,9 +38,11 @@ public abstract class AsyncIdlingResource implements IdlingResource {
 		return idle;
 	}
 
+	//@AnyThread, don't enable yet, there are still annoying warnings
 	protected void transitionToIdle() {
 		transitionToIdle(true);
 	}
+
 	private void transitionToIdle(boolean log) {
 		if (log) {
 			LOG.trace("{}.onTransitionToIdle with {}", getName(), resourceCallback);
@@ -40,9 +52,12 @@ public abstract class AsyncIdlingResource implements IdlingResource {
 		}
 	}
 
+	@MainThread
 	protected abstract boolean isIdle();
+	@MainThread
 	protected abstract void waitForIdleAsync();
 
+	@MainThread
 	@Override public void registerIdleTransitionCallback(ResourceCallback resourceCallback) {
 		this.resourceCallback = resourceCallback;
 	}

@@ -73,7 +73,7 @@ public class InstrumentationExtensions {
 		return activities.isEmpty()? null : getOnlyElement(activities);
 	}
 
-	private static <T> T runOnMainIfNecessary(final @NonNull Callable<T> resultProvider) {
+	public static <T> T runOnMainIfNecessary(final @NonNull Callable<T> resultProvider) {
 		if (Looper.myLooper() == Looper.getMainLooper()) {
 			try {
 				return resultProvider.call();
