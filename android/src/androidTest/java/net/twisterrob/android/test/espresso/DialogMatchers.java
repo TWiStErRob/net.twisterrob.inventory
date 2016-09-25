@@ -18,6 +18,8 @@ import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static android.view.WindowManager.LayoutParams.*;
 
+import net.twisterrob.android.utils.tools.AndroidTools;
+
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 
 public class DialogMatchers {
@@ -71,6 +73,18 @@ public class DialogMatchers {
 
 	public static Matcher<View> isDialogView() {
 		return root(isDialog());
+	}
+
+	public static Matcher<View> isDialogTitle() {
+		// new android.support.v7.app.AlertDialog.Builder().setTitle(...).show();
+		@IdRes int supportAlertTitle = AndroidTools.getIDResourceID(getTargetContext(), "alertTitle");
+		// new android.app.AlertDialog.Builder().setTitle(...).show();
+		@IdRes int androidAlertTitle = AndroidTools.getIDResourceID(null, "alertTitle");
+		return anyOf(withId(supportAlertTitle), withId(androidAlertTitle));
+	}
+
+	public static Matcher<View> isDialogMessage() {
+		return withId(android.R.id.message);
 	}
 
 	private static void clickInDialog(@IdRes int buttonId) {

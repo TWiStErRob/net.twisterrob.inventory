@@ -1,5 +1,7 @@
 package net.twisterrob.android.test.matchers;
 
+import java.util.Locale;
+
 import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
@@ -7,9 +9,13 @@ import static org.hamcrest.Matchers.*;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.*;
+import android.graphics.Bitmap.Config;
+import android.graphics.drawable.*;
 import android.support.annotation.*;
 import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
+import android.widget.ImageView;
 
 import static android.support.test.InstrumentationRegistry.*;
 
@@ -34,7 +40,7 @@ public class AndroidMatchers {
 	public static @NonNull Matcher<View> anyView() {
 		return any(View.class);
 	}
-	public static @NonNull Matcher<String> containsString(@StringRes int stringId) {
+	public static @NonNull Matcher<String> containsStringRes(@StringRes int stringId) {
 		return Matchers.containsString(getTargetContext().getResources().getString(stringId));
 	}
 
@@ -94,6 +100,61 @@ public class AndroidMatchers {
 		return new FeatureMatcher<Activity, Stage>(matcher, "activity is in stage", "stage") {
 			@Override protected Stage featureValueOf(Activity actual) {
 				return getActivityStage(actual);
+			}
+		};
+	}
+	// endregion
+
+	// region Bitmap matchers
+	public static @NonNull Matcher<Bitmap> hasBackground(@ColorInt final int backgroundColor) {
+		return new TypeSafeDiagnosingMatcher<Bitmap>() {
+			@Override protected boolean matchesSafely(Bitmap item, Description mismatchDescription) {
+				int pixel = item.getPixel(0, 0);
+				if (pixel != backgroundColor) {
+					mismatchDescription
+							.appendText("top left pixel is ")
+							.appendValue(String.format(Locale.ROOT, "#%08X", pixel));
+					return false;
+				}
+				return true;
+			}
+			@Override public void describeTo(Description description) {
+				description
+						.appendText("has background color: ")
+						.appendValue(String.format(Locale.ROOT, "#%08X", backgroundColor));
+			}
+		};
+	}
+	@SuppressWarnings("unchecked")
+	public static @NonNull Matcher<View> withBitmap(final Matcher<Bitmap> matcher) {
+		return (Matcher<View>)(Matcher<?>)new TypeSafeDiagnosingMatcher<ImageView>() {
+			@Override public void describeTo(Description description) {
+				description.appendText("ImageView with Bitmap: ").appendDescriptionOf(matcher);
+			}
+			@Override protected boolean matchesSafely(ImageView item, Description mismatchDescription) {
+				Drawable drawable = item.getDrawable();
+				Bitmap bitmap = null;
+				boolean recycle = false;
+				try {
+					if (drawable instanceof BitmapDrawable) {
+						bitmap = ((BitmapDrawable)drawable).getBitmap();
+					} else {
+						recycle = true;
+						bitmap = Bitmap.createBitmap(
+								drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Config.ARGB_8888);
+						Canvas canvas = new Canvas(bitmap);
+						drawable.draw(canvas);
+					}
+					if (!matcher.matches(bitmap)) {
+						matcher.describeMismatch(bitmap, mismatchDescription);
+						return false;
+					}
+					return true;
+				} finally {
+					if (recycle && bitmap != null) {
+						bitmap.recycle();
+					}
+				}
 			}
 		};
 	}

@@ -6,7 +6,6 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 import android.support.test.rule.ActivityTestRule;
@@ -67,7 +66,7 @@ public class ItemViewActivityTest_Delete {
 		onActionMenuView(withText(R.string.item_delete)).perform(click());
 
 		onView(withText(matchesPattern("%\\d"))).check(doesNotExist());
-		onView(withId(android.R.id.message)).check(matches(allOf(
+		onView(isDialogMessage()).check(matches(allOf(
 				isDisplayed(),
 				withText(containsString(TEST_ITEM))
 		)));
@@ -77,7 +76,7 @@ public class ItemViewActivityTest_Delete {
 
 		testDeleteMessage();
 
-		onView(withId(android.R.id.message)).check(matches(allOf(
+		onView(isDialogMessage()).check(matches(allOf(
 				isDisplayed(),
 				withText(containsString(TEST_SUBITEM))
 		)));
@@ -88,7 +87,7 @@ public class ItemViewActivityTest_Delete {
 
 		testDeleteMessage();
 
-		onView(withId(android.R.id.message)).check(matches(allOf(
+		onView(isDialogMessage()).check(matches(allOf(
 				isDisplayed(),
 				withText(containsString(TEST_SUBITEM)),
 				withText(containsString(TEST_SUBITEM_OTHER))

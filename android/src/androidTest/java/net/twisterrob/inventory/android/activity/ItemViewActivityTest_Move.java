@@ -6,7 +6,6 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 import android.support.test.rule.ActivityTestRule;
@@ -28,7 +27,6 @@ import net.twisterrob.inventory.android.test.*;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
-import static net.twisterrob.android.test.matchers.AndroidMatchers.containsString;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
 import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
@@ -98,10 +96,10 @@ public class ItemViewActivityTest_Move {
 		assertThat(db.get(), hasInvItemInRoom(TEST_ROOM, TEST_ITEM));
 		assertThat(db.get(), hasInvItemIn(TEST_ITEM_OTHER, TEST_ITEM));
 
-		onView(withId(android.R.id.message)).inRoot(isToast()).check(matches(allOf(
+		onView(isDialogMessage()).inRoot(isToast()).check(matches(allOf(
 				isDisplayed(),
 				withText(containsString(TEST_ITEM)),
-				withText(containsString(R.string.generic_error_unique_name)),
+				withText(containsStringRes(R.string.generic_error_unique_name)),
 				withText(containsString(TEST_ITEM_OTHER))
 		)));
 	}
