@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.support.annotation.*;
 import android.text.TextUtils;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -179,7 +178,7 @@ public class CategoryHelpBuilder {
 		int level = 0;
 		if (cursor != null) {
 			int levelColumn = cursor.getColumnIndex(LEVEL_COLUMN);
-			if (levelColumn != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+			if (levelColumn != DatabaseTools.INVALID_COLUMN) {
 				level = cursor.getInt(levelColumn);
 			}
 		}

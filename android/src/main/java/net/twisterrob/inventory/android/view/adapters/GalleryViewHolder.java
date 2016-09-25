@@ -10,7 +10,6 @@ import android.widget.*;
 
 import com.bumptech.glide.Glide;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -79,7 +78,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 	private static String getCountText(Cursor cursor) {
 		String countText = null;
 		int countIndex = cursor.getColumnIndex(CommonColumns.COUNT_CHILDREN_DIRECT);
-		if (countIndex != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+		if (countIndex != DatabaseTools.INVALID_COLUMN) {
 			int count = cursor.getInt(countIndex);
 			if (count > 0) {
 				countText = NUMBER.format(count);

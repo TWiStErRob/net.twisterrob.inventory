@@ -13,7 +13,6 @@ import android.view.*;
 import android.widget.TextView;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
@@ -268,7 +267,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			Cursor c = getCursor();
 			// Remember c is a MergeCursor so moving to a position may change the columns:
 			// only Items have "category" column, Categories don't
-			return c.moveToPosition(position) && c.getColumnIndex("category") == DatabaseOpenHelper.CURSOR_NO_COLUMN;
+			return c.moveToPosition(position) && c.getColumnIndex("category") == DatabaseTools.INVALID_COLUMN;
 		}
 
 		@Override protected int getNonHeaderViewType(int position) {

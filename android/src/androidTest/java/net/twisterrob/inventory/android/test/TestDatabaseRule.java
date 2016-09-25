@@ -15,6 +15,7 @@ import net.twisterrob.inventory.android.content.Database;
 public class TestDatabaseRule implements TestRule {
 	private Database db;
 
+	/** @deprecated FIXME get rid of usages in assertThat in favor of DatabaseActor */
 	public Database get() {
 		return db;
 	}

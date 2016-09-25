@@ -1,17 +1,22 @@
 package net.twisterrob.android.utils.tools;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 import javax.annotation.Nullable;
 
+import android.annotation.TargetApi;
 import android.database.*;
+import android.database.MatrixCursor.RowBuilder;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build.*;
 import android.support.annotation.NonNull;
 
-import net.twisterrob.android.db.DatabaseOpenHelper;
+import net.twisterrob.android.annotation.CursorFieldType;
 
 @SuppressWarnings("unused")
 public /*static*/ abstract class DatabaseTools {
+	public static final int INVALID_COLUMN = -1;
 	public static final String[] NO_ARGS = new String[0];
 	public static String escapeLike(Object string, char escape) {
 		return string.toString().replace("%", escape + "%").replace("_", escape + "_");
@@ -51,14 +56,14 @@ public /*static*/ abstract class DatabaseTools {
 
 	public static boolean getOptionalBoolean(Cursor cursor, String columnName, boolean defaultValue) {
 		int col = cursor.getColumnIndex(columnName);
-		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+		if (col != INVALID_COLUMN) {
 			return cursor.getInt(col) != 0;
 		}
 		return defaultValue;
 	}
 	public static Boolean getOptionalBoolean(Cursor cursor, String columnName) {
 		int col = cursor.getColumnIndex(columnName);
-		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+		if (col != INVALID_COLUMN) {
 			return cursor.getInt(col) != 0;
 		}
 		return null;
@@ -66,14 +71,14 @@ public /*static*/ abstract class DatabaseTools {
 
 	public static int getOptionalInt(Cursor cursor, String columnName, int defaultValue) {
 		int col = cursor.getColumnIndex(columnName);
-		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+		if (col != INVALID_COLUMN) {
 			return cursor.getInt(col);
 		}
 		return defaultValue;
 	}
 	public static Integer getOptionalInt(Cursor cursor, String columnName) {
 		int col = cursor.getColumnIndex(columnName);
-		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+		if (col != INVALID_COLUMN) {
 			return cursor.isNull(col)? null : cursor.getInt(col);
 		}
 		return null;
@@ -81,14 +86,14 @@ public /*static*/ abstract class DatabaseTools {
 
 	public static long getOptionalLong(Cursor cursor, String columnName, long defaultValue) {
 		int col = cursor.getColumnIndex(columnName);
-		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+		if (col != INVALID_COLUMN) {
 			return cursor.getLong(col);
 		}
 		return defaultValue;
 	}
 	public static Long getOptionalLong(Cursor cursor, String columnName) {
 		int col = cursor.getColumnIndex(columnName);
-		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+		if (col != INVALID_COLUMN) {
 			return cursor.isNull(col)? null : cursor.getLong(col);
 		}
 		return null;
@@ -99,7 +104,7 @@ public /*static*/ abstract class DatabaseTools {
 	}
 	public static String getOptionalString(Cursor cursor, String columnName, String defaultValue) {
 		int col = cursor.getColumnIndex(columnName);
-		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+		if (col != INVALID_COLUMN) {
 			return cursor.isNull(col)? null : cursor.getString(col);
 		}
 		return defaultValue;
@@ -110,7 +115,7 @@ public /*static*/ abstract class DatabaseTools {
 	}
 	public static byte[] getOptionalBlob(Cursor cursor, String columnName, byte... defaultValue) {
 		int col = cursor.getColumnIndex(columnName);
-		if (col != DatabaseOpenHelper.CURSOR_NO_COLUMN) {
+		if (col != INVALID_COLUMN) {
 			return cursor.isNull(col)? null : cursor.getBlob(col);
 		}
 		return defaultValue;
@@ -267,6 +272,74 @@ public /*static*/ abstract class DatabaseTools {
 				};
 			}
 		};
+	}
+
+	public static Cursor ensureFirst(Cursor cursor) {
+		if (!cursor.isFirst()) {
+			if (!cursor.moveToFirst()) {
+				throw new IllegalStateException("Cannot move to first row in Cursor.");
+			}
+		}
+		return cursor;
+	}
+
+	public static MatrixCursor clone(Cursor cursor) {
+		MatrixCursor clone = new MatrixCursor(cursor.getColumnNames(), cursor.getCount());
+		while (cursor.moveToNext()) {
+			RowBuilder row = clone.newRow();
+			for (int i = 0; i < cursor.getColumnCount(); i++) {
+				CursorColumnType type = CursorColumnType.fromFieldType(getType(cursor, i));
+				row.add(type.getValue(cursor, i));
+			}
+		}
+		return clone;
+	}
+
+	public static @CursorFieldType int getType(Cursor cursor, String columnName) {
+		return getType(cursor, cursor.getColumnIndexOrThrow(columnName));
+	}
+
+	@SuppressWarnings("deprecation")
+	@TargetApi(VERSION_CODES.HONEYCOMB)
+	public static @CursorFieldType int getType(Cursor cursor, int columnIndex) {
+		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+			//noinspection WrongConstant returns exactly what's needed as per docs
+			return cursor.getType(columnIndex);
+		}
+		while (cursor instanceof CursorWrapper) {
+			if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+				cursor = ((CursorWrapper)cursor).getWrappedCursor();
+			} else {
+				try {
+					Field mCursor = CursorWrapper.class.getDeclaredField("mCursor");
+					mCursor.setAccessible(true);
+					cursor = (Cursor)mCursor.get(cursor);
+				} catch (Exception ex) {
+					throw new IllegalStateException("Cannot access CursorWrapper.mCursor", ex);
+				}
+			}
+		}
+		if (!(cursor instanceof CrossProcessCursor)) {
+			throw new IllegalArgumentException("Cannot get type if it's not a " + CrossProcessCursor.class);
+		}
+
+		CursorWindow window = ((CrossProcessCursor)cursor).getWindow();
+		int pos = cursor.getPosition();
+		int type;
+		if (window.isNull(pos, columnIndex)) {
+			type = Cursor.FIELD_TYPE_NULL;
+		} else if (window.isLong(pos, columnIndex)) {
+			type = Cursor.FIELD_TYPE_INTEGER;
+		} else if (window.isFloat(pos, columnIndex)) {
+			type = Cursor.FIELD_TYPE_FLOAT;
+		} else if (window.isString(pos, columnIndex)) {
+			type = Cursor.FIELD_TYPE_STRING;
+		} else if (window.isBlob(pos, columnIndex)) {
+			type = Cursor.FIELD_TYPE_BLOB;
+		} else {
+			throw new IllegalArgumentException("Column has no type.");
+		}
+		return type;
 	}
 
 	protected DatabaseTools() {

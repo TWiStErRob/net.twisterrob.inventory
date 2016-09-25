@@ -19,6 +19,8 @@ import android.widget.ImageView;
 
 import static android.support.test.InstrumentationRegistry.*;
 
+import net.twisterrob.android.utils.tools.DatabaseTools;
+
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
@@ -33,16 +35,52 @@ public class AndroidMatchers {
 			@NonNull String propertyName, @NonNull Matcher<?> valueMatcher) {
 		return HasPropertyWithValueLite.hasProperty(propertyName, valueMatcher);
 	}
-	public static @NonNull Matcher<Cursor> hasColumn(
-			@NonNull String columnName, @NonNull Matcher<String> valueMatcher) {
-		return CursorHasColumn.hasColumn(columnName, valueMatcher);
-	}
 	public static @NonNull Matcher<View> anyView() {
 		return any(View.class);
 	}
 	public static @NonNull Matcher<String> containsStringRes(@StringRes int stringId) {
 		return Matchers.containsString(getTargetContext().getResources().getString(stringId));
 	}
+
+	// region Cursor matchers
+	public static Matcher<Cursor> withNoColumn(final String columnName) {
+		return new TypeSafeDiagnosingMatcher<Cursor>() {
+			@Override protected boolean matchesSafely(Cursor cursor, Description mismatchDescription) {
+				int columnIndex = cursor.getColumnIndex(columnName);
+				if (columnIndex != DatabaseTools.INVALID_COLUMN) {
+					mismatchDescription
+							.appendText("Column named ")
+							.appendValue(columnName)
+							.appendText(" found in ")
+							.appendValueList("[", ", ", "]", cursor.getColumnNames());
+					return false;
+				}
+				return true;
+			}
+			@Override public void describeTo(Description description) {
+				description.appendText("with no column named ").appendValue(columnName);
+			}
+		};
+	}
+	public static Matcher<Cursor> withStringColumn(String columnName, Matcher<String> valueMatcher) {
+		return withColumn(columnName, String.class, valueMatcher);
+	}
+	public static Matcher<Cursor> withColumn(String columnName, String expectedValue) {
+		return withStringColumn(columnName, is(expectedValue));
+	}
+	public static Matcher<Cursor> withColumn(String columnName, long expectedValue) {
+		return withColumn(columnName, Long.TYPE, is(expectedValue));
+	}
+	public static Matcher<Cursor> withColumn(String columnName, Long expectedValue) {
+		return withLongColumn(columnName, is(expectedValue));
+	}
+	public static Matcher<Cursor> withLongColumn(String columnName, Matcher<Long> valueMatcher) {
+		return withColumn(columnName, Long.class, valueMatcher);
+	}
+	public static <T> Matcher<Cursor> withColumn(String columnName, Class<T> columnType, Matcher<T> valueMatcher) {
+		return new CursorHasColumn<>(columnName, columnType, valueMatcher);
+	}
+	// endregion
 
 	// region BuildConfig matchers
 	public static @NonNull Matcher<Class<?>> isDebuggable() {

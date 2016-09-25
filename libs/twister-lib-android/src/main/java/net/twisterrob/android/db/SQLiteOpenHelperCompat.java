@@ -44,8 +44,6 @@ import android.support.annotation.*;
  */
 @RequiresApi(VERSION_CODES.GINGERBREAD_MR1)
 public class SQLiteOpenHelperCompat extends SQLiteOpenHelper {
-	public static final int CURSOR_NO_COLUMN = -1;
-
 	protected final Context context;
 	private final String name;
 	private boolean needsConfigure;
