@@ -1,9 +1,9 @@
 package net.twisterrob.inventory.android.activity.data;
 
-import android.app.AlertDialog;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.SingleFragmentActivity;
@@ -20,8 +20,8 @@ public abstract class BaseEditActivity<E extends BaseEditFragment<?, ?>> extends
 	@Override public void onBackPressed() {
 		if (getFragment().isDirty()) {
 			new AlertDialog.Builder(this)
-					.setTitle("Unsaved changes")
-					.setMessage("Continuing will discard any changes.")
+					.setTitle(R.string.generic_edit_dirty_title)
+					.setMessage(R.string.generic_edit_dirty_message)
 					.setNegativeButton(android.R.string.cancel, null)
 					.setPositiveButton(android.R.string.ok, new OnClickListener() {
 						@Override public void onClick(DialogInterface dialog, int which) {

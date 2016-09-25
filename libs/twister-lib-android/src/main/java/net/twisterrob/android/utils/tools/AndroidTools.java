@@ -16,7 +16,7 @@ import android.app.*;
 import android.content.*;
 import android.content.pm.*;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Configuration;
+import android.content.res.*;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -121,6 +121,10 @@ public /*static*/ abstract class AndroidTools {
 		return getResourceID(context, RES_TYPE_RAW, rawResourceName);
 	}
 
+	public static @IdRes int getIDResourceID(@Nullable Context context, String idResourceName) {
+		return getResourceID(context, RES_TYPE_ID, idResourceName);
+	}
+
 	public static @ColorRes int getColorResourceID(@Nullable Context context, String drawableResourceName) {
 		return getResourceID(context, RES_TYPE_COLOR, drawableResourceName);
 	}
@@ -186,9 +190,11 @@ public /*static*/ abstract class AndroidTools {
 
 	private static @AnyRes int getResourceID(@Nullable Context context,
 			@NonNull String resourceType, @NonNull String resourceName) {
-		int resID = INVALID_RESOURCE_ID;
+		int resID;
 		if (context != null) {
 			resID = context.getResources().getIdentifier(resourceName, resourceType, context.getPackageName());
+		} else {
+			resID = Resources.getSystem().getIdentifier(resourceName, resourceType, ANDROID_PACKAGE);
 		}
 		if (resID == INVALID_RESOURCE_ID) {
 			LOG.warn("No {} resource found with name '{}' in package '{}'",

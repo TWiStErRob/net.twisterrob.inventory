@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.content;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import org.slf4j.*;
@@ -99,11 +100,17 @@ public class Database extends VariantDatabase {
 		return rawInsert(getReadableDatabase(), queryResource, params);
 	}
 
-	private Long getID(@StringRes int queryResource, Object... params) {
+	public Long getID(@StringRes int queryResource, Object... params) {
 		Cursor cursor = rawQuery(queryResource, params);
 		try {
+			if (2 <= cursor.getCount()) {
+				String name = m_resources.getResourceEntryName(queryResource);
+				String paramString = Arrays.toString(params);
+				throw new IllegalStateException(
+						"Multiple rows found when querying ID for " + name + "(" + paramString + ")");
+			}
 			if (cursor.moveToFirst()) {
-				return cursor.getLong(0);
+				return cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
 			} else {
 				return null;
 			}

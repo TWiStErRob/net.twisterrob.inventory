@@ -105,6 +105,9 @@
 	<string name="generic_error_empty_text">Please enter some text!</string>
 	<string name="generic_error_missing" tools:ignore="PluralsCandidate">The %1$s with id=%2$d does not exist.</string>
 
+	<string name="generic_edit_dirty_title">Unsaved changes</string>
+	<string name="generic_edit_dirty_message">Continuing will discard any changes.</string>
+
 	<plurals name="selection_count">
 		<item quantity="other">%d selected</item>
 	</plurals>

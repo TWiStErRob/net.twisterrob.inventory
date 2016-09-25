@@ -15,7 +15,7 @@ import net.twisterrob.java.utils.StringTools;
 public class VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class); // intentionally other class
 
-	private final Resources m_resources;
+	protected final Resources m_resources;
 
 	public VariantDatabase(Resources resources) {
 		m_resources = resources;

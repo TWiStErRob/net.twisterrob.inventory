@@ -16,7 +16,7 @@ public class VariantDatabase {
 	@SuppressWarnings("LoggerInitializedWithForeignClass") // intentionally other class
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
 
-	private final Resources m_resources;
+	protected final Resources m_resources;
 
 	public VariantDatabase(Resources resources) {
 		m_resources = resources;
