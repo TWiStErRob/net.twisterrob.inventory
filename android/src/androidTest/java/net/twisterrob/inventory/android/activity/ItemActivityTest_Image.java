@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -21,6 +22,8 @@ import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.activity.CaptureImageActivityActor;
+import net.twisterrob.android.test.Helpers;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
 import net.twisterrob.inventory.android.content.Intents;
@@ -31,7 +34,6 @@ import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
 import static net.twisterrob.inventory.android.content.DatabaseMatchers.*;
-import static net.twisterrob.inventory.android.test.InventoryEspressoUtils.*;
 
 @RunWith(AndroidJUnit4.class)
 public class ItemActivityTest_Image {
@@ -48,6 +50,7 @@ public class ItemActivityTest_Image {
 		}
 	};
 	@Rule public final TestDatabaseRule db = new TestDatabaseRule();
+	private final CaptureImageActivityActor capture = new CaptureImageActivityActor();
 
 	@LargeTest
 	@Test public void testImageDeletedWithItem() throws IOException {
@@ -61,7 +64,8 @@ public class ItemActivityTest_Image {
 		onRecyclerItem(withText(TEST_ITEM)).perform(click());
 		onView(withId(R.id.action_item_edit)).perform(click());
 
-		Matcher<Intent> cameraIntent = intendCamera(temp.newFile(), TEST_ITEM + "\nin " + name.getMethodName());
+		Bitmap bitmap = Helpers.createMockBitmap(TEST_ITEM + "\n" + name.getMethodName());
+		Matcher<Intent> cameraIntent = capture.intendCamera(temp.newFile(), bitmap);
 		onView(withId(R.id.action_picture_get)).perform(click());
 		intended(cameraIntent);
 		onView(withId(R.id.btn_save)).perform(click());

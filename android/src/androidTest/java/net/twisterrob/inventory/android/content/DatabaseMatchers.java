@@ -10,6 +10,7 @@ import android.support.annotation.*;
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.debug.test.R;
 
+/** @deprecated refactor to use {@link DatabaseActor} */
 public class DatabaseMatchers {
 	public static @NonNull Matcher<? super Database> countImages(final Matcher<? super Long> countMatcher) {
 		return new TypeSafeDiagnosingMatcher<Database>() {

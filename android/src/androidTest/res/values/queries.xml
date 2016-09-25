@@ -3,6 +3,12 @@
 	<string name="query_image_count" translatable="false"><![CDATA["
 		select count(*) from Image;
 	"]]></string>
+	<string name="query_property_by_name" translatable="false"><![CDATA["
+		select _id from Property where name = ?;
+	"]]></string>
+	<string name="query_property_type_by_name" translatable="false"><![CDATA["
+		select _id from PropertyType where name = ?;
+	"]]></string>
 	<string name="query_property_exists_by_name" translatable="false"><![CDATA["
 		select 1 from Property where name = ?;
 	"]]></string>
