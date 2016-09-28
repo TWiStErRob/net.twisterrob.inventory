@@ -18,9 +18,11 @@ import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static android.view.WindowManager.LayoutParams.*;
 
+import net.twisterrob.android.test.espresso.idle.ToastIdlingResource;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
+import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 public class DialogMatchers {
 	public static final int BUTTON_POSITIVE = android.R.id.button1;
@@ -54,6 +56,29 @@ public class DialogMatchers {
 	 */
 	public static Matcher<Root> isToast() {
 		return new WindowManagerLayoutParamTypeMatcher("is toast", WindowManager.LayoutParams.TYPE_TOAST);
+	}
+	public static void assertNoToastIsDisplayed() {
+		onView(isRoot())
+				.inRoot(isToast())
+				.withFailureHandler(new PassMissingRoot())
+				.check(matches(not(anything("toast root existed"))))
+		;
+	}
+	public static ViewAction waitForToastsToDisappear() {
+		return new ViewAction() {
+			@Override public Matcher<View> getConstraints() {
+				return anyView();
+			}
+			@Override public String getDescription() {
+				return "wait for Toast to disappear";
+			}
+			@Override public void perform(UiController uiController, View view) {
+				ToastIdlingResource toastIdler = new ToastIdlingResource();
+				Espresso.registerIdlingResources(toastIdler);
+				uiController.loopMainThreadUntilIdle();
+				Espresso.unregisterIdlingResources(toastIdler);
+			}
+		};
 	}
 
 	public static Matcher<Root> isPopupMenu() {

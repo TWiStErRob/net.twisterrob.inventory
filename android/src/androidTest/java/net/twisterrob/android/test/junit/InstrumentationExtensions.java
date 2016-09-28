@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
-import android.app.Activity;
+import android.app.*;
 import android.os.Looper;
 import android.support.annotation.*;
 import android.support.test.InstrumentationRegistry;
@@ -16,21 +16,41 @@ import static android.support.test.espresso.core.deps.guava.collect.Iterables.*;
 
 public class InstrumentationExtensions {
 	public static @NonNull Stage getActivityStage(final @NonNull Activity activity) {
-		return runOnMainIfNecessary(new Callable<Stage>() {
+		return callOnMainIfNecessary(new Callable<Stage>() {
 			@Override public Stage call() throws Exception {
 				return ActivityLifecycleMonitorRegistry.getInstance().getLifecycleStageOf(activity);
 			}
 		});
 	}
 	public static @NonNull Collection<Activity> getActivitiesInStage(final @NonNull Stage stage) {
-		return runOnMainIfNecessary(new Callable<Collection<Activity>>() {
+		return callOnMainIfNecessary(new Callable<Collection<Activity>>() {
 			@Override public Collection<Activity> call() throws Exception {
 				return ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(stage);
 			}
 		});
 	}
+	public static @NonNull <T extends Activity> Collection<T> getActivitiesByType(@NonNull Class<T> activityType) {
+		Collection<Activity> activities = getAllActivities();
+		List<T> result = new ArrayList<>();
+		for (Activity activity : activities) {
+			if (activityType.isInstance(activity)) {
+				result.add(activityType.cast(activity));
+			}
+		}
+		return result;
+	}
+	/**
+	 * @throws NoSuchElementException if there's no such activity
+	 * @throws IllegalArgumentException if there are multiple activities
+	 */
+	public static @NonNull <T extends Activity> T getActivityByType(@NonNull Class<T> activityType)
+			throws NoSuchElementException, IllegalArgumentException {
+		Collection<T> activities = getActivitiesByType(activityType);
+		return getOnlyElement(activities);
+	}
+
 	public static @NonNull Collection<Activity> getAllActivities() {
-		return runOnMainIfNecessary(new Callable<Collection<Activity>>() {
+		return callOnMainIfNecessary(new Callable<Collection<Activity>>() {
 			@Override public Collection<Activity> call() throws Exception {
 				ActivityLifecycleMonitor monitor = ActivityLifecycleMonitorRegistry.getInstance();
 				List<Activity> activities = new ArrayList<>();
@@ -42,7 +62,7 @@ public class InstrumentationExtensions {
 		});
 	}
 	public static @NonNull Map<Stage, Collection<Activity>> getAllActivitiesByStage() {
-		return runOnMainIfNecessary(new Callable<Map<Stage, Collection<Activity>>>() {
+		return callOnMainIfNecessary(new Callable<Map<Stage, Collection<Activity>>>() {
 			@Override public Map<Stage, Collection<Activity>> call() throws Exception {
 				ActivityLifecycleMonitor monitor = ActivityLifecycleMonitorRegistry.getInstance();
 				Map<Stage, Collection<Activity>> activities = new EnumMap<>(Stage.class);
@@ -73,7 +93,7 @@ public class InstrumentationExtensions {
 		return activities.isEmpty()? null : getOnlyElement(activities);
 	}
 
-	public static <T> T runOnMainIfNecessary(final @NonNull Callable<T> resultProvider) {
+	public static <T> T callOnMainIfNecessary(final @NonNull Callable<T> resultProvider) {
 		if (Looper.myLooper() == Looper.getMainLooper()) {
 			try {
 				return resultProvider.call();
@@ -82,9 +102,13 @@ public class InstrumentationExtensions {
 				throw new RuntimeException("Unexpected exception", e);
 			}
 		}
-		InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+		return callOnMain(resultProvider);
+	}
+	public static <T> T callOnMain(@NonNull final Callable<T> resultProvider) {
+		Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+		instrumentation.waitForIdleSync();
 		final AtomicReference<T> ref = new AtomicReference<>();
-		InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+		instrumentation.runOnMainSync(new Runnable() {
 			@Override public void run() {
 				try {
 					ref.set(resultProvider.call());
@@ -95,6 +119,23 @@ public class InstrumentationExtensions {
 			}
 		});
 		return ref.get();
+	}
+
+	public static void runOnMainIfNecessary(@NonNull final Runnable action) {
+		if (Looper.myLooper() == Looper.getMainLooper()) {
+			try {
+				action.run();
+			} catch (Exception e) {
+				propagateIfPossible(e);
+				throw new RuntimeException("Unexpected exception", e);
+			}
+		}
+		runOnMain(action);
+	}
+	public static void runOnMain(@NonNull final Runnable action) {
+		Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+		instrumentation.waitForIdleSync();
+		instrumentation.runOnMainSync(action);
 	}
 
 	public static boolean getBooleanArgument(String key, boolean defaultValue) {

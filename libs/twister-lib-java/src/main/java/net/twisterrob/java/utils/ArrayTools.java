@@ -130,6 +130,9 @@ public final class ArrayTools {
 		}
 	}
 
+	/**
+	 * @see <a href="http://stackoverflow.com/a/784842/253468">How can I concatenate two arrays in Java?</a>
+	 */
 	@SafeVarargs
 	public static <T> T[] concat(T[] first, T[]... rest) {
 		int totalLength = first.length;
