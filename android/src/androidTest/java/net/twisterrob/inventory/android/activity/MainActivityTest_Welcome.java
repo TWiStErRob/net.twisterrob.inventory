@@ -12,13 +12,12 @@ import android.view.View;
 
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.intent.Intents.*;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
-import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.actors.*;
+import net.twisterrob.inventory.android.test.actors.MainActivityActor.WelcomeDialogActor;
 import net.twisterrob.test.junit.FlakyTestException;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
@@ -33,11 +32,13 @@ public class MainActivityTest_Welcome {
 
 	@Rule public ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class)
 			.dontClearWelcomeFlag();
+	private final MainActivityActor main = new MainActivityActor();
 
 	@Test public void testWelcomeDontPopulateDemo() {
-		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
+		WelcomeDialogActor welcome = main.assertWelcomeShown();
+
 		long beforePotentiallyLongAction = System.currentTimeMillis();
-		clickNegativeInDialog();
+		welcome.dontPopulateDemo();
 
 		checkToasted(beforePotentiallyLongAction);
 		onView(withId(R.id.properties)).check(EMPTY);
@@ -47,9 +48,10 @@ public class MainActivityTest_Welcome {
 	}
 
 	@Test public void testWelcomePopulateDemo() {
-		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
+		WelcomeDialogActor welcome = main.assertWelcomeShown();
+
 		long beforePotentiallyLongAction = System.currentTimeMillis();
-		clickPositiveInDialog();
+		welcome.populateDemo();
 
 		checkToasted(beforePotentiallyLongAction);
 		onView(withId(R.id.properties)).check(NON_EMPTY);
@@ -59,9 +61,11 @@ public class MainActivityTest_Welcome {
 	}
 
 	@Test public void testWelcomeBackup() {
-		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
-		clickNeutralInDialog();
-		intended(allOf(isInternal(), hasComponent(BackupActivity.class.getName())));
+		WelcomeDialogActor welcome = main.assertWelcomeShown();
+
+		BackupActivityActor backup = welcome.invokeBackup();
+
+		backup.openedViaIntent();
 	}
 
 	private void checkToasted(long start) {

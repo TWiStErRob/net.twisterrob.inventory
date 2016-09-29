@@ -18,8 +18,8 @@ import net.twisterrob.android.test.espresso.DialogMatchers;
 import net.twisterrob.android.test.junit.TestWatcherStatus;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.PropertyEditActivity;
-import net.twisterrob.inventory.android.content.DatabaseActor;
-import net.twisterrob.inventory.android.test.*;
+import net.twisterrob.inventory.android.content.DataBaseActor;
+import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.PropertyEditActivityActor;
 
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
@@ -29,16 +29,15 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 public class PropertyEditActivityTest_Create {
 	@Rule public final ActivityTestRule<PropertyEditActivity> activity
 			= new InventoryActivityRule<>(PropertyEditActivity.class);
-	@Rule public final TestDatabaseRule db = new TestDatabaseRule();
+	@Rule public final DataBaseActor db = new DataBaseActor();
 	@Rule public TemporaryFolder temp = new TemporaryFolder();
 	@Rule public TestName name = new TestName();
 	@Rule public TestWatcherStatus status = new TestWatcherStatus();
 
 	private final PropertyEditActivityActor propertyEditor = new PropertyEditActivityActor();
-	private final DatabaseActor database = new DatabaseActor(db);
 
-	@Before public void preconditions() {
-		database.assertHasNoProperties();
+	@Before public void preconditionsForCreatingAProperty() {
+		db.assertHasNoProperties();
 	}
 
 	@After public void lastOperationFinishesActivity() {
@@ -51,7 +50,7 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.setName(TEST_PROPERTY);
 		propertyEditor.save();
 
-		database.assertHasProperty(TEST_PROPERTY);
+		db.assertHasProperty(TEST_PROPERTY);
 	}
 
 	@Test public void testNameSavedAfterChange() throws IOException {
@@ -59,22 +58,21 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.setName(TEST_PROPERTY_OTHER);
 		propertyEditor.save();
 
-		database.assertHasProperty(TEST_PROPERTY_OTHER);
+		db.assertHasProperty(TEST_PROPERTY_OTHER);
 	}
 
 	@Test public void testCreateExisting() throws IOException {
-		database.createProperty(TEST_PROPERTY);
-		database.assertHasProperty(TEST_PROPERTY);
+		db.createProperty(TEST_PROPERTY);
+		db.assertHasProperty(TEST_PROPERTY);
 
 		propertyEditor.setName(TEST_PROPERTY);
-		propertyEditor.save();
+		propertyEditor.save().checkToastAlreadyExists();
 
-		propertyEditor.checkToastAlreadyExists();
 		propertyEditor.assertIsOpen();
-		database.assertHasProperty(TEST_PROPERTY);
+		db.assertHasProperty(TEST_PROPERTY);
 
 		// clean up activity
-		propertyEditor.tryClose();
+		propertyEditor.close();
 		propertyEditor.confirmDirtyDialog();
 	}
 
@@ -83,7 +81,7 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.setDescription(TEST_DESCRIPTION);
 
 		propertyEditor.save();
-		database.assertPropertyHasDescription(TEST_PROPERTY, TEST_DESCRIPTION);
+		db.assertPropertyHasDescription(TEST_PROPERTY, TEST_DESCRIPTION);
 	}
 
 	@Test public void testDescriptionSavedAfterChange() throws IOException {
@@ -92,7 +90,7 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.setDescription(TEST_DESCRIPTION_OTHER);
 
 		propertyEditor.save();
-		database.assertPropertyHasDescription(TEST_PROPERTY, TEST_DESCRIPTION_OTHER);
+		db.assertPropertyHasDescription(TEST_PROPERTY, TEST_DESCRIPTION_OTHER);
 	}
 
 	@Test public void testTypeSaved() throws IOException {
@@ -101,7 +99,7 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.setType(TEST_PROPERTY_TYPE);
 
 		propertyEditor.save();
-		database.assertPropertyHasType(TEST_PROPERTY, TEST_PROPERTY_TYPE);
+		db.assertPropertyHasType(TEST_PROPERTY, TEST_PROPERTY_TYPE);
 	}
 
 	@Test public void testTypeSavedAfterChange() throws IOException {
@@ -111,7 +109,7 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.setType(TEST_PROPERTY_TYPE_OTHER);
 
 		propertyEditor.save();
-		database.assertPropertyHasType(TEST_PROPERTY, TEST_PROPERTY_TYPE_OTHER);
+		db.assertPropertyHasType(TEST_PROPERTY, TEST_PROPERTY_TYPE_OTHER);
 	}
 
 	@Test public void testImageSaved() throws IOException {
@@ -119,7 +117,7 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.takePicture(temp.newFile(), TEST_IMAGE_COLOR, TEST_PROPERTY + "\n" + name.getMethodName());
 
 		propertyEditor.save();
-		database.assertPropertyHasImage(TEST_PROPERTY, TEST_IMAGE_COLOR);
+		db.assertPropertyHasImage(TEST_PROPERTY, TEST_IMAGE_COLOR);
 	}
 
 	@Test public void testImageSavedAfterChange() throws IOException {
@@ -128,7 +126,7 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.takePicture(temp.newFile(), TEST_IMAGE_COLOR_OTHER, "second image\n" + name.getMethodName());
 
 		propertyEditor.save();
-		database.assertPropertyHasImage(TEST_PROPERTY, TEST_IMAGE_COLOR_OTHER);
+		db.assertPropertyHasImage(TEST_PROPERTY, TEST_IMAGE_COLOR_OTHER);
 	}
 
 	@Test public void testRotate() throws IOException {
@@ -136,11 +134,11 @@ public class PropertyEditActivityTest_Create {
 
 		propertyEditor.rotate();
 		checkEverythingFilledIn();
-		database.assertHasNoProperty(TEST_PROPERTY);
+		db.assertHasNoProperty(TEST_PROPERTY);
 
 		propertyEditor.rotate();
 		checkEverythingFilledIn();
-		database.assertHasNoProperty(TEST_PROPERTY);
+		db.assertHasNoProperty(TEST_PROPERTY);
 
 		propertyEditor.save();
 		checkEverythingSaved();
@@ -148,13 +146,13 @@ public class PropertyEditActivityTest_Create {
 
 	@Test(expected = NoActivityResumedException.class)
 	public void testDirtyInitiallyClean() {
-		propertyEditor.tryClose();
+		propertyEditor.close();
 		DialogMatchers.assertNoDialogIsDisplayed();
 	}
 
 	@Test public void testDirtyCanSave() throws IOException {
 		fillInEverything();
-		propertyEditor.tryClose();
+		propertyEditor.close();
 		propertyEditor.saveFromDirtyDialog();
 		checkEverythingSaved();
 	}
@@ -229,21 +227,21 @@ public class PropertyEditActivityTest_Create {
 			throws Throwable {
 		// triggers dirty
 		doFirstEdit.execute();
-		propertyEditor.tryClose();
+		propertyEditor.close();
 		propertyEditor.cancelDirtyDialog();
-		database.assertHasNoProperties();
+		db.assertHasNoProperties();
 		checkFirstEditPreserved.execute();
 		// still dirty after cancel
-		propertyEditor.tryClose();
+		propertyEditor.close();
 		propertyEditor.cancelDirtyDialog();
-		database.assertHasNoProperties();
+		db.assertHasNoProperties();
 		checkFirstEditPreserved.execute();
 		// new change still leaves it dirty
 		doSecondEdit.execute();
-		propertyEditor.tryClose();
+		propertyEditor.close();
 		propertyEditor.confirmDirtyDialog();
 		// data wasn't saved
-		database.assertHasNoProperties();
+		db.assertHasNoProperties();
 	}
 
 	private void fillInEverything() throws IOException {
@@ -259,10 +257,10 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.checkPicture(TEST_IMAGE_COLOR);
 	}
 	private void checkEverythingSaved() {
-		database.assertHasProperty(TEST_PROPERTY);
-		database.assertPropertyHasDescription(TEST_PROPERTY, TEST_DESCRIPTION);
-		database.assertPropertyHasType(TEST_PROPERTY, TEST_PROPERTY_TYPE);
-		database.assertPropertyHasImage(TEST_PROPERTY, TEST_IMAGE_COLOR);
+		db.assertHasProperty(TEST_PROPERTY);
+		db.assertPropertyHasDescription(TEST_PROPERTY, TEST_DESCRIPTION);
+		db.assertPropertyHasType(TEST_PROPERTY, TEST_PROPERTY_TYPE);
+		db.assertPropertyHasImage(TEST_PROPERTY, TEST_IMAGE_COLOR);
 	}
 
 	interface DirtyAction {

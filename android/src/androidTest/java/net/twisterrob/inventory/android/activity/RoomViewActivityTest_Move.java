@@ -6,31 +6,17 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.intent.Intents.*;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import net.twisterrob.android.test.espresso.DialogMatchers;
+import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.actors.*;
 
-import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.content.Intents;
-import net.twisterrob.inventory.android.content.Intents.Extras;
-import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.test.*;
-
-import static net.twisterrob.android.test.espresso.DialogMatchers.*;
-import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
-import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
-import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
-import static net.twisterrob.inventory.android.content.DatabaseMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 public class RoomViewActivityTest_Move {
@@ -38,113 +24,101 @@ public class RoomViewActivityTest_Move {
 			= new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();
-			long propertyID = App.db().createProperty(PropertyType.DEFAULT, TEST_PROPERTY, NO_DESCRIPTION);
-			roomID = App.db().createRoom(propertyID, RoomType.DEFAULT, TEST_ROOM, NO_DESCRIPTION);
+			long propertyID = db.createProperty(TEST_PROPERTY);
+			roomID = db.createRoom(propertyID, TEST_ROOM);
 			getStartIntent().putExtras(Intents.bundleFromRoom(roomID));
-			targetID = App.db().createProperty(PropertyType.DEFAULT, TEST_PROPERTY_OTHER, NO_DESCRIPTION);
+			db.createProperty(TEST_PROPERTY_OTHER);
 		}
 	};
-	@Rule public final TestDatabaseRule db = new TestDatabaseRule();
+	@Rule public final DataBaseActor db = new DataBaseActor();
+	private final RoomViewActivityActor roomView = new RoomViewActivityActor();
+	private final PropertyViewActivityActor propertyView = new PropertyViewActivityActor();
 	private long roomID;
-	private long targetID;
 
-	@Before public void preconditions() {
-		assertThat(db.get(), hasInvProperty(TEST_PROPERTY));
-		assertThat(db.get(), both(hasInvRoom(TEST_ROOM)).and(hasInvRoomInProperty(TEST_PROPERTY, TEST_ROOM)));
-		assertThat(db.get(), hasInvProperty(TEST_PROPERTY_OTHER));
-		assertThat(db.get(), not(hasInvRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM)));
+	@Before public void preconditionsForMovingRoomBetweenProperties() {
+		db.assertHasProperty(TEST_PROPERTY);
+		db.assertHasRoomInProperty(TEST_PROPERTY, TEST_ROOM);
+
+		db.assertHasProperty(TEST_PROPERTY_OTHER);
+		db.assertHasNoRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM);
 	}
 	@After public void closeDialog() {
-		attemptCloseDialog();
+		DialogMatchers.attemptCloseDialog();
 	}
 
 	@Test public void testMoveCancel() throws IOException {
-		assertThat(db.get(), hasInvRoom(TEST_ROOM));
+		db.assertHasRoom(TEST_ROOM);
 
-		onActionMenuView(withText(R.string.room_move)).perform(click());
-		{
-			MoveTargetActivityActions.cancel();
-		}
+		MoveTargetActivityActor move = roomView.move();
+		move.cancel();
 
-		assertThat(db.get(), hasInvRoom(TEST_ROOM));
+		db.assertHasRoom(TEST_ROOM);
 	}
 
 	@Test public void testMoveConfirmMessage() throws IOException {
-		onActionMenuView(withText(R.string.room_move)).perform(click());
-		{
-			MoveTargetActivityActions.selectProperty(TEST_PROPERTY_OTHER);
-			MoveTargetActivityActions.confirm();
-		}
+		MoveTargetActivityActor move = roomView.move();
+		move.selectProperty(TEST_PROPERTY_OTHER);
+		MoveResultActor moveDialog = move.confirmSelection();
 
-		onView(withText(matchesPattern("%\\d"))).check(doesNotExist());
-		onView(isDialogMessage()).check(matches(allOf(
-				isDisplayed(),
-				withText(containsString(TEST_ROOM)),
-				withText(containsString(TEST_PROPERTY))
-		)));
+		moveDialog.checkDialogMessage(allOf(containsString(TEST_ROOM), containsString(TEST_PROPERTY)));
 	}
 
 	@Test public void testMoveConfirmCancel() throws IOException {
-		onActionMenuView(withText(R.string.room_move)).perform(click());
-		{
-			MoveTargetActivityActions.selectProperty(TEST_PROPERTY_OTHER);
-			MoveTargetActivityActions.confirm();
-		}
-		clickNegativeInDialog();
+		MoveTargetActivityActor move = roomView.move();
+		move.selectProperty(TEST_PROPERTY_OTHER);
+		MoveResultActor moveDialog = move.confirmSelection();
+		moveDialog.cancel();
 
-		assertThat(db.get(), both(hasInvRoom(TEST_ROOM)).and(hasInvRoomInProperty(TEST_PROPERTY, TEST_ROOM)));
-		assertRecyclerItemDoesNotExists(withText(TEST_ROOM));
+		db.assertHasRoomInProperty(TEST_PROPERTY, TEST_ROOM);
+		roomView.assertShowing(TEST_ROOM);
 	}
 
 	@Test public void testMove() throws IOException {
-		onActionMenuView(withText(R.string.room_move)).perform(click());
-		{
-			MoveTargetActivityActions.selectProperty(TEST_PROPERTY_OTHER);
-			MoveTargetActivityActions.confirm();
-		}
-		clickPositiveInDialog();
+		MoveTargetActivityActor move = roomView.move();
+		move.selectProperty(TEST_PROPERTY_OTHER);
+		MoveResultActor moveDialog = move.confirmSelection();
+		moveDialog.confirm();
 
-		assertThat(db.get(), both(hasInvRoom(TEST_ROOM)).and(hasInvRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM)));
-		assertPropertyOpenedWithVisibleRoom(targetID, TEST_ROOM);
+		db.assertHasRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM);
+		propertyView.assertShowing(TEST_PROPERTY_OTHER);
+		roomView.assertClosing();
+		propertyView.hasRoom(TEST_ROOM);
 	}
 	@Test public void testMoveWithContents() throws IOException {
-		long itemID = App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
-		App.db().createItem(itemID, Category.DEFAULT, TEST_SUBITEM, NO_DESCRIPTION);
-		assertThat(db.get(), both(hasInvItem(TEST_ITEM)).and(hasInvItemInRoom(TEST_ROOM, TEST_ITEM)));
-		assertThat(db.get(), both(hasInvItem(TEST_SUBITEM)).and(hasInvItemIn(TEST_ITEM, TEST_SUBITEM)));
+		long itemID = db.createItemInRoom(roomID, TEST_ITEM);
+		db.createItem(itemID, TEST_SUBITEM);
+		db.assertHasItemInRoom(TEST_ROOM, TEST_ITEM);
+		db.assertHasItemInItem(TEST_ITEM, TEST_SUBITEM);
 
-		testMove();
+		MoveTargetActivityActor move = roomView.move();
+		move.selectProperty(TEST_PROPERTY_OTHER);
+		MoveResultActor moveDialog = move.confirmSelection();
+		moveDialog.confirm();
 
-		assertThat(db.get(), both(hasInvItem(TEST_ITEM)).and(hasInvItemInRoom(TEST_ROOM, TEST_ITEM)));
-		assertThat(db.get(), both(hasInvItem(TEST_SUBITEM)).and(hasInvItemIn(TEST_ITEM, TEST_SUBITEM)));
+		db.assertHasRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM);
+		db.assertHasItemInRoom(TEST_ROOM, TEST_ITEM);
+		db.assertHasItemInItem(TEST_ITEM, TEST_SUBITEM);
+		propertyView.assertShowing(TEST_PROPERTY_OTHER);
+		roomView.assertClosing();
+		propertyView.hasRoom(TEST_ROOM);
 	}
 
 	@Test public void testMoveAlreadyExists() throws IOException {
-		long duplicateID = App.db().createRoom(targetID, RoomType.DEFAULT, TEST_ROOM, NO_DESCRIPTION);
-		assertThat(db.get(), both(hasInvRoom(TEST_ROOM)).and(hasInvRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM)));
+		@SuppressWarnings("unused")
+		long duplicateID = db.createRoom(TEST_PROPERTY_OTHER, TEST_ROOM);
 
-		onActionMenuView(withText(R.string.room_move)).perform(click());
-		{
-			MoveTargetActivityActions.selectProperty(TEST_PROPERTY_OTHER);
-			MoveTargetActivityActions.confirm();
-		}
-		clickPositiveInDialog();
+		MoveTargetActivityActor move = roomView.move();
+		move.selectProperty(TEST_PROPERTY_OTHER);
+		MoveResultActor moveDialog = move.confirmSelection();
+		moveDialog.confirm();
 
-		assertThat(db.get(), hasInvRoom(TEST_ROOM));
-		assertThat(db.get(), hasInvRoomInProperty(TEST_PROPERTY, TEST_ROOM));
-		assertThat(db.get(), hasInvRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM));
+		db.assertHasRoom(TEST_ROOM);
+		db.assertHasRoomInProperty(TEST_PROPERTY, TEST_ROOM);
+		db.assertHasRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM);
 
-		onView(isDialogMessage()).inRoot(isToast()).check(matches(allOf(
-				isDisplayed(),
-				withText(containsString(TEST_ROOM)),
-				withText(containsStringRes(R.string.generic_error_unique_name)),
-				withText(containsString(TEST_PROPERTY_OTHER))
-		)));
-	}
-
-	private void assertPropertyOpenedWithVisibleRoom(long propertyID, String roomName) {
-		intended(allOf(hasComponent(PropertyViewActivity.class.getName()), hasExtra(Extras.PROPERTY_ID, propertyID)));
-		assertThat(activity.getActivity(), isFinishing());
-		onRecyclerItem(withText(roomName)).check(matches(isDisplayed()));
+		moveDialog.checkToastMessageDuplicate(allOf(
+				containsString(TEST_ROOM),
+				containsString(TEST_PROPERTY_OTHER)
+		));
 	}
 }

@@ -10,15 +10,10 @@ import net.twisterrob.inventory.android.content.Database;
 
 /**
  * It is safe to apply this rule at any time,
- * because it won't open the database until the first query on the returned DB from {@link #get()}.
+ * because it won't open the database until the first query on {@link #testDB}.
  */
 public class TestDatabaseRule implements TestRule {
-	private Database db;
-
-	/** @deprecated FIXME get rid of usages in assertThat in favor of DatabaseActor */
-	public Database get() {
-		return db;
-	}
+	protected Database testDB;
 
 	@Override public Statement apply(final Statement base, Description description) {
 		return new DatabaseStatement(base);
@@ -31,10 +26,10 @@ public class TestDatabaseRule implements TestRule {
 		}
 		@Override public void evaluate() throws Throwable {
 			try {
-				db = new Database(getTargetContext(), getContext().getResources());
+				testDB = new Database(getTargetContext(), getContext().getResources());
 				base.evaluate();
 			} finally {
-				db.getWritableDatabase().close();
+				testDB.getWritableDatabase().close();
 			}
 		}
 	}

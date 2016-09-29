@@ -58,7 +58,7 @@ public class DialogMatchers {
 		return new WindowManagerLayoutParamTypeMatcher("is toast", WindowManager.LayoutParams.TYPE_TOAST);
 	}
 	public static void assertNoToastIsDisplayed() {
-		onView(isRoot())
+		onView(withId(android.R.id.message))
 				.inRoot(isToast())
 				.withFailureHandler(new PassMissingRoot())
 				.check(matches(not(anything("toast root existed"))))

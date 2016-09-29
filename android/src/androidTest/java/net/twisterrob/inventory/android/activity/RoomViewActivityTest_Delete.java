@@ -1,33 +1,20 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.io.IOException;
-
 import org.junit.*;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
-
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.android.test.espresso.DialogMatchers;
 import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
-import net.twisterrob.inventory.android.content.Intents;
-import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.test.*;
+import net.twisterrob.inventory.android.content.*;
+import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.actors.*;
 
-import static net.twisterrob.android.test.espresso.DialogMatchers.*;
-import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
-import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
-import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
-import static net.twisterrob.inventory.android.content.DatabaseMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 public class RoomViewActivityTest_Delete {
@@ -35,89 +22,87 @@ public class RoomViewActivityTest_Delete {
 			= new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();
-			long propertyID = App.db().createProperty(PropertyType.DEFAULT, TEST_PROPERTY, NO_DESCRIPTION);
-			roomID = App.db().createRoom(propertyID, RoomType.DEFAULT, TEST_ROOM, NO_DESCRIPTION);
+			long propertyID = db.createProperty(TEST_PROPERTY);
+			roomID = db.createRoom(propertyID, TEST_ROOM);
 			getStartIntent().putExtras(Intents.bundleFromRoom(roomID));
 		}
 	};
-	@Rule public final TestDatabaseRule db = new TestDatabaseRule();
+	@Rule public final DataBaseActor db = new DataBaseActor();
+	private final RoomViewActivityActor roomView = new RoomViewActivityActor();
 	private long roomID;
 
-	@Before public void preconditions() {
-		assertThat(db.get(), hasInvProperty(TEST_PROPERTY));
-		assertThat(db.get(), hasInvRoom(TEST_ROOM));
+	@Before public void preconditionsForDeletingARoom() {
+		db.assertHasProperty(TEST_PROPERTY);
+		db.assertHasRoom(TEST_ROOM);
 	}
 	@After public void closeDialog() {
-		attemptCloseDialog();
+		DialogMatchers.attemptCloseDialog();
 	}
 
-	@Test public void testDeleteCancel() throws IOException {
-		assertThat(db.get(), hasInvRoom(TEST_ROOM));
+	@Test public void testDeleteCancel() {
+		DeleteDialogActor delete = roomView.delete();
+		delete.cancel();
 
-		onActionMenuView(withText(R.string.room_delete)).perform(click());
-		clickNegativeInDialog();
-
-		assertThat(db.get(), hasInvRoom(TEST_ROOM));
+		db.assertHasRoom(TEST_ROOM);
 	}
 
-	@Test public void testDeleteMessage() throws IOException {
-		onActionMenuView(withText(R.string.room_delete)).perform(click());
+	@Test public void testDeleteMessage() {
+		DeleteDialogActor delete = roomView.delete();
 
-		onView(withText(matchesPattern("%\\d"))).check(doesNotExist());
-		onView(isDialogMessage()).check(matches(allOf(
-				isDisplayed(),
-				withText(containsString(TEST_ROOM))
-		)));
+		delete.checkDialogMessage(containsString(TEST_ROOM));
 	}
-	@Test public void testDeleteMessageWithContents() throws IOException {
-		App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
+	@Test public void testDeleteMessageWithContents() {
+		db.createItemInRoom(roomID, TEST_ITEM);
 
-		testDeleteMessage();
+		DeleteDialogActor delete = roomView.delete();
 
-		onView(isDialogMessage()).check(matches(allOf(
-				isDisplayed(),
-				withText(containsString(TEST_ITEM))
-		)));
+		delete.checkDialogMessage(allOf(
+				containsString(TEST_ROOM),
+				containsString(TEST_ITEM)
+		));
 	}
-	@Test public void testDeleteMessageWithContentsMultiple() throws IOException {
-		App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
-		App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM_OTHER, NO_DESCRIPTION);
+	@Test public void testDeleteMessageWithContentsMultiple() {
+		db.createItemInRoom(roomID, TEST_ITEM);
+		db.createItemInRoom(roomID, TEST_ITEM_OTHER);
 
-		testDeleteMessage();
+		DeleteDialogActor delete = roomView.delete();
 
-		onView(isDialogMessage()).check(matches(allOf(
-				isDisplayed(),
-				withText(containsString(TEST_ITEM)),
-				withText(containsString(TEST_ITEM_OTHER))
-		)));
+		delete.checkDialogMessage(allOf(
+				containsString(TEST_ROOM),
+				containsString(TEST_ITEM),
+				containsString(TEST_ITEM_OTHER)
+		));
 	}
 
-	@Test public void testDeleteConfirm() throws IOException {
-		assertThat(db.get(), hasInvRoom(TEST_ROOM));
+	@Test public void testDeleteConfirm() {
+		DeleteDialogActor delete = roomView.delete();
+		delete.confirm();
 
-		onActionMenuView(withText(R.string.room_delete)).perform(click());
-		clickPositiveInDialog();
-
-		assertThat(db.get(), not(hasInvRoom(TEST_ROOM)));
-		assertThat(activity.getActivity(), isFinishing());
+		roomView.assertClosing();
+		db.assertHasNoRoom(TEST_ROOM);
 	}
-	@Test public void testDeleteConfirmWithContents() throws IOException {
-		App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
-		assertThat(db.get(), hasInvItem(TEST_ITEM));
 
-		testDeleteConfirm();
+	@Test public void testDeleteConfirmWithContents() {
+		db.createItemInRoom(roomID, TEST_ITEM);
 
-		assertThat(db.get(), not(hasInvItem(TEST_ITEM)));
+		DeleteDialogActor delete = roomView.delete();
+		delete.confirm();
+
+		roomView.assertClosing();
+		db.assertHasNoRoom(TEST_ROOM);
+		db.assertHasNoItem(TEST_ITEM);
 	}
-	@Test public void testDeleteConfirmWithContentsMultiple() throws IOException {
-		App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
-		App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM_OTHER, NO_DESCRIPTION);
-		assertThat(db.get(), hasInvItem(TEST_ITEM));
-		assertThat(db.get(), hasInvItem(TEST_ITEM_OTHER));
 
-		testDeleteConfirm();
+	@Test public void testDeleteConfirmWithContentsMultiple() {
+		db.createItemInRoom(roomID, TEST_ITEM);
+		db.createItemInRoom(roomID, TEST_ITEM_OTHER);
 
-		assertThat(db.get(), not(hasInvItem(TEST_ITEM)));
-		assertThat(db.get(), not(hasInvItem(TEST_ITEM_OTHER)));
+		DeleteDialogActor delete = roomView.delete();
+		delete.confirm();
+
+		roomView.assertClosing();
+		db.assertHasNoRoom(TEST_ROOM);
+		db.assertHasNoItem(TEST_ITEM);
+		db.assertHasNoItem(TEST_ITEM_OTHER);
 	}
 }

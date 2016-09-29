@@ -20,6 +20,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.*;
 import android.support.annotation.*;
 import android.support.test.annotation.Beta;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.*;
 import android.support.test.espresso.NoMatchingViewException.Builder;
 import android.support.test.espresso.core.deps.guava.collect.*;
@@ -41,6 +42,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
 import net.twisterrob.java.annotations.DebugHelper;
+import net.twisterrob.java.utils.ReflectionTools;
 import net.twisterrob.test.junit.FlakyTestException;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
@@ -388,6 +390,28 @@ public class EspressoExtensions {
 	private static Matcher<View> isActionBar() {
 		return withFullResourceName(endsWith(":id/action_bar"));
 	}
+	public static Matcher<View> isActionBarTitle() {
+		return allOf(inActionBar(), new TypeSafeDiagnosingMatcher<View>() {
+			@Override protected boolean matchesSafely(View item, Description mismatchDescription) {
+				android.support.v7.widget.Toolbar toolbar = getToolbar(item);
+				if (toolbar == null) {
+					mismatchDescription.appendText("Cannot find Toolbar parent.");
+					return false;
+				}
+				return item == ReflectionTools.get(toolbar, "mTitleTextView");
+			}
+			private android.support.v7.widget.Toolbar getToolbar(View item) {
+				ViewParent parent = item.getParent();
+				while (!(parent instanceof android.support.v7.widget.Toolbar)) {
+					parent = parent.getParent();
+				}
+				return (android.support.v7.widget.Toolbar)parent;
+			}
+			@Override public void describeTo(Description description) {
+				description.appendText("ActionBar title view");
+			}
+		});
+	}
 
 	public static Matcher<View> withFullResourceName(String resourceName) {
 		return withFullResourceName(is(resourceName));
@@ -431,16 +455,16 @@ public class EspressoExtensions {
 		return isAssignableFrom(RecyclerView.class);
 	}
 
-	public static ViewInteraction assertRecyclerItemDoesNotExists(Matcher<View> dataMatcher) {
-		return onView(isRV()).check(matches(not(withAdaptedData(dataMatcher))));
+	public static ViewAssertion itemDoesNotExists(Matcher<View> dataMatcher) {
+		return matches(not(withAdaptedData(dataMatcher)));
 	}
 
 	/**
 	 * For a negative match (i.e. check for non-existent data), use
-	 * {@code onView(isRV()).check(matches(not(withAdaptedData(withText(TEST_ROOM)))))}
+	 * {@code onView(isRV()).check(recyclerItemDoesNotExists(withText(TEST_ROOM)))}
 	 * @see Espresso#onData(Matcher)
 	 * @see #withAdaptedData(Matcher)
-	 * @see #assertRecyclerItemDoesNotExists(Matcher)
+	 * @see #itemDoesNotExists(Matcher)
 	 */
 	public static RecyclerViewDataInteraction onRecyclerItem(Matcher<View> dataMatcher) {
 		return new RecyclerViewDataInteraction(hasDescendant(dataMatcher));

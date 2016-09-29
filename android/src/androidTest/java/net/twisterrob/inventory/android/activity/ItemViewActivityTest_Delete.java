@@ -6,28 +6,19 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
-
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.data.ItemViewActivity;
-import net.twisterrob.inventory.android.content.Intents;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.test.*;
+import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.actors.*;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
-import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
-import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
-import static net.twisterrob.inventory.android.content.DatabaseDTOTools.*;
-import static net.twisterrob.inventory.android.content.DatabaseMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 public class ItemViewActivityTest_Delete {
@@ -37,89 +28,83 @@ public class ItemViewActivityTest_Delete {
 			super.setDefaults();
 			long propertyID = App.db().createProperty(PropertyType.DEFAULT, TEST_PROPERTY, NO_DESCRIPTION);
 			long roomID = App.db().createRoom(propertyID, RoomType.DEFAULT, TEST_ROOM, NO_DESCRIPTION);
-			itemID = App.db().createItem(getRoot(roomID), Category.DEFAULT, TEST_ITEM, NO_DESCRIPTION);
+			itemID = db.createItemInRoom(roomID, TEST_ITEM);
 			getStartIntent().putExtras(Intents.bundleFromParent(itemID));
 		}
 	};
-	@Rule public final TestDatabaseRule db = new TestDatabaseRule();
+	@Rule public final DataBaseActor db = new DataBaseActor();
+	private final ItemViewActivityActor itemView = new ItemViewActivityActor();
 	private long itemID;
 
 	@Before public void preconditions() {
-		assertThat(db.get(), hasInvProperty(TEST_PROPERTY));
-		assertThat(db.get(), hasInvRoom(TEST_ROOM));
-		assertThat(db.get(), hasInvItem(TEST_ITEM));
+		db.assertHasProperty(TEST_PROPERTY);
+		db.assertHasRoom(TEST_ROOM);
+		db.assertHasItem(TEST_ITEM);
 	}
 	@After public void closeDialog() {
 		attemptCloseDialog();
 	}
 
 	@Test public void testDeleteCancel() throws IOException {
-		assertThat(db.get(), hasInvItem(TEST_ITEM));
+		DeleteDialogActor deleteDialog = itemView.delete();
+		deleteDialog.cancel();
 
-		onActionMenuView(withText(R.string.item_delete)).perform(click());
-		clickNegativeInDialog();
-
-		assertThat(db.get(), hasInvItem(TEST_ITEM));
+		db.assertHasItem(TEST_ITEM);
 	}
 
 	@Test public void testDeleteMessage() throws IOException {
-		onActionMenuView(withText(R.string.item_delete)).perform(click());
-
-		onView(withText(matchesPattern("%\\d"))).check(doesNotExist());
-		onView(isDialogMessage()).check(matches(allOf(
-				isDisplayed(),
-				withText(containsString(TEST_ITEM))
-		)));
+		DeleteDialogActor deleteDialog = itemView.delete();
+		deleteDialog.checkDialogMessage(containsString(TEST_ITEM));
 	}
 	@Test public void testDeleteMessageWithContents() throws IOException {
-		App.db().createItem(itemID, Category.DEFAULT, TEST_SUBITEM, NO_DESCRIPTION);
+		db.createItem(itemID, TEST_SUBITEM);
 
-		testDeleteMessage();
+		DeleteDialogActor deleteDialog = itemView.delete();
 
-		onView(isDialogMessage()).check(matches(allOf(
-				isDisplayed(),
-				withText(containsString(TEST_SUBITEM))
-		)));
+		deleteDialog.checkDialogMessage(allOf(
+				containsString(TEST_ITEM),
+				containsString(TEST_SUBITEM)
+		));
 	}
 	@Test public void testDeleteMessageWithContentsMultiple() throws IOException {
-		App.db().createItem(itemID, Category.DEFAULT, TEST_SUBITEM, NO_DESCRIPTION);
-		App.db().createItem(itemID, Category.DEFAULT, TEST_SUBITEM_OTHER, NO_DESCRIPTION);
+		db.createItem(itemID, TEST_SUBITEM);
+		db.createItem(itemID, TEST_SUBITEM_OTHER);
 
-		testDeleteMessage();
-
-		onView(isDialogMessage()).check(matches(allOf(
-				isDisplayed(),
-				withText(containsString(TEST_SUBITEM)),
-				withText(containsString(TEST_SUBITEM_OTHER))
-		)));
+		DeleteDialogActor deleteDialog = itemView.delete();
+		deleteDialog.checkDialogMessage(allOf(
+				containsString(TEST_ITEM),
+				containsString(TEST_SUBITEM),
+				containsString(TEST_SUBITEM_OTHER)
+		));
 	}
 
 	@Test public void testDeleteConfirm() throws IOException {
-		assertThat(db.get(), hasInvItem(TEST_ITEM));
+		DeleteDialogActor deleteDialog = itemView.delete();
+		deleteDialog.confirm();
 
-		onActionMenuView(withText(R.string.item_delete)).perform(click());
-		clickPositiveInDialog();
-
-		assertThat(db.get(), not(hasInvItem(TEST_ITEM)));
-		assertThat(activity.getActivity(), isFinishing());
+		db.assertHasNoItem(TEST_ITEM);
+		itemView.assertClosing();
 	}
 	@Test public void testDeleteConfirmWithContents() throws IOException {
-		App.db().createItem(itemID, Category.DEFAULT, TEST_SUBITEM, NO_DESCRIPTION);
-		assertThat(db.get(), hasInvItem(TEST_SUBITEM));
+		db.createItem(itemID, TEST_SUBITEM);
 
-		testDeleteConfirm();
+		DeleteDialogActor deleteDialog = itemView.delete();
+		deleteDialog.confirm();
 
-		assertThat(db.get(), not(hasInvItem(TEST_SUBITEM)));
+		db.assertHasNoItem(TEST_ITEM);
+		db.assertHasNoItem(TEST_SUBITEM);
+		itemView.assertClosing();
 	}
 	@Test public void testDeleteConfirmWithContentsMultiple() throws IOException {
-		App.db().createItem(itemID, Category.DEFAULT, TEST_SUBITEM, NO_DESCRIPTION);
-		App.db().createItem(itemID, Category.DEFAULT, TEST_SUBITEM_OTHER, NO_DESCRIPTION);
-		assertThat(db.get(), hasInvItem(TEST_SUBITEM));
-		assertThat(db.get(), hasInvItem(TEST_SUBITEM_OTHER));
+		db.createItem(itemID, TEST_SUBITEM);
+		db.createItem(itemID, TEST_SUBITEM_OTHER);
 
-		testDeleteConfirm();
+		DeleteDialogActor deleteDialog = itemView.delete();
+		deleteDialog.confirm();
 
-		assertThat(db.get(), not(hasInvItem(TEST_SUBITEM)));
-		assertThat(db.get(), not(hasInvItem(TEST_SUBITEM_OTHER)));
+		db.assertHasNoItem(TEST_ITEM);
+		db.assertHasNoItem(TEST_SUBITEM);
+		db.assertHasNoItem(TEST_SUBITEM_OTHER);
+		itemView.assertClosing();
 	}
 }

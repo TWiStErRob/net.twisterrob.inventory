@@ -4,7 +4,6 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.*;
 
-import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -12,6 +11,7 @@ import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.test.espresso.DialogMatchers;
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
@@ -40,6 +40,6 @@ public class ImageLoadingTest {
 		lastItem.onChildView(withId(R.id.image)).check(matches(hasImage()));
 		lastItem.onChildView(withId(R.id.type)).check(matches(hasImage()));
 		lastItem.perform(click()); // TODO this will bring up the type editor, not the item
-		Espresso.pressBack(); // don't leak the dialog
+		DialogMatchers.attemptCloseDialog();
 	}
 }

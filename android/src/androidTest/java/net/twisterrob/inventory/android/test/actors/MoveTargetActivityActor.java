@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.test;
+package net.twisterrob.inventory.android.test.actors;
 
 import android.annotation.SuppressLint;
 
@@ -11,24 +11,42 @@ import net.twisterrob.inventory.android.R;
 
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
-public class MoveTargetActivityActions {
+public class MoveTargetActivityActor {
+	public void upToProperties() {
+		up();
+	}
+	public void upToProperty(String propertyName) {
+		up();
+	}
+	public void upToRoom(String roomName) {
+		up();
+	}
+	public void upToItem(String roomName) {
+		up();
+	}
+
+	@Deprecated
 	@SuppressLint("PrivateResource")
-	public static void up() {
+	public void up() {
 		onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 	}
-	public static void confirm() {
+	public MoveResultActor confirmSelection() {
 		onView(withId(DialogMatchers.BUTTON_POSITIVE)).perform(click());
+		return new MoveResultActor();
 	}
-	public static void cancel() {
+	public void cancel() {
 		onView(withId(DialogMatchers.BUTTON_NEGATIVE)).perform(click());
 	}
-	public static void selectItem(String itemName) {
+	public void selectItem(String itemName) {
 		onRecyclerItem(withText(itemName)).perform(click());
 	}
-	public static void selectRoom(String roomName) {
+	public void selectRoom(String roomName) {
 		onRecyclerItem(withText(roomName)).perform(click());
 	}
-	public static void selectProperty(String roomName) {
+	public void selectProperty(String roomName) {
 		onRecyclerItem(withText(roomName)).perform(click());
+	}
+	public void fromRoom(String roomName) {
+		// STOPSHIP
 	}
 }
