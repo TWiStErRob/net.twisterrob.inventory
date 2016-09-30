@@ -17,8 +17,8 @@
 		tools:replace="android:label">
 		<!-- Added by Gradle: <uses-library android:name="android.test.runner" /> -->
 
-		<activity android:name="net.twisterrob.inventory.android.activity.TestActivity" />
-		<activity android:name="net.twisterrob.inventory.android.activity.CompatibleLauncher" />
+		<activity android:name="net.twisterrob.inventory.android.test.activity.TestActivity" />
+		<activity android:name="net.twisterrob.inventory.android.test.activity.CompatibleLauncher" />
 		<activity
 			android:name="net.twisterrob.android.test.espresso.EspressoExtensionsTest_onActionMenuView$TestActivity"
 			android:theme="@android:style/Theme.Holo.Light.DarkActionBar" />

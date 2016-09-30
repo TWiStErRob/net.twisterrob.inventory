@@ -34,8 +34,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import net.twisterrob.android.test.espresso.idle.DrawerIdlingResource;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.activity.*;
+import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.test.activity.CompatibleLauncher;
 import net.twisterrob.test.*;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
@@ -87,7 +88,7 @@ public class UpgradeTests {
 	private File downloads;
 	private File db;
 
-	/** @see net.twisterrob.inventory.android.activity.CompatibleLauncher */
+	/** @see net.twisterrob.inventory.android.test.activity.CompatibleLauncher */
 	@Before public void launchMain() {
 		assumeThat("Only run when instrumentation arguments contain \"" + LAUNCH_KEY + "\"",
 				getArguments(), hasKey(LAUNCH_KEY));

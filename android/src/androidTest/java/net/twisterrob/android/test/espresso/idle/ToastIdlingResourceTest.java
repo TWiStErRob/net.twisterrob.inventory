@@ -21,7 +21,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.EspressoExtensions;
 import net.twisterrob.android.test.junit.*;
-import net.twisterrob.inventory.android.activity.TestActivity;
+import net.twisterrob.inventory.android.test.activity.TestActivity;
 import net.twisterrob.java.exceptions.StackTrace;
 
 // TODO for UiThreadTest auto-import works, explicit import works, ctrl+space shows nothing

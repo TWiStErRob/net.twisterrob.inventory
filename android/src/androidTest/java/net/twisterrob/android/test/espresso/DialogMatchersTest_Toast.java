@@ -18,7 +18,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.junit.*;
-import net.twisterrob.inventory.android.activity.TestActivity;
+import net.twisterrob.inventory.android.test.activity.TestActivity;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 
