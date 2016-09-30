@@ -184,14 +184,15 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 
 	private void updateUI(BaseFragment<?> fragment) {
 		String name = fragment.getArguments().getString(ARG_TITLE);
-		title.setText(name);
 		if (name != null) {
 			setActionBarTitle(getString(R.string.action_move_pick_title));
 			setActionBarSubtitle(toString(getType(fragment)));
 		} else {
 			setActionBarTitle(getString(R.string.action_move));
 			setActionBarSubtitle(null);
+			name = getString(R.string.property_list);
 		}
+		title.setText(name);
 		CharSequence disabledMessage = buildDisabledMessage(fragment);
 		if (disabledMessage != null) {
 			btnOk.setEnabled(false);

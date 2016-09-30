@@ -391,26 +391,48 @@ public class EspressoExtensions {
 		return withFullResourceName(endsWith(":id/action_bar"));
 	}
 	public static Matcher<View> isActionBarTitle() {
-		return allOf(inActionBar(), new TypeSafeDiagnosingMatcher<View>() {
-			@Override protected boolean matchesSafely(View item, Description mismatchDescription) {
-				android.support.v7.widget.Toolbar toolbar = getToolbar(item);
-				if (toolbar == null) {
-					mismatchDescription.appendText("Cannot find Toolbar parent.");
-					return false;
-				}
-				return item == ReflectionTools.get(toolbar, "mTitleTextView");
+		return allOf(inActionBar(), isToolbarTitle());
+	}
+	public static Matcher<View> isActionBarSubTitle() {
+		return allOf(inActionBar(), isToolbarSubTitle());
+	}
+
+	public static Matcher<View> inToolbar() {
+		return isDescendantOfA(isToolbar());
+	}
+	private static Matcher<View> isToolbar() {
+		return instanceOf(Toolbar.class);
+	}
+	public static Matcher<View> isToolbarTitle() {
+		return new ReflectiveToolbarViewMatcher("mTitleTextView");
+	}
+	public static Matcher<View> isToolbarSubTitle() {
+		return new ReflectiveToolbarViewMatcher("mSubtitleTextView");
+	}
+
+	private static class ReflectiveToolbarViewMatcher extends TypeSafeDiagnosingMatcher<View> {
+		private final String viewFieldName;
+		private ReflectiveToolbarViewMatcher(String viewFieldName) {
+			this.viewFieldName = viewFieldName;
+		}
+		@Override protected boolean matchesSafely(View item, Description mismatchDescription) {
+			android.support.v7.widget.Toolbar toolbar = getToolbar(item);
+			if (toolbar == null) {
+				mismatchDescription.appendText("Cannot find Toolbar parent.");
+				return false;
 			}
-			private android.support.v7.widget.Toolbar getToolbar(View item) {
-				ViewParent parent = item.getParent();
-				while (!(parent instanceof android.support.v7.widget.Toolbar)) {
-					parent = parent.getParent();
-				}
-				return (android.support.v7.widget.Toolbar)parent;
+			return item == ReflectionTools.get(toolbar, viewFieldName);
+		}
+		private android.support.v7.widget.Toolbar getToolbar(View item) {
+			ViewParent parent = item.getParent();
+			while (parent != null && !(parent instanceof android.support.v7.widget.Toolbar)) {
+				parent = parent.getParent();
 			}
-			@Override public void describeTo(Description description) {
-				description.appendText("ActionBar title view");
-			}
-		});
+			return (android.support.v7.widget.Toolbar)parent;
+		}
+		@Override public void describeTo(Description description) {
+			description.appendText("ActionBar title view");
+		}
 	}
 
 	public static Matcher<View> withFullResourceName(String resourceName) {

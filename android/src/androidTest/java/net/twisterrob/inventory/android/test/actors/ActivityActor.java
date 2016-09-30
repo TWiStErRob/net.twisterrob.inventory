@@ -34,6 +34,9 @@ public class ActivityActor {
 	protected void assertActionTitle(String name) {
 		onView(isActionBarTitle()).check(matches(withText(containsString(name))));
 	}
+	protected void assertActionSubTitle(String name) {
+		onView(isActionBarSubTitle()).check(matches(withText(containsString(name))));
+	}
 
 	public void assertClosing() {
 		assertClosing(activityClass);

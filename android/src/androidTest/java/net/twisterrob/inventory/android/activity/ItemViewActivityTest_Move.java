@@ -77,6 +77,7 @@ public class ItemViewActivityTest_Move {
 
 		onView(isRoot()).perform(waitForToastsToDisappear());
 		MoveTargetActivityActor move = itemView.move();
+		move.fromRoom(TEST_ROOM);
 		move.selectItem(TEST_ITEM_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
 		moveDialog.assertNoDialogDisplayed();
@@ -94,6 +95,7 @@ public class ItemViewActivityTest_Move {
 		db.assertHasItemInRoom(TEST_ROOM, TEST_ITEM_OTHER);
 
 		MoveTargetActivityActor move = itemView.move();
+		move.fromRoom(TEST_ROOM);
 		move.selectItem(TEST_ITEM_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
 		moveDialog.assertNoDialogDisplayed();
@@ -117,6 +119,7 @@ public class ItemViewActivityTest_Move {
 		db.assertHasRoomInProperty(TEST_PROPERTY, TEST_ROOM_OTHER);
 
 		MoveTargetActivityActor move = itemView.move();
+		move.fromRoom(TEST_ROOM);
 		move.upToProperty(TEST_PROPERTY);
 		move.selectRoom(TEST_ROOM_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
