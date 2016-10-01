@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.zip.*;
 
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
@@ -27,11 +28,14 @@ import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.categories.*;
+import net.twisterrob.inventory.android.test.categories.On.Backup;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
 @RunWith(AndroidJUnit4.class)
+@Category({On.Backup.Import.class, Backup.External.class})
 public class BackupActivityTest_ImportExternal {
 	@Rule public final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
 	@Rule public final TemporaryFolder temp = new TemporaryFolder();
@@ -41,6 +45,7 @@ public class BackupActivityTest_ImportExternal {
 		BackupActivityTest.assertEmptyState();
 	}
 
+	@Category({UseCase.Complex.class})
 	@Test public void testImportCalled() throws Exception {
 		File inventory = temp.newFile();
 		ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(inventory));

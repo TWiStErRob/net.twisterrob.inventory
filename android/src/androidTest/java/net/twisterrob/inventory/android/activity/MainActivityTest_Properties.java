@@ -1,15 +1,18 @@
 package net.twisterrob.inventory.android.activity;
 
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 
 import android.support.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
 import net.twisterrob.inventory.android.test.actors.MainActivityActor.PropertiesNavigator;
+import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.inventory.android.content.Constants.*;
 
+@Category({On.Property.class})
 public class MainActivityTest_Properties {
 	@Rule public final ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class);
 	private final MainActivityActor main = new MainActivityActor();
@@ -20,6 +23,7 @@ public class MainActivityTest_Properties {
 		properties.hasNoProperties();
 	}
 
+	@Category({Op.Cancels.class})
 	@Test public void testAddPropertyCancel() {
 		PropertyEditActivityActor editor = properties.addProperty();
 		editor.close();
@@ -27,6 +31,7 @@ public class MainActivityTest_Properties {
 		properties.checkOpened();
 	}
 
+	@Category({Op.CreatesBelonging.class})
 	@Test public void testAddProperty() {
 		PropertyEditActivityActor editor = properties.addProperty();
 		editor.setName(TEST_PROPERTY);

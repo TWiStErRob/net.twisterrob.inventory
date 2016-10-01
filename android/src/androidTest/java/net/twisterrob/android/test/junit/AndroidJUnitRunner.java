@@ -1,19 +1,43 @@
 package net.twisterrob.android.test.junit;
 
-import org.hamcrest.Matcher;
+import java.util.regex.*;
 
+import org.slf4j.*;
+
+import android.content.ComponentName;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build.*;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
 import android.support.test.espresso.*;
 import android.support.test.espresso.base.DefaultFailureHandler;
+import android.support.test.internal.runner.RunnerArgs;
 import android.view.View;
 
 import net.twisterrob.java.exceptions.StackTrace;
 
 public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnitRunner {
+	private static final Logger LOG = LoggerFactory.getLogger(AndroidJUnitRunner.class);
+	/**
+	 * @see RunnerArgs#ARGUMENT_NOT_TEST_PACKAGE
+	 * @type java.lang.String
+	 * @format {@code pack.age1,pack.age2,pack.age3}
+	 */
+	@SuppressWarnings("JavaDoc")
+	private static final String DEFAULT_EXCLUDED_PACKAGES = "defaultExcludedPackages";
+	// copied from android.support.test.internal.runner.RunnerArgs
+	private static final String ARGUMENT_TEST_CLASS = "class";
+	private static final String ARGUMENT_NOT_TEST_CLASS = "notClass";
+	private static final String ARGUMENT_NOT_TEST_PACKAGE = "notPackage";
+	private static final String ARGUMENT_DISABLE_ANALYTICS = "disableAnalytics";
+	private static final String CLASS_NAME = "([A-Z][A-Za-z0-9_$]*)";
+	private static final Pattern INNER_CLASS =
+			Pattern.compile("((?:[a-z0-9_]+\\.)*)" + CLASS_NAME + "\\." + CLASS_NAME + "");
+	private static final String INNER_CLASS_FIX = "$1$2\\$$3";
+
 	@Override public void onCreate(Bundle arguments) {
-		setDefaults(arguments);
+		setDefaults(arguments, getInstrumentationMetaData());
 		// specifyDexMakerCacheProperty is unconditionally called, but behavior was observed in Android 5.0)
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 		try {
@@ -22,6 +46,17 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 			StrictMode.setThreadPolicy(originalPolicy);
 		}
 		Espresso.setFailureHandler(new DetailedFailureHandler(new DefaultFailureHandler(getTargetContext())));
+	}
+
+	private Bundle getInstrumentationMetaData() {
+		try {
+			PackageManager pm = getContext().getPackageManager();
+			ComponentName instrumentationRunner = new ComponentName(getContext(), getClass());
+			return pm.getInstrumentationInfo(instrumentationRunner, PackageManager.GET_META_DATA).metaData;
+		} catch (NameNotFoundException ex) {
+			LOG.warn("Cannot find own instrumentation info, wonder how do I exists then?", ex);
+			return Bundle.EMPTY;
+		}
 	}
 
 	@Override public void onStart() {
@@ -51,18 +86,46 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 		}
 	}
 
-	private void setDefaults(Bundle arguments) {
-		if (!arguments.containsKey("disableAnalytics")) {
+	private void setDefaults(Bundle arguments, Bundle manifest) {
+		if (!arguments.containsKey(ARGUMENT_DISABLE_ANALYTICS)) {
 			// Tried to put it in manifest, but it failed with cannot cast Boolean to String in super.onCreate
-			arguments.putString("disableAnalytics", Boolean.TRUE.toString());
+			arguments.putString(ARGUMENT_DISABLE_ANALYTICS, Boolean.TRUE.toString());
 		}
-		if (!arguments.containsKey("class")) { // @see TestRequestBuilder#validate
+		if (!arguments.containsKey(ARGUMENT_TEST_CLASS)) { // @see TestRequestBuilder#validate
 			String packages = "java,javax,android,com.google,net.twisterrob.android.test,net.twisterrob.test";
-			if (arguments.containsKey("notPackage")) {
-				packages += "," + arguments.getString("notPackage");
+			if (arguments.containsKey(ARGUMENT_NOT_TEST_PACKAGE)) {
+				packages += "," + arguments.getString(ARGUMENT_NOT_TEST_PACKAGE);
 			}
-			arguments.putString("notPackage", packages);
+			if (manifest.containsKey(DEFAULT_EXCLUDED_PACKAGES)) {
+				packages += "," + manifest.getString(DEFAULT_EXCLUDED_PACKAGES);
+			}
+			arguments.putString(ARGUMENT_NOT_TEST_PACKAGE, packages);
 		}
+		if (arguments.containsKey(ARGUMENT_TEST_CLASS)) {
+			arguments.putString(ARGUMENT_TEST_CLASS, fixInnerClasses(arguments.getString(ARGUMENT_TEST_CLASS)));
+		}
+		if (arguments.containsKey(ARGUMENT_NOT_TEST_CLASS)) {
+			arguments.putString(ARGUMENT_NOT_TEST_CLASS, fixInnerClasses(arguments.getString(ARGUMENT_NOT_TEST_CLASS)));
+		}
+	}
+
+	/**
+	 * IDEA creates test runs with {@code pack.age.Outer.Inner} style,
+	 * but {@link Class#forName(String)} (used by  requires {@code pack.age.Outer$Inner}.
+	 * This method bridges the gap, before {@link android.support.test.runner.AndroidJUnitRunner} sees the arguments.
+	 * @param classes contains class names separated by something other than dots and dollars (e.g. comma)
+	 * @return all occurrences of {@code Inner.Outer} class names are now {@code Inner$Outer} (even multiple nested)
+	 * @see android.support.test.internal.runner.TestRequestBuilder#loadClasses
+	 * @see android.support.test.internal.runner.TestLoader#doLoadClass
+	 */
+	private static String fixInnerClasses(String classes) {
+		Matcher matcher = INNER_CLASS.matcher(classes);
+		String fixed = classes;
+		while (matcher.find()) {
+			fixed = matcher.replaceAll(INNER_CLASS_FIX);
+			matcher.reset(fixed);
+		}
+		return fixed;
 	}
 
 	private static class DetailedFailureHandler implements FailureHandler {
@@ -70,7 +133,7 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 		private DetailedFailureHandler(DefaultFailureHandler handler) {
 			defaultFailureHandler = handler;
 		}
-		@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
+		@Override public void handle(Throwable error, org.hamcrest.Matcher<View> viewMatcher) {
 			if (false) { // TODO when is this needed again?
 				Throwable cause = error;
 				while (cause.getCause() != null) {

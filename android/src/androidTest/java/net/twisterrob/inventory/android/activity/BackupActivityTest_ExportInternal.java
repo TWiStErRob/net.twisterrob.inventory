@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.hamcrest.Matcher;
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.*;
 import org.junit.runner.*;
 import org.junit.runners.model.Statement;
@@ -26,12 +27,15 @@ import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.categories.*;
+import net.twisterrob.inventory.android.test.categories.On.Backup;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.java.utils.CollectionTools.*;
 
 @RunWith(AndroidJUnit4.class)
+@Category({On.Backup.Export.class, Backup.Internal.class})
 public class BackupActivityTest_ExportInternal {
 	private final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
 	private final TemporaryFolder temp = new TemporaryFolder(Paths.getPhoneHome());
@@ -58,6 +62,7 @@ public class BackupActivityTest_ExportInternal {
 		onView(withId(R.id.progress)).check(matches(not(isDisplayed())));
 	}
 
+	@Category({Op.Rotates.class})
 	@Test public void testBackupDialogStaysWhenRotated() throws Exception {
 		clickExport();
 
@@ -66,6 +71,7 @@ public class BackupActivityTest_ExportInternal {
 		assertDialogIsDisplayed();
 	}
 
+	@Category({Op.Rotates.class})
 	@Test public void testBackupDialogDoesNotReappearWhenRotated() throws Exception {
 		clickExport();
 		clickNeutralInDialog();
@@ -75,6 +81,7 @@ public class BackupActivityTest_ExportInternal {
 		assertNoDialogIsDisplayed();
 	}
 
+	@Category({Op.Rotates.class})
 	@Test public void testBackupProgressDoesNotAppearWhenRotated() throws Exception {
 		clickExport();
 		clickNeutralInDialog();

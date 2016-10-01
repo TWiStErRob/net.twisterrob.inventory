@@ -3,16 +3,20 @@ package net.twisterrob.inventory.android.activity;
 import java.io.IOException;
 
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.*;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.runner.lifecycle.Stage;
+
+import static android.support.test.espresso.Espresso.*;
+import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.DialogMatchers;
 import net.twisterrob.android.test.junit.TestWatcherStatus;
@@ -21,11 +25,15 @@ import net.twisterrob.inventory.android.activity.data.PropertyEditActivity;
 import net.twisterrob.inventory.android.content.DataBaseActor;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.PropertyEditActivityActor;
+import net.twisterrob.inventory.android.test.categories.*;
+import net.twisterrob.inventory.android.test.categories.UseCase.Error;
 
+import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
 
 @RunWith(AndroidJUnit4.class)
+@Category({On.Property.class, Op.CreatesBelonging.class})
 public class PropertyEditActivityTest_Create {
 	@Rule public final ActivityTestRule<PropertyEditActivity> activity
 			= new InventoryActivityRule<>(PropertyEditActivity.class);
@@ -46,14 +54,14 @@ public class PropertyEditActivityTest_Create {
 		}
 	}
 
-	@Test public void testNameSaved() throws IOException {
+	@Test public void testNameSaved() {
 		propertyEditor.setName(TEST_PROPERTY);
 		propertyEditor.save();
 
 		db.assertHasProperty(TEST_PROPERTY);
 	}
 
-	@Test public void testNameSavedAfterChange() throws IOException {
+	@Test public void testNameSavedAfterChange() {
 		propertyEditor.setName(TEST_PROPERTY);
 		propertyEditor.setName(TEST_PROPERTY_OTHER);
 		propertyEditor.save();
@@ -61,10 +69,12 @@ public class PropertyEditActivityTest_Create {
 		db.assertHasProperty(TEST_PROPERTY_OTHER);
 	}
 
-	@Test public void testCreateExisting() throws IOException {
+	@Category({Error.class, Op.ChecksMessage.class})
+	@Test public void testCreateExisting() {
 		db.createProperty(TEST_PROPERTY);
 		db.assertHasProperty(TEST_PROPERTY);
 
+		onView(isRoot()).perform(waitForToastsToDisappear());
 		propertyEditor.setName(TEST_PROPERTY);
 		propertyEditor.save().checkToastAlreadyExists();
 
@@ -76,7 +86,7 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.confirmDirtyDialog();
 	}
 
-	@Test public void testDescriptionSaved() throws IOException {
+	@Test public void testDescriptionSaved() {
 		propertyEditor.setName(TEST_PROPERTY);
 		propertyEditor.setDescription(TEST_DESCRIPTION);
 
@@ -84,7 +94,7 @@ public class PropertyEditActivityTest_Create {
 		db.assertPropertyHasDescription(TEST_PROPERTY, TEST_DESCRIPTION);
 	}
 
-	@Test public void testDescriptionSavedAfterChange() throws IOException {
+	@Test public void testDescriptionSavedAfterChange() {
 		propertyEditor.setName(TEST_PROPERTY);
 		propertyEditor.setDescription(TEST_DESCRIPTION);
 		propertyEditor.setDescription(TEST_DESCRIPTION_OTHER);
@@ -93,7 +103,7 @@ public class PropertyEditActivityTest_Create {
 		db.assertPropertyHasDescription(TEST_PROPERTY, TEST_DESCRIPTION_OTHER);
 	}
 
-	@Test public void testTypeSaved() throws IOException {
+	@Test public void testTypeSaved() {
 		propertyEditor.checkType(R.string.property_other);
 		propertyEditor.setName(TEST_PROPERTY);
 		propertyEditor.setType(TEST_PROPERTY_TYPE);
@@ -102,7 +112,7 @@ public class PropertyEditActivityTest_Create {
 		db.assertPropertyHasType(TEST_PROPERTY, TEST_PROPERTY_TYPE);
 	}
 
-	@Test public void testTypeSavedAfterChange() throws IOException {
+	@Test public void testTypeSavedAfterChange() {
 		propertyEditor.checkType(R.string.property_other);
 		propertyEditor.setName(TEST_PROPERTY);
 		propertyEditor.setType(TEST_PROPERTY_TYPE);
@@ -129,6 +139,7 @@ public class PropertyEditActivityTest_Create {
 		db.assertPropertyHasImage(TEST_PROPERTY, TEST_IMAGE_COLOR_OTHER);
 	}
 
+	@Category({Op.Rotates.class})
 	@Test public void testRotate() throws IOException {
 		fillInEverything();
 
@@ -144,6 +155,7 @@ public class PropertyEditActivityTest_Create {
 		checkEverythingSaved();
 	}
 
+	@Category({UseCase.InitialCondition.class})
 	@Test(expected = NoActivityResumedException.class)
 	public void testDirtyInitiallyClean() {
 		propertyEditor.close();
@@ -224,7 +236,7 @@ public class PropertyEditActivityTest_Create {
 	}
 
 	private void testDirty(DirtyAction doFirstEdit, DirtyAction checkFirstEditPreserved, DirtyAction doSecondEdit)
-			throws Throwable {
+			throws IOException {
 		// triggers dirty
 		doFirstEdit.execute();
 		propertyEditor.close();
@@ -264,6 +276,6 @@ public class PropertyEditActivityTest_Create {
 	}
 
 	interface DirtyAction {
-		void execute() throws Throwable;
+		void execute() throws IOException;
 	}
 }

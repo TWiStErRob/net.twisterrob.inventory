@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
@@ -18,11 +19,13 @@ import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
 import net.twisterrob.inventory.android.test.actors.MainActivityActor.WelcomeDialogActor;
+import net.twisterrob.inventory.android.test.categories.*;
 import net.twisterrob.test.junit.FlakyTestException;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
+@Category({On.Main.class})
 public class MainActivityTest_Welcome {
 
 	private static final ViewAssertion NON_EMPTY =
@@ -34,9 +37,16 @@ public class MainActivityTest_Welcome {
 			.dontClearWelcomeFlag();
 	private final MainActivityActor main = new MainActivityActor();
 
+	@Category({UseCase.InitialCondition.class})
+	@Test public void testWelcomeShown() {
+		main.assertWelcomeShown();
+	}
+
+	@Category({Op.Cancels.class, Op.ChecksMessage.class})
 	@Test public void testWelcomeDontPopulateDemo() {
 		WelcomeDialogActor welcome = main.assertWelcomeShown();
 
+		onView(isRoot()).perform(waitForToastsToDisappear());
 		long beforePotentiallyLongAction = System.currentTimeMillis();
 		welcome.dontPopulateDemo();
 
@@ -47,9 +57,11 @@ public class MainActivityTest_Welcome {
 		onView(withId(R.id.items)).check(EMPTY);
 	}
 
+	@Category({Op.ChecksMessage.class})
 	@Test public void testWelcomePopulateDemo() {
 		WelcomeDialogActor welcome = main.assertWelcomeShown();
 
+		onView(isRoot()).perform(waitForToastsToDisappear());
 		long beforePotentiallyLongAction = System.currentTimeMillis();
 		welcome.populateDemo();
 
@@ -63,7 +75,9 @@ public class MainActivityTest_Welcome {
 	@Test public void testWelcomeBackup() {
 		WelcomeDialogActor welcome = main.assertWelcomeShown();
 
+		onView(isRoot()).perform(waitForToastsToDisappear());
 		BackupActivityActor backup = welcome.invokeBackup();
+		assertNoToastIsDisplayed();
 
 		backup.openedViaIntent();
 	}

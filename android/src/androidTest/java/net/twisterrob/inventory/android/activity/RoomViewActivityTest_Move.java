@@ -1,8 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.io.IOException;
-
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
@@ -15,10 +14,13 @@ import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
+import net.twisterrob.inventory.android.test.categories.*;
+import net.twisterrob.inventory.android.test.categories.UseCase.Error;
 
 import static net.twisterrob.inventory.android.content.Constants.*;
 
 @RunWith(AndroidJUnit4.class)
+@Category({On.Room.class, Op.MovesBelonging.class})
 public class RoomViewActivityTest_Move {
 	@Rule public final ActivityTestRule<RoomViewActivity> activity
 			= new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class) {
@@ -46,7 +48,8 @@ public class RoomViewActivityTest_Move {
 		DialogMatchers.attemptCloseDialog();
 	}
 
-	@Test public void testMoveCancel() throws IOException {
+	@Category({Op.Cancels.class})
+	@Test public void testMoveCancel() {
 		db.assertHasRoom(TEST_ROOM);
 
 		MoveTargetActivityActor move = roomView.move();
@@ -55,7 +58,8 @@ public class RoomViewActivityTest_Move {
 		db.assertHasRoom(TEST_ROOM);
 	}
 
-	@Test public void testMoveConfirmMessage() throws IOException {
+	@Category({Op.ChecksMessage.class})
+	@Test public void testMoveConfirmMessage() {
 		MoveTargetActivityActor move = roomView.move();
 		move.selectProperty(TEST_PROPERTY_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
@@ -63,7 +67,8 @@ public class RoomViewActivityTest_Move {
 		moveDialog.checkDialogMessage(allOf(containsString(TEST_ROOM), containsString(TEST_PROPERTY)));
 	}
 
-	@Test public void testMoveConfirmCancel() throws IOException {
+	@Category({Op.Cancels.class})
+	@Test public void testMoveConfirmCancel() {
 		MoveTargetActivityActor move = roomView.move();
 		move.selectProperty(TEST_PROPERTY_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
@@ -73,7 +78,7 @@ public class RoomViewActivityTest_Move {
 		roomView.assertShowing(TEST_ROOM);
 	}
 
-	@Test public void testMove() throws IOException {
+	@Test public void testMove() {
 		MoveTargetActivityActor move = roomView.move();
 		move.selectProperty(TEST_PROPERTY_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
@@ -84,7 +89,9 @@ public class RoomViewActivityTest_Move {
 		roomView.assertClosing();
 		propertyView.hasRoom(TEST_ROOM);
 	}
-	@Test public void testMoveWithContents() throws IOException {
+
+	@Category({UseCase.Complex.class})
+	@Test public void testMoveWithContents() {
 		long itemID = db.createItemInRoom(roomID, TEST_ITEM);
 		db.createItem(itemID, TEST_SUBITEM);
 		db.assertHasItemInRoom(TEST_ROOM, TEST_ITEM);
@@ -103,7 +110,8 @@ public class RoomViewActivityTest_Move {
 		propertyView.hasRoom(TEST_ROOM);
 	}
 
-	@Test public void testMoveAlreadyExists() throws IOException {
+	@Category({Error.class, Op.ChecksMessage.class})
+	@Test public void testMoveAlreadyExists() {
 		@SuppressWarnings("unused")
 		long duplicateID = db.createRoom(TEST_PROPERTY_OTHER, TEST_ROOM);
 

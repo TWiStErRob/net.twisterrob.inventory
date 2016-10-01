@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.activity;
 import java.io.IOException;
 
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.*;
 import org.junit.runner.RunWith;
 
@@ -16,6 +17,7 @@ import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
+import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.inventory.android.content.Constants.*;
 
@@ -37,6 +39,7 @@ public class ItemActivityTest_Image {
 	private final RoomViewActivityActor roomView = new RoomViewActivityActor();
 
 	@LargeTest
+	@Category({UseCase.Complex.class, On.Item.class, Op.DeletesBelonging.class})
 	@Test public void testImageDeletedWithItem() throws IOException {
 		ItemEditActivityActor newItem = roomView.addItem();
 		newItem.setName(TEST_ITEM);

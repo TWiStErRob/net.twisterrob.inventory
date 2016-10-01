@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.slf4j.*;
 
@@ -16,6 +17,7 @@ import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInterac
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
@@ -30,6 +32,7 @@ public class ImageLoadingTest {
 		}
 	};
 
+	@Category({UseCase.Complex.class, On.Main.class, On.Item.class})
 	@Test public void test() {
 		onRecyclerItem(withText("!All Categories"))
 				.inAdapterView(withId(R.id.rooms))

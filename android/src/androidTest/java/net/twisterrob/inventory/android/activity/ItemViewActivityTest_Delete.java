@@ -1,8 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.io.IOException;
-
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
@@ -16,11 +15,13 @@ import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
+import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
 
 @RunWith(AndroidJUnit4.class)
+@Category({On.Item.class, Op.DeletesBelonging.class})
 public class ItemViewActivityTest_Delete {
 	@Rule public final ActivityTestRule<ItemViewActivity> activity
 			= new InventoryActivityRule<ItemViewActivity>(ItemViewActivity.class) {
@@ -45,18 +46,22 @@ public class ItemViewActivityTest_Delete {
 		attemptCloseDialog();
 	}
 
-	@Test public void testDeleteCancel() throws IOException {
+	@Category({Op.Cancels.class})
+	@Test public void testDeleteCancel() {
 		DeleteDialogActor deleteDialog = itemView.delete();
 		deleteDialog.cancel();
 
 		db.assertHasItem(TEST_ITEM);
 	}
 
-	@Test public void testDeleteMessage() throws IOException {
+	@Category({Op.ChecksMessage.class})
+	@Test public void testDeleteMessage() {
 		DeleteDialogActor deleteDialog = itemView.delete();
 		deleteDialog.checkDialogMessage(containsString(TEST_ITEM));
 	}
-	@Test public void testDeleteMessageWithContents() throws IOException {
+
+	@Category({Op.ChecksMessage.class})
+	@Test public void testDeleteMessageWithContents() {
 		db.createItem(itemID, TEST_SUBITEM);
 
 		DeleteDialogActor deleteDialog = itemView.delete();
@@ -66,7 +71,8 @@ public class ItemViewActivityTest_Delete {
 				containsString(TEST_SUBITEM)
 		));
 	}
-	@Test public void testDeleteMessageWithContentsMultiple() throws IOException {
+
+	@Test public void testDeleteMessageWithContentsMultiple() {
 		db.createItem(itemID, TEST_SUBITEM);
 		db.createItem(itemID, TEST_SUBITEM_OTHER);
 
@@ -78,14 +84,15 @@ public class ItemViewActivityTest_Delete {
 		));
 	}
 
-	@Test public void testDeleteConfirm() throws IOException {
+	@Test public void testDeleteConfirm() {
 		DeleteDialogActor deleteDialog = itemView.delete();
 		deleteDialog.confirm();
 
 		db.assertHasNoItem(TEST_ITEM);
 		itemView.assertClosing();
 	}
-	@Test public void testDeleteConfirmWithContents() throws IOException {
+
+	@Test public void testDeleteConfirmWithContents() {
 		db.createItem(itemID, TEST_SUBITEM);
 
 		DeleteDialogActor deleteDialog = itemView.delete();
@@ -95,7 +102,9 @@ public class ItemViewActivityTest_Delete {
 		db.assertHasNoItem(TEST_SUBITEM);
 		itemView.assertClosing();
 	}
-	@Test public void testDeleteConfirmWithContentsMultiple() throws IOException {
+
+	@Category({UseCase.Complex.class})
+	@Test public void testDeleteConfirmWithContentsMultiple() {
 		db.createItem(itemID, TEST_SUBITEM);
 		db.createItem(itemID, TEST_SUBITEM_OTHER);
 

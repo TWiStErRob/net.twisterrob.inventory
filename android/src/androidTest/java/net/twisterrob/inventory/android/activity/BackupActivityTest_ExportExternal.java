@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.activity;
 import java.util.*;
 
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.*;
 import org.junit.runner.RunWith;
 import org.slf4j.*;
@@ -27,6 +28,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.categories.*;
+import net.twisterrob.inventory.android.test.categories.On.Backup;
 
 import static net.twisterrob.android.test.automators.AndroidAutomator.*;
 import static net.twisterrob.android.test.automators.GoogleDriveAutomator.*;
@@ -36,6 +39,7 @@ import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
+@Category({On.Backup.Export.class, Backup.External.class})
 public class BackupActivityTest_ExportExternal {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_ExportExternal.class);
 	@Rule public final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
@@ -47,12 +51,14 @@ public class BackupActivityTest_ExportExternal {
 		BackupActivityTest.assertEmptyState();
 	}
 
+	@Category({UseCase.InitialCondition.class})
 	@After public void activityIsActive() {
 		onView(isRoot()).perform(loopMainThreadUntilIdle()); // otherwise the assertion may fail
 		assertThat(activity.getActivity(), isInStage(Stage.RESUMED));
 		BackupActivityTest.assertEmptyState();
 	}
 
+	@Category({Op.Cancels.class})
 	@Test public void testCancelWarning() throws Exception {
 		onActionMenuView(withText(R.string.backup_export_external)).perform(click());
 		onView(withId(R.id.alertTitle))
@@ -63,6 +69,7 @@ public class BackupActivityTest_ExportExternal {
 	}
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
+	@Category({Op.Cancels.class})
 	@Test public void testCancelChooser() throws Exception {
 		onActionMenuView(withText(R.string.backup_export_external)).perform(click());
 		clickPositiveInDialog();
@@ -72,6 +79,7 @@ public class BackupActivityTest_ExportExternal {
 	}
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
+	@Category({Op.Cancels.class})
 	@Test public void testCancelDrive() throws Exception {
 		assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
 		onActionMenuView(withText(R.string.backup_export_external)).perform(click());
@@ -85,6 +93,7 @@ public class BackupActivityTest_ExportExternal {
 
 	@FlakyTest(detail = "Sometimes it doesn't find clickOnLabel(selectFolder()): UiObjectNotFoundException: UiSelector[TEXT=Select folder]")
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
+	@Category({UseCase.Complex.class})
 	@Test public void testSuccessfulFullExport() throws Exception {
 		assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
 		onActionMenuView(withText(R.string.backup_export_external)).perform(click());

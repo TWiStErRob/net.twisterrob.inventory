@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
@@ -13,10 +14,12 @@ import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
+import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.inventory.android.content.Constants.*;
 
 @RunWith(AndroidJUnit4.class)
+@Category({On.Room.class, Op.DeletesBelonging.class})
 public class RoomViewActivityTest_Delete {
 	@Rule public final ActivityTestRule<RoomViewActivity> activity
 			= new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class) {
@@ -39,6 +42,7 @@ public class RoomViewActivityTest_Delete {
 		DialogMatchers.attemptCloseDialog();
 	}
 
+	@Category({Op.Cancels.class})
 	@Test public void testDeleteCancel() {
 		DeleteDialogActor delete = roomView.delete();
 		delete.cancel();
@@ -46,11 +50,14 @@ public class RoomViewActivityTest_Delete {
 		db.assertHasRoom(TEST_ROOM);
 	}
 
+	@Category({Op.ChecksMessage.class})
 	@Test public void testDeleteMessage() {
 		DeleteDialogActor delete = roomView.delete();
 
 		delete.checkDialogMessage(containsString(TEST_ROOM));
 	}
+
+	@Category({Op.ChecksMessage.class})
 	@Test public void testDeleteMessageWithContents() {
 		db.createItemInRoom(roomID, TEST_ITEM);
 
@@ -61,6 +68,8 @@ public class RoomViewActivityTest_Delete {
 				containsString(TEST_ITEM)
 		));
 	}
+
+	@Category({Op.ChecksMessage.class})
 	@Test public void testDeleteMessageWithContentsMultiple() {
 		db.createItemInRoom(roomID, TEST_ITEM);
 		db.createItemInRoom(roomID, TEST_ITEM_OTHER);
@@ -93,6 +102,7 @@ public class RoomViewActivityTest_Delete {
 		db.assertHasNoItem(TEST_ITEM);
 	}
 
+	@Category({UseCase.Complex.class})
 	@Test public void testDeleteConfirmWithContentsMultiple() {
 		db.createItemInRoom(roomID, TEST_ITEM);
 		db.createItemInRoom(roomID, TEST_ITEM_OTHER);

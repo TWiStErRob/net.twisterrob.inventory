@@ -1,8 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.io.IOException;
-
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
@@ -17,11 +16,15 @@ import net.twisterrob.inventory.android.activity.data.ItemViewActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
+import net.twisterrob.inventory.android.test.categories.*;
+import net.twisterrob.inventory.android.test.categories.UseCase.Error;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
 
+@SuppressWarnings("unused")
 @RunWith(AndroidJUnit4.class)
+@Category({On.Item.class, Op.MovesBelonging.class})
 public class ItemViewActivityTest_Move {
 	@Rule public final ActivityTestRule<ItemViewActivity> activity
 			= new InventoryActivityRule<ItemViewActivity>(ItemViewActivity.class) {
@@ -49,7 +52,8 @@ public class ItemViewActivityTest_Move {
 		attemptCloseDialog();
 	}
 
-	@Test public void testMoveCancel() throws IOException {
+	@Category({Op.Cancels.class})
+	@Test public void testMoveCancel() {
 		db.assertHasItem(TEST_ITEM);
 
 		MoveTargetActivityActor move = itemView.move();
@@ -58,7 +62,8 @@ public class ItemViewActivityTest_Move {
 		db.assertHasItem(TEST_ITEM);
 	}
 
-	@Test public void testMoveNoMove() throws IOException {
+	@Category({Op.Cancels.class})
+	@Test public void testMoveNoMove() {
 		db.assertHasItem(TEST_ITEM);
 
 		MoveTargetActivityActor move = itemView.move();
@@ -69,7 +74,8 @@ public class ItemViewActivityTest_Move {
 		db.assertHasItemInRoom(TEST_ROOM, TEST_ITEM);
 	}
 
-	@Test public void testMoveAlreadyExists() throws IOException {
+	@Category({Error.class, Op.ChecksMessage.class})
+	@Test public void testMoveAlreadyExists() {
 		long targetID = db.createItemInRoom(roomID, TEST_ITEM_OTHER);
 		long duplicateID = db.createItem(targetID, TEST_ITEM);
 		db.assertHasItemInRoom(TEST_ROOM, TEST_ITEM_OTHER);
@@ -90,7 +96,7 @@ public class ItemViewActivityTest_Move {
 		db.assertHasItemInItem(TEST_ITEM_OTHER, TEST_ITEM);
 	}
 
-	@Test public void testMoveToAnotherItem() throws IOException {
+	@Test public void testMoveToAnotherItem() {
 		long targetID = db.createItemInRoom(roomID, TEST_ITEM_OTHER);
 		db.assertHasItemInRoom(TEST_ROOM, TEST_ITEM_OTHER);
 
@@ -105,7 +111,7 @@ public class ItemViewActivityTest_Move {
 		itemView.hasItem(TEST_ITEM);
 		itemView.assertClosing(activity.getActivity());
 	}
-	@Test public void testMoveToAnotherItemWithContents() throws IOException {
+	@Test public void testMoveToAnotherItemWithContents() {
 		db.createItem(itemID, TEST_SUBITEM);
 		db.assertHasItemInItem(TEST_ITEM, TEST_SUBITEM);
 
@@ -114,7 +120,7 @@ public class ItemViewActivityTest_Move {
 		db.assertHasItemInItem(TEST_ITEM, TEST_SUBITEM);
 	}
 
-	@Test public void testMoveToOtherRoom() throws IOException {
+	@Test public void testMoveToOtherRoom() {
 		long targetID = db.createRoom(propertyID, TEST_ROOM_OTHER);
 		db.assertHasRoomInProperty(TEST_PROPERTY, TEST_ROOM_OTHER);
 
@@ -130,7 +136,7 @@ public class ItemViewActivityTest_Move {
 		roomView.hasItem(TEST_ITEM);
 		itemView.assertClosing();
 	}
-	@Test public void testMoveToRoomWithContents() throws IOException {
+	@Test public void testMoveToRoomWithContents() {
 		db.createItem(itemID, TEST_SUBITEM);
 		db.assertHasItemInItem(TEST_ITEM, TEST_SUBITEM);
 
@@ -139,7 +145,7 @@ public class ItemViewActivityTest_Move {
 		db.assertHasItemInItem(TEST_ITEM, TEST_SUBITEM);
 	}
 
-	@Test public void testMoveToItemInAnotherProperty() throws IOException {
+	@Test public void testMoveToItemInAnotherProperty() {
 		long otherPropertyID = db.createProperty(TEST_PROPERTY_OTHER);
 		long otherRoomID = db.createRoom(otherPropertyID, TEST_ROOM_OTHER);
 		long targetID = db.createItemInRoom(otherRoomID, TEST_ITEM_OTHER);
@@ -161,7 +167,9 @@ public class ItemViewActivityTest_Move {
 		itemView.hasItem(TEST_ITEM);
 		itemView.assertClosing(activity.getActivity());
 	}
-	@Test public void testMoveToItemInAnotherPropertyWithContents() throws IOException {
+
+	@Category({UseCase.Complex.class})
+	@Test public void testMoveToItemInAnotherPropertyWithContents() {
 		db.createItem(itemID, TEST_SUBITEM);
 		db.assertHasItemInItem(TEST_ITEM, TEST_SUBITEM);
 
@@ -170,7 +178,7 @@ public class ItemViewActivityTest_Move {
 		db.assertHasItemInItem(TEST_ITEM, TEST_SUBITEM);
 	}
 
-	@Test public void testMoveToRoomInAnotherProperty() throws IOException {
+	@Test public void testMoveToRoomInAnotherProperty() {
 		long otherPropertyID = db.createProperty(TEST_PROPERTY_OTHER);
 		long targetID = db.createRoom(otherPropertyID, TEST_ROOM_OTHER);
 		db.assertHasRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM_OTHER);
@@ -191,7 +199,9 @@ public class ItemViewActivityTest_Move {
 		roomView.hasItem(TEST_ITEM);
 		itemView.assertClosing();
 	}
-	@Test public void testMoveToRoomInAnotherPropertyWithContents() throws IOException {
+
+	@Category({UseCase.Complex.class})
+	@Test public void testMoveToRoomInAnotherPropertyWithContents() {
 		db.createItem(itemID, TEST_SUBITEM);
 		db.assertHasItemInItem(TEST_ITEM, TEST_SUBITEM);
 

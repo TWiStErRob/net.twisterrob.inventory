@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
@@ -12,11 +13,13 @@ import net.twisterrob.inventory.android.activity.data.PropertyViewActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
+import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
 
 @RunWith(AndroidJUnit4.class)
+@Category({On.Property.class, Op.DeletesBelonging.class})
 public class PropertyViewActivityTest_Delete {
 	@Rule public final ActivityTestRule<PropertyViewActivity> activity
 			= new InventoryActivityRule<PropertyViewActivity>(PropertyViewActivity.class) {
@@ -37,6 +40,7 @@ public class PropertyViewActivityTest_Delete {
 		attemptCloseDialog();
 	}
 
+	@Category({Op.Cancels.class})
 	@Test public void testDeleteCancel() {
 		DeleteDialogActor deleteDialog = propertyView.delete();
 		deleteDialog.cancel();
@@ -44,12 +48,14 @@ public class PropertyViewActivityTest_Delete {
 		db.assertHasProperty(TEST_PROPERTY);
 	}
 
+	@Category({Op.ChecksMessage.class})
 	@Test public void testDeleteMessage() {
 		DeleteDialogActor deleteDialog = propertyView.delete();
 
 		deleteDialog.checkDialogMessage(containsString(TEST_PROPERTY));
 	}
 
+	@Category({Op.ChecksMessage.class})
 	@Test public void testDeleteMessageWithContents() {
 		db.createRoom(propertyID, TEST_ROOM);
 
@@ -61,6 +67,7 @@ public class PropertyViewActivityTest_Delete {
 		));
 	}
 
+	@Category({Op.ChecksMessage.class})
 	@Test public void testDeleteMessageWithContentsMultiple() {
 		db.createRoom(propertyID, TEST_ROOM);
 		db.createRoom(propertyID, TEST_ROOM_OTHER);
@@ -93,6 +100,7 @@ public class PropertyViewActivityTest_Delete {
 		db.assertHasNoRoom(TEST_ROOM);
 	}
 
+	@Category({UseCase.Complex.class})
 	@Test public void testDeleteConfirmWithContentsMultiple() {
 		db.createRoom(propertyID, TEST_ROOM);
 		db.createRoom(propertyID, TEST_ROOM_OTHER);
