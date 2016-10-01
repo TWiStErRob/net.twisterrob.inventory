@@ -9,11 +9,15 @@ import org.junit.runners.Suite;
 		AllTestsSuite.class,
 })
 @Categories.IncludeCategory(matchAny = true, value = {
-
+		// add @Category({QuickSuite.QuickCategory.class}) to tests of interest
+//		QuickSuite.QuickCategory.class,
 })
 @Categories.ExcludeCategory(matchAny = true, value = {
 
 })
-@SuppressWarnings("DefaultAnnotationParam")
+@SuppressWarnings({"DefaultAnnotationParam", "deprecation"})
 public class QuickSuite {
+	/** @deprecated don't commit any uses of this class */
+	@Deprecated public interface QuickCategory {
+	}
 }
