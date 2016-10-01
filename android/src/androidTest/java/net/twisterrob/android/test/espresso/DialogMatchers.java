@@ -13,6 +13,7 @@ import android.view.*;
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
+import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
@@ -179,6 +180,7 @@ public class DialogMatchers {
 	}
 	public static void ensureDialogClosed() {
 		tryCloseDialog(true);
+		assertNoDialogIsDisplayed(); // double-check ourselves
 	}
 	private static void tryCloseDialog(boolean wait) {
 		if (!wait) {
@@ -190,14 +192,14 @@ public class DialogMatchers {
 				return;
 			}
 		}
-		onView(isDialogView())
-				.withFailureHandler(new FailureHandler() {
-					@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
-						clickNegativeInDialog(); // only runs if doesNotExist failed
-					}
-				})
-				.check(doesNotExist());
-		assertNoDialogIsDisplayed(); // double-check ourselves
+		// press back button if there's a dialog displayed
+		onView(isRoot()).inRoot(isDialog()).withFailureHandler(new Ignore()).perform(pressBack());
+		// press negative button if there's still a dialog displayed
+		onView(withId(BUTTON_NEGATIVE)).inRoot(isDialog()).withFailureHandler(new Ignore()).perform(click());
+		// pressing the negative button will fail only if there's no dialog, or the button is not visible
+		// both of these are suppressed via a failure handler
+		// as this is a best effort implementation which should change how tests behave
+		// (i.e. don't fail when there's no dialog; and if there's an invalid dialog, the next step will fail on it)
 	}
 
 	private static class ClickInDialog implements ViewAction {
