@@ -26,6 +26,7 @@
 		<!-- Added by Gradle: <uses-library android:name="android.test.runner" /> -->
 
 		<activity android:name="net.twisterrob.inventory.android.test.activity.TestActivity" />
+		<activity android:name="net.twisterrob.inventory.android.test.activity.TestActivityCompat" />
 		<activity android:name="net.twisterrob.inventory.android.test.activity.CompatibleLauncher" />
 		<activity
 			android:name="net.twisterrob.android.test.espresso.EspressoExtensionsTest_onActionMenuView$TestActivity"
