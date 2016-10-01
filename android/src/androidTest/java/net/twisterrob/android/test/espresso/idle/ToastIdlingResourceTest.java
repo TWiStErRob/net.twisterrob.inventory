@@ -102,6 +102,7 @@ public class ToastIdlingResourceTest {
 
 	@Test public void testBecomesIdleRightAfterToastCancelled() {
 		showToastAndStartWaitingForIdle().cancel();
+		// TODO fails here when running in a suite
 		assertFalse(callback.hasTransitionedToIdle());
 		onView(isRoot()).perform(EspressoExtensions.loopMainThreadUntilIdle());
 		assertTrue(callback.hasTransitionedToIdle());

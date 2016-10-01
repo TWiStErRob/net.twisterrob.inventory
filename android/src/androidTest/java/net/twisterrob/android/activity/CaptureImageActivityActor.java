@@ -17,11 +17,17 @@ import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 
+import net.twisterrob.android.utils.tools.IOTools;
+
 public class CaptureImageActivityActor {
 	public Matcher<Intent> intendCamera(File file, Bitmap mockText) throws IOException {
 		Uri resultFile = Uri.fromFile(file);
 		OutputStream output = getContext().getContentResolver().openOutputStream(resultFile);
-		assumeTrue("Cannot save bitmap to " + resultFile, mockText.compress(CompressFormat.PNG, 100, output));
+		try {
+			assumeTrue("Cannot save bitmap to " + resultFile, mockText.compress(CompressFormat.PNG, 100, output));
+		} finally {
+			IOTools.ignorantClose(output);
+		}
 		Matcher<Intent> expectedIntent = hasComponent(CaptureImage.class.getName());
 		intending(expectedIntent)
 				.respondWith(new ActivityResult(Activity.RESULT_OK, new Intent(null, resultFile)));

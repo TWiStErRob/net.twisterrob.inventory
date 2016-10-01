@@ -71,7 +71,7 @@ public class ScreenshotFailure implements TestRule {
 				try {
 					String dirName = String.format(Locale.ROOT, "%s", description.getClassName());
 					String shotName = String.format(Locale.ROOT, "%d_%s.png", started, description.getMethodName());
-					File shot = takeScreenshot(dirName, shotName);
+					File shot = takeScreenshot(fixFileSystemName(dirName), fixFileSystemName(shotName));
 					LOG.warn("Screenshot taken to {}", getADBPullPath(shot));
 				} catch (Throwable shotEx) {
 					if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
@@ -82,6 +82,9 @@ public class ScreenshotFailure implements TestRule {
 				}
 				throw ex;
 			}
+		}
+		private @NonNull String fixFileSystemName(@NonNull String name) {
+			return name.replaceAll("[^a-zA-Z0-9\\-_$!#@+ .,(){}\\[\\]]", "_");
 		}
 	}
 
