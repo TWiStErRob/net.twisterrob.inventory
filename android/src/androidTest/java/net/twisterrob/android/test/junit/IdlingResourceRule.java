@@ -3,15 +3,24 @@ package net.twisterrob.android.test.junit;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.*;
 
 import android.support.annotation.NonNull;
 import android.support.test.espresso.*;
 
 public class IdlingResourceRule implements TestRule {
-	private IdlingResource idlingResource;
+	private static final Logger LOG = LoggerFactory.getLogger(IdlingResourceRule.class);
+
+	private final IdlingResource idlingResource;
+	private boolean verbose = false;
 
 	public IdlingResourceRule(@NonNull IdlingResource resource) {
 		idlingResource = resource;
+	}
+
+	public IdlingResourceRule beVerbose() {
+		verbose = true;
+		return this;
 	}
 
 	public @NonNull IdlingResource getIdlingResource() {
@@ -29,11 +38,25 @@ public class IdlingResourceRule implements TestRule {
 		}
 		@Override public void evaluate() throws Throwable {
 			try {
-				Espresso.registerIdlingResources(idlingResource);
+				register(getIdlingResource());
 				base.evaluate();
 			} finally {
-				Espresso.unregisterIdlingResources(idlingResource);
+				unregister(getIdlingResource());
 			}
 		}
+	}
+
+	protected void register(IdlingResource resource) {
+		if (verbose) {
+			LOG.trace("Registering {}", resource);
+		}
+		Espresso.registerIdlingResources(resource);
+	}
+
+	protected void unregister(IdlingResource resource) {
+		if (verbose) {
+			LOG.trace("Unregistering {}", resource);
+		}
+		Espresso.unregisterIdlingResources(resource);
 	}
 }

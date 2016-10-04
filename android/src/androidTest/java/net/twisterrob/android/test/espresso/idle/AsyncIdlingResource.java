@@ -57,6 +57,10 @@ public abstract class AsyncIdlingResource implements IdlingResource {
 	@MainThread
 	protected abstract void waitForIdleAsync();
 
+	public ResourceCallback getIdleTransitionCallback() {
+		return resourceCallback;
+	}
+
 	@MainThread
 	@Override public void registerIdleTransitionCallback(ResourceCallback resourceCallback) {
 		this.resourceCallback = resourceCallback;

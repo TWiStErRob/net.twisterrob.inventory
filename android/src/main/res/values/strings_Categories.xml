@@ -61,7 +61,7 @@
 	<string name="category_bottle" level="2">liquid containers</string>
 	<string name="category_bottle_keywords">bottle, plastic bottle, bottle cap, baby bottle, hip flask, thermos</string>
 	<string name="category_jar" level="2">cans &amp; jars</string>
-	<string name="category_jar_keywords">mason jar, buckle jar, jar lid, aluminium can/tin can</string>
+	<string name="category_jar_keywords">mason jar, buckle jar, jar lid, aluminium can/tin can, soda can</string>
 	<string name="category_container_bulk_leakproof" level="2">bulk containers</string>
 	<string name="category_container_bulk_leakproof_keywords">basin, bucket, pail, jerrycan/gas can, barrel/drum/cask</string>
 	<string name="category_container_small_leakproof" level="2">small containers</string>
@@ -161,7 +161,7 @@
 	<string name="category_fitting" level="1">Fittings</string>
 	<string name="category_fitting_keywords">pipe, valve, tube</string>
 	<string name="category_aperture" level="2" icon="@raw/item_door">aperture components</string>
-	<string name="category_aperture_keywords">window handle, blinds, doorknob, door handle, door latch, door chain, door lock, key/keys</string>
+	<string name="category_aperture_keywords">window handle, blinds, curtain rod, doorknob, door handle, door latch, door chain, door lock, key/keys</string>
 	<string name="category_lighting" level="2" icon="@raw/item_bulb">lighting</string>
 	<string name="category_lighting_keywords">desk lamp, standing lamp, ceiling lamp, light bulb, lampshade, fluorescent tube, neon sign, laser</string>
 	<string name="category_clock" level="2" icon="@raw/item_clock">clocks</string>
@@ -302,7 +302,7 @@
 	<string name="category_accessory_decorative" level="2">decorative accessories</string>
 	<string name="category_accessory_decorative_keywords">tie, neck tie, bow tie, badge, rosette, hairband, hair clip, scrunchie, rubber band, hairnet, headpiece, collar</string>
 	<string name="category_jewelry" level="2">jewelry</string>
-	<string name="category_jewelry_keywords">tiara, earrings, necklace, pendant, medallion, medal, bracelet, ring, piercing</string>
+	<string name="category_jewelry_keywords">tiara, earrings, necklace, pendant, medallion, medal, bracelet, ring, piercing, brooch, badge, pin</string>
 
 	<string name="category_sport_clothing" level="1" icon="@raw/category_soccer">Sports</string>
 	<string name="category_sport_clothing_keywords">running gear, cycling shorts, sweatband, football boots/cleats/soccer shoes, ballet shoes</string>
@@ -387,11 +387,11 @@
 	<string name="category_model_keywords">@string/empty</string>
 	<!-- 1,2,3,6,8,12,18 -->
 	<string name="category_figurine" level="2">figurine</string>
-	<string name="category_figurine_keywords">action figure, farm animal, dinosaur, toy soldier, puppet, marionette; G.I. Joe, Star Wars, Star Trek, Transformers, Avengers, Smurfs, Barbi, Monster High</string>
+	<string name="category_figurine_keywords">action figure, farm animal, dinosaur, toy soldier, puppet, marionette; G.I. Joe, Star Wars, Star Trek, Transformers, Avengers, Smurfs, Barbi, Monster High, Nendoroid, Amiibo</string>
 	<string name="category_doll" level="2">doll</string>
 	<string name="category_doll_keywords">rag doll, ball-joined doll, peg doll, bisque doll, celebrity doll, matryoshka doll/russian nesting doll</string>
 	<string name="category_model_monster" level="2">monster model</string>
-	<string name="category_model_monster_keywords">stuffed animal, plush figure, squeaky toy/squeeze toy, rubber duck, jack-in-the-box; Furby</string>
+	<string name="category_model_monster_keywords">stuffed animal, plush figure, squeaky toy/squeeze toy, rubber duck, jack-in-the-box; Furby, Beanie Babies</string>
 	<string name="category_model_static" level="2">static model</string>
 	<string name="category_model_static_keywords">car, motocycle, aircraft, ship, submarine, tank; Matchbox</string>
 	<string name="category_model_active" level="2">active model</string>
@@ -520,7 +520,7 @@
 	<string name="category_electronic_portable" level="2">portable media players</string>
 	<string name="category_electronic_portable_keywords">digital audio player, MP3 player, iPod, Walkman, boombox/ghetto blaster, e-reader/e-book reader, Kindle, Nook</string>
 	<string name="category_electronic_transmission" level="2">signal processors</string>
-	<string name="category_electronic_transmission_keywords">set-top box, TV tuner, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor, GPS/satnav/satellite navigation</string>
+	<string name="category_electronic_transmission_keywords">set-top box, TV tuner, telephone, cordless telephone, modem, WiFi router, network switch, AM/FM radio, radio player, clock radio, walkie-talkie/handheld transceiver, baby monitor, GPS/satnav/satellite navigation, amateur radio/ham radio, transceiver, amplifier</string>
 	<string name="category_electronic_speaker" level="2" icon="@raw/item_speaker">speakers</string>
 	<string name="category_electronic_speaker_keywords">loudspeaker, sub-woofer, woofer, tweeter, surround, earphones, earbuds, headphones, headset, portable speakers/wireless speaker, noise cancelling</string>
 	<string name="category_electronic_display" level="2">displays</string>
@@ -713,7 +713,7 @@
 	<string name="category_material_adhesive" level="2">adhesive</string>
 	<string name="category_material_adhesive_keywords">glue, Blu-tack, wallpaper paste, Sellotape/Scotch/Sticky Tape, Duct/Cloth tape, electric tape, masking tape/paint tape, silicone sealant, caulking, thermal paste/thermal gel</string>
 	<string name="category_material_fastener" level="2">fastener</string>
-	<string name="category_material_fastener_keywords">nail, pin, needle, rivet, screw, screw eye, hook, bolt, nut, shim, spacer, dowel, wall plug/rawl plug/screw anchor, peg, tie-wrap/cable tie, paperclip, push pin, binder clip</string>
+	<string name="category_material_fastener_keywords">nail, pin, needle, rivet, screw, screw eye, hook, bolt, nut, shim, spacer, dowel, wall plug/rawl plug/screw anchor, peg, tie-wrap/cable tie, paperclip, push pin, binder clip, curtain clip, curtain ring, curtain rod bracket</string>
 
 
 	<!--=========================================================================================================-->
@@ -726,7 +726,7 @@
 	<string name="category_certificate" level="2">certificates</string>
 	<string name="category_certificate_keywords">birth certificate, professional certification, academic degree, diploma</string>
 	<string name="category_document_identity" level="2">identity document</string>
-	<string name="category_document_identity_keywords">personal identity card, driver\'s licence, address card, passport, magnetic card, swipe card</string>
+	<string name="category_document_identity_keywords">personal identity card, address card, passport, driver\'s licence, motor vehicle registration, magnetic card, swipe card, press pass, VIP pass, name tag</string>
 	<string name="category_deed" level="2">deed</string>
 	<string name="category_deed_keywords">warranty, licence, land registration, contract, agreement, insurance, will</string>
 
@@ -741,7 +741,7 @@
 	<string name="category_currency" level="2">currency</string>
 	<string name="category_currency_keywords">cash, bill/paper money/note, coin, credit card, debit card</string>
 	<string name="category_scrip" level="2">scrips</string>
-	<string name="category_scrip_keywords">voucher/coupon, loyalty card, ticket, season pass, press pass, token, gift card, telephone card/calling card, top-up card, prepaid card, pay-as-you-go cards</string>
+	<string name="category_scrip_keywords">voucher/coupon, loyalty card, ticket, season pass, token, gift card, telephone card/calling card, top-up card, prepaid card, pay-as-you-go cards</string>
 
 	<string name="category_material_stationery" level="1">stationery paper</string>
 	<string name="category_material_stationery_keywords">sheet paper, notepad, notebook, sticky notes, scrapbook, envelope</string>

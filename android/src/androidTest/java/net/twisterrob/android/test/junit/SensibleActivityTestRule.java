@@ -8,12 +8,16 @@ import android.app.Activity;
 import android.content.*;
 import android.support.annotation.*;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
 
 import net.twisterrob.android.test.*;
 import net.twisterrob.android.test.espresso.ScreenshotFailure;
+import net.twisterrob.android.test.espresso.idle.AllActivitiesDestroyedIdlingResource;
+
+import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
 public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRule<T> {
 	private static final String TAG = "ActivityTestRule";
@@ -73,6 +77,25 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		super.afterActivityFinished();
 		Intents.release();
 		systemAnimations.restore();
+	}
+
+	protected void waitForEverythingToDestroy() {
+		AllActivitiesDestroyedIdlingResource activities = new AllActivitiesDestroyedIdlingResource();
+		Espresso.registerIdlingResources(activities);
+		waitForIdleSync();
+		Espresso.unregisterIdlingResources(activities);
+	}
+
+	protected void waitForIdleSync() {
+		try {
+			runOnUiThread(new Runnable() {
+				@Override public void run() {
+					getUIControllerHack().loopMainThreadUntilIdle();
+				}
+			});
+		} catch (Throwable ex) {
+			throw android.support.test.espresso.core.deps.guava.base.Throwables.propagate(ex);
+		}
 	}
 
 	/**

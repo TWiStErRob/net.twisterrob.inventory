@@ -8,6 +8,7 @@ import javax.annotation.*;
 
 import org.slf4j.*;
 
+// TODO refactor get/set to have try* variants
 public class ReflectionTools {
 	private static final Logger LOG = LoggerFactory.getLogger(ReflectionTools.class);
 
@@ -34,6 +35,26 @@ public class ReflectionTools {
 	}
 
 	@SuppressWarnings("unchecked")
+	public static void setStatic(@Nonnull Class<?> clazz, @Nonnull String fieldName, @Nullable Object value) {
+		try {
+			Field field = findDeclaredField(clazz, fieldName);
+			field.setAccessible(true);
+			field.set(null, value);
+		} catch (Exception ex) {
+			LOG.warn("Cannot write static field {} of {} with {}", fieldName, clazz, value, ex);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void setStatic(@Nonnull String className, @Nonnull String fieldName, @Nullable Object value) {
+		try {
+			setStatic(Class.forName(className), fieldName, value);
+		} catch (Exception ex) {
+			LOG.warn("Cannot write static field {} of {} with {}", fieldName, className, value, ex);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
 	public static <T> T get(@Nonnull Object object, @Nonnull String fieldName) {
 		try {
 			Field field = findDeclaredField(object.getClass(), fieldName);
@@ -41,20 +62,21 @@ public class ReflectionTools {
 			return (T)field.get(object);
 		} catch (Exception ex) {
 			//noinspection ConstantConditions prevent NPE when object is null, even though it was declared not null
-			LOG.warn("Cannot read field {} of ({}){}", fieldName, object != null? object.getClass() : null, object, ex);
+			Class<?> clazz = object != null? object.getClass() : null;
+			LOG.warn("Cannot read field {} of ({}){}", fieldName, clazz, object, ex);
 		}
 		return null;
 	}
 
-	public static void set(@Nonnull Object object, @Nonnull String fieldName, Object value) {
+	public static void set(@Nonnull Object object, @Nonnull String fieldName, @Nullable Object value) {
 		try {
 			Field field = findDeclaredField(object.getClass(), fieldName);
 			field.setAccessible(true);
 			field.set(object, value);
 		} catch (Exception ex) {
 			//noinspection ConstantConditions prevent NPE when object is null, even though it was declared not null
-			LOG.warn("Cannot write field {} of ({}){}", fieldName, object != null? object.getClass() : null, object,
-					ex);
+			Class<?> clazz = object != null? object.getClass() : null;
+			LOG.warn("Cannot write field {} of ({}){}", fieldName, clazz, object, ex);
 		}
 	}
 
@@ -98,7 +120,7 @@ public class ReflectionTools {
 	 * @see Class#getDeclaredMethod(String, Class[])
 	 */
 	public static @Nonnull Method findDeclaredMethod(@Nonnull Class<?> clazz,
-			@Nonnull String fieldName, Class<?>... parameterTypes) throws NoSuchMethodException {
+			@Nonnull String fieldName, @Nonnull Class<?>... parameterTypes) throws NoSuchMethodException {
 		do {
 			try {
 				return clazz.getDeclaredMethod(fieldName, parameterTypes);
@@ -110,7 +132,7 @@ public class ReflectionTools {
 	}
 
 	public static @Nullable Method tryFindDeclaredMethod(@Nonnull Class<?> clazz,
-			@Nonnull String fieldName, Class<?>... parameterTypes) {
+			@Nonnull String fieldName, @Nonnull Class<?>... parameterTypes) {
 		try {
 			return findDeclaredMethod(clazz, fieldName, parameterTypes);
 		} catch (NoSuchMethodException e) {
