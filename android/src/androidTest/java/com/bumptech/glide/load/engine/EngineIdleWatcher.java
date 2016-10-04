@@ -1,80 +1,83 @@
 package com.bumptech.glide.load.engine;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
-import android.support.annotation.Nullable;
+import org.slf4j.*;
 
-import com.bumptech.glide.load.Key;
+import com.bumptech.glide.request.ResourceCallback;
 
-public class EngineIdleWatcher {
-	private static final Field mJobs = tryGetJobsField();
+import static net.twisterrob.java.utils.ReflectionTools.*;
 
-	private final Set<Runnable> callbacks = new HashSet<>();
-	private final SelfAwareJobs replacementJobs = new SelfAwareJobs();
+/**
+ * This class is the bridge between package private stuff and the world, don't try to inline it.
+ */
+public class EngineIdleWatcher implements EngineExternalLifecycle.PhaseCallbacks {
+	private static final Logger LOG = LoggerFactory.getLogger("EngineIdleWatcher");
+	private final Set<Runnable> idleCallbacks = new HashSet<>();
+	private final EngineExternalLifecycle lifecycle;
 
+	private boolean logEvents = false;
+
+	public EngineIdleWatcher(Engine engine) {
+		lifecycle = new EngineExternalLifecycle(engine, this);
+	}
+
+	public void setLogEvents(boolean logEvents) {
+		this.logEvents = logEvents;
+	}
 	public void subscribe(Runnable callback) {
-		callbacks.add(callback);
+		idleCallbacks.add(callback);
 	}
 
 	public void unsubscribe(Runnable callback) {
-		callbacks.remove(callback);
+		idleCallbacks.remove(callback);
 	}
 
 	public boolean isIdle() {
-		return replacementJobs.isEmpty();
+		Collection<EngineJob> jobs = lifecycle.getJobs();
+		Collection<? extends ResourceCallback> active = lifecycle.getActive();
+		//LOG.trace("{}/{}: active={}", this, lifecycle,  active.size());
+		return jobs.isEmpty() && active.isEmpty();
 	}
 
 	private void tryToCallBack() {
 		if (isIdle()) {
-			for (Runnable callback : callbacks) {
+			for (Runnable callback : idleCallbacks) {
 				callback.run();
 			}
 		}
 	}
 
-	public void associateWith(@Nullable Engine engine) {
-		replacementJobs.setEngine(engine);
-	}
-
-	private class SelfAwareJobs extends HashMap<Key, EngineJob> {
-		private Engine currentEngine;
-
-		@Override public EngineJob remove(Object key) {
-			EngineJob removed = super.remove(key);
-			tryToCallBack();
-			return removed;
-		}
-
-		public void setEngine(@Nullable Engine engine) {
-			if (currentEngine == engine) {
-				return;
-			}
-			try {
-				this.clear();
-				if (mJobs != null && engine != null) {
-					@SuppressWarnings("unchecked")
-					Map<Key, EngineJob> original = (Map<Key, EngineJob>)mJobs.get(engine);
-					this.putAll(original);
-					mJobs.set(engine, this);
-				} else {
-					// just ignore, reflection went haywire, isIdle will be true from here on
-				}
-			} catch (Exception ex) {
-				throw new IllegalStateException("Cannot hack Engine.jobs", ex);
-			}
-			currentEngine = engine;
+	@Override public void starting(Engine engine, EngineKey key, EngineJob job) {
+		if (logEvents) {
+			LOG.trace("{}.starting {}: {}", this, job, id(key));
 		}
 	}
-
-	private static Field tryGetJobsField() {
-		try {
-			Field field;
-			field = Engine.class.getDeclaredField("jobs");
-			field.setAccessible(true);
-			return field;
-		} catch (Exception ex) {
-			return null;
+	@Override public void finishing(Engine engine, EngineKey key, EngineJob job) {
+		if (logEvents) {
+			LOG.trace("{}.finishing {}: {}", this, job, id(key));
 		}
+	}
+	@Override public void cancelled(Engine engine, EngineKey key, EngineJob job) {
+		if (logEvents) {
+			LOG.trace("{}.cancelled {}: {}", this, job, id(key));
+		}
+		tryToCallBack();
+	}
+	@Override public void loadSuccess(Engine engine, EngineKey key, EngineJob job) {
+		if (logEvents) {
+			LOG.trace("{}.loadSuccess {}: {}", this, job, id(key));
+		}
+		tryToCallBack();
+	}
+	@Override public void loadFailure(Engine engine, EngineKey key, EngineJob job) {
+		if (logEvents) {
+			LOG.trace("{}.loadFailure {}: {}", this, job, id(key));
+		}
+		tryToCallBack();
+	}
+
+	private Object id(EngineKey key) {
+		return get(key, "id") + "[" + get(key, "width") + "x" + get(key, "height") + "]";
 	}
 }

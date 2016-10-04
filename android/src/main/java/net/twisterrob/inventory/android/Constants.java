@@ -7,7 +7,7 @@ import android.content.*;
 import android.graphics.*;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v4.content.*;
 import android.support.v4.graphics.ColorUtils;
 
@@ -97,11 +97,92 @@ public interface Constants {
 	}
 
 	class Pic {
-		public static <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz) {
-			ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, App.getAppContext());
+		private static Pic instance = new Pic(App.getAppContext());
+
+		/**
+		 * Achieve a ghost-like image, this is to be used where the user can replace it with a real photo.
+		 */
+		private final ColorFilter ghostFilter;
+		/**
+		 * Color somewhere between accent and accentDark.
+		 * This means that it'll be visible even if those are used as a background where this tint is applied.
+		 * There's no point in changing accentDark to this mixture, because then selection highlight won't work nicely. 
+		 */
+		private final ColorFilter tintFilter;
+
+		private final DrawableRequestBuilder<Uri> imageRequest;
+		private final DrawableRequestBuilder<Integer> svgRequest;
+		private final DrawableRequestBuilder<Integer> svgRequestTinted;
+
+		private Pic(Context context) {
+			context = context.getApplicationContext();
+			DrawableRequestBuilder<Integer> baseSvgRequest = baseRequest(Integer.class, context)
+					.dontAnimate()
+					.signature(new StringSignature(BuildConfig.VERSION_NAME))
+					.priority(Priority.HIGH)
+					.decoder(getSvgDecoder(context));
+			if (DISABLE && BuildConfig.DEBUG) {
+				LoggingListener.ResourceFormatter formatter = new ResourceFormatter(context);
+				baseSvgRequest.listener(new LoggingListener<Integer, GlideDrawable>("SVG", formatter));
+			}
+			ghostFilter = createGhostFilter(context);
+			tintFilter = createTintFilter(context);
+
+			svgRequest = baseSvgRequest
+					.clone()
+					.transcoder(new GifBitmapWrapperDrawableTranscoder(
+							new FilteredGlideBitmapDrawableTranscoder(context, "primary-ghost", ghostFilter)
+					));
+			svgRequestTinted = baseSvgRequest
+					.clone()
+					.transcoder(new GifBitmapWrapperDrawableTranscoder(
+							new FilteredGlideBitmapDrawableTranscoder(context, "accent-tint", tintFilter)
+					));
+
+			imageRequest = baseRequest(Uri.class, context)
+					.animate(android.R.anim.fade_in)
+					.priority(Priority.NORMAL);
+			if (DISABLE && BuildConfig.DEBUG) {
+				imageRequest.listener(new LoggingListener<Uri, GlideDrawable>("image"));
+			}
+		}
+
+		private ColorMatrixColorFilter createGhostFilter(Context context) {
+			return new ColorMatrixColorFilter(PictureHelper.postAlpha(0.33f,
+					PictureHelper.tintMatrix(ContextCompat.getColor(context, R.color.primaryDark))
+			));
+		}
+		private ColorMatrixColorFilter createTintFilter(Context context) {
+			return new ColorMatrixColorFilter(PictureHelper.tintMatrix(
+					ColorUtils.blendARGB(
+							ContextCompat.getColor(context, R.color.accent),
+							ContextCompat.getColor(context, R.color.accentDark),
+							0.75f
+					)
+			));
+		}
+		
+		public static DrawableRequestBuilder<Integer> svg() {
+			return instance.svgRequestTinted.clone();
+		}
+		public static DrawableRequestBuilder<Integer> svgNoTint() {
+			return instance.svgRequest.clone();
+		}
+		public static DrawableRequestBuilder<Uri> jpg() {
+			return instance.imageRequest.clone();
+		}
+		public static ColorFilter tint() {
+			return instance.tintFilter;
+		}
+		@VisibleForTesting public static void reset(Context context) {
+			instance = new Pic(context);
+		}
+
+		private <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz, Context context) {
+			ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, context);
 			// FIXME replace this with proper Glide.with calls, don't use App Context
 			DrawableRequestBuilder<T> builder = Glide
-					.with(App.getAppContext())
+					.with(context)
 					.using((StreamModelLoader<T>)loader)
 					.from(clazz)
 					.animate(android.R.anim.fade_in)
@@ -115,71 +196,7 @@ public interface Constants {
 			return builder;
 		}
 
-		private static final DrawableRequestBuilder<Integer> BASE_SVG_REQUEST = baseRequest(Integer.class)
-				.dontAnimate()
-				.signature(new StringSignature(BuildConfig.VERSION_NAME))
-				.priority(Priority.HIGH)
-				.decoder(getSvgDecoder());
-
-		static {
-			if (DISABLE && BuildConfig.DEBUG) {
-				LoggingListener.ResourceFormatter formatter = new ResourceFormatter(App.getAppContext());
-				BASE_SVG_REQUEST.listener(new LoggingListener<Integer, GlideDrawable>("SVG", formatter));
-			}
-		}
-
-		/**
-		 * Achieve a ghost-like image, this is to be used where the user can replace it with a real photo.
-		 */
-		public static final ColorFilter GHOST_FILTER = new ColorMatrixColorFilter(PictureHelper.postAlpha(0.33f,
-				PictureHelper.tintMatrix(ContextCompat.getColor(App.getAppContext(), R.color.primaryDark))
-		));
-		private static final DrawableRequestBuilder<Integer> SVG_REQUEST = BASE_SVG_REQUEST
-				.clone()
-				.transcoder(new GifBitmapWrapperDrawableTranscoder(
-						new FilteredGlideBitmapDrawableTranscoder(App.getAppContext(), "primary-ghost", GHOST_FILTER)
-				));
-
-		/**
-		 * Color somewhere between accent and accentDark.
-		 * This means that it'll be visible even if those are used as a background where this tint is applied.
-		 * There's no point in changing accentDark to this mixture, because then selection highlight won't work nicely. 
-		 */
-		public static final ColorFilter TINT_FILTER = new ColorMatrixColorFilter(PictureHelper.tintMatrix(
-				ColorUtils.blendARGB(
-						ContextCompat.getColor(App.getAppContext(), R.color.accent),
-						ContextCompat.getColor(App.getAppContext(), R.color.accentDark),
-						0.75f
-				)
-		));
-		private static final DrawableRequestBuilder<Integer> SVG_REQUEST_TINTED = BASE_SVG_REQUEST
-				.clone()
-				.transcoder(new GifBitmapWrapperDrawableTranscoder(
-						new FilteredGlideBitmapDrawableTranscoder(App.getAppContext(), "accent-tint", TINT_FILTER)
-				));
-
-		private static final DrawableRequestBuilder<Uri> IMAGE_REQUEST = baseRequest(Uri.class)
-				.animate(android.R.anim.fade_in)
-				.priority(Priority.NORMAL);
-
-		static {
-			if (DISABLE && BuildConfig.DEBUG) {
-				IMAGE_REQUEST.listener(new LoggingListener<Uri, GlideDrawable>("image"));
-			}
-		}
-
-		public static DrawableRequestBuilder<Integer> svg() {
-			return SVG_REQUEST_TINTED.clone();
-		}
-		public static DrawableRequestBuilder<Integer> svgNoTint() {
-			return SVG_REQUEST.clone();
-		}
-		public static DrawableRequestBuilder<Uri> jpg() {
-			return IMAGE_REQUEST.clone();
-		}
-
-		private static GifBitmapWrapperResourceDecoder getSvgDecoder() {
-			Context context = App.getAppContext();
+		private GifBitmapWrapperResourceDecoder getSvgDecoder(Context context) {
 			BitmapPool pool = Glide.get(context).getBitmapPool();
 			return new GifBitmapWrapperResourceDecoder(
 					new ImageVideoBitmapDecoder(

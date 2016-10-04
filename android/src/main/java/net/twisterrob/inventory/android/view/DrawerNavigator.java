@@ -136,7 +136,7 @@ public class DrawerNavigator {
 		}
 		@Override
 		public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-			resource.setColorFilter(Pic.TINT_FILTER);
+			resource.setColorFilter(Pic.tint());
 			menuItem.setIcon(new DrawableWrapper(resource) {
 				@Override public void setColorFilter(ColorFilter cf) {
 					//super.setColorFilter(cf); // don't call
