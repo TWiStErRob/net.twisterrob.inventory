@@ -37,7 +37,9 @@ public class GlideIdlingResource extends AsyncIdlingResource {
 			EngineIdleWatcher oldWatcher = watcher;
 			watcher = new EngineIdleWatcher(engine);
 			watcher.setLogEvents(isVerbose());
-			LOG.warn("Engine changed from {}({}) to {}({})", currentEngine, oldWatcher, engine, watcher);
+			if (currentEngine != null) {
+				LOG.warn("Engine changed from {}({}) to {}({})", currentEngine, oldWatcher, engine, watcher);
+			}
 			currentEngine = engine;
 		}
 		return isIdleCore();
