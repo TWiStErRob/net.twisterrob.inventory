@@ -3,7 +3,6 @@ package net.twisterrob.inventory.android.activity;
 import java.io.File;
 import java.util.*;
 
-import org.hamcrest.Matcher;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.*;
@@ -11,125 +10,119 @@ import org.junit.runner.*;
 import org.junit.runners.model.Statement;
 
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.io.FileMatchers.*;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.contrib.RecyclerViewActions.*;
-import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
+import net.twisterrob.inventory.android.test.actors.BackupActivityActor.ExportInternalActor;
 import net.twisterrob.inventory.android.test.categories.*;
 import net.twisterrob.inventory.android.test.categories.On.Backup;
 
-import static net.twisterrob.android.test.espresso.DialogMatchers.*;
-import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.java.utils.CollectionTools.*;
 
 @RunWith(AndroidJUnit4.class)
 @Category({On.Backup.Export.class, Backup.Internal.class})
 public class BackupActivityTest_ExportInternal {
 	private final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
-	private final TemporaryFolder temp = new TemporaryFolder(Paths.getPhoneHome());
+	private final TemporaryFolder tempInHomeFolder = new TemporaryFolder(Paths.getPhoneHome());
 	private final CheckExportedFiles files = new CheckExportedFiles();
 	private final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
+	private final BackupActivityActor backup = new BackupActivityActor();
 
 	@Rule public final RuleChain rules = RuleChain
 			.outerRule(activity)
 			.around(backupService)
-			.around(temp)
+			.around(tempInHomeFolder)
 			.around(files);
 
 	@Before public void assertBackupActivityIsClean() {
-		BackupActivityTest.assertEmptyState();
+		backup.assertEmptyState();
 	}
 
 	@Test public void testBackupCompletes() throws Exception {
-		clickExport();
+		ExportInternalActor dialog = backup.exportInternal();
+		dialog.assertDialogDisplayed();
 
-		assertDialogIsDisplayed();
-		clickNeutralInDialog();
+		dialog.dismiss();
 
 		// check progress also disappeared TODO check it was ever displayed
-		onView(withId(R.id.progress)).check(matches(not(isDisplayed())));
+		backup.assertNoProgressDisplayed();
 	}
 
 	@Category({Op.Rotates.class})
 	@Test public void testBackupDialogStaysWhenRotated() throws Exception {
-		clickExport();
+		ExportInternalActor dialog = backup.exportInternal();
+		dialog.assertDialogDisplayed();
 
-		onView(isRoot()).perform(rotateActivity());
+		backup.rotate();
 
-		assertDialogIsDisplayed();
+		dialog.assertDialogDisplayed();
 	}
 
 	@Category({Op.Rotates.class})
 	@Test public void testBackupDialogDoesNotReappearWhenRotated() throws Exception {
-		clickExport();
-		clickNeutralInDialog();
+		ExportInternalActor dialog = backup.exportInternal();
+		dialog.dismiss();
 
-		onView(isRoot()).perform(rotateActivity());
+		backup.rotate();
 
-		assertNoDialogIsDisplayed();
+		dialog.assertDialogDisplayed();
 	}
 
 	@Category({Op.Rotates.class})
 	@Test public void testBackupProgressDoesNotAppearWhenRotated() throws Exception {
-		clickExport();
-		clickNeutralInDialog();
+		ExportInternalActor dialog = backup.exportInternal();
+		dialog.dismiss();
 
-		onView(isRoot()).perform(rotateActivity());
+		backup.rotate();
 
-		onView(withId(R.id.progress)).check(matches(not(isDisplayed())));
+		backup.assertNoProgressDisplayed();
 	}
 
 	@Test public void testBackupShownInFileList() throws Exception {
-		clickExport();
-		clickNeutralInDialog();
+		ExportInternalActor dialog = backup.exportInternal();
+		dialog.dismiss();
 
 		String date = String.format(Locale.ROOT, "%tF", Calendar.getInstance());
-		String justExported = only(files.getCreatedFiles());
-		assertThat(justExported, containsStringIgnoringCase(date)); // validates if file exists
+		File justExported = only(files.getCreatedFiles());
+		assertThat(justExported, aFileNamed(containsStringIgnoringCase(date))); // validates if file exists
 
-		Matcher<View> justExportedLabel = withText(containsString(date));
-		onView(withId(R.id.backups)).perform(scrollTo(hasDescendant(justExportedLabel)));
-		onView(justExportedLabel).check(matches(isDisplayed())); // validates if shown
+		backup.checkFileShown(date);
 	}
 
-	private void clickExport() {
-		onView(withId(R.id.fab)).perform(click());
-	}
-
+	// TODO move to BackupActivityActor?
 	private class CheckExportedFiles implements TestRule {
-		private int expectedSize = 1;
-		private String[] preContents;
+		private int expectedSize;
+		private File[] preContents;
+
+		public CheckExportedFiles() {
+			setExpectedSize(1);
+		}
 
 		public void setExpectedSize(int expectedSize) {
 			this.expectedSize = expectedSize;
 		}
 
-		public Collection<String> getCreatedFiles() {
-			Set<String> files = new HashSet<>(Arrays.asList(temp.getRoot().list()));
+		public Collection<File> getCreatedFiles() {
+			Set<File> files = new HashSet<>(Arrays.asList(tempInHomeFolder.getRoot().listFiles()));
 			files.removeAll(Arrays.asList(preContents));
 			return files;
 		}
-		public Collection<String> getDeletedFiles() {
-			Set<String> files = new HashSet<>(Arrays.asList(preContents));
-			files.removeAll(Arrays.asList(temp.getRoot().list()));
+		public Collection<File> getDeletedFiles() {
+			Set<File> files = new HashSet<>(Arrays.asList(preContents));
+			files.removeAll(Arrays.asList(tempInHomeFolder.getRoot().listFiles()));
 			return files;
 		}
 
 		@Override public Statement apply(final Statement base, Description description) {
 			return new Statement() {
-
 				@Override public void evaluate() throws Throwable {
 					saveFolderContents();
 					navigateToFolder();
@@ -139,15 +132,14 @@ public class BackupActivityTest_ExportInternal {
 				}
 
 				@Before public void saveFolderContents() throws Exception {
-					File extraFile = temp.newFile(); // to check for devastating deletion
-					preContents = temp.getRoot().list();
-					assertThat(preContents, arrayContaining(extraFile.getName()));
+					File extraFile = tempInHomeFolder.newFile(); // to check for devastating deletion
+					preContents = tempInHomeFolder.getRoot().listFiles();
+					assertThat(preContents, arrayContaining(extraFile));
 				}
 
 				@Before private void navigateToFolder() {
-					onView(withId(R.id.action_export_home)).perform(click());
-					Matcher<View> tempFolder = hasDescendant(withText(temp.getRoot().getName()));
-					onView(withId(R.id.backups)).perform(actionOnItem(tempFolder, click()));
+					backup.gotoHomeFolder();
+					backup.selectFolder(tempInHomeFolder.getRoot());
 				}
 
 				@After public void checkFolderContents() throws Exception {

@@ -12,8 +12,6 @@ import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import net.twisterrob.inventory.android.activity.data.PropertyEditActivity;
-
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
@@ -54,8 +52,12 @@ public class ActivityActor {
 	public void rotate() {
 		onView(isRoot()).perform(rotateActivity());
 	}
-	public void assertIsOpen() {
-		assertThat(getActivityInStage(Stage.RESUMED), instanceOf(PropertyEditActivity.class));
+	public void assertIsInFront() {
+		onView(isRoot()).perform(loopMainThreadUntilIdle()); // otherwise the assertion may fail
+		assertThat(getActivityInStage(Stage.RESUMED), instanceOf(activityClass));
+	}
+	public void assertIsInBackground(Activity activity) {
+		assertThat(activity, isInStage(Stage.PAUSED));
 	}
 	public void close() {
 		Espresso.pressBack();

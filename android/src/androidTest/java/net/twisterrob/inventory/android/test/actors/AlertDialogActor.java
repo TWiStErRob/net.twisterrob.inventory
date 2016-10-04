@@ -30,5 +30,12 @@ public class AlertDialogActor {
 	public void assertNoDialogDisplayed() {
 		assertNoDialogIsDisplayed();
 	}
+	public void assertDialogDisplayed() {
+		assertDialogIsDisplayed();
+	}
+	protected void dismissWitNeutral() {
+		clickNeutralInDialog();
+		assertNoDialogIsDisplayed();
+	}
 }
 

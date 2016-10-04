@@ -78,7 +78,7 @@ public class PropertyEditActivityTest_Create {
 		propertyEditor.setName(TEST_PROPERTY);
 		propertyEditor.save().checkToastAlreadyExists();
 
-		propertyEditor.assertIsOpen();
+		propertyEditor.assertIsInFront();
 		db.assertHasProperty(TEST_PROPERTY);
 
 		// clean up activity
