@@ -57,6 +57,12 @@ public class MainActivityActor extends ActivityActor {
 	public BackupNavigator openBackup() {
 		return open(new BackupNavigator());
 	}
+	public SettingsNavigator openSettings() {
+		return open(new SettingsNavigator());
+	}
+	public AboutNavigator openAbout() {
+		return open(new AboutNavigator());
+	}
 
 	private <T extends DrawerNavigator> T open(T actor) {
 		actor.open();
@@ -173,6 +179,34 @@ public class MainActivityActor extends ActivityActor {
 		}
 		public BackupActivityActor asActor() {
 			return new BackupActivityActor();
+		}
+	}
+
+	public static class SettingsNavigator extends DrawerNavigator {
+		@Override protected void open() {
+			selectDrawerItem(R.string.pref_activity_title);
+		}
+		@Override public void checkOpened() {
+			onView(isDrawerLayout()).check(doesNotExist());
+			onView(isActionBarTitle()).check(matches(allOf(isDisplayed(), withText(R.string.pref_activity_title))));
+			onView(withId(R.id.backups)).check(matches(isDisplayed()));
+		}
+		public PreferencesActivityActor asActor() {
+			return new PreferencesActivityActor();
+		}
+	}
+
+	public static class AboutNavigator extends DrawerNavigator {
+		@Override protected void open() {
+			selectDrawerItem(R.string.about_title);
+		}
+		@Override public void checkOpened() {
+			onView(isDrawerLayout()).check(doesNotExist());
+			onView(isActionBarTitle()).check(doesNotExist());
+			onView(withId(R.id.about_name)).check(matches(withText(R.string.app_name)));
+		}
+		public AboutActivityActor asActor() {
+			return new AboutActivityActor();
 		}
 	}
 

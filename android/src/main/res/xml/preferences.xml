@@ -32,7 +32,7 @@
 
 	<PreferenceCategory android:title="Links">
 		<Preference
-			android:title="App info in Settings"
+			android:title="@string/pref_app_in_settings_title"
 			>
 			<intent
 				android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
@@ -40,7 +40,7 @@
 				/>
 		</Preference>
 		<Preference
-			android:title="App details in Play Store"
+			android:title="@string/pref_app_in_store_title"
 			>
 			<intent
 				android:action="android.intent.action.VIEW"
@@ -48,7 +48,7 @@
 				/>
 		</Preference>
 		<Preference
-			android:title="Feedback"
+			android:title="@string/feedback_title"
 			android:summary="Ask a question, request features you'd like to see, or just tell me what you think about the app. Any feedback is welcome.">
 			<intent android:action="android.intent.action.VIEW"
 			        android:data="mailto:feedback@twisterrob.net">
@@ -59,7 +59,7 @@
 			</intent>
 		</Preference>
 		<Preference
-			android:title="About"
+			android:title="@string/about_title"
 			android:summary="@string/app_name"
 			>
 			<intent

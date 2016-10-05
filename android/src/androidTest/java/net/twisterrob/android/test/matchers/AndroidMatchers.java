@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.*;
+import android.preference.Preference;
 import android.support.annotation.*;
 import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
@@ -30,6 +31,19 @@ public class AndroidMatchers {
 	}
 	public static @NonNull Matcher<String> isString(@StringRes int stringId) {
 		return equalTo(getTargetContext().getResources().getString(stringId));
+	}
+	public static @NonNull Matcher<CharSequence> isText(@StringRes int textId) {
+		return equalTo(getTargetContext().getResources().getText(textId));
+	}
+	public static @NonNull Matcher<CharSequence> cs(final Matcher<String> stringMatcher) {
+		return new TypeSafeDiagnosingMatcher<CharSequence>() {
+			@Override protected boolean matchesSafely(CharSequence item, Description mismatchDescription) {
+				return stringMatcher.matches(item.toString());
+			}
+			@Override public void describeTo(Description description) {
+				description.appendDescriptionOf(stringMatcher).appendText(" as CharSequence");
+			}
+		};
 	}
 	public static @NonNull <T> Matcher<T> hasPropertyLite(
 			@NonNull String propertyName, @NonNull Matcher<?> valueMatcher) {
@@ -79,6 +93,39 @@ public class AndroidMatchers {
 	}
 	public static <T> Matcher<Cursor> withColumn(String columnName, Class<T> columnType, Matcher<T> valueMatcher) {
 		return new CursorHasColumn<>(columnName, columnType, valueMatcher);
+	}
+	// endregion
+
+	// region Preference matchers
+	public static @NonNull Matcher<Preference> withKey(String key) {
+		return withKey(equalTo(key));
+	}
+	public static @NonNull Matcher<Preference> withKey(final Matcher<String> keyMatcher) {
+		return new FeatureMatcher<Preference, String>(keyMatcher, "key", "key") {
+			@Override protected String featureValueOf(Preference actual) {
+				return actual.getKey();
+			}
+		};
+	}
+	public static @NonNull Matcher<Preference> withTitle(CharSequence title) {
+		return withTitle(equalTo(title));
+	}
+	public static @NonNull Matcher<Preference> withTitle(final Matcher<CharSequence> titleMatcher) {
+		return new FeatureMatcher<Preference, CharSequence>(titleMatcher, "title", "title") {
+			@Override protected CharSequence featureValueOf(Preference actual) {
+				return actual.getTitle();
+			}
+		};
+	}
+	public static @NonNull Matcher<Preference> withSummary(CharSequence summary) {
+		return withSummary(equalTo(summary));
+	}
+	public static @NonNull Matcher<Preference> withSummary(final Matcher<CharSequence> summaryMatcher) {
+		return new FeatureMatcher<Preference, CharSequence>(summaryMatcher, "summary", "summary") {
+			@Override protected CharSequence featureValueOf(Preference actual) {
+				return actual.getSummary();
+			}
+		};
 	}
 	// endregion
 

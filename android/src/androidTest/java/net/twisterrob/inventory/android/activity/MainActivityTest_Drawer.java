@@ -2,15 +2,18 @@ package net.twisterrob.inventory.android.activity;
 
 import org.junit.*;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 
 import android.support.test.espresso.*;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
 import net.twisterrob.inventory.android.test.actors.MainActivityActor.*;
 import net.twisterrob.inventory.android.test.categories.*;
 
+@RunWith(AndroidJUnit4.class)
 @Category({On.Main.class})
 public class MainActivityTest_Drawer {
 	@Rule public final ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class);
@@ -56,6 +59,14 @@ public class MainActivityTest_Drawer {
 	@Category({UseCase.InitialCondition.class})
 	@Test public void testBackup() {
 		main.openBackup();
+	}
+	@Category({UseCase.InitialCondition.class})
+	@Test public void testSettings() {
+		main.openSettings();
+	}
+	@Category({UseCase.InitialCondition.class})
+	@Test public void testAbout() {
+		main.openAbout();
 	}
 
 	@Category({Op.Cancels.class})

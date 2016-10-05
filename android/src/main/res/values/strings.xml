@@ -11,6 +11,7 @@
 	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
 	<string name="home_title">Inventory</string>
 	<string name="navigation_title">Navigation</string>
+	<string name="feedback_title">Feedback</string>
 	<string name="image_title">Image</string>
 	<string name="image_loading_external">Preparing image for external app…</string>
 	<string name="welcome_title">First startup… Welcome!</string>
@@ -288,5 +289,4 @@
 	<string name="types$format$more">%1$s <annotation color="secondaryText">(more)</annotation></string>
 	<string name="types$format$keywords">%1$s <annotation color="secondaryText">(%2$s)</annotation></string>
 	<string name="types$format$source">%1$s <annotation color="secondaryText">- %2$s</annotation></string>
-
 </resources>
