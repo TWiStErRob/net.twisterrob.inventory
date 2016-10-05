@@ -12,8 +12,6 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.java.utils.StringTools;
 
-import static net.twisterrob.android.app.BaseApp.*;
-
 public class LanguageUpdater {
 	private static final Logger LOG = LoggerFactory.getLogger(LanguageUpdater.class);
 	private final ResourcePreferences prefs;
@@ -30,13 +28,13 @@ public class LanguageUpdater {
 		if (!currentLanguage.equals(storedLanguage)) {
 			String from = StringTools.toLocale(storedLanguage).getDisplayName();
 			String to = StringTools.toLocale(currentLanguage).getDisplayName();
-			String message = getAppContext().getString(R.string.message_locale_changed, from, to);
+			String message = App.getAppContext().getString(R.string.message_locale_changed, from, to);
 			LOG.debug(message);
 			if (!TextUtils.isEmpty(from)) {
 				App.toast(message);
 			}
 			try {
-				db.updateCategoryCache(getAppContext());
+				db.updateCategoryCache(App.getAppContext());
 				LOG.debug("Locale update successful: {} -> {}", storedLanguage, currentLanguage);
 				prefs.setString(R.string.pref_currentLanguage, currentLanguage);
 			} catch (Exception ex) {

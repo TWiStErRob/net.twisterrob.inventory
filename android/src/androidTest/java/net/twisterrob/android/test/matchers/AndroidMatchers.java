@@ -6,7 +6,7 @@ import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
-import android.app.Activity;
+import android.app.*;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.*;
@@ -187,6 +187,16 @@ public class AndroidMatchers {
 				return getActivityStage(actual);
 			}
 		};
+	}
+	// endregion
+
+	// region Search matchers
+	public static @NonNull Matcher<View> isSearchView() {
+		return anyOf(Matchers.<View>instanceOf(android.support.v7.widget.SearchView.class),
+				Matchers.<View>instanceOf(android.widget.SearchView.class));
+	}
+	public static @NonNull Matcher<Cursor> searchSuggestion(Matcher<String> titleMatcher) {
+		return withStringColumn(SearchManager.SUGGEST_COLUMN_TEXT_1, titleMatcher);
 	}
 	// endregion
 

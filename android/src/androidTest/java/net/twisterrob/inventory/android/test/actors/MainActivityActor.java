@@ -63,6 +63,11 @@ public class MainActivityActor extends ActivityActor {
 	public AboutNavigator openAbout() {
 		return open(new AboutNavigator());
 	}
+	public SearchActor openSearch() {
+		SearchActor actor = new SearchActor();
+		actor.open();
+		return actor;
+	}
 
 	private <T extends DrawerNavigator> T open(T actor) {
 		actor.open();

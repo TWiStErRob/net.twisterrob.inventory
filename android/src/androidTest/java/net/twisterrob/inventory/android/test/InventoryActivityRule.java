@@ -23,8 +23,6 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.java.utils.ReflectionTools;
 
-import static net.twisterrob.android.app.BaseApp.*;
-
 public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(InventoryActivityRule.class);
 
@@ -83,7 +81,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	@CallSuper
 	protected void setDefaults() {
 		if (clearWelcomeFlag) {
-			prefs().edit().putBoolean(R.string.pref_showWelcome, false).apply();
+			App.prefs().edit().putBoolean(R.string.pref_showWelcome, false).apply();
 		}
 	}
 
@@ -103,7 +101,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 
 	protected void resetPreferences() {
 		LOG.info("Clearing preferences");
-		prefs().edit().clear().apply();
+		App.prefs().edit().clear().apply();
 	}
 
 	protected void resetDB() {
