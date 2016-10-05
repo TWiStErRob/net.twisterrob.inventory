@@ -48,7 +48,7 @@ public class SearchActor {
 		onView(withId(R.id.search_src_text)).check(matches(withText(stringMatcher)));
 	}
 	public void assertOpened() {
-		onView(isSearchView()).check(matches(isDisplayed()));
+		onView(isSearchView()).check(matches(isCompletelyDisplayed()));
 	}
 	public void assertClosed() {
 		onView(isSearchView()).check(doesNotExist());
@@ -63,7 +63,7 @@ public class SearchActor {
 	public void assertResultShown(Matcher<String> matcher) {
 		onData(searchSuggestion(matcher))
 				.inRoot(isPlatformPopup())
-				.check(matches(isDisplayed()))
+				.check(matches(isCompletelyDisplayed()))
 		;
 	}
 }

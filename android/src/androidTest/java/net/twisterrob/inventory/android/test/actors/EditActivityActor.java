@@ -74,10 +74,8 @@ public abstract class EditActivityActor extends ActivityActor {
 		return new SaveResultActor();
 	}
 	public void checkDirtyDialog() {
-		onView(isDialogTitle()).check(matches(allOf(
-				isDisplayed(),
-				withText(R.string.generic_edit_dirty_title)
-		)));
+		onView(isDialogTitle())
+				.check(matches(allOf(isCompletelyDisplayed(), withText(R.string.generic_edit_dirty_title))));
 	}
 	public void confirmDirtyDialog() {
 		checkDirtyDialog();

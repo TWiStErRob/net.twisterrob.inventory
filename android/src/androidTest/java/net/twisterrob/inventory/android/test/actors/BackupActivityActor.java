@@ -66,7 +66,7 @@ public class BackupActivityActor extends ActivityActor {
 	public void checkFileShown(String date) {
 		Matcher<View> justExportedLabel = withText(containsString(date));
 		onView(withId(R.id.backups)).perform(scrollTo(hasDescendant(justExportedLabel)));
-		onView(justExportedLabel).check(matches(isDisplayed())); // validates if shown
+		onView(justExportedLabel).check(matches(isCompletelyDisplayed())); // validates if shown
 	}
 	public void gotoHomeFolder() {
 		onView(withId(R.id.action_export_home)).perform(click());
@@ -124,7 +124,7 @@ public class BackupActivityActor extends ActivityActor {
 		@Override public void assertDialogDisplayed() {
 			onView(isDialogTitle())
 					.inRoot(isDialog())
-					.check(matches(allOf(isDisplayed(), withText(R.string.backup_export_external))));
+					.check(matches(allOf(isCompletelyDisplayed(), withText(R.string.backup_export_external))));
 		}
 		public void cancel() {
 			clickNegativeInDialog();
@@ -154,7 +154,8 @@ public class BackupActivityActor extends ActivityActor {
 
 	public static class BackupResultActor extends AlertDialogActor {
 		@Override public void assertDialogDisplayed() {
-			onView(withText(R.string.backup_export_result_finished)).inRoot(isDialog()).check(matches(isDisplayed()));
+			onView(withText(R.string.backup_export_result_finished)).inRoot(isDialog())
+			                                                        .check(matches(isCompletelyDisplayed()));
 		}
 		public void dismiss() {
 			dismissWitNeutral();

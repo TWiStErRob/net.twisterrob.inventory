@@ -29,6 +29,6 @@ public class ItemViewActivityActor extends ViewActivityActor {
 		return new ItemEditActivityActor();
 	}
 	public void hasItem(String itemName) {
-		onRecyclerItem(withText(itemName)).check(matches(isDisplayed()));
+		onRecyclerItem(withText(itemName)).check(matches(isCompletelyDisplayed()));
 	}
 }

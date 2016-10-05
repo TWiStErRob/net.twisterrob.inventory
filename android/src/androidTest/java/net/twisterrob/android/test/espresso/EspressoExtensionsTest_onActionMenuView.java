@@ -30,6 +30,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.junit.TestPackageIntentRule;
 
+import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.java.utils.ReflectionTools.*;
 
 @RunWith(AndroidJUnit4.class)
@@ -66,7 +67,9 @@ public class EspressoExtensionsTest_onActionMenuView {
 		});
 
 		try {
-			EspressoExtensions.onActionMenuView(withText(TEST_ACTION_ITEM)).check(matches(anything()));
+			onActionMenuView(withText(TEST_ACTION_ITEM))
+					.check(matches(anything()))
+			;
 		} finally {
 			// reset original for later tests
 			uiControllerProvider.set(baseLayer, originalProvider);
@@ -77,7 +80,10 @@ public class EspressoExtensionsTest_onActionMenuView {
 		TestActivity activity = this.activity.getActivity();
 		activity.itemClicked = false;
 
-		EspressoExtensions.onActionMenuView(withText(TEST_ACTION_ITEM)).check(matches(isDisplayed())).perform(click());
+		onActionMenuView(withText(TEST_ACTION_ITEM))
+				.check(matches(isCompletelyDisplayed()))
+				.perform(click())
+		;
 
 		assertThat(activity.itemClicked, is(true));
 	}

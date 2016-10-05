@@ -97,6 +97,7 @@ public class MoveTargetActivityActor extends ActivityActor {
 		onView(isToolbarSubTitle()).check(matches(withText(containsString(singular))));
 	}
 	private void assertSelection(String propertyName) {
-		onView(withId(R.id.selection)).check(matches(allOf(isDisplayed(), withText(containsString(propertyName)))));
+		onView(withId(R.id.selection))
+				.check(matches(allOf(isCompletelyDisplayed(), withText(containsString(propertyName)))));
 	}
 }

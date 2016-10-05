@@ -343,7 +343,7 @@ public class EspressoExtensions {
 			}
 		}
 		// double-check the root is available, if test fails here it means the popup didn't show up
-		onView(isRoot()).inRoot(isPopupMenu()).check(matches(isDisplayed()));
+		onView(isRoot()).inRoot(isPopupMenu()).check(matches(isCompletelyDisplayed()));
 		// check that the current default root is the popup
 		onView(isRoot()).check(matches(root(isPopupMenu())));
 		return onView(matcher);//.inRoot(isPlatformPopup()); // not needed as the popup is topmost & focused

@@ -17,7 +17,7 @@ public class SearchResultActivityActor extends ActivityActor {
 		return actor;
 	}
 	public void assertResultShown(String item) {
-		EspressoExtensions.onRecyclerItem(withText(item)).check(matches(isDisplayed()));
+		EspressoExtensions.onRecyclerItem(withText(item)).check(matches(isCompletelyDisplayed()));
 	}
 	public ItemViewActivityActor openResult(String item) {
 		EspressoExtensions.onRecyclerItem(withText(item)).perform(click());

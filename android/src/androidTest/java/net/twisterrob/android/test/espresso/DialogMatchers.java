@@ -150,7 +150,7 @@ public class DialogMatchers {
 
 	public static void assertDialogIsDisplayed() {
 		// both of the below statements should be equivalent
-		onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()));
+		onView(isRoot()).inRoot(isDialog()).check(matches(isCompletelyDisplayed()));
 		onView(isRoot()).check(matches(root(isDialog())));
 	}
 
@@ -208,7 +208,7 @@ public class DialogMatchers {
 			this.viewMatcher = viewMatcher;
 		}
 		@Override public Matcher<View> getConstraints() {
-			return allOf(isDisplayed(), root(isDialog()));
+			return allOf(isCompletelyDisplayed(), root(isDialog()));
 		}
 		@Override public String getDescription() {
 			return "Click " + StringDescription.asString(viewMatcher) + " in a dialog.";

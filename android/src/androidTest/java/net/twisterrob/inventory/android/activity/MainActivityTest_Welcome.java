@@ -29,9 +29,9 @@ import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 public class MainActivityTest_Welcome {
 
 	private static final ViewAssertion NON_EMPTY =
-			matches(allOf(isDisplayed(), hasDescendant(notNullValue(View.class))));
+			matches(allOf(isCompletelyDisplayed(), hasDescendant(notNullValue(View.class))));
 	private static final ViewAssertion EMPTY =
-			matches(allOf(isDisplayed(), not(hasDescendant(notNullValue(View.class)))));
+			matches(allOf(isCompletelyDisplayed(), not(hasDescendant(notNullValue(View.class)))));
 
 	@Rule public ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class)
 			.dontClearWelcomeFlag();
@@ -84,7 +84,7 @@ public class MainActivityTest_Welcome {
 
 	private void checkToasted(long start) {
 		try {
-			onView(isRoot()).inRoot(isToast()).check(matches(isDisplayed()));
+			onView(isRoot()).inRoot(isToast()).check(matches(isCompletelyDisplayed()));
 		} catch (RuntimeException ex) {
 			long checkDuration = System.currentTimeMillis() - start;
 			if (2000 < checkDuration) { // NotificationManagerService.SHORT_DELAY = 2000

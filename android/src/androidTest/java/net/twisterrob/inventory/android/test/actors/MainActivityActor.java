@@ -35,7 +35,7 @@ public class MainActivityActor extends ActivityActor {
 	}
 
 	public WelcomeDialogActor assertWelcomeShown() {
-		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isDisplayed()));
+		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isCompletelyDisplayed()));
 		return new WelcomeDialogActor();
 	}
 
@@ -127,7 +127,7 @@ public class MainActivityActor extends ActivityActor {
 		public void hasProperty(String propertyName) {
 			onRecyclerItem(withText(propertyName))
 					.inAdapterView(withId(android.R.id.list))
-					.check(matches(isDisplayed()));
+					.check(matches(isCompletelyDisplayed()));
 		}
 		public void hasNoProperties() {
 			onView(withId(android.R.id.list)).check(itemDoesNotExists(anyView()));
@@ -179,8 +179,8 @@ public class MainActivityActor extends ActivityActor {
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
-			onView(isActionBarTitle()).check(matches(allOf(isDisplayed(), withText(R.string.backup_title))));
-			onView(withId(R.id.backups)).check(matches(isDisplayed()));
+			onView(isActionBarTitle()).check(matches(allOf(isCompletelyDisplayed(), withText(R.string.backup_title))));
+			onView(withId(R.id.backups)).check(matches(isCompletelyDisplayed()));
 		}
 		public BackupActivityActor asActor() {
 			return new BackupActivityActor();
@@ -193,8 +193,9 @@ public class MainActivityActor extends ActivityActor {
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
-			onView(isActionBarTitle()).check(matches(allOf(isDisplayed(), withText(R.string.pref_activity_title))));
-			onView(withId(R.id.backups)).check(matches(isDisplayed()));
+			onView(isActionBarTitle())
+					.check(matches(allOf(isCompletelyDisplayed(), withText(R.string.pref_activity_title))));
+			onView(withId(R.id.backups)).check(matches(isCompletelyDisplayed()));
 		}
 		public PreferencesActivityActor asActor() {
 			return new PreferencesActivityActor();
@@ -228,8 +229,8 @@ public class MainActivityActor extends ActivityActor {
 
 		protected void assertOpened(@StringRes int drawerItem, @StringRes int actionBarTitle, @IdRes int checkView) {
 			onView(isDrawerLayout()).check(matches(areBothDrawersClosed()));
-			onView(isActionBarTitle()).check(matches(allOf(isDisplayed(), withText(actionBarTitle))));
-			onView(withId(checkView)).check(matches(isDisplayed()));
+			onView(isActionBarTitle()).check(matches(allOf(isCompletelyDisplayed(), withText(actionBarTitle))));
+			onView(withId(checkView)).check(matches(isCompletelyDisplayed()));
 			onDrawerDescendant(withText(drawerItem)).check(matches(navigationItemIsHighlighted()));
 		}
 

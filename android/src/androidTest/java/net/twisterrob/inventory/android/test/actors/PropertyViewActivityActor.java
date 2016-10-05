@@ -25,6 +25,6 @@ public class PropertyViewActivityActor extends ViewActivityActor {
 		onView(withId(android.R.id.list)).check(itemDoesNotExists(withText(roomName)));
 	}
 	public void hasRoom(String roomName) {
-		onRecyclerItem(withText(roomName)).check(matches(isDisplayed()));
+		onRecyclerItem(withText(roomName)).check(matches(isCompletelyDisplayed()));
 	}
 }
