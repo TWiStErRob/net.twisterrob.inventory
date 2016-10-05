@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.Engine;
@@ -25,6 +26,7 @@ import net.twisterrob.java.utils.ReflectionTools;
 
 public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(InventoryActivityRule.class);
+	private final GlideIdlingResource glideIdler = new GlideIdlingResource();
 
 	public InventoryActivityRule(Class<T> activityClass) {
 		super(activityClass);
@@ -43,7 +45,6 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	}
 
 	@Override public Statement apply(Statement base, Description description) {
-		base = new IdlingResourceRule(new GlideIdlingResource()).apply(base, description);
 		base = DrawerIdlingResource.rule().apply(base, description);
 		base = super.apply(base, description);
 		base = new IdlingResourceRule(new DatabaseServiceIdlingResource()).apply(base, description);
@@ -54,13 +55,15 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		waitForEverythingToDestroy();
 		reset();
 		setDefaults();
+		Espresso.registerIdlingResources(glideIdler);
 		super.beforeActivityLaunched();
 	}
 
 	@Override protected void afterActivityFinished() {
+		waitForEverythingToDestroy();
 		super.afterActivityFinished();
-		// TODO is it really necessary?
-		//waitForIdleSync();
+		Espresso.unregisterIdlingResources(glideIdler);
+		// CONSIDER is it really necessary?
 		//reset();
 	}
 

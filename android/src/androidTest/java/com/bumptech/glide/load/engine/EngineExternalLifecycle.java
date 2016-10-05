@@ -14,8 +14,7 @@ import com.bumptech.glide.util.Util;
 
 import static net.twisterrob.java.utils.ReflectionTools.*;
 
-// CONSIDER get rid o this? and share on Github Glide issues
-
+// CONSIDER get rid of twisterrob dependency? and share on Github Glide issues
 public class EngineExternalLifecycle {
 	private static final Field mJobs = getJobsField();
 	private static final Field mCbs = getCallbacksField();
@@ -82,7 +81,9 @@ public class EngineExternalLifecycle {
 			@SuppressWarnings("unchecked")
 			Map<Key, EngineJob> original = (Map<Key, EngineJob>)mJobs.get(engine);
 			if (original instanceof EngineJobsReplacement) {
-				throw new IllegalStateException(engine + " already has an external lifecycle: " + original);
+				EngineJobsReplacement replacement = (EngineJobsReplacement)original;
+				throw new IllegalStateException(
+						engine + " already has an external lifecycle: " + replacement.getAssociation());
 			}
 			assertThat(replacementJobs, is(anEmptyMap()));
 			replacementJobs.putAll(original);
@@ -148,6 +149,11 @@ public class EngineExternalLifecycle {
 		}
 	}
 
+	@Override public String toString() {
+		return String.format(Locale.ROOT, "%s jobs=%d, listeners=%d, callback=%s",
+				engine, replacementJobs.size(), endListeners.size(), callback);
+	}
+
 	/**
 	 * Appends and extra item to the end of the list, but only when iterating. Size and other queries won't report it.
 	 * This is only useful with {@link EngineJob}s, because we know that only {@link #add}, {@link #remove},
@@ -179,6 +185,9 @@ public class EngineExternalLifecycle {
 			EngineJob removed = super.remove(key);
 			finishing((EngineKey)key, removed);
 			return removed;
+		}
+		public EngineExternalLifecycle getAssociation() {
+			return EngineExternalLifecycle.this;
 		}
 	}
 
