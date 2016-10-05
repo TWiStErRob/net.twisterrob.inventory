@@ -76,6 +76,7 @@ public class MainActivity extends DrawerActivity
 	}
 
 	private boolean isInventoryEmptyCache;
+	private Bundle tempSavedViewState;
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,6 +90,7 @@ public class MainActivity extends DrawerActivity
 				onOptionsItemSelected(new MenuBuilder(this).add(0, R.id.debug, 0, "Debug"));
 			}
 		} else { // on rotation, or warm start
+			this.tempSavedViewState = savedInstanceState.getBundle("android:viewHierarchyState");
 			// see onRestoreInstanceState and onRestart
 		}
 
@@ -283,6 +285,19 @@ public class MainActivity extends DrawerActivity
 				return false;
 			}
 		});
+		if (tempSavedViewState != null) {
+			// dirty and ugly hack to make these tests pass:
+			// net.twisterrob.inventory.android.activity.MainActivityTest_Search.testRotate()
+			// net.twisterrob.inventory.android.activity.MainActivityTest_Search.testSelectClose()
+			// TODO figure out a better way or report a compat bug
+//			View actionBar = findViewById(R.id.action_bar);
+//			actionBar.restoreHierarchyState(tempSavedViewState.getSparseParcelableArray("android:views"));
+//			View focused = actionBar.findViewById(tempSavedViewState.getInt("android:focusedViewId", 0));
+//			if (focused != null) {
+//				focused.requestFocus();
+//			}
+			tempSavedViewState = null;
+		}
 		return true;
 	}
 	private boolean shouldCreateOptionsMenu(Menu menu) {
