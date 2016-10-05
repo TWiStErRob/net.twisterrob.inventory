@@ -20,8 +20,8 @@ public class AppSuites {
 	@RunWith(Categories.class)
 	@SuiteClasses({AllTestsSuite.class})
 	@IncludeCategory({
-			On.Backup.Import.class,
-			On.Backup.Export.class,
+			On.Import.class,
+			On.Export.class,
 	})
 	public static class BackupSuite {
 	}

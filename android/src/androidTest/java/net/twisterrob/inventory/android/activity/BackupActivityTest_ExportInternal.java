@@ -23,12 +23,11 @@ import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.ExportInternalActor;
 import net.twisterrob.inventory.android.test.categories.*;
-import net.twisterrob.inventory.android.test.categories.On.Backup;
 
 import static net.twisterrob.java.utils.CollectionTools.*;
 
 @RunWith(AndroidJUnit4.class)
-@Category({On.Backup.Export.class, Backup.Internal.class})
+@Category({On.Export.class})
 public class BackupActivityTest_ExportInternal {
 	private final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
 	private final TemporaryFolder tempInHomeFolder = new TemporaryFolder(Paths.getPhoneHome());

@@ -14,10 +14,9 @@ import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.ImportExternalActor;
 import net.twisterrob.inventory.android.test.categories.*;
-import net.twisterrob.inventory.android.test.categories.On.Backup;
 
 @RunWith(AndroidJUnit4.class)
-@Category({On.Backup.Import.class, Backup.External.class})
+@Category({On.Import.class, On.External.class})
 public class BackupActivityTest_ImportExternal {
 	@Rule public final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
 	@Rule public final TemporaryFolder temp = new TemporaryFolder();

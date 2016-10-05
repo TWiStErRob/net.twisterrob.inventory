@@ -17,12 +17,11 @@ import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.DriveBackupActor;
 import net.twisterrob.inventory.android.test.categories.*;
-import net.twisterrob.inventory.android.test.categories.On.Backup;
 
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
 
 @RunWith(AndroidJUnit4.class)
-@Category({On.Backup.Export.class, Backup.External.class})
+@Category({On.Export.class})
 public class BackupActivityTest_ExportExternal {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_ExportExternal.class);
 	@Rule public final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
@@ -48,7 +47,7 @@ public class BackupActivityTest_ExportExternal {
 	}
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
-	@Category({Op.Cancels.class})
+	@Category({Op.Cancels.class, On.External.class})
 	@Test public void testCancelChooser() throws Exception {
 		backup
 				.exportExternal()
@@ -57,7 +56,7 @@ public class BackupActivityTest_ExportExternal {
 	}
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
-	@Category({Op.Cancels.class})
+	@Category({Op.Cancels.class, On.External.class})
 	@Test public void testCancelDrive() throws Exception {
 		DriveBackupActor.assumeIsAvailable();
 		backup
@@ -69,7 +68,7 @@ public class BackupActivityTest_ExportExternal {
 
 	@FlakyTest(detail = "Sometimes it doesn't find clickOnLabel(selectFolder()): UiObjectNotFoundException: UiSelector[TEXT=Select folder]")
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
-	@Category({UseCase.Complex.class})
+	@Category({UseCase.Complex.class, On.External.class})
 	@Test public void testSuccessfulFullExport() throws Exception {
 		DriveBackupActor.assumeIsAvailable();
 		DriveBackupActor drive = backup

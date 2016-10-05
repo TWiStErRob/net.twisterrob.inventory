@@ -156,6 +156,23 @@ public class DataBaseActor extends TestDatabaseRule {
 		assertHasItem(itemName);
 		return itemID;
 	}
+	public long create(String property, String room) {
+		long propertyID = createProperty(property);
+		return createRoom(propertyID, room);
+	}
+	public long create(String property, String room, String item) {
+		return create(property, room, new String[] {item})[0];
+	}
+	public long[] create(String property, String room, String... items) {
+		long propertyID = createProperty(property);
+		long roomID = createRoom(propertyID, room);
+		long[] itemIDs = new long[items.length];
+		for (int i = 0; i < items.length; i++) {
+			itemIDs[i] = createItemInRoom(roomID, items[i]);
+		}
+		return itemIDs;
+	}
+
 	public void assertImageCount(Matcher<Long> countMatcher) {
 		assertThat(testDB, countImages(countMatcher));
 	}

@@ -9,10 +9,8 @@ import static org.hamcrest.Matchers.*;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.activity.data.ItemViewActivity;
 import net.twisterrob.inventory.android.content.*;
-import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
 import net.twisterrob.inventory.android.test.categories.*;
@@ -27,9 +25,7 @@ public class ItemViewActivityTest_Delete {
 			= new InventoryActivityRule<ItemViewActivity>(ItemViewActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();
-			long propertyID = App.db().createProperty(PropertyType.DEFAULT, TEST_PROPERTY, NO_DESCRIPTION);
-			long roomID = App.db().createRoom(propertyID, RoomType.DEFAULT, TEST_ROOM, NO_DESCRIPTION);
-			itemID = db.createItemInRoom(roomID, TEST_ITEM);
+			itemID = db.create(TEST_PROPERTY, TEST_ROOM, TEST_ITEM);
 			getStartIntent().putExtras(Intents.bundleFromParent(itemID));
 		}
 	};
