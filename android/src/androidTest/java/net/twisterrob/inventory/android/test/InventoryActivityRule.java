@@ -81,6 +81,9 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	 *
 	 * @see #getActivityIntent()
 	 */
+	// CONSIDER extract overriding methods and reset() to separate rule and wrap the activity rule inside that
+	// It is essentially unnecessary to delay resetting this late,
+	// see how it makes setting prefs per test awkward: PropertyViewActivityTest_View
 	@CallSuper
 	protected void setDefaults() {
 		if (clearWelcomeFlag) {

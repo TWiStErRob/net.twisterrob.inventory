@@ -12,27 +12,27 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.data.PropertyViewActivity;
+import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
-import net.twisterrob.inventory.android.test.actors.PropertyViewActivityActor;
+import net.twisterrob.inventory.android.test.actors.RoomViewActivityActor;
 import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.inventory.android.content.Constants.*;
 
 @RunWith(AndroidJUnit4.class)
-@Category({On.Property.class})
-public class PropertyViewActivityTest_View {
-	@Rule public final ActivityTestRule<PropertyViewActivity> activity
-			= new InventoryActivityRule<PropertyViewActivity>(PropertyViewActivity.class, false, false) {
+@Category({On.Room.class})
+public class RoomViewActivityTest_View {
+	@Rule public final ActivityTestRule<RoomViewActivity> activity
+			= new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class, false, false) {
 		@Override protected void setDefaults() {
 			super.setDefaults();
 			App.prefs().setString(R.string.pref_defaultViewPage, defaultViewPage);
-			getStartIntent().putExtras(Intents.bundleFromProperty(db.createProperty(TEST_PROPERTY)));
+			getStartIntent().putExtras(Intents.bundleFromRoom(db.create(TEST_PROPERTY, TEST_ROOM)));
 		}
 	};
 	@Rule public final DataBaseActor db = new DataBaseActor();
-	private final PropertyViewActivityActor propertyView = new PropertyViewActivityActor();
+	private final RoomViewActivityActor roomView = new RoomViewActivityActor();
 	private @StringRes int defaultViewPage = R.string.pref_defaultViewPage_default;
 
 	@Category({UseCase.Prefs.class})
@@ -40,8 +40,8 @@ public class PropertyViewActivityTest_View {
 		defaultViewPage = R.string.pref_defaultViewPage_auto;
 		activity.launchActivity(new Intent());
 
-		propertyView.assertImageVisible();
-		propertyView.assertTypeVisible();
+		roomView.assertImageVisible();
+		roomView.assertTypeVisible();
 	}
 
 	@Category({UseCase.Prefs.class})
@@ -49,8 +49,8 @@ public class PropertyViewActivityTest_View {
 		defaultViewPage = R.string.pref_defaultViewPage_image;
 		activity.launchActivity(new Intent());
 
-		propertyView.assertImageVisible();
-		propertyView.assertTypeVisible();
+		roomView.assertImageVisible();
+		roomView.assertTypeVisible();
 	}
 
 	@Category({UseCase.Prefs.class})
@@ -58,7 +58,7 @@ public class PropertyViewActivityTest_View {
 		defaultViewPage = R.string.pref_defaultViewPage_details;
 		activity.launchActivity(new Intent());
 
-		propertyView.assertDetailsVisible();
-		propertyView.assertDetailsText(containsString(TEST_PROPERTY));
+		roomView.assertDetailsVisible();
+		roomView.assertDetailsText(containsString(TEST_ROOM));
 	}
 }

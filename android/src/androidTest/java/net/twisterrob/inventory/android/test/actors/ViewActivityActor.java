@@ -20,24 +20,24 @@ public abstract class ViewActivityActor extends ActivityActor {
 
 	public void assertImageVisible() {
 		onView(withId(R.id.image))
-				.check(matches(isDisplayed()))
+				.check(matches(isCompletelyDisplayed()))
 				.check(matches(hasImage()))
 		;
 	}
 	public void assertTypeVisible() {
 		onView(withId(R.id.type))
-				.check(matches(isDisplayed()))
+				.check(matches(isCompletelyDisplayed()))
 				.check(matches(hasImage()))
 		;
 	}
 	public void assertDetailsVisible() {
 		onView(withId(R.id.details))
-				.check(matches(isDisplayed()))
+				.check(matches(isCompletelyDisplayed()))
 		;
 	}
 	public void assertDetailsText(Matcher<String> textMatcher) {
 		onView(withId(R.id.details))
-				.check(matches(isDisplayed()))
+				.check(matches(isCompletelyDisplayed()))
 				.check(matches(withText(textMatcher)))
 		;
 	}
