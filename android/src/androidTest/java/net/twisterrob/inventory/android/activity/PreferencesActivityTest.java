@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.rule.ActivityTestRule;
@@ -48,23 +49,30 @@ public class PreferencesActivityTest {
 		prefs.openAppInfoInSettings();
 		CharSequence name = getTargetContext().getApplicationInfo().loadLabel(getTargetContext().getPackageManager());
 
-		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		UiObject object = device.findObject(new UiSelector().text(name.toString()));
-		assertTrue(object.exists());
-
-		pressBackExternal();
+		try {
+			UiDevice device = UiDevice.getInstance(getInstrumentation());
+			UiObject object = device.findObject(new UiSelector().text(name.toString()));
+			assertTrue(object.exists());
+		} finally {
+			pressBackExternal();
+		}
+		prefs.assertIsInFront();
 	}
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.InitialCondition.class, On.External.class})
 	@Test public void testInfoStore() {
-		assumeThat(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=")), canBeResolved());
+		assumeThat(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=")),
+				canBeResolvedTo(notNullValue(ResolveInfo.class)));
 
 		prefs.openAppInfoInMarket();
 
-		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		assertThat(device.getCurrentPackageName(), is("com.android.vending"));
-		pressBackExternal();
+		try {
+			assertThat(UiDevice.getInstance(getInstrumentation()).getCurrentPackageName(), is("com.android.vending"));
+		} finally {
+			pressBackExternal();
+		}
+		prefs.assertIsInFront();
 	}
 
 	@Category({UseCase.Prefs.class})

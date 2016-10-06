@@ -30,17 +30,19 @@ public class AndroidMatchers {
 	public static @NonNull Matcher<Context> hasPackageInstalled(@NonNull String packageName) {
 		return new HasInstalledPackage(packageName);
 	}
-	public static @NonNull Matcher<Intent> canBeResolved() {
-		return canBeResolvedWithFlags(0);
+	public static @NonNull Matcher<Intent> canBeResolvedTo(final Matcher<ResolveInfo> resolveInfoMatcher) {
+		return canBeResolvedTo(0, resolveInfoMatcher);
 	}
-	public static @NonNull Matcher<Intent> canBeResolvedWithFlags(final int flags) {
+	public static @NonNull Matcher<Intent> canBeResolvedTo(
+			final int flags, final Matcher<ResolveInfo> resolveInfoMatcher) {
 		return new TypeSafeMatcher<Intent>() {
 			@Override protected boolean matchesSafely(Intent intent) {
 				ResolveInfo info = getTargetContext().getPackageManager().resolveActivity(intent, flags);
-				return info != null;
+				return resolveInfoMatcher.matches(info);
 			}
 			@Override public void describeTo(Description description) {
-				description.appendText("can be resolved with flags: " + flags);
+				description.appendText("Intent can be resolved with flags: ").appendValue(flags)
+				           .appendText(" to ").appendDescriptionOf(resolveInfoMatcher);
 			}
 		};
 	}
