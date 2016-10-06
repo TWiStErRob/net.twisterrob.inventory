@@ -3,7 +3,10 @@ package net.twisterrob.android.test.espresso.idle;
 import java.util.*;
 
 import android.app.Activity;
+import android.support.annotation.AnyThread;
 import android.support.test.runner.lifecycle.*;
+
+import net.twisterrob.android.test.junit.InstrumentationExtensions;
 
 public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
 	private Collection<Activity> activities = new HashSet<>();
@@ -45,5 +48,12 @@ public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
 
 	@Override protected void waitForIdleAsync() {
 		monitor.addLifecycleCallback(callback);
+	}
+
+	@AnyThread
+	public static void finishAll() {
+		for (Activity activity : InstrumentationExtensions.getAllActivities()) {
+			activity.finish();
+		}
 	}
 }

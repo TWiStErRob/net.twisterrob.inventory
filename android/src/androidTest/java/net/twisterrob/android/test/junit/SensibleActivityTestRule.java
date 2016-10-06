@@ -40,10 +40,10 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 	}
 
 	@Override public Statement apply(Statement base, Description description) {
+		base = new ScreenshotFailure().apply(base, description);
 		base = new TestLogger().apply(base, description);
 		base = super.apply(base, description);
 		//base = new PackageNameShortener().apply(base, description); // TODO make it available
-		base = new ScreenshotFailure().apply(base, description);
 		return base;
 	}
 
@@ -80,10 +80,14 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 	}
 
 	protected void waitForEverythingToDestroy() {
+		AllActivitiesDestroyedIdlingResource.finishAll();
 		AllActivitiesDestroyedIdlingResource activities = new AllActivitiesDestroyedIdlingResource();
 		Espresso.registerIdlingResources(activities);
-		waitForIdleSync();
-		Espresso.unregisterIdlingResources(activities);
+		try {
+			waitForIdleSync();
+		} finally {
+			Espresso.unregisterIdlingResources(activities);
+		}
 	}
 
 	protected void waitForIdleSync() {
