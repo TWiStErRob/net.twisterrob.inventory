@@ -58,13 +58,12 @@ public class PreferencesActivityTest {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.InitialCondition.class, On.External.class})
 	@Test public void testInfoStore() {
-		Intent marketIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="));
-		assumeNotNull(getTargetContext().getPackageManager().resolveActivity(marketIntent, 0));
+		assumeThat(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=")), canBeResolved());
 
 		prefs.openAppInfoInMarket();
 
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		assertThat(device.getCurrentPackageName(), anyOf(is("com.android.vending"), is("")));
+		assertThat(device.getCurrentPackageName(), is("com.android.vending"));
 		pressBackExternal();
 	}
 

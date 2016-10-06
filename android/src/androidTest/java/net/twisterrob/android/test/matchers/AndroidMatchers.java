@@ -7,7 +7,8 @@ import org.hamcrest.*;
 import static org.hamcrest.Matchers.*;
 
 import android.app.*;
-import android.content.Context;
+import android.content.*;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
@@ -29,6 +30,21 @@ public class AndroidMatchers {
 	public static @NonNull Matcher<Context> hasPackageInstalled(@NonNull String packageName) {
 		return new HasInstalledPackage(packageName);
 	}
+	public static @NonNull Matcher<Intent> canBeResolved() {
+		return canBeResolvedWithFlags(0);
+	}
+	public static @NonNull Matcher<Intent> canBeResolvedWithFlags(final int flags) {
+		return new TypeSafeMatcher<Intent>() {
+			@Override protected boolean matchesSafely(Intent intent) {
+				ResolveInfo info = getTargetContext().getPackageManager().resolveActivity(intent, flags);
+				return info != null;
+			}
+			@Override public void describeTo(Description description) {
+				description.appendText("can be resolved with flags: " + flags);
+			}
+		};
+	}
+
 	public static @NonNull Matcher<String> isString(@StringRes int stringId) {
 		return equalTo(getTargetContext().getResources().getString(stringId));
 	}
