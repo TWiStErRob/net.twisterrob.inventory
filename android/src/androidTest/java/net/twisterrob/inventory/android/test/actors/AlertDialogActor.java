@@ -13,16 +13,17 @@ import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 public class AlertDialogActor {
 	protected final void assertDialogMessage(Matcher<String> matcher) {
 		onView(withText(matchesPattern("%\\d"))).check(doesNotExist());
-		onView(isDialogMessage()).check(matches(allOf(
-				isCompletelyDisplayed(),
-				withText(matcher)
-		)));
+		onView(isDialogMessage())
+				.check(matches(isCompletelyDisplayed()))
+				.check(matches(withText(matcher)))
+		;
 	}
 	protected final void assertToastMessage(Matcher<String> matcher) {
-		onView(isDialogMessage()).inRoot(isToast()).check(matches(allOf(
-				isCompletelyDisplayed(),
-				withText(matcher)
-		)));
+		onView(isDialogMessage())
+				.inRoot(isToast())
+				.check(matches(isCompletelyDisplayed()))
+				.check(matches(withText(matcher)))
+		;
 	}
 	public void assertNoToastDisplayed() {
 		assertNoToastIsDisplayed();

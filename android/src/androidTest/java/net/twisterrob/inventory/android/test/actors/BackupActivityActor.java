@@ -114,7 +114,9 @@ public class BackupActivityActor extends ActivityActor {
 				@StringRes int title = R.string.backup_import_result_finished;
 				onView(isDialogTitle())
 						.inRoot(isDialog())
-						.check(matches(allOf(isCompletelyDisplayed(), withText(title))));
+						.check(matches(isCompletelyDisplayed()))
+						.check(matches(withText(title)))
+				;
 			}
 		}
 	}
@@ -123,7 +125,9 @@ public class BackupActivityActor extends ActivityActor {
 		@Override public void assertDisplayed() {
 			onView(isDialogTitle())
 					.inRoot(isDialog())
-					.check(matches(allOf(isCompletelyDisplayed(), withText(R.string.backup_export_result_finished))));
+					.check(matches(isCompletelyDisplayed()))
+					.check(matches(withText(R.string.backup_export_result_finished)))
+			;
 		}
 	}
 
@@ -131,7 +135,9 @@ public class BackupActivityActor extends ActivityActor {
 		@Override public void assertDisplayed() {
 			onView(isDialogTitle())
 					.inRoot(isDialog())
-					.check(matches(allOf(isCompletelyDisplayed(), withText(R.string.backup_export_external))));
+					.check(matches(isCompletelyDisplayed()))
+					.check(matches(withText(R.string.backup_export_external)))
+			;
 		}
 		public void cancel() {
 			clickNegativeInDialog();
@@ -152,7 +158,9 @@ public class BackupActivityActor extends ActivityActor {
 				@StringRes int title = R.string.backup_export_result_finished;
 				onView(isDialogTitle())
 						.inRoot(isDialog())
-						.check(matches(allOf(isCompletelyDisplayed(), withText(title))));
+						.check(matches(isCompletelyDisplayed()))
+						.check(matches(withText(title)))
+				;
 			}
 		}
 	}

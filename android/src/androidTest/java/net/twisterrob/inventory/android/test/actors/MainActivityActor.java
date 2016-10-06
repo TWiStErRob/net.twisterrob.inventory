@@ -2,8 +2,6 @@ package net.twisterrob.inventory.android.test.actors;
 
 import org.hamcrest.*;
 
-import static org.hamcrest.Matchers.*;
-
 import android.support.annotation.*;
 import android.support.design.internal.NavigationMenuItemView;
 import android.support.design.widget.NavigationView;
@@ -200,7 +198,10 @@ public class MainActivityActor extends ActivityActor {
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
-			onView(isActionBarTitle()).check(matches(allOf(isCompletelyDisplayed(), withText(R.string.backup_title))));
+			onView(isActionBarTitle())
+					.check(matches(isCompletelyDisplayed()))
+					.check(matches(withText(R.string.backup_title)))
+			;
 			onView(withId(R.id.backups)).check(matches(isCompletelyDisplayed()));
 		}
 		public BackupActivityActor asActor() {
@@ -251,7 +252,10 @@ public class MainActivityActor extends ActivityActor {
 
 		protected void assertOpened(@StringRes int drawerItem, @StringRes int actionBarTitle, @IdRes int checkView) {
 			onView(isDrawerLayout()).check(matches(areBothDrawersClosed()));
-			onView(isActionBarTitle()).check(matches(allOf(isCompletelyDisplayed(), withText(actionBarTitle))));
+			onView(isActionBarTitle())
+					.check(matches(isCompletelyDisplayed()))
+					.check(matches(withText(actionBarTitle)))
+			;
 			onView(withId(checkView)).check(matches(isCompletelyDisplayed()));
 			onDrawerDescendant(withText(drawerItem)).check(matches(navigationItemIsHighlighted()));
 		}

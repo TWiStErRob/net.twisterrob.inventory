@@ -98,6 +98,8 @@ public class MoveTargetActivityActor extends ActivityActor {
 	}
 	private void assertSelection(String propertyName) {
 		onView(withId(R.id.selection))
-				.check(matches(allOf(isCompletelyDisplayed(), withText(containsString(propertyName)))));
+				.check(matches(isCompletelyDisplayed()))
+				.check(matches(withText(containsString(propertyName))))
+		;
 	}
 }
