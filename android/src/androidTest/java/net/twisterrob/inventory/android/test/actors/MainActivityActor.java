@@ -14,6 +14,7 @@ import android.view.*;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
+import static android.support.test.espresso.contrib.NavigationViewActions.*;
 import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
@@ -109,7 +110,7 @@ public class MainActivityActor extends ActivityActor {
 			assertOpened(R.string.home_title, R.string.home_title, R.id.lists);
 		}
 		@Override protected void open() {
-			selectDrawerItem(R.string.home_title);
+			selectDrawerItem(R.id.action_drawer_home);
 		}
 	}
 
@@ -118,7 +119,7 @@ public class MainActivityActor extends ActivityActor {
 			assertOpened(R.string.property_list, R.string.property_list, android.R.id.list);
 		}
 		@Override protected void open() {
-			selectDrawerItem(R.string.property_list);
+			selectDrawerItem(R.id.action_drawer_properties);
 		}
 		public PropertyEditActivityActor addProperty() {
 			onView(withId(R.id.fab)).perform(click());
@@ -136,7 +137,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class RoomsNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.string.room_list);
+			selectDrawerItem(R.id.action_drawer_rooms);
 		}
 		@Override public void checkOpened() {
 			assertOpened(R.string.room_list, R.string.room_list, android.R.id.list);
@@ -145,7 +146,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class ItemsNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.string.item_list);
+			selectDrawerItem(R.id.action_drawer_items);
 		}
 		@Override public void checkOpened() {
 			assertOpened(R.string.item_list, R.string.item_list, android.R.id.list);
@@ -154,7 +155,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class CategoriesNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.string.category_list);
+			selectDrawerItem(R.id.action_drawer_categories);
 		}
 		@Override public void checkOpened() {
 			assertOpened(R.string.category_list, R.string.category_list, android.R.id.list);
@@ -163,7 +164,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class SunburstNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.string.sunburst_title);
+			selectDrawerItem(R.id.action_drawer_sunburst);
 		}
 		@Override public void checkOpened() {
 			assertOpened(R.string.sunburst_title, R.string.sunburst_title, R.id.diagram);
@@ -175,7 +176,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class BackupNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.string.backup_title);
+			selectDrawerItem(R.id.action_drawer_backup);
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
@@ -189,13 +190,12 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class SettingsNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.string.pref_activity_title);
+			selectDrawerItem(R.id.action_drawer_preferences);
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
-			onView(isActionBarTitle())
-					.check(matches(allOf(isCompletelyDisplayed(), withText(R.string.pref_activity_title))));
-			onView(withId(R.id.backups)).check(matches(isCompletelyDisplayed()));
+			onView(isActionBarTitle()).check(doesNotExist());
+			onView(withId(android.R.id.list)).check(matches(isCompletelyDisplayed()));
 		}
 		public PreferencesActivityActor asActor() {
 			return new PreferencesActivityActor();
@@ -204,7 +204,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class AboutNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.string.about_title);
+			selectDrawerItem(R.id.action_drawer_about);
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
@@ -223,8 +223,10 @@ public class MainActivityActor extends ActivityActor {
 		protected abstract void open();
 		public abstract void checkOpened();
 
-		protected void selectDrawerItem(@StringRes int drawerItem) {
-			onOpenDrawerDescendant(withText(drawerItem)).perform(click());
+		protected void selectDrawerItem(@IdRes int drawerItem) {
+			onView(isNavigationDrawer())
+					.perform(openContainingDrawer())
+					.perform(navigateTo(drawerItem));
 		}
 
 		protected void assertOpened(@StringRes int drawerItem, @StringRes int actionBarTitle, @IdRes int checkView) {

@@ -4,6 +4,7 @@ import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
+import android.support.design.widget.NavigationView;
 import android.support.test.espresso.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.util.HumanReadables;
@@ -28,6 +29,12 @@ public class DrawerMatchers {
 	private static final boolean DEFAULT_DRAWER_ANIMATE =
 			InstrumentationExtensions.getBooleanArgument("animateDrawers", false);
 
+	public static Matcher<View> isNavigationDrawer() {
+		return allOf(isAssignableFrom(NavigationView.class), inDrawer());
+	}
+	public static Matcher<View> isNavigationDrawer(@GravityFlag int gravity) {
+		return allOf(isAssignableFrom(NavigationView.class), inDrawer(gravity));
+	}
 	public static ViewInteraction onDrawerDescendant(Matcher<View> viewMatcher) {
 		return onView(allOf(viewMatcher, inDrawer()));
 	}
@@ -91,8 +98,11 @@ public class DrawerMatchers {
 			}
 		};
 	}
-	public static ViewAction onContainingDrawer(final ViewAction drawerAction) {
+	public static ViewAction onContainingDrawer(final ViewAction drawerActionToExecute) {
 		return new ViewAction() {
+			private final Matcher<View> isDrawer = isDrawer();
+			private final ViewAction drawerAction = drawerActionToExecute;
+			private final Matcher<View> actionConstraints = drawerAction.getConstraints();
 			@Override public Matcher<View> getConstraints() {
 				return inDrawer();
 			}
@@ -100,22 +110,29 @@ public class DrawerMatchers {
 				return drawerAction.getDescription() + " the view is in";
 			}
 			@Override public void perform(UiController uiController, View view) {
-				Matcher<View> actionConstraints = drawerAction.getConstraints();
-				Matcher<View> isDrawer = isDrawer();
-				for (View drawer : EspressoExtensions.parentViewTraversal(view)) {
-					if (isDrawer.matches(drawer)) {
-						if (actionConstraints.matches(drawer)) {
-							drawerAction.perform(uiController, drawer);
-							return;
-						}
-						throw new IllegalArgumentException(HumanReadables.describe(drawer)
-								+ " matches " + isDrawer
-								+ ", but doesn't match " + actionConstraints
-								+ " from " + drawerAction.getDescription()
-						);
+				if (performIfDrawer(uiController, view)) {
+					return;
+				}
+				for (View child : EspressoExtensions.parentViewTraversal(view)) {
+					if (performIfDrawer(uiController, child)) {
+						return;
 					}
 				}
 				throw new IllegalStateException("Cannot find drawer parent");
+			}
+			private boolean performIfDrawer(UiController uiController, View view) {
+				if (isDrawer.matches(view)) {
+					if (actionConstraints.matches(view)) {
+						drawerAction.perform(uiController, view);
+						return true;
+					}
+					throw new IllegalArgumentException(HumanReadables.describe(view)
+							+ " matches " + isDrawer
+							+ ", but doesn't match " + actionConstraints
+							+ " from " + drawerAction.getDescription()
+					);
+				}
+				return false;
 			}
 		};
 	}
@@ -162,12 +179,13 @@ public class DrawerMatchers {
 	public static Matcher<View> isEndDrawer() {
 		return isDrawer(START);
 	}
+	/** Matches any view inside the drawer view, including the drawer view itself. */
 	public static Matcher<View> inDrawer() {
-		return isDescendantOfA(isDrawer());
+		return anyOf(isDrawer(), isDescendantOfA(isDrawer()));
 	}
-	/** Matches any view inside the drawer view, excluding the drawer view itself. */
+	/** Matches any view inside the drawer view, including the drawer view itself. */
 	public static Matcher<View> inDrawer(@GravityFlag int gravity) {
-		return isDescendantOfA(isDrawer(gravity));
+		return anyOf(isDrawer(gravity), isDescendantOfA(isDrawer(gravity)));
 	}
 	public static Matcher<View> isDrawerContents() {
 		return allOf(withParent(isDrawerLayout()),
