@@ -7,8 +7,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
 
-import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
-
 public class RoomViewActivityActor extends ViewActivityActor {
 	public RoomViewActivityActor() {
 		super(RoomViewActivity.class);
@@ -30,7 +28,9 @@ public class RoomViewActivityActor extends ViewActivityActor {
 		return new ItemEditActivityActor();
 	}
 	public ItemViewActivityActor openItem(String itemName) {
-		onRecyclerItem(withText(itemName)).perform(click());
-		return new ItemViewActivityActor();
+		return item(itemName).openAsItem();
+	}
+	public GridBelongingActor item(String itemName) {
+		return new GridBelongingActor(itemName);
 	}
 }

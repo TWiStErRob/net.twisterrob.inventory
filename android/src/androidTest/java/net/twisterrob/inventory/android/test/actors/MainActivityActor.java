@@ -112,6 +112,26 @@ public class MainActivityActor extends ActivityActor {
 		@Override protected void open() {
 			selectDrawerItem(R.id.action_drawer_home);
 		}
+
+		public HomeRoomsActor rooms() {
+			return new HomeRoomsActor();
+		}
+		public static class HomeRoomsActor {
+			public RoomViewActivityActor open(String roomName) {
+				onRecyclerItem(withText(roomName))
+						.inAdapterView(withId(R.id.rooms))
+						.perform(click());
+				RoomViewActivityActor actor = new RoomViewActivityActor();
+				actor.assertIsInFront();
+				return actor;
+			}
+			public void assertExists(String roomName) {
+				onRecyclerItem(withText(roomName))
+						.inAdapterView(withId(R.id.rooms))
+						.onChildView(withId(R.id.image))
+						.check(matches(hasImage()));
+			}
+		}
 	}
 
 	public static class PropertiesNavigator extends DrawerNavigator {
