@@ -68,7 +68,7 @@ public class ItemViewActivityTest_Move {
 
 		MoveTargetActivityActor move = itemView.move();
 		MoveResultActor moveDialog = move.confirmSelection();
-		moveDialog.assertNoDialogDisplayed();
+		moveDialog.assertNotDisplayed();
 		moveDialog.assertNoToastDisplayed();
 
 		db.assertHasItemInRoom(TEST_ROOM, TEST_ITEM);
@@ -86,7 +86,7 @@ public class ItemViewActivityTest_Move {
 		move.fromRoom(TEST_ROOM);
 		move.selectItem(TEST_ITEM_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
-		moveDialog.assertNoDialogDisplayed();
+		moveDialog.assertNotDisplayed();
 		moveDialog.checkToastMessageDuplicate(allOf(
 				containsString(TEST_ITEM),
 				containsString(TEST_ITEM_OTHER)
@@ -104,7 +104,7 @@ public class ItemViewActivityTest_Move {
 		move.fromRoom(TEST_ROOM);
 		move.selectItem(TEST_ITEM_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
-		moveDialog.assertNoDialogDisplayed();
+		moveDialog.assertNotDisplayed();
 
 		db.assertHasItemInItem(TEST_ITEM_OTHER, TEST_ITEM);
 		itemView.assertShowing(TEST_ITEM_OTHER);
@@ -129,7 +129,7 @@ public class ItemViewActivityTest_Move {
 		move.upToProperty(TEST_PROPERTY);
 		move.selectRoom(TEST_ROOM_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
-		moveDialog.assertNoDialogDisplayed();
+		moveDialog.assertNotDisplayed();
 
 		db.assertHasItemInRoom(TEST_ROOM_OTHER, TEST_ITEM);
 		roomView.assertShowing(TEST_ROOM_OTHER);
@@ -160,7 +160,7 @@ public class ItemViewActivityTest_Move {
 		move.selectRoom(TEST_ROOM_OTHER);
 		move.selectItem(TEST_ITEM_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
-		moveDialog.assertNoDialogDisplayed();
+		moveDialog.assertNotDisplayed();
 
 		db.assertHasItemInItem(TEST_ITEM_OTHER, TEST_ITEM);
 		itemView.assertShowing(TEST_ITEM_OTHER);
@@ -192,7 +192,7 @@ public class ItemViewActivityTest_Move {
 		move.selectProperty(TEST_PROPERTY_OTHER);
 		move.selectRoom(TEST_ROOM_OTHER);
 		MoveResultActor moveDialog = move.confirmSelection();
-		moveDialog.assertNoDialogDisplayed();
+		moveDialog.assertNotDisplayed();
 
 		db.assertHasItemInRoom(TEST_ROOM_OTHER, TEST_ITEM);
 		roomView.assertShowing(TEST_ROOM_OTHER);

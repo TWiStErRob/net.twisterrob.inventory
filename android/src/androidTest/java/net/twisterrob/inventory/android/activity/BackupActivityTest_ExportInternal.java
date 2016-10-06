@@ -21,7 +21,7 @@ import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
-import net.twisterrob.inventory.android.test.actors.BackupActivityActor.ExportInternalActor;
+import net.twisterrob.inventory.android.test.actors.BackupActivityActor.ExportInternalResultActor;
 import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.java.utils.CollectionTools.*;
@@ -46,8 +46,8 @@ public class BackupActivityTest_ExportInternal {
 	}
 
 	@Test public void testBackupCompletes() throws Exception {
-		ExportInternalActor dialog = backup.exportInternal();
-		dialog.assertDialogDisplayed();
+		ExportInternalResultActor dialog = backup.exportInternal();
+		dialog.assertDisplayed();
 
 		dialog.dismiss();
 
@@ -57,27 +57,27 @@ public class BackupActivityTest_ExportInternal {
 
 	@Category({Op.Rotates.class})
 	@Test public void testBackupDialogStaysWhenRotated() throws Exception {
-		ExportInternalActor dialog = backup.exportInternal();
-		dialog.assertDialogDisplayed();
+		ExportInternalResultActor dialog = backup.exportInternal();
+		dialog.assertDisplayed();
 
 		backup.rotate();
 
-		dialog.assertDialogDisplayed();
+		dialog.assertDisplayed();
 	}
 
 	@Category({Op.Rotates.class})
 	@Test public void testBackupDialogDoesNotReappearWhenRotated() throws Exception {
-		ExportInternalActor dialog = backup.exportInternal();
+		ExportInternalResultActor dialog = backup.exportInternal();
 		dialog.dismiss();
 
 		backup.rotate();
 
-		dialog.assertDialogDisplayed();
+		dialog.assertNotDisplayed();
 	}
 
 	@Category({Op.Rotates.class})
 	@Test public void testBackupProgressDoesNotAppearWhenRotated() throws Exception {
-		ExportInternalActor dialog = backup.exportInternal();
+		ExportInternalResultActor dialog = backup.exportInternal();
 		dialog.dismiss();
 
 		backup.rotate();
@@ -86,7 +86,7 @@ public class BackupActivityTest_ExportInternal {
 	}
 
 	@Test public void testBackupShownInFileList() throws Exception {
-		ExportInternalActor dialog = backup.exportInternal();
+		ExportInternalResultActor dialog = backup.exportInternal();
 		dialog.dismiss();
 
 		String date = String.format(Locale.ROOT, "%tF", Calendar.getInstance());

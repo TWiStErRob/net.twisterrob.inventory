@@ -5,7 +5,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
-import android.net.Uri;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -29,9 +28,9 @@ public class BackupActivityTest_ImportExternal {
 
 	@Category({UseCase.Complex.class})
 	@Test public void testImportCalled() throws Exception {
+		ImportExternalActor.mockImportFromFile(temp.newFile());
 		ImportExternalActor importActor = backup.importExternal();
-		Uri uri = importActor.mockImportFromFile(temp.newFile());
-		importActor.verifyMockImport(uri);
-		backup.assertImportFinished().dismiss();
+		importActor.verifyMockImport(); // TODO why a failure here crashes all tests?
+		importActor.assertFinished().dismiss();
 	}
 }

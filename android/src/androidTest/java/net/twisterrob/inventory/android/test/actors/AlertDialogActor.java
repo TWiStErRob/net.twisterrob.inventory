@@ -27,10 +27,10 @@ public class AlertDialogActor {
 	public void assertNoToastDisplayed() {
 		assertNoToastIsDisplayed();
 	}
-	public void assertNoDialogDisplayed() {
+	public void assertNotDisplayed() {
 		assertNoDialogIsDisplayed();
 	}
-	public void assertDialogDisplayed() {
+	public void assertDisplayed() {
 		assertDialogIsDisplayed();
 	}
 	protected void dismissWitNeutral() {

@@ -4,7 +4,7 @@ import java.util.*;
 
 import org.junit.*;
 import org.junit.experimental.categories.Category;
-import org.junit.rules.*;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.slf4j.*;
 
@@ -15,7 +15,7 @@ import android.support.test.runner.AndroidJUnit4;
 import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
-import net.twisterrob.inventory.android.test.actors.BackupActivityActor.DriveBackupActor;
+import net.twisterrob.inventory.android.test.actors.BackupActivityActor.*;
 import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
@@ -25,7 +25,6 @@ import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
 public class BackupActivityTest_ExportExternal {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_ExportExternal.class);
 	@Rule public final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
-	@Rule public final TemporaryFolder temp = new TemporaryFolder();
 	@Rule public final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
 	@Rule public final TestName name = new TestName();
 	private final BackupActivityActor backup = new BackupActivityActor();
@@ -71,8 +70,8 @@ public class BackupActivityTest_ExportExternal {
 	@Category({UseCase.Complex.class, On.External.class})
 	@Test public void testSuccessfulFullExport() throws Exception {
 		DriveBackupActor.assumeIsAvailable();
-		DriveBackupActor drive = backup
-				.exportExternal()
+		ExportExternalActor exportActor = backup.exportExternal();
+		DriveBackupActor drive = exportActor
 				.continueToChooser()
 				.chooseDrive();
 		backup.assertIsInBackground(activity.getActivity());
@@ -83,9 +82,7 @@ public class BackupActivityTest_ExportExternal {
 		backup.assertIsInBackground(activity.getActivity());
 		drive.save();
 		backup.assertIsInFront();
-		backup
-				.assertExportFinished()
-				.dismiss();
+		exportActor.assertFinished().dismiss();
 	}
 
 	private String generateFolderName() {

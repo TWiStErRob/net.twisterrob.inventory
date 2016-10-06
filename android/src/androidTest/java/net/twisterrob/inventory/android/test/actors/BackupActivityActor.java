@@ -15,6 +15,7 @@ import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.support.annotation.StringRes;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.view.View;
 
@@ -50,14 +51,14 @@ public class BackupActivityActor extends ActivityActor {
 	public void openedViaIntent() {
 		intended(allOf(isInternal(), hasComponent(BackupActivity.class.getName())));
 	}
-	public ExportInternalActor exportInternal() {
+	public ExportInternalResultActor exportInternal() {
 		onView(withId(R.id.fab)).perform(click());
-		return new ExportInternalActor();
+		return new ExportInternalResultActor();
 	}
 	public ExportExternalActor exportExternal() {
 		onActionMenuView(withText(R.string.backup_export_external)).perform(click());
 		ExportExternalActor dialog = new ExportExternalActor();
-		dialog.assertDialogDisplayed();
+		dialog.assertDisplayed();
 		return dialog;
 	}
 	public void assertNoProgressDisplayed() {
@@ -75,17 +76,6 @@ public class BackupActivityActor extends ActivityActor {
 		Matcher<View> tempFolder = hasDescendant(withText(folder.getName()));
 		onView(withId(R.id.backups)).perform(actionOnItem(tempFolder, click()));
 	}
-	private BackupResultActor assertBackupFinished() {
-		BackupResultActor result = new BackupResultActor();
-		result.assertDialogDisplayed();
-		return result;
-	}
-	public BackupResultActor assertExportFinished() {
-		return assertBackupFinished();
-	}
-	public BackupResultActor assertImportFinished() {
-		return assertBackupFinished();
-	}
 	public ImportExternalActor importExternal() {
 		onActionMenuView(withText(R.string.backup_import_external)).perform(click());
 		return new ImportExternalActor();
@@ -98,7 +88,7 @@ public class BackupActivityActor extends ActivityActor {
 	}
 
 	public static class ImportExternalActor {
-		public Uri mockImportFromFile(File inventory) throws IOException {
+		public static Uri mockImportFromFile(File inventory) throws IOException {
 			ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(inventory));
 			zip.putNextEntry(new ZipEntry(Paths.BACKUP_DATA_FILENAME));
 			IOTools.copyStream(getTargetContext().getAssets().open("demo.xml"), zip);
@@ -107,21 +97,38 @@ public class BackupActivityActor extends ActivityActor {
 			intending(not(isInternal())).respondWith(new ActivityResult(Activity.RESULT_OK, mockIntent));
 			return data;
 		}
-		public void verifyMockImport(Uri dataUri) {
+		public void verifyMockImport() {
 			intended(chooser(allOf(
 					hasAction(Intent.ACTION_GET_CONTENT),
 					hasCategories(Collections.singleton(Intent.CATEGORY_OPENABLE)),
-					hasType("*/*"),
-					hasData(dataUri)
+					hasType("*/*")
 			)));
+		}
+		public ImportExternalResultActor assertFinished() {
+			ImportExternalResultActor result = new ImportExternalResultActor();
+			result.assertDisplayed();
+			return result;
+		}
+		public static class ImportExternalResultActor extends BackupResultActor {
+			@Override public void assertDisplayed() {
+				@StringRes int title = R.string.backup_import_result_finished;
+				onView(isDialogTitle())
+						.inRoot(isDialog())
+						.check(matches(allOf(isCompletelyDisplayed(), withText(title))));
+			}
 		}
 	}
 
-	public static class ExportInternalActor extends BackupResultActor {
+	public static class ExportInternalResultActor extends BackupResultActor {
+		@Override public void assertDisplayed() {
+			onView(isDialogTitle())
+					.inRoot(isDialog())
+					.check(matches(allOf(isCompletelyDisplayed(), withText(R.string.backup_export_result_finished))));
+		}
 	}
 
 	public static class ExportExternalActor extends AlertDialogActor {
-		@Override public void assertDialogDisplayed() {
+		@Override public void assertDisplayed() {
 			onView(isDialogTitle())
 					.inRoot(isDialog())
 					.check(matches(allOf(isCompletelyDisplayed(), withText(R.string.backup_export_external))));
@@ -134,6 +141,19 @@ public class BackupActivityActor extends ActivityActor {
 			ExportChooserActor chooser = new ExportChooserActor();
 			chooser.assertDialogDisplayed();
 			return chooser;
+		}
+		public ExportExternalResultActor assertFinished() {
+			ExportExternalResultActor actor = new ExportExternalResultActor();
+			actor.assertDisplayed();
+			return actor;
+		}
+		public static class ExportExternalResultActor extends BackupResultActor {
+			@Override public void assertDisplayed() {
+				@StringRes int title = R.string.backup_export_result_finished;
+				onView(isDialogTitle())
+						.inRoot(isDialog())
+						.check(matches(allOf(isCompletelyDisplayed(), withText(title))));
+			}
 		}
 	}
 
@@ -152,11 +172,7 @@ public class BackupActivityActor extends ActivityActor {
 		}
 	}
 
-	public static class BackupResultActor extends AlertDialogActor {
-		@Override public void assertDialogDisplayed() {
-			onView(withText(R.string.backup_export_result_finished)).inRoot(isDialog())
-			                                                        .check(matches(isCompletelyDisplayed()));
-		}
+	private static class BackupResultActor extends AlertDialogActor {
 		public void dismiss() {
 			dismissWitNeutral();
 		}
