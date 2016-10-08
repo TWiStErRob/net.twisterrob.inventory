@@ -143,7 +143,7 @@ public final class InventoryContract {
 			// utility class, do not instantiate
 		}
 
-		protected static long getID(Uri data, Uri base, long invalid) {
+		static long getID(Uri data, Uri base, long invalid) {
 			if (data == null) {
 				return invalid;
 			}
@@ -157,7 +157,7 @@ public final class InventoryContract {
 			}
 		}
 
-		protected static Uri getImageUri(Uri base, long id) {
+		static Uri getImageUri(Uri base, long id) {
 			return base
 					.buildUpon()
 					.appendEncodedPath(String.valueOf(id))

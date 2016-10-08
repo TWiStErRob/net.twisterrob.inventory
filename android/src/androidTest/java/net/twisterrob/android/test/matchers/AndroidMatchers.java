@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import static android.support.test.InstrumentationRegistry.*;
+import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 
@@ -210,8 +211,10 @@ public class AndroidMatchers {
 
 	// region Search matchers
 	public static @NonNull Matcher<View> isSearchView() {
-		return anyOf(Matchers.<View>instanceOf(android.support.v7.widget.SearchView.class),
-				Matchers.<View>instanceOf(android.widget.SearchView.class));
+		return anyOf(
+				isAssignableFrom(android.support.v7.widget.SearchView.class),
+				isAssignableFrom(android.widget.SearchView.class)
+		);
 	}
 	public static @NonNull Matcher<Cursor> searchSuggestion(Matcher<String> titleMatcher) {
 		return withStringColumn(SearchManager.SUGGEST_COLUMN_TEXT_1, titleMatcher);

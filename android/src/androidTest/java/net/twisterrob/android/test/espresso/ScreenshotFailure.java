@@ -51,6 +51,22 @@ public class ScreenshotFailure implements TestRule {
 		return result;
 	}
 
+	public static void captureNow(Description description) {
+		class FakeException extends Exception {
+		}
+		try {
+			new ScreenshotFailure().apply(new Statement() {
+				@Override public void evaluate() throws Throwable {
+					throw new FakeException();
+				}
+			}, description).evaluate();
+		} catch (FakeException ignore) {
+			// this is thrown only to trigger taking a screenshot
+		} catch (Throwable ex) {
+			throw new IllegalStateException("Cannot capture screen shot", ex);
+		}
+	}
+
 	@Override public Statement apply(final Statement base, final Description description) {
 		return new ScreenshotStatement(base, description);
 	}

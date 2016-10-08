@@ -1,11 +1,13 @@
 package net.twisterrob.android.test.espresso;
 
 import java.io.*;
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
+
+import javax.inject.Provider;
 
 import org.hamcrest.*;
 import org.hamcrest.core.AnyOf;
@@ -13,16 +15,19 @@ import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.res.*;
+import android.os.Looper;
 import android.support.annotation.*;
 import android.support.test.annotation.Beta;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.*;
 import android.support.test.espresso.NoMatchingViewException.Builder;
+import android.support.test.espresso.base.RootsOracle_Factory;
 import android.support.test.espresso.core.deps.guava.collect.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.util.*;
@@ -30,6 +35,7 @@ import android.support.test.espresso.web.matcher.AmbiguousElementMatcherExceptio
 import android.support.test.runner.lifecycle.Stage;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
@@ -69,16 +75,20 @@ public class EspressoExtensions {
 					return "check for existence";
 				}
 				@Override public void perform(UiController uiController, View view) {
-					// no op, if this run, then the code will continue after .perform(...)
+					// no op, if this is run, then the execution will continue after .perform(...)
 				}
 			});
 			return true;
-		} catch (AmbiguousElementMatcherException e) {
+		} catch (AmbiguousElementMatcherException ex) {
 			// if there's any interaction later with the same matcher, that'll fail anyway
 			return true; // we found more than one
-		} catch (NoMatchingViewException e) {
+		} catch (NoMatchingRootException | NoMatchingViewException ex) {
 			return false;
 		}
+	}
+
+	public static ViewInteraction onRoot(Matcher<Root> rootMatcher) {
+		return onView(isRoot()).inRoot(rootMatcher);
 	}
 
 	public static ViewAction loopMainThreadUntilIdle() {
@@ -207,6 +217,56 @@ public class EspressoExtensions {
 		});
 		return result.get();
 	}
+
+	private static final Method listRoots = ReflectionTools.tryFindDeclaredMethod(
+			ReflectionTools.forName("android.support.test.espresso.base.RootsOracle"), "listActiveRoots");
+
+	public static List<Root> getRoots() {
+		if (listRoots == null) {
+			return Collections.emptyList();
+		}
+		Object oracle = RootsOracle_Factory.create(new Provider<Looper>() {
+			@Override public Looper get() {
+				return Looper.getMainLooper();
+			}
+		}).get();
+		try {
+			@SuppressWarnings("unchecked") List<Root> roots = (List<Root>)listRoots.invoke(oracle);
+			return roots;
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+
+	/**
+	 * Perform action of waiting for a specific view id.
+	 * @see <a href="http://stackoverflow.com/a/22563297/253468">Espresso: Thread.sleep( );</a>
+	 */
+	@SuppressLint("LogConditional")
+	public static ViewInteraction waitForRoot(final Matcher<Root> rootMatcher, final long timeout) {
+		String actionDescription = String.format(Locale.ROOT, "wait for at most %d milliseconds to appear", timeout);
+		Log.i("ViewInteraction", String.format(Locale.ROOT, "Performing '%s' action on root %s",
+				actionDescription, StringDescription.asString(rootMatcher)));
+		final long startTime = System.currentTimeMillis();
+		final long endTime = startTime + timeout;
+		final long step = Math.max(1, Math.min(50, timeout / 10)); // 10th of input between 1..50ms
+		do {
+			ViewInteraction interaction = onRoot(rootMatcher);
+			if (exists(interaction)) {
+				return interaction;
+			}
+			onView(isRoot()).perform(loopMainThreadForAtLeast(step));
+		} while (System.currentTimeMillis() < endTime);
+
+		TimeoutException timeoutException = new TimeoutException("Timed out waiting " + timeout + " milliseconds");
+		timeoutException.initCause(NoMatchingRootException.create(rootMatcher, getRoots()));
+		throw new PerformException.Builder()
+				.withActionDescription(actionDescription)
+				.withViewDescription(StringDescription.asString(rootMatcher))
+				.withCause(timeoutException)
+				.build();
+	}
+
 	@Beta
 	public static ViewAction waitFor(final Matcher<View> viewMatcher) {
 		IdlingPolicy policy = IdlingPolicies.getDynamicIdlingResourceErrorPolicy();
@@ -401,7 +461,7 @@ public class EspressoExtensions {
 		return isDescendantOfA(isToolbar());
 	}
 	private static Matcher<View> isToolbar() {
-		return instanceOf(Toolbar.class);
+		return isAssignableFrom(Toolbar.class);
 	}
 	public static Matcher<View> isToolbarTitle() {
 		return new ReflectiveToolbarViewMatcher("mTitleTextView");
