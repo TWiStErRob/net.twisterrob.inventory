@@ -12,11 +12,23 @@
 	<string name="query_property_exists_by_name" translatable="false"><![CDATA["
 		select 1 from Property where name = ?;
 	"]]></string>
+	<string name="query_room_by_name" translatable="false"><![CDATA["
+		select _id from Room where name = ?;
+	"]]></string>
+	<string name="query_room_type_by_name" translatable="false"><![CDATA["
+		select _id from RoomType where name = ?;
+	"]]></string>
 	<string name="query_room_exists_by_name" translatable="false"><![CDATA["
 		select 1 from Room where name = ?;
 	"]]></string>
 	<string name="query_room_exists_by_property" translatable="false"><![CDATA["
 		select 1 from Room r join Property p on r.property = p._id where p.name = ? and r.name = ?;
+	"]]></string>
+	<string name="query_item_by_name" translatable="false"><![CDATA["
+		select _id from Item where name = ?;
+	"]]></string>
+	<string name="query_category_by_name" translatable="false"><![CDATA["
+		select _id from Category where name = ?;
 	"]]></string>
 	<string name="query_item_exists_by_name" translatable="false"><![CDATA["
 		select 1 from Item where name = ?;
