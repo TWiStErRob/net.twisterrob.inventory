@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.Locale;
 
 import org.hamcrest.Matcher;
-import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
 
@@ -64,7 +63,6 @@ public abstract class EditActivityActor extends ActivityActor {
 	public void checkDescription(String name) {
 		onView(descriptionEditorMatcher).perform(scrollTo()).check(matches(withText(name)));
 	}
-	private static final Logger LOG = LoggerFactory.getLogger(EditActivityActor.class);
 	public void setType(@StringRes int type) {
 		onView(typeEditorMatcher).perform(scrollTo(), click());
 		String typeName = InstrumentationRegistry.getTargetContext().getResources().getResourceEntryName(type);

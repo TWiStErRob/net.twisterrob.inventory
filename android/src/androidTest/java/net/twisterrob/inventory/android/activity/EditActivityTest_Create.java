@@ -26,12 +26,12 @@ import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.EditActivityActor;
 import net.twisterrob.inventory.android.test.categories.*;
 import net.twisterrob.inventory.android.test.categories.UseCase.Error;
-import net.twisterrob.inventory.android.test.suites.QuickSuite;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
 
+// TODO tests containing setType may fail for Item when run with animations enabled and running in landscape
 @RunWith(AndroidJUnit4.class)
 public abstract class EditActivityTest_Create<T extends Activity> {
 	@Rule public final InventoryActivityRule<T> activity;
@@ -117,7 +117,6 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		db.assertHasDescription(belonging.getName(), TEST_DESCRIPTION_OTHER);
 	}
 
-	@Category({QuickSuite.QuickCategory.class})
 	@Test public void testTypeSaved() {
 		editor.checkType(belonging.getDefaultType());
 		editor.setName(belonging.getName());
@@ -127,7 +126,6 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		db.assertHasType(belonging.getName(), belonging.getType());
 	}
 
-	@Category({QuickSuite.QuickCategory.class})
 	@Test public void testTypeSavedAfterChange() {
 		editor.checkType(belonging.getDefaultType());
 		editor.setName(belonging.getName());
@@ -155,7 +153,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		db.assertHasImage(belonging.getName(), TEST_IMAGE_COLOR_OTHER);
 	}
 
-	@Category({Op.Rotates.class, QuickSuite.QuickCategory.class})
+	@Category({Op.Rotates.class})
 	@Test public void testRotate() throws IOException {
 		fillInEverything();
 
@@ -178,7 +176,6 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		DialogMatchers.assertNoDialogIsDisplayed();
 	}
 
-	@Category({QuickSuite.QuickCategory.class})
 	@Test public void testDirtyCanSave() throws IOException {
 		fillInEverything();
 		editor.close();
