@@ -44,6 +44,11 @@ public abstract class EditActivityActor extends ActivityActor {
 			not(isDescendantOfA(isAssignableFrom(AdapterView.class))),
 			not(isDescendantOfA(isAssignableFrom(RecyclerView.class)))
 	);
+	private static final Matcher<View> typeImageMatcher
+			= allOf(withId(R.id.type),
+			not(isDescendantOfA(isAssignableFrom(AdapterView.class))),
+			not(isDescendantOfA(isAssignableFrom(RecyclerView.class)))
+	);
 	private final CaptureImageActivityActor capture = new CaptureImageActivityActor();
 	private int cameraIntents = 0;
 
@@ -127,6 +132,13 @@ public abstract class EditActivityActor extends ActivityActor {
 	public void takePicture() {
 		//clickActionOverflow(R.string.action_picture_take);
 		clickActionBar(R.id.action_picture_get);
+	}
+
+	public ChangeTypeDialogActor changeType() {
+		onView(typeImageMatcher).perform(scrollTo(), click());
+		ChangeTypeDialogActor actor = new ChangeTypeDialogActor();
+		actor.assertOpen();
+		return actor;
 	}
 
 	public static class SaveResultActor extends AlertDialogActor {

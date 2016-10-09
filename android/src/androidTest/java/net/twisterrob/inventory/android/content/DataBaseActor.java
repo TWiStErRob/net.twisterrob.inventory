@@ -251,6 +251,17 @@ public class DataBaseActor extends TestDatabaseRule {
 	public void assertImageCount(Matcher<Long> countMatcher) {
 		assertThat(testDB, countImages(countMatcher));
 	}
+	public void setItemCategory(String itemName, @StringRes int category) {
+		Cursor item = getItem(itemName);
+		appDB.updateItem(
+				DatabaseTools.getLong(item, Item.ID),
+				testDB.getID(R.string.query_category_by_name,
+						getTargetContext().getResources().getResourceEntryName(category)),
+				DatabaseTools.getString(item, Item.NAME),
+				DatabaseTools.getString(item, Item.DESCRIPTION)
+		);
+		assertItemHasType(itemName, category);
+	}
 
 	public interface BelongingAssertions {
 		void assertHasNoBelongingOfType();

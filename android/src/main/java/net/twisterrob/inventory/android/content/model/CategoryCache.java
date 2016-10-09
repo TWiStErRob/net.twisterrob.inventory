@@ -118,4 +118,7 @@ public class CategoryCache {
 	public long getId(String categoryKey) {
 		return categoriesByKey.get(categoryKey);
 	}
+	public String getParent(String categoryKey) {
+		return categoryParents.get(categoryKey);
+	}
 }

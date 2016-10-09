@@ -2,15 +2,20 @@ package net.twisterrob.inventory.android.test.actors;
 
 import org.hamcrest.Matcher;
 
+import static org.hamcrest.Matchers.*;
+
 import android.app.Activity;
+import android.support.test.runner.lifecycle.Stage;
 
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.activity.SingleFragmentActivity;
 
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
+import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 
 public abstract class ViewActivityActor extends ActivityActor {
 	public ViewActivityActor(Class<? extends Activity> activityClass) {
@@ -40,5 +45,16 @@ public abstract class ViewActivityActor extends ActivityActor {
 				.check(matches(isCompletelyDisplayed()))
 				.check(matches(withText(textMatcher)))
 		;
+	}
+
+	/** @deprecated should use a better {@link net.twisterrob.android.test.junit.SensibleActivityTestRule}. */
+	public void refresh() {
+		runOnMainIfNecessary(new Runnable() {
+			@Override public void run() {
+				Activity activity = getActivityInStage(Stage.RESUMED);
+				assertThat(activity, instanceOf(SingleFragmentActivity.class));
+				((SingleFragmentActivity<?>)activity).getFragment().refresh();
+			}
+		});
 	}
 }
