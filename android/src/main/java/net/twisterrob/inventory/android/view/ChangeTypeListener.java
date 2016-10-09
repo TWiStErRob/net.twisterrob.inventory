@@ -83,7 +83,7 @@ public class ChangeTypeListener implements OnClickListener {
 			App.db().updateProperty(property.id, newType, property.name, property.description);
 		}
 		@Override public CharSequence getTitle() {
-			return "Change Type of " + getName();
+			return context.getString(R.string.property_change_type, getName());
 		}
 		@Override public Loaders getTypesLoader() {
 			return Loaders.PropertyTypes;
@@ -107,7 +107,7 @@ public class ChangeTypeListener implements OnClickListener {
 			App.db().updateRoom(room.id, newType, room.name, room.description);
 		}
 		@Override public CharSequence getTitle() {
-			return "Change Type of " + getName();
+			return context.getString(R.string.room_change_type, getName());
 		}
 		@Override public Loaders getTypesLoader() {
 			return Loaders.RoomTypes;
@@ -131,7 +131,7 @@ public class ChangeTypeListener implements OnClickListener {
 			App.db().updateItem(item.id, newType, item.name, item.description);
 		}
 		@Override public CharSequence getTitle() {
-			return "Change Category of " + getName();
+			return context.getString(R.string.item_categorize_title, getName());
 		}
 		@Override public Loaders getTypesLoader() {
 			return Loaders.ItemCategories;
@@ -141,7 +141,7 @@ public class ChangeTypeListener implements OnClickListener {
 		}
 		@Override protected void augment(Builder dialog) {
 			super.augment(dialog);
-			dialog.setNeutralButton("Jump to Category", new DialogInterface.OnClickListener() {
+			dialog.setNeutralButton(R.string.category_goto, new DialogInterface.OnClickListener() {
 				@Override public void onClick(DialogInterface dialog, int which) {
 					context.startActivity(CategoryActivity.show(entity.type));
 				}

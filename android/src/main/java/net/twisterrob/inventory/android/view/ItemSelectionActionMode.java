@@ -67,7 +67,7 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 						fragment.refresh();
 					}
 					@Override protected CharSequence getTitle() {
-						return "Change Category";
+						return fragment.getResources().getString(R.string.item_categorize_title_many);
 					}
 					@Override protected Loaders getTypesLoader() {
 						return Loaders.ItemCategories;

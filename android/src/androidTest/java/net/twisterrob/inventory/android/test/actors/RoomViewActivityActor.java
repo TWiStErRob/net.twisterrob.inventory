@@ -7,7 +7,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
 
-public class RoomViewActivityActor extends ViewActivityActor {
+public class RoomViewActivityActor extends ItemContainingViewActivityActor {
 	public RoomViewActivityActor() {
 		super(RoomViewActivity.class);
 	}

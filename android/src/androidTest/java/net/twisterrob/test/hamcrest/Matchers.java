@@ -27,7 +27,7 @@ public class Matchers {
 		return zipEntryWithName(is(name));
 	}
 	public static Matcher<ZipEntry> zipEntryWithName(Matcher<String> nameMatchers) {
-		return new FeatureMatcher<ZipEntry, String>(nameMatchers, "zip entry name", "entry name") {
+		return new FeatureMatcher<ZipEntry, String>(nameMatchers, "zip entry with name", "entry name") {
 			@Override protected String featureValueOf(ZipEntry actual) {
 				return actual.getName();
 			}

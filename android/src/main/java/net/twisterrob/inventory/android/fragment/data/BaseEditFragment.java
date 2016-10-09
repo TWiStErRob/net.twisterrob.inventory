@@ -52,6 +52,8 @@ import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
 	public static final String EDIT_IMAGE = "editImageOnStartup";
+	public static final String SAVE_KEY_SELECTED_TYPE_POSITION = "typePos";
+	public static final String SAVE_KEY_IMAGE_TO_SAVE = "image";
 	protected static final String DYN_NameHintResource = "nameHint";
 	protected static final String DYN_DescriptionHintResource = "descriptionHint";
 	private static final int REQUEST_CODE_GET_PICTURE = 0x3245;
@@ -120,7 +122,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 							AndroidTools.selectByID(type, DatabaseTools.getLong(cursor, Item.ID));
 						}
 						@Override protected CharSequence getTitle() {
-							return "Change Category of " + getName();
+							return getString(R.string.item_categorize_title, getName());
 						}
 						@Override protected Loaders getTypesLoader() {
 							return Loaders.ItemCategories;
@@ -168,15 +170,15 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	@Override public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putParcelable("image", currentImage);
-		outState.putInt("typePos", type.getSelectedItemPosition());
+		outState.putParcelable(SAVE_KEY_IMAGE_TO_SAVE, currentImage);
+		outState.putInt(SAVE_KEY_SELECTED_TYPE_POSITION, type.getSelectedItemPosition());
 	}
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-			restoredImage = savedInstanceState.getParcelable("image");
-			restoredTypePos = savedInstanceState.getInt("typePos");
+			restoredImage = savedInstanceState.getParcelable(SAVE_KEY_IMAGE_TO_SAVE);
+			restoredTypePos = savedInstanceState.getInt(SAVE_KEY_SELECTED_TYPE_POSITION);
 			isRestored = true;
 		}
 	}

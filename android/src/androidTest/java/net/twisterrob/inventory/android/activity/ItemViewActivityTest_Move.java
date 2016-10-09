@@ -38,7 +38,7 @@ public class ItemViewActivityTest_Move {
 	};
 	@Rule public final DataBaseActor db = new DataBaseActor();
 	private final ItemViewActivityActor itemView = new ItemViewActivityActor();
-	private final ItemViewActivityActor roomView = new ItemViewActivityActor();
+	private final RoomViewActivityActor roomView = new RoomViewActivityActor();
 	private long propertyID;
 	private long roomID;
 	private long itemID;

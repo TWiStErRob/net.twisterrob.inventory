@@ -1,11 +1,14 @@
 package net.twisterrob.android.test.matchers;
 
+import java.lang.reflect.Method;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
+import android.annotation.TargetApi;
 import android.app.*;
 import android.content.*;
 import android.content.pm.ResolveInfo;
@@ -13,21 +16,42 @@ import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.*;
+import android.os.Build.*;
 import android.preference.Preference;
 import android.support.annotation.*;
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.runner.lifecycle.Stage;
-import android.view.View;
-import android.widget.ImageView;
+import android.view.*;
+import android.widget.*;
 
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
+import net.twisterrob.java.utils.ReflectionTools;
+import net.twisterrob.test.hamcrest.NamedMatcher;
 
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
 public class AndroidMatchers {
+	public static @NonNull <T> Matcher<T> nothing() {
+		return new BaseMatcher<T>() {
+			@Override public void describeTo(Description description) {
+				description.appendText("nothing");
+			}
+			@Override public boolean matches(Object item) {
+				return false;
+			}
+		};
+	}
+	public static @NonNull <T> Matcher<T> once(Matcher<T> matcher) {
+		return new OnceMatcher<>(matcher);
+	}
+	public static @NonNull Matcher<String> containsWord(String word) {
+		return new NamedMatcher<>("contains word '" + word + "'",
+				matchesPattern("^.*\\b" + Pattern.quote(word) + "\\b.*$"));
+	}
 	public static @NonNull Matcher<Context> hasPackageInstalled(@NonNull String packageName) {
 		return new HasInstalledPackage(packageName);
 	}
@@ -64,6 +88,31 @@ public class AndroidMatchers {
 			}
 		};
 	}
+
+	/**
+	 * Matches {@code %[argument_index$][flags][width][.precision][t]conversion}.
+	 * @see java.util.Formatter#formatSpecifier formatSpecifier in the JDK
+	 */
+	@SuppressWarnings("JavadocReference")
+	private static final Pattern formatSpecifier =
+			Pattern.compile("%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])");
+	public static @NonNull Matcher<String> formattedRes(@StringRes int stringId) {
+		String format = getTargetContext().getResources().getString(stringId);
+		return matchesPattern(formatSpecifier.matcher(format).replaceAll(".*?"));
+	}
+
+	public static @NonNull Matcher<View> withErrorText(final Matcher<String> stringMatcher) {
+		return new BoundedMatcher<View, TextView>(TextView.class) {
+			@Override public void describeTo(final Description description) {
+				description.appendText("with error text: ").appendDescriptionOf(stringMatcher);
+			}
+
+			@Override public boolean matchesSafely(final TextView textView) {
+				return stringMatcher.matches(textView.getError().toString());
+			}
+		};
+	}
+
 	public static @NonNull <T> Matcher<T> hasPropertyLite(
 			@NonNull String propertyName, @NonNull Matcher<?> valueMatcher) {
 		return HasPropertyWithValueLite.hasProperty(propertyName, valueMatcher);
@@ -120,7 +169,7 @@ public class AndroidMatchers {
 		return withKey(equalTo(key));
 	}
 	public static @NonNull Matcher<Preference> withKey(final Matcher<String> keyMatcher) {
-		return new FeatureMatcher<Preference, String>(keyMatcher, "key", "key") {
+		return new FeatureMatcher<Preference, String>(keyMatcher, "Preference with key", "key") {
 			@Override protected String featureValueOf(Preference actual) {
 				return actual.getKey();
 			}
@@ -130,7 +179,7 @@ public class AndroidMatchers {
 		return withTitle(equalTo(title));
 	}
 	public static @NonNull Matcher<Preference> withTitle(final Matcher<CharSequence> titleMatcher) {
-		return new FeatureMatcher<Preference, CharSequence>(titleMatcher, "title", "title") {
+		return new FeatureMatcher<Preference, CharSequence>(titleMatcher, "Preference with title", "title") {
 			@Override protected CharSequence featureValueOf(Preference actual) {
 				return actual.getTitle();
 			}
@@ -140,7 +189,7 @@ public class AndroidMatchers {
 		return withSummary(equalTo(summary));
 	}
 	public static @NonNull Matcher<Preference> withSummary(final Matcher<CharSequence> summaryMatcher) {
-		return new FeatureMatcher<Preference, CharSequence>(summaryMatcher, "summary", "summary") {
+		return new FeatureMatcher<Preference, CharSequence>(summaryMatcher, "Preference with summary", "summary") {
 			@Override protected CharSequence featureValueOf(Preference actual) {
 				return actual.getSummary();
 			}
@@ -269,6 +318,92 @@ public class AndroidMatchers {
 				} finally {
 					if (recycle && bitmap != null) {
 						bitmap.recycle();
+					}
+				}
+			}
+		};
+	}
+	// endregion
+
+	// region AdapterView matchers
+	public static @NonNull Matcher<Integer> invalidPosition() {
+		return is(AdapterView.INVALID_POSITION);
+	}
+
+	/**
+	 * @see #invalidPosition()
+	 */
+	@SuppressWarnings("unchecked")
+	public static @NonNull Matcher<View> selectedPosition(Matcher<Integer> positionMatcher) {
+		return (Matcher<View>)(Matcher<?>)new FeatureMatcher<AdapterView<?>, Integer>(
+				positionMatcher, "AdapterView with selected position", "selected position") {
+			@Override protected Integer featureValueOf(AdapterView<?> actual) {
+				return actual.getSelectedItemPosition();
+			}
+		};
+	}
+
+	public static @NonNull Matcher<View> isItemChecked() {
+		return new TypeSafeDiagnosingMatcher<View>() {
+			@TargetApi(VERSION_CODES.HONEYCOMB)
+			@Override protected boolean matchesSafely(View item, Description mismatchDescription) {
+				ViewParent parent = item.getParent();
+				if (!(parent instanceof AbsListView)) {
+					mismatchDescription.appendText("view is not an item");
+					return false;
+				}
+				AbsListView absList = (AbsListView)parent;
+				int position = absList.getPositionForView(item);
+				if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+					boolean checked = absList.isItemChecked(position);
+					if (!checked) {
+						mismatchDescription.appendText("item is not checked");
+					}
+					return checked;
+				} else if (absList instanceof ListView) {
+					ListView list = (ListView)absList;
+					boolean checked = list.isItemChecked(position);
+					if (!checked) {
+						mismatchDescription.appendText("item is not checked");
+					}
+					return checked;
+				} else {
+					mismatchDescription.appendText(absList + " doesn't support item checking");
+					return false;
+				}
+			}
+			@Override public void describeTo(Description description) {
+				description.appendText("list item checked");
+			}
+		};
+	}
+
+	/**
+	 * @see #invalidPosition()
+	 */
+	@SuppressWarnings("unchecked")
+	public static @NonNull Matcher<View> checkedPosition(Matcher<Integer> positionMatcher) {
+		return (Matcher<View>)(Matcher<?>)new FeatureMatcher<AbsListView, Integer>(
+				positionMatcher, "AbsListView with checked position", "checked position") {
+			@TargetApi(VERSION_CODES.HONEYCOMB)
+			@Override protected Integer featureValueOf(AbsListView actual) {
+				if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+					return actual.getCheckedItemPosition();
+				} else {
+					if (actual instanceof ListView) {
+						ListView casted = (ListView)actual;
+						return casted.getCheckedItemPosition();
+					} else {
+						Method getCheckedItemPosition =
+								ReflectionTools.tryFindDeclaredMethod(actual.getClass(), "getCheckedItemPosition");
+						if (getCheckedItemPosition != null) {
+							try {
+								return (int)getCheckedItemPosition.invoke(actual);
+							} catch (Exception ignore) {
+								// whatever, it was best effort for old versions of Android
+							}
+						}
+						throw new UnsupportedOperationException(actual + " does not support getCheckedItemPosition");
 					}
 				}
 			}

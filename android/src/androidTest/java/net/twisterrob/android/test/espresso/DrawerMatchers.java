@@ -113,8 +113,8 @@ public class DrawerMatchers {
 				if (performIfDrawer(uiController, view)) {
 					return;
 				}
-				for (View child : EspressoExtensions.parentViewTraversal(view)) {
-					if (performIfDrawer(uiController, child)) {
+				for (View parent : EspressoExtensions.parentViewTraversal(view)) {
+					if (performIfDrawer(uiController, parent)) {
 						return;
 					}
 				}

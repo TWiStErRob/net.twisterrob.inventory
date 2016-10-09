@@ -120,21 +120,21 @@ public class ReflectionTools {
 	 * @see Class#getDeclaredMethod(String, Class[])
 	 */
 	public static @Nonnull Method findDeclaredMethod(@Nonnull Class<?> clazz,
-			@Nonnull String fieldName, @Nonnull Class<?>... parameterTypes) throws NoSuchMethodException {
+			@Nonnull String methodName, @Nonnull Class<?>... parameterTypes) throws NoSuchMethodException {
 		do {
 			try {
-				return clazz.getDeclaredMethod(fieldName, parameterTypes);
+				return clazz.getDeclaredMethod(methodName, parameterTypes);
 			} catch (NoSuchMethodException ex) {
 				clazz = clazz.getSuperclass();
 			}
 		} while (clazz != null);
-		throw new NoSuchMethodException(fieldName);
+		throw new NoSuchMethodException(methodName);
 	}
 
 	public static @Nullable Method tryFindDeclaredMethod(@Nonnull Class<?> clazz,
-			@Nonnull String fieldName, @Nonnull Class<?>... parameterTypes) {
+			@Nonnull String methodName, @Nonnull Class<?>... parameterTypes) {
 		try {
-			return findDeclaredMethod(clazz, fieldName, parameterTypes);
+			return findDeclaredMethod(clazz, methodName, parameterTypes);
 		} catch (NoSuchMethodException e) {
 			return null;
 		}

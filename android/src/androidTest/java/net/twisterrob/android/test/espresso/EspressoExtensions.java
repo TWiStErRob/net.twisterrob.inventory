@@ -24,9 +24,10 @@ import android.content.res.*;
 import android.os.Looper;
 import android.support.annotation.*;
 import android.support.test.annotation.Beta;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.*;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.NoMatchingViewException.Builder;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.base.RootsOracle_Factory;
 import android.support.test.espresso.core.deps.guava.collect.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
@@ -67,17 +68,7 @@ public class EspressoExtensions {
 	/** @see <a href="http://stackoverflow.com/a/39436238/253468">Espresso: return boolean if view exists</a> */
 	public static boolean exists(ViewInteraction interaction) {
 		try {
-			interaction.perform(new ViewAction() {
-				@Override public Matcher<View> getConstraints() {
-					return any(View.class);
-				}
-				@Override public String getDescription() {
-					return "check for existence";
-				}
-				@Override public void perform(UiController uiController, View view) {
-					// no op, if this is run, then the execution will continue after .perform(...)
-				}
-			});
+			interaction.perform(new ViewExists());
 			return true;
 		} catch (AmbiguousElementMatcherException ex) {
 			// if there's any interaction later with the same matcher, that'll fail anyway
@@ -86,7 +77,47 @@ public class EspressoExtensions {
 			return false;
 		}
 	}
+	public static boolean exists(DataInteraction interaction) {
+		try {
+			interaction.perform(new ViewExists());
+			return true;
+		} catch (AmbiguousElementMatcherException ex) {
+			// if there's any interaction later with the same matcher, that'll fail anyway
+			return true; // we found more than one
+		} catch (PerformException | NoMatchingRootException | NoMatchingViewException ex) {
+			return false;
+		}
+	}
+	private static class ViewExists implements ViewAction {
+		@Override public Matcher<View> getConstraints() {
+			return any(View.class);
+		}
+		@Override public String getDescription() {
+			return "check for existence";
+		}
+		@Override public void perform(UiController uiController, View view) {
+			// no op, if this is run, then the execution will continue after .perform(...)
+		}
+	}
 
+	/**
+	 * Version of {@link ViewAssertions#doesNotExist()} that tries to match the matcher if the view would exist.
+	 * To get the behavior of the original assertion use {@code .check(doesNotExists(not(anything())))}.
+	 */
+	public static ViewAssertion doesNotExist(final Matcher<View> fallbackMatcher) {
+		return new ViewAssertion() {
+			@Override public void check(View view, NoMatchingViewException noView) {
+				if (view != null) {
+					String description = "View is present in the hierarchy: " + HumanReadables.describe(view);
+					assertThat(description, view, fallbackMatcher);
+				}
+			}
+		};
+	}
+
+	public static ViewInteraction onRoot() {
+		return onView(isRoot());
+	}
 	public static ViewInteraction onRoot(Matcher<Root> rootMatcher) {
 		return onView(isRoot()).inRoot(rootMatcher);
 	}
@@ -382,7 +413,7 @@ public class EspressoExtensions {
 		// On Nexus 5 SDK emulator Short is 30%, Medium is 20%, Long is 5% flaky.
 
 		// An extra loop until idle helps to make them less flaky by itself, even though each perform does that anyway.
-		onView(isRoot()).perform(loopMainThreadUntilIdle());
+		onRoot().perform(loopMainThreadUntilIdle());
 
 		// Look for "Overslept and turned a tap into a long press" to detect failure early, otherwise
 		// a NoMatchingRootException will be thrown which is hard to decode and separated by at least ~30 lines of logs.
@@ -395,17 +426,17 @@ public class EspressoExtensions {
 		// wait for a platform popup to become available as root, this is the action bar overflow menu popup
 		for (long waitTime : new long[] {10, 50, 100, 500, 1000, 3000, 5000}) { // ~10 seconds altogether
 			try {
-				onView(isRoot()).inRoot(isPopupMenu()).check(matches(anything()));
+				onRoot(isPopupMenu()).check(matches(anything()));
 				break;
 			} catch (NoMatchingRootException ex) {
 				LOG.warn("No popup menu is available - waiting: " + waitTime + "ms for one to appear.");
-				onView(isRoot()).perform(loopMainThreadForAtLeast(waitTime));
+				onRoot().perform(loopMainThreadForAtLeast(waitTime));
 			}
 		}
 		// double-check the root is available, if test fails here it means the popup didn't show up
-		onView(isRoot()).inRoot(isPopupMenu()).check(matches(isCompletelyDisplayed()));
+		onRoot(isPopupMenu()).check(matches(isCompletelyDisplayed()));
 		// check that the current default root is the popup
-		onView(isRoot()).check(matches(root(isPopupMenu())));
+		onRoot().check(matches(root(isPopupMenu())));
 		return onView(matcher);//.inRoot(isPlatformPopup()); // not needed as the popup is topmost & focused
 	}
 
@@ -450,6 +481,12 @@ public class EspressoExtensions {
 	private static Matcher<View> isActionBar() {
 		return withFullResourceName(endsWith(":id/action_bar"));
 	}
+	public static Matcher<View> inContextualActionBar() {
+		return isDescendantOfA(isContextualActionBar());
+	}
+	public static Matcher<View> isContextualActionBar() {
+		return withFullResourceName(endsWith(":id/action_context_bar"));
+	}
 	public static Matcher<View> isActionBarTitle() {
 		return allOf(inActionBar(), isToolbarTitle());
 	}
@@ -464,35 +501,10 @@ public class EspressoExtensions {
 		return isAssignableFrom(Toolbar.class);
 	}
 	public static Matcher<View> isToolbarTitle() {
-		return new ReflectiveToolbarViewMatcher("mTitleTextView");
+		return new ReflectiveParentViewMatcher(isAssignableFrom(Toolbar.class), "mTitleTextView");
 	}
 	public static Matcher<View> isToolbarSubTitle() {
-		return new ReflectiveToolbarViewMatcher("mSubtitleTextView");
-	}
-
-	private static class ReflectiveToolbarViewMatcher extends TypeSafeDiagnosingMatcher<View> {
-		private final String viewFieldName;
-		private ReflectiveToolbarViewMatcher(String viewFieldName) {
-			this.viewFieldName = viewFieldName;
-		}
-		@Override protected boolean matchesSafely(View item, Description mismatchDescription) {
-			android.support.v7.widget.Toolbar toolbar = getToolbar(item);
-			if (toolbar == null) {
-				mismatchDescription.appendText("Cannot find Toolbar parent.");
-				return false;
-			}
-			return item == ReflectionTools.get(toolbar, viewFieldName);
-		}
-		private android.support.v7.widget.Toolbar getToolbar(View item) {
-			ViewParent parent = item.getParent();
-			while (parent != null && !(parent instanceof android.support.v7.widget.Toolbar)) {
-				parent = parent.getParent();
-			}
-			return (android.support.v7.widget.Toolbar)parent;
-		}
-		@Override public void describeTo(Description description) {
-			description.appendText("ActionBar title view");
-		}
+		return new ReflectiveParentViewMatcher(isAssignableFrom(Toolbar.class), "mSubtitleTextView");
 	}
 
 	public static Matcher<View> withFullResourceName(String resourceName) {
@@ -538,14 +550,14 @@ public class EspressoExtensions {
 	}
 
 	public static ViewAssertion itemDoesNotExists(Matcher<View> dataMatcher) {
-		return matches(not(withAdaptedData(dataMatcher)));
+		return matches(not(withAdaptedView(dataMatcher)));
 	}
 
 	/**
 	 * For a negative match (i.e. check for non-existent data), use
-	 * {@code onView(isRV()).check(recyclerItemDoesNotExists(withText(TEST_ROOM)))}
+	 * {@code onView(isRV()).check(itemDoesNotExists(withText(TEST_ROOM)))}
 	 * @see Espresso#onData(Matcher)
-	 * @see #withAdaptedData(Matcher)
+	 * @see #withAdaptedView(Matcher)
 	 * @see #itemDoesNotExists(Matcher)
 	 */
 	public static RecyclerViewDataInteraction onRecyclerItem(Matcher<View> dataMatcher) {
@@ -581,10 +593,10 @@ public class EspressoExtensions {
 	 * @see <a href="https://google.github.io/android-testing-support-library/docs/espresso/advanced/#asserting-that-a-data-item-is-not-in-an-adapter">
 	 *     Asserting that a data item is not in an adapter</a>
 	 */
-	public static Matcher<View> withAdaptedData(final Matcher<View> dataMatcher) {
+	public static Matcher<View> withAdaptedView(final Matcher<View> dataMatcher) {
 		return new TypeSafeMatcher<View>() {
 			@Override public void describeTo(Description description) {
-				description.appendText("with adapted data: ").appendDescriptionOf(dataMatcher);
+				description.appendText("with adapted view: ").appendDescriptionOf(dataMatcher);
 			}
 
 			@Override public boolean matchesSafely(View view) {
@@ -598,6 +610,32 @@ public class EspressoExtensions {
 					T viewHolder = adapter.createViewHolder(rv, type);
 					adapter.bindViewHolder(viewHolder, i);
 					if (dataMatcher.matches(viewHolder.itemView)) {
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+	}
+
+	/**
+	 * @see <a href="https://google.github.io/android-testing-support-library/docs/espresso/advanced/#asserting-that-a-data-item-is-not-in-an-adapter">
+	 *     Asserting that a data item is not in an adapter</a>
+	 */
+	public static Matcher<View> withAdaptedData(final Matcher<?> dataMatcher) {
+		return new TypeSafeMatcher<View>() {
+			@Override public void describeTo(Description description) {
+				description.appendText("with adapted data: ");
+				dataMatcher.describeTo(description);
+			}
+
+			@Override public boolean matchesSafely(View view) {
+				return view instanceof AdapterView && hasBoundView((AdapterView<?>)view);
+			}
+			private boolean hasBoundView(AdapterView<?> view) {
+				Adapter adapter = view.getAdapter();
+				for (int i = 0; i < adapter.getCount(); i++) {
+					if (dataMatcher.matches(adapter.getItem(i))) {
 						return true;
 					}
 				}

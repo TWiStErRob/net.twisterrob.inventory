@@ -19,7 +19,7 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
@@ -44,6 +44,7 @@ public class ChangeTypeDialog {
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void initSpinner() {
 		spinner = ContextCompat.getDrawable(context, R.drawable.spinner);
+		spinner.setColorFilter(Constants.Pic.tint());
 		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
 			spinnerAnim = ObjectAnimator.ofInt(spinner, "level", 0, 10000);
 			((ValueAnimator)spinnerAnim).setRepeatCount(ObjectAnimator.INFINITE);
@@ -83,7 +84,7 @@ public class ChangeTypeDialog {
 						}
 					}
 				})
-				.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+				.setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
 						Cursor cursor = (Cursor)adapter.getItem(list.getCheckedItemPosition());
 						userSelected(cursor, variants);

@@ -172,7 +172,9 @@
 	<string name="item_delete">Delete Item</string>
 	<string name="item_delete_many">Delete Items</string>
 	<string name="item_categorize">Change Category</string>
+	<string name="item_categorize_title">Change Category of %1$s</string>
 	<string name="item_categorize_many">@string/item_categorize</string>
+	<string name="item_categorize_title_many">@string/item_categorize_many</string>
 	<string name="item_share">Share Item</string>
 	<!-- %1$s is the item name, %2$s is all the containers of item, %3$s is the room name, %4$s is the property name -->
 	<string name="item_share_desc">%1$s inside %2$s in %3$s at %4$s</string>
@@ -195,6 +197,7 @@
 	<string name="property_add">Add Property</string>
 	<string name="property_new">New Property</string>
 	<string name="property_edit">Edit Property</string>
+	<string name="property_change_type">Change Type of %1$s</string>
 	<string name="property_delete">Delete Property</string>
 	<string name="property_delete_many">Delete Properties</string>
 	<string name="property_share">Share Property</string>
@@ -213,6 +216,7 @@
 	<string name="room_add">Add Room</string>
 	<string name="room_new">New Room</string>
 	<string name="room_edit">Edit Room</string>
+	<string name="room_change_type">Change Type of %1$s</string>
 	<string name="room_delete">Delete Room</string>
 	<string name="room_delete_many">Delete Rooms</string>
 	<string name="room_share">Share Room</string>

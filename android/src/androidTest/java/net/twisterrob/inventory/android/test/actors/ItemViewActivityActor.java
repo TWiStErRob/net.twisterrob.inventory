@@ -1,14 +1,9 @@
 package net.twisterrob.inventory.android.test.actors;
 
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
-
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.ItemViewActivity;
 
-import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
-
-public class ItemViewActivityActor extends ViewActivityActor {
+public class ItemViewActivityActor extends ItemContainingViewActivityActor {
 	public ItemViewActivityActor() {
 		super(ItemViewActivity.class);
 	}
@@ -27,8 +22,5 @@ public class ItemViewActivityActor extends ViewActivityActor {
 	public ItemEditActivityActor edit() {
 		clickActionBar(R.id.action_item_edit);
 		return new ItemEditActivityActor();
-	}
-	public void hasItem(String itemName) {
-		onRecyclerItem(withText(itemName)).check(matches(isCompletelyDisplayed()));
 	}
 }
