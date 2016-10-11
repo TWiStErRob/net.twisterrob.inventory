@@ -4,6 +4,8 @@ import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.Matchers.*;
+
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -36,28 +38,28 @@ public class ItemViewActivityTest_Selection {
 	private long itemID;
 
 	@Category({UseCase.InitialCondition.class})
-	@Test public void testSelectionModeNotStarted() {
+	@Test public void testNotStarted() {
 		createItems(3);
 		SelectionActor selection = new SelectionActor();
 		selection.assertNothingSelected();
 		selection.assertInactive();
 	}
 
-	@Test public void testSelectionModeStarts() {
+	@Test public void testStarts() {
 		SelectionActor selection = createItemsAndSelect(1, 1);
 		selection.hasSelection(subItem(1));
 		selection.assertSelectionCount(1);
 	}
 
 	@Category({Op.Cancels.class})
-	@Test public void testSelectionModeExits() {
+	@Test public void testExits() {
 		SelectionActor selection = createItemsAndSelect(1, 1);
 		selection.close();
 		selection.assertNothingSelected();
 	}
 
 	@Category({Op.Cancels.class})
-	@Test public void testSelectionModeExitsWhenLastDeselectedSingle() {
+	@Test public void testExitsWhenLastDeselectedSingle() {
 		SelectionActor selection = createItemsAndSelect(1, 1);
 		selection.deselect(subItem(1));
 		selection.assertNothingSelected();
@@ -65,7 +67,7 @@ public class ItemViewActivityTest_Selection {
 	}
 
 	@Category({Op.Cancels.class})
-	@Test public void testSelectionModeExitsWhenLastDeselected() {
+	@Test public void testExitsWhenLastDeselected() {
 		SelectionActor selection = createItemsAndSelect(2, 1);
 		selection.deselect(subItem(1));
 		selection.assertNothingSelected();
@@ -73,7 +75,7 @@ public class ItemViewActivityTest_Selection {
 	}
 
 	@Category({Op.Cancels.class})
-	@Test public void testSelectionModeExitsWhenLastDeselectedMultiple() {
+	@Test public void testExitsWhenLastDeselectedMultiple() {
 		SelectionActor selection = createItemsAndSelect(9, 1);
 		selection.select(subItem(3));
 		selection.select(subItem(6));
@@ -85,7 +87,7 @@ public class ItemViewActivityTest_Selection {
 	}
 
 	@Category({Op.Cancels.class, UseCase.Complex.class})
-	@Test public void testSelectionModeExitsRandomSelectionAll() {
+	@Test public void testExitsRandomSelectionAll() {
 		final int count = 9;
 		SelectionActor selection = createItemsAndSelect(count, 1);
 		for (int i = 2; i <= count; i++) {
@@ -98,18 +100,27 @@ public class ItemViewActivityTest_Selection {
 		selection.assertInactive();
 	}
 
-	@Test public void testSelectionModeSelectAll() {
+	@Test public void testSelectAll() {
 		SelectionActor selection = createItemsAndSelect(4, 2);
 		selection.selectAll();
 		selection.assertSelectionCount(4);
 	}
 
 	@Category({Op.Cancels.class})
-	@Test public void testSelectionModeSelectNone() {
+	@Test public void testSelectNone() {
 		SelectionActor selection = createItemsAndSelect(4, 2);
 		selection.selectAll();
 		selection.invertSelection();
 		selection.assertInactive();
+	}
+
+	@Test public void testInvert() {
+		SelectionActor selection = createItemsAndSelect(4, 1);
+		selection.select(subItem(3));
+		selection.invertSelection();
+		selection.assertIsActive();
+		selection.hasSelection(subItem(2));
+		selection.hasSelection(subItem(4));
 	}
 
 	@Test public void testSelectionDisablesTypeChange() {
@@ -130,29 +141,52 @@ public class ItemViewActivityTest_Selection {
 
 	@Category({UseCase.Complex.class})
 	@Test public void testSelectionTypeChange() {
-		createItems(3);
+		createItems(4);
 		db.assertItemHasType(subItem(1), TEST_ITEM_CATEGORY_DEFAULT);
 		db.setItemCategory(subItem(2), TEST_ITEM_CATEGORY);
-		db.setItemCategory(subItem(3), TEST_ITEM_CATEGORY_OTHER);
+		db.setItemCategory(subItem(4), TEST_ITEM_CATEGORY_OTHER);
 		itemView.refresh();
-		SelectionActor select = itemView.select(subItem(2));
-		select.select(subItem(3));
-		select.select(subItem(1));
-		ChangeTypeDialogActor typeDialog = select.changeType();
+		SelectionActor selection = itemView.select(subItem(2));
+		selection.select(subItem(4));
+		selection.select(subItem(1));
+		ChangeTypeDialogActor typeDialog = selection.changeType();
 		typeDialog.assertNoneSelected();
 		typeDialog.select(TEST_ITEM_CATEGORY_OTHER);
 		typeDialog.assertClosed();
-		select.assertInactive();
+		selection.assertInactive();
 		db.assertItemHasType(subItem(1), TEST_ITEM_CATEGORY_OTHER);
 		db.assertItemHasType(subItem(2), TEST_ITEM_CATEGORY_OTHER);
-		db.assertItemHasType(subItem(3), TEST_ITEM_CATEGORY_OTHER);
+		db.assertItemHasType(subItem(3), TEST_ITEM_CATEGORY_DEFAULT);
+		db.assertItemHasType(subItem(4), TEST_ITEM_CATEGORY_OTHER);
+		// TODO verify UI state (icons)
 	}
 
-	private SelectionActor createItemsAndSelect(int count, int selected) {
-		createItems(count);
-		return itemView.select(subItem(selected));
+	@Test public void testSelectionTypeChangeAtOnce() {
+		createItems(3);
+		db.setItemCategory(subItem(1), TEST_ITEM_CATEGORY);
+		db.setItemCategory(subItem(3), TEST_ITEM_CATEGORY);
+		itemView.refresh();
+		SelectionActor selection = itemView.select(subItem(1));
+		selection.select(subItem(3));
+		ChangeTypeDialogActor typeDialog = selection.changeType();
+		typeDialog.assertSelected(TEST_ITEM_CATEGORY);
+		typeDialog.select(TEST_ITEM_CATEGORY_OTHER);
+		typeDialog.assertClosed();
+		selection.assertInactive();
+		db.assertItemHasType(subItem(1), TEST_ITEM_CATEGORY_OTHER);
+		db.assertItemHasType(subItem(2), TEST_ITEM_CATEGORY_DEFAULT);
+		db.assertItemHasType(subItem(3), TEST_ITEM_CATEGORY_OTHER);
+		// TODO verify UI state (icons)
 	}
+
+	private SelectionActor createItemsAndSelect(int count, int toSelect) {
+		assertThat(toSelect, both(greaterThan(0)).and(lessThanOrEqualTo(count)));
+		createItems(count);
+		return itemView.select(subItem(toSelect));
+	}
+
 	private void createItems(int count) {
+		assertThat(count, greaterThan(0));
 		for (int i = 1; i <= count; i++) {
 			db.createItem(itemID, subItem(i));
 		}
