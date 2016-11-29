@@ -10,6 +10,7 @@ import android.database.*;
 import android.net.Uri;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
+import android.support.annotation.*;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 
@@ -44,13 +45,15 @@ public class FileProvider extends android.support.v4.content.FileProvider {
 			String sortOrder) {
 		try {
 			Cursor result = super.query(uri, projection, selection, selectionArgs, sortOrder);
+			//noinspection ConstantConditions TODEL when external annotations are added, result is @NonNull
 			result = fix(result, projection);
 			LOG.trace("{}.query({}, {}, {}, {}, {}): {}",
 					this, uri, projection, selection, selectionArgs, sortOrder,
 					DatabaseTools.dumpCursorToString(result));
 			return result;
 		} catch (RuntimeException ex) {
-			LOG.trace("{}.query({}, {}, {}, {}, {}): thrown {}", this, uri, ex.getClass().getSimpleName(), ex);
+			LOG.trace("{}.query({}, {}, {}, {}, {}): thrown {}",
+					this, uri, projection, selection, selectionArgs, sortOrder, ex.getClass().getSimpleName(), ex);
 			throw ex;
 		}
 	}
@@ -60,8 +63,8 @@ public class FileProvider extends android.support.v4.content.FileProvider {
 	 * but {@link android.support.v4.content.FileProvider} returns a one line zero column cursor.
 	 * @return original cursor or a 1x1 cursor with a NULL _data column.
 	 */
-	private Cursor fix(Cursor result, String... projection) {
-		if (projection.length == 1 && "_data".equals(projection[0])
+	private Cursor fix(@NonNull Cursor result, @Nullable String... projection) {
+		if (projection != null && projection.length == 1 && "_data".equals(projection[0])
 				&& result.getCount() == 1 && result.getColumnCount() == 0) {
 			LOG.warn("{} Replacing cursor with [ _data = null ] for Google+ Photos", this);
 			//noinspection resource the value is returned, the receiver will close it
@@ -115,7 +118,7 @@ public class FileProvider extends android.support.v4.content.FileProvider {
 			throw ex;
 		}
 	}
-	@Override public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+	@Override public @Nullable ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
 		try {
 			ParcelFileDescriptor result = super.openFile(uri, mode);
 			LOG.trace("{}.openFile({}, {}): {}", this, uri, mode, result);
