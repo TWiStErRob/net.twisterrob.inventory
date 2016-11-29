@@ -1064,8 +1064,14 @@ public /*static*/ abstract class AndroidTools {
 				try {
 					writer.write(out);
 				} catch (IOException ex) {
-					LOG.error("Streaming to pipe failed", ex);
-					IOTools.ignorantCloseWithError(writeEnd, ex.toString());
+					if (IOTools.isEPIPE(ex)) {
+						LOG.warn("Receiver closed the pipe."/*, ex*/); // don't log exception,
+						// because it happens quite often with Google products (GMail, Hangouts, Drive)
+						IOTools.ignorantClose(writeEnd);
+					} else {
+						LOG.error("Streaming to pipe failed", ex);
+						IOTools.ignorantCloseWithError(writeEnd, ex.toString());
+					}
 				}
 				try {
 					out.close();
