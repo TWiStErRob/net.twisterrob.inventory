@@ -672,10 +672,11 @@ public /*static*/ abstract class AndroidTools {
 			SearchableInfo info = searchManager.getSearchableInfo(activity.getComponentName());
 			if (info == null) {
 				throw new NullPointerException("No searchable info for " + activity.getComponentName()
-						+ "\nDid you define <meta-data android:name=\"android.app.default_searchable\" android:value=\".SearchActivity\" />"
+						+ "\nDid you define <meta-data android:name=\"android.app.default_searchable\""
+						+ /*                      */ " android:value=\".${name of search results activity}\" />"
 						+ "\neither on application level or inside the activity in AndroidManifest.xml?"
 						+ "\nAlso make sure that in the merged manifest the class name resolves correctly (package)."
-						+ "\nDouble check that the searchable.xml doesn't contain literal strings!"
+						+ "\nDouble check that the searchable.xml doesn't contain literal strings for label and hint!"
 				);
 			}
 			searchView.setSearchableInfo(info);
