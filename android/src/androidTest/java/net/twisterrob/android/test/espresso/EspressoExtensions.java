@@ -498,13 +498,13 @@ public class EspressoExtensions {
 		return isDescendantOfA(isToolbar());
 	}
 	private static Matcher<View> isToolbar() {
-		return isAssignableFrom(Toolbar.class);
+		return isAssignableFrom(android.support.v7.widget.Toolbar.class);
 	}
 	public static Matcher<View> isToolbarTitle() {
-		return new ReflectiveParentViewMatcher(isAssignableFrom(Toolbar.class), "mTitleTextView");
+		return new ReflectiveParentViewMatcher(isToolbar(), "mTitleTextView");
 	}
 	public static Matcher<View> isToolbarSubTitle() {
-		return new ReflectiveParentViewMatcher(isAssignableFrom(Toolbar.class), "mSubtitleTextView");
+		return new ReflectiveParentViewMatcher(isToolbar(), "mSubtitleTextView");
 	}
 
 	public static Matcher<View> withFullResourceName(String resourceName) {
@@ -644,6 +644,9 @@ public class EspressoExtensions {
 		};
 	}
 
+	/**
+	 * Run it in debug: {@code android.support.test.espresso.core.deps.guava.collect.Iterators.toArray(net.twisterrob.android.test.espresso.EspressoExtensions.parentViewTraversal(view).iterator(), android.view.View.class)}.
+	 */
 	public static Iterable<View> parentViewTraversal(final View view) {
 		return new Iterable<View>() {
 			@Override public Iterator<View> iterator() {
