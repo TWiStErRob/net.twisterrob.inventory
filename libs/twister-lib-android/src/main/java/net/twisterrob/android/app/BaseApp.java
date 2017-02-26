@@ -2,6 +2,7 @@ package net.twisterrob.android.app;
 
 import java.lang.reflect.*;
 import java.util.Date;
+import java.util.concurrent.CountDownLatch;
 
 import org.slf4j.*;
 import org.slf4j.helpers.*;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
+import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.tostring.StringerRepo;
 
 public abstract class BaseApp extends android.app.Application {
@@ -35,7 +37,8 @@ public abstract class BaseApp extends android.app.Application {
 	 * android.database.DatabaseTools.dumpCursor(net.twisterrob.inventory.android.
 	 * App.db().getReadableDatabase().rawQuery("select * from sqlite_sequence;", null));
 	 */
-	protected Object database;
+	private Object database;
+	private CountDownLatch databaseWaiter = new CountDownLatch(1);
 	private ResourcePreferences prefs;
 	private int preferencesResource;
 
@@ -105,6 +108,7 @@ public abstract class BaseApp extends android.app.Application {
 		}
 		initPreferences();
 		database = createDatabase();
+		databaseWaiter.countDown();
 	}
 
 	protected void initPreferences() {
@@ -158,6 +162,28 @@ public abstract class BaseApp extends android.app.Application {
 
 	protected Object createDatabase() {
 		return null;
+	}
+
+	/**
+	 * This a temporary workaround for initializing the Database from a {@link android.content.ContentProvider}
+	 * before the {@link android.app.Application} has finished initializing.
+	 * The proper solution would be to use a Database class that can exist without actually having connected
+	 * to the backing database yet, so it can be created on the UI thread and as early as possible.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T getDatabase() {
+		try {
+			if (database == null) {
+				LOG.warn("Waiting for database to initialize"
+						+ " (likely a Content Provider query before App is initialized)", new StackTrace());
+			}
+			// null database may be correct behavior, so always wait
+			databaseWaiter.await();
+		} catch (InterruptedException ex) {
+			Thread.interrupted();
+			throw new IllegalStateException("Database creation interrupted", ex);
+		}
+		return (T)database;
 	}
 
 	protected static @NonNull BaseApp getInstance() {

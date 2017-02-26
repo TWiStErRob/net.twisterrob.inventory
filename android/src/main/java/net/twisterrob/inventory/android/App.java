@@ -30,7 +30,7 @@ public class App extends BaseApp {
 	}
 
 	public static Database db() {
-		return (Database)getInstance().database;
+		return getInstance().getDatabase();
 	}
 
 	@Override protected Database createDatabase() {
