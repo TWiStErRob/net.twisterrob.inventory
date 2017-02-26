@@ -28,7 +28,7 @@ import static net.twisterrob.inventory.android.content.InventoryContract.*;
 // CONSIDER http://www.vogella.com/tutorials/AndroidSQLite/article.html
 // CONSIDER https://code.google.com/p/iosched/source/browse/#git%2Fandroid%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgoogle%2Fandroid%2Fapps%2Fiosched%2Fprovider
 // CONSIDER https://raw.githubusercontent.com/android/platform_packages_providers_contactsprovider/master/src/com/android/providers/contacts/ContactsProvider2.java
-public class InventoryProvider extends ContentProvider {
+public class InventoryProvider extends VariantContentProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(InventoryProvider.class);
 
 	private static final int FIRST_DIR = 100000;
@@ -78,10 +78,6 @@ public class InventoryProvider extends ContentProvider {
 		URI_MATCHER.addURI(AUTHORITY, Search.URI_PATH, SEARCH_ITEMS);
 		URI_MATCHER.addURI(AUTHORITY, Search.URI_PATH_SUGGEST, SEARCH_ITEMS_SUGGEST);
 		URI_MATCHER.addURI(AUTHORITY, Export.BACKUP_URI_SEGMENT, FULL_BACKUP);
-	}
-
-	@Override public boolean onCreate() {
-		return true;
 	}
 
 	public @NonNull Context getSafeContext() {
