@@ -12,16 +12,16 @@ import android.support.v4.content.*;
 import android.support.v4.graphics.ColorUtils;
 
 import com.bumptech.glide.*;
-import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.*;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.engine.bitmap_recycle.*;
 import com.bumptech.glide.load.engine.cache.*;
-import com.bumptech.glide.load.model.ModelLoader;
+import com.bumptech.glide.load.model.*;
 import com.bumptech.glide.load.model.stream.StreamModelLoader;
-import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
+import com.bumptech.glide.load.resource.bitmap.*;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifResourceDecoder;
-import com.bumptech.glide.load.resource.gifbitmap.GifBitmapWrapperResourceDecoder;
+import com.bumptech.glide.load.resource.gifbitmap.*;
 import com.bumptech.glide.load.resource.transcode.GifBitmapWrapperDrawableTranscoder;
 import com.bumptech.glide.module.GlideModule;
 import com.bumptech.glide.signature.StringSignature;
@@ -97,6 +97,7 @@ public interface Constants {
 	}
 
 	class Pic {
+		private static final DecodeFormat PREFERRED_FORMAT = DecodeFormat.PREFER_ARGB_8888;
 		private static Pic instance = new Pic(App.getAppContext());
 
 		/**
@@ -208,9 +209,21 @@ public interface Constants {
 			);
 		}
 
+		public static ResourceDecoder<ImageVideoWrapper, GifBitmapWrapper> nonPoolingJpgDecoder(Context context) {
+			BitmapPool pool = new BitmapPoolAdapter();
+			return new GifBitmapWrapperResourceDecoder(
+					new ImageVideoBitmapDecoder(
+							new StreamBitmapDecoder(pool, PREFERRED_FORMAT),
+							new FileDescriptorBitmapDecoder(pool, PREFERRED_FORMAT)
+					),
+					new GifResourceDecoder(context, pool),
+					pool
+			);
+		}
+
 		public static class GlideSetup implements GlideModule {
 			@Override public void applyOptions(final Context context, GlideBuilder builder) {
-				builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
+				builder.setDecodeFormat(PREFERRED_FORMAT);
 				if (BuildConfig.DEBUG) {
 					builder.setDiskCache(new DiskCache.Factory() {
 						@Override public DiskCache build() {

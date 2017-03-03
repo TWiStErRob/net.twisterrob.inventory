@@ -475,9 +475,11 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				// temporary image should be reloaded every time from the disk
 				jpg.skipMemoryCache(true);
 			}
-			jpg.load(currentImage)
-			   .diskCacheStrategy(NONE) // don't save any version: it's already on disk or used only once
-			   .into(image);
+			jpg
+					.load(currentImage)
+					.diskCacheStrategy(NONE) // don't save any version: it's already on disk or used only once
+					.decoder(Pic.nonPoolingJpgDecoder(getContext())) // prevent pollution of pool with large Bitmap
+					.into(image);
 		}
 		Pic.svg().load(getTypeImageID()).into(typeImage);
 	}
