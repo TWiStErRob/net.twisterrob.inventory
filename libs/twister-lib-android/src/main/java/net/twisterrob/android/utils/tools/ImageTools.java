@@ -443,14 +443,14 @@ public /*static*/ abstract class ImageTools {
 	//		return null;
 	//	}
 
-	public static void savePicture(Bitmap bitmap, CompressFormat format, int quality, boolean useCorrectEncoder,
+	public static void savePicture(Bitmap bitmap, CompressFormat format, int quality, boolean preferQualityOverSpeed,
 			File file) throws IOException {
-		savePicture(bitmap, format, quality, useCorrectEncoder, new FileOutputStream(file));
+		savePicture(bitmap, format, quality, preferQualityOverSpeed, new FileOutputStream(file));
 	}
-	public static void savePicture(Bitmap bitmap, CompressFormat format, int quality, boolean useCorrectEncoder,
+	public static void savePicture(Bitmap bitmap, CompressFormat format, int quality, boolean preferQualityOverSpeed,
 			OutputStream stream) throws IOException {
 		try {
-			if (useCorrectEncoder && format == CompressFormat.JPEG) {
+			if (preferQualityOverSpeed && format == CompressFormat.JPEG) {
 				compressAsJPEG(bitmap, quality, stream);
 			} else {
 				bitmap.compress(format, quality, stream);

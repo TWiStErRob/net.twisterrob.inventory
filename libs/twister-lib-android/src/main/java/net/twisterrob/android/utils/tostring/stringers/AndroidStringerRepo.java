@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.*;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Build.*;
@@ -64,5 +65,6 @@ public class AndroidStringerRepo {
 		repo.register(ActivityManager.MemoryInfo.class, new MemoryInfoStringer());
 		repo.register(ActivityManager.class, new ActivityManagerStringer());
 		repo.register(Configuration.class, new ConfigurationStringer());
+		repo.register(Bitmap.class, new BitmapStringer());
 	}
 }
