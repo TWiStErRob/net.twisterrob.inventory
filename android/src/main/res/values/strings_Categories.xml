@@ -45,7 +45,7 @@
 	<string name="category_box_plastic" level="2">plastic containers</string>
 	<string name="category_box_plastic_keywords">plastic container, clamshell, foam food container, lunch box/Tupperware, food carrier, cool-box/cooler/chilly bin/Esky</string>
 	<string name="category_container_bulk" level="2">bulk containers</string>
-	<string name="category_container_bulk_keywords">basket, waste basket, hamper, bin, crate, case, trunk, chest</string>
+	<string name="category_container_bulk_keywords">basket, waste basket, hamper, bin, crate, case, trunk, chest, safe</string>
 
 	<string name="category_bag" level="1">Bags</string>
 	<string name="category_bag_keywords">@string/empty</string>
@@ -163,7 +163,7 @@
 	<string name="category_aperture" level="2" icon="@raw/item_door">aperture components</string>
 	<string name="category_aperture_keywords">window handle, blinds, curtain rod, doorknob, door handle, door latch, door chain, door lock, key/keys</string>
 	<string name="category_lighting" level="2" icon="@raw/item_bulb">lighting</string>
-	<string name="category_lighting_keywords">desk lamp, standing lamp, ceiling lamp, light bulb, lampshade, fluorescent tube, neon sign, laser</string>
+	<string name="category_lighting_keywords">desk lamp, standing lamp, ceiling lamp, chandelier, light bulb, lampshade, fluorescent tube, neon sign, laser</string>
 	<string name="category_clock" level="2" icon="@raw/item_clock">clocks</string>
 	<string name="category_clock_keywords">wall-clock, digital wall-clock, alarm clock, cuckoo clock, longcase clock/floor clock/grandfather clock</string>
 
@@ -224,13 +224,13 @@
 	<string name="category_publication" level="1" icon="@raw/item_paper">Publications</string>
 	<string name="category_publication_keywords">@string/empty</string>
 	<string name="category_book" level="2">book</string>
-	<string name="category_book_keywords">paperback, dictionary, atlas, yearbook, photo album, magazine, comics, newsletter, newspaper, periodical, academic journal, proceeding</string>
+	<string name="category_book_keywords">paperback, dictionary, atlas, yearbook, photo album, magazine, comics, newsletter, newspaper, periodical, academic journal, proceeding, workbook/student\'s book</string>
 	<string name="category_booklet" level="2">booklet</string>
-	<string name="category_booklet_keywords">advertisement, marketing, brochure, catalogue, circular, programme, leaflet, pamphlet, flyer, invitation</string>
+	<string name="category_booklet_keywords">advertisement, marketing, brochure, catalogue, circular, programme, leaflet, pamphlet, flier/flyer, invitation</string>
 	<string name="category_information" level="2">informative</string>
 	<string name="category_information_keywords">map, travel guide, guide, white paper, blueprint, plan, patent, essay, thesis, journal, paper, wall calendar, desk calendar, business card</string>
 	<string name="category_help" level="2">help</string>
-	<string name="category_help_keywords">user guide, owner\'s manual, assembly instructions, FAQ/Frequently Asked Questions</string>
+	<string name="category_help_keywords">user guide, owner\'s manual, assembly instructions, FAQ/Frequently Asked Questions, technical specification</string>
 
 	<string name="category_recording" level="1" icon="@raw/item_disc">Recordings</string>
 	<string name="category_recording_keywords">@string/empty</string>
@@ -324,7 +324,7 @@
 	<string name="category_protective_ear" level="2" icon="@raw/item_earmuff">ear protection</string>
 	<string name="category_protective_ear_keywords">earplugs, earmuffs</string>
 	<string name="category_protective_impact" level="2">impact protection</string>
-	<string name="category_protective_impact_keywords">knee pads, elbow pads, padded girdle, impact pad, snipe protector, body armor, bulletproof vest</string>
+	<string name="category_protective_impact_keywords">knee pads, elbow pads, padded girdle, impact pad, spine protector, body armor, bulletproof vest</string>
 
 
 	<!--=========================================================================================================-->
@@ -391,7 +391,7 @@
 	<string name="category_doll" level="2">doll</string>
 	<string name="category_doll_keywords">rag doll, ball-joined doll, peg doll, bisque doll, celebrity doll, matryoshka doll/russian nesting doll</string>
 	<string name="category_model_monster" level="2">monster model</string>
-	<string name="category_model_monster_keywords">stuffed animal, plush figure, squeaky toy/squeeze toy, rubber duck, jack-in-the-box; Furby, Beanie Babies</string>
+	<string name="category_model_monster_keywords">stuffed animal, plush figure, squeaky toy/squeeze toy, rubber duck, jack-in-the-box; Teddy bear, Furby, Beanie Babies</string>
 	<string name="category_model_static" level="2">static model</string>
 	<string name="category_model_static_keywords">car, motocycle, aircraft, ship, submarine, tank; Matchbox</string>
 	<string name="category_model_active" level="2">active model</string>
@@ -548,7 +548,7 @@
 	<string name="category_computer_output" level="2">output devices</string>
 	<string name="category_computer_output_keywords">printer, 3D printer, plotter</string>
 	<string name="category_computer_component" level="2">components</string>
-	<string name="category_computer_component_keywords">PCI, AGP, PCMCIA, PCI-Express card, sound card, Sound Blaster, network card, video card, ATI, nVidia, CPU/processor, RAM/memory, SD-RAM, DDR</string>
+	<string name="category_computer_component_keywords">PCI, AGP, PCMCIA, PCI-Express card, sound card, Sound Blaster, WiFi card/ethernet card/network card, video card, ATI, nVidia, CPU/processor, RAM/memory, SD-RAM, DDR</string>
 	<string name="category_computer_drive" level="2">storage drives</string>
 	<string name="category_computer_drive_keywords">SSD/solid state drive, HDD/hard drive, optical drive, floppy disk drive, card reader, external, ATA, PATA, SATA, RAID</string>
 	<string name="category_computer_media" level="2">storage media</string>
@@ -561,7 +561,7 @@
 	<string name="category_cable_connector" level="2">connector</string>
 	<string name="category_cable_connector_keywords">audio jack, RCA, S/PDIF, USB, HDMI, DisplayPort, MHL, D-sub/VGA, DVI, SCART, S-Video, Composite, Component, RGB, YPbPr, BNC, UTP, Ethernet, ISDN, LAN, WAN</string>
 	<string name="category_cable_power" level="2">power source</string>
-	<string name="category_cable_power_keywords">power cord, extension cord, power strip, adaptor/AC adapter, US/EU/UK/AU plug, surge protector, plug converters/travel adapter, car charger, jumper cable</string>
+	<string name="category_cable_power_keywords">power cord, extension cord, power strip, adaptor/AC adapter, US plug/EU plug/UK plug/AU plug, surge protector, plug converters/travel adapter, car charger, jumper cable</string>
 
 	<string name="category_vehicle" level="1" icon="@raw/item_car_front">Vehicles</string>
 	<string name="category_vehicle_keywords">@string/empty</string>
@@ -594,7 +594,7 @@
 	<string name="category_gardening_irrigation" level="2" icon="@raw/snippet_water">irrigation tools</string>
 	<string name="category_gardening_irrigation_keywords">watering can, spray bottle, sprinkler, hose, saucer/drip tray, seed tray</string>
 	<string name="category_gardening_power" level="2">power gardening tools</string>
-	<string name="category_gardening_power_keywords">lawn mower, string trimmer, leaf blower, cultivator, tiller, pressure washer, wood chipper, generator</string>
+	<string name="category_gardening_power_keywords">lawnmower/lawn mower, string trimmer, leafblower/leaf blower, snowblower/snow blower, cultivator, tiller, pressure washer, wood chipper, generator</string>
 
 	<string name="category_cleaning" level="1">Cleaning</string>
 	<string name="category_cleaning_keywords">@string/empty</string>
@@ -678,6 +678,7 @@
 	<string name="category_tool_abrasive" level="2">abrasive tools</string>
 	<string name="category_tool_abrasive_keywords">rasp, sandpaper, scraper, grinding wheel, eraser/rubber</string>
 	<string name="category_tool_measure" level="2">measurement</string>
+	<!-- FIXME scientific instruments, telescope, microscope, lab instruments -->
 	<string name="category_tool_measure_keywords">tape measure, measuring tape, micrometer, balance, scale, spirit level, gauge, caliper, protractor, ruler, steel square, straightedge, angle, pair of compasses, stencil, multimeter, magnifier, microscope, compass</string>
 	<string name="category_tool_measure_weather" level="3">weather measurement</string>
 	<string name="category_tool_measure_weather_keywords">thermometer, barometer, hygrometer, forecast/weather station, wind vane, windsock, rain gauge, snow gauge, lightning detector</string>
@@ -708,12 +709,15 @@
 	<string name="category_material_aggregate" level="2">aggregates</string>
 	<string name="category_material_aggregate_keywords">sand, gravel, pebbles, cement, limestone, sawdust</string>
 
-	<string name="category_material_bind" level="1">Binding Materials</string>
-	<string name="category_material_bind_keywords">@string/empty</string>
+	<string name="category_material_bind" level="1">Binding Materials</string><!--kötöelem-->
+	<string name="category_material_bind_keywords">pipe</string>
 	<string name="category_material_adhesive" level="2">adhesive</string>
 	<string name="category_material_adhesive_keywords">glue, Blu-tack, wallpaper paste, Sellotape/Scotch/Sticky Tape, Duct/Cloth tape, electric tape, masking tape/paint tape, silicone sealant, caulking, thermal paste/thermal gel</string>
 	<string name="category_material_fastener" level="2">fastener</string>
-	<string name="category_material_fastener_keywords">nail, pin, needle, rivet, screw, screw eye, hook, bolt, nut, shim, spacer, dowel, wall plug/rawl plug/screw anchor, peg, tie-wrap/cable tie, paperclip, push pin, binder clip, curtain clip, curtain ring, curtain rod bracket</string>
+	<string name="category_material_fastener_keywords">nail, pin, needle, rivet, screw, screw eye, hook, bolt, nut, shim, spacer, dowel, wall plug/rawl plug/screw anchor, peg, tie-wrap/cable tie, flange, paperclip, push pin, binder clip, curtain clip, curtain ring, curtain rod bracket</string>
+	<!-- FIXME material_powertrain? -->
+	<!--<string name="category_material_powertrain" level="2">mechanical transfer</string>&lt;!&ndash;erőátvitel&ndash;&gt;-->
+	<!--<string name="category_material_powertrain_keywords">gear/cog/cogwheel, bearing, pulley, belt, axle, spindle, shaft, spline, coupling/clutch, transmission, flywheel, servo, ratchet, piston</string>-->
 
 
 	<!--=========================================================================================================-->
@@ -736,6 +740,10 @@
 	<string name="category_note" level="1">Notes</string>
 	<string name="category_note_keywords">exercise book, school notes, lesson notes, printout, pop quiz, test, midterm, exam, final exam, thesis</string>
 
+	<!-- FIXME correspondence -->
+	<!--<string name="category_?" level="1">Correspondence</string>-->
+	<!--<string name="category_?_keywords">letter, resignation, offer, *?</string>-->
+
 	<string name="category_money" level="1" icon="@raw/item_money">Money</string>
 	<string name="category_money_keywords">@string/empty</string>
 	<string name="category_currency" level="2">currency</string>
@@ -754,6 +762,7 @@
 
 	<string name="category_food" level="1" icon="@raw/item_burger">Food</string>
 	<string name="category_food_keywords">@string/empty</string>
+	<!-- CONSIDER botanicals? category: green tea, black tea -->
 	<string name="category_food_dry" level="2">long-life</string>
 	<string name="category_food_dry_keywords">coffee, tea, tobacco, cigarettes, instant packets, pet food</string>
 	<string name="category_snack" level="2">snacks</string>
@@ -839,6 +848,7 @@
 	<string name="category_sex_toy" level="2">sex toys</string>
 	<string name="category_sex_toy_keywords">@string/empty</string>
 
+	<!-- FIXME http://www.onebag.com/packing-list-toiletries.html Rename to Toiletries? -->
 	<string name="category_hygiene" level="1">Hygiene</string>
 	<string name="category_hygiene_keywords">@string/empty</string>
 	<string name="category_hygiene_body" level="2">body hygiene</string>
