@@ -32,7 +32,9 @@
 
 	<PreferenceCategory android:title="Links">
 		<Preference
+			android:order="1"
 			android:title="@string/pref_app_in_settings_title"
+		    android:summary="@string/pref_app_in_settings_desc"
 			>
 			<intent
 				android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
@@ -40,7 +42,9 @@
 				/>
 		</Preference>
 		<Preference
+			android:order="2"
 			android:title="@string/pref_app_in_store_title"
+			android:summary="@string/pref_app_in_store_desc"
 			>
 			<intent
 				android:action="android.intent.action.VIEW"
@@ -48,17 +52,31 @@
 				/>
 		</Preference>
 		<Preference
+			android:order="3"
+			android:title="@string/pref_app_privacy_policy_title"
+			android:summary="@string/pref_app_privacy_policy_desc"
+			>
+			<intent
+				android:action="android.intent.action.VIEW"
+				android:data="http://www.twisterrob.net/project/inventory/#privacy-policy"
+				/>
+		</Preference>
+		<Preference
+			android:order="-1"
 			android:title="@string/feedback_title"
 			android:summary="Ask a question, request features you'd like to see, or just tell me what you think about the app. Any feedback is welcome.">
 			<intent android:action="android.intent.action.VIEW"
 			        android:data="mailto:feedback@twisterrob.net">
+				<!--suppress AndroidElementNotAllowed: see android.preference.PreferenceInflater#onCreateCustomFromTag -->
 				<extra android:name="android.intent.extra.TEXT"
 				       android:value="Write your request/question/feedback here." />
+				<!--suppress AndroidElementNotAllowed: see android.preference.PreferenceInflater#onCreateCustomFromTag -->
 				<extra android:name="android.intent.extra.SUBJECT"
 				       android:value="Magic Home Inventory feedback" />
 			</intent>
 		</Preference>
 		<Preference
+			android:order="0"
 			android:title="@string/about_title"
 			android:summary="@string/app_name"
 			>

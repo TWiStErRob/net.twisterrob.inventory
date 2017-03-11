@@ -81,5 +81,9 @@
 	<bool name="pref_showWelcome_default" translatable="false">true</bool>
 
 	<string name="pref_app_in_settings_title">App info in Settings</string>
+	<string name="pref_app_in_settings_desc">manage storage, permissions, notifications, etc.</string>
 	<string name="pref_app_in_store_title">App details in Play Store</string>
+	<string name="pref_app_in_store_desc">check for updates, leave a review, share, uninstall, etc.</string>
+	<string name="pref_app_privacy_policy_title">Privacy Policy</string>
+	<string name="pref_app_privacy_policy_desc">How is my data handled?</string>
 </resources>
