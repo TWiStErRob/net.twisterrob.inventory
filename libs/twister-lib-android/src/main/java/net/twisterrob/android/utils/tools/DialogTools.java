@@ -18,10 +18,12 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.rarepebble.colorpicker.ColorPickerView;
 
+@SuppressWarnings({"unused", "StaticMethodOnlyUsedInOneClass"})
 public class DialogTools {
+
 	@UiThread
 	public static AlertDialog.Builder prompt(final @NonNull Context context,
-			@Nullable String initialValue, final @NonNull PopupCallbacks<String> callbacks) {
+			@Nullable CharSequence initialValue, final @NonNull PopupCallbacks<String> callbacks) {
 		final EditText input = new EditText(context);
 		input.setSingleLine(true);
 		input.setText(initialValue);
@@ -61,6 +63,7 @@ public class DialogTools {
 					}
 				});
 	}
+
 	public static AlertDialog.Builder confirm(@NonNull Context context,
 			final @NonNull PopupCallbacks<Boolean> callbacks) {
 		return new DefaultBuilder(context)
@@ -81,6 +84,7 @@ public class DialogTools {
 					}
 				});
 	}
+
 	public static AlertDialog.Builder notify(@NonNull Context context,
 			final @NonNull PopupCallbacks<Boolean> callbacks) {
 		return new DefaultBuilder(context)
@@ -96,6 +100,7 @@ public class DialogTools {
 					}
 				});
 	}
+
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	public static AlertDialog.Builder pickNumber(@NonNull Context context,
 			@IntRange(from = 0) int initial, @IntRange(from = 0) Integer min, @IntRange(from = 0) Integer max,
@@ -135,6 +140,7 @@ public class DialogTools {
 					.setTitle("Pick a number");
 		}
 	}
+
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	public static AlertDialog.Builder pickColor(@NonNull Context context,
 			@ColorInt int initial, final @NonNull PopupCallbacks<Integer> callbacks) {
@@ -167,9 +173,11 @@ public class DialogTools {
 					.setTitle("Pick a color");
 		}
 	}
+
 	@UiThread
 	public interface PopupCallbacks<T> {
 		void finished(T value);
+
 		/**
 		 * @see DoNothing#instance()
 		 */
@@ -177,8 +185,9 @@ public class DialogTools {
 
 		class DoNothing implements PopupCallbacks<Object> {
 			@Override public void finished(Object value) {
-
+				// NO OP: just ignore it
 			}
+
 			@SuppressWarnings("unchecked")
 			public static <T> PopupCallbacks<T> instance() {
 				return (PopupCallbacks<T>)NO_CALLBACK;

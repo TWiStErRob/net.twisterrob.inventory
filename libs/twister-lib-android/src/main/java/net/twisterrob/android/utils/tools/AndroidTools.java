@@ -30,7 +30,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.*;
 import android.support.v4.widget.*;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.*;
 import android.view.*;
@@ -49,7 +48,7 @@ import net.twisterrob.java.utils.*;
 import net.twisterrob.java.utils.tostring.*;
 import net.twisterrob.java.utils.tostring.stringers.DefaultNameStringer;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "StaticMethodOnlyUsedInOneClass", "SameParameterValue"})
 public /*static*/ abstract class AndroidTools {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidTools.class);
 
@@ -260,7 +259,7 @@ public /*static*/ abstract class AndroidTools {
 		if (sizes == null || sizes.isEmpty()) {
 			throw new IllegalArgumentException("There must be at least one size to choose from.");
 		}
-		ArrayList<android.hardware.Camera.Size> sorted = new ArrayList<>(sizes);
+		List<android.hardware.Camera.Size> sorted = new ArrayList<>(sizes);
 		Collections.sort(sorted, new CameraSizeComparator(w, h));
 
 		android.hardware.Camera.Size optimalSize = sorted.get(0);
@@ -271,7 +270,7 @@ public /*static*/ abstract class AndroidTools {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static StringBuilder toString(List<android.hardware.Camera.Size> sorted) {
+	private static StringBuilder toString(Iterable<android.hardware.Camera.Size> sorted) {
 		StringBuilder sizesString = new StringBuilder();
 		sizesString.append('[');
 		for (android.hardware.Camera.Size size : sorted) {
@@ -1188,16 +1187,6 @@ public /*static*/ abstract class AndroidTools {
 		return CanvasTools.getMaximumBitmapSize(canvas);
 	}
 
-	/** @deprecated use DialogTools */
-	interface PopupCallbacks<T> extends DialogTools.PopupCallbacks<T> {
-	}
-	/** @deprecated use DialogTools */
-	@SuppressWarnings("deprecation")
-	public static AlertDialog.Builder prompt(final Context context,
-			String initialValue, PopupCallbacks<String> callbacks) {
-		return DialogTools.prompt(context, initialValue, callbacks);
-	}
-
 	/**
 	 * Warning: call this before attaching the view to the parent if the view is created dynamically.
 	 * @see <a href="http://stackoverflow.com/a/19004929/253468">How to show soft-keyboard when EditText is focused?</a>
@@ -1242,29 +1231,6 @@ public /*static*/ abstract class AndroidTools {
 	public static void hideKeyboard(View input) {
 		InputMethodManager imm = (InputMethodManager)input.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
-	}
-
-	/** @deprecated use DialogTools */
-	@SuppressWarnings("deprecation")
-	public static AlertDialog.Builder confirm(Context context, PopupCallbacks<Boolean> callbacks) {
-		return DialogTools.confirm(context, callbacks);
-	}
-	/** @deprecated use DialogTools */
-	@SuppressWarnings("deprecation")
-	public static AlertDialog.Builder notify(Context context, PopupCallbacks<Boolean> callbacks) {
-		return DialogTools.notify(context, callbacks);
-	}
-	/** @deprecated use DialogTools */
-	@SuppressWarnings("deprecation")
-	public static AlertDialog.Builder pickNumber(Context context,
-			int initial, Integer min, Integer max, PopupCallbacks<Integer> callbacks) {
-		return DialogTools.pickNumber(context, initial, min, max, callbacks);
-	}
-	/** @deprecated use DialogTools */
-	@SuppressWarnings("deprecation")
-	public static AlertDialog.Builder pickColor(Context context,
-			@ColorInt int initial, final PopupCallbacks<Integer> callbacks) {
-		return DialogTools.pickColor(context, initial, callbacks);
 	}
 
 	/** Will return the first if there are more. */
