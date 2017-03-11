@@ -4,6 +4,7 @@ package net.twisterrob.inventory.android.test.categories;
 public @interface On {
 	interface Main {}
 	interface External {}
+	interface Support {}
 
 	interface Property {}
 	interface Room {}

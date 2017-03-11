@@ -4,6 +4,18 @@
 	<!ENTITY LI "\n&#8195;&#8226;&#8194;"><!-- m-space (\u2003) bullet (\u2022) n-space (\u2002) -->
 	]>
 <resources>
+	<string-array name="about_licenses" translatable="false">
+		<item>@string/about_license_glide_title</item>
+		<item>@string/about_license_libjpeg_title</item>
+		<item>@string/about_license_stackoverflow_title</item>
+	</string-array>
+
+	<string-array name="about_licenses_content" translatable="false">
+		<item>@string/about_license_glide</item>
+		<item>@string/about_license_libjpeg</item>
+		<item>@string/about_license_stackoverflow</item>
+	</string-array>
+
 	<string name="about_faq"
 		><b>What is this app?</b>
 		\nThis is a home inventory application.
@@ -35,6 +47,7 @@
 		Feel free to send any kind of comment, request, suggestion, error report;
 		just about any thought regarding this app.
 	</string>
+
 	<string name="about_help"
 		><big><b>Structure</b></big>
 		\n\n<b>Properties</b>
@@ -194,6 +207,7 @@
 		As a convenience there\'s also an exported version of the inventory in the ZIP file
 		in HTML format (for Web&nbsp;Browsers) and in CSV format (for Excel).
 	</string>
+
 	<string name="about_tips"
 		><b>Usage</b>
 		&LI;If you have a steady hand, you can use the <i>Crop</i> button to take an image and crop it immediately.

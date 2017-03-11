@@ -120,6 +120,9 @@ public class AndroidMatchers {
 	public static @NonNull Matcher<View> anyView() {
 		return any(View.class);
 	}
+	public static @NonNull String stringRes(@StringRes int stringId) {
+		return getTargetContext().getResources().getString(stringId);
+	}
 	public static @NonNull Matcher<String> containsStringRes(@StringRes int stringId) {
 		return Matchers.containsString(getTargetContext().getResources().getString(stringId));
 	}
