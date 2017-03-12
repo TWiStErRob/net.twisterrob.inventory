@@ -32,6 +32,7 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.content.io.RawResourceResolver;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 
+@SuppressWarnings("StaticMethodOnlyUsedInOneClass")
 public interface Constants {
 	/**
 	 * Turn off parts of the app permanently during build time regardless of flavor.
@@ -197,24 +198,12 @@ public interface Constants {
 			return builder;
 		}
 
-		private GifBitmapWrapperResourceDecoder getSvgDecoder(Context context) {
+		private ResourceDecoder<ImageVideoWrapper, GifBitmapWrapper> getSvgDecoder(Context context) {
 			BitmapPool pool = Glide.get(context).getBitmapPool();
 			return new GifBitmapWrapperResourceDecoder(
 					new ImageVideoBitmapDecoder(
 							new SvgBitmapDecoder(pool, new RawResourceResolver(context, pool)),
-							null /*fileDescriptorDecoder*/
-					),
-					new GifResourceDecoder(context, pool),
-					pool
-			);
-		}
-
-		public static ResourceDecoder<ImageVideoWrapper, GifBitmapWrapper> nonPoolingJpgDecoder(Context context) {
-			BitmapPool pool = new BitmapPoolAdapter();
-			return new GifBitmapWrapperResourceDecoder(
-					new ImageVideoBitmapDecoder(
-							new StreamBitmapDecoder(pool, PREFERRED_FORMAT),
-							new FileDescriptorBitmapDecoder(pool, PREFERRED_FORMAT)
+							null
 					),
 					new GifResourceDecoder(context, pool),
 					pool

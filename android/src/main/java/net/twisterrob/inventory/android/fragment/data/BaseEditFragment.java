@@ -29,7 +29,7 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.*;
 
 import net.twisterrob.android.activity.CaptureImage;
-import net.twisterrob.android.content.glide.LongSignature;
+import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.TextWatcherAdapter;
@@ -478,7 +478,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			jpg
 					.load(currentImage)
 					.diskCacheStrategy(NONE) // don't save any version: it's already on disk or used only once
-					.decoder(Pic.nonPoolingJpgDecoder(getContext())) // prevent pollution of pool with large Bitmap
+					.decoder(new NonPoolingGifBitmapWrapperResourceDecoder(getContext()))
 					.into(image);
 		}
 		Pic.svg().load(getTypeImageID()).into(typeImage);

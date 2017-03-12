@@ -30,8 +30,10 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.bumptech.glide.*;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.ImageVideoWrapper;
+import com.bumptech.glide.load.resource.bitmap.*;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.animation.*;
 import com.bumptech.glide.request.target.*;
 
 import net.twisterrob.android.R;
@@ -53,6 +55,7 @@ import net.twisterrob.java.io.IOTools;
  * > <a href="https://code.google.com/archive/p/ece301-examples/downloads">Downloads</a>
  * > <a href="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ece301-examples/CameraPreview.zip">CameraPreview.zip</a> (password preview).
  */
+@UiThread
 public class CaptureImage extends Activity implements ActivityCompat.OnRequestPermissionsResultCallback {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
 	public static final String EXTRA_OUTPUT = MediaStore.EXTRA_OUTPUT;
@@ -288,31 +291,32 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			}
 		};
 		mPreviewHider.setVisibility(View.VISIBLE);
-		BitmapRequestBuilder<File, Bitmap> image = Glide
+		GenericRequestBuilder<File, ImageVideoWrapper, Bitmap, Bitmap> image = Glide
 				.with(this)
 				.load(mSavedFile)
 				.asBitmap() // no matter the format, just a single frame of bitmap
 				.diskCacheStrategy(DiskCacheStrategy.NONE) // no need to cache, it's on disk already
 				.skipMemoryCache(true) // won't ever be loaded again, or if it is, probably contains different bytes
 				//.placeholder(new ColorDrawable(Color.BLACK)) // immediately hide the preview to prevent weird jump
-				.fitCenter() // make sure full image is visible
+				.transform(new FitCenter(GlideHelpers.NO_POOL)) // make sure full image is visible
 				;
-		@SuppressWarnings("unchecked") // TODO report IDEA doesn't pick up this unchecked warning
-				MultiRequestListener<Object, Bitmap> listener =
-				new MultiRequestListener<>(visualFeedbackListener, target);
+
+		@SuppressWarnings("unchecked")
+		RequestListener<Object, Bitmap> listener = new MultiRequestListener<>(visualFeedbackListener, target);
 		image
-				.format(DecodeFormat.PREFER_ARGB_8888) // don't lose quality (may be disabled to gain memory for crop)
+				.decoder(new NonPoolingImageVideoBitmapDecoder(DecodeFormat.PREFER_ARGB_8888))
+				// don't lose quality (may be disabled to gain memory for crop)
 				// need the special target/listener
 				.thumbnail(image
 						.clone() // inherit everything, but load lower quality
 						.listener(target)
-						.format(DecodeFormat.PREFER_RGB_565)
+						.decoder(new NonPoolingImageVideoBitmapDecoder(DecodeFormat.PREFER_RGB_565))
 						.sizeMultiplier(0.1f)
 						.animate(android.R.anim.fade_in) // fade thumbnail in (=crossFade from background)
 				)
 				.listener(listener)
 				.error(R.drawable.image_error)
-				.crossFade(150) // fade from thumb to image
+				.animate(new BitmapCrossFadeFactory(150)) // fade from thumb to image
 				.into(target)
 		;
 	}
@@ -327,6 +331,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		return flash;
 	}
 
+	@WorkerThread
 	protected void doSave(@Nullable byte... data) {
 		mSavedFile = save(mTargetFile, data);
 	}
@@ -339,9 +344,10 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			mSelection.setSelection(selection);
 		}
 	}
-	protected boolean doCrop() {
+	@WorkerThread
+	protected boolean doCrop(RectF rect) {
 		try {
-			mSavedFile = crop(mSavedFile);
+			mSavedFile = crop(mSavedFile, rect);
 			return true;
 		} catch (Exception ex) {
 			Toast.makeText(getApplicationContext(), "Cannot crop image: " + ex.getMessage(), Toast.LENGTH_LONG).show();
@@ -399,6 +405,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			return true;
 		}
 	}
+	@SuppressWarnings("NullableProblems") // doc says so
 	@Override public void onRequestPermissionsResult(
 			int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		switch (requestCode) {
@@ -461,6 +468,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		return true;
 	}
 
+	@WorkerThread
 	private static @Nullable File save(@NonNull File file, @Nullable byte... data) {
 		if (data == null) {
 			return null;
@@ -485,8 +493,8 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		return file;
 	}
 
-	private File crop(File file) throws IOException {
-		final RectF sel = getPictureRect();
+	@WorkerThread
+	private File crop(File file, RectF sel) throws IOException {
 		if (file == null || sel.isEmpty()) {
 			return null;
 		}
@@ -530,14 +538,16 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			format = CompressFormat.JPEG;
 		}
 		int quality = getIntent().getIntExtra(EXTRA_QUALITY, 85);
-		ImageTools.savePicture(bitmap, format, quality, true /* custom encoder */, file);
+
+		ImageTools.savePicture(bitmap, format, quality, true, file);
 		if (exifRotate) {
-			exif.saveAttributes(); // restore original Exif (most importantly the orientation
+			exif.saveAttributes(); // restore original Exif (most importantly the orientation)
 		}
 
 		LOG.info("Saved {}x{} {}@{} into {}", bitmap.getWidth(), bitmap.getHeight(), format, quality, file);
 		return file;
 	}
+	@AnyThread
 	private int calcSampleSize(int maxSize, float leewayPercent, int sourceWidth, int sourceHeight) {
 		// mirror calculations in ImageTools.downscale
 		final float widthPercentage = maxSize / (float)sourceWidth;
@@ -630,8 +640,10 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 
 	private class CropClickListener implements OnClickListener {
 		@Override public void onClick(View v) {
+			final RectF selection = getPictureRect();
+			Glide.clear(mImage); // free up memory for crop op
 			if (mSavedFile != null) {
-				if (doCrop()) {
+				if (doCrop(selection)) {
 					doReturn();
 				}
 			} else {
@@ -639,7 +651,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 					@Override public void call(byte... data) {
 						doSave(data);
 						flipSelection();
-						if (doCrop()) {
+						if (doCrop(selection)) {
 							doReturn();
 						}
 					}
