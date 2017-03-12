@@ -2,6 +2,8 @@ package net.twisterrob.android.test.automators;
 
 import java.util.Locale;
 
+import org.slf4j.*;
+
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
 
@@ -20,6 +22,8 @@ import net.twisterrob.android.test.espresso.DialogMatchers;
  * It signifies a normal string of pointing to no particular type of resource, but containing a value of a resource. 
  */
 public class UiAutomatorExtensions {
+	private static final Logger LOG = LoggerFactory.getLogger(UiAutomatorExtensions.class);
+
 	public static final int UI_AUTOMATOR_VERSION = VERSION_CODES.JELLY_BEAN_MR2;
 
 	@RequiresApi(UI_AUTOMATOR_VERSION)
@@ -77,7 +81,10 @@ public class UiAutomatorExtensions {
 		if (resId != 0) {
 			resValue = res.getString(resId);
 		} else {
-			assumeThat(Locale.getDefault().getLanguage(), is("en"));
+			String warning = String.format("Missing resource: @%s:string/%s", packageName, resName);
+			assumeThat(warning + "; can't use English fallback",
+					Locale.getDefault().getLanguage(), is("en"));
+			LOG.warn(warning + "; using English fallback: " + englishFallback);
 			resValue = englishFallback;
 		}
 		return resValue;

@@ -21,6 +21,7 @@ import net.twisterrob.android.test.junit.*;
 import net.twisterrob.inventory.android.test.activity.TestActivity;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
+import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
 @RunWith(AndroidJUnit4.class)
 public class DialogMatchersTest_Toast {
@@ -35,6 +36,8 @@ public class DialogMatchersTest_Toast {
 		Toast toast = createToast("Hello Toast!");
 		assertNoToastIsDisplayed();
 		toast.show();
+		// wait for it to show, this is best effort to reduce flakyness
+		onRoot().perform(loopMainThreadUntilIdle());
 		onView(withId(android.R.id.message))
 				.inRoot(isToast())
 				.check(matches(withText(containsStringIgnoringCase("hello"))));

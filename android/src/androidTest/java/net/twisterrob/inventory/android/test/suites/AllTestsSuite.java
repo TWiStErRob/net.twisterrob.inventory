@@ -13,7 +13,7 @@ import android.support.test.internal.runner.ClassPathScanner.AcceptAllFilter;
 
 @RunWith(AllTestsSuite.AndroidClasspathSuite.class)
 public class AllTestsSuite {
-	static class AndroidClasspathSuite extends ClasspathSuite {
+	public static class AndroidClasspathSuite extends ClasspathSuite {
 		public AndroidClasspathSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
 			super(suiteClass, builder, new AndroidClasspathFinderFactory());
 		}

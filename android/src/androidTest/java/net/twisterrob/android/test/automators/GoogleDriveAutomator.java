@@ -35,7 +35,7 @@ public class GoogleDriveAutomator {
 		return UiAutomatorExtensions.externalString(PACKAGE_GOOGLE_DRIVE, "upload_shared_item_title", "Save to Drive");
 	}
 	public static @RawRes String selectFolder() throws NameNotFoundException {
-		return UiAutomatorExtensions.externalString(PACKAGE_GOOGLE_DRIVE, "dialog_select_folder", "Select Folder");
+		return UiAutomatorExtensions.externalString(PACKAGE_GOOGLE_DRIVE, "dialog_select", "Select");
 	}
 	public static @RawRes String save() throws NameNotFoundException {
 		return UiAutomatorExtensions.externalString(PACKAGE_GOOGLE_DRIVE, "upload_shared_item_confirm", "Save");

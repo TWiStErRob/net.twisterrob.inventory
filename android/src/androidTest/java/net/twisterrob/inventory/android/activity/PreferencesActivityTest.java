@@ -49,8 +49,9 @@ public class PreferencesActivityTest {
 		prefs.openAppInfoInSettings();
 		CharSequence name = getTargetContext().getApplicationInfo().loadLabel(getTargetContext().getPackageManager());
 
+		UiDevice device = UiDevice.getInstance(getInstrumentation());
+		device.waitForIdle();
 		try {
-			UiDevice device = UiDevice.getInstance(getInstrumentation());
 			UiObject object = device.findObject(new UiSelector().text(name.toString()));
 			assertTrue(object.exists());
 		} finally {
@@ -67,8 +68,10 @@ public class PreferencesActivityTest {
 
 		prefs.openAppInfoInMarket();
 
+		UiDevice device = UiDevice.getInstance(getInstrumentation());
+		device.waitForIdle();
 		try {
-			assertThat(UiDevice.getInstance(getInstrumentation()).getCurrentPackageName(), is("com.android.vending"));
+			assertThat(device.getCurrentPackageName(), is("com.android.vending"));
 		} finally {
 			pressBackExternal();
 		}

@@ -16,7 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.support.annotation.StringRes;
-import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.*;
 import android.view.View;
 
 import static android.support.test.InstrumentationRegistry.*;
@@ -30,7 +30,7 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import net.twisterrob.android.test.automators.GoogleDriveAutomator;
+import net.twisterrob.android.test.automators.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
@@ -173,7 +173,9 @@ public class BackupActivityActor extends ActivityActor {
 			pressBackExternal();
 		}
 		public DriveBackupActor chooseDrive() throws UiObjectNotFoundException, NameNotFoundException {
+			// TODO refactor this as AndroidAutomator.chooseItem(saveToDrive())
 			clickOnLabel(saveToDrive());
+			// TODO make sure to let the chooser reorganize its items on 23+ (waitForIdle not enough)
 			DriveBackupActor drive = new DriveBackupActor();
 			drive.assertDialogDisplayed();
 			return drive;
@@ -186,6 +188,7 @@ public class BackupActivityActor extends ActivityActor {
 		}
 	}
 
+	// FIXME handle Marshmallow permission dialog that comes up on first usage of Drive
 	public static class DriveBackupActor {
 		private static final Logger LOG = LoggerFactory.getLogger(DriveBackupActor.class);
 		public static void assumeIsAvailable() {
