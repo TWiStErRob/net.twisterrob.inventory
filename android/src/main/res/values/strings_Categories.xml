@@ -204,7 +204,7 @@
 
 	<!--=========================================================================================================-->
 	<string name="category_collectible" level="0" icon="@raw/category_collectibles">Collectibles</string>
-	<string name="category_collectible_keywords">@string/empty</string>
+	<string name="category_collectible_keywords">collection, compilation</string>
 	<string name="category_collectible_description">stuff you don\'t need, but still have</string>
 
 	<string name="category_souvenir" level="1">Souvenirs</string>
@@ -395,7 +395,7 @@
 	<string name="category_model_static" level="2">static model</string>
 	<string name="category_model_static_keywords">car, motocycle, aircraft, ship, submarine, tank; Matchbox</string>
 	<string name="category_model_active" level="2">active model</string>
-	<string name="category_model_active_keywords">railway modeling/model railroading, slot car, pullback motor vehicle, wind-up toy, virtual pet, robotic dog; Scalextric, Tamagochi</string>
+	<string name="category_model_active_keywords">railway modeling/model railroading/train, HO scale/H0 scale/1:87/1:87.1, slot car, pullback motor vehicle, wind-up toy, virtual pet, robotic dog; Scalextric, Tamagochi</string>
 	<string name="category_model_radio" level="2">radio controlled</string>
 	<string name="category_model_radio_keywords">RC car, RC plane, RC helicopter, RC quadrocopter, RC boat, monster truck</string>
 	<string name="category_model_accessory" level="2">accessories</string>
