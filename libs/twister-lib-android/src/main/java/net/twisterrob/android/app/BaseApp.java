@@ -76,8 +76,9 @@ public abstract class BaseApp extends android.app.Application {
 	}
 
 	public void onCreate() {
-		// StrictModeDiskReadViolation on startup, but there isn't really a good way around these
-		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+		// StrictModeDiskReadViolation and StrictModeDiskWriteViolation on startup,
+		// but there isn't really a good way around these
+		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 		try {
 			// may cause StrictModeDiskReadViolation if Application.onCreate calls
 			// android.graphics.Typeface.SetAppTypeFace (this happened on Galaxy S3 with custom font set up)
@@ -113,7 +114,9 @@ public abstract class BaseApp extends android.app.Application {
 
 	protected void initPreferences() {
 		if (preferencesResource != AndroidTools.INVALID_RESOURCE_ID) {
-			// may cause StrictModeDiskReadViolation, but necessary for startup since anything can read the preferences
+			// may cause StrictModeDiskReadViolation on Android 21-23
+			// may cause StrictModeDiskWriteViolation on Android 24-25
+			// but necessary for startup since anything can read the preferences
 			PreferenceManager.setDefaultValues(this, preferencesResource, false);
 		}
 		prefs = new ResourcePreferences(getResources(), PreferenceManager.getDefaultSharedPreferences(this));
