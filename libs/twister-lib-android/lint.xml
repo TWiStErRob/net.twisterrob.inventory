@@ -8,6 +8,7 @@
 		<ignore regexp="R\.bool\.in_test" />
 		<!-- Not used, because this is a library, used by consuming apps -->
 		<ignore path="src/main/res/values/dimens.xml" />
+		<ignore path="src/main/res/values/consts.xml" />
 		<!-- Used by consuming applications -->
 		<ignore path="src/main/res/layout/inc_empty.xml" />
 		<ignore path="src/main/res/values/strings_about.xml" />

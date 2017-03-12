@@ -6,7 +6,7 @@ import org.slf4j.*;
 
 import android.Manifest;
 import android.animation.*;
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.PackageManager;
@@ -55,6 +55,7 @@ import net.twisterrob.java.io.IOTools;
  * > <a href="https://code.google.com/archive/p/ece301-examples/downloads">Downloads</a>
  * > <a href="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ece301-examples/CameraPreview.zip">CameraPreview.zip</a> (password preview).
  */
+@SuppressLint("WrongThread") // TODEL when updated the Gradle plugin with new lint
 @UiThread
 public class CaptureImage extends Activity implements ActivityCompat.OnRequestPermissionsResultCallback {
 	private static final Logger LOG = LoggerFactory.getLogger(CaptureImage.class);
