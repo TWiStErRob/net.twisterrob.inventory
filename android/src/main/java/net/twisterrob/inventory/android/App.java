@@ -90,31 +90,69 @@ public class App extends BaseApp {
 		} else if (ex instanceof SQLiteConstraintException && EMPTY_ERRORS.contains(msg)) {
 			errorMessage = res.getString(R.string.generic_error_length_name);
 		}
-		return TextUtils.concat(message, "\n", TextTools.color(Color.GRAY, errorMessage));
+		return TextUtils.concat(message, "\n", TextTools.color(Color.LTGRAY, errorMessage));
 	}
 
 	// 2013-03-18 (SQLite 3.7.16): Added new extended error codes for all SQLITE_CONSTRAINT errors
 	private static final Collection<String> EMPTY_ERRORS = new HashSet<>(Arrays.asList(
-			// Galaxy S4 4.4.2 3.7.11
+			// Galaxy S4 4.4.2 (19) 3.7.11
 			"constraint failed (code 19)",
-			// Galaxy S5 5.0.1 3.8.6.1
+			// Galaxy S5 5.0.1 (21) 3.8.6.1
+			// SDK Google APIs x86_64 7.0 (24) 3.9.2
+			// SDK Google APIs x86_64 7.1.1 (25) 3.9.2
 			"CHECK constraint failed: Property (code 275)", // should be guarded by BaseEditFragment
 			"CHECK constraint failed: Room (code 275)", // should be guarded by BaseEditFragment
 			"CHECK constraint failed: Item (code 275)", // should be guarded by BaseEditFragment
-			"CHECK constraint failed: List (code 275)"
+			"CHECK constraint failed: List (code 275)", // not guarded when list added
+			// Galaxy S5 6.0.1 (23) 3.8.10.2
+			"CHECK constraint failed: List (code 275)\n"
+					+ "#################################################################\n"
+					+ "Error Code : 275 (SQLITE_CONSTRAINT_CHECK)\n"
+					+ "Caused By : Abort due to constraint violation.\n"
+					+ "\t(CHECK constraint failed: List (code 275))\n"
+					+ "#################################################################"
 	));
 
 	// SQLite 3.7.16 released 2013-03-18: Added new extended error codes for all SQLITE_CONSTRAINT errors
 	private static final Collection<String> NAME_ERRORS = new HashSet<>(Arrays.asList(
-			// Galaxy S2 2.3.7 3.6.22
+			// Galaxy S2 (10) 2.3.7 3.6.22
 			"error code 19: constraint failed",
-			// Galaxy S4 4.4.2 3.7.11
-			"column name is not unique (code 19)", // property, list
+			// Galaxy S4 (19) 4.4.2 3.7.11
+			"column name is not unique (code 19)", // property
+			"column name is not unique (code 19)", // list
 			"columns property, name are not unique (code 19)", // room
 			"columns parent, name are not unique (code 19)", // item
-			// Galaxy S5 5.0.1 3.8.6.1 
+			// Galaxy S5 5.0.1 (21) 3.8.6.1
+			// SDK Google APIs x86_64 7.0 (24) 3.9.2
+			// SDK Google APIs x86_64 7.1.1 (25) 3.9.2
 			"UNIQUE constraint failed: Property.name (code 2067)",
 			"UNIQUE constraint failed: Room.property, Room.name (code 2067)",
-			"UNIQUE constraint failed: Item.parent, Item.name (code 2067)"
+			"UNIQUE constraint failed: Item.parent, Item.name (code 2067)",
+			"UNIQUE constraint failed: List.name (code 2067)",
+			// Galaxy S5 6.0.1 (23) 3.8.10.2
+			"UNIQUE constraint failed: Property.name (code 2067)\n"
+					+ "#################################################################\n"
+					+ "Error Code : 2067 (SQLITE_CONSTRAINT_UNIQUE)\n"
+					+ "Caused By : Abort due to constraint violation.\n"
+					+ "\t(UNIQUE constraint failed: Property.name (code 2067))\n"
+					+ "#################################################################",
+			"UNIQUE constraint failed: Room.property, Room.name (code 2067)\n"
+					+ "#################################################################\n"
+					+ "Error Code : 2067 (SQLITE_CONSTRAINT_UNIQUE)\n"
+					+ "Caused By : Abort due to constraint violation.\n"
+					+ "\t(UNIQUE constraint failed: Room.property, Room.name (code 2067))\n"
+					+ "#################################################################",
+			"UNIQUE constraint failed: Item.parent, Item.name (code 2067)\n"
+					+ "#################################################################\n"
+					+ "Error Code : 2067 (SQLITE_CONSTRAINT_UNIQUE)\n"
+					+ "Caused By : Abort due to constraint violation.\n"
+					+ "\t(UNIQUE constraint failed: Item.parent, Item.name (code 2067))\n"
+					+ "#################################################################",
+			"UNIQUE constraint failed: List.name (code 2067)\n"
+					+ "#################################################################\n"
+					+ "Error Code : 2067 (SQLITE_CONSTRAINT_UNIQUE)\n"
+					+ "Caused By : Abort due to constraint violation.\n"
+					+ "\t(UNIQUE constraint failed: List.name (code 2067))\n"
+					+ "#################################################################"
 	));
 }
