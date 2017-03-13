@@ -391,7 +391,7 @@
 	<string name="category_doll" level="2">doll</string>
 	<string name="category_doll_keywords">rag doll, ball-joined doll, peg doll, bisque doll, celebrity doll, matryoshka doll/russian nesting doll</string>
 	<string name="category_model_monster" level="2">monster model</string>
-	<string name="category_model_monster_keywords">stuffed animal, plush figure, squeaky toy/squeeze toy, rubber duck, jack-in-the-box; Teddy bear, Furby, Beanie Babies</string>
+	<string name="category_model_monster_keywords">stuffed animal, plush figure, squeaky toy/squeeze toy, rubber duck, jack-in-the-box; Teddy bear, Furby, Beanie Baby</string>
 	<string name="category_model_static" level="2">static model</string>
 	<string name="category_model_static_keywords">car, motocycle, aircraft, ship, submarine, tank; Matchbox</string>
 	<string name="category_model_active" level="2">active model</string>
