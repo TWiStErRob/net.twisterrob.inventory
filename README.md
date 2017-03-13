@@ -49,6 +49,7 @@ Release play-by-play
     * `.apk` @ Developer Console > APK > [Alpha](https://play.google.com/apps/publish/?dev_acc=01909946919088079965#ApkPlace:p=net.twisterrob.inventory)
     * `mapping.txt` @ [Deobfuscation](https://play.google.com/apps/publish/?dev_acc=01909946919088079965#DeobfuscationMappingFilesPlace:p=net.twisterrob.inventory)
 
+1. Update http://www.twisterrob.net/project/inventory/ with release notes
 1. Update *What's new in this version?* based on previous one
 1. Make a backup of current version on the phone with
 	```bash
@@ -61,6 +62,8 @@ Release play-by-play
 1. Wait until alpha stage is propagated and update current release version on my phone
 1. Smoke test for no errors
 1. If no errors Promote to Beta or Prod
+1. Update version number in android/build.gradle anticipating minor and commit
+1. Send out emails to people who requested features.
 
 External file sources
 ---------------------
