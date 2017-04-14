@@ -37,6 +37,7 @@ dependencies {
 
 	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
 	compile "com.android.support:support-v4:${VERSION_SUPPORT}"
+	compile "com.android.support:support-annotations:${VERSION_SUPPORT}"
 	compile "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
 	compile "com.android.support:design:${VERSION_SUPPORT}"
 //	compile "com.android.support:cardview-v7:${VERSION_SUPPORT}"

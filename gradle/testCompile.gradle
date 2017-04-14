@@ -9,6 +9,7 @@ configurations.all {
 		force "junit:junit:${VERSION_JUNIT}"
 		force "org.mockito:mockito-core:${VERSION_MOCKITO}"
 		force 'org.objenesis:objenesis:2.4' // 2.1 vs 2.2
+		force 'com.google.guava:guava:20.0' // 17.0 (shazamcrest) vs 20.0 (?)
 		force 'com.thoughtworks.xstream:xstream:1.4.9' // 1.4.8 vs 1.4.9
 		dependencySubstitution {
 			substitute(module('org.hamcrest:hamcrest-core'))
@@ -47,6 +48,7 @@ if (isAndroid) {
 dependencies {
 	testCompile "junit:junit:${VERSION_JUNIT}"
 	testCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
+	testCompile 'com.shazam:shazamcrest:0.11' // assertThat(*, sameBeanAs(*))
 	testCompile "org.mockito:mockito-core:${VERSION_MOCKITO}"
 	testCompile "org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}"
@@ -55,7 +57,7 @@ dependencies {
 	//testCompile "org.powermock:powermock-module-junit4-rule-agent:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
 	testCompile 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then 
-	testCompile 'org.slf4j:slf4j-simple:1.7.21'
+	testCompile "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
 	testCompile 'com.diffplug.durian:durian:3.4.0'
 	testCompile 'com.github.stefanbirkner:fishbowl:1.4.0' // exceptionThrownBy (assertThrows-like)
 //	testCompile 'cglib:cglib:3.2.4'
@@ -82,6 +84,7 @@ dependencies {
 		androidTestCompile "junit:junit:${VERSION_JUNIT}"
 		androidTestCompile "io.takari.junit:takari-cpsuite:1.2.7"
 		androidTestCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
+		androidTestCompile 'com.shazam:shazamcrest:0.11' // assertThat(*, sameBeanAs(*))
 //		androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
 //		androidTestCompile 'com.google.dexmaker:dexmaker:1.0'
 		// Android JUnit Runner
