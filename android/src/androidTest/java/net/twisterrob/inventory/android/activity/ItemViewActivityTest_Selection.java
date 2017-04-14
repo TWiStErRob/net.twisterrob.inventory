@@ -180,7 +180,7 @@ public class ItemViewActivityTest_Selection {
 	}
 
 	private SelectionActor createItemsAndSelect(int count, int toSelect) {
-		assertThat(toSelect, both(greaterThan(0)).and(lessThanOrEqualTo(count)));
+		assertThat(toSelect, allOf(greaterThan(0), lessThanOrEqualTo(count)));
 		createItems(count);
 		return itemView.select(subItem(toSelect));
 	}

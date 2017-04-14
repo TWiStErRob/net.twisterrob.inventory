@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*;
 import com.google.common.base.Preconditions;
 import com.shazam.gwen.collaborators.Asserter;
 
+@SuppressWarnings("UnusedReturnValue")
 public class BackupImportResult implements Asserter {
 	private final Progress progress;
 	private final ImportProgressHandler dispatcher;
@@ -40,12 +41,12 @@ public class BackupImportResult implements Asserter {
 		return this;
 	}
 	public BackupImportResult noInvalidImages() {
-		assertThat(progress.warnings, not(hasItem(both(containsString("invalid")).and(containsString("image")))));
+		assertThat(progress.warnings, not(hasItem(allOf(containsString("invalid"), containsString("image")))));
 		return this;
 	}
 	public BackupImportResult invalidImages(String... images) {
 		for (String image : images) {
-			hasWarning(both(containsString("invalid")).and(containsString(image)));
+			hasWarning(allOf(containsString("invalid"), containsString(image)));
 		}
 		verify(dispatcher, times(images.length)).warning(anyString());
 		return this;

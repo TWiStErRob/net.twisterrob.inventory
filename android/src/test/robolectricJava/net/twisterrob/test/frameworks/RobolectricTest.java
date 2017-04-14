@@ -11,18 +11,14 @@ import android.view.View.OnClickListener;
 import net.twisterrob.test.frameworks.classes.AndroidRecipient;
 
 public class RobolectricTest extends RobolectricTestBase {
-	@Mock
-	private OnClickListener mock;
-	@InjectMocks
-	private AndroidRecipient target;
+	@Mock OnClickListener mockAndroidClass;
+	@InjectMocks AndroidRecipient sut;
 
-	/** Check if @Test methods are executed. */
 	@Test public void testRunner() {
-		assertTrue(true);
+		assertTrue("@Test methods should be executed", true);
 	}
 
-	/** Check if JUnit rules work. */
-	@Test public void testJUnit() {
+	@Test public void testJUnitThrownRule() {
 		assertNotNull(thrown);
 
 		thrown.expect(NullPointerException.class);
@@ -30,15 +26,13 @@ public class RobolectricTest extends RobolectricTestBase {
 		throw new NullPointerException("test");
 	}
 
-	/** Check if auto-mocking works. */
 	@Test public void testMockito() {
-		assertNotNull(mock);
-		assertNotNull(target);
-		assertSame(mock, target.getMockable());
+		assertNotNull("@Mock field should be initialized", mockAndroidClass);
+		assertNotNull("@InjectMocks field should be initialized", sut);
+		assertSame("@Mock should be injected into @InjectMocks object", mockAndroidClass, sut.getMockable());
 	}
 
-	/** Call an Android class without mocking. */
-	@Test public void testAndroid() {
+	@Test public void testAndroidClassViaRobolectric() {
 		Bundle bundle = new Bundle();
 		bundle.putString("test", "value");
 

@@ -23,6 +23,6 @@ public class MoveResultActor extends AlertDialogActor {
 		assertToastMessage(matcher);
 	}
 	public void checkToastMessageDuplicate(Matcher<String> matcher) {
-		checkToastMessage(both(containsStringRes(R.string.generic_error_unique_name)).and(matcher));
+		checkToastMessage(allOf(containsStringRes(R.string.generic_error_unique_name), matcher));
 	}
 }

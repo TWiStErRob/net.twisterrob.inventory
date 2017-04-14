@@ -51,7 +51,8 @@ dependencies {
 	testCompile "org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-module-junit4-rule:${VERSION_POWERMOCK}"
-	testCompile "org.powermock:powermock-module-junit4-rule-agent:${VERSION_POWERMOCK}"
+	// contains duplicate PowerMockRule which messes things up, do not enable
+	//testCompile "org.powermock:powermock-module-junit4-rule-agent:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
 	testCompile 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then 
 	testCompile 'org.slf4j:slf4j-simple:1.7.21'
@@ -62,10 +63,12 @@ dependencies {
 //	testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.2'
 
 	if (isAndroid) {
-		testCompile("org.robolectric:robolectric:3.1.2") {
+		testCompile("org.robolectric:robolectric:3.3.2") {
+			// robolectric has inconsistent internal dependencies
 			exclude group: 'org.codehaus.plexus', module: 'plexus-utils'
 		}
-		testCompile 'org.codehaus.plexus:plexus-utils:1.5.15' // robolectric has inconsistent dependencies
+		// let's force plexus-utils to the latest version for robolectric
+		testCompile 'org.codehaus.plexus:plexus-utils:1.5.+'
 
 //	configurations
 //			.compile

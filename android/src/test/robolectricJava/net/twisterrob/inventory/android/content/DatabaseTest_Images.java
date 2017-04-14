@@ -13,6 +13,8 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import android.database.Cursor;
+import android.os.StrictMode;
+import android.os.StrictMode.ThreadPolicy;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.TestIgnoreApp;
@@ -29,6 +31,7 @@ public class DatabaseTest_Images extends RobolectricTestBase {
 	private final String name;
 	private final Belonging belonging;
 	private Database database;
+	private ThreadPolicy originalPolicy;
 
 	abstract static class Belonging {
 		Database db;
@@ -46,6 +49,8 @@ public class DatabaseTest_Images extends RobolectricTestBase {
 
 	@Before public void setUp() {
 		database = new Database(RuntimeEnvironment.application);
+		originalPolicy = StrictMode.allowThreadDiskWrites();
+		database.getWritableDatabase();
 		belonging.db = database;
 	}
 	@After public void tearDown() {
@@ -57,9 +62,11 @@ public class DatabaseTest_Images extends RobolectricTestBase {
 			cursor.close();
 		} catch (Exception ex) {
 			LOG.warn("Cannot get Log table", ex);
+		} finally {
+			StrictMode.setThreadPolicy(originalPolicy);
+			// otherwise XStream wants to serialize the whole App object because DeepCloner is in methodBlock()
+			belonging.db = null;
 		}
-		// otherwise XStream wants to serialize the whole App object because DeepCloner is in methodBlock()
-		belonging.db = null;
 	}
 	private long createDefaultImage() {
 		return database.addImage(IMAGE_CONTENTS, null);

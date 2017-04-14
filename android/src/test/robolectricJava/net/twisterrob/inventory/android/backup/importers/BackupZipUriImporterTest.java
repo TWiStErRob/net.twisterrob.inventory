@@ -7,7 +7,7 @@ import org.mockito.*;
 import org.robolectric.annotation.Config;
 import org.slf4j.*;
 
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
@@ -31,10 +31,10 @@ public class BackupZipUriImporterTest extends RobolectricTestBase {
 	public static final File FILE = new File("a/b");
 	public static final Uri NON_FILE = Uri.parse("files:///non-existent-protocol");
 
-	@Mock private Context context;
-	@Mock private ImportProgressHandler dispatcher;
-	@Mock private BackupZipStreamImporter streamImporter;
-	@Mock private BackupZipFileImporter fileImporter;
+	@Mock Context context;
+	@Mock ImportProgressHandler dispatcher;
+	@Mock BackupZipStreamImporter streamImporter;
+	@Mock BackupZipFileImporter fileImporter;
 	@InjectMocks private BackupZipUriImporter importer;
 
 	@Before public void defaultStubbing() {

@@ -11,14 +11,14 @@ public class SameFile implements ArgumentMatcher<File> {
 		this.file = file;
 	}
 
-	@Override public boolean matches(Object argument) {
+	@Override public boolean matches(File argument) {
 		if (argument == null) {
 			return file == null;
 		} else if (file == null) {
 			return false;
 		}
 		try {
-			File actual = ((File)argument).getCanonicalFile();
+			File actual = argument.getCanonicalFile();
 			File expected = file.getCanonicalFile();
 			return expected.equals(actual);
 		} catch (IOException ex) {

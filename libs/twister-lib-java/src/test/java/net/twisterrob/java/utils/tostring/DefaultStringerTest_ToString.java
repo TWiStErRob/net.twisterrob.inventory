@@ -4,10 +4,11 @@ import java.util.regex.Pattern;
 
 import org.hamcrest.Matcher;
 import org.junit.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import net.twisterrob.java.utils.tostring.stringers.DefaultStringer;
 
@@ -149,16 +150,16 @@ public class DefaultStringerTest_ToString {
 	}
 
 	private void checkToStringOf(Object value, Matcher<? super String> matcher) {
-		ToStringAppender appender = Mockito.mock(ToStringAppender.class);
+		ToStringAppender appender = mock(ToStringAppender.class);
 
 		stringer.toString(appender, value);
 
 		ArgumentCaptor<String> capture = ArgumentCaptor.forClass(String.class);
-		Mockito.verify(appender).selfDescribingProperty(capture.capture());
+		verify(appender).selfDescribingProperty(capture.capture());
 		String toString = capture.getValue();
 
 		assertThat(toString, matcher);
 
-		Mockito.verifyNoMoreInteractions(appender);
+		verifyNoMoreInteractions(appender);
 	}
 }

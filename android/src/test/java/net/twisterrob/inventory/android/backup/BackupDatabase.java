@@ -6,6 +6,7 @@ import com.shazam.gwen.collaborators.Asserter;
 
 import net.twisterrob.inventory.android.content.Database;
 
+@SuppressWarnings("UnusedReturnValue")
 public class BackupDatabase implements Asserter {
 	protected final Database db;
 	public BackupDatabase(Database mock) {

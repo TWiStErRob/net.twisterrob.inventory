@@ -8,7 +8,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.*;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.google.common.base.Preconditions;
@@ -19,6 +19,7 @@ import net.twisterrob.inventory.android.backup.Importer.*;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.contract.Type;
 
+@SuppressWarnings("UnusedReturnValue")
 public class BackupImporter implements Actor, Asserter {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupImporter.class);
 
@@ -36,7 +37,7 @@ public class BackupImporter implements Actor, Asserter {
 	public BackupImportResult imports(final BackupZip input) throws Throwable {
 		return imports(input, new Answer<Void>() {
 			@Override public Void answer(InvocationOnMock invocation) throws Throwable {
-				ImportImageGetter getter = invocation.getArgumentAt(2, ImportImageGetter.class);
+				ImportImageGetter getter = invocation.getArgument(2);
 				List<Item> items = input.getItems();
 				for (Item item : items) {
 					if (item.image != null) {

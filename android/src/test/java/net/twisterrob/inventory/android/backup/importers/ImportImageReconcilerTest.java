@@ -12,10 +12,10 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.*;
 import static org.mockito.AdditionalMatchers.*;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.anyVararg;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.contains;
 
@@ -48,14 +48,14 @@ public class ImportImageReconcilerTest {
 	@Rule public MockitoRule mockito = MockitoJUnit.rule();
 	@Rule public ExpectedException thrown = ExpectedException.none();
 
-	@Mock private Database db;
-	@Mock private Resources res;
-	@Mock private ImportProgressHandler progress;
-	@InjectMocks private BackupZipStreamImporter.ImportImageReconciler reconciler;
-	@InjectMocks private BackupImageDatabase database;
+	@Mock Database db;
+	@Mock Resources res;
+	@Mock ImportProgressHandler progress;
+	@InjectMocks BackupZipStreamImporter.ImportImageReconciler reconciler;
+	@InjectMocks BackupImageDatabase database;
 
 	@Before public void setUp() {
-		when(res.getString(anyInt(), anyVararg())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
+		when(res.getString(anyInt(), any())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
 		doAnswer(new LoggingAnswer<>(LOG)).when(progress).warning(anyString());
 		doAnswer(new LoggingAnswer<>(LOG)).when(progress).error(anyString());
 	}
@@ -156,7 +156,7 @@ public class ImportImageReconcilerTest {
 		});
 
 		assertThat(thrown, hasMessage(containsString(Type.Root.toString())));
-		verify(db, atMost(1)).addImage(Mockito.any(byte[].class), anyLong());
+		verify(db, atMost(1)).addImage(any(byte[].class), anyLong());
 	}
 
 	@Test public void testDuplicateUnmatchedImageFileBefore() throws IOException {
@@ -234,7 +234,7 @@ public class ImportImageReconcilerTest {
 	}
 
 	private static void assertDuplicate(String image, Throwable thrown) {
-		assertThat(thrown, hasMessage(both(containsStringIgnoringCase("duplicate")).and(containsString(image))));
+		assertThat(thrown, hasMessage(allOf(containsStringIgnoringCase("duplicate"), containsString(image))));
 	}
 	private static InputStream contents(String file) throws IOException {
 		return new ByteArrayInputStream(BackupZip.getContents(file));

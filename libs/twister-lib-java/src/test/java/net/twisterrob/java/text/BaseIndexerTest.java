@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 import net.twisterrob.java.text.Indexer.MatchResult;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "JUnit3StyleTestMethodInJUnit4Class"})
 public abstract class BaseIndexerTest {
 	protected static final String NO_MATCH = "no match";
 	protected static final String NORMAL_MATCH = "normal match";
@@ -71,8 +71,9 @@ public abstract class BaseIndexerTest {
 	}
 
 	@Before public void check() {
-		assertTrue(positive.length % 2 == 0);
-		assertTrue(negative.length % 2 == 0);
+		final int even = 0;
+		assertEquals(even, positive.length % 2);
+		assertEquals(even, negative.length % 2);
 	}
 
 	/** Positive words match when checked together with negative ones. */
@@ -91,15 +92,15 @@ public abstract class BaseIndexerTest {
 	/** Negative words don't match when checked alone. */
 	@Test public void testNoMatch() {
 		index(negative);
-		checkMatches(new String[0]);
+		checkMatches();
 	}
 
-	private void index(String[] input) {
+	private void index(String... input) {
 		for (int i = 0; i < input.length; i += 2) {
 			index.add(input[i], input[i + 1]);
 		}
 	}
-	private void checkMatches(String[] input) {
+	private void checkMatches(String... input) {
 		Collection<Indexer.MatchResult<String>> suggestions = index.match(toMatch);
 		@SuppressWarnings({"rawtypes", "unchecked"}) Matcher<MatchResult<String>>[] matchers =
 				new Matcher[input.length / 2];

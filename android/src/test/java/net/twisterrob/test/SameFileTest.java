@@ -22,8 +22,8 @@ public class SameFileTest {
 	@Rule public MockitoRule mockito = MockitoJUnit.rule();
 	@Rule public ExpectedException thrown = ExpectedException.none();
 
-	/** Irrelevant what this is, chosen because it accepts an arbitrary argument and is easily mocked. */
-	@Mock private Consumer<File> mock;
+	/** Irrelevant what this type is, chosen because it accepts an arbitrary argument and is easily mocked. */
+	@Mock Consumer<File> mock;
 
 	@Test public void matchesSelfSameObject() {
 		File file = new File(DUMMY_PATH);

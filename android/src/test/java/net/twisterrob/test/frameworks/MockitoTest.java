@@ -14,15 +14,12 @@ public class MockitoTest {
 	@Rule public MockitoRule mockito = MockitoJUnit.rule();
 	@Rule public ExpectedException thrown = ExpectedException.none();
 
-	@Mock
-	private Mockable mock;
-	@InjectMocks
-	private Recipient target;
+	@Mock Mockable mock;
 
-	/** Check if @Test methods are executed. */
+	@InjectMocks Recipient target;
+
 	@Test public void testRunner() {
-		// all ok, it just needs to be called
-		assertTrue(true);
+		assertTrue("@Test methods should be executed", true);
 	}
 
 	/** Check if explicitly created mocks work. */

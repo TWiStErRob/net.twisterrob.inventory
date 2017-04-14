@@ -12,7 +12,7 @@ public class JUnit4Test {
 	@Rule public ExpectedException thrown = ExpectedException.none();
 
 	@Test public void testRunner() {
-		assertTrue(true);
+		assertTrue("@Test methods should be executed", true);
 	}
 
 	@Test public void testException() {

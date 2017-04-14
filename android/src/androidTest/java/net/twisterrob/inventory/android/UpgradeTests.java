@@ -174,6 +174,6 @@ public class UpgradeTests {
 	}
 
 	private Matcher<Long> between(double lower, double upper) {
-		return both(greaterThanOrEqualTo((long)(lower * MB))).and(lessThanOrEqualTo((long)(upper * MB)));
+		return allOf(greaterThanOrEqualTo((long)(lower * MB)), lessThanOrEqualTo((long)(upper * MB)));
 	}
 }

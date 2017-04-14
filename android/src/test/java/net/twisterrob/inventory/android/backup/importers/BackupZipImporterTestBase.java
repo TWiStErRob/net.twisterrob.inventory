@@ -42,6 +42,7 @@ public abstract class BackupZipImporterTestBase {
 	protected static final String IMAGE4 = "item_4_00000000_000000.jpg";
 
 	@Spy protected ImportProgressHandler dispatcherMock;
+	// TODO SSBasedInspection should detect abstract classes with protected fields
 	@Mock protected XMLImporter xmlImporterMock;
 	@Mock protected Database dbMock;
 	@Mock protected Resources res;
@@ -56,7 +57,7 @@ public abstract class BackupZipImporterTestBase {
 	}
 	@Before public void stubResources() {
 		when(res.getString(anyInt())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
-		when(res.getString(anyInt(), anyVararg())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
+		when(res.getString(anyInt(), any())).thenAnswer(new GetStringVarargsAnswer(R.string.class));
 	}
 
 	protected abstract void callImport(InputStream stream) throws Exception;

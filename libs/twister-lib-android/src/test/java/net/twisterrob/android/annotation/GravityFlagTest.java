@@ -138,7 +138,7 @@ public class GravityFlagTest {
 
 	@Test public void test() {
 		String gravity = GravityFlag.Converter.toString(input);
-		assertThat(gravity, both(containsString(FLAG_LIST_START)).and(containsString(FLAG_LIST_END)));
+		assertThat(gravity, allOf(containsString(FLAG_LIST_START), containsString(FLAG_LIST_END)));
 		String flagList = gravity.substring(gravity.indexOf(FLAG_LIST_START) + 1, gravity.indexOf(FLAG_LIST_END));
 		String[] flags = flagList.split(FLAG_LIST_SEPARATOR);
 		assertThat(String.format(Locale.ROOT, "Returned gravity: \"%s\"", gravity),

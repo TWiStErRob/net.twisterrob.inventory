@@ -25,9 +25,9 @@ public class BackupTransactingImporterTest {
 	@Rule public MockitoRule mockito = MockitoJUnit.rule();
 	@Rule public ExpectedException thrown = ExpectedException.none();
 
-	@Mock private ImportProgressHandler progress;
-	@Mock private ZipImporter<Object> inner;
-	@Mock private Database db;
+	@Mock ImportProgressHandler progress;
+	@Mock ZipImporter<Object> inner;
+	@Mock Database db;
 	@InjectMocks private BackupTransactingImporter<Object> importer;
 	@InjectMocks private BackupDatabase database;
 

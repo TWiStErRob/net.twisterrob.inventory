@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Provider;
 
 import org.hamcrest.*;
-import org.hamcrest.core.AnyOf;
 import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
@@ -55,6 +54,7 @@ import net.twisterrob.test.junit.FlakyTestException;
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
+@SuppressWarnings("StaticMethodOnlyUsedInOneClass")
 public class EspressoExtensions {
 	private static final Logger LOG = LoggerFactory.getLogger(EspressoExtensions.class);
 	/** @see android.support.test.espresso.action.MotionEvents#sendDown */
@@ -699,11 +699,11 @@ public class EspressoExtensions {
 		};
 	}
 
-	private static AnyOf<View> isScrollPositionAware() {
+	private static Matcher<View> isScrollPositionAware() {
 		return anyOf(
-				both(isAssignableFrom(AbsListView.class)).and(hasAdapter()),
-				both(isAssignableFrom(RecyclerView.class)).and(hasRecyclerAdapter()),
-				both(isAssignableFrom(ViewPager.class)).and(hasViewPagerAdapter())
+				allOf(isAssignableFrom(AbsListView.class), hasAdapter()),
+				allOf(isAssignableFrom(RecyclerView.class), hasRecyclerAdapter()),
+				allOf(isAssignableFrom(ViewPager.class), hasViewPagerAdapter())
 		);
 	}
 
