@@ -159,7 +159,7 @@
 	<string name="category_furnishing_description">stuff to you put on other stuff</string>
 
 	<string name="category_fitting" level="1">Fittings</string>
-	<string name="category_fitting_keywords">pipe, valve, tube</string>
+	<string name="category_fitting_keywords">pipe, valve, tube, mirror</string>
 	<string name="category_aperture" level="2" icon="@raw/item_door">aperture components</string>
 	<string name="category_aperture_keywords">window handle, blinds, curtain rod, doorknob, door handle, door latch, door chain, door lock, key/keys</string>
 	<string name="category_lighting" level="2" icon="@raw/item_bulb">lighting</string>
