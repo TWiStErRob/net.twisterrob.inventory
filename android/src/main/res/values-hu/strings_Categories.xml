@@ -2,6 +2,43 @@
 <resources>
 	<string name="category_uncategorized">Kategorizálatlan</string>
 	<string name="category_group">Csoport</string>
+	<string name="category_part">Építőelem</string>
+	<string name="category_image">További kép</string>
+
+
+	<string name="category_storage">Tárolás</string>
+
+	<string name="category_container">Tárolók</string>
+	<string name="category_box">Dobozok</string>
+	<!--<string name="category_storage_baskets">Kosarak</string>-->
+	<!--<string name="category_storage_crates">Ládák</string>-->
+
+
+
+	<string name="category_case">Tokok</string>
+
+
+	<string name="category_luggage">Poggyász</string>
+	<!--<string name="category_luggage_backpacks">Hátitáskák</string>-->
+	<!--<string name="category_luggage_bags">Táskák</string>-->
+	<!--<string name="category_luggage_suitcases">Bőröndök</string>-->
+	<!--<string name="category_luggage_trunks">Csomagtartók</string>-->
+
+
+
+
+	<string name="category_furniture">Bútorok</string>
+
+
+	<string name="category_cabinetry">Szekrények</string>
+
+	<string name="category_surface">Felületek</string>
+	<string name="category_stand">Állványok</string>
+
+	<string name="category_resting">Pihenés</string>
+	<string name="category_seating">Ülés</string>
+
+	<!--
 	<string name="category_clothing">Öltözködés</string>
 	<string name="category_clothing_clothes">Ruhák</string>
 	<string name="category_clothing_underwear">Alsóneműk</string>
@@ -12,16 +49,6 @@
 	<string name="category_accessory_hats">Fejfedők</string>
 	<string name="category_accessory_gloves">Kesztyűk</string>
 	<string name="category_accessory_scarves">Sálak</string>
-	<string name="category_luggage">Poggyász</string>
-	<string name="category_luggage_backpacks">Hátitáskák</string>
-	<string name="category_luggage_bags">Táskák</string>
-	<string name="category_luggage_suitcases">Bőröndök</string>
-	<string name="category_luggage_trunks">Csomagtartók</string>
-	<string name="category_storage">Tárolás</string>
-	<string name="category_storage_boxes">Dobozok</string>
-	<string name="category_storage_baskets">Kosarak</string>
-	<string name="category_storage_crates">Ládák</string>
-	<string name="category_storage_cases">Tokok</string>
 	<string name="category_collectibles">Gyűjtemények</string>
 	<string name="category_collectible_albums">Albumok</string>
 	<string name="category_collectible_artwork">Műalkotások</string>
@@ -69,11 +96,6 @@
 	<string name="category_furnishing_linens">Szövetek</string>
 	<string name="category_furnishing_towels">Törülközők</string>
 	<string name="category_furnishing_rugs">Szőnyegek</string>
-	<string name="category_furniture">Bútorok</string>
-	<string name="category_furniture_cabinetry">Szekrények</string>
-	<string name="category_furniture_table">Asztalok</string>
-	<string name="category_furniture_stand">Állványok</string>
-	<string name="category_furniture_seating">Ülőeszközok</string>
 	<string name="category_furniture_garden">Kertibútorok</string>
 	<string name="category_furniture_bathroom">Fürdőszoba-bútorok</string>
 	<string name="category_furniture_kitchen">Konyhabútorok</string>
@@ -126,4 +148,5 @@
 	<string name="category_vehicle_bicycles">Kerékpárok</string>
 	<string name="category_vehicle_motocycles">Motorok</string>
 	<string name="category_vehicle_lgv">Nehézgépjárművek</string>
+	-->
 </resources>

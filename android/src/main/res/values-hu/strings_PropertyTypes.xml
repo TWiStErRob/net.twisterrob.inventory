@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="property_group_other">Egyéb</string>
+
 	<string name="property_other">Egyéb</string>
-	<string name="property_home">Otthon</string>
-	<string name="property_workplace">Munkahely</string>
+
+
+	<string name="property_group_dwelling">Lakóhely</string>
+
 	<string name="property_apartment">Lakás</string>
+	
 	<string name="property_house">Ház</string>
+
+	<string name="property_estate">Birtok</string>
+
+	<string name="property_vacation">Nyaraló</string>
+
+	<string name="property_mobile">Mozgó</string>
+
+
+	<string name="property_group_commercial">Kereskedelmi</string>
+
+	<string name="property_storage">Raktár</string>
+
+	<string name="property_manufacturing">Árutermelés</string>
+
+	<string name="property_productivity">Alkotás</string>
+
+	<string name="property_retail">Kiskereskedés</string>
+
+	<string name="property_services">Szolgáltató</string>
+
+	<string name="property_recreation">Szórakozás</string>
+
+	<!--
+	<string name="property_workplace">Munkahely</string>
 	<string name="property_condo">Öröklakás</string>
 	<string name="property_cottage">Házikó</string>
 	<string name="property_farm">Farm</string>
-	<string name="property_vacation">Nyaraló</string>
 	<string name="property_villa">Villa</string>
 	<string name="property_camp">Táborhely</string>
 	<string name="property_rent">Bérlemény</string>
-	<string name="property_storage">Raktár</string>
+	-->
 </resources>

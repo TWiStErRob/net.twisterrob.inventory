@@ -271,7 +271,6 @@
 	<!-- -Bikeway: a path or lane for the use of bicycles. -->
 	<string name="room_way_keywords">pathway, trail, footpath, track, pavement, sidewalk; road, drive, airstrip, runway; bridge</string>
 
-
 	<string name="room_parking">Parking</string>
 	<!-- Garage: a building or shed for housing a motor vehicle or vehicles. -->
 	<!-- Hangar: a large building with extensive floor area, typically for housing aircraft. -->
@@ -308,12 +307,12 @@
 	<!-- Waterhole: a depression in which water collects, especially one from which animals regularly drink. -->
 	<!-- Reservoir: a large natural or artificial lake used as a source of water supply. -->
 	<!-- Grotto: a small picturesque cave, especially an artificial one in a park or garden. -->
-
+	<!-- ========================================== -->
 	<!-- Ditch: a narrow channel dug in the ground, typically used for drainage alongside a road or the edge of a field. -->
 	<!-- Channel: a length of water wider than a strait, joining two larger areas of water, especially two seas. -->
 	<!-- Canal: -->
 	<!-- -Trench [too army / geo]: a long, narrow ditch. dug by troops or deep depression in the ocean floor-->
-
+	<!-- ========================================== -->
 	<!-- Brook: a small stream. -->
 	<!-- Creek: a stream, brook, or minor tributary of a river. -->
 	<!-- Stream: a small, narrow river. -->
@@ -333,15 +332,15 @@
 	<!-- Hillock: a small hill or mound. -->
 	<!-- Knoll: a small hill or mound. -->
 	<!-- -Hummock: a hillock, knoll, or mound. -->
-
+	<!-- ========================================== -->
 	<!-- Cliff: a steep rock face, especially at the edge of the sea. -->
 	<!-- Ledge: a narrow horizontal surface projecting from a wall, cliff, or other surface. -->
 	<!-- Ridge: a long narrow hilltop, mountain range, or watershed. -->
 	<!-- Rock: a large piece of rock that has become detached from a cliff or mountain; a boulder. -->
-
+	<!-- ========================================== -->
 	<!-- Hole: a hollow place in a solid body or surface. -->
 	<!-- Pit: a large hole in the ground. -->
-
+	<!-- ========================================== -->
 	<!-- Beach: a pebbly or sandy shore, especially by the ocean between high- and low-water marks. -->
 	<!-- Shore: the land along the edge of a sea, lake, or other large body of water. -->
 	<!-- Coast: the part of the land near the sea; the edge of the land. -->

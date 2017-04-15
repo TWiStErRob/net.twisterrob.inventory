@@ -24,7 +24,7 @@
 	<string name="category_uncategorized_description">any other stuff</string>
 	<!-- junk (may be too offensive): Articles that are worn-out or fit to be discarded. -->
 	<!-- junk: Discarded material, such as glass, rags, paper, or metal, some of which may be reused in some form. -->
-	<string name="category_internal_description">junk you should never see</string>
+	<!--<string name="category_internal_description">junk you should never see</string>-->
 	<!-- possession: goods that someone owns. -->
 	<string name="category_group_description">logically holds other possessions together</string>
 	<!-- kit: A set of articles or implements used for a specific purpose. A set of parts or materials to be assembled. A packaged set of related materials. -->
