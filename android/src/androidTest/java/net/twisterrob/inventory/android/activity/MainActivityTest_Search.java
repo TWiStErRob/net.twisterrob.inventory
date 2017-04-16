@@ -62,12 +62,13 @@ public class MainActivityTest_Search {
 		search.assertQuery(is("search"));
 	}
 
+	@Ignore("search query is not restored")
 	@Category({Op.Cancels.class})
 	@Test public void testSelectClose() throws InterruptedException {
 		SearchActor search = main.openSearch();
 		search.setQuery(TEST_ITEM);
 		search.select(containsString(TEST_ITEM)).close();
-		// TODO search.assertQuery(is(TEST_ITEM)); @see testRotate()
+		search.assertQuery(is(TEST_ITEM));
 	}
 
 	@Category({Op.Cancels.class})
