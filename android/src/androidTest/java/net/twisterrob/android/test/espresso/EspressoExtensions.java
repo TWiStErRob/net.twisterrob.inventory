@@ -31,7 +31,6 @@ import android.support.test.espresso.base.RootsOracle_Factory;
 import android.support.test.espresso.core.deps.guava.collect.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.util.*;
-import android.support.test.espresso.web.matcher.AmbiguousElementMatcherException;
 import android.support.test.runner.lifecycle.Stage;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -70,7 +69,7 @@ public class EspressoExtensions {
 		try {
 			interaction.perform(new ViewExists());
 			return true;
-		} catch (AmbiguousElementMatcherException ex) {
+		} catch (AmbiguousViewMatcherException ex) {
 			// if there's any interaction later with the same matcher, that'll fail anyway
 			return true; // we found more than one
 		} catch (NoMatchingRootException | NoMatchingViewException ex) {
@@ -81,7 +80,7 @@ public class EspressoExtensions {
 		try {
 			interaction.perform(new ViewExists());
 			return true;
-		} catch (AmbiguousElementMatcherException ex) {
+		} catch (AmbiguousViewMatcherException ex) {
 			// if there's any interaction later with the same matcher, that'll fail anyway
 			return true; // we found more than one
 		} catch (PerformException | NoMatchingRootException | NoMatchingViewException ex) {

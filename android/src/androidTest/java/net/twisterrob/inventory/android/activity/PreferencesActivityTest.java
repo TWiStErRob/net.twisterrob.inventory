@@ -47,11 +47,11 @@ public class PreferencesActivityTest {
 	@Category({UseCase.InitialCondition.class, On.External.class})
 	@Test public void testInfoSettings() {
 		prefs.openAppInfoInSettings();
-		CharSequence name = getTargetContext().getApplicationInfo().loadLabel(getTargetContext().getPackageManager());
+		waitForAppToBeBackgrounded();
 
-		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		device.waitForIdle();
+		CharSequence name = getTargetContext().getApplicationInfo().loadLabel(getTargetContext().getPackageManager());
 		try {
+			UiDevice device = UiDevice.getInstance(getInstrumentation());
 			UiObject object = device.findObject(new UiSelector().text(name.toString()));
 			assertTrue(object.exists());
 		} finally {
@@ -67,10 +67,9 @@ public class PreferencesActivityTest {
 				canBeResolvedTo(notNullValue(ResolveInfo.class)));
 
 		prefs.openAppInfoInMarket();
-
-		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		device.waitForIdle();
+		waitForAppToBeBackgrounded();
 		try {
+			UiDevice device = UiDevice.getInstance(getInstrumentation());
 			assertThat(device.getCurrentPackageName(), is("com.android.vending"));
 		} finally {
 			pressBackExternal();

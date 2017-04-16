@@ -15,7 +15,8 @@ import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
-import android.support.annotation.StringRes;
+import android.os.Build.VERSION_CODES;
+import android.support.annotation.*;
 import android.support.test.uiautomator.*;
 import android.view.View;
 
@@ -172,6 +173,8 @@ public class BackupActivityActor extends ActivityActor {
 		public void cancel() {
 			pressBackExternal();
 		}
+
+		@RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 		public DriveBackupActor chooseDrive() throws UiObjectNotFoundException, NameNotFoundException {
 			// TODO refactor this as AndroidAutomator.chooseItem(saveToDrive())
 			clickOnLabel(saveToDrive());
@@ -189,6 +192,7 @@ public class BackupActivityActor extends ActivityActor {
 	}
 
 	// FIXME handle Marshmallow permission dialog that comes up on first usage of Drive
+	@RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 	public static class DriveBackupActor {
 		private static final Logger LOG = LoggerFactory.getLogger(DriveBackupActor.class);
 		public static void assumeIsAvailable() {

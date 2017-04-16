@@ -84,7 +84,9 @@ dependencies {
 		androidTestCompile "junit:junit:${VERSION_JUNIT}"
 		androidTestCompile "io.takari.junit:takari-cpsuite:1.2.7"
 		androidTestCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
-		androidTestCompile 'com.shazam:shazamcrest:0.11' // assertThat(*, sameBeanAs(*))
+		androidTestCompile ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
+			exclude group: 'org.json', module: 'json'
+		}
 //		androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
 //		androidTestCompile 'com.google.dexmaker:dexmaker:1.0'
 		// Android JUnit Runner
@@ -102,8 +104,9 @@ dependencies {
 			// * NullPointerException (mDecorContentParent.setWindowCallback) at AppCompatDelegateImplV7.createSubDecor
 			exclude group: 'com.android.support'
 		}
+		// disable web for now, because it has some conflicting Guava classes (http://b.android.com/187735)
 		// Espresso-web for WebView support
-		androidTestCompile "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
+		//androidTestCompile "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
 		// Espresso-intents for capturing Intents and mocking onActivityResult
 		androidTestCompile "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 		// Espresso-idling-resource for synchronization with background jobs

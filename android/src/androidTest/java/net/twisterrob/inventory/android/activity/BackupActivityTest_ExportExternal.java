@@ -4,15 +4,15 @@ import java.util.*;
 
 import org.junit.*;
 import org.junit.experimental.categories.Category;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
+import org.junit.rules.*;
+import org.junit.runner.*;
 import org.slf4j.*;
 
 import android.support.test.filters.*;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import net.twisterrob.android.test.junit.IdlingResourceRule;
+import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.*;
@@ -24,17 +24,28 @@ import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
 @Category({On.Export.class})
 public class BackupActivityTest_ExportExternal {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_ExportExternal.class);
-	@Rule public final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
-	@Rule public final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
-	@Rule public final TestName name = new TestName();
+	private final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
+	private final TestName name = new TestName();
+	@Rule public final RuleChain rules = RuleChain
+			.emptyRuleChain()
+			.around(name)
+			.around(activity)
+			.around(new BackupServiceInBackupActivityIdlingRule(activity))
+			.around(new TestWatcher() {
+				@Override protected void succeeded(Description description) {
+					// @After: if it succeeded let's check a few more things, but only if not failed
+					backup.assertIsInFront();
+					backup.assertEmptyState();
+				}
+				@Override protected void failed(Throwable e, Description description) {
+					// try to exit any external activities that may block the other tests from running
+					UiAutomatorExtensions.pressBackExternal();
+				}
+			});
+
 	private final BackupActivityActor backup = new BackupActivityActor();
 
 	@Before public void assertBackupActivityIsClean() {
-		backup.assertEmptyState();
-	}
-
-	@After public void activityIsActive() {
-		backup.assertIsInFront();
 		backup.assertEmptyState();
 	}
 

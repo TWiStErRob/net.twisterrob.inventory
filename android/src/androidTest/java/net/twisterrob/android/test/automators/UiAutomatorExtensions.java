@@ -1,11 +1,13 @@
 package net.twisterrob.android.test.automators;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
+import static org.junit.Assert.assertTrue;
 
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
@@ -36,31 +38,31 @@ public class UiAutomatorExtensions {
 	public static void setText(@IdRes String id, @RawRes String value) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
-		object.setText(value);
+		assertTrue("expected to set text", object.setText(value));
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static void clickOn(@IdRes String id) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
-		object.clickAndWaitForNewWindow();
+		assertTrue("expected to click and new window appear", object.clickAndWaitForNewWindow());
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static void clickOnLabel(@RawRes String label) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().text(label));
-		object.clickAndWaitForNewWindow();
+		assertTrue("expected to click and new window appear", object.clickAndWaitForNewWindow());
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static void shortClickOn(@IdRes String id) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
-		object.click();
+		assertTrue("expected to click", object.click());
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
 	public static void shortClickOnLabel(@RawRes String label) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().text(label));
-		object.click();
+		assertTrue("expected to click", object.click());
 	}
 	public static @IdRes String androidId(@IdRes int resId) {
 		return getContext().getResources().getResourceName(resId);
@@ -90,10 +92,11 @@ public class UiAutomatorExtensions {
 		return resValue;
 	}
 
+	@RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 	private static void clickInExternalDialog(@IdRes int buttonId) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject dialogButton = device.findObject(new UiSelector().resourceId(androidId(buttonId)));
-		dialogButton.clickAndWaitForNewWindow();
+		assertTrue("expected to click and new window appear", dialogButton.clickAndWaitForNewWindow());
 	}
 	public static void clickPositiveInExternalDialog() throws UiObjectNotFoundException {
 		clickInExternalDialog(DialogMatchers.BUTTON_POSITIVE);
@@ -104,8 +107,19 @@ public class UiAutomatorExtensions {
 	public static void clickNeutralInExternalDialog() throws UiObjectNotFoundException {
 		clickInExternalDialog(DialogMatchers.BUTTON_NEUTRAL);
 	}
+
+	@RequiresApi(api = VERSION_CODES.JELLY_BEAN)
 	public static void pressBackExternal() {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		device.pressBack();
+		assertTrue("expected to press Back button", device.pressBack());
+	}
+
+	@RequiresApi(api = VERSION_CODES.JELLY_BEAN)
+	public static void waitForAppToBeBackgrounded() {
+		final long timeout = TimeUnit.SECONDS.toMillis(10);
+
+		UiDevice device = UiDevice.getInstance(getInstrumentation());
+		BySelector appPackage = By.pkg(getTargetContext().getPackageName());
+		assertTrue("expected " + appPackage + " to disappear", device.wait(Until.gone(appPackage), timeout));
 	}
 }

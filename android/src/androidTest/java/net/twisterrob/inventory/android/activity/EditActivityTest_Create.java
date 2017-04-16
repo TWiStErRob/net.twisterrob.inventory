@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.*;
-import org.junit.runner.RunWith;
+import org.junit.runner.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -20,7 +20,6 @@ import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.DialogMatchers;
-import net.twisterrob.android.test.junit.TestWatcherStatus;
 import net.twisterrob.inventory.android.content.DataBaseActor;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.EditActivityActor;
@@ -33,6 +32,7 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 
 // TODO tests containing setType may fail for Item when run with animations enabled and running in landscape
 @RunWith(AndroidJUnit4.class)
+@Category(Op.CreatesBelonging.class)
 public abstract class EditActivityTest_Create<T extends Activity> {
 	@Rule public final InventoryActivityRule<T> activity;
 	@Rule public final DataBaseActor database = new DataBaseActor();
@@ -40,7 +40,6 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 	private final BelongingValues belonging;
 	@Rule public TemporaryFolder temp = new TemporaryFolder();
 	@Rule public TestName testName = new TestName();
-	@Rule public TestWatcherStatus status = new TestWatcherStatus();
 
 	private final EditActivityActor editor;
 	public EditActivityTest_Create(Class<T> activityClass, EditActivityActor editorActor, BelongingValues belonging) {
@@ -62,10 +61,9 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		db.assertHasNoBelongingOfType();
 	}
 
-	@After public void lastOperationFinishesActivity() {
-		if (status.isSucceeded()) {
-			assertThat(activity.getActivity(), either(isFinishing()).or(isInStage(Stage.DESTROYED)));
-		}
+	// @After, but only when successful, so need to manually call it
+	public void lastOperationFinishesActivity() {
+		assertThat(activity.getActivity(), either(isFinishing()).or(isInStage(Stage.DESTROYED)));
 	}
 
 	@Test public void testNameSaved() {
@@ -73,6 +71,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		editor.save();
 
 		db.assertHasBelonging(belonging.getName());
+		lastOperationFinishesActivity();
 	}
 
 	@Test public void testNameSavedAfterChange() {
@@ -81,6 +80,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		editor.save();
 
 		db.assertHasBelonging(belonging.getOtherName());
+		lastOperationFinishesActivity();
 	}
 
 	@Category({Error.class, Op.ChecksMessage.class})
@@ -98,6 +98,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		// clean up activity
 		editor.close();
 		editor.confirmDirtyDialog();
+		lastOperationFinishesActivity();
 	}
 
 	@Test public void testDescriptionSaved() {
@@ -106,6 +107,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 
 		editor.save();
 		db.assertHasDescription(belonging.getName(), TEST_DESCRIPTION);
+		lastOperationFinishesActivity();
 	}
 
 	@Test public void testDescriptionSavedAfterChange() {
@@ -115,6 +117,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 
 		editor.save();
 		db.assertHasDescription(belonging.getName(), TEST_DESCRIPTION_OTHER);
+		lastOperationFinishesActivity();
 	}
 
 	@Test public void testTypeSaved() {
@@ -124,6 +127,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 
 		editor.save();
 		db.assertHasType(belonging.getName(), belonging.getType());
+		lastOperationFinishesActivity();
 	}
 
 	@Test public void testTypeSavedAfterChange() {
@@ -134,6 +138,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 
 		editor.save();
 		db.assertHasType(belonging.getName(), belonging.getOtherType());
+		lastOperationFinishesActivity();
 	}
 
 	@Test public void testImageSaved() throws IOException {
@@ -142,6 +147,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 
 		editor.save();
 		db.assertHasImage(belonging.getName(), TEST_IMAGE_COLOR);
+		lastOperationFinishesActivity();
 	}
 
 	@Test public void testImageSavedAfterChange() throws IOException {
@@ -151,6 +157,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 
 		editor.save();
 		db.assertHasImage(belonging.getName(), TEST_IMAGE_COLOR_OTHER);
+		lastOperationFinishesActivity();
 	}
 
 	@Category({Op.Rotates.class})
@@ -167,6 +174,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 
 		editor.save();
 		checkEverythingSaved();
+		lastOperationFinishesActivity();
 	}
 
 	@Category({UseCase.InitialCondition.class})
@@ -174,6 +182,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 	public void testDirtyInitiallyClean() {
 		editor.close();
 		DialogMatchers.assertNoDialogIsDisplayed();
+		lastOperationFinishesActivity();
 	}
 
 	@Test public void testDirtyCanSave() throws IOException {
@@ -181,6 +190,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		editor.close();
 		editor.saveFromDirtyDialog();
 		checkEverythingSaved();
+		lastOperationFinishesActivity();
 	}
 
 	@Test public void testNameChangeTriggersDirty() throws Throwable {
@@ -268,6 +278,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		editor.confirmDirtyDialog();
 		// data wasn't saved
 		preconditions();
+		lastOperationFinishesActivity();
 	}
 
 	protected void fillInEverything() throws IOException {
