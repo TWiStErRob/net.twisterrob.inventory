@@ -39,7 +39,7 @@ public class ModelSuites {
 	@IncludeCategory({
 			On.Item.class,
 	})
-	public class ItemSuite {
+	public static class ItemSuite {
 	}
 
 	@RunWith(Categories.class)
@@ -47,7 +47,7 @@ public class ModelSuites {
 	@IncludeCategory({
 			On.Category.class,
 	})
-	public class CategorySuite {
+	public static class CategorySuite {
 	}
 
 	@RunWith(Categories.class)
@@ -55,6 +55,6 @@ public class ModelSuites {
 	@IncludeCategory({
 			On.List.class,
 	})
-	public class ListSuite {
+	public static class ListSuite {
 	}
 }

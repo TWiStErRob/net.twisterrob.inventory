@@ -22,7 +22,7 @@ public class CRUDSuites {
 	@IncludeCategory({
 			Op.CreatesBelonging.class,
 	})
-	public class CreateSuite {
+	public static class CreateSuite {
 	}
 
 	@RunWith(Categories.class)
@@ -30,7 +30,7 @@ public class CRUDSuites {
 	@IncludeCategory({
 			Op.EditsBelonging.class,
 	})
-	public class EditSuite {
+	public static class EditSuite {
 	}
 
 	@RunWith(Categories.class)
@@ -38,7 +38,7 @@ public class CRUDSuites {
 	@IncludeCategory({
 			Op.MovesBelonging.class,
 	})
-	public class MoveSuite {
+	public static class MoveSuite {
 	}
 
 	@RunWith(Categories.class)
