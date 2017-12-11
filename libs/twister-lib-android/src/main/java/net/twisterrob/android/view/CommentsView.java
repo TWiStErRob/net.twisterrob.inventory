@@ -3,16 +3,14 @@ package net.twisterrob.android.view;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build.VERSION_CODES;
 import android.os.*;
 import android.support.annotation.*;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.*;
-import android.widget.TextView;
 
 import net.twisterrob.android.utils.listeners.AnimationListenerAdapter;
 import net.twisterrob.android.utils.tools.TextTools;
@@ -29,7 +27,7 @@ import net.twisterrob.java.collections.*;
  * </code></pre>
  */
 // TODO make it nicer with something like android:animateLayoutChanges="true"
-public class CommentsView extends TextView {
+public class CommentsView extends AppCompatTextView {
 	public interface Comment {
 		CharSequence getAuthor();
 		CharSequence getMessage();
@@ -57,11 +55,6 @@ public class CommentsView extends TextView {
 	}
 	public CommentsView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		init();
-	}
-	@TargetApi(VERSION_CODES.LOLLIPOP)
-	public CommentsView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-		super(context, attrs, defStyleAttr, defStyleRes);
 		init();
 	}
 

@@ -21,7 +21,7 @@ import java.io.*;
 import java.security.*;
 import java.util.Locale;
 
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.*;
@@ -40,6 +40,7 @@ import net.twisterrob.java.io.IOTools;
  * This class holds our bitmap caches (memory and disk).
  * @deprecated use Glide
  */
+@SuppressLint("ObsoleteSdkInt")
 @Deprecated @SuppressWarnings("deprecation")
 public class ImageCache {
 	private static final String TAG = "ImageCache";

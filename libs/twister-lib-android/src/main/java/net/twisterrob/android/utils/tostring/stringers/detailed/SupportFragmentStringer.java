@@ -2,6 +2,7 @@ package net.twisterrob.android.utils.tostring.stringers.detailed;
 
 import javax.annotation.Nonnull;
 
+import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -29,9 +30,15 @@ public class SupportFragmentStringer extends Stringer<Fragment> {
 		append.booleanProperty(fragment.isResumed(), "resumed");
 		append.booleanProperty(fragment.isHidden(), "hidden");
 		append.booleanProperty(fragment.isVisible(), "visible");
-		append.booleanProperty(fragment.isMenuVisible(), "menu visible");
+		append.booleanProperty(isMenuVisible(fragment), "menu visible");
 		append.booleanProperty(fragment.isInLayout(), "in layout");
 		append.booleanProperty(fragment.isRemoving(), "removing");
 		append.endPropertyGroup();
+	}
+
+	@SuppressLint("RestrictedApi")
+	private boolean isMenuVisible(Fragment fragment) {
+		// use internal API to query state that otherwise impossible to get (sans reflection)
+		return fragment.isMenuVisible();
 	}
 }

@@ -21,7 +21,7 @@ import net.twisterrob.java.io.IOTools;
 
 // CONSIDER crop https://github.com/lorensiuswlt/AndroidImageCrop/blob/master/src/net/londatiga/android/MainActivity.java
 // CONSIDER crop http://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "StaticMethodOnlyUsedInOneClass", "SameParameterValue"})
 public /*static*/ abstract class ImageTools {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageTools.class);
 
@@ -31,7 +31,7 @@ public /*static*/ abstract class ImageTools {
 
 	@SuppressWarnings("resource")
 	public static Bitmap loadPicture(String sourceFile, int targetW, int targetH) throws IOException {
-		Bitmap bitmap = null;
+		Bitmap bitmap;
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(sourceFile);
@@ -51,7 +51,7 @@ public /*static*/ abstract class ImageTools {
 		return loadPicture(sourceFile.getAbsolutePath(), targetW, targetH);
 	}
 	public static Bitmap loadPicture(Context context, Uri sourceUri, int targetW, int targetH) throws IOException {
-		Bitmap bitmap = null;
+		Bitmap bitmap;
 		InputStream stream = null;
 		try {
 			stream = context.getContentResolver().openInputStream(sourceUri);
@@ -375,23 +375,9 @@ public /*static*/ abstract class ImageTools {
 		// the following is deprecated and ignored in N, but the below is the default value anyway
 		options.inDither = false;
 		options.inSampleSize = sampleSize;
-		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD_MR1) {
-			return cropBitmap(file, rect, options);
-		} else {
-			// the following is deprecated and ignored in N, but the below is the default value anyway
-			options.inPreferQualityOverSpeed = true;
-			return cropRegion(file, rect, options);
-		}
-	}
-
-	private static Bitmap cropBitmap(File file, Rect rect, BitmapFactory.Options options) {
-		int sampleSize = options.inSampleSize <= 1? 1 : Integer.highestOneBit(options.inSampleSize);
-		rect.left /= sampleSize;
-		rect.top /= sampleSize;
-		rect.right /= sampleSize;
-		rect.bottom /= sampleSize;
-		Bitmap source = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-		return Bitmap.createBitmap(source, rect.left, rect.top, rect.width(), rect.height());
+		// the following is deprecated and ignored in N, but the below is the default value anyway
+		options.inPreferQualityOverSpeed = true;
+		return cropRegion(file, rect, options);
 	}
 
 	@TargetApi(VERSION_CODES.GINGERBREAD_MR1)

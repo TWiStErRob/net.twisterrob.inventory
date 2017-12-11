@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import org.slf4j.*;
 import org.slf4j.helpers.*;
 
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -232,6 +232,7 @@ public abstract class BaseApp extends android.app.Application {
 	 * Set up StrictMode in a way that doesn't interfere much with development,
 	 * but tries to tell you any violations available in all possible ways (except death).
 	 */
+	@SuppressLint("ObsoleteSdkInt")
 	@TargetApi(VERSION_CODES.M)
 	public static void setStrictMode() {
 		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {

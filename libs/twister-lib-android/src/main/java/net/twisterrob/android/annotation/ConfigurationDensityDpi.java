@@ -13,7 +13,9 @@ import net.twisterrob.java.annotations.DebugHelper;
 @SuppressLint("InlinedApi")
 @IntDef(value = {
 		Configuration.DENSITY_DPI_UNDEFINED,
+		// @hide Configuration.DENSITY_DPI_ANY
 		0xfffe,
+		// @hide Configuration.DENSITY_DPI_NONE
 		0xffff
 })
 @IntRange(from = 0)
@@ -23,6 +25,7 @@ public @interface ConfigurationDensityDpi {
 	class Converter {
 		private static final int DENSITY_DPI_ANY = 0xfffe;
 		private static final int DENSITY_DPI_NONE = 0xffff;
+		@SuppressLint("SwitchIntDef")
 		@DebugHelper
 		public static String toString(@ConfigurationDensityDpi int dpi) {
 			switch (dpi) {

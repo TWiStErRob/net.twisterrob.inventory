@@ -62,6 +62,6 @@ public class MailSender {
 
 	@Override public String toString() {
 		return String.format(Locale.ROOT, "email from %s to %s: %s\n%s",
-				getFrom(), ArrayTools.toString(getTo()), getSubject(), getBody());
+				from, ArrayTools.toString(to), subject, body);
 	}
 }

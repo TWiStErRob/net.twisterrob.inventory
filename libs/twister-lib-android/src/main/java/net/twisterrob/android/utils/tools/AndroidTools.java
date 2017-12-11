@@ -504,6 +504,7 @@ public /*static*/ abstract class AndroidTools {
 	 * @see <a href="https://groups.google.com/forum/#!topic/android-developers/8M0RTFfO7-M">AsyncTask in Android 4.0</a>
 	 * @see <a href="http://www.jayway.com/2012/11/28/is-androids-asynctask-executing-tasks-serially-or-concurrently/">AsyncTask ordering</a>
 	 */
+	@SuppressLint("ObsoleteSdkInt") // for historical documentation purposes
 	@SafeVarargs
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	public static <Params> void executeParallel(
@@ -547,6 +548,7 @@ public /*static*/ abstract class AndroidTools {
 	 * @see AsyncTask#execute(Object[])
 	 * @see #executeParallel(AsyncTask, boolean, Object[])
 	 */
+	@SuppressLint("ObsoleteSdkInt") // for historical documentation purposes
 	@SafeVarargs
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	public static <Params> void executeSerial(

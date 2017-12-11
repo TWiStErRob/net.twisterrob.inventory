@@ -266,10 +266,6 @@ public class LoggingActivity extends AppCompatActivity {
 		log("onPreparePanel", AndroidTools.toFeatureString(featureId), view, menu);
 		return super.onPreparePanel(featureId, view, menu);
 	}
-	@Override protected boolean onPrepareOptionsPanel(View view, Menu menu) {
-		log("onPrepareOptionsPanel", view, menu);
-		return super.onPrepareOptionsPanel(view, menu);
-	}
 	@Override public void onPanelClosed(int featureId, Menu menu) {
 		log("onPanelClosed", AndroidTools.toFeatureString(featureId), menu);
 		super.onPanelClosed(featureId, menu);
