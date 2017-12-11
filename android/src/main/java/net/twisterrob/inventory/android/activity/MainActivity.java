@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.wiring.CollapseActionViewOnSubmit;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.data.*;
@@ -85,10 +86,7 @@ public class MainActivity extends DrawerActivity
 
 		if (savedInstanceState == null) {
 			handleIntent();
-
-			if (Constants.DISABLE) {
-				onOptionsItemSelected(new MenuBuilder(this).add(0, R.id.debug, 0, "Debug"));
-			}
+			autoDebug();
 		} else { // on rotation, or warm start
 			this.tempSavedViewState = savedInstanceState.getBundle("android:viewHierarchyState");
 			// see onRestoreInstanceState and onRestart
@@ -110,6 +108,13 @@ public class MainActivity extends DrawerActivity
 
 		if (App.prefs().getBoolean(R.string.pref_showWelcome, R.bool.pref_showWelcome_default)) {
 			welcome();
+		}
+	}
+	@SuppressLint("RestrictedApi") // MenuBuilder() and add() are used, but only for debugging
+	private void autoDebug() {
+		if (Constants.DISABLE) {
+			onOptionsItemSelected(new MenuBuilder(this)
+					.add(0, R.id.debug, 0, "Debug"));
 		}
 	}
 
@@ -276,15 +281,7 @@ public class MainActivity extends DrawerActivity
 		getMenuInflater().inflate(R.menu.search, menu);
 		SearchView search = (SearchView)AndroidTools.prepareSearch(this, menu, R.id.search);
 		search.setQueryRefinementEnabled(true);
-		search.setOnQueryTextListener(new OnQueryTextListener() {
-			@Override public boolean onQueryTextSubmit(String query) {
-				getSupportActionBar().collapseActionView();
-				return false;
-			}
-			@Override public boolean onQueryTextChange(String query) {
-				return false;
-			}
-		});
+		search.setOnQueryTextListener(new CollapseActionViewOnSubmit(getSupportActionBar()));
 		if (tempSavedViewState != null) {
 			// dirty and ugly hack to make these tests pass:
 			// net.twisterrob.inventory.android.activity.MainActivityTest_Search.testRotate()
@@ -312,7 +309,7 @@ public class MainActivity extends DrawerActivity
 			args.remove(OPTIONS_MENU_BACKUP);
 		}
 		if (!super.onCreateOptionsMenu(menu)) {
-			args.putBoolean(OPTIONS_MENU_BACKUP, fragment.hasOptionsMenu());
+			args.putBoolean(OPTIONS_MENU_BACKUP, fragment.hasSetOptionsMenu());
 			fragment.setHasOptionsMenu(false);
 			return false;
 		}

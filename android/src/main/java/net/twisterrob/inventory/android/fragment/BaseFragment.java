@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.*;
 import android.support.annotation.NonNull;
@@ -102,8 +103,17 @@ public class BaseFragment<T> extends VariantFragment {
 		}
 	}
 
+	/**
+	 * Non-restricted API to check for options menu,
+	 * could be simply re-implemented by overriding {@link #setHasOptionsMenu(boolean)}, but pointless.
+	 */
+	@SuppressLint("RestrictedApi")
+	public boolean hasSetOptionsMenu() {
+		return hasOptionsMenu();
+	}
+
 	public void invalidateOptionsMenu() {
-		if (!hasOptionsMenu()) {
+		if (!hasSetOptionsMenu()) {
 			return;
 		}
 		FragmentActivity activity = getActivity();

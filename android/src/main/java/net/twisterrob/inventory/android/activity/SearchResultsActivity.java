@@ -8,11 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.*;
 import android.view.View.OnClickListener;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.wiring.CollapseActionViewOnSubmit;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.ItemViewActivity;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -78,15 +78,7 @@ public class SearchResultsActivity extends SingleFragmentActivity<ItemListFragme
 				search.setQuery(getExtraQuery(getIntent()), false);
 			}
 		});
-		search.setOnQueryTextListener(new OnQueryTextListener() {
-			@Override public boolean onQueryTextSubmit(String query) {
-				getSupportActionBar().collapseActionView();
-				return false;
-			}
-			@Override public boolean onQueryTextChange(String query) {
-				return false;
-			}
-		});
+		search.setOnQueryTextListener(new CollapseActionViewOnSubmit(getSupportActionBar()));
 		return true;
 	}
 
