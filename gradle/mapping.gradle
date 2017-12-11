@@ -10,7 +10,7 @@ buildscript {
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}
 }
-project.android.applicationVariants.all { com.android.build.gradle.api.ApkVariant variant ->
+project.android.applicationVariants.all { /*com.android.build.gradle.api.ApkVariant*/ variant ->
 	Task obfuscateTask = variant.obfuscation
 	def skipReason = [ ];
 	if (obfuscateTask == null) {

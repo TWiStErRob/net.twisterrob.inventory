@@ -41,7 +41,7 @@ android {
 	}
 }
 
-task jar(type: Jar, dependsOn: tasks.assembleRelease) {
+task jar(type: Jar, dependsOn: 'assembleRelease') {
 	exclude "**/R.class"
 	exclude "**/R\$*.class"
 	exclude "**/BuildConfig.class"
