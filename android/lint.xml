@@ -28,6 +28,8 @@
 		<!-- Not used, but can't do anything about it :) -->
 		<ignore regexp="R\.bool\.in_prod" />
 		<ignore regexp="R\.bool\.in_test" />
+		<!-- It's a library used in multiple projects -->
+		<ignore path="**/libs/twister-lib-android/**" />
 	</issue>
 	<issue id="SelectableText">
 		<!-- TODEL SelectableText lint check ignores style: http://b.android.com/57866 -->

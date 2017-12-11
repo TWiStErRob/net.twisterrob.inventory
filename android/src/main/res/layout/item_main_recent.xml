@@ -32,6 +32,7 @@
 		android:textAppearance="?attr/textAppearanceListItemSmall"
 		android:textIsSelectable="false"
 		tools:text="Recent Item Name"
+		tools:ignore="Deprecated"
 		/>
 	<TextView
 		android:id="@id/details"

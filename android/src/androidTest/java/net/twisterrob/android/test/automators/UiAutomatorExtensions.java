@@ -71,10 +71,10 @@ public class UiAutomatorExtensions {
 	public static @IdResName String internalId(@IdRes int resId) {
 		return getTargetContext().getResources().getResourceName(resId);
 	}
-	public static @IdResName String externalId(String packageName, @StringRes String resName) {
+	public static @IdResName String externalId(String packageName, @StringResName String resName) {
 		return packageName + ":id/" + resName;
 	}
-	public static @RawResName String externalString(String packageName, @StringRes String resName,
+	public static @RawResName String externalString(String packageName, @StringResName String resName,
 			@RawResName String englishFallback)
 			throws NameNotFoundException {
 		Resources res = getContext().getPackageManager().getResourcesForApplication(packageName);

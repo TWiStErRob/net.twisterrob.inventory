@@ -4,12 +4,14 @@
 	<!ENTITY LI "\n&#8195;&#8226;&#8194;"><!-- m-space (\u2003) bullet (\u2022) n-space (\u2002) -->
 	]>
 <resources>
+	<!--suppress InconsistentArrays -->
 	<string-array name="about_licenses" translatable="false">
 		<item>@string/about_license_glide_title</item>
 		<item>@string/about_license_libjpeg_title</item>
 		<item>@string/about_license_stackoverflow_title</item>
 	</string-array>
 
+	<!--suppress InconsistentArrays -->
 	<string-array name="about_licenses_content" translatable="false">
 		<item>@string/about_license_glide</item>
 		<item>@string/about_license_libjpeg</item>

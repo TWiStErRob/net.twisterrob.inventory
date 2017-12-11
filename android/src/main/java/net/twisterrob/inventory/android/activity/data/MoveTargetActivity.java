@@ -60,7 +60,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	public static final int ITEM = 1 << 3;
 	private static final int EVERYTHING = PROPERTY | ROOM | ITEM;
 
-	@IntDef(flag = true, value = {PROPERTY, ROOM, ITEM})
+	@IntDef(flag = true, value = {NOTHING, PROPERTY, ROOM, ITEM})
 	private @interface BelongingTarget {
 	}
 
@@ -241,8 +241,9 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 				return toString(PROPERTY) + "/" + toString(ITEM);
 			case ROOM | ITEM:
 				return toString(ROOM) + "/" + toString(ITEM);
-			case EVERYTHING:
+			case PROPERTY | ROOM | ITEM:
 				return toString(PROPERTY) + "/" + toString(ROOM) + "/" + toString(ITEM);
+			case NOTHING:
 			default:
 				return BelongingTarget.class.getSimpleName() + "::" + Integer.toBinaryString(type);
 		}
@@ -437,8 +438,11 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 
 		private final Intent intent = new Intent(App.getAppContext(), MoveTargetActivity.class);
 		private @BelongingTarget int what;
+		@SuppressWarnings("TypeMayBeWeakened")
 		private final Set<Long> forbiddenPropertyIDs = new TreeSet<>();
+		@SuppressWarnings("TypeMayBeWeakened")
 		private final Set<Long> forbiddenRoomIDs = new TreeSet<>();
+		@SuppressWarnings("TypeMayBeWeakened")
 		private final Set<Long> forbiddenItemIDs = new TreeSet<>();
 		public Builder() {
 			allowNothing();
