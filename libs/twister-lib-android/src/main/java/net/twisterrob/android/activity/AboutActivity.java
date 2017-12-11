@@ -72,7 +72,6 @@ public class AboutActivity extends ListActivity {
 
 		TextView nameText = (TextView)findViewById(R.id.about_name);
 		nameText.setText(aboutInfo.appLabel);
-		nameText.setSelected(true); // hack to start marquee
 		nameText.setOnClickListener(playStoreAction);
 
 		ImageView iconImage = (ImageView)findViewById(R.id.about_icon);
@@ -81,7 +80,6 @@ public class AboutActivity extends ListActivity {
 
 		TextView versionText = (TextView)findViewById(R.id.about_version);
 		versionText.setText(getString(R.string.about_version, aboutInfo.versionName));
-		versionText.setSelected(true); // hack to start marquee
 		versionText.setOnClickListener(settingsAction);
 
 		TextView versionCodeText = (TextView)findViewById(R.id.about_version_code);
@@ -91,7 +89,6 @@ public class AboutActivity extends ListActivity {
 
 		TextView packageText = (TextView)findViewById(R.id.about_package);
 		packageText.setText(aboutInfo.applicationId);
-		packageText.setSelected(true); // hack to start marquee
 		packageText.setOnClickListener(settingsAction);
 
 		initSection(R.id.about_faq, R.id.about_faq_title);

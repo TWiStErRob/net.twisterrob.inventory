@@ -6,6 +6,17 @@
 	android:layout_height="wrap_content"
 	android:gravity="center"
 	>
+	<!-- TODO ConstraintLayout to align image to the middle closer to text -->
+	<ImageView
+		android:id="@+id/about_icon"
+		android:layout_width="144dp"
+		android:layout_height="144dp"
+		android:layout_margin="@dimen/unit_half"
+		android:layout_centerVertical="true"
+		android:contentDescription="@null"
+		tools:src="@android:drawable/sym_def_app_icon"
+		/>
+
 	<LinearLayout
 		android:id="@+id/about_app"
 		android:layout_width="wrap_content"
@@ -14,6 +25,8 @@
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"
+		android:layout_toEndOf="@id/about_icon"
+		android:layout_toRightOf="@id/about_icon"
 		android:orientation="vertical"
 		>
 		<TextView
@@ -22,7 +35,6 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"
 			android:gravity="center"
-			android:singleLine="true"
 			android:textIsSelectable="false"
 			tools:text="\@string/app_name"
 			/>
@@ -65,15 +77,5 @@
 			android:gravity="center"
 			/>
 	</LinearLayout>
-	<ImageView
-		android:id="@+id/about_icon"
-		android:layout_width="144dp"
-		android:layout_height="144dp"
-		android:layout_margin="@dimen/unit_half"
-		android:layout_centerVertical="true"
-		android:layout_toLeftOf="@id/about_app"
-		android:layout_toStartOf="@id/about_app"
-		tools:src="@android:drawable/sym_def_app_icon"
-		tools:ignore="ContentDescription"
-		/>
+
 </RelativeLayout>
