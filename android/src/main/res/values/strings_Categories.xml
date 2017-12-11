@@ -28,7 +28,7 @@
 	<string name="category_part_keywords">@string/empty</string>
 	<string name="category_part_description">stuff that\'s useless by itself</string>
 	<string name="category_image" id="3" level="0" icon="@raw/item_picture">Extra Images</string>
-	<string name="category_image_keywords">@string/empty</string>
+	<string name="category_image_keywords">label, serial, barcode</string>
 	<string name="category_image_description">extra images of your stuff</string>
 
 
@@ -96,7 +96,7 @@
 	<string name="category_packaging_cushioning_keywords">bubble wrap, styrofoam, foam peanut, molded pulp, paperboard, protective plastic</string>
 
 	<string name="category_compartment" level="1">Compartments</string>
-	<string name="category_compartment_keywords">drawer, shelf, section, display, pocket, desktop, hanger railing; top, bottom, left, right, middle, atop, below, above, front, back, behind</string>
+	<string name="category_compartment_keywords">drawer, shelf, section, display, floor, pocket, desktop, hanging space, hanger railing; top, bottom, left, right, middle, atop, below, above, front, back, behind</string>
 
 
 	<!--=========================================================================================================-->
@@ -216,8 +216,8 @@
 	<string name="category_picture_keywords">painting, poster, centerfold/centrefold, picture frame, photo holder, greeting card, postcard, stickers</string>
 	<string name="category_sculpture" level="2">sculptures</string>
 	<string name="category_sculpture_keywords">statue, figurine, wax, glass, mask, origami, signs</string>
-	<string name="category_antique" level="2">antiques</string>
-	<string name="category_antique_keywords">painting, furniture, appliances</string>
+	<string name="category_antique" level="2">antiques, valuables</string>
+	<string name="category_antique_keywords">heirloom, painting, furniture, appliances</string>
 	<string name="category_ceramic" level="2">ceramics</string>
 	<string name="category_ceramic_keywords">vase, pot, china, window box/flower box, amphora</string>
 
@@ -371,6 +371,7 @@
 	<string name="category_embryo_keywords">stem, root, seed, bulb, seedling/sprout</string>
 	<string name="category_plant" level="2" icon="@raw/item_leaf">plants</string>
 	<string name="category_plant_keywords">grass, flower, bush, hedge, tree</string>
+	<!-- FIXME pet supplies -->
 	<string name="category_pet" level="2">pets</string>
 	<string name="category_pet_keywords">dog, puppy, cat, kitten, hamster, chinchilla, guinea pig, gerbil, ferret, mouse, rabbit, fish, koi, spider, snake, turtle/tortoise, frog/toad, parrot, canary</string>
 	<string name="category_livestock" level="2">livestock</string>
@@ -552,12 +553,12 @@
 	<string name="category_computer_drive" level="2">storage drives</string>
 	<string name="category_computer_drive_keywords">SSD/solid state drive, HDD/hard drive, optical drive, floppy disk drive, card reader, external, ATA, PATA, SATA, RAID</string>
 	<string name="category_computer_media" level="2">storage media</string>
-	<string name="category_computer_media_keywords">floppy disk, CD/compact disc, DVD/digital video disc, BD/Blu-ray Disc, USB stick/flash drive/pendrive, memory card, MMC, SD, microSD, SDHC, MemoryStick Pro Duo</string>
+	<string name="category_computer_media_keywords">floppy disk, CD/compact disc, DVD/digital video disc, BD/Blu-ray Disc, USB stick/flash drive/pendrive, memory card, MMC, SD/SDHC/SDXC, microSD/microSDHC/microSDXC, Class 2/Class 4/Class 6/Class 10/UHS-I/U1/UHS-II/UHS-III/U3; SanDisk, Kingston, MemoryStick Pro Duo</string>
 
 	<string name="category_cable" level="1">Cables</string>
 	<string name="category_cable_keywords">@string/empty</string>
 	<string name="category_cable_data" level="2">data cable</string>
-	<string name="category_cable_data_keywords">network cable, coaxial cable, fiber optic, twisted pair, USB data cable</string>
+	<string name="category_cable_data_keywords">network cable, coaxial cable, fiber optic, twisted pair, USB data cable, SD Card Adapter</string>
 	<string name="category_cable_connector" level="2">connector</string>
 	<string name="category_cable_connector_keywords">audio jack, RCA, S/PDIF, USB, HDMI, DisplayPort, MHL, D-sub/VGA, DVI, SCART, S-Video, Composite, Component, RGB, YPbPr, BNC, UTP, Ethernet, ISDN, LAN, WAN</string>
 	<string name="category_cable_power" level="2">power source</string>
@@ -752,7 +753,7 @@
 	<string name="category_scrip_keywords">voucher/coupon, loyalty card, ticket, season pass, token, gift card, telephone card/calling card, top-up card, prepaid card, pay-as-you-go cards</string>
 
 	<string name="category_material_stationery" level="1">stationery paper</string>
-	<string name="category_material_stationery_keywords">sheet paper, notepad, notebook, sticky notes, scrapbook, envelope</string>
+	<string name="category_material_stationery_keywords">sheet paper, notepad, notebook, sticky notes, scrapbook, envelope, postal stamp</string>
 
 
 	<!--=========================================================================================================-->
