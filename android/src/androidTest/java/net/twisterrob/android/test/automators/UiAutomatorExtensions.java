@@ -17,6 +17,7 @@ import android.support.test.uiautomator.*;
 
 import static android.support.test.InstrumentationRegistry.*;
 
+import net.twisterrob.android.annotation.*;
 import net.twisterrob.android.test.espresso.DialogMatchers;
 
 /**
@@ -29,57 +30,57 @@ public class UiAutomatorExtensions {
 	public static final int UI_AUTOMATOR_VERSION = VERSION_CODES.JELLY_BEAN_MR2;
 
 	@RequiresApi(UI_AUTOMATOR_VERSION)
-	public static String getText(@IdRes String id) throws UiObjectNotFoundException {
+	public static String getText(@IdResName String id) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
 		return object.getText();
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
-	public static void setText(@IdRes String id, @RawRes String value) throws UiObjectNotFoundException {
+	public static void setText(@IdResName String id, @RawResName String value) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
 		assertTrue("expected to set text", object.setText(value));
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
-	public static void clickOn(@IdRes String id) throws UiObjectNotFoundException {
+	public static void clickOn(@IdResName String id) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
 		assertTrue("expected to click and new window appear", object.clickAndWaitForNewWindow());
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
-	public static void clickOnLabel(@RawRes String label) throws UiObjectNotFoundException {
+	public static void clickOnLabel(@RawResName String label) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().text(label));
 		assertTrue("expected to click and new window appear", object.clickAndWaitForNewWindow());
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
-	public static void shortClickOn(@IdRes String id) throws UiObjectNotFoundException {
+	public static void shortClickOn(@IdResName String id) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
 		assertTrue("expected to click", object.click());
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
-	public static void shortClickOnLabel(@RawRes String label) throws UiObjectNotFoundException {
+	public static void shortClickOnLabel(@RawResName String label) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().text(label));
 		assertTrue("expected to click", object.click());
 	}
-	public static @IdRes String androidId(@IdRes int resId) {
+	public static @IdResName String androidId(@IdRes int resId) {
 		return getContext().getResources().getResourceName(resId);
 	}
-	public static @IdRes String internalId(@IdRes int resId) {
+	public static @IdResName String internalId(@IdRes int resId) {
 		return getTargetContext().getResources().getResourceName(resId);
 	}
-	public static @IdRes String externalId(String packageName, @StringRes String resName) {
+	public static @IdResName String externalId(String packageName, @StringRes String resName) {
 		return packageName + ":id/" + resName;
 	}
-	public static @RawRes String externalString(String packageName, @StringRes String resName,
-			@RawRes String englishFallback)
+	public static @RawResName String externalString(String packageName, @StringRes String resName,
+			@RawResName String englishFallback)
 			throws NameNotFoundException {
 		Resources res = getContext().getPackageManager().getResourcesForApplication(packageName);
 		@StringRes int resId = res.getIdentifier(resName, "string", packageName);
 
-		@RawRes String resValue;
+		@RawResName String resValue;
 		if (resId != 0) {
 			resValue = res.getString(resId);
 		} else {
