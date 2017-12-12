@@ -10,6 +10,7 @@ import android.graphics.*;
 import android.graphics.Paint.Style;
 import android.graphics.Region.Op;
 import android.graphics.drawable.Drawable;
+import android.os.Build.*;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.*;
@@ -213,15 +214,24 @@ public class SelectionView extends View {
 		tmpDrawSelection.sort(); // need to order because of CCW ordering I guess
 
 		if (fadeNonSelection) {
-			canvas.save();
-			canvas.clipRect(tmpDrawSelection, Op.DIFFERENCE); // the full canvas minus the selection is clipped
-			canvas.drawColor(0x88000000); // semi-transparent black shade
-			canvas.restore();
+			fadeNonSelection(canvas);
 		}
 
 		canvas.drawRect(tmpDrawSelection, line);
 
 		corners.draw(canvas);
+	}
+	@SuppressWarnings("deprecation")
+	private void fadeNonSelection(Canvas canvas) {
+		canvas.save();
+		// the full canvas minus the selection is clipped
+		if (VERSION_CODES.O <= VERSION.SDK_INT) {
+			canvas.clipOutRect(tmpDrawSelection);
+		} else {
+			canvas.clipRect(tmpDrawSelection, Op.DIFFERENCE);
+		}
+		canvas.drawColor(0x88000000); // semi-transparent black shade
+		canvas.restore();
 	}
 
 	@SuppressLint("ClickableViewAccessibility")
