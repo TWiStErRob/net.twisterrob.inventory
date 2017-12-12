@@ -1,30 +1,33 @@
 package net.twisterrob.test.frameworks;
 
-
 import java.lang.reflect.Method;
 
-import org.junit.rules.MethodRule;
-import org.junit.rules.TestRule;
+import org.junit.rules.*;
 import org.junit.runner.Description;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.Statement;
+import org.junit.runners.model.*;
+
+import android.support.annotation.NonNull;
 
 /**
+ * To use this, is a bad idea as it doesn't have a reference to the real deal, use with care.
  * @see <a href="https://github.com/powermock/powermock/issues/396#issuecomment-124665686">based on</a>
+ * @see TestRuleAdapter
  */
 public class MethodRuleAdapter implements TestRule {
 
-	private final MethodRule wrappedRule;
+	private final @NonNull MethodRule wrappedRule;
 
-	public MethodRuleAdapter(MethodRule wrappedRule) {
+	public MethodRuleAdapter(@NonNull MethodRule wrappedRule) {
 		this.wrappedRule = wrappedRule;
 	}
 
 	@Override public Statement apply(Statement base, Description testDescription) {
-		return wrappedRule.apply(base, createFrameworkMethod(testDescription), getTestObject(testDescription));
+		FrameworkMethod method = createFrameworkMethod(testDescription);
+		Object object = getTestObject(testDescription); // WARNING: this is a new object, not the real thing
+		return wrappedRule.apply(base, method, object);
 	}
 
-	private FrameworkMethod createFrameworkMethod(Description testDescription) {
+	private @NonNull FrameworkMethod createFrameworkMethod(@NonNull Description testDescription) {
 		try {
 			String testMethodName = testDescription.getMethodName();
 			Method testMethod = testDescription.getTestClass().getDeclaredMethod(testMethodName);
@@ -34,7 +37,7 @@ public class MethodRuleAdapter implements TestRule {
 		}
 	}
 
-	private Object getTestObject(Description testDescription) {
+	private @NonNull Object getTestObject(@NonNull Description testDescription) {
 		try {
 			return testDescription.getTestClass().newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
