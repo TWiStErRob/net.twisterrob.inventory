@@ -25,7 +25,7 @@ repositories {
 dependencies {
 	compile "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 	testCompile "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
-	compile 'com.google.code.findbugs:jsr305:3.0.0'
+	compile 'com.google.code.findbugs:jsr305:3.0.2'
 
 	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 }

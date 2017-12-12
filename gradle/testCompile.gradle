@@ -6,11 +6,11 @@ repositories {
 
 configurations.all {
 	resolutionStrategy {
-		force "junit:junit:${VERSION_JUNIT}"
-		force "org.mockito:mockito-core:${VERSION_MOCKITO}"
-		force 'org.objenesis:objenesis:2.4' // 2.1 vs 2.2
-		force 'com.google.guava:guava:20.0' // 17.0 (shazamcrest) vs 20.0 (?)
-		force 'com.thoughtworks.xstream:xstream:1.4.9' // 1.4.8 vs 1.4.9
+		//force "junit:junit:${VERSION_JUNIT}"
+		force "org.mockito:mockito-core:${VERSION_MOCKITO}" // powermock refers to older
+		force 'org.objenesis:objenesis:2.6' // 2.4 (powermock) vs 2.6 (mockito)
+		force 'com.google.guava:guava:20.0' // 17.0 (shazamcrest) vs 20.0 (robolectric)
+		force 'com.thoughtworks.xstream:xstream:1.4.9' // 1.4.8 (robolectric) vs 1.4.9 (powermock)
 		dependencySubstitution {
 			substitute(module('org.hamcrest:hamcrest-core'))
 					.with module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}")
@@ -25,7 +25,7 @@ if (isAndroid) {
 		// need to go for all, because of the hidden _debugAndroidTestCompile and friends
 		/*[ androidTestCompile ].each*/ all {
 			it.resolutionStrategy {
-				force 'com.google.code.findbugs:jsr305:3.0.0' // 2.0.1 vs 3.0.0
+				force 'com.google.code.findbugs:jsr305:3.0.2' // 2.0.1 vs 3.0.2
 				force 'com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.1'
 				// Force some dependencies to be consistent between compile and androidTestCompile
 				dependencySubstitution {
@@ -48,7 +48,9 @@ if (isAndroid) {
 dependencies {
 	testCompile "junit:junit:${VERSION_JUNIT}"
 	testCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
-	testCompile 'com.shazam:shazamcrest:0.11' // assertThat(*, sameBeanAs(*))
+	testCompile ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
+		exclude group: 'junit'
+	}
 	testCompile "org.mockito:mockito-core:${VERSION_MOCKITO}"
 	testCompile "org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}"
 	testCompile "org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}"
@@ -61,11 +63,11 @@ dependencies {
 	testCompile 'com.diffplug.durian:durian:3.4.0'
 	testCompile 'com.github.stefanbirkner:fishbowl:1.4.0' // exceptionThrownBy (assertThrows-like)
 //	testCompile 'cglib:cglib:3.2.4'
-//	testCompile 'pl.pragmatists:JUnitParams:1.0.4'
-//	testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.2'
+//	testCompile 'pl.pragmatists:JUnitParams:1.1.1'
+//	testCompile 'nl.jqno.equalsverifier:equalsverifier:2.4'
 
 	if (isAndroid) {
-		testCompile("org.robolectric:robolectric:3.3.2") {
+		testCompile("org.robolectric:robolectric:${VERSION_ROBOLECTRIC}") {
 			// robolectric has inconsistent internal dependencies
 			exclude group: 'org.codehaus.plexus', module: 'plexus-utils'
 		}
@@ -82,9 +84,12 @@ dependencies {
 //			.each { androidTestCompile it.displayName }
 
 		androidTestCompile "junit:junit:${VERSION_JUNIT}"
-		androidTestCompile "io.takari.junit:takari-cpsuite:1.2.7"
+		androidTestCompile ("io.takari.junit:takari-cpsuite:1.2.7") {
+			exclude group: 'junit'
+		}
 		androidTestCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
 		androidTestCompile ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
+			exclude group: 'junit'
 			exclude group: 'org.json', module: 'json'
 		}
 //		androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
