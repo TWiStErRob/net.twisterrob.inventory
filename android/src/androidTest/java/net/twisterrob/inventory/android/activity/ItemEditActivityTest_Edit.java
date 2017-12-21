@@ -37,7 +37,6 @@ public class ItemEditActivityTest_Edit {
 		db.assertHasRoomInProperty(TEST_PROPERTY, TEST_ROOM);
 	}
 
-	@Ignore("For some reason freshly opened edit is dirty, that's a bug.")
 	@Category({Op.Cancels.class})
 	@Test public void testCancel() {
 		itemEdit.close();

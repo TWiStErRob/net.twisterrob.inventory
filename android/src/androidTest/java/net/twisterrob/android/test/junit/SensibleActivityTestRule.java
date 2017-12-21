@@ -52,8 +52,8 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 	}
 
 	@Override public T launchActivity(@Nullable Intent startIntent) {
-		this.startIntent = startIntent;
-		return super.launchActivity(startIntent);
+		this.startIntent = startIntent != null ? startIntent : new Intent();
+		return super.launchActivity(this.startIntent);
 	}
 
 	@CallSuper
@@ -98,7 +98,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 				}
 			});
 		} catch (Throwable ex) {
-			throw android.support.test.espresso.core.deps.guava.base.Throwables.propagate(ex);
+			com.google.common.base.Throwables.throwIfUnchecked(ex);
 		}
 	}
 

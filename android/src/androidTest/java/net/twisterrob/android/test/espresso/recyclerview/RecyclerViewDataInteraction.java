@@ -5,15 +5,17 @@ import org.hamcrest.*;
 import static org.hamcrest.Matchers.*;
 
 import android.support.test.espresso.*;
-import android.support.test.espresso.core.deps.guava.base.Optional;
 import android.support.test.espresso.matcher.RootMatchers;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 
 import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.core.deps.guava.base.Preconditions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
+
+import com.google.common.base.Optional;
+
+import static com.google.common.base.Preconditions.*;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewProtocol.AdaptedData;
 

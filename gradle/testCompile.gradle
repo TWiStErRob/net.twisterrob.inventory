@@ -95,10 +95,8 @@ dependencies {
 //		androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
 //		androidTestCompile 'com.google.dexmaker:dexmaker:1.0'
 		// Android JUnit Runner
-		androidTestCompile 'com.android.support.test:runner:0.5'
-
-		// JUnit4 Rules
-		androidTestCompile 'com.android.support.test:rules:0.5'
+		androidTestCompile "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
+		androidTestCompile "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
 
 		// Espresso core
 		androidTestCompile "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
@@ -109,13 +107,19 @@ dependencies {
 			// * NullPointerException (mDecorContentParent.setWindowCallback) at AppCompatDelegateImplV7.createSubDecor
 			exclude group: 'com.android.support'
 		}
+		// Espresso-accessibility for automatic checking (not used yet)
+		// TODO AccessibilityChecks.enable()
+		//androidTestCompile "com.android.support.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
 		// disable web for now, because it has some conflicting Guava classes (http://b.android.com/187735)
-		// Espresso-web for WebView support
+		// Espresso-web for WebView support (not used yet)
 		//androidTestCompile "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
 		// Espresso-intents for capturing Intents and mocking onActivityResult
 		androidTestCompile "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 		// Espresso-idling-resource for synchronization with background jobs
 		androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
+		// CONSIDER using these with Glide
+		androidTestCompile "com.android.support.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
+		androidTestCompile "com.android.support.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
 		// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
 		androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:2.+"
 	}

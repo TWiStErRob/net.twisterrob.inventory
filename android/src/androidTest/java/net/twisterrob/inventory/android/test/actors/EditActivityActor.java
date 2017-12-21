@@ -83,7 +83,7 @@ public abstract class EditActivityActor extends ActivityActor {
 				.check(matches(withText(containsStringRes(type))));
 	}
 	public void checkPicture(@ColorInt int backgroundColor) {
-		onView(imageMatcher).perform(scrollTo()).check(matches(withBitmap(hasBackground(backgroundColor))));
+		onView(imageMatcher).perform(scrollTo()).check(matches(withBitmap(hasBackgroundColor(backgroundColor))));
 	}
 	public SaveResultActor save() {
 		onView(withId(R.id.btn_save)).perform(click());

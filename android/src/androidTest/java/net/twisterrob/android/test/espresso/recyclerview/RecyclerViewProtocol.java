@@ -18,12 +18,13 @@ package net.twisterrob.android.test.espresso.recyclerview;
 
 import android.database.Cursor;
 import android.support.annotation.Nullable;
-import android.support.test.espresso.core.deps.guava.base.Optional;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import static android.support.test.espresso.core.deps.guava.base.Preconditions.*;
+import com.google.common.base.Optional;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * A sadly necessary layer of indirection to interact with AdapterViews.

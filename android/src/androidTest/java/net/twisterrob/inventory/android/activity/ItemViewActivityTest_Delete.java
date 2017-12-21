@@ -68,6 +68,7 @@ public class ItemViewActivityTest_Delete {
 		));
 	}
 
+	@Category({UseCase.Complex.class})
 	@Test public void testDeleteMessageWithContentsMultiple() {
 		db.createItem(itemID, TEST_SUBITEM);
 		db.createItem(itemID, TEST_SUBITEM_OTHER);

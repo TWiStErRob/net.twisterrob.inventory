@@ -11,8 +11,9 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.lifecycle.*;
 
 import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.core.deps.guava.base.Throwables.*;
-import static android.support.test.espresso.core.deps.guava.collect.Iterables.*;
+
+import static com.google.common.base.Throwables.*;
+import static com.google.common.collect.Iterables.*;
 
 public class InstrumentationExtensions {
 	public static @NonNull Stage getActivityStage(final @NonNull Activity activity) {
@@ -98,7 +99,7 @@ public class InstrumentationExtensions {
 			try {
 				return resultProvider.call();
 			} catch (Exception e) {
-				propagateIfPossible(e);
+				throwIfUnchecked(e);
 				throw new RuntimeException("Unexpected exception", e);
 			}
 		}
@@ -113,7 +114,7 @@ public class InstrumentationExtensions {
 				try {
 					ref.set(resultProvider.call());
 				} catch (Exception e) {
-					propagateIfPossible(e);
+					throwIfUnchecked(e);
 					throw new RuntimeException("Unexpected exception", e);
 				}
 			}
@@ -126,7 +127,7 @@ public class InstrumentationExtensions {
 			try {
 				action.run();
 			} catch (Exception e) {
-				propagateIfPossible(e);
+				throwIfUnchecked(e);
 				throw new RuntimeException("Unexpected exception", e);
 			}
 		}

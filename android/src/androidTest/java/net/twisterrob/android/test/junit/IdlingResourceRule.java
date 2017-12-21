@@ -8,6 +8,7 @@ import org.slf4j.*;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.*;
 
+// STOPSHIP check the deprecation on idling resources
 public class IdlingResourceRule implements TestRule {
 	private static final Logger LOG = LoggerFactory.getLogger(IdlingResourceRule.class);
 

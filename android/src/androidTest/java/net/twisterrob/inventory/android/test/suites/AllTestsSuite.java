@@ -40,7 +40,8 @@ public class AllTestsSuite {
 
 		@Override public List<Class<?>> find() {
 			List<Class<?>> matchedClasses = new ArrayList<>();
-			TestLoader loader = new TestLoader();
+			// STOPSHIP figure out a way, or is this working already?
+			TestLoaderAccess loader = new TestLoaderAccess();
 			for (String className : getAllClassNamesOnClassPath()) {
 				Class<?> clazz = loader.loadClass(className);
 				// clazz may be null when the load fails, just ignore those

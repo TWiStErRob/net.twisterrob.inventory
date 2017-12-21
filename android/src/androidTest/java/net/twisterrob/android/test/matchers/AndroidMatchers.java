@@ -274,7 +274,7 @@ public class AndroidMatchers {
 	// endregion
 
 	// region Bitmap matchers
-	public static @NonNull Matcher<Bitmap> hasBackground(@ColorInt final int backgroundColor) {
+	public static @NonNull Matcher<Bitmap> hasBackgroundColor(@ColorInt final int backgroundColor) {
 		return new TypeSafeDiagnosingMatcher<Bitmap>() {
 			@Override protected boolean matchesSafely(Bitmap item, Description mismatchDescription) {
 				int pixel = item.getPixel(0, 0);

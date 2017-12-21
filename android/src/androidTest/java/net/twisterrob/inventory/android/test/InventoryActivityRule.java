@@ -52,7 +52,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	}
 
 	@Override protected void beforeActivityLaunched() {
-		waitForEverythingToDestroy();
+		// STOPSHIP waitForEverythingToDestroy();
 		reset();
 		setDefaults();
 		Espresso.registerIdlingResources(glideIdler);
@@ -60,7 +60,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	}
 
 	@Override protected void afterActivityFinished() {
-		waitForEverythingToDestroy();
+		// STOPSHIP waitForEverythingToDestroy();
 		super.afterActivityFinished();
 		Espresso.unregisterIdlingResources(glideIdler);
 		// CONSIDER is it really necessary?

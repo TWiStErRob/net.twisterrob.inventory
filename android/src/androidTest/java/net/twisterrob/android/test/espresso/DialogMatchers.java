@@ -183,6 +183,7 @@ public class DialogMatchers {
 		assertNoDialogIsDisplayed(); // double-check ourselves
 	}
 	private static void tryCloseDialog(boolean wait) {
+		if (true) return; // STOPSHIP
 		if (!wait) {
 			// It's not that important to close the dialog, so prevent
 			// RootViewPicker.waitForAtLeastOneActivityToBeResumed from waiting ~40 seconds and then throwing:
@@ -195,6 +196,7 @@ public class DialogMatchers {
 		// press back button if there's a dialog displayed
 		onView(isRoot()).inRoot(isDialog()).withFailureHandler(new Ignore()).perform(pressBack());
 		// press negative button if there's still a dialog displayed
+		// STOPSHIP blocks looking for root, and doesn't fail immediately
 		onView(withId(BUTTON_NEGATIVE)).inRoot(isDialog()).withFailureHandler(new Ignore()).perform(click());
 		// pressing the negative button will fail only if there's no dialog, or the button is not visible
 		// both of these are suppressed via a failure handler

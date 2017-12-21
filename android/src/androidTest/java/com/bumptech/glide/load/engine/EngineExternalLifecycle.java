@@ -165,10 +165,10 @@ public class EngineExternalLifecycle {
 			super(callbacks);
 			this.extra = extra;
 		}
-		@NonNull @Override public Iterator<ResourceCallback> iterator() {
+		@Override public @NonNull Iterator<ResourceCallback> iterator() {
 			Iterator<ResourceCallback> extraIt =
-					android.support.test.espresso.core.deps.guava.collect.Iterators.singletonIterator(extra);
-			return android.support.test.espresso.core.deps.guava.collect.Iterators.concat(super.iterator(), extraIt);
+					android.support.test.espresso.core.internal.deps.guava.collect.Iterators.singletonIterator(extra);
+			return com.google.common.collect.Iterators.concat(super.iterator(), extraIt);
 		}
 	}
 

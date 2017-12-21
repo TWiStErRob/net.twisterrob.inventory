@@ -28,7 +28,6 @@ import android.support.test.espresso.Espresso;
 import android.support.test.espresso.NoMatchingViewException.Builder;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.base.RootsOracle_Factory;
-import android.support.test.espresso.core.deps.guava.collect.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.util.*;
 import android.support.test.runner.lifecycle.Stage;
@@ -43,6 +42,8 @@ import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
+
+import com.google.common.collect.*;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
@@ -644,12 +645,12 @@ public class EspressoExtensions {
 	}
 
 	/**
-	 * Run it in debug: {@code android.support.test.espresso.core.deps.guava.collect.Iterators.toArray(net.twisterrob.android.test.espresso.EspressoExtensions.parentViewTraversal(view).iterator(), android.view.View.class)}.
+	 * Run it in debug: {@code com.google.common.collect.Iterators.toArray(net.twisterrob.android.test.espresso.EspressoExtensions.parentViewTraversal(view).iterator(), android.view.View.class)}.
 	 */
 	public static Iterable<View> parentViewTraversal(final View view) {
 		return new Iterable<View>() {
 			@Override public Iterator<View> iterator() {
-				return Iterators.filter(parentTraversal(view).iterator(), View.class);
+				return com.google.common.collect.Iterators.filter(parentTraversal(view).iterator(), View.class);
 			}
 		};
 	}
