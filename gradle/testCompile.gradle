@@ -5,6 +5,7 @@ repositories {
 }
 
 configurations.all {
+	if (it.name.contains("lintClassPath")) return
 	resolutionStrategy {
 		//force "junit:junit:${VERSION_JUNIT}"
 		force "org.mockito:mockito-core:${VERSION_MOCKITO}" // powermock refers to older
@@ -24,6 +25,7 @@ if (isAndroid) {
 	configurations {
 		// need to go for all, because of the hidden _debugAndroidTestCompile and friends
 		/*[ androidTestImplementation ].each*/ all {
+			if (it.name.contains("lintClassPath")) return
 			it.resolutionStrategy {
 				force 'com.google.code.findbugs:jsr305:3.0.2' // 2.0.1 vs 3.0.2
 				force 'com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.1'
