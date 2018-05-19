@@ -1,9 +1,5 @@
 buildscript {
-	repositories {
-		jcenter()
-		maven { name 'twisterrob'; url 'http://localhost/maven' }
-	}
-
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
 		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		//noinspection GradleDynamicVersion
@@ -25,19 +21,13 @@ repositories {
 }
 
 dependencies {
-	compile "com.android.support:support-annotations:${VERSION_SUPPORT}"
-	compile "org.slf4j:slf4j-api:${VERSION_SLF4J}"
+	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
+	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 }
 
 android {
 	lintOptions {
 		tasks.lint.enabled = false
-	}
-	variantFilter {
-		// have only a release variant
-		if (it.buildType.name == com.android.builder.core.BuilderConstants.DEBUG) {
-			it.setIgnore(true);
-		}
 	}
 }
 

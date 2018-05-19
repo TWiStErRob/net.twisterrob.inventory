@@ -1,4 +1,4 @@
-rootProject.name = 'Magic Home Inventory'
+rootProject.name = 'Inventory'
 
 include ':android'
 include ':tools:transform'

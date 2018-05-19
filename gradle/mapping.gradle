@@ -1,9 +1,5 @@
 buildscript {
-	repositories {
-		jcenter()
-		maven { name 'twisterrob'; url 'http://localhost/maven' }
-	}
-
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
 		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		//noinspection GradleDynamicVersion

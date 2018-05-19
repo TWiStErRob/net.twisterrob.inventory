@@ -1,8 +1,5 @@
 buildscript {
-	repositories {
-		jcenter()
-		maven { name 'twisterrob'; url 'http://localhost/maven' }
-	}
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}

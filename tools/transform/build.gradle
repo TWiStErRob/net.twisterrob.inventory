@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-//	compile 'xalan:xalan:2.7.1' // useful to force it on the classpath to run in IDEA
+//	compileOnly 'xalan:xalan:2.7.1' // useful to force it on the classpath to run in IDEA
 	xalan 'xalan:xalan:2.7.1'
 	saxon 'net.sf.saxon:Saxon-HE:9.7.0-7'
 }

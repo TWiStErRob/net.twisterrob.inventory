@@ -3,11 +3,7 @@ if (project.hasProperty('libFromSources')) {
 }
 
 buildscript {
-	repositories {
-		jcenter()
-		maven { name 'twisterrob'; url 'http://localhost/maven' }
-	}
-
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
 		configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
@@ -28,24 +24,24 @@ repositories {
 }
 
 dependencies {
-	//configurations.compile.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	if (project.hasProperty('libFromSources')) {
-		compile project(':twister-lib-java')
+		implementation project(':twister-lib-java')
 	} else {
-		compile 'net.twisterrob:twister-lib-java:1.0-SNAPSHOT'
+		implementation 'net.twisterrob:twister-lib-java:1.0-SNAPSHOT'
 	}
-	compile "com.android.support:support-v4:${VERSION_SUPPORT}"
-	compile "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
-	compile "com.android.support:cardview-v7:${VERSION_SUPPORT}"
-	compile "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
-	compile "com.android.support:design:${VERSION_SUPPORT}"
-	//compile "com.android.support:palette-v7:${VERSION_SUPPORT}"
+	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
+	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
+	implementation "com.android.support:cardview-v7:${VERSION_SUPPORT}"
+	implementation "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
+	implementation "com.android.support:design:${VERSION_SUPPORT}"
+	//implementation "com.android.support:palette-v7:${VERSION_SUPPORT}"
 
 	// FIXME @Deprecated, use Glide
-	compile 'com.jakewharton:disklrucache:2.0.2'
-	compile 'com.caverock:androidsvg:1.2.1'
-	compile 'com.rarepebble:colorpicker:1.7.0'
-	compile "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
+	implementation 'com.jakewharton:disklrucache:2.0.2'
+	implementation 'com.caverock:androidsvg:1.2.1'
+	implementation 'com.rarepebble:colorpicker:1.7.0'
+	implementation "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
 
 	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 }
@@ -53,11 +49,5 @@ dependencies {
 android {
 	testOptions {
 		unitTests.returnDefaultValues = true
-	}
-	variantFilter {
-		// have only a release variant
-		if (it.buildType.name == com.android.builder.core.BuilderConstants.DEBUG) {
-			it.setIgnore(true);
-		}
 	}
 }

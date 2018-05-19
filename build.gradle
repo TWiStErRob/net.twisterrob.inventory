@@ -1,9 +1,5 @@
 buildscript {
-	repositories {
-		jcenter()
-		maven { name 'twisterrob'; url 'http://localhost/maven' }
-	}
-
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
 		configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
@@ -20,7 +16,10 @@ allprojects {
 		//maven { name 'idescout'; url 'http://www.idescout.com/maven/repo/' }
 	}
 
-	configurations.all({ it.resolutionStrategy.failOnVersionConflict() })
+	configurations.all {
+		if (it.name == 'lintClassPath') return
+		it.resolutionStrategy.failOnVersionConflict()
+	}
 }
 
 task clean(type: Delete) {
@@ -38,15 +37,18 @@ task releaseCheck() {
 			}
 		}
 		println "================ Report Locations ================"
+		/* TODO AGP 2.x to 3.x breaking changes
 		getTasksByName('lint', true).each {
 			new LintHelper(it).print(report)
 		}
+		*/
 		getAllTasks(true)
 				.collectMany { it.value }
 				.findAll { it instanceof Test }
 				.each { Test task -> report(task, 'test', task.reports.html.entryPoint) }
 	}
 }
+/* TODO AGP 2.x to 3.x breaking changes 
 import com.android.build.gradle.internal.dsl.LintOptions
 import com.android.build.gradle.tasks.Lint
 
@@ -86,3 +88,4 @@ class LintHelper {
 		}
 	}
 }
+*/

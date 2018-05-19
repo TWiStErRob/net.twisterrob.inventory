@@ -8,10 +8,10 @@ repositories {
 }
 
 dependencies {
-	compile localGroovy()
-	compile gradleApi()
+	implementation localGroovy()
+	implementation gradleApi()
 
-	testCompile 'junit:junit:4.12'
+	testImplementation 'junit:junit:4.12'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7

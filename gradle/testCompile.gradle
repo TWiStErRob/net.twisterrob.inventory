@@ -23,11 +23,11 @@ configurations.all {
 if (isAndroid) {
 	configurations {
 		// need to go for all, because of the hidden _debugAndroidTestCompile and friends
-		/*[ androidTestCompile ].each*/ all {
+		/*[ androidTestImplementation ].each*/ all {
 			it.resolutionStrategy {
 				force 'com.google.code.findbugs:jsr305:3.0.2' // 2.0.1 vs 3.0.2
 				force 'com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.1'
-				// Force some dependencies to be consistent between compile and androidTestCompile
+				// Force some dependencies to be consistent between implementation and androidTestImplementation
 				dependencySubstitution {
 					[ 'support-annotations', 'support-v4', 'appcompat-v7', 'support-v13',
 					  'design', 'customtabs', 'preference-v7', 'preference-v14',
@@ -46,33 +46,33 @@ if (isAndroid) {
 }
 
 dependencies {
-	testCompile "junit:junit:${VERSION_JUNIT}"
-	testCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
-	testCompile ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
+	testImplementation "junit:junit:${VERSION_JUNIT}"
+	testImplementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
+	testImplementation ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
 		exclude group: 'junit'
 	}
-	testCompile "org.mockito:mockito-core:${VERSION_MOCKITO}"
-	testCompile "org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}"
-	testCompile "org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}"
-	testCompile "org.powermock:powermock-module-junit4-rule:${VERSION_POWERMOCK}"
+	testImplementation "org.mockito:mockito-core:${VERSION_MOCKITO}"
+	testImplementation "org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}"
+	testImplementation "org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}"
+	testImplementation "org.powermock:powermock-module-junit4-rule:${VERSION_POWERMOCK}"
 	// contains duplicate PowerMockRule which messes things up, do not enable
-	//testCompile "org.powermock:powermock-module-junit4-rule-agent:${VERSION_POWERMOCK}"
-	testCompile "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
-	testCompile 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then 
-	testCompile "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
-	testCompile 'com.diffplug.durian:durian:3.4.0'
-	testCompile 'com.github.stefanbirkner:fishbowl:1.4.0' // exceptionThrownBy (assertThrows-like)
-//	testCompile 'cglib:cglib:3.2.4'
-//	testCompile 'pl.pragmatists:JUnitParams:1.1.1'
-//	testCompile 'nl.jqno.equalsverifier:equalsverifier:2.4'
+	//testImplementation "org.powermock:powermock-module-junit4-rule-agent:${VERSION_POWERMOCK}"
+	testImplementation "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
+	testImplementation 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then 
+	testImplementation "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
+	testImplementation 'com.diffplug.durian:durian:3.4.0'
+	testImplementation 'com.github.stefanbirkner:fishbowl:1.4.0' // exceptionThrownBy (assertThrows-like)
+//	testImplementation 'cglib:cglib:3.2.4'
+//	testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
+//	testImplementation 'nl.jqno.equalsverifier:equalsverifier:2.4'
 
 	if (isAndroid) {
-		testCompile("org.robolectric:robolectric:${VERSION_ROBOLECTRIC}") {
+		testImplementation("org.robolectric:robolectric:${VERSION_ROBOLECTRIC}") {
 			// robolectric has inconsistent internal dependencies
 			exclude group: 'org.codehaus.plexus', module: 'plexus-utils'
 		}
 		// let's force plexus-utils to the latest version for robolectric
-		testCompile 'org.codehaus.plexus:plexus-utils:1.5.+'
+		testImplementation 'org.codehaus.plexus:plexus-utils:1.5.+'
 
 //	configurations
 //			.compile
@@ -81,27 +81,27 @@ dependencies {
 //			.collect { it.id.componentIdentifier }
 //			.grep { it instanceof ModuleComponentIdentifier }
 //			.grep { it.group == 'com.android.support' }
-//			.each { androidTestCompile it.displayName }
+//			.each { androidTestImplementation it.displayName }
 
-		androidTestCompile "junit:junit:${VERSION_JUNIT}"
-		androidTestCompile ("io.takari.junit:takari-cpsuite:1.2.7") {
+		androidTestImplementation "junit:junit:${VERSION_JUNIT}"
+		androidTestImplementation ("io.takari.junit:takari-cpsuite:1.2.7") {
 			exclude group: 'junit'
 		}
-		androidTestCompile "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
-		androidTestCompile ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
+		androidTestImplementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
+		androidTestImplementation ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
 			exclude group: 'junit'
 			exclude group: 'org.json', module: 'json'
 		}
-//		androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
-//		androidTestCompile 'com.google.dexmaker:dexmaker:1.0'
+//		androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
+//		androidTestImplementation 'com.google.dexmaker:dexmaker:1.0'
 		// Android JUnit Runner
-		androidTestCompile "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
-		androidTestCompile "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
+		androidTestImplementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
+		androidTestImplementation "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
 
 		// Espresso core
-		androidTestCompile "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
+		androidTestImplementation "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
 		// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
-		androidTestCompile("com.android.support.test.espresso:espresso-contrib:${VERSION_ESPRESSO}") {
+		androidTestImplementation("com.android.support.test.espresso:espresso-contrib:${VERSION_ESPRESSO}") {
 			// Need to ignore support dependencies, otherwise weird exceptions happen, for example:
 			// * Error inflating class android.support.v7.widget.CardView Resource is not a ColorStateList (color or path)
 			// * NullPointerException (mDecorContentParent.setWindowCallback) at AppCompatDelegateImplV7.createSubDecor
@@ -109,18 +109,18 @@ dependencies {
 		}
 		// Espresso-accessibility for automatic checking (not used yet)
 		// TODO AccessibilityChecks.enable()
-		//androidTestCompile "com.android.support.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
+		//androidTestImplementation "com.android.support.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
 		// disable web for now, because it has some conflicting Guava classes (http://b.android.com/187735)
 		// Espresso-web for WebView support (not used yet)
-		//androidTestCompile "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
+		//androidTestImplementation "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
 		// Espresso-intents for capturing Intents and mocking onActivityResult
-		androidTestCompile "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+		androidTestImplementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 		// Espresso-idling-resource for synchronization with background jobs
-		androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
+		androidTestImplementation "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
 		// CONSIDER using these with Glide
-		androidTestCompile "com.android.support.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
-		androidTestCompile "com.android.support.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
+		androidTestImplementation "com.android.support.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
+		androidTestImplementation "com.android.support.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
 		// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
-		androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:2.+"
+		androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:2.+"
 	}
 }

@@ -12,6 +12,9 @@
 	<!-- Used by Import/Export -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	
+	<!-- minSdkVersion in lib is high, but I know there was no new API usage there -->
+	<uses-sdk tools:overrideLibrary="net.twisterrob.android" />
 
 	<application
 		android:name=".App"
