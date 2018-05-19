@@ -239,7 +239,7 @@
 	<string name="backup_import_external">Import from…</string>
 	<string name="backup_go_home">Go to Downloads folder</string>
 	<string name="backup_go_home_condensed">Downloads</string>
-	<string name="backup$cancel_partial">Cancelling this operation may result in partial data transfer only. Are you sure you want to cancel?</string>
+	<string name="backup__cancel_partial">Cancelling this operation may result in partial data transfer only. Are you sure you want to cancel?</string>
 
 	<string name="backup_export_progress_title">Export</string>
 	<string name="backup_export_progress_background">Export continues in background</string>
@@ -287,10 +287,10 @@
 	<string name="backup_import_invalid_image">&#8220;%1$s&#8221; has invalid image: &#8220;%2$s&#8221;, ignored image.</string>
 	<string name="backup_import_invalid_list_entry">List &#8220;%1$s&#8221; has invalid or duplicate entry: id=%2$d, ignored.</string>
 
-	<string name="types$prefix$opened" translatable="false">-</string>
-	<string name="types$prefix$closed" translatable="false">+</string>
-	<string name="types$prefix$no_children" translatable="false">&#32;</string>
-	<string name="types$format$more">%1$s <annotation color="secondaryText">(more)</annotation></string>
-	<string name="types$format$keywords">%1$s <annotation color="secondaryText">(%2$s)</annotation></string>
-	<string name="types$format$source">%1$s <annotation color="secondaryText">- %2$s</annotation></string>
+	<string name="types__prefix__opened" translatable="false">-</string>
+	<string name="types__prefix__closed" translatable="false">+</string>
+	<string name="types__prefix__no_children" translatable="false">&#32;</string>
+	<string name="types__format__more">%1$s <annotation color="secondaryText">(more)</annotation></string>
+	<string name="types__format__keywords">%1$s <annotation color="secondaryText">(%2$s)</annotation></string>
+	<string name="types__format__source">%1$s <annotation color="secondaryText">- %2$s</annotation></string>
 </resources>

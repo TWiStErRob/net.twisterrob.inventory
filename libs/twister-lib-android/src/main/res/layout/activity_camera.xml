@@ -68,8 +68,8 @@
 		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_gravity="@integer/camera$button_bar$location"
-			android:orientation="@integer/camera$button_bar$orientation"
+			android:layout_gravity="@integer/camera__button_bar__location"
+			android:orientation="@integer/camera__button_bar__orientation"
 			>
 			<ImageButton
 				android:id="@+id/btn_pick"

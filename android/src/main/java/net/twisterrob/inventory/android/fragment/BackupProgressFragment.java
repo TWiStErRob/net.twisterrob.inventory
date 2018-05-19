@@ -88,12 +88,12 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		progress = (ProgressBar)view.findViewById(R.id.progress);
-		description = (TextView)view.findViewById(R.id.progress$description);
-		percentage = (TextView)view.findViewById(R.id.progress$percentage);
-		counts = (TextView)view.findViewById(R.id.progress$counts);
-		icon = (ImageView)view.findViewById(R.id.progress$icon);
-		cancel = view.findViewById(R.id.progress$cancel);
-		cancelWait = view.findViewById(R.id.progress$cancel_wait);
+		description = (TextView)view.findViewById(R.id.progress__description);
+		percentage = (TextView)view.findViewById(R.id.progress__percentage);
+		counts = (TextView)view.findViewById(R.id.progress__counts);
+		icon = (ImageView)view.findViewById(R.id.progress__icon);
+		cancel = view.findViewById(R.id.progress__cancel);
+		cancelWait = view.findViewById(R.id.progress__cancel_wait);
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				final LocalBinder binding = backupService.getBinding();
@@ -110,7 +110,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 									}
 								}
 							})
-							.setMessage(R.string.backup$cancel_partial)
+							.setMessage(R.string.backup__cancel_partial)
 							.show();
 				} else {
 					binding.cancel();

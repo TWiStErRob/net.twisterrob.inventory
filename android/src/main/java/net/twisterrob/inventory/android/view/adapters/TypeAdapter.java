@@ -95,15 +95,15 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 			boolean hasChildren = 0 < DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_CHILDREN_DIRECT, 0);
 			if (hasChildren) {
 				if (isOpen) {
-					holder.state.setText(R.string.types$prefix$opened);
+					holder.state.setText(R.string.types__prefix__opened);
 				} else {
-					holder.state.setText(R.string.types$prefix$closed);
+					holder.state.setText(R.string.types__prefix__closed);
 					if (DatabaseTools.getOptionalBoolean(cursor, TypeSource.MIXED, false)) {
-						title = TextTools.formatFormatted(mContext, R.string.types$format$more, title);
+						title = TextTools.formatFormatted(mContext, R.string.types__format__more, title);
 					}
 				}
 			} else {
-				holder.state.setText(R.string.types$prefix$no_children);
+				holder.state.setText(R.string.types__prefix__no_children);
 			}
 		}
 
@@ -116,14 +116,14 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 				keywords = null;
 			}
 			if (!TextUtils.isEmpty(keywords)) {
-				title = TextTools.formatFormatted(mContext, R.string.types$format$keywords, title, keywords);
+				title = TextTools.formatFormatted(mContext, R.string.types__format__keywords, title, keywords);
 			}
 		}
 
 		if (this.displaySource) {
 			CharSequence source = DatabaseTools.getOptionalString(cursor, TypeSource.SOURCE);
 			if (!TextUtils.isEmpty(source)) {
-				title = TextTools.formatFormatted(mContext, R.string.types$format$source, title, source);
+				title = TextTools.formatFormatted(mContext, R.string.types__format__source, title, source);
 			}
 		}
 

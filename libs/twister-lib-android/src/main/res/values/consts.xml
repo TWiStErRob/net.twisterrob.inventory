@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<integer name="orientation$horizontal">0</integer>
-	<integer name="orientation$vertical">1</integer>
+	<integer name="orientation__horizontal">0</integer>
+	<integer name="orientation__vertical">1</integer>
 
-	<integer name="gravity$no_gravity">0x0</integer>
-	<integer name="gravity$center">0x11</integer>
+	<integer name="gravity__no_gravity">0x0</integer>
+	<integer name="gravity__center">0x11</integer>
 
 	<!-- Horizontal alignment -->
-	<integer name="gravity$left">0x03</integer>
-	<integer name="gravity$start">0x00800003</integer>
-	<integer name="gravity$center_horizontal">0x01</integer>
-	<integer name="gravity$right">0x05</integer>
-	<integer name="gravity$end">0x00800005</integer>
+	<integer name="gravity__left">0x03</integer>
+	<integer name="gravity__start">0x00800003</integer>
+	<integer name="gravity__center_horizontal">0x01</integer>
+	<integer name="gravity__right">0x05</integer>
+	<integer name="gravity__end">0x00800005</integer>
 
 	<!-- Vertical alignment -->
-	<integer name="gravity$top">0x30</integer>
-	<integer name="gravity$center_vertical">0x10</integer>
-	<integer name="gravity$bottom">0x50</integer>
+	<integer name="gravity__top">0x30</integer>
+	<integer name="gravity__center_vertical">0x10</integer>
+	<integer name="gravity__bottom">0x50</integer>
 
 	<!-- Common combinations for the usual 8 directions -->
-	<integer name="gravity$bottom_left">0x53</integer>
-	<integer name="gravity$bottom_start">0x00800053</integer>
-	<integer name="gravity$bottom_center">0x51</integer>
-	<integer name="gravity$bottom_right">0x55</integer>
-	<integer name="gravity$bottom_end">0x00800055</integer>
-	<integer name="gravity$top_left">0x33</integer>
-	<integer name="gravity$top_start">0x00800033</integer>
-	<integer name="gravity$top_center">0x31</integer>
-	<integer name="gravity$top_right">0x35</integer>
-	<integer name="gravity$top_end">0x00800035</integer>
-	<integer name="gravity$center_left">0x13</integer>
-	<integer name="gravity$center_start">0x00800013</integer>
-	<integer name="gravity$center_right">0x15</integer>
-	<integer name="gravity$center_end">0x00800015</integer>
+	<integer name="gravity__bottom_left">0x53</integer>
+	<integer name="gravity__bottom_start">0x00800053</integer>
+	<integer name="gravity__bottom_center">0x51</integer>
+	<integer name="gravity__bottom_right">0x55</integer>
+	<integer name="gravity__bottom_end">0x00800055</integer>
+	<integer name="gravity__top_left">0x33</integer>
+	<integer name="gravity__top_start">0x00800033</integer>
+	<integer name="gravity__top_center">0x31</integer>
+	<integer name="gravity__top_right">0x35</integer>
+	<integer name="gravity__top_end">0x00800035</integer>
+	<integer name="gravity__center_left">0x13</integer>
+	<integer name="gravity__center_start">0x00800013</integer>
+	<integer name="gravity__center_right">0x15</integer>
+	<integer name="gravity__center_end">0x00800015</integer>
 </resources>

@@ -10,7 +10,7 @@
 	tools:context=".fragment.BackupProgressFragment"
 	>
 	<ImageButton
-		android:id="@+id/progress$cancel"
+		android:id="@+id/progress__cancel"
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:padding="0dp"
@@ -23,7 +23,7 @@
 		android:gravity="center"
 		/>
 	<ImageView
-		android:id="@+id/progress$icon"
+		android:id="@+id/progress__icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginRight="@dimen/unit"
@@ -31,7 +31,7 @@
 		tools:src="@android:drawable/ic_menu_upload"
 		/>
 	<ProgressBar
-		android:id="@+id/progress$cancel_wait"
+		android:id="@+id/progress__cancel_wait"
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:layout_marginLeft="@dimen/unit"
@@ -49,38 +49,38 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
-		android:layout_toEndOf="@id/progress$icon"
-		android:layout_toLeftOf="@id/progress$cancel"
-		android:layout_toRightOf="@id/progress$icon"
-		android:layout_toStartOf="@id/progress$cancel"
+		android:layout_toEndOf="@id/progress__icon"
+		android:layout_toLeftOf="@id/progress__cancel"
+		android:layout_toRightOf="@id/progress__icon"
+		android:layout_toStartOf="@id/progress__cancel"
 		tools:max="100"
 		tools:progress="66"
 		/>
 	<TextView
-		android:id="@+id/progress$counts"
+		android:id="@+id/progress__counts"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/progress"
-		android:layout_toLeftOf="@id/progress$cancel"
-		android:layout_toStartOf="@id/progress$cancel"
+		android:layout_toLeftOf="@id/progress__cancel"
+		android:layout_toStartOf="@id/progress__cancel"
 		android:textIsSelectable="false"
 		tools:text="666/1000"
 		/>
 	<TextView
-		android:id="@+id/progress$percentage"
+		android:id="@+id/progress__percentage"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/progress"
-		android:layout_toEndOf="@id/progress$icon"
-		android:layout_toRightOf="@id/progress$icon"
+		android:layout_toEndOf="@id/progress__icon"
+		android:layout_toRightOf="@id/progress__icon"
 		android:textIsSelectable="false"
 		tools:text="66%"
 		/>
 	<TextView
-		android:id="@+id/progress$description"
+		android:id="@+id/progress__description"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/progress$percentage"
+		android:layout_below="@id/progress__percentage"
 		android:textIsSelectable="false"
 		tools:text="Exporting blah blah"
 		/>
