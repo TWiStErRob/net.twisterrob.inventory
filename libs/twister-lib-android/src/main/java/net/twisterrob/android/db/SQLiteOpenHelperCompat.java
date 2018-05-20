@@ -54,9 +54,14 @@ public class SQLiteOpenHelperCompat extends SQLiteOpenHelper {
 		this.name = name;
 	}
 
-	/** Polyfill for pre-ICE_CREAM_SANDWICH. */
+	/**
+	 * Polyfill for pre-ICE_CREAM_SANDWICH.
+	 * Old versions don't have this method, so on those version this method will be called.
+	 * New version have this method, but there's a silent unannotated override, this method will be called.
+	 * Lint will see the TargetApi and will happily accept that it'll work for all usages.
+	 */
 	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
-	@Override public String getDatabaseName() {
+	/*@Override*/ public String getDatabaseName() {
 		return name;
 	}
 
