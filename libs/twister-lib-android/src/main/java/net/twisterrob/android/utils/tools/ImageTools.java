@@ -10,11 +10,11 @@ import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.*;
 import android.graphics.drawable.*;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build.*;
 import android.os.Environment;
 import android.provider.*;
+import android.support.media.ExifInterface;
 import android.support.v4.content.ContextCompat;
 
 import net.twisterrob.java.io.IOTools;

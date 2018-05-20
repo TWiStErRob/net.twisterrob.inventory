@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -116,6 +116,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 		if (this instanceof ItemEditFragment) {
 			typeImage.setOnClickListener(new OnClickListener() {
+				@SuppressLint("WrongThreadInterprocedural")
 				@Override public void onClick(View v) {
 					new ChangeTypeDialog(BaseEditFragment.this).show(new Variants() {
 						@Override protected void update(Cursor cursor) {

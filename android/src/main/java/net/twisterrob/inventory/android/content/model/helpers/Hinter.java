@@ -309,7 +309,7 @@ public class Hinter {
 				}
 
 				if (showEditDistances) {
-					ArrayList<WordSuggestion<Long>> all = new ArrayList<>();
+					List<WordSuggestion<Long>> all = new ArrayList<>();
 					for (WordSuggestion<Long> wordSuggestion : keywordSuggestion) {
 						all.add(wordSuggestion);
 					}

@@ -193,7 +193,7 @@ public class SunburstDrawable<T> extends Drawable {
 	}
 
 	@Override public int getOpacity() {
-		return 1;
+		return PixelFormat.TRANSLUCENT;
 	}
 
 	private static void setAlpha(Paint paint, int alpha) {

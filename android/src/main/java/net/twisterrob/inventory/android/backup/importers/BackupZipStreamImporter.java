@@ -43,6 +43,7 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 		this.images = new ImportImageReconciler(db, res, progress);
 	}
 
+	@SuppressWarnings("deprecation") // TODO refactor
 	@Override public void importFrom(InputStream source) throws Exception {
 		ZipInputStream zip = null;
 		try {

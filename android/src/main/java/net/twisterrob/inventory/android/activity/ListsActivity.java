@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 
 import net.twisterrob.inventory.android.App;
@@ -17,14 +18,14 @@ public class ListsActivity extends SingleFragmentActivity<ListListFragment> impl
 		return Intents.getItemFrom(getIntent());
 	}
 
+	@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 	@Override public void listSelected(long listID) {
-		//noinspection WrongThread FIXME DB on UI
 		App.db().addListEntry(listID, getExtraItemID());
 		App.toastUser("Item has been added to a list.");
 		getFragment().refresh();
 	}
+	@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 	@Override public void listRemoved(long listID) {
-		//noinspection WrongThread FIXME DB on UI
 		App.db().deleteListEntry(listID, getExtraItemID());
 		App.toastUser("Item has been removed from a list.");
 		getFragment().refresh();

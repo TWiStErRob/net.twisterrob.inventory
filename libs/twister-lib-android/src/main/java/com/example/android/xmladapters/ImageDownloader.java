@@ -20,7 +20,7 @@ import java.io.*;
 import java.lang.ref.*;
 import java.net.*;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 import android.graphics.*;
 import android.graphics.drawable.*;
@@ -43,7 +43,7 @@ public class ImageDownloader {
 	private static final int DELAY_BEFORE_PURGE = 30 * 1000; // in milliseconds
 
 	// Hard cache, with a fixed maximum capacity and a life duration
-	private final static HashMap<String, Bitmap> sHardBitmapCache = new LinkedHashMap<String, Bitmap>(
+	private final static Map<String, Bitmap> sHardBitmapCache = new LinkedHashMap<String, Bitmap>(
 			HARD_CACHE_CAPACITY / 2, 0.75f, true) {
 		private static final long serialVersionUID = -7190622541619388252L;
 		@Override protected boolean removeEldestEntry(Map.Entry<String, Bitmap> eldest) {
@@ -58,7 +58,7 @@ public class ImageDownloader {
 	};
 
 	// Soft cache for bitmap kicked out of hard cache
-	private final static ConcurrentHashMap<String, SoftReference<Bitmap>> sSoftBitmapCache =
+	private final static ConcurrentMap<String, SoftReference<Bitmap>> sSoftBitmapCache =
 			new ConcurrentHashMap<>(HARD_CACHE_CAPACITY / 2);
 
 	private final Handler purgeHandler = new Handler();
@@ -213,7 +213,7 @@ public class ImageDownloader {
 	/**
 	 * The actual AsyncTask that will asynchronously download the image.
 	 */
-	class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
+	static class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
 		private static final int IO_BUFFER_SIZE = 4 * 1024;
 		private String url;
 		private final WeakReference<ImageView> imageViewReference;

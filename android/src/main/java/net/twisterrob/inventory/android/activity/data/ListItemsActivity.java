@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.activity.data;
 
+import android.annotation.SuppressLint;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.support.v7.app.AlertDialog;
@@ -59,8 +60,8 @@ public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> impl
 		setupTitleEditor();
 	}
 
+	@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 	@Override protected void updateName(String newName) {
-		//noinspection WrongThread FIXME DB on UI
 		App.db().updateList(getExtraListID(), newName);
 	}
 

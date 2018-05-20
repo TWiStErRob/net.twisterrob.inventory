@@ -480,11 +480,9 @@ public class Database extends VariantDatabase {
 	}
 
 	public static void resetToTest() {
-		//noinspection WrongThread TODEL illegal detection http://b.android.com/207317
 		DatabaseOpenHelper helper = App.db().getHelper();
 		helper.close();
 		helper.setTestMode(true);
-		//noinspection resource it is closed by helper.close()
 		helper.getReadableDatabase();
 		helper.close();
 		helper.setTestMode(false);

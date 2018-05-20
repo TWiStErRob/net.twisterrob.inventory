@@ -4,6 +4,7 @@ import java.util.*;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
+import android.util.SparseArray;
 
 import net.twisterrob.android.annotation.CursorFieldType;
 
@@ -75,7 +76,7 @@ public enum CursorColumnType {
 		}
 		return type;
 	}
-	private static final Map<Integer, CursorColumnType> FIELD_TYPES = new HashMap<>();
+	private static final SparseArray<CursorColumnType> FIELD_TYPES = new SparseArray<>();
 
 	static {
 		FIELD_TYPES.put(Cursor.FIELD_TYPE_NULL, Null);

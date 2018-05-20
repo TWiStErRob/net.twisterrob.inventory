@@ -12,9 +12,6 @@
 	<!-- Used by Import/Export -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	
-	<!-- minSdkVersion in lib is high, but I know there was no new API usage there -->
-	<uses-sdk tools:overrideLibrary="net.twisterrob.android" />
 
 	<application
 		android:name=".App"
@@ -136,9 +133,11 @@
 			android:name=".activity.data.ItemViewActivity"
 			android:label="@string/item_details"
 			android:windowSoftInputMode="adjustNothing">
-			<intent-filter>
+			<intent-filter tools:ignore="AppLinkUrlError">
+				<!-- CONSIDER AppLinkUrlError: review app linking (private indexing) -->
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
+				<!-- TODEL AppLinkUrlError false positive due to ${} https://issuetracker.google.com/issues/79995047 -->
 				<data android:mimeType="vnd.android.cursor.item/vnd.${applicationId}.item" />
 			</intent-filter>
 			<meta-data android:name="android.support.PARENT_ACTIVITY"

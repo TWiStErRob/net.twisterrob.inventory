@@ -15,7 +15,7 @@ import net.twisterrob.java.annotations.DebugHelper;
 
 @DebugHelper
 @SuppressLint("Registered") // allow registration if wanted without needing to subclass
-public abstract class LoggingIntentService extends IntentService {
+public class LoggingIntentService extends IntentService {
 	private static final Logger LOG = LoggerFactory.getLogger("IntentService");
 	private final String name;
 

@@ -851,13 +851,12 @@ public /*static*/ abstract class AndroidTools {
 		// http://stackoverflow.com/questions/18374183/how-to-show-icons-in-overflow-menu-in-actionbar
 		if (menu != null && "MenuBuilder".equals(menu.getClass().getSimpleName())) {
 			try {
+				@SuppressLint("PrivateApi")
 				Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
 				m.setAccessible(true);
 				m.invoke(menu, show);
-			} catch (NoSuchMethodException ex) {
+			} catch (Throwable ex) {
 				LOG.warn("ActionBar overflow icons hack failed", ex);
-			} catch (Exception ex) {
-				throw new RuntimeException(ex);
 			}
 		}
 	}

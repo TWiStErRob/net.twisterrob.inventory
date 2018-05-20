@@ -5,14 +5,14 @@ import java.util.zip.ZipOutputStream;
 
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.app.*;
 import android.content.Intent;
 import android.database.*;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build.*;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -292,12 +292,12 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		}
 	}
 
+	@SuppressLint("WrongThreadInterprocedural")
 	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH) void recalculate() {
 		executePreferParallel(new GetFolderSizesTask(imageCacheSize),
 				GlideSetup.getCacheDir(this));
-		//noinspection WrongThread TODEL illegal detection http://b.android.com/207317
 		executePreferParallel(new GetFolderSizesTask(databaseSize),
-				getDatabasePath(App.db().getHelper().getDatabaseName()));
+				getDatabasePath(App.db().getHelper().getDatabaseName()));  // TODO illegal detection, but cannot reproduce
 		executePreferParallel(new GetFolderSizesTask(allSize),
 				new File(getApplicationInfo().dataDir), getExternalCacheDir(), getExternalFilesDir(null));
 		executePreferParallel(new GetSizeTask<Void>(searchIndexSize) {

@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.view.adapters;
 
+import android.annotation.SuppressLint;
 import android.database.*;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -44,6 +45,7 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 			this.header = header;
 
 			view.setOnTouchListener(new DeepScrollFixListener() {
+				@SuppressLint("ClickableViewAccessibility") // not detecting touches, just forwarding
 				@Override public boolean onTouch(View v, MotionEvent event) {
 					super.onTouch(v, event);
 					return HeaderViewHolder.this.header.dispatchTouchEvent(event);

@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.content.*;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
@@ -117,6 +118,8 @@ public class CategoryDTO extends ImagedDTO {
 		ChangeTypeDialog.showKeywords(context, cache.getCategoryPath(categoryID), keywords);
 	}
 
+	@SuppressLint("WrongThread") // initialization will happen only once, after that it's cached
+	@AnyThread
 	public static @NonNull CategoryCache getCache(Context context) {
 		return CategoryCacheInitializer.get(context);
 	}
@@ -127,6 +130,7 @@ public class CategoryDTO extends ImagedDTO {
 		private static @Nullable CategoryCache CACHE;
 		private static @Nullable Locale lastLocale;
 
+		@WorkerThread
 		synchronized
 		public static CategoryCache get(Context context) {
 			Locale currentLocale = AndroidTools.getLocale(context.getResources().getConfiguration());

@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentManager.*;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.text.*;
 import android.view.*;
 
@@ -445,6 +444,8 @@ public class MainActivity extends DrawerActivity
 		}
 		return intent;
 	}
+
+	@SuppressLint("WrongThreadInterprocedural")
 	public static Intent improveCategories(Context context, Long categoryId) {
 		String subject = context.getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME + " Category Feedback";
 		Intent intent = new Intent(Intent.ACTION_VIEW)

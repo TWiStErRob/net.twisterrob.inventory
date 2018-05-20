@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -112,12 +113,12 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 			@Override protected void onCreateNew() {
 				DialogTools
 						.prompt(getContext(), null, new PopupCallbacks<String>() {
+							@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 							@Override public void finished(String value) {
 								if (value == null) {
 									return;
 								}
 								try {
-									//noinspection WrongThread FIXME DB on UI
 									App.db().createList(value);
 									listsController.refresh();
 								} catch (Exception ex) {
@@ -141,9 +142,9 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
 						eventsListener.itemSelected(recyclerViewItemID);
 					}
+					@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
 						// TODO make swipe delete the item
-						//noinspection WrongThread FIXME DB on UI
 						App.db().deleteRecentsOfItem(recyclerViewItemID);
 						recentsController.refresh();
 						return true;

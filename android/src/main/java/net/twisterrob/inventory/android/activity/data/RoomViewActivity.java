@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.activity.data;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 
 import net.twisterrob.inventory.android.*;
@@ -57,8 +58,8 @@ public class RoomViewActivity extends BaseDetailActivity<ItemListFragment> imple
 		setupTitleEditor();
 	}
 
+	@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 	@Override protected void updateName(String newName) {
-		//noinspection WrongThread FIXME DB on UI
 		App.db().updateRoom(current.id, current.type, newName, current.description);
 	}
 

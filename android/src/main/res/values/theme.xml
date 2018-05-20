@@ -3,7 +3,6 @@
 
 	<style name="Theme.AppTheme" parent="Theme.AppCompat.Light">
 		<item name="actionBarStyle">@style/Widget.AppTheme.ActionBar</item>
-		<!--<item name="actionBarTabTextStyle">@style/Widget.AppTheme.ActionBar.TabText</item>-->
 		<!--<item name="actionMenuTextColor">@color/actionbar_text</item>-->
 
 		<!-- ActionBar BG -->
@@ -42,16 +41,7 @@
 
 	<!-- ActionBar styles -->
 	<style name="Widget.AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
-		<!--<time name="titleTextStyle">@style/Widget.AppTheme.ActionBar.Title</time>-->
 		<item name="displayOptions">showHome|homeAsUp|showTitle</item>
 		<!--<item name="android:layerType" tools:ignore="NewApi">software</item>-->
-	</style>
-
-	<style name="TextAppearance.AppTheme.Widget.ActionBar.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-		<!--<item name="android:textColor">@color/actionbar_text</item>-->
-	</style>
-
-	<style name="Widget.AppTheme.ActionBar.TabText" parent="@style/Widget.AppCompat.ActionBar.TabText">
-		<!--<item name="android:textColor">@color/actionbar_text</item>-->
 	</style>
 </resources>

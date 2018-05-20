@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.content.Context;
 import android.os.Build.*;
 import android.os.*;
@@ -386,13 +386,14 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 		public void startOpenCamera() {
 			mHandler.post(new Runnable() {
-				// TODEL ResourceTypes below http://b.android.com/207302
+				// Interprocedural thread annotation violation (WorkerThread to UiThread): anon#run -> View#post
+				// CONSIDER no idea what's wrong with this, looks legit usage to me
+				@SuppressLint("WrongThreadInterprocedural")
 				@WorkerThread
 				@Override public void run() {
 					int cameraID = findCamera();
 					try {
 						final CameraHolder holder = new CameraHolder(cameraID);
-						//noinspection ResourceType post should be safe to call from background
 						CameraPreview.this.post(new Runnable() {
 							@UiThread
 							public void run() {
@@ -401,7 +402,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 						});
 					} catch (final RuntimeException ex) {
 						LOG.error("Error setting up camera #{}", cameraID, ex);
-						//noinspection ResourceType post should be safe to call from background
 						CameraPreview.this.post(new Runnable() {
 							@UiThread
 							public void run() {

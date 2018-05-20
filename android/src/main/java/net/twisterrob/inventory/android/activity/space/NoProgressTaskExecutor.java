@@ -40,6 +40,7 @@ class NoProgressTaskExecutor extends BaseDialogFragment implements TaskEndListen
 		super.onDetach();
 	}
 
+	@SuppressWarnings("deprecation") // blocking the user's view intentionally
 	@Override public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
 		ProgressDialog dialog = new ProgressDialog(getActivity());
 		dialog.setIndeterminate(true);

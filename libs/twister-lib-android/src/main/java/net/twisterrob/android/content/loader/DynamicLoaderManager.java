@@ -170,11 +170,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 
 		public final Loader<Void> onCreateLoader(int id, Bundle args) {
 			if (test(id, args)) {
-				return new Loader<Void>(context) {
-					@Override protected void onStartLoading() {
-						deliverResult(null);
-					}
-				};
+				return new NullLoader(context);
 			} else {
 				return null;
 			}
@@ -185,6 +181,15 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 		}
 		public final void onLoaderReset(Loader<Void> loader) {
 			// do nothing
+		}
+
+		private static class NullLoader extends Loader<Void> {
+			public NullLoader(Context context) {
+				super(context);
+			}
+			@Override protected void onStartLoading() {
+				deliverResult(null);
+			}
 		}
 	}
 }

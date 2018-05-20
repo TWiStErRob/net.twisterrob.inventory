@@ -9,6 +9,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.*;
@@ -112,7 +113,8 @@ public class BackupService extends NotificationProgressService<Progress> {
 		return ACTION_IMPORT.equals(intent.getAction());
 	}
 
-	@SuppressWarnings("WrongThread") // TODEL http://b.android.com/207302
+	@SuppressLint({"WrongThread", "WrongThreadInterprocedural"})
+	// TODEL https://issuetracker.google.com/issues/80002895
 	@WorkerThread
 	@Override protected void onHandleIntent(Intent intent) {
 		super.onHandleIntent(intent);
@@ -259,7 +261,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 	@ThreadSafe
 	@AnyThread
 	private static class BackupListeners implements BackupListener {
-		private final List<BackupListener> listeners = new LinkedList<>();
+		private final Collection<BackupListener> listeners = new LinkedList<>();
 		private final Handler main = new Handler(Looper.getMainLooper());
 
 		public void add(@NonNull BackupListener listener) {

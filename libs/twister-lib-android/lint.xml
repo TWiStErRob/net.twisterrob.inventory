@@ -18,12 +18,10 @@
 		<!-- I'm not a free tester, leave me alone -->
 		<ignore regexp="A newer version of com.android.support.*-alpha" />
 		<ignore regexp="A newer version of com.android.support.*-beta" />
+		<!-- TODEL after upgrading support library to latest -->
+		<ignore regexp="A newer version of com.android.support.*" />
 	</issue>
-	<issue id="NewApi">
-		<!-- TODEL https://issuetracker.google.com/issues/37094595 is not in lint 2.3.3 (via Gradle) -->
-		<ignore path="src/main/java/net/twisterrob/android/db/DatabaseOpenHelper.java"
-		        regexp="android.database.sqlite.SQLiteDatabase#setForeignKeyConstraintsEnabled" />
-		<ignore path="src/main/java/net/twisterrob/android/view/SelectionView.java"
-		        regexp="android.graphics.Canvas#clipOutRect" />
+	<issue id="MinSdkTooLow" severity="ignore">
+		<!-- TODEL after upgrading support library to latest -->
 	</issue>
 </lint>

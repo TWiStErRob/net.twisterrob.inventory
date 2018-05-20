@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.tasks;
 
+import android.annotation.SuppressLint;
+
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.model.ListDTO;
 import net.twisterrob.inventory.android.view.Action;
@@ -15,8 +17,10 @@ public abstract class RenameListAction extends RenameAction<ListDTO> {
 		dto = retrieveList(id);
 	}
 
+	@SuppressLint("WrongThreadInterprocedural")
 	@Override protected void doExecute() {
-		App.db().updateList(id, getNewName());
+		String newName = getNewName(); // TODO this is UI thread access in Worker
+		App.db().updateList(id, newName);
 	}
 
 	@Override public Action buildUndo() {

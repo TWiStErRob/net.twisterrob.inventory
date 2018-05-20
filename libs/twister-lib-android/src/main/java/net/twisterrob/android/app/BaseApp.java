@@ -12,7 +12,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build.*;
-import android.os.StrictMode;
+import android.os.*;
 import android.os.StrictMode.*;
 import android.os.StrictMode.ThreadPolicy.Builder;
 import android.preference.PreferenceManager;
@@ -205,15 +205,20 @@ public abstract class BaseApp extends android.app.Application {
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
-	@UiThread
+	@AnyThread
 	public static void toast(CharSequence message) {
 		getInstance().doToast(message);
 	}
-	@UiThread
-	protected void doToast(CharSequence message) {
+	@AnyThread
+	protected void doToast(final CharSequence message) {
 		if (BuildConfigDEBUG) {
 			//LOG.info("Debug Toast: {}", message, new StackTrace());
-			Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
+			Handler handler = new Handler(Looper.getMainLooper());
+			handler.post(new Runnable() {
+				public void run() {
+					Toast.makeText(getAppContext(), message, Toast.LENGTH_LONG).show();
+				}
+			});
 		}
 	}
 

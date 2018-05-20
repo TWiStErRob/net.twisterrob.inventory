@@ -2,8 +2,9 @@ package net.twisterrob.inventory.android.fragment;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v7.widget.*;
 import android.view.*;
 
@@ -47,12 +48,12 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 			@Override protected void onCreateNew() {
 				DialogTools
 						.prompt(getContext(), null, new PopupCallbacks<String>() {
+							@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 							@Override public void finished(String value) {
 								if (value == null) {
 									return;
 								}
 								try {
-									//noinspection WrongThread FIXME DB on UI
 									long id = App.db().createList(value);
 									eventsListener.listSelected(id);
 								} catch (Exception ex) {

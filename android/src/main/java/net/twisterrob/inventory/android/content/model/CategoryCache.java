@@ -7,7 +7,7 @@ import org.slf4j.*;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v4.util.LongSparseArray;
 import android.text.SpannableStringBuilder;
 
@@ -35,6 +35,7 @@ public class CategoryCache {
 		return suggester.split(name);
 	}
 
+	@WorkerThread
 	public CategoryCache(@NonNull Context context) {
 		Cursor cursor = App.db().listRelatedCategories(null);
 		//noinspection TryFinallyCanBeTryWithResources

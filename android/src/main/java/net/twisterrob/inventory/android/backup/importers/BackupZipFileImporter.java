@@ -38,6 +38,7 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 		this.importer = ObjectTools.checkNotNull(importer);
 	}
 
+	@SuppressWarnings("deprecation") // TODO refactor train-dots
 	@Override public void importFrom(File file) throws Exception {
 		zip = null;
 		try {

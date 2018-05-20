@@ -29,6 +29,7 @@
 			android:scaleType="fitCenter"
 			tools:src="@drawable/category_unknown"
 			/>
+		<!-- TODO understand LabelFor -->
 		<TextView
 			android:id="@id/title"
 			android:layout_width="0dp"
@@ -43,6 +44,7 @@
 			android:textIsSelectable="false"
 			android:textSize="18sp"
 			tools:text="Gallery List Group Title"
+			tools:ignore="LabelFor"
 			/>
 		<include
 			android:id="@id/count"

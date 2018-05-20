@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 	<!-- Material Design Grid unit -->
 	<dimen name="unit_quarter">2dp</dimen>
 	<dimen name="unit_half">4dp</dimen>
@@ -12,7 +12,8 @@
 
 	<!-- http://www.androiddocs.com/design/style/iconography.html#small-contextual
 	     Within the body of your app, use small icons to surface actions and/or provide status for specific items. -->
-	<dimen name="icon_context">16dp</dimen>
+	<!-- TODEL SpUsage https://issuetracker.google.com/issues/80029760 -->
+	<dimen name="icon_context" tools:ignore="SpUsage">16dp</dimen>
 	<!-- http://www.androiddocs.com/design/style/iconography.html#action-bar
 	     Action bar icons are graphic buttons that represent the most important actions people can take within your app. -->
 	<dimen name="icon_action">32dp</dimen>

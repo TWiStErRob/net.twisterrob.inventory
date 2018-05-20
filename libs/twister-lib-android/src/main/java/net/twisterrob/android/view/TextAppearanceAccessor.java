@@ -1,5 +1,6 @@
 package net.twisterrob.android.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.*;
 import android.support.annotation.StyleRes;
@@ -60,6 +61,7 @@ public class TextAppearanceAccessor {
 		}
 	}
 
+	@SuppressLint("PrivateApi")
 	static class styleable {
 		private static final int[] Theme;
 		private static final int Theme_textViewStyle;

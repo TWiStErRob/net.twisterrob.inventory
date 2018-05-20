@@ -4,12 +4,13 @@ import java.util.*;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.*;
+import android.util.SparseArray;
 import android.view.ViewGroup;
 
 @SuppressWarnings("rawtypes") // hope for the implementation to handle the position mapping correctly
 public class ConcatAdapter extends Adapter<ViewHolder> {
 	private final Adapter<? extends ViewHolder>[] mWrappedAdapters;
-	private final Map<Integer, Adapter<? extends ViewHolder>> mViewTypes = new HashMap<>();
+	private final SparseArray<Adapter<? extends ViewHolder>> mViewTypes = new SparseArray<>();
 
 	@SafeVarargs
 	public ConcatAdapter(Adapter<? extends ViewHolder>... mWrappedAdapters) {
@@ -81,7 +82,8 @@ public class ConcatAdapter extends Adapter<ViewHolder> {
 	@Override public int getItemViewType(int position) {
 		Adapter<? super ViewHolder> adapter = getAdapter(position);
 		int type = adapter.getItemViewType(position - getOffsetOf(adapter));
-		Adapter<? extends ViewHolder> overwritten = mViewTypes.put(type, adapter);
+		Adapter<? extends ViewHolder> overwritten = mViewTypes.get(type);
+		mViewTypes.put(type, adapter);
 		if (adapter != overwritten && overwritten != null) {
 			throw new IllegalStateException(String.format(Locale.ROOT,
 					"Two colliding adapters (%s, %s) have the same itemViewType #%d", adapter, overwritten, type));

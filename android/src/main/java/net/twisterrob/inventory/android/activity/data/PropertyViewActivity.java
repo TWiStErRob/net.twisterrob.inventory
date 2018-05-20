@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.activity.data;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 
 import net.twisterrob.inventory.android.*;
@@ -61,8 +62,8 @@ public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> i
 		setupTitleEditor();
 	}
 
+	@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 	@Override protected void updateName(String newName) {
-		//noinspection WrongThread FIXME DB on UI
 		App.db().updateProperty(current.id, current.type, newName, current.description);
 	}
 
