@@ -62,6 +62,7 @@ public class ExactlyOneOfTest {
 
 	}
 
+	@SuppressWarnings("serial") // won't be serialized
 	@Test public void supportsMaps() {
 		Matcher<Map<String, Integer>> matcher =
 				exactlyOneOf(hasKey("good"), hasValue(greaterThan(0)), hasEntry("yay", 0));

@@ -159,7 +159,8 @@ public class EngineExternalLifecycle {
 	 * This is only useful with {@link EngineJob}s, because we know that only {@link #add}, {@link #remove},
 	 * {@link #isEmpty} and {@link #iterator} are going to be called.
 	 */
-	private class ExtraItemList extends ArrayList<ResourceCallback> {
+	@SuppressWarnings("serial") // won't be serialized
+	private static class ExtraItemList extends ArrayList<ResourceCallback> {
 		private final ResourceCallback extra;
 		public ExtraItemList(Collection<ResourceCallback> callbacks, ResourceCallback extra) {
 			super(callbacks);
@@ -175,6 +176,7 @@ public class EngineExternalLifecycle {
 	/**
 	 * Callbacks whenever jobs are added or removed. This helps to "modify" the code of Engine externally.
 	 */
+	@SuppressWarnings("serial") // won't be serialized
 	private class EngineJobsReplacement extends HashMap<Key, EngineJob> {
 		@Override public EngineJob put(Key key, EngineJob value) {
 			assertNull(super.put(key, value));

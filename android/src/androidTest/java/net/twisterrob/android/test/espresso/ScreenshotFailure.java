@@ -53,6 +53,7 @@ public class ScreenshotFailure implements TestRule {
 
 	public static void captureNow(Description description) {
 		class FakeException extends Exception {
+			private static final long serialVersionUID = 0;
 		}
 		try {
 			new ScreenshotFailure().apply(new Statement() {

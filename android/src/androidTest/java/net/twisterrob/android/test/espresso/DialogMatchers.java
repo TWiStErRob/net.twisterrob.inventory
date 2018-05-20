@@ -55,6 +55,7 @@ public class DialogMatchers {
 	 * @see <a href="http://baroqueworksdev.blogspot.hu/2015/03/how-to-check-toast-window-on-android.html">
 	 *     How to check Toast window, on android test-kit Espresso</a>
 	 */
+	@SuppressWarnings("deprecation") // TODO API 26 Toast handling may have changed, double-check APPLICATION_OVERLAY
 	public static Matcher<Root> isToast() {
 		return new WindowManagerLayoutParamTypeMatcher("is toast", WindowManager.LayoutParams.TYPE_TOAST);
 	}

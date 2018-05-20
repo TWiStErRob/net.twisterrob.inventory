@@ -5,6 +5,7 @@ import org.junit.AssumptionViolatedException;
 
 /** To be thrown when the test can detect itself to be flaky. */
 public class FlakyTestException extends AssumptionViolatedException {
+	private static final long serialVersionUID = 0L;
 	public <T> FlakyTestException(T actual, Matcher<T> matcher) {
 		super(actual, matcher);
 	}

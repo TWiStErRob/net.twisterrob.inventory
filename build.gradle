@@ -34,6 +34,16 @@ allprojects {
 				// warning: [options] bootstrap class path not set in conjunction with -source 1.7
 				"-Xlint:-options",
 		]
+
+		if (it.name.endsWith("AndroidTestJavaWithJavac")) {
+			it.options.compilerArgs += [
+					// Google's compilers emit some weird stuff (espresso, dagger, etc.)
+					// warning: [classfile] MethodParameters attribute introduced in version 52.0 class files is ignored in version 51.0 class files
+			        "-Xlint:-classfile",
+					// TODO There are some more left: registerIdlingResources and ViewActivityActor.refresh()
+					"-Xlint:-deprecation",
+			]
+		}
 	}
 }
 

@@ -149,9 +149,13 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		Engine engine = ReflectionTools.get(glide, "engine");
 		assert engine != null;
 		ReflectionTools.set(engine, "jobs", new HashMap<Object, Object>() {
+
+			private static final long serialVersionUID = 0L;
+
 			@Override public Object put(Object key, Object value) {
 				throw new UnsupportedOperationException("This engine is dead.");
 			}
+
 			@Override public Object remove(Object key) {
 				throw new UnsupportedOperationException("This engine is dead.");
 			}

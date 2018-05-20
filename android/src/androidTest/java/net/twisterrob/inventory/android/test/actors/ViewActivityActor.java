@@ -48,6 +48,7 @@ public abstract class ViewActivityActor extends ActivityActor {
 	}
 
 	/** @deprecated should use a better {@link net.twisterrob.android.test.junit.SensibleActivityTestRule}. */
+	@Deprecated
 	public void refresh() {
 		runOnMainIfNecessary(new Runnable() {
 			@Override public void run() {

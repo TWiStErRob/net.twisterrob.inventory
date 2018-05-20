@@ -30,6 +30,7 @@ public class IntentServiceIdlingResource extends AsyncIdlingResource {
 		// NO OP since can't subscribe to IntentService lifecycle changes, override if you can
 	}
 
+	@SuppressWarnings("deprecation") // only interested in "own" services, luckily target context qualifies (same process?)
 	private boolean isIntentServiceRunning() {
 		ActivityManager manager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 		for (ActivityManager.RunningServiceInfo info : manager.getRunningServices(Integer.MAX_VALUE)) {

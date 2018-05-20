@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
  * @deprecated this class is useless in practice, because succeeded/failed/skipped is called after the
  * {@link org.junit.After}s. Use an anonymous inner class {@link TestWatcher} {@link org.junit.Rule} to listen.
  */
+@Deprecated
 public class TestWatcherStatus extends TestWatcher {
 
 	private boolean succeeded, failed, skipped, started, finished;

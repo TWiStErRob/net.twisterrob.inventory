@@ -19,12 +19,16 @@ public class AndroidJUnit4WithParametersRunnerFactory implements ParametersRunne
 			throws InitializationError {
 		Instrumentation instr = InstrumentationRegistry.getInstrumentation();
 		RunnerArgs runnerArgs = ReflectionTools.get(instr, "mRunnerArgs");
+
+		@SuppressWarnings("deprecation") // will probably revisit soon
 		AndroidRunnerParams runnerParams = new AndroidRunnerParams(
 				instr,
 				InstrumentationRegistry.getArguments(),
 				runnerArgs != null && runnerArgs.logOnly,
 				runnerArgs != null? runnerArgs.testTimeout : 0,
-				true);
+				true
+		);
+
 		return new AndroidJUnit4WithParameters(test, runnerParams);
 	}
 }
