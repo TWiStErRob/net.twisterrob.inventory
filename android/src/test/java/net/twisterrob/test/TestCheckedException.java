@@ -1,6 +1,7 @@
 package net.twisterrob.test;
 
 public class TestCheckedException extends Exception {
+	private static final long serialVersionUID = 0L;
 	public TestCheckedException() {
 		super("test");
 	}

@@ -1,6 +1,7 @@
 package net.twisterrob.test;
 
 public class TestError extends Error {
+	private static final long serialVersionUID = 0L;
 	public TestError() {
 		super("test");
 	}

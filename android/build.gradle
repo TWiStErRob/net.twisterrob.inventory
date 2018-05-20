@@ -81,6 +81,7 @@ android {
 		baseline file("config/lint/lint-baseline.xml")
 		//abortOnError false
 	}
+	testOptions.unitTests.includeAndroidResources = true // Robolectric
 	testBuildType "debug" // CONSIDER release
 	buildTypes {
 		release {

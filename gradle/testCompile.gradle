@@ -63,6 +63,8 @@ dependencies {
 	testImplementation 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then 
 	testImplementation "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
 	testImplementation 'com.diffplug.durian:durian:3.4.0'
+	// Durian needs findbugs annotations
+	testCompileOnly 'com.google.code.findbugs:annotations:3.0.0'
 	testImplementation 'com.github.stefanbirkner:fishbowl:1.4.0' // exceptionThrownBy (assertThrows-like)
 //	testImplementation 'cglib:cglib:3.2.4'
 //	testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
