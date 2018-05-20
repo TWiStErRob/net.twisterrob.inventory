@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.*;
@@ -47,7 +46,6 @@ public class Database extends VariantDatabase {
 				// CONSIDER enabling auto_vacuum=INCREMENTAL as it speeds up a large delete a lot
 				//DatabaseTools.setPragma(db, Pragma.AUTO_VACUUM, Pragma.AUTO_VACUUM_INCREMENTAL);
 			}
-			@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)
 			@Override protected String[] getDataFiles() {
 				return new String[] {
 						super.getDataFiles()[0],

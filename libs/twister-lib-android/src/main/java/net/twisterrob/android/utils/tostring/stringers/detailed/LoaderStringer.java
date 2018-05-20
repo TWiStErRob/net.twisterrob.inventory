@@ -4,14 +4,14 @@ import java.io.*;
 
 import javax.annotation.Nonnull;
 
-import android.annotation.TargetApi;
 import android.content.Loader;
 import android.os.Build.VERSION_CODES;
+import android.support.annotation.RequiresApi;
 
 import net.twisterrob.java.utils.tostring.*;
 
 @SuppressWarnings("rawtypes")
-@TargetApi(VERSION_CODES.HONEYCOMB)
+@RequiresApi(VERSION_CODES.HONEYCOMB)
 public class LoaderStringer extends Stringer<Loader> {
 	@Override public void toString(@Nonnull ToStringAppender append, Loader loader) {
 		StringWriter writer = new StringWriter();

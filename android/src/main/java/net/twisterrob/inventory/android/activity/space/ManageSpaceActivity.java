@@ -293,7 +293,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	}
 
 	@SuppressLint("WrongThreadInterprocedural")
-	@TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH) void recalculate() {
+	void recalculate() {
 		executePreferParallel(new GetFolderSizesTask(imageCacheSize),
 				GlideSetup.getCacheDir(this));
 		executePreferParallel(new GetFolderSizesTask(databaseSize),

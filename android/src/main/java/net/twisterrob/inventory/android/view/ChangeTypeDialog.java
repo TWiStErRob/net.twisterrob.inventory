@@ -119,7 +119,6 @@ public class ChangeTypeDialog {
 		variants.update(cursor);
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void autoSelect(final CursorAdapter adapter, final long type) {
 		final int pos = findItemPosition(adapter, type);
 		list.setItemChecked(pos, true);
@@ -128,6 +127,7 @@ public class ChangeTypeDialog {
 		int rootPos = findItemPosition(adapter, DatabaseTools.getOptionalInt(cursor, "root", Integer.MAX_VALUE));
 		final int offset = rootPos < 0? Integer.MAX_VALUE : (1 + pos - rootPos) * getHeight(adapter, pos);
 		list.post(new Runnable() {
+			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void run() {
 				if (offset < list.getHeight() && VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
 					list.smoothScrollToPositionFromTop(pos, offset);
