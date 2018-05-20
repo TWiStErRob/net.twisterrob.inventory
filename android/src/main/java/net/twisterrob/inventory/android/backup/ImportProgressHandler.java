@@ -15,6 +15,7 @@ public class ImportProgressHandler implements ImportProgress {
 	private final ProgressDispatcher dispatcher;
 
 	/** @deprecated don't use it directly */
+	@Deprecated
 	public final Progress progress = new Progress(Progress.Type.Import);
 
 	@VisibleForTesting ImportProgressHandler() {

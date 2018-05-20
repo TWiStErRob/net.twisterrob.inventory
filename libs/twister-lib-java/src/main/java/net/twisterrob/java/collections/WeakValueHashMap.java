@@ -5,6 +5,9 @@ import java.util.HashMap;
 
 /** @see <a href="http://stackoverflow.com/a/25634084/253468">SO</a> */
 public class WeakValueHashMap<K, V> extends HashMap<K, WeakReference<V>> {
+
+	private static final long serialVersionUID = 1L;
+
 	public V getValue(K key) {
 		WeakReference<V> weakRef = super.get(key);
 		if (weakRef == null) {

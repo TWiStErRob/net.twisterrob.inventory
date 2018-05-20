@@ -18,6 +18,8 @@ public class PreferencesMigrator {
 		this.res = context.getResources();
 		this.prefs = prefs;
 	}
+
+	@SuppressWarnings("fallthrough")
 	public void migrate() {
 		// if the version is missing that means the preferences are in the state of the first release,
 		// which had no prefs version; all older versions will have the prefs version properly initialized at startup

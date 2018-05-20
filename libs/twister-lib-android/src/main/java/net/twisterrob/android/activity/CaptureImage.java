@@ -610,7 +610,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			disableControls();
 			if (mSavedFile == null) {
 				if (!take(new Callback<byte[]>() {
-					@Override public void call(@Nullable byte... data) {
+					@Override public void call(@Nullable byte[] data) {
 						doSave(data);
 						flipSelection();
 						prepareCrop();
@@ -649,7 +649,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				}
 			} else {
 				if (!take(new Callback<byte[]>() {
-					@Override public void call(byte... data) {
+					@Override public void call(@Nullable byte[] data) {
 						doSave(data);
 						flipSelection();
 						if (doCrop(selection)) {

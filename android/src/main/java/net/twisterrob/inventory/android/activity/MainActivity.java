@@ -57,18 +57,20 @@ public class MainActivity extends DrawerActivity
 	public static final String PAGE_SUNBURST = "sunburst";
 
 	private static final String OPTIONS_MENU_BACKUP = "OptionsMenu_backup";
-	private static final Map<String, Integer> TITLES = new HashMap<String, Integer>() {
-		{
-			put(PAGE_EMPTY, R.string.empty);
-			put(PAGE_HOME, R.string.home_title);
-			put(PAGE_CATEGORIES, R.string.category_list);
-			put(PAGE_CATEGORY_HELP, R.string.category_guide);
-			put(PAGE_PROPERTIES, R.string.property_list);
-			put(PAGE_ROOMS, R.string.room_list);
-			put(PAGE_ITEMS, R.string.item_list);
-			put(PAGE_SUNBURST, R.string.sunburst_title);
-		}
-	};
+	private static final Map<String, Integer> TITLES = createTitles();
+	private static Map<String, Integer> createTitles() {
+		Map<String, Integer> titles = new HashMap<>();
+		titles.put(PAGE_EMPTY, R.string.empty);
+		titles.put(PAGE_HOME, R.string.home_title);
+		titles.put(PAGE_CATEGORIES, R.string.category_list);
+		titles.put(PAGE_CATEGORY_HELP, R.string.category_guide);
+		titles.put(PAGE_PROPERTIES, R.string.property_list);
+		titles.put(PAGE_ROOMS, R.string.room_list);
+		titles.put(PAGE_ITEMS, R.string.item_list);
+		titles.put(PAGE_SUNBURST, R.string.sunburst_title);
+		return titles;
+	}
+
 	public static final int REQUEST_CODE_IMAGE = 32767;
 
 	private BaseFragment<?> getFragment() {

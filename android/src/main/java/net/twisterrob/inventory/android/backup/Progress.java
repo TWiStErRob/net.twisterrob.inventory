@@ -5,7 +5,10 @@ import java.util.*;
 
 import android.support.annotation.NonNull;
 
-public final class Progress implements Cloneable, Serializable {
+public final class Progress implements Cloneable, Serializable /* poor man's parcelable */ {
+
+	private static final long serialVersionUID = 1L;
+
 	public final Type type;
 	public Phase phase;
 	/** number of images done from total */

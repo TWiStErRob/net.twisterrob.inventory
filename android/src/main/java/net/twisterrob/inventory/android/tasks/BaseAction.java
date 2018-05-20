@@ -52,6 +52,9 @@ public abstract class BaseAction implements Action {
 	}
 
 	public static final class ValidationException extends RuntimeException {
+
+		private static final long serialVersionUID = 1L;
+
 		private final int validationError;
 		private final Object[] args;
 

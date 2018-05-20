@@ -59,3 +59,17 @@ android {
 		unitTests.returnDefaultValues = true
 	}
 }
+
+tasks.withType(JavaCompile) {
+	it.options.compilerArgs += [
+			// enable all warnings
+			"-Xlint:all",
+			// fail build when warnings pop up
+			"-Werror",
+			// Ignore for now, until understanding what it means.
+			// warning: [varargs] Varargs method could cause heap pollution from non-reifiable varargs parameter params
+			"-Xlint:-varargs",
+			// Ignore these, Stringers are using the internals for better experience, cannot be @SuppressWarning'd :(
+			"-Xlint:-auxiliaryclass",
+	]
+}
