@@ -120,18 +120,6 @@ android.testVariants.all { com.android.build.gradle.api.TestVariant test ->
 	test.connectedInstrumentTest.dependsOn grantPermissions
 }
 
-tasks.withType(JavaCompile) {
-	it.options.compilerArgs += [
-			// enable all warnings
-			"-Xlint:all",
-			// fail build when warnings pop up
-			"-Werror",
-			// Ignore for now, until understanding what it means.
-			// warning: [varargs] Varargs method could cause heap pollution from non-reifiable varargs parameter params
-			"-Xlint:-varargs",
-	]
-}
-
 apply from: "${rootDir}/gradle/upgradeTest.gradle"
 
 task generateHtmlReportFromXml(type: net.twisterrob.gradle.android.tasks.TestReportGenerator) {

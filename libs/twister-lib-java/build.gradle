@@ -25,13 +25,3 @@ dependencies {
 
 	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 }
-
-
-tasks.withType(JavaCompile) {
-	it.options.compilerArgs += [
-			// enable all warnings
-			"-Xlint:all",
-			// fail build when warnings pop up
-			"-Werror",
-	]
-}

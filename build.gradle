@@ -20,10 +20,25 @@ allprojects {
 		if (it.name == 'lintClassPath') return
 		it.resolutionStrategy.failOnVersionConflict()
 	}
+
+	tasks.withType(JavaCompile) {
+		it.options.compilerArgs += [
+				// enable all warnings
+				"-Xlint:all",
+				// fail build when warnings pop up
+				"-Werror",
+				// Ignore for now, until understanding what it means.
+				// warning: [varargs] Varargs method could cause heap pollution from non-reifiable varargs parameter params
+				"-Xlint:-varargs",
+				// TODO check my plugin, maybe java-library and java are not compatible there
+				// warning: [options] bootstrap class path not set in conjunction with -source 1.7
+				"-Xlint:-options",
+		]
+	}
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+	delete rootProject.buildDir
 }
 
 // run `gradlew releaseCheck -x check -x connectedCheck` to just get the output of this
