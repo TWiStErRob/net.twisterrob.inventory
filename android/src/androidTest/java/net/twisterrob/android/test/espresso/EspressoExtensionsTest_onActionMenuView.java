@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
+import static org.junit.Assert.*;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -17,6 +18,7 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.*;
 import android.support.test.espresso.*;
+import android.support.test.espresso.base.InterruptableUiController;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -26,9 +28,11 @@ import static android.os.Build.VERSION_CODES.*;
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.junit.TestPackageIntentRule;
+import net.twisterrob.test.junit.FlakyTestException;
 
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.java.utils.ReflectionTools.*;
@@ -39,8 +43,9 @@ public class EspressoExtensionsTest_onActionMenuView {
 	private static final String TEST_ACTION_ITEM = "Test Action Item";
 	@Rule public ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
 
-	@Test(expected = IllegalStateException.class)
-	public void testOversleep() throws Exception {
+	@Test
+	public void testOversleep()
+			throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		// see android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu()
 		// pressMenuKey() can't oversleep because it's a key, not a touchDown followed by a touchUp
 		assumeThat("app target SDK version need to be newer than Gingerbread to have overflow menu",
@@ -62,7 +67,7 @@ public class EspressoExtensionsTest_onActionMenuView {
 		// setup: make sure UiController oversleeps
 		uiControllerProvider.set(baseLayer, new Provider<UiController>() {
 			@Override public UiController get() {
-				return new OversleepingUiControllerWrapper(originalProvider.get());
+				return new OversleepingUiControllerWrapper((InterruptableUiController)originalProvider.get());
 			}
 		});
 
@@ -70,13 +75,16 @@ public class EspressoExtensionsTest_onActionMenuView {
 			onActionMenuView(withText(TEST_ACTION_ITEM))
 					.check(matches(anything()))
 			;
+			fail("FlakyTestException should have been thrown");
+		} catch (FlakyTestException ex) {
+			// expected
 		} finally {
 			// reset original for later tests
 			uiControllerProvider.set(baseLayer, originalProvider);
 		}
 	}
 
-	@Test public void testWorking() throws Exception {
+	@Test public void testWorking() {
 		TestActivity activity = this.activity.getActivity();
 		activity.itemClicked = false;
 
@@ -91,7 +99,7 @@ public class EspressoExtensionsTest_onActionMenuView {
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	@RequiresApi(VERSION_CODES.HONEYCOMB)
 	public static class TestActivity extends Activity {
-		private static final int ITEM_ID = 3453;
+		private static final int ITEM_ID = (int)(Math.random() * Integer.MAX_VALUE);
 		public boolean itemClicked;
 		@Override protected void onCreate(@Nullable Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -110,9 +118,9 @@ public class EspressoExtensionsTest_onActionMenuView {
 		}
 	}
 
-	private static class OversleepingUiControllerWrapper implements UiController {
-		private final UiController hack;
-		public OversleepingUiControllerWrapper(UiController hack) {
+	private static class OversleepingUiControllerWrapper implements InterruptableUiController {
+		private final @NonNull InterruptableUiController hack;
+		public OversleepingUiControllerWrapper(@NonNull InterruptableUiController hack) {
 			this.hack = hack;
 		}
 		@Override public boolean injectMotionEvent(MotionEvent event) throws InjectEventSecurityException {
@@ -137,6 +145,9 @@ public class EspressoExtensionsTest_onActionMenuView {
 		}
 		@Override public void loopMainThreadForAtLeast(long millisDelay) {
 			hack.loopMainThreadForAtLeast(millisDelay);
+		}
+		@Override public void interruptEspressoTasks() {
+			hack.interruptEspressoTasks();
 		}
 	}
 }
