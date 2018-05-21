@@ -30,14 +30,17 @@
 
 		<activity
 			android:name="net.twisterrob.inventory.android.test.activity.TestActivity"
+			android:label="TestActivity"
 			/>
 
 		<activity
 			android:name="net.twisterrob.inventory.android.test.activity.TestActivityCompat"
+			android:label="TestActivityCompat"
 			/>
 
 		<activity
 			android:name="net.twisterrob.inventory.android.test.activity.CompatibleLauncher"
+			android:label="CompatibleLauncher"
 			/>
 
 		<activity

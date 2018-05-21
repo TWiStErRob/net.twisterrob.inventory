@@ -47,12 +47,24 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		return base;
 	}
 
-	public Intent getStartIntent() {
+	public @NonNull Intent getStartIntent() {
 		return startIntent;
 	}
 
+	/**
+	 * Makes sure we have the intent passed in to launchActivity as a non-null and keep the reference to it.
+	 * This is the only way to capture what the actual launched intent was,
+	 * so in {@link #beforeActivityLaunched()} we can set up the intent extras via {@link #getStartIntent()}.
+	 */
 	@Override public T launchActivity(@Nullable Intent startIntent) {
-		this.startIntent = startIntent != null ? startIntent : new Intent();
+		Intent intent = startIntent;
+		if (intent == null) {
+			intent = getActivityIntent();
+		}
+		if (intent == null) {
+			intent = new Intent();
+		}
+		this.startIntent = intent;
 		return super.launchActivity(this.startIntent);
 	}
 
