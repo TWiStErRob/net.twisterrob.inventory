@@ -117,7 +117,7 @@
 	<string name="category_fixture_electric_keywords">socket, light, switch, ceiling fan, smoke alarm, burglar alarm, thermostat</string>
 
 	<string name="category_cabinetry" level="1" icon="@raw/item_wardrobe">Cabinetry</string>
-	<string name="category_cabinetry_keywords">cupboard, cabinet, wardrobe, closet, chest of drawers, nightstand</string>
+	<string name="category_cabinetry_keywords">cupboard, cabinet, wardrobe, closet, chest of drawers, book case, rack, nightstand</string>
 
 	<string name="category_surface" level="1" icon="@raw/item_table">Surfaces</string>
 	<string name="category_surface_keywords">hanger, shoe tree</string>
@@ -690,7 +690,7 @@
 	<string name="category_tool_utility_keywords">screwdriver, wrench/spanner, pipe wrench, spider wrench, clamp, plier, pincer, crimp, army-knife, awl, hammer, sledgehammer, mallet, saw, hacksaw, pick, axe, crowbar</string>
 	<string name="category_tool_power" level="2">power tools</string>
 	<string name="category_tool_power_keywords">drill, drill bit, impact driver, nail gun, sander, chainsaw, circular saw, vice, solder, blow torch, welding power supply, jackhammer/demolition hammer, rammer, suction pump, water pump, pressure pump, compressor, air pump, tire-pressure gauge</string>
-	<string name="category_tool_lighting" level="2" icon="@raw/item_bulb">mobile lighting</string>
+	<string name="category_tool_lighting" level="2" icon="@raw/item_bulb">portable lighting</string>
 	<string name="category_tool_lighting_keywords">lantern, kerosene lamp, flashlight, headlamp, torch, solar power light</string>
 
 	<string name="category_material" level="1">Materials</string>
