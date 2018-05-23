@@ -60,7 +60,7 @@ public class DialogMatchers {
 		return new WindowManagerLayoutParamTypeMatcher("is toast", WindowManager.LayoutParams.TYPE_TOAST);
 	}
 	public static void assertNoToastIsDisplayed() {
-		onView(withId(android.R.id.message))
+		onView(isDialogMessage())
 				.inRoot(isToast())
 				.withFailureHandler(new PassMissingRoot())
 				.check(matches(not(anything("toast root existed"))))
@@ -151,7 +151,7 @@ public class DialogMatchers {
 
 	public static void assertDialogIsDisplayed() {
 		// both of the below statements should be equivalent
-		onView(isRoot()).inRoot(isDialog()).check(matches(isCompletelyDisplayed()));
+		//onView(isRoot()).inRoot(isDialog()).check(matches(isCompletelyDisplayed()));
 		onView(isRoot()).check(matches(root(isDialog())));
 	}
 

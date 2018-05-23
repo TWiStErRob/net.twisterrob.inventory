@@ -7,7 +7,7 @@ repositories {
 configurations.all {
 	if (it.name.contains("lintClassPath")) return
 	resolutionStrategy {
-		//force "junit:junit:${VERSION_JUNIT}"
+		force "junit:junit:${VERSION_JUNIT}" // use snapshot version
 		force "org.mockito:mockito-core:${VERSION_MOCKITO}" // powermock refers to older
 		force 'org.objenesis:objenesis:2.6' // 2.4 (powermock) vs 2.6 (mockito)
 		force 'com.google.guava:guava:20.0' // 17.0 (shazamcrest) vs 20.0 (robolectric)
@@ -67,7 +67,7 @@ dependencies {
 	testCompileOnly 'com.google.code.findbugs:annotations:3.0.0'
 	testImplementation 'com.github.stefanbirkner:fishbowl:1.4.0' // exceptionThrownBy (assertThrows-like)
 //	testImplementation 'cglib:cglib:3.2.4'
-//	testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
+	testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
 //	testImplementation 'nl.jqno.equalsverifier:equalsverifier:2.4'
 
 	if (isAndroid) {
@@ -88,6 +88,7 @@ dependencies {
 //			.each { androidTestImplementation it.displayName }
 
 		androidTestImplementation "junit:junit:${VERSION_JUNIT}"
+		androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
 		androidTestImplementation ("io.takari.junit:takari-cpsuite:1.2.7") {
 			exclude group: 'junit'
 		}
@@ -122,8 +123,10 @@ dependencies {
 		// Espresso-idling-resource for synchronization with background jobs
 		androidTestImplementation "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
 		// CONSIDER using these with Glide
-		androidTestImplementation "com.android.support.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
-		androidTestImplementation "com.android.support.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
+		if (VERSION_ESPRESSO.startsWith("3.")) {
+			androidTestImplementation "com.android.support.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
+			androidTestImplementation "com.android.support.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
+		}
 		// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
 		androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:2.+"
 	}

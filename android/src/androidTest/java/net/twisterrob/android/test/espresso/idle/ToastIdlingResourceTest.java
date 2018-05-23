@@ -34,10 +34,10 @@ public class ToastIdlingResourceTest {
 
 	@Rule public final ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
 	private final ToastIdlingResource idler = new ToastIdlingResource();
-	private final List<Toast> toasts = new ArrayList<>();
+	private final Collection<Toast> toasts = new ArrayList<>();
 	private final TransitionRecorder callback = new TransitionRecorder();
 
-	@Before public void setUp() throws Exception {
+	@Before public void setUp() {
 		idler.registerIdleTransitionCallback(callback);
 		assumeTrue(isIdle());
 		assumeFalse(callback.hasTransitionedToIdle());
@@ -132,7 +132,7 @@ public class ToastIdlingResourceTest {
 
 	private boolean isIdle() {
 		return InstrumentationExtensions.callOnMain(new Callable<Boolean>() {
-			@Override public Boolean call() throws Exception {
+			@Override public Boolean call() {
 				return idler.isIdle();
 			}
 		});
@@ -148,7 +148,7 @@ public class ToastIdlingResourceTest {
 
 	private Toast createToast(final String message) {
 		Toast toast = InstrumentationExtensions.callOnMain(new Callable<Toast>() {
-			@Override public Toast call() throws Exception {
+			@Override public Toast call() {
 				return Toast.makeText(InstrumentationRegistry.getContext(), message, Toast.LENGTH_SHORT);
 			}
 		});
