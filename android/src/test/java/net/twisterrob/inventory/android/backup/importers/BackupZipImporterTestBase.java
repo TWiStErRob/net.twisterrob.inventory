@@ -9,9 +9,10 @@ import org.junit.rules.*;
 import org.mockito.*;
 import org.mockito.junit.*;
 
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 
 import android.content.res.Resources;

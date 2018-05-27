@@ -7,11 +7,11 @@ import org.junit.function.ThrowingRunnable;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.junit.internal.matchers.ThrowableCauseMatcher.*;
-import static org.junit.internal.matchers.ThrowableMessageMatcher.*;
+import static org.junit.Assert.assertThrows;
 
 import net.twisterrob.java.utils.ConcurrentTools;
+
+import static net.twisterrob.test.hamcrest.Matchers.*;
 
 public class AssertTest {
 

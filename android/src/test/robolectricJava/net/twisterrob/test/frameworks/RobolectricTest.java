@@ -1,6 +1,7 @@
 package net.twisterrob.test.frameworks;
 
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestName;
 import org.mockito.*;
 
 import static org.junit.Assert.*;
@@ -13,17 +14,15 @@ import net.twisterrob.test.frameworks.classes.AndroidRecipient;
 public class RobolectricTest extends RobolectricTestBase {
 	@Mock OnClickListener mockAndroidClass;
 	@InjectMocks AndroidRecipient sut;
+	@Rule public TestName testName = new TestName();
 
 	@Test public void testRunner() {
 		assertTrue("@Test methods should be executed", true);
 	}
 
-	@Test public void testJUnitThrownRule() {
-		assertNotNull(thrown);
-
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("test");
-		throw new NullPointerException("test");
+	@Test public void testJUnitRule() {
+		assertNotNull(testName);
+		assertEquals("testJUnitRule", testName.getMethodName());
 	}
 
 	@Test public void testMockito() {

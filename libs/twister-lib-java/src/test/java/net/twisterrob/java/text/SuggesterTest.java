@@ -3,8 +3,8 @@ package net.twisterrob.java.text;
 import org.junit.*;
 import org.mockito.*;
 
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 

@@ -1,16 +1,18 @@
-package net.twisterrob.test;
+package net.twisterrob.test.hamcrest;
 
 import java.io.FileNotFoundException;
 
 import org.hamcrest.*;
-import org.junit.*;
-import org.junit.rules.ExpectedException;
+import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import static net.twisterrob.test.hamcrest.Matchers.*;
+
 public class HasCauseTest {
-	@Rule public ExpectedException thrown = ExpectedException.none();
 
 	@Test public void matchesSelf() {
 		FileNotFoundException ex = new FileNotFoundException("test");
@@ -47,18 +49,24 @@ public class HasCauseTest {
 	}
 
 	@Test public void throwsNullExpectation() {
-		thrown.expect(NullPointerException.class);
-		HasCause.hasCause((Throwable)null);
+		assertThrows(NullPointerException.class, new ThrowingRunnable() {
+			@Override public void run() {
+				HasCause.hasCause((Throwable)null);
+			}
+		});
 	}
 
 	@Test public void throws1NullExpectation() {
-		thrown.expect(NullPointerException.class);
-		HasCause.hasCause((Matcher<Throwable>)null);
+		assertThrows(NullPointerException.class, new ThrowingRunnable() {
+			@Override public void run() {
+				HasCause.hasCause((Matcher<Throwable>)null);
+			}
+		});
 	}
 
 	@Test public void hasSameDescription() {
 		final String failureDescription = "description of the matcher that the cause should match";
-		Matcher<Throwable> matcher = new BaseMatcher<Throwable>() {
+		final Matcher<Throwable> matcher = new BaseMatcher<Throwable>() {
 			@Override public boolean matches(Object item) {
 				return false; // don't match anything (forces describeTo)
 			}
@@ -67,7 +75,12 @@ public class HasCauseTest {
 			}
 		};
 
-		thrown.expectMessage(failureDescription);
-		assertThat(null, HasCause.hasCause(matcher));
+		Throwable expectedFailure = assertThrows(AssertionError.class, new ThrowingRunnable() {
+			@Override public void run() {
+				assertThat(null, HasCause.hasCause(matcher));
+			}
+		});
+
+		assertThat(expectedFailure, hasMessage(containsString(failureDescription)));
 	}
 }

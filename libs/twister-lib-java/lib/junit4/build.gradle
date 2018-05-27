@@ -1,0 +1,5 @@
+dependencies {
+	api "junit:junit:${VERSION_JUNIT}"
+	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
+}

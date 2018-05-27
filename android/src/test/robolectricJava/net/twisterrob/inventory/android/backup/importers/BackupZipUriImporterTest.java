@@ -3,10 +3,13 @@ package net.twisterrob.inventory.android.backup.importers;
 import java.io.*;
 
 import org.junit.*;
+import org.junit.function.ThrowingRunnable;
 import org.mockito.*;
 import org.robolectric.annotation.Config;
 import org.slf4j.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -21,8 +24,8 @@ import net.twisterrob.inventory.android.TestIgnoreApp;
 import net.twisterrob.inventory.android.backup.ImportProgressHandler;
 import net.twisterrob.test.frameworks.RobolectricTestBase;
 
-import static net.twisterrob.test.HasCause.*;
-import static net.twisterrob.test.SameFile.*;
+import static net.twisterrob.test.hamcrest.Matchers.*;
+import static net.twisterrob.test.mockito.ArgumentMatchers.*;
 
 @Config(application = TestIgnoreApp.class)
 public class BackupZipUriImporterTest extends RobolectricTestBase {
@@ -65,8 +68,12 @@ public class BackupZipUriImporterTest extends RobolectricTestBase {
 		NullPointerException ex = new NullPointerException("test");
 		doThrow(ex).when(fileImporter).importFrom(any(File.class));
 
-		thrown.expect(hasCause(ex));
-		importer.importFrom(Uri.fromFile(FILE));
+		Exception expectedFailure = assertThrows(NullPointerException.class, new ThrowingRunnable() {
+			@Override public void run() throws Exception {
+				importer.importFrom(Uri.fromFile(FILE));
+			}
+		});
+		assertThat(expectedFailure, containsCause(ex));
 	}
 
 	@Test public void testImportFromNonFileFails() throws Exception {
@@ -74,16 +81,24 @@ public class BackupZipUriImporterTest extends RobolectricTestBase {
 		NullPointerException ex = new NullPointerException("test");
 		doThrow(ex).when(streamImporter).importFrom(any(InputStream.class));
 
-		thrown.expect(hasCause(ex));
-		importer.importFrom(NON_FILE);
+		Throwable expectedFailure = assertThrows(Throwable.class, new ThrowingRunnable() {
+			@Override public void run() throws Exception {
+				importer.importFrom(NON_FILE);
+			}
+		});
+		assertThat(expectedFailure, containsCause(ex));
 	}
 
-	@Test public void testImportFromNonFileFailsToOpen() throws Exception {
+	@Test public void testImportFromNonFileFailsToOpen() throws FileNotFoundException {
 		FileNotFoundException ex = new FileNotFoundException("test");
 		when(context.getContentResolver().openInputStream(NON_FILE)).thenThrow(new IllegalArgumentException(
 				new IllegalStateException(new IOException(ex))));
 
-		thrown.expect(hasCause(ex));
-		importer.importFrom(NON_FILE);
+		Throwable expectedFailure = assertThrows(Throwable.class, new ThrowingRunnable() {
+			@Override public void run() throws Exception {
+				importer.importFrom(NON_FILE);
+			}
+		});
+		assertThat(expectedFailure, containsCause(ex));
 	}
 }

@@ -34,8 +34,6 @@ allprojects {
 				// TODO check my plugin, maybe java-library and java are not compatible there
 				// warning: [options] bootstrap class path not set in conjunction with -source 1.7
 				"-Xlint:-options",
-				// TODO JUnit 4.13 brings in new ones
-				"-Xlint:-deprecation",
 		]
 
 		if (it.name.endsWith("AndroidTestJavaWithJavac")) {

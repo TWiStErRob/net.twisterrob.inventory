@@ -30,7 +30,6 @@ import net.twisterrob.test.PackageNameShortener;
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 public abstract class RobolectricTestBase {
 	@Rule public final MockitoRule mockito = MockitoJUnit.rule();
-	@Rule public final ExpectedException thrown = ExpectedException.none();
 	@Rule public final TestRule shortener = new PackageNameShortener();
 
 	@Before

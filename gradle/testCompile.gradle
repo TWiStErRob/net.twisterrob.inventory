@@ -49,6 +49,8 @@ if (isAndroid) {
 
 dependencies {
 	testImplementation "junit:junit:${VERSION_JUNIT}"
+	testImplementation "net.twisterrob.lib:twister-lib-hamcrest"
+	testImplementation "net.twisterrob.lib:twister-lib-mockito"
 	testImplementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
 	testImplementation ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
 		exclude group: 'junit'
@@ -92,6 +94,8 @@ dependencies {
 		androidTestImplementation ("io.takari.junit:takari-cpsuite:1.2.7") {
 			exclude group: 'junit'
 		}
+		androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
+		androidTestImplementation "net.twisterrob.lib:twister-lib-mockito"
 		androidTestImplementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
 		androidTestImplementation ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
 			exclude group: 'junit'

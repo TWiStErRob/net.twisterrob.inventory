@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.hamcrest.Matchers;
 import org.junit.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 import net.twisterrob.java.text.Indexer.MatchResult;

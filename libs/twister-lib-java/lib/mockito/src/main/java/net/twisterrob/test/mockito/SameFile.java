@@ -1,4 +1,4 @@
-package net.twisterrob.test;
+package net.twisterrob.test.mockito;
 
 import java.io.*;
 
@@ -30,7 +30,7 @@ public class SameFile implements ArgumentMatcher<File> {
 		return file != null? file.toString() : "null File";
 	}
 
-	public static ArgumentMatcher<File> pointsTo(final File file) {
+	static ArgumentMatcher<File> pointsTo(final File file) {
 		return new SameFile(file);
 	}
 }

@@ -6,6 +6,7 @@ import org.hamcrest.*;
 import org.junit.*;
 import org.junit.runners.Parameterized.Parameter;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 

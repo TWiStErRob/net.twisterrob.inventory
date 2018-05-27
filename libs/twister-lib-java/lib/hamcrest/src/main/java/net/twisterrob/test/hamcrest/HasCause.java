@@ -1,8 +1,11 @@
-package net.twisterrob.test;
+package net.twisterrob.test.hamcrest;
 
 import java.util.*;
 
+import javax.annotation.Nonnull;
+
 import org.hamcrest.*;
+import org.hamcrest.Matchers;
 
 import android.annotation.TargetApi;
 import android.os.Build.VERSION_CODES;
@@ -11,9 +14,9 @@ import android.os.Build.VERSION_CODES;
 public class HasCause extends TypeSafeDiagnosingMatcher<Throwable> {
 	public static final String NL = System.lineSeparator();
 
-	private final Matcher<Throwable> matcher;
+	private final @Nonnull Matcher<Throwable> matcher;
 
-	public HasCause(Matcher<Throwable> matcher) {
+	public HasCause( Matcher<Throwable> matcher) {
 		if (matcher == null) {
 			throw new NullPointerException("Expected cause matcher cannot be null.");
 		}
@@ -37,14 +40,14 @@ public class HasCause extends TypeSafeDiagnosingMatcher<Throwable> {
 		matcher.describeTo(description);
 	}
 
-	public static Matcher<? super Throwable> hasCause(final Throwable ex) {
+	static Matcher<? super Throwable> hasCause(final Throwable ex) {
 		if (ex == null) {
 			throw new NullPointerException("Expected exception must not be null.");
 		}
 		return hasCause(Matchers.sameInstance(ex));
 	}
 
-	public static HasCause hasCause(Matcher<Throwable> matcher) {
+	static HasCause hasCause(@Nonnull Matcher<Throwable> matcher) {
 		return new HasCause(matcher);
 	}
 }

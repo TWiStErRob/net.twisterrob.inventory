@@ -6,8 +6,8 @@ import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.twisterrob.java.utils.tostring.stringers.DefaultStringer;

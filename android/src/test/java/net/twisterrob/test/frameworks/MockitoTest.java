@@ -1,18 +1,20 @@
 package net.twisterrob.test.frameworks;
 
 import org.junit.*;
-import org.junit.rules.ExpectedException;
+import org.junit.function.ThrowingRunnable;
 import org.mockito.*;
 import org.mockito.junit.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import net.twisterrob.test.frameworks.classes.*;
 
+import static net.twisterrob.test.hamcrest.Matchers.*;
+
 public class MockitoTest {
 	@Rule public MockitoRule mockito = MockitoJUnit.rule();
-	@Rule public ExpectedException thrown = ExpectedException.none();
 
 	@Mock Mockable mock;
 
@@ -38,12 +40,16 @@ public class MockitoTest {
 
 	/** Check if method call can be mocked. */
 	@Test public void testWhen() {
-		Mockable mock = Mockito.mock(Mockable.class);
+		final Mockable mock = Mockito.mock(Mockable.class);
 		doThrow(new RuntimeException("test")).when(mock).method();
 
-		thrown.expect(RuntimeException.class);
-		thrown.expectMessage("test");
-		mock.method();
+		RuntimeException expectedFailure = assertThrows(RuntimeException.class, new ThrowingRunnable() {
+			@Override public void run() {
+				mock.method();
+			}
+		});
+
+		assertThat(expectedFailure, hasMessage("test"));
 	}
 
 	/** Check if MockitoAnnotations.injectMocks(this) is called. */

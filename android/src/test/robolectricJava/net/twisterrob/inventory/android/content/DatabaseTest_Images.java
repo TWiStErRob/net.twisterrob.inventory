@@ -9,6 +9,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.Config;
 import org.slf4j.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 

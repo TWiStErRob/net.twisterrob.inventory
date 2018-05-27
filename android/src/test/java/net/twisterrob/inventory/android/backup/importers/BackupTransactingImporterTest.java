@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.backup.importers;
 
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import org.mockito.*;
 import org.mockito.junit.*;
 import org.slf4j.*;
@@ -23,7 +22,6 @@ public class BackupTransactingImporterTest {
 
 	public static final Object INPUT = new Object();
 	@Rule public MockitoRule mockito = MockitoJUnit.rule();
-	@Rule public ExpectedException thrown = ExpectedException.none();
 
 	@Mock ImportProgressHandler progress;
 	@Mock ZipImporter<Object> inner;
@@ -48,7 +46,7 @@ public class BackupTransactingImporterTest {
 		Gwen.then(database).transacted();
 	}
 
-	@Test public void testSuccessCannotCommit() throws Exception {
+	@Test public void testSuccessCannotCommit() {
 		Throwable failure = new TestRuntimeException("test cannot commit");
 		doThrow(failure).when(db).endTransaction();
 

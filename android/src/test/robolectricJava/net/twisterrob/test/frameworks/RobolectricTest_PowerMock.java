@@ -3,7 +3,6 @@ package net.twisterrob.test.frameworks;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.Mock;
@@ -14,6 +13,7 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -39,25 +39,15 @@ import net.twisterrob.test.frameworks.classes.*;
 public class RobolectricTest_PowerMock {
 	private final PowerMockRule power = new PowerMockRule();
 	private final MockitoRule mockito = MockitoJUnit.rule();
-	private final ExpectedException thrown = ExpectedException.none();
 	@Rule public MethodRuleChain rules = MethodRuleChain
 			.emptyRuleChain()
 			.around(mockito)
-			.around(power)
-			.around(new TestRuleAdapter(thrown));
+			.around(power);
 	@Mock View.OnClickListener mockAndroidClass;
 	@InjectMocks AndroidRecipient sut;
 
 	@Test public void testRunner() {
 		assertTrue("@Test methods should be executed", true);
-	}
-
-	@Test public void testJUnitThrowRule() {
-		assertNotNull("ExpectedException rule should be initialized", thrown);
-
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("test");
-		throw new NullPointerException("test");
 	}
 
 	@Test public void testMockitoAnnotations() {

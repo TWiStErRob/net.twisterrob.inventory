@@ -3,13 +3,12 @@ package net.twisterrob.inventory.android.backup.importers;
 import java.io.*;
 
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import org.mockito.*;
 import org.mockito.junit.*;
 import org.slf4j.*;
 
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.*;
 import static org.mockito.AdditionalMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,7 +45,6 @@ public class ImportImageReconcilerTest {
 	private static final String OTHER_ITEM_NAME = "other test item " + OTHER_ITEM_ID;
 
 	@Rule public MockitoRule mockito = MockitoJUnit.rule();
-	@Rule public ExpectedException thrown = ExpectedException.none();
 
 	@Mock Database db;
 	@Mock Resources res;

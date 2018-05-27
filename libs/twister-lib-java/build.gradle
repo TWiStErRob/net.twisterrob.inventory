@@ -22,7 +22,7 @@ allprojects {
 		logger.info "${project.path} is in an included build, using Android plugin"
 		apply plugin: 'com.android.library'
 		apply plugin: 'net.twisterrob.android-library'
-		android.defaultConfig.minSdkVersion 1
+		android.defaultConfig.minSdkVersion 9
 		def manifest = file('src/main/AndroidManifest.xml')
 		manifest.parentFile.mkdirs()
 		def subpackage = project.path == ':' ? ".root" : project.path.replace(':', '.').replace('-', '_')
