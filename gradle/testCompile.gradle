@@ -52,6 +52,7 @@ dependencies {
 	testImplementation "net.twisterrob.lib:twister-lib-hamcrest"
 	testImplementation "net.twisterrob.lib:twister-lib-mockito"
 	testImplementation "net.twisterrob.lib:twister-lib-junit4"
+	testImplementation "net.twisterrob.lib:twister-lib-test"
 	testImplementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
 	testImplementation ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
 		exclude group: 'junit'
@@ -98,6 +99,7 @@ dependencies {
 		androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
 		androidTestImplementation "net.twisterrob.lib:twister-lib-mockito"
 		androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
+		androidTestImplementation "net.twisterrob.lib:twister-lib-test"
 		androidTestImplementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
 		androidTestImplementation ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
 			exclude group: 'junit'
