@@ -8,11 +8,11 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasValue;
 import static org.hamcrest.io.FileMatchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
-import static org.junit.Assert.assertThat;
 
 import android.content.*;
 import android.os.Environment;

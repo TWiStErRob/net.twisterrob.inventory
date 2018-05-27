@@ -3,8 +3,8 @@ package net.twisterrob.inventory.android.activity;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

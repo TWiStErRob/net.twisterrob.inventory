@@ -9,8 +9,8 @@ import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.*;
 
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.test.hamcrest.IsMapContainsEntries;

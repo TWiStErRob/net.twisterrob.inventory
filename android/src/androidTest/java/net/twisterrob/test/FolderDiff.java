@@ -3,8 +3,8 @@ package net.twisterrob.test;
 import java.io.File;
 import java.util.*;
 
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.io.FileMatchers.*;
-import static org.junit.Assert.*;
 
 public class FolderDiff {
 	private final File[] contents;

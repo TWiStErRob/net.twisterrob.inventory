@@ -4,9 +4,10 @@ import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.junit.MatcherAssume.*;
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
 
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
