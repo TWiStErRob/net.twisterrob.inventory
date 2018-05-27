@@ -135,7 +135,9 @@ dependencies {
 			androidTestImplementation "com.android.support.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
 			androidTestImplementation "com.android.support.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
 		}
-		// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
-		androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:2.+"
+		if (!project.path.contains(":libs:twister-lib-java")) {
+			// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
+			androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:2.+"
+		}
 	}
 }

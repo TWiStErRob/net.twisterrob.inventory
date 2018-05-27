@@ -12,7 +12,7 @@ import org.slf4j.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
-import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.java.io.IOTools;
 import net.twisterrob.test.hamcrest.IsMapContainsEntries;
 
 import static net.twisterrob.test.hamcrest.Matchers.*;

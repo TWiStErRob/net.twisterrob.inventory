@@ -3,4 +3,5 @@ dependencies {
 	implementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
 
 	testImplementation "junit:junit:${VERSION_JUNIT}"
+	testImplementation "net.twisterrob.lib:twister-lib-java"
 }
