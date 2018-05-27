@@ -1,17 +1,13 @@
-if (project.hasProperty('libFromSources')) {
-	evaluationDependsOn ':twister-lib-java'
-}
-
 buildscript {
 	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
-		configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}
 }
 
-group 'net.twisterrob'
-version '1.0'
+group = 'net.twisterrob.lib'
+version = '1.0'
 
 apply plugin: 'com.android.library'
 apply plugin: 'net.twisterrob.android-library'
@@ -19,17 +15,12 @@ apply from: 'http://localhost/maven/configure.gradle'
 
 repositories {
 	jcenter()
-	maven { name 'twisterrob'; url 'http://localhost/maven' }
-	maven { name 'sonatype'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
 }
 
 dependencies {
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-	if (project.hasProperty('libFromSources')) {
-		implementation project(':twister-lib-java')
-	} else {
-		implementation 'net.twisterrob:twister-lib-java:1.0-SNAPSHOT'
-	}
+	implementation 'net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT'
 	//noinspection GradleCompatible exifinterface is newer than all the other ones, and quite independent
 	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
 	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
@@ -66,4 +57,8 @@ tasks.withType(JavaCompile) {
 			// Ignore these, Stringers are using the internals for better experience, cannot be @SuppressWarning'd :(
 			"-Xlint:-auxiliaryclass",
 	]
+}
+
+task cleanFull {
+	dependsOn allprojects*.tasks*.findByPath('clean')
 }

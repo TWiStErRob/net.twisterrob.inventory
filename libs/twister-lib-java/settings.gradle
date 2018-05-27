@@ -1,0 +1,8 @@
+include ':'
+include ':utils:stringer'
+include ':utils:core'
+include ':lib:java'
+include ':lib:junit4'
+include ':lib:hamcrest'
+
+rootProject.name = 'twister-libs-java'

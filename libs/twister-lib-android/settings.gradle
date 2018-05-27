@@ -1,0 +1,7 @@
+include ':'
+include ':slf4j'
+//if (gradle.parent == null) {
+//	includeBuild '../twister-lib-java'
+//}
+
+rootProject.name = 'twister-libs-android'

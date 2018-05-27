@@ -9,7 +9,7 @@
 	<!--  <uses-permission android:name="android.permission.INTERNET" />-->
 	<!-- TODEL for what? -->
 	<!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
-	<uses-sdk tools:overrideLibrary="com.rarepebble.colorpicker" />
+	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18,com.rarepebble.colorpicker" />
 
 	<application
 		android:supportsRtl="true"

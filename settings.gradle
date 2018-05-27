@@ -1,14 +1,95 @@
-rootProject.name = 'Inventory'
-
 include ':android'
 include ':tools:transform'
 include ':tools:database'
+include ':libs'
 
-if (hasProperty('libFromSources')) {
-	include ':twister-lib-java'
-	project(':twister-lib-java').projectDir = file('libs/twister-lib-java')
-	include ':twister-lib-android'
-	project(':twister-lib-android').projectDir = file('libs/twister-lib-android')
-	include ':twister-lib-android-slf4j'
-	project(':twister-lib-android-slf4j').projectDir = file('libs/twister-lib-android-slf4j')
+//includeBuild ('libs/twister-lib-java') {
+//	dependencySubstitution {
+//		substitute module('net.twisterrob.lib:twister-libs-java') with project(':')
+//	}
+//}
+includeBuildHack(
+		'libs/twister-lib-java',
+		'net.twisterrob.lib', 'twister-libs-java',
+		{
+			def shortName = it.path.replaceAll(/.*:/, "")
+			return shortName == "" ? null : "twister-lib-${shortName}"
+		}
+)
+
+//includeBuild('libs/twister-lib-android') {
+//	dependencySubstitution {
+//		substitute module('net.twisterrob.lib:twister-libs-android') with project(':')
+//		substitute module('net.twisterrob.lib:twister-lib-android-slf4j') with project(':slf4j')
+//	}
+//}
+includeBuildHack(
+		'libs/twister-lib-android',
+		'net.twisterrob.lib', 'twister-libs-android',
+		{
+			def shortName = it.path.replaceAll(/.*:/, "")
+			return shortName == "" ? null : "twister-lib-android-${shortName}"
+		}
+)
+
+rootProject.name = 'Inventory'
+
+def includeBuildHack(String subfolder, String mavenGroup, String mavenModule, Closure moduleNaming) {
+	Closure<List<ProjectDescriptor>> children = { ProjectDescriptor project ->
+		[ project ] + project.children.collectMany { owner.call(it) }
+	}
+
+	def subProjectPath = subfolder.replace('/', ':')
+	def beforeInclude = children(rootProject)
+	apply from: "${subfolder}/settings.gradle", to: new SettingsDelegator(settings, subProjectPath)
+	def includedProjects = children(rootProject) - beforeInclude
+
+	def substitute = file("gradle/includedBuilds/substitute_${mavenModule}.gradle")
+	substitute.text = ""
+	substitute << """\
+		configurations.all {
+			resolutionStrategy {
+				dependencySubstitution {
+					substitute(module('${mavenGroup}:${mavenModule}'))
+						.with project(':${subProjectPath}')
+	""".stripIndent()
+	substitute << System.lineSeparator()
+	includedProjects.each {
+		def shortName = moduleNaming(it)
+		if (shortName == null) {
+			return
+		}
+		logger.info "Substituting ${shortName} with ${it.path}"
+		substitute << """\
+				substitute(module('${mavenGroup}:${shortName}'))
+					.with project('${it.path}')
+		""".stripIndent()
+	}
+	substitute << """\
+				}
+			}
+		}
+	""".stripIndent()
+}
+
+class SettingsDelegator {
+	final Settings settings
+	final ProjectDescriptor rootProject
+	private final String subProjectPathPrefix
+	SettingsDelegator(Settings settings, String subProjectPathPrefix) {
+		this.subProjectPathPrefix = subProjectPathPrefix
+		this.settings = settings
+		this.rootProject = settings.rootProject
+	}
+
+	// overrides org.gradle.api.initialization.Settings.include(String)
+	@SuppressWarnings("GroovyUnusedDeclaration") // used by included project's settings.gradle
+	void include(String path) {
+		if (path == ':') {
+			path = ""
+		}
+		def fullPath = subProjectPathPrefix + path
+		//println "Delegating include('${path}') as include('${fullPath}')"
+		settings.include(fullPath)
+	}
 }

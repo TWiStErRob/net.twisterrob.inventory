@@ -1,7 +1,7 @@
 buildscript {
 	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
-		configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}
 }
@@ -11,14 +11,15 @@ apply plugin: 'net.twisterrob.root'
 allprojects {
 	repositories {
 		jcenter()
-		maven { name 'twisterrob'; url 'http://localhost/maven' }
-		maven { name 'sonatype'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
-		//maven { name 'idescout'; url 'http://www.idescout.com/maven/repo/' }
+		maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+		maven { name = 'sonatype'; url = 'http://oss.sonatype.org/content/repositories/snapshots' }
+		//maven { name = 'idescout'; url = 'http://www.idescout.com/maven/repo/' }
 	}
-
+	apply from: rootProject.file('gradle/includedBuilds/substitute_twister-libs-java.gradle')
+	apply from: rootProject.file('gradle/includedBuilds/substitute_twister-libs-android.gradle')
 	configurations.all {
 		if (it.name == 'lintClassPath') return
-		it.resolutionStrategy.failOnVersionConflict()
+		//it.resolutionStrategy.failOnVersionConflict()
 	}
 
 	tasks.withType(JavaCompile) {
@@ -33,13 +34,15 @@ allprojects {
 				// TODO check my plugin, maybe java-library and java are not compatible there
 				// warning: [options] bootstrap class path not set in conjunction with -source 1.7
 				"-Xlint:-options",
+				// TODO JUnit 4.13 brings in new ones
+				"-Xlint:-deprecation",
 		]
 
 		if (it.name.endsWith("AndroidTestJavaWithJavac")) {
 			it.options.compilerArgs += [
 					// Google's compilers emit some weird stuff (espresso, dagger, etc.)
 					// warning: [classfile] MethodParameters attribute introduced in version 52.0 class files is ignored in version 51.0 class files
-			        "-Xlint:-classfile",
+					"-Xlint:-classfile",
 					// TODO There are some more left: registerIdlingResources and ViewActivityActor.refresh()
 					"-Xlint:-deprecation",
 			]
@@ -48,6 +51,7 @@ allprojects {
 }
 
 task clean(type: Delete) {
+	dependsOn gradle.includedBuilds*.task(':cleanFull')
 	delete rootProject.buildDir
 }
 

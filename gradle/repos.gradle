@@ -3,6 +3,6 @@
 repositories {
 	jcenter()
 	google()
-	maven { name 'twisterrob'; url 'http://localhost/maven' }
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
 	maven { name = "Gradle libs (for Kotlin-DSL)"; url = "https://repo.gradle.org/gradle/libs-releases-local/" }
 }

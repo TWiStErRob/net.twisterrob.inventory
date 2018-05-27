@@ -1,7 +1,7 @@
 def isAndroid = plugins.hasPlugin('com.android.application') || plugins.hasPlugin('com.android.library')
 
 repositories {
-	maven { name 'sonatype'; url 'https://oss.sonatype.org/content/repositories/snapshots' }
+	maven { name = 'sonatype'; url = 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 configurations.all {

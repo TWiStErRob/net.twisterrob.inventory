@@ -1,9 +1,3 @@
-if (project.hasProperty('libFromSources')) {
-	evaluationDependsOn ':twister-lib-java'
-	evaluationDependsOn ':twister-lib-android'
-	evaluationDependsOn ':twister-lib-android-slf4j'
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'net.twisterrob.android-app'
 apply from: new File(rootDir, 'gradle/mapping.gradle')
@@ -25,15 +19,9 @@ android.applicationVariants.all { com.android.build.gradle.api.ApplicationVarian
 
 dependencies {
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-	if (project.hasProperty('libFromSources')) {
-		implementation project(':twister-lib-java')
-		implementation project(':twister-lib-android')
-		runtimeOnly project(path: ':twister-lib-android-slf4j', configuration: 'jar')
-	} else {
-		implementation('net.twisterrob:twister-lib-android:1.0-SNAPSHOT')
-		implementation('net.twisterrob:twister-lib-java:1.0-SNAPSHOT')
-		runtimeOnly('net.twisterrob:twister-lib-android-slf4j:1.0-SNAPSHOT')
-	}
+	implementation('net.twisterrob.lib:twister-libs-android:1.0-SNAPSHOT')
+	implementation('net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT')
+	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j:1.0-SNAPSHOT')
 
 	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
 	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"

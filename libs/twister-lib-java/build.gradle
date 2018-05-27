@@ -1,27 +1,55 @@
 buildscript {
-	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	repositories {
+		jcenter()
+		google()
+		maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+		maven { name = "Gradle libs (for Kotlin-DSL)"; url = "https://repo.gradle.org/gradle/libs-releases-local/" }
+	}
 	dependencies {
-		configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}
 }
 
-group 'net.twisterrob'
-version '1.0'
+group = 'net.twisterrob.lib'
+version = '1.0'
 
-apply plugin: 'java-library'
-apply plugin: 'eclipse'
-apply plugin: 'net.twisterrob.java'
-apply from: 'http://localhost/maven/configure.gradle'
+allprojects {
+	repositories {
+		jcenter()
+	}
+	if (gradle.parent != null || rootProject.name != 'twister-lib-java') {
+		logger.info "${project.path} is in an included build, using Android plugin"
+		apply plugin: 'com.android.library'
+		apply plugin: 'net.twisterrob.android-library'
+		android.defaultConfig.minSdkVersion 1
+		def manifest = file('src/main/AndroidManifest.xml')
+		manifest.parentFile.mkdirs()
+		def subpackage = project.path == ':' ? ".root" : project.path.replace(':', '.').replace('-', '_')
+		manifest.text = "<manifest package=\"net.twisterrob.module_hack${subpackage}\" />"
+	} else {
+		logger.info "${project.path} is not in an included build, using Java Library plugin"
+		apply plugin: 'java-library'
+		apply plugin: 'net.twisterrob.java'
+	}
+	apply from: 'http://localhost/maven/configure.gradle'
+	dependencies {
+		api "org.slf4j:slf4j-api:${VERSION_SLF4J}"
+		testImplementation "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
+		// TODO change to implementation (first step: exclude in Android)
+		api 'com.google.code.findbugs:jsr305:3.0.2'
 
-repositories {
-	jcenter()
+		apply from: "${rootDir}/gradle/testCompile.gradle", to: project
+	}
 }
 
 dependencies {
-	api "org.slf4j:slf4j-api:${VERSION_SLF4J}"
-	testImplementation "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
-	api 'com.google.code.findbugs:jsr305:3.0.2'
+	// TODO remove all dependencies of this project and use specific modules
+	api 'net.twisterrob.lib:twister-lib-core'
+	api 'net.twisterrob.lib:twister-lib-stringer'
+	api 'net.twisterrob.lib:twister-lib-java'
+}
 
-	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
+task cleanFull {
+	dependsOn allprojects*.tasks*.findByPath('clean')
 }

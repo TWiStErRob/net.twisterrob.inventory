@@ -2,13 +2,12 @@ buildscript {
 	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
 		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-		//noinspection GradleDynamicVersion
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}
 }
 
-group 'net.twisterrob'
-version '1.0'
+group = 'net.twisterrob'
+version = '1.0'
 
 apply plugin: 'com.android.library'
 apply plugin: 'net.twisterrob.android-library'
@@ -16,8 +15,7 @@ apply from: 'http://localhost/maven/configure.gradle'
 
 repositories {
 	jcenter()
-	maven { name 'twisterrob'; url 'http://localhost/maven' }
-	maven { name 'glide'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
 }
 
 dependencies {
@@ -26,6 +24,7 @@ dependencies {
 }
 
 android {
+	defaultConfig.minSdkVersion 1
 	lintOptions {
 		tasks.lint.enabled = false
 	}
@@ -46,7 +45,7 @@ afterEvaluate {
 	tasks.jar.from files(dirs)
 }
 artifacts {
-	// reference as dependencies { apk project(path: ':twister-lib-android-slf4j', configuration: 'jar') }
+	// reference as dependencies { runtimeOnly project(path: ':twister-lib-android-slf4j', configuration: 'jar') }
 	configurations.create 'jar'
 	add('jar', tasks.jar)
 }

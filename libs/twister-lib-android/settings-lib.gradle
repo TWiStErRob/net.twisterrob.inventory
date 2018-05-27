@@ -1,6 +1,0 @@
-rootProject.name = 'twister-lib-android'
-
-if (hasProperty('libFromSources')) {
-	include ':twister-lib-java'
-	project(':twister-lib-java').projectDir = file('../twister-lib-java')
-}
