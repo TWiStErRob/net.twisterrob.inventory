@@ -15,7 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 public class TestActivityCompat extends AppCompatActivity {
 	@SuppressLint("PrivateResource") // we're a test app for that app, so accessing private should be ok
 	@Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-		setTheme(net.twisterrob.inventory.android.R.style.Theme_AppCompat);
+		setTheme(net.twisterrob.android.test.espresso.R.style.Theme_AppCompat);
 		super.onCreate(savedInstanceState);
 	}
 

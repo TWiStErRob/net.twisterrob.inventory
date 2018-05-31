@@ -36,7 +36,17 @@ allprojects {
 				"-Xlint:-options",
 		]
 
-		if (it.name.endsWith("AndroidTestJavaWithJavac")) {
+		if (it.name.endsWith("AndroidTestJavaWithJavac") || it.path.contains(":twister-lib-android:")) {
+			it.doFirst {
+				// TODO move to plugin
+				def duplicates = it
+						.options.compilerArgs
+						.grep { it.startsWith("-Xlint:-") }
+						.collect { "-Xlint:${it.substring("-Xlint:-".length())}" }
+				// if something is both disabled and enabled, make the disable win
+				it.options.compilerArgs -= duplicates
+				logger.debug "${it.path}: ${it.options.compilerArgs}"
+			}
 			it.options.compilerArgs += [
 					// Google's compilers emit some weird stuff (espresso, dagger, etc.)
 					// warning: [classfile] MethodParameters attribute introduced in version 52.0 class files is ignored in version 51.0 class files

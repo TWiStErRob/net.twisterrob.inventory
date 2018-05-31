@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.Engine;
 import com.bumptech.glide.manager.RequestManagerRetriever;
 
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;

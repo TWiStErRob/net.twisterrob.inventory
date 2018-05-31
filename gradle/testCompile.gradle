@@ -93,9 +93,6 @@ dependencies {
 
 		androidTestImplementation "junit:junit:${VERSION_JUNIT}"
 		androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
-		androidTestImplementation ("io.takari.junit:takari-cpsuite:1.2.7") {
-			exclude group: 'junit'
-		}
 		androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
 		androidTestImplementation "net.twisterrob.lib:twister-lib-mockito"
 		androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"

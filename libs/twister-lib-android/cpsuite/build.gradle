@@ -1,0 +1,36 @@
+buildscript {
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	dependencies {
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
+
+group = 'net.twisterrob'
+version = '1.0'
+
+apply plugin: 'com.android.library'
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
+repositories {
+	jcenter()
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+}
+
+dependencies {
+	implementation ("io.takari.junit:takari-cpsuite:1.2.7") {
+		exclude group: 'junit'
+	}
+	implementation "junit:junit:${VERSION_JUNIT}"
+	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
+}
+
+android {
+	defaultConfig {
+		minSdkVersion 10
+	}
+	lintOptions {
+		tasks.lint.enabled = false
+	}
+}

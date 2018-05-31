@@ -1,0 +1,32 @@
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	package="net.twisterrob.android.test.espresso"
+	>
+
+	<!-- Lint will hopefully find the usages and notice that it's not callable from everywhere. -->
+	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
+
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+	<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
+
+	<application>
+
+		<activity
+			android:name="net.twisterrob.inventory.android.test.activity.TestActivity"
+			android:label="TestActivity"
+			/>
+
+		<activity
+			android:name="net.twisterrob.inventory.android.test.activity.TestActivityCompat"
+			android:label="TestActivityCompat"
+			/>
+
+		<activity
+			android:name="net.twisterrob.android.test.espresso.EspressoExtensionsTest_onActionMenuView$TestActivity"
+			android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
+			/>
+
+	</application>
+</manifest>

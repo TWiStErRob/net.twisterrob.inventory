@@ -7,10 +7,6 @@
 	<!-- Lint will hopefully find the usages and notice that it's not callable from everywhere. -->
 	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
 
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-	<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
-
 	<!-- Normally added by Gradle: <instrumentation android:name="....AndroidJUnitRunner" ... />
 	     @see build.gradle: android.defaultConfig.testInstrumentationRunner
 	     Need to duplicate the name attribute to help the manifest merger (element looked up via android:name as key).
@@ -29,23 +25,8 @@
 		<!--<uses-library android:name="android.test.runner" />-->
 
 		<activity
-			android:name="net.twisterrob.inventory.android.test.activity.TestActivity"
-			android:label="TestActivity"
-			/>
-
-		<activity
-			android:name="net.twisterrob.inventory.android.test.activity.TestActivityCompat"
-			android:label="TestActivityCompat"
-			/>
-
-		<activity
 			android:name="net.twisterrob.inventory.android.test.activity.CompatibleLauncher"
 			android:label="CompatibleLauncher"
-			/>
-
-		<activity
-			android:name="net.twisterrob.android.test.espresso.EspressoExtensionsTest_onActionMenuView$TestActivity"
-			android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
 			/>
 
 	</application>

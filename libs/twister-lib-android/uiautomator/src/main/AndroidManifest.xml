@@ -1,0 +1,9 @@
+<manifest
+	xmlns:tools="http://schemas.android.com/tools"
+	package="net.twisterrob.android.test.uiautomator"
+	>
+
+	<!-- Lint will hopefully find the usages and notice that it's not callable from everywhere. -->
+	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
+
+</manifest>

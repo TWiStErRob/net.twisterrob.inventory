@@ -7,6 +7,7 @@ import org.junit.extensions.cpsuite.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.*;
 
+import android.annotation.SuppressLint;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.internal.runner.*;
 import android.support.test.internal.runner.ClassPathScanner.AcceptAllFilter;
@@ -52,6 +53,10 @@ public class AllTestsSuite {
 			return matchedClasses;
 		}
 
+		/**
+		 * Wrapper for using the original {@link ClassPathScanner} inside Espresso.
+		 */
+		@SuppressLint("VisibleForTests")
 		private Iterable<String> getAllClassNamesOnClassPath() {
 			try {
 				return new ClassPathScanner(apkPath).getClassPathEntries(new AcceptAllFilter());

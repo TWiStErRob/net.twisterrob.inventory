@@ -47,6 +47,11 @@ dependencies {
 //	debugImplementation 'com.idescout.sql:sqlscout-server:1.0'
 
 	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
+
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso-glide3"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-cpsuite"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-uiautomator"
 }
 
 android {

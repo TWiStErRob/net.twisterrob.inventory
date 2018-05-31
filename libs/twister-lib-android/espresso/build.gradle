@@ -1,0 +1,73 @@
+buildscript {
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	dependencies {
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
+
+group = 'net.twisterrob'
+version = '1.0'
+
+apply plugin: 'com.android.library'
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
+repositories {
+	jcenter()
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+}
+
+dependencies {
+	implementation "net.twisterrob.lib:twister-lib-core"
+	implementation "net.twisterrob.lib:twister-lib-junit4"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
+	implementation "net.twisterrob.lib:twister-lib-hamcrest"
+	implementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
+	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation "net.twisterrob.lib:twister-lib-android-defs"
+	implementation "net.twisterrob.lib:twister-libs-android"
+	
+	// Espresso core
+	implementation "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
+	// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
+	implementation("com.android.support.test.espresso:espresso-contrib:${VERSION_ESPRESSO}") {
+		// Need to ignore support dependencies, otherwise weird exceptions happen, for example:
+		// * Error inflating class android.support.v7.widget.CardView Resource is not a ColorStateList (color or path)
+		// * NullPointerException (mDecorContentParent.setWindowCallback) at AppCompatDelegateImplV7.createSubDecor
+		exclude group: 'com.android.support'
+	}
+	// Espresso-accessibility for automatic checking (not used yet)
+	// TODO AccessibilityChecks.enable()
+	//androidTestImplementation "com.android.support.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
+	// disable web for now, because it has some conflicting Guava classes (http://b.android.com/187735)
+	// Espresso-web for WebView support (not used yet)
+	//androidTestImplementation "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
+	// Espresso-intents for capturing Intents and mocking onActivityResult
+	implementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+	// Espresso-idling-resource for synchronization with background jobs
+	implementation "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
+	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
+	implementation "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
+
+	implementation "com.google.guava:guava:20.0"
+
+	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
+	compileOnly "com.android.support:support-v4:${VERSION_SUPPORT}"
+	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
+	compileOnly "com.android.support:design:${VERSION_SUPPORT}"
+	compileOnly "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
+	
+	androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
+}
+
+android {
+	defaultConfig {
+		minSdkVersion 10
+		multiDexEnabled true
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+	}
+	lintOptions {
+		tasks.lint.enabled = false
+	}
+}

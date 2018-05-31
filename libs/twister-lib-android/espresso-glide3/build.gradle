@@ -1,0 +1,40 @@
+buildscript {
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	dependencies {
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
+
+group = 'net.twisterrob'
+version = '1.0'
+
+apply plugin: 'com.android.library'
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
+repositories {
+	jcenter()
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+}
+
+dependencies {
+	implementation "net.twisterrob.lib:twister-lib-android-espresso"
+	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation "net.twisterrob.lib:twister-lib-hamcrest"
+	implementation "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
+	implementation "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
+	implementation "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
+	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
+	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
+	implementation "com.google.guava:guava:20.0"
+}
+
+android {
+	defaultConfig {
+		minSdkVersion 10
+	}
+	lintOptions {
+		tasks.lint.enabled = false
+	}
+}
