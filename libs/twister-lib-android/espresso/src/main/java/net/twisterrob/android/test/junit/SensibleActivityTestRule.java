@@ -70,6 +70,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 
 	@CallSuper
 	@Override protected void beforeActivityLaunched() {
+		waitForEverythingToDestroy();
 		systemAnimations.backup();
 		systemAnimations.disableAll();
 		unlocker.wakeUpWithDisabledKeyguard();
@@ -86,6 +87,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 
 	@CallSuper
 	@Override protected void afterActivityFinished() {
+		waitForEverythingToDestroy();
 		super.afterActivityFinished();
 		Intents.release();
 		systemAnimations.restore();
