@@ -123,13 +123,14 @@ public class DialogMatchersTest_Toast {
 
 	@Test public void testWaitForToastsToDisappear_waitsForToast() {
 		Toast toast = createToast("A toast");
-		int duration = 100;
-		toast.setDuration(duration);
+		toast.setDuration(Toast.LENGTH_SHORT);
 		show(toast);
 		onRoot(isToast()).check(matches(isDisplayed()));
 
-		// allow no more than double the set duration to show and hide the toast
-		assertTimeout(duration, 2 * duration, TimeUnit.MILLISECONDS, new Runnable() {
+		// based on com.android.server.notification.NotificationManagerService#SHORT_DELAY = 2000
+		// allow a bit more than double the set duration to show and hide the toast
+		// for some reason the delay is 2000, but on emulator it disappears in ~1900 ms
+		assertTimeout(1500, 2 * 2000, TimeUnit.MILLISECONDS, new Runnable() {
 			@Override public void run() {
 				onView(isRoot()).perform(waitForToastsToDisappear());
 			}
