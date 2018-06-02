@@ -22,6 +22,7 @@ dependencies {
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	implementation 'net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT'
 	implementation 'net.twisterrob.lib:twister-lib-android-defs'
+	implementation 'net.twisterrob.lib:twister-lib-android-logging'
 	implementation 'net.twisterrob.lib:twister-lib-android-android-core'
 	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
 	//noinspection GradleCompatible exifinterface is newer than all the other ones, and quite independent
