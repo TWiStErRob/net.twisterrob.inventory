@@ -76,9 +76,12 @@ public class DialogMatchers {
 			}
 			@Override public void perform(UiController uiController, View view) {
 				ToastIdlingResource toastIdler = new ToastIdlingResource();
-				Espresso.registerIdlingResources(toastIdler);
-				uiController.loopMainThreadUntilIdle();
-				Espresso.unregisterIdlingResources(toastIdler);
+				try {
+					Espresso.registerIdlingResources(toastIdler);
+					uiController.loopMainThreadUntilIdle();
+				} finally {
+					Espresso.unregisterIdlingResources(toastIdler);
+				}
 			}
 		};
 	}
@@ -150,18 +153,32 @@ public class DialogMatchers {
 	}
 
 	public static void assertDialogIsDisplayed() {
+		// RootViewPicker.waitForAtLeastOneActivityToBeResumed from waiting ~40 seconds and then throwing:
+		// No activities found. Did you forget to launch the activity [...]?
+		// android.support.test.espresso.NoActivityResumedException: No activities in stage RESUMED. Did you forget to launch the activity. (test.getActivity() or similar)?>
+		getInstrumentation().waitForIdleSync();
+		if (getActivitiesInStage(Stage.RESUMED).isEmpty()) {
+			throw new AssertionError(
+					"No activities in stage RESUMED. Activities are " + getAllActivitiesByStage());
+		}
 		// both of the below statements should be equivalent
-		//onView(isRoot()).inRoot(isDialog()).check(matches(isCompletelyDisplayed()));
-		onView(isRoot()).check(matches(root(isDialog())));
+		onView(isRoot()).inRoot(isDialog()).check(matches(isCompletelyDisplayed()));
+		//onView(isRoot()).check(matches(root(isDialog())));
 	}
 
 	public static void assertNoDialogIsDisplayed() {
+		// It's not possible to have a dialog shown without an activity, so prevent:
+		// No activities found. Did you forget to launch the activity by calling getActivity() or startActivitySync or similar?
+		getInstrumentation().waitForIdleSync(); // quick wait, don't care about idling resources
+		if (getActivitiesInStage(Stage.RESUMED).isEmpty()) {
+			return;
+		}
 		// required to use the root(...) option because these fail too early on inRoot(isDialog())
 		//onView(isRoot()).inRoot(isDialog()).check(doesNotExist());
 		//onView(isRoot()).inRoot(isDialog()).check(matches(not(isDisplayed())));
 		// this works but the other is more concise
 		//onView(isRoot()).check(matches(root(not(RootMatchers.isDialog()))));
-		onView(isDialogView()).check(doesNotExist());
+		onView(isDialogView())/*.noActivity()*/.check(doesNotExist());
 	}
 
 	/**
@@ -184,7 +201,6 @@ public class DialogMatchers {
 		assertNoDialogIsDisplayed(); // double-check ourselves
 	}
 	private static void tryCloseDialog(boolean wait) {
-		if (true) return; // STOPSHIP
 		if (!wait) {
 			// It's not that important to close the dialog, so prevent
 			// RootViewPicker.waitForAtLeastOneActivityToBeResumed from waiting ~40 seconds and then throwing:

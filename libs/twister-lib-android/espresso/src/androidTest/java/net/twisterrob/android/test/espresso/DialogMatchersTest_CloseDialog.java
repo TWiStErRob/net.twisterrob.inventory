@@ -1,6 +1,7 @@
 package net.twisterrob.android.test.espresso;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -12,6 +13,7 @@ import net.twisterrob.android.test.junit.InstrumentationExtensions;
 import net.twisterrob.test.junit.AndroidJUnit4WithParametersRunnerFactory;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
+import static net.twisterrob.test.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 @Parameterized.UseParametersRunnerFactory(AndroidJUnit4WithParametersRunnerFactory.class)
@@ -26,18 +28,28 @@ public abstract class DialogMatchersTest_CloseDialog {
 		assertNoDialogIsDisplayed();
 	}
 
-	@Test public void test() {
+	@Test(timeout = DialogMatchersTest.DIALOG_TIMEOUT) public void test() {
 		InstrumentationExtensions.runOnMain(new Runnable() {
 			@Override public void run() {
 				showDialog();
 			}
 		});
-		attemptCloseDialog();
+
+		attemptCloseDialog_withTimeout();
+
 		if (expectedClosed) {
 			assertNoDialogIsDisplayed();
 		} else {
 			assertDialogIsDisplayed();
 		}
+	}
+
+	protected static void attemptCloseDialog_withTimeout() {
+		assertTimeout(DialogMatchersTest.DECISION_TIMEOUT, TimeUnit.MILLISECONDS, new Runnable() {
+			@Override public void run() {
+				DialogMatchers.attemptCloseDialog();
+			}
+		});
 	}
 
 	@UiThread

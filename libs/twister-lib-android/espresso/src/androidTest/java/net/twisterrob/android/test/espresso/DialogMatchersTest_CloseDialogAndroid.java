@@ -2,7 +2,6 @@ package net.twisterrob.android.test.espresso;
 
 import org.junit.Rule;
 
-import android.app.AlertDialog;
 import android.support.test.rule.ActivityTestRule;
 
 import net.twisterrob.android.test.junit.TestPackageIntentRule;
@@ -17,19 +16,7 @@ public class DialogMatchersTest_CloseDialogAndroid extends DialogMatchersTest_Cl
 		super(positive, negative, neutral, cancellable, expectedClosed);
 	}
 
-	@SuppressWarnings("Duplicates")
 	@Override protected void showDialog() {
-		final AlertDialog.Builder builder = new AlertDialog.Builder(activity.getActivity());
-		if (positive) {
-			builder.setPositiveButton("positive", null);
-		}
-		if (negative) {
-			builder.setNegativeButton("negative", null);
-		}
-		if (neutral) {
-			builder.setNeutralButton("neutral", null);
-		}
-		builder.setCancelable(cancellable);
-		builder.show();
+		DialogMatchersTest.showAndroidAlertDialog(activity.getActivity(), positive, negative, neutral, cancellable);
 	}
 }
