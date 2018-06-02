@@ -3,6 +3,7 @@ package net.twisterrob.android.test.espresso.idle;
 import java.util.*;
 
 import android.app.Activity;
+import android.os.*;
 import android.support.annotation.AnyThread;
 import android.support.test.runner.lifecycle.*;
 
@@ -15,7 +16,14 @@ public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
 			if (stage == Stage.DESTROYED) {
 				activities.remove(activity);
 				if (isIdleCore()) {
-					monitor.removeLifecycleCallback(callback);
+					// remove our listener in the next loop, otherwise we get a "Recursive looping detected!"
+					// from android.support.test.espresso.base.UiControllerImpl.loopUntil
+					// or a ConcurrentModificationException in the loop.
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+						@Override public void run() {
+							monitor.removeLifecycleCallback(callback);
+						}
+					});
 					transitionToIdle();
 				}
 			}
