@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.inventory.android.BuildConfig;
 
 public class BaseFragment<T> extends VariantFragment {
@@ -77,7 +78,7 @@ public class BaseFragment<T> extends VariantFragment {
 			LOG.debug("Creating {}@{} {}",
 					getClass().getSimpleName(),
 					Integer.toHexString(System.identityHashCode(this)),
-					AndroidTools.toString(getArguments())
+					StringerTools.toString(getArguments())
 			);
 		}
 		super.onCreate(savedInstanceState);

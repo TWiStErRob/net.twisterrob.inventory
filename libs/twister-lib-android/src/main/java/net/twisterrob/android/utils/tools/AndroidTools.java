@@ -19,7 +19,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.*;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.*;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.*;
 import android.os.Build.*;
@@ -30,7 +29,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.*;
 import android.support.v4.widget.*;
-import android.text.TextUtils;
 import android.util.*;
 import android.view.*;
 import android.view.ViewGroup.*;
@@ -39,32 +37,21 @@ import android.widget.*;
 
 import static android.util.TypedValue.*;
 
-import net.twisterrob.android.annotation.*;
-import net.twisterrob.android.utils.tostring.stringers.name.*;
 import net.twisterrob.android.view.layout.DoAfterLayout;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.*;
-import net.twisterrob.java.utils.tostring.*;
-import net.twisterrob.java.utils.tostring.stringers.DefaultNameStringer;
+
+import static net.twisterrob.android.AndroidConstants.*;
 
 @SuppressWarnings({"unused", "StaticMethodOnlyUsedInOneClass", "SameParameterValue"})
 public /*static*/ abstract class AndroidTools {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidTools.class);
 
 	private static final float CIRCLE_LIMIT = 359.9999f;
-	private static final int INVALID_POSITION = -1;
 
-	public static final @AnyRes int INVALID_RESOURCE_ID = 0;
 	public static final String NULL = StringTools.NULL_STRING;
 	public static final String ERROR = "error";
-
-	public static final String ANDROID_PACKAGE = "android";
-	public static final String RES_TYPE_ID = "id";
-	public static final String RES_TYPE_STRING = "string";
-	public static final String RES_TYPE_RAW = "raw";
-	public static final String RES_TYPE_DRAWABLE = "drawable";
-	public static final String RES_TYPE_COLOR = "color";
 
 	public static boolean hasPermission(Context context, String permission) {
 		PackageManager packageManager = context.getPackageManager();
@@ -240,16 +227,6 @@ public /*static*/ abstract class AndroidTools {
 			result = root.findViewById(androidID);
 		}
 		return result;
-	}
-
-	@DebugHelper
-	public static @NonNull <T> String toShortString(T value) {
-		return new ToStringer(StringerRepo.INSTANCE, value, false).toString();
-	}
-
-	@DebugHelper
-	public static @NonNull <T> String toString(T value) {
-		return new ToStringer(StringerRepo.INSTANCE, value, true).toString();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -833,42 +810,6 @@ public /*static*/ abstract class AndroidTools {
 		}
 	}
 
-	/** @see ComponentCallbacks2 */
-	@DebugHelper
-	public static String toTrimMemoryString(@TrimMemoryLevel int level) {
-		return TrimMemoryLevel.Converter.toString(level);
-	}
-
-	/** @see Intent#FLAG_* */
-	@SuppressWarnings("JavadocReference")
-	@DebugHelper
-	public static String toActivityIntentFlagString(@IntentFlags int flags) {
-		return IntentFlags.Converter.toString(flags, true);
-	}
-
-	public static String toDrawerLayoutStateString(int state) {
-		switch (state) {
-			case DrawerLayout.STATE_IDLE:
-				return "STATE_IDLE";
-			case DrawerLayout.STATE_DRAGGING:
-				return "STATE_DRAGGING";
-			case DrawerLayout.STATE_SETTLING:
-				return "STATE_SETTLING";
-			default:
-				return "state::" + state;
-		}
-	}
-
-	public static String toColorString(int color) {
-		return String.format(Locale.ROOT, "#%02X%02X%02X%02X",
-				Color.alpha(color), Color.red(color), Color.green(color), Color.blue(color));
-	}
-
-	@DebugHelper
-	public static String toFeatureString(@WindowFeature int featureId) {
-		return WindowFeature.Converter.toString(featureId);
-	}
-
 	/** @see PackageManager#getActivityInfo(ComponentName, int) */
 	public static ActivityInfo getActivityInfo(Activity activity, int flags) {
 		try {
@@ -983,22 +924,6 @@ public /*static*/ abstract class AndroidTools {
 		if (bundle != null) {
 			bundle.get(null);
 		}
-	}
-	@DebugHelper
-	public static String toNameString(Context context, @IdRes int id) {
-		return new ToStringer(StringerRepo.INSTANCE, id, ResourceNameStringer.INSTANCE).toString();
-	}
-	@DebugHelper
-	public static String toNameString(Fragment fragment) {
-		return new ToStringer(StringerRepo.INSTANCE, fragment, FragmentNameStringer.INSTANCE).toString();
-	}
-	@DebugHelper
-	public static String toNameString(Activity activity) {
-		return new ToStringer(StringerRepo.INSTANCE, activity, DefaultNameStringer.INSTANCE).toString();
-	}
-	@DebugHelper
-	public static String toNameString(Object object) {
-		return new ToStringer(StringerRepo.INSTANCE, object, DefaultNameStringer.INSTANCE).toString();
 	}
 
 	@SuppressWarnings("deprecation")

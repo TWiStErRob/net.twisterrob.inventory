@@ -1,6 +1,9 @@
 include ':'
 
 include ':slf4j'
+include ':logging'
+include ':stringers'
+
 include ':espresso'
 include ':espresso_actors'
 include ':espresso-glide3'
@@ -8,8 +11,10 @@ include ':cpsuite'
 include ':uiautomator'
 include ':annotations'
 include ':defs'
+include ':android-core'
 
 include ':glide3'
+include ':widgets'
 
 include ':about', ':about:test_helpers'
 include ':capture_image', ':capture_image:test_helpers'

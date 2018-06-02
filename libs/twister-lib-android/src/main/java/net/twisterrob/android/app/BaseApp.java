@@ -20,8 +20,8 @@ import android.support.annotation.*;
 import android.util.Log;
 import android.widget.Toast;
 
+import net.twisterrob.android.AndroidConstants;
 import net.twisterrob.android.content.pref.ResourcePreferences;
-import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.tostring.StringerRepo;
@@ -113,7 +113,7 @@ public abstract class BaseApp extends android.app.Application {
 	}
 
 	protected void initPreferences() {
-		if (preferencesResource != AndroidTools.INVALID_RESOURCE_ID) {
+		if (preferencesResource != AndroidConstants.INVALID_RESOURCE_ID) {
 			// may cause StrictModeDiskReadViolation on Android 21-23
 			// may cause StrictModeDiskWriteViolation on Android 24-25
 			// but necessary for startup since anything can read the preferences

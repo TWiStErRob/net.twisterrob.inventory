@@ -20,6 +20,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 
@@ -87,7 +88,7 @@ public class DrawerNavigator {
 		final NavItem navItem = items.get(menuItem.getItemId());
 		if (navItem == null) {
 			if (BuildConfig.DEBUG) {
-				LOG.warn("{} has no data defined.", AndroidTools.toNameString(activity, menuItem.getItemId()));
+				LOG.warn("{} has no data defined.", StringerTools.toNameString(activity, menuItem.getItemId()));
 			}
 			return;
 		}
@@ -120,7 +121,7 @@ public class DrawerNavigator {
 				return String.format(Locale.ROOT, "[%s] %s: %s",
 						activity.getResources().getResourceName(icon),
 						activity.getResources().getResourceName(id),
-						AndroidTools.toString(intent)
+						StringerTools.toString(intent)
 				);
 			} else {
 				return super.toString();

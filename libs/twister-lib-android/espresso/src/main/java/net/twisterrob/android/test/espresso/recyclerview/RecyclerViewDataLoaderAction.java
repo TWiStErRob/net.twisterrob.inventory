@@ -29,10 +29,10 @@ import android.view.View;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static android.support.test.internal.util.Checks.checkState;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import android.support.test.espresso.core.internal.deps.guava.base.Optional;
+import android.support.test.espresso.core.internal.deps.guava.collect.Lists;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewProtocol.AdaptedData;
 

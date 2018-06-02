@@ -22,6 +22,8 @@ dependencies {
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	implementation 'net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT'
 	implementation 'net.twisterrob.lib:twister-lib-android-defs'
+	implementation 'net.twisterrob.lib:twister-lib-android-android-core'
+	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
 	//noinspection GradleCompatible exifinterface is newer than all the other ones, and quite independent
 	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
 	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
@@ -51,18 +53,15 @@ android {
 	}
 }
 
-tasks.withType(JavaCompile) {
-	it.options.compilerArgs += [
-			// Ignore these, Stringers are using the internals for better experience, cannot be @SuppressWarning'd :(
-			"-Xlint:-auxiliaryclass",
-	]
-}
-
-allprojects {
-	if (android.sourceSets.androidTest.java.sourceFiles.empty) {
-		tasks.whenTaskAdded { task ->
-			if(task.name.contains("AndroidTest")) {
-				task.enabled = false
+afterEvaluate {
+	allprojects { project ->
+		com.android.build.gradle.api.AndroidSourceSet androidTest = project.android.sourceSets.androidTest
+		if (androidTest.java.sourceFiles.empty) {
+			logger.info "Disabling AndroidTest tasks in ${project.path} as it has no sources in ${androidTest.java.srcDirs}"
+			project.tasks.whenTaskAdded { task ->
+				if (task.name.contains("AndroidTest")) {
+					task.enabled = false
+				}
 			}
 		}
 	}

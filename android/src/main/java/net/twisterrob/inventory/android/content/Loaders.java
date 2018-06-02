@@ -11,7 +11,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 
 import net.twisterrob.android.content.loader.SimpleCursorLoader;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -252,7 +252,7 @@ public enum Loaders {
 
 		@Override public String toString() {
 			if (BuildConfig.DEBUG) {
-				return super.toString() + "=" + loaders + "(" + AndroidTools.toShortString(args) + ")";
+				return super.toString() + "=" + loaders + "(" + StringerTools.toShortString(args) + ")";
 			} else {
 				return super.toString();
 			}

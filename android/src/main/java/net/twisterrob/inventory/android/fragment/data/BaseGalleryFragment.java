@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import net.twisterrob.android.AndroidConstants;
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.content.glide.PauseOnFling;
 import net.twisterrob.android.utils.tools.*;
@@ -305,7 +306,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 		@Override protected void onViewSet() {
 			super.onViewSet();
-			if (emptyText != AndroidTools.INVALID_RESOURCE_ID) {
+			if (emptyText != AndroidConstants.INVALID_RESOURCE_ID) {
 				TextView text = getEmpty();
 				text.setText(emptyText);
 			}

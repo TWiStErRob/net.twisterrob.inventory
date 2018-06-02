@@ -1,0 +1,49 @@
+buildscript {
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	dependencies {
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
+
+group = 'net.twisterrob'
+version = '1.0'
+
+apply plugin: 'com.android.library'
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
+repositories {
+	jcenter()
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+}
+
+dependencies {
+	compileOnly "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
+	compileOnly "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
+	compileOnly "com.android.support:design:${VERSION_SUPPORT}"
+	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation "net.twisterrob.lib:twister-lib-collect"
+	implementation "net.twisterrob.lib:twister-lib-stringer"
+	implementation 'net.twisterrob.lib:twister-lib-android-android-core'
+	implementation "net.twisterrob.lib:twister-lib-android-defs"
+	compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+	compileOnly "net.twisterrob.lib:twister-lib-android-annotations"
+	compileOnly "net.twisterrob.lib:twister-lib-core"
+}
+
+android {
+	defaultConfig {
+		minSdkVersion 10
+	}
+	lintOptions {
+		tasks.lint.enabled = false
+	}
+}
+
+tasks.withType(JavaCompile) {
+	it.options.compilerArgs += [
+			// Ignore these, Stringers are using the internals for better experience, cannot be @SuppressWarning'd :(
+			"-Xlint:-auxiliaryclass",
+	]
+}

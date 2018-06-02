@@ -27,10 +27,10 @@ import android.widget.AdapterView;
 
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.*;
+import android.support.test.espresso.core.internal.deps.guava.base.Optional;
+import android.support.test.espresso.core.internal.deps.guava.collect.*;
 
-import static com.google.common.base.Preconditions.*;
+import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.*;
 
 /**
  * Implementations of {@link RecyclerViewProtocol} for standard SDK Widgets.

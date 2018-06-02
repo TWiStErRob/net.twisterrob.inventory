@@ -20,11 +20,14 @@ repositories {
 
 dependencies {
 	implementation "net.twisterrob.lib:twister-lib-core"
+	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-lib-junit4"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
 	api "net.twisterrob.lib:twister-lib-hamcrest"
 	implementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
-	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation "net.twisterrob.lib:twister-lib-android-android-core"
+	implementation "net.twisterrob.lib:twister-lib-android-logging"
+	implementation "net.twisterrob.lib:twister-lib-android-stringers"
 	implementation "net.twisterrob.lib:twister-lib-android-defs"
 	implementation "net.twisterrob.lib:twister-libs-android"
 
@@ -50,15 +53,14 @@ dependencies {
 	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
 	implementation "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
 
-	implementation "com.google.guava:guava:20.0"
-
 	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
 	compileOnly "com.android.support:support-v4:${VERSION_SUPPORT}"
-	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
+	compileOnly "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
 	compileOnly "com.android.support:design:${VERSION_SUPPORT}"
 	compileOnly "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
 	
 	androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
+	androidTestImplementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
 }
 
 android {

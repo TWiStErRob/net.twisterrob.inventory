@@ -22,7 +22,10 @@ dependencies {
 	implementation('net.twisterrob.lib:twister-libs-android:1.0-SNAPSHOT')
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation('net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT')
+	implementation 'net.twisterrob.lib:twister-lib-android-android-core'
 	implementation 'net.twisterrob.lib:twister-lib-android-about'
+	implementation 'net.twisterrob.lib:twister-lib-android-logging'
+	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
 	implementation 'net.twisterrob.lib:twister-lib-android-capture_image'
 	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j:1.0-SNAPSHOT')
 

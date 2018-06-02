@@ -53,7 +53,7 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 			ZipEntry entry;
 			while ((entry = zip.getNextEntry()) != null) {
 				if (BuildConfig.DEBUG) {
-					LOG.trace("Found ZIP entry {}", AndroidTools.toString(entry));
+					LOG.trace("Found ZIP entry {}", StringerTools.toString(entry));
 				}
 				if (Constants.Paths.BACKUP_DATA_FILENAME.equals(entry.getName())) {
 					seenEntry = true;

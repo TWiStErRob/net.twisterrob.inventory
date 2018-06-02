@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 
 import net.twisterrob.android.annotation.TrimMemoryLevel;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.StringerTools;
 
 public class LoggingBitmapPool implements BitmapPool {
 	private final @NonNull Logger LOG;
@@ -35,17 +35,17 @@ public class LoggingBitmapPool implements BitmapPool {
 	}
 	@Override public boolean put(Bitmap bitmap) {
 		boolean result = wrapped.put(bitmap);
-		LOG.trace("put({}): {}", AndroidTools.toString(bitmap), result);
+		LOG.trace("put({}): {}", StringerTools.toString(bitmap), result);
 		return result;
 	}
 	@Override public Bitmap get(int width, int height, Config config) {
 		Bitmap result = wrapped.get(width, height, config);
-		LOG.trace("get({}, {}, {}): {}", width, height, config, AndroidTools.toString(result));
+		LOG.trace("get({}, {}, {}): {}", width, height, config, StringerTools.toString(result));
 		return result;
 	}
 	@Override public Bitmap getDirty(int width, int height, Config config) {
 		Bitmap result = wrapped.getDirty(width, height, config);
-		LOG.trace("getDirty({}, {}, {}): {}", width, height, config, AndroidTools.toString(result));
+		LOG.trace("getDirty({}, {}, {}): {}", width, height, config, StringerTools.toString(result));
 		return result;
 	}
 	@Override public void clearMemory() {
@@ -53,7 +53,7 @@ public class LoggingBitmapPool implements BitmapPool {
 		wrapped.clearMemory();
 	}
 	@Override public void trimMemory(@TrimMemoryLevel int level) {
-		LOG.trace("trimMemory({})", AndroidTools.toTrimMemoryString(level));
+		LOG.trace("trimMemory({})", StringerTools.toTrimMemoryString(level));
 		wrapped.trimMemory(level);
 	}
 }

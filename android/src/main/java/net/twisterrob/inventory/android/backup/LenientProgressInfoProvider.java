@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.*;
 import android.support.v7.app.AlertDialog;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.AndroidConstants;
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.backup.Progress.Type;
 
@@ -50,7 +50,7 @@ public class LenientProgressInfoProvider implements ProgressInfoProvider {
 		return hasProgress()? provider.getTitle() : null;
 	}
 	@Override public @DrawableRes int getIcon() {
-		return hasProgress()? provider.getIcon() : AndroidTools.INVALID_RESOURCE_ID;
+		return hasProgress()? provider.getIcon() : AndroidConstants.INVALID_RESOURCE_ID;
 	}
 	@Override public @Nullable AlertDialog displayFinishMessage(@Nullable PopupCallbacks<Void> callback) {
 		return hasProgress()? provider.displayFinishMessage(callback) : null;

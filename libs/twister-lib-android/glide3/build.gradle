@@ -26,6 +26,7 @@ dependencies {
 	compileOnly "net.twisterrob.lib:twister-lib-core"
 	compileOnly "net.twisterrob.lib:twister-lib-android-annotations"
 	compileOnly "net.twisterrob.lib:twister-lib-android-defs"
+	compileOnly "net.twisterrob.lib:twister-lib-android-stringers"
 	compileOnly "net.twisterrob.lib:twister-libs-android"
 	compileOnly "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
 }

@@ -220,13 +220,13 @@ public class AndroidToolsTest_equalsBundle extends RobolectricTestBase {
 			Bundle b1 = (Bundle)item;
 			if (!AndroidTools.equals(b1, b2)) {
 				mismatchDescription.appendText("was ");
-				mismatchDescription.appendText(AndroidTools.toString(b1));
+				mismatchDescription.appendText(StringerTools.toString(b1));
 				return false;
 			}
 			return true;
 		}
 		@Override public void describeTo(Description description) {
-			description.appendText(AndroidTools.toString(b2));
+			description.appendText(StringerTools.toString(b2));
 		}
 	}
 }

@@ -8,7 +8,7 @@ import android.view.WindowManager;
 
 import com.android.debug.hv.ViewServer;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.inventory.android.BuildConfig;
 
 /**
@@ -22,9 +22,9 @@ public abstract class DebugHelperActivity extends VariantActivity {
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) {
 			LOG.debug("Creating {}\n{}\nsavedInstanceState={}",
-					AndroidTools.toNameString(this),
-					AndroidTools.toShortString(getIntent()),
-					AndroidTools.toShortString(savedInstanceState)
+					StringerTools.toNameString(this),
+					StringerTools.toShortString(getIntent()),
+					StringerTools.toShortString(savedInstanceState)
 			);
 		}
 		super.onCreate(savedInstanceState);
@@ -64,9 +64,9 @@ public abstract class DebugHelperActivity extends VariantActivity {
 		//setIntent(intent); // call this in child activity if you handle this event
 		if (BuildConfig.DEBUG) {
 			LOG.debug("Refreshing {} {}\n{}",
-					AndroidTools.toNameString(this),
-					AndroidTools.toShortString(intent.getExtras()),
-					AndroidTools.toShortString(intent)
+					StringerTools.toNameString(this),
+					StringerTools.toShortString(intent.getExtras()),
+					StringerTools.toShortString(intent)
 			);
 		}
 		super.onNewIntent(intent);

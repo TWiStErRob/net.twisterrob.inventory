@@ -22,9 +22,9 @@ import android.support.test.espresso.util.HumanReadables;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.google.common.base.Optional;
+import android.support.test.espresso.core.internal.deps.guava.base.Optional;
 
-import static com.google.common.base.Preconditions.*;
+import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.*;
 
 /**
  * A sadly necessary layer of indirection to interact with AdapterViews.

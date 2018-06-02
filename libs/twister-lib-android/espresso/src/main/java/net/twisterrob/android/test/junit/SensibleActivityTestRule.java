@@ -110,7 +110,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 				}
 			});
 		} catch (Throwable ex) {
-			com.google.common.base.Throwables.throwIfUnchecked(ex);
+			android.support.test.espresso.core.internal.deps.guava.base.Throwables.throwIfUnchecked(ex);
 		}
 	}
 

@@ -10,7 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.content.VariantIntentService;
 
@@ -117,7 +117,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 	private void setIntentAndDefaults(@NonNull NotificationCompat.Builder notification,
 			@Nullable PendingIntent intent) {
 		if (BuildConfig.DEBUG) {
-			LOG.trace("Updating notification {} with {}", notification, AndroidTools.toString(intent));
+			LOG.trace("Updating notification {} with {}", notification, StringerTools.toString(intent));
 		}
 		notification.setContentIntent(intent);
 		notification.setAutoCancel(true);

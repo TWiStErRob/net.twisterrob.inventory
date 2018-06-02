@@ -13,9 +13,9 @@ import android.view.*;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import com.google.common.base.Optional;
+import android.support.test.espresso.core.internal.deps.guava.base.Optional;
 
-import static com.google.common.base.Preconditions.*;
+import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.*;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewProtocol.AdaptedData;
 

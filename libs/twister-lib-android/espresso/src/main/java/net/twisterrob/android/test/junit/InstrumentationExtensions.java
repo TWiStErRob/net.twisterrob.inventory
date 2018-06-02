@@ -12,8 +12,8 @@ import android.support.test.runner.lifecycle.*;
 
 import static android.support.test.InstrumentationRegistry.*;
 
-import static com.google.common.base.Throwables.*;
-import static com.google.common.collect.Iterables.*;
+import static android.support.test.espresso.core.internal.deps.guava.base.Throwables.*;
+import static android.support.test.espresso.core.internal.deps.guava.collect.Iterables.*;
 
 public class InstrumentationExtensions {
 	public static @NonNull Stage getActivityStage(final @NonNull Activity activity) {

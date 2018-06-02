@@ -21,7 +21,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
 import net.twisterrob.inventory.android.view.DrawerNavigator;
 
-import static net.twisterrob.android.utils.tools.AndroidTools.*;
+import static net.twisterrob.android.AndroidConstants.*;
 import static net.twisterrob.inventory.android.activity.MainActivity.*;
 
 // CONSIDER extract as composite class not inheritance

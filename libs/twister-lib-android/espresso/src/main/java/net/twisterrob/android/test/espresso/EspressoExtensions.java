@@ -24,10 +24,11 @@ import android.os.Looper;
 import android.support.annotation.*;
 import android.support.test.annotation.Beta;
 import android.support.test.espresso.*;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.NoMatchingViewException.Builder;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.base.RootsOracle_Factory;
+import android.support.test.espresso.core.internal.deps.guava.base.Predicate;
+import android.support.test.espresso.core.internal.deps.guava.collect.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.util.*;
 import android.support.test.runner.lifecycle.Stage;
@@ -42,8 +43,6 @@ import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
-
-import com.google.common.collect.*;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
@@ -649,8 +648,14 @@ public class EspressoExtensions {
 	 */
 	public static Iterable<View> parentViewTraversal(final View view) {
 		return new Iterable<View>() {
+			@SuppressWarnings({"unchecked", "rawtypes"})
 			@Override public Iterator<View> iterator() {
-				return com.google.common.collect.Iterators.filter(parentTraversal(view).iterator(), View.class);
+				Predicate<Object> isView = new Predicate<Object>() {
+					@Override public boolean apply(Object input) {
+						return View.class.isInstance(input);
+					}
+				};
+				return (Iterator<View>)(Iterator)Iterators.filter(parentTraversal(view).iterator(), isView);
 			}
 		};
 	}

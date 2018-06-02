@@ -22,7 +22,7 @@ import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
 
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
-import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.java.io.IOTools;
 
 public class ScreenshotFailure implements TestRule {
 	private static final Logger LOG = LoggerFactory.getLogger(ScreenshotFailure.class);
