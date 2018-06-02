@@ -40,6 +40,7 @@ dependencies {
 android {
 	defaultConfig {
 		minSdkVersion 10
+		multiDexEnabled = true
 	}
 	lintOptions {
 		checkAllWarnings = true
@@ -55,6 +56,16 @@ tasks.withType(JavaCompile) {
 			// Ignore these, Stringers are using the internals for better experience, cannot be @SuppressWarning'd :(
 			"-Xlint:-auxiliaryclass",
 	]
+}
+
+allprojects {
+	if (android.sourceSets.androidTest.java.sourceFiles.empty) {
+		tasks.whenTaskAdded { task ->
+			if(task.name.contains("AndroidTest")) {
+				task.enabled = false
+			}
+		}
+	}
 }
 
 task cleanFull {
