@@ -24,7 +24,7 @@ import android.widget.*;
 
 import static android.widget.ArrayAdapter.*;
 
-import net.twisterrob.android.R;
+import net.twisterrob.android.about.R;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.java.utils.ReflectionTools;
 
@@ -156,7 +156,7 @@ public class AboutActivity extends ListActivity {
 		String buildConfigClass = app.getClass().getPackage().getName() + ".BuildConfig";
 		about.email = ReflectionTools.getStatic(buildConfigClass, "EMAIL");
 		if (about.email == null) {
-			about.email = net.twisterrob.android.BuildConfig.EMAIL; // library's fallback
+			about.email = net.twisterrob.android.about.BuildConfig.EMAIL; // library's fallback
 		}
 
 		PackageInfo pkgInfo;

@@ -1,0 +1,35 @@
+buildscript {
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	dependencies {
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
+
+group = 'net.twisterrob'
+version = '1.0'
+
+apply plugin: 'com.android.library'
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
+repositories {
+	jcenter()
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+}
+
+dependencies {
+	implementation "net.twisterrob.lib:twister-lib-android-capture_image"
+	implementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
+	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+}
+
+android {
+	defaultConfig {
+		minSdkVersion 10
+	}
+	lintOptions {
+		tasks.lint.enabled = false
+	}
+}

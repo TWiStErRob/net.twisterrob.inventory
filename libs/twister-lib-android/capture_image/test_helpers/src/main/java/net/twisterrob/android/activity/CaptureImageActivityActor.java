@@ -17,9 +17,15 @@ import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 
-import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.inventory.android.test.actors.ActivityActor;
+import net.twisterrob.java.io.IOTools;
 
-public class CaptureImageActivityActor {
+public class CaptureImageActivityActor extends ActivityActor {
+
+	public CaptureImageActivityActor() {
+		super(CaptureImage.class);
+	}
+
 	public Matcher<Intent> intendCamera(File file, Bitmap mockText) throws IOException {
 		Uri resultFile = Uri.fromFile(file);
 		OutputStream output = getContext().getContentResolver().openOutputStream(resultFile);

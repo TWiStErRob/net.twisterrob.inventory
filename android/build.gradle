@@ -20,7 +20,10 @@ android.applicationVariants.all { com.android.build.gradle.api.ApplicationVarian
 dependencies {
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	implementation('net.twisterrob.lib:twister-libs-android:1.0-SNAPSHOT')
+	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation('net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT')
+	implementation 'net.twisterrob.lib:twister-lib-android-about'
+	implementation 'net.twisterrob.lib:twister-lib-android-capture_image'
 	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j:1.0-SNAPSHOT')
 
 	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
@@ -31,11 +34,11 @@ dependencies {
 //	implementation "com.android.support:cardview-v7:${VERSION_SUPPORT}"
 	implementation "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
 	//noinspection GradleDependency 0.3.1/1.0 is API 14+ (https://github.com/google/flexbox-layout/issues/390)
-	implementation ('com.google.android:flexbox:0.3.0') {
+	implementation('com.google.android:flexbox:0.3.0') {
 		exclude group: 'com.android.support'
 	}
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
-	implementation "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
+
 	implementation 'com.caverock:androidsvg:1.2.1'
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
@@ -49,9 +52,12 @@ dependencies {
 	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso-glide3"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-cpsuite"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-uiautomator"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-about-test_helpers"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-capture_image-test_helpers"
 }
 
 android {

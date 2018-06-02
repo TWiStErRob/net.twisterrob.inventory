@@ -36,7 +36,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.*;
 import com.bumptech.glide.request.target.*;
 
-import net.twisterrob.android.R;
+import net.twisterrob.android.capture_image.R;
 import net.twisterrob.android.content.ImageRequest;
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.utils.concurrent.Callback;

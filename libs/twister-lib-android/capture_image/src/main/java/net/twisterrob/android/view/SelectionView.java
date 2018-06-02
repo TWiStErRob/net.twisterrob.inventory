@@ -17,7 +17,7 @@ import android.view.*;
 
 import static android.support.v4.content.ContextCompat.*;
 
-import net.twisterrob.android.R;
+import net.twisterrob.android.capture_image.R;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 /**

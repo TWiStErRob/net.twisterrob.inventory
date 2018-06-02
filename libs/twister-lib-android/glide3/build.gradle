@@ -1,0 +1,40 @@
+buildscript {
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	dependencies {
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
+
+group = 'net.twisterrob'
+version = '1.0'
+
+apply plugin: 'com.android.library'
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
+repositories {
+	jcenter()
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+}
+
+dependencies {
+	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
+	api "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
+	implementation 'com.caverock:androidsvg:1.2.1'
+	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
+	compileOnly "net.twisterrob.lib:twister-lib-core"
+	compileOnly "net.twisterrob.lib:twister-lib-android-annotations"
+	compileOnly "net.twisterrob.lib:twister-lib-android-defs"
+	compileOnly "net.twisterrob.lib:twister-libs-android"
+	compileOnly "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
+}
+
+android {
+	defaultConfig {
+		minSdkVersion 10
+	}
+	lintOptions {
+		tasks.lint.enabled = false
+	}
+}

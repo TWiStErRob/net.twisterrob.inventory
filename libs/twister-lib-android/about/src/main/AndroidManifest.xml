@@ -1,0 +1,15 @@
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="net.twisterrob.android.about">
+
+	<application>
+
+		<activity
+			android:name="net.twisterrob.android.activity.AboutActivity"
+			android:label="@string/about_title"
+			android:exported="false"
+			/>
+
+	</application>
+
+</manifest>

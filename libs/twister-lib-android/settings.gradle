@@ -1,11 +1,19 @@
 include ':'
+
 include ':slf4j'
 include ':espresso'
+include ':espresso_actors'
 include ':espresso-glide3'
 include ':cpsuite'
 include ':uiautomator'
 include ':annotations'
 include ':defs'
+
+include ':glide3'
+
+include ':about', ':about:test_helpers'
+include ':capture_image', ':capture_image:test_helpers'
+
 //if (gradle.parent == null) {
 //	includeBuild '../twister-lib-java'
 //}

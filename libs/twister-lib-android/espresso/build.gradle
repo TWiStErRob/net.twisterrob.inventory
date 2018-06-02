@@ -22,14 +22,14 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-core"
 	implementation "net.twisterrob.lib:twister-lib-junit4"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
-	implementation "net.twisterrob.lib:twister-lib-hamcrest"
+	api "net.twisterrob.lib:twister-lib-hamcrest"
 	implementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-lib-android-defs"
 	implementation "net.twisterrob.lib:twister-libs-android"
-	
+
 	// Espresso core
-	implementation "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
+	api "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
 	// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
 	implementation("com.android.support.test.espresso:espresso-contrib:${VERSION_ESPRESSO}") {
 		// Need to ignore support dependencies, otherwise weird exceptions happen, for example:

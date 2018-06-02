@@ -12,7 +12,7 @@ includeBuildHack(
 		'libs/twister-lib-java',
 		'net.twisterrob.lib', 'twister-libs-java',
 		{
-			def shortName = it.path.replaceAll(/.*:/, "")
+			def shortName = it.path.replaceAll(/^.*:(.*)$/, '$1')
 			return shortName == "" ? null : "twister-lib-${shortName}"
 		}
 )
@@ -27,19 +27,25 @@ includeBuildHack(
 		'libs/twister-lib-android',
 		'net.twisterrob.lib', 'twister-libs-android',
 		{
-			def shortName = it.path.replaceAll(/.*:/, "")
+			def shortName = it.path.replaceAll(/^.*:(.*)/, '$1')
+			if (shortName == 'test_helpers') {
+				shortName = it.path.replaceAll(/^.*:(.*):test_helpers$/, '$1-test_helpers')
+			}
 			return shortName == "" ? null : "twister-lib-android-${shortName}"
 		}
 )
 
 rootProject.name = 'Inventory'
 
+/**
+ * @param subfolder relative path of between the current and the included settings.gradle
+ */
 def includeBuildHack(String subfolder, String mavenGroup, String mavenModule, Closure moduleNaming) {
 	Closure<List<ProjectDescriptor>> children = { ProjectDescriptor project ->
 		[ project ] + project.children.collectMany { owner.call(it) }
 	}
 
-	def subProjectPath = subfolder.replace('/', ':')
+	def subProjectPath = ':' + subfolder.replace('/', ':')
 	def beforeInclude = children(rootProject)
 	apply from: "${subfolder}/settings.gradle", to: new SettingsDelegator(settings, subProjectPath)
 	def includedProjects = children(rootProject) - beforeInclude
@@ -51,7 +57,7 @@ def includeBuildHack(String subfolder, String mavenGroup, String mavenModule, Cl
 			resolutionStrategy {
 				dependencySubstitution {
 					substitute(module('${mavenGroup}:${mavenModule}'))
-						.with project(':${subProjectPath}')
+						.with project('${subProjectPath}')
 	""".stripIndent()
 	substitute << System.lineSeparator()
 	includedProjects.each {
@@ -84,12 +90,24 @@ class SettingsDelegator {
 
 	// overrides org.gradle.api.initialization.Settings.include(String)
 	@SuppressWarnings("GroovyUnusedDeclaration") // used by included project's settings.gradle
-	void include(String path) {
+	void include(String... paths) {
+		paths.each { delegateInclude(it) }
+	}
+
+	private void delegateInclude(String path) {
 		if (path == ':') {
 			path = ""
 		}
-		def fullPath = subProjectPathPrefix + path
-		//println "Delegating include('${path}') as include('${fullPath}')"
-		settings.include(fullPath)
+		def fullProjectPath = subProjectPathPrefix + path
+		def adjustedProjectPath = fullProjectPath
+		if (path.endsWith(':test_helpers')) {
+			def noHelpersSuffix = fullProjectPath.substring(0, fullProjectPath.length() - ':test_helpers'.length())
+			adjustedProjectPath = noHelpersSuffix + '-test_helpers'
+		}
+		//println "Delegating include('${path}') as include('${adjustedProjectPath}')"
+		settings.include(adjustedProjectPath)
+		def includedProject = settings.project(adjustedProjectPath)
+		includedProject.projectDir = new File(fullProjectPath.substring(1).replace(':', '/'))
+		//println "Relocating ${adjustedProjectPath} as ${includedProject.projectDir.absolutePath}"
 	}
 }

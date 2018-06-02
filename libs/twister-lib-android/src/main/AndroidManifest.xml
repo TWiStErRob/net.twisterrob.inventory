@@ -11,30 +11,4 @@
 	<!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18,com.rarepebble.colorpicker" />
 
-	<application
-		android:supportsRtl="true"
-		tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
-		<activity
-			android:name="net.twisterrob.android.activity.CaptureImage"
-			android:exported="false"
-			android:screenOrientation="fullUser"
-			>
-			<intent-filter>
-				<action android:name="net.twisterrob.android.intent.action.CAPTURE_IMAGE" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-			<!--
-			<uses-permission android:name="android.permission.CAMERA" />
-			<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-			<uses-feature android:name="android.hardware.camera" android:required="false" />
-			<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-			-->
-		</activity>
-		<activity
-			android:name="net.twisterrob.android.activity.AboutActivity"
-			android:label="@string/about_title"
-			android:exported="false"
-			/>
-	</application>
-
 </manifest>

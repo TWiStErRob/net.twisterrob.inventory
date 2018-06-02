@@ -1,0 +1,42 @@
+buildscript {
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	dependencies {
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
+
+group = 'net.twisterrob'
+version = '1.0'
+
+apply plugin: 'com.android.library'
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
+repositories {
+	jcenter()
+	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+}
+
+dependencies {
+	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
+	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
+	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
+	implementation "com.android.support:exifinterface:25.1.0"
+	implementation "net.twisterrob.lib:twister-lib-android-glide3"
+	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation "net.twisterrob.lib:twister-libs-android"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-capture_image-test_helpers"
+	androidTestImplementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+}
+
+android {
+	defaultConfig {
+		minSdkVersion 10
+	}
+	lintOptions {
+		tasks.lint.enabled = false
+	}
+}
