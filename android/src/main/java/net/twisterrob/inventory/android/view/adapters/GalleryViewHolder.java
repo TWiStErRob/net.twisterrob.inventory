@@ -64,7 +64,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 
 		title.setText(name);
 		count.setText(countText);
-		AndroidTools.displayedIfHasText(count);
+		ViewTools.displayedIfHasText(count);
 
 		ImagedDTO.loadInto(this.image, this.type, hasImage? type : null, id, imageTime, typeImage, true);
 	}

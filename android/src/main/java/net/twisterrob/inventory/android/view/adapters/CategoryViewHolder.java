@@ -76,7 +76,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		} else {
 			stats.setText(CategoryDTO.getKeywordsExtended(context, name));
 		}
-		AndroidTools.displayedIfHasText(stats);
+		ViewTools.displayedIfHasText(stats);
 
 		Integer itemCountTotal = getCount(cursor, Category.COUNT_ITEM_ALL);
 		if (itemCountTotal != null) {
@@ -84,7 +84,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		} else {
 			count.setText(null);
 		}
-		AndroidTools.displayedIfHasText(count);
+		ViewTools.displayedIfHasText(count);
 
 		Pic.svg().load(AndroidTools.getRawResourceID(context, typeImage)).into(image);
 	}

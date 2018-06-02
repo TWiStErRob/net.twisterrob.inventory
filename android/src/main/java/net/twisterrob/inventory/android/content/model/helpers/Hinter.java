@@ -15,7 +15,7 @@ import android.widget.*;
 
 import static android.text.Spanned.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.content.contract.Category;
@@ -275,7 +275,7 @@ public class Hinter {
 				Pic.svg().load(typeId).into(image);
 
 				boolean isCurrent = cache.getCategoryKey(categorySuggestion.getId()).equals(currentTypeName);
-				AndroidTools.displayedIf(check, isCurrent);
+				ViewTools.displayedIf(check, isCurrent);
 
 //				title.setText(cache.getCategoryKey(categorySuggestion.getId()).replace("category_", ""));
 				title.setText(cache.getCategoryPath(categorySuggestion.getId()));

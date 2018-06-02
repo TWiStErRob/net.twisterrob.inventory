@@ -55,10 +55,10 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 		}
 		@Override public void started() {
 			setCancelling(getBinding().isCancelled());
-			AndroidTools.displayedIf(getView(), true);
+			ViewTools.displayedIf(getView(), true);
 		}
 		@Override public void finished() {
-			AndroidTools.displayedIf(getView(), false);
+			ViewTools.displayedIf(getView(), false);
 			displayer.setProgress(null);
 			updateUI();
 		}
@@ -142,9 +142,9 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 	}
 
 	private void setCancelling(boolean cancelling) {
-		AndroidTools.enabledIf(cancel, !cancelling);
-		AndroidTools.visibleIf(cancel, !cancelling);
-		AndroidTools.visibleIf(cancelWait, cancelling);
+		ViewTools.enabledIf(cancel, !cancelling);
+		ViewTools.visibleIf(cancel, !cancelling);
+		ViewTools.visibleIf(cancelWait, cancelling);
 	}
 
 	private void updateUI() {

@@ -25,7 +25,7 @@ import android.widget.*;
 import static android.widget.ArrayAdapter.*;
 
 import net.twisterrob.android.about.R;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.java.utils.ReflectionTools;
 
 public class AboutActivity extends ListActivity {
@@ -43,7 +43,7 @@ public class AboutActivity extends ListActivity {
 
 		setListAdapter(createFromResource(this, R.array.about_licenses, android.R.layout.simple_list_item_1));
 		licenseContents = getResources().getTextArray(R.array.about_licenses_content);
-		AndroidTools.displayedIf(findViewById(R.id.about_licenses_title), !getListAdapter().isEmpty());
+		ViewTools.displayedIf(findViewById(R.id.about_licenses_title), !getListAdapter().isEmpty());
 
 		AboutInfo aboutInfo = getAboutInfo();
 		LOG.trace("About info: {}", aboutInfo);
@@ -85,7 +85,7 @@ public class AboutActivity extends ListActivity {
 		TextView versionCodeText = (TextView)findViewById(R.id.about_version_code);
 		versionCodeText.setText(String.valueOf(aboutInfo.versionCode));
 		versionCodeText.setOnClickListener(settingsAction);
-		AndroidTools.displayedIf(versionCodeText, getResources().getBoolean(R.bool.in_test));
+		ViewTools.displayedIf(versionCodeText, getResources().getBoolean(R.bool.in_test));
 
 		TextView packageText = (TextView)findViewById(R.id.about_package);
 		packageText.setText(aboutInfo.applicationId);
@@ -99,7 +99,7 @@ public class AboutActivity extends ListActivity {
 	private void initSection(@IdRes int sectionContentID, @IdRes int sectionTitleID) {
 		TextView contentView = (TextView)findViewById(sectionContentID);
 		contentView.setMovementMethod(LinkMovementMethod.getInstance());
-		AndroidTools.displayedIfHasText(contentView);
+		ViewTools.displayedIfHasText(contentView);
 		View titleView = findViewById(sectionTitleID);
 		titleView.setVisibility(contentView.getVisibility());
 	}
@@ -150,7 +150,7 @@ public class AboutActivity extends ListActivity {
 		Context app = getApplicationContext();
 		ApplicationInfo appInfo = app.getApplicationInfo();
 
-		about.appLabel = getResources().getString(appInfo.labelRes);
+		about.appLabel = appInfo.labelRes != 0? getResources().getString(appInfo.labelRes) : null;
 		about.appIcon = appInfo.loadIcon(app.getPackageManager());
 		about.applicationId = app.getPackageName();
 		String buildConfigClass = app.getClass().getPackage().getName() + ".BuildConfig";
@@ -193,13 +193,14 @@ public class AboutActivity extends ListActivity {
 		return view;
 	}
 
+	@SuppressWarnings("NullableProblems")
 	protected static class AboutInfo {
-		protected String appLabel;
-		protected Drawable appIcon;
-		protected String versionName;
-		protected int versionCode;
-		protected String applicationId;
-		protected String email;
+		protected @Nullable String appLabel;
+		protected @NonNull Drawable appIcon;
+		protected @NonNull String versionName;
+		protected @IntRange(from = 0) int versionCode;
+		protected @NonNull String applicationId;
+		protected @NonNull String email;
 
 		@Override public String toString() {
 			return String.format(Locale.ROOT, "%s(%s): %s v%s(%d) -> %s",

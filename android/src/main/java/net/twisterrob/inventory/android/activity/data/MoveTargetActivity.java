@@ -15,7 +15,7 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.*;
@@ -201,8 +201,8 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 			btnOk.setEnabled(true);
 			labType.setText(null);
 		}
-		AndroidTools.displayedIfHasText(labType);
-		AndroidTools.displayedIfHasText(title);
+		ViewTools.displayedIfHasText(labType);
+		ViewTools.displayedIfHasText(title);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(0 < getSupportFragmentManager().getBackStackEntryCount());
 	}
 
@@ -262,7 +262,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
 		boolean result = super.onPrepareOptionsMenu(menu);
-		AndroidTools.visibleIf(menu, R.id.action_room_list, false);
+		ViewTools.visibleIf(menu, R.id.action_room_list, false);
 		return result;
 	}
 

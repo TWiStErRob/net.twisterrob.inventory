@@ -11,7 +11,7 @@ import android.widget.*;
 
 import static android.content.Context.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.ImageActivity;
 import net.twisterrob.inventory.android.content.model.*;
@@ -56,7 +56,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 	@Override public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		AndroidTools.enabledIf(menu, R.id.action_share, shareIntent != null);
+		ViewTools.enabledIf(menu, R.id.action_share, shareIntent != null);
 	}
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -119,7 +119,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					view = inflater.inflate(R.layout.inc_details_image, container, false);
 					ImageView image = (ImageView)view.findViewById(R.id.image);
 					ImageView type = (ImageView)view.findViewById(R.id.type);
-					AndroidTools.visibleIf(type, !(entity instanceof CategoryDTO));
+					ViewTools.visibleIf(type, !(entity instanceof CategoryDTO));
 
 					if (!(entity instanceof CategoryDTO)) {
 						image.setOnClickListener(new ImageOpenListener());

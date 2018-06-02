@@ -80,7 +80,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		if (this.indented) {
 			int level = DatabaseTools.getOptionalInt(cursor, TypeSource.LEVEL, 0);
 			int indent = (int)(mContext.getResources().getDimension(R.dimen.icon_context) * level);
-			AndroidTools.updateWidth(holder.spacer, indent);
+			ViewTools.updateWidth(holder.spacer, indent);
 		}
 
 		if (DatabaseTools.getOptionalBoolean(cursor, TypeSource.STRONG, false)) {

@@ -205,7 +205,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 
 		typeImage = (ImageView)view.findViewById(R.id.type);
-		AndroidTools.displayedIf(typeImage, this instanceof ItemEditFragment);
+		ViewTools.displayedIf(typeImage, this instanceof ItemEditFragment);
 
 		name = (EditText)view.findViewById(R.id.title);
 		AndroidTools.setHint(name, (Integer)getDynamicResource(DYN_NameHintResource));
@@ -267,7 +267,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				}
 			}
 		});
-		AndroidTools.displayedIf(help, this instanceof ItemEditFragment);
+		ViewTools.displayedIf(help, this instanceof ItemEditFragment);
 		registerForContextMenu(help);
 
 		type = (Spinner)view.findViewById(R.id.type_edit);
@@ -308,10 +308,10 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		}
 		Hinter.unhighlight(name.getText());
 		if (hinter.hint(text.toString(), b, getTypeName())) {
-			AndroidTools.displayedIf(hint, true);
+			ViewTools.displayedIf(hint, true);
 			hinter.highlight(name.getText());
 		} else {
-			AndroidTools.displayedIf(hint, false);
+			ViewTools.displayedIf(hint, false);
 		}
 	}
 
@@ -324,7 +324,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		inflater.inflate(R.menu.edit_context, menu);
 		String suggest = App.prefs().getString(R.string.pref_suggestCategory, R.string.pref_suggestCategory_default);
 		String always = getString(R.string.pref_suggestCategory_always);
-		AndroidTools.visibleIf(menu, R.id.action_category_suggest, !always.equals(suggest));
+		ViewTools.visibleIf(menu, R.id.action_category_suggest, !always.equals(suggest));
 	}
 
 	@Override public boolean onContextItemSelected(MenuItem item) {

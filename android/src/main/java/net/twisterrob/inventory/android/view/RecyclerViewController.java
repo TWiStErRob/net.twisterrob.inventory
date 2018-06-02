@@ -14,7 +14,7 @@ import android.view.*;
 import android.view.View.OnClickListener;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.R;
 
 @UiThread
@@ -105,8 +105,8 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 		if (parent instanceof SwipeRefreshLayout) {
 			this.progress = (SwipeRefreshLayout)parent;
 		}
-		fab = AndroidTools.findClosest(list, R.id.fab);
-		empty = AndroidTools.findClosest(list, android.R.id.empty);
+		fab = ViewTools.findClosest(list, R.id.fab);
+		empty = ViewTools.findClosest(list, android.R.id.empty);
 		onViewSet();
 	}
 
@@ -189,7 +189,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 			return;
 		}
 		// loading or adapter being null means emptiness is undetermined, better hide it then so progress can shine
-		AndroidTools.displayedIf(empty, !isLoading() && adapter != null && isEmpty(adapter));
+		ViewTools.displayedIf(empty, !isLoading() && adapter != null && isEmpty(adapter));
 	}
 
 	protected boolean isEmpty(@NonNull A adapter) {

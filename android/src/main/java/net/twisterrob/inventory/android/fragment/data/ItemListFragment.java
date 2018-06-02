@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.*;
 import android.view.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
@@ -52,7 +52,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		AndroidTools.visibleIf(menu, R.id.action_item_add, listController.canCreateNew());
+		ViewTools.visibleIf(menu, R.id.action_item_add, listController.canCreateNew());
 	}
 
 	@Override

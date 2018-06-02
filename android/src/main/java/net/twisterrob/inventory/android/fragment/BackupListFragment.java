@@ -189,7 +189,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 			Pic.svg().load(icon).into(holder.icon);
 			holder.text.setText(name);
 			holder.count.setText(size);
-			AndroidTools.displayedIfHasText(holder.count);
+			ViewTools.displayedIfHasText(holder.count);
 		}
 
 		class ViewHolder extends RecyclerView.ViewHolder {

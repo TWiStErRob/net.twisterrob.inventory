@@ -34,6 +34,7 @@ import net.twisterrob.inventory.android.content.db.DatabaseService;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
 import static net.twisterrob.android.utils.tools.DatabaseTools.*;
+import static net.twisterrob.android.utils.tools.ViewTools.*;
 
 public class ManageSpaceActivity extends BaseActivity implements TaskEndListener {
 	private static final Logger LOG = LoggerFactory.getLogger(ManageSpaceActivity.class);

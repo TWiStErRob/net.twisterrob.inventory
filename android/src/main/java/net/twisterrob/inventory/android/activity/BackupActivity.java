@@ -172,9 +172,9 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		return true;
 	}
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
-		AndroidTools.enabledIf(menu, R.id.action_import_external, allowNew);
-		AndroidTools.enabledIf(menu, R.id.action_export_internal, allowNew);
-		AndroidTools.enabledIf(menu, R.id.action_export_external, allowNew);
+		ViewTools.enabledIf(menu, R.id.action_import_external, allowNew);
+		ViewTools.enabledIf(menu, R.id.action_export_internal, allowNew);
+		ViewTools.enabledIf(menu, R.id.action_export_external, allowNew);
 		return super.onPrepareOptionsMenu(menu);
 	}
 	@Override public boolean onOptionsItemSelected(MenuItem item) {

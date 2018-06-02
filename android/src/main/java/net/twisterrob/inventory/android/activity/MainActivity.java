@@ -331,7 +331,7 @@ public class MainActivity extends DrawerActivity
 
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
 		boolean result = super.onPrepareOptionsMenu(menu);
-		AndroidTools.visibleIf(menu, R.id.action_demo_inventory, isInventoryEmptyCache);
+		ViewTools.visibleIf(menu, R.id.action_demo_inventory, isInventoryEmptyCache);
 		return result;
 	}
 
