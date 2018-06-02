@@ -1,0 +1,15 @@
+<!-- Setup for androidTest so there's something to show, this "app" is being targeted when running tests. -->
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="net.twisterrob.android.about.test"
+	android:versionName="@string/about_test_version_name"
+	android:versionCode="123"
+	>
+
+	<application
+		android:label="@string/about_test_application_label"
+		>
+
+	</application>
+
+</manifest>

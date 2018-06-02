@@ -32,6 +32,7 @@ dependencies {
 android {
 	defaultConfig {
 		minSdkVersion 10
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	lintOptions {
 		tasks.lint.enabled = false

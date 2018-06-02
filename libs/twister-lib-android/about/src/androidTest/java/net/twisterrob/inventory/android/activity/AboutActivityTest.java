@@ -39,7 +39,8 @@ public class AboutActivityTest {
 
 //	@Category(UseCase.InitialCondition.class)
 	@Test public void testAppNameShown() {
-//		about.assertTextExists(containsStringRes(R.string.app_name));
+		int appName = net.twisterrob.android.about.test.R.string.about_test_application_label;
+		about.assertTextExists(containsStringRes(appName));
 	}
 
 //	@Category(UseCase.InitialCondition.class)
@@ -50,9 +51,10 @@ public class AboutActivityTest {
 
 //	@Category(UseCase.InitialCondition.class)
 	@Test public void testLicencesMentioned() {
-		about.assertTextExists(containsString("Glide"));
-		about.assertTextExists(containsString("libjpeg"));
-		about.assertTextExists(containsString("StackOverflow"));
+		String[] licences = getTargetContext().getResources().getStringArray(R.array.about_licenses);
+		for (String licence : licences) {
+			about.assertTextExists(equalTo(licence));
+		}
 	}
 
 //	@Category(UseCase.InitialCondition.class)

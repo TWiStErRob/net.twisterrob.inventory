@@ -1,0 +1,17 @@
+<resources>
+
+	<string name="about_test_application_label">About Test App</string>
+	<string name="about_test_version_name">About Test Version</string>
+	<integer name="about_test_version_code">123</integer>
+
+	<string-array name="about_licenses" translatable="false">
+		<item>@string/about_license_glide_title</item>
+		<item>@string/about_license_stackoverflow_title</item>
+	</string-array>
+
+	<string-array name="about_licenses_content" translatable="false">
+		<item>@string/about_license_glide</item>
+		<item>@string/about_license_stackoverflow</item>
+	</string-array>
+
+</resources>

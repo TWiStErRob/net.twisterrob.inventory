@@ -1,0 +1,43 @@
+configurations.all {
+	if (it.name.contains("lintClassPath")) return
+	resolutionStrategy {
+		force "junit:junit:${VERSION_JUNIT}" // use snapshot version
+		force "org.mockito:mockito-core:${VERSION_MOCKITO}" // powermock refers to older
+		force 'org.objenesis:objenesis:2.6' // 2.4 (powermock) vs 2.6 (mockito)
+		force 'com.google.guava:guava:20.0' // 17.0 (shazamcrest) vs 20.0 (robolectric)
+		force 'com.thoughtworks.xstream:xstream:1.4.9' // 1.4.8 (robolectric) vs 1.4.9 (powermock)
+		dependencySubstitution {
+			substitute(module('org.hamcrest:hamcrest-core'))
+					.with module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}")
+			substitute(module('org.hamcrest:hamcrest-library'))
+					.with module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}")
+		}
+	}
+}
+
+def isAndroid = plugins.hasPlugin('com.android.application') || plugins.hasPlugin('com.android.library')
+if (isAndroid) {
+	configurations {
+		// need to go for all, because of the hidden _debugAndroidTestCompile and friends
+		/*[ androidTestImplementation ].each*/ all {
+			if (it.name.contains("lintClassPath")) return
+			it.resolutionStrategy {
+				force 'com.google.code.findbugs:jsr305:3.0.2' // 2.0.1 vs 3.0.2
+				force 'com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.1'
+				// Force some dependencies to be consistent between implementation and androidTestImplementation
+				dependencySubstitution {
+					[ 'support-annotations', 'support-v4', 'appcompat-v7', 'support-v13',
+					  'design', 'customtabs', 'preference-v7', 'preference-v14',
+					  'recyclerview-v7', 'cardview-v7', 'gridlayout-v7', 'percent', 'palette-v7',
+					  'mediarouter-v7', 'leanback-v17', 'preference-leanback-v17', 'recommendation',
+					  'support-vector-drawable', 'animated-vector-drawable'
+					].each {
+						force "com.android.support:${it}:${VERSION_SUPPORT}"
+						substitute(module("com.android.support:${it}"))
+								.with module("com.android.support:${it}:${VERSION_SUPPORT}")
+					}
+				}
+			}
+		}
+	}
+}
