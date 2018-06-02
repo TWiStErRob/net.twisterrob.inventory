@@ -17,7 +17,7 @@ import android.widget.LinearLayout.LayoutParams;
 import static android.view.ViewGroup.LayoutParams.*;
 
 import net.twisterrob.android.R;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 
 /**
  * A {@link android.preference.Preference} that displays a number picker as a dialog.
@@ -120,7 +120,7 @@ public class NumberPickerPreference extends DialogPreference {
 			message = new TextView(context);
 			LayoutParams messageParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
 			messageParams.gravity = Gravity.CENTER_HORIZONTAL;
-			messageParams.topMargin = AndroidTools.dipInt(context, 4);
+			messageParams.topMargin = ResourceTools.dipInt(context, 4);
 			message.setLayoutParams(messageParams);
 			updateMessage();
 			layout.addView(message);

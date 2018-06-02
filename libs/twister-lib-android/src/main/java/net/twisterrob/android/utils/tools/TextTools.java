@@ -64,7 +64,7 @@ public /*static*/ abstract class TextTools {
 		for (Annotation a : spans) {
 			if ("color".equals(a.getKey())) {
 				try {
-					@ColorRes int colorId = AndroidTools.getColorResourceID(context, a.getValue());
+					@ColorRes int colorId = ResourceTools.getColorResourceID(context, a.getValue());
 					@ColorInt int color = ContextCompat.getColor(context, colorId);
 					text.setSpan(new ForegroundColorSpan(color),
 							text.getSpanStart(a), text.getSpanEnd(a), text.getSpanFlags(a));

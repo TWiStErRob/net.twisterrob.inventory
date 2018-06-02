@@ -20,7 +20,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static android.view.WindowManager.LayoutParams.*;
 
 import net.twisterrob.android.test.espresso.idle.ToastIdlingResource;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.ResourceTools;
 
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
@@ -104,9 +104,9 @@ public class DialogMatchers {
 
 	public static Matcher<View> isDialogTitle() {
 		// new android.support.v7.app.AlertDialog.Builder().setTitle(...).show();
-		@IdRes int supportAlertTitle = AndroidTools.getIDResourceID(getTargetContext(), "alertTitle");
+		@IdRes int supportAlertTitle = ResourceTools.getIDResourceID(getTargetContext(), "alertTitle");
 		// new android.app.AlertDialog.Builder().setTitle(...).show();
-		@IdRes int androidAlertTitle = AndroidTools.getIDResourceID(null, "alertTitle");
+		@IdRes int androidAlertTitle = ResourceTools.getIDResourceID(null, "alertTitle");
 		return anyOf(withId(supportAlertTitle), withId(androidAlertTitle));
 	}
 

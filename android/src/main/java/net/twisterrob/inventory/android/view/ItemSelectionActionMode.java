@@ -60,7 +60,7 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 							App.db().updateItem(item.id, newType, item.name, item.description);
 						}
 						String newTypeKey = DatabaseTools.getString(cursor, CommonColumns.NAME);
-						CharSequence newTypeName = AndroidTools.getText(fragment.getContext(), newTypeKey);
+						CharSequence newTypeName = ResourceTools.getText(fragment.getContext(), newTypeKey);
 						App.toastUser(fragment.getContext()
 						                      .getString(R.string.generic_location_change, "selection", newTypeName));
 						finish();

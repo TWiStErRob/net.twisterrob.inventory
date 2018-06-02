@@ -422,7 +422,7 @@ public class Database extends VariantDatabase {
 			try {
 				while (cursor.moveToNext()) {
 					String resourceName = cursor.getString(0);
-					String displayName = String.valueOf(AndroidTools.getText(context, resourceName));
+					String displayName = String.valueOf(ResourceTools.getText(context, resourceName));
 					execSQL(db, R.string.query_category_cache_update, displayName, resourceName);
 				}
 				db.setTransactionSuccessful();

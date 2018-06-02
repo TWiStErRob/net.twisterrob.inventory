@@ -12,7 +12,7 @@ import com.caverock.androidsvg.*;
 
 import net.twisterrob.android.content.glide.SvgBitmapDecoder;
 import net.twisterrob.android.content.glide.SvgBitmapDecoder.SvgManipulator;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.ResourceTools;
 
 public class RawResourceResolver extends SVGExternalFileResolver implements SvgManipulator {
 	private static final String SVG_SUFFIX = ".svg";
@@ -35,7 +35,7 @@ public class RawResourceResolver extends SVGExternalFileResolver implements SvgM
 			if (filename.endsWith(SVG_SUFFIX)) {
 				resName = filename.substring(0, filename.length() - SVG_SUFFIX.length());
 			}
-			@RawRes int resId = AndroidTools.getRawResourceID(context, resName);
+			@RawRes int resId = ResourceTools.getRawResourceID(context, resName);
 			InputStream resStream = context.getResources().openRawResource(resId);
 			SvgBitmapDecoder decoder = new SvgBitmapDecoder(bitmapPool, RawResourceResolver.this);
 			return decoder.decode(resStream, Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();

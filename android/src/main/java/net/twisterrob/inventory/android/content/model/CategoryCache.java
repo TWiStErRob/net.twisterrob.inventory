@@ -70,9 +70,9 @@ public class CategoryCache {
 		CharSequence fullName = buildFullName(context, categoryPath);
 		categoryFullNames.put(categoryID, fullName);
 
-		suggester.addText(categoryID, AndroidTools.getText(context, categoryName));
+		suggester.addText(categoryID, ResourceTools.getText(context, categoryName));
 		try {
-			suggester.addText(categoryID, AndroidTools.getText(context, ResourceNames.getKeywordsName(categoryName)));
+			suggester.addText(categoryID, ResourceTools.getText(context, ResourceNames.getKeywordsName(categoryName)));
 		} catch (NotFoundException ex) {
 			// ignore and continue
 		}
@@ -81,7 +81,7 @@ public class CategoryCache {
 	private CharSequence buildFullName(@NonNull Context context, List<String> categoryPath) {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		for (Iterator<String> it = categoryPath.iterator(); it.hasNext(); ) {
-			CharSequence category = AndroidTools.getText(context, it.next());
+			CharSequence category = ResourceTools.getText(context, it.next());
 			builder.append(category);
 			if (it.hasNext()) {
 				builder.append(" ▶ ");

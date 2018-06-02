@@ -245,7 +245,7 @@ public class InventoryProvider extends VariantContentProvider {
 				Cursor category = App.db().getCategory(Category.getID(uri));
 				String name = DatabaseTools.singleString(category,
 						net.twisterrob.inventory.android.content.contract.Category.TYPE_IMAGE);
-				int svgID = AndroidTools.getRawResourceID(getSafeContext(), name);
+				int svgID = ResourceTools.getRawResourceID(getSafeContext(), name);
 				// The following only works if the resource is uncompressed: android.aaptOptions.noCompress 'svg'
 				//noinspection resource AssetFileDescriptor is closed by caller
 				return getSafeContext().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();

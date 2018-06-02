@@ -11,8 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
-import net.twisterrob.android.utils.tools.StringerTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
 
 public class BaseFragment<T> extends VariantFragment {

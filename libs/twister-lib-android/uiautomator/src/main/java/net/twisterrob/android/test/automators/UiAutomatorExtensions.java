@@ -99,12 +99,15 @@ public class UiAutomatorExtensions {
 		UiObject dialogButton = device.findObject(new UiSelector().resourceId(androidId(buttonId)));
 		assertTrue("expected to click and new window appear", dialogButton.clickAndWaitForNewWindow());
 	}
+	@RequiresApi(UiAutomatorExtensions.UI_AUTOMATOR_VERSION)
 	public static void clickPositiveInExternalDialog() throws UiObjectNotFoundException {
 		clickInExternalDialog(DialogMatchers.BUTTON_POSITIVE);
 	}
+	@RequiresApi(UiAutomatorExtensions.UI_AUTOMATOR_VERSION)
 	public static void clickNegativeInExternalDialog() throws UiObjectNotFoundException {
 		clickInExternalDialog(DialogMatchers.BUTTON_NEGATIVE);
 	}
+	@RequiresApi(UiAutomatorExtensions.UI_AUTOMATOR_VERSION)
 	public static void clickNeutralInExternalDialog() throws UiObjectNotFoundException {
 		clickInExternalDialog(DialogMatchers.BUTTON_NEUTRAL);
 	}

@@ -63,19 +63,19 @@ public abstract class ImagedDTO extends DTO {
 
 	public static @RawRes int getFallbackID(Context context, Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		return AndroidTools.getRawResourceID(context, image);
+		return ResourceTools.getRawResourceID(context, image);
 	}
 
 	public void loadInto(ImageView image, ImageView type, boolean alwaysShowType) {
 		Uri fullImagePath = hasImage? getImageUri() : null;
-		int typeID = AndroidTools.getRawResourceID(image.getContext(), this.typeImage);
+		int typeID = ResourceTools.getRawResourceID(image.getContext(), this.typeImage);
 		loadInto(image, type, fullImagePath, imageTime, typeID, alwaysShowType);
 	}
 
 	public static void loadInto(ImageView image, ImageView type, Type entity, long id, long signature, String typeName,
 			boolean alwaysShowType) {
 		Uri uri = entity != null? entity.getImageUri(id) : null;
-		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
+		int typeID = ResourceTools.getRawResourceID(image.getContext(), typeName);
 		loadInto(image, type, uri, signature, typeID, alwaysShowType);
 	}
 	private static void loadInto(ImageView image, ImageView type, Uri fullImagePath, long signature, int typeID,
@@ -98,7 +98,7 @@ public abstract class ImagedDTO extends DTO {
 
 	public static void loadInto(ImageView image, Type entity, long id, long signature, String typeName) {
 		Uri uri = entity != null? entity.getImageUri(id) : null;
-		int typeID = AndroidTools.getRawResourceID(image.getContext(), typeName);
+		int typeID = ResourceTools.getRawResourceID(image.getContext(), typeName);
 		loadInto(image, uri, signature, typeID);
 	}
 	private static void loadInto(ImageView image, Uri fullImagePath, long signature, int typeID) {

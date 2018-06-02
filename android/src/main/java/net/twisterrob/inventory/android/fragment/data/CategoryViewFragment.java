@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
@@ -51,7 +51,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		return new DescriptionBuilder()
 				.append("Category ID", entity.id, DEBUG)
 				.append("Category Key", entity.name, DEBUG)
-				.append("Category Name", AndroidTools.getText(getContext(), entity.name))
+				.append("Category Name", ResourceTools.getText(getContext(), entity.name))
 				.append("Category Image", entity.typeImage, DEBUG)
 				.append("Description", CategoryDTO.getDescription(getContext(), entity.name))
 				.append("Parent ID", entity.parentID, DEBUG)

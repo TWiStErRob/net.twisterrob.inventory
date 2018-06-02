@@ -9,7 +9,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.view.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.ListsActivity;
@@ -73,7 +73,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				.append("Property", entity.propertyName)
 				.append("Category ID", entity.type, DEBUG)
 				.append("Category Name", entity.categoryName, DEBUG)
-				.append("Category", AndroidTools.getText(getContext(), entity.categoryName))
+				.append("Category", ResourceTools.getText(getContext(), entity.categoryName))
 				.append("Lists", entity.lists)
 				.append("# of items in this item", entity.numDirectItems)
 				.append("# of items inside", entity.numAllItems)

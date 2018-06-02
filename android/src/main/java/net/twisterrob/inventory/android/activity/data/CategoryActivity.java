@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.content.Intents;
@@ -27,7 +27,7 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 
 	public void categoryLoaded(CategoryDTO category) {
 		current = category;
-		setActionBarTitle(AndroidTools.getText(this, category.name));
+		setActionBarTitle(ResourceTools.getText(this, category.name));
 	}
 	public void categorySelected(long id) {
 		startActivity(Intents.childNav(CategoryActivity.show(id)));

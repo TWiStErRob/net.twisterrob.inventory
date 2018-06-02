@@ -10,7 +10,7 @@ import android.view.Menu;
 
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.content.glide.*;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Intents;
@@ -59,7 +59,7 @@ public abstract class BaseActivity extends DebugHelperActivity {
 	public void setIcon(@RawRes int resourceId) {
 		Pic.svg()
 		   .load(resourceId)
-		   .transform(new PaddingTransformation(this, AndroidTools.dipInt(this, 4)))
+		   .transform(new PaddingTransformation(this, ResourceTools.dipInt(this, 4)))
 		   .into(new ActionBarIconTarget(getSupportActionBar()));
 	}
 

@@ -64,7 +64,7 @@ public class ChangeTypeListener implements OnClickListener {
 					doUpdate(newType);
 				}
 				@Override protected void onResult() {
-					CharSequence newTypeName = AndroidTools.getText(context, newTypeKey);
+					CharSequence newTypeName = ResourceTools.getText(context, newTypeKey);
 					App.toastUser(context.getString(R.string.generic_location_change, getName(), newTypeName));
 					fragment.refresh();
 				}
@@ -93,11 +93,11 @@ public class ChangeTypeListener implements OnClickListener {
 		}
 		@Override public CharSequence getTypeName(Cursor cursor) {
 			String propertyType = DatabaseTools.getString(cursor, PropertyType.NAME);
-			return AndroidTools.getText(context, propertyType);
+			return ResourceTools.getText(context, propertyType);
 		}
 		@Override public CharSequence getKeywords(Cursor cursor) {
 			String propertyType = DatabaseTools.getString(cursor, PropertyType.NAME);
-			return AndroidTools.getText(context, ResourceNames.getKeywordsName(propertyType));
+			return ResourceTools.getText(context, ResourceNames.getKeywordsName(propertyType));
 		}
 	}
 
@@ -117,11 +117,11 @@ public class ChangeTypeListener implements OnClickListener {
 		}
 		@Override public CharSequence getTypeName(Cursor cursor) {
 			String roomType = DatabaseTools.getString(cursor, RoomType.NAME);
-			return AndroidTools.getText(context, roomType);
+			return ResourceTools.getText(context, roomType);
 		}
 		@Override public CharSequence getKeywords(Cursor cursor) {
 			String roomType = DatabaseTools.getString(cursor, RoomType.NAME);
-			return AndroidTools.getText(context, ResourceNames.getKeywordsName(roomType));
+			return ResourceTools.getText(context, ResourceNames.getKeywordsName(roomType));
 		}
 	}
 

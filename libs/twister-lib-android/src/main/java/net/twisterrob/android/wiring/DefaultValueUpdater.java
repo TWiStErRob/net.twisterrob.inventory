@@ -7,7 +7,7 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 import net.twisterrob.android.R;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.ResourceTools;
 
 public class DefaultValueUpdater implements OnItemSelectedListener {
 	private static final int INVALID = -1;
@@ -37,7 +37,7 @@ public class DefaultValueUpdater implements OnItemSelectedListener {
 
 	protected @StringRes int getStringID(AdapterView<?> parent, int position) {
 		String newName = getString(parent, position);
-		return AndroidTools.getStringResourceID(parent.getContext(), newName);
+		return ResourceTools.getStringResourceID(parent.getContext(), newName);
 	}
 	protected String getString(AdapterView<?> parent, int position) {
 		Cursor newData = (Cursor)parent.getAdapter().getItem(position);

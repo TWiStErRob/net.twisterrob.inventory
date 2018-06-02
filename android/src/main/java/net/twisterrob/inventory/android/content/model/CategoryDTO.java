@@ -56,14 +56,14 @@ public class CategoryDTO extends ImagedDTO {
 	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName,
 			boolean deep) {
 		try {
-			CharSequence keywords = AndroidTools.getText(context, ResourceNames.getKeywordsName(categoryName));
+			CharSequence keywords = ResourceTools.getText(context, ResourceNames.getKeywordsName(categoryName));
 			if (deep) {
 				SpannableStringBuilder more = new SpannableStringBuilder(keywords);
 				for (String sub : getCache(context).getChildren(categoryName)) {
 					if (more.length() > 0) {
 						more.append(",\n");
 					}
-					TextTools.appendBold(more, AndroidTools.getText(context, sub));
+					TextTools.appendBold(more, ResourceTools.getText(context, sub));
 
 					CharSequence extended = getKeywordsExtended(context, sub);
 					if (extended != null) {
@@ -94,7 +94,7 @@ public class CategoryDTO extends ImagedDTO {
 			TextTools.appendBold(keywords, "more");
 			keywords.append(": ");
 			for (Iterator<String> it = children.iterator(); it.hasNext(); ) {
-				TextTools.appendItalic(keywords, AndroidTools.getText(context, it.next()));
+				TextTools.appendItalic(keywords, ResourceTools.getText(context, it.next()));
 				if (it.hasNext()) {
 					keywords.append(", ");
 				}
@@ -106,7 +106,7 @@ public class CategoryDTO extends ImagedDTO {
 
 	public static @Nullable CharSequence getDescription(@NonNull Context context, @NonNull String categoryName) {
 		try {
-			return AndroidTools.getText(context, ResourceNames.getDescriptionName(categoryName));
+			return ResourceTools.getText(context, ResourceNames.getDescriptionName(categoryName));
 		} catch (NotFoundException ex) {
 			return null;
 		}

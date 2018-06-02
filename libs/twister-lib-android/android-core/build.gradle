@@ -19,7 +19,10 @@ repositories {
 }
 
 dependencies {
+
+	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 	api "com.android.support:support-annotations:${VERSION_SUPPORT}"
+	api "net.twisterrob.lib:twister-lib-android-defs"
 	compileOnly "com.android.support:support-v4:${VERSION_SUPPORT}"
 }
 

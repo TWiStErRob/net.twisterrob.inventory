@@ -8,7 +8,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.*;
 
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.ResourceTools;
 
 public class ActionBarIconTarget extends BaseTarget<GlideDrawable> {
 	private final ActionBar actionBar;
@@ -38,7 +38,7 @@ public class ActionBarIconTarget extends BaseTarget<GlideDrawable> {
 			DisplayMetrics metrics = actionBar.getThemedContext().getResources().getDisplayMetrics();
 			size = TypedValue.complexToDimensionPixelSize(tv.data, metrics);
 		} else {
-			size = AndroidTools.dipInt(actionBar.getThemedContext(), 48); // standard size
+			size = ResourceTools.dipInt(actionBar.getThemedContext(), 48); // standard size
 		}
 		cb.onSizeReady(size, size);
 	}

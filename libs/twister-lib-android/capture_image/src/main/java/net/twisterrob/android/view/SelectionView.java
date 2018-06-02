@@ -18,7 +18,7 @@ import android.view.*;
 import static android.support.v4.content.ContextCompat.*;
 
 import net.twisterrob.android.capture_image.R;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.ResourceTools;
 
 /**
  * @see <a href="http://adblogcat.com/a-camera-preview-with-a-bounding-box-like-google-goggles/">based on</a>
@@ -73,9 +73,9 @@ public class SelectionView extends View {
 		line = new Paint();
 		line.setStyle(Style.STROKE);
 		line.setColor(Color.CYAN);
-		line.setStrokeWidth(AndroidTools.dip(context, 4));
+		line.setStrokeWidth(ResourceTools.dip(context, 4));
 
-		mTouchDistance = (int)AndroidTools.dip(context, 32);
+		mTouchDistance = (int)ResourceTools.dip(context, 32);
 	}
 
 	public Rect getSelection() {
@@ -575,7 +575,7 @@ public class SelectionView extends View {
 			mLeftBotIcon = getDrawable(context, R.drawable.selection_corner);
 			mRightBotIcon = getDrawable(context, R.drawable.selection_corner);
 
-			mCornerSize = AndroidTools.dipInt(context, 16);
+			mCornerSize = ResourceTools.dipInt(context, 16);
 		}
 
 		void draw(Canvas canvas) {

@@ -60,7 +60,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
 		Context context = itemView.getContext();
 
-		CharSequence titleText = AndroidTools.getText(context, name);
+		CharSequence titleText = ResourceTools.getText(context, name);
 		if (subCatCount != null) {
 			String subCats = context.getResources().getQuantityString(
 					R.plurals.label_category_subs, subCatCount, subCatCount);
@@ -86,7 +86,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		}
 		ViewTools.displayedIfHasText(count);
 
-		Pic.svg().load(AndroidTools.getRawResourceID(context, typeImage)).into(image);
+		Pic.svg().load(ResourceTools.getRawResourceID(context, typeImage)).into(image);
 	}
 
 	public void unBind() {

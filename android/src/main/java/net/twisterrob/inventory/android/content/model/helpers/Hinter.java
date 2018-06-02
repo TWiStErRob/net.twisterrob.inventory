@@ -271,7 +271,7 @@ public class Hinter {
 				bound = categorySuggestion;
 
 				String categoryIcon = cache.getIcon(categorySuggestion.getId());
-				int typeId = AndroidTools.getRawResourceID(image.getContext(), categoryIcon);
+				int typeId = ResourceTools.getRawResourceID(image.getContext(), categoryIcon);
 				Pic.svg().load(typeId).into(image);
 
 				boolean isCurrent = cache.getCategoryKey(categorySuggestion.getId()).equals(currentTypeName);

@@ -111,7 +111,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 			String name = DatabaseTools.getString(cursor, CommonColumns.NAME);
 			CharSequence keywords;
 			try {
-				keywords = AndroidTools.getText(mContext, ResourceNames.getKeywordsName(name));
+				keywords = ResourceTools.getText(mContext, ResourceNames.getKeywordsName(name));
 			} catch (Exception ex) {
 				keywords = null;
 			}
@@ -176,6 +176,6 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 
 	private CharSequence getName(Cursor cursor) {
 		String name = DatabaseTools.getString(cursor, CommonColumns.NAME);
-		return AndroidTools.getText(mContext, name);
+		return ResourceTools.getText(mContext, name);
 	}
 }
