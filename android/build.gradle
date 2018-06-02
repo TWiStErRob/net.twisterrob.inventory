@@ -71,6 +71,7 @@ android {
 			minor = 1
 			patch = 3
 		}
+		multiDexEnabled = true
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
 		testInstrumentationRunner 'net.twisterrob.android.test.junit.AndroidJUnitRunner'
 	}
