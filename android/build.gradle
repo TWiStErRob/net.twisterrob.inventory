@@ -22,7 +22,7 @@ dependencies {
 	implementation('net.twisterrob.lib:twister-libs-android:1.0-SNAPSHOT')
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation('net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT')
-	implementation 'net.twisterrob.lib:twister-lib-android-android-core'
+	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation 'net.twisterrob.lib:twister-lib-android-about'
 	implementation 'net.twisterrob.lib:twister-lib-android-logging'
 	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
@@ -56,7 +56,7 @@ dependencies {
 
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
-	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso-glide3"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_glide3"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-cpsuite"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-uiautomator"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-about-test_helpers"

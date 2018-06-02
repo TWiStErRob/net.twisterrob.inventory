@@ -25,7 +25,7 @@ dependencies {
 	androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
 	api "net.twisterrob.lib:twister-lib-hamcrest"
 	implementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
-	implementation "net.twisterrob.lib:twister-lib-android-android-core"
+	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-logging"
 	implementation "net.twisterrob.lib:twister-lib-android-stringers"
 	implementation "net.twisterrob.lib:twister-lib-android-defs"

@@ -25,7 +25,7 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-lib-collect"
 	implementation "net.twisterrob.lib:twister-lib-stringer"
-	implementation 'net.twisterrob.lib:twister-lib-android-android-core'
+	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation "net.twisterrob.lib:twister-lib-android-defs"
 	compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 	compileOnly "net.twisterrob.lib:twister-lib-android-annotations"
