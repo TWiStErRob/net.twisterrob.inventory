@@ -3,12 +3,15 @@ package net.twisterrob.test.junit;
 import java.util.concurrent.*;
 
 import org.junit.AssumptionViolatedException;
+import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
 
 public class Assert {
 
+	private static final Logger LOG = LoggerFactory.getLogger(Assert.class);
+	
 	public static void assertTimeout(long minimumTime, long maximumTime, TimeUnit timeUnit, Runnable runnable) {
 		assumeThat("minimum time", minimumTime, greaterThanOrEqualTo(0L));
 		assumeThat("maximum time", maximumTime, greaterThanOrEqualTo(0L));
@@ -36,6 +39,8 @@ public class Assert {
 		executor.shutdown(); // This does not cancel the already-scheduled task.
 		try {
 			future.get(timeout, timeUnit);
+			LOG.trace("assertTimeout({}, {}, {}) success in {} ms",
+					timeout, timeUnit, runnable, System.currentTimeMillis() - start);
 		} catch (TimeoutException ex) {
 			long end = System.currentTimeMillis();
 			future.cancel(true);

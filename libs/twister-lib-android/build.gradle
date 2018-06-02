@@ -54,8 +54,8 @@ android {
 	}
 }
 
-afterEvaluate {
-	allprojects { project ->
+allprojects { project ->
+	project.afterEvaluate {
 		com.android.build.gradle.api.AndroidSourceSet androidTest = project.android.sourceSets.androidTest
 		if (androidTest.java.sourceFiles.empty) {
 			logger.info "Disabling AndroidTest tasks in ${project.path} as it has no sources in ${androidTest.java.srcDirs}"

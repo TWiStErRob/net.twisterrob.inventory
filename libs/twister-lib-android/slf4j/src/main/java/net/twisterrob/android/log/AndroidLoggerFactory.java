@@ -2,8 +2,7 @@ package net.twisterrob.android.log;
 
 import java.io.*;
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 import org.slf4j.ILoggerFactory;
 
@@ -18,6 +17,9 @@ import android.util.Log;
  * @author papp.robert.s@gmail.com
  */
 public class AndroidLoggerFactory implements ILoggerFactory {
+
+	private static final String TAG = AndroidLoggerFactory.class.getSimpleName();
+
 	/**
 	 * Tag names cannot be longer than {@value} on Android platform.
 	 *
@@ -32,25 +34,29 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 	 *
 	 * @see AndroidLoggerFactory#addReplacement
 	 */
-	private static final LinkedHashMap<String, String> REPLACEMENTS = new LinkedHashMap<>();
+	private static final Map<String, String> REPLACEMENTS = new LinkedHashMap<>();
 
 	static {
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		try {
 			Properties properties = new Properties();
 			InputStream config = AndroidLoggerFactory.class.getResourceAsStream("/android-logger.properties");
-			properties.load(new InputStreamReader(config, "utf-8"));
-			for (Object rawKey : properties.keySet()) {
-				String searchKey = rawKey.toString();
-				if (searchKey.startsWith("replacement.") && !searchKey.endsWith(".with")) {
-					String replaceKey = searchKey + ".with";
-					String search = properties.getProperty(searchKey);
-					String replace = properties.getProperty(replaceKey);
-					if (replace == null) {
-						replace = "";
+			if (config != null) {
+				properties.load(new InputStreamReader(config, "utf-8"));
+				for (Object rawKey : properties.keySet()) {
+					String searchKey = rawKey.toString();
+					if (searchKey.startsWith("replacement.") && !searchKey.endsWith(".with")) {
+						String replaceKey = searchKey + ".with";
+						String search = properties.getProperty(searchKey);
+						String replace = properties.getProperty(replaceKey);
+						if (replace == null) {
+							replace = "";
+						}
+						addReplacement(search, replace);
 					}
-					addReplacement(search, replace);
 				}
+			} else {
+				Log.w(TAG, "No android-logger.properties present in APK root, not using any substitutions.\nLogs coming from this logger will have tags like a*.b*.c**EndOfClassName.");
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -59,7 +65,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 		}
 	}
 
-	private final ConcurrentHashMap<String, AndroidLogger> loggerMap = new ConcurrentHashMap<>();
+	private final ConcurrentMap<String, AndroidLogger> loggerMap = new ConcurrentHashMap<>();
 
 	public AndroidLogger getLogger(@Nullable String name) {
 		if (name == null) {
@@ -82,7 +88,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 			String message = String.format(Locale.ROOT,
 					"Logger name '%1$s' mapped to '%2$s' is too long (>%4$d), using: %3$s.",
 					originalName, replacedName, tag, TAG_MAX_LENGTH);
-			Log.i(AndroidLoggerFactory.class.getSimpleName(), message);
+			Log.i(TAG, message);
 		}
 
 		return new AndroidLogger(originalName, replacedName, tag);
@@ -102,7 +108,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 	}
 
 	private static @NonNull String doReplacements(@NonNull String name) {
-		for (Entry<String, String> replacement : REPLACEMENTS.entrySet()) {
+		for (Map.Entry<String, String> replacement : REPLACEMENTS.entrySet()) {
 			name = name.replaceFirst(replacement.getKey(), replacement.getValue());
 		}
 		return name;
