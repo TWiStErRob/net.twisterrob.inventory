@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.hamcrest.Matcher;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertFalse;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,7 +26,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.activity.CaptureImageActivityActor;
 import net.twisterrob.android.test.Helpers;
-import net.twisterrob.android.test.espresso.PassMissingRoot;
 import net.twisterrob.inventory.android.R;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
@@ -72,9 +72,10 @@ public abstract class EditActivityActor extends ActivityActor {
 		onView(typeEditorMatcher).perform(scrollTo(), click());
 		String typeName = InstrumentationRegistry.getTargetContext().getResources().getResourceEntryName(type);
 		onData(withColumn("name", typeName)).perform(click());
-		onRoot(isPlatformPopup())
-				.withFailureHandler(new PassMissingRoot())
-				.check(matches(not(anything("popup root existed"))));
+		assertFalse(hasRoot(isPlatformPopup())); // faster version of below Espresso expression
+		//onRoot(isPlatformPopup())
+		//		.withFailureHandler(new PassMissingRoot())
+		//		.check(matches(not(anything("popup root existed"))));
 		checkType(type);
 	}
 	public void checkType(@StringRes int type) {
