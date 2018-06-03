@@ -4,6 +4,7 @@ import java.io.*;
 
 import org.slf4j.*;
 
+import android.os.Build.*;
 import android.support.annotation.NonNull;
 
 import net.twisterrob.java.io.IOTools;
@@ -17,6 +18,18 @@ public class ChattyLogCat {
 	private static final Logger LOG = LoggerFactory.getLogger(ChattyLogCat.class);
 
 	private static final String DEFAULT_BLACKLIST = "~! ~1000/!";
+
+	/**
+	 * Version where chatty feature in LogCat was introduced.
+	 */
+	private static final int CHATTY_VERSION = VERSION_CODES.N;
+	
+	static {
+		if (!isChattyAvailable()) {
+			LOG.debug("Chatty is not available on this system, all operations will be no-op.");
+		}
+	}
+
 	private String lastBlackWhiteList = DEFAULT_BLACKLIST;
 
 	public void iAmNotChatty() {
@@ -26,7 +39,6 @@ public class ChattyLogCat {
 
 	public synchronized void saveBlackWhiteList() {
 		lastBlackWhiteList = getCurrentBlackWhiteList();
-		LOG.trace("Saved " + lastBlackWhiteList);
 	}
 	public synchronized void restoreLastBlackWhiteList() {
 		setBlackWhiteList(lastBlackWhiteList);
@@ -34,9 +46,14 @@ public class ChattyLogCat {
 	}
 
 	private @NonNull String getCurrentBlackWhiteList() {
+		if (!isChattyAvailable()) {
+			return DEFAULT_BLACKLIST;
+		}
 		try {
 			InputStream stream = Runtime.getRuntime().exec(new String[] {"logcat", "-p"}).getInputStream();
-			return IOTools.readAll(stream);
+			String currentBlackWhiteList = IOTools.readAll(stream);
+			LOG.trace("Received '{}' from `logcat -p`", currentBlackWhiteList);
+			return currentBlackWhiteList;
 		} catch (IOException ex) {
 			LOG.error("Cannot get `logcat -p`", ex);
 			return DEFAULT_BLACKLIST;
@@ -44,11 +61,19 @@ public class ChattyLogCat {
 	}
 
 	private void setBlackWhiteList(@NonNull String blackWhiteList) {
-		LOG.trace("Setting black/white list: " + blackWhiteList);
+		if (!isChattyAvailable()) {
+			return;
+		}
+		LOG.trace("Setting black/white list: '{}'", blackWhiteList);
 		try {
 			Runtime.getRuntime().exec(new String[] {"logcat", "-P", "'" + blackWhiteList + "'"}).waitFor();
 		} catch (IOException | InterruptedException ex) {
-			LOG.error("Cannot set `logcat -P`: " + blackWhiteList, ex);
+			LOG.error("Cannot set `logcat -P`: {}", blackWhiteList, ex);
 		}
+	}
+
+
+	private static boolean isChattyAvailable() {
+		return CHATTY_VERSION <= VERSION.SDK_INT;
 	}
 }
