@@ -262,6 +262,15 @@ public class EspressoExtensions {
 		}
 	}
 
+	public static boolean hasRoot(Matcher<Root> matcher) {
+		for (Root root : getRoots()) {
+			if (matcher.matches(root)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Perform action of waiting for a specific view id.
 	 * @see <a href="http://stackoverflow.com/a/22563297/253468">Espresso: Thread.sleep( );</a>

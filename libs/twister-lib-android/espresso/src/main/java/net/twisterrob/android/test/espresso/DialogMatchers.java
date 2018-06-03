@@ -83,13 +83,16 @@ public class DialogMatchers {
 			@Override public String getDescription() {
 				return "wait for Toast to disappear";
 			}
+			// this is called after an an onView, so the registration must sync for untilIdle to work
+			// TODEL report this issue to Espresso, and change to IdlingRegistry.register
+			@SuppressWarnings("deprecation")
 			@Override public void perform(UiController uiController, View view) {
 				ToastIdlingResource toastIdler = new ToastIdlingResource();
 				try {
-					IdlingRegistry.getInstance().register(toastIdler);
+					Espresso.registerIdlingResources(toastIdler);
 					uiController.loopMainThreadUntilIdle();
 				} finally {
-					IdlingRegistry.getInstance().unregister(toastIdler);
+					Espresso.unregisterIdlingResources(toastIdler);
 				}
 			}
 		};
@@ -162,17 +165,22 @@ public class DialogMatchers {
 	}
 
 	public static void assertDialogIsDisplayed() {
-		// RootViewPicker.waitForAtLeastOneActivityToBeResumed from waiting ~40 seconds and then throwing:
+		// Prevent RootViewPicker.waitForAtLeastOneActivityToBeResumed from waiting 60 seconds and then throwing:
 		// No activities found. Did you forget to launch the activity [...]?
-		// android.support.test.espresso.NoActivityResumedException: No activities in stage RESUMED. Did you forget to launch the activity. (test.getActivity() or similar)?>
+		// NoActivityResumedException: No activities in stage RESUMED. Did you forget to launch the activity. ...
 		getInstrumentation().waitForIdleSync();
 		if (getActivitiesInStage(Stage.RESUMED).isEmpty()) {
 			throw new AssertionError(
 					"No activities in stage RESUMED. Activities are " + getAllActivitiesByStage());
 		}
+		// Prevent RootViewPicker.pickARoot() from waiting 60 seconds and then throwing:
+		// NoMatchingRootException: Matcher 'is dialog' did not match any of the following roots ...
+		if (!hasRoot(isDialog())) {
+			throw NoMatchingRootException.create(isDialog(), getRoots());
+		}
 		// both of the below statements should be equivalent
 		onView(isRoot()).inRoot(isDialog()).check(matches(isCompletelyDisplayed()));
-		//onView(isRoot()).check(matches(root(isDialog())));
+		onView(isRoot()).check(matches(root(isDialog())));
 	}
 
 	public static void assertNoDialogIsDisplayed() {
@@ -219,15 +227,19 @@ public class DialogMatchers {
 				return;
 			}
 		}
-		// press back button if there's a dialog displayed
-		onView(isRoot()).inRoot(isDialog()).withFailureHandler(new Ignore()).perform(pressBack());
-		// press negative button if there's still a dialog displayed
-		// STOPSHIP blocks looking for root, and doesn't fail immediately
-		onView(withId(BUTTON_NEGATIVE)).inRoot(isDialog()).withFailureHandler(new Ignore()).perform(click());
-		// pressing the negative button will fail only if there's no dialog, or the button is not visible
-		// both of these are suppressed via a failure handler
-		// as this is a best effort implementation which should change how tests behave
-		// (i.e. don't fail when there's no dialog; and if there's an invalid dialog, the next step will fail on it)
+		if (hasRoot(isDialog())) {
+			// press back button if there's a dialog displayed
+			onView(isRoot()).inRoot(isDialog()).withFailureHandler(new Ignore()).perform(pressBack());
+		}
+		if (hasRoot(isDialog())) {
+			// press negative button if there's still a dialog displayed
+			// STOPSHIP blocks looking for root, and doesn't fail immediately
+			onView(withId(BUTTON_NEGATIVE)).inRoot(isDialog()).withFailureHandler(new Ignore()).perform(click());
+			// pressing the negative button will fail only if there's no dialog, or the button is not visible
+			// both of these are suppressed via a failure handler
+			// as this is a best effort implementation which should change how tests behave
+			// (i.e. don't fail when there's no dialog; and if there's an invalid dialog, the next step will fail on it)
+		}
 	}
 
 	private static class ClickInDialog implements ViewAction {
