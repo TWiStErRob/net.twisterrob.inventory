@@ -141,6 +141,14 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 				}
 				cause.initCause(new StackTrace("View interaction was initiated here"));
 			}
+			if (error instanceof NoActivityResumedException) {
+				// Wrap it in the same type, using the same message to create the illusion of nothing happened.
+				// DefaultFailureHandler will re-set the stacktrace, but we still have the original.
+				// An example of this is Espresso.pressBack() throwing "Pressed back and killed the app",
+				// but the origin shows up as waitForAndHandleInteractionResults
+				// instead of waitForPendingForegroundActivities.
+				error = new NoActivityResumedException(error.getMessage(), error);
+			}
 			defaultFailureHandler.handle(error, viewMatcher);
 		}
 	}
