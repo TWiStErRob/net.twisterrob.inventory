@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import android.content.Context;
+import android.support.test.espresso.base.RootViewPicker;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.Toast;
 
@@ -30,6 +31,12 @@ import static net.twisterrob.test.junit.Assert.*;
 
 @RunWith(JUnitParamsRunner.class)
 public class DialogMatchersTest {
+
+	/**
+	 * 60 seconds waiting for a root to appear + 10 seconds to reduce flakyness.
+	 * @see RootViewPicker#pickARoot()
+	 */
+	static final long ESPRESSO_BACKOFF_TIMEOUT = 60000 + 10000;
 
 	/**
 	 * Something is really wrong if it takes more than 6 seconds to show and dismiss a dialog.

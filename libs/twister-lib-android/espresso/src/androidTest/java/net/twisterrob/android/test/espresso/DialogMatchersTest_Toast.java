@@ -13,6 +13,7 @@ import static org.junit.internal.matchers.ThrowableMessageMatcher.*;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoMatchingRootException;
+import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Toast;
@@ -36,8 +37,17 @@ import static net.twisterrob.test.junit.Assert.*;
 public class DialogMatchersTest_Toast {
 	@Rule public final ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
 
+	private Toast shownToast;
+
 	@Before public void preconditions() {
 		onView(isRoot()).perform(waitForToastsToDisappear());
+	}
+
+	@After public void cancelToast() {
+		// to reduce possibility of tests interacting
+		if (shownToast != null) {
+			shownToast.cancel();
+		}
 	}
 
 	@Test(timeout = DIALOG_TIMEOUT) public void testAssertNoToastIsDisplayed_passes_whenNoToastShown() {
@@ -58,8 +68,9 @@ public class DialogMatchersTest_Toast {
 		assertNoToastIsDisplayed();
 	}
 
-	// TODO currently this works, but needs 60 seconds to pass; figure out a way to make it faster
-	@Test public void testIsToast_onRootFails_whenNoToastShown() {
+	@LargeTest
+	@Test(timeout = ESPRESSO_BACKOFF_TIMEOUT)
+	public void testIsToast_onRootFails_whenNoToastShown() {
 		assertNoToastIsDisplayed();
 
 		NoMatchingRootException expectedFailure = assertThrows(NoMatchingRootException.class, new ThrowingRunnable() {
@@ -88,8 +99,9 @@ public class DialogMatchersTest_Toast {
 		assertNoToastIsDisplayed();
 	}
 
-	// TODO currently this works, but needs 60 seconds to pass; figure out a way to make it faster
-	@Test public void testIsToast_inRootFails_whenNoToastShown() {
+	@LargeTest
+	@Test(timeout = ESPRESSO_BACKOFF_TIMEOUT)
+	public void testIsToast_inRootFails_whenNoToastShown() {
 		assertNoToastIsDisplayed();
 
 		NoMatchingRootException expectedFailure = assertThrows(NoMatchingRootException.class, new ThrowingRunnable() {
@@ -108,28 +120,24 @@ public class DialogMatchersTest_Toast {
 		Toast toast = createToast("Dummy message");
 		show(toast);
 
-		try {
-			AssertionFailedError expectedFailure = assertThrows(AssertionFailedError.class, new ThrowingRunnable() {
-				// android.support.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
-				// 'not toast root existed' doesn't match the selected view.
-				// Expected: not toast root existed
-				// Got: "LinearLayout{...}"
-				// or
-				// android.support.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
-				// 'not toast root existed' doesn't match the selected view.
-				// Expected: not toast root existed
-				// Got: "TextView{text=Hello Toast!}"
-				// at android.support.test.espresso.ViewInteraction.check(ViewInteraction.java:158)
-				// at net.twisterrob.android.test.espresso.DialogMatchers.assertNoToastIsDisplayed(DialogMatchers.java:68)
-				@Override public void run() {
-					assertNoToastIsDisplayed();
-				}
-			});
+		AssertionFailedError expectedFailure = assertThrows(AssertionFailedError.class, new ThrowingRunnable() {
+			// android.support.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
+			// 'not toast root existed' doesn't match the selected view.
+			// Expected: not toast root existed
+			// Got: "LinearLayout{...}"
+			// or
+			// android.support.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
+			// 'not toast root existed' doesn't match the selected view.
+			// Expected: not toast root existed
+			// Got: "TextView{text=Hello Toast!}"
+			// at android.support.test.espresso.ViewInteraction.check(ViewInteraction.java:158)
+			// at net.twisterrob.android.test.espresso.DialogMatchers.assertNoToastIsDisplayed(DialogMatchers.java:68)
+			@Override public void run() {
+				assertNoToastIsDisplayed();
+			}
+		});
 
-			assertThat(expectedFailure, hasMessage(startsWith("View is present in the hierarchy")));
-		} finally {
-			toast.cancel();
-		}
+		assertThat(expectedFailure, hasMessage(startsWith("View is present in the hierarchy")));
 	}
 
 	@Test public void testWaitForToastsToDisappear_waitsForToast() {
@@ -158,8 +166,9 @@ public class DialogMatchersTest_Toast {
 		});
 	}
 
-	private static void show(@NonNull Toast toast) {
+	private void show(@NonNull Toast toast) {
 		toast.show();
+		shownToast = toast;
 		// wait for it to show, this is best effort to reduce flakyness
 		onRoot().perform(loopMainThreadUntilIdle());
 	}
