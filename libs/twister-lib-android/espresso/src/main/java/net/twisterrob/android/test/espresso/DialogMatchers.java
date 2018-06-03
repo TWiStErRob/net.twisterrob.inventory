@@ -14,6 +14,7 @@ import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.action.ViewActions.pressBack;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
@@ -22,6 +23,7 @@ import static android.view.WindowManager.LayoutParams.*;
 import net.twisterrob.android.test.espresso.idle.ToastIdlingResource;
 import net.twisterrob.android.utils.tools.ResourceTools;
 
+import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
@@ -60,11 +62,18 @@ public class DialogMatchers {
 		return new WindowManagerLayoutParamTypeMatcher("is toast", WindowManager.LayoutParams.TYPE_TOAST);
 	}
 	public static void assertNoToastIsDisplayed() {
-		onView(isDialogMessage())
-				.inRoot(isToast())
-				.withFailureHandler(new PassMissingRoot())
-				.check(matches(not(anything("toast root existed"))))
-		;
+		// This is the original Espresso 2.2.2 code, but since 3.0.0 it takes 60 seconds to match
+		//onView(isDialogMessage())
+		//		.inRoot(isToast())
+		//		.withFailureHandler(new PassMissingRoot())
+		//		.check(matches(not(anything("toast root existed"))))
+		//;
+		for (Root root : getRoots()) {
+			if (isToast().matches(root)) {
+				// will fail and throw (used to get a similar message to previous version)
+				doesNotExist().check(root.getDecorView(), null);
+			}
+		}
 	}
 	public static ViewAction waitForToastsToDisappear() {
 		return new ViewAction() {
@@ -77,10 +86,10 @@ public class DialogMatchers {
 			@Override public void perform(UiController uiController, View view) {
 				ToastIdlingResource toastIdler = new ToastIdlingResource();
 				try {
-					Espresso.registerIdlingResources(toastIdler);
+					IdlingRegistry.getInstance().register(toastIdler);
 					uiController.loopMainThreadUntilIdle();
 				} finally {
-					Espresso.unregisterIdlingResources(toastIdler);
+					IdlingRegistry.getInstance().unregister(toastIdler);
 				}
 			}
 		};

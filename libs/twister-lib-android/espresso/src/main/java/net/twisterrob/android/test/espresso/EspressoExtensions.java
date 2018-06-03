@@ -1,13 +1,11 @@
 package net.twisterrob.android.test.espresso;
 
 import java.io.*;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
-
-import javax.inject.Provider;
 
 import org.hamcrest.*;
 import org.slf4j.*;
@@ -20,13 +18,11 @@ import android.app.Instrumentation.ActivityResult;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.res.*;
-import android.os.Looper;
 import android.support.annotation.*;
 import android.support.test.annotation.Beta;
 import android.support.test.espresso.*;
 import android.support.test.espresso.NoMatchingViewException.Builder;
 import android.support.test.espresso.assertion.ViewAssertions;
-import android.support.test.espresso.base.RootsOracle_Factory;
 import android.support.test.espresso.core.internal.deps.guava.base.Predicate;
 import android.support.test.espresso.core.internal.deps.guava.collect.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
@@ -52,6 +48,7 @@ import net.twisterrob.test.junit.FlakyTestException;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
+import static net.twisterrob.java.utils.ObjectTools.*;
 
 @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
 public class EspressoExtensions {
@@ -118,7 +115,7 @@ public class EspressoExtensions {
 		return onView(isRoot());
 	}
 	public static ViewInteraction onRoot(Matcher<Root> rootMatcher) {
-		return onView(isRoot()).inRoot(rootMatcher);
+		return onView(isRoot()).noActivity().inRoot(rootMatcher);
 	}
 
 	public static ViewAction loopMainThreadUntilIdle() {
@@ -248,22 +245,19 @@ public class EspressoExtensions {
 		return result.get();
 	}
 
-	private static final Method listRoots = ReflectionTools.tryFindDeclaredMethod(
-			ReflectionTools.forName("android.support.test.espresso.base.RootsOracle"), "listActiveRoots");
+	private static @NonNull BaseLayerComponent getEspressoBASE() {
+		return checkNotNull((BaseLayerComponent)ReflectionTools.getStatic(Espresso.class, "BASE"));
+	}
 
 	public static List<Root> getRoots() {
-		if (listRoots == null) {
-			return Collections.emptyList();
-		}
-		Object oracle = RootsOracle_Factory.create(new Provider<Looper>() {
-			@Override public Looper get() {
-				return Looper.getMainLooper();
-			}
-		}).get();
 		try {
-			@SuppressWarnings("unchecked") List<Root> roots = (List<Root>)listRoots.invoke(oracle);
-			return roots;
-		} catch (Exception e) {
+			return InstrumentationExtensions.callOnMainIfNecessary(new Callable<List<Root>>() {
+				@Override public List<Root> call() {
+					return getEspressoBASE().activeRootLister().listActiveRoots();
+				}
+			});
+		} catch (Exception ex) {
+			LOG.error("Cannot retrieve roots", ex);
 			return Collections.emptyList();
 		}
 	}

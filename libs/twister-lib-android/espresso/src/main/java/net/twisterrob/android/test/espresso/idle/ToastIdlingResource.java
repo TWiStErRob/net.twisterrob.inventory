@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.hamcrest.Matcher;
 
-import android.annotation.*;
+import android.annotation.TargetApi;
 import android.os.Build.*;
 import android.support.test.espresso.Root;
 import android.view.View;
@@ -21,7 +21,6 @@ public class ToastIdlingResource extends AsyncIdlingResource {
 		return getToast() == null;
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)
 	@Override protected void waitForIdleAsync() {
 		Root toast = getToast();
 		if (toast != null && VERSION_CODES.HONEYCOMB_MR1 <= VERSION.SDK_INT) {
@@ -42,7 +41,7 @@ public class ToastIdlingResource extends AsyncIdlingResource {
 		return null;
 	}
 
-	@SuppressLint("NewApi")
+	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)
 	private OnAttachStateChangeListener transitionOnDetach = VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1
 			? null : new OnAttachStateChangeListener() {
 		@Override public void onViewAttachedToWindow(View v) {
