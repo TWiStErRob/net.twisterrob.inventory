@@ -177,6 +177,7 @@ public class BackupActivityActor extends ActivityActor {
 		@RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 		public DriveBackupActor chooseDrive() throws UiObjectNotFoundException, NameNotFoundException {
 			// TODO refactor this as AndroidAutomator.chooseItem(saveToDrive())
+			// TODO handle the case when the chosen action is not on the first page of the chooser
 			clickOnLabel(saveToDrive());
 			// TODO make sure to let the chooser reorganize its items on 23+ (waitForIdle not enough)
 			DriveBackupActor drive = new DriveBackupActor();
