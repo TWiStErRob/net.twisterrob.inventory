@@ -59,6 +59,16 @@ allprojects {
 	}
 }
 
+//tasks.withType(com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask)
+[
+		':libs:twister-lib-android:espresso',
+		':libs:twister-lib-android:about',
+		':android'
+]
+		.collect { tasks.findByPath("$it:connectedDebugAndroidTest") }
+		.grep { it != null }
+		.inject { prev, curr -> curr.mustRunAfter prev; return prev }
+
 task clean(type: Delete) {
 	dependsOn gradle.includedBuilds*.task(':cleanFull')
 	delete rootProject.buildDir
