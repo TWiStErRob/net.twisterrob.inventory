@@ -39,7 +39,7 @@ public class ItemEditActivityTest_Edit {
 
 	@Category({Op.Cancels.class})
 	@Test public void testCancel() {
-		itemEdit.close();
+		itemEdit.closeToKill();
 		itemEdit.assertClosing(activity.getActivity());
 
 		db.assertHasItem(TEST_ITEM);
