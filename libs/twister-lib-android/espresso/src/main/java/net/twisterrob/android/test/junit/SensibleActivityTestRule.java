@@ -24,6 +24,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 
 	private final SystemAnimations systemAnimations;
 	private final DeviceUnlocker unlocker;
+	private final ChattyLogCat chatty;
 	private Intent startIntent;
 
 	public SensibleActivityTestRule(Class<T> activityClass) {
@@ -37,6 +38,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		Context context = InstrumentationRegistry.getContext();
 		systemAnimations = new SystemAnimations(context);
 		unlocker = new DeviceUnlocker(context);
+		chatty = new ChattyLogCat();
 	}
 
 	@Override public Statement apply(Statement base, Description description) {
@@ -70,6 +72,8 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 
 	@CallSuper
 	@Override protected void beforeActivityLaunched() {
+		chatty.saveBlackWhiteList();
+		chatty.iAmNotChatty();
 		waitForEverythingToDestroy();
 		systemAnimations.backup();
 		systemAnimations.disableAll();
@@ -91,6 +95,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		super.afterActivityFinished();
 		Intents.release();
 		systemAnimations.restore();
+		chatty.restoreLastBlackWhiteList();
 	}
 
 	protected void waitForEverythingToDestroy() {
