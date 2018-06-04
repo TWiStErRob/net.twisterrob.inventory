@@ -233,7 +233,6 @@ public class DialogMatchers {
 		}
 		if (hasRoot(isDialog())) {
 			// press negative button if there's still a dialog displayed
-			// STOPSHIP blocks looking for root, and doesn't fail immediately
 			onView(withId(BUTTON_NEGATIVE)).inRoot(isDialog()).withFailureHandler(new Ignore()).perform(click());
 			// pressing the negative button will fail only if there's no dialog, or the button is not visible
 			// both of these are suppressed via a failure handler
