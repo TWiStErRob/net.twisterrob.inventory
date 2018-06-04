@@ -11,7 +11,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.lifecycle.*;
 
 import static android.support.test.InstrumentationRegistry.*;
-
 import static android.support.test.espresso.core.internal.deps.guava.base.Throwables.*;
 import static android.support.test.espresso.core.internal.deps.guava.collect.Iterables.*;
 
@@ -94,46 +93,44 @@ public class InstrumentationExtensions {
 		return activities.isEmpty()? null : getOnlyElement(activities);
 	}
 
+	@AnyThread
 	public static <T> T callOnMainIfNecessary(final @NonNull Callable<T> resultProvider) {
 		if (Looper.myLooper() == Looper.getMainLooper()) {
-			try {
-				return resultProvider.call();
-			} catch (Exception e) {
-				throwIfUnchecked(e);
-				throw new RuntimeException("Unexpected exception", e);
-			}
+			return callNow(resultProvider);
 		}
 		return callOnMain(resultProvider);
 	}
-	public static <T> T callOnMain(@NonNull final Callable<T> resultProvider) {
+	@AnyThread
+	public static <T> T callOnMain(final @NonNull Callable<T> resultProvider) {
 		Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
 		instrumentation.waitForIdleSync();
 		final AtomicReference<T> ref = new AtomicReference<>();
 		instrumentation.runOnMainSync(new Runnable() {
 			@Override public void run() {
-				try {
-					ref.set(resultProvider.call());
-				} catch (Exception e) {
-					throwIfUnchecked(e);
-					throw new RuntimeException("Unexpected exception", e);
-				}
+				ref.set(callNow(resultProvider));
 			}
 		});
 		return ref.get();
 	}
+	@AnyThread
+	private static <T> T callNow(@NonNull Callable<T> resultProvider) {
+		try {
+			return resultProvider.call();
+		} catch (Exception e) {
+			throwIfUnchecked(e);
+			throw new RuntimeException("Unexpected exception", e);
+		}
+	}
 
-	public static void runOnMainIfNecessary(@NonNull final Runnable action) {
+	@AnyThread
+	public static void runOnMainIfNecessary(final @NonNull Runnable action) {
 		if (Looper.myLooper() == Looper.getMainLooper()) {
-			try {
-				action.run();
-			} catch (Exception e) {
-				throwIfUnchecked(e);
-				throw new RuntimeException("Unexpected exception", e);
-			}
+			action.run();
 		}
 		runOnMain(action);
 	}
-	public static void runOnMain(@NonNull final Runnable action) {
+	@AnyThread
+	public static void runOnMain(final @NonNull Runnable action) {
 		Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
 		instrumentation.waitForIdleSync();
 		instrumentation.runOnMainSync(action);
