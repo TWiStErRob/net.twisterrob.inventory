@@ -2,7 +2,7 @@ package net.twisterrob.android.test.espresso.idle;
 
 import android.os.*;
 import android.support.test.annotation.Beta;
-import android.support.test.espresso.Espresso;
+import android.support.test.espresso.*;
 
 /**
  * @see <a href="https://github.com/chiuki/espresso-samples/blob/master/idling-resource-elapsed-time/app/src/androidTest/java/com/sqisland/espresso/idling_resource/elapsed_time/ElapsedTimeIdlingResource.java">chiuki's ElapsedTimeIdlingResource.java</a>
@@ -31,12 +31,14 @@ public class ElapsedTimeIdlingResource extends AsyncIdlingResource {
 	}
 
 	public void startWaiting(long waitingTime) {
-		if (this.startTime != 0) {
-			Espresso.unregisterIdlingResources(this);
+		if (isAlreadyStarted()) {
+			// unregister so that the next register may check isIdle again with the right timings
+			// potentially not needed in Espresso 3.x, but was required in 2.x
+			IdlingRegistry.getInstance().unregister(this);
 		}
 		this.startTime = System.currentTimeMillis();
 		this.waitingTime = waitingTime;
-		Espresso.registerIdlingResources(this);
+		IdlingRegistry.getInstance().register(this);
 		// CONSIDER backup and restore timeouts
 		// Make sure Espresso does not time out
 //		IdlingPolicies.setMasterPolicyTimeout(waitingTime * 2, TimeUnit.MILLISECONDS);
@@ -45,7 +47,7 @@ public class ElapsedTimeIdlingResource extends AsyncIdlingResource {
 
 	public void stopWaiting() {
 		handler.removeCallbacks(transitionToIdle);
-		Espresso.unregisterIdlingResources(this);
+		IdlingRegistry.getInstance().unregister(this);
 	}
 
 	@Override protected boolean isIdle() {
@@ -56,6 +58,9 @@ public class ElapsedTimeIdlingResource extends AsyncIdlingResource {
 		handler.postDelayed(transitionToIdle, getRemaining());
 	}
 
+	private boolean isAlreadyStarted() {
+		return this.startTime != 0;
+	}
 	private long getElapsed() {
 		return System.currentTimeMillis() - startTime;
 	}

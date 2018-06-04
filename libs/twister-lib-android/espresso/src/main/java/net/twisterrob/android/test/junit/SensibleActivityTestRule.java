@@ -8,7 +8,7 @@ import android.app.Activity;
 import android.content.*;
 import android.support.annotation.*;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
+import android.support.test.espresso.*;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
@@ -101,11 +101,11 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 	protected void waitForEverythingToDestroy() {
 		AllActivitiesDestroyedIdlingResource.finishAll();
 		AllActivitiesDestroyedIdlingResource activities = new AllActivitiesDestroyedIdlingResource();
-		Espresso.registerIdlingResources(activities);
+		IdlingRegistry.getInstance().register(activities);
 		try {
 			waitForIdleSync();
 		} finally {
-			Espresso.unregisterIdlingResources(activities);
+			IdlingRegistry.getInstance().unregister(activities);
 		}
 	}
 

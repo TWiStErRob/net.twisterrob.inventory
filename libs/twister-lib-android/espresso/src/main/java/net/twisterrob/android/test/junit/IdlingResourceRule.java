@@ -8,7 +8,6 @@ import org.slf4j.*;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.*;
 
-// STOPSHIP check the deprecation on idling resources
 public class IdlingResourceRule implements TestRule {
 	private static final Logger LOG = LoggerFactory.getLogger(IdlingResourceRule.class);
 
@@ -51,13 +50,13 @@ public class IdlingResourceRule implements TestRule {
 		if (verbose) {
 			LOG.trace("Registering {}", resource);
 		}
-		Espresso.registerIdlingResources(resource);
+		IdlingRegistry.getInstance().register(resource);
 	}
 
 	protected void unregister(IdlingResource resource) {
 		if (verbose) {
 			LOG.trace("Unregistering {}", resource);
 		}
-		Espresso.unregisterIdlingResources(resource);
+		IdlingRegistry.getInstance().unregister(resource);
 	}
 }

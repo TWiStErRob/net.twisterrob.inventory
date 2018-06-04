@@ -11,17 +11,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingRegistry;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.Engine;
 import com.bumptech.glide.manager.RequestManagerRetriever;
 
-import net.twisterrob.inventory.android.R;
 import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.java.utils.ReflectionTools;
 
@@ -55,13 +55,13 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	@Override protected void beforeActivityLaunched() {
 		reset();
 		setDefaults();
-		Espresso.registerIdlingResources(glideIdler);
+		IdlingRegistry.getInstance().register(glideIdler);
 		super.beforeActivityLaunched();
 	}
 
 	@Override protected void afterActivityFinished() {
 		super.afterActivityFinished();
-		Espresso.unregisterIdlingResources(glideIdler);
+		IdlingRegistry.getInstance().unregister(glideIdler);
 		// CONSIDER is it really necessary?
 		//reset();
 	}
