@@ -186,4 +186,9 @@ public class ReflectionTools {
 			throw new IllegalStateException(ex);
 		}
 	}
+
+	public static Throwable clearCause(Throwable exception) {
+		set(exception, "cause", exception);
+		return exception;
+	}
 }

@@ -128,9 +128,9 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 		return fixed;
 	}
 
-	private static class DetailedFailureHandler implements FailureHandler {
+	static class DetailedFailureHandler implements FailureHandler {
 		private final FailureHandler defaultFailureHandler;
-		private DetailedFailureHandler(DefaultFailureHandler handler) {
+		DetailedFailureHandler(DefaultFailureHandler handler) {
 			defaultFailureHandler = handler;
 		}
 		@Override public void handle(Throwable error, org.hamcrest.Matcher<View> viewMatcher) {
