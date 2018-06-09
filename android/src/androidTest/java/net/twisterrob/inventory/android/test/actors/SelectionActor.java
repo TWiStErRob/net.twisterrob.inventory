@@ -62,15 +62,15 @@ public class SelectionActor {
 	}
 	public void selectAll() {
 		assertIsActive();
-		onActionMenuView(withText(R.string.selection_selectAll)).perform(click());
+		onActionMenuItem(withMenuItemId(R.id.action_select_all)).perform(click());
 	}
 	public void invertSelection() {
 		assertIsActive();
-		onActionMenuView(withText(R.string.selection_selectInv)).perform(click());
+		onActionMenuItem(withMenuItemId(R.id.action_select_invert)).perform(click());
 	}
 	public ChangeTypeDialogActor changeType() {
 		assertIsActive();
-		onActionMenuView(withText(R.string.item_categorize_many)).perform(click());
+		onActionMenuItem(withMenuItemId(R.id.action_item_categorize)).perform(click());
 		ChangeTypeDialogActor actor = new ChangeTypeDialogActor();
 		actor.assertOpen();
 		return actor;

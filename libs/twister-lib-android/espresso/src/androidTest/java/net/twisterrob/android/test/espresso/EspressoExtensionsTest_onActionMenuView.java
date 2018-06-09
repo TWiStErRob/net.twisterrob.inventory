@@ -5,6 +5,7 @@ import java.lang.reflect.*;
 import javax.inject.Provider;
 
 import org.junit.*;
+import org.junit.function.ThrowingRunnable;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
@@ -40,11 +41,9 @@ import static net.twisterrob.java.utils.ReflectionTools.*;
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = VERSION_CODES.HONEYCOMB)
 public class EspressoExtensionsTest_onActionMenuView {
-	private static final String TEST_ACTION_ITEM = "Test Action Item";
 	@Rule public ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
 
-	@Test
-	public void testOversleep()
+	private void verifyOversleepProtection(ThrowingRunnable actionThatTendsToOversleep)
 			throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		// see android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu()
 		// pressMenuKey() can't oversleep because it's a key, not a touchDown followed by a touchUp
@@ -72,23 +71,49 @@ public class EspressoExtensionsTest_onActionMenuView {
 		});
 
 		try {
-			onActionMenuView(withText(TEST_ACTION_ITEM))
-					.check(matches(anything()))
-			;
-			fail("FlakyTestException should have been thrown");
-		} catch (FlakyTestException ex) {
-			// expected
+			assertThrows(FlakyTestException.class, actionThatTendsToOversleep);
 		} finally {
 			// reset original for later tests
 			uiControllerProvider.set(baseLayer, originalProvider);
 		}
 	}
 
-	@Test public void testWorking() {
+	@Test public void testOversleepWithId() throws Exception {
+		verifyOversleepProtection(new ThrowingRunnable() {
+			@Override public void run() {
+				onActionMenuItem(withMenuItemId(TestActivity.ITEM_ID))
+						.check(matches(anything()))
+				;
+			}
+		});
+	}
+	@Test public void testOversleepWithText() throws Exception {
+		verifyOversleepProtection(new ThrowingRunnable() {
+			@Override public void run() {
+				onActionMenuView(withText(TestActivity.ITEM_LABEL))
+						.check(matches(anything()))
+				;
+			}
+		});
+	}
+
+	@Test public void testWorkingWithId() {
 		TestActivity activity = this.activity.getActivity();
 		activity.itemClicked = false;
 
-		onActionMenuView(withText(TEST_ACTION_ITEM))
+		onActionMenuItem(withMenuItemId(TestActivity.ITEM_ID))
+				.check(matches(isCompletelyDisplayed()))
+				.perform(click())
+		;
+
+		assertThat(activity.itemClicked, is(true));
+	}
+
+	@Test public void testWorkingWithText() {
+		TestActivity activity = this.activity.getActivity();
+		activity.itemClicked = false;
+
+		onActionMenuView(withText(TestActivity.ITEM_LABEL))
 				.check(matches(isCompletelyDisplayed()))
 				.perform(click())
 		;
@@ -99,20 +124,26 @@ public class EspressoExtensionsTest_onActionMenuView {
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	@RequiresApi(VERSION_CODES.HONEYCOMB)
 	public static class TestActivity extends Activity {
+
+		private static final String ITEM_LABEL = "Test Action Item";
 		private static final int ITEM_ID = (int)(Math.random() * Integer.MAX_VALUE);
+
 		public boolean itemClicked;
+
 		@Override protected void onCreate(@Nullable Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 		}
+
 		@Override public boolean onOptionsItemSelected(MenuItem item) {
 			if (item.getItemId() == ITEM_ID) {
 				itemClicked = true;
 			}
 			return super.onOptionsItemSelected(item);
 		}
+
 		@Override public boolean onCreateOptionsMenu(Menu menu) {
 			super.onCreateOptionsMenu(menu);
-			MenuItem item = menu.add(0, ITEM_ID, 0, TEST_ACTION_ITEM);
+			MenuItem item = menu.add(0, ITEM_ID, 0, ITEM_LABEL);
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 			return true;
 		}

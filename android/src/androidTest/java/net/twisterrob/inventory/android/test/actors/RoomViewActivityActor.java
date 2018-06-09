@@ -16,11 +16,11 @@ public class RoomViewActivityActor extends ItemContainingViewActivityActor {
 	}
 
 	public DeleteDialogActor delete() {
-		clickActionOverflow(R.string.room_delete);
+		clickActionOverflow(R.id.action_room_delete);
 		return new DeleteDialogActor();
 	}
 	public MoveTargetActivityActor move() {
-		clickActionOverflow(R.string.room_move);
+		clickActionOverflow(R.id.action_room_move);
 		return new MoveTargetActivityActor();
 	}
 	public ItemEditActivityActor addItem() {

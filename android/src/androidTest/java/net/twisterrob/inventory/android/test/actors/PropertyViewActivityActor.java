@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.test.actors;
 
 import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
@@ -18,7 +17,7 @@ public class PropertyViewActivityActor extends ViewActivityActor {
 		assertActionTitle(propertyName);
 	}
 	public DeleteDialogActor delete() {
-		onActionMenuView(withText(R.string.property_delete)).perform(click());
+		clickActionOverflow(R.id.action_property_delete);
 		return new DeleteDialogActor();
 	}
 	public void hasNoRoom(String roomName) {

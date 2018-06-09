@@ -1,14 +1,11 @@
 package net.twisterrob.inventory.android.test.actors;
 
-import org.junit.function.ThrowingRunnable;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 
 import android.app.Activity;
-import android.support.annotation.*;
-import android.support.test.espresso.*;
+import android.support.annotation.IdRes;
+import android.support.test.espresso.Espresso;
 import android.support.test.runner.lifecycle.Stage;
 
 import static android.support.test.espresso.Espresso.*;
@@ -19,7 +16,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
-import static net.twisterrob.test.hamcrest.Matchers.*;
 
 public class ActivityActor {
 	private final Class<? extends Activity> activityClass;
@@ -27,8 +23,8 @@ public class ActivityActor {
 		this.activityClass = activityClass;
 	}
 
-	protected void clickActionOverflow(@StringRes int label) {
-		onActionMenuView(withText(label)).perform(click());
+	protected void clickActionOverflow(@IdRes int menuItemId) {
+		onActionMenuItem(withMenuItemId(menuItemId)).perform(click());
 	}
 	protected void clickActionBar(@IdRes int viewId) {
 		onActionBarDescendant(withId(viewId)).perform(click());
@@ -68,11 +64,6 @@ public class ActivityActor {
 		Espresso.pressBack();
 	}
 	public void closeToKill() {
-		Throwable expectedFailure = assertThrows(NoActivityResumedException.class, new ThrowingRunnable() {
-			@Override public void run() {
-				close();
-			}
-		});
-		assertThat(expectedFailure, hasMessage("Pressed back and killed the app"));
+		Espresso.pressBackUnconditionally();
 	}
 }

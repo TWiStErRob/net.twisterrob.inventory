@@ -57,7 +57,7 @@ public class BackupActivityActor extends ActivityActor {
 		return new ExportInternalResultActor();
 	}
 	public ExportExternalActor exportExternal() {
-		onActionMenuView(withText(R.string.backup_export_external)).perform(click());
+		clickActionOverflow(R.id.action_export_external);
 		ExportExternalActor dialog = new ExportExternalActor();
 		dialog.assertDisplayed();
 		return dialog;
@@ -78,7 +78,7 @@ public class BackupActivityActor extends ActivityActor {
 		onView(withId(R.id.backups)).perform(actionOnItem(tempFolder, click()));
 	}
 	public ImportExternalActor importExternal() {
-		onActionMenuView(withText(R.string.backup_import_external)).perform(click());
+		clickActionOverflow(R.id.action_import_external);
 		return new ImportExternalActor();
 	}
 	public void assertEmptyState() {

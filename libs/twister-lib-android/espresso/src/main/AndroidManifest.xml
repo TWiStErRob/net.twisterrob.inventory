@@ -23,10 +23,5 @@
 			android:label="TestActivityCompat"
 			/>
 
-		<activity
-			android:name="net.twisterrob.android.test.espresso.EspressoExtensionsTest_onActionMenuView$TestActivity"
-			android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
-			/>
-
 	</application>
 </manifest>

@@ -19,6 +19,7 @@ import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.res.*;
 import android.support.annotation.*;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.annotation.Beta;
 import android.support.test.espresso.*;
 import android.support.test.espresso.NoMatchingViewException.Builder;
@@ -29,6 +30,7 @@ import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.util.*;
 import android.support.test.runner.lifecycle.Stage;
 import android.support.v4.view.ViewPager;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
@@ -408,8 +410,7 @@ public class EspressoExtensions {
 	 * @see <a href="https://code.google.com/p/android/issues/detail?id=199544">
 	 * perform(click()) is doing a long press randomly and causing tests to fail</a>
 	 */
-	// FIXME allow lookup by id with custom matcher: MenuView.ItemView.getItemData().getId()
-	public static ViewInteraction onActionMenuView(Matcher<View> matcher) {
+	private static void openActionBarOverflowOrOptionsMenuWithOversleepProtection() {
 		// to prevent overflow button click from oversleeping and clicking the first item in the popup via a longClick
 		// the Touch & Hold Delay (aka longClick()) has to be set to at least Medium for this to be less flaky.
 		// On Nexus 5 SDK emulator Short is 30%, Medium is 20%, Long is 5% flaky.
@@ -425,6 +426,7 @@ public class EspressoExtensions {
 			throw new FlakyTestException(OVERSLEEP_TAG + ": " + OVERSLEEP_MESSAGE);
 		}
 
+		// TODO this is done by default by Espresso 3.x?
 		// wait for a platform popup to become available as root, this is the action bar overflow menu popup
 		for (long waitTime : new long[] {10, 50, 100, 500, 1000, 3000, 5000}) { // ~10 seconds altogether
 			try {
@@ -439,6 +441,15 @@ public class EspressoExtensions {
 		onRoot(isPopupMenu()).check(matches(isCompletelyDisplayed()));
 		// check that the current default root is the popup
 		onRoot().check(matches(root(isPopupMenu())));
+	}
+
+	public static DataInteraction onActionMenuItem(Matcher<MenuItem> matcher) {
+		openActionBarOverflowOrOptionsMenuWithOversleepProtection();
+		return onData(matcher);
+	}
+
+	public static ViewInteraction onActionMenuView(Matcher<View> matcher) {
+		openActionBarOverflowOrOptionsMenuWithOversleepProtection();
 		return onView(matcher);//.inRoot(isPlatformPopup()); // not needed as the popup is topmost & focused
 	}
 
@@ -507,6 +518,62 @@ public class EspressoExtensions {
 	}
 	public static Matcher<View> isToolbarSubTitle() {
 		return new ReflectiveParentViewMatcher(isToolbar(), "mSubtitleTextView");
+	}
+
+	public static @NonNull Matcher<MenuItem> withMenuItemId(@IdRes int viewId) {
+		return withMenuItemIdAndroid(viewId);
+	}
+
+	private static @NonNull Matcher<MenuItem> withMenuItemIdAndroid(@IdRes final int menuId) {
+		final Matcher<Integer> viewIdMatcher = equalTo(menuId);
+		return new TypeSafeMatcher<MenuItem>(MenuItem.class) {
+
+			private Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+
+			@Override public void describeTo(Description description) {
+				description.appendText("with menu item id: " + getIdDescription(resources, menuId));
+			}
+
+			@Override protected boolean matchesSafely(MenuItem item) {
+				return viewIdMatcher.matches(item.getItemId());
+			}
+		};
+	}
+
+	private static @NonNull Matcher<View> withMenuItemIdCompat(@IdRes final int menuId) {
+		final Matcher<Integer> viewIdMatcher = equalTo(menuId);
+		// simplified version of Espresso's ViewMatchers.WithIdMatcher
+		return new BoundedMatcher<View, View>(View.class, MenuView.ItemView.class) {
+
+			private Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+
+			@Override public void describeTo(Description description) {
+				description.appendText("with menu item id: " + getIdDescription(resources, menuId));
+			}
+
+			@Override public boolean matchesSafely(View view) {
+				int id = ((MenuView.ItemView)view).getItemData().getItemId();
+				resources = view.getResources();
+				return viewIdMatcher.matches(id);
+			}
+		};
+	}
+
+	/**
+	 * Adapted from Espresso's ViewMatchers.WithIdMatcher.
+	 */
+	private static @NonNull String getIdDescription(@Nullable Resources resources, @IdRes int id) {
+		String idDescription;
+		if (resources != null) {
+			try {
+				idDescription = resources.getResourceName(id);
+			} catch (Resources.NotFoundException e) {
+				idDescription = String.format(Locale.ROOT, "%1$08x [%1$d] (resource name not found)", id);
+			}
+		} else {
+			idDescription = String.format(Locale.ROOT, "%1$08x [%1$d]", id);
+		}
+		return idDescription;
 	}
 
 	public static Matcher<View> withFullResourceName(String resourceName) {

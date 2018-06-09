@@ -110,11 +110,11 @@ public abstract class EditActivityActor extends ActivityActor {
 	}
 	public void removePicture() {
 		onView(imageMatcher).perform(scrollTo());
-		clickActionOverflow(R.string.action_picture_remove);
+		clickActionOverflow(R.id.action_picture_remove);
 	}
 	public void resetPicture() {
 		onView(imageMatcher).perform(scrollTo());
-		clickActionOverflow(R.string.action_picture_reset);
+		clickActionOverflow(R.id.action_picture_reset);
 	}
 	public void takePicture(File temp, String mockBitmapText) throws IOException {
 		takePicture(temp, Helpers.createMockBitmap(mockBitmapText));

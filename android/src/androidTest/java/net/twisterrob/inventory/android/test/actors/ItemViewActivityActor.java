@@ -12,7 +12,7 @@ public class ItemViewActivityActor extends ItemContainingViewActivityActor {
 	}
 
 	public DeleteDialogActor delete() {
-		clickActionOverflow(R.string.item_delete);
+		clickActionOverflow(R.id.action_item_delete);
 		return new DeleteDialogActor();
 	}
 	public MoveTargetActivityActor move() {
