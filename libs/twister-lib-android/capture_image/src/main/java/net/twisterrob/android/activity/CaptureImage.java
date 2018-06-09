@@ -238,6 +238,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		}
 		if (!fallback.equals(result)) {
 			try {
+				LOG.trace("Loading image from {} to {}", result, mTargetFile);
 				InputStream stream = getContentResolver().openInputStream(result);
 				IOTools.copyStream(stream, new FileOutputStream(mTargetFile));
 			} catch (IOException ex) {
