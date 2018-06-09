@@ -24,6 +24,16 @@ public class Matchers {
 		return exactlyOneOf(Arrays.asList(matchers));
 	}
 
+	@SafeVarargs
+	public static <K, V> Matcher<Map<? extends K, ? extends V>> containsEntries(
+			Matcher<? super Map<? extends K, ? extends V>>... matchers) {
+		return IsMapContainsEntries.containsEntries(matchers);
+	}
+	public static <K, V> Matcher<Map<? extends K, ? extends V>> containsEntries(
+			Collection<Matcher<? super Map<? extends K, ? extends V>>> matchers) {
+		return IsMapContainsEntries.containsEntries(matchers);
+	}
+
 	public static Matcher<ZipEntry> zipEntryWithName(String name) {
 		return zipEntryWithName(is(name));
 	}

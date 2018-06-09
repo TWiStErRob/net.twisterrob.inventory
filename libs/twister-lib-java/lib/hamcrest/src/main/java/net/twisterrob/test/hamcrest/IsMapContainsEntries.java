@@ -38,8 +38,8 @@ public class IsMapContainsEntries<K, V> extends TypeSafeDiagnosingMatcher<Map<? 
 	@SafeVarargs
 	static <K, V> Matcher<Map<? extends K, ? extends V>> containsEntries(
 			Matcher<? super Map<? extends K, ? extends V>>... matchers) {
-		List<Matcher<? super Map<? extends K, ? extends V>>> matchers1 = NullSafety.nullSafe(matchers);
-		return containsEntries(matchers1);
+		List<Matcher<? super Map<? extends K, ? extends V>>> nullSafeMatchers = NullSafety.nullSafe(matchers);
+		return containsEntries(nullSafeMatchers);
 	}
 	static <K, V> Matcher<Map<? extends K, ? extends V>> containsEntries(
 			Collection<Matcher<? super Map<? extends K, ? extends V>>> matchers) {

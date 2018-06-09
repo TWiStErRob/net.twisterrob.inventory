@@ -13,7 +13,6 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 import net.twisterrob.java.io.IOTools;
-import net.twisterrob.test.hamcrest.IsMapContainsEntries;
 
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
@@ -50,7 +49,7 @@ public class ZipDiffTest {
 		ZipDiff diff = new ZipDiff(beforeFile, afterFile);
 
 		assertInvariants(diff);
-		assertThat(diff.getAdded(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getAdded(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), nullValue())
 		));
 		assertThat(diff.getRemoved(), anEmptyMap());
@@ -70,7 +69,7 @@ public class ZipDiffTest {
 
 		assertInvariants(diff);
 		assertThat(diff.getAdded(), anEmptyMap());
-		assertThat(diff.getRemoved(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getRemoved(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), nullValue())
 		));
 		assertThat(diff.getSame(), anEmptyMap());
@@ -92,7 +91,7 @@ public class ZipDiffTest {
 		assertThat(diff.getAdded(), anEmptyMap());
 		assertThat(diff.getRemoved(), anEmptyMap());
 		assertThat(diff.getSame(), anEmptyMap());
-		assertThat(diff.getChanged(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getChanged(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), zipEntryWithName("file1"))
 		));
 		assertThat(diff.getMoved(), anEmptyMap());
@@ -111,7 +110,7 @@ public class ZipDiffTest {
 		assertInvariants(diff);
 		assertThat(diff.getAdded(), anEmptyMap());
 		assertThat(diff.getRemoved(), anEmptyMap());
-		assertThat(diff.getSame(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getSame(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), zipEntryWithName("file1"))
 		));
 		assertThat(diff.getChanged(), anEmptyMap());
@@ -133,7 +132,7 @@ public class ZipDiffTest {
 		assertThat(diff.getRemoved(), anEmptyMap());
 		assertThat(diff.getSame(), anEmptyMap());
 		assertThat(diff.getChanged(), anEmptyMap());
-		assertThat(diff.getMoved(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getMoved(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), zipEntryWithName("file2"))
 		));
 	}
@@ -150,13 +149,13 @@ public class ZipDiffTest {
 		ZipDiff diff = new ZipDiff(beforeFile, afterFile);
 
 		assertInvariants(diff);
-		assertThat(diff.getAdded(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getAdded(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), nullValue())
 		));
 		assertThat(diff.getRemoved(), anEmptyMap());
 		assertThat(diff.getSame(), anEmptyMap());
 		assertThat(diff.getChanged(), anEmptyMap());
-		assertThat(diff.getMoved(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getMoved(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), zipEntryWithName("file2"))
 		));
 	}
@@ -178,7 +177,7 @@ public class ZipDiffTest {
 		assertThat(diff.getRemoved(), anEmptyMap());
 		assertThat(diff.getSame(), anEmptyMap());
 		assertThat(diff.getChanged(), anEmptyMap());
-		assertThat(diff.getMoved(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getMoved(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), zipEntryWithName("file2")),
 				hasEntry(zipEntryWithName("file2"), zipEntryWithName("file1"))
 		));
@@ -205,7 +204,7 @@ public class ZipDiffTest {
 		assertThat(diff.getRemoved(), anEmptyMap());
 		assertThat(diff.getSame(), anEmptyMap());
 		assertThat(diff.getChanged(), anEmptyMap());
-		assertThat(diff.getMoved(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getMoved(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), zipEntryWithName("file3")),
 				hasEntry(zipEntryWithName("file2"), zipEntryWithName("file1")),
 				hasEntry(zipEntryWithName("file3"), zipEntryWithName("file4")),
@@ -252,11 +251,11 @@ public class ZipDiffTest {
 		ZipDiff diff = new ZipDiff(beforeFile, afterFile);
 
 		assertInvariants(diff);
-		assertThat(diff.getAdded(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getAdded(), containsEntries(
 				hasEntry(zipEntryWithName("file2"), zipEntryWithName("file1"))
 		));
 		assertThat(diff.getRemoved(), anEmptyMap());
-		assertThat(diff.getSame(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getSame(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), zipEntryWithName("file1"))
 		));
 		assertThat(diff.getChanged(), anEmptyMap());
@@ -303,10 +302,10 @@ public class ZipDiffTest {
 
 		assertInvariants(diff);
 		assertThat(diff.getAdded(), anEmptyMap());
-		assertThat(diff.getRemoved(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getRemoved(), containsEntries(
 				hasEntry(zipEntryWithName("file2"), zipEntryWithName("file1"))
 		));
-		assertThat(diff.getSame(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getSame(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), zipEntryWithName("file1"))
 		));
 		assertThat(diff.getChanged(), anEmptyMap());
@@ -326,10 +325,10 @@ public class ZipDiffTest {
 
 		assertInvariants(diff);
 		assertThat(diff.getAdded(), anEmptyMap());
-		assertThat(diff.getRemoved(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getRemoved(), containsEntries(
 				hasEntry(zipEntryWithName("file1"), zipEntryWithName("file2"))
 		));
-		assertThat(diff.getSame(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getSame(), containsEntries(
 				hasEntry(zipEntryWithName("file2"), zipEntryWithName("file2"))
 		));
 		assertThat(diff.getChanged(), anEmptyMap());
@@ -372,30 +371,30 @@ public class ZipDiffTest {
 		ZipDiff diff = new ZipDiff(beforeFile, afterFile);
 
 		assertInvariants(diff);
-		assertThat(diff.getAdded(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getAdded(), containsEntries(
 				hasEntry(zipEntryWithName("added1"), nullValue()),
 				hasEntry(zipEntryWithName("added2"), nullValue()),
 				hasEntry(zipEntryWithName("replaced"), nullValue()),
 				hasEntry(zipEntryWithName("copied1"), zipEntryWithName("copied")),
 				hasEntry(zipEntryWithName("copied2"), zipEntryWithName("copied"))
 		));
-		assertThat(diff.getRemoved(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getRemoved(), containsEntries(
 				hasEntry(zipEntryWithName("removed1"), nullValue()),
 				hasEntry(zipEntryWithName("removed2"), nullValue()),
 				hasEntry(zipEntryWithName("merged1"), zipEntryWithName("merged")),
 				hasEntry(zipEntryWithName("merged2"), zipEntryWithName("merged"))
 		));
-		assertThat(diff.getSame(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getSame(), containsEntries(
 				hasEntry(zipEntryWithName("same1"), zipEntryWithName("same1")),
 				hasEntry(zipEntryWithName("same2"), zipEntryWithName("same2")),
 				hasEntry(zipEntryWithName("merged"), zipEntryWithName("merged")),
 				hasEntry(zipEntryWithName("copied"), zipEntryWithName("copied"))
 		));
-		assertThat(diff.getChanged(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getChanged(), containsEntries(
 				hasEntry(zipEntryWithName("changed1"), zipEntryWithName("changed1")),
 				hasEntry(zipEntryWithName("changed2"), zipEntryWithName("changed2"))
 		));
-		assertThat(diff.getMoved(), IsMapContainsEntries.containsEntries(
+		assertThat(diff.getMoved(), containsEntries(
 				hasEntry(zipEntryWithName("swapped1"), zipEntryWithName("swapped2")),
 				hasEntry(zipEntryWithName("swapped2"), zipEntryWithName("swapped1")),
 				hasEntry(zipEntryWithName("replaced"), zipEntryWithName("moved"))
