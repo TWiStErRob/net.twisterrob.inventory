@@ -13,7 +13,10 @@
 	-->
 	<!--suppress AndroidDomInspection android:package is merged in by Gradle -->
 	<instrumentation android:name="net.twisterrob.android.test.junit.AndroidJUnitRunner">
-		<!--suppress AndroidElementNotAllowed STOPSHIP does it really not? -->
+		<!--suppress AndroidElementNotAllowed Undocumented that <instrumentation> can have <meta-data> children,
+		    but this is the way to parameterize the runner:
+		    `context.packageManager.getInstrumentationInfo(...).metaData` is the way to read it.
+		-->
 		<meta-data android:name="defaultExcludedPackages"
 		           android:value="net.twisterrob.inventory.android.test.suites" />
 	</instrumentation>

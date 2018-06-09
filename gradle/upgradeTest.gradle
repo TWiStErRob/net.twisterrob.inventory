@@ -41,8 +41,8 @@ task upgradeTest {
 		BaseVariantData data = debugVariant.variantData
 		def results = new File(data.scope.globalScope.testResultsFolder, 'upgrade-tests')
 		def reports = new File(data.scope.globalScope.reportsDir, 'upgrade-tests')
-		FileUtils.emptyFolder results
-		FileUtils.emptyFolder reports
+		FileUtils.cleanOutputDir(results)
+		FileUtils.cleanOutputDir(reports)
 		def testListener = new TestAwareCustomTestRunListener(
 				device.name, project.name, debugVariant.name, new StdLogger(StdLogger.Level.VERBOSE))
 		testListener.reportDir = results

@@ -10,6 +10,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build.*;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.*;
 import android.support.test.espresso.base.DefaultFailureHandler;
 import android.support.test.internal.runner.RunnerArgs;
@@ -129,27 +130,45 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 	}
 
 	static class DetailedFailureHandler implements FailureHandler {
-		private final FailureHandler defaultFailureHandler;
-		DetailedFailureHandler(DefaultFailureHandler handler) {
+
+		private final @NonNull FailureHandler defaultFailureHandler;
+
+		DetailedFailureHandler(@NonNull FailureHandler handler) {
 			defaultFailureHandler = handler;
 		}
+
 		@Override public void handle(Throwable error, org.hamcrest.Matcher<View> viewMatcher) {
-			if (false) { // TODO when is this needed again?
-				Throwable cause = error;
-				while (cause.getCause() != null) {
-					cause = cause.getCause();
-				}
-				cause.initCause(new StackTrace("View interaction was initiated here"));
+			Throwable transformed = transformSpecialCases(error);
+			defaultFailureHandler.handle(transformed, viewMatcher);
+		}
+
+		private Throwable addInitialCallStack(Throwable error) {
+			Throwable cause = error;
+			while (cause.getCause() != null) {
+				cause = cause.getCause();
 			}
+			cause.initCause(new StackTrace("View interaction was initiated here"));
+			return error;
+		}
+
+		private Throwable transformSpecialCases(Throwable originalError) {
+			Throwable transformed = originalError;
+			transformed = transformToPreserveStackTrace(transformed);
+			transformed = addInitialCallStack(transformed); // TODO when is this needed again?
+			return transformed;
+		}
+
+		private Throwable transformToPreserveStackTrace(Throwable error) {
+			// TODO generalize based on conditions in DefaultFailureHandler
 			if (error instanceof NoActivityResumedException) {
 				// Wrap it in the same type, using the same message to create the illusion of nothing happened.
-				// DefaultFailureHandler will re-set the stacktrace, but we still have the original.
+				// DefaultFailureHandler will re-set the stacktrace in getUserFriendlyError, but we keep the original.
 				// An example of this is Espresso.pressBack() throwing "Pressed back and killed the app",
 				// but the origin shows up as waitForAndHandleInteractionResults
 				// instead of waitForPendingForegroundActivities.
-				error = new NoActivityResumedException(error.getMessage(), error);
+				return new NoActivityResumedException(error.getMessage(), error);
 			}
-			defaultFailureHandler.handle(error, viewMatcher);
+			return error;
 		}
 	}
 }
