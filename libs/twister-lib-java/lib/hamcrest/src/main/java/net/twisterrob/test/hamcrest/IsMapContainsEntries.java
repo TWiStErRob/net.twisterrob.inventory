@@ -3,8 +3,14 @@ package net.twisterrob.test.hamcrest;
 import java.util.*;
 
 import org.hamcrest.*;
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.hamcrest.internal.NullSafety;
 
+/**
+ * Analogous version of {@link IsIterableContainingInAnyOrder}, but for {@link Map}s.
+ *
+ * @see org.hamcrest.Matchers#containsInAnyOrder
+ */
 public class IsMapContainsEntries<K, V> extends TypeSafeDiagnosingMatcher<Map<? extends K, ? extends V>> {
 	private final Collection<Matcher<? super Map<? extends K, ? extends V>>> matchers;
 
@@ -30,26 +36,27 @@ public class IsMapContainsEntries<K, V> extends TypeSafeDiagnosingMatcher<Map<? 
 	}
 
 	@SafeVarargs
-	public static <K, V> Matcher<Map<? extends K, ? extends V>> containsEntries(
+	static <K, V> Matcher<Map<? extends K, ? extends V>> containsEntries(
 			Matcher<? super Map<? extends K, ? extends V>>... matchers) {
 		List<Matcher<? super Map<? extends K, ? extends V>>> matchers1 = NullSafety.nullSafe(matchers);
 		return containsEntries(matchers1);
 	}
-	public static <K, V> Matcher<Map<? extends K, ? extends V>> containsEntries(
-			List<Matcher<? super Map<? extends K, ? extends V>>> matchers) {
+	static <K, V> Matcher<Map<? extends K, ? extends V>> containsEntries(
+			Collection<Matcher<? super Map<? extends K, ? extends V>>> matchers) {
 		return new IsMapContainsEntries<>(matchers);
 	}
 
-	private static class Matching<S> {
-		private final Collection<Matcher<? super S>> matchers;
+	private static class Matching<M> {
+		private final Collection<Matcher<? super M>> matchers;
 		private final Description mismatchDescription;
+		private int matched = 0;
 
-		public Matching(Collection<Matcher<? super S>> matchers, Description mismatchDescription) {
+		public Matching(Collection<Matcher<? super M>> matchers, Description mismatchDescription) {
 			this.matchers = new ArrayList<>(matchers);
 			this.mismatchDescription = mismatchDescription;
 		}
 
-		public boolean matches(S item) {
+		public boolean matches(M item) {
 			if (matchers.isEmpty()) {
 				mismatchDescription.appendText("no match for: ").appendValue(item);
 				return false;
@@ -59,22 +66,27 @@ public class IsMapContainsEntries<K, V> extends TypeSafeDiagnosingMatcher<Map<? 
 
 		public boolean isFinished(Map<?, ?> items) {
 			if (matchers.isEmpty()) {
+				if (matched != items.size()) {
+					mismatchDescription.appendText("extra entries in ").appendValue(items);
+					return false;
+				}
 				return true;
 			}
 			mismatchDescription
-					.appendText("no item matches: ").appendList("", ", ", "", matchers)
+					.appendText("no entry matches: ").appendList("", ", ", "", matchers)
 					.appendText(" in ").appendValue(items);
 			return false;
 		}
 
-		private boolean isMatched(S item) {
-			for (Matcher<? super S> matcher : matchers) {
-				if (matcher.matches(item)) {
+		private boolean isMatched(M map) {
+			for (Matcher<? super M> matcher : matchers) {
+				if (matcher.matches(map)) {
 					matchers.remove(matcher);
+					matched++;
 					return true;
 				}
 			}
-			mismatchDescription.appendText("not matched: ").appendValue(item);
+			mismatchDescription.appendText("not matched: ").appendValue(map);
 			return false;
 		}
 	}

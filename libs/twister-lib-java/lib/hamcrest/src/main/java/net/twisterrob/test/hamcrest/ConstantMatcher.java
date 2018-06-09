@@ -24,11 +24,11 @@ class ConstantMatcher extends TypeSafeDiagnosingMatcher<Class<?>> {
 			return false;
 		}
 		if (!Modifier.isStatic(field.getModifiers())) {
-			mismatchDescription.appendText("non-static field ").appendValue(field);
+			mismatchDescription.appendText("was non-static field ").appendValue(field);
 			return false;
 		}
 		if (!Modifier.isFinal(field.getModifiers())) {
-			mismatchDescription.appendText("non-final class field ").appendValue(field);
+			mismatchDescription.appendText("was non-final class field ").appendValue(field);
 			return false;
 		}
 		Object value;

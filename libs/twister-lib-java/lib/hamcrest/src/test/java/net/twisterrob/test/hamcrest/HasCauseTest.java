@@ -41,6 +41,7 @@ public class HasCauseTest {
 		FileNotFoundException ex = new FileNotFoundException("test");
 		FileNotFoundException similar = new FileNotFoundException("test");
 		assertThat(new Exception(similar), not(HasCause.hasCause(ex)));
+		assertThat(new Exception(ex), not(HasCause.hasCause(similar)));
 	}
 
 	@Test public void failsNull() {
@@ -77,7 +78,7 @@ public class HasCauseTest {
 
 		Throwable expectedFailure = assertThrows(AssertionError.class, new ThrowingRunnable() {
 			@Override public void run() {
-				assertThat(null, HasCause.hasCause(matcher));
+				assertThat(new Throwable(), HasCause.hasCause(matcher));
 			}
 		});
 

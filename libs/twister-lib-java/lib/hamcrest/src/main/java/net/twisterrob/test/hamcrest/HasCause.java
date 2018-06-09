@@ -1,7 +1,5 @@
 package net.twisterrob.test.hamcrest;
 
-import java.util.*;
-
 import javax.annotation.Nonnull;
 
 import org.hamcrest.*;
@@ -16,7 +14,7 @@ public class HasCause extends TypeSafeDiagnosingMatcher<Throwable> {
 
 	private final @Nonnull Matcher<Throwable> matcher;
 
-	public HasCause( Matcher<Throwable> matcher) {
+	public HasCause(Matcher<Throwable> matcher) {
 		if (matcher == null) {
 			throw new NullPointerException("Expected cause matcher cannot be null.");
 		}
@@ -24,15 +22,15 @@ public class HasCause extends TypeSafeDiagnosingMatcher<Throwable> {
 	}
 
 	@Override protected boolean matchesSafely(Throwable item, Description mismatchDescription) {
-		List<Throwable> causes = new LinkedList<>();
 		while (item != null) {
 			if (matcher.matches(item)) {
 				return true;
+			} else {
+				mismatchDescription.appendText("cause didn't match" + NL);
+				matcher.describeMismatch(item, mismatchDescription);
 			}
-			causes.add(item);
 			item = item.getCause();
 		}
-		mismatchDescription.appendValueList("was " + causes.size() + " nested exceptions:" + NL, NL, "", causes);
 		return false;
 	}
 
