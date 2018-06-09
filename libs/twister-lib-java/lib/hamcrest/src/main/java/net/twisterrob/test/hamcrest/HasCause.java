@@ -26,7 +26,7 @@ public class HasCause extends TypeSafeDiagnosingMatcher<Throwable> {
 			if (matcher.matches(item)) {
 				return true;
 			} else {
-				mismatchDescription.appendText("cause didn't match" + NL);
+				mismatchDescription.appendText("cause ").appendValue(item).appendText(" mismatch:" + NL);
 				matcher.describeMismatch(item, mismatchDescription);
 			}
 			item = item.getCause();
