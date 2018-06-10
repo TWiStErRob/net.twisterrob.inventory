@@ -23,6 +23,7 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation('net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT')
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
+	implementation 'net.twisterrob.lib:twister-lib-android-widgets'
 	implementation 'net.twisterrob.lib:twister-lib-android-about'
 	implementation 'net.twisterrob.lib:twister-lib-android-logging'
 	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
@@ -36,8 +37,11 @@ dependencies {
 	implementation "com.android.support:design:${VERSION_SUPPORT}"
 //	implementation "com.android.support:cardview-v7:${VERSION_SUPPORT}"
 	implementation "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
-	//noinspection GradleDependency 0.3.1/1.0 is API 14+ (https://github.com/google/flexbox-layout/issues/390)
-	implementation('com.google.android:flexbox:0.3.0') {
+	//noinspection GradleDependency 0.3.1+ is officially API 14+ (https://github.com/google/flexbox-layout/issues/390)
+	//noinspection GradleDependency 0.3.1+ is strictly API 11+ (FlexboxHelper.calculateFlexLines calls View.getMeasuredState)
+	//noinspection GradleDependency 0.3.0+ is strictly API 17+ (FlexboxHelper.getPaddingStartMain calls View.getPaddingStart)
+	implementation('com.google.android:flexbox:0.3.0') { // 0.3.0 polyfilled as FlexboxLayoutCompat to API 10+
+		// TODEL fixed in 0.3.2
 		exclude group: 'com.android.support'
 	}
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
