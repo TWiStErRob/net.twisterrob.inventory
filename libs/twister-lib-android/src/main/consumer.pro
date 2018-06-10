@@ -23,25 +23,6 @@
 -keepclassmembers class **.MenuBuilder {
 	void setOptionalIconsVisible(boolean);
 }
-# net.twisterrob.android.utils.log.LoggingFragment.onActivityCreated(android.os.Bundle)
-# net.twisterrob.android.utils.log.LoggingFragment.getLoaderManager()
-# net.twisterrob.android.utils.log.LoggingActivity.onCreate(android.os.Bundle)
--keepclassmembernames class android.support.v4.app.LoaderManagerImpl {
-	java.lang.String mWho;
-}
-# net.twisterrob.android.utils.log.LoggingFragment.getName()
--keepclassmembernames class android.support.v4.app.Fragment {
-	java.lang.String mWho;
-}
-# net.twisterrob.android.utils.tools.AndroidTools.toString(java.lang.Object)
--keepclassmembernames class android.support.v4.app.Fragment.SavedState {
-	java.lang.String mState;
-}
-# Note: net.twisterrob.java.utils.CollectionTools accesses a declared field 'map|header|before|key|backingMap|prv' dynamically
-#      Maybe this is library field 'class { type field; }'
-# Ignore tryGetLastJava/tryGetLastAndroid
--dontnote net.twisterrob.java.utils.CollectionTools
-
 # Note: net.twisterrob.android.utils.tools.IOTools accesses a declared field 'errno' dynamically
 #      Maybe this is library field 'android.system.ErrnoException { int errno; }'
 # Ignore isEPIPE
@@ -70,17 +51,3 @@
 
 # TODO is this needed for AboutActivity?
 #-keep public class **.BuildConfig
-
-# debug helpers (may be needed, wrapped most their usages in BuildConfig.DEBUG for now)
-#-assumenosideeffects class net.twisterrob.android.utils.tools.AndroidTools {
-#	public static java.lang.String toString(...);
-#	public static java.lang.String toShortString(...);
-#	public static java.lang.String toNameString(...);
-#}
-# Try to remove BaseApp call to AndroidStringerRepo.init() to enable removal of all the stringers and annotations
--assumenosideeffects class net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo {
-	*** init(...);
-}
--assumenosideeffects class net.twisterrob.java.utils.tostring.StringerRepo {
-	*** getInstance();
-}
