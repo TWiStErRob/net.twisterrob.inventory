@@ -10,7 +10,6 @@ import android.widget.*;
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter.ViewHolder;

@@ -1,6 +1,5 @@
 package net.twisterrob.android.test.matchers;
 
-import org.hamcrest.Condition;
 import org.hamcrest.*;
 
 import static org.hamcrest.Condition.*;

@@ -528,7 +528,7 @@ public class EspressoExtensions {
 		final Matcher<Integer> viewIdMatcher = equalTo(menuId);
 		return new TypeSafeMatcher<MenuItem>(MenuItem.class) {
 
-			private Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+			private final Resources resources = InstrumentationRegistry.getTargetContext().getResources();
 
 			@Override public void describeTo(Description description) {
 				description.appendText("with menu item id: " + getIdDescription(resources, menuId));

@@ -15,7 +15,7 @@ class InventoryDatabaseTask extends DefaultTask {
 			output.parentFile.mkdirs()
 			output.withWriter { writer ->
 				def printer = getPrinter()
-				new DatabaseGenerator(printer, iconFolder).transform(reader, writer);
+				new DatabaseGenerator(printer, iconFolder).transform(reader, writer)
 			}
 		}
 	}

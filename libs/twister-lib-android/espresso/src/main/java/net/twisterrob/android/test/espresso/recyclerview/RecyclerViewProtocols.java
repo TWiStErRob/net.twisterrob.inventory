@@ -141,6 +141,7 @@ public final class RecyclerViewProtocols {
 				LinearLayoutManager linear = (LinearLayoutManager)manager;
 				if (Range.closed(linear.findFirstVisibleItemPosition(), linear.findLastVisibleItemPosition())
 				         .contains(dataPosition)) {
+					//noinspection SimplifiableIfStatement it's easier to understand like this
 					if (linear.findFirstVisibleItemPosition() == linear.findLastVisibleItemPosition()) {
 						// that's a huge element.
 						inView = true;

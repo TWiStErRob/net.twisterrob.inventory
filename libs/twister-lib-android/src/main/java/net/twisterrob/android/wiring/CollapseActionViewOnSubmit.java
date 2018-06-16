@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 
 public class CollapseActionViewOnSubmit implements OnQueryTextListener {
-	private @NonNull ActionBar actionBar;
+	private final @NonNull ActionBar actionBar;
 
 	public CollapseActionViewOnSubmit(@NonNull ActionBar actionBar) {
 		this.actionBar = actionBar;

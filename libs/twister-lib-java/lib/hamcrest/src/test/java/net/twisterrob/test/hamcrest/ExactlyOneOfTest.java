@@ -13,7 +13,10 @@ import static net.twisterrob.test.hamcrest.Matchers.*;
 
 /**
  * Tests based on {@link org.hamcrest.core.AnyOfTest}.
+ * @see <a href="https://github.com/hamcrest/JavaHamcrest/blob/v2.0.0.0/hamcrest-core/src/test/java/org/hamcrest/core/AnyOfTest.java">
+ *     AnyOfTest.java</a>
  */
+@SuppressWarnings("JavadocReference")
 public class ExactlyOneOfTest {
 	@Test public void copesWithNulls() {
 		Matcher<String> matcher = exactlyOneOf(equalTo("irrelevant"), startsWith("irr"));
@@ -59,7 +62,17 @@ public class ExactlyOneOfTest {
 	}
 
 	@Test public void supportsCollections() {
+		//noinspection RedundantTypeArguments TODEL https://youtrack.jetbrains.com/issue/IDEA-194093
+		Matcher<Iterable<String>> matcher = Matchers.<Iterable<String>>exactlyOneOf(
+				hasItem("hello"),
+				hasItem("world"),
+				contains("a", "b")
+		);
 
+		assertMatches("didn't pass hello sub-matcher", matcher, Arrays.asList("hello", "word"));
+		assertMatches("didn't pass world sub-matcher", matcher, Arrays.asList("hell", "world"));
+		assertMatches("didn't pass last sub-matcher", matcher, Arrays.asList("a", "b"));
+		assertDoesNotMatch("didn't fail all sub-matchers", matcher, Arrays.asList("a", "b", "c"));
 	}
 
 	@SuppressWarnings("serial") // won't be serialized
@@ -74,11 +87,9 @@ public class ExactlyOneOfTest {
 			put("yay", 1);
 		}});
 		assertMatches("didn't fail good and > 0 sub-matchers", matcher, new ConcurrentHashMap<String, Integer>() {{
-			put("yay", -1);
 			put("yay", 0);
 		}});
 		assertDoesNotMatch("didn't fail when good and > 0 matched", matcher, new TreeMap<String, Integer>() {{
-			put("good", 0);
 			put("good", 1);
 		}});
 	}

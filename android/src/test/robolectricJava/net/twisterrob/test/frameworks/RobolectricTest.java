@@ -14,7 +14,7 @@ import net.twisterrob.test.frameworks.classes.AndroidRecipient;
 public class RobolectricTest extends RobolectricTestBase {
 	@Mock OnClickListener mockAndroidClass;
 	@InjectMocks AndroidRecipient sut;
-	@Rule public TestName testName = new TestName();
+	@Rule public final TestName testName = new TestName();
 
 	@Test public void testRunner() {
 		assertTrue("@Test methods should be executed", true);

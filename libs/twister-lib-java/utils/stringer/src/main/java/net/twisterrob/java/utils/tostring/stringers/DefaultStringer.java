@@ -98,7 +98,7 @@ public class DefaultStringer extends Stringer<Object> {
 		String name = clazz.getCanonicalName();
 		if (clazz.isArray() && value != null) {
 			// CONSIDER multidimensional cases String[5][6][][]
-			name = name.replaceFirst("\\[\\]", "[" + Array.getLength(value) + "]");
+			name = name.replaceFirst("\\[]", "[" + Array.getLength(value) + "]");
 		}
 		if (name == null) {
 			name = clazz.toString();

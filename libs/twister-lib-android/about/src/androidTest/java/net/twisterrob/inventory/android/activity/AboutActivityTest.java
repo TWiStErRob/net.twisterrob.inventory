@@ -72,6 +72,7 @@ public class AboutActivityTest {
 			return info;
 		} catch (NameNotFoundException e) {
 			AssertionError fail = new AssertionError("Cannot get package info for " + context.getPackageName());
+			//noinspection UnnecessaryInitCause API 19 only
 			fail.initCause(e);
 			throw fail;
 		}

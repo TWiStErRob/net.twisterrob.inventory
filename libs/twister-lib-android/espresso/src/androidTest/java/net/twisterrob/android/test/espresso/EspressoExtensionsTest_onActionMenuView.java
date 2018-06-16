@@ -41,7 +41,7 @@ import static net.twisterrob.java.utils.ReflectionTools.*;
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = VERSION_CODES.HONEYCOMB)
 public class EspressoExtensionsTest_onActionMenuView {
-	@Rule public ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
+	@Rule public final ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
 
 	private void verifyOversleepProtection(ThrowingRunnable actionThatTendsToOversleep)
 			throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -129,10 +129,6 @@ public class EspressoExtensionsTest_onActionMenuView {
 		private static final int ITEM_ID = (int)(Math.random() * Integer.MAX_VALUE);
 
 		public boolean itemClicked;
-
-		@Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-		}
 
 		@Override public boolean onOptionsItemSelected(MenuItem item) {
 			if (item.getItemId() == ITEM_ID) {

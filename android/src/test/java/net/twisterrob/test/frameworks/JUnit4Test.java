@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class JUnit4Test {
-	@Rule public TestName name = new TestName();
+	@Rule public final TestName name = new TestName();
 
 	@Test public void testRunner() {
 		assertTrue("@Test methods should be executed", true);

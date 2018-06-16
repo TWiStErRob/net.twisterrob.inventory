@@ -27,7 +27,7 @@ public class CameraSizeComparatorTest_Sort {
 	}
 
 	@Parameters(name = "{0}")
-	public static Object[][] dat() {
+	public static Object[][] data() {
 		return new Object[][] {
 				{"Same aspect, Different sizes", 1500, 1000,
 						Arrays.asList(s(3000, 2000), s(2000, 3000), s(750, 500), s(500, 750))},

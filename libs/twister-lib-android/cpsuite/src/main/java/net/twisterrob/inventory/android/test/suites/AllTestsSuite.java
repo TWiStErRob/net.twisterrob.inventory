@@ -46,7 +46,7 @@ public class AllTestsSuite {
 		private static final boolean DEBUG_MODE = false;
 
 		private final ClassTester tester;
-		private String apkPath;
+		private final String apkPath;
 
 		public AndroidClasspathClassesFinder(ClassTester tester, String apkPath) {
 			this.tester = tester;

@@ -24,8 +24,8 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 	private final ImportProgressHandler progress;
 	private ZipFile zip;
 	private final Resources res;
-	private Database db;
-	private XMLImporter importer;
+	private final Database db;
+	private final XMLImporter importer;
 
 	public BackupZipFileImporter(Resources res, ImportProgressHandler progress) {
 		this(res, App.db(), new XMLImporter(res, App.db()), progress);

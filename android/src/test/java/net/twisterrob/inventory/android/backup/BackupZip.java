@@ -75,9 +75,9 @@ public class BackupZip implements Arranger {
 	}
 
 	static class Item {
-		int id;
-		String name;
-		String image;
+		final int id;
+		final String name;
+		final String image;
 		public Item(int id, String name, String image) {
 			this.id = id;
 			this.name = name;

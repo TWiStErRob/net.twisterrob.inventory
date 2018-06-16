@@ -43,7 +43,6 @@ import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.DrawerMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
-import static net.twisterrob.test.hamcrest.IsMapContainsEntries.*;
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
 /**

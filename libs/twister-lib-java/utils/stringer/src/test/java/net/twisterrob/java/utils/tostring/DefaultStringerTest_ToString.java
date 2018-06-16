@@ -15,7 +15,7 @@ import net.twisterrob.java.utils.tostring.stringers.DefaultStringer;
 public class DefaultStringerTest_ToString {
 	/** Default toString's pattern without class name. */
 	public static final Pattern OBJECT_TOSTRING = Pattern.compile("^@[0-9a-f]+$");
-	public static final Pattern SQUARE_BRACKETS = Pattern.compile("^\\[.*\\]$");
+	public static final Pattern SQUARE_BRACKETS = Pattern.compile("^\\[.*]$");
 	private final DefaultStringer stringer = new DefaultStringer();
 
 	@Test public void testNull() {

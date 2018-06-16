@@ -248,9 +248,9 @@ public class Suggester<T> {
 
 	public static class DictionaryWord<T> {
 		final T id;
-		String keyword;
-		int wordStart;
-		int wordEnd;
+		final String keyword;
+		final int wordStart;
+		final int wordEnd;
 
 		DictionaryWord(T id, String word) {
 			this(id, word, 0, word.length());

@@ -21,7 +21,7 @@ public class LevelBasedIDTest {
 	@Test public void testLevel1() {
 		assertEquals(1000, level.newItem(0));
 		for (int i = 1; i < MAX_PER_LEVEL; i++) {
-			assertEquals(1000 + i * 100, level.newItem(1));
+			assertEquals(1000 + i * (int)Math.pow(10, 2), level.newItem(1));
 		}
 		testFail(1);
 		testFail(1);
@@ -30,7 +30,7 @@ public class LevelBasedIDTest {
 		assertEquals(1000, level.newItem(0));
 		assertEquals(1100, level.newItem(1));
 		for (int i = 1; i < MAX_PER_LEVEL; i++) {
-			assertEquals(1100 + i * 10, level.newItem(2));
+			assertEquals(1100 + i * (int)Math.pow(10, 1), level.newItem(2));
 		}
 		testFail(2);
 		testFail(2);
@@ -40,7 +40,7 @@ public class LevelBasedIDTest {
 		assertEquals(1100, level.newItem(1));
 		assertEquals(1110, level.newItem(2));
 		for (int i = 1; i < MAX_PER_LEVEL; i++) {
-			assertEquals(1110 + i * 1, level.newItem(3));
+			assertEquals(1110 + i * (int)Math.pow(10, 0), level.newItem(3));
 		}
 		testFail(3);
 		testFail(3);

@@ -34,9 +34,9 @@ task upgradeTest {
 
 		File testApk = debugVariant.testVariant.outputs.first().outputFile
 		logger.info("Unnstalling test package: ${debugVariant.testVariant.applicationId}")
-		realDevice.uninstallPackage(debugVariant.testVariant.applicationId);
+		realDevice.uninstallPackage(debugVariant.testVariant.applicationId)
 		logger.info("Installing test package: ${testApk}")
-		realDevice.installPackage(testApk.absolutePath, false, null);
+		realDevice.installPackage(testApk.absolutePath, false, null)
 
 		BaseVariantData data = debugVariant.variantData
 		def results = new File(data.scope.globalScope.testResultsFolder, 'upgrade-tests')
@@ -47,7 +47,7 @@ task upgradeTest {
 				device.name, project.name, debugVariant.name, new StdLogger(StdLogger.Level.VERBOSE))
 		testListener.reportDir = results
 
-		boolean failed = false;
+		boolean failed = false
 		try {
 			installOld(realDevice, debugVariant, '10001934-v1.0.0#1934')
 			pushData(realDevice, debugVariant, '10001934-v1.0.0#1934')
@@ -56,19 +56,19 @@ task upgradeTest {
 
 			File newApk = debugVariant.outputs.first().outputFile
 			logger.info("Installing package: ${newApk}")
-			realDevice.installPackage(newApk.absolutePath, true, null);
+			realDevice.installPackage(newApk.absolutePath, true, null)
 			runTest(instrument.testData, device, testListener, new File(reports, 'index.html'),
 					"net.twisterrob.inventory.android.UpgradeTests#testVerifyVersion2")
 		} catch (Throwable ex) {
-			failed = true;
-			throw ex;
+			failed = true
+			throw ex
 		} finally {
 			try {
 				ResilientTestReport report = new ResilientTestReport(ReportType.SINGLE_FLAVOR, results, reports)
-				report.generateReport();
+				report.generateReport()
 			} catch (Throwable ex) {
 				if (!failed) { // swallow if there's already a failure
-					throw ex;
+					throw ex
 				}
 			}
 		}
@@ -78,9 +78,9 @@ def installOld(IDevice realDevice, ApplicationVariant debugVariant, String versi
 	// FIXME release debug build as well
 	File oldApk = file("${System.env.RELEASE_HOME}/android/${debugVariant.applicationId}@${version}d+debug.apk")
 	logger.info("Unnstalling package: ${debugVariant.applicationId}")
-	realDevice.uninstallPackage(debugVariant.applicationId);
+	realDevice.uninstallPackage(debugVariant.applicationId)
 	logger.info("Installing package: ${oldApk}")
-	realDevice.installPackage(oldApk.absolutePath, false, null);
+	realDevice.installPackage(oldApk.absolutePath, false, null)
 }
 def pushData(IDevice realDevice, ApplicationVariant debugVariant, String version) {
 	def localData = "${System.env.RELEASE_HOME}/android/${debugVariant.applicationId}@${version}d+debug-data.zip"
@@ -93,7 +93,7 @@ def runTest(TestData testData, DeviceConnector device,
 	// from com.android.builder.internal.testing.SimpleTestCallable#call
 	def runner = new RemoteAndroidTestRunner(testData.applicationId, testData.instrumentationRunner, device)
 	for (Map.Entry<String, String> argument : testData.instrumentationRunnerArguments.entrySet()) {
-		runner.addInstrumentationArg(argument.getKey(), argument.getValue());
+		runner.addInstrumentationArg(argument.getKey(), argument.getValue())
 	}
 	runner.addInstrumentationArg('class', test)
 	//runner.addInstrumentationArg('annotation', 'org.junit.Test')
@@ -116,22 +116,24 @@ class TestAwareCustomTestRunListener extends CustomTestRunListener {
 	TestAwareCustomTestRunListener(String deviceName, String projectName, String flavorName, ILogger logger) {
 		super(deviceName, projectName, flavorName, logger)
 	}
+
 	@Override protected File getResultFile(File reportDir) throws IOException {
-		File resultFile = super.getResultFile(reportDir);
-		return new File(resultFile.parentFile, addTestName(resultFile.name));
+		File resultFile = super.getResultFile(reportDir)
+		return new File(resultFile.parentFile, addTestName(resultFile.name))
 	}
 
-	private String test;
-	public void setTest(String test) {
-		this.test = test;
+	private String test
+
+	void setTest(String test) {
+		this.test = test
 	}
 
 	private String addTestName(String name) {
 		def suffix = '.xml'
-		if (test != null && name.endsWith(suffix)) {
-			def onlyName = name.substring(0, name.length() - suffix.length());
+		if (this.test != null && name.endsWith(suffix)) {
+			def onlyName = name.substring(0, name.length() - suffix.length())
 			name = "${onlyName}-${test}${suffix}"
 		}
-		return name;
+		return name
 	}
 }

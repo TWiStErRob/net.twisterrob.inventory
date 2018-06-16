@@ -8,7 +8,7 @@ buildscript {
 }
 project.android.applicationVariants.all { /*com.android.build.gradle.api.ApkVariant*/ variant ->
 	Task obfuscateTask = variant.obfuscation
-	def skipReason = [ ];
+	def skipReason = [ ]
 	if (obfuscateTask == null) {
 		skipReason += "not obfuscated"
 	}
@@ -19,8 +19,8 @@ project.android.applicationVariants.all { /*com.android.build.gradle.api.ApkVari
 		skipReason += "tested"
 	}
 	if (!skipReason.isEmpty()) {
-		logger.info("Skipping unfuscation of {} because it is {}", variant.name, skipReason);
-		return;
+		logger.info("Skipping unfuscation of {} because it is {}", variant.name, skipReason)
+		return
 	}
 
 	File mapping = variant.mappingFile
@@ -36,7 +36,7 @@ project.android.applicationVariants.all { /*com.android.build.gradle.api.ApkVari
 			def config = configField.get(obfuscateTask) as proguard.Configuration
 			if (!config.obfuscate) {
 				return // nothing to unfuscate when -dontobfuscate
-			};
+			}
 
 			java.nio.file.Files.copy(mapping.toPath(), new File(mapping.parentFile, "mapping.txt.bck").toPath(),
 					java.nio.file.StandardCopyOption.REPLACE_EXISTING)
@@ -60,15 +60,15 @@ project.android.applicationVariants.all { /*com.android.build.gradle.api.ApkVari
 
 class Mapping {
 	private static java.util.regex.Pattern MAPPING_PATTERN =
-			~/^(?<member>    )?(?<location>\d+:\d+:)?(?:(?<type>.*?) )?(?<name>.*?)(?:\((?<args>.*?)\))?(?: -> )(?<obfuscated>.*?)(?<class>:?)$/;
-	private static int MAPPING_PATTERN_OBFUSCATED_INDEX = 6;
+			~/^(?<member>    )?(?<location>\d+:\d+:)?(?:(?<type>.*?) )?(?<name>.*?)(?:\((?<args>.*?)\))?(?: -> )(?<obfuscated>.*?)(?<class>:?)$/ 
+	private static int MAPPING_PATTERN_OBFUSCATED_INDEX = 6
 
 	private final File source
-	public Mapping(File source) {
+	Mapping(File source) {
 		this.source = source
 	}
 
-	public void remap(File target) {
+	void remap(File target) {
 		target.withWriter { source.eachLine Mapping.&processLine.curry(it) }
 	}
 
@@ -87,7 +87,7 @@ class Mapping {
 			out.write(line.substring(m.end(MAPPING_PATTERN_OBFUSCATED_INDEX)))
 			out.write('\n')
 		} catch (Exception ex) {
-			StringBuilder sb = new StringBuilder("Line #${num} failed: ${line}\n");
+			StringBuilder sb = new StringBuilder("Line #${num} failed: ${line}\n")
 			0.upto(m.groupCount()) { sb.append("Group #${it}: '${m.group(it)}'\n") }
 			throw new IllegalArgumentException(sb.toString(), ex)
 		}
@@ -97,14 +97,14 @@ class Mapping {
 		// reassemble the names with something readable, but still breaking changes
 		def origName = getName(original)
 		def obfName = getName(obfuscated)
-		obfName = obfName.equals(origName) ? "" : obfName;
-		return getPackage(original) + origName + '_' + obfName;
+		obfName = obfName.equals(origName) ? "" : obfName
+		return getPackage(original) + origName + '_' + obfName
 	}
 	private static String getPackage(String name) {
-		int lastDot = name.lastIndexOf('.');
-		return lastDot < 0 ? "" : name.substring(0, lastDot + 1);
+		int lastDot = name.lastIndexOf('.')
+		return lastDot < 0 ? "" : name.substring(0, lastDot + 1)
 	}
 	private static String getName(String name) {
-		return name.substring(name.lastIndexOf('.') + 1);
+		return name.substring(name.lastIndexOf('.') + 1)
 	}
 }

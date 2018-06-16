@@ -38,8 +38,8 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 	@Rule public final DataBaseActor database = new DataBaseActor();
 	private final DataBaseActor.BelongingAssertions db;
 	private final BelongingValues belonging;
-	@Rule public TemporaryFolder temp = new TemporaryFolder();
-	@Rule public TestName testName = new TestName();
+	@Rule public final TemporaryFolder temp = new TemporaryFolder();
+	@Rule public final TestName testName = new TestName();
 
 	private final EditActivityActor editor;
 	public EditActivityTest_Create(Class<T> activityClass, EditActivityActor editorActor, BelongingValues belonging) {

@@ -10,8 +10,8 @@ import android.support.test.runner.lifecycle.*;
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
 
 public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
-	private Collection<Activity> activities = new HashSet<>();
-	private ActivityLifecycleCallback callback = new ActivityLifecycleCallback() {
+	private final Collection<Activity> activities = new HashSet<>();
+	private final ActivityLifecycleCallback callback = new ActivityLifecycleCallback() {
 		@Override public void onActivityLifecycleChanged(Activity activity, Stage stage) {
 			if (stage == Stage.DESTROYED) {
 				activities.remove(activity);

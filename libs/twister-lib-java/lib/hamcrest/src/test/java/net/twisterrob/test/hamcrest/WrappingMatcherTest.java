@@ -11,9 +11,9 @@ import static org.mockito.Mockito.*;
 public class WrappingMatcherTest {
 
 	@SuppressWarnings("unchecked")
-	Matcher<Object> mockWrappedMatcher = mock(Matcher.class);
+	final Matcher<Object> mockWrappedMatcher = mock(Matcher.class);
 
-	WrappingMatcher<Object> sut = new WrappingMatcher<>(mockWrappedMatcher);
+	final WrappingMatcher<Object> sut = new WrappingMatcher<>(mockWrappedMatcher);
 
 	@After public void tearDown() {
 		verifyNoMoreInteractions(mockWrappedMatcher);

@@ -38,7 +38,7 @@ public abstract class BaseApp extends android.app.Application {
 	 * App.db().getReadableDatabase().rawQuery("select * from sqlite_sequence;", null));
 	 */
 	private Object database;
-	private CountDownLatch databaseWaiter = new CountDownLatch(1);
+	private final CountDownLatch databaseWaiter = new CountDownLatch(1);
 	private ResourcePreferences prefs;
 	private int preferencesResource;
 

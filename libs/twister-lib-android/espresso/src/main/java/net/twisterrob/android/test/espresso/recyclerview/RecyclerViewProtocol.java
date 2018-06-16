@@ -147,8 +147,8 @@ public interface RecyclerViewProtocol {
 	 * A custom function that is applied when {@link AdaptedData#getData()} is executed.
 	 * @see net.twisterrob.android.test.espresso.recyclerview.RecyclerViewProtocol.AdaptedData.Builder#withDataFunction(DataFunction)
 	 */
-	public interface DataFunction {
-		public Object getData();
+	interface DataFunction {
+		Object getData();
 	}
 
 	/**
@@ -156,16 +156,7 @@ public interface RecyclerViewProtocol {
 	 * AdapterViewProtocol can use to force that data object to be rendered as a child or deeper
 	 * descendant of the adapter view.
 	 */
-	public static class AdaptedData {
-
-		/**
-		 * One of the objects the AdapterView is exposing to the user.
-		 *
-		 * @deprecated use {@link AdaptedData#getData()} instead.
-		 */
-		@Nullable
-		@Deprecated
-		public final Object data;
+	class AdaptedData {
 
 		/**
 		 * A token the implementor of AdapterViewProtocol can use to force the adapterView to display
@@ -190,12 +181,12 @@ public interface RecyclerViewProtocol {
 			return String.format("Data: %s (class: %s) token: %s", myData, itsClass, opaqueToken);
 		}
 
-		private AdaptedData(Object data, Object opaqueToken, DataFunction dataFunction) {
-			this.data = data;
+		private AdaptedData(Object opaqueToken, DataFunction dataFunction) {
 			this.opaqueToken = checkNotNull(opaqueToken);
 			this.dataFunction = checkNotNull(dataFunction);
 		}
 
+		@SuppressWarnings("ParameterHidesMemberVariable")
 		public static class Builder {
 			private Object data;
 			private Object opaqueToken;
@@ -217,9 +208,7 @@ public interface RecyclerViewProtocol {
 			}
 
 			public AdaptedData build() {
-				if (null != dataFunction) {
-					data = dataFunction.getData();
-				} else {
+				if (dataFunction == null) {
 					dataFunction = new DataFunction() {
 						@Override
 						public Object getData() {
@@ -228,7 +217,7 @@ public interface RecyclerViewProtocol {
 					};
 				}
 
-				return new AdaptedData(data, opaqueToken, dataFunction);
+				return new AdaptedData(opaqueToken, dataFunction);
 			}
 		}
 	}

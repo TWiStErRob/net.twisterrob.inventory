@@ -26,11 +26,11 @@ import net.twisterrob.inventory.android.content.Database;
 public class BackupImageDatabase implements Asserter {
 	private final Database db;
 	private long generatedImageId = 100;
-	private Map<String, Long> imageIds = new HashMap<>();
+	private final Map<String, Long> imageIds = new HashMap<>();
 	@SuppressLint("UseSparseArrays") // this runs on desktop, LongSparseArray is not available
-	private Map<Long, byte[]> imageContents = new HashMap<>();
+	private final Map<Long, byte[]> imageContents = new HashMap<>();
 	@SuppressLint("UseSparseArrays") // this runs on desktop, LongSparseArray is not available
-	private Map<Long, Long> itemImages = new HashMap<>();
+	private final Map<Long, Long> itemImages = new HashMap<>();
 	public BackupImageDatabase(Database mock) {
 		db = mock;
 		Answer<Long> insertImage = new Answer<Long>() {

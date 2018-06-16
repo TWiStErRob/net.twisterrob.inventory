@@ -25,7 +25,7 @@ public class MultiBottomSheetCallback extends BottomSheetCallback {
 	}
 
 	public static class Builder {
-		private List<BottomSheetCallback> callbacks = new LinkedList<>();
+		private final List<BottomSheetCallback> callbacks = new LinkedList<>();
 		public Builder add(BottomSheetCallback callback) {
 			callbacks.add(callback);
 			return this;

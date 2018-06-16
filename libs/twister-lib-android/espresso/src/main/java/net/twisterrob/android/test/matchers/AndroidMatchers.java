@@ -95,7 +95,7 @@ public class AndroidMatchers {
 	 */
 	@SuppressWarnings("JavadocReference")
 	private static final Pattern formatSpecifier =
-			Pattern.compile("%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])");
+			Pattern.compile("%(\\d+\\$)?([-#+ 0,(<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])");
 	public static @NonNull Matcher<String> formattedRes(@StringRes int stringId) {
 		String format = getTargetContext().getResources().getString(stringId);
 		return matchesPattern(formatSpecifier.matcher(format).replaceAll(".*?"));

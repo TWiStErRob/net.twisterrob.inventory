@@ -31,9 +31,9 @@ import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.test.PackageNameShortener;
 
 public abstract class BackupZipImporterTestBase {
-	@Rule public MockitoRule mockito = MockitoJUnit.rule();
-	@Rule public TemporaryFolder temp = new TemporaryFolder();
-	@Rule public TestRule packageNameShortener = new PackageNameShortener();
+	@Rule public final MockitoRule mockito = MockitoJUnit.rule();
+	@Rule public final TemporaryFolder temp = new TemporaryFolder();
+	@Rule public final TestRule packageNameShortener = new PackageNameShortener();
 
 	protected static final String NO_IMAGE = null;
 	protected static final String[] NONE = new String[0];

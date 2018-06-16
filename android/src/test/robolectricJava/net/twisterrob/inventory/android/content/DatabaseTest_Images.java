@@ -133,35 +133,26 @@ public class DatabaseTest_Images extends RobolectricTestBase {
 		long imageID = createDefaultImage();
 		belonging.setImage(id, imageID);
 
-		Cursor properties = database.listProperties();
-		try {
+		try (Cursor properties = database.listProperties()) {
 			while (properties.moveToNext()) {
 				database.deleteProperty(DatabaseTools.getLong(properties, Property.ID));
 			}
-		} finally {
-			properties.close();
 		}
 		assertNoImages();
 	}
 
 	private void assertImageContents(long id) {
-		Cursor image = belonging.getImage(id);
-		try {
+		try (Cursor image = belonging.getImage(id)) {
 			assertThat("image.count", image.getCount(), is(1));
 			assertTrue(image.moveToFirst());
 			assertThat(getBlob(image, InventoryProvider.COLUMN_BLOB), is(IMAGE_CONTENTS));
-		} finally {
-			image.close();
 		}
 	}
 	private void assertHasImage(long id, Matcher<Boolean> matcher) {
-		Cursor belonging = this.belonging.get(id);
-		try {
-			assertThat(name + ".count", belonging.getCount(), is(1));
-			assertTrue(belonging.moveToFirst());
-			assertThat(getBoolean(belonging, Property.HAS_IMAGE), matcher);
-		} finally {
-			belonging.close();
+		try (Cursor belongingData = belonging.get(id)) {
+			assertThat(name + ".count", belongingData.getCount(), is(1));
+			assertTrue(belongingData.moveToFirst());
+			assertThat(getBoolean(belongingData, Property.HAS_IMAGE), matcher);
 		}
 	}
 
@@ -172,11 +163,8 @@ public class DatabaseTest_Images extends RobolectricTestBase {
 		assertImageCount(is(1));
 	}
 	private void assertImageCount(Matcher<Integer> imageCount) {
-		Cursor images = database.getWritableDatabase().rawQuery("select * from Image;", NO_ARGS);
-		try {
+		try (Cursor images = database.getWritableDatabase().rawQuery("select * from Image;", NO_ARGS)) {
 			assertThat("images.count", images.getCount(), imageCount);
-		} finally {
-			images.close();
 		}
 	}
 

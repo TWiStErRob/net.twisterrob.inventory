@@ -52,7 +52,7 @@ public /*static*/ abstract class IOTools extends net.twisterrob.java.io.IOTools 
 
 	/** @deprecated use Glide */
 	@Deprecated @SuppressWarnings("deprecation")
-	private static Set<Object> s_getImageLocks =
+	private static final Set<Object> s_getImageLocks =
 			CollectionTools.newSetFromMap(new ConcurrentHashMap<Object, Boolean>());
 
 	/**

@@ -23,8 +23,8 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 
 @RunWith(AndroidJUnit4.class)
 public class ItemActivityTest_Image {
-	@Rule public TemporaryFolder temp = new TemporaryFolder();
-	@Rule public TestName name = new TestName();
+	@Rule public final TemporaryFolder temp = new TemporaryFolder();
+	@Rule public final TestName name = new TestName();
 
 	@Rule public final ActivityTestRule<RoomViewActivity> activity
 			= new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class) {

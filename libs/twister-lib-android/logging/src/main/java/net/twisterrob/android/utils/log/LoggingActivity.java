@@ -30,7 +30,7 @@ public class LoggingActivity extends AppCompatActivity {
 	@SuppressWarnings("unused") // assign in child constructor for debugging something specific
 	protected LoggingDebugProvider debugInfoProvider;
 	@SuppressWarnings("unused") // assign in child constructor for debugging something specific
-	protected boolean logOnCreateView = globalLogOnCreateView;
+	protected final boolean logOnCreateView = globalLogOnCreateView;
 	private static boolean globalLogOnCreateView = false;
 
 	@SuppressWarnings("unused")

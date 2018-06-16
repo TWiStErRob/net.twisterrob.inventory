@@ -16,7 +16,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 public class ZippedExporter implements Exporter {
 	protected final String fileName;
 	protected ZipOutputStream zip;
-	private CursorExporter dataOutput;
+	private final CursorExporter dataOutput;
 
 	public ZippedExporter(String fileName, CursorExporter exporter) {
 		this.fileName = fileName;

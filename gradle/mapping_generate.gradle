@@ -4,7 +4,7 @@ android {
 		applicationVariants.all { BaseVariant variant ->
 			if (variant.obfuscation) {
 				File mapping = variant.mappingFile
-				File newMapping = new File(mapping.parentFile, mapping.getName() + ".gen");
+				File newMapping = new File(mapping.parentFile, mapping.getName() + ".gen")
 				def generateDebugMapping = project.task('generateDebugMapping') {
 					description = "Generate mapping.txt for readable output"
 					outputs.files newMapping
@@ -18,8 +18,8 @@ android {
 						def allJars = mapJars
 						+project.files(pg.libraryJarFiles)
 						+project.files(variant.androidBuilder.getBootClasspath())
-						ClassLoader loader = java.net.URLClassLoader.newInstance(allJars*.toURI()*.toURL() as URL[]);
-						PrintWriter out = new PrintWriter(newMapping);
+						ClassLoader loader = java.net.URLClassLoader.newInstance(allJars*.toURI()*.toURL() as URL[])
+						PrintWriter out = new PrintWriter(newMapping)
 						def output = { File source, String path, Class<?> clazz ->
 							//println "${source}/${path}: ${clazz}"
 							def swapCase = org.apache.commons.lang.StringUtils.&swapCase
@@ -47,20 +47,20 @@ android {
 								println "Dir: " + jar
 								project.fileTree(jar).visit { org.gradle.api.file.FileVisitDetails f ->
 									if (!f.directory && f.name.endsWith(".class")) {
-										String className = f.relativePath.segments.join(".");
-										className = className.substring(0, className.length() - ".class".length());
-										output(jar, f.relativePath.pathString, Class.forName(className, false, loader));
+										String className = f.relativePath.segments.join(".")
+										className = className.substring(0, className.length() - ".class".length())
+										output(jar, f.relativePath.pathString, Class.forName(className, false, loader))
 									}
 								}
 							} else {
 								println "File: " + jar
 								java.util.zip.ZipInputStream zip = new java.util.zip.ZipInputStream(
-										new FileInputStream(jar));
+										new FileInputStream(jar))
 								for (java.util.zip.ZipEntry f = zip.getNextEntry(); f != null; f = zip.getNextEntry()) {
 									if (!f.directory && f.name.endsWith(".class")) {
-										String className = f.name.replace('/', '.');
-										className = className.substring(0, className.length() - ".class".length());
-										output(jar, f.name, Class.forName(className, false, loader));
+										String className = f.name.replace('/', '.')
+										className = className.substring(0, className.length() - ".class".length())
+										output(jar, f.name, Class.forName(className, false, loader))
 									}
 								}
 							}

@@ -67,7 +67,7 @@ public abstract class DialogMatchersTest_CloseDialog {
 
 	@Parameterized.Parameters(name = "{index}: positive={0}, negative={1}, neutral={2}, cancellable={3} -> closed={4}")
 	public static Iterable<Object[]> data() {
-		List<Object[]> data = new ArrayList<>();
+		Collection<Object[]> data = new ArrayList<>();
 		int booleanArgCount = 4;
 		for (int generated = 0; generated < (1 << booleanArgCount); generated++) {
 			Object[] args = new Object[booleanArgCount + 1];

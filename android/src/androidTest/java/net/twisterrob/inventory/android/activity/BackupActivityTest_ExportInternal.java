@@ -130,18 +130,21 @@ public class BackupActivityTest_ExportInternal {
 					checkFolderContents();
 				}
 
-				@Before public void saveFolderContents() throws Exception {
+				/*@Before*/
+				public void saveFolderContents() throws Exception {
 					File extraFile = tempInHomeFolder.newFile(); // to check for devastating deletion
 					preContents = tempInHomeFolder.getRoot().listFiles();
 					assertThat(preContents, arrayContaining(extraFile));
 				}
 
-				@Before private void navigateToFolder() {
+				/*@Before*/
+				private void navigateToFolder() {
 					backup.gotoHomeFolder();
 					backup.selectFolder(tempInHomeFolder.getRoot());
 				}
 
-				@After public void checkFolderContents() {
+				/*@After*/
+				public void checkFolderContents() {
 					assertThat(getDeletedFiles(), is(empty()));
 					assertThat(getCreatedFiles(), hasSize(expectedSize));
 				}

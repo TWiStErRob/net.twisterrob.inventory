@@ -14,7 +14,7 @@ import static net.twisterrob.test.hamcrest.Matchers.*;
 
 public class StackTraceMatcherTest {
 
-	@Rule public TestName name = new TestName();
+	@Rule public final TestName name = new TestName();
 
 	@Test public void testPasses() {
 		FileNotFoundException ex = new FileNotFoundException("test");

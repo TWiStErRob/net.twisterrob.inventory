@@ -24,6 +24,7 @@ public class WindowManagerLayoutParamTypeMatcher extends TypeSafeMatcher<Root> {
 		if (type == root.getWindowLayoutParams().get().type) {
 			IBinder windowToken = root.getDecorView().getWindowToken();
 			IBinder appToken = root.getDecorView().getApplicationWindowToken();
+			//noinspection RedundantIfStatement
 			if (windowToken == appToken == expectedWindowTokenMatch) {
 				// windowToken == appToken means this window isn't contained by any other windows.
 				// if it was a window for an activity, it would have TYPE_BASE_APPLICATION.

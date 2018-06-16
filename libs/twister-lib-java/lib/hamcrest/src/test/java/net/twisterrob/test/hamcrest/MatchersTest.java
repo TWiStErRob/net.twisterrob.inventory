@@ -16,7 +16,7 @@ import static net.twisterrob.test.hamcrest.Matchers.*;
 
 public class MatchersTest {
 
-	@Rule public TestName name = new TestName();
+	@Rule public final TestName name = new TestName();
 
 	@Test public void testTestMethodIsInStackTraceContains() {
 		Exception exception = new Exception();

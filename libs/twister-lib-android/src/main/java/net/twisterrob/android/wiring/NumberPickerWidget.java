@@ -7,7 +7,6 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import net.twisterrob.android.R;
-import net.twisterrob.android.utils.tools.DialogTools.*;
 import net.twisterrob.android.view.RepeatListener;
 
 import static net.twisterrob.android.utils.tools.DialogTools.*;

@@ -84,7 +84,7 @@ public /*static*/ abstract class TextTools {
 
 	@SuppressWarnings("UnusedReturnValue")
 	public static class DescriptionBuilder {
-		SpannableStringBuilder text = new SpannableStringBuilder();
+		final SpannableStringBuilder text = new SpannableStringBuilder();
 
 		public DescriptionBuilder append(CharSequence label, Object object) {
 			return append(label, object, true);

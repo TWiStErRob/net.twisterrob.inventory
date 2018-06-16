@@ -42,7 +42,7 @@ public class ToastIdlingResource extends AsyncIdlingResource {
 	}
 
 	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)
-	private OnAttachStateChangeListener transitionOnDetach = VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1
+	private final OnAttachStateChangeListener transitionOnDetach = VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1
 			? null : new OnAttachStateChangeListener() {
 		@Override public void onViewAttachedToWindow(View v) {
 			v.removeOnAttachStateChangeListener(this);

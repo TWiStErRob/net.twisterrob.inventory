@@ -12,7 +12,7 @@ import static net.twisterrob.test.hamcrest.Matchers.*;
 
 public class StackTraceElementMatcherTest {
 
-	@Rule public TestName name = new TestName();
+	@Rule public final TestName name = new TestName();
 
 	@Test public void testMethodMatchPasses() {
 		StackTraceElement thisMethodElement = new Exception("test").getStackTrace()[0];

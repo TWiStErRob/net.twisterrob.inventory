@@ -25,9 +25,9 @@ public class GravityFlagTest {
 	private static final String FLAG_LIST_END = GravityFlag.Converter.FLAG_LIST_END;
 
 	@Parameters(name = "gravityToString#{index}({0,number,#})={1}")
-	public static Iterable<Object[]> data() {
+	public static Object[][] data() {
 		final String RELATIVE = "RELATIVE_LAYOUT_DIRECTION";
-		return Arrays.asList(new Object[][] {
+		return new Object[][] {
 				// single values
 				{Gravity.NO_GRAVITY, expect("NO_GRAVITY")},
 				{Gravity.CLIP_VERTICAL, expect("CLIP_VERTICAL")},
@@ -125,11 +125,11 @@ public class GravityFlagTest {
 						expect("FILL", RELATIVE,
 								"CLIP_VERTICAL", "CLIP_HORIZONTAL",
 								"DISPLAY_CLIP_VERTICAL", "DISPLAY_CLIP_HORIZONTAL")}
-		});
+		};
 	}
 
-	private int input;
-	private Expectation expected;
+	private final int input;
+	private final Expectation expected;
 
 	public GravityFlagTest(int input, Expectation expected) {
 		this.input = input;

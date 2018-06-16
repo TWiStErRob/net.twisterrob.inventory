@@ -43,8 +43,9 @@ import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewProtocol.Ad
  *
  * @see android.support.test.espresso.DataInteraction original where this is copied from
  */
+@SuppressWarnings("ParameterHidesMemberVariable")
 public class RecyclerViewDataInteraction {
-	private final Matcher<? extends Object> dataMatcher;
+	private final Matcher<?> dataMatcher;
 	private Matcher<View> adapterMatcher = isAssignableFrom(RecyclerView.class);
 	private Optional<Matcher<View>> childViewMatcher = Optional.absent();
 	private Optional<Integer> atPosition = Optional.absent();
@@ -167,7 +168,7 @@ public class RecyclerViewDataInteraction {
 
 	private Matcher<View> displayingData(
 			final Matcher<View> adapterMatcher,
-			final Matcher<? extends Object> dataMatcher,
+			final Matcher<?> dataMatcher,
 			final RecyclerViewProtocol adapterViewProtocol,
 			final RecyclerViewDataLoaderAction adapterDataLoaderAction) {
 		checkNotNull(adapterMatcher);

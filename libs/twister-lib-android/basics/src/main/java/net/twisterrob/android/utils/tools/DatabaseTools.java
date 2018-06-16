@@ -304,19 +304,7 @@ public /*static*/ abstract class DatabaseTools {
 			//noinspection WrongConstant returns exactly what's needed as per docs
 			return cursor.getType(columnIndex);
 		}
-		while (cursor instanceof CursorWrapper) {
-			if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
-				cursor = ((CursorWrapper)cursor).getWrappedCursor();
-			} else {
-				try {
-					Field mCursor = CursorWrapper.class.getDeclaredField("mCursor");
-					mCursor.setAccessible(true);
-					cursor = (Cursor)mCursor.get(cursor);
-				} catch (Exception ex) {
-					throw new IllegalStateException("Cannot access CursorWrapper.mCursor", ex);
-				}
-			}
-		}
+		cursor = unwrap(cursor);
 		if (!(cursor instanceof CrossProcessCursor)) {
 			throw new IllegalArgumentException("Cannot get type if it's not a " + CrossProcessCursor.class);
 		}
@@ -338,6 +326,24 @@ public /*static*/ abstract class DatabaseTools {
 			throw new IllegalArgumentException("Column has no type.");
 		}
 		return type;
+	}
+
+	private static Cursor unwrap(Cursor cursor) {
+		while (cursor instanceof CursorWrapper) {
+			if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+				cursor = ((CursorWrapper)cursor).getWrappedCursor();
+			} else {
+				try {
+					@SuppressWarnings("JavaReflectionMemberAccess") 
+					Field mCursor = CursorWrapper.class.getDeclaredField("mCursor");
+					mCursor.setAccessible(true);
+					cursor = (Cursor)mCursor.get(cursor);
+				} catch (Exception ex) {
+					throw new IllegalStateException("Cannot access CursorWrapper.mCursor", ex);
+				}
+			}
+		}
+		return cursor;
 	}
 
 	protected DatabaseTools() {
