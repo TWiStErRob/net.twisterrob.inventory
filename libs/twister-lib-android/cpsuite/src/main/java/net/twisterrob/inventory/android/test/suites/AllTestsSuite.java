@@ -8,12 +8,23 @@ import org.junit.runner.RunWith;
 import org.junit.runners.model.*;
 
 import android.annotation.SuppressLint;
+import android.os.Build.VERSION_CODES;
+import android.support.annotation.RequiresApi;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.internal.runner.*;
 import android.support.test.internal.runner.ClassPathScanner.AcceptAllFilter;
+import android.util.Log;
 
+/**
+ * According to JUnit runner release notes, it doesn't support 9 any more, only 15 and up.
+ * @see <a href="https://developer.android.com/training/testing/release-notes#relnotes-20170725-breaking-changes">Runner 1.0.0</a>
+ */
+@RequiresApi(VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
 @RunWith(AllTestsSuite.AndroidClasspathSuite.class)
 public class AllTestsSuite {
+
+	private static final String TAG = "AllTestSuite";
+
 	public static class AndroidClasspathSuite extends ClasspathSuite {
 		public AndroidClasspathSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
 			super(suiteClass, builder, new AndroidClasspathFinderFactory());
@@ -31,6 +42,9 @@ public class AllTestsSuite {
 	}
 
 	static class AndroidClasspathClassesFinder implements ClassesFinder {
+
+		private static final boolean DEBUG_MODE = false;
+
 		private final ClassTester tester;
 		private String apkPath;
 
@@ -39,16 +53,47 @@ public class AllTestsSuite {
 			this.apkPath = apkPath;
 		}
 
+		/**
+		 * Try to load all classes that are on the classpath to look for tests.
+		 * Since we're running in {@link android.support.test.runner.AndroidJUnitRunner}
+		 * its superclass {@link android.support.test.runner.MonitoringInstrumentation}
+		 * will install {@link android.support.multidex.MultiDex}.
+		 */
 		@Override public List<Class<?>> find() {
 			List<Class<?>> matchedClasses = new ArrayList<>();
-			// STOPSHIP figure out a way, or is this working already?
 			TestLoaderAccess loader = new TestLoaderAccess();
 			for (String className : getAllClassNamesOnClassPath()) {
-				Class<?> clazz = loader.loadClass(className);
+				if (className.startsWith("org.mockito.")
+						|| className.startsWith("net.bytebuddy.")
+						|| className.startsWith("com.google.common.")
+						|| className.startsWith("org.hamcrest.")
+						) {
+					// Need to filter some packages out because they use classes that are not available.
+					// that spams logs with "Rejecting re-init on previously-failed class java.lang.Class<FQCN>"
+					continue;
+				}
+				Class<?> clazz = null;
+				try {
+					clazz = loader.loadClass(className);
+				} catch (NoClassDefFoundError ex) {
+					Log.w(TAG, "Cannot load class " + className, ex);
+				}
 				// clazz may be null when the load fails, just ignore those
 				if (clazz != null && tester.acceptClass(clazz)) {
 					matchedClasses.add(clazz);
+				} else {
+					if (DEBUG_MODE) {
+						Log.v(TAG, clazz + " was rejected by filters");
+					}
 				}
+			}
+			if (DEBUG_MODE && Log.isLoggable(TAG, Log.VERBOSE)) {
+				// DEBUG_MODE results in dead code, so UnusedAssignment checks kick in
+				@SuppressWarnings("UnusedAssignment")
+				String s = matchedClasses.toString();
+				@SuppressWarnings("UnusedAssignment")
+				String classes = s.substring(1, s.length() - 2).replace(", ", "\n");
+				Log.v(TAG, "Matched classes:\n" + classes);
 			}
 			return matchedClasses;
 		}
