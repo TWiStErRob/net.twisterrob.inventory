@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class StructurePrinter implements Printer {
-	@Override public void start(Writer output) throws IOException {
+	@Override public void start(Writer output) {
 		// no op
 	}
 	@Override public void print(Category c, Writer output) throws IOException {
@@ -16,7 +16,7 @@ public class StructurePrinter implements Printer {
 		output.write(String.format(Locale.ROOT, "%d%s / %s%s%s, icon='%s'\n",
 				c.level, mark, idString, new String(indent), c.name, c.icon));
 	}
-	@Override public void finish(Writer output) throws IOException {
+	@Override public void finish(Writer output) {
 		// no op
 	}
 }

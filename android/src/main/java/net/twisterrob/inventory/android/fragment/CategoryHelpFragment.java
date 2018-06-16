@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.fragment;
 
-import java.io.File;
+import java.io.*;
 import java.util.Locale;
 
 import org.slf4j.*;
@@ -83,7 +83,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				@Override protected void onPreExecute() {
 					web.loadData("Loading...", "text/html", null);
 				}
-				@Override protected String doInBackground(Void ignore) throws Exception {
+				@Override protected String doInBackground(Void ignore) {
 					return new CategoryHelpBuilder(getActivity()).buildHTML();
 				}
 				@Override protected void onResult(String result, Void ignore) {
@@ -110,7 +110,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				final Context context = getContext();
 				new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
-					@Nullable @Override protected File doInBackground(@Nullable Void ignore) throws Exception {
+					@Nullable @Override protected File doInBackground(@Nullable Void ignore) throws IOException {
 						file = Paths.getShareFile(getContext(), "html");
 						new CategoryHelpBuilder(context).export(file);
 						return file;

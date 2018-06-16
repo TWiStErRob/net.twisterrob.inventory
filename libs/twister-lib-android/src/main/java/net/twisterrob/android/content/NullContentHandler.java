@@ -7,43 +7,42 @@ public class NullContentHandler implements ContentHandler {
 		// no op
 	}
 
-	@Override public void startDocument() throws SAXException {
+	@Override public void startDocument() {
 		// no op
 	}
 
-	@Override public void endDocument() throws SAXException {
+	@Override public void endDocument() {
 		// no op
 	}
 
-	@Override public void startPrefixMapping(String prefix, String uri) throws SAXException {
+	@Override public void startPrefixMapping(String prefix, String uri) {
 		// no op
 	}
 
-	@Override public void endPrefixMapping(String prefix) throws SAXException {
+	@Override public void endPrefixMapping(String prefix) {
 		// no op
 	}
-	@Override public void startElement(String uri, String localName, String qName, Attributes attributes)
-			throws SAXException {
-		// no op
-	}
-
-	@Override public void endElement(String uri, String localName, String qName) throws SAXException {
+	@Override public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		// no op
 	}
 
-	@Override public void characters(char[] ch, int start, int length) throws SAXException {
+	@Override public void endElement(String uri, String localName, String qName) {
 		// no op
 	}
 
-	@Override public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+	@Override public void characters(char[] ch, int start, int length) {
 		// no op
 	}
 
-	@Override public void processingInstruction(String target, String data) throws SAXException {
+	@Override public void ignorableWhitespace(char[] ch, int start, int length) {
 		// no op
 	}
 
-	@Override public void skippedEntity(String name) throws SAXException {
+	@Override public void processingInstruction(String target, String data) {
+		// no op
+	}
+
+	@Override public void skippedEntity(String name) {
 		// no op
 	}
 }

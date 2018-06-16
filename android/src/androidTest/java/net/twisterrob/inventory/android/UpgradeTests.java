@@ -104,7 +104,7 @@ public class UpgradeTests {
 		);
 	}
 
-	@Test public void testPrepareVersion1() throws Throwable {
+	@Test public void testPrepareVersion1() {
 		assertThat("First released version", BuildConfig.class, hasVersionCode(is(10001934)));
 		clickNeutralInDialog();
 		intended(hasComponent("net.twisterrob.inventory.android.activity.BackupActivity"));

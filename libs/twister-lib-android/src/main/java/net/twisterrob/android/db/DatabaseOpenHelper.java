@@ -259,6 +259,12 @@ public class DatabaseOpenHelper extends SQLiteOpenHelperCompat {
 		long executionTime = (end - time) / 1000 / 1000;
 		LOG.debug("Finished ({} ms) executed file {} into database: {}", executionTime, dbFile, dbToString(db));
 	}
+
+	/**
+	 * @throws IOException never, but in the future may throw if asset access fails
+	 * @throws SQLException if the loaded file is not valid SQL
+	 */
+	@SuppressWarnings("RedundantThrows")
 	@WorkerThread
 	public void execFile(String assetPath) throws IOException, SQLException {
 		realExecuteFile(getWritableDatabase(), assetPath);

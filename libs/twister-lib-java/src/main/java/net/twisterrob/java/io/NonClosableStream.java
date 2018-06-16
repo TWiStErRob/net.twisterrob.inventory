@@ -12,7 +12,7 @@ public class NonClosableStream extends FilterInputStream {
 		return closeAttempted;
 	}
 
-	@Override public void close() throws IOException {
+	@Override public void close() {
 		closeAttempted = true;
 		//super.close(); // don't allow it
 	}

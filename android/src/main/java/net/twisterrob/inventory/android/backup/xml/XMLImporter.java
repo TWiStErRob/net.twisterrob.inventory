@@ -332,7 +332,7 @@ public class XMLImporter implements Importer {
 	};
 
 	private static final ImportImageGetter DUMMY_GETTER = new ImportImageGetter() {
-		@Override public void importImage(Type type, long id, String name, String image) throws IOException {
+		@Override public void importImage(Type type, long id, String name, String image) {
 			// NO OP
 		}
 	};

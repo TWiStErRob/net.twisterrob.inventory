@@ -50,7 +50,7 @@ public class BackupActivityTest_ExportExternal {
 	}
 
 	@Category({Op.Cancels.class})
-	@Test public void testCancelWarning() throws Exception {
+	@Test public void testCancelWarning() {
 		backup
 				.exportExternal()
 				.cancel();

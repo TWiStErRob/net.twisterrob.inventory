@@ -43,7 +43,7 @@ public class BackupImageDatabase implements Asserter {
 			}
 		};
 		Answer<Void> deleteImage = new Answer<Void>() {
-			@Override public Void answer(InvocationOnMock invocation) throws Throwable {
+			@Override public Void answer(InvocationOnMock invocation) {
 				long imageId = invocation.getArgument(0);
 				assertThat(imageContents, hasKey(imageId));
 				imageContents.remove(imageId);
@@ -51,7 +51,7 @@ public class BackupImageDatabase implements Asserter {
 			}
 		};
 		Answer<Void> associateImage = new Answer<Void>() {
-			@Override public Void answer(InvocationOnMock invocation) throws Throwable {
+			@Override public Void answer(InvocationOnMock invocation) {
 				long id = invocation.getArgument(0);
 				long imageId = invocation.getArgument(1);
 				assertThat(itemImages, not(hasKey(id)));

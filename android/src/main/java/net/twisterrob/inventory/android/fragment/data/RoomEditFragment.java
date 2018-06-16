@@ -77,7 +77,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 
-	@Override protected RoomDTO onSave(Database db, RoomDTO param) throws Exception {
+	@Override protected RoomDTO onSave(Database db, RoomDTO param) {
 		if (param.id == Room.ID_ADD) {
 			param.id = db.createRoom(param.propertyID, param.type, param.name, param.description);
 		} else {

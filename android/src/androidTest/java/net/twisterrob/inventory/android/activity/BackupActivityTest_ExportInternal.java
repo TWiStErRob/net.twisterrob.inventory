@@ -45,7 +45,7 @@ public class BackupActivityTest_ExportInternal {
 		backup.assertEmptyState();
 	}
 
-	@Test public void testBackupCompletes() throws Exception {
+	@Test public void testBackupCompletes() {
 		ExportInternalResultActor dialog = backup.exportInternal();
 		dialog.assertDisplayed();
 
@@ -56,7 +56,7 @@ public class BackupActivityTest_ExportInternal {
 	}
 
 	@Category({Op.Rotates.class})
-	@Test public void testBackupDialogStaysWhenRotated() throws Exception {
+	@Test public void testBackupDialogStaysWhenRotated() {
 		ExportInternalResultActor dialog = backup.exportInternal();
 		dialog.assertDisplayed();
 
@@ -66,7 +66,7 @@ public class BackupActivityTest_ExportInternal {
 	}
 
 	@Category({Op.Rotates.class})
-	@Test public void testBackupDialogDoesNotReappearWhenRotated() throws Exception {
+	@Test public void testBackupDialogDoesNotReappearWhenRotated() {
 		ExportInternalResultActor dialog = backup.exportInternal();
 		dialog.dismiss();
 
@@ -76,7 +76,7 @@ public class BackupActivityTest_ExportInternal {
 	}
 
 	@Category({Op.Rotates.class})
-	@Test public void testBackupProgressDoesNotAppearWhenRotated() throws Exception {
+	@Test public void testBackupProgressDoesNotAppearWhenRotated() {
 		ExportInternalResultActor dialog = backup.exportInternal();
 		dialog.dismiss();
 
@@ -85,7 +85,7 @@ public class BackupActivityTest_ExportInternal {
 		backup.assertNoProgressDisplayed();
 	}
 
-	@Test public void testBackupShownInFileList() throws Exception {
+	@Test public void testBackupShownInFileList() {
 		ExportInternalResultActor dialog = backup.exportInternal();
 		dialog.dismiss();
 
@@ -141,7 +141,7 @@ public class BackupActivityTest_ExportInternal {
 					backup.selectFolder(tempInHomeFolder.getRoot());
 				}
 
-				@After public void checkFolderContents() throws Exception {
+				@After public void checkFolderContents() {
 					assertThat(getDeletedFiles(), is(empty()));
 					assertThat(getCreatedFiles(), hasSize(expectedSize));
 				}

@@ -69,7 +69,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
 
-	@Override protected ItemDTO onSave(Database db, ItemDTO param) throws Exception {
+	@Override protected ItemDTO onSave(Database db, ItemDTO param) {
 		if (param.id == Item.ID_ADD) {
 			param.id = db.createItem(param.parentID, param.type, param.name, param.description);
 		} else {

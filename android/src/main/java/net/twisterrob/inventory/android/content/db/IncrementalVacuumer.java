@@ -26,7 +26,7 @@ public class IncrementalVacuumer implements Callable<Boolean> {
 		this.maxBytesToFree = maxBytesToFree;
 	}
 
-	@Override public Boolean call() throws Exception {
+	@Override public Boolean call() {
 		LOG.trace("Working with {}", DatabaseTools.dbToString(db));
 		long vacuumState = DatabaseTools.getPragma(db, Pragma.AUTO_VACUUM);
 		if (vacuumState != 2) {

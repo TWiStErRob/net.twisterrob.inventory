@@ -107,7 +107,7 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 			final long imageId;
 			final String name;
 
-			private Image(String name, long imageId) throws IOException {
+			private Image(String name, long imageId) {
 				this.name = name;
 				this.imageId = imageId;
 			}

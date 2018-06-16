@@ -68,7 +68,7 @@ public abstract class BackupZipImporterTestBase {
 		verifyNoMoreInteractions(xmlImporterMock, dbMock, dispatcherMock);
 	}
 
-	@Test public void testEmptyZip() throws Throwable {
+	@Test public void testEmptyZip() {
 		Gwen.given(input);
 
 		Throwable thrown = exceptionThrownBy(() -> Gwen.when(importer).imports(input));

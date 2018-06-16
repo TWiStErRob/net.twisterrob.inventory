@@ -145,7 +145,7 @@ public class ImportImageReconcilerTest {
 		Gwen.then(database).danglingImages(IMAGE);
 	}
 
-	@Test public void testInvalidImageType() throws Throwable {
+	@Test public void testInvalidImageType() {
 		reconciler.importImage(Type.Root, 0, "bad item", IMAGE);
 		reconciler.hasData();
 

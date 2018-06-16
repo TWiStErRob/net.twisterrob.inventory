@@ -35,7 +35,7 @@ public class DrawerUpdateCountersTask extends SimpleSafeAsyncTask<Void, Void, Dr
 		this.nav = nav;
 		this.context = nav.getContext();
 	}
-	@Override protected Stats doInBackground(@Nullable Void ignore) throws Exception {
+	@Override protected Stats doInBackground(@Nullable Void ignore) {
 		Stats stats = new Stats();
 		Cursor cursor = App.db().stats();
 		//noinspection TryFinallyCanBeTryWithResources

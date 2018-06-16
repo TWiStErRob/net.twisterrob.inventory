@@ -17,14 +17,14 @@ import static android.support.test.espresso.core.internal.deps.guava.collect.Ite
 public class InstrumentationExtensions {
 	public static @NonNull Stage getActivityStage(final @NonNull Activity activity) {
 		return callOnMainIfNecessary(new Callable<Stage>() {
-			@Override public Stage call() throws Exception {
+			@Override public Stage call() {
 				return ActivityLifecycleMonitorRegistry.getInstance().getLifecycleStageOf(activity);
 			}
 		});
 	}
 	public static @NonNull Collection<Activity> getActivitiesInStage(final @NonNull Stage stage) {
 		return callOnMainIfNecessary(new Callable<Collection<Activity>>() {
-			@Override public Collection<Activity> call() throws Exception {
+			@Override public Collection<Activity> call() {
 				return ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(stage);
 			}
 		});
@@ -51,7 +51,7 @@ public class InstrumentationExtensions {
 
 	public static @NonNull Collection<Activity> getAllActivities() {
 		return callOnMainIfNecessary(new Callable<Collection<Activity>>() {
-			@Override public Collection<Activity> call() throws Exception {
+			@Override public Collection<Activity> call() {
 				ActivityLifecycleMonitor monitor = ActivityLifecycleMonitorRegistry.getInstance();
 				List<Activity> activities = new ArrayList<>();
 				for (Stage stage : Stage.values()) {
@@ -63,7 +63,7 @@ public class InstrumentationExtensions {
 	}
 	public static @NonNull Map<Stage, Collection<Activity>> getAllActivitiesByStage() {
 		return callOnMainIfNecessary(new Callable<Map<Stage, Collection<Activity>>>() {
-			@Override public Map<Stage, Collection<Activity>> call() throws Exception {
+			@Override public Map<Stage, Collection<Activity>> call() {
 				ActivityLifecycleMonitor monitor = ActivityLifecycleMonitorRegistry.getInstance();
 				Map<Stage, Collection<Activity>> activities = new EnumMap<>(Stage.class);
 				for (Stage stage : Stage.values()) {

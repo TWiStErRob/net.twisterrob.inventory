@@ -50,7 +50,7 @@ public class LoggingAnswer<T> implements Answer<T> {
 		this.level = level;
 	}
 
-	@Override public T answer(InvocationOnMock invocation) throws Throwable {
+	@Override public T answer(InvocationOnMock invocation) {
 		String message = invocation.toString();
 
 		switch (level) {

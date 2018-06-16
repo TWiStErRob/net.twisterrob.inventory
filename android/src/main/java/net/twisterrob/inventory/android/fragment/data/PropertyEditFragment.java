@@ -71,7 +71,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
-	@Override protected PropertyDTO onSave(Database db, PropertyDTO param) throws Exception {
+	@Override protected PropertyDTO onSave(Database db, PropertyDTO param) {
 		if (param.id == Property.ID_ADD) {
 			param.id = db.createProperty(param.type, param.name, param.description);
 		} else {

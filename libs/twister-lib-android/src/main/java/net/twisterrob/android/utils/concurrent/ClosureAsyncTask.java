@@ -12,6 +12,10 @@ public abstract class ClosureAsyncTask extends SafeAsyncTask<Void, Void, Void> {
 		doInBackgroundSafe();
 		return null;
 	}
+
+	/**
+	 * @throws Exception see {@link #doInBackgroundSafe(Void...)}
+	 */
 	@WorkerThread
 	protected abstract void doInBackgroundSafe() throws Exception;
 

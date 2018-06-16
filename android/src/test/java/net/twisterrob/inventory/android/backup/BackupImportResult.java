@@ -24,7 +24,7 @@ public class BackupImportResult implements Asserter {
 		verify(dispatcher, atMost(count)).publishProgress();
 		return this;
 	}
-	public BackupImportResult successful() throws Throwable {
+	public BackupImportResult successful() {
 		assertThat(progress.failure, nullValue());
 		return this;
 	}

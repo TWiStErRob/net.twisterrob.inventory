@@ -7,7 +7,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class EditAllowingIndexerTestDist1 extends BaseIndexerTest {
-	@Before public void setUp() throws Exception {
+	@Before public void setUp() {
 		index = new EditAllowingIndexer<>(1);
 	}
 	@Parameters(name = "{0}") public static Object[][] data() {

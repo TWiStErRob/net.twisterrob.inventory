@@ -62,7 +62,7 @@ public class XMLExporter implements CursorExporter {
 		serializer.attribute(NS, ATTR_VERSION, "1.0");
 	}
 
-	@Override public void processEntry(Cursor cursor) throws IOException {
+	@Override public void processEntry(Cursor cursor) {
 		long id = DatabaseTools.getLong(cursor, CommonColumns.ID);
 		long parentID = DatabaseTools.getLong(cursor, ParentColumns.PARENT_ID);
 		Type type = Type.from(cursor, CommonColumns.TYPE);

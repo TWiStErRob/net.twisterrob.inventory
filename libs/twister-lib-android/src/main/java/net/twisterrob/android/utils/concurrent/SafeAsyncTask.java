@@ -21,6 +21,11 @@ public abstract class SafeAsyncTask<Param, Progress, Result>
 		}
 	}
 
+	/**
+	 * Implement background logic here, successful return will be delegated to {@link #onResult}.
+	 *
+	 * @throws Exception when something goes wrong, this will be caught and reported in {@link #onError}
+	 */
 	@WorkerThread
 	@SuppressWarnings("unchecked" /* @SafeVarargs is not allowed here */)
 	protected abstract @Nullable Result doInBackgroundSafe(@Nullable Param... params) throws Exception;

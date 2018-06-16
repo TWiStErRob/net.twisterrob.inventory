@@ -262,11 +262,11 @@ public class ZipDiff {
 			group.add(entry);
 		}
 
-		public Collection<ZipEntry> findMatchesByName(ZipEntry entry) throws IOException {
+		public Collection<ZipEntry> findMatchesByName(ZipEntry entry) {
 			Set<ZipEntry> entries = byName.get(entry.getName());
 			return entries != null? entries : Collections.<ZipEntry>emptySet();
 		}
-		public Collection<ZipEntry> findMatchesBySize(ZipEntry entry) throws IOException {
+		public Collection<ZipEntry> findMatchesBySize(ZipEntry entry) {
 			Set<ZipEntry> entries = bySize.get(entry.getSize());
 			return entries != null? entries : Collections.<ZipEntry>emptySet();
 		}

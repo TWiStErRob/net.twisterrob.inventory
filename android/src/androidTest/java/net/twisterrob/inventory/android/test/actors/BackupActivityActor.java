@@ -235,7 +235,7 @@ public class BackupActivityActor extends ActivityActor {
 			clickOnLabel(GoogleDriveAutomator.save());
 		}
 
-		public String getSaveFileName() throws UiObjectNotFoundException, NameNotFoundException {
+		public String getSaveFileName() throws UiObjectNotFoundException {
 			return getText(documentTitle());
 		}
 	}

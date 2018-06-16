@@ -60,7 +60,7 @@ public class ChangeTypeListener implements OnClickListener {
 			final long newType = DatabaseTools.getLong(cursor, CommonColumns.ID);
 			final String newTypeKey = DatabaseTools.getString(cursor, CommonColumns.NAME);
 			AndroidTools.executePreferSerial(new ClosureAsyncTask() {
-				@Override protected void doInBackgroundSafe() throws Exception {
+				@Override protected void doInBackgroundSafe() {
 					doUpdate(newType);
 				}
 				@Override protected void onResult() {

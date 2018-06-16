@@ -42,7 +42,7 @@ public class GetStringVarargsAnswer implements Answer<String> {
 		return sb.toString();
 	}
 
-	private Field findId(@StringRes int id) throws IllegalAccessException, NoSuchFieldException {
+	private Field findId(@StringRes int id) throws NoSuchFieldException {
 		for (Class<?> clazz : resClasses) {
 			Field field = ReflectionTools.tryFindConstant(clazz, id);
 			if (field != null) {
