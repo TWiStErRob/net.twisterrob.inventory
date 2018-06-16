@@ -51,7 +51,7 @@ public class ChattyLogCat {
 		}
 		try {
 			InputStream stream = Runtime.getRuntime().exec(new String[] {"logcat", "-p"}).getInputStream();
-			String currentBlackWhiteList = IOTools.readAll(stream);
+			String currentBlackWhiteList = IOTools.readAll(stream).trim();
 			LOG.trace("Received '{}' from `logcat -p`", currentBlackWhiteList);
 			return currentBlackWhiteList;
 		} catch (IOException ex) {
