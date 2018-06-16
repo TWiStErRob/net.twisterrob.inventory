@@ -51,7 +51,7 @@ public class NumberPickerWidget {
 				setValueInternal(value + 1, true);
 			}
 		});
-		display = (TextView)view.findViewById(R.id.widget_number_display);
+		display = view.findViewById(R.id.widget_number_display);
 		display.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				pickNumber(v.getContext(), (int)value, (int)minValue, (int)maxValue, new PopupCallbacks<Integer>() {

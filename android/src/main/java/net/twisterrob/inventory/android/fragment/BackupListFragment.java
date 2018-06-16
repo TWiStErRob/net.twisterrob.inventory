@@ -52,7 +52,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		location = (TextView)view.findViewById(R.id.backup_location);
+		location = view.findViewById(R.id.backup_location);
 		controller = new BackupListController();
 		controller.setView((RecyclerView)view.findViewById(R.id.backups));
 	}
@@ -199,9 +199,9 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 
 			public ViewHolder(View view) {
 				super(view);
-				icon = (ImageView)view.findViewById(R.id.type);
-				text = (TextView)view.findViewById(R.id.title);
-				count = (TextView)view.findViewById(R.id.count);
+				icon = view.findViewById(R.id.type);
+				text = view.findViewById(R.id.title);
+				count = view.findViewById(R.id.count);
 
 				view.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {

@@ -61,10 +61,10 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 
 	@Override protected ViewHolder createHolder(View convertView) {
 		ViewHolder holder = new ViewHolder();
-		holder.image = (ImageView)convertView.findViewById(R.id.image);
+		holder.image = convertView.findViewById(R.id.image);
 		holder.spacer = convertView.findViewById(R.id.spacer);
-		holder.state = (TextView)convertView.findViewById(R.id.type);
-		holder.title = (TextView)convertView.findViewById(R.id.title);
+		holder.state = convertView.findViewById(R.id.type);
+		holder.title = convertView.findViewById(R.id.title);
 		return holder;
 	}
 

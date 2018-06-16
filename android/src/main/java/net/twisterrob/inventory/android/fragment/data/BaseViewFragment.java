@@ -31,7 +31,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		pager = (ViewPager)view.findViewById(R.id.pager);
+		pager = view.findViewById(R.id.pager);
 	}
 
 	public void onSingleRowLoaded(DTO entity) {
@@ -117,8 +117,8 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 			switch (position) {
 				case POSITION_IMAGE: {
 					view = inflater.inflate(R.layout.inc_details_image, container, false);
-					ImageView image = (ImageView)view.findViewById(R.id.image);
-					ImageView type = (ImageView)view.findViewById(R.id.type);
+					ImageView image = view.findViewById(R.id.image);
+					ImageView type = view.findViewById(R.id.type);
 					ViewTools.visibleIf(type, !(entity instanceof CategoryDTO));
 
 					if (!(entity instanceof CategoryDTO)) {
@@ -136,7 +136,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					final boolean debug = App.prefs().getBoolean(
 							R.string.pref_displayDebugDetails, R.bool.pref_displayDebugDetails_default);
 
-					TextView details = (TextView)view.findViewById(R.id.details);
+					TextView details = view.findViewById(R.id.details);
 					details.setText(getDetailsString(entity, debug));
 					//details.setMovementMethod(ScrollingMovementMethod.getInstance());
 					//details.setOnTouchListener(new DeepScrollFixListener());

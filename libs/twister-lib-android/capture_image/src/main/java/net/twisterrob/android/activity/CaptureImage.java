@@ -118,14 +118,14 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		setContentView(R.layout.activity_camera);
 		controls = findViewById(R.id.controls);
 		final View cameraControls = findViewById(R.id.camera_controls);
-		mBtnPick = (ImageButton)controls.findViewById(R.id.btn_pick);
-		mBtnCapture = (ImageButton)controls.findViewById(R.id.btn_capture);
-		mBtnCrop = (ImageButton)controls.findViewById(R.id.btn_crop);
-		mBtnFlash = (ToggleButton)cameraControls.findViewById(R.id.btn_flash);
-		mPreview = (CameraPreview)findViewById(R.id.preview);
+		mBtnPick = controls.findViewById(R.id.btn_pick);
+		mBtnCapture = controls.findViewById(R.id.btn_capture);
+		mBtnCrop = controls.findViewById(R.id.btn_crop);
+		mBtnFlash = cameraControls.findViewById(R.id.btn_flash);
+		mPreview = findViewById(R.id.preview);
 		mPreviewHider = findViewById(R.id.previewHider);
-		mImage = (ImageView)findViewById(R.id.image);
-		mSelection = (SelectionView)findViewById(R.id.selection);
+		mImage = findViewById(R.id.image);
+		mSelection = findViewById(R.id.selection);
 
 		mPreview.setListener(new CameraPreviewListener() {
 			@Override public void onCreate(CameraPreview preview) {

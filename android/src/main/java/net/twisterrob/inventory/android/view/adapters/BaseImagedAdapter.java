@@ -33,8 +33,8 @@ public class BaseImagedAdapter<VH extends BaseImagedAdapter<?>.ViewHolder> exten
 
 		public ViewHolder(View view) {
 			super(view);
-			image = (ImageView)view.findViewById(R.id.image);
-			title = (TextView)view.findViewById(R.id.title);
+			image = view.findViewById(R.id.image);
+			title = view.findViewById(R.id.title);
 
 			view.setOnClickListener(new OnClickListener() {
 				@Override public void onClick(View v) {

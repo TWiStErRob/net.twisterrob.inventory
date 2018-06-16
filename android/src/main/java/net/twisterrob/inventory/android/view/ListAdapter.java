@@ -45,8 +45,8 @@ public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		public ViewHolder(View view) {
 			super(view);
 
-			title = (TextView)view.findViewById(R.id.title);
-			count = (TextView)view.findViewById(R.id.count);
+			title = view.findViewById(R.id.title);
+			count = view.findViewById(R.id.count);
 
 			view.setOnClickListener(this);
 		}

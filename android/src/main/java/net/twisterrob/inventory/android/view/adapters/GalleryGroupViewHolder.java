@@ -23,9 +23,9 @@ public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
 
 	public GalleryGroupViewHolder(View view, final GalleryEvents listener) {
 		super(view);
-		title = (TextView)view.findViewById(R.id.title);
-		image = (ImageView)view.findViewById(R.id.image);
-		count = (TextView)view.findViewById(R.id.count);
+		title = view.findViewById(R.id.title);
+		image = view.findViewById(R.id.image);
+		count = view.findViewById(R.id.count);
 
 		view.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {

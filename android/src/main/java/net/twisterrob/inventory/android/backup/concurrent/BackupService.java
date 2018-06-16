@@ -181,7 +181,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 	public class LocalBinder extends Binder {
 		public void export(@NonNull ParcelFileDescriptor pfd) {
 			queue.add(ObjectTools.checkNotNull(pfd));
-			startService(new Intent(ACTION_EXPORT_PFD_WORKAROUND, (Uri)null, BackupService.this, BackupService.class));
+			startService(new Intent(ACTION_EXPORT_PFD_WORKAROUND, null, BackupService.this, BackupService.class));
 		}
 
 		public void cancel() {

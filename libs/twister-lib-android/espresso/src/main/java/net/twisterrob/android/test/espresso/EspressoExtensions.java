@@ -803,7 +803,7 @@ public class EspressoExtensions {
 		};
 	}
 	private static <A extends Adapter> Matcher<View> hasAdapter() {
-		@SuppressWarnings({"unchecked", "rawtypes"}) Class<? extends AdapterView<A>> clazz =
+		@SuppressWarnings({"unchecked", "rawtypes", "RedundantCast"}) Class<? extends AdapterView<A>> clazz =
 				(Class<? extends AdapterView<A>>)(Class)AdapterView.class;
 		return new BoundedMatcher<View, AdapterView<A>>(clazz) {
 			@Override public void describeTo(Description description) {

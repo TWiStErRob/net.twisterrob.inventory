@@ -31,10 +31,10 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 	public CategoryViewHolder(View view, CategoryItemEvents events) {
 		super(view);
 		this.listener = events;
-		image = (ImageView)view.findViewById(R.id.image);
-		title = (TextView)view.findViewById(R.id.title);
-		stats = (TextView)view.findViewById(R.id.stats);
-		count = (TextView)view.findViewById(R.id.count);
+		image = view.findViewById(R.id.image);
+		title = view.findViewById(R.id.title);
+		stats = view.findViewById(R.id.stats);
+		count = view.findViewById(R.id.count);
 
 		view.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {

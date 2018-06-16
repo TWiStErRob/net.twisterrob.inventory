@@ -67,27 +67,27 @@ public class AboutActivity extends ListActivity {
 			}
 		};
 
-		TextView feedback = (TextView)findViewById(R.id.about_feedback);
+		TextView feedback = findViewById(R.id.about_feedback);
 		feedback.setOnClickListener(feedbackAction);
 
-		TextView nameText = (TextView)findViewById(R.id.about_name);
+		TextView nameText = findViewById(R.id.about_name);
 		nameText.setText(aboutInfo.appLabel);
 		nameText.setOnClickListener(playStoreAction);
 
-		ImageView iconImage = (ImageView)findViewById(R.id.about_icon);
+		ImageView iconImage = findViewById(R.id.about_icon);
 		iconImage.setImageDrawable(aboutInfo.appIcon);
 		iconImage.setOnClickListener(playStoreAction);
 
-		TextView versionText = (TextView)findViewById(R.id.about_version);
+		TextView versionText = findViewById(R.id.about_version);
 		versionText.setText(getString(R.string.about_version, aboutInfo.versionName));
 		versionText.setOnClickListener(settingsAction);
 
-		TextView versionCodeText = (TextView)findViewById(R.id.about_version_code);
+		TextView versionCodeText = findViewById(R.id.about_version_code);
 		versionCodeText.setText(String.valueOf(aboutInfo.versionCode));
 		versionCodeText.setOnClickListener(settingsAction);
 		ViewTools.displayedIf(versionCodeText, getResources().getBoolean(R.bool.in_test));
 
-		TextView packageText = (TextView)findViewById(R.id.about_package);
+		TextView packageText = findViewById(R.id.about_package);
 		packageText.setText(aboutInfo.applicationId);
 		packageText.setOnClickListener(settingsAction);
 
@@ -97,7 +97,7 @@ public class AboutActivity extends ListActivity {
 	}
 
 	private void initSection(@IdRes int sectionContentID, @IdRes int sectionTitleID) {
-		TextView contentView = (TextView)findViewById(sectionContentID);
+		TextView contentView = findViewById(sectionContentID);
 		contentView.setMovementMethod(LinkMovementMethod.getInstance());
 		ViewTools.displayedIfHasText(contentView);
 		View titleView = findViewById(sectionTitleID);
@@ -187,7 +187,7 @@ public class AboutActivity extends ListActivity {
 
 	protected View createLicenseContents(CharSequence content) {
 		@SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.dialog_about_license, null);
-		TextView message = (TextView)view.findViewById(android.R.id.message);
+		TextView message = view.findViewById(android.R.id.message);
 		message.setText(content);
 		message.setMovementMethod(LinkMovementMethod.getInstance());
 		return view;

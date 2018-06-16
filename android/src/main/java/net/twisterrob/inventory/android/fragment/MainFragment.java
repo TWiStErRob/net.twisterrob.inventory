@@ -185,7 +185,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		class ViewHolder extends BaseImagedAdapter<?>.ViewHolder {
 			public ViewHolder(View view) {
 				super(view);
-				details = (TextView)view.findViewById(R.id.details);
+				details = view.findViewById(R.id.details);
 			}
 
 			final TextView details;
@@ -212,7 +212,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		class ViewHolder extends BaseImagedAdapter<?>.ViewHolder {
 			public ViewHolder(View view) {
 				super(view);
-				details = (TextView)view.findViewById(R.id.details);
+				details = view.findViewById(R.id.details);
 			}
 
 			final TextView details;
@@ -251,8 +251,8 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		public class ViewHolder extends RecyclerView.ViewHolder {
 			public ViewHolder(View view) {
 				super(view);
-				title = (TextView)view.findViewById(R.id.title);
-				count = (TextView)view.findViewById(R.id.count);
+				title = view.findViewById(R.id.title);
+				count = view.findViewById(R.id.count);
 
 				view.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {

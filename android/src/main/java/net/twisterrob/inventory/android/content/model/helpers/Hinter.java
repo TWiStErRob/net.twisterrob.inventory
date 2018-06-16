@@ -223,7 +223,7 @@ public class Hinter {
 			private final TextView details;
 			public MoreHolder(View itemView) {
 				super(itemView);
-				details = (TextView)itemView.findViewById(R.id.details);
+				details = itemView.findViewById(R.id.details);
 				itemView.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {
 						loadMore();
@@ -250,10 +250,10 @@ public class Hinter {
 
 			public HintHolder(View itemView) {
 				super(itemView);
-				image = (ImageView)itemView.findViewById(R.id.image);
-				check = (TextView)itemView.findViewById(R.id.type);
-				title = (TextView)itemView.findViewById(R.id.title);
-				details = (TextView)itemView.findViewById(R.id.details);
+				image = itemView.findViewById(R.id.image);
+				check = itemView.findViewById(R.id.type);
+				title = itemView.findViewById(R.id.title);
+				details = itemView.findViewById(R.id.details);
 				itemView.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {
 						clickHandler.categorySelected(bound.getId());

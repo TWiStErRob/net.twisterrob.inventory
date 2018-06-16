@@ -191,7 +191,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	// CONSIDER moving overriding logic into this class
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		image = (ImageView)view.findViewById(R.id.image);
+		image = view.findViewById(R.id.image);
 		image.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				getPicture();
@@ -204,10 +204,10 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 
-		typeImage = (ImageView)view.findViewById(R.id.type);
+		typeImage = view.findViewById(R.id.type);
 		ViewTools.displayedIf(typeImage, this instanceof ItemEditFragment);
 
-		name = (EditText)view.findViewById(R.id.title);
+		name = view.findViewById(R.id.title);
 		AndroidTools.setHint(name, (Integer)getDynamicResource(DYN_NameHintResource));
 		name.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -218,7 +218,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 
-		description = (EditText)view.findViewById(R.id.description);
+		description = view.findViewById(R.id.description);
 		AndroidTools.setHint(description, (Integer)getDynamicResource(DYN_DescriptionHintResource));
 		description.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -233,7 +233,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 		});
 
-		hint = (RecyclerView)view.findViewById(android.R.id.hint);
+		hint = view.findViewById(android.R.id.hint);
 		hint.setLayoutManager(new LinearLayoutManager(getContext()));
 		hint.addOnItemTouchListener(new NestedScrollableRecyclerViewListener(hint));
 		if (this instanceof ItemEditFragment) {
@@ -249,7 +249,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			hint.setAdapter(hinter.getAdapter());
 		}
 
-		final ImageButton help = (ImageButton)view.findViewById(R.id.help);
+		final ImageButton help = view.findViewById(R.id.help);
 		help.setOnClickListener(new OnClickListener() {
 			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void onClick(View v) {
@@ -270,7 +270,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		ViewTools.displayedIf(help, this instanceof ItemEditFragment);
 		registerForContextMenu(help);
 
-		type = (Spinner)view.findViewById(R.id.type_edit);
+		type = view.findViewById(R.id.type_edit);
 		type.setAdapter(typeAdapter = createTypeAdapter());
 		type.setOnItemSelectedListener(new DefaultValueUpdater(name, CommonColumns.NAME) {
 			private int oldPos = AdapterView.INVALID_POSITION;

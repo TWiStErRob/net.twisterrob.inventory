@@ -52,7 +52,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_sunburst, container, false);
-		diagram = (ImageView)view.findViewById(R.id.diagram);
+		diagram = view.findViewById(R.id.diagram);
 		return view;
 	}
 
@@ -63,7 +63,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	}
 
 	private void setLoading(final boolean isLoading) {
-		final SwipeRefreshLayout progress = (SwipeRefreshLayout)getView().findViewById(R.id.progress_circular);
+		final SwipeRefreshLayout progress = getView().findViewById(R.id.progress_circular);
 		progress.post(new Runnable() {
 			@Override public void run() {
 				progress.setRefreshing(isLoading);
