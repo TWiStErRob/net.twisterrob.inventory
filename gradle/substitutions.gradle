@@ -6,6 +6,8 @@ configurations.all {
 		force 'org.objenesis:objenesis:2.6' // 2.4 (powermock) vs 2.6 (mockito)
 		force 'com.google.guava:guava:20.0' // 17.0 (shazamcrest) vs 20.0 (robolectric)
 		force 'com.thoughtworks.xstream:xstream:1.4.9' // 1.4.8 (robolectric) vs 1.4.9 (powermock)
+		force "com.android.support:multidex:${VERSION_MULTIDEX}" // 1.0.2 (AGP) vs 1.0.3 (latest)
+		force "com.android.support:multidex-instrumentation:${VERSION_MULTIDEX}" // 1.0.2 (AGP) vs 1.0.3 (latest)
 		dependencySubstitution {
 			substitute(module('org.hamcrest:hamcrest-core'))
 					.with module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}")

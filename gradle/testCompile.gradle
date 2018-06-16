@@ -50,6 +50,10 @@ dependencies {
 //			.grep { it.group == 'com.android.support' }
 //			.each { androidTestImplementation it.displayName }
 
+
+		androidTestImplementation "com.android.support:multidex-instrumentation:${VERSION_MULTIDEX}"
+		androidTestImplementation "com.android.support:multidex:${VERSION_MULTIDEX}"
+
 		androidTestImplementation "junit:junit:${VERSION_JUNIT}"
 		androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
 		androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
