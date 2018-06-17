@@ -50,7 +50,9 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleItem.id(),
-				Intents.bundleFromItem(getArgItemID()), new SingleRowLoaded());
+				Intents.bundleFromItem(getArgItemID()),
+				SingleItem.createCallbacks(getContext(), new SingleRowLoaded())
+		);
 	}
 
 	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {

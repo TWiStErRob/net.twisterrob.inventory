@@ -27,7 +27,7 @@
 		tools:background="@color/toolsBG"
 		/>
 	<TextView
-		android:id="@id/type"
+		android:id="@+id/type"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="@dimen/unit_half"

@@ -14,11 +14,13 @@ import android.support.annotation.*;
 import android.text.TextUtils;
 
 import net.twisterrob.android.app.BaseApp;
+import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
 
-public class App extends BaseApp {
+public class App extends BaseApp implements BaseComponent.Provider {
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
 	public App() {
@@ -37,13 +39,18 @@ public class App extends BaseApp {
 		return new Database(this);
 	}
 
+	@Override protected void safeOnCreate() {
+		super.safeOnCreate();
+		Pic.init(this);
+	}
+
 	@Override public void onStart() {
 		super.onStart();
 		// open a database first, this should lock any other accesses, so it's clearer when the DB open fails
 		startService(new Intent(DatabaseService.ACTION_OPEN_DATABASE).setPackage(getPackageName()));
 		// run vacuum next, it's quick and most of the time does nothing anyway
 		startService(new Intent(DatabaseService.ACTION_VACUUM_INCREMENTAL).setPackage(getPackageName()));
-		// this may take a while, but it's necessary for correct display of searc reults
+		// this may take a while, but it's necessary for correct display of search results
 		updateLanguage(Locale.getDefault());
 		// last, preload categories, this would happen when editing and suggestions kick in
 		// so, prevent a delay on first suggestion, load it in the background
@@ -155,4 +162,13 @@ public class App extends BaseApp {
 					+ "\t(UNIQUE constraint failed: List.name (code 2067))\n"
 					+ "#################################################################"
 	));
+
+	@Override
+	public BaseComponent getBaseComponent() {
+		return new BaseComponent() {
+			@Override public ResourcePreferences prefs() {
+				return BaseApp.prefs();
+			}
+		};
+	}
 }

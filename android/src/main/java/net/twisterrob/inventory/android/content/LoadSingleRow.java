@@ -1,20 +1,15 @@
 package net.twisterrob.inventory.android.content;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.*;
 import android.support.v4.content.Loader;
 
 import net.twisterrob.inventory.android.App;
-import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
+import net.twisterrob.inventory.android.content.contract.InventoryLoader.LoadersCallbacksAdapter;
 
-public abstract class LoadSingleRow extends LoadersCallbacks {
-	public LoadSingleRow(Context context) {
-		super(context);
-	}
-
-	public void onLoadFinished(Loader<Cursor> loader, @Nullable Cursor data) {
-		super.onLoadFinished(loader, data);
+public abstract class LoadSingleRow extends LoadersCallbacksAdapter {
+	@Override public void postOnLoadFinished(Loader<Cursor> loader,
+			Cursor data) {
 		//DatabaseTools.dumpCursor(data);
 		if (data != null && data.getCount() == 1 && data.moveToFirst()) {
 			process(data);
@@ -24,8 +19,7 @@ public abstract class LoadSingleRow extends LoadersCallbacks {
 		//data.close(); // don't close SimpleCursorLoader (created in Loaders) will do it
 	}
 
-	public void onLoaderReset(Loader<Cursor> loader) {
-		super.onLoaderReset(loader);
+	@Override public void postOnLoaderReset(Loader<Cursor> loader) {
 		// no op, we didn't keep any reference to data
 	}
 

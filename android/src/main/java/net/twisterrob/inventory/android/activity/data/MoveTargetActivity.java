@@ -15,13 +15,13 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
-import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.contract.InventoryLoader.LoadersCallbacksAdapter;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.*;
@@ -311,8 +311,9 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	}
 	private void propertySelected(long propertyID, final boolean startMode) {
 		Bundle args = Intents.bundleFromProperty(propertyID);
-		getSupportLoaderManager().destroyLoader(Loaders.SingleProperty.id());
-		getSupportLoaderManager().initLoader(Loaders.SingleProperty.id(), args, new LoadSingleRow(this) {
+		Loaders loader = Loaders.SingleProperty;
+		getSupportLoaderManager().destroyLoader(loader.id());
+		getSupportLoaderManager().initLoader(loader.id(), args, loader.createCallbacks(this, new LoadSingleRow() {
 			@Override protected void process(@NonNull Cursor cursor) {
 				PropertyDTO property = PropertyDTO.fromCursor(cursor);
 				BaseFragment<?> fragment = RoomListFragment.newInstance(property.id);
@@ -326,7 +327,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 					startFragment(fragment);
 				}
 			}
-		});
+		}));
 	}
 
 	@Override public void roomSelected(long roomID) {
@@ -334,8 +335,9 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	}
 	private void roomSelected(long roomID, final boolean startMode) {
 		Bundle args = Intents.bundleFromRoom(roomID);
-		getSupportLoaderManager().destroyLoader(Loaders.SingleRoom.id());
-		getSupportLoaderManager().initLoader(Loaders.SingleRoom.id(), args, new LoadSingleRow(this) {
+		Loaders loader = Loaders.SingleRoom;
+		getSupportLoaderManager().destroyLoader(loader.id());
+		getSupportLoaderManager().initLoader(loader.id(), args, loader.createCallbacks(this, new LoadSingleRow() {
 			@Override protected void process(@NonNull Cursor cursor) {
 				RoomDTO room = RoomDTO.fromCursor(cursor);
 				BaseFragment<?> roomFragment = ItemListFragment.newRoomInstance(room.id);
@@ -353,7 +355,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 				}
 				startFragment(roomFragment);
 			}
-		});
+		}));
 	}
 
 	@Override public void itemSelected(long itemID) {
@@ -361,9 +363,12 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	}
 	private void itemSelected(final long itemID, final boolean startMode) {
 		Bundle args = Intents.bundleFromItem(itemID);
-		getSupportLoaderManager().destroyLoader(Loaders.ItemParents.id());
-		getSupportLoaderManager().initLoader(Loaders.ItemParents.id(), args, new LoadersCallbacks(this) {
-			@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		Loaders loader = Loaders.ItemParents;
+		LoaderManager loadManager = getSupportLoaderManager();
+		loadManager.destroyLoader(loader.id());
+		loadManager.initLoader(loader.id(), args, loader.createCallbacks(this, new LoadersCallbacksAdapter() {
+			@Override public void postOnLoadFinished(Loader<Cursor> loader,
+					Cursor data) {
 				boolean forbidden = false;
 				while (data.moveToNext()) {
 					long id = data.getLong(data.getColumnIndexOrThrow(ParentColumns.ID));
@@ -396,9 +401,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 						|| type == Type.Room && isForbidden(EXTRA_NO_ROOMS, id)
 						|| type == Type.Property && isForbidden(EXTRA_NO_PROPERTIES, id);
 			}
-			@Override public void onLoaderReset(Loader<Cursor> loader) {
-			}
-		});
+		}));
 	}
 
 	@Override public void propertyActioned(long propertyID) {

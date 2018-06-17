@@ -140,7 +140,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						"All of your belongings will be permanently deleted. Some test data will be set up.",
 						new CleanTask() {
 							@Override protected void doClean() {
-								Database.resetToTest();
+								App.db().resetToTest();
 							}
 						}
 				).show(getSupportFragmentManager(), null);

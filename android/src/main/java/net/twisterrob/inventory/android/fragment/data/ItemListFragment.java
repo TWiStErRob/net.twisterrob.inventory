@@ -103,13 +103,14 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		super.onStartLoading();
 		if (getArgRoomID() != Room.ID_ADD) {
 			Bundle args = Intents.bundleFromRoom(getArgRoomID());
-			getLoaderManager().initLoader(Loaders.SingleRoom.id(), args, new LoadSingleRow(getContext()) {
+			Loaders loader = Loaders.SingleRoom;
+			getLoaderManager().initLoader(loader.id(), args, loader.createCallbacks(getContext(), new LoadSingleRow() {
 				@Override protected void process(@NonNull Cursor data) {
 					super.process(data);
 					long root = data.getLong(data.getColumnIndex(Room.ROOT_ITEM));
 					getArguments().putLong(Extras.PARENT_ID, root);
 				}
-			});
+			}));
 		}
 	}
 

@@ -2,9 +2,5 @@
 <resources>
 	<string name="app_name">!Magic Home Inventory</string>
 	<string name="home_title">!Inventory</string>
-	<string name="package_url_settings">package:net.twisterrob.inventory.debug</string>
-	<integer name="visible_in_test">@integer/View_VISIBLE</integer>
 	<color name="transparent">#66000000</color>
-	<bool name="pref_internalImageViewer_default" translatable="false">false</bool>
-	<bool name="pref_displayDebugDetails_default" translatable="false">true</bool>
 </resources>

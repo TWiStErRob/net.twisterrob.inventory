@@ -1,0 +1,37 @@
+buildscript {
+	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	dependencies {
+		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+	}
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
+dependencies {
+	implementation project(':android:base')
+	implementation project(':android:database')
+	implementation project(':android:preferences')
+	implementation project(':android:icons')
+
+	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
+	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
+	implementation "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
+	implementation "net.twisterrob.lib:twister-libs-android"
+	implementation "net.twisterrob.lib:twister-lib-android-basics"
+	implementation "net.twisterrob.lib:twister-libs-java"
+	implementation "net.twisterrob.lib:twister-lib-java"
+
+	testImplementation project(':android:test_helpers')
+	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
+	testImplementation 'com.github.stefanbirkner:fishbowl:1.4.0' // exceptionThrownBy (assertThrows-like)
+	testImplementation "net.twisterrob.lib:twister-lib-test"
+}
+
+android {
+	defaultConfig {
+		minSdkVersion 10
+	}
+}

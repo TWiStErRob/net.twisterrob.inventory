@@ -37,7 +37,9 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 
 		if (!isNew()) {
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.id(),
-					Intents.bundleFromItem(getArgItemID()), new SingleRowLoaded());
+					Intents.bundleFromItem(getArgItemID()),
+					SingleItem.createCallbacks(getContext(), new SingleRowLoaded())
+			);
 			loadItemData.dependsOn(populateCats);
 		}
 

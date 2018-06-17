@@ -141,7 +141,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		// make sure Glide.get(...) never returns the old one
 		ReflectionTools.setStatic(Glide.class, "glide", null);
 		// recreate internal Glide wrapper
-		Constants.Pic.reset(context);
+		Constants.Pic.init(context);
 	}
 	private void restrictGlide(Context context) {
 		Glide glide = Glide.get(context);

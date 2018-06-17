@@ -10,7 +10,6 @@ import android.content.*;
 import android.database.*;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
-import android.provider.*;
 import android.support.annotation.NonNull;
 
 import static android.app.SearchManager.*;
@@ -23,6 +22,7 @@ import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
 
 import static net.twisterrob.inventory.android.content.InventoryContract.*;
+import static net.twisterrob.inventory.android.content.contract.ImageDataColumns.*;
 
 // CONSIDER http://www.grokkingandroid.com/android-tutorial-writing-your-own-content-provider/
 // CONSIDER http://www.vogella.com/tutorials/AndroidSQLite/article.html
@@ -53,12 +53,6 @@ public class InventoryProvider extends VariantContentProvider {
 	protected static final String URI_PATH_IMAGE = "/" + Helpers.IMAGE_URI_SEGMENT;
 
 	//	protected static final String URI_PATH_ANY = "/*";
-//	private static final String COLUMN_DATA_URI = "_data";
-	private static final String COLUMN_ID = BaseColumns._ID;
-	private static final String COLUMN_SIZE = OpenableColumns.SIZE;
-	private static final String COLUMN_DISPLAY_NAME = OpenableColumns.DISPLAY_NAME;
-	public static final String COLUMN_BLOB = "_dataBlob";
-
 	private static final UriMatcher URI_MATCHER;
 
 	static {

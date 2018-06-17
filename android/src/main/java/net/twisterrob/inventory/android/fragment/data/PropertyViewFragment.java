@@ -43,7 +43,9 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleProperty.id(),
-				Intents.bundleFromProperty(getArgPropertyID()), new SingleRowLoaded());
+				Intents.bundleFromProperty(getArgPropertyID()),
+				SingleProperty.createCallbacks(getContext(), new SingleRowLoaded())
+		);
 	}
 
 	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {

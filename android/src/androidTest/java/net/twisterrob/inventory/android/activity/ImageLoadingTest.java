@@ -8,7 +8,7 @@ import org.slf4j.*;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
 import net.twisterrob.inventory.android.test.actors.MainActivityActor.Navigator.HomeRoomsActor;
@@ -21,7 +21,7 @@ public class ImageLoadingTest {
 			= new InventoryActivityRule<MainActivity>(MainActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();
-			Database.resetToTest();
+			App.db().resetToTest();
 		}
 	};
 	private final MainActivityActor main = new MainActivityActor();

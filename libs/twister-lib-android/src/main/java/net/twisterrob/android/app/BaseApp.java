@@ -252,14 +252,14 @@ public abstract class BaseApp extends android.app.Application {
 					.penaltyLog()
 					.penaltyDialog()
 					.penaltyDropBox()
-					.penaltyDeath()
+//					.penaltyDeath()
 			;
 		}
 		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
 			threadBuilder = threadBuilder
 					.detectCustomSlowCalls()
 					.penaltyFlashScreen()
-					.penaltyDeathOnNetwork()
+//					.penaltyDeathOnNetwork()
 			;
 		}
 
@@ -298,7 +298,7 @@ public abstract class BaseApp extends android.app.Application {
 		if (VERSION_CODES.M <= VERSION.SDK_INT) {
 			vmBuilder = vmBuilder
 					.detectCleartextNetwork()
-					.penaltyDeathOnCleartextNetwork()
+					//.penaltyDeathOnCleartextNetwork()
 			;
 		}
 		StrictMode.setVmPolicy(vmBuilder.build());

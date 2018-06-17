@@ -152,9 +152,9 @@ public abstract class DrawerActivity extends BaseActivity {
 		data.add(R.id.action_drawer_items, R.raw.item_box, MainActivity.list(PAGE_ITEMS));
 		data.add(R.id.action_drawer_sunburst, R.raw.ic_sunburst, MainActivity.list(PAGE_SUNBURST));
 		data.add(R.id.action_drawer_category_guide, R.raw.item_paper, MainActivity.list(PAGE_CATEGORY_HELP));
-		data.add(R.id.action_drawer_backup, R.raw.item_disc, BackupActivity.chooser());
+		data.add(R.id.action_drawer_backup, R.raw.item_disc, BackupActivity.chooser(App.getAppContext()));
 		data.add(R.id.action_drawer_manage, R.raw.item_skull, ManageSpaceActivity.launch());
-		data.add(R.id.action_drawer_preferences, R.raw.category_tools, PreferencesActivity.show());
+		data.add(R.id.action_drawer_preferences, R.raw.category_tools, PreferencesActivity.show(App.getAppContext()));
 		data.add(R.id.action_drawer_about, R.raw.item_chip, new Intent(App.getAppContext(), AboutActivity.class));
 		data.addIcons();
 		data.updateCounts();

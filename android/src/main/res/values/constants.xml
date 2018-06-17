@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-	<!-- Based on <attr name="visibility"> in android/res/values/attrs.xml and http://stackoverflow.com/a/14358801/253468 -->
-	<integer name="View_VISIBLE" tools:ignore="UnusedResources">0</integer>
-	<integer name="View_INVISIBLE" tools:ignore="UnusedResources">1</integer>
-	<integer name="View_GONE" tools:ignore="UnusedResources">2</integer>
+<resources>
 	<bool name="show_category_help">@bool/in_test</bool>
 </resources>

@@ -145,7 +145,7 @@ public class DatabaseTest_Images extends RobolectricTestBase {
 		try (Cursor image = belonging.getImage(id)) {
 			assertThat("image.count", image.getCount(), is(1));
 			assertTrue(image.moveToFirst());
-			assertThat(getBlob(image, InventoryProvider.COLUMN_BLOB), is(IMAGE_CONTENTS));
+			assertThat(getBlob(image, ImageDataColumns.COLUMN_BLOB), is(IMAGE_CONTENTS));
 		}
 	}
 	private void assertHasImage(long id, Matcher<Boolean> matcher) {

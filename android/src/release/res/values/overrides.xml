@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<string name="package_url_settings">package:net.twisterrob.inventory</string>
-	<integer name="visible_in_test">@integer/View_GONE</integer>
-</resources>

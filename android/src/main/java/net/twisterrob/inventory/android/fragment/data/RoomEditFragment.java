@@ -45,7 +45,9 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 
 		if (!isNew()) {
 			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.id(),
-					Intents.bundleFromRoom(getArgRoomID()), new SingleRowLoaded());
+					Intents.bundleFromRoom(getArgRoomID()),
+					SingleRoom.createCallbacks(getContext(), new SingleRowLoaded())
+			);
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		}
 

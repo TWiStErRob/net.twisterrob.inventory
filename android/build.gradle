@@ -18,6 +18,12 @@ android.applicationVariants.all { com.android.build.gradle.api.ApplicationVarian
 }
 
 dependencies {
+	implementation project(':android:base')
+	implementation project(':android:database')
+	implementation project(':android:backup')
+	implementation project(':android:preferences')
+	testImplementation project(':android:test_helpers')
+
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	implementation('net.twisterrob.lib:twister-libs-android:1.0-SNAPSHOT')
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
@@ -45,8 +51,6 @@ dependencies {
 		exclude group: 'com.android.support'
 	}
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
-
-	implementation 'com.caverock:androidsvg:1.2.1'
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows "Serializer Java 2.7.1" on Genymotion 2.3.7 and S5 5.0.0
@@ -104,7 +108,6 @@ android {
 		def defaultIgnoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~'
 		ignoreAssetsPattern defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
-	sourceSets.main.res.srcDir 'src/main/res-icons'
 	sourceSets.test.java.srcDir 'src/test/robolectricJava'
 
 	packagingOptions {
@@ -118,6 +121,23 @@ android {
 		exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
 	}
 }
+
+subprojects { project ->
+	project.afterEvaluate {
+		//noinspection UnnecessaryQualifiedReference
+		com.android.build.gradle.api.AndroidSourceSet androidTest = project.android.sourceSets.androidTest
+		if (androidTest.java.sourceFiles.empty) {
+			logger.info "Disabling AndroidTest tasks in ${project.path} as it has no sources in ${androidTest.java.srcDirs}"
+			project.tasks.whenTaskAdded { task ->
+				if (task.name.contains("AndroidTest")) {
+					task.enabled = false
+				}
+			}
+		}
+	}
+}
+
+//noinspection UnnecessaryQualifiedReference
 android.testVariants.all { com.android.build.gradle.api.TestVariant test ->
 	def grantPermissions = project.task(type: Exec, "grant${test.name.capitalize()}Permissions") {
 		enabled = false // TOFIX figure out a way to run this at the correct time

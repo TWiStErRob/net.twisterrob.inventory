@@ -6,6 +6,7 @@ import android.content.*;
 import android.database.*;
 import android.os.Bundle;
 import android.support.annotation.*;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -20,8 +21,8 @@ import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
-import net.twisterrob.inventory.android.content.Loaders.LoadersCallbacks;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.contract.InventoryLoader.LoadersCallbacksAdapter;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.view.*;
@@ -121,7 +122,8 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	}
 
 	private class CategoriesItemsController extends RecyclerViewLoaderController<CursorRecyclerAdapter<?>, Cursor> {
-		private final Callbacks callbackState = new Callbacks(getContext());
+		private final LoaderCallbacks<Cursor> callbackState =
+				Loaders.Items.createCallbacks(getContext(), new Callbacks());
 
 		public CategoriesItemsController() {
 			super(CategoryContentsFragment.this);
@@ -182,45 +184,38 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 					itemsArgs = Intents.bundleFromCategory(id); // items by category
 				}
 			}
-			getLoaderManager().initLoader(Loaders.Categories.ordinal(), categoriesArgs, callbackState);
-			getLoaderManager().initLoader(Loaders.Items.ordinal(), itemsArgs, callbackState);
+			getLoaderManager().initLoader(Loaders.Categories.id(), categoriesArgs, callbackState);
+			getLoaderManager().initLoader(Loaders.Items.id(), itemsArgs, callbackState);
 		}
 		@Override public void refresh() {
-			getLoaderManager().getLoader(Loaders.Categories.ordinal()).onContentChanged(); // counts may have changed
-			getLoaderManager().getLoader(Loaders.Items.ordinal()).onContentChanged(); // items may have moved
+			getLoaderManager().getLoader(Loaders.Categories.id()).onContentChanged(); // counts may have changed
+			getLoaderManager().getLoader(Loaders.Items.id()).onContentChanged(); // items may have moved
 		}
 
-		private class Callbacks extends LoadersCallbacks {
+		private class Callbacks extends LoadersCallbacksAdapter {
 			private Cursor pendingCategories;
 			private Cursor pendingItems;
 
-			public Callbacks(Context context) {
-				super(context);
-			}
-
-			@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			@Override public void preOnCreateLoader(int id, Bundle args) {
 				CategoriesItemsController.this.startLoading();
-				return super.onCreateLoader(id, args);
 			}
 
-			@Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-				if (Loaders.Categories.ordinal() == loader.getId()) {
+			@Override public void preOnLoadFinished(Loader<Cursor> loader, Cursor data) {
+				if (Loaders.Categories.id() == loader.getId()) {
 					pendingCategories = data;
-				} else if (Loaders.Items.ordinal() == loader.getId()) {
+				} else if (Loaders.Items.id() == loader.getId()) {
 					pendingItems = data;
 				}
 				refreshAdapter();
-				super.onLoadFinished(loader, data);
 			}
 
-			@Override public void onLoaderReset(Loader<Cursor> loader) {
-				if (Loaders.Categories.ordinal() == loader.getId()) {
+			@Override public void preOnLoaderReset(Loader<Cursor> loader) {
+				if (Loaders.Categories.id() == loader.getId()) {
 					pendingCategories = null;
-				} else if (Loaders.Items.ordinal() == loader.getId()) {
+				} else if (Loaders.Items.id() == loader.getId()) {
 					pendingItems = null;
 				}
 				refreshAdapter();
-				super.onLoaderReset(loader);
 			}
 
 			private void refreshAdapter() {

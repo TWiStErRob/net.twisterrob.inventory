@@ -60,7 +60,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 		long imageTime = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.IMAGE_TIME));
 		String typeImage = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		String countText = getCountText(cursor);
-		entity = (ImagedDTO)type.fromCursor(cursor); // TODO collapse cursor getters to use DTO
+		entity = (ImagedDTO)TypeFactory.fromCursor(type, cursor); // TODO collapse cursor getters to use DTO
 
 		title.setText(name);
 		count.setText(countText);

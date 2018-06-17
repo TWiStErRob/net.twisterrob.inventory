@@ -44,7 +44,9 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 
 		if (!isNew()) {
 			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.id(),
-					Intents.bundleFromProperty(getArgPropertyID()), new SingleRowLoaded());
+					Intents.bundleFromProperty(getArgPropertyID()),
+					SingleProperty.createCallbacks(getContext(), new SingleRowLoaded())
+			);
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		}
 

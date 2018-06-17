@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="package_url_settings">package:net.twisterrob.inventory.debug</string>
+
+	<bool name="pref_internalImageViewer_default" translatable="false">false</bool>
+	<bool name="pref_displayDebugDetails_default" translatable="false">true</bool>
+</resources>

@@ -49,7 +49,9 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleRoom.id(),
-				Intents.bundleFromRoom(getArgRoomID()), new SingleRowLoaded());
+				Intents.bundleFromRoom(getArgRoomID()),
+				SingleRoom.createCallbacks(getContext(), new SingleRowLoaded())
+		);
 	}
 
 	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {

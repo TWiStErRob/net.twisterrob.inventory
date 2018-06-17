@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+	<!ENTITY nbsp "&#160;"><!-- non-breaking space, http://www.fileformat.info/info/unicode/char/00A0/index.htm -->
+	<!-- See TypographyQuotes lint check-->
+	<!ENTITY lquot "&#8220;"><!-- left double quotation mark, http://www.fileformat.info/info/unicode/char/201C/index.htm -->
+	<!ENTITY rquot "&#8221;"><!-- right double quotation mark, http://www.fileformat.info/info/unicode/char/201D/index.htm -->
+	]>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+	<string name="backup_title">Backup</string>
+	<string name="backup_export_internal">Backup here</string>
+	<string name="backup_export_external">Backup to…</string>
+	<string name="backup_import_external">Import from…</string>
+	<string name="backup_go_home">Go to Downloads folder</string>
+	<string name="backup_go_home_condensed">Downloads</string>
+	<string name="backup__cancel_partial">Cancelling this operation may result in partial data transfer only. Are you sure you want to cancel?</string>
+
+	<string name="backup_export_progress_title">Export</string>
+	<string name="backup_export_progress_background">Export continues in background</string>
+	<string name="backup_export_progress_init">Preparing export…</string>
+	<string name="backup_export_progress_data">Exporting belongings…</string>
+	<string name="backup_export_progress_images" tools:ignore="PluralsCandidate">Exporting %1$d images for %2$d belongings…</string>
+	<string name="backup_export_result_finished">Export finished</string>
+	<string name="backup_export_result_success" tools:ignore="PluralsCandidate">Done exporting %1$d belongings with %2$d images.</string>
+	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>
+	<string name="backup_export_result_cancelled">Export cancelled.</string>
+
+	<string name="backup_export_external_confirm_title">@string/backup_export_external</string>
+	<string name="backup_export_external_confirm_warning"
+		>You\'re about to export your inventory to a third party.
+		Once you leave the app there are no guarantees.
+		For example, some apps (Google Drive, Dropbox) don\'t allow cancelling this procedure.
+		Once you started, be patient; give it a few minutes, if you have a large inventory.
+		Even if the progress disappears, the export may still be ongoing in the background.
+		Where possible I have plans to work around these external limitations in the future.
+		\n\nDo you want to continue?
+	</string>
+	<string name="backup_import_confirm_title">Import</string>
+	<string name="backup_import_confirm_warning"
+		>You\'re about to import %1$s into your inventory.
+		In case your inventory is not empty,
+		conflicting details (image, description) of belongings will be ignored,
+		but the best effort will be made to merge contents.
+		\n\nDo you want to continue?
+	</string>
+	<string name="backup_warning_inprogress">Backup operation is in progress, please wait until it is finished.</string>
+	<string name="backup_import_progress_title">Import</string>
+	<string name="backup_import_progress_background">Import continues in background</string>
+	<string name="backup_import_progress_init">Preparing import…</string>
+	<string name="backup_import_progress_data">Importing belongings…</string>
+	<string name="backup_import_progress_images">Importing images…</string>
+	<string name="backup_import_result_finished">Import finished</string>
+	<string name="backup_import_result_success" tools:ignore="PluralsCandidate">Done importing %1$d belongings.</string>
+	<string name="backup_import_result_warning" tools:ignore="PluralsCandidate">There were %3$d issues during importing %2$d/%1$d belongings.</string>
+	<string name="backup_import_result_failed">Failed to import belongings:\n%1$s</string>
+	<string name="backup_import_result_cancelled">Import cancelled, no modifications were done.</string>
+	<string name="backup_import_conflict_property">Property &#8220;%1$s&#8221; already exists, used existing one.</string>
+	<string name="backup_import_conflict_room">Room &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>
+	<string name="backup_import_conflict_item">Item &#8220;%3$s&#8221; in &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>
+	<string name="backup_import_invalid_type">&#8220;%1$s&#8221; has invalid type: &#8220;%2$s&#8221;, used the default type.</string>
+	<string name="backup_import_invalid_image">&#8220;%1$s&#8221; has invalid image: &#8220;%2$s&#8221;, ignored image.</string>
+	<string name="backup_import_invalid_list_entry">List &#8220;%1$s&#8221; has invalid or duplicate entry: id=%2$d, ignored.</string>
+</resources>

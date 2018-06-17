@@ -141,7 +141,7 @@ public class MainActivity extends DrawerActivity
 				.setNeutralButton(R.string.welcome_backup, new DialogInterface.OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
 						App.prefs().setBoolean(R.string.pref_showWelcome, false);
-						startActivity(BackupActivity.chooser());
+						startActivity(BackupActivity.chooser(App.getAppContext()));
 					}
 				})
 				.setCancelable(true)
@@ -370,7 +370,7 @@ public class MainActivity extends DrawerActivity
 						}
 						@Override protected Void doInBackground(Void... params) {
 							Glide.get(getApplicationContext()).clearDiskCache();
-							Database.resetToTest();
+							App.db().resetToTest();
 							return null;
 						}
 						@Override protected void onPostExecute(Void aVoid) {

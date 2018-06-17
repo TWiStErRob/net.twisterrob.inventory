@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
 
-import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
@@ -38,7 +38,9 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleCategory.id(),
-				Intents.bundleFromCategory(getArgCategoryID()), new SingleRowLoaded());
+				Intents.bundleFromCategory(getArgCategoryID()),
+				SingleCategory.createCallbacks(getContext(), new SingleRowLoaded())
+		);
 	}
 
 	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {

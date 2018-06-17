@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- STOPSHIP extract PreferenceCategory heading as @string/ -->
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:key="root_screen"
+	>
+	<PreferenceCategory android:title="Preferences">
+		<ListPreference
+			android:key="@string/pref_defaultViewPage"
+			android:title="@string/pref_defaultViewPage_title"
+			android:defaultValue="@string/pref_defaultViewPage_default"
+			android:entries="@array/pref_defaultViewPage_entries"
+			android:entryValues="@array/pref_defaultViewPage_values"
+			tools:summary="@array/pref_defaultViewPage_entries"
+			/>
+		<CheckBoxPreference
+			android:key="@string/pref_internalImageViewer"
+			android:title="@string/pref_internalImageViewer_title"
+			android:defaultValue="@bool/pref_internalImageViewer_default"
+			android:summary="@string/pref_internalImageViewer_desc"
+			/>
+		<ListPreference
+			android:key="@string/pref_suggestCategory"
+			android:title="@string/pref_suggestCategory_title"
+			android:defaultValue="@string/pref_suggestCategory_default"
+			android:entries="@array/pref_suggestCategory_entries"
+			android:entryValues="@array/pref_suggestCategory_values"
+			tools:summary="@array/pref_suggestCategory_entries"
+			/>
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="Links">
+		<Preference
+			android:order="1"
+			android:title="@string/pref_app_in_settings_title"
+		    android:summary="@string/pref_app_in_settings_desc"
+			>
+			<intent
+				android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
+				android:data="@string/package_url_settings"
+				/>
+		</Preference>
+		<Preference
+			android:order="2"
+			android:title="@string/pref_app_in_store_title"
+			android:summary="@string/pref_app_in_store_desc"
+			>
+			<intent
+				android:action="android.intent.action.VIEW"
+				android:data="market://details?id=net.twisterrob.inventory"
+				/>
+		</Preference>
+		<Preference
+			android:order="3"
+			android:title="@string/pref_app_privacy_policy_title"
+			android:summary="@string/pref_app_privacy_policy_desc"
+			>
+			<intent
+				android:action="android.intent.action.VIEW"
+				android:data="http://www.twisterrob.net/project/inventory/#privacy-policy"
+				/>
+		</Preference>
+		<Preference
+			android:order="-1"
+			android:title="@string/feedback_title"
+			android:summary="Ask a question, request features you'd like to see, or just tell me what you think about the app. Any feedback is welcome.">
+			<intent android:action="android.intent.action.VIEW"
+			        android:data="mailto:feedback@twisterrob.net">
+				<!--suppress AndroidElementNotAllowed: see android.preference.PreferenceInflater#onCreateCustomFromTag -->
+				<extra android:name="android.intent.extra.TEXT"
+				       android:value="Write your request/question/feedback here." />
+				<!--suppress AndroidElementNotAllowed: see android.preference.PreferenceInflater#onCreateCustomFromTag -->
+				<extra android:name="android.intent.extra.SUBJECT"
+				       android:value="Magic Home Inventory feedback" />
+			</intent>
+		</Preference>
+		<Preference
+			android:order="0"
+			android:title="@string/about_title"
+			android:summary="@string/app_name"
+			>
+			<intent
+				android:targetClass="net.twisterrob.android.activity.AboutActivity"
+				android:targetPackage="@string/app_package"
+				/>
+		</Preference>
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="Advanced">
+		<net.twisterrob.android.view.NumberPickerPreference
+			android:key="@string/pref_sunburstIgnoreLevel"
+			android:title="@string/pref_sunburstIgnoreLevel_title"
+			android:defaultValue="@integer/pref_sunburstIgnoreLevel_default"
+			android:summary="@string/pref_sunburstIgnoreLevel_desc"
+			app:minValue="0"
+			app:maxValue="10"
+			/>
+		<CheckBoxPreference
+			android:key="@string/pref_displayDebugDetails"
+			android:title="@string/pref_displayDebugDetails_title"
+			android:defaultValue="@bool/pref_displayDebugDetails_default"
+			android:summary="@string/pref_displayDebugDetails_desc"
+			/>
+		<CheckBoxPreference
+			android:key="@string/pref_highlightSuggestion"
+			android:title="@string/pref_highlightSuggestion_title"
+			android:defaultValue="@bool/pref_highlightSuggestion_default"
+			android:summary="@string/pref_highlightSuggestion_desc"
+			/>
+		<Preference
+			android:title="@string/manage_space_title"
+			>
+			<intent
+				android:targetClass="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
+				android:targetPackage="@string/app_package"
+				/>
+		</Preference>
+	</PreferenceCategory>
+
+	<net.twisterrob.android.content.pref.InvisiblePreferences
+		android:title="Internals"
+		android:dependency="root_screen">
+		<net.twisterrob.android.content.pref.ValuePreference
+			android:key="@string/pref_showWelcome"
+			android:defaultValue="@bool/pref_showWelcome_default"
+			/>
+		<net.twisterrob.android.content.pref.ValuePreference
+			android:key="@string/pref_version"
+			android:defaultValue="@integer/pref_version_default"
+			/>
+	</net.twisterrob.android.content.pref.InvisiblePreferences>
+</PreferenceScreen>

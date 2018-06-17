@@ -1,7 +1,20 @@
 include ':android'
+include ':android:base'
+include ':android:test_helpers'
+includeWithContract ':android:database'
+include ':android:preferences'
+include ':android:icons'
+include ':android:backup'
 include ':tools:transform'
 include ':tools:database'
 include ':libs'
+
+def includeWithContract(String projectPath) {
+	include projectPath
+	def contractProjectPath = "${projectPath}-contract"
+	include contractProjectPath
+	project(contractProjectPath).projectDir = new File(project(projectPath).projectDir, 'contract')
+}
 
 //includeBuild ('libs/twister-lib-java') {
 //	dependencySubstitution {

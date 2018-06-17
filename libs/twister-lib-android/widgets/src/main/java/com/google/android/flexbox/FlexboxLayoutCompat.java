@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build.VERSION_CODES;
 import android.os.Parcel;
 import android.support.annotation.RequiresApi;
-import android.support.v4.view.*;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
@@ -26,12 +25,12 @@ public class FlexboxLayoutCompat extends FlexboxLayout {
 
 	@Override
 	public int getPaddingStart() {
-		return ViewCompat.getPaddingStart(this);
+		return 0; //ViewCompat.getPaddingStart(this); // STOPSHIP
 	}
 
 	@Override
 	public int getPaddingEnd() {
-		return ViewCompat.getPaddingEnd(this);
+		return 0; //ViewCompat.getPaddingEnd(this); // STOPSHIP
 	}
 
 	@Override
@@ -61,11 +60,11 @@ public class FlexboxLayoutCompat extends FlexboxLayout {
 		}
 
 		@Override public int getMarginStart() {
-			return MarginLayoutParamsCompat.getMarginStart(this);
+			return 0; //MarginLayoutParamsCompat.getMarginStart(this); // STOPSHIP
 		}
 
 		@Override public int getMarginEnd() {
-			return MarginLayoutParamsCompat.getMarginEnd(this);
+			return 0; //MarginLayoutParamsCompat.getMarginEnd(this); // STOPSHIP
 		}
 	}
 }

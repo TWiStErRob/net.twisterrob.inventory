@@ -16,7 +16,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 
-public enum Loaders {
+public enum Loaders implements InventoryLoader {
 	PropertyTypes {
 		@Override protected @NonNull Cursor createCursor(@NonNull Context context, @NonNull Bundle ignore) {
 			return App.db().listPropertyTypes();
@@ -145,6 +145,27 @@ public enum Loaders {
 		return new LoadersCursorLoader(context, Loaders.this, args);
 	}
 
+	@Override public LoaderCallbacks<Cursor> createCallbacks(Context context, final LoadersCallbacksListener listener) {
+		return new LoadersCallbacks(context) {
+			@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+				listener.preOnCreateLoader(id, args);
+				Loader<Cursor> loader = super.onCreateLoader(id, args);
+				listener.postOnCreateLoader(loader, args);
+				return loader;
+			}
+			@Override public void onLoadFinished(Loader<Cursor> loader, @Nullable Cursor data) {
+				listener.preOnLoadFinished(loader, data);
+				super.onLoadFinished(loader, data);
+				listener.postOnLoadFinished(loader, data);
+			}
+			@Override public void onLoaderReset(Loader<Cursor> loader) {
+				listener.preOnLoaderReset(loader);
+				super.onLoaderReset(loader);
+				listener.postOnLoaderReset(loader);
+			}
+		};
+	}
+
 	private static final int MOD = (int)Math.pow(10, Math.ceil(Math.log10(values().length)));
 	private static final int INT_SIZE = (int)Math.pow(10, Math.floor(Math.log10(Integer.MAX_VALUE)));
 
@@ -160,7 +181,7 @@ public enum Loaders {
 		return values()[(id % MOD + MOD) % MOD]; // cycle up if negative
 	}
 
-	public abstract static class LoadersCallbacks implements LoaderCallbacks<Cursor> {
+	private static abstract class LoadersCallbacks implements LoaderCallbacks<Cursor> {
 		protected final Context context;
 
 		public LoadersCallbacks(Context context) {

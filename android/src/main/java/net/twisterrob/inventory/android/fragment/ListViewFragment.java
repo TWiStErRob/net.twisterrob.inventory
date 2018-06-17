@@ -42,7 +42,9 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 	@Override protected void onStartLoading() {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleList.id(),
-				Intents.bundleFromList(getArgListID()), new SingleRowLoaded());
+				Intents.bundleFromList(getArgListID()),
+				SingleList.createCallbacks(getContext(), new SingleRowLoaded())
+		);
 	}
 
 	@Override protected void onSingleRowLoaded(@NonNull Cursor cursor) {

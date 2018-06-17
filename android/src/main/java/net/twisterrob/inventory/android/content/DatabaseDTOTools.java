@@ -137,16 +137,12 @@ public class DatabaseDTOTools {
 	}
 
 	public static long getRoot(long roomID) {
-		Cursor room = App.db().getRoom(roomID);
-		try {
-			if (!room.moveToFirst()) {
-				throw new ValidationException(
-						R.string.generic_error_missing, new Plural(R.plurals.room, 1), roomID);
-			}
-			return room.getLong(room.getColumnIndexOrThrow(Room.ROOT_ITEM));
-		} finally {
-			room.close();
+		long root = App.db().getRoomRoot(roomID);
+		if (root == Item.ID_ADD) {
+			throw new ValidationException(
+					R.string.generic_error_missing, new Plural(R.plurals.room, 1), roomID);
 		}
+		return root;
 	}
 
 	private static class Plural implements ValidationException.Resolvable {
