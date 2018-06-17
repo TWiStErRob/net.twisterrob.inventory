@@ -5,13 +5,14 @@ apply plugin: 'groovy'
 
 repositories {
 	jcenter()
+	maven { name = 'sonatype'; url = 'http://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
 	implementation localGroovy()
 	implementation gradleApi()
 
-	testImplementation 'junit:junit:4.12'
+	testImplementation "junit:junit:4.13-20180505.160251-147"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7

@@ -21,7 +21,7 @@ repositories {
 dependencies {
 	compileOnly "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
 	compileOnly "com.android.support:design:${VERSION_SUPPORT}"
-	compileOnly('com.google.android:flexbox:0.3.1') {
+	compileOnly('com.google.android:flexbox:0.3.0') {
 		// TODEL fixed in 0.3.2
 		exclude group: 'com.android.support'
 	}
