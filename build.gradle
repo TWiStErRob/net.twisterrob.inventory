@@ -20,7 +20,7 @@ allprojects {
 	apply from: rootProject.file('gradle/substitutions.gradle')
 	configurations.all {
 		if (it.name == 'lintClassPath') return
-		//it.resolutionStrategy.failOnVersionConflict()
+		it.resolutionStrategy.failOnVersionConflict()
 	}
 
 	tasks.withType(JavaCompile) {
@@ -52,7 +52,7 @@ allprojects {
 					// Google's compilers emit some weird stuff (espresso, dagger, etc.)
 					// warning: [classfile] MethodParameters attribute introduced in version 52.0 class files is ignored in version 51.0 class files
 					"-Xlint:-classfile",
-					// TODO There are some more left: registerIdlingResources and ViewActivityActor.refresh(), RuleChain from JUnit
+					// STOPSHIP There are some more left: registerIdlingResources and ViewActivityActor.refresh(), RuleChain from JUnit
 					"-Xlint:-deprecation",
 			]
 		}

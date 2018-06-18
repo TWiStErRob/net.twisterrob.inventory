@@ -21,8 +21,12 @@ repositories {
 dependencies {
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
+	//noinspection GradleCompatible exifinterface is newer than all the other ones, and quite independent
 	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
-	implementation "com.android.support:exifinterface:25.1.0"
+	implementation ("com.android.support:exifinterface:25.1.0") {
+		// prevent conflicts due to version differences
+		transitive = false
+	}
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation "net.twisterrob.lib:twister-lib-java"

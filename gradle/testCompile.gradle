@@ -33,12 +33,7 @@ dependencies {
 //	testImplementation 'nl.jqno.equalsverifier:equalsverifier:2.4'
 
 	if (isAndroid) {
-		testImplementation("org.robolectric:robolectric:${VERSION_ROBOLECTRIC}") {
-			// robolectric has inconsistent internal dependencies
-			exclude group: 'org.codehaus.plexus', module: 'plexus-utils'
-		}
-		// let's force plexus-utils to the latest version for robolectric
-		testImplementation 'org.codehaus.plexus:plexus-utils:1.5.+'
+		testImplementation "org.robolectric:robolectric:${VERSION_ROBOLECTRIC}"
 
 //	configurations
 //			.compile
@@ -96,7 +91,7 @@ dependencies {
 		}
 		if (!project.path.contains(":libs:twister-lib-java")) {
 			// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
-			androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:2.+"
+			androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:2.1.3"
 		}
 	}
 }
