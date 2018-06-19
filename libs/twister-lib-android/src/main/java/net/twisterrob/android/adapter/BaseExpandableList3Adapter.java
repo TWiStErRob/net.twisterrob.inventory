@@ -11,7 +11,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 import android.widget.ExpandableListView.OnGroupClickListener;
 
-@SuppressWarnings({"unused", "UnusedParameters"})
+@SuppressWarnings("unused")
 public abstract class BaseExpandableList3Adapter<Level1, Level2, Level3, Level1VH, Level2VH, Level3VH>
 		extends android.widget.BaseExpandableListAdapter {
 	protected final Context m_context;

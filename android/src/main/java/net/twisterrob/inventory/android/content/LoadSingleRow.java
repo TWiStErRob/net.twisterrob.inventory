@@ -23,8 +23,7 @@ public abstract class LoadSingleRow extends LoadersCallbacksAdapter {
 		// no op, we didn't keep any reference to data
 	}
 
-	// TODEL UnusedParameters: https://youtrack.jetbrains.com/issue/IDEA-154071
-	protected void process(@SuppressWarnings({"unused", "UnusedParameters"}) @NonNull Cursor data) {
+	protected void process(@SuppressWarnings("unused") @NonNull Cursor data) {
 		// no op, optional override
 	}
 

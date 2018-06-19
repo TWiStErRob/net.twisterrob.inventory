@@ -142,9 +142,9 @@ public class InventoryProvider extends VariantContentProvider {
 		}
 	}
 	private Cursor queryInternal(@NonNull Uri uri,
-			@SuppressWarnings("UnusedParameters") String[] projection,
-			@SuppressWarnings("UnusedParameters") String selection, String[] selectionArgs,
-			@SuppressWarnings("UnusedParameters") String sortOrder) {
+			@SuppressWarnings("unused") String[] projection,
+			@SuppressWarnings("unused") String selection, String[] selectionArgs,
+			@SuppressWarnings("unused") String sortOrder) {
 		switch (URI_MATCHER.match(uri)) {
 			case SEARCH_ITEMS_SUGGEST: {
 				// uri.getLastPathSegment().toLowerCase(Locale.getDefault());
@@ -251,7 +251,7 @@ public class InventoryProvider extends VariantContentProvider {
 
 	/** @see ContentProvider#openFileHelper(android.net.Uri, java.lang.String) */
 	protected final ParcelFileDescriptor openBlobHelper(@NonNull Uri uri,
-			@SuppressWarnings("UnusedParameters") @NonNull String mode) throws FileNotFoundException {
+			@SuppressWarnings("unused") @NonNull String mode) throws FileNotFoundException {
 		//noinspection resource
 		Cursor c = query(uri, new String[] {COLUMN_BLOB}, null, null, null);
 		if (c == null) {

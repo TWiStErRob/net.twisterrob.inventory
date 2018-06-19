@@ -8,7 +8,7 @@ import android.content.Context;
 import android.view.*;
 import android.widget.*;
 
-@SuppressWarnings({"unused", "UnusedParameters"})
+@SuppressWarnings("unused")
 public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filterable {
 	private List<T> m_allItems;
 	protected List<T> m_items;

@@ -28,8 +28,7 @@ public abstract class SimpleSafeAsyncTask<Param, Progress, Result>
 	}
 
 	@UiThread
-	// TODEL UnusedParameters: https://youtrack.jetbrains.com/issue/IDEA-154071
-	protected void onProgressUpdate(@SuppressWarnings({"unused", "UnusedParameters"}) @Nullable Progress value) {
+	protected void onProgressUpdate(@SuppressWarnings("unused") @Nullable Progress value) {
 		// optional override
 	}
 
