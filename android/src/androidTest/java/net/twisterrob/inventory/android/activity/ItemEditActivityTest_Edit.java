@@ -29,7 +29,7 @@ public class ItemEditActivityTest_Edit {
 			getStartIntent().putExtras(Intents.bundleFromItem(itemID));
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private final ItemEditActivityActor itemEdit = new ItemEditActivityActor();
 
 	@Before public void preconditions() {

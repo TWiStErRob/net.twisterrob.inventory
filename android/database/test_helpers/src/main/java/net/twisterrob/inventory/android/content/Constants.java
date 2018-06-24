@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.content;
 import android.graphics.Color;
 import android.support.annotation.*;
 
-import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.data.R;
 
 public interface Constants {
 	String TEST_PROPERTY = "Test Property";

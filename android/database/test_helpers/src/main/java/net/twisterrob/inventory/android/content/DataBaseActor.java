@@ -15,22 +15,25 @@ import android.support.annotation.*;
 
 import static android.support.test.InstrumentationRegistry.*;
 
-import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.App;
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.database.test_helpers.R;
 import net.twisterrob.inventory.android.test.TestDatabaseRule;
-import net.twisterrob.inventory.debug.test.R;
+import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 import static net.twisterrob.inventory.android.content.Constants.*;
 import static net.twisterrob.inventory.android.content.DatabaseMatchers.*;
 
+@SuppressWarnings({"unused", "TryFinallyCanBeTryWithResources"})
 public class DataBaseActor extends TestDatabaseRule {
 	private final Database appDB;
 
-	public DataBaseActor() {
-		appDB = App.db();
+	public DataBaseActor(Database appDB) {
+		super();
+		this.appDB = appDB;
 	}
+
 	public void assertHasNoProperties() {
 		assertThat(DatabaseTools.singleLong(appDB.stats(), "properties"), is(0L));
 	}
@@ -173,8 +176,9 @@ public class DataBaseActor extends TestDatabaseRule {
 	}
 
 	public long getRoot(long roomID) {
-		return DatabaseDTOTools.getRoot(roomID);
+		return appDB.getRoomRoot(roomID);
 	}
+
 	private Cursor getProperty(String propertyName) {
 		Long id = testDB.getID(R.string.query_property_by_name, propertyName);
 		assertNotNull("Property not found: " + propertyName, id);

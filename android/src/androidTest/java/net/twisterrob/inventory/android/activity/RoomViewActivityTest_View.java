@@ -31,7 +31,7 @@ public class RoomViewActivityTest_View {
 			getStartIntent().putExtras(Intents.bundleFromRoom(db.create(TEST_PROPERTY, TEST_ROOM)));
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private final RoomViewActivityActor roomView = new RoomViewActivityActor();
 	private @StringRes int defaultViewPage = R.string.pref_defaultViewPage_default;
 

@@ -72,6 +72,7 @@ dependencies {
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-uiautomator"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-about-test_helpers"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-capture_image-test_helpers"
+	androidTestImplementation project(':android:database:test_helpers')
 }
 
 android {

@@ -36,7 +36,7 @@ public class ItemViewActivityTest_Move {
 			getStartIntent().putExtras(Intents.bundleFromParent(itemID));
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private final ItemViewActivityActor itemView = new ItemViewActivityActor();
 	private final RoomViewActivityActor roomView = new RoomViewActivityActor();
 	private long propertyID;

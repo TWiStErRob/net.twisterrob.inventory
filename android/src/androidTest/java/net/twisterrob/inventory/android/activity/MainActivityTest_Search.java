@@ -27,7 +27,7 @@ public class MainActivityTest_Search {
 			getStartIntent().putExtras(Intents.bundleFromParent(itemID));
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private final MainActivityActor main = new MainActivityActor();
 
 	@Category({Op.Cancels.class})

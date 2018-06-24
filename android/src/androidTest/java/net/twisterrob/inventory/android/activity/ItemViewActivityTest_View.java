@@ -31,7 +31,7 @@ public class ItemViewActivityTest_View {
 			getStartIntent().putExtras(Intents.bundleFromParent(db.create(TEST_PROPERTY, TEST_ROOM, TEST_ITEM)));
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private final ItemViewActivityActor itemView = new ItemViewActivityActor();
 	private @StringRes int defaultViewPage = R.string.pref_defaultViewPage_default;
 

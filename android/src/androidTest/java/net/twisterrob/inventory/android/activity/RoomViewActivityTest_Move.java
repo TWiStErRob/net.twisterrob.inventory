@@ -32,7 +32,7 @@ public class RoomViewActivityTest_Move {
 			db.createProperty(TEST_PROPERTY_OTHER);
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private final RoomViewActivityActor roomView = new RoomViewActivityActor();
 	private final PropertyViewActivityActor propertyView = new PropertyViewActivityActor();
 	private long roomID;

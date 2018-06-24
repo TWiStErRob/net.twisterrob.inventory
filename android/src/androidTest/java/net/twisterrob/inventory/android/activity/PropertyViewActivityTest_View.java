@@ -31,7 +31,7 @@ public class PropertyViewActivityTest_View {
 			getStartIntent().putExtras(Intents.bundleFromProperty(db.createProperty(TEST_PROPERTY)));
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private final PropertyViewActivityActor propertyView = new PropertyViewActivityActor();
 	private @StringRes int defaultViewPage = R.string.pref_defaultViewPage_default;
 

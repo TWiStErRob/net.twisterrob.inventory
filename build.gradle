@@ -37,7 +37,9 @@ allprojects {
 				"-Xlint:-options",
 		]
 
-		if (it.name.endsWith("AndroidTestJavaWithJavac") || it.path.contains(":twister-lib-android:")) {
+		if (it.name.endsWith("AndroidTestJavaWithJavac")
+				|| it.path.contains(":twister-lib-android:")
+				|| it.path.startsWith(':android:database:test_helpers:')) {
 			it.doFirst {
 				// TODO move to plugin
 				def duplicates = it

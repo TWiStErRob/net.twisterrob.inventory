@@ -25,6 +25,7 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-java"
 
 	testImplementation project(':android:test_helpers')
+	testImplementation project(':android:database:test_helpers')
 	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 	testImplementation 'com.github.stefanbirkner:fishbowl:1.4.0' // exceptionThrownBy (assertThrows-like)
 	testImplementation "net.twisterrob.lib:twister-lib-test"

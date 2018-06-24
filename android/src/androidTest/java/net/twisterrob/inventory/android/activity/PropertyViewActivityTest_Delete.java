@@ -29,7 +29,7 @@ public class PropertyViewActivityTest_Delete {
 			getStartIntent().putExtras(Intents.bundleFromProperty(propertyID));
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private long propertyID;
 	private final PropertyViewActivityActor propertyView = new PropertyViewActivityActor();
 

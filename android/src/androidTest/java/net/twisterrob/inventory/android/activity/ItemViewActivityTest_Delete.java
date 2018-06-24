@@ -29,7 +29,7 @@ public class ItemViewActivityTest_Delete {
 			getStartIntent().putExtras(Intents.bundleFromParent(itemID));
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private final ItemViewActivityActor itemView = new ItemViewActivityActor();
 	private long itemID;
 

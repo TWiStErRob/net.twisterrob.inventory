@@ -20,7 +20,7 @@ import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.DialogMatchers;
-import net.twisterrob.inventory.android.content.DataBaseActor;
+import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.EditActivityActor;
 import net.twisterrob.inventory.android.test.categories.*;
@@ -35,7 +35,7 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @Category(Op.CreatesBelonging.class)
 public abstract class EditActivityTest_Create<T extends Activity> {
 	@Rule public final InventoryActivityRule<T> activity;
-	@Rule public final DataBaseActor database = new DataBaseActor();
+	@Rule public final DataBaseActor database = new AppSingletonDatabaseActor();
 	private final DataBaseActor.BelongingAssertions db;
 	private final BelongingValues belonging;
 	@Rule public final TemporaryFolder temp = new TemporaryFolder();

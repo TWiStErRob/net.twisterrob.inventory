@@ -35,7 +35,7 @@ public class ItemActivityTest_Image {
 			getStartIntent().putExtras(Intents.bundleFromRoom(roomID));
 		}
 	};
-	@Rule public final DataBaseActor db = new DataBaseActor();
+	@Rule public final DataBaseActor db = new AppSingletonDatabaseActor();
 	private final RoomViewActivityActor roomView = new RoomViewActivityActor();
 
 	@LargeTest
