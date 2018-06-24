@@ -20,8 +20,8 @@ public class DatabaseGenerator {
 	}
 
 	public static void main(String... args) throws Throwable {
-		File svgFolder = new File("..\\src\\main\\res\\raw");
-		Reader input = new FileReader(new File("..\\src\\main\\res\\values\\strings_Categories.xml"));
+		File svgFolder = new File("..\\..\\data\\src\\main\\res\\raw");
+		Reader input = new FileReader(new File("..\\..\\data\\src\\main\\res\\values\\strings_Categories.xml"));
 		Writer output = new PrintWriter(System.out, true);
 		new DatabaseGenerator(new SQLPrinter(), svgFolder).transform(input, output);
 	}
