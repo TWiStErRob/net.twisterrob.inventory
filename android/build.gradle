@@ -1,24 +1,6 @@
-import com.android.build.gradle.api.AndroidSourceSet
-
 apply plugin: 'com.android.application'
 apply plugin: 'net.twisterrob.android-app'
 apply from: new File(rootDir, 'gradle/mapping.gradle')
-
-apply plugin: InventoryDatabasePlugin
-
-databaseEntities {
-	categories {
-		def data_ss = evaluationDependsOn(':android:data').android.sourceSets.main as AndroidSourceSet
-		def my_ss = android.sourceSets.main
-		input = file(new File(data_ss.res.srcDirs.first(), 'values/strings_Categories.xml'))
-		output = file(new File(my_ss.assets.srcDirs.first(), 'MagicHomeInventory.data.Categories.sql'))
-		iconFolder = file(new File(data_ss.res.srcDirs.first(), 'raw'))
-		conversion = "SQL"
-	}
-}
-android.applicationVariants.all { com.android.build.gradle.api.ApplicationVariant variant ->
-	variant.mergeAssets.dependsOn tasks.generateDataBase
-}
 
 dependencies {
 	implementation project(':android:base')

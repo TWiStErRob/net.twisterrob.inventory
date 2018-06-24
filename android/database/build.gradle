@@ -1,3 +1,5 @@
+import com.android.build.gradle.api.AndroidSourceSet
+
 buildscript {
 	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
@@ -26,4 +28,32 @@ android {
 	defaultConfig {
 		minSdkVersion 10
 	}
+}
+
+apply plugin: InventoryDatabasePlugin
+
+databaseEntities {
+	categories {
+		def data_ss = evaluationDependsOn(':android:data').android.sourceSets.main as AndroidSourceSet
+		def my_ss = android.sourceSets.main
+		input = file(new File(data_ss.res.srcDirs.first(), 'values/strings_Categories.xml'))
+		output = file(new File(my_ss.assets.srcDirs.first(), 'MagicHomeInventory.data.Categories.sql'))
+		iconFolder = file(new File(data_ss.res.srcDirs.first(), 'raw'))
+		conversion = "SQL"
+	}
+}
+android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant variant ->
+	variant.mergeAssets.dependsOn tasks.generateDataBase
+}
+
+task testDatabase(type: Exec, dependsOn: tasks.generateDataBase) {
+	def outputDir = file("${buildDir}/database") // TODO why can't I use File(File, String) ctor?
+	workingDir outputDir
+	inputs.file('test-db.bat')
+	inputs.file('test-db.sql')
+	inputs.dir(android.sourceSets.main.assets.srcDirs[0])
+	inputs.dir(android.sourceSets.debug.assets.srcDirs[0])
+	outputs.dir(outputDir)
+	commandLine 'cmd', '/c', file('test-db.bat'), projectDir, outputDir
+	tasks.findByPath('check').dependsOn(this)
 }

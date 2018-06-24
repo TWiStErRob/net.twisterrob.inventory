@@ -14,6 +14,7 @@ set value = replace(UPPER(substr(key, 10, 1)) || substr(key, 11), '_', ' ');
 select '';
 select '__________________________________.- Before -.__________________________________';
 insert into Log (message) values ('Before');
+select '--------------------------------------------------------------------------------';
 .headers on
 .width auto
 

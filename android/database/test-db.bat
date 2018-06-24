@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set TARGET_DIR="%~dp0build"
+set TARGET_DIR="%2"
 if not exist %TARGET_DIR% mkdir %TARGET_DIR%
 pushd %TARGET_DIR%
 
@@ -10,7 +10,9 @@ set ASSETSD=%1\src\debug\assets
 set BASE_NAME=test-db
 set TARGET="%BASE_NAME%-concatenated.sql"
 set NOW=STRFTIME('%%Y-%%m-%%d %%H:%%M:%%f', 'NOW')
+
 echo. > %TARGET%
+echo -- Built from from %ASSETS% >> %TARGET%
 echo -- http://stackoverflow.com/questions/2421189/version-of-sqlite-used-in-android >> %TARGET%
 echo PRAGMA foreign_keys=ON; >> %TARGET%
 echo PRAGMA recursive_triggers = TRUE; -- This is not possible before 3.6.18 >> %TARGET%
@@ -57,7 +59,7 @@ echo .backup %BASE_NAME%.sqlite >> %TARGET%
 
 type "%~dp0test-db.sql" >> %TARGET%
 
-sqlite3 -init %TARGET% %2 %3 %4 %5 %6 %7 %8 %9
+sqlite3 -init %TARGET% %3 %4 %5 %6 %7 %8 %9
 
 popd
 endlocal

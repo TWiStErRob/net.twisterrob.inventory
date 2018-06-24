@@ -7,7 +7,6 @@ include ':android:preferences'
 include ':android:data'
 include ':android:backup'
 include ':tools:transform'
-include ':tools:database'
 include ':libs'
 
 def includeWithContract(String projectPath) {
