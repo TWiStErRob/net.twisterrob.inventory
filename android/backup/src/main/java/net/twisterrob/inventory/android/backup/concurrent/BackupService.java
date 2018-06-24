@@ -120,21 +120,22 @@ public class BackupService extends NotificationProgressService<Progress> {
 		dispatcher.reset(); // call before started, so the listener may cancel immediately
 		listeners.started();
 		try {
+			ZippedXMLExporter zip = new ZippedXMLExporter(
+					DBProvider.db(getApplicationContext()),
+					getApplicationContext().getAssets()
+			);
 			if (ACTION_EXPORT_PFD_WORKAROUND.equals(intent.getAction())) {
 				dispatcher.setCancellable(false);
-				BackupParcelExporter exporter = new BackupParcelExporter(this,
-						new ZippedXMLExporter(getApplicationContext()), dispatcher);
+				BackupParcelExporter exporter = new BackupParcelExporter(this, zip, dispatcher);
 				ParcelFileDescriptor file = queue.remove();
 				finish(exporter.exportTo(file));
 			} else if (ACTION_EXPORT.equals(intent.getAction())) {
 				dispatcher.setCancellable(false);
-				BackupUriExporter exporter = new BackupUriExporter(this,
-						new ZippedXMLExporter(getApplicationContext()), dispatcher);
+				BackupUriExporter exporter = new BackupUriExporter(this, zip, dispatcher);
 				Uri uri = intent.getData();
 				finish(exporter.exportTo(uri));
 			} else if (ACTION_EXPORT_DIR.equals(intent.getAction())) {
-				BackupDirExporter exporter = new BackupDirExporter(this,
-						new ZippedXMLExporter(getApplicationContext()), dispatcher);
+				BackupDirExporter exporter = new BackupDirExporter(this, zip, dispatcher);
 				File dir = new File(intent.getData().getPath());
 				finish(exporter.exportTo(dir));
 			}

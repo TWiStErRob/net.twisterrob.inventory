@@ -8,13 +8,12 @@ import javax.xml.transform.stream.*;
 
 import org.slf4j.*;
 
-import android.content.Context;
 import android.content.res.AssetManager;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
-import net.twisterrob.inventory.android.backup.DBProvider;
 import net.twisterrob.inventory.android.backup.exporters.ZippedExporter;
+import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.java.io.TeeOutputStream;
 
 public class ZippedXMLExporter extends ZippedExporter {
@@ -25,18 +24,18 @@ public class ZippedXMLExporter extends ZippedExporter {
 	public static final String CSV_NAME = "inventory.csv";
 	public static final String HTML_NAME = "inventory.html";
 	private final ByteArrayOutputStream capturedXML;
-	private final Context appContext;
+	private final AssetManager assets;
 
-	public ZippedXMLExporter(Context appContext) {
-		super(XML_NAME, DBProvider.db(appContext), new XMLExporter(XSLT_NAME, DBProvider.db(appContext)));
-		this.appContext = appContext.getApplicationContext();
+	public ZippedXMLExporter(Database db, AssetManager assets) {
+		super(XML_NAME, db, new XMLExporter(XSLT_NAME, db));
 		this.capturedXML = new ByteArrayOutputStream();
+		this.assets = assets;
 	}
 
 	@Override protected OutputStream startStream(ZipOutputStream zip) throws IOException {
 		// Google Drive upload opens two instances of the backup, we need to write something to the stream quick,
 		// because otherwise it would take a long time for Google Drive to break one of them with EPIPE 
-		copyXSLT(XSLT_NAME, appContext.getAssets().open("data.html.xslt"));
+		copyXSLT(XSLT_NAME, assets.open("data.html.xslt"));
 		zip.flush();
 		OutputStream out = super.startStream(zip);
 		return new TeeOutputStream(out, capturedXML);
@@ -45,7 +44,6 @@ public class ZippedXMLExporter extends ZippedExporter {
 	@Override protected void endStream() throws IOException {
 		byte[] xml = capturedXML.toByteArray();
 		super.endStream();
-		AssetManager assets = appContext.getAssets();
 		transform(HTML_NAME, new ByteArrayInputStream(xml), assets.open("data.html.xslt"));
 		transform(CSV_NAME, new ByteArrayInputStream(xml), assets.open("data.csv.xslt"));
 	}
