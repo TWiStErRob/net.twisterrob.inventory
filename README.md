@@ -45,16 +45,14 @@ Release play-by-play
 1. `svn update` just to be sure (double-check with `svn info`)
 1. `gradlew clean releaseRelease` (1m before ProGuard, 1m for ProGuard)
 1. Upload `p:\repos\release\android\net.twisterrob.inventory@*.zip`:
-
     * `.apk` @ Developer Console > APK > [Alpha](https://play.google.com/apps/publish/?dev_acc=01909946919088079965#ApkPlace:p=net.twisterrob.inventory)
     * `mapping.txt` @ [Deobfuscation](https://play.google.com/apps/publish/?dev_acc=01909946919088079965#DeobfuscationMappingFilesPlace:p=net.twisterrob.inventory)
-
 1. Update http://www.twisterrob.net/project/inventory/ with release notes
 1. Update *What's new in this version?* based on previous one
 1. Make a backup of current version on the phone with
-	```bash
-	adb backup -f Inventory-pre<version>.ab -apk -noobb -noshared -nosystem net.twisterrob.inventory
-	```
+    ```bash
+    adb backup -f Inventory-pre<version>.ab -apk -noobb -noshared -nosystem net.twisterrob.inventory
+    ```
 1. Make sure the installed release version has all kinds of data
 1. Publish to Alpha
 1. Check [Pre-launch Report](https://play.google.com/apps/publish/?dev_acc=01909946919088079965#PreLaunchReportPlace:p=net.twisterrob.inventory)
