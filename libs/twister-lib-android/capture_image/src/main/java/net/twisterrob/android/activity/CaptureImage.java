@@ -523,7 +523,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 					bitmap.getWidth(), bitmap.getHeight(), maxSize, maxSize * leeway);
 		}
 
-		@Deprecated // experimental for now, don't enable; this would reduce OOMs even more,
+		// @deprecated: experimental for now, don't enable; this would reduce OOMs even more,
 		// because it would skip rotation which create a full copy of the bitmap
 		// on the other hand, rotation should use less memory as saving (getPixels + YCC), so it may be unnecessary.
 		final boolean exifRotate = Boolean.parseBoolean("false");

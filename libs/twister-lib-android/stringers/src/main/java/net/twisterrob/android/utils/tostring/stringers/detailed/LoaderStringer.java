@@ -4,16 +4,15 @@ import java.io.*;
 
 import javax.annotation.Nonnull;
 
-import android.content.Loader;
 import android.os.Build.VERSION_CODES;
 import android.support.annotation.RequiresApi;
 
 import net.twisterrob.java.utils.tostring.*;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "deprecation"})
 @RequiresApi(VERSION_CODES.HONEYCOMB)
-public class LoaderStringer extends Stringer<Loader> {
-	@Override public void toString(@Nonnull ToStringAppender append, Loader loader) {
+public class LoaderStringer extends Stringer<android.content.Loader> {
+	@Override public void toString(@Nonnull ToStringAppender append, android.content.Loader loader) {
 		StringWriter writer = new StringWriter();
 		loader.dump("", null, new PrintWriter(writer), null);
 		append.selfDescribingProperty(writer.toString());

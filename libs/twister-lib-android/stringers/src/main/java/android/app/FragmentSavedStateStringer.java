@@ -9,6 +9,7 @@ import net.twisterrob.java.utils.ReflectionTools;
 import net.twisterrob.java.utils.tostring.*;
 
 @RequiresApi(VERSION_CODES.HONEYCOMB_MR2)
+@SuppressWarnings("deprecation")
 public class FragmentSavedStateStringer extends Stringer<Fragment.SavedState> {
 	@Override public String getType(Fragment.SavedState object) {
 		return "Fragment.SavedState";

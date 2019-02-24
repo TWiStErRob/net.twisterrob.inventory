@@ -35,6 +35,7 @@ public interface ViewProvider {
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	@RequiresApi(VERSION_CODES.HONEYCOMB)
+	@SuppressWarnings("deprecation")
 	public class FragmentViewProvider implements ViewProvider {
 		private final android.app.Fragment fragment;
 

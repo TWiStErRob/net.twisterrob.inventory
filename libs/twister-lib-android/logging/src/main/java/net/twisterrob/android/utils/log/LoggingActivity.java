@@ -79,6 +79,7 @@ public class LoggingActivity extends AppCompatActivity {
 	}
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)
+	@SuppressWarnings("deprecation")
 	@Override public void onAttachFragment(android.app.Fragment fragment) {
 		log("onAttachFragment", fragment);
 		super.onAttachFragment(fragment);

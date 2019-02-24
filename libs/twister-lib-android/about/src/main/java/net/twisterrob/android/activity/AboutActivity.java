@@ -144,6 +144,7 @@ public class AboutActivity extends ListActivity {
 		return feedbackIntent;
 	}
 
+	@SuppressWarnings("deprecation") // TODO versionCode should be long (appcompat/androidx helper?)
 	protected @NonNull AboutInfo getAboutInfo() {
 		AboutInfo about = new AboutInfo();
 
