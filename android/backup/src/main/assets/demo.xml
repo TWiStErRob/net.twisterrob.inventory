@@ -1,4 +1,5 @@
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<?xml-stylesheet type="text/xsl" href="data.html.xslt"?>
 <inventory approximateCount="34" version="1.0">
 	<property type="property_house" name="Home" id="1">
 		<room type="room_bed" name="My room" id="1">
