@@ -55,5 +55,5 @@ task testDatabase(type: Exec, dependsOn: tasks.generateDataBase) {
 	inputs.dir(android.sourceSets.debug.assets.srcDirs[0])
 	outputs.dir(outputDir)
 	commandLine 'cmd', '/c', file('test-db.bat'), projectDir, outputDir
-	tasks.findByPath('check').dependsOn(this)
+	tasks.findByPath('check').dependsOn(it)
 }

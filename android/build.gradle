@@ -1,4 +1,3 @@
-apply plugin: 'com.android.application'
 apply plugin: 'net.twisterrob.android-app'
 apply from: new File(rootDir, 'gradle/mapping.gradle')
 

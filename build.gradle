@@ -12,7 +12,7 @@ allprojects {
 	repositories {
 		jcenter()
 		maven { name = 'twisterrob'; url = 'http://localhost/maven' }
-		maven { name = 'sonatype'; url = 'http://oss.sonatype.org/content/repositories/snapshots' }
+		//maven { name = 'sonatype'; url = 'http://oss.sonatype.org/content/repositories/snapshots' }
 		//maven { name = 'idescout'; url = 'http://www.idescout.com/maven/repo/' }
 	}
 	apply from: rootProject.file('gradle/includedBuilds/substitute_twister-libs-java.gradle')
