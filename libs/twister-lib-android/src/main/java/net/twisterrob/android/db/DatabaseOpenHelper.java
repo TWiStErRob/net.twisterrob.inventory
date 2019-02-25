@@ -45,7 +45,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelperCompat {
 	private boolean allowDump;
 
 	public DatabaseOpenHelper(Context context, String dbName, int dbVersion, boolean isDebugBuild) {
-		super(context, dbName, createCursorFactory(isDebugBuild), dbVersion);
+		super(context, dbName, dbVersion, createCursorFactory(isDebugBuild));
 		this.assets = context.getAssets();
 		this.dbName = dbName;
 		this.hasWriteExternalPermission = AndroidTools.hasPermission(context, WRITE_EXTERNAL_STORAGE);

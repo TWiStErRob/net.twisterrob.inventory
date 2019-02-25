@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- lint:MergeRootFrame this is inflated as a ViewPager, need to extra level -->
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	tools:ignore="MergeRootFrame"
 	>
 	<ImageView
 		android:id="@id/image"

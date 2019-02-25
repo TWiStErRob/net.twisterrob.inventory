@@ -6,6 +6,8 @@ import java.util.*;
 
 import javax.annotation.Nullable;
 
+import android.annotation.SuppressLint;
+
 public final class StringTools {
 	public static final String NULL_STRING = "null";
 
@@ -20,6 +22,7 @@ public final class StringTools {
 		return String.format(messageFormat, formatArgs);
 	}
 
+	@SuppressLint("LambdaLast") // extension method on Iterable
 	public static String join(final Iterable<?> list, final String separator) {
 		StringBuilder sb = new StringBuilder();
 		Iterator<?> iterator = list.iterator();

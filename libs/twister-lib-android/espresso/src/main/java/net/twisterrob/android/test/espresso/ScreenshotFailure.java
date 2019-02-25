@@ -161,6 +161,7 @@ public class ScreenshotFailure implements TestRule {
 	private Bitmap shootActivity(final Activity activity) {
 		final AtomicReference<Bitmap> viewShot = new AtomicReference<>();
 		instrumentation.runOnMainSync(new Runnable() {
+			@SuppressWarnings("deprecation")
 			@Override public void run() {
 				View view = activity.getWindow().getDecorView();
 				LOG.trace("Taking screenshot of {}: {}", activity, HumanReadables.describe(view));

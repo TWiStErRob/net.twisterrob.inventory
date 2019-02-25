@@ -64,7 +64,7 @@ public class SharedPreferencesWrapper implements SharedPreferences {
 		if (wrapper == null) {
 			wrapper = new OnSharedPreferenceChangeListener() {
 				@Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-					firePreferenceChanged(listener, sharedPreferences, key);
+					firePreferenceChanged(sharedPreferences, key, listener);
 				}
 			};
 			listeners.put(listener, wrapper);
@@ -77,7 +77,8 @@ public class SharedPreferencesWrapper implements SharedPreferences {
 	}
 
 	protected void firePreferenceChanged(
-			OnSharedPreferenceChangeListener listener, SharedPreferences sharedPreferences, String key) {
+			SharedPreferences sharedPreferences, String key, OnSharedPreferenceChangeListener listener) {
+		// STOPSHIP is this intentionally ignoring param?
 		listener.onSharedPreferenceChanged(this, key);
 	}
 

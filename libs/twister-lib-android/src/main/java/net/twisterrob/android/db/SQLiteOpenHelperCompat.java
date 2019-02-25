@@ -48,7 +48,7 @@ public class SQLiteOpenHelperCompat extends SQLiteOpenHelper {
 	private final String name;
 	private boolean needsConfigure;
 
-	public SQLiteOpenHelperCompat(Context context, String name, CursorFactory factory, int version) {
+	public SQLiteOpenHelperCompat(Context context, String name, int version, CursorFactory factory) {
 		super(context, name, factory, version);
 		this.context = context;
 		this.name = name;

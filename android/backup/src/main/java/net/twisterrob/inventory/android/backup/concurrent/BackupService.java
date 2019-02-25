@@ -168,7 +168,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		progress.begin();
 
 		ZipImporter<Uri> importer = new BackupTransactingImporter<>(
-				new BackupZipUriImporter(this, progress), progress, DBProvider.db(this));
+				DBProvider.db(this), progress, new BackupZipUriImporter(this, progress));
 		try {
 			importer.importFrom(input);
 		} catch (Exception ex) {

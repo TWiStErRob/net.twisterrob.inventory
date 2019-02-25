@@ -50,7 +50,7 @@ public abstract class BaseListAdapter<T, VH> extends BaseAdapter implements Filt
 		return m_allItems.subList(m_hasDefaultItem? 1 : 0, m_allItems.size());
 	}
 
-	public List<T> getItems() {
+	public Collection<T> getItems() {
 		return m_items.subList(m_hasDefaultItem? 1 : 0, m_items.size());
 	}
 

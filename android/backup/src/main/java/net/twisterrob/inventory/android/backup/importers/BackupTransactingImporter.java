@@ -11,14 +11,14 @@ import net.twisterrob.java.utils.ObjectTools;
 public class BackupTransactingImporter<T> implements ZipImporter<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupTransactingImporter.class);
 
-	private final ImportProgressHandler progress;
 	private final @NonNull Database db;
+	private final ImportProgressHandler progress;
 	private final ZipImporter<T> importer;
 
-	public BackupTransactingImporter(ZipImporter<T> importer, ImportProgressHandler progress, Database db) {
-		this.importer = ObjectTools.checkNotNull(importer);
-		this.progress = ObjectTools.checkNotNull(progress);
+	public BackupTransactingImporter(Database db, ImportProgressHandler progress, ZipImporter<T> importer) {
 		this.db = ObjectTools.checkNotNull(db);
+		this.progress = ObjectTools.checkNotNull(progress);
+		this.importer = ObjectTools.checkNotNull(importer);
 	}
 
 	@Override public void importFrom(T input) throws Exception {

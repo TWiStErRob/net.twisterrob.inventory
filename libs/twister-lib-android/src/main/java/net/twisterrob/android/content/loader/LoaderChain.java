@@ -1,5 +1,6 @@
 package net.twisterrob.android.content.loader;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -10,6 +11,7 @@ public class LoaderChain {
 		return createSequence(actions);
 	}
 
+	@SuppressLint("LambdaLast") // vararg clash, in Java cannot put vararg first
 	public static Runnable sequence(Runnable atTheEnd, InitAction<?>... actions) {
 		if (actions.length == 0) {
 			return atTheEnd;

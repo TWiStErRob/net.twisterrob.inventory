@@ -4,6 +4,8 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import android.support.annotation.VisibleForTesting;
+
 import static android.support.test.InstrumentationRegistry.*;
 
 import net.twisterrob.inventory.android.content.Database;
@@ -12,6 +14,7 @@ import net.twisterrob.inventory.android.content.Database;
  * It is safe to apply this rule at any time,
  * because it won't open the database until the first query on {@link #testDB}.
  */
+@VisibleForTesting
 public class TestDatabaseRule implements TestRule {
 	protected Database testDB;
 
