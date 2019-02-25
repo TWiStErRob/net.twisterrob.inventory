@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="4" by="lint 3.2.1" client="gradle" variant="all" version="3.2.1">
+
+    <issue
+        id="UseSparseArrays"
+        message="Use new `SparseIntArray(...)` instead for better performance"
+        errorLine1="  private final Map&lt;Integer, Integer> distanceCounts = new HashMap&lt;>();"
+        errorLine2="                                                       ~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\net\twisterrob\java\text\Suggester.java"
+            line="74"
+            column="56"/>
+    </issue>
+
+    <issue
+        id="KotlinPropertyAccess"
+        message="The getter return type (`String[]`) and setter parameter type (`String...`) getter and setter methods for property `to` should have exactly the same type to allow be accessed as a property from Kotlin; see https://android.github.io/kotlin-guides/interop.html#property-prefixes"
+        errorLine1=" public String[] getTo() {"
+        errorLine2="                 ~~~~~">
+        <location
+            file="src\main\java\net\twisterrob\java\io\MailSender.java"
+            line="42"
+            column="18"/>
+        <location
+            file="src\main\java\net\twisterrob\java\io\MailSender.java"
+            line="45"
+            column="14"/>
+    </issue>
+
+    <!-- REPORT Annotation is not SAM, or is it? -->
+    <issue
+        id="LambdaLast"
+        message="Functional interface parameters (such as parameter 1, &quot;annotation&quot;, in net.twisterrob.java.annotations.SimpleDateFormatString.Checker.forConstantValue) should be last to improve Kotlin interoperability; see https://kotlinlang.org/docs/reference/java-interop.html#sam-conversions"
+        errorLine1="  public @Nonnull When forConstantValue(@Nonnull SimpleDateFormatString annotation, Object value) {"
+        errorLine2="                                                                                    ~~~~~~~~~~~~">
+        <location
+            file="src\main\java\net\twisterrob\java\annotations\SimpleDateFormatString.java"
+            line="21"
+            column="85"/>
+    </issue>
+
+    <issue
+        id="NoHardKeywords"
+        message="Avoid method names that are Kotlin hard keywords (&quot;when&quot;); see https://android.github.io/kotlin-guides/interop.html#no-hard-keywords"
+        errorLine1=" When when() default When.ALWAYS;"
+        errorLine2="      ~~~~">
+        <location
+            file="src\main\java\net\twisterrob\java\annotations\SimpleDateFormatString.java"
+            line="18"
+            column="7"/>
+    </issue>
+
+</issues>
