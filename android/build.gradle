@@ -74,8 +74,6 @@ android {
 	lintOptions {
 		checkAllWarnings = true
 		checkDependencies = true
-		baseline file("config/lint/lint-baseline.xml")
-		//abortOnError false
 	}
 	testOptions.unitTests.includeAndroidResources = true // Robolectric
 	testBuildType "debug" // CONSIDER release
@@ -104,6 +102,13 @@ android {
 		 */
 		exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
 		exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+	}
+}
+
+allprojects { project ->
+	project.afterEvaluate {
+		project.android.lintOptions.baseline rootProject.file("config/lint/lint-baseline-${project.name}.xml")
+		project.android.lintOptions.lintConfig = rootProject.file("config/lint/lint.xml")
 	}
 }
 

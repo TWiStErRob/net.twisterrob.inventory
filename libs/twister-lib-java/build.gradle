@@ -14,7 +14,8 @@ buildscript {
 group = 'net.twisterrob.lib'
 version = '1.0'
 
-allprojects {
+def mainProject = project
+allprojects { project ->
 	repositories {
 		jcenter()
 	}
@@ -31,6 +32,10 @@ allprojects {
 			if(task.name.contains("AndroidTest")) {
 				task.enabled = false
 			}
+		}
+		project.afterEvaluate {
+			project.android.lintOptions.lintConfig = mainProject.file("config/lint/lint.xml")
+			project.android.lintOptions.baseline mainProject.file("config/lint/lint-baseline-${project.name}.xml")
 		}
 	} else {
 		logger.info "${project.path} is not in an included build, using Java Library plugin"

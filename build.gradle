@@ -1,12 +1,16 @@
 buildscript {
 	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
+	repositories {
+		maven { name = 'TWiStErRob'; url = 'https://dl.bintray.com/twisterrob/maven' }
+	}
 	dependencies {
 		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+		classpath "net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}"
 	}
 }
-
 apply plugin: 'net.twisterrob.root'
+apply plugin: 'net.twisterrob.quality'
 
 allprojects {
 	repositories {
@@ -55,7 +59,7 @@ allprojects {
 					// warning: [classfile] MethodParameters attribute introduced in version 52.0 class files is ignored in version 51.0 class files
 					"-Xlint:-classfile",
 					// STOPSHIP There are some more left: registerIdlingResources and ViewActivityActor.refresh(), RuleChain from JUnit
-					"-Xlint:-deprecation",
+					//"-Xlint:-deprecation",
 			]
 		}
 	}

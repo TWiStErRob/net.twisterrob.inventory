@@ -53,8 +53,12 @@ android {
 	}
 }
 
+def mainProject = project
 allprojects { project ->
 	project.afterEvaluate {
+		project.android.lintOptions.lintConfig = mainProject.file("config/lint/lint.xml")
+		project.android.lintOptions.baseline mainProject.file("config/lint/lint-baseline-${project.name}.xml")
+
 		com.android.build.gradle.api.AndroidSourceSet androidTest = project.android.sourceSets.androidTest
 		if (androidTest.java.sourceFiles.empty) {
 			logger.info "Disabling AndroidTest tasks in ${project.path} as it has no sources in ${androidTest.java.srcDirs}"

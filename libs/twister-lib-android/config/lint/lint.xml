@@ -24,4 +24,13 @@
 	<issue id="MinSdkTooLow" severity="ignore">
 		<!-- TODEL after upgrading support library to latest -->
 	</issue>
+	<issue id="UnknownNullness" severity="ignore">
+		<!-- too many to fix yet -->
+	</issue>
+	<issue id="SyntheticAccessor" severity="ignore">
+		<!-- too many to fix yet -->
+	</issue>
+	<issue id="LintBaseline"> 
+		<ignore regexp="(was|were) filtered out because (it is|they are) listed in the baseline file" />
+	</issue>
 </lint>

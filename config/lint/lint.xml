@@ -2,7 +2,7 @@
 <lint>
 	<!-- TOFIX review accessibility -->
 	<issue id="ContentDescription" severity="ignore" />
-	<issue id="ClickableViewAccessibility" >
+	<issue id="ClickableViewAccessibility">
 		<ignore path="**/SunburstFragment.java" regexp="setOnTouchListener.*performClick" />
 	</issue>
 	<!-- FIXME re-check when it's really translated -->
@@ -33,6 +33,8 @@
 		<ignore regexp="R\.bool\.in_test" />
 		<!-- It's a library used in multiple projects -->
 		<ignore path="**/libs/twister-lib-android/**" />
+		<!-- used by about module reflectively / with resource overrides -->
+		<ignore path="res/values/strings_about.xml" />
 	</issue>
 	<issue id="SelectableText">
 		<!-- TODEL SelectableText lint check ignores style: http://b.android.com/57866 / https://issuetracker.google.com/issues/76458990 -->
@@ -70,4 +72,21 @@
 	</issue>
 	<!-- This app doesn't have a public website with URLs. Warning comes up in manifest and/or ItemViewActivity -->
 	<issue id="GoogleAppIndexingApiWarning" severity="ignore" />
+	<issue id="UnknownNullness" severity="ignore">
+		<!-- too many to fix yet -->
+	</issue>
+	<issue id="SyntheticAccessor" severity="ignore">
+		<!-- too many to fix yet -->
+	</issue>
+	<issue id="InvalidPackage" severity="ignore">
+		<!-- Invalid package reference in library; not included in Android: java.lang.instrument. Referenced from net.bytebuddy.agent.ByteBuddyAgent. -->
+		<ignore regexp="[/\\]byte-buddy-agent-.*\.jar" />
+	</issue>
+	<issue id="MissingRegistered" severity="ignore">
+		<!-- REPORT internal library stuff is not picked up -->
+		<ignore regexp="net\.twisterrob\.android\." />
+	</issue>
+	<issue id="LintBaseline">
+		<ignore regexp="(was|were) filtered out because (it is|they are) listed in the baseline file" />
+	</issue>
 </lint>
