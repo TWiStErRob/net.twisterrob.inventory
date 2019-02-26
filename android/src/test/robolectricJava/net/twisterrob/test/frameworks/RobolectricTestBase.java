@@ -1,11 +1,9 @@
 package net.twisterrob.test.frameworks;
 
 import org.junit.*;
-import org.junit.rules.*;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.mockito.junit.*;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
@@ -24,12 +22,13 @@ import net.twisterrob.test.PackageNameShortener;
  * @see org.robolectric.RuntimeEnvironment#application
  */
 @RunWith(RobolectricTestRunner.class)
-@PowerMockRunnerDelegate(RobolectricTestRunner.class)
-// For this to work make sure the working directory is the app module in the IDE
+//@RunWith(PowerMockRunner.class)
+//@PowerMockRunnerDelegate(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {VERSION_CODES.JELLY_BEAN}, shadows = {ShadowLog.class})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+//@PowerMockIgnore({"org.mockito.*", "org.powermock.*", "org.robolectric.*", "android.*"})
 public abstract class RobolectricTestBase {
 	@Rule public final MockitoRule mockito = MockitoJUnit.rule();
+	//@Rule public final PowerMockRule power = new PowerMockRule();
 	@Rule public final TestRule shortener = new PackageNameShortener();
 
 	@Before

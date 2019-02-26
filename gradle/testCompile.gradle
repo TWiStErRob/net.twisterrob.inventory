@@ -23,8 +23,10 @@ dependencies {
 	// contains duplicate PowerMockRule which messes things up, do not enable
 	//testImplementation "org.powermock:powermock-module-junit4-rule-agent:${VERSION_POWERMOCK}"
 	testImplementation "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
-	testImplementation 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then 
-	testImplementation "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
+	testImplementation 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then
+	// Replace APK's runtimeOnly sneaking into test runtime
+	configurations.testRuntimeOnly.exclude module: 'twister-lib-android-slf4j'
+	testRuntimeOnly "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
 	testImplementation 'com.diffplug.durian:durian:3.4.0'
 	// Durian needs findbugs annotations
 	testCompileOnly 'com.google.code.findbugs:annotations:3.0.0'
@@ -34,6 +36,8 @@ dependencies {
 
 	if (isAndroid) {
 		testImplementation "org.robolectric:robolectric:${VERSION_ROBOLECTRIC}"
+		testImplementation "org.robolectric:shadows-multidex:${VERSION_ROBOLECTRIC}"
+//		testImplementation "androidx.test:core:1.1.0"
 
 //	configurations
 //			.compile
