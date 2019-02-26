@@ -1,0 +1,1 @@
+StringResources.class patch for https://github.com/robolectric/robolectric/issues/4685 (using .class file from 3.7.1)
