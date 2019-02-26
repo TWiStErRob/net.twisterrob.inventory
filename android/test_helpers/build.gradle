@@ -1,12 +1,3 @@
-buildscript {
-	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
-	dependencies {
-		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
-	}
-}
-
-apply plugin: 'com.android.library'
 apply plugin: 'net.twisterrob.android-library'
 apply from: 'http://localhost/maven/configure.gradle'
 
