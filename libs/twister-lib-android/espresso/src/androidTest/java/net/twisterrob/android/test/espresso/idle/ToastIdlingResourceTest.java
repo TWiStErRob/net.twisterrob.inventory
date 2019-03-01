@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
+import android.os.Build.*;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingResource.ResourceCallback;
 import android.support.test.rule.ActivityTestRule;
@@ -81,6 +82,20 @@ public class ToastIdlingResourceTest {
 
 	@SuppressWarnings("Duplicates")
 	@Test public void testDetectsMultipleToastsCancelledInReverse() {
+		// There's differing behavior between Android versions (only tested 21 and 28 yet, so condition may be wrong).
+		// (in the next explanation: . means fading in/out, - means cancelled)  
+		//
+		// Old versions seem to queue the toasts:
+		// [..-toast1---]
+		//              [---toast2---]
+		//  ^ cancel toast2 has no effect yet (not idle), toast1 will be faded out, and then toast2 wouldn't be shown
+		//   ^ cancel toast1 has immediate effect (idle), toast2 is cancelled so not shown
+		//
+		// New versions replace toasts:
+		// [.--toast1---]
+		//  [.--toast2---] -> at this point toast1 is already cancelled
+		//   ^ cancel toast2 has immediate effect (idle), because toast1 is already cancelled
+		boolean expectQueued = VERSION.SDK_INT < VERSION_CODES.P;
 		Toast toast1 = createToast("Toast 1");
 		Toast toast2 = createToast("Toast 2");
 		assertTrue(isIdle());
@@ -88,7 +103,11 @@ public class ToastIdlingResourceTest {
 		toast2.show();
 		assertFalse(isIdle());
 		toast2.cancel();
-		assertFalse(isIdle());
+		if (expectQueued) {
+			assertFalse(isIdle());
+		} else {
+			assertTrue(isIdle());
+		}
 		toast1.cancel();
 		assertTrue(isIdle());
 	}
