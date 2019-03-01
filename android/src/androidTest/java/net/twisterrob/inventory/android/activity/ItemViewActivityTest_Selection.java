@@ -139,6 +139,7 @@ public class ItemViewActivityTest_Selection {
 		selection.assertSelectionCount(1);
 	}
 
+	@SuppressWarnings("deprecation") // TODO
 	@Category({UseCase.Complex.class})
 	@Test public void testSelectionTypeChange() {
 		createItems(4);
@@ -161,6 +162,7 @@ public class ItemViewActivityTest_Selection {
 		// TODO verify UI state (icons)
 	}
 
+	@SuppressWarnings("deprecation") // TODO
 	@Test public void testSelectionTypeChangeAtOnce() {
 		createItems(3);
 		db.setItemCategory(subItem(1), TEST_ITEM_CATEGORY);
@@ -185,6 +187,7 @@ public class ItemViewActivityTest_Selection {
 		return itemView.select(subItem(toSelect));
 	}
 
+	@SuppressWarnings("deprecation") // TODO
 	private void createItems(int count) {
 		assertThat(count, greaterThan(0));
 		for (int i = 1; i <= count; i++) {
@@ -192,6 +195,7 @@ public class ItemViewActivityTest_Selection {
 		}
 		itemView.refresh();
 	}
+
 	private static String subItem(int i) {
 		return TEST_SUBITEM + " " + i;
 	}

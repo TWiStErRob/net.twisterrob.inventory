@@ -17,7 +17,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
@@ -29,17 +28,14 @@ import static net.twisterrob.java.utils.CollectionTools.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Export.class})
 public class BackupActivityTest_ExportInternal {
-	private final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
-	private final TemporaryFolder tempInHomeFolder = new TemporaryFolder(Paths.getPhoneHome());
-	private final CheckExportedFiles files = new CheckExportedFiles();
-	private final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
-	private final BackupActivityActor backup = new BackupActivityActor();
 
-	@Rule public final RuleChain rules = RuleChain
-			.outerRule(activity)
-			.around(backupService)
-			.around(tempInHomeFolder)
-			.around(files);
+	@Rule(order = 1) public final ActivityTestRule<BackupActivity> activity =
+			new InventoryActivityRule<>(BackupActivity.class);
+	@Rule(order = 2) public final TestRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
+	@Rule(order = 3) public final TemporaryFolder tempInHomeFolder = new TemporaryFolder(Paths.getPhoneHome());
+	@Rule(order = 4) public final CheckExportedFiles files = new CheckExportedFiles();
+
+	private final BackupActivityActor backup = new BackupActivityActor();
 
 	@Before public void assertBackupActivityIsClean() {
 		backup.assertEmptyState();
@@ -152,4 +148,3 @@ public class BackupActivityTest_ExportInternal {
 		}
 	}
 }
-

@@ -24,24 +24,22 @@ import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
 @Category({On.Export.class})
 public class BackupActivityTest_ExportExternal {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_ExportExternal.class);
-	private final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
-	private final TestName name = new TestName();
-	@Rule public final RuleChain rules = RuleChain
-			.emptyRuleChain()
-			.around(name)
-			.around(activity)
-			.around(new BackupServiceInBackupActivityIdlingRule(activity))
-			.around(new TestWatcher() {
-				@Override protected void succeeded(Description description) {
-					// @After: if it succeeded let's check a few more things, but only if not failed
-					backup.assertIsInFront();
-					backup.assertEmptyState();
-				}
-				@Override protected void failed(Throwable e, Description description) {
-					// try to exit any external activities that may block the other tests from running
-					UiAutomatorExtensions.pressBackExternal();
-				}
-			});
+
+	@Rule(order = 1) public final TestName testName = new TestName();
+	@Rule(order = 2) public final ActivityTestRule<BackupActivity> activity =
+			new InventoryActivityRule<>(BackupActivity.class);
+	@Rule(order = 3) public final TestRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
+	@Rule(order = 4) public final TestRule sanityRule = new TestWatcher() {
+		@Override protected void succeeded(Description description) {
+			// @After: if it succeeded let's check a few more things, but only if not failed
+			backup.assertIsInFront();
+			backup.assertEmptyState();
+		}
+		@Override protected void failed(Throwable e, Description description) {
+			// try to exit any external activities that may block the other tests from running
+			UiAutomatorExtensions.pressBackExternal();
+		}
+	};
 
 	private final BackupActivityActor backup = new BackupActivityActor();
 
@@ -98,6 +96,6 @@ public class BackupActivityTest_ExportExternal {
 
 	private String generateFolderName() {
 		return String.format(Locale.ROOT, "%s.%s@%tFT%<tH-%<tM-%<tS",
-				getClass().getSimpleName(), name.getMethodName(), Calendar.getInstance());
+				getClass().getSimpleName(), testName.getMethodName(), Calendar.getInstance());
 	}
 }

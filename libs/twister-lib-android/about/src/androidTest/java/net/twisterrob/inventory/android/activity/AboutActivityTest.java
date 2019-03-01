@@ -44,6 +44,7 @@ public class AboutActivityTest {
 	}
 
 //	@Category(UseCase.InitialCondition.class)
+	@SuppressWarnings("deprecation")
 	@Test public void testAppVersionShown() {
 		about.assertTextExists(containsString(getPackageInfo().versionName));
 		about.assertTextExists(containsString(String.valueOf(getPackageInfo().versionCode)));

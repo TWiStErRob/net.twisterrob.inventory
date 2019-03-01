@@ -70,6 +70,7 @@ public /*static*/ abstract class ResourceTools {
 		}
 	}
 
+	// TODO consider requireResourceID aliases too
 	private static @AnyRes int getResourceID(@Nullable Context context,
 			@NonNull String resourceType, @NonNull String resourceName) {
 		int resID;

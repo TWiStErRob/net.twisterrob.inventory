@@ -2,7 +2,8 @@ package net.twisterrob.android.test;
 
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
-import android.support.annotation.ColorInt;
+import android.os.Build.*;
+import android.support.annotation.*;
 import android.text.Layout.Alignment;
 import android.text.*;
 
@@ -22,12 +23,26 @@ public class Helpers {
 		StaticLayout layout;
 		do {
 			paint.setTextSize(paint.getTextSize() - 1);
-			layout = new StaticLayout(text, paint, canvas.getWidth(), Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+			layout = renderText(text, paint, canvas.getWidth());
 		} while (bitmap.getHeight() < layout.getHeight());
 		canvas.save();
 		canvas.translate((canvas.getWidth() - layout.getWidth()) / 2, (canvas.getHeight() - layout.getHeight()) / 2);
 		layout.draw(canvas);
 		canvas.restore();
 		return bitmap;
+	}
+
+	@SuppressWarnings("deprecation")
+	private static @NonNull StaticLayout renderText(String text, TextPaint paint, int width) {
+		if (VERSION_CODES.M < VERSION.SDK_INT) {
+			return StaticLayout.Builder
+					.obtain(text, 0, text.length(), paint, width)
+					.setAlignment(Alignment.ALIGN_CENTER)
+					.setLineSpacing(0.0f, 1.0f)
+					.setIncludePad(false)
+					.build();
+		} else {
+			return new StaticLayout(text, paint, width, Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+		}
 	}
 }
