@@ -111,6 +111,11 @@ public class App extends BaseApp implements BaseComponent.Provider {
 			"CHECK constraint failed: Room (code 275)", // should be guarded by BaseEditFragment
 			"CHECK constraint failed: Item (code 275)", // should be guarded by BaseEditFragment
 			"CHECK constraint failed: List (code 275)", // not guarded when list added
+			// SDK Google Play x86_64 9.0 (28) 3.22.0
+			"CHECK constraint failed: Property (code 275 SQLITE_CONSTRAINT_CHECK)",
+			"CHECK constraint failed: Room (code 275 SQLITE_CONSTRAINT_CHECK)",
+			"CHECK constraint failed: Item (code 275 SQLITE_CONSTRAINT_CHECK)",
+			"CHECK constraint failed: List (code 275 SQLITE_CONSTRAINT_CHECK)",
 			// Galaxy S5 6.0.1 (23) 3.8.10.2
 			"CHECK constraint failed: List (code 275)\n"
 					+ "#################################################################\n"
@@ -136,6 +141,11 @@ public class App extends BaseApp implements BaseComponent.Provider {
 			"UNIQUE constraint failed: Room.property, Room.name (code 2067)",
 			"UNIQUE constraint failed: Item.parent, Item.name (code 2067)",
 			"UNIQUE constraint failed: List.name (code 2067)",
+			// SDK Google Play x86_64 9.0 (28) 3.22.0
+			"UNIQUE constraint failed: Property.name (code 2067 SQLITE_CONSTRAINT_UNIQUE)",
+			"UNIQUE constraint failed: Room.property, Room.name (code 2067 SQLITE_CONSTRAINT_UNIQUE)",
+			"UNIQUE constraint failed: Item.parent, Item.name (code 2067 SQLITE_CONSTRAINT_UNIQUE)",
+			"UNIQUE constraint failed: List.name (code 2067 SQLITE_CONSTRAINT_UNIQUE)",
 			// Galaxy S5 6.0.1 (23) 3.8.10.2
 			"UNIQUE constraint failed: Property.name (code 2067)\n"
 					+ "#################################################################\n"
