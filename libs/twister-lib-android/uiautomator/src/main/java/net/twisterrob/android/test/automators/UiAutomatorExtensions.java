@@ -7,7 +7,7 @@ import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
@@ -36,7 +36,7 @@ public class UiAutomatorExtensions {
 		return object.getText();
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
-	public static void setText(@IdResName String id, @RawResName String value) throws UiObjectNotFoundException {
+	public static void setText(@IdResName String id, String value) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().resourceId(id));
 		assertTrue("expected to set text", object.setText(value));
@@ -48,7 +48,7 @@ public class UiAutomatorExtensions {
 		assertTrue("expected to click and new window appear", object.clickAndWaitForNewWindow());
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
-	public static void clickOnLabel(@RawResName String label) throws UiObjectNotFoundException {
+	public static void clickOnLabel(String label) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().text(label));
 		assertTrue("expected to click and new window appear", object.clickAndWaitForNewWindow());
@@ -60,7 +60,7 @@ public class UiAutomatorExtensions {
 		assertTrue("expected to click", object.click());
 	}
 	@RequiresApi(UI_AUTOMATOR_VERSION)
-	public static void shortClickOnLabel(@RawResName String label) throws UiObjectNotFoundException {
+	public static void shortClickOnLabel(String label) throws UiObjectNotFoundException {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		UiObject object = device.findObject(new UiSelector().text(label));
 		assertTrue("expected to click", object.click());
@@ -74,13 +74,13 @@ public class UiAutomatorExtensions {
 	public static @IdResName String externalId(String packageName, @StringResName String resName) {
 		return packageName + ":id/" + resName;
 	}
-	public static @RawResName String externalString(String packageName, @StringResName String resName,
-			@RawResName String englishFallback)
+	public static String externalString(String packageName, @StringResName String resName,
+			String englishFallback)
 			throws NameNotFoundException {
 		Resources res = getContext().getPackageManager().getResourcesForApplication(packageName);
 		@StringRes int resId = res.getIdentifier(resName, "string", packageName);
 
-		@RawResName String resValue;
+		String resValue;
 		if (resId != 0) {
 			resValue = res.getString(resId);
 		} else {
@@ -112,18 +112,46 @@ public class UiAutomatorExtensions {
 		clickInExternalDialog(DialogMatchers.BUTTON_NEUTRAL);
 	}
 
-	@RequiresApi(api = VERSION_CODES.JELLY_BEAN)
+	@RequiresApi(VERSION_CODES.JELLY_BEAN)
 	public static void pressBackExternal() {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
 		assertTrue("expected to press Back button", device.pressBack());
 	}
 
-	@RequiresApi(api = VERSION_CODES.JELLY_BEAN)
+	@RequiresApi(VERSION_CODES.JELLY_BEAN)
+	public static String getCurrentAppPackageName() {
+		UiDevice device = UiDevice.getInstance(getInstrumentation());
+		return device.getCurrentPackageName();
+	}
+
+	@RequiresApi(VERSION_CODES.JELLY_BEAN)
 	public static void waitForAppToBeBackgrounded() {
 		final long timeout = TimeUnit.SECONDS.toMillis(10);
 
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		BySelector appPackage = By.pkg(getTargetContext().getPackageName());
+		BySelector appPackage = By.pkg(getTargetContext().getPackageName()).depth(0);
 		assertTrue("expected " + appPackage + " to disappear", device.wait(Until.gone(appPackage), timeout));
+	}
+
+	@RequiresApi(VERSION_CODES.JELLY_BEAN)
+	public static void waitForAppToBeForegrounded(@NonNull String packageName) {
+		final long timeout = TimeUnit.SECONDS.toMillis(10);
+
+		UiDevice device = UiDevice.getInstance(getInstrumentation());
+		BySelector appPackage = By.pkg(packageName).depth(0);
+		assertTrue("expected " + appPackage + " to appear", device.wait(Until.hasObject(appPackage), timeout));
+	}
+
+	/**
+	 * @param previousPackageName a saved value from {@link #getCurrentAppPackageName()} before an action was performed
+	 */
+	@RequiresApi(VERSION_CODES.JELLY_BEAN)
+	public static void waitForAnAppToBeForegrounded(@NonNull String previousPackageName) {
+		final long timeout = TimeUnit.SECONDS.toMillis(10);
+
+		UiDevice device = UiDevice.getInstance(getInstrumentation());
+		BySelector appPackage = By.pkg(previousPackageName).depth(0);
+		assertTrue("expected an app other than " + appPackage + " to appear",
+				device.wait(Until.gone(appPackage), timeout));
 	}
 }

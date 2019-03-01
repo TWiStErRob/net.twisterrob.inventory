@@ -17,7 +17,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
 import android.support.annotation.*;
-import android.support.test.uiautomator.*;
+import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.view.View;
 
 import static android.support.test.InstrumentationRegistry.*;
@@ -31,7 +31,7 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import net.twisterrob.android.test.automators.*;
+import net.twisterrob.android.test.automators.GoogleDriveAutomator;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
@@ -176,11 +176,8 @@ public class BackupActivityActor extends ActivityActor {
 
 		@RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 		public DriveBackupActor chooseDrive() throws UiObjectNotFoundException, NameNotFoundException {
-			// TODO refactor this as AndroidAutomator.chooseItem(saveToDrive())
-			// TODO handle the case when the chosen action is not on the first page of the chooser
-			clickOnLabel(saveToDrive());
-			// TODO make sure to let the chooser reorganize its items on 23+ (waitForIdle not enough)
 			DriveBackupActor drive = new DriveBackupActor();
+			drive.selectSaveToDriveFromChooser();
 			drive.assertDialogDisplayed();
 			return drive;
 		}
@@ -192,12 +189,36 @@ public class BackupActivityActor extends ActivityActor {
 		}
 	}
 
-	// FIXME handle Marshmallow permission dialog that comes up on first usage of Drive
 	@RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 	public static class DriveBackupActor {
 		private static final Logger LOG = LoggerFactory.getLogger(DriveBackupActor.class);
-		public static void assumeIsAvailable() {
+
+		public static void assumeIsAvailable() throws UiObjectNotFoundException, NameNotFoundException {
 			assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
+			try {
+				String previousPackageName = getCurrentAppPackageName();
+				launchApp(PACKAGE_GOOGLE_DRIVE);
+				waitForAnAppToBeForegrounded(previousPackageName);
+				assumeThat("Drive not logged in, cannot continue",
+						getCurrentAppPackageName(), not(PACKAGE_GOOGLE_SIGN_IN));
+				assumeThat(getCurrentAppPackageName(), is(PACKAGE_GOOGLE_DRIVE));
+				assumeThat("Drive didn't launch to its home screen", getActivityTitle(), is(myDrive()));
+			} finally {
+				// try to close whatever was launched
+				pressBackExternal();
+				assertThat(getCurrentAppPackageName(), is(getTargetContext().getPackageName()));
+			}
+		}
+
+		public void selectSaveToDriveFromChooser() throws UiObjectNotFoundException, NameNotFoundException {
+			// TODO refactor this as AndroidAutomator.chooseItem(saveToDrive())
+			// TODO handle the case when the chosen action is not on the first page of the chooser
+			clickOnLabel(saveToDrive());
+			allowPermissionsIfNeeded();
+			// at this point it can be "Upload to Drive" (Cancel, Setup Account)
+			// but assumeIsAvailable checked that Drive can be launched, so that shouldn't really happen
+			assertThat(getPositiveButtonLabel(), not(equalToIgnoringCase(setupAccount())));
+			// TODO make sure to let the chooser reorganize its items on 23+ (waitForIdle not enough)
 		}
 
 		public void assertDialogDisplayed() throws UiObjectNotFoundException, NameNotFoundException {
@@ -210,6 +231,7 @@ public class BackupActivityActor extends ActivityActor {
 
 		public void saveToAndroidTests(String folder) throws UiObjectNotFoundException, NameNotFoundException {
 			assumeThat(getText(dialogTitle()), is(saveToDrive()));
+			// TODO this looks like it should be multiple actors
 			clickOn(uploadFolder());
 			{
 				while (!myDrive().equals(getText(dialogTitle()))) {
