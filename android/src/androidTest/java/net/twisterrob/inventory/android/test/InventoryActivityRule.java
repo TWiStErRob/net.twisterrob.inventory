@@ -45,14 +45,22 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		return this;
 	}
 
+	// Note: with the base = foo.apply(base) pattern, these will be executed in reverse when evaluate() is called.
 	@Override public Statement apply(Statement base, Description description) {
+		// Only idle on drawer when there's an activity running inside ActivityTestRule.
 		base = DrawerIdlingResource.rule().apply(base, description);
 		base = super.apply(base, description);
+		// Make sure to check for DatabaseService outside the activity.
+		// The activity startup and hence beforeActivityLaunched() should be blocked until this is ready.
 		base = new IdlingResourceRule(new DatabaseServiceIdlingResource()).apply(base, description);
 		return base;
 	}
 
 	@Override protected void beforeActivityLaunched() {
+		// Wait for registered idling resources before continuing.
+		// In particular DatabaseServiceIdlingResource above needs to be waited for before we can delete the database.
+		// The database could already be initializing in the background because the App is already created before this.
+		waitForIdleSync();
 		reset();
 		setDefaults();
 		IdlingRegistry.getInstance().register(glideIdler);

@@ -8,7 +8,7 @@ import android.app.Activity;
 import android.content.*;
 import android.support.annotation.*;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.*;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
@@ -41,10 +41,14 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 		chatty = new ChattyLogCat();
 	}
 
+	// Note: with the base = foo.apply(base) pattern, these will be executed in reverse when evaluate() is called.
 	@Override public Statement apply(Statement base, Description description) {
+		// Inner of ActivityTestRule, because it needs to take a screenshot before a failure finishes the activity.
 		base = new ScreenshotFailure().apply(base, description);
+		// This needs to be right before the super call, so it is the immediate inner of ActivityTestRule.
 		base = new TestLogger().apply(base, description);
 		base = super.apply(base, description);
+		// Anything from above will be wrapped inside the name shortener so that all exceptions are cleaned.
 		//base = new PackageNameShortener().apply(base, description); // TODO make it available
 		return base;
 	}
