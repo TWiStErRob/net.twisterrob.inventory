@@ -11,6 +11,7 @@ buildscript {
 }
 apply plugin: 'net.twisterrob.root'
 apply plugin: 'net.twisterrob.quality'
+apply plugin: 'android-reporting'
 
 allprojects {
 	repositories {
@@ -81,6 +82,7 @@ task clean(type: Delete) {
 }
 
 // run `gradlew releaseCheck -x check -x connectedCheck` to just get the output of this
+// CONSIDER deprecate this against `gradlew connectedCheck --continue mergeAndroidReports` from 'android-reporting' 
 task releaseCheck() {
 	dependsOn getTasksByName('check', true)
 	dependsOn ':android:connectedCheck'
