@@ -97,8 +97,9 @@ public class InstrumentationExtensions {
 	public static <T> T callOnMainIfNecessary(final @NonNull Callable<T> resultProvider) {
 		if (Looper.myLooper() == Looper.getMainLooper()) {
 			return callNow(resultProvider);
+		} else {
+			return callOnMain(resultProvider);
 		}
-		return callOnMain(resultProvider);
 	}
 	@AnyThread
 	public static <T> T callOnMain(final @NonNull Callable<T> resultProvider) {
@@ -126,8 +127,9 @@ public class InstrumentationExtensions {
 	public static void runOnMainIfNecessary(final @NonNull Runnable action) {
 		if (Looper.myLooper() == Looper.getMainLooper()) {
 			action.run();
+		} else {
+			runOnMain(action);
 		}
-		runOnMain(action);
 	}
 	@AnyThread
 	public static void runOnMain(final @NonNull Runnable action) {
