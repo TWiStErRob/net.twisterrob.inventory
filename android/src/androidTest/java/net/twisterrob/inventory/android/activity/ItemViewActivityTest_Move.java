@@ -100,6 +100,8 @@ public class ItemViewActivityTest_Move {
 		long targetID = db.createItemInRoom(roomID, TEST_ITEM_OTHER);
 		db.assertHasItemInRoom(TEST_ROOM, TEST_ITEM_OTHER);
 
+		// getting it early, because ActivityTestRule.LifecycleCallback catches the moved activity and re-owns it
+		ItemViewActivity originalItemActivity = activity.getActivity();
 		MoveTargetActivityActor move = itemView.move();
 		move.fromRoom(TEST_ROOM);
 		move.selectItem(TEST_ITEM_OTHER);
@@ -109,7 +111,7 @@ public class ItemViewActivityTest_Move {
 		db.assertHasItemInItem(TEST_ITEM_OTHER, TEST_ITEM);
 		itemView.assertShowing(TEST_ITEM_OTHER);
 		itemView.hasItem(TEST_ITEM);
-		itemView.assertClosing(activity.getActivity());
+		itemView.assertClosing(originalItemActivity);
 	}
 	@Test public void testMoveToAnotherItemWithContents() {
 		db.createItem(itemID, TEST_SUBITEM);
@@ -152,6 +154,8 @@ public class ItemViewActivityTest_Move {
 		db.assertHasRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM_OTHER);
 		db.assertHasItemInRoom(TEST_ROOM_OTHER, TEST_ITEM_OTHER);
 
+		// REPORT getting it early, because ActivityTestRule.LifecycleCallback catches the moved activity and re-owns it
+		ItemViewActivity originalItemActivity = activity.getActivity();
 		MoveTargetActivityActor move = itemView.move();
 		move.fromRoom(TEST_ROOM);
 		move.upToProperty(TEST_PROPERTY);
@@ -165,7 +169,7 @@ public class ItemViewActivityTest_Move {
 		db.assertHasItemInItem(TEST_ITEM_OTHER, TEST_ITEM);
 		itemView.assertShowing(TEST_ITEM_OTHER);
 		itemView.hasItem(TEST_ITEM);
-		itemView.assertClosing(activity.getActivity());
+		itemView.assertClosing(originalItemActivity);
 	}
 
 	@Category({UseCase.Complex.class})
