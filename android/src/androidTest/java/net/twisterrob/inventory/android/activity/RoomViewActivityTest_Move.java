@@ -124,6 +124,8 @@ public class RoomViewActivityTest_Move {
 		db.assertHasRoomInProperty(TEST_PROPERTY, TEST_ROOM);
 		db.assertHasRoomInProperty(TEST_PROPERTY_OTHER, TEST_ROOM);
 
+		// CONSIDER waitForToastsToDisappear
+		// test continues with testMoveConfirmMessage even though there's a Toast displayed
 		moveDialog.checkToastMessageDuplicate(allOf(
 				containsString(TEST_ROOM),
 				containsString(TEST_PROPERTY_OTHER)

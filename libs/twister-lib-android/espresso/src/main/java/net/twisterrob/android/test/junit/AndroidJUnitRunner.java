@@ -154,7 +154,18 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 		private Throwable transformSpecialCases(Throwable originalError) {
 			Throwable transformed = originalError;
 			transformed = transformToPreserveStackTrace(transformed);
-			transformed = addInitialCallStack(transformed); // TODO when is this needed again?
+			// if an onView().check(...) ViewAssertion throws an exception the stack trace is (simplified):
+			// at ....SomeCustom$ViewAssertion.check()
+			// at android.support.test.espresso.ViewInteraction$2.call(ViewInteraction.java:274)
+			// at android.os.Looper.loop(Looper.java:135)
+			// at android.app.ActivityThread.main(ActivityThread.java:5221)
+			// which means without this transformation it's impossible to see where the check() was initiated from
+			// the only thing visible is the utility class that is the assertion implementation.
+			// This works because the exception is thrown back to the test running thread in:
+			// android.support.test.espresso.ViewInteraction.waitForAndHandleInteractionResults.
+			// TODEL This could be obsolete based on current state of DefaultHandler, test it.
+			// example: write a custom ViewAssertion inline and in override check() throw a RuntimeException
+			transformed = addInitialCallStack(transformed); // TODO when is this needed again? see above, and test!
 			return transformed;
 		}
 

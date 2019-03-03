@@ -5,6 +5,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import android.support.test.espresso.*;
+import android.support.test.filters.FlakyTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -78,6 +79,8 @@ public class MainActivityTest_Drawer {
 		}
 		main.assertHomeScreen();
 	}
+
+	@FlakyTest(detail = "when animations are enabled and the whole class is executed at once")
 	@Test public void testBackupAndBackDeep() {
 		{
 			PropertiesNavigator properties = main.openProperties();
@@ -99,6 +102,7 @@ public class MainActivityTest_Drawer {
 		main.assertHomeScreen();
 	}
 
+	@FlakyTest(detail = "when animations are enabled and the whole class is executed at once")
 	@Test public void testBackNavigation_Multiple() {
 		{
 			PropertiesNavigator properties = main.openProperties();
