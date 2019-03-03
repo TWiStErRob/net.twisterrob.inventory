@@ -28,7 +28,7 @@ public abstract class AsyncIdlingResource implements IdlingResource {
 	@Override public final boolean isIdleNow() {
 		boolean idle = isIdle();
 		if (verbose || !idle) {
-			LOG.trace("{}.isIdleNow: {}", getName(), idle);
+			LOG.trace("{}.isIdleNow: {}\n{}", getName(), idle, this);
 		}
 		if (idle) {
 			transitionToIdle(false);
@@ -45,7 +45,7 @@ public abstract class AsyncIdlingResource implements IdlingResource {
 
 	private void transitionToIdle(boolean log) {
 		if (log) {
-			LOG.trace("{}.onTransitionToIdle with {}", getName(), resourceCallback);
+			LOG.trace("{}.onTransitionToIdle with {}\n{}", getName(), resourceCallback, this);
 		}
 		if (resourceCallback != null) {
 			resourceCallback.onTransitionToIdle();

@@ -4,7 +4,7 @@ import java.util.*;
 
 import android.app.Activity;
 import android.os.*;
-import android.support.annotation.AnyThread;
+import android.support.annotation.*;
 import android.support.test.runner.lifecycle.*;
 
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
@@ -63,5 +63,18 @@ public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
 		for (Activity activity : InstrumentationExtensions.getAllActivities()) {
 			activity.finish();
 		}
+	}
+
+	@Override public @NonNull String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (activities.isEmpty()) {
+			sb.append("No activities");
+		} else {
+			for (Activity activity : activities) {
+				sb.append(activity.toString());
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
 	}
 }
