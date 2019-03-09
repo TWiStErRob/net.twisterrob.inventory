@@ -13,6 +13,7 @@ import static org.junit.Assume.*;
 import android.os.Build.*;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingResource.ResourceCallback;
+import android.support.test.filters.FlakyTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Toast;
@@ -50,6 +51,8 @@ public class ToastIdlingResourceTest {
 		}
 	}
 
+	@FlakyTest(detail = "Toast.show should be sync, but on API 28 somehow it gets async and isIdle will run before Toast.TN.show is called")
+	// Toast.show -> INotificationManager.enqueueToast -> record.callback.show -> Toast.TN.show
 	@Test public void testDetectsAToast() {
 		Toast toast = createToast("Toast");
 		assertTrue(isIdle());
@@ -57,6 +60,8 @@ public class ToastIdlingResourceTest {
 		assertFalse(isIdle());
 	}
 
+	@FlakyTest(detail = "Toast.show should be sync, but on API 28 somehow it gets async and isIdle will run before Toast.TN.show is called")
+	// Toast.show -> INotificationManager.enqueueToast -> record.callback.show -> Toast.TN.show
 	@Test public void testDetectsAToastWhenCancelled() {
 		Toast toast = createToast("Toast");
 		assertTrue(isIdle());
