@@ -82,7 +82,7 @@
 			android:name=".activity.data.MoveTargetActivity"
 			android:label="@string/action_move"
 			android:excludeFromRecents="true"
-			android:theme="@style/Theme.AppTheme.Dialog.NoTitle"
+			android:theme="@style/Theme.AppTheme.Dialog.Move"
 			/>
 		<activity
 			android:name=".activity.ListsActivity"

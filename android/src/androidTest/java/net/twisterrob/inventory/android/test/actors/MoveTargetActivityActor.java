@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.test.actors;
 import static org.hamcrest.Matchers.*;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.PluralsRes;
+import android.support.annotation.*;
 
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
@@ -12,10 +12,12 @@ import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.DialogMatchers;
+import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
+import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 public class MoveTargetActivityActor extends ActivityActor {
 	public MoveTargetActivityActor() {
@@ -42,6 +44,7 @@ public class MoveTargetActivityActor extends ActivityActor {
 		assertShowingItem(itemName);
 	}
 
+	@CheckResult
 	public MoveResultActor confirmSelection() {
 		onView(withId(DialogMatchers.BUTTON_POSITIVE)).perform(click());
 		return new MoveResultActor();
@@ -101,5 +104,10 @@ public class MoveTargetActivityActor extends ActivityActor {
 				.check(matches(isCompletelyDisplayed()))
 				.check(matches(withText(containsString(propertyName))))
 		;
+	}
+
+	public void assertUsableItemSizes() {
+		int px = ResourceTools.dipInt(getTargetContext(), 100);
+		onRecyclerItemExact(withParentIndex(0)).check(matches(withSize(greaterThan(px))));
 	}
 }

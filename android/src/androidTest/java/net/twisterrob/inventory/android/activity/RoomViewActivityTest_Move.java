@@ -15,7 +15,6 @@ import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
 import net.twisterrob.inventory.android.test.categories.*;
-import net.twisterrob.inventory.android.test.categories.UseCase.Error;
 
 import static net.twisterrob.inventory.android.content.Constants.*;
 
@@ -90,6 +89,17 @@ public class RoomViewActivityTest_Move {
 		propertyView.hasRoom(TEST_ROOM);
 	}
 
+	@Test public void testMoveHasGoodSize() {
+		MoveTargetActivityActor move = roomView.move();
+		move.assertUsableItemSizes();
+	}
+
+	@Test public void testMoveLandscapeHasGoodSize() {
+		MoveTargetActivityActor move = roomView.move();
+		move.rotate();
+		move.assertUsableItemSizes();
+	}
+
 	@Category({UseCase.Complex.class})
 	@Test public void testMoveWithContents() {
 		long itemID = db.createItemInRoom(roomID, TEST_ITEM);
@@ -110,7 +120,7 @@ public class RoomViewActivityTest_Move {
 		propertyView.hasRoom(TEST_ROOM);
 	}
 
-	@Category({Error.class, Op.ChecksMessage.class})
+	@Category({UseCase.Error.class, Op.ChecksMessage.class})
 	@Test public void testMoveAlreadyExists() {
 		@SuppressWarnings("unused")
 		long duplicateID = db.createRoom(TEST_PROPERTY_OTHER, TEST_ROOM);

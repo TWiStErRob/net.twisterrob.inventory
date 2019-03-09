@@ -113,6 +113,11 @@ public class AndroidMatchers {
 		return matchesPattern(formatSpecifier.matcher(format).replaceAll(".*?"));
 	}
 
+	// region View matchers
+	public static @NonNull Matcher<View> anyView() {
+		return any(View.class);
+	}
+
 	public static @NonNull Matcher<View> withErrorText(final Matcher<String> stringMatcher) {
 		return new BoundedMatcher<View, TextView>(TextView.class) {
 			@Override public void describeTo(final Description description) {
@@ -125,12 +130,28 @@ public class AndroidMatchers {
 		};
 	}
 
+	public static @NonNull Matcher<View> withWidth(@NonNull Matcher<Integer> widthMatcher) {
+		return new FeatureMatcher<View, Integer>(widthMatcher, "width of the view", "width") {
+			@Override protected Integer featureValueOf(View actual) {
+				return actual.getWidth();
+			}
+		};
+	}
+	public static @NonNull Matcher<View> withHeight(@NonNull Matcher<Integer> heightMatcher) {
+		return new FeatureMatcher<View, Integer>(heightMatcher, "height of the view", "height") {
+			@Override protected Integer featureValueOf(View actual) {
+				return actual.getHeight();
+			}
+		};
+	}
+	public static @NonNull Matcher<View> withSize(@NonNull Matcher<Integer> sizeMatcher) {
+		return allOf(withWidth(sizeMatcher), withHeight(sizeMatcher));
+	}
+	// endregion View matchers
+
 	public static @NonNull <T> Matcher<T> hasPropertyLite(
 			@NonNull String propertyName, @NonNull Matcher<?> valueMatcher) {
 		return HasPropertyWithValueLite.hasProperty(propertyName, valueMatcher);
-	}
-	public static @NonNull Matcher<View> anyView() {
-		return any(View.class);
 	}
 	public static @NonNull String stringRes(@StringRes int stringId) {
 		return getTargetContext().getResources().getString(stringId);
