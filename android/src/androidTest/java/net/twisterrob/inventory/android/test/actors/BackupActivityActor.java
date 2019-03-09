@@ -193,8 +193,12 @@ public class BackupActivityActor extends ActivityActor {
 	public static class DriveBackupActor {
 		private static final Logger LOG = LoggerFactory.getLogger(DriveBackupActor.class);
 
-		public static void assumeIsAvailable() throws UiObjectNotFoundException, NameNotFoundException {
+		public static void assumeDriveInstalled() {
 			assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
+		}
+
+		public static void assumeDriveFunctional() throws UiObjectNotFoundException, NameNotFoundException {
+			assumeDriveInstalled();
 			try {
 				String previousPackageName = getCurrentAppPackageName();
 				launchApp(PACKAGE_GOOGLE_DRIVE);

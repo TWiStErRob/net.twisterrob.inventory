@@ -1,7 +1,7 @@
 package net.twisterrob.android.test.matchers;
 
 import java.lang.reflect.Method;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.hamcrest.*;
@@ -68,6 +68,18 @@ public class AndroidMatchers {
 			@Override public void describeTo(Description description) {
 				description.appendText("Intent can be resolved with flags: ").appendValue(flags)
 				           .appendText(" to ").appendDescriptionOf(resolveInfoMatcher);
+			}
+		};
+	}
+	public static @NonNull Matcher<Intent> canBeResolved(final Matcher<? super List<ResolveInfo>> resolveInfoMatcher) {
+		return canBeResolved(0, resolveInfoMatcher);
+	}
+	public static @NonNull Matcher<Intent> canBeResolved(
+			final int flags, final Matcher<? super List<ResolveInfo>> resolveInfoMatcher) {
+		return new FeatureMatcher<Intent, List<ResolveInfo>>(resolveInfoMatcher,
+				"Intent resolves to activities", "resolved activities") {
+			@Override protected List<ResolveInfo> featureValueOf(Intent intent) {
+				return getTargetContext().getPackageManager().queryIntentActivities(intent, flags);
 			}
 		};
 	}

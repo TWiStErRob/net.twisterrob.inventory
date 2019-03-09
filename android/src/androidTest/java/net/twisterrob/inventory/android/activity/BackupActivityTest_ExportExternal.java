@@ -8,17 +8,23 @@ import org.junit.rules.*;
 import org.junit.runner.*;
 import org.slf4j.*;
 
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.junit.MatcherAssume.*;
+
+import android.content.Intent;
 import android.support.test.filters.*;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
+import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.*;
 import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
+import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 @Category({On.Export.class})
@@ -57,6 +63,8 @@ public class BackupActivityTest_ExportExternal {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, On.External.class})
 	@Test public void testCancelChooser() throws Exception {
+		assumeThat(new Intent(Intent.ACTION_SEND).setType(InventoryContract.Export.TYPE_BACKUP),
+				canBeResolved(hasSize(greaterThanOrEqualTo(2))));
 		backup
 				.exportExternal()
 				.continueToChooser()
@@ -66,7 +74,7 @@ public class BackupActivityTest_ExportExternal {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, On.External.class})
 	@Test public void testCancelDrive() throws Exception {
-		DriveBackupActor.assumeIsAvailable();
+		DriveBackupActor.assumeDriveFunctional();
 		backup
 				.exportExternal()
 				.continueToChooser()
@@ -78,7 +86,7 @@ public class BackupActivityTest_ExportExternal {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
 	@Test public void testSuccessfulFullExport() throws Exception {
-		DriveBackupActor.assumeIsAvailable();
+		DriveBackupActor.assumeDriveFunctional();
 		ExportExternalActor exportActor = backup.exportExternal();
 		DriveBackupActor drive = exportActor
 				.continueToChooser()
