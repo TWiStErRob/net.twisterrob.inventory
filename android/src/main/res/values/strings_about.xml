@@ -164,6 +164,15 @@
 		&LI;save the belonging
 		\nAs a shortcut: pressing the crop button while the preview is showing will take the picture and immediately crop it.
 
+		\n\n<b>Recents</b>
+		\nThe recents list on the home screen shows the most recently/frequently visited items.
+		It\'s not purely what was opened most recently, the list ordering also takes into account how often the item was opened.
+		For each item the Recents view shows:
+		&LI;the name of the item,
+		&LI;when the item was last accessed
+		&LI;how many times it was opened
+		This means that Recents works as an automatic favourites list and the most recently accessed item may not be on top.
+
 		\n\n\n<big><b>Actions</b></big>
 		
 		\n\n<b>Navigation</b>
