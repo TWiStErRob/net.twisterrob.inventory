@@ -128,6 +128,10 @@ public /*static*/ abstract class AndroidTools {
 	public static @Nullable View findActionBarSubTitle(@NonNull View root) {
 		return findActionBarItem(root, "action_bar_subtitle", "mSubtitleTextView");
 	}
+	/** @param root usually Activity.getWindow().getDecorView() or custom Toolbar */
+	public static @Nullable View findActionBarHome(@NonNull View root) {
+		return findActionBarItem(root, "NO_ID", "mNavButtonView");
+	}
 
 	private static @Nullable View findActionBarItem(@NonNull View root,
 			@NonNull String resourceName, @NonNull String toolbarFieldName) {

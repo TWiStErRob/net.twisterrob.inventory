@@ -15,9 +15,11 @@
 
 # net.twisterrob.android.utils.tools.AndroidTools.findActionBarTitle(android.view.View)
 # net.twisterrob.android.utils.tools.AndroidTools.findActionBarSubTitle(android.view.View)
+# net.twisterrob.android.utils.tools.AndroidTools.findActionBarHome(android.view.View)
 -keepclassmembernames class android.support.v7.widget.Toolbar {
 	android.widget.TextView mTitleTextView;
 	android.widget.TextView mSubtitleTextView;
+	android.widget.ImageButton mNavButtonView;
 }
 # net.twisterrob.android.utils.tools.AndroidTools.showActionBarOverflowIcons(android.view.Menu,boolean)
 -keepclassmembers class **.MenuBuilder {

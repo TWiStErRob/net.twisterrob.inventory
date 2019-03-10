@@ -7,7 +7,7 @@ import android.support.annotation.PluralsRes;
 import android.support.v7.app.ActionBar.LayoutParams;
 import android.text.TextUtils;
 import android.view.*;
-import android.view.View.OnClickListener;
+import android.view.View.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import android.widget.TextView.OnEditorActionListener;
@@ -34,6 +34,15 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 		super.onCreate(savedInstanceState);
 		setActionBarSubtitle(getTitle());
 		setActionBarTitle("...");
+		View homeButton = AndroidTools.findActionBarHome(getWindow().getDecorView());
+		if (homeButton != null) {
+			homeButton.setOnLongClickListener(new OnLongClickListener() {
+				@Override public boolean onLongClick(View v) {
+					supportNavigateUpTo(MainActivity.home());
+					return true;
+				}
+			});
+		}
 	}
 
 	@SuppressWarnings("UnusedReturnValue") // best effort to do the editing in title, so it's safe to ignore
