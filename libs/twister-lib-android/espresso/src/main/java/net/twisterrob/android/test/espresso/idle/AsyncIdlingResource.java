@@ -52,8 +52,23 @@ public abstract class AsyncIdlingResource implements IdlingResource {
 		}
 	}
 
+	/**
+	 * Synchronously calculate if the resource is idle yet.
+	 * If the resource is non-existent at this point, return {@code true}.
+	 */
 	@MainThread
 	protected abstract boolean isIdle();
+
+	/**
+	 * Add a "listener" to the resource that will be called asynchronously.
+	 * When the listener triggers and completes whatever it is doing:
+	 * <ul>
+	 * <li>remove the listener from the resource, to make sure no more notifications will be received</li>
+	 * <li>call {@link #transitionToIdle()}, to let Espresso know as fast as possible we're ready</li>
+	 * </ul>
+	 * Alternatively the listener can be removed in {@link #transitionToIdle()} as well,
+	 * in case it's possible to be called from multiple sources.
+	 */
 	@MainThread
 	protected abstract void waitForIdleAsync();
 
