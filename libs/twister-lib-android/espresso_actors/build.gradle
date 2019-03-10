@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-	implementation "net.twisterrob.lib:twister-lib-android-espresso"
+	api "net.twisterrob.lib:twister-lib-android-espresso"
 }
 
 android {

@@ -12,13 +12,21 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
+import android.support.test.uiautomator.UiObjectNotFoundException;
 
 import static android.support.test.InstrumentationRegistry.*;
+import static android.support.test.espresso.Espresso.*;
+import static android.support.test.espresso.action.ViewActions.*;
+import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
+import static android.support.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.capture_image.test_helpers.R;
 import net.twisterrob.inventory.android.test.actors.ActivityActor;
 import net.twisterrob.java.io.IOTools;
+
+import static net.twisterrob.android.test.automators.AndroidAutomator.*;
 
 public class CaptureImageActivityActor extends ActivityActor {
 
@@ -38,5 +46,31 @@ public class CaptureImageActivityActor extends ActivityActor {
 		intending(expectedIntent)
 				.respondWith(new ActivityResult(Activity.RESULT_OK, new Intent(null, resultFile)));
 		return expectedIntent;
+	}
+
+	public void allowPermissions() throws UiObjectNotFoundException {
+		allowPermissionsIfNeeded();
+	}
+
+	public void assertFlashOn() {
+		// TODO check drawable
+		onView(withId(R.id.btn_flash)).check(matches(isChecked()));
+	}
+
+	public void assertFlashOff() {
+		// TODO check drawable
+		onView(withId(R.id.btn_flash)).check(matches(isNotChecked()));
+	}
+
+	public void turnFlashOn() {
+		assertFlashOff();
+		onView(withId(R.id.btn_flash)).perform(click());
+		assertFlashOn();
+	}
+
+	public void turnFlashOff() {
+		assertFlashOn();
+		onView(withId(R.id.btn_flash)).perform(click());
+		assertFlashOff();
 	}
 }

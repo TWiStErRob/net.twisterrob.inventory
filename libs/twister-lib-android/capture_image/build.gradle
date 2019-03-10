@@ -14,7 +14,7 @@ dependencies {
 	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
 	//noinspection GradleCompatible exifinterface is newer than all the other ones, and quite independent
 	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
-	implementation ("com.android.support:exifinterface:25.1.0") {
+	implementation("com.android.support:exifinterface:25.1.0") {
 		// prevent conflicts due to version differences
 		transitive = false
 	}
@@ -23,14 +23,22 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-libs-android"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso"
-	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
-	androidTestImplementation "net.twisterrob.lib:twister-lib-android-capture_image-test_helpers"
-	androidTestImplementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+	androidTestImplementation("net.twisterrob.lib:twister-lib-android-capture_image-test_helpers") {
+		// TODO figure out how to have test-helpers with transitive dependencies, but no including self
+		// Program type already present: net.twisterrob.android.activity.CaptureImage*
+		// Caused by: com.android.builder.dexing.DexArchiveMergerException: Error while merging dex archives:
+		transitive = false
+		androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
+		androidTestImplementation "net.twisterrob.lib:twister-lib-android-uiautomator"
+		androidTestImplementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+	}
+	androidTestRuntimeOnly "net.twisterrob.lib:twister-lib-android-slf4j"
 }
 
 android {
 	defaultConfig {
 		minSdkVersion 10
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	lintOptions {
 		tasks.lint.enabled = false

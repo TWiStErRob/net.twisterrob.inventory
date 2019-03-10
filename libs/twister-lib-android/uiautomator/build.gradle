@@ -17,8 +17,6 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-espresso"
 	implementation "net.twisterrob.lib:twister-lib-android-annotations"
-	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
-	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
 }
 
 android {

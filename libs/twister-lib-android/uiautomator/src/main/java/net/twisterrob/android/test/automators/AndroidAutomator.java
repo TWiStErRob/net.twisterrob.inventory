@@ -20,7 +20,6 @@ public class AndroidAutomator {
 		return UiAutomatorExtensions.externalId(PACKAGE_PACKAGE_INSTALLER, "permission_allow_button");
 	}
 
-	@RequiresApi(api = VERSION_CODES.JELLY_BEAN)
 	public static void allowPermissionsIfNeeded() throws UiObjectNotFoundException {
 		if (VERSION_CODES.M <= VERSION.SDK_INT) {
 			UiDevice device = UiDevice.getInstance(getInstrumentation());
