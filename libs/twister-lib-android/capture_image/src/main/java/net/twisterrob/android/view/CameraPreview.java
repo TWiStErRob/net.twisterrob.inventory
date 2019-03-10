@@ -330,7 +330,15 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 				? android.hardware.Camera.Parameters.FLASH_MODE_ON
 				: android.hardware.Camera.Parameters.FLASH_MODE_OFF;
 		cameraHolder.params.setFlashMode(flashMode);
-		cameraHolder.camera.setParameters(cameraHolder.params);
+		try {
+			cameraHolder.camera.setParameters(cameraHolder.params);
+		} catch(RuntimeException ex) {
+			// TODO pre-check and hide flash button
+			// E/Camera2-Parameters: set: Requested flash mode "on" is not supported: No flash on device
+			// java.lang.RuntimeException: setParameters failed
+			//     at android.hardware.Camera.native_setParameters(Native Method)
+			//     at android.hardware.Camera.setParameters(Camera.java:2102)
+		}
 	}
 
 	@SuppressWarnings("deprecation")
