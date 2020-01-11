@@ -52,6 +52,8 @@ public class DialogMatchers {
 	}
 
 	/**
+	 * Note: not using {@link android.support.test.espresso.matcher.RootMatchers#isSystemAlertWindow()},
+	 * because that's broader than toast, but using the same mechanism to detect.
 	 * @see <a href="http://stackoverflow.com/a/33387980/253468">
 	 *     Checking toast message in android espresso</a>
 	 * @see <a href="http://baroqueworksdev.blogspot.hu/2015/03/how-to-check-toast-window-on-android.html">
