@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="4" by="lint 3.2.1" client="gradle" variant="all" version="3.2.1">
+<issues format="5" by="lint 3.4.2" client="gradle" variant="all" version="3.4.2">
 
     <issue
         id="NewApi"
-        message="Call requires API level 24 (current min is 9): new java.lang.Exception"
+        message="Call requires API level 24 (current min is 9): `new java.lang.Exception`"
         errorLine1="  super(message, cause, enableSuppression, writableStackTrace);"
         errorLine2="  ~~~~~">
         <location
@@ -14,7 +14,7 @@
 
     <issue
         id="NewApi"
-        message="Call requires API level 24 (current min is 9): new java.lang.Error"
+        message="Call requires API level 24 (current min is 9): `new java.lang.Error`"
         errorLine1="  super(message, cause, enableSuppression, writableStackTrace);"
         errorLine2="  ~~~~~">
         <location
@@ -25,7 +25,7 @@
 
     <issue
         id="NewApi"
-        message="Call requires API level 24 (current min is 9): new java.lang.RuntimeException"
+        message="Call requires API level 24 (current min is 9): `new java.lang.RuntimeException`"
         errorLine1="  super(message, cause, enableSuppression, writableStackTrace);"
         errorLine2="  ~~~~~">
         <location

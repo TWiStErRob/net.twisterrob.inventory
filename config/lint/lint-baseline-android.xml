@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="4" by="lint 3.2.1" client="gradle" variant="all" version="3.2.1">
+<issues format="5" by="lint 3.4.2" client="gradle" variant="all" version="3.4.2">
 
     <issue
         id="StaticFieldLeak"
-        message="This AsyncTask class should be static or leaks might occur (net.twisterrob.inventory.android.activity.MainActivity.RefreshInventorySizeTask)"
+        message="This `AsyncTask` class should be static or leaks might occur (net.twisterrob.inventory.android.activity.MainActivity.RefreshInventorySizeTask)"
         errorLine1=" private class RefreshInventorySizeTask extends AsyncTask&lt;Void, Void, Boolean> {"
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -14,7 +14,7 @@
 
     <issue
         id="StaticFieldLeak"
-        message="This AsyncTask class should be static or leaks might occur (net.twisterrob.inventory.android.activity.MainActivity.PopulateSampleInventoryTask)"
+        message="This `AsyncTask` class should be static or leaks might occur (net.twisterrob.inventory.android.activity.MainActivity.PopulateSampleInventoryTask)"
         errorLine1=" private class PopulateSampleInventoryTask extends AsyncTask&lt;Void, Void, Boolean> {"
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
