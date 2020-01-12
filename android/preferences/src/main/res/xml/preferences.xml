@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- STOPSHIP extract PreferenceCategory heading as @string/ -->
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:key="root_screen"
 	>
-	<PreferenceCategory android:title="Preferences">
+	<PreferenceCategory android:title="@string/pref_group_preferences">
 		<ListPreference
 			android:key="@string/pref_defaultViewPage"
 			android:title="@string/pref_defaultViewPage_title"
@@ -31,7 +30,7 @@
 			/>
 	</PreferenceCategory>
 
-	<PreferenceCategory android:title="Links">
+	<PreferenceCategory android:title="@string/pref_group_links">
 		<Preference
 			android:order="1"
 			android:title="@string/pref_app_in_settings_title"
@@ -88,7 +87,7 @@
 		</Preference>
 	</PreferenceCategory>
 
-	<PreferenceCategory android:title="Advanced">
+	<PreferenceCategory android:title="@string/pref_group_advanced">
 		<net.twisterrob.android.view.NumberPickerPreference
 			android:key="@string/pref_sunburstIgnoreLevel"
 			android:title="@string/pref_sunburstIgnoreLevel_title"
@@ -120,7 +119,7 @@
 	</PreferenceCategory>
 
 	<net.twisterrob.android.content.pref.InvisiblePreferences
-		android:title="Internals"
+		android:title="@string/pref_group_internal"
 		android:dependency="root_screen">
 		<net.twisterrob.android.content.pref.ValuePreference
 			android:key="@string/pref_showWelcome"
