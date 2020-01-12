@@ -62,7 +62,6 @@ android {
 		targetSdkVersion 19
 		applicationId 'net.twisterrob.inventory'
 		version {
-			versionFile = null
 			major = 1
 			minor = 1
 			patch = 3
@@ -131,11 +130,11 @@ subprojects { project ->
 android.testVariants.all { com.android.build.gradle.api.TestVariant test ->
 	def grantPermissions = project.task(type: Exec, "grant${test.name.capitalize()}Permissions") {
 		enabled = false // TOFIX figure out a way to run this at the correct time
-		mustRunAfter test.install // not dependsOn, because that wouldn't allow running the task by itself
+		mustRunAfter(test.installProvider) // not dependsOn, because that wouldn't allow running the task by itself
 		def permission = 'android.permission.SET_ANIMATION_SCALE'
 		commandLine "adb shell pm grant ${test./*testedVariant.*/ applicationId} ${permission}".split(' ')
 	}
-	test.connectedInstrumentTest.dependsOn grantPermissions
+	test.connectedInstrumentTestProvider.configure { it.dependsOn(grantPermissions) }
 }
 
 apply from: "${rootDir}/gradle/upgradeTest.gradle"

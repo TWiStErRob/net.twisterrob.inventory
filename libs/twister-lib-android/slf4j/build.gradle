@@ -29,11 +29,10 @@ task jar(type: Jar, dependsOn: 'assembleRelease') {
 }
 afterEvaluate {
 	com.android.build.gradle.LibraryExtension android = project.android
-	def dirs = android
+	android
 			.libraryVariants
 			.findAll { it.buildType.name == android.buildTypes.release.name }
-			.collect { it.javaCompiler.destinationDir }
-	tasks.jar.from files(dirs)
+			.each { tasks.jar.from(it.javaCompileProvider) }
 }
 artifacts {
 	// reference as dependencies { runtimeOnly project(path: ':twister-lib-android-slf4j', configuration: 'jar') }

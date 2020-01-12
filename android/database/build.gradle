@@ -34,7 +34,7 @@ databaseEntities {
 	}
 }
 android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant variant ->
-	variant.mergeAssets.dependsOn tasks.generateDataBase
+	variant.mergeAssetsProvider.configure { it.dependsOn(tasks.generateDataBase) }
 }
 
 task testDatabase(type: Exec, dependsOn: tasks.generateDataBase) {
