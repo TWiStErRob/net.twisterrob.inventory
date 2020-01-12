@@ -17,6 +17,8 @@ import android.database.Cursor;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.TestIgnoreApp;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -49,7 +51,7 @@ public class DatabaseTest_Images extends RobolectricTestBase {
 	}
 
 	@Before public void setUp() {
-		database = new Database(RuntimeEnvironment.application);
+		database = new Database(ApplicationProvider.getApplicationContext());
 		originalPolicy = StrictMode.allowThreadDiskWrites();
 		database.getWritableDatabase();
 		belonging.db = database;

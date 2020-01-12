@@ -29,6 +29,12 @@ allprojects {
 		it.resolutionStrategy.failOnVersionConflict()
 	}
 
+	project.plugins.withId("com.android.application") {
+		android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = false
+	}
+	project.plugins.withId("com.android.library") {
+		android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = false
+	}
 	tasks.withType(JavaCompile) {
 		it.options.compilerArgs += [
 				// enable all warnings

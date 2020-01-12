@@ -10,7 +10,6 @@ import org.robolectric.shadows.ShadowLog;
 
 import android.os.Build.VERSION_CODES;
 
-import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.test.PackageNameShortener;
 
 /**
@@ -19,12 +18,12 @@ import net.twisterrob.test.PackageNameShortener;
  * You can use Powermock together with Robolectric.
  *
  * @see <a href="https://github.com/robolectric/robolectric/wiki/Using-PowerMock">Using PowerMock</a>
- * @see org.robolectric.RuntimeEnvironment#application
+ * @see androidx.test.core.app.ApplicationProvider#getApplicationContext
  */
 @RunWith(RobolectricTestRunner.class)
 //@RunWith(PowerMockRunner.class)
 //@PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = {VERSION_CODES.JELLY_BEAN}, shadows = {ShadowLog.class})
+@Config(sdk = {VERSION_CODES.JELLY_BEAN}, shadows = {ShadowLog.class})
 //@PowerMockIgnore({"org.mockito.*", "org.powermock.*", "org.robolectric.*", "android.*"})
 public abstract class RobolectricTestBase {
 	@Rule public final MockitoRule mockito = MockitoJUnit.rule();

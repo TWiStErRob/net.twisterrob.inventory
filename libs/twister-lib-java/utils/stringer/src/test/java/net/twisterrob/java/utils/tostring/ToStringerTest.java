@@ -26,7 +26,7 @@ public class ToStringerTest {
 		assertEquals("(Object)value", toString.toString());
 		reset((Object)stringer);
 		assertEquals("(Object)value", toString.toString());
-		verifyZeroInteractions(stringer);
+		verifyNoInteractions(stringer);
 	}
 
 	@Test public void testRawProperty_Single() {

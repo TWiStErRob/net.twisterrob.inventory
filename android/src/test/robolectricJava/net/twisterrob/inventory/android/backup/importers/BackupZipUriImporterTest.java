@@ -52,7 +52,7 @@ public class BackupZipUriImporterTest extends RobolectricTestBase {
 		importer.importFrom(input);
 
 		verify(fileImporter).importFrom(argThat(pointsTo(FILE)));
-		verifyZeroInteractions(streamImporter);
+		verifyNoInteractions(streamImporter);
 	}
 
 	@Test public void testImportFromNonFileCallsStreamImporter() throws Exception {
@@ -61,7 +61,7 @@ public class BackupZipUriImporterTest extends RobolectricTestBase {
 		importer.importFrom(NON_FILE);
 
 		verify(streamImporter).importFrom(isA(InputStream.class));
-		verifyZeroInteractions(fileImporter);
+		verifyNoInteractions(fileImporter);
 	}
 
 	@Test public void testImportFromFileFails() throws Exception {

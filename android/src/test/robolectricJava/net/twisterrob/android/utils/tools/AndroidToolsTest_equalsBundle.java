@@ -2,13 +2,14 @@ package net.twisterrob.android.utils.tools;
 
 import org.hamcrest.*;
 import org.junit.*;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 import android.os.Bundle;
+
+import androidx.test.core.app.ApplicationProvider;
 
 import net.twisterrob.android.utils.tostring.stringers.AndroidStringerRepo;
 import net.twisterrob.inventory.android.TestIgnoreApp;
@@ -21,7 +22,7 @@ import static net.twisterrob.test.android.BundleFactory.*;
 public class AndroidToolsTest_equalsBundle extends RobolectricTestBase {
 	@Before public void initializeStringer() {
 		StringerRepo.INSTANCE.initDefaults();
-		AndroidStringerRepo.init(StringerRepo.INSTANCE, RuntimeEnvironment.application);
+		AndroidStringerRepo.init(StringerRepo.INSTANCE, ApplicationProvider.getApplicationContext());
 	}
 
 	@After public void cleanupStringer() {
