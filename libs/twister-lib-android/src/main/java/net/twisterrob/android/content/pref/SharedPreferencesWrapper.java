@@ -78,7 +78,9 @@ public class SharedPreferencesWrapper implements SharedPreferences {
 
 	protected void firePreferenceChanged(
 			SharedPreferences sharedPreferences, String key, OnSharedPreferenceChangeListener listener) {
-		// STOPSHIP is this intentionally ignoring param?
+		if (wrapped != sharedPreferences) {
+			throw new IllegalStateException("Should be listening for events from wrapped.");
+		}
 		listener.onSharedPreferenceChanged(this, key);
 	}
 
