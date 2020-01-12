@@ -43,6 +43,13 @@ public class AndroidAutomator {
 	}
 
 	@RequiresApi(UiAutomatorExtensions.UI_AUTOMATOR_VERSION)
+	public static void launchAppAndWait(@NonNull String packageName) {
+		String previousPackageName = getCurrentAppPackageName();
+		launchApp(packageName);
+		waitForAnAppToBeForegrounded(previousPackageName);
+	}
+
+	@RequiresApi(UiAutomatorExtensions.UI_AUTOMATOR_VERSION)
 	public static String getPositiveButtonLabel() throws UiObjectNotFoundException {
 		return getText(UiAutomatorExtensions.androidId(DialogMatchers.BUTTON_POSITIVE));
 	}

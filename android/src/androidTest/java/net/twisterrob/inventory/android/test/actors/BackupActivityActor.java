@@ -202,9 +202,7 @@ public class BackupActivityActor extends ActivityActor {
 		public static void assumeDriveFunctional() throws NameNotFoundException {
 			assumeDriveInstalled();
 			try {
-				String previousPackageName = getCurrentAppPackageName();
-				launchApp(PACKAGE_GOOGLE_DRIVE);
-				waitForAnAppToBeForegrounded(previousPackageName);
+				launchAppAndWait(PACKAGE_GOOGLE_DRIVE);
 				assumeThat("Drive not logged in, cannot continue",
 						getCurrentAppPackageName(), not(PACKAGE_GOOGLE_SIGN_IN));
 				assumeThat("Drive didn't launch properly",
