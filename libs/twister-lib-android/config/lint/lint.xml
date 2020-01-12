@@ -14,6 +14,10 @@
 		<ignore path="src/main/res/values/strings_about.xml" />
 		<ignore regexp="R\.(.+)\.menu_widget_(.+)" />
 	</issue>
+	<issue id="DuplicateStrings">
+		<!-- Ignore duplicate strings in .gradle\caches\transforms-2\files-2.1\...\res\values-*\*.xml -->
+		<ignore path="*/caches/transforms-*/files-*" />
+	</issue>
 	<issue id="GradleDependency">
 		<!-- I'm not a free tester, leave me alone -->
 		<ignore regexp="A newer version of com.android.support.*-alpha" />

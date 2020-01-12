@@ -9,6 +9,8 @@
 	<issue id="MissingTranslation" severity="ignore" />
 	<!-- FIXME re-check when it's really translated -->
 	<issue id="ExtraTranslation" severity="ignore" />
+	<!-- FIXME re-check when it's really translated -->
+	<issue id="DuplicateStrings" severity="ignore" />
 	<!-- TODEL review later -->
 	<issue id="Overdraw" severity="ignore" />
 	<issue id="UnusedResources">
