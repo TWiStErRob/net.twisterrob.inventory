@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.zip.*;
 
 import org.hamcrest.Matcher;
+import org.junit.AssumptionViolatedException;
 import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
@@ -24,8 +25,8 @@ import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.contrib.RecyclerViewActions.*;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
+import static android.support.test.espresso.contrib.RecyclerViewActions.*;
 import static android.support.test.espresso.intent.Intents.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.RootMatchers.*;
@@ -36,6 +37,7 @@ import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BackupActivity;
+import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.android.test.automators.AndroidAutomator.*;
 import static net.twisterrob.android.test.automators.GoogleDriveAutomator.*;
@@ -197,7 +199,7 @@ public class BackupActivityActor extends ActivityActor {
 			assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
 		}
 
-		public static void assumeDriveFunctional() throws UiObjectNotFoundException, NameNotFoundException {
+		public static void assumeDriveFunctional() throws NameNotFoundException {
 			assumeDriveInstalled();
 			try {
 				String previousPackageName = getCurrentAppPackageName();
@@ -205,13 +207,31 @@ public class BackupActivityActor extends ActivityActor {
 				waitForAnAppToBeForegrounded(previousPackageName);
 				assumeThat("Drive not logged in, cannot continue",
 						getCurrentAppPackageName(), not(PACKAGE_GOOGLE_SIGN_IN));
-				assumeThat(getCurrentAppPackageName(), is(PACKAGE_GOOGLE_DRIVE));
-				assumeThat("Drive didn't launch to its home screen", getActivityTitle(), is(myDrive()));
-			} finally {
-				// try to close whatever was launched
-				pressBackExternal();
-				assertThat(getCurrentAppPackageName(), is(getTargetContext().getPackageName()));
+				assumeThat("Drive didn't launch properly",
+						getCurrentAppPackageName(), is(PACKAGE_GOOGLE_DRIVE));
+				try {
+					assumeThat("Drive didn't launch to its home screen",
+							getActivityTitle(), is(myDrive()));
+				} catch (UiObjectNotFoundException ex) {
+					throw new AssumptionViolatedException(
+							"Drive didn't launch to a screen with a title", ex);
+				}
+			} catch (Throwable ex) {
+				// closing logic is duplicated, because it needs to not hide the error in try { ... }
+				try {
+					// try to close whatever was launched
+					pressBackExternal();
+					assertThat(getCurrentAppPackageName(), is(getTargetContext().getPackageName()));
+				} catch (Throwable failEx) {
+					//noinspection ThrowableNotThrown but used to set cause
+					ObjectTools.getRootCause(failEx).initCause(ex);
+					throw failEx;
+				}
+				throw ex;
 			}
+			// try to close whatever was launched
+			pressBackExternal();
+			assertThat(getCurrentAppPackageName(), is(getTargetContext().getPackageName()));
 		}
 
 		public void selectSaveToDriveFromChooser() throws UiObjectNotFoundException, NameNotFoundException {

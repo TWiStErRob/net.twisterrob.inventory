@@ -21,6 +21,13 @@ public class ObjectTools {
 		return sw.toString();
 	}
 
+	public static @Nonnull Throwable getRootCause(@Nonnull Throwable t) {
+		while(t.getCause() != null) {
+			t = t.getCause();
+		}
+		return t;
+	}
+
 	/**
 	 * Null-safe equals.
 	 * @see java.util.Objects#equals(Object, Object)
