@@ -2,7 +2,6 @@ buildscript {
 	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
 	dependencies {
 		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-		//noinspection GradleDynamicVersion
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
 	}
 }

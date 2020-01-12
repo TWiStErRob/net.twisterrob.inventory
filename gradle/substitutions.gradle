@@ -47,6 +47,32 @@ def configAndroid = {
 				}
 			}
 		}
+		all { config ->
+			if (!config.name.contains("AndroidTest")) return
+			config.resolutionStrategy {
+				dependencySubstitution {
+					force 'net.bytebuddy:byte-buddy:1.8.22' // otherwise RuntimeException at ClassVisitor.visitModule
+					force 'net.bytebuddy:byte-buddy-agent:1.8.22' // otherwise RuntimeException at ClassVisitor.visitModule
+					all { DependencySubstitution dep ->
+						if (dep.requested instanceof ModuleComponentSelector
+								&& dep.requested.module == 'guava'
+								&& dep.requested.group == 'com.google.guava') {
+							// need to use the Android dependency, otherwise Dex/R8/Jetifier fails
+							def androidVersion = dep.requested.version.
+									replace("-jre", "-android")
+							dep.useTarget("com.google.guava:guava:${androidVersion}")
+						}
+						if (dep.requested instanceof ModuleComponentSelector
+								&& dep.requested.module == 'mockito-core'
+								&& dep.requested.group == 'org.mockito') {
+							// need to use the Android dependency, otherwise Dex/R8/Jetifier fails
+							// need to use the Android dependency, otherwise wouldn't work at runtime
+							dep.useTarget("org.mockito:mockito-android:${dep.requested.version}")
+						}
+					}
+				}
+			}
+		}
 	}
 }
 plugins.withId('com.android.application', configAndroid)
