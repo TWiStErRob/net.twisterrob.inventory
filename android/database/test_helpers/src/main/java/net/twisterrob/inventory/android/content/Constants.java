@@ -5,6 +5,7 @@ import android.support.annotation.*;
 
 import net.twisterrob.inventory.android.data.R;
 
+@VisibleForTesting
 public interface Constants {
 	String TEST_PROPERTY = "Test Property";
 	String TEST_PROPERTY_OTHER = TEST_PROPERTY + " Other";

@@ -4,14 +4,13 @@ import java.util.*;
 
 import org.hamcrest.*;
 
-import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.support.annotation.*;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.database.test_helpers.R;
 
-@SuppressLint("VisibleForTests")
+@VisibleForTesting
 // TODO refactor to merge with DataBaseActor
 public class DatabaseMatchers {
 	public static @NonNull Matcher<? super Database> countImages(final Matcher<? super Long> countMatcher) {
