@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="query_image_count" translatable="false"><![CDATA["
+	<string name="query_image_count" translatable="false">"<![CDATA[
 		select count(*) from Image;
-	"]]></string>
-	<string name="query_property_by_name" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property_by_name" translatable="false">"<![CDATA[
 		select _id from Property where name = ?;
-	"]]></string>
-	<string name="query_property_type_by_name" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property_type_by_name" translatable="false">"<![CDATA[
 		select _id from PropertyType where name = ?;
-	"]]></string>
-	<string name="query_property_exists_by_name" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property_exists_by_name" translatable="false">"<![CDATA[
 		select 1 from Property where name = ?;
-	"]]></string>
-	<string name="query_room_by_name" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_by_name" translatable="false">"<![CDATA[
 		select _id from Room where name = ?;
-	"]]></string>
-	<string name="query_room_type_by_name" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_type_by_name" translatable="false">"<![CDATA[
 		select _id from RoomType where name = ?;
-	"]]></string>
-	<string name="query_room_exists_by_name" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_exists_by_name" translatable="false">"<![CDATA[
 		select 1 from Room where name = ?;
-	"]]></string>
-	<string name="query_room_exists_by_property" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_exists_by_property" translatable="false">"<![CDATA[
 		select 1 from Room r join Property p on r.property = p._id where p.name = ? and r.name = ?;
-	"]]></string>
-	<string name="query_item_by_name" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_by_name" translatable="false">"<![CDATA[
 		select _id from Item where name = ?;
-	"]]></string>
-	<string name="query_category_by_name" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_category_by_name" translatable="false">"<![CDATA[
 		select _id from Category where name = ?;
-	"]]></string>
-	<string name="query_item_exists_by_name" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_exists_by_name" translatable="false">"<![CDATA[
 		select 1 from Item where name = ?;
-	"]]></string>
-	<string name="query_item_exists_by_parent" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_exists_by_parent" translatable="false">"<![CDATA[
 		select 1 from Item i join Item p on i.parent = p._id where p.name = ? and i.name = ?;
-	"]]></string>
-	<string name="query_item_exists_by_room" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_exists_by_room" translatable="false">"<![CDATA[
 		select 1 from Item i join Room r on i.parent = r.root where r.name = ? and i.name = ?;
-	"]]></string>
-	<string name="query_item_parent" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_parent" translatable="false">"<![CDATA[
 		select ifNULL('room ' || r.name, 'item ' || p.name) as parent
 		from      Item i
 		join      Item p on p._id = i.parent
 		left join Room r on r.root = p._id
 		where i.name = ?;
-	"]]></string>
-	<string name="query_room_parent" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_parent" translatable="false">"<![CDATA[
 		select 'property ' || p.name as parent
 		from Room     r
 		join Property p on p._id = r.property
 		where r.name = ?;
-	"]]></string>
+	]]>"</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
            tools:ignore="TypographyDashes,TypographyQuotes">
-	<string name="query_properties" translatable="false"><![CDATA["
+	<string name="query_properties" translatable="false">"<![CDATA[
 		select
 			'property'                                        as type,
 			p._id                                             as _id,
@@ -16,8 +16,8 @@
 		join PropertyTypeKind ptk ON pt.kind = ptk._id
 		left join Image       im  ON p.image = im._id
 		order by p.name COLLATE NOCASE
-	"]]></string>
-	<string name="query_property" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property" translatable="false">"<![CDATA[
 		select
 			'property'                                        as type,
 			p._id                                             as _id,
@@ -35,8 +35,8 @@
 		join PropertyTypeKind ptk ON pt.kind = ptk._id
 		left join Image       im  ON p.image = im._id
 		where p._id = ?
-	"]]></string>
-	<string name="query_property_types" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property_types" translatable="false">"<![CDATA[
 			select
 				ptk._id                                 as kind,
 				CASE WHEN pt._id == 0 THEN 1 ELSE 0 END as strong,
@@ -61,10 +61,10 @@
 			from PropertyTypeKind ptk
 			where ptk._id <> 0
 		order by kind, _id
-	"]]></string>
+	]]>"</string>
 
 
-	<string name="query_room_types" translatable="false"><![CDATA["
+	<string name="query_room_types" translatable="false">"<![CDATA[
 			select
 				rtk._id                                 as kind,
 				CASE WHEN rt._id == 0 THEN 1 ELSE 0 END as strong,
@@ -89,8 +89,8 @@
 			from RoomTypeKind rtk
 			where rtk._id <> 0
 		order by kind, _id
-	"]]></string>
-	<string name="query_rooms" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_rooms" translatable="false">"<![CDATA[
 		select
 			'room'                                           as type,
 			r._id                                            as _id,
@@ -110,8 +110,8 @@
 		left join Image   im  ON r.image = im._id
 		where p._id = ? or ? = 'null'
 		order by r.name COLLATE NOCASE
-	"]]></string>
-	<string name="query_room" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room" translatable="false">"<![CDATA[
 		select
 			'room'                                           as type,
 			r._id                                            as _id,
@@ -132,9 +132,9 @@
 		join Property     p   ON r.property = p._id
 		left join Image   im  ON r.image = im._id
 		where r._id = ?
-	"]]></string>
+	]]>"</string>
 
-	<string name="query_categories_all" translatable="false"><![CDATA["
+	<string name="query_categories_all" translatable="false">"<![CDATA[
 		select
 			'category'        as type,
 			ct._id            as _id,
@@ -149,9 +149,9 @@
 		from Category_Tree ct
 		where ct._id <> -1 -- don't return category_internal
 		order by ct._id
-	"]]></string>
+	]]>"</string>
 
-	<string name="query_item_categories" translatable="false"><![CDATA["
+	<string name="query_item_categories" translatable="false">"<![CDATA[
 		select
 			'category'     as type,
 			ct._id         as _id,
@@ -191,9 +191,9 @@
 --		join Category_Name_Cache cnc ON cnc.key = ct.name
 		where c._id = ? and ct._id <> -1 -- don't return category_internal
 		order by _id, level
-	"]]></string>
+	]]>"</string>
 	<!-- CONSIDER rewrite with one argument and use it for by_room -->
-	<string name="query_items_by_item" translatable="false" tools:ignore="Typos"><![CDATA["
+	<string name="query_items_by_item" translatable="false" tools:ignore="Typos">"<![CDATA[
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
@@ -228,8 +228,8 @@
 			or i.parent in -- grandchildren
 				(select _id from Item where parent = ? and category = 1 /* category_group */)
 		order by g.name COLLATE NOCASE, not [group], i.category <> 1, name COLLATE NOCASE
-	"]]></string>
-	<string name="query_item" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item" translatable="false">"<![CDATA[
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
@@ -271,8 +271,8 @@
 		) as      Path
 		where i._id = ?
 		group by i._id -- without this group_concat forces an empty row with all NULLs when Item doesn't exist
-	"]]></string>
-	<string name="query_items" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_items" translatable="false">"<![CDATA[
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
@@ -288,9 +288,9 @@
 		left join Image im ON i.image = im._id
 		where c._id <> -1 -- don't return category_internal items
 		order by i.name COLLATE NOCASE
-	"]]></string>
+	]]>"</string>
 
-	<string name="query_items_by_category" translatable="false"><![CDATA["
+	<string name="query_items_by_category" translatable="false">"<![CDATA[
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
@@ -306,8 +306,8 @@
 		left join Image im ON i.image = im._id
 		where i.category = ?
 		order by i.name COLLATE NOCASE
-	"]]></string>
-	<string name="query_items_in_category" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_items_in_category" translatable="false">"<![CDATA[
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
@@ -324,13 +324,13 @@
 		left join Image          im ON i.image = im._id
 		where cd.category = ?
 		order by i.name COLLATE NOCASE
-	"]]></string>
-	<string name="query_item_parents" formatted="false" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_parents" formatted="false" translatable="false">"<![CDATA[
 		-- Tried lifting the Image left join outside,
 		-- but then the inner queries became full table scans
 		select * from (
 			-- Item from tree
-			select
+			SELECT
 					n.item                              as item,
 					n.level + 2                         as level,
 					'item'                              as parentType,
@@ -406,10 +406,10 @@
 		)
 		where item = ?
 		order by level asc
-	"]]></string>
+	]]>"</string>
 
 
-	<string name="query_categories" translatable="false"><![CDATA["
+	<string name="query_categories" translatable="false">"<![CDATA[
 		select
 			'category'                                          as type,
 			c._id                                               as _id,
@@ -434,8 +434,8 @@
 			ELSE ifNULL(cnc.value, c.name)
 			END
 		)
-	"]]></string>
-	<string name="query_category" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_category" translatable="false">"<![CDATA[
 		select
 			'category'                                          as type,
 			c._id                                               as _id,
@@ -455,9 +455,9 @@
 		left join Category            pp   ON p.parent = pp._id
 		left join Category_Name_Cache ppnc ON pp.name = ppnc.key
 		where c._id = ?
-	"]]></string>
+	]]>"</string>
 
-	<string name="query_list_list" translatable="false"><![CDATA["
+	<string name="query_list_list" translatable="false">"<![CDATA[
 		select
 			'list'                                              as type,
 			l._id                                               as _id,
@@ -466,34 +466,34 @@
 			(select count(*) from List_Entry where list = l._id) as countChildren
 		from List       l
 		order by l.name COLLATE NOCASE
-	"]]></string>
-	<string name="query_list" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_list" translatable="false">"<![CDATA[
 		select
 			'list' as type,
 			_id    as _id,
 			name   as name
 		from List
 		where _id = ?
-	"]]></string>
-	<string name="query_list_create" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_list_create" translatable="false">"<![CDATA[
 		insert into List(name) values(?)
-	"]]></string>
-	<string name="query_list_update" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_list_update" translatable="false">"<![CDATA[
 		update List set name = ? where _id = ?
-	"]]></string>
-	<string name="query_list_find" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_list_find" translatable="false">"<![CDATA[
 		select _id from List where name = ?
-	"]]></string>
-	<string name="query_list_delete" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_list_delete" translatable="false">"<![CDATA[
 		delete from List where _id = ?
-	"]]></string>
-	<string name="query_list_entry_add" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_list_entry_add" translatable="false">"<![CDATA[
 		insert into List_Entry(list, item) values(?, ?)
-	"]]></string>
-	<string name="query_list_entry_remove" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_list_entry_remove" translatable="false">"<![CDATA[
 		delete from List_Entry where list = ? and item = ?
-	"]]></string>
-	<string name="query_items_by_list" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_items_by_list" translatable="false">"<![CDATA[
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
@@ -511,9 +511,9 @@
 		left join Image im ON i.image = im._id
 		where l._id = ?
 		order by i.name COLLATE NOCASE
-	"]]></string>
+	]]>"</string>
 
-	<string name="query_recents" translatable="false"><![CDATA["
+	<string name="query_recents" translatable="false">"<![CDATA[
 		select
 			'item'                              as type,
 			i._id                               as _id,
@@ -532,15 +532,15 @@
 		join Category   c  ON i.category = c._id
 		left join Image im ON i.image = im._id
 		order by visitRank * ? + populationRank * ?
-	"]]></string>
-	<string name="query_recent_add" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_recent_add" translatable="false">"<![CDATA[
 		insert into Recent(_id) values(?)
-	"]]></string>
-	<string name="query_recent_delete" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_recent_delete" translatable="false">"<![CDATA[
 		delete from Recent where _id = ?
-	"]]></string>
+	]]>"</string>
 
-	<string name="query_search_suggest" translatable="false"><![CDATA["
+	<string name="query_search_suggest" translatable="false">"<![CDATA[
 		select
 			s.rowid    as _id,                    -- BaseColumns._ID (for ListView)
 			NULL       as suggest_intent_action,  -- SearchManager.SUGGEST_COLUMN_INTENT_ACTION
@@ -555,8 +555,8 @@
 --		join Category c ON i.category = c._id
 		where s.name MATCH ?
 		order by s.name COLLATE NOCASE
-	"]]></string>
-	<string name="query_search" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_search" translatable="false">"<![CDATA[
 		select
 			'item'                                          as type,
 			i._id                                           as _id,
@@ -573,13 +573,13 @@
 		left join Image im ON i.image = im._id
 		where s.name MATCH ?
 		order by i.name COLLATE NOCASE
-	"]]></string>
-	<string name="query_search_size" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_search_size" translatable="false">"<![CDATA[
 		-- sum 0 rows is NULL, count 0 rows is 0
 		select coalesce(sum(length(name) + length(location)), 0) + count(*) * 4 * 3 from Search
-	"]]></string>
+	]]>"</string>
 
-	<string name="query_export" formatted="false" translatable="false"><![CDATA["
+	<string name="query_export" formatted="false" translatable="false">"<![CDATA[
 			select
 				'property'    as type,
 				pt.name       as typeName,
@@ -651,10 +651,10 @@
 			join Property       p  ON r.property = p._id
 			left join Image     im ON i.image = im._id
 -- FIXME			order by type, _id?
-	"]]></string>
+	]]>"</string>
 
 
-	<string name="query_subtree" translatable="false"><![CDATA["
+	<string name="query_subtree" translatable="false">"<![CDATA[
 		-- CONSIDER a longer query or multiple queries to make it faster
 		-- (current query plan doesn't include indices everywhere)
 			select
@@ -691,50 +691,50 @@
 				or (ipn.node == ipn.item and p._id = ?)
 				or (ipn.node == ipn.item and r._id = ?)
 				or (ipn.node <> ipn.item and ipn.node = ?)
-	"]]></string>
+	]]>"</string>
 
-	<string name="query_stats" translatable="false"><![CDATA["
+	<string name="query_stats" translatable="false">"<![CDATA[
 		select
 			(select count(*) from Property) as properties,
 			(select count(*) from Room) as rooms,
 			(select count(*) from Item) - (select count(*) from Room) as items,
 			(select count(*) from Category) as categories
-	"]]></string>
+	]]>"</string>
 
 
-	<string name="query_category_cache_names" translatable="false"><![CDATA["
+	<string name="query_category_cache_names" translatable="false">"<![CDATA[
 		select key from Category_Name_Cache
-	"]]></string>
-	<string name="query_category_cache_update" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_category_cache_update" translatable="false">"<![CDATA[
 		update Category_Name_Cache set value = ? where key = ?
-	"]]></string>
+	]]>"</string>
 
 
 	<!-- Image CRUD -->
-	<string name="query_image_create" translatable="false"><![CDATA["
+	<string name="query_image_create" translatable="false">"<![CDATA[
 		insert into Image(data) values(?)
-	"]]></string>
-	<string name="query_image_create_with_time" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_image_create_with_time" translatable="false">"<![CDATA[
 		insert into Image(data, updated) values(?, ?)
-	"]]></string>
-	<string name="query_image_delete" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_image_delete" translatable="false">"<![CDATA[
 		delete from Image where _id = ?
-	"]]></string>
+	]]>"</string>
 
 	<!-- Property CRUD -->
-	<string name="query_property_create" translatable="false"><![CDATA["
+	<string name="query_property_create" translatable="false">"<![CDATA[
 		insert into Property(type, name, description) values(?, ?, ?)
-	"]]></string>
-	<string name="query_property_find" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property_find" translatable="false">"<![CDATA[
 		select _id from Property where name = ?
-	"]]></string>
-	<string name="query_property_update" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property_update" translatable="false">"<![CDATA[
 		update Property set type = ?, name = ?, description = ? where _id = ?
-	"]]></string>
-	<string name="query_property_image_set" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property_image_set" translatable="false">"<![CDATA[
 		update Property set image = ? where _id = ?
-	"]]></string>
-	<string name="query_property_image_get" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property_image_get" translatable="false">"<![CDATA[
 		select
 			p._id                        as _id,
 			im.data                      as _dataBlob,
@@ -743,25 +743,25 @@
 		from Property   p
 		left join Image im ON p.image = im._id
 		where p._id = ?
-	"]]></string>
-	<string name="query_property_delete" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_property_delete" translatable="false">"<![CDATA[
 		delete from Property where _id = ?
-	"]]></string>
+	]]>"</string>
 
 	<!-- Room CRUD -->
-	<string name="query_room_create" translatable="false"><![CDATA["
+	<string name="query_room_create" translatable="false">"<![CDATA[
 		insert into Room_Rooter(property, type, name, description) values(?, ?, ?, ?)
-	"]]></string>
-	<string name="query_room_find" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_find" translatable="false">"<![CDATA[
 		select _id from Room where property = ? and name = ?
-	"]]></string>
-	<string name="query_room_update" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_update" translatable="false">"<![CDATA[
 		update Room set type = ?, name = ?, description = ? where _id = ?
-	"]]></string>
-	<string name="query_room_image_set" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_image_set" translatable="false">"<![CDATA[
 		update Room set image = ? where _id = ?
-	"]]></string>
-	<string name="query_room_image_get" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_image_get" translatable="false">"<![CDATA[
 		select
 			r._id                        as _id,
 			im.data                      as _dataBlob,
@@ -770,28 +770,28 @@
 		from Room       r
 		left join Image im ON r.image = im._id
 		where r._id = ?
-	"]]></string>
-	<string name="query_room_delete" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_delete" translatable="false">"<![CDATA[
 		delete from Room where _id = ?
-	"]]></string>
-	<string name="query_room_move" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_room_move" translatable="false">"<![CDATA[
 		update Room set property = ? where _id = ?
-	"]]></string>
+	]]>"</string>
 
 	<!-- Item CRUD -->
-	<string name="query_item_create" translatable="false"><![CDATA["
+	<string name="query_item_create" translatable="false">"<![CDATA[
 		insert into Item(parent, category, name, description) values(?, ?, ?, ?)
-	"]]></string>
-	<string name="query_item_find" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_find" translatable="false">"<![CDATA[
 		select _id from Item where parent = ? and name = ?
-	"]]></string>
-	<string name="query_item_update" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_update" translatable="false">"<![CDATA[
 		update Item set category = ?, name = ?, description = ? where _id = ?
-	"]]></string>
-	<string name="query_item_image_set" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_image_set" translatable="false">"<![CDATA[
 		update Item set image = ? where _id = ?
-	"]]></string>
-	<string name="query_item_image_get" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_image_get" translatable="false">"<![CDATA[
 		select
 			i._id                        as _id,
 			im.data                      as _dataBlob,
@@ -800,11 +800,11 @@
 		from Item       i
 		left join Image im ON i.image = im._id
 		where i._id = ?
-	"]]></string>
-	<string name="query_item_delete" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_delete" translatable="false">"<![CDATA[
 		delete from Item where _id = ?
-	"]]></string>
-	<string name="query_item_move" translatable="false"><![CDATA["
+	]]>"</string>
+	<string name="query_item_move" translatable="false">"<![CDATA[
 		update Item set parent = ? where _id = ?
-	"]]></string>
+	]]>"</string>
 </resources>
