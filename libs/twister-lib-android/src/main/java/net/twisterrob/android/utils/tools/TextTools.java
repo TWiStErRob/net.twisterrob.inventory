@@ -23,9 +23,10 @@ public /*static*/ abstract class TextTools {
 	 * @param args styled texts to put in placeholders
 	 * @return formatted text mixing all the arguments
 	 */
-	public static CharSequence formatFormatted(Context context, int formatStringID, CharSequence... args) {
+	public static @NonNull CharSequence formatFormatted(@NonNull Context context,
+			@StringRes int formatStringID, @NonNull CharSequence... args) {
 		CharSequence formatString = context.getText(formatStringID);
-		SpannableStringBuilder format = new SpannableStringBuilder(formatString);
+		Editable format = new SpannableStringBuilder(formatString);
 		for (int i = 0; i < args.length; i++) {
 			CharSequence arg = args[i];
 			String placeholder = "%" + (i + 1) + "$s";

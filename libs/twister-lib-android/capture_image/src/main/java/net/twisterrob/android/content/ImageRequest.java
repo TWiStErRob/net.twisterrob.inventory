@@ -7,14 +7,12 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.*;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build.*;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 
-import net.twisterrob.android.R;
 import net.twisterrob.android.activity.CaptureImage;
+import net.twisterrob.android.capture_image.R;
 import net.twisterrob.android.utils.tools.*;
 
 // FIXME https://developer.android.com/guide/topics/providers/document-provider.html
@@ -75,7 +73,7 @@ public class ImageRequest {
 		private int requestCode = REQUEST_CODE_BASE;
 		public Builder(Context context) {
 			this.context = context;
-			String title = context.getString(R.string.image_choose_external_title);
+			String title = context.getString(R.string.image__choose_external__title);
 			this.chooserIntent = Intent.createChooser(new Intent(CaptureImage.ACTION), title);
 		}
 
@@ -117,23 +115,21 @@ public class ImageRequest {
 		private Intent[] buildInitialIntents() {
 			Intent[] intents = this.intents.toArray(new Intent[this.intents.size()]);
 			PackageManager pm = context.getPackageManager();
-			CharSequence take = TextTools.color(Color.LTGRAY,
-					" (", context.getString(R.string.image_choose_external_verb_take), ")");
-			CharSequence pick = TextTools.color(Color.LTGRAY,
-					" (", context.getString(R.string.image_choose_external_verb_pick), ")");
 			for (int i = 0; i < intents.length; i++) {
 				Intent intent = intents[i];
 				if (!(intent instanceof LabeledIntent)) {
-					CharSequence label = pm.resolveActivity(intent, 0).loadLabel(pm);
-					CharSequence suffix;
+					CharSequence appLabel = pm.resolveActivity(intent, 0).loadLabel(pm);
+					CharSequence label;
 					if (MediaStore.ACTION_IMAGE_CAPTURE.equals(intent.getAction())) {
-						suffix = take;
+						label = TextTools.formatFormatted(context,
+								R.string.image__choose_external__intent_label_take, appLabel);
 					} else if (Intent.ACTION_GET_CONTENT.equals(intent.getAction())) {
-						suffix = pick;
+						label = TextTools.formatFormatted(context,
+								R.string.image__choose_external__intent_label_pick, appLabel);
 					} else {
-						suffix = "";
+						label = appLabel;
 					}
-					intent = new LabeledIntent(intent, null, TextUtils.concat(label, suffix), 0);
+					intent = new LabeledIntent(intent, null, label, 0);
 				}
 				intents[i] = intent;
 			}
