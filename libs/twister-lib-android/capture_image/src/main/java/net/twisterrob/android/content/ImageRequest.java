@@ -129,7 +129,7 @@ public class ImageRequest {
 					} else {
 						label = appLabel;
 					}
-					intent = new LabeledIntent(intent, null, label, 0);
+					intent = new LabeledIntent(intent, null, TextTools.ensureString(label), 0);
 				}
 				intents[i] = intent;
 			}

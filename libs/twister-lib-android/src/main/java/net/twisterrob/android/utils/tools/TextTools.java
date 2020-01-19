@@ -43,6 +43,25 @@ public /*static*/ abstract class TextTools {
 	}
 
 	/**
+	 * Makes sure that a {@link CharSequence} is only a {@link CharSequence} when it needs to be.
+	 * @param seq potentially styled String
+	 * @return potentially styled String, but definitely {@link String}, if not styled
+	 */
+	public static @NonNull CharSequence ensureString(@NonNull CharSequence seq) {
+		if (seq instanceof String) {
+			// nothing to do, it's already a String
+			return seq;
+		}
+		if (seq instanceof Spannable) {
+			// see if it's styled at all; and if not, convert to String
+			Spannable spannable = (Spannable)seq;
+			Object[] spans = spannable.getSpans(0, seq.length(), Object.class);
+			return spans.length != 0? spannable : spannable.toString();
+		}
+		return seq;
+	}
+
+	/**
 	 * Does a color replacement if the type of the text allows it.
 	 * @see #replaceColors(Context, Spannable)
 	 */
