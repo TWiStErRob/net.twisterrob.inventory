@@ -87,7 +87,7 @@ public class ToastIdlingResourceTest {
 
 	@SuppressWarnings("Duplicates")
 	@Test public void testDetectsMultipleToastsCancelledInReverse() {
-		// There's differing behavior between Android versions (only tested 21 and 28 yet, so condition may be wrong).
+		// There's differing behavior between Android versions.
 		// (in the next explanation: . means fading in/out, - means cancelled)  
 		//
 		// Old versions seem to queue the toasts:
@@ -100,7 +100,10 @@ public class ToastIdlingResourceTest {
 		// [.--toast1---]
 		//  [.--toast2---] -> at this point toast1 is already cancelled
 		//   ^ cancel toast2 has immediate effect (idle), because toast1 is already cancelled
-		boolean expectQueued = VERSION.SDK_INT < VERSION_CODES.P;
+
+		// Only tested a few version yet, so this condition may be wrong.
+		// Known behaviors: 21=true, 28=false, 29=true
+		boolean expectQueued = VERSION.SDK_INT != VERSION_CODES.P;
 		Toast toast1 = createToast("Toast 1");
 		Toast toast2 = createToast("Toast 2");
 		assertTrue(isIdle());

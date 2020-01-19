@@ -15,9 +15,14 @@ import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
 public class AndroidAutomator {
 
 	public static final String PACKAGE_PACKAGE_INSTALLER = "com.android.packageinstaller";
+	public static final String PACKAGE_PERMISSION_CONTROLLER = "com.android.permissioncontroller";
 
 	public static @IdResName String permissionAllow() {
-		return UiAutomatorExtensions.externalId(PACKAGE_PACKAGE_INSTALLER, "permission_allow_button");
+		if (VERSION.SDK_INT <= VERSION_CODES.P) {
+			return externalId(PACKAGE_PACKAGE_INSTALLER, "permission_allow_button");
+		} else {
+			return externalId(PACKAGE_PERMISSION_CONTROLLER, "permission_allow_button");
+		}
 	}
 
 	public static void allowPermissionsIfNeeded() throws UiObjectNotFoundException {

@@ -16,7 +16,7 @@ import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
-import android.os.Build.VERSION_CODES;
+import android.os.Build.*;
 import android.support.annotation.*;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.view.View;
@@ -170,7 +170,12 @@ public class BackupActivityActor extends ActivityActor {
 
 	public static class ExportChooserActor {
 		public void assertDialogDisplayed() throws UiObjectNotFoundException {
-			assertThat(getChooserTitle(), isString(R.string.backup_export_external));
+			if (VERSION_CODES.P < VERSION.SDK_INT) {
+				// in Android 10 the title Intent.createChooser is blatantly ignored
+				assertThat(getChooserTitle(), equalTo("Share"));
+			} else {
+				assertThat(getChooserTitle(), isString(R.string.backup_export_external));
+			}
 		}
 		public void cancel() {
 			pressBackExternal();
