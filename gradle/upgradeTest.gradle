@@ -8,7 +8,8 @@ buildscript {
 
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
-import com.android.build.gradle.internal.test.report.*
+import com.android.build.gradle.internal.test.report.ReportType
+import com.android.build.gradle.internal.test.report.ResilientTestReport
 import com.android.build.gradle.internal.variant.BaseVariantData
 import com.android.builder.internal.testing.CustomTestRunListener
 import com.android.builder.testing.TestData
@@ -17,16 +18,19 @@ import com.android.ddmlib.IDevice
 import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
 import com.android.utils.*
 
-task upgradeTest {
-	dependsOn 'assembleDebug' // TODO why this is not available at eval time?
-	dependsOn tasks.assembleAndroidTest
-	tasks.connectedCheck.dependsOn it
+def upgradeTest = tasks.register('upgradeTest') { task ->
+	task.enabled = false // TODO not working since AGP 3.3/3.4
+	task.dependsOn 'assembleDebug' // TODO why this is not available at eval time?
+	task.dependsOn tasks.assembleAndroidTest
 
-	doFirst { task ->
-		ApplicationVariant debugVariant =
-				android.applicationVariants.grep { ApplicationVariant var -> var.buildType.name == 'debug' }.first()
+	doFirst {
+		ApplicationVariant debugVariant = project
+				.android
+				.applicationVariants
+				.grep { ApplicationVariant var -> var.buildType.name == 'debug' }
+				.first()
 
-		DeviceProviderInstrumentTestTask instrument = debugVariant.testVariant.connectedInstrumentTest
+		DeviceProviderInstrumentTestTask instrument = debugVariant.testVariant.connectedInstrumentTestProvider.get()
 
 		instrument.deviceProvider.init()
 		def device = instrument.deviceProvider.devices.first()
@@ -75,6 +79,8 @@ task upgradeTest {
 		}
 	}
 }
+tasks.connectedCheck.configure { it.dependsOn(upgradeTest) }
+
 def installOld(IDevice realDevice, ApplicationVariant debugVariant, String version) {
 	// FIXME release debug build as well
 	File oldApk = file("${System.env.RELEASE_HOME}/android/${debugVariant.applicationId}@${version}d+debug.apk")
@@ -99,7 +105,7 @@ def runTest(TestData testData, DeviceConnector device,
 	runner.addInstrumentationArg('class', test)
 	//runner.addInstrumentationArg('annotation', 'org.junit.Test')
 	runner.addInstrumentationArg('upgrade', 'true')
-	runner.maxtimeToOutputResponse = 60000
+	runner.maxTimeToOutputResponse = 60000
 
 	logger.info("Running: ${runner.amInstrumentCommand}")
 	runner.run runListener
