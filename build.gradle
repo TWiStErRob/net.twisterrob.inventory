@@ -35,6 +35,12 @@ allprojects {
 	project.plugins.withId("com.android.library") {
 		android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = false
 	}
+	afterEvaluate {
+		def android = project.extensions.findByName("android")
+		if (android != null && android.class.simpleName != "TestOptions_Decorated" /* android-reporting */) {
+			android.compileSdkVersion = 28
+		}
+	}
 	tasks.withType(JavaCompile) {
 		it.options.compilerArgs += [
 				// enable all warnings

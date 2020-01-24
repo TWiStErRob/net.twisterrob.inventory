@@ -30,8 +30,9 @@ public class LocationRetriever {
 			assert GPS_PROVIDER.equals(provider) : getProviderError(GPS_PROVIDER, provider);
 			m_isGPSEnabled = true;
 		}
+		@SuppressWarnings("deprecation")
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// optional override
+			// mandatory override
 		}
 	};
 
@@ -49,8 +50,9 @@ public class LocationRetriever {
 			assert NETWORK_PROVIDER.equals(provider) : getProviderError(NETWORK_PROVIDER, provider);
 			m_isNetworkEnabled = true;
 		}
+		@SuppressWarnings("deprecation")
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// optional override
+			// mandatory override
 		}
 	};
 

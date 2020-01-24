@@ -17,7 +17,8 @@ import android.widget.Toast;
 import net.twisterrob.android.utils.tools.AndroidTools;
 
 @UiThread
-// Deprecation warnings are constrained to methods by using FQCNs, because suppression doesn't work on imports.
+@SuppressWarnings("deprecation")
+// Deprecation warnings are constrained to class body by using FQCNs, because suppression doesn't work on imports.
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(CameraPreview.class);
 
@@ -74,7 +75,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)
-	@SuppressWarnings("deprecation")
 	private void initCompat() {
 		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
 			getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -85,7 +85,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		this.listener = listener != null? listener : new CameraPreviewListenerAdapter();
 	}
 
-	public @SuppressWarnings("deprecation") android.hardware.Camera getCamera() {
+	public android.hardware.Camera getCamera() {
 		return cameraHolder != null? cameraHolder.camera : null;
 	}
 
@@ -94,7 +94,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	@Override public void surfaceCreated(SurfaceHolder holder) {
-		LOG.trace("{} surfaceCreated({}) {}", cameraHolder, holder);
+		LOG.trace("{} surfaceCreated({})", cameraHolder, holder);
 		if (cameraHolder != null) {
 			usePreview();
 		} else {
@@ -103,7 +103,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	@Override public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-		LOG.trace("{} surfaceChanged({}, format={}, w={}, h={}) {}", cameraHolder, holder, format, w, h);
+		LOG.trace("{} surfaceChanged({}, format={}, w={}, h={})", cameraHolder, holder, format, w, h);
 		if (cameraHolder != null) {
 			stopPreview();
 			updatePreview(w, h);
@@ -156,9 +156,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		// if (cameraHolder.cameraInfo.facing == CAMERA_FACING_FRONT) setScaleX(-1); doesn't work
 		// @see http://stackoverflow.com/a/10390407/253468#comment63748074_10390407
 
-		@SuppressWarnings("deprecation") android.hardware.Camera.Size previewSize =
+		android.hardware.Camera.Size previewSize =
 				AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPreviewSizes(), width, height);
-		@SuppressWarnings("deprecation") android.hardware.Camera.Size pictureSize =
+		android.hardware.Camera.Size pictureSize =
 				AndroidTools.getOptimalSize(cameraHolder.params.getSupportedPictureSizes(), width, height);
 		LOG.debug("orient={}, rotate={}, landscape={}, "
 						+ "size: {}x{} ({}), "
@@ -226,7 +226,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		listener.onDestroy(this);
 	}
 
-	@SuppressWarnings("deprecation")
 	public Boolean isFrontFacing() {
 		return cameraHolder == null? null
 				: cameraHolder.cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT;
@@ -238,7 +237,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	 * {@link CameraPictureListener#onFocus(boolean)} will be only called if auto-focus was requested.
 	 * Taking the picture can be cancelled by {@link CameraPictureListener#onFocus(boolean) onFocus}.
 	 */
-	@SuppressWarnings("deprecation")
 	public void takePicture(final CameraPictureListener callback, boolean autoFocus) {
 		LOG.trace("{} Taking picture", cameraHolder);
 		if (cameraHolder == null) {
@@ -294,7 +292,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	 * Make the camera's picture be focused (if supported) and take a picture if the callback returns true.
 	 * @see CameraPictureListener#onFocus(boolean)
 	 */
-	@SuppressWarnings("deprecation")
 	public void focus(final CameraPictureListener callback) {
 		LOG.trace("{} Camera focus", cameraHolder);
 		if (cameraHolder == null) {
@@ -325,7 +322,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		if (cameraHolder == null) {
 			return;
 		}
-		@SuppressWarnings("deprecation")
 		String flashMode = flash
 				? android.hardware.Camera.Parameters.FLASH_MODE_ON
 				: android.hardware.Camera.Parameters.FLASH_MODE_OFF;
@@ -341,7 +337,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private static class CameraHolder {
 		final int cameraID;
 		final android.hardware.Camera camera;
@@ -420,7 +415,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 					}
 				}
 
-				@SuppressWarnings("deprecation")
 				private int findCamera() {
 					int cameras = android.hardware.Camera.getNumberOfCameras();
 					int frontId = -1;

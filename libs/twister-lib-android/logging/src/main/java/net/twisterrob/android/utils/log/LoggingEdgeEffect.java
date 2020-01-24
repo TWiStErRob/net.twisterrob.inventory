@@ -49,7 +49,7 @@ public class LoggingEdgeEffect extends EdgeEffectWrapper {
 	}
 	@Override public boolean onPull(Object edgeEffect, float deltaDistance, float displacement) {
 		boolean result = super.onPull(edgeEffect, deltaDistance, displacement);
-		LOG.trace("onPull({}, {}, {}): {}", edgeEffect, deltaDistance, result);
+		LOG.trace("onPull({}, {}, {}): {}", edgeEffect, deltaDistance, displacement, result);
 		return result;
 	}
 	@Override public boolean onRelease(Object edgeEffect) {

@@ -191,6 +191,7 @@ public class SunburstDrawable<T> extends Drawable {
 		invalidateSelf();
 	}
 
+	@SuppressWarnings("deprecation") // Unused from API 29, but lower still uses it.
 	@Override public int getOpacity() {
 		return PixelFormat.TRANSLUCENT;
 	}
