@@ -4,11 +4,6 @@ version = '1.0'
 apply plugin: 'net.twisterrob.android-library'
 apply from: 'http://localhost/maven/configure.gradle'
 
-repositories {
-	jcenter()
-	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
-}
-
 dependencies {
 	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
 }

@@ -4,11 +4,6 @@ version = '1.0'
 apply plugin: 'net.twisterrob.android-library'
 apply from: 'http://localhost/maven/configure.gradle'
 
-repositories {
-	jcenter()
-	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
-}
-
 dependencies {
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	implementation 'net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT'
@@ -49,6 +44,10 @@ android {
 
 def mainProject = project
 allprojects { project ->
+	project.repositories {
+		jcenter()
+		maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+	}
 	project.afterEvaluate {
 		project.android.lintOptions.lintConfig = mainProject.file("config/lint/lint.xml")
 		project.android.lintOptions.baseline mainProject.file("config/lint/lint-baseline-${project.name}.xml")

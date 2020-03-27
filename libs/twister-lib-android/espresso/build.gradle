@@ -4,11 +4,6 @@ version = '1.0'
 apply plugin: 'net.twisterrob.android-library'
 apply from: 'http://localhost/maven/configure.gradle'
 
-repositories {
-	jcenter()
-	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
-}
-
 dependencies {
 	implementation "net.twisterrob.lib:twister-lib-core"
 	implementation "net.twisterrob.lib:twister-lib-java"
@@ -48,7 +43,7 @@ dependencies {
 	compileOnly "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
 	compileOnly "com.android.support:design:${VERSION_SUPPORT}"
 	compileOnly "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
-	
+
 	androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
 	androidTestImplementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
 	androidTestRuntimeOnly "net.twisterrob.lib:twister-lib-android-slf4j"

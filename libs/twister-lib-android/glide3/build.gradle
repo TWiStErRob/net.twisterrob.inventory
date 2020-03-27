@@ -4,11 +4,6 @@ version = '1.0'
 apply plugin: 'net.twisterrob.android-library'
 apply from: 'http://localhost/maven/configure.gradle'
 
-repositories {
-	jcenter()
-	maven { name = 'twisterrob'; url = 'http://localhost/maven' }
-}
-
 dependencies {
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 	api "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
