@@ -5,10 +5,6 @@ import javax.annotation.Nonnull;
 import org.hamcrest.*;
 import org.hamcrest.Matchers;
 
-import android.annotation.TargetApi;
-import android.os.Build.VERSION_CODES;
-
-@TargetApi(VERSION_CODES.KITKAT)
 public class HasCause extends TypeSafeDiagnosingMatcher<Throwable> {
 	public static final String NL = System.lineSeparator();
 
