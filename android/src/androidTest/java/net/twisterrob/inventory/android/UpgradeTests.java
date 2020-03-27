@@ -88,6 +88,7 @@ public class UpgradeTests {
 	private File db;
 
 	/** @see net.twisterrob.inventory.android.test.activity.CompatibleLauncher */
+	@SuppressWarnings("deprecation")
 	@Before public void launchMain() {
 		assumeThat("Only run when instrumentation arguments contain \"" + LAUNCH_KEY + "\"",
 				getArguments(), hasKey(LAUNCH_KEY));
