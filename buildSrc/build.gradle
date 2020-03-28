@@ -3,6 +3,9 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 
+def props = new Properties()
+props.load(file("../gradle.properties").newInputStream())
+
 repositories {
 	jcenter()
 }
@@ -11,7 +14,7 @@ dependencies {
 	implementation localGroovy()
 	implementation gradleApi()
 
-	testImplementation "junit:junit:4.13-beta-2"
+	testImplementation "junit:junit:${props.VERSION_JUNIT}"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
