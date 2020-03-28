@@ -5,99 +5,10 @@ repositories {
 }
 
 apply from: rootProject.file('gradle/substitutions.gradle')
+apply from: new File(gradle.includedBuild("twister-libs-android").projectDir, "gradle/testCompile.gradle")
 
 dependencies {
-	testImplementation "junit:junit:${VERSION_JUNIT}"
-	testImplementation "net.twisterrob.lib:twister-lib-hamcrest"
-	testImplementation "net.twisterrob.lib:twister-lib-mockito"
-	testImplementation "net.twisterrob.lib:twister-lib-junit4"
-	testImplementation "net.twisterrob.lib:twister-lib-test"
-	testImplementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
-	testImplementation ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
-		exclude group: 'junit'
-		exclude module: 'guava'
-	}
-	testImplementation "org.mockito:mockito-core:${VERSION_MOCKITO}"
-	testImplementation "org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}"
-	testImplementation "org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}"
-	testImplementation "org.powermock:powermock-module-junit4-rule:${VERSION_POWERMOCK}"
-	// contains duplicate PowerMockRule which messes things up, do not enable
-	//testImplementation "org.powermock:powermock-module-junit4-rule-agent:${VERSION_POWERMOCK}"
-	testImplementation "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
-	testImplementation 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then
-	// Replace APK's runtimeOnly sneaking into test runtime
-	configurations.testRuntimeOnly.exclude module: 'twister-lib-android-slf4j'
-	testRuntimeOnly "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
 	testImplementation 'com.diffplug.durian:durian:3.4.0'
 	// Durian needs findbugs annotations
 	testCompileOnly 'com.google.code.findbugs:annotations:3.0.0'
-//	testImplementation 'cglib:cglib:3.2.4'
-	testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
-//	testImplementation 'nl.jqno.equalsverifier:equalsverifier:2.4'
-
-	if (isAndroid) {
-		testImplementation "org.robolectric:robolectric:${VERSION_ROBOLECTRIC}"
-		testImplementation "org.robolectric:shadows-multidex:${VERSION_ROBOLECTRIC}"
-		testImplementation "androidx.test:core:1.2.0"
-
-//	configurations
-//			.compile
-//			.resolvedConfiguration
-//			.resolvedArtifacts
-//			.collect { it.id.componentIdentifier }
-//			.grep { it instanceof ModuleComponentIdentifier }
-//			.grep { it.group == 'com.android.support' }
-//			.each { androidTestImplementation it.displayName }
-
-
-		androidTestImplementation "com.android.support:multidex-instrumentation:${VERSION_MULTIDEX}"
-		androidTestImplementation "com.android.support:multidex:${VERSION_MULTIDEX}"
-
-		androidTestImplementation "junit:junit:${VERSION_JUNIT}"
-		androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
-		androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
-		androidTestImplementation "net.twisterrob.lib:twister-lib-mockito"
-		androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
-		androidTestImplementation "net.twisterrob.lib:twister-lib-test"
-		androidTestImplementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
-		androidTestImplementation ('com.shazam:shazamcrest:0.11') { // assertThat(*, sameBeanAs(*))
-			exclude group: 'junit'
-			exclude module: 'guava'
-			exclude group: 'org.json', module: 'json'
-		}
-//		androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
-//		androidTestImplementation 'com.google.dexmaker:dexmaker:1.0'
-		// Android JUnit Runner
-		androidTestImplementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
-		androidTestImplementation "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
-
-		// Espresso core
-		androidTestImplementation "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
-		// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
-		androidTestImplementation("com.android.support.test.espresso:espresso-contrib:${VERSION_ESPRESSO}") {
-			// Need to ignore support dependencies, otherwise weird exceptions happen, for example:
-			// * Error inflating class android.support.v7.widget.CardView Resource is not a ColorStateList (color or path)
-			// * NullPointerException (mDecorContentParent.setWindowCallback) at AppCompatDelegateImplV7.createSubDecor
-			exclude group: 'com.android.support'
-		}
-		// Espresso-accessibility for automatic checking (not used yet)
-		// TODO AccessibilityChecks.enable()
-		//androidTestImplementation "com.android.support.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
-		// disable web for now, because it has some conflicting Guava classes (http://b.android.com/187735)
-		// Espresso-web for WebView support (not used yet)
-		//androidTestImplementation "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
-		// Espresso-intents for capturing Intents and mocking onActivityResult
-		androidTestImplementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
-		// Espresso-idling-resource for synchronization with background jobs
-		androidTestImplementation "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
-		// CONSIDER using these with Glide
-		if (VERSION_ESPRESSO.startsWith("3.")) {
-			androidTestImplementation "com.android.support.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
-			androidTestImplementation "com.android.support.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
-		}
-		if (!project.path.contains(":libs:twister-lib-java")) {
-			// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
-			androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:2.1.3"
-		}
-	}
 }

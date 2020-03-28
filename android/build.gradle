@@ -9,16 +9,16 @@ dependencies {
 	testImplementation project(':android:test_helpers')
 
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-	implementation('net.twisterrob.lib:twister-libs-android:1.0-SNAPSHOT')
+	implementation('net.twisterrob.lib:twister-libs-android')
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
-	implementation('net.twisterrob.lib:twister-libs-java:1.0-SNAPSHOT')
+	implementation('net.twisterrob.lib:twister-libs-java')
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation 'net.twisterrob.lib:twister-lib-android-widgets'
 	implementation 'net.twisterrob.lib:twister-lib-android-about'
 	implementation 'net.twisterrob.lib:twister-lib-android-logging'
 	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
 	implementation 'net.twisterrob.lib:twister-lib-android-capture_image'
-	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j:1.0-SNAPSHOT')
+	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j')
 
 	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
 	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"

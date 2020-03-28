@@ -14,42 +14,24 @@ buildscript {
 group = 'net.twisterrob.lib'
 version = '1.0'
 
-def mainProject = project
 allprojects { project ->
 	repositories {
 		jcenter()
 	}
-	if (gradle.parent != null || rootProject.name != 'twister-lib-java') {
-		logger.info "${project.path} is in an included build, using Android plugin"
-		apply plugin: 'com.android.library'
-		apply plugin: 'net.twisterrob.android-library'
-		android.defaultConfig.minSdkVersion 9
-		def manifest = file('src/main/AndroidManifest.xml')
-		manifest.parentFile.mkdirs()
-		def subpackage = project.path == ':' ? ".root" : project.path.replace(':', '.').replace('-', '_')
-		manifest.text = "<manifest package=\"net.twisterrob.module_hack${subpackage}\" />"
-		tasks.whenTaskAdded { task ->
-			if(task.name.contains("AndroidTest")) {
-				task.enabled = false
-			}
-		}
-		project.afterEvaluate {
-			project.android.lintOptions.lintConfig = mainProject.file("config/lint/lint.xml")
-			project.android.lintOptions.baseline mainProject.file("config/lint/lint-baseline-${project.name}.xml")
-		}
-	} else {
-		logger.info "${project.path} is not in an included build, using Java Library plugin"
-		apply plugin: 'java-library'
-		apply plugin: 'net.twisterrob.java'
+	configurations.all {
+		if (it.name == 'lintClassPath') return
+		it.resolutionStrategy.failOnVersionConflict()
 	}
+	apply plugin: 'net.twisterrob.java-library'
 	apply from: 'http://localhost/maven/configure.gradle'
+	apply from: rootProject.file("gradle/substitutions.gradle")
 	dependencies {
+		apply from: "${rootDir}/gradle/testCompile.gradle", to: project
+
 		api "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 		testImplementation "org.slf4j:slf4j-simple:${VERSION_SLF4J}"
 		// TODO change to implementation (first step: exclude in Android)
 		api 'com.google.code.findbugs:jsr305:3.0.2'
-
-		apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 	}
 }
 
@@ -61,6 +43,6 @@ dependencies {
 	api 'net.twisterrob.lib:twister-lib-java'
 }
 
-task cleanFull {
-	dependsOn allprojects*.tasks*.findByPath('clean')
+tasks.register("cleanFull") {
+	dependsOn allprojects*.tasks*.named("clean")
 }

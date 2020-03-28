@@ -1,3 +1,5 @@
+rootProject.name = 'twister-libs-android'
+
 include ':'
 
 include ':slf4j'
@@ -16,11 +18,21 @@ include ':basics'
 include ':glide3'
 include ':widgets'
 
-include ':about', ':about:test_helpers'
-include ':capture_image', ':capture_image:test_helpers'
+includeWithTestHelpers(":about")
+includeWithTestHelpers(":capture_image")
 
-//if (gradle.parent == null) {
-//	includeBuild '../twister-lib-java'
-//}
+includeBuild("../twister-lib-java") { build ->
+	apply from: new File(build.projectDir, "settings.substitutions.gradle"), to: build
+}
 
-rootProject.name = 'twister-libs-android'
+def includeWithTestHelpers(String modulePath) {
+	def contractModulePath = "${modulePath}-test_helpers"
+
+	include(modulePath)
+	def module = project(modulePath)
+
+	include(contractModulePath)
+	def contractModule = project(contractModulePath)
+
+	contractModule.projectDir = new File(module.projectDir, "test_helpers")
+}

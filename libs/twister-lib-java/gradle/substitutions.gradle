@@ -1,0 +1,52 @@
+// Substitutions for project
+configurations.all { Configuration config ->
+	config.resolutionStrategy.dependencySubstitution.all { DependencySubstitution dependency ->
+		if (dependency.requested instanceof ModuleComponentSelector
+				&& dependency.requested.group == "net.twisterrob.lib") {
+			def module = dependency.requested.module.toString()
+			if (!module.startsWith("twister-lib-")) {
+				return
+			}
+			module = module.substring("twister-lib-".length())
+			def lib = findProject(":lib:${module}")
+			if (lib != null) {
+				dependency.useTarget(lib)
+			}
+			def utils = findProject(":utils:${module}")
+			if (utils != null) {
+				dependency.useTarget(utils)
+			}
+			if (lib != null && utils != null) {
+				throw new IllegalStateException("Ambiguous module: ${dependency.requested}")
+			}
+		}
+	}
+}
+
+// Substitutions for Hamcrest
+configurations.all { Configuration config ->
+	config.resolutionStrategy { ResolutionStrategy strategy ->
+		strategy.dependencySubstitution {
+			substitute(module("org.hamcrest:hamcrest-core"))
+					.with module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}")
+			substitute(module("org.hamcrest:hamcrest-library"))
+					.with module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}")
+		}
+	}
+}
+
+// Resolve dependency conflicts
+configurations.all { Configuration config ->
+	config.resolutionStrategy {
+		// use latest version, hamcrest-junit refers to 4.12
+		force("junit:junit:${VERSION_JUNIT}")
+		// powermock refers to older
+		force("org.mockito:mockito-core:${VERSION_MOCKITO}")
+		// 3.0.1 (powermock 2.0.4) vs 2.6 (mockito 3.2.4)
+		force("org.objenesis:objenesis:3.0.1")
+		// 1.10.5 (powermock 2.0.4) vs 1.9.10 (mockito 3.2.4)
+		force("net.bytebuddy:byte-buddy:1.10.5")
+		// 1.10.5 (powermock 2.0.4) vs 1.9.10 (mockito 3.2.4)
+		force("net.bytebuddy:byte-buddy-agent:1.10.5")
+	}
+}

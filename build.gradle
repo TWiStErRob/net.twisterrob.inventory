@@ -21,19 +21,10 @@ allprojects {
 		//maven { name = 'sonatype'; url = 'http://oss.sonatype.org/content/repositories/snapshots' }
 		//maven { name = 'idescout'; url = 'http://www.idescout.com/maven/repo/' }
 	}
-	apply from: rootProject.file('gradle/includedBuilds/substitute_twister-libs-java.gradle')
-	apply from: rootProject.file('gradle/includedBuilds/substitute_twister-libs-android.gradle')
 	apply from: rootProject.file('gradle/substitutions.gradle')
 	configurations.all {
 		if (it.name == 'lintClassPath') return
 		it.resolutionStrategy.failOnVersionConflict()
-	}
-
-	project.plugins.withId("com.android.application") {
-		android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = false
-	}
-	project.plugins.withId("com.android.library") {
-		android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = false
 	}
 	afterEvaluate {
 		def android = project.extensions.findByName("android")
@@ -56,18 +47,7 @@ allprojects {
 		]
 
 		if (it.name.endsWith("AndroidTestJavaWithJavac")
-				|| it.path.contains(":twister-lib-android:")
 				|| it.path.startsWith(':android:database:test_helpers:')) {
-			it.doFirst {
-				// TODO move to plugin
-				def duplicates = it
-						.options.compilerArgs
-						.grep { it.startsWith("-Xlint:-") }
-						.collect { "-Xlint:${it.substring("-Xlint:-".length())}" }
-				// if something is both disabled and enabled, make the disable win
-				it.options.compilerArgs -= duplicates
-				logger.debug "${it.path}: ${it.options.compilerArgs}"
-			}
 			it.options.compilerArgs += [
 					// Google's compilers emit some weird stuff (espresso, dagger, etc.)
 					// warning: [classfile] MethodParameters attribute introduced in version 52.0 class files is ignored in version 51.0 class files
@@ -77,15 +57,15 @@ allprojects {
 	}
 }
 
-//tasks.withType(com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask)
-[
-		':libs:twister-lib-android:espresso',
-		':libs:twister-lib-android:about',
-		':android'
+evaluationDependsOnChildren()
+def connectedTasks = allprojects.collectMany { it.tasks.withType(com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask) }
+connectedTasks.inject { prev, curr -> curr.configure { it.mustRunAfter prev }; return prev }
+
+def includedConnectedTasks = [
+		gradle.includedBuild("twister-libs-android").task(":espresso:connectedDebugAndroidTest"),
+		gradle.includedBuild("twister-libs-android").task(":about:connectedDebugAndroidTest"),
 ]
-		.collect { tasks.findByPath("$it:connectedDebugAndroidTest") }
-		.grep { it != null }
-		.inject { prev, curr -> curr.mustRunAfter prev; return prev }
+connectedTasks.each { it.configure { it.mustRunAfter(includedConnectedTasks) } }
 
 task clean(type: Delete) {
 	dependsOn gradle.includedBuilds*.task(':cleanFull')

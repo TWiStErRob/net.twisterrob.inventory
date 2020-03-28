@@ -1,0 +1,25 @@
+/*
+ * To use this file include the build in the project's settings.gradle like this:
+ * ```
+ * includeBuild("path/to/twister-lib-java") { build ->
+ * 	apply from: new File(build.projectDir, "settings.substitutions.gradle"), to: build
+ * }
+ * ```
+ */
+
+dependencySubstitution {
+	substitute module('net.twisterrob.lib:twister-libs-java') with project(':')
+
+	substitute module("net.twisterrob.lib:twister-lib-_libs") with project(":lib")
+	substitute module("net.twisterrob.lib:twister-lib-hamcrest") with project(":lib:hamcrest")
+	substitute module("net.twisterrob.lib:twister-lib-java") with project(":lib:java")
+	substitute module("net.twisterrob.lib:twister-lib-java_desktop") with project(":lib:java_desktop")
+	substitute module("net.twisterrob.lib:twister-lib-junit4") with project(":lib:junit4")
+	substitute module("net.twisterrob.lib:twister-lib-mockito") with project(":lib:mockito")
+
+	substitute module("net.twisterrob.lib:twister-lib-_utils") with project(":utils")
+	substitute module("net.twisterrob.lib:twister-lib-collect") with project(":utils:collect")
+	substitute module("net.twisterrob.lib:twister-lib-core") with project(":utils:core")
+	substitute module("net.twisterrob.lib:twister-lib-stringer") with project(":utils:stringer")
+	substitute module("net.twisterrob.lib:twister-lib-test") with project(":utils:test")
+}
