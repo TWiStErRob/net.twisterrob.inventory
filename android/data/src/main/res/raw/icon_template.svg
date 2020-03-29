@@ -9,7 +9,10 @@
 		<path id="name" d="M0,0
 		z" />
 	</defs>
-	<rect id="background" x="-500" y="-500" width="1000" height="1000" fill="rgba(255,255,0,.35)" />
+	<!-- REPORT in Chrome fill="rgba(255,255,0,.35)" works, but in AS 3.6.1 SVG preview
+	     * fill-opacity is required to get transparency,
+		 * and rgba(255,255,0,.35) shows gray instead of yellow. -->
+	<rect id="background" x="-500" y="-500" width="1000" height="1000" fill="yellow" fill-opacity="0.35" />
 	<circle id="temp" r="50" fill="none" stroke="black" stroke-width="10" />
 	<use xlink:href="#name" />
 </svg>
