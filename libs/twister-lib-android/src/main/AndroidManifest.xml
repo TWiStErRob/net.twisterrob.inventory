@@ -7,8 +7,11 @@
 
 	<!-- TODEL for what? -->
 	<!--  <uses-permission android:name="android.permission.INTERNET" />-->
+
 	<!-- TODEL for what? -->
 	<!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+
+	<!-- com.rarepebble:colorpicker usages are behind @TargetApi(VERSION_CODES.HONEYCOMB) -->
 	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18,com.rarepebble.colorpicker" />
 
 </manifest>

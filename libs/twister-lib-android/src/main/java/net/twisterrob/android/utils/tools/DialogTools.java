@@ -101,7 +101,7 @@ public class DialogTools {
 				});
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB)
+	@TargetApi(VERSION_CODES.HONEYCOMB) // NumberPicker is new in 11
 	public static AlertDialog.Builder pickNumber(@NonNull Context context,
 			@IntRange(from = 0) int initial, @IntRange(from = 0) Integer min, @IntRange(from = 0) Integer max,
 			final @NonNull PopupCallbacks<Integer> callbacks) {
@@ -141,7 +141,7 @@ public class DialogTools {
 		}
 	}
 
-	@TargetApi(VERSION_CODES.HONEYCOMB)
+	@TargetApi(VERSION_CODES.HONEYCOMB) // ColorPickerView (1.7.0) requires API 11 minimum
 	public static AlertDialog.Builder pickColor(@NonNull Context context,
 			@ColorInt int initial, final @NonNull PopupCallbacks<Integer> callbacks) {
 		if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
