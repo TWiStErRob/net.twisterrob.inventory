@@ -7,6 +7,7 @@ import org.slf4j.*;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
+import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.ResourceDecoder;
@@ -53,7 +54,8 @@ public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
 				}
 			}
 			if (width <= 0 || height <= 0) {
-				throw new IllegalArgumentException("Either the Target or the SVG document must declare a size.");
+				throw new IllegalArgumentException(
+						"Either the Target or the SVG document must declare a size.");
 			}
 
 			Bitmap bitmap = findBitmap(width, height);
@@ -75,11 +77,11 @@ public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
 	}
 
 	@Override public String getId() {
-		return getClass().getSimpleName() + "!" + manipulator;
+		return getClass().getSimpleName() + "!" + manipulator.getId();
 	}
 
 	public interface SvgManipulator {
-		SVG manipulate(SVG svg);
-		String toString();
+		@NonNull SVG manipulate(@NonNull SVG svg);
+		@NonNull String getId();
 	}
 }

@@ -7,18 +7,18 @@ import android.content.*;
 import android.graphics.*;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.*;
+import android.support.annotation.NonNull;
 import android.support.v4.content.*;
 import android.support.v4.graphics.ColorUtils;
 
 import com.bumptech.glide.*;
 import com.bumptech.glide.load.*;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.bitmap_recycle.*;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.engine.cache.*;
 import com.bumptech.glide.load.model.*;
 import com.bumptech.glide.load.model.stream.StreamModelLoader;
-import com.bumptech.glide.load.resource.bitmap.*;
+import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifResourceDecoder;
 import com.bumptech.glide.load.resource.gifbitmap.*;
@@ -30,7 +30,6 @@ import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.base.*;
-import net.twisterrob.inventory.android.content.io.RawResourceResolver;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 
 @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
@@ -203,7 +202,7 @@ public interface Constants {
 			BitmapPool pool = Glide.get(context).getBitmapPool();
 			return new GifBitmapWrapperResourceDecoder(
 					new ImageVideoBitmapDecoder(
-							new SvgBitmapDecoder(pool, new RawResourceResolver(context, pool)),
+							new SvgBitmapDecoder(pool, new RawResourceSVGExternalFileResolver(context, pool)),
 							null
 					),
 					new GifResourceDecoder(context, pool),
