@@ -33,7 +33,10 @@ dependencies {
 
 	// FIXME @Deprecated, use Glide
 	implementation 'com.jakewharton:disklrucache:2.0.2'
-	implementation 'com.rarepebble:colorpicker:1.7.0'
+
+	// 2.4.+ is required for API 28+
+	// because of HueSatView and SliderViewBase using removed Canvas.save(int) in earlier versions
+	implementation 'com.rarepebble:colorpicker:2.4.2'
 
 	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 }

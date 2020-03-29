@@ -10,8 +10,6 @@
 
 # STOPSHIP Libraries are using Android 28 non-existent methods.
 # Warning: com.caverock.androidsvg.SVGAndroidRenderer: can't find referenced method 'int save(int)' in library class android.graphics.Canvas
-# Warning: com.rarepebble.colorpicker.HueSatView: can't find referenced method 'int save(int)' in library class android.graphics.Canvas
-# Warning: com.rarepebble.colorpicker.SliderViewBase: can't find referenced method 'int save(int)' in library class android.graphics.Canvas
 -dontwarn android.graphics.Canvas
 
 # Note: net.twisterrob.inventory.android.content.InventoryProvider calls 'Field.getType'
