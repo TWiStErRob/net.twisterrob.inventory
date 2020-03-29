@@ -189,6 +189,11 @@ public /*static*/ abstract class IOTools {
 
 	/**
 	 * Convenience method to write a full zip file at once.
+	 * 
+	 * For example to zip a folder's contents in place:
+	 * <pre><code>
+	 * zip(new File(dir.getParentFile(), dir.getName() + ".zip"), false, dir);
+	 * </code></pre>
 	 *
 	 * @param zipFile the target archive file, existing file will be overwritten
 	 * @see #zip(ZipOutputStream, boolean, File...)

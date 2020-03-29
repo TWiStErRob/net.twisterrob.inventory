@@ -4,13 +4,16 @@ import java.io.*;
 
 import javax.annotation.*;
 
+import org.jetbrains.annotations.Contract;
+
 public class ObjectTools {
 
 	private ObjectTools() {
 		// prevent instantiation
 	}
 
-	public static String getFullStackTrace(Throwable t) {
+	@Contract("null -> null; !null -> !null")
+	public static @Nullable String getFullStackTrace(@Nullable Throwable t) {
 		if (t == null) {
 			return null;
 		}
@@ -22,7 +25,7 @@ public class ObjectTools {
 	}
 
 	public static @Nonnull Throwable getRootCause(@Nonnull Throwable t) {
-		while(t.getCause() != null) {
+		while (t.getCause() != null) {
 			t = t.getCause();
 		}
 		return t;
@@ -32,6 +35,7 @@ public class ObjectTools {
 	 * Null-safe equals.
 	 * @see java.util.Objects#equals(Object, Object)
 	 */
+	@Contract("null, null -> true")
 	public static boolean equals(Object o1, Object o2) {
 		//noinspection ConstantConditions o1 is always null at the end, but still call equals with it
 		return o1 == o2 || (o1 != null? o1.equals(o2) : o2.equals(o1));
@@ -41,6 +45,7 @@ public class ObjectTools {
 	 * Assert a non-null object state
 	 * @see com.google.common.base.Preconditions#checkNotNull(java.lang.Object)
 	 */
+	@Contract("null -> fail; !null -> !null")
 	public static @Nonnull <T> T checkNotNull(@Nullable T reference) {
 		if (reference == null) {
 			throw new NullPointerException();
