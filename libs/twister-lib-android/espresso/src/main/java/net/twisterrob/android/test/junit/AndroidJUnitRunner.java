@@ -1,5 +1,6 @@
 package net.twisterrob.android.test.junit;
 
+import java.util.Arrays;
 import java.util.regex.*;
 
 import org.slf4j.*;
@@ -11,12 +12,16 @@ import android.os.Build.*;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.test.espresso.*;
 import android.support.test.espresso.base.DefaultFailureHandler;
 import android.support.test.internal.runner.RunnerArgs;
 import android.view.View;
 
+import static android.content.pm.PackageManager.GET_META_DATA;
+
 import net.twisterrob.java.exceptions.StackTrace;
+import net.twisterrob.java.utils.StringTools;
 
 public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnitRunner {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidJUnitRunner.class);
@@ -38,7 +43,11 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 	private static final String INNER_CLASS_FIX = "$1$2\\$$3";
 
 	@Override public void onCreate(Bundle arguments) {
-		setDefaults(arguments, getInstrumentationMetaData());
+		// MultiDex is done in android.support.test.runner.MonitoringInstrumentation.onCreate:
+		//MultiDex.installInstrumentation(this.getContext(), this.getTargetContext());
+
+		Bundle metaData = getInstrumentationMetaData();
+		setDefaults(arguments, metaData != null? metaData : Bundle.EMPTY);
 		// specifyDexMakerCacheProperty is unconditionally called, but behavior was observed in Android 5.0)
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 		try {
@@ -46,17 +55,23 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 		} finally {
 			StrictMode.setThreadPolicy(originalPolicy);
 		}
-		Espresso.setFailureHandler(new DetailedFailureHandler(new DefaultFailureHandler(getTargetContext())));
+		/**
+		 * @see BaseLayerModule#provideFailureHander
+		 */
+		DefaultFailureHandler defaultHandler = new DefaultFailureHandler(getTargetContext());
+		Espresso.setFailureHandler(new DetailedFailureHandler(defaultHandler));
 	}
 
-	private Bundle getInstrumentationMetaData() {
+	private @Nullable Bundle getInstrumentationMetaData() {
 		try {
 			PackageManager pm = getContext().getPackageManager();
 			ComponentName instrumentationRunner = new ComponentName(getContext(), getClass());
-			return pm.getInstrumentationInfo(instrumentationRunner, PackageManager.GET_META_DATA).metaData;
+			// InstrumentationInfo.metaData can be null, for example when not specifying a test:
+			// adb shell am instrument -w -r -e debug false <test-package>/....AndroidJUnitRunner
+			return pm.getInstrumentationInfo(instrumentationRunner, GET_META_DATA).metaData;
 		} catch (NameNotFoundException ex) {
 			LOG.warn("Cannot find own instrumentation info, wonder how do I exists then?", ex);
-			return Bundle.EMPTY;
+			return null;
 		}
 	}
 
@@ -87,13 +102,20 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 		}
 	}
 
-	private void setDefaults(Bundle arguments, Bundle manifest) {
+	private void setDefaults(@NonNull Bundle arguments, @NonNull Bundle manifest) {
 		if (!arguments.containsKey(ARGUMENT_DISABLE_ANALYTICS)) {
 			// Tried to put it in manifest, but it failed with cannot cast Boolean to String in super.onCreate
 			arguments.putString(ARGUMENT_DISABLE_ANALYTICS, Boolean.TRUE.toString());
 		}
 		if (!arguments.containsKey(ARGUMENT_TEST_CLASS)) { // @see TestRequestBuilder#validate
-			String packages = "java,javax,android,com.google,net.twisterrob.android.test,net.twisterrob.test";
+			String packages = StringTools.join(Arrays.asList(
+					"java",
+					"javax",
+					"android",
+					"com.google",
+					"net.twisterrob.android.test",
+					"net.twisterrob.test"
+			), ",");
 			if (arguments.containsKey(ARGUMENT_NOT_TEST_PACKAGE)) {
 				packages += "," + arguments.getString(ARGUMENT_NOT_TEST_PACKAGE);
 			}
@@ -103,10 +125,12 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 			arguments.putString(ARGUMENT_NOT_TEST_PACKAGE, packages);
 		}
 		if (arguments.containsKey(ARGUMENT_TEST_CLASS)) {
-			arguments.putString(ARGUMENT_TEST_CLASS, fixInnerClasses(arguments.getString(ARGUMENT_TEST_CLASS)));
+			String newArgumentValue = fixInnerClasses(arguments.getString(ARGUMENT_TEST_CLASS));
+			arguments.putString(ARGUMENT_TEST_CLASS, newArgumentValue);
 		}
 		if (arguments.containsKey(ARGUMENT_NOT_TEST_CLASS)) {
-			arguments.putString(ARGUMENT_NOT_TEST_CLASS, fixInnerClasses(arguments.getString(ARGUMENT_NOT_TEST_CLASS)));
+			String newArgumentValue = fixInnerClasses(arguments.getString(ARGUMENT_NOT_TEST_CLASS));
+			arguments.putString(ARGUMENT_NOT_TEST_CLASS, newArgumentValue);
 		}
 	}
 
@@ -165,7 +189,8 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 			// android.support.test.espresso.ViewInteraction.waitForAndHandleInteractionResults.
 			// TODEL This could be obsolete based on current state of DefaultHandler, test it.
 			// example: write a custom ViewAssertion inline and in override check() throw a RuntimeException
-			transformed = addInitialCallStack(transformed); // TODO when is this needed again? see above, and test!
+			// TODO when is this needed again? see above, and test!
+			transformed = addInitialCallStack(transformed);
 			return transformed;
 		}
 
