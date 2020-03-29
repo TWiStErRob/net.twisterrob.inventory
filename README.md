@@ -1,3 +1,18 @@
+Useful commands
+---------------
+
+Build Everything
+
+```
+gradlew clean assemble assembleDebugAndroidTest compileDebugUnitTestSources --no-build-cache
+```
+
+Run all UI tests
+```
+gradlew connectedCheck --continue mergeAndroidReports
+```
+
+
 Useful Settings
 ---------------
 
