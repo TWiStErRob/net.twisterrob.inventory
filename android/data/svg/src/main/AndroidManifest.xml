@@ -1,0 +1,8 @@
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="net.twisterrob.inventory.android.data.svg"
+	>
+
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+</manifest>

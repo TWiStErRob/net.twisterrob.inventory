@@ -1,0 +1,36 @@
+apply plugin: "net.twisterrob.android-app"
+apply from: "http://localhost/maven/configure.gradle"
+apply from: "${rootDir}/gradle/testCompile.gradle", to: project
+
+dependencies {
+	implementation("net.twisterrob.lib:twister-lib-android-basics")
+	implementation(project(":android:data"))
+	implementation("net.twisterrob.lib:twister-lib-android-glide3")
+	implementation("net.twisterrob.lib:twister-lib-java")
+	implementation("com.android.support:support-v4:${VERSION_SUPPORT}")
+	implementation("com.caverock:androidsvg:${VERSION_ANDROIDSVG}")
+}
+
+dependencies {
+	androidTestImplementation("net.twisterrob.lib:twister-lib-android-espresso")
+	androidTestRuntimeOnly("net.twisterrob.lib:twister-lib-android-slf4j")
+	// Not used, but necessary for classpath scanning on API 19
+	androidTestRuntimeOnly("com.android.support:design:${VERSION_SUPPORT}")
+}
+
+android {
+	defaultConfig {
+		applicationId "net.twisterrob.inventory.data"
+		minSdkVersion 14
+		version {
+			major = 1
+		}
+		multiDexEnabled = true
+		testInstrumentationRunner = "net.twisterrob.android.test.junit.AndroidJUnitRunner"
+	}
+	buildTypes {
+		debug {
+			multiDexKeepProguard project(":android").file("src/androidTest/multidex.pro")
+		}
+	}
+}
