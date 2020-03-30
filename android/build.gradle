@@ -83,6 +83,7 @@ android {
 		}
 		debug {
 			//minifyEnabled true
+			multiDexKeepProguard file('src/androidTest/multidex.pro')
 		}
 	}
 	aaptOptions {
