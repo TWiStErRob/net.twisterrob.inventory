@@ -16,7 +16,7 @@ dependencies {
 	api "net.twisterrob.lib:twister-lib-android-logging"
 	api "net.twisterrob.lib:twister-lib-android-stringers"
 	compileOnly "net.twisterrob.lib:twister-lib-android-capture_image"
-	implementation 'com.caverock:androidsvg:1.2.1'
+	implementation("com.caverock:androidsvg:${VERSION_ANDROIDSVG}")
 	api "javax.inject:javax.inject:1"
 }
 
