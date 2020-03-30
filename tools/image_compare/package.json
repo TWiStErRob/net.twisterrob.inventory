@@ -1,0 +1,22 @@
+{
+	"name": "image_compare",
+	"version": "1.0.0",
+	"description": "Compares two folders with subfolder structure and outputs a folder of diff images.",
+	"keywords": [
+		"svg",
+		"png",
+		"images",
+		"diff",
+		"compare"
+	],
+	"private": true,
+	"license": "WTFPL",
+	"main": "image_compare.js",
+	"engines": {
+		"node": ">=10.0.0"
+	},
+	"dependencies": {
+		"pixelmatch": "^5.1.0",
+		"pngjs": "^3.4.0"
+	}
+}

@@ -1,0 +1,1 @@
+pixelmatch.bat Example: pixelmatch a.png b.png diff.png 0 false
