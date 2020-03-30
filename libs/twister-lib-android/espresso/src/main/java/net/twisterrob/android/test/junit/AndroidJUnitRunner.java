@@ -1,6 +1,8 @@
 package net.twisterrob.android.test.junit;
 
+import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.*;
 
 import org.slf4j.*;
@@ -20,6 +22,7 @@ import android.view.View;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
 
+import net.twisterrob.android.test.junit.internal.DexPathListReflection;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.StringTools;
 
@@ -33,6 +36,7 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 	@SuppressWarnings("JavaDoc")
 	private static final String DEFAULT_EXCLUDED_PACKAGES = "defaultExcludedPackages";
 	// copied from android.support.test.internal.runner.RunnerArgs
+	private static final String ARGUMENT_CLASSPATHTOSCAN = "classpathToScan";
 	private static final String ARGUMENT_TEST_CLASS = "class";
 	private static final String ARGUMENT_NOT_TEST_CLASS = "notClass";
 	private static final String ARGUMENT_NOT_TEST_PACKAGE = "notPackage";
@@ -43,9 +47,6 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 	private static final String INNER_CLASS_FIX = "$1$2\\$$3";
 
 	@Override public void onCreate(Bundle arguments) {
-		// MultiDex is done in android.support.test.runner.MonitoringInstrumentation.onCreate:
-		//MultiDex.installInstrumentation(this.getContext(), this.getTargetContext());
-
 		Bundle metaData = getInstrumentationMetaData();
 		setDefaults(arguments, metaData != null? metaData : Bundle.EMPTY);
 		// specifyDexMakerCacheProperty is unconditionally called, but behavior was observed in Android 5.0)
@@ -131,6 +132,13 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 		if (arguments.containsKey(ARGUMENT_NOT_TEST_CLASS)) {
 			String newArgumentValue = fixInnerClasses(arguments.getString(ARGUMENT_NOT_TEST_CLASS));
 			arguments.putString(ARGUMENT_NOT_TEST_CLASS, newArgumentValue);
+		}
+		if (!arguments.containsKey(ARGUMENT_CLASSPATHTOSCAN)) {
+			// Make sure we scan all dex files for tests.
+			List<File> classpath = new DexPathListReflection(this, LOG).dexClasspath();
+			if (!classpath.isEmpty()) {
+				arguments.putString(ARGUMENT_CLASSPATHTOSCAN, StringTools.join(classpath, ":"));
+			}
 		}
 	}
 
