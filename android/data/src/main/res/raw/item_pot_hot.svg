@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Based on http://cdn.flaticon.com/png/64/465.png -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -37 130 117"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-75 -185 650 585"
      xmlns:xlink="http://www.w3.org/1999/xlink">
 	<g>
-		<rect id="pan" width="100" height="80" rx="20" ry="15" fill="black" stroke="none" />
-		<rect id="space" width="100" height="5" y="15" fill="white" stroke="none" />
-		<rect id="holder" width="15" height="6" x="42.5" y="-5.75" rx="3" ry="3" fill="black" stroke="none" />
-		<rect id="handles" width="130" height="5" x="-15" y="20" rx="2" ry="2" fill="black" stroke="none" />
-		<image width="45" height="45" x="25" y="-45" xlink:href="snippet_hot.svg" />
+		<rect id="pan" width="500" height="400" rx="100" ry="75" fill="black" stroke="none" />
+		<rect id="space" width="500" height="25" y="75" fill="white" stroke="none" />
+		<rect id="holder" width="75" height="30" x="212.5" y="-28.75" rx="15" ry="15" fill="black" stroke="none" />
+		<rect id="handles" width="650" height="25" x="-75" y="100" rx="10" ry="10" fill="black" stroke="none" />
+		<image width="225" height="225" x="125" y="-225" xlink:href="snippet_hot.svg" />
 	</g>
 </svg>
