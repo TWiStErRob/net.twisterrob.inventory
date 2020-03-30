@@ -4,7 +4,11 @@
 	package="net.twisterrob.android.test.espresso"
 	>
 
-	<!-- Lint will hopefully find the usages and notice that it's not callable from everywhere. -->
+	<!--
+		android.support.test.uiautomator.v18=18
+		Not using it in this module, but on classpath,
+		lint will hopefully find the usages and notice that it's not callable from everywhere.
+	-->
 	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
 
 	<uses-permission android:name="android.permission.WAKE_LOCK" />

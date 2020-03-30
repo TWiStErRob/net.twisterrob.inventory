@@ -3,7 +3,10 @@
 	package="net.twisterrob.android.test.uiautomator"
 	>
 
-	<!-- Lint will hopefully find the usages and notice that it's not callable from everywhere. -->
+	<!--
+		android.support.test.uiautomator.v18=18
+		Usages are behind @RequiresApi(UiAutomatorExtensions.UI_AUTOMATOR_VERSION).
+	-->
 	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
 
 </manifest>

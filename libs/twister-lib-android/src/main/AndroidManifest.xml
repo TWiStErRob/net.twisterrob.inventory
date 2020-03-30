@@ -11,7 +11,14 @@
 	<!-- TODEL for what? -->
 	<!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
-	<!-- com.rarepebble:colorpicker usages are behind @TargetApi(VERSION_CODES.HONEYCOMB) -->
+	<!--
+		android.support.test.uiautomator.v18=18
+		Not using it in this module, but on classpath,
+		lint will hopefully find the usages and notice that it's not callable from everywhere.
+
+		com.rarepebble:colorpicker=11
+		Usages are behind @TargetApi(VERSION_CODES.HONEYCOMB).
+	-->
 	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18,com.rarepebble.colorpicker" />
 
 </manifest>
