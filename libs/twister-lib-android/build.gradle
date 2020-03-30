@@ -97,6 +97,10 @@ tasks.register("cleanFull") {
 	dependsOn allprojects.collect { "${it.path}:clean" }
 }
 
+tasks.named("connectedCheck").configure {
+	dependsOn(subprojects.collect { "${it.path}:connectedCheck" })
+}
+
 evaluationDependsOnChildren() // TODO somehow remove this
 allprojects \
 	.collectMany { it.tasks.withType(com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask) } \

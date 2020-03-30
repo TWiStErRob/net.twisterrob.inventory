@@ -68,6 +68,10 @@ def includedConnectedTasks = [
 ]
 connectedTasks.each { it.configure { it.mustRunAfter(includedConnectedTasks) } }
 
+tasks.register("connectedCheck") {
+	dependsOn(gradle.includedBuild("twister-libs-android").task(':connectedCheck'))
+}
+
 task clean(type: Delete) {
 	dependsOn gradle.includedBuilds*.task(':cleanFull')
 	delete rootProject.buildDir
