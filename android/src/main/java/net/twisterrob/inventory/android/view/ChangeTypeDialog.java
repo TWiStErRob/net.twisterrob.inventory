@@ -126,6 +126,8 @@ public class ChangeTypeDialog {
 		Cursor cursor = (Cursor)adapter.getItem(pos);
 		int rootPos = findItemPosition(adapter, DatabaseTools.getOptionalInt(cursor, "root", Integer.MAX_VALUE));
 		final int offset = rootPos < 0? Integer.MAX_VALUE : (1 + pos - rootPos) * getHeight(adapter, pos);
+		// Delay things, so that ListView has time to lay out the new Adapter
+		// if it was just set in the same frame as this call.
 		list.post(new Runnable() {
 			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void run() {

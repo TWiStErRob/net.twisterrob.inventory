@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
+import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
@@ -68,10 +69,13 @@ public class ChangeTypeDialogActor {
 			do {
 				DataInteraction row = onData(withColumn(Category.NAME, currentType));
 				if (!exists(row)) {
+					// Not expanded yet, continue and try to select parent first.
 					continue;
 				}
-				row.perform(click());
+				// Make sure to close the keyword listing popup if click() turns into longClick().
+				row.perform(click(pressBack()));
 				if (exists(onView(dialogMatcher))) {
+					// Self-verify that click() actually selected the type in current iteration.
 					assertSelected(currentType);
 				}
 				break;
