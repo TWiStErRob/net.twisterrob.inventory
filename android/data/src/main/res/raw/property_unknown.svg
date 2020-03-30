@@ -25,6 +25,6 @@
 		<!-- AndroidSVG doesn't support filters yet, so need to copy in the contents for now -->
 		<!--<image width="550" height="550" x="-275" y="-275" xlink:href="category_unknown.svg" filter="url(#negative)" />-->
 		<circle r="250" stroke="white" stroke-width="50" fill="none" />
-		<text text-anchor="middle" font-size="400" font-weight="bold" dy="125" fill="white">?</text>
+		<text text-anchor="middle" font-size="400" font-weight="bold" font-family="sans-serif" dy="125" fill="white">?</text>
 	</g>
 </svg>
