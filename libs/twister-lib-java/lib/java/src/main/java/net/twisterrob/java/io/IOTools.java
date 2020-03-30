@@ -20,7 +20,10 @@ public /*static*/ abstract class IOTools {
 
 	public static void ensure(File dir) throws IOException {
 		if (!dir.mkdirs() && (!dir.exists() || !dir.isDirectory())) {
-			throw new FileNotFoundException("Failed to ensure directory: " + dir);
+			throw new FileNotFoundException("Failed to ensure directory: " + dir
+					+ "\n" + "exists=" + dir.exists()
+					+ "\n" + "isDirectory=" + dir.isDirectory()
+			);
 		}
 	}
 
