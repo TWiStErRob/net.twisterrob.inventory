@@ -1,35 +1,35 @@
 <?xml version="1.0"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4,-4 8 8">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24,-24 48 48">
 	<defs>
 		<style type="text/css"><![CDATA[
 			#arcs path {
 				fill: black;
 				stroke: white;
-				stroke-width: 0;
+				stroke-width: 0.5;
 			}
 		]]></style>
 	</defs>
 	<g style="display:none" id="helper">
-		<circle r="4" fill="blue" />
-		<circle r="3" fill="green" />
-		<circle r="2" fill="red" />
+		<circle r="24" fill="blue" fill-opacity="0.3" />
+		<circle r="18" fill="green" fill-opacity="0.3" />
+		<circle r="12" fill="red" fill-opacity="0.3" />
 	</g>
 	<g id="arcs" transform="rotate(90) scale(-1, 1)"><!-- make 0 degrees equal to +x -->
 		<!-- @formatter:off -->
-		<!-- gen(1, -15,25) --><path d="M 0 0 l 0.845 -1.813 A 2 2 0 0 0 -0.518 -1.932 Z" />
-		<!-- gen(2, 25,45) --><path d="M 0 0 l 2.121 -2.121 A 3 3 0 0 0 1.268 -2.719 Z" />
-		<!-- gen(3, 45,60) --><path d="M 0 0 l 3.464 -2 A 4 4 0 0 0 2.828 -2.828 Z" />
-		<!-- gen(1, 60,80) --><path d="M 0 0 l 1.97 -0.347 A 2 2 0 0 0 1.732 -1 Z" />
-		<!-- gen(3, 80,90) --><path d="M 0 0 l 4 0 A 4 4 0 0 0 3.939 -0.695 Z" />
-		<!-- gen(2, 90,110) --><path d="M 0 0 l 2.819 1.026 A 3 3 0 0 0 3 0 Z" />
-		<!-- gen(3, 110,170) --><path d="M 0 0 l 0.695 3.939 A 4 4 0 0 0 3.759 1.368 Z" />
-		<!-- gen(1, 170,210) --><path d="M 0 0 l -1 1.732 A 2 2 0 0 0 0.347 1.97 Z" />
-		<!-- gen(3, 210,235) --><path d="M 0 0 l -3.277 2.294 A 4 4 0 0 0 -2 3.464 Z" />
-		<!-- gen(2, 235,345) --><path d="M 0 0 l -0.776 -2.898 A 3 3 0 0 0 -2.457 1.721 Z" />
+		<!-- gen(9, -15,25) --><path d="M 0 0 l 4.226 -9.063 A 10 10 0 0 0 -2.588 -9.659 Z" />
+		<!-- gen(12, 25,45) --><path d="M 0 0 l 9.192 -9.192 A 13 13 0 0 0 5.494 -11.782 Z" />
+		<!-- gen(18, 45,60) --><path d="M 0 0 l 16.454 -9.5 A 19 19 0 0 0 13.435 -13.435 Z" />
+		<!-- gen(9, 60,80) --><path d="M 0 0 l 9.848 -1.736 A 10 10 0 0 0 8.66 -5 Z" />
+		<!-- gen(18, 80,90) --><path d="M 0 0 l 19 0 A 19 19 0 0 0 18.711 -3.299 Z" />
+		<!-- gen(12, 90,110) --><path d="M 0 0 l 12.216 4.446 A 13 13 0 0 0 13 0 Z" />
+		<!-- gen(18, 110,170) --><path d="M 0 0 l 3.299 18.711 A 19 19 0 0 0 17.854 6.498 Z" />
+		<!-- gen(9, 170,210) --><path d="M 0 0 l -5 8.66 A 10 10 0 0 0 1.736 9.848 Z" />
+		<!-- gen(18, 210,235) --><path d="M 0 0 l -15.564 10.898 A 19 19 0 0 0 -9.5 16.454 Z" />
+		<!-- gen(12, 235,345) --><path d="M 0 0 l -3.365 -12.557 A 13 13 0 0 0 -10.649 7.456 Z" />
 		<!-- @formatter:on -->
 	</g>
-	<circle r="1" fill="white" />
+	<circle r="3" fill="white" />
 </svg>
 <!-- "path d"'s are generated with:
 	function gen(radius, startAngle, endAngle) {
@@ -37,14 +37,14 @@
 			 + '<path d="' + describeArc(0,0, radius+1, startAngle, endAngle) + '" />\n';
 	}
 
-	gen(1, -15,25) +
-	gen(2, 25,45) +
-	gen(3, 45,60) +
-	gen(1, 60,80) +
-	gen(3, 80,90) +
-	gen(2, 90,110) +
-	gen(3, 110,170) +
-	gen(1, 170,210) +
-	gen(3, 210,235) +
-	gen(2, 235,345)
+	gen(9, -15,25) +
+	gen(12, 25,45) +
+	gen(18, 45,60) +
+	gen(9, 60,80) +
+	gen(18, 80,90) +
+	gen(12, 90,110) +
+	gen(18, 110,170) +
+	gen(9, 170,210) +
+	gen(18, 210,235) +
+	gen(12, 235,345)
 -->
