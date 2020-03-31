@@ -108,6 +108,30 @@ public class ZippedXMLExporterTest {
 		verifyNoMoreInteractions(mockDatabase, mockExporter);
 	}
 
+	@Test public void testDemoXmlTransformation() throws Throwable {
+		AssetManager assets = InstrumentationRegistry.getTargetContext().getAssets();
+		String xml = IOTools.readAll(assets.open("demo.xml"));
+		Cursor cursor = new MatrixCursor(new String[0]);
+		stubXML(xml, cursor);
+
+		ByteArrayOutputStream zipOs = new ByteArrayOutputStream();
+		callSut(cursor, zipOs);
+
+		verify(mockExporter).start(ArgumentMatchers.<OutputStream>any(), eq(cursor));
+		verify(mockExporter).finish(cursor);
+		verifyNoMoreInteractions(mockDatabase, mockExporter);
+
+		ZipFile zip = saveTempZip(zipOs);
+		assertThat(list(zip.entries()), hasSize(4));
+		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
+		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
+		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
+		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
+		assertThat(zip, hasEntry(
+				allOf(zipEntryWithName("data.xml"), zipEntryWithContent(zip, xml))
+		));
+	}
+
 	private @NonNull ZipFile saveTempZip(ByteArrayOutputStream zipOs) throws IOException {
 		File zipFile = temp.newFile();
 		IOTools.writeAll(new FileOutputStream(zipFile), zipOs.toByteArray());

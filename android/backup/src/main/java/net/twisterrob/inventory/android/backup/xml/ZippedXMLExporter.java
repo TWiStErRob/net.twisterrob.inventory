@@ -83,7 +83,23 @@ public class ZippedXMLExporter extends ZippedExporter {
 			zip.putNextEntry(new ZipEntry(zipFileName));
 			IOTools.writeUTF8BOM(zip); // required, because XSLT 1.0 cannot force a BOM, and some tools need it (Excel)
 			TransformerFactory factory = TransformerFactory.newInstance();
+			// Set up error handling, delegate to original, and then to mine,
+			// to get default behavior and fall back to error if it doesn't fail by default.
+			factory.setErrorListener(
+					new MultiCastErrorListener(
+							factory.getErrorListener(),
+							new StrictXmlErrorListener()
+					)
+			);
 			Transformer transformer = factory.newTransformer(new StreamSource(xslt));
+			// Set up error handling, delegate to original, and then to mine,
+			// to get default behavior and fall back to error if it doesn't fail by default.
+			transformer.setErrorListener(
+					new MultiCastErrorListener(
+							transformer.getErrorListener(),
+							new StrictXmlErrorListener()
+					)
+			);
 			// best effort to reduce acute entities, see XSLT files
 			transformer.setOutputProperty("{http://xml.apache.org/xalan}entities",
 					"org/apache/xml/serializer/XMLEntities");
