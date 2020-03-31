@@ -7,8 +7,11 @@ import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
 
 import org.slf4j.*;
+import org.xml.sax.SAXException;
 
 import android.content.res.AssetManager;
+import android.support.annotation.VisibleForTesting;
+import android.util.Xml;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
@@ -27,7 +30,12 @@ public class ZippedXMLExporter extends ZippedExporter {
 	private final AssetManager assets;
 
 	public ZippedXMLExporter(Database db, AssetManager assets) {
-		super(XML_NAME, db, new XMLExporter(XSLT_NAME, db));
+		this(db, assets, new XMLExporter(XSLT_NAME, db));
+	}
+
+	@VisibleForTesting
+	ZippedXMLExporter(Database db, AssetManager assets, CursorExporter exporter) {
+		super(XML_NAME, db, exporter);
 		this.capturedXML = new ByteArrayOutputStream();
 		this.assets = assets;
 	}
@@ -44,8 +52,17 @@ public class ZippedXMLExporter extends ZippedExporter {
 	@Override protected void endStream() throws IOException {
 		byte[] xml = capturedXML.toByteArray();
 		super.endStream();
+		validateXml(xml);
 		transform(HTML_NAME, new ByteArrayInputStream(xml), assets.open("data.html.xslt"));
 		transform(CSV_NAME, new ByteArrayInputStream(xml), assets.open("data.csv.xslt"));
+	}
+
+	private void validateXml(byte[] xml) throws IOException {
+		try {
+			Xml.parse(new ByteArrayInputStream(xml), Xml.Encoding.UTF_8, null);
+		} catch (SAXException e) {
+			throw new IOException("Cannot re-parse exported XML: " + e, e);
+		}
 	}
 
 	private void copyXSLT(String zipFileName, InputStream stream) throws IOException {

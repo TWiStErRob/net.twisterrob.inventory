@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.backup;
+package net.twisterrob.inventory.android.backup.xml;
 
 import java.io.*;
 
@@ -9,7 +9,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
-import net.twisterrob.inventory.android.backup.xml.*;
+import net.twisterrob.inventory.android.backup.Importer;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.Types;
