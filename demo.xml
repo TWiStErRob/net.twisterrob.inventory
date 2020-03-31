@@ -1,6 +1,11 @@
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <?xml-stylesheet type="text/xsl" href="data.html.xslt"?>
-<inventory approximateCount="34" version="1.0">
+<!-- An up to date version of the XSD Schema can be found at
+     https://github.com/TWiStErRob/net.twisterrob.inventory -->
+<inventory approximateCount="34" version="1.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="data.xml.xsd"
+	>
 	<property type="property_house" name="Home" id="1">
 		<room type="room_bed" name="My room" id="1">
 			<item type="category_lounging" name="Double Bed" id="2" />

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--suppress XmlDefaultAttributeValue -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<xsd:element name="inventory">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="property"    minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="list"        minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="version"          type="xsd:string"             use="optional">
+				<xsd:annotation>
+					<xsd:documentation>
+						Version of the backup format.
+						If omitted, inferred to be "1.0" for backwards compatibility.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="approximateCount" type="xsd:nonNegativeInteger" use="optional" />
+		</xsd:complexType>
+		<!--region Identity listing-->
+		<!-- unique/key/keyref xpaths are not full XPaths, just a subset:
+		     https://www.w3.org/TR/2012/REC-xmlschema11-1-20120405/structures.html#c-selector-xpath -->
+		<xsd:unique name="uniquePropertyID">
+			<xsd:selector xpath=".//property" />
+			<xsd:field xpath="@id" />
+		</xsd:unique>
+		<xsd:unique name="uniqueRoomID">
+			<xsd:selector xpath=".//room" />
+			<xsd:field xpath="@id" />
+		</xsd:unique>
+		<xsd:unique name="uniqueItemID">
+			<xsd:selector xpath=".//item" />
+			<xsd:field xpath="@id" />
+		</xsd:unique>
+		<xsd:key name="listItemKey">
+			<xsd:selector xpath=".//item" />
+			<xsd:field xpath="@id" />
+		</xsd:key>
+		<xsd:keyref name="listItemRef" refer="listItemKey">
+			<xsd:selector xpath=".//item-ref" />
+			<xsd:field xpath="@id" />
+		</xsd:keyref>
+		<!--endregion-->
+	</xsd:element>
+
+	<xsd:element name="property">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="description" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="room"        minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="id"    type="xsd:nonNegativeInteger" use="required" />
+			<xsd:attribute name="name"  type="xsd:string"             use="required" />
+			<xsd:attribute name="type"  type="xsd:string"             use="required" />
+			<xsd:attribute name="image" type="imagePath"              use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="room">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="description" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="item"        minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="id"    type="xsd:nonNegativeInteger" use="required" />
+			<xsd:attribute name="name"  type="xsd:string"             use="required" />
+			<xsd:attribute name="type"  type="xsd:string"             use="required" />
+			<xsd:attribute name="image" type="imagePath"              use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="item">
+		<xsd:annotation>
+			<xsd:documentation>
+				Represents an item in the inventory, it is recursively nestable.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="description" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="item"        minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="id"    type="xsd:nonNegativeInteger" use="required" />
+			<xsd:attribute name="name"  type="xsd:string"             use="required" />
+			<xsd:attribute name="type"  type="xsd:string"             use="required" />
+			<xsd:attribute name="image" type="imagePath"              use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="list">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="item-ref"    minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="name"  type="xsd:string"             use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="item-ref">
+		<xsd:complexType>
+			<xsd:sequence />
+			<xsd:attribute name="id"    type="xsd:nonNegativeInteger" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="description">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string" />
+		</xsd:simpleType>
+	</xsd:element>
+
+	<xsd:simpleType name="imagePath">
+		<xsd:annotation>
+			<xsd:documentation>
+				Location of the image file relative to data.xml (inside the backup ZIP).
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string" />
+	</xsd:simpleType>
+
+</xsd:schema>
