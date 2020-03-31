@@ -115,6 +115,18 @@ public class DatabaseMatchers {
 		};
 	}
 
+	public static @NonNull Matcher<? super Database> hasInvList(final String listName) {
+		return new TypeSafeDiagnosingMatcher<Database>() {
+			@Override public void describeTo(Description description) {
+				description.appendText("DB has list named ").appendValue(listName);
+			}
+			@Override protected boolean matchesSafely(Database db, Description mismatch) {
+				Cursor cursor = db.rawQuery(R.string.query_list_exists_by_name, listName);
+				return DatabaseTools.singleBoolean(cursor);
+			}
+		};
+	}
+
 	@SuppressWarnings("TryFinallyCanBeTryWithResources")
 	private static void appendParents(Description mismatch,
 			Database db, String belongingName, @StringRes int parentQuery) {

@@ -35,6 +35,18 @@ public class DataBaseActor extends TestDatabaseRule {
 		this.appDB = appDB;
 	}
 
+	public Database getDatabase() {
+		return appDB;
+	}
+
+	public void assertHasNoUserData() {
+		assertHasNoProperties();
+		assertHasNoRooms();
+		assertHasNoItems();
+		assertHasNoLists();
+		assertHasNoListEntries();
+	}
+
 	public void assertHasNoProperties() {
 		assertThat(DatabaseTools.singleLong(appDB.stats(), "properties"), is(0L));
 	}
@@ -44,6 +56,13 @@ public class DataBaseActor extends TestDatabaseRule {
 	public void assertHasNoItems() {
 		assertThat(DatabaseTools.singleLong(appDB.stats(), "items"), is(0L));
 	}
+	public void assertHasNoLists() {
+		assertThat(DatabaseTools.singleLong(appDB.stats(), "lists"), is(0L));
+	}
+	public void assertHasNoListEntries() {
+		assertThat(DatabaseTools.singleLong(appDB.stats(), "list_entries"), is(0L));
+	}
+
 	public void assertHasProperty(String propertyName) {
 		assertThat(testDB, hasInvProperty(propertyName));
 	}
@@ -77,6 +96,9 @@ public class DataBaseActor extends TestDatabaseRule {
 	}
 	public void assertHasNoItem(String itemName) {
 		assertThat(testDB, not(hasInvItem(itemName)));
+	}
+	public void assertHasList(String listName) {
+		assertThat(testDB, hasInvList(listName));
 	}
 
 	public void assertPropertyHasDescription(String propertyName, String description) {

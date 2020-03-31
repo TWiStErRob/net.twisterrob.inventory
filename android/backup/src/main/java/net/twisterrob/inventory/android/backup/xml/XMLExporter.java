@@ -54,7 +54,7 @@ public class XMLExporter implements CursorExporter {
 		if (xsltHref != null) {
 			// this is output as text() and that resets indent[depth] to false, need to set indent after this
 			serializer.ignorableWhitespace(System.getProperty("line.separator"));
-			serializer.comment(" Some browsers may not show anything if the " + xsltHref + " file cannot be found,\n"
+			escapedComment(serializer, " Some browsers may not show anything if the " + xsltHref + " file cannot be found,\n"
 					+ "     in that case remove the <?xml-stylesheet... ?> processing instruction. ");
 			serializer.ignorableWhitespace(System.getProperty("line.separator"));
 			serializer.processingInstruction("xml-stylesheet type=\"text/xsl\" href=\"" + xsltHref + "\"");
@@ -118,7 +118,7 @@ public class XMLExporter implements CursorExporter {
 				String itemName = DatabaseTools.getString(item, CommonColumns.NAME);
 				output.attribute(NS, ATTR_ID, String.valueOf(itemID));
 				output.endTag(NS, TAG_ITEM_REF);
-				output.comment(itemName);
+				escapedComment(output, itemName);
 			}
 			output.endTag(NS, TAG_LIST);
 		} finally {
@@ -136,6 +136,10 @@ public class XMLExporter implements CursorExporter {
 				return "itemName";
 		}
 		throw new IllegalStateException("Unknown type: " + type);
+	}
+
+	private static void escapedComment(XmlSerializer output, String comment) throws IOException {
+		output.comment(comment.replace("--", "&#x002d;&#x002d;"));
 	}
 
 	private abstract static class Belonging<T extends Belonging<?>> {
@@ -158,7 +162,7 @@ public class XMLExporter implements CursorExporter {
 			}
 			boolean hasBody = !children.isEmpty() || !StringTools.isNullOrEmpty(description);
 			if (hasBody && !TextUtils.isEmpty(comment)) {
-				output.comment(comment);
+				escapedComment(output, comment);
 			}
 			if (!StringTools.isNullOrEmpty(description)) {
 				output.startTag(NS, TAG_DESCRIPTION);
@@ -170,7 +174,7 @@ public class XMLExporter implements CursorExporter {
 			}
 			output.endTag(NS, tag);
 			if (!hasBody && !TextUtils.isEmpty(comment)) {
-				output.comment(comment);
+				escapedComment(output, comment);
 			}
 		}
 		protected abstract String getTag();

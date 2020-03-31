@@ -39,6 +39,9 @@
 	<string name="query_item_exists_by_room" translatable="false">"<![CDATA[
 		select 1 from Item i join Room r on i.parent = r.root where r.name = ? and i.name = ?;
 	]]>"</string>
+	<string name="query_list_exists_by_name" translatable="false">"<![CDATA[
+		select 1 from List where name = ?;
+	]]>"</string>
 	<string name="query_item_parent" translatable="false">"<![CDATA[
 		select ifNULL('room ' || r.name, 'item ' || p.name) as parent
 		from      Item i

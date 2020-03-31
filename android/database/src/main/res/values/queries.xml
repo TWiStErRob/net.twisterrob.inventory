@@ -698,7 +698,9 @@
 			(select count(*) from Property) as properties,
 			(select count(*) from Room) as rooms,
 			(select count(*) from Item) - (select count(*) from Room) as items,
-			(select count(*) from Category) as categories
+			(select count(*) from Category) as categories,
+			(select count(*) from List) as lists,
+			(select count(*) from List_Entry) as list_entries
 	]]>"</string>
 
 
