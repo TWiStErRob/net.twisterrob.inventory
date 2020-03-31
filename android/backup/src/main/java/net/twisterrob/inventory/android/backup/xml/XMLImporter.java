@@ -43,7 +43,7 @@ public class XMLImporter implements Importer {
 		Xml.parse(stream, Xml.Encoding.UTF_8, structure.getContentHandler());
 	}
 
-	public RootElement getStructure() {
+	private RootElement getStructure() {
 		RootElement root = new RootElement(TAG_ROOT);
 		Element propertyElement = root.getChild(TAG_PROPERTY);
 		final Element roomElement = propertyElement.getChild(TAG_ROOM);
