@@ -499,7 +499,7 @@ public class MainActivity extends DrawerActivity
 			InputStream demo = null;
 			try {
 				demo = getAssets().open("demo.xml");
-				new XMLImporter(getResources(), App.db()).doImport(demo, new ImportProgress() {
+				new XMLImporter(getResources(), App.db(), new Types(App.db())).doImport(demo, new ImportProgress() {
 					@Override public void publishStart(int size) {
 						// NO OP
 					}

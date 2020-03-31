@@ -16,6 +16,7 @@ import net.twisterrob.inventory.android.backup.Progress.Phase;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.Type;
+import net.twisterrob.inventory.android.content.model.Types;
 import net.twisterrob.java.utils.ObjectTools;
 
 public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<File> {
@@ -27,7 +28,7 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 	private final XMLImporter importer;
 
 	public BackupZipFileImporter(Resources res, Database db, ImportProgressHandler progress) {
-		this(res, db, new XMLImporter(res, db), progress);
+		this(res, db, new XMLImporter(res, db, new Types(db)), progress);
 	}
 	@VisibleForTesting BackupZipFileImporter(Resources res,
 			Database db, XMLImporter importer, ImportProgressHandler progress) {
