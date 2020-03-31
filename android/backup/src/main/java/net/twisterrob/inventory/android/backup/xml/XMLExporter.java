@@ -3,6 +3,8 @@ package net.twisterrob.inventory.android.backup.xml;
 import java.io.*;
 import java.util.*;
 
+import javax.xml.XMLConstants;
+
 import org.slf4j.*;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -37,14 +39,19 @@ public class XMLExporter implements CursorExporter {
 	public static final String TAG_DESCRIPTION = "description";
 	public static final String TAG_ITEM_REF = "item-ref";
 	public static final String ENCODING = "utf-8";
+	private static final String NS_XSI = "xsi";
+	private static final String NS_XSI_URI = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
+	private static final String XS_NO_LOCATION = "noNamespaceSchemaLocation";
 
 	private final Hierarchy hier = new Hierarchy();
 	private final XmlSerializer serializer = Xml.newSerializer();
 	private final String xsltHref;
+	private final String xsdHref;
 	private final Database db;
 
-	public XMLExporter(String xsltHref, Database db) {
+	public XMLExporter(String xsltHref, String xsdHref, Database db) {
 		this.xsltHref = xsltHref;
+		this.xsdHref = xsdHref;
 		this.db = db;
 	}
 
@@ -52,17 +59,27 @@ public class XMLExporter implements CursorExporter {
 		serializer.setOutput(dataStream, ENCODING);
 		serializer.startDocument(ENCODING, true);
 		if (xsltHref != null) {
-			// this is output as text() and that resets indent[depth] to false, need to set indent after this
 			serializer.ignorableWhitespace(System.getProperty("line.separator"));
 			escapedComment(serializer, " Some browsers may not show anything if the " + xsltHref + " file cannot be found,\n"
 					+ "     in that case remove the <?xml-stylesheet... ?> processing instruction. ");
 			serializer.ignorableWhitespace(System.getProperty("line.separator"));
 			serializer.processingInstruction("xml-stylesheet type=\"text/xsl\" href=\"" + xsltHref + "\"");
 		}
-		serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true); // must be after text()
+		if (xsdHref != null) {
+			serializer.ignorableWhitespace(System.getProperty("line.separator"));
+			escapedComment(serializer, " An up to date version of the XSD Schema can be found at\n"
+					+ "     https://github.com/TWiStErRob/net.twisterrob.inventory ");
+			serializer.setPrefix(NS_XSI, NS_XSI_URI);
+		}
+		// Need to set indent right before root tag, because ignorableWhitespace
+		// is output as text() and that resets indent[depth] to false.
+		serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
 		serializer.startTag(NS, TAG_ROOT);
 		serializer.attribute(NS, ATTR_COUNT, String.valueOf(cursor.getCount()));
 		serializer.attribute(NS, ATTR_VERSION, "1.0");
+		if (xsdHref != null) {
+			serializer.attribute(NS_XSI_URI, XS_NO_LOCATION, xsdHref);
+		}
 	}
 
 	@Override public void processEntry(Cursor cursor) {

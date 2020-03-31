@@ -28,6 +28,7 @@ dependencies {
 
 def dataXsltCsv = project(':android:backup').file("src/main/assets/data.csv.xslt")
 def dataXsltHtml = project(':android:backup').file("src/main/assets/data.html.xslt")
+def dataXsd = project(':android:backup').file("src/main/assets/data.xml.xsd")
 def dataXml = project(':android').file("${rootDir}/temp/test/data.xml")
 def transformDir = file('build/transformed')
 idea.module.excludeDirs += [ transformDir ]
@@ -35,11 +36,13 @@ idea.module.excludeDirs += [ transformDir ]
 // run with: gradlew -p buildSrc cRT rTHJ rTCJ | grep -v "^:"
 task runTransformHtmlJava(type: Transform) {
 	xml = dataXml
+	xsd = dataXsd
 	xslt = dataXsltHtml
 	out = new File(transformDir, "data-java.html")
 }
 task runTransformCsvJava(type: Transform) {
 	xml = dataXml
+	xsd = dataXsd
 	xslt = dataXsltCsv
 	out = new File(transformDir, "data-java.csv")
 }
@@ -47,12 +50,14 @@ task runTransformCsvJava(type: Transform) {
 // run with: gradlew -p buildSrc cRT rTHX rTCX | grep -v "^:"
 task runTransformHtmlXalan(type: Transform) {
 	xml = dataXml
+	xsd = dataXsd
 	xslt = dataXsltHtml
 	out = new File(transformDir, "data-xalan.html")
 	classpath += configurations.xalan
 }
 task runTransformCsvXalan(type: Transform) {
 	xml = dataXml
+	xsd = dataXsd
 	xslt = dataXsltCsv
 	out = new File(transformDir, "data-xalan.csv")
 	classpath += configurations.xalan
@@ -61,12 +66,14 @@ task runTransformCsvXalan(type: Transform) {
 // run with: gradlew -p buildSrc cRT rTHS rTCS | grep -v "^:"
 task runTransformHtmlSaxon(type: Transform) {
 	xml = dataXml
+	xsd = dataXsd
 	xslt = dataXsltHtml
 	out = new File(transformDir, "data-saxon.html")
 	classpath += configurations.saxon
 }
 task runTransformCsvSaxon(type: Transform) {
 	xml = dataXml
+	xsd = dataXsd
 	xslt = dataXsltCsv
 	out = new File(transformDir, "data-saxon.csv")
 	classpath += configurations.saxon
@@ -87,6 +94,7 @@ tasks.check.dependsOn tasks.runTransforms
 
 class Transform extends JavaExec {
 	@InputFile File xml
+	@InputFile File xsd
 	@InputFile File xslt
 	@OutputFile File out
 
@@ -97,7 +105,7 @@ class Transform extends JavaExec {
 	}
 
 	@Override void exec() {
-		args = [ xml, xslt, out ]
+		args = [ xml, xsd, xslt, out ]
 		super.exec()
 	}
 }

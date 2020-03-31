@@ -31,6 +31,23 @@ public class BackupDataXmlExportImportIntgTest {
 		context = InstrumentationRegistry.getTargetContext();
 	}
 
+	@Test public void testEmpty() throws Exception {
+		Database db = database.getDatabase();
+		database.assertHasNoUserData();
+
+		CursorExporter exporter = new XMLExporter("xslt.file", "xsd.file", db);
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try (Cursor export = db.export()) {
+			exporter.start(output, export);
+			exporter.finish(export);
+		}
+
+		database.assertHasNoUserData();
+		Importer importer = new XMLImporter(context.getResources(), db, new Types(db));
+		importer.doImport(new ByteArrayInputStream(output.toByteArray()), null, null);
+		database.assertHasNoUserData();
+	}
+
 	@Test public void testXMLCommentProblems() throws Exception {
 		Database db = database.getDatabase();
 		long prop = db.createProperty(PropertyType.DEFAULT, bad("Property"), badDesc("Property"));
@@ -39,7 +56,7 @@ public class BackupDataXmlExportImportIntgTest {
 		long list = db.createList(bad("List"));
 		db.addListEntry(list, item);
 
-		CursorExporter exporter = new XMLExporter("xslt-name", db);
+		CursorExporter exporter = new XMLExporter("xslt.file", "xsd.file", db);
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try (Cursor export = db.export()) {
 			exporter.start(output, export);

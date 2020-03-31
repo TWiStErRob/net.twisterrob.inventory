@@ -3,36 +3,75 @@ package net.twisterrob.build;
 import java.io.*;
 import java.util.*;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
+import javax.xml.validation.*;
+
+import org.xml.sax.*;
 
 import net.twisterrob.build.GatheringErrorListener.Problem;
 import net.twisterrob.build.GatheringErrorListener.Problem.Severity;
 
 public class Transform {
-	public static void main(String... args) throws IOException, TransformerException {
-		FileInputStream xml = new FileInputStream(args[0]);
-		FileInputStream xslt = new FileInputStream(args[1]);
-		FileOutputStream out = new FileOutputStream(args[2]);
+	public static void main(String... args) throws IOException, TransformerException, SAXException {
+		FileInputStream xmlToTransform = new FileInputStream(args[0]);
+		FileInputStream xmlToValidate = new FileInputStream(args[0]);
+		FileInputStream xsd = new FileInputStream(args[1]);
+		FileInputStream xslt = new FileInputStream(args[2]);
+		FileOutputStream out = new FileOutputStream(args[3]);
 		out.write(0xEF);
 		out.write(0xBB);
 		out.write(0xBF);
 
+		long startSchemaFactory = System.currentTimeMillis();
+		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		long endSchemaFactory = System.currentTimeMillis();
+		long startSchemaValidator = System.currentTimeMillis();
+		Schema schema = schemaFactory.newSchema(new StreamSource(xsd));
+		Validator validator = schema.newValidator();
+		long endSchemaValidator = System.currentTimeMillis();
+		System.out.printf("Validating %s with %s using %s through %s created by %s%n",
+				args[0], args[1], schema, validator, schemaFactory);
+		validator.setErrorHandler(new ErrorHandler() {
+			@Override public void warning(SAXParseException exception) throws SAXException {
+				throw exception;
+			}
+			@Override public void error(SAXParseException exception) throws SAXException {
+				throw exception;
+			}
+			@Override public void fatalError(SAXParseException exception) throws SAXException {
+				throw exception;
+			}
+		});
+		long startValidation = System.currentTimeMillis();
+		validator.validate(new StreamSource(xmlToValidate));
+		long endValidation = System.currentTimeMillis();
+
+		long timeSchemaFactory = endSchemaFactory - startSchemaFactory;
+		long timeSchemaValidator = endSchemaValidator - startSchemaValidator;
+		long timeValidation = endValidation - startValidation;
+		long timeSchemaSetup = timeSchemaFactory + timeSchemaValidator;
+		long timeSchemaTotal = timeSchemaSetup + timeValidation;
+		System.out.printf("Validation took %.3f seconds (setup = %d ms, validation = %d ms).%n",
+				timeSchemaTotal / 1000d, timeSchemaSetup, timeValidation);
+
 		GatheringErrorListener listener = new GatheringErrorListener();
 
 		long startFactory = System.currentTimeMillis();
-		TransformerFactory factory = TransformerFactory.newInstance();
-		factory.setErrorListener(listener);
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		transformerFactory.setErrorListener(listener);
 		long endFactory = System.currentTimeMillis();
 		long startTransformer = System.currentTimeMillis();
-		Transformer transformer = factory.newTransformer(new StreamSource(xslt));
+		Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslt));
 		transformer.setErrorListener(listener);
 		long endTransformer = System.currentTimeMillis();
 		System.out.printf("Transforming %s into %s through %s using %s created by %s%n",
-				args[0], args[2], args[1], transformer, factory);
-		transformer.setOutputProperty("{http://xml.apache.org/xalan}entities", "org/apache/xml/serializer/XMLEntities");
+				args[0], args[3], args[2], transformer, transformerFactory);
+		transformer.setOutputProperty("{http://xml.apache.org/xalan}entities",
+				"org/apache/xml/serializer/XMLEntities");
 		long startTransform = System.currentTimeMillis();
-		transformer.transform(new StreamSource(xml), new StreamResult(out));
+		transformer.transform(new StreamSource(xmlToTransform), new StreamResult(out));
 		long endTransform = System.currentTimeMillis();
 
 		long timeFactory = endFactory - startFactory;
