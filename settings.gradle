@@ -10,6 +10,7 @@ include ':android:data'
 include ':android:data:svg'
 include ':android:backup'
 include ':tools:transform'
+include ':libs'
 
 def includeWithContract(String projectPath) {
 	include projectPath

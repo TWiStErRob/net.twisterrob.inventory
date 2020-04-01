@@ -6,12 +6,14 @@ import org.hamcrest.Matcher;
 
 import static org.junit.Assume.*;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
-import android.content.Intent;
+import android.content.*;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 
 import static android.support.test.InstrumentationRegistry.*;
@@ -38,7 +40,8 @@ public class CaptureImageActivityActor extends ActivityActor {
 		Uri resultFile = Uri.fromFile(file);
 		OutputStream output = getContext().getContentResolver().openOutputStream(resultFile);
 		try {
-			assumeTrue("Cannot save bitmap to " + resultFile, mockText.compress(CompressFormat.PNG, 100, output));
+			boolean compressed = mockText.compress(CompressFormat.PNG, 100, output);
+			assumeTrue("Cannot save bitmap to " + resultFile, compressed);
 		} finally {
 			IOTools.ignorantClose(output);
 		}
@@ -46,6 +49,17 @@ public class CaptureImageActivityActor extends ActivityActor {
 		intending(expectedIntent)
 				.respondWith(new ActivityResult(Activity.RESULT_OK, new Intent(null, resultFile)));
 		return expectedIntent;
+	}
+
+	@SuppressLint("ApplySharedPref") // want to save persist immediately
+	public void clearPreferences() {
+		InstrumentationRegistry
+				.getTargetContext()
+				.getSharedPreferences(CaptureImage.class.getName(), Context.MODE_PRIVATE)
+				.edit()
+				.clear()
+				.commit()
+		;
 	}
 
 	public void allowPermissions() throws UiObjectNotFoundException {
