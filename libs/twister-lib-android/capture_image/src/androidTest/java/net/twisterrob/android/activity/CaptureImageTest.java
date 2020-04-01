@@ -1,17 +1,10 @@
 package net.twisterrob.android.activity;
 
-import java.io.File;
-
 import org.junit.*;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
-import android.content.Intent;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiObjectNotFoundException;
-
-import net.twisterrob.android.test.junit.SensibleActivityTestRule;
 
 /**
  * @see CaptureImage
@@ -19,25 +12,8 @@ import net.twisterrob.android.test.junit.SensibleActivityTestRule;
 @RunWith(AndroidJUnit4.class)
 public class CaptureImageTest {
 
-	private File outputFile;
-
-	@Rule(order = 1)
-	public final TemporaryFolder temp = new TemporaryFolder() {
-		@Override protected void before() throws Throwable {
-			super.before();
-			outputFile = new File(getRoot(), "output.file");
-		}
-	};
-
-	@Rule(order = 2)
-	public final ActivityTestRule<CaptureImage> activity =
-			new SensibleActivityTestRule<CaptureImage>(CaptureImage.class, true, false) {
-
-				@Override protected Intent getActivityIntent() {
-					return new Intent()
-							.putExtra(CaptureImage.EXTRA_OUTPUT, outputFile.getAbsolutePath());
-				}
-			};
+	@Rule
+	public final CaptureImageActivityTestRule activity = new CaptureImageActivityTestRule();
 
 	private final CaptureImageActivityActor captureImage = new CaptureImageActivityActor();
 
