@@ -451,7 +451,8 @@ public class MainActivity extends DrawerActivity
 	public static Intent improveCategories(Context context, Long categoryId) {
 		String subject = context.getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME + " Category Feedback";
 		Intent intent = new Intent(Intent.ACTION_VIEW)
-				.setData(Uri.parse("mailto:" + BuildConfig.EMAIL))
+				.setData(Uri.parse("mailto:"))
+				.putExtra(Intent.EXTRA_EMAIL, new String[] {BuildConfig.EMAIL})
 				.putExtra(Intent.EXTRA_SUBJECT, subject);
 		String text = "How can we improve the Categories?";
 		if (categoryId != null) {

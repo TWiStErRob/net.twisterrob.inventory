@@ -67,6 +67,16 @@
 			android:summary="@string/pref_app_feedback_desc">
 			<intent android:action="android.intent.action.VIEW"
 			        android:data="mailto:feedback@twisterrob.net">
+				<!--
+					Note: tried to use the extra method here too:
+					<extra android:name="android.intent.extra.EMAIL"
+					       android:value="@array/pref_app_feedback_email" />
+					but got org.xmlpull.v1.XmlPullParserException:
+						<extra> only supports string, integer, float, color, and boolean at Binary XML file line #71
+						at android.content.res.Resources.parseBundleExtra(Resources.java:2213)
+						at android.content.Intent.parseIntent(Intent.java:10614)
+						at android.preference.PreferenceInflater.onCreateCustomFromTag(PreferenceInflater.java:81)
+				-->
 				<!--suppress AndroidElementNotAllowed: see android.preference.PreferenceInflater#onCreateCustomFromTag -->
 				<extra android:name="android.intent.extra.TEXT"
 				       android:value="@string/pref_app_feedback_body" />

@@ -135,7 +135,7 @@ public class AboutActivity extends ListActivity {
 
 	protected @NonNull Intent createFeedbackIntent(AboutInfo aboutInfo) {
 		final Intent feedbackIntent = new Intent(Intent.ACTION_VIEW);
-		feedbackIntent.setData(Uri.parse("mailto:" + aboutInfo.email));
+		feedbackIntent.setData(Uri.parse("mailto:"));
 		feedbackIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {aboutInfo.email});
 		feedbackIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.about_feedback_subject,
 				aboutInfo.appLabel));
