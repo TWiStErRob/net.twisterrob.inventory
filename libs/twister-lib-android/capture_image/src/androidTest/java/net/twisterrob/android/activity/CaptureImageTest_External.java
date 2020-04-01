@@ -1,23 +1,30 @@
 package net.twisterrob.android.activity;
 
-import java.io.File;
+import java.io.*;
 
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.Matchers.*;
+
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 
+import net.twisterrob.android.test.espresso.idle.GlideIdlingResource;
 import net.twisterrob.android.test.junit.SensibleActivityTestRule;
 
 /**
  * @see CaptureImage
  */
 @RunWith(AndroidJUnit4.class)
-public class CaptureImageTest {
+public class CaptureImageTest_External {
 
 	private File outputFile;
 
@@ -32,6 +39,17 @@ public class CaptureImageTest {
 	@Rule(order = 2)
 	public final ActivityTestRule<CaptureImage> activity =
 			new SensibleActivityTestRule<CaptureImage>(CaptureImage.class, true, false) {
+				private final GlideIdlingResource glideIdler = new GlideIdlingResource();
+
+				@Override protected void beforeActivityLaunched() {
+					IdlingRegistry.getInstance().register(glideIdler);
+					super.beforeActivityLaunched();
+				}
+
+				@Override protected void afterActivityFinished() {
+					super.afterActivityFinished();
+					IdlingRegistry.getInstance().unregister(glideIdler);
+				}
 
 				@Override protected Intent getActivityIntent() {
 					return new Intent()
@@ -41,28 +59,15 @@ public class CaptureImageTest {
 
 	private final CaptureImageActivityActor captureImage = new CaptureImageActivityActor();
 
-	@Test public void flashStateRememberedBetweenLaunches_off() throws UiObjectNotFoundException {
-		captureImage.clearPreferences();
+	@Test public void loadsImageFromExternalSource_resultIntentDataUriFile()
+			throws UiObjectNotFoundException, IOException {
 		activity.launchActivity(null);
 		captureImage.allowPermissions();
-		captureImage.turnFlashOn();
-		captureImage.turnFlashOff();
-		activity.finishActivity();
-
-		activity.launchActivity(null);
-
-		captureImage.assertFlashOff();
-	}
-
-	@Test public void flashStateRememberedBetweenLaunches_on() throws UiObjectNotFoundException {
-		captureImage.clearPreferences();
-		activity.launchActivity(null);
-		captureImage.allowPermissions();
-		captureImage.turnFlashOn();
-		activity.finishActivity();
-
-		activity.launchActivity(null);
-
-		captureImage.assertFlashOn();
+		Uri fakeUri = captureImage.createFakeImage(temp.newFile(), Color.RED);
+		captureImage.intendExternalChooser(fakeUri);
+		captureImage.pick();
+		captureImage.verifyExternalChooser();
+		Intents.assertNoUnverifiedIntents();
+		captureImage.verifyImageColor(equalTo(Color.RED));
 	}
 }

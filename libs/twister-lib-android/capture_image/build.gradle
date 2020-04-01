@@ -28,11 +28,13 @@ dependencies {
 		androidTestImplementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 	}
 	androidTestRuntimeOnly "net.twisterrob.lib:twister-lib-android-slf4j"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_glide3"
 }
 
 android {
 	defaultConfig {
 		minSdkVersion 10
+		multiDexEnabled true
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	lintOptions {
