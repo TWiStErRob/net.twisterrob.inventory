@@ -63,26 +63,26 @@
 		</Preference>
 		<Preference
 			android:order="-1"
-			android:title="@string/feedback_title"
-			android:summary="Ask a question, request features you'd like to see, or just tell me what you think about the app. Any feedback is welcome.">
+			android:title="@string/pref_app_feedback_title"
+			android:summary="@string/pref_app_feedback_desc">
 			<intent android:action="android.intent.action.VIEW"
 			        android:data="mailto:feedback@twisterrob.net">
 				<!--suppress AndroidElementNotAllowed: see android.preference.PreferenceInflater#onCreateCustomFromTag -->
 				<extra android:name="android.intent.extra.TEXT"
-				       android:value="Write your request/question/feedback here." />
+				       android:value="@string/pref_app_feedback_body" />
 				<!--suppress AndroidElementNotAllowed: see android.preference.PreferenceInflater#onCreateCustomFromTag -->
 				<extra android:name="android.intent.extra.SUBJECT"
-				       android:value="Magic Home Inventory feedback" />
+				       android:value="@string/pref_app_feedback_subject" />
 			</intent>
 		</Preference>
 		<Preference
 			android:order="0"
-			android:title="@string/about_title"
-			android:summary="@string/app_name"
+			android:title="@string/pref_app_about_title"
+			android:summary="@string/pref_app_about_desc"
 			>
 			<intent
 				android:targetClass="net.twisterrob.android.activity.AboutActivity"
-				android:targetPackage="@string/app_package"
+				android:targetPackage="@string/pref_app_about_package"
 				/>
 		</Preference>
 	</PreferenceCategory>

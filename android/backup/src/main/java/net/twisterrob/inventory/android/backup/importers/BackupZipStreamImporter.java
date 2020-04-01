@@ -80,7 +80,8 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 			images.close();
 			if (!seenEntry) {
 				throw new IllegalArgumentException(String.format("The import is not a valid %s backup: %s",
-						res.getString(R.string.app_name), "missing data file " + Paths.BACKUP_DATA_FILENAME));
+						res.getString(R.string.backup_import_result_app_name),
+						"missing data file " + Paths.BACKUP_DATA_FILENAME));
 			}
 		} finally {
 			IOTools.ignorantClose(zip);

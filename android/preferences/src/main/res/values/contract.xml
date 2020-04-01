@@ -1,7 +1,0 @@
-<resources>
-	<item name="about_title" type="string" />
-	<string name="manage_space_title">WILL BE REPLACED</string>
-	<string name="feedback_title">WILL BE REPLACED</string>
-	<string name="app_package">WILL BE REPLACED</string>
-	<string name="app_name">WILL BE REPLACED</string>
-</resources>

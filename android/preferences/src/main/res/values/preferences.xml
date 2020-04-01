@@ -87,8 +87,25 @@
 
 	<string name="pref_app_in_settings_title">App info in Settings</string>
 	<string name="pref_app_in_settings_desc">manage storage, permissions, notifications, etc.</string>
+
 	<string name="pref_app_in_store_title">App details in Play Store</string>
 	<string name="pref_app_in_store_desc">check for updates, leave a review, share, uninstall, etc.</string>
+
 	<string name="pref_app_privacy_policy_title">Privacy Policy</string>
 	<string name="pref_app_privacy_policy_desc">How is my data handled?</string>
+
+	<string name="pref_app_feedback_title">Feedback</string>
+	<string name="pref_app_feedback_desc">Ask a question, request features you\'d like to see, or just tell me what you think about the app. Any feedback is welcome.</string>
+	<string name="pref_app_feedback_body">Write your request/question/feedback here.</string>
+	<string name="pref_app_feedback_subject">Magic Home Inventory feedback</string>
+
+	<!-- Will be replaced with "About" during resource merging. -->
+	<string name="pref_app_about_title">@string/merged_resource</string>
+	<!-- Will be replaced with "Magic Home Inventory" during resource merging. -->
+	<string name="pref_app_about_desc">@string/merged_resource</string>
+	<!-- Will be replaced with "net.twisterrob.inventory" during resource merging. -->
+	<string name="pref_app_about_package">@string/merged_resource</string>
+
+	<!-- Will be replaced with "Manage Inventory Space" during resource merging. -->
+	<string name="pref_app_manage_space_title">@string/merged_resource</string>
 </resources>

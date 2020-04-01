@@ -54,7 +54,7 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 			} else {
 				throw new IllegalArgumentException(String.format("The file %s is not a valid %s backup: %s",
 						zip.getName(),
-						res.getString(R.string.app_name),
+						res.getString(R.string.backup_import_result_app_name),
 						"missing data file " + Paths.BACKUP_DATA_FILENAME));
 			}
 		} catch (ZipException ex) {
