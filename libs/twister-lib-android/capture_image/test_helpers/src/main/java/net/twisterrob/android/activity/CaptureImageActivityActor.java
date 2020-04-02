@@ -17,7 +17,7 @@ import android.graphics.drawable.*;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.intent.*;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.view.View;
 import android.widget.ImageView;
@@ -153,12 +153,20 @@ public class CaptureImageActivityActor extends ActivityActor {
 		       .respondWith(new ActivityResult(Activity.RESULT_OK, new Intent().setData(fakeUri)));
 	}
 
+	public void intendExternalChooserCancelled() {
+		Intents.intending(hasAction(Intent.ACTION_CHOOSER))
+		       .respondWith(new ActivityResult(Activity.RESULT_CANCELED, null));
+	}
+
 	public void verifyExternalChooser() {
+		verifyExternalChooser(times(1));
+	}
+	public void verifyExternalChooser(VerificationMode mode) {
 		String title = InstrumentationRegistry.getTargetContext()
 		                                      .getString(R.string.image__choose_external__title);
 		Intents.intended(allOf(
 				hasAction(Intent.ACTION_CHOOSER),
 				hasExtra(Intent.EXTRA_TITLE, title)
-		));
+		), mode);
 	}
 }

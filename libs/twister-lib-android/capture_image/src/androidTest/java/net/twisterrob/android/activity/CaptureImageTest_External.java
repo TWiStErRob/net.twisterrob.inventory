@@ -13,6 +13,8 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 
+import static android.support.test.espresso.intent.Intents.*;
+
 /**
  * @see CaptureImage
  */
@@ -32,6 +34,21 @@ public class CaptureImageTest_External {
 		captureImage.intendExternalChooser(fakeUri);
 		captureImage.pick();
 		captureImage.verifyExternalChooser();
+		Intents.assertNoUnverifiedIntents();
+		captureImage.verifyImageColor(equalTo(Color.RED));
+	}
+
+	@Test public void fallsBackPreviousImageIfPickCancelled()
+			throws UiObjectNotFoundException, IOException {
+		activity.launchActivity(null);
+		captureImage.allowPermissions();
+		Uri fakeUri = captureImage.createFakeImage(activity.getTemp().newFile(), Color.RED);
+		captureImage.intendExternalChooser(fakeUri);
+		captureImage.pick();
+		captureImage.verifyExternalChooser();
+		captureImage.intendExternalChooserCancelled();
+		captureImage.pick();
+		captureImage.verifyExternalChooser(times(2));
 		Intents.assertNoUnverifiedIntents();
 		captureImage.verifyImageColor(equalTo(Color.RED));
 	}
