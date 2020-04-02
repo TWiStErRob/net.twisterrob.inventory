@@ -11,10 +11,7 @@ buildscript {
 	}
 }
 
-group = 'net.twisterrob.lib'
-version = '1.0'
-
-allprojects { project ->
+subprojects { project ->
 	repositories {
 		jcenter()
 	}
@@ -35,14 +32,6 @@ allprojects { project ->
 	}
 }
 
-dependencies {
-	// TODO remove all dependencies of this project and use specific modules
-	api 'net.twisterrob.lib:twister-lib-core'
-	api 'net.twisterrob.lib:twister-lib-collect'
-	api 'net.twisterrob.lib:twister-lib-stringer'
-	api 'net.twisterrob.lib:twister-lib-java'
-}
-
 tasks.register("cleanFull") {
-	dependsOn allprojects*.tasks*.named("clean")
+	dependsOn subprojects*.tasks*.named("clean")
 }

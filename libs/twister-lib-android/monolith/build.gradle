@@ -3,7 +3,7 @@ apply from: 'http://localhost/maven/configure.gradle'
 
 dependencies {
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-	implementation 'net.twisterrob.lib:twister-libs-java'
+	implementation 'net.twisterrob.lib:twister-lib-general'
 	implementation 'net.twisterrob.lib:twister-lib-android-defs'
 	implementation 'net.twisterrob.lib:twister-lib-android-logging'
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'

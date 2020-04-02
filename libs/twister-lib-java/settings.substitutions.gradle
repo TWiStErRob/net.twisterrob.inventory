@@ -8,7 +8,7 @@
  */
 
 dependencySubstitution {
-	substitute module('net.twisterrob.lib:twister-libs-java') with project(':')
+	substitute module('net.twisterrob.lib:twister-lib-general') with project(':lib:general')
 
 	substitute module("net.twisterrob.lib:twister-lib-hamcrest") with project(":lib:hamcrest")
 	substitute module("net.twisterrob.lib:twister-lib-java") with project(":lib:java")
