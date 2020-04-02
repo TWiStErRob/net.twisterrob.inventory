@@ -36,6 +36,9 @@ import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.android.test.automators.AndroidAutomator.*;
 
+/**
+ * @see CaptureImage
+ */
 public class CaptureImageActivityActor extends ActivityActor {
 
 	public CaptureImageActivityActor() {
@@ -119,16 +122,42 @@ public class CaptureImageActivityActor extends ActivityActor {
 		return Uri.fromFile(fakeFile);
 	}
 
-	public void verifyImageColor(Matcher<Integer> colorMatcher) {
+	public void verifyNoImage() {
+		onView(withId(R.id.image)).check(matches(hasBitmap(nullValue())));
+	}
+
+	public void verifyImageColor(Matcher<? super Integer> colorMatcher) {
 		onView(withId(R.id.image)).check(matches(hasBitmap(withPixelAt(0, 0, colorMatcher))));
 	}
 
+	public void verifyErrorImage() {
+		// TODO hasDrawable(R.drawable.image_error)
+		Matcher<Object> errorDrawable = allOf(
+				instanceOf(LayerDrawable.class), // contains two layers of RotateDrawables
+				not(instanceOf(TransitionDrawable.class)) // not glide animation
+		);
+		onView(withId(R.id.image)).check(matches(hasDrawable(errorDrawable)));
+	}
+
 	@SuppressWarnings("unchecked")
-	private static Matcher<View> hasBitmap(final Matcher<Bitmap> bitmapMatcher) {
+	private Matcher<View> hasDrawable(Matcher<? super Drawable> drawableMatcher) {
+		return (Matcher<View>)(Matcher<?>)new FeatureMatcher<ImageView, Drawable>(
+				drawableMatcher, "drawable", "drawable") {
+			@Override protected Drawable featureValueOf(ImageView actual) {
+				return actual.getDrawable();
+			}
+		};
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Matcher<View> hasBitmap(final Matcher<? super Bitmap> bitmapMatcher) {
 		return (Matcher<View>)(Matcher<?>)new FeatureMatcher<ImageView, Bitmap>(
 				bitmapMatcher, "bitmap in drawable", "bitmap") {
 			@Override protected Bitmap featureValueOf(ImageView actual) {
 				Drawable drawable = actual.getDrawable();
+				if (drawable == null) {
+					return null;
+				}
 				if (drawable instanceof LayerDrawable) {
 					// In case Glide is animating from thumbnail (0) to main result (1), use result.
 					drawable = ((LayerDrawable)drawable).getDrawable(1);
@@ -139,7 +168,7 @@ public class CaptureImageActivityActor extends ActivityActor {
 	}
 
 	private static Matcher<Bitmap> withPixelAt(
-			final int x, final int y, Matcher<Integer> colorMatcher) {
+			final int x, final int y, Matcher<? super Integer> colorMatcher) {
 		return new FeatureMatcher<Bitmap, Integer>(
 				colorMatcher, "pixel at " + x + ", " + y, "pixel color") {
 			@Override protected Integer featureValueOf(Bitmap actual) {

@@ -42,7 +42,7 @@ public class CaptureImageTest_External {
 			throws UiObjectNotFoundException, IOException {
 		activity.launchActivity(null);
 		captureImage.allowPermissions();
-		Uri fakeUri = captureImage.createFakeImage(activity.getTemp().newFile(), Color.RED);
+		Uri fakeUri = captureImage.createFakeImage(activity.getTemp().newFile(), Color.GREEN);
 		captureImage.intendExternalChooser(fakeUri);
 		captureImage.pick();
 		captureImage.verifyExternalChooser();
@@ -50,6 +50,44 @@ public class CaptureImageTest_External {
 		captureImage.pick();
 		captureImage.verifyExternalChooser(times(2));
 		Intents.assertNoUnverifiedIntents();
-		captureImage.verifyImageColor(equalTo(Color.RED));
+		captureImage.verifyImageColor(equalTo(Color.GREEN));
+	}
+
+	@Test public void doesNotFallBackToImageFromClosedActivityIfPickCancelled()
+			throws UiObjectNotFoundException, IOException {
+		activity.launchActivity(null);
+		captureImage.allowPermissions();
+		Uri fakeUri = captureImage.createFakeImage(activity.getTemp().newFile(), Color.BLUE);
+		captureImage.intendExternalChooser(fakeUri);
+		captureImage.pick();
+		captureImage.verifyExternalChooser();
+		Intents.assertNoUnverifiedIntents();
+		activity.finishActivity();
+
+		activity.launchActivity(null);
+		captureImage.intendExternalChooserCancelled();
+		captureImage.pick();
+		captureImage.verifyExternalChooser();
+		Intents.assertNoUnverifiedIntents();
+		captureImage.verifyNoImage();
+	}
+
+	@Test public void doesNotFallBackToImageFromClosedActivityIfPickInvalid()
+			throws UiObjectNotFoundException, IOException {
+		activity.launchActivity(null);
+		captureImage.allowPermissions();
+		Uri fakeUri = captureImage.createFakeImage(activity.getTemp().newFile(), Color.YELLOW);
+		captureImage.intendExternalChooser(fakeUri);
+		captureImage.pick();
+		captureImage.verifyExternalChooser();
+		Intents.assertNoUnverifiedIntents();
+		activity.finishActivity();
+
+		activity.launchActivity(null);
+		captureImage.intendExternalChooser(null);
+		captureImage.pick();
+		captureImage.verifyExternalChooser();
+		Intents.assertNoUnverifiedIntents();
+		captureImage.verifyErrorImage();
 	}
 }
