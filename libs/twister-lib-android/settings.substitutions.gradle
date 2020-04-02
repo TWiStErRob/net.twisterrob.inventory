@@ -8,7 +8,7 @@
  */
 
 dependencySubstitution {
-	substitute module('net.twisterrob.lib:twister-libs-android') with project(':')
+	substitute module('net.twisterrob.lib:twister-lib-android-monolith') with project(':monolith')
 	substitute module("net.twisterrob.lib:twister-lib-android-about") with project(":about")
 	substitute module("net.twisterrob.lib:twister-lib-android-about-test_helpers") with project(":about-test_helpers")
 	substitute module("net.twisterrob.lib:twister-lib-android-annotations") with project(":annotations")

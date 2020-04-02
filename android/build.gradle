@@ -9,7 +9,7 @@ dependencies {
 	testImplementation project(':android:test_helpers')
 
 	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-	implementation('net.twisterrob.lib:twister-libs-android')
+	implementation('net.twisterrob.lib:twister-lib-android-monolith')
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation('net.twisterrob.lib:twister-libs-java')
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'

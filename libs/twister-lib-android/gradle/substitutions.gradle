@@ -4,10 +4,6 @@ configurations.all { Configuration config ->
 		if (dependency.requested instanceof ModuleComponentSelector
 				&& dependency.requested.group == "net.twisterrob.lib") {
 			def module = dependency.requested.module.toString()
-			if (module == "twister-libs-android") {
-				dependency.useTarget(rootProject)
-				return
-			}
 			if (!module.startsWith("twister-lib-android-")) {
 				return
 			}

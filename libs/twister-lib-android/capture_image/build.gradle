@@ -16,7 +16,7 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation "net.twisterrob.lib:twister-lib-java"
-	implementation "net.twisterrob.lib:twister-libs-android"
+	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso"
 	androidTestImplementation("net.twisterrob.lib:twister-lib-android-capture_image-test_helpers") {
 		// TODO figure out how to have test-helpers with transitive dependencies, but no including self

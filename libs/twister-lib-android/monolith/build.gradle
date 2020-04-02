@@ -1,0 +1,43 @@
+apply plugin: 'net.twisterrob.android-library'
+apply from: 'http://localhost/maven/configure.gradle'
+
+dependencies {
+	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+	implementation 'net.twisterrob.lib:twister-libs-java'
+	implementation 'net.twisterrob.lib:twister-lib-android-defs'
+	implementation 'net.twisterrob.lib:twister-lib-android-logging'
+	implementation 'net.twisterrob.lib:twister-lib-android-basics'
+	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
+	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
+	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
+	implementation "com.android.support:cardview-v7:${VERSION_SUPPORT}"
+	implementation "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
+	implementation "com.android.support:design:${VERSION_SUPPORT}"
+	//implementation "com.android.support:palette-v7:${VERSION_SUPPORT}"
+
+	// FIXME @Deprecated, use Glide
+	implementation 'com.jakewharton:disklrucache:2.0.2'
+
+	// 2.4.+ is required for API 28+
+	// because of HueSatView and SliderViewBase using removed Canvas.save(int) in earlier versions
+	implementation 'com.rarepebble:colorpicker:2.4.2'
+
+	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
+}
+
+android {
+	defaultConfig {
+		minSdkVersion 10
+		multiDexEnabled = true
+		dependencies {
+			implementation "com.android.support:multidex:${VERSION_MULTIDEX}"
+		}
+	}
+	lintOptions {
+		checkAllWarnings = true
+		checkDependencies = true
+	}
+	testOptions {
+		unitTests.returnDefaultValues = true
+	}
+}

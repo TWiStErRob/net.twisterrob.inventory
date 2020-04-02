@@ -8,7 +8,7 @@ dependencies {
 	compileOnly "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
 	compileOnly "com.android.support:design:${VERSION_SUPPORT}"
 
-	implementation "net.twisterrob.lib:twister-libs-android"
+	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"

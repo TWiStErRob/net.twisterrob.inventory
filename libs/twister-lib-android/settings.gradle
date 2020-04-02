@@ -2,6 +2,8 @@ rootProject.name = 'twister-libs-android'
 
 include ':'
 
+include ':monolith'
+
 include ':slf4j'
 include ':logging'
 include ':stringers'
