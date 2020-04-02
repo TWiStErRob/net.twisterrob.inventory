@@ -188,7 +188,7 @@ public interface Constants {
 					.using((StreamModelLoader<T>)loader)
 					.from(clazz)
 					.animate(android.R.anim.fade_in)
-					.error(R.drawable.image_error);
+					.error(R.drawable.inventory_image_error);
 			if (DISABLE && BuildConfig.DEBUG) {
 				builder = builder
 						.diskCacheStrategy(DiskCacheStrategy.NONE)
