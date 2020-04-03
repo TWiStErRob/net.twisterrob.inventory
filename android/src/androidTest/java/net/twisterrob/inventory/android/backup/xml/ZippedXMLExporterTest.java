@@ -81,8 +81,9 @@ public class ZippedXMLExporterTest {
 		verifyNoMoreInteractions(mockDatabase, mockExporter);
 
 		ZipFile zip = saveTempZip(zipOs);
-		assertThat(list(zip.entries()), hasSize(4));
+		assertThat(list(zip.entries()), hasSize(5));
 		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
+		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
 		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
 		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
 		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
@@ -122,8 +123,9 @@ public class ZippedXMLExporterTest {
 		verifyNoMoreInteractions(mockDatabase, mockExporter);
 
 		ZipFile zip = saveTempZip(zipOs);
-		assertThat(list(zip.entries()), hasSize(4));
+		assertThat(list(zip.entries()), hasSize(5));
 		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
+		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
 		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
 		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
 		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
