@@ -1,40 +1,38 @@
-buildscript {
-	apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
-	dependencies {
-		//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
-		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
-	}
-}
-
+import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
+import com.android.build.gradle.internal.api.ApplicationVariantImpl
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
-import com.android.build.gradle.internal.test.report.ReportType
-import com.android.build.gradle.internal.test.report.ResilientTestReport
+import com.android.build.gradle.internal.test.report.*
 import com.android.build.gradle.internal.variant.BaseVariantData
 import com.android.builder.internal.testing.CustomTestRunListener
-import com.android.builder.testing.TestData
+import com.android.builder.testing.*
 import com.android.builder.testing.api.DeviceConnector
 import com.android.ddmlib.IDevice
 import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
 import com.android.utils.*
+import org.gradle.api.*
+import org.gradle.api.tasks.TaskAction
 
-def upgradeTest = tasks.register('upgradeTest') { task ->
-	task.enabled = false // TODO not working since AGP 3.3/3.4
-	task.dependsOn 'assembleDebug' // TODO why this is not available at eval time?
-	task.dependsOn tasks.assembleAndroidTest
+class UpgradeTestTask extends DefaultTask {
+	UpgradeTestTask() {
+		dependsOn 'assembleDebug' // TODO why this is not available at eval time?
+		dependsOn project.tasks.named("assembleAndroidTest")
+	}
 
-	doFirst {
-		ApplicationVariant debugVariant = project
-				.android
+	@TaskAction
+	def upgradeTest() {
+		def android = project.extensions.findByName("android") as AppExtension
+		def debugVariant = android
 				.applicationVariants
 				.grep { ApplicationVariant var -> var.buildType.name == 'debug' }
-				.first()
+				.first() as ApplicationVariantImpl
 
-		DeviceProviderInstrumentTestTask instrument = debugVariant.testVariant.connectedInstrumentTestProvider.get()
+		def instrument = debugVariant.testVariant.connectedInstrumentTestProvider.get() as
+				DeviceProviderInstrumentTestTask
 
 		instrument.deviceProvider.init()
-		def device = instrument.deviceProvider.devices.first()
-		IDevice realDevice = device.iDevice
+		def device = instrument.deviceProvider.devices.first() as ConnectedDevice
+		IDevice realDevice = device.getIDevice()
 		instrument.deviceProvider.terminate()
 
 		File testApk = debugVariant.testVariant.outputs.first().outputFile
@@ -78,44 +76,43 @@ def upgradeTest = tasks.register('upgradeTest') { task ->
 			}
 		}
 	}
-}
-tasks.connectedCheck.configure { it.dependsOn(upgradeTest) }
 
-def installOld(IDevice realDevice, ApplicationVariant debugVariant, String version) {
-	// FIXME release debug build as well
-	File oldApk = file("${System.env.RELEASE_HOME}/android/${debugVariant.applicationId}@${version}d+debug.apk")
-	logger.info("Unnstalling package: ${debugVariant.applicationId}")
-	realDevice.uninstallPackage(debugVariant.applicationId)
-	logger.info("Installing package: ${oldApk}")
-	realDevice.installPackage(oldApk.absolutePath, false, null)
-}
-def pushData(IDevice realDevice, ApplicationVariant debugVariant, String version) {
-	def localData = "${System.env.RELEASE_HOME}/android/${debugVariant.applicationId}@${version}d+debug-data.zip"
-	logger.info("Pushing ${localData}")
-	realDevice.pushFile(localData, "/sdcard/Download/data.zip")
-}
-def runTest(TestData testData, DeviceConnector device,
-		TestAwareCustomTestRunListener runListener, File results, String test) {
-	runListener.test = test
-	// from com.android.builder.internal.testing.SimpleTestCallable#call
-	def runner = new RemoteAndroidTestRunner(testData.applicationId, testData.instrumentationRunner, device)
-	for (Map.Entry<String, String> argument : testData.instrumentationRunnerArguments.entrySet()) {
-		runner.addInstrumentationArg(argument.getKey(), argument.getValue())
+	private def installOld(IDevice realDevice, ApplicationVariant debugVariant, String version) {
+		// FIXME release debug build as well
+		File oldApk = project.file("${System.getenv("RELEASE_HOME")}/android/${debugVariant.applicationId}@${version}d+debug.apk")
+		logger.info("Unnstalling package: ${debugVariant.applicationId}")
+		realDevice.uninstallPackage(debugVariant.applicationId)
+		logger.info("Installing package: ${oldApk}")
+		realDevice.installPackage(oldApk.absolutePath, false, null)
 	}
-	runner.addInstrumentationArg('class', test)
-	//runner.addInstrumentationArg('annotation', 'org.junit.Test')
-	runner.addInstrumentationArg('upgrade', 'true')
-	runner.maxTimeToOutputResponse = 60000
+	private def pushData(IDevice realDevice, ApplicationVariant debugVariant, String version) {
+		def localData = "${System.getenv("RELEASE_HOME")}/android/${debugVariant.applicationId}@${version}d+debug-data.zip"
+		logger.info("Pushing ${localData}")
+		realDevice.pushFile(localData, "/sdcard/Download/data.zip")
+	}
+	private def runTest(TestData testData, DeviceConnector device,
+			TestAwareCustomTestRunListener runListener, File results, String test) {
+		runListener.test = test
+		// from com.android.builder.internal.testing.SimpleTestCallable#call
+		def runner = new RemoteAndroidTestRunner(testData.applicationId, testData.instrumentationRunner, device)
+		for (Map.Entry<String, String> argument : testData.instrumentationRunnerArguments.entrySet()) {
+			runner.addInstrumentationArg(argument.getKey(), argument.getValue())
+		}
+		runner.addInstrumentationArg('class', test)
+		//runner.addInstrumentationArg('annotation', 'org.junit.Test')
+		runner.addInstrumentationArg('upgrade', 'true')
+		runner.maxtimeToOutputResponse = 60000
 
-	logger.info("Running: ${runner.amInstrumentCommand}")
-	runner.run runListener
+		logger.info("Running: ${runner.amInstrumentCommand}")
+		runner.run runListener
 
-	def result = runListener.runResult
-	if (result.hasFailedTests()
-			|| result.isRunFailure()
-			|| result.getNumTests() <= 0
-			|| result.numCompleteTests != result.numTests) {
-		throw new GradleException("Tests failed, see ${results}")
+		def result = runListener.runResult
+		if (result.hasFailedTests()
+				|| result.isRunFailure()
+				|| result.getNumTests() <= 0
+				|| result.numCompleteTests != result.numTests) {
+			throw new GradleException("Tests failed, see ${results}")
+		}
 	}
 }
 

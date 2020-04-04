@@ -22,20 +22,22 @@ import org.gradle.api.plugins.BasePlugin
 class InventoryDatabasePlugin implements Plugin<Project> {
 	void apply(Project project) {
 		def entities = project.container(InventoryDatabaseEntity)
-		project.extensions.databaseEntities = entities
+		project.extensions.add("databaseEntities", entities)
 
 		def allTasks = project.task('generateDataBase')
 		allTasks.group = BasePlugin.BUILD_GROUP
 		def allTasksClean = project.task('cleanGenerateDataBase')
 		project.afterEvaluate {
-			entities.all { entity ->
+			entities.all { InventoryDatabaseEntity entity ->
 				//println "Creating task for ${entity.name} (${entity.input} --${entity.conversion}--> ${entity.output})"
-				def task = project.task(type: InventoryDatabaseTask, "generateDataBase${entity.name.capitalize()}") {
-					input = entity.input
-					output = entity.output
-					conversion = entity.conversion
-					iconFolder = entity.iconFolder
-				}
+				def genDBTaskName = "generateDataBase${entity.name.capitalize()}"
+				def task = project.tasks.register(genDBTaskName, InventoryDatabaseTask, {
+					InventoryDatabaseTask task ->
+						task.input = entity.input
+						task.output = entity.output
+						task.conversion = entity.conversion
+						task.iconFolder = entity.iconFolder
+				} as Action<InventoryDatabaseTask>)
 				allTasks.dependsOn task
 				// clean task is automagically generated for every task that has output
 				allTasksClean.dependsOn "clean${task.name.capitalize()}"
@@ -45,9 +47,9 @@ class InventoryDatabasePlugin implements Plugin<Project> {
 }
 
 class InventoryDatabaseEntity {
-	def input
-	def output
-	def iconFolder
+	File input
+	File output
+	File iconFolder
 	String conversion
 
 	final String name

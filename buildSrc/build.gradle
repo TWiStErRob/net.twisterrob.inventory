@@ -1,6 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 
+compileGroovy.groovyOptions.configurationScript = file('../gradle/groovyc.groovy')
+
 def props = new Properties()
 props.load(file("../gradle.properties").newInputStream())
 
@@ -15,6 +17,8 @@ dependencies {
 
 	//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	implementation("net.twisterrob.gradle:plugin:${props.VERSION_TWISTER_GRADLE}")
+	// TODEL this should come from :plugin, but it is not transitive for some reason
+	implementation("com.android.tools.build:gradle:3.4.2")
 	implementation("net.twisterrob.gradle:twister-quality:${props.VERSION_TWISTER_QUALITY}")
 
 	testImplementation "junit:junit:${props.VERSION_JUNIT}"
