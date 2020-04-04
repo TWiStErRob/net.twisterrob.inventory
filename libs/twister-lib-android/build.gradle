@@ -39,8 +39,8 @@ subprojects { Project project ->
 }
 
 tasks.register("cleanFull") {
-	// allprojects*.tasks*.named("clean") is not available at this point
-	dependsOn allprojects.collect { "${it.path}:clean" }
+	// subprojects*.tasks*.named("clean") is not available at this point
+	dependsOn(subprojects.collect { "${it.path}:clean" })
 }
 
 tasks.register("connectedCheck").configure {
