@@ -1,5 +1,5 @@
 apply plugin: 'net.twisterrob.android-app'
-apply from: new File(rootDir, 'gradle/mapping.gradle')
+apply plugin: MappingPlugin
 
 dependencies {
 	implementation project(':android:base')

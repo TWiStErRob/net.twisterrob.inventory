@@ -1,32 +1,44 @@
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.api.BaseVariant
+import com.android.build.gradle.internal.api.BaseVariantImpl
+import com.android.builder.core.AndroidBuilder
+import org.gradle.api.*
+import proguard.gradle.ProGuardTask
+
 // Currently not used, this version was just a test to try to generate a mapping from *.jar/**/*.class files
-android {
-	afterEvaluate {
-		applicationVariants.all { BaseVariant variant ->
-			if (variant.obfuscation) {
+@SuppressWarnings("UnnecessaryQualifiedReference")
+class GenerateDebugMappingPlugin implements Plugin<Project> {
+
+	@Override void apply(Project project) {
+		def android = project.extensions.findByName("android") as AppExtension
+		project.afterEvaluate {
+			android.applicationVariants.all { BaseVariant variant ->
+				if (!variant.obfuscation) return
 				File mapping = variant.mappingFile
 				File newMapping = new File(mapping.parentFile, mapping.getName() + ".gen")
-				def generateDebugMapping = project.task('generateDebugMapping') {
-					description = "Generate mapping.txt for readable output"
-					outputs.files newMapping
-					outputs.upToDateWhen { false } // TODO inputs as jar files below
-					doFirst {
-						AndroidProGuardTask pg = variant.obfuscation
+				def generateDebugMapping = project.tasks.register("generateDebugMapping") { task ->
+					task.description = "Generate mapping.txt for readable output"
+					task.outputs.files newMapping
+					task.outputs.upToDateWhen { false } // TODO inputs as jar files below
+					task.doFirst {
+						ProGuardTask pg = variant.obfuscation as ProGuardTask
 						println project.files(pg.inJarFiles).files
 						println project.files(pg.libraryJarFiles).files
-						println project.files(variant.androidBuilder.getBootClasspath()).files
+						AndroidBuilder androidBuilder = BaseVariantImpl.class.getDeclaredField("androidBuilder").get(variant) as AndroidBuilder
+						println project.files(androidBuilder.getBootClasspath(true)).files
 						def mapJars = project.files(pg.inJarFiles)
-						def allJars = mapJars
-						+project.files(pg.libraryJarFiles)
-						+project.files(variant.androidBuilder.getBootClasspath())
-						ClassLoader loader = java.net.URLClassLoader.newInstance(allJars*.toURI()*.toURL() as URL[])
+						def allJars = mapJars +
+								project.files(pg.libraryJarFiles) + 
+								project.files(androidBuilder.getBootClasspath(true))
+						ClassLoader loader = java.net.URLClassLoader.newInstance(allJars.toList()*.toURI()*.toURL() as URL[])
 						PrintWriter out = new PrintWriter(newMapping)
 						def output = { File source, String path, Class<?> clazz ->
 							//println "${source}/${path}: ${clazz}"
-							def swapCase = org.apache.commons.lang.StringUtils.&swapCase
-							def className = { s -> s.toLowerCase() }
-							def methodName = { s -> s }
-							def fieldName = { s -> s }
-							def getClassName = { c -> java.lang.Class.getDeclaredMethod("getName").invoke(c) }
+							def swapCase = org.gradle.internal.impldep.org.apache.commons.lang.StringUtils.&swapCase
+							def className = { String s -> s.toLowerCase() }
+							def methodName = { String s -> s }
+							def fieldName = { String s -> s }
+							def getClassName = { Class<?> c -> java.lang.Class.getDeclaredMethod("getName").invoke(c) as String }
 							out.printf("%s -> %s:\n", getClassName(clazz), className(getClassName(clazz)))
 							for (java.lang.reflect.Field field : clazz.declaredFields) {
 								out.printf("\t%s %s -> %s\n",
@@ -36,7 +48,7 @@ android {
 							}
 							for (java.lang.reflect.Method method : clazz.declaredMethods) {
 								out.printf("\t%s %s(%s) -> %s\n",
-										method.returnType.canonicalName ?: getClassName(field.type),
+										method.returnType.canonicalName, //?: getClassName(field.type),
 										method.name,
 										method.parameterTypes*.canonicalName.join(","),
 										methodName(method.name))
@@ -67,9 +79,9 @@ android {
 						}
 						out.close()
 					}
-					doLast {
-						AndroidProGuardTask task = variant.obfuscation as AndroidProGuardTask
-						task.applymapping(newMapping)
+					task.doLast {
+						ProGuardTask pg = variant.obfuscation as ProGuardTask
+						pg.applymapping(newMapping)
 					}
 				}
 				variant.obfuscation.dependsOn generateDebugMapping
