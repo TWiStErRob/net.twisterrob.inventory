@@ -1,5 +1,6 @@
 apply plugin: 'net.twisterrob.android-app'
 apply plugin: MappingPlugin
+apply plugin: AndroidTestSetupPlugin
 
 dependencies {
 	implementation project(':android:base')
@@ -125,17 +126,6 @@ subprojects { project ->
 			}
 		}
 	}
-}
-
-//noinspection UnnecessaryQualifiedReference
-android.testVariants.all { com.android.build.gradle.api.TestVariant test ->
-	def grantPermissions = project.task(type: Exec, "grant${test.name.capitalize()}Permissions") {
-		enabled = false // TOFIX figure out a way to run this at the correct time
-		mustRunAfter(test.installProvider) // not dependsOn, because that wouldn't allow running the task by itself
-		def permission = 'android.permission.SET_ANIMATION_SCALE'
-		commandLine "adb shell pm grant ${test./*testedVariant.*/ applicationId} ${permission}".split(' ')
-	}
-	test.connectedInstrumentTestProvider.configure { it.dependsOn(grantPermissions) }
 }
 
 def upgradeTest = tasks.register("upgradeTest", UpgradeTestTask) { task ->
