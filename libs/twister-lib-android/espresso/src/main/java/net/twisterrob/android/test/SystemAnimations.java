@@ -5,12 +5,14 @@ import java.util.Arrays;
 
 import org.slf4j.*;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build.*;
 import android.os.*;
+import android.support.annotation.RequiresPermission;
 
 import static android.os.Build.VERSION.*;
 
@@ -40,7 +42,7 @@ import static android.os.Build.VERSION.*;
  */
 public class SystemAnimations {
 	private static final Logger LOG = LoggerFactory.getLogger(SystemAnimations.class);
-	private static final String ANIMATION_PERMISSION = "android.permission.SET_ANIMATION_SCALE";
+	private static final String ANIMATION_PERMISSION = Manifest.permission.SET_ANIMATION_SCALE;
 	private static final float DISABLED = 0.0f;
 	private static final float DEFAULT = 1.0f;
 
@@ -127,6 +129,8 @@ public class SystemAnimations {
 					? "using ValueAnimator hack as fallback"
 					: "all operations will be no-op";
 			LOG.warn("Application doesn't have {}, {}.", ANIMATION_PERMISSION, resolution);
+		} else {
+			LOG.trace("Application has {}, so changing system settings", ANIMATION_PERMISSION);
 		}
 	}
 
@@ -134,18 +138,22 @@ public class SystemAnimations {
 		previousScales = getScales();
 	}
 
+	@RequiresPermission(Manifest.permission.SET_ANIMATION_SCALE)
 	public void restore() {
 		setScales(previousScales);
 	}
 
+	@RequiresPermission(Manifest.permission.SET_ANIMATION_SCALE)
 	public void disableAll() {
 		setSystemAnimationsScale(DISABLED);
 	}
 
+	@RequiresPermission(Manifest.permission.SET_ANIMATION_SCALE)
 	public void enableAll() {
 		setSystemAnimationsScale(DEFAULT);
 	}
 
+	@RequiresPermission(Manifest.permission.SET_ANIMATION_SCALE)
 	public void setSystemAnimationsScale(float animationScale) {
 		try {
 			float[] currentScales = getScales();
@@ -155,6 +163,7 @@ public class SystemAnimations {
 			throw new IllegalStateException(ex);
 		}
 	}
+
 	public void setScales(float... currentScales) {
 		if (canSetAnimationScales) {
 			try {

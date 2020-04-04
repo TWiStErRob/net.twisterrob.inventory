@@ -1,9 +1,11 @@
 package net.twisterrob.android.test;
 
+import android.Manifest;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.support.annotation.RequiresPermission;
 
 /**
  * The below should be equivalent to using this class,
@@ -14,7 +16,6 @@ import android.os.PowerManager.WakeLock;
  * getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
  * </pre></code>
  */
-@SuppressWarnings("MissingPermission")
 public class DeviceUnlocker {
 	private final KeyguardManager keyguardManager;
 	private final PowerManager powerManager;
@@ -24,6 +25,10 @@ public class DeviceUnlocker {
 		powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
 	}
 
+	@RequiresPermission(allOf = {
+			Manifest.permission.DISABLE_KEYGUARD,
+			Manifest.permission.WAKE_LOCK
+	})
 	@SuppressWarnings("deprecation")
 	public void wakeUpWithDisabledKeyguard() {
 		KeyguardManager.KeyguardLock kl = keyguardManager.newKeyguardLock("Keyguard off for Test");
@@ -35,6 +40,7 @@ public class DeviceUnlocker {
 		}
 	}
 
+	@RequiresPermission(Manifest.permission.WAKE_LOCK)
 	@SuppressWarnings("deprecation")
 	public void wakeUp() {
 		int flags = PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE;
