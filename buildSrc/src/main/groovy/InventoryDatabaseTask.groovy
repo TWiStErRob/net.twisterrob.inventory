@@ -6,7 +6,7 @@ class InventoryDatabaseTask extends DefaultTask {
 	@InputFile File input
 	@OutputFile File output
 	@Optional @Input String conversion
-	@Optional @Input File iconFolder
+	@Optional @InputDirectory File iconFolder
 
 	@SuppressWarnings("GroovyUnusedDeclaration")
 	@TaskAction
@@ -14,13 +14,13 @@ class InventoryDatabaseTask extends DefaultTask {
 		input.withReader { reader ->
 			output.parentFile.mkdirs()
 			output.withWriter { writer ->
-				def printer = getPrinter()
+				def printer = getPrinter(conversion)
 				new DatabaseGenerator(printer, iconFolder).transform(reader, writer)
 			}
 		}
 	}
 
-	Printer getPrinter() {
+	private static Printer getPrinter(String conversion) {
 		switch (conversion) {
 			case null:
 			case 'SQL':
