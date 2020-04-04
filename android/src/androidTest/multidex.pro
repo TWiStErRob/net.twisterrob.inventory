@@ -1,3 +1,8 @@
+# Keep all tests in first dex file for OSs with multidex support. (API 21+)
+-keepclasseswithmembers class * {
+    @org.junit.Test <methods>;
+}
+
 # Keep Entry point in Main DEX file
 -keep class net.twisterrob.android.test.junit.AndroidJUnitRunner
 # Dependencies of Entry point
