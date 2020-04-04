@@ -63,8 +63,14 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		waitForIdleSync();
 		reset();
 		setDefaults();
-		IdlingRegistry.getInstance().register(glideIdler);
 		super.beforeActivityLaunched();
+	}
+
+	@Override protected void afterActivityLaunched() {
+		// Register Glide IdlingResource after the activity has launched to prevent leaking it
+		// in case the activity launch failed. CONSIDER moving this to a Statement try-finally
+		IdlingRegistry.getInstance().register(glideIdler);
+		super.afterActivityLaunched();
 	}
 
 	@Override protected void afterActivityFinished() {
