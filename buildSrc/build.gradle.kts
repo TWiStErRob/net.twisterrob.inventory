@@ -29,6 +29,7 @@ dependencies {
 	implementation("net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}")
 	// TODEL this should come from :plugin, but it is not transitive for some reason
 	implementation("com.android.tools.build:gradle:3.4.2")
+	implementation("com.android.tools.build:builder:3.4.2")
 	implementation("net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}")
 
 	testImplementation("junit:junit:${VERSION_JUNIT}")
