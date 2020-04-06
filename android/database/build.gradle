@@ -21,7 +21,7 @@ android {
 	}
 }
 
-apply plugin: InventoryDatabasePlugin
+apply plugin: "net.twisterrob.inventory.database"
 
 databaseEntities {
 	categories {

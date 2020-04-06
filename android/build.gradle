@@ -1,6 +1,6 @@
 apply plugin: 'net.twisterrob.android-app'
-apply plugin: MappingPlugin
-apply plugin: AndroidTestSetupPlugin
+apply plugin: "net.twisterrob.inventory.mapping"
+apply plugin: "net.twisterrob.inventory.androidTest"
 
 dependencies {
 	implementation project(':android:base')

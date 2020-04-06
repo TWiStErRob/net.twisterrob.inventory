@@ -18,7 +18,6 @@ import org.gradle.api.plugins.BasePlugin
  * </code></pre>
  */
 //@formatter:on
-@SuppressWarnings("GroovyUnusedDeclaration")
 class InventoryDatabasePlugin implements Plugin<Project> {
 	void apply(Project project) {
 		def entities = project.container(InventoryDatabaseEntity)
