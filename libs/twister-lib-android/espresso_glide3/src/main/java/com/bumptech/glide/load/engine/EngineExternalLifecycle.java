@@ -121,7 +121,7 @@ public class EngineExternalLifecycle {
 			if (cbs instanceof ExtraItemList) {
 				return (LoadEndListener)((ExtraItemList)cbs).extra;
 			} else {
-				throw new IllegalStateException(job + " doesn't have an end listener");
+				throw new IllegalStateException(job + " doesn't have an end listener (" + cbs + ")");
 			}
 		} catch (IllegalAccessException ex) {
 			throw new IllegalStateException("Cannot hack EngineJob.cbs", ex);
