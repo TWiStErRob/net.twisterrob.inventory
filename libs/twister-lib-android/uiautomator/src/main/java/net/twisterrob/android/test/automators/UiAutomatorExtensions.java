@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.os.Build.VERSION_CODES;
+import android.os.Build.*;
 import android.support.annotation.*;
 import android.support.test.uiautomator.*;
 
@@ -115,7 +115,14 @@ public class UiAutomatorExtensions {
 	@RequiresApi(VERSION_CODES.JELLY_BEAN)
 	public static void pressBackExternal() {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		assertTrue("expected to press Back button", device.pressBack());
+		if (VERSION.SDK_INT == VERSION_CODES.KITKAT
+				&& "com.android.settings".equals(device.getCurrentPackageName())) {
+			// net.twisterrob.inventory.android.activity.PreferencesActivityTest.testInfoSettings
+			// fails because pressBack returns false even though the Settings is closed.
+			device.pressBack();
+		} else {
+			assertTrue("expected to press Back button", device.pressBack());
+		}
 	}
 
 	@RequiresApi(VERSION_CODES.JELLY_BEAN)
