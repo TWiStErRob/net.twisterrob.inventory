@@ -115,7 +115,7 @@ public class UiAutomatorExtensions {
 	@RequiresApi(VERSION_CODES.JELLY_BEAN)
 	public static void pressBackExternal() {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		if (VERSION.SDK_INT == VERSION_CODES.KITKAT
+		if ((VERSION.SDK_INT == VERSION_CODES.KITKAT || VERSION.SDK_INT == VERSION_CODES.M)
 				&& "com.android.settings".equals(device.getCurrentPackageName())) {
 			// net.twisterrob.inventory.android.activity.PreferencesActivityTest.testInfoSettings
 			// fails because pressBack returns false even though the Settings is closed.
