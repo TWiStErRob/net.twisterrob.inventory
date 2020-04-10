@@ -1,5 +1,10 @@
 package net.twisterrob.android.test.espresso.idle;
 
+import org.hamcrest.*;
+
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.StringDescription.*;
+
 import android.app.Activity;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.runner.lifecycle.*;
@@ -12,7 +17,7 @@ public class ActivityStageIdlingResource extends AsyncIdlingResource {
 	private final ActivityLifecycleCallback callback = new ActivityLifecycleCallback() {
 		@Override public void onActivityLifecycleChanged(Activity activity, Stage stage) {
 			if (activity == ActivityStageIdlingResource.this.activity
-					&& idleStageCallback.isIdleStage(stage)) {
+					&& stageMatcher.matches(stage)) {
 				monitor.removeLifecycleCallback(callback);
 				transitionToIdle();
 			}
@@ -21,23 +26,23 @@ public class ActivityStageIdlingResource extends AsyncIdlingResource {
 
 	private final ActivityLifecycleMonitor monitor;
 	private final Activity activity;
-	private final IdleStageCallback idleStageCallback;
+	private final Matcher<Stage> stageMatcher;
 
 	public ActivityStageIdlingResource(
 			Activity activity,
-			IdleStageCallback idleStageCallback) {
+			Matcher<Stage> stageMatcher) {
 		this.activity = activity;
-		this.idleStageCallback = idleStageCallback;
+		this.stageMatcher = stageMatcher;
 		this.monitor = ActivityLifecycleMonitorRegistry.getInstance();
 	}
 
 	@Override public String getName() {
-		return "ActivityStageIdlingResource[" + activity + " " + idleStageCallback.describe() + "]";
+		return "ActivityStageIdlingResource[" + activity + " " + asString(stageMatcher) + "]";
 	}
 
 	private boolean isIdleCore() {
 		Stage currentStage = monitor.getLifecycleStageOf(activity);
-		return idleStageCallback.isIdleStage(currentStage);
+		return stageMatcher.matches(currentStage);
 	}
 
 	@Override protected boolean isIdle() {
@@ -49,36 +54,9 @@ public class ActivityStageIdlingResource extends AsyncIdlingResource {
 		monitor.addLifecycleCallback(callback);
 	}
 
-	public interface IdleStageCallback {
-		boolean isIdleStage(Stage stage);
-		String describe();
-	}
-
-	public static ActivityStageIdlingResource waitForAtMost(Activity activity, final Stage stage) {
-		return new ActivityStageIdlingResource(activity, new IdleStageCallback() {
-			@Override public String describe() {
-				return "at most " + stage;
-			}
-			@Override public boolean isIdleStage(Stage currentStage) {
-				return currentStage.compareTo(stage) <= 0;
-			}
-		});
-	}
-
-	public static ActivityStageIdlingResource waitForAtLeast(Activity activity, final Stage stage) {
-		return new ActivityStageIdlingResource(activity, new IdleStageCallback() {
-			@Override public String describe() {
-				return "at least " + stage;
-			}
-			@Override public boolean isIdleStage(Stage currentStage) {
-				return currentStage.compareTo(stage) >= 0;
-			}
-		});
-	}
-
-	public static void waitForAtLeastNow(Activity activity, Stage stage) {
+	public static void waitForAtLeast(Activity activity, Stage stage) {
 		ActivityStageIdlingResource resource =
-				ActivityStageIdlingResource.waitForAtLeast(activity, stage);
+				new ActivityStageIdlingResource(activity, greaterThanOrEqualTo(stage));
 		IdlingRegistry.getInstance().register(resource);
 		try {
 			// TODO AndroidX, onIdle doesn't sync registry, so it doesn't wait for the just-registered resource

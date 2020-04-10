@@ -260,7 +260,7 @@ public class MainActivityActor extends ActivityActor {
 					.perform(openContainingDrawer())
 					.perform(navigateTo(drawerItem));
 			if (externalActivity) {
-				ActivityStageIdlingResource.waitForAtLeastNow(activity, Stage.STOPPED);
+				ActivityStageIdlingResource.waitForAtLeast(activity, Stage.STOPPED);
 			}
 		}
 
