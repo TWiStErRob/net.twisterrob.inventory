@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.junit.AssumptionViolatedException;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.*;
@@ -85,6 +86,11 @@ public class ScreenshotFailure implements TestRule {
 			try {
 				base.evaluate();
 			} catch (Throwable ex) {
+				if (ex instanceof AssumptionViolatedException) {
+					// assumeThat(...) is not a failure, it's an ignore, so skip screenshot.
+					LOG.debug("Screenshot not taken for {} in {}", ex.getClass(), description);
+					throw ex;
+				}
 				try {
 					String dirName = String.format(Locale.ROOT, "%s", description.getClassName());
 					String shotName = String.format(Locale.ROOT, "%d_%s.png", started, description.getMethodName());
