@@ -4,9 +4,10 @@ import java.io.*;
 import java.util.Locale;
 
 import org.hamcrest.Matcher;
+import org.slf4j.*;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,6 +34,9 @@ import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 public abstract class EditActivityActor extends ActivityActor {
+
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
+
 	private static final Matcher<View> nameEditorMatcher
 			= allOf(withId(R.id.title), isAssignableFrom(EditText.class));
 	private static final Matcher<View> descriptionEditorMatcher
@@ -72,8 +76,15 @@ public abstract class EditActivityActor extends ActivityActor {
 		onView(typeEditorMatcher).perform(scrollTo(), click());
 		String typeName = InstrumentationRegistry.getTargetContext().getResources().getResourceEntryName(type);
 		onData(withColumn("name", typeName)).perform(click());
-		assertFalse(hasRoot(isPlatformPopup())); // faster version of below Espresso expression
-		//onRoot(isPlatformPopup())
+		if (hasRoot(isPlatformPopup())) {
+			LOG.warn("Failed to select {} ({}), try again to close spinner popup.", typeName, type);
+			// Not sure why it stays, but sometimes it does on API 21, and waiting doesn't help:
+			// onRoot().perform(loopMainThreadForAtLeast(1000))
+			onData(withColumn("name", typeName)).perform(click());
+		}
+		// Faster version of Espresso expression below.
+		assertFalse("Spinner popup should be closed", hasRoot(isPlatformPopup()));
+		//onRoot(isPlatformPopup()) // takes a long time waiting for non-existent root
 		//		.withFailureHandler(new PassMissingRoot())
 		//		.check(matches(not(anything("popup root existed"))));
 		checkType(type);
