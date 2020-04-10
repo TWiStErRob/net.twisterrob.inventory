@@ -23,6 +23,7 @@ import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
 
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
+import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.io.IOTools;
 
 public class ScreenshotFailure implements TestRule {
@@ -52,6 +53,12 @@ public class ScreenshotFailure implements TestRule {
 		return result;
 	}
 
+	@DebugHelper
+	public static void captureNow(String description) {
+		captureNow(Description.createTestDescription(ScreenshotFailure.class, description));
+	}
+
+	@DebugHelper
 	public static void captureNow(Description description) {
 		class FakeException extends Exception {
 			private static final long serialVersionUID = 0;
