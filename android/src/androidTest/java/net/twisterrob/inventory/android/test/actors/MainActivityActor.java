@@ -7,22 +7,27 @@ import android.support.design.internal.NavigationMenuItemView;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.runner.lifecycle.Stage;
 import android.view.*;
 
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.contrib.NavigationViewActions.*;
 import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.test.espresso.idle.ActivityStageIdlingResource;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.MainActivity;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.DrawerMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
+import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
+import static net.twisterrob.java.utils.CollectionTools.*;
 
 public class MainActivityActor extends ActivityActor {
 	public MainActivityActor() {
@@ -30,11 +35,15 @@ public class MainActivityActor extends ActivityActor {
 	}
 
 	public Navigator assertHomeScreen() {
-		return new Navigator();
+		Navigator navigator = new Navigator();
+		navigator.checkOpened();
+		return navigator;
 	}
 
 	public WelcomeDialogActor assertWelcomeShown() {
-		onView(withText(R.string.welcome_title)).inRoot(isDialog()).check(matches(isCompletelyDisplayed()));
+		onView(withText(R.string.welcome_title))
+				.inRoot(isDialog())
+				.check(matches(isCompletelyDisplayed()));
 		return new WelcomeDialogActor();
 	}
 
@@ -108,7 +117,7 @@ public class MainActivityActor extends ActivityActor {
 			assertOpened(R.string.home_title, R.string.home_title, R.id.lists);
 		}
 		@Override protected void open() {
-			selectDrawerItem(R.id.action_drawer_home);
+			selectDrawerItem(R.id.action_drawer_home, false);
 		}
 
 		public HomeRoomsActor rooms() {
@@ -137,7 +146,7 @@ public class MainActivityActor extends ActivityActor {
 			assertOpened(R.string.property_list, R.string.property_list, android.R.id.list);
 		}
 		@Override protected void open() {
-			selectDrawerItem(R.id.action_drawer_properties);
+			selectDrawerItem(R.id.action_drawer_properties, false);
 		}
 		public PropertyEditActivityActor addProperty() {
 			onView(withId(R.id.fab)).perform(click());
@@ -155,7 +164,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class RoomsNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.id.action_drawer_rooms);
+			selectDrawerItem(R.id.action_drawer_rooms, false);
 		}
 		@Override public void checkOpened() {
 			assertOpened(R.string.room_list, R.string.room_list, android.R.id.list);
@@ -164,7 +173,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class ItemsNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.id.action_drawer_items);
+			selectDrawerItem(R.id.action_drawer_items, false);
 		}
 		@Override public void checkOpened() {
 			assertOpened(R.string.item_list, R.string.item_list, android.R.id.list);
@@ -173,7 +182,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class CategoriesNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.id.action_drawer_categories);
+			selectDrawerItem(R.id.action_drawer_categories, false);
 		}
 		@Override public void checkOpened() {
 			assertOpened(R.string.category_list, R.string.category_list, android.R.id.list);
@@ -182,7 +191,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class SunburstNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.id.action_drawer_sunburst);
+			selectDrawerItem(R.id.action_drawer_sunburst, false);
 		}
 		@Override public void checkOpened() {
 			assertOpened(R.string.sunburst_title, R.string.sunburst_title, R.id.diagram);
@@ -194,7 +203,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class BackupNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.id.action_drawer_backup);
+			selectDrawerItem(R.id.action_drawer_backup, true);
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
@@ -211,7 +220,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class SettingsNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.id.action_drawer_preferences);
+			selectDrawerItem(R.id.action_drawer_preferences, true);
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
@@ -225,7 +234,7 @@ public class MainActivityActor extends ActivityActor {
 
 	public static class AboutNavigator extends DrawerNavigator {
 		@Override protected void open() {
-			selectDrawerItem(R.id.action_drawer_about);
+			selectDrawerItem(R.id.action_drawer_about, true);
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
@@ -244,10 +253,15 @@ public class MainActivityActor extends ActivityActor {
 		protected abstract void open();
 		public abstract void checkOpened();
 
-		protected void selectDrawerItem(@IdRes int drawerItem) {
+		protected void selectDrawerItem(@IdRes int drawerItem, boolean externalActivity) {
+			MainActivity activity =
+					only(getActivitiesByTypeInStage(MainActivity.class, Stage.RESUMED));
 			onView(isNavigationDrawer())
 					.perform(openContainingDrawer())
 					.perform(navigateTo(drawerItem));
+			if (externalActivity) {
+				ActivityStageIdlingResource.waitForAtLeastNow(activity, Stage.STOPPED);
+			}
 		}
 
 		protected void assertOpened(@StringRes int drawerItem, @StringRes int actionBarTitle, @IdRes int checkView) {

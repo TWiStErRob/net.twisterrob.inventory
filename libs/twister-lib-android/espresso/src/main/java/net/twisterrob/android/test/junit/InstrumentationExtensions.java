@@ -142,4 +142,17 @@ public class InstrumentationExtensions {
 		String value = getArguments().getString(key);
 		return value != null? Boolean.parseBoolean(value) : defaultValue;
 	}
+
+	public static @NonNull <T extends Activity> Collection<T> getActivitiesByTypeInStage(
+			Class<? extends T> activityType, Stage stage) {
+		Collection<? extends T> byType =
+				InstrumentationExtensions.getActivitiesByType(activityType);
+		Collection<T> inStage = new ArrayList<>();
+		for (T activity : byType) {
+			if (getActivityStage(activity) == stage) {
+				inStage.add(activity);
+			}
+		}
+		return inStage;
+	}
 }
