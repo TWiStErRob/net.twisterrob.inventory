@@ -1,6 +1,5 @@
 package com.bumptech.glide.load.engine;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,12 +12,8 @@ import com.bumptech.glide.load.Key;
 import com.bumptech.glide.request.ResourceCallback;
 import com.bumptech.glide.util.Util;
 
-import static net.twisterrob.java.utils.ReflectionTools.*;
-
 // CONSIDER get rid of twisterrob dependency? and share on Github Glide issues
 public class EngineExternalLifecycle {
-	private static final Field mJobs = getJobsField();
-	private static final Field mCbs = getCallbacksField();
 
 	private final PhaseCallbacks callback;
 	private final Engine engine;
@@ -43,10 +38,9 @@ public class EngineExternalLifecycle {
 		assertTrue(endListeners.add(endListener));
 		assertThat(replacementJobs, hasEntry((Key)key, job));
 		callback.starting(engine, key, job);
-		//noinspection ConstantConditions it's a primitive type, they won't be null
 		if (job.isCancelled()
-				|| (Boolean)get(job, "hasResource")
-				|| (Boolean)get(job, "hasException")) {
+				|| EngineJobAccessor.hasResource(job)
+				|| EngineJobAccessor.hasException(job)) {
 			// catch up in case they're already done when we're created
 			finishing(key, job);
 			// call the corresponding callback method
@@ -78,75 +72,38 @@ public class EngineExternalLifecycle {
 
 	/** {@code Engine.jobs = new EngineJobsReplacement(Engine.jobs)} */
 	private void associate() {
-		try {
-			@SuppressWarnings("unchecked")
-			Map<Key, EngineJob> original = (Map<Key, EngineJob>)mJobs.get(engine);
-			if (original instanceof EngineJobsReplacement) {
-				EngineJobsReplacement replacement = (EngineJobsReplacement)original;
-				throw new IllegalStateException(
-						engine + " already has an external lifecycle: " + replacement.getAssociation());
-			}
-			assertThat(replacementJobs, is(anEmptyMap()));
-			replacementJobs.putAll(original);
-			mJobs.set(engine, replacementJobs);
-		} catch (Exception ex) {
-			throw new IllegalStateException("Cannot hack Engine.jobs", ex);
+		Map<Key, EngineJob> original = EngineAccessor.getJobs(engine);
+		if (original instanceof EngineJobsReplacement) {
+			EngineJobsReplacement replacement = (EngineJobsReplacement)original;
+			throw new IllegalStateException(
+					engine + " already has an external lifecycle: " + replacement.getAssociation());
 		}
+		assertThat(replacementJobs, is(anEmptyMap()));
+		replacementJobs.putAll(original);
+		EngineAccessor.setJobs(engine, replacementJobs);
 	}
 
 	/** {@code job.cbs += new LoadEndListener()} */
 	private LoadEndListener setSignUp(EngineKey key, EngineJob job) {
 		Util.assertMainThread();
-		try {
-			@SuppressWarnings("unchecked")
-			List<ResourceCallback> cbs = (List<ResourceCallback>)mCbs.get(job);
-			if (cbs instanceof ExtraItemList) {
-				throw new IllegalStateException(job + " already being listened to by " + cbs);
-			}
-			LoadEndListener extra = new LoadEndListener(key, job);
-			cbs = new ExtraItemList(cbs, extra);
-			mCbs.set(job, cbs);
-			return extra;
-		} catch (IllegalAccessException ex) {
-			throw new IllegalStateException("Cannot hack EngineJob.cbs", ex);
+		List<ResourceCallback> cbs = EngineJobAccessor.getCallbacks(job);
+		if (cbs instanceof ExtraItemList) {
+			throw new IllegalStateException(job + " already being listened to by " + cbs);
 		}
+		LoadEndListener extra = new LoadEndListener(key, job);
+		cbs = new ExtraItemList(cbs, extra);
+		EngineJobAccessor.setCallbacks(job, cbs);
+		return extra;
 	}
 
 	/** {@code job.cbs.iterator().last()} */
 	private LoadEndListener getSignUp(EngineJob job) {
 		Util.assertMainThread();
-		try {
-			@SuppressWarnings("unchecked")
-			List<ResourceCallback> cbs = (List<ResourceCallback>)mCbs.get(job);
-			if (cbs instanceof ExtraItemList) {
-				return (LoadEndListener)((ExtraItemList)cbs).extra;
-			} else {
-				throw new IllegalStateException(job + " doesn't have an end listener (" + cbs + ")");
-			}
-		} catch (IllegalAccessException ex) {
-			throw new IllegalStateException("Cannot hack EngineJob.cbs", ex);
-		}
-	}
-
-	private static Field getJobsField() {
-		try {
-			Field field;
-			field = Engine.class.getDeclaredField("jobs");
-			field.setAccessible(true);
-			return field;
-		} catch (Exception ex) {
-			throw new IllegalStateException("Glide Engine jobs cannot be found", ex);
-		}
-	}
-
-	private static Field getCallbacksField() {
-		try {
-			Field field;
-			field = EngineJob.class.getDeclaredField("cbs");
-			field.setAccessible(true);
-			return field;
-		} catch (Exception ex) {
-			throw new IllegalStateException("Glide EngineJobs callbacks cannot be found", ex);
+		List<ResourceCallback> cbs = EngineJobAccessor.getCallbacks(job);
+		if (cbs instanceof ExtraItemList) {
+			return (LoadEndListener)((ExtraItemList)cbs).extra;
+		} else {
+			throw new IllegalStateException(job + " doesn't have an end listener (" + cbs + ")");
 		}
 	}
 
@@ -216,8 +173,7 @@ public class EngineExternalLifecycle {
 		}
 
 		@Override public String toString() {
-			return job + ": " + get(key, "id")
-					+ "[" + get(key, "width") + "x" + get(key, "height") + "]";
+			return job + ": " + EngineKeyAccessor.toString(key);
 		}
 	}
 
