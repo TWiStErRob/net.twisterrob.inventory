@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.test;
 
 import java.io.File;
-import java.util.HashMap;
 
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -13,17 +12,12 @@ import android.support.annotation.CallSuper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.Engine;
-import com.bumptech.glide.manager.RequestManagerRetriever;
-
 import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
-import net.twisterrob.java.utils.ReflectionTools;
 
 public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(InventoryActivityRule.class);
@@ -134,44 +128,9 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	}
 
 	protected void resetGlide() {
-		LOG.info("Resetting Glide");
 		Context context = InstrumentationRegistry.getTargetContext();
-		cleanupGlide(context);
-		restrictGlide(context);
-		forgetGlide(context);
-	}
-	private void cleanupGlide(final Context context) {
-		InstrumentationExtensions.runOnMainIfNecessary(new Runnable() {
-			@Override public void run() {
-				Glide.with(context).onDestroy();
-				Glide.get(context).clearMemory();
-			}
-		});
-		Glide.get(context).clearDiskCache();
-	}
-	private void forgetGlide(Context context) {
-		// make sure Glide.with(...) never returns the old one
-		ReflectionTools.set(RequestManagerRetriever.get(), "applicationManager", null);
-		// make sure Glide.get(...) never returns the old one
-		ReflectionTools.setStatic(Glide.class, "glide", null);
+		GlideResetter.resetGlide(context);
 		// recreate internal Glide wrapper
 		Constants.Pic.init(context);
-	}
-	private void restrictGlide(Context context) {
-		Glide glide = Glide.get(context);
-		Engine engine = ReflectionTools.get(glide, "engine");
-		assert engine != null;
-		ReflectionTools.set(engine, "jobs", new HashMap<Object, Object>() {
-
-			private static final long serialVersionUID = 0L;
-
-			@Override public Object put(Object key, Object value) {
-				throw new UnsupportedOperationException("This engine is dead.");
-			}
-
-			@Override public Object remove(Object key) {
-				throw new UnsupportedOperationException("This engine is dead.");
-			}
-		});
 	}
 }
