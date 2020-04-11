@@ -4,9 +4,9 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import com.bumptech.glide.request.ResourceCallback;
+import android.support.annotation.NonNull;
 
-import static net.twisterrob.java.utils.ReflectionTools.*;
+import com.bumptech.glide.request.ResourceCallback;
 
 /**
  * This class is the bridge between package private stuff and the world, don't try to inline it.
@@ -36,7 +36,9 @@ public class EngineIdleWatcher implements EngineExternalLifecycle.PhaseCallbacks
 	public boolean isIdle() {
 		Collection<EngineJob> jobs = lifecycle.getJobs();
 		Collection<? extends ResourceCallback> active = lifecycle.getActive();
-		//LOG.trace("{}/{}: active={}", this, lifecycle,  active.size());
+		if (logEvents) {
+			LOG.trace("{}/{}: active={}, jobs={}", this, lifecycle, active.size(), jobs.size());
+		}
 		return jobs.isEmpty() && active.isEmpty();
 	}
 
@@ -77,7 +79,7 @@ public class EngineIdleWatcher implements EngineExternalLifecycle.PhaseCallbacks
 		tryToCallBack();
 	}
 
-	private Object id(EngineKey key) {
-		return get(key, "id") + "[" + get(key, "width") + "x" + get(key, "height") + "]";
+	private static @NonNull String id(@NonNull EngineKey key) {
+		return EngineKeyAccessor.toString(key);
 	}
 }
