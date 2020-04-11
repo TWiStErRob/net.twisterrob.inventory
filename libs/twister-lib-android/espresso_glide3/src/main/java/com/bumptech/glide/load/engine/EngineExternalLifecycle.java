@@ -26,7 +26,7 @@ public class EngineExternalLifecycle {
 	private final EngineJobsReplacement replacementJobs = new EngineJobsReplacement();
 	private final Collection<LoadEndListener> endListeners = new HashSet<>();
 
-	public EngineExternalLifecycle(@NonNull Engine engine, PhaseCallbacks callback) {
+	public EngineExternalLifecycle(@NonNull Engine engine, @NonNull PhaseCallbacks callback) {
 		this.callback = callback;
 		this.engine = engine;
 		associate();
@@ -84,9 +84,18 @@ public class EngineExternalLifecycle {
 			throw new IllegalStateException(
 					engine + " already has an external lifecycle: " + replacement.getAssociation());
 		}
-		assertThat(replacementJobs, is(anEmptyMap()));
-		replacementJobs.putAll(original);
+		assertThat(
+				"freshly associating, there should be nothing yet",
+				replacementJobs, is(anEmptyMap())
+		);
+		for (Map.Entry<Key, EngineJob> entry : original.entrySet()) {
+			replacementJobs.put(entry.getKey(), entry.getValue());
+		}
 		EngineAccessor.setJobs(engine, replacementJobs);
+		assertThat(
+				"same items exist in both maps after association",
+				replacementJobs, equalTo(original)
+		);
 	}
 
 	/** {@code job.cbs += new LoadEndListener()} */
@@ -142,16 +151,26 @@ public class EngineExternalLifecycle {
 	 */
 	@SuppressWarnings("serial") // won't be serialized
 	private class EngineJobsReplacement extends HashMap<Key, EngineJob> {
+		@Override public void putAll(@NonNull Map<? extends Key, ? extends EngineJob> m) {
+			throw new UnsupportedOperationException(
+					"Use put to make sure lifecycle handled correctly.");
+		}
+
 		@Override public EngineJob put(Key key, EngineJob value) {
-			assertNull(super.put(key, value));
+			assertNull(
+					"key shouldn't exist yet, a job is started only once",
+					super.put(key, value)
+			);
 			starting((EngineKey)key, value);
 			return null;
 		}
+
 		@Override public EngineJob remove(Object key) {
 			EngineJob removed = super.remove(key);
 			finishing((EngineKey)key, removed);
 			return removed;
 		}
+
 		public EngineExternalLifecycle getAssociation() {
 			return EngineExternalLifecycle.this;
 		}
