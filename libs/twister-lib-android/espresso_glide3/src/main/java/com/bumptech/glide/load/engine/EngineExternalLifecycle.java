@@ -13,6 +13,12 @@ import com.bumptech.glide.request.ResourceCallback;
 import com.bumptech.glide.util.Util;
 
 // CONSIDER get rid of twisterrob dependency? and share on Github Glide issues
+
+/**
+ * This class cannot be moved out of this package because it uses package private classes.
+ * @see Engine
+ * @see EngineJob
+ */
 public class EngineExternalLifecycle {
 
 	private final PhaseCallbacks callback;
