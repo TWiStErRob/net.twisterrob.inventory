@@ -13,6 +13,9 @@
 	<string name="backup_import_external">Import from…</string>
 	<string name="backup_go_home">Go to Downloads folder</string>
 	<string name="backup_go_home_condensed">Downloads</string>
+	<string name="backup_go_to_title">Jump to folder</string>
+	<string name="backup_go_to_message">Enter full path of directory to go to:</string>
+
 	<string name="backup__cancel_partial">Cancelling this operation may result in partial data transfer only. Are you sure you want to cancel?</string>
 
 	<string name="backup_export_progress_title">Export</string>

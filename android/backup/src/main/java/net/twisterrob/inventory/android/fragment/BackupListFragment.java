@@ -15,7 +15,7 @@ import android.support.v7.widget.*;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.*;
-import android.view.View.OnClickListener;
+import android.view.View.*;
 import android.widget.*;
 
 import net.twisterrob.android.activity.BackPressAware;
@@ -23,6 +23,7 @@ import net.twisterrob.android.app.BaseApp;
 import net.twisterrob.android.content.loader.AsyncLoader;
 import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.backup.R;
@@ -62,6 +63,23 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		location = view.findViewById(R.id.backup_location);
+		location.setOnLongClickListener(new OnLongClickListener() {
+			@Override public boolean onLongClick(View v) {
+				DialogTools
+						.prompt(v.getContext(), getDir().getAbsolutePath(),
+								new PopupCallbacks<String>() {
+									@Override public void finished(String value) {
+										if (value != null) {
+											filePicked(new File(value), true);
+										}
+									}
+								})
+						.setTitle(R.string.backup_go_to_title)
+						.setMessage(R.string.backup_go_to_message)
+						.show();
+				return true;
+			}
+		});
 		controller = new BackupListController();
 		controller.setView((RecyclerView)view.findViewById(R.id.backups));
 	}
@@ -130,7 +148,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 			if (dir != file) {
 				BaseApp.toastUser(String.format(Locale.ROOT, "%s is not a directory, using %s.", file, dir));
 			}
-			if (addHistory) {
+			if (addHistory && !dir.equals(history.peek())) {
 				history.push(dir);
 			}
 			controller.startLoad(Intents.bundleFrom(EXTRA_PATH, dir));
