@@ -63,8 +63,8 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		location = view.findViewById(R.id.backup_location);
-		location.setOnLongClickListener(new OnLongClickListener() {
-			@Override public boolean onLongClick(View v) {
+		location.setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
 				DialogTools
 						.prompt(v.getContext(), getDir().getAbsolutePath(),
 								new PopupCallbacks<String>() {
@@ -77,7 +77,6 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 						.setTitle(R.string.backup_go_to_title)
 						.setMessage(R.string.backup_go_to_message)
 						.show();
-				return true;
 			}
 		});
 		controller = new BackupListController();

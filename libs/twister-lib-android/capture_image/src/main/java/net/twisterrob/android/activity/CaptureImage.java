@@ -409,7 +409,6 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			return true;
 		}
 	}
-	@SuppressWarnings("NullableProblems") // doc says so
 	@Override public void onRequestPermissionsResult(
 			int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		switch (requestCode) {

@@ -12,12 +12,13 @@ import org.junit.runners.model.Statement;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.io.FileMatchers.*;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
-import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.ExportInternalResultActor;
@@ -31,8 +32,14 @@ public class BackupActivityTest_ExportInternal {
 
 	@Rule(order = 1) public final ActivityTestRule<BackupActivity> activity =
 			new InventoryActivityRule<>(BackupActivity.class);
-	@Rule(order = 2) public final TestRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
-	@Rule(order = 3) public final TemporaryFolder tempInHomeFolder = new TemporaryFolder(Paths.getPhoneHome());
+	@Rule(order = 2) public final TestRule backupService =
+			new BackupServiceInBackupActivityIdlingRule(activity);
+	@Rule(order = 3) public final TemporaryFolder tempInHomeFolder = TemporaryFolder
+			.builder()
+			//.parentFolder(Paths.getPhoneHome()) // cannot work because it needs permission
+			.parentFolder(InstrumentationRegistry.getContext().getDir("temp", Context.MODE_PRIVATE))
+			.assureDeletion()
+			.build();
 	@Rule(order = 4) public final CheckExportedFiles files = new CheckExportedFiles();
 
 	private final BackupActivityActor backup = new BackupActivityActor();
@@ -87,7 +94,8 @@ public class BackupActivityTest_ExportInternal {
 
 		String date = String.format(Locale.ROOT, "%tF", Calendar.getInstance());
 		File justExported = only(files.getCreatedFiles());
-		assertThat(justExported, aFileNamed(containsStringIgnoringCase(date))); // validates if file exists
+		assertThat("double-check the file exists",
+				justExported, aFileNamed(containsStringIgnoringCase(date)));
 
 		backup.checkFileShown(date);
 	}
@@ -119,6 +127,7 @@ public class BackupActivityTest_ExportInternal {
 		@Override public Statement apply(final Statement base, Description description) {
 			return new Statement() {
 				@Override public void evaluate() throws Throwable {
+					backup.allowPermissions();
 					saveFolderContents();
 					navigateToFolder();
 					base.evaluate();
@@ -128,15 +137,16 @@ public class BackupActivityTest_ExportInternal {
 
 				/*@Before*/
 				public void saveFolderContents() throws Exception {
-					File extraFile = tempInHomeFolder.newFile(); // to check for devastating deletion
+					// To check for devastating deletion,
+					// create an empty file that should persist till the end.
+					File extraFile = tempInHomeFolder.newFile();
 					preContents = tempInHomeFolder.getRoot().listFiles();
-					assertThat(preContents, arrayContaining(extraFile));
+					assertThat("self-check", preContents, arrayContaining(extraFile));
 				}
 
 				/*@Before*/
 				private void navigateToFolder() {
-					backup.gotoHomeFolder();
-					backup.selectFolder(tempInHomeFolder.getRoot());
+					backup.gotoFolder(tempInHomeFolder.getRoot());
 				}
 
 				/*@After*/

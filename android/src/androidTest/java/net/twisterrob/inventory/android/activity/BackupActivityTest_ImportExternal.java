@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiObjectNotFoundException;
 
 import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -22,7 +23,8 @@ public class BackupActivityTest_ImportExternal {
 	@Rule public final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
 	private final BackupActivityActor backup = new BackupActivityActor();
 
-	@Before public void assertBackupActivityIsClean() {
+	@Before public void assertBackupActivityIsClean() throws UiObjectNotFoundException {
+		backup.allowPermissions();
 		backup.assertEmptyState();
 	}
 

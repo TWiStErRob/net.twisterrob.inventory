@@ -20,6 +20,7 @@ import android.os.Build.*;
 import android.support.annotation.*;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.view.View;
+import android.widget.EditText;
 
 import static android.support.test.InstrumentationRegistry.*;
 import static android.support.test.espresso.Espresso.*;
@@ -33,7 +34,8 @@ import static android.support.test.espresso.matcher.RootMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.automators.GoogleDriveAutomator;
-import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.android.test.espresso.DialogMatchers;
+import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BackupActivity;
@@ -58,6 +60,14 @@ public class BackupActivityActor extends ActivityActor {
 		onView(withId(R.id.fab)).perform(click());
 		return new ExportInternalResultActor();
 	}
+
+	public void allowPermissions() throws UiObjectNotFoundException {
+		if (hasRoot(isDialog())) {
+			clickPositiveInDialog();
+		}
+		allowPermissionsIfNeeded();
+	}
+
 	public ExportExternalActor exportExternal() {
 		clickActionOverflow(R.id.action_export_external);
 		ExportExternalActor dialog = new ExportExternalActor();
@@ -75,6 +85,18 @@ public class BackupActivityActor extends ActivityActor {
 	public void gotoHomeFolder() {
 		onView(withId(R.id.action_export_home)).perform(click());
 	}
+
+	public void gotoUpFolder() {
+		Matcher<View> tempFolder = hasDescendant(withText(startsWith("..")));
+		onView(withId(R.id.backups)).perform(actionOnItem(tempFolder, click()));
+	}
+
+	public void gotoFolder(File folderRoot) {
+		onView(withId(R.id.backup_location)).perform(click(click()));
+		onView(isAssignableFrom(EditText.class)).perform(replaceText(folderRoot.getAbsolutePath()));
+		DialogMatchers.clickPositiveInDialog();
+	}
+
 	public void selectFolder(File folder) {
 		Matcher<View> tempFolder = hasDescendant(withText(folder.getName()));
 		onView(withId(R.id.backups)).perform(actionOnItem(tempFolder, click()));

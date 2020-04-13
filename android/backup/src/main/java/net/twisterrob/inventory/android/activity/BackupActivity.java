@@ -77,6 +77,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		fileList = getFragment(R.id.backup_list);
 
 		displayPopup(findProgress(savedInstanceState, getIntent()));
+		BackupPermissions.checkAndRequest(this);
 	}
 	private @Nullable Progress findProgress(@Nullable Bundle savedInstanceState, @Nullable Intent intent) {
 		if (savedInstanceState != null) {
@@ -206,6 +207,14 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		} else {
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override public void onRequestPermissionsResult(
+			int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		if (BackupPermissions.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
+			return;
+		}
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

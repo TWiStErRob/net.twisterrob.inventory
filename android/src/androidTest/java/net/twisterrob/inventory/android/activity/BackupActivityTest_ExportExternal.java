@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.support.test.filters.*;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiObjectNotFoundException;
 
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.content.InventoryContract;
@@ -49,7 +50,8 @@ public class BackupActivityTest_ExportExternal {
 
 	private final BackupActivityActor backup = new BackupActivityActor();
 
-	@Before public void assertBackupActivityIsClean() {
+	@Before public void assertBackupActivityIsClean() throws UiObjectNotFoundException {
+		backup.allowPermissions();
 		backup.assertEmptyState();
 	}
 
