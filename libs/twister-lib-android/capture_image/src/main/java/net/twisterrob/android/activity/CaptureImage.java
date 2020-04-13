@@ -205,7 +205,9 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 						mBtnCapture.performClick();
 						break;
 					case STATE_PICKING:
-						// automatically restored
+						// Restore ImageRequest in case activity is being re-created with state,
+						// and will go on to onActivityResult where request needs to exist.
+						request = buildRequest();
 						break;
 					case STATE_CROPPING:
 						mSavedFile = mTargetFile;
@@ -389,13 +391,17 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		mPreview.setVisibility(View.INVISIBLE);
 		disableControls();
 		mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
+		request = buildRequest();
+		request.start(); // continues in onActivityResult
+	}
+
+	private ImageRequest buildRequest() {
 		// TODO properly pass and handle EXTRA_OUTPUT as Uris
 		Uri publicOutput = getIntent().getParcelableExtra(EXTRA_OUTPUT_PUBLIC);
-		request = new ImageRequest.Builder(CaptureImage.this)
+		return new ImageRequest.Builder(CaptureImage.this)
 				.addGalleryIntent()
 				.addCameraIntents(publicOutput != null? publicOutput : Uri.fromFile(mTargetFile))
 				.build();
-		request.start(); // continues in onActivityResult
 	}
 
 	private static final int PERMISSIONS_REQUEST_CAMERA = 1;
