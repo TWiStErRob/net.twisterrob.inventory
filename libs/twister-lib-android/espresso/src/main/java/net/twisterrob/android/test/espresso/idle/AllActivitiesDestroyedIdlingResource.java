@@ -72,6 +72,8 @@ public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
 		} else {
 			for (Activity activity : activities) {
 				sb.append(activity.toString());
+				sb.append(": ");
+				sb.append(InstrumentationExtensions.getActivityStage(activity));
 				sb.append("\n");
 			}
 		}
