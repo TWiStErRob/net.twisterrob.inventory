@@ -1,14 +1,19 @@
 package net.twisterrob.inventory.android.activity;
 
+import java.util.List;
+
 import android.content.*;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.*;
+import android.support.annotation.NonNull;
 
 import net.twisterrob.inventory.android.preferences.R;
 
 @SuppressWarnings("deprecation")
-public class PreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class PreferencesActivity extends PreferenceActivity
+		implements OnSharedPreferenceChangeListener {
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -17,12 +22,39 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 
 	@Override protected void onStart() {
 		super.onStart();
-		SharedPreferences prefs = getPrefs();
-		for (String prefKey : prefs.getAll().keySet()) {
-			Preference pref = findPreference(prefKey);
-			if (pref instanceof ListPreference) {
-				onSharedPreferenceChanged(getPrefs(), prefKey);
+		traversePreferences(getPreferenceScreen(), new PreferenceAction() {
+			@Override public void before(@NonNull Preference preference) {
+				if (preference.getClass() == Preference.class) {
+					// .getClass() for exact match, no implementing subclasses
+					if (preference.getIntent() != null) {
+						List<ResolveInfo> intents = getPackageManager()
+								.queryIntentActivities(preference.getIntent(), 0);
+						preference.setEnabled(!intents.isEmpty());
+					}
+				}
 			}
+
+			@Override public void after(@NonNull Preference preference) {
+				if (preference instanceof ListPreference && preference.getKey() != null) {
+					onSharedPreferenceChanged(getPrefs(), preference.getKey());
+				}
+			}
+		});
+	}
+
+	interface PreferenceAction {
+		void before(@NonNull Preference preference);
+		void after(@NonNull Preference preference);
+	}
+
+	private void traversePreferences(@NonNull PreferenceGroup parent, PreferenceAction action) {
+		for (int i = 0; i < parent.getPreferenceCount(); ++i) {
+			Preference pref = parent.getPreference(i);
+			action.before(pref);
+			if (pref instanceof PreferenceGroup) {
+				traversePreferences((PreferenceGroup)pref, action);
+			}
+			action.after(pref);
 		}
 	}
 
