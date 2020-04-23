@@ -135,9 +135,9 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 	@Override protected void onHandleIntent(Intent intent) {
 		super.onHandleIntent(intent);
 		lastProgress = null;
-		currentJobStarted = System.currentTimeMillis();
 		onGoingNotification = createOnGoingNotification(intent).setOngoing(true);
 		setIntentAndDefaults(onGoingNotification, createInProgressPendingIntent());
+		currentJobStarted = System.currentTimeMillis();
 	}
 
 	@Override public void onRebind(Intent intent) {
