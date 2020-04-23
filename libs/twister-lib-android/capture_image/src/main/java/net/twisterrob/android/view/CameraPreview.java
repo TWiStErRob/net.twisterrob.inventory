@@ -1,7 +1,7 @@
 package net.twisterrob.android.view;
 
 import java.io.IOException;
-import java.util.Locale;
+import java.util.*;
 
 import org.slf4j.*;
 
@@ -318,23 +318,35 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	public void setFlash(boolean flash) {
+	public Boolean isFlashSupported() {
 		if (cameraHolder == null) {
+			return null;
+		}
+		List<String> modes = cameraHolder.params.getSupportedFlashModes();
+		if (modes != null) {
+			return modes.contains(android.hardware.Camera.Parameters.FLASH_MODE_ON)
+					&& modes.contains(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
+		} else {
+			// no flash support, e.g.
+			// Samsung Galaxy Tab A (gta3xlwifi), 3072MB RAM, Android 9
+			// Huawei HUAWEI MediaPad M5 Pro (HWCMR), 3840MB RAM, Android 9
+			// LGE Qua tab PX (b3), 2048MB RAM, Android 7.0
+			return false;
+		}
+	}
+
+	/**
+	 * @see #isFlashSupported() as a guard, {@code setFlashMode} crashes otherwise.
+	 */
+	public void setFlash(boolean flash) {
+		if (cameraHolder == null && !Boolean.TRUE.equals(isFlashSupported())) {
 			return;
 		}
 		String flashMode = flash
 				? android.hardware.Camera.Parameters.FLASH_MODE_ON
 				: android.hardware.Camera.Parameters.FLASH_MODE_OFF;
 		cameraHolder.params.setFlashMode(flashMode);
-		try {
-			cameraHolder.camera.setParameters(cameraHolder.params);
-		} catch(RuntimeException ex) {
-			// TODO pre-check and hide flash button
-			// E/Camera2-Parameters: set: Requested flash mode "on" is not supported: No flash on device
-			// java.lang.RuntimeException: setParameters failed
-			//     at android.hardware.Camera.native_setParameters(Native Method)
-			//     at android.hardware.Camera.setParameters(Camera.java:2102)
-		}
+		cameraHolder.camera.setParameters(cameraHolder.params);
 	}
 
 	private static class CameraHolder {

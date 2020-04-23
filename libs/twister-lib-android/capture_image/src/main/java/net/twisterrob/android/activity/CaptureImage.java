@@ -131,7 +131,13 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 
 		mPreview.setListener(new CameraPreviewListener() {
 			@Override public void onCreate(CameraPreview preview) {
-				mBtnFlash.setChecked(getInitialFlashEnabled()); // calls setOnCheckedChangeListener
+				if (Boolean.TRUE.equals(preview.isFlashSupported())) {
+					// calls setOnCheckedChangeListener
+					mBtnFlash.setVisibility(View.VISIBLE);
+					mBtnFlash.setChecked(getInitialFlashEnabled());
+				} else {
+					mBtnFlash.setVisibility(View.GONE);
+				}
 			}
 			@Override public void onResume(CameraPreview preview) {
 				cameraControls.setVisibility(View.VISIBLE);
