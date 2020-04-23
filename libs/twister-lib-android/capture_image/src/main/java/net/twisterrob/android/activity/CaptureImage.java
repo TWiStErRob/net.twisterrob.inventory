@@ -264,7 +264,10 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		if (Looper.myLooper() != Looper.getMainLooper()) {
 			mImage.post(new Runnable() {
 				@Override public void run() {
-					prepareCrop();
+					// TODO Glide load may fail if destroyed while this is happening
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 || !isDestroyed()) {
+						prepareCrop();
+					}
 				}
 			});
 			return;
