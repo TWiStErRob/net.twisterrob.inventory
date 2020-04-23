@@ -86,7 +86,14 @@ public class ChangeTypeDialog {
 				})
 				.setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
-						Cursor cursor = (Cursor)adapter.getItem(list.getCheckedItemPosition());
+						int position = list.getCheckedItemPosition();
+						if (position == AdapterView.INVALID_POSITION
+								|| adapter.getCount() <= position) {
+							throw new IllegalStateException(
+									"Wrong item selected, this shouldn't happen: "
+											+ position + " in list of " + adapter.getCount());
+						}
+						Cursor cursor = (Cursor)adapter.getItem(position);
 						userSelected(cursor, variants);
 						dialog.dismiss();
 					}
