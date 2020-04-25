@@ -78,7 +78,7 @@ public abstract class BaseApp extends android.app.Application {
 
 	public void onCreate() {
 		// StrictModeDiskReadViolation and StrictModeDiskWriteViolation on startup,
-		// but there isn't really a good way around these
+		// but there isn't really a good way around these.
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 		try {
 			// may cause StrictModeDiskReadViolation if Application.onCreate calls
@@ -116,7 +116,19 @@ public abstract class BaseApp extends android.app.Application {
 	protected void initPreferences() {
 		if (preferencesResource != AndroidConstants.INVALID_RESOURCE_ID) {
 			// may cause StrictModeDiskReadViolation on Android 21-23
-			// may cause StrictModeDiskWriteViolation on Android 24-25
+
+			// may cause StrictModeDiskWriteViolation on Android 24-29
+			// D/StrictMode: StrictMode policy violation; ~duration=73 ms: android.os.strictmode.DiskWriteViolation
+			// at android.system.Os.mkdir(Os.java:375)
+			// at android.app.ContextImpl.ensurePrivateDirExists(ContextImpl.java:648)
+			// at android.app.ContextImpl.ensurePrivateDirExists(ContextImpl.java:636)
+			// at android.app.ContextImpl.getPreferencesDir(ContextImpl.java:592)
+			// at android.app.ContextImpl.getSharedPreferencesPath(ContextImpl.java:787)
+		    // at android.app.ContextImpl.getSharedPreferences(ContextImpl.java:439)
+			// at android.content.ContextWrapper.getSharedPreferences(ContextWrapper.java:178)
+			// at android.preference.PreferenceManager.setDefaultValues(PreferenceManager.java:663)
+			// at android.preference.PreferenceManager.setDefaultValues(PreferenceManager.java:629)
+
 			// but necessary for startup since anything can read the preferences
 			PreferenceManager.setDefaultValues(this, preferencesResource, false);
 		}
