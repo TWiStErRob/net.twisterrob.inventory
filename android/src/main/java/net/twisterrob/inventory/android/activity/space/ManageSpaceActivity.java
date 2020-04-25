@@ -11,8 +11,9 @@ import android.content.Intent;
 import android.database.*;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build.*;
-import android.os.Bundle;
-import android.support.annotation.*;
+import android.os.*;
+import android.os.StrictMode.ThreadPolicy;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -295,24 +296,36 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 
 	@SuppressLint("WrongThreadInterprocedural")
 	void recalculate() {
-		executePreferParallel(new GetFolderSizesTask(imageCacheSize),
-				GlideSetup.getCacheDir(this));
-		executePreferParallel(new GetFolderSizesTask(databaseSize),
-				getDatabasePath(App.db().getHelper().getDatabaseName()));  // TODO illegal detection, but cannot reproduce
-		executePreferParallel(new GetFolderSizesTask(allSize),
-				new File(getApplicationInfo().dataDir), getExternalCacheDir(), getExternalFilesDir(null));
-		executePreferParallel(new GetSizeTask<Void>(searchIndexSize) {
-			@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
-				return App.db().getSearchSize();
-			}
-		});
-		executePreferParallel(new GetSizeTask<Void>(freelistSize) {
-			@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
-				SQLiteDatabase db = App.db().getReadableDatabase();
-				return DatabaseUtils.longForQuery(db, "PRAGMA freelist_count;", NO_ARGS) * db.getPageSize();
-			}
-		});
-		swiper.setRefreshing(false);
+		ThreadPolicy threadPolicy = StrictMode.allowThreadDiskWrites();
+		try { // TODEL try to fix these somehow
+			executePreferParallel(new GetFolderSizesTask(imageCacheSize),
+					GlideSetup.getCacheDir(this)
+			);
+			executePreferParallel(new GetFolderSizesTask(databaseSize),
+					// TODO illegal WrongThreadInterprocedural detection, but cannot reproduce
+					getDatabasePath(App.db().getHelper().getDatabaseName())
+			);
+			executePreferParallel(new GetFolderSizesTask(allSize),
+					new File(getApplicationInfo().dataDir),
+					getExternalCacheDir(),
+					getExternalFilesDir(null)
+			);
+			executePreferParallel(new GetSizeTask<Void>(searchIndexSize) {
+				@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
+					return App.db().getSearchSize();
+				}
+			});
+			executePreferParallel(new GetSizeTask<Void>(freelistSize) {
+				@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
+					SQLiteDatabase db = App.db().getReadableDatabase();
+					long count = DatabaseUtils.longForQuery(db, "PRAGMA freelist_count;", NO_ARGS);
+					return count * db.getPageSize();
+				}
+			});
+			swiper.setRefreshing(false);
+		} finally {
+			StrictMode.setThreadPolicy(threadPolicy);
+		}
 	}
 
 	protected void onResume() {
