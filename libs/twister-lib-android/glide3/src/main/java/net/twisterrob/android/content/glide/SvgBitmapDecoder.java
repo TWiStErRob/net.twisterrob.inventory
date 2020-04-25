@@ -33,7 +33,7 @@ public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
 
 	public Resource<Bitmap> decode(InputStream source, int width, int height) throws IOException {
 		try {
-			SVG svg = SVG.getFromInputStream(source);
+			SVG svg = SVGWorkarounds.getFromInputStream(source);
 			if (manipulator != null) {
 				svg = manipulator.manipulate(svg);
 			}
