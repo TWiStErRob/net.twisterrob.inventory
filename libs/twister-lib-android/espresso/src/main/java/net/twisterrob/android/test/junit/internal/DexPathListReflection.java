@@ -81,15 +81,29 @@ public class DexPathListReflection {
 		}
 	}
 
-	@SuppressWarnings("ConstantConditions")
+	@SuppressWarnings({"ConstantConditions", "deprecation"})
 	private @NonNull List<File> scanClassloaderForClasspath() {
 		List<File> cp = new ArrayList<>();
 		ClassLoader loader = AndroidJUnitRunner.class.getClassLoader();
 		if (SDK_INT < ICE_CREAM_SANDWICH) {
-			// https://android.googlesource.com/platform/libcore/+/gingerbread-release/dalvik/src/main/java/dalvik/system/DexClassLoader.java#36
-			// Structure of DexClassLoader is significantly different, and not worth the effort.
-			// There's no Testlab device with this old version.
-			LOG.trace("Skipping val Class.classLoader: {} = {}", DexClassLoader.class, loader);
+			// https://android.googlesource.com/platform/libcore/+/gingerbread-release/dalvik/src/main/java/dalvik/system/PathClassLoader.java#40
+			LOG.trace("Expecting val Class.classLoader: {} = {}", PathClassLoader.class, loader);
+			DexFile[] mDexs = ReflectionTools.get(loader, "mDexs");
+			LOG.trace("Expecting val PathClassLoader.mDexs: DexFile[] = {}", (Object)mDexs);
+			for (DexFile dex : mDexs) {
+				LOG.trace("Expecting a DexFile inside mDexs: {}", dex);
+				File file = new File(dex.getName());
+				LOG.trace("Expecting val DexFile.mFileName: String = {}", dex.getName());
+				if (file.getAbsolutePath().contains(instr.getContext().getPackageName())) {
+					if (file.getName().endsWith(".zip")) {
+						generateODEX(file);
+					} else {
+						// It's APK and it'll work fine because the system already did the dexopt.
+						// Otherwise this code wouldn't be running.
+					}
+					cp.add(file);
+				}
+			}
 		} else if (ICE_CREAM_SANDWICH <= SDK_INT && SDK_INT <= 29) {
 			LOG.trace("Expecting val Class.classLoader: {} = {}", BaseDexClassLoader.class, loader);
 			Object pathList = ReflectionTools.get(loader, "pathList");
@@ -210,8 +224,19 @@ public class DexPathListReflection {
 	private void generateODEX(File zip) {
 		String zipName = zip.getAbsolutePath();
 		String noExtName = zipName.substring(0, zipName.length() - ".zip".length());
+		String odexName = noExtName + ".odex";
 		try {
-			DexFile.loadDex(zipName, noExtName + ".odex", 0).close();
+			LOG.trace("Generating ODEX {} for {}", odexName, zipName);
+			// Sadly this will sometimes crash on API 9.
+			// https://issuetracker.google.com/issues/36907533
+			// addEntriesFromPath will open and close the same file.
+			// The only solution I found to this is replacing what createClassPathScanner creates:
+			// android.support.test.internal.runner.TestRequestBuilder.createClassPathScanner
+			// android.support.test.runner.AndroidJUnitRunner.createTestRequestBuilder
+			// and simply doing the odexing there instead of here,
+			// but androidx will likely change that API and dropping API <14 anyway.
+			DexFile.loadDex(zipName, odexName, 0).close();
+			LOG.trace("Generated ODEX {}", odexName);
 		} catch (IOException e) {
 			throw new IllegalStateException(
 					"Cannot generate ODEX next to ZIP: " + zipName, e);
