@@ -285,7 +285,13 @@ public class BackupService extends NotificationProgressService<Progress> {
 				for (final BackupListener listener : listeners) {
 					main.post(new Runnable() {
 						@Override public void run() {
-							listener.started();
+							synchronized (listeners) {
+								if (listeners.contains(listener)) {
+									listener.started();
+								} else {
+									LOG.warn("Listener {} has been unregistered since post().", listener);
+								}
+							}
 						}
 					});
 				}
