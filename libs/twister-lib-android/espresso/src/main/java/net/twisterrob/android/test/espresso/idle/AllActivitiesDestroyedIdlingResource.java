@@ -7,9 +7,25 @@ import android.os.*;
 import android.support.annotation.*;
 import android.support.test.runner.lifecycle.*;
 
+import static android.os.Build.*;
+
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
 
 public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
+
+	private static final Collection<Stage> IDLE_STAGES = new HashSet<>();
+	static {
+		IDLE_STAGES.add(Stage.DESTROYED);
+		if (VERSION.SDK_INT < VERSION_CODES.ICE_CREAM_SANDWICH) {
+			// On API 10 finish() kills the activity, and calls onDestroy properly,
+			// but android.app.ActivityThread.performDestroyActivity directly calls onDestroy,
+			// instead of going through android.app.Instrumentation.callActivityOnDestroy,
+			// which means MonitoringInstrumentation won't call signalLifecycleChange(DESTROYED),
+			// so while the activity is destroyed it's stuck in STOPPED stage.
+			IDLE_STAGES.add(Stage.STOPPED);
+		}
+	}
+
 	private final Collection<Activity> activities = new HashSet<>();
 	private final ActivityLifecycleCallback callback = new ActivityLifecycleCallback() {
 		@Override public void onActivityLifecycleChanged(Activity activity, Stage stage) {
@@ -47,7 +63,7 @@ public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
 		monitor.removeLifecycleCallback(callback);
 		activities.clear();
 		for (Stage stage : Stage.values()) {
-			if (stage != Stage.DESTROYED) {
+			if (!IDLE_STAGES.contains(stage)) {
 				activities.addAll(monitor.getActivitiesInStage(stage));
 			}
 		}
