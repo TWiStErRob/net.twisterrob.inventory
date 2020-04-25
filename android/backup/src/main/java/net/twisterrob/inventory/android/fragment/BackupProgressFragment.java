@@ -86,6 +86,10 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 
 	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		// Hide view for startup, the service is not connected yet,
+		// we don't know if we need to show this.
+		ViewTools.displayedIf(view, false);
+
 		progress = view.findViewById(R.id.progress);
 		description = view.findViewById(R.id.progress__description);
 		percentage = view.findViewById(R.id.progress__percentage);
