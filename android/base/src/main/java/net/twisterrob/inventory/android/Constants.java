@@ -6,7 +6,7 @@ import java.util.*;
 import android.content.*;
 import android.graphics.*;
 import android.net.Uri;
-import android.os.Environment;
+import android.os.*;
 import android.support.annotation.NonNull;
 import android.support.v4.content.*;
 import android.support.v4.graphics.ColorUtils;
@@ -55,14 +55,22 @@ public interface Constants {
 			return String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
 		}
 		public static @NonNull File getPhoneHome() {
-			File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-			if (!IOTools.isValidDir(dir)) { // fall back to /sdcard
-				dir = Environment.getExternalStorageDirectory();
+			StrictMode.ThreadPolicy threadPolicy = StrictMode.allowThreadDiskReads();
+			try {
+				// D/StrictMode: StrictMode policy violation; ~duration=17 ms: android.os.strictmode.DiskReadViolation
+				// at java.io.File.isDirectory(File.java:845)
+				// at net.twisterrob.java.io.IOTools.isValidDir(IOTools.java:375)
+				File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+				if (!IOTools.isValidDir(dir)) { // fall back to /sdcard
+					dir = Environment.getExternalStorageDirectory();
+				}
+				if (!IOTools.isValidDir(dir)) { // fall back to /
+					dir = Environment.getRootDirectory();
+				}
+				return dir;
+			} finally {
+				StrictMode.setThreadPolicy(threadPolicy);
 			}
-			if (!IOTools.isValidDir(dir)) { // fall back to /
-				dir = Environment.getRootDirectory();
-			}
-			return dir;
 		}
 
 		/**
