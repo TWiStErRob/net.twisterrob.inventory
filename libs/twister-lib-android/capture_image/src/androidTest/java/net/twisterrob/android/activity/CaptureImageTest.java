@@ -17,10 +17,15 @@ public class CaptureImageTest {
 
 	private final CaptureImageActivityActor captureImage = new CaptureImageActivityActor();
 
-	@Test public void flashStateRememberedBetweenLaunches_off() throws UiObjectNotFoundException {
+	// Can't use @Before, because it messes with ActivityTestRule
+	private void launchCaptureImageActivity() throws UiObjectNotFoundException {
 		captureImage.clearPreferences();
 		activity.launchActivity(null);
 		captureImage.allowPermissions();
+	}
+
+	@Test public void flashStateRememberedBetweenLaunches_off() throws UiObjectNotFoundException {
+		launchCaptureImageActivity();
 		captureImage.turnFlashOn();
 		captureImage.turnFlashOff();
 		activity.finishActivity();
@@ -31,9 +36,7 @@ public class CaptureImageTest {
 	}
 
 	@Test public void flashStateRememberedBetweenLaunches_on() throws UiObjectNotFoundException {
-		captureImage.clearPreferences();
-		activity.launchActivity(null);
-		captureImage.allowPermissions();
+		launchCaptureImageActivity();
 		captureImage.turnFlashOn();
 		activity.finishActivity();
 
