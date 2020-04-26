@@ -12,6 +12,7 @@ import android.graphics.Region.Op;
 import android.graphics.drawable.Drawable;
 import android.os.Build.*;
 import android.os.Looper;
+import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.view.*;
 
@@ -600,13 +601,13 @@ public class SelectionView extends View {
 		FOCUSED(Color.GREEN),
 		BLURRY(Color.RED);
 
-		private final int color;
+		private final @ColorInt int color;
 
-		SelectionStatus(int color) {
+		SelectionStatus(@ColorInt int color) {
 			this.color = color;
 		}
 
-		public int getColor() {
+		public @ColorInt int getColor() {
 			return color;
 		}
 
