@@ -10,12 +10,17 @@ import android.support.test.uiautomator.UiObjectNotFoundException;
  * @see CaptureImage
  */
 @RunWith(AndroidJUnit4.class)
-public class CaptureImageTest {
+public class CaptureImageTest_Flash {
 
 	@Rule
 	public final CaptureImageActivityTestRule activity = new CaptureImageActivityTestRule();
 
 	private final CaptureImageActivityActor captureImage = new CaptureImageActivityActor();
+
+	@Before public void setUp() {
+		captureImage.assumeHasCamera();
+		captureImage.assumeCameraHasFlash();
+	}
 
 	// Can't use @Before, because it messes with ActivityTestRule
 	private void launchCaptureImageActivity() throws UiObjectNotFoundException {
@@ -41,6 +46,25 @@ public class CaptureImageTest {
 		activity.finishActivity();
 
 		activity.launchActivity(null);
+
+		captureImage.assertFlashOn();
+	}
+
+	@Test public void flashStateRememberedOnRotation_off() throws UiObjectNotFoundException {
+		launchCaptureImageActivity();
+		captureImage.turnFlashOn();
+		captureImage.turnFlashOff();
+
+		captureImage.rotate();
+
+		captureImage.assertFlashOff();
+	}
+
+	@Test public void flashStateRememberedOnRotation_on() throws UiObjectNotFoundException {
+		launchCaptureImageActivity();
+		captureImage.turnFlashOn();
+
+		captureImage.rotate();
 
 		captureImage.assertFlashOn();
 	}
