@@ -130,6 +130,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		mImage = findViewById(R.id.image);
 		mSelection = findViewById(R.id.selection);
 
+		mPreview.addListener(new LoggingCameraPreviewListener());
 		mPreview.addListener(new CameraPreviewListener() {
 			@Override public void onCreate(CameraPreview preview) {
 				if (Boolean.TRUE.equals(preview.isFlashSupported())) {
