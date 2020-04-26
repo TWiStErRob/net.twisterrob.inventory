@@ -5,8 +5,10 @@ import java.util.Arrays;
 import org.slf4j.*;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build.*;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
@@ -22,6 +24,7 @@ public class BackupPermissions {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupPermissions.class);
 
 	private static final int PERMISSIONS_REQUEST = 34625;
+	@TargetApi(VERSION_CODES.JELLY_BEAN)
 	private static final String READ_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE;
 	private static final String WRITE_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 	private static final String[] storagePermissions = {
@@ -30,7 +33,11 @@ public class BackupPermissions {
 	};
 
 	private static boolean hasReadPermission(Context context) {
-		return hasPermission(context, READ_PERMISSION);
+		// Assume the permission is granted on APIs where it didn't exists,
+		// otherwise onRequestPermissionsResult().grantResults parameter
+		// would contain [PERMISSION_DENIED, PERMISSION_GRANTED].
+		return VERSION.SDK_INT < VERSION_CODES.JELLY_BEAN 
+				|| hasPermission(context, READ_PERMISSION);
 	}
 
 	private static boolean hasWritePermission(Context context) {
