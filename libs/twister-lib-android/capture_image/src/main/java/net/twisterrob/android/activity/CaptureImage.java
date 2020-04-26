@@ -114,9 +114,11 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			return;
 		} else {
 			mTargetFile = new File(output);
-			LOG.trace("Clear image at {}", mTargetFile);
-			//noinspection ResultOfMethodCallIgnored best effort, try to prevent leaking old image
-			mTargetFile.delete();
+			if (savedInstanceState == null) {
+				LOG.trace("Clear image at {}", mTargetFile);
+				//noinspection ResultOfMethodCallIgnored best effort, try to prevent leaking old image
+				mTargetFile.delete();
+			}
 		}
 
 		setContentView(R.layout.activity_camera);

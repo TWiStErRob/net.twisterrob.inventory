@@ -184,13 +184,18 @@ public class CaptureImageActivityActor extends ActivityActor {
 		onView(withId(R.id.image)).check(matches(hasBitmap(withPixelAt(0, 0, colorMatcher))));
 	}
 
+	// TODO hasDrawable(R.drawable.image_error)
+	private static final Matcher<Object> ERROR_DRAWABLE = allOf(
+			instanceOf(LayerDrawable.class), // contains two layers of RotateDrawables
+			not(instanceOf(TransitionDrawable.class)) // not glide animation
+	);
+
 	public void verifyErrorImage() {
-		// TODO hasDrawable(R.drawable.image_error)
-		Matcher<Object> errorDrawable = allOf(
-				instanceOf(LayerDrawable.class), // contains two layers of RotateDrawables
-				not(instanceOf(TransitionDrawable.class)) // not glide animation
-		);
-		onView(withId(R.id.image)).check(matches(hasDrawable(errorDrawable)));
+		onView(withId(R.id.image)).check(matches(hasDrawable(ERROR_DRAWABLE)));
+	}
+
+	public void verifyNotErrorImage() {
+		onView(withId(R.id.image)).check(matches(not(hasDrawable(ERROR_DRAWABLE))));
 	}
 
 	@SuppressWarnings("unchecked")
