@@ -34,7 +34,8 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.capture_image.R;
-import net.twisterrob.android.view.CameraPreview;
+import net.twisterrob.android.view.*;
+import net.twisterrob.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.inventory.android.test.actors.ActivityActor;
 import net.twisterrob.java.io.IOTools;
 
@@ -132,6 +133,22 @@ public class CaptureImageActivityActor extends ActivityActor {
 		assertThat(preview.getCamera(), notNullValue());
 		String flashMode = preview.getCamera().getParameters().getFlashMode();
 		assertEquals(expectedMode, flashMode);
+	}
+
+	public void verifyState(SelectionStatus status) {
+		onView(isAssignableFrom(SelectionView.class))
+				.check(matches(isCompletelyDisplayed()))
+				.check(matches(selectionStatus(status)));
+	}
+
+	@SuppressWarnings("unchecked")
+	private static @NonNull Matcher<View> selectionStatus(final SelectionStatus status) {
+		return (Matcher<View>)(Matcher<?>)new FeatureMatcher<SelectionView, SelectionStatus>(
+				equalTo(status), "selection status", "selection status") {
+			@Override protected SelectionStatus featureValueOf(SelectionView actual) {
+				return actual.getSelectionStatus();
+			}
+		};
 	}
 
 	public PickDialogActor pick() {

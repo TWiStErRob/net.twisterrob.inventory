@@ -15,6 +15,8 @@ import android.support.test.uiautomator.UiObjectNotFoundException;
 
 import static android.support.test.espresso.intent.Intents.*;
 
+import net.twisterrob.android.view.SelectionView.SelectionStatus;
+
 /**
  * @see CaptureImage
  */
@@ -31,9 +33,11 @@ public class CaptureImageTest_External {
 		activity.launchActivity(null);
 		captureImage.allowPermissions();
 		Uri fakeUri = captureImage.createFakeImage(activity.getTemp().newFile(), Color.RED);
+		captureImage.verifyState(SelectionStatus.NORMAL);
 		captureImage.intendExternalChooser(fakeUri);
 		captureImage.pick();
 		captureImage.verifyExternalChooser();
+		captureImage.verifyState(SelectionStatus.FOCUSED);
 		Intents.assertNoUnverifiedIntents();
 		captureImage.verifyImageColor(equalTo(Color.RED));
 	}
@@ -43,12 +47,15 @@ public class CaptureImageTest_External {
 		activity.launchActivity(null);
 		captureImage.allowPermissions();
 		Uri fakeUri = captureImage.createFakeImage(activity.getTemp().newFile(), Color.GREEN);
+		captureImage.verifyState(SelectionStatus.NORMAL);
 		captureImage.intendExternalChooser(fakeUri);
 		captureImage.pick();
 		captureImage.verifyExternalChooser();
+		captureImage.verifyState(SelectionStatus.FOCUSED);
 		captureImage.intendExternalChooserCancelled();
 		captureImage.pick();
 		captureImage.verifyExternalChooser(times(2));
+		captureImage.verifyState(SelectionStatus.BLURRY);
 		Intents.assertNoUnverifiedIntents();
 		captureImage.verifyImageColor(equalTo(Color.GREEN));
 	}
@@ -65,11 +72,13 @@ public class CaptureImageTest_External {
 		activity.finishActivity();
 
 		activity.launchActivity(null);
+		captureImage.verifyState(SelectionStatus.NORMAL);
 		captureImage.intendExternalChooserCancelled();
 		captureImage.pick();
 		captureImage.verifyExternalChooser();
 		Intents.assertNoUnverifiedIntents();
 		captureImage.verifyNoImage();
+		captureImage.verifyState(SelectionStatus.BLURRY);
 	}
 
 	@Test public void doesNotFallBackToImageFromClosedActivityIfPickInvalid()
@@ -84,10 +93,12 @@ public class CaptureImageTest_External {
 		activity.finishActivity();
 
 		activity.launchActivity(null);
+		captureImage.verifyState(SelectionStatus.NORMAL);
 		captureImage.intendExternalChooser(null);
 		captureImage.pick();
 		captureImage.verifyExternalChooser();
 		Intents.assertNoUnverifiedIntents();
 		captureImage.verifyErrorImage();
+		captureImage.verifyState(SelectionStatus.BLURRY);
 	}
 }
