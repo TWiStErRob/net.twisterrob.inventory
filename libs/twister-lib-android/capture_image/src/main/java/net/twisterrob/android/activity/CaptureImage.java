@@ -465,6 +465,10 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		finish();
 	}
 
+	/**
+	 * @param jpegCallback @WorkerThread
+	 */
+	@UiThread
 	protected @CheckResult boolean take(final Callback<byte[]> jpegCallback) {
 		LOG.trace("Initiate taking picture {}", mPreview.isRunning());
 		if (!mPreview.isRunning()) {
@@ -472,16 +476,19 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		}
 		mSelection.setSelectionStatus(SelectionStatus.FOCUSING);
 		mPreview.takePicture(new CameraPictureListener() {
+			@WorkerThread
 			@Override public boolean onFocus(final boolean success) {
 				LOG.trace("Auto-focus result: {}", success);
 				//noinspection ResourceType post should be safe to call from background
 				mSelection.post(new Runnable() {
+					@UiThread
 					public void run() {
 						mSelection.setSelectionStatus(success? SelectionStatus.FOCUSED : SelectionStatus.BLURRY);
 					}
 				});
 				return true; // take the picture even if not in focus
 			}
+			@WorkerThread
 			@Override public void onTaken(@Nullable byte... image) {
 				jpegCallback.call(image);
 			}
