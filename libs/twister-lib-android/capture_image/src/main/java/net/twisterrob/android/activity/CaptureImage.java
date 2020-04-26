@@ -130,7 +130,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		mImage = findViewById(R.id.image);
 		mSelection = findViewById(R.id.selection);
 
-		mPreview.setListener(new CameraPreviewListener() {
+		mPreview.addListener(new CameraPreviewListener() {
 			@Override public void onCreate(CameraPreview preview) {
 				if (Boolean.TRUE.equals(preview.isFlashSupported())) {
 					// calls setOnCheckedChangeListener
@@ -168,7 +168,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				cameraControls.setVisibility(View.INVISIBLE);
 			}
 			@Override public void onDestroy(CameraPreview preview) {
-				// no op
+				// Don't do mPreview.removeListener(this); because picking from gallery destroys.
 			}
 		});
 
@@ -293,6 +293,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		RequestListener<Object, Bitmap> visualFeedbackListener = new RequestListener<Object, Bitmap>() {
 			@Override public boolean onException(Exception e,
 					Object model, Target<Bitmap> target, boolean isFirstResource) {
+				e.printStackTrace();
 				mSelection.setSelectionStatus(SelectionStatus.BLURRY);
 				return false;
 			}

@@ -30,24 +30,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		void onDestroy(CameraPreview preview);
 	}
 
-	public static class CameraPreviewListenerAdapter implements CameraPreviewListener {
-		@Override public void onCreate(CameraPreview preview) {
-			// optional override
-		}
-		@Override public void onResume(CameraPreview preview) {
-			// optional override
-		}
-		@Override public void onShutter(CameraPreview preview) {
-			// optional override
-		}
-		@Override public void onPause(CameraPreview preview) {
-			// optional override
-		}
-		@Override public void onDestroy(CameraPreview preview) {
-			// optional override
-		}
-	}
-
 	@WorkerThread
 	public interface CameraPictureListener {
 		/**
@@ -63,7 +45,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	private final MissedSurfaceEvents missedEvents = new MissedSurfaceEvents();
 	private final CameraThreadHandler thread = new CameraThreadHandler();
 	private @Nullable CameraHolder cameraHolder = null;
-	private @NonNull CameraPreviewListener listener = new CameraPreviewListenerAdapter();
+	private @NonNull CameraPreviewListeners listeners = new CameraPreviewListeners();
 
 	public CameraPreview(Context context, AttributeSet attributeset) {
 		super(context, attributeset);
@@ -81,8 +63,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	public void setListener(@Nullable CameraPreviewListener listener) {
-		this.listener = listener != null? listener : new CameraPreviewListenerAdapter();
+	public void addListener(@NonNull CameraPreviewListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeListener(@NonNull CameraPreviewListener listener) {
+		listeners.remove(listener);
 	}
 
 	public android.hardware.Camera getCamera() {
@@ -196,7 +182,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		try {
 			if (cameraHolder != null) {
 				cameraHolder.camera.startPreview();
-				listener.onResume(this);
+				listeners.onResume(this);
 			}
 		} catch (RuntimeException ex) {
 			LOG.error("Error starting camera preview", ex);
@@ -208,7 +194,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		try {
 			if (cameraHolder != null) {
 				cameraHolder.camera.stopPreview();
-				listener.onPause(this);
+				listeners.onPause(this);
 			}
 		} catch (RuntimeException ex) {
 			LOG.warn("ignore: tried to stop a non-existent preview", ex);
@@ -218,12 +204,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	private void started(CameraHolder holder) {
 		cameraHolder = holder;
 		missedEvents.replay();
-		listener.onCreate(this);
+		listeners.onCreate(this);
 	}
 
 	private void finished() {
 		cameraHolder = null;
-		listener.onDestroy(this);
+		listeners.onDestroy(this);
 	}
 
 	public Boolean isFrontFacing() {
@@ -251,12 +237,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 				@Override public void onShutter() {
 					post(new Runnable() {
 						@Override public void run() {
-							listener.onShutter(CameraPreview.this);
+							listeners.onShutter(CameraPreview.this);
 						}
 					});
 					post(new Runnable() {
 						@Override public void run() {
-							listener.onPause(CameraPreview.this);
+							listeners.onPause(CameraPreview.this);
 						}
 					});
 				}
@@ -516,6 +502,45 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			}
 			if (surfaceChanged) {
 				CameraPreview.this.surfaceChanged(holder, format, w, h);
+			}
+		}
+	}
+
+	private static class CameraPreviewListeners implements CameraPreviewListener {
+
+		private final @NonNull Collection<CameraPreviewListener> listeners = new LinkedHashSet<>();
+
+		public void add(@NonNull CameraPreviewListener listener) {
+			listeners.add(listener);
+		}
+
+		public void remove(@NonNull CameraPreviewListener listener) {
+			listeners.remove(listener);
+		}
+
+		@Override public void onCreate(CameraPreview preview) {
+			for (CameraPreviewListener listener : listeners) {
+				listener.onCreate(preview);
+			}
+		}
+		@Override public void onResume(CameraPreview preview) {
+			for (CameraPreviewListener listener : listeners) {
+				listener.onResume(preview);
+			}
+		}
+		@Override public void onShutter(CameraPreview preview) {
+			for (CameraPreviewListener listener : listeners) {
+				listener.onShutter(preview);
+			}
+		}
+		@Override public void onPause(CameraPreview preview) {
+			for (CameraPreviewListener listener : listeners) {
+				listener.onPause(preview);
+			}
+		}
+		@Override public void onDestroy(CameraPreview preview) {
+			for (CameraPreviewListener listener : listeners) {
+				listener.onDestroy(preview);
 			}
 		}
 	}
