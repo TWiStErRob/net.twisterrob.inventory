@@ -89,6 +89,7 @@ public class XMLImporter implements Importer {
 		});
 		listEntryElement.setElementListener(new ElementListener() {
 			@Override public void start(Attributes attributes) {
+				//noinspection ConstantConditions Entries are only processed inside a list.
 				long listID = currentListID.get();
 				long itemID = Long.parseLong(attributes.getValue(ATTR_ID));
 				Long dbItemID = itemMap.get(itemID);
@@ -242,7 +243,7 @@ public class XMLImporter implements Importer {
 		}
 
 		@Override protected void doProcess() {
-			Long propertyID = parent.getID();
+			long propertyID = parent.getID();
 			id = db.findRoom(propertyID, name);
 			boolean created;
 			if (id == null) {
@@ -291,7 +292,7 @@ public class XMLImporter implements Importer {
 			super.start(attributes);
 		}
 		@Override protected void doProcess() {
-			Long parentID = parent.getID();
+			long parentID = parent.getID();
 			id = db.findItem(parentID, name);
 			if (id == null) {
 				Long typeID = types.getID(type);
