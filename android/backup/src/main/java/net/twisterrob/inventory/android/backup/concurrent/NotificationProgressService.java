@@ -45,9 +45,14 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		this.debugMode = debugMode;
 	}
 
+	/**
+	 * @return a {@link NotificationCompat.Builder} for the notification,
+	 *         {@link Builder#setOngoing} will be automatically added.
+	 */
 	protected @NonNull Builder createOnGoingNotification(Intent intent) {
 		return new android.support.v7.app.NotificationCompat.Builder(this)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+				.setCategory(NotificationCompat.CATEGORY_PROGRESS)
 				.setTicker("Action continues in background...")
 				.setContentTitle("Action in progress")
 				.setSmallIcon(android.R.drawable.stat_sys_download)
@@ -57,6 +62,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 	protected @NonNull Builder createFinishedNotification(@NonNull Progress result) {
 		return new android.support.v7.app.NotificationCompat.Builder(this)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+				.setCategory(NotificationCompat.CATEGORY_PROGRESS)
 				.setTicker("Finished action")
 				.setContentTitle("Action done")
 				.setContentText(result.toString())
@@ -107,7 +113,8 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 
 			NotificationCompat.Builder doneNotification = createFinishedNotification(result);
 			setIntentAndDefaults(doneNotification, createFinishedPendingIntent(result));
-			notificationManager.notify((int)currentJobStarted + DONE_NOTIFICATION_OFFSET, doneNotification.build());
+			Notification notification = buildNotification(doneNotification, null, result);
+			notificationManager.notify((int)currentJobStarted + DONE_NOTIFICATION_OFFSET, notification);
 		} else {
 			LOG.trace("Not in background, no notification is needed (should be bound)");
 		}
@@ -152,7 +159,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		super.onUnbind(intent);
 		if (needsNotification(intent) && isInProgress()) {
 			LOG.trace("Starting notification, because it was stopped when this bind happened, but now it's needed.");
-			startNotification();
+			startNotification(intent, null);
 		}
 		return true;
 	}
@@ -171,10 +178,19 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		return currentJobStarted != NEVER;
 	}
 
-	private void startNotification() {
+	private void startNotification(@Nullable Intent intent, @Nullable Progress progress) {
 		lastProgressSentToNotification = lastProgress;
 		inBackground = true;
-		startForeground((int)currentJobStarted + ONGOING_NOTIFICATION_OFFSET, onGoingNotification.build());
+		Notification notification = buildNotification(onGoingNotification, intent, progress);
+		startForeground((int)currentJobStarted + ONGOING_NOTIFICATION_OFFSET, notification);
+	}
+
+	protected @NonNull Notification buildNotification(
+			@NonNull NotificationCompat.Builder builder,
+			@Nullable Intent intent,
+			@Nullable Progress progress
+	) {
+		return builder.build();
 	}
 
 	private void stopNotification() {
@@ -197,7 +213,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		broadcast(progress, ACTION_PROGRESS_BROADCAST);
 		boolean notify = fillNotification(onGoingNotification, progress);
 		if (inBackground && notify) {
-			startNotification();
+			startNotification(null, progress);
 		}
 	}
 

@@ -10,19 +10,21 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.slf4j.*;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.*;
 import android.support.annotation.*;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.content.ContextCompat;
 
 import net.twisterrob.inventory.android.activity.BackupActivity;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.exporters.*;
 import net.twisterrob.inventory.android.backup.importers.*;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
-import net.twisterrob.java.utils.ObjectTools;
+import net.twisterrob.java.utils.*;
 
 import static net.twisterrob.inventory.android.Constants.*;
 import static net.twisterrob.inventory.android.backup.StrictProgressInfoProvider.*;
@@ -64,12 +66,15 @@ public class BackupService extends NotificationProgressService<Progress> {
 		return new android.support.v7.app.NotificationCompat.Builder(this)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 				.setSmallIcon(android.R.drawable.stat_sys_download)
+				.setCategory(NotificationCompat.CATEGORY_PROGRESS)
+				.setColor(ContextCompat.getColor(this, R.color.accent))
 				.setTicker(isImport(intent)
 						? getString(R.string.backup_import_progress_background)
 						: getString(R.string.backup_export_progress_background)
 				)
 				;
 	}
+
 	@Override protected boolean fillNotification(@NonNull Builder notification, @NonNull Progress progress) {
 		super.fillNotification(notification, progress);
 		displayer.setProgress(progress);
@@ -85,12 +90,41 @@ public class BackupService extends NotificationProgressService<Progress> {
 		String message = displayer.getMessage();
 		return new android.support.v7.app.NotificationCompat.Builder(this)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+				.setCategory(NotificationCompat.CATEGORY_PROGRESS)
+				.setColor(ContextCompat.getColor(this, R.color.accent))
 				.setTicker(title)
 				.setContentTitle(title)
 				.setContentText(message)
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(message))
 				.setSmallIcon(android.R.drawable.stat_sys_download_done)
 				;
+	}
+
+	@Override protected @NonNull Notification buildNotification(
+			@NonNull Builder builder,
+			@Nullable Intent intent,
+			@Nullable Progress progress
+	) {
+		Notification notification = super.buildNotification(builder, intent, progress);
+		if (Build.VERSION_CODES.O <= Build.VERSION.SDK_INT) {
+			boolean isImport;
+			if (intent == null && progress != null) {
+				isImport = progress.type == Progress.Type.Import;
+			} else if (intent != null && progress == null) {
+				isImport = isImport(intent);
+			} else {
+				throw new IllegalStateException(
+						"Only one of intent (" + intent + ") and (" + progress + ")"
+								+ " must be (non)null");
+			}
+			String channelId = isImport
+					? BackupNotifications.IMPORT_PROGRESS_CHANNEL_ID
+					: BackupNotifications.EXPORT_PROGRESS_CHANNEL_ID;
+			// Workaround for using support library 24 while targeting 28:
+			// TODEL AndroidX https://github.com/TWiStErRob/net.twisterrob.inventory/issues/164
+			ReflectionTools.set(notification, "mChannelId", channelId);
+		}
+		return notification;
 	}
 
 	@Override protected @Nullable Intent createInProgressIntent() {

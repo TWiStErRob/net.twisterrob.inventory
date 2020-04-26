@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.*;
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Color;
+import android.os.Build.*;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.support.annotation.*;
@@ -17,6 +18,7 @@ import net.twisterrob.android.app.BaseApp;
 import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.backup.concurrent.BackupNotifications;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
 
@@ -72,6 +74,9 @@ public class App extends BaseApp implements BaseComponent.Provider {
 		startService(new Intent(DatabaseService.ACTION_UPDATE_LANGUAGE)
 				.setPackage(getPackageName())
 				.putExtra(DatabaseService.EXTRA_LOCALE, newLocale));
+		if (VERSION.SDK_INT >= VERSION_CODES.O) {
+			BackupNotifications.registerNotificationChannels(this);
+		}
 	}
 
 	@SuppressWarnings("WrongThread") // TODEL http://b.android.com/207302
