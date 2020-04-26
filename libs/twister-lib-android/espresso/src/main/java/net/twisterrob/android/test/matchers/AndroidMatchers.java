@@ -19,12 +19,14 @@ import android.graphics.drawable.*;
 import android.os.Build.*;
 import android.preference.Preference;
 import android.support.annotation.*;
+import android.support.test.espresso.*;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.runner.lifecycle.Stage;
 import android.view.*;
 import android.widget.*;
 
 import static android.support.test.InstrumentationRegistry.*;
+import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
@@ -146,6 +148,34 @@ public class AndroidMatchers {
 	}
 	public static @NonNull Matcher<View> withSize(@NonNull Matcher<Integer> sizeMatcher) {
 		return allOf(withWidth(sizeMatcher), withHeight(sizeMatcher));
+	}
+
+	public static @NonNull ViewAction checkIfUnchecked() {
+		return new ViewAction() {
+			@Override public String getDescription() {
+				return "check Checkable if unchecked";
+			}
+			@Override public Matcher<View> getConstraints() {
+				return allOf(instanceOf(Checkable.class), isNotChecked());
+			}
+			@Override public void perform(UiController uiController, View view) {
+				click().perform(uiController, view);
+			}
+		};
+	}
+
+	public static @NonNull ViewAction uncheckIfChecked() {
+		return new ViewAction() {
+			@Override public String getDescription() {
+				return "uncheck Checkable if checked";
+			}
+			@Override public Matcher<View> getConstraints() {
+				return allOf(instanceOf(Checkable.class), isChecked());
+			}
+			@Override public void perform(UiController uiController, View view) {
+				click().perform(uiController, view);
+			}
+		};
 	}
 	// endregion View matchers
 

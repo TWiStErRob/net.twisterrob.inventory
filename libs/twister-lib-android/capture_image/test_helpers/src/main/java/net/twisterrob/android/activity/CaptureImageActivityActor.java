@@ -35,6 +35,7 @@ import net.twisterrob.inventory.android.test.actors.ActivityActor;
 import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.android.test.automators.AndroidAutomator.*;
+import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 /**
  * @see CaptureImage
@@ -86,15 +87,11 @@ public class CaptureImageActivityActor extends ActivityActor {
 	}
 
 	public void turnFlashOn() {
-		assertFlashOff();
-		onView(withId(R.id.btn_flash)).perform(click());
-		assertFlashOn();
+		onView(withId(R.id.btn_flash)).perform(checkIfUnchecked());
 	}
 
 	public void turnFlashOff() {
-		assertFlashOn();
-		onView(withId(R.id.btn_flash)).perform(click());
-		assertFlashOff();
+		onView(withId(R.id.btn_flash)).perform(uncheckIfChecked());
 	}
 
 	public PickDialogActor pick() {
