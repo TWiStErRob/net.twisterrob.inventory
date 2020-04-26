@@ -4,7 +4,9 @@ import java.io.*;
 
 import org.hamcrest.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
 import android.annotation.SuppressLint;
@@ -15,9 +17,10 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.*;
 import android.graphics.drawable.*;
 import android.net.Uri;
-import android.support.annotation.ColorInt;
+import android.support.annotation.*;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.*;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,10 +34,12 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.capture_image.R;
+import net.twisterrob.android.view.CameraPreview;
 import net.twisterrob.inventory.android.test.actors.ActivityActor;
 import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.android.test.automators.AndroidAutomator.*;
+import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 /**
@@ -94,14 +99,18 @@ public class CaptureImageActivityActor extends ActivityActor {
 		}
 	}
 
-	public void assertFlashOn() {
+	@SuppressWarnings("deprecation")
+	public void assertFlashOn(ActivityTestRule<CaptureImage> activity) {
 		// TODO check drawable
 		onView(withId(R.id.btn_flash)).check(matches(isChecked()));
+		assertFlashMode(activity, android.hardware.Camera.Parameters.FLASH_MODE_ON);
 	}
 
-	public void assertFlashOff() {
+	@SuppressWarnings("deprecation")
+	public void assertFlashOff(ActivityTestRule<CaptureImage> activity) {
 		// TODO check drawable
 		onView(withId(R.id.btn_flash)).check(matches(isNotChecked()));
+		assertFlashMode(activity, android.hardware.Camera.Parameters.FLASH_MODE_OFF);
 	}
 
 	public void turnFlashOn() {
@@ -110,6 +119,19 @@ public class CaptureImageActivityActor extends ActivityActor {
 
 	public void turnFlashOff() {
 		onView(withId(R.id.btn_flash)).perform(uncheckIfChecked());
+	}
+
+	private static void assertFlashMode(
+			@NonNull ActivityTestRule<CaptureImage> activityRule,
+			@Nullable String expectedMode
+	) {
+		// Wait in case there's an Activity recreation in progress, e.g. after a rotation.
+		onRoot().perform(loopMainThreadUntilIdle());
+		CaptureImage activity = activityRule.getActivity();
+		CameraPreview preview = activity.findViewById(R.id.preview);
+		assertThat(preview.getCamera(), notNullValue());
+		String flashMode = preview.getCamera().getParameters().getFlashMode();
+		assertEquals(expectedMode, flashMode);
 	}
 
 	public PickDialogActor pick() {

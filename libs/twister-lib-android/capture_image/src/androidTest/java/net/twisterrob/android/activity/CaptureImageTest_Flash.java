@@ -37,7 +37,7 @@ public class CaptureImageTest_Flash {
 
 		activity.launchActivity(null);
 
-		captureImage.assertFlashOff();
+		captureImage.assertFlashOff(activity);
 	}
 
 	@Test public void flashStateRememberedBetweenLaunches_on() throws UiObjectNotFoundException {
@@ -47,7 +47,7 @@ public class CaptureImageTest_Flash {
 
 		activity.launchActivity(null);
 
-		captureImage.assertFlashOn();
+		captureImage.assertFlashOn(activity);
 	}
 
 	@Test public void flashStateRememberedOnRotation_off() throws UiObjectNotFoundException {
@@ -57,7 +57,7 @@ public class CaptureImageTest_Flash {
 
 		captureImage.rotate();
 
-		captureImage.assertFlashOff();
+		captureImage.assertFlashOff(activity);
 	}
 
 	@Test public void flashStateRememberedOnRotation_on() throws UiObjectNotFoundException {
@@ -66,6 +66,6 @@ public class CaptureImageTest_Flash {
 
 		captureImage.rotate();
 
-		captureImage.assertFlashOn();
+		captureImage.assertFlashOn(activity);
 	}
 }
