@@ -293,7 +293,6 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		RequestListener<Object, Bitmap> visualFeedbackListener = new RequestListener<Object, Bitmap>() {
 			@Override public boolean onException(Exception e,
 					Object model, Target<Bitmap> target, boolean isFirstResource) {
-				e.printStackTrace();
 				mSelection.setSelectionStatus(SelectionStatus.BLURRY);
 				return false;
 			}
