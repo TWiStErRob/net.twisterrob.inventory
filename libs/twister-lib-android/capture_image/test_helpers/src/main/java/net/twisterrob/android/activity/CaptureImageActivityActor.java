@@ -14,7 +14,6 @@ import android.content.*;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.*;
 import android.graphics.drawable.*;
-import android.hardware.Camera;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.test.InstrumentationRegistry;
@@ -77,16 +76,18 @@ public class CaptureImageActivityActor extends ActivityActor {
 		allowPermissionsIfNeeded();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void assumeHasCamera() {
-		assumeThat(Camera.getNumberOfCameras(), greaterThan(0));
+		assumeThat(android.hardware.Camera.getNumberOfCameras(), greaterThan(0));
 	}
 
+	@SuppressWarnings("deprecation")
 	public void assumeCameraHasFlash() {
-		Camera camera = Camera.open(0);
+		android.hardware.Camera camera = android.hardware.Camera.open(0);
 		try {
 			assumeThat(camera.getParameters().getSupportedFlashModes(), hasItems(
-					Camera.Parameters.FLASH_MODE_ON,
-					Camera.Parameters.FLASH_MODE_OFF
+					android.hardware.Camera.Parameters.FLASH_MODE_ON,
+					android.hardware.Camera.Parameters.FLASH_MODE_OFF
 			));
 		} finally {
 			camera.release();
