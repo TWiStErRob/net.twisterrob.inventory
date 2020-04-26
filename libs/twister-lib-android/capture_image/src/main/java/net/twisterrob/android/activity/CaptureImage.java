@@ -14,8 +14,8 @@ import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.*;
 import android.net.Uri;
-import android.os.Build.*;
 import android.os.*;
+import android.os.Build.*;
 import android.provider.MediaStore;
 import android.support.annotation.*;
 import android.support.media.ExifInterface;
@@ -31,7 +31,7 @@ import com.bumptech.glide.*;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.ImageVideoWrapper;
-import com.bumptech.glide.load.resource.bitmap.*;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.*;
 import com.bumptech.glide.request.target.*;
@@ -109,6 +109,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 
 		String output = getIntent().getStringExtra(EXTRA_OUTPUT);
 		if (output == null) {
+			LOG.warn("Missing extra: CaptureImage.EXTRA_OUTPUT, cancelling capture.");
 			doReturn();
 			return;
 		} else {
@@ -198,7 +199,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			if (getIntent().getBooleanExtra(EXTRA_PICK, false) // forcing an immediate pick
 					|| !hasCamera // device doesn't have camera
 					|| userDeclined // device has camera, but user explicitly declined the permission
-					) {
+			) {
 				mBtnPick.performClick();
 			} else {
 				mBtnCapture.performClick();
