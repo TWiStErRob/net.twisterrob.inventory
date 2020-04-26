@@ -16,7 +16,6 @@ import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 
 public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
@@ -93,6 +92,10 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	// see how it makes setting prefs per test awkward: PropertyViewActivityTest_View
 	@CallSuper
 	protected void setDefaults() {
+		App.prefs().edit().putString(
+				R.string.pref_lastDecommissionWarning,
+				R.string.pref_lastDecommissionWarning_never
+		).apply();
 		if (clearWelcomeFlag) {
 			App.prefs().edit().putBoolean(R.string.pref_showWelcome, false).apply();
 		}

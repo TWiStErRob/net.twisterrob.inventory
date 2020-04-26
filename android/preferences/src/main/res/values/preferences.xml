@@ -85,6 +85,10 @@
 	<string name="pref_showWelcome" translatable="false">showWelcome</string>
 	<bool name="pref_showWelcome_default" translatable="false">true</bool>
 
+	<string name="pref_lastDecommissionWarning" translatable="false">lastDecommissionWarning</string>
+	<string name="pref_lastDecommissionWarning_default" translatable="false">2016-09-01T00:00:00.000+00:00</string>
+	<string name="pref_lastDecommissionWarning_never" translatable="false">never</string>
+
 	<string name="pref_app_in_settings_title">App info in Settings</string>
 	<string name="pref_app_in_settings_desc">manage storage, permissions, notifications, etc.</string>
 
