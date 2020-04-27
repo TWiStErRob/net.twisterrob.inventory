@@ -54,7 +54,7 @@ def configAndroid = {
 
 	// Substitutions for Guava on Android
 	configurations.all { Configuration config ->
-		if (!config.name.contains("AndroidTest")) return
+		if (!config.name.startsWith("androidTest") && !config.name.startsWith("debugAndroidTest")) return
 		config.resolutionStrategy { ResolutionStrategy strategy ->
 			strategy.dependencySubstitution {
 				all { DependencySubstitution dep ->
@@ -72,7 +72,7 @@ def configAndroid = {
 
 	// Substitutions for Mockito on Android
 	configurations.all { Configuration config ->
-		if (!config.name.contains("AndroidTest")) return
+		if (!config.name.startsWith("androidTest") && !config.name.startsWith("debugAndroidTest")) return
 		config.resolutionStrategy { ResolutionStrategy strategy ->
 			// 1.9.10 (powermock 2.0.7) vs 1.10.5 (mockito 3.3.3)
 			force "net.bytebuddy:byte-buddy:1.10.5"
