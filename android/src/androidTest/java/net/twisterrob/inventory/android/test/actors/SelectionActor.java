@@ -31,6 +31,11 @@ public class SelectionActor {
 		onView(isContextualActionBar()).check(doesNotExist(not(isDisplayed())));
 	}
 	public void assertSelectionCount(int count) {
+		if (count == 0) {
+			assertInactive();
+			assertNothingSelected();
+			return;
+		}
 		assertIsActive();
 		onView(titleMatcher).check(matches(withText(containsWord(String.valueOf(count)))));
 	}

@@ -46,21 +46,24 @@ public class ItemViewActivityTest_Selection {
 	}
 
 	@Test public void testStarts() {
-		SelectionActor selection = createItemsAndSelect(1, 1);
+		createItems(1);
+		SelectionActor selection = itemView.select(subItem(1));
 		selection.hasSelection(subItem(1));
 		selection.assertSelectionCount(1);
 	}
 
 	@Category({Op.Cancels.class})
 	@Test public void testExits() {
-		SelectionActor selection = createItemsAndSelect(1, 1);
+		createItems(1);
+		SelectionActor selection = itemView.select(subItem(1));
 		selection.close();
 		selection.assertNothingSelected();
 	}
 
 	@Category({Op.Cancels.class})
 	@Test public void testExitsWhenLastDeselectedSingle() {
-		SelectionActor selection = createItemsAndSelect(1, 1);
+		createItems(1);
+		SelectionActor selection = itemView.select(subItem(1));
 		selection.deselect(subItem(1));
 		selection.assertNothingSelected();
 		selection.assertInactive();
@@ -68,7 +71,8 @@ public class ItemViewActivityTest_Selection {
 
 	@Category({Op.Cancels.class})
 	@Test public void testExitsWhenLastDeselected() {
-		SelectionActor selection = createItemsAndSelect(2, 1);
+		createItems(2);
+		SelectionActor selection = itemView.select(subItem(1));
 		selection.deselect(subItem(1));
 		selection.assertNothingSelected();
 		selection.assertInactive();
@@ -76,55 +80,107 @@ public class ItemViewActivityTest_Selection {
 
 	@Category({Op.Cancels.class})
 	@Test public void testExitsWhenLastDeselectedMultiple() {
-		SelectionActor selection = createItemsAndSelect(9, 1);
+		createItems(9);
+
+		SelectionActor selection = itemView.select(subItem(1));
 		selection.select(subItem(3));
 		selection.select(subItem(6));
+		selection.hasSelection(subItem(1));
+		selection.hasNoSelection(subItem(2));
+		selection.hasSelection(subItem(3));
+		selection.hasNoSelection(subItem(4));
+		selection.hasNoSelection(subItem(5));
+		selection.hasSelection(subItem(6));
+		selection.hasNoSelection(subItem(7));
+		selection.hasNoSelection(subItem(8));
+		selection.hasNoSelection(subItem(9));
+
 		selection.deselect(subItem(6));
+		selection.hasNoSelection(subItem(6));
 		selection.deselect(subItem(3));
+		selection.hasNoSelection(subItem(3));
 		selection.deselect(subItem(1));
+		selection.hasNoSelection(subItem(1));
+
 		selection.assertNothingSelected();
 		selection.assertInactive();
 	}
 
+	/**
+	 * This test is a bit jumpy because hasSelection jumps to the item being verified.
+	 */
 	@Category({Op.Cancels.class, UseCase.Complex.class})
 	@Test public void testExitsRandomSelectionAll() {
 		final int count = 9;
-		SelectionActor selection = createItemsAndSelect(count, 1);
+		createItems(count);
+		SelectionActor selection = itemView.select(subItem(1));
 		for (int i = 2; i <= count; i++) {
 			selection.select(subItem(i));
+			selection.assertSelectionCount(i);
+			for (int j = 1; j <= i; j++) {
+				selection.hasSelection(subItem(j));
+			}
 		}
+		selection.assertSelectionCount(count);
 		for (int i = 1; i <= count; i++) {
 			selection.deselect(subItem(i));
+			selection.assertSelectionCount(count - i);
+			for (int j = i + 1; j <= count; j++) {
+				selection.hasSelection(subItem(j));
+			}
 		}
 		selection.assertNothingSelected();
 		selection.assertInactive();
 	}
 
 	@Test public void testSelectAll() {
-		SelectionActor selection = createItemsAndSelect(4, 2);
+		createItems(4);
+		SelectionActor selection = itemView.select(subItem(2));
 		selection.selectAll();
+		selection.hasSelection(subItem(1));
+		selection.hasSelection(subItem(2));
+		selection.hasSelection(subItem(3));
+		selection.hasSelection(subItem(4));
 		selection.assertSelectionCount(4);
 	}
 
 	@Category({Op.Cancels.class})
 	@Test public void testSelectNone() {
-		SelectionActor selection = createItemsAndSelect(4, 2);
+		createItems(4);
+		SelectionActor selection = itemView.select(subItem(2));
 		selection.selectAll();
 		selection.invertSelection();
+		selection.hasNoSelection(subItem(1));
+		selection.hasNoSelection(subItem(2));
+		selection.hasNoSelection(subItem(3));
+		selection.hasNoSelection(subItem(4));
 		selection.assertInactive();
 	}
 
 	@Test public void testInvert() {
-		SelectionActor selection = createItemsAndSelect(4, 1);
+		createItems(4);
+
+		SelectionActor selection = itemView.select(subItem(1));
 		selection.select(subItem(3));
+		selection.hasSelection(subItem(1));
+		selection.hasNoSelection(subItem(2));
+		selection.hasSelection(subItem(3));
+		selection.hasNoSelection(subItem(4));
+
 		selection.invertSelection();
 		selection.assertIsActive();
+
 		selection.hasSelection(subItem(2));
+		selection.hasSelection(subItem(4));
+		selection.hasNoSelection(subItem(1));
+		selection.hasSelection(subItem(2));
+		selection.hasNoSelection(subItem(3));
 		selection.hasSelection(subItem(4));
 	}
 
 	@Test public void testSelectionDisablesTypeChange() {
-		SelectionActor selection = createItemsAndSelect(2, 1);
+		createItems(2);
+		SelectionActor selection = itemView.select(subItem(1));
 		selection.hasSelection(subItem(1));
 		selection.assertSelectionCount(1);
 
@@ -179,12 +235,6 @@ public class ItemViewActivityTest_Selection {
 		db.assertItemHasType(subItem(2), TEST_ITEM_CATEGORY_DEFAULT);
 		db.assertItemHasType(subItem(3), TEST_ITEM_CATEGORY_OTHER);
 		// TODO verify UI state (icons)
-	}
-
-	private SelectionActor createItemsAndSelect(int count, int toSelect) {
-		assertThat(toSelect, allOf(greaterThan(0), lessThanOrEqualTo(count)));
-		createItems(count);
-		return itemView.select(subItem(toSelect));
 	}
 
 	@SuppressWarnings("deprecation") // TODO
