@@ -48,7 +48,7 @@
 	<string name="pref_app_about_desc">@string/app_name</string>
 	<string name="pref_app_about_package">@string/app_package</string>
 	<string name="pref_app_manage_space_title">@string/manage_space_title</string>
-	<string name="backup_app_name">@string/app_name</string>
+	<string name="backup_import_result_app_name">@string/app_name</string>
 
 	<string name="action_read_more">Read more</string>
 	<string name="action_picture_take">Take Picture</string>
