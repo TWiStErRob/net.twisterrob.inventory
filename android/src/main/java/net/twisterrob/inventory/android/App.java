@@ -71,9 +71,24 @@ public class App extends BaseApp implements BaseComponent.Provider {
 	}
 
 	private void updateLanguage(@NonNull Locale newLocale) {
-		startService(new Intent(DatabaseService.ACTION_UPDATE_LANGUAGE)
-				.setPackage(getPackageName())
-				.putExtra(DatabaseService.EXTRA_LOCALE, newLocale));
+		try {
+			startService(new Intent(DatabaseService.ACTION_UPDATE_LANGUAGE)
+					.setPackage(getPackageName())
+					.putExtra(DatabaseService.EXTRA_LOCALE, newLocale));
+		} catch (IllegalStateException ex) {
+			// Ignore java.lang.IllegalStateException:
+			// Not allowed to start service Intent {...}:
+			// app is in background uid
+			// UidRecord{af72e61 u0a229 CAC  bg:+3m52s273ms idle procs:1 seq(0,0,0)}
+			// at com.android.server.am.ActiveServices.startServiceLocked(ContextImpl.java:520)
+			// https://android.googlesource.com/platform/frameworks/base/+/android10-release/services/core/java/com/android/server/am/ActiveServices.java#520
+			// at android.app.ContextImpl.startServiceCommon(ContextImpl.java:1616)
+
+			// TODO https://github.com/TWiStErRob/net.twisterrob.inventory/issues/166
+			// Need to use new JobIntentService to handle this,
+			// but that's not available until higher support library or AndroidX.
+			// So for now, just ignore the exception. Next startup will do this properly anyway.
+		}
 		if (VERSION.SDK_INT >= VERSION_CODES.O) {
 			BackupNotifications.registerNotificationChannels(this);
 		}
