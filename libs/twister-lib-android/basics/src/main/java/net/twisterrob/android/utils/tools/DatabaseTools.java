@@ -19,17 +19,34 @@ public /*static*/ abstract class DatabaseTools {
 	public static String escapeLike(Object string, char escape) {
 		return string.toString().replace("%", escape + "%").replace("_", escape + "_");
 	}
-	public static String dbToString(final SQLiteDatabase database) {
+
+	private static final Map<SQLiteDatabase, String> DATABASE_TO_SQLITE_VERSION = new WeakHashMap<>();
+	public static String dbToString(final @Nullable SQLiteDatabase database) {
 		int userVersion = database == null? 0
 				: database.getVersion();
 		int schemaVersion = database == null? 0
 				: (int)DatabaseUtils.longForQuery(database, "PRAGMA schema_version;", null);
 		String path = database == null? null
 				: database.getPath();
-		String sqliteVersion = database == null? null
-				: DatabaseTools.singleString(database.rawQuery("select sqlite_version();", NO_ARGS), null);
+
+		String sqliteVersion = null;
+		if (database != null) {
+			String cachedVersion = DATABASE_TO_SQLITE_VERSION.get(database);
+			if (cachedVersion != null) {
+				sqliteVersion = cachedVersion;
+			} else {
+				sqliteVersion = getSQLiteVersion(database);
+				DATABASE_TO_SQLITE_VERSION.put(database, sqliteVersion);
+			}
+		}
 		return String.format(Locale.ROOT, "v%d(%d)::%s@%s", userVersion, schemaVersion, sqliteVersion, path);
 	}
+
+	public static @NonNull String getSQLiteVersion(@NonNull SQLiteDatabase database) {
+		Cursor sqlite_version = database.rawQuery("select sqlite_version();", NO_ARGS);
+		return DatabaseTools.singleString(sqlite_version, null);
+	}
+
 	public static boolean getBoolean(Cursor cursor, String columnName) {
 		int col = cursor.getColumnIndex(columnName);
 		return cursor.getInt(col) != 0;
