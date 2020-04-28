@@ -14,6 +14,7 @@ import net.twisterrob.android.test.junit.InstrumentationExtensions;
 public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
 
 	private static final Collection<Stage> IDLE_STAGES = new HashSet<>();
+
 	static {
 		IDLE_STAGES.add(Stage.DESTROYED);
 		if (VERSION.SDK_INT < VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -77,7 +78,14 @@ public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
 	@AnyThread
 	public static void finishAll() {
 		for (Activity activity : InstrumentationExtensions.getAllActivities()) {
-			activity.finish();
+			if (!activity.isFinishing()) {
+				// Conditionally try to finish stale activity. Prevents showing this log:
+				// system_process W/ActivityTaskManager:
+				// Duplicate finish request for ActivityRecord{xxxxxxxx u0 pack.age/pack.ClassName t0000 f}
+				activity.finish();
+				// Note: If the activity is finished by the @Test, ActivityRule still calls .finish(),
+				// so the "Duplicate finish request" will still show up.
+			}
 		}
 	}
 
