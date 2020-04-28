@@ -1,6 +1,6 @@
 package net.twisterrob.android.test.automators;
 
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.*;
@@ -112,10 +112,15 @@ public class UiAutomatorExtensions {
 		clickInExternalDialog(DialogMatchers.BUTTON_NEUTRAL);
 	}
 
+	private static final List<Integer> FLAKY_BACK_VERSIONS = Arrays.asList(
+			VERSION_CODES.KITKAT,
+			VERSION_CODES.M,
+			29
+	);
 	@RequiresApi(VERSION_CODES.JELLY_BEAN)
 	public static void pressBackExternal() {
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		if ((VERSION.SDK_INT == VERSION_CODES.KITKAT || VERSION.SDK_INT == VERSION_CODES.M)
+		if (FLAKY_BACK_VERSIONS.contains(VERSION.SDK_INT)
 				&& "com.android.settings".equals(device.getCurrentPackageName())) {
 			// net.twisterrob.inventory.android.activity.PreferencesActivityTest.testInfoSettings
 			// fails because pressBack returns false even though the Settings is closed.
