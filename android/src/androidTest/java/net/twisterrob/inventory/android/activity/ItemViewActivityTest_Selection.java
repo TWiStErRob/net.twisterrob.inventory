@@ -120,11 +120,17 @@ public class ItemViewActivityTest_Selection {
 			for (int j = 1; j <= i; j++) {
 				selection.hasSelection(subItem(j));
 			}
+			for (int j = i + 1; j <= count; j++) {
+				selection.hasNoSelection(subItem(j));
+			}
 		}
 		selection.assertSelectionCount(count);
 		for (int i = 1; i <= count; i++) {
 			selection.deselect(subItem(i));
 			selection.assertSelectionCount(count - i);
+			for (int j = 1; j <= i; j++) {
+				selection.hasNoSelection(subItem(j));
+			}
 			for (int j = i + 1; j <= count; j++) {
 				selection.hasSelection(subItem(j));
 			}
