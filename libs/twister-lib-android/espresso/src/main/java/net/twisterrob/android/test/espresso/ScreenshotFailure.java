@@ -10,6 +10,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.*;
 import org.slf4j.*;
 
+import android.Manifest;
 import android.annotation.*;
 import android.app.*;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
 
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
+import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.io.IOTools;
 
@@ -46,7 +48,10 @@ public class ScreenshotFailure implements TestRule {
 	private static @NonNull File getDefaultDir(@NonNull Instrumentation instrumentation) {
 		Context context = instrumentation.getContext();
 
-		File result = context.getExternalFilesDir(DEFAULT_FOLDER_NAME);
+		File result = null;
+		if (AndroidTools.hasPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+			result = context.getExternalFilesDir(DEFAULT_FOLDER_NAME);
+		}
 		if (result == null) {
 			result = new File(context.getFilesDir(), DEFAULT_FOLDER_NAME);
 		}
