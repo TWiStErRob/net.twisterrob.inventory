@@ -6,8 +6,15 @@ import android.os.Build.VERSION_CODES;
 import android.os.Parcel;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * {@link FlexboxHelper#getPaddingStartMain} calls {@link View#getPaddingStart} which doesn't exists on API 10.
+ * This class polyfills that method to satisfy the {@link FlexContainer} interface.
+ *
+ * TODO fix get*Start/End(this) calls, currently not using padding/margin on these views, so 0 is fine.
+ */
 @RequiresApi(VERSION_CODES.BASE)
 @TargetApi(VERSION_CODES.O_MR1)
 @SuppressWarnings("DefaultAnnotationParam")
@@ -25,12 +32,12 @@ public class FlexboxLayoutCompat extends FlexboxLayout {
 
 	@Override
 	public int getPaddingStart() {
-		return 0; //ViewCompat.getPaddingStart(this); // STOPSHIP
+		return 0; //ViewCompat.getPaddingStart(this);
 	}
 
 	@Override
 	public int getPaddingEnd() {
-		return 0; //ViewCompat.getPaddingEnd(this); // STOPSHIP
+		return 0; //ViewCompat.getPaddingEnd(this);
 	}
 
 	@Override
@@ -60,11 +67,11 @@ public class FlexboxLayoutCompat extends FlexboxLayout {
 		}
 
 		@Override public int getMarginStart() {
-			return 0; //MarginLayoutParamsCompat.getMarginStart(this); // STOPSHIP
+			return 0; //MarginLayoutParamsCompat.getMarginStart(this);
 		}
 
 		@Override public int getMarginEnd() {
-			return 0; //MarginLayoutParamsCompat.getMarginEnd(this); // STOPSHIP
+			return 0; //MarginLayoutParamsCompat.getMarginEnd(this);
 		}
 	}
 }
