@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import org.slf4j.*;
 
 import android.content.Context;
-import android.os.Bundle;
+import android.os.*;
 import android.support.annotation.*;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -127,30 +127,40 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 		while (!history.isEmpty()) {
 			history.pop();
 			File dir = history.peek();
-			if (IOTools.isValidDir(dir)) {
-				filePicked(dir, false);
-				return true;
+			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+			try {
+				if (IOTools.isValidDir(dir)) {
+					filePicked(dir, false);
+					return true;
+				}
+			} finally {
+				StrictMode.setThreadPolicy(originalPolicy);
 			}
 		}
 		return false;
 	}
 
 	public void filePicked(@NonNull final File file, boolean addHistory) {
-		LOG.trace("File picked (dir={}, exists={}): {}", file.isDirectory(), file.exists(), file);
-		if (IOTools.isValidFile(file)) {
-			eventsListener.filePicked(file);
-		} else {
-			File dir = file;
-			while (!IOTools.isValidDir(dir)) {
-				dir = dir.getParentFile();
+		StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+		try {
+			LOG.trace("File picked (dir={}, exists={}): {}", file.isDirectory(), file.exists(), file);
+			if (IOTools.isValidFile(file)) {
+				eventsListener.filePicked(file);
+			} else {
+				File dir = file;
+				while (!IOTools.isValidDir(dir)) {
+					dir = dir.getParentFile();
+				}
+				if (dir != file) {
+					BaseApp.toastUser(String.format(Locale.ROOT, "%s is not a directory, using %s.", file, dir));
+				}
+				if (addHistory && !dir.equals(history.peek())) {
+					history.push(dir);
+				}
+				controller.startLoad(Intents.bundleFrom(EXTRA_PATH, dir));
 			}
-			if (dir != file) {
-				BaseApp.toastUser(String.format(Locale.ROOT, "%s is not a directory, using %s.", file, dir));
-			}
-			if (addHistory && !dir.equals(history.peek())) {
-				history.push(dir);
-			}
-			controller.startLoad(Intents.bundleFrom(EXTRA_PATH, dir));
+		} finally {
+			StrictMode.setThreadPolicy(originalPolicy);
 		}
 	}
 
@@ -206,10 +216,15 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 			}
 
 			String size = null;
-			if (file.isDirectory()) {
-				icon = R.raw.item_box;
-			} else {
-				size = Formatter.formatShortFileSize(holder.count.getContext(), file.length());
+			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+			try {
+				if (file.isDirectory()) {
+					icon = R.raw.item_box;
+				} else {
+					size = Formatter.formatShortFileSize(holder.count.getContext(), file.length());
+				}
+			} finally {
+				StrictMode.setThreadPolicy(originalPolicy);
 			}
 
 			Pic.svg().load(icon).into(holder.icon);

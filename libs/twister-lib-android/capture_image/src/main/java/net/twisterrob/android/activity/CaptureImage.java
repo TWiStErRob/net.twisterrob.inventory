@@ -104,8 +104,13 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		// FIXME fast 180 rotation results in flipped image: http://stackoverflow.com/a/19599599/253468 
-		prefs = getPreferences(MODE_PRIVATE);
+		// FIXME fast 180 rotation results in flipped image: http://stackoverflow.com/a/19599599/253468
+		StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+		try {
+			prefs = getPreferences(MODE_PRIVATE);
+		} finally {
+			StrictMode.setThreadPolicy(originalPolicy);
+		}
 
 		String output = getIntent().getStringExtra(EXTRA_OUTPUT);
 		if (output == null) {
@@ -115,9 +120,15 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 		} else {
 			mTargetFile = new File(output);
 			if (savedInstanceState == null) {
-				LOG.trace("Clear image at {}", mTargetFile);
-				//noinspection ResultOfMethodCallIgnored best effort, try to prevent leaking old image
-				mTargetFile.delete();
+				StrictMode.ThreadPolicy originalPolicy2 = StrictMode.allowThreadDiskWrites();
+				try {
+					LOG.trace("Clear image at {}", mTargetFile);
+					// D/StrictMode: StrictMode policy violation; ~duration=33 ms: android.os.strictmode.DiskWriteViolation
+					//noinspection ResultOfMethodCallIgnored best effort, try to prevent leaking old image
+					mTargetFile.delete();
+				} finally {
+					StrictMode.setThreadPolicy(originalPolicy2);
+				}
 			}
 		}
 
@@ -254,12 +265,15 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			}
 		}
 		if (!fallback.equals(result)) {
+			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 			try {
 				LOG.trace("Loading image from {} to {}", result, mTargetFile);
 				InputStream stream = getContentResolver().openInputStream(result);
 				IOTools.copyStream(stream, new FileOutputStream(mTargetFile));
 			} catch (IOException ex) {
 				LOG.error("Cannot grab data from {} into {}", result, mTargetFile, ex);
+			} finally {
+				StrictMode.setThreadPolicy(originalPolicy);
 			}
 		}
 		mSavedFile = mTargetFile;
@@ -675,8 +689,13 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			final RectF selection = getPictureRect();
 			Glide.clear(mImage); // free up memory for crop op
 			if (mSavedFile != null) {
-				if (doCrop(selection)) {
-					doReturn();
+				StrictMode.ThreadPolicy originalThreadPolicy = StrictMode.allowThreadDiskWrites();
+				try {
+					if (doCrop(selection)) {
+						doReturn();
+					}
+				} finally {
+					StrictMode.setThreadPolicy(originalThreadPolicy);
 				}
 			} else {
 				if (!take(new Callback<byte[]>() {

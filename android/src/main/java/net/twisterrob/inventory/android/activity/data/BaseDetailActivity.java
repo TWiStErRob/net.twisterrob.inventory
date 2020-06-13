@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.activity.data;
 
 import org.slf4j.*;
 
-import android.os.Bundle;
+import android.os.*;
 import android.support.annotation.PluralsRes;
 import android.support.v7.app.ActionBar.LayoutParams;
 import android.text.TextUtils;
@@ -52,6 +52,7 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 				if (TextUtils.getTrimmedLength(newName) == 0) {
 					return;
 				}
+				StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 				try {
 					updateName(newName);
 					getFragment().refresh();
@@ -59,6 +60,8 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 					LOG.warn("Cannot set name from '{}' to '{}'", oldName, newName, ex);
 					App.toastUser(App.getError(ex, R.string.action_rename_failed,
 							getResources().getQuantityString(typePlural, 1), oldName, newName));
+				} finally {
+					StrictMode.setThreadPolicy(originalPolicy);
 				}
 			}
 		});

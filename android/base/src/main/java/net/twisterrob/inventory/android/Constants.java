@@ -55,7 +55,7 @@ public interface Constants {
 			return String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
 		}
 		public static @NonNull File getPhoneHome() {
-			StrictMode.ThreadPolicy threadPolicy = StrictMode.allowThreadDiskReads();
+			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 			try {
 				// D/StrictMode: StrictMode policy violation; ~duration=17 ms: android.os.strictmode.DiskReadViolation
 				// at java.io.File.isDirectory(File.java:845)
@@ -69,7 +69,7 @@ public interface Constants {
 				}
 				return dir;
 			} finally {
-				StrictMode.setThreadPolicy(threadPolicy);
+				StrictMode.setThreadPolicy(originalPolicy);
 			}
 		}
 
@@ -93,15 +93,20 @@ public interface Constants {
 		}
 		private static File getTemporaryCacheFile(Context context, String folderName, String prefix, String suffix)
 				throws IOException {
-			File folder = new File(context.getCacheDir(), folderName);
-			IOTools.ensure(folder);
-			File file = new File(folder, prefix + 0 + suffix);
-			// TODO figure out an alternative to deleteOnExit, until then:
-			//noinspection ResultOfMethodCallIgnored, use the same image file over and over again
-			//file.delete(); // don't delete because it causes strange behavior (edit, take, crop, take, back, save -> ENOENT)
-			//File file = File.createTempFile(prefix, suffix, folder);
-			file.deleteOnExit();
-			return file;
+			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+			try {
+				File folder = new File(context.getCacheDir(), folderName);
+				IOTools.ensure(folder);
+				File file = new File(folder, prefix + 0 + suffix);
+				// TODO figure out an alternative to deleteOnExit, until then:
+				//noinspection ResultOfMethodCallIgnored, use the same image file over and over again
+				//file.delete(); // don't delete because it causes strange behavior (edit, take, crop, take, back, save -> ENOENT)
+				//File file = File.createTempFile(prefix, suffix, folder);
+				file.deleteOnExit();
+				return file;
+			} finally {
+				StrictMode.setThreadPolicy(originalPolicy);
+			}
 		}
 	}
 

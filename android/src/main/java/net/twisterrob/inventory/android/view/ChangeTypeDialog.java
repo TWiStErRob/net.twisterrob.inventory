@@ -6,7 +6,7 @@ import android.content.*;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Build.*;
-import android.os.Bundle;
+import android.os.*;
 import android.support.annotation.UiThread;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
@@ -73,14 +73,20 @@ public class ChangeTypeDialog {
 				.setIcon(spinner)
 				.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
 					@Override public void onClick(final DialogInterface dialog, int which) {
-						Cursor cursor = (Cursor)adapter.getItem(which);
-						final long newType = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
-						if (!DatabaseTools.getOptionalBoolean(cursor, CommonColumns.COUNT_CHILDREN_DIRECT, false)) {
-							// no children, nothing to expand, auto-save now
-							userSelected(cursor, variants);
-							dialog.dismiss();
-						} else {
-							load(variants, adapter, newType);
+						StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+						try {
+							// at android.database.sqlite.SQLiteCursor.fillWindow(SQLiteCursor.java:153)
+							Cursor cursor = (Cursor)adapter.getItem(which);
+							final long newType = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
+							if (!DatabaseTools.getOptionalBoolean(cursor, CommonColumns.COUNT_CHILDREN_DIRECT, false)) {
+								// no children, nothing to expand, auto-save now
+								userSelected(cursor, variants);
+								dialog.dismiss();
+							} else {
+								load(variants, adapter, newType);
+							}
+						} finally {
+							StrictMode.setThreadPolicy(originalPolicy);
 						}
 					}
 				})

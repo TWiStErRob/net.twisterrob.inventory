@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.view;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
+import android.os.*;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 
@@ -50,7 +50,13 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 				return true;
 			case R.id.action_item_categorize:
 				final long[] itemIDs = getSelectedIDs();
-				long category = App.db().findCommonCategory(itemIDs);
+				long category;
+				StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+				try {
+					category = App.db().findCommonCategory(itemIDs);
+				} finally {
+					StrictMode.setThreadPolicy(originalPolicy);
+				}
 				new ChangeTypeDialog(fragment).show(new Variants() {
 					@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 					@Override protected void update(Cursor cursor) {
