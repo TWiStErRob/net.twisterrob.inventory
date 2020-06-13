@@ -119,11 +119,11 @@
 			android:summary="@string/pref_highlightSuggestion_desc"
 			/>
 		<Preference
-			android:title="@string/manage_space_title"
+			android:title="@string/pref_app_manage_space_title"
 			>
 			<intent
 				android:targetClass="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
-				android:targetPackage="@string/app_package"
+				android:targetPackage="@string/pref_app_about_package"
 				/>
 		</Preference>
 	</PreferenceCategory>

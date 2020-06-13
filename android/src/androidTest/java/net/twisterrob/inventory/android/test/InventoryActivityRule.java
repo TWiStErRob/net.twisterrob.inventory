@@ -16,6 +16,7 @@ import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 
 public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
