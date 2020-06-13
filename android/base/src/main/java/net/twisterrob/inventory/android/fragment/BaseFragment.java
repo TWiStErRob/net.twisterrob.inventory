@@ -7,7 +7,7 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.*;
-import android.support.annotation.NonNull;
+import android.support.annotation.*;
 import android.support.v4.app.FragmentActivity;
 import android.view.*;
 
@@ -35,12 +35,11 @@ public class BaseFragment<T> extends VariantFragment {
 		super.setArguments(args != null? args : new Bundle());
 	}
 
-	@SuppressWarnings("unchecked")
-	public <P extends Parcelable> P getViewTag() {
-		return (P)tag;
+	public @Nullable Parcelable getViewTag() {
+		return tag;
 	}
 
-	public void setViewTag(Parcelable tag) {
+	public void setViewTag(@Nullable Parcelable tag) {
 		this.tag = tag;
 	}
 
