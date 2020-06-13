@@ -1,3 +1,12 @@
+-- This file contains the current schema of the database.
+-- Any changes to this file need to be accompanied by a version bump in `Database` class,
+-- and an additional `.upgrade.<version>.sql` file to make the change for existing users.
+-- Use test-db.bat to see if the schema is valid SQL (note: the sqlite3 command version may change).
+
+-- The minimum SQL version is 3.6.22 (Android 2.3.7).
+-- The target SQL version was 3.7.11 (Android 4.4.2) at the time of writing this file.
+-- All versions are listed here: https://stackoverflow.com/a/4377116/253468
+
 -- Notes
 -- ;--NOTEOS is needed in trigger bodies so statement execution to android driver is delayed until correct semicolon
 -- RAISE(action, msg) doesn't support expressions
