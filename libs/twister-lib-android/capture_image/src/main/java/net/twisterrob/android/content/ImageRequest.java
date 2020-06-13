@@ -3,6 +3,8 @@ package net.twisterrob.android.content;
 import java.io.File;
 import java.util.*;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.*;
@@ -10,6 +12,8 @@ import android.content.pm.*;
 import android.net.Uri;
 import android.os.Build.*;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.PermissionChecker;
 
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.capture_image.R;
@@ -148,6 +152,9 @@ public class ImageRequest {
 	}
 
 	private static List<Intent> createCameraIntents(Context context, Uri outputFileUri) {
+		if (!canLaunchCameraIntent(context)) {
+			return Collections.emptyList();
+		}
 		if (!canHasCamera(context)) {
 			return Collections.emptyList();
 		}
@@ -165,6 +172,23 @@ public class ImageRequest {
 		return galleryIntent;
 	}
 
+	/**
+	 * Check if the current {@code context} is able to launch {@link MediaStore#ACTION_IMAGE_CAPTURE}.
+	 * 
+	 * Yes, it is strange that the current context needs to have camera permission to launch a camera app.
+	 */
+	public static boolean canLaunchCameraIntent(@NonNull Context context) {
+		return VERSION.SDK_INT < VERSION_CODES.M
+				|| !AndroidTools.getDeclaredPermissions(context).contains(Manifest.permission.CAMERA)
+				|| hasCameraPermission(context);
+	}
+
+	public static boolean hasCameraPermission(@NonNull Context context) {
+		int permissionState = PermissionChecker.checkSelfPermission(context, Manifest.permission.CAMERA);
+		return permissionState == PermissionChecker.PERMISSION_GRANTED;
+	}
+
+	@SuppressLint("UnsupportedChromeOsCameraSystemFeature") // REPORT it is checked right before
 	@TargetApi(VERSION_CODES.JELLY_BEAN_MR1)
 	@SuppressWarnings("deprecation")
 	public static boolean canHasCamera(Context context) {

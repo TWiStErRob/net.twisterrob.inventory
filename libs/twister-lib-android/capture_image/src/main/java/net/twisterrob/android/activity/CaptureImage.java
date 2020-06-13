@@ -20,7 +20,6 @@ import android.provider.MediaStore;
 import android.support.annotation.*;
 import android.support.media.ExifInterface;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.PermissionChecker;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -45,6 +44,8 @@ import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.CameraPreview.*;
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
+
+import static net.twisterrob.android.content.ImageRequest.hasCameraPermission;
 
 /**
  * TODO check how others did it
@@ -212,7 +213,9 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 			mBtnCapture.setVisibility(View.GONE);
 		}
 		if (savedInstanceState == null) {
-			boolean userDeclined = hasCamera && !hasCameraPermission() && prefs.getBoolean(PREF_DENIED, false);
+			boolean userDeclined = hasCamera
+					&& !hasCameraPermission(this)
+					&& prefs.getBoolean(PREF_DENIED, false);
 			if (getIntent().getBooleanExtra(EXTRA_PICK, false) // forcing an immediate pick
 					|| !hasCamera // device doesn't have camera
 					|| userDeclined // device has camera, but user explicitly declined the permission
@@ -436,7 +439,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 
 	private static final int PERMISSIONS_REQUEST_CAMERA = 1;
 	private boolean requestCameraPermissionIfNeeded() {
-		if (hasCameraPermission()) {
+		if (hasCameraPermission(this)) {
 			return false;
 		} else {
 			// TODO if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) showDialog
@@ -452,8 +455,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				if (grantResults.length == 0) { // If request is cancelled, the result arrays are empty.
 					break; // nothing we can do really, let's try again later when user interactions warrants it
 				}
-				// TODEL double-checking hasCameraPermission only needed while target API is below 23
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED && hasCameraPermission()) {
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					// all ok, we have the permission, remember the user's approval
 					prefs.edit().remove(PREF_DENIED).apply();
 					doRestartPreview(); // start using the camera
@@ -468,10 +470,7 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
 	}
-	private boolean hasCameraPermission() {
-		int permissionState = PermissionChecker.checkSelfPermission(this, Manifest.permission.CAMERA);
-		return permissionState == PermissionChecker.PERMISSION_GRANTED;
-	}
+
 	protected void doReturn() {
 		if (mSavedFile != null) {
 			Intent result = new Intent();

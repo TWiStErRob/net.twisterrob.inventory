@@ -16,7 +16,7 @@ import android.app.*;
 import android.content.*;
 import android.content.pm.*;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.*;
+import android.content.res.Configuration;
 import android.graphics.*;
 import android.net.Uri;
 import android.os.*;
@@ -27,8 +27,8 @@ import android.support.annotation.*;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.*;
-import android.support.v4.widget.*;
-import android.util.*;
+import android.support.v4.widget.SearchViewCompat;
+import android.util.Log;
 import android.view.*;
 import android.view.ViewGroup.*;
 import android.view.inputmethod.InputMethodManager;
@@ -55,6 +55,21 @@ public /*static*/ abstract class AndroidTools {
 		// alternative: context.checkCallingOrSelfPermission
 		int permissionResult = packageManager.checkPermission(permission, context.getPackageName());
 		return permissionResult == PackageManager.PERMISSION_GRANTED;
+	}
+
+	public static @NonNull List<String> getDeclaredPermissions(@NonNull Context context) {
+		PackageManager pm = context.getPackageManager();
+		try {
+			PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_PERMISSIONS);
+			String[] requestedPermissions = packageInfo != null
+					? packageInfo.requestedPermissions
+					: null;
+			return requestedPermissions != null
+					? Arrays.asList(requestedPermissions)
+					: Collections.<String>emptyList();
+		} catch (PackageManager.NameNotFoundException e) {
+			return Collections.emptyList();
+		}
 	}
 
 	public static List<Intent> resolveIntents(Context context, Intent originalIntent, int flags) {
