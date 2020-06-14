@@ -166,6 +166,11 @@ public class App extends BaseApp implements BaseComponent.Provider {
 			"UNIQUE constraint failed: Room.property, Room.name (code 2067 SQLITE_CONSTRAINT_UNIQUE)",
 			"UNIQUE constraint failed: Item.parent, Item.name (code 2067 SQLITE_CONSTRAINT_UNIQUE)",
 			"UNIQUE constraint failed: List.name (code 2067 SQLITE_CONSTRAINT_UNIQUE)",
+			// Samsung A50 (https://mail.google.com/mail/u/0/#inbox/FMfcgxwHNqFmBnxRghcqFhxxncKgpxfh)
+			"UNIQUE constraint failed: Property.name (code 2067 SQLITE_CONSTRAINT_UNIQUE[2067])",
+			"UNIQUE constraint failed: Room.property, Room.name (code 2067 SQLITE_CONSTRAINT_UNIQUE[2067])",
+			"UNIQUE constraint failed: Item.parent, Item.name (code 2067 SQLITE_CONSTRAINT_UNIQUE[2067])",
+			"UNIQUE constraint failed: List.name (code 2067 SQLITE_CONSTRAINT_UNIQUE[2067])",
 			// Galaxy S5 6.0.1 (23) 3.8.10.2
 			"UNIQUE constraint failed: Property.name (code 2067)\n"
 					+ "#################################################################\n"
