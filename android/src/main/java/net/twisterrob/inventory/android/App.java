@@ -48,6 +48,17 @@ public class App extends BaseApp implements BaseComponent.Provider {
 
 	@Override public void onStart() {
 		super.onStart();
+		try {
+			// Quick workaround to prevent crashes on startup.
+			// Only foreground apps can startService(), at this point it's not foreground yet.
+			// https://github.com/TWiStErRob/net.twisterrob.inventory/issues/173
+			startServices();
+		} catch (RuntimeException ex) {
+			LOG.warn("Cannot start services", ex);
+		}
+	}
+
+	private void startServices() {
 		// open a database first, this should lock any other accesses, so it's clearer when the DB open fails
 		startService(new Intent(DatabaseService.ACTION_OPEN_DATABASE).setPackage(getPackageName()));
 		// run vacuum next, it's quick and most of the time does nothing anyway
