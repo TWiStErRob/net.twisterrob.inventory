@@ -64,8 +64,8 @@ android {
 		applicationId 'net.twisterrob.inventory'
 		version {
 			major = 1
-			minor = 1
-			patch = 3
+			minor = 2
+			patch = 0
 		}
 		multiDexEnabled = true
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
