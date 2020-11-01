@@ -60,7 +60,7 @@ dependencies {
 android {
 	defaultConfig {
 		minSdkVersion 10
-		targetSdkVersion 28
+		targetSdkVersion 29
 		applicationId 'net.twisterrob.inventory'
 		version {
 			major = 1
