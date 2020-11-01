@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.activity;
 
 import java.io.*;
-import java.text.*;
 import java.util.*;
 
 import org.slf4j.*;
@@ -10,7 +9,6 @@ import android.annotation.SuppressLint;
 import android.content.*;
 import android.net.Uri;
 import android.os.*;
-import android.os.Build.*;
 import android.support.annotation.*;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.*;
@@ -111,9 +109,6 @@ public class MainActivity extends DrawerActivity
 
 		// First will show last, because the new ones open on top of the previous.
 		welcome();
-		if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
-			decommissionWarning();
-		}
 	}
 
 	@SuppressLint("RestrictedApi") // MenuBuilder() and add() are used, but only for debugging
@@ -161,45 +156,6 @@ public class MainActivity extends DrawerActivity
 					}
 				})
 				.show();
-	}
-
-	private void decommissionWarning() {
-		String lastWarning = App.prefs().getString(
-				R.string.pref_lastDecommissionWarning,
-				R.string.pref_lastDecommissionWarning_default
-		);
-		if (getString(R.string.pref_lastDecommissionWarning_never).equals(lastWarning)) {
-			return;
-		}
-		final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ROOT);
-		Calendar nextWarning = Calendar.getInstance();
-		try {
-			nextWarning.setTime(format.parse(lastWarning));
-		} catch (ParseException e) {
-			App.prefs().edit().remove(R.string.pref_lastDecommissionWarning).apply();
-		}
-		nextWarning.add(Calendar.DATE, 28);
-		if (Calendar.getInstance().before(nextWarning)) {
-			// It's in the future, don't bug yet.
-			return;
-		}
-		new AlertDialog.Builder(this)
-			.setTitle(R.string.decommission_title)
-			.setMessage(R.string.decommission_description)
-			.setPositiveButton(R.string.decommission_remind_never, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					@StringRes int never = R.string.pref_lastDecommissionWarning_never;
-					App.prefs().setString(R.string.pref_lastDecommissionWarning, never);
-				}
-			})
-			.setNegativeButton(R.string.decommission_remind_me, new DialogInterface.OnClickListener() {
-				@Override public void onClick(DialogInterface dialog, int which) {
-					String now = format.format(Calendar.getInstance().getTime());
-					App.prefs().setString(R.string.pref_lastDecommissionWarning, now);
-				}
-			})
-			.setCancelable(true)
-			.show();
 	}
 
 	@Override protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {

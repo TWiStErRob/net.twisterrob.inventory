@@ -23,27 +23,6 @@
 	<string name="welcome_help_tip">See About for help and usage tips!</string>
 	<string name="welcome_backup">Import backup</string>
 
-	<string name="decommission_title">Sad News!</string>
-	<string name="decommission_description"
-		>You device is outdated. There\'s nothing wrong with it,
-		except Android\'s maintainers are pushing everyone to use newer and newer devices.
-		To move along with times and let me add exciting new features,
-		and change things with more confidence without breaking things for anyone,
-		I had to drop support for older Android versions (2010—2014).
-		<b>I\'m not going to publish more updates for devices before Lollipop (Android 5.0),
-		but it should still be possible to download an older version of the app and use it.</b>
-		\n
-		\nWhen the times comes to move to a new device,
-		use the Backup functionality to export your data.
-		Move the ZIP file to your new device,
-		where you will be able to import it in the newer version of the app.
-		\n
-		\nI\'m sorry you will miss out on any updates!
-		\n— The maintainer
-	</string>
-	<string name="decommission_remind_me">Remind me later</string>
-	<string name="decommission_remind_never">Never remind me</string>
-
 	<string name="pref_app_about_title">@string/about_title</string>
 	<string name="pref_app_about_desc">@string/app_name</string>
 	<string name="pref_app_about_package">@string/app_package</string>

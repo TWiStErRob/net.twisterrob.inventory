@@ -136,10 +136,6 @@
 			android:defaultValue="@bool/pref_showWelcome_default"
 			/>
 		<net.twisterrob.android.content.pref.ValuePreference
-			android:key="@string/pref_lastDecommissionWarning"
-			android:defaultValue="@string/pref_lastDecommissionWarning_default"
-			/>
-		<net.twisterrob.android.content.pref.ValuePreference
 			android:key="@string/pref_version"
 			android:defaultValue="@integer/pref_version_default"
 			/>
