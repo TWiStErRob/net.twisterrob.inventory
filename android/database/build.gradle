@@ -15,12 +15,6 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-java"
 }
 
-android {
-	defaultConfig {
-		minSdkVersion 10
-	}
-}
-
 apply plugin: "net.twisterrob.inventory.database"
 
 databaseEntities {

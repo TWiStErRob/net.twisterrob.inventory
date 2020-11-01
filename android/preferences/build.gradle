@@ -5,9 +5,3 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 }
-
-android {
-	defaultConfig {
-		minSdkVersion 10
-	}
-}

@@ -59,7 +59,6 @@ dependencies {
 
 android {
 	defaultConfig {
-		minSdkVersion 10
 		targetSdkVersion 29
 		applicationId 'net.twisterrob.inventory'
 		version {
@@ -67,7 +66,6 @@ android {
 			minor = 2
 			patch = 0
 		}
-		multiDexEnabled = true
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
 		testInstrumentationRunner 'net.twisterrob.android.test.junit.AndroidJUnitRunner'
 	}

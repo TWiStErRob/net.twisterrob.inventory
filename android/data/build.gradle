@@ -4,9 +4,3 @@ apply from: 'http://localhost/maven/configure.gradle'
 dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 }
-
-android {
-	defaultConfig {
-		minSdkVersion 10
-	}
-}

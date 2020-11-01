@@ -21,9 +21,3 @@ dependencies {
 	testImplementation 'com.github.stefanbirkner:fishbowl:1.4.1' // exceptionThrownBy (assertThrows-like)
 	testImplementation "net.twisterrob.lib:twister-lib-test"
 }
-
-android {
-	defaultConfig {
-		minSdkVersion 10
-	}
-}

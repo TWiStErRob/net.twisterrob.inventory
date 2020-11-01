@@ -9,9 +9,3 @@ dependencies {
 	implementation 'net.twisterrob.lib:twister-lib-stringer'
 	implementation 'net.twisterrob.lib:twister-lib-java'
 }
-
-android {
-	defaultConfig {
-		minSdkVersion 10
-	}
-}

@@ -19,9 +19,3 @@ dependencies {
 	implementation("com.caverock:androidsvg:${VERSION_ANDROIDSVG}")
 	api "javax.inject:javax.inject:1"
 }
-
-android {
-	defaultConfig {
-		minSdkVersion 10
-	}
-}

@@ -9,9 +9,3 @@ dependencies {
 	implementation "junit:junit:${VERSION_JUNIT}"
 	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
 }
-
-android {
-	defaultConfig {
-		minSdkVersion 10
-	}
-}

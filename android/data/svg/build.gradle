@@ -21,7 +21,6 @@ dependencies {
 android {
 	defaultConfig {
 		applicationId "net.twisterrob.inventory.data"
-		minSdkVersion 14
 		version {
 			major = 1
 		}

@@ -4,9 +4,3 @@ apply from: 'http://localhost/maven/configure.gradle'
 dependencies {
 	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
 }
-
-android {
-	defaultConfig {
-		minSdkVersion 10
-	}
-}

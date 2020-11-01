@@ -18,6 +18,7 @@ allprojects {
 		def android = project.extensions.findByName("android")
 		if (android != null) {
 			android.compileSdkVersion = 28
+			android.defaultConfig.minSdkVersion = 21
 		}
 	}
 	tasks.withType(JavaCompile) {
