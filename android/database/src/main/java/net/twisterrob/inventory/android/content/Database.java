@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.*;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build.*;
 import android.support.annotation.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
@@ -27,7 +26,6 @@ import static net.twisterrob.inventory.android.Constants.*;
 public class Database extends VariantDatabase {
 	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
 	public static final String NAME = "MagicHomeInventory";
-	private static final boolean SANITY_CHECKS = VERSION.SDK_INT < VERSION_CODES.HONEYCOMB;
 
 	private final DatabaseOpenHelper m_helper;
 
@@ -253,17 +251,7 @@ public class Database extends VariantDatabase {
 	}
 
 	public long createProperty(long type, String name, String description) {
-		long id = rawInsert(R.string.query_property_create, type, name, description);
-		if (SANITY_CHECKS) {
-			Long foundID = findProperty(name);
-			if (foundID == null) {
-				throw new IllegalStateException("Just inserted property doesn't exist.");
-			} else if (id != foundID) {
-				LOG.warn("Just inserted property id mismatch: executeInsert: {} VS findProperty: {}", id, foundID);
-				return foundID;
-			}
-		}
-		return id;
+		return rawInsert(R.string.query_property_create, type, name, description);
 	}
 	public Long findProperty(String name) {
 		return getID(R.string.query_property_find, name);
@@ -318,17 +306,7 @@ public class Database extends VariantDatabase {
 	}
 
 	public long createItem(long parentID, long category, String name, String description) {
-		long id = rawInsert(R.string.query_item_create, parentID, category, name, description);
-		if (SANITY_CHECKS) {
-			Long foundID = findItem(parentID, name);
-			if (foundID == null) {
-				throw new IllegalStateException("Just inserted item doesn't exist.");
-			} else if (id != foundID) {
-				LOG.warn("Just inserted item id mismatch: executeInsert: {} VS findItem: {}", id, foundID);
-				return foundID;
-			}
-		}
-		return id;
+		return rawInsert(R.string.query_item_create, parentID, category, name, description);
 	}
 	public Long findItem(long parentID, String name) {
 		return getID(R.string.query_item_find, parentID, name);

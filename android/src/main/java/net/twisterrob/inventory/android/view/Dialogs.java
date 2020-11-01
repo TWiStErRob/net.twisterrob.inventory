@@ -6,15 +6,12 @@ import android.annotation.TargetApi;
 import android.app.*;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.Drawable;
-import android.os.Build.*;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.*;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog.Builder;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
@@ -82,7 +79,7 @@ public class Dialogs {
 		@Override protected void onPostExecute(final ActionState state) {
 			super.onPostExecute(state);
 			if (state.check(context)) {
-				Builder builder = new Builder(context)
+				new AlertDialog.Builder(context)
 						.setTitle(state.action.getConfirmationTitle(context.getResources()))
 						.setMessage(state.action.getConfirmationMessage(context.getResources()))
 						.setView(state.action.getConfirmationView(context))
@@ -91,21 +88,9 @@ public class Dialogs {
 								new Execute(context).execute(state);
 							}
 						})
-						.setNegativeButton(android.R.string.no, null);
-				if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
-					// FIXME check if this is needed after transitioning to v7 AlertDialog
-					Drawable icon = ContextCompat.getDrawable(context, android.R.drawable.ic_dialog_alert).mutate();
-					icon.setColorFilter(new ColorMatrixColorFilter(new float[] {
-							-1, 0, 0, 0, 255, // red = 255 - red
-							0, -1, 0, 0, 255, // green = 255 - green
-							0, 0, -1, 0, 255, // blue = 255 - blue
-							0, 0, 0, 1, 0     // alpha = alpha
-					}));
-					builder.setIcon(icon);
-				} else {
-					builder.setIconAttribute(android.R.attr.alertDialogIcon);
-				}
-				builder.show();
+						.setNegativeButton(android.R.string.no, null)
+						.setIconAttribute(android.R.attr.alertDialogIcon)
+						.show();
 			}
 		}
 	}

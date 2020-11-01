@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- Hovered state is ignored prior to API 14 which means this selector will always match.
+	<item android:state_hovered="true" tools:ignore="UnusedAttribute">
+		<color android:color="#f00" />
+	</item>
+	-->
+	<!-- CONSIDER figure out what these are
+	<item android:state_focused="true">
+		<color android:color="#0f0" />
+	</item>
+	<item android:state_active="true">
+		<color android:color="#ff0" />
+	</item>
+	<item android:state_checked="true">
+		<color android:color="#0ff" />
+	</item>
+	-->
 	<item android:state_enabled="false">
 		<color android:color="@color/primaryDark" />
 	</item>
@@ -14,6 +30,9 @@
 			<stroke android:width="@dimen/unit_quarter" android:color="@color/accentDark" />
 		</shape>
 	</item>
-	<!-- Not supported pre-API 11, ignore: <item android:state_activated="true"> -->
+	<!-- Selected spinner item -->
+	<item android:state_activated="true">
+		<color android:color="@color/primary" />
+	</item>
 	<item android:drawable="@android:color/transparent" />
 </selector>

@@ -253,18 +253,14 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		help.setOnClickListener(new OnClickListener() {
 			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void onClick(View v) {
-				if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
-					getActivity().openContextMenu(help);
-				} else {
-					PopupMenu popup = new PopupMenu(v.getContext(), v);
-					onPrepareContextMenu(popup.getMenu(), popup.getMenuInflater());
-					popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-						@Override public boolean onMenuItemClick(MenuItem item) {
-							return onContextItemSelected(item);
-						}
-					});
-					popup.show();
-				}
+				PopupMenu popup = new PopupMenu(v.getContext(), v);
+				onPrepareContextMenu(popup.getMenu(), popup.getMenuInflater());
+				popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+					@Override public boolean onMenuItemClick(MenuItem item) {
+						return onContextItemSelected(item);
+					}
+				});
+				popup.show();
 			}
 		});
 		ViewTools.displayedIf(help, this instanceof ItemEditFragment);

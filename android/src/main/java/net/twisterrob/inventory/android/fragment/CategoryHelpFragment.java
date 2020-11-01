@@ -45,9 +45,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		web.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		web.getSettings().setJavaScriptEnabled(true);
 		//web.getSettings().setBuiltInZoomControls(true);
-		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-			WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
-		}
+		WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
 		web.setWebViewClient(new WebViewClient() {
 			@Override public void onPageFinished(WebView view, String url) {
 				long category = Intents.getCategory(getArguments());

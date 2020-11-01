@@ -33,11 +33,7 @@ public class BackupPermissions {
 	};
 
 	private static boolean hasReadPermission(Context context) {
-		// Assume the permission is granted on APIs where it didn't exists,
-		// otherwise onRequestPermissionsResult().grantResults parameter
-		// would contain [PERMISSION_DENIED, PERMISSION_GRANTED].
-		return VERSION.SDK_INT < VERSION_CODES.JELLY_BEAN 
-				|| hasPermission(context, READ_PERMISSION);
+		return hasPermission(context, READ_PERMISSION);
 	}
 
 	private static boolean hasWritePermission(Context context) {

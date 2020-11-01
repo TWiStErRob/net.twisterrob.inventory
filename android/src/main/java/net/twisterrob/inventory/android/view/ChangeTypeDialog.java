@@ -144,14 +144,10 @@ public class ChangeTypeDialog {
 		list.post(new Runnable() {
 			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void run() {
-				if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
-					list.smoothScrollToPosition(pos);
+				if (offset < list.getHeight()) {
+					list.smoothScrollToPositionFromTop(pos, offset);
 				} else {
-					if (offset < list.getHeight()) {
-						list.smoothScrollToPositionFromTop(pos, offset);
-					} else {
-						list.smoothScrollToPosition(pos);
-					}
+					list.smoothScrollToPosition(pos);
 				}
 			}
 		});
