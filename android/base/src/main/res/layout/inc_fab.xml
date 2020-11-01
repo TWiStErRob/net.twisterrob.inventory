@@ -10,6 +10,7 @@
 	android:layout_marginBottom="0dp"
 	android:layout_marginEnd="0dp"
 	android:src="@drawable/fab_interior_plus"
+	android:contentDescription="@string/fab_add"
 	android:visibility="gone"
 	tools:visibility="visible"
 	app:fabSize="normal"

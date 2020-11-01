@@ -155,6 +155,7 @@
 	<string name="category_feedback">Suggest Category</string>
 	<string name="category_open">Open with…</string>
 	<string name="category_save">Export Help</string>
+	<string name="category_actions">Category actions</string>
 	<string name="category_keywords_of">Keywords for %s</string>
 	<string name="category_keywords_empty">No keywords.</string>
 	<string name="category_keywords">Show Keywords</string>

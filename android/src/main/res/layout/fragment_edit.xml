@@ -40,6 +40,7 @@
 					android:id="@+id/help"
 					android:layout_width="@dimen/icon_action"
 					android:layout_height="@dimen/icon_action"
+					android:contentDescription="@string/category_actions"
 					android:layout_gravity="center_vertical"
 					android:padding="@dimen/unit_half"
 					android:src="@android:drawable/ic_menu_info_details"

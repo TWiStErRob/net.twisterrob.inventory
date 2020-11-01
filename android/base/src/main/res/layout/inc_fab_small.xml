@@ -10,6 +10,7 @@
 	android:layout_marginBottom="@dimen/unit_negative"
 	android:layout_marginEnd="@dimen/unit_negative_half"
 	android:src="@drawable/fab_interior_plus_mini"
+	android:contentDescription="@string/fab_add"
 	android:visibility="gone"
 	tools:visibility="visible"
 	app:fabSize="mini"
@@ -19,4 +20,3 @@
 	tools:layout_width="@dimen/icon_action_button"
 	tools:layout_height="@dimen/icon_action_button"
 	/>
-

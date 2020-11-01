@@ -28,6 +28,7 @@
 		android:layout_marginRight="@dimen/unit_half"
 		android:layout_marginBottom="@dimen/unit_half"
 		android:layout_marginEnd="@dimen/unit_half"
+		android:contentDescription="@string/item_categorize"
 		android:scaleType="fitCenter"
 		tools:src="@drawable/category_unknown"
 		/>

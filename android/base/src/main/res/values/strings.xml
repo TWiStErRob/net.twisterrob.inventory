@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- TODO split this into multiple strings -->
+	<string name="fab_add">New</string>
+
+</resources>
