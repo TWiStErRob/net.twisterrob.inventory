@@ -13,7 +13,6 @@
 		android:id="@+id/type"
 		android:layout_width="@dimen/icon_action"
 		android:layout_height="@dimen/icon_action"
-		android:layout_marginRight="@dimen/unit_half"
 		android:layout_marginEnd="@dimen/unit_half"
 		tools:src="@drawable/category_unknown"
 		/>

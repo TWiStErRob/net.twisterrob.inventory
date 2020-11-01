@@ -6,7 +6,6 @@
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_gravity="bottom|end"
-	android:layout_marginRight="@dimen/unit_negative_half"
 	android:layout_marginBottom="@dimen/unit_negative"
 	android:layout_marginEnd="@dimen/unit_negative_half"
 	android:src="@drawable/fab_interior_plus_mini"
