@@ -54,6 +54,8 @@ public interface Constants {
 		public static @NonNull String getExportFileName(Calendar now) {
 			return String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
 		}
+
+		@SuppressWarnings("deprecation") // see requestLegacyExternalStorage
 		public static @NonNull File getPhoneHome() {
 			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 			try {
