@@ -40,7 +40,9 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
+		tools:ignore="ButtonStyle"
 		>
+		<!-- lint:ButtonStyle ignore for now, the screen looks strange if the buttons are not buttons -->
 		<Button
 			android:id="@android:id/button2"
 			android:layout_width="0dp"
