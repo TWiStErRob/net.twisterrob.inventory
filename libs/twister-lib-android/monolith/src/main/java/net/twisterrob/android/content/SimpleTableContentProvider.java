@@ -4,12 +4,11 @@ import java.util.*;
 
 import android.annotation.TargetApi;
 import android.content.*;
-import android.database.Cursor;
+import android.database.*;
 import android.database.sqlite.*;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.database.DatabaseUtilsCompat;
 
 /**
  * Example provider class for {@code CREATE TABLE MyItem (_id, name, description)}:
@@ -166,7 +165,7 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 				break;
 			case SINGLE_BY_ID:
 				String id = uri.getLastPathSegment();
-				selection = DatabaseUtilsCompat.concatenateWhere(idFilter(id), selection);
+				selection = DatabaseUtils.concatenateWhere(idFilter(id), selection);
 				break;
 			default:
 				throw unmatched(uri);

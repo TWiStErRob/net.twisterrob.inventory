@@ -589,7 +589,7 @@ public /*static*/ abstract class AndroidTools {
 		if (item == null) {
 			throw new NullPointerException("Cannot find search menu item! Did you inflate it into the menu?");
 		}
-		View view = MenuItemCompat.getActionView(item);
+		View view = item.getActionView();
 		if (view == null) {
 			throw new NullPointerException("Cannot find actionView! Is it declared in XML and kept in proguard?");
 		}

@@ -2,7 +2,6 @@ package net.twisterrob.android.view;
 
 import android.content.Context;
 import android.os.Build.*;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.*;
@@ -80,7 +79,7 @@ public class OverScrollInterceptor extends ViewGroup {
 				return 0 < mTarget.getScrollY();
 			}
 		} else {
-			return ViewCompat.canScrollVertically(mTarget, -1);
+			return mTarget.canScrollVertically(-1);
 		}
 	}
 

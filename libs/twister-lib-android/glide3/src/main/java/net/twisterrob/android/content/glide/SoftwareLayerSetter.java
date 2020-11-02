@@ -1,6 +1,5 @@
 package net.twisterrob.android.content.glide;
 
-import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -19,13 +18,13 @@ public class SoftwareLayerSetter<T, R> implements RequestListener<T, R> {
 	@Override public boolean onResourceReady(R resource, T model, Target<R> target,
 			boolean isFromMemoryCache, boolean isFirstResource) {
 		View view = ((ViewTarget<?, R>)target).getView();
-		ViewCompat.setLayerType(view, ViewCompat.LAYER_TYPE_SOFTWARE, null);
+		view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		return false;
 	}
 
 	@Override public boolean onException(Exception e, T model, Target<R> target, boolean isFirstResource) {
 		View view = ((ViewTarget<?, R>)target).getView();
-		ViewCompat.setLayerType(view, ViewCompat.LAYER_TYPE_SOFTWARE, null);
+		view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		return false;
 	}
 }

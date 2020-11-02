@@ -8,7 +8,10 @@ import android.support.v4.content.Loader;
 
 import net.twisterrob.java.utils.tostring.*;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({
+		"rawtypes", // Cannot register in AndroidStringerRepo if using Loader<?>.
+		"deprecation" // Loader.dump
+})
 public class SupportLoaderStringer extends Stringer<Loader> {
 	@Override public void toString(@Nonnull ToStringAppender append, Loader loader) {
 		StringWriter writer = new StringWriter();

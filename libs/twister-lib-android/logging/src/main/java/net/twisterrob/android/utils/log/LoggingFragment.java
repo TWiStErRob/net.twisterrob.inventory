@@ -75,7 +75,7 @@ public class LoggingFragment extends Fragment {
 	@Override public void onActivityCreated(Bundle savedInstanceState) {
 		log("onActivityCreated", savedInstanceState);
 		super.onActivityCreated(savedInstanceState);
-		LOG.trace("{}.loaderManager={}", getName(), getLoaderManager());
+		LOG.trace("{}.loaderManager={}", getName(), LoaderManager.getInstance(this));
 	}
 
 	@Override public void onViewStateRestored(Bundle savedInstanceState) {
