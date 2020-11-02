@@ -8,7 +8,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.*;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.MenuItemCompat;
 import android.text.format.Formatter;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -76,10 +75,10 @@ public class DrawerUpdateCountersTask extends SimpleSafeAsyncTask<Void, Void, Dr
 
 	private void setMenuCounter(@IdRes int itemId, String count) {
 		MenuItem item = nav.getMenu().findItem(itemId);
-		TextView view = (TextView)MenuItemCompat.getActionView(item);
+		TextView view = (TextView)item.getActionView();
 		if (view == null) {
-			MenuItemCompat.setActionView(item, R.layout.inc_drawer_counter);
-			view = (TextView)MenuItemCompat.getActionView(item);
+			item.setActionView(R.layout.inc_drawer_counter);
+			view = (TextView)item.getActionView();
 		}
 		view.setText(count);
 	}

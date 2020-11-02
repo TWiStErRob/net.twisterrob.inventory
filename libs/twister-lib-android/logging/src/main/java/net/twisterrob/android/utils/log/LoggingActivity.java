@@ -51,8 +51,7 @@ public class LoggingActivity extends AppCompatActivity {
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		log("onCreate", savedInstanceState);
 		super.onCreate(savedInstanceState);
-		LoaderManager lm = getSupportLoaderManager();
-		LOG.trace("{}.loaderManager={}({})", getName(), lm, ReflectionTools.get(lm, "mWho"));
+		LOG.trace("{}.loaderManager={}", getName(), getSupportLoaderManager());
 	}
 
 	@Override public void onContentChanged() {

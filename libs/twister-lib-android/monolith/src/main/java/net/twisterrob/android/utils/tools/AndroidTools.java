@@ -27,7 +27,6 @@ import android.support.annotation.*;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.*;
-import android.support.v4.widget.SearchViewCompat;
 import android.util.Log;
 import android.view.*;
 import android.view.ViewGroup.*;
@@ -595,22 +594,26 @@ public /*static*/ abstract class AndroidTools {
 		if (view == null) {
 			throw new NullPointerException("Cannot find actionView! Is it declared in XML and kept in proguard?");
 		}
+		SearchableInfo info = searchManager.getSearchableInfo(activity.getComponentName());
+		if (info == null) {
+			throw new NullPointerException("No searchable info for " + activity.getComponentName()
+					+ "\nDid you define <meta-data android:name=\"android.app.default_searchable\""
+					+ /*                      */ " android:value=\".${name of search results activity}\" />"
+					+ "\neither on application level or inside the activity in AndroidManifest.xml?"
+					+ "\nAlso make sure that in the merged manifest the class name resolves correctly (package)."
+					+ "\nDouble check that the searchable.xml doesn't contain literal strings for label and hint!"
+			);
+		}
 		if (view instanceof android.support.v7.widget.SearchView) {
 			android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView)view;
-			SearchableInfo info = searchManager.getSearchableInfo(activity.getComponentName());
-			if (info == null) {
-				throw new NullPointerException("No searchable info for " + activity.getComponentName()
-						+ "\nDid you define <meta-data android:name=\"android.app.default_searchable\""
-						+ /*                      */ " android:value=\".${name of search results activity}\" />"
-						+ "\neither on application level or inside the activity in AndroidManifest.xml?"
-						+ "\nAlso make sure that in the merged manifest the class name resolves correctly (package)."
-						+ "\nDouble check that the searchable.xml doesn't contain literal strings for label and hint!"
-				);
-			}
+			searchView.setSearchableInfo(info);
+			return searchView;
+		} else if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {
+			android.widget.SearchView searchView = (android.widget.SearchView)view;
 			searchView.setSearchableInfo(info);
 			return searchView;
 		} else {
-			SearchViewCompat.setSearchableInfo(view, activity.getComponentName());
+			LOG.warn("Unknown SearchView: {}, prepareSearch unsuccessful.", view, new StackTrace());
 			return view;
 		}
 	}

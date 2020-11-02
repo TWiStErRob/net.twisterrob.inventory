@@ -7,7 +7,6 @@ import android.content.*;
 import android.os.IBinder;
 import android.support.annotation.*;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.tools.StringerTools;
@@ -47,10 +46,10 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 
 	/**
 	 * @return a {@link NotificationCompat.Builder} for the notification,
-	 *         {@link Builder#setOngoing} will be automatically added.
+	 *         {@link NotificationCompat.Builder#setOngoing} will be automatically added.
 	 */
-	protected @NonNull Builder createOnGoingNotification(Intent intent) {
-		return new android.support.v7.app.NotificationCompat.Builder(this)
+	protected @NonNull NotificationCompat.Builder createOnGoingNotification(@NonNull Intent intent) {
+		return new NotificationCompat.Builder(this, BackupNotifications.FAKE_CHANNEL_ID)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 				.setCategory(NotificationCompat.CATEGORY_PROGRESS)
 				.setTicker("Action continues in background...")
@@ -59,8 +58,8 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 				;
 	}
 
-	protected @NonNull Builder createFinishedNotification(@NonNull Progress result) {
-		return new android.support.v7.app.NotificationCompat.Builder(this)
+	protected @NonNull NotificationCompat.Builder createFinishedNotification(@NonNull Progress result) {
+		return new NotificationCompat.Builder(this, BackupNotifications.FAKE_CHANNEL_ID)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 				.setCategory(NotificationCompat.CATEGORY_PROGRESS)
 				.setTicker("Finished action")
@@ -121,8 +120,10 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		currentJobStarted = NEVER;
 	}
 
-	private void setIntentAndDefaults(@NonNull NotificationCompat.Builder notification,
-			@Nullable PendingIntent intent) {
+	private void setIntentAndDefaults(
+			@NonNull NotificationCompat.Builder notification,
+			@Nullable PendingIntent intent
+	) {
 		if (BuildConfig.DEBUG) {
 			LOG.trace("Updating notification {} with {}", notification, StringerTools.toString(intent));
 		}

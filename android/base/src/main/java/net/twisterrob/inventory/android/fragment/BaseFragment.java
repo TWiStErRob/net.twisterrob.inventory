@@ -117,7 +117,7 @@ public class BaseFragment<T> extends VariantFragment {
 		}
 		FragmentActivity activity = getActivity();
 		if (activity != null) {
-			activity.supportInvalidateOptionsMenu();
+			activity.invalidateOptionsMenu();
 		}
 	}
 

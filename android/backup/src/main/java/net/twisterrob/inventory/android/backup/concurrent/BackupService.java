@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.*;
 import android.support.annotation.*;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.ContextCompat;
 
 import net.twisterrob.inventory.android.activity.BackupActivity;
@@ -62,20 +61,25 @@ public class BackupService extends NotificationProgressService<Progress> {
 		super.onCreate();
 	}
 
-	@Override protected @NonNull Builder createOnGoingNotification(Intent intent) {
-		return new android.support.v7.app.NotificationCompat.Builder(this)
+	@Override protected @NonNull NotificationCompat.Builder createOnGoingNotification(
+			@NonNull Intent intent
+	) {
+		return new NotificationCompat.Builder(this, BackupNotifications.FAKE_CHANNEL_ID)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 				.setSmallIcon(android.R.drawable.stat_sys_download)
 				.setCategory(NotificationCompat.CATEGORY_PROGRESS)
 				.setColor(ContextCompat.getColor(this, R.color.accent))
-				.setTicker(isImport(intent)
+				.setTicker(getProgressType(intent, null) == Progress.Type.Import
 						? getString(R.string.backup_import_progress_background)
 						: getString(R.string.backup_export_progress_background)
 				)
 				;
 	}
 
-	@Override protected boolean fillNotification(@NonNull Builder notification, @NonNull Progress progress) {
+	@Override protected boolean fillNotification(
+			@NonNull NotificationCompat.Builder notification,
+			@NonNull Progress progress
+	) {
 		super.fillNotification(notification, progress);
 		displayer.setProgress(progress);
 		notification.setContentTitle(displayer.getTitle());
@@ -84,11 +88,13 @@ public class BackupService extends NotificationProgressService<Progress> {
 		return isVeryDifferentFrom(getLastProgressSentToNotification(), progress);
 	}
 
-	@Override protected @NonNull Builder createFinishedNotification(@NonNull Progress result) {
+	@Override protected @NonNull NotificationCompat.Builder createFinishedNotification(
+			@NonNull Progress result
+	) {
 		displayer.setProgress(result);
 		String title = displayer.getTitle();
 		String message = displayer.getMessage();
-		return new android.support.v7.app.NotificationCompat.Builder(this)
+		return new NotificationCompat.Builder(this, BackupNotifications.FAKE_CHANNEL_ID)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 				.setCategory(NotificationCompat.CATEGORY_PROGRESS)
 				.setColor(ContextCompat.getColor(this, R.color.accent))
@@ -101,30 +107,17 @@ public class BackupService extends NotificationProgressService<Progress> {
 	}
 
 	@Override protected @NonNull Notification buildNotification(
-			@NonNull Builder builder,
+			@NonNull NotificationCompat.Builder builder,
 			@Nullable Intent intent,
 			@Nullable Progress progress
 	) {
-		Notification notification = super.buildNotification(builder, intent, progress);
 		if (Build.VERSION_CODES.O <= Build.VERSION.SDK_INT) {
-			boolean isImport;
-			if (intent == null && progress != null) {
-				isImport = progress.type == Progress.Type.Import;
-			} else if (intent != null && progress == null) {
-				isImport = isImport(intent);
-			} else {
-				throw new IllegalStateException(
-						"Only one of intent (" + intent + ") and (" + progress + ")"
-								+ " must be (non)null");
-			}
-			String channelId = isImport
+			String channelId = getProgressType(intent, progress) == Progress.Type.Import
 					? BackupNotifications.IMPORT_PROGRESS_CHANNEL_ID
 					: BackupNotifications.EXPORT_PROGRESS_CHANNEL_ID;
-			// Workaround for using support library 24 while targeting 28:
-			// TODEL AndroidX https://github.com/TWiStErRob/net.twisterrob.inventory/issues/164
-			ReflectionTools.set(notification, "mChannelId", channelId);
+			builder.setChannelId(channelId);
 		}
-		return notification;
+		return super.buildNotification(builder, intent, progress);
 	}
 
 	@Override protected @Nullable Intent createInProgressIntent() {
@@ -142,8 +135,32 @@ public class BackupService extends NotificationProgressService<Progress> {
 		intent.putExtra(EXTRA_PROGRESS, progress);
 	}
 
-	private boolean isImport(Intent intent) {
-		return ACTION_IMPORT.equals(intent.getAction());
+
+	private @NonNull Progress.Type getProgressType(
+			@Nullable Intent intent,
+			@Nullable Progress progress
+	) {
+		if (intent == null && progress != null) {
+			return progress.type;
+		} else if (intent != null && progress == null) {
+			String action = intent.getAction();
+			if (action == null) {
+				throw new IllegalStateException("Unexpected intent action: " + action);
+			}
+			switch (action) {
+				case ACTION_IMPORT:
+					return Progress.Type.Import;
+				case ACTION_EXPORT:
+				case ACTION_EXPORT_DIR:
+				case ACTION_EXPORT_PFD_WORKAROUND:
+					return Progress.Type.Export;
+				default:
+					throw new IllegalStateException("Unexpected intent action: " + action);
+			}
+		} else {
+			throw new IllegalStateException(
+					"Only one of intent (" + intent + ") and (" + progress + ") must be (non)null");
+		}
 	}
 
 	@SuppressLint({"WrongThread", "WrongThreadInterprocedural"})

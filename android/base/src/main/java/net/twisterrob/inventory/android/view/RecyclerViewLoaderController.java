@@ -60,7 +60,7 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 		}
 
 		@Override public @NonNull LoaderManager get() {
-			return activity.getSupportLoaderManager();
+			return LoaderManager.getInstance(activity);
 		}
 	}
 
@@ -72,7 +72,7 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 		}
 
 		@Override public @NonNull LoaderManager get() {
-			return fragment.getLoaderManager();
+			return LoaderManager.getInstance(fragment);
 		}
 	}
 }

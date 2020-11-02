@@ -22,6 +22,12 @@ public class BackupNotifications {
 	public static final String IMPORT_PROGRESS_CHANNEL_ID = "channel__import_progress";
 	public static final String EXPORT_PROGRESS_CHANNEL_ID = "channel__export_progress";
 
+	/**
+	 * Placeholder until a channel can be decided in a {@link NotificationCompat.Builder}.
+	 */
+	@RequiresApi(VERSION_CODES.LOLLIPOP) // Override class's requirement.
+	public static final String FAKE_CHANNEL_ID = "channel__fake";
+
 	public static void registerNotificationChannels(Context context) {
 		NotificationManager service = (NotificationManager)
 				context.getSystemService(Context.NOTIFICATION_SERVICE);

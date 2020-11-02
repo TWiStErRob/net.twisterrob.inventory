@@ -9,6 +9,16 @@
 -keep class android.support.v7.widget.SearchView { <init>(...); }
 
 
+# Rules from versionedparcelable-28.0.0.aar are triggering this:
+# Note: the configuration keeps the entry point 'androidx.media.AudioAttributesCompatParcelizer { ... read(VersionedParcel); }', but not the descriptor class 'VersionedParcel'
+# Note: the configuration keeps the entry point 'androidx.media.AudioAttributesCompatParcelizer { void write(...,VersionedParcel); }', but not the descriptor class 'VersionedParcel'
+# Note: the configuration keeps the entry point 'androidx.media.AudioAttributesImplApi21Parcelizer { ... read(VersionedParcel); }', but not the descriptor class 'VersionedParcel'
+# Note: the configuration keeps the entry point 'androidx.media.AudioAttributesImplApi21Parcelizer { void write(...,VersionedParcel); }', but not the descriptor class 'VersionedParcel'
+# Note: the configuration keeps the entry point 'androidx.media.AudioAttributesImplBaseParcelizer { ... read(VersionedParcel); }', but not the descriptor class 'VersionedParcel'
+# Note: the configuration keeps the entry point 'androidx.media.AudioAttributesImplBaseParcelizer { void write(...,VersionedParcel); }', but not the descriptor class 'VersionedParcel'
+-dontnote androidx.versionedparcelable.VersionedParcel
+
+
 # Note: net.twisterrob.inventory.android.content.InventoryProvider calls 'Field.getType'
 # Note: there were 1 classes trying to access generic signatures using reflection.
 #       You should consider keeping the signature attributes
