@@ -9,9 +9,6 @@ dependencies {
 }
 
 android {
-	defaultConfig {
-		minSdkVersion 10
-	}
 	lintOptions {
 		tasks.lint.enabled = false
 	}

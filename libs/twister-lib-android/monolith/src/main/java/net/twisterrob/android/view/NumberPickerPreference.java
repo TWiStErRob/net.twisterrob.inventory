@@ -1,23 +1,18 @@
 package net.twisterrob.android.view;
 
-import java.text.NumberFormat;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build.*;
 import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
-import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.*;
 import android.widget.*;
-import android.widget.LinearLayout.LayoutParams;
 
 import static android.view.ViewGroup.LayoutParams.*;
 
 import net.twisterrob.android.R;
-import net.twisterrob.android.utils.tools.*;
 
 /**
  * A {@link android.preference.Preference} that displays a number picker as a dialog.
@@ -46,11 +41,7 @@ public class NumberPickerPreference extends DialogPreference {
 	}
 
 	private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
-			picker = new EditTextPicker(context);
-		} else {
-			picker = new NumberPickerPicker(context);
-		}
+		picker = new NumberPickerPicker(context);
 
 		TypedArray a = context.getTheme().obtainStyledAttributes(
 				attrs, R.styleable.NumberPickerPreference, defStyleAttr, defStyleRes);
@@ -99,113 +90,6 @@ public class NumberPickerPreference extends DialogPreference {
 		void setMinValue(int minValue);
 		int getValue();
 		void setValue(int value);
-	}
-
-	private static class EditTextPicker extends TextWatcherAdapter implements Picker {
-		private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
-		private final Context context;
-		private int value;
-		private int minValue = Integer.MIN_VALUE;
-		private int maxValue = Integer.MAX_VALUE;
-		private EditText editor;
-		private TextView message;
-		public EditTextPicker(Context context) {
-			this.context = context;
-		}
-
-		@Override public View createView() {
-			LinearLayout layout = new LinearLayout(context);
-			layout.setOrientation(LinearLayout.VERTICAL);
-
-			message = new TextView(context);
-			LayoutParams messageParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-			messageParams.gravity = Gravity.CENTER_HORIZONTAL;
-			messageParams.topMargin = ResourceTools.dipInt(context, 4);
-			message.setLayoutParams(messageParams);
-			updateMessage();
-			layout.addView(message);
-
-			editor = new EditText(context);
-			LayoutParams editorParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-			editorParams.gravity = Gravity.CENTER_HORIZONTAL;
-			editor.setLayoutParams(editorParams);
-			editor.setSingleLine();
-			editor.setGravity(Gravity.CENTER_HORIZONTAL);
-			editor.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-			AndroidTools.showKeyboard(editor);
-			editor.addTextChangedListener(this);
-			layout.addView(editor);
-
-			return layout;
-		}
-		private void updateMessage() {
-			if (message != null) {
-				message.setText(context.getString(R.string.pref_number_picker_invalid_input, minValue, maxValue));
-			}
-		}
-
-		@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-			try {
-				long number = Long.parseLong(s.toString());
-				if (number < minValue) {
-					throw new IllegalArgumentException(
-							"Number " + number + " is too low.");
-				}
-				if (maxValue < number) {
-					throw new IllegalArgumentException(
-							"Number " + number + " is too high.");
-				}
-				value = (int)number;
-				editor.setError(null);
-			} catch (NumberFormatException ex) {
-				if (s.length() == 0) {
-					editor.setError("Please enter a number.");
-				} else {
-					editor.setError("Invalid number: " + s);
-				}
-			} catch (IllegalArgumentException ex) {
-				editor.setError(ex.getMessage());
-			}
-		}
-
-		@Override public void setMinValue(int minValue) {
-			this.minValue = minValue;
-			if (value < minValue) {
-				value = minValue;
-			}
-			updateEms();
-			updateMessage();
-		}
-		@Override public void setMaxValue(int maxValue) {
-			this.maxValue = maxValue;
-			if (maxValue < value) {
-				value = maxValue;
-			}
-			updateEms();
-			updateMessage();
-		}
-		private void updateEms() {
-			if (editor != null) {
-				editor.setEms(1 + (int)Math.max(Math.log10(minValue), Math.log10(maxValue)) + 2); // sign + value + icon
-			}
-		}
-
-		@Override public int getValue() {
-			return value;
-		}
-		@Override public void setValue(int value) {
-			if (value < minValue) {
-				value = minValue;
-			}
-			if (maxValue < value) {
-				value = maxValue;
-			}
-			this.value = value;
-			if (editor != null) {
-				editor.setText(NUMBER.format(value));
-				editor.setSelection(editor.getText().length());
-			}
-		}
 	}
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)

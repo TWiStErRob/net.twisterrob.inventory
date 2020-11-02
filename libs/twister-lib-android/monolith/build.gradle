@@ -27,7 +27,6 @@ dependencies {
 
 android {
 	defaultConfig {
-		minSdkVersion 10
 		multiDexEnabled = true
 		dependencies {
 			implementation "com.android.support:multidex:${VERSION_MULTIDEX}"

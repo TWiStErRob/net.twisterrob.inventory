@@ -33,7 +33,6 @@ import android.view.ViewGroup.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
-import net.twisterrob.android.view.layout.DoAfterLayout;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.*;
@@ -910,7 +909,6 @@ public /*static*/ abstract class AndroidTools {
 	 * Warning: call this before attaching the view to the parent if the view is created dynamically.
 	 * @see <a href="http://stackoverflow.com/a/19004929/253468">How to show soft-keyboard when EditText is focused?</a>
 	 */
-	@TargetApi(VERSION_CODES.HONEYCOMB_MR1)
 	public static void showKeyboard(final View view) {
 		InputMethodManager imm =
 				(InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -926,24 +924,16 @@ public /*static*/ abstract class AndroidTools {
 			view.requestFocus();
 			imm.showSoftInput(view, 0);
 		} else {
-			if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1) {
-				new DoAfterLayout(view, false) {
-					@Override public void onLayout(@NonNull View view) {
-						view.post(new TryAgain());
-					}
-				};
-			} else {
-				view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-					@Override public void onViewAttachedToWindow(View view) {
-						view.removeOnAttachStateChangeListener(this);
-						view.post(new TryAgain());
-					}
+			view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+				@Override public void onViewAttachedToWindow(View view) {
+					view.removeOnAttachStateChangeListener(this);
+					view.post(new TryAgain());
+				}
 
-					@Override public void onViewDetachedFromWindow(View view) {
-						view.removeOnAttachStateChangeListener(this);
-					}
-				});
-			}
+				@Override public void onViewDetachedFromWindow(View view) {
+					view.removeOnAttachStateChangeListener(this);
+				}
+			});
 		}
 	}
 

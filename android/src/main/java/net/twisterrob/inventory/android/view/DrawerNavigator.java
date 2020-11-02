@@ -135,6 +135,7 @@ public class DrawerNavigator {
 			this.menuItem = menuItem;
 		}
 		@Override
+		@SuppressLint("RestrictedApi") // DrawableWrapper is private, but there's no point re-implementing it.
 		public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
 			resource.setColorFilter(Pic.tint());
 			menuItem.setIcon(new DrawableWrapper(resource) {

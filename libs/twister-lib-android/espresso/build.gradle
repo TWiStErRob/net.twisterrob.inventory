@@ -54,7 +54,6 @@ dependencies {
 
 android {
 	defaultConfig {
-		minSdkVersion 10
 		multiDexEnabled true
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}

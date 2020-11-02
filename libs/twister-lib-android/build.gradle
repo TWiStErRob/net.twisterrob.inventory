@@ -23,6 +23,7 @@ subprojects { Project project ->
 
 	project.afterEvaluate {
 		project.android.compileSdkVersion = 28
+		project.android.defaultConfig.minSdkVersion = 14
 		project.android.lintOptions.lintConfig = rootProject.file("config/lint/lint.xml")
 		project.android.lintOptions.baseline rootProject.file("config/lint/lint-baseline-${project.name}.xml")
 		project.tasks.withType(com.android.build.gradle.tasks.GenerateBuildConfig) { it.enabled = false }
