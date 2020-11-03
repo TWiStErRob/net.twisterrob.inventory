@@ -19,6 +19,11 @@
 -dontnote androidx.versionedparcelable.VersionedParcel
 
 
+# androidx-multidex:2.0.0 that came with AGP 3.5.4 -> 3.6.4 upgrade doesn't have a consumer proguard file.
+# Note: androidx.multidex.MultiDex$V14: can't find dynamically referenced class dalvik.system.DexPathList$Element
+-dontnote androidx.multidex.MultiDex$V14
+
+
 # Note: net.twisterrob.inventory.android.content.InventoryProvider calls 'Field.getType'
 # Note: there were 1 classes trying to access generic signatures using reflection.
 #       You should consider keeping the signature attributes
