@@ -37,7 +37,7 @@ dependencies {
 	// Espresso-idling-resource for synchronization with background jobs
 	implementation "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
 	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
-	implementation "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
+	api "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
 
 	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
 	compileOnly "com.android.support:support-v4:${VERSION_SUPPORT}"
