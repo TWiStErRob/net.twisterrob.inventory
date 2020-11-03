@@ -28,9 +28,6 @@ dependencies {
 android {
 	defaultConfig {
 		multiDexEnabled = true
-		dependencies {
-			implementation "com.android.support:multidex:${VERSION_MULTIDEX}"
-		}
 	}
 	lintOptions {
 		checkAllWarnings = true

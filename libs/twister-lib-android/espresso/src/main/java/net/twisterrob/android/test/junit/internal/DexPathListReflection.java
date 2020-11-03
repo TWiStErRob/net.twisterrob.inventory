@@ -9,7 +9,7 @@ import android.app.Instrumentation;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.support.annotation.NonNull;
-import android.support.multidex.MultiDex;
+import androidx.multidex.MultiDex;
 
 import static android.os.Build.VERSION.*;
 import static android.os.Build.VERSION_CODES.*;

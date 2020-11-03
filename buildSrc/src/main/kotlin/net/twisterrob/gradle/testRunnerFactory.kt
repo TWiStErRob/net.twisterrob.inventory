@@ -1,10 +1,8 @@
 package net.twisterrob.gradle
 
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
-import com.android.builder.testing.ConnectedDeviceProvider
 import com.android.builder.testing.SimpleTestRunner
 import com.android.builder.testing.TestData
-import com.android.builder.testing.TestRunner
 import com.android.builder.testing.api.DeviceConnector
 import com.android.ddmlib.IShellEnabledDevice
 import com.android.ddmlib.testrunner.ITestRunListener
@@ -27,11 +25,6 @@ typealias TestRunnerFactory = Any
  */
 typealias PerDeviceSetupCallback = IShellEnabledDevice.(packageName: String) -> Unit
 
-private val DeviceProviderInstrumentTestTask.executor: ExecutorServiceAdapter
-	get() = DeviceProviderInstrumentTestTask::class.java
-		.getDeclaredField("executor")
-		.getValue(this)
-
 private var DeviceProviderInstrumentTestTask.testRunnerFactory: TestRunnerFactory
 	get() = DeviceProviderInstrumentTestTask::class.java
 		.getDeclaredField("testRunnerFactory")
@@ -44,7 +37,7 @@ private var DeviceProviderInstrumentTestTask.testRunnerFactory: TestRunnerFactor
 
 fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDeviceSetupCallback) {
 	this.testRunnerFactory =
-		replaceTestRunnerFactory(this.testRunnerFactory, this.executor, configure)
+		replaceTestRunnerFactory(this.testRunnerFactory, this.executorServiceAdapter, configure)
 }
 
 private fun replaceTestRunnerFactory(

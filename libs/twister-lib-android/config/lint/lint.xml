@@ -37,4 +37,7 @@
 	<issue id="LintBaseline"> 
 		<ignore regexp="(was|were) filtered out because (it is|they are) listed in the baseline file" />
 	</issue>
+	<issue id="GradleCompatible" severity="ignore">
+		<!-- disable until AndroidX migration is complete -->
+	</issue>
 </lint>

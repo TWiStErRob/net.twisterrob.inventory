@@ -208,8 +208,14 @@ public /*static*/ abstract class AndroidTools {
 		return sizesString;
 	}
 
+	@SuppressLint("UnsupportedChromeOsCameraSystemFeature") // False positive: _ANY is 17+ and _FRONT is considered.
 	public static boolean hasCameraHardware(Context context) {
-		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+		if (VERSION_CODES.JELLY_BEAN_MR1 <= VERSION.SDK_INT) {
+			return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
+		} else {
+			return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) 
+					|| context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+		}
 	}
 
 	/**

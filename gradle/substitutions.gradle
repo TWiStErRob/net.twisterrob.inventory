@@ -10,8 +10,6 @@ configurations.all {
 		// 1.9.10 (powermock 2.0.7) vs 1.10.5 (mockito 3.3.3)
 		force "net.bytebuddy:byte-buddy-agent:1.10.5"
 		force 'com.google.guava:guava:27.0.1-jre' // 17.0 (shazamcrest 0.11, bumped in next release) vs 27.0.1-jre (robolectric 4.3.1)
-		force "com.android.support:multidex:${VERSION_MULTIDEX}" // 1.0.2 (AGP) vs 1.0.3 (latest)
-		force "com.android.support:multidex-instrumentation:${VERSION_MULTIDEX}" // 1.0.2 (AGP) vs 1.0.3 (latest)
 		// 1.0.1 (Espresso 3.0.1) vs 1.0.2 (Robolectric needs it)
 		force "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
 		// 1.0.1 (Espresso 3.0.1) vs 1.0.2 (Robolectric needs it)

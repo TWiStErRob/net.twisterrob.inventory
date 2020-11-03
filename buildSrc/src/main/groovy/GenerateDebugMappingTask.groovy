@@ -1,7 +1,7 @@
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.internal.api.BaseVariantImpl
-import com.android.builder.core.AndroidBuilder
+import com.android.build.gradle.internal.variant.BaseVariantData
 import org.gradle.api.*
 import proguard.gradle.ProGuardTask
 
@@ -24,12 +24,12 @@ class GenerateDebugMappingPlugin implements Plugin<Project> {
 						ProGuardTask pg = variant.obfuscation as ProGuardTask
 						println project.files(pg.inJarFiles).files
 						println project.files(pg.libraryJarFiles).files
-						AndroidBuilder androidBuilder = BaseVariantImpl.class.getDeclaredField("androidBuilder").get(variant) as AndroidBuilder
-						println project.files(androidBuilder.getBootClasspath(true)).files
+						BaseVariantData variantData = (variant as BaseVariantImpl).variantData
+						println project.files(variantData.scope.getBootClasspath()).files
 						def mapJars = project.files(pg.inJarFiles)
 						def allJars = mapJars +
 								project.files(pg.libraryJarFiles) + 
-								project.files(androidBuilder.getBootClasspath(true))
+								project.files(variantData.scope.getBootClasspath())
 						ClassLoader loader = java.net.URLClassLoader.newInstance(allJars.toList()*.toURI()*.toURL() as URL[])
 						PrintWriter out = new PrintWriter(newMapping)
 						def output = { File source, String path, Class<?> clazz ->

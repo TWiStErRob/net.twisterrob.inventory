@@ -89,10 +89,6 @@ configurations.all { Configuration config ->
 // Resolve dependency conflicts
 configurations.all { Configuration config ->
 	config.resolutionStrategy {
-		// 1.0.2 (AGP) vs 1.0.3 (latest)
-		force("com.android.support:multidex:${VERSION_MULTIDEX}")
-		// 1.0.2 (AGP) vs 1.0.3 (latest)
-		force("com.android.support:multidex-instrumentation:${VERSION_MULTIDEX}")
 		// use latest version, hamcrest-junit refers to 4.12
 		force("junit:junit:${VERSION_JUNIT}")
 		// powermock refers to older

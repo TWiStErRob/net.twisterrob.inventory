@@ -26,7 +26,7 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 
 					// Used by net.twisterrob.android.test.DeviceUnlocker
 					adb("pm grant $packageName android.permission.DISABLE_KEYGUARD")
-					
+
 					// Used by org.junit.rules.TemporaryFolder (only required 26-29)
 					adb("pm grant $packageName android.permission.READ_EXTERNAL_STORAGE")
 					adb("pm grant $packageName android.permission.WRITE_EXTERNAL_STORAGE")
@@ -68,5 +68,6 @@ private fun runBeforeAndroidTest(
 }
 
 private fun IShellEnabledDevice.adb(cmd: String) {
+	//println("Executing `adb shell $cmd`")
 	executeShellCommand(cmd, NullOutputReceiver(), 0, MILLISECONDS)
 }
