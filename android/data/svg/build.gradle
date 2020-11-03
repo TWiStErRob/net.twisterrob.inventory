@@ -27,6 +27,11 @@ android {
 		multiDexEnabled = true
 		testInstrumentationRunner = "net.twisterrob.android.test.junit.AndroidJUnitRunner"
 	}
+	variantFilter { variant ->
+		if (variant.buildType.name == com.android.builder.core.BuilderConstants.RELEASE) {
+			variant.setIgnore(true)
+		}
+	}
 	buildTypes {
 		debug {
 			multiDexKeepProguard project(":android").file("src/androidTest/multidex.pro")
