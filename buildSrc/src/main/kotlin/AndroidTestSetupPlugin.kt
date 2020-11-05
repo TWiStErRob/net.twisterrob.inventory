@@ -1,8 +1,4 @@
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
-import com.android.builder.testing.ConnectedDeviceProvider
-import com.android.builder.testing.SimpleTestRunner
-import com.android.builder.testing.TestData
-import com.android.builder.testing.TestRunner
 import com.android.ddmlib.IShellEnabledDevice
 import com.android.ddmlib.NullOutputReceiver
 import net.twisterrob.gradle.androidApp
@@ -13,7 +9,10 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 
 class AndroidTestSetupPlugin : Plugin<Project> {
 
+	private lateinit var project: Project
+
 	override fun apply(project: Project) {
+		this.project = project
 		project.androidApp.testVariants.all {
 			connectedInstrumentTestProvider.configure {
 				runBeforeAndroidTest(this as DeviceProviderInstrumentTestTask) { packageName ->
@@ -37,6 +36,11 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 				}
 			}
 		}
+	}
+
+	private fun IShellEnabledDevice.adb(cmd: String) {
+		project.logger.info("Executing `adb shell $cmd`")
+		executeShellCommand(cmd, NullOutputReceiver(), 0, MILLISECONDS)
 	}
 }
 
@@ -65,9 +69,4 @@ private fun runBeforeAndroidTest(
 	// Replace the test runner factory to replace the test runner,
 	// which replaces RemoteAndroidTestRunner so the block can be injected at the actual execution.
 	task.replaceTestRunnerFactory(block)
-}
-
-private fun IShellEnabledDevice.adb(cmd: String) {
-	//println("Executing `adb shell $cmd`")
-	executeShellCommand(cmd, NullOutputReceiver(), 0, MILLISECONDS)
 }

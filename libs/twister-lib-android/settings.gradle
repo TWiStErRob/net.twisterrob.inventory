@@ -24,6 +24,7 @@ includeWithTestHelpers(":about")
 includeWithTestHelpers(":capture_image")
 
 includeBuild("../twister-lib-java") { build ->
+	name = "twister-libs-java"
 	apply from: new File(build.projectDir, "settings.substitutions.gradle"), to: build
 }
 

@@ -2,7 +2,7 @@ group = 'net.twisterrob'
 version = '1.0'
 
 apply plugin: 'net.twisterrob.android-library'
-apply from: 'http://localhost/maven/configure.gradle'
+apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 
 dependencies {
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
@@ -29,7 +29,6 @@ dependencies {
 
 android {
 	defaultConfig {
-		multiDexEnabled true
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	lintOptions {

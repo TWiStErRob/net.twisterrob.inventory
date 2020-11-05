@@ -56,7 +56,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 					}
 				}
 			} else {
-				Log.w(TAG, "No android-logger.properties present in APK root, not using any substitutions.\nLogs coming from this logger will have tags like a*.b*.c**EndOfClassName.");
+				Log.w(TAG, "No android-logger.properties present in APK root, not using any substitutions.\n"
+						+ "See README.md in logging module for more info.");
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

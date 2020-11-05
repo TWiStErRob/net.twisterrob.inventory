@@ -5,7 +5,7 @@ apply plugin: 'idea'
 allprojects {
 	repositories {
 		jcenter()
-		maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+		maven { name = "twisterrob"; url = "http://localhost/maven"; allowInsecureProtocol = true }
 		//maven { name = 'sonatype'; url = 'http://oss.sonatype.org/content/repositories/snapshots' }
 		//maven { name = 'idescout'; url = 'http://www.idescout.com/maven/repo/' }
 	}

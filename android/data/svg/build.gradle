@@ -1,5 +1,5 @@
 apply plugin: "net.twisterrob.android-app"
-apply from: "http://localhost/maven/configure.gradle"
+apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 
 dependencies {
@@ -24,7 +24,6 @@ android {
 		version {
 			major = 1
 		}
-		multiDexEnabled = true
 		testInstrumentationRunner = "net.twisterrob.android.test.junit.AndroidJUnitRunner"
 	}
 	variantFilter { variant ->

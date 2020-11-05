@@ -1,7 +1,7 @@
 import com.android.build.gradle.api.AndroidSourceSet
 
 apply plugin: 'net.twisterrob.android-library'
-apply from: 'http://localhost/maven/configure.gradle'
+apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 
 dependencies {
 	api project(':android:database-contract')

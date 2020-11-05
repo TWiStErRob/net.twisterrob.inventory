@@ -2,7 +2,7 @@ buildscript {
 	repositories {
 		jcenter()
 		google()
-		maven { name = 'twisterrob'; url = 'http://localhost/maven' }
+		maven { name = "twisterrob"; url = "http://localhost/maven"; allowInsecureProtocol = true }
 		maven { name = "Gradle libs (for Kotlin-DSL)"; url = "https://repo.gradle.org/gradle/libs-releases-local/" }
 	}
 	dependencies {
@@ -20,7 +20,7 @@ subprojects { project ->
 		it.resolutionStrategy.failOnVersionConflict()
 	}
 	apply plugin: 'net.twisterrob.java-library'
-	apply from: 'http://localhost/maven/configure.gradle'
+	apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 	apply from: rootProject.file("gradle/substitutions.gradle")
 	dependencies {
 		apply from: "${rootDir}/gradle/testCompile.gradle", to: project

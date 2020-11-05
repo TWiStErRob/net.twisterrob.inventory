@@ -3,9 +3,8 @@ import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.api.ApplicationVariantImpl
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import com.android.build.gradle.internal.test.report.*
+import com.android.build.gradle.internal.testing.*
 import com.android.build.gradle.internal.variant.BaseVariantData
-import com.android.builder.internal.testing.CustomTestRunListener
-import com.android.builder.testing.*
 import com.android.builder.testing.api.DeviceConnector
 import com.android.ddmlib.IDevice
 import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
@@ -36,7 +35,7 @@ class UpgradeTestTask extends DefaultTask {
 		instrument.deviceProvider.terminate()
 
 		File testApk = debugVariant.testVariant.outputs.first().outputFile
-		logger.info("Unnstalling test package: ${debugVariant.testVariant.applicationId}")
+		logger.info("Uninstalling test package: ${debugVariant.testVariant.applicationId}")
 		realDevice.uninstallPackage(debugVariant.testVariant.applicationId)
 		logger.info("Installing test package: ${testApk}")
 		realDevice.installPackage(testApk.absolutePath, false, null)

@@ -1,8 +1,8 @@
 package net.twisterrob.gradle
 
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
-import com.android.builder.testing.SimpleTestRunner
-import com.android.builder.testing.TestData
+import com.android.build.gradle.internal.testing.SimpleTestRunner
+import com.android.build.gradle.internal.testing.TestData
 import com.android.builder.testing.api.DeviceConnector
 import com.android.ddmlib.IShellEnabledDevice
 import com.android.ddmlib.testrunner.ITestRunListener

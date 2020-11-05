@@ -2,7 +2,7 @@ group = 'net.twisterrob'
 version = '1.0'
 
 apply plugin: 'net.twisterrob.android-library'
-apply from: 'http://localhost/maven/configure.gradle'
+apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 
 dependencies {
 	api "net.twisterrob.lib:twister-lib-android-espresso"

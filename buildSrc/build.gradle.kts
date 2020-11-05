@@ -23,10 +23,6 @@ val VERSION_JUNIT: String by props
 dependencies {
 	//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
 	implementation("net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}")
-	// TODEL this should come from :plugin, but it is not transitive for some reason
-	// When changing this, make sure VERSION_TWISTER_GRADLE is in sync.
-	implementation("com.android.tools.build:gradle:3.6.4")
-	implementation("com.android.tools.build:builder:3.6.4")
 	implementation("net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}")
 
 	testImplementation("junit:junit:${VERSION_JUNIT}")
