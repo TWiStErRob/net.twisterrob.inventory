@@ -32,7 +32,7 @@ public abstract class BaseApp extends android.app.Application {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseApp.class);
 
 	private static BaseApp s_instance;
-	private boolean BuildConfigDEBUG;
+	private final boolean BuildConfigDEBUG;
 	/**
 	 * android.database.DatabaseTools.dumpCursor(net.twisterrob.inventory.android.
 	 * App.db().getReadableDatabase().rawQuery("select * from sqlite_sequence;", null));
@@ -40,7 +40,7 @@ public abstract class BaseApp extends android.app.Application {
 	private Object database;
 	private final CountDownLatch databaseWaiter = new CountDownLatch(1);
 	private ResourcePreferences prefs;
-	private int preferencesResource;
+	private final int preferencesResource;
 
 	public BaseApp(boolean debugMode, @XmlRes int preferences) {
 		synchronized (BaseApp.class) {

@@ -8,7 +8,11 @@
 			android:name="net.twisterrob.android.activity.AboutActivity"
 			android:label="@string/about_title"
 			android:exported="false"
-			/>
+			>
+			<meta-data
+				android:name="net.twisterrob.android.about.email"
+				android:value="feedback@twisterrob.net" />
+		</activity>
 
 	</application>
 

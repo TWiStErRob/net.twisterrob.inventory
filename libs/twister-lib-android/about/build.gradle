@@ -23,7 +23,3 @@ android {
 		tasks.lint.enabled = false
 	}
 }
-
-afterEvaluate {
-	project.tasks.withType(com.android.build.gradle.tasks.GenerateBuildConfig) { it.enabled = true }
-}

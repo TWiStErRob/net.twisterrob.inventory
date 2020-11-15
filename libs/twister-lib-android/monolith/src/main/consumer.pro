@@ -50,6 +50,3 @@
 
 ### bumptech/glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
-
-# TODO is this needed for AboutActivity?
-#-keep public class **.BuildConfig

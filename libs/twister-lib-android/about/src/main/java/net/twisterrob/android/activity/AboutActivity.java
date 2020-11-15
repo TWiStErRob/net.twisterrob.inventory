@@ -26,10 +26,10 @@ import static android.widget.ArrayAdapter.*;
 
 import net.twisterrob.android.about.R;
 import net.twisterrob.android.utils.tools.ViewTools;
-import net.twisterrob.java.utils.ReflectionTools;
 
 public class AboutActivity extends ListActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(AboutActivity.class);
+	private static final String META_EXTRA_KEY_EMAIL = "net.twisterrob.android.about.email";
 
 	private CharSequence[] licenseContents;
 
@@ -154,10 +154,11 @@ public class AboutActivity extends ListActivity {
 		about.appLabel = appInfo.labelRes != 0? getResources().getString(appInfo.labelRes) : null;
 		about.appIcon = appInfo.loadIcon(app.getPackageManager());
 		about.applicationId = app.getPackageName();
-		String buildConfigClass = app.getClass().getPackage().getName() + ".BuildConfig";
-		about.email = ReflectionTools.getStatic(buildConfigClass, "EMAIL");
-		if (about.email == null) {
-			about.email = net.twisterrob.android.about.BuildConfig.EMAIL; // library's fallback
+		try {
+			ActivityInfo activityInfo = app.getPackageManager().getActivityInfo(this.getComponentName(), PackageManager.GET_META_DATA);
+			about.email = activityInfo.metaData.getString(META_EXTRA_KEY_EMAIL);
+		} catch (NameNotFoundException ex) {
+			throw new IllegalStateException("Cannot find information about the application.", ex);
 		}
 
 		PackageInfo pkgInfo;
