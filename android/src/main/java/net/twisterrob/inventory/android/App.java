@@ -14,6 +14,7 @@ import android.os.StrictMode.ThreadPolicy;
 import android.support.annotation.*;
 import android.text.TextUtils;
 
+import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.app.BaseApp;
 import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.*;
@@ -27,6 +28,7 @@ public class App extends BaseApp implements BaseComponent.Provider {
 
 	public App() {
 		super(BuildConfig.DEBUG, R.xml.preferences);
+		ResourceCursorAdapterWithHolder.devMode = BuildConfig.DEBUG;
 	}
 
 	public static @NonNull App getInstance() {

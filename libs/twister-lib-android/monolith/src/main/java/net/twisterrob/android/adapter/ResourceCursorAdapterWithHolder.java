@@ -7,9 +7,9 @@ import android.os.Build.*;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.*;
 
-import net.twisterrob.android.BuildConfig;
-
 public abstract class ResourceCursorAdapterWithHolder<VH> extends ResourceCursorAdapter {
+	public static boolean devMode = false;
+
 	/** @deprecated {@link ResourceCursorAdapter#ResourceCursorAdapter(android.content.Context, int, android.database.Cursor, boolean)} */
 	@SuppressWarnings("deprecation")
 	@Deprecated
@@ -40,7 +40,7 @@ public abstract class ResourceCursorAdapterWithHolder<VH> extends ResourceCursor
 			VH holder = (VH)view.getTag();
 			bindView(holder, cursor, view);
 		} catch (RuntimeException ex) {
-			if (BuildConfig.DEBUG) {
+			if (devMode) {
 				try {
 					DatabaseUtils.dumpCurrentRow(cursor);
 				} catch (RuntimeException e) {
