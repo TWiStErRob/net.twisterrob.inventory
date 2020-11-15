@@ -1,7 +1,7 @@
 buildscript {
 	repositories {
-		jcenter()
 		google()
+		jcenter()
 		maven { name = "twisterrob"; url = "http://localhost/maven"; allowInsecureProtocol = true }
 		maven { name = "Gradle libs (for Kotlin-DSL)"; url = "https://repo.gradle.org/gradle/libs-releases-local/" }
 	}
@@ -13,6 +13,7 @@ buildscript {
 
 subprojects { Project project ->
 	project.repositories {
+		google()
 		jcenter()
 	}
 	project.configurations.all {

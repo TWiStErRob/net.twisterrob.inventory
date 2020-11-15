@@ -4,6 +4,7 @@ apply plugin: 'idea'
 
 allprojects {
 	repositories {
+		google()
 		jcenter()
 		maven { name = "twisterrob"; url = "http://localhost/maven"; allowInsecureProtocol = true }
 		//maven { name = 'sonatype'; url = 'http://oss.sonatype.org/content/repositories/snapshots' }
