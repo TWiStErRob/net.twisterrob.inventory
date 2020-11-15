@@ -2,7 +2,7 @@ apply plugin: 'net.twisterrob.android-library'
 apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 
 dependencies {
-	//configurations.implementation.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+	configurations["implementation"].resolutionStrategy.cacheChangingModulesFor(0, "seconds") // -SNAPSHOT
 	implementation 'net.twisterrob.lib:twister-lib-general'
 	implementation 'net.twisterrob.lib:twister-lib-android-defs'
 	implementation 'net.twisterrob.lib:twister-lib-android-logging'

@@ -21,7 +21,7 @@ val VERSION_TWISTER_QUALITY: String by props
 val VERSION_JUNIT: String by props
 
 dependencies {
-	//configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds' // -SNAPSHOT
+	configurations["implementation"].resolutionStrategy.cacheChangingModulesFor(0, "seconds") // -SNAPSHOT
 	implementation("net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}")
 	implementation("net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}")
 
