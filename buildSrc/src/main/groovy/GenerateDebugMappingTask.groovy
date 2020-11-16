@@ -6,7 +6,7 @@ import org.gradle.api.*
 import proguard.gradle.ProGuardTask
 
 // Currently not used, this version was just a test to try to generate a mapping from *.jar/**/*.class files
-@SuppressWarnings("UnnecessaryQualifiedReference")
+@SuppressWarnings(["UnnecessaryQualifiedReference", "GrDeprecatedAPIUsage"])
 class GenerateDebugMappingPlugin implements Plugin<Project> {
 
 	@Override void apply(Project project) {
@@ -25,11 +25,11 @@ class GenerateDebugMappingPlugin implements Plugin<Project> {
 						println project.files(pg.inJarFiles).files
 						println project.files(pg.libraryJarFiles).files
 						BaseVariantData variantData = (variant as BaseVariantImpl).variantData
-						println project.files(variantData.scope.getBootClasspath()).files
+						println project.files(variantData.globalScope.getBootClasspath()).files
 						def mapJars = project.files(pg.inJarFiles)
 						def allJars = mapJars +
 								project.files(pg.libraryJarFiles) + 
-								project.files(variantData.scope.getBootClasspath())
+								project.files(variantData.globalScope.getBootClasspath())
 						ClassLoader loader = java.net.URLClassLoader.newInstance(allJars.toList()*.toURI()*.toURL() as URL[])
 						PrintWriter out = new PrintWriter(newMapping)
 						def output = { File source, String path, Class<?> clazz ->

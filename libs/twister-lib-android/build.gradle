@@ -22,13 +22,15 @@ subprojects { Project project ->
 	}
 	project.apply from: rootProject.file("gradle/substitutions.gradle"), to: project
 
+	project.plugins.withId("net.twisterrob.android-library") {
+		project.android.buildFeatures.buildConfig = false
+		project.android.twisterrob.decorateBuildConfig = false
+	}
 	project.afterEvaluate {
 		project.android.compileSdkVersion = 28
 		project.android.defaultConfig.minSdkVersion = 14
 		project.android.lintOptions.lintConfig = rootProject.file("config/lint/lint.xml")
 		project.android.lintOptions.baseline rootProject.file("config/lint/lint-baseline-${project.name}.xml")
-		project.tasks.withType(com.android.build.gradle.tasks.GenerateBuildConfig) { it.enabled = false }
-		project.tasks.withType(net.twisterrob.gradle.android.tasks.DecorateBuildConfigTask) { it.enabled = false }
 
 		com.android.build.gradle.api.AndroidSourceSet androidTest = project.android.sourceSets.androidTest
 		if (androidTest.java.sourceFiles.empty) {

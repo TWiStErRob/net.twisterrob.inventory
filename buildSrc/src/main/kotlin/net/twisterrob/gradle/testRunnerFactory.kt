@@ -2,7 +2,7 @@ package net.twisterrob.gradle
 
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import com.android.build.gradle.internal.testing.SimpleTestRunner
-import com.android.build.gradle.internal.testing.TestData
+import com.android.build.gradle.internal.testing.StaticTestData
 import com.android.builder.testing.api.DeviceConnector
 import com.android.ddmlib.IShellEnabledDevice
 import com.android.ddmlib.testrunner.ITestRunListener
@@ -40,6 +40,7 @@ fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDevi
 		replaceTestRunnerFactory(this.testRunnerFactory, this.executorServiceAdapter, configure)
 }
 
+@Suppress("PrivateApi") // REPORT Android lint false positive, nothing to do with buildSrc.
 private fun replaceTestRunnerFactory(
 	originalFactory: TestRunnerFactory,
 	executor: ExecutorServiceAdapter,
@@ -75,7 +76,7 @@ private class ConfiguringTestRunner(
 ) : SimpleTestRunner(splitSelectExec, processExecutor, executor) {
 
 	override fun createRemoteAndroidTestRunner(
-		testData: TestData,
+		testData: StaticTestData,
 		@Suppress("UnstableApiUsage") device: DeviceConnector
 	): RemoteAndroidTestRunner =
 		ConfiguringRemoteAndroidTestRunner(

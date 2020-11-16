@@ -452,11 +452,11 @@ public class MainActivity extends DrawerActivity
 	}
 
 	@SuppressLint("WrongThreadInterprocedural")
-	public static Intent improveCategories(Context context, Long categoryId) {
+	private static Intent improveCategories(Context context, @NonNull String email, Long categoryId) {
 		String subject = context.getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME + " Category Feedback";
 		Intent intent = new Intent(Intent.ACTION_VIEW)
 				.setData(Uri.parse("mailto:"))
-				.putExtra(Intent.EXTRA_EMAIL, new String[] {BuildConfig.EMAIL})
+				.putExtra(Intent.EXTRA_EMAIL, new String[] {email})
 				.putExtra(Intent.EXTRA_SUBJECT, subject);
 		String text = "How can we improve the Categories?";
 		if (categoryId != null) {
@@ -467,11 +467,12 @@ public class MainActivity extends DrawerActivity
 		return intent;
 	}
 	public static void startImproveCategories(Context context, Long categoryId) {
+		String email = "feedback@twisterrob.net";
 		try {
-			context.startActivity(improveCategories(context, categoryId));
+			context.startActivity(improveCategories(context, email, categoryId));
 		} catch (ActivityNotFoundException ex) {
 			LOG.warn("Cannot start feedback intent", ex);
-			App.toastUser(context.getString(R.string.about_feedback_fail, BuildConfig.EMAIL));
+			App.toastUser(context.getString(R.string.about_feedback_fail, email));
 		}
 	}
 

@@ -45,7 +45,7 @@ public class App extends BaseApp implements BaseComponent.Provider {
 
 	@Override protected void safeOnCreate() {
 		super.safeOnCreate();
-		Pic.init(this);
+		Pic.init(this, BuildConfig.VERSION_NAME);
 	}
 
 	@Override public void onStart() {

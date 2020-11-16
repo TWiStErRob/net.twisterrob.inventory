@@ -19,6 +19,7 @@ class UpgradeTestTask extends DefaultTask {
 	}
 
 	@TaskAction
+	@SuppressWarnings('GrDeprecatedAPIUsage')
 	def upgradeTest() {
 		def android = project.extensions.findByName("android") as AppExtension
 		def debugVariant = android
@@ -41,8 +42,8 @@ class UpgradeTestTask extends DefaultTask {
 		realDevice.installPackage(testApk.absolutePath, false, null)
 
 		BaseVariantData data = debugVariant.variantData
-		def results = new File(data.scope.globalScope.testResultsFolder, 'upgrade-tests')
-		def reports = new File(data.scope.globalScope.reportsDir, 'upgrade-tests')
+		def results = new File(data.globalScope.testResultsFolder, 'upgrade-tests')
+		def reports = new File(data.globalScope.reportsDir, 'upgrade-tests')
 		FileUtils.cleanOutputDir(results)
 		FileUtils.cleanOutputDir(reports)
 		def testListener = new TestAwareCustomTestRunListener(
@@ -93,7 +94,7 @@ class UpgradeTestTask extends DefaultTask {
 			TestAwareCustomTestRunListener runListener, File results, String test) {
 		runListener.test = test
 		// from com.android.builder.internal.testing.SimpleTestCallable#call
-		def runner = new RemoteAndroidTestRunner(testData.applicationId, testData.instrumentationRunner, device)
+		def runner = new RemoteAndroidTestRunner(testData.applicationId.get(), testData.instrumentationRunner.get(), device)
 		for (Map.Entry<String, String> argument : testData.instrumentationRunnerArguments.entrySet()) {
 			runner.addInstrumentationArg(argument.getKey(), argument.getValue())
 		}

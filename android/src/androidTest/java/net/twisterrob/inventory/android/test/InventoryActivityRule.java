@@ -16,6 +16,7 @@ import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Database;
 
@@ -131,6 +132,6 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		Context context = InstrumentationRegistry.getTargetContext();
 		GlideResetter.resetGlide(context);
 		// recreate internal Glide wrapper
-		Constants.Pic.init(context);
+		Constants.Pic.init(context, BuildConfig.VERSION_NAME);
 	}
 }

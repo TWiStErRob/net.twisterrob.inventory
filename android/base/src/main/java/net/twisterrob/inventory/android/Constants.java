@@ -131,11 +131,11 @@ public interface Constants {
 		private final DrawableRequestBuilder<Integer> svgRequest;
 		private final DrawableRequestBuilder<Integer> svgRequestTinted;
 
-		private Pic(Context context) {
+		private Pic(@NonNull Context context, @NonNull String versionName) {
 			context = context.getApplicationContext();
 			DrawableRequestBuilder<Integer> baseSvgRequest = baseRequest(Integer.class, context)
 					.dontAnimate()
-					.signature(new StringSignature(BuildConfig.VERSION_NAME))
+					.signature(new StringSignature(versionName))
 					.priority(Priority.HIGH)
 					.decoder(getSvgDecoder(context));
 			if (DISABLE && BuildConfig.DEBUG) {
@@ -191,8 +191,8 @@ public interface Constants {
 		public static ColorFilter tint() {
 			return instance.tintFilter;
 		}
-		public static void init(Context context) {
-			instance = new Pic(context);
+		public static void init(@NonNull Context context, @NonNull String versionName) {
+			instance = new Pic(context, versionName);
 		}
 
 		private <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz, Context context) {
