@@ -10,8 +10,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-import androidx.test.rule.ActivityTestRule;
-
 import static androidx.test.core.app.ApplicationProvider.*;
 
 import net.twisterrob.android.about.R;
@@ -24,7 +22,9 @@ import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 //@Category(On.Support.class)
 public class AboutActivityTest {
-	@Rule public final ActivityTestRule<AboutActivity> activity = new SensibleActivityTestRule<>(AboutActivity.class);
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<AboutActivity> activity =
+			new SensibleActivityTestRule<>(AboutActivity.class);
 	private final AboutActivityActor about = new AboutActivityActor();
 
 //	@Category({Op.Rotates.class})

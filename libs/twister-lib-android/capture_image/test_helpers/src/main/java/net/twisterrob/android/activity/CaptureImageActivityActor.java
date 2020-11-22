@@ -24,7 +24,6 @@ import androidx.annotation.*;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.*;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import static androidx.test.espresso.Espresso.*;
@@ -103,14 +102,14 @@ public class CaptureImageActivityActor extends ActivityActor {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void assertFlashOn(ActivityTestRule<CaptureImage> activity) {
+	public void assertFlashOn(@NonNull androidx.test.rule.ActivityTestRule<CaptureImage> activity) {
 		// TODO check drawable
 		onView(withId(R.id.btn_flash)).check(matches(isChecked()));
 		assertFlashMode(activity, android.hardware.Camera.Parameters.FLASH_MODE_ON);
 	}
 
 	@SuppressWarnings("deprecation")
-	public void assertFlashOff(ActivityTestRule<CaptureImage> activity) {
+	public void assertFlashOff(@NonNull androidx.test.rule.ActivityTestRule<CaptureImage> activity) {
 		// TODO check drawable
 		onView(withId(R.id.btn_flash)).check(matches(isNotChecked()));
 		assertFlashMode(activity, android.hardware.Camera.Parameters.FLASH_MODE_OFF);
@@ -125,7 +124,8 @@ public class CaptureImageActivityActor extends ActivityActor {
 	}
 
 	private static void assertFlashMode(
-			@NonNull ActivityTestRule<CaptureImage> activityRule,
+			@SuppressWarnings("deprecation")
+			@NonNull androidx.test.rule.ActivityTestRule<CaptureImage> activityRule,
 			@Nullable String expectedMode
 	) {
 		// Wait in case there's an Activity recreation in progress, e.g. after a rotation.

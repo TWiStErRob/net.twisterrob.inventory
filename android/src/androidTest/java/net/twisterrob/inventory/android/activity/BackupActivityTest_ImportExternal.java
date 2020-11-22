@@ -6,7 +6,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import net.twisterrob.android.test.junit.IdlingResourceRule;
@@ -18,9 +17,15 @@ import net.twisterrob.inventory.android.test.categories.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Import.class, On.External.class})
 public class BackupActivityTest_ImportExternal {
-	@Rule public final ActivityTestRule<BackupActivity> activity = new InventoryActivityRule<>(BackupActivity.class);
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<BackupActivity> activity =
+			new InventoryActivityRule<>(BackupActivity.class);
+
 	@Rule public final TemporaryFolder temp = new TemporaryFolder();
+
 	@Rule public final IdlingResourceRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
+
 	private final BackupActivityActor backup = new BackupActivityActor();
 
 	@Before public void assertBackupActivityIsClean() throws UiObjectNotFoundException {

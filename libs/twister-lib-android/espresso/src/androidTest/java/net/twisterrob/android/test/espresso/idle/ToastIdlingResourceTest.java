@@ -17,7 +17,6 @@ import androidx.test.espresso.IdlingResource.ResourceCallback;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
@@ -35,7 +34,10 @@ public class ToastIdlingResourceTest {
 	// com.android.server.notification.NotificationManagerService#SHORT_DELAY
 	private static final long SHORT_DELAY = 2000;
 
-	@Rule public final ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<TestActivity> activity =
+			new TestPackageIntentRule<>(TestActivity.class);
+
 	private final ToastIdlingResource idler = new ToastIdlingResource();
 	private final Collection<Toast> toasts = new ArrayList<>();
 	private final TransitionRecorder callback = new TransitionRecorder();

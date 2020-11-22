@@ -23,7 +23,6 @@ import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.core.app.ApplicationProvider.*;
 import static androidx.test.espresso.Espresso.*;
@@ -84,9 +83,12 @@ public class UpgradeTests {
 	private static final String IMPORT_FILE = "data.zip";
 	public static final String LAUNCH_KEY = "upgrade";
 
-	@Rule public final ActivityTestRule<CompatibleLauncher> activity =
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<CompatibleLauncher> activity =
 			new TestPackageIntentRule<>(CompatibleLauncher.class);
+
 	@Rule public final IdlingResourceRule drawer = DrawerIdlingResource.rule();
+
 	private File downloads;
 	private File db;
 

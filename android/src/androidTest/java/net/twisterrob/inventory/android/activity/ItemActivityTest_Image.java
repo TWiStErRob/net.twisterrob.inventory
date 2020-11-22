@@ -11,7 +11,6 @@ import static org.hamcrest.Matchers.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
 import net.twisterrob.inventory.android.content.*;
@@ -26,8 +25,9 @@ public class ItemActivityTest_Image {
 	@Rule public final TemporaryFolder temp = new TemporaryFolder();
 	@Rule public final TestName name = new TestName();
 
-	@Rule public final ActivityTestRule<RoomViewActivity> activity
-			= new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class) {
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<RoomViewActivity> activity =
+			new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();
 			long propertyID = db.createProperty(TEST_PROPERTY);

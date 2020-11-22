@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.*;
 import androidx.test.espresso.base.DefaultFailureHandler;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.android.test.junit.AndroidJUnitRunner.DetailedFailureHandler;
 import net.twisterrob.inventory.android.test.activity.TestActivity;
@@ -18,7 +17,10 @@ import net.twisterrob.inventory.android.test.activity.TestActivity;
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
 public class DetailedFailureHandlerTest {
-	@Rule public ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<TestActivity> activity =
+			new TestPackageIntentRule<>(TestActivity.class);
 
 	@Test public void testNoActivityResumedExceptionHasRealCause() {
 		DefaultFailureHandler defaultHandler = new DefaultFailureHandler(ApplicationProvider.getApplicationContext());

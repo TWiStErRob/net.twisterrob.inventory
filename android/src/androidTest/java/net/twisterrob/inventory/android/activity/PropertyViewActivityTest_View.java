@@ -10,7 +10,6 @@ import android.content.Intent;
 
 import androidx.annotation.StringRes;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.PropertyViewActivity;
@@ -24,7 +23,9 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Property.class})
 public class PropertyViewActivityTest_View {
-	@Rule public final ActivityTestRule<PropertyViewActivity> activity
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<PropertyViewActivity> activity
 			= new InventoryActivityRule<PropertyViewActivity>(PropertyViewActivity.class, false, false) {
 		@Override protected void setDefaults() {
 			super.setDefaults();

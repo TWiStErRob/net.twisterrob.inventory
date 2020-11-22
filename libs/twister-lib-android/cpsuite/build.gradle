@@ -10,7 +10,7 @@ dependencies {
 	}
 	implementation "junit:junit:${VERSION_JUNIT}"
 	implementation "androidx.test:runner:${VERSION_ESPRESSO_RUNNER}"
-	implementation "androidx.test.ext:junit:${VERSION_ESPRESSO_RUNNER}"
+	implementation "androidx.test.ext:junit:${VERSION_ESPRESSO_JUNIT}"
 }
 
 android {

@@ -2,22 +2,24 @@ package net.twisterrob.android.adapter;
 
 import java.util.*;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.*;
 
 public class StaticFragmentPagerAdapter extends FragmentPagerAdapter {
 	private final List<Fragment> fragments = new ArrayList<>();
 	private final List<String> fragmentTitles = new ArrayList<>();
-	public StaticFragmentPagerAdapter(FragmentManager manager) {
-		super(manager);
+
+	public StaticFragmentPagerAdapter(@NonNull FragmentManager manager) {
+		super(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 	}
 
-	public <T extends Fragment> T add(String title, T fragment) {
+	public <T extends Fragment> T add(@NonNull String title, @NonNull T fragment) {
 		fragments.add(fragment);
 		fragmentTitles.add(title);
 		return fragment;
 	}
 
-	@Override public Fragment getItem(int position) {
+	@Override public @NonNull Fragment getItem(int position) {
 		return fragments.get(position);
 	}
 
@@ -25,7 +27,7 @@ public class StaticFragmentPagerAdapter extends FragmentPagerAdapter {
 		return fragments.size();
 	}
 
-	@Override public CharSequence getPageTitle(int position) {
+	@Override public @NonNull CharSequence getPageTitle(int position) {
 		return fragmentTitles.get(position);
 	}
 }

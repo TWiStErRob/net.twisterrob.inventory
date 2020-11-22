@@ -5,7 +5,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
@@ -17,7 +16,11 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Property.class})
 public class MainActivityTest_Properties {
-	@Rule public final ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class);
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<MainActivity> activity =
+			new InventoryActivityRule<>(MainActivity.class);
+
 	private final MainActivityActor main = new MainActivityActor();
 	private PropertiesNavigator properties;
 

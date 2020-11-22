@@ -5,7 +5,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.activity.data.ItemEditActivity;
 import net.twisterrob.inventory.android.content.*;
@@ -18,7 +17,9 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Item.class, Op.EditsBelonging.class})
 public class ItemEditActivityTest_Edit {
-	@Rule public final ActivityTestRule<ItemEditActivity> activity
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<ItemEditActivity> activity
 			= new InventoryActivityRule<ItemEditActivity>(ItemEditActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();

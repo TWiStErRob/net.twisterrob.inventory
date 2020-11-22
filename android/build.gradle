@@ -22,9 +22,11 @@ dependencies {
 	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j')
 
 	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
+	implementation "androidx.localbroadcastmanager:localbroadcastmanager:${VERSION_ANDROIDX_BROADCAST}"
 	implementation "androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}"
 	implementation "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
 	implementation "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
+	implementation "androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_ANDROIDX_SWIPEREFRESHLAYOUT}"
 	implementation "com.google.android:flexbox:${VERSION_FLEXBOX}"
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 

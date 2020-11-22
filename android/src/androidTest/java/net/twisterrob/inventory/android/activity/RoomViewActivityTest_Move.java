@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.android.test.espresso.DialogMatchers;
 import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
@@ -21,7 +20,9 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Room.class, Op.MovesBelonging.class})
 public class RoomViewActivityTest_Move {
-	@Rule public final ActivityTestRule<RoomViewActivity> activity
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<RoomViewActivity> activity
 			= new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();

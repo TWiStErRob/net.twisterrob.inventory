@@ -7,6 +7,8 @@ dependencies {
 	implementation "androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}"
 	compileOnly "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
 	implementation "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
+	implementation "androidx.annotation:annotation-experimental:${VERSION_ANDROIDX_ANNOTATION_EXPERIMENTAL}"
+	implementation "androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_ANDROIDX_SWIPEREFRESHLAYOUT}"
 
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-java"

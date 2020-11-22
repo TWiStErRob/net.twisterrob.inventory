@@ -41,13 +41,20 @@ dependencies {
 //		androidTestImplementation 'com.google.dexmaker:dexmaker:1.0'
 		// Android JUnit Runner
 		androidTestImplementation "androidx.test:runner:${VERSION_ESPRESSO_RUNNER}"
-		androidTestImplementation "androidx.test.ext:junit:${VERSION_ESPRESSO_RUNNER}"
+		androidTestImplementation "androidx.test.ext:junit:${VERSION_ESPRESSO_JUNIT}"
 		androidTestImplementation "androidx.test:rules:${VERSION_ESPRESSO_RUNNER}"
 
 		// Espresso core
 		androidTestImplementation "androidx.test.espresso:espresso-core:${VERSION_ESPRESSO}"
 		// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
-		androidTestImplementation("androidx.test.espresso:espresso-contrib:${VERSION_ESPRESSO}")
+		androidTestImplementation "androidx.test.espresso:espresso-contrib:${VERSION_ESPRESSO}"
+		// Make sure to bump the version coming transitively from Espresso to the one used by the project.
+		// Resolves
+		// > :processDebugAndroidTestManifest
+		// > [androidx.vectordrawable:vectordrawable-animated:1.0.0]
+		// > P:\caches\gradle\caches\transforms-2\files-2.1\54c0e3e3a1f93b71f3e9e8caba1f6095\vectordrawable-animated-1.0.0\AndroidManifest.xml
+		// > Warning: Package name 'androidx.vectordrawable' used in: androidx.vectordrawable:vectordrawable-animated:1.0.0, androidx.vectordrawable:vectordrawable:1.0.0.
+		androidTestImplementation "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
 		// Espresso-accessibility for automatic checking (not used yet)
 		// TODO AccessibilityChecks.enable()
 		//androidTestImplementation "androidx.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
@@ -59,8 +66,8 @@ dependencies {
 		// Espresso-idling-resource for synchronization with background jobs
 		androidTestImplementation "androidx.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
 		// CONSIDER using these with Glide
-		androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
-		androidTestImplementation "androidx.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
+		//androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
+		//androidTestImplementation "androidx.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
 
 		// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
 		androidTestImplementation "androidx.test.uiautomator:uiautomator:${VERSION_ESPRESSO_UIAUTOMATOR}"

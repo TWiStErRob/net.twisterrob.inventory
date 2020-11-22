@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
@@ -19,7 +18,9 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest_Search {
-	@Rule public final ActivityTestRule<MainActivity> activity
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<MainActivity> activity
 			= new InventoryActivityRule<MainActivity>(MainActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();

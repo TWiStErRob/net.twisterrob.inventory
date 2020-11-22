@@ -14,7 +14,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.drawerlayout.widget.DrawerLayout.*;
 import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.lifecycle.Stage;
 
 import static androidx.test.espresso.matcher.ViewMatchers.*;
@@ -105,14 +104,16 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 	 * <p><i>Note: this is not viable if the test rotates the activity
 	 * or for any other reason the activity may be re-created during test.</i></p>
 	 */
-	public static IdlingResourceRule rule(ActivityTestRule<?> activity) {
+	@SuppressWarnings("deprecation")
+	public static IdlingResourceRule rule(androidx.test.rule.ActivityTestRule<?> activity) {
 		return rule(new ActivityRuleDrawer(activity), GravityCompat.START);
 	}
 	/**
 	 * <p><i>Note: this is not viable if the test rotates the activity
 	 * or for any other reason the activity may be re-created during test.</i></p>
 	 */
-	public static IdlingResourceRule rule(ActivityTestRule<?> activity, @IdRes int drawerId) {
+	@SuppressWarnings("deprecation")
+	public static IdlingResourceRule rule(androidx.test.rule.ActivityTestRule<?> activity, @IdRes int drawerId) {
 		return rule(new ActivityRuleDrawerById(activity, drawerId), GravityCompat.START);
 	}
 	/**
@@ -165,9 +166,13 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 	}
 
 	public static class ActivityRuleDrawer implements ViewProvider {
-		private final ActivityTestRule<?> activity;
 
-		public ActivityRuleDrawer(ActivityTestRule<?> activity) {
+		@SuppressWarnings("deprecation")
+		private final androidx.test.rule.ActivityTestRule<?> activity;
+
+		public ActivityRuleDrawer(
+				@SuppressWarnings("deprecation") androidx.test.rule.ActivityTestRule<?> activity
+		) {
 			this.activity = activity;
 		}
 
@@ -189,10 +194,17 @@ public class DrawerIdlingResource extends AsyncIdlingResource {
 	}
 
 	public static class ActivityRuleDrawerById implements ViewProvider {
-		private final ActivityTestRule<?> activity;
+
+		@SuppressWarnings("deprecation")
+		private final @NonNull androidx.test.rule.ActivityTestRule<?> activity;
+
 		private final int drawerId;
 
-		public ActivityRuleDrawerById(ActivityTestRule<?> activity, @IdRes int drawerId) {
+		public ActivityRuleDrawerById(
+				@SuppressWarnings("deprecation")
+				@NonNull androidx.test.rule.ActivityTestRule<?> activity,
+				@IdRes int drawerId
+		) {
 			this.activity = activity;
 			this.drawerId = drawerId;
 		}

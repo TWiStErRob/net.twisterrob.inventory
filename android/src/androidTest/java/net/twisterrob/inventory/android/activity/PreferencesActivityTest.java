@@ -16,7 +16,6 @@ import android.net.Uri;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.*;
 
 import static androidx.test.core.app.ApplicationProvider.*;
@@ -31,7 +30,9 @@ import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 public class PreferencesActivityTest {
-	@Rule public final ActivityTestRule<PreferencesActivity> activity
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<PreferencesActivity> activity
 			= new InventoryActivityRule<>(PreferencesActivity.class);
 
 	private final PreferencesActivityActor prefs = new PreferencesActivityActor();

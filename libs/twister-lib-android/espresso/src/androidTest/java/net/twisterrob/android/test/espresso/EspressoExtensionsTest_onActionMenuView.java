@@ -25,7 +25,6 @@ import androidx.test.espresso.*;
 import androidx.test.espresso.base.InterruptableUiController;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.core.app.ApplicationProvider.*;
 import static androidx.test.espresso.action.ViewActions.*;
@@ -42,7 +41,10 @@ import static net.twisterrob.java.utils.ReflectionTools.*;
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = VERSION_CODES.HONEYCOMB)
 public class EspressoExtensionsTest_onActionMenuView {
-	@Rule public final ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<TestActivity> activity =
+			new TestPackageIntentRule<>(TestActivity.class);
 
 	private void verifyOversleepProtection(ThrowingRunnable actionThatTendsToOversleep)
 			throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {

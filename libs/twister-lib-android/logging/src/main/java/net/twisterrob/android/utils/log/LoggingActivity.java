@@ -359,6 +359,7 @@ public class LoggingActivity extends AppCompatActivity {
 		log("onNewIntent", intent);
 		super.onNewIntent(intent);
 	}
+	@SuppressWarnings("deprecation")
 	@Override public Object onRetainCustomNonConfigurationInstance() {
 		log("onRetainCustomNonConfigurationInstance");
 		return super.onRetainCustomNonConfigurationInstance();

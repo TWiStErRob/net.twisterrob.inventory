@@ -16,7 +16,6 @@ import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 
@@ -31,16 +30,20 @@ import static net.twisterrob.java.utils.CollectionTools.*;
 @Category({On.Export.class})
 public class BackupActivityTest_ExportInternal {
 
-	@Rule(order = 1) public final ActivityTestRule<BackupActivity> activity =
+	@SuppressWarnings("deprecation")
+	@Rule(order = 1) public final androidx.test.rule.ActivityTestRule<BackupActivity> activity =
 			new InventoryActivityRule<>(BackupActivity.class);
+
 	@Rule(order = 2) public final TestRule backupService =
 			new BackupServiceInBackupActivityIdlingRule(activity);
+
 	@Rule(order = 3) public final TemporaryFolder tempInHomeFolder = TemporaryFolder
 			.builder()
 			//.parentFolder(Paths.getPhoneHome()) // cannot work because it needs permission
 			.parentFolder(InstrumentationRegistry.getInstrumentation().getContext().getDir("temp", Context.MODE_PRIVATE))
 			.assureDeletion()
 			.build();
+
 	@Rule(order = 4) public final CheckExportedFiles files = new CheckExportedFiles();
 
 	private final BackupActivityActor backup = new BackupActivityActor();

@@ -15,7 +15,6 @@ import android.content.Intent;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.*;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
@@ -34,7 +33,8 @@ public class BackupActivityTest_ExportExternal {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_ExportExternal.class);
 
 	@Rule(order = 1) public final TestName testName = new TestName();
-	@Rule(order = 2) public final ActivityTestRule<BackupActivity> activity =
+	@SuppressWarnings("deprecation")
+	@Rule(order = 2) public final androidx.test.rule.ActivityTestRule<BackupActivity> activity =
 			new InventoryActivityRule<>(BackupActivity.class);
 	@Rule(order = 3) public final TestRule backupService = new BackupServiceInBackupActivityIdlingRule(activity);
 	@Rule(order = 4) public final TestRule sanityRule = new TestWatcher() {

@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.activity.data.PropertyViewActivity;
 import net.twisterrob.inventory.android.content.*;
@@ -21,7 +20,9 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Property.class, Op.DeletesBelonging.class})
 public class PropertyViewActivityTest_Delete {
-	@Rule public final ActivityTestRule<PropertyViewActivity> activity
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<PropertyViewActivity> activity
 			= new InventoryActivityRule<PropertyViewActivity>(PropertyViewActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();

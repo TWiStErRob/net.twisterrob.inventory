@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.action.ViewActions.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
@@ -25,7 +24,9 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Item.class, UseCase.Selection.class})
 public class ItemViewActivityTest_Selection {
-	@Rule public final ActivityTestRule<ItemViewActivity> activity
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<ItemViewActivity> activity
 			= new InventoryActivityRule<ItemViewActivity>(ItemViewActivity.class) {
 		@Override protected void setDefaults() {
 			super.setDefaults();

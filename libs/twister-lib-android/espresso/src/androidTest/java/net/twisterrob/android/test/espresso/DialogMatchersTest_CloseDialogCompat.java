@@ -2,13 +2,13 @@ package net.twisterrob.android.test.espresso;
 
 import org.junit.Rule;
 
-import androidx.test.rule.ActivityTestRule;
-
 import net.twisterrob.android.test.junit.TestPackageIntentRule;
 import net.twisterrob.inventory.android.test.activity.TestActivityCompat;
 
 public class DialogMatchersTest_CloseDialogCompat extends DialogMatchersTest_CloseDialog {
-	@Rule public final ActivityTestRule<TestActivityCompat> activity =
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<TestActivityCompat> activity =
 			new TestPackageIntentRule<>(TestActivityCompat.class);
 
 	public DialogMatchersTest_CloseDialogCompat(

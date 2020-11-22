@@ -24,6 +24,43 @@
 # Note: the configuration keeps the entry point 'androidx.vectordrawable.graphics.drawable.VectorDrawableCompat$VPath { void setPathData(androidx.core.graphics.PathParser$PathDataNode[]); }', but not the descriptor class 'androidx.core.graphics.PathParser$PathDataNode'
 -dontnote androidx.core.graphics.PathParser$PathDataNode
 
+
+# Rules from core-1.3.2.aar/proguard.txt are triggering this:
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl { WindowInsetsCompat$BuilderImpl(androidx.core.view.WindowInsetsCompat); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl { void setSystemWindowInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl { void setSystemGestureInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl { void setMandatorySystemGestureInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl { void setTappableElementInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl { void setStableInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl { void setDisplayCutout(androidx.core.view.DisplayCutoutCompat); }', but not the descriptor class 'androidx.core.view.DisplayCutoutCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl20 { WindowInsetsCompat$BuilderImpl20(androidx.core.view.WindowInsetsCompat); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl20 { void setSystemWindowInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl29 { WindowInsetsCompat$BuilderImpl29(androidx.core.view.WindowInsetsCompat); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl29 { void setSystemWindowInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl29 { void setSystemGestureInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl29 { void setMandatorySystemGestureInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl29 { void setTappableElementInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl29 { void setStableInsets(androidx.core.graphics.Insets); }', but not the descriptor class 'androidx.core.graphics.Insets'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$BuilderImpl29 { void setDisplayCutout(androidx.core.view.DisplayCutoutCompat); }', but not the descriptor class 'androidx.core.view.DisplayCutoutCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl { WindowInsetsCompat$Impl(androidx.core.view.WindowInsetsCompat); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl20 { WindowInsetsCompat$Impl20(androidx.core.view.WindowInsetsCompat,android.view.WindowInsets); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl20 { WindowInsetsCompat$Impl20(androidx.core.view.WindowInsetsCompat,androidx.core.view.WindowInsetsCompat$Impl20); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl20 { WindowInsetsCompat$Impl20(androidx.core.view.WindowInsetsCompat,androidx.core.view.WindowInsetsCompat$Impl20); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat$Impl20'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl21 { WindowInsetsCompat$Impl21(androidx.core.view.WindowInsetsCompat,android.view.WindowInsets); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl21 { WindowInsetsCompat$Impl21(androidx.core.view.WindowInsetsCompat,androidx.core.view.WindowInsetsCompat$Impl21); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl21 { WindowInsetsCompat$Impl21(androidx.core.view.WindowInsetsCompat,androidx.core.view.WindowInsetsCompat$Impl21); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat$Impl21'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl28 { WindowInsetsCompat$Impl28(androidx.core.view.WindowInsetsCompat,android.view.WindowInsets); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl28 { WindowInsetsCompat$Impl28(androidx.core.view.WindowInsetsCompat,androidx.core.view.WindowInsetsCompat$Impl28); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl28 { WindowInsetsCompat$Impl28(androidx.core.view.WindowInsetsCompat,androidx.core.view.WindowInsetsCompat$Impl28); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat$Impl28'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl29 { WindowInsetsCompat$Impl29(androidx.core.view.WindowInsetsCompat,android.view.WindowInsets); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl29 { WindowInsetsCompat$Impl29(androidx.core.view.WindowInsetsCompat,androidx.core.view.WindowInsetsCompat$Impl29); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+# Note: the configuration keeps the entry point 'androidx.core.view.WindowInsetsCompat$Impl29 { WindowInsetsCompat$Impl29(androidx.core.view.WindowInsetsCompat,androidx.core.view.WindowInsetsCompat$Impl29); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat$Impl29'
+-dontnote androidx.core.view.WindowInsetsCompat$Impl*
+-dontnote androidx.core.view.WindowInsetsCompat$BuilderImpl*
+# Note: the configuration keeps the entry point 'androidx.core.view.ViewCompat$Api21Impl { androidx.core.view.WindowInsetsCompat computeSystemWindowInsets(android.view.View,androidx.core.view.WindowInsetsCompat,android.graphics.Rect); }', but not the descriptor class 'androidx.core.view.WindowInsetsCompat'
+-dontnote androidx.core.view.ViewCompat$Api*Impl
+
+
 # androidx-multidex:2.0.0 that came with AGP 3.5.4 -> 3.6.4 upgrade doesn't have a consumer proguard file.
 # Note: androidx.multidex.MultiDex$V14: can't find dynamically referenced class dalvik.system.DexPathList$Element
 -dontnote androidx.multidex.MultiDex$V14
@@ -37,12 +74,26 @@
 
 # REPORT GhostView is @hide
 # Note: androidx.transition.GhostViewApi21: can't find dynamically referenced class android.view.GhostView
--dontnote  androidx.transition.GhostViewApi21
+-dontnote androidx.transition.GhostViewApi21
+# Note: androidx.transition.GhostViewPlatform: can't find dynamically referenced class android.view.GhostView
+-dontnote androidx.transition.GhostViewPlatform
+
+
+# REPORT SystemProperties is @hide
+# Note: androidx.core.view.DisplayCompat: can't find dynamically referenced class android.os.SystemProperties
+-dontnote androidx.core.view.DisplayCompat
+
+
+# REPORT ActivityRecreator is @hide
+# Note: androidx.core.app.ActivityRecreator: can't find dynamically referenced class android.app.ActivityThread
+-dontnote androidx.core.app.ActivityRecreator
 
 
 # TODO why?
+# Note: androidx.core.graphics.TypefaceCompatApi21Impl: can't find dynamically referenced class android.graphics.FontFamily
 # Note: androidx.core.graphics.TypefaceCompatApi24Impl: can't find dynamically referenced class android.graphics.FontFamily
 # Note: androidx.core.graphics.TypefaceCompatApi26Impl: can't find dynamically referenced class android.graphics.FontFamily
+-dontnote androidx.core.graphics.TypefaceCompatApi21Impl
 -dontnote androidx.core.graphics.TypefaceCompatApi24Impl
 -dontnote androidx.core.graphics.TypefaceCompatApi26Impl
 

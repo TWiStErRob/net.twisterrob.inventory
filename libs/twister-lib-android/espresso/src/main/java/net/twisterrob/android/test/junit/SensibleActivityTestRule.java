@@ -12,7 +12,6 @@ import androidx.annotation.*;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.android.test.*;
 import net.twisterrob.android.test.espresso.ScreenshotFailure;
@@ -20,7 +19,8 @@ import net.twisterrob.android.test.espresso.idle.AllActivitiesDestroyedIdlingRes
 
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 
-public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRule<T> {
+@SuppressWarnings("deprecation")
+public class SensibleActivityTestRule<T extends Activity> extends androidx.test.rule.ActivityTestRule<T> {
 	private static final String TAG = "ActivityTestRule";
 
 	private final SystemAnimations systemAnimations;

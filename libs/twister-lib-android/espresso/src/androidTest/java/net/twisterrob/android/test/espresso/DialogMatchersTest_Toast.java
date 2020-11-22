@@ -35,7 +35,10 @@ import static net.twisterrob.test.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class DialogMatchersTest_Toast {
-	@Rule public final ActivityTestRule<TestActivity> activity = new TestPackageIntentRule<>(TestActivity.class);
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<TestActivity> activity =
+			new TestPackageIntentRule<>(TestActivity.class);
 
 	private Toast shownToast;
 

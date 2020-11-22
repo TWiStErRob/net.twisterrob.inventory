@@ -10,7 +10,6 @@ import android.content.Intent;
 
 import androidx.annotation.StringRes;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.RoomViewActivity;
@@ -24,7 +23,9 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Room.class})
 public class RoomViewActivityTest_View {
-	@Rule public final ActivityTestRule<RoomViewActivity> activity
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<RoomViewActivity> activity
 			= new InventoryActivityRule<RoomViewActivity>(RoomViewActivity.class, false, false) {
 		@Override protected void setDefaults() {
 			super.setDefaults();

@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import androidx.test.espresso.*;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
-import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
@@ -17,7 +16,11 @@ import net.twisterrob.inventory.android.test.categories.*;
 @RunWith(AndroidJUnit4.class)
 @Category({On.Main.class})
 public class MainActivityTest_Drawer {
-	@Rule public final ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class);
+
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<MainActivity> activity =
+			new InventoryActivityRule<>(MainActivity.class);
+
 	private final MainActivityActor main = new MainActivityActor();
 
 	@Before public void startup() {

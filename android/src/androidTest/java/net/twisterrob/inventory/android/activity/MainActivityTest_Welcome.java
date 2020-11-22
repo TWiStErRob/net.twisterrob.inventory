@@ -10,7 +10,6 @@ import android.view.View;
 
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.*;
 import static androidx.test.espresso.assertion.ViewAssertions.*;
@@ -34,8 +33,11 @@ public class MainActivityTest_Welcome {
 	private static final ViewAssertion EMPTY =
 			matches(allOf(isCompletelyDisplayed(), not(hasDescendant(notNullValue(View.class)))));
 
-	@Rule public ActivityTestRule<MainActivity> activity = new InventoryActivityRule<>(MainActivity.class)
-			.dontClearWelcomeFlag();
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<MainActivity> activity =
+			new InventoryActivityRule<>(MainActivity.class)
+					.dontClearWelcomeFlag();
+
 	private final MainActivityActor main = new MainActivityActor();
 
 	@Category({UseCase.InitialCondition.class})
