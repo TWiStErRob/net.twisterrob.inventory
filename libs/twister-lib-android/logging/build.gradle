@@ -12,9 +12,9 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-core"
 	implementation "net.twisterrob.lib:twister-lib-java"
 
-	compileOnly "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
-	compileOnly "com.google.android.material:material:${VERSION_SUPPORT}"
-	compileOnly "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
+	compileOnly "androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}"
+	compileOnly "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
+	compileOnly "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
 }
 
 android {

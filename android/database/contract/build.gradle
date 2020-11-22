@@ -2,6 +2,6 @@ apply plugin: 'net.twisterrob.android-library'
 apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 
 dependencies {
-	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
-	implementation "androidx.loader:loader:${VERSION_SUPPORT}"
+	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
+	implementation "androidx.loader:loader:${VERSION_ANDROIDX_LOADER}"
 }

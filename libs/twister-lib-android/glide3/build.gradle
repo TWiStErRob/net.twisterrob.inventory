@@ -17,8 +17,8 @@ dependencies {
 	compileOnly "net.twisterrob.lib:twister-lib-android-defs"
 	compileOnly "net.twisterrob.lib:twister-lib-android-stringers"
 
-	compileOnly "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
-	compileOnly "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
+	compileOnly "androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}"
+	compileOnly "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
 }
 
 android {

@@ -31,10 +31,10 @@ dependencies {
 	implementation "androidx.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 	// Espresso-idling-resource for synchronization with background jobs
 	implementation "androidx.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
-	implementation "androidx.multidex:multidex:2.0.0"
+	implementation "androidx.multidex:multidex:${VERSION_ANDROIDX_MULTIDEX}"
 
-	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
-	compileOnly "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
+	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
+	compileOnly "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
 
 	androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
 	androidTestRuntimeOnly "net.twisterrob.lib:twister-lib-android-slf4j"

@@ -15,7 +15,7 @@ dependencies {
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 	implementation "com.google.guava:guava:27.0.1-android"
 	// Call to Glide.with(Context) doesn't compile without seeing Glide.with(androidx.Fragment)
-	compileOnly "androidx.fragment:fragment:${VERSION_SUPPORT}"
+	compileOnly "androidx.fragment:fragment:${VERSION_ANDROIDX_FRAGMENT}"
 }
 
 android {

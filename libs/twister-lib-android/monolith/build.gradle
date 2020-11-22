@@ -9,10 +9,10 @@ dependencies {
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
 
-	compileOnly "androidx.fragment:fragment:${VERSION_SUPPORT}"
-	compileOnly "androidx.cardview:cardview:${VERSION_SUPPORT}"
-	compileOnly "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
-	compileOnly "com.google.android.material:material:${VERSION_SUPPORT}"
+	compileOnly "androidx.fragment:fragment:${VERSION_ANDROIDX_FRAGMENT}"
+	compileOnly "androidx.cardview:cardview:${VERSION_ANDROIDX_CARDVIEW}"
+	compileOnly "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
+	compileOnly "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
 	//implementation "androidx.palette:palette:+"
 
 	// FIXME @Deprecated, use Glide

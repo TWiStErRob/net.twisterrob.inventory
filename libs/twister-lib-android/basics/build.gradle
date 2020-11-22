@@ -7,10 +7,10 @@ apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gra
 dependencies {
 
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
-	api "androidx.annotation:annotation:${VERSION_SUPPORT}"
+	api "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
 	api "net.twisterrob.lib:twister-lib-android-defs"
-	compileOnly "androidx.fragment:fragment:${VERSION_SUPPORT}"
-	compileOnly "androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_SUPPORT}"
+	compileOnly "androidx.fragment:fragment:${VERSION_ANDROIDX_FRAGMENT}"
+	compileOnly "androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_ANDROIDX_SWIPEREFRESHLAYOUT}"
 }
 
 android {

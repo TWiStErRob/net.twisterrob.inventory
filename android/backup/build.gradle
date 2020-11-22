@@ -7,9 +7,9 @@ dependencies {
 	implementation project(':android:preferences')
 	implementation project(':android:data')
 
-	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
-	implementation "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
-	implementation "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
+	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
+	implementation "androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}"
+	implementation "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-general"

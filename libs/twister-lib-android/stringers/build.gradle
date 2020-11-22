@@ -5,9 +5,9 @@ apply plugin: 'net.twisterrob.android-library'
 apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 
 dependencies {
-	compileOnly "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
-	compileOnly "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
-	compileOnly "com.google.android.material:material:${VERSION_SUPPORT}"
+	compileOnly "androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}"
+	compileOnly "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
+	compileOnly "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-lib-collect"
 	implementation "net.twisterrob.lib:twister-lib-stringer"
