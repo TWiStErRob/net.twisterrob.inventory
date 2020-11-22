@@ -408,7 +408,7 @@ public class EspressoExtensions {
 	}
 
 	/**
-	 * @see <a href="https://code.google.com/p/android/issues/detail?id=199544">
+	 * @see <a href="https://issuetracker.google.com/issues/37078920">
 	 * perform(click()) is doing a long press randomly and causing tests to fail</a>
 	 */
 	private static void openActionBarOverflowOrOptionsMenuWithOversleepProtection() {

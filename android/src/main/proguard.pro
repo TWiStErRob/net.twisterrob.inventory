@@ -5,7 +5,7 @@
 #-dontoptimize
 #-optimizationpasses 2
 
-# TODEL See res/menu/search.xml and b.android.com/170471
+# TODEL See res/menu/search.xml and https://issuetracker.google.com/issues/37042902
 -keep class androidx.appcompat.widget.SearchView { <init>(...); }
 
 

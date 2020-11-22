@@ -78,7 +78,7 @@ public abstract class WrappingAdapter<VH extends RecyclerView.ViewHolder> extend
 		}
 
 		@Override public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-			// TOFIX No notifyItemRangeMoved method? http://b.android.com/125984
+			// TOFIX No notifyItemRangeMoved method? https://issuetracker.google.com/issues/37019697
 			notifyItemRangeChanged(fromPosition, toPosition + itemCount);
 		}
 	}

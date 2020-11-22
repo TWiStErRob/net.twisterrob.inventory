@@ -5,7 +5,7 @@ import androidx.fragment.app.DialogFragment;
 public class BaseDialogFragment extends DialogFragment {
 	@Override public void onDestroyView() {
 		// http://stackoverflow.com/questions/8235080/fragments-dialogfragment-and-screen-rotation
-		// https://code.google.com/p/android/issues/detail?id=17423
+		// https://issuetracker.google.com/issues/36929400
 		if (getDialog() != null && getRetainInstance()) {
 			getDialog().setDismissMessage(null);
 		}

@@ -8,7 +8,7 @@ import androidx.loader.content.AsyncTaskLoader;
 /**
  * Implementation of {@link AsyncTaskLoader} which contains all the resource juggling to behave nicely in the framework.
  * It's based on the application list sample at {@link android.content.AsyncTaskLoader} and {@link android.content.CursorLoader}.
- * @see <a href="https://code.google.com/p/android/issues/detail?id=14944">Honeycomb: initLoader() nor restartLoader() actually starts the loader</a>
+ * @see <a href="https://issuetracker.google.com/issues/36925900">Honeycomb: initLoader() nor restartLoader() actually starts the loader</a>
  * @param <D> the data type to be loaded
  */
 // CONSIDER post to http://stackoverflow.com/questions/10524667/android-asynctaskloader-doesnt-start-loadinbackground

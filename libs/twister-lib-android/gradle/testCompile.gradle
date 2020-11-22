@@ -58,7 +58,7 @@ dependencies {
 		// Espresso-accessibility for automatic checking (not used yet)
 		// TODO AccessibilityChecks.enable()
 		//androidTestImplementation "androidx.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
-		// disable web for now, because it has some conflicting Guava classes (http://b.android.com/187735)
+		// disable web for now, because it has some conflicting Guava classes (https://issuetracker.google.com/issues/37063389)
 		// Espresso-web for WebView support (not used yet)
 		//androidTestImplementation "androidx.test.espresso:espresso-web:${VERSION_ESPRESSO}"
 		// Espresso-intents for capturing Intents and mocking onActivityResult

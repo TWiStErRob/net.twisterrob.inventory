@@ -108,7 +108,7 @@ public class App extends BaseApp implements BaseComponent.Provider {
 		}
 	}
 
-	@SuppressWarnings("WrongThread") // TODEL http://b.android.com/207302
+	@SuppressWarnings("WrongThread") // TODEL https://issuetracker.google.com/issues/37094658
 	@Override public void onTerminate() {
 		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 		try {

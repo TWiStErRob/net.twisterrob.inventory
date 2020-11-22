@@ -39,7 +39,7 @@
 		<ignore path="res/values/strings_about.xml" />
 	</issue>
 	<issue id="SelectableText">
-		<!-- TODEL SelectableText lint check ignores style: http://b.android.com/57866 / https://issuetracker.google.com/issues/76458990 -->
+		<!-- TODEL SelectableText lint check ignores style: https://issuetracker.google.com/issues/36975804 / https://issuetracker.google.com/issues/76458990 -->
 		<ignore path="src/main/res/layout/manage_space_activity_contents.xml" />
 	</issue>
 	<issue id="IconMissingDensityFolder">

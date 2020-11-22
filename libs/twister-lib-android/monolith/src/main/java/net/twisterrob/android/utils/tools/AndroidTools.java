@@ -650,7 +650,7 @@ public /*static*/ abstract class AndroidTools {
 	 * when {@code featureId} is {@link WindowCompat#FEATURE_ACTION_BAR}
 	 * (may need the overlay constant too depending on theme).
 	 *
-	 * @see <a href="http://b.android.com/171440">AppCompatActivity.onMenuOpened is not called any more in 22.x</a>
+	 * @see <a href="https://issuetracker.google.com/issues/37043947">AppCompatActivity.onMenuOpened is not called any more in 22.x</a>
 	 */
 	public static void showActionBarOverflowIcons(Menu menu, boolean show) {
 		// http://stackoverflow.com/questions/18374183/how-to-show-icons-in-overflow-menu-in-actionbar

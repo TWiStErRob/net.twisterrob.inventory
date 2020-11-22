@@ -39,7 +39,7 @@ import net.twisterrob.java.annotations.DebugHelper;
 @Target({FIELD, LOCAL_VARIABLE, PARAMETER, METHOD})
 public @interface WindowFeature {
 	class Converter {
-		@SuppressLint("SwitchIntDef") // TODEL http://b.android.com/214161
+		@SuppressLint("SwitchIntDef") // TODEL https://issuetracker.google.com/issues/37107158
 		@DebugHelper
 		public static String toString(@WindowFeature int featureId) {
 			switch (featureId) {
