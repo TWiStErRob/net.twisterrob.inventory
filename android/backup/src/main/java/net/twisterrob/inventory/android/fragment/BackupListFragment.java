@@ -52,16 +52,20 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 		setDynamicResource(DYN_EventsClass, BackupListCallbacks.class);
 	}
 
-	@Override public void onAttach(Context context) {
+	@Override public void onAttach(@NonNull Context context) {
 		super.onAttach(context);
 		prefs = ((BaseComponent.Provider)context.getApplicationContext()).getBaseComponent().prefs();
 	}
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public @NonNull View onCreateView(
+			@NonNull LayoutInflater inflater,
+			@Nullable ViewGroup container,
+			@Nullable Bundle savedInstanceState
+	) {
 		return inflater.inflate(R.layout.fragment_backup, container, false);
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		location = view.findViewById(R.id.backup_location);
 		location.setOnClickListener(new OnClickListener() {
@@ -84,7 +88,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 		controller.setView((RecyclerView)view.findViewById(R.id.backups));
 	}
 
-	@Override public void onActivityCreated(Bundle savedInstanceState) {
+	@Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
 			onRestoreInstanceState(savedInstanceState);
@@ -92,7 +96,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 			filePicked(getDir(), true);
 		}
 	}
-	@Override public void onSaveInstanceState(Bundle outState) {
+	@Override public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(EXTRA_HISTORY, (Serializable)history);
 	}

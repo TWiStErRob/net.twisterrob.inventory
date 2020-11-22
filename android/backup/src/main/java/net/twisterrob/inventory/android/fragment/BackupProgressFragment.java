@@ -11,6 +11,7 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
+import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -76,16 +77,20 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 	};
 	private AlertDialog cancelling;
 
-	@Override public void onAttach(Context context) {
+	@Override public void onAttach(@NonNull Context context) {
 		super.onAttach(context);
 		displayer = new LenientProgressInfoProvider(context);
 	}
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public @NonNull View onCreateView(
+			@NonNull LayoutInflater inflater,
+			@Nullable ViewGroup container,
+			@Nullable Bundle savedInstanceState
+	) {
 		return inflater.inflate(R.layout.fragment_backup_progress, container, false);
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		// Hide view for startup, the service is not connected yet,
 		// we don't know if we need to show this.

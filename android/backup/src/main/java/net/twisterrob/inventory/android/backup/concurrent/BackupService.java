@@ -229,7 +229,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		return progress.end();
 	}
 
-	@Override public IBinder onBind(Intent intent) {
+	@Override public @NonNull IBinder onBind(Intent intent) {
 		super.onBind(intent);
 		return new LocalBinder();
 	}

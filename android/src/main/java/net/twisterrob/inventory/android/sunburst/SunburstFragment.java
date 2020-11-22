@@ -11,7 +11,7 @@ import android.view.*;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.twisterrob.android.activity.BackPressAware;
@@ -44,20 +44,24 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 		setDynamicResource(DYN_EventsClass, SunBurstEvents.class);
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		int ignore = App.prefs().getInt(R.string.pref_sunburstIgnoreLevel, R.integer.pref_sunburstIgnoreLevel_default);
 		walker = new NodeTreeWalker(ignore);
 		sunburst = new SunburstDrawable<>(walker, new Paints());
 	}
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public @NonNull View onCreateView(
+			@NonNull LayoutInflater inflater,
+			@Nullable ViewGroup container,
+			@Nullable Bundle savedInstanceState
+	) {
 		View view = inflater.inflate(R.layout.fragment_sunburst, container, false);
 		diagram = view.findViewById(R.id.diagram);
 		return view;
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		diagram.setOnTouchListener(new Toucher());
 		setLoading(true);
@@ -174,12 +178,12 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 		return false;
 	}
 
-	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	@Override public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.sunburst, menu);
 	}
 
-	@Override public void onPrepareOptionsMenu(Menu menu) {
+	@Override public void onPrepareOptionsMenu(@NonNull Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		Node root = sunburst.getRoot();
 		ViewTools.visibleIf(menu, R.id.action_sunburst_open, root != null && !isArgument(root));
@@ -187,7 +191,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 		ViewTools.visibleIf(menu, R.id.action_sunburst_ignore_reset, !walker.ignore.isEmpty());
 	}
 
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_sunburst_open: {
 				Node root = sunburst.getRoot();

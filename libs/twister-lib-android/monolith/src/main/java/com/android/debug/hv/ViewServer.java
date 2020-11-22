@@ -54,7 +54,7 @@ import net.twisterrob.java.annotations.DebugHelper;
  *
  * <pre>
  * public class MyActivity extends Activity {
- *     public void onCreate(Bundle savedInstanceState) {
+ *     public void onCreate(@Nullable Bundle savedInstanceState) {
  *         super.onCreate(savedInstanceState);
  *         // Set content view, etc.
  *         ViewServer.get(this).addWindow(this);

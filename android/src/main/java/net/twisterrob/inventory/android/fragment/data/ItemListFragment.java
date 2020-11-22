@@ -34,7 +34,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		setDynamicResource(DYN_OptionsMenu, R.menu.item_list);
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Loaders loader = getArgQuery() != null? Loaders.ItemSearch : Loaders.Items;
 		final boolean canContainItems = getArgParentItemID() != Item.ID_ADD || getArgRoomID() != Room.ID_ADD;
@@ -51,13 +51,13 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	}
 
 	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
+	public void onPrepareOptionsMenu(@NonNull Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		ViewTools.visibleIf(menu, R.id.action_item_add, listController.canCreateNew());
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_item_add:
 				listController.createNew();

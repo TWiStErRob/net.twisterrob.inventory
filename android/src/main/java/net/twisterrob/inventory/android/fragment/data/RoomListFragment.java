@@ -1,12 +1,10 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import org.slf4j.*;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.appcompat.view.ActionMode;
 
 import net.twisterrob.android.utils.tools.ViewTools;
@@ -36,7 +34,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		setDynamicResource(DYN_OptionsMenu, R.menu.room_list);
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		int emptyText = getArgPropertyID() == Property.ID_ADD? R.string.room_empty_list : R.string.room_empty_child;
 		listController = new BaseGalleryController(Loaders.Rooms, emptyText) {
@@ -51,13 +49,13 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	}
 
 	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
+	public void onPrepareOptionsMenu(@NonNull Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		ViewTools.visibleIf(menu, R.id.action_room_add, listController.canCreateNew());
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_room_add:
 				listController.createNew();

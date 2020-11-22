@@ -143,7 +143,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		return true;
 	}
 
-	@Override protected void onSaveInstanceState(Bundle outState) {
+	@Override protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(BackupService.EXTRA_PROGRESS, unhandled);
 	}

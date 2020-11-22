@@ -132,7 +132,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		notification.setAutoCancel(true);
 	}
 
-	@Override public IBinder onBind(Intent intent) {
+	@Override public @Nullable IBinder onBind(Intent intent) {
 		super.onBind(intent);
 		if (needsNotification(intent)) {
 			LOG.trace("Stopping notification, because bind has a UI that displays progress.");

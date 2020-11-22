@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 
+import androidx.annotation.*;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 
@@ -27,18 +28,26 @@ public class LoggingFragment extends Fragment {
 		log("ctor");
 	}
 
-	@Override public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
+	@Override public void onInflate(
+			@NonNull Context context,
+			@NonNull AttributeSet attrs,
+			@Nullable Bundle savedInstanceState
+	) {
 		log("onInflate", context, attrs, savedInstanceState);
 		super.onInflate(context, attrs, savedInstanceState);
 	}
 
 	@SuppressWarnings("deprecation")
-	@Override public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
+	@Override public void onInflate(
+			@NonNull Activity activity,
+			@NonNull AttributeSet attrs,
+			@Nullable Bundle savedInstanceState
+	) {
 		log("onInflate", activity, attrs, savedInstanceState);
 		super.onInflate(activity, attrs, savedInstanceState);
 	}
 
-	@Override public void setArguments(Bundle args) {
+	@Override public void setArguments(@Nullable Bundle args) {
 		log("setArguments", args);
 		super.setArguments(args);
 	}
@@ -48,39 +57,43 @@ public class LoggingFragment extends Fragment {
 		super.setInitialSavedState(state);
 	}
 
-	@Override public void onAttach(Context context) {
+	@Override public void onAttach(@NonNull Context context) {
 		log("onAttach", context);
 		super.onAttach(context);
 	}
 
 	@SuppressWarnings("deprecation")
-	@Override public void onAttach(Activity activity) {
+	@Override public void onAttach(@NonNull Activity activity) {
 		log("onAttach", activity);
 		super.onAttach(activity);
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		log("onCreate", savedInstanceState);
 		super.onCreate(savedInstanceState);
 	}
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public @Nullable View onCreateView(
+			@NonNull LayoutInflater inflater,
+			@Nullable ViewGroup container,
+			@Nullable Bundle savedInstanceState
+	) {
 		log("onCreateView", inflater, container, savedInstanceState);
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		log("onViewCreated", view, savedInstanceState);
 		super.onViewCreated(view, savedInstanceState);
 	}
 
-	@Override public void onActivityCreated(Bundle savedInstanceState) {
+	@Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		log("onActivityCreated", savedInstanceState);
 		super.onActivityCreated(savedInstanceState);
 		LOG.trace("{}.loaderManager={}", getName(), LoaderManager.getInstance(this));
 	}
 
-	@Override public void onViewStateRestored(Bundle savedInstanceState) {
+	@Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		log("onViewStateRestored", savedInstanceState);
 		super.onViewStateRestored(savedInstanceState);
 	}
@@ -93,7 +106,7 @@ public class LoggingFragment extends Fragment {
 	// Activity.onPostCreate
 	// Activity.onResume/onPostResume/onResumeFragments
 
-	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		log("onActivityResult", requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -112,24 +125,24 @@ public class LoggingFragment extends Fragment {
 
 	// Activity.onCreateOptionsMenu
 
-	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+	@Override public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
 		log("onCreateOptionsMenu", menu, menuInflater);
 		super.onCreateOptionsMenu(menu, menuInflater);
 	}
 
 	// Activity.onPrepareOptionsMenu
 
-	@Override public void onPrepareOptionsMenu(Menu menu) {
+	@Override public void onPrepareOptionsMenu(@NonNull Menu menu) {
 		log("onPrepareOptionsMenu", menu);
 		super.onPrepareOptionsMenu(menu);
 	}
 
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		log("onOptionsItemSelected", item);
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override public void onOptionsMenuClosed(Menu menu) {
+	@Override public void onOptionsMenuClosed(@NonNull Menu menu) {
 		log("onOptionsMenuClosed", menu);
 		super.onOptionsMenuClosed(menu);
 	}
@@ -139,17 +152,21 @@ public class LoggingFragment extends Fragment {
 		super.onDestroyOptionsMenu();
 	}
 
-	@Override public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+	@Override public void onCreateContextMenu(
+			@NonNull ContextMenu menu,
+			@NonNull View view,
+			@Nullable ContextMenuInfo menuInfo
+	) {
 		log("onCreateContextMenu", menu, view, menuInfo);
 		super.onCreateContextMenu(menu, view, menuInfo);
 	}
 
-	@Override public boolean onContextItemSelected(MenuItem item) {
+	@Override public boolean onContextItemSelected(@NonNull MenuItem item) {
 		log("onContextItemSelected", item);
 		return super.onContextItemSelected(item);
 	}
 
-	@Override public void onConfigurationChanged(Configuration newConfig) {
+	@Override public void onConfigurationChanged(@NonNull Configuration newConfig) {
 		log("onConfigurationChanged", newConfig);
 		super.onConfigurationChanged(newConfig);
 	}
@@ -161,7 +178,7 @@ public class LoggingFragment extends Fragment {
 		super.onPause();
 	}
 
-	@Override public void onSaveInstanceState(Bundle outState) {
+	@Override public void onSaveInstanceState(@NonNull Bundle outState) {
 		log("onSaveInstanceState", outState);
 		super.onSaveInstanceState(outState);
 	}
@@ -195,11 +212,11 @@ public class LoggingFragment extends Fragment {
 		super.onLowMemory();
 	}
 
-	protected void log(String name, Object... args) {
+	protected void log(@NonNull String name, @NonNull Object... args) {
 		LoggingHelper.log(LOG, getName(), name, debugInfoProvider, args);
 	}
 
-	protected String getName() {
+	protected @NonNull String getName() {
 		return StringerTools.toNameString(this);
 	}
 }

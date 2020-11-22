@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.IBinder;
 
+import androidx.annotation.*;
+
 import net.twisterrob.android.annotation.TrimMemoryLevel;
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.StringerTools;
@@ -32,11 +34,11 @@ public class LoggingIntentService extends IntentService {
 		log("onCreate");
 		super.onCreate();
 	}
-	@Override public void onStart(Intent intent, int startId) {
+	@Override public void onStart(@Nullable Intent intent, int startId) {
 		log("onStart", intent, startId);
 		super.onStart(intent, startId);
 	}
-	@Override public int onStartCommand(Intent intent, int flags, int startId) {
+	@Override public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
 		log("onStartCommand", intent, flags, startId);
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -44,7 +46,7 @@ public class LoggingIntentService extends IntentService {
 		log("onDestroy");
 		super.onDestroy();
 	}
-	@Override public IBinder onBind(Intent intent) {
+	@Override public @Nullable IBinder onBind(Intent intent) {
 		log("onBind", intent);
 		return super.onBind(intent);
 	}
@@ -72,10 +74,10 @@ public class LoggingIntentService extends IntentService {
 		log("onTaskRemoved", rootIntent);
 		super.onTaskRemoved(rootIntent);
 	}
-	@Override protected void onHandleIntent(Intent intent) {
+	@Override protected void onHandleIntent(@Nullable Intent intent) {
 		log("onHandleIntent", intent);
 	}
-	private void log(String method, Object... args) {
+	private void log(@NonNull String method, @NonNull Object... args) {
 		LoggingHelper.log(LOG, StringerTools.toNameString(this) + "[" + name + "]", method, null, args);
 	}
 }

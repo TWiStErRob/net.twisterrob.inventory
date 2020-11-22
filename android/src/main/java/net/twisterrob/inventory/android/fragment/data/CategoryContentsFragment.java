@@ -42,17 +42,17 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	@Override protected Bundle createLoadArgs() {
 		return getArguments();
 	}
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		listController = new CategoriesItemsController();
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
 	}
 
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_feedback:
 				MainActivity.startImproveCategories(requireContext(), getArgCategoryID());

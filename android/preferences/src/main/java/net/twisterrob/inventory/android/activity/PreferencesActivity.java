@@ -9,14 +9,14 @@ import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.*;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.preferences.R;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends PreferenceActivity
 		implements OnSharedPreferenceChangeListener {
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		ThreadPolicy threadPolicy = StrictMode.allowThreadDiskWrites();

@@ -119,12 +119,12 @@ public class Dialogs {
 		}
 
 		public static class ActionProgressFragment extends BaseDialogFragment {
-			@Override public void onCreate(Bundle savedInstanceState) {
+			@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 				super.onCreate(savedInstanceState);
 				setCancelable(false);
 			}
 			@SuppressWarnings("deprecation") // blocking the user's view intentionally
-			@Override public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
+			@Override public @NonNull Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 				ProgressDialog dialog = new ProgressDialog(requireContext());
 				dialog.setMessage("Please wait...");
 				dialog.setIndeterminate(true);

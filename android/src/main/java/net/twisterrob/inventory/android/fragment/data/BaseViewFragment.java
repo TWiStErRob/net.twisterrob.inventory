@@ -10,7 +10,7 @@ import android.widget.*;
 
 import static android.content.Context.*;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.*;
 import androidx.viewpager.widget.*;
 
 import net.twisterrob.android.utils.tools.ViewTools;
@@ -27,11 +27,15 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 	protected ViewPager pager;
 	private @Nullable Intent shareIntent;
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public @NonNull View onCreateView(
+			@NonNull LayoutInflater inflater,
+			@Nullable ViewGroup container,
+			@Nullable Bundle savedInstanceState
+	) {
 		return inflater.inflate(R.layout.fragment_details, container, false);
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		pager = view.findViewById(R.id.pager);
 	}
@@ -56,11 +60,11 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 
 	protected abstract CharSequence getDetailsString(DTO entity, boolean DEBUG);
 
-	@Override public void onPrepareOptionsMenu(Menu menu) {
+	@Override public void onPrepareOptionsMenu(@NonNull Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		ViewTools.enabledIf(menu, R.id.action_share, shareIntent != null);
 	}
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_share:
 				// CONSIDER context sensitive sharing based on visible ViewPager page

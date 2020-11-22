@@ -6,7 +6,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.*;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.recyclerview.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
@@ -33,7 +33,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 		setDynamicResource(DYN_EventsClass, ListsEvents.class);
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		listController = new RecyclerViewLoadersController(this, Loaders.Lists) {
 			@Override protected @NonNull CursorRecyclerAdapter<?> setupList() {
@@ -72,11 +72,15 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 		};
 	}
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public @NonNull View onCreateView(
+			@NonNull LayoutInflater inflater,
+			@Nullable ViewGroup container,
+			@Nullable Bundle savedInstanceState
+	) {
 		return inflater.inflate(R.layout.generic_list, container, false);
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
 	}

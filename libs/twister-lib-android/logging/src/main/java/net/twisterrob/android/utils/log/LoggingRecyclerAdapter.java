@@ -6,6 +6,7 @@ import org.slf4j.*;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
 
@@ -17,7 +18,7 @@ import net.twisterrob.java.annotations.DebugHelper;
 public abstract class LoggingRecyclerAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 	private static final Logger LOG = LoggerFactory.getLogger(LoggingRecyclerAdapter.class);
 
-	@Override public void onBindViewHolder(VH holder, int position, List<Object> payloads) {
+	@Override public void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
 		log("onBindViewHolder", holder, position, payloads);
 		super.onBindViewHolder(holder, position, payloads);
 	}
@@ -33,43 +34,43 @@ public abstract class LoggingRecyclerAdapter<VH extends RecyclerView.ViewHolder>
 		log("getItemId", position);
 		return super.getItemId(position);
 	}
-	@Override public void onViewRecycled(VH holder) {
+	@Override public void onViewRecycled(@NonNull VH holder) {
 		log("onViewRecycled", holder);
 		super.onViewRecycled(holder);
 	}
-	@Override public boolean onFailedToRecycleView(VH holder) {
+	@Override public boolean onFailedToRecycleView(@NonNull VH holder) {
 		log("onFailedToRecycleView", holder);
 		return super.onFailedToRecycleView(holder);
 	}
-	@Override public void onViewAttachedToWindow(VH holder) {
+	@Override public void onViewAttachedToWindow(@NonNull VH holder) {
 		log("onViewAttachedToWindow", holder);
 		super.onViewAttachedToWindow(holder);
 	}
-	@Override public void onViewDetachedFromWindow(VH holder) {
+	@Override public void onViewDetachedFromWindow(@NonNull VH holder) {
 		log("onViewDetachedFromWindow", holder);
 		super.onViewDetachedFromWindow(holder);
 	}
-	@Override public void registerAdapterDataObserver(AdapterDataObserver observer) {
+	@Override public void registerAdapterDataObserver(@NonNull AdapterDataObserver observer) {
 		log("registerAdapterDataObserver", observer);
 		super.registerAdapterDataObserver(observer);
 	}
-	@Override public void unregisterAdapterDataObserver(AdapterDataObserver observer) {
+	@Override public void unregisterAdapterDataObserver(@NonNull AdapterDataObserver observer) {
 		log("unregisterAdapterDataObserver", observer);
 		super.unregisterAdapterDataObserver(observer);
 	}
-	@Override public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+	@Override public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
 		log("onAttachedToRecyclerView", recyclerView);
 		super.onAttachedToRecyclerView(recyclerView);
 	}
-	@Override public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+	@Override public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
 		log("onDetachedFromRecyclerView", recyclerView);
 		super.onDetachedFromRecyclerView(recyclerView);
 	}
-	@Override public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+	@Override public @NonNull VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		log("onCreateViewHolder", parent, viewType);
 		return null;
 	}
-	@Override public void onBindViewHolder(VH holder, int position) {
+	@Override public void onBindViewHolder(@NonNull VH holder, int position) {
 		log("onBindViewHolder", holder, position);
 	}
 	@Override public int getItemCount() {
@@ -77,7 +78,7 @@ public abstract class LoggingRecyclerAdapter<VH extends RecyclerView.ViewHolder>
 		return 0;
 	}
 
-	private void log(String name, Object... args) {
+	private void log(@NonNull String name, @NonNull Object... args) {
 		LoggingHelper.log(LOG, StringerTools.toNameString(this), name, null, args);
 	}
 }

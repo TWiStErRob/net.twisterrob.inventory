@@ -13,7 +13,7 @@ import android.net.Uri;
 import android.os.Build.VERSION_CODES;
 import android.os.*;
 
-import androidx.annotation.CallSuper;
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.StringerTools;
@@ -55,45 +55,67 @@ public abstract class LoggingContentProvider extends ContentProvider {
 
 	// region Files
 
-	@Override public ParcelFileDescriptor openFile(Uri uri, String mode)
-			throws FileNotFoundException {
+	@Override public @Nullable ParcelFileDescriptor openFile(
+			@NonNull Uri uri,
+			@NonNull String mode
+	) throws FileNotFoundException {
 		log("openFile", uri, mode);
 		return super.openFile(uri, mode);
 	}
 
-	@Override public ParcelFileDescriptor openFile(Uri uri, String mode, CancellationSignal signal)
-			throws FileNotFoundException {
+	@Override public @Nullable ParcelFileDescriptor openFile(
+			@NonNull Uri uri,
+			@NonNull String mode,
+			@Nullable CancellationSignal signal
+	) throws FileNotFoundException {
 		log("openFile", uri, mode, signal);
 		return super.openFile(uri, mode, signal);
 	}
 
-	@Override public AssetFileDescriptor openAssetFile(Uri uri, String mode)
-			throws FileNotFoundException {
+	@Override public @Nullable AssetFileDescriptor openAssetFile(
+			@NonNull Uri uri,
+			@NonNull String mode
+	) throws FileNotFoundException {
 		log("openAssetFile", uri, mode);
 		return super.openAssetFile(uri, mode);
 	}
 
-	@Override public AssetFileDescriptor openAssetFile(Uri uri, String mode, CancellationSignal signal)
-			throws FileNotFoundException {
+	@Override public @Nullable AssetFileDescriptor openAssetFile(
+			@NonNull Uri uri,
+			@NonNull String mode,
+			@Nullable CancellationSignal signal
+	) throws FileNotFoundException {
 		log("openAssetFile", uri, mode, signal);
 		return super.openAssetFile(uri, mode, signal);
 	}
 
-	@Override public AssetFileDescriptor openTypedAssetFile(
-			Uri uri, String mimeTypeFilter, Bundle opts) throws FileNotFoundException {
+	@Override public @Nullable AssetFileDescriptor openTypedAssetFile(
+			@NonNull Uri uri,
+			@NonNull String mimeTypeFilter,
+			@Nullable Bundle opts
+	) throws FileNotFoundException {
 		log("openTypedAssetFile", uri, mimeTypeFilter, opts);
 		return super.openTypedAssetFile(uri, mimeTypeFilter, opts);
 	}
 
-	@Override public AssetFileDescriptor openTypedAssetFile(
-			Uri uri, String mimeTypeFilter, Bundle opts, CancellationSignal signal) throws FileNotFoundException {
+	@Override public @Nullable AssetFileDescriptor openTypedAssetFile(
+			@NonNull Uri uri,
+			@NonNull String mimeTypeFilter,
+			@Nullable Bundle opts,
+			@Nullable CancellationSignal signal
+	) throws FileNotFoundException {
 		log("openTypedAssetFile", uri, mimeTypeFilter, opts, signal);
 		return super.openTypedAssetFile(uri, mimeTypeFilter, opts, signal);
 	}
 
 	@TargetApi(VERSION_CODES.HONEYCOMB)
-	@Override public <T> ParcelFileDescriptor openPipeHelper(
-			Uri uri, String mimeType, Bundle opts, T args, PipeDataWriter<T> func) throws FileNotFoundException {
+	@Override public @NonNull <T> ParcelFileDescriptor openPipeHelper(
+			@NonNull Uri uri,
+			@NonNull String mimeType, 
+			@Nullable Bundle opts,
+			@Nullable T args,
+			@NonNull PipeDataWriter<T> func
+	) throws FileNotFoundException {
 		log("openPipeHelper", uri, mimeType, opts, args, func);
 		return super.openPipeHelper(uri, mimeType, opts, args, func);
 	}
@@ -102,35 +124,40 @@ public abstract class LoggingContentProvider extends ContentProvider {
 
 	// region Queries
 
-	@Override public String[] getStreamTypes(Uri uri, String mimeTypeFilter) {
+	@Override public @Nullable String[] getStreamTypes(@NonNull Uri uri, @NonNull String mimeTypeFilter) {
 		log("getStreamTypes", uri, mimeTypeFilter);
 		return super.getStreamTypes(uri, mimeTypeFilter);
 	}
 
-	@Override public Uri canonicalize(Uri url) {
+	@Override public @Nullable Uri canonicalize(@NonNull Uri url) {
 		log("canonicalize", url);
 		return super.canonicalize(url);
 	}
 
-	@Override public Uri uncanonicalize(Uri url) {
+	@Override public @Nullable Uri uncanonicalize(@NonNull Uri url) {
 		log("uncanonicalize", url);
 		return super.uncanonicalize(url);
 	}
 
-	@Override public int bulkInsert(Uri uri, ContentValues[] values) {
+	@Override public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
 		log("bulkInsert", uri, values);
 		return super.bulkInsert(uri, values);
 	}
 
-	@Override public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
-			throws OperationApplicationException {
+	@Override public @NonNull ContentProviderResult[] applyBatch(
+			@NonNull ArrayList<ContentProviderOperation> operations
+	) throws OperationApplicationException {
 		log("applyBatch", operations);
 		return super.applyBatch(operations);
 	}
 
 	// endregion
 
-	@Override public Bundle call(String method, String arg, Bundle extras) {
+	@Override public @Nullable Bundle call(
+			@NonNull String method,
+			@Nullable String arg,
+			@Nullable Bundle extras
+	) {
 		log("call", method, arg, extras);
 		return super.call(method, arg, extras);
 	}
@@ -150,11 +177,11 @@ public abstract class LoggingContentProvider extends ContentProvider {
 		super.onTrimMemory(level);
 	}
 
-	protected void log(String name, Object... args) {
+	protected void log(@NonNull String name, @NonNull Object... args) {
 		LoggingHelper.log(LOG, getName(), name, null, args);
 	}
 
-	protected String getName() {
+	protected @NonNull String getName() {
 		return getClass().getSimpleName() + "@" + StringerTools.hashString(this);
 	}
 }

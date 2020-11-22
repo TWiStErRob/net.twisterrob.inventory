@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
@@ -15,13 +16,13 @@ import net.twisterrob.android.utils.tools.StringerTools;
 public class LoggingDrawerListener implements DrawerListener {
 	private static final Logger LOG = LoggerFactory.getLogger(LoggingDrawerListener.class);
 
-	@Override public void onDrawerSlide(View drawerView, float slideOffset) {
+	@Override public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
 		log("onDrawerSlide", drawerView, slideOffset);
 	}
-	@Override public void onDrawerOpened(View drawerView) {
+	@Override public void onDrawerOpened(@NonNull View drawerView) {
 		log("onDrawerOpened", drawerView);
 	}
-	@Override public void onDrawerClosed(View drawerView) {
+	@Override public void onDrawerClosed(@NonNull View drawerView) {
 		log("onDrawerClosed", drawerView);
 	}
 	@Override public void onDrawerStateChanged(int newState) {

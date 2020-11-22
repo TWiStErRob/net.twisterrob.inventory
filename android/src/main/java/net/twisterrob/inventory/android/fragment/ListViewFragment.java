@@ -53,7 +53,7 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 		eventsListener.listLoaded(list);
 	}
 
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_list_edit: {
 				rename(getArgListID());

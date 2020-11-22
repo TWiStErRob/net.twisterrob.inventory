@@ -69,7 +69,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 				.build();
 	}
 
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_property_edit:
 				startActivity(PropertyEditActivity.edit(getArgPropertyID()));

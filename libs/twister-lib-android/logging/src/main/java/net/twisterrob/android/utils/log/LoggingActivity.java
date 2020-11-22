@@ -65,14 +65,22 @@ public class LoggingActivity extends AppCompatActivity {
 		log("onSupportContentChanged");
 		super.onSupportContentChanged();
 	}
-	@Override public View onCreateView(View parent, String name, @NonNull Context context,
-			@NonNull AttributeSet attrs) {
+	@Override public @Nullable View onCreateView(
+			@Nullable View parent,
+			@NonNull String name,
+			@NonNull Context context,
+			@NonNull AttributeSet attrs
+	) {
 		if (logOnCreateView) {
 			log("onCreateView", parent, name, context, attrs);
 		}
 		return super.onCreateView(parent, name, context, attrs);
 	}
-	@Override public View onCreateView(String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+	@Override public @Nullable View onCreateView(
+			@NonNull String name,
+			@NonNull Context context,
+			@NonNull AttributeSet attrs
+	) {
 		if (logOnCreateView) {
 			log("onCreateView", name, context, attrs);
 		}
@@ -85,7 +93,7 @@ public class LoggingActivity extends AppCompatActivity {
 		log("onAttachFragment", fragment);
 		super.onAttachFragment(fragment);
 	}
-	@Override public void onAttachFragment(Fragment fragment) {
+	@Override public void onAttachFragment(@NonNull Fragment fragment) {
 		log("onAttachFragment", fragment);
 		super.onAttachFragment(fragment);
 	}
@@ -100,20 +108,20 @@ public class LoggingActivity extends AppCompatActivity {
 		super.onStart();
 	}
 
-	@Override public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+	@Override public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
 		log("onRestoreInstanceState", savedInstanceState, persistentState);
 		super.onRestoreInstanceState(savedInstanceState, persistentState);
 	}
-	@Override protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+	@Override protected void onRestoreInstanceState(@Nullable Bundle savedInstanceState) {
 		log("onRestoreInstanceState", savedInstanceState);
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
-	@Override public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+	@Override public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
 		log("onPostCreate", savedInstanceState, persistentState);
 		super.onPostCreate(savedInstanceState, persistentState);
 	}
-	@Override protected void onPostCreate(Bundle savedInstanceState) {
+	@Override protected void onPostCreate(@Nullable Bundle savedInstanceState) {
 		log("onPostCreate", savedInstanceState);
 		super.onPostCreate(savedInstanceState);
 	}
@@ -157,11 +165,11 @@ public class LoggingActivity extends AppCompatActivity {
 		super.onPause();
 	}
 
-	@Override public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+	@Override public void onSaveInstanceState(@Nullable Bundle outState, @Nullable PersistableBundle outPersistentState) {
 		log("onSaveInstanceState", outState, outPersistentState);
 		super.onSaveInstanceState(outState, outPersistentState);
 	}
-	@Override protected void onSaveInstanceState(Bundle outState) {
+	@Override protected void onSaveInstanceState(@NonNull Bundle outState) {
 		log("onSaveInstanceState", outState);
 		super.onSaveInstanceState(outState);
 	}
@@ -260,15 +268,15 @@ public class LoggingActivity extends AppCompatActivity {
 		log("onCreatePanelView", StringerTools.toFeatureString(featureId));
 		return super.onCreatePanelView(featureId);
 	}
-	@Override public boolean onCreatePanelMenu(int featureId, Menu menu) {
+	@Override public boolean onCreatePanelMenu(int featureId, @NonNull Menu menu) {
 		log("onCreatePanelMenu", StringerTools.toFeatureString(featureId), menu);
 		return super.onCreatePanelMenu(featureId, menu);
 	}
-	@Override public boolean onPreparePanel(int featureId, View view, Menu menu) {
+	@Override public boolean onPreparePanel(int featureId, View view, @NonNull Menu menu) {
 		log("onPreparePanel", StringerTools.toFeatureString(featureId), view, menu);
 		return super.onPreparePanel(featureId, view, menu);
 	}
-	@Override public void onPanelClosed(int featureId, Menu menu) {
+	@Override public void onPanelClosed(int featureId, @NonNull Menu menu) {
 		log("onPanelClosed", StringerTools.toFeatureString(featureId), menu);
 		super.onPanelClosed(featureId, menu);
 	}
@@ -337,7 +345,7 @@ public class LoggingActivity extends AppCompatActivity {
 		log("startActivityForResult", intent, requestCode);
 		super.startActivityForResult(intent, requestCode);
 	}
-	@Override public void startActivityFromFragment(Fragment fragment, Intent intent, int requestCode) {
+	@Override public void startActivityFromFragment(@NonNull Fragment fragment, @Nullable Intent intent, int requestCode) {
 		log("startActivityFromFragment", fragment, intent, requestCode);
 		super.startActivityFromFragment(fragment, intent, requestCode);
 	}
@@ -364,7 +372,7 @@ public class LoggingActivity extends AppCompatActivity {
 		log("onRetainCustomNonConfigurationInstance");
 		return super.onRetainCustomNonConfigurationInstance();
 	}
-	@Override public void onConfigurationChanged(Configuration newConfig) {
+	@Override public void onConfigurationChanged(@NonNull Configuration newConfig) {
 		log("onConfigurationChanged", newConfig, getResources().getConfiguration());
 		super.onConfigurationChanged(newConfig);
 	}
@@ -425,11 +433,11 @@ public class LoggingActivity extends AppCompatActivity {
 		super.onChildTitleChanged(childActivity, title);
 	}
 
-	protected void log(String name, Object... args) {
+	protected void log(@NonNull String name, @NonNull Object... args) {
 		LoggingHelper.log(LOG, getName(), name, debugInfoProvider, args);
 	}
 
-	protected String getName() {
+	protected @NonNull String getName() {
 		return getClass().getSimpleName() + "@" + StringerTools.hashString(this);
 	}
 }

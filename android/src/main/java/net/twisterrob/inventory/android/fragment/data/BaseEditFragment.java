@@ -170,13 +170,13 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		return false;
 	}
 
-	@Override public void onSaveInstanceState(Bundle outState) {
+	@Override public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable(SAVE_KEY_IMAGE_TO_SAVE, currentImage);
 		outState.putInt(SAVE_KEY_SELECTED_TYPE_POSITION, type.getSelectedItemPosition());
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
 			restoredImage = savedInstanceState.getParcelable(SAVE_KEY_IMAGE_TO_SAVE);
@@ -185,12 +185,16 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		}
 	}
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public @NonNull View onCreateView(
+			@NonNull LayoutInflater inflater,
+			@Nullable ViewGroup container,
+			@Nullable Bundle savedInstanceState
+	) {
 		return inflater.inflate(R.layout.fragment_edit, container, false);
 	}
 
 	// CONSIDER moving overriding logic into this class
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		image = view.findViewById(R.id.image);
 		image.setOnClickListener(new OnClickListener() {
@@ -312,7 +316,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		}
 	}
 
-	@Override public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+	@Override public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 		onPrepareContextMenu(menu, requireActivity().getMenuInflater());
 	}
@@ -324,7 +328,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		ViewTools.visibleIf(menu, R.id.action_category_suggest, !always.equals(suggest));
 	}
 
-	@Override public boolean onContextItemSelected(MenuItem item) {
+	@Override public boolean onContextItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_goto:
 				startActivity(CategoryActivity.show(type.getSelectedItemId()));
@@ -393,12 +397,12 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		return cursor != null? DatabaseTools.getString(cursor, CommonColumns.NAME) : null;
 	}
 
-	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	@Override public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.picture, menu);
 	}
 
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_picture_get:
 				getPicture();
@@ -440,7 +444,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		}
 	}
 
-	@Override public void onActivityResult(final int requestCode, int resultCode, final Intent data) {
+	@Override public void onActivityResult(final int requestCode, int resultCode, final @Nullable Intent data) {
 		switch (requestCode) {
 			case REQUEST_CODE_GET_PICTURE:
 				if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {

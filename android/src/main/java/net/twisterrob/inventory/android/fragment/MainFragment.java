@@ -13,7 +13,7 @@ import android.view.*;
 import android.view.View.*;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.recyclerview.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
@@ -44,11 +44,15 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 		setDynamicResource(DYN_EventsClass, MainEvents.class);
 	}
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public @NonNull View onCreateView(
+			@NonNull LayoutInflater inflater,
+			@Nullable ViewGroup container,
+			@Nullable Bundle savedInstanceState
+	) {
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
 		propertiesController = new RecyclerViewLoadersController(this, Loaders.Properties) {

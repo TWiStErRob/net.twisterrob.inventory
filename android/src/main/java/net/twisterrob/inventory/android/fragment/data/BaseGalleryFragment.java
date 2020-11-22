@@ -53,7 +53,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		return header != null && header.hasUI();
 	}
 
-	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		if (selectionMode.onActivityResult(requestCode, resultCode, data)) {
 			return;
 		}
@@ -82,7 +82,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		listController.refresh();
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState == null && hasHeader()) {
 			FragmentTransaction ft = getChildFragmentManager().beginTransaction();
@@ -98,7 +98,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		}
 	}
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		restoreOnRotation();
 
 		int layout = hasHeaderUI()? R.layout.generic_list_with_header : R.layout.generic_list;
@@ -115,19 +115,19 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		// FIXME save fragment UI state from savedInstanceState into a field and use that in the adapter
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		listController.setView((RecyclerView)view.findViewById(android.R.id.list));
 	}
 
-	@Override public void onSaveInstanceState(Bundle outState) {
+	@Override public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if (selectionMode != null) { // Fragment may be in background, and selectionMode is created in onViewCreated
 			selectionMode.onSaveInstanceState(outState);
 		}
 	}
 
-	@Override public void onViewStateRestored(Bundle savedInstanceState) {
+	@Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
 		if (selectionMode != null) { // Fragment may be in background, and selectionMode is created in onViewCreated
 			selectionMode.onRestoreInstanceState(savedInstanceState);

@@ -32,7 +32,7 @@ public class BaseFragment<T> extends VariantFragment {
 		setArguments(null);
 	}
 
-	@Override public void setArguments(Bundle args) {
+	@Override public void setArguments(@Nullable Bundle args) {
 		super.setArguments(args != null? args : new Bundle());
 	}
 
@@ -59,7 +59,7 @@ public class BaseFragment<T> extends VariantFragment {
 		this.eventsListener = eventsListener;
 	}
 
-	@Override public void onAttach(Context context) {
+	@Override public void onAttach(@NonNull Context context) {
 		super.onAttach(context);
 		Class<T> eventsClass = getDynamicResource(DYN_EventsClass);
 		if (eventsClass != null) {
@@ -72,7 +72,7 @@ public class BaseFragment<T> extends VariantFragment {
 		setEventsListener(null);
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) {
 			LOG.debug("Creating {}@{} {}",
 					getClass().getSimpleName(),
@@ -91,12 +91,12 @@ public class BaseFragment<T> extends VariantFragment {
 		return true;
 	}
 
-	@Override public void onActivityCreated(Bundle savedInstanceState) {
+	@Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		onStartLoading();
 	}
 
-	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	@Override public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		if (hasDynResource(DYN_OptionsMenu)) {
 			inflater.inflate(this.<Integer>getDynamicResource(DYN_OptionsMenu), menu);
@@ -122,7 +122,7 @@ public class BaseFragment<T> extends VariantFragment {
 		}
 	}
 
-	@Override public void onSaveInstanceState(Bundle outState) {
+	@Override public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable(KEY_VIEWTAG, tag);
 	}

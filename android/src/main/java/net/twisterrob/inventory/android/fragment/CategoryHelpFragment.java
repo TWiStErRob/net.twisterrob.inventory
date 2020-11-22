@@ -35,7 +35,11 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override public @NonNull View onCreateView(
+			@NonNull LayoutInflater inflater,
+			@Nullable ViewGroup container,
+			@Nullable Bundle savedInstanceState
+	) {
 		ThreadPolicy realPolicy = StrictMode.allowThreadDiskWrites();
 		try { // in older versions of Android WebViewDatabase.getInstance creates/opens a DB
 			web = new WebView(container.getContext());
@@ -73,7 +77,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		return web;
 	}
 
-	@Override public void onViewCreated(View view, Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (savedInstanceState == null) {
@@ -97,12 +101,12 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		}
 	}
 
-	@Override public void onSaveInstanceState(Bundle outState) {
+	@Override public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		web.saveState(outState);
 	}
 
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_open: {
 				final Context context = requireContext();

@@ -12,7 +12,7 @@ import android.view.*;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -52,7 +52,7 @@ public abstract class DrawerActivity extends BaseActivity {
 		}
 	}
 
-	@Override protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+	@Override protected void onRestoreInstanceState(@Nullable Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		// handle rotation correctly (rotate when drawer is open)
 		if (mDrawerLeft != null && mDrawerLayout.isDrawerOpen(mDrawerLeft)) {
@@ -125,7 +125,7 @@ public abstract class DrawerActivity extends BaseActivity {
 		super.onBackPressed();
 	}
 
-	@Override public void onConfigurationChanged(Configuration newConfig) {
+	@Override public void onConfigurationChanged(@NonNull Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		if (hasDrawer()) {
 			mDrawerToggle.onConfigurationChanged(newConfig);

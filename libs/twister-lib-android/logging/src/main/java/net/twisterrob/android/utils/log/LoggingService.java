@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.IBinder;
 
+import androidx.annotation.*;
+
 import net.twisterrob.android.annotation.TrimMemoryLevel;
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.StringerTools;
@@ -38,7 +40,7 @@ public class LoggingService extends Service {
 		log("onDestroy");
 		super.onDestroy();
 	}
-	@Override public IBinder onBind(Intent intent) {
+	@Override public @Nullable IBinder onBind(Intent intent) {
 		log("onBind", intent);
 		return null;
 	}
@@ -66,7 +68,7 @@ public class LoggingService extends Service {
 		log("onTaskRemoved", rootIntent);
 		super.onTaskRemoved(rootIntent);
 	}
-	private void log(String method, Object... args) {
+	private void log(@NonNull String method, @NonNull Object... args) {
 		LoggingHelper.log(LOG, StringerTools.toNameString(this), method, null, args);
 	}
 }

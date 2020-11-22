@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.view.*;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
@@ -81,7 +81,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				.build();
 	}
 
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_item_edit:
 				startActivity(ItemEditActivity.edit(getArgItemID()));
@@ -119,7 +119,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 		}
 	}
 
-	@Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		if (requestCode == MOVE_REQUEST) {
 			switch (resultCode) {
 				case MoveTargetActivity.ROOM: {

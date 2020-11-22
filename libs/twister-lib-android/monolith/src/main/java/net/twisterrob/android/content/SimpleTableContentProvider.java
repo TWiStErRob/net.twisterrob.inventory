@@ -9,7 +9,7 @@ import android.database.sqlite.*;
 import android.net.Uri;
 import android.os.Build;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 
 /**
  * Example provider class for {@code CREATE TABLE MyItem (_id, name, description)}:
@@ -91,7 +91,7 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		return database.getWritableDatabase();
 	}
 
-	@Override public synchronized String getType(@NonNull Uri uri) {
+	@Override public synchronized @Nullable String getType(@NonNull Uri uri) {
 		switch (uriMatcher.match(uri)) {
 			case ALL_IN_DIR:
 				return ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + mimeType;
@@ -102,8 +102,13 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		}
 	}
 
-	@Override public synchronized Cursor query(@NonNull Uri uri,
-			String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+	@Override public synchronized @Nullable Cursor query(
+			@NonNull Uri uri,
+			@Nullable String[] projection,
+			@Nullable String selection,
+			@Nullable String[] selectionArgs,
+			@Nullable String sortOrder
+	) {
 		SQLiteDatabase db = getDB();
 		checkColumns(projection);
 
@@ -127,7 +132,10 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		return cursor;
 	}
 
-	@Override public synchronized Uri insert(@NonNull Uri uri, ContentValues values) {
+	@Override public synchronized @Nullable Uri insert(
+			@NonNull Uri uri,
+			@Nullable ContentValues values
+	) {
 		SQLiteDatabase db = getDB();
 		long id;
 		switch (uriMatcher.match(uri)) {
@@ -142,7 +150,11 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		return uri.buildUpon().appendPath(String.valueOf(id)).build();
 	}
 
-	@Override public synchronized int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+	@Override public synchronized int delete(
+			@NonNull Uri uri,
+			@Nullable String selection,
+			@Nullable String[] selectionArgs
+	) {
 		SQLiteDatabase db = getDB();
 		selection = filterId(uri, selection);
 		int rowsDeleted = db.delete(tableName, selection, selectionArgs);
@@ -150,8 +162,12 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		return rowsDeleted;
 	}
 
-	@Override public synchronized int update(@NonNull Uri uri, ContentValues values, String selection,
-			String[] selectionArgs) {
+	@Override public synchronized int update(
+			@NonNull Uri uri,
+			@Nullable ContentValues values,
+			@Nullable String selection,
+			@Nullable String[] selectionArgs
+	) {
 		SQLiteDatabase db = getDB();
 		selection = filterId(uri, selection);
 		int rowsUpdated = db.update(tableName, values, selection, selectionArgs);
@@ -159,7 +175,7 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		return rowsUpdated;
 	}
 
-	private String filterId(Uri uri, String selection) {
+	private @Nullable String filterId(@NonNull Uri uri, @Nullable String selection) {
 		switch (uriMatcher.match(uri)) {
 			case ALL_IN_DIR:
 				// nothing to do
@@ -179,16 +195,16 @@ public abstract class SimpleTableContentProvider extends ContentProvider {
 		getContext().getContentResolver().notifyChange(uri, null);
 	}
 
-	protected String idFilter(String id) {
+	protected @NonNull String idFilter(@NonNull String id) {
 		return idColumn + "=" + id;
 	}
 
-	protected RuntimeException unmatched(Uri uri) {
+	protected @NonNull RuntimeException unmatched(@NonNull Uri uri) {
 		return new UnsupportedOperationException("Unknown URI: " + uri);
 	}
 
 	/** Check if the caller has requested a column which does not exists */
-	protected void checkColumns(String... projection) {
+	protected void checkColumns(@Nullable String... projection) {
 		if (projection == null) {
 			return;
 		}

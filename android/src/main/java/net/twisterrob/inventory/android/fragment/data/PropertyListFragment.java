@@ -1,12 +1,10 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import org.slf4j.*;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.appcompat.view.ActionMode;
 
 import net.twisterrob.android.view.SelectionAdapter;
@@ -19,7 +17,6 @@ import net.twisterrob.inventory.android.tasks.DeletePropertiesAction;
 import net.twisterrob.inventory.android.view.*;
 
 public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> {
-	private static final Logger LOG = LoggerFactory.getLogger(PropertyListFragment.class);
 
 	public interface PropertiesEvents {
 		void newProperty();
@@ -32,7 +29,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		setDynamicResource(DYN_OptionsMenu, R.menu.property_list);
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		listController = new BaseGalleryController(Loaders.Properties, R.string.property_empty_child) {
 			@Override public boolean canCreateNew() {
@@ -44,7 +41,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		};
 	}
 
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
+	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_property_add:
 				listController.createNew();

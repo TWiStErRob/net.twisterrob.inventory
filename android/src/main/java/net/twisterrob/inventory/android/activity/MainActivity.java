@@ -159,7 +159,7 @@ public class MainActivity extends DrawerActivity
 				.show();
 	}
 
-	@Override protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+	@Override protected void onRestoreInstanceState(@Nullable Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		// In case MainActivity is being restored after coming back from another activity the drawer will restore its
 		// state to when the drawer item was clicked, restore our known good selection to override that behavior.
