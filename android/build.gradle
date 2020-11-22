@@ -52,6 +52,7 @@ dependencies {
 
 android {
 	defaultConfig {
+		// TODEL OldTargetApi lint when bumping to 30
 		targetSdkVersion 29
 		applicationId 'net.twisterrob.inventory'
 		version {

@@ -69,7 +69,7 @@
 		<ignore regexp="^A newer version of org.mockito:mockito-core" />
 	</issue>
 	<issue id="OldTargetApi" severity="ignore">
-		<!-- TODEL remove after upgrading support library to latest -->
+		<!-- Cannot target API 30 yet, as it needs scoped storage updates. -->
 	</issue>
 	<!-- This app doesn't have a public website with URLs. Warning comes up in manifest and/or ItemViewActivity -->
 	<issue id="GoogleAppIndexingApiWarning" severity="ignore" />
