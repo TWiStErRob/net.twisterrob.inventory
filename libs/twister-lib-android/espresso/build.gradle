@@ -37,12 +37,9 @@ dependencies {
 	api "androidx.test.ext:junit:${VERSION_ESPRESSO_RUNNER}"
 
 	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
-	compileOnly "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
-	compileOnly "com.google.android.material:material:${VERSION_SUPPORT}"
 	compileOnly "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
 
 	androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
-	androidTestImplementation "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
 	androidTestRuntimeOnly "net.twisterrob.lib:twister-lib-android-slf4j"
 
 	testImplementation "org.mockito:mockito-core:${VERSION_MOCKITO}"

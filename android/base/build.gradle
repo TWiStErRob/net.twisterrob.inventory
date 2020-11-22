@@ -6,7 +6,7 @@ dependencies {
 	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
 	implementation "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
 	compileOnly "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
-	compileOnly "com.google.android.material:material:${VERSION_SUPPORT}"
+	implementation "com.google.android.material:material:${VERSION_SUPPORT}"
 
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-java"

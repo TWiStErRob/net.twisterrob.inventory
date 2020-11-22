@@ -2,9 +2,6 @@ package net.twisterrob.android.utils.tostring.stringers.detailed;
 
 import javax.annotation.Nonnull;
 
-import android.os.Build.*;
-import android.os.Bundle;
-
 import com.google.android.material.navigation.NavigationView.SavedState;
 
 import net.twisterrob.java.utils.tostring.*;

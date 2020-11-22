@@ -21,11 +21,9 @@ dependencies {
 	implementation 'net.twisterrob.lib:twister-lib-android-capture_image'
 	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j')
 
-	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
 	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
 	implementation "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
 	implementation "com.google.android.material:material:${VERSION_SUPPORT}"
-//	implementation "androidx.cardview:cardview:${VERSION_SUPPORT}"
 	implementation "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
 	implementation "com.google.android:flexbox:${VERSION_FLEXBOX}"
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
