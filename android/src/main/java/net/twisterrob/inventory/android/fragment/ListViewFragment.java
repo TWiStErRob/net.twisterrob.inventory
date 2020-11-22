@@ -44,7 +44,7 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleList.id(),
 				Intents.bundleFromList(getArgListID()),
-				SingleList.createCallbacks(getContext(), new SingleRowLoaded())
+				SingleList.createCallbacks(requireContext(), new SingleRowLoaded())
 		);
 	}
 
@@ -69,7 +69,7 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 	}
 
 	private void rename(long listID) {
-		Dialogs.executeConfirm(getActivity(), new RenameListAction(listID) {
+		Dialogs.executeConfirm(requireActivity(), new RenameListAction(listID) {
 			@Override public void finished() {
 				refresh();
 			}
@@ -81,7 +81,7 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 	}
 
 	private void delete(final long listID) {
-		Dialogs.executeConfirm(getActivity(), new DeleteListAction(listID) {
+		Dialogs.executeConfirm(requireActivity(), new DeleteListAction(listID) {
 			@Override public void finished() {
 				ListDTO list = new ListDTO();
 				list.id = listID;
@@ -91,7 +91,7 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 	}
 
 	private long getArgListID() {
-		return getArguments().getLong(Extras.LIST_ID, CommonColumns.ID_ADD);
+		return requireArguments().getLong(Extras.LIST_ID, CommonColumns.ID_ADD);
 	}
 
 	public static ListViewFragment newInstance(long listID) {

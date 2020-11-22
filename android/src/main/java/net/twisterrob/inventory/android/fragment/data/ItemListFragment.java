@@ -68,7 +68,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	}
 
 	@Override
-	protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+	protected SelectionActionMode onPrepareSelectionMode(@NonNull SelectionAdapter<?> adapter) {
 		MoveTargetActivity.Builder builder = MoveTargetActivity
 				.pick()
 				.allowRooms()
@@ -105,27 +105,27 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		if (getArgRoomID() != Room.ID_ADD) {
 			Bundle args = Intents.bundleFromRoom(getArgRoomID());
 			Loaders loader = Loaders.SingleRoom;
-			getLoaderManager().initLoader(loader.id(), args, loader.createCallbacks(getContext(), new LoadSingleRow() {
+			getLoaderManager().initLoader(loader.id(), args, loader.createCallbacks(requireContext(), new LoadSingleRow() {
 				@Override protected void process(@NonNull Cursor data) {
 					super.process(data);
 					long root = data.getLong(data.getColumnIndex(Room.ROOT_ITEM));
-					getArguments().putLong(Extras.PARENT_ID, root);
+					requireArguments().putLong(Extras.PARENT_ID, root);
 				}
 			}));
 		}
 	}
 
 	private long getArgListID() {
-		return getArguments().getLong(Extras.LIST_ID, CommonColumns.ID_ADD);
+		return requireArguments().getLong(Extras.LIST_ID, CommonColumns.ID_ADD);
 	}
 	private long getArgParentItemID() {
-		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
+		return requireArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
 	private long getArgRoomID() {
-		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+		return requireArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 	private CharSequence getArgQuery() {
-		return getArguments().getCharSequence(SearchManager.QUERY);
+		return requireArguments().getCharSequence(SearchManager.QUERY);
 	}
 
 	@Override protected void onListItemClick(int position, long recyclerViewItemID) {
@@ -161,7 +161,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	}
 
 	public ItemListFragment addHeader(@Nullable Bundle extras) {
-		Bundle args = getArguments();
+		Bundle args = requireArguments();
 		BaseFragment<?> header = null;
 		if (args.containsKey(Extras.PARENT_ID)) {
 			header = ItemViewFragment.newInstance(getArgParentItemID());
@@ -172,7 +172,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		}
 		if (header != null && extras != null) {
 			// TODO lazy one, maybe be more explicit with BaseViewFragment.SHOW_DETAILS
-			header.getArguments().putAll(extras);
+			header.requireArguments().putAll(extras);
 		}
 		setHeader(header);
 		return this;

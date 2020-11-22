@@ -141,17 +141,4 @@ public class BaseFragment<T> extends VariantFragment {
 	protected void onRefresh() {
 		// optional override
 	}
-
-	public final Context getContext() {
-		return getActivity();
-	}
-
-	/**
-	 * Don't use {@link androidx.fragment.app.Fragment#getView}
-	 * outside lifecycle methods that don't guarantee its existence.
-	 */
-	@SuppressWarnings("ConstantConditions")
-	@Override public @NonNull View getView() {
-		return super.getView();
-	}
 }

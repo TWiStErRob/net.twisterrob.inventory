@@ -46,7 +46,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		if (!isNew()) {
 			Dependency<Cursor> loadPropertyData = manager.add(SingleProperty.id(),
 					Intents.bundleFromProperty(getArgPropertyID()),
-					SingleProperty.createCallbacks(getContext(), new SingleRowLoaded())
+					SingleProperty.createCallbacks(requireContext(), new SingleRowLoaded())
 			);
 			loadPropertyData.dependsOn(populateTypes); // type is auto-selected when a property is loaded
 		}
@@ -71,7 +71,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 	}
 
 	private long getArgPropertyID() {
-		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
+		return requireArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
 	@Override protected PropertyDTO onSave(Database db, PropertyDTO param) {

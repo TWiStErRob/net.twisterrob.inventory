@@ -40,7 +40,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleCategory.id(),
 				Intents.bundleFromCategory(getArgCategoryID()),
-				SingleCategory.createCallbacks(getContext(), new SingleRowLoaded())
+				SingleCategory.createCallbacks(requireContext(), new SingleRowLoaded())
 		);
 	}
 
@@ -54,17 +54,17 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		return new DescriptionBuilder()
 				.append("Category ID", entity.id, DEBUG)
 				.append("Category Key", entity.name, DEBUG)
-				.append("Category Name", ResourceTools.getText(getContext(), entity.name))
+				.append("Category Name", ResourceTools.getText(requireContext(), entity.name))
 				.append("Category Image", entity.typeImage, DEBUG)
-				.append("Description", CategoryDTO.getDescription(getContext(), entity.name))
+				.append("Description", CategoryDTO.getDescription(requireContext(), entity.name))
 				.append("Parent ID", entity.parentID, DEBUG)
 				.append("Inside", entity.parentName)
 				.append("# of direct subcategories", entity.numDirectChildren)
 				.append("# of subcategories", entity.numAllChildren)
 				.append("# of items in this category", entity.numDirectItems)
 				.append("# of items in subcategories", entity.numAllItems)
-				.append("Keywords", CategoryDTO.getKeywords(getContext(), entity.name))
-				.append("Extended Keywords", CategoryDTO.getKeywordsExtended(getContext(), entity.name), DEBUG)
+				.append("Keywords", CategoryDTO.getKeywords(requireContext(), entity.name))
+				.append("Extended Keywords", CategoryDTO.getKeywordsExtended(requireContext(), entity.name), DEBUG)
 				.build();
 	}
 
@@ -83,7 +83,7 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 	}
 
 	private long getArgCategoryID() {
-		return getArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
+		return requireArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 	}
 
 	public static CategoryViewFragment newInstance(long categoryID) {

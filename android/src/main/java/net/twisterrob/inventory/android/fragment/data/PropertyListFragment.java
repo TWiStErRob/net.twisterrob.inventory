@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.view.ActionMode;
 
 import net.twisterrob.android.view.SelectionAdapter;
@@ -56,7 +57,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		}
 	}
 
-	@Override protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+	@Override protected SelectionActionMode onPrepareSelectionMode(@NonNull SelectionAdapter<?> adapter) {
 		return new PropertySelectionActionMode(this, adapter);
 	}
 
@@ -75,10 +76,10 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 	}
 
 	private static class PropertySelectionActionMode extends SelectionActionMode {
-		private final BaseFragment<?> fragment;
+		private final @NonNull BaseFragment<?> fragment;
 
-		public PropertySelectionActionMode(BaseFragment<?> fragment, SelectionAdapter<?> adapter) {
-			super(fragment.getActivity(), adapter);
+		public PropertySelectionActionMode(@NonNull BaseFragment<?> fragment, @NonNull SelectionAdapter<?> adapter) {
+			super(fragment.requireActivity(), adapter);
 			this.fragment = fragment;
 		}
 		@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {

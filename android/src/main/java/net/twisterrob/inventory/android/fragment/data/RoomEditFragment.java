@@ -47,7 +47,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		if (!isNew()) {
 			Dependency<Cursor> loadRoomData = manager.add(SingleRoom.id(),
 					Intents.bundleFromRoom(getArgRoomID()),
-					SingleRoom.createCallbacks(getContext(), new SingleRowLoaded())
+					SingleRoom.createCallbacks(requireContext(), new SingleRowLoaded())
 			);
 			loadRoomData.dependsOn(populateTypes); // type is auto-selected when a room is loaded
 		}
@@ -73,11 +73,11 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 	}
 
 	private long getArgPropertyID() {
-		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
+		return requireArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
 	private long getArgRoomID() {
-		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+		return requireArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 
 	@Override protected RoomDTO onSave(Database db, RoomDTO param) {

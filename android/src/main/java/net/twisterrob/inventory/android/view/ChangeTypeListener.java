@@ -20,13 +20,13 @@ import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 
 public class ChangeTypeListener implements OnClickListener {
-	private final BaseFragment<?> fragment;
-	private final Context context;
-	private final ImagedVariants variants;
+	private final @NonNull BaseFragment<?> fragment;
+	private final @NonNull Context context;
+	private final @NonNull ImagedVariants variants;
 
-	public ChangeTypeListener(BaseFragment<?> fragment, ImagedDTO entity) {
+	public ChangeTypeListener(@NonNull BaseFragment<?> fragment, ImagedDTO entity) {
 		this.fragment = fragment;
-		this.context = fragment.getActivity();
+		this.context = fragment.requireContext();
 		this.variants = which(entity);
 	}
 
@@ -34,7 +34,7 @@ public class ChangeTypeListener implements OnClickListener {
 		new ChangeTypeDialog(fragment).show(variants, variants.entity.type);
 	}
 
-	private ImagedVariants which(ImagedDTO entity) {
+	private @NonNull ImagedVariants which(@Nullable ImagedDTO entity) {
 		ImagedVariants variants;
 		if (entity instanceof ItemDTO) {
 			variants = new ItemVariants();

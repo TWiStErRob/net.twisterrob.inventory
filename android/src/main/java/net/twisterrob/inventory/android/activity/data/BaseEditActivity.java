@@ -14,7 +14,7 @@ import static net.twisterrob.inventory.android.fragment.data.BaseEditFragment.*;
 
 public abstract class BaseEditActivity<E extends BaseEditFragment<?, ?>> extends SingleFragmentActivity<E> {
 	@Override protected FragmentTransaction updateFragment(E fragment) {
-		fragment.getArguments().putBoolean(EDIT_IMAGE, getIntent().getBooleanExtra(EDIT_IMAGE, false));
+		fragment.requireArguments().putBoolean(EDIT_IMAGE, getIntent().getBooleanExtra(EDIT_IMAGE, false));
 		return super.updateFragment(fragment);
 	}
 

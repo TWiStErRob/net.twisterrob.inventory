@@ -10,6 +10,7 @@ import android.widget.*;
 
 import static android.content.Context.*;
 
+import androidx.annotation.Nullable;
 import androidx.viewpager.widget.*;
 
 import net.twisterrob.android.utils.tools.ViewTools;
@@ -24,7 +25,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 	public static final String KEY_PAGE = "detailsPage";
 
 	protected ViewPager pager;
-	private Intent shareIntent;
+	private @Nullable Intent shareIntent;
 
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_details, container, false);
@@ -39,13 +40,13 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		ImageAndDescriptionAdapter adapter = new ImageAndDescriptionAdapter(entity);
 		pager.setAdapter(adapter);
 		pager.setCurrentItem(adapter.getPositionOf(getDefaultPosition()));
-		shareIntent = entity.createShareIntent(getContext());
+		shareIntent = entity.createShareIntent(requireContext());
 	}
 
 	private String getDefaultPosition() {
 		String auto = getString(R.string.pref_defaultViewPage_auto);
 		String preference = App.prefs().getString(R.string.pref_defaultViewPage, R.string.pref_defaultViewPage_default);
-		String override = getArguments().getString(KEY_PAGE);
+		String override = requireArguments().getString(KEY_PAGE);
 		String page = preference;
 		if (auto.equals(page) && override != null) {
 			page = override;

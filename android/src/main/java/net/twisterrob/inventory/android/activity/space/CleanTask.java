@@ -18,7 +18,7 @@ abstract class CleanTask extends SimpleSafeAsyncTask<Activity, Void, Void> imple
 		this.callbacks = callbacks;
 	}
 
-	@Override public void execute(Activity activity) {
+	@Override public void execute(@NonNull Activity activity) {
 		super.execute(activity);
 	}
 
@@ -40,7 +40,7 @@ abstract class CleanTask extends SimpleSafeAsyncTask<Activity, Void, Void> imple
 		callbacks.taskDone();
 	}
 
-	private static void killProcessesAround(Activity activity) {
+	private static void killProcessesAround(@NonNull Activity activity) {
 		ActivityManager am = (ActivityManager)activity.getSystemService(Context.ACTIVITY_SERVICE);
 		String myProcessPrefix = activity.getApplicationInfo().processName;
 		String myProcessName = AndroidTools.getActivityInfo(activity, 0).processName;

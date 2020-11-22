@@ -40,7 +40,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 			IntentFilter filter = new IntentFilter();
 			filter.addAction(ACTION_PROGRESS_BROADCAST);
 			filter.addAction(ACTION_FINISHED_BROADCAST);
-			LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, filter);
+			LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver, filter);
 
 			if (service.isInProgress()) {
 				displayer.setProgress(service.getLastProgress());
@@ -51,7 +51,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 			}
 		}
 		@Override protected void serviceUnbound(ComponentName name, LocalBinder service) {
-			LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
+			LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(receiver);
 		}
 		@Override public void started() {
 			setCancelling(getBinding().isCancelled());
@@ -126,11 +126,11 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 	@Override public void onStart() {
 		super.onStart();
 		// Bind at the earliest possible time and unbind at the right time (see below).
-		backupService.bind(getContext());
+		backupService.bind(requireContext());
 	}
 	@Override public void onPause() {
 		super.onPause();
-		if (getActivity().isFinishing()) {
+		if (requireActivity().isFinishing()) {
 			// Unbind earlier, because we won't be able to handle any more stuff.
 			// This helps to lessen the probability of losing progress notifications.
 			backupService.unbind();
@@ -138,7 +138,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 	}
 	@Override public void onStop() {
 		super.onStop();
-		if (!getActivity().isFinishing()) {
+		if (!requireActivity().isFinishing()) {
 			// Unbind later than onPause. Even though the activity is paused it may still be visible.
 			// For example in case of a Drive export, a nice progress is displayed by us behind the huge spinner.
 			backupService.unbind();

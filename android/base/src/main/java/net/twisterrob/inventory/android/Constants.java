@@ -81,21 +81,25 @@ public interface Constants {
 		 * @param file from {@link #getShareFile}
 		 * @return {@link Uri} to be shared in {@link Intent#setData(Uri)}
 		 */
-		public static Uri getShareUri(Context context, File file) {
+		public static @NonNull Uri getShareUri(@NonNull Context context, @NonNull File file) {
 			String authority = AndroidTools.findProviderAuthority(context, FileProvider.class).authority;
 			return FileProvider.getUriForFile(context, authority, file);
 		}
-		public static File getShareFile(Context context, String ext) throws IOException {
+		public static File getShareFile(@NonNull Context context, @NonNull String ext) throws IOException {
 			return getTemporaryCacheFile(context, PUBLIC_SHARE_FOLDER_NAME, "share_", "." + ext);
 		}
-		public static File getShareImage(Context context) throws IOException {
+		public static File getShareImage(@NonNull Context context) throws IOException {
 			return getShareFile(context, "jpg");
 		}
-		public static File getTempImage(Context context) throws IOException {
+		public static File getTempImage(@NonNull Context context) throws IOException {
 			return getTemporaryCacheFile(context, PUBLIC_TEMP_FOLDER_NAME, "temp_", ".jpg");
 		}
-		private static File getTemporaryCacheFile(Context context, String folderName, String prefix, String suffix)
-				throws IOException {
+		private static File getTemporaryCacheFile(
+				@NonNull Context context,
+				@NonNull String folderName,
+				@NonNull String prefix,
+				@NonNull String suffix
+		) throws IOException {
 			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 			try {
 				File folder = new File(context.getCacheDir(), folderName);

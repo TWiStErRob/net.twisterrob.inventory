@@ -103,8 +103,8 @@ public class CategoryHelpBuilder {
 	/** last measured size was 131k */
 	private static final int EMPIRIC_SIZE = 150 * 1024;
 
-	private final Context context;
-	public CategoryHelpBuilder(Context context) {
+	private final @NonNull Context context;
+	public CategoryHelpBuilder(@NonNull Context context) {
 		this.context = context;
 	}
 

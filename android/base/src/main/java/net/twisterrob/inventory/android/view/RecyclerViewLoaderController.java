@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.view;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.fragment.app.*;
 import androidx.loader.app.LoaderManager;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
@@ -18,7 +18,7 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 		this(activity, new ActivityLoaderManagerProvider(activity));
 	}
 	public RecyclerViewLoaderController(@NonNull Fragment fragment) {
-		this(fragment.getActivity(), new FragmentLoaderManagerProvider(fragment));
+		this(fragment.requireActivity(), new FragmentLoaderManagerProvider(fragment));
 	}
 	private RecyclerViewLoaderController(@NonNull Context context, @NonNull LoaderManagerProvider manager) {
 		this.context = context;
@@ -45,7 +45,7 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 	}
 
 	/** getLoaderManager().initLoader(id, args, new LoaderFactory() {...}); */
-	public abstract void startLoad(Bundle args);
+	public abstract void startLoad(@Nullable Bundle args);
 
 	/** getLoaderManager().getLoader(id).onContentChanged(); */
 	public abstract void refresh();

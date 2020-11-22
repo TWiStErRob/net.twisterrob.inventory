@@ -33,7 +33,6 @@ public class SynchronizedScrollListener extends OnScrollListener {
 	 * @param view to adjust the top of, it's useful to use a provider when the view is not yet available or may change,
 	 *             for example {@link androidx.fragment.app.Fragment#getView()}
 	 */
-	@SuppressWarnings("deprecation") // deprecated without support Compat method
 	public SynchronizedScrollListener(float ratio, final RecyclerView list, ViewProvider view) {
 		this.ratio = ratio;
 		this.view = view;
@@ -46,13 +45,13 @@ public class SynchronizedScrollListener extends OnScrollListener {
 			};
 		}
 	}
-	@Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+	@Override public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
 		onScrolled(recyclerView, 0, 0); // fix any strange position when user interacts
 		// this was needed in Inventory when moving 3 out of 5 items somewhere else
 		// and the header doesn't come back into view even though there's space for it
 		// this change doesn't fix the issue entirely, but at least it jumps in when the user touches
 	}
-	@Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+	@Override public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
 		View view = this.view.getView();
 		if (view != null) {
 			int top = view.getTop();

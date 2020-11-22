@@ -6,7 +6,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.content.contract.*;
 
@@ -28,53 +28,53 @@ public final class Intents {
 		intent.putExtra(Extras.PARENT_EQUALS_BACK, true);
 		return intent;
 	}
-	public static boolean isChildNav(Intent intent) {
+	public static boolean isChildNav(@NonNull Intent intent) {
 		return intent.getBooleanExtra(Extras.PARENT_EQUALS_BACK, false);
 	}
 
 	//region Bundle Factories
-	public static Bundle bundleFrom(String key, Serializable value) {
+	public static @NonNull Bundle bundleFrom(@NonNull String key, @Nullable Serializable value) {
 		Bundle args = new Bundle();
 		args.putSerializable(key, value);
 		return args;
 	}
 
-	public static Bundle bundleFromProperty(long propertyID) {
+	public static @NonNull Bundle bundleFromProperty(long propertyID) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(Extras.PROPERTY_ID, propertyID);
 		return bundle;
 	}
-	public static Bundle bundleFromRoom(long roomID) {
+	public static @NonNull Bundle bundleFromRoom(long roomID) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(Extras.ROOM_ID, roomID);
 		return bundle;
 	}
-	public static Bundle bundleFromParent(long itemID) {
+	public static @NonNull Bundle bundleFromParent(long itemID) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(Extras.PARENT_ID, itemID);
 		return bundle;
 	}
-	public static Bundle bundleFromItem(long itemID) {
+	public static @NonNull Bundle bundleFromItem(long itemID) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(Extras.ITEM_ID, itemID);
 		return bundle;
 	}
-	public static Bundle bundleFromCategory(long categoryID) {
+	public static @NonNull Bundle bundleFromCategory(long categoryID) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(Extras.CATEGORY_ID, categoryID);
 		return bundle;
 	}
-	public static Bundle bundleFromList(long listID) {
+	public static @NonNull Bundle bundleFromList(long listID) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(Extras.LIST_ID, listID);
 		return bundle;
 	}
-	public static Bundle bundleFromIDs(long... IDs) {
+	public static @NonNull Bundle bundleFromIDs(long... IDs) {
 		Bundle bundle = new Bundle();
 		bundle.putLongArray("IDs", IDs);
 		return bundle;
 	}
-	public static Bundle bundleFromQuery(CharSequence query) {
+	public static @NonNull Bundle bundleFromQuery(CharSequence query) {
 		Bundle args = new Bundle();
 		args.putCharSequence(SearchManager.QUERY, query);
 		return args;
@@ -82,32 +82,32 @@ public final class Intents {
 	//endregion Bundle Factories
 
 	//region Intent Factories
-	public static Intent intentFromProperty(long propertyID) {
+	public static @NonNull Intent intentFromProperty(long propertyID) {
 		Intent intent = new Intent();
 		intent.putExtras(bundleFromProperty(propertyID));
 		return intent;
 	}
-	public static Intent intentFromRoom(long roomID) {
+	public static @NonNull Intent intentFromRoom(long roomID) {
 		Intent intent = new Intent();
 		intent.putExtras(bundleFromRoom(roomID));
 		return intent;
 	}
-	public static Intent intentFromParent(long itemID) {
+	public static @NonNull Intent intentFromParent(long itemID) {
 		Intent intent = new Intent();
 		intent.putExtras(bundleFromParent(itemID));
 		return intent;
 	}
-	public static Intent intentFromItem(long itemID) {
+	public static @NonNull Intent intentFromItem(long itemID) {
 		Intent intent = new Intent();
 		intent.putExtras(bundleFromItem(itemID));
 		return intent;
 	}
-	public static Intent intentFromCategory(long categoryID) {
+	public static @NonNull Intent intentFromCategory(long categoryID) {
 		Intent intent = new Intent();
 		intent.putExtras(bundleFromCategory(categoryID));
 		return intent;
 	}
-	public static Intent intentFromList(long listID) {
+	public static @NonNull Intent intentFromList(long listID) {
 		Intent intent = new Intent();
 		intent.putExtras(bundleFromList(listID));
 		return intent;
@@ -115,19 +115,19 @@ public final class Intents {
 	//endregion Intent Factories
 
 	//region Getters
-	public static long[] getIDsFrom(Bundle bundle) {
+	public static long[] getIDsFrom(@NonNull Bundle bundle) {
 		return bundle.getLongArray("IDs");
 	}
-	public static long getItemFrom(Intent intent) {
+	public static long getItemFrom(@NonNull Intent intent) {
 		return getItemFrom(intent.getExtras());
 	}
-	public static long getPropertyFrom(Bundle bundle) {
+	public static long getPropertyFrom(@Nullable Bundle bundle) {
 		return bundle != null? bundle.getLong(Extras.PROPERTY_ID, Property.ID_ADD) : Property.ID_ADD;
 	}
-	public static long getItemFrom(Bundle bundle) {
+	public static long getItemFrom(@Nullable Bundle bundle) {
 		return bundle != null? bundle.getLong(Extras.ITEM_ID, Item.ID_ADD) : Item.ID_ADD;
 	}
-	public static long getCategory(Bundle bundle) {
+	public static long getCategory(@Nullable Bundle bundle) {
 		return bundle != null? bundle.getLong(Extras.CATEGORY_ID, Category.ID_ADD) : Category.ID_ADD;
 	}
 	//endregion Getters

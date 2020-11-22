@@ -125,7 +125,7 @@ public class Dialogs {
 			}
 			@SuppressWarnings("deprecation") // blocking the user's view intentionally
 			@Override public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
-				ProgressDialog dialog = new ProgressDialog(getActivity());
+				ProgressDialog dialog = new ProgressDialog(requireContext());
 				dialog.setMessage("Please wait...");
 				dialog.setIndeterminate(true);
 				return dialog;

@@ -4,13 +4,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager.LoaderCallbacks;
 import androidx.loader.content.Loader;
 
 public interface InventoryLoader {
 	int id();
 
-	LoaderCallbacks<Cursor> createCallbacks(Context context, LoadersCallbacksListener listener);
+	@NonNull LoaderCallbacks<Cursor> createCallbacks(
+			@NonNull Context context,
+			@NonNull LoadersCallbacksListener listener
+	);
 
 	interface LoadersCallbacksListener {
 		void preOnCreateLoader(int id, Bundle args);

@@ -146,20 +146,23 @@ public enum Loaders implements InventoryLoader {
 		return new LoadersCursorLoader(context, Loaders.this, args);
 	}
 
-	@Override public LoaderCallbacks<Cursor> createCallbacks(Context context, final LoadersCallbacksListener listener) {
+	@Override public @NonNull LoaderCallbacks<Cursor> createCallbacks(
+			@NonNull Context context,
+			final @NonNull LoadersCallbacksListener listener
+	) {
 		return new LoadersCallbacks(context) {
-			@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			@Override public @NonNull Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
 				listener.preOnCreateLoader(id, args);
 				Loader<Cursor> loader = super.onCreateLoader(id, args);
 				listener.postOnCreateLoader(loader, args);
 				return loader;
 			}
-			@Override public void onLoadFinished(Loader<Cursor> loader, @Nullable Cursor data) {
+			@Override public void onLoadFinished(@NonNull Loader<Cursor> loader, @Nullable Cursor data) {
 				listener.preOnLoadFinished(loader, data);
 				super.onLoadFinished(loader, data);
 				listener.postOnLoadFinished(loader, data);
 			}
-			@Override public void onLoaderReset(Loader<Cursor> loader) {
+			@Override public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 				listener.preOnLoaderReset(loader);
 				super.onLoaderReset(loader);
 				listener.postOnLoaderReset(loader);
@@ -189,20 +192,20 @@ public enum Loaders implements InventoryLoader {
 			this.context = context;
 		}
 
-		@Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		@Override public @NonNull Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
 			Loader<Cursor> loader = fromID(id).createLoader(context, args);
 			LOG.trace("{}.onCreateLoader({}, {}){}", loader, id, args, getTimings(loader));
 			return loader;
 		}
 
-		@Override public void onLoadFinished(Loader<Cursor> loader, @Nullable Cursor data) {
+		@Override public void onLoadFinished(@NonNull Loader<Cursor> loader, @Nullable Cursor data) {
 			if (loader instanceof LoadersCursorLoader) {
 				((LoadersCursorLoader)loader).timeLoadFinished = System.nanoTime();
 			}
 			LOG.trace("{}.onLoadFinished({}){}", loader, data, getTimings(loader));
 		}
 
-		@Override public void onLoaderReset(Loader<Cursor> loader) {
+		@Override public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 			if (loader instanceof LoadersCursorLoader) {
 				((LoadersCursorLoader)loader).timeLoaderReset = System.nanoTime();
 			}

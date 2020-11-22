@@ -14,7 +14,7 @@ import android.view.*;
 
 import com.bumptech.glide.Glide;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
@@ -309,7 +309,7 @@ public class MainActivity extends DrawerActivity
 			return super.onCreateOptionsMenu(menu);
 		}
 		// save current state to arguments because it will be preserved on rotation
-		Bundle args = fragment.getArguments();
+		Bundle args = fragment.requireArguments();
 		if (args.containsKey(OPTIONS_MENU_BACKUP)) {
 			fragment.setHasOptionsMenu(args.getBoolean(OPTIONS_MENU_BACKUP));
 			args.remove(OPTIONS_MENU_BACKUP);
@@ -453,7 +453,7 @@ public class MainActivity extends DrawerActivity
 	}
 
 	@SuppressLint("WrongThreadInterprocedural")
-	private static Intent improveCategories(Context context, @NonNull String email, Long categoryId) {
+	private static Intent improveCategories(@NonNull Context context, @NonNull String email, @Nullable Long categoryId) {
 		String subject = context.getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME + " Category Feedback";
 		Intent intent = new Intent(Intent.ACTION_VIEW)
 				.setData(Uri.parse("mailto:"))
@@ -467,7 +467,7 @@ public class MainActivity extends DrawerActivity
 		intent.putExtra(Intent.EXTRA_TEXT, text);
 		return intent;
 	}
-	public static void startImproveCategories(Context context, Long categoryId) {
+	public static void startImproveCategories(@NonNull Context context, @Nullable Long categoryId) {
 		String email = "feedback@twisterrob.net";
 		try {
 			context.startActivity(improveCategories(context, email, categoryId));

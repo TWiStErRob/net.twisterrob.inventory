@@ -64,7 +64,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	}
 
 	private void setLoading(final boolean isLoading) {
-		final SwipeRefreshLayout progress = getView().findViewById(R.id.progress_circular);
+		final SwipeRefreshLayout progress = requireView().findViewById(R.id.progress_circular);
 		progress.post(new Runnable() {
 			@Override public void run() {
 				progress.setRefreshing(isLoading);
@@ -300,13 +300,13 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	}
 
 	private long getArgPropertyID() {
-		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
+		return requireArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 	private long getArgRoomID() {
-		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+		return requireArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 	private long getArgItemID() {
-		return getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
+		return requireArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
 	}
 
 	public static SunburstFragment newPropertyInstance(long propertyID) {

@@ -5,7 +5,7 @@ import android.app.*;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.fragment.BaseDialogFragment;
 
@@ -23,16 +23,16 @@ class NoProgressTaskExecutor extends BaseDialogFragment implements TaskEndListen
 		setRetainInstance(true);
 	}
 
-	@Override public void onAttach(Context context) {
+	@Override public void onAttach(@NonNull Context context) {
 		super.onAttach(context);
 		listener = (TaskEndListener)context;
 		task.setCallbacks(this);
 	}
 
-	@Override public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCancelable(false);
-		task.execute(getActivity());
+		task.execute(requireActivity());
 	}
 
 	@Override public void onDetach() {
@@ -42,8 +42,8 @@ class NoProgressTaskExecutor extends BaseDialogFragment implements TaskEndListen
 	}
 
 	@SuppressWarnings("deprecation") // blocking the user's view intentionally
-	@Override public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
-		ProgressDialog dialog = new ProgressDialog(getActivity());
+	@Override public @NonNull Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+		ProgressDialog dialog = new ProgressDialog(requireContext());
 		dialog.setIndeterminate(true);
 		//dialog.setTitle(title);
 		dialog.setMessage("Please wait...");
@@ -55,7 +55,7 @@ class NoProgressTaskExecutor extends BaseDialogFragment implements TaskEndListen
 		listener.taskDone();
 	}
 
-	public static NoProgressTaskExecutor create(UITask task) {
+	public static @NonNull NoProgressTaskExecutor create(@NonNull UITask task) {
 		NoProgressTaskExecutor fragment = new NoProgressTaskExecutor();
 		fragment.task = task;
 		return fragment;

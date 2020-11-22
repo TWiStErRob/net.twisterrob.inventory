@@ -13,7 +13,7 @@ import android.widget.*;
 
 import static android.text.Spanned.*;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.twisterrob.android.utils.tools.*;
@@ -25,10 +25,10 @@ import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.java.text.Suggester.*;
 
 public class Hinter {
-	private final Context context;
-	private final HintBuilder adapter;
+	private final @NonNull Context context;
+	private final @NonNull HintBuilder adapter;
 
-	public Hinter(Context context, CategorySelectedEvent clickHandler) {
+	public Hinter(@NonNull Context context, @NonNull CategorySelectedEvent clickHandler) {
 		this.context = context;
 		this.adapter = new HintBuilder(context, null, clickHandler);
 	}
@@ -126,15 +126,18 @@ public class Hinter {
 	private static class HintBuilder extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 		private static final long MORE_ID = Category.ID_ADD;
 		private final CategoryCache cache;
-		private final CategorySelectedEvent clickHandler;
+		private final @NonNull CategorySelectedEvent clickHandler;
 		private List<CategorySuggestion<Long>> suggestions;
 		private int upUntil;
 		private int maxDistance;
 		private String currentTypeName;
 		private boolean showEditDistances;
 
-		public HintBuilder(Context context, List<CategorySuggestion<Long>> suggestions,
-				CategorySelectedEvent clickHandler) {
+		public HintBuilder(
+				@NonNull Context context,
+				@Nullable List<CategorySuggestion<Long>> suggestions,
+				@NonNull CategorySelectedEvent clickHandler
+		) {
 			this.cache = CategoryDTO.getCache(context);
 			setHasStableIds(true);
 			this.clickHandler = clickHandler;
@@ -167,7 +170,7 @@ public class Hinter {
 				loadMore();
 			}
 		}
-		public void setSuggestions(List<CategorySuggestion<Long>> suggestions) {
+		public void setSuggestions(@Nullable List<CategorySuggestion<Long>> suggestions) {
 			if (suggestions == null) {
 				suggestions = Collections.emptyList();
 			}

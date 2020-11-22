@@ -70,7 +70,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		listController.startLoad(createLoadArgs());
 	}
 
-	protected Bundle createLoadArgs() {
+	protected @Nullable Bundle createLoadArgs() {
 		return null;
 	}
 
@@ -153,7 +153,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		}
 	}
 
-	protected abstract SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter);
+	protected abstract SelectionActionMode onPrepareSelectionMode(@NonNull SelectionAdapter<?> adapter);
 
 	@Override public final void onItemClick(int position, long recyclerViewItemID) {
 		if (selectionMode.isRunning()) {
@@ -204,17 +204,17 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		if (getArgSelectionEnabled()) {
 			selectionMode = onPrepareSelectionMode(selectionAdapter);
 		} else {
-			selectionMode = new SelectionActionMode.NoOp(getActivity());
+			selectionMode = new SelectionActionMode.NoOp(requireActivity());
 		}
 
 		if (hasHeaderUI()) {
-			View headerContainer = getView().findViewById(R.id.header);
+			View headerContainer = requireView().findViewById(R.id.header);
 			adapter.setHeader(headerContainer);
 			list.addOnScrollListener(new SynchronizedScrollListener(0, list, new StaticViewProvider(headerContainer)));
 			selectionAdapter.setSelectable(0, false);
 		}
 
-		GridLayoutManager layout = new GridLayoutManager(getContext(), columns);
+		GridLayoutManager layout = new GridLayoutManager(requireContext(), columns);
 		// TOFIX v21.0.3: doesn't work, false -> ladder jumpy, true -> chaotic jumpy
 		//layout.setSmoothScrollbarEnabled(true);
 		layout.setSpanSizeLookup(new SpanSizeLookup() {
@@ -228,13 +228,13 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		list.setLayoutManager(layout);
 		list.setAdapter(selectionAdapter);
 		// FIXME replace this with proper Glide.with calls
-		list.addOnScrollListener(new PauseOnFling(Glide.with(getContext().getApplicationContext())));
+		list.addOnScrollListener(new PauseOnFling(Glide.with(requireContext().getApplicationContext())));
 
 		return adapter;
 	}
 
 	private boolean getArgSelectionEnabled() {
-		return getArguments().getBoolean(KEY_ENABLE_SELECTION, true);
+		return requireArguments().getBoolean(KEY_ENABLE_SELECTION, true);
 	}
 
 	protected SingleHeaderAdapter<?> createAdapter() {

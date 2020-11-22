@@ -51,7 +51,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleRoom.id(),
 				Intents.bundleFromRoom(getArgRoomID()),
-				SingleRoom.createCallbacks(getContext(), new SingleRowLoaded())
+				SingleRoom.createCallbacks(requireContext(), new SingleRowLoaded())
 		);
 	}
 
@@ -112,7 +112,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	private void move(final long roomID, final long propertyID) {
-		Dialogs.executeConfirm(getActivity(), new MoveRoomsAction(propertyID, roomID) {
+		Dialogs.executeConfirm(requireActivity(), new MoveRoomsAction(propertyID, roomID) {
 			@Override public void finished() {
 				eventsListener.roomMoved(roomID, propertyID);
 			}
@@ -127,7 +127,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	private void delete(final long roomID) {
-		Dialogs.executeConfirm(getActivity(), new DeleteRoomsAction(roomID) {
+		Dialogs.executeConfirm(requireActivity(), new DeleteRoomsAction(roomID) {
 			@Override public void finished() {
 				RoomDTO room = new RoomDTO();
 				room.id = roomID;
@@ -141,7 +141,7 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	private long getArgRoomID() {
-		return getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+		return requireArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 	}
 
 	public static RoomViewFragment newInstance(long roomID) {

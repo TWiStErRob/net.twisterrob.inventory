@@ -45,7 +45,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleProperty.id(),
 				Intents.bundleFromProperty(getArgPropertyID()),
-				SingleProperty.createCallbacks(getContext(), new SingleRowLoaded())
+				SingleProperty.createCallbacks(requireContext(), new SingleRowLoaded())
 		);
 	}
 
@@ -86,7 +86,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	}
 
 	private void delete(final long propertyID) {
-		Dialogs.executeConfirm(getActivity(), new DeletePropertiesAction(propertyID) {
+		Dialogs.executeConfirm(requireActivity(), new DeletePropertiesAction(propertyID) {
 			@Override public void finished() {
 				PropertyDTO item = new PropertyDTO();
 				item.id = propertyID;
@@ -100,7 +100,7 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	}
 
 	private long getArgPropertyID() {
-		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
+		return requireArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
 	public static PropertyViewFragment newInstance(long propertyID) {

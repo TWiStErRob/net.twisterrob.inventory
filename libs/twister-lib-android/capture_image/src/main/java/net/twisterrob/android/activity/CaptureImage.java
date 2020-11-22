@@ -632,7 +632,8 @@ public class CaptureImage extends Activity implements ActivityCompat.OnRequestPe
 	}
 
 	/** @param maxSize pixel size or {@link #EXTRA_MAXSIZE_NO_MAX} */
-	public static Intent saveTo(Context context, File targetFile, Uri publicTarget, int maxSize) {
+	public static @NonNull Intent saveTo(
+			@NonNull Context context, @NonNull File targetFile, @NonNull Uri publicTarget, int maxSize) {
 		Intent intent = new Intent(context, CaptureImage.class);
 		intent.putExtra(CaptureImage.EXTRA_OUTPUT, targetFile.getAbsolutePath());
 		intent.putExtra(CaptureImage.EXTRA_OUTPUT_PUBLIC, publicTarget);

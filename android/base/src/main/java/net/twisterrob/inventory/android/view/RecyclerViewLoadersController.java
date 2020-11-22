@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.view;
 
-import org.slf4j.*;
-
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -16,8 +14,6 @@ import net.twisterrob.inventory.android.content.contract.InventoryLoader.Loaders
 
 public abstract class RecyclerViewLoadersController
 		extends RecyclerViewLoaderController<CursorRecyclerAdapter<?>, Cursor> {
-	private static final Logger LOG = LoggerFactory.getLogger(RecyclerViewLoadersController.class);
-
 	private final InventoryLoader loader;
 
 	public RecyclerViewLoadersController(@NonNull Fragment fragment, @NonNull InventoryLoader loader) {

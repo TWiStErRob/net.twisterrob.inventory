@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import org.slf4j.*;
-
 import android.content.Intent;
 import android.database.*;
 import android.os.Bundle;
@@ -31,8 +29,6 @@ import net.twisterrob.inventory.android.view.adapters.*;
 import net.twisterrob.inventory.android.view.adapters.CategoryViewHolder.CategoryItemEvents;
 
 public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEvents> {
-	private static final Logger LOG = LoggerFactory.getLogger(CategoryContentsFragment.class);
-
 	public interface CategoriesEvents extends ItemsEvents {
 		void categorySelected(long categoryID);
 		void categoryActioned(long categoryID);
@@ -59,7 +55,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_feedback:
-				MainActivity.startImproveCategories(getContext(), getArgCategoryID());
+				MainActivity.startImproveCategories(requireContext(), getArgCategoryID());
 				return true;
 			case R.id.action_category_help:
 				Intent intent = MainActivity.list(MainActivity.PAGE_CATEGORY_HELP);
@@ -78,7 +74,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		return new CategoryAndItemsAdapter();
 	}
 
-	@Override protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+	@Override protected SelectionActionMode onPrepareSelectionMode(@NonNull SelectionAdapter<?> adapter) {
 		MoveTargetActivity.Builder builder = MoveTargetActivity
 				.pick()
 				.startFromPropertyList()
@@ -97,12 +93,12 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	}
 
 	private Long getArgCategoryID() {
-		return (Long)getArguments().get(Extras.CATEGORY_ID);
+		return (Long)requireArguments().get(Extras.CATEGORY_ID);
 	}
 	/** @see #createLoadArgs() */
 	@SuppressWarnings("unused")
 	private boolean getArgFlatten() {
-		return getArguments().getBoolean(Extras.INCLUDE_SUBS, false);
+		return requireArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
 
 	public static CategoryContentsFragment newInstance(Long parentCategoryID, boolean flatten) {
@@ -240,7 +236,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 
 	private class CategoryItemEventsForwarder implements CategoryItemEvents {
 		@Override public void showItemsInCategory(long categoryID) {
-			getActivity().startActivity(CategoryActivity.showFlattened(categoryID));
+			requireActivity().startActivity(CategoryActivity.showFlattened(categoryID));
 		}
 
 		@Override public void onItemClick(int position, long recyclerViewItemID) {

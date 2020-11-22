@@ -86,7 +86,7 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 	}
 
 	private long getArgItemID() {
-		return Intents.getItemFrom(getArguments());
+		return Intents.getItemFrom(requireArguments());
 	}
 
 	@Override protected void onRefresh() {

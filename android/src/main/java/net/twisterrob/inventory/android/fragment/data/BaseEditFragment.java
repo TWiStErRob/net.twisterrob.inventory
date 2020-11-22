@@ -86,7 +86,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	protected LoaderCallbacks<Cursor> getTypeCallback() {
-		return new CursorSwapper(getContext(), typeAdapter) {
+		return new CursorSwapper(requireContext(), typeAdapter) {
 			@Override protected void updateAdapter(Cursor data) {
 				super.updateAdapter(data);
 				if (isNew()) {
@@ -106,8 +106,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
 		resetPicture(); // displays image, so needs type to be selected
 		description.setText(dto.description);
-		if (getArguments().getBoolean(EDIT_IMAGE)) {
-			getArguments().remove(EDIT_IMAGE);
+		if (requireArguments().getBoolean(EDIT_IMAGE)) {
+			requireArguments().remove(EDIT_IMAGE);
 			getPicture();
 		}
 		type.post(new Runnable() {
@@ -140,13 +140,13 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 						}
 						@Override public CharSequence getTypeName(Cursor cursor) {
 							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							CategoryCache cache = CategoryDTO.getCache(getContext());
+							CategoryCache cache = CategoryDTO.getCache(requireContext());
 							return cache.getCategoryPath(categoryID);
 						}
 						@Override public CharSequence getKeywords(Cursor cursor) {
 							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							CategoryCache cache = CategoryDTO.getCache(getContext());
-							return CategoryDTO.getKeywords(getContext(), cache.getCategoryKey(categoryID), true);
+							CategoryCache cache = CategoryDTO.getCache(requireContext());
+							return CategoryDTO.getKeywords(requireContext(), cache.getCategoryKey(categoryID), true);
 						}
 					}, type.getSelectedItemId());
 				}
@@ -235,16 +235,16 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		});
 
 		hint = view.findViewById(android.R.id.hint);
-		hint.setLayoutManager(new LinearLayoutManager(getContext()));
+		hint.setLayoutManager(new LinearLayoutManager(requireContext()));
 		hint.addOnItemTouchListener(new NestedScrollableRecyclerViewListener(hint));
 		if (this instanceof ItemEditFragment) {
-			hinter = new Hinter(getContext(), new CategorySelectedEvent() {
+			hinter = new Hinter(requireContext(), new CategorySelectedEvent() {
 				@Override public void categorySelected(long categoryID) {
 					AndroidTools.selectByID(type, categoryID);
 					Hinter.unhighlight(name.getText());
 				}
 				@Override public void categoryQueried(long categoryID) {
-					CategoryDTO.showKeywords(getContext(), categoryID);
+					CategoryDTO.showKeywords(requireContext(), categoryID);
 				}
 			});
 			hint.setAdapter(hinter.getAdapter());
@@ -296,7 +296,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	protected @NonNull TypeAdapter createTypeAdapter() {
-		return new TypeAdapter(getContext());
+		return new TypeAdapter(requireContext());
 	}
 
 	private void updateHint(CharSequence text, boolean b) {
@@ -314,7 +314,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	@Override public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
-		onPrepareContextMenu(menu, getActivity().getMenuInflater());
+		onPrepareContextMenu(menu, requireActivity().getMenuInflater());
 	}
 
 	private void onPrepareContextMenu(Menu menu, MenuInflater inflater) {
@@ -338,7 +338,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				updateHint(name.getText(), true);
 				return true;
 			case R.id.action_category_keywords:
-				CategoryDTO.showKeywords(getContext(), getTypeId());
+				CategoryDTO.showKeywords(requireContext(), getTypeId());
 				return true;
 		}
 		return super.onContextItemSelected(item);
@@ -429,9 +429,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	private void getPicture() {
 		try {
-			File file = Constants.Paths.getTempImage(getContext());
-			Uri fileUri = Paths.getShareUri(getContext(), file);
-			Intent intent = CaptureImage.saveTo(getContext(), file, fileUri, 2048/*px*/);
+			File file = Constants.Paths.getTempImage(requireContext());
+			Uri fileUri = Paths.getShareUri(requireContext(), file);
+			Intent intent = CaptureImage.saveTo(requireContext(), file, fileUri, 2048/*px*/);
 			intent.putExtra(CaptureImage.EXTRA_FORMAT, CompressFormat.JPEG);
 			intent.putExtra(CaptureImage.EXTRA_QUALITY, 85/*%*/);
 			startActivityForResult(intent, REQUEST_CODE_GET_PICTURE);
@@ -476,7 +476,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			jpg
 					.load(currentImage)
 					.diskCacheStrategy(NONE) // don't save any version: it's already on disk or used only once
-					.decoder(new NonPoolingGifBitmapWrapperResourceDecoder(getContext()))
+					.decoder(new NonPoolingGifBitmapWrapperResourceDecoder(requireContext()))
 					.into(image);
 		}
 		Pic.svg().load(getTypeImageID()).into(typeImage);
@@ -484,7 +484,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	private @RawRes int getTypeImageID() {
 		Cursor cursor = (Cursor)type.getItemAtPosition(type.getSelectedItemPosition());
-		return cursor != null? ImagedDTO.getFallbackID(getContext(), cursor) : R.raw.category_unknown;
+		return cursor != null? ImagedDTO.getFallbackID(requireContext(), cursor) : R.raw.category_unknown;
 	}
 
 	private class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
@@ -492,7 +492,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			if (!param.hasImage && currentImage != null) {
 				param.hasImage = true;
 				if (!InventoryContract.AUTHORITY.equals(currentImage.getAuthority())) { // do not read own image
-					param.image = IOTools.readBytes(getContext().getContentResolver().openInputStream(currentImage));
+					param.image = IOTools.readBytes(requireContext().getContentResolver().openInputStream(currentImage));
 				}
 			}
 			Database db = App.db().beginTransaction();

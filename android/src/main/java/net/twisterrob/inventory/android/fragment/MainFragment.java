@@ -98,7 +98,7 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 				list.setLayoutManager(new LinearLayoutManager(getContext()));
 				MainFragment.ListAdapter adapter = new MainFragment.ListAdapter(null, new RecyclerViewItemEvents() {
 					@Override public void onItemClick(int position, long recyclerViewItemID) {
-						getActivity().startActivity(ListItemsActivity.show(recyclerViewItemID));
+						requireActivity().startActivity(ListItemsActivity.show(recyclerViewItemID));
 					}
 					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
 						return false;

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.view.ActionMode;
 
 import net.twisterrob.android.utils.tools.ViewTools;
@@ -22,7 +23,6 @@ import net.twisterrob.inventory.android.tasks.*;
 import net.twisterrob.inventory.android.view.*;
 
 public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
-	private static final Logger LOG = LoggerFactory.getLogger(RoomListFragment.class);
 	private static final int PICK_REQUEST = 1;
 
 	public interface RoomsEvents {
@@ -68,7 +68,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	}
 
 	@Override
-	protected SelectionActionMode onPrepareSelectionMode(SelectionAdapter<?> adapter) {
+	protected SelectionActionMode onPrepareSelectionMode(@NonNull SelectionAdapter<?> adapter) {
 		MoveTargetActivity.Builder builder = MoveTargetActivity
 				.pick()
 				.startFromPropertyList()
@@ -90,7 +90,7 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	}
 
 	private long getArgPropertyID() {
-		return getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
+		return requireArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 	}
 
 	public static RoomListFragment newInstance(long propertyID) {
@@ -104,11 +104,11 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	}
 
 	private static class RoomSelectionActionMode extends SelectionActionMode {
-		private final BaseFragment<?> fragment;
-		private final Builder builder;
+		private final @NonNull BaseFragment<?> fragment;
+		private final @NonNull Builder builder;
 
-		public RoomSelectionActionMode(BaseFragment<?> fragment, SelectionAdapter<?> adapter, Builder builder) {
-			super(fragment.getActivity(), adapter);
+		public RoomSelectionActionMode(@NonNull BaseFragment<?> fragment, @NonNull SelectionAdapter<?> adapter, @NonNull Builder builder) {
+			super(fragment.requireActivity(), adapter);
 			this.fragment = fragment;
 			this.builder = builder;
 		}

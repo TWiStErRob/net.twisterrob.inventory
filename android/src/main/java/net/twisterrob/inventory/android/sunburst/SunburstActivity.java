@@ -34,17 +34,17 @@ public class SunburstActivity extends SingleFragmentActivity<SunburstFragment> i
 
 	public static Intent displayProperty(long propertyID) {
 		Intent intent = new Intent(App.getAppContext(), SunburstActivity.class);
-		intent.replaceExtras(SunburstFragment.newPropertyInstance(propertyID).getArguments());
+		intent.replaceExtras(SunburstFragment.newPropertyInstance(propertyID).requireArguments());
 		return intent;
 	}
 	public static Intent displayRoom(long roomID) {
 		Intent intent = new Intent(App.getAppContext(), SunburstActivity.class);
-		intent.replaceExtras(SunburstFragment.newRoomInstance(roomID).getArguments());
+		intent.replaceExtras(SunburstFragment.newRoomInstance(roomID).requireArguments());
 		return intent;
 	}
 	public static Intent displayItem(long itemID) {
 		Intent intent = new Intent(App.getAppContext(), SunburstActivity.class);
-		intent.replaceExtras(SunburstFragment.newItemInstance(itemID).getArguments());
+		intent.replaceExtras(SunburstFragment.newItemInstance(itemID).requireArguments());
 		return intent;
 	}
 }

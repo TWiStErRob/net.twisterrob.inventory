@@ -13,11 +13,12 @@ import android.view.View.MeasureSpec;
 import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-import androidx.annotation.UiThread;
+import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.CursorAdapter;
+import androidx.loader.content.Loader;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.*;
@@ -27,17 +28,16 @@ import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
-
 public class ChangeTypeDialog {
-	private final BaseFragment<?> fragment;
-	private final Context context;
+	private final @NonNull BaseFragment<?> fragment;
+	private final @NonNull Context context;
 	private ListView list;
-	private Drawable spinner;
+	private @NonNull Drawable spinner;
 	private Animator spinnerAnim;
 
-	public ChangeTypeDialog(BaseFragment<?> fragment) {
+	public ChangeTypeDialog(@NonNull BaseFragment<?> fragment) {
 		this.fragment = fragment;
-		this.context = fragment.getActivity();
+		this.context = fragment.requireActivity();
 
 		initSpinner();
 	}
@@ -119,7 +119,7 @@ public class ChangeTypeDialog {
 		dialog.show();
 		load(variants, adapter, initialType);
 	}
-	private void load(Variants variants, TypeAdapter adapter, long type) {
+	private void load(@NonNull Variants variants, @NonNull TypeAdapter adapter, long type) {
 		Bundle args = variants.createArgs(type);
 		MyCursorSwapper callback = new MyCursorSwapper(adapter, type);
 		if (args == null) {
@@ -197,18 +197,18 @@ public class ChangeTypeDialog {
 
 	private class MyCursorSwapper extends CursorSwapper {
 		private final long type;
-		public MyCursorSwapper(TypeAdapter adapter, long type) {
+		public MyCursorSwapper(@NonNull TypeAdapter adapter, long type) {
 			super(ChangeTypeDialog.this.context, adapter);
 			this.type = type;
 			startShowLoading();
 		}
-		@Override public void onLoadFinished(androidx.loader.content.Loader<Cursor> loader, Cursor data) {
+		@Override public void onLoadFinished(@NonNull Loader<Cursor> loader, @Nullable Cursor data) {
 			super.onLoadFinished(loader, data);
 			if (type != -1) {
 				autoSelect(adapter, type);
 			}
 		}
-		@Override protected void updateAdapter(Cursor data) {
+		@Override protected void updateAdapter(@Nullable Cursor data) {
 			super.updateAdapter(data);
 			finishShowLoading();
 		}

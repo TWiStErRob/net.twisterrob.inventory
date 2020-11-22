@@ -48,10 +48,10 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
 		web.setWebViewClient(new WebViewClient() {
 			@Override public void onPageFinished(WebView view, String url) {
-				long category = Intents.getCategory(getArguments());
-				getArguments().remove(Extras.CATEGORY_ID); // run only once
+				long category = Intents.getCategory(requireArguments());
+				requireArguments().remove(Extras.CATEGORY_ID); // run only once
 				if (category != Category.ID_ADD) {
-					String key = CategoryDTO.getCache(getContext()).getCategoryKey(category);
+					String key = CategoryDTO.getCache(requireContext()).getCategoryKey(category);
 					LOG.trace("Navigating to {} ({})", key, category);
 					// http://stackoverflow.com/a/12266640/253468
 					String jumpToCategory = "document.location.hash = '" + key + "';";
@@ -82,14 +82,14 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					web.loadData("Loading...", "text/html", null);
 				}
 				@Override protected String doInBackground(Void ignore) {
-					return new CategoryHelpBuilder(getActivity()).buildHTML();
+					return new CategoryHelpBuilder(requireContext()).buildHTML();
 				}
 				@Override protected void onResult(String result, Void ignore) {
 					web.loadData(result, "text/html", null);
 				}
 				@Override protected void onError(@NonNull Exception ex, Void ignore) {
 					App.toastUser(ex.toString());
-					getActivity().finish();
+					requireActivity().finish();
 				}
 			});
 		} else {
@@ -105,11 +105,11 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_open: {
-				final Context context = getContext();
+				final Context context = requireContext();
 				new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
 					@Nullable @Override protected File doInBackground(@Nullable Void ignore) throws IOException {
-						file = Paths.getShareFile(getContext(), "html");
+						file = Paths.getShareFile(context, "html");
 						new CategoryHelpBuilder(context).export(file);
 						return file;
 					}
@@ -126,7 +126,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				return true;
 			}
 			case R.id.action_category_save: {
-				final Context context = getContext();
+				final Context context = requireContext();
 				new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
 					@Nullable @Override protected File doInBackground(@Nullable Void aVoid) throws Exception {
@@ -147,7 +147,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				return true;
 			}
 			case R.id.action_category_feedback:
-				MainActivity.startImproveCategories(getContext(), null);
+				MainActivity.startImproveCategories(requireContext(), null);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

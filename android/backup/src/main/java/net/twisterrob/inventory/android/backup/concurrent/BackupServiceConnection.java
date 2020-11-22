@@ -4,6 +4,8 @@ import android.app.Service;
 import android.content.*;
 import android.os.IBinder;
 
+import androidx.annotation.NonNull;
+
 import net.twisterrob.inventory.android.backup.concurrent.BackupService.*;
 
 public abstract class BackupServiceConnection implements ServiceConnection, BackupListener {
@@ -51,7 +53,7 @@ public abstract class BackupServiceConnection implements ServiceConnection, Back
 		// optional operation
 	}
 
-	public void bind(Context context) {
+	public void bind(@NonNull Context context) {
 		this.context = context;
 		this.serviceIntent = new Intent(context, BackupService.class);
 		// automatically create the service to be able to query the binder if there's something in progress

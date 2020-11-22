@@ -2,8 +2,6 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import java.util.Date;
 
-import org.slf4j.*;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.view.*;
@@ -27,8 +25,6 @@ import net.twisterrob.inventory.android.view.*;
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
 public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
-	private static final Logger LOG = LoggerFactory.getLogger(ItemViewFragment.class);
-
 	private static final int MOVE_REQUEST = 0;
 
 	public interface ItemEvents {
@@ -52,7 +48,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 		super.onStartLoading();
 		getLoaderManager().initLoader(SingleItem.id(),
 				Intents.bundleFromItem(getArgItemID()),
-				SingleItem.createCallbacks(getContext(), new SingleRowLoaded())
+				SingleItem.createCallbacks(requireContext(), new SingleRowLoaded())
 		);
 	}
 
@@ -76,7 +72,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 				.append("Property", entity.propertyName)
 				.append("Category ID", entity.type, DEBUG)
 				.append("Category Name", entity.categoryName, DEBUG)
-				.append("Category", ResourceTools.getText(getContext(), entity.categoryName))
+				.append("Category", ResourceTools.getText(requireContext(), entity.categoryName))
 				.append("Lists", entity.lists)
 				.append("# of items in this item", entity.numDirectItems)
 				.append("# of items inside", entity.numAllItems)
@@ -142,10 +138,10 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	}
 
 	private void moveToRoom(final long roomID, final long... itemIDs) {
-		Dialogs.executeDirect(getActivity(), new MoveItemsToRoomAction(roomID, itemIDs) {
+		Dialogs.executeDirect(requireActivity(), new MoveItemsToRoomAction(roomID, itemIDs) {
 			public void finished() {
 				startActivity(RoomViewActivity.show(roomID));
-				getActivity().finish();
+				requireActivity().finish();
 			}
 			@Override public Action buildUndo() {
 				// we navigated away from current activity, no undo
@@ -158,10 +154,10 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	}
 
 	private void move(final long parentID, final long... itemIDs) {
-		Dialogs.executeDirect(getActivity(), new MoveItemsAction(parentID, itemIDs) {
+		Dialogs.executeDirect(requireActivity(), new MoveItemsAction(parentID, itemIDs) {
 			public void finished() {
 				startActivity(ItemViewActivity.show(parentID));
-				getActivity().finish();
+				requireActivity().finish();
 			}
 			@Override public Action buildUndo() {
 				// we navigated away from current activity, no undo
@@ -174,7 +170,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	}
 
 	private void delete(final long itemID) {
-		Dialogs.executeConfirm(getActivity(), new DeleteItemsAction(itemID) {
+		Dialogs.executeConfirm(requireActivity(), new DeleteItemsAction(itemID) {
 			@Override public void finished() {
 				ItemDTO item = new ItemDTO();
 				item.id = itemID;
@@ -188,7 +184,7 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	}
 
 	private long getArgItemID() {
-		return getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
+		return requireArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
 	}
 
 	public static ItemViewFragment newInstance(long itemID) {

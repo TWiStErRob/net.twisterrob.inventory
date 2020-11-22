@@ -152,11 +152,11 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	private void setResult(Fragment fragment) {
 		setResult(RESULT_CANCELED);
 		if (fragment instanceof RoomListFragment) {
-			long propertyID = fragment.getArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
+			long propertyID = fragment.requireArguments().getLong(Extras.PROPERTY_ID, Property.ID_ADD);
 			setResult(PROPERTY, Intents.intentFromProperty(propertyID));
 		} else if (fragment instanceof ItemListFragment) {
-			long roomID = fragment.getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
-			long itemID = fragment.getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
+			long roomID = fragment.requireArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+			long itemID = fragment.requireArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 			if (roomID != Room.ID_ADD) {
 				setResult(ROOM, Intents.intentFromRoom(roomID));
 			} else if (itemID != Item.ID_ADD) {
@@ -169,7 +169,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		if (fragment instanceof RoomListFragment) {
 			return PROPERTY;
 		} else if (fragment instanceof ItemListFragment) {
-			long roomID = fragment.getArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
+			long roomID = fragment.requireArguments().getLong(Extras.ROOM_ID, Room.ID_ADD);
 			if (roomID != Room.ID_ADD) {
 				return ROOM;
 			} else {
@@ -185,7 +185,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	}
 
 	private void updateUI(BaseFragment<?> fragment) {
-		String name = fragment.getArguments().getString(ARG_TITLE);
+		String name = fragment.requireArguments().getString(ARG_TITLE);
 		if (name != null) {
 			setActionBarTitle(getString(R.string.action_move_pick_title));
 			setActionBarSubtitle(toString(getType(fragment)));
@@ -213,7 +213,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 		int currentType = getType(fragment);
 		int requestedType = getArgWhat();
 		boolean allowed = (requestedType & currentType) != 0;
-		boolean forbidden = fragment.getArguments().getBoolean(ARG_FORBIDDEN, false);
+		boolean forbidden = fragment.requireArguments().getBoolean(ARG_FORBIDDEN, false);
 
 		String requested = toString(requestedType);
 		if (forbidden) {
@@ -297,7 +297,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 
 	private void startFragment(final BaseFragment<?> fragment) {
 		if (fragment instanceof BaseGalleryFragment) {
-			fragment.getArguments().putBoolean(BaseGalleryFragment.KEY_ENABLE_SELECTION, false);
+			fragment.requireArguments().putBoolean(BaseGalleryFragment.KEY_ENABLE_SELECTION, false);
 		}
 		// FragmentTransaction.commit: Can not perform this action inside of onLoadFinished
 		// so must do it on the UI thread, but later!
@@ -319,9 +319,9 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 			@Override protected void process(@NonNull Cursor cursor) {
 				PropertyDTO property = PropertyDTO.fromCursor(cursor);
 				BaseFragment<?> fragment = RoomListFragment.newInstance(property.id);
-				fragment.getArguments().putString(ARG_TITLE, property.name);
+				fragment.requireArguments().putString(ARG_TITLE, property.name);
 				if (isForbidden(EXTRA_NO_PROPERTIES, property.id)) {
-					fragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
+					fragment.requireArguments().putBoolean(ARG_FORBIDDEN, true);
 				}
 				if (startMode) {
 					startFragment(fragment);
@@ -343,15 +343,15 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 			@Override protected void process(@NonNull Cursor cursor) {
 				RoomDTO room = RoomDTO.fromCursor(cursor);
 				BaseFragment<?> roomFragment = ItemListFragment.newRoomInstance(room.id);
-				roomFragment.getArguments().putString(ARG_TITLE, room.name);
+				roomFragment.requireArguments().putString(ARG_TITLE, room.name);
 				if (isForbidden(EXTRA_NO_PROPERTIES, room.propertyID) || isForbidden(EXTRA_NO_ROOMS, room.id)) {
-					roomFragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
+					roomFragment.requireArguments().putBoolean(ARG_FORBIDDEN, true);
 				}
 				if (startMode) {
 					BaseFragment<?> propertyFragment = RoomListFragment.newInstance(room.propertyID);
-					propertyFragment.getArguments().putString(ARG_TITLE, room.propertyName);
+					propertyFragment.requireArguments().putString(ARG_TITLE, room.propertyName);
 					if (isForbidden(EXTRA_NO_PROPERTIES, room.propertyID)) {
-						propertyFragment.getArguments().putBoolean(ARG_FORBIDDEN, true);
+						propertyFragment.requireArguments().putBoolean(ARG_FORBIDDEN, true);
 					}
 					startFragment(propertyFragment);
 				}
@@ -379,8 +379,8 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 					if (type.isMain() && (startMode || data.isLast())) {
 						BaseFragment<?> fragment = createFragment(type, id);
 						String name = data.getString(data.getColumnIndexOrThrow(ParentColumns.NAME));
-						fragment.getArguments().putString(ARG_TITLE, name);
-						fragment.getArguments().putBoolean(ARG_FORBIDDEN, forbidden);
+						fragment.requireArguments().putString(ARG_TITLE, name);
+						fragment.requireArguments().putBoolean(ARG_FORBIDDEN, forbidden);
 						startFragment(fragment);
 					}
 				}

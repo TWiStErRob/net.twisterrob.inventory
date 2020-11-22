@@ -304,7 +304,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 			super(BackupListFragment.this);
 		}
 
-		@Override public void startLoad(Bundle args) {
+		@Override public void startLoad(@Nullable Bundle args) {
 			Loader<?> previous = getLoaderManager().getLoader(LOADER_ID);
 			Loader<?> current = getLoaderManager().restartLoader(LOADER_ID, args, new FileLoaderCallbacks());
 			if (current.getId() == 0 && previous != null) {

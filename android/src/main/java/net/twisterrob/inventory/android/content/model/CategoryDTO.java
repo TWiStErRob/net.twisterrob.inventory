@@ -43,7 +43,7 @@ public class CategoryDTO extends ImagedDTO {
 	@Override public CharSequence getShareDescription(Context context) {
 		return null;
 	}
-	@Override public Intent createShareIntent(Context context) {
+	@Override public @Nullable Intent createShareIntent(@NonNull Context context) {
 		return null;
 	}
 	@Override
@@ -121,7 +121,7 @@ public class CategoryDTO extends ImagedDTO {
 
 	@SuppressLint("WrongThread") // initialization will happen only once, after that it's cached
 	@AnyThread
-	public static @NonNull CategoryCache getCache(Context context) {
+	public static @NonNull CategoryCache getCache(@NonNull Context context) {
 		return CategoryCacheInitializer.get(context);
 	}
 
@@ -133,7 +133,7 @@ public class CategoryDTO extends ImagedDTO {
 
 		@WorkerThread
 		synchronized
-		public static CategoryCache get(Context context) {
+		public static @NonNull CategoryCache get(@NonNull Context context) {
 			Locale currentLocale = AndroidTools.getLocale(context.getResources().getConfiguration());
 			if (!currentLocale.equals(lastLocale)) {
 				LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);

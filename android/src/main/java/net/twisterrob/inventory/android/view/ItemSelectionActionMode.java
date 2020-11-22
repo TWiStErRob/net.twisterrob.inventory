@@ -1,11 +1,12 @@
 package net.twisterrob.inventory.android.view;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.*;
 import android.database.Cursor;
 import android.os.*;
 import android.view.*;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.view.ActionMode;
 
 import net.twisterrob.android.utils.tools.*;
@@ -24,11 +25,15 @@ import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 public class ItemSelectionActionMode extends SelectionActionMode {
 	private static final int PICK_REQUEST = 1;
 
-	private final BaseFragment<?> fragment;
-	private final Builder builder;
+	private final @NonNull BaseFragment<?> fragment;
+	private final @NonNull Builder builder;
 
-	public ItemSelectionActionMode(BaseFragment<?> fragment, SelectionAdapter<?> adapter, Builder builder) {
-		super(fragment.getActivity(), adapter);
+	public ItemSelectionActionMode(
+			@NonNull BaseFragment<?> fragment,
+			@NonNull SelectionAdapter<?> adapter,
+			@NonNull Builder builder
+	) {
+		super(fragment.requireActivity(), adapter);
 		this.fragment = fragment;
 		this.builder = builder;
 	}
@@ -67,9 +72,9 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 							App.db().updateItem(item.id, newType, item.name, item.description);
 						}
 						String newTypeKey = DatabaseTools.getString(cursor, CommonColumns.NAME);
-						CharSequence newTypeName = ResourceTools.getText(fragment.getContext(), newTypeKey);
-						App.toastUser(fragment.getContext()
-						                      .getString(R.string.generic_location_change, "selection", newTypeName));
+						Context context = fragment.requireContext();
+						CharSequence newTypeName = ResourceTools.getText(context, newTypeKey);
+						App.toastUser(context.getString(R.string.generic_location_change, "selection", newTypeName));
 						finish();
 						fragment.refresh();
 					}
@@ -90,13 +95,13 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 					}
 					@Override public CharSequence getTypeName(Cursor cursor) {
 						long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-						CategoryCache cache = CategoryDTO.getCache(fragment.getContext());
+						CategoryCache cache = CategoryDTO.getCache(fragment.requireContext());
 						return cache.getCategoryPath(categoryID);
 					}
 					@Override public CharSequence getKeywords(Cursor cursor) {
 						long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-						CategoryCache cache = CategoryDTO.getCache(fragment.getContext());
-						return CategoryDTO.getKeywords(fragment.getContext(), cache.getCategoryKey(categoryID), true);
+						CategoryCache cache = CategoryDTO.getCache(fragment.requireContext());
+						return CategoryDTO.getKeywords(fragment.requireContext(), cache.getCategoryKey(categoryID), true);
 					}
 				}, category);
 				return true;

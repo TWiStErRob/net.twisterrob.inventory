@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.*;
 
+import androidx.annotation.NonNull;
+
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
@@ -18,13 +20,17 @@ import static net.twisterrob.inventory.android.Constants.*;
 
 @SuppressWarnings("unused")
 public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
+
+	private final @NonNull Context context;
+
 	private boolean expandable = false;
 	private boolean indented = true;
 	private boolean displaySource = DISABLE && BuildConfig.DEBUG;
 	private boolean displayKeywords = false;
 
-	public TypeAdapter(Context context) {
+	public TypeAdapter(@NonNull Context context) {
 		super(context, R.layout.item_type_spinner, null, 0);
+		this.context = context;
 	}
 
 	public boolean isExpandable() {
@@ -59,7 +65,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		TextView title;
 	}
 
-	@Override protected ViewHolder createHolder(View convertView) {
+	@Override protected @NonNull ViewHolder createHolder(@NonNull View convertView) {
 		ViewHolder holder = new ViewHolder();
 		holder.image = convertView.findViewById(R.id.image);
 		holder.spacer = convertView.findViewById(R.id.spacer);
@@ -74,11 +80,11 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		return enabled != null? enabled : super.isEnabled(position);
 	}
 
-	@Override protected void bindView(ViewHolder holder, Cursor cursor, View convertView) {
+	@Override protected void bindView(@NonNull ViewHolder holder, @NonNull Cursor cursor, @NonNull View convertView) {
 		CharSequence title = getName(cursor);
 		if (this.indented) {
 			int level = DatabaseTools.getOptionalInt(cursor, TypeSource.LEVEL, 0);
-			int indent = (int)(mContext.getResources().getDimension(R.dimen.icon_context) * level);
+			int indent = (int)(context.getResources().getDimension(R.dimen.icon_context) * level);
 			ViewTools.updateWidth(holder.spacer, indent);
 		}
 
@@ -98,7 +104,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 				} else {
 					holder.state.setText(R.string.types__prefix__closed);
 					if (DatabaseTools.getOptionalBoolean(cursor, TypeSource.MIXED, false)) {
-						title = TextTools.formatFormatted(mContext, R.string.types__format__more, title);
+						title = TextTools.formatFormatted(context, R.string.types__format__more, title);
 					}
 				}
 			} else {
@@ -110,25 +116,25 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 			String name = DatabaseTools.getString(cursor, CommonColumns.NAME);
 			CharSequence keywords;
 			try {
-				keywords = ResourceTools.getText(mContext, ResourceNames.getKeywordsName(name));
+				keywords = ResourceTools.getText(context, ResourceNames.getKeywordsName(name));
 			} catch (Exception ex) {
 				keywords = null;
 			}
 			if (!TextUtils.isEmpty(keywords)) {
-				title = TextTools.formatFormatted(mContext, R.string.types__format__keywords, title, keywords);
+				title = TextTools.formatFormatted(context, R.string.types__format__keywords, title, keywords);
 			}
 		}
 
 		if (this.displaySource) {
 			CharSequence source = DatabaseTools.getOptionalString(cursor, TypeSource.SOURCE);
 			if (!TextUtils.isEmpty(source)) {
-				title = TextTools.formatFormatted(mContext, R.string.types__format__source, title, source);
+				title = TextTools.formatFormatted(context, R.string.types__format__source, title, source);
 			}
 		}
 
-		TextTools.replaceColors(mContext, title);
+		TextTools.replaceColors(context, title);
 		holder.title.setText(title);
-		int fallbackID = ImagedDTO.getFallbackID(mContext, cursor);
+		int fallbackID = ImagedDTO.getFallbackID(context, cursor);
 		Pic.svg().load(fallbackID).into(holder.image);
 	}
 
@@ -175,6 +181,6 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 
 	private CharSequence getName(Cursor cursor) {
 		String name = DatabaseTools.getString(cursor, CommonColumns.NAME);
-		return ResourceTools.getText(mContext, name);
+		return ResourceTools.getText(context, name);
 	}
 }

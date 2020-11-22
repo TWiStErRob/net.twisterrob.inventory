@@ -38,7 +38,7 @@ public abstract class ImagedDTO extends DTO {
 	public abstract Uri getImageUri();
 	public abstract CharSequence getShareDescription(Context context);
 
-	public Intent createShareIntent(Context context) {
+	public @Nullable Intent createShareIntent(@NonNull Context context) {
 		@StringRes int id = R.string.action_share;
 		Intent shareIntent = new Intent(Intent.ACTION_SEND)
 				.setType("text/plain")
@@ -62,7 +62,7 @@ public abstract class ImagedDTO extends DTO {
 		return Intent.createChooser(shareIntent, context.getText(id));
 	}
 
-	public static @RawRes int getFallbackID(Context context, Cursor cursor) {
+	public static @RawRes int getFallbackID(@NonNull Context context, @NonNull Cursor cursor) {
 		String image = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
 		return ResourceTools.getRawResourceID(context, image);
 	}

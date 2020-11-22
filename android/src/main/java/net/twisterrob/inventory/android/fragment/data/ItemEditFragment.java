@@ -39,7 +39,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 		if (!isNew()) {
 			Dependency<Cursor> loadItemData = manager.add(SingleItem.id(),
 					Intents.bundleFromItem(getArgItemID()),
-					SingleItem.createCallbacks(getContext(), new SingleRowLoaded())
+					SingleItem.createCallbacks(requireContext(), new SingleRowLoaded())
 			);
 			loadItemData.dependsOn(populateCats);
 		}
@@ -65,11 +65,11 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 	}
 
 	private long getArgItemID() {
-		return getArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
+		return requireArguments().getLong(Extras.ITEM_ID, Item.ID_ADD);
 	}
 
 	private long getArgParentID() {
-		return getArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
+		return requireArguments().getLong(Extras.PARENT_ID, Item.ID_ADD);
 	}
 
 	@Override protected ItemDTO onSave(Database db, ItemDTO param) {

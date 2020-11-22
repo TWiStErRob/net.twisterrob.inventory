@@ -4,15 +4,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.cursoradapter.widget.CursorAdapter;
 import androidx.loader.content.Loader;
 
 import net.twisterrob.inventory.android.content.Loaders;
 
 public class CursorSwapper extends net.twisterrob.android.content.CursorSwapper {
-	private final Context context;
+	private final @NonNull Context context;
 
-	public CursorSwapper(Context context, CursorAdapter adapter) {
+	public CursorSwapper(@NonNull Context context, @NonNull CursorAdapter adapter) {
 		super(adapter);
 		this.context = context;
 	}

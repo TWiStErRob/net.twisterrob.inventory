@@ -23,7 +23,7 @@ public abstract class BaseSingleLoaderFragment<T> extends BaseFragment<T> {
 
 		@Override protected void processInvalid(@Nullable Cursor item) {
 			super.processInvalid(item);
-			getActivity().finish();
+			requireActivity().finish();
 		}
 	}
 }
