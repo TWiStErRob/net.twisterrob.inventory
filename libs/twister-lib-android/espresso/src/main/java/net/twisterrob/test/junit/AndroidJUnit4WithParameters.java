@@ -5,12 +5,11 @@ import org.junit.internal.runners.statements.FailOnTimeout;
 import org.junit.runners.model.*;
 import org.junit.runners.parameterized.*;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.internal.util.AndroidRunnerParams;
 
 /**
  * This class is needs to merge two classes' logic together:<ul>
- * <li>{@link AndroidJUnit4}<br>
+ * <li>{@link androidx.test.ext.junit.runners.AndroidJUnit4}<br>
  * which is an alias to {@link androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner}</li>
  * <li>{@link org.junit.runners.parameterized.BlockJUnit4ClassRunnerWithParameters}</li>
  * </ul>

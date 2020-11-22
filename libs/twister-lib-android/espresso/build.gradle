@@ -31,10 +31,7 @@ dependencies {
 	implementation "androidx.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 	// Espresso-idling-resource for synchronization with background jobs
 	implementation "androidx.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
-	implementation "androidx.test.ext:junit:1.1.1"
 	implementation "androidx.multidex:multidex:2.0.0"
-	api "androidx.test:rules:${VERSION_ESPRESSO_RUNNER}"
-	api "androidx.test.ext:junit:${VERSION_ESPRESSO_RUNNER}"
 
 	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
 	compileOnly "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
