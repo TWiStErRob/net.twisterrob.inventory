@@ -22,7 +22,6 @@ dependencies {
 	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j')
 
 	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
-	implementation "androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}"
 	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
 	implementation "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
 	implementation "com.google.android.material:material:${VERSION_SUPPORT}"

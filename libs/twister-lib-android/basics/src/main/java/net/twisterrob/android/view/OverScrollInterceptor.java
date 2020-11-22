@@ -1,10 +1,8 @@
 package net.twisterrob.android.view;
 
 import android.content.Context;
-import android.os.Build.*;
 import android.util.AttributeSet;
 import android.view.*;
-import android.widget.AbsListView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 

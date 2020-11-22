@@ -7,7 +7,6 @@ dependencies {
 	implementation(project(":android:data"))
 	implementation("net.twisterrob.lib:twister-lib-android-glide3")
 	implementation("net.twisterrob.lib:twister-lib-java")
-	implementation("androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}")
 	implementation("com.caverock:androidsvg:${VERSION_ANDROIDSVG}")
 }
 

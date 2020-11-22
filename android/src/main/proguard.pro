@@ -29,6 +29,12 @@
 -dontnote androidx.multidex.MultiDex$V14
 
 
+# REPORT name of field is misleading to ProGuard, it's peeking into android.app.AppOpsManager#OP_POST_NOTIFICATION.
+# Note: androidx.core.app.NotificationManagerCompat accesses a declared field 'OP_POST_NOTIFICATION' dynamically
+#      Maybe this is program field 'androidx.core.app.NotificationManagerCompat { java.lang.String OP_POST_NOTIFICATION; }'
+-dontnote androidx.core.app.NotificationManagerCompat
+
+
 # REPORT GhostView is @hide
 # Note: androidx.transition.GhostViewApi21: can't find dynamically referenced class android.view.GhostView
 -dontnote  androidx.transition.GhostViewApi21

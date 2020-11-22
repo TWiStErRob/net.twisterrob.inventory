@@ -6,14 +6,12 @@ apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gra
 
 dependencies {
 	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
-	compileOnly "androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}"
 	compileOnly "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
 	compileOnly "com.google.android.material:material:${VERSION_SUPPORT}"
 
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-lib-core"
 
-	testCompileOnly "androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}"
 	testImplementation "net.twisterrob.lib:twister-lib-hamcrest"
 	testImplementation "net.twisterrob.lib:twister-lib-junit4"
 }
