@@ -44,7 +44,7 @@ public abstract class BaseAction implements Action {
 		return null;
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		Class<?> actionClass = getClass();
 		while ("".equals(actionClass.getSimpleName())) { // find the first non-inner-class
 			actionClass = actionClass.getSuperclass();

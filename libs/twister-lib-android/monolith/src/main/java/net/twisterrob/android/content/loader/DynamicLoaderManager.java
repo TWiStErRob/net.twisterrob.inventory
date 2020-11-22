@@ -7,6 +7,7 @@ import org.slf4j.*;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.app.LoaderManager.LoaderCallbacks;
 import androidx.loader.content.Loader;
@@ -82,7 +83,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 		state.loader = (Loader)manager.initLoader(state.id, state.args, this);
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		StringBuilder sb = new StringBuilder(manager.toString());
 		sb.append('\n');
 		for (Dependency<?> state : loaders.values()) {
@@ -155,7 +156,7 @@ public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 			return DynamicLoaderManager.this;
 		}
 
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			return String.format(Locale.ROOT, "%d(%b)", id, isReady());
 		}
 	}

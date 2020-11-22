@@ -43,10 +43,10 @@ public final class Progress implements Cloneable, Serializable /* poor man's par
 		}
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return toString(false);
 	}
-	public String toString(boolean detailed) {
+	public @NonNull String toString(boolean detailed) {
 		String header = String.format(Locale.ROOT, "%s: data=%d/%d images=%d/%d, %spending, %d warnings, %s",
 				phase, done, total, imagesDone, imagesTotal,
 				pending? "" : "not ", warnings.size(), failure != null? failure : "no error");

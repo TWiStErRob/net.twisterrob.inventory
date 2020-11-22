@@ -12,7 +12,7 @@ public class ListDTO extends DTO {
 		return (ListDTO)list.fromCursorInternal(cursor);
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return String.format(Locale.ROOT, "List #%1$d: '%2$s'", id, name);
 	}
 }

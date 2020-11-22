@@ -151,7 +151,7 @@ public class EditAllowingIndexer<T> implements Indexer<T> {
 			}
 		}
 
-		@Override public String toString() {
+		@Override public @Nonnull String toString() {
 			StringBuilder sb = new StringBuilder();
 			toNiceString(sb, 0);
 			return sb.toString();

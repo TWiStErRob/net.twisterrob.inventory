@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.sunburst;
 
 import java.util.*;
 
+import androidx.annotation.NonNull;
+
 class Node {
 	final Type type;
 	final long id;
@@ -46,7 +48,7 @@ class Node {
 	}
 
 	@Override
-	public String toString() {
+	public @NonNull String toString() {
 		return String.format(Locale.ROOT, "%s #%d: %s", type, id, label);
 	}
 }

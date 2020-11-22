@@ -15,7 +15,7 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.*;
 
-import androidx.annotation.ColorInt;
+import androidx.annotation.*;
 
 import static androidx.core.content.ContextCompat.*;
 
@@ -142,7 +142,7 @@ public class SelectionView extends View {
 				selection.bottom = (int)(height * pendingMargin.bottom);
 				return selection;
 			}
-			@Override public String toString() {
+			@Override public @NonNull String toString() {
 				return "rect: " + pendingMargin;
 			}
 		};
@@ -187,7 +187,7 @@ public class SelectionView extends View {
 				}
 				return selection;
 			}
-			@Override public String toString() {
+			@Override public @NonNull String toString() {
 				return "square: " + margin;
 			}
 		};
@@ -532,7 +532,7 @@ public class SelectionView extends View {
 			}
 		}
 
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			StringBuilder sb = new StringBuilder();
 			if (mLeftTopBool) {
 				sb.append("LeftTop");

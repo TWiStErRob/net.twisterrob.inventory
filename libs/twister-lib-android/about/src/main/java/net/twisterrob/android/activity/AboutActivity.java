@@ -196,7 +196,7 @@ public class AboutActivity extends ListActivity {
 		return view;
 	}
 
-	@SuppressWarnings("NullableProblems")
+	@SuppressWarnings("NotNullFieldNotInitialized")
 	protected static class AboutInfo {
 		protected @Nullable String appLabel;
 		protected @NonNull Drawable appIcon;
@@ -205,7 +205,7 @@ public class AboutActivity extends ListActivity {
 		protected @NonNull String applicationId;
 		protected @NonNull String email;
 
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			return String.format(Locale.ROOT, "%s(%s): %s v%s(%d) -> %s",
 					appLabel, appIcon, applicationId, versionName, versionCode, email);
 		}

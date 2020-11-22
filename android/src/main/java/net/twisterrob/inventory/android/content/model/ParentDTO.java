@@ -34,7 +34,7 @@ public class ParentDTO extends ImagedDTO {
 		return null;
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return String.format(Locale.ROOT, "Parent %3$s #%1$d: '%2$s'", id, name, parentType);
 	}
 }

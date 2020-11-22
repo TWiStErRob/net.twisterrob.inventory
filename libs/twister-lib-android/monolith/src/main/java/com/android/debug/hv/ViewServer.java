@@ -467,7 +467,7 @@ public class ViewServer implements Runnable {
 			return mStream.hashCode();
 		}
 
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			return mStream.toString();
 		}
 

@@ -19,7 +19,7 @@ package net.twisterrob.android.test.espresso.recyclerview;
 import android.database.Cursor;
 import android.view.View;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.*;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.core.internal.deps.guava.base.Optional;
 import androidx.test.espresso.util.HumanReadables;
@@ -172,7 +172,7 @@ public interface RecyclerViewProtocol {
 		}
 
 		@Override
-		public String toString() {
+		public @NonNull String toString() {
 			Object myData = getData();
 			String itsClass = null == myData? "null" : myData.getClass().getName();
 			if (myData instanceof Cursor) {

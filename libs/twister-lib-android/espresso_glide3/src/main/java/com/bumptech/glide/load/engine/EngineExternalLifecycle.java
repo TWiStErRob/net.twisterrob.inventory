@@ -122,7 +122,7 @@ public class EngineExternalLifecycle {
 		}
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return String.format(Locale.ROOT, "%s jobs=%d, listeners=%d, callback=%s",
 				engine, replacementJobs.size(), endListeners.size(), callback);
 	}
@@ -197,7 +197,7 @@ public class EngineExternalLifecycle {
 			loadFailure(this);
 		}
 
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			return job + ": " + EngineKeyAccessor.toString(key);
 		}
 	}

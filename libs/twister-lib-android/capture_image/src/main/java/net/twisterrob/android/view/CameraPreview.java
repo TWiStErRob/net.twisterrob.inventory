@@ -358,7 +358,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			android.hardware.Camera.getCameraInfo(cameraID, cameraInfo);
 		}
 
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			return String.format(Locale.ROOT, "Camera #%d (%s, %d°)",
 					cameraID, facing(cameraInfo.facing), cameraInfo.orientation);
 		}

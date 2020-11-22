@@ -45,7 +45,7 @@ public interface Indexer<T> {
 			result = 31 * result + search.hashCode();
 			return result;
 		}
-		@Override public String toString() {
+		@Override public @Nonnull String toString() {
 			return String.format(Locale.ROOT, "%s/%s(%d) match=%s (%s)", input, search, distance, source, path);
 		}
 	}

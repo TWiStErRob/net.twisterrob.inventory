@@ -57,7 +57,7 @@ public class WrappingTarget<Z> implements Target<Z> {
 		}
 		return super.equals(o);
 	}
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return "Wrapped " + wrapped.toString();
 	}
 }

@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import android.graphics.Rect;
 
+import androidx.annotation.NonNull;
+
 // http://www.blackpawn.com/texts/lightmaps/default.html
 public class RectPacker<T> {
 	public final Node<T> root = new Node<>();
@@ -84,7 +86,7 @@ public class RectPacker<T> {
 			return child1 == null && child2 == null;
 		}
 
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			return String.format(Locale.ROOT, "%s: %dx%d", rect, rect.width(), rect.height()); //NON-NLS
 		}
 	}

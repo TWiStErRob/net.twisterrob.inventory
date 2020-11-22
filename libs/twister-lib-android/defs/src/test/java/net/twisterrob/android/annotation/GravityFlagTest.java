@@ -15,6 +15,7 @@ import android.annotation.*;
 import android.os.Build.VERSION_CODES;
 import android.view.Gravity;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 
 @RunWith(Parameterized.class)
@@ -158,7 +159,7 @@ public class GravityFlagTest {
 		public String[] values() {
 			return expecteds;
 		}
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			return Arrays.toString(expecteds);
 		}
 	}

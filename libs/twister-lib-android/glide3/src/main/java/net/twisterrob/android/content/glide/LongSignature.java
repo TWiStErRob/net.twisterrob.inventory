@@ -2,6 +2,8 @@ package net.twisterrob.android.content.glide;
 
 import com.bumptech.glide.signature.StringSignature;
 
+import androidx.annotation.NonNull;
+
 public class LongSignature extends StringSignature {
 	private final long key;
 
@@ -17,7 +19,7 @@ public class LongSignature extends StringSignature {
 		this.key = key;
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return "LongSignature(" + key + ")";
 	}
 }

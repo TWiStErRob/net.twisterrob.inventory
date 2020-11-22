@@ -107,7 +107,7 @@ public final class CollectionTools {
 		@Override public void clear() {
 			m.clear();
 		}
-		@Override public String toString() {
+		@Override public @Nonnull String toString() {
 			return backingSet.toString();
 		}
 		@Override public boolean contains(Object object) {

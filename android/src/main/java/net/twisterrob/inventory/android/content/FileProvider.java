@@ -130,7 +130,7 @@ public class FileProvider extends androidx.core.content.FileProvider {
 		}
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return getClass().getSuperclass().getName() + "@" + Integer.toHexString(System.identityHashCode(this));
 	}
 }

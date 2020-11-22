@@ -275,7 +275,7 @@ public enum Loaders implements InventoryLoader {
 			super.forceLoad();
 		}
 
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			if (BuildConfig.DEBUG) {
 				return super.toString() + "=" + loaders + "(" + StringerTools.toShortString(args) + ")";
 			} else {

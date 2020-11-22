@@ -47,7 +47,7 @@ public class CategoryDTO extends ImagedDTO {
 		return null;
 	}
 	@Override
-	public String toString() {
+	public @NonNull String toString() {
 		return String.format(Locale.ROOT, "Category #%1$d: '%2$s' in %3$s", id, name, parentID);
 	}
 

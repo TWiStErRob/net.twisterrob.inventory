@@ -116,7 +116,7 @@ public class DrawerNavigator {
 			this.icon = icon;
 			this.intent = intent;
 		}
-		@Override public String toString() {
+		@Override public @NonNull String toString() {
 			if (BuildConfig.DEBUG) {
 				return String.format(Locale.ROOT, "[%s] %s: %s",
 						activity.getResources().getResourceName(icon),

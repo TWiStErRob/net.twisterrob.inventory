@@ -67,7 +67,7 @@ public class ItemDTO extends ImagedDTO {
 		return sb.toString();
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return String.format(Locale.ROOT, "Item #%1$d: '%2$s' / %3$s", id, name, type);
 	}
 }

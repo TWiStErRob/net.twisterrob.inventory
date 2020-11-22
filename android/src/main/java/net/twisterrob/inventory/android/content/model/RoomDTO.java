@@ -49,7 +49,7 @@ public class RoomDTO extends ImagedDTO {
 		return sb.toString();
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return String.format(Locale.ROOT, "Room #%2$d: '%3$s' / %4$s in property #%1$d", propertyID, id, name, type);
 	}
 }

@@ -85,7 +85,7 @@ public class HeaderManager {
 		}
 	}
 
-	@Override public String toString() {
+	@Override public @NonNull String toString() {
 		return String.format(Locale.ROOT, "%2$s in %1$s, refresh: %3$b, add/vis/res/det: %4$b/%5$b/%6$b/%7$b",
 				parent, header, refreshPending, header.isAdded(), header.isVisible(), header.isResumed(),
 				header.isDetached());
