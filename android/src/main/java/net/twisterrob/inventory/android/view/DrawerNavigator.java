@@ -33,14 +33,13 @@ public class DrawerNavigator {
 	private final int iconSize;
 	private OnNavigationItemSelectedListener navigationItemSelectedListener;
 
-	@SuppressLint("PrivateResource") // TODEL https://b.android.com/207152 overridden resource
 	public DrawerNavigator(NavigationView nav, Activity activity) {
 		this.nav = nav;
 		this.activity = activity;
 		this.iconSize = activity.getResources().getDimensionPixelSize(R.dimen.design_navigation_icon_size);
 		nav.setTag(this);
 		nav.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
-			@Override public boolean onNavigationItemSelected(MenuItem item) {
+			@Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 				boolean result = navigationItemSelectedListener.onNavigationItemSelected(item);
 				return result || trigger(item.getItemId());
 			}

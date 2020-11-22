@@ -28,7 +28,7 @@ import static net.twisterrob.inventory.android.activity.MainActivity.*;
 
 // CONSIDER extract as composite class not inheritance
 public abstract class DrawerActivity extends BaseActivity {
-	private static final Logger LOG = LoggerFactory.getLogger(DrawerActivity.class);
+
 	protected ActionBarDrawerToggle mDrawerToggle;
 	protected DrawerLayout mDrawerLayout;
 	protected View mDrawerLeft;
@@ -81,7 +81,7 @@ public abstract class DrawerActivity extends BaseActivity {
 		mDrawerLeft = mDrawerLeft.findViewById(R.id.drawer_left_list);
 		DrawerNavigator nav = createDefaultDrawer(this, (NavigationView)mDrawerLeft);
 		nav.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
-			@Override public boolean onNavigationItemSelected(MenuItem item) {
+			@Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 				mDrawerLayout.closeDrawer(mDrawerLeft);
 				return false;
 			}
