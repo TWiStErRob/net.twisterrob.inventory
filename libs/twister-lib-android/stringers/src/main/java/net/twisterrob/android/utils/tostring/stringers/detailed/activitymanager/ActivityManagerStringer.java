@@ -16,9 +16,7 @@ public class ActivityManagerStringer extends Stringer<ActivityManager> {
 		// TODO am.dumpPackageState();
 		append.beginPropertyGroup("memory");
 		append.measuredProperty("class", "MiB", am.getMemoryClass());
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-			append.measuredProperty("largeClass", "MiB", am.getLargeMemoryClass());
-		}
+		append.measuredProperty("largeClass", "MiB", am.getLargeMemoryClass());
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
 			append.booleanProperty(am.isLowRamDevice(), "low RAM device");
 		}
@@ -31,16 +29,12 @@ public class ActivityManagerStringer extends Stringer<ActivityManager> {
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 			append.complexProperty("task thumbnail", am.getAppTaskThumbnailSize());
 		}
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-			append.measuredProperty("launcher large icon", "px", am.getLauncherLargeIconSize());
-		}
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-			append.beginPropertyGroup("launcher large icon density");
-			append.rawProperty("dpi", am.getLauncherLargeIconDensity());
-			//noinspection WrongConstant
-			append.selfDescribingProperty(Density.Converter.toString(am.getLauncherLargeIconDensity()));
-			append.endPropertyGroup();
-		}
+		append.measuredProperty("launcher large icon", "px", am.getLauncherLargeIconSize());
+		append.beginPropertyGroup("launcher large icon density");
+		append.rawProperty("dpi", am.getLauncherLargeIconDensity());
+		//noinspection WrongConstant
+		append.selfDescribingProperty(Density.Converter.toString(am.getLauncherLargeIconDensity()));
+		append.endPropertyGroup();
 		append.complexProperty("deviceConfigurationInfo", am.getDeviceConfigurationInfo());
 		append.endPropertyGroup();
 

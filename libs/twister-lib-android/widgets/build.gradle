@@ -7,7 +7,6 @@ apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gra
 dependencies {
 	compileOnly "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
 	compileOnly "com.google.android.material:material:${VERSION_SUPPORT}"
-	compileOnly "com.google.android:flexbox:1.1.1"
 }
 
 android {

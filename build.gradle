@@ -6,7 +6,7 @@ allprojects {
 	repositories {
 		google()
 		jcenter()
-		maven { name = "twisterrob"; url = "http://localhost/maven"; allowInsecureProtocol = true }
+		maven { name = "TWiStErRob Local"; url = "http://localhost/maven"; allowInsecureProtocol = true }
 		//maven { name = 'sonatype'; url = 'http://oss.sonatype.org/content/repositories/snapshots' }
 		//maven { name = 'idescout'; url = 'http://www.idescout.com/maven/repo/' }
 	}
@@ -64,9 +64,9 @@ tasks.register("connectedCheck") {
 //	dependsOn(gradle.includedBuild("twister-libs-android").task(':connectedCheck'))
 }
 
-task clean(type: Delete) {
-	dependsOn gradle.includedBuilds*.task(':cleanFull')
-	delete rootProject.buildDir
+tasks.register("clean", Delete.class) { clean ->
+	clean.dependsOn gradle.includedBuilds*.task(':cleanFull')
+	clean.delete project.buildDir
 }
 
 idea {

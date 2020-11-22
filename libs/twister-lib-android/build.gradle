@@ -2,12 +2,14 @@ buildscript {
 	repositories {
 		google()
 		jcenter()
-		maven { name = "twisterrob"; url = "http://localhost/maven"; allowInsecureProtocol = true }
+		maven { name = "TWiStErRob Local"; url = "http://localhost/maven"; allowInsecureProtocol = true }
+		maven { name = "TWiStErRob"; url = uri("https://dl.bintray.com/twisterrob/maven") }
 		maven { name = "Gradle libs (for Kotlin-DSL)"; url = "https://repo.gradle.org/gradle/libs-releases-local/" }
 	}
 	dependencies {
 		configurations["classpath"].resolutionStrategy.cacheChangingModulesFor(0, "seconds") // -SNAPSHOT
 		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+		classpath "net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}"
 	}
 }
 
@@ -32,6 +34,7 @@ subprojects { Project project ->
 		project.android.lintOptions.lintConfig = rootProject.file("config/lint/lint.xml")
 		project.android.lintOptions.baseline rootProject.file("config/lint/lint-baseline-${project.name}.xml")
 
+		//noinspection UnnecessaryQualifiedReference,GrDeprecatedAPIUsage REPORT cannot replace with new interface, missing methods
 		com.android.build.gradle.api.AndroidSourceSet androidTest = project.android.sourceSets.androidTest
 		if (androidTest.java.sourceFiles.empty) {
 			logger.info "Disabling AndroidTest tasks in ${project.path} as it has no sources in ${androidTest.java.srcDirs}"
@@ -44,9 +47,14 @@ subprojects { Project project ->
 	}
 }
 
-tasks.register("cleanFull") {
+tasks.register("clean", Delete.class) { clean ->
+	clean.delete project.buildDir
+}
+
+tasks.register("cleanFull") { cleanFull ->
 	// subprojects*.tasks*.named("clean") is not available at this point
-	dependsOn(subprojects.collect { "${it.path}:clean" })
+	cleanFull.dependsOn(subprojects.collect { "${it.path}:clean" })
+	cleanFull.dependsOn(tasks.named("clean"))
 }
 
 tasks.register("connectedCheck").configure {
@@ -57,3 +65,5 @@ evaluationDependsOnChildren() // TODO somehow remove this
 allprojects \
 	.collectMany { it.tasks.withType(com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask) } \
 	.inject { prev, curr -> curr.configure { it.mustRunAfter prev }; return prev }
+
+apply plugin: 'net.twisterrob.quality'

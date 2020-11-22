@@ -14,8 +14,6 @@ dependencies {
 dependencies {
 	androidTestImplementation("net.twisterrob.lib:twister-lib-android-espresso")
 	androidTestRuntimeOnly("net.twisterrob.lib:twister-lib-android-slf4j")
-	// Not used, but necessary for classpath scanning on API 19
-	androidTestRuntimeOnly("com.google.android.material:material:${VERSION_SUPPORT}")
 }
 
 android {

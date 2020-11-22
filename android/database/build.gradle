@@ -1,5 +1,3 @@
-import com.android.build.gradle.api.AndroidSourceSet
-
 apply plugin: 'net.twisterrob.android-library'
 apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 
@@ -19,7 +17,8 @@ apply plugin: "net.twisterrob.inventory.database"
 
 databaseEntities {
 	categories {
-		def data_ss = evaluationDependsOn(':android:data').android.sourceSets.main as AndroidSourceSet
+		//noinspection UnnecessaryQualifiedReference,GrDeprecatedAPIUsage REPORT cannot replace with new interface, missing methods
+		com.android.build.gradle.api.AndroidSourceSet data_ss = evaluationDependsOn(':android:data').android.sourceSets.main
 		def my_ss = android.sourceSets.main
 		input = file(new File(data_ss.res.srcDirs.first(), 'values/strings_Categories.xml'))
 		output = file(new File(my_ss.assets.srcDirs.first(), 'MagicHomeInventory.data.Categories.sql'))

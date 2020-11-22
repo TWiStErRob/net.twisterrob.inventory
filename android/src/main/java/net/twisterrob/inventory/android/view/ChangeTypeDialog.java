@@ -171,7 +171,7 @@ public class ChangeTypeDialog {
 			keywords = context.getText(R.string.category_keywords_empty);
 		}
 		title = context.getString(R.string.category_keywords_of, title);
-		android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(context)
+		AlertDialog dialog = new AlertDialog.Builder(context)
 				.setTitle(title)
 				.setMessage(keywords)
 				.create();

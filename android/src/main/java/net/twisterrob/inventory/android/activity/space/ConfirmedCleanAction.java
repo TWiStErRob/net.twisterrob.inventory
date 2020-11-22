@@ -1,12 +1,12 @@
 package net.twisterrob.inventory.android.activity.space;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import net.twisterrob.inventory.android.fragment.BaseDialogFragment;
 
@@ -28,7 +28,7 @@ class ConfirmedCleanAction extends BaseDialogFragment implements DialogInterface
 	}
 
 	@Override public @NonNull Dialog onCreateDialog(Bundle var1) {
-		return new Builder(getActivity())
+		return new AlertDialog.Builder(requireActivity())
 				.setTitle(title)
 				.setMessage(message)
 				.setPositiveButton(android.R.string.ok, this)

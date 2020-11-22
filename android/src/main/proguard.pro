@@ -2,7 +2,7 @@
 
 # Debugging helpers
 #-dontobfuscate
--dontoptimize
+#-dontoptimize
 #-optimizationpasses 2
 
 # TODEL See res/menu/search.xml and b.android.com/170471

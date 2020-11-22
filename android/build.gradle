@@ -28,7 +28,7 @@ dependencies {
 	implementation "com.google.android.material:material:${VERSION_SUPPORT}"
 //	implementation "androidx.cardview:cardview:${VERSION_SUPPORT}"
 	implementation "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
-	implementation "com.google.android:flexbox:1.1.1"
+	implementation "com.google.android:flexbox:${VERSION_FLEXBOX}"
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
@@ -96,7 +96,7 @@ allprojects { project ->
 
 subprojects { project ->
 	project.afterEvaluate {
-		//noinspection UnnecessaryQualifiedReference
+		//noinspection UnnecessaryQualifiedReference,GrDeprecatedAPIUsage REPORT cannot replace with new interface, missing methods
 		com.android.build.gradle.api.AndroidSourceSet androidTest = project.android.sourceSets.androidTest
 		if (androidTest.java.sourceFiles.empty) {
 			logger.info "Disabling AndroidTest tasks in ${project.path} as it has no sources in ${androidTest.java.srcDirs}"
@@ -114,7 +114,8 @@ def upgradeTest = tasks.register("upgradeTest", UpgradeTestTask) { task ->
 }
 tasks.connectedCheck.configure { it.dependsOn(upgradeTest) }
 
-task generateHtmlReportFromXml(type: net.twisterrob.gradle.android.tasks.TestReportGenerator) {
+//noinspection UnnecessaryQualifiedReference
+tasks.register("generateHtmlReportFromXml", net.twisterrob.gradle.android.tasks.TestReportGenerator.class) {
 	input = new File(rootDir, 'temp/tests')
 	output = new File(rootDir, 'temp/tests_results')
 	outputs.upToDateWhen { false }

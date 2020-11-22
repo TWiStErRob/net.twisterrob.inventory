@@ -15,12 +15,14 @@ import net.twisterrob.android.annotation.BottomSheetState;
 public class BottomMarginAdjuster extends BottomSheetCallback {
 	private static final Logger LOG = LoggerFactory.getLogger(BottomMarginAdjuster.class);
 
-	private final ViewProvider viewProvider;
 	private final boolean adjustOnStateChange;
-	public BottomMarginAdjuster(ViewProvider viewProvider, boolean adjustOnStateChange) {
-		this.viewProvider = viewProvider;
+	private final @NonNull ViewProvider viewProvider;
+
+	public BottomMarginAdjuster(boolean adjustOnStateChange, @NonNull ViewProvider viewProvider) {
 		this.adjustOnStateChange = adjustOnStateChange;
+		this.viewProvider = viewProvider;
 	}
+
 	@Override public void onStateChanged(@NonNull View bottomSheet, @BottomSheetState int newState) {
 		if (!adjustOnStateChange) {
 			return;

@@ -69,19 +69,7 @@ public class OverScrollInterceptor extends ViewGroup {
 		if (mTarget instanceof SwipeRefreshLayout) {
 			return ((SwipeRefreshLayout)mTarget).canChildScrollUp();
 		}
-		if (VERSION.SDK_INT < VERSION_CODES.ICE_CREAM_SANDWICH) {
-			if ((mTarget instanceof AbsListView)) {
-				AbsListView absListView = (AbsListView)mTarget;
-				return 0 < absListView.getChildCount() && (
-						0 < absListView.getFirstVisiblePosition()
-								|| absListView.getChildAt(0).getTop() < absListView.getPaddingTop()
-				);
-			} else {
-				return 0 < mTarget.getScrollY();
-			}
-		} else {
-			return mTarget.canScrollVertically(-1);
-		}
+		return mTarget.canScrollVertically(-1);
 	}
 
 	public boolean onInterceptTouchEvent(MotionEvent ev) {

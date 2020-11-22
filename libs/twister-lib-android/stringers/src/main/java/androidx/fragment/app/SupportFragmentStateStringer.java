@@ -62,7 +62,7 @@ public class SupportFragmentStateStringer extends Stringer<FragmentState> {
 	 */
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void fixClassLoader(@NonNull Bundle bundle) {
-		if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB || bundle.getClassLoader() == null) {
+		if (bundle.getClassLoader() == null) {
 			bundle.setClassLoader(FragmentState.class.getClassLoader());
 		}
 	}
