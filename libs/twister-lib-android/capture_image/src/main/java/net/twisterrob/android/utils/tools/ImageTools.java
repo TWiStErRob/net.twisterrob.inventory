@@ -14,8 +14,9 @@ import android.net.Uri;
 import android.os.Build.*;
 import android.os.Environment;
 import android.provider.*;
-import android.support.media.ExifInterface;
-import android.support.v4.content.ContextCompat;
+
+import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 
 import net.twisterrob.java.io.IOTools;
 

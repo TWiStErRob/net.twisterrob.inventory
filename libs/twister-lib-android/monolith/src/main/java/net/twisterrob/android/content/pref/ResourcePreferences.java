@@ -5,7 +5,8 @@ import java.util.*;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 /**
  * I found it really useful to structure my preferences this way:

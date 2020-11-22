@@ -2,7 +2,8 @@ package net.twisterrob.android.test.junit;
 
 import android.app.Activity;
 import android.content.*;
-import android.support.test.InstrumentationRegistry;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 
 public class TestPackageIntentRule<T extends Activity> extends SensibleActivityTestRule<T> {
 	private final Context testContext;

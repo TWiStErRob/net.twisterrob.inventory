@@ -12,10 +12,11 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
 
 import android.content.Intent;
-import android.support.test.filters.*;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.UiObjectNotFoundException;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.*;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.content.InventoryContract;

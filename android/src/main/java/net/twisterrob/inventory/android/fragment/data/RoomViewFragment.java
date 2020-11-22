@@ -6,8 +6,9 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.R;

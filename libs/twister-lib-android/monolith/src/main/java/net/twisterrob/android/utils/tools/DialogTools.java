@@ -8,8 +8,6 @@ import android.content.*;
 import android.content.DialogInterface.*;
 import android.os.Build.*;
 import android.os.*;
-import android.support.annotation.*;
-import android.support.v7.app.AlertDialog;
 import android.text.method.LinkMovementMethod;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
@@ -17,6 +15,9 @@ import android.widget.*;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.rarepebble.colorpicker.ColorPickerView;
+
+import androidx.annotation.*;
+import androidx.appcompat.app.AlertDialog;
 
 @SuppressWarnings({"unused", "StaticMethodOnlyUsedInOneClass"})
 public class DialogTools {

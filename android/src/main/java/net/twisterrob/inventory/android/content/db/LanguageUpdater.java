@@ -4,8 +4,9 @@ import java.util.Locale;
 
 import org.slf4j.*;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.inventory.android.*;

@@ -2,11 +2,13 @@ package net.twisterrob.inventory.android.view;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.*;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.RecyclerView.Adapter;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.*;
+import androidx.loader.app.LoaderManager;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 
 public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> extends RecyclerViewController<A, D> {
 	private final Context context;

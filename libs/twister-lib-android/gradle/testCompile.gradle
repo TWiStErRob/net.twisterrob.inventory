@@ -21,7 +21,7 @@ dependencies {
 //			.resolvedArtifacts
 //			.collect { it.id.componentIdentifier }
 //			.grep { it instanceof ModuleComponentIdentifier }
-//			.grep { it.group == 'com.android.support' }
+//			.grep { it.group.startsWith("androidx.") }
 //			.each { androidTestImplementation it.displayName }
 
 		androidTestImplementation "junit:junit:${VERSION_JUNIT}"
@@ -40,36 +40,29 @@ dependencies {
 //		androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
 //		androidTestImplementation 'com.google.dexmaker:dexmaker:1.0'
 		// Android JUnit Runner
-		androidTestImplementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
-		androidTestImplementation "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
+		androidTestImplementation "androidx.test:runner:${VERSION_ESPRESSO_RUNNER}"
+		androidTestImplementation "androidx.test.ext:junit:${VERSION_ESPRESSO_RUNNER}"
+		androidTestImplementation "androidx.test:rules:${VERSION_ESPRESSO_RUNNER}"
 
 		// Espresso core
-		androidTestImplementation "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
+		androidTestImplementation "androidx.test.espresso:espresso-core:${VERSION_ESPRESSO}"
 		// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
-		androidTestImplementation("com.android.support.test.espresso:espresso-contrib:${VERSION_ESPRESSO}") {
-			// Need to ignore support dependencies, otherwise weird exceptions happen, for example:
-			// * Error inflating class android.support.v7.widget.CardView Resource is not a ColorStateList (color or path)
-			// * NullPointerException (mDecorContentParent.setWindowCallback) at AppCompatDelegateImplV7.createSubDecor
-			exclude group: 'com.android.support'
-		}
+		androidTestImplementation("androidx.test.espresso:espresso-contrib:${VERSION_ESPRESSO}")
 		// Espresso-accessibility for automatic checking (not used yet)
 		// TODO AccessibilityChecks.enable()
-		//androidTestImplementation "com.android.support.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
+		//androidTestImplementation "androidx.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
 		// disable web for now, because it has some conflicting Guava classes (http://b.android.com/187735)
 		// Espresso-web for WebView support (not used yet)
-		//androidTestImplementation "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
+		//androidTestImplementation "androidx.test.espresso:espresso-web:${VERSION_ESPRESSO}"
 		// Espresso-intents for capturing Intents and mocking onActivityResult
-		androidTestImplementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+		androidTestImplementation "androidx.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 		// Espresso-idling-resource for synchronization with background jobs
-		androidTestImplementation "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
+		androidTestImplementation "androidx.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
 		// CONSIDER using these with Glide
-		if (VERSION_ESPRESSO.startsWith("3.")) {
-			androidTestImplementation "com.android.support.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
-			androidTestImplementation "com.android.support.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
-		}
-		if (!project.path.contains(":libs:twister-lib-java")) {
-			// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
-			androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:2.1.3"
-		}
+		androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:${VERSION_ESPRESSO}"
+		androidTestImplementation "androidx.test.espresso.idling:idling-net:${VERSION_ESPRESSO}"
+
+		// UI Automator @SdkSuppress(minSdkVersion = VERSION_CODES.JELLY_BEAN_MR2)
+		androidTestImplementation "androidx.test.uiautomator:uiautomator:${VERSION_ESPRESSO_UIAUTOMATOR}"
 	}
 }

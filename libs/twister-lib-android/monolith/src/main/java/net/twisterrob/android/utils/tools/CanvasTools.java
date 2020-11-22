@@ -10,7 +10,8 @@ import android.annotation.TargetApi;
 import android.graphics.*;
 import android.opengl.*;
 import android.os.Build.*;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 public class CanvasTools {
 	private static final Logger LOG = LoggerFactory.getLogger(CanvasTools.class);

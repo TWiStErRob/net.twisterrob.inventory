@@ -6,8 +6,9 @@ import org.junit.*;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
+
+import androidx.annotation.NonNull;
+import androidx.test.core.app.ApplicationProvider;
 
 import net.twisterrob.inventory.android.backup.Importer;
 import net.twisterrob.inventory.android.content.*;
@@ -28,7 +29,7 @@ public class BackupDataXmlExportImportIntgTest {
 
 	@Before public void setUp() {
 		activity.reset();
-		context = InstrumentationRegistry.getTargetContext();
+		context = ApplicationProvider.getApplicationContext();
 	}
 
 	@Test public void testEmpty() throws Exception {

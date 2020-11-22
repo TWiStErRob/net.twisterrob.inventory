@@ -9,11 +9,12 @@ import static org.hamcrest.Matchers.*;
 
 import android.graphics.Color;
 import android.net.Uri;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.UiObjectNotFoundException;
 
-import static android.support.test.espresso.intent.Intents.*;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+
+import static androidx.test.espresso.intent.Intents.*;
 
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
 

@@ -4,12 +4,13 @@ import java.io.InputStream;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.annotation.*;
 
 import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.request.target.Target;
 import com.caverock.androidsvg.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.ResourceTools;
 

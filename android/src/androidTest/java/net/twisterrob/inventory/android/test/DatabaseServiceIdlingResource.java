@@ -1,8 +1,9 @@
 package net.twisterrob.inventory.android.test;
 
 import android.content.*;
-import android.support.test.InstrumentationRegistry;
-import android.support.v4.content.LocalBroadcastManager;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.test.core.app.ApplicationProvider;
 
 import net.twisterrob.android.test.espresso.idle.IntentServiceIdlingResource;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
@@ -22,12 +23,12 @@ public class DatabaseServiceIdlingResource extends IntentServiceIdlingResource {
 
 	@Override protected void waitForIdleAsync() {
 		super.waitForIdleAsync();
-		LocalBroadcastManager bm = LocalBroadcastManager.getInstance(InstrumentationRegistry.getTargetContext());
+		LocalBroadcastManager bm = LocalBroadcastManager.getInstance(ApplicationProvider.getApplicationContext());
 		bm.registerReceiver(onShutdown, new IntentFilter(DatabaseService.ACTION_SERVICE_SHUTDOWN));
 	}
 
 	@Override protected void transitionToIdle() {
-		LocalBroadcastManager bm = LocalBroadcastManager.getInstance(InstrumentationRegistry.getTargetContext());
+		LocalBroadcastManager bm = LocalBroadcastManager.getInstance(ApplicationProvider.getApplicationContext());
 		bm.unregisterReceiver(onShutdown);
 		super.transitionToIdle();
 	}

@@ -2,7 +2,7 @@ package net.twisterrob.android.utils.log;
 
 import org.slf4j.*;
 
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
 
 import net.twisterrob.android.annotation.SnackbarDismissEvent;
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;

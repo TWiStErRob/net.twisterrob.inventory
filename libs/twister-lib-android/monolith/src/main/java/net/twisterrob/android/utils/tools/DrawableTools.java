@@ -3,7 +3,8 @@ package net.twisterrob.android.utils.tools;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.res.ResourcesCompat;
+
+import androidx.core.content.res.ResourcesCompat;
 
 @SuppressWarnings("unused")
 public /*static*/ abstract class DrawableTools {

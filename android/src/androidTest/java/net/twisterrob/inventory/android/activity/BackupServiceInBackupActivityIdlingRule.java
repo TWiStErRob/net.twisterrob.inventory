@@ -1,7 +1,7 @@
 package net.twisterrob.inventory.android.activity;
 
-import android.support.annotation.*;
-import android.support.test.rule.ActivityTestRule;
+import androidx.annotation.*;
+import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.android.test.junit.IdlingResourceRule;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService.LocalBinder;

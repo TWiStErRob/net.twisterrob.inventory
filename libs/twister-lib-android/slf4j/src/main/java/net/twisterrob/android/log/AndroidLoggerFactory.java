@@ -8,8 +8,9 @@ import org.slf4j.ILoggerFactory;
 
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
-import android.support.annotation.*;
 import android.util.Log;
+
+import androidx.annotation.*;
 
 /**
  * An implementation of {@link ILoggerFactory} for Android, creating {@link AndroidLogger} instances.

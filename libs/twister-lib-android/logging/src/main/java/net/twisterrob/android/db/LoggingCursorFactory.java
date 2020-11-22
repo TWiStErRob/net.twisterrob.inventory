@@ -7,7 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.*;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.RequiresApi;
+
+import androidx.annotation.RequiresApi;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

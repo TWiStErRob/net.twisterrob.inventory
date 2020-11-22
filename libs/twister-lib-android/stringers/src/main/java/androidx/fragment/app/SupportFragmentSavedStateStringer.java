@@ -1,8 +1,8 @@
-package android.support.v4.app;
+package androidx.fragment.app;
 
 import javax.annotation.Nonnull;
 
-import android.support.v4.app.Fragment.SavedState;
+import androidx.fragment.app.Fragment.SavedState;
 
 import net.twisterrob.java.utils.tostring.*;
 

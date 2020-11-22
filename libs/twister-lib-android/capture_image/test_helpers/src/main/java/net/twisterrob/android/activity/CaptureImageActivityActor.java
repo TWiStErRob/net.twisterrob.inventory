@@ -17,21 +17,22 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.*;
 import android.graphics.drawable.*;
 import android.net.Uri;
-import android.support.annotation.*;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.intent.*;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.view.View;
 import android.widget.ImageView;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.intent.Intents.*;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.annotation.*;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.intent.*;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.intent.Intents.*;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.capture_image.R;
 import net.twisterrob.android.view.*;
@@ -54,7 +55,8 @@ public class CaptureImageActivityActor extends ActivityActor {
 
 	public Matcher<Intent> intendCamera(File file, Bitmap mockText) throws IOException {
 		Uri resultFile = Uri.fromFile(file);
-		OutputStream output = getContext().getContentResolver().openOutputStream(resultFile);
+		Context context = InstrumentationRegistry.getInstrumentation().getContext();
+		OutputStream output = context.getContentResolver().openOutputStream(resultFile);
 		try {
 			boolean compressed = mockText.compress(CompressFormat.PNG, 100, output);
 			assumeTrue("Cannot save bitmap to " + resultFile, compressed);
@@ -69,8 +71,8 @@ public class CaptureImageActivityActor extends ActivityActor {
 
 	@SuppressLint("ApplySharedPref") // want to save persist immediately
 	public void clearPreferences() {
-		InstrumentationRegistry
-				.getTargetContext()
+		ApplicationProvider
+				.getApplicationContext()
 				.getSharedPreferences(CaptureImage.class.getName(), Context.MODE_PRIVATE)
 				.edit()
 				.clear()
@@ -250,8 +252,7 @@ public class CaptureImageActivityActor extends ActivityActor {
 		verifyExternalChooser(times(1));
 	}
 	public void verifyExternalChooser(VerificationMode mode) {
-		String title = InstrumentationRegistry.getTargetContext()
-		                                      .getString(R.string.image__choose_external__title);
+		String title = ApplicationProvider.getApplicationContext().getString(R.string.image__choose_external__title);
 		Intents.intended(allOf(
 				hasAction(Intent.ACTION_CHOOSER),
 				hasExtra(Intent.EXTRA_TITLE, title)

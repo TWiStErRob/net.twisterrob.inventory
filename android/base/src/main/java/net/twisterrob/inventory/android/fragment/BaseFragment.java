@@ -7,9 +7,10 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.*;
-import android.support.annotation.*;
-import android.support.v4.app.FragmentActivity;
 import android.view.*;
+
+import androidx.annotation.*;
+import androidx.fragment.app.FragmentActivity;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.base.BuildConfig;
@@ -146,7 +147,7 @@ public class BaseFragment<T> extends VariantFragment {
 	}
 
 	/**
-	 * Don't use {@link android.support.v4.app.Fragment#getView}
+	 * Don't use {@link androidx.fragment.app.Fragment#getView}
 	 * outside lifecycle methods that don't guarantee its existence.
 	 */
 	@SuppressWarnings("ConstantConditions")

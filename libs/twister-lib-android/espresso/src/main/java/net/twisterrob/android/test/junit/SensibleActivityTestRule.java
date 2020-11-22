@@ -6,12 +6,13 @@ import org.junit.runners.model.Statement;
 
 import android.app.Activity;
 import android.content.*;
-import android.support.annotation.*;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
+
+import androidx.annotation.*;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.android.test.*;
 import net.twisterrob.android.test.espresso.ScreenshotFailure;
@@ -35,7 +36,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 	}
 	public SensibleActivityTestRule(Class<T> activityClass, boolean initialTouchMode, boolean launchActivity) {
 		super(activityClass, initialTouchMode, launchActivity);
-		Context context = InstrumentationRegistry.getContext();
+		Context context = InstrumentationRegistry.getInstrumentation().getContext();
 		systemAnimations = new SystemAnimations(context);
 		unlocker = new DeviceUnlocker(context);
 		chatty = new ChattyLogCat();
@@ -121,7 +122,7 @@ public class SensibleActivityTestRule<T extends Activity> extends ActivityTestRu
 				}
 			});
 		} catch (Throwable ex) {
-			android.support.test.espresso.core.internal.deps.guava.base.Throwables.throwIfUnchecked(ex);
+			androidx.test.espresso.core.internal.deps.guava.base.Throwables.throwIfUnchecked(ex);
 		}
 	}
 

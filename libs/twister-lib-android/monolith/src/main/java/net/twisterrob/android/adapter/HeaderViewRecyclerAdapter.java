@@ -17,11 +17,12 @@ package net.twisterrob.android.adapter;
 
 import java.util.*;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 /**
  * <p>

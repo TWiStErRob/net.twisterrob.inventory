@@ -4,8 +4,9 @@ import java.lang.annotation.*;
 
 import static java.lang.annotation.ElementType.*;
 
-import android.support.annotation.IntDef;
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.IntDef;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

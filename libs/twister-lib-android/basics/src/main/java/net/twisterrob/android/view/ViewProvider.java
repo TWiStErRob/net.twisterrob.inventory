@@ -2,8 +2,9 @@ package net.twisterrob.android.view;
 
 import android.annotation.TargetApi;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.*;
 import android.view.View;
+
+import androidx.annotation.*;
 
 @SuppressWarnings("UnnecessaryInterfaceModifier")
 public interface ViewProvider {
@@ -22,9 +23,9 @@ public interface ViewProvider {
 	}
 
 	public class SupportFragmentViewProvider implements ViewProvider {
-		private final android.support.v4.app.Fragment fragment;
+		private final androidx.fragment.app.Fragment fragment;
 
-		public SupportFragmentViewProvider(@NonNull android.support.v4.app.Fragment fragment) {
+		public SupportFragmentViewProvider(@NonNull androidx.fragment.app.Fragment fragment) {
 			this.fragment = fragment;
 		}
 

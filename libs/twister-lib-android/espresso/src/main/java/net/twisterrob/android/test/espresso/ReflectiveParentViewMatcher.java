@@ -2,8 +2,9 @@ package net.twisterrob.android.test.espresso;
 
 import org.hamcrest.*;
 
-import android.support.test.espresso.util.HumanReadables;
 import android.view.View;
+
+import androidx.test.espresso.util.HumanReadables;
 
 import net.twisterrob.java.utils.ReflectionTools;
 

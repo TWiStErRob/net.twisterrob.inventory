@@ -1,9 +1,12 @@
 package net.twisterrob.android.view;
 
-import android.support.annotation.*;
-import android.support.design.widget.*;
-import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
 import android.view.View;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.annotation.BottomSheetState;
 

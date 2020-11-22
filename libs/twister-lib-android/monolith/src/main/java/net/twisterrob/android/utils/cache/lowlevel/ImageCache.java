@@ -28,11 +28,12 @@ import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Build.*;
 import android.os.*;
-import android.support.v4.app.*;
-import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import com.jakewharton.disklrucache.DiskLruCache;
+
+import androidx.collection.LruCache;
+import androidx.fragment.app.*;
 
 import net.twisterrob.java.io.IOTools;
 

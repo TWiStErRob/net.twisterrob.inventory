@@ -16,8 +16,9 @@ import android.database.Cursor;
 import android.graphics.*;
 import android.os.Build.*;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.Nullable;
 import android.system.*;
+
+import androidx.annotation.Nullable;
 
 import net.twisterrob.java.utils.CollectionTools;
 

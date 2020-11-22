@@ -2,9 +2,9 @@ package net.twisterrob.inventory.android.test.actors;
 
 import android.app.Activity;
 
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 

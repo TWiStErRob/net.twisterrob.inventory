@@ -17,14 +17,14 @@
 package net.twisterrob.android.test.espresso.recyclerview;
 
 import android.database.Cursor;
-import android.support.annotation.Nullable;
-import android.support.test.espresso.util.HumanReadables;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import android.support.test.espresso.core.internal.deps.guava.base.Optional;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.core.internal.deps.guava.base.Optional;
+import androidx.test.espresso.util.HumanReadables;
 
-import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.*;
+import static androidx.test.espresso.core.internal.deps.guava.base.Preconditions.*;
 
 /**
  * A sadly necessary layer of indirection to interact with AdapterViews.
@@ -52,7 +52,7 @@ import static android.support.test.espresso.core.internal.deps.guava.base.Precon
  * If you have to implement this to talk to widgets your own project defines - I'm sorry.
  * </i><p>
  *
- * @see android.support.test.espresso.action.AdapterViewProtocol original where this is copied from
+ * @see androidx.test.espresso.action.AdapterViewProtocol original where this is copied from
  */
 public interface RecyclerViewProtocol {
 

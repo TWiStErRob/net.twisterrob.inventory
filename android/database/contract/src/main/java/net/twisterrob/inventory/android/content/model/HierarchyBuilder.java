@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.*;
 
-import android.support.annotation.*;
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.content.contract.Type;
 

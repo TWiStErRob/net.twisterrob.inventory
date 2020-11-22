@@ -6,10 +6,12 @@ import android.app.Activity;
 import android.content.*;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.*;
 import android.util.AttributeSet;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
+
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.StringerTools;

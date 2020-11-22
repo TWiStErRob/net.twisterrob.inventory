@@ -4,10 +4,11 @@ import org.slf4j.*;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.*;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
+
+import androidx.annotation.*;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.loader.content.Loader;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.inventory.android.content.contract.InventoryLoader;

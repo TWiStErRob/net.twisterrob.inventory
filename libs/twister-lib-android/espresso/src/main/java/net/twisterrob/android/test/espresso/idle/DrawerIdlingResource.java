@@ -7,17 +7,18 @@ import org.hamcrest.Matcher;
 import org.slf4j.*;
 
 import android.app.Activity;
-import android.support.annotation.*;
-import android.support.test.espresso.NoMatchingViewException;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.lifecycle.Stage;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.DrawerLayout.*;
 import android.view.*;
 
-import static android.support.test.espresso.matcher.ViewMatchers.*;
-import static android.support.test.espresso.util.TreeIterables.*;
+import androidx.annotation.*;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.drawerlayout.widget.DrawerLayout.*;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.lifecycle.Stage;
+
+import static androidx.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.espresso.util.TreeIterables.*;
 
 import net.twisterrob.android.annotation.GravityFlag;
 import net.twisterrob.android.test.junit.*;

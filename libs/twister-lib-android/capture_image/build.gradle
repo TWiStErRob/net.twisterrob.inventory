@@ -6,9 +6,9 @@ apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gra
 
 dependencies {
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
-	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
-	api "com.android.support:support-v4:${VERSION_SUPPORT}"
-	implementation("com.android.support:exifinterface:${VERSION_SUPPORT}")
+	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
+	api "androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}"
+	implementation "androidx.exifinterface:exifinterface:${VERSION_SUPPORT}"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation "net.twisterrob.lib:twister-lib-java"
@@ -21,7 +21,7 @@ dependencies {
 		transitive = false
 		androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
 		androidTestImplementation "net.twisterrob.lib:twister-lib-android-uiautomator"
-		androidTestImplementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+		androidTestImplementation "androidx.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 	}
 	androidTestRuntimeOnly "net.twisterrob.lib:twister-lib-android-slf4j"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_glide3"
@@ -29,7 +29,7 @@ dependencies {
 
 android {
 	defaultConfig {
-		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 	}
 	lintOptions {
 		tasks.lint.enabled = false

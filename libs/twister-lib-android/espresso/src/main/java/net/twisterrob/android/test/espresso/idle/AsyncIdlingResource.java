@@ -2,8 +2,8 @@ package net.twisterrob.android.test.espresso.idle;
 
 import org.slf4j.*;
 
-import android.support.annotation.MainThread;
-import android.support.test.espresso.IdlingResource;
+import androidx.annotation.MainThread;
+import androidx.test.espresso.IdlingResource;
 
 public abstract class AsyncIdlingResource implements IdlingResource {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());

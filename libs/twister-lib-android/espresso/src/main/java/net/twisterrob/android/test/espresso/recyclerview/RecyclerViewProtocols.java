@@ -19,23 +19,22 @@ package net.twisterrob.android.test.espresso.recyclerview;
 import java.util.List;
 
 import android.database.Cursor;
-import android.support.v7.widget.*;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.recyclerview.widget.*;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
+import androidx.test.espresso.core.internal.deps.guava.base.Optional;
+import androidx.test.espresso.core.internal.deps.guava.collect.*;
 
-import android.support.test.espresso.core.internal.deps.guava.base.Optional;
-import android.support.test.espresso.core.internal.deps.guava.collect.*;
-
-import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.*;
+import static androidx.test.espresso.core.internal.deps.guava.base.Preconditions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 /**
  * Implementations of {@link RecyclerViewProtocol} for standard SDK Widgets.
  *
- * @see android.support.test.espresso.action.AdapterViewProtocols original where this is copied from
+ * @see androidx.test.espresso.action.AdapterViewProtocols original where this is copied from
  */
 public final class RecyclerViewProtocols {
 

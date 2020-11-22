@@ -9,8 +9,9 @@ import org.xml.sax.Attributes;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteConstraintException;
 import android.sax.*;
-import android.support.annotation.*;
 import android.util.Xml;
+
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.content.Database;

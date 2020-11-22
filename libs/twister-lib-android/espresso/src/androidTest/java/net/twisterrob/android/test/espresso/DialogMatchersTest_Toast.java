@@ -10,20 +10,20 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.*;
 
-import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.NoMatchingRootException;
-import android.support.test.filters.LargeTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.widget.Toast;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
-
+import androidx.annotation.NonNull;
+import androidx.test.espresso.NoMatchingRootException;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import junit.framework.AssertionFailedError;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.inventory.android.test.activity.TestActivity;
@@ -121,16 +121,16 @@ public class DialogMatchersTest_Toast {
 		show(toast);
 
 		AssertionFailedError expectedFailure = assertThrows(AssertionFailedError.class, new ThrowingRunnable() {
-			// android.support.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
+			// androidx.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
 			// 'not toast root existed' doesn't match the selected view.
 			// Expected: not toast root existed
 			// Got: "LinearLayout{...}"
 			// or
-			// android.support.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
+			// androidx.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
 			// 'not toast root existed' doesn't match the selected view.
 			// Expected: not toast root existed
 			// Got: "TextView{text=Hello Toast!}"
-			// at android.support.test.espresso.ViewInteraction.check(ViewInteraction.java:158)
+			// at androidx.test.espresso.ViewInteraction.check(ViewInteraction.java:158)
 			// at net.twisterrob.android.test.espresso.DialogMatchers.assertNoToastIsDisplayed(DialogMatchers.java:68)
 			@Override public void run() {
 				assertNoToastIsDisplayed();
@@ -161,7 +161,7 @@ public class DialogMatchersTest_Toast {
 	private static Toast createToast(final @NonNull CharSequence message) {
 		return InstrumentationExtensions.callOnMain(new Callable<Toast>() {
 			@Override public Toast call() {
-				return Toast.makeText(InstrumentationRegistry.getContext(), message, Toast.LENGTH_LONG);
+				return Toast.makeText(InstrumentationRegistry.getInstrumentation().getContext(), message, Toast.LENGTH_LONG);
 			}
 		});
 	}

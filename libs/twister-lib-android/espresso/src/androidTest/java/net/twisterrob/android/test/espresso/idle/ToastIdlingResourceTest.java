@@ -11,15 +11,16 @@ import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
 import android.os.Build.*;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.IdlingResource.ResourceCallback;
-import android.support.test.filters.FlakyTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.widget.Toast;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.test.espresso.IdlingResource.ResourceCallback;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.FlakyTest;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.EspressoExtensions;
 import net.twisterrob.android.test.junit.*;
@@ -176,7 +177,7 @@ public class ToastIdlingResourceTest {
 	private Toast createToast(final String message) {
 		Toast toast = InstrumentationExtensions.callOnMain(new Callable<Toast>() {
 			@Override public Toast call() {
-				return Toast.makeText(InstrumentationRegistry.getContext(), message, Toast.LENGTH_SHORT);
+				return Toast.makeText(InstrumentationRegistry.getInstrumentation().getContext(), message, Toast.LENGTH_SHORT);
 			}
 		});
 		toasts.add(toast);

@@ -1,8 +1,8 @@
-package android.support.v7.widget;
+package androidx.appcompat.widget;
 
 import javax.annotation.Nonnull;
 
-import android.support.v7.widget.Toolbar.SavedState;
+import androidx.appcompat.widget.Toolbar.SavedState;
 
 import net.twisterrob.android.utils.tostring.stringers.name.ResourceNameStringer;
 import net.twisterrob.java.annotations.DebugHelper;

@@ -12,10 +12,11 @@ import static org.junit.Assert.*;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.os.Build.*;
-import android.support.annotation.*;
-import android.support.test.uiautomator.*;
 
-import static android.support.test.InstrumentationRegistry.*;
+import androidx.annotation.*;
+import androidx.test.uiautomator.*;
+
+import static androidx.test.platform.app.InstrumentationRegistry.*;
 
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.android.test.espresso.DialogMatchers;
@@ -66,10 +67,10 @@ public class UiAutomatorExtensions {
 		assertTrue("expected to click", object.click());
 	}
 	public static @IdResName String androidId(@IdRes int resId) {
-		return getContext().getResources().getResourceName(resId);
+		return getInstrumentation().getContext().getResources().getResourceName(resId);
 	}
 	public static @IdResName String internalId(@IdRes int resId) {
-		return getTargetContext().getResources().getResourceName(resId);
+		return getInstrumentation().getTargetContext().getResources().getResourceName(resId);
 	}
 	public static @IdResName String externalId(String packageName, @StringResName String resName) {
 		return packageName + ":id/" + resName;
@@ -77,7 +78,7 @@ public class UiAutomatorExtensions {
 	public static String externalString(String packageName, @StringResName String resName,
 			String englishFallback)
 			throws NameNotFoundException {
-		Resources res = getContext().getPackageManager().getResourcesForApplication(packageName);
+		Resources res = getInstrumentation().getContext().getPackageManager().getResourcesForApplication(packageName);
 		@StringRes int resId = res.getIdentifier(resName, "string", packageName);
 
 		String resValue;
@@ -141,7 +142,7 @@ public class UiAutomatorExtensions {
 		final long timeout = TimeUnit.SECONDS.toMillis(10);
 
 		UiDevice device = UiDevice.getInstance(getInstrumentation());
-		BySelector appPackage = By.pkg(getTargetContext().getPackageName()).depth(0);
+		BySelector appPackage = By.pkg(getInstrumentation().getTargetContext().getPackageName()).depth(0);
 		assertTrue("expected " + appPackage + " to disappear", device.wait(Until.gone(appPackage), timeout));
 	}
 

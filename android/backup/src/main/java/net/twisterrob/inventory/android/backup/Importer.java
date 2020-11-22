@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.backup;
 
 import java.io.*;
 
-import android.support.annotation.*;
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.content.contract.Type;
 

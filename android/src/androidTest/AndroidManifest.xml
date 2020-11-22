@@ -1,15 +1,7 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
 	package="net.twisterrob.inventory.android.test"
 	android:sharedUserId="net.twisterrob.inventory">
-
-	<!--
-		android.support.test.uiautomator.v18=18
-		Not using it in this module, but on classpath,
-		lint will hopefully find the usages and notice that it's not callable from everywhere.
-	-->
-	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
 
 	<!--
 		The following classes access the device storage:

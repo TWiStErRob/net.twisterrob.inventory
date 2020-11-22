@@ -12,9 +12,10 @@ import android.graphics.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.*;
 
 import static android.graphics.Color.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.content.ImageRequest;
 import net.twisterrob.android.utils.tools.*;

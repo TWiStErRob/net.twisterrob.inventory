@@ -5,10 +5,11 @@ import org.slf4j.*;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.*;
 import android.view.*;
 
-import net.twisterrob.android.utils.tools.*;
+import androidx.annotation.*;
+
+import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;

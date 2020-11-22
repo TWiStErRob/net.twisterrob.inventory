@@ -1,7 +1,8 @@
 package net.twisterrob.inventory.android.content;
 
 import android.graphics.Color;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.data.R;
 

@@ -6,11 +6,12 @@ import static java.lang.annotation.ElementType.*;
 
 import android.annotation.*;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.*;
-import android.support.v4.view.GravityCompat;
 import android.view.Gravity;
 
 import static android.view.Gravity.*;
+
+import androidx.annotation.*;
+import androidx.core.view.GravityCompat;
 
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;

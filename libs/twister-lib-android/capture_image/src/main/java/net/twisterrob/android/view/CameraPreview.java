@@ -9,10 +9,11 @@ import android.annotation.*;
 import android.content.Context;
 import android.os.Build.*;
 import android.os.*;
-import android.support.annotation.*;
 import android.util.AttributeSet;
 import android.view.*;
 import android.widget.Toast;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 

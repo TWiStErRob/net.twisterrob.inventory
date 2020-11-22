@@ -4,7 +4,7 @@ import org.junit.rules.*;
 import org.junit.runner.Description;
 import org.junit.runners.model.*;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * @see <a href="https://github.com/powermock/powermock/issues/396#issuecomment-124665686">based on</a>

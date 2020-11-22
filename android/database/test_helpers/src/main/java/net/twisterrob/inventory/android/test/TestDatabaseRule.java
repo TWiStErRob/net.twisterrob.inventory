@@ -4,9 +4,10 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
+import androidx.test.platform.app.InstrumentationRegistry;
 
-import static android.support.test.InstrumentationRegistry.*;
+import static androidx.test.core.app.ApplicationProvider.*;
 
 import net.twisterrob.inventory.android.content.Database;
 
@@ -29,7 +30,7 @@ public class TestDatabaseRule implements TestRule {
 		}
 		@Override public void evaluate() throws Throwable {
 			try {
-				testDB = new Database(getTargetContext(), getContext().getResources());
+				testDB = new Database(getApplicationContext(), InstrumentationRegistry.getInstrumentation().getContext().getResources());
 				base.evaluate();
 			} finally {
 				testDB.getWritableDatabase().close();

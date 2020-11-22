@@ -14,16 +14,17 @@ import android.app.Notification;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.*;
-import android.support.annotation.*;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
+
+import androidx.annotation.*;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import net.twisterrob.inventory.android.activity.BackupActivity;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.exporters.*;
 import net.twisterrob.inventory.android.backup.importers.*;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
-import net.twisterrob.java.utils.*;
+import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.Constants.*;
 import static net.twisterrob.inventory.android.backup.StrictProgressInfoProvider.*;

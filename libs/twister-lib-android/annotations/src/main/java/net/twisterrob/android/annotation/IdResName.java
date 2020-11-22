@@ -3,7 +3,7 @@ package net.twisterrob.android.annotation;
 import java.lang.annotation.*;
 
 /**
- * @see android.support.annotation.IdRes
+ * @see androidx.annotation.IdRes
  */
 @Retention(RetentionPolicy.SOURCE)
 public @interface IdResName {

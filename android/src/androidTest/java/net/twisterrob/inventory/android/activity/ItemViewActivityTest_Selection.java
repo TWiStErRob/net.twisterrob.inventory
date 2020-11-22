@@ -6,11 +6,11 @@ import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.*;
 
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.ItemViewActivity;

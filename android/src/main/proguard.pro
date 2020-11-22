@@ -2,14 +2,14 @@
 
 # Debugging helpers
 #-dontobfuscate
-#-dontoptimize
+-dontoptimize
 #-optimizationpasses 2
 
-# See res/menu/search.xml and b.android.com/170471
--keep class android.support.v7.widget.SearchView { <init>(...); }
+# TODEL See res/menu/search.xml and b.android.com/170471
+-keep class androidx.appcompat.widget.SearchView { <init>(...); }
 
 
-# Rules from versionedparcelable-28.0.0.aar are triggering this:
+# Rules from versionedparcelable-1.0.0.aar/proguard.txt are triggering this:
 # Note: the configuration keeps the entry point 'androidx.media.AudioAttributesCompatParcelizer { ... read(VersionedParcel); }', but not the descriptor class 'VersionedParcel'
 # Note: the configuration keeps the entry point 'androidx.media.AudioAttributesCompatParcelizer { void write(...,VersionedParcel); }', but not the descriptor class 'VersionedParcel'
 # Note: the configuration keeps the entry point 'androidx.media.AudioAttributesImplApi21Parcelizer { ... read(VersionedParcel); }', but not the descriptor class 'VersionedParcel'
@@ -17,11 +17,41 @@
 # Note: the configuration keeps the entry point 'androidx.media.AudioAttributesImplBaseParcelizer { ... read(VersionedParcel); }', but not the descriptor class 'VersionedParcel'
 # Note: the configuration keeps the entry point 'androidx.media.AudioAttributesImplBaseParcelizer { void write(...,VersionedParcel); }', but not the descriptor class 'VersionedParcel'
 -dontnote androidx.versionedparcelable.VersionedParcel
-
+# Note: the configuration keeps the entry point 'androidx.media.AudioAttributesImplApi21Parcelizer { void write(androidx.media.AudioAttributesImplApi21,androidx.versionedparcelable.VersionedParcel); }', but not the descriptor class 'androidx.media.AudioAttributesImplApi21'
+-dontnote androidx.media.AudioAttributesImplApi21
+# Note: the configuration keeps the entry point 'androidx.media.AudioAttributesImplBaseParcelizer { void write(androidx.media.AudioAttributesImplBase,androidx.versionedparcelable.VersionedParcel); }', but not the descriptor class 'androidx.media.AudioAttributesImplBase'
+-dontnote androidx.media.AudioAttributesImplBase
+# Note: the configuration keeps the entry point 'androidx.vectordrawable.graphics.drawable.VectorDrawableCompat$VPath { void setPathData(androidx.core.graphics.PathParser$PathDataNode[]); }', but not the descriptor class 'androidx.core.graphics.PathParser$PathDataNode'
+-dontnote androidx.core.graphics.PathParser$PathDataNode
 
 # androidx-multidex:2.0.0 that came with AGP 3.5.4 -> 3.6.4 upgrade doesn't have a consumer proguard file.
 # Note: androidx.multidex.MultiDex$V14: can't find dynamically referenced class dalvik.system.DexPathList$Element
 -dontnote androidx.multidex.MultiDex$V14
+
+
+# REPORT GhostView is @hide
+# Note: androidx.transition.GhostViewApi21: can't find dynamically referenced class android.view.GhostView
+-dontnote  androidx.transition.GhostViewApi21
+
+
+# TODO why?
+# Note: androidx.core.graphics.TypefaceCompatApi24Impl: can't find dynamically referenced class android.graphics.FontFamily
+# Note: androidx.core.graphics.TypefaceCompatApi26Impl: can't find dynamically referenced class android.graphics.FontFamily
+-dontnote androidx.core.graphics.TypefaceCompatApi24Impl
+-dontnote androidx.core.graphics.TypefaceCompatApi26Impl
+
+# REPORT internal? but not hidden, why is it not visible?
+# Note: androidx.core.widget.TextViewCompat$OreoCallback: can't find dynamically referenced class com.android.internal.view.menu.MenuBuilder
+-dontnote androidx.core.widget.TextViewCompat$OreoCallback
+# Note: androidx.core.text.ICUCompat: can't find dynamically referenced class libcore.icu.ICU
+-dontnote androidx.core.text.ICUCompat
+# Note: androidx.appcompat.app.ResourcesFlusher: can't find dynamically referenced class android.content.res.ThemedResourceCache
+-dontnote androidx.appcompat.app.ResourcesFlusher
+
+
+# It's interrogating val android.app.Notification.extras: Bundle, so it's safe.
+# Note: androidx.core.app.NotificationCompatJellybean calls 'Field.getType'
+-dontnote androidx.core.app.NotificationCompatJellybean
 
 
 # Note: net.twisterrob.inventory.android.content.InventoryProvider calls 'Field.getType'
@@ -40,27 +70,6 @@
 # Accessing the Map/Set internals with reflection, no need to guess which one, it's all in libraryjars.
 # Note: net.twisterrob.java.utils.CollectionTools accesses a declared field '*' dynamically
 -dontnote net.twisterrob.java.utils.CollectionTools
-
-
-# Disable unique method inlining optimization for 
-# android.support.v7.content.res.AppCompatColorStateListInflater
-# because it crashes on startup with below on API 10:
-# W/dalvikvm: VFY: invalid aput-object on Ljava/lang/Object;
-# W/dalvikvm: VFY:  rejecting opcode 0x4d at 0x00f7
-# W/dalvikvm: VFY:  rejected Landroid/support/v7/d/a/a;.a (Landroid/content/res/Resources;Lorg/xmlpull/v1/XmlPullParser;ndroid/util/AttributeSet;Landroid/content/res/Resources$Theme;)Landroid/content/res/ColorStateList;
-# W/dalvikvm: Verifier rejected class Landroid/support/v7/d/a/a;
-# java.lang.VerifyError: android.support.v7.d.a.a
-#     at android.support.v7.d.a.b.b(SourceFile:95)
-#     at android.support.v7.d.a.b.a(SourceFile:71)
-#     at android.support.v7.widget.av.d(SourceFile:132)
-#     at android.support.v7.widget.n.a(SourceFile:96)
-#     at android.support.v7.widget.AppCompatTextView.<init>(SourceFile:67)
-#     at android.support.v7.widget.AppCompatTextView.<init>(SourceFile:56)
-#     at android.support.v7.a.n.a(SourceFile:18103)
-#     at android.support.v4.view.i$a.onCreateView(SourceFile:36)
-#     at android.view.LayoutInflater$FactoryMerger.onCreateView(LayoutInflater.java:135)
-#        at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:563)
--optimizations !method/inlining/unique
 
 
 # Remove Logging for now

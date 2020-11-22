@@ -5,7 +5,8 @@ import java.util.*;
 import android.annotation.*;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 /**
  * Base class for creating custom SharedPreferences objects.

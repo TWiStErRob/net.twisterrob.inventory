@@ -3,9 +3,9 @@ package com.bumptech.glide.load.engine;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import android.support.annotation.NonNull;
-
 import com.bumptech.glide.load.Key;
+
+import androidx.annotation.NonNull;
 
 final class EngineAccessor {
 	private static final Field mJobs = getJobsField();

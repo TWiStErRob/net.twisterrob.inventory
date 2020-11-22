@@ -7,9 +7,6 @@ import android.content.*;
 import android.graphics.*;
 import android.net.Uri;
 import android.os.*;
-import android.support.annotation.NonNull;
-import android.support.v4.content.*;
-import android.support.v4.graphics.ColorUtils;
 
 import com.bumptech.glide.*;
 import com.bumptech.glide.load.*;
@@ -25,6 +22,10 @@ import com.bumptech.glide.load.resource.gifbitmap.*;
 import com.bumptech.glide.load.resource.transcode.GifBitmapWrapperDrawableTranscoder;
 import com.bumptech.glide.module.GlideModule;
 import com.bumptech.glide.signature.StringSignature;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.*;
+import androidx.core.graphics.ColorUtils;
 
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;

@@ -10,8 +10,9 @@ import org.slf4j.*;
 import org.xml.sax.SAXException;
 
 import android.content.res.AssetManager;
-import android.support.annotation.VisibleForTesting;
 import android.util.Xml;
+
+import androidx.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;

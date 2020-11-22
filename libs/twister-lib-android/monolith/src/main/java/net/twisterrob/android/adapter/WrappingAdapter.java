@@ -1,8 +1,9 @@
 package net.twisterrob.android.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class WrappingAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 	protected RecyclerView.Adapter<VH> mWrappedAdapter;

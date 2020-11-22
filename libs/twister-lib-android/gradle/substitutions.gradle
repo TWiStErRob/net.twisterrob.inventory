@@ -17,24 +17,24 @@ configurations.all { Configuration config ->
 }
 
 // Substitutions for support library
-configurations.all { Configuration config ->
-	if (!config.name.contains("lintClassPath")) {
-		config.resolutionStrategy { ResolutionStrategy strategy ->
-			strategy.dependencySubstitution { subst ->
-				[ "support-annotations", "support-v4", "appcompat-v7", "support-v13",
-				  "design", "customtabs", "preference-v7", "preference-v14",
-				  "recyclerview-v7", "cardview-v7", "gridlayout-v7", "percent", "palette-v7",
-				  "mediarouter-v7", "leanback-v17", "preference-leanback-v17", "recommendation",
-				  "support-vector-drawable", "animated-vector-drawable"
-				].each {
-					strategy.force("com.android.support:${it}:${VERSION_SUPPORT}")
-					subst.substitute(module("com.android.support:${it}"))
-					     .with module("com.android.support:${it}:${VERSION_SUPPORT}")
-				}
-			}
-		}
-	}
-}
+//configurations.all { Configuration config ->
+//	if (!config.name.contains("lintClassPath")) {
+//		config.resolutionStrategy { ResolutionStrategy strategy ->
+//			strategy.dependencySubstitution { subst ->
+//				[ "support-annotations", "support-v4", "appcompat-v7", "support-v13",
+//				  "design", "customtabs", "preference-v7", "preference-v14",
+//				  "recyclerview-v7", "cardview-v7", "gridlayout-v7", "percent", "palette-v7",
+//				  "mediarouter-v7", "leanback-v17", "preference-leanback-v17", "recommendation",
+//				  "support-vector-drawable", "animated-vector-drawable"
+//				].each {
+//					strategy.force("com.android.support:${it}:${VERSION_SUPPORT}")
+//					subst.substitute(module("com.android.support:${it}"))
+//					     .with module("com.android.support:${it}:${VERSION_SUPPORT}")
+//				}
+//			}
+//		}
+//	}
+//}
 
 // Substitutions for Guava on Android
 configurations.all { Configuration config ->
@@ -103,10 +103,6 @@ configurations.all { Configuration config ->
 		force("com.google.guava:guava:27.0.1-jre")
 		// Robolectric has inconsistent internal dependencies (4.3.1): 1.0.4, 1.4.2, 1.5.15
 		force("org.codehaus.plexus:plexus-utils:1.5.15")
-		// 1.0.1 (Espresso 3.0.1) vs 1.0.2 (Robolectric needs it)
-		force("com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}")
-		// 1.0.1 (Espresso 3.0.1) vs 1.0.2 (Robolectric needs it)
-		force("com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}")
 		// 2.0.1 (Espresso 3.0.1) vs 3.0.2 (latest)
 		force("com.google.code.findbugs:jsr305:3.0.2")
 	}

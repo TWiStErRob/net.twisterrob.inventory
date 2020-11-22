@@ -7,8 +7,9 @@ import java.util.regex.*;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
-import android.support.annotation.*;
 import android.text.TextUtils;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;

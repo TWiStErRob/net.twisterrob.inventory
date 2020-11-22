@@ -7,7 +7,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import android.support.annotation.UiThread;
+import androidx.annotation.UiThread;
 
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
 import net.twisterrob.test.junit.AndroidJUnit4WithParametersRunnerFactory;

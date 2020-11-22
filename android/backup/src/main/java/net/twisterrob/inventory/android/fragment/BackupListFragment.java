@@ -8,15 +8,16 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.os.*;
-import android.support.annotation.*;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
-import android.support.v7.widget.*;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.*;
-import android.view.View.*;
+import android.view.View.OnClickListener;
 import android.widget.*;
+
+import androidx.annotation.*;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.*;
 
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.app.BaseApp;

@@ -1,8 +1,8 @@
-package android.support.v7.widget;
+package androidx.recyclerview.widget;
 
 import javax.annotation.Nonnull;
 
-import android.support.v7.widget.LinearLayoutManager.SavedState;
+import androidx.recyclerview.widget.LinearLayoutManager.SavedState;
 
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.tostring.*;

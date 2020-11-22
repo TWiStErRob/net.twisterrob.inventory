@@ -4,21 +4,24 @@ import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
-import android.support.annotation.IdRes;
-import android.support.test.espresso.*;
-import android.support.test.espresso.util.*;
-import android.support.test.runner.lifecycle.Stage;
 import android.view.*;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.action.ViewActions.pressBack;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.RootMatchers.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static android.view.WindowManager.LayoutParams.*;
+
+import androidx.annotation.IdRes;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.*;
+import androidx.test.espresso.util.*;
+import androidx.test.runner.lifecycle.Stage;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.pressBack;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.matcher.RootMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.platform.app.InstrumentationRegistry.*;
 
 import net.twisterrob.android.test.espresso.idle.ToastIdlingResource;
 import net.twisterrob.android.utils.tools.ResourceTools;
@@ -26,7 +29,6 @@ import net.twisterrob.android.utils.tools.ResourceTools;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.junit.InstrumentationExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
-
 public class DialogMatchers {
 	public static final int BUTTON_POSITIVE = android.R.id.button1;
 	public static final int BUTTON_NEGATIVE = android.R.id.button2;
@@ -52,7 +54,7 @@ public class DialogMatchers {
 	}
 
 	/**
-	 * Note: not using {@link android.support.test.espresso.matcher.RootMatchers#isSystemAlertWindow()},
+	 * Note: not using {@link androidx.test.espresso.matcher.RootMatchers#isSystemAlertWindow()},
 	 * because that's broader than toast, but using the same mechanism to detect.
 	 * @see <a href="http://stackoverflow.com/a/33387980/253468">
 	 *     Checking toast message in android espresso</a>
@@ -120,8 +122,9 @@ public class DialogMatchers {
 	}
 
 	public static Matcher<View> isDialogTitle() {
-		// new android.support.v7.app.AlertDialog.Builder().setTitle(...).show();
-		@IdRes int supportAlertTitle = ResourceTools.getIDResourceID(getTargetContext(), "alertTitle");
+		// new androidx.appcompat.app.AlertDialog.Builder().setTitle(...).show();
+		// @see androidx.appcompat.app.AlertController.setupTitle
+		@IdRes int supportAlertTitle = ResourceTools.getIDResourceID(ApplicationProvider.getApplicationContext(), "alertTitle");
 		// new android.app.AlertDialog.Builder().setTitle(...).show();
 		@IdRes int androidAlertTitle = ResourceTools.getIDResourceID(null, "alertTitle");
 		return anyOf(withId(supportAlertTitle), withId(androidAlertTitle));
@@ -209,7 +212,7 @@ public class DialogMatchers {
 	 * that was originally added here
 	 *     at android.view.ViewRootImpl.<init>(ViewRootImpl.java:457)
 	 *     ...
-	 *     at android.support.v7.app.AlertDialog$Builder.show(AlertDialog.java:953)
+	 *     at androidx.appcompat.app.AlertDialog$Builder.show(AlertDialog.java:953)
 	 * </pre>
 	 */
 	public static void attemptCloseDialog() {

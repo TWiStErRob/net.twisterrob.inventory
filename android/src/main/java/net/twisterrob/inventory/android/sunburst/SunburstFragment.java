@@ -7,16 +7,17 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.*;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.graphics.SunburstDrawable;
 import net.twisterrob.android.utils.concurrent.*;
-import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.content.Intents;

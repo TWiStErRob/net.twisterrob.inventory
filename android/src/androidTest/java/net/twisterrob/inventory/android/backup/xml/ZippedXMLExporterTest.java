@@ -21,8 +21,9 @@ import static org.mockito.Mockito.*;
 
 import android.content.res.AssetManager;
 import android.database.*;
-import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
+
+import androidx.annotation.NonNull;
+import androidx.test.core.app.ApplicationProvider;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.Exporter;
@@ -44,7 +45,7 @@ public class ZippedXMLExporterTest {
 
 	@Before public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		AssetManager assetManager = InstrumentationRegistry.getTargetContext().getAssets();
+		AssetManager assetManager = ApplicationProvider.getApplicationContext().getAssets();
 
 		sut = new ZippedXMLExporter(mockDatabase, assetManager, mockExporter);
 	}
@@ -110,7 +111,7 @@ public class ZippedXMLExporterTest {
 	}
 
 	@Test public void testDemoXmlTransformation() throws Throwable {
-		AssetManager assets = InstrumentationRegistry.getTargetContext().getAssets();
+		AssetManager assets = ApplicationProvider.getApplicationContext().getAssets();
 		String xml = IOTools.readAll(assets.open("demo.xml"));
 		Cursor cursor = new MatrixCursor(new String[0]);
 		stubXML(xml, cursor);

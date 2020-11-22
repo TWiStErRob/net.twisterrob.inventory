@@ -1,11 +1,11 @@
 package net.twisterrob.inventory.android.test.actors;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.PreferencesActivity;

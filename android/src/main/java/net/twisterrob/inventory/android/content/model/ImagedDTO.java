@@ -5,8 +5,9 @@ import org.slf4j.*;
 import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.annotation.*;
 import android.widget.ImageView;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.content.glide.LongSignature;
 import net.twisterrob.android.utils.tools.*;

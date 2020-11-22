@@ -18,36 +18,32 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-defs"
 
 	// Espresso core
-	api "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
+	api "androidx.test.espresso:espresso-core:${VERSION_ESPRESSO}"
 	// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
-	implementation("com.android.support.test.espresso:espresso-contrib:${VERSION_ESPRESSO}") {
-		// Need to ignore support dependencies, otherwise weird exceptions happen, for example:
-		// * Error inflating class android.support.v7.widget.CardView Resource is not a ColorStateList (color or path)
-		// * NullPointerException (mDecorContentParent.setWindowCallback) at AppCompatDelegateImplV7.createSubDecor
-		exclude group: 'com.android.support'
-	}
+	implementation "androidx.test.espresso:espresso-contrib:${VERSION_ESPRESSO}"
 	// Espresso-accessibility for automatic checking (not used yet)
 	// TODO AccessibilityChecks.enable()
-	//androidTestImplementation "com.android.support.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
+	//androidTestImplementation "androidx.test.espresso:espresso-accessibility:${VERSION_ESPRESSO}"
 	// disable web for now, because it has some conflicting Guava classes (http://b.android.com/187735)
 	// Espresso-web for WebView support (not used yet)
-	//androidTestImplementation "com.android.support.test.espresso:espresso-web:${VERSION_ESPRESSO}"
+	//androidTestImplementation "androidx.test.espresso:espresso-web:${VERSION_ESPRESSO}"
 	// Espresso-intents for capturing Intents and mocking onActivityResult
-	implementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+	implementation "androidx.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 	// Espresso-idling-resource for synchronization with background jobs
-	implementation "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
-	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
-	implementation "com.android.support:multidex:${VERSION_MULTIDEX}"
-	api "com.android.support.test:rules:${VERSION_ESPRESSO_RUNNER}"
+	implementation "androidx.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
+	implementation "androidx.test.ext:junit:1.1.1"
+	implementation "androidx.multidex:multidex:2.0.0"
+	api "androidx.test:rules:${VERSION_ESPRESSO_RUNNER}"
+	api "androidx.test.ext:junit:${VERSION_ESPRESSO_RUNNER}"
 
-	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
-	compileOnly "com.android.support:support-v4:${VERSION_SUPPORT}"
-	compileOnly "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
-	compileOnly "com.android.support:design:${VERSION_SUPPORT}"
-	compileOnly "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
+	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
+	compileOnly "androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}"
+	compileOnly "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
+	compileOnly "com.google.android.material:material:${VERSION_SUPPORT}"
+	compileOnly "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
 
 	androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
-	androidTestImplementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
+	androidTestImplementation "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
 	androidTestRuntimeOnly "net.twisterrob.lib:twister-lib-android-slf4j"
 
 	testImplementation "org.mockito:mockito-core:${VERSION_MOCKITO}"
@@ -55,7 +51,7 @@ dependencies {
 
 android {
 	defaultConfig {
-		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 	}
 	lintOptions {
 		tasks.lint.enabled = false

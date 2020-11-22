@@ -5,14 +5,15 @@ import org.slf4j.*;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.*;
 import android.widget.EdgeEffect;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.wrappers.EdgeEffectWrapper;
 import net.twisterrob.java.annotations.DebugHelper;
 
 /**
- * @see android.support.v7.widget.RecyclerView#setEdgeEffectFactory
+ * @see androidx.recyclerview.widget.RecyclerView#setEdgeEffectFactory
  */
 @RequiresApi(VERSION_CODES.ICE_CREAM_SANDWICH)
 @DebugHelper

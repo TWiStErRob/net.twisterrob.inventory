@@ -3,14 +3,15 @@ package net.twisterrob.android.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build.*;
+import android.os.Build.VERSION_CODES;
 import android.preference.DialogPreference;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.*;
 import android.widget.*;
 
 import static android.view.ViewGroup.LayoutParams.*;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.R;
 

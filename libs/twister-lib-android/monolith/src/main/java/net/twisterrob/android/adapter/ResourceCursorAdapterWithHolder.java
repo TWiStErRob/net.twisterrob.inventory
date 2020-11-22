@@ -4,8 +4,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.*;
 import android.os.Build.*;
-import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.*;
+
+import androidx.cursoradapter.widget.ResourceCursorAdapter;
 
 public abstract class ResourceCursorAdapterWithHolder<VH> extends ResourceCursorAdapter {
 	public static boolean devMode = false;

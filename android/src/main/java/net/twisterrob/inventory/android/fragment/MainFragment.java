@@ -8,12 +8,13 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.*;
 import android.text.format.DateUtils;
 import android.view.*;
 import android.view.View.*;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.DialogTools;

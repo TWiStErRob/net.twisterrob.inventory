@@ -1,6 +1,6 @@
 package net.twisterrob.android;
 
-import android.support.annotation.AnyRes;
+import androidx.annotation.AnyRes;
 
 public class AndroidConstants {
 	public static final int INVALID_POSITION = -1;

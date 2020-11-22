@@ -10,7 +10,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import android.content.res.Resources;
-import android.support.test.InstrumentationRegistry;
+
+import androidx.test.core.app.ApplicationProvider;
 
 import net.twisterrob.inventory.android.backup.Importer.*;
 import net.twisterrob.inventory.android.content.Database;
@@ -31,7 +32,7 @@ public class XMLImporterTest {
 
 	@Before public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+		Resources resources = ApplicationProvider.getApplicationContext().getResources();
 		sut = new XMLImporter(resources, mockDatabase, mockTypes);
 	}
 

@@ -6,9 +6,10 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.database.*;
 import android.os.Bundle;
-import android.support.annotation.*;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
+
+import androidx.annotation.*;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.loader.content.Loader;
 
 import net.twisterrob.android.content.loader.SimpleCursorLoader;
 import net.twisterrob.android.utils.tools.StringerTools;

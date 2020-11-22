@@ -6,7 +6,8 @@ import java.util.zip.*;
 import org.slf4j.*;
 
 import android.content.res.Resources;
-import android.support.annotation.VisibleForTesting;
+
+import androidx.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;

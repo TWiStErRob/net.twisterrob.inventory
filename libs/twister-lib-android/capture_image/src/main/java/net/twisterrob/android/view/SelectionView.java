@@ -12,11 +12,12 @@ import android.graphics.Region.Op;
 import android.graphics.drawable.Drawable;
 import android.os.Build.*;
 import android.os.Looper;
-import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.view.*;
 
-import static android.support.v4.content.ContextCompat.*;
+import androidx.annotation.ColorInt;
+
+import static androidx.core.content.ContextCompat.*;
 
 import net.twisterrob.android.capture_image.R;
 import net.twisterrob.android.utils.tools.ResourceTools;

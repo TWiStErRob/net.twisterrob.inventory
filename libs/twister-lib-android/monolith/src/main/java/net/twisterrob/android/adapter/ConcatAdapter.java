@@ -2,10 +2,11 @@ package net.twisterrob.android.adapter;
 
 import java.util.*;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.*;
 import android.util.SparseArray;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.*;
 
 @SuppressWarnings("rawtypes") // hope for the implementation to handle the position mapping correctly
 public class ConcatAdapter extends Adapter<ViewHolder> {

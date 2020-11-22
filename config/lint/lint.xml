@@ -59,19 +59,20 @@
 		<!-- Invalid package reference in library; not included in Android: javax.xml.stream. Referenced from net.twisterrob.java.io.IndentingXMLStreamWriter. -->
 		<ignore path="**twister-lib-java*.jar" />
 	</issue>
+	<issue id="NonConstantResourceId" severity="ignore">
+		<!-- Ignore for now: https://github.com/TWiStErRob/net.twisterrob.inventory/issues/183 -->
+	</issue>
 	<issue id="GradleDependency">
-		<!-- I'm not a free tester, leave me alone -->
-		<ignore regexp="^A newer version of com.android.support.*-alpha" />
-		<ignore regexp="^A newer version of com.android.support.*-beta" />
+		<!-- TODEL remove after upgrading support library to latest -->
+		<ignore regexp="^A newer version of androidx\..* than 1\.0\.0 is available: .*" />
+		<ignore regexp="^A newer version of com\.google\.android\.material:material than 1\.0\.0 is available: .*" />
+		<ignore regexp="^A newer version of androidx\.test\.ext:junit than 1\.1\.1 is available: .*" />
 	</issue>
 	<issue id="NewerVersionAvailable">
 		<!-- Glide will be updated, but it's more complex. https://github.com/TWiStErRob/net.twisterrob.inventory/issues/180 -->
 		<ignore regexp="^A newer version of com.github.bumptech.glide:glide" />
 		<!-- It's complex to find matching versions of PowerMock / Robolectric and Mockito. -->
 		<ignore regexp="^A newer version of org.mockito:mockito-core" />
-	</issue>
-	<issue id="MinSdkTooLow" severity="ignore">
-		<!-- TODEL remove after upgrading support library to latest -->
 	</issue>
 	<issue id="OldTargetApi" severity="ignore">
 		<!-- TODEL remove after upgrading support library to latest -->
@@ -91,10 +92,13 @@
 	<issue id="MissingClass">
 		<!-- REPORT false positive: internal library stuff is not picked up. -->
 		<ignore regexp="net\.twisterrob\.android\." />
-		<ignore regexp="com.google.android.flexbox.FlexboxLayoutCompat" />
 	</issue>
 	<issue id="Instantiatable" severity="ignore">
 		<!-- REPORT false positive for all my classes. -->
+	</issue>
+	<issue id="MissingSuperCall">
+		<!-- REPORT False positive in AGP 4.1.1, @SuppressLint("MissingSuperCall") doesn't work, baseline doesn't work. -->
+		<ignore path="src/main/java/net/twisterrob/inventory/android/activity/space/ManageSpaceActivity.java" />
 	</issue>
 	<issue id="LintBaseline">
 		<ignore regexp="(was|were) filtered out because (it is|they are) listed in the baseline file" />

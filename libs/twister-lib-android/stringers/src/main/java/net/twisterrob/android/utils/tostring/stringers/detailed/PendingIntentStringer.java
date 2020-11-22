@@ -6,9 +6,7 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.*;
 
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
-import android.os.Build.*;
 
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.ReflectionTools;

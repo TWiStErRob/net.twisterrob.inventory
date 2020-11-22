@@ -9,7 +9,7 @@ dependencies {
 	api "net.twisterrob.lib:twister-lib-android-espresso_actors"
 	api "net.twisterrob.lib:twister-lib-android-uiautomator"
 	implementation "net.twisterrob.lib:twister-lib-java"
-	implementation "com.android.support.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+	implementation "androidx.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
 }
 
 android {

@@ -5,7 +5,8 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.support.annotation.RequiresPermission;
+
+import androidx.annotation.RequiresPermission;
 
 /**
  * The below should be equivalent to using this class,

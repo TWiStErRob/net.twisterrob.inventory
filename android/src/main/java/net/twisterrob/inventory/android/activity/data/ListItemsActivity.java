@@ -3,8 +3,9 @@ package net.twisterrob.inventory.android.activity.data;
 import android.annotation.SuppressLint;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AlertDialog.Builder;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
 
 import net.twisterrob.android.activity.AboutActivity;
 import net.twisterrob.inventory.android.*;

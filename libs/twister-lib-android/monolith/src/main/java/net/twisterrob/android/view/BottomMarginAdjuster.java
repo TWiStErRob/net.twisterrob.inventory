@@ -2,11 +2,13 @@ package net.twisterrob.android.view;
 
 import org.slf4j.*;
 
-import android.support.annotation.*;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.annotation.BottomSheetState;
 

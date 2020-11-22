@@ -9,27 +9,30 @@ import org.junit.runner.RunWith;
 import org.slf4j.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasValue;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.io.FileMatchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
 
 import android.content.*;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.test.espresso.Espresso;
-import android.support.test.filters.FlakyTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.contrib.RecyclerViewActions.*;
-import static android.support.test.espresso.intent.Intents.*;
-import static android.support.test.espresso.intent.matcher.BundleMatchers.hasKey;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.test.espresso.Espresso;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.FlakyTest;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+
+import static androidx.test.core.app.ApplicationProvider.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.contrib.RecyclerViewActions.*;
+import static androidx.test.espresso.intent.Intents.*;
+import static androidx.test.espresso.intent.matcher.BundleMatchers.hasKey;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.idle.DrawerIdlingResource;
 import net.twisterrob.android.test.junit.*;
@@ -51,13 +54,13 @@ import static net.twisterrob.test.hamcrest.Matchers.*;
  * For reason this they require to be run with
  * {@code adb shell am instrument -e class <specific method> -e upgrade true <AndroidJUnitRunner>}.
  * If run without the {@code -e upgrade true}
- * the assumption about {@link android.support.test.InstrumentationRegistry#getArguments() getArguments()} will fail
+ * the assumption about {@link InstrumentationRegistry#getArguments() getArguments()} will fail
  * and hence nothing will run any further.
  * This will be the case when no specific {@code -e class} or {@code -e package} filters are defined, which is good.
  * </p>
  *
  * <p><i><b>
- * Be careful with {@link android.support.test.InstrumentationRegistry#getArguments() getArguments()},
+ * Be careful with {@link InstrumentationRegistry#getArguments() getArguments()},
  * it only contains arguments passed in via {@code am instrument -e}, not the ones defined via {@code <meta-data>}.
  * Those need to be manually read via {@link android.content.pm.PackageManager#getInstrumentationInfo
  * packageManager.getInstrumentationInfo().metaData}.
@@ -69,9 +72,9 @@ import static net.twisterrob.test.hamcrest.Matchers.*;
  * the {@code notClass} wins and the test suite will resolve to empty, even when instrumenting a specific method.
  * </i></p>
  *
- * @see  android.support.test.internal.runner.TestRequestBuilder#addFromRunnerArgs
+ * @see  androidx.test.internal.runner.TestRequestBuilder#addFromRunnerArgs
  * how the negative overriding logic is implemented
- * @see android.support.test.InstrumentationRegistry#getArguments()
+ * @see InstrumentationRegistry#getArguments()
  */
 @RunWith(AndroidJUnit4.class)
 public class UpgradeTests {
@@ -91,14 +94,14 @@ public class UpgradeTests {
 	@SuppressWarnings("deprecation")
 	@Before public void launchMain() {
 		assumeThat("Only run when instrumentation arguments contain \"" + LAUNCH_KEY + "\"",
-				getArguments(), hasKey(LAUNCH_KEY));
+				InstrumentationRegistry.getArguments(), hasKey(LAUNCH_KEY));
 		downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-		db = getTargetContext().getDatabasePath(Database.NAME);
+		db = getApplicationContext().getDatabasePath(Database.NAME);
 		assumeThat(downloads, anExistingDirectory());
 		// It's a good idea anyway to not be dependent upon anything from any particular version.
 		// The below intent could be a string, no need to load the Activity class to create the intent.
 		activity.getActivity().startActivity(new Intent()
-				.setComponent(new ComponentName(getTargetContext(), MainActivity.class))
+				.setComponent(new ComponentName(getApplicationContext(), MainActivity.class))
 				.setAction(Intent.ACTION_MAIN)
 				.addCategory(Intent.CATEGORY_LAUNCHER)
 		);

@@ -4,14 +4,15 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.*;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
 
 import static android.content.Context.*;
 
-import net.twisterrob.android.utils.tools.*;
+import androidx.viewpager.widget.*;
+
+import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.ImageActivity;
 import net.twisterrob.inventory.android.content.model.*;

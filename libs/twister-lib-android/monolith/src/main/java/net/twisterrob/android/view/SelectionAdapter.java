@@ -4,10 +4,11 @@ import java.util.*;
 
 import android.annotation.TargetApi;
 import android.os.Build.*;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.util.SparseBooleanArray;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import net.twisterrob.android.adapter.WrappingAdapter;
 

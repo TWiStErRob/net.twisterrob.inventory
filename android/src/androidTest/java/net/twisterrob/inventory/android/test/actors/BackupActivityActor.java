@@ -17,25 +17,27 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Build.*;
-import android.support.annotation.*;
-import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.view.View;
 import android.widget.EditText;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
-import static android.support.test.espresso.contrib.RecyclerViewActions.*;
-import static android.support.test.espresso.intent.Intents.*;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
-import static android.support.test.espresso.matcher.RootMatchers.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.annotation.*;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+
+import static androidx.test.core.app.ApplicationProvider.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.contrib.RecyclerViewActions.scrollTo;
+import static androidx.test.espresso.contrib.RecyclerViewActions.*;
+import static androidx.test.espresso.intent.Intents.*;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.*;
+import static androidx.test.espresso.matcher.RootMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.automators.GoogleDriveAutomator;
 import net.twisterrob.android.test.espresso.DialogMatchers;
-import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BackupActivity;
@@ -116,7 +118,7 @@ public class BackupActivityActor extends ActivityActor {
 		public static Uri mockImportFromFile(File inventory) throws IOException {
 			ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(inventory));
 			zip.putNextEntry(new ZipEntry(Paths.BACKUP_DATA_FILENAME));
-			IOTools.copyStream(getTargetContext().getAssets().open("demo.xml"), zip);
+			IOTools.copyStream(getApplicationContext().getAssets().open("demo.xml"), zip);
 			Uri data = Uri.fromFile(inventory);
 			Intent mockIntent = new Intent().setData(data);
 			intending(not(isInternal())).respondWith(new ActivityResult(Activity.RESULT_OK, mockIntent));
@@ -223,7 +225,7 @@ public class BackupActivityActor extends ActivityActor {
 		private static final Logger LOG = LoggerFactory.getLogger(DriveBackupActor.class);
 
 		public static void assumeDriveInstalled() {
-			assumeThat(getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
+			assumeThat(InstrumentationRegistry.getInstrumentation().getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
 		}
 
 		public static void assumeDriveFunctional() throws NameNotFoundException {
@@ -246,7 +248,7 @@ public class BackupActivityActor extends ActivityActor {
 				try {
 					// try to close whatever was launched
 					pressBackExternal();
-					assertThat(getCurrentAppPackageName(), is(getTargetContext().getPackageName()));
+					assertThat(getCurrentAppPackageName(), is(getApplicationContext().getPackageName()));
 				} catch (Throwable failEx) {
 					//noinspection ThrowableNotThrown but used to set cause
 					ObjectTools.getRootCause(failEx).initCause(ex);
@@ -256,7 +258,7 @@ public class BackupActivityActor extends ActivityActor {
 			}
 			// try to close whatever was launched
 			pressBackExternal();
-			assertThat(getCurrentAppPackageName(), is(getTargetContext().getPackageName()));
+			assertThat(getCurrentAppPackageName(), is(getApplicationContext().getPackageName()));
 		}
 
 		public void selectSaveToDriveFromChooser() throws UiObjectNotFoundException, NameNotFoundException {

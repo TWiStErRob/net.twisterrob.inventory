@@ -7,7 +7,8 @@ import java.util.concurrent.CancellationException;
 import org.slf4j.*;
 
 import android.database.Cursor;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.*;

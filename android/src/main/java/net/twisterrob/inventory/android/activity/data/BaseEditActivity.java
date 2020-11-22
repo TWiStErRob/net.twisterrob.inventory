@@ -2,8 +2,9 @@ package net.twisterrob.inventory.android.activity.data;
 
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentTransaction;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.SingleFragmentActivity;

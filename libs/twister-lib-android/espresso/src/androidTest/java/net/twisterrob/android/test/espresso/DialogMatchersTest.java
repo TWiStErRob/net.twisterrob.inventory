@@ -13,12 +13,10 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import android.content.Context;
-import android.support.test.espresso.base.RootViewPicker;
-import android.support.test.rule.ActivityTestRule;
 import android.widget.Toast;
 
-import static android.support.test.InstrumentationRegistry.*;
-
+import androidx.test.espresso.base.RootViewPicker;
+import androidx.test.rule.ActivityTestRule;
 import junitparams.*;
 import junitparams.naming.TestCaseName;
 
@@ -262,8 +260,8 @@ public class DialogMatchersTest {
 
 	static void showAppCompatAlertDialog(
 			Context context, boolean positive, boolean negative, boolean neutral, boolean cancellable) {
-		android.support.v7.app.AlertDialog.Builder builder =
-				new android.support.v7.app.AlertDialog.Builder(context);
+		androidx.appcompat.app.AlertDialog.Builder builder =
+				new androidx.appcompat.app.AlertDialog.Builder(context);
 		if (positive) {
 			builder.setPositiveButton("positive", null);
 		}

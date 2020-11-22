@@ -2,13 +2,14 @@ package net.twisterrob.inventory.android.view.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.*;
 import android.widget.*;
 
 import com.bumptech.glide.Glide;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;

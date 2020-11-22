@@ -4,8 +4,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.*;
 import android.widget.EdgeEffect;
+
+import androidx.annotation.*;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

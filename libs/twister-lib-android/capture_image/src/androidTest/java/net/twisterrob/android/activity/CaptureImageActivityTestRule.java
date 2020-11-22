@@ -7,7 +7,8 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import android.content.Intent;
-import android.support.test.espresso.IdlingRegistry;
+
+import androidx.test.espresso.IdlingRegistry;
 
 import net.twisterrob.android.test.espresso.idle.GlideIdlingResource;
 import net.twisterrob.android.test.junit.SensibleActivityTestRule;

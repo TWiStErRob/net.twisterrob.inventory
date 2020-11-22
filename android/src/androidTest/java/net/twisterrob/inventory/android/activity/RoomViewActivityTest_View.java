@@ -7,9 +7,10 @@ import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.*;
 
 import android.content.Intent;
-import android.support.annotation.StringRes;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.annotation.StringRes;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.RoomViewActivity;

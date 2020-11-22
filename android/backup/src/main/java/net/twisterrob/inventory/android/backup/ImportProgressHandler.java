@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.backup;
 
 import org.slf4j.*;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 import net.twisterrob.inventory.android.backup.Importer.ImportProgress;
 import net.twisterrob.inventory.android.backup.Progress.Phase;

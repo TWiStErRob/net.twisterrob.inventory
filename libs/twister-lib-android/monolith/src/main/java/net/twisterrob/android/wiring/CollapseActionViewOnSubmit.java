@@ -1,9 +1,10 @@
 package net.twisterrob.android.wiring;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 
 public class CollapseActionViewOnSubmit implements OnQueryTextListener {
 	private final @NonNull ActionBar actionBar;

@@ -3,8 +3,9 @@ package net.twisterrob.inventory.android.fragment;
 import org.slf4j.*;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Intents;

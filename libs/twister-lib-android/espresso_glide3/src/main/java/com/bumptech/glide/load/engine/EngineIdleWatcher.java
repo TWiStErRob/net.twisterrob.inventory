@@ -4,9 +4,9 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import android.support.annotation.NonNull;
-
 import com.bumptech.glide.request.ResourceCallback;
+
+import androidx.annotation.NonNull;
 
 /**
  * This class is the bridge between package private stuff and the world, don't try to inline it.

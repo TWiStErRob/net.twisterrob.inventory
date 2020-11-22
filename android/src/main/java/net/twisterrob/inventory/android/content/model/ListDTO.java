@@ -3,7 +3,8 @@ package net.twisterrob.inventory.android.content.model;
 import java.util.Locale;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 public class ListDTO extends DTO {
 	public static ListDTO fromCursor(@NonNull Cursor cursor) {

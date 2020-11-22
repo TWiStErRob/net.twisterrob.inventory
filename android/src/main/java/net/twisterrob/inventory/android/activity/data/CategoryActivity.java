@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
 
-import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.content.Intents;

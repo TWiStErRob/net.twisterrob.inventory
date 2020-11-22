@@ -13,7 +13,7 @@ allprojects {
 	apply from: rootProject.file('gradle/substitutions.gradle')
 	configurations.all {
 		if (it.name == 'lintClassPath') return
-		it.resolutionStrategy.failOnVersionConflict()
+//		it.resolutionStrategy.failOnVersionConflict()
 	}
 	afterEvaluate {
 		def android = project.extensions.findByName("android")

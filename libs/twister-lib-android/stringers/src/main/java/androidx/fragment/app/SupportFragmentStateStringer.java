@@ -1,11 +1,12 @@
-package android.support.v4.app;
+package androidx.fragment.app;
 
 import javax.annotation.Nonnull;
 
 import android.annotation.TargetApi;
 import android.os.Build.*;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.tostring.stringers.name.*;
 import net.twisterrob.java.utils.tostring.*;
@@ -57,7 +58,7 @@ public class SupportFragmentStateStringer extends Stringer<FragmentState> {
 	 * ClassNotFoundException when unmarshalling: android.support.v7.widget.RecyclerView$SavedState</code>
 	 * would manifest itself.
 	 * @see Fragment#instantiate
-	 * @see <a href="https://code.google.com/p/android/issues/detail?id=196430">ClassNotFoundException when unmarshalling SavedState</a>
+	 * @see <a href="https://issuetracker.google.com/issues/37073849">ClassNotFoundException when unmarshalling SavedState</a>
 	 */
 	@TargetApi(VERSION_CODES.HONEYCOMB)
 	private void fixClassLoader(@NonNull Bundle bundle) {

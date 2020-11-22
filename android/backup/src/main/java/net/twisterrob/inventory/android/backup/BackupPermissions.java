@@ -8,11 +8,12 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Build.*;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.PermissionChecker;
+import android.os.Build.VERSION_CODES;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.PermissionChecker;
 
 import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;

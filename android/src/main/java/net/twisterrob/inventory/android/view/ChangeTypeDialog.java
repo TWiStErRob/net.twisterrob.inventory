@@ -7,16 +7,17 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Build.*;
 import android.os.*;
-import android.support.annotation.UiThread;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AlertDialog.Builder;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
+
+import androidx.annotation.UiThread;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.core.content.ContextCompat;
+import androidx.cursoradapter.widget.CursorAdapter;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.*;
@@ -201,7 +202,7 @@ public class ChangeTypeDialog {
 			this.type = type;
 			startShowLoading();
 		}
-		@Override public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+		@Override public void onLoadFinished(androidx.loader.content.Loader<Cursor> loader, Cursor data) {
 			super.onLoadFinished(loader, data);
 			if (type != -1) {
 				autoSelect(adapter, type);

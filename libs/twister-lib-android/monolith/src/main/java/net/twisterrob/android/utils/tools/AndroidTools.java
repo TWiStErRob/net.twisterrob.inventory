@@ -23,15 +23,17 @@ import android.os.*;
 import android.os.Build.*;
 import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.preference.ListPreference;
-import android.support.annotation.*;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.*;
 import android.util.Log;
 import android.view.*;
 import android.view.ViewGroup.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+
+import com.google.android.material.textfield.TextInputLayout;
+
+import androidx.annotation.*;
+import androidx.core.view.WindowCompat;
+import androidx.fragment.app.Fragment;
 
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.exceptions.StackTrace;
@@ -609,8 +611,8 @@ public /*static*/ abstract class AndroidTools {
 					+ "\nDouble check that the searchable.xml doesn't contain literal strings for label and hint!"
 			);
 		}
-		if (view instanceof android.support.v7.widget.SearchView) {
-			android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView)view;
+		if (view instanceof androidx.appcompat.widget.SearchView) {
+			androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView)view;
 			searchView.setSearchableInfo(info);
 			return searchView;
 		} else if (VERSION_CODES.HONEYCOMB <= VERSION.SDK_INT) {

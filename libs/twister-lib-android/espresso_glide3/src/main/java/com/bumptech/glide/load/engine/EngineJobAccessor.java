@@ -3,9 +3,9 @@ package com.bumptech.glide.load.engine;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import android.support.annotation.NonNull;
-
 import com.bumptech.glide.request.ResourceCallback;
+
+import androidx.annotation.NonNull;
 
 import static net.twisterrob.java.utils.ReflectionTools.*;
 

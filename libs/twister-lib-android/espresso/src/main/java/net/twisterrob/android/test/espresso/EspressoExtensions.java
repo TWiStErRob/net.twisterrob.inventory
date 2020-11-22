@@ -18,29 +18,30 @@ import android.app.Instrumentation.ActivityResult;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.res.*;
-import android.support.annotation.*;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.annotation.Beta;
-import android.support.test.espresso.*;
-import android.support.test.espresso.NoMatchingViewException.Builder;
-import android.support.test.espresso.assertion.ViewAssertions;
-import android.support.test.espresso.core.internal.deps.guava.base.Predicate;
-import android.support.test.espresso.core.internal.deps.guava.collect.*;
-import android.support.test.espresso.matcher.BoundedMatcher;
-import android.support.test.espresso.util.*;
-import android.support.test.runner.lifecycle.Stage;
-import android.support.v4.view.ViewPager;
-import android.support.v7.view.menu.MenuView;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.annotation.*;
+import androidx.appcompat.view.menu.MenuView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.annotation.Beta;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.*;
+import androidx.test.espresso.NoMatchingViewException.Builder;
+import androidx.test.espresso.assertion.ViewAssertions;
+import androidx.test.espresso.core.internal.deps.guava.base.Predicate;
+import androidx.test.espresso.core.internal.deps.guava.collect.*;
+import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.espresso.util.*;
+import androidx.test.runner.lifecycle.Stage;
+import androidx.viewpager.widget.ViewPager;
+
+import static androidx.test.core.app.ApplicationProvider.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewDataInteraction;
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
@@ -55,9 +56,9 @@ import static net.twisterrob.java.utils.ObjectTools.*;
 @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
 public class EspressoExtensions {
 	private static final Logger LOG = LoggerFactory.getLogger(EspressoExtensions.class);
-	/** @see android.support.test.espresso.action.MotionEvents#sendDown */
+	/** @see androidx.test.espresso.action.MotionEvents#sendDown */
 	private static final String OVERSLEEP_MESSAGE = "Overslept and turned a tap into a long press";
-	/** @see android.support.test.espresso.action.MotionEvents#TAG */
+	/** @see androidx.test.espresso.action.MotionEvents#TAG */
 	private static final String OVERSLEEP_TAG = "MotionEvents";
 
 	public static ViewAssertion exists() {
@@ -421,7 +422,7 @@ public class EspressoExtensions {
 		// Look for "Overslept and turned a tap into a long press" to detect failure early, otherwise
 		// a NoMatchingRootException will be thrown which is hard to decode and separated by at least ~30 lines of logs.
 		long oversleepBarrier = System.currentTimeMillis();
-		openActionBarOverflowOrOptionsMenu(getTargetContext());
+		openActionBarOverflowOrOptionsMenu(getApplicationContext());
 		if (hasOversleptLogMessageAfter(oversleepBarrier)) {
 			throw new FlakyTestException(OVERSLEEP_TAG + ": " + OVERSLEEP_MESSAGE);
 		}
@@ -511,7 +512,7 @@ public class EspressoExtensions {
 		return isDescendantOfA(isToolbar());
 	}
 	private static Matcher<View> isToolbar() {
-		return isAssignableFrom(android.support.v7.widget.Toolbar.class);
+		return isAssignableFrom(androidx.appcompat.widget.Toolbar.class);
 	}
 	public static Matcher<View> isToolbarTitle() {
 		return new ReflectiveParentViewMatcher(isToolbar(), "mTitleTextView");
@@ -528,7 +529,7 @@ public class EspressoExtensions {
 		final Matcher<Integer> viewIdMatcher = equalTo(menuId);
 		return new TypeSafeMatcher<MenuItem>(MenuItem.class) {
 
-			private final Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+			private final Resources resources = ApplicationProvider.getApplicationContext().getResources();
 
 			@Override public void describeTo(Description description) {
 				description.appendText("with menu item id: " + getIdDescription(resources, menuId));
@@ -545,7 +546,7 @@ public class EspressoExtensions {
 		// simplified version of Espresso's ViewMatchers.WithIdMatcher
 		return new BoundedMatcher<View, View>(View.class, MenuView.ItemView.class) {
 
-			private Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+			private Resources resources = ApplicationProvider.getApplicationContext().getResources();
 
 			@Override public void describeTo(Description description) {
 				description.appendText("with menu item id: " + getIdDescription(resources, menuId));

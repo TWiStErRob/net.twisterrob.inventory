@@ -1,6 +1,6 @@
 package net.twisterrob.android.activity;
 
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 

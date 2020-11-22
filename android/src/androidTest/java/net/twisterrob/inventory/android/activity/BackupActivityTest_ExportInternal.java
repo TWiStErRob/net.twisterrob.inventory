@@ -13,11 +13,12 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.io.FileMatchers.*;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
@@ -37,7 +38,7 @@ public class BackupActivityTest_ExportInternal {
 	@Rule(order = 3) public final TemporaryFolder tempInHomeFolder = TemporaryFolder
 			.builder()
 			//.parentFolder(Paths.getPhoneHome()) // cannot work because it needs permission
-			.parentFolder(InstrumentationRegistry.getContext().getDir("temp", Context.MODE_PRIVATE))
+			.parentFolder(InstrumentationRegistry.getInstrumentation().getContext().getDir("temp", Context.MODE_PRIVATE))
 			.assureDeletion()
 			.build();
 	@Rule(order = 4) public final CheckExportedFiles files = new CheckExportedFiles();

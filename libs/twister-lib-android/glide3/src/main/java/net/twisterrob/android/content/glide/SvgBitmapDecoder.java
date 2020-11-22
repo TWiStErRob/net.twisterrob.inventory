@@ -7,7 +7,6 @@ import org.slf4j.*;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
-import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.ResourceDecoder;
@@ -16,6 +15,8 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
 import com.bumptech.glide.request.target.Target;
 import com.caverock.androidsvg.*;
+
+import androidx.annotation.NonNull;
 
 public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
 	private static final Logger LOG = LoggerFactory.getLogger(SvgBitmapDecoder.class);

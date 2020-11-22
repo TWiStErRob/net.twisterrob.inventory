@@ -3,12 +3,13 @@ package net.twisterrob.inventory.android.view.adapters;
 import java.text.NumberFormat;
 
 import android.database.Cursor;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.*;
 import android.widget.*;
 
 import com.bumptech.glide.Glide;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.R;

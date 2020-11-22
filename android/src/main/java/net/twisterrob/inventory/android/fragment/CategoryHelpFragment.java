@@ -7,14 +7,14 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.content.*;
-import android.os.Build.*;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
-import android.support.annotation.*;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.*;
 import android.widget.Toast;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.AndroidTools;

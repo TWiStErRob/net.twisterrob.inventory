@@ -10,9 +10,10 @@ import android.content.*;
 import android.database.*;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.NonNull;
 
 import static android.app.SearchManager.*;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;

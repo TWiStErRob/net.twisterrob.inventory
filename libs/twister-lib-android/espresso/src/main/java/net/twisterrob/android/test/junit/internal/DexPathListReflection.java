@@ -8,12 +8,12 @@ import org.slf4j.Logger;
 import android.app.Instrumentation;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
-import android.support.annotation.NonNull;
-import android.support.multidex.MultiDex;
 
 import static android.os.Build.VERSION.*;
 import static android.os.Build.VERSION_CODES.*;
 
+import androidx.annotation.NonNull;
+import androidx.multidex.MultiDex;
 import dalvik.system.*;
 
 import net.twisterrob.android.test.junit.AndroidJUnitRunner;
@@ -21,13 +21,13 @@ import net.twisterrob.java.utils.ReflectionTools;
 
 /**
  * This is necessary to find extracted secondary dex files by {@link MultiDex}.
- * It is needed to make sure {@link android.support.test.internal.runner.ClassPathScanner}
+ * It is needed to make sure {@link androidx.test.internal.runner.ClassPathScanner}
  * scans all the dex files for tests.
  * By default it only looks for {@code Instrumentation.getContext().getPackageCodePath()},
  * as seen in {@code buildRequest}.
  *
- * @see android.support.test.internal.runner.ClassPathScanner#addEntriesFromPath
- * @see android.support.test.runner.AndroidJUnitRunner#buildRequest
+ * @see androidx.test.internal.runner.ClassPathScanner#addEntriesFromPath
+ * @see androidx.test.runner.AndroidJUnitRunner#buildRequest
  */
 public class DexPathListReflection {
 
@@ -133,7 +133,7 @@ public class DexPathListReflection {
 	}
 
 	private void installMultiDex() {
-		// MultiDex is normally in android.support.test.runner.MonitoringInstrumentation.onCreate.
+		// MultiDex is normally in androidx.test.runner.MonitoringInstrumentation.onCreate.
 		// Need to install it here, because this is used before super.onCreate in AndroidJUnitRunner.
 		// Without this, it can't see the extracted DexPathList files.
 		MultiDex.installInstrumentation(instr.getContext(), instr.getTargetContext());
@@ -218,7 +218,7 @@ public class DexPathListReflection {
 	 * <a href="https://android.googlesource.com/platform/dalvik/+/android-4.4.4_r2/vm/JarFile.cpp#185">alternative route</a>
 	 * without cache when opening the zip file in the future with {@code new DexFile(zip.getAbsolutePath())}.
 	 *
-	 * @see android.support.test.internal.runner.ClassPathScanner#addEntriesFromPath which uses {@code new DexFile()}.
+	 * @see androidx.test.internal.runner.ClassPathScanner#addEntriesFromPath which uses {@code new DexFile()}.
 	 */
 	@SuppressWarnings("deprecation") // DexFile and loadDex are both deprecated.
 	private void generateODEX(File zip) {
@@ -231,8 +231,8 @@ public class DexPathListReflection {
 			// https://issuetracker.google.com/issues/36907533
 			// addEntriesFromPath will open and close the same file.
 			// The only solution I found to this is replacing what createClassPathScanner creates:
-			// android.support.test.internal.runner.TestRequestBuilder.createClassPathScanner
-			// android.support.test.runner.AndroidJUnitRunner.createTestRequestBuilder
+			// androidx.test.internal.runner.TestRequestBuilder.createClassPathScanner
+			// androidx.test.runner.AndroidJUnitRunner.createTestRequestBuilder
 			// and simply doing the odexing there instead of here,
 			// but androidx will likely change that API and dropping API <14 anyway.
 			DexFile.loadDex(zipName, odexName, 0).close();
@@ -250,11 +250,11 @@ StrictMode policy violation; ~duration=1203 ms: android.os.StrictMode$StrictMode
         at libcore.io.BlockGuardOs.open(BlockGuardOs.java:106)
         at libcore.io.IoBridge.open(IoBridge.java:393)
         at java.io.RandomAccessFile.<init>(RandomAccessFile.java:118)
-        at android.support.multidex.ZipUtil.getZipCrc(ZipUtil.java:55)
-        at android.support.multidex.MultiDexExtractor.getZipCrc(MultiDexExtractor.java:234)
-        at android.support.multidex.MultiDexExtractor.<init>(MultiDexExtractor.java:98)
-        at android.support.multidex.MultiDex.doInstallation(MultiDex.java:257)
-        at android.support.multidex.MultiDex.installInstrumentation(MultiDex.java:170)
+        at androidx.multidex.ZipUtil.getZipCrc(ZipUtil.java:55)
+        at androidx.multidex.MultiDexExtractor.getZipCrc(MultiDexExtractor.java:234)
+        at androidx.multidex.MultiDexExtractor.<init>(MultiDexExtractor.java:98)
+        at androidx.multidex.MultiDex.doInstallation(MultiDex.java:257)
+        at androidx.multidex.MultiDex.installInstrumentation(MultiDex.java:170)
         at net.twisterrob.android.test.junit.AndroidJUnitRunner.onCreate(AndroidJUnitRunner.java:51)
         at android.app.ActivityThread.handleBindApplication(ActivityThread.java:4335)
         at android.app.ActivityThread.access$1500(ActivityThread.java:135)

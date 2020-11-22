@@ -3,10 +3,11 @@ package net.twisterrob.android.test.espresso;
 import org.hamcrest.*;
 
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.test.espresso.Root;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
+
+import androidx.annotation.NonNull;
+import androidx.test.espresso.Root;
 
 public class WindowManagerLayoutParamTypeMatcher extends TypeSafeMatcher<Root> {
 

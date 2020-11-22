@@ -2,10 +2,11 @@ package net.twisterrob.android.view;
 
 import android.content.Context;
 import android.os.Build.*;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.*;
 import android.widget.AbsListView;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
  * Intercepts vertical scroll events for the inside view and notifies the attached listener about over-scroll.

@@ -3,8 +3,6 @@ package net.twisterrob.inventory.android.activity.data;
 import org.slf4j.*;
 
 import android.os.*;
-import android.support.annotation.PluralsRes;
-import android.support.v7.app.ActionBar.LayoutParams;
 import android.text.TextUtils;
 import android.view.*;
 import android.view.View.*;
@@ -13,6 +11,9 @@ import android.widget.*;
 import android.widget.TextView.OnEditorActionListener;
 
 import static android.view.ViewGroup.LayoutParams.*;
+
+import androidx.annotation.PluralsRes;
+import androidx.appcompat.app.ActionBar.LayoutParams;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;

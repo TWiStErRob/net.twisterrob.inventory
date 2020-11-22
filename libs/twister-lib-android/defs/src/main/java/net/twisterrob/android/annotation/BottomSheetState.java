@@ -4,8 +4,9 @@ import java.lang.annotation.*;
 
 import static java.lang.annotation.ElementType.*;
 
-import android.support.annotation.IntDef;
-import android.support.design.widget.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import androidx.annotation.IntDef;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

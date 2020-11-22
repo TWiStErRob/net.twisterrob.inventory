@@ -1,9 +1,10 @@
 package net.twisterrob.inventory.android.utils;
 
-import android.support.v7.widget.*;
-import android.support.v7.widget.RecyclerView.OnItemTouchListener;
 import android.view.*;
 import android.view.GestureDetector.SimpleOnGestureListener;
+
+import androidx.recyclerview.widget.*;
+import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener;
 
 public class NestedScrollableRecyclerViewListener extends SimpleOnGestureListener implements OnItemTouchListener {
 	private final RecyclerView rv;

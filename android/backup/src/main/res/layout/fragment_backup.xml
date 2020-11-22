@@ -21,13 +21,13 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		>
-		<android.support.v4.widget.SwipeRefreshLayout
+		<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 			style="@style/Theme.AppTheme.RecyclerRefresh"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:enabled="true"
 			>
-			<android.support.v7.widget.RecyclerView
+			<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/backups"
 				style="@style/Theme.AppTheme.RecyclerList"
 				android:layout_width="match_parent"
@@ -35,7 +35,7 @@
 				tools:scrollbars="none"
 				tools:listitem="@layout/item_backup"
 				/>
-		</android.support.v4.widget.SwipeRefreshLayout>
+		</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 		<include
 			layout="@layout/inc_fab" tools:src="@android:drawable/ic_menu_save"
 			/>

@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.backup.importers;
 
 import org.slf4j.*;
 
-import android.support.annotation.*;
+import androidx.annotation.NonNull;
 
 import net.twisterrob.inventory.android.backup.ImportProgressHandler;
 import net.twisterrob.inventory.android.content.Database;

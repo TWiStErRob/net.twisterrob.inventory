@@ -5,8 +5,9 @@ import java.lang.annotation.*;
 import static java.lang.annotation.ElementType.*;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.IntDef;
 import android.view.View;
+
+import androidx.annotation.IntDef;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

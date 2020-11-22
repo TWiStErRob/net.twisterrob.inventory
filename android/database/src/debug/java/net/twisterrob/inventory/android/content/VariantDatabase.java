@@ -7,7 +7,8 @@ import org.slf4j.*;
 import android.content.res.Resources;
 import android.database.*;
 import android.database.sqlite.*;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.database.R;
 import net.twisterrob.java.utils.StringTools;

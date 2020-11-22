@@ -2,8 +2,9 @@ package net.twisterrob.inventory.android.tasks;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.*;
 import android.view.View;
+
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.view.Action;
 

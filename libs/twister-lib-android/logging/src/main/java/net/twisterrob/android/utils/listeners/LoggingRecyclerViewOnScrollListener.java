@@ -2,7 +2,7 @@ package net.twisterrob.android.utils.listeners;
 
 import org.slf4j.*;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

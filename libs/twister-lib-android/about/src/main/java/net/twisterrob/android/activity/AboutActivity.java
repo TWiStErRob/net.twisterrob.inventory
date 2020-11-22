@@ -13,9 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.*;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AlertDialog.Builder;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -23,6 +20,10 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import static android.widget.ArrayAdapter.*;
+
+import androidx.annotation.*;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
 
 import net.twisterrob.android.about.R;
 import net.twisterrob.android.utils.tools.ViewTools;

@@ -1,10 +1,10 @@
-package android.support.v4.app;
+package androidx.fragment.app;
 
 import java.lang.annotation.*;
 
 import static java.lang.annotation.ElementType.*;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

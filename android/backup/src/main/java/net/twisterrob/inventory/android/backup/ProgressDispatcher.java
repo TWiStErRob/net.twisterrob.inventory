@@ -2,7 +2,7 @@ package net.twisterrob.inventory.android.backup;
 
 import java.util.concurrent.CancellationException;
 
-import android.support.annotation.*;
+import androidx.annotation.*;
 
 public interface ProgressDispatcher {
 	/**

@@ -18,16 +18,17 @@ import android.graphics.Bitmap.Config;
 import android.graphics.drawable.*;
 import android.os.Build.*;
 import android.preference.Preference;
-import android.support.annotation.*;
-import android.support.test.espresso.*;
-import android.support.test.espresso.matcher.BoundedMatcher;
-import android.support.test.runner.lifecycle.Stage;
 import android.view.*;
 import android.widget.*;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.annotation.*;
+import androidx.test.espresso.*;
+import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.runner.lifecycle.Stage;
+
+import static androidx.test.core.app.ApplicationProvider.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.java.utils.ReflectionTools;
@@ -64,7 +65,7 @@ public class AndroidMatchers {
 			final int flags, final Matcher<ResolveInfo> resolveInfoMatcher) {
 		return new TypeSafeMatcher<Intent>() {
 			@Override protected boolean matchesSafely(Intent intent) {
-				ResolveInfo info = getTargetContext().getPackageManager().resolveActivity(intent, flags);
+				ResolveInfo info = getApplicationContext().getPackageManager().resolveActivity(intent, flags);
 				return resolveInfoMatcher.matches(info);
 			}
 			@Override public void describeTo(Description description) {
@@ -81,16 +82,16 @@ public class AndroidMatchers {
 		return new FeatureMatcher<Intent, List<ResolveInfo>>(resolveInfoMatcher,
 				"Intent resolves to activities", "resolved activities") {
 			@Override protected List<ResolveInfo> featureValueOf(Intent intent) {
-				return getTargetContext().getPackageManager().queryIntentActivities(intent, flags);
+				return getApplicationContext().getPackageManager().queryIntentActivities(intent, flags);
 			}
 		};
 	}
 
 	public static @NonNull Matcher<String> isString(@StringRes int stringId) {
-		return equalTo(getTargetContext().getResources().getString(stringId));
+		return equalTo(getApplicationContext().getResources().getString(stringId));
 	}
 	public static @NonNull Matcher<CharSequence> isText(@StringRes int textId) {
-		return equalTo(getTargetContext().getResources().getText(textId));
+		return equalTo(getApplicationContext().getResources().getText(textId));
 	}
 	public static @NonNull Matcher<CharSequence> cs(final Matcher<String> stringMatcher) {
 		return new TypeSafeDiagnosingMatcher<CharSequence>() {
@@ -111,7 +112,7 @@ public class AndroidMatchers {
 	private static final Pattern formatSpecifier =
 			Pattern.compile("%(\\d+\\$)?([-#+ 0,(<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])");
 	public static @NonNull Matcher<String> formattedRes(@StringRes int stringId) {
-		String format = getTargetContext().getResources().getString(stringId);
+		String format = getApplicationContext().getResources().getString(stringId);
 		return matchesPattern(formatSpecifier.matcher(format).replaceAll(".*?"));
 	}
 
@@ -184,10 +185,10 @@ public class AndroidMatchers {
 		return HasPropertyWithValueLite.hasProperty(propertyName, valueMatcher);
 	}
 	public static @NonNull String stringRes(@StringRes int stringId) {
-		return getTargetContext().getResources().getString(stringId);
+		return getApplicationContext().getResources().getString(stringId);
 	}
 	public static @NonNull Matcher<String> containsStringRes(@StringRes int stringId) {
-		return Matchers.containsString(getTargetContext().getResources().getString(stringId));
+		return Matchers.containsString(getApplicationContext().getResources().getString(stringId));
 	}
 
 	// region Cursor matchers
@@ -327,7 +328,7 @@ public class AndroidMatchers {
 	// region Search matchers
 	public static @NonNull Matcher<View> isSearchView() {
 		return anyOf(
-				isAssignableFrom(android.support.v7.widget.SearchView.class),
+				isAssignableFrom(androidx.appcompat.widget.SearchView.class),
 				isAssignableFrom(android.widget.SearchView.class)
 		);
 	}

@@ -8,9 +8,10 @@ import javax.xml.parsers.*;
 import org.xml.sax.*;
 
 import android.os.Build;
-import android.support.annotation.NonNull;
 
 import com.caverock.androidsvg.*;
+
+import androidx.annotation.NonNull;
 
 /**
  * @see "src/main/consumer.pro"

@@ -12,12 +12,14 @@ import static org.junit.Assert.*;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.support.test.filters.SdkSuppress;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.*;
 
-import static android.support.test.InstrumentationRegistry.*;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.*;
+
+import static androidx.test.core.app.ApplicationProvider.*;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -50,9 +52,9 @@ public class PreferencesActivityTest {
 		prefs.openAppInfoInSettings();
 		waitForAppToBeBackgrounded();
 
-		CharSequence name = getTargetContext().getApplicationInfo().loadLabel(getTargetContext().getPackageManager());
+		CharSequence name = getApplicationContext().getApplicationInfo().loadLabel(getApplicationContext().getPackageManager());
 		try {
-			UiDevice device = UiDevice.getInstance(getInstrumentation());
+			UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 			UiObject object = device.findObject(new UiSelector().text(name.toString()));
 			assertTrue(object.exists());
 		} finally {
@@ -70,7 +72,7 @@ public class PreferencesActivityTest {
 		prefs.openAppInfoInMarket();
 		waitForAppToBeBackgrounded();
 		try {
-			UiDevice device = UiDevice.getInstance(getInstrumentation());
+			UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 			assertThat(device.getCurrentPackageName(), is("com.android.vending"));
 		} finally {
 			pressBackExternal();

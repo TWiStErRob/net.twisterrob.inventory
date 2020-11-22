@@ -12,9 +12,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build.*;
 import android.os.*;
-import android.support.annotation.RequiresPermission;
 
 import static android.os.Build.VERSION.*;
+
+import androidx.annotation.RequiresPermission;
 
 /**
  * Equivalent to:

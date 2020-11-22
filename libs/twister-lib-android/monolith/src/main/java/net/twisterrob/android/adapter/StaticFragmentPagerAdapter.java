@@ -2,7 +2,7 @@ package net.twisterrob.android.adapter;
 
 import java.util.*;
 
-import android.support.v4.app.*;
+import androidx.fragment.app.*;
 
 public class StaticFragmentPagerAdapter extends FragmentPagerAdapter {
 	private final List<Fragment> fragments = new ArrayList<>();

@@ -10,7 +10,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.*;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;

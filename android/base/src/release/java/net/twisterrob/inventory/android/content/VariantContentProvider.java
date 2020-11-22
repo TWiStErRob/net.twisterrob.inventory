@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.content;
 
-import android.support.annotation.CallSuper;
+import androidx.annotation.CallSuper;
 
 public abstract class VariantContentProvider extends android.content.ContentProvider {
 

@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.view.adapters;
 
-import android.support.annotation.UiThread;
+import androidx.annotation.UiThread;
 
 @UiThread
 public interface RecyclerViewItemEvents {

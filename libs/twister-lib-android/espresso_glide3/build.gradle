@@ -8,14 +8,14 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-espresso"
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-lib-hamcrest"
-	implementation "com.android.support.test.espresso:espresso-core:${VERSION_ESPRESSO}"
-	implementation "com.android.support.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
+	implementation "androidx.test.espresso:espresso-core:${VERSION_ESPRESSO}"
+	implementation "androidx.test.espresso:espresso-idling-resource:${VERSION_ESPRESSO}"
 	implementation "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
-	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
+	implementation "androidx.test.ext:junit:${VERSION_ESPRESSO_RUNNER}"
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 	implementation "com.google.guava:guava:27.0.1-android"
 	// Call to Glide.with(Context) doesn't compile without seeing Glide.with(support.Fragment)
-	compileOnly "com.android.support:support-v4:${VERSION_SUPPORT}"
+	compileOnly "androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}"
 }
 
 android {

@@ -22,19 +22,13 @@ dependencies {
 	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j')
 
 	// TOFIX otherwise VariantFragment descendants don't see Fragment and its methods (Cannot access FQCN errors in IDEA)
-	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
-	implementation "com.android.support:support-annotations:${VERSION_SUPPORT}"
-	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
-	implementation "com.android.support:design:${VERSION_SUPPORT}"
-//	implementation "com.android.support:cardview-v7:${VERSION_SUPPORT}"
-	implementation "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
-	//noinspection GradleDependency 0.3.1+ is officially API 14+ (https://github.com/google/flexbox-layout/issues/390)
-	//noinspection GradleDependency 0.3.1+ is strictly API 11+ (FlexboxHelper.calculateFlexLines calls View.getMeasuredState)
-	//noinspection GradleDependency 0.3.0+ is strictly API 17+ (FlexboxHelper.getPaddingStartMain calls View.getPaddingStart)
-	implementation('com.google.android:flexbox:0.3.0') { // 0.3.0 polyfilled as FlexboxLayoutCompat to API 10+
-		// TODEL fixed in 0.3.2
-		exclude group: 'com.android.support'
-	}
+	implementation "androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}"
+	implementation "androidx.annotation:annotation:${VERSION_SUPPORT}"
+	implementation "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
+	implementation "com.google.android.material:material:${VERSION_SUPPORT}"
+//	implementation "androidx.cardview:cardview:${VERSION_SUPPORT}"
+	implementation "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
+	implementation "com.google.android:flexbox:1.1.1"
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
@@ -91,17 +85,6 @@ android {
 		ignoreAssetsPattern defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
 	sourceSets.test.java.srcDir 'src/test/robolectricJava'
-
-	packagingOptions {
-		/* Execution failed for task ':transformResourcesWithMergeJavaResForDebugAndroidTest'.
-			> com.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException:
-			Duplicate files copied in APK META-INF/maven/com.google.guava/guava/pom.xml
-			File1: I:\build\intermediates\exploded-aar\com.android.support.test.espresso\espresso-web\2.2.2\jars\classes.jar
-			File2: I:\build\intermediates\exploded-aar\com.android.support.test.espresso\espresso-core\2.2.2\jars\classes.jar
-		 */
-		exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
-		exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
-	}
 }
 
 allprojects { project ->

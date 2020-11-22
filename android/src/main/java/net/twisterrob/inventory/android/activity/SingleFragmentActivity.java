@@ -3,7 +3,8 @@ package net.twisterrob.inventory.android.activity;
 import org.slf4j.*;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+
+import androidx.fragment.app.FragmentTransaction;
 
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;

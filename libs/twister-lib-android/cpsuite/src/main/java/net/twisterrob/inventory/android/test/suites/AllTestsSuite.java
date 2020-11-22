@@ -9,11 +9,12 @@ import org.junit.runners.model.*;
 
 import android.annotation.SuppressLint;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.RequiresApi;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.internal.runner.*;
-import android.support.test.internal.runner.ClassPathScanner.AcceptAllFilter;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+import androidx.test.internal.runner.*;
+import androidx.test.internal.runner.ClassPathScanner.AcceptAllFilter;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 /**
  * According to JUnit runner release notes, it doesn't support 9 any more, only 15 and up.
@@ -36,7 +37,7 @@ public class AllTestsSuite {
 				Class<?>[] baseTypes, Class<?>[] excludedBaseTypes, String classpathProperty) {
 			ClassTester tester = new ClasspathSuiteTester(
 					searchInJars, filterPatterns, suiteTypes, baseTypes, excludedBaseTypes);
-			String apk = InstrumentationRegistry.getContext().getPackageCodePath();
+			String apk = InstrumentationRegistry.getInstrumentation().getContext().getPackageCodePath();
 			return new AndroidClasspathClassesFinder(tester, apk);
 		}
 	}
@@ -55,9 +56,9 @@ public class AllTestsSuite {
 
 		/**
 		 * Try to load all classes that are on the classpath to look for tests.
-		 * Since we're running in {@link android.support.test.runner.AndroidJUnitRunner}
-		 * its superclass {@link android.support.test.runner.MonitoringInstrumentation}
-		 * will install {@link android.support.multidex.MultiDex}.
+		 * Since we're running in {@link androidx.test.runner.AndroidJUnitRunner}
+		 * its superclass {@link androidx.test.runner.MonitoringInstrumentation}
+		 * will install {@link androidx.multidex.MultiDex}.
 		 */
 		@Override public List<Class<?>> find() {
 			List<Class<?>> matchedClasses = new ArrayList<>();

@@ -8,10 +8,11 @@ import java.util.zip.*;
 import org.slf4j.*;
 
 import android.content.res.Resources;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.Constants;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.Importer.ImportImageGetter;

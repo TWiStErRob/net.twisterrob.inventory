@@ -5,11 +5,12 @@ import org.hamcrest.Matcher;
 import static org.hamcrest.Matchers.*;
 
 import android.app.Activity;
-import android.support.test.runner.lifecycle.Stage;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.test.runner.lifecycle.Stage;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.SingleFragmentActivity;

@@ -3,9 +3,10 @@ package net.twisterrob.android.test;
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
 import android.os.Build.*;
-import android.support.annotation.*;
 import android.text.Layout.Alignment;
 import android.text.*;
+
+import androidx.annotation.*;
 
 public class Helpers {
 	public static Bitmap createMockBitmap(String text) {

@@ -1,8 +1,5 @@
 package net.twisterrob.inventory.android.view;
 
-import android.graphics.*;
-import android.graphics.drawable.*;
-
 /**
  * Work around the fact that PictureDrawable ignores alpha.
  */

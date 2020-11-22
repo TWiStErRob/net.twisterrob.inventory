@@ -11,9 +11,10 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
 
-import android.os.Bundle;
+import android.os.*;
 import android.view.View;
 
+import net.twisterrob.inventory.android.TestIgnoreApp;
 import net.twisterrob.test.frameworks.classes.AndroidRecipient;
 
 /**
@@ -21,7 +22,7 @@ import net.twisterrob.test.frameworks.classes.AndroidRecipient;
  */
 // TOCHECK https://github.com/facebook/facebook-android-sdk/blob/master/facebook/src/test/java/com/facebook/FacebookPowerMockTestCase.java
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE)
+@Config(application = TestIgnoreApp.class, sdk = Build.VERSION_CODES.LOLLIPOP)
 @PowerMockIgnore({
 		"org.mockito.*", "org.powermock.*", "org.robolectric.*", "android.*", "org.json.*",
 //		"org.mockito.*", "org.powermock.*", "org.powermock.api.mockito.repackaged.*", "com.thoughtworks.xstream.*",

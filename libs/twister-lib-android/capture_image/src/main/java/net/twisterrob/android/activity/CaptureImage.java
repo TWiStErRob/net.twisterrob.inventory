@@ -17,9 +17,6 @@ import android.net.Uri;
 import android.os.*;
 import android.os.Build.*;
 import android.provider.MediaStore;
-import android.support.annotation.*;
-import android.support.media.ExifInterface;
-import android.support.v4.app.ActivityCompat;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -35,6 +32,10 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.*;
 import com.bumptech.glide.request.target.*;
 
+import androidx.annotation.*;
+import androidx.core.app.ActivityCompat;
+import androidx.exifinterface.media.ExifInterface;
+
 import net.twisterrob.android.capture_image.R;
 import net.twisterrob.android.content.ImageRequest;
 import net.twisterrob.android.content.glide.*;
@@ -45,7 +46,7 @@ import net.twisterrob.android.view.CameraPreview.*;
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
 import net.twisterrob.java.io.IOTools;
 
-import static net.twisterrob.android.content.ImageRequest.hasCameraPermission;
+import static net.twisterrob.android.content.ImageRequest.*;
 
 /**
  * TODO check how others did it

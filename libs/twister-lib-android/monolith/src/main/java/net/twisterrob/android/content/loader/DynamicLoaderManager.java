@@ -6,9 +6,10 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
+
+import androidx.loader.app.LoaderManager;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.loader.content.Loader;
 
 public class DynamicLoaderManager implements LoaderCallbacks<Object> {
 	private static final Logger LOG = LoggerFactory.getLogger(DynamicLoaderManager.class);

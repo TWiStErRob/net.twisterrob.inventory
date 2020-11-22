@@ -9,9 +9,10 @@ import static org.hamcrest.Matchers.*;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.support.test.rule.ActivityTestRule;
 
-import static android.support.test.InstrumentationRegistry.*;
+import androidx.test.rule.ActivityTestRule;
+
+import static androidx.test.core.app.ApplicationProvider.*;
 
 import net.twisterrob.android.about.R;
 import net.twisterrob.android.activity.AboutActivity;
@@ -34,7 +35,7 @@ public class AboutActivityTest {
 
 //	@Category(UseCase.InitialCondition.class)
 	@Test public void testAppPackageShown() {
-		about.assertTextExists(containsString(getTargetContext().getPackageName()));
+		about.assertTextExists(containsString(getApplicationContext().getPackageName()));
 	}
 
 //	@Category(UseCase.InitialCondition.class)
@@ -52,7 +53,7 @@ public class AboutActivityTest {
 
 //	@Category(UseCase.InitialCondition.class)
 	@Test public void testLicencesMentioned() {
-		String[] licences = getTargetContext().getResources().getStringArray(R.array.about_licenses);
+		String[] licences = getApplicationContext().getResources().getStringArray(R.array.about_licenses);
 		for (String licence : licences) {
 			about.assertTextExists(equalTo(licence));
 		}
@@ -66,7 +67,7 @@ public class AboutActivityTest {
 	}
 
 	private static PackageInfo getPackageInfo() {
-		Context context = getTargetContext();
+		Context context = getApplicationContext();
 		try {
 			PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 			assertThat(context.getPackageName(), info, not(nullValue()));

@@ -6,7 +6,7 @@ import org.junit.rules.*;
 import org.junit.runner.Description;
 import org.junit.runners.model.*;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * To use this, is a bad idea as it doesn't have a reference to the real deal, use with care.

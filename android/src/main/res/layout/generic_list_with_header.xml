@@ -13,12 +13,12 @@
 		android:layout_height="@dimen/header"
 		android:layout_gravity="top"
 		/>
-	<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
-		<android.support.v7.widget.RecyclerView
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
+		<androidx.recyclerview.widget.RecyclerView
 			android:id="@android:id/list"
 			style="@style/Theme.AppTheme.RecyclerList"
 			/>
-	</android.support.v4.widget.SwipeRefreshLayout>
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 	<TextView
 		style="@style/EmptyText"
 		android:paddingTop="@dimen/header"

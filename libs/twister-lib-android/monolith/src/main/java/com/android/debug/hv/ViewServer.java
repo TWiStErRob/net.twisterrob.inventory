@@ -28,10 +28,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

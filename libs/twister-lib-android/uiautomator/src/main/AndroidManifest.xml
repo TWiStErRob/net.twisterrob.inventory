@@ -1,12 +1,1 @@
-<manifest
-	xmlns:tools="http://schemas.android.com/tools"
-	package="net.twisterrob.android.test.uiautomator"
-	>
-
-	<!--
-		android.support.test.uiautomator.v18=18
-		Usages are behind @RequiresApi(UiAutomatorExtensions.UI_AUTOMATOR_VERSION).
-	-->
-	<uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
-
-</manifest>
+<manifest package="net.twisterrob.android.test.uiautomator" />

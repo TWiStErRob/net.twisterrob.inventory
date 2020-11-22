@@ -7,7 +7,8 @@ import android.content.Context;
 import android.database.sqlite.*;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.os.Build.*;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 /**
  * Database Interface for SQLite with some convenience methods for asset scripts.

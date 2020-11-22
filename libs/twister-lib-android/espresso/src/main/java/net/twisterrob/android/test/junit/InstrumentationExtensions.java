@@ -6,13 +6,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import android.app.*;
 import android.os.Looper;
-import android.support.annotation.*;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.lifecycle.*;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.core.internal.deps.guava.base.Throwables.*;
-import static android.support.test.espresso.core.internal.deps.guava.collect.Iterables.*;
+import androidx.annotation.*;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.runner.lifecycle.*;
+
+import static androidx.test.espresso.core.internal.deps.guava.base.Throwables.*;
+import static androidx.test.espresso.core.internal.deps.guava.collect.Iterables.*;
+import static androidx.test.platform.app.InstrumentationRegistry.*;
 
 public class InstrumentationExtensions {
 	public static @NonNull Stage getActivityStage(final @NonNull Activity activity) {

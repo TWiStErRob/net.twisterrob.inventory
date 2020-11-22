@@ -5,8 +5,8 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.slf4j.*;
 
-import android.support.annotation.NonNull;
-import android.support.test.espresso.*;
+import androidx.annotation.NonNull;
+import androidx.test.espresso.*;
 
 public class IdlingResourceRule implements TestRule {
 	private static final Logger LOG = LoggerFactory.getLogger(IdlingResourceRule.class);

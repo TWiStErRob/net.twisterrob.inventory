@@ -29,10 +29,11 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.*;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.CursorAdapter;
+
+import androidx.annotation.NonNull;
 
 /**
  * A read-only content provider which extracts data out of an XML document.

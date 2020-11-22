@@ -1,8 +1,9 @@
 package net.twisterrob.inventory.android.content;
 
 import android.database.Cursor;
-import android.support.annotation.*;
-import android.support.v4.content.Loader;
+
+import androidx.annotation.*;
+import androidx.loader.content.Loader;
 
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.contract.InventoryLoader.LoadersCallbacksAdapter;

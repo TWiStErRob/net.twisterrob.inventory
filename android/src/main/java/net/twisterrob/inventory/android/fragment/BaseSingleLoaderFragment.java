@@ -1,7 +1,8 @@
 package net.twisterrob.inventory.android.fragment;
 
 import android.database.Cursor;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.inventory.android.content.LoadSingleRow;
 

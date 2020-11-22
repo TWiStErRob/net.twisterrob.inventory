@@ -6,11 +6,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import android.support.annotation.*;
-
 import com.bumptech.glide.load.Key;
 import com.bumptech.glide.request.ResourceCallback;
 import com.bumptech.glide.util.Util;
+
+import androidx.annotation.*;
 
 // CONSIDER get rid of twisterrob dependency? and share on Github Glide issues
 
@@ -141,7 +141,7 @@ public class EngineExternalLifecycle {
 		}
 		@Override public @NonNull Iterator<ResourceCallback> iterator() {
 			Iterator<ResourceCallback> extraIt =
-					android.support.test.espresso.core.internal.deps.guava.collect.Iterators.singletonIterator(extra);
+					androidx.test.espresso.core.internal.deps.guava.collect.Iterators.singletonIterator(extra);
 			return com.google.common.collect.Iterators.concat(super.iterator(), extraIt);
 		}
 	}

@@ -2,21 +2,23 @@ package net.twisterrob.inventory.android.test.actors;
 
 import org.hamcrest.*;
 
-import android.support.annotation.*;
-import android.support.design.internal.NavigationMenuItemView;
-import android.support.design.widget.NavigationView;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.matcher.BoundedMatcher;
-import android.support.test.runner.lifecycle.Stage;
 import android.view.*;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.contrib.NavigationViewActions.*;
-import static android.support.test.espresso.matcher.RootMatchers.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import com.google.android.material.internal.NavigationMenuItemView;
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.*;
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.runner.lifecycle.Stage;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.contrib.NavigationViewActions.*;
+import static androidx.test.espresso.matcher.RootMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.idle.ActivityStageIdlingResource;
 import net.twisterrob.inventory.android.R;

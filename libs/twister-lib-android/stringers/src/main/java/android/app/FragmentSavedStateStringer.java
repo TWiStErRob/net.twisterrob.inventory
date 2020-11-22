@@ -3,7 +3,8 @@ package android.app;
 import javax.annotation.Nonnull;
 
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.RequiresApi;
+
+import androidx.annotation.RequiresApi;
 
 import net.twisterrob.java.utils.ReflectionTools;
 import net.twisterrob.java.utils.tostring.*;

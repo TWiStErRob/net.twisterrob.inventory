@@ -21,18 +21,17 @@ import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
-import android.support.test.espresso.*;
-import android.support.test.espresso.util.HumanReadables;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import static android.support.test.espresso.matcher.ViewMatchers.*;
-import static android.support.test.internal.util.Checks.checkState;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.*;
+import androidx.test.espresso.core.internal.deps.guava.base.Optional;
+import androidx.test.espresso.core.internal.deps.guava.collect.Lists;
+import androidx.test.espresso.util.HumanReadables;
 
-import android.support.test.espresso.core.internal.deps.guava.base.Optional;
-import android.support.test.espresso.core.internal.deps.guava.collect.Lists;
-
-import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
+import static androidx.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.internal.util.Checks.checkState;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewProtocol.AdaptedData;
 
@@ -40,7 +39,7 @@ import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewProtocol.Ad
  * Forces an AdapterView to ensure that the data matching a provided data matcher
  * is loaded into the current view hierarchy.
  *
- * @see android.support.test.espresso.action.AdapterDataLoaderAction original where this is copied from
+ * @see androidx.test.espresso.action.AdapterDataLoaderAction original where this is copied from
  */
 public final class RecyclerViewDataLoaderAction implements ViewAction {
 	private final Matcher<?> dataToLoadMatcher;

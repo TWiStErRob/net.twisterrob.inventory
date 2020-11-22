@@ -1,8 +1,9 @@
 package net.twisterrob.android.content.loader;
 
 import android.content.Context;
-import android.support.annotation.*;
-import android.support.v4.content.AsyncTaskLoader;
+
+import androidx.annotation.*;
+import androidx.loader.content.AsyncTaskLoader;
 
 /**
  * Implementation of {@link AsyncTaskLoader} which contains all the resource juggling to behave nicely in the framework.

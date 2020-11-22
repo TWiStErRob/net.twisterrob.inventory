@@ -8,6 +8,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 
+import android.os.Build;
 import android.os.Build.VERSION_CODES;
 
 import net.twisterrob.test.PackageNameShortener;
@@ -23,7 +24,12 @@ import net.twisterrob.test.PackageNameShortener;
 @RunWith(RobolectricTestRunner.class)
 //@RunWith(PowerMockRunner.class)
 //@PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(sdk = {VERSION_CODES.JELLY_BEAN}, shadows = {ShadowLog.class})
+@Config(
+		// Needs to follow minSdkVersion, otherwise weird Robolectric failures are triggered.
+		sdk = Build.VERSION_CODES.LOLLIPOP,
+		// Enable LogCat in unit tests, see setUp.
+		shadows = {ShadowLog.class}
+)
 //@PowerMockIgnore({"org.mockito.*", "org.powermock.*", "org.robolectric.*", "android.*"})
 public abstract class RobolectricTestBase {
 	@Rule public final MockitoRule mockito = MockitoJUnit.rule();

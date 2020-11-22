@@ -3,8 +3,9 @@ package net.twisterrob.inventory.android.backup;
 import java.util.concurrent.CancellationException;
 
 import android.content.*;
-import android.support.annotation.*;
-import android.support.v7.app.AlertDialog;
+
+import androidx.annotation.*;
+import androidx.appcompat.app.AlertDialog;
 
 import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.inventory.android.backup.Progress.Phase;

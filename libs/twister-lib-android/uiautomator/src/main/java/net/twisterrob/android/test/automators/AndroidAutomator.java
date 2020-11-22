@@ -2,10 +2,11 @@ package net.twisterrob.android.test.automators;
 
 import android.content.*;
 import android.os.Build.*;
-import android.support.annotation.*;
-import android.support.test.uiautomator.*;
 
-import static android.support.test.InstrumentationRegistry.*;
+import androidx.annotation.*;
+import androidx.test.uiautomator.*;
+
+import static androidx.test.platform.app.InstrumentationRegistry.*;
 
 import net.twisterrob.android.annotation.IdResName;
 import net.twisterrob.android.test.espresso.DialogMatchers;

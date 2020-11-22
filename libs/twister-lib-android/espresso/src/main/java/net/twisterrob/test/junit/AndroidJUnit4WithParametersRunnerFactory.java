@@ -5,9 +5,10 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.parameterized.*;
 
 import android.app.Instrumentation;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.internal.runner.RunnerArgs;
-import android.support.test.internal.util.AndroidRunnerParams;
+
+import androidx.test.internal.runner.RunnerArgs;
+import androidx.test.internal.util.AndroidRunnerParams;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import net.twisterrob.java.utils.ReflectionTools;
 

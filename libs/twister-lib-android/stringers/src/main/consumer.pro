@@ -1,6 +1,6 @@
 # net.twisterrob.android.utils.tools.AndroidTools.toString(java.lang.Object)
--keepclassmembernames class android.support.v4.app.Fragment.SavedState {
-	java.lang.String mState;
+-keepclassmembernames class androidx.fragment.app.Fragment$SavedState {
+	android.os.Bundle mState;
 }
 
 # debug helpers (may be needed, wrapped most their usages in BuildConfig.DEBUG for now)

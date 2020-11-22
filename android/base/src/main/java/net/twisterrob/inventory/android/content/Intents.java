@@ -5,7 +5,8 @@ import java.io.Serializable;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.inventory.android.content.contract.*;
 

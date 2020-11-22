@@ -1,8 +1,8 @@
 package com.bumptech.glide;
 
-import android.support.annotation.NonNull;
-
 import com.bumptech.glide.load.engine.Engine;
+
+import androidx.annotation.NonNull;
 
 public final class GlideAccessor {
 

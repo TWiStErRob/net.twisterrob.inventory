@@ -4,8 +4,9 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
 import android.view.*;
+
+import androidx.appcompat.view.ActionMode;
 
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;

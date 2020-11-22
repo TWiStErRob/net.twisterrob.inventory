@@ -4,19 +4,21 @@ import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
-import android.support.design.widget.NavigationView;
-import android.support.test.espresso.*;
-import android.support.test.espresso.matcher.BoundedMatcher;
-import android.support.test.espresso.util.HumanReadables;
-import android.support.v4.view.*;
-import android.support.v4.widget.DrawerLayout;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.contrib.DrawerMatchers.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
-import static android.support.v4.view.GravityCompat.*;
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.core.view.*;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.test.espresso.*;
+import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.espresso.util.HumanReadables;
+
+import static androidx.core.view.GravityCompat.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.contrib.DrawerMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.annotation.GravityFlag;
 import net.twisterrob.android.test.junit.InstrumentationExtensions;

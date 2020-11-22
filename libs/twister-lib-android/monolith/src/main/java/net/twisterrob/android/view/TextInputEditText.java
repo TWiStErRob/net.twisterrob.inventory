@@ -1,13 +1,14 @@
 package net.twisterrob.android.view;
 
 import android.content.Context;
-import android.support.design.widget.TextInputLayout;
 import android.util.AttributeSet;
 import android.view.ViewParent;
 import android.view.inputmethod.*;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 // TODEL http://b.android.com/221880
-public class TextInputEditText extends android.support.design.widget.TextInputEditText {
+public class TextInputEditText extends com.google.android.material.textfield.TextInputEditText {
 	public TextInputEditText(Context context) {
 		super(context);
 	}

@@ -3,7 +3,7 @@ package net.twisterrob.inventory.android.backup;
 import java.io.Serializable;
 import java.util.*;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public final class Progress implements Cloneable, Serializable /* poor man's parcelable */ {
 

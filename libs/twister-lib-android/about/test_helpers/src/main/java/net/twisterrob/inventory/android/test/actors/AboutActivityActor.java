@@ -2,8 +2,8 @@ package net.twisterrob.inventory.android.test.actors;
 
 import org.hamcrest.Matcher;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.activity.AboutActivity;
 

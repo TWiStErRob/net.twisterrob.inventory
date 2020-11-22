@@ -11,12 +11,7 @@ import org.slf4j.*;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.os.*;
 import android.os.Build.VERSION;
-import android.support.annotation.*;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.ResourceDecoder;
@@ -26,8 +21,12 @@ import com.bumptech.glide.load.model.ImageVideoWrapper;
 import com.bumptech.glide.request.target.Target;
 import com.caverock.androidsvg.SVG;
 
-import net.twisterrob.android.content.glide.SvgBitmapDecoder;
-import net.twisterrob.android.content.glide.RawResourceSVGExternalFileResolver;
+import androidx.annotation.*;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
+
+import net.twisterrob.android.content.glide.*;
 import net.twisterrob.inventory.android.data.R;
 import net.twisterrob.java.io.IOTools;
 import net.twisterrob.java.utils.ObjectTools;
@@ -48,7 +47,7 @@ public class DumpImages {
 	@Test
 	public void test() throws IOException, IllegalAccessException, InterruptedException {
 		LOG.error("SVG version {}", SVG.getVersion());
-		final Context context = InstrumentationRegistry.getTargetContext();
+		final Context context = ApplicationProvider.getApplicationContext();
 		Field[] fields = R.raw.class.getFields();
 		File dir = new File(context.getCacheDir(), "svg");
 		IOTools.delete(dir);

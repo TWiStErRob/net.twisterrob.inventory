@@ -8,11 +8,13 @@ import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.support.annotation.*;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.*;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 
 import net.twisterrob.android.utils.concurrent.SimpleAsyncTask;
 import net.twisterrob.inventory.android.*;

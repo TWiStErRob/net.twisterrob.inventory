@@ -5,7 +5,8 @@ import java.util.*;
 import org.hamcrest.*;
 
 import android.database.Cursor;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.database.test_helpers.R;

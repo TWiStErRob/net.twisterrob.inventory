@@ -9,7 +9,8 @@ dependencies {
 		exclude group: 'junit'
 	}
 	implementation "junit:junit:${VERSION_JUNIT}"
-	implementation "com.android.support.test:runner:${VERSION_ESPRESSO_RUNNER}"
+	implementation "androidx.test:runner:${VERSION_ESPRESSO_RUNNER}"
+	implementation "androidx.test.ext:junit:${VERSION_ESPRESSO_RUNNER}"
 }
 
 android {

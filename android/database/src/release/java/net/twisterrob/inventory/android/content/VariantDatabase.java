@@ -8,7 +8,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.*;
 import android.database.sqlite.*;
-import android.support.annotation.StringRes;
+
+import androidx.annotation.StringRes;
 
 import net.twisterrob.java.utils.StringTools;
 

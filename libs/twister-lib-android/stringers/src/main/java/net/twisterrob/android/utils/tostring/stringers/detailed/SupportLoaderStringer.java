@@ -4,7 +4,7 @@ import java.io.*;
 
 import javax.annotation.Nonnull;
 
-import android.support.v4.content.Loader;
+import androidx.loader.content.Loader;
 
 import net.twisterrob.java.utils.tostring.*;
 

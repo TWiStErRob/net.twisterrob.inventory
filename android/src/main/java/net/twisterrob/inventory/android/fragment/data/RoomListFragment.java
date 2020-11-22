@@ -4,10 +4,11 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
 import android.view.*;
 
-import net.twisterrob.android.utils.tools.*;
+import androidx.appcompat.view.ActionMode;
+
+import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;

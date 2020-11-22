@@ -3,13 +3,14 @@ package net.twisterrob.inventory.android.test.actors;
 import static org.hamcrest.Matchers.*;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.*;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.annotation.*;
+
+import static androidx.test.core.app.ApplicationProvider.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.DialogMatchers;
 import net.twisterrob.android.utils.tools.ResourceTools;
@@ -66,7 +67,7 @@ public class MoveTargetActivityActor extends ActivityActor {
 		assertShowingProperty(propertyName);
 	}
 	public void fromProperties() {
-		assertSelection(getTargetContext().getString(R.string.property_list));
+		assertSelection(getApplicationContext().getString(R.string.property_list));
 	}
 	public void fromProperty(String propertyName) {
 		assertShowingProperty(propertyName);
@@ -96,7 +97,7 @@ public class MoveTargetActivityActor extends ActivityActor {
 		onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 	}
 	private void assertTypeOfBelonging(@PluralsRes int plural) {
-		String singular = getTargetContext().getResources().getQuantityString(plural, 1);
+		String singular = getApplicationContext().getResources().getQuantityString(plural, 1);
 		onView(isToolbarSubTitle()).check(matches(withText(containsString(singular))));
 	}
 	private void assertSelection(String propertyName) {
@@ -107,7 +108,7 @@ public class MoveTargetActivityActor extends ActivityActor {
 	}
 
 	public void assertUsableItemSizes() {
-		int px = ResourceTools.dipInt(getTargetContext(), 100);
+		int px = ResourceTools.dipInt(getApplicationContext(), 100);
 		onRecyclerItemExact(withParentIndex(0)).check(matches(withSize(greaterThan(px))));
 	}
 }

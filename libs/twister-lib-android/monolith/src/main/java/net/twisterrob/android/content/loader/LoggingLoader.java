@@ -3,7 +3,8 @@ package net.twisterrob.android.content.loader;
 import org.slf4j.*;
 
 import android.content.Context;
-import android.support.v4.content.Loader;
+
+import androidx.loader.content.Loader;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

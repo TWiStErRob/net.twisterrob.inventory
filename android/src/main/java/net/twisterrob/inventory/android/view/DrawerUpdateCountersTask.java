@@ -6,11 +6,13 @@ import org.slf4j.*;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.annotation.*;
-import android.support.design.widget.NavigationView;
 import android.text.format.Formatter;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.DatabaseTools;

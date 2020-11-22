@@ -3,7 +3,8 @@ package net.twisterrob.android.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.*;
-import android.support.annotation.StyleRes;
+
+import androidx.annotation.StyleRes;
 
 public class TextAppearanceAccessor {
 	/**

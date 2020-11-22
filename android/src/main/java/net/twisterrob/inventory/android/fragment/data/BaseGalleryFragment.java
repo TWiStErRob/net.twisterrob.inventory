@@ -7,20 +7,21 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.*;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.*;
-import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import androidx.annotation.*;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.*;
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+
 import net.twisterrob.android.AndroidConstants;
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.content.glide.PauseOnFling;
-import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.ViewProvider.StaticViewProvider;
 import net.twisterrob.inventory.android.R;

@@ -5,12 +5,13 @@ import java.util.*;
 
 import android.content.Context;
 import android.os.*;
-import android.support.annotation.*;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.*;
+
+import androidx.annotation.*;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import net.twisterrob.android.utils.listeners.AnimationListenerAdapter;
 import net.twisterrob.android.utils.tools.TextTools;

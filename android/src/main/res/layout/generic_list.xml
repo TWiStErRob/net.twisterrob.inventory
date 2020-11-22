@@ -6,12 +6,12 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	>
-	<android.support.v4.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
-		<android.support.v7.widget.RecyclerView
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout style="@style/Theme.AppTheme.RecyclerRefresh">
+		<androidx.recyclerview.widget.RecyclerView
 			android:id="@android:id/list"
 			style="@style/Theme.AppTheme.RecyclerList"
 			/>
-	</android.support.v4.widget.SwipeRefreshLayout>
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 	<TextView
 		style="@style/EmptyText"
 		tools:text="Empty text, description of what it means and what you can do when this list is empty."

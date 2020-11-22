@@ -1,10 +1,11 @@
 package net.twisterrob.android.view;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 
 import net.twisterrob.android.view.layout.DoAfterLayout;
 
@@ -30,7 +31,7 @@ public class SynchronizedScrollListener extends OnScrollListener {
 	 * @param ratio slowdown for leaving the screen
 	 * @param list needed for ugly hack to handle rotation correctly
 	 * @param view to adjust the top of, it's useful to use a provider when the view is not yet available or may change,
-	 *             for example {@link android.support.v4.app.Fragment#getView()}
+	 *             for example {@link androidx.fragment.app.Fragment#getView()}
 	 */
 	@SuppressWarnings("deprecation") // deprecated without support Compat method
 	public SynchronizedScrollListener(float ratio, final RecyclerView list, ViewProvider view) {

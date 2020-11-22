@@ -13,8 +13,9 @@ import static org.hamcrest.Matchers.*;
 
 import android.annotation.*;
 import android.os.Build.VERSION_CODES;
-import android.support.v4.view.GravityCompat;
 import android.view.Gravity;
+
+import androidx.core.view.GravityCompat;
 
 @RunWith(Parameterized.class)
 @TargetApi(VERSION_CODES.ICE_CREAM_SANDWICH)

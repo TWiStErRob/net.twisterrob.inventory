@@ -4,9 +4,10 @@ import java.util.Arrays;
 
 import org.slf4j.*;
 
-import android.support.annotation.NonNull;
 import android.text.format.Formatter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.concurrent.SafeAsyncTask;
 import net.twisterrob.inventory.android.*;

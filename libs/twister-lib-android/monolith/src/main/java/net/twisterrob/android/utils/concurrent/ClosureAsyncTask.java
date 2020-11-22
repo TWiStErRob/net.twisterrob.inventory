@@ -1,6 +1,6 @@
 package net.twisterrob.android.utils.concurrent;
 
-import android.support.annotation.*;
+import androidx.annotation.*;
 
 /**
  * An {@link android.os.AsyncTask} that uses a closure or constructor to obtain input and the same for output.

@@ -1,8 +1,8 @@
-package android.support.v4.widget;
+package androidx.drawerlayout.widget;
 
 import javax.annotation.Nonnull;
 
-import android.support.v4.widget.DrawerLayout.SavedState;
+import androidx.drawerlayout.widget.DrawerLayout.SavedState;
 
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.java.utils.tostring.*;

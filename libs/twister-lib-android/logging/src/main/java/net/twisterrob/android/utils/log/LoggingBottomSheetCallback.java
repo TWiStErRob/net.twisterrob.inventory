@@ -2,9 +2,11 @@ package net.twisterrob.android.utils.log;
 
 import org.slf4j.*;
 
-import android.support.annotation.*;
-import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
 import android.view.View;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.annotation.BottomSheetState;
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;

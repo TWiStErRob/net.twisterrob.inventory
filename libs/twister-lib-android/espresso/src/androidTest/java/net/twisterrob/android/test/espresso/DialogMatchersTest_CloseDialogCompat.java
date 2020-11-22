@@ -2,7 +2,7 @@ package net.twisterrob.android.test.espresso;
 
 import org.junit.Rule;
 
-import android.support.test.rule.ActivityTestRule;
+import androidx.test.rule.ActivityTestRule;
 
 import net.twisterrob.android.test.junit.TestPackageIntentRule;
 import net.twisterrob.inventory.android.test.activity.TestActivityCompat;

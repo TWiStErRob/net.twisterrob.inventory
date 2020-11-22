@@ -5,18 +5,19 @@ import org.hamcrest.core.AnyOf;
 
 import static org.hamcrest.Matchers.*;
 
-import android.support.annotation.StringRes;
-import android.support.test.espresso.*;
 import android.view.View;
 import android.widget.AdapterView;
 
-import static android.support.test.InstrumentationRegistry.*;
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.pressBack;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.annotation.StringRes;
+import androidx.test.espresso.*;
+
+import static androidx.test.core.app.ApplicationProvider.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.pressBack;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.Category;
@@ -53,7 +54,7 @@ public class ChangeTypeDialogActor {
 		onView(isAssignableFrom(AdapterView.class)).check(matches(checkedPosition(invalidPosition())));
 	}
 	public void assertSelected(@StringRes int type) {
-		String typeName = getTargetContext().getResources().getResourceEntryName(type);
+		String typeName = getApplicationContext().getResources().getResourceEntryName(type);
 		assertSelected(typeName);
 	}
 	private void assertSelected(String typeName) {
@@ -61,8 +62,8 @@ public class ChangeTypeDialogActor {
 	}
 
 	public void select(@StringRes int type) {
-		String typeName = getTargetContext().getResources().getResourceEntryName(type);
-		CategoryCache cache = CategoryDTO.getCache(getTargetContext());
+		String typeName = getApplicationContext().getResources().getResourceEntryName(type);
+		CategoryCache cache = CategoryDTO.getCache(getApplicationContext());
 		while (exists(onView(dialogMatcher))) {
 			// if the first one goes through with the click, it means that we've managed to selected what we wanted
 			String currentType = typeName;

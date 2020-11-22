@@ -8,7 +8,8 @@ import android.content.pm.ResolveInfo;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.*;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.inventory.android.preferences.R;
 

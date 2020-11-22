@@ -1,9 +1,10 @@
 package net.twisterrob.android.view;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.Layout;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 public class WrappedTextView extends AppCompatTextView {
 	public WrappedTextView(Context context) {

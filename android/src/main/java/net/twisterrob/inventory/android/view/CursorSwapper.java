@@ -3,8 +3,9 @@ package net.twisterrob.inventory.android.view;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
+
+import androidx.cursoradapter.widget.CursorAdapter;
+import androidx.loader.content.Loader;
 
 import net.twisterrob.inventory.android.content.Loaders;
 

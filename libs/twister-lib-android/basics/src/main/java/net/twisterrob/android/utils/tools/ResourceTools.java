@@ -7,10 +7,11 @@ import org.slf4j.*;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
-import android.support.annotation.*;
 import android.util.TypedValue;
 
 import static android.util.TypedValue.*;
+
+import androidx.annotation.*;
 
 import static net.twisterrob.android.AndroidConstants.*;
 

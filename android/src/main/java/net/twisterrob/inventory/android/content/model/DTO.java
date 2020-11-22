@@ -1,7 +1,8 @@
 package net.twisterrob.inventory.android.content.model;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;

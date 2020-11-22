@@ -3,7 +3,8 @@ package net.twisterrob.inventory.android.backup.exporters;
 import java.io.*;
 
 import android.content.Context;
-import android.support.annotation.VisibleForTesting;
+
+import androidx.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.backup.*;

@@ -7,7 +7,7 @@ dependencies {
 	implementation(project(":android:data"))
 	implementation("net.twisterrob.lib:twister-lib-android-glide3")
 	implementation("net.twisterrob.lib:twister-lib-java")
-	implementation("com.android.support:support-v4:${VERSION_SUPPORT}")
+	implementation("androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}")
 	implementation("com.caverock:androidsvg:${VERSION_ANDROIDSVG}")
 }
 
@@ -15,7 +15,7 @@ dependencies {
 	androidTestImplementation("net.twisterrob.lib:twister-lib-android-espresso")
 	androidTestRuntimeOnly("net.twisterrob.lib:twister-lib-android-slf4j")
 	// Not used, but necessary for classpath scanning on API 19
-	androidTestRuntimeOnly("com.android.support:design:${VERSION_SUPPORT}")
+	androidTestRuntimeOnly("com.google.android.material:material:${VERSION_SUPPORT}")
 }
 
 android {

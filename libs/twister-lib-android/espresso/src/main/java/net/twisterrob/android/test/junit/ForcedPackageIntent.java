@@ -2,12 +2,13 @@ package net.twisterrob.android.test.junit;
 
 import android.app.Activity;
 import android.content.*;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 /**
  * Intent to force a context (i.e. packageName).
- * This is useful for hacking around {@link android.support.test.rule.ActivityTestRule},
- * which forces the context to be {@link android.support.test.InstrumentationRegistry#getTargetContext()}.
+ * This is useful for hacking around {@link androidx.test.rule.ActivityTestRule},
+ * which forces the context to be {@link androidx.test.core.app.ApplicationProvider#getApplicationContext()}.
  */
 public class ForcedPackageIntent extends Intent {
 

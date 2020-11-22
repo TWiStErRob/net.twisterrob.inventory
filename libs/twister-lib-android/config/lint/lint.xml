@@ -19,14 +19,10 @@
 		<ignore path="*/caches/transforms-*/files-*" />
 	</issue>
 	<issue id="GradleDependency">
-		<!-- I'm not a free tester, leave me alone -->
-		<ignore regexp="A newer version of com.android.support.*-alpha" />
-		<ignore regexp="A newer version of com.android.support.*-beta" />
-		<!-- TODEL after upgrading support library to latest -->
-		<ignore regexp="A newer version of com.android.support.*" />
-	</issue>
-	<issue id="MinSdkTooLow" severity="ignore">
-		<!-- TODEL after upgrading support library to latest -->
+		<!-- TODEL remove after upgrading support library to latest -->
+		<ignore regexp="^A newer version of androidx\..* than 1\.0\.0 is available: .*" />
+		<ignore regexp="^A newer version of com\.google\.android\.material:material than 1\.0\.0 is available: .*" />
+		<ignore regexp="^A newer version of androidx\.test\.ext:junit than 1\.1\.1 is available: .*" />
 	</issue>
 	<issue id="UnknownNullness" severity="ignore">
 		<!-- too many to fix yet -->

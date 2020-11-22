@@ -5,10 +5,11 @@ import java.util.Locale;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.support.annotation.*;
-import android.support.v4.content.ContextCompat;
 import android.text.*;
 import android.text.style.*;
+
+import androidx.annotation.*;
+import androidx.core.content.ContextCompat;
 
 @SuppressWarnings("unused")
 public /*static*/ abstract class TextTools {

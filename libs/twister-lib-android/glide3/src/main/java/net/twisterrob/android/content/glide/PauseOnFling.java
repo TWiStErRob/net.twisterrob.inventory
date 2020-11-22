@@ -1,10 +1,10 @@
 package net.twisterrob.android.content.glide;
 
-import android.support.v7.widget.RecyclerView;
-
-import static android.support.v7.widget.RecyclerView.*;
-
 import com.bumptech.glide.RequestManager;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import static androidx.recyclerview.widget.RecyclerView.*;
 
 public class PauseOnFling extends OnScrollListener {
 	private static final int FLING_JUMP_LOW_THRESHOLD = 80;

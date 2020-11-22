@@ -6,12 +6,13 @@ import org.slf4j.*;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.*;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
+
+import androidx.annotation.*;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import net.twisterrob.android.view.*;
 import net.twisterrob.inventory.android.R;

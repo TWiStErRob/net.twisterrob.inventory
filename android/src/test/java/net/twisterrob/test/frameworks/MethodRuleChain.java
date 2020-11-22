@@ -5,7 +5,7 @@ import java.util.*;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.*;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * The {@link MethodRuleChain} rule allows ordering of {@link MethodRule}s.

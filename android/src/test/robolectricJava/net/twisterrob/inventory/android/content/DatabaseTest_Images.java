@@ -5,7 +5,7 @@ import java.util.*;
 import org.hamcrest.Matcher;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.robolectric.*;
+import org.robolectric.ParameterizedRobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.slf4j.*;
 

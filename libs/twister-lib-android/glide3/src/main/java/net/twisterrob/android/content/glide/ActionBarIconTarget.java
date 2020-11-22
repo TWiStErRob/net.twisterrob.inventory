@@ -1,12 +1,13 @@
 package net.twisterrob.android.content.glide;
 
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.ActionBar;
 import android.util.*;
 
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.*;
+
+import androidx.appcompat.app.ActionBar;
 
 import net.twisterrob.android.utils.tools.ResourceTools;
 

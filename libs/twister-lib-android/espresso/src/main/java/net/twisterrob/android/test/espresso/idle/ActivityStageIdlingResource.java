@@ -1,13 +1,14 @@
 package net.twisterrob.android.test.espresso.idle;
 
-import org.hamcrest.*;
+import org.hamcrest.Matcher;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.StringDescription.*;
 
 import android.app.Activity;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.runner.lifecycle.*;
+
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.runner.lifecycle.*;
 
 import net.twisterrob.android.test.espresso.EspressoExtensions;
 

@@ -2,9 +2,10 @@ package net.twisterrob.android.view.layout;
 
 import android.annotation.TargetApi;
 import android.os.Build.*;
-import android.support.annotation.NonNull;
 import android.view.*;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+
+import androidx.annotation.NonNull;
 
 /**
  * @see <a href="http://stackoverflow.com/a/29172475/253468">StackOverflow</a>

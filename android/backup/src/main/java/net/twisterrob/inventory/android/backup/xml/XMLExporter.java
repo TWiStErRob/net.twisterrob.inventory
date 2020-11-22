@@ -9,9 +9,10 @@ import org.slf4j.*;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Xml;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.backup.BuildConfig;

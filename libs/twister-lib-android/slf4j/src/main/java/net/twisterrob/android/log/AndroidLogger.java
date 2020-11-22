@@ -4,8 +4,9 @@ import org.slf4j.Marker;
 import org.slf4j.helpers.*;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 /**
  * A simple implementation that delegates all log requests to the Google Android logging facilities.

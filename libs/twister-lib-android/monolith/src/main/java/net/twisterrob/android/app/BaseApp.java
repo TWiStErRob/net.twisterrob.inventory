@@ -16,9 +16,10 @@ import android.os.*;
 import android.os.StrictMode.*;
 import android.os.StrictMode.ThreadPolicy.Builder;
 import android.preference.PreferenceManager;
-import android.support.annotation.*;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.AndroidConstants;
 import net.twisterrob.android.content.pref.ResourcePreferences;
@@ -53,9 +54,9 @@ public abstract class BaseApp extends android.app.Application {
 				setStrictMode();
 			}
 			//android.app.FragmentManager.enableDebugLogging(true);
-			//android.support.v4.app.FragmentManager.enableDebugLogging(true);
+			//androidx.fragment.app.FragmentManager.enableDebugLogging(true);
 			//android.app.LoaderManager.enableDebugLogging(true);
-			//android.support.v4.app.LoaderManager.enableDebugLogging(true);
+			//androidx.fragment.app.LoaderManager.enableDebugLogging(true);
 
 			s_instance = this;
 		}

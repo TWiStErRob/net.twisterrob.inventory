@@ -2,9 +2,10 @@ package net.twisterrob.android.adapter;
 
 import android.database.*;
 import android.os.Handler;
-import android.support.annotation.*;
-import android.support.v7.widget.RecyclerView;
 import android.widget.*;
+
+import androidx.annotation.*;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Provide a {@link RecyclerView.Adapter} implementation with cursor support.
@@ -22,7 +23,7 @@ import android.widget.*;
  */
 public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>
 		implements Filterable, CursorFilter.CursorFilterClient {
-	public static final int AUTO_REQUERY_BG = android.support.v4.widget.CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER;
+	public static final int AUTO_REQUERY_BG = androidx.cursoradapter.widget.CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER;
 
 	private boolean mDataValid;
 	private int mRowIDColumn;

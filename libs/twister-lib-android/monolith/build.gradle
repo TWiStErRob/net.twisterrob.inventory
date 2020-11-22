@@ -8,12 +8,12 @@ dependencies {
 	implementation 'net.twisterrob.lib:twister-lib-android-logging'
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
-	implementation "com.android.support:support-v4:${VERSION_SUPPORT}"
-	implementation "com.android.support:appcompat-v7:${VERSION_SUPPORT}"
-	implementation "com.android.support:cardview-v7:${VERSION_SUPPORT}"
-	implementation "com.android.support:recyclerview-v7:${VERSION_SUPPORT}"
-	implementation "com.android.support:design:${VERSION_SUPPORT}"
-	//implementation "com.android.support:palette-v7:${VERSION_SUPPORT}"
+	implementation "androidx.legacy:legacy-support-v4:${VERSION_SUPPORT}"
+	implementation "androidx.appcompat:appcompat:${VERSION_SUPPORT}"
+	implementation "androidx.cardview:cardview:${VERSION_SUPPORT}"
+	implementation "androidx.recyclerview:recyclerview:${VERSION_SUPPORT}"
+	implementation "com.google.android.material:material:${VERSION_SUPPORT}"
+	//implementation "androidx.palette:palette:+"
 
 	// FIXME @Deprecated, use Glide
 	implementation 'com.jakewharton:disklrucache:2.0.2'

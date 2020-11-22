@@ -8,7 +8,8 @@ import android.database.*;
 import android.database.sqlite.*;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 /**
  * Example provider class for {@code CREATE TABLE MyItem (_id, name, description)}:

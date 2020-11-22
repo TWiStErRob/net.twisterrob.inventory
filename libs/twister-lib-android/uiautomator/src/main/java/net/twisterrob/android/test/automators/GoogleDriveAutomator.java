@@ -1,11 +1,12 @@
 package net.twisterrob.android.test.automators;
 
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.support.annotation.RequiresApi;
-import android.support.test.uiautomator.*;
 import android.widget.TextView;
 
-import static android.support.test.InstrumentationRegistry.*;
+import androidx.annotation.RequiresApi;
+import androidx.test.uiautomator.*;
+
+import static androidx.test.platform.app.InstrumentationRegistry.*;
 
 import net.twisterrob.android.annotation.IdResName;
 

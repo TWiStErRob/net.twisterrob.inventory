@@ -1,13 +1,14 @@
-package android.support.v4.widget;
+package androidx.drawerlayout.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.view.*;
 
-public class ClickThroughDrawerLayout extends android.support.v4.widget.DrawerLayout {
+import androidx.annotation.ColorInt;
+
+public class ClickThroughDrawerLayout extends androidx.drawerlayout.widget.DrawerLayout {
 	/** Copied from DrawerLayout for access */
 	private static final int DEFAULT_SCRIM_COLOR = 0x99000000;
 

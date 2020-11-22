@@ -17,7 +17,7 @@ subprojects { project ->
 	}
 	configurations.all {
 		if (it.name == 'lintClassPath') return
-		it.resolutionStrategy.failOnVersionConflict()
+//		it.resolutionStrategy.failOnVersionConflict()
 	}
 	apply plugin: 'net.twisterrob.java-library'
 	apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")

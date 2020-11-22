@@ -4,8 +4,9 @@ import java.lang.annotation.*;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.*;
 import android.view.View;
+
+import androidx.annotation.*;
 
 public interface Action {
 	/**

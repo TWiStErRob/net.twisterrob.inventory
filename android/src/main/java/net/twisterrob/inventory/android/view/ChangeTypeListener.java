@@ -3,10 +3,11 @@ package net.twisterrob.inventory.android.view;
 import android.content.*;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.*;
-import android.support.v7.app.AlertDialog.Builder;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import androidx.annotation.*;
+import androidx.appcompat.app.AlertDialog.Builder;
 
 import net.twisterrob.android.utils.concurrent.ClosureAsyncTask;
 import net.twisterrob.android.utils.tools.*;

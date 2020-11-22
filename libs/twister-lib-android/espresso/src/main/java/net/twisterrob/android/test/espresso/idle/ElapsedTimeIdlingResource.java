@@ -1,8 +1,9 @@
 package net.twisterrob.android.test.espresso.idle;
 
 import android.os.*;
-import android.support.test.annotation.Beta;
-import android.support.test.espresso.*;
+
+import androidx.test.annotation.Beta;
+import androidx.test.espresso.IdlingRegistry;
 
 /**
  * @see <a href="https://github.com/chiuki/espresso-samples/blob/master/idling-resource-elapsed-time/app/src/androidTest/java/com/sqisland/espresso/idling_resource/elapsed_time/ElapsedTimeIdlingResource.java">chiuki's ElapsedTimeIdlingResource.java</a>

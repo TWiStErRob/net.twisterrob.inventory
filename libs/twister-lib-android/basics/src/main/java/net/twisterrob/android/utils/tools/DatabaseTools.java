@@ -8,7 +8,8 @@ import android.database.*;
 import android.database.MatrixCursor.RowBuilder;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build.*;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.annotation.CursorFieldType;
 

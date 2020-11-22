@@ -6,7 +6,7 @@ import java.util.Arrays;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import android.support.annotation.*;
+import androidx.annotation.*;
 
 import net.twisterrob.java.utils.ReflectionTools;
 

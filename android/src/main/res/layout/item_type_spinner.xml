@@ -19,7 +19,7 @@
 		android:focusable="false"
 		tools:src="@drawable/category_unknown"
 		/>
-	<android.support.v4.widget.Space
+	<androidx.legacy.widget.Space
 		android:id="@id/spacer"
 		android:layout_width="0dp"
 		android:layout_height="fill_parent"

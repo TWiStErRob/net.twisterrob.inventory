@@ -8,19 +8,21 @@ import android.content.*;
 import android.content.res.Configuration;
 import android.os.Build.VERSION_CODES;
 import android.os.*;
-import android.support.annotation.*;
-import android.support.v4.app.*;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
-import android.support.v7.view.ActionMode.Callback;
 import android.util.AttributeSet;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 
+import androidx.annotation.*;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.view.ActionMode.Callback;
+import androidx.core.app.TaskStackBuilder;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.java.annotations.DebugHelper;
-import net.twisterrob.java.utils.*;
 
 @DebugHelper
 @SuppressLint("Registered") // allow registration if wanted without needing to subclass

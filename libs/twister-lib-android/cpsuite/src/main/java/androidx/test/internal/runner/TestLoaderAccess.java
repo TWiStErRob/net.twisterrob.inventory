@@ -1,4 +1,4 @@
-package android.support.test.internal.runner;
+package androidx.test.internal.runner;
 
 public class TestLoaderAccess {
 	public Class<?> loadClass(String name) {

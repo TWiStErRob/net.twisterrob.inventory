@@ -9,16 +9,17 @@ import android.annotation.SuppressLint;
 import android.content.*;
 import android.net.Uri;
 import android.os.*;
-import android.support.annotation.*;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.*;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.widget.SearchView;
 import android.text.*;
 import android.view.*;
 
 import com.bumptech.glide.Glide;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentManager.*;
 
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.*;

@@ -2,8 +2,8 @@ package net.twisterrob.test.hamcrest;
 
 import javax.annotation.Nonnull;
 
-import org.hamcrest.*;
 import org.hamcrest.Matchers;
+import org.hamcrest.*;
 
 public class HasCause extends TypeSafeDiagnosingMatcher<Throwable> {
 	public static final String NL = System.lineSeparator();

@@ -6,10 +6,11 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.widget.SearchView;
 import android.view.*;
 import android.view.View.OnClickListener;
+
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.TaskStackBuilder;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.wiring.CollapseActionViewOnSubmit;

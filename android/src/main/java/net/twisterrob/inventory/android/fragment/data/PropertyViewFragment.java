@@ -5,8 +5,9 @@ import java.util.Date;
 import org.slf4j.*;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.R;

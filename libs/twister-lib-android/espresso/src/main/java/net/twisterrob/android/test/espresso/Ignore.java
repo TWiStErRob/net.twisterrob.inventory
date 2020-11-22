@@ -3,10 +3,11 @@ package net.twisterrob.android.test.espresso;
 import org.hamcrest.Matcher;
 
 import android.os.Debug;
-import android.support.annotation.Nullable;
-import android.support.test.espresso.FailureHandler;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.test.espresso.FailureHandler;
 
 public class Ignore implements FailureHandler {
 	private final @Nullable Boolean silent;

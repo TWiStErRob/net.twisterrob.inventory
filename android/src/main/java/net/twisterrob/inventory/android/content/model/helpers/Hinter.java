@@ -5,8 +5,6 @@ import java.util.*;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.text.*;
 import android.text.style.*;
 import android.view.*;
@@ -14,6 +12,9 @@ import android.view.View.*;
 import android.widget.*;
 
 import static android.text.Spanned.*;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;

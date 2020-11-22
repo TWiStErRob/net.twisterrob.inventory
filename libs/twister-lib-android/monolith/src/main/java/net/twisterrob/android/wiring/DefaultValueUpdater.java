@@ -1,10 +1,11 @@
 package net.twisterrob.android.wiring;
 
 import android.database.Cursor;
-import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
+
+import androidx.annotation.StringRes;
 
 import net.twisterrob.android.R;
 import net.twisterrob.android.utils.tools.ResourceTools;

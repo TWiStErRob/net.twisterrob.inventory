@@ -10,11 +10,12 @@ import android.database.*;
 import android.net.Uri;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 
-public class FileProvider extends android.support.v4.content.FileProvider {
+public class FileProvider extends androidx.core.content.FileProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(FileProvider.class);
 
 	@Override public boolean onCreate() {
@@ -60,7 +61,7 @@ public class FileProvider extends android.support.v4.content.FileProvider {
 
 	/**
 	 * Google+ Photos displays the image acquired from openFile and then for some reason also tries to query for _data,
-	 * but {@link android.support.v4.content.FileProvider} returns a one line zero column cursor.
+	 * but {@link androidx.core.content.FileProvider} returns a one line zero column cursor.
 	 * @return original cursor or a 1x1 cursor with a NULL _data column.
 	 */
 	private Cursor fix(@NonNull Cursor result, @Nullable String... projection) {

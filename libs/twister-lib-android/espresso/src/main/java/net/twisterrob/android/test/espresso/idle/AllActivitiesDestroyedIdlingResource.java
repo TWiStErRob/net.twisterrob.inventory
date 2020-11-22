@@ -4,10 +4,11 @@ import java.util.*;
 
 import android.app.Activity;
 import android.os.*;
-import android.support.annotation.*;
-import android.support.test.runner.lifecycle.*;
 
 import static android.os.Build.*;
+
+import androidx.annotation.*;
+import androidx.test.runner.lifecycle.*;
 
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
 
@@ -34,7 +35,7 @@ public class AllActivitiesDestroyedIdlingResource extends AsyncIdlingResource {
 				activities.remove(activity);
 				if (isIdleCore()) {
 					// remove our listener in the next loop, otherwise we get a "Recursive looping detected!"
-					// from android.support.test.espresso.base.UiControllerImpl.loopUntil
+					// from androidx.test.espresso.base.UiControllerImpl.loopUntil
 					// or a ConcurrentModificationException in the loop.
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						@Override public void run() {

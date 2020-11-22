@@ -1,8 +1,8 @@
 package net.twisterrob.inventory.android.fragment;
 
-import android.support.v4.app.LoaderManager;
+import androidx.loader.app.LoaderManager;
 
-public class VariantFragment extends android.support.v4.app.Fragment {
+public class VariantFragment extends androidx.fragment.app.Fragment {
 	@SuppressWarnings("deprecation")
 	@Override public LoaderManager getLoaderManager() {
 		return LoaderManager.getInstance(this);

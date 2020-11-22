@@ -15,9 +15,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.os.Build.*;
 import android.os.Environment;
-import android.support.annotation.*;
 
 import static android.Manifest.permission.*;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.java.annotations.DebugHelper;

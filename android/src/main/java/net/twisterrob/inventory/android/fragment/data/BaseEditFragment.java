@@ -10,23 +10,24 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
-import android.os.Build.*;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.support.annotation.*;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v7.widget.*;
 import android.text.TextUtils;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.*;
 import android.widget.*;
-import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import com.bumptech.glide.DrawableRequestBuilder;
 
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.*;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.*;
+import androidx.cursoradapter.widget.CursorAdapter;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.recyclerview.widget.*;
 
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.content.glide.*;

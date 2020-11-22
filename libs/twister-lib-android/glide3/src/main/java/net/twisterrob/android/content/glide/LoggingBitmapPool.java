@@ -4,9 +4,10 @@ import org.slf4j.*;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.support.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.annotation.TrimMemoryLevel;
 import net.twisterrob.android.utils.tools.StringerTools;

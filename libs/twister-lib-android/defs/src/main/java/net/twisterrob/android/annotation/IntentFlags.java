@@ -7,9 +7,10 @@ import static java.lang.annotation.ElementType.*;
 import android.annotation.*;
 import android.content.Intent;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.IntDef;
 
 import static android.content.Intent.*;
+
+import androidx.annotation.IntDef;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

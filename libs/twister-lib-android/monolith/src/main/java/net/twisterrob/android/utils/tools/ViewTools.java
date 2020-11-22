@@ -6,12 +6,13 @@ import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.*;
-import android.support.annotation.IdRes;
-import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.*;
 import android.view.ViewGroup.*;
 import android.widget.*;
+
+import androidx.annotation.IdRes;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 @SuppressWarnings({"unused", "StaticMethodOnlyUsedInOneClass", "SameParameterValue"})
 public /*static*/ abstract class ViewTools {

@@ -5,9 +5,10 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.*;
 import android.graphics.Color;
-import android.support.annotation.*;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
+
+import androidx.annotation.*;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.android.utils.tostring.stringers.name.*;

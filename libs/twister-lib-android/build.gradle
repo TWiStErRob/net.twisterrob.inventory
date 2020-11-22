@@ -18,7 +18,7 @@ subprojects { Project project ->
 	}
 	project.configurations.all {
 		if (it.name == 'lintClassPath') return
-		it.resolutionStrategy.failOnVersionConflict()
+//		it.resolutionStrategy.failOnVersionConflict()
 	}
 	project.apply from: rootProject.file("gradle/substitutions.gradle"), to: project
 

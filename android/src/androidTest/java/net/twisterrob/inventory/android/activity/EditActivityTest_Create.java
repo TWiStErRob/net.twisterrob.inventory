@@ -5,19 +5,20 @@ import java.io.IOException;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.*;
-import org.junit.runner.*;
+import org.junit.runner.RunWith;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import android.app.Activity;
-import android.support.annotation.StringRes;
-import android.support.test.espresso.NoActivityResumedException;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.runner.lifecycle.Stage;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.annotation.StringRes;
+import androidx.test.espresso.NoActivityResumedException;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.lifecycle.Stage;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.DialogMatchers;
 import net.twisterrob.inventory.android.content.*;

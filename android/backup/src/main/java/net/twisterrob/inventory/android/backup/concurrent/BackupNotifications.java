@@ -4,10 +4,11 @@ import java.util.Arrays;
 
 import android.app.*;
 import android.content.Context;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
 
 import static android.os.Build.*;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import net.twisterrob.inventory.android.backup.R;
 

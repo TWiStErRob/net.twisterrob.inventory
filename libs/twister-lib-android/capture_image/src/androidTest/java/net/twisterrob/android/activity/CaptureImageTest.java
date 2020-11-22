@@ -3,8 +3,8 @@ package net.twisterrob.android.activity;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import net.twisterrob.android.view.SelectionView.SelectionStatus;
 

@@ -4,9 +4,10 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.*;
-import android.support.v7.widget.*;
 import android.view.*;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.*;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.DialogTools;
@@ -14,8 +15,9 @@ import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
-import net.twisterrob.inventory.android.view.*;
+import net.twisterrob.inventory.android.view.ListAdapter;
 import net.twisterrob.inventory.android.view.ListAdapter.ListItemEvents;
+import net.twisterrob.inventory.android.view.*;
 
 public class ListListFragment extends BaseFragment<ListsEvents> implements ListItemEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(ListListFragment.class);

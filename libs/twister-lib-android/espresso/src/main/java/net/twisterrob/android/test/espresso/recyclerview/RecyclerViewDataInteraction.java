@@ -4,18 +4,17 @@ import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.*;
 
-import android.support.test.espresso.*;
-import android.support.test.espresso.matcher.RootMatchers;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.*;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+import androidx.test.espresso.*;
+import androidx.test.espresso.core.internal.deps.guava.base.Optional;
+import androidx.test.espresso.matcher.RootMatchers;
 
-import android.support.test.espresso.core.internal.deps.guava.base.Optional;
-
-import static android.support.test.espresso.core.internal.deps.guava.base.Preconditions.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.core.internal.deps.guava.base.Preconditions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewProtocol.AdaptedData;
 
@@ -41,7 +40,7 @@ import net.twisterrob.android.test.espresso.recyclerview.RecyclerViewProtocol.Ad
  * perform or check.
  * </p>
  *
- * @see android.support.test.espresso.DataInteraction original where this is copied from
+ * @see androidx.test.espresso.DataInteraction original where this is copied from
  */
 @SuppressWarnings("ParameterHidesMemberVariable")
 public class RecyclerViewDataInteraction {

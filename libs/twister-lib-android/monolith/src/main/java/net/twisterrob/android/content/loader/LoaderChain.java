@@ -2,9 +2,10 @@ package net.twisterrob.android.content.loader;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
+
+import androidx.loader.app.LoaderManager;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.loader.content.Loader;
 
 public class LoaderChain {
 	public static Runnable sequence(InitAction<?>... actions) {

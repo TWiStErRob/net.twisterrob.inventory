@@ -4,8 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.*;
-import android.support.v7.view.ActionMode;
 import android.view.*;
+
+import androidx.appcompat.view.ActionMode;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.SelectionAdapter;

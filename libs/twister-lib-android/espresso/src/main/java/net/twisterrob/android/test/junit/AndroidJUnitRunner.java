@@ -1,32 +1,31 @@
 package net.twisterrob.android.test.junit;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.*;
 
 import org.slf4j.*;
 
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.PackageManager.*;
 import android.os.Build.*;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.test.espresso.*;
-import android.support.test.espresso.base.DefaultFailureHandler;
-import android.support.test.internal.runner.RunnerArgs;
 import android.view.View;
 
-import static android.content.pm.PackageManager.GET_META_DATA;
+import static android.content.pm.PackageManager.*;
+
+import androidx.annotation.*;
+import androidx.test.espresso.*;
+import androidx.test.espresso.base.DefaultFailureHandler;
+import androidx.test.internal.runner.RunnerArgs;
 
 import net.twisterrob.android.test.junit.internal.DexPathListReflection;
 import net.twisterrob.java.exceptions.StackTrace;
 import net.twisterrob.java.utils.StringTools;
 
-public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnitRunner {
+public class AndroidJUnitRunner extends androidx.test.runner.AndroidJUnitRunner {
 	private static final Logger LOG = LoggerFactory.getLogger(AndroidJUnitRunner.class);
 	/**
 	 * @see RunnerArgs#ARGUMENT_NOT_TEST_PACKAGE
@@ -35,7 +34,7 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 	 */
 	@SuppressWarnings("JavaDoc")
 	private static final String DEFAULT_EXCLUDED_PACKAGES = "defaultExcludedPackages";
-	// copied from android.support.test.internal.runner.RunnerArgs
+	// copied from androidx.test.internal.runner.RunnerArgs
 	private static final String ARGUMENT_CLASSPATHTOSCAN = "classpathToScan";
 	private static final String ARGUMENT_TEST_CLASS = "class";
 	private static final String ARGUMENT_NOT_TEST_CLASS = "notClass";
@@ -145,11 +144,11 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 	/**
 	 * IDEA creates test runs with {@code pack.age.Outer.Inner} style,
 	 * but {@link Class#forName(String)} (used by  requires {@code pack.age.Outer$Inner}.
-	 * This method bridges the gap, before {@link android.support.test.runner.AndroidJUnitRunner} sees the arguments.
+	 * This method bridges the gap, before {@link androidx.test.runner.AndroidJUnitRunner} sees the arguments.
 	 * @param classes contains class names separated by something other than dots and dollars (e.g. comma)
 	 * @return all occurrences of {@code Inner.Outer} class names are now {@code Inner$Outer} (even multiple nested)
-	 * @see android.support.test.internal.runner.TestRequestBuilder#loadClasses
-	 * @see android.support.test.internal.runner.TestLoader#doLoadClass
+	 * @see androidx.test.internal.runner.TestRequestBuilder#loadClasses
+	 * @see androidx.test.internal.runner.TestLoader#doLoadClass
 	 */
 	private static String fixInnerClasses(String classes) {
 		Matcher matcher = INNER_CLASS.matcher(classes);
@@ -188,13 +187,13 @@ public class AndroidJUnitRunner extends android.support.test.runner.AndroidJUnit
 			transformed = transformToPreserveStackTrace(transformed);
 			// if an onView().check(...) ViewAssertion throws an exception the stack trace is (simplified):
 			// at ....SomeCustom$ViewAssertion.check()
-			// at android.support.test.espresso.ViewInteraction$2.call(ViewInteraction.java:274)
+			// at androidx.test.espresso.ViewInteraction$2.call(ViewInteraction.java:282)
 			// at android.os.Looper.loop(Looper.java:135)
 			// at android.app.ActivityThread.main(ActivityThread.java:5221)
 			// which means without this transformation it's impossible to see where the check() was initiated from
 			// the only thing visible is the utility class that is the assertion implementation.
 			// This works because the exception is thrown back to the test running thread in:
-			// android.support.test.espresso.ViewInteraction.waitForAndHandleInteractionResults.
+			// androidx.test.espresso.ViewInteraction.waitForAndHandleInteractionResults.
 			// TODEL This could be obsolete based on current state of DefaultHandler, test it.
 			// example: write a custom ViewAssertion inline and in override check() throw a RuntimeException
 			// TODO when is this needed again? see above, and test!
@@ -223,9 +222,9 @@ StrictMode policy violation; ~duration=122 ms: android.os.StrictMode$StrictModeD
 	at java.io.File.doAccess(File.java:283)
 	at java.io.File.exists(File.java:363)
 	at android.app.ContextImpl.getDir(ContextImpl.java:2668)
-	at android.support.test.runner.MonitoringInstrumentation.specifyDexMakerCacheProperty(MonitoringInstrumentation.java:187)
-	at android.support.test.runner.MonitoringInstrumentation.onCreate(MonitoringInstrumentation.java:152)
-	at android.support.test.runner.AndroidJUnitRunner.onCreate(AndroidJUnitRunner.java:209)
+	at androidx.test.runner.MonitoringInstrumentation.specifyDexMakerCacheProperty(MonitoringInstrumentation.java:187)
+	at androidx.test.runner.MonitoringInstrumentation.onCreate(MonitoringInstrumentation.java:152)
+	at androidx.test.runner.AndroidJUnitRunner.onCreate(AndroidJUnitRunner.java:209)
 */
 /* onCreate StrictMode: write needed because of this (Android 5.0):
 StrictMode policy violation; ~duration=79 ms: android.os.StrictMode$StrictModeDiskWriteViolation: policy=2813 violation=1
@@ -234,9 +233,9 @@ StrictMode policy violation; ~duration=79 ms: android.os.StrictMode$StrictModeDi
 	at java.io.File.mkdirErrno(File.java:874)
 	at java.io.File.mkdir(File.java:865)
 	at android.app.ContextImpl.getDir(ContextImpl.java:2669)
-	at android.support.test.runner.MonitoringInstrumentation.specifyDexMakerCacheProperty(MonitoringInstrumentation.java:187)
-	at android.support.test.runner.MonitoringInstrumentation.onCreate(MonitoringInstrumentation.java:152)
-	at android.support.test.runner.AndroidJUnitRunner.onCreate(AndroidJUnitRunner.java:209)
+	at androidx.test.runner.MonitoringInstrumentation.specifyDexMakerCacheProperty(MonitoringInstrumentation.java:187)
+	at androidx.test.runner.MonitoringInstrumentation.onCreate(MonitoringInstrumentation.java:152)
+	at androidx.test.runner.AndroidJUnitRunner.onCreate(AndroidJUnitRunner.java:209)
  */
 /* runOnMainSync(JavaScriptBridge.install) StrictMode: read needed because of this (2.3.7):
 StrictMode policy violation; ~duration=114 ms: android.os.StrictMode$StrictModeDiskReadViolation: policy=247 violation=2

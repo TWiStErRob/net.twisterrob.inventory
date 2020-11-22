@@ -2,8 +2,9 @@ package net.twisterrob.android.utils.log;
 
 import org.slf4j.*;
 
-import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.view.View;
+
+import androidx.drawerlayout.widget.DrawerLayout.DrawerListener;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.StringerTools;

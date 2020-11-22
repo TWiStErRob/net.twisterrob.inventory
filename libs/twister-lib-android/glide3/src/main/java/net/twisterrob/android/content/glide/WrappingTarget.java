@@ -1,11 +1,12 @@
 package net.twisterrob.android.content.glide;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.*;
+
+import androidx.annotation.NonNull;
 
 public class WrappingTarget<Z> implements Target<Z> {
 	@NonNull protected final Target<? super Z> wrapped;

@@ -12,18 +12,19 @@ import static org.junit.Assert.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.annotation.*;
-import android.support.test.InstrumentationRegistry;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.*;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.intent.Intents.*;
-import static android.support.test.espresso.matcher.RootMatchers.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.annotation.*;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.core.app.ApplicationProvider;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.intent.Intents.*;
+import static androidx.test.espresso.matcher.RootMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.activity.CaptureImageActivityActor;
 import net.twisterrob.android.test.Helpers;
@@ -74,7 +75,7 @@ public abstract class EditActivityActor extends ActivityActor {
 	}
 	public void setType(@StringRes int type) {
 		onView(typeEditorMatcher).perform(scrollTo(), click());
-		String typeName = InstrumentationRegistry.getTargetContext().getResources().getResourceEntryName(type);
+		String typeName = ApplicationProvider.getApplicationContext().getResources().getResourceEntryName(type);
 		onData(withColumn("name", typeName)).perform(click());
 		if (hasRoot(isPlatformPopup())) {
 			LOG.warn("Failed to select {} ({}), try again to close spinner popup.", typeName, type);

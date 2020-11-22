@@ -3,9 +3,10 @@ package net.twisterrob.inventory.android.test.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.test.InstrumentationRegistry;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.core.app.ApplicationProvider;
 
 /**
  * Generic empty test activity in case a UI context is needed for the tests.
@@ -25,6 +26,6 @@ public class TestActivityCompat extends AppCompatActivity {
 	 * Be careful if you want to inflate a view from test app's APK into this activity!
 	 */
 	@Override protected void attachBaseContext(Context newBase) {
-		super.attachBaseContext(InstrumentationRegistry.getTargetContext());
+		super.attachBaseContext(ApplicationProvider.getApplicationContext());
 	}
 }

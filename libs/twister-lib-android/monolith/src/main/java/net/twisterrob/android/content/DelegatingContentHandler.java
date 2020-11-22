@@ -2,7 +2,7 @@ package net.twisterrob.android.content;
 
 import org.xml.sax.*;
 
-import android.support.annotation.*;
+import androidx.annotation.*;
 
 public class DelegatingContentHandler implements ContentHandler {
 	private static final NullContentHandler NULL_HANDLER = new NullContentHandler();

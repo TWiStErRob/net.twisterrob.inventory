@@ -3,13 +3,14 @@ package net.twisterrob.android.content.glide;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
-import android.support.annotation.*;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.*;
 import com.bumptech.glide.load.resource.transcode.ResourceTranscoder;
+
+import androidx.annotation.*;
 
 /**
  * Copy of {@link com.bumptech.glide.load.resource.transcode.GlideBitmapDrawableTranscoder}

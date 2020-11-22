@@ -6,9 +6,10 @@ import static java.lang.annotation.ElementType.*;
 
 import android.annotation.*;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.IntDef;
-import android.support.v4.view.WindowCompat;
 import android.view.Window;
+
+import androidx.annotation.IntDef;
+import androidx.core.view.WindowCompat;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

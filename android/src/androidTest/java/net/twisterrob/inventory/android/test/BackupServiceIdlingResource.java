@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.test;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import net.twisterrob.android.test.espresso.idle.IntentServiceIdlingResource;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService;

@@ -6,9 +6,10 @@ import org.hamcrest.Matcher;
 
 import android.annotation.TargetApi;
 import android.os.Build.*;
-import android.support.test.espresso.Root;
 import android.view.View;
 import android.view.View.OnAttachStateChangeListener;
+
+import androidx.test.espresso.Root;
 
 import net.twisterrob.android.test.espresso.*;
 

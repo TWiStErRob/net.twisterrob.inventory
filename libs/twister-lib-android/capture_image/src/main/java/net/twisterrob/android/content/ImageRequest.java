@@ -4,16 +4,16 @@ import java.io.File;
 import java.util.*;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
+import android.annotation.*;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.*;
 import android.net.Uri;
 import android.os.Build.*;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.PermissionChecker;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.PermissionChecker;
 
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.capture_image.R;

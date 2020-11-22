@@ -17,11 +17,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Build.*;
-import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.util.HumanReadables;
-import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.test.espresso.util.HumanReadables;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.runner.lifecycle.Stage;
 
 import net.twisterrob.android.test.junit.InstrumentationExtensions;
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -132,16 +133,16 @@ public class ScreenshotFailure implements TestRule {
 	}
 
 	/**
-	 * Ignored <code>com.googlecode.eyesfree.utils.ScreenshotUtils.createScreenshot(getTargetContext());</code>,
+	 * Ignored <code>com.googlecode.eyesfree.utils.ScreenshotUtils.createScreenshot(getApplicationContext());</code>,
 	 * because it requires {@code  android.permission.READ_FRAME_BUFFER} which is signature level.
 	 */
 	@TargetApi(VERSION_CODES.JELLY_BEAN_MR2)
 	private File takeScreenshot(@NonNull String dirName, @NonNull String shotName) throws IOException {
 		if (VERSION_CODES.JELLY_BEAN_MR1 <= VERSION.SDK_INT) {
-			// android.support.test.uiautomator.UiDevice#takeScreenshot method says @since API 17, so it could be used.
+			// androidx.test.uiautomator.UiDevice#takeScreenshot method says @since API 17, so it could be used.
 			// But you can't actually acquire a UiDevice instance to call the method on API 17, because it throws:
 			// java.lang.NoSuchMethodError: android.app.Instrumentation.getUiAutomation
-			// android.support.test.uiautomator.UiDevice is from uiautomator-v18
+			// androidx.test.uiautomator.UiDevice is from uiautomator
 			// com.android.uiautomator.core.UiDevice would be from the old testing framework, but it's not available.
 			//UiDevice.getInstance(instrumentation).takeScreenshot(target);
 			//return target;

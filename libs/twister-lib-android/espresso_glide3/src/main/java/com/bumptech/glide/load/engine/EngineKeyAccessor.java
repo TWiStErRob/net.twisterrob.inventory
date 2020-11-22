@@ -1,6 +1,6 @@
 package com.bumptech.glide.load.engine;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import net.twisterrob.java.utils.ReflectionTools;
 

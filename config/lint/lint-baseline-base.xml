@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="4" by="lint 3.2.1" client="gradle" variant="all" version="3.2.1">
 
-    <issue
-        id="RtlEnabled"
-        message="The project references RTL attributes, but does not explicitly enable or disable RTL support with `android:supportsRtl` in the manifest">
-        <location
-            file="src\main\AndroidManifest.xml"/>
-    </issue>
-
 </issues>

@@ -2,9 +2,11 @@ package net.twisterrob.android.view;
 
 import java.util.*;
 
-import android.support.annotation.*;
-import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
 import android.view.View;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.annotation.BottomSheetState;
 

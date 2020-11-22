@@ -11,8 +11,9 @@ import android.graphics.Color;
 import android.os.Build.*;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
-import android.support.annotation.*;
 import android.text.TextUtils;
+
+import androidx.annotation.*;
 
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.app.BaseApp;

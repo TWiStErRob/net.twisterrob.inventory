@@ -7,13 +7,15 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.*;
-import android.support.annotation.*;
-import android.support.v4.app.*;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
-import android.support.v4.content.Loader;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+
+import androidx.annotation.*;
+import androidx.fragment.app.*;
+import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.inventory.android.*;

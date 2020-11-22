@@ -4,13 +4,14 @@ import org.hamcrest.Matcher;
 
 import static org.hamcrest.Matchers.*;
 
-import android.support.v7.widget.ActionBarContextView;
 import android.view.View;
 
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import androidx.appcompat.widget.ActionBarContextView;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.ReflectiveParentViewMatcher;
 import net.twisterrob.inventory.android.R;

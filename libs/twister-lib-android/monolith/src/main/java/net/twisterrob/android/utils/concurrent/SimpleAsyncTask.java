@@ -1,7 +1,8 @@
 package net.twisterrob.android.utils.concurrent;
 
 import android.os.AsyncTask;
-import android.support.annotation.*;
+
+import androidx.annotation.*;
 
 import static net.twisterrob.android.utils.concurrent.SimpleAsyncTaskHelper.*;
 

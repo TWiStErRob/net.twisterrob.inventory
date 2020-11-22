@@ -2,10 +2,11 @@ package net.twisterrob.android.test.espresso;
 
 import org.hamcrest.Matcher;
 
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.*;
-import android.support.test.espresso.base.DefaultFailureHandler;
 import android.view.View;
+
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.*;
+import androidx.test.espresso.base.DefaultFailureHandler;
 
 /**
  * @deprecated looks like {@code .withFailureHandler(new PassMissingRoot())}
@@ -16,7 +17,7 @@ import android.view.View;
 @Deprecated
 public class PassMissingRoot implements FailureHandler {
 	private final FailureHandler defaultHandler =
-			new DefaultFailureHandler(InstrumentationRegistry.getTargetContext());
+			new DefaultFailureHandler(ApplicationProvider.getApplicationContext());
 	@Override public void handle(Throwable error, Matcher<View> viewMatcher) {
 		if (!(error instanceof NoMatchingRootException)) {
 			defaultHandler.handle(error, viewMatcher);

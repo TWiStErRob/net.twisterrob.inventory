@@ -8,16 +8,17 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.ColorFilter;
-import android.support.annotation.*;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
-import android.support.v7.graphics.drawable.DrawableWrapper;
 import android.util.SparseArray;
 import android.view.*;
 
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
+
+import androidx.annotation.*;
+import androidx.appcompat.graphics.drawable.DrawableWrapper;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
@@ -142,7 +143,7 @@ public class DrawerNavigator {
 				@Override public void setColorFilter(ColorFilter cf) {
 					//super.setColorFilter(cf); // don't call
 					// when the item's icon is used in navigation view:
-					// android.support.design.internal.NavigationMenuItemView.setIcon()
+					// com.google.android.material.internal.NavigationMenuItemView.setIcon()
 					// it'll wrap the drawable for tinting and set tintList (which is null, see #addIcons)
 					// DrawableCompat.setTintList(icon, mIconTintList);
 					// android.support.v4.graphics.drawable.DrawableWrapperDonut.setCompatTintList()

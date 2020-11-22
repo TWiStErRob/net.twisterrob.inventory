@@ -1,7 +1,8 @@
 package net.twisterrob.android.view;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class EmptyAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 	@Override public final int getItemCount() {

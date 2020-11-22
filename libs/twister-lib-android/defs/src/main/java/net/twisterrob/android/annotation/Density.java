@@ -9,8 +9,9 @@ import static java.lang.annotation.ElementType.*;
 import android.annotation.*;
 import android.content.res.Configuration;
 import android.os.Build.*;
-import android.support.annotation.*;
 import android.util.DisplayMetrics;
+
+import androidx.annotation.*;
 
 import net.twisterrob.java.annotations.DebugHelper;
 

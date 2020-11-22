@@ -2,9 +2,10 @@ package net.twisterrob.android.view;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
-import android.support.annotation.*;
 import android.view.*;
 import android.view.View.*;
+
+import androidx.annotation.*;
 
 /**
  * A class, that can be used as a TouchListener on any view (e.g. a Button).

@@ -2,7 +2,7 @@ package net.twisterrob.android.utils.tostring.stringers.name;
 
 import javax.annotation.Nonnull;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import net.twisterrob.java.utils.*;
 import net.twisterrob.java.utils.tostring.*;

@@ -8,16 +8,17 @@ import org.slf4j.*;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.CallSuper;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.IdlingRegistry;
+
+import androidx.annotation.CallSuper;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.IdlingRegistry;
 
 import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
-import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
 
 public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
@@ -100,7 +101,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	}
 
 	protected void resetFiles() {
-		Context context = InstrumentationRegistry.getTargetContext();
+		Context context = ApplicationProvider.getApplicationContext();
 		File intDir = context.getFilesDir();
 		LOG.info("Deleting {}", intDir);
 		if (!IOTools.delete(intDir)) {
@@ -129,7 +130,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	}
 
 	protected void resetGlide() {
-		Context context = InstrumentationRegistry.getTargetContext();
+		Context context = ApplicationProvider.getApplicationContext();
 		GlideResetter.resetGlide(context);
 		// recreate internal Glide wrapper
 		Constants.Pic.init(context, BuildConfig.VERSION_NAME);

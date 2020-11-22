@@ -12,7 +12,8 @@ import android.content.res.*;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
 import android.os.*;
-import android.support.annotation.CallSuper;
+
+import androidx.annotation.CallSuper;
 
 import net.twisterrob.android.utils.log.LoggingDebugProvider.LoggingHelper;
 import net.twisterrob.android.utils.tools.StringerTools;

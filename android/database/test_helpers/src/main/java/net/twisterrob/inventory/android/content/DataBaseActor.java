@@ -11,9 +11,10 @@ import static org.junit.Assert.*;
 import android.database.Cursor;
 import android.graphics.*;
 import android.net.Uri;
-import android.support.annotation.*;
 
-import static android.support.test.InstrumentationRegistry.*;
+import androidx.annotation.*;
+
+import static androidx.test.core.app.ApplicationProvider.*;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -115,7 +116,7 @@ public class DataBaseActor extends TestDatabaseRule {
 	}
 
 	public void assertPropertyHasType(String propertyName, @StringRes int expectedType) {
-		assertPropertyHasType(propertyName, getTargetContext().getResources().getResourceEntryName(expectedType));
+		assertPropertyHasType(propertyName, getApplicationContext().getResources().getResourceEntryName(expectedType));
 	}
 	public void assertPropertyHasType(String propertyName, String expectedType) {
 		Long expectedTypeID = testDB.getID(R.string.query_property_type_by_name, expectedType);
@@ -127,7 +128,7 @@ public class DataBaseActor extends TestDatabaseRule {
 	}
 
 	public void assertRoomHasType(String roomName, @StringRes int expectedType) {
-		assertRoomHasType(roomName, getTargetContext().getResources().getResourceEntryName(expectedType));
+		assertRoomHasType(roomName, getApplicationContext().getResources().getResourceEntryName(expectedType));
 	}
 	public void assertRoomHasType(String roomName, String expectedType) {
 		Long expectedTypeID = testDB.getID(R.string.query_room_type_by_name, expectedType);
@@ -139,7 +140,7 @@ public class DataBaseActor extends TestDatabaseRule {
 	}
 
 	public void assertItemHasType(String itemName, @StringRes int expectedType) {
-		assertItemHasType(itemName, getTargetContext().getResources().getResourceEntryName(expectedType));
+		assertItemHasType(itemName, getApplicationContext().getResources().getResourceEntryName(expectedType));
 	}
 	public void assertItemHasType(String itemName, String expectedType) {
 		Long expectedTypeID = testDB.getID(R.string.query_category_by_name, expectedType);
@@ -184,7 +185,7 @@ public class DataBaseActor extends TestDatabaseRule {
 	private void assertImageBackground(Uri image, @ColorInt int backgroundColor) {
 		InputStream stream = null;
 		try {
-			stream = getTargetContext().getContentResolver().openInputStream(image);
+			stream = getApplicationContext().getContentResolver().openInputStream(image);
 			Bitmap bitmap = BitmapFactory.decodeStream(stream);
 			try {
 				assertThat(bitmap.getPixel(0, 0), is(backgroundColor));
@@ -284,7 +285,7 @@ public class DataBaseActor extends TestDatabaseRule {
 		appDB.updateItem(
 				DatabaseTools.getLong(item, Item.ID),
 				testDB.getID(R.string.query_category_by_name,
-						getTargetContext().getResources().getResourceEntryName(category)),
+						getApplicationContext().getResources().getResourceEntryName(category)),
 				DatabaseTools.getString(item, Item.NAME),
 				DatabaseTools.getString(item, Item.DESCRIPTION)
 		);
