@@ -60,7 +60,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		eventsListener.propertyLoaded(property);
 	}
 
-	@Override protected PropertyDTO createDTO() {
+	@Override protected @NonNull PropertyDTO createDTO() {
 		PropertyDTO property = new PropertyDTO();
 		property.id = getArgPropertyID();
 		return property;
@@ -91,7 +91,7 @@ public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, P
 		return param;
 	}
 
-	@Override protected void onSaved(PropertyDTO result) {
+	@Override protected void onSaved(@NonNull PropertyDTO result) {
 		eventsListener.propertySaved(result.id);
 	}
 

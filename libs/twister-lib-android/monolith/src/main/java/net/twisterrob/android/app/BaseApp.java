@@ -169,7 +169,7 @@ public abstract class BaseApp extends android.app.Application {
 	 * to the backing database yet, so it can be created on the UI thread and as early as possible.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T getDatabase() {
+	public @NonNull <T> T getDatabase() {
 		try {
 			if (database == null) {
 				LOG.warn("Waiting for database to initialize"

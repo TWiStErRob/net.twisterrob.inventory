@@ -74,7 +74,7 @@ public class Database extends VariantDatabase {
 		return m_helper;
 	}
 
-	public Database beginTransaction() {
+	public @NonNull Database beginTransaction() {
 		getWritableDatabase().beginTransaction();
 		return this;
 	}

@@ -367,10 +367,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		AndroidTools.executePreferSerial(new SaveTask(), dto);
 	}
 	/** Create the DTO object with id set and fill in all fields needed to save (except the ones inherited from ImagedDTO) */
-	protected abstract DTO createDTO();
-	@SuppressWarnings("RedundantThrows")
-	protected abstract DTO onSave(Database db, DTO param) throws Exception;
-	protected abstract void onSaved(DTO result);
+	protected abstract @NonNull DTO createDTO();
+	protected abstract @NonNull DTO onSave(@NonNull Database db, @NonNull DTO param) throws Exception;
+	protected abstract void onSaved(@NonNull DTO result);
 
 	private boolean doValidate() {
 		return doValidateTitle();
@@ -488,7 +487,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	private class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
-		@Override protected final DTO doInBackground(DTO param) throws Exception {
+		@Override protected final @NonNull DTO doInBackground(@NonNull DTO param) throws Exception {
 			if (!param.hasImage && currentImage != null) {
 				param.hasImage = true;
 				if (!InventoryContract.AUTHORITY.equals(currentImage.getAuthority())) { // do not read own image
@@ -505,11 +504,11 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			return param;
 		}
 
-		@Override protected void onResult(DTO result, DTO param) {
+		@Override protected void onResult(@NonNull DTO result, @NonNull DTO param) {
 			onSaved(result);
 		}
 
-		@Override protected void onError(@NonNull Exception ex, DTO param) {
+		@Override protected void onError(@NonNull Exception ex, @NonNull DTO param) {
 			LOG.warn("Cannot save ({}){}", param != null? param.getClass().getSimpleName() : null, param, ex);
 			App.toastUser(App.getError(ex, R.string.generic_error_save));
 		}

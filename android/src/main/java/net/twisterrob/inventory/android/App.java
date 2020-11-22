@@ -36,7 +36,7 @@ public class App extends BaseApp implements BaseComponent.Provider {
 		return (App)BaseApp.getInstance();
 	}
 
-	public static Database db() {
+	public static @NonNull Database db() {
 		return getInstance().getDatabase();
 	}
 

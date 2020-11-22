@@ -61,7 +61,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		eventsListener.roomLoaded(room);
 	}
 
-	@Override protected RoomDTO createDTO() {
+	@Override protected @NonNull RoomDTO createDTO() {
 		RoomDTO room = new RoomDTO();
 		room.propertyID = getArgPropertyID();
 		room.id = getArgRoomID();
@@ -97,7 +97,7 @@ public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> 
 		return param;
 	}
 
-	@Override protected void onSaved(RoomDTO result) {
+	@Override protected void onSaved(@NonNull RoomDTO result) {
 		eventsListener.roomSaved(result.id);
 	}
 

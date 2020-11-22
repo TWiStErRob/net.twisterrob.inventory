@@ -53,7 +53,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 		eventsListener.itemLoaded(item);
 	}
 
-	@Override protected ItemDTO createDTO() {
+	@Override protected @NonNull ItemDTO createDTO() {
 		ItemDTO item = new ItemDTO();
 		item.parentID = getArgParentID();
 		item.id = getArgItemID();
@@ -89,7 +89,7 @@ public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> 
 		return param;
 	}
 
-	@Override protected void onSaved(ItemDTO result) {
+	@Override protected void onSaved(@NonNull ItemDTO result) {
 		// FIXME this can be called when it's null if Save-rotate or Save-home is done quick enough
 		eventsListener.itemSaved(result.id);
 	}
