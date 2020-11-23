@@ -215,7 +215,7 @@ public class App extends BaseApp implements BaseComponent.Provider {
 	@Override
 	public BaseComponent getBaseComponent() {
 		return new BaseComponent() {
-			@Override public ResourcePreferences prefs() {
+			@Override public @NonNull ResourcePreferences prefs() {
 				return BaseApp.prefs();
 			}
 		};
