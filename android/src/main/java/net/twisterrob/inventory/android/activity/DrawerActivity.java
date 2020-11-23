@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.activity;
 
-import org.slf4j.*;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;

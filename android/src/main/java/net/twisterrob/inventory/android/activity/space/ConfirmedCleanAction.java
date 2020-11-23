@@ -24,7 +24,7 @@ class ConfirmedCleanAction extends BaseDialogFragment implements DialogInterface
 	}
 
 	@Override public void onClick(DialogInterface var1, int var2) {
-		NoProgressTaskExecutor.create(task).show(getFragmentManager(), "task");
+		NoProgressTaskExecutor.create(task).show(getParentFragmentManager(), "task");
 	}
 
 	@Override public @NonNull Dialog onCreateDialog(Bundle var1) {
