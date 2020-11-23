@@ -9,14 +9,17 @@ import androidx.annotation.IntDef;
 import net.twisterrob.java.annotations.DebugHelper;
 
 @IntDef(value = {
-		BackStackRecord.OP_NULL,
-		BackStackRecord.OP_ADD,
-		BackStackRecord.OP_REPLACE,
-		BackStackRecord.OP_REMOVE,
-		BackStackRecord.OP_HIDE,
-		BackStackRecord.OP_SHOW,
-		BackStackRecord.OP_DETACH,
-		BackStackRecord.OP_ATTACH
+		FragmentTransaction.OP_NULL,
+		FragmentTransaction.OP_ADD,
+		FragmentTransaction.OP_REPLACE,
+		FragmentTransaction.OP_REMOVE,
+		FragmentTransaction.OP_HIDE,
+		FragmentTransaction.OP_SHOW,
+		FragmentTransaction.OP_DETACH,
+		FragmentTransaction.OP_ATTACH,
+		FragmentTransaction.OP_SET_PRIMARY_NAV,
+		FragmentTransaction.OP_UNSET_PRIMARY_NAV,
+		FragmentTransaction.OP_SET_MAX_LIFECYCLE,
 })
 @Retention(RetentionPolicy.SOURCE)
 @Target({FIELD, LOCAL_VARIABLE, PARAMETER, METHOD})
@@ -26,22 +29,28 @@ public @interface TransactionOperationCommand {
 		@DebugHelper
 		public static String toString(@TransactionOperationCommand int cmd) {
 			switch (cmd) {
-				case BackStackRecord.OP_NULL:
+				case FragmentTransaction.OP_NULL:
 					return "NULL";
-				case BackStackRecord.OP_ADD:
+				case FragmentTransaction.OP_ADD:
 					return "ADD";
-				case BackStackRecord.OP_REPLACE:
+				case FragmentTransaction.OP_REPLACE:
 					return "REPLACE";
-				case BackStackRecord.OP_REMOVE:
+				case FragmentTransaction.OP_REMOVE:
 					return "REMOVE";
-				case BackStackRecord.OP_HIDE:
+				case FragmentTransaction.OP_HIDE:
 					return "HIDE";
-				case BackStackRecord.OP_SHOW:
+				case FragmentTransaction.OP_SHOW:
 					return "SHOW";
-				case BackStackRecord.OP_DETACH:
+				case FragmentTransaction.OP_DETACH:
 					return "DETACH";
-				case BackStackRecord.OP_ATTACH:
+				case FragmentTransaction.OP_ATTACH:
 					return "ATTACH";
+				case FragmentTransaction.OP_SET_PRIMARY_NAV:
+					return "SET_PRIMARY_NAV";
+				case FragmentTransaction.OP_UNSET_PRIMARY_NAV:
+					return "UNSET_PRIMARY_NAV";
+				case FragmentTransaction.OP_SET_MAX_LIFECYCLE:
+					return "SET_MAX_LIFECYCLE";
 				default:
 					return "cmd::" + cmd;
 			}
