@@ -17,6 +17,7 @@ public class SupportBackStackEntryStringer extends Stringer<BackStackEntry> {
 		this.resources = context.getResources();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override public void toString(@Nonnull ToStringAppender append, BackStackEntry entry) {
 		append.identity(entry.getId(), entry.getName());
 		append.formattedProperty("shortTitle",

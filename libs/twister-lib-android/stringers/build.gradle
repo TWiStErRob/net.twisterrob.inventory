@@ -6,6 +6,7 @@ apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gra
 
 dependencies {
 	compileOnly "androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}"
+	compileOnly "androidx.fragment:fragment:${VERSION_ANDROIDX_FRAGMENT}"
 	compileOnly "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
 	compileOnly "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
 	implementation "net.twisterrob.lib:twister-lib-java"
@@ -16,7 +17,16 @@ dependencies {
 	compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 	compileOnly "net.twisterrob.lib:twister-lib-android-annotations"
 	compileOnly "net.twisterrob.lib:twister-lib-core"
+
+	testImplementation "junit:junit:${VERSION_JUNIT}"
+	testImplementation "org.mockito:mockito-core:${VERSION_MOCKITO}"
+	testImplementation "org.robolectric:robolectric:${VERSION_ROBOLECTRIC}"
+	testImplementation "androidx.test.ext:junit:${VERSION_ESPRESSO_JUNIT}"
+	testImplementation "androidx.fragment:fragment-testing:${VERSION_ANDROIDX_FRAGMENT}"
+	testImplementation "androidx.test:core:${VERSION_ESPRESSO_RUNNER}"
 }
+
+android.testOptions.unitTests.includeAndroidResources = true
 
 android {
 	lintOptions {

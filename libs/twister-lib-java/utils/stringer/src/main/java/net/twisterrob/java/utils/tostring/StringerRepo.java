@@ -31,6 +31,7 @@ public class StringerRepo {
 		register(String.class, new StringStringer());
 		register(ZipEntry.class, new ZipEntryStringer());
 	}
+	/** Visible for testing only. */
 	public void clear() {
 		stringers.clear();
 		cache.clear();
