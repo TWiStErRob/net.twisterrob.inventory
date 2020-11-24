@@ -6,7 +6,7 @@ apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gra
 
 dependencies {
 	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
-	compileOnly "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
+	api "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 }
 

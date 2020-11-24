@@ -24,6 +24,7 @@ dependencies {
 	testImplementation "androidx.test.ext:junit:${VERSION_ESPRESSO_JUNIT}"
 	testImplementation "androidx.fragment:fragment-testing:${VERSION_ANDROIDX_FRAGMENT}"
 	testImplementation "androidx.test:core:${VERSION_ESPRESSO_RUNNER}"
+	testImplementation "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
 }
 
 android.testOptions.unitTests.includeAndroidResources = true

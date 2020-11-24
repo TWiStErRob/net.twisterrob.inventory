@@ -16,9 +16,10 @@ import android.content.Context;
 import android.widget.Toast;
 
 import androidx.test.espresso.base.RootViewPicker;
-import androidx.test.rule.ActivityTestRule;
 import junitparams.*;
 import junitparams.naming.TestCaseName;
+
+import static androidx.test.platform.app.InstrumentationRegistry.*;
 
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.inventory.android.test.activity.TestActivityCompat;
@@ -62,7 +63,8 @@ public class DialogMatchersTest {
 	private static final Matcher<Throwable> NO_ACTIVITIES_PRECHECK = containsCause(hasMessage(startsWith(
 			"No activities in stage RESUMED. Activities are {")));
 
-	@Rule public final ActivityTestRule<TestActivityCompat> activity =
+	@SuppressWarnings("deprecation")
+	@Rule public final androidx.test.rule.ActivityTestRule<TestActivityCompat> activity =
 			new TestPackageIntentRule<>(TestActivityCompat.class);
 
 	private void assertDialogIsDisplayed_withTimeout() {

@@ -1,0 +1,14 @@
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	package="net.twisterrob.android.capture_image.test"
+	>
+
+	<!--
+		android_libs.ub_uiautomator=18
+		Not using it in this module, but on classpath,
+		lint will hopefully find the usages and notice that it's not callable from everywhere.
+	-->
+	<uses-sdk tools:overrideLibrary="android_libs.ub_uiautomator" />
+
+</manifest>

@@ -164,6 +164,10 @@ public class EspressoExtensionsTest_onActionMenuView {
 			}
 			return result;
 		}
+		@Override public boolean injectMotionEventSequence(Iterable<MotionEvent> events)
+				throws InjectEventSecurityException {
+			return hack.injectMotionEventSequence(events);
+		}
 		@Override public boolean injectKeyEvent(KeyEvent event) throws InjectEventSecurityException {
 			return hack.injectKeyEvent(event);
 		}

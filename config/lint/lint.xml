@@ -103,8 +103,16 @@
 		    > Lint found an issue registry (`androidx.appcompat.AppCompatIssueRegistry`)
 		    > which is older than the current API level; these checks may not work correctly.
 		    > Recompile the checks against the latest version.
-		    > Custom check API version is 7 (4.0), current lint API level is 8 (4.1+).
+		    > Custom check API version is 7 (4.0), current lint API level is 8 (4.1+)
 		-->
 		<ignore regexp="androidx\.appcompat\.AppCompatIssueRegistry" />
+		<!--
+		    fragment 1.2.5 declares an older version, didn't check next alpha.
+		    > Lint found an issue registry (`androidx.fragment.lint.FragmentIssueRegistry`)
+		    > which is older than the current API level; these checks may not work correctly.
+		    > Recompile the checks against the latest version.
+		    > Custom check API version is 6 (3.6), current lint API level is 8 (4.1+)
+		-->
+		<ignore regexp="androidx\.fragment\.lint\.FragmentIssueRegistry" />
 	</issue>
 </lint>

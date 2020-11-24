@@ -84,7 +84,7 @@ public class SupportBackStackStateStringerTest {
 				assertEquals(
 						"(androidx.fragment.app.BackStackState)0: backyStacky, TRANSIT_FRAGMENT_OPEN, reordering allowed, shared::{  }, ops of 3:\n"
 								+ "\t" + fragment1Who.get()
-								+ ": OP_SET_MAX_LIFECYCLE, MaxLifecycle::{ old=RESUMED, new=STARTED }, Anim::{ enter=invalid, exit=invalid, popEnter=invalid, popExit=invalid }\n"
+								+ ": SET_MAX_LIFECYCLE, MaxLifecycle::{ old=RESUMED, new=STARTED }, Anim::{ enter=invalid, exit=invalid, popEnter=invalid, popExit=invalid }\n"
 								+ "\t" + fragment2Who.get()
 								+ ": ADD, maxLifecycle=RESUMED, Anim::{ enter=android:anim/fade_in, exit=android:anim/fade_out, popEnter=android:anim/slide_in_left, popExit=android:anim/slide_out_right }\n"
 								+ "\t" + fragment3Who.get()

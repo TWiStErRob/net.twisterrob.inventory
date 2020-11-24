@@ -24,7 +24,21 @@
 	<issue id="SyntheticAccessor" severity="ignore">
 		<!-- too many to fix yet -->
 	</issue>
+	<issue id="NewerVersionAvailable">
+		<!-- It's complex to find matching versions of PowerMock / Robolectric and Mockito. -->
+		<ignore regexp="^A newer version of org.mockito:mockito-core" />
+	</issue>
 	<issue id="LintBaseline"> 
 		<ignore regexp="(was|were) filtered out because (it is|they are) listed in the baseline file" />
+	</issue>
+	<issue id="ObsoleteLintCustomCheck">
+		<!--
+		    fragment 1.2.5 declares an older version, didn't check next alpha.
+		    > Lint found an issue registry (`androidx.fragment.lint.FragmentIssueRegistry`)
+		    > which is older than the current API level; these checks may not work correctly.
+		    > Recompile the checks against the latest version.
+		    > Custom check API version is 6 (3.6), current lint API level is 8 (4.1+)
+		-->
+		<ignore regexp="androidx\.fragment\.lint\.FragmentIssueRegistry" />
 	</issue>
 </lint>

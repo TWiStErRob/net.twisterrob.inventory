@@ -13,7 +13,7 @@ dependencies {
 	if (isAndroid) {
 		testImplementation "org.robolectric:robolectric:${VERSION_ROBOLECTRIC}"
 		testImplementation "org.robolectric:shadows-multidex:${VERSION_ROBOLECTRIC}"
-		testImplementation "androidx.test:core:1.2.0"
+		testImplementation "androidx.test:core:${VERSION_ESPRESSO_RUNNER}"
 
 //	configurations
 //			.compile

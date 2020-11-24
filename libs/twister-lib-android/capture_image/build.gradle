@@ -7,7 +7,6 @@ apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gra
 dependencies {
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
-	api "androidx.core:core:${VERSION_ANDROIDX_CORE}"
 	compileOnly "androidx.fragment:fragment:${VERSION_ANDROIDX_FRAGMENT}"
 	implementation "androidx.exifinterface:exifinterface:${VERSION_ANDROIDX_EXIF}"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
@@ -30,6 +29,7 @@ dependencies {
 
 android {
 	defaultConfig {
+		multiDexEnabled true
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 	}
 	lintOptions {
