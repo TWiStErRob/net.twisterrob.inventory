@@ -33,7 +33,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/pref_group_links">
-		<Preference
+		<net.twisterrob.android.settings.view.ExternalIntentPreference
 			android:order="1"
 			android:title="@string/pref_app_in_settings_title"
 		    android:summary="@string/pref_app_in_settings_desc"
@@ -42,8 +42,8 @@
 				android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
 				android:data="@string/package_url_settings"
 				/>
-		</Preference>
-		<Preference
+		</net.twisterrob.android.settings.view.ExternalIntentPreference>
+		<net.twisterrob.android.settings.view.ExternalIntentPreference
 			android:order="2"
 			android:title="@string/pref_app_in_store_title"
 			android:summary="@string/pref_app_in_store_desc"
@@ -52,8 +52,8 @@
 				android:action="android.intent.action.VIEW"
 				android:data="market://details?id=net.twisterrob.inventory"
 				/>
-		</Preference>
-		<Preference
+		</net.twisterrob.android.settings.view.ExternalIntentPreference>
+		<net.twisterrob.android.settings.view.ExternalIntentPreference
 			android:order="3"
 			android:title="@string/pref_app_privacy_policy_title"
 			android:summary="@string/pref_app_privacy_policy_desc"
@@ -62,8 +62,8 @@
 				android:action="android.intent.action.VIEW"
 				android:data="http://www.twisterrob.net/project/inventory/#privacy-policy"
 				/>
-		</Preference>
-		<Preference
+		</net.twisterrob.android.settings.view.ExternalIntentPreference>
+		<net.twisterrob.android.settings.view.ExternalIntentPreference
 			android:order="-1"
 			android:title="@string/pref_app_feedback_title"
 			android:summary="@string/pref_app_feedback_desc">
@@ -86,7 +86,7 @@
 				<extra android:name="android.intent.extra.SUBJECT"
 				       android:value="@string/pref_app_feedback_subject" />
 			</intent>
-		</Preference>
+		</net.twisterrob.android.settings.view.ExternalIntentPreference>
 		<Preference
 			android:order="0"
 			android:title="@string/pref_app_about_title"
