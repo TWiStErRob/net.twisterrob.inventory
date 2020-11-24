@@ -9,16 +9,16 @@
 	tools:context="net.twisterrob.inventory.android.activity.BackupActivity"
 	tools:ignore="UnusedIds"
 	>
-	<fragment
+	<androidx.fragment.app.FragmentContainerView
 		android:id="@+id/backup_progress"
-		class="net.twisterrob.inventory.android.fragment.BackupProgressFragment"
+		android:name="net.twisterrob.inventory.android.fragment.BackupProgressFragment"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		tools:layout="@layout/fragment_backup_progress"
 		/>
-	<fragment
+	<androidx.fragment.app.FragmentContainerView
 		android:id="@+id/backup_list"
-		class="net.twisterrob.inventory.android.fragment.BackupListFragment"
+		android:name="net.twisterrob.inventory.android.fragment.BackupListFragment"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="1"
