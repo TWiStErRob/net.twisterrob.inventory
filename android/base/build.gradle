@@ -9,11 +9,13 @@ dependencies {
 	implementation "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
 	implementation "androidx.annotation:annotation-experimental:${VERSION_ANDROIDX_ANNOTATION_EXPERIMENTAL}"
 	implementation "androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_ANDROIDX_SWIPEREFRESHLAYOUT}"
+	implementation "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
 
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
+	implementation "net.twisterrob.lib:twister-lib-android-settings"
 	api "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
 	api "net.twisterrob.lib:twister-lib-android-logging"
 	api "net.twisterrob.lib:twister-lib-android-stringers"

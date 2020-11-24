@@ -19,6 +19,7 @@ include ':basics'
 
 include ':glide3'
 include ':widgets'
+include ':settings'
 
 includeWithTestHelpers(":about")
 includeWithTestHelpers(":capture_image")

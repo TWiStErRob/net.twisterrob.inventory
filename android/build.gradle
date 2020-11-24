@@ -15,6 +15,7 @@ dependencies {
 	implementation('net.twisterrob.lib:twister-lib-general')
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation 'net.twisterrob.lib:twister-lib-android-widgets'
+	implementation 'net.twisterrob.lib:twister-lib-android-settings'
 	implementation 'net.twisterrob.lib:twister-lib-android-about'
 	implementation 'net.twisterrob.lib:twister-lib-android-logging'
 	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
@@ -48,6 +49,7 @@ dependencies {
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-about-test_helpers"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-capture_image-test_helpers"
 	androidTestImplementation project(':android:database:test_helpers')
+	androidTestImplementation "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
 }
 
 android {

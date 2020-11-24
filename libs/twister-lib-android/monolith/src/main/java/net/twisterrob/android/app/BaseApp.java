@@ -15,11 +15,11 @@ import android.os.Build.*;
 import android.os.*;
 import android.os.StrictMode.*;
 import android.os.StrictMode.ThreadPolicy.Builder;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.*;
+import androidx.preference.PreferenceManager;
 
 import net.twisterrob.android.AndroidConstants;
 import net.twisterrob.android.content.pref.ResourcePreferences;

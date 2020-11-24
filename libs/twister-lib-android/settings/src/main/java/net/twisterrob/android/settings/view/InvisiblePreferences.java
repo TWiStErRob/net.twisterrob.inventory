@@ -1,16 +1,12 @@
-package net.twisterrob.android.content.pref;
-
-import java.lang.reflect.Method;
+package net.twisterrob.android.settings.view;
 
 import org.slf4j.*;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build.VERSION_CODES;
-import android.preference.*;
+import androidx.preference.*;
 import android.util.AttributeSet;
-
-import static net.twisterrob.java.utils.ReflectionTools.*;
 
 /**
  * A group of preferences that won't ever show up to the user.
@@ -22,9 +18,6 @@ import static net.twisterrob.java.utils.ReflectionTools.*;
  */
 public class InvisiblePreferences extends PreferenceGroup {
 	private static final Logger LOG = LoggerFactory.getLogger(InvisiblePreferences.class);
-
-	private static final Method getPreferenceScreen =
-			trySetAccessible(tryFindDeclaredMethod(PreferenceManager.class, "getPreferenceScreen"));
 
 	public InvisiblePreferences(Context context) {
 		super(context, null);
@@ -53,21 +46,19 @@ public class InvisiblePreferences extends PreferenceGroup {
 	@Override public boolean shouldDisableDependents() {
 		return !super.isEnabled();
 	}
-
-	@Override protected void onAttachedToActivity() {
+	@Override public void onAttached() {
 		try {
 			String dependency = getDependency();
 			PreferenceGroup parent;
 			if (dependency == null) {
-				//noinspection ConstantConditions null access is ok, there's a catch; also it should be null
-				parent = (PreferenceGroup)getPreferenceScreen.invoke(getPreferenceManager());
+				parent = getPreferenceManager().getPreferenceScreen();
 			} else {
-				parent = (PreferenceGroup)getPreferenceManager().findPreference(dependency);
+				parent = getPreferenceManager().findPreference(dependency);
 			}
 			parent.removePreference(this);
 		} catch (Exception e) {
 			LOG.warn("Cannot get parent to remove " + this, e);
 		}
-		super.onAttachedToActivity();
+		super.onAttached();
 	}
 }

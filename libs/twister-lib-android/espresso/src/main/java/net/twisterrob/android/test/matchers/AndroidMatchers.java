@@ -17,11 +17,11 @@ import android.graphics.*;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.*;
 import android.os.Build.*;
-import android.preference.Preference;
 import android.view.*;
 import android.widget.*;
 
 import androidx.annotation.*;
+import androidx.preference.Preference;
 import androidx.test.espresso.*;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.runner.lifecycle.Stage;

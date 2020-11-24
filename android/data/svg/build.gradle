@@ -12,6 +12,7 @@ dependencies {
 
 dependencies {
 	androidTestImplementation("net.twisterrob.lib:twister-lib-android-espresso")
+	androidTestImplementation("androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}")
 	androidTestRuntimeOnly("net.twisterrob.lib:twister-lib-android-slf4j")
 }
 

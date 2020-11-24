@@ -16,6 +16,7 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-logging"
 	implementation "net.twisterrob.lib:twister-lib-android-stringers"
 	implementation "net.twisterrob.lib:twister-lib-android-defs"
+	compileOnly "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
 
 	// Espresso core
 	api "androidx.test.espresso:espresso-core:${VERSION_ESPRESSO}"

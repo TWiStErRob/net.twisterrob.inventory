@@ -13,6 +13,7 @@ dependencies {
 	implementation "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
+	implementation "net.twisterrob.lib:twister-lib-android-settings"
 	implementation "net.twisterrob.lib:twister-lib-general"
 	implementation "net.twisterrob.lib:twister-lib-java"
 

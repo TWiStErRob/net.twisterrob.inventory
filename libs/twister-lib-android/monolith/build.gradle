@@ -8,11 +8,14 @@ dependencies {
 	implementation 'net.twisterrob.lib:twister-lib-android-logging'
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
+	implementation 'net.twisterrob.lib:twister-lib-android-settings'
 
 	compileOnly "androidx.fragment:fragment:${VERSION_ANDROIDX_FRAGMENT}"
 	compileOnly "androidx.cardview:cardview:${VERSION_ANDROIDX_CARDVIEW}"
 	compileOnly "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
 	compileOnly "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
+	compileOnly "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
+
 	//implementation "androidx.palette:palette:+"
 
 	// FIXME @Deprecated, use Glide

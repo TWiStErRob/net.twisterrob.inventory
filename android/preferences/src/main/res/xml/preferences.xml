@@ -12,6 +12,7 @@
 			android:defaultValue="@string/pref_defaultViewPage_default"
 			android:entries="@array/pref_defaultViewPage_entries"
 			android:entryValues="@array/pref_defaultViewPage_values"
+			app:useSimpleSummaryProvider="true"
 			tools:summary="@array/pref_defaultViewPage_entries"
 			/>
 		<CheckBoxPreference
@@ -26,6 +27,7 @@
 			android:defaultValue="@string/pref_suggestCategory_default"
 			android:entries="@array/pref_suggestCategory_entries"
 			android:entryValues="@array/pref_suggestCategory_values"
+			app:useSimpleSummaryProvider="true"
 			tools:summary="@array/pref_suggestCategory_entries"
 			/>
 	</PreferenceCategory>
@@ -98,7 +100,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/pref_group_advanced">
-		<net.twisterrob.android.view.NumberPickerPreference
+		<net.twisterrob.android.settings.view.NumberPickerPreference
 			android:key="@string/pref_sunburstIgnoreLevel"
 			android:title="@string/pref_sunburstIgnoreLevel_title"
 			android:defaultValue="@integer/pref_sunburstIgnoreLevel_default"
@@ -128,16 +130,20 @@
 		</Preference>
 	</PreferenceCategory>
 
-	<net.twisterrob.android.content.pref.InvisiblePreferences
+	<net.twisterrob.android.settings.view.InvisiblePreferences
 		android:title="@string/pref_group_internal"
 		android:dependency="root_screen">
-		<net.twisterrob.android.content.pref.ValuePreference
+
+		<net.twisterrob.android.settings.view.ValuePreference
 			android:key="@string/pref_showWelcome"
 			android:defaultValue="@bool/pref_showWelcome_default"
 			/>
-		<net.twisterrob.android.content.pref.ValuePreference
+
+		<net.twisterrob.android.settings.view.ValuePreference
 			android:key="@string/pref_version"
 			android:defaultValue="@integer/pref_version_default"
 			/>
-	</net.twisterrob.android.content.pref.InvisiblePreferences>
+
+	</net.twisterrob.android.settings.view.InvisiblePreferences>
+
 </PreferenceScreen>

@@ -22,7 +22,6 @@ import android.net.Uri;
 import android.os.*;
 import android.os.Build.*;
 import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
-import android.preference.ListPreference;
 import android.util.Log;
 import android.view.*;
 import android.view.ViewGroup.*;
@@ -34,6 +33,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import androidx.annotation.*;
 import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.ListPreference;
 
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.exceptions.StackTrace;

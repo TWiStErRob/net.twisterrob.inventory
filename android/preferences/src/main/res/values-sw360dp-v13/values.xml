@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+	<!--
+	    This overrides the default true value in the same resource folder in preference library.
+	    The app doesn't have icons for preferences, so it's better to hide the empty space.
+	-->
+	<!-- lint:MissingDefaultResource the default resource is in the library's values folder. -->
+	<bool name="config_materialPreferenceIconSpaceReserved" tools:ignore="MissingDefaultResource">false</bool>
+
+</resources>

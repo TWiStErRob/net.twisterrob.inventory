@@ -1,20 +1,18 @@
-package net.twisterrob.android.content.pref;
-
-import org.slf4j.*;
+package net.twisterrob.android.settings.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build.VERSION_CODES;
-import android.preference.Preference;
 import android.util.*;
+
+import androidx.preference.Preference;
 
 /**
  * Dummy view-less preference so {@link android.preference.PreferenceManager#setDefaultValues} can pick it up.
  * It is suggested to be used in an {@link InvisiblePreferences} to prevent it from showing to the user.
  */
 public class ValuePreference extends Preference {
-	private static final Logger LOG = LoggerFactory.getLogger(ValuePreference.class);
 	private int type;
 	private Object value;
 
@@ -63,39 +61,35 @@ public class ValuePreference extends Preference {
 		return super.onGetDefaultValue(a, index);
 	}
 
-	@SuppressWarnings("ConstantConditions")
-	@Override protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
+	@SuppressWarnings("ConstantConditions") // sanitizeValue() makes sure nullability is right.
+	@Override protected void onSetInitialValue(Object defaultValue) {
 		defaultValue = sanitizeValue(defaultValue);
-		if (restorePersistedValue) {
-			switch (type) {
-				case TypedValue.TYPE_NULL:
-					setValue(null);
-					break;
-				case TypedValue.TYPE_STRING:
-					setValue(getPersistedString((String)defaultValue));
-					break;
-				case TypedValue.TYPE_DIMENSION:
-				case TypedValue.TYPE_FRACTION:
-				case TypedValue.TYPE_FLOAT:
-					setValue(getPersistedFloat((Float)defaultValue));
-					break;
-				case TypedValue.TYPE_INT_BOOLEAN:
-					setValue(getPersistedBoolean(Boolean.TRUE.equals(defaultValue)));
-					break;
-				case TypedValue.TYPE_ATTRIBUTE:
-				case TypedValue.TYPE_REFERENCE:
+		switch (type) {
+			case TypedValue.TYPE_NULL:
+				setValue(null);
+				break;
+			case TypedValue.TYPE_STRING:
+				setValue(getPersistedString((String)defaultValue));
+				break;
+			case TypedValue.TYPE_DIMENSION:
+			case TypedValue.TYPE_FRACTION:
+			case TypedValue.TYPE_FLOAT:
+				setValue(getPersistedFloat((Float)defaultValue));
+				break;
+			case TypedValue.TYPE_INT_BOOLEAN:
+				setValue(getPersistedBoolean(Boolean.TRUE.equals(defaultValue)));
+				break;
+			case TypedValue.TYPE_ATTRIBUTE:
+			case TypedValue.TYPE_REFERENCE:
+				setValue(getPersistedInt((Integer)defaultValue));
+				break;
+			default:
+				if (TypedValue.TYPE_FIRST_INT <= type && type <= TypedValue.TYPE_LAST_INT) {
 					setValue(getPersistedInt((Integer)defaultValue));
 					break;
-				default:
-					if (TypedValue.TYPE_FIRST_INT <= type && type <= TypedValue.TYPE_LAST_INT) {
-						setValue(getPersistedInt((Integer)defaultValue));
-						break;
-					} else {
-						throw new IllegalArgumentException("Cannot handle type: " + type);
-					}
-			}
-		} else {
-			setValue(defaultValue);
+				} else {
+					throw new IllegalArgumentException("Cannot handle type: " + type);
+				}
 		}
 	}
 
@@ -161,5 +155,6 @@ public class ValuePreference extends Preference {
 					throw new IllegalArgumentException("Cannot handle type: " + type);
 				}
 		}
+		notifyChanged();
 	}
 }

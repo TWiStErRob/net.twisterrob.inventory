@@ -23,6 +23,7 @@ dependencySubstitution {
 	substitute module("net.twisterrob.lib:twister-lib-android-espresso_glide3") with project(":espresso_glide3")
 	substitute module("net.twisterrob.lib:twister-lib-android-glide3") with project(":glide3")
 	substitute module("net.twisterrob.lib:twister-lib-android-logging") with project(":logging")
+	substitute module("net.twisterrob.lib:twister-lib-android-settings") with project(":settings")
 	substitute module("net.twisterrob.lib:twister-lib-android-slf4j") with project(":slf4j")
 	substitute module("net.twisterrob.lib:twister-lib-android-stringers") with project(":stringers")
 	substitute module("net.twisterrob.lib:twister-lib-android-uiautomator") with project(":uiautomator")
