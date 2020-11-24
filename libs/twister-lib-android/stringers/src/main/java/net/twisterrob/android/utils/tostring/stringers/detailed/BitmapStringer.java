@@ -1,17 +1,17 @@
 package net.twisterrob.android.utils.tostring.stringers.detailed;
 
-import javax.annotation.Nonnull;
-
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build.*;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.annotation.Density;
 import net.twisterrob.java.utils.tostring.*;
 
 public class BitmapStringer extends Stringer<Bitmap> {
 	@TargetApi(VERSION_CODES.KITKAT)
-	@Override public void toString(@Nonnull ToStringAppender append, Bitmap object) {
+	@Override public void toString(@NonNull ToStringAppender append, Bitmap object) {
 		append.beginPropertyGroup("size");
 		append.measuredProperty("width", "px", object.getWidth());
 		append.measuredProperty("height", "px", object.getHeight());

@@ -1,12 +1,12 @@
 package net.twisterrob.android.utils.concurrent;
 
-import javax.annotation.Nonnull;
+import androidx.annotation.NonNull;
 
 import net.twisterrob.java.utils.tostring.*;
 
 @SuppressWarnings("rawtypes")
 public class AsyncTaskResultStringer extends Stringer<AsyncTaskResult> {
-	@Override public void toString(@Nonnull ToStringAppender append, AsyncTaskResult result) {
+	@Override public void toString(@NonNull ToStringAppender append, AsyncTaskResult result) {
 		append.complexProperty("result", result.getResult());
 		append.complexProperty("error", result.getError());
 		Object[] params = result.getParams();

@@ -1,16 +1,15 @@
 package net.twisterrob.android.utils.tostring.stringers.detailed;
 
-import javax.annotation.Nonnull;
-
 import android.annotation.SuppressLint;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.java.utils.tostring.*;
 
 public class SupportFragmentStringer extends Stringer<Fragment> {
-	@Override public void toString(@Nonnull ToStringAppender append, Fragment fragment) {
+	@Override public void toString(@NonNull ToStringAppender append, Fragment fragment) {
 		append.identity(fragment, StringerTools.toNameString(fragment));
 		append.item("arguments", fragment.getArguments());
 		append.item("view", fragment.getView());

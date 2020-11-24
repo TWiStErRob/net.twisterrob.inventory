@@ -2,11 +2,11 @@ package net.twisterrob.android.utils.tostring.stringers.name;
 
 import java.util.*;
 
-import javax.annotation.Nonnull;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.java.utils.tostring.*;
 
@@ -37,7 +37,7 @@ public class ResourceNameStringer extends Stringer<Integer> {
 	@Override public String getType(Integer object) {
 		return null;
 	}
-	@Override public void toString(@Nonnull ToStringAppender append, Integer object) {
+	@Override public void toString(@NonNull ToStringAppender append, Integer object) {
 		int id = object; // force un-box
 		append.selfDescribingProperty(shortenName(getName(id)));
 	}

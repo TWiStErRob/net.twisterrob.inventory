@@ -1,7 +1,6 @@
 package androidx.appcompat.widget;
 
-import javax.annotation.Nonnull;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar.SavedState;
 
 import net.twisterrob.android.utils.tostring.stringers.name.ResourceNameStringer;
@@ -10,7 +9,7 @@ import net.twisterrob.java.utils.tostring.*;
 
 @DebugHelper
 public class SupportToolbarSavedStateStringer extends Stringer<SavedState> {
-	@Override public void toString(@Nonnull ToStringAppender append, SavedState state) {
+	@Override public void toString(@NonNull ToStringAppender append, SavedState state) {
 		append.booleanProperty(state.isOverflowOpen, "Overflow open", "Overflow closed");
 		append.complexProperty("Expanded MenuItem", state.expandedMenuItemId, ResourceNameStringer.INSTANCE);
 	}

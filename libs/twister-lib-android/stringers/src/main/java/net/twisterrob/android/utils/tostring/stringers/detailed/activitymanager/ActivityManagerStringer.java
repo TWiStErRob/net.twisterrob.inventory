@@ -2,17 +2,17 @@ package net.twisterrob.android.utils.tostring.stringers.detailed.activitymanager
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.*;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.java.utils.tostring.*;
 
 @SuppressWarnings("deprecation")
 public class ActivityManagerStringer extends Stringer<ActivityManager> {
-	@Override public void toString(@Nonnull ToStringAppender append, ActivityManager am) {
+	@Override public void toString(@NonNull ToStringAppender append, ActivityManager am) {
 		// TODO am.dumpPackageState();
 		append.beginPropertyGroup("memory");
 		append.measuredProperty("class", "MiB", am.getMemoryClass());
@@ -63,7 +63,7 @@ public class ActivityManagerStringer extends Stringer<ActivityManager> {
 		list(append, "runningTasks", am.getRunningTasks(Integer.MAX_VALUE));
 		list(append, "runningServices", am.getRunningServices(Integer.MAX_VALUE));
 	}
-	private void list(@Nonnull ToStringAppender append, String name, List<?> recentTasks) {
+	private void list(@NonNull ToStringAppender append, String name, List<?> recentTasks) {
 		append.beginSizedList(name, recentTasks.size());
 		for (int i = 0; i < recentTasks.size(); i++) {
 			append.item(i, recentTasks.get(i));

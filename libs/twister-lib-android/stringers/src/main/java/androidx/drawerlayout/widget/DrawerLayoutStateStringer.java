@@ -1,14 +1,13 @@
 package androidx.drawerlayout.widget;
 
-import javax.annotation.Nonnull;
-
+import androidx.annotation.NonNull;
 import androidx.drawerlayout.widget.DrawerLayout.SavedState;
 
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.java.utils.tostring.*;
 
 public class DrawerLayoutStateStringer extends Stringer<SavedState> {
-	@Override public void toString(@Nonnull ToStringAppender append, SavedState state) {
+	@Override public void toString(@NonNull ToStringAppender append, SavedState state) {
 		append.rawProperty("OpenDrawer", GravityFlag.Converter.toString(state.openDrawerGravity));
 		append.beginPropertyGroup("LockMode");
 		append.rawProperty("left", LockMode.Converter.toString(state.lockModeLeft));

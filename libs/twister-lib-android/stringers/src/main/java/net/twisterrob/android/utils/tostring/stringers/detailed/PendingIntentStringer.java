@@ -2,11 +2,11 @@ package net.twisterrob.android.utils.tostring.stringers.detailed;
 
 import java.lang.reflect.*;
 
-import javax.annotation.Nonnull;
-
 import org.slf4j.*;
 
 import android.app.PendingIntent;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.ReflectionTools;
@@ -24,7 +24,7 @@ public class PendingIntentStringer extends Stringer<PendingIntent> {
 	/** @since API 16 */
 	private static final Method isActivity = ReflectionTools.tryFindDeclaredMethod(PendingIntent.class, "isActivity");
 
-	@Override public void toString(@Nonnull ToStringAppender append, PendingIntent pending) {
+	@Override public void toString(@NonNull ToStringAppender append, PendingIntent pending) {
 		append.identity(pending, null);
 		try {
 			if (isActivity != null) {

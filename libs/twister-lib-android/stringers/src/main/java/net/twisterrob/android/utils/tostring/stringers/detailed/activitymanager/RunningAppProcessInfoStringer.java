@@ -1,16 +1,16 @@
 package net.twisterrob.android.utils.tostring.stringers.detailed.activitymanager;
 
-import javax.annotation.Nonnull;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.os.Build.*;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.annotation.TrimMemoryLevel.Converter;
 import net.twisterrob.java.utils.tostring.*;
 
 public class RunningAppProcessInfoStringer extends Stringer<ActivityManager.RunningAppProcessInfo> {
-	@Override public void toString(@Nonnull ToStringAppender append, RunningAppProcessInfo info) {
+	@Override public void toString(@NonNull ToStringAppender append, RunningAppProcessInfo info) {
 		append.identity(info.pid, info.processName);
 		append.rawProperty("uid", info.uid);
 		append.rawProperty("lru", info.lru);

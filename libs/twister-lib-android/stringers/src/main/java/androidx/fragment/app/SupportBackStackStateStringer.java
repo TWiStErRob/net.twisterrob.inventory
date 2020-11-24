@@ -1,7 +1,5 @@
 package androidx.fragment.app;
 
-import javax.annotation.Nonnull;
-
 import androidx.annotation.*;
 
 import static androidx.lifecycle.Lifecycle.*;
@@ -11,7 +9,7 @@ import net.twisterrob.java.utils.tostring.*;
 
 public class SupportBackStackStateStringer extends Stringer<BackStackState> {
 
-	@Override public void toString(@Nonnull ToStringAppender append, BackStackState state) {
+	@Override public void toString(@NonNull ToStringAppender append, BackStackState state) {
 		append.identity(state.mIndex, state.mName);
 		append.selfDescribingProperty(TransitionCommand.Converter.toString(state.mTransition));
 		append.booleanProperty(state.mReorderingAllowed, "reordering allowed",
@@ -110,7 +108,7 @@ public class SupportBackStackStateStringer extends Stringer<BackStackState> {
 		@Override public String getType(OpsRef object) {
 			return null;
 		}
-		@Override public void toString(@Nonnull ToStringAppender append, OpsRef op) {
+		@Override public void toString(@NonNull ToStringAppender append, OpsRef op) {
 			String commandString = TransactionOperationCommand.Converter.toString(op.cmd);
 			append.identity(op.who, commandString);
 			if (op.oldMaxState == op.newMaxState) {

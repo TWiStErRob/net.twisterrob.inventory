@@ -1,7 +1,6 @@
 package net.twisterrob.android.utils.tostring.stringers.name;
 
-import javax.annotation.Nonnull;
-
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import net.twisterrob.java.utils.*;
@@ -10,7 +9,7 @@ import net.twisterrob.java.utils.tostring.*;
 public class FragmentNameStringer extends Stringer<Fragment> {
 	public static final Stringer<Fragment> INSTANCE = new FragmentNameStringer();
 
-	@Override public void toString(@Nonnull ToStringAppender append, Fragment fragment) {
+	@Override public void toString(@NonNull ToStringAppender append, Fragment fragment) {
 		if (fragment == null) {
 			append.selfDescribingProperty(StringTools.NULL_STRING);
 			return;

@@ -1,10 +1,10 @@
 package net.twisterrob.android.utils.tostring.stringers.detailed;
 
-import javax.annotation.Nonnull;
-
 import android.content.Context;
 import android.util.SparseArray;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.java.annotations.DebugHelper;
@@ -24,7 +24,7 @@ public class SparseArrayStringer extends Stringer<SparseArray> {
 	@Override public String getType(SparseArray object) {
 		return null;
 	}
-	@Override public void toString(@Nonnull ToStringAppender append, SparseArray array) {
+	@Override public void toString(@NonNull ToStringAppender append, SparseArray array) {
 		append.beginSizedList(array, array.size());
 		for (int index = 0, size = array.size(); index < size; ++index) {
 			int key = array.keyAt(index);

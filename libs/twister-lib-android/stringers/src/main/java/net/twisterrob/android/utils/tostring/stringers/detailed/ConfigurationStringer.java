@@ -1,10 +1,10 @@
 package net.twisterrob.android.utils.tostring.stringers.detailed;
 
-import javax.annotation.Nonnull;
-
 import android.annotation.TargetApi;
 import android.content.res.Configuration;
 import android.os.Build.*;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.android.annotation.*;
 import net.twisterrob.java.utils.tostring.*;
@@ -16,7 +16,7 @@ import net.twisterrob.java.utils.tostring.*;
 @TargetApi(VERSION_CODES.N)
 public class ConfigurationStringer extends Stringer<Configuration> {
 	@SuppressWarnings("deprecation")
-	@Override public void toString(@Nonnull ToStringAppender append, Configuration config) {
+	@Override public void toString(@NonNull ToStringAppender append, Configuration config) {
 		append.beginPropertyGroup("screen");
 		append.rawProperty("orientation", ConfigurationOrientation.Converter.toString(config.orientation));
 		append.rawProperty("touchScreen", ConfigurationTouchscreen.Converter.toString(config.touchscreen));

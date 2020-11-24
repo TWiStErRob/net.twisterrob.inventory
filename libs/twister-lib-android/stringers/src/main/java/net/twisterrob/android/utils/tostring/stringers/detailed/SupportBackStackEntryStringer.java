@@ -1,11 +1,9 @@
 package net.twisterrob.android.utils.tostring.stringers.detailed;
 
-import javax.annotation.Nonnull;
-
 import android.content.Context;
 import android.content.res.Resources;
 
-import androidx.annotation.StringRes;
+import androidx.annotation.*;
 import androidx.fragment.app.FragmentManager.BackStackEntry;
 
 import net.twisterrob.android.AndroidConstants;
@@ -18,7 +16,7 @@ public class SupportBackStackEntryStringer extends Stringer<BackStackEntry> {
 	}
 
 	@SuppressWarnings("deprecation")
-	@Override public void toString(@Nonnull ToStringAppender append, BackStackEntry entry) {
+	@Override public void toString(@NonNull ToStringAppender append, BackStackEntry entry) {
 		append.identity(entry.getId(), entry.getName());
 		append.formattedProperty("shortTitle",
 				Integer.toHexString(entry.getBreadCrumbShortTitleRes()),

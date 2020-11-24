@@ -1,19 +1,17 @@
 package androidx.fragment.app;
 
-import javax.annotation.Nonnull;
-
 import android.annotation.TargetApi;
-import android.os.Build.*;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import net.twisterrob.android.utils.tostring.stringers.name.*;
+import net.twisterrob.android.utils.tostring.stringers.name.ResourceNameStringer;
 import net.twisterrob.java.utils.tostring.*;
 import net.twisterrob.java.utils.tostring.stringers.DefaultStringer;
 
 public class SupportFragmentStateStringer extends Stringer<FragmentState> {
-	@Override public void toString(@Nonnull ToStringAppender append, FragmentState state) {
+	@Override public void toString(@NonNull ToStringAppender append, FragmentState state) {
 	  	append.identity(state.mWho, DefaultStringer.shortenPackageNames(state.mClassName));
 		append.beginPropertyGroup(null);
 		{
