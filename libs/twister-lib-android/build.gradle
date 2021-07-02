@@ -3,7 +3,6 @@ buildscript {
 		google()
 		jcenter()
 		maven { name = "TWiStErRob Local"; url = "http://localhost/maven"; allowInsecureProtocol = true }
-		maven { name = "TWiStErRob"; url = uri("https://dl.bintray.com/twisterrob/maven") }
 		maven { name = "Gradle libs (for Kotlin-DSL)"; url = "https://repo.gradle.org/gradle/libs-releases-local/" }
 	}
 	dependencies {
