@@ -12,8 +12,8 @@ val props = Properties()
 	.apply { file("../gradle.properties").inputStream().use { load(it) } }
 
 repositories {
+	//maven { name = "sonatype1"; setUrl("https://s01.oss.sonatype.org/service/local/repositories/nettwisterrob-1009/content/") }
 	apply(from = file("../gradle/repos.gradle"))
-	maven { name = "TWiStErRob"; url = uri("https://dl.bintray.com/twisterrob/maven") }
 }
 
 val VERSION_TWISTER_GRADLE: String by props

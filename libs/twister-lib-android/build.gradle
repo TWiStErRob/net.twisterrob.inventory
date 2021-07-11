@@ -1,5 +1,6 @@
 buildscript {
 	repositories {
+		//maven { name = "sonatype1"; setUrl("https://s01.oss.sonatype.org/service/local/repositories/nettwisterrob-1009/content/") }
 		google()
 		jcenter()
 		maven { name = "TWiStErRob Local"; url = "http://localhost/maven"; allowInsecureProtocol = true }
