@@ -12,7 +12,7 @@ val props = Properties()
 	.apply { file("../gradle.properties").inputStream().use { load(it) } }
 
 repositories {
-	//maven { name = "sonatype1"; setUrl("https://s01.oss.sonatype.org/service/local/repositories/nettwisterrob-1009/content/") }
+	//maven { name = "sonatype1"; setUrl("https://s01.oss.sonatype.org/service/local/repositories/nettwisterrob-1013/content/") }
 	apply(from = file("../gradle/repos.gradle"))
 }
 
@@ -22,8 +22,9 @@ val VERSION_JUNIT: String by props
 
 dependencies {
 	configurations["implementation"].resolutionStrategy.cacheChangingModulesFor(0, "seconds") // -SNAPSHOT
-	implementation("net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}")
+	implementation("net.twisterrob.gradle:twister-convention-plugins:${VERSION_TWISTER_GRADLE}")
 	implementation("net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}")
+	implementation("com.android.tools.build:gradle:4.1.1")
 
 	testImplementation("junit:junit:${VERSION_JUNIT}")
 }

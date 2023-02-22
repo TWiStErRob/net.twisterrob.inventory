@@ -8,8 +8,9 @@ buildscript {
 	}
 	dependencies {
 		configurations["classpath"].resolutionStrategy.cacheChangingModulesFor(0, "seconds") // -SNAPSHOT
-		classpath "net.twisterrob.gradle:plugin:${VERSION_TWISTER_GRADLE}"
+		classpath "net.twisterrob.gradle:twister-convention-plugins:${VERSION_TWISTER_GRADLE}"
 		classpath "net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}"
+		classpath("com.android.tools.build:gradle:4.1.1")
 	}
 }
 
