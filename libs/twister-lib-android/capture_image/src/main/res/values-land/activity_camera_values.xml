@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<integer name="camera__button_bar__orientation">@integer/orientation__vertical</integer>
-	<!-- don't use "end" here, because then RTL devices will put the buttons far from hardware buttons when rotated. -->
-	<integer name="camera__button_bar__location">@integer/gravity__center_right</integer>
-</resources>

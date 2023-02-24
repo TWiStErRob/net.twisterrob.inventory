@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-	<!-- See https://github.com/TWiStErRob/net.twisterrob.inventory/issues/148 -->
-	<string name="image__choose_external__intent_label_pick">(select)</string>
-	<!-- See https://github.com/TWiStErRob/net.twisterrob.inventory/issues/148 -->
-	<string name="image__choose_external__intent_label_take">(capture)</string>
-
-</resources>

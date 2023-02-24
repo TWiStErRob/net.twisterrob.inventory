@@ -1,6 +1,0 @@
-dependencies {
-	api "org.mockito:mockito-core:${VERSION_MOCKITO}"
-	implementation "net.twisterrob.lib:twister-lib-java"
-	
-	testImplementation "org.hamcrest:java-hamcrest:${VERSION_HAMCREST}"
-}

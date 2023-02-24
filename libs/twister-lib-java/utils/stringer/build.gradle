@@ -1,4 +1,0 @@
-dependencies {
-	implementation 'net.twisterrob.lib:twister-lib-core'
-	implementation 'net.twisterrob.lib:twister-lib-java'
-}

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-
-	<string name="image__choose_external__title">Choose external image source</string>
-	<string name="image__choose_external__intent_label_pick"><xliff:g id="app" example="Photos">%1$s</xliff:g> <font color="#CCCCCC">(select)</font></string>
-	<string name="image__choose_external__intent_label_take"><xliff:g id="app" example="Camera">%1$s</xliff:g> <font color="#CCCCCC">(capture)</font></string>
-
-</resources>

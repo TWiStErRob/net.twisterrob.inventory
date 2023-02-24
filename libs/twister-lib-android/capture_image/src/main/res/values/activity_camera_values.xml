@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<integer name="camera__button_bar__orientation">@integer/orientation__horizontal</integer>
-	<integer name="camera__button_bar__location">@integer/gravity__bottom_center</integer>
-</resources>
