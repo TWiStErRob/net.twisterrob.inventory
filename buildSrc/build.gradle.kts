@@ -22,8 +22,12 @@ val VERSION_JUNIT: String by props
 
 dependencies {
 	configurations["implementation"].resolutionStrategy.cacheChangingModulesFor(0, "seconds") // -SNAPSHOT
-	implementation("net.twisterrob.gradle:twister-convention-plugins:${VERSION_TWISTER_GRADLE}")
-	implementation("net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}")
+	implementation("net.twisterrob.gradle:twister-convention-plugins:${VERSION_TWISTER_GRADLE}") {
+		exclude(group = "org.jetbrains.kotlin")
+	}
+	implementation("net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}") {
+		exclude(group = "org.jetbrains.kotlin")
+	}
 	implementation("com.android.tools.build:gradle:4.1.1")
 
 	testImplementation("junit:junit:${VERSION_JUNIT}")
