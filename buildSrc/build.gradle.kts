@@ -53,3 +53,14 @@ gradlePlugin {
 		}
 	}
 }
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+	kotlinOptions.allWarningsAsErrors = true
+}
+
+tasks.withType<JavaCompile> {
+	options.compilerArgs = options.compilerArgs + listOf(
+		"-Xlint:all",
+		"-Werror"
+	)
+}
