@@ -28,7 +28,7 @@ dependencies {
 	implementation "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
 	implementation "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
 	implementation "androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_ANDROIDX_SWIPEREFRESHLAYOUT}"
-	implementation "com.google.android:flexbox:${VERSION_FLEXBOX}"
+	implementation "com.google.android.flexbox:flexbox:${VERSION_FLEXBOX}"
 	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
