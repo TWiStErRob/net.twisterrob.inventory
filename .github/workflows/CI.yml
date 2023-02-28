@@ -19,7 +19,7 @@ jobs:
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v3
         with:
-          - submodules: true
+          submodules: true
 
       - name: "Validate Gradle Wrapper JARs."
         uses: gradle/wrapper-validation-action@v1
@@ -45,7 +45,7 @@ jobs:
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v3
         with:
-          - submodules: true
+          submodules: true
 
       - name: "Build project."
         working-directory: .
@@ -119,7 +119,7 @@ jobs:
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v3
         with:
-          - submodules: true
+          submodules: true
 
       - name: "Run Instrumentation Tests on emulator."
         uses: reactivecircus/android-emulator-runner@v2
