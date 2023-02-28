@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.view;
 
 import android.animation.*;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.*;
 import android.database.Cursor;
@@ -78,6 +79,7 @@ public class ChangeTypeDialog {
 						try {
 							// at android.database.sqlite.SQLiteCursor.fillWindow(SQLiteCursor.java:153)
 							Cursor cursor = (Cursor)adapter.getItem(which);
+							@SuppressLint("Range")
 							final long newType = cursor.getLong(cursor.getColumnIndex(CommonColumns.ID));
 							if (!DatabaseTools.getOptionalBoolean(cursor, CommonColumns.COUNT_CHILDREN_DIRECT, false)) {
 								// no children, nothing to expand, auto-save now
