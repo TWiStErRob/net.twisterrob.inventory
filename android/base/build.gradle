@@ -1,5 +1,4 @@
 apply plugin: 'net.twisterrob.android-library'
-apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 
 dependencies {
 	implementation project(':android:database-contract')
