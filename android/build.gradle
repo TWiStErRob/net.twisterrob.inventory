@@ -90,6 +90,12 @@ android {
 }
 
 allprojects { project ->
+	project.android {
+		compileOptions {
+			sourceCompatibility = JavaVersion.VERSION_1_7
+			targetCompatibility = JavaVersion.VERSION_1_8
+		}
+	}
 	project.afterEvaluate {
 		project.android.lintOptions.checkReleaseBuilds false 
 		project.android.lintOptions.baseline rootProject.file("config/lint/lint-baseline-${project.name}.xml")

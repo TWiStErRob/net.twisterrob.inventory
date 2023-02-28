@@ -8,6 +8,7 @@ import org.slf4j.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import com.github.stefanbirkner.fishbowl.Statement;
 import com.shazam.gwen.Gwen;
 
 import static com.github.stefanbirkner.fishbowl.Fishbowl.*;
@@ -50,7 +51,11 @@ public class BackupTransactingImporterTest {
 		Throwable failure = new TestRuntimeException("test cannot commit");
 		doThrow(failure).when(db).endTransaction();
 
-		Throwable thrown = exceptionThrownBy(() -> importer.importFrom(INPUT));
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				importer.importFrom(INPUT);
+			}
+		});
 
 		assertSame(failure, thrown);
 		Gwen.then(database).transacted();
@@ -62,7 +67,11 @@ public class BackupTransactingImporterTest {
 		Throwable innerFailure = new TestRuntimeException();
 		doThrow(innerFailure).when(inner).importFrom(any());
 
-		Throwable thrown = exceptionThrownBy(() -> importer.importFrom(INPUT));
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				importer.importFrom(INPUT);
+			}
+		});
 
 		assertSame(innerFailure, thrown);
 		Gwen.then(database).transacted(false);
@@ -73,7 +82,11 @@ public class BackupTransactingImporterTest {
 		Throwable failure = new TestRuntimeException();
 		doThrow(failure).when(inner).importFrom(any());
 
-		Throwable thrown = exceptionThrownBy(() -> importer.importFrom(INPUT));
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				importer.importFrom(INPUT);
+			}
+		});
 
 		assertSame(failure, thrown);
 		Gwen.then(database).transacted(false);
@@ -83,7 +96,11 @@ public class BackupTransactingImporterTest {
 		Throwable failure = new TestCheckedException();
 		doThrow(failure).when(inner).importFrom(any());
 
-		Throwable thrown = exceptionThrownBy(() -> importer.importFrom(INPUT));
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				importer.importFrom(INPUT);
+			}
+		});
 
 		assertSame(failure, thrown);
 		Gwen.then(database).transacted(false);
@@ -93,7 +110,11 @@ public class BackupTransactingImporterTest {
 		Throwable failure = new TestError();
 		doThrow(failure).when(inner).importFrom(any());
 
-		Throwable thrown = exceptionThrownBy(() -> importer.importFrom(INPUT));
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				importer.importFrom(INPUT);
+			}
+		});
 
 		assertSame(failure, thrown);
 		Gwen.then(database).transacted(false);
