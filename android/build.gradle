@@ -139,3 +139,14 @@ tasks.register("generateHtmlReportFromXml", net.twisterrob.gradle.android.tasks.
 	output = new File(rootDir, 'temp/tests_results')
 	outputs.upToDateWhen { false }
 }
+
+dependencies.components {
+	withModule("io.takari.junit:takari-cpsuite") {
+		withVariant("runtime") { variant ->
+			def field = org.gradle.api.internal.artifacts.repositories.resolver.VariantMetadataAdapter.class.getDeclaredField("metadata")
+			field.setAccessible(true)
+			def metadata = field.get(variant) as org.gradle.internal.component.external.model.maven.DefaultMutableMavenModuleResolveMetadata
+			metadata.setPackaging("jar")
+		}
+	}
+}
