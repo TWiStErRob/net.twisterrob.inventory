@@ -33,10 +33,6 @@ tasks.withType<GroovyCompile> {
 	groovyOptions.configurationScript = file("../gradle/groovyc.groovy")
 }
 
-kotlinDslPluginOptions {
-	experimentalWarning.set(false)
-}
-
 gradlePlugin {
 	plugins {
 		create("database") {
