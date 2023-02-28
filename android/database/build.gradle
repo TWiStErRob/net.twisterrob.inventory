@@ -29,7 +29,9 @@ android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant varian
 	variant.mergeAssetsProvider.configure { it.dependsOn(tasks.generateDataBase) }
 }
 
-task testDatabase(type: Exec, dependsOn: tasks.generateDataBase) {
+tasks.register("testDatabase", Exec) {
+	onlyIf { System.getProperty("os.name").startsWith("Windows") }
+	dependsOn(tasks.generateDataBase)
 	def outputDir = file("${buildDir}/database") // TODO why can't I use File(File, String) ctor?
 	workingDir outputDir
 	inputs.file('test-db.bat')
