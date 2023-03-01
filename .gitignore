@@ -12,8 +12,7 @@
 *.ipr
 *.iws
 /captures/
-/buildSrc/.idea/
-/.idea/
+.idea/
 !/.idea/runConfigurations/
 
 # Other
