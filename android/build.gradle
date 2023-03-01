@@ -102,6 +102,8 @@ android {
 allprojects { project ->
 	def androidConfig = {
 		project.android {
+			namespace = "net.twisterrob.inventory${project.path.replace(":", ".")}"
+			testNamespace = "${namespace}.test"
 			compileOptions {
 				sourceCompatibility = JavaVersion.VERSION_1_7
 				targetCompatibility = JavaVersion.VERSION_1_8
