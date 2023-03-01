@@ -54,13 +54,13 @@ class UpgradeTestTask extends DefaultTask {
 		try {
 			installOld(realDevice, debugVariant, '10001934-v1.0.0#1934')
 			pushData(realDevice, debugVariant, '10001934-v1.0.0#1934')
-			runTest(instrument.testData, device, testListener, new File(reports, 'index.html'),
+			runTest(instrument.testData.get(), device, testListener, new File(reports, 'index.html'),
 					"net.twisterrob.inventory.android.UpgradeTests#testPrepareVersion1")
 
 			File newApk = debugVariant.outputs.first().outputFile
 			logger.info("Installing package: ${newApk}")
 			realDevice.installPackage(newApk.absolutePath, true, null)
-			runTest(instrument.testData, device, testListener, new File(reports, 'index.html'),
+			runTest(instrument.testData.get(), device, testListener, new File(reports, 'index.html'),
 					"net.twisterrob.inventory.android.UpgradeTests#testVerifyVersion2")
 		} catch (Throwable ex) {
 			failed = true
