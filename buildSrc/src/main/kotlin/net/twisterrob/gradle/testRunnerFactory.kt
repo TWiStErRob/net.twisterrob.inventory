@@ -25,7 +25,7 @@ typealias TestRunnerFactory = Any
  */
 typealias PerDeviceSetupCallback = IShellEnabledDevice.(packageName: String) -> Unit
 
-private var DeviceProviderInstrumentTestTask.testRunnerFactory: TestRunnerFactory
+private var DeviceProviderInstrumentTestTask.testRunnerFactoryField: TestRunnerFactory
 	get() = DeviceProviderInstrumentTestTask::class.java
 		.getDeclaredField("testRunnerFactory")
 		.getValue(this)
@@ -36,7 +36,7 @@ private var DeviceProviderInstrumentTestTask.testRunnerFactory: TestRunnerFactor
 	}
 
 fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDeviceSetupCallback) {
-	this.testRunnerFactory =
+	this.testRunnerFactoryField =
 		replaceTestRunnerFactory(this.testRunnerFactory, this.executorServiceAdapter, configure)
 }
 
