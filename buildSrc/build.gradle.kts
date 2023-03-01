@@ -24,7 +24,28 @@ dependencies {
 	configurations["implementation"].resolutionStrategy.cacheChangingModulesFor(0, "seconds") // -SNAPSHOT
 	implementation("net.twisterrob.gradle:twister-convention-plugins:${VERSION_TWISTER_GRADLE}")
 	implementation("net.twisterrob.gradle:twister-quality:${VERSION_TWISTER_QUALITY}")
-	implementation("com.android.tools.build:gradle:4.1.3")
+	implementation("com.android.tools.build:gradle:7.4.2")
+	
+	// region: These dependencies were part of AGP in 3.x and 4.x, but in 7.x they became runtime dependencies.
+	// Execution failed for task ':compileGroovy'.
+	// > com.android.ddmlib.testrunner.XmlTestRunListener
+	compileOnly("com.android.tools.build:builder-test-api:7.4.2")
+	// AndroidTestSetupPlugin
+	compileOnly("com.android.tools.ddms:ddmlib:30.4.2")
+	// testRunnerFactory
+	compileOnly("com.android.tools:sdk-common:30.4.2")
+	// UpgradeTestTask: StdLogger, ILogger
+	compileOnly("com.android.tools:common:30.4.2")
+	// > Task :compileGroovy
+	// General error during canonicalization: java.lang.NoClassDefFoundError: com.android.repository.Revision
+	compileOnly("com.android.tools:repository:30.4.2")
+	// Execution failed for task ':compileGroovy'.
+	// > org.kxml2.io.KXmlSerializer
+	compileOnly("net.sf.kxml:kxml2:2.3.0")
+	// GenerateDebugMappingPlugin
+	// MappingPlugin
+	compileOnly("net.sf.proguard:proguard-gradle:6.0.3")
+	// endregion
 
 	testImplementation("junit:junit:${VERSION_JUNIT}")
 }
