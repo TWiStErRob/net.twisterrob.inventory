@@ -1,3 +1,4 @@
+import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.api.ApplicationVariantImpl
@@ -22,6 +23,7 @@ class UpgradeTestTask extends DefaultTask {
 	@SuppressWarnings('GrDeprecatedAPIUsage')
 	def upgradeTest() {
 		def android = project.extensions.findByName("android") as AppExtension
+		def androidComponents = project.extensions.findByName("androidComponents") as AndroidComponentsExtension
 		def debugVariant = android
 				.applicationVariants
 				.grep { ApplicationVariant var -> var.buildType.name == 'debug' }
@@ -30,10 +32,11 @@ class UpgradeTestTask extends DefaultTask {
 		def instrument = debugVariant.testVariant.connectedInstrumentTestProvider.get() as
 				DeviceProviderInstrumentTestTask
 
-		instrument.deviceProviderFactory.deviceProvider.init()
-		def device = instrument.deviceProviderFactory.deviceProvider.devices.first() as ConnectedDevice
+		def provider = instrument.deviceProviderFactory.getDeviceProvider(androidComponents.sdkComponents.adb, null)
+		provider.init()
+		def device = provider.devices.first() as ConnectedDevice
 		IDevice realDevice = device.getIDevice()
-		instrument.deviceProviderFactory.deviceProvider.terminate()
+		provider.terminate()
 
 		File testApk = debugVariant.testVariant.outputs.first().outputFile
 		logger.info("Uninstalling test package: ${debugVariant.testVariant.applicationId}")
