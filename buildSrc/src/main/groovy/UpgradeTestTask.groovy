@@ -42,8 +42,8 @@ class UpgradeTestTask extends DefaultTask {
 		realDevice.installPackage(testApk.absolutePath, false, null)
 
 		BaseVariantData data = debugVariant.variantData
-		def results = new File(data.globalScope.testResultsFolder, 'upgrade-tests')
-		def reports = new File(data.globalScope.reportsDir, 'upgrade-tests')
+		def results = new File(data.services.projectInfo.testResultsFolder, 'upgrade-tests')
+		def reports = new File(data.services.projectInfo.reportsDir, 'upgrade-tests')
 		FileUtils.cleanOutputDir(results)
 		FileUtils.cleanOutputDir(reports)
 		def testListener = new TestAwareCustomTestRunListener(
