@@ -18,7 +18,7 @@
 
 # Other
 /temp/
-/local.properties
+local.properties
 
 # Project
 /android/database/src/main/assets/MagicHomeInventory.data.Categories.sql
