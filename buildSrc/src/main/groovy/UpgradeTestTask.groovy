@@ -30,10 +30,10 @@ class UpgradeTestTask extends DefaultTask {
 		def instrument = debugVariant.testVariant.connectedInstrumentTestProvider.get() as
 				DeviceProviderInstrumentTestTask
 
-		instrument.deviceProvider.init()
-		def device = instrument.deviceProvider.devices.first() as ConnectedDevice
+		instrument.deviceProviderFactory.deviceProvider.init()
+		def device = instrument.deviceProviderFactory.deviceProvider.devices.first() as ConnectedDevice
 		IDevice realDevice = device.getIDevice()
-		instrument.deviceProvider.terminate()
+		instrument.deviceProviderFactory.deviceProvider.terminate()
 
 		File testApk = debugVariant.testVariant.outputs.first().outputFile
 		logger.info("Uninstalling test package: ${debugVariant.testVariant.applicationId}")
