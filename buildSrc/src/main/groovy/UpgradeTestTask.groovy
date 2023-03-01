@@ -2,6 +2,7 @@ import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.api.ApplicationVariantImpl
+import com.android.build.gradle.internal.services.VariantServices
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import com.android.build.gradle.internal.test.report.*
 import com.android.build.gradle.internal.testing.*
@@ -44,9 +45,11 @@ class UpgradeTestTask extends DefaultTask {
 		logger.info("Installing test package: ${testApk}")
 		realDevice.installPackage(testApk.absolutePath, false, null)
 
-		BaseVariantData data = debugVariant.variantData
-		def results = new File(data.services.projectInfo.testResultsFolder, 'upgrade-tests')
-		def reports = new File(data.services.projectInfo.reportsDir, 'upgrade-tests')
+		def servicesField = BaseVariantData.class.getDeclaredField("services")
+		servicesField.setAccessible(true)
+		def services = servicesField.get(debugVariant.variantData) as VariantServices
+		def results = new File(services.projectInfo.testResultsFolder, 'upgrade-tests')
+		def reports = new File(services.projectInfo.reportsDir, 'upgrade-tests')
 		FileUtils.cleanOutputDir(results)
 		FileUtils.cleanOutputDir(reports)
 		def testListener = new TestAwareCustomTestRunListener(
