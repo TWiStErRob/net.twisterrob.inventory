@@ -35,9 +35,10 @@ private var DeviceProviderInstrumentTestTask.testRunnerFactoryField: TestRunnerF
 			.setValue(this, value)
 	}
 
+@Suppress("UNUSED_PARAMETER")
 fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDeviceSetupCallback) {
-	this.testRunnerFactoryField =
-		replaceTestRunnerFactory(this.testRunnerFactory, this.executorServiceAdapter, configure)
+//	this.testRunnerFactoryField =
+//		replaceTestRunnerFactory(this.testRunnerFactory, this.executorServiceAdapter, configure)
 }
 
 @Suppress("PrivateApi") // REPORT Android lint false positive, nothing to do with buildSrc.
