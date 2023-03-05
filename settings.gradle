@@ -1,3 +1,13 @@
+pluginManagement {
+	includeBuild("gradle/plugins") {
+		it.name = "plugins-inventory"
+	}
+	repositories {
+		google()
+		mavenCentral()
+	}
+}
+
 rootProject.name = 'Inventory'
 
 include ':android'

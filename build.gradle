@@ -68,6 +68,10 @@ tasks.register("clean", Delete.class) { clean ->
 	clean.delete project.buildDir
 }
 
+tasks.register("build") { build ->
+	build.dependsOn(gradle.includedBuild("plugins-inventory").task(':build'))
+}
+
 idea {
 	module {
 		excludeDirs += [

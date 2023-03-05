@@ -12,9 +12,9 @@ import org.gradle.kotlin.dsl.get
  * @see com.android.build.api.dsl.ApplicationExtension
  * @see com.android.build.api.dsl.LibraryExtension
  */
-internal val Project.android: CommonExtension<*, *, *, *>
+internal val Project.android: CommonExtension<*, *, *, *, *, *, *, *>
 	@Suppress("UNCHECKED_CAST")
-	get() = this.extensions["android"] as CommonExtension<*, *, *, *>
+	get() = this.extensions["android"] as CommonExtension<*, *, *, *, *, *, *, *>
 
 /**
  * This is useful to emulate the `android` block in a convention plugin
@@ -23,6 +23,6 @@ internal val Project.android: CommonExtension<*, *, *, *>
  * @param block the configuration for common Android things.
  * Using an [Action] to take advantage of `kotlin-dsl`.
  */
-internal fun Project.android(block: Action<CommonExtension<*, *, *, *>>) {
+internal fun Project.android(block: Action<CommonExtension<*, *, *, *, *, *, *, *>>) {
 	block.execute(android)
 }

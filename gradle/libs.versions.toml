@@ -1,15 +1,15 @@
 [versions]
 #java = "1.8"
 #
-#agp = "7.4.2"
+agp = "4.1.3"
 ## https://github.com/TWiStErRob/net.twisterrob.gradle/releases
-#twisterrob = "0.15"
+twisterrob = "0.15"
 detekt = "1.22.0"
 
 [libraries]
-#android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
-#twisterrob-quality = { module = "net.twisterrob.gradle:twister-quality", version.ref = "twisterrob" }
-#twisterrob-android = { module = "net.twisterrob.gradle:twister-convention-plugins", version.ref = "twisterrob" }
+android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+twisterrob-quality = { module = "net.twisterrob.gradle:twister-quality", version.ref = "twisterrob" }
+twisterrob-android = { module = "net.twisterrob.gradle:twister-convention-plugins", version.ref = "twisterrob" }
 
 [bundles]
 
