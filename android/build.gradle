@@ -21,7 +21,6 @@ dependencies {
 	implementation project(':android:preferences')
 	testImplementation project(':android:test_helpers')
 
-	configurations["implementation"].resolutionStrategy.cacheChangingModulesFor(0, "seconds") // -SNAPSHOT
 	implementation('net.twisterrob.lib:twister-lib-android-monolith')
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation('net.twisterrob.lib:twister-lib-general')

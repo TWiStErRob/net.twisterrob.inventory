@@ -6,8 +6,6 @@ allprojects {
 	repositories {
 		google()
 		mavenCentral()
-		//maven { name = 'sonatype'; url = 'http://oss.sonatype.org/content/repositories/snapshots' }
-		//maven { name = 'idescout'; url = 'http://www.idescout.com/maven/repo/' }
 	}
 	apply from: rootProject.file('gradle/substitutions.gradle')
 	configurations.all {
