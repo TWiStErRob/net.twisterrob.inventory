@@ -159,7 +159,7 @@ jobs:
             adb devices -l
             ./gradlew --no-daemon --stacktrace :android:assembleDebugAndroidTest
             ./gradlew --no-daemon --stacktrace :android:assembleDebug
-            ./gradlew --no-daemon --stacktrace :android:connectedCheck
+            ./gradlew --no-daemon --stacktrace :android:connectedCheck -x assembleDebug -x assembleRelease -x assemble -x assembleAndroidTest
 
       - name: "Upload 'Instrumentation Test Results ${{ matrix.android-api }}' artifact."
         if: success() || failure()
