@@ -3,13 +3,6 @@ plugins {
 }
 
 allprojects {
-	afterEvaluate {
-		def android = project.extensions.findByName("android")
-		if (android != null) {
-			android.compileSdkVersion = 29
-			android.defaultConfig.minSdkVersion = 21
-		}
-	}
 	tasks.withType(JavaCompile) {
 		it.options.compilerArgs += [
 				// enable all warnings

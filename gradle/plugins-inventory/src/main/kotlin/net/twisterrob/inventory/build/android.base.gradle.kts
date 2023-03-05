@@ -4,6 +4,10 @@ import net.twisterrob.inventory.build.dsl.android
 
 @Suppress("UnstableApiUsage")
 android {
+	compileSdk = 29
+	defaultConfig {
+		minSdk = 21
+	}
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_1_7
 		targetCompatibility = JavaVersion.VERSION_1_8
