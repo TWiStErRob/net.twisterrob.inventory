@@ -18,6 +18,8 @@ import static org.mockito.Mockito.*;
 import android.content.res.Resources;
 
 import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.Throwing;
+import com.github.stefanbirkner.fishbowl.Statement;
 import com.shazam.gwen.Gwen;
 
 import static com.github.stefanbirkner.fishbowl.Fishbowl.*;
@@ -52,7 +54,12 @@ public abstract class BackupZipImporterTestBase {
 	protected BackupImporter importer;
 
 	@Before public void initImporter() {
-		Consumer<InputStream> callImport = Errors.rethrow().wrap(this::callImport);
+		Consumer<InputStream> callImport = Errors.rethrow().wrap(
+				new Throwing.Consumer<InputStream>() {
+					@Override public void accept(InputStream stream) throws Throwable {
+						BackupZipImporterTestBase.this.callImport(stream);
+					}
+				});
 		importer = new BackupImporter(dispatcherMock, xmlImporterMock, callImport);
 	}
 	@Before public void stubResources() {
@@ -70,7 +77,11 @@ public abstract class BackupZipImporterTestBase {
 	@Test public void testEmptyZip() {
 		Gwen.given(input);
 
-		Throwable thrown = exceptionThrownBy(() -> Gwen.when(importer).imports(input));
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				Gwen.when(importer).imports(input);
+			}
+		});
 
 		Matcher<String> aboutMissingXML =
 				both(containsStringIgnoringCase("missing data")).and(containsString(Paths.BACKUP_DATA_FILENAME));

@@ -18,6 +18,7 @@ import static org.mockito.Mockito.*;
 
 import android.content.res.Resources;
 
+import com.github.stefanbirkner.fishbowl.Statement;
 import com.shazam.gwen.Gwen;
 
 import static com.github.stefanbirkner.fishbowl.Fishbowl.*;
@@ -146,8 +147,10 @@ public class ImportImageReconcilerTest {
 		reconciler.importImage(Type.Root, 0, "bad item", IMAGE);
 		reconciler.hasData();
 
-		Throwable thrown = exceptionThrownBy(() -> {
-			reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
+			}
 		});
 
 		assertThat(thrown, hasMessage(containsString(Type.Root.toString())));
@@ -157,8 +160,10 @@ public class ImportImageReconcilerTest {
 	@Test public void testDuplicateUnmatchedImageFileBefore() throws IOException {
 		reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
 
-		Throwable thrown = exceptionThrownBy(() -> {
-			reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
+			}
 		});
 
 		assertDuplicate(IMAGE, thrown);
@@ -177,8 +182,10 @@ public class ImportImageReconcilerTest {
 		reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
 		reconciler.hasData();
 
-		Throwable thrown = exceptionThrownBy(() -> {
-			reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				reconciler.foundImageFile(IMAGE, contents(IMAGE), ANY_TIME);
+			}
 		});
 
 		assertDuplicate(IMAGE, thrown);
@@ -208,8 +215,10 @@ public class ImportImageReconcilerTest {
 	@Test public void testDuplicateReference() throws IOException {
 		reconciler.importImage(Item, ITEM_ID, ITEM_NAME, IMAGE);
 
-		Throwable thrown = exceptionThrownBy(() -> {
-			reconciler.importImage(Item, OTHER_ITEM_ID, OTHER_ITEM_NAME, IMAGE);
+		Throwable thrown = exceptionThrownBy(new Statement() {
+			@Override public void evaluate() throws Throwable {
+				reconciler.importImage(Item, OTHER_ITEM_ID, OTHER_ITEM_NAME, IMAGE);
+			}
 		});
 
 		assertDuplicate(IMAGE, thrown);

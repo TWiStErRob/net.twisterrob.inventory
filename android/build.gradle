@@ -2,6 +2,16 @@ apply plugin: 'net.twisterrob.android-app'
 apply plugin: "net.twisterrob.inventory.mapping"
 apply plugin: "net.twisterrob.inventory.androidTest"
 
+repositories {
+	maven { // jcenter() deprecated
+		name = "jcenter"
+		setUrl("https://jcenter.bintray.com/")
+		content {
+			// Can't update flexbox yet to its 3.x version, because it ships with Java 9 bytecode.
+			includeModule("com.google.android", "flexbox")
+		}
+	}
+}
 dependencies {
 	implementation project(':android:base')
 	implementation project(':android:database')
@@ -90,11 +100,19 @@ android {
 }
 
 allprojects { project ->
-	project.afterEvaluate {
-		project.android.lintOptions.checkReleaseBuilds false 
-		project.android.lintOptions.baseline rootProject.file("config/lint/lint-baseline-${project.name}.xml")
-		project.android.lintOptions.lintConfig = rootProject.file("config/lint/lint.xml")
+	def androidConfig = {
+		project.android {
+			compileOptions {
+				sourceCompatibility = JavaVersion.VERSION_1_7
+				targetCompatibility = JavaVersion.VERSION_1_8
+			}
+			lintOptions.checkReleaseBuilds false 
+			lintOptions.baseline rootProject.file("config/lint/lint-baseline-${project.name}.xml")
+			lintOptions.lintConfig = rootProject.file("config/lint/lint.xml")
+		}
 	}
+	plugins.withId('com.android.library', androidConfig)
+	plugins.withId('com.android.application', androidConfig)
 }
 
 subprojects { project ->
@@ -122,4 +140,15 @@ tasks.register("generateHtmlReportFromXml", net.twisterrob.gradle.android.tasks.
 	input = new File(rootDir, 'temp/tests')
 	output = new File(rootDir, 'temp/tests_results')
 	outputs.upToDateWhen { false }
+}
+
+dependencies.components {
+	withModule("io.takari.junit:takari-cpsuite") {
+		withVariant("runtime") { variant ->
+			def field = org.gradle.api.internal.artifacts.repositories.resolver.VariantMetadataAdapter.class.getDeclaredField("metadata")
+			field.setAccessible(true)
+			def metadata = field.get(variant) as org.gradle.internal.component.external.model.maven.DefaultMutableMavenModuleResolveMetadata
+			metadata.setPackaging("jar")
+		}
+	}
 }

@@ -29,12 +29,18 @@ dependencies {
 	testImplementation("junit:junit:${VERSION_JUNIT}")
 }
 
-tasks.withType<GroovyCompile> {
-	groovyOptions.configurationScript = file("../gradle/groovyc.groovy")
+configurations.all {
+	resolutionStrategy {
+		dependencySubstitution {
+			substitute(module("net.sf.proguard:proguard-gradle"))
+				.using(module("com.guardsquare:proguard-gradle:7.3.1"))
+				.because("Latest ProGuard is 7.3.1 which supports Java 11-19, Kotlin 1.8")
+		}
+	}
 }
 
-kotlinDslPluginOptions {
-	experimentalWarning.set(false)
+tasks.withType<GroovyCompile> {
+	groovyOptions.configurationScript = file("../gradle/groovyc.groovy")
 }
 
 gradlePlugin {

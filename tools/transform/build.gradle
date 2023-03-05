@@ -17,7 +17,7 @@ idea {
 }
 
 repositories {
-	jcenter()
+	mavenCentral()
 }
 
 dependencies {
@@ -102,7 +102,7 @@ class Transform extends JavaExec {
 	Transform() {
 		classpath = project.sourceSets.main.runtimeClasspath
 		enableAssertions = true
-		main = 'net.twisterrob.build.Transform'
+		mainClass = 'net.twisterrob.build.Transform'
 	}
 
 	@Override void exec() {

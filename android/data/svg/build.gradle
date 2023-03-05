@@ -33,4 +33,10 @@ android {
 			multiDexKeepProguard project(":android").file("src/androidTest/multidex.pro")
 		}
 	}
+	android {
+		compileOptions {
+			sourceCompatibility = JavaVersion.VERSION_1_7
+			targetCompatibility = JavaVersion.VERSION_1_8
+		}
+	}
 }
