@@ -91,6 +91,7 @@ android {
 
 allprojects { project ->
 	project.afterEvaluate {
+		project.android.lintOptions.checkReleaseBuilds false 
 		project.android.lintOptions.baseline rootProject.file("config/lint/lint-baseline-${project.name}.xml")
 		project.android.lintOptions.lintConfig = rootProject.file("config/lint/lint.xml")
 	}
