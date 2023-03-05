@@ -115,21 +115,6 @@ allprojects { project ->
 	plugins.withId('com.android.application', androidConfig)
 }
 
-subprojects { project ->
-	project.afterEvaluate {
-		//noinspection UnnecessaryQualifiedReference,GrDeprecatedAPIUsage REPORT cannot replace with new interface, missing methods
-		com.android.build.gradle.api.AndroidSourceSet androidTest = project.android.sourceSets.androidTest
-		if (androidTest.java.sourceFiles.empty) {
-			logger.info "Disabling AndroidTest tasks in ${project.path} as it has no sources in ${androidTest.java.srcDirs}"
-			project.tasks.whenTaskAdded { task ->
-				if (task.name.contains("AndroidTest")) {
-					task.enabled = false
-				}
-			}
-		}
-	}
-}
-
 def upgradeTest = tasks.register("upgradeTest", UpgradeTestTask) { task ->
 	task.enabled = false // TODO not working since AGP 3.3/3.4
 }
