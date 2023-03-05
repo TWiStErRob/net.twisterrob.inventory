@@ -2,33 +2,6 @@ plugins {
 	id("net.twisterrob.inventory.root")
 }
 
-allprojects {
-	tasks.withType(JavaCompile) {
-		it.options.compilerArgs += [
-				// enable all warnings
-				"-Xlint:all",
-				// fail build when warnings pop up
-				"-Werror",
-				// Ignore for now, until understanding what it means.
-				// warning: [varargs] Varargs method could cause heap pollution from non-reifiable varargs parameter params
-				"-Xlint:-varargs",
-				// TODO check my plugin, maybe java-library and java are not compatible there
-				// warning: [options] bootstrap class path not set in conjunction with -source 1.7
-				"-Xlint:-options",
-		]
-
-		if (it.name.endsWith("UnitTestJavaWithJavac")
-				|| it.name.endsWith("AndroidTestJavaWithJavac")
-				|| it.path.startsWith(':android:database:test_helpers:')) {
-			it.options.compilerArgs += [
-					// Google's compilers emit some weird stuff (espresso, dagger, etc.)
-					// warning: [classfile] MethodParameters attribute introduced in version 52.0 class files is ignored in version 51.0 class files
-					"-Xlint:-classfile",
-			]
-		}
-	}
-}
-
 evaluationDependsOnChildren()
 def connectedTasks = allprojects.collectMany { it.tasks.withType(com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask) }
 connectedTasks.inject { prev, curr -> curr.configure { it.mustRunAfter prev }; return prev }
