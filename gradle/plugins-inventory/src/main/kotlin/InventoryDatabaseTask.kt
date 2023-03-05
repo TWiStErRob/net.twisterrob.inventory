@@ -1,34 +1,47 @@
-import net.twisterrob.inventory.database.*
+import net.twisterrob.inventory.database.DatabaseGenerator
+import net.twisterrob.inventory.database.Printer
+import net.twisterrob.inventory.database.SQLPrinter
+import net.twisterrob.inventory.database.StructurePrinter
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
+import java.io.File
 
-class InventoryDatabaseTask extends DefaultTask {
-	@InputFile File input
-	@OutputFile File output
-	@Optional @Input String conversion
-	@Optional @InputDirectory File iconFolder
+abstract class InventoryDatabaseTask : DefaultTask() {
 
-	@SuppressWarnings("GroovyUnusedDeclaration")
+	@get:InputFile
+	abstract var input: File
+
+	@get:OutputFile
+	abstract var output: File
+
+	@get:Optional
+	@get:Input
+	abstract var conversion: String?
+
+	@get:Optional
+	@get:InputDirectory
+	abstract var iconFolder: File?
+
 	@TaskAction
-	void generate() {
-		input.withReader { reader ->
+	fun generate() {
+		input.reader().use { reader ->
 			output.parentFile.mkdirs()
-			output.withWriter { writer ->
-				def printer = getPrinter(conversion)
-				new DatabaseGenerator(printer, iconFolder).transform(reader, writer)
+			output.writer().use { writer ->
+				val printer = getPrinter(conversion)
+				DatabaseGenerator(printer, iconFolder).transform(reader, writer)
 			}
 		}
 	}
 
-	private static Printer getPrinter(String conversion) {
-		switch (conversion) {
-			case null:
-			case 'SQL':
-				return new SQLPrinter()
-			case 'structure':
-				return new StructurePrinter()
-			default:
-				return (Printer)Class.forName(conversion).newInstance()
+	private fun getPrinter(conversion: String?): Printer =
+		when (conversion) {
+			null, "SQL" -> SQLPrinter()
+			"structure" -> StructurePrinter()
+			else -> Class.forName(conversion).getDeclaredConstructor().newInstance() as Printer
 		}
-	}
 }

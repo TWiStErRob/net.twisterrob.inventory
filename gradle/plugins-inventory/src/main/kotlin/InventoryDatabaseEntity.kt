@@ -1,12 +1,11 @@
+import java.io.File
 
-class InventoryDatabaseEntity {
-	File input
-	File output
-	File iconFolder
-	String conversion
+abstract class InventoryDatabaseEntity(
+	val name: String
+) {
 
-	final String name
-	InventoryDatabaseEntity(String name) {
-		this.name = name
-	}
+	abstract var input: File
+	abstract var output: File
+	abstract var iconFolder: File
+	abstract var conversion: String
 }

@@ -1,45 +1,47 @@
 import org.gradle.api.*
 import org.gradle.api.plugins.BasePlugin
+import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.kotlin.dsl.container
+import org.gradle.kotlin.dsl.register
 
-// TODEL @formatter https://youtrack.jetbrains.com/issue/IDEA-154077
-//@formatter:off
 /**
  * Use it as
- * <pre><code>
- *     apply plugin: InventoryDatabasePlugin
- *     databaseEntities {
- *         categories {
- *             input = file(path to Android res xml with Strings)
- *             output = file(path to asset SQL file)
- *             conversion = "structure|SQL"
- *             iconFolder = file(path to SVG files)
- *         }
+ * ```gradle
+ * apply plugin: InventoryDatabasePlugin
+ * databaseEntities {
+ *     categories {
+ *         input = file(path to Android res xml with Strings)
+ *         output = file(path to asset SQL file)
+ *         conversion = "structure|SQL"
+ *         iconFolder = file(path to SVG files)
  *     }
- * </code></pre>
+ * }
+ * ```
  */
-//@formatter:on
-class InventoryDatabasePlugin implements Plugin<Project> {
-	void apply(Project project) {
-		def entities = project.container(InventoryDatabaseEntity)
+class InventoryDatabasePlugin : Plugin<Project> {
+
+	override fun apply(project: Project) {
+		val entities = project.container<InventoryDatabaseEntity>()
 		project.extensions.add("databaseEntities", entities)
 
-		def allTasks = project.task('generateDataBase')
+		val allTasks = project.task("generateDataBase")
 		allTasks.group = BasePlugin.BUILD_GROUP
-		def allTasksClean = project.task('cleanGenerateDataBase')
+		val allTasksClean = project.task("cleanGenerateDataBase")
 		project.afterEvaluate {
-			entities.all { InventoryDatabaseEntity entity ->
+			entities.all {
+				val entity: InventoryDatabaseEntity = this
 				//println "Creating task for ${entity.name} (${entity.input} --${entity.conversion}--> ${entity.output})"
-				def genDBTaskName = "generateDataBase${entity.name.capitalize()}"
-				def task = project.tasks.register(genDBTaskName, InventoryDatabaseTask, {
-					InventoryDatabaseTask task ->
-						task.input = entity.input
-						task.output = entity.output
-						task.conversion = entity.conversion
-						task.iconFolder = entity.iconFolder
-				} as Action<InventoryDatabaseTask>)
-				allTasks.dependsOn task
+				val genDBTaskName = "generateDataBase${entity.name.capitalized()}"
+				val task = project.tasks.register<InventoryDatabaseTask>(genDBTaskName) {
+					val task = this
+					task.input = entity.input
+					task.output = entity.output
+					task.conversion = entity.conversion
+					task.iconFolder = entity.iconFolder
+				}
+				allTasks.dependsOn(task)
 				// clean task is automagically generated for every task that has output
-				allTasksClean.dependsOn "clean${task.name.capitalize()}"
+				allTasksClean.dependsOn("clean${task.name.capitalized()}")
 			}
 		}
 	}
