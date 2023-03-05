@@ -2,7 +2,6 @@ import java.util.*
 
 plugins {
 	`kotlin-dsl` // id("org.gradle.kotlin.kotlin-dsl"), but that has a specific version.
-	id("org.gradle.java")
 	id("org.gradle.groovy")
 	alias(libs.plugins.detekt)
 }
@@ -51,13 +50,6 @@ configurations.all {
 
 tasks.withType<GroovyCompile> {
 	groovyOptions.configurationScript = file("../../gradle/groovyc.groovy")
-}
-
-tasks.withType<JavaCompile>().configureEach {
-	options.compilerArgs = options.compilerArgs + listOf(
-		"-Xlint:all",
-		"-Werror"
-	)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
