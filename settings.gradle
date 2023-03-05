@@ -1,7 +1,5 @@
 pluginManagement {
-	includeBuild("gradle/plugins") {
-		it.name = "plugins-inventory"
-	}
+	includeBuild("gradle/plugins-inventory")
 	repositories {
 		google()
 		mavenCentral()
