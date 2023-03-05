@@ -226,8 +226,8 @@ public class MainActivityActor extends ActivityActor {
 		}
 		@Override public void checkOpened() {
 			onView(isDrawerLayout()).check(doesNotExist());
-			onView(isActionBarTitle()).check(doesNotExist());
-			onView(withId(android.R.id.list)).check(matches(isCompletelyDisplayed()));
+			onView(isActionBarTitle()).check(matches(withText(R.string.pref_activity_title)));
+			onView(withId(R.id.preferences_fragment)).check(matches(isCompletelyDisplayed()));
 		}
 		public PreferencesActivityActor asActor() {
 			return new PreferencesActivityActor();

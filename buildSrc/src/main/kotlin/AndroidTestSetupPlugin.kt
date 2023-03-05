@@ -17,30 +17,30 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 			connectedInstrumentTestProvider.configure {
 				runBeforeAndroidTest(this as DeviceProviderInstrumentTestTask) { packageName ->
 					// Used by net.twisterrob.android.test.SystemAnimations
-					adb("pm grant $packageName android.permission.SET_ANIMATION_SCALE")
+					adbShell("pm grant ${packageName} android.permission.SET_ANIMATION_SCALE")
 					// to set these:
-					//adb("settings put global window_animation_scale 0")
-					//adb("settings put global transition_animation_scale 0")
-					//adb("settings put global animator_duration_scale 0")
+					//adbShell("settings put global window_animation_scale 0")
+					//adbShell("settings put global transition_animation_scale 0")
+					//adbShell("settings put global animator_duration_scale 0")
 
 					// Used by net.twisterrob.android.test.DeviceUnlocker
-					adb("pm grant $packageName android.permission.DISABLE_KEYGUARD")
+					adbShell("pm grant ${packageName} android.permission.DISABLE_KEYGUARD")
 
 					// Used by org.junit.rules.TemporaryFolder (only required 26-29)
-					adb("pm grant $packageName android.permission.READ_EXTERNAL_STORAGE")
-					adb("pm grant $packageName android.permission.WRITE_EXTERNAL_STORAGE")
+					adbShell("pm grant ${packageName} android.permission.READ_EXTERNAL_STORAGE")
+					adbShell("pm grant ${packageName} android.permission.WRITE_EXTERNAL_STORAGE")
 
 					// TODO move to TestRule?
-					//adb("pm grant ${packageName} android.permission.WRITE_SECURE_SETTINGS")
-					adb("settings put secure long_press_timeout 1500")
+					//adbShell("pm grant ${packageName} android.permission.WRITE_SECURE_SETTINGS")
+					adbShell("settings put secure long_press_timeout 1500")
 				}
 			}
 		}
 	}
 
-	private fun IShellEnabledDevice.adb(cmd: String) {
-		project.logger.info("Executing `adb shell $cmd`")
-		executeShellCommand(cmd, NullOutputReceiver(), 0, MILLISECONDS)
+	private fun IShellEnabledDevice.adbShell(command: String) {
+		project.logger.info("Executing `adb shell ${command}`")
+		executeShellCommand(command, NullOutputReceiver(), 0, MILLISECONDS)
 	}
 }
 

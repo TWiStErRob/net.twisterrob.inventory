@@ -204,6 +204,7 @@ public class ItemViewActivityTest_Selection {
 
 	@SuppressWarnings("deprecation") // TODO
 	@Category({UseCase.Complex.class})
+	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
 	@Test public void testSelectionTypeChange() {
 		createItems(4);
 		db.assertItemHasType(subItem(1), TEST_ITEM_CATEGORY_DEFAULT);
@@ -226,6 +227,7 @@ public class ItemViewActivityTest_Selection {
 	}
 
 	@SuppressWarnings("deprecation") // TODO
+	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
 	@Test public void testSelectionTypeChangeAtOnce() {
 		createItems(3);
 		db.setItemCategory(subItem(1), TEST_ITEM_CATEGORY);

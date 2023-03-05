@@ -103,14 +103,16 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 	protected void resetFiles() {
 		Context context = ApplicationProvider.getApplicationContext();
 		File intDir = context.getFilesDir();
-		LOG.info("Deleting {}", intDir);
+		LOG.info("Deleting getFilesDir: {}", intDir);
 		if (!IOTools.delete(intDir)) {
 			throw new IllegalStateException("Cannot delete " + intDir);
 		}
 		File extDir = context.getExternalFilesDir(null);
-		LOG.info("Deleting {}", extDir);
-		if (!IOTools.delete(extDir)) {
-			throw new IllegalStateException("Cannot delete " + extDir);
+		LOG.info("Deleting getExternalFilesDir(null): {}", extDir);
+		if (extDir != null) {
+			if (!IOTools.delete(extDir)) {
+				throw new IllegalStateException("Cannot delete " + extDir);
+			}
 		}
 	}
 

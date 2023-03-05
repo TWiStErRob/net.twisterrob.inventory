@@ -8,6 +8,8 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.*;
 
+import static org.junit.Assume.assumeTrue;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -48,6 +50,10 @@ public class DumpImages {
 	public void test() throws IOException, IllegalAccessException, InterruptedException {
 		LOG.error("SVG version {}", SVG.getVersion());
 		final Context context = ApplicationProvider.getApplicationContext();
+		@SuppressWarnings("unused")
+		File backup = context.getExternalFilesDir("svg");
+		assumeTrue("External folder 'svg' is missing", backup != null);
+
 		Field[] fields = R.raw.class.getFields();
 		File dir = new File(context.getCacheDir(), "svg");
 		IOTools.delete(dir);
@@ -83,8 +89,6 @@ public class DumpImages {
 		File zip = new File(dir.getParentFile(), dir.getName() + ".zip");
 		IOTools.zip(zip, false, dir);
 		LOG.info("ZIP: {}", zip.getAbsolutePath());
-		@SuppressWarnings("unused")
-		File backup = context.getExternalFilesDir("svg");
 		File saved = new File(backup, "svg_" + VERSION.SDK_INT + ".zip");
 		IOTools.copyFile(zip, saved);
 		LOG.error("adb pull {}", saved.getAbsolutePath());

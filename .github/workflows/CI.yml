@@ -1,0 +1,179 @@
+name: CI
+on:
+  push:
+    branches:
+      - '**'
+concurrency:
+  group: ${{ github.ref == 'refs/heads/master' && format('ci-master-{0}', github.sha) || format('ci-{0}', github.ref) }}
+  cancel-in-progress: true
+jobs:
+
+  validate:
+    name: "🦺 Validation"
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      # actions/checkout
+      contents: read
+    steps:
+      - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: "Validate Gradle Wrapper JARs."
+        uses: gradle/wrapper-validation-action@v1
+
+
+  build:
+    name: "🔨 Build & Verify"
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      # actions/checkout
+      contents: read
+      # EnricoMi/publish-unit-test-result-action -> https://github.com/EnricoMi/publish-unit-test-result-action#permissions
+      checks: write
+    steps:
+      - name: "Set up JDK 8."
+        uses: actions/setup-java@v3
+        with:
+          java-version: 8
+          distribution: zulu
+
+      - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: "Build project."
+        working-directory: .
+        run: >
+          ./gradlew
+          --no-daemon
+          --stacktrace
+          --continue
+          --no-build-cache
+          assemble assembleDebugAndroidTest compileDebugUnitTestSources compileReleaseUnitTestSources
+
+      - name: "Verify project."
+        working-directory: .
+        run: >
+          ./gradlew
+          --no-daemon
+          --stacktrace
+          --continue
+          build
+
+      - name: "Upload 'Lint Results' artifact."
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'Lint Results'
+          path: ${{ github.workspace }}/**/build/reports/lint-results*.html
+
+      - name: "Upload 'Unit Test Results' artifact."
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'Unit Test Results'
+          path: ${{ github.workspace }}/**/build/reports/tests/*/
+
+      - name: "Publish 'Unit Results' check suite."
+        if: success() || failure()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          check_name: '🔔 Test: Unit Results'
+          comment_mode: off
+          report_individual_runs: true
+          test_changes_limit: 0
+          junit_files: ${{ github.workspace }}/**/build/test-results/*/TEST-*.xml
+
+
+  icons:
+    name: "🎨 Icons"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      # actions/checkout
+      contents: read
+    steps:
+
+      - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
+        uses: actions/checkout@v3
+
+      - name: "Generate icon previews."
+        working-directory: android/data/src/main/res/raw
+        run: node icon_preview.js > icon_previews.html
+
+      - name: "Upload 'Icon Previews' artifact."
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'Icon Previews'
+          path: |
+            ${{ github.workspace }}/android/data/src/main/res/raw/icon_previews.html
+            ${{ github.workspace }}/android/data/src/main/res/raw/*.svg
+
+
+  instrumentation:
+    name: "🧪 Instrumentation Tests on ${{ matrix.android-api }}"
+    needs: validate
+    runs-on: macos-latest
+    timeout-minutes: 60
+    permissions:
+      # actions/checkout
+      contents: read
+      # EnricoMi/publish-unit-test-result-action -> https://github.com/EnricoMi/publish-unit-test-result-action#permissions
+      checks: write
+    strategy:
+      fail-fast: false
+      matrix:
+        # The API level, see https://apilevels.com/.
+        android-api:
+          # A stable version for now.
+          - 21
+    steps:
+      - name: "Set up JDK 8."
+        uses: actions/setup-java@v3
+        with:
+          java-version: 8
+          distribution: zulu
+
+      - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: "Run Instrumentation Tests on emulator."
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.android-api }}
+          # TODEL Some are not available: https://issuetracker.google.com/issues/267458959
+          target: ${{ matrix.android-api >= 32 && 'google_apis' || 'default' }}
+          arch: ${{ matrix.android-api >= 21 && 'x86_64' || 'x86' }}
+          profile: pixel
+          script: |
+            adb devices -l
+            ./gradlew --no-daemon --stacktrace :android:assembleDebugAndroidTest
+            ./gradlew --no-daemon --stacktrace :android:assembleDebug
+            ./gradlew --no-daemon --stacktrace :android:connectedCheck -x assembleDebug -x assembleRelease -x assemble -x assembleAndroidTest
+
+      - name: "Upload 'Instrumentation Test Results ${{ matrix.android-api }}' artifact."
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'Instrumentation Test Results ${{ matrix.android-api }}'
+          path: |
+            ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/flavors/debugAndroidTest/
+
+      - name: "Publish 'Instrumentation Results ${{ matrix.android-api }}' check suite."
+        if: success() || failure()
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        with:
+          check_name: '🔔 Test: Instrumentation Results ${{ matrix.android-api }}'
+          comment_mode: off
+          report_individual_runs: true
+          test_changes_limit: 0
+          junit_files: ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/flavors/debugAndroidTest/TEST-*.xml

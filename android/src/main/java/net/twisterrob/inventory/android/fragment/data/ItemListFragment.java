@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -108,6 +109,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 			getLoaderManager().initLoader(loader.id(), args, loader.createCallbacks(requireContext(), new LoadSingleRow() {
 				@Override protected void process(@NonNull Cursor data) {
 					super.process(data);
+					@SuppressLint("Range")
 					long root = data.getLong(data.getColumnIndex(Room.ROOT_ITEM));
 					requireArguments().putLong(Extras.PARENT_ID, root);
 				}

@@ -1,19 +1,24 @@
-/*.iml
-/*.ipr
-/*.iws
-/.classpath
-/.gradle
-/.project
-/.settings
-/.shelf
-/bin
-/build
-/captures
-/gen
-/prof
-/temp
+# Gradle
+.gradle/
+# rootProject, modules|buildSrc, submodules|gradle/plugins, contracts
+/build/
+/*/build/
+/*/*/build/
+/*/*/*/build/
 /gradled.bat
-/.ideaDataSources
-/dataSources
-/local.properties
-/System Volume Information
+
+# IntelliJ IDEA / Android Studio
+*.iml
+*.ipr
+*.iws
+/captures/
+.idea/
+!/.idea/runConfigurations/
+
+# Other
+/temp/
+local.properties
+
+# Project
+/android/database/src/main/assets/MagicHomeInventory.data.Categories.sql
+/android/data/src/main/res/raw/icon_previews.html

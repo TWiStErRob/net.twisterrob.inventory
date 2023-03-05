@@ -1,5 +1,4 @@
 apply plugin: "net.twisterrob.android-app"
-apply from: resources.text.fromInsecureUri("http://localhost/maven/configure.gradle")
 apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 
 dependencies {

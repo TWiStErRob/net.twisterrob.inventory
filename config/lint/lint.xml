@@ -68,6 +68,9 @@
 		<!-- It's complex to find matching versions of PowerMock / Robolectric and Mockito. -->
 		<ignore regexp="^A newer version of org.mockito:mockito-core" />
 	</issue>
+	<issue id="GradleDependency" severity="ignore">
+		<!-- Ignore for now until Renovate is enabled. -->
+	</issue>
 	<issue id="OldTargetApi" severity="ignore">
 		<!-- Cannot target API 30 yet, as it needs scoped storage updates. -->
 	</issue>

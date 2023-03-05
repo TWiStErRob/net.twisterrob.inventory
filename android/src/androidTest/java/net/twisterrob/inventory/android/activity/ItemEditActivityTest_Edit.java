@@ -39,6 +39,7 @@ public class ItemEditActivityTest_Edit {
 	}
 
 	@Category({Op.Cancels.class})
+	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/217")
 	@Test public void testCancel() {
 		itemEdit.closeToKill();
 		itemEdit.assertClosing(activity.getActivity());
@@ -47,6 +48,7 @@ public class ItemEditActivityTest_Edit {
 	}
 
 	@Category({On.Category.class})
+	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
 	@Test public void testChangeTypeWithDialog() {
 		ChangeTypeDialogActor changeType = itemEdit.changeType();
 		changeType.assertSelected(TEST_ITEM_CATEGORY);
