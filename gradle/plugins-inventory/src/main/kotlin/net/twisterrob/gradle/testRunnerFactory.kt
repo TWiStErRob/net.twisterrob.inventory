@@ -52,7 +52,7 @@ private fun replaceTestRunnerFactory(
 	//	override fun build(splitSelectExec: File?, processExecutor: ProcessExecutor): TestRunner =
 	//		MySimpleTestRunner(splitSelectExec, processExecutor, executor, block)
 	//}
-	@Suppress("LocalVariableName")
+	@Suppress("LocalVariableName", "VariableNaming")
 	val TestRunnerFactory = Class.forName(
 		"com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask\$TestRunnerFactory"
 	)
@@ -63,6 +63,7 @@ private fun replaceTestRunnerFactory(
 		} else {
 			// need to expose even public interface methods
 			method.isAccessible = true
+			@Suppress("SpreadOperator") // Have to use it, no other way to call this method.
 			method.invoke(originalFactory, *args)
 		}
 	}
