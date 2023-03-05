@@ -1,4 +1,7 @@
-apply plugin: "net.twisterrob.android-app"
+plugins {
+	id("net.twisterrob.android-app")
+}
+
 apply from: "${rootDir}/gradle/testCompile.gradle", to: project
 
 dependencies {

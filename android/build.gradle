@@ -1,8 +1,8 @@
 plugins {
 	id("net.twisterrob.inventory.android.app")
+	id("net.twisterrob.inventory.mapping")
+	id("net.twisterrob.inventory.androidTest")
 }
-apply plugin: "net.twisterrob.inventory.mapping"
-apply plugin: "net.twisterrob.inventory.androidTest"
 
 repositories {
 	maven { // jcenter() deprecated

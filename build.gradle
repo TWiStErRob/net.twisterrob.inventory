@@ -1,6 +1,8 @@
-apply plugin: 'net.twisterrob.root'
-apply plugin: 'net.twisterrob.quality'
-apply plugin: 'idea'
+plugins {
+	id("net.twisterrob.root")
+	id("net.twisterrob.quality")
+	id("org.gradle.idea")
+}
 
 allprojects {
 	repositories {
