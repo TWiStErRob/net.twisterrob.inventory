@@ -56,7 +56,6 @@ jobs:
           --continue
           --no-build-cache
           assemble assembleDebugAndroidTest compileDebugUnitTestSources compileReleaseUnitTestSources
-          -x :android:lintVitalRelease
 
       - name: "Verify project."
         working-directory: .
@@ -65,7 +64,7 @@ jobs:
           --no-daemon
           --stacktrace
           --continue
-          build -x :android:lintVitalRelease
+          build
 
       - name: "Upload 'Lint Results' artifact."
         if: success() || failure()
