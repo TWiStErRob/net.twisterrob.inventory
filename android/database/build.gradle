@@ -1,4 +1,6 @@
-apply plugin: 'net.twisterrob.android-library'
+plugins {
+	id("net.twisterrob.inventory.android.module")
+}
 
 dependencies {
 	api project(':android:database-contract')
