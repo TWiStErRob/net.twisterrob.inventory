@@ -4,16 +4,6 @@ plugins {
 	id("net.twisterrob.inventory.androidTest")
 }
 
-repositories {
-	maven { // jcenter() deprecated
-		name = "jcenter"
-		setUrl("https://jcenter.bintray.com/")
-		content {
-			// Can't update flexbox yet to its 3.x version, because it ships with Java 9 bytecode.
-			includeModule("com.google.android", "flexbox")
-		}
-	}
-}
 dependencies {
 	implementation project(':android:base')
 	implementation project(':android:database')
