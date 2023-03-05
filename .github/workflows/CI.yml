@@ -92,6 +92,32 @@ jobs:
           junit_files: ${{ github.workspace }}/**/build/test-results/*/TEST-*.xml
 
 
+  icons:
+    name: "🎨 Icons"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      # actions/checkout
+      contents: read
+    steps:
+
+      - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
+        uses: actions/checkout@v3
+
+      - name: "Generate icon previews."
+        working-directory: android/data/src/main/res/raw
+        run: node icon_preview.js > icon_previews.html
+
+      - name: "Upload 'Icon Previews' artifact."
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'Icon Previews'
+          path: |
+            ${{ github.workspace }}/android/data/src/main/res/raw/icon_previews.html
+            ${{ github.workspace }}/android/data/src/main/res/raw/*.svg
+
+
   instrumentation:
     name: "🧪 Instrumentation Tests on ${{ matrix.android-api }}"
     needs: validate
