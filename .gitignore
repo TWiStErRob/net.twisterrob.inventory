@@ -21,4 +21,4 @@ local.properties
 
 # Project
 /android/database/src/main/assets/MagicHomeInventory.data.Categories.sql
-/android/data/src/main/res/raw/icon_preview.html
+/android/data/src/main/res/raw/icon_previews.html
