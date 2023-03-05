@@ -62,6 +62,15 @@ jobs:
         with:
           submodules: true
 
+      - name: "Patch libraries to build ProGuard compatible Java bytecode."
+        run: |
+          cat >> libs/gradle/plugins/src/main/kotlin/net/twisterrob/libraries/net.twisterrob.libraries.java.library.gradle.kts <<EOF
+          java {
+              sourceCompatibility = JavaVersion.VERSION_1_7
+              targetCompatibility = JavaVersion.VERSION_1_8
+          }
+          EOF
+
       - name: "Build project."
         working-directory: .
         run: >
