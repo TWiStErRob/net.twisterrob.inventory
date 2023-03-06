@@ -18,29 +18,29 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 @Suppress("UnstableApiUsage")
 abstract class UpgradeTestTask : DefaultTask() {
-	init {
-		dependsOn("assembleDebug") // TODO why this is not available at eval time?
-		dependsOn(project.tasks.named("assembleAndroidTest"))
-	}
 
+	@Suppress("LongMethod") // Will be split up when I make it work again.
 	@TaskAction
 	fun upgradeTest() {
 		val android = project.extensions.findByName("android") as AppExtension
 		val debugVariant = android
-				.applicationVariants
-				.filter { it.buildType.name == "debug" }
-				.single() as ApplicationVariantImpl
+			.applicationVariants
+			.single { it.buildType.name == "debug" }
+			as ApplicationVariantImpl
 
 		val instrument = debugVariant.testVariant.connectedInstrumentTestProvider.get() as
-				DeviceProviderInstrumentTestTask
-
-		instrument.deviceProvider.init()
-		val device = instrument.deviceProvider.devices.first() as ConnectedDevice
-		val realDevice = device.getIDevice()
-		instrument.deviceProvider.terminate()
+			DeviceProviderInstrumentTestTask
+		val device = try {
+			instrument.deviceProvider.init()
+			instrument.deviceProvider.devices.single() as ConnectedDevice
+		} finally {
+			instrument.deviceProvider.terminate()
+		}
+		val realDevice = device.iDevice
 
 		val testApk = debugVariant.testVariant.outputs.first().outputFile
 		logger.info("Uninstalling test package: ${debugVariant.testVariant.applicationId}")
@@ -49,37 +49,44 @@ abstract class UpgradeTestTask : DefaultTask() {
 		realDevice.installPackage(testApk.absolutePath, false)
 
 		val data: BaseVariantData = debugVariant.variantData
+
 		@Suppress("DEPRECATION")
 		val results = data.globalScope.testResultsFolder.resolve("upgrade-tests")
+			.also { FileUtils.cleanOutputDir(it) }
+
+		val testListener = TestAwareCustomTestRunListener(
+			device.name, project.name, debugVariant.name, StdLogger(StdLogger.Level.VERBOSE)
+		).apply {
+			setReportDir(results)
+		}
+
 		@Suppress("DEPRECATION")
 		val reports = data.globalScope.reportsDir.resolve("upgrade-tests")
-		FileUtils.cleanOutputDir(results)
-		FileUtils.cleanOutputDir(reports)
-		val testListener = TestAwareCustomTestRunListener(
-				device.name, project.name, debugVariant.name, StdLogger(StdLogger.Level.VERBOSE))
-		testListener.setReportDir(results)
+			.also { FileUtils.cleanOutputDir(it) }
 
-		var failed = false
+		var finished = false
 		try {
 			installOld(realDevice, debugVariant, "10001934-v1.0.0#1934")
 			pushData(realDevice, debugVariant, "10001934-v1.0.0#1934")
-			runTest(instrument.testData, device, testListener, reports.resolve("index.html"),
-					"net.twisterrob.inventory.android.UpgradeTests#testPrepareVersion1")
-
+			runTest(
+				instrument.testData, device, testListener, reports.resolve("index.html"),
+				"net.twisterrob.inventory.android.UpgradeTests#testPrepareVersion1"
+			)
 			val newApk = debugVariant.outputs.first().outputFile
 			logger.info("Installing package: ${newApk}")
 			realDevice.installPackage(newApk.absolutePath, true)
-			runTest(instrument.testData, device, testListener, reports.resolve("index.html"),
-					"net.twisterrob.inventory.android.UpgradeTests#testVerifyVersion2")
-		} catch (ex: Throwable) {
-			failed = true
-			throw ex
+			runTest(
+				instrument.testData, device, testListener, reports.resolve("index.html"),
+				"net.twisterrob.inventory.android.UpgradeTests#testVerifyVersion2"
+			)
+			finished = true
 		} finally {
 			try {
 				val report = ResilientTestReport(ReportType.SINGLE_FLAVOR, results, reports)
 				report.generateReport()
-			} catch (ex: Throwable) {
-				if (!failed) { // swallow if there's already a failure
+			} catch (@Suppress("TooGenericExceptionCaught") ex: Throwable) {
+				if (finished) { // Swallow if there's already a failure.
+					@Suppress("ThrowingExceptionFromFinally") // Safe, see condition.
 					throw ex
 				}
 			}
@@ -88,37 +95,52 @@ abstract class UpgradeTestTask : DefaultTask() {
 
 	private fun installOld(realDevice: IDevice, debugVariant: ApplicationVariant, version: String) {
 		// FIXME release debug build as well
-		val oldApk = project.file("${System.getenv("RELEASE_HOME")}/android/${debugVariant.applicationId}@${version}d+debug.apk")
-		logger.info("Unnstalling package: ${debugVariant.applicationId}")
+		val oldApk =
+			File("${System.getenv("RELEASE_HOME")}/android/${debugVariant.applicationId}@${version}d+debug.apk")
+		logger.info("Uninstalling package: ${debugVariant.applicationId}")
 		realDevice.uninstallPackage(debugVariant.applicationId)
 		logger.info("Installing package: ${oldApk}")
 		realDevice.installPackage(oldApk.absolutePath, false)
 	}
+
 	private fun pushData(realDevice: IDevice, debugVariant: ApplicationVariant, version: String) {
-		val localData = "${System.getenv("RELEASE_HOME")}/android/${debugVariant.applicationId}@${version}d+debug-data.zip"
+		val localData =
+			File("${System.getenv("RELEASE_HOME")}/android/${debugVariant.applicationId}@${version}d+debug-data.zip")
 		logger.info("Pushing ${localData}")
-		realDevice.pushFile(localData, "/sdcard/Download/data.zip")
+		@Suppress("SdCardPath") // False positive, this is Gradle code not Android.
+		realDevice.pushFile(localData.absolutePath, "/sdcard/Download/data.zip")
 	}
-	private fun runTest(testData: TestData, device: DeviceConnector,
-			runListener: TestAwareCustomTestRunListener, results: File, test: String) {
+
+	private fun runTest(
+		testData: TestData,
+		device: DeviceConnector,
+		runListener: TestAwareCustomTestRunListener,
+		results: File,
+		test: String
+	) {
 		runListener.setTest(test)
 		// from com.android.builder.internal.testing.SimpleTestCallable#call
-		val runner = RemoteAndroidTestRunner(testData.applicationId.get(), testData.instrumentationRunner.get(), device)
-		testData.instrumentationRunnerArguments.forEach { (k, v) -> runner.addInstrumentationArg(k, v) }
+		val runner = RemoteAndroidTestRunner(
+			testData.applicationId.get(),
+			testData.instrumentationRunner.get(),
+			device
+		)
+		testData.instrumentationRunnerArguments.forEach(runner::addInstrumentationArg)
 		runner.addInstrumentationArg("class", test)
 		//runner.addInstrumentationArg("annotation", "org.junit.Test")
 		runner.addInstrumentationArg("upgrade", "true")
-		@Suppress("DEPRECATION")
-		runner.setMaxtimeToOutputResponse(60000)
+		runner.setMaxTimeToOutputResponse(1, TimeUnit.MINUTES)
 
 		logger.info("Running: ${runner.amInstrumentCommand}")
 		runner.run(runListener)
 
 		val result = runListener.runResult
+		@Suppress("ComplexCondition")
 		if (result.hasFailedTests()
-				|| result.isRunFailure()
-				|| result.getNumTests() <= 0
-				|| result.numCompleteTests != result.numTests) {
+			|| result.isRunFailure
+			|| result.numTests <= 0
+			|| result.numCompleteTests != result.numTests
+		) {
 			throw GradleException("Tests failed, see ${results}")
 		}
 	}

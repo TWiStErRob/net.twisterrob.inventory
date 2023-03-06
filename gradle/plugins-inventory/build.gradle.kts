@@ -17,6 +17,10 @@ gradlePlugin {
 			id = "net.twisterrob.inventory.androidTest"
 			implementationClass = "net.twisterrob.inventory.build.tests.AndroidTestSetupPlugin"
 		}
+		create("upgrade-test") {
+			id = "net.twisterrob.inventory.upgradeTest"
+			implementationClass = "net.twisterrob.inventory.build.tests.upgrade.UpgradeTestPlugin"
+		}
 	}
 }
 
