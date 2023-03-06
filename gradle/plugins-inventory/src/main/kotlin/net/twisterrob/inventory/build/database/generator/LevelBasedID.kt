@@ -6,36 +6,24 @@ internal class LevelBasedID {
 
 	private val levels = IntArray(MAX_LEVEL)
 
-	private var lastLevel = 0
-
-	private fun composeID(): Int {
-		var id = 0
-		for (level in levels.indices) {
-			id += 10.0.pow(MAX_LEVEL - level - 1).toInt() * levels[level]
-		}
-		return id
-	}
+	private var lastLevel: Int = 0
 
 	fun newItem(level: Int): Int {
-		if (level < 0 || MAX_LEVEL <= level) {
-			throw IndexOutOfBoundsException("Invalid level: $level, must be between 0 and ${MAX_LEVEL - 1}")
+		require(level in 0 until MAX_LEVEL) {
+			"Invalid level: $level, must be between 0 and ${MAX_LEVEL - 1}"
 		}
 		check(!(0 < level && levels[level] == MAX_PER_LEVEL - 1)) {
-			"Level $level cannot have more than $MAX_PER_LEVEL items."
+			"Level $level cannot have more than ${MAX_PER_LEVEL} items."
 		}
-		check(lastLevel + 1 >= level) {
-			"Cannot go deeper with skipping intermediate levels. Last: $lastLevel current: $level"
+		check(level <= lastLevel + 1) {
+			"Cannot go deeper with skipping intermediate levels. Last: ${lastLevel} current: ${level}"
 		}
 		if (level < lastLevel) {
-			var lvl = lastLevel
-			while (level < lvl) {
-				levels[lvl] = 0
-				--lvl
-			}
+			levels.fill(0, level + 1, lastLevel + 1)
 		}
 		lastLevel = level
 		levels[level]++
-		return composeID()
+		return levels.composeID()
 	}
 
 	companion object {
@@ -44,3 +32,10 @@ internal class LevelBasedID {
 		internal const val MAX_LEVEL = 4
 	}
 }
+
+private fun IntArray.composeID(): Int =
+	this
+		.mapIndexed { level: Int, value: Int ->
+			10.0.pow(LevelBasedID.MAX_LEVEL - level - 1).toInt() * value
+		}
+		.sum()
