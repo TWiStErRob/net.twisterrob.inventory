@@ -14,7 +14,8 @@ class MappingPlugin : Plugin<Project> {
 		val android = project.extensions.findByName("android") as AppExtension
 		android.applicationVariants.all {
 			val variant: ApkVariant = this
-			@Suppress("DEPRECATION")
+
+			@Suppress("DEPRECATION") // TODO don't know where to get this from. Retry in AGP 7.4 or 8.x
 			val obfuscateTask = variant.obfuscation
 			val skipReason = mutableListOf<String>()
 			if (obfuscateTask == null) {
@@ -26,20 +27,23 @@ class MappingPlugin : Plugin<Project> {
 			if (variant is TestedVariant && variant.testVariant != null) {
 				skipReason += "tested"
 			}
-			if (!skipReason.isEmpty()) {
-				project.logger.info("Skipping unfuscation of {} because it is {}", variant.name, skipReason)
+			if (skipReason.isNotEmpty()) {
+				project.logger.info(
+					"Skipping unfuscation of {} because it is {}",
+					variant.name,
+					skipReason
+				)
 				return@all
 			}
 
-			val unfuscateTask = project.tasks.register<UnfuscateTask>("${obfuscateTask.name}Unfuscate") {
-				println(this)
-				val task = this
-				task.obfuscateTask = obfuscateTask
-				@Suppress("DEPRECATION")
-				task.mapping = variant.mappingFile
-				task.newMapping = task.mapping.parentFile.resolve("unmapping.txt")
-				task.dependsOn(obfuscateTask)
-			}
+			val unfuscateTask =
+				project.tasks.register<UnfuscateTask>("${obfuscateTask.name}Unfuscate") {
+					this.obfuscateTask = obfuscateTask
+					this.mapping.fileProvider(variant.mappingFileProvider.map { it.singleFile })
+					this.newMapping.fileProvider(this.mapping.map { it.asFile.parentFile.resolve("unmapping.txt") })
+					this.dependsOn(obfuscateTask)
+				}
+
 			@Suppress("DEPRECATION")
 			(variant.dex as Task).dependsOn(unfuscateTask)
 		}
