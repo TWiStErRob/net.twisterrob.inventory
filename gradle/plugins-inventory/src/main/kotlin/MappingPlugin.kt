@@ -2,35 +2,41 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApkVariant
 import com.android.build.gradle.internal.api.TestedVariant
 import org.gradle.api.*
+import org.gradle.kotlin.dsl.register
 
-class MappingPlugin implements Plugin<Project> {
+class MappingPlugin : Plugin<Project> {
 
-	@Override
-	void apply(Project project) {
-		def android = project.extensions.findByName("android") as AppExtension
-		android.applicationVariants.all { ApkVariant variant ->
-			Task obfuscateTask = variant.obfuscation
-			def skipReason = [ ]
+	override fun apply(project: Project) {
+		val android = project.extensions.findByName("android") as AppExtension
+		android.applicationVariants.all {
+			val variant: ApkVariant = this
+			@Suppress("DEPRECATION")
+			val obfuscateTask = variant.obfuscation
+			val skipReason = mutableListOf<String>()
 			if (obfuscateTask == null) {
 				skipReason += "not obfuscated"
 			}
-			if (!variant.buildType.debuggable) {
+			if (!variant.buildType.isDebuggable) {
 				skipReason += "not debuggable"
 			}
-			if (variant instanceof TestedVariant && variant.testVariant != null) {
+			if (variant is TestedVariant && variant.testVariant != null) {
 				skipReason += "tested"
 			}
 			if (!skipReason.isEmpty()) {
 				project.logger.info("Skipping unfuscation of {} because it is {}", variant.name, skipReason)
-				return
+				return@all
 			}
 
-			def unfuscateTask = project.tasks.register("${obfuscateTask.name}Unfuscate", UnfuscateTask) { UnfuscateTask task ->
+			val unfuscateTask = project.tasks.register<UnfuscateTask>("${obfuscateTask.name}Unfuscate") {
+				println(this)
+				val task = this
 				task.obfuscateTask = obfuscateTask
+				@Suppress("DEPRECATION")
 				task.mapping = variant.mappingFile
-				task.newMapping = new File(task.mapping.parentFile, "unmapping.txt")
+				task.newMapping = task.mapping.parentFile.resolve("unmapping.txt")
 				task.dependsOn(obfuscateTask)
 			}
+			@Suppress("DEPRECATION")
 			(variant.dex as Task).dependsOn(unfuscateTask)
 		}
 	}

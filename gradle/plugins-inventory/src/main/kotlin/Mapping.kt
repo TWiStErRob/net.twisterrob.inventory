@@ -1,51 +1,58 @@
-@SuppressWarnings("UnnecessaryQualifiedReference")
-class Mapping {
-	private static java.util.regex.Pattern MAPPING_PATTERN =
-			~/^(?<member>    )?(?<location>\d+:\d+:)?(?:(?<type>.*?) )?(?<name>.*?)(?:\((?<args>.*?)\))?(?: -> )(?<obfuscated>.*?)(?<class>:?)$/ 
-	private static int MAPPING_PATTERN_OBFUSCATED_INDEX = 6
+import java.io.File
+import java.io.Writer
+import java.util.regex.Pattern
 
-	private final File source
-	Mapping(File source) {
-		this.source = source
+@SuppressWarnings("UnnecessaryQualifiedReference")
+class Mapping(
+	private val source: File
+) {
+	companion object {
+		private val MAPPING_PATTERN: Pattern = Pattern.compile("""
+			^(?<member>    )?(?<location>\d+:\d+:)?(?:(?<type>.*?) )?(?<name>.*?)(?:\((?<args>.*?)\))?(?: -> )(?<obfuscated>.*?)(?<class>:?)$
+	    """.trimIndent())
+		private val MAPPING_PATTERN_OBFUSCATED_INDEX: Int = 6
 	}
 
-	void remap(File target) {
-		target.withWriter { source.eachLine Mapping.&processLine.curry(it) }
+
+	fun remap(target: File) {
+		target.writer().use { writer ->
+			source.readLines().forEachIndexed { num, line -> processLine(writer, line, num) }
+		}
 	}
 
 	// CONSIDER supporting -applymapping by using the names from the original -applymapping file
-	private static void processLine(Writer out, String line, int num) {
-		java.util.regex.Matcher m = MAPPING_PATTERN.matcher(line)
+	private fun processLine(out: Writer, line: String, num: Int) {
+		val m = MAPPING_PATTERN.matcher(line)
 		if (!m.find()) {
-			throw new IllegalArgumentException("Line #${num} is not recognized: ${line}")
+			throw IllegalArgumentException("Line #${num} is not recognized: ${line}")
 		}
 		try {
-			def originalName = m.group("name")
-			def obfuscatedName = m.group("obfuscated")
-			def newName = originalName.equals(obfuscatedName) ? obfuscatedName : unfuscate(originalName, obfuscatedName)
+			val originalName = m.group("name")
+			val obfuscatedName = m.group("obfuscated")
+			val newName = if (originalName.equals(obfuscatedName)) obfuscatedName else unfuscate(originalName, obfuscatedName)
 			out.write(line.substring(0, m.start(MAPPING_PATTERN_OBFUSCATED_INDEX)))
 			out.write(newName)
 			out.write(line.substring(m.end(MAPPING_PATTERN_OBFUSCATED_INDEX)))
-			out.write('\n')
-		} catch (Exception ex) {
-			StringBuilder sb = new StringBuilder("Line #${num} failed: ${line}\n")
-			0.upto(m.groupCount()) { Number it -> sb.append("Group #${it}: '${m.group(it.intValue())}'\n") }
-			throw new IllegalArgumentException(sb.toString(), ex)
+			out.write("\n")
+		} catch (ex: Exception) {
+			val sb = StringBuilder("Line #${num} failed: ${line}\n")
+			0.rangeTo(m.groupCount()).forEach { sb.append("Group #${it}: '${m.group(it)}'\n") }
+			throw IllegalArgumentException(sb.toString(), ex)
 		}
 	}
 
-	private static String unfuscate(String original, String obfuscated) {
+	private fun unfuscate(original: String, obfuscated: String): String {
 		// reassemble the names with something readable, but still breaking changes
-		def origName = getName(original)
-		def obfName = getName(obfuscated)
-		obfName = obfName.equals(origName) ? "" : obfName
+		val origName = getName(original)
+		var obfName = getName(obfuscated)
+		obfName = if (obfName.equals(origName)) "" else obfName
 		return getPackage(original) + origName + '_' + obfName
 	}
-	private static String getPackage(String name) {
-		int lastDot = name.lastIndexOf('.')
-		return lastDot < 0 ? "" : name.substring(0, lastDot + 1)
+	private fun getPackage(name: String): String {
+		val lastDot = name.lastIndexOf('.')
+		return if (lastDot < 0) "" else name.substring(0, lastDot + 1)
 	}
-	private static String getName(String name) {
+	private fun getName(name: String): String {
 		return name.substring(name.lastIndexOf('.') + 1)
 	}
 }

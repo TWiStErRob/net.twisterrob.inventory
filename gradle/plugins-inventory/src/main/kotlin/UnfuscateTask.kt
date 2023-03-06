@@ -1,45 +1,46 @@
 import org.gradle.api.*
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.*
+import java.io.File
 
 @SuppressWarnings("UnnecessaryQualifiedReference")
-class UnfuscateTask extends DefaultTask {
+abstract class UnfuscateTask : DefaultTask() {
 
-	UnfuscateTask() {
+	init {
 		outputs.upToDateWhen { mapping.lastModified() <= newMapping.lastModified() }
 	}
 
-	@Input
-	Task obfuscateTask
+	@get:Input
+	abstract var obfuscateTask: Task
 
-	@InputFile
-	File mapping
+	@get:InputFile
+	abstract var mapping: File
 
-	@OutputFile
-	File newMapping
+	@get:OutputFile
+	abstract var newMapping: File
 
 	@TaskAction
-	def unfuscate() {
-		def configField = proguard.gradle.ProGuardTask.class.getDeclaredField("configuration")
-		configField.accessible = true
-		def config = configField.get(obfuscateTask) as proguard.Configuration
+	fun unfuscate() {
+		val configField = proguard.gradle.ProGuardTask::class.java.getDeclaredField("configuration")
+		configField.isAccessible = true
+		val config = configField.get(obfuscateTask) as proguard.Configuration
 		if (!config.obfuscate) {
 			return // nothing to unfuscate when -dontobfuscate
 		}
 
-		java.nio.file.Files.copy(mapping.toPath(), new File(mapping.parentFile, "mapping.txt.bck").toPath(),
+		java.nio.file.Files.copy(mapping.toPath(), mapping.parentFile.resolve("mapping.txt.bck").toPath(),
 				java.nio.file.StandardCopyOption.REPLACE_EXISTING)
 		logger.info("Writing new mapping file: {}", newMapping)
-		new Mapping(mapping).remap(newMapping)
+		Mapping(mapping).remap(newMapping)
 
 		logger.info("Re-executing {} with new mapping...", obfuscateTask.name)
 		config.applyMapping = newMapping // use our re-written mapping file
 		//config.note = [ '**' ] // -dontnote **, it was noted in the first run
 
-		def loggingManager = getLogging()
+		val loggingManager = getLogging()
 		// lower level of logging to prevent duplicate output
 		loggingManager.captureStandardOutput(LogLevel.WARN)
 		loggingManager.captureStandardError(LogLevel.WARN)
-		new proguard.ProGuard(config).execute()
+		proguard.ProGuard(config).execute()
 	}
 }
