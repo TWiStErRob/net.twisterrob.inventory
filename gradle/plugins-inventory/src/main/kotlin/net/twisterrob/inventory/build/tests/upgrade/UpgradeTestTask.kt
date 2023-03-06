@@ -20,7 +20,7 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 @Suppress("UnstableApiUsage")
-class UpgradeTestTask : DefaultTask() {
+abstract class UpgradeTestTask : DefaultTask() {
 	init {
 		dependsOn("assembleDebug") // TODO why this is not available at eval time?
 		dependsOn(project.tasks.named("assembleAndroidTest"))

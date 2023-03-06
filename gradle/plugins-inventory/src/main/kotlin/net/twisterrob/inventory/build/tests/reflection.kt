@@ -2,7 +2,7 @@ package net.twisterrob.inventory.build.tests
 
 import java.lang.reflect.Field
 
-fun <T> Field.getValue(obj: Any): T {
+internal fun <T> Field.getValue(obj: Any): T {
 	val accessible = @Suppress("DEPRECATION") isAccessible
 	try {
 		isAccessible = true
@@ -13,7 +13,7 @@ fun <T> Field.getValue(obj: Any): T {
 	}
 }
 
-fun Field.setValue(obj: Any, value: Any?) {
+internal fun Field.setValue(obj: Any, value: Any?) {
 	val accessible = @Suppress("DEPRECATION") isAccessible
 	try {
 		isAccessible = true

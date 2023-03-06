@@ -5,7 +5,7 @@ import java.io.Writer
 import java.util.regex.Pattern
 
 @SuppressWarnings("UnnecessaryQualifiedReference")
-class Mapping(
+internal class Mapping(
 	private val source: File
 ) {
 	companion object {

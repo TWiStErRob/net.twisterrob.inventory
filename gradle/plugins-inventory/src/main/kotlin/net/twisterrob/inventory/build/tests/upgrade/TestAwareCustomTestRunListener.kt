@@ -5,7 +5,7 @@ import com.android.utils.ILogger
 import java.io.File
 import java.io.IOException
 
-class TestAwareCustomTestRunListener(
+internal class TestAwareCustomTestRunListener(
 	deviceName: String,
 	projectName: String,
 	flavorName: String,

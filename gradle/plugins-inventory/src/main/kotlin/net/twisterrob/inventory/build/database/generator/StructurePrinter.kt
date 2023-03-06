@@ -5,7 +5,7 @@ import java.io.Writer
 import java.util.Arrays
 import java.util.Locale
 
-class StructurePrinter : Printer {
+internal class StructurePrinter : Printer {
 
 	override fun start(output: Writer) {
 		// no op

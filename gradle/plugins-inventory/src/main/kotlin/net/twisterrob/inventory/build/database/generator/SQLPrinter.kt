@@ -12,7 +12,7 @@ INSERT INTO Category
 ;
 */
 
-class SQLPrinter : Printer {
+internal class SQLPrinter : Printer {
 
 	private var prev: Category? = null
 

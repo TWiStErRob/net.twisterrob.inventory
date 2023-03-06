@@ -12,7 +12,7 @@ import javax.xml.stream.XMLStreamConstants
 import javax.xml.stream.XMLStreamException
 import javax.xml.stream.XMLStreamReader
 
-class DatabaseGenerator(
+internal class DatabaseGenerator(
 	private val printer: Printer,
 	private val svgFolder: File?
 ) {

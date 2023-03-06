@@ -15,7 +15,7 @@ import java.lang.reflect.Proxy
 /**
  * Just for readability, otherwise private interface in [DeviceProviderInstrumentTestTask].
  */
-typealias TestRunnerFactory = Any
+private typealias TestRunnerFactory = Any
 
 /**
  * Shorthand for configuration block to be executed
@@ -23,7 +23,7 @@ typealias TestRunnerFactory = Any
  *  * before `ddms: execute: running am instrument ...`
  * so that the install instrumentation APK can be granted permissions.
  */
-typealias PerDeviceSetupCallback = IShellEnabledDevice.(packageName: String) -> Unit
+private typealias PerDeviceSetupCallback = IShellEnabledDevice.(packageName: String) -> Unit
 
 private var DeviceProviderInstrumentTestTask.testRunnerFactory: TestRunnerFactory
 	get() = DeviceProviderInstrumentTestTask::class.java
@@ -35,7 +35,7 @@ private var DeviceProviderInstrumentTestTask.testRunnerFactory: TestRunnerFactor
 			.setValue(this, value)
 	}
 
-fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDeviceSetupCallback) {
+internal fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDeviceSetupCallback) {
 	this.testRunnerFactory =
 		replaceTestRunnerFactory(this.testRunnerFactory, this.executorServiceAdapter, configure)
 }
