@@ -5,37 +5,40 @@ import net.twisterrob.inventory.build.database.generator.Printer
 import net.twisterrob.inventory.build.database.generator.SQLPrinter
 import net.twisterrob.inventory.build.database.generator.StructurePrinter
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 
 abstract class InventoryDatabaseTask : DefaultTask() {
 
 	@get:InputFile
-	abstract var input: File
+	abstract val input: RegularFileProperty
 
 	@get:OutputFile
-	abstract var output: File
+	abstract val output: RegularFileProperty
 
 	@get:Optional
 	@get:Input
-	abstract var conversion: String?
+	abstract val conversion: Property<String>
 
 	@get:Optional
 	@get:InputDirectory
-	abstract var iconFolder: File?
+	abstract val iconFolder: DirectoryProperty
 
 	@TaskAction
 	fun generate() {
+		val input = input.get().asFile
 		input.reader().use { reader ->
-			output.parentFile.mkdirs()
+			val output = output.get().asFile.also { it.parentFile.mkdirs() }
 			output.writer().use { writer ->
-				val printer = getPrinter(conversion)
-				DatabaseGenerator(printer, iconFolder).transform(reader, writer)
+				val printer = getPrinter(conversion.orNull)
+				DatabaseGenerator(printer, iconFolder.orNull?.asFile).transform(reader, writer)
 			}
 		}
 	}

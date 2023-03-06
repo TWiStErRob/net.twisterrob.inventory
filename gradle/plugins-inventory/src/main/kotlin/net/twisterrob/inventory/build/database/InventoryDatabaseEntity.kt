@@ -1,13 +1,14 @@
 package net.twisterrob.inventory.build.database
 
-import java.io.File
+import org.gradle.api.Named
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
 
-abstract class InventoryDatabaseEntity(
-	val name: String
-) {
+abstract class InventoryDatabaseEntity : Named {
 
-	abstract var input: File
-	abstract var output: File
-	abstract var iconFolder: File
-	abstract var conversion: String
+	abstract val input: RegularFileProperty
+	abstract val output: RegularFileProperty
+	abstract val iconFolder: DirectoryProperty
+	abstract val conversion: Property<String>
 }

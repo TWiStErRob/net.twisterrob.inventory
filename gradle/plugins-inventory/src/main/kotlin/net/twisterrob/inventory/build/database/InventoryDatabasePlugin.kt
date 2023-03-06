@@ -27,24 +27,24 @@ class InventoryDatabasePlugin : Plugin<Project> {
 		val entities = project.container<InventoryDatabaseEntity>()
 		project.extensions.add("databaseEntities", entities)
 
-		val allTasks = project.task("generateDataBase")
-		allTasks.group = BasePlugin.BUILD_GROUP
-		val allTasksClean = project.task("cleanGenerateDataBase")
+		val allTasks = project.tasks.register("generateDataBase") {
+			group = BasePlugin.BUILD_GROUP
+		}
+		val allTasksClean = project.tasks.register("cleanGenerateDataBase")
 		project.afterEvaluate {
 			entities.all {
 				val entity: InventoryDatabaseEntity = this
 				//println "Creating task for ${entity.name} (${entity.input} --${entity.conversion}--> ${entity.output})"
 				val genDBTaskName = "generateDataBase${entity.name.capitalized()}"
 				val task = project.tasks.register<InventoryDatabaseTask>(genDBTaskName) {
-					val task = this
-					task.input = entity.input
-					task.output = entity.output
-					task.conversion = entity.conversion
-					task.iconFolder = entity.iconFolder
+					this.input.convention(entity.input)
+					this.output.convention(entity.output)
+					this.conversion.convention(entity.conversion)
+					this.iconFolder.convention(entity.iconFolder)
 				}
-				allTasks.dependsOn(task)
+				allTasks.configure { dependsOn(task) }
 				// clean task is automagically generated for every task that has output
-				allTasksClean.dependsOn("clean${task.name.capitalized()}")
+				allTasksClean.configure { dependsOn("clean${task.name.capitalized()}") }
 			}
 		}
 	}
