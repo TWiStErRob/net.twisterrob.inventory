@@ -11,7 +11,8 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
-import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 @CacheableTask
 abstract class UnfuscateTask : DefaultTask() {
@@ -39,8 +40,9 @@ abstract class UnfuscateTask : DefaultTask() {
 		val mapping = mapping.get().asFile
 		val newMapping = newMapping.get().asFile
 
-		java.nio.file.Files.copy(mapping.toPath(), mapping.parentFile.resolve("mapping.txt.bck").toPath(),
-				java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+		val backupMapping = mapping.parentFile.resolve("mapping.txt.bck")
+		Files.copy(mapping.toPath(), backupMapping.toPath(), StandardCopyOption.REPLACE_EXISTING)
+
 		logger.info("Writing new mapping file: {}", newMapping)
 		Mapping().remap(mapping, newMapping)
 

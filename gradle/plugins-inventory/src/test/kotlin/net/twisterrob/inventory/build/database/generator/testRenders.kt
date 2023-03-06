@@ -8,7 +8,7 @@ import java.io.File
 import java.io.StringWriter
 import java.io.Writer
 
-fun renderAsCategories(@Language("xml") xml: String, svgFolder: File? = null): List<Category> {
+internal fun renderAsCategories(@Language("xml") xml: String, svgFolder: File? = null): List<Category> {
 	val writer = StringWriter()
 	val printer = CapturingPrinter()
 	DatabaseGenerator(printer, svgFolder).transform(xml.reader(), writer)
@@ -18,7 +18,7 @@ fun renderAsCategories(@Language("xml") xml: String, svgFolder: File? = null): L
 	return printer.prints
 }
 
-fun renderAsText(printer: Printer, @Language("xml") xml: String, svgFolder: File? = null): String {
+internal fun renderAsText(printer: Printer, @Language("xml") xml: String, svgFolder: File? = null): String {
 	val writer = StringWriter()
 	DatabaseGenerator(printer, svgFolder).transform(xml.reader(), writer)
 	return writer.toString()
