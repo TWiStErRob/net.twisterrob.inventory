@@ -1,108 +1,115 @@
-package net.twisterrob.inventory.database;
+package net.twisterrob.inventory.database
 
-import java.io.*;
-import java.util.Stack;
+import java.io.File
+import java.io.FileReader
+import java.io.IOException
+import java.io.PrintWriter
+import java.io.Reader
+import java.io.Writer
+import java.util.Stack
+import javax.xml.stream.XMLInputFactory
+import javax.xml.stream.XMLStreamConstants
+import javax.xml.stream.XMLStreamException
+import javax.xml.stream.XMLStreamReader
 
-import javax.xml.stream.*;
+class DatabaseGenerator(
+	private val printer: Printer,
+	private val svgFolder: File?
+) {
 
-import static javax.xml.stream.XMLStreamConstants.*;
+	private val parents = Stack<Category>()
+	private val level = LevelBasedID()
 
-public class DatabaseGenerator {
-	private static final String NS = null;
-
-	private final Stack<Category> parents = new Stack<>();
-	private final LevelBasedID level = new LevelBasedID();
-	private final Printer printer;
-	private final File svgFolder;
-	public DatabaseGenerator(Printer printer, File svgFolder) {
-		this.printer = printer;
-		this.svgFolder = svgFolder;
-	}
-
-	public static void main(String... args) throws Throwable {
-		File svgFolder = new File("..\\..\\data\\src\\main\\res\\raw");
-		Reader input = new FileReader(new File("..\\..\\data\\src\\main\\res\\values\\strings_Categories.xml"));
-		Writer output = new PrintWriter(System.out, true);
-		new DatabaseGenerator(new SQLPrinter(), svgFolder).transform(input, output);
-	}
-
-	public void transform(Reader input, Writer output) throws XMLStreamException, IOException {
-		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-		XMLStreamReader xml = xmlInputFactory.createXMLStreamReader(input);
-		printer.start(output);
+	@Throws(XMLStreamException::class, IOException::class)
+	fun transform(input: Reader?, output: Writer) {
+		val xmlInputFactory = XMLInputFactory.newInstance()
+		val xml = xmlInputFactory.createXMLStreamReader(input)
+		printer.start(output)
 		while (xml.hasNext()) {
-			int type = xml.next();
-			if (type == START_ELEMENT && "string".equals(xml.getLocalName())) {
-				Category category = parseCategory(xml);
+			val type = xml.next()
+			if (type == XMLStreamConstants.START_ELEMENT && "string" == xml.localName) {
+				val category = parseCategory(xml)
 				if (category != null) {
 					//System.out.println(); // new category found
 					//printAttributes(xml);
 
-					checkCategory(category);
+					checkCategory(category)
 					if (category.id == Category.INVALID_ID) {
 						try {
-							category.id = level.newItem(category.level);
-						} catch (Exception ex) {
-							throw new IllegalStateException("Cannot create category ID for " + category, ex);
+							category.id = level.newItem(category.level)
+						} catch (ex: Exception) {
+							throw IllegalStateException("Cannot create category ID for $category", ex)
 						}
 					} else if (1000 <= category.id) {
-						throw new IllegalStateException("Specific ID cannot be bigger than 1000");
+						throw IllegalStateException("Specific ID cannot be bigger than 1000")
 					}
-					Category parent;
-					while ((parent = parents.empty()? null : parents.peek()) != null
-							&& category.level <= parent.level) {
-						parents.pop();
+					var parent: Category?
+					@Suppress("UNINITIALIZED_VARIABLE") // REPORT false positive
+					while ((if (parents.empty()) null else parents.peek().also { parent = it }) != null
+						&& category.level <= parent!!.level) {
+						parents.pop()
 					}
-					category.setParent(parent);
-					printer.print(category, output);
-					if (parent == null || parent.level <= category.level) {
-						parents.push(category);
+					category.parent = parent
+					printer.print(category, output)
+					if (parent == null || parent!!.level <= category.level) {
+						parents.push(category)
 					}
 				}
 			}
 		}
-		printer.finish(output);
-		output.flush();
+		printer.finish(output)
+		output.flush()
 	}
 
-	private Category parseCategory(XMLStreamReader xml) {
-		String name = xml.getAttributeValue(NS, "name");
-
-		if (name == null) {
-			throw new IllegalArgumentException("Name is mandatory on a <string>");
-		}
+	private fun parseCategory(xml: XMLStreamReader): Category? {
+		val name = xml.getAttributeValue(NS, "name")
+			?: throw IllegalArgumentException("Name is mandatory on a <string>")
 		if (name.endsWith("_keywords") || name.endsWith("_description")) {
-			return null;
+			return null
 		}
 
-		Category c = new Category();
-		c.name = name;
+		val c = Category()
+		c.name = name
 
-		String level = xml.getAttributeValue(NS, "level");
+		val level = xml.getAttributeValue(NS, "level")
 		if (level != null) {
-			c.level = Integer.parseInt(level);
+			c.level = level.toInt()
 		} else {
-			throw new IllegalArgumentException("level is mandatory for a category: " + name);
+			throw IllegalArgumentException("level is mandatory for a category: $name")
 		}
 
-		String id = xml.getAttributeValue(NS, "id");
+		val id = xml.getAttributeValue(NS, "id")
 		if (id != null) {
-			c.id = Integer.parseInt(id);
+			c.id = id.toInt()
 		}
 
-		c.icon = xml.getAttributeValue(NS, "icon");
-		if (c.icon != null && c.icon.startsWith("@raw/")) {
-			c.icon = c.icon.substring("@raw/".length());
+		c.icon = xml.getAttributeValue(NS, "icon")
+		if (c.icon != null && c.icon!!.startsWith("@raw/")) {
+			c.icon = c.icon!!.substring("@raw/".length)
 		}
-		return c;
+		return c
 	}
 
-	private void checkCategory(Category category) {
+	private fun checkCategory(category: Category?) {
 		if (svgFolder == null || category == null || category.icon == null) {
-			return;
+			return
 		}
-		if (!new File(svgFolder, category.icon + ".svg").exists()) {
-			throw new IllegalArgumentException("Missing icon: " + category);
+		require(File(svgFolder, category.icon + ".svg").exists()) {
+			"Missing icon: $category"
+		}
+	}
+
+	companion object {
+
+		private val NS: String? = null
+		
+		@JvmStatic
+		@Throws(Throwable::class)
+		fun main(args: Array<String>) {
+			val svgFolder = File("..\\..\\data\\src\\main\\res\\raw")
+			val input = FileReader(File("..\\..\\data\\src\\main\\res\\values\\strings_Categories.xml"))
+			val output = PrintWriter(System.out, true)
+			DatabaseGenerator(SQLPrinter(), svgFolder).transform(input, output)
 		}
 	}
 }

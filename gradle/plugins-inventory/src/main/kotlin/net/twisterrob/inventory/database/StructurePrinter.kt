@@ -1,22 +1,28 @@
-package net.twisterrob.inventory.database;
+package net.twisterrob.inventory.database
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException
+import java.io.Writer
+import java.util.Arrays
+import java.util.Locale
 
-public class StructurePrinter implements Printer {
-	@Override public void start(Writer output) {
+class StructurePrinter : Printer {
+
+	override fun start(output: Writer) {
 		// no op
 	}
-	@Override public void print(Category c, Writer output) throws IOException {
-		char[] indent = new char[c.level + 1];
-		Arrays.fill(indent, '\t');
-		int width = LevelBasedID.MAX_LEVEL + 1;
-		String idString = c.id == Category.INVALID_ID? "INVALID" : String.format(Locale.ROOT, "%" + width + "d", c.id);
-		String mark = c.id % 10 >= 8 || c.id % 100 / 10 >= 8 || c.id % 1000 / 100 >= 8? "*" : " ";
+
+	@Throws(IOException::class)
+	override fun print(c: Category, output: Writer) {
+		val indent = CharArray(c.level + 1)
+		Arrays.fill(indent, '\t')
+		val width = LevelBasedID.MAX_LEVEL + 1
+		val idString = if (c.id == Category.INVALID_ID) "INVALID" else String.format(Locale.ROOT, "%" + width + "d", c.id)
+		val mark = if (c.id % 10 >= 8 || c.id % 100 / 10 >= 8 || c.id % 1000 / 100 >= 8) "*" else " "
 		output.write(String.format(Locale.ROOT, "%d%s / %s%s%s, icon='%s'\n",
-				c.level, mark, idString, new String(indent), c.name, c.icon));
+			c.level, mark, idString, String(indent), c.name, c.icon))
 	}
-	@Override public void finish(Writer output) {
+
+	override fun finish(output: Writer) {
 		// no op
 	}
 }

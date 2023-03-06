@@ -1,7 +1,8 @@
-package net.twisterrob.inventory.database;
+package net.twisterrob.inventory.database
 
-import java.io.*;
-import java.util.Locale;
+import java.io.IOException
+import java.io.Writer
+import java.util.Locale
 
 /*
 INSERT INTO Category
@@ -10,46 +11,54 @@ INSERT INTO Category
 	UNION SELECT   NULL,     0, 'category_uncategorized',                  'category_unknown'
 ;
 */
-public class SQLPrinter implements Printer {
-	public static final String HEADER =
-			"INSERT INTO Category\n\t           (parent,   _id, name,                                      image)\n";
-	public static final String FOOTER = ";\n";
-	private static final String SELECT = "SELECT %5s, %5s, %-42s %s";
 
-	private Category prev;
+class SQLPrinter : Printer {
 
-	@Override public void start(Writer output) throws IOException {
-		output.write("-- The following INSERT INTOs are generated via 'gradlew generateDB'\n\n");
+	private var prev: Category? = null
+
+	@Throws(IOException::class)
+	override fun start(output: Writer) {
+		output.write("-- The following INSERT INTOs are generated via 'gradlew generateDB'\n\n")
 	}
 
-	@Override public void print(Category c, Writer output) throws IOException {
-		String name = "'" + c.name + "',";
-		String icon = "'" + c.icon + "'";
-		String parent = c.parent == null? "NULL" : String.valueOf(c.parent.id);
-		String id = String.valueOf(c.id);
-		String debug = ""; // " -- " + c.level;
-		String union;
+	@Throws(IOException::class)
+	override fun print(c: Category, output: Writer) {
+		var name = "'" + c.name + "',"
+		val icon = "'" + c.icon + "'"
+		val parent = if (c.parent == null) "NULL" else c.parent!!.id.toString()
+		val id = c.id.toString()
+		val debug = "" // " -- " + c.level;
+		val union: String
 		if (c.level == 0 && (1000 <= c.id || prev == null)) {
 			if (prev != null) {
-				output.write(FOOTER);
+				output.write(FOOTER)
 			}
-			output.write(HEADER);
-			union = "     ";
+			output.write(HEADER)
+			union = "     "
 		} else {
 			if (c.level == 1) {
-				output.write("\n");
+				output.write("\n")
 			} else if (1 < c.level) {
-				name = new String(new char[c.level - 1]).replace("\0", "    ") + name;
+				name = String(CharArray(c.level - 1)).replace("\u0000", "    ") + name
 			}
-			union = "UNION";
+			union = "UNION"
 		}
-		output.write(String.format(Locale.ROOT, "\t%s " + SELECT + "%s\n", union, parent, id, name, icon, debug));
-		prev = c;
+		output.write(String.format(Locale.ROOT, "\t%s ${SELECT}%s\n", union, parent, id, name, icon, debug))
+		prev = c
 	}
 
-	@Override public void finish(Writer output) throws IOException {
+	@Throws(IOException::class)
+	override fun finish(output: Writer) {
 		if (prev != null) {
-			output.write(FOOTER);
+			output.write(FOOTER)
 		}
+	}
+
+	companion object {
+
+		const val HEADER =
+			"INSERT INTO Category\n\t           (parent,   _id, name,                                      image)\n"
+		const val FOOTER = ";\n"
+		private const val SELECT = "SELECT %5s, %5s, %-42s %s"
 	}
 }

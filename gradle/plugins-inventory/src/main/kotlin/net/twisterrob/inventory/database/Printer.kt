@@ -1,9 +1,16 @@
-package net.twisterrob.inventory.database;
+package net.twisterrob.inventory.database
 
-import java.io.*;
+import java.io.IOException
+import java.io.Writer
 
-public interface Printer {
-	void start(Writer output) throws IOException;
-	void print(Category c, Writer output) throws IOException;
-	void finish(Writer output) throws IOException;
+interface Printer {
+
+	@Throws(IOException::class)
+	fun start(output: Writer)
+
+	@Throws(IOException::class)
+	fun print(c: Category, output: Writer)
+
+	@Throws(IOException::class)
+	fun finish(output: Writer)
 }
