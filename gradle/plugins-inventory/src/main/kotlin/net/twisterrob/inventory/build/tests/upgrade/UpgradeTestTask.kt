@@ -17,10 +17,12 @@ import com.android.utils.StdLogger
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
 import java.io.File
 import java.util.concurrent.TimeUnit
 
 @Suppress("UnstableApiUsage")
+@DisableCachingByDefault(because = "Lots of external factors")
 abstract class UpgradeTestTask : DefaultTask() {
 
 	@Suppress("LongMethod") // Will be split up when I make it work again.

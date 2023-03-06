@@ -3,13 +3,16 @@ package net.twisterrob.inventory.build.unfuscation
 import org.gradle.api.DefaultTask
 import org.gradle.api.Task
 import org.gradle.api.logging.LogLevel
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-@SuppressWarnings("UnnecessaryQualifiedReference")
+@CacheableTask
 abstract class UnfuscateTask : DefaultTask() {
 
 	init {
@@ -20,6 +23,7 @@ abstract class UnfuscateTask : DefaultTask() {
 	abstract var obfuscateTask: Task
 
 	@get:InputFile
+	@get:PathSensitive(PathSensitivity.RELATIVE)
 	abstract var mapping: File
 
 	@get:OutputFile
