@@ -2,7 +2,6 @@ import java.util.*
 
 plugins {
 	`kotlin-dsl` // id("org.gradle.kotlin.kotlin-dsl"), but that has a specific version.
-	id("org.gradle.groovy")
 	alias(libs.plugins.detekt)
 }
 
@@ -46,10 +45,6 @@ configurations.all {
 				.because("Latest ProGuard is 7.3.1 which supports Java 11-19, Kotlin 1.8")
 		}
 	}
-}
-
-tasks.withType<GroovyCompile> {
-	groovyOptions.configurationScript = file("../../gradle/groovyc.groovy")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
