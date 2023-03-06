@@ -1,5 +1,3 @@
-import java.util.*
-
 plugins {
 	`kotlin-dsl` // id("org.gradle.kotlin.kotlin-dsl"), but that has a specific version.
 	alias(libs.plugins.detekt)
@@ -22,19 +20,13 @@ gradlePlugin {
 	}
 }
 
-val props = Properties()
-	.apply { file("../../gradle.properties").inputStream().use { load(it) } }
-
-@Suppress("PropertyName")
-val VERSION_JUNIT: String by props
-
 dependencies {
 	implementation(libs.android.gradle)
 	implementation(libs.twisterrob.quality)
 	implementation(libs.twisterrob.android)
 	// TODEL https://github.com/gradle/gradle/issues/15383
 	implementation(files(libs::class.java.superclass.protectionDomain.codeSource.location))
-	testImplementation("junit:junit:${VERSION_JUNIT}")
+	testImplementation(libs.test.junit4)
 }
 
 configurations.all {
