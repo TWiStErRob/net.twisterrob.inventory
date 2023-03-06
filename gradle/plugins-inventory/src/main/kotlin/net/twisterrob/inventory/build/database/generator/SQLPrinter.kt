@@ -2,17 +2,10 @@ package net.twisterrob.inventory.build.database.generator
 
 import java.io.IOException
 import java.io.Writer
-import java.util.Locale
 
-/*
-INSERT INTO Category
-	           (parent,  _id, name,                                      image)
-	      SELECT   NULL,    -1, 'category_internal', 'category_unknown'
-	UNION SELECT   NULL,     0, 'category_uncategorized',                  'category_unknown'
-;
-*/
-
-internal class SQLPrinter : Printer {
+internal class SQLPrinter(
+	private val debug: Boolean = false
+) : Printer {
 
 	private var prev: Category? = null
 
@@ -23,13 +16,13 @@ internal class SQLPrinter : Printer {
 
 	@Throws(IOException::class)
 	override fun print(c: Category, output: Writer) {
-		var name = "'" + c.name + "',"
-		val icon = "'" + c.icon + "'"
+		var name = "'${c.name}',"
+		val icon = "'${c.icon}'"
 		val parent = if (c.parent == null) "NULL" else c.parent!!.id.toString()
 		val id = c.id.toString()
-		val debug = "" // " -- " + c.level;
+		val debug = if (debug) " -- " + c.level else ""
 		val union: String
-		if (c.level == 0 && (1000 <= c.id || prev == null)) {
+		if (c.level == 0 && (c.id !in Category.INDIVIDUAL_ID_RANGE || prev == null)) {
 			if (prev != null) {
 				output.write(FOOTER)
 			}
@@ -39,11 +32,12 @@ internal class SQLPrinter : Printer {
 			if (c.level == 1) {
 				output.write("\n")
 			} else if (1 < c.level) {
-				name = String(CharArray(c.level - 1)).replace("\u0000", "    ") + name
+				val indent = "    ".repeat(c.level - 1)
+				name = indent + name
 			}
 			union = "UNION"
 		}
-		output.write(String.format(Locale.ROOT, "\t%s ${SELECT}%s\n", union, parent, id, name, icon, debug))
+		output.write("\t${union} SELECT ${parent.padStart(5)}, ${id.padStart(5)}, ${name.padEnd(42)} ${icon}${debug}\n")
 		prev = c
 	}
 
@@ -59,6 +53,5 @@ internal class SQLPrinter : Printer {
 		const val HEADER =
 			"INSERT INTO Category\n\t           (parent,   _id, name,                                      image)\n"
 		const val FOOTER = ";\n"
-		private const val SELECT = "SELECT %5s, %5s, %-42s %s"
 	}
 }
