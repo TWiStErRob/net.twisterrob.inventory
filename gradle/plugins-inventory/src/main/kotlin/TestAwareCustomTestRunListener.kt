@@ -1,26 +1,33 @@
 import com.android.build.gradle.internal.testing.*
 import com.android.utils.*
+import java.io.File
+import java.io.IOException
 
-class TestAwareCustomTestRunListener extends CustomTestRunListener {
-	TestAwareCustomTestRunListener(String deviceName, String projectName, String flavorName, ILogger logger) {
-		super(deviceName, projectName, flavorName, logger)
+class TestAwareCustomTestRunListener(
+	deviceName: String,
+	projectName: String,
+	flavorName: String,
+	logger: ILogger,
+) : CustomTestRunListener(deviceName, projectName, flavorName, logger) {
+
+	@kotlin.jvm.Throws(IOException::class)
+	override fun getResultFile(reportDir: File): File {
+		val resultFile = super.getResultFile(reportDir)
+		return resultFile.parentFile.resolve(addTestName(resultFile.name))
 	}
 
-	@Override protected File getResultFile(File reportDir) throws IOException {
-		File resultFile = super.getResultFile(reportDir)
-		return new File(resultFile.parentFile, addTestName(resultFile.name))
-	}
+	private var test: String? = null
 
-	private String test
-
-	void setTest(String test) {
+	fun setTest(test: String) {
 		this.test = test
 	}
 
-	private String addTestName(String name) {
-		def suffix = '.xml'
+	private fun addTestName(name: String): String {
+		@Suppress("NAME_SHADOWING")
+		var name = name
+		val suffix = ".xml"
 		if (this.test != null && name.endsWith(suffix)) {
-			def onlyName = name.substring(0, name.length() - suffix.length())
+			val onlyName = name.substring(0, name.length - suffix.length)
 			name = "${onlyName}-${test}${suffix}"
 		}
 		return name

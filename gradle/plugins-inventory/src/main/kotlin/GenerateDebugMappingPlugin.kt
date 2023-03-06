@@ -4,74 +4,84 @@ import com.android.build.gradle.internal.api.BaseVariantImpl
 import com.android.build.gradle.internal.variant.BaseVariantData
 import org.gradle.api.*
 import proguard.gradle.ProGuardTask
+import java.io.File
+import java.io.FileInputStream
+import java.util.Locale
 
 // Currently not used, this version was just a test to try to generate a mapping from *.jar/**/*.class files
-@SuppressWarnings(["UnnecessaryQualifiedReference", "GrDeprecatedAPIUsage"])
-class GenerateDebugMappingPlugin implements Plugin<Project> {
+class GenerateDebugMappingPlugin : Plugin<Project> {
 
-	@Override void apply(Project project) {
-		def android = project.extensions.findByName("android") as AppExtension
+	override fun apply( project: Project) {
+		val android = project.extensions.findByName("android") as AppExtension
 		project.afterEvaluate {
-			android.applicationVariants.all { BaseVariant variant ->
-				if (!variant.obfuscation) return
-				File mapping = variant.mappingFile
-				File newMapping = new File(mapping.parentFile, mapping.getName() + ".gen")
-				def generateDebugMapping = project.tasks.register("generateDebugMapping") { task ->
+			android.applicationVariants.all {
+				val  variant: BaseVariant = this
+				@Suppress("DEPRECATION")
+				if (variant.obfuscation == null) return@all
+				@Suppress("DEPRECATION")
+				val mapping = variant.mappingFile
+				val newMapping = mapping.parentFile.resolve(mapping.getName() + ".gen")
+				val generateDebugMapping = project.tasks.register("generateDebugMapping") {
+					val task = this
 					task.description = "Generate mapping.txt for readable output"
-					task.outputs.files newMapping
+					task.outputs.files(newMapping)
 					task.outputs.upToDateWhen { false } // TODO inputs as jar files below
 					task.doFirst {
-						ProGuardTask pg = variant.obfuscation as ProGuardTask
-						println project.files(pg.inJarFiles).files
-						println project.files(pg.libraryJarFiles).files
-						BaseVariantData variantData = (variant as BaseVariantImpl).variantData
-						println project.files(variantData.globalScope.getBootClasspath()).files
-						def mapJars = project.files(pg.inJarFiles)
-						def allJars = mapJars +
-								project.files(pg.libraryJarFiles) + 
+						@Suppress("DEPRECATION")
+						val pg = variant.obfuscation as ProGuardTask
+						println(project.files(pg.inJarFiles).files)
+						println(project.files(pg.libraryJarFiles).files)
+						val variantData: BaseVariantData = (variant as BaseVariantImpl).variantData
+						@Suppress("DEPRECATION")
+						println(project.files(variantData.globalScope.getBootClasspath()).files)
+						val mapJars = project.files(pg.inJarFiles)
+						val allJars = mapJars +
+								project.files(pg.libraryJarFiles) +
+								@Suppress("DEPRECATION")
 								project.files(variantData.globalScope.getBootClasspath())
-						ClassLoader loader = java.net.URLClassLoader.newInstance(allJars.toList()*.toURI()*.toURL() as URL[])
-						PrintWriter out = new PrintWriter(newMapping)
-						def output = { File source, String path, Class<?> clazz ->
-							//println "${source}/${path}: ${clazz}"
-							def swapCase = org.gradle.internal.impldep.org.apache.commons.lang.StringUtils.&swapCase
-							def className = { String s -> s.toLowerCase() }
-							def methodName = { String s -> s }
-							def fieldName = { String s -> s }
-							def getClassName = { Class<?> c -> java.lang.Class.getDeclaredMethod("getName").invoke(c) as String }
+						val loader: ClassLoader = java.net.URLClassLoader.newInstance(allJars.map { it.toURI().toURL() }.toTypedArray())
+						val out = newMapping.printWriter()
+						val output = { source: File, path: String, clazz: Class<*> ->
+							if (false) println("${source}/${path}: ${clazz}")
+							@Suppress("UNUSED_VARIABLE")
+							val swapCase = org.gradle.internal.impldep.org.apache.commons.lang.StringUtils::swapCase
+							val className = { s: String -> s.toLowerCase(Locale.ROOT) }
+							val methodName = { s: String -> s }
+							val fieldName = { s: String -> s }
+							val getClassName = { c: Class<*> -> c.name }
 							out.printf("%s -> %s:\n", getClassName(clazz), className(getClassName(clazz)))
-							for (java.lang.reflect.Field field : clazz.declaredFields) {
+							clazz.declaredFields.forEach { field ->
 								out.printf("\t%s %s -> %s\n",
 										field.type.canonicalName ?: getClassName(field.type),
 										field.name,
 										fieldName(field.name))
 							}
-							for (java.lang.reflect.Method method : clazz.declaredMethods) {
+							clazz.declaredMethods.forEach { method ->
 								out.printf("\t%s %s(%s) -> %s\n",
 										method.returnType.canonicalName, //?: getClassName(field.type),
 										method.name,
-										method.parameterTypes*.canonicalName.join(","),
+										method.parameterTypes.joinToString(",") { it.canonicalName },
 										methodName(method.name))
 							}
 						}
-						mapJars.each { File jar ->
-							if (jar.directory) {
-								println "Dir: " + jar
-								project.fileTree(jar).visit { org.gradle.api.file.FileVisitDetails f ->
-									if (!f.directory && f.name.endsWith(".class")) {
-										String className = f.relativePath.segments.join(".")
-										className = className.substring(0, className.length() - ".class".length())
+						mapJars.forEach { jar: File ->
+							if (jar.isDirectory) {
+								println("Dir: " + jar)
+								project.fileTree(jar).visit { 
+									val f = this
+									if (!f.isDirectory && f.name.endsWith(".class")) {
+										var className = f.relativePath.segments.joinToString(".")
+										className = className.substring(0, className.length - ".class".length)
 										output(jar, f.relativePath.pathString, Class.forName(className, false, loader))
 									}
 								}
 							} else {
-								println "File: " + jar
-								java.util.zip.ZipInputStream zip = new java.util.zip.ZipInputStream(
-										new FileInputStream(jar))
-								for (java.util.zip.ZipEntry f = zip.getNextEntry(); f != null; f = zip.getNextEntry()) {
-									if (!f.directory && f.name.endsWith(".class")) {
-										String className = f.name.replace('/', '.')
-										className = className.substring(0, className.length() - ".class".length())
+								println("File: " + jar)
+								val zip = java.util.zip.ZipInputStream(FileInputStream(jar))
+								generateSequence { zip.nextEntry }.forEach { f ->
+									if (!f.isDirectory && f.name.endsWith(".class")) {
+										var className = f.name.replace('/', '.')
+										className = className.substring(0, className.length - ".class".length)
 										output(jar, f.name, Class.forName(className, false, loader))
 									}
 								}
@@ -80,12 +90,20 @@ class GenerateDebugMappingPlugin implements Plugin<Project> {
 						out.close()
 					}
 					task.doLast {
-						ProGuardTask pg = variant.obfuscation as ProGuardTask
+						@Suppress("DEPRECATION")
+						val pg = variant.obfuscation as ProGuardTask
 						pg.applymapping(newMapping)
 					}
 				}
-				variant.obfuscation.dependsOn generateDebugMapping
+				@Suppress("DEPRECATION")
+				variant.obfuscation.dependsOn(generateDebugMapping)
 			}
 		}
 	}
 }
+
+private val BaseVariantImpl.variantData: BaseVariantData
+	get() = this::class.java
+		.getDeclaredMethod("getVariantData")
+		.apply { isAccessible = true }
+		.invoke(this) as BaseVariantData
