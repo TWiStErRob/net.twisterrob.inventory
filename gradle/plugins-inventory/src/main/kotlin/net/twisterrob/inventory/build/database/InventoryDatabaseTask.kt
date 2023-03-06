@@ -1,7 +1,9 @@
-import net.twisterrob.inventory.database.DatabaseGenerator
-import net.twisterrob.inventory.database.Printer
-import net.twisterrob.inventory.database.SQLPrinter
-import net.twisterrob.inventory.database.StructurePrinter
+package net.twisterrob.inventory.build.database
+
+import net.twisterrob.inventory.build.database.generator.DatabaseGenerator
+import net.twisterrob.inventory.build.database.generator.Printer
+import net.twisterrob.inventory.build.database.generator.SQLPrinter
+import net.twisterrob.inventory.build.database.generator.StructurePrinter
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory

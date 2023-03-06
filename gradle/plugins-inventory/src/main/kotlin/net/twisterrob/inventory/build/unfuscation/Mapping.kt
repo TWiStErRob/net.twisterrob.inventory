@@ -1,3 +1,5 @@
+package net.twisterrob.inventory.build.unfuscation
+
 import java.io.File
 import java.io.Writer
 import java.util.regex.Pattern

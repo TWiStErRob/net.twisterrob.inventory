@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.database
+package net.twisterrob.inventory.build.database.generator
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail

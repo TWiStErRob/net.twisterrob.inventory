@@ -7,15 +7,15 @@ gradlePlugin {
 	plugins {
 		create("database") {
 			id = "net.twisterrob.inventory.database"
-			implementationClass = "InventoryDatabasePlugin"
+			implementationClass = "net.twisterrob.inventory.build.database.InventoryDatabasePlugin"
 		}
 		create("mapping") {
 			id = "net.twisterrob.inventory.mapping"
-			implementationClass = "MappingPlugin"
+			implementationClass = "net.twisterrob.inventory.build.unfuscation.MappingPlugin"
 		}
 		create("android-test") {
 			id = "net.twisterrob.inventory.androidTest"
-			implementationClass = "AndroidTestSetupPlugin"
+			implementationClass = "net.twisterrob.inventory.build.tests.AndroidTestSetupPlugin"
 		}
 	}
 }

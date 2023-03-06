@@ -1,5 +1,7 @@
-import com.android.build.gradle.internal.testing.*
-import com.android.utils.*
+package net.twisterrob.inventory.build.tests.upgrade
+
+import com.android.build.gradle.internal.testing.CustomTestRunListener
+import com.android.utils.ILogger
 import java.io.File
 import java.io.IOException
 

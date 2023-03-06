@@ -1,3 +1,5 @@
+package net.twisterrob.inventory.build.database
+
 import java.io.File
 
 abstract class InventoryDatabaseEntity(

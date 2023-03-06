@@ -1,8 +1,9 @@
+package net.twisterrob.inventory.build.tests
+
+import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import com.android.ddmlib.IShellEnabledDevice
 import com.android.ddmlib.NullOutputReceiver
-import net.twisterrob.gradle.androidApp
-import net.twisterrob.gradle.replaceTestRunnerFactory
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -43,6 +44,9 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 		executeShellCommand(command, NullOutputReceiver(), 0, MILLISECONDS)
 	}
 }
+
+private val Project.androidApp: AppExtension
+	get() = this.extensions.findByName("android") as AppExtension
 
 private fun runBeforeAndroidTest(
 	task: DeviceProviderInstrumentTestTask,

@@ -1,4 +1,7 @@
-import org.gradle.api.*
+package net.twisterrob.inventory.build.database
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.kotlin.dsl.container

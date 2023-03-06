@@ -1,6 +1,12 @@
-import org.gradle.api.*
+package net.twisterrob.inventory.build.unfuscation
+
+import org.gradle.api.DefaultTask
+import org.gradle.api.Task
 import org.gradle.api.logging.LogLevel
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 @SuppressWarnings("UnnecessaryQualifiedReference")

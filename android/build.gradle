@@ -1,3 +1,5 @@
+import net.twisterrob.inventory.build.tests.upgrade.UpgradeTestTask
+
 plugins {
 	id("net.twisterrob.inventory.android.app")
 	id("net.twisterrob.inventory.mapping")

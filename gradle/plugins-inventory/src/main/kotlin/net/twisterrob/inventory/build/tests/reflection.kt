@@ -1,4 +1,4 @@
-package net.twisterrob.gradle
+package net.twisterrob.inventory.build.tests
 
 import java.lang.reflect.Field
 

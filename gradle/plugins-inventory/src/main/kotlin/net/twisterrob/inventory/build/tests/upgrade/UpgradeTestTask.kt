@@ -1,15 +1,21 @@
+package net.twisterrob.inventory.build.tests.upgrade
+
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.api.ApplicationVariantImpl
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
-import com.android.build.gradle.internal.test.report.*
-import com.android.build.gradle.internal.testing.*
+import com.android.build.gradle.internal.test.report.ReportType
+import com.android.build.gradle.internal.test.report.ResilientTestReport
+import com.android.build.gradle.internal.testing.ConnectedDevice
+import com.android.build.gradle.internal.testing.TestData
 import com.android.build.gradle.internal.variant.BaseVariantData
 import com.android.builder.testing.api.DeviceConnector
 import com.android.ddmlib.IDevice
 import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
-import com.android.utils.*
-import org.gradle.api.*
+import com.android.utils.FileUtils
+import com.android.utils.StdLogger
+import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 

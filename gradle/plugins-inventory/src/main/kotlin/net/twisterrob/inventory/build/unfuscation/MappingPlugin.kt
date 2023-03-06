@@ -1,7 +1,11 @@
+package net.twisterrob.inventory.build.unfuscation
+
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApkVariant
 import com.android.build.gradle.internal.api.TestedVariant
-import org.gradle.api.*
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.kotlin.dsl.register
 
 class MappingPlugin : Plugin<Project> {

@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.database
+package net.twisterrob.inventory.build.database.generator
 
 import java.io.File
 import java.io.FileReader

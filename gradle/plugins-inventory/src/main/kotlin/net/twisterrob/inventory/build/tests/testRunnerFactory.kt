@@ -1,4 +1,4 @@
-package net.twisterrob.gradle
+package net.twisterrob.inventory.build.tests
 
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import com.android.build.gradle.internal.testing.SimpleTestRunner
