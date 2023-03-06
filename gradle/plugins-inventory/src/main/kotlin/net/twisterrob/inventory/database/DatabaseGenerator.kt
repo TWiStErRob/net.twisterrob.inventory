@@ -44,8 +44,8 @@ class DatabaseGenerator(
 						throw IllegalStateException("Specific ID cannot be bigger than 1000")
 					}
 					var parent: Category?
-					@Suppress("UNINITIALIZED_VARIABLE") // REPORT false positive
-					while ((if (parents.empty()) null else parents.peek().also { parent = it }) != null
+					// REPORT false positive during auto-konversion, because it messed up the precedence.
+					while ((if (parents.empty()) null else parents.peek()).also { parent = it } != null
 						&& category.level <= parent!!.level) {
 						parents.pop()
 					}
