@@ -1,4 +1,7 @@
-apply plugin: 'net.twisterrob.android-library'
+plugins {
+	id("net.twisterrob.inventory.android.module")
+	id("net.twisterrob.inventory.database")
+}
 
 dependencies {
 	api project(':android:database-contract')
@@ -11,8 +14,6 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
 }
-
-apply plugin: "net.twisterrob.inventory.database"
 
 databaseEntities {
 	categories {

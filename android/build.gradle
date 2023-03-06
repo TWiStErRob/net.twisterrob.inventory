@@ -1,17 +1,9 @@
-apply plugin: 'net.twisterrob.android-app'
-apply plugin: "net.twisterrob.inventory.mapping"
-apply plugin: "net.twisterrob.inventory.androidTest"
-
-repositories {
-	maven { // jcenter() deprecated
-		name = "jcenter"
-		setUrl("https://jcenter.bintray.com/")
-		content {
-			// Can't update flexbox yet to its 3.x version, because it ships with Java 9 bytecode.
-			includeModule("com.google.android", "flexbox")
-		}
-	}
+plugins {
+	id("net.twisterrob.inventory.android.app")
+	id("net.twisterrob.inventory.mapping")
+	id("net.twisterrob.inventory.androidTest")
 }
+
 dependencies {
 	implementation project(':android:base')
 	implementation project(':android:database')
@@ -19,7 +11,6 @@ dependencies {
 	implementation project(':android:preferences')
 	testImplementation project(':android:test_helpers')
 
-	configurations["implementation"].resolutionStrategy.cacheChangingModulesFor(0, "seconds") // -SNAPSHOT
 	implementation('net.twisterrob.lib:twister-lib-android-monolith')
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation('net.twisterrob.lib:twister-lib-general')
@@ -97,37 +88,6 @@ android {
 		ignoreAssetsPattern defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
 	sourceSets.test.java.srcDir 'src/test/robolectricJava'
-}
-
-allprojects { project ->
-	def androidConfig = {
-		project.android {
-			compileOptions {
-				sourceCompatibility = JavaVersion.VERSION_1_7
-				targetCompatibility = JavaVersion.VERSION_1_8
-			}
-			lintOptions.checkReleaseBuilds false 
-			lintOptions.baseline rootProject.file("config/lint/lint-baseline-${project.name}.xml")
-			lintOptions.lintConfig = rootProject.file("config/lint/lint.xml")
-		}
-	}
-	plugins.withId('com.android.library', androidConfig)
-	plugins.withId('com.android.application', androidConfig)
-}
-
-subprojects { project ->
-	project.afterEvaluate {
-		//noinspection UnnecessaryQualifiedReference,GrDeprecatedAPIUsage REPORT cannot replace with new interface, missing methods
-		com.android.build.gradle.api.AndroidSourceSet androidTest = project.android.sourceSets.androidTest
-		if (androidTest.java.sourceFiles.empty) {
-			logger.info "Disabling AndroidTest tasks in ${project.path} as it has no sources in ${androidTest.java.srcDirs}"
-			project.tasks.whenTaskAdded { task ->
-				if (task.name.contains("AndroidTest")) {
-					task.enabled = false
-				}
-			}
-		}
-	}
 }
 
 def upgradeTest = tasks.register("upgradeTest", UpgradeTestTask) { task ->

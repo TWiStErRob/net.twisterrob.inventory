@@ -1,7 +1,0 @@
-// usage:
-// apply from: rootProject.file("gradle/repos.gradle"), to: buildscript
-repositories {
-	google()
-	mavenCentral()
-//	maven { name = "Gradle libs (for Kotlin-DSL)"; url = "https://repo.gradle.org/gradle/libs-releases-local/" }
-}

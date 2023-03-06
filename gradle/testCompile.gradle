@@ -1,9 +1,5 @@
 def isAndroid = plugins.hasPlugin('com.android.application') || plugins.hasPlugin('com.android.library')
 
-repositories {
-	maven { name = 'sonatype'; url = 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-
 apply from: rootProject.file('gradle/substitutions.gradle')
 apply from: new File(gradle.includedBuild("twister-libs-android").projectDir, "gradle/testCompile.gradle")
 
