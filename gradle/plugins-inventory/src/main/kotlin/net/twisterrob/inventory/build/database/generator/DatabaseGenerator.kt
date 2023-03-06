@@ -45,7 +45,7 @@ internal class DatabaseGenerator(
 			Category.INVALID_ID ->
 				try {
 					level.newItem(category.level)
-				} catch (ex: Exception) {
+				} catch (ex: IllegalArgumentException) {
 					throw IllegalStateException("Cannot create category ID for ${category}", ex)
 				}
 			in Category.INDIVIDUAL_ID_RANGE -> category.id
@@ -63,6 +63,7 @@ internal class DatabaseGenerator(
 		}
 	}
 
+	@Suppress("ReturnCount")
 	private fun parseCategory(xml: XMLStreamReader): Category? {
 		if ("string" != xml.localName) return null
 

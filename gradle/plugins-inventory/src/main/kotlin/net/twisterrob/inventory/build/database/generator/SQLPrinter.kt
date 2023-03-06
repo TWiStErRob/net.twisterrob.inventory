@@ -37,6 +37,7 @@ internal class SQLPrinter(
 			}
 			union = "UNION"
 		}
+		@Suppress("MagicNumber")
 		output.write("\t${union} SELECT ${parent.padStart(5)}, ${id.padStart(5)}, ${name.padEnd(42)} ${icon}${debug}\n")
 		prev = c
 	}

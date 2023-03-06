@@ -61,7 +61,7 @@ class LevelBasedIDTest {
 		assertEquals(2312, level.newItem(3))
 	}
 
-	@Test(expected = IllegalStateException::class)
+	@Test(expected = IllegalArgumentException::class)
 	fun testLevelExpandingTooQuick1_3() {
 		assertEquals(1000, level.newItem(0))
 		assertEquals(2000, level.newItem(0))
@@ -70,7 +70,7 @@ class LevelBasedIDTest {
 		level.newItem(3)
 	}
 
-	@Test(expected = IllegalStateException::class)
+	@Test(expected = IllegalArgumentException::class)
 	fun testLevelExpandingTooQuick0_2() {
 		assertEquals(1000, level.newItem(0))
 		assertEquals(2000, level.newItem(0))
@@ -78,7 +78,7 @@ class LevelBasedIDTest {
 		level.newItem(3)
 	}
 
-	@Test(expected = IllegalStateException::class)
+	@Test(expected = IllegalArgumentException::class)
 	fun testLevelExpandingTooQuickWithoutParents() {
 		level.newItem(2)
 	}
@@ -138,7 +138,7 @@ class LevelBasedIDTest {
 		try {
 			this.level.newItem(level)
 			fail("Level " + level + " should fail after " + LevelBasedID.MAX_PER_LEVEL + " items.")
-		} catch (ex: IllegalStateException) {
+		} catch (ignore: IllegalArgumentException) {
 			// good
 		}
 	}

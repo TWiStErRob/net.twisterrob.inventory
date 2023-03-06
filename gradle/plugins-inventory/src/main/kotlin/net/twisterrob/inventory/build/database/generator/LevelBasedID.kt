@@ -12,10 +12,10 @@ internal class LevelBasedID {
 		require(level in 0 until MAX_LEVEL) {
 			"Invalid level: $level, must be between 0 and ${MAX_LEVEL - 1}"
 		}
-		check(!(0 < level && levels[level] == MAX_PER_LEVEL - 1)) {
+		require(!(0 < level && levels[level] == MAX_PER_LEVEL - 1)) {
 			"Level $level cannot have more than ${MAX_PER_LEVEL} items."
 		}
-		check(level <= lastLevel + 1) {
+		require(level <= lastLevel + 1) {
 			"Cannot go deeper with skipping intermediate levels. Last: ${lastLevel} current: ${level}"
 		}
 		if (level < lastLevel) {

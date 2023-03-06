@@ -14,6 +14,7 @@ import java.util.Locale
 // Currently not used, this version was just a test to try to generate a mapping from *.jar/**/*.class files
 class GenerateDebugMappingPlugin : Plugin<Project> {
 
+	@Suppress("LongMethod")
 	override fun apply(project: Project) {
 		val android = project.extensions.findByName("android") as AppExtension
 		project.afterEvaluate {
