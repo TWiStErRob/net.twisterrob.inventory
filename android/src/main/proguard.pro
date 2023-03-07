@@ -4,6 +4,7 @@
 #-dontobfuscate
 #-dontoptimize
 #-optimizationpasses 2
+-verbose
 
 # See net.twisterrob.inventory.android.activity.BackupActivity.shouldDisplay
 -keepclassmembernames class net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter {
