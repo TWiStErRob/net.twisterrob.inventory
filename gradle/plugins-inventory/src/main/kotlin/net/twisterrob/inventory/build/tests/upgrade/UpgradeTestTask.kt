@@ -14,6 +14,7 @@ import com.android.ddmlib.IDevice
 import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
 import com.android.utils.FileUtils
 import com.android.utils.StdLogger
+import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
@@ -36,11 +37,13 @@ abstract class UpgradeTestTask : DefaultTask() {
 
 		val instrument = debugVariant.testVariant.connectedInstrumentTestProvider.get() as
 			DeviceProviderInstrumentTestTask
+		val adb = project.androidComponents.sdkComponents.adb
+		val deviceProvider = instrument.deviceProviderFactory.getDeviceProvider(adb, null)
 		val device = try {
-			instrument.deviceProvider.init()
-			instrument.deviceProvider.devices.single() as ConnectedDevice
+			deviceProvider.init()
+			deviceProvider.devices.single() as ConnectedDevice
 		} finally {
-			instrument.deviceProvider.terminate()
+			deviceProvider.terminate()
 		}
 		val realDevice = device.iDevice
 
