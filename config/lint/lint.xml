@@ -40,6 +40,10 @@
 		<ignore path="res/values/strings_about.xml" />
 		<!-- Base resource used in other modules. -->
 		<ignore path="**/res/drawable-nodpi/category_unknown.webp" />
+
+		<!-- See also :base / build.gradle -->
+		<ignore path="**/base/src/main/res/**" />
+
 	</issue>
 	<issue id="StringFormatTrivial" severity="ignore">
 		<!-- Don't care, they are usually error formatting. -->
