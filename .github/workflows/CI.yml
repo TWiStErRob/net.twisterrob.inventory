@@ -65,13 +65,16 @@ jobs:
           --stacktrace
           --continue
           build
+          violationReportHtml
 
       - name: "Upload 'Lint Results' artifact."
         if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: 'Lint Results'
-          path: ${{ github.workspace }}/**/build/reports/lint-results*.html
+          path: |
+            ${{ github.workspace }}/**/build/reports/lint-results*.html
+            ${{ github.workspace }}/build/reports/violations.*
 
       - name: "Upload 'Unit Test Results' artifact."
         if: success() || failure()
