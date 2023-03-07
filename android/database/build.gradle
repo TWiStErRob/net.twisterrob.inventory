@@ -20,10 +20,10 @@ databaseEntities {
 		//noinspection UnnecessaryQualifiedReference,GrDeprecatedAPIUsage REPORT cannot replace with new interface, missing methods
 		com.android.build.gradle.api.AndroidSourceSet data_ss = evaluationDependsOn(':android:data').android.sourceSets.main
 		def my_ss = android.sourceSets.main
-		input = file(new File(data_ss.res.srcDirs.first(), 'values/strings_Categories.xml'))
-		output = file(new File(my_ss.assets.srcDirs.first(), 'MagicHomeInventory.data.Categories.sql'))
-		iconFolder = file(new File(data_ss.res.srcDirs.first(), 'raw'))
-		conversion = "SQL"
+		input.set(file(new File(data_ss.res.srcDirs.first(), 'values/strings_Categories.xml')))
+		output.set(file(new File(my_ss.assets.srcDirs.first(), 'MagicHomeInventory.data.Categories.sql')))
+		iconFolder.set(file(new File(data_ss.res.srcDirs.first(), 'raw')))
+		conversion.set("SQL")
 	}
 }
 android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant variant ->

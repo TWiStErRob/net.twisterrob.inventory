@@ -2,6 +2,7 @@ plugins {
 	id("net.twisterrob.inventory.android.app")
 	id("net.twisterrob.inventory.mapping")
 	id("net.twisterrob.inventory.androidTest")
+	id("net.twisterrob.inventory.upgradeTest")
 }
 
 dependencies {
@@ -89,11 +90,6 @@ android {
 	}
 	sourceSets.test.java.srcDir 'src/test/robolectricJava'
 }
-
-def upgradeTest = tasks.register("upgradeTest", UpgradeTestTask) { task ->
-	task.enabled = false // TODO not working since AGP 3.3/3.4
-}
-tasks.connectedCheck.configure { it.dependsOn(upgradeTest) }
 
 //noinspection UnnecessaryQualifiedReference
 tasks.register("generateHtmlReportFromXml", net.twisterrob.gradle.android.tasks.TestReportGenerator.class) {
