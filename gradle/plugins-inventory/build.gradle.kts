@@ -39,12 +39,6 @@ dependencies {
 	compileOnly("com.android.tools:sdk-common:30.4.2")
 	// UpgradeTestTask: StdLogger, ILogger
 	compileOnly("com.android.tools:common:30.4.2")
-	// > Task :compileGroovy
-	// General error during canonicalization: java.lang.NoClassDefFoundError: com.android.repository.Revision
-	compileOnly("com.android.tools:repository:30.4.2")
-	// Execution failed for task ':compileGroovy'.
-	// > org.kxml2.io.KXmlSerializer
-	compileOnly("net.sf.kxml:kxml2:2.3.0")
 	// endregion
 	
 	// TODEL https://github.com/gradle/gradle/issues/15383
