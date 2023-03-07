@@ -6,6 +6,9 @@
 	    The app doesn't have icons for preferences, so it's better to hide the empty space.
 	-->
 	<!-- lint:MissingDefaultResource the default resource is in the library's values folder. -->
-	<bool name="config_materialPreferenceIconSpaceReserved" tools:ignore="MissingDefaultResource">false</bool>
+	<!-- lint:UnusedResources REPORT false positive, it is clearly used indicated by override=true. -->
+	<bool name="config_materialPreferenceIconSpaceReserved"
+		tools:ignore="MissingDefaultResource,UnusedResources"
+		tools:override="true">false</bool>
 
 </resources>

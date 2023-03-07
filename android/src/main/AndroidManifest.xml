@@ -40,9 +40,6 @@
 			           android:value="net.twisterrob.inventory.android.activity.SearchResultsActivity" />
 		</activity>
 		<activity
-			android:name=".activity.PreferencesActivity"
-			android:label="@string/pref_activity_title" />
-		<activity
 			android:name=".activity.SearchResultsActivity"
 			android:label="@string/action_search"
 			android:launchMode="singleTop">

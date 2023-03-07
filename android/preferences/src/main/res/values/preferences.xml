@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+	<!-- lint:UnusedResources Some of these are defined here to have every preference in one place,
+	     but they're actually only used in different modules. -->
 
 	<string name="pref_version" translatable="false">version</string>
 	<integer name="pref_version_default" translatable="false">1</integer>
 
-	<string name="pref_currentLanguage" translatable="false">currentLanguage</string>
-	<string name="pref_state_backup_path" translatable="false">backupPath</string>
+	<string name="pref_currentLanguage" translatable="false" tools:ignore="UnusedResources">currentLanguage</string>
+	<string name="pref_state_backup_path" translatable="false" tools:ignore="UnusedResources">backupPath</string>
 
 	<string name="pref_group_preferences">Preferences</string>
 	<string name="pref_group_links">Links</string>
