@@ -63,3 +63,7 @@ detekt {
 	allRules = true
 	parallel = true
 }
+
+tasks.register("cleanFull").configure {
+	dependsOn("clean")
+}
