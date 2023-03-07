@@ -2,10 +2,12 @@ package net.twisterrob.inventory.android.activity.space;
 
 import java.io.File;
 
+import android.annotation.SuppressLint;
 import android.widget.TextView;
 
 import net.twisterrob.android.utils.tools.IOTools;
 
+@SuppressLint("StaticFieldLeak") // TODO see ManageSpaceActivity
 class GetFolderSizesTask extends GetSizeTask<File> {
 	public GetFolderSizesTask(TextView result) {
 		super(result);

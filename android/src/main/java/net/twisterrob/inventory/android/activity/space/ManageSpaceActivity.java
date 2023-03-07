@@ -38,6 +38,7 @@ import static net.twisterrob.android.utils.tools.AndroidTools.*;
 import static net.twisterrob.android.utils.tools.DatabaseTools.*;
 import static net.twisterrob.android.utils.tools.ViewTools.*;
 
+@SuppressLint("StaticFieldLeak") // TODO use coroutines or ViewModel for this activity.
 public class ManageSpaceActivity extends BaseActivity implements TaskEndListener {
 	private static final Logger LOG = LoggerFactory.getLogger(ManageSpaceActivity.class);
 

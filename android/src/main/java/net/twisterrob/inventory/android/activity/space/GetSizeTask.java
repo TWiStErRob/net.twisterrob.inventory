@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.text.format.Formatter;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import net.twisterrob.android.utils.concurrent.SafeAsyncTask;
 import net.twisterrob.inventory.android.*;
 
+@SuppressLint("StaticFieldLeak") // TODO see ManageSpaceActivity
 abstract class GetSizeTask<Param> extends SafeAsyncTask<Param, Long, Long> {
 	private static final Logger LOG = LoggerFactory.getLogger(GetSizeTask.class);
 	private final TextView result;
