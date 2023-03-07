@@ -1,10 +1,5 @@
 plugins {
 	id("net.twisterrob.inventory.root")
-	id("java")
-}
-
-dependencies {
-	compileOnly(utp.bundles.utp)
 }
 
 evaluationDependsOnChildren()
@@ -23,14 +18,14 @@ tasks.register("connectedCheck") {
 //	dependsOn(gradle.includedBuild("twister-libs-android").task(':connectedCheck'))
 }
 
-//tasks.register("clean", Delete.class) { clean ->
-//	clean.dependsOn gradle.includedBuilds*.task(':cleanFull')
-//	clean.delete project.buildDir
-//}
-//
-//tasks.register("build") { build ->
-//	build.dependsOn(gradle.includedBuild("plugins-inventory").task(':build'))
-//}
+tasks.register("clean", Delete.class) { clean ->
+	clean.dependsOn gradle.includedBuilds*.task(':cleanFull')
+	clean.delete project.buildDir
+}
+
+tasks.register("build") { build ->
+	build.dependsOn(gradle.includedBuild("plugins-inventory").task(':build'))
+}
 
 idea {
 	module {

@@ -54,11 +54,3 @@ includeBuild("libs/twister-lib-android") { build ->
 	name = "twister-libs-android"
 	apply from: new File(build.projectDir, "settings.substitutions.gradle"), to: build
 }
-
-dependencyResolutionManagement {
-	versionCatalogs {
-		create("utp") {
-			from(files("gradle/utp.versions.toml"))
-		}
-	}
-}
