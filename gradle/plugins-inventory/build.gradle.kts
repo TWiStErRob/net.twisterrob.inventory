@@ -45,9 +45,6 @@ dependencies {
 	// Execution failed for task ':compileGroovy'.
 	// > org.kxml2.io.KXmlSerializer
 	compileOnly("net.sf.kxml:kxml2:2.3.0")
-	// GenerateDebugMappingPlugin
-	// MappingPlugin
-	compileOnly("net.sf.proguard:proguard-gradle:6.0.3")
 	// endregion
 	
 	// TODEL https://github.com/gradle/gradle/issues/15383
