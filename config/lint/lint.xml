@@ -41,6 +41,13 @@
 		<!-- Base resource used in other modules. -->
 		<ignore path="**/res/drawable-nodpi/category_unknown.webp" />
 	</issue>
+	<issue id="StringFormatTrivial" severity="ignore">
+		<!-- Don't care, they are usually error formatting. -->
+	</issue>
+	<issue id="RequiredSize" severity="ignore">
+		<!-- TODEL https://issuetracker.google.com/issues/198689809#comment8 -->
+		<!-- Too many false positives with styles, and will be obvious when they're actually missing. -->
+	</issue>
 	<issue id="IconMissingDensityFolder">
 		<!-- Resources are separate into res and res-icons, and only icons need density-folders. -->
 		<ignore path="src/main/res" />
@@ -80,6 +87,9 @@
 	</issue>
 	<issue id="SyntheticAccessor" severity="ignore">
 		<!-- too many to fix yet -->
+	</issue>
+	<issue id="ObsoleteSdkInt" severity="ignore">
+		<!-- Keeping historical code for documentation purposes for now. -->
 	</issue>
 	<issue id="InvalidPackage" severity="ignore">
 		<!-- Invalid package reference in library; not included in Android: java.lang.instrument. Referenced from net.bytebuddy.agent.ByteBuddyAgent. -->
