@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.content.model.helpers;
 import java.text.NumberFormat;
 import java.util.*;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.*;
@@ -170,6 +171,7 @@ public class Hinter {
 				loadMore();
 			}
 		}
+		@SuppressLint("NotifyDataSetChanged") // Everything is invalidated when setting new suggestions.
 		public void setSuggestions(@Nullable List<CategorySuggestion<Long>> suggestions) {
 			if (suggestions == null) {
 				suggestions = Collections.emptyList();

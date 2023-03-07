@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.*;
 import android.text.TextUtils;
@@ -177,6 +178,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 		private File parent;
 		private List<File> files;
 
+		@SuppressLint("NotifyDataSetChanged") // Everything is invalidated when setting new suggestions.
 		public void setFiles(File root, List<File> files) {
 			this.parent = root != null? root.getParentFile() : null;
 			this.files = files;
