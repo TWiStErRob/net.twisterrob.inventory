@@ -114,6 +114,17 @@ jobs:
           test_changes_limit: 0
           junit_files: ${{ github.workspace }}/**/build/test-results/*/TEST-*.xml
 
+      - name: "Upload 'APKs' artifact."
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'APKs'
+          path: |
+            ${{ github.workspace }}/**/build/outputs/apk/
+            ${{ github.workspace }}/**/build/outputs/mapping/
+            ${{ github.workspace }}/**/build/outputs/logs/
+            ${{ github.workspace }}/**/build/outputs/sdk-dependencies/
+
 
   icons:
     name: "🎨 Icons"
