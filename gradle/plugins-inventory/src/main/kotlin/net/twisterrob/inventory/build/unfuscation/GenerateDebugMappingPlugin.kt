@@ -2,8 +2,7 @@ package net.twisterrob.inventory.build.unfuscation
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.BaseVariant
-import com.android.build.gradle.internal.api.BaseVariantImpl
-import com.android.build.gradle.internal.variant.BaseVariantData
+import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import proguard.gradle.ProGuardTask
@@ -12,6 +11,7 @@ import java.io.FileInputStream
 import java.util.Locale
 
 // Currently not used, this version was just a test to try to generate a mapping from *.jar/**/*.class files
+@Suppress("UnstableApiUsage")
 class GenerateDebugMappingPlugin : Plugin<Project> {
 
 	@Suppress("LongMethod")
@@ -33,14 +33,11 @@ class GenerateDebugMappingPlugin : Plugin<Project> {
 						val pg = variant.obfuscation as ProGuardTask
 						println(project.files(pg.inJarFiles).files)
 						println(project.files(pg.libraryJarFiles).files)
-						val variantData: BaseVariantData = (variant as BaseVariantImpl).variantData
-						@Suppress("DEPRECATION")
-						println(project.files(variantData.globalScope.bootClasspath).files)
+						println(project.files(project.androidComponents.sdkComponents.bootClasspath).files)
 						val mapJars = project.files(pg.inJarFiles)
 						val allJars = mapJars +
 							project.files(pg.libraryJarFiles) +
-							@Suppress("DEPRECATION")
-							project.files(variantData.globalScope.bootClasspath)
+							project.files(project.androidComponents.sdkComponents.bootClasspath)
 						val loader: ClassLoader = java.net.URLClassLoader
 							.newInstance(allJars.map { it.toURI().toURL() }.toTypedArray())
 						val out = newMapping.printWriter()
@@ -105,9 +102,3 @@ class GenerateDebugMappingPlugin : Plugin<Project> {
 		}
 	}
 }
-
-private val BaseVariantImpl.variantData: BaseVariantData
-	get() = this::class.java
-		.getDeclaredMethod("getVariantData")
-		.apply { isAccessible = true }
-		.invoke(this) as BaseVariantData
