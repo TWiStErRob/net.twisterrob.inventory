@@ -3,6 +3,7 @@ package net.twisterrob.inventory.build.tests.upgrade
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.api.ApplicationVariantImpl
+import com.android.build.gradle.internal.services.VariantServices
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import com.android.build.gradle.internal.test.report.ReportType
 import com.android.build.gradle.internal.test.report.ResilientTestReport
@@ -53,10 +54,9 @@ abstract class UpgradeTestTask : DefaultTask() {
 		logger.info("Installing test package: ${testApk}")
 		realDevice.installPackage(testApk.absolutePath, false)
 
-		val data: BaseVariantData = debugVariant.variantData
+		val services = debugVariant.variantData.services
 
-		@Suppress("DEPRECATION")
-		val results = data.globalScope.testResultsFolder.resolve("upgrade-tests")
+		val results = services.projectInfo.getTestResultsFolder()!!.resolve("upgrade-tests")
 			.also { FileUtils.cleanOutputDir(it) }
 
 		val testListener = TestAwareCustomTestRunListener(
@@ -65,8 +65,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 			setReportDir(results)
 		}
 
-		@Suppress("DEPRECATION")
-		val reports = data.globalScope.reportsDir.resolve("upgrade-tests")
+		val reports = services.projectInfo.getReportsDir().resolve("upgrade-tests")
 			.also { FileUtils.cleanOutputDir(it) }
 
 		var finished = false
@@ -150,3 +149,9 @@ abstract class UpgradeTestTask : DefaultTask() {
 		}
 	}
 }
+
+val BaseVariantData.services: VariantServices
+	get() = BaseVariantData::class.java
+		.getDeclaredField("services")
+		.apply { isAccessible = true }
+		.get(this) as VariantServices
