@@ -30,17 +30,16 @@
 		<ignore path="**/res/raw*/helpers.js" />
 		<ignore path="**/res/raw*/icon_*" />
 		<ignore path="**/res/raw*/shrink_resources.xml" />
-		<!-- Not used, but can't do anything about it :) -->
+		<!-- Not used, but can't do anything about it :) They're coming from a reusable library. -->
 		<ignore regexp="R\.bool\.in_prod" />
 		<ignore regexp="R\.bool\.in_test" />
+		<ignore regexp="R\.string\.app_package" />
 		<!-- It's a library used in multiple projects -->
 		<ignore path="**/libs/twister-lib-android/**" />
 		<!-- used by about module reflectively / with resource overrides -->
 		<ignore path="res/values/strings_about.xml" />
-	</issue>
-	<issue id="SelectableText">
-		<!-- TODEL SelectableText lint check ignores style: https://issuetracker.google.com/issues/36975804 / https://issuetracker.google.com/issues/76458990 -->
-		<ignore path="src/main/res/layout/manage_space_activity_contents.xml" />
+		<!-- Base resource used in other modules. -->
+		<ignore path="**/res/drawable-nodpi/category_unknown.webp" />
 	</issue>
 	<issue id="IconMissingDensityFolder">
 		<!-- Resources are separate into res and res-icons, and only icons need density-folders. -->

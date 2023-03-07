@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<integer name="visible_in_test">@integer/View_VISIBLE</integer>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+	<!-- lint:UnusedResources this is defined in :base, but used in other modules. -->
+	<integer name="visible_in_test" tools:ignore="UnusedResources">@integer/View_VISIBLE</integer>
+
 </resources>

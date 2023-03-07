@@ -7,8 +7,12 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	tools:context=".activity.space.ManageSpaceActivity"
-	tools:ignore="HardcodedText"
+	tools:ignore="HardcodedText,SelectableText"
 	>
+	<!--
+		lint:SelectableText False positive on being inherited from @style/ManageSpaceTitle.
+		TODEL SelectableText lint check ignores style: https://issuetracker.google.com/issues/36975804 / https://issuetracker.google.com/issues/76458990
+	-->
 	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"

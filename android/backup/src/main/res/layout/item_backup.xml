@@ -9,6 +9,8 @@
 	android:background="@drawable/item_state"
 	tools:background="@color/toolsBG"
 	>
+	<!-- lint:UnusedIds Using conventional adapterRoot name for documentation. -->
+
 	<ImageView
 		android:id="@+id/type"
 		android:layout_width="@dimen/icon_action"
