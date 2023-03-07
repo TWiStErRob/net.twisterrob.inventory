@@ -74,14 +74,14 @@ abstract class UpgradeTestTask : DefaultTask() {
 			installOld(realDevice, debugVariant, "10001934-v1.0.0#1934")
 			pushData(realDevice, debugVariant, "10001934-v1.0.0#1934")
 			runTest(
-				instrument.testData, device, testListener, reports.resolve("index.html"),
+				instrument.testData.get(), device, testListener, reports.resolve("index.html"),
 				"net.twisterrob.inventory.android.UpgradeTests#testPrepareVersion1"
 			)
 			val newApk = debugVariant.outputs.first().outputFile
 			logger.info("Installing package: ${newApk}")
 			realDevice.installPackage(newApk.absolutePath, true)
 			runTest(
-				instrument.testData, device, testListener, reports.resolve("index.html"),
+				instrument.testData.get(), device, testListener, reports.resolve("index.html"),
 				"net.twisterrob.inventory.android.UpgradeTests#testVerifyVersion2"
 			)
 			finished = true
