@@ -1,0 +1,28 @@
+[libraries]
+# LAUNCHER: com.google.testing.platform.launcher.Launcher
+launcher = "com.google.testing.platform:launcher:0.0.8-alpha08"
+# CORE: com.google.testing.platform.main.MainKt
+core = "com.google.testing.platform:core:0.0.8-alpha08"
+# ANDROID_DEVICE_PROVIDER_DDMLIB: com.android.tools.utp.plugins.deviceprovider.ddmlib.DdmlibAndroidDeviceProvider
+android-device-provider-ddmlib = "com.android.tools.utp:android-device-provider-ddmlib:30.4.2"
+# ANDROID_DEVICE_PROVIDER_GRADLE: com.android.tools.utp.plugins.deviceprovider.gradle.GradleManagedAndroidDeviceProvider
+android-device-provider-gradle = "com.android.tools.utp:android-device-provider-gradle:30.4.2"
+# ANDROID_DRIVER_INSTRUMENTATION: com.google.testing.platform.runtime.android.driver.AndroidInstrumentationDriver
+android-driver-instrumentation = "com.google.testing.platform:android-driver-instrumentation:0.0.8-alpha08"
+# ANDROID_TEST_PLUGIN: com.google.testing.platform.plugin.android.AndroidDevicePlugin
+android-test-plugin = "com.google.testing.platform:android-test-plugin:0.0.8-alpha08"
+# ANDROID_TEST_DEVICE_INFO_PLUGIN: com.android.tools.utp.plugins.host.device.info.AndroidTestDeviceInfoPlugin
+android-test-plugin-host-device-info = "com.android.tools.utp:android-test-plugin-host-device-info:30.4.2"
+# ANDROID_TEST_ADDITIONAL_TEST_OUTPUT_PLUGIN: com.android.tools.utp.plugins.host.additionaltestoutput.AndroidAdditionalTestOutputPlugin
+android-test-plugin-host-additional-test-output = "com.android.tools.utp:android-test-plugin-host-additional-test-output:30.4.2"
+# ANDROID_TEST_COVERAGE_PLUGIN: com.android.tools.utp.plugins.host.coverage.AndroidTestCoveragePlugin
+android-test-plugin-host-coverage = "com.android.tools.utp:android-test-plugin-host-coverage:30.4.2"
+# ANDROID_TEST_LOGCAT_PLUGIN: com.android.tools.utp.plugins.host.logcat.AndroidTestLogcatPlugin
+android-test-plugin-host-logcat = "com.android.tools.utp:android-test-plugin-host-logcat:30.4.2"
+# ANDROID_TEST_PLUGIN_HOST_RETENTION: com.android.tools.utp.plugins.host.icebox.IceboxPlugin
+android-test-plugin-host-retention = "com.android.tools.utp:android-test-plugin-host-retention:30.4.2"
+# ANDROID_TEST_PLUGIN_RESULT_LISTENER_GRADLE: com.android.tools.utp.plugins.result.listener.gradle.GradleAndroidTestResultListener
+android-test-plugin-result-listener-gradle = "com.android.tools.utp:android-test-plugin-result-listener-gradle:30.4.2"
+
+[bundles]
+utp = ["launcher", "core", "android-device-provider-ddmlib", "android-device-provider-gradle", "android-driver-instrumentation", "android-test-plugin", "android-test-plugin-host-device-info", "android-test-plugin-host-additional-test-output", "android-test-plugin-host-coverage", "android-test-plugin-host-logcat", "android-test-plugin-host-retention", "android-test-plugin-result-listener-gradle"]
