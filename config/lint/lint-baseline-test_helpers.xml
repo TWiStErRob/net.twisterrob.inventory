@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="4" by="lint 3.2.1" client="gradle" variant="all" version="3.2.1">
+<issues format="6" by="lint 7.4.2" type="baseline" client="cli" dependencies="false" name="AGP (7.4.2)" variant="all" version="7.4.2">
 
 </issues>
