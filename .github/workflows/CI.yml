@@ -175,7 +175,8 @@ jobs:
         with:
           name: 'Instrumentation Test Results ${{ matrix.android-api }}'
           path: |
-            ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/flavors/debugAndroidTest/
+            ${{ github.workspace }}/**/build/reports/androidTest/connected/
+            ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/
 
       - name: "Publish 'Instrumentation Results ${{ matrix.android-api }}' check suite."
         if: success() || failure()
@@ -185,4 +186,4 @@ jobs:
           comment_mode: off
           report_individual_runs: true
           test_changes_limit: 0
-          junit_files: ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/flavors/debugAndroidTest/TEST-*.xml
+          junit_files: ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/TEST-*.xml
