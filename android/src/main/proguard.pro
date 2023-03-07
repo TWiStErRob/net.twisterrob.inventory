@@ -5,10 +5,6 @@
 #-dontoptimize
 #-optimizationpasses 2
 
-# TODEL See res/menu/search.xml and https://issuetracker.google.com/issues/37042902
--keep class androidx.appcompat.widget.SearchView { <init>(...); }
-
-
 # Rules from versionedparcelable-1.0.0.aar/proguard.txt are triggering this:
 # Note: the configuration keeps the entry point 'androidx.media.AudioAttributesCompatParcelizer { ... read(VersionedParcel); }', but not the descriptor class 'VersionedParcel'
 # Note: the configuration keeps the entry point 'androidx.media.AudioAttributesCompatParcelizer { void write(...,VersionedParcel); }', but not the descriptor class 'VersionedParcel'
