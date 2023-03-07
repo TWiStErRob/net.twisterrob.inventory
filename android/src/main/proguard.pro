@@ -11,11 +11,6 @@
 	*** copyXSLT(...);
 }
 
-# DialogTools.pickColor is not used in Inventory. It's fine to ignore these.
-# Warning: net.twisterrob.android.utils.tools.DialogTools: can't find referenced class com.rarepebble.colorpicker.ColorPickerView
-# Warning: net.twisterrob.android.utils.tools.DialogTools$14: can't find referenced class com.rarepebble.colorpicker.ColorPickerView
--dontwarn com.rarepebble.colorpicker.ColorPickerView
-
 # Remove Logging for now
 # FIXME use isLoggable in AndroidLogger and runtime control over TAGs
 
