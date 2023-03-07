@@ -1,9 +1,11 @@
 package net.twisterrob.inventory.build
 
 import net.twisterrob.inventory.build.dsl.android
+import net.twisterrob.inventory.build.dsl.autoNamespace
 
 @Suppress("UnstableApiUsage")
 android {
+	namespace = project.autoNamespace
 	compileSdk = 29
 	defaultConfig {
 		minSdk = 21
