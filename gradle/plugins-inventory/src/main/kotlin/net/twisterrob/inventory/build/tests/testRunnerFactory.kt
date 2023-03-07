@@ -25,7 +25,8 @@ private typealias TestRunnerFactory = Any
  */
 private typealias PerDeviceSetupCallback = IShellEnabledDevice.(packageName: String) -> Unit
 
-private var DeviceProviderInstrumentTestTask.testRunnerFactory: TestRunnerFactory
+@Suppress("UnusedPrivateMember")
+private var DeviceProviderInstrumentTestTask.testRunnerFactoryField: TestRunnerFactory
 	get() = DeviceProviderInstrumentTestTask::class.java
 		.getDeclaredField("testRunnerFactory")
 		.getValue(this)
@@ -35,12 +36,13 @@ private var DeviceProviderInstrumentTestTask.testRunnerFactory: TestRunnerFactor
 			.setValue(this, value)
 	}
 
-internal fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDeviceSetupCallback) {
-	this.testRunnerFactory =
-		replaceTestRunnerFactory(this.testRunnerFactory, this.executorServiceAdapter, configure)
+@Suppress("UNUSED_PARAMETER")
+fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDeviceSetupCallback) {
+//	this.testRunnerFactoryField =
+//		replaceTestRunnerFactory(this.testRunnerFactory, this.executorServiceAdapter, configure)
 }
 
-@Suppress("PrivateApi") // REPORT Android lint false positive, nothing to do with buildSrc.
+@Suppress("UnusedPrivateMember", "PrivateApi") // REPORT Android lint false positive, nothing to do with buildSrc.
 private fun replaceTestRunnerFactory(
 	originalFactory: TestRunnerFactory,
 	executor: ExecutorServiceAdapter,
