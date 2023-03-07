@@ -42,34 +42,10 @@ jobs:
           java-version: 11
           distribution: zulu
 
-      - name: "Patch Android SDK components for compatibility."
-        run: |
-          # AGP's com.android.SdkConstants.CURRENT_BUILD_TOOLS_VERSION
-          # https://github.com/TWiStErRob/net.twisterrob.gradle/blob/v0.15/plugin/base/src/main/kotlin/net/twisterrob/gradle/android/Versions.kt#L28
-          echo android --install "build-tools;32.0.0"
-          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "build-tools;32.0.0"
-          # Patch AGP 4.x v SDK Build Tools 31/32 incompatibility: https://stackoverflow.com/a/68430992/253468
-          # Installed Build Tools revision 32.0.0 is corrupted. Remove and install again using the SDK Manager.
-          # Build-tool 32.0.0 is missing DX at /usr/local/lib/android/sdk/build-tools/32.0.0/dx
-          echo "Symlinking ${ANDROID_HOME}/build-tools/32.0.0/dx <- d8 and same for lib/dx.jar <- d8.jar."
-          test -e ${ANDROID_HOME}/build-tools/32.0.0/dx \
-              || ln --symbolic --verbose d8 ${ANDROID_HOME}/build-tools/32.0.0/dx
-          test -e ${ANDROID_HOME}/build-tools/32.0.0/lib/dx.jar \
-              || ln --symbolic --verbose d8.jar ${ANDROID_HOME}/build-tools/32.0.0/lib/dx.jar
-
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v3
         with:
           submodules: true
-
-      - name: "Patch libraries to build ProGuard compatible Java bytecode."
-        run: |
-          cat >> libs/gradle/plugins/src/main/kotlin/net/twisterrob/libraries/net.twisterrob.libraries.java.library.gradle.kts <<EOF
-          java {
-              sourceCompatibility = JavaVersion.VERSION_1_7
-              targetCompatibility = JavaVersion.VERSION_1_8
-          }
-          EOF
 
       - name: "Build project."
         working-directory: .
@@ -175,21 +151,6 @@ jobs:
         with:
           java-version: 11
           distribution: zulu
-
-      - name: "Patch Android SDK components for compatibility."
-        run: |
-          # AGP's com.android.SdkConstants.CURRENT_BUILD_TOOLS_VERSION
-          # https://github.com/TWiStErRob/net.twisterrob.gradle/blob/v0.15/plugin/base/src/main/kotlin/net/twisterrob/gradle/android/Versions.kt#L28
-          echo android --install "build-tools;32.0.0"
-          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "build-tools;32.0.0"
-          # Patch AGP 4.x v SDK Build Tools 31/32 incompatibility: https://stackoverflow.com/a/68430992/253468
-          # Installed Build Tools revision 32.0.0 is corrupted. Remove and install again using the SDK Manager.
-          # Build-tool 32.0.0 is missing DX at /usr/local/lib/android/sdk/build-tools/32.0.0/dx
-          echo "Symlinking ${ANDROID_HOME}/build-tools/32.0.0/dx <- d8 and same for lib/dx.jar <- d8.jar."
-          test -e ${ANDROID_HOME}/build-tools/32.0.0/dx \
-              || ln -s -v d8 ${ANDROID_HOME}/build-tools/32.0.0/dx
-          test -e ${ANDROID_HOME}/build-tools/32.0.0/lib/dx.jar \
-              || ln -s -v d8.jar ${ANDROID_HOME}/build-tools/32.0.0/lib/dx.jar
 
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v3
