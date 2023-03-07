@@ -19,7 +19,7 @@ import java.nio.file.StandardCopyOption
 abstract class UnfuscateTask : DefaultTask() {
 
 	@get:Input
-	abstract var obfuscateTask: Property<Task>
+	abstract val obfuscateTask: Property<Task>
 
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.RELATIVE)

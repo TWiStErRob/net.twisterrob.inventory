@@ -20,6 +20,7 @@ import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.work.DisableCachingByDefault
 import java.io.File
@@ -29,8 +30,10 @@ import java.util.concurrent.TimeUnit
 @DisableCachingByDefault(because = "Lots of external factors")
 abstract class UpgradeTestTask : DefaultTask() {
 
+	@get:Input
 	abstract val testedVariant: Property<ApplicationVariant>
 
+	@get:Input
 	abstract val instrumentTestTask: Property<DeviceProviderInstrumentTestTask>
 
 	@Suppress("LongMethod") // Will be split up when I make it work again.
