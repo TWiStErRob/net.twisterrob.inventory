@@ -12,9 +12,9 @@ android {
 		sourceCompatibility = JavaVersion.VERSION_1_7
 		targetCompatibility = JavaVersion.VERSION_1_8
 	}
-	lintOptions {
-		isCheckReleaseBuilds = false
-		baselineFile = rootDir.resolve("config/lint/lint-baseline-${project.name}.xml")
+	lint {
+		checkReleaseBuilds = false
+		baseline = rootDir.resolve("config/lint/lint-baseline-${project.name}.xml")
 		lintConfig = rootDir.resolve("config/lint/lint.xml")
 	}
 }
