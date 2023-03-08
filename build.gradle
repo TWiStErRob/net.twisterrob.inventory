@@ -3,12 +3,12 @@ plugins {
 }
 
 tasks.register("clean", Delete.class) { clean ->
-	clean.dependsOn(gradle.includedBuilds*.task("cleanFull"))
+	clean.dependsOn(gradle.includedBuilds*.task(":cleanFull"))
 	clean.delete(project.buildDir)
 }
 
 tasks.register("build") { build ->
-	build.dependsOn(gradle.includedBuilds*.task("build"))
+	build.dependsOn(gradle.includedBuilds*.task(":build"))
 }
 
 idea {
