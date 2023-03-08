@@ -19,11 +19,10 @@ idea {
 }
 
 dependencies {
-//	compileOnly 'xalan:xalan:2.7.1' // useful to force it on the classpath to run in IDEA
-	xalan 'xalan:xalan:2.7.1'
-	saxon 'net.sf.saxon:Saxon-HE:9.7.0-7'
+//	compileOnly(libs.xml.xalan) // useful to force it on the classpath to run in IDEA
+	xalan(libs.xml.xalan)
+	saxon(libs.xml.saxon)
 }
-// STOPSHIP
 
 def dataXsltCsv = project(':android:backup').file("src/main/assets/data.csv.xslt")
 def dataXsltHtml = project(':android:backup').file("src/main/assets/data.html.xslt")

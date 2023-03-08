@@ -31,8 +31,8 @@ dependencies {
 	implementation(libs.androidx.material)
 	implementation(libs.androidx.recyclerview)
 	implementation(libs.androidx.swiperefreshlayout)
-	implementation("com.google.android:flexbox:${VERSION_FLEXBOX}")
-	implementation("org.slf4j:slf4j-api:${VERSION_SLF4J}")
+	implementation(libs.flexbox)
+	implementation(libs.slf4j.api)
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows "Serializer Java 2.7.1" on Genymotion 2.3.7 and S5 5.0.0
@@ -46,17 +46,17 @@ dependencies {
 	testImplementation(libs.test.junit4)
 	testImplementation 'net.twisterrob.lib:twister-lib-hamcrest'
 	testImplementation 'net.twisterrob.lib:twister-lib-mockito'
-	testImplementation("org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}")
-	testImplementation("org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}")
-	testImplementation("org.powermock:powermock-module-junit4-rule:${VERSION_POWERMOCK}")
-	testImplementation("org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}")
+	testImplementation(libs.test.powermockMockito2)
+	testImplementation(libs.test.powermockJunit4)
+	testImplementation(libs.test.powermockJunit4Rule)
+	testImplementation(libs.test.powermockXstream)
 	testImplementation("org.robolectric:robolectric:${VERSION_ROBOLECTRIC}")
 	testImplementation("org.robolectric:shadows-multidex:${VERSION_ROBOLECTRIC}")
 	testImplementation("androidx.test:core:${VERSION_ESPRESSO_RUNNER}")
 
 	androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-mockito"
-	androidTestImplementation("org.mockito:mockito-android:${VERSION_MOCKITO}")
+	androidTestImplementation(libs.test.mockitoAndroid)
 	androidTestImplementation "net.twisterrob.lib:twister-lib-test"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
 	androidTestImplementation("org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}")

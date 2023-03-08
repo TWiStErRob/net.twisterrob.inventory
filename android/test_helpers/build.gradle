@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
 	implementation(libs.androidx.annotation)
-	implementation("org.mockito:mockito-core:${VERSION_MOCKITO}")
+	implementation(libs.test.mockito)
 	implementation(libs.test.junit4)
 	implementation 'net.twisterrob.lib:twister-lib-stringer'
 	implementation 'net.twisterrob.lib:twister-lib-java'
