@@ -8,11 +8,11 @@ dependencies {
 	implementation project(':android:preferences')
 	implementation project(':android:data')
 
-	implementation("androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}")
-	implementation("androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}")
-	implementation("androidx.localbroadcastmanager:localbroadcastmanager:${VERSION_ANDROIDX_BROADCAST}")
-	implementation("androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}")
-	implementation("androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_ANDROIDX_SWIPEREFRESHLAYOUT}")
+	implementation(libs.androidx.annotation)
+	implementation(libs.androidx.appcompat)
+	implementation(libs.androidx.broadcast)
+	implementation(libs.androidx.recyclerview)
+	implementation(libs.androidx.swiperefreshlayout)
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
@@ -21,7 +21,7 @@ dependencies {
 
 	testImplementation project(':android:test_helpers')
 	testImplementation project(':android:database:test_helpers')
-	testImplementation("junit:junit:${VERSION_JUNIT}")
+	testImplementation(libs.test.junit4)
 	testImplementation 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then
 	testImplementation "net.twisterrob.lib:twister-lib-mockito"
 	testImplementation "com.google.guava:guava:27.0.1-jre"
@@ -29,3 +29,4 @@ dependencies {
 	testImplementation 'com.github.stefanbirkner:fishbowl:1.4.1' // exceptionThrownBy (assertThrows-like)
 	testImplementation "net.twisterrob.lib:twister-lib-test"
 }
+// STOPSHIP

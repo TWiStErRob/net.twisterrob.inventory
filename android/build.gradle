@@ -25,12 +25,12 @@ dependencies {
 	// Replace APK's runtimeOnly sneaking into test runtime
 	configurations.testRuntimeOnly.exclude module: 'twister-lib-android-slf4j'
 
-	implementation("androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}")
-	implementation("androidx.localbroadcastmanager:localbroadcastmanager:${VERSION_ANDROIDX_BROADCAST}")
-	implementation("androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}")
-	implementation("com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}")
-	implementation("androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}")
-	implementation("androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_ANDROIDX_SWIPEREFRESHLAYOUT}")
+	implementation(libs.androidx.annotation)
+	implementation(libs.androidx.broadcast)
+	implementation(libs.androidx.appcompat)
+	implementation(libs.androidx.material)
+	implementation(libs.androidx.recyclerview)
+	implementation(libs.androidx.swiperefreshlayout)
 	implementation("com.google.android:flexbox:${VERSION_FLEXBOX}")
 	implementation("org.slf4j:slf4j-api:${VERSION_SLF4J}")
 
@@ -43,7 +43,7 @@ dependencies {
 //	debugImplementation 'com.idescout.sql:sqlscout-server:1.0'
 
 	testImplementation project(':android:test_helpers')
-	testImplementation("junit:junit:${VERSION_JUNIT}")
+	testImplementation(libs.test.junit4)
 	testImplementation 'net.twisterrob.lib:twister-lib-hamcrest'
 	testImplementation 'net.twisterrob.lib:twister-lib-mockito'
 	testImplementation("org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}")
@@ -69,7 +69,7 @@ dependencies {
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-about-test_helpers"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-capture_image-test_helpers"
 	androidTestImplementation project(':android:database:test_helpers')
-	androidTestImplementation("androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}")
+	androidTestImplementation(libs.androidx.preference)
 	androidTestImplementation("androidx.test.espresso:espresso-intents:${VERSION_ESPRESSO}")
 	androidTestImplementation("androidx.test.espresso:espresso-contrib:${VERSION_ESPRESSO}")
 }
