@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="5" by="lint 4.1.3" client="gradle" variant="debug" version="4.1.3">
+<issues format="6" by="lint 7.4.2" type="baseline" client="gradle" dependencies="false" name="AGP (7.4.2)" variant="all" version="7.4.2">
 
     <issue
         id="ScopedStorage"
@@ -7,8 +7,8 @@
         errorLine1=" &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; />"
         errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\AndroidManifest.xml"
-            line="6"
+            file="src/main/AndroidManifest.xml"
+            line="5"
             column="33"/>
     </issue>
 

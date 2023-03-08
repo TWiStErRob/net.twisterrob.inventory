@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+<resources>
 	<!-- http://image.made-in-china.com/2f0j10mBGQCEalYFzq/-caixa-ondulada-de-envio-pelo-correio-do-branco.jpg
 		with numColors = 7
 	-->
@@ -27,4 +27,5 @@
 	<!-- TOOLS colors -->
 	<color name="toolsBG">#8888</color>
 	<color name="transparent">#00000000</color>
+
 </resources>

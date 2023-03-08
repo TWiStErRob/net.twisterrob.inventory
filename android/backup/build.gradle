@@ -12,6 +12,7 @@ dependencies {
 	implementation "androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}"
 	implementation "androidx.localbroadcastmanager:localbroadcastmanager:${VERSION_ANDROIDX_BROADCAST}"
 	implementation "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
+	implementation "androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_ANDROIDX_SWIPEREFRESHLAYOUT}"
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"

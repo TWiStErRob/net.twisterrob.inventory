@@ -24,3 +24,6 @@ dependencies {
 	implementation("com.caverock:androidsvg:${VERSION_ANDROIDSVG}")
 	api "javax.inject:javax.inject:1"
 }
+
+// lint:UnusedResources Disable blanket, because files in this module are tend to be used by other modules.
+android.lint.disable.add("UnusedResources")

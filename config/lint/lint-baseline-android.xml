@@ -1,5 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="5" by="lint 3.4.2" client="gradle" variant="all" version="3.4.2">
+<issues format="6" by="lint 7.4.2" type="baseline" client="gradle" dependencies="true" name="AGP (7.4.2)" variant="all" version="7.4.2">
+
+    <issue
+        id="CannotEnableHidden"
+        message="Issue `StopShip` was configured with severity `fatal` in android, but was not enabled (or was disabled) in library annotations">
+        <location
+            file="android"/>
+    </issue>
+
+    <issue
+        id="InternalInsetResource"
+        message="Using internal inset dimension resource `status_bar_height` is not supported"
+        errorLine1="  int resourceId = context.getResources().getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, &quot;android&quot;);"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/net/twisterrob/android/utils/tools/AndroidTools.java"
+            line="710"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="Deprecated"
+        message="Consider removing `sharedUserId` for new users by adding `android:sharedUserMaxSdkVersion=&quot;32&quot;` to your manifest. See https://developer.android.com/guide/topics/manifest/manifest-element for details."
+        errorLine1=" android:sharedUserId=&quot;net.twisterrob.inventory&quot;>"
+        errorLine2=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/debug/AndroidManifest.xml"
+            line="5"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="UnspecifiedImmutableFlag"
+        message="Missing `PendingIntent` mutability flag"
+        errorLine1="    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/content/db/DatabaseService.java"
+            line="104"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UnspecifiedImmutableFlag"
+        message="Missing `PendingIntent` mutability flag"
+        errorLine1="   return PendingIntent.getActivity(getApplicationContext(), code, intent, PendingIntent.FLAG_UPDATE_CURRENT);"
+        errorLine2="                                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/backup/concurrent/NotificationProgressService.java"
+            line="96"
+            column="76"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This `AsyncTask` class should be static or leaks might occur (net.twisterrob.inventory.android.fragment.data.BaseEditFragment.SaveTask)"
+        errorLine1=" private class SaveTask extends SimpleSafeAsyncTask&lt;DTO, Void, DTO> {"
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/fragment/data/BaseEditFragment.java"
+            line="493"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
+        errorLine1="   AndroidTools.executePreferParallel(new SimpleSafeAsyncTask&lt;Void, Float, String>() {"
+        errorLine2="                                      ^">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/fragment/CategoryHelpFragment.java"
+            line="84"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
+        errorLine1="    new SimpleSafeAsyncTask&lt;Void, Void, File>() {"
+        errorLine2="    ^">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/fragment/CategoryHelpFragment.java"
+            line="113"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
+        errorLine1="    new SimpleSafeAsyncTask&lt;Void, Void, File>() {"
+        errorLine2="    ^">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/fragment/CategoryHelpFragment.java"
+            line="134"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.ClosureAsyncTask)"
+        errorLine1="   AndroidTools.executePreferSerial(new ClosureAsyncTask() {"
+        errorLine2="                                    ^">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/view/ChangeTypeListener.java"
+            line="63"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This field leaks a context object"
+        errorLine1="  protected final FragmentActivity context;"
+        errorLine2="  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/view/Dialogs.java"
+            line="101"
+            column="3"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This field leaks a context object"
+        errorLine1=" private final Context context;"
+        errorLine2=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/view/DrawerUpdateCountersTask.java"
+            line="24"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This field leaks a context object"
+        errorLine1=" private final NavigationView nav;"
+        errorLine2=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/view/DrawerUpdateCountersTask.java"
+            line="34"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This `AsyncTask` class should be static or leaks might occur (net.twisterrob.inventory.android.activity.ImageActivity.Redirect)"
+        errorLine1=" private class Redirect extends SimpleSafeAsyncTask&lt;Uri, Void, Uri> {"
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/activity/ImageActivity.java"
+            line="125"
+            column="16"/>
+    </issue>
 
     <issue
         id="StaticFieldLeak"
@@ -7,8 +157,8 @@
         errorLine1=" private class RefreshInventorySizeTask extends AsyncTask&lt;Void, Void, Boolean> {"
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\java\net\twisterrob\inventory\android\activity\MainActivity.java"
-            line="473"
+            file="src/main/java/net/twisterrob/inventory/android/activity/MainActivity.java"
+            line="480"
             column="16"/>
     </issue>
 
@@ -18,9 +168,34 @@
         errorLine1=" private class PopulateSampleInventoryTask extends AsyncTask&lt;Void, Void, Boolean> {"
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\java\net\twisterrob\inventory\android\activity\MainActivity.java"
-            line="493"
+            file="src/main/java/net/twisterrob/inventory/android/activity/MainActivity.java"
+            line="500"
             column="16"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
+        errorLine1="  loadTreeTask = new SimpleSafeAsyncTask&lt;Node, Void, Node>() {"
+        errorLine2="                 ^">
+        <location
+            file="src/main/java/net/twisterrob/inventory/android/sunburst/SunburstFragment.java"
+            line="86"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ConvertToWebp"
+        message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
+        <location
+            file="src/main/res/drawable-xxxhdpi/ic_flash_off.png"/>
+    </issue>
+
+    <issue
+        id="ConvertToWebp"
+        message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
+        <location
+            file="src/main/res/drawable-xxxhdpi/ic_launcher.png"/>
     </issue>
 
 </issues>

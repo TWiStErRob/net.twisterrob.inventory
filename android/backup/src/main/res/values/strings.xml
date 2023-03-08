@@ -7,7 +7,8 @@
 	]>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-	<string name="backup_title">Backup</string>
+	<!-- lint:UnusedResources Title is used in Main Drawer from app module. -->
+	<string name="backup_title" tools:ignore="UnusedResources">Backup</string>
 	<string name="backup_export_internal">Backup here</string>
 	<string name="backup_export_external">Backup to…</string>
 	<string name="backup_import_external">Import from…</string>

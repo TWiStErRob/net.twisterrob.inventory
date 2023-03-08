@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.*;
 import android.database.sqlite.SQLiteConstraintException;
@@ -24,6 +25,7 @@ import net.twisterrob.inventory.android.backup.concurrent.BackupNotifications;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
 
+@SuppressLint("Registered") // REPORT False positive, it is there with explicit FQCN.
 public class App extends BaseApp implements BaseComponent.Provider {
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
