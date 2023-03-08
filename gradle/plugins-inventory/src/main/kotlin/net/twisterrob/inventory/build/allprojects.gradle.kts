@@ -1,10 +1,16 @@
 package net.twisterrob.inventory.build
 
-apply(from = rootDir.resolve("gradle/substitutions.gradle"))
-
-configurations.all {
-	if (this.name == "lintClassPath") return@all
-//		this.resolutionStrategy.failOnVersionConflict()
+configurations.configureEach {
+	resolutionStrategy {
+		dependencySubstitution {
+			@Suppress("VariableNaming", "LocalVariableName")
+			val VERSION_HAMCREST: String by project
+			substitute(module("org.hamcrest:hamcrest-core"))
+				.using(module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}"))
+			substitute(module("org.hamcrest:hamcrest-library"))
+				.using(module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}"))
+		}
+	}
 }
 
 tasks.withType<JavaCompile>().configureEach javac@{

@@ -1,4 +1,3 @@
-apply from: rootProject.file('gradle/substitutions.gradle')
 apply from: new File(gradle.includedBuild("twister-libs-android").projectDir, "gradle/testCompile.gradle")
 
 dependencies {
