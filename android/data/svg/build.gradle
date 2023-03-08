@@ -2,8 +2,6 @@ plugins {
 	id("net.twisterrob.inventory.android.app")
 }
 
-apply from: "${rootDir}/gradle/testCompile.gradle", to: project
-
 dependencies {
 	implementation("net.twisterrob.lib:twister-lib-android-basics")
 	implementation(project(":android:data"))
