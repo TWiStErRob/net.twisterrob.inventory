@@ -24,14 +24,14 @@ android {
 		}
 		testInstrumentationRunner = "net.twisterrob.android.test.junit.AndroidJUnitRunner"
 	}
-	variantFilter { variant ->
-		if (variant.buildType.name == com.android.builder.core.BuilderConstants.RELEASE) {
-			variant.setIgnore(true)
-		}
-	}
 	buildTypes {
 		debug {
 			multiDexKeepProguard project(":android").file("src/androidTest/multidex.pro")
 		}
 	}
+}
+
+androidComponents {
+	beforeVariants(selector().withName("release"), { it.enable = false })
+	beforeVariants(selector().all(), { it.enableUnitTest = false })
 }
