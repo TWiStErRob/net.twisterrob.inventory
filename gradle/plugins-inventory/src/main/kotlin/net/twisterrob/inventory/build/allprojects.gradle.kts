@@ -1,14 +1,14 @@
 package net.twisterrob.inventory.build
 
+import net.twisterrob.inventory.build.dsl.libs
+
 configurations.configureEach {
 	resolutionStrategy {
 		dependencySubstitution {
-			@Suppress("VariableNaming", "LocalVariableName")
-			val VERSION_HAMCREST: String by project
-			substitute(module("org.hamcrest:hamcrest-core"))
-				.using(module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}"))
-			substitute(module("org.hamcrest:hamcrest-library"))
-				.using(module("org.hamcrest:java-hamcrest:${VERSION_HAMCREST}"))
+			substitute(module(libs.deprecated.hamcrestCore.get().module.toString()))
+				.using(module(libs.test.hamcrest.get().toString()))
+			substitute(module(libs.deprecated.hamcrestLibrary.get().module.toString()))
+				.using(module(libs.test.hamcrest.get().toString()))
 		}
 	}
 }

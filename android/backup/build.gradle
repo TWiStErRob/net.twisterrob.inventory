@@ -22,11 +22,10 @@ dependencies {
 	testImplementation project(':android:test_helpers')
 	testImplementation project(':android:database:test_helpers')
 	testImplementation(libs.test.junit4)
-	testImplementation 'com.shazam:gwen:1.0.2' // Gwen.given, Gwen.when, Gwen.then
+	testImplementation(libs.test.gwen)
 	testImplementation "net.twisterrob.lib:twister-lib-mockito"
-	testImplementation "com.google.guava:guava:27.0.1-jre"
-	testImplementation 'com.diffplug.durian:durian:3.4.0'
-	testImplementation 'com.github.stefanbirkner:fishbowl:1.4.1' // exceptionThrownBy (assertThrows-like)
+	testImplementation(libs.guava)
+	testImplementation(libs.test.durian)
+	testImplementation(libs.test.fishbowl)
 	testImplementation "net.twisterrob.lib:twister-lib-test"
 }
-// STOPSHIP

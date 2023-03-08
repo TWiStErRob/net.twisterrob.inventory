@@ -22,9 +22,8 @@ dependencies {
 	api "net.twisterrob.lib:twister-lib-android-stringers"
 	compileOnly "net.twisterrob.lib:twister-lib-android-capture_image"
 	implementation(libs.androidsvg)
-	api "javax.inject:javax.inject:1"
+	api(libs.javax.inject)
 }
 
 // lint:UnusedResources Disable blanket, because files in this module are tend to be used by other modules.
 android.lint.disable.add("UnusedResources")
-// STOPSHIP

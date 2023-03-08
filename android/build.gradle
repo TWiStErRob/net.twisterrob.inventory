@@ -36,7 +36,7 @@ dependencies {
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows "Serializer Java 2.7.1" on Genymotion 2.3.7 and S5 5.0.0
-//	compileOnly "xalan:xalan:2.7.1"
+//	compileOnly(libs.xalan)
 
 //	debugImplementation 'com.facebook.stetho:stetho:1.3.1'
 //	debugImplementation 'com.facebook.stetho:stetho-js-rhino:1.3.1'
@@ -50,16 +50,16 @@ dependencies {
 	testImplementation(libs.test.powermockJunit4)
 	testImplementation(libs.test.powermockJunit4Rule)
 	testImplementation(libs.test.powermockXstream)
-	testImplementation("org.robolectric:robolectric:${VERSION_ROBOLECTRIC}")
-	testImplementation("org.robolectric:shadows-multidex:${VERSION_ROBOLECTRIC}")
-	testImplementation("androidx.test:core:${VERSION_ESPRESSO_RUNNER}")
+	testImplementation(libs.test.robolectric)
+	testImplementation(libs.test.robolectricMultidexShadows)
+	testImplementation(libs.test.androidxCore)
 
 	androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-mockito"
 	androidTestImplementation(libs.test.mockitoAndroid)
 	androidTestImplementation "net.twisterrob.lib:twister-lib-test"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
-	androidTestImplementation("org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}")
+	androidTestImplementation(libs.test.hamcrest)
 
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
@@ -70,8 +70,8 @@ dependencies {
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-capture_image-test_helpers"
 	androidTestImplementation project(':android:database:test_helpers')
 	androidTestImplementation(libs.androidx.preference)
-	androidTestImplementation("androidx.test.espresso:espresso-intents:${VERSION_ESPRESSO}")
-	androidTestImplementation("androidx.test.espresso:espresso-contrib:${VERSION_ESPRESSO}")
+	androidTestImplementation(libs.test.espressoIntents)
+	androidTestImplementation(libs.test.espressoContrib)
 }
 
 android {
