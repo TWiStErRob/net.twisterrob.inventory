@@ -10,7 +10,6 @@ dependencies {
 	implementation project(':android:database')
 	implementation project(':android:backup')
 	implementation project(':android:preferences')
-	testImplementation project(':android:test_helpers')
 
 	implementation('net.twisterrob.lib:twister-lib-android-monolith')
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
@@ -23,6 +22,8 @@ dependencies {
 	implementation 'net.twisterrob.lib:twister-lib-android-stringers'
 	implementation 'net.twisterrob.lib:twister-lib-android-capture_image'
 	runtimeOnly('net.twisterrob.lib:twister-lib-android-slf4j')
+	// Replace APK's runtimeOnly sneaking into test runtime
+	configurations.testRuntimeOnly.exclude module: 'twister-lib-android-slf4j'
 
 	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
 	implementation "androidx.localbroadcastmanager:localbroadcastmanager:${VERSION_ANDROIDX_BROADCAST}"
@@ -41,7 +42,24 @@ dependencies {
 //	debugImplementation 'com.facebook.stetho:stetho-js-rhino:1.3.1'
 //	debugImplementation 'com.idescout.sql:sqlscout-server:1.0'
 
-	apply from: "${rootDir}/gradle/testCompile.gradle", to: project
+	testImplementation project(':android:test_helpers')
+	testImplementation "junit:junit:${VERSION_JUNIT}"
+	testImplementation 'net.twisterrob.lib:twister-lib-hamcrest'
+	testImplementation 'net.twisterrob.lib:twister-lib-mockito'
+	testImplementation "org.powermock:powermock-api-mockito2:${VERSION_POWERMOCK}"
+	testImplementation "org.powermock:powermock-module-junit4:${VERSION_POWERMOCK}"
+	testImplementation "org.powermock:powermock-module-junit4-rule:${VERSION_POWERMOCK}"
+	testImplementation "org.powermock:powermock-classloading-xstream:${VERSION_POWERMOCK}"
+	testImplementation "org.robolectric:robolectric:${VERSION_ROBOLECTRIC}"
+	testImplementation "org.robolectric:shadows-multidex:${VERSION_ROBOLECTRIC}"
+	testImplementation "androidx.test:core:${VERSION_ESPRESSO_RUNNER}"
+
+	androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-mockito"
+	androidTestImplementation "org.mockito:mockito-android:${VERSION_MOCKITO}"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-test"
+	androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
+	androidTestImplementation "org.hamcrest:hamcrest-junit:${VERSION_HAMCREST}"
 
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
@@ -52,6 +70,8 @@ dependencies {
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-capture_image-test_helpers"
 	androidTestImplementation project(':android:database:test_helpers')
 	androidTestImplementation "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
+	androidTestImplementation "androidx.test.espresso:espresso-intents:${VERSION_ESPRESSO}"
+	androidTestImplementation "androidx.test.espresso:espresso-contrib:${VERSION_ESPRESSO}"
 }
 
 android {
