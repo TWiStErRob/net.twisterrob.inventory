@@ -22,6 +22,7 @@ dependencies {
 //	compileOnly(libs.xml.xalan) // useful to force it on the classpath to run in IDEA
 	xalan(libs.xml.xalan)
 	saxon(libs.xml.saxon)
+	testImplementation(libs.test.junit4)
 }
 
 def dataXsltCsv = project(':android:backup').file("src/main/assets/data.csv.xslt")
@@ -30,6 +31,15 @@ def dataXsd = project(':android:backup').file("src/main/assets/data.xml.xsd")
 def dataXml = project(':android:backup').file("src/main/assets/demo.xml")
 //def dataXml = file("${rootDir}/../temp/test/data.xml")
 def transformDir = file('build/transformed')
+
+tasks.named("test", Test.class) {
+	it.systemProperty("net.twisterrob.inventory.transform.xslt.csv", dataXsltCsv)
+	it.systemProperty("net.twisterrob.inventory.transform.xslt.html", dataXsltHtml)
+	it.systemProperty("net.twisterrob.inventory.transform.xsd", dataXsd)
+	it.systemProperty("net.twisterrob.inventory.transform.xml", dataXml)
+	it.systemProperty("net.twisterrob.inventory.transform.output", new File(transformDir, "data-test.html"))
+}
+
 idea.module.excludeDirs += [ transformDir ]
 
 // run with: gradlew -p buildSrc cRT rTHJ rTCJ | grep -v "^:"
