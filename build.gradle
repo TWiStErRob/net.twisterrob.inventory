@@ -2,29 +2,13 @@ plugins {
 	id("net.twisterrob.inventory.root")
 }
 
-evaluationDependsOnChildren()
-def connectedTasks = allprojects.collectMany { it.tasks.withType(com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask) }
-connectedTasks.inject { prev, curr -> curr.configure { it.mustRunAfter prev }; return prev }
-
-// Disable these temporarily because `gradlew :android:connectedCheck` fails with:
-// > Included build task ':about:connectedDebugAndroidTest' was never scheduled for execution.
-def includedConnectedTasks = [
-//		gradle.includedBuild("twister-libs-android").task(":espresso:connectedDebugAndroidTest"),
-//		gradle.includedBuild("twister-libs-android").task(":about:connectedDebugAndroidTest"),
-]
-connectedTasks.each { it.configure { it.mustRunAfter(includedConnectedTasks) } }
-
-tasks.register("connectedCheck") {
-//	dependsOn(gradle.includedBuild("twister-libs-android").task(':connectedCheck'))
-}
-
 tasks.register("clean", Delete.class) { clean ->
 	clean.dependsOn gradle.includedBuilds*.task(':cleanFull')
 	clean.delete project.buildDir
 }
 
 tasks.register("build") { build ->
-	build.dependsOn(gradle.includedBuild("plugins-inventory").task(':build'))
+	build.dependsOn(gradle.includedBuilds*.task(':build'))
 }
 
 idea {
