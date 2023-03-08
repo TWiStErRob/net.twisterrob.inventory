@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
 	implementation project(":android:base")
-	implementation "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
+	implementation("androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}")
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
-	implementation "org.slf4j:slf4j-api:${VERSION_SLF4J}"
+	implementation("org.slf4j:slf4j-api:${VERSION_SLF4J}")
 }
