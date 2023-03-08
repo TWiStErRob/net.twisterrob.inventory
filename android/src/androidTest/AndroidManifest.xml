@@ -1,6 +1,5 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="net.twisterrob.inventory.android.test"
 	android:sharedUserId="net.twisterrob.inventory">
 
 	<!--

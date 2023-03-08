@@ -1,21 +1,26 @@
 package net.twisterrob.inventory.build.tests.upgrade
 
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.api.ApplicationVariant
-import com.android.build.gradle.internal.api.ApplicationVariantImpl
+import com.android.build.api.artifact.Artifacts
+import com.android.build.api.artifact.SingleArtifact
+import com.android.build.api.component.impl.ComponentImpl
+import com.android.build.api.variant.ApplicationVariant
+import com.android.build.api.variant.Variant
+import com.android.build.gradle.internal.services.VariantServices
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import com.android.build.gradle.internal.test.report.ReportType
 import com.android.build.gradle.internal.test.report.ResilientTestReport
 import com.android.build.gradle.internal.testing.ConnectedDevice
 import com.android.build.gradle.internal.testing.TestData
-import com.android.build.gradle.internal.variant.BaseVariantData
 import com.android.builder.testing.api.DeviceConnector
 import com.android.ddmlib.IDevice
 import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
 import com.android.utils.FileUtils
 import com.android.utils.StdLogger
+import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.work.DisableCachingByDefault
 import java.io.File
@@ -25,35 +30,37 @@ import java.util.concurrent.TimeUnit
 @DisableCachingByDefault(because = "Lots of external factors")
 abstract class UpgradeTestTask : DefaultTask() {
 
+	@get:Input
+	abstract val testedVariant: Property<ApplicationVariant>
+
+	@get:Input
+	abstract val instrumentTestTask: Property<DeviceProviderInstrumentTestTask>
+
 	@Suppress("LongMethod") // Will be split up when I make it work again.
 	@TaskAction
 	fun upgradeTest() {
-		val android = project.extensions.findByName("android") as AppExtension
-		val debugVariant = android
-			.applicationVariants
-			.single { it.buildType.name == "debug" }
-			as ApplicationVariantImpl
-
-		val instrument = debugVariant.testVariant.connectedInstrumentTestProvider.get() as
-			DeviceProviderInstrumentTestTask
+		val debugVariant = testedVariant.get()
+		val instrument = instrumentTestTask.get()
+		val adb = project.androidComponents.sdkComponents.adb
+		val deviceProvider = instrument.deviceProviderFactory.getDeviceProvider(adb, null)
 		val device = try {
-			instrument.deviceProvider.init()
-			instrument.deviceProvider.devices.single() as ConnectedDevice
+			deviceProvider.init()
+			deviceProvider.devices.single() as ConnectedDevice
 		} finally {
-			instrument.deviceProvider.terminate()
+			deviceProvider.terminate()
 		}
 		val realDevice = device.iDevice
 
-		val testApk = debugVariant.testVariant.outputs.first().outputFile
-		logger.info("Uninstalling test package: ${debugVariant.testVariant.applicationId}")
-		realDevice.uninstallPackage(debugVariant.testVariant.applicationId)
+		val testApk = debugVariant.androidTest!!.artifacts.apk
+		val testApplicationId = debugVariant.androidTest!!.applicationId.get()
+		logger.info("Uninstalling test package: ${testApplicationId}")
+		realDevice.uninstallPackage(testApplicationId)
 		logger.info("Installing test package: ${testApk}")
 		realDevice.installPackage(testApk.absolutePath, false)
 
-		val data: BaseVariantData = debugVariant.variantData
+		val services = debugVariant.services
 
-		@Suppress("DEPRECATION")
-		val results = data.globalScope.testResultsFolder.resolve("upgrade-tests")
+		val results = services.projectInfo.getTestResultsFolder()!!.resolve("upgrade-tests")
 			.also { FileUtils.cleanOutputDir(it) }
 
 		val testListener = TestAwareCustomTestRunListener(
@@ -62,8 +69,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 			setReportDir(results)
 		}
 
-		@Suppress("DEPRECATION")
-		val reports = data.globalScope.reportsDir.resolve("upgrade-tests")
+		val reports = services.projectInfo.getReportsDir().resolve("upgrade-tests")
 			.also { FileUtils.cleanOutputDir(it) }
 
 		var finished = false
@@ -71,14 +77,14 @@ abstract class UpgradeTestTask : DefaultTask() {
 			installOld(realDevice, debugVariant, "10001934-v1.0.0#1934")
 			pushData(realDevice, debugVariant, "10001934-v1.0.0#1934")
 			runTest(
-				instrument.testData, device, testListener, reports.resolve("index.html"),
+				instrument.testData.get(), device, testListener, reports.resolve("index.html"),
 				"net.twisterrob.inventory.android.UpgradeTests#testPrepareVersion1"
 			)
-			val newApk = debugVariant.outputs.first().outputFile
+			val newApk = debugVariant.artifacts.apk
 			logger.info("Installing package: ${newApk}")
 			realDevice.installPackage(newApk.absolutePath, true)
 			runTest(
-				instrument.testData, device, testListener, reports.resolve("index.html"),
+				instrument.testData.get(), device, testListener, reports.resolve("index.html"),
 				"net.twisterrob.inventory.android.UpgradeTests#testVerifyVersion2"
 			)
 			finished = true
@@ -96,18 +102,20 @@ abstract class UpgradeTestTask : DefaultTask() {
 	}
 
 	private fun installOld(realDevice: IDevice, debugVariant: ApplicationVariant, version: String) {
+		val applicationId = debugVariant.applicationId.get()
 		// FIXME release debug build as well
 		val oldApk =
-			File("${System.getenv("RELEASE_HOME")}/android/${debugVariant.applicationId}@${version}d+debug.apk")
-		logger.info("Uninstalling package: ${debugVariant.applicationId}")
-		realDevice.uninstallPackage(debugVariant.applicationId)
+			File("${System.getenv("RELEASE_HOME")}/android/${applicationId}@${version}d+debug.apk")
+		logger.info("Uninstalling package: ${applicationId}")
+		realDevice.uninstallPackage(applicationId)
 		logger.info("Installing package: ${oldApk}")
 		realDevice.installPackage(oldApk.absolutePath, false)
 	}
 
 	private fun pushData(realDevice: IDevice, debugVariant: ApplicationVariant, version: String) {
+		val applicationId = debugVariant.applicationId.get()
 		val localData =
-			File("${System.getenv("RELEASE_HOME")}/android/${debugVariant.applicationId}@${version}d+debug-data.zip")
+			File("${System.getenv("RELEASE_HOME")}/android/${applicationId}@${version}d+debug-data.zip")
 		logger.info("Pushing ${localData}")
 		@Suppress("SdCardPath") // False positive, this is Gradle code not Android.
 		realDevice.pushFile(localData.absolutePath, "/sdcard/Download/data.zip")
@@ -147,3 +155,12 @@ abstract class UpgradeTestTask : DefaultTask() {
 		}
 	}
 }
+
+val Variant.services: VariantServices
+	get() = ComponentImpl::class.java
+		.getDeclaredField("internalServices")
+		.apply { isAccessible = true }
+		.get(this) as VariantServices
+
+val Artifacts.apk: File
+	get() = this.get(SingleArtifact.APK).get().asFileTree.singleFile

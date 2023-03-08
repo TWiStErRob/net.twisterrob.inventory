@@ -1,7 +1,9 @@
 [versions]
 #java = "1.8"
 #
-agp = "4.1.3"
+agp = "7.4.2"
+# 23.0.0 + agp
+agp-tools = "30.4.2"
 ## https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 twisterrob = "0.15"
 detekt = "1.22.0"
@@ -10,6 +12,10 @@ test-junit4 = "4.13.1"
 
 [libraries]
 android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+android-tools-common = { module = "com.android.tools:common", version.ref = "agp-tools" }
+android-tools-sdkCommon = { module = "com.android.tools:sdk-common", version.ref = "agp-tools" }
+android-tools-ddmlib = { module = "com.android.tools.ddms:ddmlib", version.ref = "agp-tools" }
+android-tools-testApi = { module = "com.android.tools.build:builder-test-api", version.ref = "agp" }
 twisterrob-quality = { module = "net.twisterrob.gradle:twister-quality", version.ref = "twisterrob" }
 twisterrob-android = { module = "net.twisterrob.gradle:twister-convention-plugins", version.ref = "twisterrob" }
 

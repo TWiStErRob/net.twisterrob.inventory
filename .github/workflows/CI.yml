@@ -42,34 +42,10 @@ jobs:
           java-version: 11
           distribution: zulu
 
-      - name: "Patch Android SDK components for compatibility."
-        run: |
-          # AGP's com.android.SdkConstants.CURRENT_BUILD_TOOLS_VERSION
-          # https://github.com/TWiStErRob/net.twisterrob.gradle/blob/v0.15/plugin/base/src/main/kotlin/net/twisterrob/gradle/android/Versions.kt#L28
-          echo android --install "build-tools;32.0.0"
-          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "build-tools;32.0.0"
-          # Patch AGP 4.x v SDK Build Tools 31/32 incompatibility: https://stackoverflow.com/a/68430992/253468
-          # Installed Build Tools revision 32.0.0 is corrupted. Remove and install again using the SDK Manager.
-          # Build-tool 32.0.0 is missing DX at /usr/local/lib/android/sdk/build-tools/32.0.0/dx
-          echo "Symlinking ${ANDROID_HOME}/build-tools/32.0.0/dx <- d8 and same for lib/dx.jar <- d8.jar."
-          test -e ${ANDROID_HOME}/build-tools/32.0.0/dx \
-              || ln --symbolic --verbose d8 ${ANDROID_HOME}/build-tools/32.0.0/dx
-          test -e ${ANDROID_HOME}/build-tools/32.0.0/lib/dx.jar \
-              || ln --symbolic --verbose d8.jar ${ANDROID_HOME}/build-tools/32.0.0/lib/dx.jar
-
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v3
         with:
           submodules: true
-
-      - name: "Patch libraries to build ProGuard compatible Java bytecode."
-        run: |
-          cat >> libs/gradle/plugins/src/main/kotlin/net/twisterrob/libraries/net.twisterrob.libraries.java.library.gradle.kts <<EOF
-          java {
-              sourceCompatibility = JavaVersion.VERSION_1_7
-              targetCompatibility = JavaVersion.VERSION_1_8
-          }
-          EOF
 
       - name: "Build project."
         working-directory: .
@@ -89,13 +65,16 @@ jobs:
           --stacktrace
           --continue
           build
+          violationReportHtml
 
       - name: "Upload 'Lint Results' artifact."
         if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: 'Lint Results'
-          path: ${{ github.workspace }}/**/build/reports/lint-results*.html
+          path: |
+            ${{ github.workspace }}/**/build/reports/lint-results*.html
+            ${{ github.workspace }}/build/reports/violations.*
 
       - name: "Upload 'Unit Test Results' artifact."
         if: success() || failure()
@@ -176,21 +155,6 @@ jobs:
           java-version: 11
           distribution: zulu
 
-      - name: "Patch Android SDK components for compatibility."
-        run: |
-          # AGP's com.android.SdkConstants.CURRENT_BUILD_TOOLS_VERSION
-          # https://github.com/TWiStErRob/net.twisterrob.gradle/blob/v0.15/plugin/base/src/main/kotlin/net/twisterrob/gradle/android/Versions.kt#L28
-          echo android --install "build-tools;32.0.0"
-          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "build-tools;32.0.0"
-          # Patch AGP 4.x v SDK Build Tools 31/32 incompatibility: https://stackoverflow.com/a/68430992/253468
-          # Installed Build Tools revision 32.0.0 is corrupted. Remove and install again using the SDK Manager.
-          # Build-tool 32.0.0 is missing DX at /usr/local/lib/android/sdk/build-tools/32.0.0/dx
-          echo "Symlinking ${ANDROID_HOME}/build-tools/32.0.0/dx <- d8 and same for lib/dx.jar <- d8.jar."
-          test -e ${ANDROID_HOME}/build-tools/32.0.0/dx \
-              || ln -s -v d8 ${ANDROID_HOME}/build-tools/32.0.0/dx
-          test -e ${ANDROID_HOME}/build-tools/32.0.0/lib/dx.jar \
-              || ln -s -v d8.jar ${ANDROID_HOME}/build-tools/32.0.0/lib/dx.jar
-
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v3
         with:
@@ -214,7 +178,8 @@ jobs:
         with:
           name: 'Instrumentation Test Results ${{ matrix.android-api }}'
           path: |
-            ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/flavors/debugAndroidTest/
+            ${{ github.workspace }}/**/build/reports/androidTest/connected/
+            ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/
 
       - name: "Publish 'Instrumentation Results ${{ matrix.android-api }}' check suite."
         if: success() || failure()
@@ -224,4 +189,4 @@ jobs:
           comment_mode: off
           report_individual_runs: true
           test_changes_limit: 0
-          junit_files: ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/flavors/debugAndroidTest/TEST-*.xml
+          junit_files: ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/TEST-*.xml

@@ -28,8 +28,21 @@ dependencies {
 	implementation(libs.android.gradle)
 	implementation(libs.twisterrob.quality)
 	implementation(libs.twisterrob.android)
+
+	// region: These dependencies were part of AGP in 3.x and 4.x, but in 7.x they became runtime dependencies.
+	// UpgradeTestTask: DeviceConnector, DeviceProvider
+	compileOnly(libs.android.tools.testApi)
+	// AndroidTestSetupPlugin: IShellEnabledDevice, NullOutputReceiver, UpgradeTestTask: lot
+	compileOnly(libs.android.tools.ddmlib)
+	// testRunnerFactory: ProcessExecutor, ExecutorServiceAdapter
+	compileOnly(libs.android.tools.sdkCommon)
+	// UpgradeTestTask: FileUtils, StdLogger, ILogger
+	compileOnly(libs.android.tools.common)
+	// endregion
+	
 	// TODEL https://github.com/gradle/gradle/issues/15383
 	implementation(files(libs::class.java.superclass.protectionDomain.codeSource.location))
+
 	testImplementation(libs.test.junit4)
 }
 

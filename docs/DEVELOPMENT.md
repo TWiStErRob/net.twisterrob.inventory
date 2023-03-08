@@ -13,3 +13,9 @@ adb shell "pm list packages | grep --only-matching 'net.twisterrob.*' | while re
 ```
 
 (Beware on Linux and Mac, the quotes might be different.)
+
+### Run a specific test through AGP
+
+```shell
+gradlew :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.activity.MainActivityTest_Drawer
+```

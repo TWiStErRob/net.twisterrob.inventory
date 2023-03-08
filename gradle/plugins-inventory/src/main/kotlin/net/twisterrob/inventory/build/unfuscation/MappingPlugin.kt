@@ -1,30 +1,35 @@
 package net.twisterrob.inventory.build.unfuscation
 
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.api.ApkVariant
-import com.android.build.gradle.internal.api.TestedVariant
+import com.android.build.api.artifact.Artifact
+import com.android.build.api.artifact.SingleArtifact
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.android.build.gradle.internal.tasks.R8Task
+import net.twisterrob.gradle.android.androidComponents
+import net.twisterrob.inventory.build.dsl.android
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
+import org.gradle.api.tasks.TaskProvider
+import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
 
 class MappingPlugin : Plugin<Project> {
 
+	@Suppress("UnstableApiUsage")
 	override fun apply(project: Project) {
-		val android = project.extensions.findByName("android") as AppExtension
-		android.applicationVariants.all {
-			val variant: ApkVariant = this
-
-			@Suppress("DEPRECATION") // TODO don't know where to get this from. Retry in AGP 7.4 or 8.x
-			val obfuscateTask = variant.obfuscation
+		(project.androidComponents as ApplicationAndroidComponentsExtension).onVariants { variant ->
 			val skipReason = mutableListOf<String>()
-			if (obfuscateTask == null) {
+			if (!variant.isMinifyEnabled) {
 				skipReason += "not obfuscated"
 			}
-			if (!variant.buildType.isDebuggable) {
+			val buildType =
+				(project.android as ApplicationExtension).buildTypes[variant.buildType!!]
+			if (!buildType.isDebuggable) {
 				skipReason += "not debuggable"
 			}
-			if (variant is TestedVariant && variant.testVariant != null) {
+			if (variant.androidTest != null) {
 				skipReason += "tested"
 			}
 			if (skipReason.isNotEmpty()) {
@@ -33,19 +38,21 @@ class MappingPlugin : Plugin<Project> {
 					variant.name,
 					skipReason
 				)
-				return@all
+				return@onVariants
 			}
 
+			val obfuscateTask: TaskProvider<R8Task> =
+				project.tasks.named<R8Task>("minify${variant.name.capitalized()}WithR8")
 			val unfuscateTask =
 				project.tasks.register<UnfuscateTask>("${obfuscateTask.name}Unfuscate") {
-					this.obfuscateTask = obfuscateTask
-					this.mapping.fileProvider(variant.mappingFileProvider.map { it.singleFile })
-					this.newMapping.fileProvider(this.mapping.map { it.asFile.parentFile.resolve("unmapping.txt") })
+					this.obfuscateTask.set(obfuscateTask)
 					this.dependsOn(obfuscateTask)
 				}
 
-			@Suppress("DEPRECATION")
-			(variant.dex as Task).dependsOn(unfuscateTask)
+			@Suppress("TYPE_MISMATCH", "CAST_NEVER_SUCCEEDS") // TODO Figure out how to wire this.
+			(variant.artifacts.use(unfuscateTask)
+				.wiredWithFiles(UnfuscateTask::mapping, UnfuscateTask::newMapping)
+				.toTransform(SingleArtifact.OBFUSCATION_MAPPING_FILE as Artifact.Transformable))
 		}
 	}
 }
