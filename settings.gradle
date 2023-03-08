@@ -26,22 +26,22 @@ dependencyResolutionManagement {
 
 rootProject.name = 'Inventory'
 
-include ':android'
-include ':android:base'
-include ':android:test_helpers'
-includeWithContract ':android:database'
-include ':android:database:test_helpers'
-include ':android:preferences'
-include ':android:data'
-include ':android:data:svg'
-include ':android:backup'
-include ':tools:transform'
+include(":android")
+include(":android:base")
+include(":android:test_helpers")
+includeWithContract(":android:database")
+include(":android:database:test_helpers")
+include(":android:preferences")
+include(":android:data")
+include(":android:data:svg")
+include(":android:backup")
+include(":tools:transform")
 
-def includeWithContract(String projectPath) {
-	include projectPath
+void includeWithContract(String projectPath) {
+	include(projectPath)
 	def contractProjectPath = "${projectPath}-contract"
-	include contractProjectPath
-	project(contractProjectPath).projectDir = new File(project(projectPath).projectDir, 'contract')
+	include(contractProjectPath)
+	project(contractProjectPath).projectDir = new File(project(projectPath).projectDir, "contract")
 }
 
 includeBuild("libs") { build ->
