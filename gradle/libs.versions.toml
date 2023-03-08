@@ -11,13 +11,13 @@ detekt = "1.22.0"
 test-junit4 = "4.13.1"
 
 [libraries]
-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
-android-tools-common = { module = "com.android.tools:common", version.ref = "agp-tools" }
-android-tools-sdkCommon = { module = "com.android.tools:sdk-common", version.ref = "agp-tools" }
-android-tools-ddmlib = { module = "com.android.tools.ddms:ddmlib", version.ref = "agp-tools" }
-android-tools-testApi = { module = "com.android.tools.build:builder-test-api", version.ref = "agp" }
-twisterrob-quality = { module = "net.twisterrob.gradle:twister-quality", version.ref = "twisterrob" }
-twisterrob-android = { module = "net.twisterrob.gradle:twister-convention-plugins", version.ref = "twisterrob" }
+plugin-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+plugin-android-tools-common = { module = "com.android.tools:common", version.ref = "agp-tools" }
+plugin-android-tools-sdkCommon = { module = "com.android.tools:sdk-common", version.ref = "agp-tools" }
+plugin-android-tools-ddmlib = { module = "com.android.tools.ddms:ddmlib", version.ref = "agp-tools" }
+plugin-android-tools-testApi = { module = "com.android.tools.build:builder-test-api", version.ref = "agp" }
+plugin-twisterrob-quality = { module = "net.twisterrob.gradle:twister-quality", version.ref = "twisterrob" }
+plugin-twisterrob-android = { module = "net.twisterrob.gradle:twister-convention-plugins", version.ref = "twisterrob" }
 
 test-junit4 = { module = "junit:junit", version.ref = "test-junit4" }
 
