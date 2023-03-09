@@ -10,11 +10,15 @@ java {
 }
 
 val integrationTests by tasks.registering {
-	// dependsOn("integration*Test") added later.
+	// dependsOn("integration*Test") added later when configuring the test suites.
 }
 
 tasks.check.configure {
 	dependsOn(integrationTests)
+}
+
+dependencies {
+	testFixturesImplementation(libs.test.junit4)
 }
 
 @Suppress("UnstableApiUsage")
@@ -53,11 +57,8 @@ fun NamedDomainObjectContainerScope<TestSuite>.registerIntegrationTest(
 			implementation(project())
 			implementation(testFixtures(project()))
 		}
-		sources {
-			java {
-				srcDir("src/integrationTest/java")
-			}
-		}
+		// This is disabled, see testClassesDirs setup below.
+		//sources.java.srcDir("src/integrationTest/java")
 		targets {
 			configureEach {
 				integrationTests.configure { dependsOn(testTask) }
@@ -93,6 +94,11 @@ fun NamedDomainObjectContainerScope<TestSuite>.registerIntegrationTest(
 						"net.twisterrob.inventory.transform.output",
 						transformDir.get().asFile
 					)
+					// Prevent "Duplicate content roots detected" when syncing in IDEA.
+					// The above problem happens when sources.java.srcDir("src/integrationTest/java") is used.
+					// This is a hack, ideally this would be a similar setup to testFixtures, but sharedTests.
+					(testClassesDirs as ConfigurableFileCollection)
+						.from(sourceSets["testFixtures"].output.classesDirs)
 				}
 			}
 		}
