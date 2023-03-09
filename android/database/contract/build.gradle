@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
-	implementation "androidx.loader:loader:${VERSION_ANDROIDX_LOADER}"
+	implementation(libs.androidx.annotation)
+	implementation(libs.androidx.loader)
 }

@@ -4,25 +4,25 @@ plugins {
 
 dependencies {
 	implementation project(':android:database-contract')
-	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
-	implementation "androidx.appcompat:appcompat:${VERSION_ANDROIDX_APPCOMPAT}"
-	compileOnly "androidx.recyclerview:recyclerview:${VERSION_ANDROIDX_RECYCLERVIEW}"
-	implementation "com.google.android.material:material:${VERSION_ANDROIDX_MATERIAL}"
-	implementation "androidx.annotation:annotation-experimental:${VERSION_ANDROIDX_ANNOTATION_EXPERIMENTAL}"
-	implementation "androidx.swiperefreshlayout:swiperefreshlayout:${VERSION_ANDROIDX_SWIPEREFRESHLAYOUT}"
-	implementation "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
+	implementation(libs.androidx.annotation)
+	implementation(libs.androidx.appcompat)
+	compileOnly(libs.androidx.recyclerview)
+	implementation(libs.androidx.material)
+	implementation(libs.androidx.annotationExperimental)
+	implementation(libs.androidx.swiperefreshlayout)
+	implementation(libs.androidx.preference)
 
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
-	api "com.github.bumptech.glide:glide:${VERSION_GLIDE}"
+	api(libs.glide)
 	api "net.twisterrob.lib:twister-lib-android-logging"
 	api "net.twisterrob.lib:twister-lib-android-stringers"
 	compileOnly "net.twisterrob.lib:twister-lib-android-capture_image"
-	implementation("com.caverock:androidsvg:${VERSION_ANDROIDSVG}")
-	api "javax.inject:javax.inject:1"
+	implementation(libs.androidsvg)
+	api(libs.javax.inject)
 }
 
 // lint:UnusedResources Disable blanket, because files in this module are tend to be used by other modules.

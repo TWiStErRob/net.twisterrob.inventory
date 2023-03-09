@@ -7,6 +7,6 @@ dependencies {
 	implementation project(':android:data')
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation 'net.twisterrob.lib:twister-lib-java'
-	implementation "junit:junit:${VERSION_JUNIT}"
-	implementation "androidx.test.ext:junit:${VERSION_ESPRESSO_JUNIT}"
+	implementation(libs.test.junit4)
+	implementation(libs.test.androidxJunit)
 }

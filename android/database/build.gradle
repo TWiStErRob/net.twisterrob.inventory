@@ -7,12 +7,12 @@ dependencies {
 	api project(':android:database-contract')
 	implementation project(':android:base')
 
-	implementation "androidx.annotation:annotation:${VERSION_ANDROIDX_ANNOTATION}"
+	implementation(libs.androidx.annotation)
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-core"
 	implementation "net.twisterrob.lib:twister-lib-java"
-	implementation "androidx.preference:preference:${VERSION_ANDROIDX_PREFERENCE}"
+	implementation(libs.androidx.preference)
 }
 
 databaseEntities {
