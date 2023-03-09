@@ -2,7 +2,7 @@ package net.twisterrob.build;
 
 import java.io.File;
 
-public class Props {
+public class TransformTestProperties {
 	File getInputXml() {
 		return new File(System.getProperty("net.twisterrob.inventory.transform.xml"));
 	}

@@ -11,7 +11,7 @@ public class TransformTest {
 
 	@Test
 	public void transformHtml() throws IOException, TransformerException, SAXException {
-		Props props = new Props();
+		TransformTestProperties props = new TransformTestProperties();
 		Transform.main(
 				props.getInputXml().getAbsolutePath(),
 				props.getXsd().getAbsolutePath(),
@@ -22,7 +22,7 @@ public class TransformTest {
 
 	@Test
 	public void transformCsv() throws IOException, TransformerException, SAXException {
-		Props props = new Props();
+		TransformTestProperties props = new TransformTestProperties();
 		Transform.main(
 				props.getInputXml().getAbsolutePath(),
 				props.getXsd().getAbsolutePath(),
