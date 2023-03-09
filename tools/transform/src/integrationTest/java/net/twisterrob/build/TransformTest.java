@@ -17,7 +17,7 @@ public class TransformTest {
 				props.getInputXml().getAbsolutePath(),
 				props.getXsd().getAbsolutePath(),
 				props.getXsltHtml().getAbsolutePath(),
-				props.getOutputFile().getAbsolutePath()
+				props.getOutputHtml().getAbsolutePath()
 		);
 	}
 
@@ -28,7 +28,7 @@ public class TransformTest {
 				props.getInputXml().getAbsolutePath(),
 				props.getXsd().getAbsolutePath(),
 				props.getXsltCsv().getAbsolutePath(),
-				props.getOutputFile().getAbsolutePath()
+				props.getOutputCsv().getAbsolutePath()
 		);
 	}
 }
@@ -37,16 +37,28 @@ class Props {
 	File getInputXml() {
 		return new File(System.getProperty("net.twisterrob.inventory.transform.xml"));
 	}
-	File getOutputFile() {
-		return new File(System.getProperty("net.twisterrob.inventory.transform.output"));
-	}
 	File getXsd() {
 		return new File(System.getProperty("net.twisterrob.inventory.transform.xsd"));
 	}
+
+	File getName() {
+		return new File(System.getProperty("net.twisterrob.inventory.transform.name"));
+	}
+	File getOutputDir() {
+		return new File(System.getProperty("net.twisterrob.inventory.transform.output"));
+	}
+
 	File getXsltHtml() {
 		return new File(System.getProperty("net.twisterrob.inventory.transform.xslt.html"));
 	}
+	File getOutputHtml() {
+		return new File(getOutputDir(), "data-" + getName() + ".csv");
+	}
+
 	File getXsltCsv() {
 		return new File(System.getProperty("net.twisterrob.inventory.transform.xslt.csv"));
+	}
+	File getOutputCsv() {
+		return new File(getOutputDir(), "data-" + getName() + ".csv");
 	}
 }
