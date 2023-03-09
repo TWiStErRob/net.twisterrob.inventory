@@ -18,12 +18,22 @@ dependencies {
 	integrationTestImplementation(libs.test.junit4)
 }
 
+// TODO Not using `org.gradle.test-report-aggregation`, because https://github.com/gradle/gradle/issues/24272.
+val integrationTestAggregateTestReport by tasks.registering(TestReport::class) {
+	group = LifecycleBasePlugin.VERIFICATION_GROUP
+	description = "Generates aggregated test report for all integration tests."
+	// testResults.from(testing.suites*.targets*.testTask) added later when configuring the test suites.
+	destinationDirectory.convention(java.testReportDir.dir("integration-tests/aggregated-results"))
+}
+
 val integrationTests by tasks.registering {
 	// dependsOn("integration*Test") added later when configuring the test suites.
+	finalizedBy(integrationTestAggregateTestReport)
 }
 
 tasks.check.configure {
 	dependsOn(integrationTests)
+	dependsOn(integrationTestAggregateTestReport)
 }
 
 @Suppress("UnstableApiUsage")
@@ -71,6 +81,7 @@ fun NamedDomainObjectContainerScope<TestSuite>.registerIntegrationTest(
 		targets {
 			configureEach {
 				integrationTests.configure { dependsOn(testTask) }
+				integrationTestAggregateTestReport.configure { testResults.from(testTask) }
 				testTask.configure {
 					enableAssertions = true
 					//val dataXml = file("${rootDir}/../temp/test/data.xml")
