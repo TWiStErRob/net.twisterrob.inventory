@@ -1,5 +1,3 @@
-import org.gradle.internal.component.external.model.ProjectDerivedCapability
-
 plugins {
 	id("org.gradle.java")
 	id("org.gradle.java-test-fixtures")
@@ -66,7 +64,8 @@ fun NamedDomainObjectContainerScope<TestSuite>.registerIntegrationTest(
 			implementation(testFixtures(project()))
 			runtimeOnly(project()) {
 				capabilities {
-					requireCapability(ProjectDerivedCapability(project, "sharedIntegrationTests"))
+					// See org.gradle.internal.component.external.model.ProjectDerivedCapability
+					requireCapability("${project.group}:${project.name}-shared-integration-tests")
 				}
 			}
 		}
