@@ -1,7 +1,6 @@
 plugins {
 	id("org.gradle.java")
 	id("org.gradle.java-test-fixtures")
-	id("org.gradle.jvm-test-suite")
 }
 
 java {
