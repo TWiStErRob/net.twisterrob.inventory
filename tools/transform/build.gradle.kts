@@ -14,9 +14,9 @@ java {
 }
 
 dependencies {
-	"integrationTestImplementation"(project)
-	"integrationTestImplementation"(testFixtures(project))
-	"integrationTestImplementation"(libs.test.junit4)
+	integrationTestImplementation(project)
+	integrationTestImplementation(testFixtures(project))
+	integrationTestImplementation(libs.test.junit4)
 }
 
 val integrationTests by tasks.registering {
@@ -108,3 +108,6 @@ fun NamedDomainObjectContainerScope<TestSuite>.registerIntegrationTest(
 		configure()
 	}
 }
+
+fun DependencyHandler.integrationTestImplementation(dependencyNotation: Any): Dependency? =
+	add("integrationTestImplementation", dependencyNotation)
