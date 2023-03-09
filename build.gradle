@@ -25,16 +25,16 @@ idea {
 
 // run `gradlew releaseCheck -x check -x connectedCheck` to just get the output of this
 // CONSIDER deprecate this against `gradlew connectedCheck --continue mergeAndroidReports` from 'android-reporting' 
-task releaseCheck() {
-	dependsOn getTasksByName('check', true)
-	dependsOn ':android:connectedCheck'
+tasks.register("releaseCheck") {
+	dependsOn(getTasksByName("check", true))
+	dependsOn(":android:connectedCheck")
 	doLast {
 		def report = { task, type, loc ->
 			if (file(loc).exists()) {
 				println "${task.path} ${type}: ${loc}"
 			}
 		}
-		println "================ Report Locations ================"
+		println("================ Report Locations ================")
 		/* TODO AGP 2.x to 3.x breaking changes
 		getTasksByName('lint', true).each {
 			new LintHelper(it).print(report)
@@ -43,7 +43,7 @@ task releaseCheck() {
 		getAllTasks(true)
 				.collectMany { it.value }
 				.findAll { it instanceof Test }
-				.each { Test task -> report(task, 'test', task.reports.html.entryPoint) }
+				.each { Test task -> report(task, "test", task.reports.html.entryPoint) }
 	}
 }
 /* TODO AGP 2.x to 3.x breaking changes 
