@@ -59,7 +59,7 @@ dependencies {
 	androidTestImplementation(libs.test.mockitoAndroid)
 	androidTestImplementation "net.twisterrob.lib:twister-lib-test"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-junit4"
-	androidTestImplementation(libs.test.hamcrest)
+	androidTestImplementation(libs.test.hamcrestJunit)
 
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-espresso_actors"
