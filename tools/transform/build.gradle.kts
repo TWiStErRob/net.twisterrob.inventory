@@ -1,5 +1,6 @@
 plugins {
 	id("org.gradle.java")
+	id("org.gradle.java-test-fixtures")
 	id("org.gradle.jvm-test-suite")
 }
 
@@ -50,6 +51,7 @@ fun NamedDomainObjectContainerScope<TestSuite>.registerIntegrationTest(
 		useJUnit(libs.versions.test.junit4)
 		dependencies {
 			implementation(project())
+			implementation(testFixtures(project()))
 		}
 		sources {
 			java {
