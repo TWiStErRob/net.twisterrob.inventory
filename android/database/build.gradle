@@ -7,7 +7,6 @@ dependencies {
 	api project(':android:database-contract')
 	implementation project(':android:base')
 
-	implementation(libs.androidx.annotation)
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-core"
