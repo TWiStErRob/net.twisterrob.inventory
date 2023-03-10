@@ -13,17 +13,6 @@
     </issue>
 
     <issue
-        id="Deprecated"
-        message="Consider removing `sharedUserId` for new users by adding `android:sharedUserMaxSdkVersion=&quot;32&quot;` to your manifest. See https://developer.android.com/guide/topics/manifest/manifest-element for details."
-        errorLine1=" android:sharedUserId=&quot;net.twisterrob.inventory&quot;>"
-        errorLine2=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/debug/AndroidManifest.xml"
-            line="5"
-            column="2"/>
-    </issue>
-
-    <issue
         id="UnspecifiedImmutableFlag"
         message="Missing `PendingIntent` mutability flag"
         errorLine1="    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);"

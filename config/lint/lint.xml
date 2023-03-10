@@ -100,6 +100,9 @@
 		<!-- REPORT false positive: internal library stuff is not picked up. -->
 		<ignore regexp="net\.twisterrob\.android\." />
 	</issue>
+	<issue id="Deprecated">
+		<ignore regexp="`sharedUserId`" />
+	</issue>
 	<issue id="Instantiatable" severity="ignore">
 		<!-- REPORT false positive for all my classes. -->
 	</issue>
