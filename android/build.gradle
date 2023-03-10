@@ -25,7 +25,6 @@ dependencies {
 	// Replace APK's runtimeOnly sneaking into test runtime
 	configurations.testRuntimeOnly.exclude module: 'twister-lib-android-slf4j'
 
-	implementation(libs.androidx.annotation)
 	implementation(libs.androidx.broadcast)
 	implementation(libs.androidx.appcompat)
 	implementation(libs.androidx.material)

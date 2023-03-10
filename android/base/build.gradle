@@ -4,7 +4,8 @@ plugins {
 
 dependencies {
 	implementation project(':android:database-contract')
-	implementation(libs.androidx.annotation)
+	api(libs.androidx.annotation)
+	api(libs.annotations.jetbrains)
 	implementation(libs.androidx.appcompat)
 	compileOnly(libs.androidx.recyclerview)
 	implementation(libs.androidx.material)
@@ -17,6 +18,7 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
+	api(libs.slf4j.api)
 	api(libs.glide)
 	api "net.twisterrob.lib:twister-lib-android-logging"
 	api "net.twisterrob.lib:twister-lib-android-stringers"

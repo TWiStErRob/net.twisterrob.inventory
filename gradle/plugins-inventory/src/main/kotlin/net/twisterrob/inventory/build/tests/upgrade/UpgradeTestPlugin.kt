@@ -16,6 +16,7 @@ class UpgradeTestPlugin : Plugin<Project> {
 			val upgradeTest = project.tasks.register<UpgradeTestTask>("upgradeTest") {
 				enabled = false // TODO not working since AGP 3.3/3.4
 				testedVariant.set(variant)
+				adb.set(project.androidComponents.sdkComponents.adb)
 				val connectedAndroidTest = project.tasks.named("connectedAndroidTest")
 
 				@Suppress("UNCHECKED_CAST")

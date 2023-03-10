@@ -59,12 +59,14 @@ jobs:
 
       - name: "Verify project."
         working-directory: .
+        # Disable buildHealth for now, dependency substitutions mess it up.
         run: >
           ./gradlew
           --no-daemon
           --stacktrace
           --continue
           build
+          -x :libs:buildHealth
           violationReportHtml
 
       - name: "Upload 'Lint Results' artifact."

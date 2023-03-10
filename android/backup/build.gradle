@@ -8,7 +8,6 @@ dependencies {
 	implementation project(':android:preferences')
 	implementation project(':android:data')
 
-	implementation(libs.androidx.annotation)
 	implementation(libs.androidx.appcompat)
 	implementation(libs.androidx.broadcast)
 	implementation(libs.androidx.recyclerview)

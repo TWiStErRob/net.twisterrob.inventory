@@ -5,8 +5,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import org.slf4j.*;
 
 import android.annotation.SuppressLint;
@@ -265,7 +263,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 		}
 	}
 
-	@ThreadSafe
 	@AnyThread
 	private class ProgressDispatcher implements net.twisterrob.inventory.android.backup.ProgressDispatcher {
 		private final AtomicReference<CancellationException> cancelled = new AtomicReference<>(null);
@@ -314,7 +311,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 		void finished();
 	}
 
-	@ThreadSafe
 	@AnyThread
 	private static class BackupListeners implements BackupListener {
 		private final Collection<BackupListener> listeners = new LinkedList<>();

@@ -16,11 +16,14 @@ import com.android.ddmlib.IDevice
 import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
 import com.android.utils.FileUtils
 import com.android.utils.StdLogger
-import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.work.DisableCachingByDefault
 import java.io.File
@@ -36,12 +39,15 @@ abstract class UpgradeTestTask : DefaultTask() {
 	@get:Input
 	abstract val instrumentTestTask: Property<DeviceProviderInstrumentTestTask>
 
+	@get:InputFile
+	@get:PathSensitive(PathSensitivity.NONE)
+	abstract val adb: RegularFileProperty
+
 	@Suppress("LongMethod") // Will be split up when I make it work again.
 	@TaskAction
 	fun upgradeTest() {
 		val debugVariant = testedVariant.get()
 		val instrument = instrumentTestTask.get()
-		val adb = project.androidComponents.sdkComponents.adb
 		val deviceProvider = instrument.deviceProviderFactory.getDeviceProvider(adb, null)
 		val device = try {
 			deviceProvider.init()
@@ -64,7 +70,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 			.also { FileUtils.cleanOutputDir(it) }
 
 		val testListener = TestAwareCustomTestRunListener(
-			device.name, project.name, debugVariant.name, StdLogger(StdLogger.Level.VERBOSE)
+			device.name, services.projectInfo.name, debugVariant.name, StdLogger(StdLogger.Level.VERBOSE)
 		).apply {
 			setReportDir(results)
 		}
