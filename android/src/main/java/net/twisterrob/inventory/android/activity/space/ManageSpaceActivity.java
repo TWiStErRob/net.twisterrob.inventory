@@ -160,7 +160,6 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								}
 								NoProgressTaskExecutor.create(new CleanTask() {
 									@Override protected void onPreExecute() {
-										super.onPreExecute();
 										DatabaseService.clearVacuumAlarm(getApplicationContext());
 									}
 									@Override protected void doClean() throws Exception {
