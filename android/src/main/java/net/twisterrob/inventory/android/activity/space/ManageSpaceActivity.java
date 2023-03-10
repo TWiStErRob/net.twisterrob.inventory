@@ -33,6 +33,7 @@ import net.twisterrob.inventory.android.Constants.Pic.GlideSetup;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
+import net.twisterrob.inventory.android.view.RecyclerViewController;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
 import static net.twisterrob.android.utils.tools.DatabaseTools.*;
@@ -56,6 +57,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
 		swiper = (SwipeRefreshLayout)findViewById(R.id.refresher);
+		RecyclerViewController.initializeProgress(swiper);
 		swiper.setOnRefreshListener(new OnRefreshListener() {
 			@Override public void onRefresh() {
 				recalculate();

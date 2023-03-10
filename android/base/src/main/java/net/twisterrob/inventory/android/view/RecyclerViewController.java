@@ -106,6 +106,7 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 		ViewParent parent = list.getParent();
 		if (parent instanceof SwipeRefreshLayout) {
 			this.progress = (SwipeRefreshLayout)parent;
+			initializeProgress(progress);
 		}
 		fab = ViewTools.findClosest(list, R.id.fab);
 		empty = ViewTools.findClosest(list, android.R.id.empty);
@@ -226,5 +227,9 @@ public abstract class RecyclerViewController<A extends RecyclerView.Adapter<?>, 
 	}
 	protected void onCreateNew() {
 		throw new UnsupportedOperationException("Please override onCreateNew() if canCreateNew() returns true!");
+	}
+
+	public static void initializeProgress(@NonNull SwipeRefreshLayout progress) {
+		progress.setColorSchemeResources(R.color.accent, R.color.accentDark);
 	}
 }
