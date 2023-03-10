@@ -2,13 +2,6 @@
 <issues format="6" by="lint 7.4.2" type="baseline" client="gradle" dependencies="true" name="AGP (7.4.2)" variant="all" version="7.4.2">
 
     <issue
-        id="CannotEnableHidden"
-        message="Issue `StopShip` was configured with severity `fatal` in android, but was not enabled (or was disabled) in library annotations">
-        <location
-            file="android"/>
-    </issue>
-
-    <issue
         id="InternalInsetResource"
         message="Using internal inset dimension resource `status_bar_height` is not supported"
         errorLine1="  int resourceId = context.getResources().getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, &quot;android&quot;);"

@@ -65,10 +65,6 @@
 		<!-- TODEL review, hopefully anything used by layouts which are not available doesn't affect the layout just the looks. -->
 		<ignore path="**/res/layout*/*.xml" />
 	</issue>
-	<issue id="InvalidPackage">
-		<!-- Invalid package reference in library; not included in Android: javax.xml.stream. Referenced from net.twisterrob.java.io.IndentingXMLStreamWriter. -->
-		<ignore path="**twister-lib-java*.jar" />
-	</issue>
 	<issue id="NonConstantResourceId" severity="ignore">
 		<!-- Ignore for now: https://github.com/TWiStErRob/net.twisterrob.inventory/issues/183 -->
 	</issue>
@@ -95,9 +91,10 @@
 	<issue id="ObsoleteSdkInt" severity="ignore">
 		<!-- Keeping historical code for documentation purposes for now. -->
 	</issue>
-	<issue id="InvalidPackage" severity="ignore">
-		<!-- Invalid package reference in library; not included in Android: java.lang.instrument. Referenced from net.bytebuddy.agent.ByteBuddyAgent. -->
-		<ignore regexp="[/\\]byte-buddy-agent-.*\.jar" />
+	<issue id="InvalidPackage">
+		<ignore regexp="Invalid package reference in net.bytebuddy:byte-buddy-agent; not included in Android: `java.lang.instrument`. Referenced from `net.bytebuddy.agent.ByteBuddyAgent`." />
+		<ignore regexp="Invalid package reference in net.bytebuddy:byte-buddy-agent; not included in Android: `java.lang.management`. Referenced from `net.bytebuddy.agent.ByteBuddyAgent.ProcessProvider.ForCurrentVm.ForLegacyVm`." />
+		<ignore regexp="Invalid package reference in org.mockito:mockito-core; not included in Android: `javax.tools`. Referenced from `org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker`." />
 	</issue>
 	<issue id="MissingClass">
 		<!-- REPORT false positive: internal library stuff is not picked up. -->
