@@ -13,7 +13,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
@@ -25,23 +25,27 @@ abstract class InventoryDatabaseTask : DefaultTask() {
 	@get:PathSensitive(PathSensitivity.RELATIVE)
 	abstract val input: RegularFileProperty
 
-	@get:OutputFile
-	abstract val output: RegularFileProperty
-
-	@get:Optional
-	@get:Input
-	abstract val conversion: Property<String>
-
 	@get:Optional
 	@get:InputDirectory
 	@get:PathSensitive(PathSensitivity.RELATIVE)
 	abstract val iconFolder: DirectoryProperty
 
+	@get:Input
+	abstract val assetPath: Property<String>
+
+	@get:Optional
+	@get:Input
+	abstract val conversion: Property<String>
+
+	@get:OutputDirectory
+	abstract val output: DirectoryProperty
+
 	@TaskAction
 	fun generate() {
 		val input = input.get().asFile
 		input.reader().use { reader ->
-			val output = output.get().asFile.also { it.parentFile.mkdirs() }
+			val outputDir = output.get().asFile.also { it.mkdirs() }
+			val output = outputDir.resolve(assetPath.get())
 			output.writer().use { writer ->
 				val printer = getPrinter(conversion.orNull)
 				DatabaseGenerator(printer, iconFolder.orNull?.asFile).transform(reader, writer)

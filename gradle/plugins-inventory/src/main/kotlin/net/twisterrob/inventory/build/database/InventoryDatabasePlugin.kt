@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.build.database
 
+import net.twisterrob.gradle.android.androidComponents
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
@@ -14,9 +15,9 @@ import org.gradle.kotlin.dsl.register
  * databaseEntities {
  *     categories {
  *         input = file(path to Android res xml with Strings)
- *         output = file(path to asset SQL file)
- *         conversion = "structure|SQL"
  *         iconFolder = file(path to SVG files)
+ *         assetPath = path of the SQL file under Android Assets
+ *         conversion = "structure|SQL"
  *     }
  * }
  * ```
@@ -31,20 +32,24 @@ class InventoryDatabasePlugin : Plugin<Project> {
 			group = BasePlugin.BUILD_GROUP
 		}
 		val allTasksClean = project.tasks.register("cleanGenerateDataBase")
-		project.afterEvaluate {
-			entities.all {
-				val entity: InventoryDatabaseEntity = this
-				//println "Creating task for ${entity.name} (${entity.input} --${entity.conversion}--> ${entity.output})"
-				val genDBTaskName = "generateDataBase${entity.name.capitalized()}"
-				val task = project.tasks.register<InventoryDatabaseTask>(genDBTaskName) {
-					this.input.convention(entity.input)
-					this.output.convention(entity.output)
-					this.conversion.convention(entity.conversion)
-					this.iconFolder.convention(entity.iconFolder)
-				}
-				allTasks.configure { dependsOn(task) }
-				// clean task is automagically generated for every task that has output
-				allTasksClean.configure { dependsOn("clean${task.name.capitalized()}") }
+		entities.configureEach {
+			val entity: InventoryDatabaseEntity = this
+			val taskName = "generateDataBase${entity.name.capitalized()}"
+			val transformation = "(${entity.input} --${entity.conversion}--> ${entity.assetPath}"
+			project.logger.debug("Creating task ${taskName} for ${entity.name}: ${transformation})")
+			val task = project.tasks.register<InventoryDatabaseTask>(taskName) {
+				this.input.convention(entity.input)
+				this.assetPath.convention(entity.assetPath)
+				this.conversion.convention(entity.conversion)
+				this.iconFolder.convention(entity.iconFolder)
+			}
+			allTasks.configure { dependsOn(task) }
+			// clean task is automagically generated for every task that has output
+			allTasksClean.configure { dependsOn("clean${task.name.capitalized()}") }
+			project.androidComponents.onVariants { variant ->
+				@Suppress("UnstableApiUsage")
+				variant.sources.assets!!
+					.addGeneratedSourceDirectory(task, InventoryDatabaseTask::output)
 			}
 		}
 	}
