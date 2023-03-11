@@ -26,6 +26,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.sunburst.Node.Type;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents;
+import net.twisterrob.inventory.android.view.RecyclerViewController;
 
 public class SunburstFragment extends BaseFragment<SunBurstEvents> implements BackPressAware {
 	private static final Logger LOG = LoggerFactory.getLogger(SunburstFragment.class);
@@ -69,6 +70,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 
 	private void setLoading(final boolean isLoading) {
 		final SwipeRefreshLayout progress = requireView().findViewById(R.id.progress_circular);
+		RecyclerViewController.initializeProgress(progress);
 		progress.post(new Runnable() {
 			@Override public void run() {
 				progress.setRefreshing(isLoading);

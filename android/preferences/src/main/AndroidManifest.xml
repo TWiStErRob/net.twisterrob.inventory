@@ -6,7 +6,12 @@
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.PreferencesActivity"
 			android:label="@string/pref_activity_title"
-			/>
+			>
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="net.twisterrob.inventory.android.activity.MainActivity"
+				/>
+		</activity>
 
 	</application>
 

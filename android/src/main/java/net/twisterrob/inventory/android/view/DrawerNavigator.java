@@ -4,10 +4,8 @@ import java.util.Locale;
 
 import org.slf4j.*;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.ColorFilter;
 import android.util.SparseArray;
 import android.view.*;
 
@@ -18,7 +16,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
 import androidx.annotation.*;
-import androidx.appcompat.graphics.drawable.DrawableWrapper;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
@@ -135,23 +132,8 @@ public class DrawerNavigator {
 			this.menuItem = menuItem;
 		}
 		@Override
-		@SuppressLint("RestrictedApi") // DrawableWrapper is private, but there's no point re-implementing it.
 		public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-			resource.setColorFilter(Pic.tint());
-			menuItem.setIcon(new DrawableWrapper(resource) {
-				@Override public void setColorFilter(ColorFilter cf) {
-					//super.setColorFilter(cf); // don't call
-					// when the item's icon is used in navigation view:
-					// com.google.android.material.internal.NavigationMenuItemView.setIcon()
-					// it'll wrap the drawable for tinting and set tintList (which is null, see #addIcons)
-					// DrawableCompat.setTintList(icon, mIconTintList);
-					// android.support.v4.graphics.drawable.DrawableWrapperDonut.setCompatTintList()
-					// it finally reaches the updateTint method which clears the color filter:
-					// if (tintList == null || tintMode == null) clearColorFilter();
-					// which will propagate back to resource.setColorFilter(null), because it is wrapped.
-					// Workaround: Wrap it in another layer which ignores that call.
-				}
-			});
+			menuItem.setIcon(resource);
 		}
 	}
 }
