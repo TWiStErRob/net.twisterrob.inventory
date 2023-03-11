@@ -35,6 +35,8 @@ jobs:
       contents: read
       # EnricoMi/publish-unit-test-result-action -> https://github.com/EnricoMi/publish-unit-test-result-action#permissions
       checks: write
+      # github/codeql-action/upload-sarif -> https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github
+      security-events: write
     steps:
       - name: "Set up JDK 11."
         uses: actions/setup-java@v3
@@ -67,7 +69,9 @@ jobs:
           --continue
           build
           -x :libs:buildHealth
+          violationCountFile
           violationReportHtml
+          violationReportConsole
 
       - name: "Upload 'Lint Results' artifact."
         if: success() || failure()
@@ -77,6 +81,32 @@ jobs:
           path: |
             ${{ github.workspace }}/**/build/reports/lint-results*.html
             ${{ github.workspace }}/build/reports/violations.*
+
+      - name: "Fail if there are violations."
+        if: success() || failure()
+        run: |
+          count=$(cat "${{ github.workspace }}/build/reports/violations.count")
+          if [[ "$count" != "0" ]]; then
+            echo "::error file=config/lint/lint.xml,title=Android Lint::There were $count violations, see 'Lint Results' artifact."
+            exit 1
+          else
+            echo "No violations found."
+            exit 0
+          fi
+
+      - name: "Upload 'Detekt Results' artifact."
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'Detekt Results'
+          path: |
+            ${{ github.workspace }}/**/build/reports/detekt/detekt.*
+
+      - name: "Publish 'Code scanning results / detekt' GitHub Code Scanning analysis."
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: ${{ github.workspace }}/gradle/plugins-inventory/build/reports/detekt/detekt.sarif
 
       - name: "Upload 'Unit Test Results' artifact."
         if: success() || failure()
