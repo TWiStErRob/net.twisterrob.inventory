@@ -81,16 +81,17 @@ public class ZippedXMLExporterTest {
 		verify(mockExporter).finish(cursor);
 		verifyNoMoreInteractions(mockDatabase, mockExporter);
 
-		ZipFile zip = saveTempZip(zipOs);
-		assertThat(list(zip.entries()), hasSize(5));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
-		assertThat(zip, hasEntry(
-				allOf(zipEntryWithName("data.xml"), zipEntryWithContent(zip, xml))
-		));
+		try (ZipFile zip = saveTempZip(zipOs)) {
+			assertThat(list(zip.entries()), hasSize(5));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
+			assertThat(zip, hasEntry(
+					allOf(zipEntryWithName("data.xml"), zipEntryWithContent(zip, xml))
+			));
+		}
 	}
 
 	@Test public void testInvalidOutput() throws Throwable {
@@ -123,16 +124,17 @@ public class ZippedXMLExporterTest {
 		verify(mockExporter).finish(cursor);
 		verifyNoMoreInteractions(mockDatabase, mockExporter);
 
-		ZipFile zip = saveTempZip(zipOs);
-		assertThat(list(zip.entries()), hasSize(5));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
-		assertThat(zip, hasEntry(
-				allOf(zipEntryWithName("data.xml"), zipEntryWithContent(zip, xml))
-		));
+		try (ZipFile zip = saveTempZip(zipOs)) {
+			assertThat(list(zip.entries()), hasSize(5));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
+			assertThat(zip, hasEntry(
+					allOf(zipEntryWithName("data.xml"), zipEntryWithContent(zip, xml))
+			));
+		}
 	}
 
 	private @NonNull ZipFile saveTempZip(ByteArrayOutputStream zipOs) throws IOException {
