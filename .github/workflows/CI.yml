@@ -69,8 +69,9 @@ jobs:
           --continue
           build
           -x :libs:buildHealth
-          violationReportHtml
           violationCountFile
+          violationReportHtml
+          violationReportConsole
 
       - name: "Upload 'Lint Results' artifact."
         if: success() || failure()
@@ -86,7 +87,7 @@ jobs:
         run: |
           count=$(cat "${{ github.workspace }}/build/reports/violations.count")
           if [[ "$count" != "0" ]]; then
-            echo "::error file=config/lint/lint.xml,title=Android Lint::There were $count violations."
+            echo "::error file=config/lint/lint.xml,title=Android Lint::There were $count violations, see 'Lint Results' artifact."
             exit 1
           else
             echo "No violations found."
