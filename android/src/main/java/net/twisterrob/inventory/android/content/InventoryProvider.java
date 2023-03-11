@@ -75,7 +75,7 @@ public class InventoryProvider extends VariantContentProvider {
 		URI_MATCHER.addURI(AUTHORITY, Export.BACKUP_URI_SEGMENT, FULL_BACKUP);
 	}
 
-	public @NonNull Context requireContext() {
+	private @NonNull Context requireContext() {
 		Context context = getContext();
 		if (context == null) {
 			throw new IllegalStateException("Content provider not created yet.");
