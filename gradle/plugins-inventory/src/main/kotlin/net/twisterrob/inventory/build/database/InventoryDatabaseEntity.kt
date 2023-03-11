@@ -8,7 +8,7 @@ import org.gradle.api.provider.Property
 abstract class InventoryDatabaseEntity : Named {
 
 	abstract val input: RegularFileProperty
-	abstract val output: RegularFileProperty
 	abstract val iconFolder: DirectoryProperty
+	abstract val assetPath: Property<String>
 	abstract val conversion: Property<String>
 }
