@@ -11,6 +11,8 @@ import org.junit.function.ThrowingRunnable;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.Matchers.startsWith;
@@ -37,6 +39,7 @@ public class ZippedXMLExporterTest {
 	private static final byte[] BOM = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 
 	@Rule public final TemporaryFolder temp = new TemporaryFolder();
+	@Rule public final MockitoRule mockito = MockitoJUnit.rule();
 
 	@Mock Database mockDatabase;
 	@Mock CursorExporter mockExporter;
@@ -44,7 +47,6 @@ public class ZippedXMLExporterTest {
 	private Exporter sut;
 
 	@Before public void setUp() {
-		MockitoAnnotations.initMocks(this);
 		AssetManager assetManager = ApplicationProvider.getApplicationContext().getAssets();
 
 		sut = new ZippedXMLExporter(mockDatabase, assetManager, mockExporter);
