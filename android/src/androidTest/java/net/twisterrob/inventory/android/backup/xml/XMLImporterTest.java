@@ -3,6 +3,8 @@ package net.twisterrob.inventory.android.backup.xml;
 import org.junit.*;
 import org.junit.function.ThrowingRunnable;
 import org.mockito.*;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.xml.sax.SAXParseException;
 
 import static org.hamcrest.junit.MatcherAssert.assertThat;
@@ -23,6 +25,8 @@ import static net.twisterrob.test.hamcrest.Matchers.*;
 
 public class XMLImporterTest {
 
+	@Rule public final MockitoRule mockito = MockitoJUnit.rule();
+
 	@Mock Database mockDatabase;
 	@Mock Types mockTypes;
 	@Mock ImportProgress mockProgress;
@@ -31,7 +35,6 @@ public class XMLImporterTest {
 	private XMLImporter sut;
 
 	@Before public void setUp() {
-		MockitoAnnotations.initMocks(this);
 		Resources resources = ApplicationProvider.getApplicationContext().getResources();
 		sut = new XMLImporter(resources, mockDatabase, mockTypes);
 	}

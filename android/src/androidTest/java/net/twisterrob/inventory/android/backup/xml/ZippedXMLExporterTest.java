@@ -11,6 +11,8 @@ import org.junit.function.ThrowingRunnable;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.Matchers.startsWith;
@@ -37,6 +39,7 @@ public class ZippedXMLExporterTest {
 	private static final byte[] BOM = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 
 	@Rule public final TemporaryFolder temp = new TemporaryFolder();
+	@Rule public final MockitoRule mockito = MockitoJUnit.rule();
 
 	@Mock Database mockDatabase;
 	@Mock CursorExporter mockExporter;
@@ -44,27 +47,29 @@ public class ZippedXMLExporterTest {
 	private Exporter sut;
 
 	@Before public void setUp() {
-		MockitoAnnotations.initMocks(this);
 		AssetManager assetManager = ApplicationProvider.getApplicationContext().getAssets();
 
 		sut = new ZippedXMLExporter(mockDatabase, assetManager, mockExporter);
 	}
 
 	private void callSut(Cursor cursor, OutputStream zip) throws Throwable {
-		sut.initExport(zip);
+		try {
+			sut.initExport(zip);
 
-		sut.initData(cursor);
-		cursor.moveToPosition(-1);
-		while (cursor.moveToNext()) {
-			sut.writeData(cursor);
+			sut.initData(cursor);
+			cursor.moveToPosition(-1);
+			while (cursor.moveToNext()) {
+				sut.writeData(cursor);
+			}
+			sut.finishData(cursor);
+
+			sut.initImages(cursor);
+			sut.finishImages(cursor);
+
+			sut.finishExport();
+		} finally {
+			sut.finalizeExport();
 		}
-		sut.finishData(cursor);
-
-		sut.initImages(cursor);
-		sut.finishImages(cursor);
-
-		sut.finishExport();
-		sut.finalizeExport();
 	}
 
 	@Test public void testEmptyOutput() throws Throwable {
@@ -81,16 +86,17 @@ public class ZippedXMLExporterTest {
 		verify(mockExporter).finish(cursor);
 		verifyNoMoreInteractions(mockDatabase, mockExporter);
 
-		ZipFile zip = saveTempZip(zipOs);
-		assertThat(list(zip.entries()), hasSize(5));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
-		assertThat(zip, hasEntry(
-				allOf(zipEntryWithName("data.xml"), zipEntryWithContent(zip, xml))
-		));
+		try (ZipFile zip = saveTempZip(zipOs)) {
+			assertThat(list(zip.entries()), hasSize(5));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
+			assertThat(zip, hasEntry(
+					allOf(zipEntryWithName("data.xml"), zipEntryWithContent(zip, xml))
+			));
+		}
 	}
 
 	@Test public void testInvalidOutput() throws Throwable {
@@ -123,16 +129,17 @@ public class ZippedXMLExporterTest {
 		verify(mockExporter).finish(cursor);
 		verifyNoMoreInteractions(mockDatabase, mockExporter);
 
-		ZipFile zip = saveTempZip(zipOs);
-		assertThat(list(zip.entries()), hasSize(5));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
-		assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
-		assertThat(zip, hasEntry(
-				allOf(zipEntryWithName("data.xml"), zipEntryWithContent(zip, xml))
-		));
+		try (ZipFile zip = saveTempZip(zipOs)) {
+			assertThat(list(zip.entries()), hasSize(5));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xsd"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "data.xml.xslt"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.html"));
+			assertThat(zip, hasPracticallyNonEmptyEntry(zip, "inventory.csv"));
+			assertThat(zip, hasEntry(
+					allOf(zipEntryWithName("data.xml"), zipEntryWithContent(zip, xml))
+			));
+		}
 	}
 
 	private @NonNull ZipFile saveTempZip(ByteArrayOutputStream zipOs) throws IOException {

@@ -45,7 +45,7 @@ fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDevi
 	this.testRunnerFactoryAccess = replaceTestRunnerFactory(this.testRunnerFactory, configure)
 }
 
-private fun replaceTestRunnerFactory(
+private fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(
 	originalFactory: TestRunnerFactory,
 	configure: PerDeviceSetupCallback,
 ): TestRunnerFactory =
@@ -66,13 +66,14 @@ private fun replaceTestRunnerFactory(
 			executorServiceAdapter: ExecutorServiceAdapter,
 			utpTestResultListener: UtpTestResultListener?,
 		): TestRunner {
-			val ignoredTestRunner = super.createTestRunner(
+			val originalTestRunner = super.createTestRunner(
 				workerExecutor,
 				executorServiceAdapter,
 				utpTestResultListener,
 			)
-			require(ignoredTestRunner is SimpleTestRunner) {
-				"Expected SimpleTestRunner, got ${ignoredTestRunner::class.java}, please review assumptions above."
+			if (originalTestRunner !is SimpleTestRunner) {
+				logger.error("Test runner is not a SimpleTestRunner: ${originalTestRunner}, post-deploy setup is not applied!")
+				return originalTestRunner
 			}
 			return ConfiguringTestRunner(
 				buildTools.splitSelectExecutable().orNull,
