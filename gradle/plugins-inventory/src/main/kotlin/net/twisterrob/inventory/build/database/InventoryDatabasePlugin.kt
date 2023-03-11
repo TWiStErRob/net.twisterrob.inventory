@@ -34,9 +34,10 @@ class InventoryDatabasePlugin : Plugin<Project> {
 		val allTasksClean = project.tasks.register("cleanGenerateDataBase")
 		entities.configureEach {
 			val entity: InventoryDatabaseEntity = this
-			project.logger.debug("Creating task for ${entity.name} (${entity.input} --${entity.conversion}--> ${entity.assetPath})")
-			val genDBTaskName = "generateDataBase${entity.name.capitalized()}"
-			val task = project.tasks.register<InventoryDatabaseTask>(genDBTaskName) {
+			val taskName = "generateDataBase${entity.name.capitalized()}"
+			val transformation = "(${entity.input} --${entity.conversion}--> ${entity.assetPath}"
+			project.logger.debug("Creating task ${taskName} for ${entity.name}: ${transformation})")
+			val task = project.tasks.register<InventoryDatabaseTask>(taskName) {
 				this.input.convention(entity.input)
 				this.assetPath.convention(entity.assetPath)
 				this.conversion.convention(entity.conversion)
