@@ -51,20 +51,23 @@ public class ZippedXMLExporterTest {
 	}
 
 	private void callSut(Cursor cursor, OutputStream zip) throws Throwable {
-		sut.initExport(zip);
+		try {
+			sut.initExport(zip);
 
-		sut.initData(cursor);
-		cursor.moveToPosition(-1);
-		while (cursor.moveToNext()) {
-			sut.writeData(cursor);
+			sut.initData(cursor);
+			cursor.moveToPosition(-1);
+			while (cursor.moveToNext()) {
+				sut.writeData(cursor);
+			}
+			sut.finishData(cursor);
+
+			sut.initImages(cursor);
+			sut.finishImages(cursor);
+
+			sut.finishExport();
+		} finally {
+			sut.finalizeExport();
 		}
-		sut.finishData(cursor);
-
-		sut.initImages(cursor);
-		sut.finishImages(cursor);
-
-		sut.finishExport();
-		sut.finalizeExport();
 	}
 
 	@Test public void testEmptyOutput() throws Throwable {
