@@ -9,6 +9,7 @@ import android.app.*;
 import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
@@ -26,13 +27,8 @@ public class DatabaseService extends VariantIntentService {
 	public static final String ACTION_SERVICE_SHUTDOWN = "net.twisterrob.inventory.action.SERVICE_SHUTDOWN";
 	public static final String EXTRA_LOCALE = "net.twisterrob.inventory.extra.update_language_locale";
 	private static final int CODE_INCREMENTAL_VACUUM = 16336;
-
-	public DatabaseService() {
-		super("DB");
-	}
-
-	@Override protected void onHandleIntent(Intent intent) {
-		super.onHandleIntent(intent);
+	@Override protected void onHandleWork(@NonNull Intent intent) {
+		super.onHandleWork(intent);
 		String action = String.valueOf(intent.getAction()); // null becomes "null", so we can switch on it
 		switch (action) {
 			case ACTION_OPEN_DATABASE:

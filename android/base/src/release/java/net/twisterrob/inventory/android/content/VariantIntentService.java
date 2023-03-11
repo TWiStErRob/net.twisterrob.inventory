@@ -1,13 +1,10 @@
 package net.twisterrob.inventory.android.content;
 
 import android.content.Intent;
+import androidx.annotation.NonNull;
 
-public abstract class VariantIntentService extends android.app.IntentService {
-	public VariantIntentService(String name) {
-		super(name);
-	}
-
-	@Override protected void onHandleIntent(Intent intent) {
-		// NO OP, just for binary compatibility with LoggingIntentService
+public abstract class VariantIntentService extends androidx.core.app.JobIntentService {
+	@Override protected void onHandleWork(@NonNull Intent intent) {
+		// NO OP, just for binary compatibility with LoggingJobIntentService
 	}
 }

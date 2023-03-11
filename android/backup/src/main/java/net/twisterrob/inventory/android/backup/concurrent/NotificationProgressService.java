@@ -37,10 +37,6 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 	private Progress lastProgressSentToNotification;
 	private boolean debugMode = false;
 
-	public NotificationProgressService(String name) {
-		super(name);
-	}
-
 	public void setDebugMode(boolean debugMode) {
 		this.debugMode = debugMode;
 	}
@@ -141,8 +137,8 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		return null;
 	}
 
-	@Override protected void onHandleIntent(Intent intent) {
-		super.onHandleIntent(intent);
+	@Override protected void onHandleWork(@NonNull Intent intent) {
+		super.onHandleWork(intent);
 		lastProgress = null;
 		onGoingNotification = createOnGoingNotification(intent).setOngoing(true);
 		setIntentAndDefaults(onGoingNotification, createInProgressPendingIntent());
