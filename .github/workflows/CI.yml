@@ -78,6 +78,18 @@ jobs:
             ${{ github.workspace }}/**/build/reports/lint-results*.html
             ${{ github.workspace }}/build/reports/violations.*
 
+      - name: "Fail if there are violations."
+        if: success() || failure()
+        run: |
+          count=$(cat "${{ github.workspace }}/build/reports/violations.count")
+          if [[ "$count" != "0" ]]; then
+            echo "::error file=config/lint/lint.xml,title=Android Lint::There were $count violations."
+            exit 1
+          else
+            echo "No violations found."
+            exit 0
+          fi
+
       - name: "Upload 'Unit Test Results' artifact."
         if: success() || failure()
         uses: actions/upload-artifact@v3
