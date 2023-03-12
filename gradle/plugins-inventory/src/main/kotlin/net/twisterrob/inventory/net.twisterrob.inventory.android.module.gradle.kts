@@ -1,5 +1,5 @@
 plugins {
-	id("net.twisterrob.android-library")
+	id("net.twisterrob.gradle.plugin.android-library")
 	id("net.twisterrob.inventory.build.android.base")
 	id("net.twisterrob.inventory.build.allprojects")
 }
