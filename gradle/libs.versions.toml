@@ -5,7 +5,7 @@ agp = "7.4.2"
 # 23.0.0 + agp
 agp-tools = "30.4.2"
 ## https://github.com/TWiStErRob/net.twisterrob.gradle/releases
-twisterrob = "0.15"
+twisterrob = "0.15.1"
 detekt = "1.22.0"
 
 # TODEL NewerVersionAvailable lint exception
