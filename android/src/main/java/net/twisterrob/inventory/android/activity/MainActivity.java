@@ -129,14 +129,14 @@ public class MainActivity extends DrawerActivity
 		new AlertDialog.Builder(this)
 				.setTitle(R.string.welcome_title)
 				.setMessage(message)
-				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						App.prefs().setBoolean(R.string.pref_showWelcome, false);
 						App.toastUser(getString(R.string.welcome_help_tip));
 						new PopulateSampleInventoryTask().execute();
 					}
 				})
-				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
 						App.prefs().setBoolean(R.string.pref_showWelcome, false);
 						App.toastUser(getString(R.string.welcome_help_tip));

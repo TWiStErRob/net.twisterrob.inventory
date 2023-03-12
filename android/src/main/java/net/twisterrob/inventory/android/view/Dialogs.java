@@ -85,12 +85,12 @@ public class Dialogs {
 						.setTitle(state.action.getConfirmationTitle(context.getResources()))
 						.setMessage(state.action.getConfirmationMessage(context.getResources()))
 						.setView(state.action.getConfirmationView(context))
-						.setPositiveButton(android.R.string.yes, new OnClickListener() {
+						.setPositiveButton(android.R.string.ok, new OnClickListener() {
 							@Override public void onClick(DialogInterface dialog, int which) {
 								new Execute(context).execute(state);
 							}
 						})
-						.setNegativeButton(android.R.string.no, null)
+						.setNegativeButton(android.R.string.cancel, null)
 						.setIconAttribute(android.R.attr.alertDialogIcon)
 						.show();
 			}
