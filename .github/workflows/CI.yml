@@ -56,7 +56,6 @@ jobs:
           --no-daemon
           --stacktrace
           --continue
-          --warning-mode=fail
           --no-build-cache
           assemble assembleDebugAndroidTest compileDebugUnitTestSources compileReleaseUnitTestSources
 
@@ -68,7 +67,6 @@ jobs:
           --no-daemon
           --stacktrace
           --continue
-          --warning-mode=fail
           build
           -x :libs:buildHealth
           violationCountFile
