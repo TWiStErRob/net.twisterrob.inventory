@@ -8,7 +8,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
-import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.PackageManagerTools;
 
 abstract class CleanTask extends SimpleSafeAsyncTask<Activity, Void, Void> implements NoProgressTaskExecutor.UITask {
 	private static final Logger LOG = LoggerFactory.getLogger(CleanTask.class);
@@ -44,7 +44,7 @@ abstract class CleanTask extends SimpleSafeAsyncTask<Activity, Void, Void> imple
 	private static void killProcessesAround(@NonNull Activity activity) {
 		ActivityManager am = (ActivityManager)activity.getSystemService(Context.ACTIVITY_SERVICE);
 		String myProcessPrefix = activity.getApplicationInfo().processName;
-		String myProcessName = AndroidTools.getActivityInfo(activity, 0).processName;
+		String myProcessName = PackageManagerTools.getActivityInfo(activity, 0).processName;
 		for (ActivityManager.RunningAppProcessInfo proc : am.getRunningAppProcesses()) {
 			if (proc.processName.startsWith(myProcessPrefix) && !proc.processName.equals(myProcessName)) {
 				android.os.Process.killProcess(proc.pid);

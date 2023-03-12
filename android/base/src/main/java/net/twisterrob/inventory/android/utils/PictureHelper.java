@@ -156,7 +156,7 @@ public abstract class PictureHelper {
 			intent.putExtra("return-data", false);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, cropFile);
 			intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-			if (activity.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) == null) {
+			if (PackageManagerTools.resolveActivity(activity.getPackageManager(), intent, PackageManager.MATCH_DEFAULT_ONLY) == null) {
 				//App.toastUser("Sorry, your device can't crop this image!");
 				intent = null;
 			}
