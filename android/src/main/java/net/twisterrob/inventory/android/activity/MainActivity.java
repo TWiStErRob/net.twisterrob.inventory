@@ -340,9 +340,8 @@ public class MainActivity extends DrawerActivity
 		return result;
 	}
 
+	@SuppressLint("WrongThread")
 	@DebugHelper
-	@SuppressLint("all")
-	@SuppressWarnings("all")
 	public boolean onDebugOptionsItemSelected(MenuItem item) {
 		if (BuildConfig.DEBUG) {
 			switch (item.getItemId()) {
@@ -364,7 +363,7 @@ public class MainActivity extends DrawerActivity
 					startActivity(ItemViewActivity.show(10010L));
 					return true;
 				case R.id.debug_capture:
-					File devFile = new File("/sdcard/dev.jpg");
+					File devFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "dev.jpg");
 					Uri target = Uri.fromFile(devFile);
 					startActivityForResult(CaptureImage.saveTo(this, devFile, target, 8192), REQUEST_CODE_IMAGE);
 					return true;
