@@ -29,12 +29,24 @@ tasks.withType<JavaCompile>().configureEach javac@{
 
 	if (this@javac.name.endsWith("UnitTestJavaWithJavac")
 		|| this@javac.name.endsWith("AndroidTestJavaWithJavac")
-		|| this@javac.path.startsWith(":android:database:test_helpers:")) {
+		|| this@javac.path.startsWith(":android:database:test_helpers:")
+	) {
 		this@javac.options.compilerArgs = this@javac.options.compilerArgs + listOf(
 			// Google's compilers emit some weird stuff (espresso, dagger, etc.)
 			// warning: [classfile] MethodParameters attribute introduced in version 52.0 class files
 			// is ignored in version 51.0 class files
 			"-Xlint:-classfile",
+		)
+	}
+}
+
+tasks.withType<Test>().configureEach test@{
+	if ( // 9 <= Java < 17
+		javaVersion.isCompatibleWith(JavaVersion.VERSION_1_9)
+		&& !javaVersion.isCompatibleWith(JavaVersion.VERSION_17)
+	) {
+		jvmArgs(
+			"--illegal-access=deny",
 		)
 	}
 }

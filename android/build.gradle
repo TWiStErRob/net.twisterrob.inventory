@@ -127,3 +127,21 @@ dependencies.components {
 		}
 	}
 }
+
+tasks.withType(Test).configureEach {
+	if ( // 9 <= Java < 17
+			javaVersion.isCompatibleWith(JavaVersion.VERSION_1_9)
+					&& !javaVersion.isCompatibleWith(JavaVersion.VERSION_17)
+	) {
+		jvmArgs(
+				// TODEL https://github.com/x-stream/xstream/issues/101#issuecomment-1465270756
+				"--add-opens=java.base/java.lang=ALL-UNNAMED",
+				"--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
+				"--add-opens=java.base/java.util=ALL-UNNAMED",
+				"--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
+				"--add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED",
+				"--add-opens=java.base/java.text=ALL-UNNAMED",
+				"--add-opens=java.desktop/java.awt.font=ALL-UNNAMED",
+		)
+	}
+}
