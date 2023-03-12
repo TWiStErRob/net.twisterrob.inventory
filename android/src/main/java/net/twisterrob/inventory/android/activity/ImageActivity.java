@@ -123,6 +123,12 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 
 	/** External image viewers have horrible support for content:// uris so it's safer to hand them a temporary file. */
 	private class Redirect extends SimpleSafeAsyncTask<Uri, Void, Uri> {
+		@SuppressWarnings("deprecation")
+		public void execute(@NonNull Uri node) {
+			// Overridden to hide deprecation warnings at call-site.
+			super.execute(node);
+		}
+
 		@Override protected void onPreExecute() {
 			findViewById(R.id.description).setVisibility(View.VISIBLE);
 		}

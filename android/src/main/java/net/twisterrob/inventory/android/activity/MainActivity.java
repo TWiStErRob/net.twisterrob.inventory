@@ -369,25 +369,31 @@ public class MainActivity extends DrawerActivity
 					startActivityForResult(CaptureImage.saveTo(this, devFile, target, 8192), REQUEST_CODE_IMAGE);
 					return true;
 				case R.id.debug_testdb:
-					new AsyncTask<Void, Void, Void>() {
-						@Override protected void onPreExecute() {
-							Glide.get(getApplicationContext()).clearMemory();
-						}
-						@Override protected Void doInBackground(Void... params) {
-							Glide.get(getApplicationContext()).clearDiskCache();
-							App.db().resetToTest();
-							return null;
-						}
-						@Override protected void onPostExecute(Void aVoid) {
-							refresh();
-						}
-					}.execute();
+					resetToTestDatabase();
 					return true;
 				default:
 					return false;
 			}
 		}
 		return false;
+	}
+
+	@SuppressWarnings("deprecation")
+	@SuppressLint("StaticFieldLeak")
+	private void resetToTestDatabase() {
+		new android.os.AsyncTask<Void, Void, Void>() {
+			@Override protected void onPreExecute() {
+				Glide.get(getApplicationContext()).clearMemory();
+			}
+			@Override protected Void doInBackground(Void... params) {
+				Glide.get(getApplicationContext()).clearDiskCache();
+				App.db().resetToTest();
+				return null;
+			}
+			@Override protected void onPostExecute(Void aVoid) {
+				refresh();
+			}
+		}.execute();
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -477,7 +483,13 @@ public class MainActivity extends DrawerActivity
 		}
 	}
 
-	private class RefreshInventorySizeTask extends AsyncTask<Void, Void, Boolean> {
+	@SuppressWarnings("deprecation")
+	private class RefreshInventorySizeTask extends android.os.AsyncTask<Void, Void, Boolean> {
+		public void execute() {
+			// Overridden to hide deprecation warnings at call-site.
+			super.execute();
+		}
+
 		@Override protected void onPreExecute() {
 			isInventoryEmptyCache = false;
 			supportInvalidateOptionsMenu();
@@ -497,7 +509,14 @@ public class MainActivity extends DrawerActivity
 		}
 	}
 
-	private class PopulateSampleInventoryTask extends AsyncTask<Void, Void, Boolean> {
+	@SuppressWarnings("deprecation")
+	private class PopulateSampleInventoryTask extends android.os.AsyncTask<Void, Void, Boolean> {
+
+		public void execute() {
+			// Overridden to hide deprecation warnings at call-site.
+			super.execute();
+		}
+
 		@Override protected void onPreExecute() {
 			isInventoryEmptyCache = false;
 			supportInvalidateOptionsMenu();

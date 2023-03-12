@@ -13,6 +13,7 @@ class GetFolderSizesTask extends GetSizeTask<File> {
 		super(result);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override protected Long doInBackgroundSafe(File... dirs) {
 		long result = 0;
 		for (File dir : dirs) {

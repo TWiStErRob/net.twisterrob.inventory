@@ -18,6 +18,7 @@ abstract class CleanTask extends SimpleSafeAsyncTask<Activity, Void, Void> imple
 		this.callbacks = callbacks;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override public void execute(@NonNull Activity activity) {
 		super.execute(activity);
 	}

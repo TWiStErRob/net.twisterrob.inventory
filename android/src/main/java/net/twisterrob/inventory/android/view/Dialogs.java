@@ -106,6 +106,12 @@ public class Dialogs {
 			this.progress = new ActionProgressFragment();
 		}
 
+		@SuppressWarnings("deprecation")
+		public void execute(@NonNull ActionState node) {
+			// Overridden to hide deprecation warnings at call-site.
+			super.execute(node);
+		}
+
 		@CallSuper
 		@Override protected void onPreExecute() {
 			super.onPreExecute();
@@ -137,6 +143,7 @@ public class Dialogs {
 		protected Execute(@NonNull FragmentActivity context) {
 			super(context);
 		}
+
 		@Override protected ActionState doInBackground(ActionState state) {
 			state.execute();
 			return state;

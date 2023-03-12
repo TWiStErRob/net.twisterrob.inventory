@@ -110,7 +110,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		switch (item.getItemId()) {
 			case R.id.action_category_open: {
 				final Context context = requireContext();
-				new SimpleSafeAsyncTask<Void, Void, File>() {
+				AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
 					@Nullable @Override protected File doInBackground(@Nullable Void ignore) throws IOException {
 						file = Paths.getShareFile(context, "html");
@@ -126,12 +126,12 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					@Override protected void onError(@NonNull Exception ex, Void ignore) {
 						LOG.warn("Cannot save to {}", file, ex);
 					}
-				}.execute();
+				});
 				return true;
 			}
 			case R.id.action_category_save: {
 				final Context context = requireContext();
-				new SimpleSafeAsyncTask<Void, Void, File>() {
+				AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
 					@Nullable @Override protected File doInBackground(@Nullable Void aVoid) throws Exception {
 						File downloads = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
@@ -147,7 +147,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					@Override protected void onError(@NonNull Exception ex, Void aVoid) {
 						LOG.warn("Cannot save to {}", file, ex);
 					}
-				}.execute();
+				});
 				return true;
 			}
 			case R.id.action_category_feedback:
