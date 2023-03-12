@@ -76,7 +76,7 @@ public class MoveTargetActivity extends BaseActivity implements OnBackStackChang
 	private TextView title;
 	private TextView labType;
 	private View btnOk;
-	private final Handler handler = new Handler();
+	private final Handler handler = new Handler(Looper.getMainLooper());
 
 	private BaseFragment<?> getFragment() {
 		return getFragment(R.id.activityRoot);

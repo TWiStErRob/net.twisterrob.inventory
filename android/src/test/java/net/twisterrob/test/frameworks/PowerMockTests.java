@@ -189,7 +189,7 @@ public abstract class PowerMockTests {
 		Handler powerNew = new Handler(looper);
 
 		assertThat(powerNew, sameInstance(handler));
-		assertThat(new Handler(), not(sameInstance(powerNew)));
+		assertThat(new Handler(looper, null), not(sameInstance(powerNew)));
 	}
 
 	@Test public void testMockNormalAndroidClass() {
