@@ -2,31 +2,13 @@
 <issues format="6" by="lint 7.4.2" type="baseline" client="gradle" dependencies="true" name="AGP (7.4.2)" variant="all" version="7.4.2">
 
     <issue
-        id="CannotEnableHidden"
-        message="Issue `StopShip` was configured with severity `fatal` in android, but was not enabled (or was disabled) in library annotations">
-        <location
-            file="android"/>
-    </issue>
-
-    <issue
-        id="InternalInsetResource"
-        message="Using internal inset dimension resource `status_bar_height` is not supported"
-        errorLine1="  int resourceId = context.getResources().getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, &quot;android&quot;);"
-        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/net/twisterrob/android/utils/tools/AndroidTools.java"
-            line="710"
-            column="20"/>
-    </issue>
-
-    <issue
         id="UnspecifiedImmutableFlag"
         message="Missing `PendingIntent` mutability flag"
         errorLine1="    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/content/db/DatabaseService.java"
-            line="104"
+            line="100"
             column="5"/>
     </issue>
 
@@ -37,7 +19,7 @@
         errorLine2="                                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/backup/concurrent/NotificationProgressService.java"
-            line="96"
+            line="92"
             column="76"/>
     </issue>
 
@@ -66,23 +48,23 @@
     <issue
         id="StaticFieldLeak"
         message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
-        errorLine1="    new SimpleSafeAsyncTask&lt;Void, Void, File>() {"
-        errorLine2="    ^">
+        errorLine1="    AndroidTools.executePreferParallel(new SimpleSafeAsyncTask&lt;Void, Void, File>() {"
+        errorLine2="                                       ^">
         <location
             file="src/main/java/net/twisterrob/inventory/android/fragment/CategoryHelpFragment.java"
             line="113"
-            column="5"/>
+            column="40"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
         message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
-        errorLine1="    new SimpleSafeAsyncTask&lt;Void, Void, File>() {"
-        errorLine2="    ^">
+        errorLine1="    AndroidTools.executePreferParallel(new SimpleSafeAsyncTask&lt;Void, Void, File>() {"
+        errorLine2="                                       ^">
         <location
             file="src/main/java/net/twisterrob/inventory/android/fragment/CategoryHelpFragment.java"
             line="134"
-            column="5"/>
+            column="40"/>
     </issue>
 
     <issue
@@ -143,34 +125,34 @@
     <issue
         id="StaticFieldLeak"
         message="This `AsyncTask` class should be static or leaks might occur (net.twisterrob.inventory.android.activity.MainActivity.RefreshInventorySizeTask)"
-        errorLine1=" private class RefreshInventorySizeTask extends AsyncTask&lt;Void, Void, Boolean> {"
+        errorLine1=" private class RefreshInventorySizeTask extends android.os.AsyncTask&lt;Void, Void, Boolean> {"
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/activity/MainActivity.java"
-            line="480"
+            line="486"
             column="16"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
         message="This `AsyncTask` class should be static or leaks might occur (net.twisterrob.inventory.android.activity.MainActivity.PopulateSampleInventoryTask)"
-        errorLine1=" private class PopulateSampleInventoryTask extends AsyncTask&lt;Void, Void, Boolean> {"
+        errorLine1=" private class PopulateSampleInventoryTask extends android.os.AsyncTask&lt;Void, Void, Boolean> {"
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/activity/MainActivity.java"
-            line="500"
+            line="512"
             column="16"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
-        errorLine1="  loadTreeTask = new SimpleSafeAsyncTask&lt;Node, Void, Node>() {"
-        errorLine2="                 ^">
+        message="This `AsyncTask` class should be static or leaks might occur (net.twisterrob.inventory.android.sunburst.SunburstFragment.LoadTreeTask)"
+        errorLine1=" private class LoadTreeTask extends SimpleSafeAsyncTask&lt;Node, Void, Node> {"
+        errorLine2="               ~~~~~~~~~~~~">
         <location
             file="src/main/java/net/twisterrob/inventory/android/sunburst/SunburstFragment.java"
-            line="88"
-            column="18"/>
+            line="313"
+            column="16"/>
     </issue>
 
     <issue
