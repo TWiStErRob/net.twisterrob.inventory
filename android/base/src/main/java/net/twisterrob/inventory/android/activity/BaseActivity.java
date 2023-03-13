@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.StrictMode;
 import android.view.Menu;
 
 import androidx.annotation.*;
@@ -19,6 +21,29 @@ import net.twisterrob.inventory.android.content.Intents;
 import static net.twisterrob.java.utils.CollectionTools.*;
 
 public abstract class BaseActivity extends DebugHelperActivity {
+	@Override public void setContentView(int layoutResID) {
+		/*
+		Pixel 7 Pro Android 13 / API 33
+		android.os.strictmode.NonSdkApiUsedViolation:
+		Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V
+		at androidx.appcompat.widget.ViewUtils.makeOptionalFitsSystemWindows(ViewUtils.java:84)
+		at androidx.appcompat.app.AppCompatDelegateImpl.createSubDecor(AppCompatDelegateImpl.java:973)
+		at androidx.appcompat.app.AppCompatDelegateImpl.ensureSubDecor(AppCompatDelegateImpl.java:806)
+		at androidx.appcompat.app.AppCompatDelegateImpl.setContentView(AppCompatDelegateImpl.java:693)
+		at androidx.appcompat.app.AppCompatActivity.setContentView(AppCompatActivity.java:170)
+		at net.twisterrob.inventory.android.activity.SingleFragmentActivity.onCreate(SingleFragmentActivity.java:19)
+		 */
+		StrictMode.VmPolicy originalPolicy = StrictMode.getVmPolicy();
+		if (Build.VERSION_CODES.P <= Build.VERSION.SDK_INT) {
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder(originalPolicy)
+					.permitNonSdkApiUsage().build());
+		}
+		try {
+			super.setContentView(layoutResID);
+		} finally {
+			StrictMode.setVmPolicy(originalPolicy);
+		}
+	}
 	@Override public void onContentChanged() {
 		super.onContentChanged();
 		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -30,6 +55,33 @@ public abstract class BaseActivity extends DebugHelperActivity {
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
 		AndroidTools.showActionBarOverflowIcons(menu, true);
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override public void supportInvalidateOptionsMenu() {
+		/*
+		Pixel 7 Pro Android 13 / API 33
+		StrictMode policy violation: android.os.strictmode.NonSdkApiUsedViolation:
+		Landroid/view/View;->computeFitSystemWindows(Landroid/graphics/Rect;Landroid/graphics/Rect;)Z
+		at androidx.appcompat.widget.ViewUtils.makeOptionalFitsSystemWindows(ViewUtils.java:80)
+		at androidx.appcompat.app.AppCompatDelegateImpl.createSubDecor(AppCompatDelegateImpl.java:973)
+		at androidx.appcompat.app.AppCompatDelegateImpl.ensureSubDecor(AppCompatDelegateImpl.java:806)
+		at androidx.appcompat.app.AppCompatDelegateImpl.initWindowDecorActionBar(AppCompatDelegateImpl.java:547)
+		at androidx.appcompat.app.AppCompatDelegateImpl.getSupportActionBar(AppCompatDelegateImpl.java:534)
+		at androidx.appcompat.app.AppCompatDelegateImpl.invalidateOptionsMenu(AppCompatDelegateImpl.java:1217)
+		at androidx.appcompat.app.AppCompatActivity.supportInvalidateOptionsMenu(AppCompatActivity.java:273)
+		at androidx.fragment.app.Fragment.setHasOptionsMenu(Fragment.java:1157)
+		at net.twisterrob.inventory.android.fragment.BaseFragment.onCreate(BaseFragment.java:87)
+		*/
+		StrictMode.VmPolicy originalPolicy = StrictMode.getVmPolicy();
+		if (Build.VERSION_CODES.P <= Build.VERSION.SDK_INT) {
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder(originalPolicy)
+					.permitNonSdkApiUsage().build());
+		}
+		try {
+			super.supportInvalidateOptionsMenu();
+		} finally {
+			StrictMode.setVmPolicy(originalPolicy);
+		}
 	}
 
 	@Override public void onBackPressed() {
