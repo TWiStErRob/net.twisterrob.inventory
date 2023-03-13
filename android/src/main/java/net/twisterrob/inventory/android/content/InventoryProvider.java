@@ -9,6 +9,7 @@ import org.slf4j.*;
 import android.content.*;
 import android.database.*;
 import android.net.Uri;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
 
 import static android.app.SearchManager.*;
@@ -76,11 +77,15 @@ public class InventoryProvider extends VariantContentProvider {
 	}
 
 	private @NonNull Context requireContextCompat() {
-		Context context = getContext();
-		if (context == null) {
-			throw new IllegalStateException("Content provider not created yet.");
+		if (Build.VERSION_CODES.R <= Build.VERSION.SDK_INT) {
+			return requireContext();
+		} else {
+			Context context = getContext();
+			if (context == null) {
+				throw new IllegalStateException("Content provider not created yet.");
+			}
+			return context;
 		}
-		return context;
 	}
 
 	@Override public String getType(@NonNull Uri uri) {

@@ -6,7 +6,7 @@ import net.twisterrob.inventory.build.dsl.autoNamespace
 @Suppress("UnstableApiUsage")
 android {
 	namespace = project.autoNamespace
-	compileSdk = 32
+	compileSdk = 33
 	defaultConfig {
 		minSdk = 21
 	}
