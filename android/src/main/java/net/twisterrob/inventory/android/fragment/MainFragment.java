@@ -8,6 +8,7 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.format.DateUtils;
 import android.view.*;
 import android.view.View.*;
@@ -123,13 +124,16 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 								if (value == null) {
 									return;
 								}
+								StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 								try {
-									App.db().createList(value);
-									listsController.refresh();
+										App.db().createList(value);
 								} catch (Exception ex) {
 									LOG.warn("Cannot create list '{}'", value, ex);
 									App.toastUser(App.getError(ex, R.string.list_error_new, value));
+								} finally {
+									StrictMode.setThreadPolicy(originalPolicy);
 								}
+								listsController.refresh();
 							}
 						})
 						.setTitle("New List")
@@ -150,7 +154,12 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 					@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
 					@Override public boolean onItemLongClick(int position, long recyclerViewItemID) {
 						// TODO make swipe delete the item
-						App.db().deleteRecentsOfItem(recyclerViewItemID);
+						StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+						try {
+							App.db().deleteRecentsOfItem(recyclerViewItemID);
+						} finally {
+							StrictMode.setThreadPolicy(originalPolicy);
+						}
 						recentsController.refresh();
 						return true;
 					}

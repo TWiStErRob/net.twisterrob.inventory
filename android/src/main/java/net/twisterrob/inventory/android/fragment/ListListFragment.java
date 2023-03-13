@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.*;
 
 import androidx.annotation.*;
@@ -56,7 +57,13 @@ public class ListListFragment extends BaseFragment<ListsEvents> implements ListI
 									return;
 								}
 								try {
-									long id = App.db().createList(value);
+									StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+									long id;
+									try {
+										id = App.db().createList(value);
+									} finally {
+										StrictMode.setThreadPolicy(originalPolicy);
+									}
 									eventsListener.listSelected(id);
 								} catch (Exception ex) {
 									LOG.warn("Cannot create list {}", value, ex);

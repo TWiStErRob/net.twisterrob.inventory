@@ -9,6 +9,7 @@ import android.content.*;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.StrictMode;
 import android.text.SpannableStringBuilder;
 
 import androidx.annotation.*;
@@ -119,10 +120,16 @@ public class CategoryDTO extends ImagedDTO {
 		ChangeTypeDialog.showKeywords(context, cache.getCategoryPath(categoryID), keywords);
 	}
 
-	@SuppressLint("WrongThread") // initialization will happen only once, after that it's cached
+	@SuppressLint("WrongThread")
 	@AnyThread
 	public static @NonNull CategoryCache getCache(@NonNull Context context) {
-		return CategoryCacheInitializer.get(context);
+		StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+		try {
+			// Initialization will happen only once, after that it's cached.
+			return CategoryCacheInitializer.get(context);
+		} finally {
+			StrictMode.setThreadPolicy(originalPolicy);
+		}
 	}
 
 	private static class CategoryCacheInitializer {
