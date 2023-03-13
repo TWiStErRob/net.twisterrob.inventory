@@ -13,7 +13,6 @@ import static org.junit.internal.matchers.ThrowableMessageMatcher.*;
 import static org.mockito.AdditionalMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import android.content.res.Resources;
