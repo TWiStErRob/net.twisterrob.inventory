@@ -130,6 +130,20 @@ public final class Intents {
 	public static long getCategory(@Nullable Bundle bundle) {
 		return bundle != null? bundle.getLong(Extras.CATEGORY_ID, Category.ID_ADD) : Category.ID_ADD;
 	}
+
+	/**
+	 * Helper that supports:
+	 * <ul>
+	 *     <li>{@link Intent#putExtra(String, Serializable)}</li>
+	 *     <li>{@link Bundle#putSerializable(String, Serializable)}</li>
+	 *     <li>{@link Intent#putExtra(String, long)}</li>
+	 *     <li>{@link Bundle#putLong(String, long)}</li>
+	 * </ul>
+	 */
+	@SuppressWarnings("deprecation") // We don't know the type.
+	public static @Nullable Long getOptionalCategory(@NonNull Bundle bundle) {
+		return (Long)bundle.get(Extras.CATEGORY_ID);
+	}
 	//endregion Getters
 
 	private Intents() {

@@ -93,7 +93,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	}
 
 	private @Nullable Long getArgCategoryID() {
-		return (Long)requireArguments().get(Extras.CATEGORY_ID);
+		return Intents.getOptionalCategory(requireArguments());
 	}
 	/** @see #createLoadArgs() */
 	@SuppressWarnings("unused")
@@ -158,7 +158,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 
 		@Override public void startLoad(@NonNull Bundle args) {
 			// by listController contract all ctor provided Loaders must be started even if they don't return data
-			Long id = (Long)args.get(Extras.CATEGORY_ID);
+			Long id = Intents.getOptionalCategory(args);
 			boolean flatten = args.getBoolean(Extras.INCLUDE_SUBS);
 
 			Bundle categoriesArgs;

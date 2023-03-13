@@ -77,7 +77,7 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 	}
 
 	private @Nullable Long getExtraCategoryID() {
-		return (Long)getIntent().getExtras().get(Extras.CATEGORY_ID);
+		return Intents.getOptionalCategory(getIntent().getExtras());
 	}
 
 	private boolean getExtraIncludeSubs() {

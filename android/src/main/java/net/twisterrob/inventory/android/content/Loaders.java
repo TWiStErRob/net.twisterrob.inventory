@@ -57,7 +57,7 @@ public enum Loaders implements InventoryLoader {
 	},
 	ItemCategories {
 		@Override protected @NonNull Cursor createCursor(@NonNull Context context, @NonNull Bundle args) {
-			Long id = (Long)args.get(Extras.CATEGORY_ID);
+			Long id = Intents.getOptionalCategory(args);
 			return App.db().listRelatedCategories(id);
 		}
 	},
@@ -96,7 +96,7 @@ public enum Loaders implements InventoryLoader {
 	},
 	Categories {
 		@Override protected @NonNull Cursor createCursor(@NonNull Context context, @NonNull Bundle args) {
-			Long id = (Long)args.get(Extras.CATEGORY_ID);
+			Long id = Intents.getOptionalCategory(args);
 			return App.db().listCategories(id);
 		}
 	},
