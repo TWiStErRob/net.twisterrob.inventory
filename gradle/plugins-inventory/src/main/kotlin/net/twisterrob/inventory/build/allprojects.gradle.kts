@@ -15,16 +15,10 @@ configurations.configureEach {
 
 tasks.withType<JavaCompile>().configureEach javac@{
 	this@javac.options.compilerArgs = this@javac.options.compilerArgs + listOf(
-		// enable all warnings
+		// Enable all warnings the compiler knows.
 		"-Xlint:all",
-		// fail build when warnings pop up
+		// Fail build when any warning pops up.
 		"-Werror",
-		// Ignore for now, until understanding what it means.
-		// warning: [varargs] Varargs method could cause heap pollution from non-reifiable varargs parameter params
-		"-Xlint:-varargs",
-		// TODO check my plugin, maybe java-library and java are not compatible there
-		// warning: [options] bootstrap class path not set in conjunction with -source 1.7
-		"-Xlint:-options",
 	)
 
 	if (this@javac.name.endsWith("UnitTestJavaWithJavac")
