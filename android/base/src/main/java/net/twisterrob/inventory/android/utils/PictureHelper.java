@@ -32,7 +32,7 @@ public abstract class PictureHelper {
 			0, 0, -1, 0, 255,
 			0, 0, 0, 1, 0
 	};
-	private Bitmap thumb;
+	private @Nullable Bitmap thumb;
 	private Bitmap image;
 	private File file;
 	private File cropFile;

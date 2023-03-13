@@ -56,7 +56,7 @@ public class DatabaseService extends VariantIntentService {
 		bm.sendBroadcast(new Intent(ACTION_SERVICE_SHUTDOWN).setClass(getApplicationContext(), getClass()));
 	}
 
-	private void updateLanguage(Intent intent) {
+	private void updateLanguage(@NonNull Intent intent) {
 		Locale locale = IntentTools.getSerializableExtra(intent, EXTRA_LOCALE, Locale.class);
 		if (locale == null) {
 			LOG.warn("Missing locale from {}", intent);

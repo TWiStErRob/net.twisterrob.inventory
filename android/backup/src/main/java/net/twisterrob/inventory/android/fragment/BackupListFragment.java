@@ -147,7 +147,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 		return false;
 	}
 
-	public void filePicked(@NonNull final File file, boolean addHistory) {
+	public void filePicked(@NonNull File file, boolean addHistory) {
 		StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		try {
 			LOG.trace("File picked (dir={}, exists={}): {}", file.isDirectory(), file.exists(), file);
@@ -266,12 +266,12 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 
 	private static class FilesLoader extends AsyncLoader<List<File>> {
 		private static final Pattern IMPORT_FILTER = Pattern.compile(".*\\.zip$");
-		private final File root;
-		public FilesLoader(Context context, File root) {
+		private final @NonNull File root;
+		public FilesLoader(Context context, @NonNull File root) {
 			super(context);
 			this.root = root;
 		}
-		public File getRoot() {
+		public @NonNull File getRoot() {
 			return root;
 		}
 		@Override public List<File> loadInBackground() {
@@ -286,7 +286,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 			return result;
 		}
 
-		private @NonNull File[] getFolders(File root) {
+		private @NonNull File[] getFolders(@NonNull File root) {
 			File[] folders = root.listFiles(new FileFilter() {
 				@Override public boolean accept(File file) {
 					return file.isDirectory();
@@ -295,7 +295,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 			return folders != null? folders : new File[0];
 		}
 
-		private @NonNull File[] getImportableFiles(File root) {
+		private @NonNull File[] getImportableFiles(@NonNull File root) {
 			File[] files = root.listFiles(new FileFilter() {
 				public boolean accept(File file) {
 					return file.isFile() && file.canRead() && IMPORT_FILTER.matcher(file.getName()).matches();

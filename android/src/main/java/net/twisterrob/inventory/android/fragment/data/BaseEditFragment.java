@@ -60,10 +60,10 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private static final int REQUEST_CODE_GET_PICTURE = 0x3245;
 
 	private boolean isRestored;
-	private Uri restoredImage;
+	private @Nullable Uri restoredImage;
 	private int restoredTypePos;
 
-	private Uri currentImage;
+	private @Nullable Uri currentImage;
 	private boolean keepNameInSync;
 	private DTO original;
 
