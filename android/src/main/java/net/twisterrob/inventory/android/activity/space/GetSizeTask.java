@@ -33,6 +33,7 @@ abstract class GetSizeTask<Param> extends SafeAsyncTask<Param, Long, Long> {
 		result.setText(format(size));
 	}
 
+	@SuppressWarnings("varargs")
 	@SafeVarargs
 	@Override protected final void onError(@NonNull Exception ex, Param... params) {
 		LOG.error("Cannot get size of {}", Arrays.toString(params), ex);

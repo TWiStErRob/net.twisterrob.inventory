@@ -9,7 +9,6 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 
 import android.os.Build;
-import android.os.Build.VERSION_CODES;
 
 import net.twisterrob.test.PackageNameShortener;
 

@@ -102,8 +102,13 @@ public class ChangeTypeDialog {
 									"Wrong item selected, this shouldn't happen: "
 											+ position + " in list of " + adapter.getCount());
 						}
-						Cursor cursor = (Cursor)adapter.getItem(position);
-						userSelected(cursor, variants);
+						StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+						try {
+							Cursor cursor = (Cursor)adapter.getItem(position);
+							userSelected(cursor, variants);
+						} finally {
+							StrictMode.setThreadPolicy(originalPolicy);
+						}
 						dialog.dismiss();
 					}
 				});

@@ -15,6 +15,8 @@ import android.os.StrictMode.ThreadPolicy;
 import android.text.TextUtils;
 
 import androidx.annotation.*;
+import androidx.fragment.app.FragmentManager;
+import androidx.loader.app.LoaderManager;
 
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.app.BaseApp;
@@ -29,9 +31,14 @@ import net.twisterrob.inventory.android.content.db.DatabaseService;
 public class App extends BaseApp implements BaseComponent.Provider {
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
+	@SuppressWarnings("deprecation")
 	public App() {
 		super(BuildConfig.DEBUG, R.xml.preferences);
 		ResourceCursorAdapterWithHolder.devMode = BuildConfig.DEBUG;
+		LoaderManager.enableDebugLogging(BuildConfig.DEBUG);
+		android.app.LoaderManager.enableDebugLogging(BuildConfig.DEBUG);
+		FragmentManager.enableDebugLogging(BuildConfig.DEBUG);
+		android.app.FragmentManager.enableDebugLogging(BuildConfig.DEBUG);
 	}
 
 	public static @NonNull App getInstance() {
