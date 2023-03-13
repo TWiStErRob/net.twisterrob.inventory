@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.app.*;
 import android.content.*;
+import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.*;
@@ -103,7 +104,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		broadcast(result, ACTION_FINISHED_BROADCAST);
 		if (inBackground) {
 			LOG.trace("In background, replacing progress notification with done notification");
-			stopForeground(true);
+			stopNotification();
 			NotificationManager notificationManager =
 					(NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -132,6 +133,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		super.onBind(intent);
 		if (needsNotification(intent)) {
 			LOG.trace("Stopping notification, because bind has a UI that displays progress.");
+			inBackground = false;
 			stopNotification();
 		}
 		return null;
@@ -149,6 +151,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		super.onRebind(intent);
 		if (needsNotification(intent)) {
 			LOG.trace("Stopping notification, because re-bind has a UI that displays progress.");
+			inBackground = false;
 			stopNotification();
 		}
 	}
@@ -191,9 +194,13 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		return builder.build();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void stopNotification() {
-		inBackground = false;
-		stopForeground(true);
+		if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+			stopForeground(STOP_FOREGROUND_REMOVE);
+		} else {
+			stopForeground(true);
+		}
 	}
 
 	private void broadcast(@NonNull Progress progress, String action) {
