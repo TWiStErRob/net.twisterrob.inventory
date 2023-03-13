@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
+import net.twisterrob.android.utils.tools.IntentTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.VariantIntentService;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
@@ -56,7 +57,7 @@ public class DatabaseService extends VariantIntentService {
 	}
 
 	private void updateLanguage(Intent intent) {
-		Locale locale = (Locale)intent.getSerializableExtra(EXTRA_LOCALE);
+		Locale locale = IntentTools.getSerializableExtra(intent, EXTRA_LOCALE, Locale.class);
 		if (locale == null) {
 			LOG.warn("Missing locale from {}", intent);
 			locale = Locale.getDefault();

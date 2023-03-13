@@ -67,7 +67,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override public void onReceive(Context context, Intent intent) {
-			Progress current = (Progress)intent.getSerializableExtra(BackupService.EXTRA_PROGRESS);
+			Progress current = IntentTools.getSerializableExtra(intent, BackupService.EXTRA_PROGRESS, Progress.class);
 			if (cancelling != null && current != null && current.phase == Progress.Phase.Finished) {
 				cancelling.dismiss();
 			}

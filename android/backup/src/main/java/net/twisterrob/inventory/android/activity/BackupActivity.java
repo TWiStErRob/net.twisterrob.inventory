@@ -58,7 +58,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 	};
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override public void onReceive(Context context, Intent intent) {
-			Progress progress = (Progress)intent.getSerializableExtra(BackupService.EXTRA_PROGRESS);
+			Progress progress = IntentTools.getSerializableExtra(intent, BackupService.EXTRA_PROGRESS, Progress.class);
 			displayPopup(progress);
 		}
 	};
@@ -80,15 +80,17 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		displayPopup(findProgress(savedInstanceState, getIntent()));
 		BackupPermissions.checkAndRequest(this);
 	}
+
 	private @Nullable Progress findProgress(@Nullable Bundle savedInstanceState, @Nullable Intent intent) {
 		if (savedInstanceState != null) {
-			return (Progress)savedInstanceState.getSerializable(BackupService.EXTRA_PROGRESS);
+			return BundleTools.getSerializable(savedInstanceState, BackupService.EXTRA_PROGRESS, Progress.class);
 		} else if (intent != null) {
-			return (Progress)intent.getSerializableExtra(BackupService.EXTRA_PROGRESS);
+			return IntentTools.getSerializableExtra(intent, BackupService.EXTRA_PROGRESS, Progress.class);
 		} else {
 			return null;
 		}
 	}
+
 	@Override protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);

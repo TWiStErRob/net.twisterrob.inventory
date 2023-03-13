@@ -101,9 +101,10 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(EXTRA_HISTORY, (Serializable)history);
 	}
+
 	private void onRestoreInstanceState(Bundle savedInstanceState) {
 		@SuppressWarnings("unchecked")
-		Collection<File> history = (Collection<File>)savedInstanceState.getSerializable(EXTRA_HISTORY);
+		Collection<File> history = BundleTools.getSerializable(savedInstanceState, EXTRA_HISTORY, ArrayDeque.class);
 		//noinspection ConstantConditions if we're restoring onSaveInstanceState must have filled it
 		this.history.addAll(history);
 		this.history.push(new File("")); // pretend current directory after restore
@@ -356,7 +357,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 		private class FileLoaderCallbacks implements LoaderCallbacks<List<File>> {
 			@Override public Loader<List<File>> onCreateLoader(int id, Bundle args) {
 				startLoading();
-				File file = (File)args.getSerializable(EXTRA_PATH);
+				File file = BundleTools.getSerializable(args, EXTRA_PATH, File.class);
 				return new FilesLoader(getContext(), file);
 			}
 			@Override public void onLoadFinished(Loader<List<File>> loader, List<File> data) {

@@ -179,7 +179,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-			restoredImage = savedInstanceState.getParcelable(SAVE_KEY_IMAGE_TO_SAVE);
+			restoredImage = BundleTools.getParcelable(savedInstanceState, SAVE_KEY_IMAGE_TO_SAVE, Uri.class);
 			restoredTypePos = savedInstanceState.getInt(SAVE_KEY_SELECTED_TYPE_POSITION);
 			isRestored = true;
 		}

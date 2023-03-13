@@ -179,13 +179,7 @@ public abstract class PictureHelper {
 		File file = null;
 		if (intent != null) {
 			file = ImageTools.getFile(activity, intent.getData());
-			Bundle extras = intent.getExtras();
-			if (extras != null) {
-				Object data = extras.get("data");
-				if (data instanceof Bitmap) {
-					thumb = (Bitmap)data;
-				}
-			}
+			thumb = IntentTools.getParcelableExtra(intent, "data", Bitmap.class);
 		}
 		return file;
 	}
