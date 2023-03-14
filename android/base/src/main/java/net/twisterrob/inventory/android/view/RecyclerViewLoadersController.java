@@ -27,7 +27,10 @@ public abstract class RecyclerViewLoadersController
 	}
 
 	@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
-		adapter.swapCursor(data);// changeCursor?
+		Cursor cursor = adapter.swapCursor(data);// changeCursor?
+		if (data == null && cursor != null) {
+			cursor.close();
+		}
 	}
 
 	private @NonNull LoaderCallbacks<Cursor> createLoaderCallbacks() {
@@ -54,7 +57,12 @@ public abstract class RecyclerViewLoadersController
 
 	@Override public void close() {
 		Log.wtf("swapCursor", "RecyclerViewLoadersController("+this+").close: destroyLoader("+loader.id()+")");
-		getLoaderManager().destroyLoader(loader.id());
+		// This happens automatically on onDestroy()
+		//getLoaderManager().destroyLoader(loader.id());
+		// This is redundant most of the time, there's a case when it helps:
+		// Open app, go into room, go into item, back, back, leak.
+		// Not sure why it happens when going two deep,
+		// but setting this triggers the login in setData() above, and that closes the MergeCursor.
 		getAdapter().changeCursor(null);
 	}
 }
