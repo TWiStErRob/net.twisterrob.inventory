@@ -327,8 +327,13 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 				// and observe that the loading indicator will be visible for 5 seconds
 			}
 		}
+
 		@Override public void refresh() {
 			getLoaderManager().getLoader(LOADER_ID).onContentChanged();
+		}
+
+		@Override public void close() {
+			getLoaderManager().destroyLoader(LOADER_ID);
 		}
 
 		@Override protected @NonNull ImportFilesAdapter setupList() {

@@ -189,6 +189,11 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			getLoaderManager().getLoader(Loaders.Items.id()).onContentChanged(); // items may have moved
 		}
 
+		@Override public void close() {
+			getLoaderManager().destroyLoader(Loaders.Categories.id());
+			getLoaderManager().destroyLoader(Loaders.Items.id());
+		}
+
 		private class Callbacks extends LoadersCallbacksAdapter {
 			private Cursor pendingCategories;
 			private Cursor pendingItems;

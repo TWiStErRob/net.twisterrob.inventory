@@ -1,16 +1,19 @@
 package net.twisterrob.inventory.android.view;
 
+import java.io.Closeable;
+
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.*;
 import androidx.fragment.app.*;
 import androidx.loader.app.LoaderManager;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 
-public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> extends RecyclerViewController<A, D> {
+public abstract class RecyclerViewLoaderController<A extends RecyclerView.Adapter<?>, D>
+		extends RecyclerViewController<A, D> implements Closeable {
 	private final Context context;
 	private final LoaderManagerProvider manager;
 
@@ -49,6 +52,9 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 
 	/** getLoaderManager().getLoader(id).onContentChanged(); */
 	public abstract void refresh();
+
+	/** getLoaderManager().destroyLoader(id); */
+	public abstract void close();
 
 	protected interface LoaderManagerProvider {
 		@NonNull LoaderManager get();

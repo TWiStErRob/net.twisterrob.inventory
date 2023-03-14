@@ -43,11 +43,15 @@ public abstract class RecyclerViewLoadersController
 		});
 	}
 
-	public void startLoad(@Nullable Bundle args) {
+	@Override public void startLoad(@Nullable Bundle args) {
 		getLoaderManager().initLoader(loader.id(), args, createLoaderCallbacks());
 	}
 
-	public void refresh() {
+	@Override public void refresh() {
 		getLoaderManager().getLoader(loader.id()).onContentChanged();
+	}
+
+	@Override public void close() {
+		getLoaderManager().destroyLoader(loader.id());
 	}
 }
