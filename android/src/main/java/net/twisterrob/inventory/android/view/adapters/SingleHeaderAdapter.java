@@ -30,12 +30,16 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 
 	@SuppressWarnings("resource") // these cursor don't need to be closed
 	@Override public @Nullable Cursor swapCursor(@Nullable Cursor newCursor) {
-		if (header != null) { // add one extra row for header
+		if (newCursor == null) { // No new cursor, don't create MergeCursor.
+			return super.swapCursor(null);
+		} else if (header != null) { // Add one extra row for header.
 			MatrixCursor header = new MatrixCursor(new String[] {"type", "_id"}, 1);
 			header.addRow(new Object[] {DATABASE_TYPE_HEADER, CommonColumns.ID_ADD});
-			newCursor = new MergeCursor(new Cursor[] {header, newCursor});
+			Cursor mergeCursor = new MergeCursor(new Cursor[] {header, newCursor});
+			return super.swapCursor(mergeCursor);
+		} else { // No header, just forward original.
+			return super.swapCursor(newCursor);
 		}
-		return super.swapCursor(newCursor);
 	}
 
 	public int getSpanSize(int position, int columns) {
