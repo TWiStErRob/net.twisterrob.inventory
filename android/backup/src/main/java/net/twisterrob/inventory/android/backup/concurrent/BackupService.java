@@ -144,7 +144,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		} else if (intent != null && progress == null) {
 			String action = intent.getAction();
 			if (action == null) {
-				throw new IllegalStateException("Unexpected intent action: " + action);
+				throw new IllegalStateException("Unexpected intent action: " + intent);
 			}
 			switch (action) {
 				case ACTION_IMPORT:
