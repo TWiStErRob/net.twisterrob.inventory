@@ -57,10 +57,6 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		if (selectionMode.onActivityResult(requestCode, resultCode, data)) {
 			return;
 		}
-		if (hasHeader()) {
-			// TOFIX this is workaround for https://issuetracker.google.com/issues/36959611
-			header.onActivityResult(requestCode, resultCode, data);
-		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
