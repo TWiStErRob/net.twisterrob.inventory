@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.fragment.data;
 import android.content.Intent;
 import android.database.*;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
 
@@ -131,7 +132,8 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		}
 
 		@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
-			adapter.swapCursor(data);
+			Cursor cursor1 = adapter.swapCursor(data);
+			Log.wtf("swapCursor", "CategoriesItemsController("+this+").setData category: Not closing cursor: " + cursor1 + ", replacement: " + data);
 			if (data != null && selectionMode != null) {
 				SelectionAdapter<?> selectionAdapter = selectionMode.getAdapter();
 				Cursor cursor = ((CursorRecyclerAdapter<?>)selectionAdapter.getWrappedAdapter()).getCursor();

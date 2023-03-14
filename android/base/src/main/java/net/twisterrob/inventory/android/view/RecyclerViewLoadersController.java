@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.*;
 import androidx.fragment.app.Fragment;
@@ -26,7 +27,7 @@ public abstract class RecyclerViewLoadersController
 	}
 
 	@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
-		adapter.swapCursor(data);
+		adapter.swapCursor(data);// changeCursor?
 	}
 
 	private @NonNull LoaderCallbacks<Cursor> createLoaderCallbacks() {
@@ -52,6 +53,8 @@ public abstract class RecyclerViewLoadersController
 	}
 
 	@Override public void close() {
+		Log.wtf("swapCursor", "RecyclerViewLoadersController("+this+").close: destroyLoader("+loader.id()+")");
 		getLoaderManager().destroyLoader(loader.id());
+		getAdapter().changeCursor(null);
 	}
 }

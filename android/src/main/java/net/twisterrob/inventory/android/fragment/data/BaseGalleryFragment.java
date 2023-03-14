@@ -7,6 +7,7 @@ import org.slf4j.*;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
 
@@ -76,6 +77,11 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 			header.refresh();
 		}
 		listController.refresh();
+	}
+
+	@Override public void onDestroy() {
+		super.onDestroy();
+		listController.close();
 	}
 
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -255,6 +261,8 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 		private boolean isGroup(int position) {
 			Cursor c = getCursor();
+			Log.wtf("swapCursor", "GalleryAdapter("+this+").isGroup: " + position + " " + c);
+			//if (c.isClosed()) return false;
 			return c.moveToPosition(position) && DatabaseTools.getOptionalBoolean(c, "group", false);
 		}
 

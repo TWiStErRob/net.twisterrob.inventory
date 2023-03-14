@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.database.*;
+import android.util.Log;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 
@@ -14,6 +15,7 @@ import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.DeepScrollFixListener;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.java.exceptions.StackTrace;
 
 public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorRecyclerAdapter<ViewHolder> {
 	private static final String DATABASE_TYPE_HEADER = "header";
@@ -28,16 +30,19 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 		this.header = header;
 	}
 
-	@SuppressWarnings("resource") // these cursor don't need to be closed
+	@SuppressWarnings("resource") // These cursors (Matrix and Merge) will be closed by ???
 	@Override public @Nullable Cursor swapCursor(@Nullable Cursor newCursor) {
 		if (newCursor == null) { // No new cursor, don't create MergeCursor.
+			Log.wtf("swapCursor", "SingleHeaderAdapter("+this+").swapCursor: No new cursor, don't create MergeCursor", new StackTrace());
 			return super.swapCursor(null);
 		} else if (header != null) { // Add one extra row for header.
 			MatrixCursor header = new MatrixCursor(new String[] {"type", "_id"}, 1);
 			header.addRow(new Object[] {DATABASE_TYPE_HEADER, CommonColumns.ID_ADD});
 			Cursor mergeCursor = new MergeCursor(new Cursor[] {header, newCursor});
+			Log.wtf("swapCursor", "SingleHeaderAdapter("+this+").swapCursor: Replacing " + newCursor + " with merged " + mergeCursor);
 			return super.swapCursor(mergeCursor);
 		} else { // No header, just forward original.
+			Log.wtf("swapCursor", "SingleHeaderAdapter("+this+").swapCursor: No header for " + newCursor);
 			return super.swapCursor(newCursor);
 		}
 	}
