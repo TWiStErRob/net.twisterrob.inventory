@@ -25,8 +25,6 @@ import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.fragment.BackupListFragment;
 
-import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
-
 public class BackupActivity extends BaseActivity implements BackupListFragment.BackupListCallbacks {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
 	private static final int REQUEST_CODE_PICK_EXTERNAL = 0x4412;
@@ -39,7 +37,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 	@VisibleForTesting final BackupServiceConnection backupService = new BackupServiceConnection() {
 		@Override protected void serviceBound(ComponentName name, BackupService.LocalBinder service) {
 			IntentFilter filter = new IntentFilter();
-			filter.addAction(ACTION_FINISHED_BROADCAST);
+			filter.addAction(NotificationProgressService.ACTION_FINISHED_BROADCAST);
 			LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(receiver, filter);
 
 			setAllowNew(!service.isInProgress());
