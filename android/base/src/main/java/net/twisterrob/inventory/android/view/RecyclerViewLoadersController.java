@@ -58,18 +58,4 @@ public abstract class RecyclerViewLoadersController
 	@Override public void refresh() {
 		getLoaderManager().getLoader(loader.id()).onContentChanged();
 	}
-
-	@Override public void close() {
-		// This happens automatically on onDestroy()
-		//getLoaderManager().destroyLoader(loader.id());
-
-		// This is redundant most of the time, there's a case when it helps:
-		// Open app, go into room, go into item, back, back, leak.
-		// Not sure why it happens when going two deep,
-		// but setting this triggers the login in setData() above, and that closes the MergeCursor.
-		CursorRecyclerAdapter<?> adapter = getAdapter();
-		if (adapter != null) {
-			adapter.changeCursor(null);
-		}
-	}
 }

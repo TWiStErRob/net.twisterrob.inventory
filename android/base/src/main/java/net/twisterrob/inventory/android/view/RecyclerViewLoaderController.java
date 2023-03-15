@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.view;
 
-import java.io.Closeable;
-
 import android.content.Context;
 import android.os.Bundle;
 
@@ -13,7 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 
 public abstract class RecyclerViewLoaderController<A extends RecyclerView.Adapter<?>, D>
-		extends RecyclerViewController<A, D> implements Closeable {
+		extends RecyclerViewController<A, D> {
 	private final Context context;
 	private final LoaderManagerProvider manager;
 
@@ -53,8 +51,9 @@ public abstract class RecyclerViewLoaderController<A extends RecyclerView.Adapte
 	/** getLoaderManager().getLoader(id).onContentChanged(); */
 	public abstract void refresh();
 
-	/** getLoaderManager().destroyLoader(id); */
-	public abstract void close();
+	// Not implemented, happens automatically.
+	///** getLoaderManager().destroyLoader(id); */
+	//public abstract void close();
 
 	protected interface LoaderManagerProvider {
 		@NonNull LoaderManager get();

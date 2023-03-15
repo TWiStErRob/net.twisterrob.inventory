@@ -78,11 +78,6 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		listController.refresh();
 	}
 
-	@Override public void onDestroy() {
-		super.onDestroy();
-		listController.close();
-	}
-
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState == null && hasHeader()) {

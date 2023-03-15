@@ -193,18 +193,6 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			getLoaderManager().getLoader(Loaders.Items.id()).onContentChanged(); // items may have moved
 		}
 
-		@Override public void close() {
-			// Happens automatically on destroy of the Fragment.
-			//getLoaderManager().destroyLoader(Loaders.Categories.id());
-			//getLoaderManager().destroyLoader(Loaders.Items.id());
-
-			CursorRecyclerAdapter<?> adapter = getAdapter();
-			if (adapter != null) {
-				// See net.twisterrob.inventory.android.view.RecyclerViewLoadersController.close.
-				adapter.changeCursor(null);
-			}
-		}
-
 		private class Callbacks extends LoadersCallbacksAdapter {
 			private Cursor pendingCategories;
 			private Cursor pendingItems;
