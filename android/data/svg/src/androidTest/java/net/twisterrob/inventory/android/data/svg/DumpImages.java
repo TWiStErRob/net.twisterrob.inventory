@@ -50,7 +50,6 @@ public class DumpImages {
 	public void test() throws IOException, IllegalAccessException, InterruptedException {
 		LOG.error("SVG version {}", SVG.getVersion());
 		final Context context = ApplicationProvider.getApplicationContext();
-		@SuppressWarnings("unused")
 		File backup = context.getExternalFilesDir("svg");
 		assumeTrue("External folder 'svg' is missing", backup != null);
 
