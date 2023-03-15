@@ -55,8 +55,9 @@ public class StrictProgressInfoProvider implements ProgressInfoProvider {
 							return context.getString(R.string.backup_export_result_success,
 									progress.total, progress.imagesTotal);
 						}
+					default:
+						throw notImplementedPhase();
 				}
-				break;
 			case Import:
 				switch (progress.phase) {
 					case Init:
@@ -82,10 +83,11 @@ public class StrictProgressInfoProvider implements ProgressInfoProvider {
 										progress.total, progress.done, progress.warnings.size());
 							}
 						}
+					default:
+						throw notImplementedPhase();
 				}
-				break;
 		}
-		throw notImplementedPhase();
+		throw notImplementedType();
 	}
 
 	@Override public boolean isIndeterminate() {
@@ -101,8 +103,9 @@ public class StrictProgressInfoProvider implements ProgressInfoProvider {
 				return progress.done;
 			case Images:
 				return progress.imagesDone;
+			default:
+				throw notImplementedPhase();
 		}
-		throw notImplementedPhase();
 	}
 
 	@Override public int getTotal() {
@@ -114,8 +117,9 @@ public class StrictProgressInfoProvider implements ProgressInfoProvider {
 				return progress.total;
 			case Images:
 				return progress.imagesTotal;
+			default:
+				throw notImplementedPhase();
 		}
-		throw notImplementedPhase();
 	}
 
 	@Override public @NonNull String getTitle() {
@@ -130,8 +134,9 @@ public class StrictProgressInfoProvider implements ProgressInfoProvider {
 					return context.getString(R.string.backup_export_result_finished);
 				}
 				return context.getString(R.string.backup_export_progress_title);
+			default:
+				throw notImplementedType();
 		}
-		throw notImplementedType();
 	}
 
 	@Override public @DrawableRes int getIcon() {
@@ -140,12 +145,13 @@ public class StrictProgressInfoProvider implements ProgressInfoProvider {
 				return android.R.drawable.ic_menu_upload;
 			case Export:
 				return android.R.drawable.ic_menu_upload;
+			default:
+				throw notImplementedType();
 		}
-		throw notImplementedType();
 	}
 
 	private UnsupportedOperationException notImplementedPhase() {
-		return new UnsupportedOperationException("Phase " + progress.phase + " not implemented.");
+		return new UnsupportedOperationException("Phase " + progress.phase + " not implemented in " + progress.type + ".");
 	}
 	private UnsupportedOperationException notImplementedType() {
 		return new UnsupportedOperationException("Type " + progress.type + " not implemented.");
