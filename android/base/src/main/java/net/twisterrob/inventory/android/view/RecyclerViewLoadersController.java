@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.view;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.*;
 import androidx.fragment.app.Fragment;

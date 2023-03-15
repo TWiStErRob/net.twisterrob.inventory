@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.database.*;
-import android.util.Log;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 

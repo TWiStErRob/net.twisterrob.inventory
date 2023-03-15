@@ -3,7 +3,6 @@ package net.twisterrob.inventory.android.fragment.data;
 import android.content.Intent;
 import android.database.*;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
 
