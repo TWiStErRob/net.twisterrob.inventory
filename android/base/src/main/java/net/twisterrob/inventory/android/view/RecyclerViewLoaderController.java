@@ -6,11 +6,12 @@ import android.os.Bundle;
 import androidx.annotation.*;
 import androidx.fragment.app.*;
 import androidx.loader.app.LoaderManager;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 
-public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> extends RecyclerViewController<A, D> {
+public abstract class RecyclerViewLoaderController<A extends RecyclerView.Adapter<?>, D>
+		extends RecyclerViewController<A, D> {
 	private final Context context;
 	private final LoaderManagerProvider manager;
 
@@ -49,6 +50,10 @@ public abstract class RecyclerViewLoaderController<A extends Adapter<?>, D> exte
 
 	/** getLoaderManager().getLoader(id).onContentChanged(); */
 	public abstract void refresh();
+
+	// Not implemented, happens automatically.
+	///** getLoaderManager().destroyLoader(id); */
+	//public abstract void close();
 
 	protected interface LoaderManagerProvider {
 		@NonNull LoaderManager get();

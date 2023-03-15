@@ -160,7 +160,10 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		super.onUnbind(intent);
 		if (needsNotification(intent) && isInProgress()) {
 			LOG.trace("Starting notification, because it was stopped when this bind happened, but now it's needed.");
-			startNotification(intent, null);
+			// Ignoring intent here, because it'll be empty (no action, no extras).
+			// Using the last progress instead, because we're supposed to be in progress.
+			// Which means that at least the initial progress was published already.
+			startNotification(null, getLastProgress());
 		}
 		return true;
 	}
@@ -176,7 +179,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		return lastProgressSentToNotification;
 	}
 	protected boolean isInProgress() {
-		return currentJobStarted != NEVER;
+		return currentJobStarted != NEVER && lastProgress != null;
 	}
 
 	private void startNotification(@Nullable Intent intent, @Nullable Progress progress) {
