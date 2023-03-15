@@ -132,7 +132,11 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		}
 
 		@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
-			adapter.swapCursor(data);
+			Cursor oldCursor = adapter.swapCursor(data);
+			if (data == null && oldCursor != null) {
+				// See net.twisterrob.inventory.android.view.RecyclerViewLoadersController.setData.
+				oldCursor.close();
+			}
 			if (data != null && selectionMode != null) {
 				SelectionAdapter<?> selectionAdapter = selectionMode.getAdapter();
 				Cursor cursor = ((CursorRecyclerAdapter<?>)selectionAdapter.getWrappedAdapter()).getCursor();
@@ -194,6 +198,12 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			// Happens automatically on destroy of the Fragment.
 			//getLoaderManager().destroyLoader(Loaders.Categories.id());
 			//getLoaderManager().destroyLoader(Loaders.Items.id());
+
+			CursorRecyclerAdapter<?> adapter = getAdapter();
+			if (adapter != null) {
+				// See net.twisterrob.inventory.android.view.RecyclerViewLoadersController.close.
+				adapter.changeCursor(null);
+			}
 		}
 
 		private class Callbacks extends LoadersCallbacksAdapter {

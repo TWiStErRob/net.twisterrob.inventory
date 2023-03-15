@@ -27,14 +27,14 @@ public abstract class RecyclerViewLoadersController
 	}
 
 	@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
-		Cursor cursor = adapter.swapCursor(data);
-		if (data == null && cursor != null) {
+		Cursor oldCursor = adapter.swapCursor(data);
+		if (data == null && oldCursor != null) {
 			// This is meant to close the Cursor that may be created by a subclass of the adapter.
 			// swapCursor might actually set a cursor inside the adapter, that's not the same as data.
 			// When data is null, it means we want to forget what's in the adapter, so we close the original.
 			// If we close it always, i.e. adapter.changeCursor(data), then we might close used cursors.
 			// This happens because some Cursors might be shared between different screens via the Loaders.
-			cursor.close();
+			oldCursor.close();
 		}
 	}
 
@@ -63,10 +63,14 @@ public abstract class RecyclerViewLoadersController
 	@Override public void close() {
 		// This happens automatically on onDestroy()
 		//getLoaderManager().destroyLoader(loader.id());
+
 		// This is redundant most of the time, there's a case when it helps:
 		// Open app, go into room, go into item, back, back, leak.
 		// Not sure why it happens when going two deep,
 		// but setting this triggers the login in setData() above, and that closes the MergeCursor.
-		getAdapter().changeCursor(null);
+		CursorRecyclerAdapter<?> adapter = getAdapter();
+		if (adapter != null) {
+			adapter.changeCursor(null);
+		}
 	}
 }
