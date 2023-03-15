@@ -32,7 +32,7 @@ public abstract class PictureHelper {
 			0, 0, -1, 0, 255,
 			0, 0, 0, 1, 0
 	};
-	private Bitmap thumb;
+	private @Nullable Bitmap thumb;
 	private Bitmap image;
 	private File file;
 	private File cropFile;
@@ -156,7 +156,7 @@ public abstract class PictureHelper {
 			intent.putExtra("return-data", false);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, cropFile);
 			intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-			if (activity.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) == null) {
+			if (PackageManagerTools.resolveActivity(activity.getPackageManager(), intent, PackageManager.MATCH_DEFAULT_ONLY) == null) {
 				//App.toastUser("Sorry, your device can't crop this image!");
 				intent = null;
 			}
@@ -179,13 +179,7 @@ public abstract class PictureHelper {
 		File file = null;
 		if (intent != null) {
 			file = ImageTools.getFile(activity, intent.getData());
-			Bundle extras = intent.getExtras();
-			if (extras != null) {
-				Object data = extras.get("data");
-				if (data instanceof Bitmap) {
-					thumb = (Bitmap)data;
-				}
-			}
+			thumb = IntentTools.getParcelableExtra(intent, "data", Bitmap.class);
 		}
 		return file;
 	}

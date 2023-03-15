@@ -9,9 +9,11 @@ import android.app.*;
 import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
+import net.twisterrob.android.utils.tools.IntentTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.VariantIntentService;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
@@ -26,13 +28,8 @@ public class DatabaseService extends VariantIntentService {
 	public static final String ACTION_SERVICE_SHUTDOWN = "net.twisterrob.inventory.action.SERVICE_SHUTDOWN";
 	public static final String EXTRA_LOCALE = "net.twisterrob.inventory.extra.update_language_locale";
 	private static final int CODE_INCREMENTAL_VACUUM = 16336;
-
-	public DatabaseService() {
-		super("DB");
-	}
-
-	@Override protected void onHandleIntent(Intent intent) {
-		super.onHandleIntent(intent);
+	@Override protected void onHandleWork(@NonNull Intent intent) {
+		super.onHandleWork(intent);
 		String action = String.valueOf(intent.getAction()); // null becomes "null", so we can switch on it
 		switch (action) {
 			case ACTION_OPEN_DATABASE:
@@ -59,8 +56,8 @@ public class DatabaseService extends VariantIntentService {
 		bm.sendBroadcast(new Intent(ACTION_SERVICE_SHUTDOWN).setClass(getApplicationContext(), getClass()));
 	}
 
-	private void updateLanguage(Intent intent) {
-		Locale locale = (Locale)intent.getSerializableExtra(EXTRA_LOCALE);
+	private void updateLanguage(@NonNull Intent intent) {
+		Locale locale = IntentTools.getSerializableExtra(intent, EXTRA_LOCALE, Locale.class);
 		if (locale == null) {
 			LOG.warn("Missing locale from {}", intent);
 			locale = Locale.getDefault();

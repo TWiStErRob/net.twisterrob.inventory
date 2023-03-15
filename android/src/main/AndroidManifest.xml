@@ -8,6 +8,8 @@
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<!-- Used by BackupService -->
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<!-- Used by JobIntentService (all services extend that at API 30, since IntentService was deprecated). -->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
 	<application
 		android:name="net.twisterrob.inventory.android.App"

@@ -39,7 +39,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	private SunburstDrawable<Node> sunburst;
 	private NodeTreeWalker walker;
 
-	private SafeAsyncTask<Node, ?, ?> loadTreeTask;
+	private LoadTreeTask loadTreeTask;
 
 	public SunburstFragment() {
 		setDynamicResource(DYN_EventsClass, SunBurstEvents.class);
@@ -77,6 +77,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 			}
 		});
 	}
+
 	@Override public void onStart() {
 		super.onStart();
 		if (sunburst.getRoot() != null) {
@@ -85,34 +86,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 			diagram.setImageDrawable(sunburst);
 			return;
 		}
-		loadTreeTask = new SimpleSafeAsyncTask<Node, Void, Node>() {
-			@Override protected void onPreExecute() {
-				setLoading(true);
-			}
-
-			@Override protected Node doInBackground(Node param) {
-				Node root = new TreeLoader().build(param);
-				root.parent = null; // clear parent in case it was set (happens when deep linking)
-				return root;
-			}
-
-			@Override protected void onResult(Node result, Node param) {
-				if (isCancelled()) {
-					return;
-				}
-				setRoot(result);
-				//noinspection ConstantConditions in this case super conditions apply and it can be null
-				if (getView() != null) {
-					setLoading(false);
-					diagram.setImageDrawable(sunburst);
-				}
-			}
-
-			@Override protected void onError(@NonNull Exception ex, Node param) {
-				LOG.error("Cannot build {}", param, ex);
-				throw new RuntimeException("Cannot load " + param, ex);
-			}
-		};
+		loadTreeTask = new LoadTreeTask();
 		loadTreeTask.execute(createStartingNode());
 	}
 
@@ -123,7 +97,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	@Override public void onDestroy() {
 		super.onDestroy();
 		if (loadTreeTask != null) {
-			loadTreeTask.cancel(true);
+			loadTreeTask.destroy();
 			loadTreeTask = null;
 		}
 	}
@@ -334,5 +308,52 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 		SunburstFragment fragment = new SunburstFragment();
 		fragment.setArguments(new Bundle());
 		return fragment;
+	}
+
+	private class LoadTreeTask extends SimpleSafeAsyncTask<Node, Void, Node> {
+		@Override protected void onPreExecute() {
+			setLoading(true);
+		}
+
+		@Override protected Node doInBackground(Node param) {
+			Node root = new TreeLoader().build(param);
+			root.parent = null; // clear parent in case it was set (happens when deep linking)
+			return root;
+		}
+
+		@Override protected void onResult(Node result, Node param) {
+			if (isCancelledInternal()) {
+				return;
+			}
+			setRoot(result);
+			//noinspection ConstantConditions in this case super conditions apply and it can be null
+			if (getView() != null) {
+				setLoading(false);
+				diagram.setImageDrawable(sunburst);
+			}
+		}
+
+		@SuppressWarnings("deprecation")
+		public void execute(@NonNull Node node) {
+			// Overridden to hide deprecation warnings at call-site.
+			super.execute(node);
+		}
+
+		@SuppressWarnings("deprecation")
+		private boolean isCancelledInternal() {
+			// Overridden to hide deprecation warnings at call-site.
+			return super.isCancelled();
+		}
+
+		@Override protected void onError(@NonNull Exception ex, Node param) {
+			LOG.error("Cannot build {}", param, ex);
+			throw new RuntimeException("Cannot load " + param, ex);
+		}
+
+		@SuppressWarnings("deprecation")
+		public void destroy() {
+			// Overridden to hide deprecation warnings at call-site.
+			super.cancel(true);
+		}
 	}
 }

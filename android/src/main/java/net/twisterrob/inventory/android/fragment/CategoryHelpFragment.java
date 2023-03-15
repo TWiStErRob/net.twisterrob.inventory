@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
 import java.io.*;
+import java.net.URI;
 import java.util.Locale;
 
 import org.slf4j.*;
@@ -81,15 +82,17 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (savedInstanceState == null) {
-			AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Float, String>() {
+			AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Float, URI>() {
 				@Override protected void onPreExecute() {
 					web.loadData("Loading...", "text/html", null);
 				}
-				@Override protected String doInBackground(Void ignore) {
-					return new CategoryHelpBuilder(requireContext()).buildHTML();
+				@Override protected URI doInBackground(Void ignore) throws IOException {
+					File file = new File(requireContext().getCacheDir(), "categories.html");
+					new CategoryHelpBuilder(requireContext()).export(file);
+					return file.toURI();
 				}
-				@Override protected void onResult(String result, Void ignore) {
-					web.loadData(result, "text/html", null);
+				@Override protected void onResult(URI result, Void ignore) {
+					web.loadUrl(result.toString());
 				}
 				@Override protected void onError(@NonNull Exception ex, Void ignore) {
 					App.toastUser(ex.toString());
@@ -110,9 +113,9 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		switch (item.getItemId()) {
 			case R.id.action_category_open: {
 				final Context context = requireContext();
-				new SimpleSafeAsyncTask<Void, Void, File>() {
+				AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
-					@Nullable @Override protected File doInBackground(@Nullable Void ignore) throws IOException {
+					@Override protected @Nullable File doInBackground(@Nullable Void ignore) throws IOException {
 						file = Paths.getShareFile(context, "html");
 						new CategoryHelpBuilder(context).export(file);
 						return file;
@@ -126,14 +129,14 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					@Override protected void onError(@NonNull Exception ex, Void ignore) {
 						LOG.warn("Cannot save to {}", file, ex);
 					}
-				}.execute();
+				});
 				return true;
 			}
 			case R.id.action_category_save: {
 				final Context context = requireContext();
-				new SimpleSafeAsyncTask<Void, Void, File>() {
+				AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
-					@Nullable @Override protected File doInBackground(@Nullable Void aVoid) throws Exception {
+					@Override protected @Nullable File doInBackground(@Nullable Void aVoid) throws Exception {
 						File downloads = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 						String name = String.format(Locale.ROOT,
 								"%s - %s.html", getString(R.string.app_name), getString(R.string.category_guide));
@@ -147,7 +150,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					@Override protected void onError(@NonNull Exception ex, Void aVoid) {
 						LOG.warn("Cannot save to {}", file, ex);
 					}
-				}.execute();
+				});
 				return true;
 			}
 			case R.id.action_category_feedback:

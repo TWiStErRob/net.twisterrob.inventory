@@ -6,7 +6,7 @@ import net.twisterrob.inventory.build.dsl.autoNamespace
 @Suppress("UnstableApiUsage")
 android {
 	namespace = project.autoNamespace
-	compileSdk = 29
+	compileSdk = 33
 	defaultConfig {
 		minSdk = 21
 	}
@@ -18,5 +18,16 @@ android {
 		checkReleaseBuilds = false
 		baseline = rootDir.resolve("config/lint/lint-baseline-${project.name}.xml")
 		lintConfig = rootDir.resolve("config/lint/lint.xml")
+
+		/*
+		 * Work around
+		 * > CannotEnableHidden: Issue Already Disabled
+		 * > ../../../android: Issue StopShip was configured with severity fatal in android,
+		 * > but was not enabled (or was disabled) in library annotations
+		 * > Any issues that are specifically disabled in a library cannot be re-enabled in a dependent project.
+		 * > To fix this you need to also enable the issue in the library project.
+		 * Strangely even though both projects have my plugin applied which adds the fatal.
+		 */
+		fatal.remove("StopShip")
 	}
 }

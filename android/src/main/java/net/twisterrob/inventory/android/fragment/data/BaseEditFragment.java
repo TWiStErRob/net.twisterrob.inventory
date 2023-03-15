@@ -60,10 +60,10 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private static final int REQUEST_CODE_GET_PICTURE = 0x3245;
 
 	private boolean isRestored;
-	private Uri restoredImage;
+	private @Nullable Uri restoredImage;
 	private int restoredTypePos;
 
-	private Uri currentImage;
+	private @Nullable Uri currentImage;
 	private boolean keepNameInSync;
 	private DTO original;
 
@@ -179,7 +179,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-			restoredImage = savedInstanceState.getParcelable(SAVE_KEY_IMAGE_TO_SAVE);
+			restoredImage = BundleTools.getParcelable(savedInstanceState, SAVE_KEY_IMAGE_TO_SAVE, Uri.class);
 			restoredTypePos = savedInstanceState.getInt(SAVE_KEY_SELECTED_TYPE_POSITION);
 			isRestored = true;
 		}

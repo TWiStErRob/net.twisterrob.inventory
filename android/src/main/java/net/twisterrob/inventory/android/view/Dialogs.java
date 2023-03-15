@@ -85,12 +85,12 @@ public class Dialogs {
 						.setTitle(state.action.getConfirmationTitle(context.getResources()))
 						.setMessage(state.action.getConfirmationMessage(context.getResources()))
 						.setView(state.action.getConfirmationView(context))
-						.setPositiveButton(android.R.string.yes, new OnClickListener() {
+						.setPositiveButton(android.R.string.ok, new OnClickListener() {
 							@Override public void onClick(DialogInterface dialog, int which) {
 								new Execute(context).execute(state);
 							}
 						})
-						.setNegativeButton(android.R.string.no, null)
+						.setNegativeButton(android.R.string.cancel, null)
 						.setIconAttribute(android.R.attr.alertDialogIcon)
 						.show();
 			}
@@ -104,6 +104,12 @@ public class Dialogs {
 		protected ProgressAsyncTask(@NonNull FragmentActivity context) {
 			this.context = context;
 			this.progress = new ActionProgressFragment();
+		}
+
+		@SuppressWarnings("deprecation")
+		public void execute(@NonNull ActionState node) {
+			// Overridden to hide deprecation warnings at call-site.
+			super.execute(node);
 		}
 
 		@CallSuper
@@ -137,6 +143,7 @@ public class Dialogs {
 		protected Execute(@NonNull FragmentActivity context) {
 			super(context);
 		}
+
 		@Override protected ActionState doInBackground(ActionState state) {
 			state.execute();
 			return state;

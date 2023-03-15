@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.activity.data;
 
 import android.content.Intent;
 
+import androidx.annotation.Nullable;
+
 import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.MainActivity;
@@ -74,8 +76,8 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 		return null;
 	}
 
-	private Long getExtraCategoryID() {
-		return (Long)getIntent().getExtras().get(Extras.CATEGORY_ID);
+	private @Nullable Long getExtraCategoryID() {
+		return Intents.getOptionalCategory(getIntent().getExtras());
 	}
 
 	private boolean getExtraIncludeSubs() {

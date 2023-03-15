@@ -129,14 +129,14 @@ public class MainActivity extends DrawerActivity
 		new AlertDialog.Builder(this)
 				.setTitle(R.string.welcome_title)
 				.setMessage(message)
-				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						App.prefs().setBoolean(R.string.pref_showWelcome, false);
 						App.toastUser(getString(R.string.welcome_help_tip));
 						new PopulateSampleInventoryTask().execute();
 					}
 				})
-				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 					@Override public void onClick(DialogInterface dialog, int which) {
 						App.prefs().setBoolean(R.string.pref_showWelcome, false);
 						App.toastUser(getString(R.string.welcome_help_tip));
@@ -340,9 +340,8 @@ public class MainActivity extends DrawerActivity
 		return result;
 	}
 
+	@SuppressLint("WrongThread")
 	@DebugHelper
-	@SuppressLint("all")
-	@SuppressWarnings("all")
 	public boolean onDebugOptionsItemSelected(MenuItem item) {
 		if (BuildConfig.DEBUG) {
 			switch (item.getItemId()) {
@@ -364,30 +363,37 @@ public class MainActivity extends DrawerActivity
 					startActivity(ItemViewActivity.show(10010L));
 					return true;
 				case R.id.debug_capture:
-					File devFile = new File("/sdcard/dev.jpg");
+					File devFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "dev.jpg");
 					Uri target = Uri.fromFile(devFile);
 					startActivityForResult(CaptureImage.saveTo(this, devFile, target, 8192), REQUEST_CODE_IMAGE);
 					return true;
 				case R.id.debug_testdb:
-					new AsyncTask<Void, Void, Void>() {
-						@Override protected void onPreExecute() {
-							Glide.get(getApplicationContext()).clearMemory();
-						}
-						@Override protected Void doInBackground(Void... params) {
-							Glide.get(getApplicationContext()).clearDiskCache();
-							App.db().resetToTest();
-							return null;
-						}
-						@Override protected void onPostExecute(Void aVoid) {
-							refresh();
-						}
-					}.execute();
+					resetToTestDatabase();
 					return true;
 				default:
 					return false;
 			}
 		}
 		return false;
+	}
+
+	@SuppressWarnings("deprecation")
+	@SuppressLint("StaticFieldLeak")
+	@DebugHelper
+	private void resetToTestDatabase() {
+		new android.os.AsyncTask<Void, Void, Void>() {
+			@Override protected void onPreExecute() {
+				Glide.get(getApplicationContext()).clearMemory();
+			}
+			@Override protected Void doInBackground(Void... params) {
+				Glide.get(getApplicationContext()).clearDiskCache();
+				App.db().resetToTest();
+				return null;
+			}
+			@Override protected void onPostExecute(Void aVoid) {
+				refresh();
+			}
+		}.execute();
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -477,7 +483,14 @@ public class MainActivity extends DrawerActivity
 		}
 	}
 
-	private class RefreshInventorySizeTask extends AsyncTask<Void, Void, Boolean> {
+	@SuppressWarnings("deprecation")
+	private class RefreshInventorySizeTask extends android.os.AsyncTask<Void, Void, Boolean> {
+
+		public void execute() {
+			// Overridden to hide deprecation warnings at call-site.
+			super.execute();
+		}
+
 		@Override protected void onPreExecute() {
 			isInventoryEmptyCache = false;
 			supportInvalidateOptionsMenu();
@@ -497,7 +510,14 @@ public class MainActivity extends DrawerActivity
 		}
 	}
 
-	private class PopulateSampleInventoryTask extends AsyncTask<Void, Void, Boolean> {
+	@SuppressWarnings("deprecation")
+	private class PopulateSampleInventoryTask extends android.os.AsyncTask<Void, Void, Boolean> {
+
+		public void execute() {
+			// Overridden to hide deprecation warnings at call-site.
+			super.execute();
+		}
+
 		@Override protected void onPreExecute() {
 			isInventoryEmptyCache = false;
 			supportInvalidateOptionsMenu();

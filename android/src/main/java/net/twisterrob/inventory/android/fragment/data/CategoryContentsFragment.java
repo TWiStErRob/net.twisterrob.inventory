@@ -92,8 +92,8 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		eventsListener.itemActioned(recyclerViewItemID);
 	}
 
-	private Long getArgCategoryID() {
-		return (Long)requireArguments().get(Extras.CATEGORY_ID);
+	private @Nullable Long getArgCategoryID() {
+		return Intents.getOptionalCategory(requireArguments());
 	}
 	/** @see #createLoadArgs() */
 	@SuppressWarnings("unused")
@@ -101,7 +101,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		return requireArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
 
-	public static CategoryContentsFragment newInstance(Long parentCategoryID, boolean flatten) {
+	public static CategoryContentsFragment newInstance(@Nullable Long parentCategoryID, boolean flatten) {
 		CategoryContentsFragment fragment = new CategoryContentsFragment();
 		Bundle args = new Bundle();
 		args.putSerializable(Extras.CATEGORY_ID, parentCategoryID);
@@ -160,9 +160,9 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			return adapter.getItemCount() <= 1;
 		}
 
-		@Override public void startLoad(Bundle args) {
+		@Override public void startLoad(@NonNull Bundle args) {
 			// by listController contract all ctor provided Loaders must be started even if they don't return data
-			Long id = (Long)args.get(Extras.CATEGORY_ID);
+			Long id = Intents.getOptionalCategory(args);
 			boolean flatten = args.getBoolean(Extras.INCLUDE_SUBS);
 
 			Bundle categoriesArgs;

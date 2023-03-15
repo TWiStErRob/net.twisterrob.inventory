@@ -82,7 +82,7 @@ public class BaseFragment<T> extends VariantFragment {
 		}
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-			tag = savedInstanceState.getParcelable(KEY_VIEWTAG);
+			tag = BundleTools.getParcelable(savedInstanceState, KEY_VIEWTAG, Parcelable.class);
 		}
 		setHasOptionsMenu(true);
 	}

@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.*;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.content.Intent;
 import android.net.Uri;
@@ -47,11 +46,11 @@ public class BackupService extends NotificationProgressService<Progress> {
 	 * but it needs to bind and pass the target differently.
 	 * @see <a href="http://stackoverflow.com/q/18706062/253468">Exception with sending ParcelFileDescriptor via Intent</a>
 	 */
+	@SuppressWarnings("JavadocReference")
 	private final Queue<ParcelFileDescriptor> queue = new LinkedBlockingDeque<>();
 	private final ProgressDispatcher dispatcher = new ProgressDispatcher();
 
 	public BackupService() {
-		super(BackupService.class.getSimpleName());
 		setDebugMode(DISABLE && BuildConfig.DEBUG);
 	}
 
@@ -159,11 +158,9 @@ public class BackupService extends NotificationProgressService<Progress> {
 		}
 	}
 
-	@SuppressLint({"WrongThread", "WrongThreadInterprocedural"})
-	// TODEL https://issuetracker.google.com/issues/80002895
 	@WorkerThread
-	@Override protected void onHandleIntent(Intent intent) {
-		super.onHandleIntent(intent);
+	@Override protected void onHandleWork(@NonNull Intent intent) {
+		super.onHandleWork(intent);
 		dispatcher.reset(); // call before started, so the listener may cancel immediately
 		listeners.started();
 		try {

@@ -9,6 +9,7 @@ import org.slf4j.*;
 import android.content.*;
 import android.database.*;
 import android.net.Uri;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
 
 import static android.app.SearchManager.*;
@@ -75,12 +76,16 @@ public class InventoryProvider extends VariantContentProvider {
 		URI_MATCHER.addURI(AUTHORITY, Export.BACKUP_URI_SEGMENT, FULL_BACKUP);
 	}
 
-	private @NonNull Context requireContext() {
-		Context context = getContext();
-		if (context == null) {
-			throw new IllegalStateException("Content provider not created yet.");
+	private @NonNull Context requireContextCompat() {
+		if (Build.VERSION_CODES.R <= Build.VERSION.SDK_INT) {
+			return requireContext();
+		} else {
+			Context context = getContext();
+			if (context == null) {
+				throw new IllegalStateException("Content provider not created yet.");
+			}
+			return context;
 		}
-		return context;
 	}
 
 	@Override public String getType(@NonNull Uri uri) {
@@ -240,10 +245,10 @@ public class InventoryProvider extends VariantContentProvider {
 				Cursor category = App.db().getCategory(Category.getID(uri));
 				String name = DatabaseTools.singleString(category,
 						net.twisterrob.inventory.android.content.contract.Category.TYPE_IMAGE);
-				int svgID = ResourceTools.getRawResourceID(requireContext(), name);
+				int svgID = ResourceTools.getRawResourceID(requireContextCompat(), name);
 				// The following only works if the resource is uncompressed: android.aaptOptions.noCompress 'svg'
 				//noinspection resource AssetFileDescriptor is closed by caller
-				return requireContext().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();
+				return requireContextCompat().getResources().openRawResourceFd(svgID).getParcelFileDescriptor();
 			case FULL_BACKUP:
 				return generateBackupWithService();
 		}
@@ -283,7 +288,7 @@ public class InventoryProvider extends VariantContentProvider {
 	private ParcelFileDescriptor generateBackupWithService() throws FileNotFoundException {
 		try {
 			final ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
-			final Context context = requireContext();
+			final Context context = requireContextCompat();
 			new BackupServiceConnection() {
 				@Override protected void serviceBound(ComponentName name, BackupService.LocalBinder service) {
 					service.export(pipe[1]);

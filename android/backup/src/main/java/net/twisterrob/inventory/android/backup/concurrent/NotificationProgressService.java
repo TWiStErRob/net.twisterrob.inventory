@@ -4,6 +4,7 @@ import org.slf4j.*;
 
 import android.app.*;
 import android.content.*;
+import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.*;
@@ -36,10 +37,6 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 	private Progress lastProgress = null;
 	private Progress lastProgressSentToNotification;
 	private boolean debugMode = false;
-
-	public NotificationProgressService(String name) {
-		super(name);
-	}
 
 	public void setDebugMode(boolean debugMode) {
 		this.debugMode = debugMode;
@@ -107,7 +104,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		broadcast(result, ACTION_FINISHED_BROADCAST);
 		if (inBackground) {
 			LOG.trace("In background, replacing progress notification with done notification");
-			stopForeground(true);
+			stopNotification();
 			NotificationManager notificationManager =
 					(NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -136,13 +133,14 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		super.onBind(intent);
 		if (needsNotification(intent)) {
 			LOG.trace("Stopping notification, because bind has a UI that displays progress.");
+			inBackground = false;
 			stopNotification();
 		}
 		return null;
 	}
 
-	@Override protected void onHandleIntent(Intent intent) {
-		super.onHandleIntent(intent);
+	@Override protected void onHandleWork(@NonNull Intent intent) {
+		super.onHandleWork(intent);
 		lastProgress = null;
 		onGoingNotification = createOnGoingNotification(intent).setOngoing(true);
 		setIntentAndDefaults(onGoingNotification, createInProgressPendingIntent());
@@ -153,6 +151,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		super.onRebind(intent);
 		if (needsNotification(intent)) {
 			LOG.trace("Stopping notification, because re-bind has a UI that displays progress.");
+			inBackground = false;
 			stopNotification();
 		}
 	}
@@ -198,9 +197,13 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		return builder.build();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void stopNotification() {
-		inBackground = false;
-		stopForeground(true);
+		if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+			stopForeground(STOP_FOREGROUND_REMOVE);
+		} else {
+			stopForeground(true);
+		}
 	}
 
 	private void broadcast(@NonNull Progress progress, String action) {
