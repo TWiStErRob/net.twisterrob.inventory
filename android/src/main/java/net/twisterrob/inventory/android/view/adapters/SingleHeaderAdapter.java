@@ -6,14 +6,18 @@ import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.DeepScrollFixListener;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
 
 public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorRecyclerAdapter<ViewHolder> {
+	private static final String DATABASE_TYPE_HEADER = "header";
+	
 	private View header;
 
 	public SingleHeaderAdapter(Cursor cursor) {
@@ -24,14 +28,18 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 		this.header = header;
 	}
 
-	@SuppressWarnings("resource") // these cursor don't need to be closed
-	@Override public Cursor swapCursor(Cursor newCursor) {
-		if (header != null) { // add one extra row for header
+	@SuppressWarnings("resource") // These cursors (Matrix and Merge) will be closed by RecyclerViewLoadersController.close()
+	@Override public @Nullable Cursor swapCursor(@Nullable Cursor newCursor) {
+		if (newCursor == null) { // No new cursor, don't create MergeCursor.
+			return super.swapCursor(null);
+		} else if (header != null) { // Add one extra row for header.
 			MatrixCursor header = new MatrixCursor(new String[] {"type", "_id"}, 1);
-			header.addRow(new Object[] {"header", CommonColumns.ID_ADD});
-			newCursor = new MergeCursor(new Cursor[] {header, newCursor});
+			header.addRow(new Object[] {DATABASE_TYPE_HEADER, CommonColumns.ID_ADD});
+			Cursor mergeCursor = new MergeCursor(new Cursor[] {header, newCursor});
+			return super.swapCursor(mergeCursor);
+		} else { // No header, just forward original.
+			return super.swapCursor(newCursor);
 		}
-		return super.swapCursor(newCursor);
 	}
 
 	public int getSpanSize(int position, int columns) {
@@ -63,6 +71,9 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 	protected abstract int getNonHeaderViewType(int position);
 	@Override public final int getItemViewType(int position) {
 		if (position == 0 && header != null) {
+			assert getItemId(position) == CommonColumns.ID_ADD;
+			assert getCursor().moveToPosition(position)
+					&& DATABASE_TYPE_HEADER.equals(DatabaseTools.getString(getCursor(), "type"));
 			return R.layout.item_header_placeholder;
 		}
 		return getNonHeaderViewType(position);

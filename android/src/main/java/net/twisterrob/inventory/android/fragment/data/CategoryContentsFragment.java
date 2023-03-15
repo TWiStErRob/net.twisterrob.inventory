@@ -131,7 +131,11 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		}
 
 		@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
-			adapter.swapCursor(data);
+			Cursor oldCursor = adapter.swapCursor(data);
+			if (data == null && oldCursor != null) {
+				// See net.twisterrob.inventory.android.view.RecyclerViewLoadersController.setData.
+				oldCursor.close();
+			}
 			if (data != null && selectionMode != null) {
 				SelectionAdapter<?> selectionAdapter = selectionMode.getAdapter();
 				Cursor cursor = ((CursorRecyclerAdapter<?>)selectionAdapter.getWrappedAdapter()).getCursor();

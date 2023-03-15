@@ -26,7 +26,15 @@ public abstract class RecyclerViewLoadersController
 	}
 
 	@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
-		adapter.swapCursor(data);
+		Cursor oldCursor = adapter.swapCursor(data);
+		if (data == null && oldCursor != null) {
+			// This is meant to close the Cursor that may be created by a subclass of the adapter.
+			// swapCursor might actually set a cursor inside the adapter, that's not the same as data.
+			// When data is null, it means we want to forget what's in the adapter, so we close the original.
+			// If we close it always, i.e. adapter.changeCursor(data), then we might close used cursors.
+			// This happens because some Cursors might be shared between different screens via the Loaders.
+			oldCursor.close();
+		}
 	}
 
 	private @NonNull LoaderCallbacks<Cursor> createLoaderCallbacks() {
@@ -43,11 +51,11 @@ public abstract class RecyclerViewLoadersController
 		});
 	}
 
-	public void startLoad(@Nullable Bundle args) {
+	@Override public void startLoad(@Nullable Bundle args) {
 		getLoaderManager().initLoader(loader.id(), args, createLoaderCallbacks());
 	}
 
-	public void refresh() {
+	@Override public void refresh() {
 		getLoaderManager().getLoader(loader.id()).onContentChanged();
 	}
 }
