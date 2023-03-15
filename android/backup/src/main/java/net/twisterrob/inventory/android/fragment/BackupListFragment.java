@@ -333,7 +333,8 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 		}
 
 		@Override public void close() {
-			getLoaderManager().destroyLoader(LOADER_ID);
+			// Happens automatically onDestroy of the Fragment.
+			//getLoaderManager().destroyLoader(LOADER_ID);
 		}
 
 		@Override protected @NonNull ImportFilesAdapter setupList() {

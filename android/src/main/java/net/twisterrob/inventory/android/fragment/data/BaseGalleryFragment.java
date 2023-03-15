@@ -261,7 +261,6 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 		private boolean isGroup(int position) {
 			Cursor c = getCursor();
-			//if (c.isClosed()) return false;
 			return c.moveToPosition(position) && DatabaseTools.getOptionalBoolean(c, "group", false);
 		}
 

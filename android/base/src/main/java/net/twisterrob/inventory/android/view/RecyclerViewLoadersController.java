@@ -27,8 +27,13 @@ public abstract class RecyclerViewLoadersController
 	}
 
 	@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
-		Cursor cursor = adapter.swapCursor(data);// changeCursor?
+		Cursor cursor = adapter.swapCursor(data);
 		if (data == null && cursor != null) {
+			// This is meant to close the Cursor that may be created by a subclass of the adapter.
+			// swapCursor might actually set a cursor inside the adapter, that's not the same as data.
+			// When data is null, it means we want to forget what's in the adapter, so we close the original.
+			// If we close it always, i.e. adapter.changeCursor(data), then we might close used cursors.
+			// This happens because some Cursors might be shared between different screens via the Loaders.
 			cursor.close();
 		}
 	}

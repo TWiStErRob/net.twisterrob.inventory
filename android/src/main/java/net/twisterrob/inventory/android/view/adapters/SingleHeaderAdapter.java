@@ -15,7 +15,6 @@ import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.DeepScrollFixListener;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
-import net.twisterrob.java.exceptions.StackTrace;
 
 public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorRecyclerAdapter<ViewHolder> {
 	private static final String DATABASE_TYPE_HEADER = "header";
@@ -30,7 +29,7 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 		this.header = header;
 	}
 
-	@SuppressWarnings("resource") // These cursors (Matrix and Merge) will be closed by ???
+	@SuppressWarnings("resource") // These cursors (Matrix and Merge) will be closed by RecyclerViewLoadersController.close()
 	@Override public @Nullable Cursor swapCursor(@Nullable Cursor newCursor) {
 		if (newCursor == null) { // No new cursor, don't create MergeCursor.
 			return super.swapCursor(null);

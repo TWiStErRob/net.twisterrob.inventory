@@ -191,8 +191,9 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		}
 
 		@Override public void close() {
-			getLoaderManager().destroyLoader(Loaders.Categories.id());
-			getLoaderManager().destroyLoader(Loaders.Items.id());
+			// Happens automatically on destroy of the Fragment.
+			//getLoaderManager().destroyLoader(Loaders.Categories.id());
+			//getLoaderManager().destroyLoader(Loaders.Items.id());
 		}
 
 		private class Callbacks extends LoadersCallbacksAdapter {
