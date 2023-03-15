@@ -24,13 +24,6 @@
 	*** copyXSLT(...);
 }
 
-# Make sure PackageManagerTools can be used, which was compiled against API 33.
-# TODO Remove when compileSdk = 33
-#-dontwarn android.content.pm.PackageManager$ComponentInfoFlags
-#-dontwarn android.content.pm.PackageManager$PackageInfoFlags
-#-dontwarn android.content.pm.PackageManager$ResolveInfoFlags
--dontwarn net.twisterrob.android.utils.tools.PackageManagerTools
-
 # Remove Logging for now
 # ----------------------
 # FIXME use isLoggable in AndroidLogger and runtime control over TAGs
