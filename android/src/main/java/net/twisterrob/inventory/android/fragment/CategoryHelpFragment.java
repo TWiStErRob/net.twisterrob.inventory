@@ -112,7 +112,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				final Context context = requireContext();
 				AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
-					@Nullable @Override protected File doInBackground(@Nullable Void ignore) throws IOException {
+					@Override protected @Nullable File doInBackground(@Nullable Void ignore) throws IOException {
 						file = Paths.getShareFile(context, "html");
 						new CategoryHelpBuilder(context).export(file);
 						return file;
@@ -133,7 +133,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				final Context context = requireContext();
 				AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
-					@Nullable @Override protected File doInBackground(@Nullable Void aVoid) throws Exception {
+					@Override protected @Nullable File doInBackground(@Nullable Void aVoid) throws Exception {
 						File downloads = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 						String name = String.format(Locale.ROOT,
 								"%s - %s.html", getString(R.string.app_name), getString(R.string.category_guide));
