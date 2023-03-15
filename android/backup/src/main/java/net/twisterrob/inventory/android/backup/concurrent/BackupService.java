@@ -142,19 +142,16 @@ public class BackupService extends NotificationProgressService<Progress> {
 		if (intent == null && progress != null) {
 			return progress.type;
 		} else if (intent != null && progress == null) {
-			String action = intent.getAction();
-			if (action == null) {
-				throw new IllegalStateException("Unexpected intent action: " + intent);
-			}
-			switch (action) {
+			switch (String.valueOf(intent.getAction())) { // valueOf for using null in switch.
 				case ACTION_IMPORT:
 					return Progress.Type.Import;
 				case ACTION_EXPORT:
 				case ACTION_EXPORT_DIR:
 				case ACTION_EXPORT_PFD_WORKAROUND:
 					return Progress.Type.Export;
+				case "null":
 				default:
-					throw new IllegalStateException("Unexpected intent action: " + action);
+					throw new IllegalStateException("Unexpected intent action: " + intent);
 			}
 		} else {
 			throw new IllegalStateException(
