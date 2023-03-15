@@ -56,7 +56,6 @@ public abstract class RecyclerViewLoadersController
 	}
 
 	@Override public void close() {
-		Log.wtf("swapCursor", "RecyclerViewLoadersController("+this+").close: destroyLoader("+loader.id()+")");
 		// This happens automatically on onDestroy()
 		//getLoaderManager().destroyLoader(loader.id());
 		// This is redundant most of the time, there's a case when it helps:

@@ -132,8 +132,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		}
 
 		@Override protected void setData(@NonNull CursorRecyclerAdapter<?> adapter, @Nullable Cursor data) {
-			Cursor cursor1 = adapter.swapCursor(data);
-			Log.wtf("swapCursor", "CategoriesItemsController("+this+").setData category: Not closing cursor: " + cursor1 + ", replacement: " + data);
+			adapter.swapCursor(data);
 			if (data != null && selectionMode != null) {
 				SelectionAdapter<?> selectionAdapter = selectionMode.getAdapter();
 				Cursor cursor = ((CursorRecyclerAdapter<?>)selectionAdapter.getWrappedAdapter()).getCursor();
