@@ -352,6 +352,7 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 
 		@SuppressWarnings("deprecation")
 		public void destroy() {
+			// Overridden to hide deprecation warnings at call-site.
 			super.cancel(true);
 		}
 	}

@@ -379,6 +379,7 @@ public class MainActivity extends DrawerActivity
 
 	@SuppressWarnings("deprecation")
 	@SuppressLint("StaticFieldLeak")
+	@DebugHelper
 	private void resetToTestDatabase() {
 		new android.os.AsyncTask<Void, Void, Void>() {
 			@Override protected void onPreExecute() {
@@ -484,6 +485,7 @@ public class MainActivity extends DrawerActivity
 
 	@SuppressWarnings("deprecation")
 	private class RefreshInventorySizeTask extends android.os.AsyncTask<Void, Void, Boolean> {
+
 		public void execute() {
 			// Overridden to hide deprecation warnings at call-site.
 			super.execute();
