@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.fragment;
 
 import java.io.*;
+import java.net.URI;
 import java.util.Locale;
 
 import org.slf4j.*;
@@ -81,15 +82,17 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (savedInstanceState == null) {
-			AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Float, String>() {
+			AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Float, URI>() {
 				@Override protected void onPreExecute() {
 					web.loadData("Loading...", "text/html", null);
 				}
-				@Override protected String doInBackground(Void ignore) {
-					return new CategoryHelpBuilder(requireContext()).buildHTML();
+				@Override protected URI doInBackground(Void ignore) throws IOException {
+					File file = new File(requireContext().getCacheDir(), "categories.html");
+					new CategoryHelpBuilder(requireContext()).export(file);
+					return file.toURI();
 				}
-				@Override protected void onResult(String result, Void ignore) {
-					web.loadData(result, "text/html", null);
+				@Override protected void onResult(URI result, Void ignore) {
+					web.loadUrl(result.toString());
 				}
 				@Override protected void onError(@NonNull Exception ex, Void ignore) {
 					App.toastUser(ex.toString());
