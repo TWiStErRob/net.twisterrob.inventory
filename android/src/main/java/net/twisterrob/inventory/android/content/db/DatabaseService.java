@@ -10,13 +10,14 @@ import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.utils.tools.IntentTools;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.VariantIntentService;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
+
+import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
 public class DatabaseService extends VariantIntentService {
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseService.class);
@@ -52,8 +53,8 @@ public class DatabaseService extends VariantIntentService {
 
 	@Override public void onDestroy() {
 		super.onDestroy();
-		LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
-		bm.sendBroadcast(new Intent(ACTION_SERVICE_SHUTDOWN).setClass(getApplicationContext(), getClass()));
+		getLocalBroadcastManager(getApplicationContext())
+				.sendBroadcast(new Intent(ACTION_SERVICE_SHUTDOWN).setClass(getApplicationContext(), getClass()));
 	}
 
 	private void updateLanguage(@NonNull Intent intent) {

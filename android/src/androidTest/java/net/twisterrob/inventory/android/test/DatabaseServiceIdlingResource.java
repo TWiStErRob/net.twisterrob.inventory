@@ -2,11 +2,12 @@ package net.twisterrob.inventory.android.test;
 
 import android.content.*;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.test.core.app.ApplicationProvider;
 
 import net.twisterrob.android.test.espresso.idle.IntentServiceIdlingResource;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
+
+import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
 public class DatabaseServiceIdlingResource extends IntentServiceIdlingResource {
 	private final BroadcastReceiver onShutdown = new BroadcastReceiver() {
@@ -23,13 +24,13 @@ public class DatabaseServiceIdlingResource extends IntentServiceIdlingResource {
 
 	@Override protected void waitForIdleAsync() {
 		super.waitForIdleAsync();
-		LocalBroadcastManager bm = LocalBroadcastManager.getInstance(ApplicationProvider.getApplicationContext());
-		bm.registerReceiver(onShutdown, new IntentFilter(DatabaseService.ACTION_SERVICE_SHUTDOWN));
+		getLocalBroadcastManager(ApplicationProvider.getApplicationContext())
+				.registerReceiver(onShutdown, new IntentFilter(DatabaseService.ACTION_SERVICE_SHUTDOWN));
 	}
 
 	@Override protected void transitionToIdle() {
-		LocalBroadcastManager bm = LocalBroadcastManager.getInstance(ApplicationProvider.getApplicationContext());
-		bm.unregisterReceiver(onShutdown);
+		getLocalBroadcastManager(ApplicationProvider.getApplicationContext())
+				.unregisterReceiver(onShutdown);
 		super.transitionToIdle();
 	}
 }
