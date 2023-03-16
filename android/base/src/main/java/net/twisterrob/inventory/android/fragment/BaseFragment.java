@@ -91,6 +91,7 @@ public class BaseFragment<T> extends VariantFragment {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation") // https://github.com/TWiStErRob/net.twisterrob.inventory/issues/255
 	@Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		onStartLoading();

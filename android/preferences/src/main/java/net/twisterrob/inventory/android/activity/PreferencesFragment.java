@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.activity;
 import android.os.Bundle;
 import android.os.StrictMode;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.*;
@@ -56,10 +57,15 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
 		if (getParentFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG) == null) {
 			DialogFragment fragment =
 					NumberPickerPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-			fragment.setTargetFragment(this, 0);
+			setTarget(fragment);
 			fragment.show(getParentFragmentManager(), DIALOG_FRAGMENT_TAG);
 		} else {
 			// The dialog is already showing.
 		}
+	}
+
+	@SuppressWarnings("deprecation") // TODEL https://issuetracker.google.com/issues/181793702
+	private void setTarget(@NonNull DialogFragment fragment) {
+		fragment.setTargetFragment(this, 0);
 	}
 }
