@@ -54,9 +54,9 @@ test-junit4 = "4.13.1"
 # TODEL NewerVersionAvailable lint exception
 test-mockito = "3.10.0"
 test-powermock = "2.0.7"
+# https://developer.android.com/jetpack/androidx/releases/test
 test-androidxJunit = "1.1.5"
 test-androidxCore = "1.5.0"
-# https://developer.android.com/jetpack/androidx/releases/test
 test-espresso = "3.5.1"
 test-robolectric = "4.9.2"
 # Use this instead of 1.3
