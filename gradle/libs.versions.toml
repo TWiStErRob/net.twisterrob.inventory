@@ -22,7 +22,6 @@ androidx-fragment = "1.5.5"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 androidx-appcompat = "1.6.1"
 # https://developer.android.com/jetpack/androidx/releases/core
-# TODEL OP_POST_NOTIFICATION ProGuard -dontnote if it's renamed.
 androidx-core = "1.9.0"
 # https://developer.android.com/jetpack/androidx/releases/localbroadcastmanager
 androidx-broadcast = "1.1.0"
