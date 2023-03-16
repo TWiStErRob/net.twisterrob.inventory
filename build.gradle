@@ -1,7 +1,24 @@
 plugins {
 	id("net.twisterrob.inventory.root")
+	id("com.github.ben-manes.versions") version "0.46.0"
+	id("nl.littlerobots.version-catalog-update") version "0.8.0"
 }
-
+versionCatalogUpdate {
+	sortByKey = false
+//	keepUnusedVersions = true
+//	keepUnusedLibraries = true
+//	keepUnusedPlugins = true
+}
+def isNonStable = { String version ->
+	def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+	def regex = /^[0-9,.v-]+(-r)?$/
+	return !stableKeyword && !(version ==~ regex)
+}
+tasks.named("dependencyUpdates").configure {
+	rejectVersionIf {
+		isNonStable(it.candidate.version)
+	}
+}
 tasks.register("clean", Delete.class) { clean ->
 	clean.dependsOn(gradle.includedBuilds*.task(":cleanFull"))
 	clean.delete(project.buildDir)
