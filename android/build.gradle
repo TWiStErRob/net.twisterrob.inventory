@@ -33,10 +33,6 @@ dependencies {
 	implementation(libs.flexbox)
 	implementation(libs.slf4j.api)
 
-	// Lock in the version of Kotlin used so that the transitive dependencies are consistently upgraded.
-	// https://kotlinlang.org/docs/whatsnew18.html#usage-of-the-latest-kotlin-stdlib-version-in-transitive-dependencies
-	implementation(platform(libs.kotlin.bom))
-
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows "Serializer Java 2.7.1" on Genymotion 2.3.7 and S5 5.0.0
 //	compileOnly(libs.xalan)
