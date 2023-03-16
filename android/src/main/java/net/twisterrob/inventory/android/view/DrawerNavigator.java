@@ -73,6 +73,7 @@ public class DrawerNavigator {
 	}
 
 	public void addIcons() {
+		// app:itemIconTint="@null" triggers !hasValue in NavigationView constructor, which creates default.
 		nav.setItemIconTintList(null);
 		Menu menu = nav.getMenu();
 		for (int i = 0; i < menu.size(); ++i) {
