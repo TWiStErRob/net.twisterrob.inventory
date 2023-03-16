@@ -16,6 +16,7 @@ class ConfirmedCleanAction extends BaseDialogFragment implements DialogInterface
 	private final CharSequence title;
 	private final CharSequence message;
 
+	@SuppressWarnings("deprecation") // https://github.com/TWiStErRob/net.twisterrob.inventory/issues/258
 	ConfirmedCleanAction(CharSequence title, CharSequence message, NoProgressTaskExecutor.UITask task) {
 		this.title = title;
 		this.message = message;

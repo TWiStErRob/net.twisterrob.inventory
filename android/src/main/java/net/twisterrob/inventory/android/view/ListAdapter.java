@@ -55,7 +55,7 @@ public class ListAdapter extends CursorRecyclerAdapter<ViewHolder> {
 		@Override public void onClick(View v) {
 			itemView.setEnabled(false);
 			Cursor cursor = getCursor();
-			if (cursor.moveToPosition(getAdapterPosition())) {
+			if (cursor.moveToPosition(getBindingAdapterPosition())) {
 				if (cursor.getShort(cursor.getColumnIndexOrThrow("exists")) != 0) {
 					listener.removeFromList(getItemId());
 				} else {

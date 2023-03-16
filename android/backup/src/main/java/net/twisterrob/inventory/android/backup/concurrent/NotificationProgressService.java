@@ -9,11 +9,12 @@ import android.os.IBinder;
 
 import androidx.annotation.*;
 import androidx.core.app.NotificationCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.inventory.android.backup.BuildConfig;
 import net.twisterrob.inventory.android.content.VariantIntentService;
+
+import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
 public abstract class NotificationProgressService<Progress> extends VariantIntentService {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -213,7 +214,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		if (debugMode) {
 			LOG.trace("Broadcasting {}: {}", progress, progressIntent);
 		}
-		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(progressIntent);
+		getLocalBroadcastManager(getApplicationContext()).sendBroadcast(progressIntent);
 	}
 
 	protected final void reportProgress(@NonNull Progress progress) {

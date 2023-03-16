@@ -19,6 +19,7 @@ class NoProgressTaskExecutor extends BaseDialogFragment implements TaskEndListen
 	private TaskEndListener listener;
 	private UITask task;
 
+	@SuppressWarnings("deprecation") // https://github.com/TWiStErRob/net.twisterrob.inventory/issues/258
 	public NoProgressTaskExecutor() {
 		setRetainInstance(true);
 	}

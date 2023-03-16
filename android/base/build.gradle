@@ -3,13 +3,16 @@ plugins {
 }
 
 dependencies {
+	// Lock in the version of Kotlin used so that the transitive dependencies are consistently upgraded.
+	// https://kotlinlang.org/docs/whatsnew18.html#usage-of-the-latest-kotlin-stdlib-version-in-transitive-dependencies
+	implementation(platform(libs.kotlin.bom))
+	
 	implementation project(':android:database-contract')
 	api(libs.androidx.annotation)
 	api(libs.annotations.jetbrains)
 	implementation(libs.androidx.appcompat)
-	compileOnly(libs.androidx.recyclerview)
+	implementation(libs.androidx.recyclerview)
 	implementation(libs.androidx.material)
-	implementation(libs.androidx.annotationExperimental)
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.androidx.preference)
 

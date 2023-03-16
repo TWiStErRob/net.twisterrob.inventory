@@ -270,12 +270,12 @@ public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 
 				view.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {
-						listener.onItemClick(getAdapterPosition(), getItemId());
+						listener.onItemClick(getBindingAdapterPosition(), getItemId());
 					}
 				});
 				view.setOnLongClickListener(new OnLongClickListener() {
 					@Override public boolean onLongClick(View v) {
-						listener.onItemLongClick(getAdapterPosition(), getItemId());
+						listener.onItemLongClick(getBindingAdapterPosition(), getItemId());
 						return true;
 					}
 				});

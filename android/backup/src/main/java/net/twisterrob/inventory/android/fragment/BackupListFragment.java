@@ -254,7 +254,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 
 				view.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {
-						int position = getAdapterPosition();
+						int position = getBindingAdapterPosition();
 						if (position != RecyclerView.NO_POSITION) {
 							filePicked(getItem(position), true);
 						}

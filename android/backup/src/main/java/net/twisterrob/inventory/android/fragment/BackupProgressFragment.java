@@ -13,7 +13,6 @@ import android.widget.*;
 
 import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
@@ -22,6 +21,7 @@ import net.twisterrob.inventory.android.backup.concurrent.*;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService.LocalBinder;
 
 import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
+import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
 public class BackupProgressFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupProgressFragment.class);
@@ -41,7 +41,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 			IntentFilter filter = new IntentFilter();
 			filter.addAction(ACTION_PROGRESS_BROADCAST);
 			filter.addAction(ACTION_FINISHED_BROADCAST);
-			LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver, filter);
+			getLocalBroadcastManager(requireContext()).registerReceiver(receiver, filter);
 
 			if (service.isInProgress()) {
 				displayer.setProgress(service.getLastProgress());
@@ -52,7 +52,7 @@ public class BackupProgressFragment extends BaseFragment<Void> {
 			}
 		}
 		@Override protected void serviceUnbound(ComponentName name, LocalBinder service) {
-			LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(receiver);
+			getLocalBroadcastManager(requireContext()).unregisterReceiver(receiver);
 		}
 		@Override public void started() {
 			setCancelling(getBinding().isCancelled());
