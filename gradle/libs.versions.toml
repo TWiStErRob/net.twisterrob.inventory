@@ -19,13 +19,11 @@ slf4j = "1.7.30"
 androidx-annotation = "1.6.0"
 # https://developer.android.com/jetpack/androidx/releases/annotation
 # Override for a transitive Material lib dependency to fix a lint issue.
-# ObsoleteLintCustomCheck Lint found an issue registry (`androidx.annotation.experimental.lint.ExperimentalIssueRegistry`) which did not specify the Lint API version it was compiled with.
 androidx-annotationExperimental = "1.3.0"
 # https://developer.android.com/jetpack/androidx/releases/fragment
 androidx-fragment = "1.5.5"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 # TODEL androidx-annotationExperimental when a new version is available
-# TODEL ObsoleteLintCustomCheck exception when upgrading this.
 androidx-appcompat = "1.6.1"
 # https://developer.android.com/jetpack/androidx/releases/core
 # TODEL OP_POST_NOTIFICATION ProGuard -dontnote if it's renamed.
