@@ -17,13 +17,9 @@ slf4j = "1.7.30"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
 androidx-annotation = "1.6.0"
-# https://developer.android.com/jetpack/androidx/releases/annotation
-# Override for a transitive Material lib dependency to fix a lint issue.
-androidx-annotationExperimental = "1.3.0"
 # https://developer.android.com/jetpack/androidx/releases/fragment
 androidx-fragment = "1.5.5"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
-# TODEL androidx-annotationExperimental when a new version is available
 androidx-appcompat = "1.6.1"
 # https://developer.android.com/jetpack/androidx/releases/core
 # TODEL OP_POST_NOTIFICATION ProGuard -dontnote if it's renamed.
@@ -47,7 +43,6 @@ androidx-swiperefreshlayout = "1.1.0"
 # https://developer.android.com/jetpack/androidx/releases/preference
 androidx-preference = "1.2.0"
 # https://github.com/material-components/material-components-android/releases
-# TODEL androidx-annotationExperimental when a new version is available
 androidx-material = "1.8.0"
 
 xalan = "2.7.1"
@@ -90,7 +85,6 @@ slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 annotations-jetbrains = { module = "org.jetbrains:annotations", version.ref = "jbrAnn" }
 
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidx-annotation" }
-androidx-annotationExperimental = { module = "androidx.annotation:annotation-experimental", version.ref = "androidx-annotationExperimental" }
 androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "androidx-fragment" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-broadcast = { module = "androidx.localbroadcastmanager:localbroadcastmanager", version.ref = "androidx-broadcast" }
