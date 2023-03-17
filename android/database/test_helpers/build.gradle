@@ -8,5 +8,5 @@ dependencies {
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation 'net.twisterrob.lib:twister-lib-java'
 	implementation(libs.test.junit4)
-	implementation(libs.test.androidxJunit)
+	implementation(libs.androidx.test.junit)
 }

@@ -5,6 +5,8 @@ import net.twisterrob.inventory.build.dsl.autoNamespace
 
 dependencies {
 	"implementation"(platform("net.twisterrob.inventory.build:platform"))
+	"testImplementation"(platform("net.twisterrob.inventory.build:platform"))
+	"androidTestImplementation"(platform("net.twisterrob.inventory.build:platform"))
 }
 
 @Suppress("UnstableApiUsage")

@@ -11,7 +11,7 @@ dependencies {
 	api(libs.androidx.annotation)
 	api(libs.annotations.jetbrains)
 	implementation(libs.androidx.appcompat)
-	implementation(libs.androidx.recyclerview)
+	compileOnly(libs.androidx.recyclerview)
 	implementation(libs.androidx.material)
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.androidx.preference)
