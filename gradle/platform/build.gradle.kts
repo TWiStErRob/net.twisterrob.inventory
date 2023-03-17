@@ -9,6 +9,11 @@ plugins {
 group = "net.twisterrob.inventory.build"
 
 dependencies {
+	javaPlatform.allowDependencies()
+	// Lock in the version of Kotlin used so that the transitive dependencies are consistently upgraded.
+	// https://kotlinlang.org/docs/whatsnew18.html#usage-of-the-latest-kotlin-stdlib-version-in-transitive-dependencies
+	api(platform(libs.kotlin.bom))
+
 	constraints {
 		apiWithKtx(libs.androidx.activity)
 		apiWithKtx(libs.androidx.annotation)
