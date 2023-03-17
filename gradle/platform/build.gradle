@@ -1,0 +1,10 @@
+plugins {
+	id("org.gradle.java-platform")
+}
+
+group = "net.twisterrob.inventory.build"
+
+dependencies {
+	constraints {
+	}
+}

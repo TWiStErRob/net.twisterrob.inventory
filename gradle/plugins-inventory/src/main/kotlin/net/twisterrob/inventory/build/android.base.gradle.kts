@@ -3,6 +3,10 @@ package net.twisterrob.inventory.build
 import net.twisterrob.inventory.build.dsl.android
 import net.twisterrob.inventory.build.dsl.autoNamespace
 
+dependencies {
+	"implementation"(platform("net.twisterrob.inventory.build:platform"))
+}
+
 @Suppress("UnstableApiUsage")
 android {
 	namespace = project.autoNamespace

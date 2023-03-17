@@ -3,6 +3,8 @@ plugins {
 	alias(libs.plugins.detekt)
 }
 
+group = "net.twisterrob.inventory.build"
+
 gradlePlugin {
 	plugins {
 		create("database") {
