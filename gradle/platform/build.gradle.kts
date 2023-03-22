@@ -18,6 +18,7 @@ dependencies {
 		val libsVC = versionCatalogs.named("libs")
 		val (androidxTest, androidxProd) = libsVC
 			.libraryAliases
+			.sorted()
 			.filter { it.startsWith("androidx.") }
 			.partition { it.startsWith("androidx.test.") }
 
