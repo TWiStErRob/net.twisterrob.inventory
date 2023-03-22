@@ -303,6 +303,7 @@ public class MainActivity extends DrawerActivity
 		}
 		return true;
 	}
+
 	private boolean shouldCreateOptionsMenu(Menu menu) {
 		BaseFragment<?> fragment = getFragment();
 		if (fragment == null) {

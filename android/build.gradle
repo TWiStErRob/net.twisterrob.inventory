@@ -25,7 +25,7 @@ dependencies {
 	// Replace APK's runtimeOnly sneaking into test runtime
 	configurations.testRuntimeOnly.exclude module: 'twister-lib-android-slf4j'
 
-	implementation(libs.androidx.broadcast)
+	implementation(libs.androidx.localbroadcastmanager)
 	implementation(libs.androidx.appcompat)
 	implementation(libs.androidx.material)
 	implementation(libs.androidx.recyclerview)
@@ -51,7 +51,7 @@ dependencies {
 	testImplementation(libs.test.powermockXstream)
 	testImplementation(libs.test.robolectric)
 	testImplementation(libs.test.robolectricMultidexShadows)
-	testImplementation(libs.test.androidxCore)
+	testImplementation(libs.androidx.test.core)
 
 	androidTestImplementation "net.twisterrob.lib:twister-lib-hamcrest"
 	androidTestImplementation "net.twisterrob.lib:twister-lib-mockito"
@@ -69,8 +69,8 @@ dependencies {
 	androidTestImplementation "net.twisterrob.lib:twister-lib-android-capture_image-test_helpers"
 	androidTestImplementation project(':android:database:test_helpers')
 	androidTestImplementation(libs.androidx.preference)
-	androidTestImplementation(libs.test.espressoIntents)
-	androidTestImplementation(libs.test.espressoContrib)
+	androidTestImplementation(libs.androidx.test.espressoIntents)
+	androidTestImplementation(libs.androidx.test.espressoContrib)
 }
 
 android {

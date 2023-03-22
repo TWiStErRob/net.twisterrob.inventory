@@ -11,6 +11,7 @@ import android.content.Context;
 
 import androidx.annotation.CallSuper;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 
 import net.twisterrob.android.test.espresso.idle.*;
@@ -56,7 +57,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		// Wait for registered idling resources before continuing.
 		// In particular DatabaseServiceIdlingResource above needs to be waited for before we can delete the database.
 		// The database could already be initializing in the background because the App is already created before this.
-		waitForIdleSync();
+		Espresso.onIdle();
 		reset();
 		setDefaults();
 		super.beforeActivityLaunched();
