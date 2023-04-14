@@ -212,6 +212,7 @@ jobs:
           path: |
             ${{ github.workspace }}/**/build/reports/androidTest/connected/
             ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/
+            ${{ github.workspace }}/**/build/outputs/connected_android_test_additional_output/
 
       - name: "Publish 'Instrumentation Results ${{ matrix.android-api }}' check suite."
         if: success() || failure()
