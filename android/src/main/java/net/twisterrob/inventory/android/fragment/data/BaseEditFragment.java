@@ -82,7 +82,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	public boolean isDirty() {
-		LOG.warn("isDirty: isClean={}", isClean);
 		return !isClean;
 	}
 
@@ -102,9 +101,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		if (tryRestore()) {
 			return;
 		}
-		LOG.warn("onSingleRowLoaded: isClean={}, selectByID({}, {})", isClean, type, dto.type);
+
 		AndroidTools.selectByID(type, dto.type);
-		LOG.warn("onSingleRowPos: {}", type.getSelectedItemPosition());
 		name.setText(dto.name); // must set it after type to prevent keepNameInSync
 		resetPicture(); // displays image, so needs type to be selected
 		description.setText(dto.description);
@@ -131,9 +129,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				@Override public void onClick(View v) {
 					new ChangeTypeDialog(BaseEditFragment.this).show(new Variants() {
 						@Override protected void update(Cursor cursor) {
-							long id = DatabaseTools.getLong(cursor, Item.ID);
-							LOG.warn("ChangeTypeDialog.update: isClean={}, selectByID({}, {})", isClean, type, id);
-							AndroidTools.selectByID(type, id);
+							AndroidTools.selectByID(type, DatabaseTools.getLong(cursor, Item.ID));
 						}
 						@Override protected CharSequence getTitle() {
 							return getString(R.string.item_categorize_title, getName());
@@ -175,7 +171,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			}
 			// manually restore because sometimes lost, e.g. action_take_picture, rotate, back (or crop)
 			// at this point we can be sure that types are loaded because SingleBelonging loader depends on types loader
-			LOG.warn("tryRestore: isClean={}, setSelection({})", isClean, restoredTypePos);
 			type.setSelection(restoredTypePos);
 			// isClean cannot be restored even if post()-ed here, setSelection finishes after
 			return true;
@@ -229,7 +224,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		AndroidTools.setHint(name, (Integer)getDynamicResource(DYN_NameHintResource));
 		name.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-				LOG.warn("name.addTextChangedListener: isClean={}, setting false", isClean);
 				isClean = false;
 				if (doValidateTitle()) {
 					updateHint(s, false);
@@ -241,7 +235,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		AndroidTools.setHint(description, (Integer)getDynamicResource(DYN_DescriptionHintResource));
 		description.addTextChangedListener(new TextWatcherAdapter() {
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-				LOG.warn("description.addTextChangedListener: isClean={}, setting false", isClean);
 				isClean = false;
 			}
 		});
@@ -259,7 +252,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		if (this instanceof ItemEditFragment) {
 			hinter = new Hinter(requireContext(), new CategorySelectedEvent() {
 				@Override public void categorySelected(long categoryID) {
-					LOG.warn("categorySelected: isClean={}, selectByID({}, {})", isClean, type, categoryID);
 					AndroidTools.selectByID(type, categoryID);
 					Hinter.unhighlight(name.getText());
 				}
@@ -294,16 +286,12 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				if (oldPos != position && oldPos != AdapterView.INVALID_POSITION) {
-					LOG.warn("type.setOnItemSelectedListener: isClean={}, setting false ({}, {})", isClean, oldPos, position);
 					isClean = false;
-				} else {
-					LOG.warn("type.setOnItemSelectedListener: isClean={}, keeping ({}, {})", isClean, oldPos, position);
 				}
 				oldPos = position;
 				if (keepNameInSync) {
 					boolean cleanBefore = isClean; // automatic naming shouldn't be considered a change
 					super.onItemSelected(parent, view, position, id);
-					LOG.warn("keepNameInSync: isClean={}, setting {}", isClean, cleanBefore);
 					isClean = cleanBefore;
 				}
 				reloadImage();
@@ -480,7 +468,6 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 	private void setCurrentImage(Uri currentImage) {
 		this.currentImage = currentImage;
-		LOG.warn("setCurrentImage: isClean={}, setting false", isClean);
 		isClean = false;
 		reloadImage();
 	}

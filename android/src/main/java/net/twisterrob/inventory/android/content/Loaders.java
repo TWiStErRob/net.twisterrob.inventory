@@ -91,11 +91,6 @@ public enum Loaders implements InventoryLoader {
 	SingleItem {
 		@Override protected @NonNull Cursor createCursor(@NonNull Context context, @NonNull Bundle args) {
 			long id = args.getLong(Extras.ITEM_ID, Item.ID_ADD);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException ex) {
-				throw new RuntimeException(ex);
-			}
 			return App.db().getItem(id, true);
 		}
 	},
