@@ -112,10 +112,17 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			requireArguments().remove(EDIT_IMAGE);
 			getPicture();
 		}
+		// Reset the flag in the next frame, because we have changed things.
 		type.post(new Runnable() {
 			@Override public void run() {
-				LOG.warn("post: isClean={}, setting true", isClean);
-				isClean = true;
+				// Type has changed and it may have posted SelectionNotifier
+				// which will run in the next frame too, see AdapterView#selectionChanged.
+				type.post(new Runnable() {
+					@Override public void run() {
+						// Reset of dirty flag, so that the initial state is not dirty.
+						isClean = true;
+					}
+				});
 			}
 		});
 		if (this instanceof ItemEditFragment) {
