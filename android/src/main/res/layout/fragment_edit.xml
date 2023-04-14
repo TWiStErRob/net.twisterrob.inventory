@@ -28,7 +28,7 @@
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				>
-				<Spinner
+				<net.twisterrob.android.utils.log.LoggingAppCompatSpinner
 					android:id="@+id/type_edit"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
