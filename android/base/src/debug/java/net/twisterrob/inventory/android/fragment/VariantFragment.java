@@ -5,11 +5,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.ContentView;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
 
 public class VariantFragment extends net.twisterrob.android.utils.log.LoggingFragment {
+
+	public VariantFragment() {
+		super();
+	}
+
+	@ContentView
+	public VariantFragment(@LayoutRes int contentLayoutId) {
+		super(contentLayoutId);
+	}
+
 	@SuppressWarnings("deprecation") // https://github.com/TWiStErRob/net.twisterrob.inventory/issues/255
 	@Override public LoaderManager getLoaderManager() {
 		return LoaderManager.getInstance(this);

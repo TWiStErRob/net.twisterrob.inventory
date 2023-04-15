@@ -28,8 +28,14 @@ public class BaseFragment<T> extends VariantFragment {
 	protected T eventsListener;
 
 	public BaseFragment() {
+		super();
 		// prevent headaches when querying arguments (see Main.onCreateOptionsMenu)
 		setArguments(null);
+	}
+
+	@ContentView
+	public BaseFragment(@LayoutRes int contentLayoutId) {
+		super(contentLayoutId);
 	}
 
 	@Override public void setArguments(@Nullable Bundle args) {

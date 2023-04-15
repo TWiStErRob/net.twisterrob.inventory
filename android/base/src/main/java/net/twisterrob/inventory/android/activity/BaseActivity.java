@@ -21,6 +21,16 @@ import net.twisterrob.inventory.android.content.Intents;
 import static net.twisterrob.java.utils.CollectionTools.*;
 
 public abstract class BaseActivity extends DebugHelperActivity {
+
+	public BaseActivity() {
+		super();
+	}
+
+	@ContentView
+	public BaseActivity(@LayoutRes int contentLayoutId) {
+		super(contentLayoutId);
+	}
+
 	@Override public void setContentView(int layoutResID) {
 		/*
 		Pixel 7 Pro Android 13 / API 33

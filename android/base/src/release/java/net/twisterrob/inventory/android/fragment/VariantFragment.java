@@ -5,11 +5,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
 
 public class VariantFragment extends androidx.fragment.app.Fragment {
+	public VariantFragment() {
+		super();
+	}
+
+	public VariantFragment(@LayoutRes int contentLayoutId) {
+		super(contentLayoutId);
+	}
+
 	@SuppressWarnings("deprecation") // https://github.com/TWiStErRob/net.twisterrob.inventory/issues/255
 	@Override public LoaderManager getLoaderManager() {
 		return LoaderManager.getInstance(this);
