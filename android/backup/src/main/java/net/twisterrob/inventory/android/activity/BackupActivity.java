@@ -88,6 +88,8 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		fileList.onRefresh();
 		supportInvalidateOptionsMenu();
 	}
+
+	@Deprecated
 	@Override public boolean isAllowNew() {
 		return allowNew;
 	}
@@ -259,7 +261,8 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		}
 	}
 
-	public void filePicked(@NonNull final File file) {
+	@Deprecated
+	@Override public void filePicked(@NonNull final File file) {
 		//ensureNotInProgress(); // for other operations the UI is disabled, but the user can still tap in the file list
 		if (!allowNew) {
 			DialogTools
@@ -319,6 +322,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		// createChooser(..., PendingIntent.getBroadcast.getIntentSender), but it's API 22 and only notifies after started
 	}
 
+	@Deprecated
 	@Override public void newIntoDir(@NonNull File targetDir) {
 		ensureNotInProgress();
 		Uri dir = Uri.fromFile(targetDir);
