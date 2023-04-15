@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="@dimen/unit_half"
+	android:orientation="vertical"
+	tools:showIn="@layout/activity_backup"
+	tools:context="net.twisterrob.inventory.android.fragment.BackupControllerFragment"
+	>
+
+	<Button
+		android:id="@+id/backup_import"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/backup_import"
+		android:drawableStart="@android:drawable/ic_menu_upload"
+		android:drawableEnd="@android:drawable/ic_menu_upload"
+		/>
+
+	<Button
+		android:id="@+id/backup_export"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/backup_export"
+		android:drawableStart="@android:drawable/stat_sys_download_done"
+		android:drawableEnd="@android:drawable/stat_sys_download_done"
+		/>
+
+	<Button
+		android:id="@+id/backup_send"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/backup_send"
+		android:drawableStart="@android:drawable/ic_menu_send"
+		android:drawableEnd="@android:drawable/ic_menu_send"
+		/>
+
+</LinearLayout>

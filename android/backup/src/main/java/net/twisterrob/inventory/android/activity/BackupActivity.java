@@ -1,32 +1,25 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.util.Calendar;
 import java.util.concurrent.CancellationException;
 
 import org.slf4j.*;
 
 import android.content.*;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.*;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
-import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.concurrent.*;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
-import net.twisterrob.inventory.android.content.InventoryContract;
+import net.twisterrob.inventory.android.fragment.BackupControllerFragment;
 
 import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
-public class BackupActivity extends BaseActivity {
+public class BackupActivity extends BaseActivity implements BackupControllerFragment.BackupEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
 	private boolean allowNew;
 	/** Prevents {@code android.view.WindowLeaked} "Activity BackupActivity has leaked window". See usages. */
@@ -60,27 +53,8 @@ public class BackupActivity extends BaseActivity {
 		}
 	};
 
-	private final ActivityResultLauncher<String> exporter = registerForActivityResult(
-			new ActivityResultContracts.CreateDocument(InventoryContract.Export.TYPE_BACKUP),
-			new ActivityResultCallback<Uri>() {
-				@Override public void onActivityResult(@Nullable Uri result) {
-					doExport(result);
-				}
-			}
-	);
-
-	private final ActivityResultLauncher<String[]> importer = registerForActivityResult(
-			new ActivityResultContracts.OpenDocument(),
-			new ActivityResultCallback<Uri>() {
-				@Override public void onActivityResult(@Nullable Uri result) {
-					doImport(result);
-				}
-			}
-	);
-
 	private void setAllowNew(boolean allowNew) {
 		this.allowNew = allowNew;
-		supportInvalidateOptionsMenu();
 	}
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
@@ -176,52 +150,6 @@ public class BackupActivity extends BaseActivity {
 			finishDialog.show();
 		}
 	}
-	@Override public boolean onCreateOptionsMenu(Menu menu) {
-		if (!super.onCreateOptionsMenu(menu)) {
-			return false;
-		}
-		getMenuInflater().inflate(R.menu.backup, menu);
-		return true;
-	}
-	@Override public boolean onPrepareOptionsMenu(Menu menu) {
-		ViewTools.enabledIf(menu, R.id.action_send, allowNew);
-		return super.onPrepareOptionsMenu(menu);
-	}
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
-		int itemId = item.getItemId();
-		if (itemId == R.id.action_send) {
-			DialogTools
-					.confirm(this, new PopupCallbacks<Boolean>() {
-						@Override public void finished(Boolean value) {
-							if (Boolean.TRUE.equals(value)) {
-								startSend();
-							}
-						}
-					})
-					.setTitle(R.string.backup_export_external_confirm_title)
-					.setMessage(R.string.backup_export_external_confirm_warning)
-					.show();
-			return true;
-		} else if (itemId == R.id.action_export) {
-			startExport();
-			return true;
-		}else if (itemId == R.id.action_import) {
-			DialogTools
-					.confirm(this, new PopupCallbacks<Boolean>() {
-						@Override public void finished(Boolean value) {
-							if (Boolean.TRUE.equals(value)) {
-								startImport();
-							}
-						}
-					})
-					.setTitle(R.string.backup_import_confirm_title)
-					.setMessage(getString(R.string.backup_import_confirm_warning, "a backup"))
-					.show();
-			return true;
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-	}
 
 	@Override public void onRequestPermissionsResult(
 			int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -231,44 +159,7 @@ public class BackupActivity extends BaseActivity {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
-	private void startImport() {
-		ensureNotInProgress();
-		importer.launch(new String[] {InventoryContract.Export.TYPE_BACKUP});
-	}
-
-	private void doImport(@NonNull Uri source) {
-		ensureNotInProgress();
-		Intent intent = new Intent(BackupService.ACTION_IMPORT, source, getApplicationContext(), BackupService.class);
-		startService(intent);
-	}
-
-	private void startExport() {
-		ensureNotInProgress();
-		Calendar now = Calendar.getInstance();
-		exporter.launch(Paths.getExportFileName(now));
-	}
-
-	private void doExport(@NonNull Uri result) {
-		Intent intent = new Intent(BackupService.ACTION_EXPORT, result, getApplicationContext(), BackupService.class);
-		startService(intent);
-	}
-
-	private void startSend() {
-		ensureNotInProgress();
-		Calendar now = Calendar.getInstance();
-		Intent intent = new Intent(Intent.ACTION_SEND)
-				.setType(InventoryContract.Export.TYPE_BACKUP)
-				.putExtra(Intent.EXTRA_STREAM, InventoryContract.Export.getUri(now))
-				.putExtra(Intent.EXTRA_SUBJECT, Paths.getExportFileName(now))
-				.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-		// this makes the user choose a target and that target will call the provider later, which starts the service
-		startActivity(Intent.createChooser(intent, getString(R.string.backup_send)));
-		// alternatives would be:
-		// ACTION_PICK_ACTIVITY which calls onActivityResult, but it looks ugly
-		// createChooser(..., PendingIntent.getBroadcast.getIntentSender), but it's API 22 and only notifies after started
-	}
-
-	private void ensureNotInProgress() {
+	@Override public void ensureNotInProgress() {
 		if (!allowNew) {
 			throw new IllegalStateException(getString(R.string.backup_warning_inprogress));
 		}
