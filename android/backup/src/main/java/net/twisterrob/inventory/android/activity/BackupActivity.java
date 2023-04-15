@@ -31,7 +31,6 @@ import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBr
 
 public class BackupActivity extends BaseActivity implements BackupListFragment.BackupListCallbacks {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
-	private static final int REQUEST_CODE_PICK_EXTERNAL = 0x4412;
 	private BackupListFragment fileList;
 	private boolean allowNew;
 	/** Prevents {@code android.view.WindowLeaked} "Activity BackupActivity has leaked window". See usages. */
@@ -196,7 +195,6 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		return true;
 	}
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
-		ViewTools.enabledIf(menu, R.id.action_import_external, allowNew);
 		ViewTools.enabledIf(menu, R.id.action_export_internal, allowNew);
 		ViewTools.enabledIf(menu, R.id.action_export_external, allowNew);
 		return super.onPrepareOptionsMenu(menu);
@@ -205,13 +203,6 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		int itemId = item.getItemId();
 		if (itemId == R.id.action_export_home) {
 			fileList.filePicked(Paths.getPhoneHome(), true);
-			return true;
-		} else if (itemId == R.id.action_import_external) {
-			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-			intent.addCategory(Intent.CATEGORY_OPENABLE);
-			intent.setType("*/*");
-			intent = Intent.createChooser(intent, getString(R.string.backup_import_external));
-			startActivityForResult(intent, REQUEST_CODE_PICK_EXTERNAL);
 			return true;
 		} else if (itemId == R.id.action_export_internal) {
 			newIntoDir(fileList.getDir());
@@ -246,19 +237,6 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 			return;
 		}
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-	}
-
-	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-			case REQUEST_CODE_PICK_EXTERNAL: {
-				if (resultCode == RESULT_OK && data != null && data.getData() != null) {
-					Uri uri = data.getData();
-					doImport(uri);
-				}
-				break;
-			}
-		}
 	}
 
 	@Deprecated

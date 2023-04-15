@@ -28,12 +28,6 @@
 		app:showAsAction="never"
 		/>
 	<item
-		android:id="@+id/action_import_external"
-		android:title="@string/backup_import_external"
-		android:icon="@android:drawable/stat_sys_download_done"
-		app:showAsAction="never"
-		/>
-	<item
 		android:id="@+id/action_export_home"
 		android:title="@string/backup_go_home"
 		android:titleCondensed="@string/backup_go_home_condensed"

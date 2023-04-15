@@ -13,7 +13,6 @@
 	<string name="backup_import">Import…</string>
 	<string name="backup_export_internal">XXX Backup here</string>
 	<string name="backup_export_external">XXX Backup to…</string>
-	<string name="backup_import_external">XXX Import from…</string>
 	<string name="backup_go_home">XXX Go to Downloads folder</string>
 	<string name="backup_go_home_condensed">XXX Downloads</string>
 	<string name="backup_go_to_title">Jump to folder</string>
