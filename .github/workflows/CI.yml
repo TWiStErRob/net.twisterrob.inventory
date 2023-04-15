@@ -210,7 +210,7 @@ jobs:
         with:
           name: 'Instrumentation Test Results ${{ matrix.android-api }}'
           path: |
-            ${{ github.workspace }}/**/build/reports/androidTest/connected/
+            ${{ github.workspace }}/**/build/reports/androidTests/connected/
             ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/
             ${{ github.workspace }}/**/build/outputs/connected_android_test_additional_output/
 
