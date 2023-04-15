@@ -1,6 +1,5 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.concurrent.CancellationException;
 
@@ -19,19 +18,16 @@ import androidx.appcompat.app.AlertDialog;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
-import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks.DoNothing;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.concurrent.*;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 import net.twisterrob.inventory.android.content.InventoryContract;
-import net.twisterrob.inventory.android.fragment.BackupListFragment;
 
 import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
-public class BackupActivity extends BaseActivity implements BackupListFragment.BackupListCallbacks {
+public class BackupActivity extends BaseActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
-	private BackupListFragment fileList;
 	private boolean allowNew;
 	/** Prevents {@code android.view.WindowLeaked} "Activity BackupActivity has leaked window". See usages. */
 	private AlertDialog finishDialog; // CONSIDER DialogFragment to auto-dismiss? and handle rotation
@@ -84,19 +80,12 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 
 	private void setAllowNew(boolean allowNew) {
 		this.allowNew = allowNew;
-		fileList.onRefresh();
 		supportInvalidateOptionsMenu();
-	}
-
-	@Deprecated
-	@Override public boolean isAllowNew() {
-		return allowNew;
 	}
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_backup);
-		fileList = getFragment(R.id.backup_list);
 
 		displayPopup(findProgress(savedInstanceState, getIntent()));
 		BackupPermissions.checkAndRequest(this);
@@ -200,10 +189,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 	}
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
-		if (itemId == R.id.action_export_home) {
-			fileList.filePicked(Paths.getPhoneHome(), true);
-			return true;
-		} else if (itemId == R.id.action_send) {
+		if (itemId == R.id.action_send) {
 			DialogTools
 					.confirm(this, new PopupCallbacks<Boolean>() {
 						@Override public void finished(Boolean value) {
@@ -220,7 +206,17 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 			startExport();
 			return true;
 		}else if (itemId == R.id.action_import) {
-			startImport();
+			DialogTools
+					.confirm(this, new PopupCallbacks<Boolean>() {
+						@Override public void finished(Boolean value) {
+							if (Boolean.TRUE.equals(value)) {
+								startImport();
+							}
+						}
+					})
+					.setTitle(R.string.backup_import_confirm_title)
+					.setMessage(getString(R.string.backup_import_confirm_warning, "a backup"))
+					.show();
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
@@ -233,30 +229,6 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 			return;
 		}
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-	}
-
-	@Deprecated
-	@Override public void filePicked(@NonNull final File file) {
-		//ensureNotInProgress(); // for other operations the UI is disabled, but the user can still tap in the file list
-		if (!allowNew) {
-			DialogTools
-					.notify(this, DoNothing.<Boolean>instance())
-					.setTitle(R.string.backup_import_confirm_title)
-					.setMessage(R.string.backup_warning_inprogress)
-					.show();
-			return;
-		}
-		DialogTools
-				.confirm(this, new PopupCallbacks<Boolean>() {
-					@Override public void finished(Boolean value) {
-						if (Boolean.TRUE.equals(value)) {
-							doImport(Uri.fromFile(file));
-						}
-					}
-				})
-				.setTitle(R.string.backup_import_confirm_title)
-				.setMessage(getString(R.string.backup_import_confirm_warning, file.getName()))
-				.show();
 	}
 
 	private void startImport() {
@@ -294,14 +266,6 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		// alternatives would be:
 		// ACTION_PICK_ACTIVITY which calls onActivityResult, but it looks ugly
 		// createChooser(..., PendingIntent.getBroadcast.getIntentSender), but it's API 22 and only notifies after started
-	}
-
-	@Deprecated
-	@Override public void newIntoDir(@NonNull File targetDir) {
-		ensureNotInProgress();
-		Uri dir = Uri.fromFile(targetDir);
-		Intent intent = new Intent(BackupService.ACTION_EXPORT_DIR, dir, getApplicationContext(), BackupService.class);
-		startService(intent);
 	}
 
 	private void ensureNotInProgress() {

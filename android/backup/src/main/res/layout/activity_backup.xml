@@ -16,12 +16,12 @@
 		android:layout_height="wrap_content"
 		tools:layout="@layout/fragment_backup_progress"
 		/>
-	<androidx.fragment.app.FragmentContainerView
-		android:id="@+id/backup_list"
-		android:name="net.twisterrob.inventory.android.fragment.BackupListFragment"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_weight="1"
-		tools:layout="@layout/fragment_backup"
-		/>
+<!--	<androidx.fragment.app.FragmentContainerView-->
+<!--		android:id="@+id/backup_list"-->
+<!--		android:name="net.twisterrob.inventory.android.fragment.BackupListFragment"-->
+<!--		android:layout_width="match_parent"-->
+<!--		android:layout_height="0dp"-->
+<!--		android:layout_weight="1"-->
+<!--		tools:layout="@layout/fragment_backup"-->
+<!--		/>-->
 </LinearLayout>

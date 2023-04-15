@@ -21,11 +21,4 @@
 		android:icon="@android:drawable/ic_menu_send"
 		app:showAsAction="never"
 		/>
-	<item
-		android:id="@+id/action_export_home"
-		android:title="@string/backup_go_home"
-		android:titleCondensed="@string/backup_go_home_condensed"
-		android:icon="@android:drawable/ic_menu_revert"
-		app:showAsAction="ifRoom|withText"
-		/>
 </menu>

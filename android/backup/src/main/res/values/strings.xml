@@ -12,10 +12,6 @@
 	<string name="backup_export">Backup…</string>
 	<string name="backup_import">Import…</string>
 	<string name="backup_send">Send to…</string>
-	<string name="backup_go_home">XXX Go to Downloads folder</string>
-	<string name="backup_go_home_condensed">XXX Downloads</string>
-	<string name="backup_go_to_title">Jump to folder</string>
-	<string name="backup_go_to_message">Enter full path of directory to go to:</string>
 
 	<string name="backup_permission_title">Permission required</string>
 	<string name="backup_permission_message">Need access to the file system to be able to browse the directories to the location of the backup, and to write the backup file.\n\nWill you allow that?</string>
