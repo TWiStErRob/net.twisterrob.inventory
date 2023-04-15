@@ -5,6 +5,7 @@ import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,7 +37,13 @@ public class BackupControllerFragment extends BaseFragment<BackupControllerFragm
 	}
 
 	private final ActivityResultLauncher<String> exporter = registerForActivityResult(
-			new ActivityResultContracts.CreateDocument(InventoryContract.Export.TYPE_BACKUP),
+			new ActivityResultContracts.CreateDocument(InventoryContract.Export.TYPE_BACKUP) {
+				@Override public @NonNull Intent createIntent(@NonNull Context context, @NonNull String input) {
+					return super
+							.createIntent(context, input)
+							.addCategory(Intent.CATEGORY_OPENABLE);
+				}
+			},
 			new ActivityResultCallback<Uri>() {
 				@Override public void onActivityResult(@Nullable Uri result) {
 					if (result != null) {
@@ -49,7 +56,13 @@ public class BackupControllerFragment extends BaseFragment<BackupControllerFragm
 	);
 
 	private final ActivityResultLauncher<String[]> importer = registerForActivityResult(
-			new ActivityResultContracts.OpenDocument(),
+			new ActivityResultContracts.OpenDocument() {
+				@Override public @NonNull Intent createIntent(@NonNull Context context, @NonNull String[] input) {
+					return super
+							.createIntent(context, input)
+							.addCategory(Intent.CATEGORY_OPENABLE);
+				}
+			},
 			new ActivityResultCallback<Uri>() {
 				@Override public void onActivityResult(@Nullable Uri result) {
 					if (result != null) {
