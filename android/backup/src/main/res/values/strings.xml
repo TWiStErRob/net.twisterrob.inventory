@@ -13,10 +13,6 @@
 	<string name="backup_import">Import…</string>
 	<string name="backup_send">Send to…</string>
 
-	<string name="backup_permission_title">Permission required</string>
-	<string name="backup_permission_message">Need access to the file system to be able to browse the directories to the location of the backup, and to write the backup file.\n\nWill you allow that?</string>
-	<string name="backup_permission_coach">Required permission denied permanently: if you changed your mind, please allow it in device Settings.</string>
-
 	<string name="backup_notification_channel_group_name" maxLength="40">Backup Progress</string>
 	<string name="backup_notification_channel_group_description" maxLength="300">
 		Notifications related to backup progress: import and export.

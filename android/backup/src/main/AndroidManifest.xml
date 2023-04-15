@@ -4,13 +4,7 @@
 	<!-- Used by BackupService -->
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-	<!-- Used by Import/Export -->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-	<application
-		android:requestLegacyExternalStorage="true"
-		>
+	<application>
 
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.BackupActivity"

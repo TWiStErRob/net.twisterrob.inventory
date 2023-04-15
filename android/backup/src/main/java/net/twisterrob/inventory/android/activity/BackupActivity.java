@@ -62,7 +62,6 @@ public class BackupActivity extends BaseActivity implements BackupControllerFrag
 		setContentView(R.layout.activity_backup);
 
 		displayPopup(findProgress(savedInstanceState, getIntent()));
-		BackupPermissions.checkAndRequest(this);
 	}
 
 	private @Nullable Progress findProgress(@Nullable Bundle savedInstanceState, @Nullable Intent intent) {
@@ -149,14 +148,6 @@ public class BackupActivity extends BaseActivity implements BackupControllerFrag
 		if (finishDialog != null) {
 			finishDialog.show();
 		}
-	}
-
-	@Override public void onRequestPermissionsResult(
-			int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		if (BackupPermissions.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
-			return;
-		}
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
 	@Override public void ensureNotInProgress() {
