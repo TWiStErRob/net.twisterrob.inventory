@@ -71,7 +71,7 @@ public class BackupActivityActor extends ActivityActor {
 	}
 
 	public ExportExternalActor exportExternal() {
-		clickActionOverflow(R.id.action_export_external);
+		clickActionOverflow(R.id.action_send);
 		ExportExternalActor dialog = new ExportExternalActor();
 		dialog.assertDisplayed();
 		return dialog;
@@ -163,7 +163,7 @@ public class BackupActivityActor extends ActivityActor {
 			onView(isDialogTitle())
 					.inRoot(isDialog())
 					.check(matches(isCompletelyDisplayed()))
-					.check(matches(withText(R.string.backup_export_external)))
+					.check(matches(withText(R.string.backup_send)))
 			;
 		}
 		public void cancel() {
@@ -198,7 +198,7 @@ public class BackupActivityActor extends ActivityActor {
 				// in Android 10 the title Intent.createChooser is blatantly ignored
 				assertThat(getChooserTitle(), equalTo("Share"));
 			} else {
-				assertThat(getChooserTitle(), isString(R.string.backup_export_external));
+				assertThat(getChooserTitle(), isString(R.string.backup_send));
 			}
 		}
 		public void cancel() {

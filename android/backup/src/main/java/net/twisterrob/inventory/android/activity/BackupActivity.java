@@ -196,7 +196,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 	}
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
 		ViewTools.enabledIf(menu, R.id.action_export_internal, allowNew);
-		ViewTools.enabledIf(menu, R.id.action_export_external, allowNew);
+		ViewTools.enabledIf(menu, R.id.action_send, allowNew);
 		return super.onPrepareOptionsMenu(menu);
 	}
 	@Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -207,7 +207,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		} else if (itemId == R.id.action_export_internal) {
 			newIntoDir(fileList.getDir());
 			return true;
-		} else if (itemId == R.id.action_export_external) {
+		} else if (itemId == R.id.action_send) {
 			DialogTools
 					.confirm(this, new PopupCallbacks<Boolean>() {
 						@Override public void finished(Boolean value) {
@@ -294,7 +294,7 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 				.putExtra(Intent.EXTRA_SUBJECT, Paths.getExportFileName(now))
 				.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		// this makes the user choose a target and that target will call the provider later, which starts the service
-		startActivity(Intent.createChooser(intent, getString(R.string.backup_export_external)));
+		startActivity(Intent.createChooser(intent, getString(R.string.backup_send)));
 		// alternatives would be:
 		// ACTION_PICK_ACTIVITY which calls onActivityResult, but it looks ugly
 		// createChooser(..., PendingIntent.getBroadcast.getIntentSender), but it's API 22 and only notifies after started

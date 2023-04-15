@@ -12,7 +12,7 @@
 	<string name="backup_export">Backup…</string>
 	<string name="backup_import">Import…</string>
 	<string name="backup_export_internal">XXX Backup here</string>
-	<string name="backup_export_external">XXX Backup to…</string>
+	<string name="backup_send">Send to…</string>
 	<string name="backup_go_home">XXX Go to Downloads folder</string>
 	<string name="backup_go_home_condensed">XXX Downloads</string>
 	<string name="backup_go_to_title">Jump to folder</string>
@@ -52,14 +52,13 @@
 	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>
 	<string name="backup_export_result_cancelled">Export cancelled.</string>
 
-	<string name="backup_export_external_confirm_title">@string/backup_export_external</string>
+	<string name="backup_export_external_confirm_title">@string/backup_send</string>
 	<string name="backup_export_external_confirm_warning"
-		>You\'re about to export your inventory to a third party.
+		>You\'re about to send your inventory to a third party.
 		Once you leave the app there are no guarantees.
 		For example, some apps (Google Drive, Dropbox) don\'t allow cancelling this procedure.
 		Once you started, be patient; give it a few minutes, if you have a large inventory.
 		Even if the progress disappears, the export may still be ongoing in the background.
-		Where possible I have plans to work around these external limitations in the future.
 		\n\nDo you want to continue?
 	</string>
 	<string name="backup_import_confirm_title">Import</string>

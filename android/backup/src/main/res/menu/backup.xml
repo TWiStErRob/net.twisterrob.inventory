@@ -22,9 +22,9 @@
 		app:showAsAction="never"
 		/>
 	<item
-		android:id="@+id/action_export_external"
-		android:title="@string/backup_export_external"
-		android:icon="@android:drawable/ic_menu_upload"
+		android:id="@+id/action_send"
+		android:title="@string/backup_send"
+		android:icon="@android:drawable/ic_menu_send"
 		app:showAsAction="never"
 		/>
 	<item
