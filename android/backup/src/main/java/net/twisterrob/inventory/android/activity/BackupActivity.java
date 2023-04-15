@@ -11,6 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.*;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
 
@@ -61,6 +64,24 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 			displayPopup(progress);
 		}
 	};
+
+	private final ActivityResultLauncher<String> exporter = registerForActivityResult(
+			new ActivityResultContracts.CreateDocument(InventoryContract.Export.TYPE_BACKUP),
+			new ActivityResultCallback<Uri>() {
+				@Override public void onActivityResult(@Nullable Uri result) {
+					doExport(result);
+				}
+			}
+	);
+
+	private final ActivityResultLauncher<String[]> importer = registerForActivityResult(
+			new ActivityResultContracts.OpenDocument(),
+			new ActivityResultCallback<Uri>() {
+				@Override public void onActivityResult(@Nullable Uri result) {
+					doImport(result);
+				}
+			}
+	);
 
 	private void setAllowNew(boolean allowNew) {
 		this.allowNew = allowNew;
@@ -198,13 +219,19 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 					.confirm(this, new PopupCallbacks<Boolean>() {
 						@Override public void finished(Boolean value) {
 							if (Boolean.TRUE.equals(value)) {
-								doExportExternal();
+								startSend();
 							}
 						}
 					})
 					.setTitle(R.string.backup_export_external_confirm_title)
 					.setMessage(R.string.backup_export_external_confirm_warning)
 					.show();
+			return true;
+		} else if (itemId == R.id.action_export) {
+			startExport();
+			return true;
+		}else if (itemId == R.id.action_import) {
+			startImport();
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
@@ -255,13 +282,29 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 				.show();
 	}
 
-	private void doImport(Uri source) {
+	private void startImport() {
+		ensureNotInProgress();
+		importer.launch(new String[] {InventoryContract.Export.TYPE_BACKUP});
+	}
+
+	private void doImport(@NonNull Uri source) {
 		ensureNotInProgress();
 		Intent intent = new Intent(BackupService.ACTION_IMPORT, source, getApplicationContext(), BackupService.class);
 		startService(intent);
 	}
 
-	private void doExportExternal() {
+	private void startExport() {
+		ensureNotInProgress();
+		Calendar now = Calendar.getInstance();
+		exporter.launch(Paths.getExportFileName(now));
+	}
+
+	private void doExport(@NonNull Uri result) {
+		Intent intent = new Intent(BackupService.ACTION_EXPORT, result, getApplicationContext(), BackupService.class);
+		startService(intent);
+	}
+
+	private void startSend() {
 		ensureNotInProgress();
 		Calendar now = Calendar.getInstance();
 		Intent intent = new Intent(Intent.ACTION_SEND)
