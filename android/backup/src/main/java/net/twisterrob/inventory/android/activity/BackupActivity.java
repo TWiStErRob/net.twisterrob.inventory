@@ -25,6 +25,7 @@ public class BackupActivity extends BaseActivity implements BackupControllerFrag
 	/** Prevents {@code android.view.WindowLeaked} "Activity BackupActivity has leaked window". See usages. */
 	private AlertDialog finishDialog; // CONSIDER DialogFragment to auto-dismiss? and handle rotation
 	private Progress unhandled;
+	private BackupControllerFragment controller;
 
 	@VisibleForTesting final BackupServiceConnection backupService = new BackupServiceConnection() {
 		@Override protected void serviceBound(ComponentName name, BackupService.LocalBinder service) {
@@ -55,11 +56,13 @@ public class BackupActivity extends BaseActivity implements BackupControllerFrag
 
 	private void setAllowNew(boolean allowNew) {
 		this.allowNew = allowNew;
+		controller.onAllowNewChanged(allowNew);
 	}
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_backup);
+		controller = getFragment(R.id.backup_controller);
 
 		displayPopup(findProgress(savedInstanceState, getIntent()));
 	}

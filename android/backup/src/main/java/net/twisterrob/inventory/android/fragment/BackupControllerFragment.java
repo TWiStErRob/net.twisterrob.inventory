@@ -74,26 +74,43 @@ public class BackupControllerFragment extends BaseFragment<BackupControllerFragm
 			}
 	);
 
+	private Button importButton;
+	private Button exportButton;
+	private Button sendButton;
+
 	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		Button importButton = view.findViewById(R.id.backup_import);
+		importButton = view.findViewById(R.id.backup_import);
 		importButton.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
 				handleImport();
 			}
 		});
-		Button exportButton = view.findViewById(R.id.backup_export);
+		exportButton = view.findViewById(R.id.backup_export);
 		exportButton.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
 				handleExport();
 			}
 		});
-		Button sendButton = view.findViewById(R.id.backup_send);
+		sendButton = view.findViewById(R.id.backup_send);
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
 				handleSend();
 			}
 		});
+	}
+
+	@Override public void onDestroyView() {
+		super.onDestroyView();
+		importButton = null;
+		exportButton = null;
+		sendButton = null;
+	}
+
+	public void onAllowNewChanged(boolean isAllowNew) {
+		importButton.setEnabled(isAllowNew);
+		exportButton.setEnabled(isAllowNew);
+		sendButton.setEnabled(isAllowNew);
 	}
 
 	private void handleImport() {
