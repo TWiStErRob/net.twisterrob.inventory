@@ -9,6 +9,7 @@ import androidx.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.*;
+import net.twisterrob.java.utils.ObjectTools;
 
 public class BackupUriExporter {
 	private final BackupStreamExporter exporter;
@@ -23,7 +24,15 @@ public class BackupUriExporter {
 	}
 
 	public Progress exportTo(Uri uri) throws IOException {
-		OutputStream stream = context.getContentResolver().openOutputStream(uri);
+		OutputStream stream;
+		try {
+			stream = context.getContentResolver().openOutputStream(uri);
+		} catch (Exception ex) {
+			IllegalArgumentException cause = new IllegalArgumentException("Target URI: " + uri);
+			//noinspection ThrowableNotThrown
+			ObjectTools.getRootCause(ex).initCause(cause);
+			throw ex;
+		}
 		try {
 			return exporter.export(stream);
 		} finally {

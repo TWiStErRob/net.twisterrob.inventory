@@ -9,6 +9,7 @@ import androidx.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.*;
+import net.twisterrob.java.utils.ObjectTools;
 
 public class BackupZipUriImporter implements ZipImporter<Uri> {
 	private final Context context;
@@ -29,10 +30,17 @@ public class BackupZipUriImporter implements ZipImporter<Uri> {
 	}
 
 	@Override public void importFrom(Uri uri) throws Exception {
-		if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
-			importFile(uri);
-		} else {
-			importStream(uri);
+		try {
+			if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+				importFile(uri);
+			} else {
+				importStream(uri);
+			}
+		} catch (Exception ex) {
+			IllegalArgumentException cause = new IllegalArgumentException("Source URI: " + uri);
+			//noinspection ThrowableNotThrown
+			ObjectTools.getRootCause(ex).initCause(cause);
+			throw ex;
 		}
 	}
 
