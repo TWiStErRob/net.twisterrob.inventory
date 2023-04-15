@@ -16,12 +16,6 @@
 		app:showAsAction="never"
 		/>
 	<item
-		android:id="@+id/action_export_internal"
-		android:title="@string/backup_export_internal"
-		android:icon="@android:drawable/ic_menu_save"
-		app:showAsAction="never"
-		/>
-	<item
 		android:id="@+id/action_send"
 		android:title="@string/backup_send"
 		android:icon="@android:drawable/ic_menu_send"

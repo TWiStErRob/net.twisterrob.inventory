@@ -195,7 +195,6 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		return true;
 	}
 	@Override public boolean onPrepareOptionsMenu(Menu menu) {
-		ViewTools.enabledIf(menu, R.id.action_export_internal, allowNew);
 		ViewTools.enabledIf(menu, R.id.action_send, allowNew);
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -203,9 +202,6 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 		int itemId = item.getItemId();
 		if (itemId == R.id.action_export_home) {
 			fileList.filePicked(Paths.getPhoneHome(), true);
-			return true;
-		} else if (itemId == R.id.action_export_internal) {
-			newIntoDir(fileList.getDir());
 			return true;
 		} else if (itemId == R.id.action_send) {
 			DialogTools

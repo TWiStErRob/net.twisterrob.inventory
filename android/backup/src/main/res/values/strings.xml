@@ -11,7 +11,6 @@
 	<string name="backup_title" tools:ignore="UnusedResources">Backup</string>
 	<string name="backup_export">Backup…</string>
 	<string name="backup_import">Import…</string>
-	<string name="backup_export_internal">XXX Backup here</string>
 	<string name="backup_send">Send to…</string>
 	<string name="backup_go_home">XXX Go to Downloads folder</string>
 	<string name="backup_go_home_condensed">XXX Downloads</string>
