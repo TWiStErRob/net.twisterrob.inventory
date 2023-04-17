@@ -26,7 +26,10 @@ import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.inventory.android.content.model.*;
+import net.twisterrob.java.annotations.DebugHelper;
 
+@DebugHelper
+@SuppressLint("StaticFieldLeak") // https://github.com/TWiStErRob/net.twisterrob.inventory/issues/257
 public class CategoryHelpFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryHelpFragment.class);
 	private WebView web;
