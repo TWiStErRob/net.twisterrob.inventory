@@ -1,8 +1,10 @@
 package net.twisterrob.inventory.android.activity.space;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import android.app.*;
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 
 import androidx.annotation.NonNull;

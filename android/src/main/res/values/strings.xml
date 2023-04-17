@@ -237,9 +237,6 @@
 	<string name="room_empty_child">Create a room with the button below. You can then open it and add items inside.</string>
 	<string name="room_empty_list">Your rooms will show up here. Go inside a property to create one.</string>
 
-	<string name="manage_space_title">Manage Inventory Space</string>
-	<string name="manage_space_calculating">Calculating…</string>
-
 	<string name="types__prefix__opened" translatable="false">-</string>
 	<string name="types__prefix__closed" translatable="false">+</string>
 	<string name="types__prefix__no_children" translatable="false">&#32;</string>

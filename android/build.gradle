@@ -10,6 +10,7 @@ dependencies {
 	implementation project(':android:database')
 	implementation project(':android:backup')
 	implementation project(':android:preferences')
+	implementation project(':android:space')
 
 	implementation('net.twisterrob.lib:twister-lib-android-monolith')
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"

@@ -2,7 +2,8 @@ package net.twisterrob.inventory.android.activity.space;
 
 import java.util.Arrays;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.annotation.SuppressLint;
 import android.text.format.Formatter;
@@ -11,7 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.concurrent.SafeAsyncTask;
-import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.space.R;
 
 @SuppressLint("StaticFieldLeak") // TODO see ManageSpaceActivity
 abstract class GetSizeTask<Param> extends SafeAsyncTask<Param, Long, Long> {

@@ -33,6 +33,7 @@ import net.twisterrob.inventory.android.Constants.Pic.GlideSetup;
 import net.twisterrob.inventory.android.activity.BaseActivity;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
+import net.twisterrob.inventory.android.space.R;
 import net.twisterrob.inventory.android.view.RecyclerViewController;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
@@ -53,7 +54,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.manage_space_activity);
-		setIcon(ContextCompat.getDrawable(this, R.drawable.ic_launcher));
+		setIcon(ContextCompat.getDrawable(this, net.twisterrob.inventory.android.R.drawable.ic_launcher));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
 		swiper = (SwipeRefreshLayout)findViewById(R.id.refresher);
