@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import androidx.annotation.ContentView;
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 import androidx.loader.app.LoaderManager;
 
@@ -20,7 +21,7 @@ public abstract class VariantActivity extends androidx.appcompat.app.AppCompatAc
 	}
 
 	@SuppressWarnings("deprecation") // https://github.com/TWiStErRob/net.twisterrob.inventory/issues/255
-	public LoaderManager getSupportLoaderManager() {
+	public @NonNull LoaderManager getSupportLoaderManager() {
 		return LoaderManager.getInstance(this);
 	}
 
