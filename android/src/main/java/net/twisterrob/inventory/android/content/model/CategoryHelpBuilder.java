@@ -1,6 +1,5 @@
 package net.twisterrob.inventory.android.content.model;
 
-import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -106,11 +105,6 @@ public class CategoryHelpBuilder {
 	private final @NonNull Context context;
 	public CategoryHelpBuilder(@NonNull Context context) {
 		this.context = context;
-	}
-
-	public void export(File file) throws IOException {
-		IOTools.writeAll(new FileOutputStream(file), buildHTML());
-		AndroidTools.makeFileDiscoverable(context, file);
 	}
 
 	public String buildHTML() {
@@ -256,4 +250,3 @@ public class CategoryHelpBuilder {
 		}
 	}
 }
-
