@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.utils.tools.IntentTools;
 import net.twisterrob.inventory.android.App;
+import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.content.VariantIntentService;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
 
@@ -63,7 +64,9 @@ public class DatabaseService extends VariantIntentService {
 			LOG.warn("Missing locale from {}", intent);
 			locale = Locale.getDefault();
 		}
-		new LanguageUpdater(App.prefs(), App.db()).updateLanguage(locale);
+		BaseComponent inject = App.getInstance().getBaseComponent();
+		new LanguageUpdater(App.getAppContext(), App.prefs(), App.db(), inject.toaster())
+				.updateLanguage(locale);
 	}
 
 	private void preloadCategoryCache() {

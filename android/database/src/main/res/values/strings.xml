@@ -1,0 +1,5 @@
+<resources>
+
+	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
+
+</resources>

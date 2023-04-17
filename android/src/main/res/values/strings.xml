@@ -8,7 +8,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="app_name">Magic Home Inventory</string>
 	<string name="app_name_short">@string/home_title</string>
-	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
 	<string name="home_title">Inventory</string>
 	<string name="navigation_title">Navigation</string>
 	<string name="image_title">Image</string>
