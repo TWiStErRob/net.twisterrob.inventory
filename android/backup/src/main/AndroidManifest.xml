@@ -4,6 +4,9 @@
 	<!-- Used by BackupService -->
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+	<!-- net.twisterrob.inventory.android.fragment.BackupControllerFragment.doImport -->
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
 	<application>
 
 		<activity
