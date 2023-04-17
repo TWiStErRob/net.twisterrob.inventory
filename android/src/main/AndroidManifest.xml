@@ -3,11 +3,6 @@
           xmlns:tools="http://schemas.android.com/tools"
           android:installLocation="auto">
 
-	<!-- Used by Import/Export -->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<!-- Used by BackupService -->
-	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<!-- Used by JobIntentService (all services extend that at API 30, since IntentService was deprecated). -->
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -71,13 +66,6 @@
 			android:label="@string/manage_space_title"
 			android:launchMode="singleInstance"
 			android:process=":managespace" />
-		<activity
-			android:name=".activity.BackupActivity"
-			android:label="Backup"
-			android:launchMode="singleTop">
-			<meta-data android:name="android.support.PARENT_ACTIVITY"
-			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
-		</activity>
 		<activity
 			android:name=".activity.data.MoveTargetActivity"
 			android:label="@string/action_move"
@@ -172,16 +160,6 @@
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/paths_share" />
 		</provider>
 
-		<service
-			android:name=".backup.concurrent.BackupService"
-			android:label="Background Import/Export"
-			android:enabled="true"
-			android:exported="false"
-			android:stopWithTask="false"
-			tools:ignore="UnusedAttribute"
-			>
-			<!-- lint:UnusedAttribute stopWithTask is API 14+, using as best effort. -->
-		</service>
 		<service
 			android:name=".content.db.DatabaseService"
 			android:label="Background Database Operations"
