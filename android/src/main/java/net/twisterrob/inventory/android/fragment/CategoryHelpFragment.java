@@ -64,7 +64,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					// view.evaluateJavascript was added in API 19, so it cannot be used
 				}
 			}
-			@SuppressWarnings("deprecation") // cannot use API 23 version, app supports API 10
+			@SuppressWarnings("deprecation") // cannot use API 23 version, app supports API 21
 			@Override public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 				LOG.warn("WebView error #{} loading {}:\n{}", errorCode, failingUrl, description);
 			}
