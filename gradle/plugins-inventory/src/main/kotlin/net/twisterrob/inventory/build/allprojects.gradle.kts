@@ -1,6 +1,8 @@
 package net.twisterrob.inventory.build
 
 import net.twisterrob.inventory.build.dsl.libs
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 configurations.configureEach {
 	resolutionStrategy {
@@ -10,6 +12,13 @@ configurations.configureEach {
 			substitute(module(libs.deprecated.hamcrestLibrary.get().module.toString()))
 				.using(module(libs.test.hamcrest.get().toString()))
 		}
+	}
+}
+
+tasks.withType<KotlinCompile>().configureEach kotlin@{
+	compilerOptions { 
+		allWarningsAsErrors.set(true)
+		jvmTarget.set(JvmTarget.fromTarget(JavaVersion.VERSION_1_8.toString()))
 	}
 }
 
