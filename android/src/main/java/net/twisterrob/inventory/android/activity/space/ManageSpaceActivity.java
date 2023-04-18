@@ -55,7 +55,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.manage_space_activity);
-		setIcon(ContextCompat.getDrawable(this, net.twisterrob.inventory.android.R.drawable.ic_launcher));
+		setIcon(ContextCompat.getDrawable(this, getApplicationInfo().icon));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
 		swiper = (SwipeRefreshLayout)findViewById(R.id.refresher);
