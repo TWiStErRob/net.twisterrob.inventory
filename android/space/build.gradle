@@ -1,6 +1,7 @@
 plugins {
 	id("net.twisterrob.inventory.android.module")
 	id("org.jetbrains.kotlin.android")
+//	id("org.jetbrains.kotlin.kapt")
 }
 
 dependencies {
@@ -11,6 +12,10 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
 	implementation "net.twisterrob.lib:twister-lib-java"
+//	implementation "net.twisterrob.lib:twister-lib-core"
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.flexbox)
+
+	implementation(libs.dagger.hilt)
+//	kapt(libs.dagger.hilt.apt)
 }
