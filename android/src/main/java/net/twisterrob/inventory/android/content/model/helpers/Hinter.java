@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.utils.PictureHelper;

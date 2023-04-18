@@ -20,6 +20,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.inventory.android.content.model.*;
 

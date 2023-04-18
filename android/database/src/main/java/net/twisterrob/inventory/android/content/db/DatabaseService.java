@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.utils.tools.IntentTools;
 import net.twisterrob.inventory.android.BaseComponent;
+import net.twisterrob.inventory.android.categories.cache.CategoryCacheImpl;
 import net.twisterrob.inventory.android.content.VariantIntentService;
-import net.twisterrob.inventory.android.content.model.CategoryDTO;
 
 import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
@@ -71,7 +71,7 @@ public class DatabaseService extends VariantIntentService {
 
 	private void preloadCategoryCache() {
 		try {
-			CategoryDTO.getCache(getApplicationContext());
+			CategoryCacheImpl.getCache(getApplicationContext());
 		} catch (Exception ex) {
 			// if fails we'll crash later when used, but at least let the app start up
 			LOG.error("Failed to initialize Category cache", ex);
