@@ -47,7 +47,7 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 				listController.createNew();
 				return true;
 			case R.id.action_room_list:
-				startActivity(MainActivity.list(MainActivity.PAGE_ROOMS));
+				startActivity(MainActivity.list(requireContext(), MainActivity.PAGE_ROOMS));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

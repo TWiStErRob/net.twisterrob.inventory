@@ -94,9 +94,9 @@ public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragmen
 	private static Intent show(Long categoryID, boolean flattened) {
 		if (categoryID == null) {
 			if (flattened) {
-				return MainActivity.list(MainActivity.PAGE_ITEMS);
+				return MainActivity.list(App.getAppContext(), MainActivity.PAGE_ITEMS);
 			} else {
-				return MainActivity.list(MainActivity.PAGE_CATEGORIES);
+				return MainActivity.list(App.getAppContext(), MainActivity.PAGE_CATEGORIES);
 			}
 		}
 		Intent intent = new Intent(App.getAppContext(), CategoryActivity.class);

@@ -342,7 +342,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				startActivity(CategoryActivity.show(type.getSelectedItemId()));
 				return true;
 			case R.id.action_category_help:
-				Intent intent = MainActivity.list(MainActivity.PAGE_CATEGORY_HELP);
+				Intent intent = MainActivity.list(requireContext(), MainActivity.PAGE_CATEGORY_HELP);
 				intent.putExtras(Intents.bundleFromCategory(getTypeId()));
 				startActivity(intent);
 				return true;
