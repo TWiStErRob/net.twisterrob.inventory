@@ -52,8 +52,11 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 	TextView allSize;
 	private SwipeRefreshLayout swiper;
 
+	private BaseComponent inject;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		inject = BaseComponent.get(getApplicationContext());
 		setContentView(R.layout.manage_space_activity);
 		setIcon(ContextCompat.getDrawable(this, getApplicationInfo().icon));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -72,7 +75,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						"Continuing will re-build the search index, it may take a while.",
 						new CleanTask() {
 							@Override protected void doClean() {
-								App.db().rebuildSearch();
+								Database.get(getApplicationContext()).rebuildSearch();
 							}
 						}
 				).show(getSupportFragmentManager(), null);
@@ -104,12 +107,12 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						"All of your belongings will be permanently deleted.",
 						new CleanTask() {
 							@Override protected void doClean() {
-								DatabaseOpenHelper helper = App.db().getHelper();
+								DatabaseOpenHelper helper = Database.get(getApplicationContext()).getHelper();
 								helper.onDestroy(helper.getWritableDatabase());
 								helper.onCreate(helper.getWritableDatabase());
 								helper.close();
-								App.prefs().setString(R.string.pref_currentLanguage, null);
-								App.prefs().setBoolean(R.string.pref_showWelcome, true);
+								inject.prefs().setString(R.string.pref_currentLanguage, null);
+								inject.prefs().setBoolean(R.string.pref_showWelcome, true);
 							}
 						}
 				).show(getSupportFragmentManager(), null);
@@ -119,7 +122,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 			@Override public void onClick(View v) {
 				NoProgressTaskExecutor.create(new CleanTask() {
 					@Override protected void doClean() throws IOException {
-						File path = App.db().getFile();
+						File path = Database.get(getApplicationContext()).getFile();
 						InputStream in = new FileInputStream(path);
 						File dumpFile = getDumpFile();
 						OutputStream out = new FileOutputStream(dumpFile);
@@ -135,7 +138,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						"Images of all your belongings will be permanently deleted, all other data is kept.",
 						new CleanTask() {
 							@Override protected void doClean() {
-								App.db().clearImages();
+								Database.get(getApplicationContext()).clearImages();
 							}
 						}
 				).show(getSupportFragmentManager(), null);
@@ -147,7 +150,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						"All of your belongings will be permanently deleted. Some test data will be set up.",
 						new CleanTask() {
 							@Override protected void doClean() {
-								App.db().resetToTest();
+								Database.get(getApplicationContext()).resetToTest();
 							}
 						}
 				).show(getSupportFragmentManager(), null);
@@ -167,7 +170,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 										DatabaseService.clearVacuumAlarm(getApplicationContext());
 									}
 									@Override protected void doClean() throws Exception {
-										App.db().getHelper().restore(new File(value));
+										Database.get(getApplicationContext()).getHelper().restore(new File(value));
 									}
 									@Override protected void onResult(Void ignore, Activity activity) {
 										super.onResult(ignore, activity);
@@ -192,7 +195,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 						"May take a while depending on database size, also requires at least the size of the database as free space.",
 						new CleanTask() {
 							@Override protected void doClean() {
-								App.db().getWritableDatabase().execSQL("VACUUM;");
+								Database.get(getApplicationContext()).getWritableDatabase().execSQL("VACUUM;");
 							}
 						}
 				).show(getSupportFragmentManager(), null);
@@ -209,7 +212,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 								}
 								NoProgressTaskExecutor.create(new CleanTask() {
 									@Override protected void doClean() {
-										SQLiteDatabase db = App.db().getWritableDatabase();
+										SQLiteDatabase db = Database.get(getApplicationContext()).getWritableDatabase();
 										long pagesToFree = value / db.getPageSize();
 										Cursor vacuum =
 												db.rawQuery("PRAGMA incremental_vacuum(" + pagesToFree + ");", NO_ARGS);
@@ -237,13 +240,13 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 									((ActivityManager)getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
 								} else {
 									// Best effort: clear prefs, db and Glide cache; CONSIDER deltree getFilesDir()
-									App.prefs().edit().clear().apply();
+									inject.prefs().edit().clear().apply();
 									Glide.get(getApplicationContext()).clearDiskCache();
-									Database db = App.db();
+									Database db = Database.get(getApplicationContext());
 									File dbFile = db.getFile();
 									db.getHelper().close();
 									if (dbFile.exists() && !dbFile.delete()) {
-										App.toast("Cannot delete database file: " + dbFile);
+										inject.toaster().toast("Cannot delete database file: " + dbFile);
 									}
 								}
 							}
@@ -263,7 +266,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 				).show(getSupportFragmentManager(), null);
 			}
 		});
-		displayedIf(findViewById(R.id.storage_all), VERSION_CODES.KITKAT <= VERSION.SDK_INT || BuildConfig.DEBUG);
+		displayedIf(findViewById(R.id.storage_all), inject.buildInfo().isDebug());
 	}
 
 	@Override public void taskDone() {
@@ -308,7 +311,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 			);
 			executePreferParallel(new GetFolderSizesTask(databaseSize),
 					// TODO illegal WrongThreadInterprocedural detection, but cannot reproduce
-					getDatabasePath(App.db().getHelper().getDatabaseName())
+					getDatabasePath(Database.get(getApplicationContext()).getHelper().getDatabaseName())
 			);
 			executePreferParallel(new GetFolderSizesTask(allSize),
 					new File(getApplicationInfo().dataDir),
@@ -317,12 +320,12 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 			);
 			executePreferParallel(new GetSizeTask<Void>(searchIndexSize) {
 				@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
-					return App.db().getSearchSize();
+					return Database.get(getApplicationContext()).getSearchSize();
 				}
 			});
 			executePreferParallel(new GetSizeTask<Void>(freelistSize) {
 				@Override protected @NonNull Long doInBackgroundSafe(Void... params) {
-					SQLiteDatabase db = App.db().getReadableDatabase();
+					SQLiteDatabase db = Database.get(getApplicationContext()).getReadableDatabase();
 					long count = DatabaseUtils.longForQuery(db, "PRAGMA freelist_count;", NO_ARGS);
 					return count * db.getPageSize();
 				}
