@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.utils.tools.IntentTools;
-import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.content.VariantIntentService;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
@@ -30,12 +29,13 @@ public class DatabaseService extends VariantIntentService {
 	public static final String ACTION_SERVICE_SHUTDOWN = "net.twisterrob.inventory.action.SERVICE_SHUTDOWN";
 	public static final String EXTRA_LOCALE = "net.twisterrob.inventory.extra.update_language_locale";
 	private static final int CODE_INCREMENTAL_VACUUM = 16336;
+
 	@Override protected void onHandleWork(@NonNull Intent intent) {
 		super.onHandleWork(intent);
 		String action = String.valueOf(intent.getAction()); // null becomes "null", so we can switch on it
 		switch (action) {
 			case ACTION_OPEN_DATABASE:
-				SQLiteDatabase db = App.db().getWritableDatabase();
+				SQLiteDatabase db = BaseComponent.get(this).db().getWritableDatabase();
 				LOG.trace("Database opened: {}", DatabaseTools.dbToString(db));
 				break;
 			case ACTION_UPDATE_LANGUAGE:
@@ -64,8 +64,8 @@ public class DatabaseService extends VariantIntentService {
 			LOG.warn("Missing locale from {}", intent);
 			locale = Locale.getDefault();
 		}
-		BaseComponent inject = App.getInstance().getBaseComponent();
-		new LanguageUpdater(App.getAppContext(), App.prefs(), App.db(), inject.toaster())
+		BaseComponent inject = BaseComponent.get(this);
+		new LanguageUpdater(getApplicationContext(), inject.prefs(), inject.db(), inject.toaster())
 				.updateLanguage(locale);
 	}
 
@@ -80,7 +80,8 @@ public class DatabaseService extends VariantIntentService {
 
 	private void incrementalVacuum() {
 		try {
-			if (Boolean.TRUE.equals(new IncrementalVacuumer(App.db().getWritableDatabase()).call())) {
+			SQLiteDatabase database = BaseComponent.get(this).db().getWritableDatabase();
+			if (Boolean.TRUE.equals(new IncrementalVacuumer(database).call())) {
 				scheduleNextIncrementalVacuum();
 			}
 		} catch (Exception ex) {

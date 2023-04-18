@@ -3,7 +3,8 @@ plugins {
 }
 
 dependencies {
-	implementation project(':android:database-contract')
+	implementation(project(":android:database-contract"))
+	compileOnly(project(":android:database"))
 	api(libs.androidx.annotation)
 	api(libs.annotations.jetbrains)
 	implementation(libs.androidx.appcompat)
