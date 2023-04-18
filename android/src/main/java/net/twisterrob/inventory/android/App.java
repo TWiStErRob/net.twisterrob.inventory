@@ -228,6 +228,9 @@ public class App extends BaseApp implements BaseComponent.Provider {
 			@Override public @NonNull ResourcePreferences prefs() {
 				return BaseApp.prefs();
 			}
+			@Override public @NonNull Object db() {
+				return App.db();
+			}
 			@Override public @NonNull Toaster toaster() {
 				return new Toaster() {
 					@Override public void toast(@NonNull CharSequence message) {

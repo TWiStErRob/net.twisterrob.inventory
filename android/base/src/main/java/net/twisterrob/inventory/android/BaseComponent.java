@@ -7,6 +7,11 @@ import net.twisterrob.inventory.android.components.Toaster;
 
 public interface BaseComponent {
 	@NonNull ResourcePreferences prefs();
+	/**
+	 * Untyped, so that base doesn't have to depend on database module.
+	 * @return net.twisterrob.inventory.android.content.Database
+	 */
+	@NonNull Object db();
 	@NonNull Toaster toaster();
 
 	interface Provider {
