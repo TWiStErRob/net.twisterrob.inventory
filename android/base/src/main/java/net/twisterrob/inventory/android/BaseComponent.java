@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android;
 import androidx.annotation.NonNull;
 
 import net.twisterrob.android.content.pref.ResourcePreferences;
+import net.twisterrob.inventory.android.components.BuildInfo;
 import net.twisterrob.inventory.android.components.Toaster;
 
 public interface BaseComponent {
@@ -13,6 +14,7 @@ public interface BaseComponent {
 	 */
 	@NonNull Object db();
 	@NonNull Toaster toaster();
+	@NonNull BuildInfo buildInfo();
 
 	interface Provider {
 		BaseComponent getBaseComponent();
