@@ -33,6 +33,8 @@ dependencies {
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.flexbox)
 	implementation(libs.slf4j.api)
+	implementation(libs.dagger.hilt)
+	annotationProcessor(libs.dagger.hilt.apt)
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows "Serializer Java 2.7.1" on Genymotion 2.3.7 and S5 5.0.0

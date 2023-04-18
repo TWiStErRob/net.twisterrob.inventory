@@ -13,6 +13,7 @@ glide = "3.8.0"
 androidsvg = "1.4"
 flexbox = "2.0.1"
 slf4j = "1.7.30"
+dagger = "2.45"
 
 androidx-activity = "1.6.1" # https://developer.android.com/jetpack/androidx/releases/activity
 androidx-annotation = "1.6.0" # https://developer.android.com/jetpack/androidx/releases/annotation
@@ -81,7 +82,8 @@ plugin-android-tools-ddmlib = { module = "com.android.tools.ddms:ddmlib", versio
 plugin-android-tools-testApi = { module = "com.android.tools.build:builder-test-api", version.ref = "agp" }
 plugin-twisterrob-quality = { module = "net.twisterrob.gradle:twister-quality", version.ref = "twisterrob" }
 plugin-twisterrob-android = { module = "net.twisterrob.gradle:twister-convention-plugins", version.ref = "twisterrob" }
-plugin-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+plugin-dagger-hilt = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "dagger" }
 
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 
@@ -139,6 +141,8 @@ androidx-test-espressoIntents = { module = "androidx.test.espresso:espresso-inte
 androidx-test-espressoContrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "androidx-test-espresso" }
 androidx-test-espressoIdlingResource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "androidx-test-espresso" }
 
+dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
+dagger-hilt-apt = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 xml-xalan = { module = "xalan:xalan", version.ref = "xalan" }
 xml-saxon = { module = "net.sf.saxon:Saxon-HE", version.ref = "saxon" }
