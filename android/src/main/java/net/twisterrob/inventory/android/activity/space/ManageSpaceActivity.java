@@ -7,6 +7,7 @@ import org.slf4j.*;
 
 import android.annotation.*;
 import android.app.*;
+import android.content.Context;
 import android.content.Intent;
 import android.database.*;
 import android.database.sqlite.SQLiteDatabase;
@@ -337,7 +338,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		recalculate();
 	}
 
-	public static Intent launch() {
-		return new Intent(App.getAppContext(), ManageSpaceActivity.class);
+	public static Intent launch(Context context) {
+		return new Intent(context, ManageSpaceActivity.class);
 	}
 }

@@ -145,17 +145,17 @@ public abstract class DrawerActivity extends BaseActivity {
 
 	public static DrawerNavigator createDefaultDrawer(Activity activity, NavigationView nav) {
 		DrawerNavigator data = new DrawerNavigator(nav, activity);
-		data.add(R.id.action_drawer_home, R.raw.property_house, MainActivity.home());
-		data.add(R.id.action_drawer_categories, R.raw.category_unknown, MainActivity.list(PAGE_CATEGORIES));
-		data.add(R.id.action_drawer_properties, R.raw.property_unknown, MainActivity.list(PAGE_PROPERTIES));
-		data.add(R.id.action_drawer_rooms, R.raw.room_unknown, MainActivity.list(PAGE_ROOMS));
-		data.add(R.id.action_drawer_items, R.raw.item_box, MainActivity.list(PAGE_ITEMS));
-		data.add(R.id.action_drawer_sunburst, R.raw.ic_sunburst, MainActivity.list(PAGE_SUNBURST));
-		data.add(R.id.action_drawer_category_guide, R.raw.item_paper, MainActivity.list(PAGE_CATEGORY_HELP));
-		data.add(R.id.action_drawer_backup, R.raw.item_disc, BackupActivity.chooser(App.getAppContext()));
-		data.add(R.id.action_drawer_manage, R.raw.item_skull, ManageSpaceActivity.launch());
-		data.add(R.id.action_drawer_preferences, R.raw.category_tools, PreferencesActivity.show(App.getAppContext()));
-		data.add(R.id.action_drawer_about, R.raw.item_chip, new Intent(App.getAppContext(), AboutActivity.class));
+		data.add(R.id.action_drawer_home, R.raw.property_house, MainActivity.home(activity));
+		data.add(R.id.action_drawer_categories, R.raw.category_unknown, MainActivity.list(activity, PAGE_CATEGORIES));
+		data.add(R.id.action_drawer_properties, R.raw.property_unknown, MainActivity.list(activity, PAGE_PROPERTIES));
+		data.add(R.id.action_drawer_rooms, R.raw.room_unknown, MainActivity.list(activity, PAGE_ROOMS));
+		data.add(R.id.action_drawer_items, R.raw.item_box, MainActivity.list(activity, PAGE_ITEMS));
+		data.add(R.id.action_drawer_sunburst, R.raw.ic_sunburst, MainActivity.list(activity, PAGE_SUNBURST));
+		data.add(R.id.action_drawer_category_guide, R.raw.item_paper, MainActivity.list(activity, PAGE_CATEGORY_HELP));
+		data.add(R.id.action_drawer_backup, R.raw.item_disc, BackupActivity.chooser(activity));
+		data.add(R.id.action_drawer_manage, R.raw.item_skull, ManageSpaceActivity.launch(activity));
+		data.add(R.id.action_drawer_preferences, R.raw.category_tools, PreferencesActivity.show(activity));
+		data.add(R.id.action_drawer_about, R.raw.item_chip, new Intent(activity, AboutActivity.class));
 		data.addIcons();
 		data.updateCounts();
 		return data;

@@ -446,12 +446,12 @@ public class MainActivity extends DrawerActivity
 		setActionBarSubtitle(name);
 	}
 
-	public static Intent home() {
-		return list(PAGE_HOME);
+	public static Intent home(Context context) {
+		return list(context, PAGE_HOME);
 	}
 
-	public static Intent list(String page) {
-		Intent intent = new Intent(App.getAppContext(), MainActivity.class);
+	public static Intent list(Context context, String page) {
+		Intent intent = new Intent(context, MainActivity.class);
 		if (!PAGE_HOME.equals(page)) {
 			// Don't include EXTRA_PAGE for home() to have the navigation drawer match with external launch Intent
 			intent.putExtra(EXTRA_PAGE, page);
