@@ -61,14 +61,14 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 		setIcon(ContextCompat.getDrawable(this, getApplicationInfo().icon));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-		swiper = (SwipeRefreshLayout)findViewById(R.id.refresher);
+		swiper = findViewById(R.id.refresher);
 		RecyclerViewController.initializeProgress(swiper);
 		swiper.setOnRefreshListener(new OnRefreshListener() {
 			@Override public void onRefresh() {
 				recalculate();
 			}
 		});
-		searchIndexSize = (TextView)this.findViewById(R.id.storage_search_size);
+		searchIndexSize = this.findViewById(R.id.storage_search_size);
 		findViewById(R.id.storage_search_clear).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				new ConfirmedCleanAction("Re-build Search",
@@ -82,7 +82,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 			}
 		});
 
-		imageCacheSize = (TextView)this.findViewById(R.id.storage_imageCache_size);
+		imageCacheSize = this.findViewById(R.id.storage_imageCache_size);
 		findViewById(R.id.storage_imageCache_clear).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				new ConfirmedCleanAction("Clear Image Cache",
@@ -99,8 +99,8 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 			}
 		});
 
-		databaseSize = (TextView)this.findViewById(R.id.storage_db_size);
-		freelistSize = (TextView)this.findViewById(R.id.storage_db_freelist_size);
+		databaseSize = this.findViewById(R.id.storage_db_size);
+		freelistSize = this.findViewById(R.id.storage_db_freelist_size);
 		findViewById(R.id.storage_db_clear).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				new ConfirmedCleanAction("Empty Database",
@@ -228,7 +228,7 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 			}
 		});
 
-		allSize = (TextView)this.findViewById(R.id.storage_all_size);
+		allSize = this.findViewById(R.id.storage_all_size);
 		findViewById(R.id.storage_all_clear).setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				new ConfirmedCleanAction("Clear Data",
