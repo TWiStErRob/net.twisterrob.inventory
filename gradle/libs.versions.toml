@@ -81,7 +81,6 @@ plugin-android-tools-ddmlib = { module = "com.android.tools.ddms:ddmlib", versio
 plugin-android-tools-testApi = { module = "com.android.tools.build:builder-test-api", version.ref = "agp" }
 plugin-twisterrob-quality = { module = "net.twisterrob.gradle:twister-quality", version.ref = "twisterrob" }
 plugin-twisterrob-android = { module = "net.twisterrob.gradle:twister-convention-plugins", version.ref = "twisterrob" }
-plugin-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 
