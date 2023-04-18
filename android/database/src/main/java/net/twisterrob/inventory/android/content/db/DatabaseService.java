@@ -15,6 +15,7 @@ import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.utils.tools.IntentTools;
 import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.categories.cache.CategoryCacheImpl;
+import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.VariantIntentService;
 
 import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
@@ -35,7 +36,7 @@ public class DatabaseService extends VariantIntentService {
 		String action = String.valueOf(intent.getAction()); // null becomes "null", so we can switch on it
 		switch (action) {
 			case ACTION_OPEN_DATABASE:
-				SQLiteDatabase db = BaseComponent.get(this).db().getWritableDatabase();
+				SQLiteDatabase db = Database.get(this).getWritableDatabase();
 				LOG.trace("Database opened: {}", DatabaseTools.dbToString(db));
 				break;
 			case ACTION_UPDATE_LANGUAGE:
@@ -65,7 +66,7 @@ public class DatabaseService extends VariantIntentService {
 			locale = Locale.getDefault();
 		}
 		BaseComponent inject = BaseComponent.get(this);
-		new LanguageUpdater(getApplicationContext(), inject.prefs(), inject.db(), inject.toaster())
+		new LanguageUpdater(getApplicationContext(), inject.prefs(), Database.get(this), inject.toaster())
 				.updateLanguage(locale);
 	}
 
@@ -80,7 +81,7 @@ public class DatabaseService extends VariantIntentService {
 
 	private void incrementalVacuum() {
 		try {
-			SQLiteDatabase database = BaseComponent.get(this).db().getWritableDatabase();
+			SQLiteDatabase database = Database.get(this).getWritableDatabase();
 			if (Boolean.TRUE.equals(new IncrementalVacuumer(database).call())) {
 				scheduleNextIncrementalVacuum();
 			}

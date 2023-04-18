@@ -150,8 +150,7 @@ public class CategoryCacheImpl implements CategoryCache {
 			Locale currentLocale = AndroidTools.getLocale(context.getResources().getConfiguration());
 			if (!currentLocale.equals(lastLocale)) {
 				LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
-				Database database = BaseComponent.get(context).db();
-				CACHE = new CategoryCacheImpl(database, context);
+				CACHE = new CategoryCacheImpl(Database.get(context), context);
 				lastLocale = currentLocale;
 			}
 			return CACHE;
