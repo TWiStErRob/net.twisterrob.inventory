@@ -17,6 +17,7 @@ public abstract class BaseComponent {
 	public abstract @NonNull ResourcePreferences prefs();
 	/**
 	 * Untyped, so that base doesn't have to depend on database module.
+	 * Use {@code Database.get(Context)} instead of this.
 	 *
 	 * @return net.twisterrob.inventory.android.content.Database
 	 */

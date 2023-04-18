@@ -15,7 +15,6 @@ import androidx.annotation.*;
 import androidx.collection.LongSparseArray;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.java.text.*;
