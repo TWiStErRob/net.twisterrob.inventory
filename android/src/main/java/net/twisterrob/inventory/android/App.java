@@ -34,9 +34,9 @@ import net.twisterrob.inventory.android.components.Toaster;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
 
-@HiltAndroidApp(BaseApp.class)
+@HiltAndroidApp
 @SuppressLint("Registered") // REPORT False positive, it is there with explicit FQCN.
-public class App extends Hilt_App implements BaseComponent.Provider {
+public class App extends BaseApp implements BaseComponent.Provider {
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
 	// TODEL https://github.com/google/dagger/issues/3601
