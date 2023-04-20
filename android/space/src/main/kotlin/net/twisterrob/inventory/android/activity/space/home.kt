@@ -3,60 +3,61 @@ package net.twisterrob.inventory.android.activity.space
 import android.content.Context
 import android.widget.Toast
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
 @HiltViewModel
-internal class HomeViewModel @Inject constructor(
-	homeEffectHandler: HomeEffectHandler,
-	getWeatherActionHandler: GetWeatherActionHandler,
-	getTempActionHandler: GetTempActionHandler
-) : BaseViewModel<HomeAction, HomeState, HomeEffect, HomeReducer>(
-	homeEffectHandler,
-	HomeState.Initial
+internal class ManageSpaceViewModel @Inject constructor(
+	effectHandler: ManageSpaceEffectHandler,
+	getSizesActionHandler: GetSizesActionHandler
+) : BaseViewModel<ManageSpaceAction, ManageSpaceState, ManageSpaceEffect, ManageSpaceReducer>(
+	effectHandler,
+	ManageSpaceState.Initial
 ) {
-
-	override val actionHandlers = mapOf(
-		LoadWeatherButtonClicked::class to getWeatherActionHandler,
-		LoadTempButtonClicked::class to getTempActionHandler
+	override val actionHandlers: Map<KClass<out ManageSpaceAction>, ManageSpaceHandler<out ManageSpaceAction>> = mapOf(
+		LoadSizes::class to getSizesActionHandler,
 	)
 }
 
-internal sealed interface HomeAction
+internal typealias ManageSpaceHandler<T> = ActionHandler<T, ManageSpaceState, ManageSpaceEffect, ManageSpaceReducer>
 
-internal data class HomeState(
+internal sealed interface ManageSpaceAction
+
+internal data class ManageSpaceState(
 	val isLoading: Boolean = false,
-	val weatherStatus: String = "Unknown",
-	val tempStatus: String = "Unknown"
+	val sizes: SizesState? = null,
 ) {
+
 	companion object {
-		val Initial = HomeState()
+		val Initial = ManageSpaceState()
 	}
 }
 
-internal sealed class HomeEffect {
+internal sealed class ManageSpaceEffect {
 	data class ShowToast(
 		val message: String
-	) : HomeEffect()
+	) : ManageSpaceEffect()
 }
 
-internal sealed class HomeReducer constructor(
-	reducer: Reducer<HomeState>
-) : Reducer<HomeState> by reducer {
+internal sealed class ManageSpaceReducer constructor(
+	reducer: Reducer<ManageSpaceState>
+) : Reducer<ManageSpaceState> by reducer {
 
-	object OnLoading : HomeReducer({
+	object OnLoading : ManageSpaceReducer({
 		it.copy(
 			isLoading = true
 		)
 	})
 }
 
-internal class HomeEffectHandler @Inject constructor(
-	/*@ApplicationContext*/ private val context: Context
-) : EffectHandler<HomeEffect>() {
+internal class ManageSpaceEffectHandler @Inject constructor(
+	@ApplicationContext private val context: Context
+) : EffectHandler<ManageSpaceEffect>() {
 
-	override suspend fun handleEffect(effect: HomeEffect) {
+	override suspend fun handleEffect(effect: ManageSpaceEffect) {
 		when (effect) {
-			is HomeEffect.ShowToast -> {
+			is ManageSpaceEffect.ShowToast -> {
 				Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()
 			}
 		}

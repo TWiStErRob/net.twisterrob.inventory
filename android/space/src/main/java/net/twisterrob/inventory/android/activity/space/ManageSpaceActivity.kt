@@ -13,10 +13,13 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.view.View
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import net.twisterrob.android.utils.tools.AndroidTools.executePreferParallel
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.DatabaseTools.NO_ARGS
@@ -53,6 +56,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 	private lateinit var swiper: SwipeRefreshLayout
 
 	private lateinit var inject: BaseComponent
+	private val viewModel: ManageSpaceViewModel by viewModels()
 
 	@Suppress("LongMethod")
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +68,11 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 
 		swiper = findViewById(R.id.refresher)
 		RecyclerViewController.initializeProgress(swiper)
-		swiper.setOnRefreshListener { recalculate() }
+		swiper.setOnRefreshListener {
+			lifecycleScope.launch {
+				viewModel.action(LoadSizes)
+			}
+		}
 		searchIndexSize = this.findViewById(R.id.storage_search_size)
 		findViewById<View>(R.id.storage_search_clear).setOnClickListener {
 			ConfirmedCleanAction(
@@ -161,15 +169,18 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 							override fun onPreExecute() {
 								DatabaseService.clearVacuumAlarm(applicationContext)
 							}
+
 							override fun doClean() {
 								Database.get(applicationContext)
 								        .helper
 								        .restore(FileInputStream(value))
 							}
+
 							override fun onResult(ignore: Void?, activity: Activity) {
 								super.onResult(ignore, activity)
 								LOG.debug("Restored {}", value)
 							}
+
 							override fun onError(ex: Exception, activity: Activity) {
 								super.onError(ex, activity)
 								LOG.error("Cannot restore {}", value)
@@ -205,7 +216,8 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 							override fun doClean() {
 								val db = Database.get(applicationContext).writableDatabase
 								val pagesToFree = value / db.pageSize
-								val vacuum = db.rawQuery("PRAGMA incremental_vacuum($pagesToFree);", NO_ARGS)
+								val vacuum =
+									db.rawQuery("PRAGMA incremental_vacuum($pagesToFree);", NO_ARGS)
 								DatabaseTools.consume(vacuum)
 							}
 						}).show(supportFragmentManager, null)
@@ -253,6 +265,17 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 			).show(supportFragmentManager, null)
 		}
 		ViewTools.displayedIf(findViewById(R.id.storage_all), inject.buildInfo().isDebug)
+		viewModel.state.collectOnLifecycle(block = ::updateUi)
+	}
+
+	private fun updateUi(state: ManageSpaceState) {
+		LOG.trace("Updating UI with state {}", state)
+		this.swiper.isRefreshing = state.isLoading
+		this.imageCacheSize.text = state.sizes?.imageCache
+		this.databaseSize.text = state.sizes?.database
+		this.freelistSize.text = state.sizes?.freelist
+		this.searchIndexSize.text = state.sizes?.searchIndex
+		this.allSize.text = state.sizes?.allData
 	}
 
 	override fun taskDone() {
