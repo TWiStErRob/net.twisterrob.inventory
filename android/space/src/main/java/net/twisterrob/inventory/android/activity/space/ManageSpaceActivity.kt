@@ -12,11 +12,9 @@ import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.StrictMode
 import android.view.View
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -34,6 +32,7 @@ import net.twisterrob.inventory.android.activity.BaseActivity
 import net.twisterrob.inventory.android.content.Database
 import net.twisterrob.inventory.android.content.db.DatabaseService
 import net.twisterrob.inventory.android.space.R
+import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import net.twisterrob.inventory.android.view.RecyclerViewController
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -48,13 +47,7 @@ import java.util.zip.ZipOutputStream
 @SuppressLint("StaticFieldLeak") // TODO use coroutines or ViewModel for this activity.
 @Suppress("OVERRIDE_DEPRECATION")
 class ManageSpaceActivity : BaseActivity(), TaskEndListener {
-	private lateinit var imageCacheSize: TextView
-	private lateinit var databaseSize: TextView
-	private lateinit var freelistSize: TextView
-	private lateinit var searchIndexSize: TextView
-	private lateinit var allSize: TextView
-	private lateinit var swiper: SwipeRefreshLayout
-
+	private lateinit var binding: ManageSpaceActivityBinding
 	private lateinit var inject: BaseComponent
 	private val viewModel: ManageSpaceViewModel by viewModels()
 
@@ -62,18 +55,16 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		inject = BaseComponent.get(applicationContext)
-		setContentView(R.layout.manage_space_activity)
+		binding = setContentView(ManageSpaceActivityBinding::inflate)
 		setIcon(ContextCompat.getDrawable(this, applicationInfo.icon))
 		supportActionBar.setDisplayHomeAsUpEnabled(false)
 
-		swiper = findViewById(R.id.refresher)
-		RecyclerViewController.initializeProgress(swiper)
-		swiper.setOnRefreshListener {
+		RecyclerViewController.initializeProgress(binding.refresher)
+		binding.refresher.setOnRefreshListener {
 			lifecycleScope.launch {
 				viewModel.action(LoadSizes)
 			}
 		}
-		searchIndexSize = this.findViewById(R.id.storage_search_size)
 		findViewById<View>(R.id.storage_search_clear).setOnClickListener {
 			ConfirmedCleanAction(
 				"Re-build Search",
@@ -85,8 +76,6 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 				}
 			).show(supportFragmentManager, null)
 		}
-
-		imageCacheSize = this.findViewById(R.id.storage_imageCache_size)
 		findViewById<View>(R.id.storage_imageCache_clear).setOnClickListener {
 			ConfirmedCleanAction(
 				"Clear Image Cache",
@@ -104,9 +93,6 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 				}
 			).show(supportFragmentManager, null)
 		}
-
-		databaseSize = this.findViewById(R.id.storage_db_size)
-		freelistSize = this.findViewById(R.id.storage_db_freelist_size)
 		findViewById<View>(R.id.storage_db_clear).setOnClickListener {
 			ConfirmedCleanAction(
 				"Empty Database",
@@ -227,7 +213,6 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 				.setMessage("How many bytes do you want to vacuum?")
 				.show()
 		}
-		allSize = this.findViewById(R.id.storage_all_size)
 		findViewById<View>(R.id.storage_all_clear).setOnClickListener {
 			ConfirmedCleanAction(
 				"Clear Data",
@@ -270,12 +255,12 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 
 	private fun updateUi(state: ManageSpaceState) {
 		LOG.trace("Updating UI with state {}", state)
-		this.swiper.isRefreshing = state.isLoading
-		this.imageCacheSize.text = state.sizes?.imageCache
-		this.databaseSize.text = state.sizes?.database
-		this.freelistSize.text = state.sizes?.freelist
-		this.searchIndexSize.text = state.sizes?.searchIndex
-		this.allSize.text = state.sizes?.allData
+		binding.refresher.isRefreshing = state.isLoading
+		binding.contents.storageImageCacheSize.text = state.sizes?.imageCache
+		binding.contents.storageDbSize.text = state.sizes?.database
+		binding.contents.storageDbFreelistSize.text = state.sizes?.freelist
+		binding.contents.storageSearchSize.text = state.sizes?.searchIndex
+		binding.contents.storageAllSize.text = state.sizes?.allData
 	}
 
 	override fun taskDone() {
@@ -315,32 +300,32 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		val threadPolicy = StrictMode.allowThreadDiskWrites()
 		try { // TODEL try to fix these somehow
 			executePreferParallel(
-				GetFolderSizesTask(imageCacheSize),
+				GetFolderSizesTask(binding.contents.storageImageCacheSize),
 				GlideSetup.getCacheDir(this)
 			)
 			executePreferParallel(
-				GetFolderSizesTask(databaseSize),  // TODO illegal WrongThreadInterprocedural detection, but cannot reproduce
+				GetFolderSizesTask(binding.contents.storageDbSize),  // TODO illegal WrongThreadInterprocedural detection, but cannot reproduce
 				getDatabasePath(Database.get(applicationContext).helper.databaseName)
 			)
 			executePreferParallel(
-				GetFolderSizesTask(allSize),
+				GetFolderSizesTask(binding.contents.storageAllSize),
 				File(applicationInfo.dataDir),
 				externalCacheDir,
 				getExternalFilesDir(null)
 			)
-			executePreferParallel(object : GetSizeTask<Void>(searchIndexSize) {
+			executePreferParallel(object : GetSizeTask<Void>(binding.contents.storageSearchSize) {
 				override fun doInBackgroundSafe(vararg params: Void): Long {
 					return Database.get(applicationContext).searchSize
 				}
 			})
-			executePreferParallel(object : GetSizeTask<Void>(freelistSize) {
+			executePreferParallel(object : GetSizeTask<Void>(binding.contents.storageDbFreelistSize) {
 				override fun doInBackgroundSafe(vararg params: Void): Long {
 					val db = Database.get(applicationContext).readableDatabase
 					val count = DatabaseUtils.longForQuery(db, "PRAGMA freelist_count;", NO_ARGS)
 					return count * db.pageSize
 				}
 			})
-			swiper.isRefreshing = false
+			binding.refresher.isRefreshing = false
 		} finally {
 			StrictMode.setThreadPolicy(threadPolicy)
 		}

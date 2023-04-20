@@ -7,5 +7,10 @@
 	android:enabled="true"
 	tools:context="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
 	>
-	<include layout="@layout/manage_space_activity_contents" />
+
+	<include
+		android:id="@+id/contents"
+		layout="@layout/manage_space_activity_contents"
+		/>
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
