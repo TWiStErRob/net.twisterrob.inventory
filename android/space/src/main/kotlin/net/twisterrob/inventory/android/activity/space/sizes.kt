@@ -4,35 +4,16 @@ import android.content.Context
 import android.text.format.Formatter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import net.twisterrob.inventory.android.activity.space.ManageSpaceReducer.OnLoading
 import javax.inject.Inject
-
-object LoadSizes : ManageSpaceAction
-
-internal class GetSizesActionHandler @Inject constructor(
-	private val useCase: GetSizesUseCase,
-	private val mapper: SizesDomainToStateMapper
-) : ManageSpaceHandler<LoadSizes> {
-
-	override fun handle(
-		action: LoadSizes,
-		state: ManageSpaceState,
-		effect: suspend (ManageSpaceEffect) -> Unit
-	): Flow<ManageSpaceReducer> = flow {
-		emit(OnLoading)
-		val newState = mapper.map(useCase.execute(Unit))
-		emit(OnSizesLoaded(newState))
-	}
-}
 
 class GetSizesUseCase @Inject constructor(
 ) : UseCase<Unit, SizesDomain> {
 	override suspend fun execute(input: Unit): SizesDomain = withContext(Dispatchers.IO) {
+		delay(1000)
 		SizesDomain(
-			imageCache = 1,
+			imageCache = (Math.random() * 1000).toLong(),
 			database = 2,
 			freelist = 3,
 			searchIndex = 4,
@@ -73,12 +54,3 @@ internal data class SizesState(
 	val searchIndex: String,
 	val allData: String,
 )
-
-internal data class OnSizesLoaded(
-	private val state: SizesState
-) : ManageSpaceReducer({
-	it.copy(
-		isLoading = false,
-		sizes = state,
-	)
-})

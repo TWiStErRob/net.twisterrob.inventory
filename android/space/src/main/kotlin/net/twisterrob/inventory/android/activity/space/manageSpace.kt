@@ -3,36 +3,44 @@ package net.twisterrob.inventory.android.activity.space
 import android.content.Context
 import android.widget.Toast
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.qualifiers.ActivityContext
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.reduce
 import javax.inject.Inject
-import kotlin.reflect.KClass
 
 @HiltViewModel
 internal class ManageSpaceViewModel @Inject constructor(
-	effectHandler: ManageSpaceEffectHandler,
-	getSizesActionHandler: GetSizesActionHandler
-) : BaseViewModel<ManageSpaceAction, ManageSpaceState, ManageSpaceEffect, ManageSpaceReducer>(
-	effectHandler,
-	ManageSpaceState.Initial
-) {
-	override val actionHandlers: Map<KClass<out ManageSpaceAction>, ManageSpaceHandler<out ManageSpaceAction>> = mapOf(
-		LoadSizes::class to getSizesActionHandler,
+	private val useCase: GetSizesUseCase,
+	private val mapper: SizesDomainToStateMapper,
+) : BaseViewModel<ManageSpaceState, ManageSpaceEffect>(
+	initialState = ManageSpaceState(
+		isLoading = false,
+		sizes = null,
 	)
-}
-
-internal typealias ManageSpaceHandler<T> = ActionHandler<T, ManageSpaceState, ManageSpaceEffect, ManageSpaceReducer>
-
-internal sealed interface ManageSpaceAction
-
-internal data class ManageSpaceState(
-	val isLoading: Boolean = false,
-	val sizes: SizesState? = null,
 ) {
-
-	companion object {
-		val Initial = ManageSpaceState()
+	fun loadSizes() {
+		intent {
+			reduce {
+				state.copy(
+					isLoading = true,
+					sizes = null,
+				)
+			}
+			val sizes = mapper.map(useCase.execute(Unit))
+			reduce {
+				state.copy(
+					isLoading = false,
+					sizes = sizes,
+				)
+			}
+		}
 	}
 }
+
+internal data class ManageSpaceState(
+	val isLoading: Boolean,
+	val sizes: SizesState?,
+)
 
 internal sealed class ManageSpaceEffect {
 	data class ShowToast(
@@ -40,20 +48,9 @@ internal sealed class ManageSpaceEffect {
 	) : ManageSpaceEffect()
 }
 
-internal sealed class ManageSpaceReducer constructor(
-	reducer: Reducer<ManageSpaceState>
-) : Reducer<ManageSpaceState> by reducer {
-
-	object OnLoading : ManageSpaceReducer({
-		it.copy(
-			isLoading = true
-		)
-	})
-}
-
 internal class ManageSpaceEffectHandler @Inject constructor(
-	@ApplicationContext private val context: Context
-) : EffectHandler<ManageSpaceEffect>() {
+	@ActivityContext private val context: Context
+) : EffectHandler<ManageSpaceEffect> {
 
 	override suspend fun handleEffect(effect: ManageSpaceEffect) {
 		when (effect) {

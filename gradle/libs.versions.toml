@@ -14,6 +14,7 @@ androidsvg = "1.4"
 flexbox = "2.0.1"
 slf4j = "1.7.30"
 dagger = "2.45"
+orbit = "4.6.1"
 
 androidx-activity = "1.6.1" # https://developer.android.com/jetpack/androidx/releases/activity
 androidx-annotation = "1.6.0" # https://developer.android.com/jetpack/androidx/releases/annotation
@@ -147,7 +148,8 @@ javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInjec
 xml-xalan = { module = "xalan:xalan", version.ref = "xalan" }
 xml-saxon = { module = "net.sf.saxon:Saxon-HE", version.ref = "saxon" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
-
+orbit-viewModel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit" }
+orbit-test = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit" }
 test-junit4 = { module = "junit:junit", version.ref = "test-junit4" }
 test-hamcrest = { module = "org.hamcrest:java-hamcrest", version.ref = "test-hamcrest" }
 test-hamcrestJunit = { module = "org.hamcrest:hamcrest-junit", version.ref = "test-hamcrest" }

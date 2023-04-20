@@ -14,10 +14,8 @@ import android.os.StrictMode
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import net.twisterrob.android.utils.tools.AndroidTools.executePreferParallel
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.DatabaseTools.NO_ARGS
@@ -34,6 +32,7 @@ import net.twisterrob.inventory.android.content.db.DatabaseService
 import net.twisterrob.inventory.android.space.R
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import net.twisterrob.inventory.android.view.RecyclerViewController
+import org.orbitmvi.orbit.viewmodel.observe
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
@@ -42,6 +41,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.zip.ZipOutputStream
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @SuppressLint("StaticFieldLeak") // TODO use coroutines or ViewModel for this activity.
@@ -50,6 +50,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 	private lateinit var binding: ManageSpaceActivityBinding
 	private lateinit var inject: BaseComponent
 	private val viewModel: ManageSpaceViewModel by viewModels()
+	@Inject internal lateinit var effectHandler: ManageSpaceEffectHandler
 
 	@Suppress("LongMethod")
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,13 +59,8 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding = setContentView(ManageSpaceActivityBinding::inflate)
 		setIcon(ContextCompat.getDrawable(this, applicationInfo.icon))
 		supportActionBar.setDisplayHomeAsUpEnabled(false)
-
 		RecyclerViewController.initializeProgress(binding.refresher)
-		binding.refresher.setOnRefreshListener {
-			lifecycleScope.launch {
-				viewModel.action(LoadSizes)
-			}
-		}
+		binding.refresher.setOnRefreshListener { viewModel.loadSizes() }
 		findViewById<View>(R.id.storage_search_clear).setOnClickListener {
 			ConfirmedCleanAction(
 				"Re-build Search",
@@ -250,7 +246,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 			).show(supportFragmentManager, null)
 		}
 		ViewTools.displayedIf(findViewById(R.id.storage_all), inject.buildInfo().isDebug)
-		viewModel.state.collectOnLifecycle(block = ::updateUi)
+		viewModel.observe(this, state = ::updateUi, sideEffect = effectHandler::handleEffect)
 	}
 
 	private fun updateUi(state: ManageSpaceState) {

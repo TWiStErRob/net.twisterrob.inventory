@@ -18,6 +18,9 @@ dependencies {
 	implementation(libs.flexbox)
 	implementation(libs.dagger.hilt)
 	kapt(libs.dagger.hilt.apt)
+
+	implementation(libs.orbit.viewModel)
+	testImplementation(libs.orbit.test)
 }
 
 android {
