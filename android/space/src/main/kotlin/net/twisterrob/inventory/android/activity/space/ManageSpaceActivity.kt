@@ -6,17 +6,14 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.database.DatabaseUtils
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.os.StrictMode
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
-import net.twisterrob.android.utils.tools.AndroidTools.executePreferParallel
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.DatabaseTools.NO_ARGS
 import net.twisterrob.android.utils.tools.DialogTools
@@ -25,7 +22,6 @@ import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.android.utils.tools.ViewTools
 import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.Constants.Paths
-import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
 import net.twisterrob.inventory.android.activity.BaseActivity
 import net.twisterrob.inventory.android.content.Database
 import net.twisterrob.inventory.android.content.db.DatabaseService
@@ -260,7 +256,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 	}
 
 	override fun taskDone() {
-		recalculate()
+		viewModel.loadSizes()
 	}
 
 	private val dumpFile: File
@@ -291,45 +287,9 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		}
 	}
 
-	@SuppressLint("WrongThreadInterprocedural")
-	fun recalculate() {
-		val threadPolicy = StrictMode.allowThreadDiskWrites()
-		try { // TODEL try to fix these somehow
-			executePreferParallel(
-				GetFolderSizesTask(binding.contents.storageImageCacheSize),
-				GlideSetup.getCacheDir(this)
-			)
-			executePreferParallel(
-				GetFolderSizesTask(binding.contents.storageDbSize),  // TODO illegal WrongThreadInterprocedural detection, but cannot reproduce
-				getDatabasePath(Database.get(applicationContext).helper.databaseName)
-			)
-			executePreferParallel(
-				GetFolderSizesTask(binding.contents.storageAllSize),
-				File(applicationInfo.dataDir),
-				externalCacheDir,
-				getExternalFilesDir(null)
-			)
-			executePreferParallel(object : GetSizeTask<Void>(binding.contents.storageSearchSize) {
-				override fun doInBackgroundSafe(vararg params: Void): Long {
-					return Database.get(applicationContext).searchSize
-				}
-			})
-			executePreferParallel(object : GetSizeTask<Void>(binding.contents.storageDbFreelistSize) {
-				override fun doInBackgroundSafe(vararg params: Void): Long {
-					val db = Database.get(applicationContext).readableDatabase
-					val count = DatabaseUtils.longForQuery(db, "PRAGMA freelist_count;", NO_ARGS)
-					return count * db.pageSize
-				}
-			})
-			binding.refresher.isRefreshing = false
-		} finally {
-			StrictMode.setThreadPolicy(threadPolicy)
-		}
-	}
-
 	override fun onResume() {
 		super.onResume()
-		recalculate()
+		viewModel.loadSizes()
 	}
 
 	companion object {
