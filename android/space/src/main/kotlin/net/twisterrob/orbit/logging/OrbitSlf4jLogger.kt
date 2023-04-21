@@ -13,7 +13,7 @@ class OrbitSlf4jLogger<STATE : Any, SIDE_EFFECT : Any>(
 	override fun intent(
 		transformer: suspend SimpleSyntax<STATE, SIDE_EFFECT>.() -> Unit
 	) {
-		log.trace("Starting intent: {}", transformer.lambdaName())
+		log.trace("Starting intent: {} with {}", transformer.lambdaName(), transformer.captures())
 	}
 
 	override fun reduce(
@@ -24,7 +24,9 @@ class OrbitSlf4jLogger<STATE : Any, SIDE_EFFECT : Any>(
 		log.trace("reduced via {}:\n{}\n->\n{}", reducer.lambdaName(), oldState, newState)
 	}
 
-	override fun sideEffect(sideEffect: SIDE_EFFECT) {
+	override fun sideEffect(
+		sideEffect: SIDE_EFFECT
+	) {
 		log.trace("postSideEffect({})", sideEffect)
 	}
 
@@ -44,3 +46,16 @@ private fun Function<*>.lambdaName(): String = this::class.java.name
 	.replaceBeforeLast('.', "")
 	// Remove the last dot too.
 	.removePrefix(".")
+
+/**
+ * When a lambda is called in Kotlin, it creates an anonymous inner class.
+ * This anonymous inner class has fields for the captured variables.
+ * When launching the intent, the only parameters captured should be the inputs of the event.
+ */
+private fun Function<*>.captures(): Map<String, Any?> =
+	this::class
+		.java
+		.declaredFields
+		.filter { it.name.startsWith("$") }
+		.onEach { it.isAccessible = true }
+		.associateBy({ it.name.removePrefix("$") }, { it.get(this) })
