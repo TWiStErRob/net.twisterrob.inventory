@@ -15,6 +15,7 @@ import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.android.utils.tools.TextTools
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
+import net.twisterrob.inventory.android.activity.space.ManageSpaceState.SizesState
 import net.twisterrob.inventory.android.components.ErrorMapper
 import net.twisterrob.inventory.android.content.Database
 import net.twisterrob.inventory.android.space.R
@@ -61,7 +62,17 @@ internal class ManageSpaceViewModel @Inject constructor(
 internal data class ManageSpaceState(
 	val isLoading: Boolean,
 	val sizes: SizesState?,
-)
+) {
+
+	internal data class SizesState(
+		val imageCache: CharSequence,
+		val database: CharSequence,
+		val freelist: CharSequence,
+		val searchIndex: CharSequence,
+		val allData: CharSequence,
+		val errors: CharSequence?,
+	)
+}
 
 internal sealed class ManageSpaceEffect {
 	data class ShowToast(
@@ -192,12 +203,3 @@ internal class SizesDomainToStateMapper @Inject constructor(
 		)
 	}
 }
-
-internal data class SizesState(
-	val imageCache: CharSequence,
-	val database: CharSequence,
-	val freelist: CharSequence,
-	val searchIndex: CharSequence,
-	val allData: CharSequence,
-	val errors: CharSequence?,
-)
