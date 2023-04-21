@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.activity.space
 
 import androidx.lifecycle.ViewModel
+import net.twisterrob.orbit.logging.OrbitSlf4jLogger.Companion.decorateLogging
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import org.slf4j.LoggerFactory
