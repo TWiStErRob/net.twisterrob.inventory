@@ -7,6 +7,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.xml.sax.SAXParseException;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -70,13 +71,14 @@ public class XMLImporterTest {
 				+ "<!-- -- -->\n"
 				+ "</inventory>\n";
 
-		SAXParseException ex = assertThrows(SAXParseException.class, new ThrowingRunnable() {
+		InvalidDataXmlException ex = assertThrows(InvalidDataXmlException.class, new ThrowingRunnable() {
 			@Override public void run() throws Exception {
 				callSut(xml);
 			}
 		});
 
-		assertThat(ex, hasMessage("At line 3, column 7: not well-formed (invalid token)"));
+		assertThat(ex, hasCause(instanceOf(SAXParseException.class)));
+		assertThat(ex.getCause(), hasMessage("At line 3, column 7: not well-formed (invalid token)"));
 		verifyNoInteractions(mockDatabase, mockTypes, mockImages);
 	}
 
