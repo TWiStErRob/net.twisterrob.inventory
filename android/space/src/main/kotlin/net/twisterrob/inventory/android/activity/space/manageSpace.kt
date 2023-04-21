@@ -128,7 +128,7 @@ class GetSizesUseCase @Inject constructor(
 	}
 
 	private fun dirSizes(vararg dirs: File?): Long =
-		dirs.sumOf { if (Math.random() < 0.3) error("WHops") else IOTools.calculateSize(it) }
+		dirs.sumOf { IOTools.calculateSize(it) }
 
 	private val SQLiteDatabase.freelistCount: Long
 		get() = DatabaseUtils.longForQuery(
