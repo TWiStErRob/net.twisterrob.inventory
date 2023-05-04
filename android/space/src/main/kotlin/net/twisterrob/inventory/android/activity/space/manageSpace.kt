@@ -98,7 +98,7 @@ class GetSizesUseCase @Inject constructor(
 ) : UseCase<Unit, SizesDomain> {
 
 	override suspend fun execute(input: Unit): SizesDomain = withContext(Dispatchers.IO) {
-		delay(1000)
+		delay(1000) // STOPSHIP remove this
 		val database = Database.get(context)
 		SizesDomain(
 			imageCache = safe {
