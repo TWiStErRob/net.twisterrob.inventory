@@ -2,20 +2,18 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.*;
 
-import org.slf4j.*;
-
-import android.annotation.SuppressLint;
 import android.content.*;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.StrictMode;
 import android.text.SpannableStringBuilder;
 
 import androidx.annotation.*;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
+import net.twisterrob.inventory.android.categories.cache.CategoryCacheImpl;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog;
 
@@ -120,34 +118,8 @@ public class CategoryDTO extends ImagedDTO {
 		ChangeTypeDialog.showKeywords(context, cache.getCategoryPath(categoryID), keywords);
 	}
 
-	@SuppressLint("WrongThread")
 	@AnyThread
 	public static @NonNull CategoryCache getCache(@NonNull Context context) {
-		StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
-		try {
-			// Initialization will happen only once, after that it's cached.
-			return CategoryCacheInitializer.get(context);
-		} finally {
-			StrictMode.setThreadPolicy(originalPolicy);
-		}
-	}
-
-	private static class CategoryCacheInitializer {
-		private static final Logger LOG = LoggerFactory.getLogger(CategoryCacheInitializer.class);
-		/** @see #getCache(Context) */
-		private static @Nullable CategoryCache CACHE;
-		private static @Nullable Locale lastLocale;
-
-		@WorkerThread
-		synchronized
-		public static @NonNull CategoryCache get(@NonNull Context context) {
-			Locale currentLocale = AndroidTools.getLocale(context.getResources().getConfiguration());
-			if (!currentLocale.equals(lastLocale)) {
-				LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
-				CACHE = new CategoryCache(context);
-				lastLocale = currentLocale;
-			}
-			return CACHE;
-		}
+		return CategoryCacheImpl.getCache(context);
 	}
 }

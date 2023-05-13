@@ -8,7 +8,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="app_name">Magic Home Inventory</string>
 	<string name="app_name_short">@string/home_title</string>
-	<string name="message_locale_changed">Language has been changed from %1$s to %2$s.</string>
 	<string name="home_title">Inventory</string>
 	<string name="navigation_title">Navigation</string>
 	<string name="image_title">Image</string>
@@ -237,9 +236,6 @@
 	<string name="room_viewAll">List All Rooms</string>
 	<string name="room_empty_child">Create a room with the button below. You can then open it and add items inside.</string>
 	<string name="room_empty_list">Your rooms will show up here. Go inside a property to create one.</string>
-
-	<string name="manage_space_title">Manage Inventory Space</string>
-	<string name="manage_space_calculating">Calculating…</string>
 
 	<string name="types__prefix__opened" translatable="false">-</string>
 	<string name="types__prefix__closed" translatable="false">+</string>

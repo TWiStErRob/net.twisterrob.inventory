@@ -42,6 +42,7 @@ include(":android:preferences")
 include(":android:data")
 include(":android:data:svg")
 include(":android:backup")
+include(":android:space")
 include(":tools:transform")
 
 void includeWithContract(String projectPath) {

@@ -58,7 +58,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 				MainActivity.startImproveCategories(requireContext(), getArgCategoryID());
 				return true;
 			case R.id.action_category_help:
-				Intent intent = MainActivity.list(MainActivity.PAGE_CATEGORY_HELP);
+				Intent intent = MainActivity.list(requireContext(), MainActivity.PAGE_CATEGORY_HELP);
 				Long category = getArgCategoryID();
 				if (category != null) {
 					intent.putExtras(Intents.bundleFromCategory(category));

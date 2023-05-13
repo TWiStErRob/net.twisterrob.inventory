@@ -39,7 +39,7 @@ public abstract class BaseDetailActivity<F extends BaseFragment<?>> extends Sing
 		if (homeButton != null) {
 			homeButton.setOnLongClickListener(new OnLongClickListener() {
 				@Override public boolean onLongClick(View v) {
-					supportNavigateUpTo(MainActivity.home());
+					supportNavigateUpTo(MainActivity.home(getApplicationContext()));
 					return true;
 				}
 			});
