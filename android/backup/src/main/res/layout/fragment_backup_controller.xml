@@ -24,8 +24,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/backup_export"
-		android:drawableStart="@android:drawable/stat_sys_download_done"
-		android:drawableEnd="@android:drawable/stat_sys_download_done"
+		android:drawableStart="@android:drawable/ic_menu_save"
+		android:drawableEnd="@android:drawable/ic_menu_save"
 		/>
 
 	<Button
