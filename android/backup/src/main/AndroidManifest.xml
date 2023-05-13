@@ -1,0 +1,33 @@
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<!-- Used by BackupService -->
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+	<!-- Used by Import/Export -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+	<application
+		android:requestLegacyExternalStorage="true"
+		>
+
+		<activity
+			android:name="net.twisterrob.inventory.android.activity.BackupActivity"
+			android:label="Backup"
+			android:launchMode="singleTop">
+			<meta-data android:name="android.support.PARENT_ACTIVITY"
+			           android:value="net.twisterrob.inventory.android.activity.MainActivity" />
+		</activity>
+
+		<service
+			android:name="net.twisterrob.inventory.android.backup.concurrent.BackupService"
+			android:label="Background Import/Export"
+			android:enabled="true"
+			android:exported="false"
+			android:stopWithTask="false"
+			/>
+
+	</application>
+
+</manifest>

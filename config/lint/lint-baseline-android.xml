@@ -36,39 +36,6 @@
 
     <issue
         id="StaticFieldLeak"
-        message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
-        errorLine1="   AndroidTools.executePreferParallel(new SimpleSafeAsyncTask&lt;Void, Float, String>() {"
-        errorLine2="                                      ^">
-        <location
-            file="src/main/java/net/twisterrob/inventory/android/fragment/CategoryHelpFragment.java"
-            line="84"
-            column="39"/>
-    </issue>
-
-    <issue
-        id="StaticFieldLeak"
-        message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
-        errorLine1="    AndroidTools.executePreferParallel(new SimpleSafeAsyncTask&lt;Void, Void, File>() {"
-        errorLine2="                                       ^">
-        <location
-            file="src/main/java/net/twisterrob/inventory/android/fragment/CategoryHelpFragment.java"
-            line="113"
-            column="40"/>
-    </issue>
-
-    <issue
-        id="StaticFieldLeak"
-        message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask)"
-        errorLine1="    AndroidTools.executePreferParallel(new SimpleSafeAsyncTask&lt;Void, Void, File>() {"
-        errorLine2="                                       ^">
-        <location
-            file="src/main/java/net/twisterrob/inventory/android/fragment/CategoryHelpFragment.java"
-            line="134"
-            column="40"/>
-    </issue>
-
-    <issue
-        id="StaticFieldLeak"
         message="This `AsyncTask` class should be static or leaks might occur (anonymous net.twisterrob.android.utils.concurrent.ClosureAsyncTask)"
         errorLine1="   AndroidTools.executePreferSerial(new ClosureAsyncTask() {"
         errorLine2="                                    ^">

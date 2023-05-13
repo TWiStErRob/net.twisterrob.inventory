@@ -8,6 +8,9 @@ import android.view.WindowManager;
 
 import com.android.debug.hv.ViewServer;
 
+import androidx.annotation.ContentView;
+import androidx.annotation.LayoutRes;
+
 import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.inventory.android.base.BuildConfig;
 
@@ -18,6 +21,15 @@ import net.twisterrob.inventory.android.base.BuildConfig;
 public abstract class DebugHelperActivity extends VariantActivity {
 	@SuppressWarnings("LoggerInitializedWithForeignClass") // looks better with BaseActivity
 	private static final Logger LOG = LoggerFactory.getLogger(BaseActivity.class);
+
+	public DebugHelperActivity() {
+		super();
+	}
+
+	@ContentView
+	public DebugHelperActivity(@LayoutRes int contentLayoutId) {
+		super(contentLayoutId);
+	}
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) {

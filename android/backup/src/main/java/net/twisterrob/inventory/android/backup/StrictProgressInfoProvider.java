@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.inventory.android.backup.Progress.Phase;
+import net.twisterrob.inventory.android.backup.xml.InvalidDataXmlException;
 import net.twisterrob.java.utils.ObjectTools;
 
 /** Strict in a sense that it doesn't deal with {@code null}s. */
@@ -70,6 +71,9 @@ public class StrictProgressInfoProvider implements ProgressInfoProvider {
 						if (progress.failure != null) {
 							if (progress.failure instanceof CancellationException) {
 								return context.getString(R.string.backup_import_result_cancelled);
+							} else if (progress.failure instanceof InvalidDataXmlException) {
+								return context.getString(R.string.backup_import_result_invalid_xml,
+										progress.failure.getMessage());
 							} else {
 								return context.getString(R.string.backup_import_result_failed,
 										progress.failure.getMessage());

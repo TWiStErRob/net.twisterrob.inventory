@@ -186,6 +186,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 		} catch (Throwable ex) {
 			finish(new Progress(Progress.Type.Export, ex));
 		}
+		// Looks like this will call multiple finish methods, but in fact they're all distinct ifs.
 		try {
 			if (ACTION_IMPORT.equals(intent.getAction())) {
 				Uri uri = intent.getData();

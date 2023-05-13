@@ -25,7 +25,6 @@ import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.wiring.CollapseActionViewOnSubmit;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.backup.Importer.*;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
@@ -346,14 +345,6 @@ public class MainActivity extends DrawerActivity
 	public boolean onDebugOptionsItemSelected(MenuItem item) {
 		if (BuildConfig.DEBUG) {
 			switch (item.getItemId()) {
-				case R.id.debug_exportCategories:
-					try {
-						File file = new File(Paths.getPhoneHome(), "categories.html");
-						new CategoryHelpBuilder(this).export(file);
-					} catch (Exception ex) {
-						LOG.error("Cannot export categories", ex);
-					}
-					return true;
 				case R.id.debug_showImage:
 					startActivity(ImageActivity.show(InventoryContract.Item.imageUri(1L)));
 					return true;

@@ -40,8 +40,12 @@ public class XMLImporter implements Importer {
 			@Nullable ImportImageGetter getter) throws Exception {
 		this.progress = progress == null? DUMMY_HANDLER : progress;
 		this.images = getter == null? DUMMY_GETTER : getter;
-		RootElement structure = getStructure();
-		Xml.parse(stream, Xml.Encoding.UTF_8, structure.getContentHandler());
+		try {
+			RootElement structure = getStructure();
+			Xml.parse(stream, Xml.Encoding.UTF_8, structure.getContentHandler());
+		} catch (Exception ex) {
+			throw new InvalidDataXmlException(ex);
+		}
 	}
 
 	private RootElement getStructure() {

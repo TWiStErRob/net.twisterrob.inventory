@@ -180,7 +180,7 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		return lastProgressSentToNotification;
 	}
 	protected boolean isInProgress() {
-		return currentJobStarted != NEVER && lastProgress != null;
+		return currentJobStarted != NEVER;
 	}
 
 	private void startNotification(@Nullable Intent intent, @Nullable Progress progress) {

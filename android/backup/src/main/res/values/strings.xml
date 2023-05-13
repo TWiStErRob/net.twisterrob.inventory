@@ -82,6 +82,7 @@
 	<!-- Will be replaced with the app's name during resource merging. -->
 	<string name="backup_import_result_app_name">@string/merged_resource</string>
 	<string name="backup_import_result_cancelled">Import cancelled, no modifications were done.</string>
+	<string name="backup_import_result_invalid_xml">Failed to import belongings, invalid backup data: %s.</string>
 	<string name="backup_import_conflict_property">Property &#8220;%1$s&#8221; already exists, used existing one.</string>
 	<string name="backup_import_conflict_room">Room &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>
 	<string name="backup_import_conflict_item">Item &#8220;%3$s&#8221; in &#8220;%2$s&#8221; in &#8220;%1$s&#8221; already exists, used existing one.</string>

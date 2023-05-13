@@ -8,6 +8,7 @@ import org.slf4j.*;
 
 import android.annotation.SuppressLint;
 import android.content.*;
+import android.net.Uri;
 import android.os.*;
 import android.os.StrictMode.ThreadPolicy;
 import android.view.*;
@@ -15,6 +16,9 @@ import android.view.ViewGroup.LayoutParams;
 import android.webkit.*;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
@@ -26,7 +30,11 @@ import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.inventory.android.content.model.*;
+import net.twisterrob.java.annotations.DebugHelper;
+import net.twisterrob.java.io.IOTools;
 
+@DebugHelper
+@SuppressLint("StaticFieldLeak") // https://github.com/TWiStErRob/net.twisterrob.inventory/issues/257
 public class CategoryHelpFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryHelpFragment.class);
 	private WebView web;
@@ -34,6 +42,17 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 	public CategoryHelpFragment() {
 		setDynamicResource(DYN_OptionsMenu, R.menu.category_help);
 	}
+
+	private final @NonNull ActivityResultLauncher<String> saveAs = registerForActivityResult(
+			new ActivityResultContracts.CreateDocument("text/html"),
+			new ActivityResultCallback<Uri>() {
+				@Override public void onActivityResult(@Nullable Uri result) {
+					if (result != null) {
+						doSaveAs(result);
+					}
+				}
+			}
+	);
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override public @NonNull View onCreateView(
@@ -64,7 +83,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					// view.evaluateJavascript was added in API 19, so it cannot be used
 				}
 			}
-			@SuppressWarnings("deprecation") // cannot use API 23 version, app supports API 10
+			@SuppressWarnings("deprecation") // cannot use API 23 version, app supports API 21
 			@Override public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 				LOG.warn("WebView error #{} loading {}:\n{}", errorCode, failingUrl, description);
 			}
@@ -88,7 +107,8 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				}
 				@Override protected URI doInBackground(Void ignore) throws IOException {
 					File file = new File(requireContext().getCacheDir(), "categories.html");
-					new CategoryHelpBuilder(requireContext()).export(file);
+					String html = new CategoryHelpBuilder(requireContext()).buildHTML();
+					IOTools.writeAll(new FileOutputStream(file), html);
 					return file.toURI();
 				}
 				@Override protected void onResult(URI result, Void ignore) {
@@ -115,9 +135,11 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				final Context context = requireContext();
 				AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
 					private File file;
-					@Override protected @Nullable File doInBackground(@Nullable Void ignore) throws IOException {
+					@Override protected @Nullable File doInBackground(@Nullable Void ignore)
+							throws IOException {
 						file = Paths.getShareFile(context, "html");
-						new CategoryHelpBuilder(context).export(file);
+						String html = new CategoryHelpBuilder(context).buildHTML();
+						IOTools.writeAll(new FileOutputStream(file), html);
 						return file;
 					}
 					@Override protected void onResult(@Nullable File file, Void ignore) {
@@ -133,24 +155,9 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				return true;
 			}
 			case R.id.action_category_save: {
-				final Context context = requireContext();
-				AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
-					private File file;
-					@Override protected @Nullable File doInBackground(@Nullable Void aVoid) throws Exception {
-						File downloads = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-						String name = String.format(Locale.ROOT,
-								"%s - %s.html", getString(R.string.app_name), getString(R.string.category_guide));
-						file = new File(downloads, name);
-						new CategoryHelpBuilder(context).export(file);
-						return file;
-					}
-					@Override protected void onResult(@Nullable File file, Void aVoid) {
-						Toast.makeText(context, "Exported to " + file, Toast.LENGTH_LONG).show();
-					}
-					@Override protected void onError(@NonNull Exception ex, Void aVoid) {
-						LOG.warn("Cannot save to {}", file, ex);
-					}
-				});
+				String name = String.format(Locale.ROOT, "%s - %s.html",
+						getString(R.string.app_name), getString(R.string.category_guide));
+				saveAs.launch(name);
 				return true;
 			}
 			case R.id.action_category_feedback:
@@ -160,6 +167,24 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				return super.onOptionsItemSelected(item);
 		}
 	}
+
+	private void doSaveAs(@NonNull Uri target) {
+		final Context context = requireContext();
+		AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Uri, Void, Void>() {
+			@Override protected Void doInBackground(Uri target) throws Exception {
+				String html = new CategoryHelpBuilder(context).buildHTML();
+				IOTools.writeAll(context.getContentResolver().openOutputStream(target), html);
+				return null;
+			}
+			@Override protected void onResult(@Nullable Void aVoid, Uri target) {
+				Toast.makeText(context, "Exported to " + target, Toast.LENGTH_LONG).show();
+			}
+			@Override protected void onError(@NonNull Exception ex, Uri target) {
+				LOG.warn("Cannot save to {}", target, ex);
+			}
+		}, target);
+	}
+
 	public static CategoryHelpFragment newInstance(long categoryID) {
 		CategoryHelpFragment fragment = new CategoryHelpFragment();
 		fragment.setArguments(Intents.bundleFromCategory(categoryID));
