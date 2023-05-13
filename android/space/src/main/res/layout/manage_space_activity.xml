@@ -5,7 +5,7 @@
 	android:id="@+id/refresher"
 	style="@style/Theme.AppTheme.RecyclerRefresh"
 	android:enabled="true"
-	tools:context=".activity.space.ManageSpaceActivity"
+	tools:context="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
 	>
 	<include layout="@layout/manage_space_activity_contents" />
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

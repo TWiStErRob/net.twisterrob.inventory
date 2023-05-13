@@ -5,4 +5,5 @@ plugins {
 dependencies {
 	implementation(libs.androidx.annotation)
 	implementation(libs.androidx.loader)
+	implementation("net.twisterrob.lib:twister-lib-general")
 }

@@ -1,0 +1,15 @@
+plugins {
+	id("net.twisterrob.inventory.android.module")
+}
+
+dependencies {
+	implementation project(':android:base')
+	implementation project(':android:database')
+
+	implementation "net.twisterrob.lib:twister-lib-android-monolith"
+	implementation "net.twisterrob.lib:twister-lib-android-basics"
+	implementation "net.twisterrob.lib:twister-lib-android-settings"
+	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation(libs.androidx.swiperefreshlayout)
+	implementation(libs.flexbox)
+}

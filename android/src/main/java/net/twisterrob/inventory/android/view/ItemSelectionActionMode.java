@@ -14,6 +14,7 @@ import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;

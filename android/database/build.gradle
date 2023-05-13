@@ -6,11 +6,14 @@ plugins {
 dependencies {
 	api project(':android:database-contract')
 	implementation project(':android:base')
+	implementation project(':android:preferences')
 
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
+	implementation "net.twisterrob.lib:twister-lib-android-settings"
 	implementation "net.twisterrob.lib:twister-lib-core"
 	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation("net.twisterrob.lib:twister-lib-general")
 	implementation(libs.androidx.preference)
 }
 

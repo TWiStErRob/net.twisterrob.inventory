@@ -24,6 +24,8 @@ import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.backup.concurrent.BackupNotifications;
+import net.twisterrob.inventory.android.components.BuildInfo;
+import net.twisterrob.inventory.android.components.Toaster;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
 
@@ -226,6 +228,23 @@ public class App extends BaseApp implements BaseComponent.Provider {
 		return new BaseComponent() {
 			@Override public @NonNull ResourcePreferences prefs() {
 				return BaseApp.prefs();
+			}
+			@Override public @NonNull Database db() {
+				return App.db();
+			}
+			@Override public @NonNull Toaster toaster() {
+				return new Toaster() {
+					@Override public void toast(@NonNull CharSequence message) {
+						App.toast(message);
+					}
+				};
+			}
+			@Override public @NonNull BuildInfo buildInfo() {
+				return new BuildInfo() {
+					@Override public boolean isDebug() {
+						return BuildConfig.DEBUG;
+					}
+				};
 			}
 		};
 	}

@@ -55,7 +55,7 @@ public class BackupListFragment extends BaseFragment<BackupListFragment.BackupLi
 
 	@Override public void onAttach(@NonNull Context context) {
 		super.onAttach(context);
-		prefs = ((BaseComponent.Provider)context.getApplicationContext()).getBaseComponent().prefs();
+		prefs = BaseComponent.get(context).prefs();
 	}
 
 	@Override public @NonNull View onCreateView(

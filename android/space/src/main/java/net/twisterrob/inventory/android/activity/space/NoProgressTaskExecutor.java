@@ -1,11 +1,13 @@
 package net.twisterrob.inventory.android.activity.space;
 
 import android.annotation.SuppressLint;
-import android.app.*;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import net.twisterrob.inventory.android.fragment.BaseDialogFragment;
 
@@ -44,7 +46,7 @@ class NoProgressTaskExecutor extends BaseDialogFragment implements TaskEndListen
 
 	@SuppressWarnings("deprecation") // blocking the user's view intentionally
 	@Override public @NonNull Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-		ProgressDialog dialog = new ProgressDialog(requireContext());
+		android.app.ProgressDialog dialog = new android.app.ProgressDialog(requireContext());
 		dialog.setIndeterminate(true);
 		//dialog.setTitle(title);
 		dialog.setMessage("Please wait...");
