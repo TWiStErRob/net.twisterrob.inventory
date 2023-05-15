@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.*;
 
 import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.*;
@@ -52,6 +53,15 @@ public class BackupService extends NotificationProgressService<Progress> {
 		setDebugMode(DISABLE && BuildConfig.DEBUG);
 	}
 
+	public static void enqueueWork(@NonNull Context context, @NonNull Intent work) {
+		enqueueWork(
+				context,
+				BackupService.class,
+				BackupService.class.getName().hashCode(),
+				work
+		);
+	}
+	
 	@Override public void onCreate() {
 		displayer = new LenientProgressInfoProvider(this);
 		super.onCreate();
@@ -223,7 +233,9 @@ public class BackupService extends NotificationProgressService<Progress> {
 	public class LocalBinder extends Binder {
 		public void export(@NonNull ParcelFileDescriptor pfd) {
 			queue.add(ObjectTools.checkNotNull(pfd));
-			startService(new Intent(ACTION_EXPORT_PFD_WORKAROUND, null, BackupService.this, BackupService.class));
+			BackupService context = BackupService.this;
+			Intent intent = new Intent(BackupService.ACTION_EXPORT_PFD_WORKAROUND, null, context, BackupService.class);
+			enqueueWork(context, intent);
 		}
 
 		public void cancel() {

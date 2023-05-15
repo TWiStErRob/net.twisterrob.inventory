@@ -135,7 +135,7 @@ public class BackupControllerFragment extends BaseFragment<BackupControllerFragm
 	private void doImport(@NonNull Uri source) {
 		eventsListener.ensureNotInProgress();
 		Intent intent = new Intent(BackupService.ACTION_IMPORT, source, requireContext(), BackupService.class);
-		requireContext().startService(intent);
+		BackupService.enqueueWork(requireContext(), intent);
 	}
 
 	private void handleExport() {
@@ -150,7 +150,7 @@ public class BackupControllerFragment extends BaseFragment<BackupControllerFragm
 
 	private void doExport(@NonNull Uri result) {
 		Intent intent = new Intent(BackupService.ACTION_EXPORT, result, requireContext(), BackupService.class);
-		requireContext().startService(intent);
+		BackupService.enqueueWork(requireContext(), intent);
 	}
 
 	private void handleSend() {
