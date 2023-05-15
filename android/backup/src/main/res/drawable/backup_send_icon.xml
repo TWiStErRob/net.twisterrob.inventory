@@ -2,16 +2,17 @@
 <layer-list
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
-		android:left="16dp"
-		android:top="16dp"
-		android:right="16dp"
-		android:bottom="16dp"
+		android:left="@dimen/backup_icon_padding"
+		android:top="@dimen/backup_icon_padding"
+		android:right="@dimen/backup_icon_padding"
+		android:bottom="@dimen/backup_icon_padding"
 		android:drawable="@android:drawable/ic_menu_send"
 		/>
 	<item>
 		<shape>
 			<size
-				android:width="120dp" android:height="120dp"
+				android:width="@dimen/backup_icon_size"
+				android:height="@dimen/backup_icon_size"
 				/>
 		</shape>
 	</item>
