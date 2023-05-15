@@ -1,43 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="match_parent"
 	android:padding="@dimen/unit_half"
 	android:orientation="vertical"
 	tools:showIn="@layout/activity_backup"
 	tools:context="net.twisterrob.inventory.android.fragment.BackupControllerFragment"
 	>
 
-	<net.twisterrob.inventory.android.backup.ui.BackupActionView
+	<Button
 		android:id="@+id/backup_export"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_weight="1"
-		app:dir="reverse"
-		app:text="@string/backup_export"
-		app:image="@android:drawable/ic_menu_save"
+		style="@style/BackupAction"
+		android:text="@string/backup_export"
+		android:drawableStart="@drawable/backup_export_icon"
 		/>
 
-	<net.twisterrob.inventory.android.backup.ui.BackupActionView
+	<Button
 		android:id="@+id/backup_import"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_weight="1"
-		app:text="@string/backup_import"
-		app:image="@android:drawable/ic_menu_upload"
+		style="@style/BackupAction"
+		android:text="@string/backup_import"
+		android:drawableStart="@drawable/backup_import_icon"
 		/>
 
-	<net.twisterrob.inventory.android.backup.ui.BackupActionView
+	<Button
 		android:id="@+id/backup_send"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_weight="1"
-		app:dir="reverse"
-		app:text="@string/backup_send"
-		app:image="@android:drawable/ic_menu_send"
+		style="@style/BackupAction"
+		android:text="@string/backup_send"
+		android:drawableStart="@drawable/backup_send_icon"
 		/>
 
 </LinearLayout>
