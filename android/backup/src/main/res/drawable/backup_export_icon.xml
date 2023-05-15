@@ -1,11 +1,6 @@
-<!-- @android:drawable/ic_menu_x scaled to 120dp with 16dp padding. -->
 <layer-list
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
-		android:left="@dimen/backup_icon_padding"
-		android:top="@dimen/backup_icon_padding"
-		android:right="@dimen/backup_icon_padding"
-		android:bottom="@dimen/backup_icon_padding"
 		android:drawable="@android:drawable/ic_menu_save"
 		/>
 	<item>
