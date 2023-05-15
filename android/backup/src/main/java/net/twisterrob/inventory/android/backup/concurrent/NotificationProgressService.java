@@ -26,6 +26,13 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 	public static final String ACTION_PROGRESS_NOTIFICATION = "net.twisterrob.intent.action.PROGRESS_NOTIFICATION";
 	public static final String ACTION_FINISHED_NOTIFICATION = "net.twisterrob.intent.action.FINISHED_NOTIFICATION";
 
+	/**
+	 * Special action which is only valid for {@link Context#bindService},
+	 * so that {@link #onBind(Intent)} and {@link #onUnbind(Intent)} can distinguish between
+	 * the framework binding to the job service, or the app binding for progress display.
+	 */
+	public static final String ACTION_BIND_UI = "net.twisterrob.inventory.intent.action.BIND_UI";
+
 	private static final long NEVER = Long.MIN_VALUE;
 	private NotificationCompat.Builder onGoingNotification;
 	// TODO somehow make sure this is not possible:
@@ -130,14 +137,19 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		notification.setAutoCancel(true);
 	}
 
-	@Override public @Nullable IBinder onBind(Intent intent) {
-		super.onBind(intent);
-		if (needsNotification(intent)) {
-			LOG.trace("Stopping notification, because bind has a UI that displays progress.");
-			inBackground = false;
-			stopNotification();
+	protected abstract @NonNull IBinder createBinder();
+
+	@Override public @Nullable IBinder onBind(@NonNull Intent intent) {
+		if (ACTION_BIND_UI.equals(intent.getAction())) {
+			super.onBind(intent);
+			if (needsNotification(intent)) {
+				LOG.trace("Stopping notification, because bind has a UI that displays progress.");
+				inBackground = false;
+				stopNotification();
+			}
+			return createBinder();
 		}
-		return null;
+		return super.onBind(intent);
 	}
 
 	@Override protected void onHandleWork(@NonNull Intent intent) {
@@ -148,25 +160,33 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 		currentJobStarted = System.currentTimeMillis();
 	}
 
-	@Override public void onRebind(Intent intent) {
-		super.onRebind(intent);
-		if (needsNotification(intent)) {
-			LOG.trace("Stopping notification, because re-bind has a UI that displays progress.");
-			inBackground = false;
-			stopNotification();
+	@Override public void onRebind(@NonNull Intent intent) {
+		if (ACTION_BIND_UI.equals(intent.getAction())) {
+			super.onRebind(intent);
+			if (needsNotification(intent)) {
+				LOG.trace("Stopping notification, because re-bind has a UI that displays progress.");
+				inBackground = false;
+				stopNotification();
+			}
+		} else {
+			super.onRebind(intent);
 		}
 	}
 
-	@Override public boolean onUnbind(Intent intent) {
-		super.onUnbind(intent);
-		if (needsNotification(intent) && isInProgress()) {
-			LOG.trace("Starting notification, because it was stopped when this bind happened, but now it's needed.");
-			// Ignoring intent here, because it'll be empty (no action, no extras).
-			// Using the last progress instead, because we're supposed to be in progress.
-			// Which means that at least the initial progress was published already.
-			startNotification(null, getLastProgress());
+	@Override public boolean onUnbind(@NonNull Intent intent) {
+		if (ACTION_BIND_UI.equals(intent.getAction())) {
+			super.onUnbind(intent);
+			if (needsNotification(intent) && isInProgress()) {
+				LOG.trace("Starting notification, because it was stopped when this bind happened, but now it's needed.");
+				// Ignoring intent here, because it'll be empty (no action, no extras).
+				// Using the last progress instead, because we're supposed to be in progress.
+				// Which means that at least the initial progress was published already.
+				startNotification(null, getLastProgress());
+			}
+			return true;
+		} else {
+			return super.onUnbind(intent);
 		}
-		return true;
 	}
 
 	protected boolean needsNotification(Intent intent) {

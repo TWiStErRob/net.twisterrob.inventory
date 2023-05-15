@@ -55,7 +55,9 @@ public abstract class BackupServiceConnection implements ServiceConnection, Back
 
 	public void bind(@NonNull Context context) {
 		this.context = context;
-		this.serviceIntent = new Intent(context, BackupService.class);
+		this.serviceIntent = new Intent(context, BackupService.class)
+				.setAction(BackupService.ACTION_BIND_UI)
+		;
 		// automatically create the service to be able to query the binder if there's something in progress
 		// bind in the background so hopefully the UI still gets more CPU than the export
 		int flags = Service.BIND_AUTO_CREATE | Service.BIND_NOT_FOREGROUND;
