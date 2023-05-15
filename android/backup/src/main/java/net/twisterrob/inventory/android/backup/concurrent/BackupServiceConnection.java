@@ -1,11 +1,14 @@
 package net.twisterrob.inventory.android.backup.concurrent;
 
+import java.util.Locale;
+
 import android.app.Service;
 import android.content.*;
 import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 
+import net.twisterrob.android.utils.tools.StringerTools;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService.*;
 
 public abstract class BackupServiceConnection implements ServiceConnection, BackupListener {
@@ -61,7 +64,12 @@ public abstract class BackupServiceConnection implements ServiceConnection, Back
 		// automatically create the service to be able to query the binder if there's something in progress
 		// bind in the background so hopefully the UI still gets more CPU than the export
 		int flags = Service.BIND_AUTO_CREATE | Service.BIND_NOT_FOREGROUND;
-		context.bindService(serviceIntent, this, flags);
+		boolean bound = context.bindService(serviceIntent, this, flags);
+		if (!bound) {
+			String message = String.format(Locale.ROOT,
+					"Could not bind %s with %s.", this, StringerTools.toString(serviceIntent));
+			throw new IllegalStateException(message);
+		}
 	}
 
 	public void unbind() {
