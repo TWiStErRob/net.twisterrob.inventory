@@ -9,9 +9,9 @@
 
 	<!-- lint:UnusedResources Title is used in Main Drawer from app module. -->
 	<string name="backup_title" tools:ignore="UnusedResources">Backup</string>
-	<string name="backup_export">Backup…</string>
-	<string name="backup_import">Import…</string>
-	<string name="backup_send">Send to…</string>
+	<string name="backup_export">Backup</string>
+	<string name="backup_import">Import</string>
+	<string name="backup_send">Send</string>
 
 	<string name="backup_notification_channel_group_name" maxLength="40">Backup Progress</string>
 	<string name="backup_notification_channel_group_description" maxLength="300">
