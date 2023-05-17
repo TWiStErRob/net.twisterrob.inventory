@@ -216,7 +216,7 @@ public class BackupActivityActor extends ActivityActor {
 
 	private static class BackupResultActor extends AlertDialogActor {
 		public void dismiss() {
-			dismissWitNeutral();
+			dismissWithNeutral();
 		}
 	}
 
