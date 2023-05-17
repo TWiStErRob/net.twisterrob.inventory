@@ -8,6 +8,7 @@ import org.slf4j.*;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 
 import androidx.annotation.CallSuper;
 import androidx.test.core.app.ApplicationProvider;
@@ -47,9 +48,13 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		// Only idle on drawer when there's an activity running inside ActivityTestRule.
 		base = DrawerIdlingResource.rule().apply(base, description);
 		base = super.apply(base, description);
-		// Make sure to check for DatabaseService outside the activity.
-		// The activity startup and hence beforeActivityLaunched() should be blocked until this is ready.
-		base = new IdlingResourceRule(new DatabaseServiceIdlingResource()).apply(base, description);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+			// Make sure to check for DatabaseService outside the activity.
+			// The activity startup and hence beforeActivityLaunched() should be blocked until this is ready.
+			base = new IdlingResourceRule(new DatabaseServiceIdlingResource()).apply(base, description);
+		} else {
+			LOG.warn("DatabaseServiceIdlingResource is not supported on API {}, database is not synchornized in tests.", Build.VERSION.SDK_INT);
+		}
 		return base;
 	}
 
