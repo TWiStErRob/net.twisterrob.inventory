@@ -34,5 +34,10 @@
 			android:label="CompatibleLauncher"
 			/>
 
+		<activity
+			android:name="net.twisterrob.inventory.android.test.activity.ScopedStorageSaver"
+			android:label="ScopedStorageSaver"
+			/>
+
 	</application>
 </manifest>
