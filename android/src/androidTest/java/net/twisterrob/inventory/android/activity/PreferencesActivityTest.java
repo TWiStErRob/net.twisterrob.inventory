@@ -21,6 +21,7 @@ import androidx.test.uiautomator.*;
 import static androidx.test.core.app.ApplicationProvider.*;
 
 import net.twisterrob.inventory.android.*;
+import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.PreferencesActivityActor;
 import net.twisterrob.inventory.android.test.categories.*;
