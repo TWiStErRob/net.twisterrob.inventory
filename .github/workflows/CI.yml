@@ -172,8 +172,8 @@ jobs:
           curl --silent --show-error --location --remote-name \
              https://github.com/validator/validator/releases/download/${VNU_VERSION?}/vnu.jar_${VNU_VERSION?}.zip
           unzip "vnu.jar_*.zip"
-          java -jar ./vnu.jar_*/dist/vnu.jar --version
-          java -jar ./vnu.jar_*/dist/vnu.jar \
+          java -jar ./dist/vnu.jar --version
+          java -jar ./dist/vnu.jar \
              --asciiquotes \
              --Werror \
              --verbose \
@@ -183,7 +183,7 @@ jobs:
       - name: "Validate with W3C Nu Validator (should have 1 failure)"
         if: success() || failure()
         run: |
-          java -jar ./vnu.jar_*/dist/vnu.jar \
+          java -jar ./dist/vnu.jar \
              --asciiquotes \
              --Werror \
              --verbose \
@@ -193,7 +193,7 @@ jobs:
       - name: "Validate with W3C Nu Validator (should have tons of failures)"
         if: success() || failure()
         run: |
-          java -jar ./vnu.jar_*/dist/vnu.jar \
+          java -jar ./dist/vnu.jar \
              --asciiquotes \
              --Werror \
              --verbose \
