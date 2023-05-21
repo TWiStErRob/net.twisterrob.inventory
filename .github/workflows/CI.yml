@@ -162,6 +162,43 @@ jobs:
             ${{ github.workspace }}/android/data/src/main/res/raw/icon_previews.html
             ${{ github.workspace }}/android/data/src/main/res/raw/*.svg
 
+      - name: Register problem matchers.
+        run: echo "::add-matcher::.github/problemMatchers-icons.json"
+
+      - name: "Validate with W3C Nu Validator"
+        env:
+          VNU_VERSION: 20.6.30
+        run: |
+          curl --silent --show-error --location --remote-name \
+             https://github.com/validator/validator/releases/download/${VNU_VERSION?}/vnu.jar_${VNU_VERSION?}.zip
+          unzip "vnu.jar_*.zip"
+          java -jar ./vnu.jar_*/dist/vnu.jar --version
+          java -jar ./vnu.jar_*/dist/vnu.jar \
+             --asciiquotes \
+             --Werror \
+             --verbose \
+             --svg \
+             android/data/src/main/res/raw/*.svg \
+
+      - name: "Validate with W3C Nu Validator (should have 1 failure)"
+        if: success() || failure()
+        run: |
+          java -jar ./vnu.jar_*/dist/vnu.jar \
+             --asciiquotes \
+             --Werror \
+             --verbose \
+             --svg \
+             android/*.svg \
+
+      - name: "Validate with W3C Nu Validator (should have tons of failures)"
+        if: success() || failure()
+        run: |
+          java -jar ./vnu.jar_*/dist/vnu.jar \
+             --asciiquotes \
+             --Werror \
+             --verbose \
+             android/data/src/main/res/raw/*.svg \
+
 
   instrumentation:
     name: "🧪 Instrumentation Tests on ${{ matrix.android-api }}"
