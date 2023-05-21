@@ -80,7 +80,7 @@ public class BackupActivityTest_Export {
 	}
 
 	@Category({Op.Rotates.class})
-	@Test public void testExportProgressDoesNotAppearWhenRotated()throws Exception  {
+	@Test public void testExportProgressDoesNotAppearWhenRotated() throws Exception {
 		BackupExportPickerActor pickerActor = backup.exportBackup();
 		pickerActor.cancel();
 
@@ -88,75 +88,4 @@ public class BackupActivityTest_Export {
 
 		backup.assertNoProgressDisplayed();
 	}
-
-//	@Test public void testBackupShownInFileList()throws Exception  {
-//		BackupExportActor pickerActor = backup.exportBackup();
-//
-//		String date = String.format(Locale.ROOT, "%tF", Calendar.getInstance());
-//		File justExported = only(files.getCreatedFiles());
-//		assertThat("double-check the file exists",
-//				justExported, aFileNamed(containsStringIgnoringCase(date)));
-//
-//		backup.checkFileShown(date);
-//
-//		pickerActor.cancel();
-//	}
-
-//	// TODO move to BackupActivityActor?
-//	private class CheckExportedFiles implements TestRule {
-//		private int expectedSize;
-//		private File[] preContents;
-//
-//		public CheckExportedFiles() {
-//			setExpectedSize(1);
-//		}
-//
-//		public void setExpectedSize(int expectedSize) {
-//			this.expectedSize = expectedSize;
-//		}
-//
-//		public Collection<File> getCreatedFiles() {
-//			Set<File> files = new HashSet<>(Arrays.asList(temp.getRoot().listFiles()));
-//			files.removeAll(Arrays.asList(preContents));
-//			return files;
-//		}
-//		public Collection<File> getDeletedFiles() {
-//			Set<File> files = new HashSet<>(Arrays.asList(preContents));
-//			files.removeAll(Arrays.asList(temp.getRoot().listFiles()));
-//			return files;
-//		}
-//
-//		@Override public Statement apply(final Statement base, Description description) {
-//			return new Statement() {
-//				@Override public void evaluate() throws Throwable {
-//					backup.allowPermissions();
-//					saveFolderContents();
-//					navigateToFolder();
-//					base.evaluate();
-//					// only if didn't throw
-//					checkFolderContents();
-//				}
-//
-//				/*@Before*/
-//				public void saveFolderContents() throws Exception {
-//					// To check for devastating deletion,
-//					// create an empty file that should persist till the end.
-//					File extraFile = temp.newFile();
-//					preContents = temp.getRoot().listFiles();
-//					assertThat("self-check", preContents, arrayContaining(extraFile));
-//				}
-//
-//				/*@Before*/
-//				private void navigateToFolder() {
-//					backup.gotoFolder(temp.getRoot());
-//				}
-//
-//				/*@After*/
-//				public void checkFolderContents() {
-//					assertThat(getDeletedFiles(), is(empty()));
-//					assertThat(getCreatedFiles(), hasSize(expectedSize));
-//				}
-//			};
-//		}
-//	}
 }
