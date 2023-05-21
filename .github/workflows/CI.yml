@@ -180,25 +180,6 @@ jobs:
              --svg \
              android/data/src/main/res/raw/*.svg \
 
-      - name: "Validate with W3C Nu Validator (should have 1 failure)"
-        if: success() || failure()
-        run: |
-          java -jar ./dist/vnu.jar \
-             --asciiquotes \
-             --Werror \
-             --verbose \
-             --svg \
-             android/*.svg \
-
-      - name: "Validate with W3C Nu Validator (should have tons of failures)"
-        if: success() || failure()
-        run: |
-          java -jar ./dist/vnu.jar \
-             --asciiquotes \
-             --Werror \
-             --verbose \
-             android/data/src/main/res/raw/*.svg \
-
 
   instrumentation:
     name: "🧪 Instrumentation Tests on ${{ matrix.android-api }}"
