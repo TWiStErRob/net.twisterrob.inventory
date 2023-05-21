@@ -1,0 +1,19 @@
+{
+	"problemMatcher": [
+		{
+			"owner": "vnu",
+			"pattern": [
+				{
+					"regexp": "^\"file:(.*?)\"(?::(\\d+).(\\d+)(?:-(\\d+).(\\d+))?)?: (?:info )?(error|warning): (.*)$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"endLine": 4,
+					"endColumn": 5,
+					"severity": 6,
+					"message": 7
+				}
+			]
+		}
+	]
+}

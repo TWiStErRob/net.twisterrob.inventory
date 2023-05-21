@@ -4,7 +4,7 @@ on:
     branches:
       - '**'
 concurrency:
-  group: ${{ github.ref == 'refs/heads/master' && format('ci-master-{0}', github.sha) || format('ci-{0}', github.ref) }}
+  group: ${{ github.ref == 'refs/heads/main' && format('ci-main-{0}', github.sha) || format('ci-{0}', github.ref) }}
   cancel-in-progress: true
 jobs:
 
@@ -161,6 +161,24 @@ jobs:
           path: |
             ${{ github.workspace }}/android/data/src/main/res/raw/icon_previews.html
             ${{ github.workspace }}/android/data/src/main/res/raw/*.svg
+
+      - name: Register problem matchers.
+        run: echo "::add-matcher::.github/problemMatchers-icons.json"
+
+      - name: "Validate with W3C Nu Validator"
+        env:
+          VNU_VERSION: 20.6.30
+        run: |
+          curl --silent --show-error --location --remote-name \
+             https://github.com/validator/validator/releases/download/${VNU_VERSION?}/vnu.jar_${VNU_VERSION?}.zip
+          unzip "vnu.jar_*.zip"
+          java -jar ./dist/vnu.jar --version
+          java -jar ./dist/vnu.jar \
+             --asciiquotes \
+             --Werror \
+             --verbose \
+             --svg \
+             android/data/src/main/res/raw/*.svg \
 
 
   instrumentation:
