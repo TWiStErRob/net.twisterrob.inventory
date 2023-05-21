@@ -4,7 +4,7 @@
 			"owner": "vnu",
 			"pattern": [
 				{
-					"regexp": "^\"file:/(.*)\":(\\d+).(\\d+)-(\\d+).(\\d+): (?:info )?(error|warning): (.*)$",
+					"regexp": "^\"file:(.*)\":(\\d+).(\\d+)-(\\d+).(\\d+): (?:info )?(error|warning): (.*)$",
 					"file": 1,
 					"line": 2,
 					"column": 3,
