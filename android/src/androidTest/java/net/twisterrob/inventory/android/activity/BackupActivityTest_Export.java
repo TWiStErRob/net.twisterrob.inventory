@@ -6,6 +6,7 @@ import org.junit.rules.*;
 import org.junit.runner.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -13,6 +14,8 @@ import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupExportPickerActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupExportPickerActor.BackupExportResultActor;
 import net.twisterrob.inventory.android.test.categories.*;
+
+import static net.twisterrob.android.test.automators.UiAutomatorExtensions.UI_AUTOMATOR_VERSION;
 
 @RunWith(AndroidJUnit4.class)
 @Category({On.Export.class})
@@ -27,14 +30,13 @@ public class BackupActivityTest_Export {
 
 	@Rule(order = 3) public final TemporaryFolder temp = new TemporaryFolder();
 
-//	@Rule(order = 4) public final CheckExportedFiles files = new CheckExportedFiles();
-
 	private final BackupActivityActor backup = new BackupActivityActor();
 
 	@Before public void assertBackupActivityIsClean() {
 		backup.assertEmptyState();
 	}
 
+	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Test public void testExportCompletes() throws Exception {
 		BackupExportPickerActor pickerActor = backup.exportBackup();
 		pickerActor.selectInDrawer("Downloads");
@@ -46,7 +48,8 @@ public class BackupActivityTest_Export {
 		backup.assertNoProgressDisplayed();
 	}
 
-	@Category({Op.Rotates.class})
+	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
+	@Category({Op.Rotates.class, On.External.class})
 	@Test public void testExportCompletesWhenPickerRotated() throws Exception {
 		BackupExportPickerActor pickerActor = backup.exportBackup();
 		pickerActor.selectInDrawer("Downloads");
@@ -62,7 +65,8 @@ public class BackupActivityTest_Export {
 		}
 	}
 
-	@Category({Op.Rotates.class})
+	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
+	@Category({Op.Cancels.class, Op.Rotates.class, On.External.class})
 	@Test public void testExportPickerDoesNotReappearWhenRotated() throws Exception {
 		BackupExportPickerActor pickerActor = backup.exportBackup();
 		pickerActor.cancel();
@@ -72,7 +76,8 @@ public class BackupActivityTest_Export {
 		pickerActor.assertNotDisplayed();
 	}
 
-	@Category({Op.Rotates.class})
+	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
+	@Category({Op.Cancels.class, Op.Rotates.class, On.External.class})
 	@Test public void testExportProgressDoesNotAppearWhenRotated() throws Exception {
 		BackupExportPickerActor pickerActor = backup.exportBackup();
 		pickerActor.cancel();

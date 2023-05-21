@@ -26,8 +26,8 @@ public class BackupActivityTest_SendGoogleDrive {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_SendGoogleDrive.class);
 
 	@Rule(order = 1) public final TestName testName = new TestName();
-	@SuppressWarnings("deprecation")
 
+	@SuppressWarnings("deprecation")
 	@Rule(order = 2) public final androidx.test.rule.ActivityTestRule<BackupActivity> activity =
 			new InventoryActivityRule<>(BackupActivity.class);
 

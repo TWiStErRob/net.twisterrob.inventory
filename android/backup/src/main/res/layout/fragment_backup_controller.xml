@@ -6,8 +6,8 @@
 	android:layout_height="match_parent"
 	android:padding="@dimen/unit_half"
 	android:orientation="vertical"
-	tools:showIn="@layout/activity_backup"
 	tools:context="net.twisterrob.inventory.android.fragment.BackupControllerFragment"
+	tools:showIn="@layout/activity_backup"
 	>
 
 	<Button

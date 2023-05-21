@@ -11,21 +11,23 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.FlakyTest;
+import androidx.test.filters.SdkSuppress;
 
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.activity.ScopedStorageSaver;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.categories.On;
+import net.twisterrob.inventory.android.test.categories.Op;
 import net.twisterrob.inventory.android.test.categories.UseCase;
 
+import static net.twisterrob.android.test.automators.UiAutomatorExtensions.UI_AUTOMATOR_VERSION;
 import static net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupImportActor;
 import static net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupImportActor.*;
 import static net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupImportPickerActor;
 import static net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupImportStubActor;
 
 @RunWith(AndroidJUnit4.class)
-@Category({On.Import.class, On.External.class})
+@Category({On.Import.class})
 public class BackupActivityTest_Import {
 
 	@SuppressWarnings("deprecation")
@@ -43,7 +45,7 @@ public class BackupActivityTest_Import {
 		backup.assertEmptyState();
 	}
 
-	@Category({UseCase.Complex.class})
+	@Category({Op.Cancels.class})
 	@Test public void testImportCancelWarning() {
 		BackupImportStubActor.mockImportFromAnyFile();
 		BackupImportActor importActor = backup.importBackup();
@@ -55,7 +57,8 @@ public class BackupActivityTest_Import {
 		backup.assertEmptyState();
 	}
 
-	@Category({UseCase.Complex.class})
+	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
+	@Category({Op.Cancels.class, On.External.class})
 	@Test public void testImportCancelPicker() throws Exception {
 		BackupImportActor importActor = backup.importBackup();
 
@@ -65,7 +68,7 @@ public class BackupActivityTest_Import {
 		backup.assertEmptyState();
 	}
 
-	@Category({UseCase.Complex.class})
+	@Category({Op.CreatesBelonging.class})
 	@Test public void testImportStubbed() throws Exception {
 		BackupImportStubActor.mockImportFromFile(temp.newFile());
 		BackupImportActor importActor = backup.importBackup();
@@ -77,8 +80,8 @@ public class BackupActivityTest_Import {
 		resultActor.dismiss();
 	}
 
-	@Category({UseCase.Complex.class})
-	@FlakyTest(detail = "Will fail on API 24 and API 25, see BackupImportPickerActor.selectFile")
+	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
+	@Category({UseCase.Complex.class, On.External.class})
 	@Test public void testImportReal() throws Exception {
 		File file = temp.newFile();
 		BackupImportPickerActor.prepareImportableFile(file);

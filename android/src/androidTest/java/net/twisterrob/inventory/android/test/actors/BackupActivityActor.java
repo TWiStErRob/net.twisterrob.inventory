@@ -47,7 +47,8 @@ import net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupIm
 import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.android.test.automators.AndroidAutomator.*;
-import static net.twisterrob.android.test.automators.DocumentsUiAutomator.*;
+import static net.twisterrob.android.test.automators.DocumentsUiAutomator.drawerTitleOpenFrom;
+import static net.twisterrob.android.test.automators.DocumentsUiAutomator.drawerTitleSaveTo;
 import static net.twisterrob.android.test.automators.GoogleDriveAutomator.*;
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
@@ -212,6 +213,7 @@ public class BackupActivityActor extends ActivityActor {
 				shortClickOnDescriptionLabel(DocumentsUiAutomator.showRoots());
 			}
 			assertThat(DocumentsUiAutomator.getDrawerTitle(), is(drawerTitleSaveTo()));
+			// CONSIDER RTL: click on top right
 			clickOnBottomRight(DocumentsUiAutomator.toolbar());
 		}
 		public void assertNotDisplayed() {
@@ -278,8 +280,10 @@ public class BackupActivityActor extends ActivityActor {
 	public static class BackupSendChooserActor {
 		public void assertDialogDisplayed() throws UiObjectNotFoundException {
 			if (VERSION_CODES.S <= VERSION.SDK_INT) {
+				// From Android 12, the title of Intent.createChooser is removed.
 				assertThat(getChooserTitle(), allOf(startsWith("Inventory_"), endsWith(".zip")));
 			} else if (VERSION_CODES.Q <= VERSION.SDK_INT) {
+				// In Android 10, the title of Intent.createChooser is blatantly ignored.
 				assertThat(getChooserTitle(), equalTo("Share"));
 			} else {
 				assertThat(getChooserTitle(), isString(R.string.backup_send));
