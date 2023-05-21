@@ -27,10 +27,6 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 					// Used by net.twisterrob.android.test.DeviceUnlocker
 					adbShell("pm grant ${packageName} android.permission.DISABLE_KEYGUARD")
 
-					// Used by org.junit.rules.TemporaryFolder (only required 26-29)
-					adbShell("pm grant ${packageName} android.permission.READ_EXTERNAL_STORAGE")
-					adbShell("pm grant ${packageName} android.permission.WRITE_EXTERNAL_STORAGE")
-
 					// TODO move to TestRule?
 					//adbShell("pm grant ${packageName} android.permission.WRITE_SECURE_SETTINGS")
 					adbShell("settings put secure long_press_timeout 1500")

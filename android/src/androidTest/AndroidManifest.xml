@@ -2,13 +2,6 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:sharedUserId="net.twisterrob.inventory">
 
-	<!--
-		The following classes access the device storage:
-		org.junit.rules.TemporaryFolder
-	-->
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 	<!-- Normally added by Gradle: <instrumentation android:name="....AndroidJUnitRunner" ... />
 	     @see build.gradle: android.defaultConfig.testInstrumentationRunner
 	     Need to duplicate the name attribute to help the manifest merger (element looked up via android:name as key).

@@ -10,11 +10,8 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
-import android.content.Context;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.activity.ScopedStorageSaver;
@@ -38,11 +35,7 @@ public class BackupActivityTest_Import {
 	@Rule(order = 2) public final TestRule backupService =
 			new BackupServiceInBackupActivityIdlingRule(activity);
 
-	@Rule(order = 3) public final TemporaryFolder temp = TemporaryFolder
-			.builder()
-			.parentFolder(InstrumentationRegistry.getInstrumentation().getContext().getDir("temp", Context.MODE_PRIVATE))
-			.assureDeletion()
-			.build();
+	@Rule(order = 3) public final TemporaryFolder temp = new TemporaryFolder();
 
 	private final BackupActivityActor backup = new BackupActivityActor();
 

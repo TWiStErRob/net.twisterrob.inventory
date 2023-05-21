@@ -5,10 +5,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.*;
 import org.junit.runner.*;
 
-import android.content.Context;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -28,11 +25,7 @@ public class BackupActivityTest_Export {
 	@Rule(order = 2) public final TestRule backupService =
 			new BackupServiceInBackupActivityIdlingRule(activity);
 
-	@Rule(order = 3) public final TemporaryFolder temp = TemporaryFolder
-			.builder()
-			.parentFolder(InstrumentationRegistry.getInstrumentation().getContext().getDir("temp", Context.MODE_PRIVATE))
-			.assureDeletion()
-			.build();
+	@Rule(order = 3) public final TemporaryFolder temp = new TemporaryFolder();
 
 //	@Rule(order = 4) public final CheckExportedFiles files = new CheckExportedFiles();
 
