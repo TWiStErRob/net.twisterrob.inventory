@@ -38,6 +38,7 @@ public class BackupActivityTest_Export {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Test public void testExportCompletes() throws Exception {
+		BackupExportPickerActor.assumeFunctional();
 		BackupExportPickerActor pickerActor = backup.exportBackup();
 		pickerActor.selectInDrawer("Downloads");
 
@@ -51,6 +52,7 @@ public class BackupActivityTest_Export {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Rotates.class, On.External.class})
 	@Test public void testExportCompletesWhenPickerRotated() throws Exception {
+		BackupExportPickerActor.assumeFunctional();
 		BackupExportPickerActor pickerActor = backup.exportBackup();
 		pickerActor.selectInDrawer("Downloads");
 

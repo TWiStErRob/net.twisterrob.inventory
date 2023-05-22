@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Build.*;
+import android.os.Environment;
 
 import androidx.annotation.*;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -206,6 +207,15 @@ public class BackupActivityActor extends ActivityActor {
 	}
 
 	public static class BackupExportPickerActor {
+		public static void assumeFunctional() {
+			// Without SD card pressing "Save" in the CreateDocument() picker's "Download" provider
+			// will fail with "Failed to save document" toast.
+			assumeThat(
+					"No SD card present",
+					Environment.getExternalStorageState(), is(Environment.MEDIA_MOUNTED)
+			);
+		}
+
 		public void assertDisplayed() throws UiObjectNotFoundException, NameNotFoundException {
 			// Open the drawer for a moment to check its label,
 			// because otherwise it's unclear if it's save or load.

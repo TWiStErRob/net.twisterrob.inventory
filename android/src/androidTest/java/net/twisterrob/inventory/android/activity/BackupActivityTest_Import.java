@@ -16,6 +16,7 @@ import androidx.test.filters.SdkSuppress;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.activity.ScopedStorageSaver;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
+import net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupExportPickerActor;
 import net.twisterrob.inventory.android.test.categories.On;
 import net.twisterrob.inventory.android.test.categories.Op;
 import net.twisterrob.inventory.android.test.categories.UseCase;
@@ -83,6 +84,7 @@ public class BackupActivityTest_Import {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
 	@Test public void testImportReal() throws Exception {
+		BackupExportPickerActor.assumeFunctional();
 		File file = temp.newFile();
 		BackupImportPickerActor.prepareImportableFile(file);
 		String name = ScopedStorageSaver.createZipInDownloads(file);
