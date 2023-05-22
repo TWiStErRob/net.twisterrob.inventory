@@ -38,8 +38,11 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 
@@ -135,6 +138,21 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
+	fun dumpDatabase(inject: BaseComponent) {
+		intent {
+			cleanTask {
+				withContext(Dispatchers.IO) {
+					val path = Database.get(inject.applicationContext()).file
+					val `in`: InputStream = FileInputStream(path)
+					val dumpFile = File(Paths.getPhoneHome(), "db.sqlite")
+					val out: OutputStream = FileOutputStream(dumpFile)
+					IOTools.copyStream(`in`, out)
+					ManageSpaceActivity.LOG.debug("Saved DB to {}", dumpFile)
+				}
+			}
+		}
+	}
+
 	fun clearImages(inject: BaseComponent) {
 		intent {
 			confirmedClean(
@@ -167,6 +185,21 @@ internal class ManageSpaceViewModel @Inject constructor(
 				{ it.copy(database = "Vacuuming…") }
 			) {
 				Database.get(inject.applicationContext()).writableDatabase.execSQL("VACUUM;")
+			}
+		}
+	}
+
+	fun vacuumDatabaseIncremental(inject: BaseComponent, vacuumBytes: Int) {
+		intent {
+			reduce {
+				state.copy(sizes = state.sizes?.copy(database = "Vacuuming…"))
+			}
+			cleanTask {
+				val db = Database.get(inject.applicationContext()).writableDatabase
+				val pagesToFree = vacuumBytes / db.pageSize
+				val vacuum =
+					db.rawQuery("PRAGMA incremental_vacuum($pagesToFree);", DatabaseTools.NO_ARGS)
+				DatabaseTools.consume(vacuum)
 			}
 		}
 	}
@@ -274,10 +307,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 						sizes = state.sizes?.let(progress),
 					)
 				}
-				// STOPSHIP CleanTask.killProcessesAround(activity)
-				action()
-				// STOPSHIP CleanTask.killProcessesAround(activity)
-				loadSizes()
+				cleanTask(action)
 			}
 
 			CANCELLED -> {
@@ -288,6 +318,14 @@ internal class ManageSpaceViewModel @Inject constructor(
 				}
 			}
 		}
+	}
+
+	private suspend fun cleanTask(action: suspend () -> Unit) {
+		// STOPSHIP NoProgressTaskExecutor.create(object : CleanTask() {
+		// STOPSHIP CleanTask.killProcessesAround(activity)
+		action()
+		// STOPSHIP CleanTask.killProcessesAround(activity)
+		loadSizes()
 	}
 }
 

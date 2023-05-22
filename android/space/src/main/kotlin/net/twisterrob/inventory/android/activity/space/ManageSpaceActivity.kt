@@ -10,11 +10,8 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
-import net.twisterrob.android.utils.tools.DatabaseTools
-import net.twisterrob.android.utils.tools.DatabaseTools.NO_ARGS
 import net.twisterrob.android.utils.tools.DialogTools
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks
-import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.android.utils.tools.ViewTools
 import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.Constants.Paths
@@ -27,10 +24,6 @@ import net.twisterrob.inventory.android.view.RecyclerViewController
 import org.orbitmvi.orbit.viewmodel.observe
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -65,17 +58,8 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.contents.storageDbClear.setOnClickListener {
 			viewModel.emptyDatabase(inject)
 		}
-		findViewById<View>(R.id.storage_db_dump).setOnClickListener {
-			NoProgressTaskExecutor.create(object : CleanTask() {
-				override fun doClean() {
-					val path = Database.get(applicationContext).file
-					val `in`: InputStream = FileInputStream(path)
-					val dumpFile: File = dumpFile
-					val out: OutputStream = FileOutputStream(dumpFile)
-					IOTools.copyStream(`in`, out)
-					LOG.debug("Saved DB to {}", dumpFile)
-				}
-			}).show(supportFragmentManager, "task")
+		binding.contents.storageDbDump.setOnClickListener {
+			viewModel.dumpDatabase(inject)
 		}
 		binding.contents.storageImagesClear.setOnClickListener {
 			viewModel.clearImages(inject)
@@ -84,6 +68,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 			viewModel.resetTestData(inject)
 		}
 		findViewById<View>(R.id.storage_db_restore).setOnClickListener { v ->
+			val dumpFile = File(Paths.getPhoneHome(), "db.sqlite")
 			val defaultPath: String = dumpFile.absolutePath
 			DialogTools
 				.prompt(v.context, defaultPath, object : PopupCallbacks<String> {
@@ -121,28 +106,20 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.contents.storageDbVacuum.setOnClickListener {
 			viewModel.vacuumDatabase(inject)
 		}
-		findViewById<View>(R.id.storage_db_vacuum_incremental).setOnClickListener { v ->
-			@Suppress("MagicNumber")
-			val tenMB = 10 * 1024 * 1024
+		binding.contents.storageDbVacuumIncremental.setOnClickListener {
 			DialogTools
-				.pickNumber(v.context, tenMB, 0, Int.MAX_VALUE, object : PopupCallbacks<Int> {
+				.pickNumber(this, 10, 0, Int.MAX_VALUE, object : PopupCallbacks<Int> {
 					override fun finished(value: Int?) {
 						if (value == null) {
 							return
 						}
-						NoProgressTaskExecutor.create(object : CleanTask() {
-							override fun doClean() {
-								val db = Database.get(applicationContext).writableDatabase
-								val pagesToFree = value / db.pageSize
-								val vacuum =
-									db.rawQuery("PRAGMA incremental_vacuum($pagesToFree);", NO_ARGS)
-								DatabaseTools.consume(vacuum)
-							}
-						}).show(supportFragmentManager, null)
+						@Suppress("MagicNumber")
+						val vacuumBytes = value * 1024 * 1024
+						viewModel.vacuumDatabaseIncremental(inject, vacuumBytes)
 					}
 				})
 				.setTitle("Incremental Vacuum")
-				.setMessage("How many bytes do you want to vacuum?")
+				.setMessage("How many megabytes do you want to vacuum?")
 				.show()
 		}
 		binding.contents.storageAllClear.setOnClickListener {
@@ -169,9 +146,6 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 	override fun taskDone() {
 		viewModel.loadSizes()
 	}
-
-	private val dumpFile: File
-		get() = File(Paths.getPhoneHome(), "db.sqlite")
 
 	override fun onResume() {
 		super.onResume()
