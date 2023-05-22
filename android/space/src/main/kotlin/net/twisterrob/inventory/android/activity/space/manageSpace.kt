@@ -88,18 +88,6 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun rebuildSearch(activity: Activity) {
-		intent {
-			confirmedClean(
-				title = "Rebuild search index…",
-				message = "Continuing will re-build the search index, it may take a while.",
-				{ it.copy(searchIndex = "Rebuilding…") }
-			) {
-				Database.get(activity.applicationContext).rebuildSearch()
-			}
-		}
-	}
-
 	fun clearImageCache(glide: Glide) {
 		intent {
 			confirmedClean(
@@ -111,6 +99,18 @@ internal class ManageSpaceViewModel @Inject constructor(
 			) {
 				withContext(Dispatchers.Main) { glide.clearMemory() }
 				withContext(Dispatchers.IO) { glide.clearDiskCache() }
+			}
+		}
+	}
+
+	fun rebuildSearch(activity: Activity) {
+		intent {
+			confirmedClean(
+				title = "Rebuild search index…",
+				message = "Continuing will re-build the search index, it may take a while.",
+				{ it.copy(searchIndex = "Rebuilding…") }
+			) {
+				Database.get(activity.applicationContext).rebuildSearch()
 			}
 		}
 	}
