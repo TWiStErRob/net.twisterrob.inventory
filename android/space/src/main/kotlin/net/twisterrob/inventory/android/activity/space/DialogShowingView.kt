@@ -7,6 +7,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.use
+import androidx.core.view.isVisible
 import net.twisterrob.android.AndroidConstants
 import net.twisterrob.inventory.android.space.R
 
@@ -57,8 +58,6 @@ class DialogShowingView @JvmOverloads constructor(
 	) {
 		builder = AlertDialog.Builder(context, dialogStyle).apply {
 			setCancelable(false)
-			setTitle("Title")
-			setMessage("Message")
 		}
 	}
 
@@ -78,5 +77,11 @@ class DialogShowingView @JvmOverloads constructor(
 	override fun onDetachedFromWindow() {
 		dialog?.dismiss()
 		super.onDetachedFromWindow()
+	}
+
+	fun show(title: CharSequence, message: CharSequence) {
+		builder.setTitle(title)
+		builder.setMessage(message)
+		isVisible = true
 	}
 }

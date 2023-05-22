@@ -258,6 +258,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 	) {
 		reduce {
 			state.copy(
+				// STOPSHIP show a blocking progress bar like ConfirmedCleanAction did.
 				confirmation = Confirmation(
 					title = title,
 					message = message,

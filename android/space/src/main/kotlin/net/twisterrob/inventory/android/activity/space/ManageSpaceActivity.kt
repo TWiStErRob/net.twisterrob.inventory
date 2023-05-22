@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import net.twisterrob.android.utils.tools.DatabaseTools
@@ -164,7 +163,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.contents.storageDbFreelistSize.text = state.sizes?.freelist
 		binding.contents.storageSearchSize.text = state.sizes?.searchIndex
 		binding.contents.storageAllSize.text = state.sizes?.allData
-		binding.dialog.isVisible = state.confirmation != null
+		state.confirmation?.run { binding.dialog.show(title, message) }
 	}
 
 	override fun taskDone() {
