@@ -2,7 +2,10 @@ package net.twisterrob.inventory.android.activity.space
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
+import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -11,13 +14,13 @@ import net.twisterrob.android.utils.tools.DialogTools
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks
 import net.twisterrob.android.utils.tools.ViewTools
 import net.twisterrob.inventory.android.BaseComponent
-import net.twisterrob.inventory.android.Constants.Paths
+import net.twisterrob.inventory.android.Constants.Paths.getFileName
 import net.twisterrob.inventory.android.activity.BaseActivity
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import net.twisterrob.inventory.android.view.RecyclerViewController
 import org.orbitmvi.orbit.viewmodel.observe
 import org.slf4j.LoggerFactory
-import java.io.File
+import java.util.Calendar
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,6 +29,39 @@ class ManageSpaceActivity : BaseActivity() {
 	private lateinit var inject: BaseComponent
 	private val viewModel: ManageSpaceViewModel by viewModels()
 	@Inject internal lateinit var effectHandler: ManageSpaceEffectHandler
+
+	private val dumpAll = registerForActivityResult<String, Uri>(
+		object : CreateDocument(MIME_TYPE_ZIP) {
+			override fun createIntent(context: Context, input: String): Intent =
+				super
+					.createIntent(context, input)
+					.addCategory(Intent.CATEGORY_OPENABLE)
+		}
+	) { result ->
+		result?.let { viewModel.dumpAllData(inject, it) }
+	}
+
+	private val dumpDB = registerForActivityResult<String, Uri>(
+		object : CreateDocument(MIME_TYPE_SQLITE) {
+			override fun createIntent(context: Context, input: String): Intent =
+				super
+					.createIntent(context, input)
+					.addCategory(Intent.CATEGORY_OPENABLE)
+		}
+	) { result ->
+		result?.let { viewModel.dumpDatabase(inject, it) }
+	}
+
+	private val restoreDB = registerForActivityResult<Array<String>, Uri>(
+		object : OpenDocument() {
+			override fun createIntent(context: Context, input: Array<String>): Intent =
+				super
+					.createIntent(context, input)
+					.addCategory(Intent.CATEGORY_OPENABLE)
+		}
+	) { result ->
+		result?.let { viewModel.restoreDatabase(inject, it) }
+	}
 
 	@Suppress("LongMethod")
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,24 +82,13 @@ class ManageSpaceActivity : BaseActivity() {
 			viewModel.clearImageCache(Glide.get(applicationContext))
 		}
 		binding.contents.storageDbClear.setOnClickListener { viewModel.emptyDatabase(inject) }
-		binding.contents.storageDbDump.setOnClickListener { viewModel.dumpDatabase(inject) }
+		binding.contents.storageDbDump.setOnClickListener {
+			dumpDB.launch(getFileName("Inventory", Calendar.getInstance(), "sqlite"))
+		}
 		binding.contents.storageImagesClear.setOnClickListener { viewModel.clearImages(inject) }
 		binding.contents.storageDbTest.setOnClickListener { viewModel.resetTestData(inject) }
-		binding.contents.storageDbRestore.setOnClickListener { v ->
-			val dumpFile = File(Paths.getPhoneHome(), "db.sqlite")
-			val defaultPath: String = dumpFile.absolutePath
-			DialogTools
-				.prompt(v.context, defaultPath, object : PopupCallbacks<String> {
-					override fun finished(value: String?) {
-						if (value == null) {
-							return
-						}
-						viewModel.restoreDatabase(inject, File(value))
-					}
-				})
-				.setTitle("Restore DB")
-				.setMessage("Please enter the absolute path of the .sqlite file to restore!")
-				.show()
+		binding.contents.storageDbRestore.setOnClickListener {
+			restoreDB.launch(arrayOf(MIME_TYPE_SQLITE))
 		}
 		binding.contents.storageDbVacuum.setOnClickListener { viewModel.vacuumDatabase(inject) }
 		binding.contents.storageDbVacuumIncremental.setOnClickListener {
@@ -83,7 +108,9 @@ class ManageSpaceActivity : BaseActivity() {
 				.show()
 		}
 		binding.contents.storageAllClear.setOnClickListener { viewModel.clearData(inject) }
-		binding.contents.storageAllDump.setOnClickListener { viewModel.dumpAllData(inject) }
+		binding.contents.storageAllDump.setOnClickListener {
+			dumpAll.launch(getFileName("Inventory_dump", Calendar.getInstance(), "zip"))
+		}
 		ViewTools.displayedIf(binding.contents.storageAll, inject.buildInfo().isDebug)
 		viewModel.observe(this, state = ::updateUi, sideEffect = effectHandler::handleEffect)
 	}
@@ -106,6 +133,12 @@ class ManageSpaceActivity : BaseActivity() {
 
 	companion object {
 		internal val LOG = LoggerFactory.getLogger(ManageSpaceActivity::class.java)
+
+		/**
+		 * See [IANA](https://www.iana.org/assignments/media-types/application/vnd.sqlite3).
+		 */
+		private const val MIME_TYPE_SQLITE: String = "application/vnd.sqlite3"
+		private const val MIME_TYPE_ZIP: String = "application/zip"
 
 		@JvmStatic
 		fun launch(context: Context): Intent =

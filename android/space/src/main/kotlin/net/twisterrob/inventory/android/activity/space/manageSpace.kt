@@ -6,11 +6,13 @@ import android.app.ActivityManager
 import android.content.Context
 import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
+import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Process
 import android.text.format.Formatter
 import android.widget.Toast
+import androidx.documentfile.provider.DocumentFile
 import com.bumptech.glide.Glide
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ActivityContext
@@ -25,7 +27,6 @@ import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.android.utils.tools.PackageManagerTools
 import net.twisterrob.android.utils.tools.TextTools
 import net.twisterrob.inventory.android.BaseComponent
-import net.twisterrob.inventory.android.Constants.Paths
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
 import net.twisterrob.inventory.android.activity.BaseActivity
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation
@@ -42,11 +43,7 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 
@@ -142,16 +139,17 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun dumpDatabase(inject: BaseComponent) {
+	fun dumpDatabase(inject: BaseComponent, target: Uri) {
 		intent {
 			cleanTask {
 				withContext(Dispatchers.IO) {
-					val path = Database.get(inject.applicationContext()).file
-					val `in`: InputStream = FileInputStream(path)
-					val dumpFile = File(Paths.getPhoneHome(), "db.sqlite")
-					val out: OutputStream = FileOutputStream(dumpFile)
-					IOTools.copyStream(`in`, out)
-					ManageSpaceActivity.LOG.debug("Saved DB to {}", dumpFile)
+					val name = DocumentFile.fromSingleUri(inject.applicationContext(), target)?.name
+					ManageSpaceActivity.LOG.debug("Saving DB to {} ({})", target, name)
+					val source = Database.get(inject.applicationContext()).file.inputStream()
+					val out = inject.applicationContext().contentResolver.openOutputStream(target)
+						?: error("Cannot open ${target} for writing.")
+					IOTools.copyStream(source, out)
+					ManageSpaceActivity.LOG.debug("Saved DB to {} ({})", target, name)
 				}
 			}
 		}
@@ -181,7 +179,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun restoreDatabase(inject: BaseComponent, file: File) {
+	fun restoreDatabase(inject: BaseComponent, source: Uri) {
 		intent {
 			cleanTask { 
 				withContext(Dispatchers.Main) {
@@ -189,12 +187,13 @@ internal class ManageSpaceViewModel @Inject constructor(
 				}
 				withContext(Dispatchers.IO) {
 					try {
-						Database.get(inject.applicationContext()).helper.restore(file.inputStream())
-						ManageSpaceActivity.LOG.debug("Restored {}", file)
+						val stream = inject.applicationContext().contentResolver.openInputStream(source)
+						Database.get(inject.applicationContext()).helper.restore(stream)
+						ManageSpaceActivity.LOG.debug("Restored {}", source)
 					} catch (ex: CancellationException) {
 						throw ex
 					} catch (ex: Exception) {
-						ManageSpaceActivity.LOG.error("Cannot restore {}", file)
+						ManageSpaceActivity.LOG.error("Cannot restore {}", source)
 					}
 				}
 			}
@@ -260,36 +259,31 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 	
-	fun dumpAllData(inject: BaseComponent) {
+	fun dumpAllData(inject: BaseComponent, target: Uri) {
 		intent {
-			confirmedClean(
-				title = "Export Data",
-				message = "Dump the data folder to a zip file for debugging.",
-				{ it.copy(database = "Vacuuming…") }
-			) {
-				val applicationInfo = inject.applicationContext().applicationInfo
-				var zip: ZipOutputStream? = null
+			cleanTask {
 				try {
-					zip = ZipOutputStream(FileOutputStream(Paths.getExportFile(Paths.getPhoneHome())))
-					val description = StringBuilder()
-					if (applicationInfo.dataDir != null) {
-						val internalDataDir = File(applicationInfo.dataDir)
-						IOTools.zip(zip, internalDataDir, "internal")
-						description.append("internal\tgetApplicationInfo().dataDir: ").append(internalDataDir).append("\n")
+					val contentResolver = inject.applicationContext().contentResolver
+					ZipOutputStream(contentResolver.openOutputStream(target)).use { zip ->
+						val description = StringBuilder()
+						val applicationInfo = inject.applicationContext().applicationInfo
+						if (applicationInfo.dataDir != null) {
+							val internalDataDir = File(applicationInfo.dataDir)
+							IOTools.zip(zip, internalDataDir, "internal")
+							description.append("internal\tgetApplicationInfo().dataDir: ").append(internalDataDir).append("\n")
+						}
+						val externalFilesDir = inject.applicationContext().getExternalFilesDir(null)
+						if (externalFilesDir != null) {
+							val externalDataDir = externalFilesDir.parentFile
+							IOTools.zip(zip, externalDataDir, "external")
+							description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir).append("\n")
+						}
+						IOTools.zip(zip, "descript.ion", IOTools.stream(description.toString()))
+						zip.finish()
 					}
-					val externalFilesDir = inject.applicationContext().getExternalFilesDir(null)
-					if (externalFilesDir != null) {
-						val externalDataDir = externalFilesDir.parentFile
-						IOTools.zip(zip, externalDataDir, "external")
-						description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir).append("\n")
-					}
-					IOTools.zip(zip, "descript.ion", IOTools.stream(description.toString()))
-					zip.finish()
 				} catch (ex: IOException) {
 					// STOPSHIP review error handling
 					ManageSpaceActivity.LOG.error("Cannot save data", ex)
-				} finally {
-					IOTools.ignorantClose(zip)
 				}
 			}
 		}

@@ -53,9 +53,11 @@ public interface Constants {
 			return new File(exportFolder, getExportFileName(Calendar.getInstance()));
 		}
 		public static @NonNull String getExportFileName(Calendar now) {
-			return String.format(Locale.ROOT, "Inventory_%tF_%<tH-%<tM-%<tS.zip", now);
+			return getFileName("Inventory", now, "zip");
 		}
-
+		public static @NonNull String getFileName(String prefix, Calendar now, String extension) {
+			return String.format(Locale.ROOT, "%s_%tF_%<tH-%<tM-%<tS.%s", prefix, now, extension);
+		}
 		@SuppressWarnings("deprecation") // see requestLegacyExternalStorage
 		public static @NonNull File getPhoneHome() {
 			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
