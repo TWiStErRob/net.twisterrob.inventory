@@ -41,24 +41,14 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.dialog.setPositiveButtonListener(viewModel::actionConfirmed)
 		binding.dialog.setNegativeButtonListener(viewModel::actionCancelled)
 		binding.dialog.setCancelListener(viewModel::actionCancelled)
-		binding.contents.storageSearchClear.setOnClickListener {
-			viewModel.rebuildSearch(this)
-		}
-		binding.contents.storageImageCacheClear.setOnClickListener { 
+		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch(this) }
+		binding.contents.storageImageCacheClear.setOnClickListener {
 			viewModel.clearImageCache(Glide.get(applicationContext))
 		}
-		binding.contents.storageDbClear.setOnClickListener {
-			viewModel.emptyDatabase(inject)
-		}
-		binding.contents.storageDbDump.setOnClickListener {
-			viewModel.dumpDatabase(inject)
-		}
-		binding.contents.storageImagesClear.setOnClickListener {
-			viewModel.clearImages(inject)
-		}
-		binding.contents.storageDbTest.setOnClickListener {
-			viewModel.resetTestData(inject)
-		}
+		binding.contents.storageDbClear.setOnClickListener { viewModel.emptyDatabase(inject) }
+		binding.contents.storageDbDump.setOnClickListener { viewModel.dumpDatabase(inject) }
+		binding.contents.storageImagesClear.setOnClickListener { viewModel.clearImages(inject) }
+		binding.contents.storageDbTest.setOnClickListener { viewModel.resetTestData(inject) }
 		binding.contents.storageDbRestore.setOnClickListener { v ->
 			val dumpFile = File(Paths.getPhoneHome(), "db.sqlite")
 			val defaultPath: String = dumpFile.absolutePath
@@ -75,9 +65,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 				.setMessage("Please enter the absolute path of the .sqlite file to restore!")
 				.show()
 		}
-		binding.contents.storageDbVacuum.setOnClickListener {
-			viewModel.vacuumDatabase(inject)
-		}
+		binding.contents.storageDbVacuum.setOnClickListener { viewModel.vacuumDatabase(inject) }
 		binding.contents.storageDbVacuumIncremental.setOnClickListener {
 			DialogTools
 				.pickNumber(this, 10, 0, Int.MAX_VALUE, object : PopupCallbacks<Int> {
@@ -94,12 +82,8 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 				.setMessage("How many megabytes do you want to vacuum?")
 				.show()
 		}
-		binding.contents.storageAllClear.setOnClickListener {
-			viewModel.clearData(inject)
-		}
-		binding.contents.storageAllDump.setOnClickListener {
-			viewModel.dumpAllData(inject)
-		}
+		binding.contents.storageAllClear.setOnClickListener { viewModel.clearData(inject) }
+		binding.contents.storageAllDump.setOnClickListener { viewModel.dumpAllData(inject) }
 		ViewTools.displayedIf(binding.contents.storageAll, inject.buildInfo().isDebug)
 		viewModel.observe(this, state = ::updateUi, sideEffect = effectHandler::handleEffect)
 	}
