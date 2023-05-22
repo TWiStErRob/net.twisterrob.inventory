@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
@@ -26,6 +25,7 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.MainActivity;
+import net.twisterrob.inventory.android.content.CreateOpenableDocument;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Category;
@@ -44,7 +44,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 	}
 
 	private final @NonNull ActivityResultLauncher<String> saveAs = registerForActivityResult(
-			new ActivityResultContracts.CreateDocument("text/html"),
+			new CreateOpenableDocument("text/html"),
 			new ActivityResultCallback<Uri>() {
 				@Override public void onActivityResult(@Nullable Uri result) {
 					if (result != null) {

@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
-import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -16,6 +14,8 @@ import net.twisterrob.android.utils.tools.ViewTools
 import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.Constants.Paths.getFileName
 import net.twisterrob.inventory.android.activity.BaseActivity
+import net.twisterrob.inventory.android.content.CreateOpenableDocument
+import net.twisterrob.inventory.android.content.OpenOpenableDocument
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import net.twisterrob.inventory.android.view.RecyclerViewController
 import org.orbitmvi.orbit.viewmodel.observe
@@ -31,34 +31,19 @@ class ManageSpaceActivity : BaseActivity() {
 	@Inject internal lateinit var effectHandler: ManageSpaceEffectHandler
 
 	private val dumpAll = registerForActivityResult<String, Uri>(
-		object : CreateDocument(MIME_TYPE_ZIP) {
-			override fun createIntent(context: Context, input: String): Intent =
-				super
-					.createIntent(context, input)
-					.addCategory(Intent.CATEGORY_OPENABLE)
-		}
+		CreateOpenableDocument(MIME_TYPE_ZIP)
 	) { result ->
 		result?.let { viewModel.dumpAllData(inject, it) }
 	}
 
 	private val dumpDB = registerForActivityResult<String, Uri>(
-		object : CreateDocument(MIME_TYPE_SQLITE) {
-			override fun createIntent(context: Context, input: String): Intent =
-				super
-					.createIntent(context, input)
-					.addCategory(Intent.CATEGORY_OPENABLE)
-		}
+		CreateOpenableDocument(MIME_TYPE_SQLITE)
 	) { result ->
 		result?.let { viewModel.dumpDatabase(inject, it) }
 	}
 
 	private val restoreDB = registerForActivityResult<Array<String>, Uri>(
-		object : OpenDocument() {
-			override fun createIntent(context: Context, input: Array<String>): Intent =
-				super
-					.createIntent(context, input)
-					.addCategory(Intent.CATEGORY_OPENABLE)
-		}
+		OpenOpenableDocument()
 	) { result ->
 		result?.let { viewModel.restoreDatabase(inject, it) }
 	}
