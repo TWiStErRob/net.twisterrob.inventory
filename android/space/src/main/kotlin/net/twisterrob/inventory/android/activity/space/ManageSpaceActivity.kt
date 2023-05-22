@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import net.twisterrob.android.utils.tools.DatabaseTools
@@ -56,18 +57,13 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		setIcon(ContextCompat.getDrawable(this, applicationInfo.icon))
 		supportActionBar.setDisplayHomeAsUpEnabled(false)
 		RecyclerViewController.initializeProgress(binding.refresher)
-		binding.refresher.setOnRefreshListener { viewModel.loadSizes() }
-		findViewById<View>(R.id.storage_search_clear).setOnClickListener {
-			ConfirmedCleanAction(
-				"Re-build Search",
-				"Continuing will re-build the search index, it may take a while.",
-				object : CleanTask() {
-					override fun doClean() {
-						Database.get(applicationContext).rebuildSearch()
-					}
-				}
-			).show(supportFragmentManager, null)
+		binding.refresher.setOnRefreshListener(viewModel::loadSizes)
+		binding.contents.storageSearchClear.setOnClickListener {
+			viewModel.rebuildSearch(this)
 		}
+		binding.dialog.setPositiveButtonListener { viewModel.dialogConfirmed() }
+		binding.dialog.setNegativeButtonListener { viewModel.dialogCancelled() }
+		binding.dialog.setCancelListener { viewModel.dialogCancelled() }
 		findViewById<View>(R.id.storage_imageCache_clear).setOnClickListener {
 			ConfirmedCleanAction(
 				"Clear Image Cache",
@@ -253,6 +249,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.contents.storageDbFreelistSize.text = state.sizes?.freelist
 		binding.contents.storageSearchSize.text = state.sizes?.searchIndex
 		binding.contents.storageAllSize.text = state.sizes?.allData
+		binding.dialog.isVisible = state.dialog != null
 	}
 
 	override fun taskDone() {
@@ -289,7 +286,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 
 	override fun onResume() {
 		super.onResume()
-		viewModel.loadSizes()
+		viewModel.screenVisible()
 	}
 
 	companion object {

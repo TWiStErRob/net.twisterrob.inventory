@@ -1,20 +1,26 @@
 package net.twisterrob.inventory.android.activity.space
 
+import android.app.Activity
 import android.content.Context
 import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.text.format.Formatter
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.android.utils.tools.TextTools
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
+import net.twisterrob.inventory.android.activity.space.ManageSpaceState.DialogState
+import net.twisterrob.inventory.android.activity.space.ManageSpaceState.DialogState.DialogResult.CANCELLED
+import net.twisterrob.inventory.android.activity.space.ManageSpaceState.DialogState.DialogResult.CONFIRMED
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.SizesState
 import net.twisterrob.inventory.android.components.ErrorMapper
 import net.twisterrob.inventory.android.content.Database
@@ -34,8 +40,31 @@ internal class ManageSpaceViewModel @Inject constructor(
 	initialState = ManageSpaceState(
 		isLoading = false,
 		sizes = null,
+		dialog = null,
 	)
 ) {
+	private val confirmedEvents = Channel<DialogState.DialogResult>()
+
+	fun dialogConfirmed() {
+		intent {
+			confirmedEvents.send(DialogState.DialogResult.CONFIRMED)
+		}
+	}
+
+	fun dialogCancelled() {
+		intent {
+			confirmedEvents.send(DialogState.DialogResult.CANCELLED)
+		}
+	}
+
+	fun screenVisible() {
+		intent {
+			if (state.dialog == null) {
+				loadSizes()
+			}
+		}
+	}
+
 	fun loadSizes() {
 		intent {
 			reduce {
@@ -57,11 +86,42 @@ internal class ManageSpaceViewModel @Inject constructor(
 			}
 		}
 	}
+
+	fun rebuildSearch(activity: Activity) {
+		intent {
+			reduce {
+				state.copy(
+					dialog = DialogState(
+						title = "Rebuild search index…",
+						message = "Continuing will re-build the search index, it may take a while.",
+					),
+				)
+			}
+			val confirmResult = confirmedEvents.receive()
+			reduce {
+				state.copy(
+					dialog = null,
+				)
+			}
+			when (confirmResult) {
+				CONFIRMED -> {
+					// STOPSHIP CleanTask.killProcessesAround(activity)
+					Database.get(activity.applicationContext).rebuildSearch()
+					// STOPSHIP CleanTask.killProcessesAround(activity)
+					loadSizes()
+				}
+				CANCELLED -> {
+					// do nothing
+				}
+			}
+		}
+	}
 }
 
 internal data class ManageSpaceState(
 	val isLoading: Boolean,
 	val sizes: SizesState?,
+	val dialog: DialogState?,
 ) {
 
 	internal data class SizesState(
@@ -72,6 +132,16 @@ internal data class ManageSpaceState(
 		val allData: CharSequence,
 		val errors: CharSequence?,
 	)
+
+	internal data class DialogState(
+		val title: CharSequence,
+		val message: CharSequence,
+	) {
+		enum class DialogResult {
+			CONFIRMED,
+			CANCELLED,
+		}
+	}
 }
 
 internal sealed class ManageSpaceEffect {

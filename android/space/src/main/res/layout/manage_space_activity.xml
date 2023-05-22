@@ -13,4 +13,10 @@
 		layout="@layout/manage_space_activity_contents"
 		/>
 
+	<net.twisterrob.inventory.android.activity.space.DialogShowingView
+		android:id="@+id/dialog"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		/>
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

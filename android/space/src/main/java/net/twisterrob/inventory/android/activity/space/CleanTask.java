@@ -43,7 +43,7 @@ abstract class CleanTask extends SimpleSafeAsyncTask<Activity, Void, Void> imple
 		callbacks.taskDone();
 	}
 
-	private static void killProcessesAround(@NonNull Activity activity) {
+	static void killProcessesAround(@NonNull Activity activity) {
 		ActivityManager am = (ActivityManager)activity.getSystemService(Context.ACTIVITY_SERVICE);
 		String myProcessPrefix = activity.getApplicationInfo().processName;
 		String myProcessName = PackageManagerTools.getActivityInfo(activity, 0).processName;
