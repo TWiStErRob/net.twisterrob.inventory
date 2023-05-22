@@ -63,11 +63,11 @@ class DialogShowingView @JvmOverloads constructor(
 	}
 
 	fun setPositiveButtonListener(listener: () -> Unit) {
-		builder.setPositiveButton("OK") { _, _ -> listener() }
+		builder.setPositiveButton(android.R.string.ok) { _, _ -> listener() }
 	}
 
 	fun setNegativeButtonListener(listener: () -> Unit) {
-		builder.setNegativeButton("Cancel") { _, _ -> listener() }
+		builder.setNegativeButton(android.R.string.cancel) { _, _ -> listener() }
 	}
 
 	fun setCancelListener(listener: () -> Unit) {

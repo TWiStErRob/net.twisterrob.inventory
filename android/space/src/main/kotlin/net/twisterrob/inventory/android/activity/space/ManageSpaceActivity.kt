@@ -1,13 +1,9 @@
 package net.twisterrob.inventory.android.activity.space
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -34,10 +30,8 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -69,21 +63,8 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.contents.storageImageCacheClear.setOnClickListener { 
 			viewModel.clearImageCache(Glide.get(applicationContext))
 		}
-		findViewById<View>(R.id.storage_db_clear).setOnClickListener {
-			ConfirmedCleanAction(
-				"Empty Database",
-				"All of your belongings will be permanently deleted.",
-				object : CleanTask() {
-					override fun doClean() {
-						val helper = Database.get(applicationContext).helper
-						helper.onDestroy(helper.writableDatabase)
-						helper.onCreate(helper.writableDatabase)
-						helper.close()
-						inject.prefs().setString(R.string.pref_currentLanguage, null)
-						inject.prefs().setBoolean(R.string.pref_showWelcome, true)
-					}
-				}
-			).show(supportFragmentManager, null)
+		binding.contents.storageDbClear.setOnClickListener {
+			viewModel.emptyDatabase(inject)
 		}
 		findViewById<View>(R.id.storage_db_dump).setOnClickListener {
 			NoProgressTaskExecutor.create(object : CleanTask() {
@@ -97,27 +78,11 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 				}
 			}).show(supportFragmentManager, "task")
 		}
-		findViewById<View>(R.id.storage_images_clear).setOnClickListener {
-			ConfirmedCleanAction(
-				"Clear Images",
-				"Images of all your belongings will be permanently deleted, all other data is kept.",
-				object : CleanTask() {
-					override fun doClean() {
-						Database.get(applicationContext).clearImages()
-					}
-				}
-			).show(supportFragmentManager, null)
+		binding.contents.storageImagesClear.setOnClickListener {
+			viewModel.clearImages(inject)
 		}
-		findViewById<View>(R.id.storage_db_test).setOnClickListener {
-			ConfirmedCleanAction(
-				"Reset to Test Data",
-				"All of your belongings will be permanently deleted. Some test data will be set up.",
-				object : CleanTask() {
-					override fun doClean() {
-						Database.get(applicationContext).resetToTest()
-					}
-				}
-			).show(supportFragmentManager, null)
+		binding.contents.storageDbTest.setOnClickListener {
+			viewModel.resetTestData(inject)
 		}
 		findViewById<View>(R.id.storage_db_restore).setOnClickListener { v ->
 			val defaultPath: String = dumpFile.absolutePath
@@ -154,16 +119,8 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 				.setMessage("Please enter the absolute path of the .sqlite file to restore!")
 				.show()
 		}
-		findViewById<View>(R.id.storage_db_vacuum).setOnClickListener {
-			ConfirmedCleanAction(
-				"Vacuum the whole Database",
-				"May take a while depending on database size, also requires at least the size of the database as free space.",
-				object : CleanTask() {
-					override fun doClean() {
-						Database.get(applicationContext).writableDatabase.execSQL("VACUUM;")
-					}
-				}
-			).show(supportFragmentManager, null)
+		binding.contents.storageDbVacuum.setOnClickListener {
+			viewModel.vacuumDatabase(inject)
 		}
 		findViewById<View>(R.id.storage_db_vacuum_incremental).setOnClickListener { v ->
 			@Suppress("MagicNumber")
@@ -189,43 +146,13 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 				.setMessage("How many bytes do you want to vacuum?")
 				.show()
 		}
-		findViewById<View>(R.id.storage_all_clear).setOnClickListener {
-			ConfirmedCleanAction(
-				"Clear Data",
-				"All of your belongings and user preferences will be permanently deleted. "
-					+ "Any backups will be kept, even after you uninstall the app.",
-				object : CleanTask() {
-					@TargetApi(VERSION_CODES.KITKAT)
-					override fun doClean() {
-						if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
-							(getSystemService(ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
-						} else {
-							// Best effort: clear prefs, db and Glide cache; CONSIDER deltree getFilesDir()
-							inject.prefs().edit().clear().apply()
-							Glide.get(applicationContext).clearDiskCache()
-							val db = Database.get(applicationContext)
-							val dbFile = db.file
-							db.helper.close()
-							if (dbFile.exists() && !dbFile.delete()) {
-								inject.toaster().toast("Cannot delete database file: ${dbFile}")
-							}
-						}
-					}
-				}
-			).show(supportFragmentManager, null)
+		binding.contents.storageAllClear.setOnClickListener {
+			viewModel.clearData(inject)
 		}
-		findViewById<View>(R.id.storage_all_dump).setOnClickListener {
-			ConfirmedCleanAction(
-				"Export Data",
-				"Dump the data folder to a zip file for debugging.",
-				object : CleanTask() {
-					override fun doClean() {
-						zipAllData()
-					}
-				}
-			).show(supportFragmentManager, null)
+		binding.contents.storageAllDump.setOnClickListener {
+			viewModel.dumpAllData(inject)
 		}
-		ViewTools.displayedIf(findViewById(R.id.storage_all), inject.buildInfo().isDebug)
+		ViewTools.displayedIf(binding.contents.storageAll, inject.buildInfo().isDebug)
 		viewModel.observe(this, state = ::updateUi, sideEffect = effectHandler::handleEffect)
 	}
 
@@ -247,38 +174,13 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 	private val dumpFile: File
 		get() = File(Paths.getPhoneHome(), "db.sqlite")
 
-	private fun zipAllData() {
-		var zip: ZipOutputStream? = null
-		try {
-			zip = ZipOutputStream(FileOutputStream(Paths.getExportFile(Paths.getPhoneHome())))
-			val description = StringBuilder()
-			if (applicationInfo.dataDir != null) {
-				val internalDataDir = File(applicationInfo.dataDir)
-				IOTools.zip(zip, internalDataDir, "internal")
-				description.append("internal\tgetApplicationInfo().dataDir: ").append(internalDataDir).append("\n")
-			}
-			val externalFilesDir = getExternalFilesDir(null)
-			if (externalFilesDir != null) {
-				val externalDataDir = externalFilesDir.parentFile
-				IOTools.zip(zip, externalDataDir, "external")
-				description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir).append("\n")
-			}
-			IOTools.zip(zip, "descript.ion", IOTools.stream(description.toString()))
-			zip.finish()
-		} catch (ex: IOException) {
-			LOG.error("Cannot save data", ex)
-		} finally {
-			IOTools.ignorantClose(zip)
-		}
-	}
-
 	override fun onResume() {
 		super.onResume()
 		viewModel.screenVisible()
 	}
 
 	companion object {
-		private val LOG = LoggerFactory.getLogger(ManageSpaceActivity::class.java)
+		internal val LOG = LoggerFactory.getLogger(ManageSpaceActivity::class.java)
 
 		@JvmStatic
 		fun launch(context: Context): Intent =

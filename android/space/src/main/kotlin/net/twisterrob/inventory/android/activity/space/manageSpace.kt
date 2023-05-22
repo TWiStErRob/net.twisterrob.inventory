@@ -1,9 +1,13 @@
 package net.twisterrob.inventory.android.activity.space
 
+import android.annotation.TargetApi
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
 import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.text.format.Formatter
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -17,7 +21,10 @@ import kotlinx.coroutines.withContext
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.android.utils.tools.TextTools
+import net.twisterrob.inventory.android.BaseComponent
+import net.twisterrob.inventory.android.Constants.Paths
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
+import net.twisterrob.inventory.android.activity.BaseActivity
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation.Result.CANCELLED
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation.Result.CONFIRMED
@@ -31,6 +38,9 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
@@ -99,6 +109,131 @@ internal class ManageSpaceViewModel @Inject constructor(
 			) {
 				withContext(Dispatchers.Main) { glide.clearMemory() }
 				withContext(Dispatchers.IO) { glide.clearDiskCache() }
+			}
+		}
+	}
+
+	fun emptyDatabase(inject: BaseComponent) {
+		intent {
+			confirmedClean(
+				title = "Empty Database",
+				message = "All of your belongings will be permanently deleted.",
+				{ it.copy(database = "Emptying…") }
+			) {
+				Database.get(inject.applicationContext()).helper.run {
+					@Suppress("ConvertTryFinallyToUseCall") // AutoClosable was added in Q.
+					try {
+						onDestroy(writableDatabase)
+						onCreate(writableDatabase)
+					} finally {
+						close()
+					}
+				}
+				inject.prefs().setString(R.string.pref_currentLanguage, null)
+				inject.prefs().setBoolean(R.string.pref_showWelcome, true)
+			}
+		}
+	}
+
+	fun clearImages(inject: BaseComponent) {
+		intent {
+			confirmedClean(
+				title = "Clear Images",
+				message = "Images of all your belongings will be permanently deleted, all other data is kept.",
+				{ it.copy(database = "Clearing images…") }
+			) {
+				Database.get(inject.applicationContext()).clearImages()
+			}
+		}
+	}
+
+	fun resetTestData(inject: BaseComponent) {
+		intent {
+			confirmedClean(
+				title = "Reset to Test Data",
+				message = "All of your belongings will be permanently deleted. Some test data will be set up.",
+				{ it.copy(database = "Resetting…") }
+			) {
+				Database.get(inject.applicationContext()).resetToTest()
+			}
+		}
+	}
+
+	fun vacuumDatabase(inject: BaseComponent) {
+		intent {
+			confirmedClean(
+				title = "Vacuum the Database",
+				message = "May take a while depending on database size, also requires at least the size of the database as free space.",
+				{ it.copy(database = "Vacuuming…") }
+			) {
+				Database.get(inject.applicationContext()).writableDatabase.execSQL("VACUUM;")
+			}
+		}
+	}
+
+	@TargetApi(VERSION_CODES.KITKAT)
+	fun clearData(inject: BaseComponent) {
+		intent {
+			confirmedClean(
+				title = "Clear Data",
+				message = "All of your belongings and user preferences will be permanently deleted. "
+					+ "Any backups will be kept, even after you uninstall the app.",
+				{ it.copy(
+					database = "Clearing…",
+					imageCache = "Clearing…",
+					freelist = "Clearing…",
+					searchIndex = "Clearing…",
+					allData = "Clearing…",
+				) }
+			) {
+				if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
+					(inject.applicationContext().getSystemService(BaseActivity.ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
+				} else {
+					// Best effort: clear prefs, db and Glide cache; CONSIDER deltree getFilesDir()
+					inject.prefs().edit().clear().apply()
+					Glide.get(inject.applicationContext()).clearDiskCache()
+					val db = Database.get(inject.applicationContext())
+					val dbFile = db.file
+					db.helper.close()
+					if (dbFile.exists() && !dbFile.delete()) {
+						postSideEffect(ManageSpaceEffect.ShowToast("Cannot delete database file: ${dbFile}"))
+					}
+				}
+			}
+		}
+	}
+	
+	fun dumpAllData(inject: BaseComponent) {
+		intent {
+			confirmedClean(
+				title = "Export Data",
+				message = "Dump the data folder to a zip file for debugging.",
+				{ it.copy(database = "Vacuuming…") }
+			) {
+				val applicationInfo = inject.applicationContext().applicationInfo
+				var zip: ZipOutputStream? = null
+				try {
+					zip = ZipOutputStream(FileOutputStream(Paths.getExportFile(Paths.getPhoneHome())))
+					val description = StringBuilder()
+					if (applicationInfo.dataDir != null) {
+						val internalDataDir = File(applicationInfo.dataDir)
+						IOTools.zip(zip, internalDataDir, "internal")
+						description.append("internal\tgetApplicationInfo().dataDir: ").append(internalDataDir).append("\n")
+					}
+					val externalFilesDir = inject.applicationContext().getExternalFilesDir(null)
+					if (externalFilesDir != null) {
+						val externalDataDir = externalFilesDir.parentFile
+						IOTools.zip(zip, externalDataDir, "external")
+						description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir).append("\n")
+					}
+					IOTools.zip(zip, "descript.ion", IOTools.stream(description.toString()))
+					zip.finish()
+				} catch (ex: IOException) {
+					// STOPSHIP review error handling
+					ManageSpaceActivity.LOG.error("Cannot save data", ex)
+				} finally {
+					IOTools.ignorantClose(zip)
+				}
 			}
 		}
 	}

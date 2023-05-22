@@ -235,6 +235,9 @@ public class App extends BaseApp implements BaseComponent.Provider {
 	@Override
 	public BaseComponent getBaseComponent() {
 		return new BaseComponent() {
+			@Override public @NonNull Context applicationContext() {
+				return App.getAppContext();
+			}
 			@Override public @NonNull ResourcePreferences prefs() {
 				return BaseApp.prefs();
 			}
