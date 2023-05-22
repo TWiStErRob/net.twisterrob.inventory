@@ -25,6 +25,7 @@ import net.twisterrob.inventory.android.activity.space.ManageSpaceState.SizesSta
 import net.twisterrob.inventory.android.components.ErrorMapper
 import net.twisterrob.inventory.android.content.Database
 import net.twisterrob.inventory.android.space.R
+import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -89,71 +90,65 @@ internal class ManageSpaceViewModel @Inject constructor(
 
 	fun rebuildSearch(activity: Activity) {
 		intent {
-			reduce {
-				state.copy(
-					confirmation = Confirmation(
-						title = "Rebuild search index…",
-						message = "Continuing will re-build the search index, it may take a while.",
-					),
-				)
-			}
-			val confirmResult = confirmations.receive()
-			reduce {
-				state.copy(
-					confirmation = null,
-				)
-			}
-			when (confirmResult) {
-				CONFIRMED -> {
-					// STOPSHIP CleanTask.killProcessesAround(activity)
-					Database.get(activity.applicationContext).rebuildSearch()
-					// STOPSHIP CleanTask.killProcessesAround(activity)
-					loadSizes()
-				}
-				CANCELLED -> {
-					// do nothing
-				}
+			confirmedClean(
+				title = "Rebuild search index…",
+				message = "Continuing will re-build the search index, it may take a while.",
+				{ it.copy(searchIndex = "Rebuilding…") }
+			) {
+				Database.get(activity.applicationContext).rebuildSearch()
 			}
 		}
 	}
 
 	fun clearImageCache(glide: Glide) {
 		intent {
-			reduce {
-				state.copy(
-					confirmation = Confirmation(
-						title = "Clear Image Cache",
-						message = "You're about to remove all files in the image cache. "
-							+ "There will be no permanent loss. "
-							+ "The cache will be re-filled as required in the future.",
-					),
-				)
+			confirmedClean(
+				title = "Clear Image Cache",
+				message = "You're about to remove all files in the image cache. "
+					+ "There will be no permanent loss. "
+					+ "The cache will be re-filled as required in the future.",
+				{ it.copy(imageCache = "Clearing…") }
+			) {
+				withContext(Dispatchers.Main) { glide.clearMemory() }
+				withContext(Dispatchers.IO) { glide.clearDiskCache() }
 			}
-			when (confirmations.receive()) {
-				CONFIRMED -> {
-					reduce {
-						state.copy(
-							confirmation = null,
-							isLoading = true,
-							sizes = state.sizes?.copy(
-								imageCache = "Clearing…",
-							)
-						)
-					}
-					// STOPSHIP CleanTask.killProcessesAround(activity)
-					withContext(Dispatchers.Main) { glide.clearMemory() }
-					withContext(Dispatchers.IO) { glide.clearDiskCache() }
-					// STOPSHIP CleanTask.killProcessesAround(activity)
-					loadSizes()
-				}
+		}
+	}
 
-				CANCELLED -> {
-					reduce {
-						state.copy(
-							confirmation = null,
-						)
-					}
-					// do nothing
+	private suspend fun SimpleSyntax<ManageSpaceState, ManageSpaceEffect>.confirmedClean(
+		title: CharSequence,
+		message: CharSequence,
+		progress: (SizesState) -> SizesState,
+		action: suspend () -> Unit,
+	) {
+		reduce {
+			state.copy(
+				confirmation = Confirmation(
+					title = title,
+					message = message,
+				),
+			)
+		}
+		when (confirmations.receive()) {
+			CONFIRMED -> {
+				reduce {
+					state.copy(
+						confirmation = null,
+						isLoading = true,
+						sizes = state.sizes?.let(progress),
+					)
+				}
+				// STOPSHIP CleanTask.killProcessesAround(activity)
+				action()
+				// STOPSHIP CleanTask.killProcessesAround(activity)
+				loadSizes()
+			}
+
+			CANCELLED -> {
+				reduce {
+					state.copy(
+						confirmation = null,
+					)
 				}
 			}
 		}
