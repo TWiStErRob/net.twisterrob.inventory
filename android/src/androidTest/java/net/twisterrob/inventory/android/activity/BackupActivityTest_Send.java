@@ -5,22 +5,16 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.*;
 import org.junit.runner.*;
 
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.junit.MatcherAssume.*;
-
-import android.content.Intent;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.*;
 
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
-import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.categories.*;
 
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
-import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
+import static net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupSendChooserActor;
 
 @RunWith(AndroidJUnit4.class)
 @Category({On.Export.class})
@@ -60,9 +54,8 @@ public class BackupActivityTest_Send {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, On.External.class})
 	@Test public void testCancelChooser() throws Exception {
-		assumeThat(new Intent(Intent.ACTION_SEND).setType(InventoryContract.Export.TYPE_BACKUP),
-				canBeResolved(hasSize(greaterThanOrEqualTo(2))));
-		
+		BackupSendChooserActor.assumeFunctional();
+
 		backup
 				.send()
 				.continueToChooser()
@@ -74,10 +67,9 @@ public class BackupActivityTest_Send {
 	// Example: API 28 Google Play device has a "Bluetooth" send target,
 	// but even when cancelling the dialog to "Turn on Bluetooth", it opens the stream anyway.
 	@Ignore("This is going to be flaky by definition, because it's randomly choosing an app with undefined behavior.")
-	@Test public void testCancel() throws Exception {
-		assumeThat(new Intent(Intent.ACTION_SEND).setType(InventoryContract.Export.TYPE_BACKUP),
-				canBeResolved(hasSize(greaterThanOrEqualTo(2))));
-		
+	@Test public void testCancelApp() throws Exception {
+		BackupSendChooserActor.assumeFunctional();
+
 		backup
 				.send()
 				.continueToChooser()

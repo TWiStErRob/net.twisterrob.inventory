@@ -44,6 +44,7 @@ import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.BackupActivity;
+import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupImportActor.BackupImportResultActor;
 import net.twisterrob.java.utils.ObjectTools;
 
@@ -288,6 +289,13 @@ public class BackupActivityActor extends ActivityActor {
 	}
 
 	public static class BackupSendChooserActor {
+		public static void assumeFunctional() {
+			assumeThat(
+					"There aren't enough apps installed to show a chooser for Backup > Send.",
+					new Intent(Intent.ACTION_SEND).setType(InventoryContract.Export.TYPE_BACKUP),
+					canBeResolved(hasSize(greaterThanOrEqualTo(2)))
+			);
+		}
 		public void assertDialogDisplayed() throws UiObjectNotFoundException {
 			if (VERSION_CODES.S <= VERSION.SDK_INT) {
 				// From Android 12, the title of Intent.createChooser is removed.
@@ -334,7 +342,11 @@ public class BackupActivityActor extends ActivityActor {
 		private static final Logger LOG = LoggerFactory.getLogger(DriveBackupActor.class);
 
 		public static void assumeDriveInstalled() {
-			assumeThat(InstrumentationRegistry.getInstrumentation().getContext(), hasPackageInstalled(PACKAGE_GOOGLE_DRIVE));
+			assumeThat(
+					"Google Drive is not installed",
+					InstrumentationRegistry.getInstrumentation().getContext(),
+					hasPackageInstalled(PACKAGE_GOOGLE_DRIVE)
+			);
 		}
 
 		public static void assumeDriveFunctional() throws UiObjectNotFoundException {
@@ -344,13 +356,13 @@ public class BackupActivityActor extends ActivityActor {
 				if (exists(GoogleDriveAutomator.welcomeScreen())) {
 					clickOn(GoogleDriveAutomator.skipWelcome());
 				}
-				assumeThat("Drive not logged in, cannot continue",
+				assumeThat("Google Drive not logged in, cannot continue",
 						getCurrentAppPackageName(), not(PACKAGE_GOOGLE_SIGN_IN));
-				assumeThat("Drive didn't launch properly",
+				assumeThat("Google Drive didn't launch properly",
 						getCurrentAppPackageName(), is(PACKAGE_GOOGLE_DRIVE));
-				assumeTrue("Drive doesn't have a bottom navigation",
+				assumeTrue("Google Drive doesn't have a bottom navigation",
 						exists(GoogleDriveAutomator.bottomNavigation()));
-				assumeTrue("Drive doesn't have a search bar",
+				assumeTrue("Google Drive doesn't have a search bar",
 						exists(GoogleDriveAutomator.searchBar()));
 			} catch (Throwable ex) {
 				// closing logic is duplicated, because it needs to not hide the error in try { ... }
