@@ -1,11 +1,8 @@
 package net.twisterrob.inventory.android.activity.space
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -16,9 +13,6 @@ import net.twisterrob.android.utils.tools.ViewTools
 import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.Constants.Paths
 import net.twisterrob.inventory.android.activity.BaseActivity
-import net.twisterrob.inventory.android.content.Database
-import net.twisterrob.inventory.android.content.db.DatabaseService
-import net.twisterrob.inventory.android.space.R
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import net.twisterrob.inventory.android.view.RecyclerViewController
 import org.orbitmvi.orbit.viewmodel.observe
@@ -27,8 +21,6 @@ import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
-@SuppressLint("StaticFieldLeak") // TODO use coroutines or ViewModel for this activity.
-@Suppress("OVERRIDE_DEPRECATION")
 class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 	private lateinit var binding: ManageSpaceActivityBinding
 	private lateinit var inject: BaseComponent
@@ -67,7 +59,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.contents.storageDbTest.setOnClickListener {
 			viewModel.resetTestData(inject)
 		}
-		findViewById<View>(R.id.storage_db_restore).setOnClickListener { v ->
+		binding.contents.storageDbRestore.setOnClickListener { v ->
 			val dumpFile = File(Paths.getPhoneHome(), "db.sqlite")
 			val defaultPath: String = dumpFile.absolutePath
 			DialogTools
@@ -76,27 +68,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 						if (value == null) {
 							return
 						}
-						NoProgressTaskExecutor.create(object : CleanTask() {
-							override fun onPreExecute() {
-								DatabaseService.clearVacuumAlarm(applicationContext)
-							}
-
-							override fun doClean() {
-								Database.get(applicationContext)
-								        .helper
-								        .restore(FileInputStream(value))
-							}
-
-							override fun onResult(ignore: Void?, activity: Activity) {
-								super.onResult(ignore, activity)
-								LOG.debug("Restored {}", value)
-							}
-
-							override fun onError(ex: Exception, activity: Activity) {
-								super.onError(ex, activity)
-								LOG.error("Cannot restore {}", value)
-							}
-						}).show(supportFragmentManager, "task")
+						viewModel.restoreDatabase(inject, File(value))
 					}
 				})
 				.setTitle("Restore DB")

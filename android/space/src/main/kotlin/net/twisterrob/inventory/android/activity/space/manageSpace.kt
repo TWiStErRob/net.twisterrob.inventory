@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -31,6 +32,7 @@ import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirma
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.SizesState
 import net.twisterrob.inventory.android.components.ErrorMapper
 import net.twisterrob.inventory.android.content.Database
+import net.twisterrob.inventory.android.content.db.DatabaseService
 import net.twisterrob.inventory.android.space.R
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -173,6 +175,26 @@ internal class ManageSpaceViewModel @Inject constructor(
 				{ it.copy(database = "Resetting…") }
 			) {
 				Database.get(inject.applicationContext()).resetToTest()
+			}
+		}
+	}
+
+	fun restoreDatabase(inject: BaseComponent, file: File) {
+		intent {
+			cleanTask { 
+				withContext(Dispatchers.Main) {
+					DatabaseService.clearVacuumAlarm(inject.applicationContext())
+				}
+				withContext(Dispatchers.IO) {
+					try {
+						Database.get(inject.applicationContext()).helper.restore(file.inputStream())
+						ManageSpaceActivity.LOG.debug("Restored {}", file)
+					} catch (ex: CancellationException) {
+						throw ex
+					} catch (ex: Exception) {
+						ManageSpaceActivity.LOG.error("Cannot restore {}", file)
+					}
+				}
 			}
 		}
 	}
