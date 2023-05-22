@@ -116,6 +116,48 @@ internal class ManageSpaceViewModel @Inject constructor(
 			}
 		}
 	}
+
+	fun clearImageCache(glide: Glide) {
+		intent {
+			reduce {
+				state.copy(
+					dialog = DialogState(
+						title = "Clear Image Cache",
+						message = "You're about to remove all files in the image cache. "
+							+ "There will be no permanent loss. "
+							+ "The cache will be re-filled as required in the future.",
+					),
+				)
+			}
+			when (confirmedEvents.receive()) {
+				CONFIRMED -> {
+					reduce {
+						state.copy(
+							dialog = null,
+							isLoading = true,
+							sizes = state.sizes?.copy(
+								imageCache = "Clearing…",
+							)
+						)
+					}
+					// STOPSHIP CleanTask.killProcessesAround(activity)
+					withContext(Dispatchers.Main) { glide.clearMemory() }
+					withContext(Dispatchers.IO) { glide.clearDiskCache() }
+					// STOPSHIP CleanTask.killProcessesAround(activity)
+					loadSizes()
+				}
+
+				CANCELLED -> {
+					reduce {
+						state.copy(
+							dialog = null,
+						)
+					}
+					// do nothing
+				}
+			}
+		}
+	}
 }
 
 internal data class ManageSpaceState(

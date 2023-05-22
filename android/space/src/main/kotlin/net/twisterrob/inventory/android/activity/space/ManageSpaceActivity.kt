@@ -61,26 +61,12 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.contents.storageSearchClear.setOnClickListener {
 			viewModel.rebuildSearch(this)
 		}
+		binding.contents.storageImageCacheClear.setOnClickListener { 
+			viewModel.clearImageCache(Glide.get(applicationContext))
+		}
 		binding.dialog.setPositiveButtonListener { viewModel.dialogConfirmed() }
 		binding.dialog.setNegativeButtonListener { viewModel.dialogCancelled() }
 		binding.dialog.setCancelListener { viewModel.dialogCancelled() }
-		findViewById<View>(R.id.storage_imageCache_clear).setOnClickListener {
-			ConfirmedCleanAction(
-				"Clear Image Cache",
-				"You're about to remove all files in the image cache. "
-					+ "There will be no permanent loss. "
-					+ "The cache will be re-filled as required in the future.",
-				object : CleanTask() {
-					override fun onPreExecute() {
-						Glide.get(applicationContext).clearMemory()
-					}
-
-					override fun doClean() {
-						Glide.get(applicationContext).clearDiskCache()
-					}
-				}
-			).show(supportFragmentManager, null)
-		}
 		findViewById<View>(R.id.storage_db_clear).setOnClickListener {
 			ConfirmedCleanAction(
 				"Empty Database",
