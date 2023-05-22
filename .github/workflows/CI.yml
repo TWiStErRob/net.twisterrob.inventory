@@ -218,6 +218,8 @@ jobs:
           target: ${{ matrix.android-api >= 32 && 'google_apis' || 'default' }}
           arch: ${{ matrix.android-api >= 21 && 'x86_64' || 'x86' }}
           profile: pixel
+          # Ensure that /storage/sdcard exists, without this the stock DocumentsUI will be non-functional.
+          sdcard-path-or-size: 100M
           script: |
             adb devices -l
             ./gradlew --no-daemon --stacktrace :android:connectedCheck
