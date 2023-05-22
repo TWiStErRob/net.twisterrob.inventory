@@ -8,6 +8,7 @@ import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import android.os.Process
 import android.text.format.Formatter
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -21,6 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
+import net.twisterrob.android.utils.tools.PackageManagerTools
 import net.twisterrob.android.utils.tools.TextTools
 import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.Constants.Paths
@@ -344,10 +346,21 @@ internal class ManageSpaceViewModel @Inject constructor(
 
 	private suspend fun cleanTask(action: suspend () -> Unit) {
 		// STOPSHIP NoProgressTaskExecutor.create(object : CleanTask() {
-		// STOPSHIP CleanTask.killProcessesAround(activity)
+		// STOPSHIP killProcessesAround(activity, activity)
 		action()
-		// STOPSHIP CleanTask.killProcessesAround(activity)
+		// STOPSHIP killProcessesAround(activity, activity)
 		loadSizes()
+	}
+}
+
+private fun killProcessesAround(context: Context, activity: Activity) {
+	val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+	val myProcessPrefix = context.applicationInfo.processName
+	val myProcessName = PackageManagerTools.getActivityInfo(activity, 0).processName
+	for (proc in am.runningAppProcesses) {
+		if (proc.processName.startsWith(myProcessPrefix) && proc.processName != myProcessName) {
+			Process.killProcess(proc.pid)
+		}
 	}
 }
 

@@ -21,7 +21,7 @@ import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ManageSpaceActivity : BaseActivity(), TaskEndListener {
+class ManageSpaceActivity : BaseActivity() {
 	private lateinit var binding: ManageSpaceActivityBinding
 	private lateinit var inject: BaseComponent
 	private val viewModel: ManageSpaceViewModel by viewModels()
@@ -97,10 +97,6 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.contents.storageSearchSize.text = state.sizes?.searchIndex
 		binding.contents.storageAllSize.text = state.sizes?.allData
 		state.confirmation?.run { binding.dialog.show(title, message) }
-	}
-
-	override fun taskDone() {
-		viewModel.loadSizes()
 	}
 
 	override fun onResume() {
