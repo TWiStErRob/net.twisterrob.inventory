@@ -53,20 +53,22 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		inject = BaseComponent.get(applicationContext)
+
 		binding = setContentView(ManageSpaceActivityBinding::inflate)
 		setIcon(ContextCompat.getDrawable(this, applicationInfo.icon))
 		supportActionBar.setDisplayHomeAsUpEnabled(false)
 		RecyclerViewController.initializeProgress(binding.refresher)
+
 		binding.refresher.setOnRefreshListener(viewModel::loadSizes)
+		binding.dialog.setPositiveButtonListener(viewModel::actionConfirmed)
+		binding.dialog.setNegativeButtonListener(viewModel::actionCancelled)
+		binding.dialog.setCancelListener(viewModel::actionCancelled)
 		binding.contents.storageSearchClear.setOnClickListener {
 			viewModel.rebuildSearch(this)
 		}
 		binding.contents.storageImageCacheClear.setOnClickListener { 
 			viewModel.clearImageCache(Glide.get(applicationContext))
 		}
-		binding.dialog.setPositiveButtonListener { viewModel.dialogConfirmed() }
-		binding.dialog.setNegativeButtonListener { viewModel.dialogCancelled() }
-		binding.dialog.setCancelListener { viewModel.dialogCancelled() }
 		findViewById<View>(R.id.storage_db_clear).setOnClickListener {
 			ConfirmedCleanAction(
 				"Empty Database",
@@ -235,7 +237,7 @@ class ManageSpaceActivity : BaseActivity(), TaskEndListener {
 		binding.contents.storageDbFreelistSize.text = state.sizes?.freelist
 		binding.contents.storageSearchSize.text = state.sizes?.searchIndex
 		binding.contents.storageAllSize.text = state.sizes?.allData
-		binding.dialog.isVisible = state.dialog != null
+		binding.dialog.isVisible = state.confirmation != null
 	}
 
 	override fun taskDone() {

@@ -18,9 +18,9 @@ import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.android.utils.tools.TextTools
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
-import net.twisterrob.inventory.android.activity.space.ManageSpaceState.DialogState
-import net.twisterrob.inventory.android.activity.space.ManageSpaceState.DialogState.DialogResult.CANCELLED
-import net.twisterrob.inventory.android.activity.space.ManageSpaceState.DialogState.DialogResult.CONFIRMED
+import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation
+import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation.Result.CANCELLED
+import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation.Result.CONFIRMED
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.SizesState
 import net.twisterrob.inventory.android.components.ErrorMapper
 import net.twisterrob.inventory.android.content.Database
@@ -40,26 +40,26 @@ internal class ManageSpaceViewModel @Inject constructor(
 	initialState = ManageSpaceState(
 		isLoading = false,
 		sizes = null,
-		dialog = null,
+		confirmation = null,
 	)
 ) {
-	private val confirmedEvents = Channel<DialogState.DialogResult>()
+	private val confirmations = Channel<Confirmation.Result>()
 
-	fun dialogConfirmed() {
+	fun actionConfirmed() {
 		intent {
-			confirmedEvents.send(DialogState.DialogResult.CONFIRMED)
+			confirmations.send(Confirmation.Result.CONFIRMED)
 		}
 	}
 
-	fun dialogCancelled() {
+	fun actionCancelled() {
 		intent {
-			confirmedEvents.send(DialogState.DialogResult.CANCELLED)
+			confirmations.send(Confirmation.Result.CANCELLED)
 		}
 	}
 
 	fun screenVisible() {
 		intent {
-			if (state.dialog == null) {
+			if (state.confirmation == null) {
 				loadSizes()
 			}
 		}
@@ -91,16 +91,16 @@ internal class ManageSpaceViewModel @Inject constructor(
 		intent {
 			reduce {
 				state.copy(
-					dialog = DialogState(
+					confirmation = Confirmation(
 						title = "Rebuild search index…",
 						message = "Continuing will re-build the search index, it may take a while.",
 					),
 				)
 			}
-			val confirmResult = confirmedEvents.receive()
+			val confirmResult = confirmations.receive()
 			reduce {
 				state.copy(
-					dialog = null,
+					confirmation = null,
 				)
 			}
 			when (confirmResult) {
@@ -121,7 +121,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 		intent {
 			reduce {
 				state.copy(
-					dialog = DialogState(
+					confirmation = Confirmation(
 						title = "Clear Image Cache",
 						message = "You're about to remove all files in the image cache. "
 							+ "There will be no permanent loss. "
@@ -129,11 +129,11 @@ internal class ManageSpaceViewModel @Inject constructor(
 					),
 				)
 			}
-			when (confirmedEvents.receive()) {
+			when (confirmations.receive()) {
 				CONFIRMED -> {
 					reduce {
 						state.copy(
-							dialog = null,
+							confirmation = null,
 							isLoading = true,
 							sizes = state.sizes?.copy(
 								imageCache = "Clearing…",
@@ -150,7 +150,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 				CANCELLED -> {
 					reduce {
 						state.copy(
-							dialog = null,
+							confirmation = null,
 						)
 					}
 					// do nothing
@@ -163,7 +163,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 internal data class ManageSpaceState(
 	val isLoading: Boolean,
 	val sizes: SizesState?,
-	val dialog: DialogState?,
+	val confirmation: Confirmation?,
 ) {
 
 	internal data class SizesState(
@@ -175,11 +175,11 @@ internal data class ManageSpaceState(
 		val errors: CharSequence?,
 	)
 
-	internal data class DialogState(
+	internal data class Confirmation(
 		val title: CharSequence,
 		val message: CharSequence,
 	) {
-		enum class DialogResult {
+		enum class Result {
 			CONFIRMED,
 			CANCELLED,
 		}
