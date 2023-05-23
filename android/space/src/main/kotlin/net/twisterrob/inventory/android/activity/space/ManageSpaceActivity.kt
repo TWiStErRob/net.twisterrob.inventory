@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import net.twisterrob.android.utils.tools.DialogTools
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks
@@ -62,9 +61,9 @@ class ManageSpaceActivity : BaseActivity() {
 		binding.dialog.setPositiveButtonListener(viewModel::actionConfirmed)
 		binding.dialog.setNegativeButtonListener(viewModel::actionCancelled)
 		binding.dialog.setCancelListener(viewModel::actionCancelled)
-		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch(this) }
+		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch(inject) }
 		binding.contents.storageImageCacheClear.setOnClickListener {
-			viewModel.clearImageCache(Glide.get(applicationContext))
+			viewModel.clearImageCache(inject)
 		}
 		binding.contents.storageDbClear.setOnClickListener { viewModel.emptyDatabase(inject) }
 		binding.contents.storageDbDump.setOnClickListener {

@@ -4,11 +4,11 @@
 
 	<application>
 
-		<!-- STOPSHIP restore process attribute -->
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
 			android:label="@string/manage_space_title"
 			android:launchMode="singleInstance"
+			android:process=":managespace"
 			/>
 
 	</application>
