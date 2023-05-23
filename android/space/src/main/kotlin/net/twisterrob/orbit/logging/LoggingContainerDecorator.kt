@@ -14,7 +14,8 @@ class LoggingContainerDecorator<STATE : Any, SIDE_EFFECT : Any>(
 ) : ContainerDecorator<STATE, SIDE_EFFECT> {
 
 	interface OrbitEvents<STATE : Any, SIDE_EFFECT : Any> {
-		fun intent(transformer: suspend SimpleSyntax<STATE, SIDE_EFFECT>.() -> Unit)
+		fun intentStarted(transformer: suspend SimpleSyntax<STATE, SIDE_EFFECT>.() -> Unit)
+		fun intentFinished(transformer: suspend SimpleSyntax<STATE, SIDE_EFFECT>.() -> Unit)
 
 		fun sideEffect(sideEffect: SIDE_EFFECT)
 
@@ -23,15 +24,17 @@ class LoggingContainerDecorator<STATE : Any, SIDE_EFFECT : Any>(
 
 	override suspend fun orbit(orbitIntent: suspend ContainerContext<STATE, SIDE_EFFECT>.() -> Unit) {
 		super.orbit {
-			events.intent(orbitIntent.captured("transformer"))
+			events.intentStarted(orbitIntent.captured("transformer"))
 			this.logged().orbitIntent()
+			events.intentFinished(orbitIntent.captured("transformer"))
 		}
 	}
 
 	override suspend fun inlineOrbit(orbitIntent: suspend ContainerContext<STATE, SIDE_EFFECT>.() -> Unit) {
 		super.inlineOrbit {
-			events.intent(orbitIntent.captured("transformer"))
+			events.intentStarted(orbitIntent.captured("transformer"))
 			this.logged().orbitIntent()
+			events.intentFinished(orbitIntent.captured("transformer"))
 		}
 	}
 

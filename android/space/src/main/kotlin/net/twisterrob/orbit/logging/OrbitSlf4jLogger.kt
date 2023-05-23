@@ -10,10 +10,16 @@ class OrbitSlf4jLogger<STATE : Any, SIDE_EFFECT : Any>(
 	private val log: Logger
 ) : OrbitEvents<STATE, SIDE_EFFECT> {
 
-	override fun intent(
+	override fun intentStarted(
 		transformer: suspend SimpleSyntax<STATE, SIDE_EFFECT>.() -> Unit
 	) {
 		log.trace("Starting intent: {} with {}", transformer.lambdaName(), transformer.captures())
+	}
+
+	override fun intentFinished(
+		transformer: suspend SimpleSyntax<STATE, SIDE_EFFECT>.() -> Unit
+	) {
+		log.trace("Finished intent: {} with {}", transformer.lambdaName(), transformer.captures())
 	}
 
 	override fun reduce(
