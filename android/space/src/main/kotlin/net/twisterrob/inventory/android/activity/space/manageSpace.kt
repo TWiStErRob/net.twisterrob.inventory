@@ -353,6 +353,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 		// STOPSHIP NoProgressTaskExecutor.create(object : CleanTask() {
 		killProcessesAroundManageSpaceActivity(context)
 		try {
+			delay(1000) // STOPSHIP remove this
 			action()
 		} catch (ex: CancellationException) {
 			throw ex
