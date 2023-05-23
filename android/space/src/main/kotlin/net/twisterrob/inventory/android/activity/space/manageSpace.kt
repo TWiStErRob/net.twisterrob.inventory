@@ -1,21 +1,13 @@
 package net.twisterrob.inventory.android.activity.space
 
 import android.annotation.TargetApi
-import android.app.ActivityManager
-import android.content.ComponentName
 import android.content.Context
-import android.content.pm.ActivityInfo
 import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
-import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import android.os.Process
 import android.text.format.Formatter
 import android.widget.Toast
-import androidx.core.content.getSystemService
-import androidx.documentfile.provider.DocumentFile
-import com.bumptech.glide.Glide
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -26,9 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
-import net.twisterrob.android.utils.tools.PackageManagerTools
 import net.twisterrob.android.utils.tools.TextTools
-import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation.Result.CANCELLED
@@ -36,7 +26,6 @@ import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirma
 import net.twisterrob.inventory.android.activity.space.ManageSpaceState.SizesState
 import net.twisterrob.inventory.android.components.ErrorMapper
 import net.twisterrob.inventory.android.content.Database
-import net.twisterrob.inventory.android.content.db.DatabaseService
 import net.twisterrob.inventory.android.space.R
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -44,14 +33,13 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ManageSpaceViewModel @Inject constructor(
 	private val useCase: GetSizesUseCase,
 	private val mapper: SizesDomainToStateMapper,
-	private val inject: BaseComponent,
+	private val manager: InventorySpaceManager,
 ) : BaseViewModel<ManageSpaceState, ManageSpaceEffect>(
 	initialState = ManageSpaceState(
 		isLoading = false,
@@ -118,11 +106,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 					+ "There will be no permanent loss. "
 					+ "The cache will be re-filled as required in the future.",
 				progress = { it.copy(imageCache = "Clearing… " + it.imageCache) },
-			) {
-				val glide = Glide.get(inject.applicationContext())
-				withContext(Dispatchers.Main) { glide.clearMemory() }
-				withContext(Dispatchers.IO) { glide.clearDiskCache() }
-			}
+				action = manager::clearImageCache,
+			)
 		}
 	}
 
@@ -132,36 +117,17 @@ internal class ManageSpaceViewModel @Inject constructor(
 				title = "Empty Database",
 				message = "All of your belongings will be permanently deleted.",
 				progress = { it.copy(database = "Emptying… " + it.database) },
-			) {
-				Database.get(inject.applicationContext()).helper.run {
-					@Suppress("ConvertTryFinallyToUseCall") // AutoClosable was added in Q.
-					try {
-						onDestroy(writableDatabase)
-						onCreate(writableDatabase)
-					} finally {
-						close()
-					}
-				}
-				inject.prefs().setString(R.string.pref_currentLanguage, null)
-				inject.prefs().setBoolean(R.string.pref_showWelcome, true)
-			}
+				action = manager::emptyDatabase,
+			)
 		}
 	}
 
 	fun dumpDatabase(target: Uri) {
 		intent {
-			cleanTask(
+			unconfirmedClean(
 				progress = { it.copy(database = "Dumping… " + it.database) },
 			) {
-				withContext(Dispatchers.IO) {
-					val name = DocumentFile.fromSingleUri(inject.applicationContext(), target)?.name
-					LOG.debug("Saving DB to {} ({})", target, name)
-					val source = Database.get(inject.applicationContext()).file.inputStream()
-					val out = inject.applicationContext().contentResolver.openOutputStream(target)
-						?: error("Cannot open ${target} for writing.")
-					IOTools.copyStream(source, out)
-					LOG.debug("Saved DB to {} ({})", target, name)
-				}
+				manager.dumpDatabase(target)
 			}
 		}
 	}
@@ -172,9 +138,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 				title = "Clear Images",
 				message = "Images of all your belongings will be permanently deleted, all other data is kept.",
 				progress = { it.copy(database = "Clearing images…") },
-			) {
-				Database.get(inject.applicationContext()).clearImages()
-			}
+				action = manager::clearImages,
+			)
 		}
 	}
 
@@ -184,31 +149,17 @@ internal class ManageSpaceViewModel @Inject constructor(
 				title = "Reset to Test Data",
 				message = "All of your belongings will be permanently deleted. Some test data will be set up.",
 				progress = { it.copy(database = "Resetting…") },
-			) {
-				Database.get(inject.applicationContext()).resetToTest()
-			}
+				action = manager::resetToTestData,
+			)
 		}
 	}
 
 	fun restoreDatabase(source: Uri) {
 		intent {
-			cleanTask(
+			unconfirmedClean(
 				progress = { it.copy(database = "Restoring…") },
 			) {
-				withContext(Dispatchers.Main) {
-					DatabaseService.clearVacuumAlarm(inject.applicationContext())
-				}
-				withContext(Dispatchers.IO) {
-					try {
-						val stream = inject.applicationContext().contentResolver.openInputStream(source)
-						Database.get(inject.applicationContext()).helper.restore(stream)
-						LOG.debug("Restored {}", source)
-					} catch (ex: CancellationException) {
-						throw ex
-					} catch (ex: Exception) {
-						LOG.error("Cannot restore {}", source)
-					}
-				}
+				manager.restoreDatabase(source)
 			}
 		}
 	}
@@ -220,22 +171,17 @@ internal class ManageSpaceViewModel @Inject constructor(
 				message = "May take a while depending on database size, "
 					+ "also requires at least the size of the database as free space.",
 				progress = { it.copy(database = "Vacuuming…") },
-			) {
-				Database.get(inject.applicationContext()).writableDatabase.execSQL("VACUUM;")
-			}
+				action = manager::vacuumDatabase,
+			)
 		}
 	}
 
 	fun vacuumDatabaseIncremental(vacuumBytes: Int) {
 		intent {
-			cleanTask(
+			unconfirmedClean(
 				progress = { it.copy(database = "Vacuuming…") },
 			) {
-				val db = Database.get(inject.applicationContext()).writableDatabase
-				val pagesToFree = vacuumBytes / db.pageSize
-				val vacuum =
-					db.rawQuery("PRAGMA incremental_vacuum($pagesToFree);", DatabaseTools.NO_ARGS)
-				DatabaseTools.consume(vacuum)
+				manager.vacuumDatabaseIncremental(vacuumBytes)
 			}
 		}
 	}
@@ -256,28 +202,14 @@ internal class ManageSpaceViewModel @Inject constructor(
 						allData = "Clearing…",
 					)
 				},
-			) {
-				if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
-					val am = inject.applicationContext().getSystemService<ActivityManager>()!!
-					am.clearApplicationUserData()
-				} else {
-					// Best effort: clear prefs, db and Glide cache; CONSIDER deltree getFilesDir()
-					inject.prefs().edit().clear().apply()
-					Glide.get(inject.applicationContext()).clearDiskCache()
-					val db = Database.get(inject.applicationContext())
-					val dbFile = db.file
-					db.helper.close()
-					if (dbFile.exists() && !dbFile.delete()) {
-						postSideEffect(ManageSpaceEffect.ShowToast("Cannot delete database file: ${dbFile}"))
-					}
-				}
-			}
+				action = manager::clearData,
+			)
 		}
 	}
 
 	fun dumpAllData(target: Uri) {
 		intent {
-			cleanTask(
+			unconfirmedClean(
 				progress = {
 					it.copy(
 						database = "Dumping…",
@@ -288,24 +220,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 					)
 				},
 			) {
-				val contentResolver = inject.applicationContext().contentResolver
-				ZipOutputStream(contentResolver.openOutputStream(target)).use { zip ->
-					val description = StringBuilder()
-					val applicationInfo = inject.applicationContext().applicationInfo
-					if (applicationInfo.dataDir != null) {
-						val internalDataDir = File(applicationInfo.dataDir)
-						IOTools.zip(zip, internalDataDir, "internal")
-						description.append("internal\tgetApplicationInfo().dataDir: ").append(internalDataDir).append("\n")
-					}
-					val externalFilesDir = inject.applicationContext().getExternalFilesDir(null)
-					if (externalFilesDir != null) {
-						val externalDataDir = externalFilesDir.parentFile
-						IOTools.zip(zip, externalDataDir, "external")
-						description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir).append("\n")
-					}
-					IOTools.zip(zip, "descript.ion", IOTools.stream(description.toString()))
-					zip.finish()
-				}
+				manager.dumpAllData(target)
 			}
 		}
 	}
@@ -315,10 +230,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 			confirmedClean(
 				title = "Rebuild search index…",
 				message = "Continuing will re-build the search index, it may take a while.",
-				{ it.copy(searchIndex = "Rebuilding… " + it.searchIndex) }
-			) {
-				Database.get(inject.applicationContext()).rebuildSearch()
-			}
+				progress = { it.copy(searchIndex = "Rebuilding… " + it.searchIndex) },
+				action = manager::rebuildSearch,
+			)
 		}
 	}
 
@@ -338,7 +252,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 		when (confirmations.receive()) {
 			CONFIRMED -> {
-				cleanTask(progress, action)
+				unconfirmedClean(progress, action)
 			}
 			CANCELLED -> {
 				reduce {
@@ -350,7 +264,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	private suspend fun SimpleSyntax<ManageSpaceState, ManageSpaceEffect>.cleanTask(
+	private suspend fun SimpleSyntax<ManageSpaceState, ManageSpaceEffect>.unconfirmedClean(
 		progress: (SizesState) -> SizesState,
 		action: suspend () -> Unit,
 	) {
@@ -363,7 +277,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			)
 		}
 		delay(1000) // STOPSHIP remove this
-		killProcessesAroundManageSpaceActivity(inject.applicationContext())
+		manager.killProcessesAroundManageSpaceActivity()
 		try {
 			action()
 		} catch (ex: CancellationException) {
@@ -372,7 +286,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			LOG.error("cleanTask failed", ex)
 			postSideEffect(ManageSpaceEffect.ShowToast(ex.toString()))
 		}
-		killProcessesAroundManageSpaceActivity(inject.applicationContext())
+		manager.killProcessesAroundManageSpaceActivity()
 		loadSizes(force = true)
 	}
 
@@ -380,25 +294,6 @@ internal class ManageSpaceViewModel @Inject constructor(
 		private val LOG = LoggerFactory.getLogger(ManageSpaceViewModel::class.java)
 	}
 }
-
-private fun killProcessesAroundManageSpaceActivity(context: Context) {
-	val myProcessName = context.manageSpaceActivity.processName
-	val myProcessPrefix = context.applicationInfo.processName
-	val am = context.getSystemService<ActivityManager>()!! 
-	for (proc in am.runningAppProcesses) {
-		if (proc.processName.startsWith(myProcessPrefix) && proc.processName != myProcessName) {
-			Process.killProcess(proc.pid)
-		}
-	}
-}
-
-private val Context.manageSpaceActivity: ActivityInfo
-	get() {
-		val pm = packageManager
-		val applicationInfo = applicationInfo
-		val activity = ComponentName(packageName, applicationInfo.manageSpaceActivityName)
-		return PackageManagerTools.getActivityInfo(pm, activity, 0)
-	}
 
 internal data class ManageSpaceState(
 	val isLoading: Boolean,
