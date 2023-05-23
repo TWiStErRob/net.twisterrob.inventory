@@ -203,7 +203,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 			confirmedClean(
 				title = "Clear Data",
 				message = "All of your belongings and user preferences will be permanently deleted. "
-					+ "Any backups will be kept, even after you uninstall the app.",
+					+ "Any backups will be kept, even after you uninstall the app."
+					+ "\n\nThe app will be closed after this operation.",
 				progress = {
 					it.copy(
 						database = "Clearing…",
