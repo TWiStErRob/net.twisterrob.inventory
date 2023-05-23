@@ -65,6 +65,10 @@ class LoggingContainerDecorator<STATE : Any, SIDE_EFFECT : Any>(
 /**
  * The framework's reducer and intent declarations are lambdas inside Orbit's functions.
  * We need to access the captured local variables to get our original reducer and intent lambdas.
+ *
+ * @see org.orbitmvi.orbit.syntax.simple.intent
+ * @see org.orbitmvi.orbit.syntax.simple.blockingIntent
+ * @see org.orbitmvi.orbit.syntax.simple.reduce
  */
 private fun <T : Function<*>> Function<*>.captured(localName: String): T =
 	this::class

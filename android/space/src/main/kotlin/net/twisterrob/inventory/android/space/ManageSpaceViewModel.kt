@@ -6,7 +6,6 @@ import android.os.Build.VERSION_CODES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.Constants.Paths
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.ConfirmationUiState
@@ -295,12 +294,10 @@ internal class ManageSpaceViewModel @Inject constructor(
 		reduce {
 			state.copy(
 				confirmation = null,
-				// STOPSHIP NoProgressTaskExecutor.create(object : CleanTask() {
 				isLoading = true,
 				sizes = state.sizes?.let(progress),
 			)
 		}
-		delay(1000) // STOPSHIP remove this
 		manager.killProcessesAroundManageSpaceActivity()
 		try {
 			action()

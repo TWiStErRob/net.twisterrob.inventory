@@ -5,7 +5,6 @@ import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
@@ -21,7 +20,6 @@ class GetSizesUseCase @Inject constructor(
 ) : UseCase<Unit, SizesDomain> {
 
 	override suspend fun execute(input: Unit): SizesDomain = withContext(Dispatchers.IO) {
-		delay(1000) // STOPSHIP remove this
 		val database = Database.get(context)
 		SizesDomain(
 			imageCache = safe {

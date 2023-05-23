@@ -172,7 +172,10 @@
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/unit"
 			card:contentPadding="@dimen/unit"
+			tools:visibility="@integer/visible_in_test"
 			>
+			<!-- android:visibility is set from code, because this section is visible
+			     in debuggable builds: this might include release variants with debuggable flag. -->
 			<LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"

@@ -159,8 +159,8 @@ class InventorySpaceManager @Inject constructor(
 
 private val Context.manageSpaceActivity: ActivityInfo
 	get() {
-		val pm = packageManager
-		val applicationInfo = applicationInfo
-		val activity = ComponentName(packageName, applicationInfo.manageSpaceActivityName)
+		val pm = this.packageManager
+		val applicationInfo = this.applicationInfo
+		val activity = ComponentName(this.packageName, applicationInfo.manageSpaceActivityName)
 		return PackageManagerTools.getActivityInfo(pm, activity, 0)
 	}
