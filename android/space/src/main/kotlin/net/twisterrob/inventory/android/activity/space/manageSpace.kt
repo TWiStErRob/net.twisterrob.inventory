@@ -75,15 +75,20 @@ internal class ManageSpaceViewModel @Inject constructor(
 
 	fun screenVisible() {
 		intent {
-			if (state.confirmation == null) {
-				loadSizes()
+			if (state.confirmation != null) {
+				LOG.trace("Skipping loadSizes() because a confirmation is in progress.")
+				return@intent
 			}
+			loadSizes()
 		}
 	}
 
 	fun loadSizes(force: Boolean = false) {
 		intent {
-			if (state.isLoading && !force) return@intent
+			if (state.isLoading && !force) {
+				LOG.trace("Skipping loadSizes() because something is in progress.")
+				return@intent
+			}
 			reduce {
 				state.copy(
 					isLoading = true,
@@ -152,12 +157,12 @@ internal class ManageSpaceViewModel @Inject constructor(
 			) {
 				withContext(Dispatchers.IO) {
 					val name = DocumentFile.fromSingleUri(inject.applicationContext(), target)?.name
-					ManageSpaceActivity.LOG.debug("Saving DB to {} ({})", target, name)
+					LOG.debug("Saving DB to {} ({})", target, name)
 					val source = Database.get(inject.applicationContext()).file.inputStream()
 					val out = inject.applicationContext().contentResolver.openOutputStream(target)
 						?: error("Cannot open ${target} for writing.")
 					IOTools.copyStream(source, out)
-					ManageSpaceActivity.LOG.debug("Saved DB to {} ({})", target, name)
+					LOG.debug("Saved DB to {} ({})", target, name)
 				}
 			}
 		}
@@ -202,11 +207,11 @@ internal class ManageSpaceViewModel @Inject constructor(
 					try {
 						val stream = inject.applicationContext().contentResolver.openInputStream(source)
 						Database.get(inject.applicationContext()).helper.restore(stream)
-						ManageSpaceActivity.LOG.debug("Restored {}", source)
+						LOG.debug("Restored {}", source)
 					} catch (ex: CancellationException) {
 						throw ex
 					} catch (ex: Exception) {
-						ManageSpaceActivity.LOG.error("Cannot restore {}", source)
+						LOG.error("Cannot restore {}", source)
 					}
 				}
 			}
@@ -376,11 +381,15 @@ internal class ManageSpaceViewModel @Inject constructor(
 		} catch (ex: CancellationException) {
 			throw ex
 		} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
-			ManageSpaceActivity.LOG.error("cleanTask failed", ex)
+			LOG.error("cleanTask failed", ex)
 			postSideEffect(ManageSpaceEffect.ShowToast(ex.toString()))
 		}
 		killProcessesAroundManageSpaceActivity(context)
 		loadSizes(force = true)
+	}
+
+	companion object {
+		private val LOG = LoggerFactory.getLogger(ManageSpaceViewModel::class.java)
 	}
 }
 

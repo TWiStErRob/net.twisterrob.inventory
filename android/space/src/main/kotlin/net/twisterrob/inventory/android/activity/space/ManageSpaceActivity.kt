@@ -18,7 +18,6 @@ import net.twisterrob.inventory.android.content.OpenOpenableDocument
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import net.twisterrob.inventory.android.view.RecyclerViewController
 import org.orbitmvi.orbit.viewmodel.observe
-import org.slf4j.LoggerFactory
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -100,7 +99,6 @@ class ManageSpaceActivity : BaseActivity() {
 	}
 
 	private fun updateUi(state: ManageSpaceState) {
-		LOG.trace("Updating UI with state {}", state)
 		binding.refresher.isRefreshing = state.isLoading
 		binding.contents.storageImageCacheActions.isEnabled = !state.isLoading
 		binding.contents.storageDbActions.isEnabled = !state.isLoading
@@ -120,8 +118,6 @@ class ManageSpaceActivity : BaseActivity() {
 	}
 
 	companion object {
-		internal val LOG = LoggerFactory.getLogger(ManageSpaceActivity::class.java)
-
 		/**
 		 * See [IANA](https://www.iana.org/assignments/media-types/application/vnd.sqlite3).
 		 */
