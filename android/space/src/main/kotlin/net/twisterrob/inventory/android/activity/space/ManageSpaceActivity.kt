@@ -103,6 +103,10 @@ class ManageSpaceActivity : BaseActivity() {
 	private fun updateUi(state: ManageSpaceState) {
 		LOG.trace("Updating UI with state {}", state)
 		binding.refresher.isRefreshing = state.isLoading
+		binding.contents.storageImageCacheActions.isEnabled = !state.isLoading
+		binding.contents.storageDbActions.isEnabled = !state.isLoading
+		binding.contents.storageDataActions.isEnabled = !state.isLoading
+		binding.contents.storageIndexActions.isEnabled = !state.isLoading
 		binding.contents.storageImageCacheSize.text = state.sizes?.imageCache
 		binding.contents.storageDbSize.text = state.sizes?.database
 		binding.contents.storageDbFreelistSize.text = state.sizes?.freelist
