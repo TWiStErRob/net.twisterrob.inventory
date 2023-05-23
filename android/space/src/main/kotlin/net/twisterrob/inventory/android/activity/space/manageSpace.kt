@@ -43,7 +43,6 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.IOException
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 
@@ -265,28 +264,23 @@ internal class ManageSpaceViewModel @Inject constructor(
 	fun dumpAllData(inject: BaseComponent, target: Uri) {
 		intent {
 			cleanTask {
-				try {
-					val contentResolver = inject.applicationContext().contentResolver
-					ZipOutputStream(contentResolver.openOutputStream(target)).use { zip ->
-						val description = StringBuilder()
-						val applicationInfo = inject.applicationContext().applicationInfo
-						if (applicationInfo.dataDir != null) {
-							val internalDataDir = File(applicationInfo.dataDir)
-							IOTools.zip(zip, internalDataDir, "internal")
-							description.append("internal\tgetApplicationInfo().dataDir: ").append(internalDataDir).append("\n")
-						}
-						val externalFilesDir = inject.applicationContext().getExternalFilesDir(null)
-						if (externalFilesDir != null) {
-							val externalDataDir = externalFilesDir.parentFile
-							IOTools.zip(zip, externalDataDir, "external")
-							description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir).append("\n")
-						}
-						IOTools.zip(zip, "descript.ion", IOTools.stream(description.toString()))
-						zip.finish()
+				val contentResolver = inject.applicationContext().contentResolver
+				ZipOutputStream(contentResolver.openOutputStream(target)).use { zip ->
+					val description = StringBuilder()
+					val applicationInfo = inject.applicationContext().applicationInfo
+					if (applicationInfo.dataDir != null) {
+						val internalDataDir = File(applicationInfo.dataDir)
+						IOTools.zip(zip, internalDataDir, "internal")
+						description.append("internal\tgetApplicationInfo().dataDir: ").append(internalDataDir).append("\n")
 					}
-				} catch (ex: IOException) {
-					// STOPSHIP review error handling
-					ManageSpaceActivity.LOG.error("Cannot save data", ex)
+					val externalFilesDir = inject.applicationContext().getExternalFilesDir(null)
+					if (externalFilesDir != null) {
+						val externalDataDir = externalFilesDir.parentFile
+						IOTools.zip(zip, externalDataDir, "external")
+						description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir).append("\n")
+					}
+					IOTools.zip(zip, "descript.ion", IOTools.stream(description.toString()))
+					zip.finish()
 				}
 			}
 		}
@@ -341,10 +335,17 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	private suspend fun cleanTask(action: suspend () -> Unit) {
+	private suspend fun SimpleSyntax<ManageSpaceState, ManageSpaceEffect>.cleanTask(action: suspend () -> Unit) {
 		// STOPSHIP NoProgressTaskExecutor.create(object : CleanTask() {
 		// STOPSHIP killProcessesAround(activity, activity)
-		action()
+		try {
+			action()
+		} catch (ex: CancellationException) {
+			throw ex
+		} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
+			ManageSpaceActivity.LOG.error("cleanTask failed", ex)
+			postSideEffect(ManageSpaceEffect.ShowToast(ex.toString()))
+		}
 		// STOPSHIP killProcessesAround(activity, activity)
 		loadSizes()
 	}
