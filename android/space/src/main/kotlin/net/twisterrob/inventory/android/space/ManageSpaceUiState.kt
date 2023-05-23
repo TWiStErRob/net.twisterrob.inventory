@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.android.space
 
 internal data class ManageSpaceUiState(
-	val isDevelopmentMode: Boolean,
 	val isLoading: Boolean,
 	val sizes: SizesUiState?,
 	val confirmation: ConfirmationUiState?,

@@ -6,7 +6,6 @@ import android.os.Build.VERSION_CODES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
-import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.Constants.Paths
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.ConfirmationUiState
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.SizesUiState
@@ -28,10 +27,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 	private val useCase: GetSizesUseCase,
 	private val mapper: SizesDomainToStateMapper,
 	private val manager: InventorySpaceManager,
-	inject: BaseComponent,
 ) : BaseViewModel<ManageSpaceUiState, ManageSpaceUiEffect>(
 	initialState = ManageSpaceUiState(
-		isDevelopmentMode = inject.buildInfo().isDebug,
 		isLoading = false,
 		sizes = null,
 		confirmation = null,
