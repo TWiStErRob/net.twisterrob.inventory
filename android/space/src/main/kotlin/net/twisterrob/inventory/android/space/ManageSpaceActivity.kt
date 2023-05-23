@@ -1,12 +1,17 @@
 package net.twisterrob.inventory.android.space
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.components.ActivityComponent
 import net.twisterrob.android.utils.tools.DialogTools
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks
 import net.twisterrob.android.utils.tools.ViewTools
@@ -16,18 +21,34 @@ import net.twisterrob.inventory.android.activity.BaseActivity
 import net.twisterrob.inventory.android.content.CreateOpenableDocument
 import net.twisterrob.inventory.android.content.OpenOpenableDocument
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
-import net.twisterrob.inventory.android.view.RecyclerViewController
-import net.twisterrob.inventory.android.viewmodel.setContentView
+import net.twisterrob.inventory.android.viewmodel.viewBindingInflate
 import org.orbitmvi.orbit.viewmodel.observe
 import java.util.Calendar
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ManageSpaceActivity : BaseActivity() {
-	private lateinit var binding: ManageSpaceActivityBinding
-	private lateinit var inject: BaseComponent
+	private val binding: ManageSpaceActivityBinding by viewBindingInflate()
 	private val viewModel: ManageSpaceViewModel by viewModels()
+	@Inject internal lateinit var inject: BaseComponent
 	@Inject internal lateinit var effectHandler: ManageSpaceUiEffectHandler
+	@Inject internal lateinit var stateHandler: ManageSpaceUiStateHandler
+
+	@InstallIn(ActivityComponent::class)
+	@Module
+	internal class HiltModule {
+		@Provides
+		fun provideTypedActivity(activity: Activity): ManageSpaceActivity =
+			(activity as ManageSpaceActivity)
+
+		@Provides
+		fun provideBinding(activity: ManageSpaceActivity): ManageSpaceActivityBinding =
+			activity.binding
+
+		@Provides
+		fun provideViewModel(activity: ManageSpaceActivity): ManageSpaceViewModel =
+			activity.viewModel
+	}
 
 	private val dumpAll = registerForActivityResult<String, Uri>(
 		CreateOpenableDocument(MIME_TYPE_ZIP)
@@ -47,14 +68,10 @@ class ManageSpaceActivity : BaseActivity() {
 		result?.let { viewModel.restoreDatabase(it) }
 	}
 
-	@Suppress("LongMethod")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		inject = BaseComponent.get(applicationContext)
-		binding = setContentView(ManageSpaceActivityBinding::inflate)
 		setIcon(ContextCompat.getDrawable(this, applicationInfo.icon))
 		supportActionBar.setDisplayHomeAsUpEnabled(false)
-		RecyclerViewController.initializeProgress(binding.refresher)
 
 		binding.refresher.setOnRefreshListener(viewModel::loadSizes)
 		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch() }
@@ -90,33 +107,11 @@ class ManageSpaceActivity : BaseActivity() {
 			dumpAll.launch(getFileName("Inventory_dump", Calendar.getInstance(), "zip"))
 		}
 		ViewTools.displayedIf(binding.contents.storageAll, inject.buildInfo().isDebug)
-		viewModel.observe(this, state = ::updateUi, sideEffect = effectHandler::handleEffect)
-	}
-
-	private fun updateUi(state: ManageSpaceUiState) {
-		binding.refresher.isRefreshing = state.isLoading
-		binding.contents.storageImageCacheActions.isEnabled = !state.isLoading
-		binding.contents.storageDbActions.isEnabled = !state.isLoading
-		binding.contents.storageDataActions.isEnabled = !state.isLoading
-		binding.contents.storageIndexActions.isEnabled = !state.isLoading
-		binding.contents.storageImageCacheSize.text = state.sizes?.imageCache
-		binding.contents.storageDbSize.text = state.sizes?.database
-		binding.contents.storageDbFreelistSize.text = state.sizes?.freelist
-		binding.contents.storageSearchSize.text = state.sizes?.searchIndex
-		binding.contents.storageAllSize.text = state.sizes?.allData
-		if (state.confirmation != null) {
-			DialogTools
-				.confirm(this) { result: Boolean? ->
-					if (result == true) {
-						viewModel.actionConfirmed()
-					} else {
-						viewModel.actionCancelled()
-					}
-				}
-				.setTitle(state.confirmation.title)
-				.setMessage(state.confirmation.message)
-				.show()
-		}
+		viewModel.observe(
+			lifecycleOwner = this,
+			state = stateHandler::updateUi,
+			sideEffect = effectHandler::handleEffect
+		)
 	}
 
 	override fun onResume() {
