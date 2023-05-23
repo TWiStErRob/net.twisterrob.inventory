@@ -12,8 +12,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.components.ActivityComponent
-import net.twisterrob.android.utils.tools.DialogTools
-import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks
 import net.twisterrob.android.utils.tools.ViewTools
 import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.activity.BaseActivity
@@ -64,22 +62,7 @@ class ManageSpaceActivity : BaseActivity() {
 		binding.contents.storageDbTest.setOnClickListener { viewModel.resetTestData() }
 		binding.contents.storageDbRestore.setOnClickListener { viewModel.restoreDatabase() }
 		binding.contents.storageDbVacuum.setOnClickListener { viewModel.vacuumDatabase() }
-		binding.contents.storageDbVacuumIncremental.setOnClickListener {
-			DialogTools
-				.pickNumber(this, 10, 0, Int.MAX_VALUE, object : PopupCallbacks<Int> {
-					override fun finished(value: Int?) {
-						if (value == null) {
-							return
-						}
-						@Suppress("MagicNumber")
-						val vacuumBytes = value * 1024 * 1024
-						viewModel.vacuumDatabaseIncremental(vacuumBytes)
-					}
-				})
-				.setTitle("Incremental Vacuum")
-				.setMessage("How many megabytes do you want to vacuum?")
-				.show()
-		}
+		binding.contents.storageDbVacuumIncremental.setOnClickListener { viewModel.vacuumDatabaseIncremental() }
 		binding.contents.storageAllClear.setOnClickListener { viewModel.clearData() }
 		binding.contents.storageAllDump.setOnClickListener { viewModel.dumpAllData() }
 		ViewTools.displayedIf(binding.contents.storageAll, inject.buildInfo().isDebug)

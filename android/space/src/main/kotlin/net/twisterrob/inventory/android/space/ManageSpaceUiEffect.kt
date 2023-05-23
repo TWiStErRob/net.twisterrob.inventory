@@ -13,4 +13,6 @@ internal sealed class ManageSpaceUiEffect {
 	data class PickDumpAllDataTarget(
 		val fileName: String,
 	) : ManageSpaceUiEffect()
+
+	object PickVacuumDatabaseIncrementalBytes : ManageSpaceUiEffect()
 }

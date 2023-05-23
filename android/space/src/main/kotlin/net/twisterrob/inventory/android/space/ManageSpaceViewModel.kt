@@ -182,6 +182,12 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
+	fun vacuumDatabaseIncremental() {
+		intent {
+			postSideEffect(ManageSpaceUiEffect.PickVacuumDatabaseIncrementalBytes)
+		}
+	}
+
 	fun vacuumDatabaseIncremental(vacuumBytes: Int) {
 		intent {
 			unconfirmedClean(

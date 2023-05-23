@@ -5,6 +5,8 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCaller
 import dagger.hilt.android.qualifiers.ActivityContext
+import net.twisterrob.android.utils.tools.DialogTools
+import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks
 import net.twisterrob.inventory.android.content.CreateOpenableDocument
 import net.twisterrob.inventory.android.content.OpenOpenableDocument
 import net.twisterrob.inventory.android.viewmodel.EffectHandler
@@ -49,6 +51,23 @@ internal class ManageSpaceUiEffectHandler @Inject constructor(
 
 			is ManageSpaceUiEffect.PickDumpAllDataTarget -> {
 				dumpAll.launch(effect.fileName)
+			}
+
+			is ManageSpaceUiEffect.PickVacuumDatabaseIncrementalBytes -> {
+				DialogTools
+					.pickNumber(context, 10, 0, Int.MAX_VALUE, object : PopupCallbacks<Int> {
+						override fun finished(value: Int?) {
+							if (value == null) {
+								return
+							}
+							@Suppress("MagicNumber")
+							val vacuumBytes = value * 1024 * 1024
+							viewModel.vacuumDatabaseIncremental(vacuumBytes)
+						}
+					})
+					.setTitle("Incremental Vacuum")
+					.setMessage("How many megabytes do you want to vacuum?")
+					.show()
 			}
 		}
 	}
