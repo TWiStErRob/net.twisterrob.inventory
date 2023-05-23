@@ -182,7 +182,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 
 	fun restoreDatabase(inject: BaseComponent, source: Uri) {
 		intent {
-			cleanTask { 
+			cleanTask {
 				withContext(Dispatchers.Main) {
 					DatabaseService.clearVacuumAlarm(inject.applicationContext())
 				}
@@ -235,13 +235,15 @@ internal class ManageSpaceViewModel @Inject constructor(
 				title = "Clear Data",
 				message = "All of your belongings and user preferences will be permanently deleted. "
 					+ "Any backups will be kept, even after you uninstall the app.",
-				{ it.copy(
-					database = "Clearing…",
-					imageCache = "Clearing…",
-					freelist = "Clearing…",
-					searchIndex = "Clearing…",
-					allData = "Clearing…",
-				) }
+				{
+					it.copy(
+						database = "Clearing…",
+						imageCache = "Clearing…",
+						freelist = "Clearing…",
+						searchIndex = "Clearing…",
+						allData = "Clearing…",
+					)
+				}
 			) {
 				if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
 					(inject.applicationContext().getSystemService(BaseActivity.ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
@@ -259,7 +261,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			}
 		}
 	}
-	
+
 	fun dumpAllData(inject: BaseComponent, target: Uri) {
 		intent {
 			cleanTask {
