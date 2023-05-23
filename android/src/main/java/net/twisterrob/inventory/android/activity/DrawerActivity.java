@@ -18,7 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener;
 
 import net.twisterrob.android.activity.AboutActivity;
 import net.twisterrob.inventory.android.*;
-import net.twisterrob.inventory.android.activity.space.ManageSpaceActivity;
+import net.twisterrob.inventory.android.space.ManageSpaceActivity;
 import net.twisterrob.inventory.android.view.DrawerNavigator;
 
 import static net.twisterrob.android.AndroidConstants.*;

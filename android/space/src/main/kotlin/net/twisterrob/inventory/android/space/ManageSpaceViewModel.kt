@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity.space
+package net.twisterrob.inventory.android.space
 
 import android.annotation.TargetApi
 import android.net.Uri
@@ -7,11 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import net.twisterrob.inventory.android.activity.space.ManageSpaceUiState.ConfirmationUiState
-import net.twisterrob.inventory.android.activity.space.ManageSpaceUiState.SizesUiState
-import net.twisterrob.inventory.android.activity.space.manager.InventorySpaceManager
-import net.twisterrob.inventory.android.activity.space.sizes.GetSizesUseCase
-import net.twisterrob.inventory.android.activity.space.sizes.SizesDomainToStateMapper
+import net.twisterrob.inventory.android.space.ManageSpaceUiState.ConfirmationUiState
+import net.twisterrob.inventory.android.space.ManageSpaceUiState.SizesUiState
+import net.twisterrob.inventory.android.space.manager.InventorySpaceManager
+import net.twisterrob.inventory.android.space.sizes.GetSizesUseCase
+import net.twisterrob.inventory.android.space.sizes.SizesDomainToStateMapper
 import net.twisterrob.inventory.android.viewmodel.BaseViewModel
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent

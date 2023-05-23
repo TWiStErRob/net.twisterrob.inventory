@@ -124,7 +124,7 @@
 			android:title="@string/pref_app_manage_space_title"
 			>
 			<intent
-				android:targetClass="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
+				android:targetClass="net.twisterrob.inventory.android.space.ManageSpaceActivity"
 				android:targetPackage="@string/pref_app_about_package"
 				/>
 		</Preference>

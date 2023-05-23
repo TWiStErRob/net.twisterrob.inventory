@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity.space.sizes
+package net.twisterrob.inventory.android.space.sizes
 
 import android.content.Context
 import android.database.DatabaseUtils

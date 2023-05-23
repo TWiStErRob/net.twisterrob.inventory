@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity.space
+package net.twisterrob.inventory.android.space
 
 internal sealed class ManageSpaceUiEffect {
 	data class ShowToast(

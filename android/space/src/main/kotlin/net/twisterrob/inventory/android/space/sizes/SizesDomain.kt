@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity.space.sizes
+package net.twisterrob.inventory.android.space.sizes
 
 data class SizesDomain(
 	val imageCache: Result<Long>,
