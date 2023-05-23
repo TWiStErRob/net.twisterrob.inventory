@@ -3,8 +3,8 @@ package net.twisterrob.inventory.android.space
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import androidx.activity.result.ActivityResultCaller
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import dagger.Module
@@ -16,14 +16,10 @@ import net.twisterrob.android.utils.tools.DialogTools
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks
 import net.twisterrob.android.utils.tools.ViewTools
 import net.twisterrob.inventory.android.BaseComponent
-import net.twisterrob.inventory.android.Constants.Paths.getFileName
 import net.twisterrob.inventory.android.activity.BaseActivity
-import net.twisterrob.inventory.android.content.CreateOpenableDocument
-import net.twisterrob.inventory.android.content.OpenOpenableDocument
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import net.twisterrob.inventory.android.viewmodel.viewBindingInflate
 import org.orbitmvi.orbit.viewmodel.observe
-import java.util.Calendar
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,26 +42,12 @@ class ManageSpaceActivity : BaseActivity() {
 			activity.binding
 
 		@Provides
+		fun provideActivityResultCaller(activity: ManageSpaceActivity): ActivityResultCaller =
+			activity
+
+		@Provides
 		fun provideViewModel(activity: ManageSpaceActivity): ManageSpaceViewModel =
 			activity.viewModel
-	}
-
-	private val dumpAll = registerForActivityResult<String, Uri>(
-		CreateOpenableDocument(MIME_TYPE_ZIP)
-	) { result ->
-		result?.let { viewModel.dumpAllData(it) }
-	}
-
-	private val dumpDB = registerForActivityResult<String, Uri>(
-		CreateOpenableDocument(MIME_TYPE_SQLITE)
-	) { result ->
-		result?.let { viewModel.dumpDatabase(it) }
-	}
-
-	private val restoreDB = registerForActivityResult<Array<String>, Uri>(
-		OpenOpenableDocument()
-	) { result ->
-		result?.let { viewModel.restoreDatabase(it) }
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,14 +59,10 @@ class ManageSpaceActivity : BaseActivity() {
 		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch() }
 		binding.contents.storageImageCacheClear.setOnClickListener { viewModel.clearImageCache() }
 		binding.contents.storageDbClear.setOnClickListener { viewModel.emptyDatabase() }
-		binding.contents.storageDbDump.setOnClickListener {
-			dumpDB.launch(getFileName("Inventory", Calendar.getInstance(), "sqlite"))
-		}
+		binding.contents.storageDbDump.setOnClickListener { viewModel.dumpDatabase() }
 		binding.contents.storageImagesClear.setOnClickListener { viewModel.clearImages() }
 		binding.contents.storageDbTest.setOnClickListener { viewModel.resetTestData() }
-		binding.contents.storageDbRestore.setOnClickListener {
-			restoreDB.launch(arrayOf(MIME_TYPE_SQLITE))
-		}
+		binding.contents.storageDbRestore.setOnClickListener { viewModel.restoreDatabase() }
 		binding.contents.storageDbVacuum.setOnClickListener { viewModel.vacuumDatabase() }
 		binding.contents.storageDbVacuumIncremental.setOnClickListener {
 			DialogTools
@@ -103,9 +81,7 @@ class ManageSpaceActivity : BaseActivity() {
 				.show()
 		}
 		binding.contents.storageAllClear.setOnClickListener { viewModel.clearData() }
-		binding.contents.storageAllDump.setOnClickListener {
-			dumpAll.launch(getFileName("Inventory_dump", Calendar.getInstance(), "zip"))
-		}
+		binding.contents.storageAllDump.setOnClickListener { viewModel.dumpAllData() }
 		ViewTools.displayedIf(binding.contents.storageAll, inject.buildInfo().isDebug)
 		viewModel.observe(
 			lifecycleOwner = this,
@@ -120,12 +96,6 @@ class ManageSpaceActivity : BaseActivity() {
 	}
 
 	companion object {
-		/**
-		 * See [IANA](https://www.iana.org/assignments/media-types/application/vnd.sqlite3).
-		 */
-		private const val MIME_TYPE_SQLITE: String = "application/vnd.sqlite3"
-		private const val MIME_TYPE_ZIP: String = "application/zip"
-
 		@JvmStatic
 		fun launch(context: Context): Intent =
 			Intent(context, ManageSpaceActivity::class.java)

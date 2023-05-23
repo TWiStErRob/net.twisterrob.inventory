@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import net.twisterrob.inventory.android.Constants.Paths
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.ConfirmationUiState
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.SizesUiState
 import net.twisterrob.inventory.android.space.manager.InventorySpaceManager
@@ -18,6 +19,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.slf4j.LoggerFactory
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -113,6 +115,13 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
+	fun dumpDatabase() {
+		intent {
+			val fileName = Paths.getFileName("Inventory", Calendar.getInstance(), "sqlite")
+			postSideEffect(ManageSpaceUiEffect.PickDumpDatabaseTarget(fileName))
+		}
+	}
+
 	fun dumpDatabase(target: Uri) {
 		intent {
 			unconfirmedClean(
@@ -142,6 +151,12 @@ internal class ManageSpaceViewModel @Inject constructor(
 				progress = { it.copy(database = "Resetting…") },
 				action = manager::resetToTestData,
 			)
+		}
+	}
+
+	fun restoreDatabase() {
+		intent {
+			postSideEffect(ManageSpaceUiEffect.PickRestoreDatabaseSource)
 		}
 	}
 
@@ -195,6 +210,13 @@ internal class ManageSpaceViewModel @Inject constructor(
 				},
 				action = manager::clearData,
 			)
+		}
+	}
+
+	fun dumpAllData() {
+		intent {
+			val fileName = Paths.getFileName("Inventory_dump", Calendar.getInstance(), "zip")
+			postSideEffect(ManageSpaceUiEffect.PickDumpAllDataTarget(fileName))
 		}
 	}
 
