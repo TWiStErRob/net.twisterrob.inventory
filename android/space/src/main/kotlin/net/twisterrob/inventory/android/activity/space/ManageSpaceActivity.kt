@@ -31,46 +31,43 @@ class ManageSpaceActivity : BaseActivity() {
 	private val dumpAll = registerForActivityResult<String, Uri>(
 		CreateOpenableDocument(MIME_TYPE_ZIP)
 	) { result ->
-		result?.let { viewModel.dumpAllData(inject, it) }
+		result?.let { viewModel.dumpAllData(it) }
 	}
 
 	private val dumpDB = registerForActivityResult<String, Uri>(
 		CreateOpenableDocument(MIME_TYPE_SQLITE)
 	) { result ->
-		result?.let { viewModel.dumpDatabase(inject, it) }
+		result?.let { viewModel.dumpDatabase(it) }
 	}
 
 	private val restoreDB = registerForActivityResult<Array<String>, Uri>(
 		OpenOpenableDocument()
 	) { result ->
-		result?.let { viewModel.restoreDatabase(inject, it) }
+		result?.let { viewModel.restoreDatabase(it) }
 	}
 
 	@Suppress("LongMethod")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		inject = BaseComponent.get(applicationContext)
-
 		binding = setContentView(ManageSpaceActivityBinding::inflate)
 		setIcon(ContextCompat.getDrawable(this, applicationInfo.icon))
 		supportActionBar.setDisplayHomeAsUpEnabled(false)
 		RecyclerViewController.initializeProgress(binding.refresher)
 
 		binding.refresher.setOnRefreshListener(viewModel::loadSizes)
-		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch(inject) }
-		binding.contents.storageImageCacheClear.setOnClickListener {
-			viewModel.clearImageCache(inject)
-		}
-		binding.contents.storageDbClear.setOnClickListener { viewModel.emptyDatabase(inject) }
+		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch() }
+		binding.contents.storageImageCacheClear.setOnClickListener { viewModel.clearImageCache() }
+		binding.contents.storageDbClear.setOnClickListener { viewModel.emptyDatabase() }
 		binding.contents.storageDbDump.setOnClickListener {
 			dumpDB.launch(getFileName("Inventory", Calendar.getInstance(), "sqlite"))
 		}
-		binding.contents.storageImagesClear.setOnClickListener { viewModel.clearImages(inject) }
-		binding.contents.storageDbTest.setOnClickListener { viewModel.resetTestData(inject) }
+		binding.contents.storageImagesClear.setOnClickListener { viewModel.clearImages() }
+		binding.contents.storageDbTest.setOnClickListener { viewModel.resetTestData() }
 		binding.contents.storageDbRestore.setOnClickListener {
 			restoreDB.launch(arrayOf(MIME_TYPE_SQLITE))
 		}
-		binding.contents.storageDbVacuum.setOnClickListener { viewModel.vacuumDatabase(inject) }
+		binding.contents.storageDbVacuum.setOnClickListener { viewModel.vacuumDatabase() }
 		binding.contents.storageDbVacuumIncremental.setOnClickListener {
 			DialogTools
 				.pickNumber(this, 10, 0, Int.MAX_VALUE, object : PopupCallbacks<Int> {
@@ -80,14 +77,14 @@ class ManageSpaceActivity : BaseActivity() {
 						}
 						@Suppress("MagicNumber")
 						val vacuumBytes = value * 1024 * 1024
-						viewModel.vacuumDatabaseIncremental(inject, vacuumBytes)
+						viewModel.vacuumDatabaseIncremental(vacuumBytes)
 					}
 				})
 				.setTitle("Incremental Vacuum")
 				.setMessage("How many megabytes do you want to vacuum?")
 				.show()
 		}
-		binding.contents.storageAllClear.setOnClickListener { viewModel.clearData(inject) }
+		binding.contents.storageAllClear.setOnClickListener { viewModel.clearData() }
 		binding.contents.storageAllDump.setOnClickListener {
 			dumpAll.launch(getFileName("Inventory_dump", Calendar.getInstance(), "zip"))
 		}

@@ -51,6 +51,7 @@ import javax.inject.Inject
 internal class ManageSpaceViewModel @Inject constructor(
 	private val useCase: GetSizesUseCase,
 	private val mapper: SizesDomainToStateMapper,
+	private val inject: BaseComponent,
 ) : BaseViewModel<ManageSpaceState, ManageSpaceEffect>(
 	initialState = ManageSpaceState(
 		isLoading = false,
@@ -109,10 +110,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun clearImageCache(inject: BaseComponent) {
+	fun clearImageCache() {
 		intent {
 			confirmedClean(
-				context = inject.applicationContext(),
 				title = "Clear Image Cache",
 				message = "You're about to remove all files in the image cache. "
 					+ "There will be no permanent loss. "
@@ -126,10 +126,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun emptyDatabase(inject: BaseComponent) {
+	fun emptyDatabase() {
 		intent {
 			confirmedClean(
-				context = inject.applicationContext(),
 				title = "Empty Database",
 				message = "All of your belongings will be permanently deleted.",
 				progress = { it.copy(database = "Emptying… " + it.database) },
@@ -149,10 +148,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun dumpDatabase(inject: BaseComponent, target: Uri) {
+	fun dumpDatabase(target: Uri) {
 		intent {
 			cleanTask(
-				context = inject.applicationContext(),
 				progress = { it.copy(database = "Dumping… " + it.database) },
 			) {
 				withContext(Dispatchers.IO) {
@@ -168,10 +166,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun clearImages(inject: BaseComponent) {
+	fun clearImages() {
 		intent {
 			confirmedClean(
-				context = inject.applicationContext(),
 				title = "Clear Images",
 				message = "Images of all your belongings will be permanently deleted, all other data is kept.",
 				progress = { it.copy(database = "Clearing images…") },
@@ -181,10 +178,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun resetTestData(inject: BaseComponent) {
+	fun resetTestData() {
 		intent {
 			confirmedClean(
-				context = inject.applicationContext(),
 				title = "Reset to Test Data",
 				message = "All of your belongings will be permanently deleted. Some test data will be set up.",
 				progress = { it.copy(database = "Resetting…") },
@@ -194,10 +190,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun restoreDatabase(inject: BaseComponent, source: Uri) {
+	fun restoreDatabase(source: Uri) {
 		intent {
 			cleanTask(
-				context = inject.applicationContext(),
 				progress = { it.copy(database = "Restoring…") },
 			) {
 				withContext(Dispatchers.Main) {
@@ -218,10 +213,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun vacuumDatabase(inject: BaseComponent) {
+	fun vacuumDatabase() {
 		intent {
 			confirmedClean(
-				context = inject.applicationContext(),
 				title = "Vacuum the Database",
 				message = "May take a while depending on database size, "
 					+ "also requires at least the size of the database as free space.",
@@ -232,10 +226,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun vacuumDatabaseIncremental(inject: BaseComponent, vacuumBytes: Int) {
+	fun vacuumDatabaseIncremental(vacuumBytes: Int) {
 		intent {
 			cleanTask(
-				context = inject.applicationContext(),
 				progress = { it.copy(database = "Vacuuming…") },
 			) {
 				val db = Database.get(inject.applicationContext()).writableDatabase
@@ -248,10 +241,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 	}
 
 	@TargetApi(VERSION_CODES.KITKAT)
-	fun clearData(inject: BaseComponent) {
+	fun clearData() {
 		intent {
 			confirmedClean(
-				context = inject.applicationContext(),
 				title = "Clear Data",
 				message = "All of your belongings and user preferences will be permanently deleted. "
 					+ "Any backups will be kept, even after you uninstall the app.",
@@ -283,10 +275,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun dumpAllData(inject: BaseComponent, target: Uri) {
+	fun dumpAllData(target: Uri) {
 		intent {
 			cleanTask(
-				context = inject.applicationContext(),
 				progress = {
 					it.copy(
 						database = "Dumping…",
@@ -319,10 +310,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	fun rebuildSearch(inject: BaseComponent) {
+	fun rebuildSearch() {
 		intent {
 			confirmedClean(
-				context = inject.applicationContext(),
 				title = "Rebuild search index…",
 				message = "Continuing will re-build the search index, it may take a while.",
 				{ it.copy(searchIndex = "Rebuilding… " + it.searchIndex) }
@@ -333,7 +323,6 @@ internal class ManageSpaceViewModel @Inject constructor(
 	}
 
 	private suspend fun SimpleSyntax<ManageSpaceState, ManageSpaceEffect>.confirmedClean(
-		context: Context,
 		title: CharSequence,
 		message: CharSequence,
 		progress: (SizesState) -> SizesState,
@@ -349,7 +338,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 		when (confirmations.receive()) {
 			CONFIRMED -> {
-				cleanTask(context, progress, action)
+				cleanTask(progress, action)
 			}
 			CANCELLED -> {
 				reduce {
@@ -362,7 +351,6 @@ internal class ManageSpaceViewModel @Inject constructor(
 	}
 
 	private suspend fun SimpleSyntax<ManageSpaceState, ManageSpaceEffect>.cleanTask(
-		context: Context,
 		progress: (SizesState) -> SizesState,
 		action: suspend () -> Unit,
 	) {
@@ -375,7 +363,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			)
 		}
 		delay(1000) // STOPSHIP remove this
-		killProcessesAroundManageSpaceActivity(context)
+		killProcessesAroundManageSpaceActivity(inject.applicationContext())
 		try {
 			action()
 		} catch (ex: CancellationException) {
@@ -384,7 +372,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			LOG.error("cleanTask failed", ex)
 			postSideEffect(ManageSpaceEffect.ShowToast(ex.toString()))
 		}
-		killProcessesAroundManageSpaceActivity(context)
+		killProcessesAroundManageSpaceActivity(inject.applicationContext())
 		loadSizes(force = true)
 	}
 
