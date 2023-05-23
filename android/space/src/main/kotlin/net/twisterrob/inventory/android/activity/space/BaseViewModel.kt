@@ -1,6 +1,6 @@
 package net.twisterrob.inventory.android.activity.space
 
-import androidx.lifecycle.ViewModel
+import net.twisterrob.inventory.android.content.VariantViewModel
 import net.twisterrob.orbit.logging.OrbitSlf4jLogger.Companion.decorateLogging
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 
 abstract class BaseViewModel<State : Any, Effect : Any>(
 	initialState: State
-) : ViewModel(), ContainerHost<State, Effect> {
+) : VariantViewModel(), ContainerHost<State, Effect> {
 
 	override val container = container<State, Effect>(initialState)
 		.decorateLogging(LoggerFactory.getLogger(this::class.java))
