@@ -1,64 +1,55 @@
 package net.twisterrob.inventory.android.activity.space
 
 import android.annotation.TargetApi
-import android.content.Context
-import android.database.DatabaseUtils
-import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.os.Build.VERSION_CODES
-import android.text.format.Formatter
-import android.widget.Toast
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
-import net.twisterrob.android.utils.tools.DatabaseTools
-import net.twisterrob.android.utils.tools.IOTools
-import net.twisterrob.android.utils.tools.TextTools
-import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
-import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation
-import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation.Result.CANCELLED
-import net.twisterrob.inventory.android.activity.space.ManageSpaceState.Confirmation.Result.CONFIRMED
-import net.twisterrob.inventory.android.activity.space.ManageSpaceState.SizesState
-import net.twisterrob.inventory.android.components.ErrorMapper
-import net.twisterrob.inventory.android.content.Database
-import net.twisterrob.inventory.android.space.R
+import net.twisterrob.inventory.android.activity.space.ManageSpaceUiState.ConfirmationUiState
+import net.twisterrob.inventory.android.activity.space.ManageSpaceUiState.SizesUiState
+import net.twisterrob.inventory.android.activity.space.manager.InventorySpaceManager
+import net.twisterrob.inventory.android.activity.space.sizes.GetSizesUseCase
+import net.twisterrob.inventory.android.activity.space.sizes.SizesDomainToStateMapper
+import net.twisterrob.inventory.android.viewmodel.BaseViewModel
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.slf4j.LoggerFactory
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("TooManyFunctions") // Blame the screen, not the ViewModel?
 internal class ManageSpaceViewModel @Inject constructor(
 	private val useCase: GetSizesUseCase,
 	private val mapper: SizesDomainToStateMapper,
 	private val manager: InventorySpaceManager,
-) : BaseViewModel<ManageSpaceState, ManageSpaceEffect>(
-	initialState = ManageSpaceState(
+) : BaseViewModel<ManageSpaceUiState, ManageSpaceUiEffect>(
+	initialState = ManageSpaceUiState(
 		isLoading = false,
 		sizes = null,
 		confirmation = null,
 	)
 ) {
-	private val confirmations = Channel<Confirmation.Result>()
+	private val confirmations = Channel<ConfirmationResult>()
 		.also { addCloseable { it.cancel(CancellationException("ManageSpaceViewModel cleared")) } }
+
+	private enum class ConfirmationResult {
+		CONFIRMED,
+		CANCELLED,
+	}
 
 	fun actionConfirmed() {
 		intent {
-			confirmations.send(Confirmation.Result.CONFIRMED)
+			confirmations.send(ConfirmationResult.CONFIRMED)
 		}
 	}
 
 	fun actionCancelled() {
 		intent {
-			confirmations.send(Confirmation.Result.CANCELLED)
+			confirmations.send(ConfirmationResult.CANCELLED)
 		}
 	}
 
@@ -87,7 +78,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			val input = useCase.execute(Unit)
 			val sizes = mapper.map(input)
 			if (sizes.errors != null) {
-				postSideEffect(ManageSpaceEffect.ShowToast(sizes.errors))
+				postSideEffect(ManageSpaceUiEffect.ShowToast(sizes.errors))
 			}
 			reduce {
 				state.copy(
@@ -236,25 +227,25 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	private suspend fun SimpleSyntax<ManageSpaceState, ManageSpaceEffect>.confirmedClean(
+	private suspend fun SimpleSyntax<ManageSpaceUiState, ManageSpaceUiEffect>.confirmedClean(
 		title: CharSequence,
 		message: CharSequence,
-		progress: (SizesState) -> SizesState,
+		progress: (SizesUiState) -> SizesUiState,
 		action: suspend () -> Unit,
 	) {
 		reduce {
 			state.copy(
-				confirmation = Confirmation(
+				confirmation = ConfirmationUiState(
 					title = title,
 					message = message,
 				),
 			)
 		}
 		when (confirmations.receive()) {
-			CONFIRMED -> {
+			ConfirmationResult.CONFIRMED -> {
 				unconfirmedClean(progress, action)
 			}
-			CANCELLED -> {
+			ConfirmationResult.CANCELLED -> {
 				reduce {
 					state.copy(
 						confirmation = null,
@@ -264,8 +255,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	private suspend fun SimpleSyntax<ManageSpaceState, ManageSpaceEffect>.unconfirmedClean(
-		progress: (SizesState) -> SizesState,
+	private suspend fun SimpleSyntax<ManageSpaceUiState, ManageSpaceUiEffect>.unconfirmedClean(
+		progress: (SizesUiState) -> SizesUiState,
 		action: suspend () -> Unit,
 	) {
 		reduce {
@@ -284,7 +275,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			throw ex
 		} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
 			LOG.error("cleanTask failed", ex)
-			postSideEffect(ManageSpaceEffect.ShowToast(ex.toString()))
+			postSideEffect(ManageSpaceUiEffect.ShowToast(ex.toString()))
 		}
 		manager.killProcessesAroundManageSpaceActivity()
 		loadSizes(force = true)
@@ -292,161 +283,5 @@ internal class ManageSpaceViewModel @Inject constructor(
 
 	companion object {
 		private val LOG = LoggerFactory.getLogger(ManageSpaceViewModel::class.java)
-	}
-}
-
-internal data class ManageSpaceState(
-	val isLoading: Boolean,
-	val sizes: SizesState?,
-	val confirmation: Confirmation?,
-) {
-
-	internal data class SizesState(
-		val imageCache: CharSequence,
-		val database: CharSequence,
-		val freelist: CharSequence,
-		val searchIndex: CharSequence,
-		val allData: CharSequence,
-		val errors: CharSequence?,
-	)
-
-	internal data class Confirmation(
-		val title: CharSequence,
-		val message: CharSequence,
-	) {
-		enum class Result {
-			CONFIRMED,
-			CANCELLED,
-		}
-	}
-}
-
-internal sealed class ManageSpaceEffect {
-	data class ShowToast(
-		val message: CharSequence
-	) : ManageSpaceEffect()
-}
-
-internal class ManageSpaceEffectHandler @Inject constructor(
-	@ActivityContext private val context: Context
-) : EffectHandler<ManageSpaceEffect> {
-
-	override suspend fun handleEffect(effect: ManageSpaceEffect) {
-		when (effect) {
-			is ManageSpaceEffect.ShowToast -> {
-				Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()
-			}
-		}
-	}
-}
-
-class GetSizesUseCase @Inject constructor(
-	@ApplicationContext private val context: Context,
-) : UseCase<Unit, SizesDomain> {
-
-	override suspend fun execute(input: Unit): SizesDomain = withContext(Dispatchers.IO) {
-		delay(1000) // STOPSHIP remove this
-		val database = Database.get(context)
-		SizesDomain(
-			imageCache = safe {
-				dirSizes(
-					GlideSetup.getCacheDir(context)
-				)
-			},
-			database = safe {
-				dirSizes(
-					context.getDatabasePath(database.helper.databaseName)
-				)
-			},
-			freelist = safe {
-				database.readableDatabase.let { it.freelistCount * it.pageSize }
-			},
-			searchIndex = safe {
-				database.searchSize
-			},
-			allData = safe {
-				dirSizes(
-					File(context.applicationInfo.dataDir),
-					context.externalCacheDir,
-					context.getExternalFilesDir(null),
-				)
-			},
-		)
-	}
-
-	private fun dirSizes(vararg dirs: File?): Long =
-		dirs.sumOf { IOTools.calculateSize(it) }
-
-	private val SQLiteDatabase.freelistCount: Long
-		get() = DatabaseUtils.longForQuery(
-			this,
-			"PRAGMA freelist_count;",
-			DatabaseTools.NO_ARGS
-		)
-
-	private fun safe(block: () -> Long): Result<Long> =
-		try {
-			Result.success(block())
-		} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
-			LOG.error("Cannot get size", ex)
-			Result.failure(ex)
-		}
-
-	companion object {
-		private val LOG = LoggerFactory.getLogger(GetSizesUseCase::class.java)
-	}
-}
-
-data class SizesDomain(
-	val imageCache: Result<Long>,
-	val database: Result<Long>,
-	val freelist: Result<Long>,
-	val searchIndex: Result<Long>,
-	val allData: Result<Long>,
-)
-
-internal class SizesDomainToStateMapper @Inject constructor(
-	@ApplicationContext private val context: Context,
-	private val errorMapper: ErrorMapper,
-) : Mapper<SizesDomain, SizesState> {
-	override fun map(input: SizesDomain): SizesState =
-		SizesState(
-			imageCache = input.imageCache.formatFileSize(),
-			database = input.database.formatFileSize(),
-			freelist = input.freelist.formatFileSize(),
-			searchIndex = input.searchIndex.formatFileSize(),
-			allData = input.allData.formatFileSize(),
-			errors = formatError(
-				listOf(
-					input.imageCache,
-					input.database,
-					input.freelist,
-					input.searchIndex,
-					input.allData,
-				)
-			)
-		)
-
-	// TODEL make it vararg, workaround for https://youtrack.jetbrains.com/issue/KT-33565
-	private fun formatError(results: List<Result<Long>>): CharSequence? =
-		results
-			.mapNotNull { it.exceptionOrNull() }
-			.map { errorMapper.getError(it, "Cannot get size") }
-			.takeIf { it.isNotEmpty() }
-			?.let { TextTools.join("\n", it) }
-
-	private fun Result<Long>.formatFileSize(): CharSequence =
-		this.map { Formatter.formatFileSize(context, it) }.getOrElse { "?" }
-
-	fun loading(): SizesState {
-		val calculating = context.getString(R.string.manage_space_calculating)
-		return SizesState(
-			imageCache = calculating,
-			database = calculating,
-			freelist = calculating,
-			searchIndex = calculating,
-			allData = calculating,
-			errors = null,
-		)
 	}
 }

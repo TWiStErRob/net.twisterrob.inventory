@@ -17,6 +17,7 @@ import net.twisterrob.inventory.android.content.CreateOpenableDocument
 import net.twisterrob.inventory.android.content.OpenOpenableDocument
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import net.twisterrob.inventory.android.view.RecyclerViewController
+import net.twisterrob.inventory.android.viewmodel.setContentView
 import org.orbitmvi.orbit.viewmodel.observe
 import java.util.Calendar
 import javax.inject.Inject
@@ -26,7 +27,7 @@ class ManageSpaceActivity : BaseActivity() {
 	private lateinit var binding: ManageSpaceActivityBinding
 	private lateinit var inject: BaseComponent
 	private val viewModel: ManageSpaceViewModel by viewModels()
-	@Inject internal lateinit var effectHandler: ManageSpaceEffectHandler
+	@Inject internal lateinit var effectHandler: ManageSpaceUiEffectHandler
 
 	private val dumpAll = registerForActivityResult<String, Uri>(
 		CreateOpenableDocument(MIME_TYPE_ZIP)
@@ -92,7 +93,7 @@ class ManageSpaceActivity : BaseActivity() {
 		viewModel.observe(this, state = ::updateUi, sideEffect = effectHandler::handleEffect)
 	}
 
-	private fun updateUi(state: ManageSpaceState) {
+	private fun updateUi(state: ManageSpaceUiState) {
 		binding.refresher.isRefreshing = state.isLoading
 		binding.contents.storageImageCacheActions.isEnabled = !state.isLoading
 		binding.contents.storageDbActions.isEnabled = !state.isLoading

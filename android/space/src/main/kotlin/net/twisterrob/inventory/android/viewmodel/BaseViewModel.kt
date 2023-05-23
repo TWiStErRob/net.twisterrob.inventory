@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity.space
+package net.twisterrob.inventory.android.viewmodel
 
 import net.twisterrob.inventory.android.content.VariantViewModel
 import net.twisterrob.orbit.logging.OrbitSlf4jLogger.Companion.decorateLogging

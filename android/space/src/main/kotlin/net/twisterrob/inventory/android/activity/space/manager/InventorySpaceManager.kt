@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity.space
+package net.twisterrob.inventory.android.activity.space.manager
 
 import android.app.ActivityManager
 import android.content.ComponentName

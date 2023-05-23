@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity.space
+package net.twisterrob.inventory.android.viewmodel
 
 import android.app.Activity
 import android.view.LayoutInflater

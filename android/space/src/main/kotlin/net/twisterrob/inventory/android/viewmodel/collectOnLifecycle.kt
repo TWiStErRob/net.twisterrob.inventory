@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android.activity.space
+package net.twisterrob.inventory.android.viewmodel
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
