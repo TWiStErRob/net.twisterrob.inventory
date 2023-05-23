@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import net.twisterrob.android.utils.tools.DialogTools
@@ -107,14 +106,17 @@ class ManageSpaceActivity : BaseActivity() {
 		binding.contents.storageDbFreelistSize.text = state.sizes?.freelist
 		binding.contents.storageSearchSize.text = state.sizes?.searchIndex
 		binding.contents.storageAllSize.text = state.sizes?.allData
-		state.confirmation?.run {
-			AlertDialog.Builder(this@ManageSpaceActivity)
-				.setPositiveButton(android.R.string.ok) { _, _ -> viewModel.actionConfirmed() }
-				.setNegativeButton(android.R.string.cancel) { _, _ -> viewModel.actionCancelled() }
-				.setCancelable(true)
-				.setOnCancelListener { viewModel.actionCancelled() }
-				.setTitle(title)
-				.setMessage(message)
+		if (state.confirmation != null) {
+			DialogTools
+				.confirm(this) { result: Boolean? ->
+					if (result == true) {
+						viewModel.actionConfirmed()
+					} else {
+						viewModel.actionCancelled()
+					}
+				}
+				.setTitle(state.confirmation.title)
+				.setMessage(state.confirmation.message)
 				.show()
 		}
 	}
