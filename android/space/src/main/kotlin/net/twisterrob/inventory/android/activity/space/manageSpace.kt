@@ -112,7 +112,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 				message = "You're about to remove all files in the image cache. "
 					+ "There will be no permanent loss. "
 					+ "The cache will be re-filled as required in the future.",
-				progress = { it.copy(imageCache = "Clearing…") },
+				progress = { it.copy(imageCache = "Clearing… " + it.imageCache) },
 			) {
 				val glide = Glide.get(inject.applicationContext())
 				withContext(Dispatchers.Main) { glide.clearMemory() }
@@ -127,7 +127,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 				context = inject.applicationContext(),
 				title = "Empty Database",
 				message = "All of your belongings will be permanently deleted.",
-				progress = { it.copy(database = "Emptying…") },
+				progress = { it.copy(database = "Emptying… " + it.database) },
 			) {
 				Database.get(inject.applicationContext()).helper.run {
 					@Suppress("ConvertTryFinallyToUseCall") // AutoClosable was added in Q.
@@ -148,7 +148,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 		intent {
 			cleanTask(
 				context = inject.applicationContext(),
-				progress = { it.copy(database = "Dumping…") },
+				progress = { it.copy(database = "Dumping… " + it.database) },
 			) {
 				withContext(Dispatchers.IO) {
 					val name = DocumentFile.fromSingleUri(inject.applicationContext(), target)?.name
@@ -218,8 +218,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 			confirmedClean(
 				context = inject.applicationContext(),
 				title = "Vacuum the Database",
-				message = "May take a while depending on database size, " +
-					"also requires at least the size of the database as free space.",
+				message = "May take a while depending on database size, "
+					+ "also requires at least the size of the database as free space.",
 				progress = { it.copy(database = "Vacuuming…") },
 			) {
 				Database.get(inject.applicationContext()).writableDatabase.execSQL("VACUUM;")
@@ -320,7 +320,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 				context = inject.applicationContext(),
 				title = "Rebuild search index…",
 				message = "Continuing will re-build the search index, it may take a while.",
-				{ it.copy(searchIndex = "Rebuilding…") }
+				{ it.copy(searchIndex = "Rebuilding… " + it.searchIndex) }
 			) {
 				Database.get(inject.applicationContext()).rebuildSearch()
 			}
