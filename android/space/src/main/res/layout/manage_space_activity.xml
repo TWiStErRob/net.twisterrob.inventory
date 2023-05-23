@@ -4,19 +4,12 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/refresher"
 	style="@style/Theme.AppTheme.RecyclerRefresh"
-	android:enabled="true"
 	tools:context="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
 	>
 
 	<include
 		android:id="@+id/contents"
 		layout="@layout/manage_space_activity_contents"
-		/>
-
-	<net.twisterrob.inventory.android.activity.space.DialogShowingView
-		android:id="@+id/dialog"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
 		/>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

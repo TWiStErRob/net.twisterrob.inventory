@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import net.twisterrob.android.utils.tools.DialogTools
@@ -57,9 +58,6 @@ class ManageSpaceActivity : BaseActivity() {
 		RecyclerViewController.initializeProgress(binding.refresher)
 
 		binding.refresher.setOnRefreshListener(viewModel::loadSizes)
-		binding.dialog.setPositiveButtonListener(viewModel::actionConfirmed)
-		binding.dialog.setNegativeButtonListener(viewModel::actionCancelled)
-		binding.dialog.setCancelListener(viewModel::actionCancelled)
 		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch(inject) }
 		binding.contents.storageImageCacheClear.setOnClickListener {
 			viewModel.clearImageCache(inject)
@@ -109,7 +107,16 @@ class ManageSpaceActivity : BaseActivity() {
 		binding.contents.storageDbFreelistSize.text = state.sizes?.freelist
 		binding.contents.storageSearchSize.text = state.sizes?.searchIndex
 		binding.contents.storageAllSize.text = state.sizes?.allData
-		state.confirmation?.run { binding.dialog.show(title, message) }
+		state.confirmation?.run {
+			AlertDialog.Builder(this@ManageSpaceActivity)
+				.setPositiveButton(android.R.string.ok) { _, _ -> viewModel.actionConfirmed() }
+				.setNegativeButton(android.R.string.cancel) { _, _ -> viewModel.actionCancelled() }
+				.setCancelable(true)
+				.setOnCancelListener { viewModel.actionCancelled() }
+				.setTitle(title)
+				.setMessage(message)
+				.show()
+		}
 	}
 
 	override fun onResume() {
