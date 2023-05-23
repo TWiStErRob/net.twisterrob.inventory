@@ -4,8 +4,10 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/refresher"
 	style="@style/Theme.AppTheme.RecyclerRefresh"
+	android:enabled="true"
 	tools:context="net.twisterrob.inventory.android.space.ManageSpaceActivity"
 	>
+	<!-- android:enabled is required counteract the style and have Pull-to-refresh support on inflate. -->
 
 	<include
 		android:id="@+id/contents"
