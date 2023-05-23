@@ -1,19 +1,16 @@
 package net.twisterrob.inventory.android.space
 
+import androidx.core.view.isVisible
 import net.twisterrob.android.utils.tools.DialogTools
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
-import net.twisterrob.inventory.android.view.RecyclerViewController
 import javax.inject.Inject
 
 internal class ManageSpaceUiStateHandler @Inject constructor(
 	private val binding: ManageSpaceActivityBinding,
 	private val viewModel: ManageSpaceViewModel,
 ) {
-	init {
-		RecyclerViewController.initializeProgress(binding.refresher)
-	}
-
 	fun updateUi(state: ManageSpaceUiState) {
+		binding.contents.storageAll.isVisible = state.isDevelopmentMode
 		binding.refresher.isRefreshing = state.isLoading
 		binding.contents.storageImageCacheActions.isEnabled = !state.isLoading
 		binding.contents.storageDbActions.isEnabled = !state.isLoading

@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.space
 
 internal data class ManageSpaceUiState(
+	val isDevelopmentMode: Boolean,
 	val isLoading: Boolean,
 	val sizes: SizesUiState?,
 	val confirmation: ConfirmationUiState?,
@@ -20,3 +21,6 @@ internal data class ManageSpaceUiState(
 		val message: CharSequence,
 	)
 }
+
+internal val ManageSpaceUiState.isModalShowing: Boolean
+	get() = confirmation != null

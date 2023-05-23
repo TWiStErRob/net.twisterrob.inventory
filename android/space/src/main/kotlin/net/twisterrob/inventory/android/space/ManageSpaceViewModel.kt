@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.Constants.Paths
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.ConfirmationUiState
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.SizesUiState
@@ -28,8 +29,10 @@ internal class ManageSpaceViewModel @Inject constructor(
 	private val useCase: GetSizesUseCase,
 	private val mapper: SizesDomainToStateMapper,
 	private val manager: InventorySpaceManager,
+	inject: BaseComponent,
 ) : BaseViewModel<ManageSpaceUiState, ManageSpaceUiEffect>(
 	initialState = ManageSpaceUiState(
+		isDevelopmentMode = inject.buildInfo().isDebug,
 		isLoading = false,
 		sizes = null,
 		confirmation = null,
@@ -57,7 +60,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 
 	fun screenVisible() {
 		intent {
-			if (state.confirmation != null) {
+			if (state.isModalShowing) {
 				LOG.trace("Skipping loadSizes() because a confirmation is in progress.")
 				return@intent
 			}
@@ -255,7 +258,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	private suspend fun SimpleSyntax<ManageSpaceUiState, ManageSpaceUiEffect>.confirmedClean(
+	context(SimpleSyntax<ManageSpaceUiState, ManageSpaceUiEffect>)
+	private suspend fun confirmedClean(
 		title: CharSequence,
 		message: CharSequence,
 		progress: (SizesUiState) -> SizesUiState,
@@ -283,7 +287,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 	}
 
-	private suspend fun SimpleSyntax<ManageSpaceUiState, ManageSpaceUiEffect>.unconfirmedClean(
+	context(SimpleSyntax<ManageSpaceUiState, ManageSpaceUiEffect>)
+	private suspend fun unconfirmedClean(
 		progress: (SizesUiState) -> SizesUiState,
 		action: suspend () -> Unit,
 	) {

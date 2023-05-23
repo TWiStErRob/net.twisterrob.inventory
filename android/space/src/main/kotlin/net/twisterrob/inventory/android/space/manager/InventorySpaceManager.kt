@@ -163,4 +163,4 @@ private val Context.manageSpaceActivity: ActivityInfo
 		val applicationInfo = applicationInfo
 		val activity = ComponentName(packageName, applicationInfo.manageSpaceActivityName)
 		return PackageManagerTools.getActivityInfo(pm, activity, 0)
-	}	
+	}
