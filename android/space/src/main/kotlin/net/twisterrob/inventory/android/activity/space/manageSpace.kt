@@ -59,6 +59,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 	)
 ) {
 	private val confirmations = Channel<Confirmation.Result>()
+		.also { addCloseable { it.cancel(CancellationException("ManageSpaceViewModel cleared")) } }
 
 	fun actionConfirmed() {
 		intent {
