@@ -12,10 +12,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.components.ActivityComponent
+import net.twisterrob.android.viewbinding.viewBindingInflate
 import net.twisterrob.inventory.android.activity.BaseActivity
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import net.twisterrob.inventory.android.view.RecyclerViewController
-import net.twisterrob.inventory.android.viewmodel.viewBindingInflate
 import org.orbitmvi.orbit.viewmodel.observe
 import javax.inject.Inject
 

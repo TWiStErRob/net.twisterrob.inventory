@@ -12,6 +12,8 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
+	implementation "net.twisterrob.lib:twister-lib-android-orbit"
+	implementation "net.twisterrob.lib:twister-lib-android-mad"
 	implementation "net.twisterrob.lib:twister-lib-java"
 //	implementation "net.twisterrob.lib:twister-lib-core"
 	implementation(libs.androidx.swiperefreshlayout)
