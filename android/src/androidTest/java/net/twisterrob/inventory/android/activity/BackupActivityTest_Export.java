@@ -37,7 +37,6 @@ public class BackupActivityTest_Export {
 	}
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
-	@Ignore
 	@Test public void testExportCompletes() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		BackupExportPickerActor pickerActor = backup.exportBackup();
