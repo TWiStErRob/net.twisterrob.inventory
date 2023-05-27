@@ -199,7 +199,8 @@ public class BackupActivityActor extends ActivityActor {
 				DocumentsUiAutomator.selectItemInList(name).longClick();
 				clickOn(DocumentsUiAutomator.open());
 			} else {
-				clickOn(DocumentsUiAutomator.selectItemInList(name));
+				// Don't use clickOn() because this click is flaky.
+				DocumentsUiAutomator.selectItemInList(name).clickAndWaitForNewWindow();
 			}
 			BackupImportResultActor result = new BackupImportResultActor();
 			result.assertDisplayed();
