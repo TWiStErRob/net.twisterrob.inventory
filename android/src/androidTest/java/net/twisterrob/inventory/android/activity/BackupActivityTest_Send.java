@@ -8,7 +8,9 @@ import org.junit.runner.*;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.*;
 
+import net.twisterrob.android.test.automators.DocumentsUiAutomator;
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
+import net.twisterrob.inventory.android.test.ExternalAppKiller;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.categories.*;
@@ -19,6 +21,10 @@ import static net.twisterrob.inventory.android.test.actors.BackupActivityActor.B
 @RunWith(AndroidJUnit4.class)
 @Category({On.Export.class})
 public class BackupActivityTest_Send {
+
+	@Rule(order = 0) public final TestRule docsKiller =
+			new ExternalAppKiller(DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI);
+
 	@SuppressWarnings("deprecation")
 	@Rule(order = 1) public final androidx.test.rule.ActivityTestRule<BackupActivity> activity =
 			new InventoryActivityRule<>(BackupActivity.class);
