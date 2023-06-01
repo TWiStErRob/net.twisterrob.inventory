@@ -74,6 +74,12 @@ public class ExternalAppKiller extends ExternalResource {
 
 	@CheckResult
 	private static boolean isVisible(@NonNull String packageName) {
+		try {
+			UiDevice.getInstance(getInstrumentation());
+		} catch(IllegalStateException e) {
+			// UiDevice.getInstance() throws IllegalStateException if the instrumentation is not running.
+			return false;
+		}
 		return packageName.equals(UiAutomatorExtensions.getCurrentAppPackageName());
 	}
 }

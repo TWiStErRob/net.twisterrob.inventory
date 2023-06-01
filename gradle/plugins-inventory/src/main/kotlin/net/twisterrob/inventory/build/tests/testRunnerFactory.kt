@@ -23,7 +23,7 @@ import java.io.File
  *  * before `ddms: execute: running am instrument ...`
  * so that the install instrumentation APK can be granted permissions.
  */
-private typealias PerDeviceSetupCallback = IShellEnabledDevice.(packageName: String) -> Unit
+typealias PerDeviceCallback = IShellEnabledDevice.(packageName: String) -> Unit
 
 /**
  * Note, this access is for [DeviceProviderInstrumentTestTask.getTestRunnerFactory],
@@ -41,13 +41,14 @@ private var DeviceProviderInstrumentTestTask.testRunnerFactoryAccess: TestRunner
 			.setValue(this, value)
 	}
 
-fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(configure: PerDeviceSetupCallback) {
-	this.testRunnerFactoryAccess = replaceTestRunnerFactory(this.testRunnerFactory, configure)
+fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(before: PerDeviceCallback, after: PerDeviceCallback) {
+	this.testRunnerFactoryAccess = replaceTestRunnerFactory(this.testRunnerFactory, before, after)
 }
 
 private fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(
 	originalFactory: TestRunnerFactory,
-	configure: PerDeviceSetupCallback,
+	before: PerDeviceCallback,
+	after: PerDeviceCallback,
 ): TestRunnerFactory =
 	@Suppress("UnstableApiUsage")
 	object : DelegatingTestRunnerFactory(originalFactory) {
@@ -79,7 +80,8 @@ private fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(
 				buildTools.splitSelectExecutable().orNull,
 				GradleProcessExecutor(execOperations::exec),
 				executorServiceAdapter,
-				configure,
+				before,
+				after,
 			)
 		}
 	}
@@ -88,7 +90,8 @@ private class ConfiguringTestRunner(
 	splitSelectExec: File?,
 	processExecutor: ProcessExecutor,
 	executor: ExecutorServiceAdapter,
-	private val configure: PerDeviceSetupCallback,
+	private val before: PerDeviceCallback,
+	private val after: PerDeviceCallback,
 ) : SimpleTestRunner(splitSelectExec, processExecutor, executor) {
 
 	override fun createRemoteAndroidTestRunner(
@@ -99,7 +102,8 @@ private class ConfiguringTestRunner(
 			testData.applicationId,
 			testData.instrumentationRunner,
 			device,
-			configure,
+			before,
+			after,
 		)
 }
 
@@ -107,11 +111,13 @@ private class ConfiguringRemoteAndroidTestRunner(
 	packageName: String,
 	runnerName: String,
 	private val remoteDevice: IShellEnabledDevice,
-	private val configure: PerDeviceSetupCallback,
+	private val before: PerDeviceCallback,
+	private val after: PerDeviceCallback,
 ) : RemoteAndroidTestRunner(packageName, runnerName, remoteDevice) {
 
 	override fun run(listeners: MutableCollection<ITestRunListener>?) {
-		remoteDevice.configure(packageName)
+		remoteDevice.before(packageName)
 		super.run(listeners)
+		remoteDevice.after(packageName)
 	}
 }

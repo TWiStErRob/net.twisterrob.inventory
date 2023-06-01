@@ -2,6 +2,7 @@ package net.twisterrob.inventory.build.tests
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
+import com.android.build.gradle.internal.testing.ConnectedDevice
 import com.android.ddmlib.IShellEnabledDevice
 import com.android.ddmlib.NullOutputReceiver
 import org.gradle.api.Plugin
@@ -16,7 +17,7 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 		this.project = project
 		project.androidApp.testVariants.all {
 			connectedInstrumentTestProvider.configure {
-				runBeforeAndroidTest(this as DeviceProviderInstrumentTestTask) { packageName ->
+				val before: PerDeviceCallback = { packageName ->
 					// Used by net.twisterrob.android.test.SystemAnimations
 					adbShell("pm grant ${packageName} android.permission.SET_ANIMATION_SCALE")
 					// to set these:
@@ -31,6 +32,11 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 					//adbShell("pm grant ${packageName} android.permission.WRITE_SECURE_SETTINGS")
 					adbShell("settings put secure long_press_timeout 1500")
 				}
+				val after: PerDeviceCallback = {
+					this as ConnectedDevice
+					iDevice.pullFile("/sdcard/test.zip", project.file("build/outputs/connected_android_test_additional_output/test.zip").absolutePath)
+				}
+				runBeforeAndroidTest(this as DeviceProviderInstrumentTestTask, before, after) 
 			}
 		}
 	}
@@ -46,7 +52,8 @@ private val Project.androidApp: AppExtension
 
 private fun runBeforeAndroidTest(
 	task: DeviceProviderInstrumentTestTask,
-	block: IShellEnabledDevice.(packageName: String) -> Unit
+	before: PerDeviceCallback,
+	after: PerDeviceCallback,
 ) {
 	// Originally I tried the below doFirst block.
 	// Even though that's the latest public injection point,
@@ -68,5 +75,5 @@ private fun runBeforeAndroidTest(
 
 	// Replace the test runner factory to replace the test runner,
 	// which replaces RemoteAndroidTestRunner so the block can be injected at the actual execution.
-	task.replaceTestRunnerFactory(block)
+	task.replaceTestRunnerFactory(before, after)
 }
