@@ -12,6 +12,7 @@ import static org.hamcrest.junit.MatcherAssume.*;
 import static org.junit.Assume.assumeTrue;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -20,7 +21,9 @@ import android.os.Build.*;
 import android.os.Environment;
 
 import androidx.annotation.*;
+import androidx.test.espresso.Espresso;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiScrollable;
@@ -201,6 +204,7 @@ public class BackupActivityActor extends ActivityActor {
 			} else {
 				// Don't use clickOn() because this click is flaky.
 				DocumentsUiAutomator.selectItemInList(name).clickAndWaitForNewWindow();
+				crazyIdle();
 			}
 			BackupImportResultActor result = new BackupImportResultActor();
 			result.assertDisplayed();
@@ -241,6 +245,7 @@ public class BackupActivityActor extends ActivityActor {
 		}
 		public BackupExportResultActor save() throws UiObjectNotFoundException {
 			clickPositiveInExternalDialog();
+			crazyIdle();
 			BackupExportResultActor actor = new BackupExportResultActor();
 			actor.assertDisplayed();
 			return actor;
@@ -427,5 +432,19 @@ public class BackupActivityActor extends ActivityActor {
 		public String getSaveFileName() throws UiObjectNotFoundException {
 			return getText(GoogleDriveAutomator.saveToDriveFileName());
 		}
+	}
+
+	/**
+	 * Some UI automator actions are not stable on CI, while always seem to pass on local tests.
+	 * This is a hail mary function trying to stabilize these calls.
+	 * In both cases an external button is pressed,
+	 * then an assertion is made for a Dialog Root in Espresso.
+	 * This assertion fails on CI, not finding the root, only seeing the idle state of the activity.
+	 */
+	private static void crazyIdle() {
+		Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+		UiDevice.getInstance(instrumentation).waitForIdle();
+		instrumentation.waitForIdleSync();
+		Espresso.onIdle();
 	}
 }
