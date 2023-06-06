@@ -13,12 +13,12 @@ import net.twisterrob.android.utils.tools.IOTools;
 
 public class InventoryJUnitRunner extends AndroidJUnitRunner {
 	@Override public void finish(int resultCode, Bundle results) {
-		zip();
+		zipOutputDirectory();
 		super.finish(resultCode, results); // Kills the process!
 	}
 
 	// TODEL once AGP UTP is used.
-	private static void zip() {
+	private static void zipOutputDirectory() {
 		if (Build.VERSION_CODES.Q < Build.VERSION.SDK_INT) {
 			// Not supported, because of https://developer.android.com/about/versions/11/privacy/storage
 			return;
@@ -27,7 +27,6 @@ public class InventoryJUnitRunner extends AndroidJUnitRunner {
 		try {
 			IOTools.zip(new File("/sdcard/test.zip"), false, folder);
 		} catch (IOException ex) {
-			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		}
 	}

@@ -43,7 +43,7 @@ private var DeviceProviderInstrumentTestTask.testRunnerFactoryAccess: TestRunner
 
 fun DeviceProviderInstrumentTestTask.replaceTestRunnerFactory(
 	before: PerDeviceCallback,
-	after: PerDeviceCallback
+	after: PerDeviceCallback,
 ) {
 	this.testRunnerFactoryAccess = replaceTestRunnerFactory(this.testRunnerFactory, before, after)
 }
