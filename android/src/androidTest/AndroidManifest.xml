@@ -7,7 +7,7 @@
 	     Need to duplicate the name attribute to help the manifest merger (element looked up via android:name as key).
 	-->
 	<!--suppress AndroidDomInspection android:package is merged in by Gradle -->
-	<instrumentation android:name="net.twisterrob.inventory.android.InventoryJunitRunner">
+	<instrumentation android:name="net.twisterrob.inventory.android.InventoryJUnitRunner">
 		<!--suppress AndroidElementNotAllowed Undocumented that <instrumentation> can have <meta-data> children,
 		    but this is the way to parameterize the runner:
 		    `context.packageManager.getInstrumentationInfo(...).metaData` is the way to read it.
@@ -16,6 +16,7 @@
 		           android:value="net.twisterrob.inventory.android.test.suites" />
 	</instrumentation>
 
+	<!-- Used by net.twisterrob.inventory.android.InventoryJUnitRunner -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 	<application

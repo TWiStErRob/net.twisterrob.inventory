@@ -36,7 +36,7 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 					this as ConnectedDevice
 					iDevice.pullFile("/sdcard/test.zip", project.file("build/outputs/connected_android_test_additional_output/test.zip").absolutePath)
 				}
-				runBeforeAndroidTest(this as DeviceProviderInstrumentTestTask, before, after) 
+				runAroundAndroidTest(this as DeviceProviderInstrumentTestTask, before, after) 
 			}
 		}
 	}
@@ -50,7 +50,7 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 private val Project.androidApp: AppExtension
 	get() = this.extensions.findByName("android") as AppExtension
 
-private fun runBeforeAndroidTest(
+private fun runAroundAndroidTest(
 	task: DeviceProviderInstrumentTestTask,
 	before: PerDeviceCallback,
 	after: PerDeviceCallback,

@@ -85,7 +85,7 @@ android {
 			patch = 0
 		}
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
-		testInstrumentationRunner 'net.twisterrob.inventory.android.InventoryJunitRunner'
+		testInstrumentationRunner = "net.twisterrob.inventory.android.InventoryJUnitRunner"
 	}
 	lint {
 		checkAllWarnings = true

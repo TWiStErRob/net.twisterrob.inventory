@@ -49,6 +49,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 
 	// Note: with the base = foo.apply(base) pattern, these will be executed in reverse when evaluate() is called.
 	@Override public Statement apply(Statement base, Description description) {
+		// TODEL once AGP UTP is used.
 		File folder = new OutputDirCalculator().getOutputDir();
 		Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
 		base = new ScreenshotFailure(instrumentation, folder).apply(base, description);
