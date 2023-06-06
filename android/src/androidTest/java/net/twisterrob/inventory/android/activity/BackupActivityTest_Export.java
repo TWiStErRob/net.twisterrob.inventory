@@ -8,14 +8,8 @@ import org.junit.runner.*;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
 import net.twisterrob.android.test.automators.DocumentsUiAutomator;
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
-import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.test.ExternalAppKiller;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
@@ -45,15 +39,6 @@ public class BackupActivityTest_Export {
 
 	@Before public void assertBackupActivityIsClean() {
 		backup.assertEmptyState();
-	}
-
-	@Test public void test() throws Exception {
-		// Make a failure, ensure takeScreenshot in defaultfailurehandler, and then look for additional files
-//		https://github.com/android/android-test/issues/1584
-//		https://www.repeato.app/espresso-how-to-take-a-screenshot-when-a-test-fails/
-//		https://issuetracker.google.com/issues/156065464
-
-		onView(withId(R.id.progress)).check(matches(isDisplayed()));
 	}
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
