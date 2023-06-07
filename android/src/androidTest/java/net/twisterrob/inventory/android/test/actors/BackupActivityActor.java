@@ -446,5 +446,13 @@ public class BackupActivityActor extends ActivityActor {
 		UiDevice.getInstance(instrumentation).waitForIdle();
 		instrumentation.waitForIdleSync();
 		Espresso.onIdle();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException ex) {
+			throw new RuntimeException(ex);
+		}
+		UiDevice.getInstance(instrumentation).waitForIdle();
+		instrumentation.waitForIdleSync();
+		Espresso.onIdle();
 	}
 }
