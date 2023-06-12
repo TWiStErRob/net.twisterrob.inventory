@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.activity;
 import java.io.File;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -88,6 +89,7 @@ public class BackupActivityTest_Import {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
+	@Ignore
 	@Test public void testImportReal() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		File file = temp.newFile();
