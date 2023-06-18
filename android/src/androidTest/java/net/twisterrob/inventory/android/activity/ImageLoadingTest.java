@@ -32,9 +32,7 @@ public class ImageLoadingTest {
 		HomeRoomsActor rooms = home.rooms();
 		rooms.assertExists("!All Categories");
 		RoomViewActivityActor room = rooms.open("!All Categories");
-		// Pick the item before last, because the last one might overlap with the + button.
-		// See https://github.com/TWiStErRob/net.twisterrob.inventory/issues/274
-		GridBelongingActor item = room.item("Vehicle trailer");
+		GridBelongingActor item = room.item("Vehicle water");
 		item.assertHasImage();
 		item.assertHasTypeImage();
 		item.changeCategory().cancel();
