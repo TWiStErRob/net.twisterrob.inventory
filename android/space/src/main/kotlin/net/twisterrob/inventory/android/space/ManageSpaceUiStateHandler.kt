@@ -11,10 +11,10 @@ internal class ManageSpaceUiStateHandler @Inject constructor(
 	fun updateUi(state: ManageSpaceUiState) {
 		binding.refresher.isRefreshing = state.isLoading
 		// Note: isVisible is set from XML based on debug/release builds for each button/section.
-		binding.contents.storageImageCacheActions.isEnabled = !state.isLoading
-		binding.contents.storageDbActions.isEnabled = !state.isLoading
-		binding.contents.storageDataActions.isEnabled = !state.isLoading
-		binding.contents.storageIndexActions.isEnabled = !state.isLoading
+		binding.contents.storageImageCacheActions.isEnabled = state.isEnableButtons
+		binding.contents.storageDbActions.isEnabled = state.isEnableButtons
+		binding.contents.storageDataActions.isEnabled = state.isEnableButtons
+		binding.contents.storageIndexActions.isEnabled = state.isEnableButtons
 		binding.contents.storageImageCacheSize.text = state.sizes?.imageCache
 		binding.contents.storageDbSize.text = state.sizes?.database
 		binding.contents.storageDbFreelistSize.text = state.sizes?.freelist

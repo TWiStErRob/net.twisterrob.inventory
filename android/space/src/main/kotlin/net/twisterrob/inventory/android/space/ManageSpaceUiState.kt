@@ -23,3 +23,6 @@ internal data class ManageSpaceUiState(
 
 internal val ManageSpaceUiState.isModalShowing: Boolean
 	get() = confirmation != null
+
+internal val ManageSpaceUiState.isEnableButtons: Boolean
+	get() = !isLoading
