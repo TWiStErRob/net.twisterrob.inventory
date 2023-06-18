@@ -93,8 +93,8 @@ internal class InventorySpaceManager @Inject constructor(
 				LOG.debug("Restored {}", source)
 			} catch (ex: CancellationException) {
 				throw ex
-			} catch (ex: Exception) {
-				LOG.error("Cannot restore {}", source)
+			} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
+				LOG.error("Cannot restore {}", source, ex)
 			}
 		}
 	}
