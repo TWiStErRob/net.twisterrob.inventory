@@ -31,7 +31,7 @@ class ManageSpaceActivity : BaseActivity() {
 	internal class HiltModule {
 		@Provides
 		fun provideTypedActivity(activity: Activity): ManageSpaceActivity =
-			(activity as ManageSpaceActivity)
+			activity as ManageSpaceActivity
 
 		@Provides
 		fun provideBinding(activity: ManageSpaceActivity): ManageSpaceActivityBinding =

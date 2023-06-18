@@ -1,17 +1,17 @@
 package net.twisterrob.inventory.android.viewmodel
 
 import net.twisterrob.inventory.android.content.VariantViewModel
+import net.twisterrob.inventory.android.logger
 import net.twisterrob.orbit.logging.decorateLogging
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
-import org.slf4j.LoggerFactory
 
-abstract class BaseViewModel<State : Any, Effect : Any>(
+abstract class OrbitViewModel<State : Any, Effect : Any>(
 	initialState: State
 ) : VariantViewModel(), ContainerHost<State, Effect> {
 
 	override val container = container<State, Effect>(initialState)
-		.decorateLogging(LoggerFactory.getLogger(this::class.java))
+		.decorateLogging(logger(this::class))
 }
 
 fun interface EffectHandler<Effect> {

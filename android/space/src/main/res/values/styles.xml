@@ -34,6 +34,7 @@
 		<item name="android:layout_gravity">end</item>
 		<item name="android:paddingLeft">@dimen/unit_double</item>
 		<item name="android:paddingRight">@dimen/unit_double</item>
+		<!-- Propagates parent layout's android:enabled to this button. -->
 		<item name="android:duplicateParentState">true</item>
 	</style>
 </resources>

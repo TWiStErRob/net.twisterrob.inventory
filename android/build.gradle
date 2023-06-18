@@ -3,7 +3,7 @@ plugins {
 	id("net.twisterrob.inventory.mapping")
 	id("net.twisterrob.inventory.androidTest")
 	id("net.twisterrob.inventory.upgradeTest")
-	id("dagger.hilt.android.plugin")
+	id("com.google.dagger.hilt.android")
 }
 
 dependencies {
@@ -106,10 +106,10 @@ android {
 			multiDexKeepProguard file('src/androidTest/multidex.pro')
 		}
 	}
-	aaptOptions {
+	androidResources {
 		noCompress 'svg' // Resources.openRawResourceFd can only open AssetFileDescriptor for uncompressed resources
 		def defaultIgnoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~'
-		ignoreAssetsPattern defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
+		ignoreAssetsPattern = defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
 	sourceSets.test.java.srcDir 'src/test/robolectricJava'
 }

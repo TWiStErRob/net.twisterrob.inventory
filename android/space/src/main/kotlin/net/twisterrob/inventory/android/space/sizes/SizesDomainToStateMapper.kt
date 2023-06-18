@@ -6,7 +6,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import net.twisterrob.android.utils.tools.TextTools
 import net.twisterrob.inventory.android.components.ErrorMapper
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.SizesUiState
-import net.twisterrob.inventory.android.space.R.string
+import net.twisterrob.inventory.android.space.R
 import net.twisterrob.inventory.android.viewmodel.Mapper
 import javax.inject.Inject
 
@@ -44,7 +44,7 @@ internal class SizesDomainToStateMapper @Inject constructor(
 		this.map { Formatter.formatFileSize(context, it) }.getOrElse { "?" }
 
 	fun loading(): SizesUiState {
-		val calculating = context.getString(string.manage_space_calculating)
+		val calculating = context.getString(R.string.manage_space_calculating)
 		return SizesUiState(
 			imageCache = calculating,
 			database = calculating,

@@ -20,13 +20,16 @@ import net.twisterrob.android.utils.tools.PackageManagerTools
 import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.content.Database
 import net.twisterrob.inventory.android.content.db.DatabaseService
-import net.twisterrob.inventory.android.space.R.string
-import org.slf4j.LoggerFactory
+import net.twisterrob.inventory.android.logger
+import net.twisterrob.inventory.android.space.R
 import java.io.File
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 
-class InventorySpaceManager @Inject constructor(
+private val LOG = logger<InventorySpaceManager>()
+
+@Suppress("TooManyFunctions")
+internal class InventorySpaceManager @Inject constructor(
 	private val inject: BaseComponent,
 ) {
 	suspend fun clearImageCache() {
@@ -45,8 +48,8 @@ class InventorySpaceManager @Inject constructor(
 				close()
 			}
 		}
-		inject.prefs().setString(string.pref_currentLanguage, null)
-		inject.prefs().setBoolean(string.pref_showWelcome, true)
+		inject.prefs().setString(R.string.pref_currentLanguage, null)
+		inject.prefs().setBoolean(R.string.pref_showWelcome, true)
 	}
 
 	fun clearImages() {
@@ -150,10 +153,6 @@ class InventorySpaceManager @Inject constructor(
 				Process.killProcess(proc.pid)
 			}
 		}
-	}
-
-	companion object {
-		private val LOG = LoggerFactory.getLogger(InventorySpaceManager::class.java)
 	}
 }
 

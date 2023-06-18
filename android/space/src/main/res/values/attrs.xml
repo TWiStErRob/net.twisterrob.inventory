@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<declare-styleable name="DialogShowingView">
-		<attr name="dialogStyle" format="reference" />
-		<attr name="dialogLayout" format="reference" />
-	</declare-styleable>
-</resources>

@@ -7,19 +7,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import net.twisterrob.inventory.android.Constants.Paths
+import net.twisterrob.inventory.android.logger
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.ConfirmationUiState
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.SizesUiState
 import net.twisterrob.inventory.android.space.manager.InventorySpaceManager
 import net.twisterrob.inventory.android.space.sizes.GetSizesUseCase
 import net.twisterrob.inventory.android.space.sizes.SizesDomainToStateMapper
-import net.twisterrob.inventory.android.viewmodel.BaseViewModel
+import net.twisterrob.inventory.android.viewmodel.OrbitViewModel
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
-import org.slf4j.LoggerFactory
 import java.util.Calendar
 import javax.inject.Inject
+
+private val LOG = logger<ManageSpaceViewModel>()
 
 @HiltViewModel
 @Suppress("TooManyFunctions") // Blame the screen, not the ViewModel?
@@ -27,7 +29,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 	private val useCase: GetSizesUseCase,
 	private val mapper: SizesDomainToStateMapper,
 	private val manager: InventorySpaceManager,
-) : BaseViewModel<ManageSpaceUiState, ManageSpaceUiEffect>(
+) : OrbitViewModel<ManageSpaceUiState, ManageSpaceUiEffect>(
 	initialState = ManageSpaceUiState(
 		isLoading = false,
 		sizes = null,
@@ -307,9 +309,5 @@ internal class ManageSpaceViewModel @Inject constructor(
 		}
 		manager.killProcessesAroundManageSpaceActivity()
 		loadSizes(force = true)
-	}
-
-	companion object {
-		private val LOG = LoggerFactory.getLogger(ManageSpaceViewModel::class.java)
 	}
 }

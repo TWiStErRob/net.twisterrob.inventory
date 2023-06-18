@@ -10,10 +10,12 @@ import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
 import net.twisterrob.inventory.android.content.Database
+import net.twisterrob.inventory.android.logger
 import net.twisterrob.inventory.android.viewmodel.UseCase
-import org.slf4j.LoggerFactory
 import java.io.File
 import javax.inject.Inject
+
+private val LOG = logger<GetSizesUseCase>()
 
 class GetSizesUseCase @Inject constructor(
 	@ApplicationContext private val context: Context,
@@ -65,8 +67,4 @@ class GetSizesUseCase @Inject constructor(
 			LOG.error("Cannot get size", ex)
 			Result.failure(ex)
 		}
-
-	companion object {
-		private val LOG = LoggerFactory.getLogger(GetSizesUseCase::class.java)
-	}
 }
