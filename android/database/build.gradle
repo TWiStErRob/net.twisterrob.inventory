@@ -13,7 +13,7 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
 	implementation "net.twisterrob.lib:twister-lib-core"
 	implementation "net.twisterrob.lib:twister-lib-java"
-	api("net.twisterrob.lib:twister-lib-general")
+	implementation("net.twisterrob.lib:twister-lib-general")
 	implementation(libs.androidx.preference)
 }
 
