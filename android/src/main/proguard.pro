@@ -24,19 +24,6 @@
 	*** copyXSLT(...);
 }
 
-# See net.twisterrob.orbit.logging.LoggingContainerDecoratorKt#captured
--keepclassmembernames class org.orbitmvi.orbit.syntax.simple.SimpleSyntaxExtensionsKt$reduce$* {
-    final kotlin.jvm.functions.Function1 $reducer;
-}
-# See net.twisterrob.orbit.logging.LoggingContainerDecoratorKt#captured
--keepclassmembernames class org.orbitmvi.orbit.syntax.simple.SimpleSyntaxExtensionsKt$intent$* {
-    final kotlin.jvm.functions.Function2 $transformer;
-}
-# See net.twisterrob.orbit.logging.LoggingContainerDecoratorKt#captured
--keepclassmembernames class org.orbitmvi.orbit.syntax.simple.SimpleSyntaxExtensionsKt$blockingIntent$* {
-    final kotlin.jvm.functions.Function2 $transformer;
-}
-
 # Remove Logging for now
 # ----------------------
 # FIXME use isLoggable in AndroidLogger and runtime control over TAGs
