@@ -13,7 +13,6 @@ import android.os.StrictMode;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.documentfile.provider.DocumentFile;
@@ -22,6 +21,7 @@ import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import net.twisterrob.android.test.automators.DocumentsUiAutomator;
 import net.twisterrob.android.utils.tools.IOTools;
+import net.twisterrob.inventory.android.content.CreateOpenableDocument;
 
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.clickOn;
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.exists;
@@ -51,13 +51,7 @@ public class ScopedStorageSaver extends ComponentActivity {
 	@Override protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		registerForActivityResult(
-				new ActivityResultContracts.CreateDocument(getIntent().getType()) {
-					@Override public @NonNull Intent createIntent(
-							@NonNull Context context, @NonNull String input) {
-						return super.createIntent(context, input)
-						            .addCategory(Intent.CATEGORY_OPENABLE);
-					}
-				},
+				new CreateOpenableDocument(getIntent().getType()),
 				new ActivityResultCallback<Uri>() {
 					@Override public void onActivityResult(@Nullable Uri result) {
 						ScopedStorageSaver.lastFileName = copyToSelectedTarget(result);
