@@ -34,7 +34,8 @@ class AndroidTestSetupPlugin : Plugin<Project> {
 				}
 				val after: PerDeviceCallback = {
 					this as ConnectedDevice
-					iDevice.pullFile("/sdcard/test.zip", project.file("build/outputs/connected_android_test_additional_output/test.zip").absolutePath)
+					val testZip = project.file("build/outputs/connected_android_test_additional_output/test.zip")
+					iDevice.pullFile("/sdcard/test.zip", testZip.absolutePath)
 				}
 				runAroundAndroidTest(this as DeviceProviderInstrumentTestTask, before, after) 
 			}
