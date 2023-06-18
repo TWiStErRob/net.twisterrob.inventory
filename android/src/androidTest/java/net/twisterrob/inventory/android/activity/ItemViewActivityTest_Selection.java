@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.FlakyTest;
 
 import static androidx.test.espresso.action.ViewActions.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
@@ -204,7 +205,7 @@ public class ItemViewActivityTest_Selection {
 
 	@SuppressWarnings("deprecation") // TODO
 	@Category({UseCase.Complex.class})
-	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
+	@FlakyTest(bugId = 215, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
 	@Test public void testSelectionTypeChange() {
 		createItems(4);
 		db.assertItemHasType(subItem(1), TEST_ITEM_CATEGORY_DEFAULT);
@@ -227,7 +228,7 @@ public class ItemViewActivityTest_Selection {
 	}
 
 	@SuppressWarnings("deprecation") // TODO
-	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
+	@FlakyTest(bugId = 215, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
 	@Test public void testSelectionTypeChangeAtOnce() {
 		createItems(3);
 		db.setItemCategory(subItem(1), TEST_ITEM_CATEGORY);

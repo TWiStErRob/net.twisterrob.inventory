@@ -5,6 +5,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.FlakyTest;
 
 import net.twisterrob.inventory.android.activity.data.ItemEditActivity;
 import net.twisterrob.inventory.android.content.*;
@@ -47,7 +48,7 @@ public class ItemEditActivityTest_Edit {
 	}
 
 	@Category({On.Category.class})
-	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
+	@FlakyTest(bugId = 215, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
 	@Test public void testChangeTypeWithDialog() {
 		ChangeTypeDialogActor changeType = itemEdit.changeType();
 		changeType.assertSelected(TEST_ITEM_CATEGORY);
