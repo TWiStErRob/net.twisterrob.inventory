@@ -7,8 +7,7 @@ import org.junit.rules.TemporaryFolder
 
 class MappingTest {
 
-	@Rule
-	@JvmField
+	@get:Rule
 	val temp = TemporaryFolder()
 
 	@Test

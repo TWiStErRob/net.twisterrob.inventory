@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/unit_half"
+	android:orientation="vertical"
+	tools:context="net.twisterrob.inventory.android.fragment.BackupControllerFragment"
+	tools:showIn="@layout/activity_backup"
+	>
+
+	<Button
+		android:id="@+id/backup_export"
+		style="@style/BackupAction"
+		android:text="@string/backup_export"
+		android:drawableStart="@drawable/backup_export_icon"
+		/>
+
+	<Button
+		android:id="@+id/backup_import"
+		style="@style/BackupAction"
+		android:text="@string/backup_import"
+		android:drawableStart="@drawable/backup_import_icon"
+		/>
+
+	<Button
+		android:id="@+id/backup_send"
+		style="@style/BackupAction"
+		android:text="@string/backup_send"
+		android:drawableStart="@drawable/backup_send_icon"
+		/>
+
+</LinearLayout>

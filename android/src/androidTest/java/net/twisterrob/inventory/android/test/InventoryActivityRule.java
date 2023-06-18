@@ -7,13 +7,18 @@ import org.junit.runners.model.Statement;
 import org.slf4j.*;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Context;
+import android.os.Build;
 
 import androidx.annotation.CallSuper;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.platform.io.OutputDirCalculator;
 
+import net.twisterrob.android.test.espresso.ScreenshotFailure;
 import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
@@ -44,12 +49,20 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 
 	// Note: with the base = foo.apply(base) pattern, these will be executed in reverse when evaluate() is called.
 	@Override public Statement apply(Statement base, Description description) {
+		// TODEL once AGP UTP is used.
+		File folder = new OutputDirCalculator().getOutputDir();
+		Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+		base = new ScreenshotFailure(instrumentation, folder).apply(base, description);
 		// Only idle on drawer when there's an activity running inside ActivityTestRule.
 		base = DrawerIdlingResource.rule().apply(base, description);
 		base = super.apply(base, description);
-		// Make sure to check for DatabaseService outside the activity.
-		// The activity startup and hence beforeActivityLaunched() should be blocked until this is ready.
-		base = new IdlingResourceRule(new DatabaseServiceIdlingResource()).apply(base, description);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+			// Make sure to check for DatabaseService outside the activity.
+			// The activity startup and hence beforeActivityLaunched() should be blocked until this is ready.
+			base = new IdlingResourceRule(new DatabaseServiceIdlingResource()).apply(base, description);
+		} else {
+			LOG.warn("DatabaseServiceIdlingResource is not supported on API {}, database is not synchornized in tests.", Build.VERSION.SDK_INT);
+		}
 		return base;
 	}
 

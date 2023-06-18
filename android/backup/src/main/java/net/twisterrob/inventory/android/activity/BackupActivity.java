@@ -1,39 +1,31 @@
 package net.twisterrob.inventory.android.activity;
 
-import java.io.File;
-import java.util.Calendar;
 import java.util.concurrent.CancellationException;
 
 import org.slf4j.*;
 
 import android.content.*;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.*;
 
 import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
-import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks.DoNothing;
-import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.concurrent.*;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
-import net.twisterrob.inventory.android.content.InventoryContract;
-import net.twisterrob.inventory.android.fragment.BackupListFragment;
+import net.twisterrob.inventory.android.fragment.BackupControllerFragment;
 
 import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
-public class BackupActivity extends BaseActivity implements BackupListFragment.BackupListCallbacks {
+public class BackupActivity extends BaseActivity implements BackupControllerFragment.BackupEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
-	private static final int REQUEST_CODE_PICK_EXTERNAL = 0x4412;
-	private BackupListFragment fileList;
 	private boolean allowNew;
 	/** Prevents {@code android.view.WindowLeaked} "Activity BackupActivity has leaked window". See usages. */
 	private AlertDialog finishDialog; // CONSIDER DialogFragment to auto-dismiss? and handle rotation
 	private Progress unhandled;
+	private BackupControllerFragment controller;
 
 	@VisibleForTesting final BackupServiceConnection backupService = new BackupServiceConnection() {
 		@Override protected void serviceBound(ComponentName name, BackupService.LocalBinder service) {
@@ -64,20 +56,15 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 
 	private void setAllowNew(boolean allowNew) {
 		this.allowNew = allowNew;
-		fileList.onRefresh();
-		supportInvalidateOptionsMenu();
-	}
-	@Override public boolean isAllowNew() {
-		return allowNew;
+		controller.onAllowNewChanged(allowNew);
 	}
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_backup);
-		fileList = getFragment(R.id.backup_list);
+		controller = getFragment(R.id.backup_controller);
 
 		displayPopup(findProgress(savedInstanceState, getIntent()));
-		BackupPermissions.checkAndRequest(this);
 	}
 
 	private @Nullable Progress findProgress(@Nullable Bundle savedInstanceState, @Nullable Intent intent) {
@@ -165,125 +152,8 @@ public class BackupActivity extends BaseActivity implements BackupListFragment.B
 			finishDialog.show();
 		}
 	}
-	@Override public boolean onCreateOptionsMenu(Menu menu) {
-		if (!super.onCreateOptionsMenu(menu)) {
-			return false;
-		}
-		getMenuInflater().inflate(R.menu.backup, menu);
-		return true;
-	}
-	@Override public boolean onPrepareOptionsMenu(Menu menu) {
-		ViewTools.enabledIf(menu, R.id.action_import_external, allowNew);
-		ViewTools.enabledIf(menu, R.id.action_export_internal, allowNew);
-		ViewTools.enabledIf(menu, R.id.action_export_external, allowNew);
-		return super.onPrepareOptionsMenu(menu);
-	}
-	@Override public boolean onOptionsItemSelected(MenuItem item) {
-		int itemId = item.getItemId();
-		if (itemId == R.id.action_export_home) {
-			fileList.filePicked(Paths.getPhoneHome(), true);
-			return true;
-		} else if (itemId == R.id.action_import_external) {
-			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-			intent.addCategory(Intent.CATEGORY_OPENABLE);
-			intent.setType("*/*");
-			intent = Intent.createChooser(intent, getString(R.string.backup_import_external));
-			startActivityForResult(intent, REQUEST_CODE_PICK_EXTERNAL);
-			return true;
-		} else if (itemId == R.id.action_export_internal) {
-			newIntoDir(fileList.getDir());
-			return true;
-		} else if (itemId == R.id.action_export_external) {
-			DialogTools
-					.confirm(this, new PopupCallbacks<Boolean>() {
-						@Override public void finished(Boolean value) {
-							if (Boolean.TRUE.equals(value)) {
-								doExportExternal();
-							}
-						}
-					})
-					.setTitle(R.string.backup_export_external_confirm_title)
-					.setMessage(R.string.backup_export_external_confirm_warning)
-					.show();
-			return true;
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-	}
 
-	@Override public void onRequestPermissionsResult(
-			int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		if (BackupPermissions.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
-			return;
-		}
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-	}
-
-	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-			case REQUEST_CODE_PICK_EXTERNAL: {
-				if (resultCode == RESULT_OK && data != null && data.getData() != null) {
-					Uri uri = data.getData();
-					doImport(uri);
-				}
-				break;
-			}
-		}
-	}
-
-	public void filePicked(@NonNull final File file) {
-		//ensureNotInProgress(); // for other operations the UI is disabled, but the user can still tap in the file list
-		if (!allowNew) {
-			DialogTools
-					.notify(this, DoNothing.<Boolean>instance())
-					.setTitle(R.string.backup_import_confirm_title)
-					.setMessage(R.string.backup_warning_inprogress)
-					.show();
-			return;
-		}
-		DialogTools
-				.confirm(this, new PopupCallbacks<Boolean>() {
-					@Override public void finished(Boolean value) {
-						if (Boolean.TRUE.equals(value)) {
-							doImport(Uri.fromFile(file));
-						}
-					}
-				})
-				.setTitle(R.string.backup_import_confirm_title)
-				.setMessage(getString(R.string.backup_import_confirm_warning, file.getName()))
-				.show();
-	}
-
-	private void doImport(Uri source) {
-		ensureNotInProgress();
-		Intent intent = new Intent(BackupService.ACTION_IMPORT, source, getApplicationContext(), BackupService.class);
-		startService(intent);
-	}
-
-	private void doExportExternal() {
-		ensureNotInProgress();
-		Calendar now = Calendar.getInstance();
-		Intent intent = new Intent(Intent.ACTION_SEND)
-				.setType(InventoryContract.Export.TYPE_BACKUP)
-				.putExtra(Intent.EXTRA_STREAM, InventoryContract.Export.getUri(now))
-				.putExtra(Intent.EXTRA_SUBJECT, Paths.getExportFileName(now))
-				.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-		// this makes the user choose a target and that target will call the provider later, which starts the service
-		startActivity(Intent.createChooser(intent, getString(R.string.backup_export_external)));
-		// alternatives would be:
-		// ACTION_PICK_ACTIVITY which calls onActivityResult, but it looks ugly
-		// createChooser(..., PendingIntent.getBroadcast.getIntentSender), but it's API 22 and only notifies after started
-	}
-
-	@Override public void newIntoDir(@NonNull File targetDir) {
-		ensureNotInProgress();
-		Uri dir = Uri.fromFile(targetDir);
-		Intent intent = new Intent(BackupService.ACTION_EXPORT_DIR, dir, getApplicationContext(), BackupService.class);
-		startService(intent);
-	}
-
-	private void ensureNotInProgress() {
+	@Override public void ensureNotInProgress() {
 		if (!allowNew) {
 			throw new IllegalStateException(getString(R.string.backup_warning_inprogress));
 		}

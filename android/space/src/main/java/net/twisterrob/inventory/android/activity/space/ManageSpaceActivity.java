@@ -170,7 +170,9 @@ public class ManageSpaceActivity extends BaseActivity implements TaskEndListener
 										DatabaseService.clearVacuumAlarm(getApplicationContext());
 									}
 									@Override protected void doClean() throws Exception {
-										Database.get(getApplicationContext()).getHelper().restore(new File(value));
+										Database.get(getApplicationContext())
+										        .getHelper()
+										        .restore(new FileInputStream(value));
 									}
 									@Override protected void onResult(Void ignore, Activity activity) {
 										super.onResult(ignore, activity);

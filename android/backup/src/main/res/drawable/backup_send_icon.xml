@@ -1,0 +1,14 @@
+<layer-list
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:drawable="@android:drawable/ic_menu_send"
+		/>
+	<item>
+		<shape>
+			<size
+				android:width="@dimen/backup_icon_size"
+				android:height="@dimen/backup_icon_size"
+				/>
+		</shape>
+	</item>
+</layer-list>

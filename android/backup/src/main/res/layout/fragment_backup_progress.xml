@@ -8,6 +8,7 @@
 	android:orientation="horizontal"
 	android:animateLayoutChanges="true"
 	tools:context="net.twisterrob.inventory.android.fragment.BackupProgressFragment"
+	tools:showIn="@layout/activity_backup"
 	>
 	<ImageButton
 		android:id="@+id/progress__cancel"

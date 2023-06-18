@@ -213,7 +213,7 @@ public class MainActivityActor extends ActivityActor {
 					.check(matches(isCompletelyDisplayed()))
 					.check(matches(withText(R.string.backup_title)))
 			;
-			onView(withId(R.id.backups)).check(matches(isCompletelyDisplayed()));
+			onView(withId(R.id.backup_controller)).check(matches(isCompletelyDisplayed()));
 		}
 		public BackupActivityActor asActor() {
 			return new BackupActivityActor();

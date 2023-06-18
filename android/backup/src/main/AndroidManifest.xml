@@ -4,13 +4,10 @@
 	<!-- Used by BackupService -->
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-	<!-- Used by Import/Export -->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<!-- net.twisterrob.inventory.android.fragment.BackupControllerFragment.doImport -->
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
-	<application
-		android:requestLegacyExternalStorage="true"
-		>
+	<application>
 
 		<activity
 			android:name="net.twisterrob.inventory.android.activity.BackupActivity"
@@ -25,6 +22,8 @@
 			android:label="Background Import/Export"
 			android:enabled="true"
 			android:exported="false"
+			android:foregroundServiceType="dataSync"
+			android:permission="android.permission.BIND_JOB_SERVICE"
 			android:stopWithTask="false"
 			/>
 

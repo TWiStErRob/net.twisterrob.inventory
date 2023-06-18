@@ -21,21 +21,23 @@ public class PreferencesMigrator {
 
 	@SuppressWarnings("fallthrough")
 	public void migrate() {
-		// if the version is missing that means the preferences are in the state of the first release,
-		// which had no prefs version; all older versions will have the prefs version properly initialized at startup
+		// If the version is missing, that means the preferences are
+		// in the state of the first release, which had no prefs version.
+		// All older versions will have the prefs version properly initialized at startup.
 		int oldVersion = prefs.getIntVal(R.string.pref_version, VERSION_INITIAL_RELEASE);
 		int newVersion = res.getInteger(R.integer.pref_version_default);
 		if (newVersion == oldVersion) {
 			LOG.info("Preferences are up to date at v{}", newVersion);
-			return; // don't bother, if version didn't change
+			return; // Don't bother, if version didn't change.
 		} else if (newVersion < oldVersion) {
 			// CONSIDER throwing
 			LOG.info("Preferences version is invalid: old={}, new={}", oldVersion, newVersion);
-			return; // something is weird, just leave it
+			return; // Something is weird, a downgrade is hacky, just leave it.
 		} else {
 			LOG.info("Updating preferences from v{} to v{}", oldVersion, newVersion);
+			// No `return`, see `switch` below.
 		}
-		// brings oldVersion up to date with current code, everything falls through
+		// Brings oldVersion up to date with current code, EVERYTHING FALLS THROUGH!
 		switch (oldVersion) {
 			case VERSION_INITIAL_RELEASE: {
 				// Most users probably didn't touch the default page setting, so migrate them to automatic display.
@@ -46,7 +48,11 @@ public class PreferencesMigrator {
 				}
 			}
 			case 1: {
-				// increase R.integer.pref_version_default and add changes when needed
+				// R.string.pref_state_backup_path was removed, because Backup screen was fully rewritten.
+				prefs.edit().remove("backupPath");
+			}
+			case 2: {
+				// Increase R.integer.pref_version_default, and add cases above to handled migrations.
 			}
 			default:
 				prefs.setIntVal(R.string.pref_version, newVersion);

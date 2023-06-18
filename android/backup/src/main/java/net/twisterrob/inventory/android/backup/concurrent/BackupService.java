@@ -1,6 +1,5 @@
 package net.twisterrob.inventory.android.backup.concurrent;
 
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -8,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.*;
 
 import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.*;
@@ -31,7 +31,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 
 	private static final String ACTION_EXPORT_PFD_WORKAROUND = "net.twisterrob.inventory.intent.action.EXPORT_PFD";
 	public static final String ACTION_EXPORT = "net.twisterrob.inventory.intent.action.EXPORT";
-	public static final String ACTION_EXPORT_DIR = "net.twisterrob.inventory.intent.action.EXPORT_DIR";
 	public static final String ACTION_IMPORT = "net.twisterrob.inventory.intent.action.IMPORT";
 	// TODO Parcelable or ProgressDisplayer?
 	public static final String EXTRA_PROGRESS = "net.twisterrob.inventory:backup_progress";
@@ -54,6 +53,15 @@ public class BackupService extends NotificationProgressService<Progress> {
 		setDebugMode(DISABLE && BuildConfig.DEBUG);
 	}
 
+	public static void enqueueWork(@NonNull Context context, @NonNull Intent work) {
+		enqueueWork(
+				context,
+				BackupService.class,
+				BackupService.class.getName().hashCode(),
+				work
+		);
+	}
+	
 	@Override public void onCreate() {
 		displayer = new LenientProgressInfoProvider(this);
 		super.onCreate();
@@ -145,7 +153,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 				case ACTION_IMPORT:
 					return Progress.Type.Import;
 				case ACTION_EXPORT:
-				case ACTION_EXPORT_DIR:
 				case ACTION_EXPORT_PFD_WORKAROUND:
 					return Progress.Type.Export;
 				case "null":
@@ -178,10 +185,6 @@ public class BackupService extends NotificationProgressService<Progress> {
 				BackupUriExporter exporter = new BackupUriExporter(this, zip, dispatcher);
 				Uri uri = intent.getData();
 				finish(exporter.exportTo(uri));
-			} else if (ACTION_EXPORT_DIR.equals(intent.getAction())) {
-				BackupDirExporter exporter = new BackupDirExporter(this, zip, dispatcher);
-				File dir = new File(intent.getData().getPath());
-				finish(exporter.exportTo(dir));
 			}
 		} catch (Throwable ex) {
 			finish(new Progress(Progress.Type.Export, ex));
@@ -222,15 +225,17 @@ public class BackupService extends NotificationProgressService<Progress> {
 		return progress.end();
 	}
 
-	@Override public @NonNull IBinder onBind(Intent intent) {
-		super.onBind(intent);
+	@Override
+	protected @NonNull IBinder createBinder() {
 		return new LocalBinder();
 	}
 
 	public class LocalBinder extends Binder {
 		public void export(@NonNull ParcelFileDescriptor pfd) {
 			queue.add(ObjectTools.checkNotNull(pfd));
-			startService(new Intent(ACTION_EXPORT_PFD_WORKAROUND, null, BackupService.this, BackupService.class));
+			BackupService context = BackupService.this;
+			Intent intent = new Intent(BackupService.ACTION_EXPORT_PFD_WORKAROUND, null, context, BackupService.class);
+			enqueueWork(context, intent);
 		}
 
 		public void cancel() {

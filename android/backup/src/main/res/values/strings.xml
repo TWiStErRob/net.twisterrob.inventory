@@ -9,17 +9,10 @@
 
 	<!-- lint:UnusedResources Title is used in Main Drawer from app module. -->
 	<string name="backup_title" tools:ignore="UnusedResources">Backup</string>
-	<string name="backup_export_internal">Backup here</string>
-	<string name="backup_export_external">Backup to…</string>
-	<string name="backup_import_external">Import from…</string>
-	<string name="backup_go_home">Go to Downloads folder</string>
-	<string name="backup_go_home_condensed">Downloads</string>
-	<string name="backup_go_to_title">Jump to folder</string>
-	<string name="backup_go_to_message">Enter full path of directory to go to:</string>
-
-	<string name="backup_permission_title">Permission required</string>
-	<string name="backup_permission_message">Need access to the file system to be able to browse the directories to the location of the backup, and to write the backup file.\n\nWill you allow that?</string>
-	<string name="backup_permission_coach">Required permission denied permanently: if you changed your mind, please allow it in device Settings.</string>
+	<string name="backup_export">Export</string>
+	<string name="backup_import">Import</string>
+	<!-- Fill the rest of the space with spaces, so that the autoSize picks equal font sizes. -->
+	<string name="backup_send">Send&#160;&#160;&#160;</string>
 
 	<string name="backup_notification_channel_group_name" maxLength="40">Backup Progress</string>
 	<string name="backup_notification_channel_group_description" maxLength="300">
@@ -51,14 +44,13 @@
 	<string name="backup_export_result_failed">Failed to export belongings:\n%1$s</string>
 	<string name="backup_export_result_cancelled">Export cancelled.</string>
 
-	<string name="backup_export_external_confirm_title">@string/backup_export_external</string>
+	<string name="backup_export_external_confirm_title">@string/backup_send</string>
 	<string name="backup_export_external_confirm_warning"
-		>You\'re about to export your inventory to a third party.
+		>You\'re about to send your inventory to a third party.
 		Once you leave the app there are no guarantees.
 		For example, some apps (Google Drive, Dropbox) don\'t allow cancelling this procedure.
 		Once you started, be patient; give it a few minutes, if you have a large inventory.
 		Even if the progress disappears, the export may still be ongoing in the background.
-		Where possible I have plans to work around these external limitations in the future.
 		\n\nDo you want to continue?
 	</string>
 	<string name="backup_import_confirm_title">Import</string>

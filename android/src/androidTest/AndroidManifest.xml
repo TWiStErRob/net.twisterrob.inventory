@@ -2,19 +2,12 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:sharedUserId="net.twisterrob.inventory">
 
-	<!--
-		The following classes access the device storage:
-		org.junit.rules.TemporaryFolder
-	-->
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 	<!-- Normally added by Gradle: <instrumentation android:name="....AndroidJUnitRunner" ... />
 	     @see build.gradle: android.defaultConfig.testInstrumentationRunner
 	     Need to duplicate the name attribute to help the manifest merger (element looked up via android:name as key).
 	-->
 	<!--suppress AndroidDomInspection android:package is merged in by Gradle -->
-	<instrumentation android:name="net.twisterrob.android.test.junit.AndroidJUnitRunner">
+	<instrumentation android:name="net.twisterrob.inventory.android.InventoryJUnitRunner">
 		<!--suppress AndroidElementNotAllowed Undocumented that <instrumentation> can have <meta-data> children,
 		    but this is the way to parameterize the runner:
 		    `context.packageManager.getInstrumentationInfo(...).metaData` is the way to read it.
@@ -22,6 +15,9 @@
 		<meta-data android:name="defaultExcludedPackages"
 		           android:value="net.twisterrob.inventory.android.test.suites" />
 	</instrumentation>
+
+	<!-- Used by net.twisterrob.inventory.android.InventoryJUnitRunner -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 	<application
 		android:label="@string/app_name"
@@ -32,6 +28,11 @@
 		<activity
 			android:name="net.twisterrob.inventory.android.test.activity.CompatibleLauncher"
 			android:label="CompatibleLauncher"
+			/>
+
+		<activity
+			android:name="net.twisterrob.inventory.android.test.activity.ScopedStorageSaver"
+			android:label="ScopedStorageSaver"
 			/>
 
 	</application>
