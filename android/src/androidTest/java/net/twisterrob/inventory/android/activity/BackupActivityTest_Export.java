@@ -42,7 +42,8 @@ public class BackupActivityTest_Export {
 	}
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
-	@Ignore
+	@Category({UseCase.Complex.class, On.External.class})
+	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
 	@Test public void testExportCompletes() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		BackupExportPickerActor pickerActor = backup.exportBackup();
@@ -57,7 +58,7 @@ public class BackupActivityTest_Export {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Rotates.class, On.External.class})
-	@Ignore
+	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
 	@Test public void testExportCompletesWhenPickerRotated() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		BackupExportPickerActor pickerActor = backup.exportBackup();

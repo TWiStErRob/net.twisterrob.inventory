@@ -89,7 +89,7 @@ public class BackupActivityTest_Import {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
-	@Ignore
+	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
 	@Test public void testImportReal() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		File file = temp.newFile();
