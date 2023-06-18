@@ -6,6 +6,7 @@ import org.junit.rules.*;
 import org.junit.runner.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.FlakyTest;
 import androidx.test.filters.SdkSuppress;
 
 import net.twisterrob.android.test.automators.DocumentsUiAutomator;
@@ -43,7 +44,7 @@ public class BackupActivityTest_Export {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
-	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
+	@FlakyTest(bugId = 275, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
 	@Test public void testExportCompletes() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		BackupExportPickerActor pickerActor = backup.exportBackup();
@@ -58,7 +59,7 @@ public class BackupActivityTest_Export {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Rotates.class, On.External.class})
-	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
+	@FlakyTest(bugId = 275, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
 	@Test public void testExportCompletesWhenPickerRotated() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		BackupExportPickerActor pickerActor = backup.exportBackup();
