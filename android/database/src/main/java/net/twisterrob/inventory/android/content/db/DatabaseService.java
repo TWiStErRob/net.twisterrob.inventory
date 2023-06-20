@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.utils.tools.IntentTools;
-import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.categories.cache.CategoryCacheImpl;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.VariantIntentService;
@@ -36,6 +35,7 @@ public class DatabaseService extends VariantIntentService {
 	private static final int CODE_INCREMENTAL_VACUUM = 16336;
 
 	@Inject Database database;
+	@Inject LanguageUpdater languageUpdater;
 
 	@Override protected void onHandleWork(@NonNull Intent intent) {
 		super.onHandleWork(intent);
@@ -71,9 +71,7 @@ public class DatabaseService extends VariantIntentService {
 			LOG.warn("Missing locale from {}", intent);
 			locale = Locale.getDefault();
 		}
-		BaseComponent inject = BaseComponent.get(this);
-		new LanguageUpdater(getApplicationContext(), inject.prefs(), database, inject.toaster())
-				.updateLanguage(locale);
+		languageUpdater.updateLanguage(locale);
 	}
 
 	private void preloadCategoryCache() {
@@ -87,8 +85,8 @@ public class DatabaseService extends VariantIntentService {
 
 	private void incrementalVacuum() {
 		try {
-			SQLiteDatabase database = this.database.getWritableDatabase();
-			if (Boolean.TRUE.equals(new IncrementalVacuumer(database).call())) {
+			IncrementalVacuumer vacuum = new IncrementalVacuumer(database.getWritableDatabase());
+			if (Boolean.TRUE.equals(vacuum.call())) {
 				scheduleNextIncrementalVacuum();
 			}
 		} catch (Exception ex) {

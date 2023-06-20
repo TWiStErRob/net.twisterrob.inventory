@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.components;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -9,6 +10,7 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 
+import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.content.Database;
@@ -23,9 +25,19 @@ abstract class ComponentsModule {
 	static BaseComponent provideBaseComponent(@ApplicationContext Context context) {
 		return BaseComponent.get(context);
 	}
-	
+
 	@Provides
 	static Database provideDatabase() {
 		return App.db();
+	}
+
+	@Provides
+	static ResourcePreferences providePrefs() {
+		return App.prefs();
+	}
+
+	@Provides
+	static @NonNull Toaster provideToaster() {
+		return new ToasterImpl();
 	}
 }

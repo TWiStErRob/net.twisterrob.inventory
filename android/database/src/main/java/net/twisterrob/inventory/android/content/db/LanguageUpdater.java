@@ -2,12 +2,15 @@ package net.twisterrob.inventory.android.content.db;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.inventory.android.components.Toaster;
@@ -22,7 +25,13 @@ public class LanguageUpdater {
 	private final Database db;
 	private final Toaster toaster;
 
-	public LanguageUpdater(Context appContext, ResourcePreferences prefs, Database db, Toaster toaster) {
+	@Inject
+	public LanguageUpdater(
+			@ApplicationContext Context appContext,
+			ResourcePreferences prefs,
+			Database db,
+			Toaster toaster
+	) {
 		this.appContext = appContext;
 		this.prefs = prefs;
 		this.db = db;

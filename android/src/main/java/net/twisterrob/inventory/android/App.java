@@ -244,13 +244,6 @@ public class App extends BaseApp implements BaseComponent.Provider {
 			@Override public @NonNull Database db() {
 				return App.db();
 			}
-			@Override public @NonNull Toaster toaster() {
-				return new Toaster() {
-					@Override public void toast(@NonNull CharSequence message) {
-						App.toast(message);
-					}
-				};
-			}
 			@Override public @NonNull BuildInfo buildInfo() {
 				return new BuildInfo() {
 					@Override public boolean isDebug() {

@@ -23,7 +23,6 @@ public abstract class BaseComponent {
 	 * @return net.twisterrob.inventory.android.content.Database
 	 */
 	public abstract @NonNull Object db();
-	public abstract @NonNull Toaster toaster();
 	public abstract @NonNull BuildInfo buildInfo();
 
 	interface Provider {
