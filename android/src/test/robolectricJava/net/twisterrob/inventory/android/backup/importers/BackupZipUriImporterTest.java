@@ -18,69 +18,51 @@ import net.twisterrob.inventory.android.TestIgnoreApp;
 import net.twisterrob.test.frameworks.RobolectricTestBase;
 
 import static net.twisterrob.test.hamcrest.Matchers.*;
-import static net.twisterrob.test.mockito.ArgumentMatchers.*;
 
 @Config(application = TestIgnoreApp.class)
 public class BackupZipUriImporterTest extends RobolectricTestBase {
-	public static final File FILE = new File("a/b");
-	public static final Uri NON_FILE = Uri.parse("files:///non-existent-protocol");
+	public static final Uri URI = Uri.parse("files:///non-existent-protocol");
 
 	@Mock ContentResolver contentResolver;
 	@Mock BackupZipStreamImporter streamImporter;
-	@Mock BackupZipFileImporter fileImporter;
 	@InjectMocks private BackupZipUriImporter importer;
 
-	@Test public void testImportFromFileCallsFileImporter() throws Exception {
-		Uri input = Uri.fromFile(FILE);
+	@Test public void testImportSuccess() throws Exception {
+		InputStream mockStream = mock(InputStream.class);
+		when(contentResolver.openInputStream(any(Uri.class))).thenReturn(mockStream);
 
-		importer.importFrom(input);
+		importer.importFrom(URI);
 
-		verify(fileImporter).importFrom(argThat(pointsTo(FILE)));
-		verifyNoInteractions(streamImporter);
+		verify(streamImporter).importFrom(mockStream);
+		verifyNoMoreInteractions(streamImporter);
+		verify(mockStream).close();
+		verifyNoMoreInteractions(mockStream);
 	}
 
-	@Test public void testImportFromNonFileCallsStreamImporter() throws Exception {
-		when(contentResolver.openInputStream(any(Uri.class))).thenReturn(mock(InputStream.class));
-
-		importer.importFrom(NON_FILE);
-
-		verify(streamImporter).importFrom(isA(InputStream.class));
-		verifyNoInteractions(fileImporter);
-	}
-
-	@Test public void testImportFromFileFails() throws Exception {
+	@Test public void testImportFails() throws Exception {
+		InputStream mockStream = mock(InputStream.class);
+		when(contentResolver.openInputStream(any(Uri.class))).thenReturn(mockStream);
 		NullPointerException ex = new NullPointerException("test");
-		doThrow(ex).when(fileImporter).importFrom(any(File.class));
-
-		Exception expectedFailure = assertThrows(NullPointerException.class, new ThrowingRunnable() {
-			@Override public void run() throws Exception {
-				importer.importFrom(Uri.fromFile(FILE));
-			}
-		});
-		assertThat(expectedFailure, containsCause(ex));
-	}
-
-	@Test public void testImportFromNonFileFails() throws Exception {
-		when(contentResolver.openInputStream(any(Uri.class))).thenReturn(mock(InputStream.class));
-		NullPointerException ex = new NullPointerException("test");
-		doThrow(ex).when(streamImporter).importFrom(any(InputStream.class));
+		doThrow(ex).when(streamImporter).importFrom(mockStream);
 
 		Throwable expectedFailure = assertThrows(Throwable.class, new ThrowingRunnable() {
 			@Override public void run() throws Exception {
-				importer.importFrom(NON_FILE);
+				importer.importFrom(URI);
 			}
 		});
 		assertThat(expectedFailure, containsCause(ex));
+		verify(mockStream).close();
+		verifyNoMoreInteractions(mockStream);
 	}
 
-	@Test public void testImportFromNonFileFailsToOpen() throws FileNotFoundException {
+	@Test public void testImportFailsToOpen() throws Exception {
 		FileNotFoundException ex = new FileNotFoundException("test");
-		when(contentResolver.openInputStream(NON_FILE)).thenThrow(new IllegalArgumentException(
+		when(contentResolver.openInputStream(URI)).thenThrow(new IllegalArgumentException(
 				new IllegalStateException(new IOException(ex))));
 
 		Throwable expectedFailure = assertThrows(Throwable.class, new ThrowingRunnable() {
 			@Override public void run() throws Exception {
-				importer.importFrom(NON_FILE);
+				importer.importFrom(URI);
 			}
 		});
 		assertThat(expectedFailure, containsCause(ex));
