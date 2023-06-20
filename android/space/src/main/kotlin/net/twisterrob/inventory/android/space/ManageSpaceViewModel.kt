@@ -295,7 +295,7 @@ internal class ManageSpaceViewModel @Inject constructor(
 			state.copy(
 				confirmation = null,
 				isLoading = true,
-				sizes = state.sizes?.let(progress),
+				sizes = (state.sizes ?: mapper.empty()).let(progress),
 			)
 		}
 		try {

@@ -54,4 +54,16 @@ internal class SizesDomainToStateMapper @Inject constructor(
 			errors = null,
 		)
 	}
+
+	fun empty(): SizesUiState {
+		val unknown = "?"
+		return SizesUiState(
+			imageCache = unknown,
+			database = unknown,
+			freelist = unknown,
+			searchIndex = unknown,
+			allData = unknown,
+			errors = null,
+		)
+	}
 }
