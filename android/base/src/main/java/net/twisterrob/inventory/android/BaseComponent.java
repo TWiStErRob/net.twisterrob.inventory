@@ -6,19 +6,31 @@ import androidx.annotation.NonNull;
 
 public abstract class BaseComponent {
 
+	/**
+	 * @deprecated inject {@link net.twisterrob.inventory.android.content.Database} directly.
+	 */
+	@SuppressWarnings({"deprecation", "JavadocReference"})
+	@Deprecated
 	public static @NonNull BaseComponent get(@NonNull Context context) {
 		return ((Provider)context.getApplicationContext()).getBaseComponent();
 	}
 
 	/**
 	 * Untyped, so that base doesn't have to depend on database module.
-	 * Use {@code Database.get(Context)} instead of this.
 	 *
 	 * @return net.twisterrob.inventory.android.content.Database
+	 * @deprecated inject {@link net.twisterrob.inventory.android.content.Database} directly.
 	 */
+	@SuppressWarnings("JavadocReference")
+	@Deprecated
 	public abstract @NonNull Object db();
 
 	interface Provider {
+		/**
+		 * @deprecated inject {@link net.twisterrob.inventory.android.content.Database} directly.
+		 */
+		@Deprecated
+		@SuppressWarnings("JavadocReference")
 		BaseComponent getBaseComponent();
 	}
 }

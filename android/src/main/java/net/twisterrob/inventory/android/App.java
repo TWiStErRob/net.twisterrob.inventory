@@ -231,6 +231,7 @@ public class App extends BaseApp implements BaseComponent.Provider {
 	));
 
 	@Override
+	@SuppressWarnings({"deprecation", "RedundantSuppression"}) // Needed to implement it.
 	public BaseComponent getBaseComponent() {
 		return new BaseComponent() {
 			@Override public @NonNull Database db() {
