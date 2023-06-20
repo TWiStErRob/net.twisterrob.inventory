@@ -39,6 +39,10 @@ abstract class ComponentsModule {
 
 	@Provides
 	static @NonNull Toaster provideToaster() {
-		return new ToasterImpl();
+		return new Toaster() {
+			@Override public void toast(@NonNull CharSequence message) {
+				App.toast(message);
+			}
+		};
 	}
 }
