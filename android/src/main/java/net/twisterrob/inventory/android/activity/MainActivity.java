@@ -288,10 +288,7 @@ public class MainActivity extends DrawerActivity
 		search.setQueryRefinementEnabled(true);
 		search.setOnQueryTextListener(new CollapseActionViewOnSubmit(getSupportActionBar()));
 		if (tempSavedViewState != null) {
-			// dirty and ugly hack to make these tests pass:
-			// net.twisterrob.inventory.android.activity.MainActivityTest_Search.testRotate()
-			// net.twisterrob.inventory.android.activity.MainActivityTest_Search.testSelectClose()
-			// TODO figure out a better way or report a compat bug
+			// TODO figure out a better way or report a compat bug, https://github.com/TWiStErRob/net.twisterrob.inventory/issues/276
 //			View actionBar = findViewById(R.id.action_bar);
 //			actionBar.restoreHierarchyState(tempSavedViewState.getSparseParcelableArray("android:views"));
 //			View focused = actionBar.findViewById(tempSavedViewState.getInt("android:focusedViewId", 0));

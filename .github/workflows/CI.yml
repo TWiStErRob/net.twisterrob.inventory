@@ -222,7 +222,7 @@ jobs:
           sdcard-path-or-size: 100M
           script: |
             adb devices -l
-            ./gradlew --no-daemon --stacktrace :android:connectedCheck
+            ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=androidx.test.filters.FlakyTest
 
       - name: "Upload 'Instrumentation Test Results ${{ matrix.android-api }}' artifact."
         if: success() || failure()

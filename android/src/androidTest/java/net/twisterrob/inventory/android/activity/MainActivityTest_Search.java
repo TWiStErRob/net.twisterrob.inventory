@@ -52,7 +52,7 @@ public class MainActivityTest_Search {
 		search.close();
 	}
 
-	@Ignore("search query is not restored on rotation")
+	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/276")
 	@Category({Op.Rotates.class})
 	@Test public void testRotate() {
 		SearchActor search = main.openSearch();
@@ -63,7 +63,7 @@ public class MainActivityTest_Search {
 		search.assertQuery(is("search"));
 	}
 
-	@Ignore("search query is not restored")
+	@Ignore("https://github.com/TWiStErRob/net.twisterrob.inventory/issues/276")
 	@Category({Op.Cancels.class})
 	@Test public void testSelectClose() {
 		SearchActor search = main.openSearch();
