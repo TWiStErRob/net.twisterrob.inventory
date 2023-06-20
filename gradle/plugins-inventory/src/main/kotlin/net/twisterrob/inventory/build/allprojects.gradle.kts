@@ -37,12 +37,6 @@ tasks.withType<JavaCompile>().configureEach javac@{
 		"-Xlint:all",
 		// Fail build when any warning pops up.
 		"-Werror",
-		// No processor claimed any of these annotations:
-		// dagger.hilt.android.HiltAndroidApp
-		// android.annotation.*
-		// androidx.annotation.*
-		// net.twisterrob.*
-		"-Xlint:-processing",
 	)
 
 	if (this@javac.name.endsWith("UnitTestJavaWithJavac")
