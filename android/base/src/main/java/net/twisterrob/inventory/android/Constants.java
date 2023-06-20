@@ -48,36 +48,12 @@ public interface Constants {
 		private static final String PUBLIC_TEMP_FOLDER_NAME = "temp";
 		public static final String BACKUP_DATA_FILENAME = "data.xml";
 
-		public static @NonNull File getExportFile(File exportFolder) throws IOException {
-			IOTools.ensure(exportFolder);
-			return new File(exportFolder, getExportFileName(Calendar.getInstance()));
-		}
 		public static @NonNull String getExportFileName(Calendar now) {
 			return getFileName("Inventory", now, "zip");
 		}
 		public static @NonNull String getFileName(String prefix, Calendar now, String extension) {
 			return String.format(Locale.ROOT, "%s_%tF_%<tH-%<tM-%<tS.%s", prefix, now, extension);
 		}
-		@SuppressWarnings("deprecation") // see requestLegacyExternalStorage
-		public static @NonNull File getPhoneHome() {
-			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
-			try {
-				// D/StrictMode: StrictMode policy violation; ~duration=17 ms: android.os.strictmode.DiskReadViolation
-				// at java.io.File.isDirectory(File.java:845)
-				// at net.twisterrob.java.io.IOTools.isValidDir(IOTools.java:375)
-				File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-				if (!IOTools.isValidDir(dir)) { // fall back to /sdcard
-					dir = Environment.getExternalStorageDirectory();
-				}
-				if (!IOTools.isValidDir(dir)) { // fall back to /
-					dir = Environment.getRootDirectory();
-				}
-				return dir;
-			} finally {
-				StrictMode.setThreadPolicy(originalPolicy);
-			}
-		}
-
 		/**
 		 * Make sure to add <code>.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)</code> to the intent.
 		 * @param file from {@link #getShareFile}
