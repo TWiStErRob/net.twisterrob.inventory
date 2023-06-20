@@ -1,14 +1,15 @@
 package net.twisterrob.inventory.android.space
 
 import net.twisterrob.android.utils.tools.DialogTools
+import net.twisterrob.inventory.android.arch.UiStateHandler
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import javax.inject.Inject
 
 internal class ManageSpaceUiStateHandler @Inject constructor(
 	private val binding: ManageSpaceActivityBinding,
 	private val viewModel: ManageSpaceViewModel,
-) {
-	fun updateUi(state: ManageSpaceUiState) {
+) : UiStateHandler<ManageSpaceUiState> {
+	override fun render(state: ManageSpaceUiState) {
 		binding.refresher.isRefreshing = state.isLoading
 		// Note: isVisible is set from XML based on debug/release builds for each button/section.
 		binding.contents.storageImageCacheActions.isEnabled = state.isEnableButtons

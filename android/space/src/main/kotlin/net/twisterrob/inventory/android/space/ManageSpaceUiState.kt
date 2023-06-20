@@ -1,10 +1,12 @@
 package net.twisterrob.inventory.android.space
 
+import net.twisterrob.inventory.android.arch.UiState
+
 internal data class ManageSpaceUiState(
 	val isLoading: Boolean,
 	val sizes: SizesUiState?,
 	val confirmation: ConfirmationUiState?,
-) {
+) : UiState {
 
 	internal data class SizesUiState(
 		val imageCache: CharSequence,

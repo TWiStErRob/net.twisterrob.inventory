@@ -7,9 +7,9 @@ import androidx.activity.result.ActivityResultCaller
 import dagger.hilt.android.qualifiers.ActivityContext
 import net.twisterrob.android.utils.tools.DialogTools
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks
+import net.twisterrob.inventory.android.arch.UiEffectHandler
 import net.twisterrob.inventory.android.content.CreateOpenableDocument
 import net.twisterrob.inventory.android.content.OpenOpenableDocument
-import net.twisterrob.inventory.android.viewmodel.EffectHandler
 import javax.inject.Inject
 
 internal class ManageSpaceUiEffectHandler @Inject constructor(
@@ -17,7 +17,7 @@ internal class ManageSpaceUiEffectHandler @Inject constructor(
 	private val viewModel: ManageSpaceViewModel,
 	@ActivityContext
 	private val context: Context,
-) : EffectHandler<ManageSpaceUiEffect> {
+) : UiEffectHandler<ManageSpaceUiEffect> {
 
 	private val dumpAll = caller.registerForActivityResult<String, Uri>(
 		CreateOpenableDocument(MIME_TYPE_ZIP)
@@ -35,7 +35,7 @@ internal class ManageSpaceUiEffectHandler @Inject constructor(
 		result?.let { viewModel.restoreDatabase(it) }
 	}
 
-	override suspend fun handleEffect(effect: ManageSpaceUiEffect) {
+	override suspend fun launch(effect: ManageSpaceUiEffect) {
 		when (effect) {
 			is ManageSpaceUiEffect.ShowToast -> {
 				Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()

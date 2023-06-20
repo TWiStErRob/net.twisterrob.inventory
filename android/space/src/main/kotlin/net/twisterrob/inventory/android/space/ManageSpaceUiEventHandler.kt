@@ -1,14 +1,14 @@
 package net.twisterrob.inventory.android.space
 
+import net.twisterrob.inventory.android.arch.UiEventHandler
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import javax.inject.Inject
 
 internal class ManageSpaceUiEventHandler @Inject constructor(
 	private val binding: ManageSpaceActivityBinding,
 	private val viewModel: ManageSpaceViewModel,
-) {
-
-	fun setupEventHandling() {
+) : UiEventHandler {
+	override fun wireEvents() {
 		binding.refresher.setOnRefreshListener(viewModel::loadSizes)
 		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch() }
 		binding.contents.storageImageCacheClear.setOnClickListener { viewModel.clearImageCache() }

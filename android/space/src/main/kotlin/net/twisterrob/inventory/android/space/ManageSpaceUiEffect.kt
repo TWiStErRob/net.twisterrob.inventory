@@ -1,6 +1,8 @@
 package net.twisterrob.inventory.android.space
 
-internal sealed class ManageSpaceUiEffect {
+import net.twisterrob.inventory.android.arch.UiEffect
+
+internal sealed class ManageSpaceUiEffect : UiEffect {
 	data class ShowToast(
 		val message: CharSequence
 	) : ManageSpaceUiEffect()

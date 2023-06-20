@@ -4,10 +4,10 @@ import android.content.Context
 import android.text.format.Formatter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import net.twisterrob.android.utils.tools.TextTools
+import net.twisterrob.inventory.android.arch.Mapper
 import net.twisterrob.inventory.android.components.ErrorMapper
 import net.twisterrob.inventory.android.space.ManageSpaceUiState.SizesUiState
 import net.twisterrob.inventory.android.space.R
-import net.twisterrob.inventory.android.viewmodel.Mapper
 import javax.inject.Inject
 
 internal class SizesDomainToStateMapper @Inject constructor(

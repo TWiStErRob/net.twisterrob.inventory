@@ -23,8 +23,8 @@ import javax.inject.Inject
 class ManageSpaceActivity : BaseActivity() {
 	private val binding: ManageSpaceActivityBinding by viewBindingInflate()
 	private val viewModel: ManageSpaceViewModel by viewModels()
-	@Inject internal lateinit var effectHandler: ManageSpaceUiEffectHandler
 	@Inject internal lateinit var stateHandler: ManageSpaceUiStateHandler
+	@Inject internal lateinit var effectHandler: ManageSpaceUiEffectHandler
 	@Inject internal lateinit var eventHandler: ManageSpaceUiEventHandler
 
 	@InstallIn(ActivityComponent::class)
@@ -50,11 +50,11 @@ class ManageSpaceActivity : BaseActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setupUI()
-		eventHandler.setupEventHandling()
+		eventHandler.wireEvents()
 		viewModel.observe(
 			lifecycleOwner = this,
-			state = stateHandler::updateUi,
-			sideEffect = effectHandler::handleEffect
+			state = stateHandler::render,
+			sideEffect = effectHandler::launch
 		)
 	}
 

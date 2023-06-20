@@ -9,9 +9,9 @@ import kotlinx.coroutines.withContext
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
+import net.twisterrob.inventory.android.arch.UseCase
 import net.twisterrob.inventory.android.content.Database
 import net.twisterrob.inventory.android.logger
-import net.twisterrob.inventory.android.viewmodel.UseCase
 import java.io.File
 import javax.inject.Inject
 
