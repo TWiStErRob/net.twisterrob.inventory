@@ -18,6 +18,7 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
+	api "net.twisterrob.lib:twister-lib-core"
 	api(libs.slf4j.api)
 	api(libs.glide)
 	api "net.twisterrob.lib:twister-lib-android-logging"

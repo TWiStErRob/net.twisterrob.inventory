@@ -4,6 +4,10 @@ import net.twisterrob.gradle.android.androidComponents
 import net.twisterrob.inventory.build.dsl.android
 import net.twisterrob.inventory.build.dsl.autoNamespace
 
+plugins {
+	id("net.twisterrob.inventory.build.hilt")
+}
+
 dependencies {
 	"implementation"(platform("net.twisterrob.inventory.build:platform"))
 	"testImplementation"(platform("net.twisterrob.inventory.build:platform"))
