@@ -3,6 +3,8 @@ package net.twisterrob.inventory.android.content.db;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.app.*;
@@ -10,6 +12,7 @@ import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.utils.tools.IntentTools;
@@ -20,6 +23,7 @@ import net.twisterrob.inventory.android.content.VariantIntentService;
 
 import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
+@AndroidEntryPoint
 public class DatabaseService extends VariantIntentService {
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseService.class);
 	private static final long SLEEP_BETWEEN_VACUUMS = TimeUnit.SECONDS.toMillis(10);
@@ -31,12 +35,14 @@ public class DatabaseService extends VariantIntentService {
 	public static final String EXTRA_LOCALE = "net.twisterrob.inventory.extra.update_language_locale";
 	private static final int CODE_INCREMENTAL_VACUUM = 16336;
 
+	@Inject Database database;
+
 	@Override protected void onHandleWork(@NonNull Intent intent) {
 		super.onHandleWork(intent);
 		String action = String.valueOf(intent.getAction()); // null becomes "null", so we can switch on it
 		switch (action) {
 			case ACTION_OPEN_DATABASE:
-				SQLiteDatabase db = Database.get(this).getWritableDatabase();
+				SQLiteDatabase db = database.getWritableDatabase();
 				LOG.trace("Database opened: {}", DatabaseTools.dbToString(db));
 				break;
 			case ACTION_UPDATE_LANGUAGE:
@@ -66,7 +72,7 @@ public class DatabaseService extends VariantIntentService {
 			locale = Locale.getDefault();
 		}
 		BaseComponent inject = BaseComponent.get(this);
-		new LanguageUpdater(getApplicationContext(), inject.prefs(), Database.get(this), inject.toaster())
+		new LanguageUpdater(getApplicationContext(), inject.prefs(), database, inject.toaster())
 				.updateLanguage(locale);
 	}
 
@@ -81,7 +87,7 @@ public class DatabaseService extends VariantIntentService {
 
 	private void incrementalVacuum() {
 		try {
-			SQLiteDatabase database = Database.get(this).getWritableDatabase();
+			SQLiteDatabase database = this.database.getWritableDatabase();
 			if (Boolean.TRUE.equals(new IncrementalVacuumer(database).call())) {
 				scheduleNextIncrementalVacuum();
 			}

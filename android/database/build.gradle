@@ -1,6 +1,7 @@
 plugins {
 	id("net.twisterrob.inventory.android.module")
 	id("net.twisterrob.inventory.database")
+	id("net.twisterrob.inventory.build.hilt")
 }
 
 dependencies {
