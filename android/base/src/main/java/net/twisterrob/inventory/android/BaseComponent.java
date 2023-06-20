@@ -5,8 +5,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import net.twisterrob.android.content.pref.ResourcePreferences;
-import net.twisterrob.inventory.android.components.BuildInfo;
-import net.twisterrob.inventory.android.components.Toaster;
 
 public abstract class BaseComponent {
 
@@ -23,7 +21,6 @@ public abstract class BaseComponent {
 	 * @return net.twisterrob.inventory.android.content.Database
 	 */
 	public abstract @NonNull Object db();
-	public abstract @NonNull BuildInfo buildInfo();
 
 	interface Provider {
 		BaseComponent getBaseComponent();
