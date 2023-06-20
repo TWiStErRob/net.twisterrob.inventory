@@ -1,14 +1,23 @@
 package net.twisterrob.inventory.android.space
 
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import net.twisterrob.inventory.android.arch.UiEventHandler
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import javax.inject.Inject
 
 internal class ManageSpaceUiEventHandler @Inject constructor(
+	private val lifecycle: Lifecycle,
 	private val binding: ManageSpaceActivityBinding,
 	private val viewModel: ManageSpaceViewModel,
 ) : UiEventHandler {
 	override fun wireEvents() {
+		lifecycle.addObserver(object : DefaultLifecycleObserver {
+			override fun onResume(owner: LifecycleOwner) {
+				viewModel.screenVisible()
+			}
+		})
 		binding.refresher.setOnRefreshListener(viewModel::loadSizes)
 		binding.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch() }
 		binding.contents.storageImageCacheClear.setOnClickListener { viewModel.clearImageCache() }

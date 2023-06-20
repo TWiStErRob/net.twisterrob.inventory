@@ -25,7 +25,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.app.BaseApp;
-import net.twisterrob.android.content.pref.ResourcePreferences;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.backup.concurrent.BackupNotifications;
@@ -50,12 +49,8 @@ public class App extends BaseApp implements BaseComponent.Provider {
 		android.app.FragmentManager.enableDebugLogging(BuildConfig.DEBUG);
 	}
 
-	public static @NonNull App getInstance() {
-		return (App)BaseApp.getInstance();
-	}
-
 	public static @NonNull Database db() {
-		return getInstance().getDatabase();
+		return BaseApp.getInstance().getDatabase();
 	}
 
 	@Override protected Database createDatabase() {

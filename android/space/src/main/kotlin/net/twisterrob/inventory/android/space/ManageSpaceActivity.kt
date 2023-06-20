@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,6 +46,10 @@ class ManageSpaceActivity : BaseActivity() {
 		@Provides
 		fun provideViewModel(activity: ManageSpaceActivity): ManageSpaceViewModel =
 			activity.viewModel
+		
+		@Provides
+		fun provideLifecycle(activity: ManageSpaceActivity): Lifecycle =
+			activity.lifecycle
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,11 +67,6 @@ class ManageSpaceActivity : BaseActivity() {
 		setIcon(ContextCompat.getDrawable(this, applicationInfo.icon))
 		supportActionBar.setDisplayHomeAsUpEnabled(false)
 		RecyclerViewController.initializeProgress(binding.refresher)
-	}
-
-	override fun onResume() {
-		super.onResume()
-		viewModel.screenVisible()
 	}
 
 	companion object {
