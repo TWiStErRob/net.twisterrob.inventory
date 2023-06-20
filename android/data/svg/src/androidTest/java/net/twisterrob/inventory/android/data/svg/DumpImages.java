@@ -26,7 +26,6 @@ import com.caverock.androidsvg.SVG;
 import androidx.annotation.*;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
 
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.inventory.android.data.R;
@@ -39,10 +38,6 @@ import net.twisterrob.java.utils.ObjectTools;
  */
 @RunWith(AndroidJUnit4.class)
 public class DumpImages {
-
-	@Rule
-	public GrantPermissionRule mRuntimePermissionRule =
-			GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
 	private static final Logger LOG = LoggerFactory.getLogger(DumpImages.class);
 
