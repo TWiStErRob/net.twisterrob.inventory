@@ -31,6 +31,7 @@ private val LOG = logger<InventorySpaceManager>()
 @Suppress("TooManyFunctions")
 internal class InventorySpaceManager @Inject constructor(
 	private val inject: BaseComponent,
+	private val database: Database,
 ) {
 	suspend fun clearImageCache() {
 		val glide = Glide.get(inject.applicationContext())
@@ -39,7 +40,7 @@ internal class InventorySpaceManager @Inject constructor(
 	}
 
 	fun emptyDatabase() {
-		Database.get(inject.applicationContext()).helper.run {
+		database.helper.run {
 			@Suppress("ConvertTryFinallyToUseCall") // AutoClosable was added in Q.
 			try {
 				onDestroy(writableDatabase)
@@ -53,19 +54,19 @@ internal class InventorySpaceManager @Inject constructor(
 	}
 
 	fun clearImages() {
-		Database.get(inject.applicationContext()).clearImages()
+		database.clearImages()
 	}
 
 	fun resetToTestData() {
-		Database.get(inject.applicationContext()).resetToTest()
+		database.resetToTest()
 	}
 
 	fun vacuumDatabase() {
-		Database.get(inject.applicationContext()).writableDatabase.execSQL("VACUUM;")
+		database.writableDatabase.execSQL("VACUUM;")
 	}
 
 	fun vacuumDatabaseIncremental(vacuumBytes: Int) {
-		val db = Database.get(inject.applicationContext()).writableDatabase
+		val db = database.writableDatabase
 		val pagesToFree = vacuumBytes / db.pageSize
 		val vacuum =
 			db.rawQuery("PRAGMA incremental_vacuum($pagesToFree);", DatabaseTools.NO_ARGS)
@@ -75,7 +76,7 @@ internal class InventorySpaceManager @Inject constructor(
 	suspend fun dumpDatabase(target: Uri) = withContext(Dispatchers.IO) {
 		val name = DocumentFile.fromSingleUri(inject.applicationContext(), target)?.name
 		LOG.debug("Saving DB to {} ({})", target, name)
-		val source = Database.get(inject.applicationContext()).file.inputStream()
+		val source = database.file.inputStream()
 		val out = inject.applicationContext().contentResolver.openOutputStream(target)
 			?: error("Cannot open ${target} for writing.")
 		IOTools.copyStream(source, out)
@@ -89,7 +90,7 @@ internal class InventorySpaceManager @Inject constructor(
 		withContext(Dispatchers.IO) {
 			try {
 				val stream = inject.applicationContext().contentResolver.openInputStream(source)
-				Database.get(inject.applicationContext()).helper.restore(stream)
+				database.helper.restore(stream)
 				LOG.debug("Restored {}", source)
 			} catch (ex: CancellationException) {
 				throw ex
@@ -107,9 +108,8 @@ internal class InventorySpaceManager @Inject constructor(
 			// Best effort: clear prefs, db and Glide cache; CONSIDER deltree getFilesDir()
 			inject.prefs().edit().clear().apply()
 			Glide.get(inject.applicationContext()).clearDiskCache()
-			val db = Database.get(inject.applicationContext())
-			val dbFile = db.file
-			db.helper.close()
+			val dbFile = database.file
+			database.helper.close()
 			if (dbFile.exists() && !dbFile.delete()) {
 				error("Cannot delete database file: ${dbFile}")
 			}
@@ -140,7 +140,7 @@ internal class InventorySpaceManager @Inject constructor(
 	}
 
 	fun rebuildSearch() {
-		Database.get(inject.applicationContext()).rebuildSearch()
+		database.rebuildSearch()
 	}
 
 	fun killProcessesAroundManageSpaceActivity() {

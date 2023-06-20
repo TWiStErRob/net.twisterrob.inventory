@@ -9,7 +9,9 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.BaseComponent;
+import net.twisterrob.inventory.android.content.Database;
 
 @Module
 @InstallIn(SingletonComponent.class)
@@ -20,5 +22,10 @@ abstract class ComponentsModule {
 	@Provides
 	static BaseComponent provideBaseComponent(@ApplicationContext Context context) {
 		return BaseComponent.get(context);
+	}
+	
+	@Provides
+	static Database provideDatabase() {
+		return App.db();
 	}
 }

@@ -19,10 +19,10 @@ private val LOG = logger<GetSizesUseCase>()
 
 internal class GetSizesUseCase @Inject constructor(
 	@ApplicationContext private val context: Context,
+	private val database: Database,
 ) : UseCase<Unit, SizesDomain> {
 
 	override suspend fun execute(input: Unit): SizesDomain = withContext(Dispatchers.IO) {
-		val database = Database.get(context)
 		SizesDomain(
 			imageCache = safe {
 				dirSizes(
