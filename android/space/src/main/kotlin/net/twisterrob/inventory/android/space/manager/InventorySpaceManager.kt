@@ -35,9 +35,9 @@ internal class InventorySpaceManager @Inject constructor(
 	private val context: Context,
 	private val prefs: ResourcePreferences,
 	private val database: Database,
+	private val glide: Glide,
 ) {
 	suspend fun clearImageCache() {
-		val glide = Glide.get(context) // STOPSHIP inject?
 		withContext(Dispatchers.Main) { glide.clearMemory() }
 		withContext(Dispatchers.IO) { glide.clearDiskCache() }
 	}
@@ -110,7 +110,7 @@ internal class InventorySpaceManager @Inject constructor(
 		} else {
 			// Best effort: clear prefs, db and Glide cache; CONSIDER deltree getFilesDir()
 			prefs.edit().clear().apply()
-			Glide.get(context).clearDiskCache()
+			glide.clearDiskCache()
 			val dbFile = database.file
 			database.helper.close()
 			if (dbFile.exists() && !dbFile.delete()) {

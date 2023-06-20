@@ -1,10 +1,15 @@
 package net.twisterrob.inventory.android.components;
 
+import android.content.Context;
+
+import com.bumptech.glide.Glide;
+
 import androidx.annotation.NonNull;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 
 import net.twisterrob.android.content.pref.ResourcePreferences;
@@ -25,6 +30,11 @@ abstract class ComponentsModule {
 	@Provides
 	static ResourcePreferences providePrefs() {
 		return App.prefs();
+	}
+
+	@Provides
+	static Glide provideGlide(@ApplicationContext Context context) {
+		return Glide.get(context);
 	}
 
 	@Provides

@@ -4,6 +4,9 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+/**
+ * @see net.twisterrob.inventory.android.components.ComponentsModule
+ */
 public abstract class BaseComponent {
 
 	/**
