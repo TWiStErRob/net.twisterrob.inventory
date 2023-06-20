@@ -2,10 +2,14 @@ package net.twisterrob.inventory.android.backup.exporters;
 
 import java.io.*;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.*;
@@ -15,11 +19,20 @@ public class BackupUriExporter {
 	private final BackupStreamExporter exporter;
 	private final Context context;
 
-	@VisibleForTesting BackupUriExporter(Context context, BackupStreamExporter exporter) {
+	@VisibleForTesting BackupUriExporter(
+			@NonNull Context context,
+			@NonNull BackupStreamExporter exporter
+	) {
 		this.context = context;
 		this.exporter = exporter;
 	}
-	public BackupUriExporter(Context context, Exporter exporter, ProgressDispatcher dispatcher) {
+
+	@Inject
+	public BackupUriExporter(
+			@ApplicationContext @NonNull Context context,
+			@NonNull Exporter exporter,
+			@NonNull ProgressDispatcher dispatcher
+	) {
 		this(context, new BackupStreamExporter(exporter, DBProvider.db(context), dispatcher));
 	}
 

@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.backup.xml;
 import java.io.*;
 import java.util.zip.*;
 
+import javax.inject.Inject;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
 
@@ -31,6 +32,7 @@ public class ZippedXMLExporter extends ZippedExporter {
 	private final ByteArrayOutputStream capturedXML;
 	private final AssetManager assets;
 
+	@Inject
 	public ZippedXMLExporter(Database db, AssetManager assets) {
 		this(db, assets, new XMLExporter(XSLT_NAME, XSD_NAME, db));
 	}
