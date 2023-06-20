@@ -20,20 +20,20 @@ import net.twisterrob.inventory.android.content.Database;
 @InstallIn(SingletonComponent.class)
 abstract class ComponentsModule {
 	@Binds
-	abstract ErrorMapper bindErrorMapper(ErrorMapperImpl impl);
+	abstract @NonNull ErrorMapper bindErrorMapper(@NonNull ErrorMapperImpl impl);
 
 	@Provides
-	static Database provideDatabase() {
+	static @NonNull Database provideDatabase() {
 		return App.db();
 	}
 
 	@Provides
-	static ResourcePreferences providePrefs() {
+	static @NonNull ResourcePreferences providePrefs() {
 		return App.prefs();
 	}
 
 	@Provides
-	static Glide provideGlide(@ApplicationContext Context context) {
+	static @NonNull Glide provideGlide(@ApplicationContext @NonNull Context context) {
 		return Glide.get(context);
 	}
 
