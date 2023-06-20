@@ -25,12 +25,12 @@ internal class GetSizesUseCase @Inject constructor(
 	override suspend fun execute(input: Unit): SizesDomain = withContext(Dispatchers.IO) {
 		SizesDomain(
 			imageCache = safe {
-				dirSizes(
+				fileSystemSizes(
 					GlideSetup.getCacheDir(context)
 				)
 			},
 			database = safe {
-				dirSizes(
+				fileSystemSizes(
 					context.getDatabasePath(database.helper.databaseName)
 				)
 			},
@@ -41,7 +41,7 @@ internal class GetSizesUseCase @Inject constructor(
 				database.searchSize
 			},
 			allData = safe {
-				dirSizes(
+				fileSystemSizes(
 					File(context.applicationInfo.dataDir),
 					context.externalCacheDir,
 					context.getExternalFilesDir(null),
@@ -50,8 +50,8 @@ internal class GetSizesUseCase @Inject constructor(
 		)
 	}
 
-	private fun dirSizes(vararg dirs: File?): Long =
-		dirs.sumOf { IOTools.calculateSize(it) }
+	private fun fileSystemSizes(vararg dirsOrFiles: File?): Long =
+		dirsOrFiles.sumOf { IOTools.calculateSize(it) }
 
 	private val SQLiteDatabase.freelistCount: Long
 		get() = DatabaseUtils.longForQuery(
