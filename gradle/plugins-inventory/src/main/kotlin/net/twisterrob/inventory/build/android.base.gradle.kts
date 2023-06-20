@@ -39,7 +39,7 @@ android {
 
 		// TODEL https://issuetracker.google.com/issues/170658134
 		androidComponents.finalizeDsl {
-			if (it.buildFeatures.viewBinding /*nullable*/ == true || project.path == ":app") {
+			if (it.buildFeatures.viewBinding /*nullable*/ == true || project.path == ":android") {
 				it.lint.disable += "UnusedIds"
 			}
 		}
