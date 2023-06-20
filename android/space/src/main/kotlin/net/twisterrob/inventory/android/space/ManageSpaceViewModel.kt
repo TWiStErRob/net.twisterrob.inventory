@@ -298,16 +298,16 @@ internal class ManageSpaceViewModel @Inject constructor(
 				sizes = state.sizes?.let(progress),
 			)
 		}
-		manager.killProcessesAroundManageSpaceActivity()
 		try {
+			manager.killProcessesAroundManageSpaceActivity()
 			action()
+			manager.killProcessesAroundManageSpaceActivity()
 		} catch (ex: CancellationException) {
 			throw ex
 		} catch (@Suppress("TooGenericExceptionCaught") ex: Exception) {
 			LOG.error("cleanTask failed", ex)
 			postSideEffect(ManageSpaceUiEffect.ShowToast(ex.toString()))
 		}
-		manager.killProcessesAroundManageSpaceActivity()
 		loadSizes(force = true)
 	}
 }

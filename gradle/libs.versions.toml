@@ -6,7 +6,7 @@ agp = "7.4.2"
 agp-tools = "30.4.2"
 twisterrob = "0.15.1" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 detekt = "1.22.0"
-kotlin = "1.8.10"
+kotlin = "1.8.22"
 
 # TODEL NewerVersionAvailable lint exception
 glide = "3.8.0"
