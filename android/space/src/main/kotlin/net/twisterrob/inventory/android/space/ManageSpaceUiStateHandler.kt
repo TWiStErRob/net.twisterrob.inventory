@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.space
 
 import net.twisterrob.android.utils.tools.DialogTools
 import net.twisterrob.inventory.android.arch.UiStateHandler
+import net.twisterrob.inventory.android.space.ManageSpaceUiState.ConfirmationUiState
 import net.twisterrob.inventory.android.space.databinding.ManageSpaceActivityBinding
 import javax.inject.Inject
 
@@ -22,17 +23,21 @@ internal class ManageSpaceUiStateHandler @Inject constructor(
 		binding.contents.storageSearchSize.text = state.sizes?.searchIndex
 		binding.contents.storageAllSize.text = state.sizes?.allData
 		if (state.confirmation != null) {
-			DialogTools
-				.confirm(binding.root.context) { result: Boolean? ->
-					if (result == true) {
-						viewModel.actionConfirmed()
-					} else {
-						viewModel.actionCancelled()
-					}
-				}
-				.setTitle(state.confirmation.title)
-				.setMessage(state.confirmation.message)
-				.show()
+			showDialog(state.confirmation)
 		}
+	}
+
+	private fun showDialog(confirmation: ConfirmationUiState) {
+		DialogTools
+			.confirm(binding.root.context) { result: Boolean? ->
+				if (result == true) {
+					viewModel.actionConfirmed()
+				} else {
+					viewModel.actionCancelled()
+				}
+			}
+			.setTitle(confirmation.title)
+			.setMessage(confirmation.message)
+			.show()
 	}
 }

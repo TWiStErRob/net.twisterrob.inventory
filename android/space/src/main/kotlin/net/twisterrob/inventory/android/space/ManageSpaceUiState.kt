@@ -8,7 +8,7 @@ internal data class ManageSpaceUiState(
 	val confirmation: ConfirmationUiState?,
 ) : UiState {
 
-	internal data class SizesUiState(
+	data class SizesUiState(
 		val imageCache: CharSequence,
 		val database: CharSequence,
 		val freelist: CharSequence,
@@ -17,7 +17,7 @@ internal data class ManageSpaceUiState(
 		val errors: CharSequence?,
 	)
 
-	internal data class ConfirmationUiState(
+	data class ConfirmationUiState(
 		val title: CharSequence,
 		val message: CharSequence,
 	)

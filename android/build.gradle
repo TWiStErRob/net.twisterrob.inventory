@@ -34,7 +34,6 @@ dependencies {
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.flexbox)
 	implementation(libs.slf4j.api)
-	implementation(libs.dagger.hilt)
 	annotationProcessor(libs.dagger.hilt.apt)
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
