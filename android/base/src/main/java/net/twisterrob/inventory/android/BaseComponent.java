@@ -14,6 +14,7 @@ public abstract class BaseComponent {
 		return ((Provider)context.getApplicationContext()).getBaseComponent();
 	}
 
+	public abstract @NonNull Context applicationContext();
 	public abstract @NonNull ResourcePreferences prefs();
 	/**
 	 * Untyped, so that base doesn't have to depend on database module.

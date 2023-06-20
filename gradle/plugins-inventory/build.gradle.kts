@@ -30,6 +30,8 @@ dependencies {
 	implementation(libs.plugin.android.gradle)
 	implementation(libs.plugin.twisterrob.quality)
 	implementation(libs.plugin.twisterrob.android)
+	implementation(libs.plugin.kotlin)
+	implementation(libs.plugin.dagger.hilt)
 
 	// region: These dependencies were part of AGP in 3.x and 4.x, but in 7.x they became runtime dependencies.
 	// UpgradeTestTask: DeviceConnector, DeviceProvider

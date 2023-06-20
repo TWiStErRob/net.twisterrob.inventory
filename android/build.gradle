@@ -3,6 +3,7 @@ plugins {
 	id("net.twisterrob.inventory.mapping")
 	id("net.twisterrob.inventory.androidTest")
 	id("net.twisterrob.inventory.upgradeTest")
+	id("net.twisterrob.inventory.build.hilt")
 }
 
 dependencies {
@@ -33,6 +34,7 @@ dependencies {
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.flexbox)
 	implementation(libs.slf4j.api)
+	annotationProcessor(libs.dagger.hilt.apt)
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows "Serializer Java 2.7.1" on Genymotion 2.3.7 and S5 5.0.0
@@ -103,10 +105,10 @@ android {
 			multiDexKeepProguard file('src/androidTest/multidex.pro')
 		}
 	}
-	aaptOptions {
+	androidResources {
 		noCompress 'svg' // Resources.openRawResourceFd can only open AssetFileDescriptor for uncompressed resources
 		def defaultIgnoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~'
-		ignoreAssetsPattern defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
+		ignoreAssetsPattern = defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
 	sourceSets.test.java.srcDir 'src/test/robolectricJava'
 }

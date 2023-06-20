@@ -1,5 +1,6 @@
 plugins {
 	id("net.twisterrob.inventory.android.module")
+	id("net.twisterrob.inventory.build.hilt")
 }
 
 dependencies {
@@ -9,7 +10,26 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
+	implementation "net.twisterrob.lib:twister-lib-android-orbit"
+	implementation "net.twisterrob.lib:twister-lib-android-mad"
 	implementation "net.twisterrob.lib:twister-lib-java"
+	implementation "net.twisterrob.lib:twister-lib-core"
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation(libs.flexbox)
+
+	implementation(libs.orbit.viewModel)
+	testImplementation(libs.orbit.test)
+	testImplementation(libs.kotlin.coroutinesTest) // TODEL https://github.com/orbit-mvi/orbit-mvi/issues/177
+	testImplementation(libs.test.mockitoKotlin)
+
+	testImplementation project(':android:test_helpers')
+	testImplementation "net.twisterrob.lib:twister-lib-test"
+
+	testRuntimeOnly(libs.slf4j.simple)
+}
+
+android {
+	buildFeatures {
+		viewBinding = true
+	}
 }

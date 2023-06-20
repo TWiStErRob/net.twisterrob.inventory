@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.build
 
+import net.twisterrob.gradle.android.androidComponents
 import net.twisterrob.inventory.build.dsl.android
 import net.twisterrob.inventory.build.dsl.autoNamespace
 
@@ -35,5 +36,12 @@ android {
 		 * Strangely even though both projects have my plugin applied which adds the fatal.
 		 */
 		fatal.remove("StopShip")
+
+		// TODEL https://issuetracker.google.com/issues/170658134
+		androidComponents.finalizeDsl {
+			if (it.buildFeatures.viewBinding /*nullable*/ == true || project.path == ":android") {
+				it.lint.disable += "UnusedIds"
+			}
+		}
 	}
 }

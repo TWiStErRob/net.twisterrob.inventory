@@ -21,7 +21,6 @@ dependencies {
 
 	testImplementation project(':android:test_helpers')
 	testImplementation project(':android:database:test_helpers')
-	testImplementation(libs.test.junit4)
 	testImplementation(libs.test.gwen)
 	testImplementation "net.twisterrob.lib:twister-lib-mockito"
 	testImplementation(libs.guava)

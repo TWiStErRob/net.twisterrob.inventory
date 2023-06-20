@@ -5,7 +5,6 @@ import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.Button;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -22,7 +20,9 @@ import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.inventory.android.Constants;
 import net.twisterrob.inventory.android.backup.R;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService;
+import net.twisterrob.inventory.android.content.CreateOpenableDocument;
 import net.twisterrob.inventory.android.content.InventoryContract;
+import net.twisterrob.inventory.android.content.OpenOpenableDocument;
 
 public class BackupControllerFragment extends BaseFragment<BackupControllerFragment.BackupEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupControllerFragment.class);
@@ -37,13 +37,7 @@ public class BackupControllerFragment extends BaseFragment<BackupControllerFragm
 	}
 
 	private final ActivityResultLauncher<String> exporter = registerForActivityResult(
-			new ActivityResultContracts.CreateDocument(InventoryContract.Export.TYPE_BACKUP) {
-				@Override public @NonNull Intent createIntent(@NonNull Context context, @NonNull String input) {
-					return super
-							.createIntent(context, input)
-							.addCategory(Intent.CATEGORY_OPENABLE);
-				}
-			},
+			new CreateOpenableDocument(InventoryContract.Export.TYPE_BACKUP),
 			new ActivityResultCallback<Uri>() {
 				@Override public void onActivityResult(@Nullable Uri result) {
 					if (result != null) {
@@ -56,13 +50,7 @@ public class BackupControllerFragment extends BaseFragment<BackupControllerFragm
 	);
 
 	private final ActivityResultLauncher<String[]> importer = registerForActivityResult(
-			new ActivityResultContracts.OpenDocument() {
-				@Override public @NonNull Intent createIntent(@NonNull Context context, @NonNull String[] input) {
-					return super
-							.createIntent(context, input)
-							.addCategory(Intent.CATEGORY_OPENABLE);
-				}
-			},
+			new OpenOpenableDocument(),
 			new ActivityResultCallback<Uri>() {
 				@Override public void onActivityResult(@Nullable Uri result) {
 					if (result != null) {

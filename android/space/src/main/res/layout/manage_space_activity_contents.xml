@@ -6,7 +6,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	tools:context="net.twisterrob.inventory.android.activity.space.ManageSpaceActivity"
+	tools:context="net.twisterrob.inventory.android.space.ManageSpaceActivity"
 	tools:ignore="HardcodedText,SelectableText"
 	>
 	<!--
@@ -50,11 +50,20 @@
 					style="@style/ManageSpaceText"
 					android:text="Some images are resized and saved to the phone so next time it's not necessary to load the whole image and transform it again, this saves battery life when using the app."
 					/>
-				<Button
-					android:id="@+id/storage_imageCache_clear"
-					style="@style/ManageSpaceButton"
-					android:text="Clear Image Cache"
-					/>
+				<com.google.android.flexbox.FlexboxLayout
+					android:id="@+id/storage_imageCache_actions"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					flex:flexDirection="row"
+					flex:justifyContent="flex_end"
+					flex:flexWrap="wrap"
+					>
+					<Button
+						android:id="@+id/storage_imageCache_clear"
+						style="@style/ManageSpaceButton"
+						android:text="Clear Image Cache"
+						/>
+				</com.google.android.flexbox.FlexboxLayout>
 			</LinearLayout>
 		</androidx.cardview.widget.CardView>
 
@@ -106,6 +115,7 @@
 					android:text="The database stores data for all your belongings (properties, rooms, items), including, but not limited to: name, description and image."
 					/>
 				<com.google.android.flexbox.FlexboxLayout
+					android:id="@+id/storage_db_actions"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					flex:flexDirection="row"
@@ -188,6 +198,7 @@
 					android:text="All of the above and some more, like your preferences."
 					/>
 				<com.google.android.flexbox.FlexboxLayout
+					android:id="@+id/storage_data_actions"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					flex:flexDirection="row"
@@ -241,11 +252,20 @@
 					style="@style/ManageSpaceText"
 					android:text="Search index is used to quickly find items based on parts of their name. Sometimes this index gets messed up, so it's worth to re-build it."
 					/>
-				<Button
-					android:id="@+id/storage_search_clear"
-					style="@style/ManageSpaceButton"
-					android:text="Re-build Search"
-					/>
+				<com.google.android.flexbox.FlexboxLayout
+					android:id="@+id/storage_index_actions"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					flex:flexDirection="row"
+					flex:justifyContent="flex_end"
+					flex:flexWrap="wrap"
+					>
+					<Button
+						android:id="@+id/storage_search_clear"
+						style="@style/ManageSpaceButton"
+						android:text="Re-build Search"
+						/>
+				</com.google.android.flexbox.FlexboxLayout>
 			</LinearLayout>
 		</androidx.cardview.widget.CardView>
 

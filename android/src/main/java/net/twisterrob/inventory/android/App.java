@@ -2,9 +2,12 @@ package net.twisterrob.inventory.android;
 
 import java.util.*;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.*;
 import android.database.sqlite.SQLiteConstraintException;
@@ -17,6 +20,8 @@ import android.text.TextUtils;
 import androidx.annotation.*;
 import androidx.fragment.app.FragmentManager;
 import androidx.loader.app.LoaderManager;
+import dagger.hilt.android.HiltAndroidApp;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.adapter.ResourceCursorAdapterWithHolder;
 import net.twisterrob.android.app.BaseApp;
@@ -29,13 +34,17 @@ import net.twisterrob.inventory.android.components.Toaster;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.db.DatabaseService;
 
+@HiltAndroidApp
 @SuppressLint("Registered") // REPORT False positive, it is there with explicit FQCN.
 public class App extends BaseApp implements BaseComponent.Provider {
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
+	// TODEL https://github.com/google/dagger/issues/3601
+	@Inject @ApplicationContext Context context;
+
 	@SuppressWarnings("deprecation")
 	public App() {
-		super(BuildConfig.DEBUG, R.xml.preferences);
+		init(BuildConfig.DEBUG, R.xml.preferences);
 		ResourceCursorAdapterWithHolder.devMode = BuildConfig.DEBUG;
 		LoaderManager.enableDebugLogging(BuildConfig.DEBUG);
 		android.app.LoaderManager.enableDebugLogging(BuildConfig.DEBUG);
@@ -226,6 +235,9 @@ public class App extends BaseApp implements BaseComponent.Provider {
 	@Override
 	public BaseComponent getBaseComponent() {
 		return new BaseComponent() {
+			@Override public @NonNull Context applicationContext() {
+				return App.getAppContext();
+			}
 			@Override public @NonNull ResourcePreferences prefs() {
 				return BaseApp.prefs();
 			}
