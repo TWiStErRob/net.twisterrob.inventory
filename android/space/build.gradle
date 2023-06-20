@@ -24,6 +24,13 @@ dependencies {
 
 	implementation(libs.orbit.viewModel)
 	testImplementation(libs.orbit.test)
+	testImplementation(libs.kotlin.coroutinesTest) // TODEL https://github.com/orbit-mvi/orbit-mvi/issues/177
+	testImplementation(libs.test.mockitoKotlin)
+
+	testImplementation project(':android:test_helpers')
+	testImplementation "net.twisterrob.lib:twister-lib-test"
+
+	testRuntimeOnly(libs.slf4j.simple)
 }
 
 android {

@@ -1,5 +1,6 @@
 plugins {
 	id("net.twisterrob.inventory.android.module")
+	id("org.jetbrains.kotlin.android")
 }
 
 dependencies {
@@ -8,4 +9,5 @@ dependencies {
 	api(libs.test.junit4)
 	implementation 'net.twisterrob.lib:twister-lib-stringer'
 	implementation 'net.twisterrob.lib:twister-lib-java'
+	compileOnly(libs.androidx.lifecycleViewModel)
 }

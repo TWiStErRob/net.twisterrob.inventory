@@ -44,19 +44,17 @@ internal class ManageSpaceViewModel @Inject constructor(
 		CANCELLED,
 	}
 
-	fun actionConfirmed() {
+	fun actionConfirmed() =
 		intent {
 			confirmations.send(ConfirmationResult.CONFIRMED)
 		}
-	}
 
-	fun actionCancelled() {
+	fun actionCancelled() =
 		intent {
 			confirmations.send(ConfirmationResult.CANCELLED)
 		}
-	}
 
-	fun screenVisible() {
+	fun screenVisible() =
 		intent {
 			if (state.isModalShowing) {
 				LOG.trace("Skipping loadSizes() because a confirmation is in progress.")
@@ -64,9 +62,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 			}
 			loadSizes()
 		}
-	}
 
-	fun loadSizes(force: Boolean = false) {
+	fun loadSizes(force: Boolean = false) =
 		intent {
 			if (state.isLoading && !force) {
 				LOG.trace("Skipping loadSizes() because something is in progress.")
@@ -90,9 +87,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 				)
 			}
 		}
-	}
 
-	fun clearImageCache() {
+	fun clearImageCache() =
 		intent {
 			confirmedClean(
 				title = "Clear Image Cache",
@@ -103,9 +99,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 				action = manager::clearImageCache,
 			)
 		}
-	}
 
-	fun emptyDatabase() {
+	fun emptyDatabase() =
 		intent {
 			confirmedClean(
 				title = "Empty Database",
@@ -114,16 +109,14 @@ internal class ManageSpaceViewModel @Inject constructor(
 				action = manager::emptyDatabase,
 			)
 		}
-	}
 
-	fun dumpDatabase() {
+	fun dumpDatabase() =
 		intent {
 			val fileName = Paths.getFileName("Inventory", Calendar.getInstance(), "sqlite")
 			postSideEffect(ManageSpaceUiEffect.PickDumpDatabaseTarget(fileName))
 		}
-	}
 
-	fun dumpDatabase(target: Uri) {
+	fun dumpDatabase(target: Uri) =
 		intent {
 			unconfirmedClean(
 				progress = { it.copy(database = "Dumping… " + it.database) },
@@ -131,9 +124,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 				manager.dumpDatabase(target)
 			}
 		}
-	}
 
-	fun clearImages() {
+	fun clearImages() =
 		intent {
 			confirmedClean(
 				title = "Clear Images",
@@ -142,9 +134,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 				action = manager::clearImages,
 			)
 		}
-	}
 
-	fun resetTestData() {
+	fun resetTestData() =
 		intent {
 			confirmedClean(
 				title = "Reset to Test Data",
@@ -153,15 +144,13 @@ internal class ManageSpaceViewModel @Inject constructor(
 				action = manager::resetToTestData,
 			)
 		}
-	}
 
-	fun restoreDatabase() {
+	fun restoreDatabase() =
 		intent {
 			postSideEffect(ManageSpaceUiEffect.PickRestoreDatabaseSource)
 		}
-	}
 
-	fun restoreDatabase(source: Uri) {
+	fun restoreDatabase(source: Uri) =
 		intent {
 			unconfirmedClean(
 				progress = { it.copy(database = "Restoring…") },
@@ -169,9 +158,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 				manager.restoreDatabase(source)
 			}
 		}
-	}
 
-	fun vacuumDatabase() {
+	fun vacuumDatabase() =
 		intent {
 			confirmedClean(
 				title = "Vacuum the Database",
@@ -181,15 +169,13 @@ internal class ManageSpaceViewModel @Inject constructor(
 				action = manager::vacuumDatabase,
 			)
 		}
-	}
 
-	fun vacuumDatabaseIncremental() {
+	fun vacuumDatabaseIncremental() =
 		intent {
 			postSideEffect(ManageSpaceUiEffect.PickVacuumDatabaseIncrementalBytes)
 		}
-	}
 
-	fun vacuumDatabaseIncremental(vacuumBytes: Int) {
+	fun vacuumDatabaseIncremental(vacuumBytes: Int) =
 		intent {
 			unconfirmedClean(
 				progress = { it.copy(database = "Vacuuming…") },
@@ -197,10 +183,9 @@ internal class ManageSpaceViewModel @Inject constructor(
 				manager.vacuumDatabaseIncremental(vacuumBytes)
 			}
 		}
-	}
 
 	@TargetApi(VERSION_CODES.KITKAT)
-	fun clearData() {
+	fun clearData() =
 		intent {
 			confirmedClean(
 				title = "Clear Data",
@@ -219,16 +204,14 @@ internal class ManageSpaceViewModel @Inject constructor(
 				action = manager::clearData,
 			)
 		}
-	}
 
-	fun dumpAllData() {
+	fun dumpAllData() =
 		intent {
 			val fileName = Paths.getFileName("Inventory_dump", Calendar.getInstance(), "zip")
 			postSideEffect(ManageSpaceUiEffect.PickDumpAllDataTarget(fileName))
 		}
-	}
 
-	fun dumpAllData(target: Uri) {
+	fun dumpAllData(target: Uri) =
 		intent {
 			unconfirmedClean(
 				progress = {
@@ -244,9 +227,8 @@ internal class ManageSpaceViewModel @Inject constructor(
 				manager.dumpAllData(target)
 			}
 		}
-	}
 
-	fun rebuildSearch() {
+	fun rebuildSearch() =
 		intent {
 			confirmedClean(
 				title = "Rebuild search index…",
@@ -255,7 +237,6 @@ internal class ManageSpaceViewModel @Inject constructor(
 				action = manager::rebuildSearch,
 			)
 		}
-	}
 
 	context(SimpleSyntax<ManageSpaceUiState, ManageSpaceUiEffect>)
 	private suspend fun confirmedClean(
