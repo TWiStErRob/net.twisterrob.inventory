@@ -25,6 +25,7 @@ class ManageSpaceActivity : BaseActivity() {
 	private val viewModel: ManageSpaceViewModel by viewModels()
 	@Inject internal lateinit var effectHandler: ManageSpaceUiEffectHandler
 	@Inject internal lateinit var stateHandler: ManageSpaceUiStateHandler
+	@Inject internal lateinit var eventHandler: ManageSpaceUiEventHandler
 
 	@InstallIn(ActivityComponent::class)
 	@Module
@@ -49,7 +50,7 @@ class ManageSpaceActivity : BaseActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setupUI()
-		binding.setupEventHandling(viewModel)
+		eventHandler.setupEventHandling()
 		viewModel.observe(
 			lifecycleOwner = this,
 			state = stateHandler::updateUi,
@@ -73,19 +74,4 @@ class ManageSpaceActivity : BaseActivity() {
 		fun launch(context: Context): Intent =
 			Intent(context, ManageSpaceActivity::class.java)
 	}
-}
-
-private fun ManageSpaceActivityBinding.setupEventHandling(viewModel: ManageSpaceViewModel) {
-	this.refresher.setOnRefreshListener(viewModel::loadSizes)
-	this.contents.storageSearchClear.setOnClickListener { viewModel.rebuildSearch() }
-	this.contents.storageImageCacheClear.setOnClickListener { viewModel.clearImageCache() }
-	this.contents.storageDbClear.setOnClickListener { viewModel.emptyDatabase() }
-	this.contents.storageDbDump.setOnClickListener { viewModel.dumpDatabase() }
-	this.contents.storageImagesClear.setOnClickListener { viewModel.clearImages() }
-	this.contents.storageDbTest.setOnClickListener { viewModel.resetTestData() }
-	this.contents.storageDbRestore.setOnClickListener { viewModel.restoreDatabase() }
-	this.contents.storageDbVacuum.setOnClickListener { viewModel.vacuumDatabase() }
-	this.contents.storageDbVacuumIncremental.setOnClickListener { viewModel.vacuumDatabaseIncremental() }
-	this.contents.storageAllClear.setOnClickListener { viewModel.clearData() }
-	this.contents.storageAllDump.setOnClickListener { viewModel.dumpAllData() }
 }
