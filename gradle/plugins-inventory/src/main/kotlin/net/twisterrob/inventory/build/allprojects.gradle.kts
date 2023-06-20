@@ -27,6 +27,7 @@ tasks.withType<KotlinCompile>().configureEach kotlin@{
 plugins.withId("org.jetbrains.kotlin.kapt") {
 	configure<KaptExtension> {
 		correctErrorTypes = true
+		mapDiagnosticLocations = true
 		strictMode = true
 	}
 }
