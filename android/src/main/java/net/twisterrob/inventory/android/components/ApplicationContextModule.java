@@ -1,5 +1,6 @@
 package net.twisterrob.inventory.android.components;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 
@@ -16,5 +17,10 @@ abstract class ApplicationContextModule {
 	@Provides
 	static @NonNull AssetManager provideAssetManager(@ApplicationContext @NonNull Context context) {
 		return context.getAssets();
+	}
+
+	@Provides
+	static @NonNull ContentResolver provideContentResolver(@ApplicationContext @NonNull Context context) {
+		return context.getContentResolver();
 	}
 }

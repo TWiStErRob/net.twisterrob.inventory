@@ -4,42 +4,32 @@ import java.io.*;
 
 import javax.inject.Inject;
 
-import android.content.Context;
+import android.content.ContentResolver;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
-import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.java.utils.ObjectTools;
 
 public class BackupUriExporter {
-	private final BackupStreamExporter exporter;
-	private final Context context;
-
-	@VisibleForTesting BackupUriExporter(
-			@NonNull Context context,
-			@NonNull BackupStreamExporter exporter
-	) {
-		this.context = context;
-		this.exporter = exporter;
-	}
+	private final @NonNull BackupStreamExporter exporter;
+	private final @NonNull ContentResolver contentResolver;
 
 	@Inject
 	public BackupUriExporter(
-			@ApplicationContext @NonNull Context context,
-			@NonNull Exporter exporter,
-			@NonNull ProgressDispatcher dispatcher
+			@NonNull ContentResolver contentResolver,
+			@NonNull BackupStreamExporter exporter
 	) {
-		this(context, new BackupStreamExporter(exporter, DBProvider.db(context), dispatcher));
+		this.contentResolver = contentResolver;
+		this.exporter = exporter;
 	}
 
 	public Progress exportTo(Uri uri) throws IOException {
 		OutputStream stream;
 		try {
-			stream = context.getContentResolver().openOutputStream(uri);
+			stream = contentResolver.openOutputStream(uri);
 		} catch (Exception ex) {
 			IllegalArgumentException cause = new IllegalArgumentException("Target URI: " + uri);
 			//noinspection ThrowableNotThrown
