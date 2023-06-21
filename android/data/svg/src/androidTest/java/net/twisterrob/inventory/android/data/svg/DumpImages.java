@@ -2,6 +2,9 @@ package net.twisterrob.inventory.android.data.svg;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.*;
 
 import org.junit.*;
@@ -55,8 +58,14 @@ public class DumpImages {
 		int cpus = Runtime.getRuntime().availableProcessors();
 		LOG.info("Running on {} cores.", cpus);
 		ExecutorService service = Executors.newFixedThreadPool(cpus);
+		Set<String> exclusions = new HashSet<>(Arrays.asList(
+				"shrink_resources",
+				"icon_preview",
+				"icon_helpers"
+		));
 		for (Field field : fields) {
 			final String name = field.getName();
+			if (exclusions.contains(name)) continue;
 			final File target = new File(dir, name + ".png");
 			@RawRes final int rawId = (Integer)field.get(null);
 			service.submit(new Runnable() {
@@ -68,7 +77,7 @@ public class DumpImages {
 						try {
 							String stackTrace = ObjectTools.getFullStackTrace(ex);
 							IOTools.writeAll(new FileOutputStream(target), stackTrace);
-							LOG.info("{} failed: {}", name, ex);
+							LOG.warn("{} failed: {}", name, ex, ex);
 						} catch (IOException ex2) {
 							// Shouldn't happen normally.
 							throw new IllegalStateException(ex2);
