@@ -18,7 +18,8 @@ import javax.inject.Inject
 private val LOG = logger<GetSizesUseCase>()
 
 internal class GetSizesUseCase @Inject constructor(
-	@ApplicationContext private val context: Context,
+	@ApplicationContext
+	private val context: Context,
 	private val database: Database,
 ) : UseCase<Unit, SizesDomain> {
 

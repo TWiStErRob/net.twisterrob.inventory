@@ -60,13 +60,7 @@ public class PackageNameShortener implements TestRule {
 		String detailMessage = ReflectionTools.get(ex, "detailMessage");
 		detailMessage = fix(detailMessage);
 		ReflectionTools.set(ex, "detailMessage", detailMessage);
-		StackTraceElement[] trace;
-		if (ex instanceof MockitoException) {
-			trace = ((MockitoException)ex).getUnfilteredStackTrace();
-		} else {
-			trace = ex.getStackTrace();
-		}
-		for (StackTraceElement st : trace) {
+		for (StackTraceElement st : ex.getStackTrace()) {
 			String className = ReflectionTools.get(st, "declaringClass");
 			className = fix(className);
 			ReflectionTools.set(st, "declaringClass", className);

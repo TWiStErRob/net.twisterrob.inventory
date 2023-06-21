@@ -11,7 +11,8 @@ import net.twisterrob.inventory.android.space.R
 import javax.inject.Inject
 
 internal class SizesDomainToStateMapper @Inject constructor(
-	@ApplicationContext private val context: Context,
+	@ApplicationContext
+	private val context: Context,
 	private val errorMapper: ErrorMapper,
 ) : Mapper<SizesDomain, SizesUiState> {
 	override fun map(input: SizesDomain): SizesUiState =

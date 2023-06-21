@@ -41,6 +41,7 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 	) {
 		this(res, db, new XMLImporter(res, db, new Types(db)), progress);
 	}
+
 	@VisibleForTesting
 	BackupZipFileImporter(
 			@ApplicationContext
