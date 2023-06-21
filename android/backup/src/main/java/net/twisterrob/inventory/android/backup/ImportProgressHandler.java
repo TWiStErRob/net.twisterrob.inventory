@@ -14,14 +14,14 @@ import net.twisterrob.java.utils.ObjectTools;
 @ImportScoped
 public class ImportProgressHandler implements ImportProgress {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportProgressHandler.class);
-	private final ProgressDispatcher dispatcher;
+	private final @NonNull ProgressDispatcher dispatcher;
 
 	/** @deprecated don't use it directly */
 	@Deprecated
 	public final Progress progress = new Progress(Progress.Type.Import);
 
 	@Inject
-	public ImportProgressHandler(ProgressDispatcher dispatcher) {
+	public ImportProgressHandler(@NonNull ProgressDispatcher dispatcher) {
 		this.dispatcher = ObjectTools.checkNotNull(dispatcher);
 	}
 

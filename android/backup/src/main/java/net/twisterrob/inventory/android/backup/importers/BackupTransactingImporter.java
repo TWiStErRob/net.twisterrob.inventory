@@ -14,11 +14,15 @@ public class BackupTransactingImporter<T> implements ZipImporter<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupTransactingImporter.class);
 
 	private final @NonNull Database db;
-	private final ImportProgressHandler progress;
-	private final ZipImporter<T> importer;
+	private final @NonNull ImportProgressHandler progress;
+	private final @NonNull ZipImporter<T> importer;
 
 	@Inject
-	public BackupTransactingImporter(Database db, ImportProgressHandler progress, ZipImporter<T> importer) {
+	public BackupTransactingImporter(
+			@NonNull Database db,
+			@NonNull ImportProgressHandler progress,
+			@NonNull ZipImporter<T> importer
+	) {
 		this.db = ObjectTools.checkNotNull(db);
 		this.progress = ObjectTools.checkNotNull(progress);
 		this.importer = ObjectTools.checkNotNull(importer);

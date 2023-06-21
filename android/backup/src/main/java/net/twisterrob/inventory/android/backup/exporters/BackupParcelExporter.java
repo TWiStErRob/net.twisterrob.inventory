@@ -13,7 +13,7 @@ import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.*;
 
 public class BackupParcelExporter {
-	private final BackupStreamExporter exporter;
+	private final @NonNull BackupStreamExporter exporter;
 
 	@Inject
 	public BackupParcelExporter(

@@ -22,7 +22,7 @@ public interface ExportComponent {
 	@DefineComponent.Builder
 	interface Builder {
 		@BindsInstance
-		Builder progress(ProgressDispatcher progress);
+		Builder progress(@NonNull ProgressDispatcher progress);
 		ExportComponent build();
 	}
 
@@ -33,17 +33,13 @@ public interface ExportComponent {
 	@EntryPoint
 	@InstallIn(ExportComponent.class)
 	interface ExportEntryPoint {
-		BackupParcelExporter parcelExporter();
-		BackupUriExporter uriExporter();
+		@NonNull BackupParcelExporter parcelExporter();
+		@NonNull BackupUriExporter uriExporter();
 
 		class Companion {
 			// TODO Extension val in Kotlin.
-			public static @NonNull ExportComponent.ExportEntryPoint get(
-					@NonNull ExportComponent.Builder builder) {
-				return EntryPoints.get(
-						builder.build(),
-						ExportComponent.ExportEntryPoint.class
-				);
+			public static @NonNull ExportEntryPoint get(@NonNull ExportComponent.Builder builder) {
+				return EntryPoints.get(builder.build(), ExportEntryPoint.class);
 			}
 		}
 	}

@@ -25,12 +25,16 @@ public class BackupStreamExporter {
 
 	private Cursor cursor;
 	private Progress progress;
-	private final Exporter exporter;
-	private final Database db;
-	private final ProgressDispatcher dispatcher;
+	private final @NonNull Exporter exporter;
+	private final @NonNull Database db;
+	private final @NonNull ProgressDispatcher dispatcher;
 
 	@Inject
-	public BackupStreamExporter(Exporter exporter, Database db, ProgressDispatcher dispatcher) {
+	public BackupStreamExporter(
+			@NonNull Exporter exporter,
+			@NonNull Database db,
+			@NonNull ProgressDispatcher dispatcher
+	) {
 		this.exporter = exporter;
 		this.db = db;
 		this.dispatcher = dispatcher;

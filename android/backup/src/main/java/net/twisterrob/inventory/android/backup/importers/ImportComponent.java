@@ -23,7 +23,7 @@ public interface ImportComponent {
 	@DefineComponent.Builder
 	interface Builder {
 		@BindsInstance
-		Builder progress(ProgressDispatcher progress);
+		Builder progress(@NonNull ProgressDispatcher progress);
 		ImportComponent build();
 	}
 
@@ -34,16 +34,13 @@ public interface ImportComponent {
 	@EntryPoint
 	@InstallIn(ImportComponent.class)
 	interface ImportEntryPoint {
-		ImportProgressHandler progress();
-		BackupTransactingImporter<Uri> importer();
+		@NonNull ImportProgressHandler progress();
+		@NonNull BackupTransactingImporter<Uri> importer();
 
 		class Companion {
 			// TODO Extension val in Kotlin.
 			public static @NonNull ImportEntryPoint get(@NonNull ImportComponent.Builder builder) {
-				return EntryPoints.get(
-						builder.build(),
-						ImportComponent.ImportEntryPoint.class
-				);
+				return EntryPoints.get(builder.build(), ImportEntryPoint.class);
 			}
 		}
 	}
@@ -52,6 +49,6 @@ public interface ImportComponent {
 	@InstallIn(ImportComponent.class)
 	interface HiltModule {
 		@Binds
-		@NonNull ZipImporter<Uri> bindImporter(BackupZipUriImporter impl);
+		@NonNull ZipImporter<Uri> bindImporter(@NonNull BackupZipUriImporter impl);
 	}
 }

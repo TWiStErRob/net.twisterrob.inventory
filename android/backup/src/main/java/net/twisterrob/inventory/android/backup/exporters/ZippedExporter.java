@@ -5,6 +5,8 @@ import java.util.zip.*;
 
 import android.database.Cursor;
 
+import androidx.annotation.NonNull;
+
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.backup.Exporter;
 import net.twisterrob.inventory.android.backup.xml.CursorExporter;
@@ -12,13 +14,17 @@ import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 
 @SuppressWarnings("RedundantThrows")
-public class ZippedExporter implements Exporter {
-	protected final String fileName;
+public abstract class ZippedExporter implements Exporter {
+	protected final @NonNull String fileName;
 	protected ZipOutputStream zip;
-	private final Database db;
-	private final CursorExporter dataOutput;
+	private final @NonNull Database db;
+	private final @NonNull CursorExporter dataOutput;
 
-	public ZippedExporter(String fileName, Database db, CursorExporter exporter) {
+	public ZippedExporter(
+			@NonNull String fileName,
+			@NonNull Database db,
+			@NonNull CursorExporter exporter
+	) {
 		this.fileName = fileName;
 		this.db = db;
 		this.dataOutput = exporter;

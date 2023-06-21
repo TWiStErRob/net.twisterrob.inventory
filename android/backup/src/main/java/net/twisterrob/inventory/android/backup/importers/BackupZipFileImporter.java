@@ -9,6 +9,7 @@ import org.slf4j.*;
 
 import android.content.res.Resources;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import net.twisterrob.android.utils.tools.IOTools;
@@ -24,18 +25,26 @@ import net.twisterrob.java.utils.ObjectTools;
 
 public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<File> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupZipFileImporter.class);
-	private final ImportProgressHandler progress;
+	private final @NonNull ImportProgressHandler progress;
 	private ZipFile zip;
-	private final Resources res;
-	private final Database db;
-	private final XMLImporter importer;
+	private final @NonNull Resources res;
+	private final @NonNull Database db;
+	private final @NonNull XMLImporter importer;
 
 	@Inject
-	public BackupZipFileImporter(Resources res, Database db, ImportProgressHandler progress) {
+	public BackupZipFileImporter(
+			@NonNull Resources res,
+			@NonNull Database db,
+			@NonNull ImportProgressHandler progress
+	) {
 		this(res, db, new XMLImporter(res, db, new Types(db)), progress);
 	}
-	@VisibleForTesting BackupZipFileImporter(Resources res,
-			Database db, XMLImporter importer, ImportProgressHandler progress) {
+	@VisibleForTesting
+	BackupZipFileImporter(Resources res,
+			@NonNull Database db,
+			@NonNull XMLImporter importer,
+			@NonNull ImportProgressHandler progress
+	) {
 		this.progress = ObjectTools.checkNotNull(progress);
 		this.res = ObjectTools.checkNotNull(res);
 		this.db = ObjectTools.checkNotNull(db);

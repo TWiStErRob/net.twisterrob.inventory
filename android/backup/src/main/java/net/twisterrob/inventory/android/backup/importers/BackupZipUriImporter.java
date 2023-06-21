@@ -7,19 +7,21 @@ import javax.inject.Inject;
 import android.content.*;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.java.utils.ObjectTools;
 
 public class BackupZipUriImporter implements ZipImporter<Uri> {
-	private final ContentResolver contentResolver;
-	private final BackupZipStreamImporter streamImporter;
-	private final BackupZipFileImporter fileImporter;
+	private final @NonNull ContentResolver contentResolver;
+	private final @NonNull BackupZipStreamImporter streamImporter;
+	private final @NonNull BackupZipFileImporter fileImporter;
 
 	@Inject
 	public BackupZipUriImporter(
-			ContentResolver contentResolver,
-			BackupZipStreamImporter streamImporter,
-			BackupZipFileImporter fileImporter
+			@NonNull ContentResolver contentResolver,
+			@NonNull BackupZipStreamImporter streamImporter,
+			@NonNull BackupZipFileImporter fileImporter
 	) {
 		this.contentResolver = contentResolver;
 		this.streamImporter = streamImporter;

@@ -34,7 +34,7 @@ public class ZippedXMLExporter extends ZippedExporter {
 
 	@Inject
 	public ZippedXMLExporter(Database db, AssetManager assets) {
-		this(db, assets, new XMLExporter(XSLT_NAME, XSD_NAME, db));
+		this(db, assets, new XMLExporter(db, XSLT_NAME, XSD_NAME));
 	}
 
 	@VisibleForTesting
