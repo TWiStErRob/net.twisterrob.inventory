@@ -8,6 +8,7 @@ import android.content.*;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.java.utils.ObjectTools;
@@ -19,6 +20,7 @@ public class BackupZipUriImporter implements ZipImporter<Uri> {
 
 	@Inject
 	public BackupZipUriImporter(
+			@ApplicationContext
 			@NonNull ContentResolver contentResolver,
 			@NonNull BackupZipStreamImporter streamImporter,
 			@NonNull BackupZipFileImporter fileImporter

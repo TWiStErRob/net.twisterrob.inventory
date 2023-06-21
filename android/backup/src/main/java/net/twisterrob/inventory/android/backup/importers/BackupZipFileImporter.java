@@ -11,6 +11,7 @@ import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
@@ -33,6 +34,7 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 
 	@Inject
 	public BackupZipFileImporter(
+			@ApplicationContext
 			@NonNull Resources res,
 			@NonNull Database db,
 			@NonNull ImportProgressHandler progress
@@ -40,7 +42,9 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 		this(res, db, new XMLImporter(res, db, new Types(db)), progress);
 	}
 	@VisibleForTesting
-	BackupZipFileImporter(Resources res,
+	BackupZipFileImporter(
+			@ApplicationContext
+			@NonNull Resources res,
 			@NonNull Database db,
 			@NonNull XMLImporter importer,
 			@NonNull ImportProgressHandler progress

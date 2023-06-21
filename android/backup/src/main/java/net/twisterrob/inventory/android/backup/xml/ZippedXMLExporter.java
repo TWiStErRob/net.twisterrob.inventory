@@ -13,7 +13,9 @@ import org.xml.sax.SAXException;
 import android.content.res.AssetManager;
 import android.util.Xml;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.Constants.Paths;
@@ -29,16 +31,25 @@ public class ZippedXMLExporter extends ZippedExporter {
 	public static final String XSD_NAME = Paths.BACKUP_DATA_FILENAME + ".xsd";
 	public static final String CSV_NAME = "inventory.csv";
 	public static final String HTML_NAME = "inventory.html";
-	private final ByteArrayOutputStream capturedXML;
-	private final AssetManager assets;
+	private final @NonNull ByteArrayOutputStream capturedXML;
+	private final @NonNull AssetManager assets;
 
 	@Inject
-	public ZippedXMLExporter(Database db, AssetManager assets) {
+	public ZippedXMLExporter(
+			@NonNull Database db,
+			@ApplicationContext
+			@NonNull AssetManager assets
+	) {
 		this(db, assets, new XMLExporter(db, XSLT_NAME, XSD_NAME));
 	}
 
 	@VisibleForTesting
-	ZippedXMLExporter(Database db, AssetManager assets, CursorExporter exporter) {
+	ZippedXMLExporter(
+			@NonNull Database db,
+			@ApplicationContext
+			@NonNull AssetManager assets,
+			@NonNull CursorExporter exporter
+	) {
 		super(XML_NAME, db, exporter);
 		this.capturedXML = new ByteArrayOutputStream();
 		this.assets = assets;

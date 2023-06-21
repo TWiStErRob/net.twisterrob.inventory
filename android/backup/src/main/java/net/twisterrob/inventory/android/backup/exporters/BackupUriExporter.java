@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.*;
@@ -19,6 +20,7 @@ public class BackupUriExporter {
 
 	@Inject
 	public BackupUriExporter(
+			@ApplicationContext
 			@NonNull ContentResolver contentResolver,
 			@NonNull BackupStreamExporter exporter
 	) {
