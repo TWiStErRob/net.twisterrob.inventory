@@ -1,7 +1,7 @@
 package net.twisterrob.inventory.build
 
 //import net.twisterrob.inventory.build.dsl.android
-//import net.twisterrob.inventory.build.dsl.hilt
+import net.twisterrob.inventory.build.dsl.hilt
 import net.twisterrob.inventory.build.dsl.libs
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.withType
@@ -30,10 +30,12 @@ tasks.withType<JavaCompile>().configureEach javac@{
 	)
 }
 
-//hilt {
-//	enableAggregatingTask = true
-//	enableExperimentalClasspathAggregation
-//}
+hilt {
+//	enableExperimentalClasspathAggregation = false // default (2.46.1): false
+//	enableAggregatingTask = true // default (2.46.1): true
+//	enableTransformForLocalTests = false // default (2.46.1): false
+//	disableCrossCompilationRootValidation = false // default (2.46.1): false
+}
 
 //val daggerFlags = mapOf(
 //	"dagger.experimentalDaggerErrorMessages" to "disabled",
