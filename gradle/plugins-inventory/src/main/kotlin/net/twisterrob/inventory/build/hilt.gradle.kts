@@ -1,7 +1,8 @@
 package net.twisterrob.inventory.build
 
-import net.twisterrob.inventory.build.dsl.libs
 //import net.twisterrob.inventory.build.dsl.android
+//import net.twisterrob.inventory.build.dsl.hilt
+import net.twisterrob.inventory.build.dsl.libs
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.withType
 
@@ -28,6 +29,11 @@ tasks.withType<JavaCompile>().configureEach javac@{
 		"-Xlint:-processing",
 	)
 }
+
+//hilt {
+//	enableAggregatingTask = true
+//	enableExperimentalClasspathAggregation
+//}
 
 //val daggerFlags = mapOf(
 //	"dagger.experimentalDaggerErrorMessages" to "disabled",

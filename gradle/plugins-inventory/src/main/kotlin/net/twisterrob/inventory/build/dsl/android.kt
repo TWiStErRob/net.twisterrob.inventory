@@ -1,7 +1,6 @@
 package net.twisterrob.inventory.build.dsl
 
 import com.android.build.api.dsl.CommonExtension
-import com.android.build.api.dsl.DefaultConfig
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.get
@@ -11,7 +10,9 @@ import org.gradle.kotlin.dsl.get
  * where the `android-library` or `android-application` are not applied, but implied.
  *
  * @see com.android.build.api.dsl.ApplicationExtension
+ * created by [com.android.build.gradle.internal.plugins.AppPlugin.createExtension]
  * @see com.android.build.api.dsl.LibraryExtension
+ * created by [com.android.build.gradle.internal.plugins.LibraryPlugin.createExtension]
  */
 internal val Project.android: CommonExtension<*, *, *, *>
 	@Suppress("UNCHECKED_CAST")
