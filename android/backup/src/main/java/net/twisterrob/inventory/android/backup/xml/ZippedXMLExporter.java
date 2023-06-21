@@ -33,7 +33,7 @@ public class ZippedXMLExporter extends ZippedExporter {
 	private final AssetManager assets;
 
 	@Inject
-	public ZippedXMLExporter(Database db, AssetManager assets) { // STOPSHIP
+	public ZippedXMLExporter(Database db, AssetManager assets) {
 		this(db, assets, new XMLExporter(XSLT_NAME, XSD_NAME, db));
 	}
 
