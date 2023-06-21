@@ -5,12 +5,19 @@ import java.util.regex.*;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.*;
+import org.mockito.exceptions.base.MockitoException;
 
 import android.os.Build.*;
 
 import net.twisterrob.java.utils.ReflectionTools;
 import net.twisterrob.java.utils.tostring.stringers.DefaultStringer;
 
+/**
+ * Note: this uses reflection, so there's a need to open up Java with:
+ * <pre><code>
+ * --add-opens java.base/java.lang=ALL-UNNAMED
+ * </code></pre>
+ */
 public class PackageNameShortener implements TestRule {
 	private static final String ID_PATTERN = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
 	private static final Pattern FQCN = Pattern.compile(ID_PATTERN + "(\\." + ID_PATTERN + ")*");
@@ -53,9 +60,13 @@ public class PackageNameShortener implements TestRule {
 		String detailMessage = ReflectionTools.get(ex, "detailMessage");
 		detailMessage = fix(detailMessage);
 		ReflectionTools.set(ex, "detailMessage", detailMessage);
-		ex.getStackTrace();
-		//noinspection ConstantConditions if Throwable is messed up, an NPE is in order
-		for (StackTraceElement st : ReflectionTools.<StackTraceElement[]>get(ex, "stackTrace")) {
+		StackTraceElement[] trace;
+		if (ex instanceof MockitoException) {
+			trace = ((MockitoException)ex).getUnfilteredStackTrace();
+		} else {
+			trace = ex.getStackTrace();
+		}
+		for (StackTraceElement st : trace) {
 			String className = ReflectionTools.get(st, "declaringClass");
 			className = fix(className);
 			ReflectionTools.set(st, "declaringClass", className);

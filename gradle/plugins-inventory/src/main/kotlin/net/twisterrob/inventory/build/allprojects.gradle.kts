@@ -60,6 +60,8 @@ tasks.withType<Test>().configureEach test@{
 	) {
 		jvmArgs(
 			"--illegal-access=deny",
+			// net.twisterrob.test.PackageNameShortener.fixPackages uses reflection on Throwable/StackTraceElement.
+			"--add-opens", "java.base/java.lang=ALL-UNNAMED",
 		)
 	}
 }
