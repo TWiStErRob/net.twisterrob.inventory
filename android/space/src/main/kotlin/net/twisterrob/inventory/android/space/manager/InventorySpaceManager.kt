@@ -11,13 +11,14 @@ import android.os.Process
 import androidx.core.content.getSystemService
 import androidx.documentfile.provider.DocumentFile
 import com.bumptech.glide.Glide
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import net.twisterrob.android.content.pref.ResourcePreferences
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
 import net.twisterrob.android.utils.tools.PackageManagerTools
-import net.twisterrob.inventory.android.BaseComponent
 import net.twisterrob.inventory.android.content.Database
 import net.twisterrob.inventory.android.content.db.DatabaseService
 import net.twisterrob.inventory.android.logger
@@ -30,16 +31,19 @@ private val LOG = logger<InventorySpaceManager>()
 
 @Suppress("TooManyFunctions")
 internal class InventorySpaceManager @Inject constructor(
-	private val inject: BaseComponent,
+	@ApplicationContext
+	private val context: Context,
+	private val prefs: ResourcePreferences,
+	private val database: Database,
+	private val glide: Glide,
 ) {
 	suspend fun clearImageCache() {
-		val glide = Glide.get(inject.applicationContext())
 		withContext(Dispatchers.Main) { glide.clearMemory() }
 		withContext(Dispatchers.IO) { glide.clearDiskCache() }
 	}
 
 	fun emptyDatabase() {
-		Database.get(inject.applicationContext()).helper.run {
+		database.helper.run {
 			@Suppress("ConvertTryFinallyToUseCall") // AutoClosable was added in Q.
 			try {
 				onDestroy(writableDatabase)
@@ -48,24 +52,24 @@ internal class InventorySpaceManager @Inject constructor(
 				close()
 			}
 		}
-		inject.prefs().setString(R.string.pref_currentLanguage, null)
-		inject.prefs().setBoolean(R.string.pref_showWelcome, true)
+		prefs.setString(R.string.pref_currentLanguage, null)
+		prefs.setBoolean(R.string.pref_showWelcome, true)
 	}
 
 	fun clearImages() {
-		Database.get(inject.applicationContext()).clearImages()
+		database.clearImages()
 	}
 
 	fun resetToTestData() {
-		Database.get(inject.applicationContext()).resetToTest()
+		database.resetToTest()
 	}
 
 	fun vacuumDatabase() {
-		Database.get(inject.applicationContext()).writableDatabase.execSQL("VACUUM;")
+		database.writableDatabase.execSQL("VACUUM;")
 	}
 
 	fun vacuumDatabaseIncremental(vacuumBytes: Int) {
-		val db = Database.get(inject.applicationContext()).writableDatabase
+		val db = database.writableDatabase
 		val pagesToFree = vacuumBytes / db.pageSize
 		val vacuum =
 			db.rawQuery("PRAGMA incremental_vacuum($pagesToFree);", DatabaseTools.NO_ARGS)
@@ -73,10 +77,10 @@ internal class InventorySpaceManager @Inject constructor(
 	}
 
 	suspend fun dumpDatabase(target: Uri) = withContext(Dispatchers.IO) {
-		val name = DocumentFile.fromSingleUri(inject.applicationContext(), target)?.name
+		val name = DocumentFile.fromSingleUri(context, target)?.name
 		LOG.debug("Saving DB to {} ({})", target, name)
-		val source = Database.get(inject.applicationContext()).file.inputStream()
-		val out = inject.applicationContext().contentResolver.openOutputStream(target)
+		val source = database.file.inputStream()
+		val out = context.contentResolver.openOutputStream(target)
 			?: error("Cannot open ${target} for writing.")
 		IOTools.copyStream(source, out)
 		LOG.debug("Saved DB to {} ({})", target, name)
@@ -84,12 +88,12 @@ internal class InventorySpaceManager @Inject constructor(
 
 	suspend fun restoreDatabase(source: Uri) {
 		withContext(Dispatchers.Main) {
-			DatabaseService.clearVacuumAlarm(inject.applicationContext())
+			DatabaseService.clearVacuumAlarm(context)
 		}
 		withContext(Dispatchers.IO) {
 			try {
-				val stream = inject.applicationContext().contentResolver.openInputStream(source)
-				Database.get(inject.applicationContext()).helper.restore(stream)
+				val stream = context.contentResolver.openInputStream(source)
+				database.helper.restore(stream)
 				LOG.debug("Restored {}", source)
 			} catch (ex: CancellationException) {
 				throw ex
@@ -101,15 +105,14 @@ internal class InventorySpaceManager @Inject constructor(
 
 	fun clearData() {
 		if (VERSION_CODES.KITKAT <= VERSION.SDK_INT) {
-			val am = inject.applicationContext().getSystemService<ActivityManager>()!!
+			val am = context.getSystemService<ActivityManager>()!!
 			am.clearApplicationUserData()
 		} else {
 			// Best effort: clear prefs, db and Glide cache; CONSIDER deltree getFilesDir()
-			inject.prefs().edit().clear().apply()
-			Glide.get(inject.applicationContext()).clearDiskCache()
-			val db = Database.get(inject.applicationContext())
-			val dbFile = db.file
-			db.helper.close()
+			prefs.edit().clear().apply()
+			glide.clearDiskCache()
+			val dbFile = database.file
+			database.helper.close()
 			if (dbFile.exists() && !dbFile.delete()) {
 				error("Cannot delete database file: ${dbFile}")
 			}
@@ -117,17 +120,18 @@ internal class InventorySpaceManager @Inject constructor(
 	}
 
 	fun dumpAllData(target: Uri) {
-		val contentResolver = inject.applicationContext().contentResolver
-		ZipOutputStream(contentResolver.openOutputStream(target)).use { zip ->
+		val out = context.contentResolver.openOutputStream(target)
+			?: error("Cannot open ${target} for writing.")
+		ZipOutputStream(out).use { zip ->
 			val description = StringBuilder()
-			val applicationInfo = inject.applicationContext().applicationInfo
+			val applicationInfo = context.applicationInfo
 			if (applicationInfo.dataDir != null) {
 				val internalDataDir = File(applicationInfo.dataDir)
 				IOTools.zip(zip, internalDataDir, "internal")
 				description.append("internal\tgetApplicationInfo().dataDir: ")
 					.append(internalDataDir).append("\n")
 			}
-			val externalFilesDir = inject.applicationContext().getExternalFilesDir(null)
+			val externalFilesDir = context.getExternalFilesDir(null)
 			if (externalFilesDir != null) {
 				val externalDataDir = externalFilesDir.parentFile
 				IOTools.zip(zip, externalDataDir, "external")
@@ -140,11 +144,10 @@ internal class InventorySpaceManager @Inject constructor(
 	}
 
 	fun rebuildSearch() {
-		Database.get(inject.applicationContext()).rebuildSearch()
+		database.rebuildSearch()
 	}
 
 	fun killProcessesAroundManageSpaceActivity() {
-		val context = inject.applicationContext()
 		val myProcessName = context.manageSpaceActivity.processName
 		val myProcessPrefix = context.applicationInfo.processName
 		val am = context.getSystemService<ActivityManager>()!!

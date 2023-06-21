@@ -14,11 +14,11 @@ import net.twisterrob.java.utils.ObjectTools;
 
 /** Strict in a sense that it doesn't deal with {@code null}s. */
 public class StrictProgressInfoProvider implements ProgressInfoProvider {
-	private final Context context;
+	private final @NonNull Context context;
 	private @NonNull Progress progress;
 
 	public StrictProgressInfoProvider(@NonNull Context context, @NonNull Progress progress) {
-		this.context = context;
+		this.context = ObjectTools.checkNotNull(context);
 		this.progress = ObjectTools.checkNotNull(progress);
 	}
 

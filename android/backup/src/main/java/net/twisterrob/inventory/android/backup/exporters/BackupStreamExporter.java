@@ -4,6 +4,8 @@ import java.io.OutputStream;
 import java.util.Locale;
 import java.util.concurrent.CancellationException;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.database.Cursor;
@@ -23,11 +25,16 @@ public class BackupStreamExporter {
 
 	private Cursor cursor;
 	private Progress progress;
-	private final Exporter exporter;
-	private final Database db;
-	private final ProgressDispatcher dispatcher;
+	private final @NonNull Exporter exporter;
+	private final @NonNull Database db;
+	private final @NonNull ProgressDispatcher dispatcher;
 
-	public BackupStreamExporter(Exporter exporter, Database db, ProgressDispatcher dispatcher) {
+	@Inject
+	public BackupStreamExporter(
+			@NonNull Exporter exporter,
+			@NonNull Database db,
+			@NonNull ProgressDispatcher dispatcher
+	) {
 		this.exporter = exporter;
 		this.db = db;
 		this.dispatcher = dispatcher;

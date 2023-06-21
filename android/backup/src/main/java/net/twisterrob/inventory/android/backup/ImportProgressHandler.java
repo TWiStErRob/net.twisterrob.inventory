@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.backup;
 
 import org.slf4j.*;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import net.twisterrob.inventory.android.backup.Importer.ImportProgress;
@@ -12,16 +13,18 @@ import net.twisterrob.java.utils.ObjectTools;
 @SuppressWarnings("deprecation")
 public class ImportProgressHandler implements ImportProgress {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportProgressHandler.class);
-	private final ProgressDispatcher dispatcher;
+	private final @NonNull ProgressDispatcher dispatcher;
 
 	/** @deprecated don't use it directly */
 	@Deprecated
 	public final Progress progress = new Progress(Progress.Type.Import);
 
-	@VisibleForTesting ImportProgressHandler() {
+	@SuppressWarnings("unused") // Used by BackupZipImporterTestBase.dispatcherMock.
+	@VisibleForTesting
+	ImportProgressHandler() {
 		this(ProgressDispatcher.IGNORE);
 	}
-	public ImportProgressHandler(ProgressDispatcher dispatcher) {
+	public ImportProgressHandler(@NonNull ProgressDispatcher dispatcher) {
 		this.dispatcher = ObjectTools.checkNotNull(dispatcher);
 	}
 

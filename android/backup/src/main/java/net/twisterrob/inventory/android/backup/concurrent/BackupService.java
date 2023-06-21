@@ -4,6 +4,9 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.slf4j.*;
 
 import android.app.Notification;
@@ -15,17 +18,20 @@ import android.os.*;
 import androidx.annotation.*;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.inventory.android.activity.BackupActivity;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.exporters.*;
+import net.twisterrob.inventory.android.backup.exporters.ExportComponent.ExportEntryPoint;
 import net.twisterrob.inventory.android.backup.importers.*;
-import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
+import net.twisterrob.inventory.android.backup.importers.ImportComponent.ImportEntryPoint;
 import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.Constants.*;
 import static net.twisterrob.inventory.android.backup.StrictProgressInfoProvider.*;
 
+@AndroidEntryPoint
 public class BackupService extends NotificationProgressService<Progress> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupService.class);
 
@@ -48,6 +54,9 @@ public class BackupService extends NotificationProgressService<Progress> {
 	@SuppressWarnings("JavadocReference")
 	private final Queue<ParcelFileDescriptor> queue = new LinkedBlockingDeque<>();
 	private final ProgressDispatcher dispatcher = new ProgressDispatcher();
+
+	@Inject Provider<ExportComponent.Builder> exportFactory;
+	@Inject Provider<ImportComponent.Builder> importFactory;
 
 	public BackupService() {
 		setDebugMode(DISABLE && BuildConfig.DEBUG);
@@ -171,18 +180,18 @@ public class BackupService extends NotificationProgressService<Progress> {
 		dispatcher.reset(); // call before started, so the listener may cancel immediately
 		listeners.started();
 		try {
-			ZippedXMLExporter zip = new ZippedXMLExporter(
-					DBProvider.db(getApplicationContext()),
-					getApplicationContext().getAssets()
-			);
 			if (ACTION_EXPORT_PFD_WORKAROUND.equals(intent.getAction())) {
 				dispatcher.setCancellable(false);
-				BackupParcelExporter exporter = new BackupParcelExporter(this, zip, dispatcher);
+				BackupParcelExporter exporter = ExportEntryPoint.Companion
+						.get(exportFactory.get().progress(dispatcher))
+						.parcelExporter();
 				ParcelFileDescriptor file = queue.remove();
 				finish(exporter.exportTo(file));
 			} else if (ACTION_EXPORT.equals(intent.getAction())) {
 				dispatcher.setCancellable(false);
-				BackupUriExporter exporter = new BackupUriExporter(this, zip, dispatcher);
+				BackupUriExporter exporter = ExportEntryPoint.Companion
+						.get(exportFactory.get().progress(dispatcher))
+						.uriExporter();
 				Uri uri = intent.getData();
 				finish(exporter.exportTo(uri));
 			}
@@ -215,8 +224,9 @@ public class BackupService extends NotificationProgressService<Progress> {
 		ImportProgressHandler progress = new ImportProgressHandler(dispatcher);
 		progress.begin();
 
-		ZipImporter<Uri> importer = new BackupTransactingImporter<>(
-				DBProvider.db(this), progress, new BackupZipUriImporter(this, progress));
+		ZipImporter<Uri> importer = ImportEntryPoint.Companion
+				.get(importFactory.get().progress(progress))
+				.importer();
 		try {
 			importer.importFrom(input);
 		} catch (Exception ex) {

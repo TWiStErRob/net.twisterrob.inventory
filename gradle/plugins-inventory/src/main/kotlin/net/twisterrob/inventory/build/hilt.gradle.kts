@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.build
 
+//import net.twisterrob.inventory.build.dsl.android
+import net.twisterrob.inventory.build.dsl.hilt
 import net.twisterrob.inventory.build.dsl.libs
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.withType
@@ -11,6 +13,7 @@ plugins {
 	id("org.jetbrains.kotlin.kapt")
 }
 
+@Suppress("UnstableApiUsage")
 dependencies {
 	"implementation"(libs.dagger.hilt)
 	"kapt"(libs.dagger.hilt.apt)
@@ -26,3 +29,35 @@ tasks.withType<JavaCompile>().configureEach javac@{
 		"-Xlint:-processing",
 	)
 }
+
+hilt {
+//	enableExperimentalClasspathAggregation = false // default (2.46.1): false
+//	enableAggregatingTask = true // default (2.46.1): true
+//	enableTransformForLocalTests = false // default (2.46.1): false
+//	disableCrossCompilationRootValidation = false // default (2.46.1): false
+}
+
+//val daggerFlags = mapOf(
+//	"dagger.experimentalDaggerErrorMessages" to "disabled",
+//)
+//
+//android {
+//	defaultConfig {
+//		javaCompileOptions {
+//			annotationProcessorOptions {
+//				daggerFlags.forEach { (key, value) ->
+//					@Suppress("UnstableApiUsage")
+//					argument(key, value)
+//				}
+//			}
+//		}
+//	}
+//}
+//
+//kapt {
+//	arguments {
+//		daggerFlags.forEach { (key, value) ->
+//			arg(key, value)
+//		}
+//	}
+//}

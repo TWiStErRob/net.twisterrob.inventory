@@ -5,11 +5,14 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.zip.*;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.content.res.Resources;
 
 import androidx.annotation.*;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants;
@@ -33,11 +36,24 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 	private final @NonNull XMLImporter importer;
 	private final @NonNull ImportImageReconciler images;
 
-	public BackupZipStreamImporter(Resources res, Database db, ImportProgressHandler progress) {
+	@Inject
+	public BackupZipStreamImporter(
+			@ApplicationContext
+			@NonNull Resources res,
+			@NonNull Database db,
+			@NonNull ImportProgressHandler progress
+	) {
 		this(res, new XMLImporter(res, db, new Types(db)), db, progress);
 	}
-	@VisibleForTesting BackupZipStreamImporter(@NonNull Resources res,
-			@NonNull XMLImporter importer, @NonNull Database db, @NonNull ImportProgressHandler progress) {
+
+	@VisibleForTesting
+	BackupZipStreamImporter(
+			@ApplicationContext
+			@NonNull Resources res,
+			@NonNull XMLImporter importer,
+			@NonNull Database db,
+			@NonNull ImportProgressHandler progress
+	) {
 		this.res = ObjectTools.checkNotNull(res);
 		this.progress = ObjectTools.checkNotNull(progress);
 		this.importer = ObjectTools.checkNotNull(importer);

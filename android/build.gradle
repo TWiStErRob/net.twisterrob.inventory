@@ -3,7 +3,6 @@ plugins {
 	id("net.twisterrob.inventory.mapping")
 	id("net.twisterrob.inventory.androidTest")
 	id("net.twisterrob.inventory.upgradeTest")
-	id("net.twisterrob.inventory.build.hilt")
 }
 
 dependencies {

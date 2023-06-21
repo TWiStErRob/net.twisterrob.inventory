@@ -4,29 +4,36 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import net.twisterrob.android.content.pref.ResourcePreferences;
-import net.twisterrob.inventory.android.components.BuildInfo;
-import net.twisterrob.inventory.android.components.Toaster;
-
+/**
+ * @see net.twisterrob.inventory.android.components.ComponentsModule
+ */
 public abstract class BaseComponent {
 
+	/**
+	 * @deprecated inject {@link net.twisterrob.inventory.android.content.Database} directly.
+	 */
+	@SuppressWarnings({"deprecation", "JavadocReference"})
+	@Deprecated
 	public static @NonNull BaseComponent get(@NonNull Context context) {
 		return ((Provider)context.getApplicationContext()).getBaseComponent();
 	}
 
-	public abstract @NonNull Context applicationContext();
-	public abstract @NonNull ResourcePreferences prefs();
 	/**
 	 * Untyped, so that base doesn't have to depend on database module.
-	 * Use {@code Database.get(Context)} instead of this.
 	 *
 	 * @return net.twisterrob.inventory.android.content.Database
+	 * @deprecated inject {@link net.twisterrob.inventory.android.content.Database} directly.
 	 */
+	@SuppressWarnings("JavadocReference")
+	@Deprecated
 	public abstract @NonNull Object db();
-	public abstract @NonNull Toaster toaster();
-	public abstract @NonNull BuildInfo buildInfo();
 
 	interface Provider {
+		/**
+		 * @deprecated inject {@link net.twisterrob.inventory.android.content.Database} directly.
+		 */
+		@Deprecated
+		@SuppressWarnings("JavadocReference")
 		BaseComponent getBaseComponent();
 	}
 }

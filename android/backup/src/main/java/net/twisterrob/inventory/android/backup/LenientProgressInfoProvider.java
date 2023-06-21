@@ -10,15 +10,15 @@ import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.backup.Progress.Type;
 
 public class LenientProgressInfoProvider implements ProgressInfoProvider {
-	private final ProgressInfoProvider provider;
+	private final @NonNull ProgressInfoProvider provider;
 	private boolean hasProgress = false;
 
-	public LenientProgressInfoProvider(Context context) {
+	public LenientProgressInfoProvider(@NonNull Context context) {
 		// what progress is used here doesn't matter, because hasProgress is false
 		this(new StrictProgressInfoProvider(context, new Progress(Type.Export)));
 	}
 
-	public LenientProgressInfoProvider(ProgressInfoProvider provider) {
+	public LenientProgressInfoProvider(@NonNull ProgressInfoProvider provider) {
 		this.provider = provider;
 	}
 

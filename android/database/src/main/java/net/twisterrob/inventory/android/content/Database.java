@@ -15,7 +15,6 @@ import androidx.annotation.*;
 
 import net.twisterrob.android.db.DatabaseOpenHelper;
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.database.*;
 import net.twisterrob.java.annotations.DebugHelper;
@@ -497,9 +496,5 @@ public class Database extends VariantDatabase {
 			getWritableDatabase().execSQL(query);
 			return "execSQL finished";
 		}
-	}
-
-	public static @NonNull Database get(@NonNull Context context) {
-		return (Database)BaseComponent.get(context).db();
 	}
 }

@@ -36,7 +36,7 @@ public class BackupDataXmlExportImportIntgTest {
 		Database db = database.getDatabase();
 		database.assertHasNoUserData();
 
-		CursorExporter exporter = new XMLExporter("xslt.file", "xsd.file", db);
+		CursorExporter exporter = new XMLExporter(db, "xslt.file", "xsd.file");
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try (Cursor export = db.export()) {
 			exporter.start(output, export);
@@ -57,7 +57,7 @@ public class BackupDataXmlExportImportIntgTest {
 		long list = db.createList(bad("List"));
 		db.addListEntry(list, item);
 
-		CursorExporter exporter = new XMLExporter("xslt.file", "xsd.file", db);
+		CursorExporter exporter = new XMLExporter(db, "xslt.file", "xsd.file");
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try (Cursor export = db.export()) {
 			exporter.start(output, export);

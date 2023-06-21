@@ -15,6 +15,7 @@ import androidx.annotation.*;
 import androidx.collection.LongSparseArray;
 
 import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.java.text.*;
@@ -149,7 +150,9 @@ public class CategoryCacheImpl implements CategoryCache {
 			Locale currentLocale = AndroidTools.getLocale(context.getResources().getConfiguration());
 			if (!currentLocale.equals(lastLocale)) {
 				LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
-				CACHE = new CategoryCacheImpl(Database.get(context), context);
+				@SuppressWarnings("deprecation")
+				Database database = (Database)BaseComponent.get(context).db();
+				CACHE = new CategoryCacheImpl(database, context);
 				lastLocale = currentLocale;
 			}
 			return CACHE;

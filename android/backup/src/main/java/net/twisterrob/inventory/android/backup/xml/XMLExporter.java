@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Xml;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.backup.BuildConfig;
@@ -46,14 +47,14 @@ public class XMLExporter implements CursorExporter {
 
 	private final Hierarchy hier = new Hierarchy();
 	private final XmlSerializer serializer = Xml.newSerializer();
-	private final String xsltHref;
-	private final String xsdHref;
-	private final Database db;
+	private final @NonNull Database db;
+	private final @Nullable String xsltHref;
+	private final @Nullable String xsdHref;
 
-	public XMLExporter(String xsltHref, String xsdHref, Database db) {
+	public XMLExporter(@NonNull Database db, @Nullable String xsltHref, @Nullable String xsdHref) {
+		this.db = db;
 		this.xsltHref = xsltHref;
 		this.xsdHref = xsdHref;
-		this.db = db;
 	}
 
 	@Override public void start(OutputStream dataStream, Cursor cursor) throws IOException {

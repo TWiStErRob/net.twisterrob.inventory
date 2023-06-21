@@ -25,12 +25,16 @@ public class XMLImporter implements Importer {
 	private static final Logger LOG = LoggerFactory.getLogger(XMLImporter.class);
 	private ImportProgress progress;
 	private ImportImageGetter images;
-	private final Resources res;
-	private final Database db;
-	private final Types types;
+	private final @NonNull Resources res;
+	private final @NonNull Database db;
+	private final @NonNull Types types;
 	private final Map<Long, Long> itemMap = new TreeMap<>();
 
-	public XMLImporter(Resources res, Database db, Types types) {
+	public XMLImporter(
+			@NonNull Resources res,
+			@NonNull Database db,
+			@NonNull Types types
+	) {
 		this.res = ObjectTools.checkNotNull(res);
 		this.db = ObjectTools.checkNotNull(db);
 		this.types = ObjectTools.checkNotNull(types);

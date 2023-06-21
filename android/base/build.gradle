@@ -18,6 +18,17 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-glide3"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
+	/*
+	 * This shouldn't be here, but
+	 * > > Task :android:base:kaptDebugKotlin
+	 * > error: cannot access DebugHelper
+	 * > 	 class file for net.twisterrob.java.annotations.DebugHelper not found
+	 * > [WARN] Running non-incrementally because analyzing file:///.../android/base/src/debug/java/.../VariantActivity.java failed.
+	 * Ideally this would be solved by `hilt.enableExperimentalClasspathAggregation`,
+	 * but since `hilt.enableAggregatingTask` is on by default, it doesn't have an effect.
+	 * Tried flipping them around, but the same error.
+	 */
+	api "net.twisterrob.lib:twister-lib-core"
 	api(libs.slf4j.api)
 	api(libs.glide)
 	api "net.twisterrob.lib:twister-lib-android-logging"
