@@ -41,6 +41,7 @@ public interface Constants {
 	 */
 	boolean DISABLE = Boolean.parseBoolean("false"); // TODEL IDEA-157715
 
+	// STOPSHIP find where media store indexing is happening
 	class Paths {
 		/** Warning: this is used inlined in paths_share.xml because path doesn't support string resources */
 		private static final String PUBLIC_SHARE_FOLDER_NAME = "share";
@@ -161,7 +162,7 @@ public interface Constants {
 					)
 			));
 		}
-		
+
 		public static DrawableRequestBuilder<Integer> svg() {
 			return instance.svgRequestTinted.clone();
 		}
