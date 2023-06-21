@@ -2,10 +2,13 @@ package net.twisterrob.inventory.android.backup.importers;
 
 import java.io.*;
 
+import javax.inject.Inject;
+
 import android.content.*;
 import android.net.Uri;
 
 import androidx.annotation.VisibleForTesting;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.*;
@@ -16,12 +19,14 @@ public class BackupZipUriImporter implements ZipImporter<Uri> {
 	private final BackupZipStreamImporter streamImporter;
 	private final BackupZipFileImporter fileImporter;
 
-	public BackupZipUriImporter(Context context, ImportProgressHandler progress) {
-		this(context,
+	@Inject
+	public BackupZipUriImporter(@ApplicationContext Context context, ImportProgressHandler progress) {
+		this(context, // STOPSHIP
 				new BackupZipStreamImporter(context.getResources(), DBProvider.db(context), progress),
 				new BackupZipFileImporter(context.getResources(), DBProvider.db(context), progress)
 		);
 	}
+
 	@VisibleForTesting BackupZipUriImporter(Context context,
 			BackupZipStreamImporter streamImporter, BackupZipFileImporter fileImporter) {
 		this.context = context;

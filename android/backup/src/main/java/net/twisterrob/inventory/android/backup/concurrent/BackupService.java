@@ -10,7 +10,6 @@ import javax.inject.Provider;
 import org.slf4j.*;
 
 import android.app.Notification;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,18 +18,14 @@ import android.os.*;
 import androidx.annotation.*;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import dagger.Binds;
-import dagger.Module;
-import dagger.Provides;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.AndroidEntryPoint;
-import dagger.hilt.android.components.ServiceComponent;
 
 import net.twisterrob.inventory.android.activity.BackupActivity;
 import net.twisterrob.inventory.android.backup.*;
 import net.twisterrob.inventory.android.backup.exporters.*;
+import net.twisterrob.inventory.android.backup.exporters.ExportComponent.ExportEntryPoint;
 import net.twisterrob.inventory.android.backup.importers.*;
-import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
+import net.twisterrob.inventory.android.backup.importers.ImportComponent.ImportEntryPoint;
 import net.twisterrob.java.utils.ObjectTools;
 
 import static net.twisterrob.inventory.android.Constants.*;
@@ -60,27 +55,8 @@ public class BackupService extends NotificationProgressService<Progress> {
 	private final Queue<ParcelFileDescriptor> queue = new LinkedBlockingDeque<>();
 	private final ProgressDispatcher dispatcher = new ProgressDispatcher();
 
-	@Inject Provider<BackupParcelExporter> parcelExporterFactory;
-	@Inject Provider<BackupUriExporter> uriExporterFactory;
-
-	@Module
-	@InstallIn(ServiceComponent.class)
-	public static abstract class HiltModule {
-
-		@Provides
-		static @NonNull BackupService bindService(@NonNull Service impl) {
-			return (BackupService)impl;
-		}
-
-		@Provides
-		static @NonNull net.twisterrob.inventory.android.backup.ProgressDispatcher
-		provideProgressDispatcher(@NonNull BackupService service) {
-			return service.dispatcher;
-		}
-
-		@Binds
-		abstract @NonNull Exporter bindExporter(@NonNull ZippedXMLExporter impl);
-	}
+	@Inject Provider<ExportComponent.Builder> exportFactory;
+	@Inject Provider<ImportComponent.Builder> importFactory;
 
 	public BackupService() {
 		setDebugMode(DISABLE && BuildConfig.DEBUG);
@@ -206,12 +182,16 @@ public class BackupService extends NotificationProgressService<Progress> {
 		try {
 			if (ACTION_EXPORT_PFD_WORKAROUND.equals(intent.getAction())) {
 				dispatcher.setCancellable(false);
-				BackupParcelExporter exporter = parcelExporterFactory.get();
+				BackupParcelExporter exporter = ExportEntryPoint.Companion
+						.get(exportFactory.get().progress(dispatcher))
+						.parcelExporter();
 				ParcelFileDescriptor file = queue.remove();
 				finish(exporter.exportTo(file));
 			} else if (ACTION_EXPORT.equals(intent.getAction())) {
 				dispatcher.setCancellable(false);
-				BackupUriExporter exporter = uriExporterFactory.get();
+				BackupUriExporter exporter = ExportEntryPoint.Companion
+						.get(exportFactory.get().progress(dispatcher))
+						.uriExporter();
 				Uri uri = intent.getData();
 				finish(exporter.exportTo(uri));
 			}
@@ -241,11 +221,12 @@ public class BackupService extends NotificationProgressService<Progress> {
 	}
 
 	private Progress importFrom(Uri input) {
-		ImportProgressHandler progress = new ImportProgressHandler(dispatcher);
+		ImportEntryPoint importComponent = ImportEntryPoint.Companion
+				.get(importFactory.get().progress(dispatcher));
+		ImportProgressHandler progress = importComponent.progress();
 		progress.begin();
 
-		ZipImporter<Uri> importer = new BackupTransactingImporter<>(
-				DBProvider.db(this), progress, new BackupZipUriImporter(this, progress));
+		ZipImporter<Uri> importer = importComponent.importer();
 		try {
 			importer.importFrom(input);
 		} catch (Exception ex) {
