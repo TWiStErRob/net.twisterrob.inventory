@@ -10,10 +10,4 @@ public interface ProgressDispatcher {
 	 */
 	@WorkerThread
 	void dispatchProgress(@NonNull Progress progress) throws CancellationException;
-
-	ProgressDispatcher IGNORE = new ProgressDispatcher() {
-		@Override public void dispatchProgress(@NonNull Progress progress) throws CancellationException {
-			// NO OP
-		}
-	};
 }

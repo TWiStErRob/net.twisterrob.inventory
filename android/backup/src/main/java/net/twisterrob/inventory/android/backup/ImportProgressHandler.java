@@ -2,8 +2,6 @@ package net.twisterrob.inventory.android.backup;
 
 import org.slf4j.*;
 
-import androidx.annotation.VisibleForTesting;
-
 import net.twisterrob.inventory.android.backup.Importer.ImportProgress;
 import net.twisterrob.inventory.android.backup.Progress.Phase;
 import net.twisterrob.java.utils.ObjectTools;
@@ -18,9 +16,6 @@ public class ImportProgressHandler implements ImportProgress {
 	@Deprecated
 	public final Progress progress = new Progress(Progress.Type.Import);
 
-	@VisibleForTesting ImportProgressHandler() {
-		this(ProgressDispatcher.IGNORE);
-	}
 	public ImportProgressHandler(ProgressDispatcher dispatcher) {
 		this.dispatcher = ObjectTools.checkNotNull(dispatcher);
 	}
