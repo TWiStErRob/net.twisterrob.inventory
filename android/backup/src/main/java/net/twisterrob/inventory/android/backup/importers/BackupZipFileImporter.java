@@ -3,6 +3,8 @@ package net.twisterrob.inventory.android.backup.importers;
 import java.io.*;
 import java.util.zip.*;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.content.res.Resources;
@@ -28,6 +30,7 @@ public class BackupZipFileImporter implements ImportImageGetter, ZipImporter<Fil
 	private final Database db;
 	private final XMLImporter importer;
 
+	@Inject
 	public BackupZipFileImporter(Resources res, Database db, ImportProgressHandler progress) {
 		this(res, db, new XMLImporter(res, db, new Types(db)), progress);
 	}

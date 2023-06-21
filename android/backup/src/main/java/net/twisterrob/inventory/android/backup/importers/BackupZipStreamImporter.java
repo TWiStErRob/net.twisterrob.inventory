@@ -5,6 +5,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.zip.*;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.content.res.Resources;
@@ -33,6 +35,7 @@ public class BackupZipStreamImporter implements ZipImporter<InputStream> {
 	private final @NonNull XMLImporter importer;
 	private final @NonNull ImportImageReconciler images;
 
+	@Inject
 	public BackupZipStreamImporter(Resources res, Database db, ImportProgressHandler progress) {
 		this(res, new XMLImporter(res, db, new Types(db)), db, progress);
 	}

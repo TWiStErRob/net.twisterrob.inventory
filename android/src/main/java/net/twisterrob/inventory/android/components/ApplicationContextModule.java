@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.components;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
 import dagger.Module;
@@ -14,6 +15,11 @@ import dagger.hilt.components.SingletonComponent;
 @Module
 @InstallIn(SingletonComponent.class)
 abstract class ApplicationContextModule {
+	@Provides
+	static @NonNull Resources provideResources(@ApplicationContext @NonNull Context context) {
+		return context.getResources();
+	}
+
 	@Provides
 	static @NonNull AssetManager provideAssetManager(@ApplicationContext @NonNull Context context) {
 		return context.getAssets();
