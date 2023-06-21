@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.backup.exporters;
 
-import javax.inject.Scope;
-
 import androidx.annotation.NonNull;
 import dagger.Binds;
 import dagger.BindsInstance;
@@ -17,17 +15,12 @@ import net.twisterrob.inventory.android.backup.ProgressDispatcher;
 import net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter;
 
 @DefineComponent(parent = ServiceComponent.class)
-@ExportComponent.ExportScoped
 public interface ExportComponent {
 	@DefineComponent.Builder
 	interface Builder {
 		@BindsInstance
 		Builder progress(@NonNull ProgressDispatcher progress);
 		ExportComponent build();
-	}
-
-	@Scope
-	@interface ExportScoped {
 	}
 
 	@EntryPoint

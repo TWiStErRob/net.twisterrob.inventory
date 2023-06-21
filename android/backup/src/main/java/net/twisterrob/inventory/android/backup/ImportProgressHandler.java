@@ -1,17 +1,15 @@
 package net.twisterrob.inventory.android.backup;
 
-import javax.inject.Inject;
-
 import org.slf4j.*;
+
+import androidx.annotation.NonNull;
 
 import net.twisterrob.inventory.android.backup.Importer.ImportProgress;
 import net.twisterrob.inventory.android.backup.Progress.Phase;
-import net.twisterrob.inventory.android.backup.importers.ImportComponent.ImportScoped;
 import net.twisterrob.java.utils.ObjectTools;
 
 // TODO generalize to import/export and refactor deprecation
 @SuppressWarnings("deprecation")
-@ImportScoped
 public class ImportProgressHandler implements ImportProgress {
 	private static final Logger LOG = LoggerFactory.getLogger(ImportProgressHandler.class);
 	private final @NonNull ProgressDispatcher dispatcher;
@@ -20,7 +18,6 @@ public class ImportProgressHandler implements ImportProgress {
 	@Deprecated
 	public final Progress progress = new Progress(Progress.Type.Import);
 
-	@Inject
 	public ImportProgressHandler(@NonNull ProgressDispatcher dispatcher) {
 		this.dispatcher = ObjectTools.checkNotNull(dispatcher);
 	}

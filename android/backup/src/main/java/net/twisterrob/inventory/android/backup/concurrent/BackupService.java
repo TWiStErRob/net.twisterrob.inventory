@@ -221,12 +221,12 @@ public class BackupService extends NotificationProgressService<Progress> {
 	}
 
 	private Progress importFrom(Uri input) {
-		ImportEntryPoint importComponent = ImportEntryPoint.Companion
-				.get(importFactory.get().progress(dispatcher));
-		ImportProgressHandler progress = importComponent.progress();
+		ImportProgressHandler progress = new ImportProgressHandler(dispatcher);
 		progress.begin();
 
-		ZipImporter<Uri> importer = importComponent.importer();
+		ZipImporter<Uri> importer = ImportEntryPoint.Companion
+				.get(importFactory.get().progress(progress))
+				.importer();
 		try {
 			importer.importFrom(input);
 		} catch (Exception ex) {
