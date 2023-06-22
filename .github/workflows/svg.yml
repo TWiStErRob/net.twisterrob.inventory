@@ -1,11 +1,10 @@
-name: CI
+name: SVG
 on:
+  workflow_dispatch:
   push:
     branches:
       - '**'
-concurrency:
-  group: ${{ github.ref == 'refs/heads/main' && format('ci-main-{0}', github.sha) || format('ci-{0}', github.ref) }}
-  cancel-in-progress: true
+
 jobs:
 
   validate:
@@ -25,7 +24,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
 
 
-  svg:
+  instrumentation:
     name: "🎨 Generate SVGs on ${{ matrix.android-api }}"
     needs: validate
     runs-on: macos-latest
@@ -68,7 +67,7 @@ jobs:
           sdcard-path-or-size: 100M
           script: |
             adb devices -l
-            ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
+            ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
   
       - name: "Upload 'SVG ${{ matrix.android-api }}' artifact."
         if: success() || failure()
