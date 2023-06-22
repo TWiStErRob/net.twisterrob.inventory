@@ -11,7 +11,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.*;
 
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assume.assumeFalse;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -29,6 +29,9 @@ import com.caverock.androidsvg.SVG;
 import androidx.annotation.*;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.io.OutputDirCalculator;
+import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 
 import net.twisterrob.android.content.glide.*;
 import net.twisterrob.inventory.android.data.R;
@@ -46,12 +49,15 @@ public class DumpImages {
 
 	@Test
 	public void test() throws IOException, IllegalAccessException, InterruptedException {
+		PlatformTestStorage storage = PlatformTestStorageRegistry.getInstance();
+		assumeFalse(
+				"PlatformTestStorage goes nowhere!",
+				"NoOpPlatformTestStorage".equals(storage.getClass().getSimpleName())
+		);
 		LOG.error("SVG version {}", SVG.getVersion());
 		final Context context = ApplicationProvider.getApplicationContext();
-		File backup = context.getExternalFilesDir("svg");
-		assumeTrue("External folder 'svg' is missing", backup != null);
-
 		Field[] fields = R.raw.class.getFields();
+
 		File dir = new File(context.getCacheDir(), "svg");
 		IOTools.delete(dir);
 		IOTools.ensure(dir);
@@ -92,9 +98,12 @@ public class DumpImages {
 		File zip = new File(dir.getParentFile(), dir.getName() + ".zip");
 		IOTools.zip(zip, false, dir);
 		LOG.info("ZIP: {}", zip.getAbsolutePath());
-		File saved = new File(backup, "svg_" + VERSION.SDK_INT + ".zip");
-		IOTools.copyFile(zip, saved);
-		LOG.error("adb pull {}", saved.getAbsolutePath());
+		String fileName = "svg_" + VERSION.SDK_INT + ".zip";
+		OutputStream saved = storage.openOutputFile(fileName);
+		IOTools.copyStream(new FileInputStream(zip), saved);
+		// Guess where storage.openOutputFile() puts the file.
+		File target = new File(new OutputDirCalculator().getOutputDir(), fileName);
+		LOG.error("adb pull {}", target.getAbsolutePath());
 	}
 
 	private static void save(@NonNull Bitmap bitmap, @NonNull File file) throws IOException {
