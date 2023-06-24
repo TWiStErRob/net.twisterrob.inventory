@@ -49,12 +49,12 @@ jobs:
         with:
           java-version: 11
           distribution: zulu
-  
+
       - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
         uses: actions/checkout@v3
         with:
           submodules: true
-  
+
       - name: "Run SVG generation on emulator."
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -69,7 +69,7 @@ jobs:
             adb devices -l
             adb shell "mkdir -p /storage/sdcard/Android/"
             ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
-  
+
       - name: "Upload 'SVG ${{ matrix.android-api }}' artifact."
         if: success() || failure()
         uses: actions/upload-artifact@v3
@@ -79,7 +79,7 @@ jobs:
             ${{ github.workspace }}/**/build/reports/androidTests/connected/
             ${{ github.workspace }}/**/build/outputs/androidTest-results/connected/
             ${{ github.workspace }}/**/build/outputs/connected_android_test_additional_output/
-  
+
       - name: "Publish 'SVG Results ${{ matrix.android-api }}' check suite."
         if: success() || failure()
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
