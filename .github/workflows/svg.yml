@@ -75,6 +75,7 @@ jobs:
           profile: pixel
           # Ensure that /storage/sdcard exists, without this the stock DocumentsUI will be non-functional.
           sdcard-path-or-size: 100M
+          emulator-boot-timeout: 900 # 15 minutes
           script: |
             adb devices -l
             # Satisfy AGP's com.android.build.gradle.internal.testing.utp.queryAdditionalTestOutputLocation
