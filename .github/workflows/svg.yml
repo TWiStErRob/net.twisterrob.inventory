@@ -67,6 +67,7 @@ jobs:
           sdcard-path-or-size: 100M
           script: |
             adb devices -l
+            adb shell "content query --uri content://media/external/file --projection _data --where \"_data LIKE '%Android'\""
             ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
   
       - name: "Upload 'SVG ${{ matrix.android-api }}' artifact."
