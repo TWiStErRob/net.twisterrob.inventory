@@ -67,6 +67,8 @@ jobs:
           sdcard-path-or-size: 100M
           script: |
             adb devices -l
+            # Satisfy AGP's com.android.build.gradle.internal.testing.utp.queryAdditionalTestOutputLocation
+            # so API 21-28 can generate additional output.
             adb shell "mkdir -p /storage/sdcard/Android/"
             ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
 
