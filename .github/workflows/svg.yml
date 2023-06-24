@@ -28,7 +28,7 @@ jobs:
     name: "🎨 Generate SVGs on ${{ matrix.android-api }}"
     needs: validate
     runs-on: macos-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     permissions:
       # actions/checkout
       contents: read
