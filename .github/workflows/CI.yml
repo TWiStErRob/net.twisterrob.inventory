@@ -223,6 +223,7 @@ jobs:
           script: |
             adb devices -l
             ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=androidx.test.filters.FlakyTest
+            ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck
 
       - name: "Upload 'Instrumentation Test Results ${{ matrix.android-api }}' artifact."
         if: success() || failure()
