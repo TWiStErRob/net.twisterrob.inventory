@@ -79,17 +79,29 @@ jobs:
           script: |
             adb devices -l
             adb shell "content query --uri content://media/external/file --projection _data" || true
+            adb shell "readlink -f /sdcard" || true
             adb shell "ls -la /sdcard" || true
             adb shell "ls -la /sdcard/" || true
             adb shell "ls -la /sdcard/Android" || true
             adb shell "ls -la /sdcard/Android/data" || true
-            adb shell "ls -la /storage/sdcard" || true
             adb shell "ls -la /storage/emulated/0" || true
             adb shell "ls -la /storage/emulated/0/Android" || true
-            #
-            # Satisfy AGP's com.android.build.gradle.internal.testing.utp.queryAdditionalTestOutputLocation
-            # so API 21-28 can generate additional output.
-            if [ "${{ matrix.android-api }}" -lt 29 ]; then adb shell "mkdir -p /sdcard/Android"; fi
+            if [ "${{ matrix.android-api }}" -lt 29 ]; then
+                # Satisfy AGP's findAdditionalTestOutputDirectoryOnDevice -> queryAdditionalTestOutputLocation
+                # so API 21-28 can generate additional output.
+                adb shell "mkdir -p /sdcard/Android" || true
+                # Tell the Android system's MediaProvider that we added a directory.
+                # This will ensure that `content query --uri content://media/external/file` finds the new folder.
+                adb shell "content insert --uri content://media/external/file --bind _data:s:\$(readlink -f /sdcard)/Android"
+            fi
+            adb shell "content query --uri content://media/external/file --projection _data" || true
+            adb shell "readlink -f /sdcard" || true
+            adb shell "ls -la /sdcard" || true
+            adb shell "ls -la /sdcard/" || true
+            adb shell "ls -la /sdcard/Android" || true
+            adb shell "ls -la /sdcard/Android/data" || true
+            adb shell "ls -la /storage/emulated/0" || true
+            adb shell "ls -la /storage/emulated/0/Android" || true
             ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
 
       - name: "Upload 'SVG ${{ matrix.android-api }}' artifact."
