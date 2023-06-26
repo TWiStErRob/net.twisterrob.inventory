@@ -22,7 +22,9 @@ if [ "${API_LEVEL}" -lt 29 ]; then
     adb shell "mkdir -p /sdcard/Android"
     # Tell the Android system's MediaProvider that we added a directory.
     # This will ensure that `content query --uri content://media/external/file` finds the new folder.
-    adb shell "content insert --uri content://media/external/file --bind _data:s:\$(readlink -f /sdcard)/Android"
+    # Note: API 21-22 does not support readlink -e.
+    # Note: API 27 does not support readlink without root (21-26,28-34 is ok).
+    adb shell "content insert --uri content://media/external/file --bind _data:s:\$(su root readlink -f /sdcard)/Android"
 else
     echo "API 29+ (${API_LEVEL}) does not need to create /sdcard/Android"
 fi
