@@ -80,7 +80,7 @@ public class App extends BaseApp implements BaseComponent.Provider {
 		// run vacuum next, it's quick and most of the time does nothing anyway
 		startService(new Intent(DatabaseService.ACTION_VACUUM_INCREMENTAL).setPackage(getPackageName()));
 		// this may take a while, but it's necessary for correct display of search results
-		updateLanguage(Locale.getDefault());
+		updateLocaleDependencies(Locale.getDefault());
 		// last, preload categories, this would happen when editing and suggestions kick in
 		// so, prevent a delay on first suggestion, load it in the background
 		startService(new Intent(DatabaseService.ACTION_PRELOAD_CATEGORIES).setPackage(getPackageName()));
@@ -93,10 +93,14 @@ public class App extends BaseApp implements BaseComponent.Provider {
 
 	@Override public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		updateLanguage(AndroidTools.getLocale(newConfig));
+		updateLocaleDependencies(AndroidTools.getLocale(newConfig));
 		// FIXME private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance();
 	}
 
+	private void updateLocaleDependencies(@NonNull Locale newLocale) {
+		updateLanguage(newLocale);
+		updateNotificationChannels();
+	}
 	private void updateLanguage(@NonNull Locale newLocale) {
 		try {
 			startService(new Intent(DatabaseService.ACTION_UPDATE_LANGUAGE)
@@ -116,6 +120,8 @@ public class App extends BaseApp implements BaseComponent.Provider {
 			// but that's not available until higher support library or AndroidX.
 			// So for now, just ignore the exception. Next startup will do this properly anyway.
 		}
+	}
+	private void updateNotificationChannels() {
 		if (VERSION.SDK_INT >= VERSION_CODES.O) {
 			BackupNotifications.registerNotificationChannels(this);
 		}
