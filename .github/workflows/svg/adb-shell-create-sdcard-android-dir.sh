@@ -8,18 +8,10 @@ fi
 set -euxo pipefail
 
 API_LEVEL=$1
-adb shell "content query --uri content://media/external/file --projection _data" || true
-adb shell "readlink -f /sdcard" || true
-adb shell "ls -la /sdcard" || true
-adb shell "ls -la /sdcard/" || true
-adb shell "ls -la /sdcard/Android" || true
-adb shell "ls -la /sdcard/Android/data" || true
-adb shell "ls -la /storage/emulated/0" || true
-adb shell "ls -la /storage/emulated/0/Android" || true
 if [ "${API_LEVEL}" -lt 29 ]; then
     # Satisfy AGP's findAdditionalTestOutputDirectoryOnDevice -> queryAdditionalTestOutputLocation
     # so API 21-28 can generate additional output.
-    adb shell "mkdir -p /sdcard/Android"
+    adb shell "mkdir /sdcard/Android"
     # Tell the Android system's MediaProvider that we added a directory.
     # This will ensure that `content query --uri content://media/external/file` finds the new folder.
     # Note: API 21-22 does not support readlink -e.
@@ -28,11 +20,3 @@ if [ "${API_LEVEL}" -lt 29 ]; then
 else
     echo "API 29+ (${API_LEVEL}) does not need to create /sdcard/Android"
 fi
-adb shell "content query --uri content://media/external/file --projection _data" || true
-adb shell "readlink -f /sdcard" || true
-adb shell "ls -la /sdcard" || true
-adb shell "ls -la /sdcard/" || true
-adb shell "ls -la /sdcard/Android" || true
-adb shell "ls -la /sdcard/Android/data" || true
-adb shell "ls -la /storage/emulated/0" || true
-adb shell "ls -la /storage/emulated/0/Android" || true

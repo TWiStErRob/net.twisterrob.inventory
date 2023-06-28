@@ -71,9 +71,10 @@ public class DumpImages {
 		LOG.info("Running on {} cores.", cpus);
 		ExecutorService service = Executors.newFixedThreadPool(cpus);
 		Set<String> exclusions = new HashSet<>(Arrays.asList(
-				"shrink_resources",
-				"icon_preview",
-				"icon_helpers"
+				"shrink_resources", // Resource for AAPT.
+				"icon_preview", // Development tool.
+				"icon_helpers", // Development tool.
+				"icon_template" // Template for new icons.
 		));
 		List<Future<?>> jobs = new ArrayList<>();
 		for (final Field field : fields) {
