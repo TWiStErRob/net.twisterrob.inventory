@@ -342,6 +342,9 @@ public class BackupActivityActor extends ActivityActor {
 	public static class DriveBackupActor {
 		private static final Logger LOG = LoggerFactory.getLogger(DriveBackupActor.class);
 
+		/**
+		 * {@code <queries><package android:name="com.google.android.apps.docs" />}
+		 */
 		public static void assumeDriveInstalled() {
 			assumeThat(
 					"Google Drive is not installed",

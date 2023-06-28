@@ -19,6 +19,9 @@
 	<!-- Used by net.twisterrob.inventory.android.InventoryJUnitRunner -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+	<!-- Used by net.twisterrob.android.test.matchers.HasInstalledPackage -->
+	<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
 	<application
 		android:label="@string/app_name"
 		android:process="net.twisterrob.inventory.debug">
@@ -36,4 +39,10 @@
 			/>
 
 	</application>
+
+	<queries>
+		<!-- net.twisterrob.inventory.android.test.actors.BackupActivityActor.DriveBackupActor.assumeDriveInstalled -->
+		<package android:name="com.google.android.apps.docs" />
+	</queries>
+
 </manifest>
