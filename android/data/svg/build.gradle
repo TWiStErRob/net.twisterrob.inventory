@@ -30,6 +30,24 @@ android {
 			multiDexKeepProguard project(":android").file("src/androidTest/multidex.pro")
 		}
 	}
+	testOptions {
+		managedDevices {
+			def apiDevices = (29..33).collect {api ->
+				devices.register("api${api}", com.android.build.api.dsl.ManagedVirtualDevice) {
+					device = "Pixel 2"
+					apiLevel = api
+					require64Bit = true
+					// https://issuetracker.google.com/issues/267458959
+					systemImageSource = api == 32 || api == 33 ? "google_apis" : "default"
+				}
+			}
+			groups.register("gmd") { group ->
+				apiDevices.each { device ->
+					group.targetDevices.addLater(device)
+				}
+			}
+		}
+	}
 }
 
 androidComponents {
