@@ -219,14 +219,14 @@ jobs:
 
           # Gather all input SVGs into a folder.
           mkdir svgs
-          cp "${{github.workspace}}/android/data/src/main/res/raw/*.svg" ./svgs/
+          cp ${{github.workspace}}/android/data/src/main/res/raw/*.svg ./svgs/
           basename --suffix=.svg -- ./svgs/*.svg > ./svg_names.txt
 
           # Output all the wanted API levels into a file.
           seq 21 34 > ./api_levels.txt
 
           # Copy report HTML to this folder.
-          cp "${{github.workspace}}/tools/svg_render/svgs.html" ./index.html
+          cp ${{github.workspace}}/tools/svg_render/svgs.html ./index.html
 
       - name: "Aggregate svg_*.zip files."
         if: success() || failure()
