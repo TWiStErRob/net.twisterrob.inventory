@@ -73,7 +73,7 @@ Release play-by-play
       \> Downloads tab
       \> Assets
       \> ReTrace mapping file
-1. Update http://www.twisterrob.net/project/inventory/ with release notes.
+1. Update https://www.twisterrob.net/project/inventory/ with release notes.
 1. Update *What's new in this version?* based on previous one.
 1. Make a backup of current version on the phone with
     ```bash

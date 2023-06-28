@@ -15,4 +15,31 @@
 
 	</application>
 
+	<queries>
+
+		<!-- src/main/res/xml/preferences.xml -->
+		<intent>
+			<action android:name="android.settings.APPLICATION_DETAILS_SETTINGS" />
+		</intent>
+
+		<!-- src/main/res/xml/preferences.xml -->
+		<intent>
+			<action android:name="android.intent.action.VIEW" />
+			<data android:scheme="market" android:host="details" />
+		</intent>
+
+		<!-- src/main/res/xml/preferences.xml -->
+		<intent>
+			<action android:name="android.intent.action.VIEW" />
+			<data android:scheme="https" android:host="www.twisterrob.net" />
+		</intent>
+
+		<!-- src/main/res/xml/preferences.xml -->
+		<intent>
+			<action android:name="android.intent.action.VIEW" />
+			<data android:scheme="mailto" />
+		</intent>
+
+	</queries>
+
 </manifest>
