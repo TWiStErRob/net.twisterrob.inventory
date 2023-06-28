@@ -77,9 +77,6 @@
 	<issue id="GradleDependency" severity="ignore">
 		<!-- Ignore for now until Renovate is enabled. -->
 	</issue>
-	<issue id="OldTargetApi" severity="ignore">
-		<!-- Cannot target API 30 yet, as it needs scoped storage updates. -->
-	</issue>
 	<!-- This app doesn't have a public website with URLs. Warning comes up in manifest and/or ItemViewActivity -->
 	<issue id="GoogleAppIndexingApiWarning" severity="ignore" />
 	<issue id="UnknownNullness" severity="ignore">
