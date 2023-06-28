@@ -1,11 +1,15 @@
-<html class="">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src-elem https: 'unsafe-inline'; connect-src file:; img-src file: https:"></meta>
+<html lang="en">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'unsafe-inline'; script-src-elem https: 'unsafe-inline'; connect-src file:; img-src file:">
 <body>
-	<input id="showGrid" type="checkbox" checked="checked"><label for="showGrid">Show grid borders (It's easer to see slight differences on a fully white screen.)</label>
-	<input id="showTransparency" type="checkbox" checked disabled><label for="showTransparency">Show checkerboard background for transparency. (Only when reference is <code>None</code>.)</label>
+	<input id="showGrid" type="checkbox" checked>
+	<label for="showGrid">Show grid borders (It's easier to see slight differences on a fully white screen.)</label>
+	<input id="showTransparency" type="checkbox" checked disabled>
+	<label for="showTransparency">Show checkerboard background for transparency. (Only when reference is <code>None</code>.)</label>
 	<table id="images" class="diffing transparency grid"></table>
 </body>
 
+<!--suppress CssUnusedSymbol -->
 <style>
 	/* Table layout: full width, equal cell sizes, images filling cells. */
 	table#images {
@@ -45,7 +49,7 @@
 	}
 
 	/* Transparency helper. */
-	.transparency .checkered {
+	table#images.transparency .checkered {
 		background: repeating-conic-gradient(#EEE 0% 25%, #DDD 0% 50%) 50% / 16px 16px;
 	}
 
@@ -68,6 +72,7 @@
 	table#images.diffing .checkered {
 		background: white;
 	}
+
 	/* Show both images on hover with animation. */
 	table#images.diffing .diff:hover {
 		position: relative;
@@ -75,7 +80,7 @@
 		filter: none; /* Disable inverting. */
 	}
 	table#images.diffing .diff > img.bottom {
-		right: 0%; /* Set initial value for animation. */
+		right: 0; /* Set initial value for animation. */
 	}
 	table#images.diffing .diff:hover > img.bottom {
 		position: relative;
@@ -84,7 +89,7 @@
 		transition: 0.3s right;
 	}
 	table#images.diffing .diff > img.top {
-		left: 0%; /* Set initial value for animation. */
+		left: 0; /* Set initial value for animation. */
 	}
 	table#images.diffing .diff:hover > img.top {
 		position: relative;
@@ -93,21 +98,25 @@
 		left: calc(50% + 4px);
 		transition: 0.3s left;
 	}
+
 	/* Special position for last cell, so the popout doesn't leave the window frame. */
 	table#images.diffing td:last-child .diff:hover > img.bottom {
 		right: calc(100% + 8px);
 	}
 	table#images.diffing td:last-child .diff:hover > img.top {
-		left: 0%;
+		left: 0;
 	}
 </style>
 
 <script type="module">
 	import * as d3 from "https://cdn.skypack.dev/d3";
+
 	const svgNames = (await d3.text("svg_names.txt")).trim().split('\n');
 	const apiLevels = (await d3.text("api_levels.txt")).trim().split('\n');
+
 	function svgName(name) { return `svgs/${name}.svg`; }
 	function pngName(name, api) { return `svg_${api}/${name}.png`; }
+
 	const data = svgNames.map(name => (
 		{
 			name: name,
@@ -134,8 +143,8 @@
 			.html("SVG<sup>*</sup>")
 			.classed('original', true)
 			.attr('title', "Some SVGs might not render correctly, "
-						+ "because Chrome doesn't handle xlink:href when used in <img src, but it does when opened fully. "
-						+ "It's not CSP, because there are no errors.")
+			               + "because Chrome doesn't handle xlink:href when used in <img src, but it does when opened fully. "
+			               + "It's not CSP, because there are no errors.")
 		;
 		const select = header
 			.append('th')
@@ -148,10 +157,12 @@
 				.data(
 					[
 						{ value: 'none', title: "None" },
-						{ value: 'svg', title: "SVG" }
-					].concat(apiLevels.map(
-						api => ({ value: api, title: `API ${api}` })
-					)), d => d)
+						{ value: 'svg', title: "SVG" },
+					].concat(apiLevels.map(api => (
+						{ value: api, title: `API ${api}` }
+					))),
+					d => d,
+				)
 				.join('option')
 				.text(d => d.title)
 				.attr('value', d => d.value)
@@ -221,17 +232,17 @@
 	}
 
 	d3.select('#showGrid').on('change', e => {
-		d3.select('table#images').classed('grid', e.target.checked)
+		d3.select('table#images').classed('grid', e.target.checked);
 	});
 	d3.select('#showTransparency').on('change', e => {
-		d3.select('table#images').classed('transparency', e.target.checked)
+		d3.select('table#images').classed('transparency', e.target.checked);
 	});
 
 	function updateReferences(value) {
 		const table = d3.select('table#images');
 		const references = table.selectAll(':scope > tbody > tr > td.reference');
 		const bottoms = table.selectAll(':scope > tbody > tr > td.rendered > div.diff > img.bottom');
-		switch(value) {
+		switch (value) {
 			case 'none':
 				// Don't update things, just hide.
 				break;
@@ -251,13 +262,13 @@
 			d3.select('#showTransparency')
 				.property('disabled', true)
 				.property('checked', true)
-				.node().dispatchEvent(new Event('change', {'bubbles': true, 'cancellable': false}))
+				.node().dispatchEvent(new Event('change', { 'bubbles': true, 'cancelable': false }))
 			;
 		} else {
 			d3.select('#showTransparency').property('disabled', false);
 		}
-		references.style('visibility', diffing ? undefined : 'hidden');
-		bottoms.style('visibilily', diffing ? undefined : 'hidden');
+		references.style('visibility', diffing? undefined : 'hidden');
+		bottoms.style('visibility', diffing? undefined : 'hidden');
 		table.classed('diffing', diffing);
 	}
 </script>
