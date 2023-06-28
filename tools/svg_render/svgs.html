@@ -1,263 +1,263 @@
 <html class="">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src-elem https: 'unsafe-inline'; connect-src file:; img-src file: https:"></meta>
 <body>
-  <input id="showGrid" type="checkbox" checked="checked"><label for="showGrid">Show grid borders (It's easer to see slight differences on a fully white screen.)</label>
-  <input id="showTransparency" type="checkbox" checked disabled><label for="showTransparency">Show checkerboard background for transparency. (Only when reference is <code>None</code>.)</label>
-  <table id="images" class="diffing transparency grid"></table>
+	<input id="showGrid" type="checkbox" checked="checked"><label for="showGrid">Show grid borders (It's easer to see slight differences on a fully white screen.)</label>
+	<input id="showTransparency" type="checkbox" checked disabled><label for="showTransparency">Show checkerboard background for transparency. (Only when reference is <code>None</code>.)</label>
+	<table id="images" class="diffing transparency grid"></table>
 </body>
 
 <style>
-  /* Table layout: full width, equal cell sizes, images filling cells. */
-  table#images {
-    width: 100%;
-    table-layout: fixed;
-  }
-  table#images > tbody > tr > td.rendered img,
-  table#images > tbody > tr > td.original img,
-  table#images > tbody > tr > td.reference img {
-    width: 100%;
-  }
-  table#images > tbody > tr > td {
-    padding: 4px;
-  }
+	/* Table layout: full width, equal cell sizes, images filling cells. */
+	table#images {
+		width: 100%;
+		table-layout: fixed;
+	}
+	table#images > tbody > tr > td.rendered img,
+	table#images > tbody > tr > td.original img,
+	table#images > tbody > tr > td.reference img {
+		width: 100%;
+	}
+	table#images > tbody > tr > td {
+		padding: 4px;
+	}
 
-  /* Grid mode. */
-  table#images {
-    border-collapse: collapse;
-    border: 2px black solid;
-  }
-  table#images > tbody > tr > td {
-    border: 1px transparent solid;
-  }
-  table#images > thead > tr > th {
-    border: 1px transparent solid;
-  }
-  table#images.grid > tbody > tr > td {
-    border-color: black;
-  }
-  table#images.grid > thead > tr > th {
-    border-color: black;
-  }
-  table#images > thead > tr > th {
-    padding: 5px;
-    background-color: lightgray;
-    font-weight: bold;
-  }
+	/* Grid mode. */
+	table#images {
+		border-collapse: collapse;
+		border: 2px black solid;
+	}
+	table#images > tbody > tr > td {
+		border: 1px transparent solid;
+	}
+	table#images > thead > tr > th {
+		border: 1px transparent solid;
+	}
+	table#images.grid > tbody > tr > td {
+		border-color: black;
+	}
+	table#images.grid > thead > tr > th {
+		border-color: black;
+	}
+	table#images > thead > tr > th {
+		padding: 5px;
+		background-color: lightgray;
+		font-weight: bold;
+	}
 
-  /* Transparency helper. */
-  .transparency .checkered {
-    background: repeating-conic-gradient(#EEE 0% 25%, #DDD 0% 50%) 50% / 16px 16px;
-  }
+	/* Transparency helper. */
+	.transparency .checkered {
+		background: repeating-conic-gradient(#EEE 0% 25%, #DDD 0% 50%) 50% / 16px 16px;
+	}
 
-  /* Absolute positioning but better, so images show exactly on top of each other. */
-  .diff {
-    display: grid;
-  }
-  .diff > img {
-    grid-row: 1;
-    grid-column: 1;
-  }
+	/* Absolute positioning but better, so images show exactly on top of each other. */
+	.diff {
+		display: grid;
+	}
+	.diff > img {
+		grid-row: 1;
+		grid-column: 1;
+	}
 
-  /* Diffing mode. */
-  table#images.diffing .diff {
-    filter: invert(1);
-  }
-  table#images.diffing .diff > img.top {
-    mix-blend-mode: difference;
-  }
-  table#images.diffing .checkered {
-    background: white;
-  }
-  /* Show both images on hover with animation. */
-  table#images.diffing .diff:hover {
-    position: relative;
-    z-index: 1; /* Appear on top of other cells, so mix-blend-mode doesn't mess things up. */
-    filter: none; /* Disable inverting. */
-  }
-  table#images.diffing .diff > img.bottom {
-    right: 0%; /* Set initial value for animation. */
-  }
-  table#images.diffing .diff:hover > img.bottom {
-    position: relative;
-    right: calc(50% + 4px);
-    background: repeating-conic-gradient(#EEE 0% 25%, #DDD 0% 50%) 50% / 16px 16px;
-    transition: 0.3s right;
-  }
-  table#images.diffing .diff > img.top {
-    left: 0%; /* Set initial value for animation. */
-  }
-  table#images.diffing .diff:hover > img.top {
-    position: relative;
-    mix-blend-mode: normal;
-    background: repeating-conic-gradient(#EEE 0% 25%, #DDD 0% 50%) 50% / 16px 16px;
-    left: calc(50% + 4px);
-    transition: 0.3s left;
-  }
-  /* Special position for last cell, so the popout doesn't leave the window frame. */
-  table#images.diffing td:last-child .diff:hover > img.bottom {
-    right: calc(100% + 8px);
-  }
-  table#images.diffing td:last-child .diff:hover > img.top {
-    left: 0%;
-  }
+	/* Diffing mode. */
+	table#images.diffing .diff {
+		filter: invert(1);
+	}
+	table#images.diffing .diff > img.top {
+		mix-blend-mode: difference;
+	}
+	table#images.diffing .checkered {
+		background: white;
+	}
+	/* Show both images on hover with animation. */
+	table#images.diffing .diff:hover {
+		position: relative;
+		z-index: 1; /* Appear on top of other cells, so mix-blend-mode doesn't mess things up. */
+		filter: none; /* Disable inverting. */
+	}
+	table#images.diffing .diff > img.bottom {
+		right: 0%; /* Set initial value for animation. */
+	}
+	table#images.diffing .diff:hover > img.bottom {
+		position: relative;
+		right: calc(50% + 4px);
+		background: repeating-conic-gradient(#EEE 0% 25%, #DDD 0% 50%) 50% / 16px 16px;
+		transition: 0.3s right;
+	}
+	table#images.diffing .diff > img.top {
+		left: 0%; /* Set initial value for animation. */
+	}
+	table#images.diffing .diff:hover > img.top {
+		position: relative;
+		mix-blend-mode: normal;
+		background: repeating-conic-gradient(#EEE 0% 25%, #DDD 0% 50%) 50% / 16px 16px;
+		left: calc(50% + 4px);
+		transition: 0.3s left;
+	}
+	/* Special position for last cell, so the popout doesn't leave the window frame. */
+	table#images.diffing td:last-child .diff:hover > img.bottom {
+		right: calc(100% + 8px);
+	}
+	table#images.diffing td:last-child .diff:hover > img.top {
+		left: 0%;
+	}
 </style>
 
 <script type="module">
-  import * as d3 from "https://cdn.skypack.dev/d3";
-  const svgNames = (await d3.text("svg_names.txt")).trim().split('\n');
-  const apiLevels = (await d3.text("api_levels.txt")).trim().split('\n');
-  function svgName(name) { return `svgs/${name}.svg`; }
-  function pngName(name, api) { return `svg_${api}/${name}.png`; }
-  const data = svgNames.map(name => (
-    {
-      name: name,
-      pngs: apiLevels.map(api => ({
-        name: name,
-        api: api,
-      })),
-    }
-  ));
+	import * as d3 from "https://cdn.skypack.dev/d3";
+	const svgNames = (await d3.text("svg_names.txt")).trim().split('\n');
+	const apiLevels = (await d3.text("api_levels.txt")).trim().split('\n');
+	function svgName(name) { return `svgs/${name}.svg`; }
+	function pngName(name, api) { return `svg_${api}/${name}.png`; }
+	const data = svgNames.map(name => (
+		{
+			name: name,
+			pngs: apiLevels.map(api => ({
+				name: name,
+				api: api,
+			})),
+		}
+	));
 
-  const table = d3.select('table#images');
+	const table = d3.select('table#images');
 
-  const header = table
-    .append('thead')
-    .append('tr')
-  ;
-  {
-    header
-      .append('th')
-      .text("Name")
-    ;
-    header
-      .append('th')
-      .html("SVG<sup>*</sup>")
-      .classed('original', true)
-      .attr('title', "Some SVGs might not render correctly, "
-            + "because Chrome doesn't handle xlink:href when used in <img src, but it does when opened fully. "
-            + "It's not CSP, because there are no errors.")
-    ;
-    const select = header
-      .append('th')
-      .text("Reference")
-      .append('select')
-    ;
-    {
-      select
-        .selectAll('option')
-        .data(
-          [
-            { value: 'none', title: "None" },
-            { value: 'svg', title: "SVG" }
-          ].concat(apiLevels.map(
-            api => ({ value: api, title: `API ${api}` })
-          )), d => d)
-        .join('option')
-        .text(d => d.title)
-        .attr('value', d => d.value)
-      ;
-      select.node().value = 'svg'; // Does not trigger event!
-      select.on('change', (e) => updateReferences(e.target.value));
-    }
-    header
-      .selectAll('th.rendered')
-      .data(apiLevels, d => d)
-      .join('th')
-      .classed('rendered', true)
-      .text(d => `API ${d} PNG`)
-    ;
-  }
-  const trs = table.append("tbody").selectAll('tr')
-    .data(data, d => d.name)
-    .join('tr')
-  ;
-  {
-    trs.append('td')
-      .classed('name', true)
-      .text(d => d.name)
-    ;
-    trs.append('td')
-      .classed('original', true)
-      .append('img')
-      .attr('loading', 'eager')
-      .attr('src', d => svgName(d.name))
-    ;
-    trs.append('td')
-      .classed('reference', true)
-      .append('img')
-      .attr('loading', 'eager')
-      .attr('src', d => svgName(d.name))
-    ;
-    const td = trs
-      .selectAll('td.rendered')
-      .data(d => d.pngs, d => d.name)
-      .join('td')
-      .classed('rendered', true)
-      .attr("data-name", d => d.name)
-      .attr("data-api", d => d.api)
-    ;
-    {
-      const diff = td
-        .append('div')
-        .classed('diff', true)
-      ;
-      {
-        diff
-          .append('img')
-          .attr('loading', 'lazy')
-          .classed('bottom', true)
-          .classed('checkered', true)
-          .attr('src', d => svgName(d.name))
-        ;
-        diff
-          .append('img')
-          .attr('loading', 'lazy')
-          .classed('top', true)
-          .classed('checkered', true)
-          .attr('src', d => pngName(d.name, d.api))
-        ;
-      }
-    }
-  }
+	const header = table
+		.append('thead')
+		.append('tr')
+	;
+	{
+		header
+			.append('th')
+			.text("Name")
+		;
+		header
+			.append('th')
+			.html("SVG<sup>*</sup>")
+			.classed('original', true)
+			.attr('title', "Some SVGs might not render correctly, "
+						+ "because Chrome doesn't handle xlink:href when used in <img src, but it does when opened fully. "
+						+ "It's not CSP, because there are no errors.")
+		;
+		const select = header
+			.append('th')
+			.text("Reference")
+			.append('select')
+		;
+		{
+			select
+				.selectAll('option')
+				.data(
+					[
+						{ value: 'none', title: "None" },
+						{ value: 'svg', title: "SVG" }
+					].concat(apiLevels.map(
+						api => ({ value: api, title: `API ${api}` })
+					)), d => d)
+				.join('option')
+				.text(d => d.title)
+				.attr('value', d => d.value)
+			;
+			select.node().value = 'svg'; // Does not trigger event!
+			select.on('change', (e) => updateReferences(e.target.value));
+		}
+		header
+			.selectAll('th.rendered')
+			.data(apiLevels, d => d)
+			.join('th')
+			.classed('rendered', true)
+			.text(d => `API ${d} PNG`)
+		;
+	}
+	const trs = table.append("tbody").selectAll('tr')
+		.data(data, d => d.name)
+		.join('tr')
+	;
+	{
+		trs.append('td')
+			.classed('name', true)
+			.text(d => d.name)
+		;
+		trs.append('td')
+			.classed('original', true)
+			.append('img')
+			.attr('loading', 'eager')
+			.attr('src', d => svgName(d.name))
+		;
+		trs.append('td')
+			.classed('reference', true)
+			.append('img')
+			.attr('loading', 'eager')
+			.attr('src', d => svgName(d.name))
+		;
+		const td = trs
+			.selectAll('td.rendered')
+			.data(d => d.pngs, d => d.name)
+			.join('td')
+			.classed('rendered', true)
+			.attr("data-name", d => d.name)
+			.attr("data-api", d => d.api)
+		;
+		{
+			const diff = td
+				.append('div')
+				.classed('diff', true)
+			;
+			{
+				diff
+					.append('img')
+					.attr('loading', 'lazy')
+					.classed('bottom', true)
+					.classed('checkered', true)
+					.attr('src', d => svgName(d.name))
+				;
+				diff
+					.append('img')
+					.attr('loading', 'lazy')
+					.classed('top', true)
+					.classed('checkered', true)
+					.attr('src', d => pngName(d.name, d.api))
+				;
+			}
+		}
+	}
 
-  d3.select('#showGrid').on('change', e => {
-    d3.select('table#images').classed('grid', e.target.checked)
-  });
-  d3.select('#showTransparency').on('change', e => {
-    d3.select('table#images').classed('transparency', e.target.checked)
-  });
+	d3.select('#showGrid').on('change', e => {
+		d3.select('table#images').classed('grid', e.target.checked)
+	});
+	d3.select('#showTransparency').on('change', e => {
+		d3.select('table#images').classed('transparency', e.target.checked)
+	});
 
-  function updateReferences(value) {
-    const table = d3.select('table#images');
-    const references = table.selectAll(':scope > tbody > tr > td.reference');
-    const bottoms = table.selectAll(':scope > tbody > tr > td.rendered > div.diff > img.bottom');
-    switch(value) {
-      case 'none':
-        // Don't update things, just hide.
-        break;
-      case 'svg':
-        references.select('img').attr('src', d => svgName(d.name));
-        bottoms.attr('src', d => svgName(d.name));
-        break;
-      default:
-        console.assert('' + +value === value, `Selected option value ${value} is not an API level number.`);
-        references.select('img').attr('src', d => pngName(d.name, +value));
-        bottoms.attr('src', d => pngName(d.name, +value));
-        break;
-    }
+	function updateReferences(value) {
+		const table = d3.select('table#images');
+		const references = table.selectAll(':scope > tbody > tr > td.reference');
+		const bottoms = table.selectAll(':scope > tbody > tr > td.rendered > div.diff > img.bottom');
+		switch(value) {
+			case 'none':
+				// Don't update things, just hide.
+				break;
+			case 'svg':
+				references.select('img').attr('src', d => svgName(d.name));
+				bottoms.attr('src', d => svgName(d.name));
+				break;
+			default:
+				console.assert('' + +value === value, `Selected option value ${value} is not an API level number.`);
+				references.select('img').attr('src', d => pngName(d.name, +value));
+				bottoms.attr('src', d => pngName(d.name, +value));
+				break;
+		}
 
-    const diffing = value !== 'none';
-    if (diffing) {
-      d3.select('#showTransparency')
-        .property('disabled', true)
-        .property('checked', true)
-        .node().dispatchEvent(new Event('change', {'bubbles': true, 'cancellable': false}))
-      ;
-    } else {
-      d3.select('#showTransparency').property('disabled', false);
-    }
-    references.style('visibility', diffing ? undefined : 'hidden');
-    bottoms.style('visibilily', diffing ? undefined : 'hidden');
-    table.classed('diffing', diffing);
-  }
+		const diffing = value !== 'none';
+		if (diffing) {
+			d3.select('#showTransparency')
+				.property('disabled', true)
+				.property('checked', true)
+				.node().dispatchEvent(new Event('change', {'bubbles': true, 'cancellable': false}))
+			;
+		} else {
+			d3.select('#showTransparency').property('disabled', false);
+		}
+		references.style('visibility', diffing ? undefined : 'hidden');
+		bottoms.style('visibilily', diffing ? undefined : 'hidden');
+		table.classed('diffing', diffing);
+	}
 </script>
