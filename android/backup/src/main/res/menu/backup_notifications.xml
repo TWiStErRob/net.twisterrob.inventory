@@ -1,0 +1,12 @@
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	>
+
+	<item
+		android:id="@+id/backup_notifications"
+		android:title="@string/backup_permission_notification_enable"
+		app:showAsAction="ifRoom|withText"
+		/>
+
+</menu>

@@ -1,8 +1,10 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<!-- Used by BackupService -->
+	<!-- Used by BackupService through NotificationProgressService.startNotification(). -->
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<!-- Used by BackupService through NotificationProgressService.finish(). -->
+	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
 	<!-- net.twisterrob.inventory.android.fragment.BackupControllerFragment.doImport -->
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
