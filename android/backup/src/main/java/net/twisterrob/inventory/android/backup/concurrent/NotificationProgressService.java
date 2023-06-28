@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.backup.concurrent;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
 import android.os.Build;
@@ -98,7 +99,9 @@ public abstract class NotificationProgressService<Progress> extends VariantInten
 				intent.setAction(defaultAction);
 			}
 			int code = getClass().getName().hashCode() + codeOffset;
-			return PendingIntent.getActivity(getApplicationContext(), code, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			@SuppressLint("InlinedApi") // FLAG_IMMUTABLE is API 23, lower versions should just ignore it.
+			int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+			return PendingIntent.getActivity(getApplicationContext(), code, intent, flags);
 		} else {
 			return null;
 		}

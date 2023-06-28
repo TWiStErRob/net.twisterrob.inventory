@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.slf4j.*;
 
+import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
@@ -107,8 +108,9 @@ public class DatabaseService extends VariantIntentService {
 	}
 	private static PendingIntent createVacuumIntent(Context context) {
 		Intent intent = new Intent(ACTION_VACUUM_INCREMENTAL).setPackage(context.getPackageName());
-		return PendingIntent.getService(context, CODE_INCREMENTAL_VACUUM, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+		@SuppressLint("InlinedApi") // FLAG_IMMUTABLE is API 23, lower versions should just ignore it.
+		int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE;
+		return PendingIntent.getService(context, CODE_INCREMENTAL_VACUUM, intent, flags);
 	}
 
 	public static void clearVacuumAlarm(Context context) {

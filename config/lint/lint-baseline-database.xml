@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="6" by="lint 7.4.2" type="baseline" client="gradle" dependencies="false" name="AGP (7.4.2)" variant="all" version="7.4.2">
 
-	<issue
-		id="UnspecifiedImmutableFlag"
-		message="Missing `PendingIntent` mutability flag"
-		errorLine1="    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);"
-		errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-		<location
-			file="src/main/java/net/twisterrob/inventory/android/content/db/DatabaseService.java"
-			line="100"
-			column="5"/>
-	</issue>
-
 </issues>

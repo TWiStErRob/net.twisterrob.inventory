@@ -2,28 +2,6 @@
 <issues format="6" by="lint 7.4.2" type="baseline" client="gradle" dependencies="true" name="AGP (7.4.2)" variant="all" version="7.4.2">
 
     <issue
-        id="UnspecifiedImmutableFlag"
-        message="Missing `PendingIntent` mutability flag"
-        errorLine1="    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/net/twisterrob/inventory/android/content/db/DatabaseService.java"
-            line="100"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="UnspecifiedImmutableFlag"
-        message="Missing `PendingIntent` mutability flag"
-        errorLine1="   return PendingIntent.getActivity(getApplicationContext(), code, intent, PendingIntent.FLAG_UPDATE_CURRENT);"
-        errorLine2="                                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/net/twisterrob/inventory/android/backup/concurrent/NotificationProgressService.java"
-            line="92"
-            column="76"/>
-    </issue>
-
-    <issue
         id="StaticFieldLeak"
         message="This `AsyncTask` class should be static or leaks might occur (net.twisterrob.inventory.android.fragment.data.BaseEditFragment.SaveTask)"
         errorLine1=" private class SaveTask extends SimpleSafeAsyncTask&lt;DTO, Void, DTO> {"
