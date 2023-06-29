@@ -14,6 +14,7 @@ dependencies {
 	implementation(libs.androidx.recyclerview)
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation "net.twisterrob.lib:twister-lib-android-monolith"
+	implementation "net.twisterrob.lib:twister-lib-android-permissions"
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
 	implementation "net.twisterrob.lib:twister-lib-android-settings"
 	implementation "net.twisterrob.lib:twister-lib-general"

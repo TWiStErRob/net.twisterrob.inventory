@@ -5,6 +5,7 @@ import java.util.concurrent.CancellationException;
 import org.slf4j.*;
 
 import android.content.*;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.*;
@@ -63,8 +64,18 @@ public class BackupActivity extends BaseActivity implements BackupControllerFrag
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_backup);
 		controller = getFragment(R.id.backup_controller);
+		if (Build.VERSION_CODES.TIRAMISU <= Build.VERSION.SDK_INT) {
+			addMenuProvider(new BackupNotificationsMenu(this));
+		}
 
 		displayPopup(findProgress(savedInstanceState, getIntent()));
+	}
+
+	@Override protected void onResume() {
+		super.onResume();
+		if (Build.VERSION_CODES.TIRAMISU <= Build.VERSION.SDK_INT) {
+			invalidateOptionsMenu();
+		}
 	}
 
 	private @Nullable Progress findProgress(@Nullable Bundle savedInstanceState, @Nullable Intent intent) {
