@@ -32,7 +32,7 @@ public class Hinter {
 
 	public Hinter(@NonNull Context context, @NonNull CategorySelectedEvent clickHandler) {
 		this.context = context;
-		this.adapter = new HintBuilder(context, null, clickHandler);
+		this.adapter = new HintBuilder(context, clickHandler);
 	}
 
 	public void highlight(Spannable input) {
@@ -135,15 +135,11 @@ public class Hinter {
 		private String currentTypeName;
 		private boolean showEditDistances;
 
-		public HintBuilder(
-				@NonNull Context context,
-				@Nullable List<CategorySuggestion<Long>> suggestions,
-				@NonNull CategorySelectedEvent clickHandler
-		) {
+		public HintBuilder(@NonNull Context context, @NonNull CategorySelectedEvent clickHandler) {
 			this.cache = CategoryDTO.getCache(context);
 			setHasStableIds(true);
 			this.clickHandler = clickHandler;
-			setSuggestions(suggestions);
+			setSuggestions(null);
 		}
 
 		public void setCurrentTypeName(String currentTypeName) {
