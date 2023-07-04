@@ -51,9 +51,6 @@ public class CategoryDTO extends ImagedDTO {
 		return String.format(Locale.ROOT, "Category #%1$d: '%2$s' in %3$s", id, name, parentID);
 	}
 
-	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName) { // STOPSHIP remove
-		return getKeywords(context, categoryName, false);
-	}
 	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName,
 			boolean deep) { // STOPSHIP remove
 		try {
@@ -103,14 +100,6 @@ public class CategoryDTO extends ImagedDTO {
 		}
 
 		return keywords.length() != 0? keywords : null;
-	}
-
-	public static @Nullable CharSequence getDescription(@NonNull Context context, @NonNull String categoryName) { // STOPSHIP remove
-		try {
-			return ResourceTools.getText(context, ResourceNames.getDescriptionName(categoryName));
-		} catch (NotFoundException ex) {
-			return null;
-		}
 	}
 
 	public static void showKeywords(@NonNull Context context, long categoryID) { // STOPSHIP remove

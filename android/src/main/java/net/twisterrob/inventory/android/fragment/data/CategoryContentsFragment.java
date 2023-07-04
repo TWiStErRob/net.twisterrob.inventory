@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import javax.inject.Inject;
+
 import android.content.Intent;
 import android.database.*;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.contract.InventoryLoader.LoadersCallbacksAdapter;
+import net.twisterrob.inventory.android.content.model.CategoryVisuals;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.view.*;
@@ -33,6 +36,8 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		void categorySelected(long categoryID);
 		void categoryActioned(long categoryID);
 	}
+
+	@Inject CategoryVisuals visuals;
 
 	public CategoryContentsFragment() {
 		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
@@ -278,7 +283,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			View view = inflater.inflate(viewType, parent, false);
 			switch (viewType) {
 				case R.layout.item_category:
-					return new CategoryViewHolder(view, new CategoryItemEventsForwarder());
+					return new CategoryViewHolder(view, new CategoryItemEventsForwarder(), visuals);
 				case R.layout.item_gallery:
 					return new GalleryViewHolder(view, CategoryContentsFragment.this);
 				default:

@@ -16,6 +16,7 @@ import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
+import net.twisterrob.inventory.android.content.model.CategoryVisuals;
 
 public class CategoryViewHolder extends RecyclerView.ViewHolder {
 	public interface CategoryItemEvents extends RecyclerViewItemEvents {
@@ -28,9 +29,11 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 	private final TextView title;
 	private final TextView stats;
 	private final TextView count;
+	private final CategoryVisuals visuals;
 
-	public CategoryViewHolder(View view, CategoryItemEvents events) {
+	public CategoryViewHolder(View view, CategoryItemEvents events, CategoryVisuals visuals) {
 		super(view);
+		this.visuals = visuals;
 		this.listener = events;
 		image = view.findViewById(R.id.image);
 		title = view.findViewById(R.id.title);
@@ -71,7 +74,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 			title.setText(titleText);
 		}
 
-		CharSequence description = CategoryDTO.getDescription(context, name);
+		CharSequence description = visuals.getDescription(name);
 		if (description != null && description.length() != 0) {
 			stats.setText(description);
 		} else {
