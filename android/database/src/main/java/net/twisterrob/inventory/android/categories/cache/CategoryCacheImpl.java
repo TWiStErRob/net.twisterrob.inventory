@@ -2,27 +2,21 @@ package net.twisterrob.inventory.android.categories.cache;
 
 import java.util.*;
 
-import org.slf4j.*;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
-import android.os.StrictMode;
 import android.text.SpannableStringBuilder;
 
 import androidx.annotation.*;
 import androidx.collection.LongSparseArray;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.java.text.*;
 import net.twisterrob.java.text.Suggester.*;
 
 public class CategoryCacheImpl implements CategoryCache {
-	private static final Logger LOG = LoggerFactory.getLogger(CategoryCache.class);
 	private final LongSparseArray<String> categoriesByID = new LongSparseArray<>();
 	private final Map<String, Long> categoriesByKey = new HashMap<>();
 	private final Map<String, String> categoryParents = new TreeMap<>();
@@ -125,37 +119,5 @@ public class CategoryCacheImpl implements CategoryCache {
 	}
 	@Override public String getParent(String categoryKey) {
 		return categoryParents.get(categoryKey);
-	}
-
-	@SuppressLint("WrongThread")
-	@AnyThread
-	public static @NonNull CategoryCache getCache(@NonNull Context context) {
-		StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
-		try {
-			// Initialization will happen only once, after that it's cached.
-			return CategoryCacheInitializer.get(context);
-		} finally {
-			StrictMode.setThreadPolicy(originalPolicy);
-		}
-	}
-
-	private static class CategoryCacheInitializer {
-		/** @see #getCache(Context) */
-		private static @Nullable CategoryCache CACHE;
-		private static @Nullable Locale lastLocale;
-
-		@WorkerThread
-		synchronized
-		public static @NonNull CategoryCache get(@NonNull Context context) {
-			Locale currentLocale = AndroidTools.getLocale(context.getResources().getConfiguration());
-			if (!currentLocale.equals(lastLocale)) {
-				LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
-				@SuppressWarnings("deprecation")
-				Database database = (Database)BaseComponent.get(context).db();
-				CACHE = new CategoryCacheImpl(database, context);
-				lastLocale = currentLocale;
-			}
-			return CACHE;
-		}
 	}
 }

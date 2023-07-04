@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.content.model;
 
 import java.util.*;
 
+import android.annotation.SuppressLint;
 import android.content.*;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
@@ -13,7 +14,7 @@ import androidx.annotation.*;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.categories.cache.CategoryCache;
-import net.twisterrob.inventory.android.categories.cache.CategoryCacheImpl;
+import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog;
 
@@ -118,8 +119,13 @@ public class CategoryDTO extends ImagedDTO {
 		ChangeTypeDialog.showKeywords(context, cache.getCategoryPath(categoryID), keywords);
 	}
 
+	@SuppressLint("StaticFieldLeak")
+	private static CategoryCacheProvider sCacheProvider;
 	@AnyThread
 	public static @NonNull CategoryCache getCache(@NonNull Context context) {
-		return CategoryCacheImpl.getCache(context);
+		if (sCacheProvider == null) {
+			sCacheProvider = new CategoryCacheProvider(context.getApplicationContext());
+		}
+		return sCacheProvider.getCache();
 	}
 }
