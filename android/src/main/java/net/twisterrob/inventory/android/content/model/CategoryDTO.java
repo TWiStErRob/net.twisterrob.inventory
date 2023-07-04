@@ -51,11 +51,11 @@ public class CategoryDTO extends ImagedDTO {
 		return String.format(Locale.ROOT, "Category #%1$d: '%2$s' in %3$s", id, name, parentID);
 	}
 
-	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName) {
+	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName) { // STOPSHIP remove
 		return getKeywords(context, categoryName, false);
 	}
 	public static @Nullable CharSequence getKeywords(@NonNull Context context, @NonNull String categoryName,
-			boolean deep) {
+			boolean deep) { // STOPSHIP remove
 		try {
 			CharSequence keywords = ResourceTools.getText(context, ResourceNames.getKeywordsName(categoryName));
 			if (deep) {
@@ -79,7 +79,7 @@ public class CategoryDTO extends ImagedDTO {
 		}
 	}
 
-	public static @Nullable CharSequence getKeywordsExtended(@NonNull Context context, @NonNull String categoryName) {
+	public static @Nullable CharSequence getKeywordsExtended(@NonNull Context context, @NonNull String categoryName) { // STOPSHIP remove
 		SpannableStringBuilder keywords = new SpannableStringBuilder();
 
 		CharSequence myKeywords = getKeywords(context, categoryName, false);
@@ -105,7 +105,7 @@ public class CategoryDTO extends ImagedDTO {
 		return keywords.length() != 0? keywords : null;
 	}
 
-	public static @Nullable CharSequence getDescription(@NonNull Context context, @NonNull String categoryName) {
+	public static @Nullable CharSequence getDescription(@NonNull Context context, @NonNull String categoryName) { // STOPSHIP remove
 		try {
 			return ResourceTools.getText(context, ResourceNames.getDescriptionName(categoryName));
 		} catch (NotFoundException ex) {
@@ -113,7 +113,7 @@ public class CategoryDTO extends ImagedDTO {
 		}
 	}
 
-	public static void showKeywords(@NonNull Context context, long categoryID) {
+	public static void showKeywords(@NonNull Context context, long categoryID) { // STOPSHIP remove
 		CategoryCache cache = CategoryDTO.getCache(context);
 		CharSequence keywords = CategoryDTO.getKeywords(context, cache.getCategoryKey(categoryID), true);
 		ChangeTypeDialog.showKeywords(context, cache.getCategoryPath(categoryID), keywords);
