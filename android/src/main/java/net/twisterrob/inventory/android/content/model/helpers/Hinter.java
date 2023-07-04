@@ -107,11 +107,11 @@ public class Hinter {
 			@Override public int compare(CategorySuggestion<Long> o1, CategorySuggestion<Long> o2) {
 				int m1 = o1.getMinDistance();
 				int m2 = o2.getMinDistance();
-				int diff = m1 < m2? -1 : (m1 == m2? 0 : 1); // Integer.compare(m1, m2)
+				int diff = Integer.compare(m1, m2);
 				if (diff == 0) {
 					int d1 = o1.getDistanceCount(m1);
 					int d2 = o2.getDistanceCount(m2);
-					diff = (d1 < d2? 1 : (d1 == d2? 0 : -1)); // -Integer.compare(d1, d2)
+					diff = -Integer.compare(d1, d2);
 				}
 				if (diff == 0) {
 					diff = o1.getId().compareTo(o2.getId());
