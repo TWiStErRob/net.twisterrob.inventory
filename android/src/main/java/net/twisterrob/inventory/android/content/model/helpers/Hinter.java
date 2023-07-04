@@ -22,24 +22,29 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.contract.Category;
-import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.utils.PictureHelper;
 import net.twisterrob.java.text.Suggester.*;
 
 public class Hinter {
 	private final @NonNull Context context;
 	private final @NonNull HintBuilder adapter;
+	private final @NonNull CategoryCache cache;
 
-	public Hinter(@NonNull Context context, @NonNull CategorySelectedEvent clickHandler) {
+	public Hinter(
+			@NonNull Context context,
+			@NonNull CategoryCache cache,
+			@NonNull CategorySelectedEvent clickHandler
+	) {
 		this.context = context;
-		this.adapter = new HintBuilder(context, clickHandler);
+		this.cache = cache;
+		this.adapter = new HintBuilder(cache, clickHandler);
 	}
 
 	public void highlight(Spannable input) {
 		boolean colorMatches =
 				App.prefs().getBoolean(R.string.pref_highlightSuggestion, R.bool.pref_highlightSuggestion_default);
 		if (colorMatches) {
-			for (WordMatch word : CategoryDTO.getCache(context).split(input)) {
+			for (WordMatch word : cache.split(input)) {
 				int color = PictureHelper.getColor(word.word().toString());
 				input.setSpan(new ForegroundColorSpan(color), word.wordStart, word.wordEnd, SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
@@ -91,7 +96,6 @@ public class Hinter {
 	}
 
 	private boolean isSuggested(List<CategorySuggestion<Long>> suggestions, String currentTypeName) {
-		CategoryCache cache = CategoryDTO.getCache(context);
 		for (CategorySuggestion<Long> category : suggestions) {
 			if (cache.getCategoryKey(category.getId()).equals(currentTypeName)) {
 				return true;
@@ -101,8 +105,7 @@ public class Hinter {
 	}
 
 	private List<CategorySuggestion<Long>> doSuggest(CharSequence userInput) {
-		List<CategorySuggestion<Long>> suggestions =
-				new ArrayList<>(CategoryDTO.getCache(context).suggest(userInput));
+		List<CategorySuggestion<Long>> suggestions = new ArrayList<>(cache.suggest(userInput));
 		Collections.sort(suggestions, new Comparator<CategorySuggestion<Long>>() {
 			@Override public int compare(CategorySuggestion<Long> o1, CategorySuggestion<Long> o2) {
 				int m1 = o1.getMinDistance();
@@ -127,7 +130,7 @@ public class Hinter {
 
 	private static class HintBuilder extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 		private static final long MORE_ID = Category.ID_ADD;
-		private final CategoryCache cache;
+		private final @NonNull CategoryCache cache;
 		private final @NonNull CategorySelectedEvent clickHandler;
 		private List<CategorySuggestion<Long>> suggestions;
 		private int upUntil;
@@ -135,8 +138,8 @@ public class Hinter {
 		private String currentTypeName;
 		private boolean showEditDistances;
 
-		public HintBuilder(@NonNull Context context, @NonNull CategorySelectedEvent clickHandler) {
-			this.cache = CategoryDTO.getCache(context);
+		public HintBuilder(@NonNull CategoryCache cache, @NonNull CategorySelectedEvent clickHandler) {
+			this.cache = cache;
 			setHasStableIds(true);
 			this.clickHandler = clickHandler;
 			setSuggestions(null);

@@ -251,7 +251,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		hint.setLayoutManager(new LinearLayoutManager(requireContext()));
 		hint.addOnItemTouchListener(new NestedScrollableRecyclerViewListener(hint));
 		if (this instanceof ItemEditFragment) {
-			hinter = new Hinter(requireContext(), new CategorySelectedEvent() {
+			hinter = new Hinter(requireContext(), CategoryDTO.getCache(requireContext()), new CategorySelectedEvent() {
 				@Override public void categorySelected(long categoryID) {
 					AndroidTools.selectByID(type, categoryID);
 					Hinter.unhighlight(name.getText());
