@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.view.*;
 
 import androidx.annotation.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
@@ -24,6 +25,7 @@ import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
+@AndroidEntryPoint
 public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	private static final int MOVE_REQUEST = 0;
 

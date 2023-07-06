@@ -3,6 +3,7 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 
 import androidx.annotation.Nullable;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.inventory.android.*;
@@ -15,6 +16,7 @@ import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 
+@AndroidEntryPoint
 public class CategoryActivity extends BaseDetailActivity<CategoryContentsFragment>
 		implements CategoryEvents, CategoriesEvents {
 	private CategoryDTO current;

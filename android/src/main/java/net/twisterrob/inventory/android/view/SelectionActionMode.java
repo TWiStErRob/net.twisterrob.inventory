@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import net.twisterrob.android.view.*;
+import net.twisterrob.inventory.android.PreconditionsKt;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.java.exceptions.StackTrace;
 
@@ -22,15 +23,15 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(SelectionActionMode.class);
 	private static final String KEY_SELECTION = "selection";
 
-	private final AppCompatActivity activity;
-	private final SelectionAdapter<?> adapter;
+	private final @NonNull AppCompatActivity activity;
+	private final @NonNull SelectionAdapter<?> adapter;
 
 	private final ActionMode.Callback callback = this;
 	private ActionMode actionMode;
 
 	public SelectionActionMode(@NonNull FragmentActivity activity, @NonNull SelectionAdapter<?> adapter) {
-		this.activity = (AppCompatActivity)activity;
-		this.adapter = adapter;
+		this.activity = (AppCompatActivity)PreconditionsKt.checkNotNull(activity);
+		this.adapter = PreconditionsKt.checkNotNull(adapter);
 	}
 
 	public @NonNull AppCompatActivity getActivity() {

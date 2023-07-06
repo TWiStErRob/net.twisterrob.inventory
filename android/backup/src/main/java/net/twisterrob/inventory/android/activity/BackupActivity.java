@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
@@ -20,6 +21,7 @@ import net.twisterrob.inventory.android.fragment.BackupControllerFragment;
 
 import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
+@AndroidEntryPoint
 public class BackupActivity extends BaseActivity implements BackupControllerFragment.BackupEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivity.class);
 	private boolean allowNew;

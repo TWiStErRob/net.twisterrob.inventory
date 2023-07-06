@@ -20,6 +20,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
@@ -27,6 +28,7 @@ import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 
+@AndroidEntryPoint
 public class ImageActivity extends DebugHelperActivity implements RequestListener<Uri, Bitmap> {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageActivity.class);
 

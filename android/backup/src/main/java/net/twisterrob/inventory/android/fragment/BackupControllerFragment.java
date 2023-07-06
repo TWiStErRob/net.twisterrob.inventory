@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.inventory.android.Constants;
@@ -24,6 +25,7 @@ import net.twisterrob.inventory.android.content.CreateOpenableDocument;
 import net.twisterrob.inventory.android.content.InventoryContract;
 import net.twisterrob.inventory.android.content.OpenOpenableDocument;
 
+@AndroidEntryPoint
 public class BackupControllerFragment extends BaseFragment<BackupControllerFragment.BackupEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupControllerFragment.class);
 

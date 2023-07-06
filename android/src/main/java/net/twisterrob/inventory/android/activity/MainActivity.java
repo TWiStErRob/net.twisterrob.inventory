@@ -20,6 +20,7 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.*;
@@ -28,6 +29,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.*;
 import net.twisterrob.inventory.android.backup.Importer.*;
 import net.twisterrob.inventory.android.backup.xml.XMLImporter;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
@@ -42,6 +44,7 @@ import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents
 import net.twisterrob.inventory.android.view.DrawerNavigator;
 import net.twisterrob.java.annotations.DebugHelper;
 
+@AndroidEntryPoint
 public class MainActivity extends DrawerActivity
 		implements PropertiesEvents, RoomsEvents, CategoriesEvents, SunBurstEvents, MainEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
@@ -448,7 +451,7 @@ public class MainActivity extends DrawerActivity
 	}
 
 	@SuppressLint("WrongThreadInterprocedural")
-	private static Intent improveCategories(@NonNull Context context, @NonNull String email, @Nullable Long categoryId) {
+	private static Intent improveCategories(@NonNull Context context, @NonNull CategoryCache cache, @NonNull String email, @Nullable Long categoryId) {
 		String subject = context.getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME + " Category Feedback";
 		Intent intent = new Intent(Intent.ACTION_VIEW)
 				.setData(Uri.parse("mailto:"))
@@ -456,16 +459,16 @@ public class MainActivity extends DrawerActivity
 				.putExtra(Intent.EXTRA_SUBJECT, subject);
 		String text = "How can we improve the Categories?";
 		if (categoryId != null) {
-			String categoryKey = CategoryDTO.getCache(context).getCategoryKey(categoryId);
+			String categoryKey = cache.getCategoryKey(categoryId);
 			text += "\n(Suggestion was triggered in context of category: " + categoryKey + ")";
 		}
 		intent.putExtra(Intent.EXTRA_TEXT, text);
 		return intent;
 	}
-	public static void startImproveCategories(@NonNull Context context, @Nullable Long categoryId) {
+	public static void startImproveCategories(@NonNull Context context, @NonNull CategoryCache cache, @Nullable Long categoryId) {
 		String email = "feedback@twisterrob.net";
 		try {
-			context.startActivity(improveCategories(context, email, categoryId));
+			context.startActivity(improveCategories(context, cache, email, categoryId));
 		} catch (ActivityNotFoundException ex) {
 			LOG.warn("Cannot start feedback intent", ex);
 			App.toastUser(context.getString(R.string.about_feedback_fail, email));

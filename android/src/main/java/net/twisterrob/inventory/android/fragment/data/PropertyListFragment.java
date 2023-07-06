@@ -6,6 +6,7 @@ import android.view.*;
 
 import androidx.annotation.*;
 import androidx.appcompat.view.ActionMode;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
@@ -16,6 +17,7 @@ import net.twisterrob.inventory.android.fragment.data.PropertyListFragment.Prope
 import net.twisterrob.inventory.android.tasks.DeletePropertiesAction;
 import net.twisterrob.inventory.android.view.*;
 
+@AndroidEntryPoint
 public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> {
 
 	public interface PropertiesEvents {

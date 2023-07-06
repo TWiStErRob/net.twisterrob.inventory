@@ -3,10 +3,13 @@ package net.twisterrob.inventory.android.sunburst;
 import android.content.Intent;
 import android.os.Bundle;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.SingleFragmentActivity;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents;
 
+@AndroidEntryPoint
 public class SunburstActivity extends SingleFragmentActivity<SunburstFragment> implements SunBurstEvents {
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
