@@ -21,6 +21,7 @@ import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.*;
+import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -40,6 +41,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	}
 
 	@Inject CategoryVisuals visuals;
+	@Inject CategoryCacheProvider cache;
 
 	public CategoryContentsFragment() {
 		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
@@ -87,7 +89,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 				.startFromPropertyList()
 				.allowRooms()
 				.allowItems();
-		return new ItemSelectionActionMode(this, adapter, builder);
+		return new ItemSelectionActionMode(this, adapter, visuals, cache, builder);
 	}
 	@Override protected void onListItemClick(int position, long recyclerViewItemID) {
 		// category listener doesn't call through to super

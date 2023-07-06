@@ -14,7 +14,7 @@ import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
-import net.twisterrob.inventory.android.categories.cache.CategoryCache;
+import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -28,15 +28,21 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 
 	private final @NonNull BaseFragment<?> fragment;
 	private final @NonNull Builder builder;
+	private final @NonNull CategoryVisuals visuals;
+	private final @NonNull CategoryCacheProvider cache;
 
 	public ItemSelectionActionMode(
 			@NonNull BaseFragment<?> fragment,
 			@NonNull SelectionAdapter<?> adapter,
+			@NonNull CategoryVisuals visuals,
+			@NonNull CategoryCacheProvider cache,
 			@NonNull Builder builder
 	) {
 		super(fragment.requireActivity(), adapter);
-		this.fragment = fragment;
-		this.builder = builder;
+		this.fragment = PreconditionsKt.checkNotNull(fragment);
+		this.visuals = PreconditionsKt.checkNotNull(visuals);
+		this.cache = PreconditionsKt.checkNotNull(cache);
+		this.builder = PreconditionsKt.checkNotNull(builder);
 	}
 
 	@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -96,13 +102,12 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 					}
 					@Override public CharSequence getTypeName(Cursor cursor) {
 						long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-						CategoryCache cache = CategoryDTO.getCache(fragment.requireContext());
-						return cache.getCategoryPath(categoryID);
+						return cache.getCache().getCategoryPath(categoryID);
 					}
 					@Override public CharSequence getKeywords(Cursor cursor) {
 						long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-						CategoryCache cache = CategoryDTO.getCache(fragment.requireContext());
-						return CategoryDTO.getKeywords(fragment.requireContext(), cache.getCategoryKey(categoryID), true);
+						String categoryKey = cache.getCache().getCategoryKey(categoryID);
+						return visuals.getKeywords(categoryKey, true);
 					}
 				}, category);
 				return true;

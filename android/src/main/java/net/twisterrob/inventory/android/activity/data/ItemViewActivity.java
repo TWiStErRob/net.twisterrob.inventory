@@ -3,6 +3,8 @@ package net.twisterrob.inventory.android.activity.data;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
@@ -12,6 +14,7 @@ import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemViewFragment.ItemEvents;
 
+@AndroidEntryPoint
 public class ItemViewActivity extends BaseDetailActivity<ItemListFragment>
 		implements ItemEvents, ItemsEvents {
 	private ItemDTO current;
