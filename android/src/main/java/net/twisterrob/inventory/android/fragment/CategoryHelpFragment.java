@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.URI;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.annotation.SuppressLint;
@@ -19,12 +21,14 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.MainActivity;
+import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
 import net.twisterrob.inventory.android.content.CreateOpenableDocument;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
@@ -33,11 +37,14 @@ import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.io.IOTools;
 
+@AndroidEntryPoint
 @DebugHelper
 @SuppressLint("StaticFieldLeak") // https://github.com/TWiStErRob/net.twisterrob.inventory/issues/257
 public class CategoryHelpFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryHelpFragment.class);
 	private WebView web;
+
+	@Inject protected CategoryCacheProvider cache;
 
 	public CategoryHelpFragment() {
 		setDynamicResource(DYN_OptionsMenu, R.menu.category_help);
@@ -75,7 +82,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				long category = Intents.getCategory(requireArguments());
 				requireArguments().remove(Extras.CATEGORY_ID); // run only once
 				if (category != Category.ID_ADD) {
-					String key = CategoryDTO.getCache(requireContext()).getCategoryKey(category);
+					String key = cache.getCache().getCategoryKey(category);
 					LOG.trace("Navigating to {} ({})", key, category);
 					// http://stackoverflow.com/a/12266640/253468
 					String jumpToCategory = "document.location.hash = '" + key + "';";
@@ -161,7 +168,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				return true;
 			}
 			case R.id.action_category_feedback:
-				MainActivity.startImproveCategories(requireContext(), null);
+				MainActivity.startImproveCategories(requireContext(), cache.getCache(), null);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
