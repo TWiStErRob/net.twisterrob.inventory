@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.categories.cache;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class CategoryCacheProvider {
 	private final @NonNull Context context;
 	private final @NonNull Database database;
 
-	//@Inject // Intentionally not possible to create it automatically, CategoryCacheModule controls lifecycle.
+	@Inject
 	public CategoryCacheProvider(
 			@ApplicationContext @NonNull Context context,
 			@NonNull Database database
