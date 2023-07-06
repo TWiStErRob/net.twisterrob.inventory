@@ -20,7 +20,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.utils.tools.DatabaseTools;
-import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.PreconditionsKt;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.CommonColumns;
@@ -32,12 +31,17 @@ public class CategoryCacheProvider {
 
 	private @Nullable CategoryCache CACHE;
 	private @Nullable Locale lastLocale;
-	
+
 	private final @NonNull Context context;
+	private final @NonNull Database database;
 
 	//@Inject // Intentionally not possible to create it automatically, CategoryCacheModule controls lifecycle.
-	public CategoryCacheProvider(@ApplicationContext @NonNull Context context) {
+	public CategoryCacheProvider(
+			@ApplicationContext @NonNull Context context,
+			@NonNull Database database
+	) {
 		this.context = context;
+		this.database = database;
 	}
 
 	@WorkerThread
@@ -47,10 +51,8 @@ public class CategoryCacheProvider {
 		if (!currentLocale.equals(lastLocale)) {
 			// TODO externalize this to an explicit call.
 			LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
-			@SuppressWarnings("deprecation")
-			Database database = (Database)BaseComponent.get(context).db();
 			CategoryCacheImpl cache = new CategoryCacheImpl(context);
-			fillItemCategories(cache, database);
+			fillItemCategories(cache);
 			CACHE = cache;
 			lastLocale = currentLocale;
 		}
@@ -69,19 +71,19 @@ public class CategoryCacheProvider {
 		}
 	}
 
-	private void fillPropertyTypes(@NonNull CategoryCacheImpl cache, @NonNull Database database) {
+	private void fillPropertyTypes(@NonNull CategoryCacheImpl cache) {
 		fillCategoriesFrom(cache, database.listPropertyTypes());
 	}
 
-	private void fillRoomTypes(@NonNull CategoryCacheImpl cache, @NonNull Database database) {
+	private void fillRoomTypes(@NonNull CategoryCacheImpl cache) {
 		fillCategoriesFrom(cache, database.listRoomTypes());
 	}
 
-	private void fillItemCategories(@NonNull CategoryCacheImpl cache, @NonNull Database database) {
+	private void fillItemCategories(@NonNull CategoryCacheImpl cache) {
 		fillCategoriesFrom(cache, database.listRelatedCategories(null));
 	}
 
-	private static void fillCategoriesFrom(@NonNull CategoryCacheImpl cache, Cursor cursor) {
+	private static void fillCategoriesFrom(@NonNull CategoryCacheImpl cache, @NonNull Cursor cursor) {
 		try {
 			while (cursor.moveToNext()) {
 				String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
