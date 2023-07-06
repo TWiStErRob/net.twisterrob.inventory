@@ -18,7 +18,7 @@ import androidx.viewpager.widget.*;
 import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.ImageActivity;
-import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.view.ChangeTypeListener;
@@ -32,7 +32,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 	private @Nullable Intent shareIntent;
 
 	@Inject protected CategoryVisuals visuals;
-	@Inject protected CategoryCacheProvider cache;
+	@Inject protected CategoryCache cache;
 
 	@Override public @NonNull View onCreateView(
 			@NonNull LayoutInflater inflater,

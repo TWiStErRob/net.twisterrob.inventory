@@ -41,7 +41,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
-import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
@@ -64,7 +64,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private static final int REQUEST_CODE_GET_PICTURE = 0x3245;
 
 	@Inject protected CategoryVisuals visuals;
-	@Inject protected CategoryCacheProvider cache;
+	@Inject protected CategoryCache cache;
 
 	private boolean isRestored;
 	private @Nullable Uri restoredImage;
@@ -155,11 +155,11 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 						}
 						@Override public CharSequence getTypeName(Cursor cursor) {
 							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							return cache.getCache().getCategoryPath(categoryID);
+							return cache.getCategoryPath(categoryID);
 						}
 						@Override public CharSequence getKeywords(Cursor cursor) {
 							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							String categoryKey = cache.getCache().getCategoryKey(categoryID);
+							String categoryKey = cache.getCategoryKey(categoryID);
 							return visuals.getKeywords(categoryKey, true);
 						}
 					}, type.getSelectedItemId());
@@ -256,7 +256,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		hint.setLayoutManager(new LinearLayoutManager(requireContext()));
 		hint.addOnItemTouchListener(new NestedScrollableRecyclerViewListener(hint));
 		if (this instanceof ItemEditFragment) {
-			hinter = new Hinter(requireContext(), cache.getCache(), new CategorySelectedEvent() {
+			hinter = new Hinter(requireContext(), cache, new CategorySelectedEvent() {
 				@Override public void categorySelected(long categoryID) {
 					AndroidTools.selectByID(type, categoryID);
 					Hinter.unhighlight(name.getText());

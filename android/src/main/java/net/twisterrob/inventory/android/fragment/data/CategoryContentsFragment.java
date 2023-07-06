@@ -57,7 +57,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_feedback:
-				MainActivity.startImproveCategories(requireContext(), cache.getCache(), getArgCategoryID());
+				MainActivity.startImproveCategories(requireContext(), cache, getArgCategoryID());
 				return true;
 			case R.id.action_category_help:
 				Intent intent = MainActivity.list(requireContext(), MainActivity.PAGE_CATEGORY_HELP);

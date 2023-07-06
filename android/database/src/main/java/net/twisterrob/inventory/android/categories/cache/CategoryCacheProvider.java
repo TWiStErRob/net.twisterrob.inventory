@@ -17,6 +17,10 @@ import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import dagger.Module;
+import dagger.Provides;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.components.ActivityComponent;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -95,6 +99,20 @@ public class CategoryCacheProvider {
 			}
 		} finally {
 			cursor.close();
+		}
+	}
+
+	@Module
+	// Installing in Activity means it cannot be injected in the Singleton scope,
+	// so whenever a CategoryCache is injected it'll be a short-lived Activity/Fragment or lower.
+	@InstallIn(ActivityComponent.class)
+	public static class CategoryCacheModule {
+
+		// Not scoped, call provider every time to get the latest cache.
+		@Provides @NonNull CategoryCache provideCategoryCache(
+				@NonNull CategoryCacheProvider provider
+		) {
+			return provider.getCache();
 		}
 	}
 }

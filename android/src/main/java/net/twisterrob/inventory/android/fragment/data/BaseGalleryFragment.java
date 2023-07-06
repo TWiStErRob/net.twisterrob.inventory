@@ -27,7 +27,7 @@ import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.ViewProvider.StaticViewProvider;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.Loaders;
 import net.twisterrob.inventory.android.content.model.CategoryVisuals;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
@@ -45,7 +45,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	protected RecyclerViewLoaderController<?, ?> listController;
 	protected SelectionActionMode selectionMode;
 	@Inject protected CategoryVisuals visuals;
-	@Inject protected CategoryCacheProvider cache;
+	@Inject protected CategoryCache cache;
 
 	public void setHeader(@Nullable BaseFragment<?> headerFragment) {
 		this.header = headerFragment;

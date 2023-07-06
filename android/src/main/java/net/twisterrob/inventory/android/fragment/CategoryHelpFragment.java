@@ -28,7 +28,7 @@ import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.MainActivity;
-import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.CreateOpenableDocument;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
@@ -44,7 +44,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryHelpFragment.class);
 	private WebView web;
 
-	@Inject protected CategoryCacheProvider cache;
+	@Inject protected CategoryCache cache;
 
 	public CategoryHelpFragment() {
 		setDynamicResource(DYN_OptionsMenu, R.menu.category_help);
@@ -82,7 +82,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				long category = Intents.getCategory(requireArguments());
 				requireArguments().remove(Extras.CATEGORY_ID); // run only once
 				if (category != Category.ID_ADD) {
-					String key = cache.getCache().getCategoryKey(category);
+					String key = cache.getCategoryKey(category);
 					LOG.trace("Navigating to {} ({})", key, category);
 					// http://stackoverflow.com/a/12266640/253468
 					String jumpToCategory = "document.location.hash = '" + key + "';";
@@ -168,7 +168,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				return true;
 			}
 			case R.id.action_category_feedback:
-				MainActivity.startImproveCategories(requireContext(), cache.getCache(), null);
+				MainActivity.startImproveCategories(requireContext(), cache, null);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

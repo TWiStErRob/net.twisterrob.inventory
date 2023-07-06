@@ -13,7 +13,7 @@ import net.twisterrob.android.utils.concurrent.ClosureAsyncTask;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
-import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
@@ -25,12 +25,12 @@ public class ChangeTypeListener implements OnClickListener {
 	private final @NonNull Context context;
 	private final @NonNull ImagedVariants variants;
 	private final @NonNull CategoryVisuals visuals;
-	private final @NonNull CategoryCacheProvider cache;
+	private final @NonNull CategoryCache cache;
 
 	public ChangeTypeListener(
 			@NonNull BaseFragment<?> fragment,
 			@NonNull CategoryVisuals visuals,
-			@NonNull CategoryCacheProvider cache,
+			@NonNull CategoryCache cache,
 			ImagedDTO entity
 	) {
 		this.fragment = PreconditionsKt.checkNotNull(fragment);
@@ -163,11 +163,11 @@ public class ChangeTypeListener implements OnClickListener {
 		}
 		@Override public CharSequence getTypeName(Cursor cursor) {
 			long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-			return cache.getCache().getCategoryPath(categoryID);
+			return cache.getCategoryPath(categoryID);
 		}
 		@Override public CharSequence getKeywords(Cursor cursor) {
 			long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-			String categoryKey = cache.getCache().getCategoryKey(categoryID);
+			String categoryKey = cache.getCategoryKey(categoryID);
 			return visuals.getKeywords(categoryKey, true);
 		}
 	}
