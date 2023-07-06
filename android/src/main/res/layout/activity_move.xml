@@ -18,7 +18,7 @@
 		android:textIsSelectable="true"
 		tools:text="@string/action_move_pick_title"
 		/>
-	<FrameLayout
+	<androidx.fragment.app.FragmentContainerView
 		android:id="@id/activityRoot"
 		android:layout_width="fill_parent"
 		android:layout_height="0dp"
