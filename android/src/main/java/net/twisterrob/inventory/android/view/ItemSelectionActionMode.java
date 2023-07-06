@@ -13,7 +13,6 @@ import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.data.MoveTargetActivity;
-import net.twisterrob.inventory.android.activity.data.MoveTargetActivity.Builder;
 import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
@@ -27,7 +26,7 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 	private static final int PICK_REQUEST = 1;
 
 	private final @NonNull BaseFragment<?> fragment;
-	private final @NonNull Builder builder;
+	private final @NonNull MoveTargetActivity.Builder builder;
 	private final @NonNull CategoryVisuals visuals;
 	private final @NonNull CategoryCacheProvider cache;
 
@@ -36,7 +35,7 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 			@NonNull SelectionAdapter<?> adapter,
 			@NonNull CategoryVisuals visuals,
 			@NonNull CategoryCacheProvider cache,
-			@NonNull Builder builder
+			@NonNull MoveTargetActivity.Builder builder
 	) {
 		super(fragment.requireActivity(), adapter);
 		this.fragment = PreconditionsKt.checkNotNull(fragment);

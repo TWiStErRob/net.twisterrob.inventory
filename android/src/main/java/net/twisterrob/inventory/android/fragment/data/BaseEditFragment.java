@@ -63,8 +63,8 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	protected static final String DYN_DescriptionHintResource = "descriptionHint";
 	private static final int REQUEST_CODE_GET_PICTURE = 0x3245;
 
-	@Inject CategoryVisuals visuals;
-	@Inject CategoryCacheProvider cache;
+	@Inject protected CategoryVisuals visuals;
+	@Inject protected CategoryCacheProvider cache;
 
 	private boolean isRestored;
 	private @Nullable Uri restoredImage;

@@ -63,7 +63,7 @@ public class CategoryCacheProvider {
 		StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		try {
 			// Initialization will happen only once, after that it's cached.
-			return get(context);
+			return get(context.getApplicationContext());
 		} finally {
 			StrictMode.setThreadPolicy(originalPolicy);
 		}

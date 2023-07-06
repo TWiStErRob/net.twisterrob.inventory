@@ -23,8 +23,8 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 	private static final Logger LOG = LoggerFactory.getLogger(SelectionActionMode.class);
 	private static final String KEY_SELECTION = "selection";
 
-	private final AppCompatActivity activity;
-	private final SelectionAdapter<?> adapter;
+	private final @NonNull AppCompatActivity activity;
+	private final @NonNull SelectionAdapter<?> adapter;
 
 	private final ActionMode.Callback callback = this;
 	private ActionMode actionMode;

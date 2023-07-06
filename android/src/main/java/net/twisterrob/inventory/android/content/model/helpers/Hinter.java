@@ -35,8 +35,8 @@ public class Hinter {
 			@NonNull CategoryCache cache,
 			@NonNull CategorySelectedEvent clickHandler
 	) {
-		this.context = context;
-		this.cache = cache;
+		this.context = PreconditionsKt.checkNotNull(context);
+		this.cache = PreconditionsKt.checkNotNull(cache);
 		this.adapter = new HintBuilder(cache, clickHandler);
 	}
 
@@ -139,9 +139,9 @@ public class Hinter {
 		private boolean showEditDistances;
 
 		public HintBuilder(@NonNull CategoryCache cache, @NonNull CategorySelectedEvent clickHandler) {
-			this.cache = cache;
+			this.cache = PreconditionsKt.checkNotNull(cache);
 			setHasStableIds(true);
-			this.clickHandler = clickHandler;
+			this.clickHandler = PreconditionsKt.checkNotNull(clickHandler);
 			setSuggestions(null);
 		}
 

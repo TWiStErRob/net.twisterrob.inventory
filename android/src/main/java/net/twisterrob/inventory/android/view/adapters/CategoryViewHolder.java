@@ -9,13 +9,14 @@ import android.widget.*;
 
 import com.bumptech.glide.Glide;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
+import net.twisterrob.inventory.android.PreconditionsKt;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.contract.*;
-import net.twisterrob.inventory.android.content.model.CategoryDTO;
 import net.twisterrob.inventory.android.content.model.CategoryVisuals;
 
 public class CategoryViewHolder extends RecyclerView.ViewHolder {
@@ -23,18 +24,18 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		void showItemsInCategory(long categoryID);
 	}
 
-	private final CategoryItemEvents listener;
+	private final @NonNull CategoryVisuals visuals;
+	private final @NonNull CategoryItemEvents listener;
 
 	private final ImageView image;
 	private final TextView title;
 	private final TextView stats;
 	private final TextView count;
-	private final CategoryVisuals visuals;
 
-	public CategoryViewHolder(View view, CategoryItemEvents events, CategoryVisuals visuals) {
+	public CategoryViewHolder(@NonNull View view, @NonNull CategoryItemEvents events, @NonNull CategoryVisuals visuals) {
 		super(view);
-		this.visuals = visuals;
-		this.listener = events;
+		this.visuals = PreconditionsKt.checkNotNull(visuals);
+		this.listener = PreconditionsKt.checkNotNull(events);
 		image = view.findViewById(R.id.image);
 		title = view.findViewById(R.id.title);
 		stats = view.findViewById(R.id.stats);

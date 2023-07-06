@@ -8,6 +8,7 @@ import android.text.SpannableStringBuilder;
 
 import androidx.annotation.*;
 import androidx.collection.LongSparseArray;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.content.contract.*;
@@ -33,7 +34,7 @@ public class CategoryCacheImpl implements CategoryCache {
 		return suggester.split(name);
 	}
 
-	public CategoryCacheImpl(@NonNull Context context) {
+	public CategoryCacheImpl(@ApplicationContext @NonNull Context context) {
 		this.context = context;
 	}
 
