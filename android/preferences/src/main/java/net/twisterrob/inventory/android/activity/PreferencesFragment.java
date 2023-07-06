@@ -7,10 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.settings.view.*;
 import net.twisterrob.inventory.android.preferences.R;
 
+@AndroidEntryPoint
 public class PreferencesFragment extends PreferenceFragmentCompat {
 
 	private static final String DIALOG_FRAGMENT_TAG =

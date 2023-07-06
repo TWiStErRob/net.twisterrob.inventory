@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.*;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.activity.BackPressAware;
 import net.twisterrob.android.graphics.SunburstDrawable;
@@ -28,6 +29,7 @@ import net.twisterrob.inventory.android.sunburst.Node.Type;
 import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents;
 import net.twisterrob.inventory.android.view.RecyclerViewController;
 
+@AndroidEntryPoint
 public class SunburstFragment extends BaseFragment<SunBurstEvents> implements BackPressAware {
 	private static final Logger LOG = LoggerFactory.getLogger(SunburstFragment.class);
 

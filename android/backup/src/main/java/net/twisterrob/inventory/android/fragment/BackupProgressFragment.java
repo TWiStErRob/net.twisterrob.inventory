@@ -13,6 +13,7 @@ import android.widget.*;
 
 import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks;
@@ -23,6 +24,7 @@ import net.twisterrob.inventory.android.backup.concurrent.BackupService.LocalBin
 import static net.twisterrob.inventory.android.backup.concurrent.NotificationProgressService.*;
 import static net.twisterrob.inventory.android.content.BroadcastTools.getLocalBroadcastManager;
 
+@AndroidEntryPoint
 public class BackupProgressFragment extends BaseFragment<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupProgressFragment.class);
 

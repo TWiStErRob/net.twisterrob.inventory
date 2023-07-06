@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.*;
 import androidx.recyclerview.widget.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.DialogTools;
@@ -30,6 +31,7 @@ import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEven
 import net.twisterrob.inventory.android.view.RecyclerViewLoadersController;
 import net.twisterrob.inventory.android.view.adapters.*;
 
+@AndroidEntryPoint
 public class MainFragment extends BaseFragment<MainFragment.MainEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(MainFragment.class);
 

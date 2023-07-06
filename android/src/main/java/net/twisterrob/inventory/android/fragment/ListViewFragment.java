@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.content.Intents;
@@ -18,6 +19,7 @@ import net.twisterrob.inventory.android.view.Dialogs;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
+@AndroidEntryPoint
 public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ListViewFragment.class);
 
