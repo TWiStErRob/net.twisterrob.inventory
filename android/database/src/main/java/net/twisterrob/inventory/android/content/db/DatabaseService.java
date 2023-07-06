@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.utils.tools.IntentTools;
-import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
+import net.twisterrob.inventory.android.categories.cache.CategoryCacheHolder;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.VariantIntentService;
 
@@ -37,7 +37,7 @@ public class DatabaseService extends VariantIntentService {
 
 	@Inject Database database;
 	@Inject LanguageUpdater languageUpdater;
-	@Inject CategoryCacheProvider categoryCacheProvider;
+	@Inject CategoryCacheHolder categoryCacheHolder;
 
 	@Override protected void onHandleWork(@NonNull Intent intent) {
 		super.onHandleWork(intent);
@@ -78,7 +78,7 @@ public class DatabaseService extends VariantIntentService {
 
 	private void preloadCategoryCache() {
 		try {
-			categoryCacheProvider.getCache();
+			categoryCacheHolder.getCacheForCurrentLocale();
 		} catch (Exception ex) {
 			// if fails we'll crash later when used, but at least let the app start up
 			LOG.error("Failed to initialize Category cache", ex);

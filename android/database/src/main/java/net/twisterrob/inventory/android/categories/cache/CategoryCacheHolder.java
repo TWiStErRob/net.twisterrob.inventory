@@ -31,8 +31,8 @@ import net.twisterrob.inventory.android.content.contract.CommonColumns;
 import net.twisterrob.inventory.android.content.contract.ParentColumns;
 
 @Singleton
-public class CategoryCacheProvider {
-	private static final Logger LOG = LoggerFactory.getLogger(CategoryCacheProvider.class);
+public class CategoryCacheHolder {
+	private static final Logger LOG = LoggerFactory.getLogger(CategoryCacheHolder.class);
 
 	private @Nullable CategoryCache CACHE;
 	private @Nullable Locale lastLocale;
@@ -41,7 +41,7 @@ public class CategoryCacheProvider {
 	private final @NonNull Database database;
 
 	@Inject
-	public CategoryCacheProvider(
+	public CategoryCacheHolder(
 			@ApplicationContext @NonNull Context context,
 			@NonNull Database database
 	) {
@@ -66,7 +66,7 @@ public class CategoryCacheProvider {
 
 	@SuppressLint("WrongThread")
 	@AnyThread
-	public @NonNull CategoryCache getCache() {
+	public @NonNull CategoryCache getCacheForCurrentLocale() {
 		StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 		try {
 			// Initialization will happen only once, after that it's cached.
@@ -110,9 +110,9 @@ public class CategoryCacheProvider {
 
 		// Not scoped, call provider every time to get the latest cache.
 		@Provides @NonNull CategoryCache provideCategoryCache(
-				@NonNull CategoryCacheProvider provider
+				@NonNull CategoryCacheHolder provider
 		) {
-			return provider.getCache();
+			return provider.getCacheForCurrentLocale();
 		}
 	}
 }
