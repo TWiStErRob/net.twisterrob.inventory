@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -19,6 +20,7 @@ import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
+@AndroidEntryPoint
 public class RoomEditFragment extends BaseEditFragment<RoomEditEvents, RoomDTO> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomEditFragment.class);
 

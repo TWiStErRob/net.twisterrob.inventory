@@ -78,7 +78,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 		if (description != null && description.length() != 0) {
 			stats.setText(description);
 		} else {
-			stats.setText(CategoryDTO.getKeywordsExtended(context, name));
+			stats.setText(visuals.getKeywordsExtended(name));
 		}
 		ViewTools.displayedIfHasText(stats);
 

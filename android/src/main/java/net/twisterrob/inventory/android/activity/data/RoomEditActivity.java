@@ -3,6 +3,8 @@ package net.twisterrob.inventory.android.activity.data;
 import android.content.Intent;
 import android.os.Bundle;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
@@ -10,6 +12,7 @@ import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.RoomDTO;
 import net.twisterrob.inventory.android.fragment.data.RoomEditFragment;
 
+@AndroidEntryPoint
 public class RoomEditActivity extends BaseEditActivity<RoomEditFragment>
 		implements RoomEditFragment.RoomEditEvents {
 	@Override protected RoomEditFragment onCreateFragment() {

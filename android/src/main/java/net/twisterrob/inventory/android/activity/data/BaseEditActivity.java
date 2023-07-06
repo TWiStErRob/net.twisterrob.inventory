@@ -12,6 +12,7 @@ import net.twisterrob.inventory.android.fragment.data.BaseEditFragment;
 
 import static net.twisterrob.inventory.android.fragment.data.BaseEditFragment.*;
 
+// Every subclass must have @AndroidEntryPoint because BaseEditFragment can only be hosted inside one.
 public abstract class BaseEditActivity<E extends BaseEditFragment<?, ?>> extends SingleFragmentActivity<E> {
 	@Override protected FragmentTransaction updateFragment(E fragment) {
 		fragment.requireArguments().putBoolean(EDIT_IMAGE, getIntent().getBooleanExtra(EDIT_IMAGE, false));

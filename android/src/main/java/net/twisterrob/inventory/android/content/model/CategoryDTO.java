@@ -102,12 +102,6 @@ public class CategoryDTO extends ImagedDTO {
 		return keywords.length() != 0? keywords : null;
 	}
 
-	public static void showKeywords(@NonNull Context context, long categoryID) { // STOPSHIP remove
-		CategoryCache cache = CategoryDTO.getCache(context);
-		CharSequence keywords = CategoryDTO.getKeywords(context, cache.getCategoryKey(categoryID), true);
-		ChangeTypeDialog.showKeywords(context, cache.getCategoryPath(categoryID), keywords);
-	}
-
 	@SuppressLint("StaticFieldLeak")
 	private static CategoryCacheProvider sCacheProvider;
 	@AnyThread
