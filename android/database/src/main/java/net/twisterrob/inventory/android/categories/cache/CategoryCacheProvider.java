@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.categories.cache;
 
 import java.util.Locale;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -10,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.StrictMode;
 
 import androidx.annotation.AnyThread;
@@ -19,9 +19,12 @@ import androidx.annotation.WorkerThread;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.BaseComponent;
 import net.twisterrob.inventory.android.PreconditionsKt;
 import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.content.contract.CommonColumns;
+import net.twisterrob.inventory.android.content.contract.ParentColumns;
 
 @Singleton
 public class CategoryCacheProvider {
@@ -46,7 +49,9 @@ public class CategoryCacheProvider {
 			LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
 			@SuppressWarnings("deprecation")
 			Database database = (Database)BaseComponent.get(context).db();
-			CACHE = new CategoryCacheImpl(database, context);
+			CategoryCacheImpl cache = new CategoryCacheImpl(context);
+			fillItemCategories(database, cache);
+			CACHE = cache;
 			lastLocale = currentLocale;
 		}
 		return PreconditionsKt.checkNotNull(CACHE);
@@ -61,6 +66,22 @@ public class CategoryCacheProvider {
 			return get(context);
 		} finally {
 			StrictMode.setThreadPolicy(originalPolicy);
+		}
+	}
+
+	private void fillItemCategories(@NonNull Database database, @NonNull CategoryCacheImpl cache) {
+		Cursor cursor = database.listRelatedCategories(null);
+		//noinspection TryFinallyCanBeTryWithResources
+		try {
+			while (cursor.moveToNext()) {
+				String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+				long categoryID = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
+				Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
+				String categoryIcon = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+				cache.addCategory(categoryName, categoryID, parentID, categoryIcon);
+			}
+		} finally {
+			cursor.close();
 		}
 	}
 }

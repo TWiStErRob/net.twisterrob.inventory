@@ -4,14 +4,12 @@ import java.util.*;
 
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
-import android.database.Cursor;
 import android.text.SpannableStringBuilder;
 
 import androidx.annotation.*;
 import androidx.collection.LongSparseArray;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.java.text.*;
 import net.twisterrob.java.text.Suggester.*;
@@ -26,6 +24,8 @@ public class CategoryCacheImpl implements CategoryCache {
 
 	private final Suggester<Long> suggester = new Suggester<>(new EditAllowingIndexer<DictionaryWord<Long>>(2), 3);
 
+	private final @NonNull Context context;
+
 	@Override public @NonNull Collection<CategorySuggestion<Long>> suggest(@NonNull CharSequence name) {
 		return suggester.suggest(name);
 	}
@@ -33,23 +33,11 @@ public class CategoryCacheImpl implements CategoryCache {
 		return suggester.split(name);
 	}
 
-	@WorkerThread
-	public CategoryCacheImpl(@NonNull Database database, @NonNull Context context) {
-		Cursor cursor = database.listRelatedCategories(null);
-		//noinspection TryFinallyCanBeTryWithResources
-		try {
-			while (cursor.moveToNext()) {
-				addCategoryToCache(cursor, context);
-			}
-		} finally {
-			cursor.close();
-		}
+	public CategoryCacheImpl(@NonNull Context context) {
+		this.context = context;
 	}
-	private void addCategoryToCache(@NonNull Cursor cursor, @NonNull Context context) {
-		String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-		long categoryID = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
-		Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
-		String categoryIcon = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+
+	void addCategory(@NonNull String categoryName, long categoryID, @Nullable Long parentID, String categoryIcon) {
 		categoriesByID.put(categoryID, categoryName);
 		categoriesByKey.put(categoryName, categoryID);
 		categoryIcons.put(categoryID, categoryIcon);
@@ -65,7 +53,7 @@ public class CategoryCacheImpl implements CategoryCache {
 			children.add(categoryName);
 		}
 		List<String> categoryPath = getPath(categoryName);
-		CharSequence fullName = buildFullName(context, categoryPath);
+		CharSequence fullName = buildFullName(categoryPath);
 		categoryFullNames.put(categoryID, fullName);
 
 		suggester.addText(categoryID, ResourceTools.getText(context, categoryName));
@@ -76,7 +64,7 @@ public class CategoryCacheImpl implements CategoryCache {
 		}
 	}
 
-	private CharSequence buildFullName(@NonNull Context context, List<String> categoryPath) {
+	private CharSequence buildFullName(@NonNull List<String> categoryPath) {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		for (Iterator<String> it = categoryPath.iterator(); it.hasNext(); ) {
 			CharSequence category = ResourceTools.getText(context, it.next());
@@ -88,7 +76,7 @@ public class CategoryCacheImpl implements CategoryCache {
 		return builder;
 	}
 
-	private List<String> getPath(@NonNull String categoryName) {
+	private @NonNull List<String> getPath(@NonNull String categoryName) {
 		LinkedList<String> cats = new LinkedList<>();
 		String parentCat = categoryName;
 		do {
