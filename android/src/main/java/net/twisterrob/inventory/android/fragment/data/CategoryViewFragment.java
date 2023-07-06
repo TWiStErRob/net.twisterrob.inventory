@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
@@ -22,6 +23,7 @@ import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.Categ
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
+@AndroidEntryPoint
 public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, CategoryEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryViewFragment.class);
 

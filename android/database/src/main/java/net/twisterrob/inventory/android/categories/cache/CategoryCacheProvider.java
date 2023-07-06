@@ -32,7 +32,7 @@ public class CategoryCacheProvider {
 	
 	private final @NonNull Context context;
 
-	@Inject
+	//@Inject // Intentionally not possible to create it automatically, CategoryCacheModule controls lifecycle.
 	public CategoryCacheProvider(@ApplicationContext @NonNull Context context) {
 		this.context = context;
 	}
@@ -42,6 +42,7 @@ public class CategoryCacheProvider {
 	private @NonNull CategoryCache get(@NonNull Context context) {
 		Locale currentLocale = AndroidTools.getLocale(context.getResources().getConfiguration());
 		if (!currentLocale.equals(lastLocale)) {
+			// TODO externalize this to an explicit call.
 			LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
 			@SuppressWarnings("deprecation")
 			Database database = (Database)BaseComponent.get(context).db();

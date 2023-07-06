@@ -111,7 +111,7 @@ public class CategoryDTO extends ImagedDTO {
 	@SuppressLint("StaticFieldLeak")
 	private static CategoryCacheProvider sCacheProvider;
 	@AnyThread
-	public static @NonNull CategoryCache getCache(@NonNull Context context) {
+	public static @NonNull CategoryCache getCache(@NonNull Context context) { // STOPSHIP remove
 		if (sCacheProvider == null) {
 			sCacheProvider = new CategoryCacheProvider(context.getApplicationContext());
 		}

@@ -13,6 +13,7 @@ import androidx.loader.app.LoaderManager.LoaderCallbacks;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.DatabaseTools;
@@ -31,6 +32,7 @@ import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.*;
 import net.twisterrob.inventory.android.view.adapters.CategoryViewHolder.CategoryItemEvents;
 
+@AndroidEntryPoint
 public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEvents> {
 	public interface CategoriesEvents extends ItemsEvents {
 		void categorySelected(long categoryID);

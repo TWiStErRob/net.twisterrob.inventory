@@ -20,6 +20,7 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.activity.CaptureImage;
 import net.twisterrob.android.utils.tools.*;
@@ -42,6 +43,7 @@ import net.twisterrob.inventory.android.sunburst.SunburstFragment.SunBurstEvents
 import net.twisterrob.inventory.android.view.DrawerNavigator;
 import net.twisterrob.java.annotations.DebugHelper;
 
+@AndroidEntryPoint
 public class MainActivity extends DrawerActivity
 		implements PropertiesEvents, RoomsEvents, CategoriesEvents, SunBurstEvents, MainEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
