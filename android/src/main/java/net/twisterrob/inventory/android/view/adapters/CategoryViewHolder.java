@@ -32,7 +32,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 	private final TextView stats;
 	private final TextView count;
 
-	public CategoryViewHolder(@NonNull View view, @NonNull CategoryItemEvents events, @NonNull CategoryVisuals visuals) {
+	public CategoryViewHolder(@NonNull View view, @NonNull CategoryVisuals visuals, @NonNull CategoryItemEvents events) {
 		super(view);
 		this.visuals = PreconditionsKt.checkNotNull(visuals);
 		this.listener = PreconditionsKt.checkNotNull(events);

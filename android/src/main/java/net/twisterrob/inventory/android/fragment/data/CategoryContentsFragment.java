@@ -280,7 +280,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			View view = inflater.inflate(viewType, parent, false);
 			switch (viewType) {
 				case R.layout.item_category:
-					return new CategoryViewHolder(view, new CategoryItemEventsForwarder(), visuals);
+					return new CategoryViewHolder(view, visuals, new CategoryItemEventsForwarder());
 				case R.layout.item_gallery:
 					return new GalleryViewHolder(view, CategoryContentsFragment.this);
 				default:
