@@ -41,7 +41,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.*;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
-import net.twisterrob.inventory.android.categories.cache.CategoryCache;
+import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.model.*;
@@ -64,6 +64,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private static final int REQUEST_CODE_GET_PICTURE = 0x3245;
 
 	@Inject CategoryVisuals visuals;
+	@Inject CategoryCacheProvider cache;
 
 	private boolean isRestored;
 	private @Nullable Uri restoredImage;
@@ -154,13 +155,12 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 						}
 						@Override public CharSequence getTypeName(Cursor cursor) {
 							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							CategoryCache cache = CategoryDTO.getCache(requireContext());
-							return cache.getCategoryPath(categoryID);
+							return cache.getCache().getCategoryPath(categoryID);
 						}
 						@Override public CharSequence getKeywords(Cursor cursor) {
 							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							CategoryCache cache = CategoryDTO.getCache(requireContext());
-							return visuals.getKeywords(cache.getCategoryKey(categoryID), true);
+							String categoryKey = cache.getCache().getCategoryKey(categoryID);
+							return visuals.getKeywords(categoryKey, true);
 						}
 					}, type.getSelectedItemId());
 				}
