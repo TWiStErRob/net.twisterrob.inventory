@@ -50,7 +50,7 @@ public class CategoryCacheProvider {
 			@SuppressWarnings("deprecation")
 			Database database = (Database)BaseComponent.get(context).db();
 			CategoryCacheImpl cache = new CategoryCacheImpl(context);
-			fillItemCategories(database, cache);
+			fillItemCategories(cache, database);
 			CACHE = cache;
 			lastLocale = currentLocale;
 		}
@@ -69,9 +69,19 @@ public class CategoryCacheProvider {
 		}
 	}
 
-	private void fillItemCategories(@NonNull Database database, @NonNull CategoryCacheImpl cache) {
-		Cursor cursor = database.listRelatedCategories(null);
-		//noinspection TryFinallyCanBeTryWithResources
+	private void fillPropertyTypes(@NonNull CategoryCacheImpl cache, @NonNull Database database) {
+		fillCategoriesFrom(cache, database.listPropertyTypes());
+	}
+
+	private void fillRoomTypes(@NonNull CategoryCacheImpl cache, @NonNull Database database) {
+		fillCategoriesFrom(cache, database.listRoomTypes());
+	}
+
+	private void fillItemCategories(@NonNull CategoryCacheImpl cache, @NonNull Database database) {
+		fillCategoriesFrom(cache, database.listRelatedCategories(null));
+	}
+
+	private static void fillCategoriesFrom(@NonNull CategoryCacheImpl cache, Cursor cursor) {
 		try {
 			while (cursor.moveToNext()) {
 				String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
