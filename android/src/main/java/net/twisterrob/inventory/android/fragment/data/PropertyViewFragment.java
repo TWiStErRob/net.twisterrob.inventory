@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.R;
@@ -23,6 +24,7 @@ import net.twisterrob.inventory.android.view.Dialogs;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
+@AndroidEntryPoint
 public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, PropertyEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyViewFragment.class);
 

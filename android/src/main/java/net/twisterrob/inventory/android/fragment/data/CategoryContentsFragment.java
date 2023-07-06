@@ -1,7 +1,5 @@
 package net.twisterrob.inventory.android.fragment.data;
 
-import javax.inject.Inject;
-
 import android.content.Intent;
 import android.database.*;
 import android.os.Bundle;
@@ -21,12 +19,10 @@ import net.twisterrob.android.view.SelectionAdapter;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.activity.data.*;
-import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.inventory.android.content.contract.InventoryLoader.LoadersCallbacksAdapter;
-import net.twisterrob.inventory.android.content.model.CategoryVisuals;
 import net.twisterrob.inventory.android.fragment.data.CategoryContentsFragment.CategoriesEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.view.*;
@@ -39,9 +35,6 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		void categorySelected(long categoryID);
 		void categoryActioned(long categoryID);
 	}
-
-	@Inject CategoryVisuals visuals;
-	@Inject CategoryCacheProvider cache;
 
 	public CategoryContentsFragment() {
 		setDynamicResource(DYN_EventsClass, CategoriesEvents.class);
