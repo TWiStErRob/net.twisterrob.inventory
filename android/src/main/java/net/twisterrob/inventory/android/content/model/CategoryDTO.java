@@ -1,19 +1,18 @@
 package net.twisterrob.inventory.android.content.model;
 
-import java.util.*;
+import java.util.Locale;
 
-import android.annotation.SuppressLint;
-import android.content.*;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
-import androidx.annotation.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import net.twisterrob.android.utils.tools.*;
+import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.inventory.android.BuildConfig;
-import net.twisterrob.inventory.android.categories.cache.CategoryCache;
-import net.twisterrob.inventory.android.categories.cache.CategoryCacheProvider;
-import net.twisterrob.inventory.android.content.contract.*;
+import net.twisterrob.inventory.android.content.contract.Category;
 
 public class CategoryDTO extends ImagedDTO {
 	private static final Uri APP_RESOURCE_RAW = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/raw/");
@@ -46,15 +45,5 @@ public class CategoryDTO extends ImagedDTO {
 	@Override
 	public @NonNull String toString() {
 		return String.format(Locale.ROOT, "Category #%1$d: '%2$s' in %3$s", id, name, parentID);
-	}
-
-	@SuppressLint("StaticFieldLeak")
-	private static CategoryCacheProvider sCacheProvider;
-	@AnyThread
-	public static @NonNull CategoryCache getCache(@NonNull Context context) { // STOPSHIP remove
-		if (sCacheProvider == null) {
-			sCacheProvider = new CategoryCacheProvider(context.getApplicationContext());
-		}
-		return sCacheProvider.getCache();
 	}
 }
