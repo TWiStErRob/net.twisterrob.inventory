@@ -5,6 +5,8 @@ import javax.inject.Inject;
 import org.slf4j.*;
 
 import android.database.Cursor;
+import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
+import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.CategoryActivity;
 import net.twisterrob.inventory.android.content.Intents;
@@ -75,6 +78,11 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 				.build();
 	}
 
+	@Override public void onPrepareOptionsMenu(@NonNull Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		ViewTools.visibleIf(menu, R.id.action_category_viewAllItems, !getArgFlatten());
+	}
+
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_viewAllItems:
@@ -93,13 +101,19 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 		return requireArguments().getLong(Extras.CATEGORY_ID, Category.ID_ADD);
 	}
 
-	public static CategoryViewFragment newInstance(long categoryID) {
+	private boolean getArgFlatten() {
+		return requireArguments().getBoolean(Extras.INCLUDE_SUBS, false);
+	}
+
+	public static CategoryViewFragment newInstance(long categoryID, boolean flatten) {
 		if (categoryID == Category.ID_ADD) {
 			throw new IllegalArgumentException("Must be an existing category");
 		}
 
 		CategoryViewFragment fragment = new CategoryViewFragment();
-		fragment.setArguments(Intents.bundleFromCategory(categoryID));
+		Bundle args = Intents.bundleFromCategory(categoryID);
+		args.putBoolean(Extras.INCLUDE_SUBS, flatten);
+		fragment.setArguments(args);
 		return fragment;
 	}
 }
