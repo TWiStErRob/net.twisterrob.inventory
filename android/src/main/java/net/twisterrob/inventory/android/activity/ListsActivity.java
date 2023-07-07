@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.StrictMode;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.fragment.ListListFragment;
 import net.twisterrob.inventory.android.fragment.ListListFragment.ListsEvents;
 
+@AndroidEntryPoint
 public class ListsActivity extends SingleFragmentActivity<ListListFragment> implements ListsEvents {
 	@Override protected ListListFragment onCreateFragment() {
 		return ListListFragment.newInstance(getExtraItemID());

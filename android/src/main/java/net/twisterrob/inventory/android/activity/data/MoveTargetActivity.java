@@ -16,6 +16,7 @@ import androidx.fragment.app.*;
 import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.inventory.android.*;
@@ -28,6 +29,7 @@ import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.fragment.data.*;
 
+@AndroidEntryPoint
 public class MoveTargetActivity extends BaseActivity implements OnBackStackChangedListener,
 		PropertyListFragment.PropertiesEvents,
 		RoomListFragment.RoomsEvents,

@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import java.util.Collections;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.content.Intent;
@@ -25,12 +27,15 @@ import net.twisterrob.android.utils.tools.DatabaseTools;
 import net.twisterrob.android.view.*;
 import net.twisterrob.android.view.ViewProvider.StaticViewProvider;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.Loaders;
+import net.twisterrob.inventory.android.content.model.CategoryVisuals;
 import net.twisterrob.inventory.android.content.model.ImagedDTO;
 import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.*;
 
+// Every subclass must have @AndroidEntryPoint or otherwise initialize @Inject fields.
 public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements GalleryEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseGalleryFragment.class);
 	/** boolean argument, defaults to true */
@@ -39,6 +44,8 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 	private BaseFragment<?> header;
 	protected RecyclerViewLoaderController<?, ?> listController;
 	protected SelectionActionMode selectionMode;
+	@Inject protected CategoryVisuals visuals;
+	@Inject protected CategoryCache cache;
 
 	public void setHeader(@Nullable BaseFragment<?> headerFragment) {
 		this.header = headerFragment;
@@ -175,7 +182,7 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 	@Override public void onTypeClick(int position, ImagedDTO dto) {
 		if (!selectionMode.isRunning()) {
-			new ChangeTypeListener(this, dto).onClick(listController.getView());
+			new ChangeTypeListener(this, visuals, cache, dto).onClick(listController.getView());
 		} else {
 			onItemClick(position, dto.id);
 		}

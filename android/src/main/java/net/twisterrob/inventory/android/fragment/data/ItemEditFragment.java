@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -18,6 +19,7 @@ import net.twisterrob.inventory.android.fragment.data.ItemEditFragment.ItemEditE
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
+@AndroidEntryPoint
 public class ItemEditFragment extends BaseEditFragment<ItemEditEvents, ItemDTO> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemEditFragment.class);
 

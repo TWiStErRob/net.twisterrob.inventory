@@ -2,27 +2,20 @@ package net.twisterrob.inventory.android.categories.cache;
 
 import java.util.*;
 
-import org.slf4j.*;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
-import android.database.Cursor;
-import android.os.StrictMode;
 import android.text.SpannableStringBuilder;
 
 import androidx.annotation.*;
 import androidx.collection.LongSparseArray;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import net.twisterrob.android.utils.tools.*;
-import net.twisterrob.inventory.android.BaseComponent;
-import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.*;
 import net.twisterrob.java.text.*;
 import net.twisterrob.java.text.Suggester.*;
 
 public class CategoryCacheImpl implements CategoryCache {
-	private static final Logger LOG = LoggerFactory.getLogger(CategoryCache.class);
 	private final LongSparseArray<String> categoriesByID = new LongSparseArray<>();
 	private final Map<String, Long> categoriesByKey = new HashMap<>();
 	private final Map<String, String> categoryParents = new TreeMap<>();
@@ -32,6 +25,8 @@ public class CategoryCacheImpl implements CategoryCache {
 
 	private final Suggester<Long> suggester = new Suggester<>(new EditAllowingIndexer<DictionaryWord<Long>>(2), 3);
 
+	private final @NonNull Context context;
+
 	@Override public @NonNull Collection<CategorySuggestion<Long>> suggest(@NonNull CharSequence name) {
 		return suggester.suggest(name);
 	}
@@ -39,23 +34,11 @@ public class CategoryCacheImpl implements CategoryCache {
 		return suggester.split(name);
 	}
 
-	@WorkerThread
-	public CategoryCacheImpl(@NonNull Database database, @NonNull Context context) {
-		Cursor cursor = database.listRelatedCategories(null);
-		//noinspection TryFinallyCanBeTryWithResources
-		try {
-			while (cursor.moveToNext()) {
-				addCategoryToCache(cursor, context);
-			}
-		} finally {
-			cursor.close();
-		}
+	public CategoryCacheImpl(@ApplicationContext @NonNull Context context) {
+		this.context = context;
 	}
-	private void addCategoryToCache(@NonNull Cursor cursor, @NonNull Context context) {
-		String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
-		long categoryID = cursor.getLong(cursor.getColumnIndexOrThrow(CommonColumns.ID));
-		Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
-		String categoryIcon = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+
+	void addCategory(@NonNull String categoryName, long categoryID, @Nullable Long parentID, String categoryIcon) {
 		categoriesByID.put(categoryID, categoryName);
 		categoriesByKey.put(categoryName, categoryID);
 		categoryIcons.put(categoryID, categoryIcon);
@@ -71,7 +54,7 @@ public class CategoryCacheImpl implements CategoryCache {
 			children.add(categoryName);
 		}
 		List<String> categoryPath = getPath(categoryName);
-		CharSequence fullName = buildFullName(context, categoryPath);
+		CharSequence fullName = buildFullName(categoryPath);
 		categoryFullNames.put(categoryID, fullName);
 
 		suggester.addText(categoryID, ResourceTools.getText(context, categoryName));
@@ -82,7 +65,7 @@ public class CategoryCacheImpl implements CategoryCache {
 		}
 	}
 
-	private CharSequence buildFullName(@NonNull Context context, List<String> categoryPath) {
+	private CharSequence buildFullName(@NonNull List<String> categoryPath) {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		for (Iterator<String> it = categoryPath.iterator(); it.hasNext(); ) {
 			CharSequence category = ResourceTools.getText(context, it.next());
@@ -94,7 +77,7 @@ public class CategoryCacheImpl implements CategoryCache {
 		return builder;
 	}
 
-	private List<String> getPath(@NonNull String categoryName) {
+	private @NonNull List<String> getPath(@NonNull String categoryName) {
 		LinkedList<String> cats = new LinkedList<>();
 		String parentCat = categoryName;
 		do {
@@ -125,37 +108,5 @@ public class CategoryCacheImpl implements CategoryCache {
 	}
 	@Override public String getParent(String categoryKey) {
 		return categoryParents.get(categoryKey);
-	}
-
-	@SuppressLint("WrongThread")
-	@AnyThread
-	public static @NonNull CategoryCache getCache(@NonNull Context context) {
-		StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
-		try {
-			// Initialization will happen only once, after that it's cached.
-			return CategoryCacheInitializer.get(context);
-		} finally {
-			StrictMode.setThreadPolicy(originalPolicy);
-		}
-	}
-
-	private static class CategoryCacheInitializer {
-		/** @see #getCache(Context) */
-		private static @Nullable CategoryCache CACHE;
-		private static @Nullable Locale lastLocale;
-
-		@WorkerThread
-		synchronized
-		public static @NonNull CategoryCache get(@NonNull Context context) {
-			Locale currentLocale = AndroidTools.getLocale(context.getResources().getConfiguration());
-			if (!currentLocale.equals(lastLocale)) {
-				LOG.info("Locale changed from {} to {}", lastLocale, currentLocale);
-				@SuppressWarnings("deprecation")
-				Database database = (Database)BaseComponent.get(context).db();
-				CACHE = new CategoryCacheImpl(database, context);
-				lastLocale = currentLocale;
-			}
-			return CACHE;
-		}
 	}
 }

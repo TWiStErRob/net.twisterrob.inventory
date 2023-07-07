@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.content.Intent;
@@ -16,16 +18,21 @@ import androidx.viewpager.widget.*;
 import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.activity.ImageActivity;
+import net.twisterrob.inventory.android.categories.cache.CategoryCache;
 import net.twisterrob.inventory.android.content.model.*;
 import net.twisterrob.inventory.android.fragment.BaseSingleLoaderFragment;
 import net.twisterrob.inventory.android.view.ChangeTypeListener;
 
+// Every subclass must have @AndroidEntryPoint or otherwise initialize @Inject fields.
 public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseViewFragment.class);
 	public static final String KEY_PAGE = "detailsPage";
 
 	protected ViewPager pager;
 	private @Nullable Intent shareIntent;
+
+	@Inject protected CategoryVisuals visuals;
+	@Inject protected CategoryCache cache;
 
 	@Override public @NonNull View onCreateView(
 			@NonNull LayoutInflater inflater,
@@ -130,7 +137,7 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 					if (!(entity instanceof CategoryDTO)) {
 						image.setOnClickListener(new ImageOpenListener());
 						image.setOnLongClickListener(new ImageChangeListener());
-						type.setOnClickListener(new ChangeTypeListener(BaseViewFragment.this, entity));
+						type.setOnClickListener(new ChangeTypeListener(BaseViewFragment.this, visuals, cache, entity));
 					}
 
 					entity.loadInto(image, type, true);

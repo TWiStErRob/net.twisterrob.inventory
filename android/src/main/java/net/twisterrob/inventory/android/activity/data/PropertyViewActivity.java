@@ -5,6 +5,8 @@ import org.slf4j.*;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
@@ -14,6 +16,7 @@ import net.twisterrob.inventory.android.fragment.data.PropertyViewFragment.Prope
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment;
 import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEvents;
 
+@AndroidEntryPoint
 public class PropertyViewActivity extends BaseDetailActivity<RoomListFragment> implements PropertyEvents, RoomsEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyViewActivity.class);
 

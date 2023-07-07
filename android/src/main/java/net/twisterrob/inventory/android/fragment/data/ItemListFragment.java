@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.*;
 
 import androidx.annotation.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.android.view.SelectionAdapter;
@@ -21,6 +22,7 @@ import net.twisterrob.inventory.android.fragment.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 import net.twisterrob.inventory.android.view.*;
 
+@AndroidEntryPoint
 public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(ItemListFragment.class);
 
@@ -80,7 +82,7 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 		} else if (getArgRoomID() != Item.ID_ADD) {
 			builder.startFromRoom(getArgRoomID());
 		}
-		return new ItemSelectionActionMode(this, adapter, builder);
+		return new ItemSelectionActionMode(this, adapter, visuals, cache, builder);
 	}
 
 	@Override protected Bundle createLoadArgs() {

@@ -4,9 +4,11 @@ import android.content.*;
 import android.os.Bundle;
 
 import androidx.annotation.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.inventory.android.preferences.R;
 
+@AndroidEntryPoint
 public class PreferencesActivity extends BaseActivity {
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -6,6 +6,7 @@ import android.content.DialogInterface.OnClickListener;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.activity.AboutActivity;
 import net.twisterrob.inventory.android.*;
@@ -16,6 +17,7 @@ import net.twisterrob.inventory.android.fragment.ListViewFragment.ListEvents;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
+@AndroidEntryPoint
 public class ListItemsActivity extends BaseDetailActivity<ItemListFragment> implements ItemsEvents, ListEvents {
 	public ListItemsActivity() {
 		super(R.plurals.list);
