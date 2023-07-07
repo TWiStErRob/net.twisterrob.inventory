@@ -98,7 +98,6 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		return Intents.getOptionalCategory(requireArguments());
 	}
 	/** @see #createLoadArgs() */
-	@SuppressWarnings("unused")
 	private boolean getArgFlatten() {
 		return requireArguments().getBoolean(Extras.INCLUDE_SUBS, false);
 	}
@@ -115,7 +114,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	public CategoryContentsFragment addHeader() {
 		Long id = getArgCategoryID();
 		if (id != null) {
-			setHeader(CategoryViewFragment.newInstance(id));
+			setHeader(CategoryViewFragment.newInstance(id, getArgFlatten()));
 		}
 		return this;
 	}
