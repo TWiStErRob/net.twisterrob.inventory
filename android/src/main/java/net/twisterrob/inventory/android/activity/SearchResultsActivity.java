@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.TaskStackBuilder;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.android.wiring.CollapseActionViewOnSubmit;
@@ -19,6 +20,7 @@ import net.twisterrob.inventory.android.activity.data.ItemViewActivity;
 import net.twisterrob.inventory.android.fragment.data.*;
 import net.twisterrob.inventory.android.fragment.data.ItemListFragment.ItemsEvents;
 
+@AndroidEntryPoint
 public class SearchResultsActivity extends SingleFragmentActivity<ItemListFragment> implements ItemsEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(SearchResultsActivity.class);
 	private SearchView search;

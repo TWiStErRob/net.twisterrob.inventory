@@ -5,6 +5,7 @@ import org.slf4j.*;
 import android.database.Cursor;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.content.loader.DynamicLoaderManager;
 import net.twisterrob.android.content.loader.DynamicLoaderManager.Dependency;
@@ -18,6 +19,7 @@ import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
+@AndroidEntryPoint
 public class PropertyEditFragment extends BaseEditFragment<PropertyEditEvents, PropertyDTO> {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyEditFragment.class);
 

@@ -6,6 +6,7 @@ import android.view.*;
 
 import androidx.annotation.*;
 import androidx.appcompat.view.ActionMode;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.ViewTools;
 import net.twisterrob.android.view.SelectionAdapter;
@@ -20,6 +21,7 @@ import net.twisterrob.inventory.android.fragment.data.RoomListFragment.RoomsEven
 import net.twisterrob.inventory.android.tasks.*;
 import net.twisterrob.inventory.android.view.*;
 
+@AndroidEntryPoint
 public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 	private static final int PICK_REQUEST = 1;
 

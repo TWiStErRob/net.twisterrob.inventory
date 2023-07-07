@@ -1,11 +1,14 @@
 package net.twisterrob.inventory.android.fragment.data;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.database.Cursor;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.ResourceTools;
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
@@ -15,16 +18,20 @@ import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Category;
 import net.twisterrob.inventory.android.content.model.CategoryDTO;
+import net.twisterrob.inventory.android.content.model.CategoryVisuals;
 import net.twisterrob.inventory.android.fragment.data.CategoryViewFragment.CategoryEvents;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
+@AndroidEntryPoint
 public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, CategoryEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryViewFragment.class);
 
 	public interface CategoryEvents {
 		void categoryLoaded(CategoryDTO item);
 	}
+
+	@Inject CategoryVisuals visuals;
 
 	public CategoryViewFragment() {
 		setDynamicResource(DYN_EventsClass, CategoryEvents.class);
@@ -56,15 +63,15 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 				.append("Category Key", entity.name, DEBUG)
 				.append("Category Name", ResourceTools.getText(requireContext(), entity.name))
 				.append("Category Image", entity.typeImage, DEBUG)
-				.append("Description", CategoryDTO.getDescription(requireContext(), entity.name))
+				.append("Description", visuals.getDescription(entity.name))
 				.append("Parent ID", entity.parentID, DEBUG)
 				.append("Inside", entity.parentName)
 				.append("# of direct subcategories", entity.numDirectChildren)
 				.append("# of subcategories", entity.numAllChildren)
 				.append("# of items in this category", entity.numDirectItems)
 				.append("# of items in subcategories", entity.numAllItems)
-				.append("Keywords", CategoryDTO.getKeywords(requireContext(), entity.name))
-				.append("Extended Keywords", CategoryDTO.getKeywordsExtended(requireContext(), entity.name), DEBUG)
+				.append("Keywords", visuals.getKeywords(entity.name))
+				.append("Extended Keywords", visuals.getKeywordsExtended(entity.name), DEBUG)
 				.build();
 	}
 

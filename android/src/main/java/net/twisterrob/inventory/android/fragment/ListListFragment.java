@@ -9,6 +9,7 @@ import android.view.*;
 
 import androidx.annotation.*;
 import androidx.recyclerview.widget.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.DialogTools;
@@ -20,6 +21,7 @@ import net.twisterrob.inventory.android.view.ListAdapter;
 import net.twisterrob.inventory.android.view.ListAdapter.ListItemEvents;
 import net.twisterrob.inventory.android.view.*;
 
+@AndroidEntryPoint
 public class ListListFragment extends BaseFragment<ListsEvents> implements ListItemEvents {
 	private static final Logger LOG = LoggerFactory.getLogger(ListListFragment.class);
 

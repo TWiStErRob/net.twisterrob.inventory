@@ -24,11 +24,20 @@ public class ChangeTypeListener implements OnClickListener {
 	private final @NonNull BaseFragment<?> fragment;
 	private final @NonNull Context context;
 	private final @NonNull ImagedVariants variants;
+	private final @NonNull CategoryVisuals visuals;
+	private final @NonNull CategoryCache cache;
 
-	public ChangeTypeListener(@NonNull BaseFragment<?> fragment, ImagedDTO entity) {
-		this.fragment = fragment;
-		this.context = fragment.requireContext();
-		this.variants = which(entity);
+	public ChangeTypeListener(
+			@NonNull BaseFragment<?> fragment,
+			@NonNull CategoryVisuals visuals,
+			@NonNull CategoryCache cache,
+			ImagedDTO entity
+	) {
+		this.fragment = PreconditionsKt.checkNotNull(fragment);
+		this.context = PreconditionsKt.checkNotNull(fragment.requireContext());
+		this.visuals = PreconditionsKt.checkNotNull(visuals);
+		this.cache = PreconditionsKt.checkNotNull(cache);
+		this.variants = PreconditionsKt.checkNotNull(which(entity));
 	}
 
 	@Override public void onClick(View v) {
@@ -154,13 +163,12 @@ public class ChangeTypeListener implements OnClickListener {
 		}
 		@Override public CharSequence getTypeName(Cursor cursor) {
 			long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-			CategoryCache cache = CategoryDTO.getCache(context);
 			return cache.getCategoryPath(categoryID);
 		}
 		@Override public CharSequence getKeywords(Cursor cursor) {
 			long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-			CategoryCache cache = CategoryDTO.getCache(context);
-			return CategoryDTO.getKeywords(context, cache.getCategoryKey(categoryID), true);
+			String categoryKey = cache.getCategoryKey(categoryID);
+			return visuals.getKeywords(categoryKey, true);
 		}
 	}
 }

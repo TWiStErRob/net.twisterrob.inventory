@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.fragment.data;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 import org.slf4j.*;
 
 import android.annotation.*;
@@ -51,6 +53,7 @@ import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.ChangeTypeDialog.Variants;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
+// Every subclass must have @AndroidEntryPoint or otherwise initialize @Inject fields.
 public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSingleLoaderFragment<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseEditFragment.class);
 	public static final String EDIT_IMAGE = "editImageOnStartup";
@@ -59,6 +62,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	protected static final String DYN_NameHintResource = "nameHint";
 	protected static final String DYN_DescriptionHintResource = "descriptionHint";
 	private static final int REQUEST_CODE_GET_PICTURE = 0x3245;
+
+	@Inject protected CategoryVisuals visuals;
+	@Inject protected CategoryCache cache;
 
 	private boolean isRestored;
 	private @Nullable Uri restoredImage;
@@ -149,13 +155,12 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 						}
 						@Override public CharSequence getTypeName(Cursor cursor) {
 							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							CategoryCache cache = CategoryDTO.getCache(requireContext());
 							return cache.getCategoryPath(categoryID);
 						}
 						@Override public CharSequence getKeywords(Cursor cursor) {
 							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							CategoryCache cache = CategoryDTO.getCache(requireContext());
-							return CategoryDTO.getKeywords(requireContext(), cache.getCategoryKey(categoryID), true);
+							String categoryKey = cache.getCategoryKey(categoryID);
+							return visuals.getKeywords(categoryKey, true);
 						}
 					}, type.getSelectedItemId());
 				}
@@ -251,13 +256,13 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		hint.setLayoutManager(new LinearLayoutManager(requireContext()));
 		hint.addOnItemTouchListener(new NestedScrollableRecyclerViewListener(hint));
 		if (this instanceof ItemEditFragment) {
-			hinter = new Hinter(requireContext(), new CategorySelectedEvent() {
+			hinter = new Hinter(requireContext(), cache, new CategorySelectedEvent() {
 				@Override public void categorySelected(long categoryID) {
 					AndroidTools.selectByID(type, categoryID);
 					Hinter.unhighlight(name.getText());
 				}
 				@Override public void categoryQueried(long categoryID) {
-					CategoryDTO.showKeywords(requireContext(), categoryID);
+					visuals.showKeywords(categoryID);
 				}
 			});
 			hint.setAdapter(hinter.getAdapter());
@@ -302,7 +307,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		// CONSIDER setOnItemLongClickListener is not supported, any way to work around? So user has the same "tooltip" as in ChangeTypeDialog
 		type.setOnLongClickListener(new OnLongClickListener() {
 			@Override public boolean onLongClick(View view) {
-				CategoryDTO.showKeywords(view.getContext(), getTypeId());
+				visuals.showKeywords(getTypeId());
 				return true;
 			}
 		});
@@ -351,7 +356,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				updateHint(name.getText(), true);
 				return true;
 			case R.id.action_category_keywords:
-				CategoryDTO.showKeywords(requireContext(), getTypeId());
+				visuals.showKeywords(getTypeId());
 				return true;
 		}
 		return super.onContextItemSelected(item);

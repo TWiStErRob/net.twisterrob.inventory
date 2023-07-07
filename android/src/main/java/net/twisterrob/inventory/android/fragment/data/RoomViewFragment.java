@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.view.MenuItem;
 
 import androidx.annotation.*;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.tools.TextTools.DescriptionBuilder;
 import net.twisterrob.inventory.android.R;
@@ -24,6 +25,7 @@ import net.twisterrob.inventory.android.view.*;
 
 import static net.twisterrob.inventory.android.content.Loaders.*;
 
+@AndroidEntryPoint
 public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	private static final Logger LOG = LoggerFactory.getLogger(RoomViewFragment.class);
 

@@ -11,6 +11,7 @@ import androidx.loader.app.LoaderManager.LoaderCallbacks;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.adapter.CursorRecyclerAdapter;
 import net.twisterrob.android.utils.tools.DatabaseTools;
@@ -28,6 +29,7 @@ import net.twisterrob.inventory.android.view.*;
 import net.twisterrob.inventory.android.view.adapters.*;
 import net.twisterrob.inventory.android.view.adapters.CategoryViewHolder.CategoryItemEvents;
 
+@AndroidEntryPoint
 public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEvents> {
 	public interface CategoriesEvents extends ItemsEvents {
 		void categorySelected(long categoryID);
@@ -55,7 +57,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_category_feedback:
-				MainActivity.startImproveCategories(requireContext(), getArgCategoryID());
+				MainActivity.startImproveCategories(requireContext(), cache, getArgCategoryID());
 				return true;
 			case R.id.action_category_help:
 				Intent intent = MainActivity.list(requireContext(), MainActivity.PAGE_CATEGORY_HELP);
@@ -80,7 +82,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 				.startFromPropertyList()
 				.allowRooms()
 				.allowItems();
-		return new ItemSelectionActionMode(this, adapter, builder);
+		return new ItemSelectionActionMode(this, adapter, visuals, cache, builder);
 	}
 	@Override protected void onListItemClick(int position, long recyclerViewItemID) {
 		// category listener doesn't call through to super
@@ -278,7 +280,7 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 			View view = inflater.inflate(viewType, parent, false);
 			switch (viewType) {
 				case R.layout.item_category:
-					return new CategoryViewHolder(view, new CategoryItemEventsForwarder());
+					return new CategoryViewHolder(view, visuals, new CategoryItemEventsForwarder());
 				case R.layout.item_gallery:
 					return new GalleryViewHolder(view, CategoryContentsFragment.this);
 				default:

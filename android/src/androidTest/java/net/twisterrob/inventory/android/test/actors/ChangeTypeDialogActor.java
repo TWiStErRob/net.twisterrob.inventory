@@ -19,10 +19,11 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.inventory.android.App;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.categories.cache.CategoryCache;
+import net.twisterrob.inventory.android.categories.cache.CategoryCacheHolder;
 import net.twisterrob.inventory.android.content.contract.Category;
-import net.twisterrob.inventory.android.content.model.*;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
@@ -64,7 +65,8 @@ public class ChangeTypeDialogActor {
 
 	public void select(@StringRes int type) {
 		String typeName = getApplicationContext().getResources().getResourceEntryName(type);
-		CategoryCache cache = CategoryDTO.getCache(getApplicationContext());
+		// TODO figure out how to get this from the Hilt Singleton component.
+		CategoryCache cache = new CategoryCacheHolder(getApplicationContext(), App.db()).getCacheForCurrentLocale();
 		while (exists(onView(dialogMatcher))) {
 			// if the first one goes through with the click, it means that we've managed to selected what we wanted
 			String currentType = typeName;
