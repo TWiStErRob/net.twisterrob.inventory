@@ -65,7 +65,17 @@ jobs:
         with:
           submodules: true
 
-      - name: "Run SVG generation on emulator."
+      - name: "Load AVD cache"
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: ${{ runner.os }}-avd-api${{ matrix.android-api }}@v1
+
+      - name: "Create AVD and generate snapshot for caching"
+        if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.android-api }}
@@ -76,9 +86,27 @@ jobs:
           # Ensure that /storage/sdcard exists, without this the stock DocumentsUI will be non-functional.
           sdcard-path-or-size: 100M
           emulator-boot-timeout: 900 # 15 minutes
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          force-avd-creation: true # There was a cache miss, be strict now.
           script: |
             adb devices -l
+            # Initial setup, gets cached.
             ./.github/workflows/svg/adb-shell-create-sdcard-android-dir.sh ${{ matrix.android-api }}
+
+      - name: "Run SVG generation on emulator."
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          force-avd-creation: false # Reuse pre-created emulator.
+          api-level: ${{ matrix.android-api }}
+          # TODEL Some are not available: https://issuetracker.google.com/issues/267458959
+          target: ${{ matrix.android-api >= 32 && 'google_apis' || 'default' }}
+          arch: ${{ matrix.android-api >= 21 && 'x86_64' || 'x86' }}
+          profile: pixel
+          # Ensure that /storage/sdcard exists, without this the stock DocumentsUI will be non-functional.
+          sdcard-path-or-size: 100M
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-save
+          script: |
+            adb devices -l
             ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
 
       - name: "Upload 'SVG ${{ matrix.android-api }}' artifact."
