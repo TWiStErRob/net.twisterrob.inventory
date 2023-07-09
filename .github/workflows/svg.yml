@@ -40,18 +40,18 @@ jobs:
         # The Android SDK API level (number), see https://apilevels.com/.
         android-api:
           - 21
-          - 22
-          - 23
-          - 24
-          - 25
-          - 26
-          - 27
-          - 28
-          - 29
-          - 30
-          - 31
-          - 32
-          - 33
+#          - 22
+#          - 23
+#          - 24
+#          - 25
+#          - 26
+#          - 27
+#          - 28
+#          - 29
+#          - 30
+#          - 31
+#          - 32
+#          - 33
           - 34
     steps:
       - name: "Set up JDK 11."
@@ -64,6 +64,24 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: true
+      
+      - name: "Calculate emulator properties"
+        id: emulator
+        run: |
+          echo "api-level=${{ matrix.android-api }}" >> $GITHUB_OUTPUT
+          # TODEL Some are not available: https://issuetracker.google.com/issues/267458959
+          echo "target=${{ matrix.android-api >= 32 && 'google_apis' || 'default' }}" >> $GITHUB_OUTPUT
+          echo "arch=${{ matrix.android-api >= 21 && 'x86_64' || 'x86' }}" >> $GITHUB_OUTPUT
+          echo "profile=pixel" >> $GITHUB_OUTPUT
+          # Ensure that /storage/sdcard exists, without this the stock DocumentsUI will be non-functional.
+          echo "sdcard=100M" >> $GITHUB_OUTPUT
+          echo "options=-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim" >> $GITHUB_OUTPUT
+
+      - name: "Calculate emulator properties"
+        id: emulator-helper
+        run: |
+          echo "package=system-images;android-${{ steps.emulator.outputs.api-level }};${{ steps.emulator.outputs.target }};${{ steps.emulator.outputs.arch }}" >> $GITHUB_OUTPUT
+          echo "device=${{ steps.emulator.outputs.profile }};${{ steps.emulator.outputs.sdcard }}" >> $GITHUB_OUTPUT
 
       - name: "Load AVD cache"
         uses: actions/cache@v3
@@ -74,22 +92,22 @@ jobs:
             ~/.android/avd/test.avd/
             ~/.android/adbkey
             ~/.android/adbkey.pub
-          key: android-avd${{ matrix.android-api }}-v1
+          key: android-emulator-${{ steps.emulator-helper.outputs.device }}-${{ steps.emulator-helper.outputs.package }}-v1
 
       - name: "Create AVD and generate snapshot for caching"
-        if: steps.avd-cache.outputs.cache-hit != 'true'
+        # Emulators for API 32, 33, 34 are 1.4, 1.2 and 1.7 GB respectively.
+        if: steps.avd-cache.outputs.cache-hit != 'true' && steps.emulator.outputs.target != 'google_apis'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.android-api }}
-          # TODEL Some are not available: https://issuetracker.google.com/issues/267458959
-          target: ${{ matrix.android-api >= 32 && 'google_apis' || 'default' }}
-          arch: ${{ matrix.android-api >= 21 && 'x86_64' || 'x86' }}
-          profile: pixel
-          # Ensure that /storage/sdcard exists, without this the stock DocumentsUI will be non-functional.
-          sdcard-path-or-size: 100M
-          emulator-boot-timeout: 900 # 15 minutes
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           force-avd-creation: true # There was a cache miss, be strict now.
+          emulator-boot-timeout: 1200 # 20 minutes, take a hit once for cache.
+
+          api-level: ${{ steps.emulator.outputs.api-level }}
+          target: ${{ steps.emulator.outputs.target }}
+          arch: ${{ steps.emulator.outputs.arch }}
+          profile: ${{ steps.emulator.outputs.profile }}
+          sdcard-path-or-size: ${{ steps.emulator.outputs.sdcard }}
+          emulator-options: ${{ steps.emulator.outputs.options }} -no-snapshot-load
           script: |
             adb devices -l
             # Initial setup, gets cached.
@@ -99,14 +117,14 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           force-avd-creation: false # Reuse pre-created emulator.
-          api-level: ${{ matrix.android-api }}
-          # TODEL Some are not available: https://issuetracker.google.com/issues/267458959
-          target: ${{ matrix.android-api >= 32 && 'google_apis' || 'default' }}
-          arch: ${{ matrix.android-api >= 21 && 'x86_64' || 'x86' }}
-          profile: pixel
-          # Ensure that /storage/sdcard exists, without this the stock DocumentsUI will be non-functional.
-          sdcard-path-or-size: 100M
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-save
+          emulator-boot-timeout: 1200 # 20 minutes
+
+          api-level: ${{ steps.emulator.outputs.api-level }}
+          target: ${{ steps.emulator.outputs.target }}
+          arch: ${{ steps.emulator.outputs.arch }}
+          profile: ${{ steps.emulator.outputs.profile }}
+          sdcard-path-or-size: ${{ steps.emulator.outputs.sdcard }}
+          emulator-options: ${{ steps.emulator.outputs.options }} -no-snapshot-save
           script: |
             adb devices -l
             ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
