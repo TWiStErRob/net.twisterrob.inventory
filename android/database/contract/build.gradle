@@ -7,3 +7,6 @@ dependencies {
 	implementation(libs.androidx.loader)
 	implementation("net.twisterrob.lib:twister-lib-general")
 }
+
+// See net.twisterrob.inventory.android.content.InventoryContract.AUTHORITY.
+android.buildFeatures.buildConfig = true
