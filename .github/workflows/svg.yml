@@ -65,6 +65,9 @@ jobs:
         with:
           submodules: true
 
+      - name: "Set up Gradle caching"
+        uses: gradle/gradle-build-action@v2
+
       - name: "Load AVD cache"
         uses: actions/cache@v3
         id: avd-cache
