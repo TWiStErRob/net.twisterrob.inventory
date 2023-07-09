@@ -40,17 +40,17 @@ jobs:
         # The Android SDK API level (number), see https://apilevels.com/.
         android-api:
           - 21
-#          - 22
-#          - 23
-#          - 24
-#          - 25
-#          - 26
-#          - 27
-#          - 28
-#          - 29
-#          - 30
-#          - 31
-#          - 32
+          - 22
+          - 23
+          - 24
+          - 25
+          - 26
+          - 27
+          - 28
+          - 29
+          - 30
+          - 31
+          - 32
           - 33
           - 34
     steps:
@@ -65,13 +65,6 @@ jobs:
         with:
           submodules: true
 
-      - name: "Set up Gradle caching"
-        uses: gradle/gradle-build-action@v2
-        with:
-          cache-read-only: false
-          gradle-home-cache-cleanup: true
-          # dependency-graph
-
       - name: "Load AVD cache"
         uses: actions/cache@v3
         id: avd-cache
@@ -81,7 +74,7 @@ jobs:
             ~/.android/avd/test.avd/
             ~/.android/adbkey
             ~/.android/adbkey.pub
-          key: ${{ runner.os }}-avd-api${{ matrix.android-api }}@v1
+          key: android-avd${{ matrix.android-api }}-v1
 
       - name: "Create AVD and generate snapshot for caching"
         if: steps.avd-cache.outputs.cache-hit != 'true'
