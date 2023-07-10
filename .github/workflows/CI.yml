@@ -24,18 +24,4 @@ jobs:
 
   instrumentation:
     name: "🧪 Instrumentation Tests on" # / API ${{ matrix.api }} will be appended by used workflow.
-    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@instrumentation
-    with:
-      android-api: ${{ matrix.api }}
-      java-version: 11
-      timeout-minutes: 60
-      script: |
-        ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=androidx.test.filters.FlakyTest
-        ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck
-
-    strategy:
-      fail-fast: false
-      matrix:
-        # The API level, see https://apilevels.com/.
-        api:
-          - 21 # A stable version for now.
+    uses: ./.github/workflows/instrumentation.yml
