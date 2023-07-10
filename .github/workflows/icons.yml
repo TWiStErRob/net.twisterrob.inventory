@@ -5,7 +5,7 @@ on:
 jobs:
 
   previews:
-    name: "🎨 Generate Previews"
+    name: "🪟 Generate Previews"
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -33,7 +33,7 @@ jobs:
 
 
   nu-validator:
-    name: "🎨 Validate SVGs"
+    name: "🕵 Validate SVGs"
     runs-on: ubuntu-latest
     timeout-minutes: 5
 

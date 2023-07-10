@@ -1,11 +1,13 @@
-name: "🔨 Build & Verify"
+name: "🧪 Instrumentation Test Matrix"
+
 on:
   workflow_call
 
 jobs:
 
   instrumentation:
-    name: ${{ matrix.api }}
+    name: "${{ matrix.api }}"
+
     uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@instrumentation
     with:
       android-api: ${{ matrix.api }}
