@@ -43,3 +43,7 @@ val MinimalExternalModuleDependency.ktx: MinimalExternalModuleDependency
 		DefaultModuleIdentifier.newId(this.module.group, "${this.module.name}-ktx"),
 		DefaultMutableVersionConstraint(this.versionConstraint)
 	)
+
+tasks.register("cleanFull").configure {
+	dependsOn("clean")
+}

@@ -44,3 +44,6 @@ tasks.register("testDatabase", Exec) {
 	commandLine 'cmd', '/c', file('test-db.bat'), projectDir, outputDir
 	tasks.findByPath('check').dependsOn(it)
 }
+
+// See net.twisterrob.inventory.android.content.Database.
+android.buildFeatures.buildConfig = true

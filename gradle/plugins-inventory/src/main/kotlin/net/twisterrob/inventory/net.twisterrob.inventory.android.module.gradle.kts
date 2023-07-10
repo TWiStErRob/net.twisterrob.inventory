@@ -16,3 +16,5 @@ afterEvaluate {
 		}
 	}
 }
+
+android.buildFeatures.buildConfig = false
