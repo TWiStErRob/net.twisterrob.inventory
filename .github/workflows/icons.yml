@@ -1,4 +1,5 @@
 name: "🎨 Icons"
+
 on:
   workflow_call
 
