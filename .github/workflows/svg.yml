@@ -9,7 +9,7 @@ jobs:
 
   validate:
     name: "🦺 Validation"
-    uses: TWiStErRob/github-workflows/.github/workflows/validate.yml@main
+    uses: TWiStErRob/github-workflows/.github/workflows/validate.yml@v1
 
   instrumentation:
     name: "🎨 Generate SVGs on ${{ matrix.android-api }}"
