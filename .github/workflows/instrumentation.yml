@@ -1,0 +1,25 @@
+name: "🧪 Instrumentation Test Matrix"
+
+on:
+  workflow_call
+
+jobs:
+
+  instrumentation:
+    name: "${{ matrix.api }}"
+
+    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@v1
+    with:
+      android-api: ${{ matrix.api }}
+      java-version: 11
+      timeout-minutes: 60
+      script: |
+        ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=androidx.test.filters.FlakyTest
+        ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        # The API level, see https://apilevels.com/.
+        api:
+          - 21 # A stable version for now.
