@@ -1,9 +1,10 @@
 name: SVG
+
 on:
   workflow_dispatch:
   push:
     branches:
-      - '**'
+      - '**' # STOPSHIP main
 
 jobs:
 
@@ -14,18 +15,27 @@ jobs:
   instrumentation:
     name: "🎨 Generate SVGs on ${{ matrix.android-api }}"
     needs: validate
-    runs-on: macos-latest
-    timeout-minutes: 30
-    permissions:
-      # actions/checkout
-      contents: read
-      # EnricoMi/publish-unit-test-result-action -> https://github.com/EnricoMi/publish-unit-test-result-action#permissions
-      checks: write
+    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@cache
+    with:
+      android-api: ${{ matrix.api }}
+      java-version: 11
+      name-artifact-fine-grained: 'SVG {0}'
+      name-check-results: '🔔 Test: SVG Results {0}'
+      script-cache: >
+        ./.github/workflows/instrumentation/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
+      script: >
+        ./gradlew
+        --no-daemon
+        --stacktrace
+        :android:data:svg:connectedCheck
+        -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true
+        -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
+
     strategy:
       fail-fast: false
       matrix:
-        # The Android SDK API level (number), see https://apilevels.com/.
-        android-api:
+        # The API level, see https://apilevels.com/.
+        api:
           - 21
 #          - 22
 #          - 23
@@ -40,101 +50,6 @@ jobs:
 #          - 32
 #          - 33
           - 34
-    steps:
-      - name: "Set up JDK 11."
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: zulu
-
-      - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
-        uses: actions/checkout@v3
-        with:
-          submodules: true
-      
-      - name: "Calculate emulator properties"
-        id: emulator
-        run: |
-          echo "api-level=${{ matrix.android-api }}" >> $GITHUB_OUTPUT
-          # TODEL Some are not available: https://issuetracker.google.com/issues/267458959
-          echo "target=${{ matrix.android-api >= 32 && 'google_apis' || 'default' }}" >> $GITHUB_OUTPUT
-          echo "arch=${{ matrix.android-api >= 21 && 'x86_64' || 'x86' }}" >> $GITHUB_OUTPUT
-          echo "profile=pixel" >> $GITHUB_OUTPUT
-          # Ensure that /storage/sdcard exists, without this the stock DocumentsUI will be non-functional.
-          echo "sdcard=100M" >> $GITHUB_OUTPUT
-          echo "options=-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim" >> $GITHUB_OUTPUT
-
-      - name: "Calculate emulator properties"
-        id: emulator-helper
-        run: |
-          echo "package=system-images;android-${{ steps.emulator.outputs.api-level }};${{ steps.emulator.outputs.target }};${{ steps.emulator.outputs.arch }}" >> $GITHUB_OUTPUT
-          echo "device=${{ steps.emulator.outputs.profile }};${{ steps.emulator.outputs.sdcard }}" >> $GITHUB_OUTPUT
-
-      - name: "Load AVD cache"
-        uses: actions/cache@v3
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/test.ini
-            ~/.android/avd/test.avd/
-            ~/.android/adbkey
-            ~/.android/adbkey.pub
-          key: android-emulator-${{ steps.emulator-helper.outputs.device }}-${{ steps.emulator-helper.outputs.package }}-v1
-
-      - name: "Create AVD and generate snapshot for caching"
-        # Emulators for API 32, 33, 34 are 1.4, 1.2 and 1.7 GB respectively.
-        if: steps.avd-cache.outputs.cache-hit != 'true' && steps.emulator.outputs.target != 'google_apis'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          force-avd-creation: true # There was a cache miss, be strict now.
-          emulator-boot-timeout: 1200 # 20 minutes, take a hit once for cache.
-
-          api-level: ${{ steps.emulator.outputs.api-level }}
-          target: ${{ steps.emulator.outputs.target }}
-          arch: ${{ steps.emulator.outputs.arch }}
-          profile: ${{ steps.emulator.outputs.profile }}
-          sdcard-path-or-size: ${{ steps.emulator.outputs.sdcard }}
-          emulator-options: ${{ steps.emulator.outputs.options }} -no-snapshot-load
-          script: |
-            adb devices -l
-            # Initial setup, gets cached.
-            ./.github/workflows/svg/adb-shell-create-sdcard-android-dir.sh ${{ matrix.android-api }}
-
-      - name: "Run SVG generation on emulator."
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          force-avd-creation: false # Reuse pre-created emulator.
-          emulator-boot-timeout: 1200 # 20 minutes
-
-          api-level: ${{ steps.emulator.outputs.api-level }}
-          target: ${{ steps.emulator.outputs.target }}
-          arch: ${{ steps.emulator.outputs.arch }}
-          profile: ${{ steps.emulator.outputs.profile }}
-          sdcard-path-or-size: ${{ steps.emulator.outputs.sdcard }}
-          emulator-options: ${{ steps.emulator.outputs.options }} -no-snapshot-save
-          script: |
-            adb devices -l
-            ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
-
-      - name: "Upload 'SVG ${{ matrix.android-api }}' artifact."
-        if: success() || failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: 'SVG ${{ matrix.android-api }}'
-          path: |
-            android/data/svg/build/reports/androidTests/connected/
-            android/data/svg/build/outputs/androidTest-results/connected/
-            android/data/svg/build/outputs/connected_android_test_additional_output/
-
-      - name: "Publish 'SVG Results ${{ matrix.android-api }}' check suite."
-        if: success() || failure()
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
-        with:
-          check_name: '🔔 Test: SVG Results ${{ matrix.android-api }}'
-          comment_mode: off
-          report_individual_runs: true
-          test_changes_limit: 0
-          junit_files: android/data/svg/build/outputs/androidTest-results/connected/TEST-*.xml
 
   report:
     name: "📢 SVG Report"
