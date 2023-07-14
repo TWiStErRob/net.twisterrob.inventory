@@ -13,7 +13,7 @@ jobs:
     uses: TWiStErRob/github-workflows/.github/workflows/validate.yml@v1
 
   instrumentation:
-    name: "🎨 Generate SVGs on ${{ matrix.android-api }}"
+    name: "🎨 Generate SVGs on" # / API ${{ matrix.api }} will be appended by used workflow.
     needs: validate
     uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@cache
     with:
@@ -22,7 +22,7 @@ jobs:
       name-artifact-fine-grained: 'SVG {0}'
       name-check-results: '🔔 Test: SVG Results {0}'
       script-cache: >
-        ./.github/workflows/instrumentation/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
+        ./.github/workflows/svg/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
       script: >
         ./gradlew
         --no-daemon
