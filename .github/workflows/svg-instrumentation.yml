@@ -1,0 +1,39 @@
+name: "🧪 Generate SVG Matrix"
+
+on:
+  workflow_call
+
+jobs:
+
+  instrumentation:
+    name: "${{ matrix.api }}"
+
+    uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@cache
+    with:
+      android-api: ${{ matrix.api }}
+      java-version: 11
+      name-artifact-fine-grained: 'SVG {0}'
+      name-check-results: '🔔 Test: SVG Results {0}'
+      script: |
+        ./.github/workflows/svg/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
+        ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # The API level, see https://apilevels.com/.
+        api:
+          - 21
+          #          - 22
+          #          - 23
+          #          - 24
+          #          - 25
+          #          - 26
+          #          - 27
+          #          - 28
+          #          - 29
+          #          - 30
+          #          - 31
+          #          - 32
+          #          - 33
+          - 34
