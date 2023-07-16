@@ -16,7 +16,7 @@ jobs:
       script: |
         ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=androidx.test.filters.FlakyTest
         ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck
-    
+
     strategy:
       fail-fast: false
       matrix:
