@@ -18,13 +18,13 @@ jobs:
   build:
     name: "🔨 Build & Verify"
     needs: validate
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/CI-build.yml
 
   icons:
     name: "🎨 Icons"
-    uses: ./.github/workflows/icons.yml
+    uses: ./.github/workflows/CI-icons.yml
 
   instrumentation:
     name: "🧪 Instrumentation Tests on" # / API ${{ matrix.api }} will be appended by used workflow.
     needs: validate
-    uses: ./.github/workflows/instrumentation.yml
+    uses: ./.github/workflows/CI-instrumentation.yml
