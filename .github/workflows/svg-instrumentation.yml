@@ -1,0 +1,87 @@
+name: "🧪 Generate SVG Matrix"
+
+on:
+  workflow_call
+
+jobs:
+
+  instrumentation:
+    name: "${{ matrix.android-api }}"
+
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    permissions:
+      # actions/checkout
+      contents: read
+      # EnricoMi/publish-unit-test-result-action -> https://github.com/EnricoMi/publish-unit-test-result-action#permissions
+      checks: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # The Android SDK API level (number), see https://apilevels.com/.
+        android-api:
+          - 21
+          - 22
+          - 23
+          - 24
+          - 25
+          - 26
+          - 27
+          - 28
+          - 29
+          - 30
+          - 31
+          - 32
+          - 33
+          - 34
+
+    steps:
+
+      - name: "Set up JDK 11."
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: zulu
+
+      - name: "Checkout ${{ github.ref }} branch in ${{ github.repository }} repository."
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: "Run SVG generation on emulator."
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.android-api }}
+          # TODEL Some are not available: https://issuetracker.google.com/issues/267458959
+          target: ${{ matrix.android-api >= 32 && 'google_apis' || 'default' }}
+          arch: ${{ matrix.android-api >= 21 && 'x86_64' || 'x86' }}
+          profile: pixel
+          # Ensure that /storage/sdcard exists, without this the stock DocumentsUI will be non-functional.
+          sdcard-path-or-size: 100M
+          emulator-boot-timeout: 900 # 15 minutes
+          script: |
+            adb devices -l
+            ./.github/workflows/svg/adb-shell-create-sdcard-android-dir.sh ${{ matrix.android-api }}
+            ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
+
+      - name: "Upload 'SVG ${{ matrix.android-api }}' artifact."
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'SVG ${{ matrix.android-api }}'
+          path: |
+            android/data/svg/build/reports/androidTests/connected/
+            android/data/svg/build/outputs/androidTest-results/connected/
+            android/data/svg/build/outputs/connected_android_test_additional_output/
+
+      - name: "Publish 'SVG Results ${{ matrix.android-api }}' check suite."
+        if: success() || failure()
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        with:
+          check_name: '🔔 Test: SVG Results ${{ matrix.android-api }}'
+          comment_mode: off
+          report_individual_runs: true
+          test_changes_limit: 0
+          junit_files: android/data/svg/build/outputs/androidTest-results/connected/TEST-*.xml
