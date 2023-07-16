@@ -117,15 +117,15 @@ jobs:
         run: |
           mkdir svg-report
           cd svg-report
-          
+
           # Gather all input SVGs into a folder.
           mkdir svgs
           cp ${{github.workspace}}/android/data/src/main/res/raw/*.svg ./svgs/
           basename --suffix=.svg -- ./svgs/*.svg > ./svg_names.txt
-          
+
           # Output all the wanted API levels into a file.
           seq 21 34 > ./api_levels.txt
-          
+
           # Copy report HTML to this folder.
           cp ${{github.workspace}}/tools/svg_render/svgs.html ./index.html
 
@@ -137,7 +137,7 @@ jobs:
           # Glob resolution is done by shell, so can't use quotes, have to escape spaces and parentheses.
           cp ${{github.workspace}}/downloads/SVG\ ??/outputs/connected_android_test_additional_output/debugAndroidTest/connected/test\(AVD\)\ -\ */svg_??.zip ./
           # At this point we should have svg_??.zip files.
-          
+
           # Unzip all ZIPs into separate folders.
           for svg_zip in svg_??.zip; do unzip "${svg_zip}" -d "${svg_zip%.zip}"; done
           # At this point we should have svg_??/*.png files.
