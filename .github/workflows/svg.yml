@@ -1,4 +1,5 @@
 name: SVG
+
 on:
   workflow_dispatch:
   push:
@@ -12,7 +13,7 @@ jobs:
     uses: TWiStErRob/github-workflows/.github/workflows/validate.yml@v1
 
   instrumentation:
-    name: "🎨 Generate SVGs on"
+    name: "🎨 Generate SVGs on" # / API ${{ matrix.api }} will be appended by used workflow.
     needs: validate
     uses: ./.github/workflows/svg-instrumentation.yml
 
