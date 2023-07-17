@@ -12,7 +12,7 @@ if [ "${API_LEVEL}" -lt 29 ]; then
     # Satisfy AGP's findAdditionalTestOutputDirectoryOnDevice -> queryAdditionalTestOutputLocation
     # so API 21-28 can generate additional output.
     # Folder might exist already (API 26, 27), so only create if it doesn't exist. /sdcard must exist.
-    adb shell "test ! -d /sdcard/Android && mkdir /sdcard/Android"
+    adb shell "test -d /sdcard/Android || mkdir /sdcard/Android"
     # Tell the Android system's MediaProvider that we added a directory.
     # This will ensure that `content query --uri content://media/external/file` finds the new folder.
     # Note: API 21-22 does not support readlink -e.
