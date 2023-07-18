@@ -135,7 +135,7 @@ jobs:
         run: |
           # Get all ZIPs into a folder.
           # Glob resolution is done by shell, so can't use quotes, have to escape spaces and parentheses.
-          cp ${{github.workspace}}/downloads/SVG\ ??/outputs/connected_android_test_additional_output/debugAndroidTest/connected/test\(AVD\)\ -\ */svg_??.zip ./
+          cp ${{github.workspace}}/downloads/SVG\ ??/android/data/svg/build/outputs/connected_android_test_additional_output/debugAndroidTest/connected/test\(AVD\)\ -\ */svg_??.zip ./
           # At this point we should have svg_??.zip files.
 
           # Unzip all ZIPs into separate folders.
@@ -144,7 +144,7 @@ jobs:
 
       - name: "Upload 'SVG Report' artifact."
         if: success() || failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: 'SVG Report'
           path: |
