@@ -29,3 +29,6 @@ dependencies {
 	testImplementation(libs.test.fishbowl)
 	testImplementation "net.twisterrob.lib:twister-lib-test"
 }
+
+// See NotificationProgressService, XMLExporter, StrictXmlErrorListener, BackupService, BackupZipStreamImporter.
+android.buildFeatures.buildConfig = true

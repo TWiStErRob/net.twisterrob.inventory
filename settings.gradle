@@ -7,11 +7,21 @@ pluginManagement {
 	repositories {
 		google()
 		mavenCentral()
+		exclusiveContent {
+			forRepository {
+				gradlePluginPortal()
+			}
+			filter {
+				includeModule("com.gradle.enterprise", "com.gradle.enterprise.gradle.plugin")
+				includeModule("com.gradle", "gradle-enterprise-gradle-plugin")
+			}
+		}
 	}
 }
 
 plugins {
 	id("net.twisterrob.gradle.plugin.settings") version "0.15.1"
+	id("com.gradle.enterprise") version("3.13.4")
 }
 
 dependencyResolutionManagement {
@@ -54,6 +64,13 @@ void includeWithContract(String projectPath) {
 
 includeBuild("libs") { build ->
 	apply from: new File(build.projectDir, "gradle/settings.substitutions.gradle"), to: build
+}
+
+gradleEnterprise {
+	buildScan {
+		termsOfServiceUrl = "https://gradle.com/terms-of-service"
+		termsOfServiceAgree = "yes"
+	}
 }
 
 String gradleVersion = GradleVersion.current().version
