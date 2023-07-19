@@ -110,9 +110,11 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 
 	private void restoreOnRotation() {
 		if (header == null) {
+			// Try to restore UI-less header first.
 			header = (BaseFragment<?>)getChildFragmentManager().findFragmentByTag("header");
 		}
 		if (header == null) {
+			// If there's no UI-less header, try restoring the UI one.
 			header = (BaseFragment<?>)getChildFragmentManager().findFragmentById(R.id.header);
 		}
 		// FIXME save fragment UI state from savedInstanceState into a field and use that in the adapter

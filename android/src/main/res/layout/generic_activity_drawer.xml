@@ -7,7 +7,7 @@
 	android:layout_height="match_parent"
 	tools:context=".activity.BaseActivity"
 	>
-	<FrameLayout
+	<androidx.fragment.app.FragmentContainerView
 		android:id="@id/activityRoot"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
