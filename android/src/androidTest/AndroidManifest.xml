@@ -1,6 +1,6 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:sharedUserId="net.twisterrob.inventory">
+	>
 
 	<!-- Normally added by Gradle: <instrumentation android:name="....AndroidJUnitRunner" ... />
 	     @see build.gradle: android.defaultConfig.testInstrumentationRunner
