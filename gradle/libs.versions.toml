@@ -1,9 +1,9 @@
 [versions]
 #java = "1.8"
 #
-agp = "7.4.2"
+agp = "8.0.2"
 # 23.0.0 + agp
-agp-tools = "30.4.2"
+agp-tools = "31.0.2"
 twisterrob = "0.16" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 detekt = "1.22.0"
 kotlin = "1.8.22"
