@@ -5,7 +5,7 @@ This is an app instead of a test project, because Firebase Testlab requires and 
 
 ## Local & Manual CI
 ```
-gradlew :android:data:svg:connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true
+gradlew :android:data:svg:connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
 ```
 will output on device to:
 ```
@@ -22,7 +22,6 @@ Only work above 29
 gradlew
     :android:data:svg:gmdGroupDebugAndroidTest
     -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
-    -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true
     --continue
 ```
 output is in:
