@@ -14,6 +14,20 @@ jobs:
       java-version: 11
       timeout-minutes: 60
       script: |
+        # Used by net.twisterrob.android.test.SystemAnimations
+        #adb shell pm grant ${packageName} android.permission.SET_ANIMATION_SCALE
+        # to set these:
+        adb shell settings put global window_animation_scale 0
+        adb shell settings put global transition_animation_scale 0
+        adb shell settings put global animator_duration_scale 0
+        
+        # Used by net.twisterrob.android.test.DeviceUnlocker
+        #adb shell pm grant ${packageName} android.permission.DISABLE_KEYGUARD
+        
+        # TODO move to TestRule?
+        #adb shell pm grant ${packageName} android.permission.WRITE_SECURE_SETTINGS
+        adb shell settings put secure long_press_timeout 1500
+        
         ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=androidx.test.filters.FlakyTest
         ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck
 

@@ -1,7 +1,6 @@
 plugins {
 	id("net.twisterrob.inventory.android.app")
 	id("net.twisterrob.inventory.mapping")
-	id("net.twisterrob.inventory.androidTest")
 	id("net.twisterrob.inventory.upgradeTest")
 }
 
