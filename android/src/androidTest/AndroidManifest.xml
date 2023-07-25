@@ -16,9 +16,6 @@
 		           android:value="net.twisterrob.inventory.android.test.suites" />
 	</instrumentation>
 
-	<!-- Used by net.twisterrob.inventory.android.InventoryJUnitRunner -->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 	<!-- Used by net.twisterrob.android.test.matchers.HasInstalledPackage -->
 	<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
