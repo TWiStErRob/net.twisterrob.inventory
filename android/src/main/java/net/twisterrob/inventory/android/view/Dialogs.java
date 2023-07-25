@@ -55,8 +55,12 @@ public class Dialogs {
 		final Action undo = state.action.buildUndo();
 		if (undo != null) {
 			CharSequence message = state.action.getSuccessMessage(activity.getResources());
+			View rootView = activity.findViewById(android.R.id.content);
+			if (rootView == null) {
+				rootView = activity.getWindow().getDecorView().getRootView();
+			}
 			Snackbar
-					.make(activity.getWindow().getDecorView().getRootView(), message, 5000)
+					.make(rootView, message, 5000)
 					.setAction(R.string.action_undo, new View.OnClickListener() {
 						@Override public void onClick(View v) {
 							new NoQuestions(activity).execute(new ActionState(undo));
