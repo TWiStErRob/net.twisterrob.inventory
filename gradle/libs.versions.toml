@@ -4,7 +4,7 @@
 agp = "7.4.2"
 # 23.0.0 + agp
 agp-tools = "30.4.2"
-twisterrob = "0.15.1" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
+twisterrob = "0.16" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 detekt = "1.22.0"
 kotlin = "1.8.22"
 kotlin-coroutines = "1.7.1"
