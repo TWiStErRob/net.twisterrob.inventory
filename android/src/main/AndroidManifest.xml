@@ -14,9 +14,10 @@
 		android:manageSpaceActivity="net.twisterrob.inventory.android.space.ManageSpaceActivity"
 		android:supportsRtl="true"
 		android:theme="@style/Theme.AppTheme"
-		tools:ignore="AllowBackup,UnusedAttribute">
-		<!-- lint:AllowBackup not using fullBackupContent, default "Auto Backup" is fine. -->
-		<!-- lint:UnusedAttribute Backup screen and getPhoneHome accesses the Download folder. (#179) -->
+		tools:ignore="AllowBackup"
+		>
+		<!-- lint:AllowBackup not using fullBackupContent, default "Auto Backup" is fine.
+		     TODO review in https://github.com/TWiStErRob/net.twisterrob.inventory/issues/301 -->
 
 		<meta-data
 			android:name="net.twisterrob.inventory.android.Constants$Pic$GlideSetup"
