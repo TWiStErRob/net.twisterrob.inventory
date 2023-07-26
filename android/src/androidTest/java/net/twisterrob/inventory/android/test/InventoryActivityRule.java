@@ -25,7 +25,6 @@ import net.twisterrob.inventory.android.content.Database;
 
 public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(InventoryActivityRule.class);
-	private final GlideIdlingResource glideIdler = new GlideIdlingResource();
 
 	public InventoryActivityRule(Class<T> activityClass) {
 		super(activityClass);
@@ -55,6 +54,8 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		} else {
 			LOG.warn("DatabaseServiceIdlingResource is not supported on API {}, database is not synchornized in tests.", Build.VERSION.SDK_INT);
 		}
+		base = new GlideIdlingResourceRule().apply(base, description);
+		base = new InventoryGlideResetRule().apply(base, description);
 		return base;
 	}
 
@@ -68,22 +69,13 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		super.beforeActivityLaunched();
 	}
 
-	@Override protected void afterActivityLaunched() {
-		// Register Glide IdlingResource after the activity has launched to prevent leaking it
-		// in case the activity launch failed. CONSIDER moving this to a Statement try-finally
-		IdlingRegistry.getInstance().register(glideIdler);
-		super.afterActivityLaunched();
-	}
-
 	@Override protected void afterActivityFinished() {
 		super.afterActivityFinished();
-		IdlingRegistry.getInstance().unregister(glideIdler);
 		// CONSIDER is it really necessary?
 		//reset();
 	}
 
 	public final void reset() {
-		resetGlide();
 		resetDB();
 		resetPreferences();
 		resetFiles();
@@ -135,12 +127,5 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		if (dbFile.exists() && !dbFile.delete()) {
 			throw new IllegalStateException("Cannot delete Database");
 		}
-	}
-
-	protected void resetGlide() {
-		Context context = ApplicationProvider.getApplicationContext();
-		GlideResetter.resetGlide(context);
-		// recreate internal Glide wrapper
-		Constants.Pic.init(context, BuildConfig.VERSION_NAME);
 	}
 }
