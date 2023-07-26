@@ -44,15 +44,15 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_property_add:
-				listController.createNew();
-				return true;
-			case R.id.action_room_list:
-				startActivity(MainActivity.list(requireContext(), MainActivity.PAGE_ROOMS));
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_property_add) {
+			listController.createNew();
+			return true;
+		} else if (id == R.id.action_room_list) {
+			startActivity(MainActivity.list(requireContext(), MainActivity.PAGE_ROOMS));
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -87,12 +87,13 @@ public class PropertyListFragment extends BaseGalleryFragment<PropertiesEvents> 
 		}
 
 		@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			switch (item.getItemId()) {
-				case R.id.action_property_delete:
-					delete(getSelectedIDs());
-					return true;
+			int id = item.getItemId();
+			if (id == R.id.action_property_delete) {
+				delete(getSelectedIDs());
+				return true;
+			} else {
+				return super.onActionItemClicked(mode, item);
 			}
-			return super.onActionItemClicked(mode, item);
 		}
 
 		@Override public boolean onActivityResult(int requestCode, int resultCode, Intent data) {

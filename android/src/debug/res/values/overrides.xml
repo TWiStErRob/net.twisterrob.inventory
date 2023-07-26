@@ -2,5 +2,4 @@
 <resources>
 	<string name="app_name">!Magic Home Inventory</string>
 	<string name="home_title">!Inventory</string>
-	<color name="transparent">#66000000</color>
 </resources>

@@ -137,41 +137,39 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_category_open: {
-				final Context context = requireContext();
-				AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
-					private File file;
-					@Override protected @Nullable File doInBackground(@Nullable Void ignore)
-							throws IOException {
-						file = Paths.getShareFile(context, "html");
-						String html = new CategoryHelpBuilder(context).buildHTML();
-						IOTools.writeAll(new FileOutputStream(file), html);
-						return file;
-					}
-					@Override protected void onResult(@Nullable File file, Void ignore) {
-						startActivity(new Intent(Intent.ACTION_VIEW)
-								.setDataAndType(Paths.getShareUri(context, file), "text/html")
-								.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-						);
-					}
-					@Override protected void onError(@NonNull Exception ex, Void ignore) {
-						LOG.warn("Cannot save to {}", file, ex);
-					}
-				});
-				return true;
-			}
-			case R.id.action_category_save: {
-				String name = String.format(Locale.ROOT, "%s - %s.html",
-						getString(R.string.app_name), getString(R.string.category_guide));
-				saveAs.launch(name);
-				return true;
-			}
-			case R.id.action_category_feedback:
-				MainActivity.startImproveCategories(requireContext(), cache, null);
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_category_open) {
+			final Context context = requireContext();
+			AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Void, File>() {
+				private File file;
+				@Override protected @Nullable File doInBackground(@Nullable Void ignore)
+						throws IOException {
+					file = Paths.getShareFile(context, "html");
+					String html = new CategoryHelpBuilder(context).buildHTML();
+					IOTools.writeAll(new FileOutputStream(file), html);
+					return file;
+				}
+				@Override protected void onResult(@Nullable File file, Void ignore) {
+					startActivity(new Intent(Intent.ACTION_VIEW)
+							.setDataAndType(Paths.getShareUri(context, file), "text/html")
+							.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+					);
+				}
+				@Override protected void onError(@NonNull Exception ex, Void ignore) {
+					LOG.warn("Cannot save to {}", file, ex);
+				}
+			});
+			return true;
+		} else if (id == R.id.action_category_save) {
+			String name = String.format(Locale.ROOT, "%s - %s.html",
+					getString(R.string.app_name), getString(R.string.category_guide));
+			saveAs.launch(name);
+			return true;
+		} else if (id == R.id.action_category_feedback) {
+			MainActivity.startImproveCategories(requireContext(), cache, null);
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

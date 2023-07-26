@@ -72,18 +72,18 @@ public class PropertyViewFragment extends BaseViewFragment<PropertyDTO, Property
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_property_edit:
-				startActivity(PropertyEditActivity.edit(getArgPropertyID()));
-				return true;
-			case R.id.action_property_delete:
-				delete(getArgPropertyID());
-				return true;
-			case R.id.action_property_sunburst:
-				startActivity(SunburstActivity.displayProperty(getArgPropertyID()));
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_property_edit) {
+			startActivity(PropertyEditActivity.edit(getArgPropertyID()));
+			return true;
+		} else if (id == R.id.action_property_delete) {
+			delete(getArgPropertyID());
+			return true;
+		} else if (id == R.id.action_property_sunburst) {
+			startActivity(SunburstActivity.displayProperty(getArgPropertyID()));
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

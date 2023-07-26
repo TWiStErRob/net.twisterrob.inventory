@@ -84,40 +84,40 @@ public class ItemViewFragment extends BaseViewFragment<ItemDTO, ItemEvents> {
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_item_edit:
-				startActivity(ItemEditActivity.edit(getArgItemID()));
-				return true;
-			case R.id.action_item_move:
-				Intent intent = MoveTargetActivity.pick()
-				                                  .startFromItem(parentID)
-				                                  .allowRooms()
-				                                  .allowItems()
-				                                  //.forbidItems(parentID) // cannot forbid, siblings would be disabled
-				                                  .forbidItems(getArgItemID())
-				                                  .build();
-				startActivityForResult(intent, MOVE_REQUEST);
-				return true;
-			case R.id.action_item_categorize:
-				View view = getView();
+		int id = item.getItemId();
+		if (id == R.id.action_item_edit) {
+			startActivity(ItemEditActivity.edit(getArgItemID()));
+			return true;
+		} else if (id == R.id.action_item_move) {
+			Intent intent = MoveTargetActivity.pick()
+			                                  .startFromItem(parentID)
+			                                  .allowRooms()
+			                                  .allowItems()
+			                                  //.forbidItems(parentID) // cannot forbid, siblings would be disabled
+			                                  .forbidItems(getArgItemID())
+			                                  .build();
+			startActivityForResult(intent, MOVE_REQUEST);
+			return true;
+		} else if (id == R.id.action_item_categorize) {
+			View view = getView();
+			if (view != null) {
+				view = view.findViewById(R.id.type);
 				if (view != null) {
-					view = view.findViewById(R.id.type);
-					if (view != null) {
-						view.performClick();
-					}
+					view.performClick();
 				}
-				return true;
-			case R.id.action_item_delete:
-				delete(getArgItemID());
-				return true;
-			case R.id.action_list_manage:
-				startActivity(ListsActivity.manage(getArgItemID()));
-				return true;
-			case R.id.action_item_sunburst:
-				startActivity(SunburstActivity.displayItem(getArgItemID()));
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+			}
+			return true;
+		} else if (id == R.id.action_item_delete) {
+			delete(getArgItemID());
+			return true;
+		} else if (id == R.id.action_list_manage) {
+			startActivity(ListsActivity.manage(getArgItemID()));
+			return true;
+		} else if (id == R.id.action_item_sunburst) {
+			startActivity(SunburstActivity.displayItem(getArgItemID()));
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

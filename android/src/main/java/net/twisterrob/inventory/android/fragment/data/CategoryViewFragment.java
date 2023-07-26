@@ -84,12 +84,12 @@ public class CategoryViewFragment extends BaseViewFragment<CategoryDTO, Category
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_category_viewAllItems:
-				startActivity(CategoryActivity.showFlattened(getArgCategoryID()));
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_category_viewAllItems) {
+			startActivity(CategoryActivity.showFlattened(getArgCategoryID()));
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

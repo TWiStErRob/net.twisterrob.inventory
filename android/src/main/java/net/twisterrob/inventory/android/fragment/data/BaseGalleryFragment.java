@@ -270,13 +270,12 @@ public abstract class BaseGalleryFragment<T> extends BaseFragment<T> implements 
 		@Override protected ViewHolder onCreateNonHeaderViewHolder(ViewGroup parent, int viewType) {
 			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 			View view = inflater.inflate(viewType, parent, false);
-			switch (viewType) {
-				case R.layout.item_gallery:
-					return new GalleryViewHolder(view, listener);
-				case R.layout.item_gallery_group:
-					return new GalleryGroupViewHolder(view, listener);
-				default:
-					throw new IllegalArgumentException("Unsupported viewType: " + viewType);
+			if (viewType == R.layout.item_gallery) {
+				return new GalleryViewHolder(view, listener);
+			} else if (viewType == R.layout.item_gallery_group) {
+				return new GalleryGroupViewHolder(view, listener);
+			} else {
+				throw new IllegalArgumentException("Unsupported viewType: " + viewType);
 			}
 		}
 

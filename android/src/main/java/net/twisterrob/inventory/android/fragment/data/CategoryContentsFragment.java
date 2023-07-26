@@ -55,20 +55,20 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_category_feedback:
-				MainActivity.startImproveCategories(requireContext(), cache, getArgCategoryID());
-				return true;
-			case R.id.action_category_help:
-				Intent intent = MainActivity.list(requireContext(), MainActivity.PAGE_CATEGORY_HELP);
-				Long category = getArgCategoryID();
-				if (category != null) {
-					intent.putExtras(Intents.bundleFromCategory(category));
-				}
-				startActivity(intent);
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_category_feedback) {
+			MainActivity.startImproveCategories(requireContext(), cache, getArgCategoryID());
+			return true;
+		} else if (id == R.id.action_category_help) {
+			Intent intent = MainActivity.list(requireContext(), MainActivity.PAGE_CATEGORY_HELP);
+			Long category = getArgCategoryID();
+			if (category != null) {
+				intent.putExtras(Intents.bundleFromCategory(category));
+			}
+			startActivity(intent);
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -277,13 +277,12 @@ public class CategoryContentsFragment extends BaseGalleryFragment<CategoriesEven
 		@Override protected ViewHolder onCreateNonHeaderViewHolder(ViewGroup parent, int viewType) {
 			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 			View view = inflater.inflate(viewType, parent, false);
-			switch (viewType) {
-				case R.layout.item_category:
-					return new CategoryViewHolder(view, visuals, new CategoryItemEventsForwarder());
-				case R.layout.item_gallery:
-					return new GalleryViewHolder(view, CategoryContentsFragment.this);
-				default:
-					throw new IllegalArgumentException("Invalid view type: " + viewType);
+			if (viewType == R.layout.item_category) {
+				return new CategoryViewHolder(view, visuals, new CategoryItemEventsForwarder());
+			} else if (viewType == R.layout.item_gallery) {
+				return new GalleryViewHolder(view, CategoryContentsFragment.this);
+			} else {
+				throw new IllegalArgumentException("Invalid view type: " + viewType);
 			}
 		}
 		@Override protected void onBindNonHeaderViewHolder(ViewHolder holder, Cursor cursor) {
