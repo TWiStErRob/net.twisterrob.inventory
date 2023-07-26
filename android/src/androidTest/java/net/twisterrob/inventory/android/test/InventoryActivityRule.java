@@ -52,7 +52,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 			// The activity startup and hence beforeActivityLaunched() should be blocked until this is ready.
 			base = new IdlingResourceRule(new DatabaseServiceIdlingResource()).apply(base, description);
 		} else {
-			LOG.warn("DatabaseServiceIdlingResource is not supported on API {}, database is not synchornized in tests.", Build.VERSION.SDK_INT);
+			LOG.warn("DatabaseServiceIdlingResource is not supported on API {}, database is not synchronized in tests.", Build.VERSION.SDK_INT);
 		}
 		base = new GlideIdlingResourceRule().apply(base, description);
 		base = new InventoryGlideResetRule().apply(base, description);
