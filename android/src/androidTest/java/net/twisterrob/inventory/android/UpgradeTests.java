@@ -48,6 +48,7 @@ import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
 /**
+ * Warning: this class might be broken since upgrade to UTP / removal of sharedUserId.
  * <p>
  * <b>These tests need to be excluded from normal {@code gradle connectedCheck} runs.</b>
  * For reason this they require to be run with
@@ -92,11 +93,14 @@ public class UpgradeTests {
 	private File downloads;
 	private File db;
 
+	@BeforeClass public static void assumeUpgrade() {
+		assumeThat("Only run when instrumentation arguments contain \"" + LAUNCH_KEY + "\"",
+				InstrumentationRegistry.getArguments(), hasKey(LAUNCH_KEY));
+	}
+
 	/** @see net.twisterrob.inventory.android.test.activity.CompatibleLauncher */
 	@SuppressWarnings("deprecation")
 	@Before public void launchMain() {
-		assumeThat("Only run when instrumentation arguments contain \"" + LAUNCH_KEY + "\"",
-				InstrumentationRegistry.getArguments(), hasKey(LAUNCH_KEY));
 		downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		db = getApplicationContext().getDatabasePath(Database.NAME);
 		assumeThat(downloads, anExistingDirectory());

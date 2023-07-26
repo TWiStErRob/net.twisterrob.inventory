@@ -219,6 +219,7 @@ public class BackupActivityActor extends ActivityActor {
 		}
 
 		public void assertDisplayed() throws UiObjectNotFoundException, NameNotFoundException {
+			assertDocumentsUi();
 			// Open the drawer for a moment to check its label,
 			// because otherwise it's unclear if it's save or load.
 			if (!exists(DocumentsUiAutomator.drawerToolbar())) {
@@ -231,8 +232,17 @@ public class BackupActivityActor extends ActivityActor {
 		public void assertNotDisplayed() {
 			assertThat(getCurrentAppPackageName(), not(DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI));
 		}
+		private static void assertAppDisplayed() {
+			assertThat(getCurrentAppPackageName(), is(getApplicationContext().getPackageName()));
+		}
+		private static void assertDocumentsUi() {
+			assertThat(getCurrentAppPackageName(), is(DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI));
+		}
 		public void cancel() {
+			assertDocumentsUi();
 			pressBackExternalUnsafe();
+			assertNotDisplayed();
+			assertAppDisplayed();
 		}
 		public void selectInDrawer(@NonNull String root) throws UiObjectNotFoundException, NameNotFoundException {
 			shortClickOnDescriptionLabel(DocumentsUiAutomator.showRoots());

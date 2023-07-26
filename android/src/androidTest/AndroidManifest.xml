@@ -1,6 +1,6 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:sharedUserId="net.twisterrob.inventory">
+	>
 
 	<!-- Normally added by Gradle: <instrumentation android:name="....AndroidJUnitRunner" ... />
 	     @see build.gradle: android.defaultConfig.testInstrumentationRunner
@@ -15,9 +15,6 @@
 		<meta-data android:name="defaultExcludedPackages"
 		           android:value="net.twisterrob.inventory.android.test.suites" />
 	</instrumentation>
-
-	<!-- Used by net.twisterrob.inventory.android.InventoryJUnitRunner -->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 	<!-- Used by net.twisterrob.android.test.matchers.HasInstalledPackage -->
 	<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />

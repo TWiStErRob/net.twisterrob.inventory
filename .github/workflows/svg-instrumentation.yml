@@ -16,7 +16,7 @@ jobs:
       name-check-results: '🔔 Test: SVG Results {0}'
       script: |
         ./.github/workflows/svg/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
-        ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.experimental.androidTest.useUnifiedTestPlatform=true -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
+        ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
 
     strategy:
       fail-fast: false

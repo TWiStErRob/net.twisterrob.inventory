@@ -7,7 +7,6 @@ import org.junit.runners.model.Statement;
 import org.slf4j.*;
 
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Context;
 import android.os.Build;
 
@@ -15,10 +14,7 @@ import androidx.annotation.CallSuper;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.platform.io.OutputDirCalculator;
 
-import net.twisterrob.android.test.espresso.ScreenshotFailure;
 import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
@@ -29,7 +25,6 @@ import net.twisterrob.inventory.android.content.Database;
 
 public class InventoryActivityRule<T extends Activity> extends SensibleActivityTestRule<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(InventoryActivityRule.class);
-	private final GlideIdlingResource glideIdler = new GlideIdlingResource();
 
 	public InventoryActivityRule(Class<T> activityClass) {
 		super(activityClass);
@@ -49,10 +44,6 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 
 	// Note: with the base = foo.apply(base) pattern, these will be executed in reverse when evaluate() is called.
 	@Override public Statement apply(Statement base, Description description) {
-		// TODEL once AGP UTP is used.
-		File folder = new OutputDirCalculator().getOutputDir();
-		Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-		base = new ScreenshotFailure(instrumentation, folder).apply(base, description);
 		// Only idle on drawer when there's an activity running inside ActivityTestRule.
 		base = DrawerIdlingResource.rule().apply(base, description);
 		base = super.apply(base, description);
@@ -61,8 +52,10 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 			// The activity startup and hence beforeActivityLaunched() should be blocked until this is ready.
 			base = new IdlingResourceRule(new DatabaseServiceIdlingResource()).apply(base, description);
 		} else {
-			LOG.warn("DatabaseServiceIdlingResource is not supported on API {}, database is not synchornized in tests.", Build.VERSION.SDK_INT);
+			LOG.warn("DatabaseServiceIdlingResource is not supported on API {}, database is not synchronized in tests.", Build.VERSION.SDK_INT);
 		}
+		base = new GlideIdlingResourceRule().apply(base, description);
+		base = new InventoryGlideResetRule().apply(base, description);
 		return base;
 	}
 
@@ -76,22 +69,13 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		super.beforeActivityLaunched();
 	}
 
-	@Override protected void afterActivityLaunched() {
-		// Register Glide IdlingResource after the activity has launched to prevent leaking it
-		// in case the activity launch failed. CONSIDER moving this to a Statement try-finally
-		IdlingRegistry.getInstance().register(glideIdler);
-		super.afterActivityLaunched();
-	}
-
 	@Override protected void afterActivityFinished() {
 		super.afterActivityFinished();
-		IdlingRegistry.getInstance().unregister(glideIdler);
 		// CONSIDER is it really necessary?
 		//reset();
 	}
 
 	public final void reset() {
-		resetGlide();
 		resetDB();
 		resetPreferences();
 		resetFiles();
@@ -143,12 +127,5 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		if (dbFile.exists() && !dbFile.delete()) {
 			throw new IllegalStateException("Cannot delete Database");
 		}
-	}
-
-	protected void resetGlide() {
-		Context context = ApplicationProvider.getApplicationContext();
-		GlideResetter.resetGlide(context);
-		// recreate internal Glide wrapper
-		Constants.Pic.init(context, BuildConfig.VERSION_NAME);
 	}
 }
