@@ -325,12 +325,12 @@ public class MainActivity extends DrawerActivity
 		if (item.getGroupId() == R.id.debug && onDebugOptionsItemSelected(item)) {
 			return true;
 		}
-		switch (item.getItemId()) {
-			case R.id.action_demo_inventory:
-				new PopulateSampleInventoryTask().execute();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_demo_inventory) {
+			new PopulateSampleInventoryTask().execute();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -343,30 +343,32 @@ public class MainActivity extends DrawerActivity
 	@SuppressLint("WrongThread")
 	@DebugHelper
 	public boolean onDebugOptionsItemSelected(MenuItem item) {
-		if (BuildConfig.DEBUG) {
-			switch (item.getItemId()) {
-				case R.id.debug_showImage:
-					startActivity(ImageActivity.show(InventoryContract.Item.imageUri(1L)));
-					return true;
-				case R.id.debug_showCategory:
-					startActivity(CategoryActivity.show(7000L));
-					return true;
-				case R.id.debug_showItem:
-					startActivity(ItemViewActivity.show(10010L));
-					return true;
-				case R.id.debug_capture:
-					File devFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "dev.jpg");
-					Uri target = Uri.fromFile(devFile);
-					startActivityForResult(CaptureImage.saveTo(this, devFile, target, 8192), REQUEST_CODE_IMAGE);
-					return true;
-				case R.id.debug_testdb:
-					resetToTestDatabase();
-					return true;
-				default:
-					return false;
-			}
+		if (!BuildConfig.DEBUG) {
+			return false;
 		}
-		return false;
+		int id = item.getItemId();
+		if (id == R.id.debug_showImage) {
+			startActivity(ImageActivity.show(InventoryContract.Item.imageUri(1L)));
+			return true;
+		} else if (id == R.id.debug_showCategory) {
+			startActivity(CategoryActivity.show(7000L));
+			return true;
+		} else if (id == R.id.debug_showItem) {
+			startActivity(ItemViewActivity.show(10010L));
+			return true;
+		} else if (id == R.id.debug_capture) {
+			File devFile =
+					new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "dev.jpg");
+			Uri target = Uri.fromFile(devFile);
+			startActivityForResult(CaptureImage.saveTo(this, devFile, target, 8192),
+					REQUEST_CODE_IMAGE);
+			return true;
+		} else if (id == R.id.debug_testdb) {
+			resetToTestDatabase();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@SuppressWarnings("deprecation")

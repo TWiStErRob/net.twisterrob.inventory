@@ -56,17 +56,15 @@ public class ListViewFragment extends BaseSingleLoaderFragment<ListEvents> {
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_list_edit: {
-				rename(getArgListID());
-				return true;
-			}
-			case R.id.action_list_delete: {
-				delete(getArgListID());
-				return true;
-			}
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_list_edit) {
+			rename(getArgListID());
+			return true;
+		} else if (id == R.id.action_list_delete) {
+			delete(getArgListID());
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

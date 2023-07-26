@@ -170,52 +170,49 @@ public class SunburstFragment extends BaseFragment<SunBurstEvents> implements Ba
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_sunburst_open: {
-				Node root = sunburst.getRoot();
-				Intent intent;
-				switch (root.type) {
-					case Property:
-						intent = PropertyViewActivity.show(root.id);
-						break;
-					case Room:
-						intent = RoomViewActivity.show(root.id);
-						break;
-					case Item:
-						intent = ItemViewActivity.show(root.id);
-						break;
-					default:
-						throw new IllegalStateException("Should have been disabled");
-				}
-				startActivity(intent);
-				return true;
+		int id = item.getItemId();
+		if (id == R.id.action_sunburst_open) {
+			Node root = sunburst.getRoot();
+			Intent intent;
+			switch (root.type) {
+				case Property:
+					intent = PropertyViewActivity.show(root.id);
+					break;
+				case Room:
+					intent = RoomViewActivity.show(root.id);
+					break;
+				case Item:
+					intent = ItemViewActivity.show(root.id);
+					break;
+				default:
+					throw new IllegalStateException("Should have been disabled");
 			}
-			case R.id.action_sunburst_ignore: {
-				Node node = sunburst.getRoot();
-				walker.ignore.add(node);
-				int count = node.getCount();
+			startActivity(intent);
+			return true;
+		} else if (id == R.id.action_sunburst_ignore) {
+			Node node = sunburst.getRoot();
+			walker.ignore.add(node);
+			int count = node.getCount();
+			while (node.parent != null) {
+				node.parent.filteredCount += count;
+				node = node.parent;
+			}
+			if (hasPreviousRoot()) {
+				setPreviousRoot();
+			}
+			return true;
+		} else if (id == R.id.action_sunburst_ignore_reset) {
+			for (Node node : walker.ignore) {
 				while (node.parent != null) {
-					node.parent.filteredCount += count;
+					node.parent.filteredCount = 0;
 					node = node.parent;
 				}
-				if (hasPreviousRoot()) {
-					setPreviousRoot();
-				}
-				return true;
 			}
-			case R.id.action_sunburst_ignore_reset: {
-				for (Node node : walker.ignore) {
-					while (node.parent != null) {
-						node.parent.filteredCount = 0;
-						node = node.parent;
-					}
-				}
-				walker.ignore.clear();
-				refreshRoot();
-				return true;
-			}
-			default:
-				return super.onOptionsItemSelected(item);
+			walker.ignore.clear();
+			refreshRoot();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

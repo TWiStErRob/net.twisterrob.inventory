@@ -80,27 +80,27 @@ public class RoomViewFragment extends BaseViewFragment<RoomDTO, RoomEvents> {
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_room_edit:
-				startActivity(RoomEditActivity.edit(getArgRoomID()));
-				return true;
-			case R.id.action_room_delete:
-				delete(getArgRoomID());
-				return true;
-			case R.id.action_room_move:
-				Intent intent = MoveTargetActivity
-						.pick()
-						.startFromPropertyList()
-						.allowProperties()
-						.forbidProperties(propertyID)
-						.build();
-				startActivityForResult(intent, MOVE_REQUEST);
-				return true;
-			case R.id.action_room_sunburst:
-				startActivity(SunburstActivity.displayRoom(getArgRoomID()));
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_room_edit) {
+			startActivity(RoomEditActivity.edit(getArgRoomID()));
+			return true;
+		} else if (id == R.id.action_room_delete) {
+			delete(getArgRoomID());
+			return true;
+		} else if (id == R.id.action_room_move) {
+			Intent intent = MoveTargetActivity
+					.pick()
+					.startFromPropertyList()
+					.allowProperties()
+					.forbidProperties(propertyID)
+					.build();
+			startActivityForResult(intent, MOVE_REQUEST);
+			return true;
+		} else if (id == R.id.action_room_sunburst) {
+			startActivity(SunburstActivity.displayRoom(getArgRoomID()));
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

@@ -81,13 +81,12 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 
 	protected abstract VH onCreateNonHeaderViewHolder(ViewGroup parent, int viewType);
 	@Override public final ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		switch (viewType) {
-			case R.layout.item_header_placeholder:
-				LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-				View view = inflater.inflate(viewType, parent, false);
-				return new HeaderViewHolder(view, header);
-			default:
-				return onCreateNonHeaderViewHolder(parent, viewType);
+		if (viewType == R.layout.item_header_placeholder) {
+			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+			View view = inflater.inflate(viewType, parent, false);
+			return new HeaderViewHolder(view, header);
+		} else {
+			return onCreateNonHeaderViewHolder(parent, viewType);
 		}
 	}
 
