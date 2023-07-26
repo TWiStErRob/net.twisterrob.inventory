@@ -65,9 +65,6 @@
 		<!-- TODEL review, hopefully anything used by layouts which are not available doesn't affect the layout just the looks. -->
 		<ignore path="**/res/layout*/*.xml" />
 	</issue>
-	<issue id="NonConstantResourceId" severity="ignore">
-		<!-- Ignore for now: https://github.com/TWiStErRob/net.twisterrob.inventory/issues/183 -->
-	</issue>
 	<issue id="NewerVersionAvailable">
 		<!-- Glide will be updated, but it's more complex. https://github.com/TWiStErRob/net.twisterrob.inventory/issues/180 -->
 		<ignore regexp="^A newer version of com.github.bumptech.glide:glide" />
