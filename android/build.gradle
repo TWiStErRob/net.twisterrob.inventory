@@ -86,6 +86,9 @@ android {
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
 		testInstrumentationRunner = "net.twisterrob.inventory.android.InventoryJUnitRunner"
 	}
+	buildFeatures {
+		buildConfig = true
+	}
 	lint {
 		checkAllWarnings = true
 		checkDependencies = true
