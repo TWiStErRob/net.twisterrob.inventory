@@ -72,13 +72,13 @@ public abstract class BaseViewFragment<DTO extends ImagedDTO, T> extends BaseSin
 		ViewTools.enabledIf(menu, R.id.action_share, shareIntent != null);
 	}
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_share:
-				// CONSIDER context sensitive sharing based on visible ViewPager page
-				startActivity(shareIntent);
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_share) {
+			// CONSIDER context sensitive sharing based on visible ViewPager page
+			startActivity(shareIntent);
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

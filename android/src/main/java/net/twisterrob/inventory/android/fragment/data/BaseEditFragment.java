@@ -343,23 +343,24 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	@Override public boolean onContextItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_category_goto:
-				startActivity(CategoryActivity.show(type.getSelectedItemId()));
-				return true;
-			case R.id.action_category_help:
-				Intent intent = MainActivity.list(requireContext(), MainActivity.PAGE_CATEGORY_HELP);
-				intent.putExtras(Intents.bundleFromCategory(getTypeId()));
-				startActivity(intent);
-				return true;
-			case R.id.action_category_suggest:
-				updateHint(name.getText(), true);
-				return true;
-			case R.id.action_category_keywords:
-				visuals.showKeywords(getTypeId());
-				return true;
+		int id = item.getItemId();
+		if (id == R.id.action_category_goto) {
+			startActivity(CategoryActivity.show(type.getSelectedItemId()));
+			return true;
+		} else if (id == R.id.action_category_help) {
+			Intent intent = MainActivity.list(requireContext(), MainActivity.PAGE_CATEGORY_HELP);
+			intent.putExtras(Intents.bundleFromCategory(getTypeId()));
+			startActivity(intent);
+			return true;
+		} else if (id == R.id.action_category_suggest) {
+			updateHint(name.getText(), true);
+			return true;
+		} else if (id == R.id.action_category_keywords) {
+			visuals.showKeywords(getTypeId());
+			return true;
+		} else {
+			return super.onContextItemSelected(item);
 		}
-		return super.onContextItemSelected(item);
 	}
 
 	protected abstract boolean isNew();
@@ -417,18 +418,18 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	}
 
 	@Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_picture_get:
-				getPicture();
-				return true;
-			case R.id.action_picture_reset:
-				resetPicture();
-				return true;
-			case R.id.action_picture_remove:
-				removePicture();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_picture_get) {
+			getPicture();
+			return true;
+		} else if (id == R.id.action_picture_reset) {
+			resetPicture();
+			return true;
+		} else if (id == R.id.action_picture_remove) {
+			removePicture();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

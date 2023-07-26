@@ -61,12 +61,12 @@ public class ItemListFragment extends BaseGalleryFragment<ItemsEvents> {
 
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_item_add:
-				listController.createNew();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_item_add) {
+			listController.createNew();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

@@ -119,21 +119,21 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 
 	@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		assert actionMode == mode;
-		switch (item.getItemId()) {
-			case R.id.action_select_all:
-				adapter.selectRange(0, adapter.getItemCount());
-				mode.invalidate();
-				return true;
-			case R.id.action_select_invert:
-				Set<Integer> selection = new TreeSet<>(adapter.getSelectedPositions());
-				adapter.clearSelections();
-				for (int i = 0, end = adapter.getItemCount(); i < end; i++) {
-					adapter.setSelected(i, !selection.contains(i));
-				}
-				mode.invalidate();
-				return true;
-			default:
-				return false;
+		int id = item.getItemId();
+		if (id == R.id.action_select_all) {
+			adapter.selectRange(0, adapter.getItemCount());
+			mode.invalidate();
+			return true;
+		} else if (id == R.id.action_select_invert) {
+			Set<Integer> selection = new TreeSet<>(adapter.getSelectedPositions());
+			adapter.clearSelections();
+			for (int i = 0, end = adapter.getItemCount(); i < end; i++) {
+				adapter.setSelected(i, !selection.contains(i));
+			}
+			mode.invalidate();
+			return true;
+		} else {
+			return false;
 		}
 	}
 

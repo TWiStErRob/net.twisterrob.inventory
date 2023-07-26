@@ -50,68 +50,69 @@ public class ItemSelectionActionMode extends SelectionActionMode {
 	}
 
 	@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_item_delete:
-				delete(getSelectedIDs());
-				return true;
-			case R.id.action_item_move:
-				Intent intent = builder.resetForbidItems()
-				                       .forbidItems(getSelectedIDs())
-				                       .build();
-				fragment.startActivityForResult(intent, PICK_REQUEST);
-				return true;
-			case R.id.action_item_categorize:
-				final long[] itemIDs = getSelectedIDs();
-				long category;
-				StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
-				try {
-					category = App.db().findCommonCategory(itemIDs);
-				} finally {
-					StrictMode.setThreadPolicy(originalPolicy);
+		int id = item.getItemId();
+		if (id == R.id.action_item_delete) {
+			delete(getSelectedIDs());
+			return true;
+		} else if (id == R.id.action_item_move) {
+			Intent intent = builder.resetForbidItems()
+			                       .forbidItems(getSelectedIDs())
+			                       .build();
+			fragment.startActivityForResult(intent, PICK_REQUEST);
+			return true;
+		} else if (id == R.id.action_item_categorize) {
+			final long[] itemIDs = getSelectedIDs();
+			long category;
+			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+			try {
+				category = App.db().findCommonCategory(itemIDs);
+			} finally {
+				StrictMode.setThreadPolicy(originalPolicy);
+			}
+			new ChangeTypeDialog(fragment).show(new Variants() {
+				@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
+				@Override protected void update(Cursor cursor) {
+					long newType = DatabaseTools.getLong(cursor, Item.ID);
+					for (long itemID : itemIDs) {
+						ItemDTO item = DatabaseDTOTools.retrieveItem(itemID);
+						App.db().updateItem(item.id, newType, item.name, item.description);
+					}
+					String newTypeKey = DatabaseTools.getString(cursor, CommonColumns.NAME);
+					Context context = fragment.requireContext();
+					CharSequence newTypeName = ResourceTools.getText(context, newTypeKey);
+					App.toastUser(context.getString(R.string.generic_location_change, "selection", newTypeName));
+					finish();
+					fragment.refresh();
 				}
-				new ChangeTypeDialog(fragment).show(new Variants() {
-					@SuppressLint({"WrongThread", "WrongThreadInterprocedural"}) // FIXME DB on UI
-					@Override protected void update(Cursor cursor) {
-						long newType = DatabaseTools.getLong(cursor, Item.ID);
-						for (long itemID : itemIDs) {
-							ItemDTO item = DatabaseDTOTools.retrieveItem(itemID);
-							App.db().updateItem(item.id, newType, item.name, item.description);
-						}
-						String newTypeKey = DatabaseTools.getString(cursor, CommonColumns.NAME);
-						Context context = fragment.requireContext();
-						CharSequence newTypeName = ResourceTools.getText(context, newTypeKey);
-						App.toastUser(context.getString(R.string.generic_location_change, "selection", newTypeName));
-						finish();
-						fragment.refresh();
-					}
-					@Override protected CharSequence getTitle() {
-						return fragment.getResources().getString(R.string.item_categorize_title_many);
-					}
-					@Override protected Loaders getTypesLoader() {
-						return Loaders.ItemCategories;
-					}
-					@Override protected Bundle createArgs(long type) {
-						return Intents.bundleFromCategory(type);
-					}
-					@Override protected CharSequence getName() {
-						return "selection";
-					}
-					@Override protected boolean isExpandable() {
-						return true;
-					}
-					@Override public CharSequence getTypeName(Cursor cursor) {
-						long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-						return cache.getCategoryPath(categoryID);
-					}
-					@Override public CharSequence getKeywords(Cursor cursor) {
-						long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-						String categoryKey = cache.getCategoryKey(categoryID);
-						return visuals.getKeywords(categoryKey, true);
-					}
-				}, category);
-				return true;
+				@Override protected CharSequence getTitle() {
+					return fragment.getResources().getString(R.string.item_categorize_title_many);
+				}
+				@Override protected Loaders getTypesLoader() {
+					return Loaders.ItemCategories;
+				}
+				@Override protected Bundle createArgs(long type) {
+					return Intents.bundleFromCategory(type);
+				}
+				@Override protected CharSequence getName() {
+					return "selection";
+				}
+				@Override protected boolean isExpandable() {
+					return true;
+				}
+				@Override public CharSequence getTypeName(Cursor cursor) {
+					long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+					return cache.getCategoryPath(categoryID);
+				}
+				@Override public CharSequence getKeywords(Cursor cursor) {
+					long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+					String categoryKey = cache.getCategoryKey(categoryID);
+					return visuals.getKeywords(categoryKey, true);
+				}
+			}, category);
+			return true;
+		} else {
+			return super.onActionItemClicked(mode, item);
 		}
-		return super.onActionItemClicked(mode, item);
 	}
 
 	@Override public boolean onActivityResult(int requestCode, int resultCode, Intent data) {

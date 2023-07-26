@@ -58,12 +58,12 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_room_add:
-				listController.createNew();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.action_room_add) {
+			listController.createNew();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -119,16 +119,17 @@ public class RoomListFragment extends BaseGalleryFragment<RoomsEvents> {
 		}
 
 		@Override public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			switch (item.getItemId()) {
-				case R.id.action_room_delete:
-					delete(getSelectedIDs());
-					return true;
-				case R.id.action_room_move:
-					Intent intent = builder.build();
-					fragment.startActivityForResult(intent, PICK_REQUEST);
-					return true;
+			int id = item.getItemId();
+			if (id == R.id.action_room_delete) {
+				delete(getSelectedIDs());
+				return true;
+			} else if (id == R.id.action_room_move) {
+				Intent intent = builder.build();
+				fragment.startActivityForResult(intent, PICK_REQUEST);
+				return true;
+			} else {
+				return super.onActionItemClicked(mode, item);
 			}
-			return super.onActionItemClicked(mode, item);
 		}
 
 		@Override public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
