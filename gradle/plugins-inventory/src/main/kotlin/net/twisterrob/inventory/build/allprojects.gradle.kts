@@ -54,12 +54,15 @@ tasks.withType<JavaCompile>().configureEach javac@{
 }
 
 tasks.withType<Test>().configureEach test@{
-	if ( // 9 <= Java < 17
-		javaVersion.isCompatibleWith(JavaVersion.VERSION_1_9)
+	if (javaVersion.isCompatibleWith(JavaVersion.VERSION_1_9)
 		&& !javaVersion.isCompatibleWith(JavaVersion.VERSION_17)
-	) {
+	) { // 9 <= Java < 17
 		jvmArgs(
 			"--illegal-access=deny",
+		)
+	}
+	if (javaVersion.isCompatibleWith(JavaVersion.VERSION_1_9)) { // 9 <= Java
+		jvmArgs(
 			// net.twisterrob.test.PackageNameShortener.fixPackages uses reflection on Throwable/StackTraceElement.
 			"--add-opens", "java.base/java.lang=ALL-UNNAMED",
 		)
