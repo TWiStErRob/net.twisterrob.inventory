@@ -48,7 +48,6 @@ hilt {
 //		javaCompileOptions {
 //			annotationProcessorOptions {
 //				daggerFlags.forEach { (key, value) ->
-//					@Suppress("UnstableApiUsage")
 //					argument(key, value)
 //				}
 //			}
