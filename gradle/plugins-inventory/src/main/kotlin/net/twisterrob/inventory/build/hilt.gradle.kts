@@ -16,7 +16,6 @@ plugins {
 	id("org.gradle.idea")
 }
 
-@Suppress("UnstableApiUsage")
 dependencies {
 	"implementation"(libs.dagger.hilt)
 	"kapt"(libs.dagger.hilt.apt)
