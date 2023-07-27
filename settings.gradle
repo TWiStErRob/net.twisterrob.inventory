@@ -1,7 +1,5 @@
 import org.gradle.api.initialization.resolve.RepositoriesMode
 
-import static net.twisterrob.gradle.GradleUtils.doNotNagAbout
-
 pluginManagement {
 	includeBuild("gradle/plugins-inventory")
 	repositories {
@@ -71,33 +69,4 @@ gradleEnterprise {
 		termsOfServiceUrl = "https://gradle.com/terms-of-service"
 		termsOfServiceAgree = "yes"
 	}
-}
-
-String gradleVersion = GradleVersion.current().version
-
-// TODEL Gradle sync in AS EE 2022.1.1 https://youtrack.jetbrains.com/issue/IDEA-301430, fixed in AS Giraffe.
-if (System.getProperty("idea.version") ?: "" < "2022.3") {
-	doNotNagAbout(
-			"The org.gradle.util.GUtil type has been deprecated. " +
-					"This is scheduled to be removed in Gradle 9.0. " +
-					"Consult the upgrading guide for further information: " +
-					"https://docs.gradle.org/${gradleVersion}/userguide/upgrading_version_7.html#org_gradle_util_reports_deprecations",
-			//"at org.jetbrains.plugins.gradle.tooling.builder.ExternalProjectBuilderImpl\$_getSourceSets_closure"
-	)
-} else {
-	error("Android Studio version changed, please remove hack.")
-}
-
-// TODEL Gradle sync in AS EE 2022.1.1 https://youtrack.jetbrains.com/issue/IDEA-284158
-if (System.getProperty("idea.version") ?: "" < "2023.2") {
-	doNotNagAbout(
-			"Resolution of the configuration :tools:transform:detachedConfiguration1 " +
-					"was attempted from a context different than the project context. " +
-					"Have a look at the documentation to understand why this is a problem and how it can be resolved. " +
-					"This behaviour has been deprecated and is scheduled to be removed in Gradle 8.0. " +
-					"See https://docs.gradle.org/${gradleVersion}/userguide/viewing_debugging_dependencies.html#sub:resolving-unsafe-configuration-resolution-errors for more details.",
-			//	at org.jetbrains.plugins.gradle.model.ProjectImportAction$MyBuildController.findModel(ProjectImportAction.java:618)
-	)
-} else {
-	error("Android Studio version changed, please review hack.")
 }
