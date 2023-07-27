@@ -69,7 +69,7 @@
 	<bool name="pref_internalImageViewer_default" translatable="false">true</bool>
 	<string name="pref_internalImageViewer_desc">Internal image viewer has limited functionality,
 		but it definitely shows the images,
-		while using another application may result in crashes out of this app\'s control.</string>
+		while using another application may result in crashes out of this app’s control.</string>
 
 	<string name="pref_displayDebugDetails_title">Display more details (debug)</string>
 	<string name="pref_displayDebugDetails" translatable="false">displayDebugDetails</string>
@@ -96,7 +96,7 @@
 	<string name="pref_app_privacy_policy_desc">How is my data handled?</string>
 
 	<string name="pref_app_feedback_title">Feedback</string>
-	<string name="pref_app_feedback_desc">Ask a question, request features you\'d like to see, or just tell me what you think about the app. Any feedback is welcome.</string>
+	<string name="pref_app_feedback_desc">Ask a question, request features you’d like to see, or just tell me what you think about the app. Any feedback is welcome.</string>
 	<string name="pref_app_feedback_body">Write your request/question/feedback here.</string>
 	<string name="pref_app_feedback_subject">Magic Home Inventory feedback</string>
 

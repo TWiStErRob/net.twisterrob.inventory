@@ -24,13 +24,13 @@
 		It helps you maintain a list of stuff you have, with an efficient interface and easy navigation.
 
 		\n\n<b>When is it useful?</b>
-		&LI;You have a remote storage and you don\'t remember exactly what\'s there.
-		&LI;You\'re moving, to remember which box contains what.
-		&LI;You\'re tidy and organized and want to know where your stuff belongs.
+		&LI;You have a remote storage and you don’t remember exactly what’s there.
+		&LI;You’re moving, to remember which box contains what.
+		&LI;You’re tidy and organized and want to know where your stuff belongs.
 		&LI;You want to inventory valuable items for insurance purposes.
-		&LI;You\'re not at home, but your family member/flatmate wants something.
+		&LI;You’re not at home, but your family member/flatmate wants something.
 		&LI;You want to declutter, you can create a list of stuff you want to throw away.
-		&LI;You\'re curious how many pens you have lying around the house.
+		&LI;You’re curious how many pens you have lying around the house.
 
 		\n\n<b>How is the inventory structured?</b>
 		\nThe inventory structure is based on real life.
@@ -42,7 +42,7 @@
 		\n\n<b>How can I enter multiple images for a single item?</b>
 		\nThis is currently not directly possible,
 		but as a workaround you can create items within that item and select the “<i>Extra Images</i>” category.
-		Feel free to contact me if you feel it\'s an important feature for you.
+		Feel free to contact me if you feel it’s an important feature for you.
 
 		\n\n<b>How can I leave feedback? What is feedback?</b>
 		\nTap on the link below the application name/version in the About section.
@@ -55,7 +55,7 @@
 		\n\n<b>Properties</b>
 		\nYour inventory, everything you own, must be located somewhere.
 		In the app, these locations are called <i>properties</i>;
-		they\'re usually buildings or land that you own or visit often.
+		they’re usually buildings or land that you own or visit often.
 
 		\n\n<b>Rooms</b>
 		\nEach <i>property</i> has significant areas where stuff can be located.
@@ -71,28 +71,28 @@
 
 		\n\n<b>Items</b>
 		\nAn item is a single piece of the stuff that you own.
-		It\'s up to you how specific you want to be. An item could be
+		It’s up to you how specific you want to be. An item could be
 			your whole desktop computer with its peripherals (monitor, keyboard, printer)
 			or a single cog or LEGO building block.
-		Of course, you don\'t have to input every little piece, but the possibility is there.
+		Of course, you don’t have to input every little piece, but the possibility is there.
 
 		\n\n<b>Items (Hierarchy)</b>
 		\nOne of the key features of this app is that <i>any</i> item could <i>contain</i> any number of other items,
 		similar to Russian matryoshka nesting dolls.
 		This nesting ability gives organisation and definition to your inventory.
 		Each item is listed as having a particular location, which is calculated based on the hierarchy of items containing it.
-		It\'s easy to locate everything quickly when needed: no more “<i>Was it in this or that box?</i>”.
+		It’s easy to locate everything quickly when needed: no more “<i>Was it in this or that box?</i>”.
 		\nFor example a common layout of items in a wardrobe:
-		&LI;there\'s stuff hanging in the main area
+		&LI;there’s stuff hanging in the main area
 		&LI;there are shoes and boxes at the bottom
 		&LI;there are possibly boxes on top of the wardrobe
 		\nAll of these (main area, bottom, atop) can be represented as items in the <i>compartment</i> category.
-		For example, imagine there\'s a squash ball inside it\'s packaging in that box at the bottom, the hierarchy of items are:
+		For example, imagine there’s a squash ball inside it’s packaging in that box at the bottom, the hierarchy of items are:
 		(<i>Home</i> ▶ <i>Bedroom</i> ▶) <i>Wardrobe</i> ▶ <i>Bottom</i> ▶ <i>Carton box</i> ▶ <i>Squash ball box</i> ▶ <i>Blue squash ball</i>.
 		Remember, using compartments to organize items, and inputting the packaging are optional.
 
 		\n\n<b>Items (Groups)</b>
-		\nA group holds items together, but it\'s not an actual physical container.
+		\nA group holds items together, but it’s not an actual physical container.
 		It is represented as a special category you can select for the item.
 		It helps to make the item listing cleaner by giving headings to the contained items.
 		A good example when groups are useful is inputting a pencil holder: you can
@@ -100,13 +100,13 @@
 
 		\n\n<b>Lists</b>
 		\nYou can create <i>lists</i> for items you want to remember for any particular reason.
-		Lists are virtual, because they don\'t contain the items they list, just reference them;
+		Lists are virtual, because they don’t contain the items they list, just reference them;
 		think of them as notes on a sheet of paper.
 		\nFor example if you go on summer vacation every year, you can create a list for all the items that you always bring,
-		so when it\'s time to travel you can quickly gather everything and never forget anything anymore.
+		so when it’s time to travel you can quickly gather everything and never forget anything anymore.
 		Other examples are:
 		&LI;a list for stuff you lent to someone,
-		&LI;a list for stuff that you can\'t find,
+		&LI;a list for stuff that you can’t find,
 		&LI;a list for broken stuff that needs replacing.
 		
 		\n\n\n<big><b>Interface</b></big>
@@ -116,7 +116,7 @@
 
 		\n\n<b>Headers</b>
 		\nWhen a belonging is opened, the top part of the screen shows its image along with its category.
-		If the belonging doesn\'t have an image, the category\'s icon is used as a ghost image.
+		If the belonging doesn’t have an image, the category’s icon is used as a ghost image.
 		Single tap on the image (if it exists) will show the image in a larger view.
 		Tapping on a ghost image or long tapping on an existing image will initiate editing and changing the image. 
 		Tapping the small icon in the lower right corner will always initiate changing the type of the belonging.
@@ -125,7 +125,7 @@
 		\n\n<b>Grids</b>
 		\nAll contents of the belongings are shown in a multi-column grid.
 		This helps fast navigation and visual search.
-		The grids adjust to the screen size, so if your device has a wide enough screen it\'ll be used efficiently.
+		The grids adjust to the screen size, so if your device has a wide enough screen it’ll be used efficiently.
 		Each grid item shows the image of the belonging (if any),
 			the name,
 			the category in the lower right corner and
@@ -166,7 +166,7 @@
 
 		\n\n<b>Recents</b>
 		\nThe recents list on the home screen shows the most recently/frequently visited items.
-		It\'s not purely what was opened most recently, the list ordering also takes into account how often the item was opened.
+		It’s not purely what was opened most recently, the list ordering also takes into account how often the item was opened.
 		For each item the Recents view shows:
 		&LI;the name of the item,
 		&LI;when the item was last accessed
@@ -177,36 +177,36 @@
 		
 		\n\n<b>Navigation</b>
 		\nTapping a single belonging in any list will open it, and show the details and contained belongings.
-		To go back to the <b>previous screen</b> use the device\'s <i>back</i> button.
-		To go to the <b>container\'s details</b> use the <i>up navigation</i> button in the action bar.
+		To go back to the <b>previous screen</b> use the device’s <i>back</i> button.
+		To go to the <b>container’s details</b> use the <i>up navigation</i> button in the action bar.
 
 		\n\n<b>Single belongings</b>
 		\nTo take any action on a single belonging, open it and check the available actions on the action bar.
 
 		\n\n<b>Selection</b>
-		\nTo take action on more than one item at once, you\'ll need to select them first.
+		\nTo take action on more than one item at once, you’ll need to select them first.
 		You can initiate a selection by long-tapping any item and then tapping any others you wish to select.
 		The possible actions are available on the action bar.
 
 		\n\n<b>Move</b>
 		\nIf something has been relocated, you can track that by selecting the item and moving using the move action.
-		For example if you\'re moving homes you can select all of the items in a drawer and move them to a box.
+		For example if you’re moving homes you can select all of the items in a drawer and move them to a box.
 		After the moving is initiated, you can select where you want to move starting from the closest belonging.
 		You can navigate up in the hierarchy using the back button (contrary to usual behavior) and the arrow in the upper left corner.
 		Click “<i>OK</i>” to move to the current location; “<i>Cancel</i>” if you changed your mind.
-		The target doesn\'t necessarily have to exist; you can create belongings on the fly while browsing.
+		The target doesn’t necessarily have to exist; you can create belongings on the fly while browsing.
 
 		\n\n<b>Delete</b>
 		\nDeleting any belonging will delete <i>all</i> of its contents as well.
-		You\'ll be warned about this with a confirmation question.
-		If you want to keep what\'s inside a belonging, move them first to somewhere else and then delete the empty belonging.
+		You’ll be warned about this with a confirmation question.
+		If you want to keep what’s inside a belonging, move them first to somewhere else and then delete the empty belonging.
 
 		\n\n\n<big><b>Sunburst Diagram</b></big>
 		\nSunburst is an aid visualizing hierarchical data by showing everything on a single chart.
 		The middle is the current location and everything around it (on concentric circles) is contained within.
 		It shows you, for example, what the distribution of your items is within your inventory:
 		the belonging with the most items will have the largest arc.
-		\nYou can drill down into the diagram by tapping a belonging\'s segment.
+		\nYou can drill down into the diagram by tapping a belonging’s segment.
 		The current belonging can be opened from the action bar.
 		If something has too many items and it distorts the diagram, you can exclude it from the action bar.
 		For example, use this if you want to see where most of your stuff is other than in your own room.
@@ -215,14 +215,14 @@
 		\nYou can select a directory where you want to export the whole inventory and then press the “<i>Export</i>” button.
 		You can use the same browser to find an existing inventory backup and import it by tapping on it.
 		\nA backup contains all the images (JPEG), and details (XML) of the belongings in a compressed ZIP file.
-		As a convenience there\'s also an exported version of the inventory in the ZIP file
+		As a convenience there’s also an exported version of the inventory in the ZIP file
 		in HTML format (for Web&nbsp;Browsers) and in CSV format (for Excel).
 	</string>
 
 	<string name="about_tips"
 		><b>Usage</b>
 		&LI;If you have a steady hand, you can use the <i>Crop</i> button to take an image and crop it immediately.
-		&LI;If a belonging doesn\'t have an image, tap the ghost image in the header to add a new image; editing will start automatically.
+		&LI;If a belonging doesn’t have an image, tap the ghost image in the header to add a new image; editing will start automatically.
 
 		\n\n<b>Organization</b>
 		&LI;When inventorying a cupboard, create compartments for “<i>Atop</i>”, “<i>In&nbsp;front&nbsp;of</i>”, “<i>Below</i>” for stuff around it.
@@ -231,10 +231,10 @@
 		&LI;Create an “<i>Original&nbsp;Packaging</i>” room in a “<i>Virtual</i>” property to record what was in the original boxes in case you want to re-sell stuff later.
 
 		\n\n<b>Naming</b>
-		&LI;Put an exclamation mark (!) in front of a belonging\'s name to bring it to the top of the list.
+		&LI;Put an exclamation mark (!) in front of a belonging’s name to bring it to the top of the list.
 		&LI;To inventory how many you have of an indistinguishable item, name it similar to “<i>Steel spoon&nbsp;x5</i>”.
 		&LI;To inventory the color/size of an item, name it similar to “<i>USB cable&nbsp;(white,&nbsp;30cm)</i>”, “<i>Shoe box&nbsp;(blue,&nbsp;30×20×10&nbsp;cm)</i>”.
 
-		<!--&LI;In case your device doesn\'t have enough free space to export a backup use an USB stick with an OTG cable.-->
+		<!--&LI;In case your device doesn’t have enough free space to export a backup use an USB stick with an OTG cable.-->
 	</string>
 </resources>

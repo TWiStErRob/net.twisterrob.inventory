@@ -17,7 +17,7 @@
 	<string name="backup_notification_channel_group_name" maxLength="40">Backup Progress</string>
 	<string name="backup_notification_channel_group_description" maxLength="300">
 		Notifications related to backup progress: import and export.
-		They\'re shown if you leave the screen/app while an import/export is in progress,
+		They’re shown if you leave the screen/app while an import/export is in progress,
 		or at the end of the process.</string>
 	<string name="backup_import_notification_channel_name" maxLength="40">Import Progress</string>
 	<string name="backup_import_notification_channel_description" maxLength="300">
@@ -50,16 +50,16 @@
 
 	<string name="backup_export_external_confirm_title">@string/backup_send</string>
 	<string name="backup_export_external_confirm_warning"
-		>You\'re about to send your inventory to a third party.
+		>You’re about to send your inventory to a third party.
 		Once you leave the app there are no guarantees.
-		For example, some apps (Google Drive, Dropbox) don\'t allow cancelling this procedure.
+		For example, some apps (Google Drive, Dropbox) don’t allow cancelling this procedure.
 		Once you started, be patient; give it a few minutes, if you have a large inventory.
 		Even if the progress disappears, the export may still be ongoing in the background.
 		\n\nDo you want to continue?
 	</string>
 	<string name="backup_import_confirm_title">Import</string>
 	<string name="backup_import_confirm_warning"
-		>You\'re about to import %1$s into your inventory.
+		>You’re about to import %1$s into your inventory.
 		In case your inventory is not empty,
 		conflicting details (image, description) of belongings will be ignored,
 		but the best effort will be made to merge contents.
