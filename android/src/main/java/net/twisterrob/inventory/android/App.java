@@ -64,26 +64,19 @@ public class App extends BaseApp {
 
 	@Override public void onStart() {
 		super.onStart();
-		try {
-			// Quick workaround to prevent crashes on startup.
-			// Only foreground apps can startService(), at this point it's not foreground yet.
-			// https://github.com/TWiStErRob/net.twisterrob.inventory/issues/173
-			startServices();
-		} catch (RuntimeException ex) {
-			LOG.warn("Cannot start services", ex);
-		}
+		startServices();
 	}
 
 	private void startServices() {
 		// open a database first, this should lock any other accesses, so it's clearer when the DB open fails
-		startService(new Intent(DatabaseService.ACTION_OPEN_DATABASE).setPackage(getPackageName()));
+		DatabaseService.enqueueWork(this, new Intent(DatabaseService.ACTION_OPEN_DATABASE));
 		// run vacuum next, it's quick and most of the time does nothing anyway
-		startService(new Intent(DatabaseService.ACTION_VACUUM_INCREMENTAL).setPackage(getPackageName()));
+		DatabaseService.enqueueWork(this, new Intent(DatabaseService.ACTION_VACUUM_INCREMENTAL));
 		// this may take a while, but it's necessary for correct display of search results
 		updateLocaleDependencies(Locale.getDefault());
 		// last, preload categories, this would happen when editing and suggestions kick in
 		// so, prevent a delay on first suggestion, load it in the background
-		startService(new Intent(DatabaseService.ACTION_PRELOAD_CATEGORIES).setPackage(getPackageName()));
+		DatabaseService.enqueueWork(this, new Intent(DatabaseService.ACTION_PRELOAD_CATEGORIES));
 	}
 
 	@Override protected void initPreferences() {
@@ -102,24 +95,8 @@ public class App extends BaseApp {
 		updateNotificationChannels();
 	}
 	private void updateLanguage(@NonNull Locale newLocale) {
-		try {
-			startService(new Intent(DatabaseService.ACTION_UPDATE_LANGUAGE)
-					.setPackage(getPackageName())
-					.putExtra(DatabaseService.EXTRA_LOCALE, newLocale));
-		} catch (IllegalStateException ex) {
-			// Ignore java.lang.IllegalStateException:
-			// Not allowed to start service Intent {...}:
-			// app is in background uid
-			// UidRecord{af72e61 u0a229 CAC  bg:+3m52s273ms idle procs:1 seq(0,0,0)}
-			// at com.android.server.am.ActiveServices.startServiceLocked(ContextImpl.java:520)
-			// https://android.googlesource.com/platform/frameworks/base/+/android10-release/services/core/java/com/android/server/am/ActiveServices.java#520
-			// at android.app.ContextImpl.startServiceCommon(ContextImpl.java:1616)
-
-			// TODO https://github.com/TWiStErRob/net.twisterrob.inventory/issues/166
-			// Need to use new JobIntentService to handle this,
-			// but that's not available until higher support library or AndroidX.
-			// So for now, just ignore the exception. Next startup will do this properly anyway.
-		}
+		DatabaseService.enqueueWork(this, new Intent(DatabaseService.ACTION_UPDATE_LANGUAGE)
+				.putExtra(DatabaseService.EXTRA_LOCALE, newLocale));
 	}
 	private void updateNotificationChannels() {
 		if (VERSION.SDK_INT >= VERSION_CODES.O) {
