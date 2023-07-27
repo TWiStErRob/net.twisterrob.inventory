@@ -1,20 +1,20 @@
 [versions]
 #java = "1.8"
 #
-agp = "8.0.2"
+agp = "8.1.0"
 # 23.0.0 + agp
-agp-tools = "31.0.2"
+agp-tools = "31.1.0"
 twisterrob = "0.16" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
-detekt = "1.22.0"
-kotlin = "1.8.22"
-kotlin-coroutines = "1.7.1"
+detekt = "1.23.0"
+kotlin = "1.9.0"
+kotlin-coroutines = "1.7.3"
 
 # TODEL NewerVersionAvailable lint exception
 glide = "3.8.0"
 androidsvg = "1.4"
 flexbox = "2.0.1"
-slf4j = "1.7.30"
-dagger = "2.46.1"
+slf4j = "1.7.36"
+dagger = "2.47"
 orbit = "6.0.0"
 
 androidx-activity = "1.6.1" # https://developer.android.com/jetpack/androidx/releases/activity
@@ -62,9 +62,9 @@ xalan = "2.7.1"
 saxon = "9.7.0-7"
 javaxInject = "1"
 guava = "27.0.1-jre"
-jbrAnn = "18.0.0"
+jbrAnn = "24.0.1"
 
-test-junit4 = "4.13.1"
+test-junit4 = "4.13.2"
 # TODEL NewerVersionAvailable lint exception
 test-mockito = "3.10.0"
 test-mockito-kotlin = "3.2.0"

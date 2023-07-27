@@ -70,7 +70,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 				work
 		);
 	}
-	
+
 	@Override public void onCreate() {
 		displayer = new LenientProgressInfoProvider(this);
 		super.onCreate();
@@ -151,7 +151,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 	}
 
 
-	private @NonNull Progress.Type getProgressType(
+	private static @NonNull Progress.Type getProgressType(
 			@Nullable Intent intent,
 			@Nullable Progress progress
 	) {

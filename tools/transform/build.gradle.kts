@@ -8,7 +8,6 @@ java {
 	targetCompatibility = JavaVersion.VERSION_1_7
 	registerFeature("sharedIntegrationTests") {
 		usingSourceSet(sourceSets.create("integrationTest"))
-		@Suppress("UnstableApiUsage")
 		disablePublication()
 	}
 }
@@ -37,7 +36,7 @@ tasks.check.configure {
 	dependsOn(integrationTestAggregateTestReport)
 }
 
-@Suppress("UnstableApiUsage")
+@Suppress("UnstableApiUsage") // JvmTestSuite and all methods.
 testing.suites {
 	named<JvmTestSuite>("test").configure {
 		// Keep defaults.
@@ -59,7 +58,7 @@ testing.suites {
 	}
 }
 
-@Suppress("UnstableApiUsage")
+@Suppress("UnstableApiUsage") // TestSuite and all methods.
 fun NamedDomainObjectContainerScope<TestSuite>.registerIntegrationTest(
 	name: String,
 	configure: JvmTestSuite.() -> Unit

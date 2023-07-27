@@ -14,7 +14,6 @@ dependencies {
 	"androidTestImplementation"(platform("net.twisterrob.inventory.build:platform"))
 }
 
-@Suppress("UnstableApiUsage")
 android {
 	namespace = project.autoNamespace
 	compileSdk = 33

@@ -47,7 +47,6 @@ class InventoryDatabasePlugin : Plugin<Project> {
 			// clean task is automagically generated for every task that has output
 			allTasksClean.configure { dependsOn("clean${task.name.capitalized()}") }
 			project.androidComponents.onVariants { variant ->
-				@Suppress("UnstableApiUsage")
 				variant.sources.assets!!
 					.addGeneratedSourceDirectory(task, InventoryDatabaseTask::output)
 			}

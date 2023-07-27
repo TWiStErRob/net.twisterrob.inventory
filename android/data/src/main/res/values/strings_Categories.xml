@@ -26,7 +26,7 @@
 	<string name="category_group_description">logically holds other stuff together</string>
 	<string name="category_part" id="2" level="0" icon="@raw/category_unknown">Other Pieces</string>
 	<string name="category_part_keywords">@string/empty</string>
-	<string name="category_part_description">stuff that\'s useless by itself</string>
+	<string name="category_part_description">stuff that’s useless by itself</string>
 	<string name="category_image" id="3" level="0" icon="@raw/item_picture">Extra Images</string>
 	<string name="category_image_keywords">label, serial, barcode</string>
 	<string name="category_image_description">extra images of your stuff</string>
@@ -196,7 +196,7 @@
 	<string name="category_decoration_party" level="2">parties</string>
 	<string name="category_decoration_party_keywords">house party, birthday party, bachelor party, hen party, balls, unicorn horn</string>
 	<string name="category_decoration_holiday" level="2">holidays</string>
-	<string name="category_decoration_holiday_keywords">New Year\'s, Halloween, Valentine\'s Day, Christmas, Easter, Thanksgiving</string>
+	<string name="category_decoration_holiday_keywords">New Year’s, Halloween, Valentine’s Day, Christmas, Easter, Thanksgiving</string>
 
 	<string name="category_decoration_traditional" level="1">Traditional</string>
 	<string name="category_decoration_traditional_keywords">folk art, religious motif, religious objects</string>
@@ -205,7 +205,7 @@
 	<!--=========================================================================================================-->
 	<string name="category_collectible" level="0" icon="@raw/category_collectibles">Collectibles</string>
 	<string name="category_collectible_keywords">collection, compilation</string>
-	<string name="category_collectible_description">stuff you don\'t need, but still have</string>
+	<string name="category_collectible_description">stuff you don’t need, but still have</string>
 
 	<string name="category_souvenir" level="1">Souvenirs</string>
 	<string name="category_souvenir_keywords">@string/empty</string>
@@ -224,13 +224,13 @@
 	<string name="category_publication" level="1" icon="@raw/item_paper">Publications</string>
 	<string name="category_publication_keywords">@string/empty</string>
 	<string name="category_book" level="2">book</string>
-	<string name="category_book_keywords">paperback, dictionary, atlas, yearbook, photo album, magazine, comics, newsletter, newspaper, periodical, academic journal, proceeding, workbook/student\'s book</string>
+	<string name="category_book_keywords">paperback, dictionary, atlas, yearbook, photo album, magazine, comics, newsletter, newspaper, periodical, academic journal, proceeding, workbook/student’s book</string>
 	<string name="category_booklet" level="2">booklet</string>
 	<string name="category_booklet_keywords">advertisement, marketing, brochure, catalogue, circular, programme, leaflet, pamphlet, flier/flyer, invitation</string>
 	<string name="category_information" level="2">informative</string>
 	<string name="category_information_keywords">map, travel guide, guide, white paper, blueprint, plan, patent, essay, thesis, journal, paper, wall calendar, desk calendar, business card</string>
 	<string name="category_help" level="2">help</string>
-	<string name="category_help_keywords">user guide, owner\'s manual, assembly instructions, FAQ/Frequently Asked Questions, technical specification</string>
+	<string name="category_help_keywords">user guide, owner’s manual, assembly instructions, FAQ/Frequently Asked Questions, technical specification</string>
 
 	<string name="category_recording" level="1" icon="@raw/item_disc">Recordings</string>
 	<string name="category_recording_keywords">@string/empty</string>
@@ -416,7 +416,7 @@
 	<string name="category_game_stacking" level="2">stacking games</string>
 	<string name="category_game_stacking_keywords">domino/dominoes, pick-up sticks, Jenga, Tetris</string>
 	<string name="category_game_trivia" level="2">trivia games</string>
-	<string name="category_game_trivia_keywords">quiz games, crossword, memory, spot the difference, Where\'s Wally?/Where\'s Waldo?</string>
+	<string name="category_game_trivia_keywords">quiz games, crossword, memory, spot the difference, Where’s Wally?/Where’s Waldo?</string>
 
 	<string name="category_game_creative" level="1">Creative Games</string>
 	<string name="category_game_creative_keywords">@string/empty</string>
@@ -426,9 +426,9 @@
 	<string name="category_game_artistic" level="2">artistic</string>
 	<string name="category_game_artistic_keywords">erasable drawing board, spirograph, toy piano, synthesizer; Etch-a-Sketch</string>
 	<string name="category_game_construction" level="2">construction games</string>
-	<string name="category_game_construction_keywords">blocks, neodymium magnet/magnetic puzzle, bricks, girders &amp; gears, geometric, balls &amp; sticks, modeling clay; Lego, Merkur/Steel Tec, K\'nex, Zometool/Babylon, Plasticine/Play-Doh</string>
+	<string name="category_game_construction_keywords">blocks, neodymium magnet/magnetic puzzle, bricks, girders &amp; gears, geometric, balls &amp; sticks, modeling clay; Lego, Merkur/Steel Tec, K′nex, Zometool/Babylon, Plasticine/Play-Doh</string>
 	<string name="category_game_puzzle" level="2">puzzles</string>
-	<string name="category_game_puzzle_keywords">Rubik\'s Cube, Tower of Babel, Sudoku, Tangram, 15-puzzle/sliding puzzle, disentanglement puzzle, jigsaw puzzle</string>
+	<string name="category_game_puzzle_keywords">Rubik’s Cube, Tower of Babel, Sudoku, Tangram, 15-puzzle/sliding puzzle, disentanglement puzzle, jigsaw puzzle</string>
 
 	<string name="category_novelty" level="1">Novelty Toys</string>
 	<string name="category_novelty_keywords">@string/empty</string>
@@ -436,7 +436,7 @@
 	<string name="category_novelty_visual" level="2">visual</string>
 	<string name="category_novelty_visual_keywords">lava lamp, plasma globe, snow globe, kaleidoscope, stereoscope, zoetrope</string>
 	<string name="category_novelty_motion" level="2">motion</string>
-	<string name="category_novelty_motion_keywords">Newton\'s cradle, perpetual pendulum, spinning top, roly-poly toy/tilting doll/tumbler, slinky, whirligig, pinwheel</string>
+	<string name="category_novelty_motion_keywords">Newton’s cradle, perpetual pendulum, spinning top, roly-poly toy/tilting doll/tumbler, slinky, whirligig, pinwheel</string>
 	<string name="category_novelty_chemistry" level="2">chemistry</string>
 	<string name="category_novelty_chemistry_keywords">Silly Putty/Flubber/Slime, bubble blower/bubble ring, ferrofluid, Magic 8-ball</string>
 	<string name="category_novelty_stress" level="2">anti-stress</string>
@@ -731,7 +731,7 @@
 	<string name="category_certificate" level="2">certificates</string>
 	<string name="category_certificate_keywords">birth certificate, professional certification, academic degree, diploma</string>
 	<string name="category_document_identity" level="2">identity document</string>
-	<string name="category_document_identity_keywords">personal identity card, address card, passport, driver\'s licence, motor vehicle registration, magnetic card, swipe card, press pass, VIP pass, name tag</string>
+	<string name="category_document_identity_keywords">personal identity card, address card, passport, driver’s licence, motor vehicle registration, magnetic card, swipe card, press pass, VIP pass, name tag</string>
 	<string name="category_deed" level="2">deed</string>
 	<string name="category_deed_keywords">warranty, licence, land registration, contract, agreement, insurance, will</string>
 

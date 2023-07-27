@@ -3,6 +3,7 @@ package net.twisterrob.inventory.build
 //import net.twisterrob.inventory.build.dsl.android
 import com.android.build.api.variant.ComponentIdentity
 import com.android.build.api.variant.HasAndroidTest
+import com.android.build.api.variant.HasUnitTest
 import net.twisterrob.gradle.android.androidComponents
 import net.twisterrob.inventory.build.dsl.hilt
 import net.twisterrob.inventory.build.dsl.libs
@@ -15,7 +16,6 @@ plugins {
 	id("org.gradle.idea")
 }
 
-@Suppress("UnstableApiUsage")
 dependencies {
 	"implementation"(libs.dagger.hilt)
 	"kapt"(libs.dagger.hilt.apt)
@@ -48,7 +48,6 @@ hilt {
 //		javaCompileOptions {
 //			annotationProcessorOptions {
 //				daggerFlags.forEach { (key, value) ->
-//					@Suppress("UnstableApiUsage")
 //					argument(key, value)
 //				}
 //			}
@@ -76,8 +75,8 @@ androidComponents.onVariants { variant ->
 	}
 	variant.componentTreesDir.let(addGeneratedSources)
 	variant.componentSourcesDir.let(addGeneratedSources)
-	variant.unitTest?.componentTreesDir?.let(addGeneratedSources)
-	variant.unitTest?.componentSourcesDir?.let(addGeneratedSources)
+	(variant as? HasUnitTest)?.unitTest?.componentTreesDir?.let(addGeneratedSources)
+	(variant as? HasUnitTest)?.unitTest?.componentSourcesDir?.let(addGeneratedSources)
 	(variant as? HasAndroidTest)?.androidTest?.componentTreesDir?.let(addGeneratedSources)
 	(variant as? HasAndroidTest)?.androidTest?.componentSourcesDir?.let(addGeneratedSources)
 }

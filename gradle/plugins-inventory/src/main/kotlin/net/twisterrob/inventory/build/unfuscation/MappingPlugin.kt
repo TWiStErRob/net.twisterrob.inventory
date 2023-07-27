@@ -17,10 +17,10 @@ import org.gradle.kotlin.dsl.register
 
 class MappingPlugin : Plugin<Project> {
 
-	@Suppress("UnstableApiUsage")
 	override fun apply(project: Project) {
 		(project.androidComponents as ApplicationAndroidComponentsExtension).onVariants { variant ->
 			val skipReason = mutableListOf<String>()
+			@Suppress("UnstableApiUsage")
 			if (!variant.isMinifyEnabled) {
 				skipReason += "not obfuscated"
 			}

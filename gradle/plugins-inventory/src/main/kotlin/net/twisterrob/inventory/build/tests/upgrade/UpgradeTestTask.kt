@@ -29,7 +29,6 @@ import org.gradle.work.DisableCachingByDefault
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-@Suppress("UnstableApiUsage")
 @DisableCachingByDefault(because = "Lots of external factors")
 abstract class UpgradeTestTask : DefaultTask() {
 
@@ -51,6 +50,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 		val deviceProvider = instrument.deviceProviderFactory.getDeviceProvider(adb, null)
 		val device = try {
 			deviceProvider.init()
+			@Suppress("UnstableApiUsage")
 			deviceProvider.devices.single() as ConnectedDevice
 		} finally {
 			deviceProvider.terminate()
@@ -129,6 +129,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 
 	private fun runTest(
 		testData: TestData,
+		@Suppress("UnstableApiUsage")
 		device: DeviceConnector,
 		runListener: TestAwareCustomTestRunListener,
 		results: File,
@@ -163,6 +164,7 @@ abstract class UpgradeTestTask : DefaultTask() {
 }
 
 val Variant.services: VariantServices
+	@Suppress("PrivateApi")
 	get() = ComponentImpl::class.java
 		.getDeclaredField("internalServices")
 		.apply { isAccessible = true }

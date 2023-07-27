@@ -13,12 +13,12 @@ import java.io.FileInputStream
 import java.util.Locale
 
 // Currently not used, this version was just a test to try to generate a mapping from *.jar/**/*.class files
-@Suppress("UnstableApiUsage")
 class GenerateDebugMappingPlugin : Plugin<Project> {
 
 	@Suppress("LongMethod")
 	override fun apply(project: Project) {
 		(project.androidComponents as ApplicationAndroidComponentsExtension).onVariants { variant ->
+			@Suppress("UnstableApiUsage")
 			if (!variant.isMinifyEnabled) return@onVariants
 			val mapping = variant.artifacts
 				.get(SingleArtifact.OBFUSCATION_MAPPING_FILE)
