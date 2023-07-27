@@ -39,6 +39,15 @@ public class DatabaseService extends VariantIntentService {
 	@Inject LanguageUpdater languageUpdater;
 	@Inject CategoryCacheHolder categoryCacheHolder;
 
+	public static void enqueueWork(@NonNull Context context, @NonNull Intent work) {
+		enqueueWork(
+				context,
+				DatabaseService.class,
+				DatabaseService.class.getName().hashCode(),
+				work
+		);
+	}
+
 	@Override protected void onHandleWork(@NonNull Intent intent) {
 		super.onHandleWork(intent);
 		String action = String.valueOf(intent.getAction()); // null becomes "null", so we can switch on it
