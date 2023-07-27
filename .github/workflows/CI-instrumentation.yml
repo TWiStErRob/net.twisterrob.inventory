@@ -11,7 +11,6 @@ jobs:
     uses: TWiStErRob/github-workflows/.github/workflows/instrumentation.yml@v1
     with:
       android-api: ${{ matrix.api }}
-      java-version: 11
       timeout-minutes: 60
       script: |
         # Used by net.twisterrob.android.test.SystemAnimations

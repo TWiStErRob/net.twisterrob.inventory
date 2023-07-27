@@ -26,7 +26,7 @@ import android.app.Activity;
  * It's probably also useful for testing application exiting and restarting,
  * because the test keeps running even though the tested activity is destroyed.
  *
- *    @see net.twisterrob.inventory.android.UpgradeTests
+ * @see net.twisterrob.inventory.android.upgrade.UpgradeTests
  */
 public class CompatibleLauncher extends Activity {
 	// empty activity

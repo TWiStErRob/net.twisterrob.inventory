@@ -86,6 +86,9 @@ android {
 		resConfigs "en_GB", "en_NZ", "en_AU" //, "hu"
 		testInstrumentationRunner = "net.twisterrob.inventory.android.InventoryJUnitRunner"
 	}
+	buildFeatures {
+		buildConfig = true
+	}
 	lint {
 		checkAllWarnings = true
 		checkDependencies = true
@@ -129,10 +132,7 @@ dependencies.components {
 }
 
 tasks.withType(Test).configureEach {
-	if ( // 9 <= Java < 17
-			javaVersion.isCompatibleWith(JavaVersion.VERSION_1_9)
-					&& !javaVersion.isCompatibleWith(JavaVersion.VERSION_17)
-	) {
+	if (javaVersion.isCompatibleWith(JavaVersion.VERSION_1_9)) { // 9 <= Java
 		jvmArgs(
 				// TODEL https://github.com/x-stream/xstream/issues/101#issuecomment-1465270756
 				"--add-opens=java.base/java.lang=ALL-UNNAMED",

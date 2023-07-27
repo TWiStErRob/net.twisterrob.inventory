@@ -1,4 +1,4 @@
-package net.twisterrob.inventory.android;
+package net.twisterrob.inventory.android.upgrade;
 
 import java.io.File;
 import java.util.Collection;
@@ -35,6 +35,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 import net.twisterrob.android.test.espresso.idle.DrawerIdlingResource;
 import net.twisterrob.android.test.junit.*;
+import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.content.Database;
@@ -93,14 +94,10 @@ public class UpgradeTests {
 	private File downloads;
 	private File db;
 
-	@BeforeClass public static void assumeUpgrade() {
+	/** @see net.twisterrob.inventory.android.test.activity.CompatibleLauncher */
+	@Before public void launchMain() {
 		assumeThat("Only run when instrumentation arguments contain \"" + LAUNCH_KEY + "\"",
 				InstrumentationRegistry.getArguments(), hasKey(LAUNCH_KEY));
-	}
-
-	/** @see net.twisterrob.inventory.android.test.activity.CompatibleLauncher */
-	@SuppressWarnings("deprecation")
-	@Before public void launchMain() {
 		downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		db = getApplicationContext().getDatabasePath(Database.NAME);
 		assumeThat(downloads, anExistingDirectory());
