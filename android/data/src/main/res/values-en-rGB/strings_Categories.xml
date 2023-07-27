@@ -28,7 +28,7 @@
 	<!-- possession: goods that someone owns. -->
 	<string name="category_group_description">logically holds other possessions together</string>
 	<!-- kit: A set of articles or implements used for a specific purpose. A set of parts or materials to be assembled. A packaged set of related materials. -->
-	<string name="category_part_description">kit that\'s useless by itself</string>
+	<string name="category_part_description">kit that’s useless by itself</string>
 	<!-- property: Something owned; a possession. Possessions collectively or the fact of owning possessions of value. -->
 	<string name="category_image_description">extra images of your properties</string>
 	<!-- impedimenta: Objects, such as provisions or baggage, that impede or encumber. -->
@@ -46,7 +46,7 @@
 	<!-- clutter: A disordered heap or mass of objects. A confused or disordered state or collection; a jumble. -->
 	<string name="category_decoration_description">trappings that make your clutter look pretty</string>
 	<!-- lares and penates: The cherished possessions of a family or household. Treasured household possessions. -->
-	<string name="category_collectible_description">lares and penates you don\'t need, but still have</string>
+	<string name="category_collectible_description">lares and penates you don’t need, but still have</string>
 	<!-- clobber (UK slang): Personal belongings, such as clothes and accessories. -->
 	<string name="category_clothing_description">clobber to put on your body</string>
 	<!-- tackle: The equipment used in a particular activity, especially in fishing; gear. -->
