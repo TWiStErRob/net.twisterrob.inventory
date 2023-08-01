@@ -79,6 +79,7 @@ import static net.twisterrob.test.hamcrest.Matchers.*;
  * @see InstrumentationRegistry#getArguments()
  */
 @RunWith(AndroidJUnit4.class)
+@SkipOnCI(reason = "Do not execute them as part of the normal test suite.")
 public class UpgradeTests {
 	private static final Logger LOG = LoggerFactory.getLogger(UpgradeTests.class);
 
@@ -145,7 +146,6 @@ public class UpgradeTests {
 	}
 
 	@FlakyTest(detail = "On 2.3.7 it sometimes taps on Properties instead of Backup in the drawer")
-	@SkipOnCI(reason = "TODO obsolete ignore probably")
 	@Test public void testVerifyVersion2() throws Throwable {
 		assertThat("Second released version", BuildConfig.class, hasVersionCode(greaterThanOrEqualTo(10002111)));
 		assertNoDialogIsDisplayed();
