@@ -3,7 +3,6 @@ package net.twisterrob.inventory.android.activity;
 import java.io.File;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -15,6 +14,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 import androidx.test.filters.SdkSuppress;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.android.test.automators.DocumentsUiAutomator;
 import net.twisterrob.inventory.android.test.ExternalAppKiller;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -91,6 +91,7 @@ public class BackupActivityTest_Import {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
 	@FlakyTest(bugId = 275, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
+	@SkipOnCI(reason = "Runs too long and dialog is not shown.")
 	@Test public void testImportReal() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		File file = temp.newFile();

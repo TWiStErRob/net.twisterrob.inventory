@@ -33,6 +33,7 @@ import static androidx.test.espresso.intent.matcher.BundleMatchers.hasKey;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.android.test.espresso.idle.DrawerIdlingResource;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.inventory.android.BuildConfig;
@@ -144,6 +145,7 @@ public class UpgradeTests {
 	}
 
 	@FlakyTest(detail = "On 2.3.7 it sometimes taps on Properties instead of Backup in the drawer")
+	@SkipOnCI(reason = "TODO obsolete ignore probably")
 	@Test public void testVerifyVersion2() throws Throwable {
 		assertThat("Second released version", BuildConfig.class, hasVersionCode(greaterThanOrEqualTo(10002111)));
 		assertNoDialogIsDisplayed();
