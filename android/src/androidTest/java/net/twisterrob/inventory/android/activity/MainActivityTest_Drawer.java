@@ -8,7 +8,6 @@ import androidx.test.espresso.*;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 
-import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.*;
 import net.twisterrob.inventory.android.test.actors.MainActivityActor.*;
@@ -85,7 +84,6 @@ public class MainActivityTest_Drawer {
 	}
 
 	@FlakyTest(detail = "when animations are enabled and the whole class is executed at once")
-	@SkipOnCI(reason = "TODO these are probably fine to enable because animations are off")
 	@Test public void testBackupAndBackDeep() {
 		{
 			PropertiesNavigator properties = main.openProperties();
@@ -108,7 +106,6 @@ public class MainActivityTest_Drawer {
 	}
 
 	@FlakyTest(detail = "when animations are enabled and the whole class is executed at once")
-	@SkipOnCI(reason = "TODO these are probably fine to enable because animations are off")
 	@Test public void testBackNavigation_Multiple() {
 		{
 			PropertiesNavigator properties = main.openProperties();
