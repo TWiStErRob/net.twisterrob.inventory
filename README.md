@@ -7,12 +7,6 @@ Build Everything
 gradlew clean assemble assembleDebugAndroidTest compileDebugUnitTestSources -x :android:lintVitalRelease --no-build-cache
 ```
 
-Run all UI tests
-```
-gradlew connectedCheck --continue mergeAndroidReports
-```
-
-
 Useful Settings
 ---------------
 

@@ -1,7 +1,6 @@
 Release play-by-play
 --------------------
 
-1. Fix all warnings `gradlew clean releaseCheck` should yield 0 warnings.
 1. Commit all changes (`svn status` should be empty)
 1. `svn update` just to be sure (double-check with `svn info`)
 1. `gradlew clean :android:assembleAndroidTest :android:release` (1m before ProGuard, 1m for ProGuard)
