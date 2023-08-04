@@ -51,6 +51,7 @@ androidx-transition = "1.4.1" # https://developer.android.com/jetpack/androidx/r
 androidx-vectordrawable = "1.1.0" # https://developer.android.com/jetpack/androidx/releases/vectordrawable
 androidx-viewpager = "1.0.0" # https://developer.android.com/jetpack/androidx/releases/viewpager
 androidx-viewpager2 = "1.0.0" # https://developer.android.com/jetpack/androidx/releases/viewpager2
+androidx-webkit = "1.7.0" # https://developer.android.com/jetpack/androidx/releases/webkit
 androidx-test-junit = "1.1.5" # https://developer.android.com/jetpack/androidx/releases/test
 androidx-test-core = "1.5.0" # https://developer.android.com/jetpack/androidx/releases/test
 androidx-test-monitor = "1.6.1" # https://developer.android.com/jetpack/androidx/releases/test
@@ -136,6 +137,7 @@ androidx-transition = { module = "androidx.transition:transition", version.ref =
 androidx-vectordrawable = { module = "androidx.vectordrawable:vectordrawable", version.ref = "androidx-vectordrawable" }
 androidx-viewpager = { module = "androidx.viewpager:viewpager", version.ref = "androidx-viewpager" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "androidx-viewpager2" }
+androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "androidx-webkit" }
 androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-junit" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }

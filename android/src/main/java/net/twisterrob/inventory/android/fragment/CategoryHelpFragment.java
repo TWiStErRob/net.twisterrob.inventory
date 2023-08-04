@@ -20,6 +20,9 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.*;
+import androidx.webkit.WebViewAssetLoader;
+import androidx.webkit.WebViewAssetLoader.InternalStoragePathHandler;
+import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
@@ -74,10 +77,16 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		}
 		web.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		web.getSettings().setJavaScriptEnabled(true);
-		web.getSettings().setAllowFileAccess(true);
 		//web.getSettings().setBuiltInZoomControls(true);
 		WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
 		web.setWebViewClient(new WebViewClient() {
+			private final WebViewAssetLoader website = setupWebsite();
+
+			@Override
+			public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+				return website.shouldInterceptRequest(request.getUrl());
+			}
+
 			@Override public void onPageFinished(WebView view, String url) {
 				long category = Intents.getCategory(requireArguments());
 				requireArguments().remove(Extras.CATEGORY_ID); // run only once
@@ -113,13 +122,16 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					web.loadData("Loading...", "text/html", null);
 				}
 				@Override protected Uri doInBackground(Void ignore) throws IOException {
-					File file = new File(requireContext().getCacheDir(), "categories.html");
+					File dir = new File(requireContext().getCacheDir(), "categories");
+					IOTools.ensure(dir);
+					File file = new File(dir, "index.html");
 					String html = new CategoryHelpBuilder(requireContext()).buildHTML();
 					IOTools.writeAll(new FileOutputStream(file), html);
 					return Uri.fromFile(file);
 				}
 				@Override protected void onResult(Uri result, Void ignore) {
-					web.loadUrl(result.toString());
+					// See CategoryHelpFragment.setupWebsite.
+					web.loadUrl("https://inventory.twisterrob.net/categories/index.html");
 				}
 				@Override protected void onError(@NonNull Exception ex, Void ignore) {
 					App.toastUser(ex.toString());
@@ -189,6 +201,22 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 			}
 		}, target);
 	}
+
+	private @NonNull WebViewAssetLoader setupWebsite() {
+		ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+		try {
+			File categories = new File(requireContext().getCacheDir(), "categories");
+			return new WebViewAssetLoader.Builder()
+					.setHttpAllowed(false) // https:// only.
+					.setDomain("inventory.twisterrob.net")
+					.addPathHandler("/categories/", new InternalStoragePathHandler(requireContext(), categories))
+					.addPathHandler("/res/", new ResourcesPathHandler(requireContext()))
+					.build();
+		} finally {
+			StrictMode.setThreadPolicy(originalPolicy);
+		}
+	}
+
 
 	public static CategoryHelpFragment newInstance(long categoryID) {
 		CategoryHelpFragment fragment = new CategoryHelpFragment();
