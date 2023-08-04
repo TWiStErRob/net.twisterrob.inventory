@@ -88,15 +88,17 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 			}
 
 			@Override public void onPageFinished(WebView view, String url) {
-				long category = Intents.getCategory(requireArguments());
-				requireArguments().remove(Extras.CATEGORY_ID); // run only once
-				if (category != Category.ID_ADD) {
-					String key = cache.getCategoryKey(category);
-					LOG.trace("Navigating to {} ({})", key, category);
-					// http://stackoverflow.com/a/12266640/253468
-					String jumpToCategory = "document.location.hash = '" + key + "';";
-					view.loadUrl("javascript:(function() { " + jumpToCategory + "})()");
-					// view.evaluateJavascript was added in API 19, so it cannot be used
+				if (url.endsWith("/categories/index.html")) {
+					long category = Intents.getCategory(requireArguments());
+					requireArguments().remove(Extras.CATEGORY_ID); // run only once
+					if (category != Category.ID_ADD) {
+						String key = cache.getCategoryKey(category);
+						LOG.trace("Navigating to {} ({})", key, category);
+						// http://stackoverflow.com/a/12266640/253468
+						String jumpToCategory = "document.location.hash = '" + key + "';";
+						view.loadUrl("javascript:(function() { " + jumpToCategory + "})()");
+						// view.evaluateJavascript was added in API 19, so it cannot be used
+					}
 				}
 			}
 			@SuppressWarnings("deprecation") // cannot use API 23 version, app supports API 21
