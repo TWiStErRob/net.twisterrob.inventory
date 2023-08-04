@@ -74,6 +74,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		}
 		web.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		web.getSettings().setJavaScriptEnabled(true);
+		web.getSettings().setAllowFileAccess(true);
 		//web.getSettings().setBuiltInZoomControls(true);
 		WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
 		web.setWebViewClient(new WebViewClient() {
