@@ -131,7 +131,7 @@ public class CategoryHelpBuilder {
 	private void writeCat(StringBuilder out, Cursor cursor) {
 		String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
 		String categoryIconName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
-		String categoryIconUrl = String.format(Locale.ROOT, "https://inventory.twisterrob.net/res/raw/%s.svg", categoryIconName);
+		String categoryIconUrl = String.format(Locale.ROOT, "/res/raw/%s.svg", categoryIconName);
 		Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
 		CharSequence categoryTitle = ResourceTools.getText(context, categoryName);
 		if (parentID == null) {
