@@ -99,6 +99,7 @@ public class CategoryHelpBuilder {
 			+ "     <br/>\n"
 			+ "     <span>*</span> Click subcategories to toggle their keywords.<br/>\n"
 			+ "     <span>^</span> Click the up arrows to go to the top of the page.<br/>\n"
+			+ "     <span>\uD83D\uDDBC</span> Click category icons to open a large version.<br/>\n"
 			+ "</p>\n\n";
 
 	private static final String FOOTER = "<script>\n"
