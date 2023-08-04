@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 import androidx.test.filters.SdkSuppress;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.android.test.automators.DocumentsUiAutomator;
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.test.ExternalAppKiller;
@@ -45,6 +46,7 @@ public class BackupActivityTest_Export {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
 	@FlakyTest(bugId = 275, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
+	@SkipOnCI(reason = "Runs too long and dialog is not shown.")
 	@Test public void testExportCompletes() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		BackupExportPickerActor pickerActor = backup.exportBackup();
@@ -60,6 +62,7 @@ public class BackupActivityTest_Export {
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Rotates.class, On.External.class})
 	@FlakyTest(bugId = 275, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
+	@SkipOnCI(reason = "Runs too long and dialog is not shown.")
 	@Test public void testExportCompletesWhenPickerRotated() throws Exception {
 		BackupExportPickerActor.assumeFunctional();
 		BackupExportPickerActor pickerActor = backup.exportBackup();

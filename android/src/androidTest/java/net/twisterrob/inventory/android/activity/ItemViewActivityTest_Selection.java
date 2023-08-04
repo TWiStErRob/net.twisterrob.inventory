@@ -12,6 +12,7 @@ import androidx.test.filters.FlakyTest;
 import static androidx.test.espresso.action.ViewActions.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.activity.data.ItemViewActivity;
 import net.twisterrob.inventory.android.content.*;
@@ -206,6 +207,7 @@ public class ItemViewActivityTest_Selection {
 	@SuppressWarnings("deprecation") // TODO
 	@Category({UseCase.Complex.class})
 	@FlakyTest(bugId = 215, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
+	@SkipOnCI(reason = "Hangs, because it's not able to select an item in the dialog.")
 	@Test public void testSelectionTypeChange() {
 		createItems(4);
 		db.assertItemHasType(subItem(1), TEST_ITEM_CATEGORY_DEFAULT);
@@ -229,6 +231,7 @@ public class ItemViewActivityTest_Selection {
 
 	@SuppressWarnings("deprecation") // TODO
 	@FlakyTest(bugId = 215, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
+	@SkipOnCI(reason = "Hangs, because it's not able to select an item in the dialog.")
 	@Test public void testSelectionTypeChangeAtOnce() {
 		createItems(3);
 		db.setItemCategory(subItem(1), TEST_ITEM_CATEGORY);

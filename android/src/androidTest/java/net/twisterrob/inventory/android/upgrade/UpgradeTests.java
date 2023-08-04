@@ -33,6 +33,7 @@ import static androidx.test.espresso.intent.matcher.BundleMatchers.hasKey;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.android.test.espresso.idle.DrawerIdlingResource;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.inventory.android.BuildConfig;
@@ -78,6 +79,7 @@ import static net.twisterrob.test.hamcrest.Matchers.*;
  * @see InstrumentationRegistry#getArguments()
  */
 @RunWith(AndroidJUnit4.class)
+@SkipOnCI(reason = "Do not execute them as part of the normal test suite.")
 public class UpgradeTests {
 	private static final Logger LOG = LoggerFactory.getLogger(UpgradeTests.class);
 

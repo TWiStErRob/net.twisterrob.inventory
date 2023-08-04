@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 
+import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.inventory.android.activity.data.ItemEditActivity;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
@@ -49,6 +50,7 @@ public class ItemEditActivityTest_Edit {
 
 	@Category({On.Category.class})
 	@FlakyTest(bugId = 215, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/215")
+	@SkipOnCI(reason = "Hangs, because it's not able to select an item in the dialog.")
 	@Test public void testChangeTypeWithDialog() {
 		ChangeTypeDialogActor changeType = itemEdit.changeType();
 		changeType.assertSelected(TEST_ITEM_CATEGORY);

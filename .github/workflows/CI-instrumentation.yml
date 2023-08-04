@@ -27,7 +27,7 @@ jobs:
         #adb shell pm grant ${packageName} android.permission.WRITE_SECURE_SETTINGS
         adb shell settings put secure long_press_timeout 1500
         
-        ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=androidx.test.filters.FlakyTest
+        ./gradlew --no-daemon --stacktrace :android:connectedCheck -Pandroid.testInstrumentationRunnerArguments.notAnnotation=net.twisterrob.android.test.SkipOnCI
         ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck
 
     strategy:
