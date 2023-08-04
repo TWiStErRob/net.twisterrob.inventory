@@ -113,8 +113,10 @@ public class CategoryHelpBuilder {
 	private static final int EMPIRIC_SIZE = 150 * 1024;
 
 	private final @NonNull Context context;
-	public CategoryHelpBuilder(@NonNull Context context) {
+	private final boolean useImages;
+	public CategoryHelpBuilder(@NonNull Context context, boolean useImages) {
 		this.context = context;
+		this.useImages = useImages;
 	}
 
 	public String buildHTML() {
@@ -179,7 +181,10 @@ public class CategoryHelpBuilder {
 		}
 	}
 
-	private static @NonNull String img(String categoryIconName, String categoryIconUrl) {
+	private @NonNull String img(String categoryIconName, String categoryIconUrl) {
+		if (!useImages) {
+			return "";
+		}
 		return String.format(Locale.ROOT, "<a href=\"%s\"><img alt=\"%s\" src=\"%s\" /></a>",
 				categoryIconUrl, categoryIconName, categoryIconUrl);
 	}

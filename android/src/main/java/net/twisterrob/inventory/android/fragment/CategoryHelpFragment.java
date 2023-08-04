@@ -141,7 +141,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 					File dir = new File(requireContext().getCacheDir(), "categories");
 					IOTools.ensure(dir);
 					File file = new File(dir, "index.html");
-					String html = new CategoryHelpBuilder(requireContext()).buildHTML();
+					String html = new CategoryHelpBuilder(requireContext(), true).buildHTML();
 					IOTools.writeAll(new FileOutputStream(file), html);
 					return Uri.fromFile(file);
 				}
@@ -173,7 +173,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				@Override protected @Nullable File doInBackground(@Nullable Void ignore)
 						throws IOException {
 					file = Paths.getShareFile(context, "html");
-					String html = new CategoryHelpBuilder(context).buildHTML();
+					String html = new CategoryHelpBuilder(context, false).buildHTML();
 					IOTools.writeAll(new FileOutputStream(file), html);
 					return file;
 				}
@@ -205,7 +205,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		final Context context = requireContext();
 		AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Uri, Void, Void>() {
 			@Override protected Void doInBackground(Uri target) throws Exception {
-				String html = new CategoryHelpBuilder(context).buildHTML();
+				String html = new CategoryHelpBuilder(context, false).buildHTML();
 				IOTools.writeAll(context.getContentResolver().openOutputStream(target), html);
 				return null;
 			}
