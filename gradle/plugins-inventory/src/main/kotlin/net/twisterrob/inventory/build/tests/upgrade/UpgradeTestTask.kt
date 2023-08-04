@@ -109,7 +109,6 @@ abstract class UpgradeTestTask : DefaultTask() {
 
 	private fun installOld(realDevice: IDevice, debugVariant: ApplicationVariant, version: String) {
 		val applicationId = debugVariant.applicationId.get()
-		// FIXME release debug build as well
 		val oldApk =
 			File("${System.getenv("RELEASE_HOME")}/android/${applicationId}@${version}d+debug.apk")
 		logger.info("Uninstalling package: ${applicationId}")
