@@ -24,7 +24,7 @@ public class CategoryHelpBuilder {
 			+ "    margin: 0;\n"
 			+ "    margin-top: 0.25em;\n"
 			+ "}\n"
-			+ "h2.category > img {\n"
+			+ "h2.category > a > img {\n"
 			+ "    width: 24px;\n"
 			+ "    height: 24px;\n"
 			+ "    margin-right: 4px;\n"
@@ -33,7 +33,7 @@ public class CategoryHelpBuilder {
 			+ "    margin: 0;\n"
 			+ "    margin-top: 0.5em;\n"
 			+ "}\n"
-			+ "h3.subcategory > img {\n"
+			+ "h3.subcategory > a > img {\n"
 			+ "    width: 16px;\n"
 			+ "    height: 16px;\n"
 			+ "    margin-right: 4px;\n"
@@ -180,8 +180,8 @@ public class CategoryHelpBuilder {
 	}
 
 	private static @NonNull String img(String categoryIconName, String categoryIconUrl) {
-		return String.format(Locale.ROOT, "<img alt=\"%s\" src=\"%s\" />",
-				categoryIconName, categoryIconUrl);
+		return String.format(Locale.ROOT, "<a href=\"%s\"><img alt=\"%s\" src=\"%s\" /></a>",
+				categoryIconUrl, categoryIconName, categoryIconUrl);
 	}
 
 	private static final Pattern KEYWORD_SPLITTER = Pattern.compile("(?m)\\s*([^,]+?)\\s*([,;]|\\z)");

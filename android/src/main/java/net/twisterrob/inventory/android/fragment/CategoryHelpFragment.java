@@ -17,6 +17,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.webkit.*;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.*;
@@ -89,6 +90,7 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 
 			@Override public void onPageFinished(WebView view, String url) {
 				if (url.endsWith("/categories/index.html")) {
+					web.clearHistory(); // https://stackoverflow.com/a/8103581/253468
 					long category = Intents.getCategory(requireArguments());
 					requireArguments().remove(Extras.CATEGORY_ID); // run only once
 					if (category != Category.ID_ADD) {
@@ -112,6 +114,18 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 				return false;
 			}
 		});
+		requireActivity()
+				.getOnBackPressedDispatcher()
+				.addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+					@Override public void handleOnBackPressed() {
+						if (web.canGoBack()) {
+							web.goBack();
+						} else {
+							remove();
+							requireActivity().onBackPressed();
+						}
+					}
+				});
 		return web;
 	}
 
