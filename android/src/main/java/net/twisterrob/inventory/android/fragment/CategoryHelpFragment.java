@@ -209,8 +209,10 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 			return new WebViewAssetLoader.Builder()
 					.setHttpAllowed(false) // https:// only.
 					.setDomain("inventory.twisterrob.net")
+					// Must be first, otherwise the the next one will just look on disk.
+					// The suffix /res/ is important, otherwise the next one will never be used.
+					.addPathHandler("/categories/res/", new ResourcesPathHandler(requireContext()))
 					.addPathHandler("/categories/", new InternalStoragePathHandler(requireContext(), categories))
-					.addPathHandler("/res/", new ResourcesPathHandler(requireContext()))
 					.build();
 		} finally {
 			StrictMode.setThreadPolicy(originalPolicy);
