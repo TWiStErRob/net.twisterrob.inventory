@@ -25,6 +25,7 @@ import androidx.webkit.WebViewAssetLoader;
 import androidx.webkit.WebViewAssetLoader.InternalStoragePathHandler;
 import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler;
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.io.FilesKt;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.AndroidTools;
@@ -133,21 +134,21 @@ public class CategoryHelpFragment extends BaseFragment<Void> {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (savedInstanceState == null) {
-			AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Float, Uri>() {
+			AndroidTools.executePreferParallel(new SimpleSafeAsyncTask<Void, Float, String>() {
 				@Override protected void onPreExecute() {
 					web.loadData("Loading...", "text/html", null);
 				}
-				@Override protected Uri doInBackground(Void ignore) throws IOException {
+				@Override protected String doInBackground(Void ignore) throws IOException {
 					File dir = new File(requireContext().getCacheDir(), "categories");
 					IOTools.ensure(dir);
 					File file = new File(dir, "index.html");
 					String html = new CategoryHelpBuilder(requireContext(), true).buildHTML();
 					IOTools.writeAll(new FileOutputStream(file), html);
-					return Uri.fromFile(file);
+					return FilesKt.relativeTo(file, requireContext().getCacheDir()).toString();
 				}
-				@Override protected void onResult(Uri result, Void ignore) {
+				@Override protected void onResult(String result, Void ignore) {
 					// See CategoryHelpFragment.setupWebsite.
-					web.loadUrl("https://inventory.twisterrob.net/categories/index.html");
+					web.loadUrl("https://inventory.twisterrob.net/" + result);
 				}
 				@Override protected void onError(@NonNull Exception ex, Void ignore) {
 					App.toastUser(ex.toString());
