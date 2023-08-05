@@ -2,6 +2,7 @@ plugins {
 	id("net.twisterrob.inventory.android.app")
 	id("net.twisterrob.inventory.mapping")
 	id("net.twisterrob.inventory.upgradeTest")
+	id("net.twisterrob.inventory.build.tests.instrumentation")
 }
 
 dependencies {
@@ -149,8 +150,13 @@ tasks.withType(Test).configureEach {
 
 // CONSIDER a rewrite of plugin "android-reporting" (see Color Filters repo)
 def copyAndroidTestResults = tasks.register("copyAndroidTestResults", Sync) {
+	// No SingleArtifact/InternalArtifactType in AGP 8.1 for androidTest results/reports, so hardcode.
 	from(layout.buildDirectory.dir("reports/androidTests/connected/debug"))
 	from(layout.buildDirectory.dir("outputs/androidTest-results/connected/debug"))
 	into(rootProject.layout.buildDirectory.dir("androidTest-results"))
 }
-tasks.named("connectedDebugAndroidTest").configure { finalizedBy(copyAndroidTestResults) }
+afterEvaluate {
+	tasks.named("connectedDebugAndroidTest").configure {
+		finalizedBy(copyAndroidTestResults)
+	}
+}
