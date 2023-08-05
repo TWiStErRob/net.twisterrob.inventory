@@ -24,9 +24,19 @@ public class CategoryHelpBuilder {
 			+ "    margin: 0;\n"
 			+ "    margin-top: 0.25em;\n"
 			+ "}\n"
+			+ "h2.category > a > img {\n"
+			+ "    width: 24px;\n"
+			+ "    height: 24px;\n"
+			+ "    margin-right: 4px;\n"
+			+ "}\n"
 			+ "h3.subcategory {\n"
 			+ "    margin: 0;\n"
 			+ "    margin-top: 0.5em;\n"
+			+ "}\n"
+			+ "h3.subcategory > a > img {\n"
+			+ "    width: 16px;\n"
+			+ "    height: 16px;\n"
+			+ "    margin-right: 4px;\n"
 			+ "}\n"
 			+ ".level {\n"
 			+ "    margin-left: 1em;\n"
@@ -89,6 +99,7 @@ public class CategoryHelpBuilder {
 			+ "     <br/>\n"
 			+ "     <span>*</span> Click subcategories to toggle their keywords.<br/>\n"
 			+ "     <span>^</span> Click the up arrows to go to the top of the page.<br/>\n"
+			+ "     <span>\uD83D\uDDBC</span> Click category icons to open a large version.<br/>\n"
 			+ "</p>\n\n";
 
 	private static final String FOOTER = "<script>\n"
@@ -103,8 +114,10 @@ public class CategoryHelpBuilder {
 	private static final int EMPIRIC_SIZE = 150 * 1024;
 
 	private final @NonNull Context context;
-	public CategoryHelpBuilder(@NonNull Context context) {
+	private final boolean useImages;
+	public CategoryHelpBuilder(@NonNull Context context, boolean useImages) {
 		this.context = context;
+		this.useImages = useImages;
 	}
 
 	public String buildHTML() {
@@ -130,13 +143,19 @@ public class CategoryHelpBuilder {
 	}
 	private void writeCat(StringBuilder out, Cursor cursor) {
 		String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.NAME));
+		String categoryIconName = cursor.getString(cursor.getColumnIndexOrThrow(CommonColumns.TYPE_IMAGE));
+		String categoryIconUrl = String.format(Locale.ROOT, "res/raw/%s.svg", categoryIconName);
 		Long parentID = DatabaseTools.getOptionalLong(cursor, ParentColumns.PARENT_ID);
 		CharSequence categoryTitle = ResourceTools.getText(context, categoryName);
 		if (parentID == null) {
 			CharSequence description = ResourceTools.getText(context, ResourceNames.getDescriptionName(categoryName));
 			out.append(String.format(Locale.ROOT,
-					"<h2 class=\"category\" id=\"%s\">%s<a href=\"#toc\">^</a><span class=\"description\">%s</span></h2>\n",
-					categoryName, categoryTitle, description));
+					"<h2 class=\"category\" id=\"%s\">%s%s<a href=\"#toc\">^</a><span class=\"description\">%s</span></h2>\n",
+					categoryName,
+					img(categoryIconName, categoryIconUrl),
+					categoryTitle,
+					description
+			));
 		} else {
 			CharSequence keywords;
 			try {
@@ -146,8 +165,13 @@ public class CategoryHelpBuilder {
 			}
 			String toc = getLevel(cursor) <= 1?
 					"<a href=\"#toc\" onclick=\"arguments[0].stopPropagation()\">^</a>" : "";
-			out.append(String.format(Locale.ROOT, "<h3 class=\"subcategory%s\" id=\"%s\">%s%s</h3>\n",
-					!TextUtils.isEmpty(keywords)? " has-keywords" : "", categoryName, categoryTitle, toc));
+			out.append(String.format(Locale.ROOT, "<h3 class=\"subcategory%s\" id=\"%s\">%s%s%s</h3>\n",
+					!TextUtils.isEmpty(keywords)? " has-keywords" : "",
+					categoryName,
+					img(categoryIconName, categoryIconUrl),
+					categoryTitle,
+					toc
+			));
 			out.append("<p class=\"keywords level\">\n");
 			if (!TextUtils.isEmpty(keywords)) {
 				appendKeywords(out, keywords);
@@ -157,6 +181,15 @@ public class CategoryHelpBuilder {
 			out.append("\n</p>");
 		}
 	}
+
+	private @NonNull String img(String categoryIconName, String categoryIconUrl) {
+		if (!useImages) {
+			return "";
+		}
+		return String.format(Locale.ROOT, "<a href=\"%s\"><img alt=\"%s\" src=\"%s\" /></a>",
+				categoryIconUrl, categoryIconName, categoryIconUrl);
+	}
+
 	private static final Pattern KEYWORD_SPLITTER = Pattern.compile("(?m)\\s*([^,]+?)\\s*([,;]|\\z)");
 	private void appendKeywords(StringBuilder out, CharSequence keywords) {
 		Matcher matcher = KEYWORD_SPLITTER.matcher(keywords);
