@@ -30,6 +30,7 @@ import net.twisterrob.inventory.android.fragment.BaseFragment;
 import net.twisterrob.inventory.android.view.adapters.TypeAdapter;
 
 import static net.twisterrob.android.utils.tools.AndroidTools.*;
+
 public class ChangeTypeDialog {
 	private final @NonNull BaseFragment<?> fragment;
 	private final @NonNull Context context;

@@ -130,42 +130,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				});
 			}
 		});
-		if (this instanceof ItemEditFragment) {
-			typeImage.setOnClickListener(new OnClickListener() {
-				@SuppressLint("WrongThreadInterprocedural")
-				@Override public void onClick(View v) {
-					new ChangeTypeDialog(BaseEditFragment.this).show(new Variants() {
-						@Override protected void update(Cursor cursor) {
-							AndroidTools.selectByID(type, DatabaseTools.getLong(cursor, Item.ID));
-						}
-						@Override protected CharSequence getTitle() {
-							return getString(R.string.item_categorize_title, getName());
-						}
-						@Override protected Loaders getTypesLoader() {
-							return Loaders.ItemCategories;
-						}
-						@Override protected CharSequence getName() {
-							return name.getText();
-						}
-						@Override protected boolean isExpandable() {
-							return true; // only for items (see instanceof above)
-						}
-						@Override protected Bundle createArgs(long type) {
-							return Intents.bundleFromCategory(type);
-						}
-						@Override public CharSequence getTypeName(Cursor cursor) {
-							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							return cache.getCategoryPath(categoryID);
-						}
-						@Override public CharSequence getKeywords(Cursor cursor) {
-							long categoryID = DatabaseTools.getLong(cursor, Category.ID);
-							String categoryKey = cache.getCategoryKey(categoryID);
-							return visuals.getKeywords(categoryKey, true);
-						}
-					}, type.getSelectedItemId());
-				}
-			});
-		}
+		typeImage.setEnabled(true);
 	}
 
 	private boolean tryRestore() {
@@ -225,6 +190,15 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 
 		typeImage = view.findViewById(R.id.type);
 		ViewTools.displayedIf(typeImage, this instanceof ItemEditFragment);
+		if (this instanceof ItemEditFragment) {
+			typeImage.setOnClickListener(new OnClickListener() {
+				@Override public void onClick(View v) {
+					new ChangeTypeDialog(BaseEditFragment.this)
+							.show(new ItemEditVariants(), type.getSelectedItemId());
+				}
+			});
+			typeImage.setEnabled(isNew());
+		}
 
 		name = view.findViewById(R.id.title);
 		AndroidTools.setHint(name, (Integer)getDynamicResource(DYN_NameHintResource));
@@ -503,6 +477,37 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 	private @RawRes int getTypeImageID() {
 		Cursor cursor = (Cursor)type.getItemAtPosition(type.getSelectedItemPosition());
 		return cursor != null? ImagedDTO.getFallbackID(requireContext(), cursor) : R.raw.category_unknown;
+	}
+
+	@SuppressLint("WrongThreadInterprocedural")
+	private class ItemEditVariants extends Variants {
+		@Override protected void update(Cursor cursor) {
+			AndroidTools.selectByID(type, DatabaseTools.getLong(cursor, Item.ID));
+		}
+		@Override protected CharSequence getTitle() {
+			return getString(R.string.item_categorize_title, getName());
+		}
+		@Override protected Loaders getTypesLoader() {
+			return Loaders.ItemCategories;
+		}
+		@Override protected CharSequence getName() {
+			return name.getText();
+		}
+		@Override protected boolean isExpandable() {
+			return true; // only for items (see instanceof above)
+		}
+		@Override protected Bundle createArgs(long type) {
+			return Intents.bundleFromCategory(type);
+		}
+		@Override public CharSequence getTypeName(Cursor cursor) {
+			long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+			return cache.getCategoryPath(categoryID);
+		}
+		@Override public CharSequence getKeywords(Cursor cursor) {
+			long categoryID = DatabaseTools.getLong(cursor, Category.ID);
+			String categoryKey = cache.getCategoryKey(categoryID);
+			return visuals.getKeywords(categoryKey, true);
+		}
 	}
 
 	private class SaveTask extends SimpleSafeAsyncTask<DTO, Void, DTO> {
