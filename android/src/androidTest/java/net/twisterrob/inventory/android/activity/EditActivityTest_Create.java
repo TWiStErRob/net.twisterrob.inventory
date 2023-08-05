@@ -23,7 +23,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.*;
 import net.twisterrob.android.test.espresso.DialogMatchers;
 import net.twisterrob.inventory.android.content.*;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
+import net.twisterrob.inventory.android.test.actors.ChangeTypeDialogActor;
 import net.twisterrob.inventory.android.test.actors.EditActivityActor;
+import net.twisterrob.inventory.android.test.actors.KeywordsDialogActor;
 import net.twisterrob.inventory.android.test.categories.*;
 import net.twisterrob.inventory.android.test.categories.UseCase.Error;
 
@@ -178,6 +180,14 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		lastOperationFinishesActivity();
 	}
 
+	@Test public void testChangeCategoryAndKeywordsDialog() {
+		ChangeTypeDialogActor dialog = editor.changeType();
+		KeywordsDialogActor keywords = dialog.showKeywords(belonging.getOtherType());
+		keywords.assertKeywords(belonging.getOtherKeywords());
+		keywords.close();
+		dialog.cancel();
+	}
+
 	@Category({UseCase.InitialCondition.class})
 	@Test(expected = NoActivityResumedException.class)
 	public void testDirtyInitiallyClean() {
@@ -310,6 +320,7 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		private final String otherName;
 		private final @StringRes int type;
 		private final @StringRes int otherType;
+		private final @StringRes int otherKeywords;
 		private final @StringRes int defaultType;
 
 		public BelongingValues(
@@ -317,12 +328,14 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 				String otherName,
 				@StringRes int type,
 				@StringRes int otherType,
+				@StringRes int otherKeywords,
 				@StringRes int defaultType
 		) {
 			this.name = name;
 			this.otherName = otherName;
 			this.type = type;
 			this.otherType = otherType;
+			this.otherKeywords = otherKeywords;
 			this.defaultType = defaultType;
 		}
 		public String getName() {
@@ -336,6 +349,9 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		}
 		public @StringRes int getOtherType() {
 			return otherType;
+		}
+		public @StringRes int getOtherKeywords() {
+			return otherKeywords;
 		}
 		public @StringRes int getDefaultType() {
 			return defaultType;

@@ -20,6 +20,7 @@ public class PropertyEditActivityTest_Create extends EditActivityTest_Create<Pro
 						TEST_PROPERTY_OTHER,
 						TEST_PROPERTY_TYPE,
 						TEST_PROPERTY_TYPE_OTHER,
+						TEST_PROPERTY_TYPE_OTHER_KEYWORDS,
 						TEST_PROPERTY_TYPE_DEFAULT
 				) {
 					@Override protected DataBaseActor.BelongingAssertions createAssertions(

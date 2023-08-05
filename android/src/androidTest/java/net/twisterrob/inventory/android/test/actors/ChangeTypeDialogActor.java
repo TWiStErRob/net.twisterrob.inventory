@@ -83,6 +83,12 @@ public class ChangeTypeDialogActor {
 		}
 	}
 
+	public @NonNull KeywordsDialogActor showKeywords(int type) {
+		navigateToType(type).perform(longClick());
+		KeywordsDialogActor dialog = new KeywordsDialogActor();
+		dialog.assertDisplayed();
+		return dialog;
+	}
 
 	private @NonNull DataInteraction navigateToType(int type) {
 		String typeName = getApplicationContext().getResources().getResourceEntryName(type);

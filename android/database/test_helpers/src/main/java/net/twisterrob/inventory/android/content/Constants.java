@@ -12,18 +12,21 @@ public interface Constants {
 	String TEST_PROPERTY_OTHER = TEST_PROPERTY + " Other";
 	@StringRes int TEST_PROPERTY_TYPE = R.string.property_house;
 	@StringRes int TEST_PROPERTY_TYPE_OTHER = R.string.property_storage;
+	@StringRes int TEST_PROPERTY_TYPE_OTHER_KEYWORDS = R.string.property_storage_keywords;
 	@StringRes int TEST_PROPERTY_TYPE_DEFAULT = R.string.property_other;
 
 	String TEST_ROOM = "Test Room";
 	String TEST_ROOM_OTHER = TEST_ROOM + " Other";
 	@StringRes int TEST_ROOM_TYPE = R.string.room_bed;
 	@StringRes int TEST_ROOM_TYPE_OTHER = R.string.room_parking;
+	@StringRes int TEST_ROOM_TYPE_OTHER_KEYWORDS = R.string.room_parking_keywords;
 	@StringRes int TEST_ROOM_TYPE_DEFAULT = R.string.room_other;
 
 	String TEST_ITEM = "Test Item";
 	String TEST_ITEM_OTHER = TEST_ITEM + " Other";
 	@StringRes int TEST_ITEM_CATEGORY = R.string.category_computer_part;
 	@StringRes int TEST_ITEM_CATEGORY_OTHER = R.string.category_book;
+	@StringRes int TEST_ITEM_CATEGORY_OTHER_KEYWORDS = R.string.category_book_keywords;
 	@StringRes int TEST_ITEM_CATEGORY_DEFAULT = R.string.category_uncategorized;
 
 	String TEST_SUBITEM = "Test Sub-item";

@@ -21,6 +21,7 @@ public class RoomEditActivityTest_Create extends EditActivityTest_Create<RoomEdi
 						TEST_ROOM_OTHER,
 						TEST_ROOM_TYPE,
 						TEST_ROOM_TYPE_OTHER,
+						TEST_ROOM_TYPE_OTHER_KEYWORDS,
 						TEST_ROOM_TYPE_DEFAULT
 				) {
 					@Override protected DataBaseActor.BelongingAssertions createAssertions(

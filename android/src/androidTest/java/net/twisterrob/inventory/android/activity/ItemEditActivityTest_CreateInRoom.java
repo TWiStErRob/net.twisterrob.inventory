@@ -22,6 +22,7 @@ public class ItemEditActivityTest_CreateInRoom extends EditActivityTest_Create<I
 						TEST_ITEM_OTHER,
 						TEST_ITEM_CATEGORY,
 						TEST_ITEM_CATEGORY_OTHER,
+						TEST_ITEM_CATEGORY_OTHER_KEYWORDS,
 						TEST_ITEM_CATEGORY_DEFAULT
 				) {
 					@Override protected DataBaseActor.BelongingAssertions createAssertions(
