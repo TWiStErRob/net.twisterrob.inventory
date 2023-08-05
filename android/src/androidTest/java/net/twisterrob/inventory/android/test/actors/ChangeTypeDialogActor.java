@@ -49,7 +49,7 @@ public class ChangeTypeDialogActor {
 		Espresso.pressBack();
 	}
 	public void save() {
-		onView(withId(R.id.btn_save)).perform(click());
+		clickPositiveInDialog();
 	}
 
 	public void assertNoneSelected() {
