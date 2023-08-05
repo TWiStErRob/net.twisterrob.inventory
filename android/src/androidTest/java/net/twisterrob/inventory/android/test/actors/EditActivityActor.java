@@ -25,6 +25,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.*;
 import static androidx.test.espresso.intent.Intents.*;
 import static androidx.test.espresso.matcher.RootMatchers.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import net.twisterrob.android.activity.CaptureImageActivityActor;
 import net.twisterrob.android.test.Helpers;
@@ -156,7 +157,8 @@ public abstract class EditActivityActor extends ActivityActor {
 
 	public static class SaveResultActor extends AlertDialogActor {
 		public final void checkToastAlreadyExists() {
-			assertToastMessage(containsStringRes(R.string.generic_error_unique_name));
+			Matcher<String> matcher = containsStringRes(R.string.generic_error_unique_name);
+			assertToastMessage(withText(matcher));
 		}
 	}
 }
