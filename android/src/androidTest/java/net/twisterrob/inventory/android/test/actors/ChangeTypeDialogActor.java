@@ -29,6 +29,9 @@ import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
+/**
+ * @see net.twisterrob.inventory.android.view.ChangeTypeDialog
+ */
 public class ChangeTypeDialogActor {
 	public static final AnyOf<View> titleAssertion = anyOf(
 			withText(R.string.item_categorize_title_many),
