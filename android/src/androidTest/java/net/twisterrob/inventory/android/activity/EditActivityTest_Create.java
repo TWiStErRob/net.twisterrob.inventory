@@ -312,8 +312,13 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		private final @StringRes int otherType;
 		private final @StringRes int defaultType;
 
-		public BelongingValues(String name, String otherName,
-				@StringRes int type, @StringRes int otherType, @StringRes int defaultType) {
+		public BelongingValues(
+				String name,
+				String otherName,
+				@StringRes int type,
+				@StringRes int otherType,
+				@StringRes int defaultType
+		) {
 			this.name = name;
 			this.otherName = otherName;
 			this.type = type;
@@ -326,13 +331,13 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		public String getOtherName() {
 			return otherName;
 		}
-		public int getType() {
+		public @StringRes int getType() {
 			return type;
 		}
-		public int getOtherType() {
+		public @StringRes int getOtherType() {
 			return otherType;
 		}
-		public int getDefaultType() {
+		public @StringRes int getDefaultType() {
 			return defaultType;
 		}
 

@@ -13,13 +13,21 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 public class RoomEditActivityTest_Create extends EditActivityTest_Create<RoomEditActivity> {
 	private long propertyID;
 	public RoomEditActivityTest_Create() {
-		super(RoomEditActivity.class, new RoomEditActivityActor(), new BelongingValues(
-				TEST_ROOM, TEST_ROOM_OTHER,
-				TEST_ROOM_TYPE, TEST_ROOM_TYPE_OTHER, TEST_ROOM_TYPE_DEFAULT) {
-			@Override protected DataBaseActor.BelongingAssertions createAssertions(DataBaseActor database) {
-				return database.new RoomAssertions();
-			}
-		});
+		super(
+				RoomEditActivity.class,
+				new RoomEditActivityActor(),
+				new BelongingValues(
+						TEST_ROOM,
+						TEST_ROOM_OTHER,
+						TEST_ROOM_TYPE,
+						TEST_ROOM_TYPE_OTHER,
+						TEST_ROOM_TYPE_DEFAULT
+				) {
+					@Override protected DataBaseActor.BelongingAssertions createAssertions(
+							DataBaseActor database) {
+						return database.new RoomAssertions();
+					}
+				});
 	}
 
 	@Override protected void createContainers() {
