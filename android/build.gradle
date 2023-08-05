@@ -107,7 +107,7 @@ android {
 		}
 	}
 	androidResources {
-		noCompress 'svg' // Resources.openRawResourceFd can only open AssetFileDescriptor for uncompressed resources
+		noCompress.add("svg") // Resources.openRawResourceFd can only open AssetFileDescriptor for uncompressed resources
 		def defaultIgnoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~'
 		ignoreAssetsPattern = defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
