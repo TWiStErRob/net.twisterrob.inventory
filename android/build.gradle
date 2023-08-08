@@ -146,3 +146,11 @@ tasks.withType(Test).configureEach {
 		)
 	}
 }
+
+// CONSIDER a rewrite of plugin "android-reporting" (see Color Filters repo)
+def copyAndroidTestResults = tasks.register("copyAndroidTestResults", Sync) {
+	from(layout.buildDirectory.dir("reports/androidTests/connected/debug"))
+	from(layout.buildDirectory.dir("outputs/androidTest-results/connected/debug"))
+	into(rootProject.layout.buildDirectory.dir("androidTest-results"))
+}
+tasks.named("connectedDebugAndroidTest").configure { finalizedBy(copyAndroidTestResults) }
