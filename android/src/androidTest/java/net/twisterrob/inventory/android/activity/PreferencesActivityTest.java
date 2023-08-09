@@ -74,8 +74,7 @@ public class PreferencesActivityTest {
 		prefs.openAppInfoInMarket();
 		waitForAppToBeBackgrounded();
 		try {
-			UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-			assertThat(device.getCurrentPackageName(), is("com.android.vending"));
+			assertThat(UiAutomatorExtensions.getCurrentAppPackageName(), is(AndroidAutomator.PACKAGE_MARKET));
 		} finally {
 			pressBackExternal();
 		}
