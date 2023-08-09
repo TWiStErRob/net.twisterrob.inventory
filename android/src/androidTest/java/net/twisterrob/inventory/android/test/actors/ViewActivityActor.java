@@ -9,6 +9,7 @@ import android.app.Activity;
 import androidx.test.runner.lifecycle.Stage;
 
 import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 
@@ -46,6 +47,11 @@ public abstract class ViewActivityActor extends ActivityActor {
 				.check(matches(isCompletelyDisplayed()))
 				.check(matches(withText(textMatcher)))
 		;
+	}
+
+	protected void clickFab() {
+		onView(withId(R.id.fab))
+				.perform(click());
 	}
 
 	/** @deprecated should use a better {@link net.twisterrob.android.test.junit.SensibleActivityTestRule}. */
