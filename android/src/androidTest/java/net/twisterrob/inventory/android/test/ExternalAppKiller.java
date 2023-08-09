@@ -12,7 +12,6 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import androidx.annotation.CheckResult;
@@ -47,7 +46,9 @@ public class ExternalAppKiller extends ExternalResource {
 
 	@Override public Statement apply(Statement base, Description description) {
 		OpensExternalApp annotation = description.getAnnotation(OpensExternalApp.class);
-		assertNotNull("Test method or class must be annotated with " + OpensExternalApp.class, annotation);
+		if (annotation == null) {
+			return base;
+		}
 		packageNames.addAll(Arrays.asList(annotation.value()));
 		if (packageNames.isEmpty()) {
 			return base;
