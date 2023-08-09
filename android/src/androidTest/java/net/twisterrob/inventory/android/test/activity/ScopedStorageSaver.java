@@ -84,7 +84,7 @@ public class ScopedStorageSaver extends ComponentActivity {
 
 	public static String createZipInDownloads(@NonNull File file)
 			throws PackageManager.NameNotFoundException, UiObjectNotFoundException {
-		Context context = InstrumentationRegistry.getInstrumentation().getContext();
+		Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 		Uri uri = Uri.fromFile(file);
 		Intent intent = createIntent(context, uri, "application/zip", file.getName())
 				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
