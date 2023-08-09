@@ -50,8 +50,6 @@ import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
 /**
- * Warning: this class might be broken since upgrade to UTP / removal of sharedUserId.
- * <p>
  * <b>These tests need to be excluded from normal {@code gradle connectedCheck} runs.</b>
  * For reason this they require to be run with
  * {@code adb shell am instrument -e class <specific method> -e upgrade true <AndroidJUnitRunner>}.
@@ -89,7 +87,7 @@ public class UpgradeTests {
 
 	@SuppressWarnings("deprecation")
 	@Rule public final androidx.test.rule.ActivityTestRule<CompatibleLauncher> activity =
-			new TestPackageIntentRule<>(CompatibleLauncher.class);
+			new androidx.test.espresso.intent.rule.IntentsTestRule<>(CompatibleLauncher.class);
 
 	@Rule public final IdlingResourceRule drawer = DrawerIdlingResource.rule();
 

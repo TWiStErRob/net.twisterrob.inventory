@@ -20,6 +20,12 @@
 			android:label="ScopedStorageSaver"
 			/>
 
+		<!--suppress AndroidDomInspection workaround for https://github.com/TWiStErRob/net.twisterrob.inventory/issues/309 -->
+		<activity
+			android:name="net.twisterrob.inventory.android.test.activity.CompatibleLauncher"
+			android:label="CompatibleLauncher"
+			/>
+
 	</application>
 
 </manifest>

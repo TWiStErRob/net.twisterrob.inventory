@@ -3,8 +3,6 @@ package net.twisterrob.inventory.android.test.activity;
 import android.app.Activity;
 
 /**
- * Warning: this class might be broken since upgrade to UTP / removal of sharedUserId.
- *
  * Activity that can be used to launch other activities.
  * If this one is launched with {@link android.content.Intent#FLAG_ACTIVITY_NEW_TASK}
  * the other activities started from this are not required to be launched that way, for example:
