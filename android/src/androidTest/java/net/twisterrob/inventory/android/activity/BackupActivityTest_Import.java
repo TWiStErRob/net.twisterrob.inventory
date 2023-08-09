@@ -23,6 +23,7 @@ import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupExportPickerActor;
 import net.twisterrob.inventory.android.test.categories.On;
 import net.twisterrob.inventory.android.test.categories.Op;
+import net.twisterrob.inventory.android.test.categories.OpensExternalApp;
 import net.twisterrob.inventory.android.test.categories.UseCase;
 
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.UI_AUTOMATOR_VERSION;
@@ -35,8 +36,7 @@ import static net.twisterrob.inventory.android.test.actors.BackupActivityActor.B
 @Category({On.Import.class})
 public class BackupActivityTest_Import {
 
-	@Rule(order = 0) public final TestRule docsKiller =
-			new ExternalAppKiller(DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI);
+	@Rule(order = 0) public final TestRule externalAppKiller = new ExternalAppKiller();
 
 	@SuppressWarnings("deprecation")
 	@Rule(order = 1) public final androidx.test.rule.ActivityTestRule<BackupActivity> activity =
@@ -67,6 +67,10 @@ public class BackupActivityTest_Import {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, On.External.class})
+	@OpensExternalApp({
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_ANDROID,
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_GOOGLE
+	})
 	@Test public void testImportCancelPicker() throws Exception {
 		BackupImportActor importActor = backup.importBackup();
 
@@ -90,6 +94,10 @@ public class BackupActivityTest_Import {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
+	@OpensExternalApp({
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_ANDROID,
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_GOOGLE
+	})
 	@FlakyTest(bugId = 275, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
 	@SkipOnCI(reason = "Runs too long and dialog is not shown.")
 	@Test public void testImportReal() throws Exception {

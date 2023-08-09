@@ -25,8 +25,7 @@ import static net.twisterrob.android.test.automators.UiAutomatorExtensions.UI_AU
 @Category({On.Export.class})
 public class BackupActivityTest_Export {
 
-	@Rule(order = 0) public final TestRule docsKiller =
-			new ExternalAppKiller(DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI);
+	@Rule(order = 0) public final TestRule externalAppKiller = new ExternalAppKiller();
 
 	@SuppressWarnings("deprecation")
 	@Rule(order = 1) public final androidx.test.rule.ActivityTestRule<BackupActivity> activity =
@@ -45,6 +44,10 @@ public class BackupActivityTest_Export {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
+	@OpensExternalApp({
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_ANDROID,
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_GOOGLE
+	})
 	@FlakyTest(bugId = 275, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
 	@SkipOnCI(reason = "Runs too long and dialog is not shown.")
 	@Test public void testExportCompletes() throws Exception {
@@ -61,6 +64,10 @@ public class BackupActivityTest_Export {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Rotates.class, On.External.class})
+	@OpensExternalApp({
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_ANDROID,
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_GOOGLE
+	})
 	@FlakyTest(bugId = 275, detail = "https://github.com/TWiStErRob/net.twisterrob.inventory/issues/275")
 	@SkipOnCI(reason = "Runs too long and dialog is not shown.")
 	@Test public void testExportCompletesWhenPickerRotated() throws Exception {
@@ -81,6 +88,10 @@ public class BackupActivityTest_Export {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, Op.Rotates.class, On.External.class})
+	@OpensExternalApp({
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_ANDROID,
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_GOOGLE
+	})
 	@Test public void testExportPickerDoesNotReappearWhenRotated() throws Exception {
 		BackupExportPickerActor pickerActor = backup.exportBackup();
 		pickerActor.cancel();
@@ -92,6 +103,10 @@ public class BackupActivityTest_Export {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, Op.Rotates.class, On.External.class})
+	@OpensExternalApp({
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_ANDROID,
+			DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI_GOOGLE
+	})
 	@Test public void testExportProgressDoesNotAppearWhenRotated() throws Exception {
 		BackupExportPickerActor pickerActor = backup.exportBackup();
 		pickerActor.cancel();

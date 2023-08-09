@@ -8,22 +8,21 @@ import org.junit.runner.*;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.*;
 
-import net.twisterrob.android.test.automators.DocumentsUiAutomator;
+import net.twisterrob.android.test.automators.AndroidAutomator;
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.test.ExternalAppKiller;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.categories.*;
 
-import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
+import static net.twisterrob.android.test.automators.UiAutomatorExtensions.UI_AUTOMATOR_VERSION;
 import static net.twisterrob.inventory.android.test.actors.BackupActivityActor.BackupSendChooserActor;
 
 @RunWith(AndroidJUnit4.class)
 @Category({On.Export.class})
 public class BackupActivityTest_Send {
 
-	@Rule(order = 0) public final TestRule docsKiller =
-			new ExternalAppKiller(DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI);
+	@Rule(order = 0) public final TestRule externalAppKiller = new ExternalAppKiller();
 
 	@SuppressWarnings("deprecation")
 	@Rule(order = 1) public final androidx.test.rule.ActivityTestRule<BackupActivity> activity =
@@ -37,10 +36,6 @@ public class BackupActivityTest_Send {
 			// @After: if it succeeded let's check a few more things, but only if not failed
 			backup.assertIsInFront();
 			backup.assertEmptyState();
-		}
-		@Override protected void failed(Throwable e, Description description) {
-			// try to exit any external activities that may block the other tests from running
-			UiAutomatorExtensions.pressBackExternalUnsafe();
 		}
 	};
 
@@ -59,6 +54,9 @@ public class BackupActivityTest_Send {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, On.External.class})
+	@OpensExternalApp({
+			AndroidAutomator.PACKAGE_CHOOSER,
+	})
 	@Test public void testCancelChooser() throws Exception {
 		BackupSendChooserActor.assumeFunctional();
 
@@ -70,6 +68,12 @@ public class BackupActivityTest_Send {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, On.External.class})
+	@OpensExternalApp({
+			AndroidAutomator.PACKAGE_CHOOSER,
+			AndroidAutomator.PACKAGE_PACKAGE_INSTALLER,
+			AndroidAutomator.PACKAGE_PERMISSION_CONTROLLER,
+			"*"
+	})
 	// Example: API 28 Google Play device has a "Bluetooth" send target,
 	// but even when cancelling the dialog to "Turn on Bluetooth", it opens the stream anyway.
 	@Ignore("This is going to be flaky by definition, because it's randomly choosing an app with undefined behavior.")

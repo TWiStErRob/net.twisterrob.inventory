@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.Locale;
 
 import org.junit.rules.ExternalResource;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import androidx.annotation.CheckResult;
@@ -40,6 +43,16 @@ public class ExternalAppKiller extends ExternalResource {
 		this.packageNames.addAll(Arrays.asList(packageNames));
 		this.maxBackAttempts = maxBackAttempts;
 		this.maxHomeAttempts = maxHomeAttempts;
+	}
+
+	@Override public Statement apply(Statement base, Description description) {
+		OpensExternalApp annotation = description.getAnnotation(OpensExternalApp.class);
+		assertNotNull("Test method or class must be annotated with " + OpensExternalApp.class, annotation);
+		packageNames.addAll(Arrays.asList(annotation.value()));
+		if (packageNames.isEmpty()) {
+			return base;
+		}
+		return super.apply(base, description);
 	}
 
 	@Override protected void after() {
