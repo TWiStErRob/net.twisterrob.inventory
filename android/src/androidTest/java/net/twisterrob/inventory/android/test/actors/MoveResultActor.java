@@ -4,6 +4,8 @@ import org.hamcrest.Matcher;
 
 import static org.hamcrest.Matchers.*;
 
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 import net.twisterrob.inventory.android.R;
 
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
@@ -17,10 +19,10 @@ public class MoveResultActor extends AlertDialogActor {
 		clickPositiveInDialog();
 	}
 	public void checkDialogMessage(Matcher<String> matcher) {
-		assertDialogMessage(matcher);
+		assertDialogMessage(withText(matcher));
 	}
 	public void checkToastMessage(Matcher<String> matcher) {
-		assertToastMessage(matcher);
+		assertToastMessage(withText(matcher));
 	}
 	public void checkToastMessageDuplicate(Matcher<String> matcher) {
 		checkToastMessage(allOf(containsStringRes(R.string.generic_error_unique_name), matcher));
