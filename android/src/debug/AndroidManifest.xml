@@ -13,6 +13,13 @@
 		tools:replace="android:name"
 		>
 		<!-- lint:AllowBackup REPORT false positive, because main/AndroidManifest.xml is set up. -->
+
+		<!--suppress AndroidDomInspection workaround for https://github.com/TWiStErRob/net.twisterrob.inventory/issues/309 -->
+		<activity
+			android:name="net.twisterrob.inventory.android.test.activity.ScopedStorageSaver"
+			android:label="ScopedStorageSaver"
+			/>
+
 	</application>
 
 </manifest>

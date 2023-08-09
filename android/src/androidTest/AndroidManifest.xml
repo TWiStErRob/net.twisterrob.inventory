@@ -33,7 +33,10 @@
 		<activity
 			android:name="net.twisterrob.inventory.android.test.activity.ScopedStorageSaver"
 			android:label="ScopedStorageSaver"
-			/>
+			android:enabled="false"
+			>
+			<!-- This is listed here for documentation, the real registration is in src/debug/AndroidManifest.xml -->
+		</activity>
 
 	</application>
 
