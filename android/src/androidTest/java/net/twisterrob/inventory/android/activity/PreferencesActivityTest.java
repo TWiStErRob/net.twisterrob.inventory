@@ -24,7 +24,6 @@ import net.twisterrob.android.test.automators.AndroidAutomator;
 import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.R;
-import net.twisterrob.inventory.android.test.ExternalAppKiller;
 import net.twisterrob.inventory.android.test.categories.OpensExternalApp;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.PreferencesActivityActor;
@@ -36,12 +35,8 @@ import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 @RunWith(AndroidJUnit4.class)
 public class PreferencesActivityTest {
 
-	@Rule(order = 0)
-	public final ExternalAppKiller externalAppKiller = new ExternalAppKiller();
-
 	@SuppressWarnings("deprecation")
-	@Rule(order = 1)
-	public final androidx.test.rule.ActivityTestRule<PreferencesActivity> activity
+	@Rule public final androidx.test.rule.ActivityTestRule<PreferencesActivity> activity
 			= new InventoryActivityRule<>(PreferencesActivity.class);
 
 	private final PreferencesActivityActor prefs = new PreferencesActivityActor();

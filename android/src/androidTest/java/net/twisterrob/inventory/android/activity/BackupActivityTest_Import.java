@@ -16,7 +16,6 @@ import androidx.test.filters.SdkSuppress;
 
 import net.twisterrob.android.test.SkipOnCI;
 import net.twisterrob.android.test.automators.DocumentsUiAutomator;
-import net.twisterrob.inventory.android.test.ExternalAppKiller;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.activity.ScopedStorageSaver;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
@@ -35,8 +34,6 @@ import static net.twisterrob.inventory.android.test.actors.BackupActivityActor.B
 @RunWith(AndroidJUnit4.class)
 @Category({On.Import.class})
 public class BackupActivityTest_Import {
-
-	@Rule(order = 0) public final TestRule externalAppKiller = new ExternalAppKiller();
 
 	@SuppressWarnings("deprecation")
 	@Rule(order = 1) public final androidx.test.rule.ActivityTestRule<BackupActivity> activity =

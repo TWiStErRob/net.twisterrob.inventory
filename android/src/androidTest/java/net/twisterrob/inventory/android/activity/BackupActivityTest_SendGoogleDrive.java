@@ -14,7 +14,6 @@ import androidx.test.filters.*;
 
 import net.twisterrob.android.test.automators.AndroidAutomator;
 import net.twisterrob.android.test.automators.GoogleDriveAutomator;
-import net.twisterrob.inventory.android.test.ExternalAppKiller;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.*;
@@ -26,8 +25,6 @@ import static net.twisterrob.android.test.automators.UiAutomatorExtensions.UI_AU
 @Category({On.Export.class})
 public class BackupActivityTest_SendGoogleDrive {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_SendGoogleDrive.class);
-
-	@Rule(order = 0) public final TestRule externalAppKiller = new ExternalAppKiller();
 
 	@Rule(order = 1) public final TestName testName = new TestName();
 
