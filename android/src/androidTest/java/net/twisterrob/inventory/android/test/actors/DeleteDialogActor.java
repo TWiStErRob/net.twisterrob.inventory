@@ -2,6 +2,8 @@ package net.twisterrob.inventory.android.test.actors;
 
 import org.hamcrest.Matcher;
 
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 
 public class DeleteDialogActor extends AlertDialogActor {
@@ -12,6 +14,6 @@ public class DeleteDialogActor extends AlertDialogActor {
 		clickPositiveInDialog();
 	}
 	public void checkDialogMessage(Matcher<String> matcher) {
-		assertDialogMessage(matcher);
+		assertDialogMessage(withText(matcher));
 	}
 }
