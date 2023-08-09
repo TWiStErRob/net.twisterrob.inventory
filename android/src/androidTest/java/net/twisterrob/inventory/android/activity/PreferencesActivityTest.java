@@ -1,5 +1,8 @@
 package net.twisterrob.inventory.android.activity;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -12,6 +15,7 @@ import static org.junit.Assert.*;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
@@ -34,6 +38,11 @@ import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 public class PreferencesActivityTest {
+	private static final List<Integer> FLAKY_BACK_VERSIONS = Arrays.asList(
+			Build.VERSION_CODES.KITKAT,
+			Build.VERSION_CODES.M,
+			29
+	);
 
 	@SuppressWarnings("deprecation")
 	@Rule public final androidx.test.rule.ActivityTestRule<PreferencesActivity> activity
@@ -66,7 +75,12 @@ public class PreferencesActivityTest {
 			UiObject object = device.findObject(new UiSelector().text(name.toString()));
 			assertTrue(object.exists());
 		} finally {
-			pressBackExternal();
+			if (FLAKY_BACK_VERSIONS.contains(Build.VERSION.SDK_INT)
+					&& AndroidAutomator.PACKAGE_SETTINGS.equals(UiAutomatorExtensions.getCurrentAppPackageName())) {
+				pressBackExternalUnsafe();
+			} else {
+				pressBackExternal();
+			}
 		}
 		prefs.assertIsInFront();
 	}
