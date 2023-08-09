@@ -2,6 +2,7 @@ plugins {
 	id("net.twisterrob.inventory.android.app")
 	id("net.twisterrob.inventory.mapping")
 	id("net.twisterrob.inventory.upgradeTest")
+	id("net.twisterrob.inventory.build.tests.instrumentation")
 }
 
 dependencies {
@@ -107,7 +108,7 @@ android {
 		}
 	}
 	androidResources {
-		noCompress 'svg' // Resources.openRawResourceFd can only open AssetFileDescriptor for uncompressed resources
+		noCompress.add("svg") // Resources.openRawResourceFd can only open AssetFileDescriptor for uncompressed resources
 		def defaultIgnoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~'
 		ignoreAssetsPattern = defaultIgnoreAssetsPattern + ':!descript.ion:!*.yuml:!*.yuml.png'
 	}
@@ -144,5 +145,18 @@ tasks.withType(Test).configureEach {
 				"--add-opens=java.base/java.text=ALL-UNNAMED",
 				"--add-opens=java.desktop/java.awt.font=ALL-UNNAMED",
 		)
+	}
+}
+
+// CONSIDER a rewrite of plugin "android-reporting" (see Color Filters repo)
+def copyAndroidTestResults = tasks.register("copyAndroidTestResults", Sync) {
+	// No SingleArtifact/InternalArtifactType in AGP 8.1 for androidTest results/reports, so hardcode.
+	from(layout.buildDirectory.dir("reports/androidTests/connected/debug"))
+	from(layout.buildDirectory.dir("outputs/androidTest-results/connected/debug"))
+	into(rootProject.layout.buildDirectory.dir("androidTest-results"))
+}
+afterEvaluate {
+	tasks.named("connectedDebugAndroidTest").configure {
+		finalizedBy(copyAndroidTestResults)
 	}
 }

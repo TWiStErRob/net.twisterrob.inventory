@@ -36,6 +36,10 @@ dependencies {
 	compileOnly(libs.plugin.android.tools.ddmlib)
 	// UpgradeTestTask: FileUtils, StdLogger, ILogger
 	compileOnly(libs.plugin.android.tools.common)
+	// instrumentation.gradle.kts
+	compileOnly("com.android.tools.utp:android-test-plugin-result-listener-gradle-proto:31.1.0")
+	compileOnly("com.google.testing.platform:core-proto:0.0.8-alpha08")
+	compileOnly("com.google.protobuf:protobuf-java:3.19.3")
 	// endregion
 	
 	// TODEL https://github.com/gradle/gradle/issues/15383
