@@ -12,23 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.*;
 
-import net.twisterrob.android.test.automators.DocumentsUiAutomator;
-import net.twisterrob.android.test.automators.UiAutomatorExtensions;
-import net.twisterrob.inventory.android.test.ExternalAppKiller;
+import net.twisterrob.android.test.automators.AndroidAutomator;
+import net.twisterrob.android.test.automators.GoogleDriveAutomator;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor;
 import net.twisterrob.inventory.android.test.actors.BackupActivityActor.*;
 import net.twisterrob.inventory.android.test.categories.*;
 
-import static net.twisterrob.android.test.automators.UiAutomatorExtensions.*;
+import static net.twisterrob.android.test.automators.UiAutomatorExtensions.UI_AUTOMATOR_VERSION;
 
 @RunWith(AndroidJUnit4.class)
 @Category({On.Export.class})
 public class BackupActivityTest_SendGoogleDrive {
 	private static final Logger LOG = LoggerFactory.getLogger(BackupActivityTest_SendGoogleDrive.class);
-
-	@Rule(order = 0) public final TestRule docsKiller =
-			new ExternalAppKiller(DocumentsUiAutomator.PACKAGE_DOCUMENTS_UI);
 
 	@Rule(order = 1) public final TestName testName = new TestName();
 
@@ -45,10 +41,6 @@ public class BackupActivityTest_SendGoogleDrive {
 			backup.assertIsInFront();
 			backup.assertEmptyState();
 		}
-		@Override protected void failed(Throwable e, Description description) {
-			// try to exit any external activities that may block the other tests from running
-			UiAutomatorExtensions.pressBackExternalUnsafe();
-		}
 	};
 
 	private final BackupActivityActor backup = new BackupActivityActor();
@@ -59,6 +51,13 @@ public class BackupActivityTest_SendGoogleDrive {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({Op.Cancels.class, On.External.class})
+	@OpensExternalApp({
+			AndroidAutomator.PACKAGE_CHOOSER,
+			GoogleDriveAutomator.PACKAGE_GOOGLE_DRIVE,
+			GoogleDriveAutomator.PACKAGE_GOOGLE_SIGN_IN,
+			AndroidAutomator.PACKAGE_PACKAGE_INSTALLER,
+			AndroidAutomator.PACKAGE_PERMISSION_CONTROLLER
+	})
 	@Test public void testCancelDrive() throws Exception {
 		DriveBackupActor.assumeDriveFunctional();
 		backup
@@ -70,6 +69,11 @@ public class BackupActivityTest_SendGoogleDrive {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.Complex.class, On.External.class})
+	@OpensExternalApp({
+			AndroidAutomator.PACKAGE_CHOOSER,
+			GoogleDriveAutomator.PACKAGE_GOOGLE_DRIVE,
+			GoogleDriveAutomator.PACKAGE_GOOGLE_SIGN_IN
+	})
 	@Test public void testSuccessfulFullExport() throws Exception {
 		DriveBackupActor.assumeDriveFunctional();
 		BackupSendActor exportActor = backup.send();

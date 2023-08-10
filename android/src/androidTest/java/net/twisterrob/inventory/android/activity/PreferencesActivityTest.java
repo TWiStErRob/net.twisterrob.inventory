@@ -1,5 +1,8 @@
 package net.twisterrob.inventory.android.activity;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -12,6 +15,7 @@ import static org.junit.Assert.*;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
@@ -20,8 +24,11 @@ import androidx.test.uiautomator.*;
 
 import static androidx.test.core.app.ApplicationProvider.*;
 
+import net.twisterrob.android.test.automators.AndroidAutomator;
+import net.twisterrob.android.test.automators.UiAutomatorExtensions;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.R;
+import net.twisterrob.inventory.android.test.categories.OpensExternalApp;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.actors.PreferencesActivityActor;
 import net.twisterrob.inventory.android.test.categories.*;
@@ -31,6 +38,11 @@ import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 public class PreferencesActivityTest {
+	private static final List<Integer> FLAKY_BACK_VERSIONS = Arrays.asList(
+			Build.VERSION_CODES.KITKAT,
+			Build.VERSION_CODES.M,
+			29
+	);
 
 	@SuppressWarnings("deprecation")
 	@Rule public final androidx.test.rule.ActivityTestRule<PreferencesActivity> activity
@@ -50,6 +62,9 @@ public class PreferencesActivityTest {
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.InitialCondition.class, On.External.class})
+	@OpensExternalApp({
+			AndroidAutomator.PACKAGE_SETTINGS
+	})
 	@Test public void testInfoSettings() {
 		prefs.openAppInfoInSettings();
 		waitForAppToBeBackgrounded();
@@ -60,13 +75,21 @@ public class PreferencesActivityTest {
 			UiObject object = device.findObject(new UiSelector().text(name.toString()));
 			assertTrue(object.exists());
 		} finally {
-			pressBackExternal();
+			if (FLAKY_BACK_VERSIONS.contains(Build.VERSION.SDK_INT)
+					&& AndroidAutomator.PACKAGE_SETTINGS.equals(UiAutomatorExtensions.getCurrentAppPackageName())) {
+				pressBackExternalUnsafe();
+			} else {
+				pressBackExternal();
+			}
 		}
 		prefs.assertIsInFront();
 	}
 
 	@SdkSuppress(minSdkVersion = UI_AUTOMATOR_VERSION)
 	@Category({UseCase.InitialCondition.class, On.External.class})
+	@OpensExternalApp({
+			AndroidAutomator.PACKAGE_MARKET
+	})
 	@Test public void testInfoStore() {
 		assumeThat(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=")),
 				canBeResolvedTo(notNullValue(ResolveInfo.class)));
@@ -74,8 +97,7 @@ public class PreferencesActivityTest {
 		prefs.openAppInfoInMarket();
 		waitForAppToBeBackgrounded();
 		try {
-			UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-			assertThat(device.getCurrentPackageName(), is("com.android.vending"));
+			assertThat(UiAutomatorExtensions.getCurrentAppPackageName(), is(AndroidAutomator.PACKAGE_MARKET));
 		} finally {
 			pressBackExternal();
 		}
