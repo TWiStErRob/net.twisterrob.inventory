@@ -14,7 +14,7 @@ jobs:
       name-artifact-fine-grained: 'SVG {0}'
       name-check-results: '🔔 Test: SVG Results {0}'
       script: |
-        ./.github/workflows/svg/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
+        ./.github/workflows/scripts/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
         ./gradlew --no-daemon --stacktrace :android:data:svg:connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=net.twisterrob.inventory.android.data.svg.DumpImages
 
     strategy:

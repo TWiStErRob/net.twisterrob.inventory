@@ -13,6 +13,10 @@ jobs:
       android-api: ${{ matrix.api }}
       timeout-minutes: 60
       script: |
+        # Workaround for :android:connectedDebugAndroidTest's output:
+        # > additionalTestOutput is not supported on this device running API level 21 because the additional test output directory could not be found
+        ./.github/workflows/scripts/adb-shell-create-sdcard-android-dir.sh ${{ matrix.api }}
+        
         # Used by net.twisterrob.android.test.SystemAnimations
         #adb shell pm grant ${packageName} android.permission.SET_ANIMATION_SCALE
         # to set these:

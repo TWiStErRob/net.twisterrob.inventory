@@ -23,4 +23,11 @@ public abstract class ItemContainingViewActivityActor extends ViewActivityActor 
 		actor.assertIsActive();
 		return actor;
 	}
+
+	public ItemEditActivityActor addItem() {
+		clickFab();
+		ItemEditActivityActor actor = new ItemEditActivityActor();
+		actor.assertIsInFront();
+		return actor;
+	}
 }
