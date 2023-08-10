@@ -26,6 +26,10 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 
 	public void setHeader(View header) {
 		this.header = header;
+		if (getCursor() == null) {
+			// Ensure valid data as soon as this method returns.
+			super.changeCursor(new MatrixCursor(new String[0], 0));
+		}
 	}
 
 	@SuppressWarnings("resource") // These cursors (Matrix and Merge) will be closed by RecyclerViewLoadersController.close()
@@ -33,13 +37,16 @@ public abstract class SingleHeaderAdapter<VH extends ViewHolder> extends CursorR
 		if (newCursor == null) { // No new cursor, don't create MergeCursor.
 			return super.swapCursor(null);
 		} else if (header != null) { // Add one extra row for header.
-			MatrixCursor header = new MatrixCursor(new String[] {"type", "_id"}, 1);
-			header.addRow(new Object[] {DATABASE_TYPE_HEADER, CommonColumns.ID_ADD});
-			Cursor mergeCursor = new MergeCursor(new Cursor[] {header, newCursor});
-			return super.swapCursor(mergeCursor);
+			return super.swapCursor(new MergeCursor(new Cursor[] {createHeaderRow(), newCursor}));
 		} else { // No header, just forward original.
 			return super.swapCursor(newCursor);
 		}
+	}
+
+	private static @NonNull Cursor createHeaderRow() {
+		MatrixCursor header = new MatrixCursor(new String[] {"type", "_id"}, 1);
+		header.addRow(new Object[] {DATABASE_TYPE_HEADER, CommonColumns.ID_ADD});
+		return header;
 	}
 
 	public int getSpanSize(int position, int columns) {

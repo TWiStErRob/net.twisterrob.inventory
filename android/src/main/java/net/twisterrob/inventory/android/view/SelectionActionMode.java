@@ -63,9 +63,17 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 	public void toggle(int position) {
 		if (isRunning()) {
 			adapter.toggleSelection(position);
-			actionMode.invalidate();
+			invalidateOrFinish();
 		} else {
 			LOG.warn("Cannot toggle position #{} because action mode is not running.", position, new StackTrace());
+		}
+	}
+
+	private void invalidateOrFinish() {
+		if (adapter.getSelectedItemCount() == 0) {
+			finish();
+		} else {
+			actionMode.invalidate();
 		}
 	}
 
@@ -79,26 +87,21 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 
 	public void onSaveInstanceState(Bundle outState) {
 		if (isRunning()) {
-			outState.putIntegerArrayList(KEY_SELECTION, new ArrayList<>(adapter.getSelectedPositions()));
+			outState.putLongArray(KEY_SELECTION, getSelectedIDs());
 		}
 	}
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		if (savedInstanceState != null) {
-			ArrayList<Integer> selection = savedInstanceState.getIntegerArrayList(KEY_SELECTION);
-			if (selection != null) {
-				start(selection);
+			long[] savedSelection = savedInstanceState.getLongArray(KEY_SELECTION);
+			if (savedSelection != null) {
+				adapter.setSelectedIds(savedSelection);
+				start();
 			}
 		}
 	}
 
 	public long[] getSelectedIDs() {
-		Collection<Integer> positions = adapter.getSelectedPositions();
-		long[] IDs = new long[positions.size()];
-		int i = 0;
-		for (int position : positions) {
-			IDs[i++] = adapter.getItemId(position);
-		}
-		return IDs;
+		return adapter.getSelectedIds();
 	}
 
 	@Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -109,11 +112,7 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 
 	@Override public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
 		int count = adapter.getSelectedItemCount();
-		if (count == 0) {
-			mode.finish();
-		} else {
-			mode.setTitle(activity.getResources().getQuantityString(R.plurals.selection_count, count, count));
-		}
+		mode.setTitle(activity.getResources().getQuantityString(R.plurals.selection_count, count, count));
 		return true;
 	}
 
@@ -122,15 +121,17 @@ public abstract class SelectionActionMode implements ActionMode.Callback {
 		int id = item.getItemId();
 		if (id == R.id.action_select_all) {
 			adapter.selectRange(0, adapter.getItemCount());
-			mode.invalidate();
+			invalidateOrFinish();
 			return true;
 		} else if (id == R.id.action_select_invert) {
-			Set<Integer> selection = new TreeSet<>(adapter.getSelectedPositions());
+			long[] selection = adapter.getSelectedIds();
+			Arrays.sort(selection);
 			adapter.clearSelections();
 			for (int i = 0, end = adapter.getItemCount(); i < end; i++) {
-				adapter.setSelected(i, !selection.contains(i));
+				boolean wasSelected = Arrays.binarySearch(selection, adapter.getItemId(i)) >= 0;
+				adapter.setSelected(i, !wasSelected);
 			}
-			mode.invalidate();
+			invalidateOrFinish();
 			return true;
 		} else {
 			return false;

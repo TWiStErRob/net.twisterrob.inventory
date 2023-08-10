@@ -109,6 +109,35 @@ public class ItemViewActivityTest_Selection {
 		selection.assertInactive();
 	}
 
+	@SuppressWarnings("deprecation") // TODO
+	@Category({Op.CreatesBelonging.class})
+	@Test public void testCreateKeepSelection() {
+		db.createItem(itemID, subItem(1));
+		db.createItem(itemID, subItem(3));
+		db.createItem(itemID, subItem(4));
+		db.createItem(itemID, subItem(5));
+		itemView.refresh();
+
+		SelectionActor selection = itemView.select(subItem(1));
+		selection.select(subItem(3));
+		selection.select(subItem(4));
+		selection.select(subItem(5));
+		selection.hasSelection(subItem(1));
+		selection.hasSelection(subItem(3));
+		selection.hasSelection(subItem(4));
+		selection.hasSelection(subItem(5));
+
+		ItemEditActivityActor creator = itemView.addItem();
+		creator.setName(subItem(2));
+		creator.save();
+
+		selection.hasSelection(subItem(1));
+		selection.hasNoSelection(subItem(2));
+		selection.hasSelection(subItem(3));
+		selection.hasSelection(subItem(4));
+		selection.hasSelection(subItem(5));
+	}
+
 	/**
 	 * This test is a bit jumpy because hasSelection jumps to the item being verified.
 	 */
