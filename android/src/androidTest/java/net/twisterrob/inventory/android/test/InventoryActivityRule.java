@@ -13,12 +13,10 @@ import android.os.Build;
 import androidx.annotation.CallSuper;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
-import androidx.test.espresso.IdlingRegistry;
 
 import net.twisterrob.android.test.espresso.idle.*;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
-import net.twisterrob.inventory.android.BuildConfig;
 import net.twisterrob.inventory.android.R;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.content.Database;
@@ -56,6 +54,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		}
 		base = new GlideIdlingResourceRule().apply(base, description);
 		base = new InventoryGlideResetRule().apply(base, description);
+		base = new ExternalAppKiller().apply(base, description);
 		return base;
 	}
 
