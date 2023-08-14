@@ -1,7 +1,9 @@
 package net.twisterrob.inventory.android.test;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
+import org.junit.rules.Timeout;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.slf4j.*;
@@ -55,6 +57,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		base = new GlideIdlingResourceRule().apply(base, description);
 		base = new InventoryGlideResetRule().apply(base, description);
 		base = new ExternalAppKiller().apply(base, description);
+		base = new Timeout(20, TimeUnit.SECONDS).apply(base, description);
 		return base;
 	}
 
