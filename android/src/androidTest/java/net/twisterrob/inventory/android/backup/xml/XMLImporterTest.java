@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.backup.xml;
 
 import org.junit.*;
 import org.junit.function.ThrowingRunnable;
+import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.*;
 import android.content.res.Resources;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import net.twisterrob.inventory.android.backup.Importer.*;
 import net.twisterrob.inventory.android.content.Database;
@@ -24,6 +26,7 @@ import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
+@RunWith(AndroidJUnit4.class)
 public class XMLImporterTest {
 
 	@Rule public final MockitoRule mockito = MockitoJUnit.rule();

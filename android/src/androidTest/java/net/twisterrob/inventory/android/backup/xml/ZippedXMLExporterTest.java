@@ -9,6 +9,7 @@ import org.hamcrest.Matcher;
 import org.junit.*;
 import org.junit.function.ThrowingRunnable;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnit;
@@ -26,6 +27,7 @@ import android.database.*;
 
 import androidx.annotation.NonNull;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.Exporter;
@@ -34,6 +36,7 @@ import net.twisterrob.inventory.android.content.Database;
 import static net.twisterrob.test.hamcrest.Matchers.hasEntry;
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
+@RunWith(AndroidJUnit4.class)
 public class ZippedXMLExporterTest {
 
 	private static final byte[] BOM = {(byte)0xEF, (byte)0xBB, (byte)0xBF};

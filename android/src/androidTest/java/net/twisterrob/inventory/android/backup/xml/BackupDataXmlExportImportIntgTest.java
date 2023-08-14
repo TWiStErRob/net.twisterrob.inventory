@@ -3,12 +3,14 @@ package net.twisterrob.inventory.android.backup.xml;
 import java.io.*;
 
 import org.junit.*;
+import org.junit.runner.RunWith;
 
 import android.content.Context;
 import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import net.twisterrob.inventory.android.backup.Importer;
 import net.twisterrob.inventory.android.content.*;
@@ -17,6 +19,7 @@ import net.twisterrob.inventory.android.content.model.Types;
 import net.twisterrob.inventory.android.test.InventoryActivityRule;
 import net.twisterrob.inventory.android.test.activity.TestActivity;
 
+@RunWith(AndroidJUnit4.class)
 public class BackupDataXmlExportImportIntgTest {
 
 	private static final String BAD_XML = "<!-- --> -- & &amp; &lt; &gt; <?xml?> <![CDATA[ ]]>";
