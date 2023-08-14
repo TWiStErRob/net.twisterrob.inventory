@@ -40,7 +40,7 @@ public class ItemActivityTest_Image {
 
 	@LargeTest
 	@Category({UseCase.Complex.class, On.Item.class, Op.DeletesBelonging.class})
-	@Test(timeout = 30 * 60 * 1000)
+	@Test(timeout = 30 * 1000)
 	public void testImageDeletedWithItem() throws IOException {
 		ItemEditActivityActor newItem = roomView.addItem();
 		newItem.setName(TEST_ITEM);
