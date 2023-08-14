@@ -1,5 +1,7 @@
 package net.twisterrob.inventory.android.backup.xml;
 
+import java.util.concurrent.TimeUnit;
+
 import org.junit.*;
 import org.junit.function.ThrowingRunnable;
 import org.mockito.*;
@@ -20,13 +22,15 @@ import net.twisterrob.inventory.android.backup.Importer.*;
 import net.twisterrob.inventory.android.content.Database;
 import net.twisterrob.inventory.android.content.contract.PropertyType;
 import net.twisterrob.inventory.android.content.model.Types;
+import net.twisterrob.inventory.android.test.TimeoutRule;
 import net.twisterrob.java.io.IOTools;
 
 import static net.twisterrob.test.hamcrest.Matchers.*;
 
 public class XMLImporterTest {
 
-	@Rule public final MockitoRule mockito = MockitoJUnit.rule();
+	@Rule(order = 1) public final TimeoutRule timeout = new TimeoutRule(5, TimeUnit.SECONDS);
+	@Rule(order = 2) public final MockitoRule mockito = MockitoJUnit.rule();
 
 	@Mock Database mockDatabase;
 	@Mock Types mockTypes;
