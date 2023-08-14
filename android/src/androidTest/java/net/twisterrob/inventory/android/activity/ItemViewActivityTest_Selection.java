@@ -142,7 +142,8 @@ public class ItemViewActivityTest_Selection {
 	 * This test is a bit jumpy because hasSelection jumps to the item being verified.
 	 */
 	@Category({Op.Cancels.class, UseCase.Complex.class})
-	@Test public void testExitsRandomSelectionAll() {
+	@Test(timeout = 2 * 60 * 1000)
+	public void testExitsRandomSelectionAll() {
 		final int count = 9;
 		createItems(count);
 		SelectionActor selection = itemView.select(subItem(1));

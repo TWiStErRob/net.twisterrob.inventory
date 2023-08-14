@@ -27,7 +27,8 @@ public class ImageLoadingTest {
 	private final MainActivityActor main = new MainActivityActor();
 
 	@Category({UseCase.Complex.class, On.Main.class, On.Item.class})
-	@Test public void test() {
+	@Test(timeout = 30 * 60 * 1000)
+	public void test() {
 		MainActivityActor.Navigator home = main.assertHomeScreen();
 		HomeRoomsActor rooms = home.rooms();
 		rooms.assertExists("!All Categories");
