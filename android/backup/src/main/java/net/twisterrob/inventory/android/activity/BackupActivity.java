@@ -133,9 +133,9 @@ public class BackupActivity extends BaseActivity implements BackupControllerFrag
 				pipe = true;
 				// EPIPE error (this just means that external party closed the PIPE)
 				for (StackTraceElement st : cause.getStackTrace()) {
-					// stack trace failed in ZippedXMLExporter.copyXSLT
+					// Stack trace failed in ZippedXMLExporter.copyEntry
 					if (ZippedXMLExporter.class.getName().equals(st.getClassName())
-							&& "copyXSLT".equals(st.getMethodName())) {
+							&& "copyEntry".equals(st.getMethodName())) {
 						// very likely the external app closed the stream
 						// or the user has 100kb free space, but then... good for them
 						LOG.warn("Ignoring Google Drive's weirdness of peeking for size.", progress.failure);
