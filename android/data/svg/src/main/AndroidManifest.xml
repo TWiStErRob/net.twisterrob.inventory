@@ -1,14 +1,10 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
 	>
 
 	<application
 		android:icon="@android:drawable/sym_def_app_icon"
-		android:allowBackup="false"
-		tools:ignore="DataExtractionRules"
 		>
-		<!-- lint:DataExtractionRules not necessary for this test app. -->
 	</application>
 
 </manifest>
