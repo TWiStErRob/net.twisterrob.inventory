@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
 	>
 
 	<application
 		android:largeHeap="true"
-		tools:ignore="UnusedAttribute"
 		>
 		<!-- largeHeap to prevent OOMs (e.g. cropping),
 		     but only do it in release to force memory problems to come up during development. -->
-		<!-- lint:UnusedAttribute largeHeap is API 11+, using as best effort. -->
 	</application>
 
 </manifest>
