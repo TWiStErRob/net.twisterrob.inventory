@@ -21,7 +21,7 @@
 
 # See net.twisterrob.inventory.android.activity.BackupActivity.shouldDisplay
 -keepclassmembernames class net.twisterrob.inventory.android.backup.xml.ZippedXMLExporter {
-	*** copyXSLT(...);
+	*** copyEntry(...);
 }
 
 # Remove Logging for now
