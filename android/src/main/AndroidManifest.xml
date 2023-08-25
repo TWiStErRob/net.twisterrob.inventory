@@ -10,6 +10,7 @@
 		android:name="net.twisterrob.inventory.android.App"
 		android:label="@string/app_name"
 		android:icon="@drawable/ic_launcher"
+		android:allowBackup="true"
 		android:manageSpaceActivity="net.twisterrob.inventory.android.space.ManageSpaceActivity"
 		android:supportsRtl="true"
 		android:theme="@style/Theme.AppTheme"
