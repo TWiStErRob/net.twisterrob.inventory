@@ -80,6 +80,10 @@ public class ZippedXMLExporter extends ZippedExporter {
 		}
 	}
 
+	/**
+	 * @noinspection JavadocReference
+	 * @see net.twisterrob.inventory.android.activity.BackupActivity#shouldDisplay where this method is reflected upon.
+	 */
 	private void copyEntry(String zipFileName, InputStream stream) throws IOException {
 		LOG.trace("Copying into {}", zipFileName);
 		try {

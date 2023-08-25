@@ -186,6 +186,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 						.get(exportFactory.get().progress(dispatcher))
 						.parcelExporter();
 				ParcelFileDescriptor file = queue.remove();
+				LOG.trace("Dequeued export to {}", file);
 				finish(exporter.exportTo(file));
 			} else if (ACTION_EXPORT.equals(intent.getAction())) {
 				dispatcher.setCancellable(false);
@@ -242,6 +243,7 @@ public class BackupService extends NotificationProgressService<Progress> {
 
 	public class LocalBinder extends Binder {
 		public void export(@NonNull ParcelFileDescriptor pfd) {
+			LOG.trace("Enqueueing export to {}", pfd);
 			queue.add(ObjectTools.checkNotNull(pfd));
 			BackupService context = BackupService.this;
 			Intent intent = new Intent(BackupService.ACTION_EXPORT_PFD_WORKAROUND, null, context, BackupService.class);

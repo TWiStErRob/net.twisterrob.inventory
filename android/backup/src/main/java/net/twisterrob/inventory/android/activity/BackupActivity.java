@@ -113,34 +113,40 @@ public class BackupActivity extends BaseActivity implements BackupControllerFrag
 		if (progress == null) {
 			return false;
 		}
-		// this should ignore any incoming finish progress while the dialog is up
-		// and hopefully that only happens when Google Drive reads the second time
-		// lack of initiating component (see doExportExternal), try the best heuristic to filter Drive peeking for size:
-		if (unhandled != null) {
-			// while another finish is already displayed (because the BackupService is sequential)
-			LOG.warn("Double-finish\n{}\n{}", unhandled, progress);
-			boolean cancelled = false, pipe = false;
-			if (progress.failure instanceof CancellationException) {
-				cancelled = true;
-				Throwable cause = progress.failure.getCause();
-				if (IOTools.isEPIPE(cause)) {
-					pipe = true;
-					// EPIPE error (this just means that external party closed the PIPE)
-					for (StackTraceElement st : cause.getStackTrace()) {
-						// stack trace failed in ZippedXMLExporter.copyXSLT
-						if (ZippedXMLExporter.class.getName().equals(st.getClassName())
-								&& "copyXSLT".equals(st.getMethodName())) {
-							// very likely the external app closed the stream
-							// or the user has 100kb free space, but then... good for them
-							LOG.warn("Ignoring Google Drive's weirdness of peeking for size.", progress.failure);
-							return false;
-						}
+
+		// If another finish is not yet displayed, display this progress immediately.
+		// This is ok, because the BackupService is sequential.
+		if (unhandled == null) {
+			return true;
+		}
+
+		// The following should ignore any incoming finish progress while the dialog is up.
+		// Hopefully that only happens when Google Drive reads the second time.
+		// Due to a lack of initiating component (see BackupControllerFragment.doExport),
+		// try the best heuristic to filter Drive peeking for size.
+		LOG.warn("Double-finish\n{}\n{}", unhandled, progress);
+		boolean cancelled = false, pipe = false;
+		if (progress.failure instanceof CancellationException) {
+			cancelled = true;
+			Throwable cause = progress.failure.getCause();
+			if (IOTools.isEPIPE(cause)) {
+				pipe = true;
+				// EPIPE error (this just means that external party closed the PIPE)
+				for (StackTraceElement st : cause.getStackTrace()) {
+					// Stack trace failed in ZippedXMLExporter.copyEntry
+					if (ZippedXMLExporter.class.getName().equals(st.getClassName())
+							&& "copyEntry".equals(st.getMethodName())) {
+						// very likely the external app closed the stream
+						// or the user has 100kb free space, but then... good for them
+						LOG.warn("Ignoring Google Drive's weirdness of peeking for size.", progress.failure);
+						return false;
 					}
 				}
 			}
-			LOG.warn("Letting double-dialog display: cancelled={}, pipe={}, stack={}", cancelled, pipe, false);
-			// anything that doesn't match the above: it's better to display double dialog
 		}
+
+		// Anything that doesn't match the above: it's better to display double dialog.
+		LOG.warn("Letting double-dialog display: cancelled={}, pipe={}, stack={}", cancelled, pipe, false);
 		return true;
 	}
 
