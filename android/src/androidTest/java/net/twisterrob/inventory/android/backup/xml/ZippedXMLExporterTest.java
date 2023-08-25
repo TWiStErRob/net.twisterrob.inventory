@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android.backup.xml;
 
 import java.io.*;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipFile;
 
 import static java.util.Collections.*;
@@ -30,6 +31,7 @@ import androidx.test.core.app.ApplicationProvider;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.backup.Exporter;
 import net.twisterrob.inventory.android.content.Database;
+import net.twisterrob.inventory.android.test.TimeoutRule;
 
 import static net.twisterrob.test.hamcrest.Matchers.hasEntry;
 import static net.twisterrob.test.hamcrest.Matchers.*;
@@ -38,8 +40,9 @@ public class ZippedXMLExporterTest {
 
 	private static final byte[] BOM = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 
-	@Rule public final TemporaryFolder temp = new TemporaryFolder();
-	@Rule public final MockitoRule mockito = MockitoJUnit.rule();
+	@Rule(order = 1) public final TimeoutRule timeout = new TimeoutRule(5, TimeUnit.SECONDS);
+	@Rule(order = 2) public final TemporaryFolder temp = new TemporaryFolder();
+	@Rule(order = 3) public final MockitoRule mockito = MockitoJUnit.rule();
 
 	@Mock Database mockDatabase;
 	@Mock CursorExporter mockExporter;
