@@ -3,6 +3,9 @@ name: SVG
 on:
   workflow_dispatch:
   push:
+    paths:
+      - 'android/data/src/main/res/raw/*.svg'
+      - 'android/data/svg/**'
     branches:
       - main
 
