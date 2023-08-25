@@ -60,7 +60,10 @@ internal class DeferredWeakHashMapFor293190504<K, V> : WeakHashMap<K, V>() {
 					// Assuming a for(:) loop will not do anything after this.
 					if (!hasNext) {
 						locked = false
-						changes.forEach { it(this@DeferredWeakHashMapFor293190504) }
+						changes.removeAll {
+							this@DeferredWeakHashMapFor293190504.it()
+							return@removeAll true
+						}
 					}
 					return hasNext
 				}
