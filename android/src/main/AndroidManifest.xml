@@ -10,14 +10,10 @@
 		android:name="net.twisterrob.inventory.android.App"
 		android:label="@string/app_name"
 		android:icon="@drawable/ic_launcher"
-		android:allowBackup="true"
 		android:manageSpaceActivity="net.twisterrob.inventory.android.space.ManageSpaceActivity"
 		android:supportsRtl="true"
 		android:theme="@style/Theme.AppTheme"
-		tools:ignore="AllowBackup"
 		>
-		<!-- lint:AllowBackup not using fullBackupContent, default "Auto Backup" is fine.
-		     TODO review in https://github.com/TWiStErRob/net.twisterrob.inventory/issues/301 -->
 
 		<meta-data
 			android:name="net.twisterrob.inventory.android.Constants$Pic$GlideSetup"

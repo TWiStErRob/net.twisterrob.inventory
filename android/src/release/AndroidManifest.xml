@@ -6,12 +6,11 @@
 
 	<application
 		android:largeHeap="true"
-		tools:ignore="AllowBackup,UnusedAttribute"
+		tools:ignore="UnusedAttribute"
 		>
 		<!-- largeHeap to prevent OOMs (e.g. cropping),
 		     but only do it in release to force memory problems to come up during development. -->
 		<!-- lint:UnusedAttribute largeHeap is API 11+, using as best effort. -->
-		<!-- lint:AllowBackup REPORT false positive, because main/AndroidManifest.xml is set up. -->
 	</application>
 
 </manifest>

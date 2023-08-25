@@ -9,10 +9,8 @@
 
 	<application
 		android:name="net.twisterrob.inventory.android.DebugApp"
-		tools:ignore="AllowBackup"
 		tools:replace="android:name"
 		>
-		<!-- lint:AllowBackup REPORT false positive, because main/AndroidManifest.xml is set up. -->
 
 		<!--suppress AndroidDomInspection workaround for https://github.com/TWiStErRob/net.twisterrob.inventory/issues/309 -->
 		<activity
