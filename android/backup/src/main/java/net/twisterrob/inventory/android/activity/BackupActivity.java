@@ -113,11 +113,12 @@ public class BackupActivity extends BaseActivity implements BackupControllerFrag
 		if (progress == null) {
 			return false;
 		}
-		// this should ignore any incoming finish progress while the dialog is up
-		// and hopefully that only happens when Google Drive reads the second time
-		// lack of initiating component (see doExportExternal), try the best heuristic to filter Drive peeking for size:
+		// This should ignore any incoming finish progress while the dialog is up.
+		// Hopefully that only happens when Google Drive reads the second time.
+		// Due to a lack of initiating component (see BackupControllerFragment.doExport),
+		// try the best heuristic to filter Drive peeking for size.
 		if (unhandled != null) {
-			// while another finish is already displayed (because the BackupService is sequential)
+			// While another finish is already displayed (because the BackupService is sequential).
 			LOG.warn("Double-finish\n{}\n{}", unhandled, progress);
 			boolean cancelled = false, pipe = false;
 			if (progress.failure instanceof CancellationException) {
@@ -138,8 +139,9 @@ public class BackupActivity extends BaseActivity implements BackupControllerFrag
 					}
 				}
 			}
+			// Anything that doesn't match the above: it's better to display double dialog.
 			LOG.warn("Letting double-dialog display: cancelled={}, pipe={}, stack={}", cancelled, pipe, false);
-			// anything that doesn't match the above: it's better to display double dialog
+			return true;
 		}
 		return true;
 	}
