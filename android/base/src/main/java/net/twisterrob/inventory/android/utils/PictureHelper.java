@@ -1,10 +1,11 @@
 package net.twisterrob.inventory.android.utils;
 
-import android.graphics.*;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
 
-import static android.graphics.Color.*;
-
-import androidx.annotation.*;
+import androidx.annotation.ColorInt;
+import androidx.annotation.FloatRange;
+import androidx.annotation.NonNull;
 
 public abstract class PictureHelper {
 	private static final float[] NEGATIVE = new float[] {
@@ -27,10 +28,10 @@ public abstract class PictureHelper {
 		ColorMatrix matrix = new ColorMatrix();
 		matrix.postConcat(new ColorMatrix(NEGATIVE));
 		matrix.postConcat(new ColorMatrix(new float[] {
-				1 - red(color) / 255f, 0, 0, 0, 0,
-				0, 1 - green(color) / 255f, 0, 0, 0,
-				0, 0, 1 - blue(color) / 255f, 0, 0,
-				0, 0, 0, alpha(color) / 255f, 0
+				1 - Color.red(color) / 255f, 0, 0, 0, 0,
+				0, 1 - Color.green(color) / 255f, 0, 0, 0,
+				0, 0, 1 - Color.blue(color) / 255f, 0, 0,
+				0, 0, 0, Color.alpha(color) / 255f, 0
 		}));
 		matrix.postConcat(new ColorMatrix(NEGATIVE));
 		return matrix;
@@ -51,17 +52,18 @@ public abstract class PictureHelper {
 	 * @see <a href="http://stackoverflow.com/a/31217267/253468">SO</a>
 	 * @see <a href="https://gist.github.com/ro-sharp/49fd46a071a267d9e5dd">Gist</a>
 	 */
-	@SuppressWarnings("UnusedAssignment")
-	public static int getColor(Object thing) {
+	public static @ColorInt int getColor(@NonNull Object thing) {
 		int seed = thing.hashCode();
 		// Math.sin jumps big enough even when adding 1, because argument is radian and period is ~3
-		int rand_r = (int)Math.abs(Math.sin(seed++) * 10000) & 0xFF;
-		int rand_g = (int)Math.abs(Math.sin(seed++) * 10000) & 0xFF;
-		int rand_b = (int)Math.abs(Math.sin(seed++) * 10000) & 0xFF;
+		// The `& 0xFF` will truncate the higher bits, so we end up with [0, 255] range.
+		int rand_r = (int)Math.abs(Math.sin(++seed) * 10000) & 0xFF;
+		int rand_g = (int)Math.abs(Math.sin(++seed) * 10000) & 0xFF;
+		int rand_b = (int)Math.abs(Math.sin(++seed) * 10000) & 0xFF;
 
+		// r, g, b in range of [(160 + 0) / 2 = 80, (160 + 255) / 2 = 207]
 		int r = (160 + rand_r) / 2;
 		int g = (160 + rand_g) / 2;
 		int b = (160 + rand_b) / 2;
-		return argb(0xFF, r, g, b);
+		return Color.argb(0xFF, r, g, b);
 	}
 }
