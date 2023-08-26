@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.junit.MatcherAssume.assumeThat;
 
 import android.app.Activity;
 
@@ -181,6 +182,14 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 	}
 
 	@Test public void testChangeCategoryAndKeywordsDialog() {
+		assumeThat(
+				"Only items have change type button for now.",
+				this,
+				not(anyOf(
+						instanceOf(PropertyEditActivityTest_Create.class),
+						instanceOf(RoomEditActivityTest_Create.class)
+				))
+		);
 		ChangeTypeDialogActor dialog = editor.changeType();
 
 		KeywordsDialogActor keywords = dialog.showKeywords(belonging.getOtherType());
