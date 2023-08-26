@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Build.*;
 import android.os.*;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -153,7 +154,9 @@ public class ChangeTypeDialog {
 			@TargetApi(VERSION_CODES.HONEYCOMB)
 			@Override public void run() {
 				if (offset < list.getHeight()) {
-					list.smoothScrollToPositionFromTop(pos, offset);
+					float scale = Settings.Global.getFloat(context.getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f);
+					int duration = (int)(scale * 200);
+					list.smoothScrollToPositionFromTop(pos, offset, duration);
 				} else {
 					list.smoothScrollToPosition(pos);
 				}
