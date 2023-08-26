@@ -59,9 +59,9 @@ public abstract class PictureHelper {
 		int rand_g = (int)Math.abs(Math.sin(seed++) * 10000) & 0xFF;
 		int rand_b = (int)Math.abs(Math.sin(seed++) * 10000) & 0xFF;
 
-		int r = Math.round((160 + rand_r) / 2);
-		int g = Math.round((160 + rand_g) / 2);
-		int b = Math.round((160 + rand_b) / 2);
+		int r = (160 + rand_r) / 2;
+		int g = (160 + rand_g) / 2;
+		int b = (160 + rand_b) / 2;
 		return argb(0xFF, r, g, b);
 	}
 }
