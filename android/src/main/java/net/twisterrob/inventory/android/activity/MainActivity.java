@@ -357,11 +357,16 @@ public class MainActivity extends DrawerActivity
 			startActivity(ItemViewActivity.show(10010L));
 			return true;
 		} else if (id == R.id.debug_capture) {
-			File devFile =
-					new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "dev.jpg");
+			File devFile;
+			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+			try {
+				devFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "dev.jpg");
+			} finally {
+				StrictMode.setThreadPolicy(originalPolicy);
+			}
 			Uri target = Uri.fromFile(devFile);
-			startActivityForResult(CaptureImage.saveTo(this, devFile, target, 8192),
-					REQUEST_CODE_IMAGE);
+			Intent intent = CaptureImage.saveTo(this, devFile, target, 8192);
+			startActivityForResult(intent, REQUEST_CODE_IMAGE);
 			return true;
 		} else if (id == R.id.debug_testdb) {
 			resetToTestDatabase();
