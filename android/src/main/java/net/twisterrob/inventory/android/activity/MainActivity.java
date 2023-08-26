@@ -360,11 +360,13 @@ public class MainActivity extends DrawerActivity
 			File devFile;
 			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
 			try {
-				devFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "dev.jpg");
+				devFile = Constants.Paths.getTempImage(this);
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
 			} finally {
 				StrictMode.setThreadPolicy(originalPolicy);
 			}
-			Uri target = Uri.fromFile(devFile);
+			Uri target = Constants.Paths.getShareUri(this, devFile);
 			Intent intent = CaptureImage.saveTo(this, devFile, target, 8192);
 			startActivityForResult(intent, REQUEST_CODE_IMAGE);
 			return true;
