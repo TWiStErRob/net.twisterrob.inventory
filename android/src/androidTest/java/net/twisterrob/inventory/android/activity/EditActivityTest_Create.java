@@ -182,9 +182,11 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 
 	@Test public void testChangeCategoryAndKeywordsDialog() {
 		ChangeTypeDialogActor dialog = editor.changeType();
+
 		KeywordsDialogActor keywords = dialog.showKeywords(belonging.getOtherType());
 		keywords.assertKeywords(belonging.getOtherKeywords());
 		keywords.close();
+
 		dialog.cancel();
 	}
 
