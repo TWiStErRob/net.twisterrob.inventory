@@ -40,9 +40,13 @@ public class MainActivityTest_Welcome {
 
 	private final MainActivityActor main = new MainActivityActor();
 
-	@Category({UseCase.InitialCondition.class})
-	@Test public void testWelcomeShown() {
-		main.assertWelcomeShown();
+	@Category({UseCase.InitialCondition.class, Op.Cancels.class})
+	@Test public void testWelcomeShownAndClosable() {
+		WelcomeDialogActor welcome = main.assertWelcomeShown();
+
+		// Dismiss the dialog to not leak the window.
+		welcome.dismissIgnoring();
+		main.assertClosing();
 	}
 
 	@Category({Op.Cancels.class, Op.ChecksMessage.class})

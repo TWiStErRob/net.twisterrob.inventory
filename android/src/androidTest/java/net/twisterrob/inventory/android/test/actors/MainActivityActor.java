@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.runner.lifecycle.Stage;
 
 import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.*;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.*;
@@ -108,6 +109,10 @@ public class MainActivityActor extends ActivityActor {
 		}
 		private void checkDismissed() {
 			assertNoDialogIsDisplayed();
+		}
+		public void dismissIgnoring() {
+			pressBackUnconditionally();
+			checkDismissed();
 		}
 	}
 

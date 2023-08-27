@@ -12,13 +12,22 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @Category({On.Property.class, Op.CreatesBelonging.class})
 public class PropertyEditActivityTest_Create extends EditActivityTest_Create<PropertyEditActivity> {
 	public PropertyEditActivityTest_Create() {
-		super(PropertyEditActivity.class, new PropertyEditActivityActor(), new BelongingValues(
-				TEST_PROPERTY, TEST_PROPERTY_OTHER,
-				TEST_PROPERTY_TYPE, TEST_PROPERTY_TYPE_OTHER, TEST_PROPERTY_TYPE_DEFAULT) {
-			@Override protected DataBaseActor.BelongingAssertions createAssertions(DataBaseActor database) {
-				return database.new PropertyAssertions();
-			}
-		});
+		super(
+				PropertyEditActivity.class,
+				new PropertyEditActivityActor(),
+				new BelongingValues(
+						TEST_PROPERTY,
+						TEST_PROPERTY_OTHER,
+						TEST_PROPERTY_TYPE,
+						TEST_PROPERTY_TYPE_OTHER,
+						TEST_PROPERTY_TYPE_OTHER_KEYWORDS,
+						TEST_PROPERTY_TYPE_DEFAULT
+				) {
+					@Override protected DataBaseActor.BelongingAssertions createAssertions(
+							DataBaseActor database) {
+						return database.new PropertyAssertions();
+					}
+				});
 	}
 
 	@Override protected void createContainers() {

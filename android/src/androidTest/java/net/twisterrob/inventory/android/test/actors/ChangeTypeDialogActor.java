@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.*;
 import android.view.View;
 import android.widget.AdapterView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.test.espresso.*;
 
@@ -29,6 +30,9 @@ import static net.twisterrob.android.test.espresso.DialogMatchers.*;
 import static net.twisterrob.android.test.espresso.EspressoExtensions.*;
 import static net.twisterrob.android.test.matchers.AndroidMatchers.*;
 
+/**
+ * @see net.twisterrob.inventory.android.view.ChangeTypeDialog
+ */
 public class ChangeTypeDialogActor {
 	public static final AnyOf<View> titleAssertion = anyOf(
 			withText(R.string.item_categorize_title_many),
@@ -49,7 +53,7 @@ public class ChangeTypeDialogActor {
 		Espresso.pressBack();
 	}
 	public void save() {
-		onView(withId(R.id.btn_save)).perform(click());
+		clickPositiveInDialog();
 	}
 
 	public void assertNoneSelected() {
@@ -65,29 +69,58 @@ public class ChangeTypeDialogActor {
 
 	public void select(@StringRes int type) {
 		String typeName = getApplicationContext().getResources().getResourceEntryName(type);
+		DataInteraction row = navigateToType(type);
+		// Back closes the keyword listing popup if click() turns into longClick().
+		row.perform(click(pressBack()));
+		if (exists(onView(dialogMatcher))) {
+			// We've found what we wanted, selected it, but it's not auto-closing the dialog.
+			// This happens when it's not a leaf sub-category, so it needs manual confirmation.
+		
+			// Self-verify that click() actually selected the type in current iteration.
+			assertSelected(typeName);
+			// Terminate the dialog, because the actor needs to "select" the type.
+			save();
+		}
+	}
+
+	public @NonNull KeywordsDialogActor showKeywords(int type) {
+		navigateToType(type).perform(longClick());
+		KeywordsDialogActor dialog = new KeywordsDialogActor();
+		dialog.assertDisplayed();
+		return dialog;
+	}
+
+	private @NonNull DataInteraction navigateToType(int type) {
+		String typeName = getApplicationContext().getResources().getResourceEntryName(type);
 		// TODO figure out how to get this from the Hilt Singleton component.
 		CategoryCache cache = new CategoryCacheHolder(getApplicationContext(), App.db()).getCacheForCurrentLocale();
 		while (exists(onView(dialogMatcher))) {
-			// if the first one goes through with the click, it means that we've managed to selected what we wanted
+			// If the dialog closes automatically with the click,
+			// it means that we've managed to select what we wanted,
+			// and it was a leaf sub-category.
 			String currentType = typeName;
 			do {
 				DataInteraction row = onData(withColumn(Category.NAME, currentType));
 				if (!exists(row)) {
-					// Not expanded yet, continue and try to select parent first.
+					// Could not find the type we're looking for.
+					// This probably means that it's not expanded yet,
+					// continue and try to select a parent first so the sub-category becomes visible.
 					continue;
 				}
-				// Make sure to close the keyword listing popup if click() turns into longClick().
-				row.perform(click(pressBack()));
-				if (exists(onView(dialogMatcher))) {
-					// Self-verify that click() actually selected the type in current iteration.
-					assertSelected(currentType);
+				if (typeName.equals(currentType)) {
+					// We've found the type we're looking for, not one of its parents.
+					return row;
 				}
-				break;
+				// We've found a row we need to click in order to expand the one we need.
+				// Click the row, so that we expand it.
+				
+				// Back closes the keyword listing popup if click() turns into longClick().
+				row.perform(click(pressBack()));
+				// Self-verify that click() actually selected the type in current iteration.
+				assertSelected(currentType);
+				break; // Start again, because the dialog contents significantly changed.
 			} while ((currentType = cache.getParent(currentType)) != null);
-			if (typeName.equals(currentType) && exists(onView(dialogMatcher))) {
-				// selected type needs manual confirmation
-				save();
-			}
 		}
+		throw new IllegalStateException("Could not find type " + typeName);
 	}
 }

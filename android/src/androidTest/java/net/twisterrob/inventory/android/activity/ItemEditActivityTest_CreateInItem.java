@@ -12,14 +12,25 @@ import static net.twisterrob.inventory.android.content.Constants.*;
 @Category({On.Item.class, Op.CreatesBelonging.class})
 public class ItemEditActivityTest_CreateInItem extends EditActivityTest_Create<ItemEditActivity> {
 	private long itemID;
+
 	public ItemEditActivityTest_CreateInItem() {
-		super(ItemEditActivity.class, new ItemEditActivityActor(), new BelongingValues(
-				TEST_SUBITEM, TEST_SUBITEM_OTHER,
-				TEST_ITEM_CATEGORY, TEST_ITEM_CATEGORY_OTHER, TEST_ITEM_CATEGORY_DEFAULT) {
-			@Override protected DataBaseActor.BelongingAssertions createAssertions(DataBaseActor database) {
-				return database.new ItemAssertions();
-			}
-		});
+		super(
+				ItemEditActivity.class,
+				new ItemEditActivityActor(),
+				new BelongingValues(
+						TEST_SUBITEM,
+						TEST_SUBITEM_OTHER,
+						TEST_ITEM_CATEGORY,
+						TEST_ITEM_CATEGORY_OTHER,
+						TEST_ITEM_CATEGORY_OTHER_KEYWORDS,
+						TEST_ITEM_CATEGORY_DEFAULT
+				) {
+					@Override protected DataBaseActor.BelongingAssertions createAssertions(
+							DataBaseActor database
+					) {
+						return database.new ItemAssertions();
+					}
+				});
 	}
 
 	@Override public void preconditions() {
