@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 
 import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.*;
@@ -114,11 +114,10 @@ public class MainActivity extends DrawerActivity
 		welcome();
 	}
 
-	@SuppressLint("RestrictedApi") // MenuBuilder() and add() are used, but only for debugging
 	private void autoDebug() {
 		if (Constants.DISABLE) {
-			onOptionsItemSelected(new MenuBuilder(this)
-					.add(0, R.id.debug, 0, "Debug"));
+			Menu menu = new PopupMenu(this, getWindow().getDecorView()).getMenu();
+			onOptionsItemSelected(menu.add(R.id.debug, R.id.debug_capture, Menu.NONE, "Debug"));
 		}
 	}
 
