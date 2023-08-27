@@ -181,7 +181,6 @@ public abstract class EditActivityTest_Create<T extends Activity> {
 		lastOperationFinishesActivity();
 	}
 
-	@Ignore
 	@Test public void testChangeCategoryAndKeywordsDialog() {
 		assumeThat(
 				"Only items have change type button for now.",
