@@ -423,7 +423,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		try {
 			File file = Constants.Paths.getTempImage(requireContext());
 			Uri fileUri = Paths.getShareUri(requireContext(), file);
-			Intent intent = CaptureImage.saveTo(requireContext(), file, fileUri, 2048/*px*/);
+			Intent intent = CaptureImage.saveTo(requireContext(), fileUri, 2048/*px*/);
 			intent.putExtra(CaptureImage.EXTRA_FORMAT, CompressFormat.JPEG);
 			intent.putExtra(CaptureImage.EXTRA_QUALITY, 85/*%*/);
 			startActivityForResult(intent, REQUEST_CODE_GET_PICTURE);
