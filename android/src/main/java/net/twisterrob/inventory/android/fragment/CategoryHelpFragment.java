@@ -27,13 +27,13 @@ import androidx.webkit.WebViewAssetLoader.ResourcesPathHandler;
 import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.io.FilesKt;
 
+import net.twisterrob.android.contracts.CreateOpenableDocument;
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.AndroidTools;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 import net.twisterrob.inventory.android.activity.MainActivity;
 import net.twisterrob.inventory.android.categories.cache.CategoryCache;
-import net.twisterrob.inventory.android.content.CreateOpenableDocument;
 import net.twisterrob.inventory.android.content.Intents;
 import net.twisterrob.inventory.android.content.Intents.Extras;
 import net.twisterrob.inventory.android.content.contract.Category;

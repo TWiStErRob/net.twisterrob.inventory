@@ -17,13 +17,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import dagger.hilt.android.AndroidEntryPoint;
 
+import net.twisterrob.android.contracts.CreateOpenableDocument;
+import net.twisterrob.android.contracts.OpenOpenableDocument;
 import net.twisterrob.android.utils.tools.DialogTools;
 import net.twisterrob.inventory.android.Constants;
 import net.twisterrob.inventory.android.backup.R;
 import net.twisterrob.inventory.android.backup.concurrent.BackupService;
-import net.twisterrob.inventory.android.content.CreateOpenableDocument;
 import net.twisterrob.inventory.android.content.InventoryContract;
-import net.twisterrob.inventory.android.content.OpenOpenableDocument;
 
 @AndroidEntryPoint
 public class BackupControllerFragment extends BaseFragment<BackupControllerFragment.BackupEvents> {
