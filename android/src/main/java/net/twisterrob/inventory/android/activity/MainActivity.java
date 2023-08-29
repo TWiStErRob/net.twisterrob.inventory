@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 
 import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.*;
@@ -114,11 +114,10 @@ public class MainActivity extends DrawerActivity
 		welcome();
 	}
 
-	@SuppressLint("RestrictedApi") // MenuBuilder() and add() are used, but only for debugging
 	private void autoDebug() {
 		if (Constants.DISABLE) {
-			onOptionsItemSelected(new MenuBuilder(this)
-					.add(0, R.id.debug, 0, "Debug"));
+			Menu menu = new PopupMenu(this, getWindow().getDecorView()).getMenu();
+			onOptionsItemSelected(menu.add(R.id.debug, R.id.debug_capture, Menu.NONE, "Debug"));
 		}
 	}
 
@@ -357,11 +356,18 @@ public class MainActivity extends DrawerActivity
 			startActivity(ItemViewActivity.show(10010L));
 			return true;
 		} else if (id == R.id.debug_capture) {
-			File devFile =
-					new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "dev.jpg");
-			Uri target = Uri.fromFile(devFile);
-			startActivityForResult(CaptureImage.saveTo(this, devFile, target, 8192),
-					REQUEST_CODE_IMAGE);
+			Uri target;
+			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+			try {
+				File devFile = Constants.Paths.getTempImage(this);
+				target = Constants.Paths.getShareUri(this, devFile);
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			} finally {
+				StrictMode.setThreadPolicy(originalPolicy);
+			}
+			Intent intent = CaptureImage.saveTo(this, target, 8192);
+			startActivityForResult(intent, REQUEST_CODE_IMAGE);
 			return true;
 		} else if (id == R.id.debug_testdb) {
 			resetToTestDatabase();

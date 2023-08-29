@@ -19,9 +19,9 @@ import androidx.documentfile.provider.DocumentFile;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 
+import net.twisterrob.android.contracts.CreateOpenableDocument;
 import net.twisterrob.android.test.automators.DocumentsUiAutomator;
 import net.twisterrob.android.utils.tools.IOTools;
-import net.twisterrob.inventory.android.content.CreateOpenableDocument;
 
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.clickOn;
 import static net.twisterrob.android.test.automators.UiAutomatorExtensions.exists;

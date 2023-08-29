@@ -22,7 +22,7 @@
 				<item android:id="@+id/debug_testdb" android:title="Reset to Test DB" />
 				<item android:id="@+id/debug_showCategory" android:title="Show Category" />
 				<item android:id="@+id/debug_showItem" android:title="Show Item" />
-				<item android:id="@+id/debug_capture" android:title="Capture  Image" />
+				<item android:id="@+id/debug_capture" android:title="Capture Image" />
 				<item android:id="@+id/debug_showImage" android:title="Show Image (InventoryProvider)" />
 			</group>
 		</menu>

@@ -5,11 +5,11 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCaller
 import dagger.hilt.android.qualifiers.ActivityContext
+import net.twisterrob.android.contracts.CreateOpenableDocument
+import net.twisterrob.android.contracts.OpenOpenableDocument
 import net.twisterrob.android.utils.tools.DialogTools
 import net.twisterrob.android.utils.tools.DialogTools.PopupCallbacks
 import net.twisterrob.inventory.android.arch.UiEffectHandler
-import net.twisterrob.inventory.android.content.CreateOpenableDocument
-import net.twisterrob.inventory.android.content.OpenOpenableDocument
 import javax.inject.Inject
 
 internal class ManageSpaceUiEffectHandler @Inject constructor(
