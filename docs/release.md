@@ -2,6 +2,7 @@ For the full process see [.github/release.md](https://github.com/TWiStErRob/.git
 
 # Release Process
 
+1. Double-check the version number in `android/build.gradle` is the same as the milestone, if not, PR.
 1. Ensure clean latest working copy.
    ```shell
    git checkout main
@@ -22,7 +23,7 @@ For the full process see [.github/release.md](https://github.com/TWiStErRob/.git
    * `proguard_mapping.txt`
      @ Developer Console
      \> Release
-     \> [App bundle explorer](https://play.google.com/console/u/0/developers/7995455198986011414/app/4974852622245161228/bundle-explorer)
+     \> [App bundle explorer](https://play.google.com/console/u/0/developers/7995455198986011414/app/4974852622245161228/bundle-explorer-selector)
      \> Downloads tab
      \> Assets
      \> ReTrace mapping file
@@ -31,6 +32,10 @@ For the full process see [.github/release.md](https://github.com/TWiStErRob/.git
 1. Make a backup of current version on the phone with
    ```shell
    adb backup -f Inventory-pre<version>.ab -apk -noobb -noshared -nosystem net.twisterrob.inventory
+   # > Now unlock your device and confirm the backup operation...
+   # At this point have to press "Back up my data" on the phone really quickly.
+   # If the CLI prompt is shown after this message,
+   # it's too late and the backup will not happen regardless what the toast says.
    ```
    Note: to restore a backup for testing use
    ```shell

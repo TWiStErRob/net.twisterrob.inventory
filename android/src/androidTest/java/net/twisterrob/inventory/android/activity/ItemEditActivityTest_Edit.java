@@ -4,6 +4,9 @@ import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.not;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import net.twisterrob.inventory.android.activity.data.ItemEditActivity;
@@ -59,5 +62,12 @@ public class ItemEditActivityTest_Edit {
 
 		// changes applied
 		db.assertItemHasType(TEST_ITEM, TEST_ITEM_CATEGORY_OTHER);
+	}
+
+	@Category({On.Category.class})
+	@Test public void testShowKeywords() {
+		KeywordsDialogActor keywords = itemEdit.help().showKeywords();
+		keywords.assertKeywords(not(emptyString()));
+		keywords.close();
 	}
 }

@@ -236,7 +236,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 					Hinter.unhighlight(name.getText());
 				}
 				@Override public void categoryQueried(long categoryID) {
-					visuals.showKeywords(categoryID);
+					visuals.showKeywords(requireActivity(), categoryID);
 				}
 			});
 			hint.setAdapter(hinter.getAdapter());
@@ -281,7 +281,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		// CONSIDER setOnItemLongClickListener is not supported, any way to work around? So user has the same "tooltip" as in ChangeTypeDialog
 		type.setOnLongClickListener(new OnLongClickListener() {
 			@Override public boolean onLongClick(View view) {
-				visuals.showKeywords(getTypeId());
+				visuals.showKeywords(requireActivity(), getTypeId());
 				return true;
 			}
 		});
@@ -330,7 +330,7 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 			updateHint(name.getText(), true);
 			return true;
 		} else if (id == R.id.action_category_keywords) {
-			visuals.showKeywords(getTypeId());
+			visuals.showKeywords(requireActivity(), getTypeId());
 			return true;
 		} else {
 			return super.onContextItemSelected(item);
