@@ -31,6 +31,9 @@ For the full process see [.github/release.md](https://github.com/TWiStErRob/.git
 1. Make a backup of current version on the phone with
    ```shell
    adb backup -f Inventory-pre<version>.ab -apk -noobb -noshared -nosystem net.twisterrob.inventory
+   # > Now unlock your device and confirm the backup operation...
+   # At this point have to press "Back up my data" on the phone really quickly.
+   # If the promt is shown, it's too late and the backup will not happen regardless what the toast says.
    ```
    Note: to restore a backup for testing use
    ```shell
