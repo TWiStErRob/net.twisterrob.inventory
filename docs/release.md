@@ -2,6 +2,7 @@ For the full process see [.github/release.md](https://github.com/TWiStErRob/.git
 
 # Release Process
 
+1. Double-check the version number in `android/build.gradle` is the same as the milestone, if not, PR.
 1. Ensure clean latest working copy.
    ```shell
    git checkout main
