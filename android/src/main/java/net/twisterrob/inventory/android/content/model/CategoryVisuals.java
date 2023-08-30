@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import javax.inject.Inject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.text.SpannableStringBuilder;
@@ -95,8 +96,8 @@ public class CategoryVisuals {
 		}
 	}
 
-	public void showKeywords(long categoryID) {
+	public void showKeywords(@NonNull Activity activity, long categoryID) {
 		CharSequence keywords = getKeywords(cache.getCategoryKey(categoryID), true);
-		ChangeTypeDialog.showKeywords(context, cache.getCategoryPath(categoryID), keywords);
+		ChangeTypeDialog.showKeywords(activity, cache.getCategoryPath(categoryID), keywords);
 	}
 }

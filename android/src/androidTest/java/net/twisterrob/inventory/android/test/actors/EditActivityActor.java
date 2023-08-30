@@ -99,6 +99,12 @@ public abstract class EditActivityActor extends ActivityActor {
 	public void checkPicture(@ColorInt int backgroundColor) {
 		onView(imageMatcher).perform(scrollTo()).check(matches(withBitmap(hasBackgroundColor(backgroundColor))));
 	}
+	public InfoPopupActor help() {
+		onView(withId(R.id.help)).perform(click());
+		InfoPopupActor popup = new InfoPopupActor();
+		popup.assertDisplayed();
+		return popup;
+	}
 	public SaveResultActor save() {
 		onView(withId(R.id.btn_save)).perform(click());
 		return new SaveResultActor();
@@ -159,6 +165,30 @@ public abstract class EditActivityActor extends ActivityActor {
 		public final void checkToastAlreadyExists() {
 			Matcher<String> matcher = containsStringRes(R.string.generic_error_unique_name);
 			assertToastMessage(withText(matcher));
+		}
+	}
+
+	public static class InfoPopupActor {
+		public void assertDisplayed() {
+			onRoot(isPlatformPopup()).check(matches(isCompletelyDisplayed()));
+		}
+
+		public KeywordsDialogActor showKeywords() {
+			onData(withMenuItemId(R.id.action_category_keywords)).perform(click());
+			KeywordsDialogActor dialog = new KeywordsDialogActor();
+			dialog.assertDisplayed();
+			return dialog;
+		}
+
+		public CategoryActivityActor jumpToCategory() {
+			onData(withMenuItemId(R.id.action_category_goto)).perform(click());
+			CategoryActivityActor activity = new CategoryActivityActor();
+			activity.assertIsInFront();
+			return activity;
+		}
+
+		public void suggestCategories() {
+			onData(withMenuItemId(R.id.action_category_suggest)).perform(click());
 		}
 	}
 }

@@ -1,9 +1,12 @@
 package net.twisterrob.inventory.android.test.actors;
 
+import org.hamcrest.Matcher;
+
 import static org.hamcrest.Matchers.anyOf;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.test.espresso.Espresso;
 
@@ -27,6 +30,9 @@ public class KeywordsDialogActor extends AlertDialogActor {
 
 	public void assertKeywords(@StringRes int keywords) {
 		assertDialogMessage(withText(keywords));
+	}
+	public void assertKeywords(@NonNull Matcher<String> matcher) {
+		assertDialogMessage(withText(matcher));
 	}
 
 	public void close() {
