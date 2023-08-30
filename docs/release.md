@@ -22,7 +22,7 @@ For the full process see [.github/release.md](https://github.com/TWiStErRob/.git
    * `proguard_mapping.txt`
      @ Developer Console
      \> Release
-     \> [App bundle explorer](https://play.google.com/console/u/0/developers/7995455198986011414/app/4974852622245161228/bundle-explorer)
+     \> [App bundle explorer](https://play.google.com/console/u/0/developers/7995455198986011414/app/4974852622245161228/bundle-explorer-selector)
      \> Downloads tab
      \> Assets
      \> ReTrace mapping file
