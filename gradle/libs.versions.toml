@@ -79,7 +79,6 @@ test-durian = "3.4.0"
 test-fishbowl = "1.4.1"
 
 [libraries]
-plugin-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 plugin-android-tools-common = { module = "com.android.tools:common", version.ref = "agp-tools" }
 plugin-android-tools-sdkCommon = { module = "com.android.tools:sdk-common", version.ref = "agp-tools" }
 plugin-android-tools-ddmlib = { module = "com.android.tools.ddms:ddmlib", version.ref = "agp-tools" }
@@ -176,6 +175,8 @@ deprecated-hamcrestLibrary = { module = "org.hamcrest:hamcrest-library" }
 [bundles]
 
 [plugins]
+# com.android.application, com.android.library
+android = { id = "com.android.base", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
