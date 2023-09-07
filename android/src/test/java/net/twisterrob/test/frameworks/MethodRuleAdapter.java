@@ -1,5 +1,6 @@
 package net.twisterrob.test.frameworks;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.junit.rules.*;
@@ -39,9 +40,11 @@ public class MethodRuleAdapter implements TestRule {
 
 	private @NonNull Object getTestObject(@NonNull Description testDescription) {
 		try {
-			return testDescription.getTestClass().newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new IllegalStateException(e);
+			return testDescription.getTestClass().getDeclaredConstructor().newInstance();
+		} catch (NoSuchMethodException | IllegalAccessException | InstantiationException ex) {
+			throw new IllegalStateException(ex);
+		} catch (InvocationTargetException ex) {
+			throw new RuntimeException(ex.getCause());
 		}
 	}
 }
