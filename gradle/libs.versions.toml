@@ -84,8 +84,6 @@ plugin-android-tools-common = { module = "com.android.tools:common", version.ref
 plugin-android-tools-sdkCommon = { module = "com.android.tools:sdk-common", version.ref = "agp-tools" }
 plugin-android-tools-ddmlib = { module = "com.android.tools.ddms:ddmlib", version.ref = "agp-tools" }
 plugin-android-tools-testApi = { module = "com.android.tools.build:builder-test-api", version.ref = "agp" }
-plugin-twisterrob-quality = { module = "net.twisterrob.gradle:twister-quality", version.ref = "twisterrob" }
-plugin-twisterrob-android = { module = "net.twisterrob.gradle:twister-convention-plugins", version.ref = "twisterrob" }
 
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutines" }
@@ -181,3 +179,5 @@ deprecated-hamcrestLibrary = { module = "org.hamcrest:hamcrest-library" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+twisterrob-quality = { id = "net.twisterrob.gradle.plugin.quality", version.ref = "twisterrob" }
+twisterrob-android = { id = "net.twisterrob.gradle.plugin.android-app", version.ref = "twisterrob" }

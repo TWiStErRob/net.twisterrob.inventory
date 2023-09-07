@@ -24,8 +24,8 @@ gradlePlugin {
 
 dependencies {
 	implementation(libs.plugin.android.gradle)
-	implementation(libs.plugin.twisterrob.quality)
-	implementation(libs.plugin.twisterrob.android)
+	implementation(libs.plugins.twisterrob.quality.asMarkerArtifact())
+	implementation(libs.plugins.twisterrob.android.asMarkerArtifact())
 	implementation(libs.plugins.kotlin.asMarkerArtifact())
 	implementation(libs.plugins.daggerHilt.asMarkerArtifact())
 
