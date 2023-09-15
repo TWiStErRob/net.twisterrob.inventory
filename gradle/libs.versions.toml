@@ -175,8 +175,7 @@ deprecated-hamcrestLibrary = { module = "org.hamcrest:hamcrest-library" }
 [bundles]
 
 [plugins]
-# com.android.application, com.android.library
-android = { id = "com.android.base", version.ref = "agp" }
+android = { id = "com.android.application", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
