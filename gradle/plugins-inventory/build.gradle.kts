@@ -23,11 +23,11 @@ gradlePlugin {
 }
 
 dependencies {
-	implementation(libs.plugin.android.gradle)
-	implementation(libs.plugin.twisterrob.quality)
-	implementation(libs.plugin.twisterrob.android)
-	implementation(libs.plugin.kotlin)
-	implementation(libs.plugin.dagger.hilt)
+	implementation(libs.plugins.android.asMarkerArtifact())
+	implementation(libs.plugins.twisterrob.quality.asMarkerArtifact())
+	implementation(libs.plugins.twisterrob.android.asMarkerArtifact())
+	implementation(libs.plugins.kotlin.asMarkerArtifact())
+	implementation(libs.plugins.daggerHilt.asMarkerArtifact())
 
 	// region: These dependencies were part of AGP in 3.x and 4.x, but in 7.x they became runtime dependencies.
 	// UpgradeTestTask: DeviceConnector, DeviceProvider
@@ -81,4 +81,8 @@ detekt {
 
 tasks.register("cleanFull").configure {
 	dependsOn("clean")
+}
+
+fun Provider<PluginDependency>.asMarkerArtifact(): Provider<String> = map { 
+	"${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}"
 }

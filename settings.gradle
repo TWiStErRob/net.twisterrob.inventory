@@ -23,7 +23,7 @@ plugins {
 }
 
 dependencyResolutionManagement {
-	includeBuild("gradle/platform")
+	includeBuild("gradle/platform-inventory")
 	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 	repositories {
 		google()

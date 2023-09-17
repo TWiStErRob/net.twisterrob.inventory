@@ -79,15 +79,10 @@ test-durian = "3.4.0"
 test-fishbowl = "1.4.1"
 
 [libraries]
-plugin-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 plugin-android-tools-common = { module = "com.android.tools:common", version.ref = "agp-tools" }
 plugin-android-tools-sdkCommon = { module = "com.android.tools:sdk-common", version.ref = "agp-tools" }
 plugin-android-tools-ddmlib = { module = "com.android.tools.ddms:ddmlib", version.ref = "agp-tools" }
 plugin-android-tools-testApi = { module = "com.android.tools.build:builder-test-api", version.ref = "agp" }
-plugin-twisterrob-quality = { module = "net.twisterrob.gradle:twister-quality", version.ref = "twisterrob" }
-plugin-twisterrob-android = { module = "net.twisterrob.gradle:twister-convention-plugins", version.ref = "twisterrob" }
-plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-plugin-dagger-hilt = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "dagger" }
 
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutines" }
@@ -180,4 +175,9 @@ deprecated-hamcrestLibrary = { module = "org.hamcrest:hamcrest-library" }
 [bundles]
 
 [plugins]
+android = { id = "com.android.application", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+twisterrob-quality = { id = "net.twisterrob.gradle.plugin.quality", version.ref = "twisterrob" }
+twisterrob-android = { id = "net.twisterrob.gradle.plugin.android-app", version.ref = "twisterrob" }
