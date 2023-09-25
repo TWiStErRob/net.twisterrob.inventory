@@ -7,7 +7,7 @@ internal sealed class ManageSpaceUiEffect : UiEffect {
 		val message: CharSequence
 	) : ManageSpaceUiEffect()
 
-	object PickRestoreDatabaseSource
+	data object PickRestoreDatabaseSource
 		: ManageSpaceUiEffect()
 
 	data class PickDumpDatabaseTarget(
@@ -18,6 +18,6 @@ internal sealed class ManageSpaceUiEffect : UiEffect {
 		val fileName: String,
 	) : ManageSpaceUiEffect()
 
-	object PickVacuumDatabaseIncrementalBytes
+	data object PickVacuumDatabaseIncrementalBytes
 		: ManageSpaceUiEffect()
 }
