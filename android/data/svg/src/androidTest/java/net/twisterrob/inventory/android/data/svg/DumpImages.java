@@ -24,10 +24,8 @@ import android.graphics.Bitmap.CompressFormat;
 import android.os.Build.VERSION;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.ResourceDecoder;
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.model.ImageVideoWrapper;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.caverock.androidsvg.SVG;
 
@@ -39,8 +37,6 @@ import androidx.test.platform.io.OutputDirCalculator;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
 
-import net.twisterrob.android.content.glide.*;
-import net.twisterrob.inventory.android.data.R;
 import net.twisterrob.java.io.IOTools;
 import net.twisterrob.java.utils.ObjectTools;
 
@@ -151,46 +147,20 @@ public class DumpImages {
 	private static void saveSVG(@NonNull Context context, @RawRes int svgRes, @NonNull File file)
 			throws IOException {
 		LOG.info("Loading {}", context.getResources().getResourceEntryName(svgRes));
-		// Simulate the following Glide load, but can't do this because of threading.
-		//FutureTarget<Bitmap> target = Glide
-		//		.with(context)
-		//		.fromResource()
-		//		.asBitmap()
-		//		.diskCacheStrategy(DiskCacheStrategy.NONE)
-		//		.decoder(getSvgDecoder(context))
-		//		.load(svgRes)
-		//		.into(1024, 1024)
-		//		.get();
-		ResourceDecoder<InputStream, Bitmap> decoder = getSvgImageDecoder(context);
-		InputStream stream = context.getResources().openRawResource(svgRes);
-		Resource<Bitmap> resource =
-				decoder.decode(stream, Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+		FutureTarget<Bitmap> target = Glide
+				.with(context)
+				.asBitmap()
+				.diskCacheStrategy(DiskCacheStrategy.NONE)
+				//.decoder(getSvgDecoder(context))
+				.load(svgRes)
+				.submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL); // STOPSHIP does this work?
 		try {
-			Bitmap bitmap = resource.get();
+			Bitmap bitmap = target.get();
 			save(bitmap, file);
+		} catch (ExecutionException | InterruptedException ex) {
+			throw new IOException("Couldn't load Bitmap via Glide", ex);
 		} finally {
-			resource.recycle();
+			target.cancel(true);
 		}
-	}
-
-	private static @NonNull ResourceDecoder<ImageVideoWrapper, Bitmap> getSvgDecoder(
-			@NonNull Context context) {
-		final ResourceDecoder<InputStream, Bitmap> decoder = getSvgImageDecoder(context);
-
-		// like ImageVideoBitmapDecoder, except it doesn't swallow the exception
-		return new ResourceDecoder<ImageVideoWrapper, Bitmap>() {
-			@Override public Resource<Bitmap> decode(
-					ImageVideoWrapper source, int width, int height) throws IOException {
-				return decoder.decode(source.getStream(), width, height);
-			}
-			@Override public String getId() {
-				return "ImageVideoBitmapDecoder-WithExceptions";
-			}
-		};
-	}
-	private static @NonNull ResourceDecoder<InputStream, Bitmap> getSvgImageDecoder(
-			@NonNull Context context) {
-		BitmapPool pool = Glide.get(context).getBitmapPool();
-		return new SvgBitmapDecoder(pool, new RawResourceSVGExternalFileResolver(context, pool));
 	}
 }

@@ -5,7 +5,7 @@ plugins {
 dependencies {
 	implementation("net.twisterrob.lib:twister-lib-android-basics")
 	implementation(project(":android:data"))
-	implementation("net.twisterrob.lib:twister-lib-android-glide3")
+	implementation("net.twisterrob.lib:twister-lib-android-glide4")
 	implementation("net.twisterrob.lib:twister-lib-java")
 	implementation(libs.androidsvg)
 	implementation(libs.slf4j.api)
