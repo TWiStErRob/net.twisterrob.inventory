@@ -122,7 +122,7 @@ public abstract class BaseActivity extends DebugHelperActivity {
 	public void setIcon(@RawRes int resourceId) {
 		Pic.svg()
 		   .load(resourceId)
-		   .transform(new PaddingTransformation(this, ResourceTools.dipInt(this, 4)))
+		   .transform(new PaddingTransformation(ResourceTools.dipInt(this, 4)))
 		   .into(new ActionBarIconTarget(getSupportActionBar()));
 	}
 

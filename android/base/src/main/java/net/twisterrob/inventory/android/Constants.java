@@ -5,30 +5,29 @@ import java.util.*;
 
 import android.content.*;
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.*;
 
-import com.bumptech.glide.*;
-import com.bumptech.glide.load.*;
+import com.bumptech.glide.GenericTransitionOptions;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.engine.cache.*;
-import com.bumptech.glide.load.model.*;
-import com.bumptech.glide.load.model.stream.StreamModelLoader;
-import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.load.resource.gif.GifResourceDecoder;
-import com.bumptech.glide.load.resource.gifbitmap.*;
-import com.bumptech.glide.load.resource.transcode.GifBitmapWrapperDrawableTranscoder;
-import com.bumptech.glide.module.GlideModule;
-import com.bumptech.glide.signature.StringSignature;
+import com.bumptech.glide.load.engine.cache.DiskCache;
+import com.bumptech.glide.load.engine.cache.DiskLruCacheWrapper;
+import com.bumptech.glide.module.AppGlideModule;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.*;
 import androidx.core.graphics.ColorUtils;
 
 import net.twisterrob.android.content.glide.*;
-import net.twisterrob.android.content.glide.LoggingListener.ResourceFormatter;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.base.*;
 import net.twisterrob.inventory.android.utils.PictureHelper;
@@ -102,49 +101,59 @@ public interface Constants {
 		/**
 		 * Achieve a ghost-like image, this is to be used where the user can replace it with a real photo.
 		 */
-		private final ColorFilter ghostFilter;
+		private final @NonNull ColorFilter ghostFilter;
 		/**
 		 * Color somewhere between accent and accentDark.
 		 * This means that it'll be visible even if those are used as a background where this tint is applied.
 		 * There's no point in changing accentDark to this mixture, because then selection highlight won't work nicely. 
 		 */
-		private final ColorFilter tintFilter;
+		private final @NonNull ColorFilter tintFilter;
 
-		private final DrawableRequestBuilder<Uri> imageRequest;
-		private final DrawableRequestBuilder<Integer> svgRequest;
-		private final DrawableRequestBuilder<Integer> svgRequestTinted;
+		private final @NonNull RequestBuilder<Drawable> imageRequest;
+		private final @NonNull RequestBuilder<Drawable> svgRequest;
+		private final @NonNull RequestBuilder<Drawable> svgRequestTinted;
 
 		private Pic(@NonNull Context context, @NonNull String versionName) {
 			context = context.getApplicationContext();
-			DrawableRequestBuilder<Integer> baseSvgRequest = baseRequest(Integer.class, context)
+			RequestBuilder<Drawable> baseSvgRequest = baseRequest(Integer.class, context)
 					.dontAnimate()
-					.signature(new StringSignature(versionName))
+					.signature(new ObjectKey(versionName))
 					.priority(Priority.HIGH)
-					.decoder(getSvgDecoder(context));
+					// STOPSHIP .decoder(getSvgDecoder(context))
+					;
 			if (DISABLE && BuildConfig.DEBUG) {
-				LoggingListener.ResourceFormatter formatter = new ResourceFormatter(context);
-				baseSvgRequest.listener(new LoggingListener<Integer, GlideDrawable>("SVG", formatter));
+				// STOPSHIP use formatter
+				LoggingListener.ModelFormatter<Integer> formatter =
+						LoggingListener.ModelFormatter.Companion.forResources(context);
+				baseSvgRequest = baseSvgRequest
+						.listener(new LoggingListener<Drawable>("SVG"));
 			}
 			ghostFilter = createGhostFilter(context);
 			tintFilter = createTintFilter(context);
 
 			svgRequest = baseSvgRequest
 					.clone()
+					/* STOPSHIP how to migrate this?
 					.transcoder(new GifBitmapWrapperDrawableTranscoder(
 							new FilteredGlideBitmapDrawableTranscoder(context, "primary-ghost", ghostFilter)
-					));
+					))*/
+					;
 			svgRequestTinted = baseSvgRequest
 					.clone()
+					/* STOPSHIP how to migrate this?
 					.transcoder(new GifBitmapWrapperDrawableTranscoder(
 							new FilteredGlideBitmapDrawableTranscoder(context, "accent-tint", tintFilter)
-					));
+					))*/
+					;
 
+			RequestBuilder<Drawable> imageRequest;
 			imageRequest = baseRequest(Uri.class, context)
-					.animate(android.R.anim.fade_in)
+					.transition(GenericTransitionOptions.with(android.R.anim.fade_in))
 					.priority(Priority.NORMAL);
 			if (DISABLE && BuildConfig.DEBUG) {
-				imageRequest.listener(new LoggingListener<Uri, GlideDrawable>("image"));
+				imageRequest = imageRequest.listener(new LoggingListener<Drawable>("image"));
 			}
+			this.imageRequest = imageRequest;
 		}
 
 		private ColorMatrixColorFilter createGhostFilter(Context context) {
@@ -162,30 +171,31 @@ public interface Constants {
 			));
 		}
 
-		public static DrawableRequestBuilder<Integer> svg() {
+		public static @NonNull RequestBuilder<Drawable> svg() {
 			return instance.svgRequestTinted.clone();
 		}
-		public static DrawableRequestBuilder<Integer> svgNoTint() {
+		public static @NonNull RequestBuilder<Drawable> svgNoTint() {
 			return instance.svgRequest.clone();
 		}
-		public static DrawableRequestBuilder<Uri> jpg() {
+		public static @NonNull RequestBuilder<Drawable> jpg() {
 			return instance.imageRequest.clone();
 		}
-		public static ColorFilter tint() {
+		public static @NonNull ColorFilter tint() {
 			return instance.tintFilter;
 		}
 		public static void init(@NonNull Context context, @NonNull String versionName) {
 			instance = new Pic(context, versionName);
 		}
 
-		private <T> DrawableRequestBuilder<T> baseRequest(Class<T> clazz, Context context) {
-			ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, context);
+		private static <T> RequestBuilder<Drawable> baseRequest(@NonNull Class<T> clazz, @NonNull Context context) {
+			// STOPSHIP ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, context);
 			// FIXME replace this with proper Glide.with calls, don't use App Context
-			DrawableRequestBuilder<T> builder = Glide
+			RequestBuilder<Drawable> builder = Glide
 					.with(context)
-					.using((StreamModelLoader<T>)loader)
-					.from(clazz)
-					.animate(android.R.anim.fade_in)
+					.asDrawable()
+		// STOPSHIP .using((StreamModelLoader<T>)loader)
+		// STOPSHIP .from(clazz)
+					.transition(GenericTransitionOptions.with(android.R.anim.fade_in))
 					.error(R.drawable.inventory_image_error);
 			if (DISABLE && BuildConfig.DEBUG) {
 				builder = builder
@@ -195,7 +205,7 @@ public interface Constants {
 			}
 			return builder;
 		}
-
+/* STOPSHIP how to migrate this?
 		private ResourceDecoder<ImageVideoWrapper, GifBitmapWrapper> getSvgDecoder(Context context) {
 			BitmapPool pool = Glide.get(context).getBitmapPool();
 			return new GifBitmapWrapperResourceDecoder(
@@ -207,30 +217,35 @@ public interface Constants {
 					pool
 			);
 		}
+*/
+		@GlideModule
+		public static class GlideSetup extends AppGlideModule {
+			@Override
+			public boolean isManifestParsingEnabled() {
+				return false;
+			}
 
-		public static class GlideSetup implements GlideModule {
-			@Override public void applyOptions(final Context context, GlideBuilder builder) {
-				builder.setDecodeFormat(PREFERRED_FORMAT);
+			@Override public void applyOptions(final @NonNull Context context, @NonNull GlideBuilder builder) {
+				// STOPSHIP this is the default now:
+				builder.setDefaultRequestOptions(new RequestOptions().format(PREFERRED_FORMAT));
 				if (BuildConfig.DEBUG) {
 					builder.setDiskCache(new DiskCache.Factory() {
 						@Override public DiskCache build() {
-							return DiskLruCacheWrapper.get(getDir(context), 250 * 1024 * 1024);
+							return DiskLruCacheWrapper.create(getDir(context), 250 * 1024 * 1024);
 						}
 					});
 				}
 			}
-			@Override public void registerComponents(Context context, Glide glide) {
-				// no op
-			}
 
-			private static @NonNull File getDir(Context context) {
+			private static @NonNull File getDir(@NonNull Context context) {
 				return new File(context.getExternalCacheDir(), DiskCache.Factory.DEFAULT_DISK_CACHE_DIR);
 			}
 
-			public static @NonNull File getCacheDir(Context context) {
+			public static @NonNull File getCacheDir(@NonNull Context context) {
 				if (BuildConfig.DEBUG) {
 					return getDir(context);
 				}
+				// STOPSHIP can be null, can we get the real cache dir, i.e. compatible with DEBUG above?
 				return Glide.getPhotoCacheDir(context);
 			}
 		}

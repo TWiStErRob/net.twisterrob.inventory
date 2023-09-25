@@ -13,13 +13,16 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.stream.StreamUriLoader;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
@@ -29,7 +32,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 
 @AndroidEntryPoint
-public class ImageActivity extends DebugHelperActivity implements RequestListener<Uri, Bitmap> {
+public class ImageActivity extends DebugHelperActivity implements RequestListener<Bitmap> {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageActivity.class);
 
 	/** type: Boolean, true=internal, false=external, not present=auto(from prefs) */
@@ -39,7 +42,7 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_image);
-		ImageView image = (ImageView)findViewById(R.id.image);
+		ImageView image = findViewById(R.id.image);
 		image.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				askRedirect();
@@ -49,14 +52,14 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		if (getExtraUseInternal()) {
 			Glide
 					.with(this)
-					.using(new StreamUriLoader(getApplicationContext()))
-					.load(getIntent().getData())
 					.asBitmap()
+					//STOPSHIP why? .using(new StreamUriLoader(getApplicationContext()))
+					.load(getIntent().getData())
 					.format(DecodeFormat.PREFER_ARGB_8888)
 					.diskCacheStrategy(DiskCacheStrategy.NONE)
 					.skipMemoryCache(true)
 					.thumbnail(0.25f)
-					.crossFade()
+					.transition(BitmapTransitionOptions.withCrossFade())
 					.listener(this)
 					.into(image)
 			;
@@ -93,17 +96,17 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		;
 	}
 
-	@Override
-	public boolean onException(Exception ex, Uri model, Target<Bitmap> target, boolean isFirstResource) {
+	@Override public boolean onLoadFailed(@Nullable GlideException ex, @Nullable Object model,
+			@NonNull Target<Bitmap> target, boolean isFirstResource) {
+		// If target is used in the future: beware of passing null target in ImageActivity.Redirect.onError.
 		LOG.warn("Cannot load image: {}", model, ex);
 		App.toastUser(App.getError(ex, "Cannot load image."));
 		finish();
 		return true;
 	}
 
-	@Override
-	public boolean onResourceReady(Bitmap resource, Uri model, Target<Bitmap> target,
-			boolean isFromMemoryCache, boolean isFirstResource) {
+	@Override public boolean onResourceReady(@NonNull Bitmap resource, @NonNull Object model,
+			Target<Bitmap> target, @NonNull DataSource dataSource, boolean isFirstResource) {
 		return false;
 	}
 
@@ -153,7 +156,8 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		}
 
 		@Override protected void onError(@NonNull Exception ex, Uri param) {
-			onException(ex, param, null, true);
+			// Passing null Target is safe hack for now, Java allows it, and Target is not used.
+			onLoadFailed(new GlideException(ex.getMessage(), ex), param, null, true);
 		}
 	}
 }

@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.View.*;
 import android.widget.*;
 
-import com.bumptech.glide.Glide;
-
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.twisterrob.android.utils.tools.*;
@@ -72,8 +70,8 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 
 	public void unBind() {
 		// FIXME replace this with proper Glide.with calls
-		Glide.clear(image);
-		Glide.clear(type);
+		// STOPSHIP Glide.clear(image);
+		// STOPSHIP Glide.clear(type);
 	}
 
 	private static String getCountText(Cursor cursor) {

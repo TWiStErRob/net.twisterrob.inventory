@@ -16,10 +16,6 @@
 		android:theme="@style/Theme.AppTheme"
 		>
 
-		<meta-data
-			android:name="net.twisterrob.inventory.android.Constants$Pic$GlideSetup"
-			android:value="GlideModule" />
-
 		<activity
 			android:name=".activity.MainActivity"
 			android:label="@string/home_title"

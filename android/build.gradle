@@ -13,7 +13,7 @@ dependencies {
 	implementation project(':android:space')
 
 	implementation('net.twisterrob.lib:twister-lib-android-monolith')
-	implementation "net.twisterrob.lib:twister-lib-android-glide3"
+	implementation "net.twisterrob.lib:twister-lib-android-glide4"
 	implementation('net.twisterrob.lib:twister-lib-general')
 	implementation 'net.twisterrob.lib:twister-lib-android-basics'
 	implementation 'net.twisterrob.lib:twister-lib-android-widgets'
