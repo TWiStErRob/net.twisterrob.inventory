@@ -32,7 +32,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 
 @AndroidEntryPoint
-public class ImageActivity extends DebugHelperActivity implements RequestListener<Bitmap> {
+public class ImageActivity extends DebugHelperActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageActivity.class);
 
 	/** type: Boolean, true=internal, false=external, not present=auto(from prefs) */
@@ -60,7 +60,7 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 					.skipMemoryCache(true)
 					.thumbnail(0.25f)
 					.transition(BitmapTransitionOptions.withCrossFade())
-					.listener(this)
+					.listener(new GlideListener())
 					.into(image)
 			;
 		} else {
@@ -96,18 +96,13 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		;
 	}
 
-	@Override public boolean onLoadFailed(@Nullable GlideException ex, @Nullable Object model,
-			@NonNull Target<Bitmap> target, boolean isFirstResource) {
-		// If target is used in the future: beware of passing null target in ImageActivity.Redirect.onError.
+	private void onError(@Nullable Exception ex, @Nullable Object model) {
+		if (ex == null) {
+			ex = new GlideException("Unknown error");
+		}
 		LOG.warn("Cannot load image: {}", model, ex);
 		App.toastUser(App.getError(ex, "Cannot load image."));
 		finish();
-		return true;
-	}
-
-	@Override public boolean onResourceReady(@NonNull Bitmap resource, @NonNull Object model,
-			Target<Bitmap> target, @NonNull DataSource dataSource, boolean isFirstResource) {
-		return false;
 	}
 
 	private boolean getExtraUseInternal() {
@@ -124,6 +119,20 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		Intent intent = new Intent(App.getAppContext(), ImageActivity.class);
 		intent.setData(data);
 		return intent;
+	}
+	
+	private class GlideListener implements RequestListener<Bitmap> {
+
+		@Override public boolean onLoadFailed(@Nullable GlideException ex, @Nullable Object model,
+				@NonNull Target<Bitmap> target, boolean isFirstResource) {
+			onError(ex, model);
+			return true;
+		}
+
+		@Override public boolean onResourceReady(@NonNull Bitmap resource, @NonNull Object model,
+				Target<Bitmap> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+			return false;
+		}
 	}
 
 	/** External image viewers have horrible support for content:// uris so it's safer to hand them a temporary file. */
@@ -156,8 +165,7 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		}
 
 		@Override protected void onError(@NonNull Exception ex, Uri param) {
-			// Passing null Target is safe hack for now, Java allows it, and Target is not used.
-			onLoadFailed(new GlideException(ex.getMessage(), ex), param, null, true);
+			ImageActivity.this.onError(ex, param);
 		}
 	}
 }
