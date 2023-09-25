@@ -97,6 +97,8 @@ android {
 	lint {
 		checkAllWarnings = true
 		checkDependencies = true
+		// REPORT https://issuetracker.google.com/issues/233912817 is fixed, but still repros.
+		disable.add("UnusedIds")
 	}
 	testOptions.unitTests.includeAndroidResources = true // Robolectric
 	testBuildType "debug" // CONSIDER release
