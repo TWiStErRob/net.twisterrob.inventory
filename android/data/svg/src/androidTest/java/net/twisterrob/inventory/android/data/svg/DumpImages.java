@@ -39,9 +39,6 @@ import androidx.test.platform.io.OutputDirCalculator;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
 
-import net.twisterrob.android.content.glide.RawResourceSVGExternalFileResolver;
-import net.twisterrob.android.content.glide.SvgBitmapTranscoder;
-import net.twisterrob.android.content.glide.SvgDecoder;
 import net.twisterrob.java.io.IOTools;
 import net.twisterrob.java.utils.ObjectTools;
 
@@ -53,15 +50,13 @@ import net.twisterrob.java.utils.ObjectTools;
 public class DumpImages {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DumpImages.class);
-	
+
 	@BeforeClass
 	public static void setUp() {
 		Context context = ApplicationProvider.getApplicationContext();
 		Glide glide = Glide.get(context);
 		Registry registry = glide.getRegistry();
-		registry.append(InputStream.class, SVG.class, new SvgDecoder());
-		registry.register(SVG.class, Bitmap.class, new SvgBitmapTranscoder(glide.getBitmapPool()));
-		SVG.registerExternalFileResolver(new RawResourceSVGExternalFileResolver(context, glide.getBitmapPool()));
+		new SvgLibraryModule().registerComponents(context, glide, registry);
 	}
 
 	@Test
@@ -100,7 +95,8 @@ public class DumpImages {
 						saveSVG(context, rawId, target);
 						LOG.info("Generated {}", target.getAbsolutePath());
 					} catch (Exception ex) {
-						String fullName = field.getDeclaringClass().getName() + "." + field.getName();
+						String fullName =
+								field.getDeclaringClass().getName() + "." + field.getName();
 						RuntimeException wrapped =
 								new IllegalStateException("Couldn't generate " + fullName, ex);
 						try {

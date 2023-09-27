@@ -4,6 +4,8 @@ plugins {
 
 dependencies {
 	implementation "net.twisterrob.lib:twister-lib-android-basics"
+	implementation "net.twisterrob.lib:twister-lib-android-glide4"
+	implementation(libs.androidsvg)
 }
 
 // lint:UnusedResources Disable blanket, because files in this module are tend to be used by other modules.
