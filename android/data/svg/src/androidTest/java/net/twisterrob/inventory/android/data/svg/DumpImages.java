@@ -24,7 +24,9 @@ import android.graphics.Bitmap.CompressFormat;
 import android.os.Build.VERSION;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Registry;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.caverock.androidsvg.SVG;
@@ -37,6 +39,9 @@ import androidx.test.platform.io.OutputDirCalculator;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
 
+import net.twisterrob.android.content.glide.RawResourceSVGExternalFileResolver;
+import net.twisterrob.android.content.glide.SvgBitmapTranscoder;
+import net.twisterrob.android.content.glide.SvgDecoder;
 import net.twisterrob.java.io.IOTools;
 import net.twisterrob.java.utils.ObjectTools;
 
@@ -48,6 +53,16 @@ import net.twisterrob.java.utils.ObjectTools;
 public class DumpImages {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DumpImages.class);
+	
+	@BeforeClass
+	public static void setUp() {
+		Context context = ApplicationProvider.getApplicationContext();
+		Glide glide = Glide.get(context);
+		Registry registry = glide.getRegistry();
+		registry.append(InputStream.class, SVG.class, new SvgDecoder());
+		registry.register(SVG.class, Bitmap.class, new SvgBitmapTranscoder(glide.getBitmapPool()));
+		SVG.registerExternalFileResolver(new RawResourceSVGExternalFileResolver(context, glide.getBitmapPool()));
+	}
 
 	@Test
 	public void test() throws Throwable {
@@ -150,14 +165,20 @@ public class DumpImages {
 		FutureTarget<Bitmap> target = Glide
 				.with(context)
 				.asBitmap()
+				.decode(SVG.class)
 				.diskCacheStrategy(DiskCacheStrategy.NONE)
-				//.decoder(getSvgDecoder(context))
 				.load(svgRes)
-				.submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL); // STOPSHIP does this work?
+				.submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 		try {
 			Bitmap bitmap = target.get();
 			save(bitmap, file);
-		} catch (ExecutionException | InterruptedException ex) {
+		} catch (ExecutionException ex) {
+			Throwable cause = ex.getCause();
+			if (cause instanceof GlideException) {
+				((GlideException)cause).logRootCauses(LOG.getName());
+			}
+			throw new IOException("Couldn't load Bitmap via Glide, see above for details.", ex);
+		} catch (InterruptedException ex) {
 			throw new IOException("Couldn't load Bitmap via Glide", ex);
 		} finally {
 			target.cancel(true);
