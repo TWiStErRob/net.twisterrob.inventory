@@ -57,7 +57,13 @@ public interface Constants {
 		 */
 		public static @NonNull Uri getShareUri(@NonNull Context context, @NonNull File file) {
 			String authority = AndroidTools.findProviderAuthority(context, FileProvider.class).authority;
-			return FileProvider.getUriForFile(context, authority, file);
+			StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+			try {
+				// FileProvider.getPathStrategy -> Context.getCacheDir -> ensure -> File.exists
+				return FileProvider.getUriForFile(context, authority, file);
+			} finally {
+				StrictMode.setThreadPolicy(originalPolicy);
+			}
 		}
 		public static File getShareFile(@NonNull Context context, @NonNull String ext) throws IOException {
 			return getTemporaryCacheFile(context, PUBLIC_SHARE_FOLDER_NAME, "share_", "." + ext);
