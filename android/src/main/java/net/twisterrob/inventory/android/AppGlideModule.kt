@@ -1,6 +1,7 @@
 package net.twisterrob.inventory.android
 
 import android.content.Context
+import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.Registry
@@ -22,6 +23,7 @@ class AppGlideModule : AppGlideModule() {
 			builder.setDiskCache {
 				DiskLruCacheWrapper.create(Pic.getDir(context), 250.MB)
 			}
+			builder.setLogLevel(Log.VERBOSE)
 		}
 	}
 
