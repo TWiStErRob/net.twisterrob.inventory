@@ -54,7 +54,6 @@ public class ImageActivity extends DebugHelperActivity {
 			RequestBuilder<Bitmap> glide = Glide
 					.with(this)
 					.asBitmap()
-					//STOPSHIP why? .using(new StreamUriLoader(getApplicationContext()))
 					.load(getIntent().getData())
 					.diskCacheStrategy(DiskCacheStrategy.NONE)
 					;
