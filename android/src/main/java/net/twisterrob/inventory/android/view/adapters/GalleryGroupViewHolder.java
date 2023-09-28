@@ -54,7 +54,7 @@ public class GalleryGroupViewHolder extends RecyclerView.ViewHolder {
 
 	public void unBind() {
 		// FIXME replace this with proper Glide.with calls
-		//STOPSHIP Glide.clear(image);
+		Glide.with(image.getContext().getApplicationContext()).clear(image);
 	}
 
 	private static String getName(Cursor cursor) {
