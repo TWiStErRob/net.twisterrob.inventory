@@ -127,7 +127,7 @@ public interface Constants {
 				LoggingListener.ModelFormatter<Integer> formatter =
 						LoggingListener.ModelFormatter.Companion.forResources(context);
 				baseSvgRequest = baseSvgRequest
-						.listener(new LoggingListener<Drawable>("SVG"));
+						.addListener(new LoggingListener<Drawable>("SVG"));
 			}
 			ghostFilter = createGhostFilter(context);
 			tintFilter = createTintFilter(context);
@@ -146,7 +146,7 @@ public interface Constants {
 					.transition(GenericTransitionOptions.with(android.R.anim.fade_in))
 					.priority(Priority.NORMAL);
 			if (DISABLE && BuildConfig.DEBUG) {
-				imageRequest = imageRequest.listener(new LoggingListener<Drawable>("image"));
+				imageRequest = imageRequest.addListener(new LoggingListener<Drawable>("image"));
 			}
 			this.imageRequest = imageRequest;
 		}

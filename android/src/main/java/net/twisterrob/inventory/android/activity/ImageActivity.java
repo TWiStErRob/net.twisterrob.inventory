@@ -60,7 +60,7 @@ public class ImageActivity extends DebugHelperActivity {
 					.skipMemoryCache(true)
 					.thumbnail(0.25f)
 					.transition(BitmapTransitionOptions.withCrossFade())
-					.listener(new GlideListener())
+					.addListener(new GlideListener())
 					.into(image)
 			;
 		} else {
