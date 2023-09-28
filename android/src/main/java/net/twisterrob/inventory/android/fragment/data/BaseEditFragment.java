@@ -23,8 +23,7 @@ import android.widget.*;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import com.bumptech.glide.RequestBuilder;
-
-import static com.bumptech.glide.load.engine.DiskCacheStrategy.*;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.*;
@@ -33,7 +32,8 @@ import androidx.loader.app.LoaderManager.LoaderCallbacks;
 import androidx.recyclerview.widget.*;
 
 import net.twisterrob.android.activity.CaptureImage;
-import net.twisterrob.android.content.glide.*;
+import net.twisterrob.android.content.glide.LongSignature;
+import net.twisterrob.android.content.glide.pooling.NonPooledBitmap;
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.TextWatcherAdapter;
@@ -467,9 +467,9 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 				jpg = jpg.skipMemoryCache(true);
 			}
 			jpg
+					.decode(NonPooledBitmap.class)
 					.load(currentImage)
-					.diskCacheStrategy(NONE) // don't save any version: it's already on disk or used only once
-// STOPSHIP					.decoder(new NonPoolingGifBitmapWrapperResourceDecoder(requireContext()))
+					.diskCacheStrategy(DiskCacheStrategy.NONE) // don't save any version: it's already on disk or used only once
 					.into(image);
 		}
 		Pic.svg().load(getTypeImageID()).into(typeImage);
