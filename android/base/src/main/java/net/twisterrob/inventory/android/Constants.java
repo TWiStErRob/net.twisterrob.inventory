@@ -113,7 +113,6 @@ public interface Constants {
 			context = context.getApplicationContext();
 			RequestBuilder<Drawable> baseSvgRequest = baseRequest(context)
 					.decode(SVG.class)
-					.dontAnimate()
 					.signature(new ObjectKey(versionName))
 					.priority(Priority.HIGH)
 					;
@@ -129,17 +128,11 @@ public interface Constants {
 
 			svgRequest = baseSvgRequest
 					.clone()
-					/* STOPSHIP how to migrate this?
-					.transcoder(new GifBitmapWrapperDrawableTranscoder(
-							new FilteredGlideBitmapDrawableTranscoder(context, "primary-ghost", ghostFilter)
-					))*/
+					.transition(ColorFilterApplyingTransitionFactory.with(ghostFilter))
 					;
 			svgRequestTinted = baseSvgRequest
 					.clone()
-					/* STOPSHIP how to migrate this?
-					.transcoder(new GifBitmapWrapperDrawableTranscoder(
-							new FilteredGlideBitmapDrawableTranscoder(context, "accent-tint", tintFilter)
-					))*/
+					.transition(ColorFilterApplyingTransitionFactory.with(tintFilter))
 					;
 
 			RequestBuilder<Drawable> imageRequest;
@@ -152,12 +145,12 @@ public interface Constants {
 			this.imageRequest = imageRequest;
 		}
 
-		private ColorMatrixColorFilter createGhostFilter(Context context) {
+		private @NonNull ColorMatrixColorFilter createGhostFilter(Context context) {
 			return new ColorMatrixColorFilter(PictureHelper.postAlpha(0.33f,
 					PictureHelper.tintMatrix(ContextCompat.getColor(context, R.color.primaryDark))
 			));
 		}
-		private ColorMatrixColorFilter createTintFilter(Context context) {
+		private @NonNull ColorMatrixColorFilter createTintFilter(Context context) {
 			return new ColorMatrixColorFilter(PictureHelper.tintMatrix(
 					ColorUtils.blendARGB(
 							ContextCompat.getColor(context, R.color.accent),
@@ -183,7 +176,7 @@ public interface Constants {
 			instance = new Pic(context, versionName);
 		}
 
-		private static RequestBuilder<Drawable> baseRequest(@NonNull Context context) {
+		private static @NonNull RequestBuilder<Drawable> baseRequest(@NonNull Context context) {
 			// FIXME replace this with proper Glide.with calls, don't use App Context
 			RequestBuilder<Drawable> builder = Glide
 					.with(context)
