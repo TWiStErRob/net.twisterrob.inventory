@@ -11,17 +11,13 @@ import android.os.*;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.cache.DiskCache;
-import com.bumptech.glide.load.engine.cache.DiskLruCacheWrapper;
-import com.bumptech.glide.module.AppGlideModule;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.caverock.androidsvg.SVG;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.*;
@@ -95,7 +91,7 @@ public interface Constants {
 	}
 
 	class Pic {
-		private static final DecodeFormat PREFERRED_FORMAT = DecodeFormat.PREFER_ARGB_8888;
+		public static final DecodeFormat PREFERRED_FORMAT = DecodeFormat.PREFER_ARGB_8888;
 		private static Pic instance;
 
 		/**
@@ -115,11 +111,11 @@ public interface Constants {
 
 		private Pic(@NonNull Context context, @NonNull String versionName) {
 			context = context.getApplicationContext();
-			RequestBuilder<Drawable> baseSvgRequest = baseRequest(Integer.class, context)
+			RequestBuilder<Drawable> baseSvgRequest = baseRequest(context)
+					.decode(SVG.class)
 					.dontAnimate()
 					.signature(new ObjectKey(versionName))
 					.priority(Priority.HIGH)
-					// STOPSHIP .decoder(getSvgDecoder(context))
 					;
 			if (DISABLE && BuildConfig.DEBUG) {
 				// STOPSHIP use formatter
@@ -147,7 +143,7 @@ public interface Constants {
 					;
 
 			RequestBuilder<Drawable> imageRequest;
-			imageRequest = baseRequest(Uri.class, context)
+			imageRequest = baseRequest(context)
 					.transition(GenericTransitionOptions.with(android.R.anim.fade_in))
 					.priority(Priority.NORMAL);
 			if (DISABLE && BuildConfig.DEBUG) {
@@ -187,14 +183,11 @@ public interface Constants {
 			instance = new Pic(context, versionName);
 		}
 
-		private static <T> RequestBuilder<Drawable> baseRequest(@NonNull Class<T> clazz, @NonNull Context context) {
-			// STOPSHIP ModelLoader<T, InputStream> loader = Glide.buildModelLoader(clazz, InputStream.class, context);
+		private static RequestBuilder<Drawable> baseRequest(@NonNull Context context) {
 			// FIXME replace this with proper Glide.with calls, don't use App Context
 			RequestBuilder<Drawable> builder = Glide
 					.with(context)
 					.asDrawable()
-		// STOPSHIP .using((StreamModelLoader<T>)loader)
-		// STOPSHIP .from(clazz)
 					.transition(GenericTransitionOptions.with(android.R.anim.fade_in))
 					.error(R.drawable.inventory_image_error);
 			if (DISABLE && BuildConfig.DEBUG) {
@@ -205,49 +198,17 @@ public interface Constants {
 			}
 			return builder;
 		}
-/* STOPSHIP how to migrate this?
-		private ResourceDecoder<ImageVideoWrapper, GifBitmapWrapper> getSvgDecoder(Context context) {
-			BitmapPool pool = Glide.get(context).getBitmapPool();
-			return new GifBitmapWrapperResourceDecoder(
-					new ImageVideoBitmapDecoder(
-							new SvgBitmapDecoder(pool, new RawResourceSVGExternalFileResolver(context, pool)),
-							null
-					),
-					new GifResourceDecoder(context, pool),
-					pool
-			);
+
+		public static @NonNull File getDir(@NonNull Context context) {
+			return new File(context.getExternalCacheDir(), DiskCache.Factory.DEFAULT_DISK_CACHE_DIR);
 		}
-*/
-		@GlideModule
-		public static class GlideSetup extends AppGlideModule {
-			@Override
-			public boolean isManifestParsingEnabled() {
-				return false;
-			}
 
-			@Override public void applyOptions(final @NonNull Context context, @NonNull GlideBuilder builder) {
-				// STOPSHIP this is the default now:
-				builder.setDefaultRequestOptions(new RequestOptions().format(PREFERRED_FORMAT));
-				if (BuildConfig.DEBUG) {
-					builder.setDiskCache(new DiskCache.Factory() {
-						@Override public DiskCache build() {
-							return DiskLruCacheWrapper.create(getDir(context), 250 * 1024 * 1024);
-						}
-					});
-				}
+		public static @NonNull File getCacheDir(@NonNull Context context) {
+			if (BuildConfig.DEBUG) {
+				return getDir(context);
 			}
-
-			private static @NonNull File getDir(@NonNull Context context) {
-				return new File(context.getExternalCacheDir(), DiskCache.Factory.DEFAULT_DISK_CACHE_DIR);
-			}
-
-			public static @NonNull File getCacheDir(@NonNull Context context) {
-				if (BuildConfig.DEBUG) {
-					return getDir(context);
-				}
-				// STOPSHIP can be null, can we get the real cache dir, i.e. compatible with DEBUG above?
-				return Glide.getPhotoCacheDir(context);
-			}
+			// STOPSHIP can be null, can we get the real cache dir, i.e. compatible with DEBUG above?
+			return Glide.getPhotoCacheDir(context);
 		}
 	}
 }

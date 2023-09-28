@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
-import net.twisterrob.inventory.android.Constants.Pic.GlideSetup
+import net.twisterrob.inventory.android.Constants
 import net.twisterrob.inventory.android.arch.UseCase
 import net.twisterrob.inventory.android.content.Database
 import net.twisterrob.inventory.android.logger
@@ -27,7 +27,7 @@ internal class GetSizesUseCase @Inject constructor(
 		SizesDomain(
 			imageCache = safe {
 				fileSystemSizes(
-					GlideSetup.getCacheDir(context)
+					Constants.Pic.getCacheDir(context)
 				)
 			},
 			database = safe {

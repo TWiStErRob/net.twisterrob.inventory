@@ -3,6 +3,7 @@ plugins {
 	id("net.twisterrob.inventory.mapping")
 	id("net.twisterrob.inventory.upgradeTest")
 	id("net.twisterrob.inventory.build.tests.instrumentation")
+	id("com.google.devtools.ksp")
 }
 
 dependencies {
@@ -11,7 +12,8 @@ dependencies {
 	implementation project(':android:backup')
 	implementation project(':android:preferences')
 	implementation project(':android:space')
-
+	// REPORT Glide transitive libs are not used in GeneratedAppGlideModuleImpl
+	implementation project(':android:data')
 	implementation('net.twisterrob.lib:twister-lib-android-monolith')
 	implementation "net.twisterrob.lib:twister-lib-android-glide4"
 	implementation('net.twisterrob.lib:twister-lib-general')
@@ -35,6 +37,7 @@ dependencies {
 	implementation(libs.flexbox)
 	implementation(libs.slf4j.api)
 	annotationProcessor(libs.dagger.hilt.apt)
+	ksp(libs.glide.ksp)
 
 	// Class.forName("org.apache.xml.serializer.Version").getDeclaredMethod("main", String[].class)
 	// .invoke(null, new Object[] { new String[0] }); // shows "Serializer Java 2.7.1" on Genymotion 2.3.7 and S5 5.0.0
