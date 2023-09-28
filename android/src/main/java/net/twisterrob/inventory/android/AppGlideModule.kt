@@ -7,7 +7,6 @@ import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.engine.cache.DiskLruCacheWrapper
 import com.bumptech.glide.module.AppGlideModule
-import com.bumptech.glide.request.RequestOptions
 import net.twisterrob.android.content.glide.pooling.NonPooledBitmap
 import net.twisterrob.inventory.android.Constants.Pic
 import net.twisterrob.inventory.android.base.BuildConfig
@@ -19,8 +18,6 @@ class AppGlideModule : AppGlideModule() {
 	override fun isManifestParsingEnabled(): Boolean = false
 
 	override fun applyOptions(context: Context, builder: GlideBuilder) {
-		// STOPSHIP this is the default now:
-		builder.setDefaultRequestOptions(RequestOptions().format(Pic.PREFERRED_FORMAT))
 		if (BuildConfig.DEBUG) {
 			builder.setDiskCache {
 				DiskLruCacheWrapper.create(Pic.getDir(context), 250.MB)

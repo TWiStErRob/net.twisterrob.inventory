@@ -98,7 +98,6 @@ public interface Constants {
 	}
 
 	class Pic {
-		public static final DecodeFormat PREFERRED_FORMAT = DecodeFormat.PREFER_ARGB_8888;
 		private static Pic instance;
 
 		/**
