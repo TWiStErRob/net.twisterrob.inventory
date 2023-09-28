@@ -23,7 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.*;
 import androidx.core.graphics.ColorUtils;
 
-import net.twisterrob.android.content.glide.*;
+import net.twisterrob.android.content.glide.ColorFilterApplyingTransitionFactory;
+import net.twisterrob.android.content.glide.logging.LoggingListener;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.base.*;
 import net.twisterrob.inventory.android.utils.PictureHelper;
