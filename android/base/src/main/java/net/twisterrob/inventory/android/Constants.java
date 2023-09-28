@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.cache.DiskCache;
 import com.bumptech.glide.signature.ObjectKey;
 import com.caverock.androidsvg.SVG;
 
@@ -195,18 +194,6 @@ public interface Constants {
 				;
 			}
 			return builder;
-		}
-
-		public static @NonNull File getDir(@NonNull Context context) {
-			return new File(context.getExternalCacheDir(), DiskCache.Factory.DEFAULT_DISK_CACHE_DIR);
-		}
-
-		public static @NonNull File getCacheDir(@NonNull Context context) {
-			if (BuildConfig.DEBUG) {
-				return getDir(context);
-			}
-			// STOPSHIP can be null, can we get the real cache dir, i.e. compatible with DEBUG above?
-			return Glide.getPhotoCacheDir(context);
 		}
 	}
 }

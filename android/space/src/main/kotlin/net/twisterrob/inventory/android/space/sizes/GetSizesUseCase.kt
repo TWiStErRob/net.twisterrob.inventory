@@ -3,12 +3,12 @@ package net.twisterrob.inventory.android.space.sizes
 import android.content.Context
 import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
+import com.bumptech.glide.Glide
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.twisterrob.android.utils.tools.DatabaseTools
 import net.twisterrob.android.utils.tools.IOTools
-import net.twisterrob.inventory.android.Constants
 import net.twisterrob.inventory.android.arch.UseCase
 import net.twisterrob.inventory.android.content.Database
 import net.twisterrob.inventory.android.logger
@@ -27,7 +27,9 @@ internal class GetSizesUseCase @Inject constructor(
 		SizesDomain(
 			imageCache = safe {
 				fileSystemSizes(
-					Constants.Pic.getCacheDir(context)
+					// This is the same as the default InternalCacheDiskCacheFactory
+					// used in com.bumptech.glide.GlideBuilder.createGlide.
+					Glide.getPhotoCacheDir(context)
 				)
 			},
 			database = safe {
