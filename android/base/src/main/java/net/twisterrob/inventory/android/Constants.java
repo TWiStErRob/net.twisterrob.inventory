@@ -13,7 +13,6 @@ import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.cache.DiskCache;
 import com.bumptech.glide.signature.ObjectKey;
@@ -123,11 +122,11 @@ public interface Constants {
 					.priority(Priority.HIGH)
 					;
 			if (DISABLE && BuildConfig.DEBUG) {
-				// STOPSHIP use formatter
-				LoggingListener.ModelFormatter<Integer> formatter =
-						LoggingListener.ModelFormatter.Companion.forResources(context);
 				baseSvgRequest = baseSvgRequest
-						.addListener(new LoggingListener<Drawable>("SVG"));
+						.addListener(new LoggingListener<Drawable>(
+								"SVG",
+								LoggingListener.ModelFormatter.Companion.forResources(context)
+						));
 			}
 			ghostFilter = createGhostFilter(context);
 			tintFilter = createTintFilter(context);
