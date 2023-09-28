@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -50,15 +51,21 @@ public class ImageActivity extends DebugHelperActivity {
 		});
 
 		if (getExtraUseInternal()) {
-			Glide
+			RequestBuilder<Bitmap> glide = Glide
 					.with(this)
 					.asBitmap()
 					//STOPSHIP why? .using(new StreamUriLoader(getApplicationContext()))
 					.load(getIntent().getData())
-					.format(DecodeFormat.PREFER_ARGB_8888)
 					.diskCacheStrategy(DiskCacheStrategy.NONE)
+					;
+			glide
+					.format(DecodeFormat.PREFER_ARGB_8888)
 					.skipMemoryCache(true)
-					.thumbnail(0.25f)
+					.thumbnail(glide
+							.clone()
+							.format(DecodeFormat.PREFER_RGB_565)
+							.sizeMultiplier(0.25f)
+					)
 					.transition(BitmapTransitionOptions.withCrossFade())
 					.addListener(new GlideListener())
 					.into(image)
