@@ -27,8 +27,8 @@ dependencies {
 	implementation(libs.plugins.twisterrob.quality.asMarkerArtifact())
 	implementation(libs.plugins.twisterrob.android.asMarkerArtifact())
 	implementation(libs.plugins.kotlin.asMarkerArtifact())
-	implementation(libs.plugins.daggerHilt.asMarkerArtifact())
 	implementation(libs.plugins.ksp.asMarkerArtifact())
+	implementation(libs.plugins.daggerHilt.asMarkerArtifact())
 
 	// region: These dependencies were part of AGP in 3.x and 4.x, but in 7.x they became runtime dependencies.
 	// UpgradeTestTask: DeviceConnector, DeviceProvider
