@@ -15,7 +15,8 @@ import androidx.annotation.CallSuper;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 
-import net.twisterrob.android.test.espresso.idle.*;
+import net.twisterrob.android.test.espresso.idle.DrawerIdlingResource;
+import net.twisterrob.android.test.espresso.idle.GlideIdlingResourceRule;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.R;
