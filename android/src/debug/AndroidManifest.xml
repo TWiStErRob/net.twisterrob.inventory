@@ -9,6 +9,7 @@
 
 	<application
 		android:name="net.twisterrob.inventory.android.DebugApp"
+		android:vmSafeMode="true"
 		tools:replace="android:name"
 		>
 
