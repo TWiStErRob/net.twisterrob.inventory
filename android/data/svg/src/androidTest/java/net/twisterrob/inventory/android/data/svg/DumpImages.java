@@ -24,7 +24,6 @@ import android.graphics.Bitmap.CompressFormat;
 import android.os.Build.VERSION;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Registry;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.FutureTarget;
@@ -50,14 +49,6 @@ import net.twisterrob.java.utils.ObjectTools;
 public class DumpImages {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DumpImages.class);
-
-	@BeforeClass
-	public static void setUp() {
-		Context context = ApplicationProvider.getApplicationContext();
-		Glide glide = Glide.get(context);
-		Registry registry = glide.getRegistry();
-		new SvgLibraryModule().registerComponents(context, glide, registry);
-	}
 
 	@Test
 	public void test() throws Throwable {
@@ -95,10 +86,8 @@ public class DumpImages {
 						saveSVG(context, rawId, target);
 						LOG.info("Generated {}", target.getAbsolutePath());
 					} catch (Exception ex) {
-						String fullName =
-								field.getDeclaringClass().getName() + "." + field.getName();
-						RuntimeException wrapped =
-								new IllegalStateException("Couldn't generate " + fullName, ex);
+						String fullName = field.getDeclaringClass().getName() + "." + field.getName();
+						RuntimeException wrapped = new IllegalStateException("Couldn't generate " + fullName, ex);
 						try {
 							String stackTrace = ObjectTools.getFullStackTrace(ex);
 							IOTools.writeAll(new FileOutputStream(target), stackTrace);
@@ -125,10 +114,8 @@ public class DumpImages {
 			File target = new File(new OutputDirCalculator().getOutputDir(), fileName);
 			LOG.error("adb pull {}", target.getAbsolutePath());
 		} else {
-			LOG.error(
-					"{} should be available in build/outputs/(connected|managed_device)_android_test_additional_output/...",
-					fileName
-			);
+			String agpFolder = "build/outputs/(connected|managed_device)_android_test_additional_output/...";
+			LOG.error("{} should be available in {}", fileName, agpFolder);
 		}
 		failTestIfAnyJobFailed(jobs);
 	}

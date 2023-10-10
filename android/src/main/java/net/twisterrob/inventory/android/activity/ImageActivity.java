@@ -102,10 +102,7 @@ public class ImageActivity extends DebugHelperActivity {
 		;
 	}
 
-	private void onError(@Nullable Exception ex, @Nullable Object model) {
-		if (ex == null) {
-			ex = new GlideException("Unknown error");
-		}
+	private void onError(@NonNull Exception ex, @Nullable Object model) {
 		LOG.warn("Cannot load image: {}", model, ex);
 		App.toastUser(App.getError(ex, "Cannot load image."));
 		finish();
@@ -131,6 +128,9 @@ public class ImageActivity extends DebugHelperActivity {
 
 		@Override public boolean onLoadFailed(@Nullable GlideException ex, @Nullable Object model,
 				@NonNull Target<Bitmap> target, boolean isFirstResource) {
+			if (ex == null) {
+				ex = new GlideException("Unknown error");
+			}
 			onError(ex, model);
 			return true;
 		}

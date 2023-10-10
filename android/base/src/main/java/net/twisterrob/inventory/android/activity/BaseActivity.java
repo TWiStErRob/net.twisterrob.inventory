@@ -12,7 +12,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import net.twisterrob.android.activity.BackPressAware;
-import net.twisterrob.android.content.glide.*;
+import net.twisterrob.android.content.glide.ActionBarIconTarget;
+import net.twisterrob.android.content.glide.PaddingTransformation;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.Constants.Pic;
 import net.twisterrob.inventory.android.base.R;

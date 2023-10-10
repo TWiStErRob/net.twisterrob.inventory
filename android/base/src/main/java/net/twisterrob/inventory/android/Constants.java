@@ -23,6 +23,7 @@ import androidx.core.graphics.ColorUtils;
 
 import net.twisterrob.android.content.glide.ColorFilterApplyingTransitionFactory;
 import net.twisterrob.android.content.glide.logging.LoggingListener;
+import net.twisterrob.android.content.glide.logging.LoggingListener.ModelFormatter;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.base.*;
 import net.twisterrob.inventory.android.utils.PictureHelper;
@@ -119,42 +120,41 @@ public interface Constants {
 					.decode(SVG.class)
 					.signature(new ObjectKey(versionName))
 					.priority(Priority.HIGH)
-					;
+			;
 			if (DISABLE && BuildConfig.DEBUG) {
+				ModelFormatter formatter = ModelFormatter.Companion.forResources(context);
 				baseSvgRequest = baseSvgRequest
-						.addListener(new LoggingListener<Drawable>(
-								"SVG",
-								LoggingListener.ModelFormatter.Companion.forResources(context)
-						));
+						.addListener(new LoggingListener<Drawable>("SVG", formatter));
 			}
 			ghostFilter = createGhostFilter(context);
 			tintFilter = createTintFilter(context);
 
 			svgRequest = baseSvgRequest
 					.clone()
-					.transition(ColorFilterApplyingTransitionFactory.with(ghostFilter))
-					;
+					.transition(ColorFilterApplyingTransitionFactory.applyFilter(ghostFilter))
+			;
 			svgRequestTinted = baseSvgRequest
 					.clone()
-					.transition(ColorFilterApplyingTransitionFactory.with(tintFilter))
-					;
+					.transition(ColorFilterApplyingTransitionFactory.applyFilter(tintFilter))
+			;
 
 			RequestBuilder<Drawable> imageRequest;
 			imageRequest = baseRequest(context)
 					.transition(GenericTransitionOptions.with(android.R.anim.fade_in))
 					.priority(Priority.NORMAL);
 			if (DISABLE && BuildConfig.DEBUG) {
-				imageRequest = imageRequest.addListener(new LoggingListener<Drawable>("image"));
+				imageRequest = imageRequest
+						.addListener(new LoggingListener<Drawable>("image"));
 			}
 			this.imageRequest = imageRequest;
 		}
 
-		private @NonNull ColorMatrixColorFilter createGhostFilter(Context context) {
+		private @NonNull ColorMatrixColorFilter createGhostFilter(@NonNull Context context) {
 			return new ColorMatrixColorFilter(PictureHelper.postAlpha(0.33f,
 					PictureHelper.tintMatrix(ContextCompat.getColor(context, R.color.primaryDark))
 			));
 		}
-		private @NonNull ColorMatrixColorFilter createTintFilter(Context context) {
+		private @NonNull ColorMatrixColorFilter createTintFilter(@NonNull Context context) {
 			return new ColorMatrixColorFilter(PictureHelper.tintMatrix(
 					ColorUtils.blendARGB(
 							ContextCompat.getColor(context, R.color.accent),

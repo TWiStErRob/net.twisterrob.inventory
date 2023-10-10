@@ -66,8 +66,6 @@
 		<ignore path="**/res/layout*/*.xml" />
 	</issue>
 	<issue id="NewerVersionAvailable">
-		<!-- Glide will be updated, but it's more complex. https://github.com/TWiStErRob/net.twisterrob.inventory/issues/180 -->
-		<ignore regexp="^A newer version of com.github.bumptech.glide:glide" />
 		<!-- It's complex to find matching versions of PowerMock / Robolectric and Mockito. -->
 		<ignore regexp="^A newer version of org.mockito:mockito-core" />
 	</issue>

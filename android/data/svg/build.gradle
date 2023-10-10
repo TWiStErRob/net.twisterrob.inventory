@@ -1,5 +1,6 @@
 plugins {
 	id("net.twisterrob.inventory.android.app")
+	id("com.google.devtools.ksp")
 }
 
 dependencies {
@@ -15,6 +16,7 @@ dependencies {
 	androidTestImplementation("net.twisterrob.lib:twister-lib-android-espresso")
 	androidTestImplementation(libs.androidx.preference)
 	androidTestRuntimeOnly("net.twisterrob.lib:twister-lib-android-slf4j")
+	kspAndroidTest(libs.glide.ksp)
 }
 
 android {
