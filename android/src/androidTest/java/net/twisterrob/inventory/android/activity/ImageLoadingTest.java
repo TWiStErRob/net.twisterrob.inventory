@@ -39,6 +39,7 @@ public class ImageLoadingTest {
 		item.assertHasImage();
 		item.assertHasTypeImage();
 		item.changeCategory().cancel();
-//		room.close();
+		room.close();
+		main.assertHomeScreen();
 	}
 }
