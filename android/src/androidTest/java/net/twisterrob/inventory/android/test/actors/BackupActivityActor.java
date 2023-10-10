@@ -7,6 +7,7 @@ import java.util.zip.*;
 
 import org.slf4j.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssume.*;
 import static org.junit.Assume.assumeTrue;
