@@ -42,6 +42,7 @@ class DumpImages {
 
 	@Test fun test() {
 		val storage = PlatformTestStorageRegistry.getInstance()
+		LOG.info("Working with storage: {}", storage)
 		assumeFalse(
 			"PlatformTestStorage goes nowhere!",
 			"NoOpPlatformTestStorage" == storage.javaClass.simpleName
