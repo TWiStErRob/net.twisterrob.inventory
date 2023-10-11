@@ -2,7 +2,6 @@ package net.twisterrob.inventory.android.data.svg
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Bitmap.CompressFormat.PNG
 import android.os.Build.VERSION
 import androidx.annotation.RawRes
 import androidx.test.core.app.ApplicationProvider
@@ -24,14 +23,13 @@ import org.junit.runner.RunWith
 import org.junit.runners.model.MultipleFailureException
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.IOException
-import java.util.LinkedList
+import java.lang.reflect.Field
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
-import java.util.concurrent.TimeUnit.DAYS
+import java.util.concurrent.TimeUnit
 
 private val LOG = LoggerFactory.getLogger(DumpImages::class.java)
 
@@ -41,7 +39,7 @@ private val LOG = LoggerFactory.getLogger(DumpImages::class.java)
  */
 @RunWith(AndroidJUnit4::class)
 class DumpImages {
-	@Throws(Throwable::class)
+
 	@Test fun test() {
 		val storage = PlatformTestStorageRegistry.getInstance()
 		assumeFalse(
@@ -49,90 +47,72 @@ class DumpImages {
 			"NoOpPlatformTestStorage" == storage.javaClass.simpleName
 		)
 		LOG.error("SVG version {}", SVG.getVersion())
-		val context = ApplicationProvider.getApplicationContext<Context>()
+		val context: Context = ApplicationProvider.getApplicationContext()
 		val fields = R.raw::class.java.fields
-		val dir = File(context.cacheDir, "svg")
+		val dir = context.cacheDir.resolve("svg")
 		IOTools.delete(dir)
 		IOTools.ensure(dir)
-		val cpus = Runtime.getRuntime().availableProcessors()
-		LOG.info("Running on {} cores.", cpus)
-		val service = Executors.newFixedThreadPool(cpus)
-		val exclusions = setOf(
-			"shrink_resources",  // Resource for AAPT.
-			"icon_preview",  // Development tool.
-			"icon_helpers",  // Development tool.
-			"icon_template" // Template for new icons.
-		)
-		val jobs = mutableListOf<Future<*>>()
-		for (field in fields) {
+		val service = createExecutor()
+		val jobs = fields.mapNotNull { field ->
 			if (exclusions.contains(field.name)) {
-				continue
+				return@mapNotNull null
 			}
-			val target = File(dir, "${field.name}.png")
-			@RawRes val rawId = field[null] as Int
-			jobs.add(service.submit {
+			val target = dir.resolve("${field.name}.png")
+			@RawRes val rawId = field.get(null) as Int
+			service.submit {
 				try {
 					saveSVG(context, rawId, target)
 					LOG.info("Generated {}", target.absolutePath)
 				} catch (ex: Exception) {
-					val fullName = "${field.declaringClass.name}.${field.name}"
-					val wrapped: RuntimeException =
-						IllegalStateException("Couldn't generate ${fullName}", ex)
-					try {
-						val stackTrace = ObjectTools.getFullStackTrace(ex)!!
-						IOTools.writeAll(FileOutputStream(target), stackTrace)
-						LOG.warn(wrapped.message, ex)
-					} catch (ex2: IOException) {
-						// Shouldn't happen normally.
-						throw IllegalStateException("Failed to write exception", ex2)
-					}
-					throw wrapped
+					throw saveError(field, ex, target)
 				}
-			})
+			}
 		}
 		service.shutdown()
-		assertTrue(service.awaitTermination(Int.MAX_VALUE.toLong(), DAYS))
-		val zip = File(dir.parentFile, "${dir.name}.zip")
+		assertTrue(service.awaitTermination(5, TimeUnit.MINUTES))
+		val zip = dir.resolveSibling("${dir.name}.zip")
 		IOTools.zip(zip, false, dir)
 		LOG.info("ZIP: {}", zip.absolutePath)
 		val fileName = "svg_${VERSION.SDK_INT}.zip"
-		val saved = storage.openOutputFile(fileName)
-		IOTools.copyStream(FileInputStream(zip), saved)
+		IOTools.copyStream(zip.inputStream(), storage.openOutputFile(fileName))
 		if (storage is FileTestStorage) {
 			// Guess where storage.openOutputFile() puts the file.
-			val target = File(OutputDirCalculator().outputDir, fileName)
+			val target = OutputDirCalculator().outputDir.resolve(fileName)
 			LOG.error("adb pull {}", target.absolutePath)
 		} else {
-			val agpFolder =
-				"build/outputs/(connected|managed_device)_android_test_additional_output/..."
+			val agpFolder = "build/outputs/(connected|managed_device)_android_test_additional_output/..."
 			LOG.error("{} should be available in {}", fileName, agpFolder)
 		}
 		failTestIfAnyJobFailed(jobs)
 	}
 
 	companion object {
-		@Throws(Exception::class)
-		private fun failTestIfAnyJobFailed(jobs: Iterable<Future<*>>) {
-			val errors: MutableList<Throwable?> = LinkedList()
-			for (job in jobs) {
-				try {
-					job.get()
-				} catch (ex: ExecutionException) {
-					errors.add(ex.cause)
-				}
-			}
-			MultipleFailureException.assertEmpty(errors)
+
+		private val exclusions: Set<String> = setOf(
+			"shrink_resources",  // Resource for AAPT.
+			"icon_preview",  // Development tool.
+			"icon_helpers",  // Development tool.
+			"icon_template" // Template for new icons.
+		)
+
+		private fun createExecutor(): ExecutorService {
+			val cpus = Runtime.getRuntime().availableProcessors()
+			LOG.info("Running on {} cores.", cpus)
+			return Executors.newFixedThreadPool(cpus)
 		}
 
-		@Throws(IOException::class)
-		private fun save(bitmap: Bitmap, file: File) {
-			IOTools.ensure(file.parentFile!!)
-			val stream = FileOutputStream(file)
+		private fun saveError(field: Field, ex: Exception, target: File): IllegalStateException {
+			val fullName = "${field.declaringClass.name}.${field.name}"
+			val wrapped = IllegalStateException("Couldn't generate ${fullName}", ex)
 			try {
-				bitmap.compress(PNG, 100, stream)
-			} finally {
-				IOTools.ignorantClose(stream)
+				val stackTrace = ObjectTools.getFullStackTrace(ex)!!
+				IOTools.writeAll(target.outputStream(), stackTrace)
+				LOG.warn(wrapped.message, ex)
+			} catch (ex2: IOException) {
+				// Shouldn't happen normally.
+				throw IllegalStateException("Failed to write exception", ex2)
 			}
+			return wrapped
 		}
 
 		@Throws(IOException::class)
@@ -146,8 +126,7 @@ class DumpImages {
 				.load(svgRes)
 				.submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
 			try {
-				val bitmap = target.get()
-				save(bitmap, file)
+				target.get().save(file)
 			} catch (ex: ExecutionException) {
 				val cause = ex.cause
 				if (cause is GlideException) {
@@ -160,5 +139,25 @@ class DumpImages {
 				target.cancel(true)
 			}
 		}
+
+		@Throws(Exception::class)
+		private fun failTestIfAnyJobFailed(jobs: Iterable<Future<*>>) {
+			MultipleFailureException.assertEmpty(jobs.getErrors())
+		}
 	}
 }
+
+@Throws(IOException::class)
+private fun Bitmap.save(file: File) {
+	IOTools.ensure(file.parentFile!!)
+	file.outputStream().use {
+		this.compress(Bitmap.CompressFormat.PNG, 100, it)
+	}
+}
+
+private fun Iterable<Future<*>>.getErrors(): List<Throwable> =
+	this
+		.map { runCatching { it.get(1, TimeUnit.MINUTES) } }
+		.filter { it.isFailure }
+		.map { it.exceptionOrNull()!! }
+		.map { (it as? ExecutionException)?.cause ?: it }
