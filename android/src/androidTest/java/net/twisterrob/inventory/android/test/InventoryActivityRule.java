@@ -15,7 +15,8 @@ import androidx.annotation.CallSuper;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 
-import net.twisterrob.android.test.espresso.idle.*;
+import net.twisterrob.android.test.espresso.idle.DrawerIdlingResource;
+import net.twisterrob.android.test.espresso.idle.GlideIdlingRule;
 import net.twisterrob.android.test.junit.*;
 import net.twisterrob.android.utils.tools.IOTools;
 import net.twisterrob.inventory.android.R;
@@ -53,7 +54,7 @@ public class InventoryActivityRule<T extends Activity> extends SensibleActivityT
 		} else {
 			LOG.warn("DatabaseServiceIdlingResource is not supported on API {}, database is not synchronized in tests.", Build.VERSION.SDK_INT);
 		}
-		base = new GlideIdlingResourceRule().apply(base, description);
+		base = new GlideIdlingRule().apply(base, description);
 		base = new InventoryGlideResetRule().apply(base, description);
 		base = new ExternalAppKiller().apply(base, description);
 		base = new TimeoutRule(20, TimeUnit.SECONDS).apply(base, description);

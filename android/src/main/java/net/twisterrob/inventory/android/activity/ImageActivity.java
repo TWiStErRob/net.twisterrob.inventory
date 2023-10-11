@@ -13,13 +13,17 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.stream.StreamUriLoader;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
@@ -29,7 +33,7 @@ import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Paths;
 
 @AndroidEntryPoint
-public class ImageActivity extends DebugHelperActivity implements RequestListener<Uri, Bitmap> {
+public class ImageActivity extends DebugHelperActivity {
 	private static final Logger LOG = LoggerFactory.getLogger(ImageActivity.class);
 
 	/** type: Boolean, true=internal, false=external, not present=auto(from prefs) */
@@ -39,7 +43,7 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_image);
-		ImageView image = (ImageView)findViewById(R.id.image);
+		ImageView image = findViewById(R.id.image);
 		image.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
 				askRedirect();
@@ -47,17 +51,22 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		});
 
 		if (getExtraUseInternal()) {
-			Glide
+			RequestBuilder<Bitmap> glide = Glide
 					.with(this)
-					.using(new StreamUriLoader(getApplicationContext()))
-					.load(getIntent().getData())
 					.asBitmap()
-					.format(DecodeFormat.PREFER_ARGB_8888)
+					.load(getIntent().getData())
 					.diskCacheStrategy(DiskCacheStrategy.NONE)
+					;
+			glide
+					.format(DecodeFormat.PREFER_ARGB_8888)
 					.skipMemoryCache(true)
-					.thumbnail(0.25f)
-					.crossFade()
-					.listener(this)
+					.thumbnail(glide
+							.clone()
+							.format(DecodeFormat.PREFER_RGB_565)
+							.sizeMultiplier(0.25f)
+					)
+					.transition(BitmapTransitionOptions.withCrossFade())
+					.addListener(new GlideListener())
 					.into(image)
 			;
 		} else {
@@ -93,18 +102,10 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		;
 	}
 
-	@Override
-	public boolean onException(Exception ex, Uri model, Target<Bitmap> target, boolean isFirstResource) {
+	private void onError(@NonNull Exception ex, @Nullable Object model) {
 		LOG.warn("Cannot load image: {}", model, ex);
 		App.toastUser(App.getError(ex, "Cannot load image."));
 		finish();
-		return true;
-	}
-
-	@Override
-	public boolean onResourceReady(Bitmap resource, Uri model, Target<Bitmap> target,
-			boolean isFromMemoryCache, boolean isFirstResource) {
-		return false;
 	}
 
 	private boolean getExtraUseInternal() {
@@ -121,6 +122,23 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		Intent intent = new Intent(App.getAppContext(), ImageActivity.class);
 		intent.setData(data);
 		return intent;
+	}
+	
+	private class GlideListener implements RequestListener<Bitmap> {
+
+		@Override public boolean onLoadFailed(@Nullable GlideException ex, @Nullable Object model,
+				@NonNull Target<Bitmap> target, boolean isFirstResource) {
+			if (ex == null) {
+				ex = new GlideException("Unknown error");
+			}
+			onError(ex, model);
+			return true;
+		}
+
+		@Override public boolean onResourceReady(@NonNull Bitmap resource, @NonNull Object model,
+				Target<Bitmap> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+			return false;
+		}
 	}
 
 	/** External image viewers have horrible support for content:// uris so it's safer to hand them a temporary file. */
@@ -153,7 +171,7 @@ public class ImageActivity extends DebugHelperActivity implements RequestListene
 		}
 
 		@Override protected void onError(@NonNull Exception ex, Uri param) {
-			onException(ex, param, null, true);
+			ImageActivity.this.onError(ex, param);
 		}
 	}
 }

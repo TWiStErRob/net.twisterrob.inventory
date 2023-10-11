@@ -1,11 +1,12 @@
 plugins {
 	id("net.twisterrob.inventory.android.app")
+	id("com.google.devtools.ksp")
 }
 
 dependencies {
 	implementation("net.twisterrob.lib:twister-lib-android-basics")
 	implementation(project(":android:data"))
-	implementation("net.twisterrob.lib:twister-lib-android-glide3")
+	implementation("net.twisterrob.lib:twister-lib-android-glide4")
 	implementation("net.twisterrob.lib:twister-lib-java")
 	implementation(libs.androidsvg)
 	implementation(libs.slf4j.api)
@@ -15,6 +16,7 @@ dependencies {
 	androidTestImplementation("net.twisterrob.lib:twister-lib-android-espresso")
 	androidTestImplementation(libs.androidx.preference)
 	androidTestRuntimeOnly("net.twisterrob.lib:twister-lib-android-slf4j")
+	kspAndroidTest(libs.glide.ksp)
 }
 
 android {

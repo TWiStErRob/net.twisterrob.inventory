@@ -2,6 +2,7 @@ package net.twisterrob.inventory.android.test.actors;
 
 import org.hamcrest.Matcher;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import android.app.Activity;

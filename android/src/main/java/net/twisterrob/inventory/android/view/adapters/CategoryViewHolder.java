@@ -96,7 +96,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
 	public void unBind() {
 		// FIXME replace this with proper Glide.with calls
-		Glide.clear(image);
+		Glide.with(image.getContext().getApplicationContext()).clear(image);
 	}
 
 	private static Integer getCount(Cursor cursor, String columnName) {

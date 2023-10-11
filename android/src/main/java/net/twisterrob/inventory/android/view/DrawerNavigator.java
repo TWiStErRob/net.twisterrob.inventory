@@ -9,14 +9,12 @@ import android.content.Intent;
 import android.util.SparseArray;
 import android.view.*;
 
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
 import androidx.annotation.*;
 
+import net.twisterrob.android.content.glide.MenuItemTarget;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.inventory.android.*;
 import net.twisterrob.inventory.android.Constants.Pic;
@@ -89,7 +87,7 @@ public class DrawerNavigator {
 			}
 			return;
 		}
-		Pic.svg().load(navItem.icon).into(new MenuItemTarget(menuItem, iconSize));
+		Pic.svg().load(navItem.icon).override(iconSize).into(new MenuItemTarget(menuItem));
 	}
 
 	public static DrawerNavigator get(View nav) {
@@ -123,18 +121,6 @@ public class DrawerNavigator {
 			} else {
 				return super.toString();
 			}
-		}
-	}
-
-	private static class MenuItemTarget extends SimpleTarget<GlideDrawable> {
-		private final MenuItem menuItem;
-		public MenuItemTarget(MenuItem menuItem, int iconSize) {
-			super(iconSize, iconSize);
-			this.menuItem = menuItem;
-		}
-		@Override
-		public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-			menuItem.setIcon(resource);
 		}
 	}
 }

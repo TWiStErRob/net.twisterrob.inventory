@@ -72,8 +72,8 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
 
 	public void unBind() {
 		// FIXME replace this with proper Glide.with calls
-		Glide.clear(image);
-		Glide.clear(type);
+		Glide.with(image.getContext().getApplicationContext()).clear(image);
+		Glide.with(type.getContext().getApplicationContext()).clear(type);
 	}
 
 	private static String getCountText(Cursor cursor) {

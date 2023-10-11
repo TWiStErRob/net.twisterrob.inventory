@@ -7,10 +7,10 @@ agp-tools = "31.1.1"
 twisterrob = "0.16" # https://github.com/TWiStErRob/net.twisterrob.gradle/releases
 detekt = "1.23.0"
 kotlin = "1.9.10"
+kotlin-ksp = "1.9.10-1.0.13"
 kotlin-coroutines = "1.7.3"
 
-# TODEL NewerVersionAvailable lint exception
-glide = "3.8.0"
+glide = "4.16.0"
 androidsvg = "1.4"
 flexbox = "2.0.1"
 slf4j = "1.7.36"
@@ -89,6 +89,7 @@ kotlin-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-tes
 
 androidsvg = { module = "com.caverock:androidsvg", version.ref = "androidsvg" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide-ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
 flexbox = { module = "com.google.android:flexbox", version.ref = "flexbox" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
@@ -181,3 +182,4 @@ kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 twisterrob-quality = { id = "net.twisterrob.gradle.plugin.quality", version.ref = "twisterrob" }
 twisterrob-android = { id = "net.twisterrob.gradle.plugin.android-app", version.ref = "twisterrob" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }

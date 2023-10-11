@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -21,9 +22,8 @@ import android.view.View.*;
 import android.widget.*;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
-import com.bumptech.glide.DrawableRequestBuilder;
-
-import static com.bumptech.glide.load.engine.DiskCacheStrategy.*;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.*;
@@ -32,7 +32,8 @@ import androidx.loader.app.LoaderManager.LoaderCallbacks;
 import androidx.recyclerview.widget.*;
 
 import net.twisterrob.android.activity.CaptureImage;
-import net.twisterrob.android.content.glide.*;
+import net.twisterrob.android.content.glide.LongSignature;
+import net.twisterrob.android.content.glide.pooling.NonPooledBitmap;
 import net.twisterrob.android.utils.concurrent.SimpleSafeAsyncTask;
 import net.twisterrob.android.utils.tools.*;
 import net.twisterrob.android.view.TextWatcherAdapter;
@@ -457,18 +458,18 @@ public abstract class BaseEditFragment<T, DTO extends ImagedDTO> extends BaseSin
 		if (currentImage == null) {
 			Pic.svgNoTint().load(getTypeImageID()).into(image);
 		} else {
-			DrawableRequestBuilder<Uri> jpg = Pic.jpg();
+			RequestBuilder<Drawable> jpg = Pic.jpg();
 			if (original != null && currentImage.equals(original.getImageUri())) {
 				// original image needs timestamp to refresh between edits (in case user made save changes)
-				jpg.signature(new LongSignature(original.imageTime));
+				jpg = jpg.signature(new LongSignature(original.imageTime));
 			} else {
 				// temporary image should be reloaded every time from the disk
-				jpg.skipMemoryCache(true);
+				jpg = jpg.skipMemoryCache(true);
 			}
 			jpg
+					.decode(NonPooledBitmap.class)
 					.load(currentImage)
-					.diskCacheStrategy(NONE) // don't save any version: it's already on disk or used only once
-					.decoder(new NonPoolingGifBitmapWrapperResourceDecoder(requireContext()))
+					.diskCacheStrategy(DiskCacheStrategy.NONE) // don't save any version: it's already on disk or used only once
 					.into(image);
 		}
 		Pic.svg().load(getTypeImageID()).into(typeImage);
