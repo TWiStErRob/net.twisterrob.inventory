@@ -139,7 +139,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		int fallbackID = ImagedDTO.getFallbackID(context, cursor);
 		Pic.svg().load(fallbackID).into(holder.image);
 
-		int count = DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_ITEM_ALL, 0);
+		int count = DatabaseTools.getOptionalInt(cursor, CommonColumns.COUNT_ITEM_DIRECT, 0);
 		ViewTools.visibleIf(holder.count, count > 0);
 		holder.count.setText(String.valueOf(count));
 	}
