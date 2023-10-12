@@ -133,7 +133,7 @@ internal class InventorySpaceManager @Inject constructor(
 			}
 			val externalFilesDir = context.getExternalFilesDir(null)
 			if (externalFilesDir != null) {
-				val externalDataDir = externalFilesDir.parentFile
+				val externalDataDir = externalFilesDir.parentFile ?: error("${externalFilesDir} has no parent")
 				IOTools.zip(zip, externalDataDir, "external")
 				description.append("external\tgetExternalFilesDir(null): ").append(externalDataDir)
 					.append("\n")
