@@ -30,10 +30,10 @@
 	<TextView
 		android:id="@id/type"
 		android:layout_width="@dimen/icon_context"
-		android:layout_height="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
 		android:focusable="false"
 		android:gravity="center"
-		android:includeFontPadding="false"
 		android:textIsSelectable="false"
 		android:textSize="@dimen/icon_context"
 		android:typeface="monospace"
@@ -48,9 +48,9 @@
 		android:id="@id/title"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
 		android:layout_weight="1"
 		android:focusable="false"
-		android:gravity="center_vertical"
 		android:textIsSelectable="false"
 		tools:text="Category Name (with, some, keywords, that, could, be, so, many, that, it, wraps, to, multiple, lines)"
 		/>
