@@ -58,7 +58,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		this.displayKeywords = displayKeywords;
 	}
 
-	class ViewHolder {
+	static class ViewHolder {
 		ImageView image;
 		View spacer;
 		TextView state;
