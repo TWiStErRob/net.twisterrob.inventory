@@ -63,6 +63,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		View spacer;
 		TextView state;
 		TextView title;
+		TextView count;
 	}
 
 	@Override protected @NonNull ViewHolder createHolder(@NonNull View convertView) {
@@ -71,6 +72,7 @@ public class TypeAdapter extends ResourceCursorAdapterWithHolder<ViewHolder> {
 		holder.spacer = convertView.findViewById(R.id.spacer);
 		holder.state = convertView.findViewById(R.id.type);
 		holder.title = convertView.findViewById(R.id.title);
+		holder.count = convertView.findViewById(R.id.count);
 		return holder;
 	}
 
