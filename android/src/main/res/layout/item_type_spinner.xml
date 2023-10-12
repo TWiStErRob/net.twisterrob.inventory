@@ -14,7 +14,8 @@
 		android:layout_width="@dimen/icon_context"
 		android:layout_height="@dimen/icon_context"
 		android:layout_gravity="center_vertical"
-		android:layout_margin="@dimen/unit_half"
+		android:layout_marginStart="@dimen/unit_half"
+		android:layout_marginEnd="@dimen/unit_half"
 		android:focusable="false"
 		tools:src="@drawable/category_unknown"
 		/>
