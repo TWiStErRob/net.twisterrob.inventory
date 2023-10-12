@@ -57,13 +57,7 @@
 
 	<include
 		android:id="@id/count"
-		layout="@layout/inc_count"
-		android:layout_width="@dimen/icon_context"
-		android:layout_height="@dimen/icon_context"
-		android:layout_gravity="center_vertical"
-		android:layout_margin="0dp"
-		android:textSize="12dp"
-		tools:ignore="SpUsage"
+		layout="@layout/inc_count_mini"
 		/>
 
 </LinearLayout>
