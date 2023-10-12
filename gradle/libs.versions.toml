@@ -15,7 +15,7 @@ androidsvg = "1.4"
 flexbox = "2.0.1"
 slf4j = "1.7.36"
 dagger = "2.47"
-orbit = "6.0.0"
+orbit = "6.1.0"
 
 androidx-activity = "1.7.2" # https://developer.android.com/jetpack/androidx/releases/activity
 androidx-annotation = "1.7.0" # https://developer.android.com/jetpack/androidx/releases/annotation
