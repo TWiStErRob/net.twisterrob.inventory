@@ -75,12 +75,15 @@ class DumpImages {
 		IOTools.zip(zip, false, dir)
 		LOG.info("ZIP: {}", zip.absolutePath)
 		val fileName = "svg_${VERSION.SDK_INT}.zip"
-		IOTools.copyStream(zip.inputStream(), storage.openOutputFile(fileName))
 		if (storage is FileTestStorage) {
 			// Guess where storage.openOutputFile() puts the file.
-			val target = OutputDirCalculator().outputDir.resolve(fileName)
+			val outputDir = OutputDirCalculator().outputDir
+			IOTools.ensure(outputDir)
+			IOTools.copyStream(zip.inputStream(), storage.openOutputFile(fileName))
+			val target = outputDir.resolve(fileName)
 			LOG.error("adb pull {}", target.absolutePath)
 		} else {
+			IOTools.copyStream(zip.inputStream(), storage.openOutputFile(fileName))
 			val agpFolder = "build/outputs/(connected|managed_device)_android_test_additional_output/..."
 			LOG.error("{} should be available in {}", fileName, agpFolder)
 		}
