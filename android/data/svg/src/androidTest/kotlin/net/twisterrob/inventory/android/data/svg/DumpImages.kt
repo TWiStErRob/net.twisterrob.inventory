@@ -45,6 +45,7 @@ class DumpImages {
 		LOG.info("Working with storage: {}", storage)
 		assumeFalse(
 			"PlatformTestStorage goes nowhere!",
+			// NoOp is internal in PlatformTestStorageRegistry, so can't use class reference.
 			"NoOpPlatformTestStorage" == storage.javaClass.simpleName
 		)
 		LOG.error("SVG version {}", SVG.getVersion())
