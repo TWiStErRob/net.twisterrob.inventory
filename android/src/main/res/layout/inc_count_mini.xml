@@ -7,8 +7,6 @@
 	android:layout_height="@dimen/icon_context"
 	android:layout_gravity="end|center_vertical"
 	android:layout_marginEnd="@dimen/unit_half"
-	android:layout_alignParentEnd="true"
-	android:layout_centerVertical="true"
 	android:background="@drawable/circle"
 	android:alpha="0.4"
 	android:focusable="false"
