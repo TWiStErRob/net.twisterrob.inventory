@@ -45,7 +45,13 @@
 				'PropertyType'                          as source,
 				pt._id                                  as _id,
 				pt.name                                 as name,
-				COALESCE(pt.image, ptk.image)           as typeImage
+				COALESCE(pt.image, ptk.image)           as typeImage,
+				(
+					select count(*)
+					from Property p
+					where p.type = pt._id
+					-- "directItems" is a misnomer intentionally so the binding is simpler.
+				)                                       as countDirectItems
 			from PropertyType     pt
 			join PropertyTypeKind ptk ON pt.kind = ptk._id
 		UNION
@@ -57,7 +63,14 @@
 				'PropertyTypeKind'                      as source,
 				-1                                      as _id,
 				ptk.name                                as name,
-				ptk.image                               as typeImage
+				ptk.image                               as typeImage,
+				(
+					select count(*)
+					from Property p
+					join PropertyType pt ON p.type = pt._id
+					where pt.kind = ptk._id
+					-- "directItems" is a misnomer intentionally so the binding is simpler.
+				)                                       as countDirectItems
 			from PropertyTypeKind ptk
 			where ptk._id <> 0
 		order by kind, _id
@@ -73,7 +86,13 @@
 				'RoomType'                              as source,
 				rt._id                                  as _id,
 				rt.name                                 as name,
-				COALESCE(rt.image, rtk.image)           as typeImage
+				COALESCE(rt.image, rtk.image)           as typeImage,
+				(
+					select count(*)
+					from Room r
+					where r.type = rt._id
+					-- "directItems" is a misnomer intentionally so the binding is simpler.
+				)                                       as countDirectItems
 			from RoomType     rt
 			join RoomTypeKind rtk ON rt.kind = rtk._id
 		UNION
@@ -85,7 +104,14 @@
 				'RoomTypeKind'                          as source,
 				-1                                      as _id,
 				rtk.name                                as name,
-				rtk.image                               as typeImage
+				rtk.image                               as typeImage,
+				(
+					select count(*)
+					from Room r
+					join RoomType rt ON r.type = rt._id
+					where rt.kind = rtk._id
+					-- "directItems" is a misnomer intentionally so the binding is simpler.
+				)                                       as countDirectItems
 			from RoomTypeKind rtk
 			where rtk._id <> 0
 		order by kind, _id
@@ -145,7 +171,8 @@
 			ct.descendants    as countAllChildren,
 			ct.image          as typeImage,
 			ct.parent IS NULL as strong,
-			ct.root           as root
+			ct.root           as root,
+			(select count(*) from Item where category = ct._id) as countDirectItems
 		from Category_Tree ct
 		where ct._id <> -1 -- don't return category_internal
 		order by ct._id
@@ -184,7 +211,8 @@
 					)
 				)
 			)              as strong,
-			ct.image       as typeImage
+			ct.image       as typeImage,
+			(select count(*) from Item where category = ct._id) as countDirectItems
 		from Category            c
 		join Category_Related    cr  ON cr.category = c._id
 		join Category_Tree       ct  ON ct._id = cr.related
