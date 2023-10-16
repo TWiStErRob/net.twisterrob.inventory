@@ -1,3 +1,7 @@
+import kotlin.io.FilesKt
+import kotlin.text.Charsets
+import org.gradle.platform.*
+
 plugins {
 	id("net.twisterrob.inventory.android.module")
 	id("net.twisterrob.inventory.database")
@@ -20,7 +24,8 @@ dependencies {
 databaseEntities {
 	categories {
 		//noinspection UnnecessaryQualifiedReference,GrDeprecatedAPIUsage REPORT cannot replace with new interface, missing methods
-		com.android.build.gradle.api.AndroidSourceSet data_ss = evaluationDependsOn(':android:data').android.sourceSets.main
+		com.android.build.gradle.api.AndroidSourceSet data_ss =
+				evaluationDependsOn(':android:data').android.sourceSets.main
 		input.set(file(new File(data_ss.res.srcDirs.first(), 'values/strings_Categories.xml')))
 		assetPath.set("MagicHomeInventory.data.Categories.sql")
 		iconFolder.set(file(new File(data_ss.res.srcDirs.first(), 'raw')))
@@ -31,19 +36,115 @@ android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant varian
 	variant.mergeAssetsProvider.configure { it.dependsOn(tasks.generateDataBase) }
 }
 
+def outDir = project.layout.buildDirectory.dir("database")
+def concatenated = outDir.map { it.file("test-db-concatenated.sql") }
+def preparedDatabase = outDir.map { it.file("test-db-prepared.sqlite") }
+def finalDatabase = outDir.map { it.file("test-db-final.sqlite") }
+
+def concatenateDatabase = tasks.register("concatenateDatabase", ConcatenateDatabaseScripts.class) {
+	group = LifecycleBasePlugin.BUILD_GROUP
+	def assetsMain = android.sourceSets.main.assets.srcDirs[0]
+	def assetsDebug = android.sourceSets.debug.assets.srcDirs[0]
+	prelude = """
+		-- Built from from ${assetsMain} and ${assetsDebug}.
+		-- http://stackoverflow.com/questions/2421189/version-of-sqlite-used-in-android
+		PRAGMA foreign_keys=ON;
+		PRAGMA recursive_triggers = TRUE; -- This is not possible before 3.6.18
+	""".stripIndent()
+	scriptsUnderTest.addAll(
+			FilesKt.resolve(assetsMain, "MagicHomeInventory.clean.sql"),
+			FilesKt.resolve(assetsMain, "MagicHomeInventory.schema.sql"),
+			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.sql"),
+			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.Categories.sql"),
+			FilesKt.resolve(assetsMain, "MagicHomeInventory.init.sql"),
+			FilesKt.resolve(assetsDebug, "MagicHomeInventory.development.sql"),
+			FilesKt.resolve(assetsDebug, "MagicHomeInventory.verify.sql"),
+			FilesKt.resolve(assetsDebug, "MagicHomeInventory.test.sql"),
+	)
+	testScript = new File("src/test/sql/test-db.sql")
+	it.concatenated = concatenated
+	it.preparedDatabase = preparedDatabase.map { outDir.get().asFile.relativePath(it.asFile) }
+	it.finalDatabase = finalDatabase.map { outDir.get().asFile.relativePath(it.asFile) }
+}
+
 def testDatabase = tasks.register("testDatabase", Exec.class) {
-	onlyIf { System.getProperty("os.name").startsWith("Windows") }
+	group = LifecycleBasePlugin.VERIFICATION_GROUP
 	dependsOn(tasks.generateDataBase)
-	def outputDir = new File(buildDir, database)
-	setWorkingDir(outputDir)
-	inputs.file("test-db.bat")
-	inputs.file("test-db.sql")
-	inputs.dir(android.sourceSets.main.assets.srcDirs[0])
-	inputs.dir(android.sourceSets.debug.assets.srcDirs[0])
-	outputs.dir(outputDir)
-	setCommandLine("cmd", "/c", file("test-db.bat"), projectDir, outputDir)
+	dependsOn(concatenateDatabase)
+	setWorkingDir(outDir)
+	inputs.file(concatenateDatabase.map { it.concatenated })
+	outputs.file(preparedDatabase)
+	outputs.file(finalDatabase)
+	Provider<Directory> sdkDirectory = androidComponents.sdkComponents.sdkDirectory
+	Provider<RegularFile> sqlite = sdkDirectory.map {
+		//noinspection GroovyAccessibility in Kotlin this will be serviceOf<BuildPlatform>()
+		if (services.get(BuildPlatform).operatingSystem == OperatingSystem.WINDOWS) {
+			it.file("platform-tools/sqlite3.exe")
+		} else {
+			it.file("platform-tools/sqlite3")
+		}
+	}
+	setExecutable(sqlite.map { it.asFile.absolutePath }.get())
+	setArgs([
+			"-init",
+			concatenateDatabase.map { it.concatenated.get().asFile.absolutePath }.get()
+	])
 }
 tasks.named("check").configure { dependsOn(testDatabase) }
 
 // See net.twisterrob.inventory.android.content.Database.
 android.buildFeatures.buildConfig = true
+
+abstract class ConcatenateDatabaseScripts extends DefaultTask {
+
+	@Input
+	abstract Property<String> getPrelude()
+
+	@InputFiles
+	@PathSensitive(PathSensitivity.NAME_ONLY)
+	abstract ListProperty<File> getScriptsUnderTest()
+
+	@InputFiles
+	@PathSensitive(PathSensitivity.NAME_ONLY)
+	abstract RegularFileProperty getTestScript()
+
+	@OutputFile
+	abstract RegularFileProperty getConcatenated()
+
+	@Input
+	abstract Property<String> getPreparedDatabase()
+
+	@Input
+	abstract Property<String> getFinalDatabase()
+
+	@TaskAction
+	void concatenate() {
+		File target = concatenated.get().asFile
+		assert (target.parentFile.exists() || target.parentFile.mkdirs())
+		assert (!target.exists() || target.delete())
+		assert (target.createNewFile())
+		def append = { String text ->
+			target.append(text, Charsets.UTF_8.name(), false)
+		}
+		def appendLog = { String text ->
+			append("select STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), '${text}';\n")
+		}
+		def appendFile = { File file ->
+			appendLog(file.name)
+			append(file.getText(Charsets.UTF_8.name()))
+		}
+		append(prelude.get())
+		appendLog("Initialize once")
+		for (def script in scriptsUnderTest.get()) {
+			appendFile(script)
+		}
+		appendLog("Tear-down and initialize again")
+		for (def script in scriptsUnderTest.get()) {
+			appendFile(script)
+		}
+		appendLog("Test script")
+		append(".backup '${preparedDatabase.get()}'\n")
+		appendFile(testScript.get().asFile)
+		append(".backup '${finalDatabase.get()}'\n")
+	}
+}

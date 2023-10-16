@@ -1,7 +1,8 @@
 -- This file contains the current schema of the database.
 -- Any changes to this file need to be accompanied by a version bump in `Database` class,
 -- and an additional `.upgrade.<version>.sql` file to make the change for existing users.
--- Use test-db.bat to see if the schema is valid SQL (note: the sqlite3 command version may change).
+-- Use :android:database:testDatabase to see if the schema is valid SQL
+-- (note: the sqlite3 command version may change depending on Android SDK installation).
 
 -- The minimum SQL version is 3.8.6 (Android 5.0/21).
 -- The target SQL version was 3.39.2 (Android 14/34) at the time of last update.

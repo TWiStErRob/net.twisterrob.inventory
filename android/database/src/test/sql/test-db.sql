@@ -1,4 +1,5 @@
 .mode column
+.width 120
 
 -- This file is used to simulate user actions to see the DB state before and after
 -- Some triggers populate the Log table if those lines are uncommented.
@@ -16,9 +17,8 @@ select '__________________________________.- Before -.__________________________
 insert into Log (message) values ('Before');
 select '--------------------------------------------------------------------------------';
 .headers on
-.width auto
 
--- verifiy preconditions or pre-state
+-- Verify preconditions or pre-state.
 
 .headers off
 select '';
@@ -29,7 +29,10 @@ select '------------------------------------------------------------------------
 
 BEGIN TRANSACTION;
 
--- write your stuff here
+.headers off
+-- Write your stuff here.
+select 'Not changing anything, to be filled in when something is tested.';
+.headers on
 
 END TRANSACTION;
 
@@ -39,9 +42,8 @@ select '__________________________________.- After -.___________________________
 insert into Log (message) values ('After');
 select '--------------------------------------------------------------------------------';
 .headers on
-.width auto
 
--- verify postconditions or post-state
+-- Verify postconditions or post-state.
 
 .headers off
 select '';
