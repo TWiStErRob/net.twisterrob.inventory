@@ -1,5 +1,7 @@
--- Note: this is the initial version of the schema at r1921.
--- This file shouldn't be used in production, it's just the base for testing upgrades.
+-- Context: this is the initial version of the schema at r1921,
+-- which is the last update before 1.0.0#1934 release.
+
+-- WARNING: This file shouldn't be used in production, it's just the base for testing upgrades.
 
 -- Usage: insert into Log(message) values ('Log message');
 CREATE TABLE Log (

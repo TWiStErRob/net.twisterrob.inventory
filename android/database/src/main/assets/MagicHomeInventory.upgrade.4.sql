@@ -1,3 +1,6 @@
+-- Context: See v3, where the new triggers were added.
+-- This v4 cleans up dangling images left after deleting things.
+
 -- The default vacuuming strategy should be FULL, downgrade to INCREMENTAL so the following delete can complete fast.
 -- With FULL mode during the commit a full copy of the deleted pages would be created, possibly requiring 3x disk space.
 -- To work around this, INCREMENTAL only marks the pages as deleted, but that's fast to commit.

@@ -1,3 +1,6 @@
+-- Context: Changed from ASCII < to Unicode ◀ (in 1.1.0).
+
+-- This required ro-recreating the trigger ...
 DROP TRIGGER IF EXISTS Search_refresh;
 CREATE TRIGGER Search_refresh
 INSTEAD OF INSERT ON Search_Refresher
@@ -22,4 +25,5 @@ BEGIN
 	;--NOTEOS
 END;
 
+-- ... and repropulating it with data (inserts will delete and re-insert).
 insert into Search_Refresher (_id) select _id from Item;

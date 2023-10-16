@@ -1,3 +1,6 @@
+-- Context: Before 1.1.0 images of deleted belongings stayed dangling in the database.
+-- See also v4 where the dangling images are deleted.
+
 DROP TRIGGER IF EXISTS Property_image;
 CREATE TRIGGER Property_image
 AFTER UPDATE OF image ON Property
@@ -37,7 +40,8 @@ BEGIN
 	insert into Item_Path_Node_Refresher(_id) values (old._id);--NOTEOS
 END;
 
+-- Side effect performance improvement:
 -- Deleting 2000 belongings takes a long time, now with this new trigger:
 -- 38 seconds with secure_delete off.
 -- 30 seconds with secure_delete on. (weird)
--- Before it was 2 seconds for the same amount, that's what we get for removing images
+-- Before it was 2 seconds for the same amount, that's what we get for removing images.
