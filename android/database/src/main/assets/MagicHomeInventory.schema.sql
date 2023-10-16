@@ -3,15 +3,15 @@
 -- and an additional `.upgrade.<version>.sql` file to make the change for existing users.
 -- Use test-db.bat to see if the schema is valid SQL (note: the sqlite3 command version may change).
 
--- The minimum SQL version is 3.6.22 (Android 2.3.7).
--- The target SQL version was 3.7.11 (Android 4.4.2) at the time of writing this file.
+-- The minimum SQL version is 3.8.6 (Android 5.0/21).
+-- The target SQL version was 3.39.2 (Android 14/34) at the time of last update.
 -- All versions are listed here: https://stackoverflow.com/a/4377116/253468
 
 -- Notes
 -- ;--NOTEOS is needed in trigger bodies so statement execution to android driver is delayed until correct semicolon
 -- RAISE(action, msg) doesn't support expressions
 -- Be careful with WHEN conditions in triggers for NULLABLE columns <> returns NULL, need to check if IS NULL changed
--- WITH clause support was added in SQLite 3.8.3, first to support it is Android 5.0
+-- WITH clause support was added in SQLite 3.8.3, first to support it is Android 5.0 (3.8.6)
 
 
 -- Usage: insert into Log(message) values ('Log message');
