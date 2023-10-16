@@ -31,19 +31,19 @@ android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant varian
 	variant.mergeAssetsProvider.configure { it.dependsOn(tasks.generateDataBase) }
 }
 
-tasks.register("testDatabase", Exec) {
+def testDatabase = tasks.register("testDatabase", Exec.class) {
 	onlyIf { System.getProperty("os.name").startsWith("Windows") }
 	dependsOn(tasks.generateDataBase)
-	def outputDir = file("${buildDir}/database") // TODO why can't I use File(File, String) ctor?
-	workingDir outputDir
-	inputs.file('test-db.bat')
-	inputs.file('test-db.sql')
+	def outputDir = new File(buildDir, database)
+	setWorkingDir(outputDir)
+	inputs.file("test-db.bat")
+	inputs.file("test-db.sql")
 	inputs.dir(android.sourceSets.main.assets.srcDirs[0])
 	inputs.dir(android.sourceSets.debug.assets.srcDirs[0])
 	outputs.dir(outputDir)
-	commandLine 'cmd', '/c', file('test-db.bat'), projectDir, outputDir
-	tasks.findByPath('check').dependsOn(it)
+	setCommandLine("cmd", "/c", file("test-db.bat"), projectDir, outputDir)
 }
+tasks.named("check").configure { dependsOn(testDatabase) }
 
 // See net.twisterrob.inventory.android.content.Database.
 android.buildFeatures.buildConfig = true
