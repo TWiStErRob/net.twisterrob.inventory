@@ -87,7 +87,8 @@ def testDatabase = tasks.register("testDatabase", Exec.class) {
 	setExecutable(sqlite.map { it.asFile.absolutePath }.get())
 	setArgs([
 			"-init",
-			concatenateDatabase.map { it.concatenated.get().asFile.absolutePath }.get()
+			concatenateDatabase.map { it.concatenated.get().asFile.absolutePath }.get(),
+			"-bail",
 	])
 }
 tasks.named("check").configure { dependsOn(testDatabase) }
