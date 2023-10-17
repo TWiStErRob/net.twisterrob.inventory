@@ -41,9 +41,9 @@ android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant varian
 }
 
 def outDir = project.layout.buildDirectory.dir("database/test-db")
-def concatenated = outDir.map { it.file("test-db-concatenated.sql") }
-def preparedDatabase = outDir.map { it.file("test-db-prepared.sqlite") }
-def finalDatabase = outDir.map { it.file("test-db-final.sqlite") }
+def concatenated = outDir.map { it.file("concatenated.sql") }
+def preparedDatabase = outDir.map { it.file("prepared.sqlite") }
+def finalDatabase = outDir.map { it.file("final.sqlite") }
 
 def concatenateDatabaseTest = tasks.register("concatenateDatabaseTest", ConcatenateDatabaseScripts.class) {
 	def assetsMain = android.sourceSets.main.assets.srcDirs[0]
@@ -90,9 +90,9 @@ tasks.named("check").configure { dependsOn(testDatabaseTest) }
 
 
 def outDir2 = project.layout.buildDirectory.dir("database/upgrade")
-def concatenated2 = outDir2.map { it.file("test-db-concatenated.sql") }
-def preparedDatabase2 = outDir2.map { it.file("test-db-prepared.sqlite") }
-def finalDatabase2 = outDir2.map { it.file("test-db-final.sqlite") }
+def concatenated2 = outDir2.map { it.file("concatenated.sql") }
+def preparedDatabase2 = outDir2.map { it.file("prepared.sqlite") }
+def finalDatabase2 = outDir2.map { it.file("final.sqlite") }
 
 def concatenateUpgradeTest = tasks.register("concatenateUpgradeTest", ConcatenateDatabaseScripts.class) {
 	def assetsMain = android.sourceSets.main.assets.srcDirs[0]
@@ -111,7 +111,7 @@ def concatenateUpgradeTest = tasks.register("concatenateUpgradeTest", Concatenat
 			FilesKt.resolve(assetsMain, "MagicHomeInventory.upgrade.5.sql"),
 			FilesKt.resolve(assetsMain, "MagicHomeInventory.upgrade.6.sql"),
 	)
-	testScript = new File("src/test/sql/upgrade-test.sql")
+	testScript = new File("src/test/sql/upgrade.sql")
 	it.concatenated = concatenated2
 	it.preparedDatabase = preparedDatabase2.map { outDir2.get().asFile.relativePath(it.asFile) }
 	it.finalDatabase = finalDatabase2.map { outDir2.get().asFile.relativePath(it.asFile) }
@@ -124,6 +124,38 @@ def testUpgradeTest = tasks.register("testUpgradeTest", TestDatabase.class) {
 	wireWith(concatenateUpgradeTest)
 }
 tasks.named("check").configure { dependsOn(testUpgradeTest) }
+
+
+def outDir3 = project.layout.buildDirectory.dir("database/create")
+def concatenated3 = outDir3.map { it.file("concatenated.sql") }
+def preparedDatabase3 = outDir3.map { it.file("prepared.sqlite") }
+def finalDatabase3 = outDir3.map { it.file("final.sqlite") }
+
+def concatenateCreateTest = tasks.register("concatenateCreateTest", ConcatenateDatabaseScripts.class) {
+	def assetsMain = android.sourceSets.main.assets.srcDirs[0]
+	prelude = """
+		PRAGMA foreign_keys=ON;
+		PRAGMA recursive_triggers = TRUE;
+	""".stripIndent()
+	scriptsUnderTest.addAll(
+			FilesKt.resolve(assetsMain, "MagicHomeInventory.schema.sql"),
+			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.sql"),
+			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.Categories.sql"),
+			FilesKt.resolve(assetsMain, "MagicHomeInventory.init.sql"),
+	)
+	testScript = new File("src/test/sql/create.sql")
+	it.concatenated = concatenated3
+	it.preparedDatabase = preparedDatabase3.map { outDir3.get().asFile.relativePath(it.asFile) }
+	it.finalDatabase = finalDatabase3.map { outDir3.get().asFile.relativePath(it.asFile) }
+}
+
+def testCreateTest = tasks.register("testCreateTest", TestDatabase.class) {
+	setWorkingDir(outDir3)
+	outputs.file(preparedDatabase3)
+	outputs.file(finalDatabase3)
+	wireWith(concatenateCreateTest)
+}
+tasks.named("check").configure { dependsOn(testCreateTest) }
 
 // See net.twisterrob.inventory.android.content.Database.
 android.buildFeatures.buildConfig = true
