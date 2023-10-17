@@ -4,6 +4,8 @@ import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import net.twisterrob.inventory.android.content.InventoryContract.*;
 
 /**
@@ -25,7 +27,7 @@ public class InventoryDatabase {
 		return INSTANCE;
 	}
 
-	public long createProperty(ContentResolver cr, String name, String image) throws NullPointerException {
+	public long createProperty(@NonNull ContentResolver cr, String name, String image) throws NullPointerException {
 		ContentValues cv = new ContentValues();
 		cv.put(Item.NAME, name);
 		cv.put(Item.IMAGE, image);
@@ -34,12 +36,12 @@ public class InventoryDatabase {
 		return Long.parseLong(result.getLastPathSegment());
 	}
 
-	public Cursor listProperties(ContentResolver cr) {
+	public Cursor listProperties(@NonNull ContentResolver cr) {
 		return cr.query(Item.DIR_URI, NO_PROJ, NO_SEL, NO_ARGS, NO_SORT);
 	}
 
-	public Cursor searchItems(ContentResolver cr, CharSequence query) {
-		String[] args = query != null? new String[] {query.toString()} : null;
+	public Cursor searchItems(@NonNull ContentResolver cr, @NonNull CharSequence query) {
+		String[] args = new String[] {query.toString()};
 		return cr.query(Search.URI, NO_PROJ, NO_SEL, args, NO_SORT);
 	}
 }

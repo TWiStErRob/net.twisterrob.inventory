@@ -24,6 +24,7 @@ import net.twisterrob.java.annotations.DebugHelper;
 import net.twisterrob.java.utils.StringTools;
 
 import static net.twisterrob.inventory.android.content.InventoryContract.*;
+import static net.twisterrob.inventory.android.content.contract.Category.INTERNAL;
 import static net.twisterrob.inventory.android.content.contract.ImageDataColumns.*;
 
 // CONSIDER http://www.grokkingandroid.com/android-tutorial-writing-your-own-content-provider/
@@ -153,19 +154,17 @@ public class InventoryProvider extends VariantContentProvider {
 			@SuppressWarnings("unused") String sortOrder) {
 		switch (URI_MATCHER.match(uri)) {
 			case SEARCH_ITEMS_SUGGEST: {
-				// uri.getLastPathSegment().toLowerCase(Locale.getDefault());
-				String query = selectionArgs[0].toLowerCase(Locale.getDefault());
+				String query = selectionArgs[0];
 				if (StringTools.isNullOrEmpty(query)) {
 					return createItemSearchHelp();
 				}
 				return App.db().searchSuggest(query);
 			}
 			case SEARCH_ITEMS: {
-				if (BuildConfig.DEBUG && (selectionArgs == null || StringTools.isNullOrEmpty(selectionArgs[0]))) {
-					return App.db().listItemsForCategory(
-							net.twisterrob.inventory.android.content.contract.Category.INTERNAL, true);
+				String query = selectionArgs[0];
+				if (BuildConfig.DEBUG && StringTools.isNullOrEmpty(query)) {
+					return App.db().listItemsForCategory(INTERNAL, true);
 				}
-				String query = selectionArgs[0].toLowerCase(Locale.getDefault());
 				return App.db().search(query);
 			}
 
