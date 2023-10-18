@@ -7,6 +7,9 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
+/**
+ * Note: the `sqlite3` command version may change depending on Android SDK installation.
+ */
 class DatabaseSqlIntegrationTests {
 
 	@get:Rule val temp: TemporaryFolder = TemporaryFolder.builder().assureDeletion().build()
