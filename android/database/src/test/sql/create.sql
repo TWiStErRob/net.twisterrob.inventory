@@ -1,2 +1,2 @@
---.output create.dump
---.dump
+.output dump.sql
+.dump

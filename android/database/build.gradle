@@ -23,6 +23,9 @@ dependencies {
 	implementation "net.twisterrob.lib:twister-lib-java"
 	implementation("net.twisterrob.lib:twister-lib-general")
 	implementation(libs.androidx.preference)
+
+	testImplementation project(':android:test_helpers')
+	testImplementation(project(":android:database:sqlite3"))
 }
 
 databaseEntities {
@@ -123,6 +126,7 @@ def testUpgradeTest = tasks.register("testUpgradeTest", TestDatabase.class) {
 	outputs.file(finalDatabase2)
 	wireWith(concatenateUpgradeTest)
 }
+afterEvaluate { tasks.named("testDebugUnitTest").configure { dependsOn(testUpgradeTest) } }
 tasks.named("check").configure { dependsOn(testUpgradeTest) }
 
 
@@ -155,6 +159,7 @@ def testCreateTest = tasks.register("testCreateTest", TestDatabase.class) {
 	outputs.file(finalDatabase3)
 	wireWith(concatenateCreateTest)
 }
+afterEvaluate { tasks.named("testDebugUnitTest").configure { dependsOn(testCreateTest) } }
 tasks.named("check").configure { dependsOn(testCreateTest) }
 
 // See net.twisterrob.inventory.android.content.Database.
@@ -192,12 +197,19 @@ abstract class TestDatabase extends Exec {
 	
 	void wireWith(Provider<ConcatenateDatabaseScripts> concatenateTask) {
 		dependsOn(concatenateTask)
+		doFirst {
+			// Strangely having this in ctor is triggering as doLast.
+			logger.lifecycle("Executing ${script.get()}...")
+		}
 		def file = concatenateTask.flatMap { it.concatenated }
 		script = file
 		setArgs([
 				"-init",
 				file.get().asFile.absolutePath,
+				// Fail fast if anything errors.
 				"-bail",
+				// https://stackoverflow.com/a/76344213/253468
+				"-unsafe-testing",
 		])
 	}
 }

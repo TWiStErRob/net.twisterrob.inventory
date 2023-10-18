@@ -1,2 +1,2 @@
---.output upgrade.dump
---.dump
+.output dump.sql
+.dump
