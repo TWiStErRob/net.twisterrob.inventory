@@ -1,0 +1,17 @@
+Index: android/database/sqlite3/src/main/antlr/SQLiteParser.g4
+===================================================================
+diff --git a/android/database/sqlite3/src/main/antlr/SQLiteParser.g4 b/android/database/sqlite3/src/main/antlr/SQLiteParser.g4
+--- a/android/database/sqlite3/src/main/antlr/SQLiteParser.g4	(revision 50161a7ab0fdc93708c4493a9ee4c027d66f905b)
++++ b/android/database/sqlite3/src/main/antlr/SQLiteParser.g4	(date 1697620173399)
+@@ -157,8 +157,9 @@
+ ;
+ 
+ table_constraint: (CONSTRAINT_ name)? (
+-        (PRIMARY_ KEY_ | UNIQUE_) OPEN_PAR indexed_column (
+-            COMMA indexed_column
++        // See https://sqlite.org/forum/forumpost/77468323b2c68c39 why AUTOINCREMENT is here.
++        (PRIMARY_ KEY_ | UNIQUE_) OPEN_PAR indexed_column AUTOINCREMENT_? (
++            COMMA indexed_column AUTOINCREMENT_?
+         )* CLOSE_PAR conflict_clause?
+         | CHECK_ OPEN_PAR expr CLOSE_PAR
+         | FOREIGN_ KEY_ OPEN_PAR column_name (COMMA column_name)* CLOSE_PAR foreign_key_clause

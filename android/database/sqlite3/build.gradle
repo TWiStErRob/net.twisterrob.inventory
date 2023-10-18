@@ -1,0 +1,56 @@
+plugins {
+	// https://docs.gradle.org/current/userguide/antlr_plugin.html
+	id("org.gradle.antlr")
+}
+
+// http://lab.antlr.org/
+
+repositories {
+	// Defined in settings.gradle (GitHub raw).
+}
+
+configurations {
+	register("grammars") {
+		canBeConsumed(false)
+		canBeDeclared(true)
+		canBeResolved(true)
+	}
+}
+
+dependencies {
+	antlr("org.antlr:antlr4:4.13.1")
+	// https://github.com/antlr/grammars-v4/blob/main/sql/sqlite/SQLiteLexer.g4
+	grammars("antlr/grammars-v4:sql/sqlite/SQLiteLexer:3a73a199cc31fb600c5d7b0f141cedd168933e20@g4")
+	grammars("antlr/grammars-v4:sql/sqlite/SQLiteParser:3a73a199cc31fb600c5d7b0f141cedd168933e20@g4")
+}
+
+def downloadGrammars = tasks.register("downloadGrammars", Copy.class) {
+	def dir = sourceSets.main.antlr.srcDirs[0]
+	from(configurations.grammars)
+	into(dir)
+	rename("(.*)-[a-f0-9]+(\\.g4)\$", "\$1\$2")
+	inputs
+			.file(new File(dir, "SQLiteParser.g4.patch"))
+			.withPropertyName("SQLiteParser patch")
+			.withPathSensitivity(PathSensitivity.NONE)
+	doLast {
+		// Not a separate task, because it changes the output of this task, so caching wouldn't work.
+		exec {
+			workingDir(dir)
+			executable("git")
+			args("apply", "SQLiteParser.g4.patch")
+		}
+	}
+}
+
+tasks.named("generateGrammarSource", AntlrTask.class).configure {
+	dependsOn(downloadGrammars)
+	String pkg = "net.twisterrob.inventory.database.sqlite"
+	arguments += [
+			"-package", pkg,
+			"-long-messages",
+			"-visitor",
+	]
+	// https://stackoverflow.com/a/49388412/253468
+	outputDirectory = new File(outputDirectory, pkg)
+}
