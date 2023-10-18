@@ -1,14 +1,16 @@
 .mode column
 .width 120
+--.width auto
 
--- This file is used to simulate user actions to see the DB state before and after
+-- This file is used to simulate user actions to see the DB state before and after.
 -- Some triggers populate the Log table if those lines are uncommented.
 
--- fake some values for Category names
+-- Fake some values for Category names.
 update Category_Name_Cache
 set value = replace(UPPER(substr(key, 10, 1)) || substr(key, 11), '_', ' ');
 
--- Helps to figure out problems with foreign key constraints
+-- Helps to figure out problems with foreign key constraints.
+-- Don't use it always, because it differs in behavior from production.
 --PRAGMA defer_foreign_keys = 1;
 
 .headers off

@@ -1,9 +1,9 @@
+import kotlin.collections.CollectionsKt
+
 plugins {
 	// https://docs.gradle.org/current/userguide/antlr_plugin.html
 	id("org.gradle.antlr")
 }
-
-// http://lab.antlr.org/
 
 repositories {
 	// Defined in settings.gradle (GitHub raw).
@@ -25,7 +25,7 @@ dependencies {
 }
 
 def downloadGrammars = tasks.register("downloadGrammars", Copy.class) {
-	def dir = sourceSets.main.antlr.srcDirs[0]
+	File dir = CollectionsKt.single(sourceSets.main.antlr.srcDirs)
 	from(configurations.grammars)
 	into(dir)
 	rename("(.*)-[a-f0-9]+(\\.g4)\$", "\$1\$2")

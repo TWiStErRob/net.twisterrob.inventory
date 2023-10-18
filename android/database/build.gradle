@@ -25,8 +25,7 @@ dependencies {
 databaseEntities {
 	categories {
 		//noinspection UnnecessaryQualifiedReference,GrDeprecatedAPIUsage REPORT cannot replace with new interface, missing methods
-		com.android.build.gradle.api.AndroidSourceSet data_ss =
-				evaluationDependsOn(':android:data').android.sourceSets.main
+		com.android.build.gradle.api.AndroidSourceSet data_ss = evaluationDependsOn(':android:data').android.sourceSets.main
 		input.set(file(new File(data_ss.res.srcDirs.first(), 'values/strings_Categories.xml')))
 		assetPath.set("MagicHomeInventory.data.Categories.sql")
 		iconFolder.set(file(new File(data_ss.res.srcDirs.first(), 'raw')))
