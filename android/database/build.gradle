@@ -1,10 +1,4 @@
-import com.android.build.api.dsl.SdkComponents
-import kotlin.io.FilesKt
-import kotlin.text.Charsets
-import org.gradle.platform.BuildPlatform
-import org.gradle.platform.OperatingSystem
-
-import javax.inject.Inject
+import kotlin.collections.CollectionsKt
 
 plugins {
 	id("net.twisterrob.inventory.android.module")
@@ -43,226 +37,20 @@ android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant varian
 	variant.mergeAssetsProvider.configure { it.dependsOn(tasks.generateDataBase) }
 }
 
-def outDir = project.layout.buildDirectory.dir("database/test-db")
-def concatenated = outDir.map { it.file("concatenated.sql") }
-def preparedDatabase = outDir.map { it.file("prepared.sqlite") }
-def finalDatabase = outDir.map { it.file("final.sqlite") }
-
-def concatenateDatabaseTest = tasks.register("concatenateDatabaseTest", ConcatenateDatabaseScripts.class) {
-	def assetsMain = android.sourceSets.main.assets.srcDirs[0]
-	def assetsDebug = android.sourceSets.debug.assets.srcDirs[0]
-	prelude = """
-		-- Built from from ${assetsMain} and ${assetsDebug}.
-		-- http://stackoverflow.com/questions/2421189/version-of-sqlite-used-in-android
-		PRAGMA foreign_keys=ON;
-		PRAGMA recursive_triggers = TRUE; -- This is not possible before 3.6.18
-	""".stripIndent()
-	scriptsUnderTest.addAll(
-			// Initialize once
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.clean.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.schema.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.Categories.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.init.sql"),
-			FilesKt.resolve(assetsDebug, "MagicHomeInventory.development.sql"),
-			FilesKt.resolve(assetsDebug, "MagicHomeInventory.verify.sql"),
-			FilesKt.resolve(assetsDebug, "MagicHomeInventory.test.sql"),
-			// Tear-down and initialize again
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.clean.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.schema.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.Categories.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.init.sql"),
-			FilesKt.resolve(assetsDebug, "MagicHomeInventory.development.sql"),
-			FilesKt.resolve(assetsDebug, "MagicHomeInventory.verify.sql"),
-			FilesKt.resolve(assetsDebug, "MagicHomeInventory.test.sql"),
-	)
-	testScript = new File("src/test/sql/test-db.sql")
-	it.concatenated = concatenated
-	it.preparedDatabase = preparedDatabase.map { outDir.get().asFile.relativePath(it.asFile) }
-	it.finalDatabase = finalDatabase.map { outDir.get().asFile.relativePath(it.asFile) }
-}
-
-def testDatabaseTest = tasks.register("testDatabaseTest", TestDatabase.class) {
-	setWorkingDir(outDir)
-	outputs.file(preparedDatabase)
-	outputs.file(finalDatabase)
-	wireWith(concatenateDatabaseTest)
-}
-tasks.named("check").configure { dependsOn(testDatabaseTest) }
-
-
-def outDir2 = project.layout.buildDirectory.dir("database/upgrade")
-def concatenated2 = outDir2.map { it.file("concatenated.sql") }
-def preparedDatabase2 = outDir2.map { it.file("prepared.sqlite") }
-def finalDatabase2 = outDir2.map { it.file("final.sqlite") }
-
-def concatenateUpgradeTest = tasks.register("concatenateUpgradeTest", ConcatenateDatabaseScripts.class) {
-	def assetsMain = android.sourceSets.main.assets.srcDirs[0]
-	prelude = """
-		PRAGMA foreign_keys=ON;
-		PRAGMA recursive_triggers = TRUE;
-	""".stripIndent()
-	scriptsUnderTest.addAll(
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.upgrade.1.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.Categories.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.init.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.upgrade.2.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.upgrade.3.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.upgrade.4.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.upgrade.5.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.upgrade.6.sql"),
-	)
-	testScript = new File("src/test/sql/upgrade.sql")
-	it.concatenated = concatenated2
-	it.preparedDatabase = preparedDatabase2.map { outDir2.get().asFile.relativePath(it.asFile) }
-	it.finalDatabase = finalDatabase2.map { outDir2.get().asFile.relativePath(it.asFile) }
-}
-
-def testUpgradeTest = tasks.register("testUpgradeTest", TestDatabase.class) {
-	setWorkingDir(outDir2)
-	outputs.file(preparedDatabase2)
-	outputs.file(finalDatabase2)
-	wireWith(concatenateUpgradeTest)
-}
-afterEvaluate { tasks.named("testDebugUnitTest").configure { dependsOn(testUpgradeTest) } }
-tasks.named("check").configure { dependsOn(testUpgradeTest) }
-
-
-def outDir3 = project.layout.buildDirectory.dir("database/create")
-def concatenated3 = outDir3.map { it.file("concatenated.sql") }
-def preparedDatabase3 = outDir3.map { it.file("prepared.sqlite") }
-def finalDatabase3 = outDir3.map { it.file("final.sqlite") }
-
-def concatenateCreateTest = tasks.register("concatenateCreateTest", ConcatenateDatabaseScripts.class) {
-	def assetsMain = android.sourceSets.main.assets.srcDirs[0]
-	prelude = """
-		PRAGMA foreign_keys=ON;
-		PRAGMA recursive_triggers = TRUE;
-	""".stripIndent()
-	scriptsUnderTest.addAll(
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.schema.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.data.Categories.sql"),
-			FilesKt.resolve(assetsMain, "MagicHomeInventory.init.sql"),
-	)
-	testScript = new File("src/test/sql/create.sql")
-	it.concatenated = concatenated3
-	it.preparedDatabase = preparedDatabase3.map { outDir3.get().asFile.relativePath(it.asFile) }
-	it.finalDatabase = finalDatabase3.map { outDir3.get().asFile.relativePath(it.asFile) }
-}
-
-def testCreateTest = tasks.register("testCreateTest", TestDatabase.class) {
-	setWorkingDir(outDir3)
-	outputs.file(preparedDatabase3)
-	outputs.file(finalDatabase3)
-	wireWith(concatenateCreateTest)
-}
-afterEvaluate { tasks.named("testDebugUnitTest").configure { dependsOn(testCreateTest) } }
-tasks.named("check").configure { dependsOn(testCreateTest) }
-
 // See net.twisterrob.inventory.android.content.Database.
 android.buildFeatures.buildConfig = true
 
-abstract class TestDatabase extends Exec {
-
-	@InputFile
-	@PathSensitive(PathSensitivity.NONE)
-	abstract RegularFileProperty getScript()
-	
-	@InputFile
-	@PathSensitive(PathSensitivity.NONE)
-	abstract RegularFileProperty getSqlite3()
-	
-	@Inject
-	abstract BuildPlatform getBuildPlatform()
-
-	@Internal
-	abstract Property<SdkComponents> getAndroidSdk()
-	
-	TestDatabase() {
-		group = LifecycleBasePlugin.VERIFICATION_GROUP
-		dependsOn(project.tasks.generateDataBase)
-		androidSdk = project.androidComponents.sdkComponents
-		sqlite3 = androidSdk.get().sdkDirectory.map {
-			if (buildPlatform.operatingSystem == OperatingSystem.WINDOWS) {
-				it.file("platform-tools/sqlite3.exe")
-			} else {
-				it.file("platform-tools/sqlite3")
-			}
-		}
-		setExecutable(sqlite3.get().asFile.absolutePath)
-	}
-	
-	void wireWith(Provider<ConcatenateDatabaseScripts> concatenateTask) {
-		dependsOn(concatenateTask)
-		doFirst {
-			// Strangely having this in ctor is triggering as doLast.
-			logger.lifecycle("Executing ${script.get()}...")
-		}
-		def file = concatenateTask.flatMap { it.concatenated }
-		script = file
-		setArgs([
-				"-init",
-				file.get().asFile.absolutePath,
-				// Fail fast if anything errors.
-				"-bail",
-				// https://stackoverflow.com/a/76344213/253468
-				"-unsafe-testing",
-		])
-	}
-}
-
-abstract class ConcatenateDatabaseScripts extends DefaultTask {
-
-	@Input
-	abstract Property<String> getPrelude()
-
-	@InputFiles
-	@PathSensitive(PathSensitivity.NAME_ONLY)
-	abstract ListProperty<File> getScriptsUnderTest()
-
-	@InputFiles
-	@PathSensitive(PathSensitivity.NAME_ONLY)
-	abstract RegularFileProperty getTestScript()
-
-	@OutputFile
-	abstract RegularFileProperty getConcatenated()
-
-	@Input
-	abstract Property<String> getPreparedDatabase()
-
-	@Input
-	abstract Property<String> getFinalDatabase()
-
-	ConcatenateDatabaseScripts() {
-		group = LifecycleBasePlugin.VERIFICATION_GROUP
-	}
-
-	@TaskAction
-	void concatenate() {
-		File target = concatenated.get().asFile
-		assert (target.parentFile.exists() || target.parentFile.mkdirs())
-		assert (!target.exists() || target.delete())
-		assert (target.createNewFile())
-		def append = { String text ->
-			target.append(text, Charsets.UTF_8.name(), false)
-		}
-		def appendLog = { String text ->
-			append("select STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), '${text}';\n")
-		}
-		def appendFile = { File file ->
-			appendLog(file.name)
-			append(file.getText(Charsets.UTF_8.name()))
-		}
-		append(prelude.get())
-		for (def script in scriptsUnderTest.get()) {
-			appendFile(script)
-		}
-		appendLog("Test script")
-		append(".backup '${preparedDatabase.get()}'\n")
-		appendFile(testScript.get().asFile)
-		append(".backup '${finalDatabase.get()}'\n")
-	}
+android.testOptions.unitTests.all { Test test ->
+	test.systemProperty(
+			"net.twisterrob.inventory.database.mainFolder",
+			CollectionsKt.single(android.sourceSets.main.assets.srcDirs)
+	)
+	test.systemProperty(
+			"net.twisterrob.inventory.database.debugFolder",
+			CollectionsKt.single(android.sourceSets.debug.assets.srcDirs)
+	)
+	test.systemProperty(
+			"net.twisterrob.inventory.database.androidSdk",
+			androidComponents.sdkComponents.sdkDirectory.get().asFile
+	)
 }

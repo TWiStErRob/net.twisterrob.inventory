@@ -1,2 +1,0 @@
-.output dump.sql
-.dump
