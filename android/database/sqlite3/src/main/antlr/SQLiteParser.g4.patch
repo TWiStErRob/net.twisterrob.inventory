@@ -1,7 +1,7 @@
 Index: android/database/sqlite3/src/main/antlr/SQLiteParser.g4
 ===================================================================
 diff --git a/android/database/sqlite3/src/main/antlr/SQLiteParser.g4 b/android/database/sqlite3/src/main/antlr/SQLiteParser.g4
---- a/android/database/sqlite3/src/main/antlr/SQLiteParser.g4	(revision 50161a7ab0fdc93708c4493a9ee4c027d66f905b)
+--- a/android/database/sqlite3/src/main/antlr/SQLiteParser.g4	(revision 3a73a199cc31fb600c5d7b0f141cedd168933e20)
 +++ b/android/database/sqlite3/src/main/antlr/SQLiteParser.g4	(date 1697620173399)
 @@ -157,8 +157,9 @@
  ;

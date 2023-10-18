@@ -9,11 +9,11 @@ import java.lang.ProcessBuilder.Redirect
 import java.util.concurrent.TimeUnit.SECONDS
 import kotlin.concurrent.thread
 
-fun executeSQLite(dir: File, @Language("SQLite") sql: String): String {
+fun executeSQLite(dir: File, @Language("SQLite") sql: String) {
 	val script = dir.resolve("sqlite.sql").also { it.writeText(sql) }
 	println("Executing ${script}...")
 	try {
-		return executeSQLite(dir, script)
+		println(executeSQLite(dir, script))
 	} finally {
 		println("Finished executing ${script}...")
 	}

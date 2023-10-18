@@ -9,8 +9,8 @@ fun stringifySQLiteStatements(parsed: SQLiteParser.ParseContext): List<String> =
 		.sql_stmt_list()
 		.single()
 		.sql_stmt()
-		.map {
-			it.accept(object : AbstractParseTreeVisitor<String>() {
+		.map { statement ->
+			statement.accept(object : AbstractParseTreeVisitor<String>() {
 				override fun defaultResult(): String =
 					""
 

@@ -13,23 +13,23 @@ class DatabaseSqlIntegrationTests {
 
 	@Test(timeout = 5_000) fun testCreate() {
 		val script = buildScript(createScripts)
-		println(executeSQLite(temp.newFolder(), script))
+		executeSQLite(temp.newFolder(), script)
 	}
 
 	@Test(timeout = 5_000) fun testUpgrade() {
 		val script = buildScript(upgradeScripts)
-		println(executeSQLite(temp.newFolder(), script))
+		executeSQLite(temp.newFolder(), script)
 	}
 
 	@Test(timeout = 10_000) fun testCompareCreateAndUpgrade() {
 		val create = buildScript(createScripts, ".output dump.sql\n.dump")
 		val createFolder = temp.newFolder()
-		println(executeSQLite(createFolder, create))
+		executeSQLite(createFolder, create)
 		val createStatements = parseSQLite(createFolder.resolve("dump.sql"))
 
 		val upgrade = buildScript(upgradeScripts, ".output dump.sql\n.dump")
 		val upgradeFolder = temp.newFolder()
-		println(executeSQLite(upgradeFolder, upgrade))
+		executeSQLite(upgradeFolder, upgrade)
 		val upgradeStatements = parseSQLite(upgradeFolder.resolve("dump.sql"))
 
 		assertEquals(
@@ -50,7 +50,7 @@ class DatabaseSqlIntegrationTests {
 				.requireResourceAsStream("quick-test.sql")
 				.readText()
 		)
-		println(executeSQLite(temp.newFolder(), script))
+		executeSQLite(temp.newFolder(), script)
 	}
 
 	companion object {

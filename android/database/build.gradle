@@ -36,10 +36,8 @@ android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant varian
 	variant.mergeAssetsProvider.configure { it.dependsOn(tasks.generateDataBase) }
 }
 
-// See net.twisterrob.inventory.android.content.Database.
-android.buildFeatures.buildConfig = true
-
 android.testOptions.unitTests.all { Test test ->
+	test.dependsOn(tasks.generateDataBase)
 	test.systemProperty(
 			"net.twisterrob.inventory.database.mainFolder",
 			CollectionsKt.single(android.sourceSets.main.assets.srcDirs)
@@ -53,3 +51,6 @@ android.testOptions.unitTests.all { Test test ->
 			androidComponents.sdkComponents.sdkDirectory.get().asFile
 	)
 }
+
+// See net.twisterrob.inventory.android.content.Database.
+android.buildFeatures.buildConfig = true
