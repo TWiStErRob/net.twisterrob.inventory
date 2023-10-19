@@ -32,9 +32,6 @@ databaseEntities {
 		conversion.set("SQL")
 	}
 }
-android.libraryVariants.all { com.android.build.gradle.api.LibraryVariant variant ->
-	variant.mergeAssetsProvider.configure { it.dependsOn(tasks.generateDataBase) }
-}
 
 android.testOptions.unitTests.all { Test test ->
 	test.dependsOn(tasks.generateDataBase)
@@ -45,6 +42,12 @@ android.testOptions.unitTests.all { Test test ->
 	test.systemProperty(
 			"net.twisterrob.inventory.database.debugFolder",
 			CollectionsKt.single(android.sourceSets.debug.assets.srcDirs)
+	)
+	test.systemProperty(
+			"net.twisterrob.inventory.database.generatedCategories",
+			tasks.named("generateDataBaseCategories")
+			     .flatMap { t -> t.assetPath.map { t.output.get().file(it) } }
+			     .get().asFile
 	)
 	test.systemProperty(
 			"net.twisterrob.inventory.database.androidSdk",

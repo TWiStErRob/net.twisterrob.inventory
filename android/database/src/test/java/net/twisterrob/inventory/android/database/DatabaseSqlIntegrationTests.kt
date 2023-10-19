@@ -64,12 +64,15 @@ class DatabaseSqlIntegrationTests {
 		private val assetsDebug: File =
 			File(requireProperty("net.twisterrob.inventory.database.debugFolder"))
 
+		private val assetsCategories: File =
+			File(requireProperty("net.twisterrob.inventory.database.generatedCategories"))
+
 		private val devScripts: List<File> =
 			listOf(
 				assetsMain.resolve("MagicHomeInventory.clean.sql"),
 				assetsMain.resolve("MagicHomeInventory.schema.sql"),
 				assetsMain.resolve("MagicHomeInventory.data.sql"),
-				assetsMain.resolve("MagicHomeInventory.data.Categories.sql"),
+				assetsCategories,
 				assetsMain.resolve("MagicHomeInventory.init.sql"),
 				assetsDebug.resolve("MagicHomeInventory.development.sql"),
 				assetsDebug.resolve("MagicHomeInventory.verify.sql"),
@@ -80,7 +83,7 @@ class DatabaseSqlIntegrationTests {
 			listOf(
 				assetsMain.resolve("MagicHomeInventory.schema.sql"),
 				assetsMain.resolve("MagicHomeInventory.data.sql"),
-				assetsMain.resolve("MagicHomeInventory.data.Categories.sql"),
+				assetsCategories,
 				assetsMain.resolve("MagicHomeInventory.init.sql"),
 			)
 
@@ -88,7 +91,7 @@ class DatabaseSqlIntegrationTests {
 			listOf(
 				assetsMain.resolve("MagicHomeInventory.upgrade.1.sql"),
 				assetsMain.resolve("MagicHomeInventory.data.sql"),
-				assetsMain.resolve("MagicHomeInventory.data.Categories.sql"),
+				assetsCategories,
 				assetsMain.resolve("MagicHomeInventory.init.sql"),
 				*generateSequence(2) { it + 1 }
 					.map { assetsMain.resolve("MagicHomeInventory.upgrade.${it}.sql") }
